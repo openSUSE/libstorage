@@ -7,7 +7,7 @@ template< class Iter >
 class IterPair
     {
     public:
-	IterPair( const Iter& b, const Iter& e ) : m_begin(b), m_end(e) {}
+	IterPair( const Iter b, const Iter e ) : m_begin(b), m_end(e) {}
 	IterPair( const IterPair& x ) 
 	    {
 	    *this = x;

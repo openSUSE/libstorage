@@ -6,8 +6,16 @@
 
 #include "y2storage/Storage.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Softraid.h"
+#include "y2storage/IterPair.h"
 
-    struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
+struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
+
+bool TestLg150( const Disk& d )
+    { return(d.Cylinders()>150); };
+bool TestCG30( const Partition& d )
+    { return(d.CylSize()>30); };
+
 
 Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
     {
@@ -16,6 +24,22 @@ Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
 	{
 	AutodetectDisks();
 	}
+    /*
+    ConstPartInter b(DiskPair( TestLg150 ));
+    ConstPartInter e(DiskPair( TestLg150 ), true);
+    IterPair<ConstPartInter> p( b, e );
+
+    IterPair<ConstPartInter2> q = IterPair<ConstPartInter2>( ConstPartInter2( b ), 
+                                                             ConstPartInter2( e ) );
+    IterPair<ConstPartIterator> r = 
+	IterPair<ConstPartIterator>( ConstPartIterator(ConstPartPIterator( q, TestCG30 )), 
+	                             ConstPartIterator(ConstPartPIterator( q, TestCG30, true)));
+    for( ConstPartIterator i=r.begin(); i!=r.end(); ++i )
+	{
+	cout << "Name:" << i->Device() << " Start:" << (*i).CylStart()
+	     << " Cyl:" << (*i).CylSize() << endl;
+	}
+    */
     }
 
 Storage::~Storage()
@@ -59,6 +83,7 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
+    Disks.push_back( new Softraid() );
     }
 
 int 

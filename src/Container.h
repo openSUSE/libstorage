@@ -29,7 +29,7 @@ class Container
 	    };
 	static SkipDeleted SkipDel;
 	static bool NotDeleted( const Volume&d ) { return( !d.Delete() ); }
-	enum CType { UNKNOWN, DISK, MD, LOOP, LVM, EVMS };
+	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
 
 	template< class Pred >
 	    struct CVP { typedef ContainerIter<Pred, CVIter> type; };

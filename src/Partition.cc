@@ -3,9 +3,9 @@
 #include <ycp/y2log.h>
 
 #include "y2storage/Partition.h"
-#include "y2storage/Container.h"
+#include "y2storage/Disk.h"
 
-Partition::Partition( const Container& d, unsigned PNr ) : Volume( d, PNr )
+Partition::Partition( const Disk& d, unsigned PNr ) : Volume( d, PNr )
     {
     cyl_start = PNr;
     cyl_size = PNr*PNr;

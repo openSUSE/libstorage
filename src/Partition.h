@@ -5,10 +5,12 @@ using namespace std;
 
 #include "y2storage/Volume.h"
 
+class Disk;
+
 class Partition : public Volume
     {
     public:
-	Partition( const Container& d, unsigned Pnr );
+	Partition( const Disk& d, unsigned Pnr );
 	virtual ~Partition();
 	unsigned CylStart() const { return cyl_start; }
 	unsigned CylSize() const { return cyl_size; }
