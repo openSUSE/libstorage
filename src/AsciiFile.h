@@ -8,6 +8,7 @@
 
 using std::vector;
 
+class Regex;
 
 #define DBG(x)
 
@@ -29,25 +30,26 @@ class AsciiFile
 	~AsciiFile();
 	bool insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv=0 );
 	bool appendFile( AsciiFile& File_Cv );
-	bool insertFile( string Name_Cv, unsigned int BeforeLine_iv=0 );
-	bool appendFile( string Name_Cv );
-	bool loadFile( string Name_Cv );
+	bool insertFile( const string& Name_Cv, unsigned int BeforeLine_iv=0 );
+	bool appendFile( const string& Name_Cv );
+	bool loadFile( const string& Name_Cv );
 	bool updateFile();
-	bool saveToFile( string Name_Cv );
-	void append( string Line_Cv );
-	void insert( unsigned int Before_iv, string Line_Cv );
+	bool saveToFile( const string& Name_Cv );
+	void append( const string& Line_Cv );
+	void insert( unsigned int Before_iv, const string& Line_Cv );
 	void remove( unsigned int Start_iv, unsigned int Cnt_iv );
 	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
-		      string Line_Cv );
+		      const string& Line_Cv );
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
-	int find( unsigned int Start_iv, string Pat_Cv );
+	int find( unsigned int Start_iv, const string& Pat_Cv );
+	int find( unsigned int Start_iv, Regex& Pat_Cv );
 	int numLines() const; 
-	string fileName();
+	const string& fileName();
 	int differentLine( const AsciiFile& File_Cv ) const;
 
     protected:
-	bool appendFile( string Name_Cv, vector<string>& Lines_Cr );
+	bool appendFile( const string&  Name_Cv, vector<string>& Lines_Cr );
 	bool appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr );
 
 	bool BackupCreated_b;

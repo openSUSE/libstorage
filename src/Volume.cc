@@ -104,7 +104,7 @@ bool Volume::getMajorMinor( const string& device,
     return( ret );
     }
 
-void Volume::getFstabData( const EtcFstab& fstabData )
+void Volume::getFstabData( EtcFstab& fstabData )
     {
     FstabEntry entry;
     bool found = fstabData.findDevice( device(), entry );
@@ -115,6 +115,7 @@ void Volume::getFstabData( const EtcFstab& fstabData )
     if( !found && (uuid.size()>0||label.size()>0) )
 	{
 	found = fstabData.findUuidLabel( uuid, label, entry );
+	fstabData.setDevice( entry, device() );
 	}
     if( !found && mp.size()>0 )
 	{
@@ -572,36 +573,113 @@ int Volume::prepareRemove()
 	    }
 	if( ret==0 )
 	    {
-	    ret = doRemoveFstab( cont->getStorage()->getFstab() );
+	    ret = doFstabUpdate();
 	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
 
-int Volume::doRemoveFstab( EtcFstab* fstab )
+string Volume::getMountbyString( MountByType mby, const string& dev, 
+				 const string& uuid, const string& label )
     {
-    int ret = 0;
-    y2milestone( "device:%s mp:%s", dev.c_str(), orig_mp.c_str() );
-    if( orig_mp.size()>0 )
+    string ret = dev;
+    if( mby==MOUNTBY_UUID )
 	{
-	FstabEntry entry;
-	if( fstab->findDevice( dev, entry ) || 
-	    fstab->findDevice( alt_names, entry ) ||
-	    fstab->findMount( orig_mp, entry ))
-	    {
-	    ret = fstab->removeEntry( entry );
-	    }
+	ret = "UUID=" + uuid;
 	}
-    y2milestone( "ret:%d", ret );
+    else if( mby==MOUNTBY_LABEL )
+	{
+	ret = "LABEL=" + label;
+	}
     return( ret );
     }
 
-int Volume::doFstabUpdate( EtcFstab* fstab )
+int Volume::doFstabUpdate()
     {
     int ret = 0;
+    bool changed = false;
     y2milestone( "device:%s mp:%s options:%s",  dev.c_str(), mp.c_str(), 
                  fstab_opt.c_str() );
+    EtcFstab* fstab = cont->getStorage()->getFstab();
+    FstabEntry entry;
+    if( orig_mp.size()>0 && (deleted()||mp.size()==0) &&
+        (fstab->findDevice( dev, entry ) ||
+	 fstab->findDevice( alt_names, entry ) ))
+	{
+	changed = true;
+	ret = fstab->removeEntry( entry );
+	}
+    else if( mp.size()>0 )
+	{
+	if( fstab->findDevice( dev, entry ) ||
+	    fstab->findDevice( alt_names, entry ))
+	    {
+	    FstabChange che( entry );
+	    if( orig_mp!=mp )
+		{
+		changed = true;
+		che.mount = mp;
+		}
+	    if( fstab_opt!=orig_fstab_opt )
+		{
+		changed = true;
+		che.opts = splitString( fstab_opt, "," );
+		}
+	    if( mount_by!=orig_mount_by || (format && mount_by==MOUNTBY_UUID) ||
+	        (orig_label!=label && mount_by==MOUNTBY_LABEL) )
+		{
+		changed = true;
+		che.dentry = getMountbyString( mount_by, dev, uuid, label );
+		}
+	    if( fs != detected_fs )
+		{
+		changed = true;
+		che.fs = fs_names[fs];
+		}
+	    if( encryption != orig_encryption )
+		{
+		changed = true;
+		che.encr = encryption;
+		che.loop_dev = (fstab_loop_dev.size()>0)?fstab_loop_dev:
+		                                           loop_dev;
+		}
+	    if( changed )
+		{
+		ret = fstab->updateEntry( che );
+		}
+	    }
+	else
+	    {
+	    changed = true;
+	    FstabChange che;
+	    che.dentry = getMountbyString( mount_by, dev, uuid, label );
+	    che.encr = encryption;
+	    che.loop_dev = (fstab_loop_dev.size()>0)?fstab_loop_dev:
+	    che.fs = fs_names[fs];
+	    string fst = fstab_opt;
+	    if( fst.size()==0 )
+		{
+		if( is_loop )
+		    fst = "noatime";
+		else
+		    fst = (mp=="swap") ? "pri=42" : "defaults";
+		}
+	    che.opts = splitString( fst, "," );
+	    che.mount = mp;
+	    if( fs != UNKNOWN && fs != NTFS && fs != VFAT && !is_loop &&
+	        !optNoauto() )
+		{
+		che.freq = 1;
+		che.passno = (mp=="/") ? 1 : 2;
+		}
+	    ret = fstab->addEntry( che );
+	    }
+	}
+    if( changed && ret==0 )
+	{
+	ret = fstab->flush();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -679,7 +757,7 @@ string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
 
 string Volume::mb_names[] = { "device", "uuid", "label" };
 
-string Volume::enc_names[] = { "none", "twofish", "twofish_old", 
-                               "twofish256_old", "unknown" };
+string Volume::enc_names[] = { "none", "twofish256", "twofish", 
+                               "twofishSL92", "unknown" };
 
 

@@ -87,8 +87,7 @@ class Volume
 	int doFormat();
 	int doLosetup();
 	int doSetLabel();
-	int doFstabUpdate( EtcFstab* fstab );
-	int doRemoveFstab( EtcFstab* fstab );
+	int doFstabUpdate();
 	bool isMounted() const { return( orig_mp.size()>0 && !mp_from_fstab ); }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
@@ -111,6 +110,8 @@ class Volume
 	const string& fsTypeString() const { return fs_names[fs]; }
 	static const string& fsTypeString( const storage::FsType type )
 	    { return fs_names[type]; }
+	static const string& encTypeString( const storage::EncryptType type )
+	    { return enc_names[type]; }
 	    
 
     protected:
@@ -119,7 +120,9 @@ class Volume
 	void getFsData( SystemCmd& blkidData );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );
-	void getFstabData( const EtcFstab& mountData );
+	void getFstabData( EtcFstab& fstabData );
+	string getMountbyString( storage::MountByType mby, const string& dev,
+	                         const string& uuid, const string& label );
 
 	const Container* const cont;
 	bool numeric;
