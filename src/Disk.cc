@@ -246,7 +246,7 @@ bool Disk::detectPartitions()
     if( dlabel.size()==0 )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
-    y2milestone( "ret:%d partitons:%d detected label:%s label:%s", ret, 
+    y2milestone( "ret:%d partitons:%d detected label:%s label:%s", ret,
                  vols.size(), detected_label.c_str(), label.c_str() );
     return( ret );
     }
@@ -340,7 +340,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     return( cmd.retcode() );
     }
 
-int 
+int
 Disk::execCheck( const string& cmd_line )
     {
     static SystemCmd cmd;
@@ -841,7 +841,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2milestone( "overlaps with %s at %lu len %lu", 
+	    y2milestone( "overlaps with %s at %lu len %lu",
 			 i->name().c_str(), i->cylStart(), i->cylSize() );
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
@@ -850,7 +850,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	{
 	if( !ext_possible || hasExtended())
 	    {
-	    ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE 
+	    ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE
 	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
 	    }
 	}
@@ -866,7 +866,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     if( ret==0 )
 	{
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
-	                               len, type, 
+	                               len, type,
 				       decString(cylinderToKb(start-1)) );
 	p->setCreated();
 	device = p->device();
@@ -882,9 +882,9 @@ int Disk::removePartition( unsigned nr )
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
-    while( i!=p.end() && !i->nr()!=nr)
+    while( i!=p.end() && i->nr()!=nr)
 	{
-	++i;
+	    ++i;
 	}
     if( i==p.end() )
 	{
@@ -1102,7 +1102,7 @@ int Disk::doCreate( Volume* v )
     if( p != NULL )
 	{
 	system_stderr.erase();
-	y2milestone( "doCreate container %s name %s", name().c_str(), 
+	y2milestone( "doCreate container %s name %s", name().c_str(),
 		     p->name().c_str() );
 	y2milestone( "doCreate nr:%d start %ld len %ld", p->nr(),
 	             p->cylStart(), p->cylSize() );
@@ -1137,7 +1137,7 @@ int Disk::doCreate( Volume* v )
 		cmd_line << "linux-swap ";
 		}
 	    else if( p->id()==Partition::ID_GPT_BOOT ||
-		     p->id()==Partition::ID_DOS16 || 
+		     p->id()==Partition::ID_DOS16 ||
 	             p->id()==Partition::ID_DOS )
 	        {
 		cmd_line << "fat32 ";
@@ -1187,7 +1187,7 @@ int Disk::doRemove( Volume* v )
     if( p != NULL )
 	{
 	system_stderr.erase();
-	y2milestone( "doRemove container %s name %s", name().c_str(), 
+	y2milestone( "doRemove container %s name %s", name().c_str(),
 		     p->name().c_str() );
 	if( !p->created() )
 	    {
