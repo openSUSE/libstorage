@@ -839,7 +839,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    }
 	}
     int number = 0;
-    if( ret==0 && type==EXTENDED )
+    if( ret==0 )
 	{
 	number = availablePartNumber( type );
 	if( number==0 )
