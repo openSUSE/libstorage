@@ -239,7 +239,7 @@ bool Disk::detectPartitions()
 	Cmd.execute( "/sbin/fdisk -l " + device() );
 	if( Cmd.select( "AIX label" )>0 )
 	    {
-	    dlabel = "aix";
+	    detected_label = "aix";
 	    }
 	}
     detected_label = dlabel;
@@ -308,7 +308,7 @@ Disk::setLabelData( const string& disklabel )
                  ext_possible, max_primary, max_logical );
     }
 
-void
+int
 Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     {
     string tmp = *cmd.getString(SystemCmd::IDX_STDERR);
@@ -337,6 +337,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
         {
         y2error( "retcode:%d", cmd.retcode() );
         }
+    return( cmd.retcode() );
     }
 
 bool
@@ -407,7 +408,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	  if( PartitionType == "extended" )
 	      {
 	      type = EXTENDED;
-	      id = 0x0f;
+	      id = Partition::ID_EXTENDED;
 	      }
 	  else if( nr>=5 )
 	      {
@@ -428,7 +429,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	  }
       else if( TInfo.find( ",raid," )!=string::npos )
 	  {
-	  id = Partition::ID_MD;
+	  id = Partition::ID_RAID;
 	  }
       else if( TInfo.find( ",lvm," )!=string::npos )
 	  {
@@ -469,11 +470,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		      val.find( "Apple_FWDriver" ) != string::npos ||
 		      val.find( "Apple_Patches" ) != string::npos )
 		      {
-		      id = 0x101;
+		      id = Partition::ID_APPLE_OTHER;
 		      }
 		  else if( val.find( "Apple_HFS" ) != string::npos )
 		      {
-		      id = 0x102;
+		      id = Partition::ID_APPLE_HFS;
 		      }
 		  }
 	      }
@@ -482,11 +483,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	  {
 	  if( TInfo.find( ",boot," ) != string::npos )
 	      {
-	      id = 0x103;
+	      id = Partition::ID_GPT_BOOT;
 	      }
 	  if( TInfo.find( ",hp-service," ) != string::npos )
 	      {
-	      id = 0x104;
+	      id = Partition::ID_GPT_SERVICE;
 	      }
 	  }
       y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
@@ -879,21 +880,178 @@ int Disk::commitChanges( CommitStage stage )
     return( ret );
     }
 
+int Disk::doCreateLabel( const string& label_name )
+    {
+    y2milestone( "label:%s", label_name.c_str() );
+    int ret = 0;
+    system_stderr.erase();
+    std::ostringstream cmd_line;
+    cmd_line << PARTEDCMD << device() << " mklabel " << label_name;
+    SystemCmd cmd( cmd_line.str(), true );
+    if( checkSystemError( cmd_line.str(), cmd ) )
+	{
+	ret = DISK_SET_LABEL_PARTED_FAILED;
+	}
+    else
+	{
+	detected_label = label_name;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Disk::doSetType( Volume* v )
+    {
+    Partition * p = dynamic_cast<Partition *>(v);
+    int ret = 0;
+    if( p != NULL )
+	{
+	system_stderr.erase();
+	SystemCmd cmd;
+	std::ostringstream cmd_line;
+	cmd_line << PARTEDCMD << device() << " set " << p->nr() << " ";
+	string start_cmd = cmd_line.str();
+	if( ret==0 )
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line << " type " << p->id();
+	    cmd.execute( cmd_line.str() );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line << " lvm " << (p->id()==Partition::ID_LVM)?"on":"off";
+	    cmd.execute( cmd_line.str() );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line << " raid " << (p->id()==Partition::ID_RAID)?"on":"off";
+	    cmd.execute( cmd_line.str() );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 && (label=="gpt"||label=="dvh"||label=="mac"))
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line << " swap " << (p->id()==Partition::ID_SWAP)?"on":"off";
+	    cmd.execute( cmd_line.str() );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line << " boot " << (p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off";
+	    cmd.execute( cmd_line.str() );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	}
+    else
+	{
+	ret = DISK_SET_TYPE_INVALID_VOLUME;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Disk::doCreate( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
     if( p != NULL )
 	{
+	system_stderr.erase();
 	y2milestone( "doCreate container %s name %s", name().c_str(), 
 		     p->name().c_str() );
-	y2milestone( "doCreate start %ld len %ld", p->cylStart(), 
-		     p->cylSize() );
+	y2milestone( "doCreate nr:%d start %ld len %ld", p->nr(),
+	             p->cylStart(), p->cylSize() );
+	if( detected_label != label )
+	    {
+	    ret = doCreateLabel( label );
+	    }
+	std::ostringstream cmd_line;
+	if( ret==0 )
+	    {
+	    cmd_line << PARTEDCMD << device() << " mkpart ";
+	    switch( p->type() )
+		{
+		case LOGICAL:
+		    cmd_line << "logical ";
+		    break;
+		case PRIMARY:
+		    cmd_line << "primary ";
+		    break;
+		case EXTENDED:
+		    cmd_line << "extended ";
+		    break;
+		default:
+		    ret = DISK_CREATE_PARTITION_INVALID_TYPE;
+		    break;
+		}
+	    }
+	if( ret==0 && p->type()!=EXTENDED )
+	    {
+	    if( p->id()==Partition::ID_SWAP )
+		{
+		cmd_line << "linux-swap ";
+		}
+	    else if( p->id()==Partition::ID_GPT_BOOT ||
+		     p->id()==Partition::ID_DOS16 || 
+	             p->id()==Partition::ID_DOS )
+	        {
+		cmd_line << "fat32 ";
+		}
+	    else if( p->id()==Partition::ID_APPLE_HFS )
+		{
+		cmd_line << "hfs ";
+		}
+	    else
+		{
+		cmd_line << "ext2 ";
+		}
+	    }
+	if( ret==0 )
+	    {
+	    cmd_line << std::setprecision(3)
+		     << std::setiosflags(std::ios_base::fixed)
+		     << (double)(p->cylStart()-1)*cylinderToKb(1)/1024
+		     << " ";
+	    cmd_line << std::setprecision(3)
+		     << std::setiosflags(std::ios_base::fixed)
+		     << (double)(p->cylStart()+p->cylSize()-1)*cylinderToKb(1)/1024
+		     << " ";
+	    SystemCmd cmd( cmd_line.str(), true );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 && p->id()!=Partition::ID_LINUX )
+	    {
+	    ret = doSetType( p );
+	    }
 	}
     else
 	{
 	ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
 	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 

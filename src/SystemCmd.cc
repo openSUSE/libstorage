@@ -156,7 +156,7 @@ SystemCmd::closeOpenFds()
 int
 SystemCmd::executeBackground( const string& Cmd_Cv )
     {
-    y2debug( "SystemCmd Executing (Background):\"%s\"", Cmd_Cv.c_str() );
+    y2milestone( "SystemCmd Executing (Background):\"%s\"", Cmd_Cv.c_str() );
     Background_b = true;
     return( doExecute( Cmd_Cv ));
     }
@@ -164,7 +164,7 @@ SystemCmd::executeBackground( const string& Cmd_Cv )
 int
 SystemCmd::execute( const string& Cmd_Cv )
     {
-    y2debug( "SystemCmd Executing:\"%s\"", Cmd_Cv.c_str() );
+    y2milestone( "SystemCmd Executing:\"%s\"", Cmd_Cv.c_str() );
     Background_b = false;
     return( doExecute( Cmd_Cv ));
     }

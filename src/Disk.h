@@ -13,6 +13,7 @@ using namespace storage;
 class Storage;
 class SystemCmd;
 class ProcPart;
+class Partition;
 
 class Disk : public Container
     {
@@ -103,7 +104,7 @@ class Disk : public Container
 	bool detectGeometry();
 	bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );
-	void checkSystemError( const string& cmd_line, const SystemCmd& cmd );
+	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	bool checkPartedOutput( const SystemCmd& cmd );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
@@ -113,6 +114,8 @@ class Disk : public Container
 	                       const list<Partition*>& pl );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	int doCreate( Volume* v );
+	int doCreateLabel( const string& label_name );
+	int doSetType( Volume* v );
 
 	//list<Region> getUnusedRegions();
 	void logData( const string& Dir );
