@@ -1349,6 +1349,52 @@ int Disk::doCreate( Volume* v )
     return( ret );
     }
 
+int Disk::doRemove( Volume* v )
+    {
+    Partition * p = dynamic_cast<Partition *>(v);
+    int ret = 0;
+    if( p != NULL )
+	{
+	if( !silent )
+	    {
+	    getStorage()->showInfoCb( p->removeText(true) );
+	    }
+	system_stderr.erase();
+	y2milestone( "doRemove container %s name %s", name().c_str(),
+		     p->name().c_str() );
+	ret = v->prepareRemove();
+	if( ret==0 && !p->created() )
+	    {
+	    std::ostringstream cmd_line;
+	    cmd_line << PARTEDCMD << device() << " rm " << p->OrigNr();
+	    if( execCheckFailed( cmd_line.str() ) )
+		{
+		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    VIter pi = vols.begin();
+	    while( pi!=vols.end() && *pi != p )
+		++pi;
+	    if( pi!=vols.end() )
+		{
+		vols.erase( pi );
+		}
+	    else
+		{
+		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
+		}
+	    }
+	}
+    else
+	{
+	ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Disk::doResize( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
@@ -1362,7 +1408,6 @@ int Disk::doResize( Volume* v )
 	system_stderr.erase();
 	y2milestone( "doResize container %s name %s", name().c_str(),
 		     p->name().c_str() );
-	ret = v->prepareRemove();
 	if( ret==0 && !p->created() )
 	    {
 	    std::ostringstream cmd_line;
