@@ -2,6 +2,7 @@
 #define STORAGE_TMPL_H
 
 #include <functional>
+#include <sstream>
 
 #include <y2storage/IterPair.h>
 #include <y2storage/FilterIterator.h>

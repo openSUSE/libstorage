@@ -34,8 +34,13 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     if( !testmode )
 	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
-    y2milestone( "instsys:%d testmode:%d autodetect:%d", inst_sys, testmode,
-                 autodetect );
+    max_log_num = 5;
+    tenv = getenv( "Y2MAXLOGNUM" );
+    logdir = "/var/log/YaST2";
+    if( tenv!=0 )
+	string(tenv) >> max_log_num;
+    y2milestone( "instsys:%d testmode:%d autodetect:%d log:%d", inst_sys, 
+                 testmode, autodetect, max_log_num );
     progress_bar_cb = NULL;
     install_info_cb = NULL;
     }
@@ -67,7 +72,7 @@ Storage::initialize()
 	    }
 	else
 	    {
-	    testdir = "/var/log/YaST2";
+	    testdir = logdir;
 	    }
 	}
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
@@ -101,10 +106,12 @@ Storage::initialize()
 
 Storage::~Storage()
     {
-    logVolumes( "/var/log/YaST2" );
+    if( max_log_num>0 )
+	logVolumes( logdir );
     for( CIter i=cont.begin(); i!=cont.end(); ++i )
 	{
-	(*i)->logData( "/var/log/YaST2" );
+	if( max_log_num>0 )
+	    (*i)->logData( logdir );
 	delete( *i );
 	}
     if( tempdir.size()>0 && access( tempdir.c_str(), R_OK )==0 )
@@ -177,7 +184,8 @@ Storage::autodetectDisks()
 		if( d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
 		    d->detectGeometry() && d->detectPartitions() )
 		    {
-		    d->logData( "/var/log/YaST2" );
+		    if( max_log_num>0 )
+			d->logData( logdir );
 		    addToList( d );
 		    }
 		else
@@ -208,7 +216,8 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
 	i->getMountData( Mounts );
 	i->getFstabData( *fstab );
 	}
-    logVolumes( "/var/log/YaST2" );
+    if( max_log_num>0 )
+	logVolumes( logdir );
     y2milestone( "detectFsData end" );
     }
 
@@ -230,7 +239,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 void
 Storage::logVolumes( const string& Dir )
     {
-    string fname( Dir + "/volume_info" );
+    string fname( Dir + "/volume_info.tmp" );
     ofstream file( fname.c_str() );
     for( VolIterator i=vBegin(); i!=vEnd(); ++i )
 	{
@@ -240,6 +249,58 @@ Storage::logVolumes( const string& Dir )
 	    }
 	}
     file.close();
+    handleLogFile( fname );
+    }
+
+bool 
+Storage::testFilesEqual( const string& n1, const string& n2 )
+    {
+    bool ret = false;
+    if( access( n1.c_str(), R_OK )==0 && access( n2.c_str(), R_OK )==0 )
+	{
+	SystemCmd c( "md5sum " + n1 + " " + n2 );
+	if( c.retcode()==0 && c.numLines()>=2 )
+	    {
+	    ret = extractNthWord( 0, *c.getLine(0) )==
+	          extractNthWord( 0, *c.getLine(1) );
+	    }
+	}
+    y2milestone( "ret:%d n1:%s n2:%s", ret, n1.c_str(), n2.c_str() );
+    return( ret );
+    }
+
+void
+Storage::handleLogFile( const string& name )
+    {
+    string bname( name );
+    string::size_type pos = bname.rfind( '.' );
+    bname.erase( pos );
+    y2milestone( "name:%s bname:%s", name.c_str(), bname.c_str() );
+    if( access( bname.c_str(), R_OK )==0 )
+	{
+	if( !testFilesEqual( bname, name ) )
+	    {
+	    unsigned num = max_log_num;
+	    string tmpo = bname + "-" + decString(num);
+	    string tmpn;
+	    if( access( tmpo.c_str(), R_OK )==0 )
+		unlink( tmpo.c_str() );
+	    while( num>1 )
+		{
+		tmpn = bname + "-" + decString(num-1);
+		if( access( tmpn.c_str(), R_OK )==0 )
+		    rename( tmpn.c_str(), tmpo.c_str() );
+		tmpo = tmpn;
+		num--;
+		}
+	    rename( bname.c_str(), tmpn.c_str() );
+	    rename( name.c_str(), bname.c_str() );
+	    }
+	else
+	    unlink( name.c_str() );
+	}
+    else
+	rename( name.c_str(), bname.c_str() );
     }
 
 string Storage::proc_arch;

@@ -257,7 +257,7 @@ bool Disk::detectPartitions()
 void
 Disk::logData( const string& Dir )
     {
-    string fname( Dir + "/disk_" + name() );
+    string fname( Dir + "/disk_" + name() + ".tmp" );
     ofstream file( fname.c_str() );
     file << "Device: " << dev << endl;
     file << "Major: " << mjr << endl;
@@ -290,6 +290,7 @@ Disk::logData( const string& Dir )
 	file << endl;
 	}
     file.close();
+    getStorage()->handleLogFile( fname );
     }
 
 void
@@ -348,15 +349,8 @@ Disk::execCheckFailed( const string& cmd_line )
     {
     static SystemCmd cmd;
     int ret = 0;
-    if( !sto->test() )
-	{
-	cmd.execute( cmd_line );
-	ret = checkSystemError( cmd_line, cmd );
-	}
-    else
-	{
-	y2milestone( "TESTMODE exec cmdline:\"%s\"", cmd_line.c_str() );
-	}
+    cmd.execute( cmd_line );
+    ret = checkSystemError( cmd_line, cmd );
     return( ret );
     }
 

@@ -70,6 +70,9 @@ class Storage : public StorageInterface
 	const string& tmpDir() const { return( tempdir ); }
 	static const string& arch() { return( proc_arch ); }
 	EtcFstab* getFstab() { return fstab; }
+	void handleLogFile( const string& name );
+	static bool testFilesEqual( const string& n1, const string& n2 );
+
 	virtual ~Storage();
 
 	// functions for interface
@@ -863,11 +866,13 @@ class Storage : public StorageInterface
 	string testdir;
 	string tempdir;
 	string rootprefix;
+	string logdir;
 	static string proc_arch;
 	CCont cont;
 	EtcFstab *fstab;
 	CallbackProgressBar progress_bar_cb;
 	CallbackShowInstallInfo install_info_cb;
+	unsigned max_log_num;
     };
 
 Storage::SkipDeleted Storage::SkipDel;
