@@ -7,7 +7,7 @@
 
 Md::Md( const Container& d, unsigned PNr, MdType Type ) : Volume( d, PNr )
     {
-    y2milestone( "constructed md %s on disk %s", dev.c_str(),
+    y2milestone( "constructed md %s on container %s", dev.c_str(),
                  cont->Name().c_str() );
     md_type = Type;
     if( d.Type() != Container::MD )

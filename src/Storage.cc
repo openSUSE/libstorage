@@ -82,6 +82,7 @@ Storage::AutodetectDisks()
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
     Disks.push_back( new Container( "md", Container::MD ) );
+    Disks.push_back( new Container( "loop", Container::LOOP ) );
     }
 
 int 

@@ -7,6 +7,7 @@
 #include "y2storage/Container.h"
 #include "y2storage/Disk.h"
 #include "y2storage/Md.h"
+#include "y2storage/Loop.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
@@ -409,6 +410,66 @@ class Storage
 	    ConstVolInter e( ContPair( IsMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( ConstMdI<Pred>::type( ConstMdPI<Pred>::type(pair, p, true )) );
+	    }
+
+// iterators over file based loop devices
+    protected:
+	// protected typedefs for iterators over file based loop devices
+	typedef CastIterator<ConstVolInter, Loop *> ConstLoopInter;
+	template< class Pred > 
+	    struct ConstLoopPI { typedef ContainerIter<Pred, 
+	                                             ConstLoopInter> type; };
+	typedef CheckFnc<const Loop> CheckFncLoop;
+	typedef CheckerIterator< CheckFncLoop, ConstLoopPI<CheckFncLoop>::type,
+	                         ConstLoopInter, Loop > ConstLoopPIterator;
+    public:
+	// public typedefs for iterators over file based loop devices
+	template< class Pred > 
+	    struct ConstLoopI 
+		{ typedef ContainerDerIter<Pred, typename ConstLoopPI<Pred>::type,
+		                           const Loop> type; };
+	template< class Pred >
+	    struct LoopCondIPair 
+		{ typedef MakeCondIterPair<Pred, typename ConstLoopI<Pred>::type> type;};
+	typedef DerefIterator<ConstLoopPIterator, const Loop> ConstLoopIterator;
+	typedef IterPair<ConstLoopIterator> ConstLoopPair;
+
+	// public member functions for iterators over file based loop devices
+	ConstLoopPair LoopPair( bool (* CheckLoop)( const Loop& )=NULL ) const
+	    { 
+	    return( ConstLoopPair( LoopBegin( CheckLoop ), LoopEnd( CheckLoop ) ));
+	    }
+	ConstLoopIterator LoopBegin( bool (* CheckLoop)( const Loop& )=NULL ) const
+	    {
+	    ConstVolInter b( ContPair( IsLoop ) );
+	    ConstVolInter e( ContPair( IsLoop ), true );
+	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
+	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop )));
+	    }
+	ConstLoopIterator LoopEnd( bool (* CheckLoop)( const Loop& )=NULL ) const
+	    { 
+	    ConstVolInter b( ContPair( IsLoop ) );
+	    ConstVolInter e( ContPair( IsLoop ), true );
+	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
+	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop, true )));
+	    }
+	template< class Pred > typename LoopCondIPair<Pred>::type LoopCondPair( const Pred& p ) const
+	    {
+	    return( LoopCondIPair<Pred>::type( LoopCondBegin( p ), LoopCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstLoopI<Pred>::type LoopCondBegin( const Pred& p ) const
+	    {
+	    ConstVolInter b( ContPair( IsLoop ) );
+	    ConstVolInter e( ContPair( IsLoop ), true );
+	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
+	    return( ConstLoopI<Pred>::type( ConstLoopPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstLoopI<Pred>::type LoopCondEnd( const Pred& p ) const
+	    {
+	    ConstVolInter b( ContPair( IsLoop ) );
+	    ConstVolInter e( ContPair( IsLoop ), true );
+	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
+	    return( ConstLoopI<Pred>::type( ConstLoopPI<Pred>::type(pair, p, true )) );
 	    }
 
     protected:
