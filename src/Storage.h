@@ -5,6 +5,7 @@
 #include <list>
 
 #include "y2storage/Container.h"
+#include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
 #include "y2storage/ListListIterator.h"
@@ -78,28 +79,8 @@ class Storage
 		ContIter( const _bclass& i ) : _bclass(i) {};
 	    };
 
-
-	class CheckFncCont
-	    {
-	    public:
-		CheckFncCont( bool (* CheckFnc)( const Container& )=NULL ) : 
-		    m_check(CheckFnc) {};
-		bool operator()(const Container& d) const
-		    { return(m_check==NULL || (*m_check)(d)); };
-	    private:
-		bool (* m_check)( const Container& d );
-	    };
-
-	class CheckFncVol
-	    {
-	    public:
-		CheckFncVol( bool (* CheckFnc)( const Volume& )=NULL ) : 
-		    m_check(CheckFnc) {};
-		bool operator()(const Volume& d) const
-		    { return(m_check==NULL || (*m_check)(d)); };
-	    private:
-		bool (* m_check)( const Volume& d );
-	    };
+	typedef CheckFnc<const Container> CheckFncCont;
+	typedef CheckFnc<const Volume> CheckFncVol;
 
     public:
 	class ConstContIteratorP : public CheckFncCont, public ConstContPIter<CheckFncCont>

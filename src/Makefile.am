@@ -27,7 +27,7 @@ pkgincludedir = $(includedir)/y2storage
 pkginclude_HEADERS =                                                    \
         Storage.h Container.h Volume.h Disk.h Partition.h \
 	FilterIterator.h ListListIterator.h DerefIterator.h \
-	IterPair.h
+	IterPair.h StorageTmpl.h
 
 #<INSTALL-HEADER-TARGET>
 

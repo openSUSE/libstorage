@@ -6,6 +6,7 @@
 using namespace std;
 
 #include "y2storage/Volume.h"
+#include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
 #include "y2storage/IterPair.h"
@@ -69,16 +70,7 @@ class Container
 		VolIter( const _bclass& i ) : _bclass(i) {};
 	    };
 
-	class CheckFncVol
-	    {
-	    public:
-		CheckFncVol( bool (* CheckFnc)( const Volume& )=NULL ) :
-		    m_check(CheckFnc) {}
-		bool operator()(const Volume& d) const
-		    { return(m_check==NULL || (*m_check)(d)); }
-	    private:
-		bool (* m_check)( const Volume& d );
-	    };
+	typedef CheckFnc<const Volume> CheckFncVol;
 
 	class ConstVolPIterator : public CheckFncVol, public ConstVolPIter<CheckFncVol>
 	    {
