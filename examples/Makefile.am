@@ -22,7 +22,7 @@ TestProbing_SOURCES = TestProbing.cc
 
 exampledir = $(docdir)/examples/liby2storage
 
-example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc
+example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc TestProbing.cc
 
 EXTRA_DIST = $(example_DATA) Makefile.example
 
