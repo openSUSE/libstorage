@@ -11,6 +11,7 @@
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
 #include <linux/fs.h>          /* for BLKGETSIZE64 */
 
+#include "y2storage/Region.h"
 #include "y2storage/Partition.h"
 #include "y2storage/ProcPart.h"
 #include "y2storage/Disk.h"
@@ -241,11 +242,12 @@ bool Disk::detectPartitions()
 	    dlabel = "aix";
 	    }
 	}
+    detected_label = dlabel;
     if( dlabel.size()==0 )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
-    y2milestone( "ret:%d partitons:%d label:%s", ret, vols.size(),
-                 dlabel.c_str() );
+    y2milestone( "ret:%d partitons:%d detected label:%s label:%s", ret, 
+                 vols.size(), detected_label.c_str(), label.c_str() );
     return( ret );
     }
 
@@ -567,7 +569,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 			    type = EXTENDED;
 			    id = Partition::ID_EXTENDED;
 			    }
-			if( pr.second>max_primary )
+			if( (unsigned)pr.second>max_primary )
 			    {
 			    type = LOGICAL;
 			    }
@@ -754,4 +756,99 @@ pair<string,long> Disk::getDiskPartition( const string& dev )
 	disk = dev.substr( 0, p-(need_p?1:0));
 	}
     return( make_pair<string,long>(disk,nr) );
+    }
+
+static bool isExtended( const Partition& p )
+    {
+    return( Volume::notDeleted(p) && p.type()==EXTENDED );
+    }
+
+bool Disk::hasExtended()
+    {
+    return( ext_possible && !partPair(isExtended).empty() );
+    }
+
+
+int Disk::availablePartNumber( PartitionType type )
+    {
+    y2milestone( "name:%s type %d", name().c_str(), type );
+    int ret = 0;
+    PartPPair p = partPair( notDeleted );
+    if( !ext_possible && type==LOGICAL )
+	{
+	ret = 0;
+	}
+    else if( p.empty() )
+	{
+	ret = type==LOGICAL ? (max_primary+1) : 1;
+	}
+    else if( type==LOGICAL )
+	{
+	ret = (*(--p.end()))->nr()+1;
+	}
+    else
+	{
+	PartPIter i=p.begin();
+	unsigned start = 1;
+	while( i!=p.end() && (*i)->nr()==start && (*i)->nr()<=max_primary )
+	    {
+	    i++;
+	    start++;
+	    }
+	if( i!=p.end() && (*i)->nr()<=max_primary )
+	    ret = start;
+	if( type==EXTENDED && (!ext_possible || hasExtended()))
+	    ret = 0;
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::createPartition( PartitionType type, unsigned long start,
+                           unsigned long len, unsigned& number )
+    {
+    y2milestone( "type %d at %ld len %ld", type, start, len );
+    int ret = 0;
+    Region r( start, len );
+    if( r.end() > cylinders() )
+	{
+	y2milestone( "too large for disk cylinders %lu", cylinders() );
+	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
+	}
+    if( ret==0 )
+	{
+	PartPPair p = partPair( notDeleted );
+	PartPIter i = p.begin();
+	while( i!=p.end() && !(*i)->intersectArea( r ))
+	    {
+	    i++;
+	    }
+	if( i!=p.end() )
+	    {
+	    y2milestone( "overlaps with %s at %lu len %lu", 
+			 (*i)->name().c_str(), (*i)->cylStart(), 
+			 (*i)->cylSize() );
+	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
+	    }
+	}
+    if( ret==0 && type==EXTENDED )
+	{
+	if( !ext_possible || hasExtended())
+	    {
+	    ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE 
+	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
+	    }
+	}
+    if( ret==0 && type==EXTENDED )
+	{
+	number = availablePartNumber( type );
+	if( number==0 )
+	    {
+	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
+	    }
+	}
+    if( ret==0 )
+	{
+	}
+    return( ret );
     }

@@ -31,8 +31,8 @@ liby2storage_la_SOURCES =			\
 	  ProcPart.cc    ProcPart.h 	     \
 	AppUtil.cc       AppUtil.h           \
 	FilterIterator.h ListListIterator.h  \
-	DerefIterator.h                      \
-	IterPair.h
+	DerefIterator.h  IterPair.h          \
+	Region.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
 liby2storage_la_LIBADD = -ly2util
@@ -46,7 +46,7 @@ pkginclude_HEADERS =							\
 	Partition.h Md.h Loop.h LvmVg.h LvmLv.h \
 	Evms.h EvmsVol.h \
 	FilterIterator.h ListListIterator.h DerefIterator.h \
-	IterPair.h StorageTmpl.h
+	IterPair.h StorageTmpl.h Region.h
 
 #<INSTALL-HEADER-TARGET>
 
