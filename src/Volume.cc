@@ -492,9 +492,9 @@ int Volume::doMount()
     string lmount = cont->getStorage()->root()+mp;
     y2milestone( "device:%s mp:%s old mp:%s",  dev.c_str(), mp.c_str(),
                  orig_mp.c_str() );
-    if( !silent && cont->getStorage()->getCallbackShowInstallInfo() )
+    if( !silent )
 	{
-	(*cont->getStorage()->getCallbackShowInstallInfo())( mountText(true) );
+	cont->getStorage()->showInfoCb( mountText(true) );
 	}
     if( orig_mp.size()>0 )
 	{

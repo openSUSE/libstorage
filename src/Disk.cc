@@ -1075,9 +1075,9 @@ int Disk::doCreateLabel()
     {
     y2milestone( "label:%s", label.c_str() );
     int ret = 0;
-    if( !silent && getStorage()->getCallbackShowInstallInfo() )
+    if( !silent )
 	{
-	(*getStorage()->getCallbackShowInstallInfo())( setDiskLabelText(true) );
+	getStorage()->showInfoCb( setDiskLabelText(true) );
 	}
     VolPair p = volPair();
     if( !p.empty() )
@@ -1126,9 +1126,9 @@ int Disk::doSetType( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	if( !silent )
 	    {
-	    (*getStorage()->getCallbackShowInstallInfo())( p->setTypeText(true) );
+	    getStorage()->showInfoCb( p->setTypeText(true) );
 	    }
 	system_stderr.erase();
 	std::ostringstream cmd_line;
@@ -1202,9 +1202,9 @@ int Disk::doCreate( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	if( !silent )
 	    {
-	    (*getStorage()->getCallbackShowInstallInfo())( p->createText(true) );
+	    getStorage()->showInfoCb( p->createText(true) );
 	    }
 	system_stderr.erase();
 	y2milestone( "doCreate container %s name %s", name().c_str(),
@@ -1315,9 +1315,9 @@ int Disk::doRemove( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	if( !silent )
 	    {
-	    (*getStorage()->getCallbackShowInstallInfo())( p->removeText(true) );
+	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
 	system_stderr.erase();
 	y2milestone( "doRemove container %s name %s", name().c_str(),

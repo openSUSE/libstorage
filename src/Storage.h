@@ -62,6 +62,7 @@ class Storage : public StorageInterface
 	bool instsys() const { return( inst_sys ); }
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool isCacheChanges() const { return( cache ); }
+	void assertInit() { if( !initialized ) initialize(); }
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
@@ -97,6 +98,8 @@ class Storage : public StorageInterface
 	void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc )
 	    { install_info_cb=pfnc; }
 	CallbackShowInstallInfo getCallbackShowInstallInfo() { return install_info_cb; }
+	void progressBarCb( const string& id, unsigned cur, unsigned max );
+	void showInfoCb( const string& info );
 
 // iterators over container
     protected:
@@ -825,6 +828,7 @@ class Storage : public StorageInterface
 
     protected:
 	// protected internal member functions
+	void initialize();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	static void detectArch();
@@ -832,19 +836,14 @@ class Storage : public StorageInterface
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
-	void callProgressBarCb( const string& id, unsigned cur, unsigned max )
-	    { 
-	    if( progress_bar_cb )
-	        (*progress_bar_cb)(id, cur, max );
-	    }
-	static void defaultProgressBarCb( const string& id, unsigned cur, unsigned max );
-	static void defaultShowInfoCb( const string& info );
 
 	// protected internal member variables
 	bool readonly;
 	bool testmode;
 	bool inst_sys;
 	bool cache;
+	bool initialized;
+	bool autodetect;
 	string testdir;
 	string rootprefix;
 	static string proc_arch;

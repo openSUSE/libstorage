@@ -22,8 +22,8 @@ bool TestCG30( const Partition& d )
     { return(d.cylSize()>30); };
 
 
-Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
-    readonly(ronly), testmode(tmode)
+Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
+    readonly(ronly), testmode(tmode), initialized(false), autodetect(autodetec)
     {
     y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
                  ronly, testmode, autodetect );
@@ -31,6 +31,16 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     if( !testmode )
 	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
+    y2milestone( "instsys:%d testmode:%d autodetect:%d", inst_sys, testmode,
+                 autodetect );
+    progress_bar_cb = NULL;
+    install_info_cb = NULL;
+    }
+
+void
+Storage::initialize()
+    {
+    initialized = true;
     if( autodetect && !testmode )
 	{
 	detectArch();
@@ -38,7 +48,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	}
     if( testmode )
 	{
-	tenv = getenv( "YAST2_STORAGE_TDIR" );
+	char * tenv = getenv( "YAST2_STORAGE_TDIR" );
 	if( tenv!=NULL && strlen(tenv)>0 )
 	    {
 	    testdir = tenv;
@@ -67,8 +77,6 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	detectFsData( vBegin(), vEnd() );
 	}
     setCacheChanges( true );
-    setCallbackProgressBar( defaultProgressBarCb );
-    setCallbackShowInstallInfo( defaultShowInfoCb );
     }
 
 Storage::~Storage()
@@ -187,6 +195,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 			  unsigned long size, string& device )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "disk:%s type:%d start:%ld size:%ld", disk.c_str(),
                  type, start, size );
     DiskIterator i = findDisk( disk );
@@ -212,6 +221,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 			    unsigned long long sizeK, string& device )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "disk:%s type:%d start:%lld sizeK:%lld", disk.c_str(),
                  type, start, sizeK );
     DiskIterator i = findDisk( disk );
@@ -238,6 +248,7 @@ unsigned long long
 Storage::cylinderToKb( const string& disk, unsigned long size )
     {
     unsigned long long ret = 0;
+    assertInit();
     y2milestone( "disk:%s size:%ld", disk.c_str(), size );
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
@@ -252,6 +263,7 @@ unsigned long
 Storage::kbToCylinder( const string& disk, unsigned long long sizeK )
     {
     unsigned long ret = 0;
+    assertInit();
     y2milestone( "disk:%s sizeK:%lld", disk.c_str(), sizeK );
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
@@ -266,6 +278,7 @@ int
 Storage::removePartition( const string& partition )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "partition:%s", partition.c_str() );
     VolIterator vol;
     ContIterator cont;
@@ -297,6 +310,7 @@ int
 Storage::changePartitionId( const string& partition, unsigned id )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "partition:%s id:%x", partition.c_str(), id );
     VolIterator vol;
     ContIterator cont;
@@ -328,6 +342,7 @@ int
 Storage::destroyPartitionTable( const string& disk, const string& label )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "disk:%s", disk.c_str() );
     DiskIterator i = findDisk( disk );
 
@@ -357,6 +372,7 @@ int
 Storage::changeFormatVolume( string device, bool format, FsType fs )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "device:%s format:%d type:%s", device.c_str(), format, 
                  Volume::fsTypeString(fs).c_str() );
     VolIterator vol;
@@ -381,6 +397,7 @@ int
 Storage::changeMountPoint( string device, string mount )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "device:%s mount:%s", device.c_str(), mount.c_str() );
     VolIterator vol;
     ContIterator cont;
@@ -404,6 +421,7 @@ int
 Storage::changeFstabOptions( string device, string options )
     {
     int ret = 0;
+    assertInit();
     y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
     VolIterator vol;
     ContIterator cont;
@@ -433,6 +451,7 @@ int Storage::checkCache()
 
 int Storage::commit()
     {
+    assertInit();
     struct tmp
 	{ static bool TestHdb( const Container& c )
 	    {
@@ -448,10 +467,13 @@ int Storage::commit()
 	Container::CommitStage* pt = a;
 	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
 	    {
-	    int t = p.begin()->commitChanges( *pt );
-	    y2milestone( "%d ret %d", *pt, ret );
-	    if( ret==0 && t!=0 )
-		ret = t;
+	    ContIterator i = p.begin();
+	    while( ret==0 && i != p.end() )
+		{
+		ret = i->commitChanges( *pt );
+		y2milestone( "stage %d ret %d", *pt, ret );
+		++i;
+		}
 	    pt++;
 	    }
 	}
@@ -464,6 +486,7 @@ bool
 Storage::getDisks (list<string>& disks)
 {
     disks.clear ();
+    assertInit();
 
     for (ConstDiskIterator i = diskBegin(); i != diskEnd(); ++i)
 	disks.push_back (i->name());
@@ -476,6 +499,7 @@ bool
 Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
+    assertInit();
     DiskIterator i = findDisk( disk );
 
     if( i != dEnd() )
@@ -489,54 +513,11 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
     return( i != dEnd() );
 }
 
-bool Storage::findVolume( const string& device, ContIterator& c,
-                          VolIterator& v )
-    {
-    bool ret = false;
-    VPair p = vPair( Volume::notDeleted );
-    v = p.begin();
-    while( v!=p.end() && v->device()!=device )
-	{
-	++v;
-	}
-    if( v!=p.end() )
-	{
-	const Container *co = v->getContainer();
-	CPair cp = cPair();
-	c = cp.begin();
-	while( c!=cp.end() && &(*c)!=co )
-	    ++c;
-	ret = c!=cp.end();
-	}
-    y2milestone( "device:%s ret:%d c->device:%s v->device:%s", device.c_str(),
-                 ret, ret?c->device().c_str():"nil",
-		 ret?v->device().c_str():"nil" );
-    return( ret );
-    }
-
-void Storage::defaultProgressBarCb( const string& id, unsigned cur, unsigned max )
-    {
-    y2milestone( "id:%s cur:%d max:%d", id.c_str(), cur, max );
-    }
-
-void Storage::defaultShowInfoCb( const string& info )
-    {
-    y2milestone( "INSTALL INFO:%s", info.c_str() );
-    }
-
-Storage::DiskIterator Storage::findDisk( const string& disk )
-    {
-    DiskIterator ret=dBegin();
-    while( ret != dEnd() && ret->device()!=disk )
-	++ret;
-    return( ret );
-    }
-
-
 bool
 Storage::getPartitions (list<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
+    assertInit();
 
     ConstPartPair p = partPair(Partition::notDeleted);
     for (ConstPartIterator i = p.begin(); i != p.end(); ++i)
@@ -615,3 +596,54 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	    return false;
     }
 }
+
+bool Storage::findVolume( const string& device, ContIterator& c,
+                          VolIterator& v )
+    {
+    bool ret = false;
+    assertInit();
+    VPair p = vPair( Volume::notDeleted );
+    v = p.begin();
+    while( v!=p.end() && v->device()!=device )
+	{
+	++v;
+	}
+    if( v!=p.end() )
+	{
+	const Container *co = v->getContainer();
+	CPair cp = cPair();
+	c = cp.begin();
+	while( c!=cp.end() && &(*c)!=co )
+	    ++c;
+	ret = c!=cp.end();
+	}
+    y2milestone( "device:%s ret:%d c->device:%s v->device:%s", device.c_str(),
+                 ret, ret?c->device().c_str():"nil",
+		 ret?v->device().c_str():"nil" );
+    return( ret );
+    }
+
+void Storage::progressBarCb( const string& id, unsigned cur, unsigned max )
+    {
+    y2milestone( "id:%s cur:%d max:%d", id.c_str(), cur, max );
+    if( progress_bar_cb )
+	(*progress_bar_cb)( id, cur, max );
+    }
+
+void Storage::showInfoCb( const string& info )
+    {
+    y2milestone( "INSTALL INFO:%s", info.c_str() );
+    if( install_info_cb )
+	(*install_info_cb)( info );
+    }
+
+Storage::DiskIterator Storage::findDisk( const string& disk )
+    {
+    assertInit();
+    DiskIterator ret=dBegin();
+    while( ret != dEnd() && ret->device()!=disk )
+	++ret;
+    return( ret );
+    }
+
+
