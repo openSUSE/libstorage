@@ -25,6 +25,10 @@ void timeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
 void createPath(string Path_Cv);
 
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
+list<string> splitString( const string& s, const string& delChars=" \t\n",
+                          bool multipleDelim=true, bool skipEmpty=true );
+map<string,string> makeMap( const list<string>& l, const string& delim = "=",
+			    const string& removeSur = " \t\n" );
 void removeLastIf(string& Text_Cr, char Char_cv);
 bool runningFromSystem();
 
@@ -61,6 +65,11 @@ template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
 	}
     cout << ">";
     return( s );
+    }
+
+template<class F, class S> ostream& operator<<( ostream& s, const pair<F,S>& p )
+    {
+    s << "[" << p.first << ":" << p.second << "]";
     }
 
 template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,Value>& m )

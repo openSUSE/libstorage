@@ -223,6 +223,66 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   return Ret_Ci;
   }
 
+list<string> splitString( const string& s, const string& delChars, 
+		          bool multipleDelim, bool skipEmpty )
+    {
+    string::size_type pos;
+    string::size_type cur = 0;
+    list<string> ret;
+
+    while( cur<s.size() && (pos=s.find_first_of(delChars,cur))!=string::npos )
+	{
+	if( pos==cur )
+	    {
+	    if( !skipEmpty )
+		ret.push_back( "" );
+	    }
+	else
+	    ret.push_back( s.substr( cur, pos-cur ));
+	if( multipleDelim )
+	    {
+	    cur = s.find_first_not_of(delChars,pos);
+	    }
+	else
+	    cur = pos+1;
+	}
+    if( cur<s.size() )
+	ret.push_back( s.substr( cur ));
+    if( !skipEmpty && s.size()>0 && s.find_last_of(delChars)==s.size()-1 )
+	ret.push_back( "" );
+    return( ret );
+    }
+
+map<string,string> 
+makeMap( const list<string>& l, const string& delim, const string& removeSur )
+    {
+    map<string,string> ret;
+    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	{
+	string k, v;
+	string::size_type pos;
+	if( (pos=i->find_first_of( delim ))!=string::npos )
+	    {
+	    k = i->substr( 0, pos );
+	    v = i->substr( i->find_first_not_of( delim, pos+1 ) );
+	    }
+	if( removeSur.size()>0 )
+	    {
+	    if( (pos=k.find_first_of(removeSur)) != string::npos )
+		k.erase( 0, k.find_first_not_of(removeSur) );
+	    if( k.size()>0 && (pos=k.find_last_of(removeSur))==k.size()-1 )
+		k.erase( k.find_last_not_of(removeSur)+1 );
+	    if( (pos=v.find_first_of(removeSur)) != string::npos )
+		v.erase( 0, v.find_first_not_of(removeSur) );
+	    if( v.size()>0 && (pos=v.find_last_of(removeSur))==v.size()-1 )
+		v.erase( v.find_last_not_of(removeSur)+1 );
+	    }
+	ret[k] = v;
+	}
+    return( ret );
+    }
+
+
 void putNthWord(int Num_iv, string Word_Cv, string& Line_Cr)
 {
   string Last_Ci = extractNthWord(Num_iv, Line_Cr, true);
