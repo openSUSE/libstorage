@@ -58,10 +58,9 @@ Storage::initialize()
 	}
     else
 	tempdir = tbuf;
-    if( autodetect && !testmode )
+    if( autodetect )
 	{
 	detectArch();
-	autodetectDisks();
 	}
     if( testmode )
 	{
@@ -77,22 +76,11 @@ Storage::initialize()
 	}
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
 
+    detectDisks();
+    detectLvmVgs();
+
     if( testmode )
         {
-	glob_t globbuf;
-
-	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	    {
-	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList( new Disk( this, *p ) );
-	    }
- 	globfree (&globbuf);
-	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	    {
-	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList( new LvmVg( this, *p, true ) );
-	    }
-	globfree (&globbuf);
  	system_cmd_testmode = true;
  	rootprefix = testdir;
  	fstab = new EtcFstab( rootprefix );
@@ -158,6 +146,54 @@ Storage::detectArch()
 	    }
 	}
     y2milestone( "Arch:%s", proc_arch.c_str() );
+    }
+
+void 
+Storage::detectDisks()
+    {
+    if( test() )
+	{
+	glob_t globbuf;
+
+	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, 
+	          &globbuf) == 0)
+	    {
+	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+		addToList( new Disk( this, *p ) );
+	    }
+ 	globfree (&globbuf);
+	}
+    else if( autodetect )
+	{
+	autodetectDisks();
+	}
+    }
+
+void 
+Storage::detectLvmVgs()
+    {
+    if( test() )
+	{
+	glob_t globbuf;
+	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, 
+	          &globbuf) == 0)
+	    {
+	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+		addToList( new LvmVg( this, *p, true ) );
+	    }
+ 	globfree (&globbuf);
+	}
+    else
+	{
+	list<string> l;
+	if( instsys() )
+	    LvmVg::activate( true );
+	LvmVg::getVgs( l );
+	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    addToList( new Disk( this, *i ) );
+	if( instsys() )
+	    LvmVg::activate( false );
+	}
     }
 
 void
@@ -831,12 +867,7 @@ list<string> Storage::getCommitActions( bool mark_destructive )
 int Storage::commit()
     {
     assertInit();
-    struct tmp
-	{ static bool TestHdb( const Container& c )
-	    {
-	    y2milestone( "name:%s", c.name().c_str() );
-	    return( c.name().find("hdb")!=string::npos ); }};
-    CPair p = cPair( tmp::TestHdb );
+    CPair p = cPair();
     int ret = 0;
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )

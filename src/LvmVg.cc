@@ -1,54 +1,71 @@
 #include <iostream> 
+#include <sstream> 
 
 #include <ycp/y2log.h>
 
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
+#include "y2storage/SystemCmd.h"
+#include "y2storage/AppUtil.h"
 
 LvmVg::LvmVg( Storage * const s, const string& Name ) :
     Container(s,Name,staticType())
     {
-    if( nm == "system" )
-	{
-	pe_size = 4*1024*1024;
-	num_pv = 1;
-	addToList( new LvmLv( *this, "usr" ));
-	addToList( new LvmLv( *this, "var" ));
-	addToList( new LvmLv( *this, "scratch" ));
-	}
-    else if( nm == "vg1" )
-	{
-	pe_size = 16*1024*1024;
-	num_pv = 10;
-	addToList( new LvmLv( *this, "lv1" ));
-	addToList( new LvmLv( *this, "lv2", 2 ));
-	addToList( new LvmLv( *this, "lv3", 3 ));
-	addToList( new LvmLv( *this, "lv4", 4 ));
-	addToList( new LvmLv( *this, "lv5", 5 ));
-	addToList( new LvmLv( *this, "lv6", 6 ));
-	}
-    else if( nm == "vg2" )
-	{
-	num_pv = 5;
-	pe_size = 256*1024*1024;
-	addToList( new LvmLv( *this, "lv_va2", 2 ));
-	}
-    else
-	{
-	num_pv = 1;
-	pe_size = 4*1024*1024;
-	}
     y2milestone( "constructed lvm vg %s", dev.c_str() );
     }
 
 LvmVg::LvmVg( Storage * const s, const string& file, bool ) :
     Container(s,"",staticType())
     {
+    y2milestone( "constructed lvm vg %s from file %s", dev.c_str(), 
+                 file.c_str() );
     }
 
 LvmVg::~LvmVg()
     {
     y2milestone( "destructed lvm vg %s", dev.c_str() );
+    }
+
+void LvmVg::activate( bool val )
+    {
+    if( active!=val )
+	{
+	SystemCmd c;
+	if( active )
+	    {
+	    c.execute( "vgscan --mknodes" );
+	    c.execute( "vgchange -a y" );
+	    }
+	else
+	    {
+	    c.execute( "vgchange -a n" );
+	    }
+	active = val;
+	}
+    }
+
+void LvmVg::getVgs( list<string>& l )
+    {
+    l.clear();
+    string vgname;
+    string::size_type pos;
+    SystemCmd c( "vgdisplay -s" );
+    if( !active && c.numLines()>0 )
+	active = true;
+    for( int i=0; i<c.numLines(); ++i )
+	{
+	vgname = *c.getLine(i);
+	pos=vgname.find_first_not_of( " \t\n\"" );
+	if( pos>0 )
+	    vgname.erase( 0, pos );
+	pos=vgname.find_first_of( " \t\n\"" );
+	if( pos>0 )
+	    vgname.erase( pos );
+	l.push_back(vgname);
+	}
+    std::ostringstream buf;
+    buf << l;
+    y2milestone( "detecte Vgs %s", buf.str().c_str() );
     }
 
 int LvmVg::doCreate( Volume* v ) { return( 0 ); }
@@ -72,4 +89,6 @@ LvmVg::checkResize( Volume* v, unsigned long long newSizeK ) const
     }
 
 void LvmVg::logData( const string& Dir ) {;}
+
+bool LvmVg::active = false;
 

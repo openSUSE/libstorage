@@ -27,8 +27,9 @@ class LvmVg : public Container
 	int reduceVg( const string& device );
 	int commitChanges( CommitStage stage );
 	int checkResize( Volume* v, unsigned long long newSize ) const;
+	static void activate( bool val=true );
+	static void getVgs( list<string>& l );
 	
-
     protected:
 	LvmVg( Storage * const s, const string& File, bool );
 	unsigned long long capacityInKb() const;
@@ -42,6 +43,7 @@ class LvmVg : public Container
 
 	unsigned long long pe_size;
 	unsigned num_pv;
+	static bool active;
     };
 
 inline ostream& operator<< (ostream& s, const LvmVg& d )

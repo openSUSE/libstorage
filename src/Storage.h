@@ -844,6 +844,8 @@ class Storage : public StorageInterface
     protected:
 	// protected internal member functions
 	void initialize();
+	void detectDisks();
+	void detectLvmVgs();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	void detectFsDataTestMode( const string& file, 
