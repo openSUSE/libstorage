@@ -5,6 +5,11 @@
 AM_CXXFLAGS = -DY2LOG=\"y2storage\"
 INCLUDES = -I$(includedir) -I/usr/include/evms
 
+y2storage:
+	ln -sf . y2storage
+
+Makefile: y2storage
+
 lib_LTLIBRARIES = liby2storage.la
 
 liby2storage_la_SOURCES =		     \
