@@ -38,14 +38,15 @@ int Container::commitChanges( CommitStage stage )
 	case DECREASE:
 	    {
 	    VolPair p = volPair( toDelete );
-	    if( !p.empty() )
+	    if( !deleted() && !p.empty() )
 		{
 		VolIterator i=p.end();
-		i--;
+		--i;
 		do
 		    {
 		    VolIterator save = i;
-		    --i;
+		    if( i!=p.begin() )
+			--i;
 		    ret = doRemove( &(*save) );
 		    }
 		while( ret==0 && i!=p.begin() );

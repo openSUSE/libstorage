@@ -71,6 +71,7 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	{
 	extractNthWord( 1, line ) >> sector;
 	}
+    byte_cyl = head * sector * 512;
     if( searchFile( file, "^Label:", line ) )
 	{
 	label = extractNthWord( 1, line );
@@ -341,7 +342,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     }
 
 int
-Disk::execCheck( const string& cmd_line )
+Disk::execCheckFailed( const string& cmd_line )
     {
     static SystemCmd cmd;
     int ret = 0;
@@ -884,7 +885,7 @@ int Disk::removePartition( unsigned nr )
     PartIter i = p.begin();
     while( i!=p.end() && i->nr()!=nr)
 	{
-	    ++i;
+	++i;
 	}
     if( i==p.end() )
 	{
@@ -1008,12 +1009,13 @@ int Disk::doCreateLabel( const string& label_name )
     system_stderr.erase();
     std::ostringstream cmd_line;
     cmd_line << PARTEDCMD << device() << " mklabel " << label_name;
-    if( !execCheck( cmd_line.str() ) )
+    if( execCheckFailed( cmd_line.str() ) )
 	{
 	ret = DISK_SET_LABEL_PARTED_FAILED;
 	}
     else
 	{
+	setDeleted(false);
 	VIter i = vols.begin();
 	while( i!=vols.end() )
 	    {
@@ -1043,7 +1045,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line << " type " << p->id();
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
@@ -1052,7 +1054,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line << " lvm " << (p->id()==Partition::ID_LVM)?"on":"off";
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
@@ -1061,7 +1063,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line << " raid " << (p->id()==Partition::ID_RAID)?"on":"off";
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
@@ -1070,7 +1072,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line << " swap " << (p->id()==Partition::ID_SWAP)?"on":"off";
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
@@ -1079,7 +1081,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line << " boot " << (p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off";
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
@@ -1161,7 +1163,7 @@ int Disk::doCreate( Volume* v )
 		     << std::setiosflags(std::ios_base::fixed)
 		     << (double)(p->cylStart()+p->cylSize()-1)*cylinderToKb(1)/1024
 		     << " ";
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 		}
@@ -1193,7 +1195,7 @@ int Disk::doRemove( Volume* v )
 	    {
 	    std::ostringstream cmd_line;
 	    cmd_line << PARTEDCMD << device() << " rm " << p->OrigNr();
-	    if( !execCheck( cmd_line.str() ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
 		}
