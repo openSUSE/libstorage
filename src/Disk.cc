@@ -842,6 +842,10 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	y2milestone( "too large for disk cylinders %lu", cylinders() );
 	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
 	}
+    if( ret==0 && len==0 )
+	{
+	ret = DISK_CREATE_PARTITION_ZERO_SIZE;
+	}
     if( ret==0 && type==LOGICAL && ext.empty() )
 	{
 	ret = DISK_CREATE_PARTITION_LOGICAL_NO_EXT;
