@@ -10,10 +10,8 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,
 		      PartitionType Type, const string& PartedStart,
 		      unsigned Id, bool Boot )
-    : Volume( d, PNr, SizeK )
+    : Volume( d, PNr, SizeK ), reg( Start, CSize )
     {
-    cyl_start = Start;
-    cyl_size = CSize;
     bootflag = Boot;
     idt = Id;
     typ = Type;
@@ -27,7 +25,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
     {
     string ts, rs;
     istringstream i( Data );
-    i >> num >> dev >> size_k >> mjr >> mnr >> cyl_start >> cyl_size >>
+    i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
 	 hex >> idt >> dec >> ts >> rs;
     nm = decString(num);
     if( ts == "extended" )
@@ -44,11 +42,16 @@ Partition::Partition( const Disk& d, const string& Data ) :
                  cont->name().c_str() );
     }
 
+bool Partition::intersectArea( const Region& r ) const
+    {
+    return( r.intersect( reg ) );
+    }
+
 ostream& Partition::logData( ostream& file ) const
     {
     file << num << " " << dev << " " << size_k << " " <<  mjr << " "
          << mnr << " ";
-    file << cyl_start << " " << cyl_size << " " << hex << idt << dec;
+    file << reg.start() << " " << reg.len() << " " << hex << idt << dec;
     if( typ == LOGICAL )
 	file << " logical";
     else if( typ == EXTENDED )

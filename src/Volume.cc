@@ -9,7 +9,7 @@
 #include "y2storage/Container.h"
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
-    : cont(&d), dltd(false)
+    : cont(&d)
     {
     numeric = true;
     num = PNr;
@@ -36,7 +36,7 @@ Volume::~Volume()
 
 void Volume::init()
     {
-    dltd = false;
+    del = create = false;
     std::ostringstream Buf_Ci;
     if( numeric )
 	Buf_Ci << cont->device() << (Disk::needP(cont->device())?"p":"") << num;
@@ -59,7 +59,7 @@ bool Volume::operator== ( const Volume& rhs ) const
     {
     return( (*cont)==(*rhs.cont) && 
             nm == rhs.nm && 
-	    dltd == rhs.dltd ); 
+	    del == rhs.del ); 
     }
 
 bool Volume::operator< ( const Volume& rhs ) const
@@ -74,7 +74,7 @@ bool Volume::operator< ( const Volume& rhs ) const
 	    return( nm<rhs.nm );
 	}
     else
-	return( !dltd );
+	return( !del );
     }
 
 bool Volume::getMajorMinor( const string& device,

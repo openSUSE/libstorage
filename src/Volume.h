@@ -15,8 +15,10 @@ class Volume
 	virtual bool commitChanges() { return true; }
 
 	const string& device() const { return dev; }; 
-	bool deleted() const { return dltd; }
-	void setDeleted( bool val=true ) { dltd=val; }
+	bool deleted() const { return del; }
+	bool created() const { return create; }
+	void setDeleted( bool val=true ) { del=val; }
+	void setCreated( bool val=true ) { create=val; }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
 	const string& name() const { return nm; }
@@ -52,7 +54,8 @@ class Volume
 
 	const Container* const cont;
 	bool numeric;
-	bool dltd;
+	bool create;
+	bool del;
 	string nm;
 	unsigned num;
 	unsigned long long size_k;
@@ -71,8 +74,10 @@ inline ostream& operator<< (ostream& s, const Volume &v )
     s << " SizeK:" << v.size_k 
       << " Node <" << v.mjr
       << ":" << v.mnr << ">";
-    if( v.dltd )
+    if( v.del )
       s << " deleted";
+    if( v.create )
+      s << " created";
     return( s );
     }
 

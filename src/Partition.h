@@ -5,6 +5,7 @@ using namespace std;
 
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Volume.h"
+#include "y2storage/Region.h"
 
 using namespace storage;
 
@@ -26,8 +27,9 @@ class Partition : public Volume
 	Partition( const Disk& d, const string& Data );
 	virtual ~Partition();
 
-	unsigned cylStart() const { return cyl_start; }
-	unsigned cylSize() const { return cyl_size; }
+	unsigned long cylStart() const { return reg.start(); }
+	unsigned long cylSize() const { return reg.len(); }
+	bool intersectArea( const Region& r ) const;
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
 	PartitionType type() const { return typ; }
@@ -36,8 +38,7 @@ class Partition : public Volume
 	friend ostream& operator<< (ostream& s, const Partition &p );
 
     protected:
-	unsigned long cyl_start;
-	unsigned long cyl_size;
+	Region reg;
 	bool bootflag;
 	PartitionType typ;
 	unsigned idt;
@@ -49,8 +50,8 @@ class Partition : public Volume
 inline ostream& operator<< (ostream& s, const Partition &p )
     {
     s << "Partition " << Volume(p)
-      << " Start:" << p.cyl_start
-      << " CylNum:" << p.cyl_size
+      << " Start:" << p.reg.start()
+      << " CylNum:" << p.reg.len()
       << " Id:" << std::hex << p.idt << std::dec;
     if( p.typ!=PRIMARY )
       s << ((p.typ==LOGICAL)?" logical":" extended");

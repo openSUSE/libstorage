@@ -577,7 +577,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 		    Partition *p =
 			new Partition( *this, pr.second, s, cyl_start, cyl,
 			               type,
-				       decString(cylinderToKb(cyl_start)),
+				       decString(cylinderToKb(cyl_start-1)),
 				       id, false );
 		    pl.push_back( p );
 		    }
@@ -849,6 +849,9 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	}
     if( ret==0 )
 	{
+	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
+	                               len, type, 
+				       decString(cylinderToKb(start-1)) );
 	}
     return( ret );
     }
