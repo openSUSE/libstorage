@@ -68,7 +68,7 @@ Storage::initialize()
 	char * tenv = getenv( "YAST2_STORAGE_TDIR" );
 	if( tenv!=NULL && strlen(tenv)>0 )
 	    {
-	    testdir = tenv;
+	    logdir = testdir = tenv;
 	    }
 	else
 	    {
@@ -86,10 +86,10 @@ Storage::initialize()
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new Disk( this, *p ) );
 	    }
-	globfree (&globbuf);
-	system_cmd_testmode = true;
-	rootprefix = testdir;
-	fstab = new EtcFstab( rootprefix );
+ 	globfree (&globbuf);
+ 	system_cmd_testmode = true;
+ 	rootprefix = testdir;
+ 	fstab = new EtcFstab( rootprefix );
 	string t = testdir+"/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
 	    {
