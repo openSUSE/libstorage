@@ -14,6 +14,7 @@ liby2storage_la_SOURCES =		     \
 	Volume.cc        Volume.h            \
 	  Partition.cc   Partition.h         \
 	FilterIterator.h ListListIterator.h  \
+	DerefIterator.h                      \
 	IterPair.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
@@ -25,7 +26,7 @@ pkgincludedir = $(includedir)/y2storage
 
 pkginclude_HEADERS =                                                    \
         Storage.h Container.h Volume.h Disk.h Partition.h \
-	FilterIterator.h ListListIterator.h \
+	FilterIterator.h ListListIterator.h DerefIterator.h \
 	IterPair.h
 
 #<INSTALL-HEADER-TARGET>

@@ -6,6 +6,7 @@
 
 #include "y2storage/Container.h"
 #include "y2storage/FilterIterator.h"
+#include "y2storage/DerefIterator.h"
 #include "y2storage/ListListIterator.h"
 #include "y2storage/IterPair.h"
 
@@ -29,14 +30,22 @@ class Storage
 	int AddDisk( const string& Name );
 
 	template< class Pred > 
-	class ConstContIter : public FilterIterator< Pred, CCIter, const Container >
+	class ConstContPIter : public FilterIterator< Pred, CCIter >
 	    {
-	    typedef FilterIterator< Pred, CCIter, const Container > _bclass;
+	    typedef FilterIterator< Pred, CCIter > _bclass;
+	    public:
+		ConstContPIter() : _bclass() {};
+		ConstContPIter( const CCIter& b, const CCIter& e, const Pred& p,
+		                bool atend=false ) : 
+		    _bclass(b, e, p, atend ) {}
+	    };
+	template< class Pred > 
+	class ConstContIter : public DerefIterator<ConstContPIter<Pred>,const Container>
+	    {
+	    typedef DerefIterator<ConstContPIter<Pred>,const Container> _bclass;
 	    public:
 		ConstContIter() : _bclass() {};
-		ConstContIter( const CCIter& b, const CCIter& e, const Pred& p,
-		               bool atend=false ) : 
-		    _bclass(b, e, p, atend ) {}
+		ConstContIter( const _bclass& i ) : _bclass(i) {};
 	    };
 
 	template<class Pred> class ContCondIPair : 
@@ -51,14 +60,22 @@ class Storage
 
     protected:
 	template< class Pred > 
-	class ContIter : public FilterIterator< Pred, CIter, Container > 
+	class ContPIter : public FilterIterator< Pred, CIter > 
 	    {
-	    typedef FilterIterator< Pred, CIter, Container > _bclass;
+	    typedef FilterIterator< Pred, CIter > _bclass;
+	    public:
+		ContPIter() : _bclass() {};
+		ContPIter( const CIter& b, const CIter& e, const Pred& p, 
+		           bool atend=false ) : 
+		    _bclass(b, e, p, atend ) {}
+	    };
+	template< class Pred > 
+	class ContIter : public DerefIterator<ContPIter<Pred>,Container>
+	    {
+	    typedef DerefIterator<ContPIter<Pred>,Container> _bclass;
 	    public:
 		ContIter() : _bclass() {};
-		ContIter( const CIter& b, const CIter& e, const Pred& p, 
-		          bool atend=false ) : 
-		    _bclass(b, e, p, atend ) {}
+		ContIter( const _bclass& i ) : _bclass(i) {};
 	    };
 
 
@@ -85,29 +102,38 @@ class Storage
 	    };
 
     public:
-	class ConstContIterator : public CheckFncCont, public ConstContIter<CheckFncCont>
+	class ConstContIteratorP : public CheckFncCont, public ConstContPIter<CheckFncCont>
 	    {
 	    public: 
-		ConstContIterator() {};
-		ConstContIterator( const CCIter& b, const CCIter& e, 
-				   bool (* CheckFnc)( const Container& )=NULL,
-				   bool atend=false ) :
+		ConstContIteratorP() {};
+		ConstContIteratorP( const CCIter& b, const CCIter& e, 
+				    bool (* CheckFnc)( const Container& )=NULL,
+				    bool atend=false ) :
 		    CheckFncCont( CheckFnc ),
-		    ConstContIter<CheckFncCont>( b, e, *this, atend ) {};
+		    ConstContPIter<CheckFncCont>( b, e, *this, atend ) {};
 	    };
+	typedef DerefIterator<ConstContIteratorP,const Container> ConstContIterator;
 	typedef ListListIterator<Container::ConstPlainIterator, ConstContIterator> ConstVolPart;
 	template< class Pred > 
-	class ConstVolIter : public FilterIterator< Pred, ConstVolPart, const Volume >
+	class ConstVolPIter : public FilterIterator< Pred, ConstVolPart >
 	    {
-	    typedef FilterIterator< Pred, ConstVolPart, const Volume > _bclass;
+	    typedef FilterIterator< Pred, ConstVolPart > _bclass;
+	    public:
+		ConstVolPIter() : _bclass() {};
+		ConstVolPIter( const ConstVolPart& b, const ConstVolPart& e, 
+		               const Pred& p, bool atend=false ) : 
+		    _bclass(b, e, p, atend ) {}
+		ConstVolPIter( const IterPair<ConstVolPart>& pair, 
+		               const Pred& p, bool atend=false ) : 
+		    _bclass(pair, p, atend ) {}
+	    };
+	template< class Pred >
+	class ConstVolIter : public DerefIterator<ConstVolPIter<Pred>,const Volume>
+	    {
+	    typedef DerefIterator<ConstVolPIter<Pred>,const Volume> _bclass;
 	    public:
 		ConstVolIter() : _bclass() {};
-		ConstVolIter( const ConstVolPart& b, const ConstVolPart& e, const Pred& p,
-		              bool atend=false ) : 
-		    _bclass(b, e, p, atend ) {}
-		ConstVolIter( const IterPair<ConstVolPart>& pair, const Pred& p,
-		              bool atend=false ) : 
-		    _bclass(pair, p, atend ) {}
+		ConstVolIter( const _bclass& i ) : _bclass(i) {};
 	    };
 
 	template<class Pred> class VolCondIPair : public IterPair<ConstVolIter<Pred> >
@@ -119,39 +145,41 @@ class Storage
 		    _bclass( b, e ) {}
 	    };
 
-	class ConstVolIterator : public CheckFncVol, public ConstVolIter<CheckFncVol>
+	class ConstVolPIterator : public CheckFncVol, public ConstVolPIter<CheckFncVol>
 	    {
 	    public: 
-		ConstVolIterator() {};
-		ConstVolIterator( const ConstVolPart& b, const ConstVolPart& e, 
-				  bool (* CheckFnc)( const Volume& )=NULL,
-				  bool atend=false ) :
+		ConstVolPIterator() {};
+		ConstVolPIterator( const ConstVolPart& b, const ConstVolPart& e, 
+				   bool (* CheckFnc)( const Volume& )=NULL,
+				   bool atend=false ) :
 		    CheckFncVol( CheckFnc ),
-		    ConstVolIter<CheckFncVol>( b, e, *this, atend ) {};
-		ConstVolIterator( const IterPair<ConstVolPart>& p, 
-				  bool (* CheckFnc)( const Volume& )=NULL,
-				  bool atend=false ) :
+		    ConstVolPIter<CheckFncVol>( b, e, *this, atend ) {};
+		ConstVolPIterator( const IterPair<ConstVolPart>& p, 
+				   bool (* CheckFnc)( const Volume& )=NULL,
+				   bool atend=false ) :
 		    CheckFncVol( CheckFnc ),
-		    ConstVolIter<CheckFncVol>( p, *this, atend ) {};
+		    ConstVolPIter<CheckFncVol>( p, *this, atend ) {};
 	    };
+	typedef DerefIterator<ConstVolPIterator,const Volume> ConstVolIterator;
 
     protected:
-	class ContIterator : public CheckFncCont, public ContIter<CheckFncCont>
+	class ContPIterator : public CheckFncCont, public ContPIter<CheckFncCont>
 	    {
 	    public: 
-		ContIterator() {};
-		ContIterator( const CIter& b, const CIter& e, 
-			      bool (* CheckFnc)( const Container& d )=NULL,
-			      bool atend=false ) :
+		ContPIterator() {};
+		ContPIterator( const CIter& b, const CIter& e, 
+			       bool (* CheckFnc)( const Container& d )=NULL,
+			       bool atend=false ) :
 		    CheckFncCont( CheckFnc ),
-		    ContIter<CheckFncCont>( b, e, *this, atend ) {};
+		    ContPIter<CheckFncCont>( b, e, *this, atend ) {};
 	    };
+	typedef DerefIterator<ContPIterator,Container> ContIterator;
 
 	typedef ListListIterator<Container::PlainIterator, ContIterator> VolPart;
 	template< class Pred > 
-	class VolIter : public FilterIterator< Pred, VolPart, Volume >
+	class VolIter : public FilterIterator< Pred, VolPart >
 	    {
-	    typedef FilterIterator< Pred, VolPart, Volume > _bclass;
+	    typedef FilterIterator< Pred, VolPart > _bclass;
 	    public:
 		VolIter() : _bclass() {};
 		VolIter( const VolPart& b, const VolPart& e, const Pred& p,
@@ -185,11 +213,11 @@ class Storage
 	    }
 	ConstContIterator ContBegin( bool (* CheckFnc)( const Container& )=NULL ) const
 	    { 
-	    return( ConstContIterator( Disks.begin(), Disks.end(), CheckFnc ) );
+	    return( ConstContIterator( ConstContIteratorP( Disks.begin(), Disks.end(), CheckFnc )) );
 	    }
 	ConstContIterator ContEnd( bool (* CheckFnc)( const Container& )=NULL ) const
 	    { 
-	    return( ConstContIterator( Disks.begin(), Disks.end(), CheckFnc, true ) );
+	    return( ConstContIterator( ConstContIteratorP( Disks.begin(), Disks.end(), CheckFnc, true )) );
 	    }
 
 	typedef IterPair<ConstVolIterator> ConstVolPair;
@@ -212,7 +240,7 @@ class Storage
 	    {
 	    IterPair<ConstVolPart> p( *new ConstVolPart( ContPair( CheckCnt )),
 	                              *new ConstVolPart( ContPair( CheckCnt ), true ));
-	    return( ConstVolIterator( p, CheckVol ));
+	    return( ConstVolIterator( ConstVolPIterator(p, CheckVol )));
 	    }
 	ConstVolIterator VolEnd( bool (* CheckCnt)( const Container& )) const
 	    { 
@@ -223,7 +251,7 @@ class Storage
 	    { 
 	    IterPair<ConstVolPart> p( *new ConstVolPart( ContPair( CheckCnt )),
 	                              *new ConstVolPart( ContPair( CheckCnt ), true ));
-	    return( ConstVolIterator( p, CheckVol, true ));
+	    return( ConstVolIterator( ConstVolPIterator(p, CheckVol, true )));
 	    }
 
 	template< class Pred > ContCondIPair<Pred> ContCondPair( const Pred& p ) const
@@ -232,11 +260,11 @@ class Storage
 	    }
 	template< class Pred > ConstContIter<Pred> ContCondBegin( const Pred& p ) const
 	    {
-	    return( ConstContIter< Pred >( Disks.begin(), Disks.end(), p ) );
+	    return( ConstContIter< Pred >( ConstContPIter<Pred>( Disks.begin(), Disks.end(), p )) );
 	    }
 	template< class Pred > ConstContIter<Pred> ContCondEnd( const Pred& p ) const
 	    {
-	    return( ConstContIter< Pred >( Disks.begin(), Disks.end(), p, true ) );
+	    return( ConstContIter< Pred >( ConstContPIter<Pred>( Disks.begin(), Disks.end(), p, true )) );
 	    }
 	template< class Pred > VolCondIPair<Pred> VolCondPair( const Pred& p ) const
 	    {
@@ -246,13 +274,13 @@ class Storage
 	    {
 	    IterPair<ConstVolPart> pair( *new ConstVolPart( ContPair()),
 	                                 *new ConstVolPart( ContPair(), true ));
-	    return( ConstVolIter< Pred >( pair, p ) );
+	    return( ConstVolIter< Pred >( ConstVolPIter<Pred>(pair, p) ) );
 	    }
 	template< class Pred > ConstVolIter<Pred> VolCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ConstVolPart> pair( *new ConstVolPart( ContPair()),
 	                                 *new ConstVolPart( ContPair(), true ));
-	    return( ConstVolIter< Pred >( pair, p, true ) );
+	    return( ConstVolIter< Pred >( ConstVolPIter<Pred>(pair, p, true )) );
 	    }
 
     protected:
@@ -263,11 +291,11 @@ class Storage
 	    }
 	ContIterator CBegin( bool (* CheckFnc)( const Container& )=NULL )
 	    { 
-	    return( ContIterator( Disks.begin(), Disks.end(), CheckFnc ) );
+	    return( ContIterator( ContPIterator( Disks.begin(), Disks.end(), CheckFnc )) );
 	    }
 	ContIterator CEnd( bool (* CheckFnc)( const Container& )=NULL )
 	    { 
-	    return( ContIterator( Disks.begin(), Disks.end(), CheckFnc, true ) );
+	    return( ContIterator( ContPIterator( Disks.begin(), Disks.end(), CheckFnc, true )) );
 	    }
 
 	typedef IterPair<VolIterator> VIPair;
