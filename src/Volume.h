@@ -4,11 +4,15 @@
 using namespace std;
 
 #include "y2storage/StorageInterface.h"
+#include "y2storage/AppUtil.h"
 
 class Container;
+class SystemCmd;
 
 class Volume
     {
+    friend class Storage;
+
     public:
 	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
@@ -32,10 +36,15 @@ class Volume
 	void setCryptPwd( string val ) { crypt_pwd=val; }
 	string getMount() const { return mount; }
 	void setMount( string val ) { mount=val; }
+	storage::FsType getFs() const { return fs; }
+	void setFs( storage::FsType val ) { fs=val; }
+	storage::MountyByType getMountBy() const { return mount_by; }
+	void setMountBy( storage::MountyByType val ) { mount_by=val; }
 	string getFstabOption() const { return fstab_opt; }
 	void setFstabOption( string val ) { fstab_opt=val; }
 	string getMkfsOption() const { return mkfs_opt; }
 	void setMkfsOption( string val ) { mkfs_opt=val; }
+	const list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
 	const string& name() const { return nm; }
@@ -69,6 +78,7 @@ class Volume
     protected:
 	void init();
 	void setNameDev();
+	void getFsData( SystemCmd& blkidData );
 
 	const Container* const cont;
 	bool numeric;
@@ -77,6 +87,8 @@ class Volume
 	bool format;
 	storage::FsType fs;
 	storage::FsType detected_fs;
+	storage::MountyByType mount_by;
+	storage::MountyByType orig_mount_by;
 	string uuid;
 	string label;
 	string orig_label;
@@ -91,6 +103,7 @@ class Volume
 	string fstab_loop_dev;
 	string crypt_pwd;
 	string nm;
+	list<string> alt_names;
 	unsigned num;
 	unsigned long long size_k;
 	string dev;
@@ -98,6 +111,7 @@ class Volume
 	unsigned long mjr;
 
 	static string fs_names[storage::SWAP+1];
+	static string mb_names[storage::MOUNTBY_LABEL+1];
     };
 
 inline ostream& operator<< (ostream& s, const Volume &v )
@@ -122,6 +136,18 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::UNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
 	}
+    if( v.mount.length()>0 )
+	{
+	s << " mount:" << v.mount;
+	if( v.mount != v.orig_mount && v.orig_mount.length()>0 )
+	    s << " orig_mount:" << v.orig_mount;
+	}
+    if( v.mount_by != storage::MOUNTBY_DEVICE )
+	{
+	s << " mount_by:" << Volume::mb_names[v.mount_by];
+	if( v.mount_by != v.orig_mount_by )
+	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
+	}
     if( v.uuid.length()>0 )
 	{
 	s << " uuid:" << v.uuid;
@@ -132,12 +158,6 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	if( v.label != v.orig_label && v.orig_label.length()>0 )
 	    s << " orig_label:" << v.orig_label;
 	}
-    if( v.mount.length()>0 )
-	{
-	s << " mount:" << v.mount;
-	if( v.mount != v.orig_mount && v.orig_mount.length()>0 )
-	    s << " orig_mount:" << v.orig_mount;
-	}
     if( v.fstab_opt.length()>0 )
 	{
 	s << " fstopt:" << v.fstab_opt;
@@ -147,6 +167,10 @@ inline ostream& operator<< (ostream& s, const Volume &v )
     if( v.mkfs_opt.length()>0 )
 	{
 	s << " mkfsopt:" << v.mkfs_opt;
+	}
+    if( v.alt_names.begin() != v.alt_names.end() )
+	{
+	s << " alt_names:" << v.alt_names;
 	}
     if( v.is_loop )
 	{

@@ -15,6 +15,8 @@ namespace storage
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL };
 
+    enum MountyByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
+
     enum MdType { RAID0, RAID1, RAID5, MULTIPATH };
 
 
