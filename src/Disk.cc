@@ -1349,7 +1349,7 @@ int Disk::doCreate( Volume* v )
     return( ret );
     }
 
-int Disk::doRemove( Volume* v )
+int Disk::doResize( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
@@ -1357,10 +1357,10 @@ int Disk::doRemove( Volume* v )
 	{
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( p->removeText(true) );
+	    getStorage()->showInfoCb( p->resizeText(true) );
 	    }
 	system_stderr.erase();
-	y2milestone( "doRemove container %s name %s", name().c_str(),
+	y2milestone( "doResize container %s name %s", name().c_str(),
 		     p->name().c_str() );
 	ret = v->prepareRemove();
 	if( ret==0 && !p->created() )
@@ -1389,7 +1389,7 @@ int Disk::doRemove( Volume* v )
 	}
     else
 	{
-	ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
+	ret = DISK_RESIZE_PARTITION_INVALID_VOLUME;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

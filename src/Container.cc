@@ -28,8 +28,10 @@ Container::~Container()
     y2milestone( "destructed cont %s", dev.c_str() );
     }
 
-static bool stageDecrease( const Volume& v ) { return( v.deleted()); }
-static bool stageCreate( const Volume& v ) { return( v.created()); }
+static bool stageDecrease( const Volume& v ) 
+    { return( v.deleted()||v.needShrink()); }
+static bool stageCreate( const Volume& v )
+    { return( v.created()||v.needExtend()); }
 static bool stageFormat( const Volume& v ) 
     { return( v.getFormat()||v.needLosetup()||v.needLabel()); }
 static bool stageMount( const Volume& v ) 
@@ -52,7 +54,10 @@ int Container::commitChanges( CommitStage stage )
 		list<VolIterator>::const_iterator i=l.begin();
 		while( ret==0 && i!=l.end() )
 		    {
-		    ret = doRemove( &(**i) );
+		    if( (*i)->deleted() )
+			ret = doRemove( &(**i) );
+		    else
+			ret = doResize( &(**i) );
 		    ++i;
 		    }
 		}
@@ -64,7 +69,10 @@ int Container::commitChanges( CommitStage stage )
 	    VolIterator i=p.begin();
 	    while( ret==0 && i!=p.end() )
 		{
-		ret = doCreate( &(*i) );
+		if( i->created() )
+		    ret = doCreate( &(*i) );
+		else
+		    ret = doResize( &(*i) );
 		++i;
 		}
 	    }
@@ -159,6 +167,13 @@ string Container::removeText( bool doing ) const
 int Container::doRemove( Volume * v ) 
     { 
     y2warning( "invalid doRemove Container:%s name:%s",
+	       type_names[typ].c_str(), name().c_str() ); 
+    return( CONTAINER_INTERNAL_ERROR );
+    }
+
+int Container::doResize( Volume * v ) 
+    { 
+    y2warning( "invalid doResize Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
     return( CONTAINER_INTERNAL_ERROR );
     }

@@ -149,6 +149,7 @@ class Container
 	    { pointerIntoSortedList<Volume>( vols, e ); }
 	virtual int doCreate( Volume * v ); 
 	virtual int doRemove( Volume * v ); 
+	virtual int doResize( Volume * v ); 
 
 
 	static string type_names[EVMS+1];

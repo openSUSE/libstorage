@@ -99,6 +99,8 @@ class Storage : public StorageInterface
 	int setCryptPassword( const string& device, const string& pwd );
 	int setCrypt( const string& device, bool val );
 
+	int resizeVolume( const string& device, unsigned long long newSizeMb );
+
 	list<string> getCommitActions( bool mark_destructive );
         int commit();
 

@@ -37,20 +37,21 @@ class Volume
 	bool needLosetup() const { return is_loop&&!loop_active; }
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
-	void setLabel( const string& val ) { label!=val; }
+	int setLabel( const string& val ); 
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
 	    { encryption=val; }
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
-	void setCryptPwd( const string& val ) { crypt_pwd=val; }
+	int setCryptPwd( const string& val ); 
 	const string& getMount() const { return mp; }
 	bool needRemount() const; 
+	bool needShrink() const { return(size_k<orig_size_k); }
+	bool needExtend() const { return(size_k>orig_size_k); }
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
-	void setMountBy( storage::MountByType val ) { mount_by=val; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }
 	bool needFstabUpdate() const
@@ -66,7 +67,7 @@ class Volume
 	unsigned long majorNumber() const { return mjr; }
 	void setMajorMinor( unsigned long Major, unsigned long Minor )
 	    { mjr=Major; mnr=Minor; }
-	void setSize( unsigned long long SizeK ) { size_k=SizeK; }
+	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 
         bool operator== ( const Volume& rhs ) const;
         bool operator!= ( const Volume& rhs ) const
@@ -83,6 +84,7 @@ class Volume
 	int prepareRemove();
 	int umount( const string& mp="" );
 	int mount( const string& mp="" );
+	int resize( unsigned long long newSizeMb );
 	int doMount();
 	int doFormat();
 	int doLosetup();
@@ -92,6 +94,7 @@ class Volume
 	bool isMounted() const { return( is_mounted ); }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
+	virtual string resizeText(bool doing=true) const; 
 	virtual string formatText(bool doing=true) const { return(""); }
 	virtual void getCommitActions( list<commitAction*>& l ) const;
 	string mountText( bool doing=true ) const;
@@ -134,6 +137,7 @@ class Volume
 	int getFreeLoop();
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();
+	virtual int checkResize(); 
 
 
 	const Container* const cont;
@@ -166,6 +170,7 @@ class Volume
 	list<string> alt_names;
 	unsigned num;
 	unsigned long long size_k;
+	unsigned long long orig_size_k;
 	string dev;
 	unsigned long mnr;
 	unsigned long mjr;
@@ -182,9 +187,10 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	s << " Nr:" << v.num;
     else
 	s << " Name:" << v.nm;
-    s << " SizeK:" << v.size_k
-	<< " Node <" << v.mjr
-	<< ":" << v.mnr << ">";
+    s << " SizeK:" << v.size_k;
+    if( v.size_k != v.orig_size_k )
+	s << " orig_SizeK:" << v.orig_size_k;
+    s << " Node <" << v.mjr << ":" << v.mnr << ">";
     if( v.del )
 	s << " deleted";
     if( v.create )

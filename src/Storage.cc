@@ -652,6 +652,35 @@ Storage::setCryptPassword( const string& device, const string& pwd )
     return( ret );
     }
 
+int 
+Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s newSizeMb:%llu", device.c_str(), newSizeMb );
+
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->resize( newSizeMb );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Storage::checkCache()
     {
     int ret=0;
@@ -794,7 +823,8 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	supportsUuid: true,
 	supportsLabel: true,
 	labelWhileMounted: false,
-	labelLength: 16
+	labelLength: 16,
+	minimalFsSizeK: 50*1024
     };
 
     static FsCapabilities ext2Caps = {
@@ -805,7 +835,8 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	supportsUuid: true,
 	supportsLabel: true,
 	labelWhileMounted: true,
-	labelLength: 16
+	labelLength: 16,
+	minimalFsSizeK: 1*1024
     };
 
     static FsCapabilities ext3Caps = {
@@ -816,7 +847,8 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	supportsUuid: true,
 	supportsLabel: true,
 	labelWhileMounted: true,
-	labelLength: 16
+	labelLength: 16,
+	minimalFsSizeK: 10*1024
     };
 
     static FsCapabilities xfsCaps = {
@@ -827,8 +859,45 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	supportsUuid: true,
 	supportsLabel: true,
 	labelWhileMounted: false,
-	labelLength: 12
+	labelLength: 12,
+	minimalFsSizeK: 40*1024
     };
+
+    static FsCapabilities ntfsCaps = {
+	isExtendable: true,
+	isExtendableWhileMounted: false,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: false,
+	supportsLabel: false,
+	labelWhileMounted: false,
+	labelLength: 0,
+	minimalFsSizeK: 10*1024
+    };
+
+    static FsCapabilities fatCaps = {
+	isExtendable: true,
+	isExtendableWhileMounted: false,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: false,
+	supportsLabel: false,
+	labelWhileMounted: false,
+	labelLength: 0,
+	minimalFsSizeK: 1*1024
+	};
+
+    static FsCapabilities swapCaps = {
+	isExtendable: true,
+	isExtendableWhileMounted: false,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: false,
+	supportsLabel: false,
+	labelWhileMounted: false,
+	labelLength: 0,
+	minimalFsSizeK: 1*1024
+	};
 
     switch (fstype)
     {
@@ -846,6 +915,18 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 
 	case XFS:
 	    fscapabilities = xfsCaps;
+	    return true;
+
+	case VFAT:
+	    fscapabilities = fatCaps;
+	    return true;
+
+	case NTFS:
+	    fscapabilities = ntfsCaps;
+	    return true;
+
+	case SWAP:
+	    fscapabilities = swapCaps;
 	    return true;
 
 	default:

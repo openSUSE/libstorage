@@ -113,7 +113,8 @@ namespace storage
 	bool supportsUuid;
 	bool supportsLabel;
 	bool labelWhileMounted;
-	int labelLength;
+	unsigned labelLength;
+	unsigned long long minimalFsSizeK;
     };
 
 
@@ -156,6 +157,7 @@ namespace storage
 	DISK_DESTROY_TABLE_INVALID_LABEL = -1019,
 	DISK_CREATE_PARTITION_ZERO_SIZE = -1020,
 	DISK_CHANGE_READONLY = -1021,
+	DISK_RESIZE_PARTITION_INVALID_VOLUME = -1022,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -170,17 +172,25 @@ namespace storage
 	VOLUME_FORMAT_DD_FAILED = -3004,
 	VOLUME_FORMAT_UNKNOWN_FS = -3005,
 	VOLUME_FORMAT_FS_UNDETECTED = -3006,
-	VOLUME_FORMAT_FAILED = -3007,
-	VOLUME_TUNE2FS_FAILED = -3008,
-	VOLUME_MKLABEL_FS_UNABLE = -3009,
-	VOLUME_MKLABEL_FAILED = -3010,
-	VOLUME_LOSETUP_NO_LOOP = -3011,
-	VOLUME_LOSETUP_FAILED = -3012,
-	VOLUME_ENCRYPT_NO_PWD = -3013,
-	VOLUME_ENCRYPT_NOT_DETECTED = -3014,
-	VOLUME_FORMAT_EXTENDED_UNSUPPORTED = -3015,
-	VOLUME_MOUNT_EXTENDED_UNSUPPORTED = -3016,
-	VOLUME_MOUNTBY_NOT_ENCRYPTED = -3017,
+	VOLUME_FORMAT_FS_TOO_SMALL = -3007,
+	VOLUME_FORMAT_FAILED = -3008,
+	VOLUME_TUNE2FS_FAILED = -3009,
+	VOLUME_MKLABEL_FS_UNABLE = -3010,
+	VOLUME_MKLABEL_FAILED = -3011,
+	VOLUME_LOSETUP_NO_LOOP = -3012,
+	VOLUME_LOSETUP_FAILED = -3013,
+	VOLUME_CRYPT_NO_PWD = -3014,
+	VOLUME_CRYPT_PWD_TOO_SHORT = -3015,
+	VOLUME_CRYPT_NOT_DETECTED = -3016,
+	VOLUME_FORMAT_EXTENDED_UNSUPPORTED = -3017,
+	VOLUME_MOUNT_EXTENDED_UNSUPPORTED = -3018,
+	VOLUME_MOUNTBY_NOT_ENCRYPTED = -3019,
+	VOLUME_MOUNTBY_UNSUPPORTED_BY_FS = -3020,
+	VOLUME_LABEL_NOT_SUPPORTED = -3021,
+	VOLUME_LABEL_TOO_LONG = -3022,
+	VOLUME_LABEL_WHILE_MOUNTED = -3023,
+	VOLUME_RESIZE_UNSUPPORTED_BY_FS = -3024,
+	VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME = -3025,
 
 	CONTAINER_INTERNAL_ERROR = -4000,
 
@@ -395,6 +405,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCrypt( const string& device, bool val ) = 0;
+
+	/**
+	 *  resizes a volume while keeping the data on the filesystem 
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param newSizeMb new size desired volume in Megabyte
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
 
 	/**
 	 *  gets a list of string describing the actions to be executed

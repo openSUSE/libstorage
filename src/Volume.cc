@@ -21,7 +21,7 @@ Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
     {
     numeric = true;
     num = PNr;
-    size_k = SizeK;
+    size_k = orig_size_k = SizeK;
     init();
     y2milestone( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
                  cont->name().c_str() );
@@ -31,7 +31,7 @@ Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK
     {
     numeric = false;
     nm = Name;
-    size_k = SizeK;
+    size_k = orig_size_k = SizeK;
     init();
     y2milestone( "constructed volume \"%s\" on disk %s", dev.c_str(),
                  cont->name().c_str() );
@@ -298,7 +298,18 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
     if( !format )
 	fs = detected_fs;
     else
-	fs = new_fs;
+	{
+	FsCapabilities caps;
+	if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
+	    caps.minimalFsSizeK < size_k  )
+	    {
+	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
+	    }
+	else
+	    {
+	    fs = new_fs;
+	    }
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -318,9 +329,19 @@ int Volume::changeMountBy( MountByType mby )
     y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
     if( mp.size()>0 )
 	{
-	if( encryption != ENC_NONE && mby != MOUNTBY_DEVICE )
-	    ret = VOLUME_MOUNTBY_NOT_ENCRYPTED;
-	else
+	if( mby != MOUNTBY_DEVICE )
+	    {
+	    FsCapabilities caps;
+	    if( encryption != ENC_NONE )
+		ret = VOLUME_MOUNTBY_NOT_ENCRYPTED;
+	    else if( !cont->getStorage()->getFsCapabilities( fs, caps ) ||
+	             (mby==MOUNTBY_LABEL && !caps.supportsLabel) ||
+	             (mby==MOUNTBY_UUID && !caps.supportsUuid))
+		{
+		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
+		}
+	    }
+	if( ret==0 )
 	    mount_by = mby;
 	}
     else
@@ -485,6 +506,10 @@ int Volume::doFormat()
 		ret = VOLUME_FORMAT_FS_UNDETECTED;
 	    }
 	}
+    if( ret==0 && label.size()>0 )
+	{
+	ret = doSetLabel();
+	}
     if( needMount )
 	{
 	int r = mount( orig_mp );
@@ -595,6 +620,35 @@ int Volume::doMount()
     return( ret );
     }
 
+int Volume::resize( unsigned long long newSizeMb )
+    {
+    int ret=0;
+    y2milestone( "val:%llu", newSizeMb );
+    unsigned long long new_size = newSizeMb*1024;
+    if( new_size != size_k )
+	{
+	FsCapabilities caps;
+	if( !format && 
+	    (!cont->getStorage()->getFsCapabilities( fs, caps ) || 
+	     (new_size < size_k && !caps.isReduceable) ||
+	     (new_size > size_k && !caps.isExtendable)) )
+	    {
+	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
+	    }
+	if( ret==0 )
+	    ret = checkResize();
+	if( ret==0 )
+	    size_k = new_size;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::checkResize() 
+    { 
+    return VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME; 
+    }
+
 int Volume::setEncryption( bool val )
     {
     int ret = 0;
@@ -614,7 +668,7 @@ int Volume::setEncryption( bool val )
     else
 	{
 	if( crypt_pwd.size()==0 )
-	    ret = VOLUME_ENCRYPT_NO_PWD;
+	    ret = VOLUME_CRYPT_NO_PWD;
 	if( ret == 0 && format )
 	    {
 	    encryption = ENC_TWOFISH;
@@ -623,7 +677,7 @@ int Volume::setEncryption( bool val )
 	if( ret == 0 && !format && !loop_active )
 	    {
 	    if( detectLoopEncryption()==ENC_UNKNOWN )
-		ret = VOLUME_ENCRYPT_NOT_DETECTED;
+		ret = VOLUME_CRYPT_NOT_DETECTED;
 	    }
 	}
     y2milestone( "ret:%d", ret );
@@ -708,6 +762,23 @@ string Volume::getLosetupCmd( storage::EncryptType e, const string& pwdfile ) co
     cmd += pwdfile;
     y2milestone( "cmd:%s", cmd.c_str() );
     return( cmd );
+    }
+
+int 
+Volume::setCryptPwd( const string& val ) 
+    { 
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2milestone( "password:%s", val.c_str() );
+#endif
+    int ret = 0;
+
+    if( val.size()<8 )
+	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
+    else
+	crypt_pwd=val; 
+
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
 EncryptType Volume::detectLoopEncryption()
@@ -848,11 +919,26 @@ string Volume::labelText( bool doing ) const
 int Volume::doSetLabel()
     {
     int ret = 0;
+    bool remount = false;
+    FsCapabilities caps;
     y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(), 
                  label.c_str() );
     if( !silent )
 	{
 	cont->getStorage()->showInfoCb( labelText(true) );
+	}
+    if( !cont->getStorage()->getFsCapabilities( fs, caps ) || 
+        !caps.supportsLabel  )
+	{
+	ret = VOLUME_LABEL_TOO_LONG;
+	}
+    if( is_mounted && !caps.labelWhileMounted )
+	{
+	ret = umount( cont->getStorage()->root()+orig_mp );
+	if( ret!=0 )
+	    ret = VOLUME_LABEL_WHILE_MOUNTED;
+	else 
+	    remount = true;
 	}
     if( ret==0 )
 	{
@@ -880,6 +966,10 @@ int Volume::doSetLabel()
 		ret = VOLUME_MKLABEL_FAILED;
 	    }
 	}
+    if( remount )
+	{
+	ret = mount( cont->getStorage()->root()+orig_mp );
+	}
     if( ret==0 )
 	{
 	ret = doFstabUpdate();
@@ -888,6 +978,25 @@ int Volume::doSetLabel()
 	{
 	orig_label = label;
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::setLabel( const string& val )
+    {
+    int ret=0;
+    y2milestone( "label:%s", val.c_str() );
+    FsCapabilities caps;
+    if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
+        caps.supportsLabel  )
+	{
+	if( caps.labelLength < val.size() )
+	    ret = VOLUME_LABEL_TOO_LONG;
+	else
+	    label = val;
+	}
+    else
+	ret = VOLUME_LABEL_NOT_SUPPORTED;
     y2milestone( "ret:%d", ret );
     return( ret );
     }

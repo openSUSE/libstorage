@@ -45,10 +45,11 @@ class Partition : public Volume
 	void changeNumber( unsigned new_num );
 	void changeId( unsigned id );
 	void changeIdDone();
-	virtual string removeText( bool doing=true ) const;
-	virtual string createText( bool doing=true ) const;
-	virtual string formatText(bool doing=true) const;
-	virtual void getCommitActions( list<commitAction*>& l ) const;
+	string removeText( bool doing=true ) const;
+	string createText( bool doing=true ) const;
+	string formatText(bool doing=true) const;
+	string resizeText(bool doing=true) const;
+	void getCommitActions( list<commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );

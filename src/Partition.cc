@@ -97,7 +97,7 @@ void Partition::changeRegion( unsigned long Start, unsigned long CSize,
 			      unsigned long long SizeK )
     {
     reg = Region( Start, CSize );
-    size_k = SizeK;
+    size_k = orig_size_k = SizeK;
     }
 
 ostream& Partition::logData( ostream& file ) const
@@ -338,6 +338,37 @@ string Partition::formatText( bool doing ) const
 			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	}
+    return( txt );
+    }
+
+string Partition::resizeText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+	if( needShrink() )
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Shrinking partition %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Extending partition %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+
+        }
+    else
+        {
+	string d = dev.substr( 5 );
+	if( needShrink() )
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Shrink partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Extend partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+
+        }
     return( txt );
     }
 
