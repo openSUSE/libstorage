@@ -6,9 +6,9 @@
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
-#include "y2storage/EtsFstab.h"
+#include "y2storage/EtcFstab.h"
 
-EtcFstab::EtcFstab() 
+EtcFstab::EtcFstab()
     {
     sync = true;
     ifstream mounts( "/etc/fstab" );
