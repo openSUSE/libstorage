@@ -1,6 +1,6 @@
 Device: /dev/hdb
 Major: 3
-Minor: 0
+Minor: 64
 Range: 64
 Cylinder: 119150
 Head: 16
