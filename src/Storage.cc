@@ -43,6 +43,10 @@ Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
 
 Storage::~Storage()
     {
+    for( CIter i=cont.begin(); i!=cont.end(); i++ )
+	{
+	delete( *i );
+	}
     y2milestone( "destructed Storage" );
     }
 
@@ -82,23 +86,23 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
-    Disks.push_back( new Container( "md", Container::MD ) );
-    Disks.push_back( new Container( "loop", Container::LOOP ) );
-    Disks.push_back( new LvmVg( "system" ) );
-    Disks.push_back( new LvmVg( "vg1" ) );
-    Disks.push_back( new LvmVg( "vg2" ) );
-    Disks.push_back( new LvmVg( "empty" ) );
-    Disks.push_back( new Evms() );
-    Disks.push_back( new Evms( "vg1" ) );
-    Disks.push_back( new Evms( "vg2" ) );
-    Disks.push_back( new Evms( "empty" ) );
+    cont.push_back( new Container( "md", Container::MD ) );
+    cont.push_back( new Container( "loop", Container::LOOP ) );
+    cont.push_back( new LvmVg( "system" ) );
+    cont.push_back( new LvmVg( "vg1" ) );
+    cont.push_back( new LvmVg( "vg2" ) );
+    cont.push_back( new LvmVg( "empty" ) );
+    cont.push_back( new Evms() );
+    cont.push_back( new Evms( "vg1" ) );
+    cont.push_back( new Evms( "vg2" ) );
+    cont.push_back( new Evms( "empty" ) );
     }
 
 int 
 Storage::AddDisk( const string& Name )
     {
     y2milestone( "Name: %s", Name.c_str() );
-    Disks.push_front( new Disk( Name ) );
+    cont.push_front( new Disk( Name ) );
     return( 0 );
     }
 

@@ -13,10 +13,20 @@ class Md : public Volume
 	virtual ~Md();
 	MdType Personality() const { return md_type; }
 	const string& PersonalityName() const { return md_names[md_type]; }
+	friend inline ostream& operator<< (ostream& s, const Md& m );
+
 
     protected:
 	MdType md_type;
 	static string md_names[MULTIPATH+1];
     };
+
+inline ostream& operator<< (ostream& s, const Md& m )
+    {
+    s << "Md " << Volume(m)
+      << " Personality:" << m.PersonalityName();
+    return( s );
+    }
+
 
 #endif

@@ -11,9 +11,18 @@ class Loop : public Volume
 	Loop( const Container& d, unsigned Pnr, const string& LoopFile );
 	virtual ~Loop();
 	const string& LoopFile() const { return loop_file; }
+	friend inline ostream& operator<< (ostream& s, const Loop& l );
 
     protected:
 	string loop_file;
     };
+
+inline ostream& operator<< (ostream& s, const Loop& l )
+    {
+    s << "Loop " << Volume(l) 
+      << " LoopFile:" << l.loop_file;
+    return( s );
+    }
+
 
 #endif

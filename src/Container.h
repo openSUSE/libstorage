@@ -22,15 +22,30 @@ class Container
 	typedef list<Volume*> VCont;
 	typedef VCont::iterator VIter;
 	typedef VCont::const_iterator CVIter;
+	Container operator=( const Container& );
+	Container( const Container& );
 
     public:
-	struct SkipDeleted 
-	    { 
-	    bool operator()(const Volume&d) const { return( !d.Delete());}
-	    };
-	static SkipDeleted SkipDel;
-	static bool NotDeleted( const Volume&d ) { return( !d.Delete() ); }
 	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
+	bool operator== ( const Container& rhs ) const
+	    { return( type == rhs.type && name == rhs.name && deleted == rhs.deleted ); }
+	bool operator!= ( const Container& rhs ) const
+	    { return( !(*this==rhs) ); }
+	bool operator< ( const Container& rhs ) const
+	    { 
+	    if( type != rhs.type )
+		return( type<rhs.type );
+	    else if( name != rhs.name )
+		return( name<rhs.name );
+	    else 
+		return( !deleted );
+	    }
+	bool operator<= ( const Container& rhs ) const
+	    { return( *this<rhs || *this==rhs ); }
+	bool operator>= ( const Container& rhs ) const
+	    { return( !(*this<rhs) ); }
+	bool operator> ( const Container& rhs ) const
+	    { return( !(*this<=rhs) ); }
 
 // iterators over volumes of a container
     protected:
@@ -65,11 +80,11 @@ class Container
 	    }
 	ConstVolIterator VolBegin( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    {
-	    return( ConstVolIterator( ConstVolPIterator(Vols.begin(), Vols.end(), CheckFnc )) );
+	    return( ConstVolIterator( ConstVolPIterator(vols.begin(), vols.end(), CheckFnc )) );
 	    }
 	ConstVolIterator VolEnd( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    {
-	    return( ConstVolIterator( ConstVolPIterator(Vols.begin(), Vols.end(), CheckFnc, true )) );
+	    return( ConstVolIterator( ConstVolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
 	    }
 
 	template< class Pred > typename VolCondIPair<Pred>::type VolCondPair( const Pred& p ) const
@@ -78,11 +93,11 @@ class Container
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type VolCondBegin( const Pred& p ) const
 	    {
-	    return( ConstVolumeI<Pred>::type( Vols.begin(), Vols.end(), p ) );
+	    return( ConstVolumeI<Pred>::type( vols.begin(), vols.end(), p ) );
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type VolCondEnd( const Pred& p ) const
 	    {
-	    return( ConstVolumeI<Pred>::type( Vols.begin(), Vols.end(), p, true ) );
+	    return( ConstVolumeI<Pred>::type( vols.begin(), vols.end(), p, true ) );
 	    }
 
     protected:
@@ -93,11 +108,11 @@ class Container
 	    }
 	VolIterator VBegin( bool (* CheckFnc)( const Volume& )=NULL ) 
 	    { 
-	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc )) );
+	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc )) );
 	    }
 	VolIterator VEnd( bool (* CheckFnc)( const Volume& )=NULL ) 
 	    { 
-	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc, true )) );
+	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
 	    }
 
     public:
@@ -108,21 +123,36 @@ class Container
 	CType Type() const { return type; }
 	bool Delete() const { return deleted; }
 	static CType const StaticType() { return UNKNOWN; } 
+	friend ostream& operator<< (ostream& s, const Container &c );
 
     protected:
 	typedef CVIter ConstPlainIterator;
-	ConstPlainIterator begin() const { return Vols.begin(); }
-	ConstPlainIterator end() const { return Vols.end(); }
+	ConstPlainIterator begin() const { return vols.begin(); }
+	ConstPlainIterator end() const { return vols.end(); }
 
 	typedef VIter PlainIterator;
-	PlainIterator begin() { return Vols.begin(); }
-	PlainIterator end() { return Vols.end(); }
+	PlainIterator begin() { return vols.begin(); }
+	PlainIterator end() { return vols.end(); }
+	void print( ostream& s ) const { s << *this; }
+
+	static string type_names[EVMS+1];
 
 	CType type;
 	string name;
 	string device;
 	bool deleted;
-	VCont Vols;
+	VCont vols;
+
     };
+
+inline ostream& operator<< (ostream& s, const Container &c )
+    {
+    s << "Type:" << Container::type_names[c.type] 
+      << " Name:" << c.name 
+      << " Device:" << c.device 
+      << " Del:" << c.deleted 
+      << " Vcnt:" << c.vols.size(); 
+    return( s );
+    }
 
 #endif

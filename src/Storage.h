@@ -80,11 +80,11 @@ class Storage
 	    }
 	ConstContIterator ContBegin( bool (* CheckFnc)( const Container& )=NULL ) const
 	    { 
-	    return( ConstContIterator( ConstContPIterator( Disks.begin(), Disks.end(), CheckFnc )) );
+	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	    }
 	ConstContIterator ContEnd( bool (* CheckFnc)( const Container& )=NULL ) const
 	    { 
-	    return( ConstContIterator( ConstContPIterator( Disks.begin(), Disks.end(), CheckFnc, true )) );
+	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	    }
 	template< class Pred > typename ContCondIPair<Pred>::type ContCondPair( const Pred& p ) const
 	    {
@@ -92,11 +92,11 @@ class Storage
 	    }
 	template< class Pred > typename ConstContainerI<Pred>::type ContCondBegin( const Pred& p ) const
 	    {
-	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( Disks.begin(), Disks.end(), p )) );
+	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p )) );
 	    }
 	template< class Pred > typename ConstContainerI<Pred>::type ContCondEnd( const Pred& p ) const
 	    {
-	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( Disks.begin(), Disks.end(), p, true )) );
+	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
 	    }
     protected:
 	// protected member functions for iterators over containers 
@@ -106,11 +106,11 @@ class Storage
 	    }
 	ContIterator CBegin( bool (* CheckFnc)( const Container& )=NULL )
 	    { 
-	    return( ContIterator( ContPIterator( Disks.begin(), Disks.end(), CheckFnc )) );
+	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	    }
 	ContIterator CEnd( bool (* CheckFnc)( const Container& )=NULL )
 	    { 
-	    return( ContIterator( ContPIterator( Disks.begin(), Disks.end(), CheckFnc, true )) );
+	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	    }
 
 // iterators over disks 
@@ -146,14 +146,14 @@ class Storage
 	    }
 	ConstDiskIterator DiskBegin( bool (* CheckFnc)( const Disk& )=NULL ) const
 	    { 
-	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( Disks.begin(), Disks.end() ),
-	                                    ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( cont.begin(), cont.end() ),
+	                                    ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskIterator( ConstDiskPIterator( p, CheckFnc )) );
 	    }
 	ConstDiskIterator DiskEnd( bool (* CheckFnc)( const Disk& )=NULL ) const
 	    { 
-	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( Disks.begin(), Disks.end() ),
-	                                    ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( cont.begin(), cont.end() ),
+	                                    ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskIterator( ConstDiskPIterator( p, CheckFnc, true )) );
 	    }
 	template< class Pred > typename DiskCondIPair<Pred>::type DiskCondPair( const Pred& p ) const
@@ -162,14 +162,14 @@ class Storage
 	    }
 	template< class Pred > typename ConstDiskI<Pred>::type DiskCondBegin( const Pred& p ) const
 	    {
-	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( Disks.begin(), Disks.end() ),
-					       ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
+					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskI<Pred>::type( ConstDiskPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstDiskI<Pred>::type DiskCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( Disks.begin(), Disks.end() ),
-					       ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
+					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskI<Pred>::type( ConstDiskPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
@@ -208,14 +208,14 @@ class Storage
 	    }
 	ConstLvmVgIterator LvmVgBegin( bool (* CheckFnc)( const LvmVg& )=NULL ) const
 	    { 
-	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
-	                                     ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( cont.begin(), cont.end() ),
+	                                     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc )) );
 	    }
 	ConstLvmVgIterator LvmVgEnd( bool (* CheckFnc)( const LvmVg& )=NULL ) const
 	    { 
-	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
-	                                     ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( cont.begin(), cont.end() ),
+	                                     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc, true )) );
 	    }
 	template< class Pred > typename LvmVgCondIPair<Pred>::type LvmVgCondPair( const Pred& p ) const
@@ -224,14 +224,14 @@ class Storage
 	    }
 	template< class Pred > typename ConstLvmVgI<Pred>::type LvmVgCondBegin( const Pred& p ) const
 	    {
-	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
-					        ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
+					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstLvmVgI<Pred>::type LvmVgCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
-					        ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
+					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
@@ -270,14 +270,14 @@ class Storage
 	    }
 	ConstEvmsIterator EvmsBegin( bool (* CheckFnc)( const Evms& )=NULL ) const
 	    { 
-	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( Disks.begin(), Disks.end() ),
-	                                    ContainerCEvmsIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( cont.begin(), cont.end() ),
+	                                    ContainerCEvmsIter( cont.begin(), cont.end(), true ));
 	    return( ConstEvmsIterator( ConstEvmsPIterator( p, CheckFnc )) );
 	    }
 	ConstEvmsIterator EvmsEnd( bool (* CheckFnc)( const Evms& )=NULL ) const
 	    { 
-	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( Disks.begin(), Disks.end() ),
-	                                    ContainerCEvmsIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( cont.begin(), cont.end() ),
+	                                    ContainerCEvmsIter( cont.begin(), cont.end(), true ));
 	    return( ConstEvmsIterator( ConstEvmsPIterator( p, CheckFnc, true )) );
 	    }
 	template< class Pred > typename EvmsCondIPair<Pred>::type EvmsCondPair( const Pred& p ) const
@@ -286,14 +286,14 @@ class Storage
 	    }
 	template< class Pred > typename ConstEvmsI<Pred>::type EvmsCondBegin( const Pred& p ) const
 	    {
-	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( Disks.begin(), Disks.end() ),
-					       ContainerCEvmsIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( cont.begin(), cont.end() ),
+					       ContainerCEvmsIter( cont.begin(), cont.end(), true ));
 	    return( ConstEvmsI<Pred>::type( ConstEvmsPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstEvmsI<Pred>::type EvmsCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( Disks.begin(), Disks.end() ),
-					       ContainerCEvmsIter( Disks.begin(), Disks.end(), true ));
+	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( cont.begin(), cont.end() ),
+					       ContainerCEvmsIter( cont.begin(), cont.end(), true ));
 	    return( ConstEvmsI<Pred>::type( ConstEvmsPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
@@ -752,7 +752,7 @@ class Storage
 
 	// protected internal member variables
 	bool readonly;
-	CCont Disks;
+	CCont cont;
     };
 
 Storage::SkipDeleted Storage::SkipDel;

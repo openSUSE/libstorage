@@ -47,4 +47,22 @@ void Volume::Init()
 	nr = 0;
     }
 
+bool Volume::operator== ( const Volume& rhs ) const
+    {
+    return( (*cont)==(*rhs.cont) && 
+            name == rhs.name && 
+	    deleted == rhs.deleted ); 
+    }
+
+bool Volume::operator< ( const Volume& rhs ) const
+    {
+    if( *cont != *rhs.cont )
+	return( *cont<*rhs.cont );
+    else if( name != rhs.name )
+	return( name<rhs.name );
+    else
+	return( !deleted );
+    }
+
+
 

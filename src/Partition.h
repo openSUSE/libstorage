@@ -14,6 +14,7 @@ class Partition : public Volume
 	virtual ~Partition();
 	unsigned CylStart() const { return cyl_start; }
 	unsigned CylSize() const { return cyl_size; }
+	friend ostream& operator<< (ostream& s, const Partition &p );
 
     protected:
 	unsigned cyl_start;
@@ -21,3 +22,11 @@ class Partition : public Volume
     };
 
 #endif
+
+inline ostream& operator<< (ostream& s, const Partition &p )
+    {
+    s << "Partition " << Volume(p) 
+      << " Start:" << p.cyl_start
+      << " CylNum:" << p.cyl_size;
+    return( s );
+    }
