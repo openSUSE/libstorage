@@ -831,7 +831,7 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	}
 
     if( ret >= range )
-	return 0;
+	ret = 0;
 
     y2milestone( "ret %d", ret );
     return( ret );
