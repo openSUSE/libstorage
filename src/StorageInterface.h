@@ -10,7 +10,7 @@ using std::list;
 
 
 /*!
- * \mainpage libstorage
+ * \mainpage libstorage Documentation
  *
  * \section Interface
  *
@@ -37,11 +37,37 @@ using std::list;
  *
  * \section Example
  *
- * Here is a very simple example to demonstrate the usage of libstorage.
+ * Here is a simple example to demonstrate the usage of libstorage:
  *
- * FIXME
+ * \code
  *
- * More examples can be found in the testsuite.
+ * #include <y2storage/StorageInterface.h>
+ *
+ * using namespace std;
+ * using namespace storage;
+ *
+ * int
+ * main ()
+ * {
+ *     // First we must create a concrete StorageInterface object.
+ *     StorageInterface* s = createStorageInterface (true, true, true);
+ *
+ *     int ret;
+ *     string name;
+ *
+ *     // Create a primary partition on /dev/hda.
+ *     ret = s->createPartitionKb ("/dev/hda", PRIMARY, 0, 100000, name);
+ *
+ *     // Commit the change to the system.
+ *     ret = s->commit ();
+ *
+ *     // Finally destroy the StorageInterface object.
+ *     delete s;
+ * }
+ *
+ * \endcode
+ *
+ * More examples can be found in the examples and testsuite directory.
  */
 
 
