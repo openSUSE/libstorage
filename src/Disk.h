@@ -108,6 +108,7 @@ class Disk : public Container
 	bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
+	int execCheck( const string& cmd_line );
 	bool checkPartedOutput( const SystemCmd& cmd );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
