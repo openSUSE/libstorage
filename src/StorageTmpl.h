@@ -99,41 +99,6 @@ class CastCheckIterator : public CheckType<Value>,
 	    }
     };
 
-template< class Iter, int Value>
-class CheckIterator : public CheckType<Value>, 
-                      public FilterIterator< CheckType<Value>, Iter >
-    {
-    typedef FilterIterator<CheckType<Value>, Iter> _bclass;
-    public:
-	CheckIterator() : _bclass() {}
-	CheckIterator( const Iter& b, const Iter& e, bool atend=false) : 
-	    _bclass( b, e, *this, atend ) {}
-	CheckIterator( const IterPair<Iter>& pair, bool atend=false) : 
-	    _bclass( pair, *this, atend ) {}
-	CheckIterator& operator++() 
-	    { 
-	    _bclass::operator++(); return(*this); 
-	    }
-	CheckIterator operator++(int) 
-	    { 
-	    cerr << "Expensive ++ CheckIterator" << endl;
-	    CheckIterator tmp(*this);
-	    _bclass::operator++(); 
-	    return(tmp); 
-	    }
-	CheckIterator& operator--() 
-	    { 
-	    _bclass::operator--(); return(*this); 
-	    }
-	CheckIterator operator--(int) 
-	    { 
-	    cerr << "Expensive -- CastCheckIterator" << endl;
-	    CheckIterator tmp(*this);
-	    _bclass::operator--(); 
-	    return(tmp); 
-	    }
-    };
-
 template< class Iter, class CastResult >
 class CastIterator : public Iter
     {
