@@ -460,6 +460,7 @@ string Volume::formatText( bool doing ) const
 
 int Volume::doFormat()
     {
+    static int fcount=1000;
     int ret = 0;
     bool needMount = false;
     y2milestone( "device:%s", dev.c_str() );
@@ -557,13 +558,17 @@ int Volume::doFormat()
 	{
 	format = false;
 	detected_fs = fs;
-	if( fs != SWAP )
+	if( fs != SWAP && !cont->getStorage()->test() )
 	    {
 	    SystemCmd Blkid( "/sbin/blkid -c /dev/null " + mountDevice() );
 	    FsType old=fs;
 	    getFsData( Blkid );
 	    if( fs != old )
 		ret = VOLUME_FORMAT_FS_UNDETECTED;
+	    }
+	else if( fs != SWAP )
+	    {
+	    uuid = "testmode-0123-4567-8900-98765432"+decString(fcount++);
 	    }
 	}
     if( ret==0 && label.size()>0 )
