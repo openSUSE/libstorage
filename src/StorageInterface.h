@@ -54,7 +54,7 @@ using std::list;
  * main ()
  * {
  *     // First we must create a concrete StorageInterface object.
- *     StorageInterface* s = createStorageInterface (true, true, true);
+ *     StorageInterface* s = createStorageInterface (false, false, true);
  *
  *     int ret;
  *     string name;

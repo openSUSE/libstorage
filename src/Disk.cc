@@ -82,11 +82,11 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	extractNthWord( 1, line ) >> max_primary;
 	}
     ext_possible = false;
-    max_logical = 0;
     if( searchFile( file, "^ExtPossible:", line ) )
 	{
 	extractNthWord( 1, line ) >> ext_possible;
 	}
+    max_logical = 0;
     if( searchFile( file, "^MaxLogical:", line ) )
 	{
 	extractNthWord( 1, line ) >> max_logical;
@@ -829,6 +829,10 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	if( type==EXTENDED && (!ext_possible || hasExtended()))
 	    ret = 0;
 	}
+
+    if( ret >= range )
+	return 0;
+
     y2milestone( "ret %d", ret );
     return( ret );
     }
@@ -1059,7 +1063,7 @@ string Disk::setDiskLabelText( bool doing ) const
         {
         // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Initializing disk label of disk %1$s to %2$s"), 
+        txt = sformat( _("Initializing disk label of disk %1$s to %2$s"),
 		      dev.c_str(), label.c_str() );
         }
     else
@@ -1067,7 +1071,7 @@ string Disk::setDiskLabelText( bool doing ) const
 	string d = dev.substr( 5 );
         // displayed text before action, %1$s is replaced by disk name (e.g. hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Initialize disk label of disk %1$s to %2$s"), 
+        txt = sformat( _("Initialize disk label of disk %1$s to %2$s"),
 		      d.c_str(), label.c_str() );
         }
     return( txt );
