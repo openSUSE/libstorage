@@ -1,0 +1,11 @@
+Makefile
+Makefile.in
+*.o
+*.lo
+*.loT
+*.la
+*.html
+.libs
+.deps
+ag_fdisk
+*.kdoc
