@@ -7,11 +7,13 @@
 
 Disk::Disk( const string& Name ) : Container(Name)
     {
-    type = REAL_DISK;
+    type = StaticType();
+    device = "/dev/" + name;
     if( name.find( "hdb" ) != string::npos )
 	deleted = true;
     if( name == "sda" )
 	{
+	cylinders = heads = sectors = 100;
 	Vols.push_back( new Partition( *this, 1 ));
 	Vols.push_back( new Partition( *this, 2 ));
 	Vols.push_back( new Partition( *this, 3 ));
@@ -19,6 +21,7 @@ Disk::Disk( const string& Name ) : Container(Name)
 	}
     if( name == "hdb" )
 	{
+	cylinders = heads = sectors = 200;
 	Vols.push_back( new Partition( *this, 1 ));
 	Vols.push_back( new Partition( *this, 5 ));
 	Vols.push_back( new Partition( *this, 6 ));
@@ -26,6 +29,7 @@ Disk::Disk( const string& Name ) : Container(Name)
 	}
     if( name == "hdc" )
 	{
+	cylinders = heads = sectors = 300;
 	Vols.push_back( new Partition( *this, 1 ));
 	}
     y2milestone( "constructed disk %s", device.c_str() );

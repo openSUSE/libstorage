@@ -7,6 +7,7 @@
 #include "y2storage/Storage.h"
 #include "y2storage/Disk.h"
 
+    struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
 
 Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
     {

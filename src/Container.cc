@@ -7,7 +7,7 @@
 Container::Container( const string& Name ) : name(Name)
     {
     deleted = false;
-    type = UNKNOWN;
+    type = StaticType();
     /*
     if( name.find( "hdb" ) != string::npos )
 	deleted = true;

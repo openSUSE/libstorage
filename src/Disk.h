@@ -18,6 +18,7 @@ class Disk : public Container
 	unsigned Cylinders() const { return cylinders; }
 	unsigned Heads() const { return heads; }
 	unsigned Sectors() const { return sectors; }
+	static CType const StaticType() { return DISK; }
 
     protected:
 	unsigned cylinders;

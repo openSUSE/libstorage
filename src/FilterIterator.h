@@ -68,7 +68,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    return tmp;
 	    }
 
-	reference operator*() const 
+	value_type operator*() const 
 	    {
 	    return( *m_cur );
 	    }

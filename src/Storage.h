@@ -5,6 +5,7 @@
 #include <list>
 
 #include "y2storage/Container.h"
+#include "y2storage/Disk.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
@@ -24,7 +25,7 @@ class Storage
 	static SkipDeleted SkipDel;
 	static bool NotDeleted( const Container&d ) { return( !d.Delete() ); };
 	static bool IsRealDisk( const Container&d ) 
-	    { return( d.Type()==Container::REAL_DISK ); };
+	    { return( d.Type()==Container::DISK ); };
 
 	Storage( bool ronly=false, bool autodetect=true );
 	virtual ~Storage();
@@ -37,19 +38,37 @@ class Storage
 	template< class Pred >
 	    struct ContCondIPair { typedef MakeCondIterPair<Pred, typename CC<Pred>::type> type;};
 
+	typedef CastIterator<CCIter, Disk, const Disk *> ContainerCDiskIter;
+	template< class Pred > 
+	    struct CDP { typedef ContainerIter<Pred, ContainerCDiskIter> type; };
+	template< class Pred > 
+	    struct CD { typedef ContainerDerIter<Pred, typename CDP<Pred>::type, const Disk> type; };
+	template< class Pred >
+	    struct DiskCondIPair { typedef MakeCondIterPair<Pred, typename CD<Pred>::type> type; };
+
     protected:
 	template< class Pred > 
 	    struct CP { typedef ContainerIter<Pred, CIter> type; };
 	template< class Pred > 
 	    struct C { typedef ContainerDerIter<Pred, typename CP<Pred>::type, Container> type; };
+	typedef CastIterator<CIter, Disk, Disk *> ContainerDiskIter;
+	template< class Pred > 
+	    struct DP { typedef ContainerIter<Pred, ContainerDiskIter> type; };
+	template< class Pred > 
+	    struct D { typedef ContainerDerIter<Pred, typename DP<Pred>::type, Disk> type; };
 
 	typedef CheckFnc<const Container> CheckFncCont;
 	typedef CheckFnc<const Volume> CheckFncVol;
+	typedef CheckFnc<const Disk> CheckFncDisk;
 
     public:
 	typedef CheckerIterator< CheckFncCont, CCP<CheckFncCont>::type, 
 	                         CCIter, Container > ConstContIteratorP;
 	typedef DerefIterator<ConstContIteratorP,const Container> ConstContIterator;
+	typedef CheckerIterator< CheckFncDisk, CDP<CheckFncDisk>::type, 
+	                         ContainerCDiskIter, Disk > ConstDiskIteratorP;
+	typedef DerefIterator<ConstDiskIteratorP,const Disk> ConstDiskIterator;
+
 	typedef ListListIterator<Container::ConstPlainIterator, ConstContIterator> ConstVolPart;
 	template< class Pred > 
 	    struct CVP { typedef ContainerIter<Pred, ConstVolPart> type; };
@@ -90,6 +109,52 @@ class Storage
 	    { 
 	    return( ConstContIterator( ConstContIteratorP( Disks.begin(), Disks.end(), CheckFnc, true )) );
 	    }
+	template< class Pred > typename ContCondIPair<Pred>::type ContCondPair( const Pred& p ) const
+	    {
+	    return( ContCondIPair<Pred>::type( ContCondBegin( p ), ContCondEnd( p ) ) );
+	    }
+	template< class Pred > typename CC<Pred>::type ContCondBegin( const Pred& p ) const
+	    {
+	    return( CC<Pred>::type( CCP<Pred>::type( Disks.begin(), Disks.end(), p )) );
+	    }
+	template< class Pred > typename CC<Pred>::type ContCondEnd( const Pred& p ) const
+	    {
+	    return( CC<Pred>::type( CCP<Pred>::type( Disks.begin(), Disks.end(), p, true )) );
+	    }
+
+	typedef IterPair<ConstDiskIterator> ConstDiskPair;
+	ConstDiskPair DiskPair( bool (* CheckFnc)( const Disk& )=NULL ) const
+	    { 
+	    return( ConstDiskPair( DiskBegin( CheckFnc ), DiskEnd( CheckFnc ) ));
+	    }
+	ConstDiskIterator DiskBegin( bool (* CheckFnc)( const Disk& )=NULL ) const
+	    { 
+	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( Disks.begin(), Disks.end() ),
+	                                    ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstDiskIterator( ConstDiskIteratorP( p, CheckFnc )) );
+	    }
+	ConstDiskIterator DiskEnd( bool (* CheckFnc)( const Disk& )=NULL ) const
+	    { 
+	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( Disks.begin(), Disks.end() ),
+	                                    ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstDiskIterator( ConstDiskIteratorP( p, CheckFnc, true )) );
+	    }
+	template< class Pred > typename DiskCondIPair<Pred>::type DiskCondPair( const Pred& p ) const
+	    {
+	    return( DiskCondIPair<Pred>::type( DiskCondBegin( p ), DiskCondEnd( p ) ) );
+	    }
+	template< class Pred > typename CD<Pred>::type DiskCondBegin( const Pred& p ) const
+	    {
+	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( Disks.begin(), Disks.end() ),
+					       ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    return( CD<Pred>::type( CDP<Pred>::type( pair, p )) );
+	    }
+	template< class Pred > typename CD<Pred>::type DiskCondEnd( const Pred& p ) const
+	    {
+	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( Disks.begin(), Disks.end() ),
+					       ContainerCDiskIter( Disks.begin(), Disks.end(), true ));
+	    return( CD<Pred>::type( CDP<Pred>::type( pair, p, true )) );
+	    }
 
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 	ConstVolPair VolPair( bool (* CheckCnt)( const Container& )) const
@@ -124,19 +189,6 @@ class Storage
 	                              *new ConstVolPart( ContPair( CheckCnt ), true ));
 	    return( ConstVolIterator( ConstVolPIterator(p, CheckVol, true )));
 	    }
-
-	template< class Pred > typename ContCondIPair<Pred>::type ContCondPair( const Pred& p ) const
-	    {
-	    return( ContCondIPair<Pred>::type( ContCondBegin( p ), ContCondEnd( p ) ) );
-	    }
-	template< class Pred > typename CC<Pred>::type ContCondBegin( const Pred& p ) const
-	    {
-	    return( CC<Pred>::type( CCP<Pred>::type( Disks.begin(), Disks.end(), p )) );
-	    }
-	template< class Pred > typename CC<Pred>::type ContCondEnd( const Pred& p ) const
-	    {
-	    return( CC<Pred>::type( CCP<Pred>::type( Disks.begin(), Disks.end(), p, true )) );
-	    }
 	template< class Pred > typename VolCondIPair<Pred>::type VolCondPair( const Pred& p ) const
 	    {
 	    return( VolCondIPair<Pred>::type( VolCondBegin( p ), VolCondEnd( p ) ) );
@@ -153,6 +205,7 @@ class Storage
 	                                 *new ConstVolPart( ContPair(), true ));
 	    return( CV<Pred>::type( CVP<Pred>::type(pair, p, true )) );
 	    }
+
 
     protected:
 	typedef IterPair<ContIterator> CIPair;
