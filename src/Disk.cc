@@ -249,7 +249,7 @@ bool Disk::detectPartitions()
     if( dlabel.size()==0 )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
-    y2milestone( "ret:%d partitons:%d detected label:%s label:%s", ret,
+    y2milestone( "ret:%d partitons:%zd detected label:%s label:%s", ret,
                  vols.size(), detected_label.c_str(), label.c_str() );
     return( ret );
     }
@@ -825,13 +825,13 @@ unsigned Disk::availablePartNumber( PartitionType type )
     return( ret );
     }
 
-static bool notDeletedLog( const Partition& p ) 
-    { 
+static bool notDeletedLog( const Partition& p )
+    {
     return( !p.deleted() && p.type()==LOGICAL );
     }
 
 int Disk::createPartition( PartitionType type, unsigned long start,
-                           unsigned long len, string& device, 
+                           unsigned long len, string& device,
 			   bool checkRelaxed )
     {
     y2milestone( "begin type %d at %ld len %ld relxed:%d", type, start, len, checkRelaxed );
@@ -1106,7 +1106,7 @@ int Disk::doSetType( Volume* v )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "boot " << 
+	    cmd_line << "boot " <<
 		     ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
@@ -1216,7 +1216,7 @@ int Disk::doCreate( Volume* v )
 	    PartitionType type;
 	    string pstart;
 	    bool boot;
-	    if( cmd.numLines()>0 && 
+	    if( cmd.numLines()>0 &&
 	        scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
 		                pstart, id, boot ))
 		{

@@ -27,7 +27,7 @@ SystemCmd::SystemCmd( const string& Command_Cv, bool UseTmp_bv ) :
 	OutputHandler_f(NULL),
 	HandlerPar_p(NULL)
     {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d", 
+    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d",
                  Command_Cv.c_str(), UseTmp_bv, Nr_i );
     Append_ab[0] = false;
     Append_ab[1] = false;
@@ -41,7 +41,7 @@ SystemCmd::SystemCmd( const char* Command_Cv, bool UseTmp_bv ) :
 	OutputHandler_f(NULL),
 	HandlerPar_p(NULL)
     {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d", 
+    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d",
                  Command_Cv, UseTmp_bv, Nr_i );
     Append_ab[0] = false;
     Append_ab[1] = false;
@@ -154,11 +154,11 @@ SystemCmd::setOutputHandler( void (*Handle_f)( void *, string, bool ),
     HandlerPar_p = Par_p;
     }
 
-void 
+void
 SystemCmd::closeOpenFds()
     {
     int max_fd = getdtablesize();
-    for( int fd = 3; fd < max_fd; fd++ ) 
+    for( int fd = 3; fd < max_fd; fd++ )
 	{
 	close(fd);
 	}
@@ -450,7 +450,7 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
     bool BeginOfLine_bi;
     string Search_Ci( Pat_Cv );
 
-    y2debug( "Select Idx:%d Pattern:\"%s\" Invert:%d", Idx_iv, Pat_Cv.c_str(), 
+    y2debug( "Select Idx:%d Pattern:\"%s\" Invert:%d", Idx_iv, Pat_Cv.c_str(),
              Invert_bv );
     if( Idx_iv > 1 )
 	{
@@ -475,7 +475,7 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
 	    {
 	    SelLines_aC[Idx_iv].resize( Size_ii+1 );
 	    SelLines_aC[Idx_iv][Size_ii] = &Lines_aC[Idx_iv][I_ii];
-	    y2debug( "Select Added Line %d \"%s\"", Size_ii, 
+	    y2debug( "Select Added Line %d \"%s\"", Size_ii,
 	             SelLines_aC[Idx_iv][Size_ii]->c_str() );
 	    Size_ii++;
 	    }
@@ -650,7 +650,7 @@ SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
     if( Lines_Cr.size()<100 )
 	{
 #endif
-	y2debug( "Adding Line %d \"%s\"", Lines_Cr.size()+1, Text_Cv.c_str() );
+	y2debug( "Adding Line %zd \"%s\"", Lines_Cr.size()+1, Text_Cv.c_str() );
 #ifndef FULL_DEBUG_SYSTEM_CMD
 	}
 #endif
@@ -667,7 +667,7 @@ SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
 //	OUTPUT :
 //	DESCRIPTION : Place stdout/stderr linewise in Ret_Cr
 //
-int SystemCmd::placeOutput( unsigned Which_iv, vector<string> &Ret_Cr, 
+int SystemCmd::placeOutput( unsigned Which_iv, vector<string> &Ret_Cr,
                             const bool Append_bv ) const
 {
   if ( !Append_bv )
