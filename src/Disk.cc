@@ -1,4 +1,4 @@
-#include <iostream> 
+#include <iostream>
 
 #include <ycp/y2log.h>
 
@@ -21,8 +21,8 @@
 
 #define PARTEDCMD "/usr/sbin/parted -s "  // blank at end !!
 
-Disk::Disk( const Storage * const s, const string& Name, 
-            unsigned long long SizeK ) : 
+Disk::Disk( const Storage * const s, const string& Name,
+            unsigned long long SizeK ) :
     Container(s,Name,staticType())
     {
     size_k = SizeK;
@@ -209,7 +209,7 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
 	{
 	ret = false;
 	}
-    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld", ret, range, mjr, 
+    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld", ret, range, mjr,
                  mnr );
     return( ret );
     }
@@ -244,7 +244,7 @@ bool Disk::detectPartitions()
     if( dlabel.size()==0 )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
-    y2milestone( "ret:%d partitons:%d label:%s", ret, vols.size(), 
+    y2milestone( "ret:%d partitons:%d label:%s", ret, vols.size(),
                  dlabel.c_str() );
     return( ret );
     }
@@ -337,8 +337,8 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     }
 
 bool
-Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start, 
-                      unsigned long& csize, Partition::PType& type, 
+Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
+                      unsigned long& csize, Partition::PType& type,
 		      string& parted_start, unsigned& id, bool& boot )
     {
     double StartM, EndM;
@@ -359,7 +359,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	Data >> nr >> StartM >> EndM;
 	}
     std::ostringstream Buf;
-    Buf << std::setprecision(3) << std::setiosflags(std::ios_base::fixed) 
+    Buf << std::setprecision(3) << std::setiosflags(std::ios_base::fixed)
 	<< StartM;
     parted_start = Buf.str().c_str();
     char c;
@@ -458,7 +458,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		  }
 	      if( id == Partition::ID_LINUX )
 		  {
-		  if( val.find( "Apple_partition" ) != string::npos || 
+		  if( val.find( "Apple_partition" ) != string::npos ||
 		      val.find( "Apple_Driver" ) != string::npos ||
 		      val.find( "Apple_Loader" ) != string::npos ||
 		      val.find( "Apple_Boot" ) != string::npos ||
@@ -517,14 +517,14 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 	tmp = extractNthWord( 0, line );
 	if( tmp.length()>0 && isdigit(tmp[0]) )
 	    {
-	    if( scanPartedLine( line, pnr, c_start, c_size, type, p_start, id, 
+	    if( scanPartedLine( line, pnr, c_start, c_size, type, p_start, id,
 	                        boot ))
 		{
 		if( pnr<range )
 		    {
 		    unsigned long long s = cylinderToKb(c_size);
 		    Partition *p = new Partition( *this, pnr, s,
-						  c_start, c_size, type, 
+						  c_start, c_size, type,
 						  p_start, id, boot );
 		    if( ppart.getSize( p->device(), s ))
 			{
@@ -533,7 +533,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 			}
 		    pl.push_back( p );
 		    }
-		else 
+		else
 		    range_exceed = max( range_exceed, (unsigned long)pnr );
 		}
 	    }
@@ -572,14 +572,14 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 			    type = Partition::LOGICAL;
 			    }
 			}
-		    Partition *p = 
+		    Partition *p =
 			new Partition( *this, pr.second, s, cyl_start, cyl,
-			               type, 
+			               type,
 				       decString(cylinderToKb(cyl_start)),
 				       id, false );
 		    pl.push_back( p );
 		    }
-		else 
+		else
 		    range_exceed = max( range_exceed, (unsigned long)pr.second );
 		cyl_start += cyl;
 		}
@@ -602,10 +602,10 @@ _("The partitioning on your disk %1$s is not readable by\n"
 	{
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	//            %2$lu and %3$lu are replaced by numbers.
-	string txt = sformat( 
+	string txt = sformat(
 _("Your disk %1$s contains %2$lu partitions. The maximal number\n"
 "of partitions to handle by the kernel driver of disk is %3$lu.\n"
-"You will not be able to access partitions numbered above %3$lu."), 
+"You will not be able to access partitions numbered above %3$lu."),
                               (char*)dev.c_str(), range_exceed, range-1 );
 	// TODO: handle callback into ycp code for error popup
 	y2milestone( "range_exceed:%s", txt.c_str() );
@@ -638,14 +638,14 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
 	pair<string,long> p = getDiskPartition( *i );
-	if( p.second>=0 && p.second!=ext_nr && 
+	if( p.second>=0 && p.second!=ext_nr &&
 	    pp.getInfo( *i, SizeK, Dummy, Dummy ))
 	    {
 	    proc_l[unsigned(p.second)] = kbToCylinder( SizeK );
 	    }
 	}
     bool openbsd = false;
-    if( proc_l.size()==parted_l.size() || 
+    if( proc_l.size()==parted_l.size() ||
         ((openbsd=haveBsdPart()) && proc_l.size()>parted_l.size()) )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;

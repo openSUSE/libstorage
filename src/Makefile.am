@@ -12,7 +12,8 @@ Makefile: y2storage
 
 lib_LTLIBRARIES = liby2storage.la
 
-liby2storage_la_SOURCES =		     \
+liby2storage_la_SOURCES =			\
+	StorageInterface.h			\
 	Storage.cc	 Storage.h           \
 	Container.cc     Container.h	     \
 	  Disk.cc        Disk.h	     	     \
@@ -40,8 +41,8 @@ pkgincludedir = $(includedir)/y2storage
 
 # these go to $(pkgincludedir)
 
-pkginclude_HEADERS =                                                    \
-        Storage.h Container.h Volume.h Disk.h \
+pkginclude_HEADERS =							\
+        StorageInterface.h Storage.h Container.h Volume.h Disk.h	\
 	Partition.h Md.h Loop.h LvmVg.h LvmLv.h \
 	Evms.h EvmsVol.h \
 	FilterIterator.h ListListIterator.h DerefIterator.h \

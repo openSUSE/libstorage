@@ -157,3 +157,12 @@ Storage::autodetectDisks()
 string Storage::proc_arch;
 
 
+bool
+Storage::getDisks (list<string>& disks)
+{
+    disks.clear ();
+
+    for (ConstDiskIterator i = diskBegin(); i != diskEnd(); ++i)
+	disks.push_back (i->name());
+}
+
