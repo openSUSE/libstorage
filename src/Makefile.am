@@ -26,6 +26,7 @@ liby2storage_la_SOURCES =			\
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
 	SystemCmd.cc     SystemCmd.h         \
+	OutputProcessor.cc OutputProcessor.h \
 	Regex.cc         Regex.h             \
 	AsciiFile.cc     AsciiFile.h         \
 	  ProcPart.cc    ProcPart.h 	     \

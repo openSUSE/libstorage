@@ -44,10 +44,12 @@ ProcMounts::ProcMounts()
 string 
 ProcMounts::getMount( const string& dev ) const
     {
+    y2milestone( "begin" );
     string ret;
     map<string,string>::const_iterator i = co.find( dev );
     if( i!=co.end() )
 	ret = i->second;
+    y2milestone( "end" );
     return( ret );
     }
 

@@ -11,6 +11,11 @@ struct FstabEntry
     {
     FstabEntry() { freq=passno=0; crypto=loop=noauto=false; 
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
+    bool operator==( const FstabEntry& rhs )
+	{ return( device == rhs.device && mount == rhs.mount ); }
+    bool operator!=( const FstabEntry& rhs )
+	{ return( ! (*this == rhs) ); }
+
     string device;
     string mount;
     string fs;
@@ -34,16 +39,17 @@ class EtcFstab
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findUuidLabel( const string& uuid, const string& label,
 			    FstabEntry& entry ) const;
-	void updateEntry( const string& dev, const string& mount,
-	                  const string& fs, const string& opts="defaults" );
-	void updateEntry( const FstabEntry& entry );
+	int updateEntry( const string& dev, const string& mount,
+	                 const string& fs, const string& opts="defaults" );
+	int updateEntry( const FstabEntry& entry );
+	int removeEntry( const FstabEntry& entry );
 	void keepSync( bool val=true ) { sync=val; }
 	void flush();
     protected:
 	struct Entry
 	    {
-	    enum operation { FST_NONE, FST_ADD, FST_REMOVE, FST_UPDATE };
-	    Entry() { op=FST_NONE; }
+	    enum operation { NONE, ADD, REMOVE, UPDATE };
+	    Entry() { op=NONE; }
 	    operation op;
 	    FstabEntry nnew;
 	    FstabEntry old;

@@ -225,7 +225,7 @@ bool Disk::detectPartitions()
     string dlabel;
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
-    SystemCmd Cmd( cmd_line, true );
+    SystemCmd Cmd( cmd_line );
     checkSystemError( cmd_line, Cmd );
     if( Cmd.select( "Disk label type:" )>0 )
 	{
@@ -1035,6 +1035,22 @@ int Disk::doCreateLabel( const string& label_name )
     {
     y2milestone( "label:%s", label_name.c_str() );
     int ret = 0;
+    VolPair p = volPair();
+    if( !p.empty() )
+	{
+	VolIterator i=p.end();
+	do
+	    {
+	    if( i!=p.begin() )
+		--i;
+	    VolIterator save = i;
+	    if( !save->created() )
+		{
+		doRemove( &(*save) );
+		}
+	    }
+	while( i!=p.begin() );
+	}
     system_stderr.erase();
     std::ostringstream cmd_line;
     cmd_line << PARTEDCMD << device() << " mklabel " << label_name;
@@ -1252,7 +1268,8 @@ int Disk::doRemove( Volume* v )
 	system_stderr.erase();
 	y2milestone( "doRemove container %s name %s", name().c_str(),
 		     p->name().c_str() );
-	if( !p->created() )
+	ret = v->prepareRemove();
+	if( ret==0 && !p->created() )
 	    {
 	    std::ostringstream cmd_line;
 	    cmd_line << PARTEDCMD << device() << " rm " << p->OrigNr();

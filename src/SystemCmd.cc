@@ -1,14 +1,10 @@
 // Maintainer: fehr@suse.de
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <iostream>
 #include <fstream>
-#include <sys/vfs.h>
-#include <sys/types.h>
 #include <sys/wait.h>
-#include <sys/stat.h>
 
 #include <ycp/y2log.h>
 
@@ -16,134 +12,49 @@
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
+#include "y2storage/OutputProcessor.h"
 
 int SystemCmd::Nr_i = 0;
 
 //#define FULL_DEBUG_SYSTEM_CMD
 
-SystemCmd::SystemCmd( const string& Command_Cv, bool UseTmp_bv ) :
-	Combine_b(false),
-	UseTmp_b(UseTmp_bv),
-	OutputHandler_f(NULL),
-	HandlerPar_p(NULL)
+SystemCmd::SystemCmd( const char* Command )
     {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d",
-                 Command_Cv.c_str(), UseTmp_bv, Nr_i );
-    Append_ab[0] = false;
-    Append_ab[1] = false;
-    initFile();
+    y2milestone( "Konstruktor SystemCmd:\"%s\" Nr:%d", Command, Nr_i );
+    init();
+    execute( Command );
+    }
+
+SystemCmd::SystemCmd( const string& Command_Cv )
+    {
+    y2milestone( "Konstruktor SystemCmd:\"%s\" Nr:%d", Command_Cv.c_str(), 
+                 Nr_i );
+    init();
     execute( Command_Cv );
     }
 
-SystemCmd::SystemCmd( const char* Command_Cv, bool UseTmp_bv ) :
-	Combine_b(false),
-	UseTmp_b(UseTmp_bv),
-	OutputHandler_f(NULL),
-	HandlerPar_p(NULL)
+SystemCmd::SystemCmd()
     {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d",
-                 Command_Cv, UseTmp_bv, Nr_i );
-    Append_ab[0] = false;
-    Append_ab[1] = false;
-    initFile();
-    execute( Command_Cv );
+    init();
+    y2milestone( "Konstruktor SystemCmd Nr:%d", Nr_i );
     }
 
-SystemCmd::SystemCmd( bool UseTmp_bv ) :
-	Combine_b(false),
-	UseTmp_b(UseTmp_bv),
-	OutputHandler_f(NULL),
-	HandlerPar_p(NULL)
+void SystemCmd::init()
     {
-    y2milestone( "Konstruktor SystemCmd UseTmp:%d Nr:%d", UseTmp_b, Nr_i );
-    Append_ab[0] = false;
-    Append_ab[1] = false;
-    initFile();
+    Combine_b = false;
+    OutputHandler_f = NULL;
+    HandlerPar_p = NULL;
+    output_proc = NULL;
+    File_aC[0] = File_aC[1] = NULL;
+    pfds[0].events = pfds[1].events = POLLIN;
     }
 
 SystemCmd::~SystemCmd()
     {
-    if( !Append_ab[IDX_STDOUT] && FileName_aC[IDX_STDOUT]!="" )
-	{
-  	unlink( FileName_aC[IDX_STDOUT].c_str() );
-	}
-    if( !Append_ab[IDX_STDERR] && FileName_aC[IDX_STDERR]!="" )
-	{
-  	unlink( FileName_aC[IDX_STDERR].c_str() );
-	}
-    }
-
-void
-SystemCmd::initFile( )
-    {
-    string Tmp_Ci = "/tmp";
-
-    invalidate();
-    Tmp_Ci += '/';
-    Tmp_Ci += "YaST2.tdir";
-    mkdir( Tmp_Ci.c_str(), 0700 );
-    char buf[20];
-    Tmp_Ci += "/stp";
-    sprintf( buf, "%d", getpid() );
-    Tmp_Ci += buf;
-    Tmp_Ci += '_';
-    sprintf( buf, "%d", Nr_i );
-    Tmp_Ci += buf;
-    Tmp_Ci += '_';
-    Nr_i++;
-
-    if( !Append_ab[IDX_STDOUT] )
-	{
-	if( FileName_aC[IDX_STDOUT].length() )
-	    {
-  	    unlink( FileName_aC[IDX_STDOUT].c_str() );
-	    }
-	FileName_aC[IDX_STDOUT] = Tmp_Ci+'S';
-	unlink( FileName_aC[IDX_STDOUT].c_str() );
-	}
-    if( !Append_ab[IDX_STDERR] )
-	{
-	if( FileName_aC[IDX_STDERR].length() )
-	    {
-  	    unlink( FileName_aC[IDX_STDERR].c_str() );
-	    }
-	FileName_aC[IDX_STDERR] = Tmp_Ci+'E';
-	unlink( FileName_aC[IDX_STDERR].c_str() );
-	}
-    y2milestone( "File:\"%s\"", FileName_aC[IDX_STDOUT].c_str() );
-    }
-
-void
-SystemCmd::initCmd( string CmdIn_rv, string& CmdRedir_Cr )
-    {
-    invalidate();
-    CmdRedir_Cr = CmdIn_rv;
-    if( !Combine_b )
-	{
-	CmdRedir_Cr += " >";
-	if( Append_ab[IDX_STDOUT] )
-	    {
-	    CmdRedir_Cr += ">";
-	    }
-	CmdRedir_Cr += FileName_aC[IDX_STDOUT];
-	CmdRedir_Cr += " 2>";
-	if( Append_ab[IDX_STDERR] )
-	    {
-	    CmdRedir_Cr += ">";
-	    }
-	CmdRedir_Cr += FileName_aC[IDX_STDERR];
-	}
-    else
-	{
-	CmdRedir_Cr += " >";
-	if( Append_ab[IDX_STDOUT] )
-	    {
-	    CmdRedir_Cr += ">";
-	    }
-	CmdRedir_Cr += FileName_aC[IDX_STDOUT];
-	CmdRedir_Cr += " 2>&1";
-	}
-    y2debug( "InitCmd:\"%s\"", CmdRedir_Cr.c_str() );
+    if( File_aC[IDX_STDOUT] )
+	fclose( File_aC[IDX_STDOUT] );
+    if( File_aC[IDX_STDERR] )
+	fclose( File_aC[IDX_STDERR] );
     }
 
 void
@@ -184,47 +95,137 @@ SystemCmd::execute( const string& Cmd_Cv )
     }
 
 int
-SystemCmd::doExecute( string Cmd_Cv )
+SystemCmd::doExecute( string Cmd )
     {
-    string Cmd_Ci;
     string Shell_Ci = "/bin/sh";
 
+    if( output_proc )
+	{
+	output_proc->reset();
+	}
     timeMark( "System", false );
-    initCmd( Cmd_Cv, Cmd_Ci );
-    y2debug( "Cmd_Ci:%s", Cmd_Ci.c_str() );
+    y2debug( "Cmd:%s", Cmd.c_str() );
     if( access( Shell_Ci.c_str(), X_OK ) != 0 )
 	{
 	Shell_Ci = ALTERNATE_SHELL;
 	}
-    switch( (Pid_i=fork()) )
+    File_aC[IDX_STDERR] = File_aC[IDX_STDOUT] = NULL;
+    invalidate();
+    int sout[2];
+    int serr[2];
+    bool ok_bi = true;
+    if( pipe(sout)<0 )
 	{
-	case 0:
-	    setenv( "LC_ALL", "C", 1 );
-	    setenv( "LANGUAGE", "C", 1 );
-	    closeOpenFds();
-	    Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
-			   Cmd_Ci.c_str(),
-	                   NULL );
-	    y2error( "SHOULD NOT HAPPEN \"%s\" Ret:%d", Shell_Ci.c_str(),
-		     Ret_i );
-	    break;
-	case -1:
-	    Ret_i = -1;
-	    break;
-	default:
-	    Ret_i = 0;
-	    if( !Background_b )
-		{
-		doWait( true, Ret_i );
-		}
-	    break;
+	y2error( "pipe stdout creation failed errno=%d (%s)", errno, 
+	         strerror(errno)); 
+	ok_bi = false;
 	}
-    timeMark( "After system()" );
+    if( !Combine_b && pipe(serr)<0 ) 
+	{
+	y2error( "pipe stderr creation failed errno=%d (%s)", errno, 
+	         strerror(errno)); 
+	ok_bi = false;
+	}
+    if( ok_bi )
+	{
+	pfds[0].fd = sout[0];
+	if( fcntl( pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
+	    {
+	    y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno, 
+		     strerror(errno)); 
+	    }
+	if( !Combine_b )
+	    {
+	    pfds[1].fd = serr[0];
+	    if( fcntl( pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
+		{
+		y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno, 
+			 strerror(errno)); 
+		}
+	    }
+	y2debug( "sout:%d serr:%d", pfds[0].fd, Combine_b?-1:pfds[1].fd );
+	switch( (Pid_i=fork()) )
+	    {
+	    case 0:
+		setenv( "LC_ALL", "C", 1 );
+		setenv( "LANGUAGE", "C", 1 );
+		if( dup2( sout[1], 1 )<0 )
+		    {
+		    y2error( "dup2 stdout child failed errno=%d (%s)", errno, 
+			     strerror(errno));
+		    }
+		if( !Combine_b && dup2( serr[1], 2 )<0 )
+		    {
+		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
+			     strerror(errno));
+		    }
+		if( Combine_b && dup2( 2, 1 )<0 )
+		    {
+		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
+			     strerror(errno));
+		    }
+		if( close( sout[0] )<0 )
+		    {
+		    y2error( "close child failed errno=%d (%s)", errno, 
+		             strerror(errno)); 
+		    }
+		if( !Combine_b && close( serr[0] )<0 )
+		    {
+		    y2error( "close child failed errno=%d (%s)", errno, 
+		             strerror(errno)); 
+		    }
+		closeOpenFds();
+		Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
+			       Cmd.c_str(), NULL );
+		y2error( "SHOULD NOT HAPPEN \"%s\" Ret:%d", Shell_Ci.c_str(),
+			 Ret_i );
+		break;
+	    case -1:
+		Ret_i = -1;
+		break;
+	    default:
+		if( close( sout[1] )<0 )
+		    {
+		    y2error( "close parent failed errno=%d (%s)", errno, 
+		             strerror(errno)); 
+		    }
+		if( !Combine_b && close( serr[1] )<0 )
+		    {
+		    y2error( "close parent failed errno=%d (%s)", errno, 
+		             strerror(errno)); 
+		    }
+		Ret_i = 0;
+		File_aC[IDX_STDOUT] = fdopen( sout[0], "r" );
+		if( File_aC[IDX_STDOUT] == NULL )
+		    {
+		    y2error( "fdopen stdout failed errno=%d (%s)", errno, 
+		             strerror(errno)); 
+		    }
+		if( !Combine_b )
+		    {
+		    File_aC[IDX_STDERR] = fdopen( serr[0], "r" );
+		    if( File_aC[IDX_STDERR] == NULL )
+			{
+			y2error( "fdopen stderr failed errno=%d (%s)", errno, 
+				 strerror(errno)); 
+			}
+		    }
+		if( !Background_b )
+		    {
+		    doWait( true, Ret_i );
+		    }
+		break;
+	    }
+	}
+    else
+	{
+	Ret_i = -1;
+	}
+    timeMark( "After fork()" );
     if( Ret_i==-127 || Ret_i==-1 )
 	{
-	y2error("system (%s) = %d", Cmd_Cv.c_str(), Ret_i);
+	y2error("system (%s) = %d", Cmd.c_str(), Ret_i);
 	}
-    openFiles();
     checkOutput();
     y2milestone( "system() Returns:%d", Ret_i );
     timeMark( "After CheckOutput" );
@@ -237,10 +238,36 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
     {
     int Wait_ii;
     int Status_ii;
+    int sel;
 
-    Wait_ii = waitpid( Pid_i, &Status_ii, Hang_bv?0:WNOHANG );
+    do
+	{
+	y2debug( "[0] id:%d ev:%x [1] fs:%d ev:%x", 
+	             pfds[0].fd, (unsigned)pfds[0].events,
+		     Combine_b?-1:pfds[1].fd, Combine_b?0:(unsigned)pfds[1].events );
+	if( (sel=poll( pfds, Combine_b?1:2, 1000 ))<0 )
+	    {
+	    y2error( "poll failed errno=%d (%s)", errno, strerror(errno)); 
+	    }
+	y2debug( "poll ret:%d", sel );
+	if( sel>0 )
+	    {
+	    checkOutput();
+	    }
+	Wait_ii = waitpid( Pid_i, &Status_ii, WNOHANG );
+	y2debug( "Wait ret:%d", Wait_ii );
+	}
+    while( Hang_bv && Wait_ii == 0 );
     if( Wait_ii != 0 )
 	{
+	checkOutput();
+	fclose( File_aC[IDX_STDOUT] );
+	File_aC[IDX_STDOUT] = NULL;
+	if( !Combine_b )
+	    {
+	    fclose( File_aC[IDX_STDERR] );
+	    File_aC[IDX_STDERR] = NULL;
+	    }
 	if( !WIFEXITED(Status_ii) )
 	    {
 	    Ret_ir = -127;
@@ -248,6 +275,10 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	else
 	    {
 	    Ret_ir = WEXITSTATUS(Status_ii);
+	    }
+	if( output_proc )
+	    {
+	    output_proc->finished();
 	    }
 	}
     y2debug( "Wait:%d pid=%d stat=%d Hang:%d Ret:%d", Wait_ii, Pid_i,
@@ -260,114 +291,6 @@ SystemCmd::setCombine( const bool Comb_bv )
     {
     Combine_b = Comb_bv;
     }
-
-string
-SystemCmd::getFilename( unsigned Idx_iv )
-    {
-    string Ret_Ci;
-
-    if( Idx_iv > 1 )
-	{
-	y2error("invalid index %d", Idx_iv );
-	}
-    else
-	{
-	Ret_Ci = FileName_aC[Idx_iv];
-	}
-    return( Ret_Ci );
-    }
-
-
-void
-SystemCmd::appendTo( string File_Cv, const unsigned Idx_iv )
-    {
-    struct statfs Buf_ri;
-    string::size_type Pos_ii;
-
-    if( Idx_iv > 1 )
-	{
-	y2error("invalid index %d", Idx_iv );
-	}
-    y2debug( "AppendTo File:\"%s\"", File_Cv.c_str() );
-    if( !File_Cv.length() )
-        {
-        if( Append_ab[Idx_iv] )
-	    {
-	    Append_ab[Idx_iv] = false;
-	    FileName_aC[Idx_iv] = "";
-	    initFile();
-	    }
-        return;                      // <--- just reset and return
-        }
-    if( (Pos_ii=File_Cv.find( '/' )) != string::npos )
-	{
-	string Tmp_Ci( File_Cv );
-	Tmp_Ci.erase(0, Pos_ii );
-	if( access( Tmp_Ci.c_str(), R_OK ) )
-	    {
-	    y2debug( "AppendTo CreatePath:\"%s\"", Tmp_Ci.c_str() );
-	    createPath( Tmp_Ci );
-	    }
-	}
-    std::ofstream File_Ci( File_Cv.c_str(), std::ios::app );
-    File_Ci.close();
-    if( !Append_ab[Idx_iv] && FileName_aC[Idx_iv].length() )
-	{
-  	unlink( FileName_aC[Idx_iv].c_str() );
-	}
-    Append_ab[Idx_iv] = true;
-    statfs( File_Cv.c_str(), &Buf_ri );
-#ifdef SYSTEMCMD_VERBOSE_DEBUG
-    y2debug( "Statfs File:\"%s\" Free:%d", File_Cv.c_str(), Buf_ri.f_bfree );
-#endif
-    if( Buf_ri.f_bfree > 0 )
-	{
-	FileName_aC[Idx_iv] = File_Cv;
-	}
-    else
-	{
-	y2error( "File System full - Append to /dev/null" );
-	FileName_aC[Idx_iv] = "/dev/null";
-	}
-    }
-
-void
-SystemCmd::openFiles()
-    {
-    int Rest_ii = 5*1000000;
-
-    File_aC[IDX_STDOUT].close();
-    if( !Append_ab[IDX_STDOUT] )
-	{
-	while( access( FileName_aC[IDX_STDOUT].c_str(), R_OK ) == -1 && Rest_ii>0 )
-	    {
-	    delay( 10000 );
-	    Rest_ii -= 10000;
-	    }
-	File_aC[IDX_STDOUT].clear();
-	File_aC[IDX_STDOUT].open( FileName_aC[IDX_STDOUT].c_str() );
-	if( !File_aC[IDX_STDOUT].good() )
-	    {
-	    y2error("could not open %s", FileName_aC[IDX_STDOUT].c_str() );
-	    }
-	}
-    File_aC[IDX_STDERR].close();
-    if( !Append_ab[IDX_STDERR] && !Combine_b )
-	{
-	while( access( FileName_aC[IDX_STDERR].c_str(), R_OK ) == -1 && Rest_ii>0 )
-	    {
-	    delay( 10000 );
-	    Rest_ii -= 10000;
-	    }
-	File_aC[IDX_STDERR].clear();
-	File_aC[IDX_STDERR].open( FileName_aC[IDX_STDERR].c_str() );
-	if( !File_aC[IDX_STDERR].good() )
-	    {
-	    y2error("could not open %s", FileName_aC[IDX_STDERR].c_str() );
-	    }
-	}
-    }
-
 
 const string *
 SystemCmd::getString( unsigned Idx_iv ) const
@@ -450,8 +373,6 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
     bool BeginOfLine_bi;
     string Search_Ci( Pat_Cv );
 
-    y2debug( "Select Idx:%d Pattern:\"%s\" Invert:%d", Idx_iv, Pat_Cv.c_str(),
-             Invert_bv );
     if( Idx_iv > 1 )
 	{
 	y2error("invalid index %d", Idx_iv );
@@ -476,11 +397,12 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
 	    SelLines_aC[Idx_iv].resize( Size_ii+1 );
 	    SelLines_aC[Idx_iv][Size_ii] = &Lines_aC[Idx_iv][I_ii];
 	    y2debug( "Select Added Line %d \"%s\"", Size_ii,
-	             SelLines_aC[Idx_iv][Size_ii]->c_str() );
+		     SelLines_aC[Idx_iv][Size_ii]->c_str() );
 	    Size_ii++;
 	    }
 	}
-    y2debug( "Select Lines %d", Size_ii );
+    y2milestone( "Pid:%d Idx:%d Pattern:\"%s\" Invert:%d Lines %d", Pid_i, 
+                 Idx_iv, Pat_Cv.c_str(), Invert_bv, Size_ii );
     return( Size_ii );
     }
 
@@ -501,90 +423,46 @@ SystemCmd::invalidate()
 void
 SystemCmd::checkOutput()
     {
-    struct statfs Buf_ri;
-    bool Full_bi = false;
-    bool Done_bi = false;
-    string Name_Ci;
-
-    do
-	{
-	if( Background_b && !(Done_bi=doWait( false, Ret_i )))
-	    {
-	    delay( 100000 );
-	    }
-	statfs( FileName_aC[IDX_STDOUT].c_str(), &Buf_ri );
-#ifdef SYSTEMCMD_VERBOSE_DEBUG
-	y2debug( "File:\"%s\" Free Stdout:%d", FileName_aC[IDX_STDOUT].c_str(),
-	         Buf_ri.f_bfree );
-#endif
-	if( Buf_ri.f_bfree == 0 )
-	    {
-	    if( !Append_ab[IDX_STDOUT] )
-		{
-		y2error("Filesystem full!! Couldn't write to /tmp or /mnt/tmp");
-		}
-	    else
-		{
-		Full_bi = true;
-		Name_Ci = FileName_aC[IDX_STDOUT];
-		}
-	    }
-	if( !Append_ab[IDX_STDOUT] )
-	    {
-	    getUntilEOF( File_aC[IDX_STDOUT], Lines_aC[IDX_STDOUT],
-			 NewLineSeen_ab[IDX_STDOUT], false );
-	    }
-	statfs( FileName_aC[IDX_STDERR].c_str(), &Buf_ri );
-	if( Buf_ri.f_bfree == 0 && !Full_bi )
-	    {
-	    if( !Append_ab[IDX_STDERR] )
-		{
-		y2error("Filesystem full!! Couldn't write to /tmp or /mnt/tmp");
-		}
-	    else
-		{
-		Full_bi = true;
-		Name_Ci = FileName_aC[IDX_STDERR];
-		}
-	    }
-	if( !Append_ab[IDX_STDERR] )
-	    {
-	    getUntilEOF( File_aC[IDX_STDERR], Lines_aC[IDX_STDERR],
-			 NewLineSeen_ab[IDX_STDERR], true );
-	    }
-	}
-    while( !Full_bi && Background_b && !Done_bi );
-    if( Full_bi )
-	{
-	string Tmp_Ci = string("TXT_ERR_FS_FULL") + Name_Ci;
-	if( OutputHandler_f )
-	    {
-	    OutputHandler_f( HandlerPar_p, Tmp_Ci, true );
-	    }
-	Lines_aC[IDX_STDERR].push_back( Tmp_Ci );
-	}
+    y2debug( "NewLine out:%d err:%d", NewLineSeen_ab[IDX_STDOUT],
+	     NewLineSeen_ab[IDX_STDERR] );
+    if( File_aC[IDX_STDOUT] )
+	getUntilEOF( File_aC[IDX_STDOUT], Lines_aC[IDX_STDOUT],
+		     NewLineSeen_ab[IDX_STDOUT], false );
+    if( File_aC[IDX_STDERR] )
+	getUntilEOF( File_aC[IDX_STDERR], Lines_aC[IDX_STDERR],
+		     NewLineSeen_ab[IDX_STDERR], true );
+    y2debug( "NewLine out:%d err:%d", NewLineSeen_ab[IDX_STDOUT],
+	     NewLineSeen_ab[IDX_STDERR] );
     }
 
 #define BUF_LEN 256
 #define MAX_STRING (STRING_MAXLEN - BUF_LEN - 10)
 
 void
-SystemCmd::getUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
+SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
                         bool& NewLine_br, bool Stderr_bv )
     {
+    size_t old_size = Lines_Cr.size();
     char Buf_ti[BUF_LEN];
     int Cnt_ii;
     int Char_ii;
     string Text_Ci;
 
-    File_Cr.clear();
+    clearerr( File_Cr );
     Cnt_ii = 0;
-    while( (Char_ii=File_Cr.get()) != EOF )
+    Char_ii = EOF;
+    while( (Char_ii=fgetc(File_Cr)) != EOF )
 	{
 	Buf_ti[Cnt_ii++] = Char_ii;
 	if( Cnt_ii==sizeof(Buf_ti)-1 )
 	    {
 	    Buf_ti[Cnt_ii] = 0;
+	    extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
+	    Cnt_ii = 0;
+	    if( output_proc )
+		{
+		output_proc->process( Buf_ti, Stderr_bv );
+		}
 	    if( OutputHandler_f )
 		{
 #ifdef SYSTEMCMD_VERBOSE_DEBUG
@@ -593,13 +471,17 @@ SystemCmd::getUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
 #endif
 		OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 		}
-	    extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
-	    Cnt_ii = 0;
 	    }
+	Char_ii = EOF;
 	}
     if( Cnt_ii>0 )
 	{
 	Buf_ti[Cnt_ii] = 0;
+	extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
+	if( output_proc )
+	    {
+	    output_proc->process( Buf_ti, Stderr_bv );
+	    }
 	if( OutputHandler_f )
 	    {
 #ifdef SYSTEMCMD_VERBOSE_DEBUG
@@ -608,21 +490,33 @@ SystemCmd::getUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
 #endif
 	    OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 	    }
-	extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
 	}
     if( Text_Ci.length() > 0 )
 	{
-	addLine( Text_Ci, Lines_Cr );
+	if( NewLine_br )
+	    {
+	    addLine( Text_Ci, Lines_Cr );
+	    }
+	else
+	    {
+	    Lines_Cr[Lines_Cr.size()-1] += Text_Ci;
+	    }
 	NewLine_br = false;
 	}
     else
 	{
 	NewLine_br = true;
 	}
+    y2debug( "Text_Ci:%s NewLine:%d", Text_Ci.c_str(), NewLine_br );
+    if( old_size != Lines_Cr.size() )
+	{
+	y2milestone( "pid:%d added lines:%d stderr:%d", Pid_i,
+	             Lines_Cr.size()-old_size, Stderr_bv );
+	}
     }
 
 void
-SystemCmd::extractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
+SystemCmd::extractNewline( const char* Buf_ti, int Cnt_iv, bool& NewLine_br,
                            string& Text_Cr, vector<string>& Lines_Cr )
     {
     string::size_type Idx_ii;
@@ -638,9 +532,10 @@ SystemCmd::extractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
 	    {
 	    addLine( Text_Cr.substr( 0, Idx_ii ), Lines_Cr );
 	    }
-	NewLine_br = true;
 	Text_Cr.erase( 0, Idx_ii+1 );
+	NewLine_br = true;
 	}
+    y2debug( "Text_Ci:%s NewLine:%d", Text_Cr.c_str(), NewLine_br );
     }
 
 void
@@ -650,7 +545,7 @@ SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
     if( Lines_Cr.size()<100 )
 	{
 #endif
-	y2debug( "Adding Line %zd \"%s\"", Lines_Cr.size()+1, Text_Cv.c_str() );
+	y2milestone( "Adding Line %zd \"%s\"", Lines_Cr.size()+1, Text_Cv.c_str() );
 #ifndef FULL_DEBUG_SYSTEM_CMD
 	}
 #endif

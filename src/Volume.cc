@@ -4,12 +4,15 @@
 #include <sys/stat.h>
 #include <ycp/y2log.h>
 
+
 #include "y2storage/Volume.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Storage.h"
 #include "y2storage/Container.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/ProcMounts.h"
+#include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
@@ -52,7 +55,7 @@ void Volume::setNameDev()
 void Volume::init()
     {
     del = create = format = is_loop = false;
-    mauto = true;
+    mp_from_fstab = false;
     detected_fs = fs = UNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     setNameDev();
@@ -84,6 +87,16 @@ bool Volume::operator< ( const Volume& rhs ) const
 	return( !del );
     }
 
+bool Volume::deleted() const
+    {
+    bool d = del;
+    if( !d && cont->type()==Container::DISK && cont->deleted() )
+	{
+	d = !created();
+	}
+    return( d );
+    }
+
 bool Volume::getMajorMinor( const string& device,
 			    unsigned long& Major, unsigned long& Minor )
     {
@@ -113,20 +126,20 @@ void Volume::getFstabData( const EtcFstab& fstabData )
 	{
 	found = fstabData.findUuidLabel( uuid, label, entry );
 	}
-    if( !found && mount.size()>0 )
+    if( !found && mp.size()>0 )
 	{
-	found = fstabData.findMount( mount, entry );
+	found = fstabData.findMount( mp, entry );
 	}
     if( found )
 	{
 	std::ostringstream b;
 	b << "line[" << device() << "]=";
-	mauto = !entry.noauto;
-	b << "auto:" << mauto;
-	if( mount.size()==0 )
+	mp_from_fstab = entry.noauto;
+	b << "noauto:" << mp_from_fstab;
+	if( mp.size()==0 )
 	    {
-	    mount = orig_mount = entry.mount;
-	    b << " mount:" << mount;
+	    mp = orig_mp = entry.mount;
+	    b << " mount:" << mp;
 	    }
 	mount_by = orig_mount_by = entry.mount_by;
 	if( mount_by != MOUNTBY_DEVICE )
@@ -148,16 +161,16 @@ void Volume::getFstabData( const EtcFstab& fstabData )
 
 void Volume::getMountData( const ProcMounts& mountData )
     {
-    mount = mountData.getMount( mountDevice() );
-    if( mount.size()==0 )
+    mp = mountData.getMount( mountDevice() );
+    if( mp.size()==0 )
 	{
-	mount = mountData.getMount( alt_names );
+	mp = mountData.getMount( alt_names );
 	}
-    if( mount.size()>0 )
+    if( mp.size()>0 )
 	{
-	y2milestone( "%s mounted on %s", device().c_str(), mount.c_str() );
+	y2milestone( "%s mounted on %s", device().c_str(), mp.c_str() );
 	}
-    orig_mount = mount;
+    orig_mp = mp;
     }
 
 void Volume::getLoopData( SystemCmd& loopData )
@@ -281,6 +294,242 @@ void Volume::getFsData( SystemCmd& blkidData )
 	}
     }
 
+int Volume::setFormat( bool val, storage::FsType new_fs )
+    {
+    int ret = 0;
+    y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val, 
+                 fs_names[new_fs].c_str() );
+    format = val;
+    if( !format )
+	fs = detected_fs;
+    else
+	fs = new_fs;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::changeMount( const string& m )
+    {
+    int ret = 0;
+    y2milestone( "device:%s mount:%s", dev.c_str(), m.c_str() );
+    mp = m;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::changeFstabOptions( const string& options )
+    {
+    int ret = 0;
+    y2milestone( "device:%s options:%s", dev.c_str(), options.c_str() );
+    if( mp.size()>0 )
+	fstab_opt = options;
+    else
+	ret = VOLUME_FSTAB_EMPTY_MOUNT;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doFormat()
+    {
+    int ret = 0;
+    bool needMount = false;
+    y2milestone( "device:%s", dev.c_str() );
+    if( isMounted() )
+	{
+	ret = umount( orig_mp );
+	needMount = ret==0;
+	}
+    if( ret==0 &&
+        (Storage::arch().find( "sparc" )!=0 || encryption!=ENC_NONE ))
+	{
+	SystemCmd c;
+	string cmd = "/bin/dd if=";
+	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
+	cmd += " of=" + dev + " bs=1024 count=";
+	cmd += decString(min(50ull,size_k));
+	if( c.execute( cmd ) != 0 )
+	    ret = VOLUME_FORMAT_DD_FAILED;
+	}
+    if( ret==0 )
+	{
+	string cmd;
+	string params;
+	ScrollBarHandler* p = NULL;
+	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBar();
+	
+	switch( fs )
+	    {
+	    case EXT2:
+	    case EXT3:
+		cmd = "/sbin/mke2fs";
+		params = (fs==EXT2) ? "-v" : "-j -v";
+		p = new Mke2fsScrollbar( cb );
+		break;
+	    case REISERFS:
+		cmd = "/sbin/mkreiserfs";
+		params = "-f -f";
+		p = new ReiserScrollbar( cb );
+		break;
+	    case VFAT:
+		{
+		cmd = "/sbin/mkdosfs";
+		list<string> l=splitString( mkfs_opt );
+		list<string>::const_iterator i = l.begin();
+		while( i!=l.end() && i->find( "-F" )!=0 )
+		    ++i;
+		if( i!=l.end() )
+		    params = "-F 32";
+		break;
+		}
+	    case JFS:
+		cmd = "/sbin/mkfs.jfs";
+		params = "-q";
+		break;
+	    case XFS:
+		cmd = "/sbin/mkfs.xfs";
+		params = "-q -f";
+		break;
+	    case SWAP:
+		cmd = "/sbin/mkswap";
+		break;
+	    default:
+		ret = VOLUME_FORMAT_UNKNOWN_FS;
+		break;
+	    }
+	if( ret==0 )
+	    {
+	    cmd += " ";
+	    if( mkfs_opt.size()>0 )
+		{
+		cmd += mkfs_opt + " ";
+		}
+	    if( params.size()>0 )
+		{
+		cmd += params + " ";
+		}
+	    cmd += mountDevice();
+	    SystemCmd c;
+	    c.setOutputProcessor( p );
+	    c.execute( cmd );
+	    }
+	delete p;
+	}
+    if( needMount )
+	{
+	int r = mount( orig_mp );
+	ret = (ret==0)?r:ret;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::umount( const string& mp )
+    {
+    SystemCmd cmd;
+    y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
+    string cmdline = "umount " + mountDevice();
+    int ret = cmd.execute( cmdline );
+    if( ret != 0 && mp.size()>0 )
+	{
+	cmdline = "umount " + mp;
+	ret = cmd.execute( cmdline );
+	}
+    if( ret != 0 )
+	ret = VOLUME_UMOUNT_FAILED;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doMount()
+    {
+    int ret = 0;
+    string lmount = cont->getStorage()->root()+mp;
+    y2milestone( "device:%s mp:%s old mp:%s",  dev.c_str(), mp.c_str(),
+                 orig_mp.c_str() );
+    if( orig_mp.size()>0 )
+	ret = umount( orig_mp );
+    if( access( lmount.c_str(), R_OK )!=0 )
+	{
+	createPath( lmount );
+	}
+    if( ret==0 && mp.size()>0 )
+	{
+	ret = mount();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doLosetup()
+    {
+    int ret = 0;
+    y2milestone( "device:%s mp:%s",  dev.c_str(), mp.c_str() );
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::mount( const string& m )
+    {
+    SystemCmd cmd;
+    y2milestone( "device:%s mp:%s", dev.c_str(), m.c_str() );
+    string cmdline;
+    if( fs != SWAP )
+	{
+	string lmount = (m.size()>0)?m:mp;
+	y2milestone( "device:%s mp:%s", dev.c_str(), lmount.c_str() );
+	cmdline = "modprobe " + fs_names[fs];
+	cmd.execute( cmdline );
+	cmdline = "mount -t " + fs_names[fs] + " " + mountDevice() + " " + 
+	          lmount;
+	}
+    else
+	{
+	cmdline = "swapon " + mountDevice();
+	}
+    int ret = cmd.execute( cmdline );
+    if( ret != 0 )
+	ret = VOLUME_MOUNT_FAILED;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::prepareRemove()
+    {
+    int ret = 0;
+    y2milestone( "device:%s", dev.c_str() );
+    if( orig_mp.size()>0 )
+	{
+	if( isMounted() )
+	    {
+	    ret = umount( orig_mp );
+	    }
+	if( ret==0 )
+	    {
+	    ret = doRemoveFstab( cont->getStorage()->getFstab() );
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doRemoveFstab( EtcFstab* fstab )
+    {
+    int ret = 0;
+    y2milestone( "device:%s mp:%s", dev.c_str(), orig_mp.c_str() );
+    if( orig_mp.size()>0 )
+	{
+	FstabEntry entry;
+	if( fstab->findDevice( dev, entry ) || 
+	    fstab->findDevice( alt_names, entry ) ||
+	    fstab->findMount( orig_mp, entry ))
+	    {
+	    ret = fstab->removeEntry( entry );
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 EncryptType Volume::toEncType( const string& val )
     {
     EncryptType ret = ENC_UNKNOWN;
@@ -288,17 +537,20 @@ EncryptType Volume::toEncType( const string& val )
         ret = ENC_NONE;
     else if( val=="twofish" )
         ret = ENC_TWOFISH_OLD;
+    else if( val=="twofishSL92" )
+        ret = ENC_TWOFISH256_OLD;
     else if( val=="twofish256" )
         ret = ENC_TWOFISH;
     return( ret );
     }
 
 
-string Volume::fs_names[] = { "unknown", "reiser", "ext2", "ext3", "vfat",
+string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "ntfs", "swap" };
 
 string Volume::mb_names[] = { "device", "uuid", "label" };
 
-string Volume::enc_names[] = { "none", "twofish", "twofish_old", "unknown" };
+string Volume::enc_names[] = { "none", "twofish", "twofish_old", 
+                               "twofish256_old", "unknown" };
 
 

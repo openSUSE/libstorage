@@ -6,7 +6,6 @@ using namespace std;
 #include "y2storage/StorageInterface.h"
 #include "y2storage/StorageTmpl.h"
 
-class Container;
 class SystemCmd;
 class ProcMounts;
 class EtcFstab;
@@ -25,12 +24,17 @@ class Volume
 	const string& device() const { return dev; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const Container* getContainer() const { return cont; }
-	bool deleted() const { return del; }
+	bool deleted() const;
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
+	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	bool getFormat() const { return format; }
+	int changeFstabOptions( const string& options );
+	int changeMount( const string& m );
+	bool needRemount() const { return( mp!=orig_mp ); }
 	bool loop() const { return is_loop; }
-	bool noauto() const { return !mauto; }
+	bool mpFromFstab() const { return mp_from_fstab; }
 	string getUuid() const { return uuid; }
 	string getLabel() const { return label; }
 	bool setLabel( string val );
@@ -39,8 +43,8 @@ class Volume
 	    { encryption=val; }
 	string getCryptPwd() const { return crypt_pwd; }
 	void setCryptPwd( string val ) { crypt_pwd=val; }
-	string getMount() const { return mount; }
-	void setMount( string val ) { mount=val; }
+	string getMount() const { return mp; }
+	void setMount( string val ) { mp=val; }
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
@@ -71,6 +75,15 @@ class Volume
             { return( !(*this<=rhs) ); }
 	friend ostream& operator<< (ostream& s, const Volume &v );
 
+	int prepareRemove();
+	int umount( const string& mp="" );
+	int mount( const string& mp="" );
+	int doMount();
+	int doFormat();
+	int doLosetup();
+	int doRemoveFstab( EtcFstab* fstab );
+	bool isMounted() const { return( orig_mp.size()>0 && !mp_from_fstab ); }
+
 	struct SkipDeleted
 	    {
 	    bool operator()(const Volume&d) const { return( !d.deleted());}
@@ -80,6 +93,9 @@ class Volume
 	static bool getMajorMinor( const string& device, 
 	                           unsigned long& Major, unsigned long& Minor );
 	static storage::EncryptType toEncType( const string& val );
+	static const string& fsTypeString( const storage::FsType type )
+	    { return fs_names[type]; }
+	    
 
     protected:
 	void init();
@@ -94,7 +110,7 @@ class Volume
 	bool create;
 	bool del;
 	bool format;
-	bool mauto;
+	bool mp_from_fstab;
 	storage::FsType fs;
 	storage::FsType detected_fs;
 	storage::MountByType mount_by;
@@ -102,8 +118,8 @@ class Volume
 	string uuid;
 	string label;
 	string orig_label;
-	string mount;
-	string orig_mount;
+	string mp;
+	string orig_mp;
 	string fstab_opt;
 	string orig_fstab_opt;
 	string mkfs_opt;
@@ -147,14 +163,14 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::UNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
 	}
-    if( v.mount.length()>0 )
+    if( v.mp.length()>0 )
 	{
-	s << " mount:" << v.mount;
-	if( v.mount != v.orig_mount && v.orig_mount.length()>0 )
-	    s << " orig_mount:" << v.orig_mount;
+	s << " mount:" << v.mp;
+	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
+	    s << " orig_mount:" << v.orig_mp;
 	}
-    if( !v.mauto )
-	s << " noauto";
+    if( v.mp_from_fstab )
+	s << " mp_fstab";
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
 	s << " mount_by:" << Volume::mb_names[v.mount_by];

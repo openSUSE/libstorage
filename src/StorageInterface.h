@@ -85,9 +85,20 @@ namespace storage
 
     enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
 
-    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, ENC_UNKNOWN };
+    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD, ENC_UNKNOWN };
 
     enum MdType { RAID0, RAID1, RAID5, MULTIPATH };
+
+    /**
+     *  typedef for a pointer to a function that is called on progress bar events
+     */
+    typedef void (*CallbackProgressBar)( const string& id, unsigned cur, unsigned max );
+
+    /**
+     *  typedef for a pointer to a function that is called with strings telling the user what is
+        currently going on
+     */
+    typedef void (*CallbackShowInstallInfo)( const string& id );
 
 
     /**
@@ -151,8 +162,16 @@ namespace storage
 	STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER = -2003,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
+	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
+	VOLUME_UMOUNT_FAILED = -3002,
+	VOLUME_MOUNT_FAILED = -3003,
+	VOLUME_FORMAT_DD_FAILED = -3004,
+	VOLUME_FORMAT_UNKNOWN_FS = -3005,
 
 	CONTAINER_INTERNAL_ERROR = -4000,
+
+	FSTAB_ENTRY_NOT_FOUND = -5000
+
     };
 
 
@@ -186,7 +205,7 @@ namespace storage
 
 
 	/**
-	 * Quert capabilities of a filesystem type.
+	 * Query capabilities of a filesystem type.
 	 */
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
 
@@ -201,6 +220,7 @@ namespace storage
 	 * @param device gets assigned to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
+	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartition( const string& disk, PartitionType type,
 				     unsigned long start,
@@ -217,6 +237,7 @@ namespace storage
 	 * @param device gets assigned to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
+	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartitionKb( const string& disk, PartitionType type,
 				       unsigned long long start,
@@ -247,6 +268,7 @@ namespace storage
 	 * Remove a partition
 	 *
 	 * @param partition name of partition, e.g. /dev/hda1
+	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removePartition (const string& partition) = 0;
 
@@ -256,6 +278,7 @@ namespace storage
 	 *
 	 * @param partition name of partition, e.g. /dev/hda1
 	 * @param new partition id (e.g. 0x82 swap, 0x8e for lvm, ...)
+	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
 
@@ -265,6 +288,7 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
+	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
@@ -272,11 +296,67 @@ namespace storage
 	 *  Returns the default disk label of the architecture of the
 	 *  machine (e.g. msdos for ix86, gpt for ia64, ...)
 	 *
-	 * @param disk device name of disk, e.g. /dev/hda
-	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
 	 */
 	virtual string defaultDiskLabel() = 0;
 
+	/**
+	 *  sets or unsets the format flag for the given device.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param format flag if format is set on or off
+	 * @param fs type of filesystem to create if fromat is true
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeFormatVolume( string device, bool format, FsType fs ) = 0;
+
+	/**
+	 *  changes the mount point of a partition
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param mount new mount point of the partition (e.g. /home).
+	 *    it is valid to set an empty mount point
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMountPoint( string device, string mount ) = 0;
+
+	/**
+	 *  changes the fstab options point of a partition
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options new fstab options of the partition (e.g. noauto,user,sync).
+	 *    it is valid to set an empty fstab option
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeFstabOptions( string device, string options ) = 0;
+
+
+	/**
+	 *  sets the callback function called on progress bar events
+	 *
+	 * @param pfnc pointer to funtcion
+	 */
+	virtual void setCallbackProgressBar( CallbackProgressBar pfnc ) = 0;
+
+	/**
+	 *  query the callback function called on progress bar events
+	 *
+	 * @return pointer to function currently called for progress bar events
+	 */
+	virtual CallbackProgressBar getCallbackProgressBar() = 0;
+
+	/**
+	 *  sets the callback function called to display install info
+	 *
+	 * @param pfnc pointer to funtcion
+	 */
+	virtual void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc ) = 0;
+
+	/**
+	 *  query the callback function called to display install info
+	 *
+	 * @return pointer to function currently called for progress bar events
+	 */
+	virtual CallbackShowInstallInfo getCallbackShowInstallInfo() = 0;
 #if 0
 	/**
 	 *
@@ -308,11 +388,6 @@ namespace storage
 	virtual bool removeEvmsVolume (...) = 0;
 	virtual bool resizeEvmsVolume (...) = 0;
 
-	virtual bool formatVolume (...) = 0;
-
-	virtual bool changeMountPoint (...) = 0;
-
-	virtual bool changeFstabOptions (...) = 0;
 
 	/**
 	 * Create a backup of the current state.

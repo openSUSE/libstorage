@@ -7,6 +7,7 @@
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Container.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Volume.h"
 #include "y2storage/Partition.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
@@ -37,6 +38,8 @@ using namespace std;
  * the user interface of libstorage.
  */
 
+class EtcFstab;
+
 class Storage : public StorageInterface
     {
     protected:
@@ -63,6 +66,7 @@ class Storage : public StorageInterface
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	static const string& arch() { return( proc_arch ); }
+	EtcFstab* getFstab() { return fstab; }
 	virtual ~Storage();
 
 	// functions for interface
@@ -82,7 +86,17 @@ class Storage : public StorageInterface
 	int changePartitionId( const string& partition, unsigned id );
 	int destroyPartitionTable( const string& disk, const string& label );
 	string defaultDiskLabel();
+	int changeFstabOptions( string device, string options );
+	int changeMountPoint( string device, string mount );
+	int changeFormatVolume( string device, bool format, FsType fs );
         int commit();
+
+	void setCallbackProgressBar( CallbackProgressBar pfnc )
+	    { progress_bar_cb=pfnc; }
+	CallbackProgressBar getCallbackProgressBar() { return progress_bar_cb; }
+	void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc )
+	    { install_info_cb=pfnc; }
+	CallbackShowInstallInfo getCallbackShowInstallInfo() { return install_info_cb; }
 
 // iterators over container
     protected:
@@ -818,6 +832,13 @@ class Storage : public StorageInterface
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+	void callProgressBarCb( const string& id, unsigned cur, unsigned max )
+	    { 
+	    if( progress_bar_cb )
+	        (*progress_bar_cb)(id, cur, max );
+	    }
+	static void defaultProgressBarCb( const string& id, unsigned cur, unsigned max );
+	static void defaultShowInfoCb( const string& info );
 
 	// protected internal member variables
 	bool readonly;
@@ -828,6 +849,9 @@ class Storage : public StorageInterface
 	string rootprefix;
 	static string proc_arch;
 	CCont cont;
+	EtcFstab *fstab;
+	CallbackProgressBar progress_bar_cb;
+	CallbackShowInstallInfo install_info_cb;
     };
 
 Storage::SkipDeleted Storage::SkipDel;

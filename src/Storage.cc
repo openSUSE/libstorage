@@ -62,8 +62,13 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	globfree (&globbuf);
 	}
     else
+	{
+	fstab = new EtcFstab();
 	detectFsData( vBegin(), vEnd() );
+	}
     setCacheChanges( true );
+    setCallbackProgressBar( defaultProgressBarCb );
+    setCallbackShowInstallInfo( defaultShowInfoCb );
     }
 
 Storage::~Storage()
@@ -156,13 +161,12 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     SystemCmd Blkid( "/sbin/blkid -c /dev/null" );
     SystemCmd Losetup( "/sbin/losetup -a" );
     ProcMounts Mounts;
-    EtcFstab Fstab;
     for( VolIterator i=begin; i!=end; ++i )
 	{
 	i->getLoopData( Losetup );
 	i->getFsData( Blkid );
 	i->getMountData( Mounts );
-	i->getFstabData( Fstab );
+	i->getFstabData( *fstab );
 	}
     y2milestone( "detectFsData end" );
     }
@@ -349,6 +353,76 @@ Storage::defaultDiskLabel()
     return( Disk::defaultLabel() );
     }
 
+int 
+Storage::changeFormatVolume( string device, bool format, FsType fs )
+    {
+    int ret = 0;
+    y2milestone( "device:%s format:%d type:%s", device.c_str(), format, 
+                 Volume::fsTypeString(fs).c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setFormat( format, fs );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::changeMountPoint( string device, string mount )
+    {
+    int ret = 0;
+    y2milestone( "device:%s mount:%s", device.c_str(), mount.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->changeMount( mount );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::changeFstabOptions( string device, string options )
+    {
+    int ret = 0;
+    y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->changeFstabOptions( options );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Storage::checkCache()
     {
     int ret=0;
@@ -419,14 +493,16 @@ bool Storage::findVolume( const string& device, ContIterator& c,
                           VolIterator& v )
     {
     bool ret = false;
-    VPair p = vPair( Volume::notDeleted, notDeleted );
+    VPair p = vPair( Volume::notDeleted );
     v = p.begin();
     while( v!=p.end() && v->device()!=device )
+	{
 	++v;
+	}
     if( v!=p.end() )
 	{
 	const Container *co = v->getContainer();
-	CPair cp = cPair( notDeleted );
+	CPair cp = cPair();
 	c = cp.begin();
 	while( c!=cp.end() && &(*c)!=co )
 	    ++c;
@@ -436,6 +512,16 @@ bool Storage::findVolume( const string& device, ContIterator& c,
                  ret, ret?c->device().c_str():"nil",
 		 ret?v->device().c_str():"nil" );
     return( ret );
+    }
+
+void Storage::defaultProgressBarCb( const string& id, unsigned cur, unsigned max )
+    {
+    y2milestone( "id:%s cur:%d max:%d", id.c_str(), cur, max );
+    }
+
+void Storage::defaultShowInfoCb( const string& info )
+    {
+    y2milestone( "INSTALL INFO:%s", info.c_str() );
     }
 
 Storage::DiskIterator Storage::findDisk( const string& disk )

@@ -173,5 +173,18 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
     return( i!=co.end() );
     }
 
-
+int EtcFstab::removeEntry( const FstabEntry& entry )
+    {
+    list<Entry>::iterator i = co.begin();
+    while( i->op==Entry::REMOVE || (i->old != entry && i->nnew != entry) )
+	++i;
+    if( i != co.end() )
+	{
+	if( i->op != Entry::ADD )
+	    i->op = Entry::REMOVE;
+	else
+	    co.erase( i );
+	}
+    return( (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND );
+    }
 
