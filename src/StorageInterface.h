@@ -15,25 +15,29 @@ using std::list;
  * \section Interface
  *
  * The functionality of libstorage is entirely accessed through the abstract
- * interface class storage::StorageInterface.  To ensure maximal possible
- * compatibility user of libstorage must only include the header file
- * StorageInterface.h.
+ * interface class \link storage::StorageInterface StorageInterface\endlink.
+ * To ensure maximal possible compatibility user of libstorage must only
+ * include the header file StorageInterface.h.
  *
  * \section Caching
  *
  * All modifying functions of libstorage can either operate on an
  * internal cache or directly on the system.
  *
- * When the caching mode is enabled a call of e.g. createPartition() will only
- * change the internal cache.  The user has to call
- * storage::StorageInterface::commit() later on to actually create the
- * partition on the disk.
+ * When the caching mode is enabled a call of e.g. \link
+ * storage::StorageInterface::createPartition() createPartition() \endlink
+ * will only change the internal cache.  The user has to call \link
+ * storage::StorageInterface::commit() commit() \endlink later on to actually
+ * create the partition on the disk.
  *
- * When caching mode is disabled the call of createPartition() will
- * immediately create the partition on the disk.
+ * When caching mode is disabled the call of e.g. \link
+ * storage::StorageInterface::createPartition() createPartition() \endlink
+ * will immediately create the partition on the disk.
  *
- * Caching mode can be set with storage::StorageInterface::setCacheChanges()
- * and queried with storage::StorageInterface::isCacheChanges().
+ * Caching mode can be set with \link
+ * storage::StorageInterface::setCacheChanges() setCacheChanges() \endlink and
+ * queried with \link storage::StorageInterface::isCacheChanges()
+ * isCacheChanges()\endlink.
  *
  * \section Example
  *
@@ -69,7 +73,6 @@ using std::list;
  *
  * More examples can be found in the directory
  * /usr/share/doc/packages/yast2-storage/examples/liby2storage.
- *
  */
 
 
