@@ -51,7 +51,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
         {
 	glob_t globbuf;
 
-	if( glob( (testdir+"/disk_*").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if( glob( (testdir+"/disk_*[!~]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new Disk( this, *p ) );
@@ -155,7 +155,7 @@ namespace storage
     }
 }
 
-int 
+int
 Storage::createPartition( const string& disk, PartitionType type, unsigned long start,
 			  unsigned long long sizeK, string& device )
     {
@@ -176,9 +176,9 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 
 int Storage::commit()
     {
-    struct tmp 
+    struct tmp
 	{ static bool TestHdb( const Container& c )
-	    { 
+	    {
 	    y2milestone( "name:%s", c.name().c_str() );
 	    return( c.name().find("hdb")!=string::npos ); }};
     CPair p = cPair( tmp::TestHdb );
@@ -186,7 +186,7 @@ int Storage::commit()
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
 	{
-	Container::CommitStage a[] = { Container::DECREASE, Container::INCREASE, 
+	Container::CommitStage a[] = { Container::DECREASE, Container::INCREASE,
 	                               Container::FORMAT, Container::MOUNT };
 	Container::CommitStage* pt = a;
 	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
@@ -200,7 +200,6 @@ int Storage::commit()
 	}
     return( ret );
     }
-
 
 
 bool
@@ -227,8 +226,6 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 
 	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    partitioninfos.push_back (i2->getPartitionInfo());
-
-	return true;
     }
 
     return( i != dEnd() );
