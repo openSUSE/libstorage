@@ -1401,16 +1401,17 @@ int Disk::doRemove( Volume* v )
     return( ret );
     }
 
-int Disk::checkResize( Volume* v ) const
+int Disk::checkResize( Volume* v, unsigned long long newSize ) const
     {
     int ret = 0;
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else if( v->needExtend() )
+    else if( newSize>v->sizeK() )
 	{
 	Partition * p = dynamic_cast<Partition *>(v);
+	unsigned long long increase = newSize - v->sizeK();
 	if( p!=NULL )
 	    {
 	    ConstPartPair pp = partPair( isExtended );
@@ -1431,8 +1432,8 @@ int Disk::checkResize( Volume* v ) const
 	    if( end>start )
 		free = end-start;
 	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lld", 
-	                 free, cylinderToKb(free), p->extendSize() );
-	    if( (long long)cylinderToKb(free) < p->extendSize() )
+	                 free, cylinderToKb(free), increase );
+	    if( cylinderToKb(free) < increase )
 		ret = DISK_RESIZE_NO_SPACE;
 	    }
 	else
@@ -1451,6 +1452,7 @@ int Disk::doResize( Volume* v )
     if( p != NULL )
 	{
 	bool remount = false;
+	bool needExtend = !p->needShrink();
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( p->resizeText(true) );
@@ -1461,7 +1463,7 @@ int Disk::doResize( Volume* v )
 	    if( ret==0 )
 		remount = true;
 	    }
-	if( ret==0 && p->needShrink() && p->getFs()!=VFAT )
+	if( ret==0 && !needExtend && p->getFs()!=VFAT )
 	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
@@ -1469,9 +1471,10 @@ int Disk::doResize( Volume* v )
 	    y2milestone( "doResize container %s name %s", name().c_str(),
 			 p->name().c_str() );
 	    std::ostringstream cmd_line;
-	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(size_k) - 1;
+	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(p->sizeK()) - 1;
 	    y2milestone( "new_cyl_end %u", new_cyl_end );
-	    cmd_line << PARTEDCMD << device() << " resize " << p->nr() << " " 
+	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device() 
+	             << " resize " << p->nr() << " " 
 	             << p->partedStart() << " " 
 		     << std::setprecision(3)
 		     << std::setiosflags(std::ios_base::fixed)
@@ -1488,7 +1491,7 @@ int Disk::doResize( Volume* v )
 	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(), 
 	                 p->needShrink()||p->needExtend() );
 	    }
-	if( p->needExtend() && p->getFs()!=VFAT )
+	if( needExtend && p->getFs()!=VFAT )
 	    ret = p->resizeFs();
 	if( ret==0 && remount )
 	    ret = p->mount();

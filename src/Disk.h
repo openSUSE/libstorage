@@ -48,7 +48,7 @@ class Disk : public Container
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
-	int checkResize( Volume* v ) const;
+	int checkResize( Volume* v, unsigned long long newSize ) const;
 	bool hasExtended() const;
 	friend inline ostream& operator<< (ostream&, const Disk& );
 	string setDiskLabelText( bool doing=true ) const;

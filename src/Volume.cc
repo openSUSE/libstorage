@@ -301,7 +301,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	{
 	FsCapabilities caps;
 	if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
-	    caps.minimalFsSizeK < size_k  )
+	    caps.minimalFsSizeK > size_k  )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
 	    }
@@ -636,7 +636,7 @@ int Volume::resize( unsigned long long newSizeMb )
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
 	if( ret==0 )
-	    ret = cont->checkResize( this );
+	    ret = cont->checkResize( this, new_size );
 	if( ret==0 )
 	    size_k = new_size;
 	}
