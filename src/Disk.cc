@@ -812,6 +812,8 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	    ret = max_primary+1;
 	if( !ext_possible || !hasExtended() )
 	    ret = 0;
+	if( ret>max_logical )
+	    ret = 0;
 	}
     else
 	{
