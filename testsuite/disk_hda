@@ -1,0 +1,16 @@
+Device: /dev/hda
+Major: 3
+Minor: 0
+Range: 64
+Cylinder: 119150
+Head: 16
+Sector: 63
+Label: msdos
+MaxPrimary: 4
+ExtPossible: 1
+MaxLogical: 63
+SizeK: 60051600
+Partition: 1 /dev/hda1 4819468 3 1 1 9562 83 primary boot
+Partition: 2 /dev/hda2 4819500 3 2 9563 9563 83 primary
+Partition: 3 /dev/hda3 1052257 3 3 19126 2088 82 primary
+Partition: 4 /dev/hda4 49359712 3 4 21214 97936 83 primary

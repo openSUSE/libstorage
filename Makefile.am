@@ -1,3 +1,5 @@
 #
-# Makefile.am for storage/agent-fdisk
-SUBDIRS = doc src 
+# Makefile.am for libstorage
+#
+
+SUBDIRS = doc src testsuite

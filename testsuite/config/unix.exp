@@ -1,0 +1,4 @@
+load_lib "limal_init.exp"
+proc limal_exit {} {}
+proc limal_version {} {}
+
