@@ -966,10 +966,18 @@ int Disk::destroyPartitionTable( const string& new_label )
 	{
 	setDeleted( true );
 	label = new_label;
-	PartPair p = partPair( notDeleted );
-	for( PartIter i = p.begin(); i!=p.end(); ++i )
+	VIter i = vols.begin();
+	while( i!=vols.end() )
 	    {
-	    i->setDeleted( true );
+	    if( (*i)->created() )
+		{
+		i = vols.erase( i );
+		}
+	    else
+		{
+		(*i)->setDeleted( true );
+		++i;
+		}
 	    }
 	}
     y2milestone( "ret %d", ret );

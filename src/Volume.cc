@@ -87,16 +87,6 @@ bool Volume::operator< ( const Volume& rhs ) const
 	return( !del );
     }
 
-bool Volume::deleted() const
-    {
-    bool d = del;
-    if( !d && cont->type()==Container::DISK && cont->deleted() )
-	{
-	d = !created();
-	}
-    return( d );
-    }
-
 bool Volume::getMajorMinor( const string& device,
 			    unsigned long& Major, unsigned long& Minor )
     {

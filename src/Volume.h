@@ -24,7 +24,7 @@ class Volume
 	const string& device() const { return dev; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const Container* getContainer() const { return cont; }
-	bool deleted() const;
+	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
