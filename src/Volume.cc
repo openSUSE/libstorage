@@ -1069,10 +1069,20 @@ void Volume::getCommitActions( list<commitAction*>& l ) const
 	l.push_back( new commitAction( DECREASE, cont->type(),
 				       removeText(false), true ));
 	}
+    else if( needShrink() )
+	{
+	l.push_back( new commitAction( DECREASE, cont->type(),
+				       resizeText(false), true ));
+	}
     else if( created() )
 	{
 	l.push_back( new commitAction( INCREASE, cont->type(),
 				       createText(false), false ));
+	}
+    else if( needExtend() )
+	{
+	l.push_back( new commitAction( INCREASE, cont->type(),
+				       resizeText(false), true ));
 	}
     else if( format )
 	{
@@ -1275,6 +1285,37 @@ string Volume::createText( bool doing ) const
         {
         // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
         txt = sformat( _("Create %1$s"), dev.c_str() );
+        }
+    return( txt );
+    }
+
+string Volume::resizeText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+	if( needShrink() )
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Shrinking %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Extending %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+
+        }
+    else
+        {
+	string d = dev.substr( 5 );
+	if( needShrink() )
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Shrink %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Extend %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+
         }
     return( txt );
     }
