@@ -41,7 +41,6 @@ EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
 	    *i++ >> p->old.passno;
 	p->old.calcDependent();
 	p->nnew = p->old;
-	cout << "*p:" << p->old << endl;
 	co.push_back( *p );
 	delete p;
 
