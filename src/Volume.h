@@ -12,7 +12,7 @@ class Volume
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
 	virtual ~Volume();
 
-	virtual bool commitChanges();
+	virtual bool commitChanges() { return true; }
 
 	const string& device() const { return dev; }; 
 	bool deleted() const { return dltd; }
