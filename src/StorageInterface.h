@@ -33,7 +33,7 @@ using std::list;
  * immediately create the partition on the disk.
  *
  * Caching mode can be set with storage::StorageInterface::setCacheChanges()
- * and queried with storage::StorageInterface:isCacheChanges().
+ * and queried with storage::StorageInterface::isCacheChanges().
  *
  * \section Example
  *
@@ -67,7 +67,9 @@ using std::list;
  *
  * \endcode
  *
- * More examples can be found in the examples and testsuite directory.
+ * More examples can be found in the directory
+ * /usr/share/doc/packages/yast2-storage/examples/liby2storage.
+ *
  */
 
 
