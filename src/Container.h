@@ -16,11 +16,12 @@ template<typename L1, typename L2> class ListListIterator;
 class Container
     {
     friend class Storage;
-    template<typename L1, typename L2> friend class ListListIterator;
+    protected:
+	template<typename L1, typename L2> friend class ListListIterator;
 
-    typedef list<Volume*> VCont;
-    typedef VCont::iterator VIter;
-    typedef VCont::const_iterator CVIter;
+	typedef list<Volume*> VCont;
+	typedef VCont::iterator VIter;
+	typedef VCont::const_iterator CVIter;
 
     public:
 	struct SkipDeleted 
@@ -31,30 +32,33 @@ class Container
 	static bool NotDeleted( const Volume&d ) { return( !d.Delete() ); }
 	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
 
+// iterators over volumes of a container
+    protected:
+	// protected typedefs for iterators over volumes
 	template< class Pred >
-	    struct CVP { typedef ContainerIter<Pred, CVIter> type; };
+	    struct ConstVolumePI { typedef ContainerIter<Pred, CVIter> type; };
 	template< class Pred >
-	    struct CV { typedef ContainerDerIter<Pred, typename CVP<Pred>::type, const Volume> type; };
-
+	    struct VolumePI { typedef ContainerIter<Pred, VIter> type; };
 	template< class Pred >
-	    struct VP { typedef ContainerIter<Pred, VIter> type; };
-	template< class Pred >
-	    struct V { typedef ContainerDerIter<Pred, typename VP<Pred>::type, Volume> type; };
-	template< class Pred >
-	    struct VolCondIPair { typedef MakeCondIterPair<Pred, typename CV<Pred>::type> type;};
-	    
+	    struct VolumeI { typedef ContainerDerIter<Pred, typename VolumePI<Pred>::type, Volume> type; };
 	typedef CheckFnc<const Volume> CheckFncVol;
-
-	typedef CheckerIterator< CheckFncVol, CVP<CheckFncVol>::type, 
+	typedef CheckerIterator< CheckFncVol, ConstVolumePI<CheckFncVol>::type, 
 	                         CVIter, Volume> ConstVolPIterator;
-
-	typedef DerefIterator<ConstVolPIterator,const Volume> ConstVolIterator;
-
-	typedef CheckerIterator< CheckFncVol, VP<CheckFncVol>::type, 
+	typedef CheckerIterator< CheckFncVol, VolumePI<CheckFncVol>::type, 
 	                         VIter, Volume> VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
+	typedef IterPair<VolIterator> VolIPair;
 
+    public:
+	// public typedefs for iterators over volumes
+	template< class Pred >
+	    struct ConstVolumeI { typedef ContainerDerIter<Pred, typename ConstVolumePI<Pred>::type, const Volume> type; };
+	template< class Pred >
+	    struct VolCondIPair { typedef MakeCondIterPair<Pred, typename ConstVolumeI<Pred>::type> type;};
+	typedef DerefIterator<ConstVolPIterator,const Volume> ConstVolIterator;
 	typedef IterPair<ConstVolIterator> ConstVolPair;
+
+	// public member functions for iterators over volumes
 	ConstVolPair VolPair( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    { 
 	    return( ConstVolPair( VolBegin( CheckFnc ), VolEnd( CheckFnc ) ));
@@ -72,16 +76,32 @@ class Container
 	    {
 	    return( VolCondIPair<Pred>::type( VolCondBegin( p ), VolCondEnd( p ) ) );
 	    }
-	template< class Pred > typename CV<Pred>::type VolCondBegin( const Pred& p ) const
+	template< class Pred > typename ConstVolumeI<Pred>::type VolCondBegin( const Pred& p ) const
 	    {
-	    return( CV<Pred>::type( Vols.begin(), Vols.end(), p ) );
+	    return( ConstVolumeI<Pred>::type( Vols.begin(), Vols.end(), p ) );
 	    }
-	template< class Pred > typename CV<Pred>::type VolCondEnd( const Pred& p ) const
+	template< class Pred > typename ConstVolumeI<Pred>::type VolCondEnd( const Pred& p ) const
 	    {
-	    return( CV<Pred>::type( Vols.begin(), Vols.end(), p, true ) );
+	    return( ConstVolumeI<Pred>::type( Vols.begin(), Vols.end(), p, true ) );
 	    }
 
-	Container( const string& Name );
+    protected:
+	// protected member functions for iterators over volumes
+	VolIPair VolPair( bool (* CheckFnc)( const Volume& )=NULL )
+	    { 
+	    return( VolIPair( VBegin( CheckFnc ), VEnd( CheckFnc ) ));
+	    }
+	VolIterator VBegin( bool (* CheckFnc)( const Volume& )=NULL ) 
+	    { 
+	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc )) );
+	    }
+	VolIterator VEnd( bool (* CheckFnc)( const Volume& )=NULL ) 
+	    { 
+	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc, true )) );
+	    }
+
+    public:
+	Container( const string& Name, CType typ );
 	virtual ~Container();
 	const string& Name() const { return name; }
 	const string& Device() const { return device; }
@@ -98,19 +118,6 @@ class Container
 	PlainIterator begin() { return Vols.begin(); }
 	PlainIterator end() { return Vols.end(); }
 
-	typedef IterPair<VolIterator> VolIPair;
-	VolIPair VolPair( bool (* CheckFnc)( const Volume& )=NULL )
-	    { 
-	    return( VolIPair( VBegin( CheckFnc ), VEnd( CheckFnc ) ));
-	    }
-	VolIterator VBegin( bool (* CheckFnc)( const Volume& )=NULL ) 
-	    { 
-	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc )) );
-	    }
-	VolIterator VEnd( bool (* CheckFnc)( const Volume& )=NULL ) 
-	    { 
-	    return( VolIterator( VolPIterator(Vols.begin(), Vols.end(), CheckFnc, true )) );
-	    }
 	CType type;
 	string name;
 	string device;

@@ -5,9 +5,8 @@
 #include "y2storage/Disk.h"
 #include "y2storage/Partition.h"
 
-Disk::Disk( const string& Name ) : Container(Name)
+Disk::Disk( const string& Name ) : Container(Name,StaticType())
     {
-    type = StaticType();
     device = "/dev/" + name;
     if( name.find( "hdb" ) != string::npos )
 	deleted = true;

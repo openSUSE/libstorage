@@ -41,17 +41,17 @@ class ContainerDerIter : public DerefIterator<Iter,Value>
 	ContainerDerIter( const ContainerDerIter& i) { *this=i;}
     };
 
-template <class Value>
+template <int Value>
 class CheckType 
     {
     public:
 	bool operator()( const Container& d ) const
 	    {
-	    return( d.Type()==Value::StaticType() );
+	    return( d.Type()==Value );
 	    }
     };
 
-template< class Iter, class Value, class CastResult >
+template< class Iter, int Value, class CastResult >
 class CastCheckIterator : public CheckType<Value>, 
                           public FilterIterator< CheckType<Value>, Iter >
     {
@@ -94,6 +94,41 @@ class CastCheckIterator : public CheckType<Value>,
 	    { 
 	    cerr << "Expensive -- CastCheckIterator" << endl;
 	    CastCheckIterator tmp(*this);
+	    _bclass::operator--(); 
+	    return(tmp); 
+	    }
+    };
+
+template< class Iter, int Value>
+class CheckIterator : public CheckType<Value>, 
+                      public FilterIterator< CheckType<Value>, Iter >
+    {
+    typedef FilterIterator<CheckType<Value>, Iter> _bclass;
+    public:
+	CheckIterator() : _bclass() {}
+	CheckIterator( const Iter& b, const Iter& e, bool atend=false) : 
+	    _bclass( b, e, *this, atend ) {}
+	CheckIterator( const IterPair<Iter>& pair, bool atend=false) : 
+	    _bclass( pair, *this, atend ) {}
+	CheckIterator& operator++() 
+	    { 
+	    _bclass::operator++(); return(*this); 
+	    }
+	CheckIterator operator++(int) 
+	    { 
+	    cerr << "Expensive ++ CheckIterator" << endl;
+	    CheckIterator tmp(*this);
+	    _bclass::operator++(); 
+	    return(tmp); 
+	    }
+	CheckIterator& operator--() 
+	    { 
+	    _bclass::operator--(); return(*this); 
+	    }
+	CheckIterator operator--(int) 
+	    { 
+	    cerr << "Expensive -- CastCheckIterator" << endl;
+	    CheckIterator tmp(*this);
 	    _bclass::operator--(); 
 	    return(tmp); 
 	    }

@@ -160,8 +160,7 @@ class ListListIterator : public PIter
 		if( setend )
 		    {
 		    m_pcur = m_end;
-		    m_lcur = end;
-		    --m_lcur;
+		    m_lcur = tmp;
 		    }
 		else
 		    m_pcur = m_begin;

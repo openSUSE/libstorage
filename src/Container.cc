@@ -3,34 +3,18 @@
 #include <ycp/y2log.h>
 
 #include "y2storage/Container.h"
+#include "y2storage/Md.h"
 
-Container::Container( const string& Name ) : name(Name)
+Container::Container( const string& Name, CType t ) : name(Name)
     {
     deleted = false;
-    type = StaticType();
-    /*
-    if( name.find( "hdb" ) != string::npos )
-	deleted = true;
     device = "/dev/" + name;
-    if( name == "sda" )
+    type = t;
+    if( name == "md" )
 	{
-	Vols.push_back( Volume( *this, 1 ));
-	Vols.push_back( Volume( *this, 2 ));
-	Vols.push_back( Volume( *this, 3 ));
-	Vols.push_back( Volume( *this, 4 ));
+	Vols.push_back( new Md( *this, 0, Md::RAID0 ));
+        Vols.push_back( new Md( *this, 2, Md::RAID5 ));
 	}
-    if( name == "hdb" )
-	{
-	Vols.push_back( Volume( *this, 1 ));
-	Vols.push_back( Volume( *this, 5 ));
-	Vols.push_back( Volume( *this, 6 ));
-	Vols.push_back( Volume( *this, 7 ));
-	}
-    if( name == "hdc" )
-	{
-	Vols.push_back( Volume( *this, 1 ));
-	}
-    */
     y2milestone( "constructed cont %s", name.c_str() );
     }
 

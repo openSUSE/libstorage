@@ -6,7 +6,6 @@
 
 #include "y2storage/Storage.h"
 #include "y2storage/Disk.h"
-#include "y2storage/Softraid.h"
 #include "y2storage/IterPair.h"
 
 struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
@@ -31,9 +30,8 @@ Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
 
     IterPair<ConstPartInter2> q = IterPair<ConstPartInter2>( ConstPartInter2( b ), 
                                                              ConstPartInter2( e ) );
-    IterPair<ConstPartIterator> r = 
-	IterPair<ConstPartIterator>( ConstPartIterator(ConstPartPIterator( q, TestCG30 )), 
-	                             ConstPartIterator(ConstPartPIterator( q, TestCG30, true)));
+    IterPair<ConstPartIterator> r((ConstPartIterator(ConstPartPIterator( q, TestCG30 ))), 
+	                          (ConstPartIterator(ConstPartPIterator( q, TestCG30, true))));
     for( ConstPartIterator i=r.begin(); i!=r.end(); ++i )
 	{
 	cout << "Name:" << i->Device() << " Start:" << (*i).CylStart()
@@ -83,7 +81,7 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
-    Disks.push_back( new Softraid() );
+    Disks.push_back( new Container( "md", Container::MD ) );
     }
 
 int 
