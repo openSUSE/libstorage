@@ -7,12 +7,14 @@ using namespace std;
 
 #include "y2storage/Container.h"
 
+class Storage;
+
 class Disk : public Container
     {
     friend class Storage;
 
     public:
-	Disk( const string& Name );
+	Disk( const Storage * const s, const string& Name );
 	virtual ~Disk();
 	unsigned Cylinders() const { return cylinders; }
 	unsigned Heads() const { return heads; }
@@ -21,9 +23,16 @@ class Disk : public Container
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
     protected:
-	unsigned cylinders;
+	unsigned long long CylinderToKb( unsigned long );
+	unsigned long KbToCylinder( unsigned long long );
+
+	unsigned long cylinders;
 	unsigned heads;
 	unsigned sectors;
+	string label;
+	int max_primary;
+	bool has_logical;
+	int max_logical;
     };
 
 inline ostream& operator<< (ostream& s, const Disk& d )

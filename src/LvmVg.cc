@@ -5,7 +5,8 @@
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
 
-LvmVg::LvmVg( const string& Name ) : Container(Name,StaticType())
+LvmVg::LvmVg( const Storage * const s, const string& Name ) :
+    Container(s,Name,StaticType())
     {
     if( name.find( "del" ) != string::npos )
 	deleted = true;

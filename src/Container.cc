@@ -6,7 +6,8 @@
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 
-Container::Container( const string& Name, CType t ) : name(Name)
+Container::Container( const Storage * const s, const string& Name, CType t ) : 
+    sto(s), name(Name)
     {
     deleted = false;
     readonly = false;

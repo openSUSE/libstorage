@@ -2,10 +2,12 @@
 
 #include <ycp/y2log.h>
 
-#include "y2storage/Disk.h"
 #include "y2storage/Partition.h"
+#include "y2storage/Disk.h"
+#include "y2storage/Storage.h"
 
-Disk::Disk( const string& Name ) : Container(Name,StaticType())
+Disk::Disk( const Storage * const s, const string& Name ) : 
+    Container(s,Name,StaticType())
     {
     if( name.find( "hdb" ) != string::npos )
 	deleted = true;

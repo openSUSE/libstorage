@@ -17,4 +17,3 @@ Partition::~Partition()
     {
     y2milestone( "destructed partition %s", dev.c_str() );
     }
-

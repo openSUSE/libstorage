@@ -17,12 +17,33 @@ bool TestCG30( const Partition& d )
     { return(d.CylSize()>30); };
 
 
-Storage::Storage( bool ronly, bool autodetect ) : readonly(ronly)
+Storage::Storage( bool ronly, bool tmode, bool autodetect ) : 
+    readonly(ronly), testmode(tmode)
     {
-    y2milestone( "constructed Storage ronly:%d autodetec:%d", ronly, autodetect );
-    if( autodetect )
+    y2milestone( "constructed Storage ronly:%d testmode:%d autodetec:%d", 
+                 ronly, testmode, autodetect );
+    if( autodetect && !testmode )
 	{
 	AutodetectDisks();
+	}
+    char * tenv = getenv( "YAST_IS_RUNNING" );
+    instsys = tenv!=NULL && strcmp(tenv,"instsys")==0;
+    if( testmode )
+	{
+	tenv = getenv( "YAST2_STORAGE_TDIR" );
+	if( tenv!=NULL && strlen(tenv)>0 )
+	    {
+	    testdir = tenv;
+	    }
+	else
+	    {
+	    testdir = "/var/lib/YaST2/storage_test";
+	    }
+	}
+    y2milestone( "instsys:%d testdir:%s", instsys, testdir.c_str() );
+
+    if( testmode )
+	{
 	}
     /*
     ConstPartInter b(DiskPair( TestLg150 ));
@@ -53,7 +74,7 @@ Storage::~Storage()
 void
 Storage::AutodetectDisks()
     {
-    AddDisk( "hdc" );
+    AddToList( new Disk( this, "hdc" ));
     string SysfsDir = "/sys/block";
     DIR *Dir;
     struct dirent *Entry;
@@ -77,7 +98,7 @@ Storage::AutodetectDisks()
 		}
 	    if( Range>1 && Size>0 )
 		{
-		AddDisk( Entry->d_name );
+		AddToList( new Disk( this, Entry->d_name ) );
 		}
 	    }
 	closedir( Dir );
@@ -86,23 +107,16 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
-    AddToList( new Container( "md", Container::MD ) );
-    AddToList( new Container( "loop", Container::LOOP ) );
-    AddToList( new LvmVg( "system" ) );
-    AddToList( new LvmVg( "vg1" ) );
-    AddToList( new LvmVg( "vg2" ) );
-    AddToList( new LvmVg( "empty" ) );
-    AddToList( new Evms() );
-    AddToList( new Evms( "vg1" ) );
-    AddToList( new Evms( "vg2" ) );
-    AddToList( new Evms( "empty" ) );
+    AddToList( new Container( this, "md", Container::MD ) );
+    AddToList( new Container( this, "loop", Container::LOOP ) );
+    AddToList( new LvmVg( this, "system" ) );
+    AddToList( new LvmVg( this, "vg1" ) );
+    AddToList( new LvmVg( this, "vg2" ) );
+    AddToList( new LvmVg( this, "empty" ) );
+    AddToList( new Evms( this ) );
+    AddToList( new Evms( this, "vg1" ) );
+    AddToList( new Evms( this, "vg2" ) );
+    AddToList( new Evms( this, "empty" ) );
     }
 
-int 
-Storage::AddDisk( const string& Name )
-    {
-    y2milestone( "Name: %s", Name.c_str() );
-    AddToList( new Disk( Name ) );
-    return( 0 );
-    }
 

@@ -21,7 +21,6 @@ class Partition : public Volume
 	unsigned cyl_size;
     };
 
-#endif
 
 inline ostream& operator<< (ostream& s, const Partition &p )
     {
@@ -30,3 +29,5 @@ inline ostream& operator<< (ostream& s, const Partition &p )
       << " CylNum:" << p.cyl_size;
     return( s );
     }
+
+#endif

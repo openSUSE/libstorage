@@ -36,10 +36,12 @@ class Storage
 	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.Delete());}};
 	static SkipDeleted SkipDel;
 	static bool NotDeleted( const Container&d ) { return( !d.Delete() ); };
-	static bool IsRealDisk( const Container&d ) 
-	    { return( d.Type()==Container::DISK ); };
 
-	Storage( bool ronly=false, bool autodetect=true );
+	Storage( bool ronly=false, bool testmode=false, bool autodetect=true );
+	bool Test() const { return( testmode ); }
+	bool Instsys() const { return( instsys ); }
+	const string& TDir() const { return( testdir ); }
+	const string& Root() const { return( rootprefix ); }
 	virtual ~Storage();
 
 // iterators over container 
@@ -748,12 +750,15 @@ class Storage
     protected:
 	// protected internal member functions
 	void AutodetectDisks();
-	int AddDisk( const string& Name );
 	void AddToList( Container* e ) 
 	    { PointerIntoSortedList<Container>( cont, e ); }
 
 	// protected internal member variables
 	bool readonly;
+	bool testmode;
+	bool instsys;
+	string testdir;
+	string rootprefix;
 	CCont cont;
     };
 

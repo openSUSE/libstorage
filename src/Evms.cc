@@ -5,7 +5,8 @@
 #include "y2storage/Evms.h"
 #include "y2storage/EvmsVol.h"
 
-Evms::Evms( const string& Name ) : Container(Name,StaticType())
+Evms::Evms( const Storage * const s, const string& Name ) : 
+    Container(s,Name,StaticType())
     {
     device = "/dev/evms";
     if( name.length()>0 )

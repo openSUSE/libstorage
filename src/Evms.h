@@ -10,7 +10,7 @@ class Evms : public Container
     friend class Storage;
 
     public:
-	Evms( const string& Name="" );
+	Evms( const Storage * const s, const string& Name="" );
 	virtual ~Evms();
 	unsigned long long PeSize() const { return pe_size; }
 	unsigned NumVol() const { return vols.size(); }

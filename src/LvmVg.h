@@ -10,7 +10,7 @@ class LvmVg : public Container
     friend class Storage;
 
     public:
-	LvmVg( const string& Name );
+	LvmVg( const Storage * const s, const string& Name );
 	virtual ~LvmVg();
 	unsigned long long PeSize() const { return pe_size; }
 	unsigned NumLv() const { return vols.size(); }
