@@ -203,7 +203,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     }
 
 int
-Storage::createPartitionKb( const string& disk, PartitionType type, 
+Storage::createPartitionKb( const string& disk, PartitionType type,
                             unsigned long long start,
 			    unsigned long long sizeK, string& device )
     {
@@ -217,7 +217,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	unsigned long long tmp_start = start;
 	if( tmp_start > i->kbToCylinder(1)/2 )
 	    tmp_start -= i->kbToCylinder(1)/2;
-	else 
+	else
 	    tmp_start = 0;
 	unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
 	ret = i->createPartition( type, start_cyl, num_cyl, device, true );
@@ -343,7 +343,7 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     return( ret );
     }
 
-string 
+string
 Storage::defaultDiskLabel()
     {
     return( Disk::defaultLabel() );
@@ -351,9 +351,9 @@ Storage::defaultDiskLabel()
 
 int Storage::checkCache()
     {
-    int ret=0; 
-    if( !cacheChanges() ) 
-	ret = commit(); 
+    int ret=0;
+    if( !isCacheChanges() )
+	ret = commit();
     return(ret);
     }
 
@@ -433,7 +433,7 @@ bool Storage::findVolume( const string& device, ContIterator& c,
 	ret = c!=cp.end();
 	}
     y2milestone( "device:%s ret:%d c->device:%s v->device:%s", device.c_str(),
-                 ret, ret?c->device().c_str():"nil", 
+                 ret, ret?c->device().c_str():"nil",
 		 ret?v->device().c_str():"nil" );
     return( ret );
     }

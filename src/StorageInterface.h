@@ -264,7 +264,30 @@ namespace storage
 #endif
 
 	/**
-	 * Commit the current state to the system.
+	 * All modifying functions of libstorage can either operate on an
+	 * internal cache or directly on the system.
+	 *
+	 * When the caching mode is enabled a call of e.g. createPartition()
+	 * will only change the internal cache.  The user has to call commit()
+	 * later on to actually create the partition on the disk.
+	 *
+	 * When caching mode is disabled the call of createPartition() will
+	 * immediately create the partition on the disk.
+	 *
+	 * With the function setCacheChanges you can turn the caching mode on
+	 * and off.  Turning of caching mode will cause all changes done so
+	 * far to be commited upto the next modifying function.
+	 */
+	virtual void setCacheChanges (bool cache) = 0;
+
+	/**
+	 * Query the caching mode, see setCacheChanges().
+	 */
+	virtual bool isCacheChanges () const = 0;
+
+	/**
+	 * Commit the current state to the system.  Only useful in caching
+	 * mode, see setCacheChanges().
 	 */
 	virtual int commit() = 0;
 

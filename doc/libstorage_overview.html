@@ -4,24 +4,24 @@
 </head><body>
 <h1>libstorage: Design Concepts and Main Overview</h1>
 
-<p> 
+<p>
 Short overview about the concepts and classes of libstorage. Click on the class names to
 get a more detailed description of each class.
 <p>
-<a href="autodocs/classStorage.html"><h2>class Storage</h2></a>
+<a href="autodocs/classstorage_1_1StorageInterface.html"><h2>class StorageInterface</h2></a>
 <p>
 This is the main class with that one can get access to the functionality provided by libstorage.
 The class contains a list of container objects.</p>
 <p>
-All modifying member functions of the storage library will go through Storage class. This is the 
-central place where things like readonly access, locking, testmode, inst-sys etc. are handled. 
-So e.g. if one wants to remove a partition from a certain disk he will call 
+All modifying member functions of the storage library will go through Storage class. This is the
+central place where things like readonly access, locking, testmode, inst-sys etc. are handled.
+So e.g. if one wants to remove a partition from a certain disk he will call
 <code>Storage::RemovePartition(...)</code> not <code>Disk::RemovePartition(...)</code>. Of course
 <code>Storage::RemovePartition(...)</code> may eventually call <code>Disk::RemovePartition(...)</code>
 but only after the checks against the central restrictions (e.g. readonly access or active testmode)
 have succeeded in class Storage.</p>
 <p>
-This has the additional advantage the the complete class hierarchy below Storage could be changed 
+This has the additional advantage the the complete class hierarchy below Storage could be changed
 without affecting the user interface of libstorage.</p>
 <p>
 The following modifying functions are planned to be available when libstorage is finished.</p>
@@ -57,8 +57,8 @@ The following modifying functions are planned to be available when libstorage is
 <a href="autodocs/classContainer.html"><h2>class Container</h2></a>
 <p>
 This is the base class for everything being able to contain volumes.
-A <code>Container</code> contains a list of <code>Volumes</code>. 
-Currently, the following classes derived from <code>Container</code> exist: <code>Disk</code>, 
+A <code>Container</code> contains a list of <code>Volumes</code>.
+Currently, the following classes derived from <code>Container</code> exist: <code>Disk</code>,
 <code>LvmVg</code>, <code>Evms</code>.</p>
 
 <a href="autodocs/classDisk.html"><h2>class Disk</h2></a>
@@ -80,7 +80,7 @@ Derived class from <code>Container</code>. Contains knowledge about handling of 
 <p>
 This is the base class for all objects that can be formatted and mounted.
 It contains cunctionality for formatting, mounting, fstab handling.
-Currently, the following classes derived from <code>Volume</code> exist: <code>Partition</code>, 
+Currently, the following classes derived from <code>Volume</code> exist: <code>Partition</code>,
 <code>LvmLv</code>, <code>EvmsVol</code>, <code>Md</code>, <code>Loop</code>.</p>
 
 <a href="autodocs/classPartition.html"><h2>class Partition</h2></a>

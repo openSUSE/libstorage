@@ -58,7 +58,7 @@ class Storage : public StorageInterface
 	bool test() const { return( testmode ); }
 	bool instsys() const { return( inst_sys ); }
 	void setCacheChanges( bool val=true ) { cache = val; }
-	bool cacheChanges() const { return( cache ); }
+	bool isCacheChanges() const { return( cache ); }
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
@@ -73,7 +73,7 @@ class Storage : public StorageInterface
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
 			     unsigned long size, string& device );
-	int createPartitionKb( const string& disk, PartitionType type, 
+	int createPartitionKb( const string& disk, PartitionType type,
 	                       unsigned long long start,
 			       unsigned long long sizek, string& device );
 	unsigned long kbToCylinder( const string& disk, unsigned long long size );
