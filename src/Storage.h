@@ -67,6 +67,7 @@ class Storage : public StorageInterface
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
+	const string& tmpDir() const { return( tempdir ); }
 	static const string& arch() { return( proc_arch ); }
 	EtcFstab* getFstab() { return fstab; }
 	virtual ~Storage();
@@ -88,9 +89,15 @@ class Storage : public StorageInterface
 	int changePartitionId( const string& partition, unsigned id );
 	int destroyPartitionTable( const string& disk, const string& label );
 	string defaultDiskLabel();
-	int changeFstabOptions( string device, string options );
-	int changeMountPoint( string device, string mount );
-	int changeFormatVolume( string device, bool format, FsType fs );
+
+	int changeFormatVolume( const string&, bool format, FsType fs );
+	int changeMountPoint( const string&, const string& mount );
+	int changeFstabOptions( const string&, const string& options );
+	int addFstabOptions( const string&, const string& options );
+	int removeFstabOptions( const string&, const string& options );
+	int setCryptPassword( const string& device, const string& pwd );
+	int setCrypt( const string& device, bool val );
+
 	list<string> getCommitActions( bool mark_destructive );
         int commit();
 
@@ -847,6 +854,7 @@ class Storage : public StorageInterface
 	bool initialized;
 	bool autodetect;
 	string testdir;
+	string tempdir;
 	string rootprefix;
 	static string proc_arch;
 	CCont cont;

@@ -7,6 +7,8 @@
 #include <sys/utsname.h>
 
 #include "y2storage/Storage.h"
+#include "y2storage/StorageTmpl.h"
+#include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
 #include "y2storage/LvmVg.h"
@@ -41,6 +43,15 @@ void
 Storage::initialize()
     {
     initialized = true;
+    char tbuf[100];
+    strncpy( tbuf, "/tmp/liby2storageXXXXXX", sizeof(tbuf)-1 );
+    if( mkdtemp( tbuf )==NULL )
+	{
+	cerr << "tmpdir creation " << tbuf << " failed. Aborting..." << endl;
+	exit(1);
+	}
+    else
+	tempdir = tbuf;
     if( autodetect && !testmode )
 	{
 	detectArch();
@@ -84,6 +95,16 @@ Storage::~Storage()
     for( CIter i=cont.begin(); i!=cont.end(); ++i )
 	{
 	delete( *i );
+	}
+    if( tempdir.size()>0 && access( tempdir.c_str(), R_OK )==0 )
+	{
+	SystemCmd c( "rmdir " + tempdir );
+	if( c.retcode()!=0 )
+	    {
+	    y2error( "stray tmpfile" );
+	    c.execute( "ls " + tempdir );
+	    c.execute( "rm -rf " + tempdir );
+	    }
 	}
     y2milestone( "destructed Storage" );
     }
@@ -369,7 +390,7 @@ Storage::defaultDiskLabel()
     }
 
 int 
-Storage::changeFormatVolume( string device, bool format, FsType fs )
+Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {
     int ret = 0;
     assertInit();
@@ -394,7 +415,7 @@ Storage::changeFormatVolume( string device, bool format, FsType fs )
     }
 
 int 
-Storage::changeMountPoint( string device, string mount )
+Storage::changeMountPoint( const string& device, const string& mount )
     {
     int ret = 0;
     assertInit();
@@ -418,7 +439,7 @@ Storage::changeMountPoint( string device, string mount )
     }
 
 int 
-Storage::changeFstabOptions( string device, string options )
+Storage::changeFstabOptions( const string& device, const string& options )
     {
     int ret = 0;
     assertInit();
@@ -428,6 +449,119 @@ Storage::changeFstabOptions( string device, string options )
     if( findVolume( device, cont, vol ) )
 	{
 	ret = vol->changeFstabOptions( options );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::addFstabOptions( const string& device, const string& options )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	list<string> l = splitString( options, "," );
+	list<string> opts = splitString( vol->getFstabOption(), "," );
+	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	    {
+	    if( find( opts.begin(), opts.end(), *i )==opts.end() )
+		opts.push_back( *i );
+	    }
+	ret = vol->changeFstabOptions( mergeString( opts, "," ) );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::removeFstabOptions( const string& device, const string& options )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	list<string> l = splitString( options, "," );
+	list<string> opts = splitString( vol->getFstabOption(), "," );
+	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	    {
+	    opts.remove_if( match_string( *i ));
+	    }
+	ret = vol->changeFstabOptions( mergeString( opts, "," ) );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::setCrypt( const string& device, bool val )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s val:%d", device.c_str(), val );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setEncryption( val );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::setCryptPassword( const string& device, const string& pwd )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2milestone( "password:%s", pwd.c_str() );
+#endif
+
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	vol->setCryptPwd( pwd );
 	}
     else
 	{
@@ -460,6 +594,18 @@ list<string> Storage::getCommitActions( bool mark_destructive )
 	for( ContIterator i = p.begin(); i != p.end(); ++i )
 	    {
 	    i->getCommitActions( ac );
+	    }
+	ac.sort( cont_less<commitAction>() );
+	string txt;
+	for( list<commitAction*>::const_iterator i=ac.begin(); i!=ac.end(); ++i )
+	    {
+	    txt.erase();
+	    if( mark_destructive && (*i)->destructive )
+		txt += "<font color=red>";
+	    txt += (*i)->descr;
+	    if( mark_destructive && (*i)->destructive )
+		txt += "</font>";
+	    ret.push_back( txt );
 	    }
 	}
     y2milestone( "ret.size():%d", ret.size() );

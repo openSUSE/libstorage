@@ -20,8 +20,6 @@ class Volume
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
 	virtual ~Volume();
 
-	virtual bool commitChanges() { return true; }
-
 	const string& device() const { return dev; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const Container* getContainer() const { return cont; }
@@ -35,29 +33,31 @@ class Volume
 	int changeFstabOptions( const string& options );
 	int changeMount( const string& m );
 	bool loop() const { return is_loop; }
+	bool needLosetup() const { return is_loop&&!loop_active; }
 	bool mpFromFstab() const { return mp_from_fstab; }
-	string getUuid() const { return uuid; }
-	string getLabel() const { return label; }
+	const string& getUuid() const { return uuid; }
+	const string& getLabel() const { return label; }
 	void setLabel( string val ) { label!=val; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH ) 
 	    { encryption=val; }
-	string getCryptPwd() const { return crypt_pwd; }
+	int setEncryption( bool val );
+	const string& getCryptPwd() const { return crypt_pwd; }
 	void setCryptPwd( string val ) { crypt_pwd=val; }
-	string getMount() const { return mp; }
+	const string& getMount() const { return mp; }
 	void setMount( string val ) { mp=val; }
 	bool needRemount() const { return( mp!=orig_mp ); }
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	void setMountBy( storage::MountByType val ) { mount_by=val; }
-	string getFstabOption() const { return fstab_opt; }
+	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( string val ) { fstab_opt=val; }
 	bool needFstabUpdate() const 
 	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 	              encryption!=orig_encryption ); }
-	string getMkfsOption() const { return mkfs_opt; }
+	const string& getMkfsOption() const { return mkfs_opt; }
 	void setMkfsOption( string val ) { mkfs_opt=val; }
 	const list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
@@ -94,7 +94,9 @@ class Volume
 	virtual string createText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const { return(""); }
 	virtual void getCommitActions( list<commitAction*>& l ) const;
-	string mountText( bool doing=true) const;
+	string mountText( bool doing=true ) const;
+	string labelText( bool doing=true ) const;
+	string losetupText( bool doing=true ) const;
 	string fstabUpdateText() const; 
 	string sizeString() const;
 	string bootMount() const;
@@ -125,8 +127,12 @@ class Volume
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );
 	void getFstabData( EtcFstab& fstabData );
-	string getMountbyString( storage::MountByType mby, const string& dev,
-	                         const string& uuid, const string& label );
+	string getMountByString( storage::MountByType mby, const string& dev,
+	                         const string& uuid, const string& label ) const;
+	int getFreeLoop();
+	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
+	storage::EncryptType detectLoopEncryption();
+
 
 	const Container* const cont;
 	bool numeric;
@@ -148,6 +154,7 @@ class Volume
 	string orig_fstab_opt;
 	string mkfs_opt;
 	bool is_loop;
+	bool loop_active;
 	storage::EncryptType encryption;
 	storage::EncryptType orig_encryption;
 	string loop_dev;
@@ -228,6 +235,8 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	}
     if( v.is_loop )
 	{
+	if( v.loop_active )
+	    s << " active";
 	s << " loop:" << v.loop_dev;
 	if( v.fstab_loop_dev != v.loop_dev )
 	    {
@@ -235,7 +244,7 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	    }
 	s << " encr:" << v.enc_names[v.encryption];
 	if( v.encryption != v.orig_encryption && v.orig_encryption!=storage::ENC_NONE )
-	    s << " orig_scnr:" << v.enc_names[v.orig_encryption];
+	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
 #endif

@@ -168,6 +168,14 @@ namespace storage
 	VOLUME_FORMAT_DD_FAILED = -3004,
 	VOLUME_FORMAT_UNKNOWN_FS = -3005,
 	VOLUME_FORMAT_FS_UNDETECTED = -3006,
+	VOLUME_FORMAT_FAILED = -3007,
+	VOLUME_TUNE2FS_FAILED = -3008,
+	VOLUME_MKLABEL_FS_UNABLE = -3009,
+	VOLUME_MKLABEL_FAILED = -3010,
+	VOLUME_LOSETUP_NO_LOOP = -3011,
+	VOLUME_LOSETUP_FAILED = -3012,
+	VOLUME_ENCRYPT_NO_PWD = -3013,
+	VOLUME_ENCRYPT_NOT_DETECTED = -3014,
 
 	CONTAINER_INTERNAL_ERROR = -4000,
 
@@ -305,34 +313,74 @@ namespace storage
 	virtual string defaultDiskLabel() = 0;
 
 	/**
-	 *  sets or unsets the format flag for the given device.
+	 *  sets or unsets the format flag for the given volume.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param format flag if format is set on or off
 	 * @param fs type of filesystem to create if fromat is true
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeFormatVolume( string device, bool format, FsType fs ) = 0;
+	virtual int changeFormatVolume( const string& device, bool format, FsType fs ) = 0;
 
 	/**
-	 *  changes the mount point of a partition
+	 *  changes the mount point of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param mount new mount point of the partition (e.g. /home).
 	 *    it is valid to set an empty mount point
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeMountPoint( string device, string mount ) = 0;
+	virtual int changeMountPoint( const string& device, const string& mount ) = 0;
 
 	/**
-	 *  changes the fstab options of a partition
+	 *  changes the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options new fstab options of the partition (e.g. noauto,user,sync).
-	 *    it is valid to set an empty fstab option
+	 *    Multiple options are separated by ",".
+	 *    It is valid to set an empty fstab option.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeFstabOptions( string device, string options ) = 0;
+	virtual int changeFstabOptions( const string& device, const string& options ) = 0;
+
+	/**
+	 *  adds to the fstab options of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options fstab options to add to already exiting options of the partition (e.g. noauto,user,sync).
+	 *    Multiple options are separated by ",".
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int addFstabOptions( const string& device, const string& options ) = 0;
+
+	/**
+	 *  remove from the fstab options of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options fstab options to remove from already exiting options of the partition (e.g. noauto).
+	 *    Multiple options are separated by ",".
+	 *    It is possible to specify wildcards, so "uid=.*" matches every option startign with the string "uid=".
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeFstabOptions( const string& device, const string& options ) = 0;
+
+	/**
+	 *  set crypt password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param pwd crypt password fro this volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
+
+	/**
+	 *  set crypt password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param val flag if encryption should be activated 
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int setCrypt( const string& device, bool val ) = 0;
 
 	/**
 	 *  gets a list of string describing the actions to be executed 

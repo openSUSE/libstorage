@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "y2storage/AppUtil.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/AsciiFile.h"
 #include "y2storage/Regex.h"
 #include "y2storage/StorageTmpl.h"
@@ -13,13 +14,6 @@
 #include "y2storage/EtcFstab.h"
 
 using namespace storage;
-
-struct find_begin
-    {
-    find_begin( const string& t ) : val(t) {};
-    bool operator()(const string&s) { return( s.find(val)==0 ); }
-    const string& val;
-    };
 
 EtcFstab::EtcFstab( const string& prefix )
     {
@@ -46,41 +40,7 @@ EtcFstab::EtcFstab( const string& prefix )
 	    *i++ >> p->old.freq;
 	if( i!=l.end() )
 	    *i++ >> p->old.passno;
-
-	list<string>::const_iterator beg = p->old.opts.begin();
-	list<string>::const_iterator end = p->old.opts.end();
-
-	p->old.noauto = find( beg, end, "noauto" ) != end;
-
-	i = find_if( beg, end, *new find_begin("loop") );
-	if( i!=end )
-	    {
-	    p->old.loop = true;
-	    string::size_type pos = i->find("=");
-	    if( pos!=string::npos )
-		{
-		p->old.loop_dev = i->substr( pos+1 );
-		}
-	    }
-	i = find_if( beg, end, *new find_begin("encryption=") );
-	if( i!=end )
-	    {
-	    string::size_type pos = i->find("=");
-	    if( pos!=string::npos )
-		{
-		p->old.encr = Volume::toEncType( i->substr( pos+1 ) );
-		}
-	    }
-	if( p->old.device.find( "LABEL=" )==0 )
-	    {
-	    p->old.mount_by = MOUNTBY_LABEL;
-	    p->old.device.erase();
-	    }
-	else if( p->old.device.find( "UUID=" )==0 )
-	    {
-	    p->old.mount_by = MOUNTBY_UUID;
-	    p->old.device.erase();
-	    }
+	p->old.calcDependent();
 	p->nnew = p->old;
 	co.push_back( *p );
 	delete p;
@@ -127,7 +87,7 @@ FstabEntry::calcDependent()
 
     noauto = find( beg, end, "noauto" ) != end;
 
-    list<string>::const_iterator i = find_if( beg, end, *new find_begin("loop") );
+    list<string>::const_iterator i = find_if( beg, end, find_begin("loop") );
     if( i!=end )
 	{
 	loop = true;
@@ -137,7 +97,7 @@ FstabEntry::calcDependent()
 	    loop_dev = i->substr( pos+1 );
 	    }
 	}
-    i = find_if( beg, end, *new find_begin("encryption=") );
+    i = find_if( beg, end, find_begin("encryption=") );
     if( i!=end )
 	{
 	string::size_type pos = i->find("=");

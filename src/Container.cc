@@ -31,7 +31,7 @@ Container::~Container()
 static bool stageDecrease( const Volume& v ) { return( v.deleted()); }
 static bool stageCreate( const Volume& v ) { return( v.created()); }
 static bool stageFormat( const Volume& v ) 
-    { return( v.getFormat()||v.loop()||v.needLabel()); }
+    { return( v.getFormat()||v.needLosetup()||v.needLabel()); }
 static bool stageMount( const Volume& v ) 
     { return( v.needRemount()||v.needFstabUpdate()); }
 
@@ -75,7 +75,7 @@ int Container::commitChanges( CommitStage stage )
 	    VolIterator i=p.begin();
 	    while( ret==0 && i!=p.end() )
 		{
-		if( i->loop() )
+		if( i->needLosetup() )
 		    ret = i->doLosetup();
 		if( ret==0 && i->getFormat() )
 		    ret = i->doFormat();
@@ -108,6 +108,9 @@ int Container::commitChanges( CommitStage stage )
 
 void Container::getCommitActions( list<commitAction*>& l ) const
     {
+    ConstVolPair p = volPair();
+    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+	i->getCommitActions( l );
     }
 
 string Container::createText( bool doing ) const

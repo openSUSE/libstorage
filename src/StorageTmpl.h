@@ -1,6 +1,8 @@
 #ifndef STORAGE_TMPL_H
 #define STORAGE_TMPL_H
 
+#include <functional>
+
 #include <y2storage/IterPair.h>
 #include <y2storage/FilterIterator.h>
 #include <y2storage/DerefIterator.h>
@@ -223,6 +225,10 @@ template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,
     return( s );
     }
 
-
+template< class Val >
+struct cont_less : public binary_function<Val*,Val*,bool>
+    {
+    bool operator()(const Val* __x, const Val* __y) const { return *__x < *__y; }
+    };
 
 #endif
