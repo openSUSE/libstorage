@@ -54,7 +54,8 @@ class Disk : public Container
             struct PartitionPI { typedef ContainerIter<Pred, PartInter> type; };
         typedef CheckFnc<const Partition> CheckFncPartition;
         typedef CheckerIterator< CheckFncPartition, PartitionPI<CheckFncPartition>::type,
-                                 PartInter, Partition > PartPIter;
+                                 PartInter, Partition > PartPIterator;
+	typedef DerefIterator<PartPIterator,Partition> PartPIter;
         typedef IterPair<PartPIter> PartPPair;
 
         // public member functions for iterators over partitions
@@ -65,12 +66,12 @@ class Disk : public Container
         PartPIter partBegin( bool (* CheckPart)( const Partition& )=NULL)
             {
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartPIter( p, CheckPart ) );
+            return( PartPIter( PartPIterator( p, CheckPart )) );
 	    }
         PartPIter partEnd( bool (* CheckPart)( const Partition& )=NULL)
             {
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartPIter( p, CheckPart, true ) );
+            return( PartPIter( PartPIterator( p, CheckPart, true )) );
 	    }
 
 	Disk( const Storage * const s, const string& File );

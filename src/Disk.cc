@@ -784,18 +784,18 @@ int Disk::availablePartNumber( PartitionType type )
 	}
     else if( type==LOGICAL )
 	{
-	ret = (*(--p.end()))->nr()+1;
+	ret = (--p.end())->nr()+1;
 	}
     else
 	{
 	PartPIter i=p.begin();
 	unsigned start = 1;
-	while( i!=p.end() && (*i)->nr()==start && (*i)->nr()<=max_primary )
+	while( i!=p.end() && i->nr()==start && i->nr()<=max_primary )
 	    {
 	    i++;
 	    start++;
 	    }
-	if( i!=p.end() && (*i)->nr()<=max_primary )
+	if( i!=p.end() && i->nr()<=max_primary )
 	    ret = start;
 	if( type==EXTENDED && (!ext_possible || hasExtended()))
 	    ret = 0;
@@ -819,15 +819,15 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	{
 	PartPPair p = partPair( notDeleted );
 	PartPIter i = p.begin();
-	while( i!=p.end() && !(*i)->intersectArea( r ))
+	while( i!=p.end() && !i->intersectArea( r ))
 	    {
 	    i++;
 	    }
 	if( i!=p.end() )
 	    {
 	    y2milestone( "overlaps with %s at %lu len %lu", 
-			 (*i)->name().c_str(), (*i)->cylStart(), 
-			 (*i)->cylSize() );
+			 i->name().c_str(), i->cylStart(), 
+			 i->cylSize() );
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
