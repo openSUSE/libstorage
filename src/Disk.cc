@@ -338,7 +338,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
 
 bool
 Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
-                      unsigned long& csize, Partition::PType& type,
+                      unsigned long& csize, PartitionType& type,
 		      string& parted_start, unsigned& id, bool& boot )
     {
     double StartM, EndM;
@@ -349,7 +349,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 
     nr=0;
     StartM = EndM = 0.0;
-    type = Partition::PRIMARY;
+    type = PRIMARY;
     if( label == "msdos" )
 	{
 	Data >> nr >> StartM >> EndM >> PartitionType;
@@ -403,12 +403,12 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	  {
 	  if( PartitionType == "extended" )
 	      {
-	      type = Partition::EXTENDED;
+	      type = EXTENDED;
 	      id = 0x0f;
 	      }
 	  else if( nr>=5 )
 	      {
-	      type = Partition::LOGICAL;
+	      type = LOGICAL;
 	      }
 	  }
       else if( TInfo.find( ",fat" )!=string::npos )
@@ -508,7 +508,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 	unsigned pnr;
 	unsigned long c_start;
 	unsigned long c_size;
-	Partition::PType type;
+	PartitionType type;
 	string p_start;
 	unsigned id;
 	bool boot;
@@ -528,7 +528,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 						  p_start, id, boot );
 		    if( ppart.getSize( p->device(), s ))
 			{
-			if( s>0 && p->type() != Partition::EXTENDED )
+			if( s>0 && p->type() != EXTENDED )
 			    p->setSize( s );
 			}
 		    pl.push_back( p );
@@ -559,17 +559,17 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 		if( pr.second < (long)range )
 		    {
 		    unsigned id = Partition::ID_LINUX;
-		    Partition::PType type = Partition::PRIMARY;
+		    PartitionType type = PRIMARY;
 		    if( ext_possible )
 			{
 			if( s==1 )
 			    {
-			    type = Partition::EXTENDED;
+			    type = EXTENDED;
 			    id = Partition::ID_EXTENDED;
 			    }
 			if( pr.second>max_primary )
 			    {
-			    type = Partition::LOGICAL;
+			    type = LOGICAL;
 			    }
 			}
 		    Partition *p =
@@ -628,7 +628,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
     map<unsigned,unsigned long> parted_l;
     for( list<Partition*>::const_iterator i=pl.begin(); i!=pl.end(); i++ )
 	{
-	if( (*i)->type()==Partition::EXTENDED )
+	if( (*i)->type()==EXTENDED )
 	    ext_nr = (*i)->nr();
 	else
 	    {

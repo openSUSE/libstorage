@@ -42,7 +42,7 @@ pkgincludedir = $(includedir)/y2storage
 # these go to $(pkgincludedir)
 
 pkginclude_HEADERS =							\
-        StorageInterface.h Storage.h Container.h Volume.h Disk.h	\
+	StorageInterface.h Storage.h Container.h Volume.h Disk.h	\
 	Partition.h Md.h Loop.h LvmVg.h LvmLv.h \
 	Evms.h EvmsVol.h \
 	FilterIterator.h ListListIterator.h DerefIterator.h \

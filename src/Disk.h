@@ -8,6 +8,8 @@ using namespace std;
 #include "y2storage/Container.h"
 #include "y2storage/Partition.h"
 
+using namespace storage;
+
 class Storage;
 class SystemCmd;
 class ProcPart;
@@ -16,7 +18,7 @@ class Disk : public Container
     {
     friend class Storage;
 
-    struct label_info 
+    struct label_info
 	{
 	string name;
 	bool extended;
@@ -27,8 +29,6 @@ class Disk : public Container
     public:
 	Disk( const Storage * const s, const string& Name, unsigned long long Size );
 	virtual ~Disk();
-
-
 
 	unsigned cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
@@ -51,9 +51,9 @@ class Disk : public Container
 	bool getSysfsInfo( const string& SysFsDir );
 	void checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	bool checkPartedOutput( const SystemCmd& cmd );
-	bool scanPartedLine( const string& Line, unsigned& nr, 
-	                     unsigned long& start, unsigned long& csize, 
-			     Partition::PType& type, string& parted_start, 
+	bool scanPartedLine( const string& Line, unsigned& nr,
+	                     unsigned long& start, unsigned long& csize,
+			     PartitionType& type, string& parted_start,
 			     unsigned& id, bool& boot );
 	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );

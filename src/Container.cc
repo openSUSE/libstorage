@@ -1,4 +1,4 @@
-#include <iostream> 
+#include <iostream>
 
 #include <ycp/y2log.h>
 
@@ -6,7 +6,7 @@
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 
-Container::Container( const Storage * const s, const string& Name, CType t ) : 
+Container::Container( const Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
     {
     dltd = false;
@@ -15,8 +15,8 @@ Container::Container( const Storage * const s, const string& Name, CType t ) :
     typ = t;
     if( nm == "md" )
 	{
-	addToList( new Md( *this, 0, Md::RAID0 ));
-        addToList( new Md( *this, 2, Md::RAID5 ));
+	addToList( new Md( *this, 0, RAID0 ));
+        addToList( new Md( *this, 2, RAID5 ));
 	}
     else if( nm == "loop" )
 	{

@@ -7,9 +7,10 @@
 #include "y2storage/Disk.h"
 
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
-                      unsigned long Start, unsigned long CSize, PType Type,
-		      const string& PartedStart, unsigned Id, bool Boot ) : 
-        Volume( d, PNr, SizeK )
+                      unsigned long Start, unsigned long CSize,
+		      PartitionType Type, const string& PartedStart,
+		      unsigned Id, bool Boot )
+    : Volume( d, PNr, SizeK )
     {
     cyl_start = Start;
     cyl_size = CSize;
@@ -21,7 +22,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                  cont->name().c_str() );
     }
 
-Partition::Partition( const Disk& d, const string& Data ) : 
+Partition::Partition( const Disk& d, const string& Data ) :
         Volume( d, 0, 0 )
     {
     string ts, rs;
@@ -33,7 +34,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	typ = EXTENDED;
     else if( ts == "logical" )
 	typ = LOGICAL;
-    else 
+    else
 	typ = PRIMARY;
     if( rs == "boot" )
 	bootflag = true;
@@ -45,14 +46,14 @@ Partition::Partition( const Disk& d, const string& Data ) :
 
 ostream& Partition::logData( ostream& file ) const
     {
-    file << num << " " << dev << " " << size_k << " " <<  mjr << " " 
+    file << num << " " << dev << " " << size_k << " " <<  mjr << " "
          << mnr << " ";
     file << cyl_start << " " << cyl_size << " " << hex << idt << dec;
     if( typ == LOGICAL )
 	file << " logical";
     else if( typ == EXTENDED )
 	file << " extended";
-    else 
+    else
 	file << " primary";
     if( bootflag )
 	file << " boot";
