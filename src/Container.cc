@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <list>
 
 #include <ycp/y2log.h>
 
@@ -42,15 +44,15 @@ int Container::commitChanges( CommitStage stage )
 	    VolPair p = volPair( toDelete );
 	    if( !deleted() && !p.empty() )
 		{
-		VolIterator i=p.end();
-		do
+		list<VolIterator> l;
+		for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		    l.push_front( i );
+		list<VolIterator>::const_iterator i=l.begin();
+		while( ret==0 && i!=l.end() )
 		    {
-		    if( i!=p.begin() )
-			--i;
-		    VolIterator save = i;
-		    ret = doRemove( &(*save) );
+		    ret = doRemove( &(**i) );
+		    ++i;
 		    }
-		while( ret==0 && i!=p.begin() );
 		}
 	    }
 	    break;

@@ -1038,18 +1038,12 @@ int Disk::doCreateLabel( const string& label_name )
     VolPair p = volPair();
     if( !p.empty() )
 	{
-	VolIterator i=p.end();
-	do
-	    {
-	    if( i!=p.begin() )
-		--i;
-	    VolIterator save = i;
-	    if( !save->created() )
-		{
-		doRemove( &(*save) );
-		}
-	    }
-	while( i!=p.begin() );
+	list<VolIterator> l;
+	for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    if( !i->created() )
+		l.push_front( i );
+	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    doRemove( &(**i) );
 	}
     system_stderr.erase();
     std::ostringstream cmd_line;
