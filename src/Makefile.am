@@ -1,5 +1,5 @@
 #
-# Makefile.am for storage/libstorage/src
+# Makefile.am for libstorage/src
 #
 
 AM_CXXFLAGS = -DY2LOG=\"y2storage\"

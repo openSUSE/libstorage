@@ -1,6 +1,7 @@
 #
-# Makefile.am for libstorage/testsuite
+# Makefile.am for libstorage/examples
 #
+
 PACKAGE = libstorage
 
 INCLUDES = -I$(top_srcdir)/libstorage/src -I/usr/include/YaST2

@@ -1,4 +1,6 @@
-# Makefile.am for storage/agent-fdisk/doc/autodocs
+#
+# Makefile.am for libstorage/doc/autodocs
+#
 
 htmldir = $(docdir)/autodocs
 

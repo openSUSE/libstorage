@@ -9,6 +9,42 @@ using std::string;
 using std::list;
 
 
+/*!
+ * \mainpage libstorage
+ *
+ * \section Interface
+ *
+ * The functionality of libstorage is entirely accessed through the abstract
+ * interface class storage::StorageInterface.  To ensure maximal possible
+ * compatibility user of libstorage must only include the header file
+ * StorageInterface.h.
+ *
+ * \section Caching
+ *
+ * All modifying functions of libstorage can either operate on an
+ * internal cache or directly on the system.
+ *
+ * When the caching mode is enabled a call of e.g. createPartition() will only
+ * change the internal cache.  The user has to call
+ * storage::StorageInterface::commit() later on to actually create the
+ * partition on the disk.
+ *
+ * When caching mode is disabled the call of createPartition() will
+ * immediately create the partition on the disk.
+ *
+ * Caching mode can be set with storage::StorageInterface::setCacheChanges()
+ * and queried with storage::StorageInterface:isCacheChanges().
+ *
+ * \section Example
+ *
+ * Here is a very simple example to demonstrate the usage of libstorage.
+ *
+ * FIXME
+ *
+ * More examples can be found in the testsuite.
+ */
+
+
 namespace storage
 {
     enum FsType { UNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP };
@@ -264,16 +300,6 @@ namespace storage
 #endif
 
 	/**
-	 * All modifying functions of libstorage can either operate on an
-	 * internal cache or directly on the system.
-	 *
-	 * When the caching mode is enabled a call of e.g. createPartition()
-	 * will only change the internal cache.  The user has to call commit()
-	 * later on to actually create the partition on the disk.
-	 *
-	 * When caching mode is disabled the call of createPartition() will
-	 * immediately create the partition on the disk.
-	 *
 	 * With the function setCacheChanges you can turn the caching mode on
 	 * and off.  Turning of caching mode will cause all changes done so
 	 * far to be commited upto the next modifying function.
@@ -281,19 +307,22 @@ namespace storage
 	virtual void setCacheChanges (bool cache) = 0;
 
 	/**
-	 * Query the caching mode, see setCacheChanges().
+	 * Query the caching mode.
 	 */
 	virtual bool isCacheChanges () const = 0;
 
 	/**
 	 * Commit the current state to the system.  Only useful in caching
-	 * mode, see setCacheChanges().
+	 * mode.
 	 */
 	virtual int commit() = 0;
 
     };
 
 
+    /**
+     * Factory for creating a concrete StorageInterface object.
+     */
     StorageInterface* createStorageInterface (bool ronly = false,
 					      bool testmode = false,
 					      bool autodetect = true);
