@@ -1,4 +1,5 @@
 #include <dirent.h>
+#include <glob.h>
 
 #include <fstream>
 
@@ -18,10 +19,10 @@ bool TestCG30( const Partition& d )
     { return(d.CylSize()>30); };
 
 
-Storage::Storage( bool ronly, bool tmode, bool autodetect ) : 
+Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
     readonly(ronly), testmode(tmode)
     {
-    y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d", 
+    y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
                  ronly, testmode, autodetect );
     char * tenv = getenv( "YAST_IS_RUNNING" );
     instsys = tenv!=NULL && strcmp(tenv,"instsys")==0;
@@ -47,20 +48,16 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
     y2milestone( "instsys:%d testdir:%s", instsys, testdir.c_str() );
 
     if( testmode )
+        {
+	glob_t globbuf;
+
+	if (glob ((testdir+"/disk_*").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
-	DIR *Dir;
-	struct dirent *Entry;
-	if( (Dir=opendir( testdir.c_str() ))!=NULL )
-	    {
-	    while( (Entry=readdir( Dir ))!=NULL )
-		{
-		if( strncmp( Entry->d_name, "disk_", 5 )==0 )
-		    {
-		    Disk * d = new Disk( this, testdir+"/"+Entry->d_name );
-		    AddToList( d );
-		    }
-		}
-	    }
+	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+		AddToList( new Disk( this, *p ) );
+	}
+
+	globfree (&globbuf);
 	}
     }
 
@@ -145,6 +142,7 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
+
     AddToList( new Container( this, "md", Container::MD ) );
     AddToList( new Container( this, "loop", Container::LOOP ) );
     AddToList( new LvmVg( this, "system" ) );
