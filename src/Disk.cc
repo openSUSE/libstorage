@@ -794,7 +794,7 @@ int Disk::availablePartNumber( PartitionType type )
 	    ++i;
 	    start++;
 	    }
-	if( i!=p.end() && i->nr()<=max_primary )
+	if( start<=max_primary )
 	    ret = start;
 	if( type==EXTENDED && (!ext_possible || hasExtended()))
 	    ret = 0;
@@ -881,12 +881,19 @@ int Disk::commitChanges( CommitStage stage )
 
 int Disk::doCreate( Volume* v )
     {
-    Partition * p = static_cast<Partition *>(v);
-    y2milestone( "doCreate container %s name %s", name().c_str(), 
-                 p->name().c_str() );
-    y2milestone( "doCreate start %ld len %ld", p->cylStart(), 
-                 p->cylSize() );
+    Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
+    if( p != NULL )
+	{
+	y2milestone( "doCreate container %s name %s", name().c_str(), 
+		     p->name().c_str() );
+	y2milestone( "doCreate start %ld len %ld", p->cylStart(), 
+		     p->cylSize() );
+	}
+    else
+	{
+	ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
+	}
     return( ret );
     }
 
