@@ -71,7 +71,8 @@ using std::list;
  *
  * \endcode
  *
- * More examples can be found in the directory
+ * If you have installed the latest yast2-storage package you can find more
+ * examples in the directory
  * /usr/share/doc/packages/yast2-storage/examples/liby2storage.
  */
 
