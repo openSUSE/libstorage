@@ -220,7 +220,11 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     y2milestone( "disk:%s type:%d start:%ld size:%ld", disk.c_str(),
                  type, start, size );
     DiskIterator i = findDisk( disk );
-    if( i != dEnd() )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
 	{
 	ret = i->createPartition( type, start, size, device );
 	}
@@ -246,7 +250,11 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
     y2milestone( "disk:%s type:%d start:%lld sizeK:%lld", disk.c_str(),
                  type, start, sizeK );
     DiskIterator i = findDisk( disk );
-    if( i != dEnd() )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
 	{
 	unsigned long num_cyl = i->kbToCylinder( sizeK );
 	unsigned long long tmp_start = start;
@@ -303,7 +311,11 @@ Storage::removePartition( const string& partition )
     y2milestone( "partition:%s", partition.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( partition, cont, vol ) && cont->type()==DISK )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( partition, cont, vol ) && cont->type()==DISK )
 	{
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
@@ -335,7 +347,11 @@ Storage::changePartitionId( const string& partition, unsigned id )
     y2milestone( "partition:%s id:%x", partition.c_str(), id );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( partition, cont, vol ) && cont->type()==DISK )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( partition, cont, vol ) && cont->type()==DISK )
 	{
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
@@ -367,7 +383,11 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     y2milestone( "disk:%s", disk.c_str() );
     DiskIterator i = findDisk( disk );
 
-    if( i != dEnd() )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
 	{
 	ret = i->destroyPartitionTable( label );
 	}
@@ -398,7 +418,11 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
                  Volume::fsTypeString(fs).c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	ret = vol->setFormat( format, fs );
 	}
@@ -422,9 +446,42 @@ Storage::changeMountPoint( const string& device, const string& mount )
     y2milestone( "device:%s mount:%s", device.c_str(), mount.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	ret = vol->changeMount( mount );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::changeMountBy( const string& device, MountByType mby )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s mby:%s", device.c_str(), 
+                 Volume::mbyTypeString(mby).c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->changeMountBy( mby );
 	}
     else
 	{
@@ -446,7 +503,11 @@ Storage::changeFstabOptions( const string& device, const string& options )
     y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	ret = vol->changeFstabOptions( options );
 	}
@@ -470,7 +531,11 @@ Storage::addFstabOptions( const string& device, const string& options )
     y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	list<string> l = splitString( options, "," );
 	list<string> opts = splitString( vol->getFstabOption(), "," );
@@ -501,7 +566,11 @@ Storage::removeFstabOptions( const string& device, const string& options )
     y2milestone( "device:%s options:%s", device.c_str(), options.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	list<string> l = splitString( options, "," );
 	list<string> opts = splitString( vol->getFstabOption(), "," );
@@ -531,7 +600,11 @@ Storage::setCrypt( const string& device, bool val )
     y2milestone( "device:%s val:%d", device.c_str(), val );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	ret = vol->setEncryption( val );
 	}
@@ -559,7 +632,11 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( device, cont, vol ) )
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
 	{
 	vol->setCryptPwd( pwd );
 	}

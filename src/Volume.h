@@ -31,34 +31,33 @@ class Volume
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
 	int changeFstabOptions( const string& options );
-	int changeMount( const string& m );
+	int changeMountBy( storage::MountByType mby );
+	virtual int changeMount( const string& m );
 	bool loop() const { return is_loop; }
 	bool needLosetup() const { return is_loop&&!loop_active; }
-	bool mpFromFstab() const { return mp_from_fstab; }
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
-	void setLabel( string val ) { label!=val; }
+	void setLabel( const string& val ) { label!=val; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
 	    { encryption=val; }
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
-	void setCryptPwd( string val ) { crypt_pwd=val; }
+	void setCryptPwd( const string& val ) { crypt_pwd=val; }
 	const string& getMount() const { return mp; }
-	void setMount( string val ) { mp=val; }
-	bool needRemount() const { return( mp!=orig_mp ); }
+	bool needRemount() const; 
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	void setMountBy( storage::MountByType val ) { mount_by=val; }
 	const string& getFstabOption() const { return fstab_opt; }
-	void setFstabOption( string val ) { fstab_opt=val; }
+	void setFstabOption( const string& val ) { fstab_opt=val; }
 	bool needFstabUpdate() const
 	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 	              encryption!=orig_encryption ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
-	void setMkfsOption( string val ) { mkfs_opt=val; }
+	void setMkfsOption( const string& val ) { mkfs_opt=val; }
 	const list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
@@ -89,7 +88,8 @@ class Volume
 	int doLosetup();
 	int doSetLabel();
 	int doFstabUpdate();
-	bool isMounted() const { return( orig_mp.size()>0 && !mp_from_fstab ); }
+	void fstabUpdateDone();
+	bool isMounted() const { return( is_mounted ); }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const { return(""); }
@@ -118,6 +118,8 @@ class Volume
 	    { return fs_names[type]; }
 	static const string& encTypeString( const storage::EncryptType type )
 	    { return enc_names[type]; }
+	static const string& mbyTypeString( const storage::MountByType type )
+	    { return mb_names[type]; }
 
 
     protected:
@@ -140,7 +142,6 @@ class Volume
 	bool del;
 	bool format;
 	bool silent;
-	bool mp_from_fstab;
 	storage::FsType fs;
 	storage::FsType detected_fs;
 	storage::MountByType mount_by;
@@ -154,6 +155,7 @@ class Volume
 	string orig_fstab_opt;
 	string mkfs_opt;
 	bool is_loop;
+	bool is_mounted;
 	bool loop_active;
 	storage::EncryptType encryption;
 	storage::EncryptType orig_encryption;
@@ -201,8 +203,8 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
 	    s << " orig_mount:" << v.orig_mp;
 	}
-    if( v.mp_from_fstab )
-	s << " mp_fstab";
+    if( !v.is_mounted )
+	s << " not_mounted";
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
 	s << " mount_by:" << Volume::mb_names[v.mount_by];

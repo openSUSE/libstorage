@@ -94,7 +94,11 @@ int Container::commitChanges( CommitStage stage )
 		if( i->needRemount() )
 		    ret = i->doMount();
 		if( ret==0 && i->needFstabUpdate() )
+		    {
 		    ret = i->doFstabUpdate();
+		    if( ret==0 )
+			i->fstabUpdateDone();
+		    }
 		++i;
 		}
 	    }

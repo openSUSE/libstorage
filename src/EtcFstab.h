@@ -14,13 +14,8 @@ struct FstabEntry
     {
     FstabEntry() { freq=passno=0; crypto=loop=noauto=false; 
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
-    bool operator==( const FstabEntry& rhs ) const
-	{ return( dentry == rhs.dentry && mount == rhs.mount ); }
-    bool operator==( const FstabChange& rhs ) const;
-    bool operator!=( const FstabEntry& rhs ) const
-	{ return( ! (*this == rhs) ); }
-    bool operator!=( const FstabChange& rhs ) const;
     FstabEntry& operator=( const FstabChange& rhs );
+    friend ostream& operator<< (ostream& s, const FstabEntry &v );
 
     string device;
     string dentry;
@@ -39,25 +34,39 @@ struct FstabEntry
     void calcDependent();
     };
 
+inline ostream& operator<< (ostream& s, const FstabEntry &v )
+    {
+    s << " device:" << v.device 
+      << " dentry:" << v.dentry << " mount:" << v.mount 
+      << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
+      << " freq:" << v.freq << " passno:" << v.passno;
+    if( v.noauto )
+	s << " noauto";
+    if( v.crypto )
+	s << " crypto";
+    if( v.loop )
+	s << " loop";
+    if( v.loop_dev.size()>0 )
+	s << " loop_dev:" << v.loop_dev;
+    if( v.encr != storage::ENC_NONE )
+	s << " encr:" << v.encr;
+    return( s );
+    }
+
 struct FstabChange
     {
     FstabChange() { freq=passno=0; encr=storage::ENC_NONE; }
     FstabChange( const FstabEntry& e ) { *this = e; }
-    bool operator==( const FstabChange& rhs ) const
-	{ return( dentry == rhs.dentry && mount == rhs.mount ); }
-    bool operator==( const FstabEntry& rhs ) const
-	{ return( dentry == rhs.dentry && mount == rhs.mount ); }
-    bool operator!=( const FstabEntry& rhs ) const
-	{ return( ! (*this == rhs) ); }
-    bool operator!=( const FstabChange& rhs ) const
-	{ return( ! (*this == rhs) ); }
     FstabChange& operator=( const FstabEntry& rhs )
 	{
+	device = rhs.device;
 	dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
 	opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
 	loop_dev = rhs.loop_dev; encr = rhs.encr;
 	return( *this );
 	}
+    friend ostream& operator<< (ostream& s, const FstabChange &v );
+    string device;
     string dentry;
     string mount;
     string fs;
@@ -68,14 +77,9 @@ struct FstabChange
     storage::EncryptType encr;
     };
 
-inline bool FstabEntry::operator==( const FstabChange& rhs ) const
-    { return( dentry == rhs.dentry && mount == rhs.mount ); }
-
-inline bool FstabEntry::operator!=( const FstabChange& rhs ) const
-    { return( ! (*this == rhs) ); }
-
 inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
     {
+    device = rhs.device;
     dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
     opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
     loop_dev = rhs.loop_dev; encr = rhs.encr;
@@ -83,6 +87,18 @@ inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
     return( *this );
     }
 
+inline ostream& operator<< (ostream& s, const FstabChange &v )
+    {
+    s << " device:" << v.device 
+      << " dentry:" << v.dentry << " mount:" << v.mount 
+      << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
+      << " freq:" << v.freq << " passno:" << v.passno;
+    if( v.loop_dev.size()>0 )
+	s << " loop_dev:" << v.loop_dev;
+    if( v.encr != storage::ENC_NONE )
+	s << " encr:" << v.encr;
+    return( s );
+    }
 
 class EtcFstab 
     {

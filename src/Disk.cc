@@ -851,7 +851,11 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     int ret = 0;
     Region r( start, len );
     PartPair ext = partPair(isExtended);
-    if( r.end() > cylinders()+fuzz )
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
+    if( ret==0 && (r.end() > cylinders()+fuzz) )
 	{
 	y2milestone( "too large for disk cylinders %lu", cylinders() );
 	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
@@ -932,6 +936,10 @@ int Disk::removePartition( unsigned nr )
 	{
 	ret = DISK_REMOVE_PARTITION_NOT_FOUND;
 	}
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
     if( ret==0 )
 	{
 	i->setDeleted();
@@ -969,7 +977,11 @@ int Disk::destroyPartitionTable( const string& new_label )
     y2milestone( "begin" );
     int ret = 0;
     setLabelData( new_label );
-    if( max_primary==0 )
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
+    else if( max_primary==0 )
 	{
 	setLabelData( label );
 	ret = DISK_DESTROY_TABLE_INVALID_LABEL;
@@ -1009,6 +1021,10 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
     if( i==p.end() )
 	{
 	ret = DISK_CHANGE_PARTITION_ID_NOT_FOUND;
+	}
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
 	}
     if( ret==0 )
 	{
@@ -1323,10 +1339,6 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );
-	    }
-	if( ret==0 )
-	    {
-	    ret = p->doFstabUpdate();
 	    }
 	}
     else

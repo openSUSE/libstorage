@@ -51,6 +51,7 @@ class Partition : public Volume
 	virtual void getCommitActions( list<commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	int changeMount( const string& val );
 	const Disk* const disk() const;
 	bool isWindows() const;
 	friend ostream& operator<< (ostream& s, const Partition &p );

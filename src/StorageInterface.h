@@ -155,11 +155,13 @@ namespace storage
 	DISK_CHANGE_PARTITION_ID_NOT_FOUND = -1018,
 	DISK_DESTROY_TABLE_INVALID_LABEL = -1019,
 	DISK_CREATE_PARTITION_ZERO_SIZE = -1020,
+	DISK_CHANGE_READONLY = -1021,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
 	STORAGE_REMOVE_PARTITION_INVALID_CONTAINER = -2002,
 	STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER = -2003,
+	STORAGE_CHANGE_READONLY = -2004,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -177,6 +179,8 @@ namespace storage
 	VOLUME_ENCRYPT_NO_PWD = -3013,
 	VOLUME_ENCRYPT_NOT_DETECTED = -3014,
 	VOLUME_FORMAT_EXTENDED_UNSUPPORTED = -3015,
+	VOLUME_MOUNT_EXTENDED_UNSUPPORTED = -3016,
+	VOLUME_MOUNTBY_NOT_ENCRYPTED = -3017,
 
 	CONTAINER_INTERNAL_ERROR = -4000,
 
@@ -327,17 +331,26 @@ namespace storage
 	 *  changes the mount point of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param mount new mount point of the partition (e.g. /home).
+	 * @param mount new mount point of the volume (e.g. /home).
 	 *    it is valid to set an empty mount point
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMountPoint( const string& device, const string& mount ) = 0;
 
 	/**
+	 *  changes mount by value in fstab of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options new mount by value of the volume.
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMountBy( const string& device, MountByType mby ) = 0;
+
+	/**
 	 *  changes the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param options new fstab options of the partition (e.g. noauto,user,sync).
+	 * @param options new fstab options of the volume (e.g. noauto,user,sync).
 	 *    Multiple options are separated by ",".
 	 *    It is valid to set an empty fstab option.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -348,7 +361,7 @@ namespace storage
 	 *  adds to the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param options fstab options to add to already exiting options of the partition (e.g. noauto,user,sync).
+	 * @param options fstab options to add to already exiting options of the volume (e.g. noauto,user,sync).
 	 *    Multiple options are separated by ",".
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -358,7 +371,7 @@ namespace storage
 	 *  remove from the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param options fstab options to remove from already exiting options of the partition (e.g. noauto).
+	 * @param options fstab options to remove from already existing options of the volume (e.g. noauto).
 	 *    Multiple options are separated by ",".
 	 *    It is possible to specify wildcards, so "uid=.*" matches every option startign with the string "uid=".
 	 * @return zero if all is ok, a negative number to indicate an error

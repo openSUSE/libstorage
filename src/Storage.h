@@ -92,6 +92,7 @@ class Storage : public StorageInterface
 
 	int changeFormatVolume( const string&, bool format, FsType fs );
 	int changeMountPoint( const string&, const string& mount );
+	int changeMountBy( const string& device, MountByType mby );
 	int changeFstabOptions( const string&, const string& options );
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );

@@ -116,6 +116,7 @@ FstabEntry::calcDependent()
 	mount_by = MOUNTBY_UUID;
 	device.erase();
 	}
+    crypto = !noauto && encr!=ENC_NONE;
     }
 
 bool 
@@ -172,7 +173,7 @@ int EtcFstab::changeRootPrefix( const string& prfix )
 void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
     {
     list<Entry>::iterator i = co.begin();
-    while( i!=co.end() && i->old != entry )
+    while( i!=co.end() && i->old.dentry != entry.dentry )
 	++i;
     if( i!=co.end() )
 	i->nnew.device = i->old.device = device;
@@ -205,8 +206,10 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
 
 int EtcFstab::removeEntry( const FstabEntry& entry )
     {
+    y2milestone( "dev:%s mp:%s", entry.dentry.c_str(), entry.mount.c_str() );
     list<Entry>::iterator i = co.begin();
-    while( i->op==Entry::REMOVE || i->nnew != entry )
+    while( i != co.end() && 
+           (i->op==Entry::REMOVE || i->nnew.device != entry.device) )
 	++i;
     if( i != co.end() )
 	{
@@ -220,9 +223,13 @@ int EtcFstab::removeEntry( const FstabEntry& entry )
 
 int EtcFstab::updateEntry( const FstabChange& entry )
     {
+    y2milestone( "dev:%s mp:%s", entry.dentry.c_str(), entry.mount.c_str() );
     list<Entry>::iterator i = co.begin();
-    while( i->op==Entry::REMOVE || (i->nnew != entry && i->old != entry) )
+    while( i != co.end() && 
+           (i->op==Entry::REMOVE || entry.device!=i->old.device ))
+	{
 	++i;
+	}
     if( i != co.end() )
 	{
 	if( i->op==Entry::NONE )
@@ -234,6 +241,7 @@ int EtcFstab::updateEntry( const FstabChange& entry )
 
 int EtcFstab::addEntry( const FstabChange& entry )
     {
+    y2milestone( "dev:%s mp:%s", entry.dentry.c_str(), entry.mount.c_str() );
     Entry e;
     e.op = Entry::ADD;
     e.nnew = entry;
@@ -244,6 +252,8 @@ int EtcFstab::addEntry( const FstabChange& entry )
 AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
                                AsciiFile*& cryptotab, int& lineno )
     {
+    y2milestone( "device:%s mp:%s fstab:%p cryptotab:%p", e.dentry.c_str(),
+                 e.mount.c_str(), fstab, cryptotab );
     AsciiFile* ret=NULL;
     Regex *fi = NULL;
     if( e.crypto )
@@ -262,6 +272,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	}
     lineno = ret->find( 0, *fi );
     delete fi;
+    y2milestone( "fstab:%p cryptotab:%p lineno:%d", fstab, cryptotab, lineno );
     return( ret );
     }
 
@@ -289,6 +300,7 @@ void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls )
 
 string EtcFstab::createTabLine( const FstabEntry& e )
     {
+    y2milestone( "device:%s mp:%s", e.dentry.c_str(), e.mount.c_str() );
     string ret;
     list<string> ls;
     makeStringList( e, ls );
@@ -302,9 +314,12 @@ string EtcFstab::createTabLine( const FstabEntry& e )
 	    ret += " ";
 	ret += *i;
 	if( count<max_fields && i->size()<fields[count] )
-	    ret.replace( string::npos, 0, fields[count]-i->size(), ' ' );
+	    {
+	    ret.replace( ret.size(), 0, fields[count]-i->size(), ' ' );
+	    }
 	count++;
 	}
+    y2milestone( "ret:%s", ret.c_str() );
     return( ret );
     }
 
@@ -330,6 +345,8 @@ int EtcFstab::flush()
 		break;
 	    case Entry::UPDATE:
 		cur = findFile( i->old, fstab, cryptotab, lineno );
+		if( lineno<0 )
+		    cur = findFile( i->nnew, fstab, cryptotab, lineno );
 		if( lineno>=0 )
 		    {
 		    string line;
@@ -353,7 +370,6 @@ int EtcFstab::flush()
 			posn = line.find_first_not_of( " \t", posn );
 			while( ni != nl.end() )
 			    {
-			    y2milestone( "substr:\"%s\"", line.substr( pos, posn-pos ).c_str() );
 			    if( *ni != *oi )
 				{
 				string nstr = *ni;
@@ -361,14 +377,18 @@ int EtcFstab::flush()
 				    {
 				    unsigned diff = posn-pos-1;
 				    if( diff > nstr.size() )
-					nstr.replace( string::npos, 0, 
+					{
+					nstr.replace( nstr.size(), 0, 
 						      diff-nstr.size(), ' ' );
-				    line.replace( pos, posn-1, nstr );
+					}
+				    line.replace( pos, posn-1-pos, nstr );
 				    if( nstr.size()>diff )
 					posn += nstr.size()-diff;
 				    }
 				else
-				    line.replace( pos, posn, nstr );
+				    {
+				    line.replace( pos, posn-pos, nstr );
+				    }
 				}
 			    pos = posn;
 			    posn = line.find_first_of( " \t", pos );
@@ -376,7 +396,7 @@ int EtcFstab::flush()
 			    ++oi;
 			    ++ni;
 			    }
-			cur[lineno] = line;
+			(*cur)[lineno] = line;
 			}
 		    }
 		else

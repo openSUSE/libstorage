@@ -157,6 +157,18 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
     return( ret );
 }
 
+int Partition::changeMount( const string& val )
+    {
+    int ret = 0;
+    y2milestone( "device:%s val:%s", dev.c_str(), val.c_str() );
+    if( typ==EXTENDED )
+	ret = VOLUME_MOUNT_EXTENDED_UNSUPPORTED;
+    else
+	ret = Volume::changeMount( val );
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 bool Partition::isWindows() const
     {
     return( idt==6 || idt==0xb || idt==ID_DOS || idt==0xe || idt==1 || idt==4 ||
