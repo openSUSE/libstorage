@@ -45,6 +45,15 @@ namespace storage
 	FsType fstype;
     };
 
+    /**
+     * prelimiary list of error codes, must have negative values
+     */
+    enum ErrorCodes
+    {
+	DISK_CREATED_PARTITION_OVERLAPS_EXISTING = -1000,
+	DISK_CREATED_PARTITION_EXCEEDS_DISK = -1001
+    };
+
 
     /**
      * \brief Abstract class defining the interface for libstorage.
