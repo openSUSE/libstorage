@@ -17,3 +17,12 @@ TestDiskLog_SOURCES = TestDiskLog.cc
 
 TestStorage_SOURCES = TestStorage.cc
 
+exampledir = $(docdir)/examples/liby2storage
+
+example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc
+
+EXTRA_DIST = $(example_DATA) Makefile.example
+
+install-data-local:
+	/usr/bin/install -d -p -m 755 $(DESTDIR)$(exampledir)
+	/usr/bin/install -p -m 644 Makefile.example $(DESTDIR)$(exampledir)/Makefile

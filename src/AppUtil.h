@@ -34,57 +34,6 @@ bool runningFromSystem();
 
 void delay(int Microsec_iv);
 
-template<class Num> string decString(Num number)
-    {
-    std::ostringstream num_str;
-    num_str << number;
-    return( num_str.str() );
-    }
-
-template<class Num> string hexString(Num number)
-    {
-    std::ostringstream num_str;
-    num_str << std::hex << number;
-    return( num_str.str() );
-    }
-
-template<class Value> void operator>>( const string& d, Value& v)
-    {
-    std::istringstream Data( d );
-    Data >> v;
-    }
-
-template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
-    {
-    s << "<";
-    for( typename list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
-	{
-	if( i!=l.begin() )
-	    s << " ";
-	s << *i;
-	}
-    s << ">";
-    return( s );
-    }
-
-template<class F, class S> ostream& operator<<( ostream& s, const pair<F,S>& p )
-    {
-    s << "[" << p.first << ":" << p.second << "]";
-    }
-
-template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,Value>& m )
-    {
-    s << "<";
-    for( typename map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
-	{
-	if( i!=m.begin() )
-	    s << " ";
-	s << i->first << ":" << i->second;
-	}
-    s << ">";
-    return( s );
-    }
-
 inline string sformat( const char* txt, ... )
     {
     unsigned s = strlen(txt)+3072;

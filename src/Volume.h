@@ -4,7 +4,7 @@
 using namespace std;
 
 #include "y2storage/StorageInterface.h"
-#include "y2storage/AppUtil.h"
+#include "y2storage/StorageTmpl.h"
 
 class Container;
 class SystemCmd;
@@ -30,7 +30,6 @@ class Volume
 	void setCreated( bool val=true ) { create=val; }
 	bool loop() const { return is_loop; }
 	bool noauto() const { return !mauto; }
-	void setNoauto( bool val=true ) { mauto=!val; }
 	string getUuid() const { return uuid; }
 	string getLabel() const { return label; }
 	bool setLabel( string val );
