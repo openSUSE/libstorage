@@ -81,7 +81,7 @@ Storage::initialize()
         {
 	glob_t globbuf;
 
-	if( glob( (testdir+"/disk_*[!~]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new Disk( this, *p ) );
