@@ -29,6 +29,8 @@ liby2storage_la_SOURCES =			\
 	Regex.cc         Regex.h             \
 	AsciiFile.cc     AsciiFile.h         \
 	  ProcPart.cc    ProcPart.h 	     \
+	ProcMounts.cc    ProcMounts.h        \
+	EtcFstab.cc      EtcFstab.h 	     \
 	AppUtil.cc       AppUtil.h           \
 	FilterIterator.h ListListIterator.h  \
 	DerefIterator.h  IterPair.h          \

@@ -9,6 +9,8 @@
 #include "y2storage/Container.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
+#include "y2storage/ProcMounts.h"
+#include "y2storage/EtcFstab.h"
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
     : cont(&d)
@@ -50,6 +52,7 @@ void Volume::setNameDev()
 void Volume::init()
     {
     del = create = format = is_loop = false;
+    mauto = true;
     detected_fs = fs = UNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     setNameDev();
@@ -98,10 +101,112 @@ bool Volume::getMajorMinor( const string& device,
     return( ret );
     }
 
+void Volume::getMountData( ProcMounts& mountData )
+    {
+    /*
+    bool found = mountData.select( " (" + device() + ")" )>0;
+    if( !found )
+	{
+	list<string>::const_iterator an = alt_names.begin();
+	while( !found && an!=alt_names.end() )
+	    {
+	    found = loopData.select( " (" + *an + ") " )>0;
+	    ++an;
+	    }
+	}
+    if( found )
+	{
+	list<string> l = splitString( *loopData.getLine( 0, true ));
+	std::ostringstream b;
+	b << "line[" << device() << "]=" << l;
+	y2milestone( "%s", b.str().c_str() );
+	if( l.size()>0 )
+	    {
+	    list<string>::const_iterator el = l.begin();
+	    is_loop = true;
+	    loop_dev = *el;
+	    if( loop_dev.size()>0 && *loop_dev.rbegin()==':' )
+	        loop_dev.erase(--loop_dev.end());
+	    fstab_loop_dev = loop_dev;
+	    b.str("");
+	    b << "loop_dev:" << loop_dev;
+	    encryption = ENC_NONE;
+	    if( l.size()>3 )
+		{
+		++el; ++el; ++el;
+		string encr = "encryption=";
+		if( el->find( encr )==0 )
+		    {
+		    encr = el->substr( encr.size() );
+		    if( encr == "twofish160" )
+			encryption = ENC_TWOFISH_OLD;
+		    else if( encr == "CryptoAPI/twofish-cbc" )
+			encryption = ENC_TWOFISH;
+		    else
+			encryption = ENC_UNKNOWN;
+		    }
+		}
+	    b << " encr:" << encryption;
+	    y2milestone( "%s", b.str().c_str() );
+	    }
+	}
+    */
+    }
+
+void Volume::getLoopData( SystemCmd& loopData )
+    {
+    bool found = loopData.select( " (" + device() + ")" )>0;
+    if( !found )
+	{
+	list<string>::const_iterator an = alt_names.begin();
+	while( !found && an!=alt_names.end() )
+	    {
+	    found = loopData.select( " (" + *an + ") " )>0;
+	    ++an;
+	    }
+	}
+    if( found )
+	{
+	list<string> l = splitString( *loopData.getLine( 0, true ));
+	std::ostringstream b;
+	b << "line[" << device() << "]=" << l;
+	y2milestone( "%s", b.str().c_str() );
+	if( l.size()>0 )
+	    {
+	    list<string>::const_iterator el = l.begin();
+	    is_loop = true;
+	    loop_dev = *el;
+	    if( loop_dev.size()>0 && *loop_dev.rbegin()==':' )
+	        loop_dev.erase(--loop_dev.end());
+	    fstab_loop_dev = loop_dev;
+	    b.str("");
+	    b << "loop_dev:" << loop_dev;
+	    encryption = ENC_NONE;
+	    if( l.size()>3 )
+		{
+		++el; ++el; ++el;
+		string encr = "encryption=";
+		if( el->find( encr )==0 )
+		    {
+		    encr = el->substr( encr.size() );
+		    if( encr == "twofish160" )
+			encryption = ENC_TWOFISH_OLD;
+		    else if( encr == "CryptoAPI/twofish-cbc" )
+			encryption = ENC_TWOFISH;
+		    else
+			encryption = ENC_UNKNOWN;
+		    }
+		}
+	    b << " encr:" << encryption;
+	    y2milestone( "%s", b.str().c_str() );
+	    }
+	}
+    }
+
 void Volume::getFsData( SystemCmd& blkidData )
     {
-    bool found = blkidData.select( "^" + device() + ":" )>0;
-    if( !found )
+    bool found = blkidData.select( "^" + mountDevice() + ":" )>0;
+    if( !found && !is_loop )
 	{
 	list<string>::const_iterator an = alt_names.begin();
 	while( !found && an!=alt_names.end() )
@@ -175,5 +280,6 @@ string Volume::fs_names[] = { "unknown", "reiser", "ext2", "ext3", "vfat",
 
 string Volume::mb_names[] = { "device", "uuid", "label" };
 
+string Volume::enc_names[] = { "none", "twofish", "twofish_old", "unknown" };
 
 

@@ -17,6 +17,8 @@ namespace storage
 
     enum MountyByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
 
+    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, ENC_UNKNOWN };
+
     enum MdType { RAID0, RAID1, RAID5, MULTIPATH };
 
 

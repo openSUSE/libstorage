@@ -8,6 +8,7 @@ using namespace std;
 
 class Container;
 class SystemCmd;
+class ProcMounts;
 
 class Volume
     {
@@ -21,17 +22,21 @@ class Volume
 	virtual bool commitChanges() { return true; }
 
 	const string& device() const { return dev; }
+	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const Container* getContainer() const { return cont; }
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	bool loop() const { return is_loop; }
+	bool noauto() const { return !mauto; }
+	void setNoauto( bool val=true ) { mauto=!val; }
 	string getUuid() const { return uuid; }
 	string getLabel() const { return label; }
 	bool setLabel( string val );
-	string getEncryption() const { return encryption; }
-	void setEncryption( string val="twofish256" ) { encryption=val; }
+	storage::EncryptType getEncryption() const { return encryption; }
+	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH ) 
+	    { encryption=val; }
 	string getCryptPwd() const { return crypt_pwd; }
 	void setCryptPwd( string val ) { crypt_pwd=val; }
 	string getMount() const { return mount; }
@@ -79,12 +84,15 @@ class Volume
 	void init();
 	void setNameDev();
 	void getFsData( SystemCmd& blkidData );
+	void getLoopData( SystemCmd& loopData );
+	void getMountData( ProcMounts& mountData );
 
 	const Container* const cont;
 	bool numeric;
 	bool create;
 	bool del;
 	bool format;
+	bool mauto;
 	storage::FsType fs;
 	storage::FsType detected_fs;
 	storage::MountyByType mount_by;
@@ -98,7 +106,7 @@ class Volume
 	string orig_fstab_opt;
 	string mkfs_opt;
 	bool is_loop;
-	string encryption;
+	storage::EncryptType encryption;
 	string loop_dev;
 	string fstab_loop_dev;
 	string crypt_pwd;
@@ -112,74 +120,77 @@ class Volume
 
 	static string fs_names[storage::SWAP+1];
 	static string mb_names[storage::MOUNTBY_LABEL+1];
+	static string enc_names[storage::ENC_UNKNOWN+1];
     };
 
 inline ostream& operator<< (ostream& s, const Volume &v )
-    {
+{
     s << "Device:" << v.dev;
     if( v.numeric )
-      s << " Nr:" << v.num;
+	s << " Nr:" << v.num;
     else
-      s << " Name:" << v.nm;
+	s << " Name:" << v.nm;
     s << " SizeK:" << v.size_k 
-      << " Node <" << v.mjr
-      << ":" << v.mnr << ">";
+	<< " Node <" << v.mjr
+	<< ":" << v.mnr << ">";
     if( v.del )
-      s << " deleted";
+	s << " deleted";
     if( v.create )
-      s << " created";
+	s << " created";
     if( v.format )
-      s << " format";
+	s << " format";
+    if( !v.mauto )
+	s << " noauto";
     if( v.fs != storage::UNKNOWN )
-	{
+    {
 	s << " fs:" << Volume::fs_names[v.fs];
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::UNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
-	}
+    }
     if( v.mount.length()>0 )
-	{
+    {
 	s << " mount:" << v.mount;
 	if( v.mount != v.orig_mount && v.orig_mount.length()>0 )
 	    s << " orig_mount:" << v.orig_mount;
-	}
+    }
     if( v.mount_by != storage::MOUNTBY_DEVICE )
-	{
+    {
 	s << " mount_by:" << Volume::mb_names[v.mount_by];
 	if( v.mount_by != v.orig_mount_by )
 	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
-	}
+    }
     if( v.uuid.length()>0 )
-	{
+    {
 	s << " uuid:" << v.uuid;
-	}
+    }
     if( v.label.length()>0 )
-	{
+    {
 	s << " label:" << v.label;
 	if( v.label != v.orig_label && v.orig_label.length()>0 )
 	    s << " orig_label:" << v.orig_label;
-	}
+    }
     if( v.fstab_opt.length()>0 )
-	{
+    {
 	s << " fstopt:" << v.fstab_opt;
 	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
 	    s << " orig_fstopt:" << v.orig_fstab_opt;
-	}
+    }
     if( v.mkfs_opt.length()>0 )
-	{
+    {
 	s << " mkfsopt:" << v.mkfs_opt;
-	}
+    }
     if( v.alt_names.begin() != v.alt_names.end() )
-	{
+    {
 	s << " alt_names:" << v.alt_names;
-	}
+    }
     if( v.is_loop )
-	{
+    {
 	s << " loop:" << v.loop_dev;
 	if( v.fstab_loop_dev != v.loop_dev )
-	    {
+	{
 	    s << " fstab_loop:" << v.fstab_loop_dev;
-	    }
-	s << " encr:" << v.encryption;
+	}
+	s << " encr:" << v.enc_names[v.encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
 #endif

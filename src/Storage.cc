@@ -11,6 +11,8 @@
 #include "y2storage/Disk.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
+#include "y2storage/ProcMounts.h"
+#include "y2storage/EtcFstab.h"
 
 struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
 
@@ -151,10 +153,14 @@ void
 Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     {
     y2milestone( "detectFsData begin" );
-    SystemCmd Blkid( "/sbin/blkid" );
+    SystemCmd Blkid( "/sbin/blkid -c /dev/null" );
+    SystemCmd Losetup( "/sbin/losetup -a" );
+    ProcMounts Mounts;
     for( VolIterator i=begin; i!=end; ++i )
 	{
+	i->getLoopData( Losetup );
 	i->getFsData( Blkid );
+	i->getMountData( Mounts );
 	}
     y2milestone( "detectFsData end" );
     }
