@@ -29,12 +29,11 @@ class Storage
 	int AddDisk( const string& Name );
 
 	template< class Pred > 
-	class ConstContIter : public FilterIterator< Pred, CCIter >
+	class ConstContIter : public FilterIterator< Pred, CCIter, const Container >
 	    {
-	    typedef FilterIterator< Pred, CCIter > _bclass;
+	    typedef FilterIterator< Pred, CCIter, const Container > _bclass;
 	    public:
 		ConstContIter() : _bclass() {};
-		const Container& operator*() const { return( *_bclass::operator*() ); }
 		ConstContIter( const CCIter& b, const CCIter& e, const Pred& p,
 		               bool atend=false ) : 
 		    _bclass(b, e, p, atend ) {}
@@ -52,12 +51,11 @@ class Storage
 
     protected:
 	template< class Pred > 
-	class ContIter : public FilterIterator< Pred, CIter > 
+	class ContIter : public FilterIterator< Pred, CIter, Container > 
 	    {
-	    typedef FilterIterator< Pred, CIter > _bclass;
+	    typedef FilterIterator< Pred, CIter, Container > _bclass;
 	    public:
 		ContIter() : _bclass() {};
-		Container& operator*() const { return( *_bclass::operator*() ); }
 		ContIter( const CIter& b, const CIter& e, const Pred& p, 
 		          bool atend=false ) : 
 		    _bclass(b, e, p, atend ) {}
@@ -99,12 +97,11 @@ class Storage
 	    };
 	typedef ListListIterator<Container::ConstPlainIterator, ConstContIterator> ConstVolPart;
 	template< class Pred > 
-	class ConstVolIter : public FilterIterator< Pred, ConstVolPart >
+	class ConstVolIter : public FilterIterator< Pred, ConstVolPart, const Volume >
 	    {
-	    typedef FilterIterator< Pred, ConstVolPart > _bclass;
+	    typedef FilterIterator< Pred, ConstVolPart, const Volume > _bclass;
 	    public:
 		ConstVolIter() : _bclass() {};
-		const Volume& operator*() const { cerr<< "ConstVolIter*" << endl; return( *_bclass::operator*() ); }
 		ConstVolIter( const ConstVolPart& b, const ConstVolPart& e, const Pred& p,
 		              bool atend=false ) : 
 		    _bclass(b, e, p, atend ) {}
@@ -152,12 +149,11 @@ class Storage
 
 	typedef ListListIterator<Container::PlainIterator, ContIterator> VolPart;
 	template< class Pred > 
-	class VolIter : public FilterIterator< Pred, VolPart >
+	class VolIter : public FilterIterator< Pred, VolPart, Volume >
 	    {
-	    typedef FilterIterator< Pred, VolPart > _bclass;
+	    typedef FilterIterator< Pred, VolPart, Volume > _bclass;
 	    public:
 		VolIter() : _bclass() {};
-		Volume& operator*() const { cerr<< "VolIter*" << endl; return( *_bclass::operator*() ); }
 		VolIter( const VolPart& b, const VolPart& e, const Pred& p,
 			 bool atend=false ) : 
 		    _bclass(b, e, p, atend ) {}

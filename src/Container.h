@@ -30,26 +30,22 @@ class Container
 	enum CType { UNKNOWN, REAL_DISK, MD, LOOP, LVM, EVMS };
 
 	template< class Pred >
-	class ConstVolIter : public FilterIterator< Pred, CVIter >
+	class ConstVolIter : public FilterIterator< Pred, CVIter, const Volume >
 	    {
-	    typedef FilterIterator< Pred, CVIter > _bclass;
+	    typedef FilterIterator< Pred, CVIter, const Volume > _bclass;
 	    public:
 		ConstVolIter( ) {}
-		const Volume& operator*() const { return( *_bclass::operator*() ); }
-		const Volume* operator->() const { return( _bclass::operator*() ); }
 		ConstVolIter( const CVIter& b, const CVIter& e, const Pred& p,
 		              bool atend=false ) :
 		    _bclass(b, e, p, atend ) {}
 	    };
 
 	template< class Pred >
-	class VolIter : public FilterIterator< Pred, VIter > 
+	class VolIter : public FilterIterator< Pred, VIter, Volume > 
 	    {
-	    typedef FilterIterator< Pred, VIter > _bclass;
+	    typedef FilterIterator< Pred, VIter, Volume > _bclass;
 	    public:
 		VolIter() {}
-		Volume& operator*() const { return( *_bclass::operator*() ); }
-		Volume* operator->() const { return( _bclass::operator*() ); }
 		VolIter( const VIter& b, const VIter& e, const Pred& p,
 			 bool atend=false ) :
 		    _bclass(b, e, p, atend ) {}

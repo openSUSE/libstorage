@@ -3,7 +3,7 @@
 
 #include "y2storage/IterPair.h"
 
-template< class Pred, class Iter > 
+template< class Pred, class Iter, class RefType > 
 class FilterIterator : public std::iterator<std::bidirectional_iterator_tag, 
                                             typename Iter::value_type>
     {
@@ -68,14 +68,14 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    return tmp;
 	    }
 
-	reference operator*() const 
+	RefType operator*() const 
 	    {
-	    return( *m_cur );
+	    return( **m_cur );
 	    }
 
-	pointer operator->() const 
+	reference operator->() const 
 	    {
-	    return( &(*m_cur) );
+	    return( *m_cur );
 	    }
 	bool operator==(const FilterIterator& x) const
 	    {
