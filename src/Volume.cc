@@ -47,7 +47,8 @@ void Volume::setNameDev()
 
 void Volume::init()
     {
-    del = create = false;
+    del = create = format = false;
+    detected_fs = fs = UNKNOWN;
     setNameDev();
     mjr = mnr = 0;
     getMajorMinor( dev, mjr, mnr );
@@ -93,6 +94,9 @@ bool Volume::getMajorMinor( const string& device,
 	}
     return( ret );
     }
+
+string Volume::fs_names[] = { "unknown", "reiser", "ext2", "ext2", "vfat",
+                              "xfs", "jfs", "ntfs", "swap" };
 
 
 

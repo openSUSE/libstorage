@@ -7,6 +7,7 @@
 #include <sys/utsname.h>
 
 #include "y2storage/Storage.h"
+#include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
@@ -141,6 +142,15 @@ Storage::autodetectDisks()
     else
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
+	}
+    }
+
+void
+Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
+    {
+    SystemCmd Blkid( "/sbin/blkid" );
+    for( VolIterator i=begin; i!=end; i++ )
+	{
 	}
     }
 

@@ -812,6 +812,7 @@ class Storage : public StorageInterface
     protected:
 	// protected internal member functions
 	void autodetectDisks();
+	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	static void detectArch();
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
