@@ -88,6 +88,10 @@ Storage::AutodetectDisks()
     Disks.push_back( new LvmVg( "vg1" ) );
     Disks.push_back( new LvmVg( "vg2" ) );
     Disks.push_back( new LvmVg( "empty" ) );
+    Disks.push_back( new Evms() );
+    Disks.push_back( new Evms( "vg1" ) );
+    Disks.push_back( new Evms( "vg2" ) );
+    Disks.push_back( new Evms( "empty" ) );
     }
 
 int 

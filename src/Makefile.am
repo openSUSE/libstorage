@@ -12,9 +12,11 @@ liby2storage_la_SOURCES =		     \
 	Container.cc     Container.h	     \
 	  Disk.cc        Disk.h	     	     \
 	  LvmVg.cc       LvmVg.h	     \
+	  Evms.cc        Evms.h	     	     \
 	Volume.cc        Volume.h            \
 	  Partition.cc   Partition.h         \
 	  LvmLv.cc       LvmLv.h             \
+	  EvmsVol.cc     EvmsVol.h           \
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
 	FilterIterator.h ListListIterator.h  \
@@ -31,6 +33,7 @@ pkgincludedir = $(includedir)/y2storage
 pkginclude_HEADERS =                                                    \
         Storage.h Container.h Volume.h Disk.h \
 	Partition.h Md.h Loop.h LvmVg.h LvmLv.h \
+	Evms.h EvmsVol.h \
 	FilterIterator.h ListListIterator.h DerefIterator.h \
 	IterPair.h StorageTmpl.h
 
