@@ -41,7 +41,8 @@ class Disk : public Container
 	static CType const staticType() { return DISK; }
 	static bool needP( const string& dev );
 	int createPartition( PartitionType type, long unsigned start,
-	                     long unsigned len, string& device );
+	                     long unsigned len, string& device,
+			     bool checkRelaxed=false );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );

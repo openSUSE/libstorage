@@ -1,6 +1,8 @@
 #ifndef REGION_H
 #define REGION_H
 
+#include <algorithm>
+
 class Region 
     {
     public:
@@ -10,8 +12,19 @@ class Region
 	    { *this = x; }
 	Region& operator=(const Region& r)
 	    { s = r.start(); l = r.len(); return( *this ); }
-	bool intersect( const Region& r ) const
+	bool doIntersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
+	Region intersect( const Region& r ) const
+	    {
+	    Region ret;
+	    if( r.start() <= end() && r.end() >= start() )
+		{
+		unsigned long s = max( r.start(), start() );
+		unsigned long e = min( r.end(), end() );
+		ret = Region( s, e-s+1 );
+		}
+	    return( ret );
+	    }
 	bool inside( const Region& r ) const
 	    { return( start()>=r.start() && end() <= r.end() ); }
 	bool operator==(const Region& r) const

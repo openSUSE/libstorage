@@ -831,13 +831,15 @@ static bool notDeletedLog( const Partition& p )
     }
 
 int Disk::createPartition( PartitionType type, unsigned long start,
-                           unsigned long len, string& device )
+                           unsigned long len, string& device, 
+			   bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld", type, start, len );
+    y2milestone( "begin type %d at %ld len %ld relxed:%d", type, start, len, checkRelaxed );
+    unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
     Region r( start, len );
     PartPair ext = partPair(isExtended);
-    if( r.end() > cylinders() )
+    if( r.end() > cylinders()+fuzz )
 	{
 	y2milestone( "too large for disk cylinders %lu", cylinders() );
 	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
@@ -855,19 +857,23 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	PartPair p = (type!=LOGICAL) ? partPair( notDeleted )
 	                             : partPair( notDeletedLog );
 	PartIter i = p.begin();
-	while( i!=p.end() && !i->intersectArea( r ))
+	while( i!=p.end() && !i->intersectArea( r, fuzz ))
 	    {
 	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
-	    y2milestone( "overlaps with %s at %lu len %lu",
-			 i->name().c_str(), i->cylStart(), i->cylSize() );
+	    std::ostringstream b;
+	    b << "r:" << r << " p:" << i->region() << " inter:" << i->region().intersect(r);
+	    y2warning( "overlaps %s", b.str().c_str() );
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
-    if( ret==0 && type==LOGICAL && !ext.begin()->isAreaInside( r ))
+    if( ret==0 && type==LOGICAL && !ext.begin()->isAreaInside( r, fuzz ))
 	{
+	std::ostringstream b;
+	b << "r:" << r << " ext:" << ext.begin()->region() << "inter:" << ext.begin()->region().intersect(r);
+	y2warning( "outside ext %s", b.str().c_str() );
 	ret = DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
     if( ret==0 && type==EXTENDED )

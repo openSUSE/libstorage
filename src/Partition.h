@@ -31,8 +31,9 @@ class Partition : public Volume
 
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
-	bool intersectArea( const Region& r ) const;
-	bool isAreaInside( const Region& r ) const;
+	Region region() const { return reg; }
+	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
+	bool isAreaInside( const Region& r, unsigned fuzz=0 ) const;
 	unsigned OrigNr() const { return( orig_num ); }
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }

@@ -197,7 +197,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	else 
 	    tmp_start = 0;
 	unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
-	ret = i->createPartition( type, start_cyl, num_cyl, device );
+	ret = i->createPartition( type, start_cyl, num_cyl, device, true );
 	}
     else
 	{

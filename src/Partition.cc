@@ -44,14 +44,14 @@ Partition::Partition( const Disk& d, const string& Data ) :
                  cont->name().c_str() );
     }
 
-bool Partition::intersectArea( const Region& r ) const
+bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
     {
-    return( r.intersect( reg ) );
+    return( r.intersect( reg ).len()>fuzz );
     }
 
-bool Partition::isAreaInside( const Region& r ) const
+bool Partition::isAreaInside( const Region& r, unsigned fuzz ) const
     {
-    return( r.inside( reg ) );
+    return( (r.len() - reg.intersect( r ).len()) <= fuzz );
     }
 
 void Partition::changeNumber( unsigned new_num )
