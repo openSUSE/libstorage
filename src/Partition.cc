@@ -88,7 +88,7 @@ void Partition::changeId( unsigned new_id )
 	}
     }
 
-void Partition::changeIdDone() 
+void Partition::changeIdDone()
     {
     orig_id = idt;
     }
@@ -128,6 +128,8 @@ Partition::getPartitionInfo () const
 {
     PartitionInfo tmp;
     tmp.name = name ();
-    tmp.partitiontype = type ();
+    tmp.partitionType = type ();
+    tmp.cylStart = cylStart ();
+    tmp.cylSize = cylSize ();
     return tmp;
 }

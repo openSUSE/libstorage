@@ -40,10 +40,10 @@ namespace storage
     struct PartitionInfo
     {
 	string name;
-	unsigned long cyl_start;
-	unsigned long cyl_size;
-	PartitionType partitiontype;
-	FsType fstype;
+	unsigned long cylStart;
+	unsigned long cylSize;
+	PartitionType partitionType;
+	FsType fsType;
     };
 
     /**
@@ -60,7 +60,7 @@ namespace storage
 	DISK_CREATE_PARTITION_INVALID_TYPE = -1006,
 	DISK_CREATE_PARTITION_PARTED_FAILED = -1007,
 	DISK_CREATE_PARTITION_NOT_FOUND = -1008,
-	DISK_CREATE_PARTITION_LOGICAL_NO_EXT = -109,
+	DISK_CREATE_PARTITION_LOGICAL_NO_EXT = -1009,
 	DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT = -1010,
 	DISK_SET_TYPE_INVALID_VOLUME = -1011,
 	DISK_SET_TYPE_PARTED_FAILED = -1012,
@@ -130,7 +130,7 @@ namespace storage
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 */
-	virtual int createPartition( const string& disk, PartitionType type, 
+	virtual int createPartition( const string& disk, PartitionType type,
 				     unsigned long start,
 	                             unsigned long sizeCyl,
 				     string& device ) = 0;
@@ -146,7 +146,7 @@ namespace storage
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 */
-	virtual int createPartitionKb( const string& disk, PartitionType type, 
+	virtual int createPartitionKb( const string& disk, PartitionType type,
 				       unsigned long long start,
 				       unsigned long long size,
 				       string& device ) = 0;
@@ -158,7 +158,7 @@ namespace storage
 	 * @param size number of disk cylinders
 	 * @return number of kilobytes of given cylinders
 	 */
-	virtual unsigned long long cylinderToKb( const string& disk, 
+	virtual unsigned long long cylinderToKb( const string& disk,
 	                                         unsigned long size ) = 0;
 
 	/**
@@ -168,7 +168,7 @@ namespace storage
 	 * @param size number of kilobytes
 	 * @return number of disk cylinders needed
 	 */
-	virtual unsigned long kbToCylinder( const string& disk, 
+	virtual unsigned long kbToCylinder( const string& disk,
 					    unsigned long long size ) = 0;
 
 	/**
@@ -188,8 +188,8 @@ namespace storage
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
 
 	/**
-	 *  Destroys the partition table of a disk. An empty disk label 
-	 *  of the given type without any partition is created. 
+	 *  Destroys the partition table of a disk. An empty disk label
+	 *  of the given type without any partition is created.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
@@ -197,7 +197,7 @@ namespace storage
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
 	/**
-	 *  Returns the default disk label of the architecture of the 
+	 *  Returns the default disk label of the architecture of the
 	 *  machine (e.g. msdos for ix86, gpt for ia64, ...)
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
