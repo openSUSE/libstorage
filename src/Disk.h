@@ -42,36 +42,58 @@ class Disk : public Container
 	int createPartition( PartitionType type, long unsigned start,
 	                     long unsigned len, string& device );
 	int availablePartNumber( PartitionType type=PRIMARY );
+	int commitChanges( CommitStage stage );
 	bool hasExtended();
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
     protected:
 
-// iterators over partitions
+	// iterators over partitions
         // protected typedefs for iterators over partitions
         typedef CastIterator<VIter, Partition *> PartInter;
+        typedef CastIterator<CVIter, const Partition *> PartCInter;
         template< class Pred >
             struct PartitionPI { typedef ContainerIter<Pred, PartInter> type; };
+        template< class Pred >
+            struct PartitionCPI { typedef ContainerIter<Pred, PartCInter> type; };
         typedef CheckFnc<const Partition> CheckFncPartition;
         typedef CheckerIterator< CheckFncPartition, PartitionPI<CheckFncPartition>::type,
                                  PartInter, Partition > PartPIterator;
-	typedef DerefIterator<PartPIterator,Partition> PartPIter;
-        typedef IterPair<PartPIter> PartPPair;
+        typedef CheckerIterator< CheckFncPartition, PartitionCPI<CheckFncPartition>::type,
+                                 PartCInter, const Partition > PartCPIterator;
+	typedef DerefIterator<PartPIterator,Partition> PartIter;
+	typedef DerefIterator<PartCPIterator,const Partition> ConstPartIter;
+        typedef IterPair<PartIter> PartPair;
+        typedef IterPair<ConstPartIter> ConstPartPair;
 
-        // public member functions for iterators over partitions
-        PartPPair partPair( bool (* CheckPart)( const Partition& )=NULL)
+        PartPair partPair( bool (* CheckPart)( const Partition& )=NULL)
             {
-            return( PartPPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
+            return( PartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
             }
-        PartPIter partBegin( bool (* CheckPart)( const Partition& )=NULL)
+        PartIter partBegin( bool (* CheckPart)( const Partition& )=NULL)
             {
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartPIter( PartPIterator( p, CheckPart )) );
+            return( PartIter( PartPIterator( p, CheckPart )) );
 	    }
-        PartPIter partEnd( bool (* CheckPart)( const Partition& )=NULL)
+        PartIter partEnd( bool (* CheckPart)( const Partition& )=NULL)
             {
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartPIter( PartPIterator( p, CheckPart, true )) );
+            return( PartIter( PartPIterator( p, CheckPart, true )) );
+	    }
+
+        ConstPartPair partPair( bool (* CheckPart)( const Partition& )=NULL) const
+            {
+            return( ConstPartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
+            }
+        ConstPartIter partBegin( bool (* CheckPart)( const Partition& )=NULL) const
+            {
+	    IterPair<PartCInter> p( (PartCInter(begin())), (PartCInter(end())) );
+            return( ConstPartIter( PartCPIterator( p, CheckPart )) );
+	    }
+        ConstPartIter partEnd( bool (* CheckPart)( const Partition& )=NULL) const
+            {
+	    IterPair<PartCInter> p( (PartCInter(begin())), (PartCInter(end())) );
+            return( ConstPartIter( PartCPIterator( p, CheckPart, true )) );
 	    }
 
 	Disk( Storage * const s, const string& File );
@@ -90,6 +112,7 @@ class Disk : public Container
 	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
+	int doCreate( Volume* v );
 
 	//list<Region> getUnusedRegions();
 	void logData( const string& Dir );

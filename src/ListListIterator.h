@@ -45,7 +45,7 @@ class ListListIterator : public PIter
 	    }
 	ListListIterator operator++(int)
 	    {
-	    cerr << "Expensive ++ ListListIterator" << endl;
+	    y2warning( "Expensive ++ ListListIterator" );
 	    ListListIterator tmp(*this); 
 	    increment();
 	    return tmp;
@@ -58,7 +58,7 @@ class ListListIterator : public PIter
 	    }
 	ListListIterator operator--(int)
 	    {
-	    cerr << "Expensive -- ListListIterator" << endl;
+	    y2warning( "Expensive -- ListListIterator" );
 	    ListListIterator tmp(*this); 
 	    decrement();
 	    return tmp;

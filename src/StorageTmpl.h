@@ -81,7 +81,7 @@ class CastCheckIterator : public CheckType<Value>,
 	    }
 	CastCheckIterator operator++(int) 
 	    { 
-	    cerr << "Expensive ++ CastCheckIterator" << endl;
+	    y2warning( "Expensive ++ CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
 	    _bclass::operator++(); 
 	    return(tmp); 
@@ -92,7 +92,7 @@ class CastCheckIterator : public CheckType<Value>,
 	    }
 	CastCheckIterator operator--(int) 
 	    { 
-	    cerr << "Expensive -- CastCheckIterator" << endl;
+	    y2warning( "Expensive -- CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
 	    _bclass::operator--(); 
 	    return(tmp); 
@@ -124,7 +124,7 @@ class CastIterator : public Iter
 	    }
 	CastIterator operator++(int) 
 	    { 
-	    cerr << "Expensive ++ CastIterator" << endl;
+	    y2warning( "Expensive ++ CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator++(); 
 	    return(tmp); 
@@ -135,7 +135,7 @@ class CastIterator : public Iter
 	    }
 	CastIterator operator--(int) 
 	    { 
-	    cerr << "Expensive -- CastIterator" << endl;
+	    y2warning( "Expensive -- CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator--(); 
 	    return(tmp); 

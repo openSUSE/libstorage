@@ -63,7 +63,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 
 Storage::~Storage()
     {
-    for( CIter i=cont.begin(); i!=cont.end(); i++ )
+    for( CIter i=cont.begin(); i!=cont.end(); ++i )
 	{
 	delete( *i );
 	}
@@ -142,17 +142,6 @@ Storage::autodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
-
-    addToList( new Container( this, "md", Container::MD ) );
-    addToList( new Container( this, "loop", Container::LOOP ) );
-    addToList( new LvmVg( this, "system" ) );
-    addToList( new LvmVg( this, "vg1" ) );
-    addToList( new LvmVg( this, "vg2" ) );
-    addToList( new LvmVg( this, "empty" ) );
-    addToList( new Evms( this ) );
-    addToList( new Evms( this, "vg1" ) );
-    addToList( new Evms( this, "vg2" ) );
-    addToList( new Evms( this, "empty" ) );
     }
 
 string Storage::proc_arch;
@@ -175,11 +164,39 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     if( i != dEnd() )
 	{
 	unsigned long num_cyl = i->kbToCylinder( sizeK );
+	y2milestone( "num_cyl %ld", num_cyl );
 	ret = i->createPartition( type, start, num_cyl, device );
 	}
     else
 	{
 	ret = STORAGE_DISK_NOTFOUND;
+	}
+    return( ret );
+    }
+
+int Storage::commit()
+    {
+    struct tmp 
+	{ static bool TestHdb( const Container& c )
+	    { 
+	    y2milestone( "name:%s", c.name().c_str() );
+	    return( c.name().find("hdb")!=string::npos ); }};
+    CPair p = cPair( tmp::TestHdb );
+    int ret = 0;
+    y2milestone( "empty:%d", p.empty() );
+    if( !p.empty() )
+	{
+	Container::CommitStage a[] = { Container::DECREASE, Container::INCREASE, 
+	                               Container::FORMAT, Container::MOUNT };
+	Container::CommitStage* pt = a;
+	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
+	    {
+	    int t = p.begin()->commitChanges( *pt );
+	    y2milestone( "%d ret %d", *pt, ret );
+	    if( ret==0 && t!=0 )
+		ret = t;
+	    pt++;
+	    }
 	}
     return( ret );
     }
@@ -206,9 +223,9 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 
     if( i != dEnd() )
     {
-	Disk::PartPPair p = i->partPair (Disk::notDeleted);
+	Disk::PartPair p = i->partPair (Disk::notDeleted);
 
-	for (Disk::PartPIter i2 = p.begin(); i2 != p.end(); ++i2)
+	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    partitioninfos.push_back (i2->getPartitionInfo());
 
 	return true;
@@ -221,7 +238,7 @@ Storage::DiskIterator Storage::findDisk( const string& disk )
     {
     DiskIterator ret=dBegin();
     while( ret != dEnd() && ret->device()!=disk )
-	ret++;
+	++ret;
     return( ret );
     }
 

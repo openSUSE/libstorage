@@ -13,17 +13,6 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     rdonly = false;
     dev = "/dev/" + nm;
     typ = t;
-    if( nm == "md" )
-	{
-	addToList( new Md( *this, 0, RAID0 ));
-        addToList( new Md( *this, 2, RAID5 ));
-	}
-    else if( nm == "loop" )
-	{
-	addToList( new Loop( *this, 0, "loop_file" ));
-        addToList( new Loop( *this, 1, "another-file" ));
-        addToList( new Loop( *this, 2, "last_file" ));
-	}
     y2milestone( "constructed cont %s", nm.c_str() );
     }
 
@@ -34,6 +23,48 @@ Container::~Container()
 	delete( *i );
 	}
     y2milestone( "destructed cont %s", dev.c_str() );
+    }
+
+static bool toDelete( const Volume& v ) { return( v.deleted()); }
+static bool toCreate( const Volume& v ) { return( v.created()); }
+//static bool toFormat( const Volume& v ) { return( v.created()); }
+
+int Container::commitChanges( CommitStage stage )
+    {
+    y2milestone( "name %s stage %d", name().c_str(), stage );
+    int ret = 0;
+    switch( stage )
+	{
+	case DECREASE:
+	    {
+	    VolPair p = volPair( toDelete );
+	    VolIterator i=p.begin();
+	    while( ret==0 && i!=p.end() )
+		{
+		++i;
+		}
+	    }
+	    break;
+	case INCREASE:
+	    {
+	    VolPair p = volPair( toCreate );
+	    VolIterator i=p.begin();
+	    while( ret==0 && i!=p.end() )
+		{
+		ret = doCreate( &(*i) );
+		++i;
+		}
+	    }
+	    break;
+	case FORMAT:
+	    break;
+	case MOUNT:
+	    break;
+	default:
+	    ret = VOLUME_COMMIT_UNKNOWN_STAGE;
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
     }
 
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };

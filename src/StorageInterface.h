@@ -57,7 +57,9 @@ namespace storage
 	DISK_CREATE_PARTITION_EXT_IMPOSSIBLE = -1003,
 	DISK_CREATE_PARTITION_NO_FREE_NUMBER = -1004,
 
-	STORAGE_DISK_NOTFOUND = -2004,
+	STORAGE_DISK_NOTFOUND = -2000,
+
+	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
     };
 
 
@@ -173,12 +175,12 @@ namespace storage
 	 */
 	virtual bool removeBackupState (string state) = 0;
 
+#endif
+
 	/**
 	 * Commit the current state to the system.
 	 */
-	virtual bool commit () = 0;
-
-#endif
+	virtual int commit() = 0;
 
     };
 

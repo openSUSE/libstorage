@@ -25,8 +25,10 @@ class Container
 	Container operator=( const Container& );
 	Container( const Container& );
 
+
     public:
 	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
+	typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 	bool operator== ( const Container& rhs ) const
 	    { return( typ == rhs.typ && nm == rhs.nm && dltd == rhs.dltd ); }
 	bool operator!= ( const Container& rhs ) const
@@ -46,6 +48,8 @@ class Container
 	    { return( !(*this<rhs) ); }
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
+
+	virtual int commitChanges( CommitStage stage );
 
 // iterators over volumes of a container
     protected:
@@ -137,6 +141,7 @@ class Container
 	void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
 	    { pointerIntoSortedList<Volume>( vols, e ); }
+	virtual int doCreate( Volume * v ) { y2milestone( "ret -1" ); return( -1 );}
 
 
 	static string type_names[EVMS+1];

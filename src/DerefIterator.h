@@ -18,7 +18,7 @@ class DerefIterator : public Iter
 	DerefIterator& operator++() { Iter::operator++(); return(*this); }
 	DerefIterator operator++(int) 
 	    {
-	    cerr << "Expensive ++ DerefIterator" << endl;
+	    y2warning( "Expensive ++ DerefIterator" );
 	    DerefIterator tmp(*this);
 	    Iter::operator++();
 	    return(tmp);
@@ -26,7 +26,7 @@ class DerefIterator : public Iter
 	DerefIterator& operator--() { Iter::operator--(); return(*this); }
 	DerefIterator operator--(int) 
 	    {
-	    cerr << "Expensive -- DerefIterator" << endl;
+	    y2warning( "Expensive -- DerefIterator" );
 	    DerefIterator tmp(*this);
 	    Iter::operator--();
 	    return(tmp);

@@ -73,6 +73,8 @@ class Storage : public StorageInterface
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
 			     unsigned long long sizeK, string& device );
+        int commit();
+
 	int commitChanges() { return 0; }
 
 // iterators over container

@@ -46,7 +46,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    }
 	FilterIterator operator++(int)
 	    {
-	    cerr << "Expensive ++ FilterIterator" << endl;
+	    y2warning( "Expensive ++ FilterIterator" );
 	    FilterIterator tmp(*this); 
 	    ++m_cur;
 	    assertPred();
@@ -61,7 +61,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    }
 	FilterIterator operator--(int)
 	    {
-	    cerr << "Expensive -- FilterIterator" << endl;
+	    y2warning( "Expensive -- FilterIterator" );
 	    FilterIterator tmp(*this); 
 	    --m_cur;
 	    assertPred(false);

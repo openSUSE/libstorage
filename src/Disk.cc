@@ -279,9 +279,10 @@ Disk::logData( const string& Dir )
 	}
     file << "SizeK: " << size_k << endl;
 
-    for( ConstPlainIterator i=begin(); i!=end(); i++ )
+
+    PartPair pp = partPair();
+    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
-	const Partition *p = static_cast<const Partition *>(*i);
 	file << "Partition: ";
 	p->logData(file);
 	file << endl;
@@ -682,16 +683,12 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
     return( ret );
     }
 
+static bool isBsdPart( const Partition& p )
+    { return( p.id()==0xa5 || p.id()==0xa6 || p.id()==0xeb ); }
+
 bool Disk::haveBsdPart() const
     {
-    bool ret=false;
-    for( ConstPlainIterator i=begin(); !ret&&i!=end(); i++ )
-	{
-	const Partition *p = static_cast<const Partition *>(*i);
-	if( p->id()==0xa5 || p->id()==0xa6 )
-	    ret=true;
-	}
-    return(ret);
+    return( !partPair(isBsdPart).empty() );
     }
 
 
@@ -773,7 +770,7 @@ int Disk::availablePartNumber( PartitionType type )
     {
     y2milestone( "name:%s type %d", name().c_str(), type );
     int ret = 0;
-    PartPPair p = partPair( notDeleted );
+    PartPair p = partPair( notDeleted );
     if( !ext_possible && type==LOGICAL )
 	{
 	ret = 0;
@@ -790,11 +787,11 @@ int Disk::availablePartNumber( PartitionType type )
 	}
     else
 	{
-	PartPIter i=p.begin();
+	PartIter i=p.begin();
 	unsigned start = 1;
 	while( i!=p.end() && i->nr()==start && i->nr()<=max_primary )
 	    {
-	    i++;
+	    ++i;
 	    start++;
 	    }
 	if( i!=p.end() && i->nr()<=max_primary )
@@ -819,11 +816,11 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	}
     if( ret==0 )
 	{
-	PartPPair p = partPair( notDeleted );
-	PartPIter i = p.begin();
+	PartPair p = partPair( notDeleted );
+	PartIter i = p.begin();
 	while( i!=p.end() && !i->intersectArea( r ))
 	    {
-	    i++;
+	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
@@ -854,9 +851,42 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type, 
 				       decString(cylinderToKb(start-1)) );
+	p->setCreated();
 	device = p->device();
 	addToList( p );
 	}
     sto->checkCache();
     return( ret );
     }
+
+int Disk::commitChanges( CommitStage stage )
+    {
+    y2milestone( "name %s stage %d", name().c_str(), stage );
+    int ret = Container::commitChanges( stage );
+    if( ret==0 )
+	{
+	switch( stage )
+	    {
+	    case INCREASE:
+		{
+		// do stuff for change of partition type
+		}
+		break;
+	    default:
+		break;
+	    }
+	}
+    return( ret );
+    }
+
+int Disk::doCreate( Volume* v )
+    {
+    Partition * p = static_cast<Partition *>(v);
+    y2milestone( "doCreate container %s name %s", name().c_str(), 
+                 p->name().c_str() );
+    y2milestone( "doCreate start %ld len %ld", p->cylStart(), 
+                 p->cylSize() );
+    int ret = 0;
+    return( ret );
+    }
+
