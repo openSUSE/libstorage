@@ -128,7 +128,7 @@ bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
     vector<string> New_Ci;
     bool Ret_bi;
 
-    DBG( App_pC->Dbg() << "Inserting AsciiFile Lines:" << File_Cv.numLines() 
+    DBG( App_pC->Dbg() << "Inserting AsciiFile Lines:" << File_Cv.numLines()
                        << " before:" << BeforeLine_iv << endl; )
     unsigned int Idx_ii=0;
     while( Idx_ii<BeforeLine_iv )
@@ -226,13 +226,13 @@ void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv, string Line
 
 void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
     {
-    DBG( App_pC->Dbg() << "Delete Line From:" << Start_iv 
+    DBG( App_pC->Dbg() << "Delete Line From:" << Start_iv
                        << " Length:" << Cnt_iv << "\n"; )
     DBG( App_pC->Dbg() << "Before Delete Lines:" << Lines_C.size() << std::endl; );
     Start_iv = max( 0u, Start_iv );
     if( Start_iv < Lines_C.size() )
 	{
-	Cnt_iv = min( Cnt_iv, Lines_C.size()-Start_iv );
+	Cnt_iv = min( Cnt_iv, (unsigned int)(Lines_C.size())-Start_iv );
 	for( unsigned int I_ii=Start_iv; I_ii< Lines_C.size()-Cnt_iv; I_ii++ )
 	    {
 	    Lines_C[I_ii] = Lines_C[I_ii+Cnt_iv];
@@ -248,7 +248,7 @@ void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
 void AsciiFile::insert( unsigned int Before_iv, string Line_Cv )
     {
     unsigned int Idx_ii = Lines_C.size();
-    DBG( App_pC->Dbg() << "Insert Line Before:" << Before_iv 
+    DBG( App_pC->Dbg() << "Insert Line Before:" << Before_iv
                        << " High:" << Lines_C.size()
                        << " Text:\"" << Line_Cv << "\"\n"; )
     if( Before_iv>=Idx_ii )
@@ -298,7 +298,7 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     }
 
 #if 0
-int AsciiFile::find( int Start_iv, const Regex& Pat_Cv ) 
+int AsciiFile::find( int Start_iv, const Regex& Pat_Cv )
     {
     int Idx_ii = Start_iv;
     int Ret_ii = -1;
@@ -313,7 +313,7 @@ int AsciiFile::find( int Start_iv, const Regex& Pat_Cv )
 	    Idx_ii++;
 	    }
 	}
-    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii 
+    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii
 		       << " Start:" << Start_iv << std::endl; )
     if( Ret_ii>=0 )
 	{
@@ -323,7 +323,7 @@ int AsciiFile::find( int Start_iv, const Regex& Pat_Cv )
     }
 #endif
 
-int AsciiFile::find( unsigned int Start_iv, string Pat_Cv ) 
+int AsciiFile::find( unsigned int Start_iv, string Pat_Cv )
     {
     string::size_type Pos_ii;
     unsigned int Idx_ii = Start_iv;
@@ -353,7 +353,7 @@ int AsciiFile::find( unsigned int Start_iv, string Pat_Cv )
 	    Idx_ii++;
 	    }
 	}
-    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii 
+    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii
 		       << " Start:" << Start_iv << std::endl; )
     if( Ret_ii>=0 )
 	{
