@@ -843,11 +843,15 @@ class Storage : public StorageInterface
 	void initialize();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
+	void detectFsDataTestMode( const string& file, 
+	                           const VolIterator& begin, const VolIterator& end );
 	static void detectArch();
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+	void logVolumes( const string& Dir );
+
 
 	// protected internal member variables
 	bool readonly;

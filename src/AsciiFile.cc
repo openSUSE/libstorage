@@ -301,7 +301,7 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
 
 int AsciiFile::find( unsigned Start_iv, Regex& Pat_Cv )
     {
-    int Idx_ii = Start_iv;
+    unsigned Idx_ii = Start_iv;
     int Ret_ii = -1;
     while( Ret_ii<0 && Idx_ii<Lines_C.size() )
 	{

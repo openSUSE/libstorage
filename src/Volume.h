@@ -118,6 +118,8 @@ class Volume
 	static bool getMajorMinor( const string& device,
 	                           unsigned long& Major, unsigned long& Minor );
 	static storage::EncryptType toEncType( const string& val );
+	static storage::FsType toFsType( const string& val );
+	static storage::MountByType toMountByType( const string& val );
 	const string& fsTypeString() const { return fs_names[fs]; }
 	static const string& fsTypeString( const storage::FsType type )
 	    { return fs_names[type]; }
@@ -134,8 +136,10 @@ class Volume
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );
 	void getFstabData( EtcFstab& fstabData );
+	void getTestmodeData( const string& data );
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, const string& label ) const;
+	ostream& logVolume( ostream& file ) const;
 	int getFreeLoop();
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();

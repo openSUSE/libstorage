@@ -376,4 +376,5 @@ bool runningFromSystem()
     return( FromSystem_bs );
     }
 
+bool system_cmd_testmode = false;
 

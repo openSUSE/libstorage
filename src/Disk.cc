@@ -290,6 +290,7 @@ Disk::logData( const string& Dir )
 	p->logData(file);
 	file << endl;
 	}
+    file.close();
     }
 
 void

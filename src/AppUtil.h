@@ -66,4 +66,6 @@ inline const char* _(const char* msgid1, const char* msgid2, unsigned long int n
     return( dngettext ("storage", msgid1, msgid2, n) );
     }
 
+extern bool system_cmd_testmode;
+
 #endif

@@ -114,19 +114,19 @@ SystemCmd::doExecute( string Cmd )
     int sout[2];
     int serr[2];
     bool ok_bi = true;
-    if( pipe(sout)<0 )
+    if( !system_cmd_testmode && pipe(sout)<0 )
 	{
 	y2error( "pipe stdout creation failed errno=%d (%s)", errno, 
 	         strerror(errno)); 
 	ok_bi = false;
 	}
-    if( !Combine_b && pipe(serr)<0 ) 
+    if( !system_cmd_testmode && !Combine_b && pipe(serr)<0 ) 
 	{
 	y2error( "pipe stderr creation failed errno=%d (%s)", errno, 
 	         strerror(errno)); 
 	ok_bi = false;
 	}
-    if( ok_bi )
+    if( ok_bi && !system_cmd_testmode )
 	{
 	pfds[0].fd = sout[0];
 	if( fcntl( pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
@@ -217,16 +217,22 @@ SystemCmd::doExecute( string Cmd )
 		break;
 	    }
 	}
-    else
+    else if( !system_cmd_testmode )
 	{
 	Ret_i = -1;
+	}
+    else
+	{
+	Ret_i = 0;
+	y2milestone( "TESTMODE would execute \"%s\"", Cmd.c_str() );
 	}
     timeMark( "After fork()" );
     if( Ret_i==-127 || Ret_i==-1 )
 	{
 	y2error("system (%s) = %d", Cmd.c_str(), Ret_i);
 	}
-    checkOutput();
+    if( !system_cmd_testmode )
+	checkOutput();
     y2milestone( "system() Returns:%d", Ret_i );
     timeMark( "After CheckOutput" );
     return( Ret_i );

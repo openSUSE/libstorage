@@ -15,6 +15,7 @@
 #include "y2storage/IterPair.h"
 #include "y2storage/ProcMounts.h"
 #include "y2storage/EtcFstab.h"
+#include "y2storage/AsciiFile.h"
 
 struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
 
@@ -81,6 +82,13 @@ Storage::initialize()
 		addToList( new Disk( this, *p ) );
 	    }
 	globfree (&globbuf);
+	system_cmd_testmode = true;
+	fstab = new EtcFstab( testdir );
+	string t = testdir+"/volume_info";
+	if( access( t.c_str(), R_OK )==0 )
+	    {
+	    detectFsDataTestMode( t, vBegin(), vEnd() );
+	    }
 	}
     else
 	{
@@ -92,8 +100,10 @@ Storage::initialize()
 
 Storage::~Storage()
     {
+    logVolumes( "/var/log/YaST2" );
     for( CIter i=cont.begin(); i!=cont.end(); ++i )
 	{
+	(*i)->logData( "/var/log/YaST2" );
 	delete( *i );
 	}
     if( tempdir.size()>0 && access( tempdir.c_str(), R_OK )==0 )
@@ -197,7 +207,38 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
 	i->getMountData( Mounts );
 	i->getFstabData( *fstab );
 	}
+    logVolumes( "/var/log/YaST2" );
     y2milestone( "detectFsData end" );
+    }
+
+void
+Storage::detectFsDataTestMode( const string& file, const VolIterator& begin, 
+			       const VolIterator& end )
+    {
+    AsciiFile vd( file );
+    for( VolIterator i=begin; i!=end; ++i )
+	{
+	int pos = -1;
+	if( (pos=vd.find( 0, "^"+i->device()+" " ))>=0 )
+	    {
+	    i->getTestmodeData( vd[pos] );
+	    }
+	}
+    }
+
+void
+Storage::logVolumes( const string& Dir )
+    {
+    string fname( Dir + "/volume_info" );
+    ofstream file( fname.c_str() );
+    for( VolIterator i=vBegin(); i!=vEnd(); ++i )
+	{
+	if( i->getFs()!=FSUNKNOWN )
+	    {
+	    i->logVolume( file );
+	    }
+	}
+    file.close();
     }
 
 string Storage::proc_arch;

@@ -240,48 +240,51 @@ void Volume::getFsData( SystemCmd& blkidData )
 	    {
 	    l.pop_front();
 	    map<string,string> m = makeMap( l, "=", "\"" );
+	    map<string,string>::const_iterator i = m.find( "TYPE" );
 	    b.str("");
-	    if( m.find( "TYPE" )!=m.end() )
+	    if( i !=m.end() )
 		{
-		if( m["TYPE"] == "reiserfs" )
+		if( i->second == "reiserfs" )
 		    {
 		    fs = REISERFS;
 		    }
-		else if( m["TYPE"] == "swap" )
+		else if( i->second == "swap" )
 		    {
 		    fs = SWAP;
 		    }
-		else if( m["TYPE"] == "ext2" )
+		else if( i->second == "ext2" )
 		    {
 		    fs = (m["SEC_TYPE"]=="ext3")?EXT3:EXT2;
 		    }
-		else if( m["TYPE"] == "vfat" )
+		else if( i->second == "vfat" )
 		    {
 		    fs = VFAT;
 		    }
-		else if( m["TYPE"] == "ntfs" )
+		else if( i->second == "ntfs" )
 		    {
 		    fs = NTFS;
 		    }
-		else if( m["TYPE"] == "jfs" )
+		else if( i->second == "jfs" )
 		    {
 		    fs = JFS;
 		    }
-		else if( m["TYPE"] == "xfs" )
+		else if( i->second == "xfs" )
 		    {
 		    fs = XFS;
 		    }
 		detected_fs = fs;
 		b << "fs:" << fs_names[fs];
 		}
-	    if( m.find("UUID") != m.end() )
+	    i = m.find( "UUID" );
+	    if( i != m.end() )
 		{
-		uuid = m["UUID"];
+		uuid = i->second;
 		b << " uuid:" << uuid;
 		}
-	    if( m.find("LABEL") != m.end() )
+	    i = m.find( "LABEL" );
+	    if( i != m.end() )
 		{
-		label = orig_label = m["LABEL"];
+		label = orig_label = i->second;
 		b << " label:\"" << label << "\"";
 		}
 	    y2milestone( "%s", b.str().c_str() );
@@ -1329,6 +1332,26 @@ EncryptType Volume::toEncType( const string& val )
     return( ret );
     }
 
+FsType Volume::toFsType( const string& val )
+    {
+    enum FsType ret = SWAP;
+    while( ret!=FSUNKNOWN && val!=fs_names[ret] )
+	{
+	ret = FsType(ret-1);
+	}
+    return( ret );
+    }
+
+MountByType Volume::toMountByType( const string& val )
+    {
+    enum MountByType ret = MOUNTBY_LABEL;
+    while( ret!=MOUNTBY_DEVICE && val!=mb_names[ret] )
+	{
+	ret = MountByType(ret-1);
+	}
+    return( ret );
+    }
+
 string Volume::sizeString() const
     {
     return( kbyteToHumanString( size_k ));
@@ -1418,6 +1441,72 @@ string Volume::removeText( bool doing ) const
         txt = sformat( _("Remove %1$s"), dev.c_str() );
         }
     return( txt );
+    }
+
+ostream& Volume::logVolume( ostream& file ) const
+    {
+    file << dev << " fs=" << fs_names[fs];
+    if( uuid.size()>0 )
+	file << " uuid=" << uuid;
+    if( label.size()>0 )
+	file << " label=" << label;
+    if( mp.size()>0 )
+	file << " mount=" << mp;
+    if( fstab_opt.size()>0 )
+	file << " fstopt=" << fstab_opt;
+    if( mount_by != MOUNTBY_DEVICE )
+	file << " mountby=" << mb_names[mount_by];
+    if( is_loop && fstab_loop_dev.size()>0 )
+	file << " loop=" << fstab_loop_dev;
+    if( is_loop && encryption!=ENC_NONE )
+	file << " encr=" << enc_names[encryption];
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    if( is_loop && encryption!=ENC_NONE && crypt_pwd.size()>0 )
+	s << " pwd:" << v.crypt_pwd;
+#endif
+    file << endl;
+    return( file );
+    }
+
+void Volume::getTestmodeData( const string& data )
+    {
+    list<string> l = splitString( data );
+    if( l.begin()!=l.end() )
+	l.erase( l.begin() );
+    //cout << "l:" << l << endl;
+    map<string,string> m = makeMap( l );
+    //cout << "m:" << m << endl;
+    map<string,string>::const_iterator i = m.find( "fs" );
+    if( i!=m.end() )
+	fs = detected_fs = toFsType(i->second);
+    i = m.find( "uuid" );
+    if( i!=m.end() )
+	uuid = i->second;
+    i = m.find( "label" );
+    if( i!=m.end() )
+	label = orig_label = i->second;
+    i = m.find( "mount" );
+    if( i!=m.end() )
+	mp = orig_mp = i->second;
+    i = m.find( "mountby" );
+    if( i!=m.end() )
+	mount_by = orig_mount_by = toMountByType(i->second);
+    i = m.find( "fstopt" );
+    if( i!=m.end() )
+	fstab_opt = orig_fstab_opt = i->second;
+    i = m.find( "loop" );
+    if( i!=m.end() )
+	{
+	loop_dev = fstab_loop_dev = i->second;
+	is_loop = true;
+	loop_active = true;
+	}
+    i = m.find( "encr" );
+    if( i!=m.end() )
+	encryption = orig_encryption = toEncType(i->second);
+    i = m.find( "pwd" );
+    if( i!=m.end() )
+	crypt_pwd = i->second;
     }
 
 
