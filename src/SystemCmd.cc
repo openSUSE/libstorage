@@ -35,6 +35,20 @@ SystemCmd::SystemCmd( const string& Command_Cv, bool UseTmp_bv ) :
     execute( Command_Cv );
     }
 
+SystemCmd::SystemCmd( const char* Command_Cv, bool UseTmp_bv ) :
+	Combine_b(false),
+	UseTmp_b(UseTmp_bv),
+	OutputHandler_f(NULL),
+	HandlerPar_p(NULL)
+    {
+    y2milestone( "Konstruktor SystemCmd:\"%s\" UseTmp:%d Nr:%d", 
+                 Command_Cv, UseTmp_bv, Nr_i );
+    Append_ab[0] = false;
+    Append_ab[1] = false;
+    initFile();
+    execute( Command_Cv );
+    }
+
 SystemCmd::SystemCmd( bool UseTmp_bv ) :
 	Combine_b(false),
 	UseTmp_b(UseTmp_bv),

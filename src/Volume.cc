@@ -49,7 +49,7 @@ void Volume::setNameDev()
 
 void Volume::init()
     {
-    del = create = format = false;
+    del = create = format = is_loop = false;
     detected_fs = fs = UNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     setNameDev();
@@ -170,7 +170,7 @@ void Volume::getFsData( SystemCmd& blkidData )
     }
 
 
-string Volume::fs_names[] = { "unknown", "reiser", "ext2", "ext2", "vfat",
+string Volume::fs_names[] = { "unknown", "reiser", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "ntfs", "swap" };
 
 string Volume::mb_names[] = { "device", "uuid", "label" };

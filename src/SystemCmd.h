@@ -16,6 +16,8 @@ class SystemCmd
     {
     public:
 	enum OutputStream { IDX_STDOUT, IDX_STDERR };
+	SystemCmd( const char* Command_Cv,
+	           bool UseTmp_bv=false );
 	SystemCmd( const string& Command_Cv,
 	           bool UseTmp_bv=false );
 	SystemCmd( bool UseTmp_bv=false );

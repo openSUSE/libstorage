@@ -59,6 +59,8 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	    }
 	globfree (&globbuf);
 	}
+    else
+	detectFsData( vBegin(), vEnd() );
     setCacheChanges( true );
     }
 
@@ -148,10 +150,13 @@ Storage::autodetectDisks()
 void
 Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     {
+    y2milestone( "detectFsData begin" );
     SystemCmd Blkid( "/sbin/blkid" );
-    for( VolIterator i=begin; i!=end; i++ )
+    for( VolIterator i=begin; i!=end; ++i )
 	{
+	i->getFsData( Blkid );
 	}
+    y2milestone( "detectFsData end" );
     }
 
 string Storage::proc_arch;

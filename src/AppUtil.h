@@ -60,10 +60,10 @@ template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
     for( typename list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	{
 	if( i!=l.begin() )
-	    cout << " ";
-	cout << *i;
+	    s << " ";
+	s << *i;
 	}
-    cout << ">";
+    s << ">";
     return( s );
     }
 
@@ -78,10 +78,10 @@ template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,
     for( typename map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
 	{
 	if( i!=m.begin() )
-	    cout << " ";
-	cout << i->first << ":" << i->second;
+	    s << " ";
+	s << i->first << ":" << i->second;
 	}
-    cout << ">";
+    s << ">";
     return( s );
     }
 
