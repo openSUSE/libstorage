@@ -19,6 +19,11 @@ liby2storage_la_SOURCES =		     \
 	  EvmsVol.cc     EvmsVol.h           \
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
+	SystemCmd.cc     SystemCmd.h         \
+	Regex.cc         Regex.h             \
+	AsciiFile.cc     AsciiFile.h         \
+	  ProcPart.cc    ProcPart.h 	     \
+	AppUtil.cc       AppUtil.h           \
 	FilterIterator.h ListListIterator.h  \
 	DerefIterator.h                      \
 	IterPair.h

@@ -8,10 +8,10 @@
 Evms::Evms( const Storage * const s, const string& Name ) : 
     Container(s,Name,StaticType())
     {
-    device = "/dev/evms";
+    dev = "/dev/evms";
     if( name.length()>0 )
 	{
-	device += "/" + name;
+	dev += "/" + name;
 	is_container = true;
 	}
     else
@@ -46,12 +46,12 @@ Evms::Evms( const Storage * const s, const string& Name ) :
 	num_pv = 1;
 	pe_size = 4*1024*1024;
 	}
-    y2milestone( "constructed evms co %s", device.c_str() );
+    y2milestone( "constructed evms co %s", dev.c_str() );
     }
 
 Evms::~Evms()
     {
-    y2milestone( "destructed evmc co %s", device.c_str() );
+    y2milestone( "destructed evmc co %s", dev.c_str() );
     }
 
 

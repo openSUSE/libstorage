@@ -11,7 +11,7 @@ Container::Container( const Storage * const s, const string& Name, CType t ) :
     {
     deleted = false;
     readonly = false;
-    device = "/dev/" + name;
+    dev = "/dev/" + name;
     type = t;
     if( name == "md" )
 	{
@@ -33,7 +33,7 @@ Container::~Container()
 	{
 	delete( *i );
 	}
-    y2milestone( "destructed cont %s", device.c_str() );
+    y2milestone( "destructed cont %s", dev.c_str() );
     }
 
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };

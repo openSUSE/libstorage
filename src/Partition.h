@@ -10,15 +10,33 @@ class Disk;
 class Partition : public Volume
     {
     public:
-	Partition( const Disk& d, unsigned Pnr );
+	typedef enum { ID_DOS=0x0c, ID_NTFS=0x07, ID_EXTENDED=0x0f,
+	               ID_LINUX=0x83, ID_SWAP=0x82, ID_LVM=0x8e, 
+		       ID_MD=0xfd } IdNum;
+	typedef enum { PRIMARY, EXTENDED, LOGICAL } PType;
+	Partition( const Disk& d, unsigned Pnr, unsigned long long SizeK,
+	           unsigned long Start, unsigned long CSize, PType Type,
+		   const string& parted_start, unsigned id=ID_LINUX, 
+		   bool Boot=false );
+	Partition( const Disk& d, const string& Data );
 	virtual ~Partition();
 	unsigned CylStart() const { return cyl_start; }
 	unsigned CylSize() const { return cyl_size; }
+	bool Boot() const { return boot; }
+	unsigned Id() const { return id; }
+	PType Type() const { return type; }
+	ostream& LogData( ostream& file ) const;
+	const string& PartedStart() const { return parted_start; }
 	friend ostream& operator<< (ostream& s, const Partition &p );
 
     protected:
-	unsigned cyl_start;
-	unsigned cyl_size;
+	unsigned long cyl_start;
+	unsigned long cyl_size;
+	bool boot;
+	PType type;
+	unsigned id;
+	string parted_start;
+
     };
 
 
@@ -26,7 +44,12 @@ inline ostream& operator<< (ostream& s, const Partition &p )
     {
     s << "Partition " << Volume(p) 
       << " Start:" << p.cyl_start
-      << " CylNum:" << p.cyl_size;
+      << " CylNum:" << p.cyl_size
+      << " Id:" << std::hex << p.id << std::dec;
+    if( p.type!=Partition::PRIMARY )
+      s << ((p.type==Partition::LOGICAL)?" logical":" extended");
+    if( p.boot )
+      s << " boot";
     return( s );
     }
 

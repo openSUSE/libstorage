@@ -5,7 +5,8 @@
 #include "y2storage/Evms.h"
 #include "y2storage/EvmsVol.h"
 
-EvmsVol::EvmsVol( const Evms& d, const string& name, unsigned Stripes ) : Volume( d, name )
+EvmsVol::EvmsVol( const Evms& d, const string& name, unsigned Stripes ) 
+    : Volume( d, name, 0 )
     {
     stripes = Stripes;
     compatible = true;

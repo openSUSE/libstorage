@@ -119,7 +119,7 @@ class Container
 	Container( const Storage * const, const string& Name, CType typ );
 	virtual ~Container();
 	const string& Name() const { return name; }
-	const string& Device() const { return device; }
+	const string& Device() const { return dev; }
 	CType Type() const { return type; }
 	bool Delete() const { return deleted; }
 	bool Readonly() const { return readonly; }
@@ -144,7 +144,7 @@ class Container
 	const Storage * const sto;
 	CType type;
 	string name;
-	string device;
+	string dev;
 	bool deleted;
 	bool readonly;
 	VCont vols;
@@ -155,7 +155,7 @@ inline ostream& operator<< (ostream& s, const Container &c )
     {
     s << "Type:" << Container::type_names[c.type] 
       << " Name:" << c.name 
-      << " Device:" << c.device 
+      << " Device:" << c.dev 
       << " Vcnt:" << c.vols.size(); 
     if( c.deleted )
       s << " deleted";

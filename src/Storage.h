@@ -42,6 +42,7 @@ class Storage
 	bool Instsys() const { return( instsys ); }
 	const string& TDir() const { return( testdir ); }
 	const string& Root() const { return( rootprefix ); }
+	static const string& Arch() { return( arch ); }
 	virtual ~Storage();
 
 // iterators over container 
@@ -750,6 +751,7 @@ class Storage
     protected:
 	// protected internal member functions
 	void AutodetectDisks();
+	static void DetectArch();
 	void AddToList( Container* e ) 
 	    { PointerIntoSortedList<Container>( cont, e ); }
 
@@ -759,6 +761,7 @@ class Storage
 	bool instsys;
 	string testdir;
 	string rootprefix;
+	static string arch;
 	CCont cont;
     };
 

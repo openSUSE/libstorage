@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include <ycp/y2log.h>
+#include <sys/utsname.h>
 
 #include "y2storage/Storage.h"
 #include "y2storage/Disk.h"
@@ -20,14 +21,17 @@ bool TestCG30( const Partition& d )
 Storage::Storage( bool ronly, bool tmode, bool autodetect ) : 
     readonly(ronly), testmode(tmode)
     {
-    y2milestone( "constructed Storage ronly:%d testmode:%d autodetec:%d", 
+    y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d", 
                  ronly, testmode, autodetect );
-    if( autodetect && !testmode )
-	{
-	AutodetectDisks();
-	}
     char * tenv = getenv( "YAST_IS_RUNNING" );
     instsys = tenv!=NULL && strcmp(tenv,"instsys")==0;
+    if( !testmode )
+	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
+    if( autodetect && !testmode )
+	{
+	DetectArch();
+	AutodetectDisks();
+	}
     if( testmode )
 	{
 	tenv = getenv( "YAST2_STORAGE_TDIR" );
@@ -37,29 +41,27 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	    }
 	else
 	    {
-	    testdir = "/var/lib/YaST2/storage_test";
+	    testdir = "/var/log/YaST2";
 	    }
 	}
     y2milestone( "instsys:%d testdir:%s", instsys, testdir.c_str() );
 
     if( testmode )
 	{
+	DIR *Dir;
+	struct dirent *Entry;
+	if( (Dir=opendir( testdir.c_str() ))!=NULL )
+	    {
+	    while( (Entry=readdir( Dir ))!=NULL )
+		{
+		if( strncmp( Entry->d_name, "disk_", 5 )==0 )
+		    {
+		    Disk * d = new Disk( this, testdir+"/"+Entry->d_name );
+		    AddToList( d );
+		    }
+		}
+	    }
 	}
-    /*
-    ConstPartInter b(DiskPair( TestLg150 ));
-    ConstPartInter e(DiskPair( TestLg150 ), true);
-    IterPair<ConstPartInter> p( b, e );
-
-    IterPair<ConstPartInter2> q = IterPair<ConstPartInter2>( ConstPartInter2( b ), 
-                                                             ConstPartInter2( e ) );
-    IterPair<ConstPartIterator> r((ConstPartIterator(ConstPartPIterator( q, TestCG30 ))), 
-	                          (ConstPartIterator(ConstPartPIterator( q, TestCG30, true))));
-    for( ConstPartIterator i=r.begin(); i!=r.end(); ++i )
-	{
-	cout << "Name:" << i->Device() << " Start:" << (*i).CylStart()
-	     << " Cyl:" << (*i).CylSize() << endl;
-	}
-    */
     }
 
 Storage::~Storage()
@@ -72,9 +74,35 @@ Storage::~Storage()
     }
 
 void
+Storage::DetectArch()
+    {
+    struct utsname buf;
+    arch = "i386";
+    if( uname( &buf ) == 0 )
+	{
+	if( strncmp( buf.machine, "ppc", 3 )==0 )
+	    {
+	    arch = "ppc";
+	    }
+	else if( strncmp( buf.machine, "ia64", 4 )==0 )
+	    {
+	    arch = "ia64";
+	    }
+	else if( strncmp( buf.machine, "s390", 4 )==0 )
+	    {
+	    arch = "s390";
+	    }
+	else if( strncmp( buf.machine, "sparc", 5 )==0 )
+	    {
+	    arch = "sparc";
+	    }
+	}
+    y2milestone( "Arch:%s", arch.c_str() );
+    }
+
+void
 Storage::AutodetectDisks()
     {
-    AddToList( new Disk( this, "hdc" ));
     string SysfsDir = "/sys/block";
     DIR *Dir;
     struct dirent *Entry;
@@ -98,7 +126,17 @@ Storage::AutodetectDisks()
 		}
 	    if( Range>1 && Size>0 )
 		{
-		AddToList( new Disk( this, Entry->d_name ) );
+		Disk * d = new Disk( this, Entry->d_name, Size/2 );
+		if( d->GetSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
+		    d->DetectGeometry() && d->DetectPartitions() )
+		    {
+		    d->LogData( "/var/log/YaST2" );
+		    AddToList( d );
+		    }
+		else
+		    {
+		    delete d;
+		    }
 		}
 	    }
 	closedir( Dir );
@@ -118,5 +156,7 @@ Storage::AutodetectDisks()
     AddToList( new Evms( this, "vg2" ) );
     AddToList( new Evms( this, "empty" ) );
     }
+
+string Storage::arch;
 
 

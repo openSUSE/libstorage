@@ -40,12 +40,12 @@ LvmVg::LvmVg( const Storage * const s, const string& Name ) :
 	num_pv = 1;
 	pe_size = 4*1024*1024;
 	}
-    y2milestone( "constructed lvm vg %s", device.c_str() );
+    y2milestone( "constructed lvm vg %s", dev.c_str() );
     }
 
 LvmVg::~LvmVg()
     {
-    y2milestone( "destructed lvm vg %s", device.c_str() );
+    y2milestone( "destructed lvm vg %s", dev.c_str() );
     }
 
 
