@@ -981,9 +981,12 @@ bool Storage::findVolume( const string& device, ContIterator& c,
     {
     bool ret = false;
     assertInit();
+    string d( device );
+    if( d.find( "/dev/" )!=0 )
+	d = "/dev/" + d;
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
-    while( v!=p.end() && v->device()!=device )
+    while( v!=p.end() && v->device()!=d )
 	{
 	++v;
 	}
@@ -1019,8 +1022,11 @@ void Storage::showInfoCb( const string& info )
 Storage::DiskIterator Storage::findDisk( const string& disk )
     {
     assertInit();
+    string d( disk );
+    if( d.find( "/dev/" )!=0 )
+	d = "/dev/" + d;
     DiskIterator ret=dBegin();
-    while( ret != dEnd() && ret->device()!=disk )
+    while( ret != dEnd() && ret->device()!=d )
 	++ret;
     return( ret );
     }
