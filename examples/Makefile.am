@@ -10,13 +10,15 @@ LDADD = ../src/liby2storage.la
 AM_CPPFLAGS = -DY2LOG=\"y2storage\"
 AM_CXXFLAGS =
 
-noinst_PROGRAMS = TestDisk TestDiskLog TestStorage
+noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing
 
 TestDisk_SOURCES = TestDisk.cc
 
 TestDiskLog_SOURCES = TestDiskLog.cc
 
 TestStorage_SOURCES = TestStorage.cc
+
+TestProbing_SOURCES = TestProbing.cc
 
 exampledir = $(docdir)/examples/liby2storage
 
