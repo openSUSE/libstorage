@@ -1015,7 +1015,7 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
 int Disk::commitChanges( CommitStage stage )
     {
     y2milestone( "name %s stage %d", name().c_str(), stage );
-    int ret = Container::commitChanges( stage );
+    int ret = 0;
     if( ret==0 )
 	{
 	switch( stage )
@@ -1023,21 +1023,26 @@ int Disk::commitChanges( CommitStage stage )
 	    case DECREASE:
 		if( deleted() )
 		    {
-		    doCreateLabel();
+		    ret = doCreateLabel();
 		    }
+		if( ret==0 )
+		    ret = Container::commitChanges( stage );
 		break;
 	    case INCREASE:
-		{
-		PartPair p = partPair( Partition::toChangeId );
-		PartIter i = p.begin();
-		while( ret==0 && i!=p.end() )
+		ret = Container::commitChanges( stage );
+		if( ret==0 )
 		    {
-		    ret = doSetType( &(*i) );
-		    ++i;
+		    PartPair p = partPair( Partition::toChangeId );
+		    PartIter i = p.begin();
+		    while( ret==0 && i!=p.end() )
+			{
+			ret = doSetType( &(*i) );
+			++i;
+			}
 		    }
-		}
 		break;
 	    default:
+		ret = Container::commitChanges( stage );
 		break;
 	    }
 	}

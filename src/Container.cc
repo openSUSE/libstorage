@@ -5,6 +5,7 @@
 #include <ycp/y2log.h>
 
 #include "y2storage/Container.h"
+#include "y2storage/Storage.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 #include "y2storage/AppUtil.h"
@@ -27,11 +28,12 @@ Container::~Container()
     y2milestone( "destructed cont %s", dev.c_str() );
     }
 
-static bool toDelete( const Volume& v ) { return( v.deleted()); }
-static bool toCreate( const Volume& v ) { return( v.created()); }
-static bool toFormat( const Volume& v ) { return( v.getFormat()); }
-static bool needLosetup( const Volume& v ) { return( v.loop()); }
-static bool needMount( const Volume& v ) { return( v.needRemount()); }
+static bool stageDecrease( const Volume& v ) { return( v.deleted()); }
+static bool stageCreate( const Volume& v ) { return( v.created()); }
+static bool stageFormat( const Volume& v ) 
+    { return( v.getFormat()||v.loop()||v.needLabel()); }
+static bool stageMount( const Volume& v ) 
+    { return( v.needRemount()||v.needFstabUpdate()); }
 
 int Container::commitChanges( CommitStage stage )
     {
@@ -41,7 +43,7 @@ int Container::commitChanges( CommitStage stage )
 	{
 	case DECREASE:
 	    {
-	    VolPair p = volPair( toDelete );
+	    VolPair p = volPair( stageDecrease );
 	    if( !deleted() && !p.empty() )
 		{
 		list<VolIterator> l;
@@ -58,7 +60,7 @@ int Container::commitChanges( CommitStage stage )
 	    break;
 	case INCREASE:
 	    {
-	    VolPair p = volPair( toCreate );
+	    VolPair p = volPair( stageCreate );
 	    VolIterator i=p.begin();
 	    while( ret==0 && i!=p.end() )
 		{
@@ -69,31 +71,30 @@ int Container::commitChanges( CommitStage stage )
 	    break;
 	case FORMAT:
 	    {
-	    VolPair p = volPair( needLosetup );
+	    VolPair p = volPair( stageFormat );
 	    VolIterator i=p.begin();
 	    while( ret==0 && i!=p.end() )
 		{
-		ret = i->doLosetup();
-		++i;
-		}
-	    }
-	    {
-	    VolPair p = volPair( toFormat );
-	    VolIterator i=p.begin();
-	    while( ret==0 && i!=p.end() )
-		{
-		ret = i->doFormat();
+		if( i->loop() )
+		    ret = i->doLosetup();
+		if( ret==0 && i->getFormat() )
+		    ret = i->doFormat();
+		if( ret==0 && i->needLabel() )
+		    ret = i->doSetLabel();
 		++i;
 		}
 	    }
 	    break;
 	case MOUNT:
 	    {
-	    VolPair p = volPair( needMount );
+	    VolPair p = volPair( stageMount );
 	    VolIterator i=p.begin();
 	    while( ret==0 && i!=p.end() )
 		{
-		ret = i->doMount();
+		if( i->needRemount() )
+		    ret = i->doMount();
+		if( ret==0 && i->needFstabUpdate() )
+		    ret = i->doFstabUpdate( getStorage()->getFstab() );
 		++i;
 		}
 	    }

@@ -29,15 +29,16 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
 	int changeFstabOptions( const string& options );
 	int changeMount( const string& m );
-	bool needRemount() const { return( mp!=orig_mp ); }
 	bool loop() const { return is_loop; }
 	bool mpFromFstab() const { return mp_from_fstab; }
 	string getUuid() const { return uuid; }
 	string getLabel() const { return label; }
-	bool setLabel( string val );
+	void setLabel( string val ) { label!=val; }
+	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH ) 
 	    { encryption=val; }
@@ -45,12 +46,16 @@ class Volume
 	void setCryptPwd( string val ) { crypt_pwd=val; }
 	string getMount() const { return mp; }
 	void setMount( string val ) { mp=val; }
+	bool needRemount() const { return( mp!=orig_mp ); }
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	void setMountBy( storage::MountByType val ) { mount_by=val; }
 	string getFstabOption() const { return fstab_opt; }
 	void setFstabOption( string val ) { fstab_opt=val; }
+	bool needFstabUpdate() const 
+	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
+	              encryption!=orig_encryption ); }
 	string getMkfsOption() const { return mkfs_opt; }
 	void setMkfsOption( string val ) { mkfs_opt=val; }
 	const list<string>& altNames() const { return( alt_names ); }
@@ -81,6 +86,8 @@ class Volume
 	int doMount();
 	int doFormat();
 	int doLosetup();
+	int doSetLabel();
+	int doFstabUpdate( EtcFstab* fstab );
 	int doRemoveFstab( EtcFstab* fstab );
 	bool isMounted() const { return( orig_mp.size()>0 && !mp_from_fstab ); }
 	virtual string removeText(bool doing=true) const;
@@ -132,6 +139,7 @@ class Volume
 	string mkfs_opt;
 	bool is_loop;
 	storage::EncryptType encryption;
+	storage::EncryptType orig_encryption;
 	string loop_dev;
 	string fstab_loop_dev;
 	string crypt_pwd;
@@ -216,6 +224,8 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	    s << " fstab_loop:" << v.fstab_loop_dev;
 	    }
 	s << " encr:" << v.enc_names[v.encryption];
+	if( v.encryption != v.orig_encryption && v.orig_encryption!=storage::ENC_NONE )
+	    s << " orig_scnr:" << v.enc_names[v.orig_encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
 #endif

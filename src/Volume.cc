@@ -141,7 +141,7 @@ void Volume::getFstabData( const EtcFstab& fstabData )
 	if( !is_loop && entry.loop )
 	    {
 	    is_loop = true;
-	    encryption = entry.encr;
+	    orig_encryption = encryption = entry.encr;
 	    loop_dev = fstab_loop_dev = entry.loop_dev;
 	    b << " loop_dev:" << loop_dev << " encr:" << enc_names[encryption];
 	    }
@@ -191,7 +191,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 	    fstab_loop_dev = loop_dev;
 	    b.str("");
 	    b << "loop_dev:" << loop_dev;
-	    encryption = ENC_NONE;
+	    orig_encryption = encryption = ENC_NONE;
 	    if( l.size()>3 )
 		{
 		++el; ++el; ++el;
@@ -200,11 +200,13 @@ void Volume::getLoopData( SystemCmd& loopData )
 		    {
 		    encr = el->substr( encr.size() );
 		    if( encr == "twofish160" )
-			encryption = ENC_TWOFISH_OLD;
+			orig_encryption = encryption = ENC_TWOFISH_OLD;
+		    if( encr == "twofish256" )
+			orig_encryption = encryption = ENC_TWOFISH256_OLD;
 		    else if( encr == "CryptoAPI/twofish-cbc" )
-			encryption = ENC_TWOFISH;
+			orig_encryption = encryption = ENC_TWOFISH;
 		    else
-			encryption = ENC_UNKNOWN;
+			orig_encryption = encryption = ENC_UNKNOWN;
 		    }
 		}
 	    b << " encr:" << encryption;
@@ -404,6 +406,19 @@ int Volume::doFormat()
 	    }
 	delete p;
 	}
+    if( ret==0 )
+	{
+	format = false;
+	detected_fs = fs;
+	if( fs != SWAP )
+	    {
+	    SystemCmd Blkid( "/sbin/blkid -c /dev/null " + mountDevice() );
+	    FsType old=fs;
+	    getFsData( Blkid );
+	    if( fs != old )
+		ret = VOLUME_FORMAT_FS_UNDETECTED;
+	    }
+	}
     if( needMount )
 	{
 	int r = mount( orig_mp );
@@ -437,7 +452,11 @@ int Volume::doMount()
     y2milestone( "device:%s mp:%s old mp:%s",  dev.c_str(), mp.c_str(),
                  orig_mp.c_str() );
     if( orig_mp.size()>0 )
+	{
 	ret = umount( orig_mp );
+	if( ret==0 )
+	    orig_mp.erase();
+	}
     if( access( lmount.c_str(), R_OK )!=0 )
 	{
 	createPath( lmount );
@@ -445,6 +464,10 @@ int Volume::doMount()
     if( ret==0 && mp.size()>0 )
 	{
 	ret = mount();
+	}
+    if( ret==0 )
+	{
+	orig_mp = mp;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -454,6 +477,15 @@ int Volume::doLosetup()
     {
     int ret = 0;
     y2milestone( "device:%s mp:%s",  dev.c_str(), mp.c_str() );
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doSetLabel()
+    {
+    int ret = 0;
+    y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(), 
+                 label.c_str() );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -516,6 +548,15 @@ int Volume::doRemoveFstab( EtcFstab* fstab )
 	    ret = fstab->removeEntry( entry );
 	    }
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::doFstabUpdate( EtcFstab* fstab )
+    {
+    int ret = 0;
+    y2milestone( "device:%s mp:%s options:%s",  dev.c_str(), mp.c_str(), 
+                 fstab_opt.c_str() );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
