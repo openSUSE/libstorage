@@ -72,7 +72,12 @@ class Storage : public StorageInterface
 	bool getPartitions (const string& disk, list<PartitionInfo>& partitioninfos);
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
-			     unsigned long long sizeK, string& device );
+			     unsigned long size, string& device );
+	int createPartitionKb( const string& disk, PartitionType type, 
+	                       unsigned long long start,
+			       unsigned long long sizek, string& device );
+	unsigned long kbToCylinder( const string& disk, unsigned long long size );
+	unsigned long long cylinderToKb( const string& disk, unsigned long size );
 	int removePartition( const string& partition );
 	int changePartitionId( const string& partition, unsigned id );
 	int destroyPartitionTable( const string& disk, const string& label );

@@ -157,17 +157,15 @@ namespace storage
 
 int
 Storage::createPartition( const string& disk, PartitionType type, unsigned long start,
-			  unsigned long long sizeK, string& device )
+			  unsigned long size, string& device )
     {
     int ret = 0;
-    y2milestone( "disk:%s type:%d start:%ld sizeK:%lld", disk.c_str(),
-                 type, start, sizeK );
+    y2milestone( "disk:%s type:%d start:%ld size:%ld", disk.c_str(),
+                 type, start, size );
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
-	unsigned long num_cyl = i->kbToCylinder( sizeK );
-	y2milestone( "num_cyl %ld", num_cyl );
-	ret = i->createPartition( type, start, num_cyl, device );
+	ret = i->createPartition( type, start, size, device );
 	}
     else
 	{
@@ -178,6 +176,62 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	ret = checkCache();
 	}
     y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
+int
+Storage::createPartitionKb( const string& disk, PartitionType type, 
+                            unsigned long long start,
+			    unsigned long long sizeK, string& device )
+    {
+    int ret = 0;
+    y2milestone( "disk:%s type:%d start:%lld sizeK:%lld", disk.c_str(),
+                 type, start, sizeK );
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	unsigned long num_cyl = i->kbToCylinder( sizeK );
+	unsigned long long tmp_start = start;
+	if( tmp_start > i->kbToCylinder(1)/2 )
+	    tmp_start -= i->kbToCylinder(1)/2;
+	else 
+	    tmp_start = 0;
+	unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
+	ret = i->createPartition( type, start_cyl, num_cyl, device );
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
+unsigned long long
+Storage::cylinderToKb( const string& disk, unsigned long size )
+    {
+    unsigned long long ret = 0;
+    y2milestone( "disk:%s size:%ld", disk.c_str(), size );
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	ret = i->cylinderToKb( size );
+	}
+    y2milestone( "ret:%lld", ret );
+    return( ret );
+    }
+
+unsigned long
+Storage::kbToCylinder( const string& disk, unsigned long long sizeK )
+    {
+    unsigned long ret = 0;
+    y2milestone( "disk:%s sizeK:%lld", disk.c_str(), sizeK );
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	ret = i->kbToCylinder( sizeK );
+	}
+    y2milestone( "ret:%ld", ret );
     return( ret );
     }
 

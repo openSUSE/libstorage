@@ -32,12 +32,16 @@ class Partition : public Volume
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
 	bool intersectArea( const Region& r ) const;
+	bool isAreaInside( const Region& r ) const;
 	unsigned OrigNr() const { return( orig_num ); }
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
 	PartitionType type() const { return typ; }
 	ostream& logData( ostream& file ) const;
 	const string& partedStart() const { return parted_start; }
+	void changePartedStart( const string& pstart ) { parted_start=pstart; }
+	void changeRegion( unsigned long Start, unsigned long CSize,
+	                   unsigned long long SizeK ); 
 	void changeNumber( unsigned new_num );
 	void changeId( unsigned id );
 	void changeIdDone();

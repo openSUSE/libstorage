@@ -12,6 +12,8 @@ class Region
 	    { s = r.start(); l = r.len(); return( *this ); }
 	bool intersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
+	bool inside( const Region& r ) const
+	    { return( start()>=r.start() && end() <= r.end() ); }
 	bool operator==(const Region& r) const
 	    { return( r.start()==s && r.len()==l ); }
 	bool operator!=(const Region& r) const

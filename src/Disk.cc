@@ -128,7 +128,9 @@ Disk::kbToCylinder( unsigned long long kb )
     {
     unsigned long long bytes = kb * 1024;
     bytes += byte_cyl - 1;
-    return (bytes/byte_cyl);
+    unsigned long ret = bytes/byte_cyl;
+    y2milestone( "KB:%lld ret:%ld byte_cyl:%ld", kb, ret, byte_cyl );
+    return (ret);
     }
 
 unsigned long long
@@ -784,10 +786,10 @@ bool Disk::hasExtended()
     }
 
 
-int Disk::availablePartNumber( PartitionType type )
+unsigned Disk::availablePartNumber( PartitionType type )
     {
     y2milestone( "begin name:%s type %d", name().c_str(), type );
-    int ret = 0;
+    unsigned ret = 0;
     PartPair p = partPair( notDeleted );
     if( !ext_possible && type==LOGICAL )
 	{
@@ -800,6 +802,8 @@ int Disk::availablePartNumber( PartitionType type )
     else if( type==LOGICAL )
 	{
 	ret = (--p.end())->nr()+1;
+	if( ret<=max_primary )
+	    ret = max_primary+1;
 	if( !ext_possible || !hasExtended() )
 	    ret = 0;
 	}
@@ -821,20 +825,31 @@ int Disk::availablePartNumber( PartitionType type )
     return( ret );
     }
 
+static bool notDeletedLog( const Partition& p ) 
+    { 
+    return( !p.deleted() && p.type()==LOGICAL );
+    }
+
 int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device )
     {
     y2milestone( "begin type %d at %ld len %ld", type, start, len );
     int ret = 0;
     Region r( start, len );
+    PartPair ext = partPair(isExtended);
     if( r.end() > cylinders() )
 	{
 	y2milestone( "too large for disk cylinders %lu", cylinders() );
 	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
 	}
+    if( ret==0 && type==LOGICAL && ext.empty() )
+	{
+	ret = DISK_CREATE_PARTITION_LOGICAL_NO_EXT;
+	}
     if( ret==0 )
 	{
-	PartPair p = partPair( notDeleted );
+	PartPair p = (type!=LOGICAL) ? partPair( notDeleted )
+	                             : partPair( notDeletedLog );
 	PartIter i = p.begin();
 	while( i!=p.end() && !i->intersectArea( r ))
 	    {
@@ -847,9 +862,13 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
+    if( ret==0 && type==LOGICAL && !ext.begin()->isAreaInside( r ))
+	{
+	ret = DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT;
+	}
     if( ret==0 && type==EXTENDED )
 	{
-	if( !ext_possible || hasExtended())
+	if( !ext_possible || !ext.empty())
 	    {
 	    ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE
 	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
@@ -953,7 +972,7 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
-    while( i!=p.end() && !i->nr()!=nr)
+    while( i!=p.end() && i->nr()!=nr)
 	{
 	++i;
 	}
@@ -1033,6 +1052,8 @@ int Disk::doCreateLabel( const string& label_name )
 
 int Disk::doSetType( Volume* v )
     {
+    y2milestone( "doSetType container %s name %s", name().c_str(),
+		 v->name().c_str() );
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
     if( p != NULL )
@@ -1041,10 +1062,11 @@ int Disk::doSetType( Volume* v )
 	std::ostringstream cmd_line;
 	cmd_line << PARTEDCMD << device() << " set " << p->nr() << " ";
 	string start_cmd = cmd_line.str();
-	if( ret==0 && !sto->test() )
+	if( ret==0 )
 	    {
 	    cmd_line.str( start_cmd );
-	    cmd_line << " type " << p->id();
+	    cmd_line.seekp(0, ios_base::end );
+	    cmd_line << "lvm " << (p->id()==Partition::ID_LVM ? "on" : "off");
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
@@ -1053,16 +1075,8 @@ int Disk::doSetType( Volume* v )
 	if( ret==0 )
 	    {
 	    cmd_line.str( start_cmd );
-	    cmd_line << " lvm " << (p->id()==Partition::ID_LVM)?"on":"off";
-	    if( execCheckFailed( cmd_line.str() ) )
-		{
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
-	    }
-	if( ret==0 )
-	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line << " raid " << (p->id()==Partition::ID_RAID)?"on":"off";
+	    cmd_line.seekp(0, ios_base::end );
+	    cmd_line << "raid " << (p->id()==Partition::ID_RAID?"on":"off");
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
@@ -1071,7 +1085,8 @@ int Disk::doSetType( Volume* v )
 	if( ret==0 && (label=="gpt"||label=="dvh"||label=="mac"))
 	    {
 	    cmd_line.str( start_cmd );
-	    cmd_line << " swap " << (p->id()==Partition::ID_SWAP)?"on":"off";
+	    cmd_line.seekp(0, ios_base::end );
+	    cmd_line << "swap " << (p->id()==Partition::ID_SWAP?"on":"off");
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
@@ -1080,7 +1095,19 @@ int Disk::doSetType( Volume* v )
 	if( ret==0 )
 	    {
 	    cmd_line.str( start_cmd );
-	    cmd_line << " boot " << (p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off";
+	    cmd_line.seekp(0, ios_base::end );
+	    cmd_line << "boot " << 
+		     ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
+	    if( execCheckFailed( cmd_line.str() ) )
+		{
+		ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    cmd_line.str( start_cmd );
+	    cmd_line.seekp(0, ios_base::end );
+	    cmd_line << "type " << p->id();
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
@@ -1168,7 +1195,31 @@ int Disk::doCreate( Volume* v )
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 		}
 	    }
-	p->setCreated( false );
+	if( ret==0 )
+	    {
+	    p->setCreated( false );
+	    std::ostringstream cmd_line;
+	    cmd_line << PARTEDCMD << device() << " print | grep -w ^" << p->nr();
+	    SystemCmd cmd( cmd_line.str() );
+	    unsigned nr, id;
+	    unsigned long start, csize;
+	    PartitionType type;
+	    string pstart;
+	    bool boot;
+	    if( cmd.numLines()>0 && 
+	        scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
+		                pstart, id, boot ))
+		{
+		y2milestone( "really created at cyl:%ld csize:%ld, pstart:%s",
+		             start, csize, pstart.c_str() );
+		p->changePartedStart( pstart );
+		p->changeRegion( start, csize, cylinderToKb(csize) );
+		}
+	    else
+		{
+		ret = DISK_CREATE_PARTITION_NOT_FOUND;
+		}
+	    }
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );

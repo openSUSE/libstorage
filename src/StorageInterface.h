@@ -59,15 +59,18 @@ namespace storage
 	DISK_CREATE_PARTITION_INVALID_VOLUME = -1005,
 	DISK_CREATE_PARTITION_INVALID_TYPE = -1006,
 	DISK_CREATE_PARTITION_PARTED_FAILED = -1007,
-	DISK_SET_TYPE_INVALID_VOLUME = -1008,
-	DISK_SET_TYPE_PARTED_FAILED = -1009,
-	DISK_SET_LABEL_PARTED_FAILED = -1010,
-	DISK_REMOVE_PARTITION_NOT_FOUND = -1011,
-	DISK_REMOVE_PARTITION_PARTED_FAILED = -1012,
-	DISK_REMOVE_PARTITION_INVALID_VOLUME = -1013,
-	DISK_REMOVE_PARTITION_LIST_ERASE = -1014,
-	DISK_CHANGE_PARTITION_ID_NOT_FOUND = -1015,
-	DISK_DESTROY_TABLE_INVALID_LABEL = -1016,
+	DISK_CREATE_PARTITION_NOT_FOUND = -1008,
+	DISK_CREATE_PARTITION_LOGICAL_NO_EXT = -109,
+	DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT = -1010,
+	DISK_SET_TYPE_INVALID_VOLUME = -1011,
+	DISK_SET_TYPE_PARTED_FAILED = -1012,
+	DISK_SET_LABEL_PARTED_FAILED = -1013,
+	DISK_REMOVE_PARTITION_NOT_FOUND = -1014,
+	DISK_REMOVE_PARTITION_PARTED_FAILED = -1015,
+	DISK_REMOVE_PARTITION_INVALID_VOLUME = -1016,
+	DISK_REMOVE_PARTITION_LIST_ERASE = -1017,
+	DISK_CHANGE_PARTITION_ID_NOT_FOUND = -1018,
+	DISK_DESTROY_TABLE_INVALID_LABEL = -1019,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -116,20 +119,56 @@ namespace storage
 
 
 	/**
-	 * Create a new partition.
+	 * Create a new partition. Units given in disk cylinders.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param start cylinder number of partition start
-	 * @param sizeK size of partition in kilobyte
+	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
+	 * @param sizeCyl size of partition in disk cylinders
 	 * @param device gets assigned to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 */
 	virtual int createPartition( const string& disk, PartitionType type, 
 				     unsigned long start,
-	                             unsigned long long sizeK,
+	                             unsigned long sizeCyl,
 				     string& device ) = 0;
+
+	/**
+	 * Create a new partition. Units given in Megabytes.
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param type type of partition to create, e.g. primary or extended
+	 * @param start offset in kilobytes from start of disk
+	 * @param size  size of partition in kilobytes
+	 * @param device gets assigned to the device name of the new partition
+	 * The name is returned instead of the number since creating the name from the
+	 * number is not straight-forward.
+	 */
+	virtual int createPartitionKb( const string& disk, PartitionType type, 
+				       unsigned long long start,
+				       unsigned long long size,
+				       string& device ) = 0;
+
+	/**
+	 * Compute number of kilobytes of a given number of disk cylinders
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param size number of disk cylinders
+	 * @return number of kilobytes of given cylinders
+	 */
+	virtual unsigned long long cylinderToKb( const string& disk, 
+	                                         unsigned long size ) = 0;
+
+	/**
+	 * Compute number of disk cylinders needed for given space
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param size number of kilobytes
+	 * @return number of disk cylinders needed
+	 */
+	virtual unsigned long kbToCylinder( const string& disk, 
+					    unsigned long long size ) = 0;
 
 	/**
 	 * Remove a partition

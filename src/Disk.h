@@ -45,10 +45,12 @@ class Disk : public Container
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );
-	int availablePartNumber( PartitionType type=PRIMARY );
+	unsigned availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
 	bool hasExtended();
 	friend inline ostream& operator<< (ostream&, const Disk& );
+	unsigned long long cylinderToKb( unsigned long );
+	unsigned long kbToCylinder( unsigned long long );
 
     protected:
 
@@ -101,8 +103,6 @@ class Disk : public Container
 	    }
 
 	Disk( Storage * const s, const string& File );
-	unsigned long long cylinderToKb( unsigned long );
-	unsigned long kbToCylinder( unsigned long long );
 	unsigned long long capacityInKb();
 	bool detectGeometry();
 	bool detectPartitions();

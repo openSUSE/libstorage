@@ -13,7 +13,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     : Volume( d, PNr, SizeK ), reg( Start, CSize )
     {
     bootflag = Boot;
-    idt = Id;
+    idt = orig_id = Id;
     typ = Type;
     parted_start = PartedStart;
     orig_num = num;
@@ -47,6 +47,11 @@ Partition::Partition( const Disk& d, const string& Data ) :
 bool Partition::intersectArea( const Region& r ) const
     {
     return( r.intersect( reg ) );
+    }
+
+bool Partition::isAreaInside( const Region& r ) const
+    {
+    return( r.inside( reg ) );
     }
 
 void Partition::changeNumber( unsigned new_num )
@@ -86,6 +91,13 @@ void Partition::changeId( unsigned new_id )
 void Partition::changeIdDone() 
     {
     orig_id = idt;
+    }
+
+void Partition::changeRegion( unsigned long Start, unsigned long CSize,
+			      unsigned long long SizeK )
+    {
+    reg = Region( Start, CSize );
+    size_k = SizeK;
     }
 
 ostream& Partition::logData( ostream& file ) const
