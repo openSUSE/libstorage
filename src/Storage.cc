@@ -220,7 +220,7 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 Storage::DiskIterator Storage::findDisk( const string& disk )
     {
     DiskIterator ret=dBegin();
-    while( ret != dEnd() && ret->name()!=disk )
+    while( ret != dEnd() && ret->device()!=disk )
 	ret++;
     return( ret );
     }
