@@ -1,17 +1,19 @@
 CXXFLAGS=-MMD -g -I /usr/include/YaST2 -DY2LOG=\"y2storage\"
-LDFLAGS = -ly2storage 
+LDFLAGS = -ly2storage
 
-PROG=TestStorage TestDisk TestDiskLog
+PROG=TestStorage TestDisk TestDiskLog TestProbing
 
 all: $(PROG)
 
-TestStorage: TestStorage.o 
+TestStorage: TestStorage.o
 
-TestDisk: TestDisk.o 
+TestDisk: TestDisk.o
 
-TestDiskLog: TestDiskLog.o 
+TestDiskLog: TestDiskLog.o
 
-clean: 
+TestProbing: TestProbing.o
+
+clean:
 	rm -f *.d *.o $(PROG)
 
 ifneq "$(strip $(wildcard *.d))" ""
