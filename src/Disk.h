@@ -5,7 +5,6 @@
 
 using namespace std;
 
-#include "y2storage/Partition.h"
 #include "y2storage/Container.h"
 
 class Disk : public Container

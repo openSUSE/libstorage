@@ -6,6 +6,9 @@
 
 #include "y2storage/Container.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Partition.h"
+#include "y2storage/LvmVg.h"
+#include "y2storage/LvmLv.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 #include "y2storage/StorageTmpl.h"
@@ -169,6 +172,68 @@ class Storage
 	    }
     protected:
 	// protected member functions for iterators over disks
+
+// iterators over LVM VGs 
+    protected:
+	// protected typedefs for iterators over LVM VGs
+	typedef CastCheckIterator<CCIter, Container::LVM, const LvmVg *> ContainerCLvmVgIter;
+	template< class Pred > 
+	    struct ConstLvmVgPI { typedef ContainerIter<Pred, ContainerCLvmVgIter> type; };
+	typedef CastCheckIterator<CIter, Container::DISK, LvmVg *> ContainerLvmVgIter;
+	template< class Pred > 
+	    struct LvmVgPI { typedef ContainerIter<Pred, ContainerLvmVgIter> type; };
+	template< class Pred > 
+	    struct LvmVgI { typedef ContainerDerIter<Pred, typename LvmVgPI<Pred>::type, LvmVg> type; };
+	typedef CheckFnc<const LvmVg> CheckFncLvmVg;
+	typedef CheckerIterator< CheckFncLvmVg, ConstLvmVgPI<CheckFncLvmVg>::type, 
+	                         ContainerCLvmVgIter, LvmVg > ConstLvmVgPIterator;
+
+    public:
+	// public typedefs for iterators over LVM VGs
+	typedef DerefIterator<ConstLvmVgPIterator,const LvmVg> ConstLvmVgIterator;
+	template< class Pred > 
+	    struct ConstLvmVgI 
+		{ typedef ContainerDerIter<Pred, typename ConstLvmVgPI<Pred>::type, 
+					   const LvmVg> type; };
+	template< class Pred >
+	    struct LvmVgCondIPair { typedef MakeCondIterPair<Pred, typename ConstLvmVgI<Pred>::type> type; };
+	typedef IterPair<ConstLvmVgIterator> ConstLvmVgPair;
+
+	// public member functions for iterators over LVM VGs
+	ConstLvmVgPair LvmVgPair( bool (* CheckFnc)( const LvmVg& )=NULL ) const
+	    { 
+	    return( ConstLvmVgPair( LvmVgBegin( CheckFnc ), LvmVgEnd( CheckFnc ) ));
+	    }
+	ConstLvmVgIterator LvmVgBegin( bool (* CheckFnc)( const LvmVg& )=NULL ) const
+	    { 
+	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
+	                                     ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc )) );
+	    }
+	ConstLvmVgIterator LvmVgEnd( bool (* CheckFnc)( const LvmVg& )=NULL ) const
+	    { 
+	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
+	                                     ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc, true )) );
+	    }
+	template< class Pred > typename LvmVgCondIPair<Pred>::type LvmVgCondPair( const Pred& p ) const
+	    {
+	    return( LvmVgCondIPair<Pred>::type( LvmVgCondBegin( p ), LvmVgCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstLvmVgI<Pred>::type LvmVgCondBegin( const Pred& p ) const
+	    {
+	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
+					        ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p )) );
+	    }
+	template< class Pred > typename ConstLvmVgI<Pred>::type LvmVgCondEnd( const Pred& p ) const
+	    {
+	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( Disks.begin(), Disks.end() ),
+					        ContainerCLvmVgIter( Disks.begin(), Disks.end(), true ));
+	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p, true )) );
+	    }
+    protected:
+	// protected member functions for iterators over LVM VGs
 
 // iterators over volumes 
     protected:
@@ -350,6 +415,78 @@ class Storage
 	    IterPair<ConstPartInter2> pair( (ConstPartInter( DiskPair())),
 					    (ConstPartInter( DiskPair(), true )));
 	    return( ConstPartitionI<Pred>::type( ConstPartitionPI<Pred>::type(pair, p, true )) );
+	    }
+
+// iterators over LVM LVs
+    protected:
+	// protected typedefs for iterators over LVM LVs
+	typedef ListListIterator<Container::ConstPlainIterator, ConstLvmVgIterator> ConstLvmLvInter;
+	typedef CastIterator<ConstLvmLvInter, LvmLv *> ConstLvmLvInter2;
+	template< class Pred > 
+	    struct ConstLvmLvPI { typedef ContainerIter<Pred, ConstLvmLvInter2> type; };
+	typedef CheckFnc<const LvmLv> CheckFncLvmLv;
+	typedef CheckerIterator< CheckFncLvmLv, ConstLvmLvPI<CheckFncLvmLv>::type, 
+	                         ConstLvmLvInter2, LvmLv > ConstLvmLvPIterator;
+    public:
+	// public typedefs for iterators over LVM LVs
+	template< class Pred > 
+	    struct ConstLvmLvI 
+		{ typedef ContainerDerIter<Pred, typename ConstLvmLvPI<Pred>::type, 
+		                           const LvmLv> type; };
+	template< class Pred >
+	    struct LvmLvCondIPair 
+		{ typedef MakeCondIterPair<Pred, typename ConstLvmLvI<Pred>::type> type;};
+	typedef DerefIterator<ConstLvmLvPIterator, const LvmLv> ConstLvmLvIterator;
+	typedef IterPair<ConstLvmLvIterator> ConstLvmLvPair;
+
+	// public member functions for iterators over LVM LVs
+	ConstLvmLvPair LvmLvPair( bool (* CheckLvmVg)( const LvmVg& )) const
+	    { 
+	    return( ConstLvmLvPair( LvmLvBegin( CheckLvmVg ), LvmLvEnd( CheckLvmVg ) ));
+	    }
+	ConstLvmLvPair LvmLvPair( bool (* CheckLvmLv)( const LvmLv& )=NULL,
+				  bool (* CheckLvmVg)( const LvmVg& )=NULL) const
+	    { 
+	    return( ConstLvmLvPair( LvmLvBegin( CheckLvmLv, CheckLvmVg ),
+	                            LvmLvEnd( CheckLvmLv, CheckLvmVg ) ));
+	    }
+	ConstLvmLvIterator LvmLvBegin( bool (* CheckLvmVg)( const LvmVg& )) const
+	    { 
+	    return( LvmLvBegin( NULL, CheckLvmVg ) );
+	    }
+	ConstLvmLvIterator LvmLvBegin( bool (* CheckLvmLv)( const LvmLv& )=NULL, 
+	                               bool (* CheckLvmVg)( const LvmVg& )=NULL) const
+	    {
+	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(LvmVgPair( CheckLvmVg ))),
+					  (ConstLvmLvInter(LvmVgPair( CheckLvmVg ), true )));
+	    return( ConstLvmLvIterator( ConstLvmLvPIterator(p, CheckLvmLv )));
+	    }
+	ConstLvmLvIterator LvmLvEnd( bool (* CheckLvmVg)( const LvmVg& )) const
+	    { 
+	    return( LvmLvEnd( NULL, CheckLvmVg ) );
+	    }
+	ConstLvmLvIterator LvmLvEnd( bool (* CheckLvmLv)( const LvmLv& )=NULL, 
+	                             bool (* CheckLvmVg)( const LvmVg& )=NULL) const
+	    { 
+	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(LvmVgPair( CheckLvmVg ))),
+					  (ConstLvmLvInter(LvmVgPair( CheckLvmVg ), true )));
+	    return( ConstLvmLvIterator( ConstLvmLvPIterator(p, CheckLvmLv, true )));
+	    }
+	template< class Pred > typename LvmLvCondIPair<Pred>::type LvmLvCondPair( const Pred& p ) const
+	    {
+	    return( LvmLvCondIPair<Pred>::type( LvmLvCondBegin( p ), LvmLvCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstLvmLvI<Pred>::type LvmLvCondBegin( const Pred& p ) const
+	    {
+	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( LvmVgPair())),
+					     (ConstLvmLvInter( LvmVgPair(), true )));
+	    return( ConstLvmLvI<Pred>::type( ConstLvmLvPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstLvmLvI<Pred>::type LvmLvCondEnd( const Pred& p ) const
+	    {
+	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( LvmVgPair())),
+					     (ConstLvmLvInter( LvmVgPair(), true )));
+	    return( ConstLvmLvI<Pred>::type( ConstLvmLvPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over software raid devices

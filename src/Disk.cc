@@ -7,7 +7,6 @@
 
 Disk::Disk( const string& Name ) : Container(Name,StaticType())
     {
-    device = "/dev/" + name;
     if( name.find( "hdb" ) != string::npos )
 	deleted = true;
     if( name == "sda" )

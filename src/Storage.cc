@@ -6,6 +6,7 @@
 
 #include "y2storage/Storage.h"
 #include "y2storage/Disk.h"
+#include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
 
 struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
@@ -83,6 +84,10 @@ Storage::AutodetectDisks()
 	}
     Disks.push_back( new Container( "md", Container::MD ) );
     Disks.push_back( new Container( "loop", Container::LOOP ) );
+    Disks.push_back( new LvmVg( "system" ) );
+    Disks.push_back( new LvmVg( "vg1" ) );
+    Disks.push_back( new LvmVg( "vg2" ) );
+    Disks.push_back( new LvmVg( "empty" ) );
     }
 
 int 
