@@ -176,6 +176,7 @@ namespace storage
 	VOLUME_LOSETUP_FAILED = -3012,
 	VOLUME_ENCRYPT_NO_PWD = -3013,
 	VOLUME_ENCRYPT_NOT_DETECTED = -3014,
+	VOLUME_FORMAT_EXTENDED_UNSUPPORTED = -3015,
 
 	CONTAINER_INTERNAL_ERROR = -4000,
 
@@ -377,13 +378,13 @@ namespace storage
 	 *  set crypt password of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param val flag if encryption should be activated 
+	 * @param val flag if encryption should be activated
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCrypt( const string& device, bool val ) = 0;
 
 	/**
-	 *  gets a list of string describing the actions to be executed 
+	 *  gets a list of string describing the actions to be executed
 	 *  after next call to commit()
 	 *
 	 * @param mark_destructive if true use <red> around </red> destructive

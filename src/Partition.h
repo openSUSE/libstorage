@@ -15,9 +15,9 @@ class Partition : public Volume
     {
     public:
 
-	typedef enum { ID_DOS16=0x6, ID_DOS=0x0c, ID_NTFS=0x07, 
+	typedef enum { ID_DOS16=0x6, ID_DOS=0x0c, ID_NTFS=0x07,
 	               ID_EXTENDED=0x0f,
-		       ID_LINUX=0x83, ID_SWAP=0x82, ID_LVM=0x8e, ID_RAID=0xfd, 
+		       ID_LINUX=0x83, ID_SWAP=0x82, ID_LVM=0x8e, ID_RAID=0xfd,
 		       ID_APPLE_OTHER=0x101, ID_APPLE_HFS=0x102,
 		       ID_GPT_BOOT=0x103, ID_GPT_SERVICE=0x104 } IdNum;
 
@@ -41,7 +41,7 @@ class Partition : public Volume
 	const string& partedStart() const { return parted_start; }
 	void changePartedStart( const string& pstart ) { parted_start=pstart; }
 	void changeRegion( unsigned long Start, unsigned long CSize,
-	                   unsigned long long SizeK ); 
+	                   unsigned long long SizeK );
 	void changeNumber( unsigned new_num );
 	void changeId( unsigned id );
 	void changeIdDone();
@@ -50,6 +50,7 @@ class Partition : public Volume
 	virtual string formatText(bool doing=true) const;
 	virtual void getCommitActions( list<commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
+	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	const Disk* const disk() const;
 	bool isWindows() const;
 	friend ostream& operator<< (ostream& s, const Partition &p );

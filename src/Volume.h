@@ -27,7 +27,7 @@ class Volume
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
-	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
 	int changeFstabOptions( const string& options );
@@ -40,7 +40,7 @@ class Volume
 	void setLabel( string val ) { label!=val; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
-	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH ) 
+	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
 	    { encryption=val; }
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
@@ -54,7 +54,7 @@ class Volume
 	void setMountBy( storage::MountByType val ) { mount_by=val; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( string val ) { fstab_opt=val; }
-	bool needFstabUpdate() const 
+	bool needFstabUpdate() const
 	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 	              encryption!=orig_encryption ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
@@ -97,7 +97,7 @@ class Volume
 	string mountText( bool doing=true ) const;
 	string labelText( bool doing=true ) const;
 	string losetupText( bool doing=true ) const;
-	string fstabUpdateText() const; 
+	string fstabUpdateText() const;
 	string sizeString() const;
 	string bootMount() const;
 	bool optNoauto() const;
@@ -110,7 +110,7 @@ class Volume
 	    };
 	static SkipDeleted SkipDel;
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
-	static bool getMajorMinor( const string& device, 
+	static bool getMajorMinor( const string& device,
 	                           unsigned long& Major, unsigned long& Minor );
 	static storage::EncryptType toEncType( const string& val );
 	const string& fsTypeString() const { return fs_names[fs]; }
@@ -118,7 +118,7 @@ class Volume
 	    { return fs_names[type]; }
 	static const string& encTypeString( const storage::EncryptType type )
 	    { return enc_names[type]; }
-	    
+
 
     protected:
 	void init();
@@ -180,7 +180,7 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	s << " Nr:" << v.num;
     else
 	s << " Name:" << v.nm;
-    s << " SizeK:" << v.size_k 
+    s << " SizeK:" << v.size_k
 	<< " Node <" << v.mjr
 	<< ":" << v.mnr << ">";
     if( v.del )
