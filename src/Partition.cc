@@ -27,7 +27,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
     istringstream i( Data );
     i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
 	 hex >> idt >> dec >> ts >> rs;
-    nm = d.name() + decString(num);
+    nm = dev.substr (5);	// strip "/dev/"
     if( ts == "extended" )
 	typ = EXTENDED;
     else if( ts == "logical" )
