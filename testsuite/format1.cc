@@ -25,10 +25,21 @@ print_partitions (const string& disk)
 	    case PRIMARY: cout << "PRIMARY "; break;
 	    case EXTENDED: cout << "EXTENDED "; break;
 	    case LOGICAL: cout << "LOGICAL "; break;
-	    default: cout << "UNKNOWN ";
 	}
 	cout << i->cylStart << ' ' << i->cylSize << ' ';
-	cout << i->fsType << '\n';
+	switch (i->fsType)
+	{
+	    case FSUNKNOWN: cout << "FSUNKNOWN"; break;
+	    case REISERFS: cout << "REISERFS"; break;
+	    case EXT2: cout << "EXT2"; break;
+	    case EXT3: cout << "EXT3"; break;
+	    case VFAT: cout << "VFAT"; break;
+	    case XFS: cout << "XFS"; break;
+	    case JFS: cout << "JFS"; break;
+	    case NTFS: cout << "NTFS"; break;
+	    case SWAP: cout << "SWAP"; break;
+	}
+	cout << '\n';
     }
 
     cout << '\n';
@@ -56,7 +67,7 @@ main ()
 {
     setenv ("YAST2_STORAGE_TDIR", ".", 1);
 
-    s = createStorageInterface (true, true, true);
+    s = createStorageInterface (false, true, false);
 
     test ();
 

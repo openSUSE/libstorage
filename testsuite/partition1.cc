@@ -25,7 +25,6 @@ print_partitions (const string& disk)
 	    case PRIMARY: cout << "PRIMARY "; break;
 	    case EXTENDED: cout << "EXTENDED "; break;
 	    case LOGICAL: cout << "LOGICAL "; break;
-	    default: cout << "UNKNOWN ";
 	}
 	cout << i->cylStart << ' ' << i->cylSize << '\n';
     }
@@ -83,7 +82,7 @@ main ()
 {
     setenv ("YAST2_STORAGE_TDIR", ".", 1);
 
-    s = createStorageInterface (true, true, true);
+    s = createStorageInterface (false, true, false);
 
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions
