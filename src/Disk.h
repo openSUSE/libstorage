@@ -14,6 +14,7 @@ class Storage;
 class SystemCmd;
 class ProcPart;
 class Partition;
+class istream;
 
 class Disk : public Container
     {
@@ -39,6 +40,8 @@ class Disk : public Container
 	unsigned long major() const { return mjr; }
 	unsigned long numMinor() const { return range; }
 	static CType const staticType() { return DISK; }
+	friend inline ostream& operator<< (ostream&, const Disk& );
+
 	static bool needP( const string& dev );
 	int createPartition( PartitionType type, long unsigned start,
 	                     long unsigned len, string& device,
@@ -50,7 +53,6 @@ class Disk : public Container
 	int commitChanges( CommitStage stage );
 	int checkResize( Volume* v, unsigned long long newSize ) const;
 	bool hasExtended() const;
-	friend inline ostream& operator<< (ostream&, const Disk& );
 	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
@@ -126,7 +128,7 @@ class Disk : public Container
 	bool getPartedValues( Partition *p );
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
-	virtual void getCommitActions( list<commitAction*>& l ) const;
+	void getCommitActions( list<commitAction*>& l ) const;
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );

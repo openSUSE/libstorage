@@ -28,6 +28,9 @@ Partition::Partition( const Disk& d, const string& Data ) :
     istringstream i( Data );
     i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
 	 hex >> idt >> dec >> ts >> rs;
+    orig_size_k = size_k;
+    orig_num = num;
+    orig_id = idt;
     nm = dev.substr (5);	// strip "/dev/"
     if( ts == "extended" )
 	typ = EXTENDED;
@@ -39,7 +42,6 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	bootflag = true;
     else
 	bootflag = false;
-    orig_num = num;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }

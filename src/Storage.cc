@@ -87,6 +87,12 @@ Storage::initialize()
 		addToList( new Disk( this, *p ) );
 	    }
  	globfree (&globbuf);
+	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	    {
+	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+		addToList( new LvmVg( this, *p, true ) );
+	    }
+	globfree (&globbuf);
  	system_cmd_testmode = true;
  	rootprefix = testdir;
  	fstab = new EtcFstab( rootprefix );
@@ -233,6 +239,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 	    {
 	    i->getTestmodeData( vd[pos] );
 	    }
+	i->getFstabData( *fstab );
 	}
     }
 

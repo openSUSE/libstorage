@@ -41,9 +41,35 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     y2milestone( "constructed lvm vg %s", dev.c_str() );
     }
 
+LvmVg::LvmVg( Storage * const s, const string& file, bool ) :
+    Container(s,"",staticType())
+    {
+    }
+
 LvmVg::~LvmVg()
     {
     y2milestone( "destructed lvm vg %s", dev.c_str() );
     }
 
+int LvmVg::doCreate( Volume* v ) { return( 0 ); }
+int LvmVg::doRemove( Volume* v ) { return( 0 ); }
+int LvmVg::doResize( Volume* v ) { return( 0 ); }
+
+int
+LvmVg::commitChanges( CommitStage stage )
+    {
+    return( 0 );
+    }
+
+void LvmVg::getCommitActions( list<commitAction*>& l ) const
+    {
+    }
+
+int
+LvmVg::checkResize( Volume* v, unsigned long long newSizeK ) const
+    {
+    return( false );
+    }
+
+void LvmVg::logData( const string& Dir ) {;}
 

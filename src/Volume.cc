@@ -568,7 +568,7 @@ int Volume::doFormat()
 	    }
 	else if( fs != SWAP )
 	    {
-	    uuid = "testmode-0123-4567-8900-98765432"+decString(fcount++);
+	    uuid = "testmode-0123-4567-6666-98765432"+decString(fcount++);
 	    }
 	}
     if( ret==0 && label.size()>0 )

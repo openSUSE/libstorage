@@ -18,7 +18,28 @@ class LvmVg : public Container
 	static CType const staticType() { return LVM; }
 	friend inline ostream& operator<< (ostream&, const LvmVg& );
 
+	int createLv( const string& name, unsigned long long sizeK, 
+	              string& device );
+	int removeLv( const string& name );
+	int extendVg( const list<string>& dl );
+	int extendVg( const string& device );
+	int reduceVg( const list<string>& dl );
+	int reduceVg( const string& device );
+	int commitChanges( CommitStage stage );
+	int checkResize( Volume* v, unsigned long long newSize ) const;
+	
+
     protected:
+	LvmVg( Storage * const s, const string& File, bool );
+	unsigned long long capacityInKb() const;
+	void getCommitActions( list<commitAction*>& l ) const;
+
+	int doCreate( Volume* v );
+	int doRemove( Volume* v );
+	int doResize( Volume* v );
+
+	void logData( const string& Dir );
+
 	unsigned long long pe_size;
 	unsigned num_pv;
     };
