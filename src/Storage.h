@@ -155,6 +155,10 @@ class Storage : public StorageInterface
 	typedef CheckFnc<const Disk> CheckFncDisk;
 	typedef CheckerIterator< CheckFncDisk, ConstDiskPI<CheckFncDisk>::type,
 	                         ContainerCDiskIter, Disk > ConstDiskPIterator;
+	typedef CheckerIterator< CheckFncDisk, DiskPI<CheckFncDisk>::type,
+	                         ContainerDiskIter, Disk > DiskPIterator;
+	typedef DerefIterator<DiskPIterator,Disk> DiskIterator;
+	typedef IterPair<DiskIterator> DiskPair;
 
     public:
 	// public typedefs for iterators over disks
@@ -202,6 +206,23 @@ class Storage : public StorageInterface
 	    }
     protected:
 	// protected member functions for iterators over disks
+	DiskPair dPair( bool (* CheckFnc)( const Disk& )=NULL )
+	    {
+	    return( DiskPair( dBegin( CheckFnc ), dEnd( CheckFnc ) ));
+	    }
+	DiskIterator dBegin( bool (* CheckFnc)( const Disk& )=NULL )
+	    {
+	    IterPair<ContainerDiskIter> p( ContainerDiskIter( cont.begin(), cont.end() ),
+	                                   ContainerDiskIter( cont.begin(), cont.end(), true ));
+	    return( DiskIterator( DiskPIterator( p, CheckFnc )) );
+	    }
+	DiskIterator dEnd( bool (* CheckFnc)( const Disk& )=NULL )
+	    {
+	    IterPair<ContainerDiskIter> p( ContainerDiskIter( cont.begin(), cont.end() ),
+	                                   ContainerDiskIter( cont.begin(), cont.end(), true ));
+	    return( DiskIterator( DiskPIterator( p, CheckFnc, true )) );
+	    }
+
 
 // iterators over LVM VGs
     protected:
