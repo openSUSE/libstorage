@@ -22,7 +22,7 @@
 
 #define PARTEDCMD "/usr/sbin/parted -s "  // blank at end !!
 
-Disk::Disk( const Storage * const s, const string& Name,
+Disk::Disk( Storage * const s, const string& Name,
             unsigned long long SizeK ) :
     Container(s,Name,staticType())
     {
@@ -30,7 +30,7 @@ Disk::Disk( const Storage * const s, const string& Name,
     y2milestone( "constructed disk %s", dev.c_str() );
     }
 
-Disk::Disk( const Storage * const s, const string& fname ) :
+Disk::Disk( Storage * const s, const string& fname ) :
     Container(s,"",staticType())
     {
     nm = fname.substr( fname.find_last_of( '/' )+1);
@@ -855,5 +855,6 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
+    sto->checkCache();
     return( ret );
     }

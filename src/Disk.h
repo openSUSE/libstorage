@@ -27,7 +27,7 @@ class Disk : public Container
 	};
 
     public:
-	Disk( const Storage * const s, const string& Name, unsigned long long Size );
+	Disk( Storage * const s, const string& Name, unsigned long long Size );
 	virtual ~Disk();
 
 	unsigned long cylinders() const { return cyl; }
@@ -74,7 +74,7 @@ class Disk : public Container
             return( PartPIter( PartPIterator( p, CheckPart, true )) );
 	    }
 
-	Disk( const Storage * const s, const string& File );
+	Disk( Storage * const s, const string& File );
 	unsigned long long cylinderToKb( unsigned long );
 	unsigned long kbToCylinder( unsigned long long );
 	unsigned long long capacityInKb();

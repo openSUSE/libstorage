@@ -5,7 +5,7 @@
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
 
-LvmVg::LvmVg( const Storage * const s, const string& Name ) :
+LvmVg::LvmVg( Storage * const s, const string& Name ) :
     Container(s,Name,staticType())
     {
     if( nm == "system" )

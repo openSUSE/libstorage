@@ -59,6 +59,7 @@ class Storage : public StorageInterface
 	bool instsys() const { return( inst_sys ); }
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool cacheChanges() const { return( cache ); }
+	void checkCache() { if( !cacheChanges() ) commitChanges(); }
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	static const string& arch() { return( proc_arch ); }
@@ -72,6 +73,7 @@ class Storage : public StorageInterface
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
 			     unsigned long long sizeK, string& device );
+	int commitChanges() { return 0; }
 
 // iterators over container
     protected:

@@ -6,7 +6,7 @@
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 
-Container::Container( const Storage * const s, const string& Name, CType t ) :
+Container::Container( Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
     {
     dltd = false;

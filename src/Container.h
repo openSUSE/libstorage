@@ -116,7 +116,7 @@ class Container
 	    }
 
     public:
-	Container( const Storage * const, const string& Name, CType typ );
+	Container( Storage * const, const string& Name, CType typ );
 	virtual ~Container();
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
@@ -141,7 +141,7 @@ class Container
 
 	static string type_names[EVMS+1];
 
-	const Storage * const sto;
+	Storage * const sto;
 	CType typ;
 	string nm;
 	string dev;
