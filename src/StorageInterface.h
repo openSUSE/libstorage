@@ -27,9 +27,10 @@ namespace storage
 	bool isExtendableWhileMounted;
 	bool isReduceable;
 	bool isReduceableWhileMounted;
-	bool uuid;
-	bool label;
-	int label_length;
+	bool supportsUuid;
+	bool supportsLabel;
+	bool labelWhileMounted;
+	int labelLength;
     };
 
 
@@ -52,8 +53,8 @@ namespace storage
     {
     public:
 
-	StorageInterface () {};
-	virtual ~StorageInterface () {};
+	StorageInterface () {}
+	virtual ~StorageInterface () {}
 
 
 	/**
@@ -74,12 +75,14 @@ namespace storage
 	 */
 	virtual bool getPartitions (string disk, list<PartitionInfo>& partitioninfos) = 0;
 
+#endif
 
 	/**
 	 * Quert capabilities of a filesystem type.
 	 */
-	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
+	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
 
+#if 0
 
 	/**
 	 * Create a new partition.
@@ -160,6 +163,12 @@ namespace storage
 #endif
 
     };
+
+
+    StorageInterface* createStorageInterface (bool ronly = false,
+					      bool testmode = false,
+					      bool autodetect = true);
+
 
 };
 

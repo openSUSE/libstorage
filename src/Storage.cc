@@ -158,6 +158,15 @@ Storage::autodetectDisks()
 string Storage::proc_arch;
 
 
+namespace storage
+{
+    StorageInterface* createStorageInterface (bool ronly, bool testmode, bool autodetect)
+    {
+	return new Storage (ronly, testmode, autodetect);
+    }
+}
+
+
 bool
 Storage::getDisks (list<string>& disks)
 {
@@ -168,7 +177,6 @@ Storage::getDisks (list<string>& disks)
 
     return true;
 }
-
 
 
 bool
@@ -186,3 +194,58 @@ Storage::getPartitions (list<PartitionInfo>& partitioninfos)
     return true;
 }
 
+
+bool
+Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
+{
+    FsCapabilities reiserfsCap = {
+	isExtendable: true,
+	isExtendableWhileMounted: true,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: true,
+	supportsLabel: true,
+	labelWhileMounted: false,
+	labelLength: 16
+    };
+
+    FsCapabilities ext2Cap = {
+	isExtendable: true,
+	isExtendableWhileMounted: false,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: true,
+	supportsLabel: true,
+	labelWhileMounted: true,
+	labelLength: 16
+    };
+
+    FsCapabilities ext3Cap = {
+	isExtendable: true,
+	isExtendableWhileMounted: false,
+	isReduceable: true,
+	isReduceableWhileMounted: false,
+	supportsUuid: true,
+	supportsLabel: true,
+	labelWhileMounted: true,
+	labelLength: 16
+    };
+
+    switch (fstype)
+    {
+	case REISERFS:
+	    fscapabilities = reiserfsCap;
+	    return true;
+
+	case EXT2:
+	    fscapabilities = ext2Cap;
+	    return true;
+
+	case EXT3:
+	    fscapabilities = ext3Cap;
+	    return true;
+
+	default:
+	    return false;
+    }
+}
