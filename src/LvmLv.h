@@ -21,8 +21,9 @@ class LvmLv : public Volume
 
 inline ostream& operator<< (ostream& s, const LvmLv &p )
     {
-    s << "Lv " << Volume(p)
-      << " Stripes:" << p.stripes;
+    s << "Lv " << Volume(p);
+    if( p.stripes>1 )
+      s << " Stripes:" << p.stripes;
     return( s );
     }
 

@@ -48,12 +48,13 @@ class Volume
 
 inline ostream& operator<< (ostream& s, const Volume &v )
     {
-    s << "Device:" << v.dev
-      << " Del:" << v.deleted;
+    s << "Device:" << v.dev;
     if( v.numeric )
       s << " Nr:" << v.nr;
     else
       s << " Name:" << v.name;
+    if( v.deleted )
+      s << " deleted";
     return( s );
     }
 

@@ -749,6 +749,8 @@ class Storage
 	// protected internal member functions
 	void AutodetectDisks();
 	int AddDisk( const string& Name );
+	void AddToList( Container* e ) 
+	    { PointerIntoSortedList<Container>( cont, e ); }
 
 	// protected internal member variables
 	bool readonly;

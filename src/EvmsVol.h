@@ -23,9 +23,11 @@ class EvmsVol : public Volume
 
 inline ostream& operator<< (ostream& s, const EvmsVol &p )
     {
-    s << "Vol " << Volume(p)
-      << " Compat:" << p.compatible
-      << " Stripes:" << p.stripes;
+    s << "Vol " << Volume(p);
+    if( p.compatible )
+      s << " compatible";
+    if( p.stripes>1 )
+      s << " Stripes:" << p.stripes;
     return( s );
     }
 

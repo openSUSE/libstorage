@@ -86,23 +86,23 @@ Storage::AutodetectDisks()
 	{
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
-    cont.push_back( new Container( "md", Container::MD ) );
-    cont.push_back( new Container( "loop", Container::LOOP ) );
-    cont.push_back( new LvmVg( "system" ) );
-    cont.push_back( new LvmVg( "vg1" ) );
-    cont.push_back( new LvmVg( "vg2" ) );
-    cont.push_back( new LvmVg( "empty" ) );
-    cont.push_back( new Evms() );
-    cont.push_back( new Evms( "vg1" ) );
-    cont.push_back( new Evms( "vg2" ) );
-    cont.push_back( new Evms( "empty" ) );
+    AddToList( new Container( "md", Container::MD ) );
+    AddToList( new Container( "loop", Container::LOOP ) );
+    AddToList( new LvmVg( "system" ) );
+    AddToList( new LvmVg( "vg1" ) );
+    AddToList( new LvmVg( "vg2" ) );
+    AddToList( new LvmVg( "empty" ) );
+    AddToList( new Evms() );
+    AddToList( new Evms( "vg1" ) );
+    AddToList( new Evms( "vg2" ) );
+    AddToList( new Evms( "empty" ) );
     }
 
 int 
 Storage::AddDisk( const string& Name )
     {
     y2milestone( "Name: %s", Name.c_str() );
-    cont.push_front( new Disk( Name ) );
+    AddToList( new Disk( Name ) );
     return( 0 );
     }
 

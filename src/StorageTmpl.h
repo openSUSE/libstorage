@@ -160,4 +160,14 @@ class CheckerIterator : public Checker, public ContIter
 	CheckerIterator( const CheckerIterator& i ) { *this=i; }
     };
 
+template < class C >
+void PointerIntoSortedList( list<C*>& l, C* e )
+    {
+    typename list<C*>::iterator i = l.begin();
+    while( i!=l.end() && **i < *e )
+	i++;
+    l.insert( i, e );
+    }
+
+
 #endif

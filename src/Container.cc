@@ -9,18 +9,19 @@
 Container::Container( const string& Name, CType t ) : name(Name)
     {
     deleted = false;
+    readonly = false;
     device = "/dev/" + name;
     type = t;
     if( name == "md" )
 	{
-	vols.push_back( new Md( *this, 0, Md::RAID0 ));
-        vols.push_back( new Md( *this, 2, Md::RAID5 ));
+	AddToList( new Md( *this, 0, Md::RAID0 ));
+        AddToList( new Md( *this, 2, Md::RAID5 ));
 	}
     else if( name == "loop" )
 	{
-	vols.push_back( new Loop( *this, 0, "loop_file" ));
-        vols.push_back( new Loop( *this, 1, "another-file" ));
-        vols.push_back( new Loop( *this, 2, "last_file" ));
+	AddToList( new Loop( *this, 0, "loop_file" ));
+        AddToList( new Loop( *this, 1, "another-file" ));
+        AddToList( new Loop( *this, 2, "last_file" ));
 	}
     y2milestone( "constructed cont %s", name.c_str() );
     }

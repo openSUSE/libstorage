@@ -122,6 +122,7 @@ class Container
 	const string& Device() const { return device; }
 	CType Type() const { return type; }
 	bool Delete() const { return deleted; }
+	bool Readonly() const { return readonly; }
 	static CType const StaticType() { return UNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 
@@ -134,6 +135,9 @@ class Container
 	PlainIterator begin() { return vols.begin(); }
 	PlainIterator end() { return vols.end(); }
 	void print( ostream& s ) const { s << *this; }
+	void AddToList( Volume* e )
+	    { PointerIntoSortedList<Volume>( vols, e ); }
+
 
 	static string type_names[EVMS+1];
 
@@ -141,6 +145,7 @@ class Container
 	string name;
 	string device;
 	bool deleted;
+	bool readonly;
 	VCont vols;
 
     };
@@ -150,8 +155,11 @@ inline ostream& operator<< (ostream& s, const Container &c )
     s << "Type:" << Container::type_names[c.type] 
       << " Name:" << c.name 
       << " Device:" << c.device 
-      << " Del:" << c.deleted 
       << " Vcnt:" << c.vols.size(); 
+    if( c.deleted )
+      s << " deleted";
+    if( c.readonly )
+      s << " readonly";
     return( s );
     }
 

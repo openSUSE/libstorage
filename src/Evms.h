@@ -29,8 +29,9 @@ inline ostream& operator<< (ostream& s, const Evms& d )
     {
     d.print(s);
     s << " NumPv:" << d.num_pv
-      << " PeSize:" << d.pe_size
-      << " IsCont:" << d.is_container;
+      << " PeSize:" << d.pe_size;
+    if( d.is_container )
+      s << " is_cont";
     return( s );
     }
 

@@ -13,26 +13,26 @@ LvmVg::LvmVg( const string& Name ) : Container(Name,StaticType())
 	{
 	pe_size = 4*1024*1024;
 	num_pv = 1;
-	vols.push_back( new LvmLv( *this, "usr" ));
-	vols.push_back( new LvmLv( *this, "var" ));
-	vols.push_back( new LvmLv( *this, "scratch" ));
+	AddToList( new LvmLv( *this, "usr" ));
+	AddToList( new LvmLv( *this, "var" ));
+	AddToList( new LvmLv( *this, "scratch" ));
 	}
     else if( name == "vg1" )
 	{
 	pe_size = 16*1024*1024;
 	num_pv = 10;
-	vols.push_back( new LvmLv( *this, "lv1" ));
-	vols.push_back( new LvmLv( *this, "lv2", 2 ));
-	vols.push_back( new LvmLv( *this, "lv3", 3 ));
-	vols.push_back( new LvmLv( *this, "lv4", 4 ));
-	vols.push_back( new LvmLv( *this, "lv5", 5 ));
-	vols.push_back( new LvmLv( *this, "lv6", 6 ));
+	AddToList( new LvmLv( *this, "lv1" ));
+	AddToList( new LvmLv( *this, "lv2", 2 ));
+	AddToList( new LvmLv( *this, "lv3", 3 ));
+	AddToList( new LvmLv( *this, "lv4", 4 ));
+	AddToList( new LvmLv( *this, "lv5", 5 ));
+	AddToList( new LvmLv( *this, "lv6", 6 ));
 	}
     else if( name == "vg2" )
 	{
 	num_pv = 5;
 	pe_size = 256*1024*1024;
-	vols.push_back( new LvmLv( *this, "lv_va2", 2 ));
+	AddToList( new LvmLv( *this, "lv_va2", 2 ));
 	}
     else
 	{
