@@ -15,7 +15,7 @@ Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
     num = PNr;
     size_k = SizeK;
     init();
-    y2milestone( "constructed volume %s on disk %s", dev.c_str(),
+    y2milestone( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
                  cont->name().c_str() );
     }
 
