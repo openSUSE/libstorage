@@ -9,3 +9,4 @@ Makefile.in
 .deps
 ag_fdisk
 *.kdoc
+y2storage
