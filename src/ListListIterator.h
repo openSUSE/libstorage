@@ -29,12 +29,12 @@ class ListListIterator : public PIter
 
 	ListListIterator( const ListListIterator& x ) 
 	    {
-	    copy_members( x );
+	    copyMembers( x );
 	    }
 
 	ListListIterator& operator=(const ListListIterator& x)
 	    { 
-	    copy_members( x );
+	    copyMembers( x );
 	    return *this; 
 	    }
 
@@ -94,7 +94,7 @@ class ListListIterator : public PIter
 	PIter m_pcur;
 	static const PIter empty;
 
-	void copy_members( const ListListIterator& x ) 
+	void copyMembers( const ListListIterator& x ) 
 	    { 
 	    m_begin = x.begin();
 	    m_end = x.end();

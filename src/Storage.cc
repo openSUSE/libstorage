@@ -11,12 +11,12 @@
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
 
-struct Larger150 { bool operator()(const Disk&d) const {return(d.Cylinders()>150);}};
+struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
 
 bool TestLg150( const Disk& d )
-    { return(d.Cylinders()>150); };
+    { return(d.cylinders()>150); };
 bool TestCG30( const Partition& d )
-    { return(d.CylSize()>30); };
+    { return(d.cylSize()>30); };
 
 
 Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
@@ -25,13 +25,13 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
     y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
                  ronly, testmode, autodetect );
     char * tenv = getenv( "YAST_IS_RUNNING" );
-    instsys = tenv!=NULL && strcmp(tenv,"instsys")==0;
+    inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     if( !testmode )
 	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
     if( autodetect && !testmode )
 	{
-	DetectArch();
-	AutodetectDisks();
+	detectArch();
+	autodetectDisks();
 	}
     if( testmode )
 	{
@@ -45,18 +45,17 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	    testdir = "/var/log/YaST2";
 	    }
 	}
-    y2milestone( "instsys:%d testdir:%s", instsys, testdir.c_str() );
+    y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
 
     if( testmode )
         {
 	glob_t globbuf;
 
-	if (glob ((testdir+"/disk_*").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	{
+	if( glob( (testdir+"/disk_*").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		AddToList( new Disk( this, *p ) );
-	}
-
+		addToList( new Disk( this, *p ) );
+	    }
 	globfree (&globbuf);
 	}
     }
@@ -71,34 +70,34 @@ Storage::~Storage()
     }
 
 void
-Storage::DetectArch()
+Storage::detectArch()
     {
     struct utsname buf;
-    arch = "i386";
+    proc_arch = "i386";
     if( uname( &buf ) == 0 )
 	{
 	if( strncmp( buf.machine, "ppc", 3 )==0 )
 	    {
-	    arch = "ppc";
+	    proc_arch = "ppc";
 	    }
 	else if( strncmp( buf.machine, "ia64", 4 )==0 )
 	    {
-	    arch = "ia64";
+	    proc_arch = "ia64";
 	    }
 	else if( strncmp( buf.machine, "s390", 4 )==0 )
 	    {
-	    arch = "s390";
+	    proc_arch = "s390";
 	    }
 	else if( strncmp( buf.machine, "sparc", 5 )==0 )
 	    {
-	    arch = "sparc";
+	    proc_arch = "sparc";
 	    }
 	}
-    y2milestone( "Arch:%s", arch.c_str() );
+    y2milestone( "Arch:%s", proc_arch.c_str() );
     }
 
 void
-Storage::AutodetectDisks()
+Storage::autodetectDisks()
     {
     string SysfsDir = "/sys/block";
     DIR *Dir;
@@ -124,11 +123,11 @@ Storage::AutodetectDisks()
 	    if( Range>1 && Size>0 )
 		{
 		Disk * d = new Disk( this, Entry->d_name, Size/2 );
-		if( d->GetSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
-		    d->DetectGeometry() && d->DetectPartitions() )
+		if( d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
+		    d->detectGeometry() && d->detectPartitions() )
 		    {
-		    d->LogData( "/var/log/YaST2" );
-		    AddToList( d );
+		    d->logData( "/var/log/YaST2" );
+		    addToList( d );
 		    }
 		else
 		    {
@@ -143,18 +142,18 @@ Storage::AutodetectDisks()
 	y2error( "Failed to open:%s", SysfsDir.c_str() );
 	}
 
-    AddToList( new Container( this, "md", Container::MD ) );
-    AddToList( new Container( this, "loop", Container::LOOP ) );
-    AddToList( new LvmVg( this, "system" ) );
-    AddToList( new LvmVg( this, "vg1" ) );
-    AddToList( new LvmVg( this, "vg2" ) );
-    AddToList( new LvmVg( this, "empty" ) );
-    AddToList( new Evms( this ) );
-    AddToList( new Evms( this, "vg1" ) );
-    AddToList( new Evms( this, "vg2" ) );
-    AddToList( new Evms( this, "empty" ) );
+    addToList( new Container( this, "md", Container::MD ) );
+    addToList( new Container( this, "loop", Container::LOOP ) );
+    addToList( new LvmVg( this, "system" ) );
+    addToList( new LvmVg( this, "vg1" ) );
+    addToList( new LvmVg( this, "vg2" ) );
+    addToList( new LvmVg( this, "empty" ) );
+    addToList( new Evms( this ) );
+    addToList( new Evms( this, "vg1" ) );
+    addToList( new Evms( this, "vg2" ) );
+    addToList( new Evms( this, "empty" ) );
     }
 
-string Storage::arch;
+string Storage::proc_arch;
 
 

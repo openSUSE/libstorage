@@ -31,8 +31,8 @@ SystemCmd::SystemCmd( const string& Command_Cv, bool UseTmp_bv ) :
                  Command_Cv.c_str(), UseTmp_bv, Nr_i );
     Append_ab[0] = false;
     Append_ab[1] = false;
-    InitFile();
-    Execute( Command_Cv );
+    initFile();
+    execute( Command_Cv );
     }
 
 SystemCmd::SystemCmd( bool UseTmp_bv ) :
@@ -44,7 +44,7 @@ SystemCmd::SystemCmd( bool UseTmp_bv ) :
     y2milestone( "Konstruktor SystemCmd UseTmp:%d Nr:%d", UseTmp_b, Nr_i );
     Append_ab[0] = false;
     Append_ab[1] = false;
-    InitFile();
+    initFile();
     }
 
 SystemCmd::~SystemCmd()
@@ -60,11 +60,11 @@ SystemCmd::~SystemCmd()
     }
 
 void
-SystemCmd::InitFile( )
+SystemCmd::initFile( )
     {
     string Tmp_Ci = "/tmp";
 
-    Invalidate();
+    invalidate();
     Tmp_Ci += '/';
     Tmp_Ci += "YaST2.tdir";
     mkdir( Tmp_Ci.c_str(), 0700 );
@@ -100,9 +100,9 @@ SystemCmd::InitFile( )
     }
 
 void
-SystemCmd::InitCmd( string CmdIn_rv, string& CmdRedir_Cr )
+SystemCmd::initCmd( string CmdIn_rv, string& CmdRedir_Cr )
     {
-    Invalidate();
+    invalidate();
     CmdRedir_Cr = CmdIn_rv;
     if( !Combine_b )
 	{
@@ -133,39 +133,50 @@ SystemCmd::InitCmd( string CmdIn_rv, string& CmdRedir_Cr )
     }
 
 void
-SystemCmd::SetOutputHandler( void (*Handle_f)( void *, string, bool ),
+SystemCmd::setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                     void * Par_p )
     {
     OutputHandler_f = Handle_f;
     HandlerPar_p = Par_p;
     }
 
+void 
+SystemCmd::closeOpenFds()
+    {
+    int max_fd = getdtablesize();
+    for( int fd = 3; fd < max_fd; fd++ ) 
+	{
+	close(fd);
+	}
+    }
+
+
 #define ALTERNATE_SHELL "/bin/bash"
 
 int
-SystemCmd::ExecuteBackground( const string& Cmd_Cv )
+SystemCmd::executeBackground( const string& Cmd_Cv )
     {
     y2debug( "SystemCmd Executing (Background):\"%s\"", Cmd_Cv.c_str() );
     Background_b = true;
-    return( DoExecute( Cmd_Cv ));
+    return( doExecute( Cmd_Cv ));
     }
 
 int
-SystemCmd::Execute( const string& Cmd_Cv )
+SystemCmd::execute( const string& Cmd_Cv )
     {
     y2debug( "SystemCmd Executing:\"%s\"", Cmd_Cv.c_str() );
     Background_b = false;
-    return( DoExecute( Cmd_Cv ));
+    return( doExecute( Cmd_Cv ));
     }
 
 int
-SystemCmd::DoExecute( string Cmd_Cv )
+SystemCmd::doExecute( string Cmd_Cv )
     {
     string Cmd_Ci;
     string Shell_Ci = "/bin/sh";
 
-    TimeMark( "System", false );
-    InitCmd( Cmd_Cv, Cmd_Ci );
+    timeMark( "System", false );
+    initCmd( Cmd_Cv, Cmd_Ci );
     y2debug( "Cmd_Ci:%s", Cmd_Ci.c_str() );
     if( access( Shell_Ci.c_str(), X_OK ) != 0 )
 	{
@@ -176,7 +187,7 @@ SystemCmd::DoExecute( string Cmd_Cv )
 	case 0:
 	    setenv( "LC_ALL", "C", 1 );
 	    setenv( "LANGUAGE", "C", 1 );
-
+	    closeOpenFds();
 	    Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
 			   Cmd_Ci.c_str(),
 	                   NULL );
@@ -190,25 +201,25 @@ SystemCmd::DoExecute( string Cmd_Cv )
 	    Ret_i = 0;
 	    if( !Background_b )
 		{
-		DoWait( true, Ret_i );
+		doWait( true, Ret_i );
 		}
 	    break;
 	}
-    TimeMark( "After system()" );
+    timeMark( "After system()" );
     if( Ret_i==-127 || Ret_i==-1 )
 	{
 	y2error("system (%s) = %d", Cmd_Cv.c_str(), Ret_i);
 	}
-    OpenFiles();
-    CheckOutput();
+    openFiles();
+    checkOutput();
     y2milestone( "system() Returns:%d", Ret_i );
-    TimeMark( "After CheckOutput" );
+    timeMark( "After CheckOutput" );
     return( Ret_i );
     }
 
 
 bool
-SystemCmd::DoWait( bool Hang_bv, int& Ret_ir )
+SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
     {
     int Wait_ii;
     int Status_ii;
@@ -231,13 +242,13 @@ SystemCmd::DoWait( bool Hang_bv, int& Ret_ir )
     }
 
 void
-SystemCmd::SetCombine( const bool Comb_bv )
+SystemCmd::setCombine( const bool Comb_bv )
     {
     Combine_b = Comb_bv;
     }
 
 string
-SystemCmd::GetFilename( unsigned Idx_iv )
+SystemCmd::getFilename( unsigned Idx_iv )
     {
     string Ret_Ci;
 
@@ -254,7 +265,7 @@ SystemCmd::GetFilename( unsigned Idx_iv )
 
 
 void
-SystemCmd::AppendTo( string File_Cv, const unsigned Idx_iv )
+SystemCmd::appendTo( string File_Cv, const unsigned Idx_iv )
     {
     struct statfs Buf_ri;
     string::size_type Pos_ii;
@@ -270,7 +281,7 @@ SystemCmd::AppendTo( string File_Cv, const unsigned Idx_iv )
 	    {
 	    Append_ab[Idx_iv] = false;
 	    FileName_aC[Idx_iv] = "";
-	    InitFile();
+	    initFile();
 	    }
         return;                      // <--- just reset and return
         }
@@ -281,7 +292,7 @@ SystemCmd::AppendTo( string File_Cv, const unsigned Idx_iv )
 	if( access( Tmp_Ci.c_str(), R_OK ) )
 	    {
 	    y2debug( "AppendTo CreatePath:\"%s\"", Tmp_Ci.c_str() );
-	    CreatePath( Tmp_Ci );
+	    createPath( Tmp_Ci );
 	    }
 	}
     std::ofstream File_Ci( File_Cv.c_str(), std::ios::app );
@@ -307,7 +318,7 @@ SystemCmd::AppendTo( string File_Cv, const unsigned Idx_iv )
     }
 
 void
-SystemCmd::OpenFiles()
+SystemCmd::openFiles()
     {
     int Rest_ii = 5*1000000;
 
@@ -316,7 +327,7 @@ SystemCmd::OpenFiles()
 	{
 	while( access( FileName_aC[IDX_STDOUT].c_str(), R_OK ) == -1 && Rest_ii>0 )
 	    {
-	    Delay( 10000 );
+	    delay( 10000 );
 	    Rest_ii -= 10000;
 	    }
 	File_aC[IDX_STDOUT].clear();
@@ -331,7 +342,7 @@ SystemCmd::OpenFiles()
 	{
 	while( access( FileName_aC[IDX_STDERR].c_str(), R_OK ) == -1 && Rest_ii>0 )
 	    {
-	    Delay( 10000 );
+	    delay( 10000 );
 	    Rest_ii -= 10000;
 	    }
 	File_aC[IDX_STDERR].clear();
@@ -345,7 +356,7 @@ SystemCmd::OpenFiles()
 
 
 const string *
-SystemCmd::GetString( unsigned Idx_iv ) const
+SystemCmd::getString( unsigned Idx_iv ) const
     {
     if( Idx_iv > 1 )
 	{
@@ -369,7 +380,7 @@ SystemCmd::GetString( unsigned Idx_iv ) const
     }
 
 int
-SystemCmd::NumLines( bool Sel_bv, unsigned Idx_iv ) const
+SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
     {
     int Ret_ii;
 
@@ -390,7 +401,7 @@ SystemCmd::NumLines( bool Sel_bv, unsigned Idx_iv ) const
     }
 
 const string *
-SystemCmd::GetLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
+SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
     {
     const string * Ret_pCi = NULL;
 
@@ -416,7 +427,7 @@ SystemCmd::GetLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
     }
 
 int
-SystemCmd::Select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
+SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
     {
     int I_ii;
     int End_ii;
@@ -460,7 +471,7 @@ SystemCmd::Select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
     }
 
 void
-SystemCmd::Invalidate()
+SystemCmd::invalidate()
     {
     int Idx_ii;
 
@@ -474,7 +485,7 @@ SystemCmd::Invalidate()
     }
 
 void
-SystemCmd::CheckOutput()
+SystemCmd::checkOutput()
     {
     struct statfs Buf_ri;
     bool Full_bi = false;
@@ -483,9 +494,9 @@ SystemCmd::CheckOutput()
 
     do
 	{
-	if( Background_b && !(Done_bi=DoWait( false, Ret_i )))
+	if( Background_b && !(Done_bi=doWait( false, Ret_i )))
 	    {
-	    Delay( 100000 );
+	    delay( 100000 );
 	    }
 	statfs( FileName_aC[IDX_STDOUT].c_str(), &Buf_ri );
 #ifdef SYSTEMCMD_VERBOSE_DEBUG
@@ -506,7 +517,7 @@ SystemCmd::CheckOutput()
 	    }
 	if( !Append_ab[IDX_STDOUT] )
 	    {
-	    GetUntilEOF( File_aC[IDX_STDOUT], Lines_aC[IDX_STDOUT],
+	    getUntilEOF( File_aC[IDX_STDOUT], Lines_aC[IDX_STDOUT],
 			 NewLineSeen_ab[IDX_STDOUT], false );
 	    }
 	statfs( FileName_aC[IDX_STDERR].c_str(), &Buf_ri );
@@ -524,7 +535,7 @@ SystemCmd::CheckOutput()
 	    }
 	if( !Append_ab[IDX_STDERR] )
 	    {
-	    GetUntilEOF( File_aC[IDX_STDERR], Lines_aC[IDX_STDERR],
+	    getUntilEOF( File_aC[IDX_STDERR], Lines_aC[IDX_STDERR],
 			 NewLineSeen_ab[IDX_STDERR], true );
 	    }
 	}
@@ -544,7 +555,7 @@ SystemCmd::CheckOutput()
 #define MAX_STRING (STRING_MAXLEN - BUF_LEN - 10)
 
 void
-SystemCmd::GetUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
+SystemCmd::getUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
                         bool& NewLine_br, bool Stderr_bv )
     {
     char Buf_ti[BUF_LEN];
@@ -568,7 +579,7 @@ SystemCmd::GetUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
 #endif
 		OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 		}
-	    ExtractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
+	    extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
 	    Cnt_ii = 0;
 	    }
 	}
@@ -583,11 +594,11 @@ SystemCmd::GetUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
 #endif
 	    OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 	    }
-	ExtractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
+	extractNewline( Buf_ti, Cnt_ii, NewLine_br, Text_Ci, Lines_Cr );
 	}
     if( Text_Ci.length() > 0 )
 	{
-	AddLine( Text_Ci, Lines_Cr );
+	addLine( Text_Ci, Lines_Cr );
 	NewLine_br = false;
 	}
     else
@@ -597,7 +608,7 @@ SystemCmd::GetUntilEOF( std::ifstream& File_Cr, vector<string>& Lines_Cr,
     }
 
 void
-SystemCmd::ExtractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
+SystemCmd::extractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
                            string& Text_Cr, vector<string>& Lines_Cr )
     {
     string::size_type Idx_ii;
@@ -611,7 +622,7 @@ SystemCmd::ExtractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
 	    }
 	else
 	    {
-	    AddLine( Text_Cr.substr( 0, Idx_ii ), Lines_Cr );
+	    addLine( Text_Cr.substr( 0, Idx_ii ), Lines_Cr );
 	    }
 	NewLine_br = true;
 	Text_Cr.erase( 0, Idx_ii+1 );
@@ -619,7 +630,7 @@ SystemCmd::ExtractNewline( char* Buf_ti, int Cnt_iv, bool& NewLine_br,
     }
 
 void
-SystemCmd::AddLine( string Text_Cv, vector<string>& Lines_Cr )
+SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
     {
 #ifndef FULL_DEBUG_SYSTEM_CMD
     if( Lines_Cr.size()<100 )
@@ -642,16 +653,16 @@ SystemCmd::AddLine( string Text_Cv, vector<string>& Lines_Cr )
 //	OUTPUT :
 //	DESCRIPTION : Place stdout/stderr linewise in Ret_Cr
 //
-int SystemCmd::PlaceOutput( unsigned Which_iv, vector<string> &Ret_Cr, 
+int SystemCmd::placeOutput( unsigned Which_iv, vector<string> &Ret_Cr, 
                             const bool Append_bv ) const
 {
   if ( !Append_bv )
     Ret_Cr.clear();
 
-  int Lines_ii = NumLines( false, Which_iv );
+  int Lines_ii = numLines( false, Which_iv );
 
   for ( int i_ii = 0; i_ii < Lines_ii; i_ii++ )
-    Ret_Cr.push_back( *GetLine( i_ii, false, Which_iv ) );
+    Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
 
   return( Lines_ii );
 }

@@ -28,17 +28,17 @@ class Container
     public:
 	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
 	bool operator== ( const Container& rhs ) const
-	    { return( type == rhs.type && name == rhs.name && deleted == rhs.deleted ); }
+	    { return( typ == rhs.typ && nm == rhs.nm && dltd == rhs.dltd ); }
 	bool operator!= ( const Container& rhs ) const
 	    { return( !(*this==rhs) ); }
 	bool operator< ( const Container& rhs ) const
 	    { 
-	    if( type != rhs.type )
-		return( type<rhs.type );
-	    else if( name != rhs.name )
-		return( name<rhs.name );
+	    if( typ != rhs.typ )
+		return( typ<rhs.typ );
+	    else if( nm != rhs.nm )
+		return( nm<rhs.nm );
 	    else 
-		return( !deleted );
+		return( !dltd );
 	    }
 	bool operator<= ( const Container& rhs ) const
 	    { return( *this<rhs || *this==rhs ); }
@@ -62,7 +62,7 @@ class Container
 	typedef CheckerIterator< CheckFncVol, VolumePI<CheckFncVol>::type, 
 	                         VIter, Volume> VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
-	typedef IterPair<VolIterator> VolIPair;
+	typedef IterPair<VolIterator> VolPair;
 
     public:
 	// public typedefs for iterators over volumes
@@ -74,43 +74,43 @@ class Container
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 
 	// public member functions for iterators over volumes
-	ConstVolPair VolPair( bool (* CheckFnc)( const Volume& )=NULL ) const
+	ConstVolPair volPair( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    { 
-	    return( ConstVolPair( VolBegin( CheckFnc ), VolEnd( CheckFnc ) ));
+	    return( ConstVolPair( volBegin( CheckFnc ), volEnd( CheckFnc ) ));
 	    }
-	ConstVolIterator VolBegin( bool (* CheckFnc)( const Volume& )=NULL ) const
+	ConstVolIterator volBegin( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    {
 	    return( ConstVolIterator( ConstVolPIterator(vols.begin(), vols.end(), CheckFnc )) );
 	    }
-	ConstVolIterator VolEnd( bool (* CheckFnc)( const Volume& )=NULL ) const
+	ConstVolIterator volEnd( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    {
 	    return( ConstVolIterator( ConstVolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
 	    }
 
-	template< class Pred > typename VolCondIPair<Pred>::type VolCondPair( const Pred& p ) const
+	template< class Pred > typename VolCondIPair<Pred>::type volCondPair( const Pred& p ) const
 	    {
-	    return( VolCondIPair<Pred>::type( VolCondBegin( p ), VolCondEnd( p ) ) );
+	    return( VolCondIPair<Pred>::type( volCondBegin( p ), volCondEnd( p ) ) );
 	    }
-	template< class Pred > typename ConstVolumeI<Pred>::type VolCondBegin( const Pred& p ) const
+	template< class Pred > typename ConstVolumeI<Pred>::type volCondBegin( const Pred& p ) const
 	    {
 	    return( ConstVolumeI<Pred>::type( vols.begin(), vols.end(), p ) );
 	    }
-	template< class Pred > typename ConstVolumeI<Pred>::type VolCondEnd( const Pred& p ) const
+	template< class Pred > typename ConstVolumeI<Pred>::type volCondEnd( const Pred& p ) const
 	    {
 	    return( ConstVolumeI<Pred>::type( vols.begin(), vols.end(), p, true ) );
 	    }
 
     protected:
 	// protected member functions for iterators over volumes
-	VolIPair VolPair( bool (* CheckFnc)( const Volume& )=NULL )
+	VolPair volPair( bool (* CheckFnc)( const Volume& )=NULL )
 	    { 
-	    return( VolIPair( VBegin( CheckFnc ), VEnd( CheckFnc ) ));
+	    return( VolPair( vBegin( CheckFnc ), vEnd( CheckFnc ) ));
 	    }
-	VolIterator VBegin( bool (* CheckFnc)( const Volume& )=NULL ) 
+	VolIterator vBegin( bool (* CheckFnc)( const Volume& )=NULL ) 
 	    { 
 	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc )) );
 	    }
-	VolIterator VEnd( bool (* CheckFnc)( const Volume& )=NULL ) 
+	VolIterator vEnd( bool (* CheckFnc)( const Volume& )=NULL ) 
 	    { 
 	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
 	    }
@@ -118,12 +118,12 @@ class Container
     public:
 	Container( const Storage * const, const string& Name, CType typ );
 	virtual ~Container();
-	const string& Name() const { return name; }
-	const string& Device() const { return dev; }
-	CType Type() const { return type; }
-	bool Delete() const { return deleted; }
-	bool Readonly() const { return readonly; }
-	static CType const StaticType() { return UNKNOWN; } 
+	const string& name() const { return nm; }
+	const string& device() const { return dev; }
+	CType type() const { return typ; }
+	bool deleted() const { return dltd; }
+	bool readonly() const { return rdonly; }
+	static CType const staticType() { return UNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 
     protected:
@@ -135,31 +135,31 @@ class Container
 	PlainIterator begin() { return vols.begin(); }
 	PlainIterator end() { return vols.end(); }
 	void print( ostream& s ) const { s << *this; }
-	void AddToList( Volume* e )
-	    { PointerIntoSortedList<Volume>( vols, e ); }
+	void addToList( Volume* e )
+	    { pointerIntoSortedList<Volume>( vols, e ); }
 
 
 	static string type_names[EVMS+1];
 
 	const Storage * const sto;
-	CType type;
-	string name;
+	CType typ;
+	string nm;
 	string dev;
-	bool deleted;
-	bool readonly;
+	bool dltd;
+	bool rdonly;
 	VCont vols;
 
     };
 
 inline ostream& operator<< (ostream& s, const Container &c )
     {
-    s << "Type:" << Container::type_names[c.type] 
-      << " Name:" << c.name 
+    s << "Type:" << Container::type_names[c.typ] 
+      << " Name:" << c.nm 
       << " Device:" << c.dev 
       << " Vcnt:" << c.vols.size(); 
-    if( c.deleted )
+    if( c.dltd )
       s << " deleted";
-    if( c.readonly )
+    if( c.rdonly )
       s << " readonly";
     return( s );
     }

@@ -25,7 +25,7 @@ AsciiFile::AsciiFile( const char* Name_Cv, bool CreateBackup_bv,
 	BackupCreated_b(!CreateBackup_bv),
 	BackupExtension_C( BackupExt_Cv )
 {
-    LoadFile( Name_Cv );
+    loadFile( Name_Cv );
 }
 
 AsciiFile::AsciiFile( const string& Name_Cv, bool CreateBackup_bv,
@@ -33,42 +33,42 @@ AsciiFile::AsciiFile( const string& Name_Cv, bool CreateBackup_bv,
 	BackupCreated_b(!CreateBackup_bv),
 	BackupExtension_C( BackupExt_Cv )
 {
-    LoadFile( Name_Cv.c_str() );
+    loadFile( Name_Cv.c_str() );
 }
 
 AsciiFile::~AsciiFile()
 {
 }
 
-bool AsciiFile::LoadFile( string Name_Cv )
+bool AsciiFile::loadFile( string Name_Cv )
 {
     bool Ret_bi;
 
     y2milestone( "Loading File:\"%s\"", Name_Cv.c_str() );
     Lines_C.clear();
-    Ret_bi = AppendFile( Name_Cv, Lines_C );
+    Ret_bi = appendFile( Name_Cv, Lines_C );
     Name_C = Name_Cv;
     return( Ret_bi );
 }
 
-string AsciiFile::FileName()
+string AsciiFile::fileName()
 {
     return( Name_C );
 }
 
-bool AsciiFile::AppendFile( string Name_Cv )
+bool AsciiFile::appendFile( string Name_Cv )
 {
     DBG( App_pC->Dbg() << "Appending File:\"" << Name_Cv << "\"\n"; )
-    return( AppendFile( Name_Cv, Lines_C ) );
+    return( appendFile( Name_Cv, Lines_C ) );
 }
 
-bool AsciiFile::AppendFile( AsciiFile& File_Cv )
+bool AsciiFile::appendFile( AsciiFile& File_Cv )
 {
-    DBG( App_pC->Dbg() << "Appending AsciiFile Lines:" << File_Cv.NumLines() << "\n"; )
-    return( AppendFile( File_Cv, Lines_C ) );
+    DBG( App_pC->Dbg() << "Appending AsciiFile Lines:" << File_Cv.numLines() << "\n"; )
+    return( appendFile( File_Cv, Lines_C ) );
 }
 
-bool AsciiFile::AppendFile( string Name_Cv, vector<string>& Lines_Cr )
+bool AsciiFile::appendFile( string Name_Cv, vector<string>& Lines_Cr )
 {
     ifstream File_Ci( Name_Cv.c_str() );
     string Line_Ci;
@@ -84,11 +84,11 @@ bool AsciiFile::AppendFile( string Name_Cv, vector<string>& Lines_Cr )
     return( Ret_bi );
 }
 
-bool AsciiFile::AppendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
+bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
 {
     int Idx_ii = 0;
 
-    while( Idx_ii<File_Cv.NumLines() )
+    while( Idx_ii<File_Cv.numLines() )
       {
 	Lines_Cr.push_back( File_Cv[Idx_ii] );
 	Idx_ii++;
@@ -96,7 +96,7 @@ bool AsciiFile::AppendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
     return( true );
 }
 
-bool AsciiFile::InsertFile( string Name_Cv, unsigned int BeforeLine_iv )
+bool AsciiFile::insertFile( string Name_Cv, unsigned int BeforeLine_iv )
 {
     ifstream File_Ci( Name_Cv.c_str() );
     string Line_Ci;
@@ -111,7 +111,7 @@ bool AsciiFile::InsertFile( string Name_Cv, unsigned int BeforeLine_iv )
 	    New_Ci.push_back( Lines_C[Idx_ii] );
 	    Idx_ii++;
 	    }
-	Ret_bi = AppendFile( Name_Cv, New_Ci );
+	Ret_bi = appendFile( Name_Cv, New_Ci );
 	while( Idx_ii<Lines_C.size() )
 	    {
 	    New_Ci.push_back( Lines_C[Idx_ii] );
@@ -122,13 +122,13 @@ bool AsciiFile::InsertFile( string Name_Cv, unsigned int BeforeLine_iv )
     return( Ret_bi );
     }
 
-bool AsciiFile::InsertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
+bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
     {
     string Line_Ci;
     vector<string> New_Ci;
     bool Ret_bi;
 
-    DBG( App_pC->Dbg() << "Inserting AsciiFile Lines:" << File_Cv.NumLines() 
+    DBG( App_pC->Dbg() << "Inserting AsciiFile Lines:" << File_Cv.numLines() 
                        << " before:" << BeforeLine_iv << endl; )
     unsigned int Idx_ii=0;
     while( Idx_ii<BeforeLine_iv )
@@ -136,7 +136,7 @@ bool AsciiFile::InsertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
 	New_Ci.push_back( Lines_C[Idx_ii] );
 	Idx_ii++;
 	}
-    Ret_bi = AppendFile( File_Cv, New_Ci );
+    Ret_bi = appendFile( File_Cv, New_Ci );
     while( Idx_ii<Lines_C.size() )
 	{
 	New_Ci.push_back( Lines_C[Idx_ii] );
@@ -146,7 +146,7 @@ bool AsciiFile::InsertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
     return( Ret_bi );
     }
 
-bool AsciiFile::UpdateFile()
+bool AsciiFile::updateFile()
     {
     struct stat Stat_ri;
     bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
@@ -168,7 +168,7 @@ bool AsciiFile::UpdateFile()
 	    Tmp_Ci += Name_C;
 	    Tmp_Ci += ' ';
 	    Tmp_Ci += BakName_Ci;
-	    Cmd_Ci.Execute( Tmp_Ci );
+	    Cmd_Ci.execute( Tmp_Ci );
 	    }
 	BackupCreated_b = true;
 	}
@@ -188,7 +188,7 @@ bool AsciiFile::UpdateFile()
     return( File_Ci.good() );
     }
 
-bool AsciiFile::SaveToFile( string Name_Cv )
+bool AsciiFile::saveToFile( string Name_Cv )
     {
     ofstream File_Ci( Name_Cv.c_str() );
     unsigned int Idx_ii = 0;
@@ -203,13 +203,13 @@ bool AsciiFile::SaveToFile( string Name_Cv )
     }
 
 
-void AsciiFile::Append( string Line_Cv )
+void AsciiFile::append( string Line_Cv )
     {
     string::size_type Idx_ii;
     string Line_Ci = Line_Cv;
 
     DBG( App_pC->Dbg() << "Append Line:\"" << Line_Ci << "\"\n"; )
-    RemoveLastIf( Line_Ci, '\n' );
+    removeLastIf( Line_Ci, '\n' );
     while( (Idx_ii=Line_Ci.find( '\n' ))!= string::npos )
 	{
 	Lines_C.push_back( Line_Ci.substr(0, Idx_ii ) );
@@ -218,13 +218,13 @@ void AsciiFile::Append( string Line_Cv )
     Lines_C.push_back( Line_Ci );
     }
 
-void AsciiFile::Replace( unsigned int Start_iv, unsigned int Cnt_iv, string Lines_Cv )
+void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv, string Lines_Cv )
     {
-    Delete( Start_iv, Cnt_iv );
-    Insert( Start_iv, Lines_Cv );
+    remove( Start_iv, Cnt_iv );
+    insert( Start_iv, Lines_Cv );
     }
 
-void AsciiFile::Delete( unsigned int Start_iv, unsigned int Cnt_iv )
+void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
     {
     DBG( App_pC->Dbg() << "Delete Line From:" << Start_iv 
                        << " Length:" << Cnt_iv << "\n"; )
@@ -245,7 +245,7 @@ void AsciiFile::Delete( unsigned int Start_iv, unsigned int Cnt_iv )
     DBG( App_pC->Dbg() << "After Delete Lines:" << Lines_C.size() << std::endl; );
     }
 
-void AsciiFile::Insert( unsigned int Before_iv, string Line_Cv )
+void AsciiFile::insert( unsigned int Before_iv, string Line_Cv )
     {
     unsigned int Idx_ii = Lines_C.size();
     DBG( App_pC->Dbg() << "Insert Line Before:" << Before_iv 
@@ -253,7 +253,7 @@ void AsciiFile::Insert( unsigned int Before_iv, string Line_Cv )
                        << " Text:\"" << Line_Cv << "\"\n"; )
     if( Before_iv>=Idx_ii )
 	{
-	Append( Line_Cv );
+	append( Line_Cv );
 	}
     else
 	{
@@ -261,7 +261,7 @@ void AsciiFile::Insert( unsigned int Before_iv, string Line_Cv )
 	unsigned int Cnt_ii;
 	string::size_type Pos_ii;
 
-	RemoveLastIf( Line_Ci, '\n' );
+	removeLastIf( Line_Ci, '\n' );
 	Cnt_ii = 0;
 	Pos_ii = 0;
 	do
@@ -298,7 +298,7 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     }
 
 #if 0
-int AsciiFile::Find( int Start_iv, const Regex& Pat_Cv ) 
+int AsciiFile::find( int Start_iv, const Regex& Pat_Cv ) 
     {
     int Idx_ii = Start_iv;
     int Ret_ii = -1;
@@ -323,7 +323,7 @@ int AsciiFile::Find( int Start_iv, const Regex& Pat_Cv )
     }
 #endif
 
-int AsciiFile::Find( unsigned int Start_iv, string Pat_Cv ) 
+int AsciiFile::find( unsigned int Start_iv, string Pat_Cv ) 
     {
     string::size_type Pos_ii;
     unsigned int Idx_ii = Start_iv;
@@ -362,15 +362,15 @@ int AsciiFile::Find( unsigned int Start_iv, string Pat_Cv )
     return( Ret_ii );
     }
 
-int AsciiFile::NumLines() const
+int AsciiFile::numLines() const
     {
     return( Lines_C.size() );
     }
 
-int AsciiFile::DifferentLine( const AsciiFile& File_Cv ) const
+int AsciiFile::differentLine( const AsciiFile& File_Cv ) const
     {
     int Ret_ii = -1;
-    int Cnt_ii = min( NumLines(), File_Cv.NumLines() );
+    int Cnt_ii = min( numLines(), File_Cv.numLines() );
     int I_ii = 0;
     while( I_ii<Cnt_ii && (*this)[I_ii]==File_Cv[I_ii] )
         {
@@ -380,7 +380,7 @@ int AsciiFile::DifferentLine( const AsciiFile& File_Cv ) const
         {
         Ret_ii = I_ii;
         }
-    else if( NumLines()>Cnt_ii || File_Cv.NumLines()>Cnt_ii )
+    else if( numLines()>Cnt_ii || File_Cv.numLines()>Cnt_ii )
         {
         Ret_ii = Cnt_ii;
         }
@@ -389,7 +389,7 @@ int AsciiFile::DifferentLine( const AsciiFile& File_Cv ) const
 
 
 #if 0
-void AsciiFile::Put( const Regex& Pat_Cv, const String& Line_Cv )
+void AsciiFile::put( const Regex& Pat_Cv, const String& Line_Cv )
     {
     int Idx_ii;
 
@@ -399,7 +399,7 @@ void AsciiFile::Put( const Regex& Pat_Cv, const String& Line_Cv )
 	}
     else
 	{
-	Append( Line_Cv );
+	append( Line_Cv );
 	}
     }
 

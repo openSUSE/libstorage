@@ -11,16 +11,16 @@ class Volume
 	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
 	virtual ~Volume();
-	const string& Device() const { return dev; }; 
-	bool Delete() const { return deleted; }
-	unsigned Nr() const { return nr; }
-	unsigned long long SizeK() const { return size_k; }
-	const string& Name() const { return name; }
-	unsigned long Minor() const { return minor; }
-	unsigned long Major() const { return major; }
-	void SetMajorMinor( unsigned long Major, unsigned long Minor )
-	    { major=Major; minor=Minor; }
-	void SetSize( unsigned long long SizeK ) { size_k=SizeK; }
+	const string& device() const { return dev; }; 
+	bool deleted() const { return dltd; }
+	unsigned nr() const { return num; }
+	unsigned long long sizeK() const { return size_k; }
+	const string& name() const { return nm; }
+	unsigned long minorNumber() const { return mnr; }
+	unsigned long majorNumber() const { return mjr; }
+	void setMajorMinor( unsigned long Major, unsigned long Minor )
+	    { mjr=Major; mnr=Minor; }
+	void setSize( unsigned long long SizeK ) { size_k=SizeK; }
 
         bool operator== ( const Volume& rhs ) const;
         bool operator!= ( const Volume& rhs ) const
@@ -36,38 +36,38 @@ class Volume
 
 	struct SkipDeleted
 	    {
-	    bool operator()(const Volume&d) const { return( !d.Delete());}
+	    bool operator()(const Volume&d) const { return( !d.deleted());}
 	    };
 	static SkipDeleted SkipDel;
-	static bool NotDeleted( const Volume&d ) { return( !d.Delete() ); }
-	static bool GetMajorMinor( const string& device, 
+	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
+	static bool getMajorMinor( const string& device, 
 	                           unsigned long& Major, unsigned long& Minor );
 
     protected:
-	void Init();
+	void init();
 
 	const Container* const cont;
 	bool numeric;
-	bool deleted;
-	string name;
-	unsigned nr;
+	bool dltd;
+	string nm;
+	unsigned num;
 	unsigned long long size_k;
 	string dev;
-	unsigned long minor;
-	unsigned long major;
+	unsigned long mnr;
+	unsigned long mjr;
     };
 
 inline ostream& operator<< (ostream& s, const Volume &v )
     {
     s << "Device:" << v.dev;
     if( v.numeric )
-      s << " Nr:" << v.nr;
+      s << " Nr:" << v.num;
     else
-      s << " Name:" << v.name;
+      s << " Name:" << v.nm;
     s << " SizeK:" << v.size_k 
-      << " Node <" << v.major
-      << ":" << v.minor << ">";
-    if( v.deleted )
+      << " Node <" << v.mjr
+      << ":" << v.mnr << ">";
+    if( v.dltd )
       s << " deleted";
     return( s );
     }

@@ -10,9 +10,9 @@
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {
-    for( int i=0; i<NumLines(); i++ )
+    for( int i=0; i<numLines(); i++ )
 	{
-	string tmp = ExtractNthWord( 3, (*this)[i] );
+	string tmp = extractNthWord( 3, (*this)[i] );
 	if( tmp.size()>0 && tmp!="name" )
 	    {
 	    co[tmp] = i;
@@ -21,36 +21,36 @@ ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     }
 
 bool 
-ProcPart::GetInfo( const string& Dev, unsigned long long& SizeK,
+ProcPart::getInfo( const string& Dev, unsigned long long& SizeK,
 		   unsigned long& Major, unsigned long& Minor ) const
     {
     bool ret = false;
-    map<string,int>::const_iterator i = co.find( DevName(Dev) );
+    map<string,int>::const_iterator i = co.find( devName(Dev) );
     if( i != co.end() )
 	{
-	ExtractNthWord( 0, (*this)[i->second] ) >> Major;
-	ExtractNthWord( 1, (*this)[i->second] ) >> Minor;
-	ExtractNthWord( 2, (*this)[i->second] ) >> SizeK;
+	extractNthWord( 0, (*this)[i->second] ) >> Major;
+	extractNthWord( 1, (*this)[i->second] ) >> Minor;
+	extractNthWord( 2, (*this)[i->second] ) >> SizeK;
 	ret = true;
 	}
     return( ret );
     }
 
 bool 
-ProcPart::GetSize( const string& Dev, unsigned long long& SizeK ) const
+ProcPart::getSize( const string& Dev, unsigned long long& SizeK ) const
     {
     bool ret = false;
-    map<string,int>::const_iterator i = co.find( DevName(Dev) );
+    map<string,int>::const_iterator i = co.find( devName(Dev) );
     if( i != co.end() )
 	{
-	ExtractNthWord( 2, (*this)[i->second] ) >> SizeK;
+	extractNthWord( 2, (*this)[i->second] ) >> SizeK;
 	ret = true;
 	}
     return( ret );
     }
 
 string 
-ProcPart::DevName( const string& Dev )
+ProcPart::devName( const string& Dev )
     {
     string name( Dev );
     if( name.find( "/dev/" )==0 )
@@ -59,7 +59,7 @@ ProcPart::DevName( const string& Dev )
     }
 
 list<string>  
-ProcPart::GetMatchingEntries( const string& regexp ) const
+ProcPart::getMatchingEntries( const string& regexp ) const
     {
     Regex reg( "^" + regexp + "$" );
     list<string> ret;

@@ -9,9 +9,9 @@ Loop::Loop( const Container& d, unsigned PNr, const string& LoopFile ) :
     Volume( d, PNr, 0 )
     {
     y2milestone( "constructed loop %s on container %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     loop_file = LoopFile;
-    if( d.Type() != Container::LOOP )
+    if( d.type() != Container::LOOP )
 	y2error( "constructed loop with wrong container" );
     }
 

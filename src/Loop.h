@@ -10,7 +10,7 @@ class Loop : public Volume
     public:
 	Loop( const Container& d, unsigned Pnr, const string& LoopFile );
 	virtual ~Loop();
-	const string& LoopFile() const { return loop_file; }
+	const string& loopFile() const { return loop_file; }
 	friend inline ostream& operator<< (ostream& s, const Loop& l );
 
     protected:

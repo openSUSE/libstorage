@@ -20,42 +20,43 @@ class SystemCmd
 	           bool UseTmp_bv=false );
 	SystemCmd( bool UseTmp_bv=false );
 	virtual ~SystemCmd();
-	int Execute( const string& Command_Cv );
-	int ExecuteBackground( const string& Command_Cv );
-	void SetOutputHandler( void (*Handle_f)( void *, string, bool ),
+	int execute( const string& Command_Cv );
+	int executeBackground( const string& Command_Cv );
+	void setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                       void * Par_p );
-	int Select( string Reg_Cv, bool Invert_bv=false,
+	int select( string Reg_Cv, bool Invert_bv=false,
 	            unsigned Idx_ii=IDX_STDOUT );
-	const string* GetString( unsigned Idx_ii=IDX_STDOUT ) const;
-	const string* GetLine( unsigned Num_iv, bool Selected_bv=false,
-				    unsigned Idx_ii=IDX_STDOUT ) const;
-	int NumLines( bool Selected_bv=false, unsigned Idx_ii=IDX_STDOUT ) const;
-	void SetCombine( const bool Combine_b=true );
-	void AppendTo( string File_Cv, unsigned Idx_ii=IDX_STDOUT );
-	int Retcode() const { return Ret_i; }
-	string GetFilename( unsigned Idx_ii=IDX_STDOUT );
+	const string* getString( unsigned Idx_ii=IDX_STDOUT ) const;
+	const string* getLine( unsigned Num_iv, bool Selected_bv=false,
+			       unsigned Idx_ii=IDX_STDOUT ) const;
+	int numLines( bool Selected_bv=false, unsigned Idx_ii=IDX_STDOUT ) const;
+	void setCombine( const bool Combine_b=true );
+	void appendTo( string File_Cv, unsigned Idx_ii=IDX_STDOUT );
+	int retcode() const { return Ret_i; }
+	string getFilename( unsigned Idx_ii=IDX_STDOUT );
 
-	int GetStdout( vector<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return PlaceOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
-	int GetStderr( vector<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return PlaceOutput( IDX_STDERR, Ret_Cr, Append_bv); }
+	int getStdout( vector<string> &Ret_Cr, const bool Append_bv = false ) const
+	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
+	int getStderr( vector<string> &Ret_Cr, const bool Append_bv = false ) const
+	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
 
     protected:
 
-        int  PlaceOutput( unsigned Which_iv, vector<string> &Ret_Cr, const bool Append_bv ) const;
+        int  placeOutput( unsigned Which_iv, vector<string> &Ret_Cr, const bool Append_bv ) const;
 
-	void Invalidate();
-	void InitFile();
-	void OpenFiles();
-	int DoExecute( string Cmd_Cv );
-	bool DoWait( bool Hang_bv, int& Ret_ir );
-        void InitCmd( string CmdIn_rv, string& CmdRedir_Cr );
-        void CheckOutput();
-	void GetUntilEOF( ifstream& File_Cr, vector<string>& Lines_Cr,
+	void invalidate();
+	void initFile();
+	void openFiles();
+	void closeOpenFds();
+	int doExecute( string Cmd_Cv );
+	bool doWait( bool Hang_bv, int& Ret_ir );
+        void initCmd( string CmdIn_rv, string& CmdRedir_Cr );
+        void checkOutput();
+	void getUntilEOF( ifstream& File_Cr, vector<string>& Lines_Cr,
 	                  bool& NewLineSeen_br, bool Stderr_bv );
-	void ExtractNewline( char* Buf_ti, int Cnt_ii, bool& NewLineSeen_br,
+	void extractNewline( char* Buf_ti, int Cnt_ii, bool& NewLineSeen_br,
 	                     string& Text_Cr, vector<string>& Lines_Cr );
-	void AddLine( string Text_Cv, vector<string>& Lines_Cr );
+	void addLine( string Text_Cv, vector<string>& Lines_Cr );
 
 	string FileName_aC[2];
 	mutable string Text_aC[2];

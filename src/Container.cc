@@ -7,24 +7,24 @@
 #include "y2storage/Loop.h"
 
 Container::Container( const Storage * const s, const string& Name, CType t ) : 
-    sto(s), name(Name)
+    sto(s), nm(Name)
     {
-    deleted = false;
-    readonly = false;
-    dev = "/dev/" + name;
-    type = t;
-    if( name == "md" )
+    dltd = false;
+    rdonly = false;
+    dev = "/dev/" + nm;
+    typ = t;
+    if( nm == "md" )
 	{
-	AddToList( new Md( *this, 0, Md::RAID0 ));
-        AddToList( new Md( *this, 2, Md::RAID5 ));
+	addToList( new Md( *this, 0, Md::RAID0 ));
+        addToList( new Md( *this, 2, Md::RAID5 ));
 	}
-    else if( name == "loop" )
+    else if( nm == "loop" )
 	{
-	AddToList( new Loop( *this, 0, "loop_file" ));
-        AddToList( new Loop( *this, 1, "another-file" ));
-        AddToList( new Loop( *this, 2, "last_file" ));
+	addToList( new Loop( *this, 0, "loop_file" ));
+        addToList( new Loop( *this, 1, "another-file" ));
+        addToList( new Loop( *this, 2, "last_file" ));
 	}
-    y2milestone( "constructed cont %s", name.c_str() );
+    y2milestone( "constructed cont %s", nm.c_str() );
     }
 
 Container::~Container()

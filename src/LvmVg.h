@@ -12,10 +12,10 @@ class LvmVg : public Container
     public:
 	LvmVg( const Storage * const s, const string& Name );
 	virtual ~LvmVg();
-	unsigned long long PeSize() const { return pe_size; }
-	unsigned NumLv() const { return vols.size(); }
-	unsigned NumPv() const { return num_pv; }
-	static CType const StaticType() { return LVM; }
+	unsigned long long peSize() const { return pe_size; }
+	unsigned numLv() const { return vols.size(); }
+	unsigned numPv() const { return num_pv; }
+	static CType const staticType() { return LVM; }
 	friend inline ostream& operator<< (ostream&, const LvmVg& );
 
     protected:

@@ -9,24 +9,24 @@
 #include "y2storage/Container.h"
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
-    : cont(&d), deleted(false)
+    : cont(&d), dltd(false)
     {
     numeric = true;
-    nr = PNr;
+    num = PNr;
     size_k = SizeK;
-    Init();
+    init();
     y2milestone( "constructed volume %s on disk %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
 Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK ) : cont(&c)
     {
     numeric = false;
-    name = Name;
+    nm = Name;
     size_k = SizeK;
-    Init();
+    init();
     y2milestone( "constructed volume \"%s\" on disk %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
 Volume::~Volume()
@@ -34,50 +34,50 @@ Volume::~Volume()
     y2milestone( "destructed volume %s", dev.c_str() );
     }
 
-void Volume::Init()
+void Volume::init()
     {
-    deleted = false;
+    dltd = false;
     std::ostringstream Buf_Ci;
     if( numeric )
-	Buf_Ci << cont->Device() << (Disk::NeedP(cont->Device())?"p":"") << nr;
+	Buf_Ci << cont->device() << (Disk::needP(cont->device())?"p":"") << num;
     else
-	Buf_Ci << cont->Device() << "/" << name;
+	Buf_Ci << cont->device() << "/" << nm;
     dev = Buf_Ci.str();
-    major = minor = 0;
-    GetMajorMinor( dev, major, minor );
+    mjr = mnr = 0;
+    getMajorMinor( dev, mjr, mnr );
     if( numeric )
 	{
 	Buf_Ci.str("");
-	Buf_Ci << cont->Name() << nr;
-	name = Buf_Ci.str();
+	Buf_Ci << cont->name() << num;
+	nm = Buf_Ci.str();
 	}
     else
-	nr = 0;
+	num = 0;
     }
 
 bool Volume::operator== ( const Volume& rhs ) const
     {
     return( (*cont)==(*rhs.cont) && 
-            name == rhs.name && 
-	    deleted == rhs.deleted ); 
+            nm == rhs.nm && 
+	    dltd == rhs.dltd ); 
     }
 
 bool Volume::operator< ( const Volume& rhs ) const
     {
     if( *cont != *rhs.cont )
 	return( *cont<*rhs.cont );
-    else if( name != rhs.name )
+    else if( nm != rhs.nm )
 	{
 	if( numeric )
-	    return( nr<rhs.nr );
+	    return( num<rhs.num );
 	else
-	    return( name<rhs.name );
+	    return( nm<rhs.nm );
 	}
     else
-	return( !deleted );
+	return( !dltd );
     }
 
-bool Volume::GetMajorMinor( const string& device,
+bool Volume::getMajorMinor( const string& device,
 			    unsigned long& Major, unsigned long& Minor )
     {
     bool ret = false;

@@ -13,12 +13,12 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     {
     cyl_start = Start;
     cyl_size = CSize;
-    boot = Boot;
-    id = Id;
-    type = Type;
+    bootflag = Boot;
+    idt = Id;
+    typ = Type;
     parted_start = PartedStart;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
 Partition::Partition( const Disk& d, const string& Data ) : 
@@ -26,35 +26,35 @@ Partition::Partition( const Disk& d, const string& Data ) :
     {
     string ts, rs;
     istringstream i( Data );
-    i >> nr >> dev >> size_k >> major >> minor >> cyl_start >> cyl_size >>
-	 hex >> id >> dec >> ts >> rs;
-    name = dec_string(nr);
+    i >> num >> dev >> size_k >> mjr >> mnr >> cyl_start >> cyl_size >>
+	 hex >> idt >> dec >> ts >> rs;
+    nm = decString(num);
     if( ts == "extended" )
-	type = EXTENDED;
+	typ = EXTENDED;
     else if( ts == "logical" )
-	type = LOGICAL;
+	typ = LOGICAL;
     else 
-	type = PRIMARY;
+	typ = PRIMARY;
     if( rs == "boot" )
-	boot = true;
+	bootflag = true;
     else
-	boot = false;
+	bootflag = false;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
-ostream& Partition::LogData( ostream& file ) const
+ostream& Partition::logData( ostream& file ) const
     {
-    file << nr << " " << dev << " " << size_k << " " <<  major << " " 
-         << minor << " ";
-    file << cyl_start << " " << cyl_size << " " << hex << id << dec;
-    if( type == LOGICAL )
+    file << num << " " << dev << " " << size_k << " " <<  mjr << " " 
+         << mnr << " ";
+    file << cyl_start << " " << cyl_size << " " << hex << idt << dec;
+    if( typ == LOGICAL )
 	file << " logical";
-    else if( type == EXTENDED )
+    else if( typ == EXTENDED )
 	file << " extended";
     else 
 	file << " primary";
-    if( boot )
+    if( bootflag )
 	file << " boot";
     return( file );
     }

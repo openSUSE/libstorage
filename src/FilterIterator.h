@@ -29,19 +29,19 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 
 	FilterIterator( const FilterIterator& x ) 
 	    {
-	    copy_members( x );
+	    copyMembers( x );
 	    }
 
 	FilterIterator& operator=(const FilterIterator& x)
 	    { 
-	    copy_members( x );
+	    copyMembers( x );
 	    return *this; 
 	    }
 
 	FilterIterator& operator++()
 	    { 
 	    ++m_cur;
-	    assert_pred();
+	    assertPred();
 	    return *this; 
 	    }
 	FilterIterator operator++(int)
@@ -49,14 +49,14 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    cerr << "Expensive ++ FilterIterator" << endl;
 	    FilterIterator tmp(*this); 
 	    ++m_cur;
-	    assert_pred();
+	    assertPred();
 	    return tmp;
 	    }
 
 	FilterIterator& operator--()
 	    { 
 	    --m_cur;
-	    assert_pred(false);
+	    assertPred(false);
 	    return *this; 
 	    }
 	FilterIterator operator--(int)
@@ -64,7 +64,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    cerr << "Expensive -- FilterIterator" << endl;
 	    FilterIterator tmp(*this); 
 	    --m_cur;
-	    assert_pred(false);
+	    assertPred(false);
 	    return tmp;
 	    }
 
@@ -102,10 +102,10 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    if( setend )
 		m_cur = m_end;
 	    else
-		assert_pred();
+		assertPred();
 	    }
 
-	void copy_members( const FilterIterator& x ) 
+	void copyMembers( const FilterIterator& x ) 
 	    { 
 	    m_begin = x.begin();
 	    m_end = x.end();
@@ -114,7 +114,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    }
 
 
-	void assert_pred( bool forward=true ) 
+	void assertPred( bool forward=true ) 
 	    {
 	    if( forward )
 		while( m_cur!=m_end && !m_f(**m_cur) )

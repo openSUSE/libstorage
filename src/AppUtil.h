@@ -18,26 +18,26 @@ using std::string;
 
 class AsciiFile;
 
-bool SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
-bool SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
+bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
+bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
 		int& StartLine_ir);
-void TimeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
-void CreatePath(string Path_Cv);
+void timeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
+void createPath(string Path_Cv);
 
-string ExtractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
-void RemoveLastIf(string& Text_Cr, char Char_cv);
-bool RunningFromSystem();
+string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
+void removeLastIf(string& Text_Cr, char Char_cv);
+bool runningFromSystem();
 
-void Delay(int Microsec_iv);
+void delay(int Microsec_iv);
 
-template<class Num> string dec_string(Num number)
+template<class Num> string decString(Num number)
     {
     std::ostringstream num_str;
     num_str << number;
     return( num_str.str() );
     }
 
-template<class Num> string hex_string(Num number)
+template<class Num> string hexString(Num number)
     {
     std::ostringstream num_str;
     num_str << std::hex << number;

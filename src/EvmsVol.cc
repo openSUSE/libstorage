@@ -8,11 +8,11 @@
 EvmsVol::EvmsVol( const Evms& d, const string& name, unsigned Stripes ) 
     : Volume( d, name, 0 )
     {
-    stripes = Stripes;
-    compatible = true;
-    dev = d.Device() + "/" + name;
+    stripe = Stripes;
+    compat = true;
+    dev = d.device() + "/" + name;
     y2milestone( "constructed evms vol %s on co %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
 EvmsVol::~EvmsVol()

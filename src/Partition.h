@@ -20,21 +20,21 @@ class Partition : public Volume
 		   bool Boot=false );
 	Partition( const Disk& d, const string& Data );
 	virtual ~Partition();
-	unsigned CylStart() const { return cyl_start; }
-	unsigned CylSize() const { return cyl_size; }
-	bool Boot() const { return boot; }
-	unsigned Id() const { return id; }
-	PType Type() const { return type; }
-	ostream& LogData( ostream& file ) const;
-	const string& PartedStart() const { return parted_start; }
+	unsigned cylStart() const { return cyl_start; }
+	unsigned cylSize() const { return cyl_size; }
+	bool boot() const { return bootflag; }
+	unsigned id() const { return idt; }
+	PType type() const { return typ; }
+	ostream& logData( ostream& file ) const;
+	const string& partedStart() const { return parted_start; }
 	friend ostream& operator<< (ostream& s, const Partition &p );
 
     protected:
 	unsigned long cyl_start;
 	unsigned long cyl_size;
-	bool boot;
-	PType type;
-	unsigned id;
+	bool bootflag;
+	PType typ;
+	unsigned idt;
 	string parted_start;
 
     };
@@ -45,10 +45,10 @@ inline ostream& operator<< (ostream& s, const Partition &p )
     s << "Partition " << Volume(p) 
       << " Start:" << p.cyl_start
       << " CylNum:" << p.cyl_size
-      << " Id:" << std::hex << p.id << std::dec;
-    if( p.type!=Partition::PRIMARY )
-      s << ((p.type==Partition::LOGICAL)?" logical":" extended");
-    if( p.boot )
+      << " Id:" << std::hex << p.idt << std::dec;
+    if( p.typ!=Partition::PRIMARY )
+      s << ((p.typ==Partition::LOGICAL)?" logical":" extended");
+    if( p.bootflag )
       s << " boot";
     return( s );
     }

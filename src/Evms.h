@@ -12,11 +12,11 @@ class Evms : public Container
     public:
 	Evms( const Storage * const s, const string& Name="" );
 	virtual ~Evms();
-	unsigned long long PeSize() const { return pe_size; }
-	unsigned NumVol() const { return vols.size(); }
-	unsigned NumPv() const { return num_pv; }
-	unsigned IsContainer() const { return is_container; }
-	static CType const StaticType() { return EVMS; }
+	unsigned long long peSize() const { return pe_size; }
+	unsigned numVol() const { return vols.size(); }
+	unsigned numPv() const { return num_pv; }
+	unsigned isContainer() const { return is_container; }
+	static CType const staticType() { return EVMS; }
 	friend inline ostream& operator<< (ostream&, const Evms& );
 
     protected:

@@ -8,9 +8,9 @@
 Md::Md( const Container& d, unsigned PNr, MdType Type ) : Volume( d, PNr, 0 )
     {
     y2milestone( "constructed md %s on container %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     md_type = Type;
-    if( d.Type() != Container::MD )
+    if( d.type() != Container::MD )
 	y2error( "constructed md with wrong container" );
     }
 

@@ -23,88 +23,88 @@
 
 Disk::Disk( const Storage * const s, const string& Name, 
             unsigned long long SizeK ) : 
-    Container(s,Name,StaticType())
+    Container(s,Name,staticType())
     {
     size_k = SizeK;
     y2milestone( "constructed disk %s", dev.c_str() );
     }
 
 Disk::Disk( const Storage * const s, const string& fname ) :
-    Container(s,"",StaticType())
+    Container(s,"",staticType())
     {
-    name = fname.substr( fname.find_last_of( '/' )+1);
-    if( name.find("disk_")==0 )
-	name.erase( 0, 5 );
+    nm = fname.substr( fname.find_last_of( '/' )+1);
+    if( nm.find("disk_")==0 )
+	nm.erase( 0, 5 );
     AsciiFile file( fname );
     string line;
-    if( SearchFile( file, "^Device:", line ) )
+    if( searchFile( file, "^Device:", line ) )
 	{
-	dev = ExtractNthWord( 1, line );
+	dev = extractNthWord( 1, line );
 	}
-    minor = major = 0;
-    if( SearchFile( file, "^Major:", line ) )
+    mnr = mjr = 0;
+    if( searchFile( file, "^Major:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> major;
+	extractNthWord( 1, line ) >> mjr;
 	}
-    if( SearchFile( file, "^Minor:", line ) )
+    if( searchFile( file, "^Minor:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> minor;
+	extractNthWord( 1, line ) >> mnr;
 	}
     range = 4;
-    if( SearchFile( file, "^Range:", line ) )
+    if( searchFile( file, "^Range:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> range;
+	extractNthWord( 1, line ) >> range;
 	}
-    cylinders = 1024;
-    if( SearchFile( file, "^Cylinder:", line ) )
+    cyl = 1024;
+    if( searchFile( file, "^Cylinder:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> cylinders;
+	extractNthWord( 1, line ) >> cyl;
 	}
-    heads = 1024;
-    if( SearchFile( file, "^Head:", line ) )
+    head = 1024;
+    if( searchFile( file, "^Head:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> heads;
+	extractNthWord( 1, line ) >> head;
 	}
-    sectors = 32;
-    if( SearchFile( file, "^Sector:", line ) )
+    sector = 32;
+    if( searchFile( file, "^Sector:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> sectors;
+	extractNthWord( 1, line ) >> sector;
 	}
-    if( SearchFile( file, "^Label:", line ) )
+    if( searchFile( file, "^Label:", line ) )
 	{
-	label = ExtractNthWord( 1, line );
+	label = extractNthWord( 1, line );
 	}
     max_primary = 0;
-    if( SearchFile( file, "^MaxPrimary:", line ) )
+    if( searchFile( file, "^MaxPrimary:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> max_primary;
+	extractNthWord( 1, line ) >> max_primary;
 	}
     ext_possible = false;
     max_logical = 0;
-    if( SearchFile( file, "^ExtPossible:", line ) )
+    if( searchFile( file, "^ExtPossible:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> ext_possible;
+	extractNthWord( 1, line ) >> ext_possible;
 	}
-    if( SearchFile( file, "^MaxLogical:", line ) )
+    if( searchFile( file, "^MaxLogical:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> max_logical;
+	extractNthWord( 1, line ) >> max_logical;
 	}
-    readonly = false;
-    if( SearchFile( file, "^Readonly:", line ) )
+    rdonly = false;
+    if( searchFile( file, "^Readonly:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> readonly;
+	extractNthWord( 1, line ) >> rdonly;
 	}
     size_k = 0;
-    if( SearchFile( file, "^SizeK:", line ) )
+    if( searchFile( file, "^SizeK:", line ) )
 	{
-	ExtractNthWord( 1, line ) >> size_k;
+	extractNthWord( 1, line ) >> size_k;
 	}
     int lnr = 0;
-    while( SearchFile( file, "^Partition:", line, lnr ))
+    while( searchFile( file, "^Partition:", line, lnr ))
 	{
 	lnr++;
-	Partition *p = new Partition( *this, ExtractNthWord( 1, line, true ));
-	AddToList( p );
+	Partition *p = new Partition( *this, extractNthWord( 1, line, true ));
+	addToList( p );
 	}
     y2milestone( "constructed disk %s from file %s", dev.c_str(), fname.c_str() );
     }
@@ -116,13 +116,13 @@ Disk::~Disk()
     }
 
 unsigned long long
-Disk::CylinderToKb( unsigned long cylinder )
+Disk::cylinderToKb( unsigned long cylinder )
     {
     return (unsigned long long)byte_cyl * cylinder / 1024;
     }
 
 unsigned long
-Disk::KbToCylinder( unsigned long long kb )
+Disk::kbToCylinder( unsigned long long kb )
     {
     unsigned long long bytes = kb * 1024;
     bytes += byte_cyl - 1;
@@ -130,37 +130,37 @@ Disk::KbToCylinder( unsigned long long kb )
     }
 
 unsigned long long
-Disk::CapacityInKb()
+Disk::capacityInKb()
     {
-    return (unsigned long long)byte_cyl * cylinders / 1024;
+    return (unsigned long long)byte_cyl * cyl / 1024;
     }
 
-bool Disk::DetectGeometry()
+bool Disk::detectGeometry()
     {
     bool ret = false;
-    int fd = open( Device().c_str(), O_RDONLY );
+    int fd = open( device().c_str(), O_RDONLY );
     if( fd >= 0 )
 	{
-	heads = 255;
-	sectors = 63;
-	cylinders = 16;
+	head = 255;
+	sector = 63;
+	cyl = 16;
 	struct hd_geometry geometry;
 	int rcode = ioctl( fd, HDIO_GETGEO, &geometry );
 	if( rcode==0 )
 	    {
-	    heads = geometry.heads>0?geometry.heads:heads;
-	    sectors = geometry.sectors>0?geometry.sectors:sectors;
-	    cylinders = geometry.cylinders>0?geometry.cylinders:cylinders;
+	    head = geometry.heads>0?geometry.heads:head;
+	    sector = geometry.sectors>0?geometry.sectors:sector;
+	    cyl = geometry.cylinders>0?geometry.cylinders:cyl;
 	    }
 	y2milestone( "After HDIO_GETGEO ret %d Head:%u Sector:%u Cylinder:%lu",
-		     rcode, heads, sectors, cylinders );
+		     rcode, head, sector, cyl );
 	__uint64_t sect = 0;
 	rcode = ioctl( fd, BLKGETSIZE64, &sect);
 	y2milestone( "BLKGETSIZE64 Ret:%d Bytes:%llu", rcode, sect );
 	if( rcode==0 && sect!=0 )
 	    {
 	    sect /= 512;
-	    cylinders = (unsigned)(sect / (__uint64_t)(heads*sectors));
+	    cyl = (unsigned)(sect / (__uint64_t)(head*sector));
 	    ret = true;
 	    }
 	else
@@ -170,19 +170,19 @@ bool Disk::DetectGeometry()
 	    y2milestone( "BLKGETSIZE Ret:%d Sect:%lu", rcode, lsect );
 	    if( rcode==0 && lsect!=0 )
 		{
-		cylinders = lsect / (unsigned long)(heads*sectors);
+		cyl = lsect / (unsigned long)(head*sector);
 		ret = true;
 		}
 	    }
-	y2milestone( "After getsize Cylinder:%lu", cylinders );
+	y2milestone( "After getsize Cylinder:%lu", cyl );
 	close( fd );
 	}
-    byte_cyl = heads * sectors * 512;
+    byte_cyl = head * sector * 512;
     y2milestone( "ret:%d byte_cyl:%lu", ret, byte_cyl );
     return( ret );
     }
 
-bool Disk::GetSysfsInfo( const string& SysfsDir )
+bool Disk::getSysfsInfo( const string& SysfsDir )
     {
     bool ret = true;
     string SysfsFile = SysfsDir+"/range";
@@ -201,67 +201,67 @@ bool Disk::GetSysfsInfo( const string& SysfsDir )
 	{
 	ifstream File( SysfsFile.c_str() );
 	char c;
-	File >> major;
+	File >> mjr;
 	File >> c;
-	File >> minor;
+	File >> mnr;
 	}
     else
 	{
 	ret = false;
 	}
-    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld", ret, range, major, 
-                 minor );
+    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld", ret, range, mjr, 
+                 mnr );
     return( ret );
     }
 
-bool Disk::DetectPartitions()
+bool Disk::detectPartitions()
     {
     bool ret = true;
-    string cmd_line = PARTEDCMD + Device() + " print | sort -n";
+    string cmd_line = PARTEDCMD + device() + " print | sort -n";
     string dlabel;
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line, true );
-    CheckSystemError( cmd_line, Cmd );
-    if( Cmd.Select( "Disk label type:" )>0 )
+    checkSystemError( cmd_line, Cmd );
+    if( Cmd.select( "Disk label type:" )>0 )
 	{
-	string tmp = *Cmd.GetLine(0, true);
+	string tmp = *Cmd.getLine(0, true);
 	y2milestone( "Label line:%s", tmp.c_str() );
-	dlabel = ExtractNthWord( 3, tmp );
+	dlabel = extractNthWord( 3, tmp );
 	}
     y2milestone( "Label:%s", dlabel.c_str() );
-    SetLabelData( dlabel );
-    CheckPartedOutput( Cmd );
+    setLabelData( dlabel );
+    checkPartedOutput( Cmd );
     if( dlabel.size()==0 )
 	{
-	Cmd.SetCombine();
-	Cmd.Execute( "/sbin/fdisk -l " + Device() );
-	if( Cmd.Select( "AIX label" )>0 )
+	Cmd.setCombine();
+	Cmd.execute( "/sbin/fdisk -l " + device() );
+	if( Cmd.select( "AIX label" )>0 )
 	    {
 	    dlabel = "aix";
 	    }
 	}
     if( dlabel.size()==0 )
-	dlabel = DefaultLabel();
-    SetLabelData( dlabel );
+	dlabel = defaultLabel();
+    setLabelData( dlabel );
     y2milestone( "ret:%d partitons:%d label:%s", ret, vols.size(), 
                  dlabel.c_str() );
     return( ret );
     }
 
 void
-Disk::LogData( const string& Dir )
+Disk::logData( const string& Dir )
     {
-    string fname( Dir + "/disk_" + Name() );
+    string fname( Dir + "/disk_" + name() );
     ofstream file( fname.c_str() );
     file << "Device: " << dev << endl;
-    file << "Major: " << major << endl;
-    file << "Minor: " << minor << endl;
+    file << "Major: " << mjr << endl;
+    file << "Minor: " << mnr << endl;
     file << "Range: " << range << endl;
 
-    file << "Cylinder: " << cylinders << endl;
-    file << "Head: " << heads << endl;
-    file << "Sector: " << sectors << endl;
+    file << "Cylinder: " << cyl << endl;
+    file << "Head: " << head << endl;
+    file << "Sector: " << sector << endl;
 
     file << "Label: " << label << endl;
     file << "MaxPrimary: " << max_primary << endl;
@@ -271,9 +271,9 @@ Disk::LogData( const string& Dir )
 	file << "MaxLogical: " << max_logical << endl;
 	}
 
-    if( readonly )
+    if( rdonly )
 	{
-	file << "Readonly: " << readonly << endl;
+	file << "Readonly: " << rdonly << endl;
 	}
     file << "SizeK: " << size_k << endl;
 
@@ -281,13 +281,13 @@ Disk::LogData( const string& Dir )
 	{
 	const Partition *p = static_cast<const Partition *>(*i);
 	file << "Partition: ";
-	p->LogData(file);
+	p->logData(file);
 	file << endl;
 	}
     }
 
 void
-Disk::SetLabelData( const string& disklabel )
+Disk::setLabelData( const string& disklabel )
     {
     y2milestone( "disklabel:%s", disklabel.c_str() );
     int i=0;
@@ -306,9 +306,9 @@ Disk::SetLabelData( const string& disklabel )
     }
 
 void
-Disk::CheckSystemError( const string& cmd_line, const SystemCmd& cmd )
+Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     {
-    string tmp = *cmd.GetString(SystemCmd::IDX_STDERR);
+    string tmp = *cmd.getString(SystemCmd::IDX_STDERR);
     if( tmp.length()>0 )
         {
         y2error( "cmd:%s", cmd_line.c_str() );
@@ -319,7 +319,7 @@ Disk::CheckSystemError( const string& cmd_line, const SystemCmd& cmd )
 	    }
 	system_stderr += tmp;
         }
-    tmp = *cmd.GetString(SystemCmd::IDX_STDOUT);
+    tmp = *cmd.getString(SystemCmd::IDX_STDOUT);
     if( tmp.length()>0 )
         {
         y2milestone( "cmd:%s", cmd_line.c_str() );
@@ -330,14 +330,14 @@ Disk::CheckSystemError( const string& cmd_line, const SystemCmd& cmd )
 	    }
 	system_stderr += tmp;
         }
-    if( cmd.Retcode() != 0 )
+    if( cmd.retcode() != 0 )
         {
-        y2error( "retcode:%d", cmd.Retcode() );
+        y2error( "retcode:%d", cmd.retcode() );
         }
     }
 
 bool
-Disk::ScanPartedLine( const string& Line, unsigned& nr, unsigned long& start, 
+Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start, 
                       unsigned long& csize, Partition::PType& type, 
 		      string& parted_start, unsigned& id, bool& boot )
     {
@@ -387,11 +387,11 @@ Disk::ScanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     TInfo += ",";
     y2milestone( "Fields Num:%d Start:%5.2f End:%5.2f Type:%d",
 		 nr, StartM, EndM, type );
-    int Add = CylinderToKb(1)*2/5;
+    int Add = cylinderToKb(1)*2/5;
     if( nr>0 )
       {
-      start = KbToCylinder( (unsigned long long)(StartM*1024)+Add );
-      csize = KbToCylinder( (unsigned long long)(EndM*1024)+Add ) - start;
+      start = kbToCylinder( (unsigned long long)(StartM*1024)+Add );
+      csize = kbToCylinder( (unsigned long long)(EndM*1024)+Add ) - start;
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;
@@ -493,7 +493,7 @@ Disk::ScanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
    }
 
 bool
-Disk::CheckPartedOutput( const SystemCmd& Cmd )
+Disk::checkPartedOutput( const SystemCmd& Cmd )
     {
     int cnt;
     string line;
@@ -502,7 +502,7 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
     unsigned long range_exceed = 0;
     list<Partition *> pl;
 
-    cnt = Cmd.NumLines();
+    cnt = Cmd.numLines();
     for( int i=0; i<cnt; i++)
 	{
 	unsigned pnr;
@@ -513,23 +513,23 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 	unsigned id;
 	bool boot;
 
-	line = *Cmd.GetLine(i);
-	tmp = ExtractNthWord( 0, line );
+	line = *Cmd.getLine(i);
+	tmp = extractNthWord( 0, line );
 	if( tmp.length()>0 && isdigit(tmp[0]) )
 	    {
-	    if( ScanPartedLine( line, pnr, c_start, c_size, type, p_start, id, 
+	    if( scanPartedLine( line, pnr, c_start, c_size, type, p_start, id, 
 	                        boot ))
 		{
 		if( pnr<range )
 		    {
-		    unsigned long long s = CylinderToKb(c_size);
+		    unsigned long long s = cylinderToKb(c_size);
 		    Partition *p = new Partition( *this, pnr, s,
 						  c_start, c_size, type, 
 						  p_start, id, boot );
-		    if( ppart.GetSize( p->Device(), s ))
+		    if( ppart.getSize( p->device(), s ))
 			{
-			if( s>0 && p->Type() != Partition::EXTENDED )
-			    p->SetSize( s );
+			if( s>0 && p->type() != Partition::EXTENDED )
+			    p->setSize( s );
 			}
 		    pl.push_back( p );
 		    }
@@ -538,8 +538,8 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 		}
 	    }
 	}
-    list<string> ps = ppart.GetMatchingEntries( name + "p?[0-9]+" );
-    if( !CheckPartedValid( ppart, ps, pl ) )
+    list<string> ps = ppart.getMatchingEntries( nm + "p?[0-9]+" );
+    if( !checkPartedValid( ppart, ps, pl ) )
 	{
 	range_exceed = 0;
 	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
@@ -552,10 +552,10 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 	    {
 	    unsigned long cyl;
 	    unsigned long long s;
-	    pair<string,long> pr = GetDiskPartition( *i );
-	    if( ppart.GetSize( *i, s ))
+	    pair<string,long> pr = getDiskPartition( *i );
+	    if( ppart.getSize( *i, s ))
 		{
-		cyl = KbToCylinder(s);
+		cyl = kbToCylinder(s);
 		if( pr.second < (long)range )
 		    {
 		    unsigned id = Partition::ID_LINUX;
@@ -575,7 +575,7 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 		    Partition *p = 
 			new Partition( *this, pr.second, s, cyl_start, cyl,
 			               type, 
-				       dec_string(CylinderToKb(cyl_start)),
+				       decString(cylinderToKb(cyl_start)),
 				       id, false );
 		    pl.push_back( p );
 		    }
@@ -596,7 +596,7 @@ _("The partitioning on your disk %1$s is not readable by\n"
 
 	// TODO: handle callback into ycp code for error popup
 	y2milestone( "parted invalid:%s", txt.c_str() );
-	readonly = true;
+	rdonly = true;
 	}
     if( range_exceed>0 )
 	{
@@ -612,12 +612,12 @@ _("Your disk %1$s contains %2$lu partitions. The maximal number\n"
 	}
     for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
 	{
-	AddToList( *i );
+	addToList( *i );
 	}
     return( true );
     }
 
-bool Disk::CheckPartedValid( const ProcPart& pp, const list<string>& ps,
+bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
                              const list<Partition*>& pl )
     {
     long ext_nr = 0;
@@ -628,25 +628,25 @@ bool Disk::CheckPartedValid( const ProcPart& pp, const list<string>& ps,
     map<unsigned,unsigned long> parted_l;
     for( list<Partition*>::const_iterator i=pl.begin(); i!=pl.end(); i++ )
 	{
-	if( (*i)->Type()==Partition::EXTENDED )
-	    ext_nr = (*i)->Nr();
+	if( (*i)->type()==Partition::EXTENDED )
+	    ext_nr = (*i)->nr();
 	else
 	    {
-	    parted_l[(*i)->Nr()] = (*i)->CylSize();
+	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
-	pair<string,long> p = GetDiskPartition( *i );
+	pair<string,long> p = getDiskPartition( *i );
 	if( p.second>=0 && p.second!=ext_nr && 
-	    pp.GetInfo( *i, SizeK, Dummy, Dummy ))
+	    pp.getInfo( *i, SizeK, Dummy, Dummy ))
 	    {
-	    proc_l[unsigned(p.second)] = KbToCylinder( SizeK );
+	    proc_l[unsigned(p.second)] = kbToCylinder( SizeK );
 	    }
 	}
     bool openbsd = false;
     if( proc_l.size()==parted_l.size() || 
-        ((openbsd=HaveBsdPart()) && proc_l.size()>parted_l.size()) )
+        ((openbsd=haveBsdPart()) && proc_l.size()>parted_l.size()) )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
 	for( i=proc_l.begin(); i!=proc_l.end(); i++ )
@@ -680,25 +680,25 @@ bool Disk::CheckPartedValid( const ProcPart& pp, const list<string>& ps,
     return( ret );
     }
 
-bool Disk::HaveBsdPart() const
+bool Disk::haveBsdPart() const
     {
     bool ret=false;
     for( ConstPlainIterator i=begin(); !ret&&i!=end(); i++ )
 	{
 	const Partition *p = static_cast<const Partition *>(*i);
-	if( p->Id()==0xa5 || p->Id()==0xa6 )
+	if( p->id()==0xa5 || p->id()==0xa6 )
 	    ret=true;
 	}
     return(ret);
     }
 
 
-string Disk::DefaultLabel()
+string Disk::defaultLabel()
     {
     string ret = "msdos";
-    if( Storage::Arch()=="ia64" )
+    if( Storage::arch()=="ia64" )
 	ret = "gpt";
-    else if( Storage::Arch()=="sparc" )
+    else if( Storage::arch()=="sparc" )
 	ret = "sun";
     y2milestone( "ret %s", ret.c_str() );
     return( ret );
@@ -716,7 +716,7 @@ Disk::label_info Disk::labels[] = {
 
 string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/" };
 
-bool Disk::NeedP( const string& disk )
+bool Disk::needP( const string& disk )
     {
     bool need_p = false;
     unsigned i=0;
@@ -732,21 +732,21 @@ bool Disk::NeedP( const string& disk )
     return( need_p );
     }
 
-string Disk::GetPartName( const string& disk, unsigned nr )
+string Disk::getPartName( const string& disk, unsigned nr )
     {
-    return( disk + (Disk::NeedP(disk)?"p":"") + dec_string(nr) );
+    return( disk + (Disk::needP(disk)?"p":"") + decString(nr) );
     }
 
-string Disk::GetPartName( const string& disk, const string& nr )
+string Disk::getPartName( const string& disk, const string& nr )
     {
     return( disk + "/" + nr );
     }
 
-pair<string,long> Disk::GetDiskPartition( const string& dev )
+pair<string,long> Disk::getDiskPartition( const string& dev )
     {
     long nr = -1;
     string disk = dev;
-    bool need_p = Disk::NeedP(dev);
+    bool need_p = Disk::needP(dev);
     string::size_type p = dev.find_last_not_of( "0123456789" );
     if( p != string::npos && (!need_p||dev[p]=='p') && isdigit(dev[p+1]))
 	{

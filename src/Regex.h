@@ -21,8 +21,8 @@ public:
     Regex (const string&, int = REG_EXTENDED, unsigned int = 10);
     ~Regex ();
 
-    string get_pattern () const { return pattern; };
-    int get_cflags () const { return cflags; }
+    string getPattern () const { return pattern; };
+    int getCflags () const { return cflags; }
 
     bool match (const string&, int = 0) const;
 

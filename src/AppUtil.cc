@@ -22,14 +22,14 @@
 #define BUF_SIZE 512
 
 bool
-SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr)
+searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr)
 {
   int LineNr_ii = 0;
-  return SearchFile(File_Cr, Pat_Cv, Line_Cr, LineNr_ii);
+  return searchFile(File_Cr, Pat_Cv, Line_Cr, LineNr_ii);
 }
 
 bool
-SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
+searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
 {
   int End_ii;
   bool Found_bi = false;
@@ -45,7 +45,7 @@ SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
   BeginOfLine_bi = Search_Ci.length() > 0 && Search_Ci[0] == '^';
   if (BeginOfLine_bi)
     Search_Ci.erase(0, 1);
-  End_ii = File_Cr.NumLines();
+  End_ii = File_Cr.numLines();
   LineNr_ii = LineNr_ir;
   while (!Found_bi && LineNr_ii < End_ii)
     {
@@ -69,7 +69,7 @@ SearchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
   return Found_bi;
 }
 
-void TimeMark(const char*const Text_pcv, bool PrintDiff_bi)
+void timeMark(const char*const Text_pcv, bool PrintDiff_bi)
 {
   static unsigned long Start_ls;
   unsigned long Diff_li;
@@ -87,7 +87,7 @@ void TimeMark(const char*const Text_pcv, bool PrintDiff_bi)
     }
 }
 
-void CreatePath(string Path_Cv)
+void createPath(string Path_Cv)
 {
   string Path_Ci = Path_Cv;
   string Tmp_Ci;
@@ -102,7 +102,7 @@ void CreatePath(string Path_Cv)
 }
 
 bool
-GetUid(string Name_Cv, unsigned& Uid_ir)
+getUid(string Name_Cv, unsigned& Uid_ir)
 {
   struct passwd *Passwd_pri;
 
@@ -112,7 +112,7 @@ GetUid(string Name_Cv, unsigned& Uid_ir)
 }
 
 bool
-GetGid(string Name_Cv, unsigned& Gid_ir)
+getGid(string Name_Cv, unsigned& Gid_ir)
 {
   struct group *Group_pri;
 
@@ -122,25 +122,25 @@ GetGid(string Name_Cv, unsigned& Gid_ir)
 }
 
 int
-GetGid(string Name_Cv)
+getGid(string Name_Cv)
 {
   unsigned Tmp_ii;
 
-  GetGid(Name_Cv, Tmp_ii);
+  getGid(Name_Cv, Tmp_ii);
   return Tmp_ii;
 }
 
 int
-GetUid(string Name_Cv)
+getUid(string Name_Cv)
 {
   unsigned Tmp_ii;
 
-  GetUid(Name_Cv, Tmp_ii);
+  getUid(Name_Cv, Tmp_ii);
   return Tmp_ii;
 }
 
 bool
-CheckDir(string Path_Cv)
+checkDir(string Path_Cv)
 {
   struct stat Stat_ri;
 
@@ -149,7 +149,7 @@ CheckDir(string Path_Cv)
 }
 
 bool
-CheckSymlink(string Path_Cv)
+checkSymlink(string Path_Cv)
 {
   struct stat Stat_ri;
 
@@ -158,7 +158,7 @@ CheckSymlink(string Path_Cv)
 }
 
 bool
-CheckBlockDevice(string Path_Cv)
+checkBlockDevice(string Path_Cv)
 {
   struct stat Stat_ri;
 
@@ -167,7 +167,7 @@ CheckBlockDevice(string Path_Cv)
 }
 
 bool
-CheckNormalFile(string Path_Cv)
+checkNormalFile(string Path_Cv)
 {
   struct stat Stat_ri;
   
@@ -175,7 +175,7 @@ CheckNormalFile(string Path_Cv)
 	  S_ISREG(Stat_ri.st_mode));
 }
 
-string ExtractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
+string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   {
   string::size_type pos;
   int I_ii=0;
@@ -223,21 +223,21 @@ string ExtractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   return Ret_Ci;
   }
 
-void PutNthWord(int Num_iv, string Word_Cv, string& Line_Cr)
+void putNthWord(int Num_iv, string Word_Cv, string& Line_Cr)
 {
-  string Last_Ci = ExtractNthWord(Num_iv, Line_Cr, true);
+  string Last_Ci = extractNthWord(Num_iv, Line_Cr, true);
   int Len_ii = Last_Ci.find_first_of(" \t");
   Line_Cr.replace(Line_Cr.length() - Last_Ci.length(), Len_ii, Word_Cv);
 }
 
 
-void RemoveLastIf (string& Text_Cr, char Char_cv)
+void removeLastIf (string& Text_Cr, char Char_cv)
 {
   if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
     Text_Cr.erase(Text_Cr.length() - 1);
 }
 
-void Delay(int Microsec_iv)
+void delay(int Microsec_iv)
 {
   timeval Timeout_ri;
 
@@ -246,7 +246,7 @@ void Delay(int Microsec_iv)
   select(0, NULL, NULL, NULL, &Timeout_ri);
 }
 
-void RemoveSurrounding(char Delim_ci, string& Text_Cr)
+void removeSurrounding(char Delim_ci, string& Text_Cr)
 {
   if (Text_Cr.length() > 0 && Text_Cr[0] == Delim_ci)
     Text_Cr.erase(0, 1);
@@ -255,12 +255,12 @@ void RemoveSurrounding(char Delim_ci, string& Text_Cr)
 }
 
 int
-CompareGt(string Lhs_Cv, string Rhs_Cv)
+compareGt(string Lhs_Cv, string Rhs_Cv)
 {
   return Lhs_Cv > Rhs_Cv;
 }
 
-bool RunningFromSystem()
+bool runningFromSystem()
     {
     static bool FirstCall_bs = true;
     static bool FromSystem_bs;

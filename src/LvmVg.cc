@@ -6,32 +6,32 @@
 #include "y2storage/LvmLv.h"
 
 LvmVg::LvmVg( const Storage * const s, const string& Name ) :
-    Container(s,Name,StaticType())
+    Container(s,Name,staticType())
     {
-    if( name == "system" )
+    if( nm == "system" )
 	{
 	pe_size = 4*1024*1024;
 	num_pv = 1;
-	AddToList( new LvmLv( *this, "usr" ));
-	AddToList( new LvmLv( *this, "var" ));
-	AddToList( new LvmLv( *this, "scratch" ));
+	addToList( new LvmLv( *this, "usr" ));
+	addToList( new LvmLv( *this, "var" ));
+	addToList( new LvmLv( *this, "scratch" ));
 	}
-    else if( name == "vg1" )
+    else if( nm == "vg1" )
 	{
 	pe_size = 16*1024*1024;
 	num_pv = 10;
-	AddToList( new LvmLv( *this, "lv1" ));
-	AddToList( new LvmLv( *this, "lv2", 2 ));
-	AddToList( new LvmLv( *this, "lv3", 3 ));
-	AddToList( new LvmLv( *this, "lv4", 4 ));
-	AddToList( new LvmLv( *this, "lv5", 5 ));
-	AddToList( new LvmLv( *this, "lv6", 6 ));
+	addToList( new LvmLv( *this, "lv1" ));
+	addToList( new LvmLv( *this, "lv2", 2 ));
+	addToList( new LvmLv( *this, "lv3", 3 ));
+	addToList( new LvmLv( *this, "lv4", 4 ));
+	addToList( new LvmLv( *this, "lv5", 5 ));
+	addToList( new LvmLv( *this, "lv6", 6 ));
 	}
-    else if( name == "vg2" )
+    else if( nm == "vg2" )
 	{
 	num_pv = 5;
 	pe_size = 256*1024*1024;
-	AddToList( new LvmLv( *this, "lv_va2", 2 ));
+	addToList( new LvmLv( *this, "lv_va2", 2 ));
 	}
     else
 	{

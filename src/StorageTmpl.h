@@ -47,7 +47,7 @@ class CheckType
     public:
 	bool operator()( const Container& d ) const
 	    {
-	    return( d.Type()==Value );
+	    return( d.type()==Value );
 	    }
     };
 
@@ -161,7 +161,7 @@ class CheckerIterator : public Checker, public ContIter
     };
 
 template < class C >
-void PointerIntoSortedList( list<C*>& l, C* e )
+void pointerIntoSortedList( list<C*>& l, C* e )
     {
     typename list<C*>::iterator i = l.begin();
     while( i!=l.end() && **i < *e )

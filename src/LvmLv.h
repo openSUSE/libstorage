@@ -12,18 +12,18 @@ class LvmLv : public Volume
     public:
 	LvmLv( const LvmVg& d, const string& name, unsigned Stripes=1 );
 	virtual ~LvmLv();
-	unsigned Stripes() const { return stripes; }
+	unsigned stripes() const { return stripe; }
 	friend ostream& operator<< (ostream& s, const LvmLv &p );
 
     protected:
-	unsigned stripes;
+	unsigned stripe;
     };
 
 inline ostream& operator<< (ostream& s, const LvmLv &p )
     {
     s << "Lv " << Volume(p);
-    if( p.stripes>1 )
-      s << " Stripes:" << p.stripes;
+    if( p.stripe>1 )
+      s << " Stripes:" << p.stripe;
     return( s );
     }
 

@@ -7,9 +7,9 @@
 
 LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned Stripes ) : Volume( d, name, 0 )
     {
-    stripes = Stripes;
+    stripe = Stripes;
     y2milestone( "constructed lvm lv %s on vg %s", dev.c_str(),
-                 cont->Name().c_str() );
+                 cont->name().c_str() );
     }
 
 LvmLv::~LvmLv()

@@ -27,47 +27,47 @@ class Disk : public Container
     public:
 	Disk( const Storage * const s, const string& Name, unsigned long long Size );
 	virtual ~Disk();
-	unsigned Cylinders() const { return cylinders; }
-	unsigned Heads() const { return heads; }
-	unsigned Sectors() const { return sectors; }
-	unsigned long long SizeK() const { return size_k; }
-	unsigned long Minor() const { return minor; }
-	unsigned long Major() const { return major; }
-	unsigned long NumMinor() const { return range; }
-	static CType const StaticType() { return DISK; }
-	static bool NeedP( const string& dev );
+	unsigned cylinders() const { return cyl; }
+	unsigned heads() const { return head; }
+	unsigned sectors() const { return sector; }
+	unsigned long long sizeK() const { return size_k; }
+	unsigned long minor() const { return mnr; }
+	unsigned long major() const { return mjr; }
+	unsigned long numMinor() const { return range; }
+	static CType const staticType() { return DISK; }
+	static bool needP( const string& dev );
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
     protected:
 	Disk( const Storage * const s, const string& File );
-	unsigned long long CylinderToKb( unsigned long );
-	unsigned long KbToCylinder( unsigned long long );
-	unsigned long long CapacityInKb();
-	bool DetectGeometry();
-	bool DetectPartitions();
-	bool GetSysfsInfo( const string& SysFsDir );
-	void CheckSystemError( const string& cmd_line, const SystemCmd& cmd );
-	bool CheckPartedOutput( const SystemCmd& cmd );
-	bool ScanPartedLine( const string& Line, unsigned& nr, 
+	unsigned long long cylinderToKb( unsigned long );
+	unsigned long kbToCylinder( unsigned long long );
+	unsigned long long capacityInKb();
+	bool detectGeometry();
+	bool detectPartitions();
+	bool getSysfsInfo( const string& SysFsDir );
+	void checkSystemError( const string& cmd_line, const SystemCmd& cmd );
+	bool checkPartedOutput( const SystemCmd& cmd );
+	bool scanPartedLine( const string& Line, unsigned& nr, 
 	                     unsigned long& start, unsigned long& csize, 
 			     Partition::PType& type, string& parted_start, 
 			     unsigned& id, bool& boot );
-	bool CheckPartedValid( const ProcPart& pp, const list<string>& ps,
+	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );
-	void LogData( const string& Dir );
-	bool HaveBsdPart() const;
-	void SetLabelData( const string& );
+	void logData( const string& Dir );
+	bool haveBsdPart() const;
+	void setLabelData( const string& );
 
-	static string DefaultLabel();
+	static string defaultLabel();
 	static label_info labels[];
 	static string p_disks[];
-	static string GetPartName( const string& disk, unsigned nr );
-	static string GetPartName( const string& disk, const string& nr );
-	static pair<string,long> GetDiskPartition( const string& dev );
+	static string getPartName( const string& disk, unsigned nr );
+	static string getPartName( const string& disk, const string& nr );
+	static pair<string,long> getDiskPartition( const string& dev );
 
-	unsigned long cylinders;
-	unsigned heads;
-	unsigned sectors;
+	unsigned long cyl;
+	unsigned head;
+	unsigned sector;
 	string label;
 	string system_stderr;
 	int max_primary;
@@ -75,19 +75,19 @@ class Disk : public Container
 	int max_logical;
 	unsigned long byte_cyl;
 	unsigned long long size_k;
-	unsigned long minor;
-	unsigned long major;
+	unsigned long mnr;
+	unsigned long mjr;
 	unsigned long range;
     };
 
 inline ostream& operator<< (ostream& s, const Disk& d )
     {
     d.print(s);
-    s << " Cyl:" << d.cylinders
-      << " Head:" << d.heads
-      << " Sect:" << d.sectors
-      << " Node <" << d.major
-      << ":" << d.minor << ">"
+    s << " Cyl:" << d.cyl
+      << " Head:" << d.head
+      << " Sect:" << d.sector
+      << " Node <" << d.mjr
+      << ":" << d.mnr << ">"
       << " Range:" << d.range
       << " SizeM:" << d.size_k/1024
       << " Label:" << d.label
