@@ -27,6 +27,9 @@ class Disk : public Container
     public:
 	Disk( const Storage * const s, const string& Name, unsigned long long Size );
 	virtual ~Disk();
+
+
+
 	unsigned cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
 	unsigned sectors() const { return sector; }

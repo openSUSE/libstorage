@@ -20,6 +20,7 @@ class Partition : public Volume
 		   bool Boot=false );
 	Partition( const Disk& d, const string& Data );
 	virtual ~Partition();
+
 	unsigned cylStart() const { return cyl_start; }
 	unsigned cylSize() const { return cyl_size; }
 	bool boot() const { return bootflag; }

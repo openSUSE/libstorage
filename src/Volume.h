@@ -11,8 +11,12 @@ class Volume
 	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
 	virtual ~Volume();
+
+	virtual bool commitChanges();
+
 	const string& device() const { return dev; }; 
 	bool deleted() const { return dltd; }
+	void setDeleted( bool val=true ) { dltd=val; }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
 	const string& name() const { return nm; }

@@ -58,6 +58,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetect ) :
 	    }
 	globfree (&globbuf);
 	}
+    setCacheChanges( true );
     }
 
 Storage::~Storage()

@@ -57,6 +57,8 @@ class Storage : public StorageInterface
 	Storage( bool ronly=false, bool testmode=false, bool autodetect=true );
 	bool test() const { return( testmode ); }
 	bool instsys() const { return( inst_sys ); }
+	void setCacheChanges( bool val=true ) { cache = val; }
+	bool cacheChanges() const { return( cache ); }
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	static const string& arch() { return( proc_arch ); }
@@ -781,6 +783,7 @@ class Storage : public StorageInterface
 	bool readonly;
 	bool testmode;
 	bool inst_sys;
+	bool cache;
 	string testdir;
 	string rootprefix;
 	static string proc_arch;
