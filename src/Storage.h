@@ -59,7 +59,7 @@ class Storage : public StorageInterface
 	bool instsys() const { return( inst_sys ); }
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool cacheChanges() const { return( cache ); }
-	void checkCache() { if( !cacheChanges() ) commitChanges(); }
+	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	static const string& arch() { return( proc_arch ); }
@@ -73,9 +73,11 @@ class Storage : public StorageInterface
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
 			     unsigned long long sizeK, string& device );
+	int removePartition( const string& partition );
+	int changePartitionId( const string& partition, unsigned id );
+	int destroyPartitionTable( const string& disk, const string& label );
+	string defaultDiskLabel();
         int commit();
-
-	int commitChanges() { return 0; }
 
 // iterators over container
     protected:
@@ -368,7 +370,8 @@ class Storage : public StorageInterface
 	template< class Pred >
 	    struct VolumeI { typedef ContainerIter<Pred, VolPart> type; };
 	typedef CheckerIterator< CheckFncVol, VolumeI<CheckFncVol>::type,
-	                         VolPart, Volume > VolIterator;
+	                         VolPart, Volume > VolPIterator;
+	typedef DerefIterator<VolPIterator,Volume> VolIterator;
 	typedef IterPair<VolIterator> VPair;
 
     public:
@@ -451,7 +454,7 @@ class Storage : public StorageInterface
 	    {
 	    IterPair<VolPart> p( (VolPart( cPair( CheckCnt ))),
 				 (VolPart( cPair( CheckCnt ), true )));
-	    return( VolIterator( p, CheckVol ));
+	    return( VolIterator( VolPIterator( p, CheckVol )));
 	    }
 	VolIterator vEnd( bool (* CheckCnt)( const Container& ))
 	    {
@@ -462,7 +465,7 @@ class Storage : public StorageInterface
 	    {
 	    IterPair<VolPart> p( (VolPart( cPair( CheckCnt ))),
 				 (VolPart( cPair( CheckCnt ), true )));
-	    return( VolIterator( p, CheckVol, true ));
+	    return( VolIterator( VolPIterator( p, CheckVol, true )));
 	    }
 
 // iterators over partitions
@@ -808,6 +811,7 @@ class Storage : public StorageInterface
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
+	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
 
 	// protected internal member variables
 	bool readonly;

@@ -34,24 +34,24 @@ Volume::~Volume()
     y2milestone( "destructed volume %s", dev.c_str() );
     }
 
-void Volume::init()
+void Volume::setNameDev()
     {
-    del = create = false;
     std::ostringstream Buf_Ci;
     if( numeric )
 	Buf_Ci << cont->device() << (Disk::needP(cont->device())?"p":"") << num;
     else
 	Buf_Ci << cont->device() << "/" << nm;
     dev = Buf_Ci.str();
+    nm = dev.substr( 5 );
+    }
+
+void Volume::init()
+    {
+    del = create = false;
+    setNameDev();
     mjr = mnr = 0;
     getMajorMinor( dev, mjr, mnr );
-    if( numeric )
-	{
-	Buf_Ci.str("");
-	Buf_Ci << cont->name() << num;
-	nm = Buf_Ci.str();
-	}
-    else
+    if( !numeric )
 	num = 0;
     }
 

@@ -62,8 +62,17 @@ namespace storage
 	DISK_SET_TYPE_INVALID_VOLUME = -1008,
 	DISK_SET_TYPE_PARTED_FAILED = -1009,
 	DISK_SET_LABEL_PARTED_FAILED = -1010,
+	DISK_REMOVE_PARTITION_NOT_FOUND = -1011,
+	DISK_REMOVE_PARTITION_PARTED_FAILED = -1012,
+	DISK_REMOVE_PARTITION_INVALID_VOLUME = -1013,
+	DISK_REMOVE_PARTITION_LIST_ERASE = -1014,
+	DISK_CHANGE_PARTITION_ID_NOT_FOUND = -1015,
+	DISK_DESTROY_TABLE_INVALID_LABEL = -1016,
 
-	STORAGE_DISK_NOTFOUND = -2000,
+	STORAGE_DISK_NOT_FOUND = -2000,
+	STORAGE_VOLUME_NOT_FOUND = -2001,
+	STORAGE_REMOVE_PARTITION_INVALID_CONTAINER = -2002,
+	STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER = -2003,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 
@@ -109,7 +118,7 @@ namespace storage
 	/**
 	 * Create a new partition.
 	 *
-	 * @param disk name of disk, e.g. hda
+	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param start cylinder number of partition start
 	 * @param sizeK size of partition in kilobyte
@@ -122,21 +131,46 @@ namespace storage
 	                             unsigned long long sizeK,
 				     string& device ) = 0;
 
-#if 0
 	/**
+	 * Remove a partition
 	 *
+	 * @param partition name of partition, e.g. /dev/hda1
 	 */
-	virtual bool removePartition (string partition) = 0;
+	virtual int removePartition (const string& partition) = 0;
 
+
+	/**
+	 * Change partition id of a partition
+	 *
+	 * @param partition name of partition, e.g. /dev/hda1
+	 * @param new partition id (e.g. 0x82 swap, 0x8e for lvm, ...)
+	 */
+	virtual int changePartitionId (const string& partition, unsigned id) = 0;
+
+	/**
+	 *  Destroys the partition table of a disk. An empty disk label 
+	 *  of the given type without any partition is created. 
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
+	 */
+	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
+
+	/**
+	 *  Returns the default disk label of the architecture of the 
+	 *  machine (e.g. msdos for ix86, gpt for ia64, ...)
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
+	 */
+	virtual string defaultDiskLabel() = 0;
+
+#if 0
 	/**
 	 *
 	 */
 	virtual bool resizePartition (string partition, long size) = 0;
 
-	/**
-	 *  Destroys the partition table of a disk.
-	 */
-	virtual bool destroyPartitionTable (string disk) = 0;
 
 	virtual bool createMd (...) = 0;
 	virtual bool removeMd (...) = 0;

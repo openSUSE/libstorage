@@ -692,7 +692,6 @@ bool Disk::haveBsdPart() const
     return( !partPair(isBsdPart).empty() );
     }
 
-
 string Disk::defaultLabel()
     {
     string ret = "msdos";
@@ -769,7 +768,7 @@ bool Disk::hasExtended()
 
 int Disk::availablePartNumber( PartitionType type )
     {
-    y2milestone( "name:%s type %d", name().c_str(), type );
+    y2milestone( "begin name:%s type %d", name().c_str(), type );
     int ret = 0;
     PartPair p = partPair( notDeleted );
     if( !ext_possible && type==LOGICAL )
@@ -807,7 +806,7 @@ int Disk::availablePartNumber( PartitionType type )
 int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device )
     {
-    y2milestone( "type %d at %ld len %ld", type, start, len );
+    y2milestone( "begin type %d at %ld len %ld", type, start, len );
     int ret = 0;
     Region r( start, len );
     if( r.end() > cylinders() )
@@ -856,7 +855,99 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
-    sto->checkCache();
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::removePartition( unsigned nr )
+    {
+    y2milestone( "begin nr %u", nr );
+    int ret = 0;
+    PartPair p = partPair( notDeleted );
+    PartIter i = p.begin();
+    while( i!=p.end() && !i->nr()!=nr)
+	{
+	++i;
+	}
+    if( i==p.end() )
+	{
+	ret = DISK_REMOVE_PARTITION_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	i->setDeleted();
+	if( nr>max_primary )
+	    {
+	    i = p.begin();
+	    while( i!=p.end() )
+		{
+		if( i->nr()>nr )
+		    {
+		    i->changeNumber( i->nr()-1 );
+		    }
+		++i;
+		}
+	    }
+	else if( i->type()==EXTENDED )
+	    {
+	    i = p.begin();
+	    while( i!=p.end() )
+		{
+		if( i->nr()>max_primary )
+		    {
+		    i->setDeleted();
+		    }
+		++i;
+		}
+	    }
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::destroyPartitionTable( const string& new_label )
+    {
+    y2milestone( "begin" );
+    int ret = 0;
+    setLabelData( new_label );
+    if( max_primary==0 )
+	{
+	setLabelData( label );
+	ret = DISK_DESTROY_TABLE_INVALID_LABEL;
+	}
+    else
+	{
+	setDeleted( true );
+	label = new_label;
+	PartPair p = partPair( notDeleted );
+	for( PartIter i = p.begin(); i!=p.end(); ++i )
+	    {
+	    i->setDeleted( true );
+	    }
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::changePartitionId( unsigned nr, unsigned id )
+    {
+    y2milestone( "begin nr:%u id:%x", nr, id );
+    int ret = 0;
+    PartPair p = partPair( notDeleted );
+    PartIter i = p.begin();
+    while( i!=p.end() && !i->nr()!=nr)
+	{
+	++i;
+	}
+    if( i==p.end() )
+	{
+	ret = DISK_CHANGE_PARTITION_ID_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	i->changeId( id );
+	}
+    y2milestone( "ret %d", ret );
     return( ret );
     }
 
@@ -868,15 +959,28 @@ int Disk::commitChanges( CommitStage stage )
 	{
 	switch( stage )
 	    {
+	    case DECREASE:
+		if( deleted() )
+		    {
+		    doCreateLabel( label );
+		    }
+		break;
 	    case INCREASE:
 		{
-		// do stuff for change of partition type
+		PartPair p = partPair( Partition::toChangeId );
+		PartIter i = p.begin();
+		while( ret==0 && i!=p.end() )
+		    {
+		    ret = doSetType( &(*i) );
+		    ++i;
+		    }
 		}
 		break;
 	    default:
 		break;
 	    }
 	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -894,7 +998,16 @@ int Disk::doCreateLabel( const string& label_name )
 	}
     else
 	{
-	detected_label = label_name;
+	VIter i = vols.begin();
+	while( i!=vols.end() )
+	    {
+	    if( !(*i)->created() )
+		{
+		i = vols.erase( i );
+		}
+	    else
+		++i;
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -961,6 +1074,8 @@ int Disk::doSetType( Volume* v )
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
 	    }
+	if( ret==0 )
+	    p->changeIdDone();
 	}
     else
 	{
@@ -1042,6 +1157,7 @@ int Disk::doCreate( Volume* v )
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 		}
 	    }
+	p->setCreated( false );
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );
@@ -1050,6 +1166,48 @@ int Disk::doCreate( Volume* v )
     else
 	{
 	ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Disk::doRemove( Volume* v )
+    {
+    Partition * p = dynamic_cast<Partition *>(v);
+    int ret = 0;
+    if( p != NULL )
+	{
+	system_stderr.erase();
+	y2milestone( "doRemove container %s name %s", name().c_str(), 
+		     p->name().c_str() );
+	if( !p->created() )
+	    {
+	    std::ostringstream cmd_line;
+	    cmd_line << PARTEDCMD << device() << " rm " << p->OrigNr();
+	    SystemCmd cmd( cmd_line.str(), true );
+	    if( checkSystemError( cmd_line.str(), cmd ) )
+		{
+		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
+		}
+	    }
+	if( ret==0 )
+	    {
+	    VIter pi = vols.begin();
+	    while( pi!=vols.end() && *pi != p )
+		++pi;
+	    if( pi!=vols.end() )
+		{
+		vols.erase( pi );
+		}
+	    else
+		{
+		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
+		}
+	    }
+	}
+    else
+	{
+	ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

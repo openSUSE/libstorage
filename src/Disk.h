@@ -42,6 +42,9 @@ class Disk : public Container
 	static bool needP( const string& dev );
 	int createPartition( PartitionType type, long unsigned start,
 	                     long unsigned len, string& device );
+	int removePartition( unsigned nr );
+	int changePartitionId( unsigned nr, unsigned id );
+	int destroyPartitionTable( const string& new_label );
 	int availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
 	bool hasExtended();
@@ -114,8 +117,9 @@ class Disk : public Container
 	                       const list<Partition*>& pl );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	int doCreate( Volume* v );
-	int doCreateLabel( const string& label_name );
+	int doRemove( Volume* v );
 	int doSetType( Volume* v );
+	int doCreateLabel( const string& label_name );
 
 	//list<Region> getUnusedRegions();
 	void logData( const string& Dir );

@@ -160,6 +160,8 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 			  unsigned long long sizeK, string& device )
     {
     int ret = 0;
+    y2milestone( "disk:%s type:%d start:%ld sizeK:%lld", disk.c_str(),
+                 type, start, sizeK );
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
@@ -169,9 +171,113 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	}
     else
 	{
-	ret = STORAGE_DISK_NOTFOUND;
+	ret = STORAGE_DISK_NOT_FOUND;
 	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
     return( ret );
+    }
+
+int
+Storage::removePartition( const string& partition )
+    {
+    int ret = 0;
+    y2milestone( "partition:%s", partition.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( partition, cont, vol ) && cont->type()==Container::DISK )
+	{
+	Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	if( disk!=NULL )
+	    {
+	    ret = disk->removePartition( vol->nr() );
+	    }
+	else
+	    {
+	    ret = STORAGE_REMOVE_PARTITION_INVALID_CONTAINER;
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::changePartitionId( const string& partition, unsigned id )
+    {
+    int ret = 0;
+    y2milestone( "partition:%s id:%x", partition.c_str(), id );
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( partition, cont, vol ) && cont->type()==Container::DISK )
+	{
+	Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	if( disk!=NULL )
+	    {
+	    ret = disk->changePartitionId( vol->nr(), id );
+	    }
+	else
+	    {
+	    ret = STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER;
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::destroyPartitionTable( const string& disk, const string& label )
+    {
+    int ret = 0;
+    y2milestone( "disk:%s", disk.c_str() );
+    DiskIterator i = findDisk( disk );
+
+    if( i != dEnd() )
+	{
+	ret = i->destroyPartitionTable( label );
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+string 
+Storage::defaultDiskLabel()
+    {
+    return( Disk::defaultLabel() );
+    }
+
+int Storage::checkCache()
+    {
+    int ret=0; 
+    if( !cacheChanges() ) 
+	ret = commit(); 
+    return(ret);
     }
 
 int Storage::commit()
@@ -198,6 +304,7 @@ int Storage::commit()
 	    pt++;
 	    }
 	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -230,6 +337,29 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 
     return( i != dEnd() );
 }
+
+bool Storage::findVolume( const string& device, ContIterator& c,
+                          VolIterator& v )
+    {
+    bool ret = false;
+    VPair p = vPair( Volume::notDeleted, notDeleted );
+    v = p.begin();
+    while( v!=p.end() && v->device()!=device )
+	++v;
+    if( v!=p.end() )
+	{
+	const Container *co = v->getContainer();
+	CPair cp = cPair( notDeleted );
+	c = cp.begin();
+	while( c!=cp.end() && &(*c)!=co )
+	    ++c;
+	ret = c!=cp.end();
+	}
+    y2milestone( "device:%s ret:%d c->device:%s v->device:%s", device.c_str(),
+                 ret, ret?c->device().c_str():"nil", 
+		 ret?v->device().c_str():"nil" );
+    return( ret );
+    }
 
 Storage::DiskIterator Storage::findDisk( const string& disk )
     {

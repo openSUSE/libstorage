@@ -6,7 +6,7 @@
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 
-Container::Container( Storage * const s, const string& Name, CType t ) :
+Container::Container( const Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
     {
     dltd = false;
@@ -38,10 +38,17 @@ int Container::commitChanges( CommitStage stage )
 	case DECREASE:
 	    {
 	    VolPair p = volPair( toDelete );
-	    VolIterator i=p.begin();
-	    while( ret==0 && i!=p.end() )
+	    if( !p.empty() )
 		{
-		++i;
+		VolIterator i=p.end();
+		i--;
+		do
+		    {
+		    VolIterator save = i;
+		    --i;
+		    ret = doRemove( &(*save) );
+		    }
+		while( ret==0 && i!=p.begin() );
 		}
 	    }
 	    break;
@@ -63,13 +70,20 @@ int Container::commitChanges( CommitStage stage )
 	default:
 	    ret = VOLUME_COMMIT_UNKNOWN_STAGE;
 	}
-    y2milestone( "ret %d", ret );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
 int Container::doCreate( Volume * v ) 
     { 
     y2warning( "invalid doCreate Container:%s name:%s",
+	       type_names[typ].c_str(), name().c_str() ); 
+    return( CONTAINER_INTERNAL_ERROR );
+    }
+
+int Container::doRemove( Volume * v ) 
+    { 
+    y2warning( "invalid doRemove Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
     return( CONTAINER_INTERNAL_ERROR );
     }

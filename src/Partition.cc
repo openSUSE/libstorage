@@ -16,6 +16,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     idt = Id;
     typ = Type;
     parted_start = PartedStart;
+    orig_num = num;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -38,6 +39,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	bootflag = true;
     else
 	bootflag = false;
+    orig_num = num;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -45,6 +47,45 @@ Partition::Partition( const Disk& d, const string& Data ) :
 bool Partition::intersectArea( const Region& r ) const
     {
     return( r.intersect( reg ) );
+    }
+
+void Partition::changeNumber( unsigned new_num )
+    {
+    if( new_num!=num )
+	{
+	if( orig_num==num )
+	    {
+	    orig_num = num;
+	    }
+	num = new_num;
+	if( created() )
+	    {
+	    orig_num = num;
+	    }
+	setNameDev();
+	getMajorMinor( dev, mjr, mnr );
+	}
+    }
+
+void Partition::changeId( unsigned new_id )
+    {
+    if( new_id!=idt )
+	{
+	if( orig_id==idt )
+	    {
+	    orig_id = idt;
+	    }
+	idt = new_id;
+	if( created() )
+	    {
+	    orig_id = idt;
+	    }
+	}
+    }
+
+void Partition::changeIdDone() 
+    {
+    orig_id = idt;
     }
 
 ostream& Partition::logData( ostream& file ) const
@@ -60,6 +101,8 @@ ostream& Partition::logData( ostream& file ) const
 	file << " primary";
     if( bootflag )
 	file << " boot";
+    if( orig_num!=num )
+	file << " OrigNr:" << orig_num;
     return( file );
     }
 

@@ -32,13 +32,18 @@ class Partition : public Volume
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
 	bool intersectArea( const Region& r ) const;
+	unsigned OrigNr() const { return( orig_num ); }
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
 	PartitionType type() const { return typ; }
 	ostream& logData( ostream& file ) const;
 	const string& partedStart() const { return parted_start; }
+	void changeNumber( unsigned new_num );
+	void changeId( unsigned id );
+	void changeIdDone();
 	friend ostream& operator<< (ostream& s, const Partition &p );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
+	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }
 
 	PartitionInfo getPartitionInfo () const;
 
@@ -47,8 +52,9 @@ class Partition : public Volume
 	bool bootflag;
 	PartitionType typ;
 	unsigned idt;
+	unsigned orig_id;
 	string parted_start;
-
+	unsigned orig_num;
     };
 
 
@@ -60,6 +66,10 @@ inline ostream& operator<< (ostream& s, const Partition &p )
       << " Id:" << std::hex << p.idt << std::dec;
     if( p.typ!=PRIMARY )
       s << ((p.typ==LOGICAL)?" logical":" extended");
+    if( p.orig_num!=p.num )
+      s << " OrigNr:" << p.orig_num;
+    if( p.orig_id!=p.idt )
+      s << " OrigId:" << p.orig_id;
     if( p.bootflag )
       s << " boot";
     return( s );

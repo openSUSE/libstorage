@@ -14,7 +14,8 @@ class Volume
 
 	virtual bool commitChanges() { return true; }
 
-	const string& device() const { return dev; }; 
+	const string& device() const { return dev; }
+	const Container* getContainer() const { return cont; }
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
@@ -51,6 +52,7 @@ class Volume
 
     protected:
 	void init();
+	void setNameDev();
 
 	const Container* const cont;
 	bool numeric;

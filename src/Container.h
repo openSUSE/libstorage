@@ -120,12 +120,13 @@ class Container
 	    }
 
     public:
-	Container( Storage * const, const string& Name, CType typ );
+	Container( const Storage * const, const string& Name, CType typ );
 	virtual ~Container();
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
 	CType type() const { return typ; }
 	bool deleted() const { return dltd; }
+	void setDeleted( bool val=true ) { dltd=val; }
 	bool readonly() const { return rdonly; }
 	static CType const staticType() { return UNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
@@ -140,13 +141,14 @@ class Container
 	PlainIterator end() { return vols.end(); }
 	void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
-	    { pointerIntoSortedList<Volume>( vols, e ); }
+	{ pointerIntoSortedList<Volume>( vols, e ); }
 	virtual int doCreate( Volume * v ); 
+	virtual int doRemove( Volume * v ); 
 
 
 	static string type_names[EVMS+1];
 
-	Storage * const sto;
+	const Storage * const sto;
 	CType typ;
 	string nm;
 	string dev;
@@ -157,13 +159,13 @@ class Container
     };
 
 inline ostream& operator<< (ostream& s, const Container &c )
-    {
+{
     s << "Type:" << Container::type_names[c.typ] 
-      << " Name:" << c.nm 
-      << " Device:" << c.dev 
-      << " Vcnt:" << c.vols.size(); 
+	<< " Name:" << c.nm 
+	<< " Device:" << c.dev 
+	<< " Vcnt:" << c.vols.size(); 
     if( c.dltd )
-      s << " deleted";
+	s << " deleted";
     if( c.rdonly )
       s << " readonly";
     return( s );
