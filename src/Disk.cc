@@ -826,8 +826,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	if( i!=p.end() )
 	    {
 	    y2milestone( "overlaps with %s at %lu len %lu", 
-			 i->name().c_str(), i->cylStart(), 
-			 i->cylSize() );
+			 i->name().c_str(), i->cylStart(), i->cylSize() );
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
@@ -852,6 +851,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type, 
 				       decString(cylinderToKb(start-1)) );
+	addToList( p );
 	}
     return( ret );
     }
