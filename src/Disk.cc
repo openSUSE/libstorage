@@ -522,18 +522,14 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 		{
 		if( pnr<range )
 		    {
-		    unsigned long major;
-		    unsigned long minor;
 		    unsigned long long s = CylinderToKb(c_size);
-		    Partition *p = new Partition( *this, pnr, 
-		                                  CylinderToKb(c_size),
+		    Partition *p = new Partition( *this, pnr, s,
 						  c_start, c_size, type, 
 						  p_start, id, boot );
-		    if( ppart.GetInfo( p->Device(), s, major, minor ))
+		    if( ppart.GetSize( p->Device(), s ))
 			{
 			if( s>0 && p->Type() != Partition::EXTENDED )
 			    p->SetSize( s );
-			p->SetMajorMinor( major, minor );
 			}
 		    pl.push_back( p );
 		    }
@@ -556,9 +552,8 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 	    {
 	    unsigned long cyl;
 	    unsigned long long s;
-	    unsigned long major, minor;
 	    pair<string,long> pr = GetDiskPartition( *i );
-	    if( ppart.GetInfo( *i, s, major, minor ))
+	    if( ppart.GetSize( *i, s ))
 		{
 		cyl = KbToCylinder(s);
 		if( pr.second < (long)range )
@@ -582,7 +577,6 @@ Disk::CheckPartedOutput( const SystemCmd& Cmd )
 			               type, 
 				       dec_string(CylinderToKb(cyl_start)),
 				       id, false );
-		    p->SetMajorMinor( major, minor );
 		    pl.push_back( p );
 		    }
 		else 

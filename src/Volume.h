@@ -40,6 +40,8 @@ class Volume
 	    };
 	static SkipDeleted SkipDel;
 	static bool NotDeleted( const Volume&d ) { return( !d.Delete() ); }
+	static bool GetMajorMinor( const string& device, 
+	                           unsigned long& Major, unsigned long& Minor );
 
     protected:
 	void Init();

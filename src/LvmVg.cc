@@ -8,8 +8,6 @@
 LvmVg::LvmVg( const Storage * const s, const string& Name ) :
     Container(s,Name,StaticType())
     {
-    if( name.find( "del" ) != string::npos )
-	deleted = true;
     if( name == "system" )
 	{
 	pe_size = 4*1024*1024;

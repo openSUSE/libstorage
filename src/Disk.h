@@ -35,6 +35,7 @@ class Disk : public Container
 	unsigned long Major() const { return major; }
 	unsigned long NumMinor() const { return range; }
 	static CType const StaticType() { return DISK; }
+	static bool NeedP( const string& dev );
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
     protected:
@@ -60,7 +61,6 @@ class Disk : public Container
 	static string DefaultLabel();
 	static label_info labels[];
 	static string p_disks[];
-	static bool NeedP( const string& dev );
 	static string GetPartName( const string& disk, unsigned nr );
 	static string GetPartName( const string& disk, const string& nr );
 	static pair<string,long> GetDiskPartition( const string& dev );

@@ -1,7 +1,5 @@
 // Maintainer: fehr@suse.de
 
-#include <features.h>
-#include <sys/stat.h>
 #include <ycp/y2log.h>
 
 #include <sstream>
@@ -27,11 +25,7 @@ ProcPart::GetInfo( const string& Dev, unsigned long long& SizeK,
 		   unsigned long& Major, unsigned long& Minor ) const
     {
     bool ret = false;
-    string name( Dev );
-    if( name.find( "/dev/" )==0 )
-	name.erase( 0, 5 );
-    map<string,int>::const_iterator i = co.find( name );
-    SizeK = 0;
+    map<string,int>::const_iterator i = co.find( DevName(Dev) );
     if( i != co.end() )
 	{
 	ExtractNthWord( 0, (*this)[i->second] ) >> Major;
@@ -39,20 +33,29 @@ ProcPart::GetInfo( const string& Dev, unsigned long long& SizeK,
 	ExtractNthWord( 2, (*this)[i->second] ) >> SizeK;
 	ret = true;
 	}
-    else
+    return( ret );
+    }
+
+bool 
+ProcPart::GetSize( const string& Dev, unsigned long long& SizeK ) const
+    {
+    bool ret = false;
+    map<string,int>::const_iterator i = co.find( DevName(Dev) );
+    if( i != co.end() )
 	{
-	string dev( Dev );
-	if( dev.find( "/dev/" )!=0 )
-	    dev = "/dev/"+ dev;
-	struct stat sbuf;
-	if( stat( dev.c_str(), &sbuf )==0 )
-	    {
-	    Minor = gnu_dev_minor( sbuf.st_rdev );
-	    Major = gnu_dev_major( sbuf.st_rdev );
-	    ret = true;
-	    }
+	ExtractNthWord( 2, (*this)[i->second] ) >> SizeK;
+	ret = true;
 	}
     return( ret );
+    }
+
+string 
+ProcPart::DevName( const string& Dev )
+    {
+    string name( Dev );
+    if( name.find( "/dev/" )==0 )
+	name.erase( 0, 5 );
+    return( name );
     }
 
 list<string>  

@@ -1,8 +1,11 @@
 #include <sstream>
 
+#include <features.h>
+#include <sys/stat.h>
 #include <ycp/y2log.h>
 
 #include "y2storage/Volume.h"
+#include "y2storage/Disk.h"
 #include "y2storage/Container.h"
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
@@ -33,14 +36,15 @@ Volume::~Volume()
 
 void Volume::Init()
     {
-    major = minor = 0;
     deleted = false;
     std::ostringstream Buf_Ci;
     if( numeric )
-	Buf_Ci << "/dev/" << cont->Name() << nr;
+	Buf_Ci << cont->Device() << (Disk::NeedP(cont->Device())?"p":"") << nr;
     else
-	Buf_Ci << "/dev/" << cont->Name() << "/" << name;
+	Buf_Ci << cont->Device() << "/" << name;
     dev = Buf_Ci.str();
+    major = minor = 0;
+    GetMajorMinor( dev, major, minor );
     if( numeric )
 	{
 	Buf_Ci.str("");
@@ -71,6 +75,23 @@ bool Volume::operator< ( const Volume& rhs ) const
 	}
     else
 	return( !deleted );
+    }
+
+bool Volume::GetMajorMinor( const string& device,
+			    unsigned long& Major, unsigned long& Minor )
+    {
+    bool ret = false;
+    string dev( device );
+    if( dev.find( "/dev/" )!=0 )
+	dev = "/dev/"+ dev;
+    struct stat sbuf;
+    if( stat( dev.c_str(), &sbuf )==0 )
+	{
+	Minor = gnu_dev_minor( sbuf.st_rdev );
+	Major = gnu_dev_major( sbuf.st_rdev );
+	ret = true;
+	}
+    return( ret );
     }
 
 
