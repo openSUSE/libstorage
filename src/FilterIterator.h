@@ -17,12 +17,12 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
         FilterIterator() { }
 
 	FilterIterator( const Iter& begin, const Iter& end, Pred f, bool setend=false ) : 
-	    m_start(begin), m_end(end), m_cur(begin), m_f(f)
+	    m_begin(begin), m_end(end), m_cur(begin), m_f(f)
 	    {
 	    initialize( setend );
 	    }
 	FilterIterator( const IterPair<Iter>& p, Pred f, bool setend=false ) : 
-	    m_start(p.begin()), m_end(p.end()), m_cur(p.begin()), m_f(f)
+	    m_begin(p.begin()), m_end(p.end()), m_cur(p.begin()), m_f(f)
 	    {
 	    initialize( setend );
 	    }
@@ -89,10 +89,10 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	Pred pred() const {return m_f;}
 	Iter end() const {return m_end;}
 	Iter cur() const {return m_cur;}
-	Iter start() const {return m_start;}
+	Iter begin() const {return m_begin;}
 
     private:
-	Iter m_start;
+	Iter m_begin;
 	Iter m_end;
 	Iter m_cur;
 	Pred m_f;
@@ -107,7 +107,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 
 	void copy_members( const FilterIterator& x ) 
 	    { 
-	    m_start = x.start();
+	    m_begin = x.begin();
 	    m_end = x.end();
 	    m_cur = x.cur();
 	    m_f = x.pred();
@@ -120,7 +120,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 		while( m_cur!=m_end && !m_f(**m_cur) )
 		    ++m_cur;
 	    else
-		while( m_cur!=m_start && !m_f(**m_cur) )
+		while( m_cur!=m_begin && !m_f(**m_cur) )
 		    --m_cur;
 	    };
 
