@@ -1241,23 +1241,44 @@ bool
 Disk::getPartedValues( Partition *p )
     {
     bool ret = false;
-    std::ostringstream cmd_line;
-    cmd_line << PARTEDCMD << device() << " print | grep -w ^" << p->nr();
-    SystemCmd cmd( cmd_line.str() );
-    unsigned nr, id;
-    unsigned long start, csize;
-    PartitionType type;
-    string pstart;
-    bool boot;
-    if( cmd.numLines()>0 &&
-	scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
-			pstart, id, boot ))
+    if( getStorage()->test() )
 	{
-	y2milestone( "really created at cyl:%ld csize:%ld, pstart:%s",
-		     start, csize, pstart.c_str() );
-	p->changePartedStart( pstart );
-	p->changeRegion( start, csize, cylinderToKb(csize) );
 	ret = true;
+	p->setSize( p->sizeK() );
+	}
+    else
+	{
+	ProcPart ppart;
+	std::ostringstream cmd_line;
+	cmd_line << PARTEDCMD << device() << " print | grep -w ^" << p->nr();
+	SystemCmd cmd( cmd_line.str() );
+	unsigned nr, id;
+	unsigned long start, csize;
+	PartitionType type;
+	string pstart;
+	bool boot;
+	if( cmd.numLines()>0 &&
+	    scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
+			    pstart, id, boot ))
+	    {
+	    y2milestone( "really created at cyl:%ld csize:%ld, pstart:%s",
+			 start, csize, pstart.c_str() );
+	    p->changePartedStart( pstart );
+	    p->changeRegion( start, csize, cylinderToKb(csize) );
+	    unsigned long long s=0;
+	    ret = true;
+	    if( p->type() != EXTENDED )
+		{
+		if( !ppart.getSize( p->device(), s ) || s==0 )
+		    {
+		    y2error( "device %s not found in /proc/partitions", 
+		             p->device().c_str() );
+		    ret = false;
+		    }
+		else
+		    p->setSize( s );
+		}
+	    }
 	}
     return( ret );
     }

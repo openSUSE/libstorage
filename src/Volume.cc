@@ -321,7 +321,15 @@ int Volume::changeMount( const string& m )
     {
     int ret = 0;
     y2milestone( "device:%s mount:%s", dev.c_str(), m.c_str() );
-    mp = m;
+    if( (m.size()>0 && m[0]!='/' && m!="swap") ||
+	m.find_first_of( " \t\n" ) != string::npos )
+	{
+	ret = VOLUME_MOUNT_POINT_INAVLID;
+	}
+    else
+	{
+	mp = m;
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
