@@ -118,13 +118,13 @@ Disk::~Disk()
     }
 
 unsigned long long
-Disk::cylinderToKb( unsigned long cylinder )
+Disk::cylinderToKb( unsigned long cylinder ) const
     {
     return (unsigned long long)byte_cyl * cylinder / 1024;
     }
 
 unsigned long
-Disk::kbToCylinder( unsigned long long kb )
+Disk::kbToCylinder( unsigned long long kb ) const
     {
     unsigned long long bytes = kb * 1024;
     bytes += byte_cyl - 1;
@@ -134,7 +134,7 @@ Disk::kbToCylinder( unsigned long long kb )
     }
 
 unsigned long long
-Disk::capacityInKb()
+Disk::capacityInKb() const
     {
     return (unsigned long long)byte_cyl * cyl / 1024;
     }
@@ -786,7 +786,7 @@ static bool isExtended( const Partition& p )
     return( Volume::notDeleted(p) && p.type()==EXTENDED );
     }
 
-bool Disk::hasExtended()
+bool Disk::hasExtended() const
     {
     return( ext_possible && !partPair(isExtended).empty() );
     }
@@ -846,7 +846,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relxed:%d", type, start, len, checkRelaxed );
+    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len, 
+                 checkRelaxed );
     unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
     Region r( start, len );
@@ -1236,6 +1237,31 @@ int Disk::doSetType( Volume* v )
     return( ret );
     }
 
+bool 
+Disk::getPartedValues( Partition *p )
+    {
+    bool ret = false;
+    std::ostringstream cmd_line;
+    cmd_line << PARTEDCMD << device() << " print | grep -w ^" << p->nr();
+    SystemCmd cmd( cmd_line.str() );
+    unsigned nr, id;
+    unsigned long start, csize;
+    PartitionType type;
+    string pstart;
+    bool boot;
+    if( cmd.numLines()>0 &&
+	scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
+			pstart, id, boot ))
+	{
+	y2milestone( "really created at cyl:%ld csize:%ld, pstart:%s",
+		     start, csize, pstart.c_str() );
+	p->changePartedStart( pstart );
+	p->changeRegion( start, csize, cylinderToKb(csize) );
+	ret = true;
+	}
+    return( ret );
+    }
+
 int Disk::doCreate( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
@@ -1304,8 +1330,7 @@ int Disk::doCreate( Volume* v )
 		     << " ";
 	    cmd_line << std::setprecision(3)
 		     << std::setiosflags(std::ios_base::fixed)
-		     << (double)(p->cylStart()+p->cylSize()-1)*cylinderToKb(1)/1024
-		     << " ";
+		     << (double)((p->cylStart()+p->cylSize()-1)*cylinderToKb(1)+1023)/1024;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
@@ -1314,27 +1339,8 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    p->setCreated( false );
-	    std::ostringstream cmd_line;
-	    cmd_line << PARTEDCMD << device() << " print | grep -w ^" << p->nr();
-	    SystemCmd cmd( cmd_line.str() );
-	    unsigned nr, id;
-	    unsigned long start, csize;
-	    PartitionType type;
-	    string pstart;
-	    bool boot;
-	    if( cmd.numLines()>0 &&
-	        scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
-		                pstart, id, boot ))
-		{
-		y2milestone( "really created at cyl:%ld csize:%ld, pstart:%s",
-		             start, csize, pstart.c_str() );
-		p->changePartedStart( pstart );
-		p->changeRegion( start, csize, cylinderToKb(csize) );
-		}
-	    else
-		{
+	    if( !getPartedValues( p ))
 		ret = DISK_CREATE_PARTITION_NOT_FOUND;
-		}
 	    }
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
@@ -1395,42 +1401,97 @@ int Disk::doRemove( Volume* v )
     return( ret );
     }
 
+int Disk::checkResize( Volume* v ) const
+    {
+    int ret = 0;
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
+    else if( v->needExtend() )
+	{
+	Partition * p = dynamic_cast<Partition *>(v);
+	if( p!=NULL )
+	    {
+	    ConstPartPair pp = partPair( isExtended );
+	    unsigned long start = p->cylEnd()+1;
+	    unsigned long end = cylinders();
+	    if( p->type()==LOGICAL && !pp.empty() )
+		end = pp.begin()->cylEnd()+1;
+	    pp = partPair( notDeleted );
+	    ConstPartIter i = pp.begin();
+	    while( i != pp.end() )
+		{
+		if( i->type()==p->type() && i->cylStart()>=start && 
+		    i->cylStart()<end )
+		    end = i->cylStart();
+		++i;
+		}
+	    unsigned long free = 0;
+	    if( end>start )
+		free = end-start;
+	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lld", 
+	                 free, cylinderToKb(free), p->extendSize() );
+	    if( (long long)cylinderToKb(free) < p->extendSize() )
+		ret = DISK_RESIZE_NO_SPACE;
+	    }
+	else
+	    {
+	    ret = DISK_CHECK_PARTITION_INVALID_VOLUME;
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Disk::doResize( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
     if( p != NULL )
 	{
+	bool remount = false;
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( p->resizeText(true) );
 	    }
-	system_stderr.erase();
-	y2milestone( "doResize container %s name %s", name().c_str(),
-		     p->name().c_str() );
-	if( ret==0 && !p->created() )
+	if( p->isMounted() )
 	    {
-	    std::ostringstream cmd_line;
-	    cmd_line << PARTEDCMD << device() << " rm " << p->OrigNr();
-	    if( execCheckFailed( cmd_line.str() ) )
-		{
-		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
-		}
+	    ret = p->umount();
+	    if( ret==0 )
+		remount = true;
 	    }
+	if( ret==0 && p->needShrink() && p->getFs()!=VFAT )
+	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
-	    VIter pi = vols.begin();
-	    while( pi!=vols.end() && *pi != p )
-		++pi;
-	    if( pi!=vols.end() )
+	    system_stderr.erase();
+	    y2milestone( "doResize container %s name %s", name().c_str(),
+			 p->name().c_str() );
+	    std::ostringstream cmd_line;
+	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(size_k) - 1;
+	    y2milestone( "new_cyl_end %u", new_cyl_end );
+	    cmd_line << PARTEDCMD << device() << " resize " << p->nr() << " " 
+	             << p->partedStart() << " " 
+		     << std::setprecision(3)
+		     << std::setiosflags(std::ios_base::fixed)
+		     << (double)((cylinderToKb(new_cyl_end)+1023)/1024);
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
-		vols.erase( pi );
+		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
-	    else
+	    if( !getPartedValues( p ))
 		{
-		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
+		if( ret==0 )
+		    ret = DISK_RESIZE_PARTITION_NOT_FOUND;
 		}
+	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(), 
+	                 p->needShrink()||p->needExtend() );
 	    }
+	if( p->needExtend() && p->getFs()!=VFAT )
+	    ret = p->resizeFs();
+	if( ret==0 && remount )
+	    ret = p->mount();
 	}
     else
 	{

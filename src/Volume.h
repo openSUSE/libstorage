@@ -49,6 +49,7 @@ class Volume
 	bool needRemount() const; 
 	bool needShrink() const { return(size_k<orig_size_k); }
 	bool needExtend() const { return(size_k>orig_size_k); }
+	long long extendSize() const { return(orig_size_k-size_k);}
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
@@ -90,6 +91,7 @@ class Volume
 	int doLosetup();
 	int doSetLabel();
 	int doFstabUpdate();
+	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }
 	virtual string removeText(bool doing=true) const;
@@ -137,8 +139,6 @@ class Volume
 	int getFreeLoop();
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();
-	virtual int checkResize(); 
-
 
 	const Container* const cont;
 	bool numeric;

@@ -48,11 +48,12 @@ class Disk : public Container
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
-	bool hasExtended();
+	int checkResize( Volume* v ) const;
+	bool hasExtended() const;
 	friend inline ostream& operator<< (ostream&, const Disk& );
 	string setDiskLabelText( bool doing=true ) const;
-	unsigned long long cylinderToKb( unsigned long );
-	unsigned long kbToCylinder( unsigned long long );
+	unsigned long long cylinderToKb( unsigned long ) const;
+	unsigned long kbToCylinder( unsigned long long ) const;
 	string getPartName( unsigned nr ) const;
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
@@ -109,7 +110,7 @@ class Disk : public Container
 	    }
 
 	Disk( Storage * const s, const string& File );
-	unsigned long long capacityInKb();
+	unsigned long long capacityInKb() const;
 	bool detectGeometry();
 	bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );
@@ -122,6 +123,8 @@ class Disk : public Container
 			     unsigned& id, bool& boot );
 	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );
+	bool getPartedValues( Partition *p );
+
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	virtual void getCommitActions( list<commitAction*>& l ) const;
 

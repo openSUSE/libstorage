@@ -527,9 +527,9 @@ int Volume::umount( const string& mp )
     {
     SystemCmd cmd;
     y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
-    string cmdline = "umount " + mountDevice();
+    string cmdline = ((fs != SWAP)?"umount ":"swapoff ") + mountDevice();
     int ret = cmd.execute( cmdline );
-    if( ret != 0 && mp.size()>0 )
+    if( fs != SWAP && ret != 0 && mp.size()>0 )
 	{
 	cmdline = "umount " + mp;
 	ret = cmd.execute( cmdline );
@@ -636,7 +636,7 @@ int Volume::resize( unsigned long long newSizeMb )
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
 	if( ret==0 )
-	    ret = checkResize();
+	    ret = cont->checkResize( this );
 	if( ret==0 )
 	    size_k = new_size;
 	}
@@ -644,9 +644,93 @@ int Volume::resize( unsigned long long newSizeMb )
     return( ret );
     }
 
-int Volume::checkResize() 
-    { 
-    return VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME; 
+int Volume::resizeFs()
+    {
+    int ret = 0;
+    if( !format )
+	{
+	string cmd;
+	SystemCmd c;
+	switch( fs )
+	    {
+	    case SWAP:
+		cmd = "mkswap " + mountDevice();
+		c.execute( cmd );
+		if( c.retcode()!=0 )
+		    ret = VOLUME_RESIZE_FAILED;
+		break;
+	    case REISERFS:
+		cmd = "resize_reiserfs -f ";
+		if( needShrink() )
+		    {
+		    cmd = "echo y | " + cmd;
+		    cmd += "-s " + decString(size_k) + "K ";
+		    }
+		cmd += mountDevice();
+		c.execute( cmd );
+		if( c.retcode()!=0 )
+		    ret = VOLUME_RESIZE_FAILED;
+		break;
+	    case NTFS:
+		cmd = "echo y | ntfsresize -f ";
+		if( needShrink() )
+		    cmd += "-s " + decString(size_k) + "k ";
+		cmd += mountDevice();
+		c.execute( cmd );
+		if( c.retcode()!=0 )
+		    ret = VOLUME_RESIZE_FAILED;
+		break;
+	    case EXT2:
+	    case EXT3:
+		cmd = "resize2fs -f " + mountDevice();
+		if( needShrink() )
+		    cmd += " " + decString(size_k) + "K";
+		c.execute( cmd );
+		if( c.retcode()!=0 )
+		    ret = VOLUME_RESIZE_FAILED;
+		break;
+	    case XFS:
+		{
+		bool needumount = false;
+		bool needrmdir = false;
+		string mpoint = orig_mp;
+		if( !isMounted() )
+		    {
+		    mpoint = cont->getStorage()->tmpDir()+"/mp";
+		    mkdir( mpoint.c_str(), 0700 );
+		    ret = mount( mpoint );
+		    needrmdir = true;
+		    if( ret==0 )
+			needumount = true;
+		    }
+		if( ret==0 )
+		    {
+		    cmd = "xfs_growfs " + mpoint;
+		    c.execute( cmd );
+		    if( c.retcode()!=0 )
+			ret = VOLUME_RESIZE_FAILED;
+		    }
+		if( needumount )
+		    {
+		    int r = umount( mpoint );
+		    ret = (ret!=0)?ret:r;
+		    }
+		if( needrmdir )
+		    {
+		    rmdir( mpoint.c_str() );
+		    }
+		}
+		break;
+	    default:
+		break;
+	    }
+	if( cmd.size()==0 )
+	    {
+	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
 int Volume::setEncryption( bool val )

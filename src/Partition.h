@@ -30,6 +30,7 @@ class Partition : public Volume
 
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
+	unsigned long cylEnd() const { return reg.start()+reg.len()-1; }
 	Region region() const { return reg; }
 	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
 	bool isAreaInside( const Region& r, unsigned fuzz=0 ) const;

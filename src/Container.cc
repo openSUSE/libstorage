@@ -178,5 +178,10 @@ int Container::doResize( Volume * v )
     return( CONTAINER_INTERNAL_ERROR );
     }
 
+int Container::checkResize( Volume* v ) const
+    {
+    return( VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME );
+    }
+
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };
 
