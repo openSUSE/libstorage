@@ -1,6 +1,7 @@
 #
 # Makefile.am for libstorage/testsuite
 #
+PACKAGE = libstorage
 
 INCLUDES = -I$(top_srcdir)/libstorage/src -I/usr/include/YaST2
 LDADD = ../src/liby2storage.la
