@@ -32,78 +32,26 @@ class Container
 	enum CType { UNKNOWN, REAL_DISK, MD, LOOP, LVM, EVMS };
 
 	template< class Pred >
-	class ConstVolPIter : public FilterIterator< Pred, CVIter >
-	    {
-	    typedef FilterIterator< Pred, CVIter > _bclass;
-	    public:
-		ConstVolPIter( ) {}
-		ConstVolPIter( const CVIter& b, const CVIter& e, const Pred& p,
-		               bool atend=false ) :
-		    _bclass(b, e, p, atend ) {}
-	    };
-	template< class Pred > 
-	class ConstVolIter : public DerefIterator<ConstVolPIter<Pred>,const Volume>
-	    {
-	    typedef DerefIterator<ConstVolPIter<Pred>,const Volume> _bclass;
-	    public:
-		ConstVolIter() : _bclass() {};
-		ConstVolIter( const _bclass& i ) : _bclass(i) {};
-	    };
-
+	    struct CVP { typedef ContainerIter<Pred, CVIter> type; };
+	template< class Pred >
+	    struct CV { typedef ContainerDerIter<Pred, typename CVP<Pred>::type, const Volume> type; };
 
 	template< class Pred >
-	class VolPIter : public FilterIterator< Pred, VIter > 
-	    {
-	    typedef FilterIterator< Pred, VIter > _bclass;
-	    public:
-		VolPIter() {}
-		VolPIter( const VIter& b, const VIter& e, const Pred& p,
-			  bool atend=false ) :
-		    _bclass(b, e, p, atend ) {}
-	    };
-	template< class Pred > 
-	class VolIter : public DerefIterator<VolPIter<Pred>,Volume>
-	    {
-	    typedef DerefIterator<VolPIter<Pred>,Volume> _bclass;
-	    public:
-		VolIter() : _bclass() {};
-		VolIter( const _bclass& i ) : _bclass(i) {};
-	    };
-
+	    struct VP { typedef ContainerIter<Pred, VIter> type; };
+	template< class Pred >
+	    struct V { typedef ContainerDerIter<Pred, typename VP<Pred>::type, Volume> type; };
+	template< class Pred >
+	    struct VolCondIPair { typedef MakeCondIterPair<Pred, typename CV<Pred>::type> type;};
+	    
 	typedef CheckFnc<const Volume> CheckFncVol;
 
-	class ConstVolPIterator : public CheckFncVol, public ConstVolPIter<CheckFncVol>
-	    {
-	    public:
-		ConstVolPIterator() {}
-		ConstVolPIterator( const CVIter& b, const CVIter& e,
-				  bool (* CheckFnc)( const Volume& )=NULL,
-				  bool atend=false ) :
-		    CheckFncVol( CheckFnc ),
-		    ConstVolPIter<CheckFncVol>( b, e, *this, atend ) {}
-	    };
+	typedef CheckerIterator< CheckFncVol, CVP<CheckFncVol>::type, 
+	                         CVIter, Volume> ConstVolPIterator;
+
 	typedef DerefIterator<ConstVolPIterator,const Volume> ConstVolIterator;
 
-	template<class Pred> class VolCondIPair :
-	    public IterPair<ConstVolIter<Pred> >
-	    {
-	    typedef IterPair<ConstVolIter<Pred> > _bclass;
-	    public:
-		VolCondIPair( const ConstVolIter<Pred>& b,
-			       const ConstVolIter<Pred>& e ) :
-		    _bclass( b, e ) {}
-	    };
-
-	class VolPIterator : public CheckFncVol, public VolPIter<CheckFncVol>
-	    {
-	    public:
-		VolPIterator() {}
-		VolPIterator( const VIter& b, const VIter& e,
-			      bool (* CheckFnc)( const Volume& )=NULL,
-			      bool atend=false ) :
-		    CheckFncVol( CheckFnc ),
-		    VolPIter<CheckFncVol>( b, e, *this, atend ) {}
-	    };
+	typedef CheckerIterator< CheckFncVol, VP<CheckFncVol>::type, 
+	                         VIter, Volume> VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
 
 	typedef IterPair<ConstVolIterator> ConstVolPair;
@@ -120,17 +68,17 @@ class Container
 	    return( ConstVolIterator( ConstVolPIterator(Vols.begin(), Vols.end(), CheckFnc, true )) );
 	    }
 
-	template< class Pred > VolCondIPair<Pred> VolCondPair( const Pred& p ) const
+	template< class Pred > typename VolCondIPair<Pred>::type VolCondPair( const Pred& p ) const
 	    {
-	    return( VolCondIPair<Pred>( VolCondBegin( p ), VolCondEnd( p ) ) );
+	    return( VolCondIPair<Pred>::type( VolCondBegin( p ), VolCondEnd( p ) ) );
 	    }
-	template< class Pred > ConstVolIter<Pred> VolCondBegin( const Pred& p ) const
+	template< class Pred > typename CV<Pred>::type VolCondBegin( const Pred& p ) const
 	    {
-	    return( ConstVolIter< Pred >( Vols.begin(), Vols.end(), p ) );
+	    return( CV<Pred>::type( Vols.begin(), Vols.end(), p ) );
 	    }
-	template< class Pred > ConstVolIter<Pred> VolCondEnd( const Pred& p ) const
+	template< class Pred > typename CV<Pred>::type VolCondEnd( const Pred& p ) const
 	    {
-	    return( ConstVolIter< Pred >( Vols.begin(), Vols.end(), p, true ) );
+	    return( CV<Pred>::type( Vols.begin(), Vols.end(), p, true ) );
 	    }
 
 	Container( const string& Name );

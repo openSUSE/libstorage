@@ -37,4 +37,13 @@ IterPair<Iter> MakeIterPair( Container& c )
     return( IterPair<Iter>( c.begin(), c.end() ));
     }
 
+template< class Pred, class Iter >
+class MakeCondIterPair : public IterPair<Iter>
+    {
+    typedef IterPair<Iter> _bclass;
+    public:
+	MakeCondIterPair( const Iter& b, const Iter& e ) :
+	    _bclass( b, e ) {}
+    };
+
 #endif
