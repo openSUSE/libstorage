@@ -68,8 +68,10 @@ class Storage : public StorageInterface
 
 	bool getDisks (list<string>& disks);
 	bool getPartitions (list<PartitionInfo>& partitioninfos);
-	bool getPartitions (string disk, list<PartitionInfo>& partitioninfos);
+	bool getPartitions (const string& disk, list<PartitionInfo>& partitioninfos);
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
+	int createPartition( const string& disk, PartitionType type, unsigned long start,
+			     unsigned long long sizeK, string& device );
 
 // iterators over container
     protected:
@@ -801,6 +803,7 @@ class Storage : public StorageInterface
 	static void detectArch();
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
+	DiskIterator findDisk( const string& disk );
 
 	// protected internal member variables
 	bool readonly;

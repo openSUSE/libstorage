@@ -166,6 +166,25 @@ namespace storage
     }
 }
 
+int 
+Storage::createPartition( const string& disk, PartitionType type, unsigned long start,
+			  unsigned long long sizeK, string& device )
+    {
+    int ret = 0;
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	unsigned long num_cyl = i->kbToCylinder( sizeK );
+	ret = i->createPartition( type, start, num_cyl, device );
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOTFOUND;
+	}
+    return( ret );
+    }
+
+
 
 bool
 Storage::getDisks (list<string>& disks)
@@ -180,25 +199,31 @@ Storage::getDisks (list<string>& disks)
 
 
 bool
-Storage::getPartitions (string disk, list<PartitionInfo>& partitioninfos)
+Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
+    DiskIterator i = findDisk( disk );
 
-    for (DiskIterator i = dBegin(); i != dEnd(); ++i)
+    if( i != dEnd() )
     {
-	if (i->name () == disk)
-	{
-	    Disk::PartPPair p = i->partPair (Disk::notDeleted);
+	Disk::PartPPair p = i->partPair (Disk::notDeleted);
 
-	    for (Disk::PartPIter i2 = p.begin(); i2 != p.end(); ++i2)
-		partitioninfos.push_back (i2->getPartitionInfo());
+	for (Disk::PartPIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    partitioninfos.push_back (i2->getPartitionInfo());
 
-	    return true;
-	}
+	return true;
     }
 
-    return false;
+    return( i != dEnd() );
 }
+
+Storage::DiskIterator Storage::findDisk( const string& disk )
+    {
+    DiskIterator ret=dBegin();
+    while( ret != dEnd() && ret->name()!=disk )
+	ret++;
+    return( ret );
+    }
 
 
 bool
@@ -206,7 +231,8 @@ Storage::getPartitions (list<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
 
-    for (ConstPartIterator i = partBegin(); i != partEnd(); ++i)
+    ConstPartPair p = partPair(Partition::notDeleted);
+    for (ConstPartIterator i = p.begin(); i != p.end(); ++i)
 	partitioninfos.push_back (i->getPartitionInfo());
 
     return true;

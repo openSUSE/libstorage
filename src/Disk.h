@@ -40,7 +40,7 @@ class Disk : public Container
 	static CType const staticType() { return DISK; }
 	static bool needP( const string& dev );
 	int createPartition( PartitionType type, long unsigned start,
-	                     long unsigned len, unsigned& num );
+	                     long unsigned len, string& device );
 	int availablePartNumber( PartitionType type=PRIMARY );
 	bool hasExtended();
 	friend inline ostream& operator<< (ostream&, const Disk& );

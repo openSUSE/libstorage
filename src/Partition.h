@@ -36,6 +36,7 @@ class Partition : public Volume
 	ostream& logData( ostream& file ) const;
 	const string& partedStart() const { return parted_start; }
 	friend ostream& operator<< (ostream& s, const Partition &p );
+	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
 	PartitionInfo getPartitionInfo () const;
 

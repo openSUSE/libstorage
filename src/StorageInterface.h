@@ -56,6 +56,8 @@ namespace storage
 	DISK_CREATE_PARTITION_EXT_ONLY_ONCE = -1002,
 	DISK_CREATE_PARTITION_EXT_IMPOSSIBLE = -1003,
 	DISK_CREATE_PARTITION_NO_FREE_NUMBER = -1004,
+
+	STORAGE_DISK_NOTFOUND = -2004,
     };
 
 
@@ -85,7 +87,7 @@ namespace storage
 	/**
 	 * Query partitions on a single disks.
 	 */
-	virtual bool getPartitions (string disk, list<PartitionInfo>& partitioninfos) = 0;
+	virtual bool getPartitions (const string& disk, list<PartitionInfo>& partitioninfos) = 0;
 
 
 	/**
@@ -93,21 +95,24 @@ namespace storage
 	 */
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
 
-#if 0
 
 	/**
 	 * Create a new partition.
 	 *
 	 * @param disk name of disk, e.g. hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param size size of partition
-	 * @param partition gets assigned to the name of the new partition.  The name
-	 * is returned instead of the number since creating the name from the
-	 * disk name and partition number is not strait-forward.
+	 * @param start cylinder number of partition start
+	 * @param sizeK size of partition in kilobyte
+	 * @param device gets assigned to the device name of the new partition
+	 * The name is returned instead of the number since creating the name from the
+	 * number is not straight-forward.
 	 */
-	virtual bool createPartition (string disk, PartitionType type, long size,
-				      string& partition) = 0;
+	virtual int createPartition( const string& disk, PartitionType type, 
+				     unsigned long start,
+	                             unsigned long long sizeK,
+				     string& device ) = 0;
 
+#if 0
 	/**
 	 *
 	 */

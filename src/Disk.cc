@@ -805,7 +805,7 @@ int Disk::availablePartNumber( PartitionType type )
     }
 
 int Disk::createPartition( PartitionType type, unsigned long start,
-                           unsigned long len, unsigned& number )
+                           unsigned long len, string& device )
     {
     y2milestone( "type %d at %ld len %ld", type, start, len );
     int ret = 0;
@@ -838,6 +838,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
 	    }
 	}
+    int number = 0;
     if( ret==0 && type==EXTENDED )
 	{
 	number = availablePartNumber( type );
@@ -851,6 +852,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type, 
 				       decString(cylinderToKb(start-1)) );
+	device = p->device();
 	addToList( p );
 	}
     return( ret );
