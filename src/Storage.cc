@@ -180,16 +180,34 @@ Storage::getDisks (list<string>& disks)
 
 
 bool
+Storage::getPartitions (string disk, list<PartitionInfo>& partitioninfos)
+{
+    partitioninfos.clear ();
+
+    for (DiskIterator i = dBegin(); i != dEnd(); ++i)
+    {
+	if (i->name () == disk)
+	{
+	    Disk::PartPPair p = i->partPair (Disk::notDeleted);
+
+	    for (Disk::PartPIter i2 = p.begin(); i2 != p.end(); ++i2)
+		partitioninfos.push_back (i2->getPartitionInfo());
+
+	    return true;
+	}
+    }
+
+    return false;
+}
+
+
+bool
 Storage::getPartitions (list<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
 
     for (ConstPartIterator i = partBegin(); i != partEnd(); ++i)
-    {
-	PartitionInfo tmp;
-	tmp.name = i->name ();
-	partitioninfos.push_back (tmp);
-    }
+	partitioninfos.push_back (i->getPartitionInfo());
 
     return true;
 }
@@ -198,7 +216,7 @@ Storage::getPartitions (list<PartitionInfo>& partitioninfos)
 bool
 Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 {
-    FsCapabilities reiserfsCap = {
+    static FsCapabilities reiserfsCaps = {
 	isExtendable: true,
 	isExtendableWhileMounted: true,
 	isReduceable: true,
@@ -209,7 +227,7 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	labelLength: 16
     };
 
-    FsCapabilities ext2Cap = {
+    static FsCapabilities ext2Caps = {
 	isExtendable: true,
 	isExtendableWhileMounted: false,
 	isReduceable: true,
@@ -220,7 +238,7 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	labelLength: 16
     };
 
-    FsCapabilities ext3Cap = {
+    static FsCapabilities ext3Caps = {
 	isExtendable: true,
 	isExtendableWhileMounted: false,
 	isReduceable: true,
@@ -229,20 +247,35 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
 	supportsLabel: true,
 	labelWhileMounted: true,
 	labelLength: 16
+    };
+
+    static FsCapabilities xfsCaps = {
+	isExtendable: true,
+	isExtendableWhileMounted: true,
+	isReduceable: false,
+	isReduceableWhileMounted: false,
+	supportsUuid: true,
+	supportsLabel: true,
+	labelWhileMounted: false,
+	labelLength: 12
     };
 
     switch (fstype)
     {
 	case REISERFS:
-	    fscapabilities = reiserfsCap;
+	    fscapabilities = reiserfsCaps;
 	    return true;
 
 	case EXT2:
-	    fscapabilities = ext2Cap;
+	    fscapabilities = ext2Caps;
 	    return true;
 
 	case EXT3:
-	    fscapabilities = ext3Cap;
+	    fscapabilities = ext3Caps;
+	    return true;
+
+	case XFS:
+	    fscapabilities = xfsCaps;
 	    return true;
 
 	default:

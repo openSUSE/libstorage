@@ -68,6 +68,7 @@ class Storage : public StorageInterface
 
 	bool getDisks (list<string>& disks);
 	bool getPartitions (list<PartitionInfo>& partitioninfos);
+	bool getPartitions (string disk, list<PartitionInfo>& partitioninfos);
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 
 // iterators over container

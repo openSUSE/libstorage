@@ -39,7 +39,7 @@ class Disk : public Container
 	unsigned long numMinor() const { return range; }
 	static CType const staticType() { return DISK; }
 	static bool needP( const string& dev );
-	int createPartition( PartitionType type, long unsigned start, 
+	int createPartition( PartitionType type, long unsigned start,
 	                     long unsigned len, unsigned& num );
 	int availablePartNumber( PartitionType type=PRIMARY );
 	bool hasExtended();

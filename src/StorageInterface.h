@@ -42,6 +42,7 @@ namespace storage
 	string name;
 	unsigned long cyl_start;
 	unsigned long cyl_size;
+	PartitionType partitiontype;
 	FsType fstype;
     };
 
@@ -80,14 +81,12 @@ namespace storage
 	 */
 	virtual bool getPartitions (list<PartitionInfo>& partitioninfos) = 0;
 
-#if 0
 
 	/**
 	 * Query partitions on a single disks.
 	 */
 	virtual bool getPartitions (string disk, list<PartitionInfo>& partitioninfos) = 0;
 
-#endif
 
 	/**
 	 * Quert capabilities of a filesystem type.
@@ -102,20 +101,22 @@ namespace storage
 	 * @param disk name of disk, e.g. hda
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param size size of partition
-	 * @param number gets assigned to the number of the new partition
+	 * @param partition gets assigned to the name of the new partition.  The name
+	 * is returned instead of the number since creating the name from the
+	 * disk name and partition number is not strait-forward.
 	 */
 	virtual bool createPartition (string disk, PartitionType type, long size,
-				      int& number) = 0;
+				      string& partition) = 0;
 
 	/**
 	 *
 	 */
-	virtual bool removePartition (string name) = 0;
+	virtual bool removePartition (string partition) = 0;
 
 	/**
 	 *
 	 */
-	virtual bool resizePartition (string name, long size) = 0;
+	virtual bool resizePartition (string partition, long size) = 0;
 
 	/**
 	 *  Destroys the partition table of a disk.
@@ -155,17 +156,17 @@ namespace storage
 	/**
 	 * Create a backup of the current state.
 	 */
-	virtual bool createBackupState (string name) = 0;
+	virtual bool createBackupState (string state) = 0;
 
 	/**
 	 * Restore a backup of the current state.
 	 */
-	virtual bool restoreBackupState (string name) = 0;
+	virtual bool restoreBackupState (string state) = 0;
 
 	/**
 	 * Delete a backup of the current state.
 	 */
-	virtual bool removeBackupState (string name) = 0;
+	virtual bool removeBackupState (string state) = 0;
 
 	/**
 	 * Commit the current state to the system.

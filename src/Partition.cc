@@ -67,3 +67,12 @@ Partition::~Partition()
     {
     y2milestone( "destructed partition %s", dev.c_str() );
     }
+
+PartitionInfo
+Partition::getPartitionInfo () const
+{
+    PartitionInfo tmp;
+    tmp.name = name ();
+    tmp.partitiontype = type ();
+    return tmp;
+}

@@ -37,6 +37,8 @@ class Partition : public Volume
 	const string& partedStart() const { return parted_start; }
 	friend ostream& operator<< (ostream& s, const Partition &p );
 
+	PartitionInfo getPartitionInfo () const;
+
     protected:
 	Region reg;
 	bool bootflag;
