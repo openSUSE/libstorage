@@ -115,7 +115,6 @@ class EtcFstab
 	int updateEntry( const FstabChange& entry );
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
-	void keepSync( bool val=true ) { sync=val; }
 	int changeRootPrefix( const string& prfix );
 	string addText( bool doing, bool crypto, const string&  mp );
 	string updateText( bool doing, bool crypto, const string&  mp );
@@ -138,10 +137,8 @@ class EtcFstab
 
 	static unsigned fstabFields[6];
 	static unsigned cryptotabFields[6];
-	static string blanks;
 
 	string prefix;
-	bool sync;
 	list<Entry> co;
     };
 ///////////////////////////////////////////////////////////////////

@@ -83,7 +83,8 @@ Storage::initialize()
 	    }
 	globfree (&globbuf);
 	system_cmd_testmode = true;
-	fstab = new EtcFstab( testdir );
+	rootprefix = testdir;
+	fstab = new EtcFstab( rootprefix );
 	string t = testdir+"/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
 	    {
@@ -92,7 +93,7 @@ Storage::initialize()
 	}
     else
 	{
-	fstab = new EtcFstab();
+	fstab = new EtcFstab( "/etc" );
 	detectFsData( vBegin(), vEnd() );
 	}
     setCacheChanges( true );
@@ -815,7 +816,7 @@ Storage::getDisks (list<string>& disks)
     assertInit();
 
     for (ConstDiskIterator i = diskBegin(); i != diskEnd(); ++i)
-	disks.push_back (i->name());
+	disks.push_back (i->device());
 
     return true;
 }

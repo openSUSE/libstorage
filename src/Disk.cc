@@ -282,7 +282,6 @@ Disk::logData( const string& Dir )
 	}
     file << "SizeK: " << size_k << endl;
 
-
     PartPair pp = partPair();
     for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{

@@ -15,10 +15,9 @@
 
 using namespace storage;
 
-EtcFstab::EtcFstab( const string& prefix )
+EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
     {
-    sync = true;
-    string file = prefix+"/etc/fstab";
+    string file = prefix+"/fstab";
     ifstream mounts( file.c_str() );
     string line;
     getline( mounts, line );
@@ -48,7 +47,7 @@ EtcFstab::EtcFstab( const string& prefix )
 	getline( mounts, line );
 	}
     mounts.close();
-    file = prefix+"/etc/cryptotab";
+    file = prefix+"/cryptotab";
     mounts.clear();
     mounts.open( file.c_str() );
     getline( mounts, line );
@@ -259,14 +258,14 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
     if( e.crypto )
 	{
 	if( cryptotab==NULL )
-	    cryptotab = new AsciiFile( prefix + "/etc/cryptotab" );
+	    cryptotab = new AsciiFile( prefix + "/cryptotab" );
 	ret = cryptotab;
 	fi = new Regex( "[ \t]" + e.dentry + "[ \t]" );
 	}
     else
 	{
 	if( fstab==NULL )
-	    fstab = new AsciiFile( prefix + "/etc/fstab" );
+	    fstab = new AsciiFile( prefix + "/fstab" );
 	ret = fstab;
 	fi = new Regex( "^[ \t]*" + e.dentry + "[ \t]" );
 	}
@@ -435,60 +434,63 @@ int EtcFstab::flush()
 
 string EtcFstab::addText( bool doing, bool crypto, const string& mp )
     {
+    const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
     string txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Adding entry for mount point %1$s to %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Add entry for mount point %1$s to %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     return( txt );
     }
 
 string EtcFstab::updateText( bool doing, bool crypto, const string& mp )
     {
+    const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
     string txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Updating entry for mount point %1$s in %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Update entry for mount point %1$s in %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     return( txt );
     }
 
 string EtcFstab::removeText( bool doing, bool crypto, const string& mp )
     {
+    const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
     string txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Removing entry for mount point %1$s from %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by mount point e.g. /home
 	// %2$s is replaced by a pathname e.g. /etc/fstab
 	txt = sformat( _("Remove entry for mount point %1$s from %2$s"),
-		       mp.c_str(), crypto?"/etc/cryptotsb":"/etc/fstab" );
+		       mp.c_str(), file );
 	}
     return( txt );
     }
@@ -497,5 +499,4 @@ string EtcFstab::removeText( bool doing, bool crypto, const string& mp )
 
 unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
 unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
-string EtcFstab::blanks = "                                                                                                                        "; 
 
