@@ -31,6 +31,7 @@ string mergeString( const list<string>& l, const string& del=" " );
 map<string,string> makeMap( const list<string>& l, const string& delim = "=",
 			    const string& removeSur = " \t\n" );
 void removeLastIf(string& Text_Cr, char Char_cv);
+string kbyteToHumanString( unsigned long long size );
 bool runningFromSystem();
 
 void delay(int Microsec_iv);

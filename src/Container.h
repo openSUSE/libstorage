@@ -30,7 +30,7 @@ class Container
 	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
 	typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 	bool operator== ( const Container& rhs ) const
-	    { return( typ == rhs.typ && nm == rhs.nm && dltd == rhs.dltd ); }
+	    { return( typ == rhs.typ && nm == rhs.nm && del == rhs.del ); }
 	bool operator!= ( const Container& rhs ) const
 	    { return( !(*this==rhs) ); }
 	bool operator< ( const Container& rhs ) const
@@ -40,7 +40,7 @@ class Container
 	    else if( nm != rhs.nm )
 		return( nm<rhs.nm );
 	    else 
-		return( !dltd );
+		return( !del );
 	    }
 	bool operator<= ( const Container& rhs ) const
 	    { return( *this<rhs || *this==rhs ); }
@@ -126,9 +126,12 @@ class Container
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
 	CType type() const { return typ; }
-	bool deleted() const { return dltd; }
-	void setDeleted( bool val=true ) { dltd=val; }
+	bool deleted() const { return del; }
+	void setDeleted( bool val=true ) { del=val; }
+	void setSilent( bool val=true ) { silent=val; }
 	bool readonly() const { return rdonly; }
+	virtual string removeText(bool doing=true) const;
+	virtual string createText(bool doing=true) const;
 	static CType const staticType() { return UNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 
@@ -153,7 +156,8 @@ class Container
 	CType typ;
 	string nm;
 	string dev;
-	bool dltd;
+	bool del;
+	bool silent;
 	bool rdonly;
 	VCont vols;
 
@@ -165,10 +169,12 @@ inline ostream& operator<< (ostream& s, const Container &c )
 	<< " Name:" << c.nm 
 	<< " Device:" << c.dev 
 	<< " Vcnt:" << c.vols.size(); 
-    if( c.dltd )
+    if( c.del )
 	s << " deleted";
     if( c.rdonly )
       s << " readonly";
+    if( c.silent )
+      s << " silent";
     return( s );
     }
 

@@ -83,6 +83,12 @@ class Volume
 	int doLosetup();
 	int doRemoveFstab( EtcFstab* fstab );
 	bool isMounted() const { return( orig_mp.size()>0 && !mp_from_fstab ); }
+	virtual string removeText(bool doing=true) const;
+	virtual string createText(bool doing=true) const;
+	virtual string formatText(bool doing=true) const { return(""); }
+	string sizeString() const;
+	string bootMount() const;
+
 
 	struct SkipDeleted
 	    {
@@ -93,6 +99,7 @@ class Volume
 	static bool getMajorMinor( const string& device, 
 	                           unsigned long& Major, unsigned long& Minor );
 	static storage::EncryptType toEncType( const string& val );
+	const string& fsTypeString() const { return fs_names[fs]; }
 	static const string& fsTypeString( const storage::FsType type )
 	    { return fs_names[type]; }
 	    

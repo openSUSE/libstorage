@@ -534,6 +534,53 @@ EncryptType Volume::toEncType( const string& val )
     return( ret );
     }
 
+string Volume::sizeString() const
+    {
+    return( kbyteToHumanString( size_k ));
+    }
+
+string Volume::bootMount() const
+    {
+    if( Storage::arch()=="ia64" )
+	return( "/boot/efi" );
+    else
+	return( "/boot" );
+    }
+
+string Volume::createText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+        txt = sformat( _("Creating %1$s"), dev.c_str() );
+        }
+    else
+        {
+        // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+        txt = sformat( _("Create %1$s"), dev.c_str() );
+        }
+    return( txt );
+    }
+
+string Volume::removeText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+        txt = sformat( _("Removing %1$s"), dev.c_str() );
+        }
+    else
+        {
+        // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+        txt = sformat( _("Remove %1$s"), dev.c_str() );
+        }
+    return( txt );
+    }
+
+
+
 
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "ntfs", "swap" };

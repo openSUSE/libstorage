@@ -7,12 +7,12 @@
 #include "y2storage/Container.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
+#include "y2storage/AppUtil.h"
 
 Container::Container( Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
     {
-    dltd = false;
-    rdonly = false;
+    del = silent = rdonly = false;
     dev = "/dev/" + nm;
     typ = t;
     y2milestone( "constructed cont %s", nm.c_str() );
@@ -105,11 +105,43 @@ int Container::commitChanges( CommitStage stage )
     return( ret );
     }
 
+string Container::createText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+	{
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	txt = sformat( _("Creating %1$s"), dev.c_str() );
+	}
+    else
+	{
+	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	txt = sformat( _("Create %1$s"), dev.c_str() );
+	}
+    return( txt );
+    }
+
 int Container::doCreate( Volume * v ) 
     { 
     y2warning( "invalid doCreate Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
     return( CONTAINER_INTERNAL_ERROR );
+    }
+
+string Container::removeText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+	{
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	txt = sformat( _("Removing %1$s"), dev.c_str() );
+	}
+    else
+	{
+	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	txt = sformat( _("Remove %1$s"), dev.c_str() );
+	}
+    return( txt );
     }
 
 int Container::doRemove( Volume * v ) 

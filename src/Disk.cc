@@ -608,6 +608,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 		cyl_start += cyl;
 		}
 	    }
+	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
 _("The partitioning on your disk %1$s is not readable by\n"
 "the partitioning tool \"parted\" that YaST2 uses to change the\n"
@@ -634,7 +635,7 @@ _("Your disk %1$s contains %2$lu partitions. The maximal number\n"
 	// TODO: handle callback into ycp code for error popup
 	y2milestone( "range_exceed:%s", txt.c_str() );
 	}
-    for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
+    for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
 	{
 	addToList( *i );
 	}
@@ -759,6 +760,11 @@ string Disk::getPartName( const string& disk, unsigned nr )
 string Disk::getPartName( const string& disk, const string& nr )
     {
     return( disk + "/" + nr );
+    }
+
+string Disk::getPartName( unsigned nr ) const
+    {
+    return( getPartName( dev, nr ) );
     }
 
 pair<string,long> Disk::getDiskPartition( const string& dev )
@@ -1017,7 +1023,7 @@ int Disk::commitChanges( CommitStage stage )
 	    case DECREASE:
 		if( deleted() )
 		    {
-		    doCreateLabel( label );
+		    doCreateLabel();
 		    }
 		break;
 	    case INCREASE:
@@ -1039,23 +1045,51 @@ int Disk::commitChanges( CommitStage stage )
     return( ret );
     }
 
-int Disk::doCreateLabel( const string& label_name )
+string Disk::setDiskLabelText( bool doing ) const
     {
-    y2milestone( "label:%s", label_name.c_str() );
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
+	// %2$s is replaced by label name (e.g. msdos)
+        txt = sformat( _("Initializing disk label of disk %1$s to %2$s"), 
+		      dev.c_str(), label.c_str() );
+        }
+    else
+        {
+        // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
+	// %2$s is replaced by label name (e.g. msdos)
+        txt = sformat( _("Initialize disk label of disk %1$s to %2$s"), 
+		      dev.c_str(), label.c_str() );
+        }
+    return( txt );
+    }
+
+int Disk::doCreateLabel()
+    {
+    y2milestone( "label:%s", label.c_str() );
     int ret = 0;
+    if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	{
+	(*getStorage()->getCallbackShowInstallInfo())( setDiskLabelText(true) );
+	}
     VolPair p = volPair();
     if( !p.empty() )
 	{
+	setSilent( true );
 	list<VolIterator> l;
 	for( VolIterator i=p.begin(); i!=p.end(); ++i )
 	    if( !i->created() )
 		l.push_front( i );
 	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    {
 	    doRemove( &(**i) );
+	    }
+	setSilent( false );
 	}
     system_stderr.erase();
     std::ostringstream cmd_line;
-    cmd_line << PARTEDCMD << device() << " mklabel " << label_name;
+    cmd_line << PARTEDCMD << device() << " mklabel " << label;
     if( execCheckFailed( cmd_line.str() ) )
 	{
 	ret = DISK_SET_LABEL_PARTED_FAILED;
@@ -1086,6 +1120,10 @@ int Disk::doSetType( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
+	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	    {
+	    (*getStorage()->getCallbackShowInstallInfo())( p->setTypeText(true) );
+	    }
 	system_stderr.erase();
 	std::ostringstream cmd_line;
 	cmd_line << PARTEDCMD << device() << " set " << p->nr() << " ";
@@ -1158,6 +1196,10 @@ int Disk::doCreate( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
+	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	    {
+	    (*getStorage()->getCallbackShowInstallInfo())( p->createText(true) );
+	    }
 	system_stderr.erase();
 	y2milestone( "doCreate container %s name %s", name().c_str(),
 		     p->name().c_str() );
@@ -1165,7 +1207,7 @@ int Disk::doCreate( Volume* v )
 	             p->cylStart(), p->cylSize() );
 	if( detected_label != label )
 	    {
-	    ret = doCreateLabel( label );
+	    ret = doCreateLabel();
 	    }
 	std::ostringstream cmd_line;
 	if( ret==0 )
@@ -1267,6 +1309,10 @@ int Disk::doRemove( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
+	if( !silent && getStorage()->getCallbackShowInstallInfo() )
+	    {
+	    (*getStorage()->getCallbackShowInstallInfo())( p->removeText(true) );
+	    }
 	system_stderr.erase();
 	y2milestone( "doRemove container %s name %s", name().c_str(),
 		     p->name().c_str() );

@@ -9,7 +9,6 @@ using namespace std;
 
 using namespace storage;
 
-
 class Disk;
 
 class Partition : public Volume
@@ -46,6 +45,12 @@ class Partition : public Volume
 	void changeNumber( unsigned new_num );
 	void changeId( unsigned id );
 	void changeIdDone();
+	virtual string removeText( bool doing=true ) const;
+	virtual string createText( bool doing=true ) const;
+	virtual string formatText(bool doing=true) const;
+	string setTypeText( bool doing=true ) const;
+	const Disk* const disk() const;
+	bool isWindows() const;
 	friend ostream& operator<< (ostream& s, const Partition &p );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }

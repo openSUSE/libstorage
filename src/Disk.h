@@ -50,8 +50,13 @@ class Disk : public Container
 	int commitChanges( CommitStage stage );
 	bool hasExtended();
 	friend inline ostream& operator<< (ostream&, const Disk& );
+	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long );
 	unsigned long kbToCylinder( unsigned long long );
+	string getPartName( unsigned nr ) const;
+	static string getPartName( const string& disk, unsigned nr );
+	static string getPartName( const string& disk, const string& nr );
+	static pair<string,long> getDiskPartition( const string& dev );
 
     protected:
 
@@ -121,7 +126,7 @@ class Disk : public Container
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doSetType( Volume* v );
-	int doCreateLabel( const string& label_name );
+	int doCreateLabel();
 
 	//list<Region> getUnusedRegions();
 	void logData( const string& Dir );
@@ -131,9 +136,6 @@ class Disk : public Container
 	static string defaultLabel();
 	static label_info labels[];
 	static string p_disks[];
-	static string getPartName( const string& disk, unsigned nr );
-	static string getPartName( const string& disk, const string& nr );
-	static pair<string,long> getDiskPartition( const string& dev );
 
 	unsigned long cyl;
 	unsigned head;

@@ -14,6 +14,7 @@
 #include <string>
 
 #include "y2storage/AsciiFile.h"
+#include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
 
 
@@ -174,6 +175,36 @@ checkNormalFile(string Path_Cv)
   return (stat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
 	  S_ISREG(Stat_ri.st_mode));
 }
+
+string kbyteToHumanString( unsigned long long sizeK )
+    {
+    unsigned num;
+    unsigned fract;
+    string unit;
+    if( sizeK<1024*1024 )
+	{
+	num = (unsigned)(sizeK / 1024);
+	sizeK -= num*1024;
+	fract = (unsigned)(sizeK / 103);
+	unit = " MB";
+	}
+    else if( sizeK<1024*1024*1024 )
+	{
+	num = (unsigned)(sizeK / (1024*1024));
+	sizeK -= num * (1024*1024);
+	fract = (unsigned)(sizeK / 104858);
+	unit = " GB";
+	}
+    else
+	{
+	num = (unsigned)(sizeK / (1024*1024*1024));
+	sizeK -= num * (1024*1024*1024);
+	fract = (unsigned)(sizeK / 107374183);
+	unit = " TB";
+	}
+    return( decString(num)+"."+decString(fract)+unit );
+    }
+
 
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   {
