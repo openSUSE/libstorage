@@ -54,7 +54,7 @@ void Volume::setNameDev()
 
 void Volume::init()
     {
-    del = create = format = is_loop = false;
+    del = create = format = is_loop = silent = false;
     mp_from_fstab = false;
     detected_fs = fs = UNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
@@ -445,12 +445,57 @@ int Volume::umount( const string& mp )
     return( ret );
     }
 
+string Volume::mountText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	// %2$s is replaced by mount point e.g. /home
+        txt = sformat( _("Mounting %1$s to %2$s"), dev.c_str(), mp.c_str() );
+        }
+    else
+        {
+	string d = dev.substr( 5 );
+	if( orig_mp.size()>0 && mp.size()>0 )
+	    {
+	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // %2$s is replaced by mount point e.g. /home
+	    txt = sformat( _("Change mount point of %1$s to %2$s"), d.c_str() );
+	    }
+	else if( mp.size()>0 )
+	    {
+	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // %2$s is replaced by mount point e.g. /home
+	    txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str() );
+	    }
+	else if( orig_mp.size()>0 )
+	    {
+	    if( encryption!=ENC_NONE || optNoauto() )
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		txt = sformat( _("Remove %1$s from /etc/fstab"), d.c_str() );
+		}
+	    else
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		txt = sformat( _("Remove %1$s from /etc/cryptotab"), d.c_str() );
+		}
+	    }
+        }
+    return( txt );
+    }
+
 int Volume::doMount()
     {
     int ret = 0;
     string lmount = cont->getStorage()->root()+mp;
     y2milestone( "device:%s mp:%s old mp:%s",  dev.c_str(), mp.c_str(),
                  orig_mp.c_str() );
+    if( !silent && cont->getStorage()->getCallbackShowInstallInfo() )
+	{
+	(*cont->getStorage()->getCallbackShowInstallInfo())( mountText(true) );
+	}
     if( orig_mp.size()>0 )
 	{
 	ret = umount( orig_mp );
@@ -586,6 +631,12 @@ string Volume::bootMount() const
 	return( "/boot/efi" );
     else
 	return( "/boot" );
+    }
+
+bool Volume::optNoauto() const
+    {
+    list<string> l = splitString( fstab_opt );
+    return( find( l.begin(), l.end(), "noauto" )!=l.end() );
     }
 
 string Volume::createText( bool doing ) const

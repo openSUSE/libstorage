@@ -93,8 +93,10 @@ class Volume
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const { return(""); }
+	string mountText( bool doing=true) const;
 	string sizeString() const;
 	string bootMount() const;
+	bool optNoauto() const;
 
 
 	struct SkipDeleted
@@ -124,6 +126,7 @@ class Volume
 	bool create;
 	bool del;
 	bool format;
+	bool silent;
 	bool mp_from_fstab;
 	storage::FsType fs;
 	storage::FsType detected_fs;

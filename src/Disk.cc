@@ -1062,10 +1062,11 @@ string Disk::setDiskLabelText( bool doing ) const
         }
     else
         {
-        // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
+	string d = dev.substr( 5 );
+        // displayed text before action, %1$s is replaced by disk name (e.g. hda),
 	// %2$s is replaced by label name (e.g. msdos)
         txt = sformat( _("Initialize disk label of disk %1$s to %2$s"), 
-		      dev.c_str(), label.c_str() );
+		      d.c_str(), label.c_str() );
         }
     return( txt );
     }
