@@ -1,0 +1,15 @@
+Device: /dev/sda
+Major: 8
+Minor: 0
+Range: 16
+Cylinder: 1115
+Head: 255
+Sector: 63
+Label: msdos
+MaxPrimary: 4
+ExtPossible: 1
+MaxLogical: 63
+SizeK: 8958120
+Partition: 1 /dev/sda1 1036161 8 1 1 129 82 primary
+Partition: 2 /dev/sda2 6297480 8 2 130 784 83 primary boot
+Partition: 3 /dev/sda3 1622565 8 3 914 202 83 primary
