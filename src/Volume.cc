@@ -409,6 +409,55 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
+string Volume::formatText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+	{
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	// %2$s is replaced by size (e.g. 623.5 MB)
+	// %3$s is replaced by file system type (e.g. reiserfs)
+	txt = sformat( _("Formatting device %1$s %2$s with %3$s "),
+		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	}
+    else
+	{
+	string d = dev.substr( 5 );
+	if( mp.size()>0 )
+	    {
+	    if( encryption==ENC_NONE )
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat( _("Format device %1$s %2$s for %4$s with %3$s"),
+			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			       mp.c_str() );
+		}
+	    else
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat( _("Format crypted device %1$s %2$s for %4$s with %3$s"),
+			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			       mp.c_str() );
+		}
+	    }
+	else
+	    {
+	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by file system type (e.g. reiserfs)
+	    txt = sformat( _("Format device %1$s %2$s $s with %3$s"),
+			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	    }
+	}
+    return( txt );
+    }
+
 int Volume::doFormat()
     {
     int ret = 0;
