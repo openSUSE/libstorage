@@ -29,7 +29,9 @@ ProcMounts::ProcMounts()
 	co[dev] = "/";
 	}
     mounts.close();
+    mounts.clear();
     mounts.open( "/proc/swaps" );
+    getline( mounts, line );
     getline( mounts, line );
     while( mounts.good() )
 	{

@@ -101,56 +101,63 @@ bool Volume::getMajorMinor( const string& device,
     return( ret );
     }
 
-void Volume::getMountData( ProcMounts& mountData )
+void Volume::getFstabData( const EtcFstab& fstabData )
     {
-    /*
-    bool found = mountData.select( " (" + device() + ")" )>0;
+    FstabEntry entry;
+    bool found = fstabData.findDevice( device(), entry );
     if( !found )
 	{
-	list<string>::const_iterator an = alt_names.begin();
-	while( !found && an!=alt_names.end() )
-	    {
-	    found = loopData.select( " (" + *an + ") " )>0;
-	    ++an;
-	    }
+	found = fstabData.findDevice( alt_names, entry );
+	}
+    if( !found && (uuid.size()>0||label.size()>0) )
+	{
+	found = fstabData.findUuidLabel( uuid, label, entry );
+	}
+    if( !found && mount.size()>0 )
+	{
+	found = fstabData.findMount( mount, entry );
 	}
     if( found )
 	{
-	list<string> l = splitString( *loopData.getLine( 0, true ));
 	std::ostringstream b;
-	b << "line[" << device() << "]=" << l;
-	y2milestone( "%s", b.str().c_str() );
-	if( l.size()>0 )
+	b << "line[" << device() << "]=";
+	mauto = !entry.noauto;
+	b << "auto:" << mauto;
+	if( mount.size()==0 )
 	    {
-	    list<string>::const_iterator el = l.begin();
-	    is_loop = true;
-	    loop_dev = *el;
-	    if( loop_dev.size()>0 && *loop_dev.rbegin()==':' )
-	        loop_dev.erase(--loop_dev.end());
-	    fstab_loop_dev = loop_dev;
-	    b.str("");
-	    b << "loop_dev:" << loop_dev;
-	    encryption = ENC_NONE;
-	    if( l.size()>3 )
-		{
-		++el; ++el; ++el;
-		string encr = "encryption=";
-		if( el->find( encr )==0 )
-		    {
-		    encr = el->substr( encr.size() );
-		    if( encr == "twofish160" )
-			encryption = ENC_TWOFISH_OLD;
-		    else if( encr == "CryptoAPI/twofish-cbc" )
-			encryption = ENC_TWOFISH;
-		    else
-			encryption = ENC_UNKNOWN;
-		    }
-		}
-	    b << " encr:" << encryption;
-	    y2milestone( "%s", b.str().c_str() );
+	    mount = orig_mount = entry.mount;
+	    b << " mount:" << mount;
 	    }
+	mount_by = orig_mount_by = entry.mount_by;
+	if( mount_by != MOUNTBY_DEVICE )
+	    {
+	    b << " mountby:" << mb_names[mount_by];
+	    }
+	fstab_opt = orig_fstab_opt = mergeString( entry.opts, "," );
+	b << " fstopt:" << fstab_opt;
+	if( !is_loop && entry.loop )
+	    {
+	    is_loop = true;
+	    encryption = entry.encr;
+	    loop_dev = fstab_loop_dev = entry.loop_dev;
+	    b << " loop_dev:" << loop_dev << " encr:" << enc_names[encryption];
+	    }
+	y2milestone( "%s", b.str().c_str() );
 	}
-    */
+    }
+
+void Volume::getMountData( const ProcMounts& mountData )
+    {
+    mount = mountData.getMount( mountDevice() );
+    if( mount.size()==0 )
+	{
+	mount = mountData.getMount( alt_names );
+	}
+    if( mount.size()>0 )
+	{
+	y2milestone( "%s mounted on %s", device().c_str(), mount.c_str() );
+	}
+    orig_mount = mount;
     }
 
 void Volume::getLoopData( SystemCmd& loopData )
@@ -272,6 +279,18 @@ void Volume::getFsData( SystemCmd& blkidData )
 	    y2milestone( "%s", b.str().c_str() );
 	    }
 	}
+    }
+
+EncryptType Volume::toEncType( const string& val )
+    {
+    EncryptType ret = ENC_UNKNOWN;
+    if( val=="none" || val.size()==0 )
+        ret = ENC_NONE;
+    else if( val=="twofish" )
+        ret = ENC_TWOFISH_OLD;
+    else if( val=="twofish256" )
+        ret = ENC_TWOFISH;
+    return( ret );
     }
 
 

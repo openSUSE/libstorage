@@ -253,6 +253,18 @@ list<string> splitString( const string& s, const string& delChars,
     return( ret );
     }
 
+string mergeString( const list<string>& l, const string& del )
+    {
+    string ret;
+    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	{
+	if( i!=l.begin() )
+	    ret += del;
+	ret += *i;
+	}
+    return( ret );
+    }
+
 map<string,string> 
 makeMap( const list<string>& l, const string& delim, const string& removeSur )
     {

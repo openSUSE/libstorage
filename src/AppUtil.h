@@ -27,6 +27,7 @@ void createPath(string Path_Cv);
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
 list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true );
+string mergeString( const list<string>& l, const string& del=" " );
 map<string,string> makeMap( const list<string>& l, const string& delim = "=",
 			    const string& removeSur = " \t\n" );
 void removeLastIf(string& Text_Cr, char Char_cv);
