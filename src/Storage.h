@@ -21,9 +21,25 @@
 
 using namespace std;
 
+/** 
+ * \brief Main class to access libstorage functionality.
+ *
+ * This is the main class with that one can get access to the
+ * functionality provided by libstorage.
+ * It contains a list of container objects. 
+ *
+ * All modifying member functions of the storage library will 
+ * go through Storage class. This is the central place where 
+ * things like readonly access, locking, testmode, inst-sys etc.
+ * are handled. It has the additional advantage the the complete 
+ * class hierarchy below Storage could be changed without affecting 
+ * the user interface of libstorage.
+ */
+
 class Storage
     {
     protected:
+
 	typedef list<Container*> CCont;
 	typedef CCont::iterator CIter;
 	typedef CCont::const_iterator CCIter;

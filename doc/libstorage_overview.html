@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
+<title>libstorage: Design Concepts and Main Overview</title>
+</head><body>
+<h1>libstorage: Design Concepts and Main Overview</h1>
+
+<p> 
+Short overview about the concepts and classes of libstorage. Click on the class names to
+get a more detailed description of each class.
+<p>
+<a href="autodocs/classStorage.html"><h2>class Storage</h2></a>
+<p>
+This is the main class with that one can get access to the functionality provided by libstorage.
+The class contains a list of container objects.</p>
+<p>
+All modifying member functions of the storage library will go through Storage class. This is the 
+central place where things like readonly access, locking, testmode, inst-sys etc. are handled. 
+So e.g. if one wants to remove a partition from a certain disk he will call 
+<code>Storage::RemovePartition(...)</code> not <code>Disk::RemovePartition(...)</code>. Of course
+<code>Storage::RemovePartition(...)</code> may eventually call <code>Disk::RemovePartition(...)</code>
+but only after the checks against the central restrictions (e.g. readonly access or active testmode)
+have succeeded in class Storage.</p>
+<p>
+This has the additional advantage the the complete class hierarchy below Storage could be changed 
+without affecting the user interface of libstorage.</p>
+<p>
+The following modifying functions are planned to be available if libstorage is finished.</p>
+<code>
+	CreatePartition(...)<br>
+        RemovePartition(...)<br>
+        ResizePartition(...)<br>
+        DestroyPartitionTable(...)<br>
+        CreateMd(...)<br>
+        RemoveMd(...)<br>
+        CreateLvmVg(...)<br>
+        RemoveLvmVg(...)<br>
+        ExtendLvmVg(...)<br>
+        ReduceLvmVg(...)<br>
+        CreateLvmLv(...)<br>
+        RemoveLvmLv(...)<br>
+        ResizeLvmLv(...)<br>
+        CreateLoopFile(...)<br>
+        RemoveLoopFile(...)<br>
+        CreateEvmsContainer(...)<br>
+        ReomveEvmsContainer(...)<br>
+        ExtendEvmsContainer(...)<br>
+        ReduceEvmsContainer(...)<br>
+        CreateEvmsVolume(...)<br>
+        RemoveEvmsVolume(...)<br>
+        ResizeEvmsVolume(...)<br>
+<br>
+        FormatVolume(...)<br>
+        ChangeMountPoint(...)<br>
+        ChangeFstabOptions(...)<br>
+</code>
+
+<a href="autodocs/classContainer.html"><h2>class Container</h2></a>
+<p>
+This is the base class for everything being able to contain volumes.
+A <code>Container</code> contains a list of <code>Volumes</code>. 
+Currently, the following classes derived from <code>Container</code> exist: <code>Disk</code>, 
+<code>LvmVg</code>, <code>Evms</code>.</p>
+
+<a href="autodocs/classDisk.html"><h2>class Disk</h2></a>
+<p>
+Derived class from <code>Container</code>. Contains knowledge about handling of normal disks.
+</p>
+
+<a href="autodocs/classLvmVg.html"><h2>class LvmVg</h2></a>
+<p>
+Derived class from <code>Container</code>. Contains knowledge about handling of LVM Volume groups.
+</p>
+
+<a href="autodocs/classEvms.html"><h2>class Evms</h2></a>
+<p>
+Derived class from <code>Container</code>. Contains knowledge about handling of EVMS Entities.
+</p>
+
+<a href="autodocs/classVolume.html"><h2>class Volume</h2></a>
+<p>
+This is the base class for all objects that can be formatted and mounted.
+It contains cunctionality for formatting, mounting, fstab handling.
+Currently, the following classes derived from <code>Volume</code> exist: <code>Partition</code>, 
+<code>LvmLv</code>, <code>EvmsVol</code>, <code>Md</code>, <code>Loop</code>.</p>
+
+<a href="autodocs/classPartition.html"><h2>class Partition</h2></a>
+<p>
+Derived class from <code>Volume</code>. Contains data about a disk partition.
+</p>
+
+<a href="autodocs/classLvmLv.html"><h2>class LvmLv</h2></a>
+<p>
+Derived class from <code>Volume</code>. Contains data about a LVM Logical Volume.
+</p>
+
+<a href="autodocs/classEvmsVol.html"><h2>class EvmsVol</h2></a>
+<p>
+Derived class from <code>Volume</code>. Contains data about a EVMS Volume.
+</p>
+
+<a href="autodocs/classMd.html"><h2>class Md</h2></a>
+<p>
+Derived class from <code>Volume</code>. Contains data about a Software Raid Device.
+</p>
+
+<a href="autodocs/classLoop.html"><h2>class Loop</h2></a>
+<p>
+Derived class from <code>Volume</code>. Contains data about a file based loop filesystem.
+</p>
+
+<a href="autodocs/classAsciiFile.html"><h2>class AsciiFile</h2></a>
+<p>
+Class for accessing and modifying ascii files.
+</p>
+
+<a href="autodocs/classProcPart.html"><h2>class ProcPart</h2></a>
+<p>
+Derived class from <code>AsciiFile</code>. Class for accessing content of <code>/proc/partitions</code>.
+</p>
+
+</body>
+</html>
