@@ -164,5 +164,24 @@ Storage::getDisks (list<string>& disks)
 
     for (ConstDiskIterator i = diskBegin(); i != diskEnd(); ++i)
 	disks.push_back (i->name());
+
+    return true;
+}
+
+
+
+bool
+Storage::getPartitions (list<PartitionInfo>& partitioninfos)
+{
+    partitioninfos.clear ();
+
+    for (ConstPartIterator i = partBegin(); i != partEnd(); ++i)
+    {
+	PartitionInfo tmp;
+	tmp.name = i->name ();
+	partitioninfos.push_back (tmp);
+    }
+
+    return true;
 }
 

@@ -65,6 +65,7 @@ class Storage : public StorageInterface
 	// functions for interface
 
 	bool getDisks (list<string>& disks);
+	bool getPartitions (list<PartitionInfo>& partitioninfos);
 
 // iterators over container
     protected:

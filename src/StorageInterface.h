@@ -58,13 +58,13 @@ public:
      */
     virtual bool getDisks (list<string>& disks) = 0;
 
-#if 0
 
     /**
      * Query partitions on all attatched disks.
      */
     virtual bool getPartitions (list<PartitionInfo>& partitioninfos) = 0;
 
+#if 0
 
     /**
      * Query partitions on a single disks.
