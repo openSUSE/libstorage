@@ -101,6 +101,9 @@ class EtcFstab
 	int removeEntry( const FstabEntry& entry );
 	void keepSync( bool val=true ) { sync=val; }
 	int changeRootPrefix( const string& prfix );
+	string addText( bool doing, bool crypto, const string&  mp );
+	string updateText( bool doing, bool crypto, const string&  mp );
+	string removeText( bool doing, bool crypto, const string&  mp );
 	int flush();
     protected:
 	struct Entry

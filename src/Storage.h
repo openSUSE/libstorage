@@ -5,6 +5,7 @@
 #include <list>
 
 #include "y2storage/StorageInterface.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/Container.h"
 #include "y2storage/Disk.h"
 #include "y2storage/Volume.h"
@@ -49,9 +50,9 @@ class Storage : public StorageInterface
 	typedef CCont::const_iterator CCIter;
 
 	static bool isMd( const Container&d )
-	    { return( d.type()==Container::MD ); };
+	    { return( d.type()==MD ); };
 	static bool isLoop( const Container&d )
-	    { return( d.type()==Container::LOOP ); };
+	    { return( d.type()==LOOP ); };
     public:
 	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.deleted());}};
 	static SkipDeleted SkipDel;
@@ -90,6 +91,7 @@ class Storage : public StorageInterface
 	int changeFstabOptions( string device, string options );
 	int changeMountPoint( string device, string mount );
 	int changeFormatVolume( string device, bool format, FsType fs );
+	list<string> getCommitActions( bool mark_destructive );
         int commit();
 
 	void setCallbackProgressBar( CallbackProgressBar pfnc )
@@ -175,10 +177,10 @@ class Storage : public StorageInterface
 // iterators over disks
     protected:
 	// protected typedefs for iterators over disks
-	typedef CastCheckIterator<CCIter, Container::DISK, const Disk *> ContainerCDiskIter;
+	typedef CastCheckIterator<CCIter, DISK, const Disk *> ContainerCDiskIter;
 	template< class Pred >
 	    struct ConstDiskPI { typedef ContainerIter<Pred, ContainerCDiskIter> type; };
-	typedef CastCheckIterator<CIter, Container::DISK, Disk *> ContainerDiskIter;
+	typedef CastCheckIterator<CIter, DISK, Disk *> ContainerDiskIter;
 	template< class Pred >
 	    struct DiskPI { typedef ContainerIter<Pred, ContainerDiskIter> type; };
 	template< class Pred >
@@ -258,10 +260,10 @@ class Storage : public StorageInterface
 // iterators over LVM VGs
     protected:
 	// protected typedefs for iterators over LVM VGs
-	typedef CastCheckIterator<CCIter, Container::LVM, const LvmVg *> ContainerCLvmVgIter;
+	typedef CastCheckIterator<CCIter, LVM, const LvmVg *> ContainerCLvmVgIter;
 	template< class Pred >
 	    struct ConstLvmVgPI { typedef ContainerIter<Pred, ContainerCLvmVgIter> type; };
-	typedef CastCheckIterator<CIter, Container::DISK, LvmVg *> ContainerLvmVgIter;
+	typedef CastCheckIterator<CIter, LVM, LvmVg *> ContainerLvmVgIter;
 	template< class Pred >
 	    struct LvmVgPI { typedef ContainerIter<Pred, ContainerLvmVgIter> type; };
 	template< class Pred >
@@ -320,10 +322,10 @@ class Storage : public StorageInterface
 // iterators over EVMS container
     protected:
 	// protected typedefs for iterators over EVMS container
-	typedef CastCheckIterator<CCIter, Container::EVMS, const Evms *> ContainerCEvmsIter;
+	typedef CastCheckIterator<CCIter, EVMS, const Evms *> ContainerCEvmsIter;
 	template< class Pred >
 	    struct ConstEvmsPI { typedef ContainerIter<Pred, ContainerCEvmsIter> type; };
-	typedef CastCheckIterator<CIter, Container::DISK, Evms *> ContainerEvmsIter;
+	typedef CastCheckIterator<CIter, EVMS, Evms *> ContainerEvmsIter;
 	template< class Pred >
 	    struct EvmsPI { typedef ContainerIter<Pred, ContainerEvmsIter> type; };
 	template< class Pred >

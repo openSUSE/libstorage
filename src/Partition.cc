@@ -316,6 +316,27 @@ string Partition::formatText( bool doing ) const
     return( txt );
     }
 
+void Partition::getCommitActions( list<commitAction*>& l ) const
+    {
+    unsigned s = l.size();
+    bool change_id = idt!=orig_id;
+    Volume::getCommitActions( l );
+    if( s<l.size() && change_id )
+        {
+	list<commitAction*>::iterator last = l.end();
+	--last;
+	if( (*last)->stage>INCREASE )
+	    l.erase( last );
+	else
+	    change_id = false;
+	}
+    if( change_id )
+	{
+	l.push_back( new commitAction( INCREASE, cont->staticType(),
+				       setTypeText(false), false ));
+	}
+    }
+
 Partition::~Partition()
     {
     y2milestone( "destructed partition %s", dev.c_str() );

@@ -79,7 +79,7 @@ using std::list;
 
 namespace storage
 {
-    enum FsType { UNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP };
+    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL };
 
@@ -325,7 +325,7 @@ namespace storage
 	virtual int changeMountPoint( string device, string mount ) = 0;
 
 	/**
-	 *  changes the fstab options point of a partition
+	 *  changes the fstab options of a partition
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options new fstab options of the partition (e.g. noauto,user,sync).
@@ -334,6 +334,15 @@ namespace storage
 	 */
 	virtual int changeFstabOptions( string device, string options ) = 0;
 
+	/**
+	 *  gets a list of string describing the actions to be executed 
+	 *  after next call to commit()
+	 *
+	 * @param mark_destructive if true use <red> around </red> destructive
+	 *    actions (like e.g. deletion, formatting, ...)
+	 * @return list of strings presentable to the user
+	 */
+	virtual list<string> getCommitActions( bool mark_destructive ) = 0;
 
 	/**
 	 *  sets the callback function called on progress bar events

@@ -56,7 +56,7 @@ void Volume::init()
     {
     del = create = format = is_loop = silent = false;
     mp_from_fstab = false;
-    detected_fs = fs = UNKNOWN;
+    detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     setNameDev();
     mjr = mnr = 0;
@@ -327,6 +327,10 @@ int Volume::doFormat()
     int ret = 0;
     bool needMount = false;
     y2milestone( "device:%s", dev.c_str() );
+    if( !silent )
+	{
+	cont->getStorage()->showInfoCb( formatText(true) );
+	}
     if( isMounted() )
 	{
 	ret = umount( orig_mp );
@@ -406,6 +410,10 @@ int Volume::doFormat()
 	    c.execute( cmd );
 	    }
 	delete p;
+	}
+    if( ret==0 )
+	{
+	ret = doFstabUpdate();
 	}
     if( ret==0 )
 	{
@@ -500,8 +508,6 @@ int Volume::doMount()
     if( orig_mp.size()>0 )
 	{
 	ret = umount( orig_mp );
-	if( ret==0 )
-	    orig_mp.erase();
 	}
     if( access( lmount.c_str(), R_OK )!=0 )
 	{
@@ -513,6 +519,7 @@ int Volume::doMount()
 	}
     if( ret==0 )
 	{
+	ret = doFstabUpdate();
 	orig_mp = mp;
 	}
     y2milestone( "ret:%d", ret );
@@ -595,6 +602,46 @@ string Volume::getMountbyString( MountByType mby, const string& dev,
     return( ret );
     }
 
+void Volume::getCommitActions( list<commitAction*>& l ) const
+    {
+    if( deleted() )
+	{
+	l.push_back( new commitAction( DECREASE, cont->type(),
+				       removeText(false), true ));
+	}
+    else if( created() )
+	{
+	l.push_back( new commitAction( INCREASE, cont->type(),
+				       createText(false), false ));
+	}
+    else if( format )
+	{
+	l.push_back( new commitAction( FORMAT, cont->type(),
+				       formatText(false), true ));
+	}
+    else if( mp != orig_mp )
+	{
+	l.push_back( new commitAction( MOUNT, cont->type(),
+				       mountText(false), false ));
+	}
+    else if( needFstabUpdate() )
+	{
+	l.push_back( new commitAction( MOUNT, cont->type(),
+				       fstabUpdateText(), false ));
+	}
+    }
+
+string Volume::fstabUpdateText() const
+    {
+    string txt;
+    EtcFstab* fstab = cont->getStorage()->getFstab();
+    if( orig_mp.size()>0 && mp.size()==0 )
+	txt = fstab->removeText( false, inCrypto(), orig_mp );
+    else
+	txt = fstab->updateText( false, inCrypto(), orig_mp );
+    return( txt );
+    }
+
 int Volume::doFstabUpdate()
     {
     int ret = 0;
@@ -608,6 +655,11 @@ int Volume::doFstabUpdate()
 	 fstab->findDevice( alt_names, entry ) ))
 	{
 	changed = true;
+	if( !silent )
+	    {
+	    cont->getStorage()->showInfoCb( 
+		fstab->removeText( true, entry.crypto, entry.mount ));
+	    }
 	ret = fstab->removeEntry( entry );
 	}
     else if( mp.size()>0 )
@@ -646,6 +698,11 @@ int Volume::doFstabUpdate()
 		}
 	    if( changed )
 		{
+		if( !silent )
+		    {
+		    cont->getStorage()->showInfoCb( 
+			fstab->updateText( true, inCrypto(), che.mount ));
+		    }
 		ret = fstab->updateEntry( che );
 		}
 	    }
@@ -667,11 +724,16 @@ int Volume::doFstabUpdate()
 		}
 	    che.opts = splitString( fst, "," );
 	    che.mount = mp;
-	    if( fs != UNKNOWN && fs != NTFS && fs != VFAT && !is_loop &&
+	    if( fs != FSUNKNOWN && fs != NTFS && fs != VFAT && !is_loop &&
 	        !optNoauto() )
 		{
 		che.freq = 1;
 		che.passno = (mp=="/") ? 1 : 2;
+		}
+	    if( !silent )
+		{
+		cont->getStorage()->showInfoCb( fstab->addText( true, inCrypto(),
+		                                                che.mount ));
 		}
 	    ret = fstab->addEntry( che );
 	    }

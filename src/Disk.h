@@ -123,6 +123,8 @@ class Disk : public Container
 	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
+	virtual void getCommitActions( list<commitAction*>& l ) const;
+
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doSetType( Volume* v );

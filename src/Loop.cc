@@ -3,6 +3,7 @@
 #include <ycp/y2log.h>
 
 #include "y2storage/Loop.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/Container.h"
 
 Loop::Loop( const Container& d, unsigned PNr, const string& LoopFile ) : 
@@ -11,7 +12,7 @@ Loop::Loop( const Container& d, unsigned PNr, const string& LoopFile ) :
     y2milestone( "constructed loop %s on container %s", dev.c_str(),
                  cont->name().c_str() );
     loop_file = LoopFile;
-    if( d.type() != Container::LOOP )
+    if( d.type() != LOOP )
 	y2error( "constructed loop with wrong container" );
     }
 

@@ -48,6 +48,7 @@ class Partition : public Volume
 	virtual string removeText( bool doing=true ) const;
 	virtual string createText( bool doing=true ) const;
 	virtual string formatText(bool doing=true) const;
+	virtual void getCommitActions( list<commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
 	const Disk* const disk() const;
 	bool isWindows() const;

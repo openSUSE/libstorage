@@ -282,7 +282,7 @@ Storage::removePartition( const string& partition )
     y2milestone( "partition:%s", partition.c_str() );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( partition, cont, vol ) && cont->type()==Container::DISK )
+    if( findVolume( partition, cont, vol ) && cont->type()==DISK )
 	{
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
@@ -314,7 +314,7 @@ Storage::changePartitionId( const string& partition, unsigned id )
     y2milestone( "partition:%s id:%x", partition.c_str(), id );
     VolIterator vol;
     ContIterator cont;
-    if( findVolume( partition, cont, vol ) && cont->type()==Container::DISK )
+    if( findVolume( partition, cont, vol ) && cont->type()==DISK )
 	{
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
@@ -449,6 +449,23 @@ int Storage::checkCache()
     return(ret);
     }
 
+list<string> Storage::getCommitActions( bool mark_destructive )
+    {
+    list<string> ret;
+    CPair p = cPair();
+    y2milestone( "empty:%d", p.empty() );
+    if( !p.empty() )
+	{
+	list<commitAction*> ac;
+	for( ContIterator i = p.begin(); i != p.end(); ++i )
+	    {
+	    i->getCommitActions( ac );
+	    }
+	}
+    y2milestone( "ret.size():%d", ret.size() );
+    return( ret );
+    }
+
 int Storage::commit()
     {
     assertInit();
@@ -462,17 +479,34 @@ int Storage::commit()
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
 	{
-	Container::CommitStage a[] = { Container::DECREASE, Container::INCREASE,
-	                               Container::FORMAT, Container::MOUNT };
-	Container::CommitStage* pt = a;
+	CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
+	CommitStage* pt = a;
 	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
 	    {
-	    ContIterator i = p.begin();
-	    while( ret==0 && i != p.end() )
+	    if( *pt==DECREASE )
 		{
-		ret = i->commitChanges( *pt );
-		y2milestone( "stage %d ret %d", *pt, ret );
-		++i;
+		ContIterator i = p.end();
+		if( p.begin()!=p.end() )
+		    {
+		    do
+			{
+			if( i!=p.begin() )
+			    --i;
+			ret = i->commitChanges( *pt );
+			y2milestone( "stage %d ret %d", *pt, ret );
+			}
+		    while( ret==0 && i != p.begin() );
+		    }
+		}
+	    else
+		{
+		ContIterator i = p.begin();
+		while( ret==0 && i != p.end() )
+		    {
+		    ret = i->commitChanges( *pt );
+		    y2milestone( "stage %d ret %d", *pt, ret );
+		    ++i;
+		    }
 		}
 	    pt++;
 	    }
@@ -480,7 +514,6 @@ int Storage::commit()
     y2milestone( "ret:%d", ret );
     return( ret );
     }
-
 
 bool
 Storage::getDisks (list<string>& disks)

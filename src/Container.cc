@@ -106,6 +106,10 @@ int Container::commitChanges( CommitStage stage )
     return( ret );
     }
 
+void Container::getCommitActions( list<commitAction*>& l ) const
+    {
+    }
+
 string Container::createText( bool doing ) const
     {
     string txt;

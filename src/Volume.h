@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "y2storage/StorageInterface.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 
 class SystemCmd;
@@ -92,10 +93,13 @@ class Volume
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const { return(""); }
+	virtual void getCommitActions( list<commitAction*>& l ) const;
 	string mountText( bool doing=true) const;
+	string fstabUpdateText() const; 
 	string sizeString() const;
 	string bootMount() const;
 	bool optNoauto() const;
+	bool inCrypto() const { return( is_loop && !optNoauto() ); }
 
 
 	struct SkipDeleted
@@ -178,10 +182,10 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	s << " created";
     if( v.format )
 	s << " format";
-    if( v.fs != storage::UNKNOWN )
+    if( v.fs != storage::FSUNKNOWN )
 	{
 	s << " fs:" << Volume::fs_names[v.fs];
-	if( v.fs != v.detected_fs && v.detected_fs!=storage::UNKNOWN )
+	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
 	}
     if( v.mp.length()>0 )

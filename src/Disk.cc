@@ -1056,6 +1056,24 @@ int Disk::commitChanges( CommitStage stage )
     return( ret );
     }
 
+void Disk::getCommitActions( list<commitAction*>& l ) const
+    {
+    Container::getCommitActions( l );
+    if( deleted() )
+	{
+	list<commitAction*>::iterator i = l.begin();
+	while( i!=l.end() )
+	    {
+	    if( (*i)->stage==DECREASE )
+		i=l.erase( i );
+	    else
+		++i;
+	    }
+	l.push_front( new commitAction( DECREASE, staticType(), 
+				        setDiskLabelText(false), true ));
+	}
+    }
+
 string Disk::setDiskLabelText( bool doing ) const
     {
     string txt;
@@ -1305,6 +1323,10 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );
+	    }
+	if( ret==0 )
+	    {
+	    ret = p->doFstabUpdate();
 	    }
 	}
     else

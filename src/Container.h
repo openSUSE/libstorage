@@ -6,6 +6,7 @@
 using namespace std;
 
 #include "y2storage/Volume.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
@@ -27,8 +28,6 @@ class Container
 
 
     public:
-	typedef enum { UNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
-	typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 	bool operator== ( const Container& rhs ) const
 	    { return( typ == rhs.typ && nm == rhs.nm && del == rhs.del ); }
 	bool operator!= ( const Container& rhs ) const
@@ -132,7 +131,7 @@ class Container
 	bool readonly() const { return rdonly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
-	static CType const staticType() { return UNKNOWN; } 
+	static CType const staticType() { return CUNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 
     protected:
@@ -143,9 +142,11 @@ class Container
 	typedef VIter PlainIterator;
 	PlainIterator begin() { return vols.begin(); }
 	PlainIterator end() { return vols.end(); }
+	virtual void getCommitActions( list<commitAction*>& l ) const;
+
 	void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
-	{ pointerIntoSortedList<Volume>( vols, e ); }
+	    { pointerIntoSortedList<Volume>( vols, e ); }
 	virtual int doCreate( Volume * v ); 
 	virtual int doRemove( Volume * v ); 
 
