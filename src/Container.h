@@ -141,7 +141,7 @@ class Container
 	void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
 	    { pointerIntoSortedList<Volume>( vols, e ); }
-	virtual int doCreate( Volume * v ) { y2milestone( "ret -1" ); return( -1 );}
+	virtual int doCreate( Volume * v ); 
 
 
 	static string type_names[EVMS+1];

@@ -67,5 +67,12 @@ int Container::commitChanges( CommitStage stage )
     return( ret );
     }
 
+int Container::doCreate( Volume * v ) 
+    { 
+    y2warning( "invalid doCreate Container:%s name:%s",
+	       type_names[typ].c_str(), name().c_str() ); 
+    return( CONTAINER_INTERNAL_ERROR );
+    }
+
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };
 
