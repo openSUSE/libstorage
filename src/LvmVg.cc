@@ -28,6 +28,7 @@ LvmVg::~LvmVg()
 
 void LvmVg::activate( bool val )
     {
+    y2milestone( "old active:%d val:%d", active, val );
     if( active!=val )
 	{
 	SystemCmd c;
@@ -65,7 +66,7 @@ void LvmVg::getVgs( list<string>& l )
 	}
     std::ostringstream buf;
     buf << l;
-    y2milestone( "detecte Vgs %s", buf.str().c_str() );
+    y2milestone( "detected Vgs %s", buf.str().c_str() );
     }
 
 int LvmVg::doCreate( Volume* v ) { return( 0 ); }
