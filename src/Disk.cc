@@ -785,6 +785,8 @@ int Disk::availablePartNumber( PartitionType type )
     else if( type==LOGICAL )
 	{
 	ret = (--p.end())->nr()+1;
+	if( !ext_possible || !hasExtended() )
+	    ret = 0;
 	}
     else
 	{
