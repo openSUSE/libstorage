@@ -2,4 +2,4 @@
 # Makefile.am for libstorage
 #
 
-SUBDIRS = doc src testsuite
+SUBDIRS = doc src testsuite examples
