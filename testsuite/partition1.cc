@@ -88,33 +88,34 @@ gpt (const string& disk, int n)
 int
 main ()
 {
-    setenv ("YAST2_STORAGE_TDIR", ".", 1);
+    system ("mkdir -p tmp");
+    setenv ("YAST2_STORAGE_TDIR", "tmp", 1);
 
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions
      * on a ide disk with msdos partition table.
      */
-    system ("cp data/disk_hda disk_hda");
+    system ("cp data/disk_hda tmp/disk_hda");
     msdos ("/dev/hda", 59);
 
     /*
      * Check that we can create 3 primary, 1 extended and 11 logical partitions
      * on a scsi disk with msdos partition table.
      */
-    system ("cp data/disk_sda disk_sda");
+    system ("cp data/disk_sda tmp/disk_sda");
     msdos ("/dev/sda", 11);
 
     /*
      * Check that we can create 63 primary partitions on a ide disk with gpt
      * partition table.
      */
-    system ("cp data/disk_hda disk_hda");
+    system ("cp data/disk_hda tmp/disk_hda");
     gpt ("/dev/hda", 63);
 
     /*
      * Check that we can create 15 primary partitions on a scsi disk with gpt
      * partition table.
      */
-    system ("cp data/disk_sda disk_sda");
+    system ("cp data/disk_sda tmp/disk_sda");
     gpt ("/dev/sda", 15);
 }

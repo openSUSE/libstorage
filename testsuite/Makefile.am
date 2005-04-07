@@ -2,7 +2,7 @@
 # Makefile.am for libstorage/testsuite
 #
 
-SUBDIRS = lib config libstorage.test single.out
+SUBDIRS = lib config libstorage.test single.out data
 PACKAGE = libstorage
 AUTOMAKE_OPTIONS = dejagnu
 
@@ -21,6 +21,4 @@ format1_single_LDADD = ../src/liby2storage.la
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak
-
-EXTRA_DIST = disk_hda disk_hdb disk_sda disk_sdb
 
