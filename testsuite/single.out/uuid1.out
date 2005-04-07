@@ -1,0 +1,13 @@
+UUID=testmode-0123-4567-6666-987654321000 /tmp/mnt             reiserfs   defaults              1 2
+/dev/hdb1                                 /tmp/mnt             reiserfs   defaults              1 2
+run1
+0
+/dev/hdb1
+0
+0
+0
+0
+run2
+/dev/hdb1
+0
+0
