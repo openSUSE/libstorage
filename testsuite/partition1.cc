@@ -38,6 +38,8 @@ msdos (const string& disk, int n)
 {
     printf ("msdos %s %d\n", disk.c_str(), n);
 
+    s = createStorageInterface (false, true, false);
+
     s->destroyPartitionTable (disk, "msdos");
 
     long int S = 100000;
@@ -55,6 +57,8 @@ msdos (const string& disk, int n)
     cout << s->createPartitionKb (disk, LOGICAL, (3+n)*S, S, name) << '\n'; // FAILS
 
     print_partitions (disk);
+
+    delete s;
 }
 
 
@@ -62,6 +66,8 @@ void
 gpt (const string& disk, int n)
 {
     printf ("gpt %s %d\n", disk.c_str(), n);
+
+    s = createStorageInterface (false, true, false);
 
     s->destroyPartitionTable (disk, "gpt");
 
@@ -74,6 +80,8 @@ gpt (const string& disk, int n)
     cout << s->createPartitionKb (disk, PRIMARY, n*S, S, name) << '\n'; // FAILS
 
     print_partitions (disk);
+
+    delete s;
 }
 
 
@@ -82,35 +90,31 @@ main ()
 {
     setenv ("YAST2_STORAGE_TDIR", ".", 1);
 
-    s = createStorageInterface (false, true, false);
-
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions
      * on a ide disk with msdos partition table.
      */
-    system ("cp disk_hda.clean disk_hda");
+    system ("cp data/disk_hda disk_hda");
     msdos ("/dev/hda", 59);
 
     /*
      * Check that we can create 3 primary, 1 extended and 11 logical partitions
      * on a scsi disk with msdos partition table.
      */
-    system ("cp disk_sda.clean disk_sda");
+    system ("cp data/disk_sda disk_sda");
     msdos ("/dev/sda", 11);
 
     /*
      * Check that we can create 63 primary partitions on a ide disk with gpt
      * partition table.
      */
-    system ("cp disk_hda.clean disk_hda");
+    system ("cp data/disk_hda disk_hda");
     gpt ("/dev/hda", 63);
 
     /*
      * Check that we can create 15 primary partitions on a scsi disk with gpt
      * partition table.
      */
-    system ("cp disk_sda.clean disk_sda");
+    system ("cp data/disk_sda disk_sda");
     gpt ("/dev/sda", 15);
-
-    delete s;
 }

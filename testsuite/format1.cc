@@ -69,7 +69,7 @@ main ()
 
     s = createStorageInterface (false, true, false);
 
-    system ("cp disk_hda.clean disk_hda");
+    system ("cp data/disk_hda disk_hda");
     system ("rm volume_info -f");
     test ();
 
