@@ -190,7 +190,7 @@ Storage::detectLvmVgs()
 	    LvmVg::activate( true );
 	LvmVg::getVgs( l );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	    addToList( new Disk( this, *i ) );
+	    addToList( new LvmVg( this, *i ) );
 	if( instsys() )
 	    LvmVg::activate( false );
 	}

@@ -56,7 +56,7 @@ void Volume::setNameDev()
 void Volume::init()
     {
     del = create = format = is_loop = loop_active = silent = false;
-    is_mounted = false;
+    is_mounted = ronly = false;
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     encryption = orig_encryption = ENC_NONE;

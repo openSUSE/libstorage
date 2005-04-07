@@ -112,7 +112,7 @@ class Disk : public Container
 	    }
 
 	Disk( Storage * const s, const string& File );
-	unsigned long long capacityInKb() const;
+	unsigned long long capacityInKb() const { return size_k; }
 	bool detectGeometry();
 	bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );

@@ -14,7 +14,7 @@ class LvmVg : public Container
 	virtual ~LvmVg();
 	unsigned long long peSize() const { return pe_size; }
 	unsigned numLv() const { return vols.size(); }
-	unsigned numPv() const { return num_pv; }
+	unsigned numPv() const { return pv.size(); }
 	static CType const staticType() { return LVM; }
 	friend inline ostream& operator<< (ostream&, const LvmVg& );
 
@@ -31,8 +31,21 @@ class LvmVg : public Container
 	static void getVgs( list<string>& l );
 	
     protected:
+	struct Pv
+	    {
+	    string device;
+	    string uuid;
+	    string status;
+	    unsigned long num_pe;
+	    unsigned long free_pe;
+	    Pv() { num_pe = free_pe = 0; }
+	    };
+
+	friend inline ostream& operator<< (ostream&, const Pv& );
+
 	LvmVg( Storage * const s, const string& File, bool );
-	unsigned long long capacityInKb() const;
+	void init();
+	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	void getCommitActions( list<commitAction*>& l ) const;
 
 	int doCreate( Volume* v );
@@ -40,19 +53,42 @@ class LvmVg : public Container
 	int doResize( Volume* v );
 
 	void logData( const string& Dir );
+	void addLv( unsigned long& le, string& name, string& uuid,
+	            string& status, string& alloc, bool& ro );
+	void addPv( Pv*& p );
 
 	unsigned long long pe_size;
-	unsigned num_pv;
-	static bool active;
+	unsigned long num_pe;
+	unsigned long free_pe;
+	string status;
+	string uuid;
+	bool lvm1;
+	list<Pv> pv;
+	static bool lvm_active;
     };
 
 inline ostream& operator<< (ostream& s, const LvmVg& d )
     {
     d.print(s);
-    s << " NumPv:" << d.num_pv
-      << " PeSize:" << d.pe_size;
+    s << " SizeM:" << d.capacityInKb()/1024
+      << " PeSize:" << d.pe_size
+      << " NumPE:" << d.num_pe
+      << " FreePE:" << d.free_pe
+      << " status:" << d.status;
+    if( d.lvm1 )
+      s << " lvm1";
+    s << " UUID:" << d.uuid;
     return( s );
     }
 
+inline ostream& operator<< (ostream& s, const LvmVg::Pv& v )
+    {
+    s << "device:" << v.device
+      << " PE:" << v.num_pe
+      << " Free:" << v.free_pe
+      << " Status:" << v.status
+      << " UUID:" << v.uuid;
+    return( s );
+    }
 
 #endif

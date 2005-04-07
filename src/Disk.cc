@@ -91,10 +91,10 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	{
 	extractNthWord( 1, line ) >> max_logical;
 	}
-    rdonly = false;
+    ronly = false;
     if( searchFile( file, "^Readonly:", line ) )
 	{
-	extractNthWord( 1, line ) >> rdonly;
+	extractNthWord( 1, line ) >> ronly;
 	}
     size_k = 0;
     if( searchFile( file, "^SizeK:", line ) )
@@ -131,12 +131,6 @@ Disk::kbToCylinder( unsigned long long kb ) const
     unsigned long ret = bytes/byte_cyl;
     y2milestone( "KB:%lld ret:%ld byte_cyl:%ld", kb, ret, byte_cyl );
     return (ret);
-    }
-
-unsigned long long
-Disk::capacityInKb() const
-    {
-    return (unsigned long long)byte_cyl * cyl / 1024;
     }
 
 bool Disk::detectGeometry()
@@ -276,9 +270,9 @@ Disk::logData( const string& Dir )
 	file << "MaxLogical: " << max_logical << endl;
 	}
 
-    if( rdonly )
+    if( ronly )
 	{
-	file << "Readonly: " << rdonly << endl;
+	file << "Readonly: " << ronly << endl;
 	}
     file << "SizeK: " << size_k << endl;
 
@@ -615,7 +609,7 @@ _("The partitioning on your disk %1$s is not readable by\n"
 
 	// TODO: handle callback into ycp code for error popup
 	y2milestone( "parted invalid:%s", txt.c_str() );
-	rdonly = true;
+	ronly = true;
 	}
     if( range_exceed>0 )
 	{

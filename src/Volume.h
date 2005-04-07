@@ -27,6 +27,7 @@ class Volume
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
+	void setReadonly( bool val=true ) { ronly=val; }
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
@@ -165,6 +166,7 @@ class Volume
 	bool is_loop;
 	bool is_mounted;
 	bool loop_active;
+	bool ronly;
 	storage::EncryptType encryption;
 	storage::EncryptType orig_encryption;
 	string loop_dev;
@@ -195,6 +197,8 @@ inline ostream& operator<< (ostream& s, const Volume &v )
     if( v.size_k != v.orig_size_k )
 	s << " orig_SizeK:" << v.orig_size_k;
     s << " Node <" << v.mjr << ":" << v.mnr << ">";
+    if( v.ronly )
+	s << " readonly";
     if( v.del )
 	s << " deleted";
     if( v.create )

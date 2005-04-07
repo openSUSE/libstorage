@@ -13,7 +13,7 @@
 Container::Container( Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
     {
-    del = silent = rdonly = false;
+    del = silent = ronly = false;
     dev = "/dev/" + nm;
     typ = t;
     y2milestone( "constructed cont %s", nm.c_str() );

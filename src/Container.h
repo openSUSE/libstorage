@@ -128,7 +128,7 @@ class Container
 	bool deleted() const { return del; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setSilent( bool val=true ) { silent=val; }
-	bool readonly() const { return rdonly; }
+	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual int checkResize( Volume* v, unsigned long long newSize ) const;
@@ -162,7 +162,7 @@ class Container
 	string dev;
 	bool del;
 	bool silent;
-	bool rdonly;
+	bool ronly;
 	VCont vols;
 
     };
@@ -175,7 +175,7 @@ inline ostream& operator<< (ostream& s, const Container &c )
 	<< " Vcnt:" << c.vols.size(); 
     if( c.del )
 	s << " deleted";
-    if( c.rdonly )
+    if( c.ronly )
       s << " readonly";
     if( c.silent )
       s << " silent";
