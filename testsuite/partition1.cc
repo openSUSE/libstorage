@@ -88,24 +88,28 @@ main ()
      * Check that we can create 3 primary, 1 extended and 59 logical partitions
      * on a ide disk with msdos partition table.
      */
+    system ("cp disk_hda.clean disk_hda");
     msdos ("/dev/hda", 59);
 
     /*
      * Check that we can create 3 primary, 1 extended and 11 logical partitions
      * on a scsi disk with msdos partition table.
      */
+    system ("cp disk_sda.clean disk_sda");
     msdos ("/dev/sda", 11);
 
     /*
      * Check that we can create 63 primary partitions on a ide disk with gpt
      * partition table.
      */
+    system ("cp disk_hda.clean disk_hda");
     gpt ("/dev/hda", 63);
 
     /*
      * Check that we can create 15 primary partitions on a scsi disk with gpt
      * partition table.
      */
+    system ("cp disk_sda.clean disk_sda");
     gpt ("/dev/sda", 15);
 
     delete s;
