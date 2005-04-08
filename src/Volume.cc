@@ -816,7 +816,7 @@ int Volume::setEncryption( bool val )
 	}
     else
 	{
-	if( crypt_pwd.size()==0 )
+	if( crypt_pwd.empty() )
 	    ret = VOLUME_CRYPT_NO_PWD;
 	if( ret == 0 && format )
 	    {

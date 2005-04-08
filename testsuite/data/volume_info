@@ -1,0 +1,4 @@
+/dev/hda1 fs=reiserfs uuid=d43fe1f9-9e5c-4698-a9e4-d3374d8d4b5a mount=/ fstopt=acl,user_xattr
+/dev/hda2 fs=reiserfs uuid=47aadd63-e17d-44cd-a6c7-3ea274ebda27 mount=/x86-64 fstopt=noauto,user
+/dev/hda3 fs=swap mount=swap fstopt=pri=42
+/dev/hdb1 fs=reiserfs uuid=5494378d-c554-48d0-b0a2-f0ee116ccf02 mount=/tmp/mnt fstopt=defaults

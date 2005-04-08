@@ -608,6 +608,26 @@ Storage::changeMountPoint( const string& device, const string& mount )
 	{
 	ret = checkCache();
 	}
+    y2milestone( "ret:%d mount:%s", ret, mount.c_str() );
+    return( ret );
+    }
+
+int
+Storage::getMountPoint( const string& device, string& mount )
+{
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str());
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+    {
+	mount = vol->getMount();
+    }
+    else
+    {
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    }
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -642,6 +662,26 @@ Storage::changeMountBy( const string& device, MountByType mby )
     }
 
 int 
+Storage::getMountBy( const string& device, MountByType& mby )
+{
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str());
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+    {
+	mby = vol->getMountBy();
+    }
+    else
+    {
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    }
+    y2milestone( "ret:%d mby:%s", ret, Volume::mbyTypeString(mby).c_str());
+    return( ret );
+}
+
+int
 Storage::changeFstabOptions( const string& device, const string& options )
     {
     int ret = 0;
@@ -670,6 +710,26 @@ Storage::changeFstabOptions( const string& device, const string& options )
     }
 
 int 
+Storage::getFstabOptions( const string& device, string& options )
+{
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str());
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+    {
+	options = vol->getFstabOption();
+    }
+    else
+    {
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    }
+    y2milestone( "ret:%d options:%s", ret, options.c_str() );
+    return( ret );
+}
+
+int
 Storage::addFstabOptions( const string& device, const string& options )
     {
     int ret = 0;
@@ -767,6 +827,26 @@ Storage::setCrypt( const string& device, bool val )
     }
 
 int 
+Storage::getCrypt( const string& device, bool& val )
+{
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str());
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+    {
+	val = vol->getEncryption();
+    }
+    else
+    {
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    }
+    y2milestone( "ret:%d  val:%d", ret, val );
+    return( ret );
+}
+
+int
 Storage::setCryptPassword( const string& device, const string& pwd )
     {
     int ret = 0;
@@ -784,7 +864,7 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	vol->setCryptPwd( pwd );
+	ret = vol->setCryptPwd( pwd );
 	}
     else
 	{

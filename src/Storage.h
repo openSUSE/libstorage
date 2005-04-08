@@ -95,12 +95,16 @@ class Storage : public StorageInterface
 
 	int changeFormatVolume( const string&, bool format, FsType fs );
 	int changeMountPoint( const string&, const string& mount );
+	int getMountPoint( const string&, string& mount );
 	int changeMountBy( const string& device, MountByType mby );
+	int getMountBy( const string& device, MountByType& mby );
 	int changeFstabOptions( const string&, const string& options );
+	int getFstabOptions( const string& device, string& options );
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
 	int setCrypt( const string& device, bool val );
+	int getCrypt( const string& device, bool& val );
 
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 

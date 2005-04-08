@@ -354,6 +354,15 @@ namespace storage
 	virtual int changeMountPoint( const string& device, const string& mount ) = 0;
 
 	/**
+	 *  get the mount point of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param mount will be set to the mount point of the volume (e.g. /home).
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMountPoint( const string& device, string& mount ) = 0;
+
+	/**
 	 *  changes mount by value in fstab of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
@@ -361,6 +370,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMountBy( const string& device, MountByType mby ) = 0;
+
+	/**
+	 *  get mount by value in fstab of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options will be set to the mount by value of the volume.
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMountBy( const string& device, MountByType& mby ) = 0;
 
 	/**
 	 *  changes the fstab options of a volume
@@ -372,6 +390,16 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeFstabOptions( const string& device, const string& options ) = 0;
+
+	/**
+	 *  get the fstab options of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param options will be set to the fstab options of the volume (e.g. noauto,user,sync).
+	 *    Multiple options are separated by ",".
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getFstabOptions( const string& device, string& options ) = 0;
 
 	/**
 	 *  adds to the fstab options of a volume
@@ -389,7 +417,7 @@ namespace storage
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options fstab options to remove from already existing options of the volume (e.g. noauto).
 	 *    Multiple options are separated by ",".
-	 *    It is possible to specify wildcards, so "uid=.*" matches every option startign with the string "uid=".
+	 *    It is possible to specify wildcards, so "uid=.*" matches every option starting with the string "uid=".
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeFstabOptions( const string& device, const string& options ) = 0;
@@ -413,7 +441,16 @@ namespace storage
 	virtual int setCrypt( const string& device, bool val ) = 0;
 
 	/**
-	 *  resizes a volume while keeping the data on the filesystem 
+	 *  get crypt password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param val will be set if encryption is activated
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getCrypt( const string& device, bool& val ) = 0;
+
+	/**
+	 *  resizes a volume while keeping the data on the filesystem
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param newSizeMb new size desired volume in Megabyte
