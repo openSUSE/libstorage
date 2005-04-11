@@ -1571,9 +1571,6 @@ void Volume::getTestmodeData( const string& data )
 	crypt_pwd = i->second;
     }
 
-
-
-
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "ntfs", "swap" };
 

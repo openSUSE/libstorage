@@ -6,6 +6,7 @@
 
 #include "y2storage/StorageInterface.h"
 #include "y2storage/StorageTypes.h"
+#include "y2storage/StorageTmpl.h"
 #include "y2storage/Container.h"
 #include "y2storage/Disk.h"
 #include "y2storage/Volume.h"
@@ -16,13 +17,70 @@
 #include "y2storage/EvmsVol.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
-#include "y2storage/StorageTmpl.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
 #include "y2storage/ListListIterator.h"
 #include "y2storage/IterPair.h"
 
 using namespace std;
+
+template <int Value>
+class CheckType 
+    {
+    public:
+	bool operator()( const Container& d ) const
+	    {
+	    return( d.type()==Value );
+	    }
+    };
+
+template< class Iter, int Value, class CastResult >
+class CastCheckIterator : public CheckType<Value>, 
+                          public FilterIterator< CheckType<Value>, Iter >
+    {
+    typedef FilterIterator<CheckType<Value>, Iter> _bclass;
+    public:
+	typedef CastResult value_type;
+	typedef CastResult& reference;
+	typedef CastResult* pointer;
+
+	CastCheckIterator() : _bclass() {}
+	CastCheckIterator( const Iter& b, const Iter& e, bool atend=false) : 
+	    _bclass( b, e, *this, atend ) {}
+	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) : 
+	    _bclass( pair, *this, atend ) {}
+	CastCheckIterator( const CastCheckIterator& i) { *this=i;}
+	CastResult operator*() const
+	    {
+	    return( static_cast<CastResult>(_bclass::operator*()) );
+	    }
+	CastResult* operator->() const
+	    {
+	    return( static_cast<CastResult*>(_bclass::operator->()) );
+	    }
+	CastCheckIterator& operator++() 
+	    { 
+	    _bclass::operator++(); return(*this); 
+	    }
+	CastCheckIterator operator++(int) 
+	    { 
+	    y2warning( "Expensive ++ CastCheckIterator" );
+	    CastCheckIterator tmp(*this);
+	    _bclass::operator++(); 
+	    return(tmp); 
+	    }
+	CastCheckIterator& operator--() 
+	    { 
+	    _bclass::operator--(); return(*this); 
+	    }
+	CastCheckIterator operator--(int) 
+	    { 
+	    y2warning( "Expensive -- CastCheckIterator" );
+	    CastCheckIterator tmp(*this);
+	    _bclass::operator--(); 
+	    return(tmp); 
+	    }
+    };
 
 /**
  * \brief Main class to access libstorage functionality.
@@ -166,15 +224,15 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename ContCondIPair<Pred>::type contCondPair( const Pred& p ) const
 	    {
-	    return( ContCondIPair<Pred>::type( contCondBegin( p ), contCondEnd( p ) ) );
+	    return( typename ContCondIPair<Pred>::type( contCondBegin( p ), contCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstContainerI<Pred>::type contCondBegin( const Pred& p ) const
 	    {
-	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p )) );
+	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p )) );
 	    }
 	template< class Pred > typename ConstContainerI<Pred>::type contCondEnd( const Pred& p ) const
 	    {
-	    return( ConstContainerI<Pred>::type( ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
+	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
 	    }
     protected:
 	// protected member functions for iterators over containers
@@ -240,19 +298,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename DiskCondIPair<Pred>::type diskCondPair( const Pred& p ) const
 	    {
-	    return( DiskCondIPair<Pred>::type( diskCondBegin( p ), diskCondEnd( p ) ) );
+	    return( typename DiskCondIPair<Pred>::type( diskCondBegin( p ), diskCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstDiskI<Pred>::type diskCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
 					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
-	    return( ConstDiskI<Pred>::type( ConstDiskPI<Pred>::type( pair, p )) );
+	    return( typename ConstDiskI<Pred>::type( typename ConstDiskPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstDiskI<Pred>::type diskCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
 					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
-	    return( ConstDiskI<Pred>::type( ConstDiskPI<Pred>::type( pair, p, true )) );
+	    return( typename ConstDiskI<Pred>::type( typename ConstDiskPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
 	// protected member functions for iterators over disks
@@ -319,19 +377,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename LvmVgCondIPair<Pred>::type lvmVgCondPair( const Pred& p ) const
 	    {
-	    return( LvmVgCondIPair<Pred>::type( lvmVgCondBegin( p ), lvmVgCondEnd( p ) ) );
+	    return( typename LvmVgCondIPair<Pred>::type( lvmVgCondBegin( p ), lvmVgCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstLvmVgI<Pred>::type lvmVgCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
 					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
-	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p )) );
+	    return( typename ConstLvmVgI<Pred>::type( typename ConstLvmVgPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstLvmVgI<Pred>::type lvmVgCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
 					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
-	    return( ConstLvmVgI<Pred>::type( ConstLvmVgPI<Pred>::type( pair, p, true )) );
+	    return( typename ConstLvmVgI<Pred>::type( typename ConstLvmVgPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
 	// protected member functions for iterators over LVM VGs
@@ -381,19 +439,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename EvmsCondIPair<Pred>::type evmsCondPair( const Pred& p ) const
 	    {
-	    return( EvmsCondIPair<Pred>::type( evmsCondBegin( p ), evmsCondEnd( p ) ) );
+	    return( typename EvmsCondIPair<Pred>::type( evmsCondBegin( p ), evmsCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstEvmsI<Pred>::type evmsCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( cont.begin(), cont.end() ),
 					       ContainerCEvmsIter( cont.begin(), cont.end(), true ));
-	    return( ConstEvmsI<Pred>::type( ConstEvmsPI<Pred>::type( pair, p )) );
+	    return( typename ConstEvmsI<Pred>::type( typename ConstEvmsPI<Pred>::type( pair, p )) );
 	    }
 	template< class Pred > typename ConstEvmsI<Pred>::type evmsCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ContainerCEvmsIter> pair( ContainerCEvmsIter( cont.begin(), cont.end() ),
 					       ContainerCEvmsIter( cont.begin(), cont.end(), true ));
-	    return( ConstEvmsI<Pred>::type( ConstEvmsPI<Pred>::type( pair, p, true )) );
+	    return( typename ConstEvmsI<Pred>::type( typename ConstEvmsPI<Pred>::type( pair, p, true )) );
 	    }
     protected:
 	// protected member functions for iterators over EVMS container
@@ -459,19 +517,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename VolCondIPair<Pred>::type volCondPair( const Pred& p ) const
 	    {
-	    return( VolCondIPair<Pred>::type( volCondBegin( p ), volCondEnd( p ) ) );
+	    return( typename VolCondIPair<Pred>::type( volCondBegin( p ), volCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
 					  (ConstVolInter( contPair(), true )));
-	    return( ConstVolumeI<Pred>::type( ConstVolumePI<Pred>::type(pair, p) ) );
+	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
 					  (ConstVolInter( contPair(), true )));
-	    return( ConstVolumeI<Pred>::type( ConstVolumePI<Pred>::type(pair, p, true )) );
+	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p, true )) );
 	    }
 
     protected:
@@ -566,19 +624,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename PartCondIPair<Pred>::type partCondPair( const Pred& p ) const
 	    {
-	    return( PartCondIPair<Pred>::type( partCondBegin( p ), partCondEnd( p ) ) );
+	    return( typename PartCondIPair<Pred>::type( partCondBegin( p ), partCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstPartitionI<Pred>::type partCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ConstPartInter2> pair( (ConstPartInter( diskPair())),
 					    (ConstPartInter( diskPair(), true )));
-	    return( ConstPartitionI<Pred>::type( ConstPartitionPI<Pred>::type(pair, p) ) );
+	    return( typename ConstPartitionI<Pred>::type( typename ConstPartitionPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstPartitionI<Pred>::type partCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ConstPartInter2> pair( (ConstPartInter( diskPair())),
 					    (ConstPartInter( diskPair(), true )));
-	    return( ConstPartitionI<Pred>::type( ConstPartitionPI<Pred>::type(pair, p, true )) );
+	    return( typename ConstPartitionI<Pred>::type( typename ConstPartitionPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over LVM LVs
@@ -638,19 +696,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename LvmLvCondIPair<Pred>::type lvmLvCondPair( const Pred& p ) const
 	    {
-	    return( LvmLvCondIPair<Pred>::type( lvmLvCondBegin( p ), lvmLvCondEnd( p ) ) );
+	    return( typename LvmLvCondIPair<Pred>::type( lvmLvCondBegin( p ), lvmLvCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstLvmLvI<Pred>::type lvmLvCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( lvmVgPair())),
 					     (ConstLvmLvInter( lvmVgPair(), true )));
-	    return( ConstLvmLvI<Pred>::type( ConstLvmLvPI<Pred>::type(pair, p) ) );
+	    return( typename ConstLvmLvI<Pred>::type( typename ConstLvmLvPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstLvmLvI<Pred>::type lvmLvCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( lvmVgPair())),
 					     (ConstLvmLvInter( lvmVgPair(), true )));
-	    return( ConstLvmLvI<Pred>::type( ConstLvmLvPI<Pred>::type(pair, p, true )) );
+	    return( typename ConstLvmLvI<Pred>::type( typename ConstLvmLvPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over EVMS volumes
@@ -710,19 +768,19 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename EvmsVolCondIPair<Pred>::type evmsVolCondPair( const Pred& p ) const
 	    {
-	    return( EvmsVolCondIPair<Pred>::type( evmsVolCondBegin( p ), evmsVolCondEnd( p ) ) );
+	    return( typename EvmsVolCondIPair<Pred>::type( evmsVolCondBegin( p ), evmsVolCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstEvmsVolI<Pred>::type evmsVolCondBegin( const Pred& p ) const
 	    {
 	    IterPair<ConstEvmsVolInter2> pair( (ConstEvmsVolInter( evmsPair())),
 					       (ConstEvmsVolInter( evmsPair(), true )));
-	    return( ConstEvmsVolI<Pred>::type( ConstEvmsVolPI<Pred>::type(pair, p) ) );
+	    return( typename ConstEvmsVolI<Pred>::type( typename ConstEvmsVolPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstEvmsVolI<Pred>::type evmsVolCondEnd( const Pred& p ) const
 	    {
 	    IterPair<ConstEvmsVolInter2> pair( (ConstEvmsVolInter( evmsPair())),
 					       (ConstEvmsVolInter( evmsPair(), true )));
-	    return( ConstEvmsVolI<Pred>::type( ConstEvmsVolPI<Pred>::type(pair, p, true )) );
+	    return( typename ConstEvmsVolI<Pred>::type( typename ConstEvmsVolPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over software raid devices
@@ -768,21 +826,21 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename MdCondIPair<Pred>::type mdCondPair( const Pred& p ) const
 	    {
-	    return( MdCondIPair<Pred>::type( mdCondBegin( p ), mdCondEnd( p ) ) );
+	    return( typename MdCondIPair<Pred>::type( mdCondBegin( p ), mdCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstMdI<Pred>::type mdCondBegin( const Pred& p ) const
 	    {
 	    ConstVolInter b( contPair( isMd ) );
 	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
-	    return( ConstMdI<Pred>::type( ConstMdPI<Pred>::type(pair, p) ) );
+	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstMdI<Pred>::type mdCondEnd( const Pred& p ) const
 	    {
 	    ConstVolInter b( contPair( isMd ) );
 	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
-	    return( ConstMdI<Pred>::type( ConstMdPI<Pred>::type(pair, p, true )) );
+	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over file based loop devices
@@ -828,21 +886,21 @@ class Storage : public StorageInterface
 	    }
 	template< class Pred > typename LoopCondIPair<Pred>::type loopCondPair( const Pred& p ) const
 	    {
-	    return( LoopCondIPair<Pred>::type( loopCondBegin( p ), loopCondEnd( p ) ) );
+	    return( typename LoopCondIPair<Pred>::type( loopCondBegin( p ), loopCondEnd( p ) ) );
 	    }
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondBegin( const Pred& p ) const
 	    {
 	    ConstVolInter b( contPair( isLoop ) );
 	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
-	    return( ConstLoopI<Pred>::type( ConstLoopPI<Pred>::type(pair, p) ) );
+	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondEnd( const Pred& p ) const
 	    {
 	    ConstVolInter b( contPair( isLoop ) );
 	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
-	    return( ConstLoopI<Pred>::type( ConstLoopPI<Pred>::type(pair, p, true )) );
+	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
 	    }
 
     protected:
@@ -880,8 +938,5 @@ class Storage : public StorageInterface
 	CallbackShowInstallInfo install_info_cb;
 	unsigned max_log_num;
     };
-
-Storage::SkipDeleted Storage::SkipDel;
-
 
 #endif

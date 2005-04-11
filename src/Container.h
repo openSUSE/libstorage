@@ -8,11 +8,6 @@ using namespace std;
 #include "y2storage/Volume.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
-#include "y2storage/FilterIterator.h"
-#include "y2storage/DerefIterator.h"
-#include "y2storage/IterPair.h"
-
-template<typename L1, typename L2> class ListListIterator;
 
 class Container
     {

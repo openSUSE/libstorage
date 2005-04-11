@@ -9,7 +9,6 @@
 #include <fcntl.h>
 #include <sys/mount.h>         /* for BLKGETSIZE */
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
-#include <linux/fs.h>          /* for BLKGETSIZE64 */
 
 #include "y2storage/Region.h"
 #include "y2storage/Partition.h"

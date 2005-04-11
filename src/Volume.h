@@ -10,6 +10,7 @@ using namespace std;
 class SystemCmd;
 class ProcMounts;
 class EtcFstab;
+class Container;
 
 class Volume
     {

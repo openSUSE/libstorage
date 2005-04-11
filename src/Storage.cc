@@ -1211,3 +1211,4 @@ Storage::DiskIterator Storage::findDisk( const string& disk )
     }
 
 
+Storage::SkipDeleted Storage::SkipDel;

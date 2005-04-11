@@ -1,6 +1,7 @@
 // Maintainer: fehr@suse.de
 
 #include <unistd.h>
+#include <errno.h>
 #include <fcntl.h>
 #include <iostream>
 #include <fstream>

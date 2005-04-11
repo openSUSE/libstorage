@@ -44,66 +44,6 @@ class ContainerDerIter : public DerefIterator<Iter,Value>
 	ContainerDerIter( const ContainerDerIter& i) { *this=i;}
     };
 
-class Container;
-
-template <int Value>
-class CheckType 
-    {
-    public:
-	bool operator()( const Container& d ) const
-	    {
-	    return( d.type()==Value );
-	    }
-    };
-
-template< class Iter, int Value, class CastResult >
-class CastCheckIterator : public CheckType<Value>, 
-                          public FilterIterator< CheckType<Value>, Iter >
-    {
-    typedef FilterIterator<CheckType<Value>, Iter> _bclass;
-    public:
-	typedef CastResult value_type;
-	typedef CastResult& reference;
-	typedef CastResult* pointer;
-
-	CastCheckIterator() : _bclass() {}
-	CastCheckIterator( const Iter& b, const Iter& e, bool atend=false) : 
-	    _bclass( b, e, *this, atend ) {}
-	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) : 
-	    _bclass( pair, *this, atend ) {}
-	CastCheckIterator( const CastCheckIterator& i) { *this=i;}
-	CastResult operator*() const
-	    {
-	    return( static_cast<CastResult>(_bclass::operator*()) );
-	    }
-	CastResult* operator->() const
-	    {
-	    return( static_cast<CastResult*>(_bclass::operator->()) );
-	    }
-	CastCheckIterator& operator++() 
-	    { 
-	    _bclass::operator++(); return(*this); 
-	    }
-	CastCheckIterator operator++(int) 
-	    { 
-	    y2warning( "Expensive ++ CastCheckIterator" );
-	    CastCheckIterator tmp(*this);
-	    _bclass::operator++(); 
-	    return(tmp); 
-	    }
-	CastCheckIterator& operator--() 
-	    { 
-	    _bclass::operator--(); return(*this); 
-	    }
-	CastCheckIterator operator--(int) 
-	    { 
-	    y2warning( "Expensive -- CastCheckIterator" );
-	    CastCheckIterator tmp(*this);
-	    _bclass::operator--(); 
-	    return(tmp); 
-	    }
-    };
-
 template< class Iter, class CastResult >
 class CastIterator : public Iter
     {
@@ -211,6 +151,7 @@ template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
 template<class F, class S> ostream& operator<<( ostream& s, const pair<F,S>& p )
     {
     s << "[" << p.first << ":" << p.second << "]";
+    return( s );
     }
 
 template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,Value>& m )
@@ -231,5 +172,4 @@ struct cont_less : public binary_function<Val*,Val*,bool>
     {
     bool operator()(const Val* __x, const Val* __y) const { return *__x < *__y; }
     };
-
 #endif
