@@ -109,11 +109,9 @@ crypt1 ()
 
     cout << s->setCryptPassword ("/dev/hda1", "hello-world") << '\n';
 
-    /*
     cout << s->setCrypt ("/dev/hda1", true) << '\n';
     cout << s->getCrypt ("/dev/hda1", val) << '\n';
     cout << val << '\n';
-    */
 
     cout << s->setCrypt ("/dev/hda1", false) << '\n';
     cout << s->getCrypt ("/dev/hda1", val) << '\n';

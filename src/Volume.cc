@@ -933,6 +933,14 @@ Volume::setCryptPwd( const string& val )
 EncryptType Volume::detectLoopEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
+
+    if( getContainer()->getStorage()->test() )
+    {
+	ret = ENC_TWOFISH;
+	y2milestone( "ret:%s", encTypeString(ret).c_str() );
+	return( ret );
+    }
+
     unsigned pos=0;
     static EncryptType try_order[] = { ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD, 
                                        ENC_TWOFISH };
