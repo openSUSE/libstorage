@@ -131,6 +131,7 @@ class Storage : public StorageInterface
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( ostream& str );
+	bool setUsedBy( const string& dev, UsedByType typ, const string& name );
 
 	virtual ~Storage();
 
@@ -164,8 +165,15 @@ class Storage : public StorageInterface
 	int setCryptPassword( const string& device, const string& pwd );
 	int setCrypt( const string& device, bool val );
 	int getCrypt( const string& device, bool& val );
-
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
+
+	int createLvmVg( const string& name, bool lvm1,
+			 const list<string>& devs );
+	int extendLvmVg( const string& name, const list<string>& devs );
+	int shrinkLvmVg( const string& name, const list<string>& devs );
+	int createLvmLv( const string& vg, const string& name,
+			 unsigned long long sizeM, unsigned stripe=1 );
+	int removeLvmLv( const string& vg, const string& name );
 
 	list<string> getCommitActions( bool mark_destructive );
         int commit();
@@ -918,6 +926,7 @@ class Storage : public StorageInterface
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+	bool findVolume( const string& device, VolIterator& v  );
 	void logVolumes( const string& Dir );
 
 	// protected internal member variables

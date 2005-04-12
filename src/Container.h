@@ -121,8 +121,13 @@ class Container
 	const string& device() const { return dev; }
 	CType type() const { return typ; }
 	bool deleted() const { return del; }
+	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
+	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
+	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
+	UsedByType getUsedBy() { return( uby.t ); }
+	const string& usedByName() { return( uby.name ); }
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
@@ -156,8 +161,10 @@ class Container
 	string nm;
 	string dev;
 	bool del;
+	bool create;
 	bool silent;
 	bool ronly;
+	usedBy uby;
 	VCont vols;
 
     };
@@ -170,10 +177,13 @@ inline ostream& operator<< (ostream& s, const Container &c )
 	<< " Vcnt:" << c.vols.size(); 
     if( c.del )
 	s << " deleted";
+    if( c.create )
+	s << " created";
     if( c.ronly )
       s << " readonly";
     if( c.silent )
       s << " silent";
+    s << c.uby;
     return( s );
     }
 

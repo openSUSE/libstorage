@@ -48,10 +48,16 @@ class LvmVg : public Container
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	void getCommitActions( list<commitAction*>& l ) const;
 	virtual void print( ostream& s ) const { s << *this; }
+	string createVgText( bool doing ) const;
+	string removeVgText( bool doing ) const;
 
+	int doCreateVg();
+	int doRemoveVg();
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );
+	int doCreatePv( const string& device );
+	string metaString();
 
 	void logData( const string& Dir );
 	void addLv( unsigned long& le, string& name, string& uuid,

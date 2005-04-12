@@ -7,6 +7,7 @@
 #include "y2storage/LvmLv.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
+#include "y2storage/Storage.h"
 
 LvmVg::LvmVg( Storage * const s, const string& Name ) :
     Container(s,Name,staticType())
@@ -50,7 +51,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 			}
 		    if( line.find( "Free  PE" ) == 0 )
 			{
-			extractNthWord( 2, line ) >> free_pe;
+			extractNthWord( 4, line ) >> free_pe;
 			}
 		    if( line.find( "VG Status" ) == 0 )
 			{
@@ -149,6 +150,18 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 	}
     }
 
+LvmVg::LvmVg( Storage * const s, const string& file, bool ) :
+    Container(s,"",staticType())
+    {
+    y2milestone( "construcing lvm vg %s from file %s", dev.c_str(), 
+                 file.c_str() );
+    }
+
+LvmVg::~LvmVg()
+    {
+    y2milestone( "destructed lvm vg %s", dev.c_str() );
+    }
+
 void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
                    string& status, string& alloc, bool& ro )
     {
@@ -164,20 +177,111 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 void LvmVg::addPv( Pv*& p )
     {
     pv.push_back( *p );
+    getStorage()->setUsedBy( p->device, UB_LVM, name() );
     p = new Pv;
     }
 
-LvmVg::LvmVg( Storage * const s, const string& file, bool ) :
-    Container(s,"",staticType())
+int LvmVg::commitChanges( CommitStage stage )
     {
-    y2milestone( "construcing lvm vg %s from file %s", dev.c_str(), 
-                 file.c_str() );
+    y2milestone( "name %s stage %d", name().c_str(), stage );
+    int ret = 0;
+    switch( stage )
+	{
+	case DECREASE:
+	    if( ret==0 )
+		ret = Container::commitChanges( stage );
+	    if( deleted() )
+		{
+		ret = doRemoveVg();
+		}
+	    break;
+	case INCREASE:
+	    if( created() )
+		{
+		ret = doCreateVg();
+		}
+	    if( ret==0 )
+		{
+		ret = Container::commitChanges( stage );
+		}
+	    break;
+	default:
+	    ret = Container::commitChanges( stage );
+	    break;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
-LvmVg::~LvmVg()
+void LvmVg::getCommitActions( list<commitAction*>& l ) const
     {
-    y2milestone( "destructed lvm vg %s", dev.c_str() );
+    Container::getCommitActions( l );
+    if( deleted() )
+	{
+	l.push_back( new commitAction( DECREASE, staticType(), 
+				       removeVgText(false), true ));
+	}
+    else if( created() )
+	{
+	l.push_front( new commitAction( INCREASE, staticType(), 
+				        createVgText(false), true ));
+	}
     }
+
+string 
+LvmVg::removeVgText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by a name (e.g. system),
+        txt = sformat( _("Removing Volume group %1$s"), name().c_str() );
+        }
+    else
+        {
+        // displayed text before action, %1$s is replaced by a name (e.g. system),
+        txt = sformat( _("Remove Volume group %1$s"), name().c_str() );
+        }
+    return( txt );
+    }
+
+string 
+LvmVg::createVgText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+        {
+        // displayed text during action, %1$s is replaced by a name (e.g. system),
+        txt = sformat( _("Creating Volume group %1$s"), name().c_str() );
+        }
+    else
+        {
+        // displayed text before action, %1$s is replaced by a name (e.g. system),
+        txt = sformat( _("Create Volume group %1$s"), name().c_str() );
+        }
+    return( txt );
+    }
+
+string LvmVg::metaString()
+    {
+    return( (lvm1)?"M1":"M2" );
+    }
+
+int LvmVg::doCreatePv( const string& device )
+    {
+    int ret = 0;
+    y2milestone( "dev:%s", device.c_str() );
+    SystemCmd c;
+    string cmd = "mdadm --zero-superblock " + device;
+    c.execute( cmd );
+    cmd = "pvcreate -ff " + metaString() + " " + device;
+    c.execute( cmd );
+    if( c.retcode()!=0 )
+	ret = LVM_CREATE_PV_FAILED;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 
 void 
 LvmVg::init()
@@ -233,16 +337,6 @@ void LvmVg::getVgs( list<string>& l )
 int LvmVg::doCreate( Volume* v ) { return( 0 ); }
 int LvmVg::doRemove( Volume* v ) { return( 0 ); }
 int LvmVg::doResize( Volume* v ) { return( 0 ); }
-
-int
-LvmVg::commitChanges( CommitStage stage )
-    {
-    return( 0 );
-    }
-
-void LvmVg::getCommitActions( list<commitAction*>& l ) const
-    {
-    }
 
 int
 LvmVg::checkResize( Volume* v, unsigned long long newSizeK ) const

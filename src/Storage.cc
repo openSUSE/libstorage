@@ -390,7 +390,10 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	}
     else if( i != dEnd() )
 	{
-	ret = i->createPartition( type, start, size, device );
+	if( i->getUsedBy() != UB_NONE )
+	    ret = STORAGE_DISK_USED_BY;
+	else
+	    ret = i->createPartition( type, start, size, device );
 	}
     else
 	{
@@ -420,14 +423,19 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	}
     else if( i != dEnd() )
 	{
-	unsigned long num_cyl = i->kbToCylinder( sizeK );
-	unsigned long long tmp_start = start;
-	if( tmp_start > i->kbToCylinder(1)/2 )
-	    tmp_start -= i->kbToCylinder(1)/2;
+	if( i->getUsedBy() != UB_NONE )
+	    ret = STORAGE_DISK_USED_BY;
 	else
-	    tmp_start = 0;
-	unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
-	ret = i->createPartition( type, start_cyl, num_cyl, device, true );
+	    {
+	    unsigned long num_cyl = i->kbToCylinder( sizeK );
+	    unsigned long long tmp_start = start;
+	    if( tmp_start > i->kbToCylinder(1)/2 )
+		tmp_start -= i->kbToCylinder(1)/2;
+	    else
+		tmp_start = 0;
+	    unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
+	    ret = i->createPartition( type, start_cyl, num_cyl, device, true );
+	    }
 	}
     else
 	{
@@ -1177,17 +1185,7 @@ bool Storage::findVolume( const string& device, ContIterator& c,
                           VolIterator& v )
     {
     bool ret = false;
-    assertInit();
-    string d( device );
-    if( d.find( "/dev/" )!=0 )
-	d = "/dev/" + d;
-    VPair p = vPair( Volume::notDeleted );
-    v = p.begin();
-    while( v!=p.end() && v->device()!=d )
-	{
-	++v;
-	}
-    if( v!=p.end() )
+    if( findVolume( device, v ))
 	{
 	const Container *co = v->getContainer();
 	CPair cp = cPair();
@@ -1199,6 +1197,50 @@ bool Storage::findVolume( const string& device, ContIterator& c,
     y2milestone( "device:%s ret:%d c->device:%s v->device:%s", device.c_str(),
                  ret, ret?c->device().c_str():"nil",
 		 ret?v->device().c_str():"nil" );
+    return( ret );
+    }
+
+bool Storage::findVolume( const string& device, VolIterator& v )
+    {
+    assertInit();
+    string d( device );
+    if( d.find( "/dev/" )!=0 )
+	d = "/dev/" + d;
+    VPair p = vPair( Volume::notDeleted );
+    v = p.begin();
+    const list<string>& al( v->altNames() );
+    while( v!=p.end() && v->device()!=d && 
+           find( al.begin(), al.end(), d )==al.end() )
+	{
+	++v;
+	}
+    return( v!=p.end() );
+    }
+
+bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
+    {
+    bool ret=true;
+    VolIterator v;
+    if( !findVolume( dev, v ) )
+	{
+	DiskIterator i = findDisk( dev );
+	if( i != dEnd() )
+	    {
+	    i->setUsedBy( typ, name );
+	    }
+	else
+	    {
+	    ret = false;
+	    y2error( "could not set used by %d:%s for %s", typ, name.c_str(),
+		     dev.c_str() );
+	    }
+	}
+    else
+	{
+	v->setUsedBy( typ, name );
+	}
+    y2milestone( "dev:%s usedBy %d:%s ret:%d", dev.c_str(), typ, name.c_str(),
+                 ret );
     return( ret );
     }
 

@@ -90,6 +90,8 @@ namespace storage
 
     enum MdType { RAID0, RAID1, RAID5, MULTIPATH };
 
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM };
+
     /**
      *  typedef for a pointer to a function that is called on progress bar events
      */
@@ -169,6 +171,7 @@ namespace storage
 	STORAGE_REMOVE_PARTITION_INVALID_CONTAINER = -2002,
 	STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER = -2003,
 	STORAGE_CHANGE_READONLY = -2004,
+	STORAGE_DISK_USED_BY = -2005,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -199,13 +202,16 @@ namespace storage
 	VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME = -3026,
 	VOLUME_RESIZE_FAILED = -3027,
 
-	CONTAINER_INTERNAL_ERROR = -4000,
+	LVM_CREATE_PV_FAILED = -4000,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
 	FSTAB_REMOVE_ENTRY_NOT_FOUND = -5002,
 	FSTAB_UPDATE_ENTRY_NOT_FOUND = -5003,
-	FSTAB_ADD_ENTRY_FOUND = -5004
+	FSTAB_ADD_ENTRY_FOUND = -5004,
+
+	CONTAINER_INTERNAL_ERROR = -99000,
+
 
     };
 
@@ -468,6 +474,60 @@ namespace storage
 	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
 
 	/**
+	 *  create a LVM volume group
+	 *
+	 * @param name name of volume group, must not contain blanks, colons 
+	 * and shell special characters (e.g. system)
+	 * @param lvm1 flag if lvm1 compatible format should be used
+	 * @param devs list with physical devices to add to that volume group
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createLvmVg( const string& name, bool lvm1, 
+	                         const list<string>& devs ) = 0;
+
+	/**
+	 *  extend a LVM volume group
+	 *
+	 * @param name name of volume group
+	 * @param devs list with physical devices to add to that volume group
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int extendLvmVg( const string& name, 
+	                         const list<string>& devs ) = 0;
+
+	/**
+	 *  shrink a LVM volume group
+	 *
+	 * @param name name of volume group
+	 * @param devs list with physical devices to remove from that volume group
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int shrinkLvmVg( const string& name, 
+	                         const list<string>& devs ) = 0;
+
+	/**
+	 *  create a LVM logical volume 
+	 *
+	 * @param vg name of volume group
+	 * @param name of logical volume
+	 * @param size size of logical volume in megabytes
+	 * @param stripe stripe count of logical volume (use 1 unless you know
+	 * exactly what you are doing)
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createLvmLv( const string& vg, const string& name,
+	                         unsigned long long sizeM, unsigned stripe) = 0;
+
+	/**
+	 *  remove a LVM logical volume 
+	 *
+	 * @param vg name of volume group
+	 * @param name of logical volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
+
+	/**
 	 *  gets a list of string describing the actions to be executed
 	 *  after next call to commit()
 	 *
@@ -513,15 +573,6 @@ namespace storage
 
 	virtual bool createMd (...) = 0;
 	virtual bool removeMd (...) = 0;
-
-	virtual bool createLvmVg (...) = 0;
-	virtual bool removeLvmVg (...) = 0;
-	virtual bool extendLvmVg (...) = 0;
-	virtual bool reduceLvmVg (...) = 0;
-
-	virtual bool createLvmLv (...) = 0;
-	virtual bool removeLvmLv (...) = 0;
-	virtual bool resizeLvmLv (...) = 0;
 
 	virtual bool createLoopFile (...) = 0;
 	virtual bool removeLoopFile (...) = 0;

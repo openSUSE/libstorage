@@ -2,6 +2,9 @@
 #define STORAGE_TYPES_H
 
 #include <y2storage/Regex.h>
+#include <y2storage/StorageInterface.h>
+
+using namespace storage;
 
 typedef enum { CUNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
 
@@ -36,6 +39,49 @@ struct commitAction
     bool operator>( const commitAction& rhs ) const
 	{ return( !(*this < rhs && *this == rhs) ); }
     };
+
+struct usedBy
+    {
+    usedBy() : t(UB_NONE) {;}
+    usedBy( UsedByType typ, const string& n ) : t(typ), name(n) {;}
+    void clear() { t=UB_NONE; name.erase(); }
+    void set( UsedByType type, const string& n ) 
+	{ t=type; (t==UB_NONE)?name.erase():name=n; }
+    bool operator==( const usedBy& rhs ) const
+	{ return( t==rhs.t && name==rhs.name ); }
+    friend inline ostream& operator<< (ostream&, const usedBy& );
+
+    UsedByType t;
+    string name;
+    };
+
+inline ostream& operator<< (ostream& s, const usedBy& d )
+    {
+    if( d.t!=UB_NONE )
+	{
+	string st;
+	switch( d.t )
+	    {
+	    case UB_LVM:
+		st = "lvm";
+		break;
+	    case UB_MD: 
+		st = "md";
+		break;
+	    case UB_EVMS: 
+		st = "evms";
+		break;
+	    case UB_DM:
+		st = "dm";
+		break;
+	    default:
+		st = "UNKNOWN";
+		break;
+	    }
+	s << " UsedBy:" << st << "[" << d.name << "]";
+	}
+    return( s );
+    }
 
 struct match_string
     {

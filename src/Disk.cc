@@ -1026,35 +1026,32 @@ int Disk::commitChanges( CommitStage stage )
     {
     y2milestone( "name %s stage %d", name().c_str(), stage );
     int ret = 0;
-    if( ret==0 )
+    switch( stage )
 	{
-	switch( stage )
-	    {
-	    case DECREASE:
-		if( deleted() )
-		    {
-		    ret = doCreateLabel();
-		    }
-		if( ret==0 )
-		    ret = Container::commitChanges( stage );
-		break;
-	    case INCREASE:
+	case DECREASE:
+	    if( deleted() )
+		{
+		ret = doCreateLabel();
+		}
+	    if( ret==0 )
 		ret = Container::commitChanges( stage );
-		if( ret==0 )
+	    break;
+	case INCREASE:
+	    ret = Container::commitChanges( stage );
+	    if( ret==0 )
+		{
+		PartPair p = partPair( Partition::toChangeId );
+		PartIter i = p.begin();
+		while( ret==0 && i!=p.end() )
 		    {
-		    PartPair p = partPair( Partition::toChangeId );
-		    PartIter i = p.begin();
-		    while( ret==0 && i!=p.end() )
-			{
-			ret = doSetType( &(*i) );
-			++i;
-			}
+		    ret = doSetType( &(*i) );
+		    ++i;
 		    }
-		break;
-	    default:
-		ret = Container::commitChanges( stage );
-		break;
-	    }
+		}
+	    break;
+	default:
+	    ret = Container::commitChanges( stage );
+	    break;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -1086,7 +1083,7 @@ string Disk::setDiskLabelText( bool doing ) const
         // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
         txt = sformat( _("Initializing disk label of disk %1$s to %2$s"),
-		      dev.c_str(), label.c_str() );
+		       dev.c_str(), label.c_str() );
         }
     else
         {

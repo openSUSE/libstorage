@@ -29,6 +29,7 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
+	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
@@ -181,6 +182,7 @@ class Volume
 	string dev;
 	unsigned long mnr;
 	unsigned long mjr;
+	usedBy uby;
 
 	static string fs_names[storage::SWAP+1];
 	static string mb_names[storage::MOUNTBY_LABEL+1];
@@ -206,6 +208,7 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	s << " created";
     if( v.format )
 	s << " format";
+    s << v.uby;
     if( v.fs != storage::FSUNKNOWN )
 	{
 	s << " fs:" << Volume::fs_names[v.fs];
