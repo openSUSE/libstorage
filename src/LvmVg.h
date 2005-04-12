@@ -47,6 +47,7 @@ class LvmVg : public Container
 	void init();
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	void getCommitActions( list<commitAction*>& l ) const;
+	virtual void print( ostream& s ) const { s << *this; }
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
@@ -69,7 +70,7 @@ class LvmVg : public Container
 
 inline ostream& operator<< (ostream& s, const LvmVg& d )
     {
-    d.print(s);
+    s << *((Container*)&d);
     s << " SizeM:" << d.capacityInKb()/1024
       << " PeSize:" << d.pe_size
       << " NumPE:" << d.num_pe

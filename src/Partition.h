@@ -59,6 +59,7 @@ class Partition : public Volume
 	friend ostream& operator<< (ostream& s, const Partition &p );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }
+	virtual void print( ostream& s ) const { s << *this; }
 
 	PartitionInfo getPartitionInfo () const;
 

@@ -264,6 +264,24 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     }
 
 void
+Storage::printInfo( ostream& str )
+    {
+    assertInit();
+    ConstContPair p = contPair();
+    for( ConstContIterator i=p.begin(); i!=p.end(); ++i )
+	{
+	Container::ConstVolPair vp = i->volPair();
+	i->print( str );
+	str << endl;
+	for( Container::ConstVolIterator i=vp.begin(); i!=vp.end(); ++i )
+	    {
+	    i->print( str );
+	    str << endl;
+	    }
+	}
+    }
+
+void
 Storage::detectFsDataTestMode( const string& file, const VolIterator& begin, 
 			       const VolIterator& end )
     {

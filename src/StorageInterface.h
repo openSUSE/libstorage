@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <ostream>
 #include <list>
 
 using std::string;
@@ -243,6 +244,14 @@ namespace storage
 	 */
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
 
+	/**
+	 * Print detected entities on a stream. 
+	 * Exact output format may change between releses.
+	 * Function mainly meant for debugging purposes.
+	 *
+	 * @param str stream to print data to
+	 */
+	virtual void printInfo( std::ostream& str ) = 0;
 
 	/**
 	 * Create a new partition. Units given in disk cylinders.

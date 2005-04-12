@@ -130,6 +130,7 @@ class Storage : public StorageInterface
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
+	void printInfo( ostream& str );
 
 	virtual ~Storage();
 
@@ -918,7 +919,6 @@ class Storage : public StorageInterface
 	DiskIterator findDisk( const string& disk );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
 	void logVolumes( const string& Dir );
-
 
 	// protected internal member variables
 	bool readonly;

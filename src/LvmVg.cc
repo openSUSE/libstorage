@@ -77,6 +77,11 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 		    line.erase( 0, line.find_first_not_of( " \t\n" ));
 		    if( line.find( "LV Name" ) == 0 )
 			{
+			if( name.size()>0 )
+			    {
+			    addLv( num_le, name, uuid, status, allocation,
+				   readOnly );
+			    }
 			name = extractNthWord( 2, line );
 			if( (pos=name.rfind( "/" ))!=string::npos )
 			    name.erase( 0, pos+1 );
@@ -97,12 +102,6 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 			{
 			allocation = extractNthWord( 1, line );
 			}
-		    if( line.find( "Logical volume" )!=string::npos && 
-			name.size()>0 )
-			{
-			addLv( num_le, name, uuid, status, allocation,
-			       readOnly );
-			}
 		    line = *c.getLine( i++ );
 		    }
 		if( name.size()>0 )
@@ -115,6 +114,10 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 		    line.erase( 0, line.find_first_not_of( " \t\n" ));
 		    if( line.find( "PV Name" ) == 0 )
 			{
+			if( p->device.size()>0 )
+			    {
+			    addPv( p );
+			    }
 			p->device = extractNthWord( 2, line );
 			}
 		    if( line.find( "PV UUID" ) == 0 )
@@ -130,10 +133,6 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 			extractNthWord( 5, line ) >> p->num_pe;
 			extractNthWord( 7, line ) >> p->free_pe;
 			}
-		    if( line.find( "PV Name" ) == 0 && p->device.size()>0 )
-			{
-			addPv( p );
-			}
 		    line = *c.getLine( i++ );
 		    }
 		if( p->device.size()>0 )
@@ -143,7 +142,6 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 		delete p;
 		}
 	    }
-	cout << *this << endl;
 	}
     else
 	{
@@ -157,7 +155,6 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
     LvmLv *p = new LvmLv( *this, name, le, uuid, status, alloc );
     if( ro )
 	p->setReadonly();
-    cout << *p << endl;
     addToList( p );
     name = uuid = status = alloc = "";
     le = 0; 
@@ -167,7 +164,6 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 void LvmVg::addPv( Pv*& p )
     {
     pv.push_back( *p );
-    cout << "Pv " << *p << endl;
     p = new Pv;
     }
 

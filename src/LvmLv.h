@@ -16,9 +16,12 @@ class LvmLv : public Volume
 	virtual ~LvmLv();
 	unsigned stripes() const { return stripe; }
 	friend ostream& operator<< (ostream& s, const LvmLv &p );
+	virtual void print( ostream& s ) const { s << *this; }
 
     protected:
 	void init();
+	const LvmVg* const vg() const;
+	void calcSize();
 
 	string vol_uuid;
 	string status;

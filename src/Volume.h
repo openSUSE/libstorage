@@ -109,7 +109,7 @@ class Volume
 	string bootMount() const;
 	bool optNoauto() const;
 	bool inCrypto() const { return( is_loop && !optNoauto() ); }
-
+	virtual void print( ostream& s ) const { s << *this; }
 
 	struct SkipDeleted
 	    {
@@ -217,9 +217,9 @@ inline ostream& operator<< (ostream& s, const Volume &v )
 	s << " mount:" << v.mp;
 	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
 	    s << " orig_mount:" << v.orig_mp;
+	if( !v.is_mounted )
+	    s << " not_mounted";
 	}
-    if( !v.is_mounted )
-	s << " not_mounted";
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
 	s << " mount_by:" << Volume::mb_names[v.mount_by];

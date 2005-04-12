@@ -126,6 +126,7 @@ class Disk : public Container
 	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	                       const list<Partition*>& pl );
 	bool getPartedValues( Partition *p );
+	virtual void print( ostream& s ) const { s << *this; }
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	void getCommitActions( list<commitAction*>& l ) const;
@@ -163,7 +164,7 @@ class Disk : public Container
 
 inline ostream& operator<< (ostream& s, const Disk& d )
     {
-    d.print(s);
+    s << *((Container*)&d);
     s << " Cyl:" << d.cyl
       << " Head:" << d.head
       << " Sect:" << d.sector

@@ -141,7 +141,7 @@ class Container
 	PlainIterator end() { return vols.end(); }
 	virtual void getCommitActions( list<commitAction*>& l ) const;
 
-	void print( ostream& s ) const { s << *this; }
+	virtual void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
 	    { pointerIntoSortedList<Volume>( vols, e ); }
 	virtual int doCreate( Volume * v ); 

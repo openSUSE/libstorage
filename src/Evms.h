@@ -20,6 +20,8 @@ class Evms : public Container
 	friend inline ostream& operator<< (ostream&, const Evms& );
 
     protected:
+	virtual void print( ostream& s ) const { s << *this; }
+
 	unsigned long long pe_size;
 	unsigned num_pv;
 	bool is_container;
@@ -27,7 +29,7 @@ class Evms : public Container
 
 inline ostream& operator<< (ostream& s, const Evms& d )
     {
-    d.print(s);
+    s << *((Container*)&d);
     s << " NumPv:" << d.num_pv
       << " PeSize:" << d.pe_size;
     if( d.is_container )
