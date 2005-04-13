@@ -941,9 +941,9 @@ int Storage::checkCache()
     return(ret);
     }
 
-list<string> Storage::getCommitActions( bool mark_destructive )
+deque<string> Storage::getCommitActions( bool mark_destructive )
     {
-    list<string> ret;
+    deque<string> ret;
     CPair p = cPair();
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
@@ -1015,7 +1015,7 @@ int Storage::commit()
     }
 
 bool
-Storage::getDisks (list<string>& disks)
+Storage::getDisks (deque<string>& disks)
 {
     disks.clear ();
     assertInit();
@@ -1028,7 +1028,7 @@ Storage::getDisks (list<string>& disks)
 
 
 bool
-Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
+Storage::getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
     assertInit();
@@ -1046,7 +1046,7 @@ Storage::getPartitions (const string& disk, list<PartitionInfo>& partitioninfos)
 }
 
 bool
-Storage::getPartitions (list<PartitionInfo>& partitioninfos)
+Storage::getPartitions (deque<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
     assertInit();

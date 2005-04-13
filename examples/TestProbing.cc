@@ -16,25 +16,25 @@ main (int argc, char** argv)
 {
     StorageInterface* s = createStorageInterface (true, false, true);
 
-    list<string> disks;
+    deque<string> disks;
     if (!s->getDisks (disks))
     {
 	cerr << "getDisks failed\n";
 	exit (EXIT_FAILURE);
     }
 
-    for (list<string>::iterator i1 = disks.begin (); i1 != disks.end(); i1++)
+    for (deque<string>::iterator i1 = disks.begin (); i1 != disks.end(); i1++)
     {
 	cout << "Found Disk " << *i1 << '\n';
 
-	list<PartitionInfo> partitions;
+	deque<PartitionInfo> partitions;
 	if (!s->getPartitions (*i1, partitions))
 	{
 	    cerr << "getPartitions failed\n";
 	    exit (EXIT_FAILURE);
 	}
 
-	for (list<PartitionInfo>::iterator i2 = partitions.begin ();
+	for (deque<PartitionInfo>::iterator i2 = partitions.begin ();
 	     i2 != partitions.end(); i2++)
 	{
 	    cout << i2->name << ' ';

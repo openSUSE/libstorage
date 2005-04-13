@@ -3,11 +3,11 @@
 
 
 #include <string>
+#include <deque>
 #include <ostream>
-#include <list>
 
 using std::string;
-using std::list;
+using std::deque;
 
 
 /*!
@@ -230,19 +230,19 @@ namespace storage
 	/**
 	 * Query all attatched disks.
 	 */
-	virtual bool getDisks (list<string>& disks) = 0;
+	virtual bool getDisks (deque<string>& disks) = 0;
 
 
 	/**
 	 * Query partitions on all attatched disks.
 	 */
-	virtual bool getPartitions (list<PartitionInfo>& partitioninfos) = 0;
+	virtual bool getPartitions (deque<PartitionInfo>& partitioninfos) = 0;
 
 
 	/**
 	 * Query partitions on a single disks.
 	 */
-	virtual bool getPartitions (const string& disk, list<PartitionInfo>& partitioninfos) = 0;
+	virtual bool getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos) = 0;
 
 
 	/**
@@ -483,7 +483,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmVg( const string& name, bool lvm1, 
-	                         const list<string>& devs ) = 0;
+	                         const deque<string>& devs ) = 0;
 
 	/**
 	 *  extend a LVM volume group
@@ -493,7 +493,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int extendLvmVg( const string& name, 
-	                         const list<string>& devs ) = 0;
+	                         const deque<string>& devs ) = 0;
 
 	/**
 	 *  shrink a LVM volume group
@@ -503,7 +503,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int shrinkLvmVg( const string& name, 
-	                         const list<string>& devs ) = 0;
+	                         const deque<string>& devs ) = 0;
 
 	/**
 	 *  create a LVM logical volume 
@@ -535,7 +535,7 @@ namespace storage
 	 *    actions (like e.g. deletion, formatting, ...)
 	 * @return list of strings presentable to the user
 	 */
-	virtual list<string> getCommitActions( bool mark_destructive ) = 0;
+	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
 
 	/**
 	 *  sets the callback function called on progress bar events

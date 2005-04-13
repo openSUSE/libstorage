@@ -14,9 +14,9 @@ StorageInterface* s = 0;
 void
 print_partitions (const string& disk)
 {
-    list<PartitionInfo> partitioninfos;
+    deque<PartitionInfo> partitioninfos;
     s->getPartitions (disk, partitioninfos);
-    for (list<PartitionInfo>::iterator i = partitioninfos.begin ();
+    for (deque<PartitionInfo>::iterator i = partitioninfos.begin ();
 	 i != partitioninfos.end(); i++)
     {
 	cout << i->name << ' ';

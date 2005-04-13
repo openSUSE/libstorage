@@ -137,9 +137,9 @@ class Storage : public StorageInterface
 
 	// functions for interface
 
-	bool getDisks (list<string>& disks);
-	bool getPartitions (list<PartitionInfo>& partitioninfos);
-	bool getPartitions (const string& disk, list<PartitionInfo>& partitioninfos);
+	bool getDisks (deque<string>& disks);
+	bool getPartitions (deque<PartitionInfo>& partitioninfos);
+	bool getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos);
 	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, PartitionType type, unsigned long start,
 			     unsigned long size, string& device );
@@ -168,14 +168,14 @@ class Storage : public StorageInterface
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 
 	int createLvmVg( const string& name, bool lvm1,
-			 const list<string>& devs );
-	int extendLvmVg( const string& name, const list<string>& devs );
-	int shrinkLvmVg( const string& name, const list<string>& devs );
+			 const deque<string>& devs );
+	int extendLvmVg( const string& name, const deque<string>& devs );
+	int shrinkLvmVg( const string& name, const deque<string>& devs );
 	int createLvmLv( const string& vg, const string& name,
 			 unsigned long long sizeM, unsigned stripe=1 );
 	int removeLvmLv( const string& vg, const string& name );
 
-	list<string> getCommitActions( bool mark_destructive );
+	deque<string> getCommitActions( bool mark_destructive );
         int commit();
 
 	void setCallbackProgressBar( CallbackProgressBar pfnc )
