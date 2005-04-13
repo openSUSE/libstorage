@@ -6,3 +6,6 @@
 #include "StorageInterface.h"
 %}
 
+%include "std_string.i"
+
+%include "StorageInterface.h"
