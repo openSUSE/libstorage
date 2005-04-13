@@ -29,7 +29,10 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
+	UsedByType getUsedBy() { return( uby.t ); }
+	const string& usedByName() { return( uby.name ); }
 	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
+
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
@@ -67,8 +70,8 @@ class Volume
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
 	const string& name() const { return nm; }
-	unsigned long minorNumber() const { return mnr; }
-	unsigned long majorNumber() const { return mjr; }
+	unsigned long minorNr() const { return mnr; }
+	unsigned long majorNr() const { return mjr; }
 	void setMajorMinor( unsigned long Major, unsigned long Minor )
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }

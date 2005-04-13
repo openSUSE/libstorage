@@ -323,10 +323,10 @@ SystemCmd::getString( unsigned Idx_iv ) const
     return( &Text_aC[Idx_iv] );
     }
 
-int
+unsigned
 SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
     {
-    int Ret_ii;
+    unsigned Ret_ii;
 
     if( Idx_iv > 1 )
 	{
@@ -340,7 +340,7 @@ SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
 	{
 	Ret_ii = Lines_aC[Idx_iv].size();
 	}
-    y2debug("ret:%d", Ret_ii );
+    y2debug("ret:%u", Ret_ii );
     return( Ret_ii );
     }
 

@@ -933,6 +933,224 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     return( ret );
     }
 
+int
+Storage::createLvmVg( const string& name, unsigned long long peSizeK, 
+		      bool lvm1, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    std::ostringstream buf;
+    buf << "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1
+        << " devices:" << devs;
+    y2milestone( "%s", buf.str().c_str() );
+    LvmVgIterator i = findLvmVg( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    if( name.find_first_of( "\"\' /\n\t:*?" ) != string::npos )
+	{
+	ret = STORAGE_VG_INVALID_NAME;
+	}
+    else if( i == lvgEnd() )
+	{
+	LvmVg *v = new LvmVg( this, name, lvm1 );
+	v->setCreated();
+	ret = v->setPeSize( peSizeK );
+	if( ret==0 )
+	    {
+	    list<string> d;
+	    copy( devs.begin(), devs.end(), d.begin() );
+	    ret = v->extendVg( d );
+	    }
+	if( ret==0 )
+	    addToList( v );
+	else
+	    delete( v );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_EXISTS;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::removeLvmVg( const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    LvmVgIterator i = findLvmVg( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	if( i->created() )
+	    ret = removeContainer( &(*i) );
+	else
+	    ret = i->removeVg();
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::extendLvmVg( const string& name, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    std::ostringstream buf;
+    buf << "name:" << name << " devices:" << devs;
+    y2milestone( "%s", buf.str().c_str() );
+    LvmVgIterator i = findLvmVg( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	list<string> d;
+	copy( devs.begin(), devs.end(), d.begin() );
+	ret = i->extendVg( d );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    std::ostringstream buf;
+    buf << "name:" << name << " devices:" << devs;
+    y2milestone( "%s", buf.str().c_str() );
+    LvmVgIterator i = findLvmVg( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	list<string> d;
+	copy( devs.begin(), devs.end(), d.begin() );
+	ret = i->reduceVg( d );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::createLvmLv( const string& vg, const string& name, 
+                      unsigned long long sizeM, unsigned stripe,
+		      string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "vg:%s name:%s sizeM:%llu stripe:%u", vg.c_str(), 
+                 name.c_str(), sizeM, stripe );
+    LvmVgIterator i = findLvmVg( vg );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->createLv( name, sizeM*1024, stripe, device );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
+int
+Storage::removeLvmLv( const string& device )
+    {
+    int ret = 0;
+    string vg, name;
+    string d( device );
+    if( d.find( "/dev/" )==0 )
+	d.erase( 0, 5 );
+    string::size_type pos = d.find( '/' );
+    if( pos!=string::npos )
+	{
+	vg = d.substr( 0, pos );
+	name = d.substr( pos+1 );
+	}
+    if( vg.size()>0 && name.size()>0 )
+	ret = removeLvmLv( vg, name );
+    else
+	ret = STORAGE_LVM_INVALID_DEVICE;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::removeLvmLv( const string& vg, const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "vg:%s name:%s", vg.c_str(), name.c_str() );
+    LvmVgIterator i = findLvmVg( vg );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->removeLv( name );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Storage::checkCache()
     {
     int ret=0;
@@ -1264,9 +1482,119 @@ Storage::DiskIterator Storage::findDisk( const string& disk )
     string d( disk );
     if( d.find( "/dev/" )!=0 )
 	d = "/dev/" + d;
-    DiskIterator ret=dBegin();
-    while( ret != dEnd() && ret->device()!=d )
+    DiskPair p = dPair();
+    DiskIterator ret=p.begin();
+    while( ret != p.end() && ret->device()!=d )
 	++ret;
+    return( ret );
+    }
+
+Storage::LvmVgIterator Storage::findLvmVg( const string& name )
+    {
+    assertInit();
+    LvmVgPair p = lvgPair();
+    LvmVgIterator ret=p.begin();
+    while( ret != p.end() && ret->name()!=name )
+	++ret;
+    return( ret );
+    }
+
+bool Storage::knownDevice( const string& dev, bool disks_allowed )
+    {
+    bool ret=true;
+    VolIterator v;
+    if( !findVolume( dev, v ) )
+	{
+	ret = disks_allowed && findDisk( dev )!=dEnd();
+	}
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
+bool Storage::canUseDevice( const string& dev, bool disks_allowed )
+    {
+    bool ret=true;
+    VolIterator v;
+    if( !findVolume( dev, v ) )
+	{
+	if( disks_allowed )
+	    {
+	    DiskIterator i = findDisk( dev );
+	    ret = i!=dEnd() && i->getUsedBy()==UB_NONE && i->numPartitions()==0;
+	    }
+	else
+	    ret = false;
+	}
+    else
+	ret = v->getUsedBy()==UB_NONE && v->getMount().size()==0;
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
+string Storage::deviceByNumber( const string& majmin )
+    {
+    string ret="";
+    string::size_type pos = majmin.find( ":" );
+    if( pos!=string::npos )
+	{
+	unsigned ma, mi;
+	majmin.substr( 0, pos ) >> ma;
+	majmin.substr( pos+1 ) >> mi;
+	ConstVolPair p = volPair( Volume::notDeleted );
+	ConstVolIterator v = p.begin();
+	while( v!=p.end() && (ma!=v->majorNr() || mi!=v->minorNr()))
+	   {
+	   ++v;
+	   }
+	if( v==p.end() )
+	    {
+	    ConstDiskPair d = diskPair();
+	    ConstDiskIterator di = d.begin();
+	    while( di!=d.end() && (ma!=di->majorNr() || mi!=di->minorNr()))
+		++di;
+	    if( di!=d.end() )
+		ret = di->device();
+	    }
+	else
+	    ret = v->device();
+	}
+    y2milestone( "majmin %s ret:%s", majmin.c_str(), ret.c_str() );
+    return( ret );
+    }
+
+unsigned long long Storage::deviceSize( const string& dev )
+    {
+    unsigned long long ret=0;
+    VolIterator v;
+    if( !findVolume( dev, v ) )
+	{
+	DiskIterator i = findDisk( dev );
+	if( i!=dEnd() )
+	    ret = i->capacityInKb();
+	}
+    else
+	ret = v->sizeK();
+    y2milestone( "dev:%s ret:%llu", dev.c_str(), ret );
+    return( ret );
+    }
+
+int Storage::removeContainer( Container* val )
+    {
+    y2milestone( "name:%s", val->name().c_str() );
+    int ret = 0;
+    CIter i=cont.begin();
+    while( i!=cont.end() && *i!=val )
+	++i;
+    if( i!=cont.end() )
+	{
+	delete( *i );
+	cont.erase( i );
+	}
+    else
+	{
+	ret = STORAGE_CONTAINER_NOT_FOUND;
+	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 

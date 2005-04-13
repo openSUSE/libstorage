@@ -13,7 +13,6 @@ using namespace storage;
 class Storage;
 class SystemCmd;
 class ProcPart;
-class Partition;
 class istream;
 
 class Disk : public Container
@@ -36,9 +35,10 @@ class Disk : public Container
 	unsigned heads() const { return head; }
 	unsigned sectors() const { return sector; }
 	unsigned long long sizeK() const { return size_k; }
-	unsigned long minor() const { return mnr; }
-	unsigned long major() const { return mjr; }
+	unsigned long minorNr() const { return mnr; }
+	unsigned long majorNr() const { return mjr; }
 	unsigned long numMinor() const { return range; }
+	unsigned numPartitions() const;
 	static CType const staticType() { return DISK; }
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
@@ -51,7 +51,9 @@ class Disk : public Container
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
-	int checkResize( Volume* v, unsigned long long newSize ) const;
+	int checkResize( Volume* v, unsigned long long newSize, 
+	                 bool doit, bool &done ) const;
+
 	bool hasExtended() const;
 	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;

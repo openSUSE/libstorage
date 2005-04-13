@@ -303,8 +303,12 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
     else
 	{
 	FsCapabilities caps;
-	if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
-	    caps.minimalFsSizeK > size_k  )
+	if( uby.t != UB_NONE )
+	    {
+	    ret = VOLUME_ALREADY_IN_USE;
+	    }
+	else if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
+		 caps.minimalFsSizeK > size_k  )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
 	    }
@@ -325,6 +329,10 @@ int Volume::changeMount( const string& m )
 	m.find_first_of( " \t\n" ) != string::npos )
 	{
 	ret = VOLUME_MOUNT_POINT_INAVLID;
+	}
+    else if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
 	}
     else
 	{
@@ -354,6 +362,10 @@ int Volume::changeMountBy( MountByType mby )
 	    }
 	if( ret==0 )
 	    mount_by = mby;
+	}
+    else if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
 	}
     else
 	ret = VOLUME_FSTAB_EMPTY_MOUNT;
@@ -402,6 +414,10 @@ int Volume::changeFstabOptions( const string& options )
 	    y2milestone( "update encrypted (opt_noauto:%d) fstab_opt:%s", 
 	                 optNoauto(), fstab_opt.c_str() );
 	    }
+	}
+    else if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
 	}
     else
 	ret = VOLUME_FSTAB_EMPTY_MOUNT;
@@ -468,7 +484,11 @@ int Volume::doFormat()
 	{
 	cont->getStorage()->showInfoCb( formatText(true) );
 	}
-    if( isMounted() )
+    if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
+	}
+    else if( isMounted() )
 	{
 	ret = umount( orig_mp );
 	needMount = ret==0;
@@ -664,11 +684,15 @@ int Volume::doMount()
 	{
 	cont->getStorage()->showInfoCb( mountText(true) );
 	}
-    if( orig_mp.size()>0 && isMounted() )
+    if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
+	}
+    if( ret==0 && orig_mp.size()>0 && isMounted() )
 	{
 	ret = umount( cont->getStorage()->root()+orig_mp );
 	}
-    if( access( lmount.c_str(), R_OK )!=0 )
+    if( ret==0 && access( lmount.c_str(), R_OK )!=0 )
 	{
 	createPath( lmount );
 	}
@@ -690,7 +714,11 @@ int Volume::resize( unsigned long long newSizeMb )
     int ret=0;
     y2milestone( "val:%llu", newSizeMb );
     unsigned long long new_size = newSizeMb*1024;
-    if( new_size != size_k )
+    if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
+	}
+    else if( new_size != size_k )
 	{
 	FsCapabilities caps;
 	if( !format && 
@@ -700,9 +728,10 @@ int Volume::resize( unsigned long long newSizeMb )
 	    {
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
+	bool done=false;
 	if( ret==0 )
-	    ret = cont->checkResize( this, new_size );
-	if( ret==0 )
+	    ret = cont->checkResize( this, new_size, true, done );
+	if( !done && ret==0 )
 	    size_k = new_size;
 	}
     y2milestone( "ret:%d", ret );
@@ -802,31 +831,38 @@ int Volume::setEncryption( bool val )
     {
     int ret = 0;
     y2milestone( "val:%d", val );
-    if( !val )
+    if( getUsedBy() != UB_NONE )
 	{
-	if( loop_dev.size()>0 && loop_active )
-	    {
-	    SystemCmd c( "losetup -d " + loop_dev );
-	    loop_dev.erase();
-	    fstab_loop_dev = loop_dev;
-	    }
-	is_loop = loop_active = false;
-	encryption = orig_encryption = ENC_NONE;
-	crypt_pwd.erase();
+	ret = VOLUME_ALREADY_IN_USE;
 	}
-    else
+    if( ret==0 )
 	{
-	if( crypt_pwd.empty() )
-	    ret = VOLUME_CRYPT_NO_PWD;
-	if( ret == 0 && format )
+	if( !val )
 	    {
-	    encryption = ENC_TWOFISH;
-	    is_loop = true;
+	    if( loop_dev.size()>0 && loop_active )
+		{
+		SystemCmd c( "losetup -d " + loop_dev );
+		loop_dev.erase();
+		fstab_loop_dev = loop_dev;
+		}
+	    is_loop = loop_active = false;
+	    encryption = orig_encryption = ENC_NONE;
+	    crypt_pwd.erase();
 	    }
-	if( ret == 0 && !format && !loop_active )
+	else
 	    {
-	    if( detectLoopEncryption()==ENC_UNKNOWN )
-		ret = VOLUME_CRYPT_NOT_DETECTED;
+	    if( crypt_pwd.empty() )
+		ret = VOLUME_CRYPT_NO_PWD;
+	    if( ret == 0 && format )
+		{
+		encryption = ENC_TWOFISH;
+		is_loop = true;
+		}
+	    if( ret == 0 && !format && !loop_active )
+		{
+		if( detectLoopEncryption()==ENC_UNKNOWN )
+		    ret = VOLUME_CRYPT_NOT_DETECTED;
+		}
 	    }
 	}
     y2milestone( "ret:%d", ret );
@@ -921,7 +957,7 @@ Volume::setCryptPwd( const string& val )
 #endif
     int ret = 0;
 
-    if( val.size()<8 )
+    if( val.size()<5 )
 	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
     else
 	crypt_pwd=val; 
@@ -1089,7 +1125,11 @@ int Volume::doSetLabel()
 	{
 	ret = VOLUME_LABEL_TOO_LONG;
 	}
-    if( is_mounted && !caps.labelWhileMounted )
+    if( ret==0 && getUsedBy() != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
+	}
+    if( ret==0 && is_mounted && !caps.labelWhileMounted )
 	{
 	ret = umount( cont->getStorage()->root()+orig_mp );
 	if( ret!=0 )
@@ -1149,6 +1189,8 @@ int Volume::setLabel( const string& val )
 	{
 	if( caps.labelLength < val.size() )
 	    ret = VOLUME_LABEL_TOO_LONG;
+	else if( getUsedBy() != UB_NONE )
+	    ret = VOLUME_ALREADY_IN_USE;
 	else
 	    label = val;
 	}

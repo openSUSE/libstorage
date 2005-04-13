@@ -172,6 +172,11 @@ namespace storage
 	STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER = -2003,
 	STORAGE_CHANGE_READONLY = -2004,
 	STORAGE_DISK_USED_BY = -2005,
+	STORAGE_LVM_VG_EXISTS = -2006,
+	STORAGE_LVM_VG_NOT_FOUND = -2007,
+	STORAGE_LVM_INVALID_DEVICE = -2008,
+	STORAGE_CONTAINER_NOT_FOUND = -2009,
+	STORAGE_VG_INVALID_NAME = -2010,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -201,8 +206,21 @@ namespace storage
 	VOLUME_RESIZE_UNSUPPORTED_BY_FS = -3025,
 	VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME = -3026,
 	VOLUME_RESIZE_FAILED = -3027,
+	VOLUME_ALREADY_IN_USE = -3028,
 
 	LVM_CREATE_PV_FAILED = -4000,
+	LVM_PE_SIZE_INVALID = -4001,
+	LVM_PV_ALREADY_CONTAINED = -4002,
+	LVM_PV_DEVICE_UNKNOWN = -4003,
+	LVM_PV_DEVICE_USED = -4004,
+	LVM_VG_HAS_NONE_PV = -4005,
+	LVM_PV_NOT_FOUND = -4006,
+	LVM_REMOVE_PV_SIZE_NEEDED = -4007,
+	LVM_REMOVE_PV_IN_USE = -4008,
+	LVM_LV_INVALID_NAME = -4009,
+	LVM_LV_DUPLICATE_NAME = -4010,
+	LVM_LV_NO_SPACE = -4011,
+	LVM_LV_NO_SPACE_STRIPED = -4012,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -266,7 +284,7 @@ namespace storage
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
 	 * @param sizeCyl size of partition in disk cylinders
-	 * @param device gets assigned to the device name of the new partition
+	 * @param device is set to the device name of the new partition 
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -283,7 +301,7 @@ namespace storage
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param start offset in kilobytes from start of disk
 	 * @param size  size of partition in kilobytes
-	 * @param device gets assigned to the device name of the new partition
+	 * @param device is set to the device name of the new partition 
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -482,8 +500,18 @@ namespace storage
 	 * @param devs list with physical devices to add to that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createLvmVg( const string& name, bool lvm1, 
+	virtual int createLvmVg( const string& name, 
+	                         unsigned long long peSizeK, bool lvm1, 
 	                         const deque<string>& devs ) = 0;
+
+	/**
+	 *  remove a LVM volume group. If the volume group contains 
+	 *  logical volumes, these are automatically also removed.
+	 *
+	 * @param name name of volume group
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeLvmVg( const string& name ) = 0;
 
 	/**
 	 *  extend a LVM volume group
@@ -513,10 +541,20 @@ namespace storage
 	 * @param size size of logical volume in megabytes
 	 * @param stripe stripe count of logical volume (use 1 unless you know
 	 * exactly what you are doing)
+	 * @param device is set to the device name of the new LV
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLv( const string& vg, const string& name,
-	                         unsigned long long sizeM, unsigned stripe) = 0;
+	                         unsigned long long sizeM, unsigned stripe,
+				 string& device ) = 0;
+
+	/**
+	 *  remove a LVM logical volume 
+	 *
+	 * @param device name of logical volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeLvmLv( const string& device ) = 0;
 
 	/**
 	 *  remove a LVM logical volume 

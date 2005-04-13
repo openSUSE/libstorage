@@ -1406,12 +1406,21 @@ int Disk::doRemove( Volume* v )
     return( ret );
     }
 
-int Disk::checkResize( Volume* v, unsigned long long newSize ) const
+int Disk::checkResize( Volume* v, unsigned long long newSize,
+                       bool doit, bool& done ) const
     {
+    done = false;
     int ret = 0;
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
+	}
+    else if( newSize<v->sizeK() && doit && v->created() )
+	{
+	Partition * p = dynamic_cast<Partition *>(v);
+	unsigned new_cyl_cnt = kbToCylinder(newSize);
+	p->changeRegion( p->cylStart(), new_cyl_cnt, cylinderToKb(new_cyl_cnt));
+	done = true;
 	}
     else if( newSize>v->sizeK() )
 	{
@@ -1440,11 +1449,22 @@ int Disk::checkResize( Volume* v, unsigned long long newSize ) const
 	                 free, cylinderToKb(free), increase );
 	    if( cylinderToKb(free) < increase )
 		ret = DISK_RESIZE_NO_SPACE;
+	    else if( doit && v->created() )
+		{
+		unsigned new_cyl_cnt = kbToCylinder(newSize);
+		p->changeRegion( p->cylStart(), new_cyl_cnt, 
+		                 cylinderToKb(new_cyl_cnt));
+		done = true;
+		}
 	    }
 	else
 	    {
 	    ret = DISK_CHECK_PARTITION_INVALID_VOLUME;
 	    }
+	}
+    else if( doit )
+	{
+	done = true;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -1509,3 +1529,7 @@ int Disk::doResize( Volume* v )
     return( ret );
     }
 
+unsigned Disk::numPartitions() const
+    {
+    return(partPair( notDeleted ).length());
+    }

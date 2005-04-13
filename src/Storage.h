@@ -132,6 +132,10 @@ class Storage : public StorageInterface
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( ostream& str );
 	bool setUsedBy( const string& dev, UsedByType typ, const string& name );
+	bool canUseDevice( const string& dev, bool disks_allowed=false );
+	bool knownDevice( const string& dev, bool disks_allowed=false );
+	unsigned long long deviceSize( const string& dev );
+	string deviceByNumber( const string& majmin );
 
 	virtual ~Storage();
 
@@ -167,12 +171,15 @@ class Storage : public StorageInterface
 	int getCrypt( const string& device, bool& val );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 
-	int createLvmVg( const string& name, bool lvm1,
-			 const deque<string>& devs );
+	int createLvmVg( const string& name, unsigned long long peSizeK,
+	                 bool lvm1, const deque<string>& devs );
+	int removeLvmVg( const string& name );
 	int extendLvmVg( const string& name, const deque<string>& devs );
 	int shrinkLvmVg( const string& name, const deque<string>& devs );
 	int createLvmLv( const string& vg, const string& name,
-			 unsigned long long sizeM, unsigned stripe=1 );
+			 unsigned long long sizeM, unsigned stripe,
+			 string& device );
+	int removeLvmLv( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
 
 	deque<string> getCommitActions( bool mark_destructive );
@@ -355,6 +362,10 @@ class Storage : public StorageInterface
 	typedef CheckFnc<const LvmVg> CheckFncLvmVg;
 	typedef CheckerIterator< CheckFncLvmVg, ConstLvmVgPI<CheckFncLvmVg>::type,
 	                         ContainerCLvmVgIter, LvmVg > ConstLvmVgPIterator;
+	typedef CheckerIterator< CheckFncLvmVg, LvmVgPI<CheckFncLvmVg>::type,
+	                         ContainerLvmVgIter, LvmVg > LvmVgPIterator;
+	typedef DerefIterator<LvmVgPIterator,LvmVg> LvmVgIterator;
+	typedef IterPair<LvmVgIterator> LvmVgPair;
 
     public:
 	// public typedefs for iterators over LVM VGs
@@ -402,6 +413,22 @@ class Storage : public StorageInterface
 	    }
     protected:
 	// protected member functions for iterators over LVM VGs
+	LvmVgPair lvgPair( bool (* CheckFnc)( const LvmVg& )=NULL )
+	    {
+	    return( LvmVgPair( lvgBegin( CheckFnc ), lvgEnd( CheckFnc ) ));
+	    }
+	LvmVgIterator lvgBegin( bool (* CheckFnc)( const LvmVg& )=NULL )
+	    {
+	    IterPair<ContainerLvmVgIter> p( ContainerLvmVgIter( cont.begin(), cont.end() ),
+					    ContainerLvmVgIter( cont.begin(), cont.end(), true ));
+	    return( LvmVgIterator( LvmVgPIterator( p, CheckFnc )) );
+	    }
+	LvmVgIterator lvgEnd( bool (* CheckFnc)( const LvmVg& )=NULL )
+	    {
+	    IterPair<ContainerLvmVgIter> p( ContainerLvmVgIter( cont.begin(), cont.end() ),
+					    ContainerLvmVgIter( cont.begin(), cont.end(), true ));
+	    return( LvmVgIterator( LvmVgPIterator( p, CheckFnc, true )) );
+	    }
 
 // iterators over EVMS container
     protected:
@@ -925,8 +952,10 @@ class Storage : public StorageInterface
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
+	LvmVgIterator findLvmVg( const string& name );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
 	bool findVolume( const string& device, VolIterator& v  );
+	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
 
 	// protected internal member variables

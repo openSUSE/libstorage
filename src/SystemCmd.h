@@ -33,7 +33,7 @@ class SystemCmd
 	const string* getString( unsigned Idx_ii=IDX_STDOUT ) const;
 	const string* getLine( unsigned Num_iv, bool Selected_bv=false,
 			       unsigned Idx_ii=IDX_STDOUT ) const;
-	int numLines( bool Selected_bv=false, unsigned Idx_ii=IDX_STDOUT ) const;
+	unsigned numLines( bool Selected_bv=false, unsigned Idx_ii=IDX_STDOUT ) const;
 	void setCombine( const bool Combine_b=true );
 	int retcode() const { return Ret_i; }
 

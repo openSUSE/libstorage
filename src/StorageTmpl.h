@@ -148,6 +148,19 @@ template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
     return( s );
     }
 
+template<class Value> ostream& operator<<( ostream& s, const deque<Value>& l )
+    {
+    s << "<";
+    for( typename deque<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	{
+	if( i!=l.begin() )
+	    s << " ";
+	s << *i;
+	}
+    s << ">";
+    return( s );
+    }
+
 template<class F, class S> ostream& operator<<( ostream& s, const pair<F,S>& p )
     {
     s << "[" << p.first << ":" << p.second << "]";

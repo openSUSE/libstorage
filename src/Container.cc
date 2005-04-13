@@ -178,8 +178,9 @@ int Container::doResize( Volume * v )
     return( CONTAINER_INTERNAL_ERROR );
     }
 
-int Container::checkResize( Volume* v, unsigned long long ) const
+int Container::checkResize( Volume* v, unsigned long long, bool, bool& done ) const
     {
+    done = false;
     return( VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME );
     }
 

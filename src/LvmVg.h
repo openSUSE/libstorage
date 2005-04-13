@@ -4,6 +4,7 @@
 using namespace std;
 
 #include "y2storage/Container.h"
+#include "y2storage/LvmLv.h"
 
 class LvmVg : public Container
     {
@@ -11,6 +12,7 @@ class LvmVg : public Container
 
     public:
 	LvmVg( Storage * const s, const string& Name );
+	LvmVg( Storage * const s, const string& Name, bool lvm1 );
 	virtual ~LvmVg();
 	unsigned long long peSize() const { return pe_size; }
 	unsigned numLv() const { return vols.size(); }
@@ -18,19 +20,70 @@ class LvmVg : public Container
 	static CType const staticType() { return LVM; }
 	friend inline ostream& operator<< (ostream&, const LvmVg& );
 
-	int createLv( const string& name, unsigned long long sizeK, 
-	              string& device );
-	int removeLv( const string& name );
+	int removeVg();
 	int extendVg( const list<string>& dl );
 	int extendVg( const string& device );
 	int reduceVg( const list<string>& dl );
 	int reduceVg( const string& device );
+	int createLv( const string& name, unsigned long long sizeK, 
+		      unsigned stripe, string& device );
+	int removeLv( const string& name );
+
+	int setPeSize( long long unsigned );
 	int commitChanges( CommitStage stage );
 	int checkResize( Volume* v, unsigned long long newSize ) const;
 	static void activate( bool val=true );
 	static void getVgs( list<string>& l );
 	
     protected:
+	// iterators over LVM LVs
+	// protected typedefs for iterators over LVMLVs
+	typedef CastIterator<VIter, LvmLv *> LvmLvInter;
+	typedef CastIterator<CVIter, const LvmLv *> LvmLvCInter;
+	template< class Pred >
+	    struct LvmLvPI { typedef ContainerIter<Pred, LvmLvInter> type; };
+	template< class Pred >
+	    struct LvmLvCPI { typedef ContainerIter<Pred, LvmLvCInter> type; };
+	typedef CheckFnc<const LvmLv> CheckFncLvmLv;
+	typedef CheckerIterator< CheckFncLvmLv, LvmLvPI<CheckFncLvmLv>::type,
+				 LvmLvInter, LvmLv > LvmLvPIterator;
+	typedef CheckerIterator< CheckFncLvmLv, LvmLvCPI<CheckFncLvmLv>::type,
+				 LvmLvCInter, const LvmLv > LvmLvCPIterator;
+	typedef DerefIterator<LvmLvPIterator,LvmLv> LvmLvIter;
+	typedef DerefIterator<LvmLvCPIterator,const LvmLv> ConstLvmLvIter;
+	typedef IterPair<LvmLvIter> LvmLvPair;
+	typedef IterPair<ConstLvmLvIter> ConstLvmLvPair;
+
+	LvmLvPair lvmLvPair( bool (* Check)( const LvmLv& )=NULL)
+	    {
+	    return( LvmLvPair( lvmLvBegin( Check ), lvmLvEnd( Check ) ));
+	    }
+	LvmLvIter lvmLvBegin( bool (* Check)( const LvmLv& )=NULL)
+	    {
+	    IterPair<LvmLvInter> p( (LvmLvInter(begin())), (LvmLvInter(end())) );
+	    return( LvmLvIter( LvmLvPIterator( p, Check )) );
+	    }
+	LvmLvIter lvmLvEnd( bool (* Check)( const LvmLv& )=NULL)
+	    {
+	    IterPair<LvmLvInter> p( (LvmLvInter(begin())), (LvmLvInter(end())) );
+	    return( LvmLvIter( LvmLvPIterator( p, Check, true )) );
+	    }
+
+	ConstLvmLvPair lvmLvPair( bool (* Check)( const LvmLv& )=NULL) const
+	    {
+	    return( ConstLvmLvPair( lvmLvBegin( Check ), lvmLvEnd( Check ) ));
+	    }
+	ConstLvmLvIter lvmLvBegin( bool (* Check)( const LvmLv& )=NULL) const
+	    {
+	    IterPair<LvmLvCInter> p( (LvmLvCInter(begin())), (LvmLvCInter(end())) );
+	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check )) );
+	    }
+	ConstLvmLvIter lvmLvEnd( bool (* Check)( const LvmLv& )=NULL) const
+	    {
+	    IterPair<LvmLvCInter> p( (LvmLvCInter(begin())), (LvmLvCInter(end())) );
+	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check, true )) );
+	    }
+
 	struct Pv
 	    {
 	    string device;
@@ -38,18 +91,31 @@ class LvmVg : public Container
 	    string status;
 	    unsigned long num_pe;
 	    unsigned long free_pe;
+
+	    static bool comp_le( const Pv& a, const Pv& b )
+		{ return( a.free_pe<b.free_pe ); }
+	    static bool no_free( const Pv& a )
+		{ return( a.free_pe==0 ); }
+
+	    bool operator== ( const Pv& rhs ) const
+		{ return( device==rhs.device ); }
+	    bool operator== ( const string& dev ) const
+		{ return( device==dev); }
 	    Pv() { num_pe = free_pe = 0; }
 	    };
 
 	friend inline ostream& operator<< (ostream&, const Pv& );
 
-	LvmVg( Storage * const s, const string& File, bool );
+	LvmVg( Storage * const s, const string& File, int );
+
+	void getVgData( const string& name );
 	void init();
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	void getCommitActions( list<commitAction*>& l ) const;
 	virtual void print( ostream& s ) const { s << *this; }
 	string createVgText( bool doing ) const;
 	string removeVgText( bool doing ) const;
+	unsigned long leByLvRemove() const;
 
 	int doCreateVg();
 	int doRemoveVg();
@@ -71,6 +137,8 @@ class LvmVg : public Container
 	string uuid;
 	bool lvm1;
 	list<Pv> pv;
+	list<Pv> pv_add;
+	list<Pv> pv_remove;
 	static bool lvm_active;
     };
 
