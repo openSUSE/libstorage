@@ -178,11 +178,28 @@ int Container::doResize( Volume * v )
     return( CONTAINER_INTERNAL_ERROR );
     }
 
-int Container::checkResize( Volume* v, unsigned long long, bool, bool& done ) const
+int Container::checkResize( Volume* v, unsigned long long&, bool, bool& done )
     {
     done = false;
     return( VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME );
     }
+
+bool Container::removeFromList( Volume* e )
+    {
+    bool ret=false;
+    PlainIterator i = vols.begin();
+    while( i!=vols.end() && *i!=e )
+	++i;
+    if( i!=vols.end() )
+	{
+	delete( *i );
+	vols.erase( i );
+	ret = true;
+	}
+    y2milestone( "P:%p ret:%d", e, ret );
+    return( ret );
+    }
+
 
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };
 

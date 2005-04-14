@@ -730,7 +730,10 @@ int Volume::resize( unsigned long long newSizeMb )
 	    }
 	bool done=false;
 	if( ret==0 )
-	    ret = cont->checkResize( this, new_size, true, done );
+	    {
+	    Container* c = const_cast<Container*>(cont);
+	    ret = c->checkResize( this, new_size, true, done );
+	    }
 	if( !done && ret==0 )
 	    size_k = new_size;
 	}
@@ -1585,9 +1588,7 @@ void Volume::getTestmodeData( const string& data )
     list<string> l = splitString( data );
     if( l.begin()!=l.end() )
 	l.erase( l.begin() );
-    //cout << "l:" << l << endl;
     map<string,string> m = makeMap( l );
-    //cout << "m:" << m << endl;
     map<string,string>::const_iterator i = m.find( "fs" );
     if( i!=m.end() )
 	fs = detected_fs = toFsType(i->second);

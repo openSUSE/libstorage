@@ -131,7 +131,7 @@ class Container
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
-	virtual int checkResize( Volume* v, unsigned long long newSize, bool doit, bool &done ) const;
+	virtual int checkResize( Volume* v, unsigned long long& newSize, bool doit, bool &done );
 	static CType const staticType() { return CUNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 
@@ -148,6 +148,7 @@ class Container
 	virtual void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
 	    { pointerIntoSortedList<Volume>( vols, e ); }
+	bool removeFromList( Volume* e );
 	virtual int doCreate( Volume * v ); 
 	virtual int doRemove( Volume * v ); 
 	virtual int doResize( Volume * v ); 

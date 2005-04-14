@@ -1202,17 +1202,29 @@ int Storage::commit()
 	    {
 	    if( *pt==DECREASE )
 		{
+		list<ContIterator> cil;
 		ContIterator i = p.end();
 		if( p.begin()!=p.end() )
 		    {
+		    bool save_iter = false;
 		    do
 			{
 			if( i!=p.begin() )
 			    --i;
+			save_iter = i->deleted() && 
+			            (i->type()==LVM||i->type()==EVMS);
 			ret = i->commitChanges( *pt );
 			y2milestone( "stage %d ret %d", *pt, ret );
+			if( ret==0 && save_iter )
+			    cil.push_back( i );
 			}
 		    while( ret==0 && i != p.begin() );
+		    }
+		for( list<ContIterator>::iterator c=cil.begin(); c!=cil.end(); ++c )
+		    {
+		    int r = removeContainer( &(**c) );
+		    if( ret==0 )
+			ret = r;
 		    }
 		}
 	    else

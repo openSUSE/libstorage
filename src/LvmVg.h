@@ -31,7 +31,8 @@ class LvmVg : public Container
 
 	int setPeSize( long long unsigned );
 	int commitChanges( CommitStage stage );
-	int checkResize( Volume* v, unsigned long long newSize ) const;
+	int checkResize( Volume* v, unsigned long long& newSize, 
+	                 bool doit, bool& done );
 	static void activate( bool val=true );
 	static void getVgs( list<string>& l );
 	
@@ -115,15 +116,28 @@ class LvmVg : public Container
 	virtual void print( ostream& s ) const { s << *this; }
 	string createVgText( bool doing ) const;
 	string removeVgText( bool doing ) const;
+	string extendVgText( bool doing, const string& dev ) const;
+	string reduceVgText( bool doing, const string& dev ) const;
 	unsigned long leByLvRemove() const;
+	int tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
+	                list<Pv>& plrem, unsigned long& removed_pe );
+	static int addLvPeDistribution( unsigned long le, unsigned stripe,
+					list<Pv>& pl, list<Pv>& pladd, 
+					map<string,unsigned long>& pe_map );
+	static int remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
+					list<Pv>& pl, list<Pv>& pladd );
+	bool checkConsistency() const;
 
 	int doCreateVg();
 	int doRemoveVg();
+	int doExtendVg();
+	int doReduceVg();
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );
 	int doCreatePv( const string& device );
 	string metaString();
+	string instSysString();
 
 	void logData( const string& Dir );
 	void addLv( unsigned long& le, string& name, string& uuid,

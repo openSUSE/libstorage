@@ -20,20 +20,26 @@ class LvmLv : public Volume
 	virtual ~LvmLv();
 	unsigned long getLe() const { return num_le; }
 	void setLe( unsigned long le );
+	void calcSize();
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
 	void setAlloc( const string& a ) { allocation=a; }
 	const map<string,unsigned long>& getPeMap() const { return( pe_map ); }
 	void setPeMap( const map<string,unsigned long>& m ) { pe_map = m; }
+	unsigned long usingPe( const string& dev ) const;
 	void getTableInfo();
+	bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }
 	friend ostream& operator<< (ostream& s, const LvmLv &p );
 	virtual void print( ostream& s ) const { s << *this; }
+	string removeText( bool doing ) const;
+	string createText( bool doing ) const;
+	string formatText( bool doing ) const;
+	string resizeText( bool doing ) const;
 
     protected:
 	void init();
 	const LvmVg* const vg() const;
-	void calcSize();
 
 	string vol_uuid;
 	string status;
