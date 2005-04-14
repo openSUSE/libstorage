@@ -103,7 +103,7 @@ crypt1 ()
 
     bool val = false;
 
-    cout << s->setCryptPassword ("/dev/hda1", "hello") << '\n';	// FAILS
+    cout << s->setCryptPassword ("/dev/hda1", "test") << '\n';	// FAILS
 
     cout << s->setCrypt ("/dev/hda1", true) << '\n'; // FAILS
 
