@@ -17,3 +17,5 @@ using namespace std;
 using namespace storage;
 
 %template(dequestring) deque<string>;
+%template(dequepartitioninfo) deque<PartitionInfo>;
+

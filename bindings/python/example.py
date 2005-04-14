@@ -10,3 +10,11 @@ c.getDisks (disks)
 for disk in disks:
 
     print disk
+
+    partitioninfos = Storage.dequepartitioninfo()
+    c.getPartitions (disk, partitioninfos)
+
+    for partitioninfo in partitioninfos:
+
+        print partitioninfo.name
+        print partitioninfo.cylStart,partitioninfo.cylSize
