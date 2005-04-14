@@ -1416,16 +1416,14 @@ int Disk::doRemove( Volume* v )
     return( ret );
     }
 
-int Disk::checkResize( Volume* v, unsigned long long& newSize,
-                       bool doit, bool& done )
+int Disk::resizeVolume( Volume* v, unsigned long long newSize )
     {
-    done = false;
     int ret = 0;
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else if( newSize<v->sizeK() )
+    else 
 	{
 	Partition * p = dynamic_cast<Partition *>(v);
 	unsigned new_cyl_cnt = kbToCylinder(newSize);
@@ -1433,67 +1431,47 @@ int Disk::checkResize( Volume* v, unsigned long long& newSize,
 	if( p!=NULL )
 	    {
 	    if( new_cyl_cnt!=p->cylSize() )
+		ret = v->canResize( newSize );
+	    if( ret==0 && new_cyl_cnt<p->cylSize() )
 		{
-		if( v->created() && doit )
+		if( v->created() )
+		    p->changeRegion( p->cylStart(), new_cyl_cnt, newSize );
+		else
+		    v->setResizedSize( newSize );
+		}
+	    if( ret==0 && new_cyl_cnt>p->cylSize() )
+		{
+		unsigned long increase = new_cyl_cnt - p->cylSize();
+		PartPair pp = partPair( isExtended );
+		unsigned long start = p->cylEnd()+1;
+		unsigned long end = cylinders();
+		if( p->type()==LOGICAL && !pp.empty() )
+		    end = pp.begin()->cylEnd()+1;
+		pp = partPair( notDeleted );
+		PartIter i = pp.begin();
+		while( i != pp.end() )
 		    {
-		    p->changeRegion( p->cylStart(), new_cyl_cnt, 
-				     cylinderToKb(new_cyl_cnt));
-		    done = true;
+		    if( i->type()==p->type() && i->cylStart()>=start && 
+			i->cylStart()<end )
+			end = i->cylStart();
+		    ++i;
 		    }
-		}
-	    else if( doit )
-		{
-		done = true;
-		}
-	    }
-	else
-	    {
-	    ret = DISK_CHECK_RESIZE_INVALID_VOLUME;
-	    }
-	}
-    else if( newSize>v->sizeK() )
-	{
-	Partition * p = dynamic_cast<Partition *>(v);
-	unsigned long long increase = newSize - v->sizeK();
-	if( p!=NULL )
-	    {
-	    PartPair pp = partPair( isExtended );
-	    unsigned long start = p->cylEnd()+1;
-	    unsigned long end = cylinders();
-	    if( p->type()==LOGICAL && !pp.empty() )
-		end = pp.begin()->cylEnd()+1;
-	    pp = partPair( notDeleted );
-	    PartIter i = pp.begin();
-	    while( i != pp.end() )
-		{
-		if( i->type()==p->type() && i->cylStart()>=start && 
-		    i->cylStart()<end )
-		    end = i->cylStart();
-		++i;
-		}
-	    unsigned long free = 0;
-	    if( end>start )
-		free = end-start;
-	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lld", 
-	                 free, cylinderToKb(free), increase );
-	    if( cylinderToKb(free) < increase )
-		ret = DISK_RESIZE_NO_SPACE;
-	    else 
-		{
-		unsigned new_cyl_cnt = kbToCylinder(newSize);
-		newSize = cylinderToKb(new_cyl_cnt);
-		if( new_cyl_cnt!=p->cylSize() )
+		unsigned long free = 0;
+		if( end>start )
+		    free = end-start;
+		y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lu", 
+			     free, cylinderToKb(free), increase );
+		if( cylinderToKb(free) < increase )
+		    ret = DISK_RESIZE_NO_SPACE;
+		else 
 		    {
-		    if( doit && v->created() )
+		    if( v->created() )
 			{
 			p->changeRegion( p->cylStart(), new_cyl_cnt, 
-					 cylinderToKb(new_cyl_cnt));
-			done = true;
+					 newSize );
 			}
-		    }
-		else if( doit )
-		    {
-		    done = true;
+		    else
+			v->setResizedSize( newSize );
 		    }
 		}
 	    }
@@ -1501,10 +1479,6 @@ int Disk::checkResize( Volume* v, unsigned long long& newSize,
 	    {
 	    ret = DISK_CHECK_RESIZE_INVALID_VOLUME;
 	    }
-	}
-    else if( doit )
-	{
-	done = true;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

@@ -131,7 +131,7 @@ class Container
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
-	virtual int checkResize( Volume* v, unsigned long long& newSize, bool doit, bool &done );
+	virtual int resizeVolume( Volume* v, unsigned long long newSize );
 	static CType const staticType() { return CUNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 

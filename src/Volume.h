@@ -75,6 +75,7 @@ class Volume
 	void setMajorMinor( unsigned long Major, unsigned long Minor )
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
+	void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
 
         bool operator== ( const Volume& rhs ) const;
         bool operator!= ( const Volume& rhs ) const
@@ -91,7 +92,7 @@ class Volume
 	int prepareRemove();
 	int umount( const string& mp="" );
 	int mount( const string& mp="" );
-	int resize( unsigned long long newSizeMb );
+	int canResize( unsigned long long newSizeK ) const;
 	int doMount();
 	int doFormat();
 	int doLosetup();

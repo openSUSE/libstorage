@@ -919,7 +919,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	ret = vol->resize( newSizeMb );
+	ret = cont->resizeVolume( &(*vol), newSizeMb );
 	}
     else
 	{

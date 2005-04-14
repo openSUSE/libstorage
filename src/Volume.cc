@@ -709,33 +709,24 @@ int Volume::doMount()
     return( ret );
     }
 
-int Volume::resize( unsigned long long newSizeMb )
+int Volume::canResize( unsigned long long newSizeK ) const
     {
     int ret=0;
-    y2milestone( "val:%llu", newSizeMb );
-    unsigned long long new_size = newSizeMb*1024;
+    y2milestone( "val:%llu", newSizeK );
     if( uby.t != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
-    else if( new_size != size_k )
+    else 
 	{
 	FsCapabilities caps;
 	if( !format && 
 	    (!cont->getStorage()->getFsCapabilities( fs, caps ) || 
-	     (new_size < size_k && !caps.isReduceable) ||
-	     (new_size > size_k && !caps.isExtendable)) )
+	     (newSizeK < size_k && !caps.isReduceable) ||
+	     (newSizeK > size_k && !caps.isExtendable)) )
 	    {
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
-	bool done=false;
-	if( ret==0 )
-	    {
-	    Container* c = const_cast<Container*>(cont);
-	    ret = c->checkResize( this, new_size, true, done );
-	    }
-	if( !done && ret==0 )
-	    size_k = new_size;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

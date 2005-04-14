@@ -178,10 +178,9 @@ int Container::doResize( Volume * v )
     return( CONTAINER_INTERNAL_ERROR );
     }
 
-int Container::checkResize( Volume* v, unsigned long long&, bool, bool& done )
+int Container::resizeVolume( Volume * v, unsigned long long )
     {
-    done = false;
-    return( VOLUME_RESIZE_UNSUPPORTED_BY_VOLUME );
+    return( VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER );
     }
 
 bool Container::removeFromList( Volume* e )

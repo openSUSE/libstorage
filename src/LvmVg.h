@@ -31,8 +31,7 @@ class LvmVg : public Container
 
 	int setPeSize( long long unsigned );
 	int commitChanges( CommitStage stage );
-	int checkResize( Volume* v, unsigned long long& newSize, 
-	                 bool doit, bool& done );
+	int resizeVolume( Volume* v, unsigned long long newSize );
 	static void activate( bool val=true );
 	static void getVgs( list<string>& l );
 	

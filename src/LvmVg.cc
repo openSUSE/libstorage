@@ -297,7 +297,8 @@ LvmVg::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	if( !added_pv )
 	    plrem.push_back( cur_pv );
 	}
-    y2milestone( "ret:%d removed_pe:%lu dev:%s", ret, removed_pe, cur_pv.device.c_str() );
+    y2milestone( "ret:%d removed_pe:%lu dev:%s", ret, removed_pe, 
+                 cur_pv.device.c_str() );
     return( ret );
     }
 
@@ -341,6 +342,61 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	free_pe -= num_le;
 	}
     y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
+int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
+    {
+    int ret = 0;
+    if( readonly() )
+	{
+	ret = LVM_CHANGE_READONLY;
+	}
+    else 
+	{
+	LvmLv * l = dynamic_cast<LvmLv *>(v);
+	unsigned long new_le = (newSize+pe_size-1)/pe_size;
+	newSize = new_le*pe_size;
+	if( l!=NULL )
+	    {
+	    if( new_le!=l->getLe() )
+		{
+		ret = v->canResize( newSize );
+		}
+	    if( ret==0 && new_le!=l->getLe() )
+		{
+		map<string,unsigned long> pe_map = l->getPeMap();
+		list<Pv> pl = pv;
+		list<Pv> pladd = pv_add;
+		if( new_le<l->getLe() )
+		    {
+		    ret = remLvPeDistribution( l->getLe()-new_le, pe_map,
+		                               pl, pladd );
+		    }
+		else
+		    {
+		    ret = addLvPeDistribution( new_le-l->getLe(), l->stripes(),
+		                               pl, pladd, pe_map );
+		    }
+		if( ret==0 )
+		    {
+		    pv = pl;
+		    pv_add = pladd;
+		    l->setLe( new_le );
+		    l->setPeMap( pe_map );
+		    if( v->created() )
+			l->calcSize();
+		    else
+			v->setResizedSize( newSize );
+		    }
+		}
+	    }
+	else
+	    {
+	    ret = LVM_CHECK_RESIZE_INVALID_VOLUME;
+	    }
+	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -959,61 +1015,6 @@ LvmVg::checkConsistency() const
 	y2warning( "used PE is %lu should be %lu", sum, num_pe-free_pe );
 	ret = false;
 	}
-    return( ret );
-    }
-
-int
-LvmVg::checkResize( Volume* v, unsigned long long& newSizeK,
-		    bool doit, bool& done )
-    {
-    done = false;
-    int ret = 0;
-    if( readonly() )
-	{
-	ret = LVM_CHANGE_READONLY;
-	}
-    else 
-	{
-	LvmLv * l = dynamic_cast<LvmLv *>(v);
-	if( l!=NULL )
-	    {
-	    unsigned long new_le = (newSizeK+pe_size-1)/pe_size;
-	    newSizeK = new_le*pe_size;
-	    if( new_le!=l->getLe() )
-		{
-		map<string,unsigned long> pe_map = l->getPeMap();
-		if( new_le<l->getLe() )
-		    {
-		    ret = remLvPeDistribution( l->getLe()-new_le, pe_map,
-		                               pv, pv_add );
-		    }
-		else
-		    {
-		    ret = addLvPeDistribution( new_le-l->getLe(), l->stripes(),
-		                               pv, pv_add, pe_map );
-		    }
-		if( ret==0 )
-		    {
-		    l->setLe( new_le );
-		    l->setPeMap( pe_map );
-		    if( v->created() && doit )
-			{
-			l->calcSize();
-			done = true;
-			}
-		    }
-		}
-	    else if( doit )
-		{
-		done = true;
-		}
-	    }
-	else
-	    {
-	    ret = LVM_CHECK_RESIZE_INVALID_VOLUME;
-	    }
-	}
-    y2milestone( "ret:%d", ret );
     return( ret );
     }
 

@@ -51,8 +51,7 @@ class Disk : public Container
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( PartitionType type=PRIMARY );
 	int commitChanges( CommitStage stage );
-	int checkResize( Volume* v, unsigned long long& newSize, 
-	                 bool doit, bool &done );
+	int resizeVolume( Volume* v, unsigned long long newSize );
 
 	bool hasExtended() const;
 	string setDiskLabelText( bool doing=true ) const;
