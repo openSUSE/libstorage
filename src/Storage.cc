@@ -190,7 +190,11 @@ Storage::detectLvmVgs()
 	    LvmVg::activate( true );
 	LvmVg::getVgs( l );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	    addToList( new LvmVg( this, *i ) );
+	    {
+	    LvmVg * v = new LvmVg( this, *i );
+	    addToList( v );
+	    v->checkConsistency();
+	    }
 	if( instsys() )
 	    LvmVg::activate( false );
 	}
