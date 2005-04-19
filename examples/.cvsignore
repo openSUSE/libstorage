@@ -10,4 +10,5 @@ Makefile.in
 TestDisk
 TestDiskLog
 TestStorage
+TestProbing
 TestLvm
