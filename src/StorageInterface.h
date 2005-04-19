@@ -80,7 +80,7 @@ using std::deque;
 
 namespace storage
 {
-    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP };
+    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL };
 
@@ -166,6 +166,8 @@ namespace storage
 	DISK_RESIZE_NO_SPACE = -1025,
 	DISK_CHECK_RESIZE_INVALID_VOLUME = -1026,
 	DISK_REMOVE_PARTITION_CREATE_NOT_FOUND = -1027,
+	DISK_COMMIT_NOTHING_TODO = -1028,
+	DISK_CREATE_PARTITION_NO_SPACE = -1029,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -240,6 +242,7 @@ namespace storage
 	LVM_RESIZE_LV_INVALID_VOLUME = -4028,
 	LVM_CHANGE_READONLY = -4029,
 	LVM_CHECK_RESIZE_INVALID_VOLUME = -4030,
+	LVM_COMMIT_NOTHING_TODO = -4031,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -248,6 +251,7 @@ namespace storage
 	FSTAB_ADD_ENTRY_FOUND = -5004,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
+	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
 
 
     };
@@ -314,7 +318,7 @@ namespace storage
 				     string& device ) = 0;
 
 	/**
-	 * Create a new partition. Units given in Megabytes.
+	 * Create a new partition. Units given in Kilobytes.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
@@ -329,6 +333,20 @@ namespace storage
 				       unsigned long long start,
 				       unsigned long long size,
 				       string& device ) = 0;
+
+	/**
+	 * Create a new partition of any type anywhere on the disk. Units given in Kilobytes.
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param size  size of partition in kilobytes
+	 * @param device is set to the device name of the new partition 
+	 * The name is returned instead of the number since creating the name from the
+	 * number is not straight-forward.
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createPartitionAny( const string& disk, 
+					unsigned long long size,
+					string& device ) = 0;
 
 	/**
 	 * Compute number of kilobytes of a given number of disk cylinders

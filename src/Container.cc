@@ -37,83 +37,101 @@ static bool stageFormat( const Volume& v )
 static bool stageMount( const Volume& v ) 
     { return( v.needRemount()||v.needFstabUpdate()); }
 
-int Container::commitChanges( CommitStage stage )
+int Container::getToCommit( CommitStage stage, list<Container*>& col, 
+                            list<Volume*>& vol )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
     int ret = 0;
+    unsigned long oco = col.size(); 
+    unsigned long ovo = vol.size(); 
     switch( stage )
 	{
 	case DECREASE:
 	    {
 	    VolPair p = volPair( stageDecrease );
-	    if( !deleted() && !p.empty() )
-		{
-		list<VolIterator> l;
-		for( VolIterator i=p.begin(); i!=p.end(); ++i )
-		    l.push_front( i );
-		list<VolIterator>::const_iterator i=l.begin();
-		while( ret==0 && i!=l.end() )
-		    {
-		    if( (*i)->deleted() )
-			ret = doRemove( &(**i) );
-		    else
-			ret = doResize( &(**i) );
-		    ++i;
-		    }
-		}
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		vol.push_back( &(*i) );
+	    if( deleted() )
+		col.push_back( this );
 	    }
 	    break;
 	case INCREASE:
 	    {
 	    VolPair p = volPair( stageCreate );
-	    VolIterator i=p.begin();
-	    while( ret==0 && i!=p.end() )
-		{
-		if( i->created() )
-		    ret = doCreate( &(*i) );
-		else
-		    ret = doResize( &(*i) );
-		++i;
-		}
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		vol.push_back( &(*i) );
+	    if( created() )
+		col.push_back( this );
 	    }
-	    break;
 	case FORMAT:
 	    {
 	    VolPair p = volPair( stageFormat );
-	    VolIterator i=p.begin();
-	    while( ret==0 && i!=p.end() )
-		{
-		if( i->needLosetup() )
-		    ret = i->doLosetup();
-		if( ret==0 && i->getFormat() )
-		    ret = i->doFormat();
-		if( ret==0 && i->needLabel() )
-		    ret = i->doSetLabel();
-		++i;
-		}
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		vol.push_back( &(*i) );
 	    }
 	    break;
 	case MOUNT:
 	    {
 	    VolPair p = volPair( stageMount );
-	    VolIterator i=p.begin();
-	    while( ret==0 && i!=p.end() )
-		{
-		if( i->needRemount() )
-		    ret = i->doMount();
-		if( ret==0 && i->needFstabUpdate() )
-		    {
-		    ret = i->doFstabUpdate();
-		    if( ret==0 )
-			i->fstabUpdateDone();
-		    }
-		++i;
-		}
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		vol.push_back( &(*i) );
 	    }
+	    break;
+	default:
+	    break;
+	}
+    if( col.size()!=oco || vol.size()!=ovo )
+	y2milestone( "ret:%d col:%d vol:%d", ret, col.size(), vol.size());
+    return( ret );
+    }
+
+int Container::commitChanges( CommitStage stage, Volume* vol )
+    {
+    y2milestone( "name:%s stage %d vol:%s", name().c_str(), stage,
+                 vol->name().c_str() );
+    int ret = 0;
+    switch( stage )
+	{
+	case DECREASE:
+	    if( vol->deleted() )
+		ret = doRemove( vol );
+	    else
+		ret = doResize( vol );
+	    break;
+	case INCREASE:
+	    if( vol->created() )
+		ret = doCreate( vol );
+	    else
+		ret = doResize( vol );
+	    break;
+	case FORMAT:
+	    if( vol->needLosetup() )
+		ret = vol->doLosetup();
+	    if( ret==0 && vol->getFormat() )
+		ret = vol->doFormat();
+	    if( ret==0 && vol->needLabel() )
+		ret = vol->doSetLabel();
+	    break;
+	case MOUNT:
+	    if( vol->needRemount() )
+		ret = vol->doMount();
+	    if( ret==0 && vol->needFstabUpdate() )
+		{
+		ret = vol->doFstabUpdate();
+		if( ret==0 )
+		    vol->fstabUpdateDone();
+		}
 	    break;
 	default:
 	    ret = VOLUME_COMMIT_UNKNOWN_STAGE;
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Container::commitChanges( CommitStage stage )
+    {
+    y2milestone( "name %s stage %d", name().c_str(), stage );
+    int ret = CONTAINER_INVALID_VIRTUAL_CALL;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -145,7 +163,7 @@ int Container::doCreate( Volume * v )
     { 
     y2warning( "invalid doCreate Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
-    return( CONTAINER_INTERNAL_ERROR );
+    return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
 string Container::removeText( bool doing ) const
@@ -168,14 +186,14 @@ int Container::doRemove( Volume * v )
     { 
     y2warning( "invalid doRemove Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
-    return( CONTAINER_INTERNAL_ERROR );
+    return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
 int Container::doResize( Volume * v ) 
     { 
     y2warning( "invalid doResize Container:%s name:%s",
 	       type_names[typ].c_str(), name().c_str() ); 
-    return( CONTAINER_INTERNAL_ERROR );
+    return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
 int Container::resizeVolume( Volume * v, unsigned long long )

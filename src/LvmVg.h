@@ -30,7 +30,10 @@ class LvmVg : public Container
 	int removeLv( const string& name );
 
 	int setPeSize( long long unsigned );
+	void getCommitActions( list<commitAction*>& l ) const;
 	int commitChanges( CommitStage stage );
+	int getToCommit( CommitStage stage, list<Container*>& col,
+			 list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	static void activate( bool val=true );
 	static void getVgs( list<string>& l );
@@ -108,10 +111,9 @@ class LvmVg : public Container
 
 	LvmVg( Storage * const s, const string& File, int );
 
-	void getVgData( const string& name );
+	void getVgData( const string& name, bool exists=true );
 	void init();
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
-	void getCommitActions( list<commitAction*>& l ) const;
 	virtual void print( ostream& s ) const { s << *this; }
 	string createVgText( bool doing ) const;
 	string removeVgText( bool doing ) const;

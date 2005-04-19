@@ -43,7 +43,11 @@ class Container
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
 
+	virtual void getCommitActions( list<commitAction*>& l ) const;
+	virtual int getToCommit( CommitStage stage, list<Container*>& col,
+	                         list<Volume*>& vol );
 	virtual int commitChanges( CommitStage stage );
+	virtual int commitChanges( CommitStage stage, Volume* vol );
 
 // iterators over volumes of a container
     protected:
@@ -143,7 +147,6 @@ class Container
 	typedef VIter PlainIterator;
 	PlainIterator begin() { return vols.begin(); }
 	PlainIterator end() { return vols.end(); }
-	virtual void getCommitActions( list<commitAction*>& l ) const;
 
 	virtual void print( ostream& s ) const { s << *this; }
 	void addToList( Volume* e )

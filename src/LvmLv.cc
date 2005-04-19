@@ -36,6 +36,7 @@ LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
     setLe( le );
     calcSize();
     stripe = str;
+    fs = detected_fs = FSNONE;
     if( majorNr()>0 )
 	{
 	alt_names.push_back( "/dev/dm-" + decString(minorNr()) );
@@ -73,7 +74,7 @@ LvmLv::getTableInfo()
 	if( type=="linear" )
 	    {
 	    extractNthWord( 1, line ) >> le;
-	    le *=2;
+	    le /= 2;
 	    le += pesize-1;
 	    le /= pesize;
 	    majmin = extractNthWord( 3, line );
@@ -94,7 +95,7 @@ LvmLv::getTableInfo()
 	    unsigned str;
 	    extractNthWord( 1, line ) >> le;
 	    extractNthWord( 3, line ) >> str;
-	    le *=2;
+	    le /= 2;
 	    le += pesize-1;
 	    le /= pesize;
 	    if( str<2 )
@@ -102,9 +103,9 @@ LvmLv::getTableInfo()
 	    else
 		{
 		le = (le+str-1)/str;
-		for( unsigned j=0; j<str; i++ )
+		for( unsigned j=0; j<str; j++ )
 		    {
-		    majmin = extractNthWord( 5+j*str*2, line );
+		    majmin = extractNthWord( 5+j*2, line );
 		    dev = cont->getStorage()->deviceByNumber( majmin );
 		    if( dev.size()>0 )
 			{
@@ -145,7 +146,7 @@ LvmLv::checkConsistency() const
          mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
     if( sum != num_le )
-	y2warning( "sum:%lu num:%lu", sum, num_le );
+	y2warning( "lv:%s sum:%lu num:%lu", dev.c_str(), sum, num_le );
     else
 	ret = true;
     return( ret );
@@ -159,6 +160,9 @@ LvmLv::setLe( unsigned long le )
 
 void LvmLv::init()
     {
+    string::size_type pos = nm.rfind( "/" );
+    if( pos != string::npos )
+	nm.erase( 0, pos+1 );
     num_le = 0;
     stripe = 1;
     }

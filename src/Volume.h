@@ -24,6 +24,7 @@ class Volume
 	const string& device() const { return dev; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const Container* getContainer() const { return cont; }
+	CType cType() const;
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
@@ -69,6 +70,7 @@ class Volume
 	const list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
+	unsigned long long origSizeK() const { return orig_size_k; }
 	const string& name() const { return nm; }
 	unsigned long minorNr() const { return mnr; }
 	unsigned long majorNr() const { return mjr; }
@@ -188,7 +190,7 @@ class Volume
 	unsigned long mjr;
 	usedBy uby;
 
-	static string fs_names[storage::SWAP+1];
+	static string fs_names[storage::FSNONE+1];
 	static string mb_names[storage::MOUNTBY_LABEL+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
     };

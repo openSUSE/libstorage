@@ -26,6 +26,7 @@ class SystemCmd
 	int executeBackground( const string& Command_Cv );
 	void setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                       void * Par_p );
+	void logOutput();
 	void setOutputProcessor( OutputProcessor * proc )
 	    { output_proc = proc; }
 	int select( string Reg_Cv, bool Invert_bv=false,

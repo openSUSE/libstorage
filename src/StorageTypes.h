@@ -12,12 +12,14 @@ typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 
 struct commitAction
     {
-    commitAction( CommitStage s, CType t, const string& d, bool destr=false ) 
-	{ stage=s; type=t; descr=d; destructive=destr; }
+    commitAction( CommitStage s, CType t, const string& d, bool destr=false,
+                  bool cont=false ) 
+	{ stage=s; type=t; descr=d; destructive=destr; container=cont; }
     CommitStage stage;
     CType type;
     string descr;
     bool destructive;
+    bool container;
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
     bool operator<( const commitAction& rhs ) const
@@ -25,9 +27,19 @@ struct commitAction
 	if( stage==rhs.stage )
 	    {
 	    if( stage==DECREASE )
-		return( type>rhs.type );
+		{
+		if( type!=rhs.type )
+		    return( type>rhs.type );
+		else
+		    return( container<rhs.container );
+		}
 	    else
-		return( type<rhs.type );
+		{
+		if( type!=rhs.type )
+		    return( type<rhs.type );
+		else
+		    return( container>rhs.container );
+		}
 	    }
 	else
 	    return( stage<rhs.stage );

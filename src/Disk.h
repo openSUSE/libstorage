@@ -46,13 +46,19 @@ class Disk : public Container
 	int createPartition( PartitionType type, long unsigned start,
 	                     long unsigned len, string& device,
 			     bool checkRelaxed=false );
+	int createPartition( long unsigned len, string& device,
+			     bool checkRelaxed=false );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( PartitionType type=PRIMARY );
+	void getCommitActions( list<commitAction*>& l ) const;
+	int getToCommit( CommitStage stage, list<Container*>& col,
+			 list<Volume*>& vol );
 	int commitChanges( CommitStage stage );
+	int commitChanges( CommitStage stage, Volume* vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
-
+	void getUnusedSpace( list<Region>& free );
 	bool hasExtended() const;
 	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;
@@ -130,7 +136,6 @@ class Disk : public Container
 	virtual void print( ostream& s ) const { s << *this; }
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
-	void getCommitActions( list<commitAction*>& l ) const;
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );

@@ -340,6 +340,19 @@ void removeLastIf (string& Text_Cr, char Char_cv)
     Text_Cr.erase(Text_Cr.length() - 1);
 }
 
+string normalizeDevice( const string& dev )
+    {
+    string ret( dev );
+    normalizeDevice( ret );
+    return( ret );
+    }
+
+void normalizeDevice( string& dev )
+    {
+    if( dev.find( "/dev/" )!=0 )
+	dev = "/dev/" + dev;
+    }
+
 void delay(int Microsec_iv)
 {
   timeval Timeout_ri;

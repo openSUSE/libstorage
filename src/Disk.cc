@@ -402,7 +402,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     if( nr>0 )
       {
       start = kbToCylinder( (unsigned long long)(StartM*1024)+Add );
-      csize = kbToCylinder( (unsigned long long)(EndM*1024)+Add ) - start;
+      csize = kbToCylinder( (unsigned long long)(EndM*1024)+Add ) - start + 1;
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;
@@ -829,6 +829,77 @@ static bool notDeletedLog( const Partition& p )
     return( !p.deleted() && p.type()==LOGICAL );
     }
 
+static bool notDeletedNotLog( const Partition& p )
+    {
+    return( !p.deleted() && p.type()!=LOGICAL );
+    }
+
+void Disk::getUnusedSpace( list<Region>& free )
+    {
+    free.clear();
+    PartPair p = partPair( notDeletedNotLog );
+    unsigned long start = 1;
+    for( PartIter i=p.begin(); i!=p.end(); ++i )
+	{
+	if( i->cylStart()>start )
+	    free.push_back( Region( start, i->cylStart()-start ));
+	start = i->cylEnd()+1;
+	}
+    if( cylinders()>start )
+	free.push_back( Region( start, cylinders()-start ));
+    PartPair ext = partPair(isExtended);
+    if( !ext.empty() )
+	{
+	p = partPair( notDeletedLog );
+	start = ext.begin()->cylStart();
+	for( PartIter i=p.begin(); i!=p.end(); ++i )
+	    {
+	    if( i->cylStart()>start )
+		free.push_back( Region( start, i->cylStart()-start ));
+	    start = i->cylEnd()+1;
+	    }
+	if( ext.begin()->cylEnd()>start )
+	    free.push_back( Region( start, ext.begin()->cylEnd()-start ));
+	}
+    }
+
+static bool regions_sort_size( const Region& rhs, const Region& lhs )
+    {
+    return( rhs.len()>lhs.len() );
+    }
+
+int Disk::createPartition( unsigned long cylLen, string& device,
+			   bool checkRelaxed )
+    {
+    y2milestone( "len %ld relaxed:%d", cylLen, checkRelaxed );
+    int ret = 0;
+    list<Region> free;
+    getUnusedSpace( free );
+    if( free.size()>0 )
+	{
+	free.sort( regions_sort_size );
+	list<Region>::iterator i = free.begin();
+	while( i!=free.end() && i->len()>=cylLen )
+	    ++i;
+	--i;
+	if( i->len()>=cylLen )
+	    {
+	    PartitionType t = PRIMARY;
+	    PartPair ext = partPair(isExtended);
+	    if( !ext.empty() && ext.begin()->isAreaInside( *i ) )
+		t = LOGICAL;
+	    ret = createPartition( t, i->start(), cylLen, device, 
+	                           checkRelaxed );
+	    }
+	else
+	    ret = DISK_CREATE_PARTITION_NO_SPACE;
+	}
+    else
+	ret = DISK_CREATE_PARTITION_NO_SPACE;
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
 int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
@@ -906,7 +977,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
-    y2milestone( "ret %d", ret );
+    y2milestone( "ret %d device:%s", ret, ret==0?device.c_str():"" );
     return( ret );
     }
 
@@ -1041,37 +1112,52 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
     return( ret );
     }
 
+int Disk::getToCommit( CommitStage stage, list<Container*>& col,
+                       list<Volume*>& vol )
+    {
+    int ret = 0;
+    unsigned long oco = col.size(); 
+    unsigned long ovo = vol.size();
+    Container::getToCommit( stage, col, vol );
+    if( stage==INCREASE )
+	{
+	PartPair p = partPair( Partition::toChangeId );
+	for( PartIter i=p.begin(); i!=p.end(); ++i )
+	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		vol.push_back( &(*i) );
+	}
+    if( col.size()!=oco || vol.size()!=ovo )
+	y2milestone( "ret:%d col:%d vol:%d", ret, col.size(), vol.size());
+    return( ret );
+    }
+
+int Disk::commitChanges( CommitStage stage, Volume* vol )
+    {
+    y2milestone( "name %s stage %d", name().c_str(), stage );
+    int ret = Container::commitChanges( stage, vol );
+    if( ret==0 && stage==INCREASE )
+	{
+	Partition * p = dynamic_cast<Partition *>(vol);
+	if( p!=NULL )
+	    {
+	    if( Partition::toChangeId( *p ) )
+		ret = doSetType( p );
+	    }
+	else
+	    ret = DISK_SET_TYPE_INVALID_VOLUME;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Disk::commitChanges( CommitStage stage )
     {
     y2milestone( "name %s stage %d", name().c_str(), stage );
     int ret = 0;
-    switch( stage )
-	{
-	case DECREASE:
-	    if( deleted() )
-		{
-		ret = doCreateLabel();
-		}
-	    if( ret==0 )
-		ret = Container::commitChanges( stage );
-	    break;
-	case INCREASE:
-	    ret = Container::commitChanges( stage );
-	    if( ret==0 )
-		{
-		PartPair p = partPair( Partition::toChangeId );
-		PartIter i = p.begin();
-		while( ret==0 && i!=p.end() )
-		    {
-		    ret = doSetType( &(*i) );
-		    ++i;
-		    }
-		}
-	    break;
-	default:
-	    ret = Container::commitChanges( stage );
-	    break;
-	}
+    if( stage==DECREASE && deleted() )
+	ret = doCreateLabel();
+    else
+	ret = DISK_COMMIT_NOTHING_TODO;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1090,7 +1176,7 @@ void Disk::getCommitActions( list<commitAction*>& l ) const
 		++i;
 	    }
 	l.push_front( new commitAction( DECREASE, staticType(), 
-				        setDiskLabelText(false), true ));
+				        setDiskLabelText(false), true, true ));
 	}
     }
 
@@ -1502,7 +1588,7 @@ int Disk::doResize( Volume* v )
 	    if( ret==0 )
 		remount = true;
 	    }
-	if( ret==0 && !needExtend && p->getFs()!=VFAT )
+	if( ret==0 && !needExtend && p->getFs()!=VFAT && p->getFs()!=FSNONE )
 	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
@@ -1530,7 +1616,7 @@ int Disk::doResize( Volume* v )
 	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(), 
 	                 p->needShrink()||p->needExtend() );
 	    }
-	if( needExtend && p->getFs()!=VFAT )
+	if( needExtend && p->getFs()!=VFAT && p->getFs()!=FSNONE )
 	    ret = p->resizeFs();
 	if( ret==0 && remount )
 	    ret = p->mount();

@@ -67,6 +67,11 @@ void Volume::init()
 	num = 0;
     }
 
+CType Volume::cType() const
+    {
+    return( cont->type() );
+    }
+
 bool Volume::operator== ( const Volume& rhs ) const
     {
     return( (*cont)==(*rhs.cont) && 
@@ -93,9 +98,7 @@ bool Volume::getMajorMinor( const string& device,
 			    unsigned long& Major, unsigned long& Minor )
     {
     bool ret = false;
-    string dev( device );
-    if( dev.find( "/dev/" )!=0 )
-	dev = "/dev/"+ dev;
+    string dev = normalizeDevice( device );
     struct stat sbuf;
     if( stat( dev.c_str(), &sbuf )==0 )
 	{
@@ -271,6 +274,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		else if( i->second == "xfs" )
 		    {
 		    fs = XFS;
+		    }
+		else if( i->second == "(null)" )
+		    {
+		    fs = FSNONE;
 		    }
 		detected_fs = fs;
 		b << "fs:" << fs_names[fs];
@@ -720,7 +727,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
     else 
 	{
 	FsCapabilities caps;
-	if( !format && 
+	if( !format && fs!=FSNONE &&
 	    (!cont->getStorage()->getFsCapabilities( fs, caps ) || 
 	     (newSizeK < size_k && !caps.isReduceable) ||
 	     (newSizeK > size_k && !caps.isExtendable)) )
@@ -1614,7 +1621,7 @@ void Volume::getTestmodeData( const string& data )
     }
 
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
-                              "xfs", "jfs", "ntfs", "swap" };
+                              "xfs", "jfs", "ntfs", "swap", "none" };
 
 string Volume::mb_names[] = { "device", "uuid", "label" };
 

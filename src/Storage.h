@@ -150,6 +150,8 @@ class Storage : public StorageInterface
 	int createPartitionKb( const string& disk, PartitionType type,
 	                       unsigned long long start,
 			       unsigned long long sizek, string& device );
+	int createPartitionAny( const string& disk, unsigned long long size,
+				string& device );
 	unsigned long kbToCylinder( const string& disk, unsigned long long size );
 	unsigned long long cylinderToKb( const string& disk, unsigned long size );
 	int removePartition( const string& partition );
@@ -957,6 +959,11 @@ class Storage : public StorageInterface
 	bool findVolume( const string& device, VolIterator& v  );
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
+	void sortCommitLists( CommitStage stage, list<Container*>& co,  
+			      list<Volume*>& vl );
+	int performContChanges( CommitStage stage, const list<Container*>& co,
+	                        bool& cont_removed );
+
 
 	// protected internal member variables
 	bool readonly;

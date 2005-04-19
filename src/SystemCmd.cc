@@ -235,6 +235,8 @@ SystemCmd::doExecute( string Cmd )
     if( !system_cmd_testmode )
 	checkOutput();
     y2milestone( "system() Returns:%d", Ret_i );
+    if( Ret_i!=0 )
+	logOutput();
     timeMark( "After CheckOutput" );
     return( Ret_i );
     }
@@ -559,6 +561,12 @@ SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
     Lines_Cr.push_back( Text_Cv );
     }
 
+void
+SystemCmd::logOutput()
+    {
+    y2milestone( "stderr:%s", getString( IDX_STDERR )->c_str() );
+    y2milestone( "stdout:%s", getString( IDX_STDOUT )->c_str() );
+    }
 
 ///////////////////////////////////////////////////////////////////
 //

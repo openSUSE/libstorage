@@ -449,6 +449,36 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
     return( ret );
     }
 
+int
+Storage::createPartitionAny( const string& disk, unsigned long long sizeK, 
+                             string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "disk:%s sizeK:%lld", disk.c_str(), sizeK );
+    DiskIterator i = findDisk( disk );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
+	{
+	if( i->getUsedBy() != UB_NONE )
+	    ret = STORAGE_DISK_USED_BY;
+	else
+	    {
+	    unsigned long num_cyl = i->kbToCylinder( sizeK );
+	    ret = i->createPartition( num_cyl, device, true );
+	    }
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
 unsigned long long
 Storage::cylinderToKb( const string& disk, unsigned long size )
     {
@@ -964,7 +994,8 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	if( ret==0 )
 	    {
 	    list<string> d;
-	    copy( devs.begin(), devs.end(), d.begin() );
+	    back_insert_iterator<list<string> > inserter(d);
+	    copy( devs.begin(), devs.end(), inserter );
 	    ret = v->extendVg( d );
 	    }
 	if( ret==0 )
@@ -1030,7 +1061,8 @@ Storage::extendLvmVg( const string& name, const deque<string>& devs )
     else if( i != lvgEnd() )
 	{
 	list<string> d;
-	copy( devs.begin(), devs.end(), d.begin() );
+	back_insert_iterator<list<string> > inserter(d);
+	copy( devs.begin(), devs.end(), inserter );
 	ret = i->extendVg( d );
 	}
     else
@@ -1061,7 +1093,8 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
     else if( i != lvgEnd() )
 	{
 	list<string> d;
-	copy( devs.begin(), devs.end(), d.begin() );
+	back_insert_iterator<list<string> > inserter(d);
+	copy( devs.begin(), devs.end(), inserter );
 	ret = i->reduceVg( d );
 	}
     else
@@ -1192,6 +1225,94 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
     return( ret );
     }
 
+static bool sort_cont_up( const Container* rhs, const Container* lhs )
+    {
+    return( *rhs > *lhs );
+    }
+
+static bool sort_cont_down( const Container* rhs, const Container* lhs )
+    {
+    return( *rhs < *lhs );
+    }
+
+static bool sort_vol_normal( const Volume* rhs, const Volume* lhs )
+    {
+    return( *rhs < *lhs );
+    }
+
+static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
+    {
+    if( rhs->isMounted()==lhs->isMounted()  )
+	{
+        if( rhs->isMounted() )
+	    return( rhs->getMount()>lhs->getMount() );
+	else
+	    return( *rhs > *lhs ); 
+	}
+    else
+	return( rhs->isMounted() ); 
+    }
+
+static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
+    {
+    if( rhs->cType()==lhs->cType() )
+	{
+	if( rhs->cType()==LVM||rhs->cType()==EVMS )
+	    return( static_cast<const LvmLv*>(rhs)->stripes() >
+	            static_cast<const LvmLv*>(lhs)->stripes() );
+	else
+	    return( *rhs < *lhs );
+	}
+    else
+	return( *rhs < *lhs );
+    }
+
+static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
+    {
+    if( rhs->getMount()=="swap" )
+	return( false );
+    else if( lhs->getMount()=="swap" )
+	return( true );
+    else
+	return( rhs->getMount()<lhs->getMount() );
+    }
+
+void 
+Storage::sortCommitLists( CommitStage stage, list<Container*>& co, 
+                          list<Volume*>& vl )
+    {
+    co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
+    if( stage==DECREASE )
+	vl.sort( sort_vol_delete );
+    else if( stage==INCREASE )
+	vl.sort( sort_vol_create );
+    else if( stage==MOUNT )
+	vl.sort( sort_vol_mount );
+    else 
+	vl.sort( sort_vol_normal );
+    std::ostringstream b;
+    y2milestone( "stage %d", stage );
+    b << "sorted co <";
+    for( list<Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
+	{
+	if( i!=co.begin() )
+	    b << " ";
+	b << (*i)->name();
+	}
+    b << "> ";
+    y2milestone( "%s", b.str().c_str() );
+    b.str("");
+    b << "sorted vol <";
+    for( list<Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
+	{
+	if( i!=vl.begin() )
+	    b << " ";
+	b << (*i)->device();
+	}
+    b << "> ";
+    y2milestone( "%s", b.str().c_str() );
+    }
+
 int Storage::commit()
     {
     assertInit();
@@ -1204,45 +1325,72 @@ int Storage::commit()
 	CommitStage* pt = a;
 	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
 	    {
-	    if( *pt==DECREASE )
+	    bool cont_removed = false;
+	    list<Container*> colist;
+	    list<Volume*> vlist;
+	    ContIterator i = p.begin();
+	    while( ret==0 && i != p.end() )
 		{
-		list<ContIterator> cil;
-		ContIterator i = p.end();
-		if( p.begin()!=p.end() )
-		    {
-		    bool save_iter = false;
-		    do
-			{
-			if( i!=p.begin() )
-			    --i;
-			save_iter = i->deleted() && 
-			            (i->type()==LVM||i->type()==EVMS);
-			ret = i->commitChanges( *pt );
-			y2milestone( "stage %d ret %d", *pt, ret );
-			if( ret==0 && save_iter )
-			    cil.push_back( i );
-			}
-		    while( ret==0 && i != p.begin() );
-		    }
-		for( list<ContIterator>::iterator c=cil.begin(); c!=cil.end(); ++c )
-		    {
-		    int r = removeContainer( &(**c) );
-		    if( ret==0 )
-			ret = r;
-		    }
+		ret = i->getToCommit( *pt, colist, vlist );
+		++i;
 		}
-	    else
+	    sortCommitLists( *pt, colist, vlist );
+	    list<Volume*>::iterator vli = vlist.begin();
+	    list<Container*>::iterator cli;
+	    while( ret==0 && vli != vlist.end() )
 		{
-		ContIterator i = p.begin();
-		while( ret==0 && i != p.end() )
+		Container *co = const_cast<Container*>((*vli)->getContainer());
+		cli = find( colist.begin(), colist.end(), co );
+		if( *pt!=DECREASE && cli!=colist.end() )
 		    {
-		    ret = i->commitChanges( *pt );
-		    y2milestone( "stage %d ret %d", *pt, ret );
-		    ++i;
+		    ret = co->commitChanges( *pt );
+		    colist.erase( cli );
 		    }
+		if( ret==0 )
+		    ret = co->commitChanges( *pt, *vli );
+		++vli;
 		}
+	    if( ret==0 && colist.size()>0 )
+		ret = performContChanges( *pt, colist, cont_removed );
+	    if( cont_removed )
+		p = cPair();
 	    pt++;
 	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::performContChanges( CommitStage stage, const list<Container*>& co,
+                             bool& cont_removed )
+    {
+    y2milestone( "list size:%u", co.size() );
+    int ret = 0;
+    cont_removed = false;
+    list<Container*> cont_remove;
+    list<Container*>::const_iterator cli = co.begin();
+    while( ret==0 && cli != co.end() )
+	{
+	Container *co = *cli;
+	y2milestone( "before commit:%p", co );
+	ret = co->commitChanges( stage );
+	y2milestone( "after commit:%p", co );
+	if( stage==DECREASE && co->deleted() && 
+	    (co->type()==LVM||co->type()==EVMS) )
+	    cont_remove.push_back( co );
+	++cli;
+	}
+    if( cont_remove.size()>0 )
+	{
+	for( list<Container*>::iterator c=cont_remove.begin(); 
+	     c!=cont_remove.end(); ++c )
+	    {
+	    int r = removeContainer( *c );
+	    if( ret==0 )
+		ret = r;
+	    }
+	cont_removed = true;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -1437,9 +1585,7 @@ bool Storage::findVolume( const string& device, ContIterator& c,
 bool Storage::findVolume( const string& device, VolIterator& v )
     {
     assertInit();
-    string d( device );
-    if( d.find( "/dev/" )!=0 )
-	d = "/dev/" + d;
+    string d = normalizeDevice( device );
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
     const list<string>& al( v->altNames() );
@@ -1495,9 +1641,7 @@ void Storage::showInfoCb( const string& info )
 Storage::DiskIterator Storage::findDisk( const string& disk )
     {
     assertInit();
-    string d( disk );
-    if( d.find( "/dev/" )!=0 )
-	d = "/dev/" + d;
+    string d = normalizeDevice( disk );
     DiskPair p = dPair();
     DiskIterator ret=p.begin();
     while( ret != p.end() && ret->device()!=d )
@@ -1542,7 +1686,13 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
 	    ret = false;
 	}
     else
+	{
 	ret = v->getUsedBy()==UB_NONE && v->getMount().size()==0;
+	if( ret && v->cType()==DISK )
+	    {
+	    ret = static_cast<const Partition*>(&(*v))->type() != EXTENDED;
+	    }
+	}
     y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
     return( ret );
     }
