@@ -1447,7 +1447,7 @@ EncryptType Volume::toEncType( const string& val )
 
 FsType Volume::toFsType( const string& val )
     {
-    enum FsType ret = SWAP;
+    enum FsType ret = FSNONE;
     while( ret!=FSUNKNOWN && val!=fs_names[ret] )
 	{
 	ret = FsType(ret-1);

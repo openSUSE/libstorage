@@ -364,9 +364,11 @@ int EtcFstab::flush()
 			makeStringList( i->old, ol );
 			list<string>::const_iterator oi = ol.begin();
 			list<string>::const_iterator ni = nl.begin();
-			string::size_type pos = line.find_first_not_of( " \t" );
-			string::size_type posn = line.find_first_of( " \t", pos );
-			posn = line.find_first_not_of( " \t", posn );
+			string::size_type pos = 
+			    line.find_first_not_of( app_ws );
+			string::size_type posn = 
+			    line.find_first_of( app_ws, pos );
+			posn = line.find_first_not_of( app_ws, posn );
 			while( ni != nl.end() )
 			    {
 			    if( *ni != *oi )
@@ -390,8 +392,8 @@ int EtcFstab::flush()
 				    }
 				}
 			    pos = posn;
-			    posn = line.find_first_of( " \t", pos );
-			    posn = line.find_first_not_of( " \t", posn );
+			    posn = line.find_first_of( app_ws, pos );
+			    posn = line.find_first_not_of( app_ws, posn );
 			    ++oi;
 			    ++ni;
 			    }

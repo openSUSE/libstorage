@@ -212,9 +212,9 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   int I_ii=0;
   string Ret_Ci = Line_Cv;
 
-  if( Ret_Ci.find_first_of(" \t\n")==0 )
+  if( Ret_Ci.find_first_of(app_ws)==0 )
     {
-    pos = Ret_Ci.find_first_not_of(" \t\n");
+    pos = Ret_Ci.find_first_not_of(app_ws);
     if( pos != string::npos )
         {
         Ret_Ci.erase(0, pos );
@@ -226,7 +226,7 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
     }
   while( I_ii<Num_iv && Ret_Ci.length()>0 )
     {
-    pos = Ret_Ci.find_first_of(" \t\n");
+    pos = Ret_Ci.find_first_of(app_ws);
     if( pos != string::npos )
         {
         Ret_Ci.erase(0, pos );
@@ -235,9 +235,9 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
         {
         Ret_Ci.erase();
         }
-    if( Ret_Ci.find_first_of(" \t\n")==0 )
+    if( Ret_Ci.find_first_of(app_ws)==0 )
         {
-        pos = Ret_Ci.find_first_not_of(" \t\n");
+        pos = Ret_Ci.find_first_not_of(app_ws);
         if( pos != string::npos )
             {
             Ret_Ci.erase(0, pos );
@@ -249,7 +249,7 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
         }
     I_ii++;
     }
-  if (!GetRest_bi && (pos=Ret_Ci.find_first_of(" \t\n"))!=string::npos )
+  if (!GetRest_bi && (pos=Ret_Ci.find_first_of(app_ws))!=string::npos )
       Ret_Ci.erase(pos);
   return Ret_Ci;
   }
@@ -329,7 +329,7 @@ makeMap( const list<string>& l, const string& delim, const string& removeSur )
 void putNthWord(int Num_iv, string Word_Cv, string& Line_Cr)
 {
   string Last_Ci = extractNthWord(Num_iv, Line_Cr, true);
-  int Len_ii = Last_Ci.find_first_of(" \t");
+  int Len_ii = Last_Ci.find_first_of(app_ws);
   Line_Cr.replace(Line_Cr.length() - Last_Ci.length(), Len_ii, Word_Cv);
 }
 
@@ -390,4 +390,5 @@ bool runningFromSystem()
     }
 
 bool system_cmd_testmode = false;
+const string app_ws = " \t\n";
 

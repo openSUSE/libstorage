@@ -48,6 +48,7 @@ class Container
 	                         list<Volume*>& vol );
 	virtual int commitChanges( CommitStage stage );
 	virtual int commitChanges( CommitStage stage, Volume* vol );
+	unsigned numVolumes() const;
 
 // iterators over volumes of a container
     protected:
@@ -136,6 +137,7 @@ class Container
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
+	virtual int removeVolume( Volume* v );
 	static CType const staticType() { return CUNKNOWN; } 
 	friend ostream& operator<< (ostream& s, const Container &c );
 

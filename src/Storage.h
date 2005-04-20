@@ -8,13 +8,14 @@
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/Container.h"
-#include "y2storage/Disk.h"
 #include "y2storage/Volume.h"
+#include "y2storage/Disk.h"
 #include "y2storage/Partition.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
 #include "y2storage/Evms.h"
 #include "y2storage/EvmsVol.h"
+#include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 #include "y2storage/FilterIterator.h"
@@ -152,6 +153,8 @@ class Storage : public StorageInterface
 			       unsigned long long sizek, string& device );
 	int createPartitionAny( const string& disk, unsigned long long size,
 				string& device );
+	int createPartitionMax( const string& disk, PartitionType type,
+				string& device );
 	unsigned long kbToCylinder( const string& disk, unsigned long long size );
 	unsigned long long cylinderToKb( const string& disk, unsigned long size );
 	int removePartition( const string& partition );
@@ -172,6 +175,10 @@ class Storage : public StorageInterface
 	int setCrypt( const string& device, bool val );
 	int getCrypt( const string& device, bool& val );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
+	void setRecursiveRemoval( bool val=true );
+	bool getRecursiveRemoval() { return recursiveRemove; }
+	int removeVolume( const string& device );
+	int removeUsing( Volume* vol );
 
 	int createLvmVg( const string& name, unsigned long long peSizeK,
 	                 bool lvm1, const deque<string>& devs );
@@ -183,6 +190,14 @@ class Storage : public StorageInterface
 			 string& device );
 	int removeLvmLv( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
+
+	int removeEvmsContainer( const string& name );
+
+	int createMd( const string& name, MdType rtype,
+		      const deque<string>& devs );
+	int createMdAny( MdType rtype, const deque<string>& devs,
+			 string& device );
+	int removeMd( const string& name );
 
 	deque<string> getCommitActions( bool mark_destructive );
         int commit();
@@ -945,6 +960,7 @@ class Storage : public StorageInterface
 	// protected internal member functions
 	void initialize();
 	void detectDisks();
+	void detectMds();
 	void detectLvmVgs();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
@@ -956,7 +972,9 @@ class Storage : public StorageInterface
 	DiskIterator findDisk( const string& disk );
 	LvmVgIterator findLvmVg( const string& name );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+	bool haveMd( MdCo*& md );
 	bool findVolume( const string& device, VolIterator& v  );
+
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
 	void sortCommitLists( CommitStage stage, list<Container*>& co,  
@@ -972,6 +990,7 @@ class Storage : public StorageInterface
 	bool cache;
 	bool initialized;
 	bool autodetect;
+	bool recursiveRemove;
 	string testdir;
 	string tempdir;
 	string rootprefix;

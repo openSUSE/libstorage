@@ -778,7 +778,6 @@ bool Disk::hasExtended() const
     return( ext_possible && !partPair(isExtended).empty() );
     }
 
-
 unsigned Disk::availablePartNumber( PartitionType type )
     {
     y2milestone( "begin name:%s type %d", name().c_str(), type );
@@ -834,32 +833,38 @@ static bool notDeletedNotLog( const Partition& p )
     return( !p.deleted() && p.type()!=LOGICAL );
     }
 
-void Disk::getUnusedSpace( list<Region>& free )
+void Disk::getUnusedSpace( list<Region>& free, bool all, bool logical )
     {
     free.clear();
-    PartPair p = partPair( notDeletedNotLog );
-    unsigned long start = 1;
-    for( PartIter i=p.begin(); i!=p.end(); ++i )
+    if( all || !logical )
 	{
-	if( i->cylStart()>start )
-	    free.push_back( Region( start, i->cylStart()-start ));
-	start = i->cylEnd()+1;
-	}
-    if( cylinders()>start )
-	free.push_back( Region( start, cylinders()-start ));
-    PartPair ext = partPair(isExtended);
-    if( !ext.empty() )
-	{
-	p = partPair( notDeletedLog );
-	start = ext.begin()->cylStart();
+	PartPair p = partPair( notDeletedNotLog );
+	unsigned long start = 1;
 	for( PartIter i=p.begin(); i!=p.end(); ++i )
 	    {
 	    if( i->cylStart()>start )
 		free.push_back( Region( start, i->cylStart()-start ));
 	    start = i->cylEnd()+1;
 	    }
-	if( ext.begin()->cylEnd()>start )
-	    free.push_back( Region( start, ext.begin()->cylEnd()-start ));
+	if( cylinders()>start )
+	    free.push_back( Region( start, cylinders()-start ));
+	}
+    if( all || logical )
+	{
+	PartPair ext = partPair(isExtended);
+	if( !ext.empty() )
+	    {
+	    PartPair p = partPair( notDeletedLog );
+	    unsigned long start = ext.begin()->cylStart();
+	    for( PartIter i=p.begin(); i!=p.end(); ++i )
+		{
+		if( i->cylStart()>start )
+		    free.push_back( Region( start, i->cylStart()-start ));
+		start = i->cylEnd()+1;
+		}
+	    if( ext.begin()->cylEnd()>start )
+		free.push_back( Region( start, ext.begin()->cylEnd()-start ));
+	    }
 	}
     }
 
@@ -884,15 +889,63 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	--i;
 	if( i->len()>=cylLen )
 	    {
-	    PartitionType t = PRIMARY;
 	    PartPair ext = partPair(isExtended);
-	    if( !ext.empty() && ext.begin()->isAreaInside( *i ) )
-		t = LOGICAL;
-	    ret = createPartition( t, i->start(), cylLen, device, 
-	                           checkRelaxed );
+	    PartitionType t = PRIMARY;
+	    bool usable = false;
+	    do
+		{
+		t = PRIMARY;
+		if( !ext.empty() && ext.begin()->contains( *i ) )
+		    t = LOGICAL;
+		usable = availablePartNumber(t)>0;
+		if( !usable && i!=free.begin() )
+		    --i;
+		}
+	    while( i!=free.begin() && !usable );
+	    usable = availablePartNumber(t)>0;
+	    if( usable )
+		ret = createPartition( t, i->start(), cylLen, device, 
+				       checkRelaxed );
+	    else
+		ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
 	    }
 	else
 	    ret = DISK_CREATE_PARTITION_NO_SPACE;
+	}
+    else
+	ret = DISK_CREATE_PARTITION_NO_SPACE;
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::createPartition( PartitionType type, string& device )
+    {
+    y2milestone( "type %u", type );
+    int ret = 0;
+    list<Region> free;
+    getUnusedSpace( free, type==PTYPE_ANY, type==LOGICAL );
+    if( free.size()>0 )
+	{
+	free.sort( regions_sort_size );
+	list<Region>::iterator i = free.begin();
+	PartPair ext = partPair(isExtended);
+	PartitionType t = PRIMARY;
+	bool usable = false;
+	do
+	    {
+	    t = PRIMARY;
+	    if( !ext.empty() && ext.begin()->contains( *i ) )
+		t = LOGICAL;
+	    usable = availablePartNumber(t)>0;
+	    if( !usable && i!=free.begin() )
+		--i;
+	    }
+	while( i!=free.begin() && !usable );
+	usable = availablePartNumber(t)>0;
+	if( usable )
+	    ret = createPartition( t, i->start(), i->len(), device, true );
+	else
+	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
 	}
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
@@ -910,6 +963,15 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     int ret = 0;
     Region r( start, len );
     PartPair ext = partPair(isExtended);
+    PartitionType ptype=type;
+    if( ptype==PTYPE_ANY )
+	{
+	if( ext.empty() || !ext.begin()->contains( Region(start,1) ))
+	    ptype = PRIMARY;
+	else
+	    ptype = LOGICAL;
+	}
+
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
@@ -923,14 +985,14 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	{
 	ret = DISK_CREATE_PARTITION_ZERO_SIZE;
 	}
-    if( ret==0 && type==LOGICAL && ext.empty() )
+    if( ret==0 && ptype==LOGICAL && ext.empty() )
 	{
 	ret = DISK_CREATE_PARTITION_LOGICAL_NO_EXT;
 	}
     if( ret==0 )
 	{
-	PartPair p = (type!=LOGICAL) ? partPair( notDeleted )
-	                             : partPair( notDeletedLog );
+	PartPair p = (ptype!=LOGICAL) ? partPair( notDeleted )
+	                              : partPair( notDeletedLog );
 	PartIter i = p.begin();
 	while( i!=p.end() && !i->intersectArea( r, fuzz ))
 	    {
@@ -944,14 +1006,15 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
-    if( ret==0 && type==LOGICAL && !ext.begin()->isAreaInside( r, fuzz ))
+    if( ret==0 && ptype==LOGICAL && !ext.begin()->contains( r, fuzz ))
 	{
 	std::ostringstream b;
-	b << "r:" << r << " ext:" << ext.begin()->region() << "inter:" << ext.begin()->region().intersect(r);
+	b << "r:" << r << " ext:" << ext.begin()->region() 
+	  << "inter:" << ext.begin()->region().intersect(r);
 	y2warning( "outside ext %s", b.str().c_str() );
 	ret = DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
-    if( ret==0 && type==EXTENDED )
+    if( ret==0 && ptype==EXTENDED )
 	{
 	if( !ext_possible || !ext.empty())
 	    {
@@ -962,7 +1025,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     int number = 0;
     if( ret==0 )
 	{
-	number = availablePartNumber( type );
+	number = availablePartNumber( ptype );
 	if( number==0 )
 	    {
 	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
@@ -971,7 +1034,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     if( ret==0 )
 	{
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
-	                               len, type,
+	                               len, ptype,
 				       decString(cylinderToKb(start-1)) );
 	p->setCreated();
 	device = p->device();
@@ -998,6 +1061,10 @@ int Disk::removePartition( unsigned nr )
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
+	}
+    else if( i->getUsedBy() != UB_NONE )
+	{
+	ret = DISK_REMOVE_USED_BY;
 	}
     if( ret==0 )
 	{
@@ -1069,6 +1136,8 @@ int Disk::destroyPartitionTable( const string& new_label )
 	setDeleted( true );
 	label = new_label;
 	VIter i = vols.begin();
+	bool save = getStorage()->getRecursiveRemoval();
+	getStorage()->setRecursiveRemoval(true);
 	while( i!=vols.end() )
 	    {
 	    if( (*i)->created() )
@@ -1077,10 +1146,11 @@ int Disk::destroyPartitionTable( const string& new_label )
 		}
 	    else
 		{
-		(*i)->setDeleted( true );
+		getStorage()->removeVolume( (*i)->device() );
 		++i;
 		}
 	    }
+	getStorage()->setRecursiveRemoval(save);
 	}
     y2milestone( "ret %d", ret );
     return( ret );
@@ -1568,6 +1638,11 @@ int Disk::resizeVolume( Volume* v, unsigned long long newSize )
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+int Disk::removeVolume( Volume* v )
+    {
+    return( removePartition( v->nr() ));
     }
 
 int Disk::doResize( Volume* v )

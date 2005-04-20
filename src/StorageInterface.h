@@ -82,13 +82,14 @@ namespace storage
 {
     enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, NTFS, SWAP, FSNONE };
 
-    enum PartitionType { PRIMARY, EXTENDED, LOGICAL };
+    enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
     enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
 
-    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD, ENC_UNKNOWN };
+    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, 
+                       ENC_TWOFISH256_OLD, ENC_UNKNOWN };
 
-    enum MdType { RAID0, RAID1, RAID5, MULTIPATH };
+    enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
 
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM };
 
@@ -168,6 +169,7 @@ namespace storage
 	DISK_REMOVE_PARTITION_CREATE_NOT_FOUND = -1027,
 	DISK_COMMIT_NOTHING_TODO = -1028,
 	DISK_CREATE_PARTITION_NO_SPACE = -1029,
+	DISK_REMOVE_USED_BY = -1030,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -180,6 +182,11 @@ namespace storage
 	STORAGE_LVM_INVALID_DEVICE = -2008,
 	STORAGE_CONTAINER_NOT_FOUND = -2009,
 	STORAGE_VG_INVALID_NAME = -2010,
+	STORAGE_REMOVE_USED_VOLUME = -2011,
+	STORAGE_REMOVE_USING_UNKNOWN_TYPE = -2012,
+	STORAGE_NOT_YET_IMPLEMENTED = -2013,
+	STORAGE_MD_INVALID_NAME = -2014,
+	STORAGE_MD_NOT_FOUND = -2015,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -243,12 +250,26 @@ namespace storage
 	LVM_CHANGE_READONLY = -4029,
 	LVM_CHECK_RESIZE_INVALID_VOLUME = -4030,
 	LVM_COMMIT_NOTHING_TODO = -4031,
+	LVM_LV_REMOVE_USED_BY = -4032,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
 	FSTAB_REMOVE_ENTRY_NOT_FOUND = -5002,
 	FSTAB_UPDATE_ENTRY_NOT_FOUND = -5003,
 	FSTAB_ADD_ENTRY_FOUND = -5004,
+
+	MD_CHANGE_READONLY = -6000,
+	MD_DUPLICATE_NUMBER = -6001,
+	MD_TOO_FEW_DEVICES = -6002,
+	MD_DEVICE_UNKNOWN = -6003,
+	MD_DEVICE_USED = -6004,
+	MD_CREATE_INVALID_VOLUME = -6005,
+	MD_REMOVE_FAILED = -6006,
+	MD_NOT_IN_LIST = -6007,
+	MD_CREATE_FAILED = -6008,
+	MD_UNKNOWN_NUMBER = -6009,
+	MD_REMOVE_USED_BY = -6010,
+	MD_NUMBER_TOO_LARGE = -6011,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -349,6 +370,19 @@ namespace storage
 					string& device ) = 0;
 
 	/**
+	 * Create a new partition of given type as large as possible.
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param type type of partition to create, e.g. primary or extended
+	 * @param device is set to the device name of the new partition 
+	 * The name is returned instead of the number since creating the name from the
+	 * number is not straight-forward.
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createPartitionMax( const string& disk, PartitionType type,
+					string& device ) = 0;
+
+	/**
 	 * Compute number of kilobytes of a given number of disk cylinders
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
@@ -387,8 +421,8 @@ namespace storage
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
 
 	/**
-	 *  Destroys the partition table of a disk. An empty disk label
-	 *  of the given type without any partition is created.
+	 * Destroys the partition table of a disk. An empty disk label
+	 * of the given type without any partition is created.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
@@ -397,14 +431,14 @@ namespace storage
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
 	/**
-	 *  Returns the default disk label of the architecture of the
-	 *  machine (e.g. msdos for ix86, gpt for ia64, ...)
+	 * Returns the default disk label of the architecture of the
+	 * machine (e.g. msdos for ix86, gpt for ia64, ...)
 	 *
 	 */
 	virtual string defaultDiskLabel() = 0;
 
 	/**
-	 *  sets or unsets the format flag for the given volume.
+	 * Sets or unsets the format flag for the given volume.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param format flag if format is set on or off
@@ -414,7 +448,7 @@ namespace storage
 	virtual int changeFormatVolume( const string& device, bool format, FsType fs ) = 0;
 
 	/**
-	 *  changes the mount point of a volume
+	 * Changes the mount point of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param mount new mount point of the volume (e.g. /home).
@@ -424,7 +458,7 @@ namespace storage
 	virtual int changeMountPoint( const string& device, const string& mount ) = 0;
 
 	/**
-	 *  get the mount point of a volume
+	 * Get the mount point of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param mount will be set to the mount point of the volume (e.g. /home).
@@ -433,7 +467,7 @@ namespace storage
 	virtual int getMountPoint( const string& device, string& mount ) = 0;
 
 	/**
-	 *  changes mount by value in fstab of a volume
+	 * Changes mount by value in fstab of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options new mount by value of the volume.
@@ -442,7 +476,7 @@ namespace storage
 	virtual int changeMountBy( const string& device, MountByType mby ) = 0;
 
 	/**
-	 *  get mount by value in fstab of a volume
+	 * Get mount by value in fstab of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options will be set to the mount by value of the volume.
@@ -451,7 +485,7 @@ namespace storage
 	virtual int getMountBy( const string& device, MountByType& mby ) = 0;
 
 	/**
-	 *  changes the fstab options of a volume
+	 * Changes the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options new fstab options of the volume (e.g. noauto,user,sync).
@@ -462,7 +496,7 @@ namespace storage
 	virtual int changeFstabOptions( const string& device, const string& options ) = 0;
 
 	/**
-	 *  get the fstab options of a volume
+	 * Get the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options will be set to the fstab options of the volume (e.g. noauto,user,sync).
@@ -472,7 +506,7 @@ namespace storage
 	virtual int getFstabOptions( const string& device, string& options ) = 0;
 
 	/**
-	 *  adds to the fstab options of a volume
+	 * Add to the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options fstab options to add to already exiting options of the volume (e.g. noauto,user,sync).
@@ -482,7 +516,7 @@ namespace storage
 	virtual int addFstabOptions( const string& device, const string& options ) = 0;
 
 	/**
-	 *  remove from the fstab options of a volume
+	 * Remove from the fstab options of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param options fstab options to remove from already existing options of the volume (e.g. noauto).
@@ -493,7 +527,7 @@ namespace storage
 	virtual int removeFstabOptions( const string& device, const string& options ) = 0;
 
 	/**
-	 *  set crypt password of a volume
+	 * Set crypt password of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param pwd crypt password fro this volume
@@ -502,7 +536,7 @@ namespace storage
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
 
 	/**
-	 *  set crypt password of a volume
+	 * Set encryption state of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param val flag if encryption should be activated
@@ -511,7 +545,7 @@ namespace storage
 	virtual int setCrypt( const string& device, bool val ) = 0;
 
 	/**
-	 *  get crypt password of a volume
+	 * Get encryption state of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param val will be set if encryption is activated
@@ -520,7 +554,7 @@ namespace storage
 	virtual int getCrypt( const string& device, bool& val ) = 0;
 
 	/**
-	 *  resizes a volume while keeping the data on the filesystem
+	 * Resizes a volume while keeping the data on the filesystem
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param newSizeMb new size desired volume in Megabyte
@@ -529,7 +563,40 @@ namespace storage
 	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
 
 	/**
-	 *  create a LVM volume group
+	 * Set handling of deletion of entities that belong to other
+	 * volumes. Normally it is not possibly to remove a volume that
+	 * is part of another entity (e.g. you cannot remove a partition
+	 * that is part of an LVM Volume group or a Software raid). 
+	 * This setting makes the removal recursive, this means all
+	 * entities where the removed volume is a part of are also
+	 * removed. Use this setting with extreme care, it may cause
+	 * the removal of LVM Volume group spanning multiple disks just
+	 * because one partition of the LVM Volume group got deleted.
+	 *
+	 * @param val flag if removal is done recursive
+	 */
+
+	virtual void setRecursiveRemoval( bool val ) = 0;
+
+	/**
+	 * Get value of the flag for recursive removal
+	 * 
+	 * @return value of the flag for recursive removal
+	 */
+
+	virtual bool getRecursiveRemoval() = 0;
+
+	/**
+	 * Removes a volume from the system. This function can be used 
+	 * for removing all types of volumes (partitions, LVM LVs, MD devices ...)
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeVolume( const string& device ) = 0;
+
+	/**
+	 * Create a LVM volume group
 	 *
 	 * @param name name of volume group, must not contain blanks, colons 
 	 * and shell special characters (e.g. system)
@@ -542,8 +609,8 @@ namespace storage
 	                         const deque<string>& devs ) = 0;
 
 	/**
-	 *  remove a LVM volume group. If the volume group contains 
-	 *  logical volumes, these are automatically also removed.
+	 * Remove a LVM volume group. If the volume group contains 
+	 * logical volumes, these are automatically also removed.
 	 *
 	 * @param name name of volume group
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -551,7 +618,7 @@ namespace storage
 	virtual int removeLvmVg( const string& name ) = 0;
 
 	/**
-	 *  extend a LVM volume group
+	 * Extend a LVM volume group with additional physical devices
 	 *
 	 * @param name name of volume group
 	 * @param devs list with physical devices to add to that volume group
@@ -561,7 +628,7 @@ namespace storage
 	                         const deque<string>& devs ) = 0;
 
 	/**
-	 *  shrink a LVM volume group
+	 * Shrink a LVM volume group
 	 *
 	 * @param name name of volume group
 	 * @param devs list with physical devices to remove from that volume group
@@ -571,7 +638,7 @@ namespace storage
 	                         const deque<string>& devs ) = 0;
 
 	/**
-	 *  create a LVM logical volume 
+	 * Create a LVM logical volume 
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
@@ -586,7 +653,7 @@ namespace storage
 				 string& device ) = 0;
 
 	/**
-	 *  remove a LVM logical volume 
+	 * Remove a LVM logical volume 
 	 *
 	 * @param device name of logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -594,7 +661,7 @@ namespace storage
 	virtual int removeLvmLv( const string& device ) = 0;
 
 	/**
-	 *  remove a LVM logical volume 
+	 * Remove a LVM logical volume 
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
@@ -603,8 +670,39 @@ namespace storage
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
 
 	/**
-	 *  gets a list of string describing the actions to be executed
-	 *  after next call to commit()
+	 * Create a Software raid device by name
+	 *
+	 * @param name name of software raid device to create (e.g. /dev/md0) 
+	 * @param rtype raid personality of the new software raid
+	 * @param devs list with physical devices for the new software raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createMd( const string& name, MdType rtype,
+			      const deque<string>& devs ) = 0;
+
+	/**
+	 * Create a Software raid device. Name determined by library.
+	 *
+	 * @param rtype raid personality of the new software raid
+	 * @param devs list with physical devices for the new software raid
+	 * @param device device name of created software raid device 
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createMdAny( MdType rtype, const deque<string>& devs, 
+	                         string& device ) = 0;
+
+	/**
+	 * Remove a LVM volume group. If the volume group contains 
+	 * logical volumes, these are automatically also removed.
+	 *
+	 * @param name name of software raid device to remove (e.g. /dev/md0) 
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeMd( const string& name ) = 0;
+
+	/**
+	 * Gets a list of string describing the actions to be executed
+	 * after next call to commit()
 	 *
 	 * @param mark_destructive if true use <red> around </red> destructive
 	 *    actions (like e.g. deletion, formatting, ...)
@@ -613,38 +711,33 @@ namespace storage
 	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
 
 	/**
-	 *  sets the callback function called on progress bar events
+	 * Sets the callback function called on progress bar events
 	 *
 	 * @param pfnc pointer to funtcion
 	 */
 	virtual void setCallbackProgressBar( CallbackProgressBar pfnc ) = 0;
 
 	/**
-	 *  query the callback function called on progress bar events
+	 * Query the callback function called on progress bar events
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
 	virtual CallbackProgressBar getCallbackProgressBar() = 0;
 
 	/**
-	 *  sets the callback function called to display install info
+	 * Sets the callback function called to display install info
 	 *
 	 * @param pfnc pointer to funtcion
 	 */
 	virtual void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc ) = 0;
 
 	/**
-	 *  query the callback function called to display install info
+	 * Query the callback function called to display install info
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
 	virtual CallbackShowInstallInfo getCallbackShowInstallInfo() = 0;
 #if 0
-	/**
-	 *
-	 */
-	virtual bool resizePartition (string partition, long size) = 0;
-
 
 	virtual bool createMd (...) = 0;
 	virtual bool removeMd (...) = 0;

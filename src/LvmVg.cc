@@ -425,6 +425,11 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     return( ret );
     }
 
+int LvmVg::removeVolume( Volume* v )
+    {
+    return( removeLv( v->name() ));
+    }
+
 int 
 LvmVg::removeLv( const string& name )
     {
@@ -444,6 +449,13 @@ LvmVg::removeLv( const string& name )
 	    ++i;
 	if( i==p.end() )
 	    ret = LVM_LV_UNKNOWN_NAME;
+	}
+    if( ret==0 && i->getUsedBy() != UB_NONE )
+	{
+	if( getStorage()->getRecursiveRemoval() )
+	    ret = getStorage()->removeUsing( &(*i) );
+	else
+	    ret = LVM_LV_REMOVE_USED_BY;
 	}
     if( ret==0 )
 	{
@@ -631,7 +643,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		   line.find( "Physical volume" )==string::npos &&
 		   i<cnt )
 		{
-		line.erase( 0, line.find_first_not_of( " \t\n" ));
+		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "Format" ) == 0 )
 		    {
 		    bool lv1 = extractNthWord( 1, line )=="lvm1";
@@ -683,7 +695,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    bool readOnly = false;
 	    while( line.find( "Physical volume" )==string::npos && i<cnt )
 		{
-		line.erase( 0, line.find_first_not_of( " \t\n" ));
+		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "LV Name" ) == 0 )
 		    {
 		    if( vname.size()>0 )
@@ -724,7 +736,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    Pv *p = new Pv;
 	    while( i<cnt )
 		{
-		line.erase( 0, line.find_first_not_of( " \t\n" ));
+		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "PV Name" ) == 0 )
 		    {
 		    if( p->device.size()>0 )
@@ -1058,10 +1070,10 @@ void LvmVg::getVgs( list<string>& l )
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	vgname = *c.getLine(i);
-	pos=vgname.find_first_not_of( " \t\n\"" );
+	pos=vgname.find_first_not_of( app_ws+"\"" );
 	if( pos>0 )
 	    vgname.erase( 0, pos );
-	pos=vgname.find_first_of( " \t\n\"" );
+	pos=vgname.find_first_of( app_ws+"\"" );
 	if( pos>0 )
 	    vgname.erase( pos );
 	l.push_back(vgname);

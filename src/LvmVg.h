@@ -35,6 +35,7 @@ class LvmVg : public Container
 	int getToCommit( CommitStage stage, list<Container*>& col,
 			 list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
+	int removeVolume( Volume* v );
 	static void activate( bool val=true );
 	static void getVgs( list<string>& l );
 	

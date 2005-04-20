@@ -212,7 +212,7 @@ string LvmLv::createText( bool doing ) const
 	    txt = sformat( _("Create swap Logical volume %1$s %2$s"),
 	                   dev.c_str(), sizeString().c_str() );
 	    }
-	if( mp.size()>0 )
+	else if( mp.size()>0 )
 	    {
 	    if( encryption==ENC_NONE )
 		{
@@ -263,7 +263,8 @@ string LvmLv::formatText( bool doing ) const
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var$s is replaced by size (e.g. 623.5 MB)
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format Logical volume %1$s %2$s for %4$s with %3$s"),
@@ -272,7 +273,8 @@ string LvmLv::formatText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var$s is replaced by size (e.g. 623.5 MB)
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format crypted Logical volume %1$s %2$s for %4$s with %3$s"),
@@ -282,7 +284,8 @@ string LvmLv::formatText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var$s is replaced by size (e.g. 623.5 MB)
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format Logical volume %1$s %2$s $s with %3$s"),
 			   dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );

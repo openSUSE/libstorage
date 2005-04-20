@@ -11,6 +11,7 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
+#include "y2storage/MdCo.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
 #include "y2storage/ProcMounts.h"
@@ -43,6 +44,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
                  testmode, autodetect, max_log_num );
     progress_bar_cb = NULL;
     install_info_cb = NULL;
+    recursiveRemove = false;
     }
 
 void
@@ -77,7 +79,12 @@ Storage::initialize()
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
 
     detectDisks();
+    if( instsys() )
+	MdCo::activate( true );
+    detectMds();
     detectLvmVgs();
+    if( instsys() )
+	MdCo::activate( false );
 
     if( testmode )
         {
@@ -166,6 +173,26 @@ Storage::detectDisks()
     else if( autodetect )
 	{
 	autodetectDisks();
+	}
+    }
+
+void Storage::detectMds()
+    {
+    if( test() )
+	{
+	string file = testdir+"/md";
+	if( access( file.c_str(), R_OK )==0 )
+	    {
+	    addToList( new MdCo( this, file ) );
+	    }
+	}
+    else
+	{
+	MdCo * v = new MdCo( this, true );
+	if( v->numVolumes()>0 )
+	    addToList( v );
+	else
+	    delete v;
 	}
     }
 
@@ -368,6 +395,12 @@ Storage::handleLogFile( const string& name )
 	rename( name.c_str(), bname.c_str() );
     }
 
+void Storage::setRecursiveRemoval( bool val )
+    {
+    y2milestone( "val:%d", val );
+    recursiveRemove = val;
+    }
+
 string Storage::proc_arch;
 
 
@@ -479,6 +512,35 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
     return( ret );
     }
 
+int
+Storage::createPartitionMax( const string& disk, PartitionType type,
+                             string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "disk:%s type:%u", disk.c_str(), type );
+    DiskIterator i = findDisk( disk );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
+	{
+	if( i->getUsedBy() != UB_NONE )
+	    ret = STORAGE_DISK_USED_BY;
+	else
+	    {
+	    ret = i->createPartition( type, device );
+	    }
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    return( ret );
+    }
+
 unsigned long long
 Storage::cylinderToKb( const string& disk, unsigned long size )
     {
@@ -526,7 +588,16 @@ Storage::removePartition( const string& partition )
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
 	    {
-	    ret = disk->removePartition( vol->nr() );
+	    if( vol->getUsedBy() == UB_NONE )
+		ret = disk->removePartition( vol->nr() );
+	    else if( !recursiveRemove )
+		ret = STORAGE_REMOVE_USED_VOLUME;
+	    else
+		{
+		ret = removeUsing( &(*vol) );
+		if( ret==0 )
+		    disk->removePartition( vol->nr() );
+		}
 	    }
 	else
 	    {
@@ -967,6 +1038,44 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     return( ret );
     }
 
+int 
+Storage::removeVolume( const string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	if( vol->getUsedBy() == UB_NONE )
+	    ret = cont->removeVolume( &(*vol) );
+	else if( !recursiveRemove )
+	    ret = STORAGE_REMOVE_USED_VOLUME;
+	else
+	    {
+	    ret = removeUsing( &(*vol) );
+	    if( ret==0 )
+		cont->removeVolume( &(*vol) );
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int
 Storage::createLvmVg( const string& name, unsigned long long peSizeK, 
 		      bool lvm1, const deque<string>& devs )
@@ -1188,6 +1297,160 @@ Storage::removeLvmLv( const string& vg, const string& name )
     return( ret );
     }
 
+int
+Storage::removeEvmsContainer( const string& name )
+    {
+    int ret = STORAGE_NOT_YET_IMPLEMENTED;
+    assertInit();
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::createMd( const string& name, MdType rtype,
+                   const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    std::ostringstream buf;
+    buf << "name:" << name << " MdType:" << Md::pName(rtype) 
+	<< " devices:" << devs;
+    y2milestone( "%s", buf.str().c_str() );
+    unsigned num = 0;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    MdCo *md = NULL;
+    bool have_md = true; 
+    if( ret==0 )
+	{
+	have_md = haveMd(md);
+	if( !have_md )
+	    md = new MdCo( this, false );
+	}
+    if( ret==0 && md!=NULL )
+	{
+	list<string> d;
+	cout << "a:" << devs << endl;
+	d.insert( d.end(), devs.begin(), devs.end() );
+	cout << "d:" << d << endl;
+	ret = md->createMd( num, rtype, d );
+	}
+    if( !have_md )
+	{
+	if( ret==0 )
+	    addToList( md );
+	else if( md!=NULL )
+	    delete md;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Storage::createMdAny( MdType rtype, const deque<string>& devs,
+			  string& device )
+    {
+    int ret = 0;
+    assertInit();
+    std::ostringstream buf;
+    buf << "MdType:" << Md::pName(rtype) << " devices:" << devs;
+    y2milestone( "%s", buf.str().c_str() );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    MdCo *md = NULL;
+    bool have_md = true; 
+    unsigned num = 0;
+    if( ret==0 )
+	{
+	have_md = haveMd(md);
+	if( !have_md )
+	    md = new MdCo( this, false );
+	else
+	    num = md->unusedNumber();
+	}
+    if( ret==0 && md!=NULL )
+	{
+	list<string> d;
+	cout << "a:" << devs << endl;
+	d.insert( d.end(), devs.begin(), devs.end() );
+	cout << "d:" << d << endl;
+	ret = md->createMd( num, rtype, d );
+	}
+    if( !have_md )
+	{
+	if( ret==0 )
+	    {
+	    addToList( md );
+	    }
+	else if( md!=NULL )
+	    delete md;
+	}
+    if( ret==0 )
+	{
+	device = "/dev/md" + decString(num);
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d device:%s", ret, ret==0?device.c_str():"" );
+    return( ret );
+    }
+
+int Storage::removeMd( const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->removeMd( num );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+
+bool Storage::haveMd( MdCo*& md )
+    {
+    md = NULL;
+    CPair p = cPair();
+    ContIterator i = p.begin(); 
+    while( i != p.end() && i->type()!=MD )
+	++i;
+    if( i != p.end() )
+	md = static_cast<MdCo*>(&(*i));
+    return( i != p.end() );
+    }
+		      
 int Storage::checkCache()
     {
     int ret=0;
@@ -1764,5 +2027,36 @@ int Storage::removeContainer( Container* val )
     return( ret );
     }
 
+int Storage::removeUsing( Volume* vol )
+    {
+    int ret=0;
+    string uname = vol->usedByName();
+    switch( vol->getUsedBy() )
+	{
+	case UB_MD:
+	    ret = removeVolume(  "/dev/md" + uname );
+	    break;
+	case UB_DM:
+	    ret = removeVolume(  "/dev/dm-" + uname );
+	    break;
+	case UB_LVM:
+	    ret = removeLvmVg( uname );
+	    break;
+	case UB_EVMS:
+	    if( uname.size()>0 )
+		ret = removeEvmsContainer( uname );
+	    else
+		ret = removeVolume( "/dev/evms/" + uname );
+	    break;
+	case UB_NONE:
+	    y2warning( "%s used by none", vol->device().c_str() );
+	    break;
+	default:
+	    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;
+	    break;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
 
 Storage::SkipDeleted Storage::SkipDel;

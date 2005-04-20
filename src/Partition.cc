@@ -51,7 +51,7 @@ bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
     return( r.intersect( reg ).len()>fuzz );
     }
 
-bool Partition::isAreaInside( const Region& r, unsigned fuzz ) const
+bool Partition::contains( const Region& r, unsigned fuzz ) const
     {
     return( (r.len() - reg.intersect( r ).len()) <= fuzz );
     }

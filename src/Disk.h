@@ -48,6 +48,7 @@ class Disk : public Container
 			     bool checkRelaxed=false );
 	int createPartition( long unsigned len, string& device,
 			     bool checkRelaxed=false );
+	int createPartition( PartitionType type, string& device );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );
@@ -58,7 +59,9 @@ class Disk : public Container
 	int commitChanges( CommitStage stage );
 	int commitChanges( CommitStage stage, Volume* vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
-	void getUnusedSpace( list<Region>& free );
+	int removeVolume( Volume* v );
+	void getUnusedSpace( list<Region>& free, bool all=true, 
+	                     bool logical=false );
 	bool hasExtended() const;
 	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;

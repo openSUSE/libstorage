@@ -28,6 +28,15 @@ Container::~Container()
     y2milestone( "destructed cont %s", dev.c_str() );
     }
 
+static bool existingVol( const Volume& v ) 
+    { return( !v.deleted()&&!v.created()); }
+
+unsigned Container::numVolumes() const
+    {
+    ConstVolPair p = volPair( existingVol );
+    return( p.length() );
+    }
+
 static bool stageDecrease( const Volume& v ) 
     { return( v.deleted()||v.needShrink()); }
 static bool stageCreate( const Volume& v )
@@ -159,13 +168,6 @@ string Container::createText( bool doing ) const
     return( txt );
     }
 
-int Container::doCreate( Volume * v ) 
-    { 
-    y2warning( "invalid doCreate Container:%s name:%s",
-	       type_names[typ].c_str(), name().c_str() ); 
-    return( CONTAINER_INVALID_VIRTUAL_CALL );
-    }
-
 string Container::removeText( bool doing ) const
     {
     string txt;
@@ -182,17 +184,31 @@ string Container::removeText( bool doing ) const
     return( txt );
     }
 
+int Container::doCreate( Volume * v ) 
+    { 
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
+               name().c_str() ); 
+    return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
+
 int Container::doRemove( Volume * v ) 
     { 
-    y2warning( "invalid doRemove Container:%s name:%s",
-	       type_names[typ].c_str(), name().c_str() ); 
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
+               name().c_str() ); 
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
 int Container::doResize( Volume * v ) 
     { 
-    y2warning( "invalid doResize Container:%s name:%s",
-	       type_names[typ].c_str(), name().c_str() ); 
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
+               name().c_str() ); 
+    return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
+
+int Container::removeVolume( Volume * v ) 
+    { 
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
+               name().c_str() ); 
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
