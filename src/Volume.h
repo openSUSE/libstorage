@@ -30,8 +30,9 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
-	UsedByType getUsedBy() { return( uby.t ); }
-	const string& usedByName() { return( uby.name ); }
+	const usedBy& getUsedBy()  const{ return( uby ); }
+	UsedByType getUsedByType() const { return( uby.t ); }
+	const string& usedByName() const { return( uby.name ); }
 	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
 
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
@@ -78,6 +79,7 @@ class Volume
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
+	virtual bool canUseDevice() const;
 
         bool operator== ( const Volume& rhs ) const;
         bool operator!= ( const Volume& rhs ) const

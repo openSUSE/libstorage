@@ -19,7 +19,7 @@ class Loop : public Volume
 
 inline ostream& operator<< (ostream& s, const Loop& l )
     {
-    s << "Loop " << Volume(l) 
+    s << "Loop " << *(Volume*)&l
       << " LoopFile:" << l.loop_file;
     return( s );
     }

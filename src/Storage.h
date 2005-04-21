@@ -135,8 +135,10 @@ class Storage : public StorageInterface
 	bool setUsedBy( const string& dev, UsedByType typ, const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
+	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );
 	string deviceByNumber( const string& majmin );
+	void rootMounted();
 
 	virtual ~Storage();
 

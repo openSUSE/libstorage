@@ -835,6 +835,7 @@ static bool notDeletedNotLog( const Partition& p )
 
 void Disk::getUnusedSpace( list<Region>& free, bool all, bool logical )
     {
+    y2milestone( "all:%d logical:%d", all, logical );
     free.clear();
     if( all || !logical )
 	{
@@ -880,6 +881,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free );
+    y2milestone( "free:" );
     if( free.size()>0 )
 	{
 	free.sort( regions_sort_size );
@@ -929,21 +931,23 @@ int Disk::createPartition( PartitionType type, string& device )
 	free.sort( regions_sort_size );
 	list<Region>::iterator i = free.begin();
 	PartPair ext = partPair(isExtended);
-	PartitionType t = PRIMARY;
+	PartitionType t = type;
 	bool usable = false;
 	do
 	    {
 	    t = PRIMARY;
 	    if( !ext.empty() && ext.begin()->contains( *i ) )
 		t = LOGICAL;
-	    usable = availablePartNumber(t)>0;
+	    usable = t==type || type==PTYPE_ANY || (t==PRIMARY&&type==EXTENDED);
+	    usable = usable && availablePartNumber(t)>0;
 	    if( !usable && i!=free.begin() )
 		--i;
 	    }
 	while( i!=free.begin() && !usable );
 	usable = availablePartNumber(t)>0;
 	if( usable )
-	    ret = createPartition( t, i->start(), i->len(), device, true );
+	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(), 
+	                           i->len(), device, true );
 	else
 	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
 	}
@@ -1062,7 +1066,7 @@ int Disk::removePartition( unsigned nr )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else if( i->getUsedBy() != UB_NONE )
+    else if( i->getUsedByType() != UB_NONE )
 	{
 	ret = DISK_REMOVE_USED_BY;
 	}
@@ -1133,24 +1137,29 @@ int Disk::destroyPartitionTable( const string& new_label )
 	}
     else
 	{
-	setDeleted( true );
 	label = new_label;
-	VIter i = vols.begin();
+	VIter j = vols.begin();
+	while( j!=vols.end() )
+	    {
+	    if( (*j)->created() )
+		{
+		delete( *j );
+		j = vols.erase( j );
+		}
+	    else 
+		++j;
+	    }
 	bool save = getStorage()->getRecursiveRemoval();
 	getStorage()->setRecursiveRemoval(true);
-	while( i!=vols.end() )
+	RVIter i = vols.rbegin();
+	while( i!=vols.rend() )
 	    {
-	    if( (*i)->created() )
-		{
-		i = vols.erase( i );
-		}
-	    else
-		{
+	    if( !(*i)->deleted() )
 		getStorage()->removeVolume( (*i)->device() );
-		++i;
-		}
+	    ++i;
 	    }
 	getStorage()->setRecursiveRemoval(save);
+	setDeleted( true );
 	}
     y2milestone( "ret %d", ret );
     return( ret );

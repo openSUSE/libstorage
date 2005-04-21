@@ -427,7 +427,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	}
     else if( i != dEnd() )
 	{
-	if( i->getUsedBy() != UB_NONE )
+	if( i->getUsedByType() != UB_NONE )
 	    ret = STORAGE_DISK_USED_BY;
 	else
 	    ret = i->createPartition( type, start, size, device );
@@ -440,7 +440,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -460,7 +460,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	}
     else if( i != dEnd() )
 	{
-	if( i->getUsedBy() != UB_NONE )
+	if( i->getUsedByType() != UB_NONE )
 	    ret = STORAGE_DISK_USED_BY;
 	else
 	    {
@@ -478,7 +478,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	{
 	ret = STORAGE_DISK_NOT_FOUND;
 	}
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -496,7 +496,7 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 	}
     else if( i != dEnd() )
 	{
-	if( i->getUsedBy() != UB_NONE )
+	if( i->getUsedByType() != UB_NONE )
 	    ret = STORAGE_DISK_USED_BY;
 	else
 	    {
@@ -508,7 +508,7 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 	{
 	ret = STORAGE_DISK_NOT_FOUND;
 	}
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -526,7 +526,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	}
     else if( i != dEnd() )
 	{
-	if( i->getUsedBy() != UB_NONE )
+	if( i->getUsedByType() != UB_NONE )
 	    ret = STORAGE_DISK_USED_BY;
 	else
 	    {
@@ -537,7 +537,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	{
 	ret = STORAGE_DISK_NOT_FOUND;
 	}
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -588,7 +588,7 @@ Storage::removePartition( const string& partition )
 	Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	if( disk!=NULL )
 	    {
-	    if( vol->getUsedBy() == UB_NONE )
+	    if( vol->getUsedByType() == UB_NONE )
 		ret = disk->removePartition( vol->nr() );
 	    else if( !recursiveRemove )
 		ret = STORAGE_REMOVE_USED_VOLUME;
@@ -1053,7 +1053,7 @@ Storage::removeVolume( const string& device )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	if( vol->getUsedBy() == UB_NONE )
+	if( vol->getUsedByType() == UB_NONE )
 	    ret = cont->removeVolume( &(*vol) );
 	else if( !recursiveRemove )
 	    ret = STORAGE_REMOVE_USED_VOLUME;
@@ -1244,7 +1244,7 @@ Storage::createLvmLv( const string& vg, const string& name,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -1336,9 +1336,7 @@ Storage::createMd( const string& name, MdType rtype,
     if( ret==0 && md!=NULL )
 	{
 	list<string> d;
-	cout << "a:" << devs << endl;
 	d.insert( d.end(), devs.begin(), devs.end() );
-	cout << "d:" << d << endl;
 	ret = md->createMd( num, rtype, d );
 	}
     if( !have_md )
@@ -1382,9 +1380,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
     if( ret==0 && md!=NULL )
 	{
 	list<string> d;
-	cout << "a:" << devs << endl;
 	d.insert( d.end(), devs.begin(), devs.end() );
-	cout << "d:" << d << endl;
 	ret = md->createMd( num, rtype, d );
 	}
     if( !have_md )
@@ -1934,6 +1930,20 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
+const Volume* 
+Storage::getVolume( const string& dev )
+    {
+    const Volume* ret=NULL;
+    VolIterator v;
+    if( findVolume( dev, v ) )
+	{
+	ret = &(*v);
+	}
+    y2milestone( "dev:%s ret:%s", dev.c_str(), 
+                 ret?ret->device().c_str():"nil" );
+    return( ret );
+    }
+
 bool Storage::canUseDevice( const string& dev, bool disks_allowed )
     {
     bool ret=true;
@@ -1943,18 +1953,15 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
 	if( disks_allowed )
 	    {
 	    DiskIterator i = findDisk( dev );
-	    ret = i!=dEnd() && i->getUsedBy()==UB_NONE && i->numPartitions()==0;
+	    ret = i!=dEnd() && i->getUsedByType()==UB_NONE && 
+	          i->numPartitions()==0;
 	    }
 	else
 	    ret = false;
 	}
     else
 	{
-	ret = v->getUsedBy()==UB_NONE && v->getMount().size()==0;
-	if( ret && v->cType()==DISK )
-	    {
-	    ret = static_cast<const Partition*>(&(*v))->type() != EXTENDED;
-	    }
+	ret = v->canUseDevice();
 	}
     y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
     return( ret );
@@ -2029,9 +2036,12 @@ int Storage::removeContainer( Container* val )
 
 int Storage::removeUsing( Volume* vol )
     {
+    ostringstream buf;
+    buf << "device:" << vol->device() << " usedBy:" << vol->getUsedBy();
+    y2milestone( "%s", buf.str().c_str() );
     int ret=0;
     string uname = vol->usedByName();
-    switch( vol->getUsedBy() )
+    switch( vol->getUsedByType() )
 	{
 	case UB_MD:
 	    ret = removeVolume(  "/dev/md" + uname );
@@ -2058,5 +2068,13 @@ int Storage::removeUsing( Volume* vol )
     y2milestone( "ret:%d", ret );
     return( ret );
     }
+
+void Storage::rootMounted()
+    {
+    MdCo* md;
+    if( root().size()>0 && haveMd(md) )
+	md->syncRaidtab();
+    }
+
 
 Storage::SkipDeleted Storage::SkipDel;

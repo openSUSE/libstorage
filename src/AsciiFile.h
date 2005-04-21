@@ -36,17 +36,20 @@ class AsciiFile
 	bool updateFile();
 	bool saveToFile( const string& Name_Cv );
 	void append( const string& Line_Cv );
+	void append( const list<string>& Lines_Cv );
 	void insert( unsigned int Before_iv, const string& Line_Cv );
 	void remove( unsigned int Start_iv, unsigned int Cnt_iv );
 	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
 		      const string& Line_Cv );
+	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
+		      const list<string>& Line_Cv );
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
 	int find( unsigned int Start_iv, const string& Pat_Cv );
 	int find( unsigned int Start_iv, Regex& Pat_Cv );
-	int numLines() const; 
+	unsigned numLines() const; 
 	const string& fileName();
-	int differentLine( const AsciiFile& File_Cv ) const;
+	unsigned differentLine( const AsciiFile& File_Cv ) const;
 
     protected:
 	bool appendFile( const string&  Name_Cv, vector<string>& Lines_Cr );

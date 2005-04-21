@@ -14,11 +14,12 @@ Md::Md( const Container& d, unsigned PNr, MdType Type,
     {
     y2milestone( "constructed md %s on container %s", dev.c_str(),
                  cont->name().c_str() );
+    if( d.type() != MD )
+	y2error( "constructed md with wrong container" );
+    init();
     md_type = Type;
     for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
 	devs.push_back( normalizeDevice( *i ) );
-    if( d.type() != MD )
-	y2error( "constructed md with wrong container" );
     }
 
 Md::Md( const Container& d, const string& line1, const string& line2 )
@@ -28,6 +29,7 @@ Md::Md( const Container& d, const string& line1, const string& line2 )
                  line2.c_str() );
     if( d.type() != MD )
 	y2error( "constructed md with wrong container" );
+    init();
     string tmp = extractNthWord( 0, line1 );
     if( tmp.find( "md" )==0 )
 	tmp.erase( 0, 2 );
@@ -129,8 +131,16 @@ Md::~Md()
     y2milestone( "destructed md %s", dev.c_str() );
     }
 
+void
+Md::init()
+    {
+    md_parity = PAR_NONE;
+    chunk = 0;
+    md_type = RAID_UNK;
+    }
+
 void 
-Md::getDevs( list<string>& devices, bool all, bool spares ) 
+Md::getDevs( list<string>& devices, bool all, bool spares ) const
     { 
     if( !all )
 	devices = spares ? devs : spare; 
@@ -152,6 +162,72 @@ Md::addSpareDevice( const string& dev )
 	}
     else
 	spare.push_back(d);
+    }
+
+string Md::createCmd() const
+    {
+    string cmd = "mdadm --create " + device() + " --run --level=" + pName();
+    if( chunk>0 )
+	cmd += " --chunk=" + decString(chunk);
+    if( md_parity!=PAR_NONE )
+	cmd += " --parity=" + ptName();
+    cmd += " --raid-devices=" + decString(devs.size());
+    if( spare.size()>0 )
+	cmd += " --spare-devices=" + decString(spare.size());
+    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
+	cmd += " " + *i;
+    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
+	cmd += " " + *i;
+    y2milestone( "ret:%s", cmd.c_str() );
+    return( cmd );
+    }
+
+void Md::raidtabLines( list<string>& lines ) const
+    {
+    lines.clear();
+    lines.push_back( "raiddev " + device() );
+    string tmp = "   raid-level            ";
+    switch( md_type )
+	{
+	case RAID1:
+	    tmp += "1";
+	    break;
+	case RAID5:
+	    tmp += "5";
+	    break;
+	case RAID6:
+	    tmp += "6";
+	    break;
+	case RAID10:
+	    tmp += "10";
+	    break;
+	case MULTIPATH:
+	    tmp += "miltipath";
+	    break;
+	default:
+	    tmp += "0";
+	    break;
+	}
+    lines.push_back( tmp );
+    lines.push_back( "   nr-raid-disks         " + decString(devs.size()));
+    lines.push_back( "   nr-spare-disks        " + decString(spare.size()));
+    lines.push_back( "   persistent-superblock 1" );
+    if( md_parity!=PAR_NONE )
+	lines.push_back( "   parity-algorithm      " + ptName());
+    if( chunk>0 )
+	lines.push_back( "   chunk-size            " + decString(chunk));
+    unsigned cnt = 0;
+    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
+	{
+	lines.push_back( "   device                " + *i);
+	lines.push_back( "   raid-disk             " + decString(cnt++));
+	}
+    cnt = 0;
+    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
+	{
+	lines.push_back( "   device                " + *i);
+	lines.push_back( "   spare-disk            " + decString(cnt++));
+	}
     }
 
 string Md::removeText( bool doing ) const

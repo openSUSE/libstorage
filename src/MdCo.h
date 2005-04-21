@@ -6,6 +6,8 @@ using namespace std;
 #include "y2storage/Container.h"
 #include "y2storage/Md.h"
 
+class EtcRaidtab;
+
 class MdCo : public Container
     {
     friend class Storage;
@@ -19,6 +21,8 @@ class MdCo : public Container
 	int createMd( unsigned num, MdType type, const list<string>& devs );
 	int removeMd( unsigned num );
 	unsigned unusedNumber();
+	void syncRaidtab();
+
 
 	static void activate( bool val=true );
 	int removeVolume( Volume* v );
@@ -82,6 +86,7 @@ class MdCo : public Container
 	bool findMd( const string& dev ); 
 	void addMd( Md* m );
 	void checkMd( Md* m );
+	void init();
 
 	virtual void print( ostream& s ) const { s << *this; }
 
@@ -89,6 +94,8 @@ class MdCo : public Container
 	int doRemove( Volume* v );
 
 	void logData( const string& Dir );
+
+	EtcRaidtab *tab;
 
 	static bool md_active;
     };

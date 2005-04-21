@@ -450,7 +450,7 @@ LvmVg::removeLv( const string& name )
 	if( i==p.end() )
 	    ret = LVM_LV_UNKNOWN_NAME;
 	}
-    if( ret==0 && i->getUsedBy() != UB_NONE )
+    if( ret==0 && i->getUsedByType() != UB_NONE )
 	{
 	if( getStorage()->getRecursiveRemoval() )
 	    ret = getStorage()->removeUsing( &(*i) );

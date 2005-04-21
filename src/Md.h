@@ -26,8 +26,10 @@ class Md : public Volume
 	unsigned long chunkSize() const { return chunk; }
 	const string& pName() const { return md_names[md_type]; }
 	const string& ptName() const { return par_names[md_parity]; }
-	void getDevs( list<string>& devices, bool all=true, bool spare=false ); 
+	void getDevs( list<string>& devices, bool all=true, bool spare=false ) const; 
 	void addSpareDevice( const string& dev );
+	void raidtabLines( list<string>& ) const ; 
+	string createCmd() const;
 
 	static const string& pName( MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
@@ -38,6 +40,7 @@ class Md : public Volume
 	string formatText( bool doing ) const;
 
     protected:
+	void init();
 	static MdType toMdType( const string& val );
 	static MdParity toMdParity( const string& val );
 
@@ -52,7 +55,7 @@ class Md : public Volume
 
 inline ostream& operator<< (ostream& s, const Md& m )
     {
-    s << "Md " << Volume(m)
+    s << "Md " << *(Volume*)&m
       << " Personality:" << m.pName();
     if( m.chunk>0 )
 	s << " Chunk:" << m.chunk;

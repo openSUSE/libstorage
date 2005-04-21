@@ -18,6 +18,8 @@ class Container
 	typedef list<Volume*> VCont;
 	typedef VCont::iterator VIter;
 	typedef VCont::const_iterator CVIter;
+	typedef VCont::reverse_iterator RVIter;
+	typedef VCont::const_reverse_iterator CRVIter;
 	Container operator=( const Container& );
 	Container( const Container& );
 
@@ -131,7 +133,8 @@ class Container
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
 	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
-	UsedByType getUsedBy() { return( uby.t ); }
+	const usedBy& getUsedBy() { return( uby ); }
+	UsedByType getUsedByType() { return( uby.t ); }
 	const string& usedByName() { return( uby.name ); }
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;

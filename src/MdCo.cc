@@ -8,11 +8,13 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/EtcRaidtab.h"
 
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
     {
     y2milestone( "construcing MdCo detect:%d", detect );
+    init();
     if( detect )
 	getMdData();
     }
@@ -21,14 +23,38 @@ MdCo::MdCo( Storage * const s, const string& file ) :
     Container(s,"md",staticType())
     {
     y2milestone( "construcing MdCo file:%s", file.c_str() );
+    init();
     }
 
 MdCo::~MdCo()
     {
     y2milestone( "destructed MdCo" );
+    delete tab;
+    }
+
+void
+MdCo::init()
+    {
+    tab = NULL;
+    if( !getStorage()->instsys() )
+	tab = new EtcRaidtab( getStorage()->root() );
     }
 
 static bool mdNotDeleted( const Md& l ) { return( !l.deleted() ); }
+
+void
+MdCo::syncRaidtab()
+    {
+    delete tab;
+    tab = new EtcRaidtab( getStorage()->root() );
+    MdPair p=mdPair(mdNotDeleted);
+    for( MdIter i=p.begin(); i!=p.end(); ++i )
+	{
+	list<string> lines;
+	i->raidtabLines(lines);
+	tab->updateEntry( i->nr(), lines );
+	}
+    }
 
 void
 MdCo::getMdData()
@@ -137,13 +163,14 @@ MdCo::checkMd( Md* m )
     if( findMd( m->nr(), i ))
 	{
 	i->setSize( m->sizeK() );
+	i->setCreated( false );
 	if( m->personality()!=i->personality() )
 	    y2warning( "inconsistent raid type my:%s kernel:%s", 
 	               i->pName().c_str(), m->pName().c_str() );
-	if( m->parity()!=i->parity() )
+	if( i->parity()!=Md::PAR_NONE && m->parity()!=i->parity() )
 	    y2warning( "inconsistent parity my:%s kernel:%s", 
 	               i->ptName().c_str(), m->ptName().c_str() );
-	if( m->chunkSize()!=i->chunkSize() )
+	if( i->chunkSize()>0 && m->chunkSize()!=i->chunkSize() )
 	    y2warning( "inconsistent chunk size my:%lu kernel:%lu", 
 	               i->chunkSize(), m->chunkSize() );
 	}
@@ -225,37 +252,65 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	if( findMd( num ))
 	    ret = MD_DUPLICATE_NUMBER;
 	}
-    unsigned min;
-    switch( type )
-	{
-	case RAID5:
-	    min = 3;
-	    break;
-	case RAID6:
-	    min = 4;
-	    break;
-	default:
-	    min = 2;
-	    break;
-	}
-    if( devs.size()<min )
-	{
-	ret = MD_TOO_FEW_DEVICES;
-	}
+    unsigned long long sum = 0;
+    unsigned long long smallest = 0;
     list<string>::const_iterator i=devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
-	if( !getStorage()->knownDevice( d, false ) )
+	const Volume* v = getStorage()->getVolume( d );
+	if( v==NULL )
 	    {
 	    ret = MD_DEVICE_UNKNOWN;
 	    }
-	else if( !getStorage()->canUseDevice( d, false ) )
+	else if( !v->canUseDevice() )
 	    {
 	    ret = MD_DEVICE_USED;
 	    }
+	else 
+	    {
+	    sum += v->sizeK();
+	    if( smallest==0 )
+		smallest = v->sizeK();
+	    else
+		smallest = min( smallest, v->sizeK() );
+	    }
 	++i;
 	}
+    unsigned long long rsize = 0;
+    unsigned nmin = 2;
+    if( ret==0 )
+	{
+	switch( type )
+	    {
+	    case RAID0:
+		rsize = sum;
+		break;
+	    case RAID1:
+	    case MULTIPATH:
+		rsize = smallest;
+		break;
+	    case RAID5:
+		nmin = 3;
+		rsize = smallest*(devs.size()-1);
+		break;
+	    case RAID6:
+		nmin = 4;
+		rsize = smallest*(devs.size()-2);
+		break;
+	    case RAID10:
+		rsize = smallest*devs.size()/2;
+		break;
+	    default:
+		break;
+	    }
+	if( devs.size()<nmin )
+	    {
+	    ret = MD_TOO_FEW_DEVICES;
+	    }
+	}
+    y2milestone( "min:%u smallest:%llu sum:%llu size:%llu", nmin, smallest, 
+                 sum, rsize );
     i=devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
@@ -267,6 +322,7 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	{
 	Md* m = new Md( *this, num, type, devs );
 	m->setCreated( true );
+	m->setSize( rsize );
 	addToList( m );
 	}
     y2milestone( "ret:%d", ret );
@@ -283,14 +339,14 @@ MdCo::removeMd( unsigned num )
 	{
 	ret = MD_CHANGE_READONLY;
 	}
-    else if( i->getUsedBy() != UB_NONE )
-	{
-	ret = MD_REMOVE_USED_BY;
-	}
     if( ret==0 )
 	{
 	if( !findMd( num, i ))
 	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && i->getUsedByType() != UB_NONE )
+	{
+	ret = MD_REMOVE_USED_BY;
 	}
     if( ret==0 )
 	{
@@ -330,7 +386,7 @@ void MdCo::activate( bool val )
 int 
 MdCo::doCreate( Volume* v ) 
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2milestone( "name:%s", v->name().c_str() );
     Md * m = dynamic_cast<Md *>(v);
     int ret = 0;
     if( m != NULL )
@@ -339,15 +395,19 @@ MdCo::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( m->createText(true) );
 	    }
-	string cmd = "mdadm ";
-	cmd += " -n " + m->device();
-	cmd += " " + name();
+	string cmd = m->createCmd();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    ret = MD_CREATE_FAILED;
 	if( ret==0 )
 	    {
 	    getMdData( m->nr() );
+	    if( tab!=NULL )
+		{
+		list<string> lines;
+		m->raidtabLines(lines);
+		tab->updateEntry( m->nr(), lines );
+		}
 	    }
 	}
     else
@@ -359,7 +419,7 @@ MdCo::doCreate( Volume* v )
 int 
 MdCo::doRemove( Volume* v )
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2milestone( "name:%s", v->name().c_str() );
     Md * m = dynamic_cast<Md *>(v);
     int ret = 0;
     if( m != NULL )
@@ -378,6 +438,10 @@ MdCo::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    if( tab!=NULL )
+		{
+		tab->removeEntry( m->nr() );
+		}
 	    if( !removeFromList( m ) )
 		ret = MD_NOT_IN_LIST;
 	    }

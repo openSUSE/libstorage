@@ -102,6 +102,15 @@ void Partition::changeRegion( unsigned long Start, unsigned long CSize,
     size_k = orig_size_k = SizeK;
     }
 
+bool Partition::canUseDevice() const
+    {
+    bool ret = Volume::canUseDevice();
+    if( ret )
+	ret = type()!=EXTENDED;
+    return( ret );
+    }
+
+
 ostream& Partition::logData( ostream& file ) const
     {
     file << num << " " << dev << " " << size_k << " " <<  mjr << " "

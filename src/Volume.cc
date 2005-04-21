@@ -712,6 +712,10 @@ int Volume::doMount()
 	ret = doFstabUpdate();
 	orig_mp = mp;
 	}
+    if( ret==0 && mp=="/" && cont->getStorage()->root().size()>0 )
+	{
+	cont->getStorage()->rootMounted();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -832,7 +836,7 @@ int Volume::setEncryption( bool val )
     {
     int ret = 0;
     y2milestone( "val:%d", val );
-    if( getUsedBy() != UB_NONE )
+    if( getUsedByType() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1126,7 +1130,7 @@ int Volume::doSetLabel()
 	{
 	ret = VOLUME_LABEL_TOO_LONG;
 	}
-    if( ret==0 && getUsedBy() != UB_NONE )
+    if( ret==0 && getUsedByType() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1190,7 +1194,7 @@ int Volume::setLabel( const string& val )
 	{
 	if( caps.labelLength < val.size() )
 	    ret = VOLUME_LABEL_TOO_LONG;
-	else if( getUsedBy() != UB_NONE )
+	else if( getUsedByType() != UB_NONE )
 	    ret = VOLUME_ALREADY_IN_USE;
 	else
 	    label = val;
@@ -1468,6 +1472,12 @@ MountByType Volume::toMountByType( const string& val )
 string Volume::sizeString() const
     {
     return( kbyteToHumanString( size_k ));
+    }
+
+bool Volume::canUseDevice() const
+    {
+    bool ret = getUsedByType()==UB_NONE && getMount().size()==0;
+    return( ret );
     }
 
 string Volume::bootMount() const
