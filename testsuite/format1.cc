@@ -25,11 +25,12 @@ print_partitions (const string& disk)
 	    case PRIMARY: cout << "PRIMARY "; break;
 	    case EXTENDED: cout << "EXTENDED "; break;
 	    case LOGICAL: cout << "LOGICAL "; break;
+	    case PTYPE_ANY: cout << "ANY "; break;
 	}
 	cout << i->cylStart << ' ' << i->cylSize << ' ';
 	switch (i->fsType)
 	{
-	    case FSUNKNOWN: cout << "FSUNKNOWN"; break;
+	    case FSUNKNOWN: cout << "UNKNOWN"; break;
 	    case REISERFS: cout << "REISERFS"; break;
 	    case EXT2: cout << "EXT2"; break;
 	    case EXT3: cout << "EXT3"; break;
@@ -38,6 +39,7 @@ print_partitions (const string& disk)
 	    case JFS: cout << "JFS"; break;
 	    case NTFS: cout << "NTFS"; break;
 	    case SWAP: cout << "SWAP"; break;
+	    case FSNONE: cout << "NONE"; break;
 	}
 	cout << '\n';
     }

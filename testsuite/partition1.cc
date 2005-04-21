@@ -25,6 +25,7 @@ print_partitions (const string& disk)
 	    case PRIMARY: cout << "PRIMARY "; break;
 	    case EXTENDED: cout << "EXTENDED "; break;
 	    case LOGICAL: cout << "LOGICAL "; break;
+	    case PTYPE_ANY: cout << "ANY "; break;
 	}
 	cout << i->cylStart << ' ' << i->cylSize << '\n';
     }
