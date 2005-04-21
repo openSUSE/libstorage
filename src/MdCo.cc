@@ -50,9 +50,19 @@ MdCo::syncRaidtab()
     MdPair p=mdPair(mdNotDeleted);
     for( MdIter i=p.begin(); i!=p.end(); ++i )
 	{
+	updateEntry( &(*i) );
+	}
+    }
+
+void MdCo::updateEntry( const Md* m )
+    {
+    if( tab )
+	{
 	list<string> lines;
-	i->raidtabLines(lines);
-	tab->updateEntry( i->nr(), lines );
+	list<string> devices;
+	m->raidtabLines(lines);
+	m->getDevs( devices );
+	tab->updateEntry( m->nr(), lines, m->mdadmLine(), devices );
 	}
     }
 
@@ -163,6 +173,7 @@ MdCo::checkMd( Md* m )
     if( findMd( m->nr(), i ))
 	{
 	i->setSize( m->sizeK() );
+	i->setMdUuid( m->getMdUuid() );
 	i->setCreated( false );
 	if( m->personality()!=i->personality() )
 	    y2warning( "inconsistent raid type my:%s kernel:%s", 
@@ -404,9 +415,7 @@ MdCo::doCreate( Volume* v )
 	    getMdData( m->nr() );
 	    if( tab!=NULL )
 		{
-		list<string> lines;
-		m->raidtabLines(lines);
-		tab->updateEntry( m->nr(), lines );
+		updateEntry( m );
 		}
 	    }
 	}

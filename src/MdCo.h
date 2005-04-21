@@ -86,6 +86,8 @@ class MdCo : public Container
 	bool findMd( const string& dev ); 
 	void addMd( Md* m );
 	void checkMd( Md* m );
+	void updateEntry( const Md* m );
+
 	void init();
 
 	virtual void print( ostream& s ) const { s << *this; }

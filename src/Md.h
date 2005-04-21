@@ -24,11 +24,14 @@ class Md : public Volume
 	MdType personality() const { return md_type; }
 	MdParity parity() const { return md_parity; }
 	unsigned long chunkSize() const { return chunk; }
+	void setMdUuid( const string&val ) { md_uuid=val; }
+	const string& getMdUuid() const { return(md_uuid); }
 	const string& pName() const { return md_names[md_type]; }
 	const string& ptName() const { return par_names[md_parity]; }
 	void getDevs( list<string>& devices, bool all=true, bool spare=false ) const; 
 	void addSpareDevice( const string& dev );
 	void raidtabLines( list<string>& ) const ; 
+	string mdadmLine() const; 
 	string createCmd() const;
 
 	static const string& pName( MdType t ) { return md_names[t]; }
@@ -47,6 +50,7 @@ class Md : public Volume
 	MdType md_type;
 	MdParity md_parity;
 	unsigned long chunk;
+	string md_uuid;
 	list<string> devs;
 	list<string> spare;
 	static string md_names[MULTIPATH+1];
@@ -61,6 +65,8 @@ inline ostream& operator<< (ostream& s, const Md& m )
 	s << " Chunk:" << m.chunk;
     if( m.md_parity!=Md::PAR_NONE )
 	s << " Parity:" << m.ptName();
+    if( m.md_uuid.size()>0 )
+	s << " MD UUID:" << m.md_uuid;
     s << " Devices:" << m.devs;
     if( m.spare.size()>0 )
 	s << " Spare:" << m.spare;

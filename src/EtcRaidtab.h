@@ -4,16 +4,15 @@
 #include <string>
 #include <map>
 
-#include "y2storage/AsciiFile.h"
+class AsciiFile;
 
-class Regex;
-
-class EtcRaidtab : public AsciiFile
+class EtcRaidtab
     {
     public:
 	EtcRaidtab( const string& prefix="" );
 	~EtcRaidtab();
-	void updateEntry( unsigned num, const list<string>& entries );
+	void updateEntry( unsigned num, const list<string>& entries,
+	                  const string&, const list<string>& devs );
 	void removeEntry( unsigned num );
     protected:
 	struct entry
@@ -26,13 +25,20 @@ class EtcRaidtab : public AsciiFile
 	    };
 	friend ostream& operator<< (ostream& s, const entry &v );
 
-	void updateFile();
-	void buildMap();
+	void updateMdadmFile();
+	void updateRaidtabFile();
+	void buildRaidtabMap();
+	void buildMdadmMap();
 
 	Regex *whitespace;
 	Regex *comment;
-	string filename;
-	map<unsigned,entry> co;
+	string rtabname;
+	string mdadmname;
+	int mdadm_dev_line;
+	map<unsigned,entry> mtab;
+	map<unsigned,entry> rtab;
+	AsciiFile* raidtab;
+	AsciiFile* mdadm;
     };
 ///////////////////////////////////////////////////////////////////
 

@@ -5,6 +5,7 @@
 #include "y2storage/Md.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/AppUtil.h"
+#include "y2storage/SystemCmd.h"
 #include "y2storage/Regex.h"
 #include "y2storage/Container.h"
 
@@ -36,8 +37,16 @@ Md::Md( const Container& d, const string& line1, const string& line2 )
     tmp >> num;
     setNameDev();
     getMajorMinor( dev, mjr, mnr );
-    string line = line1;
+    SystemCmd c( "mdadm -D " + device() + " | grep 'UUID : '" );
     string::size_type pos;
+    if( c.retcode()==0 && c.numLines()>0 )
+	{
+	md_uuid = *c.getLine(0);
+	if( (pos=md_uuid.find( "UUID : " ))!=string::npos )
+	    md_uuid.erase( 0, pos+7 );
+	md_uuid = extractNthWord( 0, md_uuid );
+	}
+    string line = line1;
     if( (pos=line.find( ':' ))!=string::npos )
 	line.erase( 0, pos+1 );
     if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
@@ -182,6 +191,14 @@ string Md::createCmd() const
     return( cmd );
     }
 
+string Md::mdadmLine() const
+    {
+    string line = "ARRAY " + device() + " level=" + pName();
+    line += " UUID=" + md_uuid;
+    y2milestone( "line:%s", line.c_str() );
+    return( line );
+    }
+
 void Md::raidtabLines( list<string>& lines ) const
     {
     lines.clear();
@@ -202,7 +219,7 @@ void Md::raidtabLines( list<string>& lines ) const
 	    tmp += "10";
 	    break;
 	case MULTIPATH:
-	    tmp += "miltipath";
+	    tmp += "multipath";
 	    break;
 	default:
 	    tmp += "0";
