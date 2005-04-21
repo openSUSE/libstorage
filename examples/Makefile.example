@@ -1,7 +1,7 @@
 CXXFLAGS=-MMD -g -I /usr/include/YaST2 -DY2LOG=\"y2storage\"
 LDFLAGS = -ly2storage
 
-PROG=TestStorage TestDisk TestDiskLog TestProbing TestLvm
+PROG=TestStorage TestDisk TestDiskLog TestProbing TestLvm TextMd
 
 all: $(PROG)
 
@@ -14,6 +14,8 @@ TestDiskLog: TestDiskLog.o
 TestProbing: TestProbing.o
 
 TestLvm: TestLvm.o
+
+TestMd: TestMd.o
 
 clean:
 	rm -f *.d *.o $(PROG)
