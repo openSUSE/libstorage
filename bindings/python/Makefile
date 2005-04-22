@@ -11,7 +11,7 @@ all: Storage_wrap.cxx
 	python -c "import Storage"
 	python -O -c "import Storage"
 
-Storage_wrap.cxx: Storage.i
+Storage_wrap.cxx: Storage.i ../../src/StorageInterface.h
 	swig -Wall -c++ -python Storage.i
 
 install_vendor:
