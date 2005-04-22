@@ -1,0 +1,21 @@
+
+# /usr/lib/YaST2/bin/y2base example.ycp stdio
+
+{
+    import "Foo";
+    import "Foo::StorageInterface";
+
+    any o = Foo::createStorageInterface (); // (true, false, true);
+
+    list <string> disks = [];
+    Foo::StorageInterface::getDisks (o, disks);
+    foreach (string disk, disks, {
+	y2milestone ("found disk %1", disk);
+    });
+
+    string mount_point = "";
+    // Foo::StorageInterface::getMountPoint (o, "/dev/hda2", mount_point);
+    y2milestone ("mount point of /dev/hda2 is %1", mount_point);
+
+    Foo::destroyStorageInterface (o);
+}
