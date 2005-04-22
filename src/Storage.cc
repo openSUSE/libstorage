@@ -40,7 +40,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     logdir = "/var/log/YaST2";
     if( tenv!=0 )
 	string(tenv) >> max_log_num;
-    y2milestone( "instsys:%d testmode:%d autodetect:%d log:%d", inst_sys, 
+    y2milestone( "instsys:%d testmode:%d autodetect:%d log:%d", inst_sys,
                  testmode, autodetect, max_log_num );
     progress_bar_cb = NULL;
     install_info_cb = NULL;
@@ -155,14 +155,14 @@ Storage::detectArch()
     y2milestone( "Arch:%s", proc_arch.c_str() );
     }
 
-void 
+void
 Storage::detectDisks()
     {
     if( test() )
 	{
 	glob_t globbuf;
 
-	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, 
+	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
@@ -196,13 +196,13 @@ void Storage::detectMds()
 	}
     }
 
-void 
+void
 Storage::detectLvmVgs()
     {
     if( test() )
 	{
 	glob_t globbuf;
-	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, 
+	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
@@ -313,7 +313,7 @@ Storage::printInfo( ostream& str )
     }
 
 void
-Storage::detectFsDataTestMode( const string& file, const VolIterator& begin, 
+Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 			       const VolIterator& end )
     {
     AsciiFile vd( file );
@@ -344,7 +344,7 @@ Storage::logVolumes( const string& Dir )
     handleLogFile( fname );
     }
 
-bool 
+bool
 Storage::testFilesEqual( const string& n1, const string& n2 )
     {
     bool ret = false;
@@ -410,7 +410,13 @@ namespace storage
     {
 	return new Storage (ronly, testmode, autodetect);
     }
+
+    void destroyStorageInterface (StorageInterface* p)
+    {
+	delete p;
+    }
 }
+
 
 int
 Storage::createPartition( const string& disk, PartitionType type, unsigned long start,
@@ -483,7 +489,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
     }
 
 int
-Storage::createPartitionAny( const string& disk, unsigned long long sizeK, 
+Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
                              string& device )
     {
     int ret = 0;
@@ -686,12 +692,12 @@ Storage::defaultDiskLabel()
     return( Disk::defaultLabel() );
     }
 
-int 
+int
 Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "device:%s format:%d type:%s", device.c_str(), format, 
+    y2milestone( "device:%s format:%d type:%s", device.c_str(), format,
                  Volume::fsTypeString(fs).c_str() );
     VolIterator vol;
     ContIterator cont;
@@ -715,7 +721,7 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     return( ret );
     }
 
-int 
+int
 Storage::changeMountPoint( const string& device, const string& mount )
     {
     int ret = 0;
@@ -763,12 +769,12 @@ Storage::getMountPoint( const string& device, string& mount )
     return( ret );
     }
 
-int 
+int
 Storage::changeMountBy( const string& device, MountByType mby )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "device:%s mby:%s", device.c_str(), 
+    y2milestone( "device:%s mby:%s", device.c_str(),
                  Volume::mbyTypeString(mby).c_str() );
     VolIterator vol;
     ContIterator cont;
@@ -792,7 +798,7 @@ Storage::changeMountBy( const string& device, MountByType mby )
     return( ret );
     }
 
-int 
+int
 Storage::getMountBy( const string& device, MountByType& mby )
 {
     int ret = 0;
@@ -840,7 +846,7 @@ Storage::changeFstabOptions( const string& device, const string& options )
     return( ret );
     }
 
-int 
+int
 Storage::getFstabOptions( const string& device, string& options )
 {
     int ret = 0;
@@ -895,7 +901,7 @@ Storage::addFstabOptions( const string& device, const string& options )
     return( ret );
     }
 
-int 
+int
 Storage::removeFstabOptions( const string& device, const string& options )
     {
     int ret = 0;
@@ -929,7 +935,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
     return( ret );
     }
 
-int 
+int
 Storage::setCrypt( const string& device, bool val )
     {
     int ret = 0;
@@ -957,7 +963,7 @@ Storage::setCrypt( const string& device, bool val )
     return( ret );
     }
 
-int 
+int
 Storage::getCrypt( const string& device, bool& val )
 {
     int ret = 0;
@@ -1009,7 +1015,7 @@ Storage::setCryptPassword( const string& device, const string& pwd )
     return( ret );
     }
 
-int 
+int
 Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     {
     int ret = 0;
@@ -1038,7 +1044,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     return( ret );
     }
 
-int 
+int
 Storage::removeVolume( const string& device )
     {
     int ret = 0;
@@ -1077,7 +1083,7 @@ Storage::removeVolume( const string& device )
     }
 
 int
-Storage::createLvmVg( const string& name, unsigned long long peSizeK, 
+Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 		      bool lvm1, const deque<string>& devs )
     {
     int ret = 0;
@@ -1219,13 +1225,13 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
     }
 
 int
-Storage::createLvmLv( const string& vg, const string& name, 
+Storage::createLvmLv( const string& vg, const string& name,
                       unsigned long long sizeM, unsigned stripe,
 		      string& device )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "vg:%s name:%s sizeM:%llu stripe:%u", vg.c_str(), 
+    y2milestone( "vg:%s name:%s sizeM:%llu stripe:%u", vg.c_str(),
                  name.c_str(), sizeM, stripe );
     LvmVgIterator i = findLvmVg( vg );
     if( readonly )
@@ -1306,14 +1312,14 @@ Storage::removeEvmsContainer( const string& name )
     return( ret );
     }
 
-int 
+int
 Storage::createMd( const string& name, MdType rtype,
                    const deque<string>& devs )
     {
     int ret = 0;
     assertInit();
     std::ostringstream buf;
-    buf << "name:" << name << " MdType:" << Md::pName(rtype) 
+    buf << "name:" << name << " MdType:" << Md::pName(rtype)
 	<< " devices:" << devs;
     y2milestone( "%s", buf.str().c_str() );
     unsigned num = 0;
@@ -1326,7 +1332,7 @@ Storage::createMd( const string& name, MdType rtype,
 	ret = STORAGE_MD_INVALID_NAME;
 	}
     MdCo *md = NULL;
-    bool have_md = true; 
+    bool have_md = true;
     if( ret==0 )
 	{
 	have_md = haveMd(md);
@@ -1367,7 +1373,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	ret = STORAGE_CHANGE_READONLY;
 	}
     MdCo *md = NULL;
-    bool have_md = true; 
+    bool have_md = true;
     unsigned num = 0;
     if( ret==0 )
 	{
@@ -1439,14 +1445,14 @@ bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;
     CPair p = cPair();
-    ContIterator i = p.begin(); 
+    ContIterator i = p.begin();
     while( i != p.end() && i->type()!=MD )
 	++i;
     if( i != p.end() )
 	md = static_cast<MdCo*>(&(*i));
     return( i != p.end() );
     }
-		      
+
 int Storage::checkCache()
     {
     int ret=0;
@@ -1506,10 +1512,10 @@ static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
         if( rhs->isMounted() )
 	    return( rhs->getMount()>lhs->getMount() );
 	else
-	    return( *rhs > *lhs ); 
+	    return( *rhs > *lhs );
 	}
     else
-	return( rhs->isMounted() ); 
+	return( rhs->isMounted() );
     }
 
 static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
@@ -1536,8 +1542,8 @@ static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
 	return( rhs->getMount()<lhs->getMount() );
     }
 
-void 
-Storage::sortCommitLists( CommitStage stage, list<Container*>& co, 
+void
+Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
                           list<Volume*>& vl )
     {
     co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
@@ -1547,7 +1553,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	vl.sort( sort_vol_create );
     else if( stage==MOUNT )
 	vl.sort( sort_vol_mount );
-    else 
+    else
 	vl.sort( sort_vol_normal );
     std::ostringstream b;
     y2milestone( "stage %d", stage );
@@ -1635,14 +1641,14 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
 	y2milestone( "before commit:%p", co );
 	ret = co->commitChanges( stage );
 	y2milestone( "after commit:%p", co );
-	if( stage==DECREASE && co->deleted() && 
+	if( stage==DECREASE && co->deleted() &&
 	    (co->type()==LVM||co->type()==EVMS) )
 	    cont_remove.push_back( co );
 	++cli;
 	}
     if( cont_remove.size()>0 )
 	{
-	for( list<Container*>::iterator c=cont_remove.begin(); 
+	for( list<Container*>::iterator c=cont_remove.begin();
 	     c!=cont_remove.end(); ++c )
 	    {
 	    int r = removeContainer( *c );
@@ -1848,7 +1854,7 @@ bool Storage::findVolume( const string& device, VolIterator& v )
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
     const list<string>& al( v->altNames() );
-    while( v!=p.end() && v->device()!=d && 
+    while( v!=p.end() && v->device()!=d &&
            find( al.begin(), al.end(), d )==al.end() )
 	{
 	++v;
@@ -1930,7 +1936,7 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
-const Volume* 
+const Volume*
 Storage::getVolume( const string& dev )
     {
     const Volume* ret=NULL;
@@ -1939,7 +1945,7 @@ Storage::getVolume( const string& dev )
 	{
 	ret = &(*v);
 	}
-    y2milestone( "dev:%s ret:%s", dev.c_str(), 
+    y2milestone( "dev:%s ret:%s", dev.c_str(),
                  ret?ret->device().c_str():"nil" );
     return( ret );
     }
@@ -1953,7 +1959,7 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
 	if( disks_allowed )
 	    {
 	    DiskIterator i = findDisk( dev );
-	    ret = i!=dEnd() && i->getUsedByType()==UB_NONE && 
+	    ret = i!=dEnd() && i->getUsedByType()==UB_NONE &&
 	          i->numPartitions()==0;
 	    }
 	else

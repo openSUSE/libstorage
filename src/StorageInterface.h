@@ -86,7 +86,7 @@ namespace storage
 
     enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
 
-    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD, 
+    enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD,
                        ENC_TWOFISH256_OLD, ENC_UNKNOWN };
 
     enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
@@ -313,7 +313,7 @@ namespace storage
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
 
 	/**
-	 * Print detected entities on a stream. 
+	 * Print detected entities on a stream.
 	 * Exact output format may change between releses.
 	 * Function mainly meant for debugging purposes.
 	 *
@@ -328,7 +328,7 @@ namespace storage
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
 	 * @param sizeCyl size of partition in disk cylinders
-	 * @param device is set to the device name of the new partition 
+	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -345,7 +345,7 @@ namespace storage
 	 * @param type type of partition to create, e.g. primary or extended
 	 * @param start offset in kilobytes from start of disk
 	 * @param size  size of partition in kilobytes
-	 * @param device is set to the device name of the new partition 
+	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -360,12 +360,12 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param size  size of partition in kilobytes
-	 * @param device is set to the device name of the new partition 
+	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createPartitionAny( const string& disk, 
+	virtual int createPartitionAny( const string& disk,
 					unsigned long long size,
 					string& device ) = 0;
 
@@ -374,7 +374,7 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param device is set to the device name of the new partition 
+	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -566,7 +566,7 @@ namespace storage
 	 * Set handling of deletion of entities that belong to other
 	 * volumes. Normally it is not possibly to remove a volume that
 	 * is part of another entity (e.g. you cannot remove a partition
-	 * that is part of an LVM Volume group or a Software raid). 
+	 * that is part of an LVM Volume group or a Software raid).
 	 * This setting makes the removal recursive, this means all
 	 * entities where the removed volume is a part of are also
 	 * removed. Use this setting with extreme care, it may cause
@@ -580,14 +580,14 @@ namespace storage
 
 	/**
 	 * Get value of the flag for recursive removal
-	 * 
+	 *
 	 * @return value of the flag for recursive removal
 	 */
 
 	virtual bool getRecursiveRemoval() = 0;
 
 	/**
-	 * Removes a volume from the system. This function can be used 
+	 * Removes a volume from the system. This function can be used
 	 * for removing all types of volumes (partitions, LVM LVs, MD devices ...)
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
@@ -598,18 +598,18 @@ namespace storage
 	/**
 	 * Create a LVM volume group
 	 *
-	 * @param name name of volume group, must not contain blanks, colons 
+	 * @param name name of volume group, must not contain blanks, colons
 	 * and shell special characters (e.g. system)
 	 * @param lvm1 flag if lvm1 compatible format should be used
 	 * @param devs list with physical devices to add to that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createLvmVg( const string& name, 
-	                         unsigned long long peSizeK, bool lvm1, 
+	virtual int createLvmVg( const string& name,
+	                         unsigned long long peSizeK, bool lvm1,
 	                         const deque<string>& devs ) = 0;
 
 	/**
-	 * Remove a LVM volume group. If the volume group contains 
+	 * Remove a LVM volume group. If the volume group contains
 	 * logical volumes, these are automatically also removed.
 	 *
 	 * @param name name of volume group
@@ -624,7 +624,7 @@ namespace storage
 	 * @param devs list with physical devices to add to that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int extendLvmVg( const string& name, 
+	virtual int extendLvmVg( const string& name,
 	                         const deque<string>& devs ) = 0;
 
 	/**
@@ -634,11 +634,11 @@ namespace storage
 	 * @param devs list with physical devices to remove from that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int shrinkLvmVg( const string& name, 
+	virtual int shrinkLvmVg( const string& name,
 	                         const deque<string>& devs ) = 0;
 
 	/**
-	 * Create a LVM logical volume 
+	 * Create a LVM logical volume
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
@@ -653,7 +653,7 @@ namespace storage
 				 string& device ) = 0;
 
 	/**
-	 * Remove a LVM logical volume 
+	 * Remove a LVM logical volume
 	 *
 	 * @param device name of logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -661,7 +661,7 @@ namespace storage
 	virtual int removeLvmLv( const string& device ) = 0;
 
 	/**
-	 * Remove a LVM logical volume 
+	 * Remove a LVM logical volume
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
@@ -672,7 +672,7 @@ namespace storage
 	/**
 	 * Create a Software raid device by name
 	 *
-	 * @param name name of software raid device to create (e.g. /dev/md0) 
+	 * @param name name of software raid device to create (e.g. /dev/md0)
 	 * @param rtype raid personality of the new software raid
 	 * @param devs list with physical devices for the new software raid
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -685,17 +685,17 @@ namespace storage
 	 *
 	 * @param rtype raid personality of the new software raid
 	 * @param devs list with physical devices for the new software raid
-	 * @param device device name of created software raid device 
+	 * @param device device name of created software raid device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createMdAny( MdType rtype, const deque<string>& devs, 
+	virtual int createMdAny( MdType rtype, const deque<string>& devs,
 	                         string& device ) = 0;
 
 	/**
-	 * Remove a LVM volume group. If the volume group contains 
+	 * Remove a LVM volume group. If the volume group contains
 	 * logical volumes, these are automatically also removed.
 	 *
-	 * @param name name of software raid device to remove (e.g. /dev/md0) 
+	 * @param name name of software raid device to remove (e.g. /dev/md0)
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeMd( const string& name ) = 0;
@@ -800,6 +800,10 @@ namespace storage
 					      bool testmode = false,
 					      bool autodetect = true);
 
+    /**
+     *
+     */
+    void destroyStorageInterface (StorageInterface*);
 
 };
 

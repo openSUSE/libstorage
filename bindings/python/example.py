@@ -18,3 +18,5 @@ for disk in disks:
 
         print partitioninfo.name
         print partitioninfo.cylStart,partitioninfo.cylSize
+
+Storage.destroyStorageInterface (c)
