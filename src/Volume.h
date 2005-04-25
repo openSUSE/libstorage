@@ -50,7 +50,7 @@ class Volume
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
-	    { encryption=val; }
+	    { encryption=orig_encryption=val; }
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val ); 
@@ -60,7 +60,7 @@ class Volume
 	bool needExtend() const { return(size_k>orig_size_k); }
 	long long extendSize() const { return(orig_size_k-size_k);}
 	storage::FsType getFs() const { return fs; }
-	void setFs( storage::FsType val ) { fs=val; }
+	void setFs( storage::FsType val ) { detected_fs=fs=val; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }

@@ -58,6 +58,8 @@ LoopCo::getLoopData()
 	else
 	    {
 	    Loop *l = new Loop( *this, i->loop_dev, lfile );
+	    l->setEncryption( i->encr );
+	    l->setFs( Volume::toFsType(i->fs) );
 	    addToList( l );
 	    }
 	}
