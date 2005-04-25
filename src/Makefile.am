@@ -20,6 +20,7 @@ liby2storage_la_SOURCES =			\
 	  LvmVg.cc       LvmVg.h	     \
 	  Evms.cc        Evms.h	     	     \
 	  MdCo.cc        MdCo.h	     	     \
+	  LoopCo.cc      LoopCo.h	     \
 	Volume.cc        Volume.h            \
 	  Partition.cc   Partition.h         \
 	  LvmLv.cc       LvmLv.h             \

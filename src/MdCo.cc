@@ -213,14 +213,9 @@ MdCo::findMd( unsigned num )
 bool
 MdCo::findMd( const string& dev, MdIter& i )
     {
-    string d(dev);
-    if( d.find( "/dev/" )==0 )
-	d.erase( 0, 5 );
-    if( d.find( "md" )==0 )
+    unsigned num;
+    if( Md::mdStringNum(dev,num) ) 
 	{
-	d.erase( 0, 2 );
-	unsigned num;
-	d >> num;
 	return( findMd( num, i ));
 	}
     else
@@ -373,7 +368,14 @@ MdCo::removeMd( unsigned num )
 
 int MdCo::removeVolume( Volume* v )
     {
-    return( removeMd( v->nr() ));
+    int ret = 0;
+    y2milestone( "name:%s", v->name().c_str() );
+    Md * m = dynamic_cast<Md *>(v);
+    if( m != NULL )
+	ret = removeMd( v->nr() );
+    else 
+	ret = MD_REMOVE_INVALID_VOLUME;
+    return( ret );
     }
 
 void MdCo::activate( bool val )
@@ -456,7 +458,7 @@ MdCo::doRemove( Volume* v )
 	    }
 	}
     else
-	ret = MD_CREATE_INVALID_VOLUME;
+	ret = MD_REMOVE_INVALID_VOLUME;
     y2milestone( "ret:%d", ret );
     return( ret );
     }

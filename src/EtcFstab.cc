@@ -322,6 +322,22 @@ string EtcFstab::createTabLine( const FstabEntry& e )
     return( ret );
     }
 
+void EtcFstab::getFileBasedLoops( const string& prefix, list<FstabEntry>& l )
+    {
+    l.clear();
+    list<Entry>::iterator i = co.begin();
+    while( i!=co.end() )
+	{
+	if( i->op==Entry::NONE )
+	    {
+	    string lfile = prefix + i->old.dentry;
+	    if( checkNormalFile( lfile ))
+		l.push_back( i->old );
+	    }
+	++i;
+	}
+    }
+
 int EtcFstab::flush()
     {
     int ret = 0;
@@ -430,7 +446,7 @@ int EtcFstab::flush()
 	cryptotab->updateFile();
 	delete( cryptotab );
 	}
-    y2milestone( "ret:%d", i!=co.end() );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 

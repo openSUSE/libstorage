@@ -12,6 +12,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
 #include "y2storage/MdCo.h"
+#include "y2storage/LoopCo.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
 #include "y2storage/ProcMounts.h"
@@ -33,6 +34,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
                  ronly, testmode, autodetect );
     char * tenv = getenv( "YAST_IS_RUNNING" );
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
+    root_mounted = !inst_sys;
     if( !testmode )
 	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
     max_log_num = 5;
@@ -100,6 +102,7 @@ Storage::initialize()
     else
 	{
 	fstab = new EtcFstab( "/etc" );
+	detectLoops();
 	detectFsData( vBegin(), vEnd() );
 	}
     setCacheChanges( true );
@@ -189,6 +192,26 @@ void Storage::detectMds()
     else
 	{
 	MdCo * v = new MdCo( this, true );
+	if( v->numVolumes()>0 )
+	    addToList( v );
+	else
+	    delete v;
+	}
+    }
+
+void Storage::detectLoops()
+    {
+    if( test() )
+	{
+	string file = testdir+"/loop";
+	if( access( file.c_str(), R_OK )==0 )
+	    {
+	    addToList( new LoopCo( this, file ) );
+	    }
+	}
+    else
+	{
+	LoopCo * v = new LoopCo( this, true );
 	if( v->numVolumes()>0 )
 	    addToList( v );
 	else
@@ -2078,9 +2101,15 @@ int Storage::removeUsing( Volume* vol )
 void Storage::rootMounted()
     {
     MdCo* md;
-    if( root().size()>0 && haveMd(md) )
-	md->syncRaidtab();
+    root_mounted = true;
+    if( root().size()>0 )
+	{
+    	if( haveMd(md) )
+	    md->syncRaidtab();
+	int ret = fstab->changeRootPrefix( root() );
+	if( ret!=0 )
+	    y2error( "changeRootPrefix returns %d", ret );
+	}
     }
-
 
 Storage::SkipDeleted Storage::SkipDel;

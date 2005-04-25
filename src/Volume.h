@@ -23,6 +23,7 @@ class Volume
 
 	const string& device() const { return dev; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
+	const string& loopDevice() const { return( loop_dev ); }
 	const Container* getContainer() const { return cont; }
 	CType cType() const;
 	bool deleted() const { return del; }
@@ -119,6 +120,8 @@ class Volume
 	bool optNoauto() const;
 	bool inCrypto() const { return( is_loop && !optNoauto() ); }
 	virtual void print( ostream& s ) const { s << *this; }
+	int getFreeLoop();
+	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted
 	    {
@@ -128,6 +131,7 @@ class Volume
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
 	static bool getMajorMinor( const string& device,
 	                           unsigned long& Major, unsigned long& Minor );
+	static bool loopStringNum( const string& name, unsigned& num );
 	static storage::EncryptType toEncType( const string& val );
 	static storage::FsType toFsType( const string& val );
 	static storage::MountByType toMountByType( const string& val );
@@ -151,7 +155,6 @@ class Volume
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, const string& label ) const;
 	ostream& logVolume( ostream& file ) const;
-	int getFreeLoop();
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();
 

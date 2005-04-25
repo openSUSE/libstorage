@@ -31,12 +31,11 @@ Md::Md( const Container& d, const string& line1, const string& line2 )
     if( d.type() != MD )
 	y2error( "constructed md with wrong container" );
     init();
-    string tmp = extractNthWord( 0, line1 );
-    if( tmp.find( "md" )==0 )
-	tmp.erase( 0, 2 );
-    tmp >> num;
-    setNameDev();
-    getMajorMinor( dev, mjr, mnr );
+    if( mdStringNum( extractNthWord( 0, line1 ), num ))
+	{
+	setNameDev();
+	getMajorMinor( dev, mjr, mnr );
+	}
     SystemCmd c( "mdadm -D " + device() + " | grep 'UUID : '" );
     string::size_type pos;
     if( c.retcode()==0 && c.numLines()>0 )
@@ -46,6 +45,7 @@ Md::Md( const Container& d, const string& line1, const string& line2 )
 	    md_uuid.erase( 0, pos+7 );
 	md_uuid = extractNthWord( 0, md_uuid );
 	}
+    string tmp;
     string line = line1;
     if( (pos=line.find( ':' ))!=string::npos )
 	line.erase( 0, pos+1 );
@@ -273,7 +273,7 @@ string Md::createText( bool doing ) const
     string d = dev;
     if( doing )
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 	txt = sformat( _("Creating Software raid %1$s"), d.c_str() );
 	}
     else
@@ -319,7 +319,7 @@ string Md::formatText( bool doing ) const
     string d = dev;
     if( doing )
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
 	txt = sformat( _("Formatting Software raid %1$s %2$s with %3$s "),
@@ -332,13 +332,13 @@ string Md::formatText( bool doing ) const
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+		// displayed text before action, %1$s is replaced by device name e.g. md0
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format Software raid %1$s %2$s for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
+			       d.c_str(), sizeString().c_str(), 
+			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    else
 		{
@@ -347,17 +347,18 @@ string Md::formatText( bool doing ) const
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format crypted Software raid %1$s %2$s for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
+			       d.c_str(), sizeString().c_str(), 
+			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format Software raid %1$s %2$s $s with %3$s"),
-			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	    txt = sformat( _("Format Software raid %1$s %2$s with %3$s"),
+			   d.c_str(), sizeString().c_str(), 
+			   fsTypeString().c_str() );
 	    }
 	}
     return( txt );

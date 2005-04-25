@@ -345,7 +345,7 @@ string Partition::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format partition %1$s %2$s $s with %3$s"),
+	    txt = sformat( _("Format partition %1$s %2$s with %3$s"),
 			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	}

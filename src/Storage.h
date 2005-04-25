@@ -139,6 +139,7 @@ class Storage : public StorageInterface
 	unsigned long long deviceSize( const string& dev );
 	string deviceByNumber( const string& majmin );
 	void rootMounted();
+	bool isRootMounted() const { return( root_mounted ); }
 
 	virtual ~Storage();
 
@@ -963,6 +964,7 @@ class Storage : public StorageInterface
 	void initialize();
 	void detectDisks();
 	void detectMds();
+	void detectLoops();
 	void detectLvmVgs();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
@@ -993,6 +995,7 @@ class Storage : public StorageInterface
 	bool initialized;
 	bool autodetect;
 	bool recursiveRemove;
+	bool root_mounted;
 	string testdir;
 	string tempdir;
 	string rootprefix;

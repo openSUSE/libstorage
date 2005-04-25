@@ -7,6 +7,7 @@
 
 #include "y2storage/Volume.h"
 #include "y2storage/Disk.h"
+#include "y2storage/LoopCo.h"
 #include "y2storage/Storage.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/Container.h"
@@ -112,15 +113,24 @@ bool Volume::getMajorMinor( const string& device,
 void Volume::getFstabData( EtcFstab& fstabData )
     {
     FstabEntry entry;
-    bool found = fstabData.findDevice( device(), entry );
-    if( !found )
+    bool found = false;
+    if( cont->type()==LOOP )
 	{
-	found = fstabData.findDevice( alt_names, entry );
+	Loop* l = static_cast<Loop*>(this);
+	found = fstabData.findDevice( l->loopFile(), entry );
 	}
-    if( !found && (uuid.size()>0||label.size()>0) )
+    else
 	{
-	found = fstabData.findUuidLabel( uuid, label, entry );
-	fstabData.setDevice( entry, device() );
+	found = fstabData.findDevice( device(), entry );
+	if( !found )
+	    {
+	    found = fstabData.findDevice( alt_names, entry );
+	    }
+	if( !found && (uuid.size()>0||label.size()>0) )
+	    {
+	    found = fstabData.findUuidLabel( uuid, label, entry );
+	    fstabData.setDevice( entry, device() );
+	    }
 	}
     if( !found && mp.size()>0 )
 	{
@@ -171,14 +181,23 @@ void Volume::getMountData( const ProcMounts& mountData )
 
 void Volume::getLoopData( SystemCmd& loopData )
     {
-    bool found = loopData.select( " (" + device() + ")" )>0;
-    if( !found )
+    bool found = false;
+    if( cont->type()==LOOP )
 	{
-	list<string>::const_iterator an = alt_names.begin();
-	while( !found && an!=alt_names.end() )
+	Loop* l = static_cast<Loop*>(this);
+	found = loopData.select( " (" + l->loopFile() + ") " )>0;
+	}
+    else
+	{
+	found = loopData.select( " (" + device() + ")" )>0;
+	if( !found )
 	    {
-	    found = loopData.select( " (" + *an + ") " )>0;
-	    ++an;
+	    list<string>::const_iterator an = alt_names.begin();
+	    while( !found && an!=alt_names.end() )
+		{
+		found = loopData.select( " (" + *an + ") " )>0;
+		++an;
+		}
 	    }
 	}
     if( found )
@@ -207,7 +226,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 		    encr = el->substr( encr.size() );
 		    if( encr == "twofish160" )
 			orig_encryption = encryption = ENC_TWOFISH_OLD;
-		    if( encr == "twofish256" )
+		    else if( encr == "twofish256" )
 			orig_encryption = encryption = ENC_TWOFISH256_OLD;
 		    else if( encr == "CryptoAPI/twofish-cbc" )
 			orig_encryption = encryption = ENC_TWOFISH;
@@ -474,7 +493,7 @@ string Volume::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format device %1$s %2$s $s with %3$s"),
+	    txt = sformat( _("Format device %1$s %2$s with %3$s"),
 			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	}
@@ -891,12 +910,52 @@ string Volume::losetupText( bool doing ) const
     return( txt );
     }
 
+bool Volume::loopStringNum( const string& name, unsigned& num )
+    {
+    bool ret=false;
+    string d(name);
+    if( d.find( "/dev/" )==0 )
+	d.erase( 0, 5 );
+    static Regex loop( "^loop[0-9]+$" );
+    if( loop.match( d ))
+	{
+	d.substr( 4 )>>num;
+	ret = true;
+	}
+    return( ret );
+    }
+
+bool hasLoopDevice( const Volume& v ) { return( v.loopDevice().size()>0 ); }
+
+bool Volume::loopInUse( Storage* sto, const string& loopdev )
+    {
+    bool ret = false;
+
+    Storage::ConstVolPair p = sto->volPair( hasLoopDevice );
+    Storage::ConstVolIterator i=p.begin();
+    while( !ret && i!=p.end() )
+	{
+	ret = i->loop_dev==loopdev;
+	++i;
+	}
+    return( ret );
+    }
+
 int Volume::getFreeLoop()
     {
     const int loop_instsys_offset = 2;
     int ret = 0;
     if( loop_dev.size()==0 )
 	{
+	list<unsigned> lnum;
+	Storage::ConstVolPair p = cont->getStorage()->volPair( hasLoopDevice );
+	for( Storage::ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+	    {
+	    unsigned num;
+	    if( loopStringNum( i->loopDevice(), num ))
+		lnum.push_back( num );
+	    }
+	cout << "lnum:" << lnum << endl;
 	unsigned num = cont->getStorage()->instsys()?loop_instsys_offset:0;
 	bool found;
 	string ldev;
@@ -905,7 +964,7 @@ int Volume::getFreeLoop()
 	    {
 	    ldev = "^/dev/loop" + decString(num) + " ";
 	    found = c.select( ldev )>0;
-	    if( found )
+	    if( found || find( lnum.begin(), lnum.end(), num )!=lnum.end())
 		num++;
 	    }
 	while( found && num<32 );
@@ -1419,7 +1478,7 @@ int Volume::doFstabUpdate()
 	    ret = fstab->addEntry( che );
 	    }
 	}
-    if( changed && ret==0 )
+    if( changed && ret==0 && cont->getStorage()->isRootMounted() )
 	{
 	ret = fstab->flush();
 	}

@@ -11,7 +11,7 @@
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {
-    for( int i=0; i<numLines(); i++ )
+    for( unsigned i=0; i<numLines(); i++ )
 	{
 	string tmp = extractNthWord( 3, (*this)[i] );
 	if( tmp.size()>0 && tmp!="name" )

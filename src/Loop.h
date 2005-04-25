@@ -8,19 +8,24 @@ using namespace std;
 class Loop : public Volume
     {
     public:
-	Loop( const Container& d, unsigned Pnr, const string& LoopFile );
+	Loop( const Container& d, const string& LoopDev, const string& LoopFile );
 	virtual ~Loop();
-	const string& loopFile() const { return loop_file; }
+	const string& loopFile() const { return lfile; }
 	friend inline ostream& operator<< (ostream& s, const Loop& l );
 
+	virtual void print( ostream& s ) const { s << *this; }
+	string removeText( bool doing ) const;
+	string createText( bool doing ) const;
+	string formatText( bool doing ) const;
+
     protected:
-	string loop_file;
+	string lfile;
     };
 
 inline ostream& operator<< (ostream& s, const Loop& l )
     {
     s << "Loop " << *(Volume*)&l
-      << " LoopFile:" << l.loop_file;
+      << " LoopFile:" << l.lfile;
     return( s );
     }
 

@@ -116,10 +116,12 @@ class EtcFstab
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
 	int changeRootPrefix( const string& prfix );
+	void getFileBasedLoops( const string& prefix, list<FstabEntry>& l );
 	string addText( bool doing, bool crypto, const string&  mp );
 	string updateText( bool doing, bool crypto, const string&  mp );
 	string removeText( bool doing, bool crypto, const string&  mp );
 	int flush();
+
     protected:
 	struct Entry
 	    {
