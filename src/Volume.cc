@@ -1024,8 +1024,11 @@ Volume::setCryptPwd( const string& val )
     if( val.size()<5 )
 	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
     else
+	{
 	crypt_pwd=val; 
-
+	if( encryption==ENC_UNKNOWN )
+	    detectLoopEncryption();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1036,7 +1039,7 @@ EncryptType Volume::detectLoopEncryption()
 
     if( getContainer()->getStorage()->test() )
     {
-	ret = ENC_TWOFISH;
+	ret = encryption = orig_encryption = ENC_TWOFISH;
 	y2milestone( "ret:%s", encTypeString(ret).c_str() );
 	return( ret );
     }
