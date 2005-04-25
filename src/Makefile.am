@@ -3,12 +3,12 @@
 #
 
 AM_CXXFLAGS = -DY2LOG=\"y2storage\"
-INCLUDES = -I$(includedir) -I/usr/include/evms
+INCLUDES = -I$(includedir) ${Y2UTIL_CFLAGS} -I/usr/include/evms
 
 y2storage:
 	ln -sf . y2storage
 
-Makefile: y2storage
+BUILT_SOURCES = y2storage
 
 lib_LTLIBRARIES = liby2storage.la
 
@@ -41,7 +41,7 @@ liby2storage_la_SOURCES =			\
 	StorageTmpl.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
-liby2storage_la_LIBADD = -ly2util
+liby2storage_la_LIBADD = ${Y2UTIL_LIBS}
 
 pkgincludedir = $(includedir)/y2storage
 
