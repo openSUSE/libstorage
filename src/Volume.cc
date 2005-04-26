@@ -57,7 +57,7 @@ void Volume::setNameDev()
 void Volume::init()
     {
     del = create = format = is_loop = loop_active = silent = false;
-    is_mounted = ronly = false;
+    is_mounted = ronly = fstab_added = false;
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     encryption = orig_encryption = ENC_NONE;
@@ -955,7 +955,6 @@ int Volume::getFreeLoop()
 	    if( loopStringNum( i->loopDevice(), num ))
 		lnum.push_back( num );
 	    }
-	cout << "lnum:" << lnum << endl;
 	unsigned num = cont->getStorage()->instsys()?loop_instsys_offset:0;
 	bool found;
 	string ldev;
@@ -1006,7 +1005,13 @@ string Volume::getLosetupCmd( storage::EncryptType e, const string& pwdfile ) co
     cmd += " ";
     cmd += loop_dev;
     cmd += " ";
-    cmd += dev;
+    if( cont->type()!=LOOP )
+	cmd += dev;
+    else
+	{
+	const Loop* l = static_cast<const Loop*>(this);
+	cmd += l->lfileRealPath();
+	}
     cmd += " -p0 < ";
     cmd += pwdfile;
     y2milestone( "cmd:%s", cmd.c_str() );
@@ -1021,7 +1026,10 @@ Volume::setCryptPwd( const string& val )
 #endif
     int ret = 0;
 
-    if( val.size()<5 )
+    if( ((encryption==ENC_UNKNOWN||encryption==ENC_TWOFISH_OLD||
+          encryption==ENC_NONE) && val.size()<5) || 
+        ((encryption==ENC_TWOFISH||encryption==ENC_TWOFISH256_OLD) && 
+	  val.size()<8) )
 	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
     else
 	{
@@ -1309,6 +1317,12 @@ int Volume::prepareRemove()
 	    ret = doFstabUpdate();
 	    }
 	}
+    if( is_loop && loop_active )
+	{
+	SystemCmd c( "losetup -d " + loop_dev );
+	if( c.retcode()!=0 )
+	    ret = VOLUME_LOUNSETUP_FAILED;
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1440,7 +1454,7 @@ int Volume::doFstabUpdate()
 		}
 	    if( changed )
 		{
-		if( !silent )
+		if( !silent && !fstab_added )
 		    {
 		    cont->getStorage()->showInfoCb( 
 			fstab->updateText( true, inCrypto(), che.mount ));
@@ -1453,7 +1467,13 @@ int Volume::doFstabUpdate()
 	    changed = true;
 	    FstabChange che;
 	    che.device = dev;
-	    che.dentry = getMountByString( mount_by, dev, uuid, label );
+	    if( cont->type()!=LOOP )
+		che.dentry = getMountByString( mount_by, dev, uuid, label );
+	    else
+		{
+		const Loop* l = static_cast<const Loop*>(this);
+		che.dentry = l->loopFile();
+		}
 	    che.encr = encryption;
 	    che.loop_dev = fstab_loop_dev;
 	    che.fs = fs_names[fs];
@@ -1479,6 +1499,7 @@ int Volume::doFstabUpdate()
 		                                                che.mount ));
 		}
 	    ret = fstab->addEntry( che );
+	    fstab_added = true;
 	    }
 	}
     if( changed && ret==0 && cont->getStorage()->isRootMounted() )

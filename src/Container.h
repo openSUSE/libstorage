@@ -51,6 +51,7 @@ class Container
 	virtual int commitChanges( CommitStage stage );
 	virtual int commitChanges( CommitStage stage, Volume* vol );
 	unsigned numVolumes() const;
+	bool findVolume( const string& device, Volume*& vol );
 
 // iterators over volumes of a container
     protected:
@@ -163,6 +164,7 @@ class Container
 	virtual void logData( const string& Dir ) {;}
 
 	static string type_names[EVMS+1];
+	static unsigned order[EVMS+1];
 
 	Storage * const sto;
 	CType typ;

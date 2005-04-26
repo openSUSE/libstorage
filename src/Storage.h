@@ -17,6 +17,7 @@
 #include "y2storage/EvmsVol.h"
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
+#include "y2storage/LoopCo.h"
 #include "y2storage/Loop.h"
 #include "y2storage/FilterIterator.h"
 #include "y2storage/DerefIterator.h"
@@ -202,17 +203,35 @@ class Storage : public StorageInterface
 			 string& device );
 	int removeMd( const string& name );
 
+	int createFileLoop( const string& lname, bool reuseExisting,
+			    unsigned long long sizeK, const string& mp,
+			    const string& pwd, string& device );
+	int removeFileLoop( const string& lname, bool removeFile );
+
 	deque<string> getCommitActions( bool mark_destructive );
         int commit();
 
 	void setCallbackProgressBar( CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }
-	CallbackProgressBar getCallbackProgressBar() { return progress_bar_cb; }
+	CallbackProgressBar getCallbackProgressBar() 
+	    { return progress_bar_cb; }
 	void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc )
 	    { install_info_cb=pfnc; }
-	CallbackShowInstallInfo getCallbackShowInstallInfo() { return install_info_cb; }
+	CallbackShowInstallInfo getCallbackShowInstallInfo() 
+	    { return install_info_cb; }
+	void setCallbackInfoPopup( CallbackInfoPopup pfnc )
+	    { info_popup_cb=pfnc; }
+	CallbackInfoPopup getCallbackInfoPopup() 
+	    { return info_popup_cb; }
+	void setCallbackYesNoPopup( CallbackYesNoPopup pfnc )
+	    { yesno_popup_cb=pfnc; }
+	CallbackYesNoPopup getCallbackYesNoPopup() 
+	    { return yesno_popup_cb; }
+
 	void progressBarCb( const string& id, unsigned cur, unsigned max );
 	void showInfoCb( const string& info );
+	void infoPopupCb( const string& info );
+	bool yesnoPopupCb( const string& info );
 
 // iterators over container
     protected:
@@ -977,10 +996,12 @@ class Storage : public StorageInterface
 	LvmVgIterator findLvmVg( const string& name );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
 	bool haveMd( MdCo*& md );
+	bool haveLoop( LoopCo*& loop );
 	bool findVolume( const string& device, VolIterator& v  );
 
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
+	int commitPair( CPair& p );
 	void sortCommitLists( CommitStage stage, list<Container*>& co,  
 			      list<Volume*>& vl );
 	int performContChanges( CommitStage stage, const list<Container*>& co,
@@ -1005,6 +1026,8 @@ class Storage : public StorageInterface
 	EtcFstab *fstab;
 	CallbackProgressBar progress_bar_cb;
 	CallbackShowInstallInfo install_info_cb;
+	CallbackInfoPopup info_popup_cb;
+	CallbackYesNoPopup yesno_popup_cb;
 	unsigned max_log_num;
     };
 

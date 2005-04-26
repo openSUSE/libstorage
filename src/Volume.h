@@ -31,6 +31,8 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
+	void setFstabAdded( bool val=true ) { fstab_added=val; }
+	bool fstabAdded() const { return( fstab_added ); }
 	const usedBy& getUsedBy()  const{ return( uby ); }
 	UsedByType getUsedByType() const { return( uby.t ); }
 	const string& usedByName() const { return( uby.name ); }
@@ -164,6 +166,7 @@ class Volume
 	bool del;
 	bool format;
 	bool silent;
+	bool fstab_added;
 	storage::FsType fs;
 	storage::FsType detected_fs;
 	storage::MountByType mount_by;

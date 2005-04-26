@@ -25,25 +25,26 @@ EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
 	{
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
-	Entry *p = new Entry;
-
-	if( i!=l.end() )
-	    p->old.device = p->old.dentry = *i++;
-	if( i!=l.end() )
-	    p->old.mount = *i++;
-	if( i!=l.end() )
-	    p->old.fs = *i++;
-	if( i!=l.end() )
-	    p->old.opts = splitString( *i++, "," );
-	if( i!=l.end() )
-	    *i++ >> p->old.freq;
-	if( i!=l.end() )
-	    *i++ >> p->old.passno;
-	p->old.calcDependent();
-	p->nnew = p->old;
-	co.push_back( *p );
-	delete p;
-
+	if( l.begin()!=l.end() && i->find( '#' )!=0 )
+	    {
+	    Entry *p = new Entry;
+	    if( i!=l.end() )
+		p->old.device = p->old.dentry = *i++;
+	    if( i!=l.end() )
+		p->old.mount = *i++;
+	    if( i!=l.end() )
+		p->old.fs = *i++;
+	    if( i!=l.end() )
+		p->old.opts = splitString( *i++, "," );
+	    if( i!=l.end() )
+		*i++ >> p->old.freq;
+	    if( i!=l.end() )
+		*i++ >> p->old.passno;
+	    p->old.calcDependent();
+	    p->nnew = p->old;
+	    co.push_back( *p );
+	    delete p;
+	    }
 	getline( mounts, line );
 	}
     mounts.close();

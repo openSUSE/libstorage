@@ -13,3 +13,4 @@ TestStorage
 TestProbing
 TestLvm
 TestMd
+TestLoop

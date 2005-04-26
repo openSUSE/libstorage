@@ -67,10 +67,14 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    {
 	    VolPair p = volPair( stageCreate );
 	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		{
+		cout << "dev:" << i->device() << endl;
 		vol.push_back( &(*i) );
+		}
 	    if( created() )
 		col.push_back( this );
 	    }
+	    break;
 	case FORMAT:
 	    {
 	    VolPair p = volPair( stageFormat );
@@ -233,6 +237,21 @@ bool Container::removeFromList( Volume* e )
     return( ret );
     }
 
+bool Container::findVolume( const string& device, Volume*& vol )
+    {
+    string d = normalizeDevice( device );
+    VolPair p = volPair( Volume::notDeleted );
+    VolIterator v = p.begin();
+    const list<string>& al( v->altNames() );
+    while( v!=p.end() && v->device()!=d &&
+           find( al.begin(), al.end(), d )==al.end() )
+	{
+	++v;
+        }
+    if( v!=p.end() )
+	vol = &(*v);
+    return( v!=p.end() );
+    }
 
-string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "EVMS" };
+string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "EVMS" };
 

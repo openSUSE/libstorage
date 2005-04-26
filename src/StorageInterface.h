@@ -99,10 +99,24 @@ namespace storage
     typedef void (*CallbackProgressBar)( const string& id, unsigned cur, unsigned max );
 
     /**
-     *  typedef for a pointer to a function that is called with strings telling the user what is
-        currently going on
+     * typedef for a pointer to a function that is called with strings 
+     * telling the user what is currently going on
      */
     typedef void (*CallbackShowInstallInfo)( const string& id );
+
+    /**
+     * typedef for a pointer to a function that displays a popup with
+     * the given text and waits for user confirmation
+     */
+    typedef void (*CallbackInfoPopup)( const string& text );
+
+    /**
+     * typedef for a pointer to a function that displays a popup with
+     * the given text and two buttons labels "Yes" and "No". The user
+     * has to press on of these buttons. If he presses "Yes" true is
+     * returned, false otherwise.
+     */
+    typedef bool (*CallbackYesNoPopup)( const string& text );
 
 
     /**
@@ -187,6 +201,9 @@ namespace storage
 	STORAGE_NOT_YET_IMPLEMENTED = -2013,
 	STORAGE_MD_INVALID_NAME = -2014,
 	STORAGE_MD_NOT_FOUND = -2015,
+	STORAGE_MEMORY_EXHAUSTED = -2016,
+	STORAGE_LOOP_NOT_FOUND = -2017,
+	STORAGE_CREATED_LOOP_NOT_FOUND = -2018,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -217,6 +234,7 @@ namespace storage
 	VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER = -3026,
 	VOLUME_RESIZE_FAILED = -3027,
 	VOLUME_ALREADY_IN_USE = -3028,
+	VOLUME_LOUNSETUP_FAILED = -3029,
 
 	LVM_CREATE_PV_FAILED = -4000,
 	LVM_PE_SIZE_INVALID = -4001,
@@ -271,16 +289,18 @@ namespace storage
 	MD_REMOVE_USED_BY = -6010,
 	MD_NUMBER_TOO_LARGE = -6011,
 	MD_REMOVE_INVALID_VOLUME = -6012,
+	MD_REMOVE_CREATE_NOT_FOUND = -6013,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
 	LOOP_UNKNOWN_FILE = -7002,
 	LOOP_REMOVE_USED_BY = -7003,
-	LOOP_CREATE_FAILED = -7004,
+	LOOP_FILE_CREATE_FAILED = -7004,
 	LOOP_CREATE_INVALID_VOLUME = -7005,
-	LOOP_REMOVE_FAILED = -7006,
+	LOOP_REMOVE_FILE_FAILED = -7006,
 	LOOP_REMOVE_INVALID_VOLUME = -7007,
 	LOOP_NOT_IN_LIST = -7008,
+	LOOP_REMOVE_CREATE_NOT_FOUND = -7009,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -712,6 +732,37 @@ namespace storage
 	virtual int removeMd( const string& name ) = 0;
 
 	/**
+	 * Create a file based loop device. Encryption is automatically
+	 * activated on the loop device.
+	 *
+	 * @param lname name of file the loop device is based on 
+	 * @param reuseExisting if true an alraedy existing file will be
+	 *    reused. if false the file will be created new. if false
+	 *    the format flag for the device is set by default.
+	 * @param sizeK size of the created file, this parameter is ignored
+	 *    if reuseExisting is true and a file alraedy exists.
+	 * @param mp mount point of the file based loop device
+	 * @param pwd crypt password for the loop device, encryption type
+	 *    is determined automatically by the system
+	 * @param device the name of the created loop device
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createFileLoop( const string& lname, bool reuseExisting,
+	                            unsigned long long sizeK,
+				    const string& mp, const string& pwd,
+				    string &device ) = 0;
+	
+	/**
+	 * Remove a file based loop device from the system.
+	 *
+	 * @param lname name of file the loop device is based on 
+	 * @param removeFile if true the file is removed together with
+	 *    the based loop device. If false the file is not touched.
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeFileLoop( const string& lname, bool removeFile ) = 0;
+
+	/**
 	 * Gets a list of string describing the actions to be executed
 	 * after next call to commit()
 	 *
@@ -720,6 +771,7 @@ namespace storage
 	 * @return list of strings presentable to the user
 	 */
 	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
+
 
 	/**
 	 * Sets the callback function called on progress bar events
@@ -735,28 +787,56 @@ namespace storage
 	 */
 	virtual CallbackProgressBar getCallbackProgressBar() = 0;
 
+
 	/**
 	 * Sets the callback function called to display install info
 	 *
 	 * @param pfnc pointer to funtcion
 	 */
 	virtual void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc ) = 0;
-
 	/**
 	 * Query the callback function called to display install info
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
 	virtual CallbackShowInstallInfo getCallbackShowInstallInfo() = 0;
+
+
+	/**
+	 * Sets the callback function called to display a info popup to the
+	 * user
+	 *
+	 * @param pfnc pointer to funtcion
+	 */
+	virtual void setCallbackInfoPopup( CallbackInfoPopup pfnc ) = 0;
+
+	/**
+	 * Query the callback function called to display info popup to the
+	 * user
+	 *
+	 * @return pointer to function currently called for progress bar events
+	 */
+	virtual CallbackInfoPopup getCallbackInfoPopup() = 0;
+
+
+	/**
+	 * Sets the callback function called to get a Yes/No decision by
+	 * the user.
+	 *
+	 * @param pfnc pointer to funtcion
+	 */
+	virtual void setCallbackYesNoPopup( CallbackYesNoPopup pfnc ) = 0;
+
+	/**
+	 * Query the callback function called to get a Yes/No decision by
+	 * the user.
+	 *
+	 * @return pointer to function currently called for progress bar events
+	 */
+	virtual CallbackYesNoPopup getCallbackYesNoPopup() = 0;
+
 #if 0
 
-	virtual bool createMd (...) = 0;
-	virtual bool removeMd (...) = 0;
-
-	virtual bool createLoopFile (...) = 0;
-	virtual bool removeLoopFile (...) = 0;
-
-	virtual bool createEvmsContainer (...) = 0;
 	virtual bool reomveEvmsContainer (...) = 0;
 	virtual bool extendEvmsContainer (...) = 0;
 	virtual bool reduceEvmsContainer (...) = 0;

@@ -46,6 +46,8 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
                  testmode, autodetect, max_log_num );
     progress_bar_cb = NULL;
     install_info_cb = NULL;
+    info_popup_cb = NULL;
+    yesno_popup_cb = NULL;
     recursiveRemove = false;
     }
 
@@ -1405,8 +1407,10 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	    md = new MdCo( this, false );
 	else
 	    num = md->unusedNumber();
+	if( md==NULL )
+	    ret = STORAGE_MEMORY_EXHAUSTED;
 	}
-    if( ret==0 && md!=NULL )
+    if( ret==0 )
 	{
 	list<string> d;
 	d.insert( d.end(), devs.begin(), devs.end() );
@@ -1463,7 +1467,6 @@ int Storage::removeMd( const string& name )
     return( ret );
     }
 
-
 bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;
@@ -1473,6 +1476,113 @@ bool Storage::haveMd( MdCo*& md )
 	++i;
     if( i != p.end() )
 	md = static_cast<MdCo*>(&(*i));
+    return( i != p.end() );
+    }
+
+int 
+Storage::createFileLoop( const string& lname, bool reuseExisting,
+                         unsigned long long sizeK, const string& mp,
+			 const string& pwd, string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "lname:%s reuseExisting:%d sizeK:%llu mp:%s", lname.c_str(),
+                 reuseExisting, sizeK, mp.c_str() );
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2milestone( "pwd:%s", pwd.c_str() );
+#endif
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    LoopCo *loop = NULL;
+    Volume *vol = NULL;
+    bool have_loop = true;
+    if( ret==0 )
+	{
+	have_loop = haveLoop(loop);
+	if( !have_loop )
+	    loop = new LoopCo( this, false );
+	if( loop==NULL )
+	    ret = STORAGE_MEMORY_EXHAUSTED;
+	}
+    if( ret==0 )
+	{
+	ret = loop->createLoop( lname, reuseExisting, sizeK, device );
+	}
+    if( ret==0 && !loop->findVolume( device, vol ))
+	{
+	ret = STORAGE_CREATED_LOOP_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = vol->setCryptPwd( pwd );
+	}
+    if( ret==0 && (!reuseExisting || access( (root()+lname).c_str(), R_OK )!=0 ))
+	{
+	ret = vol->setFormat( true, EXT3 );
+	}
+    if( ret==0 )
+	{
+	ret = vol->setEncryption( true );
+	}
+    if( ret==0 )
+	{
+	ret = vol->changeMount( mp );
+	}
+    if( !have_loop )
+	{
+	if( ret==0 )
+	    {
+	    addToList( loop );
+	    }
+	else if( loop!=NULL )
+	    delete loop;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d device:%s", ret, ret==0?device.c_str():"" );
+    return( ret );
+    }
+
+int 
+Storage::removeFileLoop( const string& lname, bool removeFile )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "lname:%s removeFile:%d", lname.c_str(), removeFile );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	LoopCo *loop = NULL;
+	if( haveLoop(loop) )
+	    ret = loop->removeLoop( lname, removeFile );
+	else
+	    ret = STORAGE_LOOP_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+
+bool Storage::haveLoop( LoopCo*& loop )
+    {
+    loop = NULL;
+    CPair p = cPair();
+    ContIterator i = p.begin();
+    while( i != p.end() && i->type()!=LOOP )
+	++i;
+    if( i != p.end() )
+	loop = static_cast<LoopCo*>(&(*i));
     return( i != p.end() );
     }
 
@@ -1601,49 +1711,71 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
     y2milestone( "%s", b.str().c_str() );
     }
 
+static bool notLoop( const Container& c ) { return( c.type()!=LOOP ); }
+static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
+
 int Storage::commit()
     {
     assertInit();
-    CPair p = cPair();
+    CPair p = cPair( notLoop );
     int ret = 0;
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
 	{
-	CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
-	CommitStage* pt = a;
-	while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
+	ret = commitPair( p );
+	}
+    p = cPair( isLoop );
+    y2milestone( "empty:%d", p.empty() );
+    if( ret==0 && !p.empty() )
+	{
+	ret = commitPair( p );
+	}
+    VPair vp = vPair( fstabAdded );
+    for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
+	i->setFstabAdded(false);
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int  
+Storage::commitPair( CPair& p )
+    {
+    int ret = 0;
+    y2milestone( "p.length:%d", p.length() );
+    CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
+    CommitStage* pt = a;
+    while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
+	{
+	bool cont_removed = false;
+	list<Container*> colist;
+	list<Volume*> vlist;
+	ContIterator i = p.begin();
+	while( ret==0 && i != p.end() )
 	    {
-	    bool cont_removed = false;
-	    list<Container*> colist;
-	    list<Volume*> vlist;
-	    ContIterator i = p.begin();
-	    while( ret==0 && i != p.end() )
-		{
-		ret = i->getToCommit( *pt, colist, vlist );
-		++i;
-		}
-	    sortCommitLists( *pt, colist, vlist );
-	    list<Volume*>::iterator vli = vlist.begin();
-	    list<Container*>::iterator cli;
-	    while( ret==0 && vli != vlist.end() )
-		{
-		Container *co = const_cast<Container*>((*vli)->getContainer());
-		cli = find( colist.begin(), colist.end(), co );
-		if( *pt!=DECREASE && cli!=colist.end() )
-		    {
-		    ret = co->commitChanges( *pt );
-		    colist.erase( cli );
-		    }
-		if( ret==0 )
-		    ret = co->commitChanges( *pt, *vli );
-		++vli;
-		}
-	    if( ret==0 && colist.size()>0 )
-		ret = performContChanges( *pt, colist, cont_removed );
-	    if( cont_removed )
-		p = cPair();
-	    pt++;
+	    ret = i->getToCommit( *pt, colist, vlist );
+	    ++i;
 	    }
+	sortCommitLists( *pt, colist, vlist );
+	list<Volume*>::iterator vli = vlist.begin();
+	list<Container*>::iterator cli;
+	while( ret==0 && vli != vlist.end() )
+	    {
+	    Container *co = const_cast<Container*>((*vli)->getContainer());
+	    cli = find( colist.begin(), colist.end(), co );
+	    if( *pt!=DECREASE && cli!=colist.end() )
+		{
+		ret = co->commitChanges( *pt );
+		colist.erase( cli );
+		}
+	    if( ret==0 )
+		ret = co->commitChanges( *pt, *vli );
+	    ++vli;
+	    }
+	if( ret==0 && colist.size()>0 )
+	    ret = performContChanges( *pt, colist, cont_removed );
+	if( cont_removed )
+	    p = cPair();
+	pt++;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -1925,6 +2057,22 @@ void Storage::showInfoCb( const string& info )
     y2milestone( "INSTALL INFO:%s", info.c_str() );
     if( install_info_cb )
 	(*install_info_cb)( info );
+    }
+
+void Storage::infoPopupCb( const string& info )
+    {
+    y2milestone( "INFO POPUP:%s", info.c_str() );
+    if( info_popup_cb )
+	(*info_popup_cb)( info );
+    }
+
+bool Storage::yesnoPopupCb( const string& info )
+    {
+    y2milestone( "YESNO POPUP:%s", info.c_str() );
+    if( yesno_popup_cb )
+	return (*yesno_popup_cb)( info );
+    else
+	return( true );
     }
 
 Storage::DiskIterator Storage::findDisk( const string& disk )

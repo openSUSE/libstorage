@@ -564,8 +564,10 @@ SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
 void
 SystemCmd::logOutput()
     {
-    y2milestone( "stderr:%s", getString( IDX_STDERR )->c_str() );
-    y2milestone( "stdout:%s", getString( IDX_STDOUT )->c_str() );
+    for( unsigned i=0; i<numLines(false,IDX_STDERR); ++i )
+	y2milestone( "stderr:%s", getLine( i, false, IDX_STDERR )->c_str() );
+    for( unsigned i=0; i<numLines(); ++i )
+	y2milestone( "stderr:%s", getLine( i )->c_str() );
     }
 
 ///////////////////////////////////////////////////////////////////

@@ -356,11 +356,19 @@ MdCo::removeMd( unsigned num )
 	}
     if( ret==0 )
 	{
-	list<string> devs;
-	i->getDevs( devs );
-	for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
-	    getStorage()->setUsedBy( *s, UB_NONE, "" );
-	i->setDeleted( true );
+	if( i->created() )
+	    {
+	    if( !removeFromList( &(*i) ))
+		ret = MD_REMOVE_CREATE_NOT_FOUND;
+	    }
+	else
+	    {
+	    list<string> devs;
+	    i->getDevs( devs );
+	    for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
+		getStorage()->setUsedBy( *s, UB_NONE, "" );
+	    i->setDeleted( true );
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

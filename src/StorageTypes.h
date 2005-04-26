@@ -6,7 +6,19 @@
 
 using namespace storage;
 
-typedef enum { CUNKNOWN, DISK, MD, LOOP, LVM, EVMS } CType;
+typedef enum { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS } CType;
+
+struct contOrder
+    {
+    contOrder(CType t) : order(0)
+	{
+	if( t==LOOP )
+	    order=1;
+	}
+    operator unsigned() const { return( order ); }
+    protected:
+	unsigned order;
+    };
 
 typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 
@@ -23,26 +35,34 @@ struct commitAction
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
     bool operator<( const commitAction& rhs ) const
-	{ 
-	if( stage==rhs.stage )
+	{
+	contOrder l(type);
+	contOrder r(rhs.type);
+
+	if( unsigned(r)==unsigned(l) )
 	    {
-	    if( stage==DECREASE )
+	    if( stage==rhs.stage )
 		{
-		if( type!=rhs.type )
-		    return( type>rhs.type );
+		if( stage==DECREASE )
+		    {
+		    if( type!=rhs.type )
+			return( type>rhs.type );
+		    else
+			return( container<rhs.container );
+		    }
 		else
-		    return( container<rhs.container );
+		    {
+		    if( type!=rhs.type )
+			return( type<rhs.type );
+		    else
+			return( container>rhs.container );
+		    }
 		}
 	    else
-		{
-		if( type!=rhs.type )
-		    return( type<rhs.type );
-		else
-		    return( container>rhs.container );
-		}
+		return( stage<rhs.stage );
 	    }
 	else
-	    return( stage<rhs.stage );
+	    return( unsigned(l)<unsigned(r) );
 	}
     bool operator<=( const commitAction& rhs ) const
 	{ return( *this < rhs || *this == rhs ); }

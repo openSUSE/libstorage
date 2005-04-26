@@ -116,11 +116,12 @@ LoopCo::findLoop( const string& file )
     }
 
 int 
-LoopCo::createLoop( const string& file, bool reuseExistsing )
+LoopCo::createLoop( const string& file, bool reuseExisting,
+                    unsigned long long sizeK, string& device )
     {
     int ret = 0;
-    unsigned long long fsize = 0;
-    y2milestone( "file:%s reuseEx:%d", file.c_str(), reuseExistsing );
+    y2milestone( "file:%s reuseEx:%d sizeK:%llu", file.c_str(), 
+                 reuseExisting, sizeK );
     if( readonly() )
 	{
 	ret = LOOP_CHANGE_READONLY;
@@ -132,10 +133,10 @@ LoopCo::createLoop( const string& file, bool reuseExistsing )
 	}
     if( ret==0 )
 	{
-	Loop* m = new Loop( *this, 0, file );
-	m->setCreated( true );
-	m->setSize( fsize );
-	addToList( m );
+	Loop* l = new Loop( *this, file, reuseExisting, sizeK );
+	l->setCreated( true );
+	addToList( l );
+	device = l->device();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -160,6 +161,19 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 	{
 	ret = LOOP_REMOVE_USED_BY;
 	}
+    if( ret==0 )
+	{
+	if( i->created() )
+	    {
+	    if( !removeFromList( &(*i) ))
+		ret = LOOP_REMOVE_CREATE_NOT_FOUND;
+	    }
+	else
+	    {
+	    i->setDeleted( true );
+	    i->setDelFile( removeFile );
+	    }
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -181,23 +195,23 @@ int
 LoopCo::doCreate( Volume* v ) 
     {
     y2milestone( "name:%s", v->name().c_str() );
-    Loop * m = dynamic_cast<Loop *>(v);
+    Loop * l = dynamic_cast<Loop *>(v);
     int ret = 0;
-    if( m != NULL )
+    if( l != NULL )
 	{
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( m->createText(true) );
+	    getStorage()->showInfoCb( l->createText(true) );
 	    }
-	string cmd = "";
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = LOOP_CREATE_FAILED;
+	if( !l->createFile() )
+	    ret = LOOP_FILE_CREATE_FAILED;
 	if( ret==0 )
 	    {
-		{
-		//updateEntry( m );
-		}
+	    ret = l->doLosetup();
+	    }
+	if( ret==0 )
+	    {
+	    l->setCreated( false );
 	    }
 	}
     else
@@ -210,25 +224,20 @@ int
 LoopCo::doRemove( Volume* v )
     {
     y2milestone( "name:%s", v->name().c_str() );
-    Loop * m = dynamic_cast<Loop *>(v);
+    Loop * l = dynamic_cast<Loop *>(v);
     int ret = 0;
-    if( m != NULL )
+    if( l != NULL )
 	{
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( m->removeText(true) );
+	    getStorage()->showInfoCb( l->removeText(true) );
 	    }
-	ret = m->prepareRemove();
+	ret = l->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "mdadm --stop " + m->device();
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = LOOP_REMOVE_FAILED;
-	    }
-	if( ret==0 )
-	    {
-	    if( !removeFromList( m ) )
+	    if( !l->removeFile() )
+		ret = LOOP_REMOVE_FILE_FAILED;
+	    if( !removeFromList( l ) && ret==0 )
 		ret = LOOP_NOT_IN_LIST;
 	    }
 	}

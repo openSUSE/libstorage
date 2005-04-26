@@ -10,7 +10,7 @@ LDADD = ../src/liby2storage.la
 AM_CPPFLAGS = -DY2LOG=\"y2storage\"
 AM_CXXFLAGS =
 
-noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm TestMd
+noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm TestMd TestLoop
 
 TestDisk_SOURCES = TestDisk.cc
 
@@ -24,9 +24,11 @@ TestLvm_SOURCES = TestLvm.cc
 
 TestMd_SOURCES = TestMd.cc
 
+TestLoop_SOURCES = TestLoop.cc
+
 exampledir = $(docdir)/examples/liby2storage
 
-example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc TestProbing.cc TestLvm.cc TestMd.cc
+example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc TestProbing.cc TestLvm.cc TestMd.cc TestLoop.cc
 
 EXTRA_DIST = $(example_DATA) Makefile.example
 

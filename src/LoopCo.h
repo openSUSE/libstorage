@@ -16,7 +16,8 @@ class LoopCo : public Container
 	static CType const staticType() { return LOOP; }
 	friend inline ostream& operator<< (ostream&, const LoopCo& );
 
-	int createLoop( const string& file, bool reuseExisting = true );
+	int createLoop( const string& file, bool reuseExisting, 
+	                unsigned long long sizeK, string& device );
 	int removeLoop( const string& file, bool removeFile = false );
 
 	int removeVolume( Volume* v );
