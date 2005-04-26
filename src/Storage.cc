@@ -1876,10 +1876,11 @@ bool Storage::findVolume( const string& device, VolIterator& v )
     string d = normalizeDevice( device );
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
-    const list<string>& al( v->altNames() );
-    while( v!=p.end() && v->device()!=d &&
-           find( al.begin(), al.end(), d )==al.end() )
-	{
+    while( v!=p.end() && v->device()!=d )
+        {
+	const list<string>& al( v->altNames() );
+	if( find( al.begin(), al.end(), d )!=al.end() )
+	    break;
 	++v;
 	}
     return( v!=p.end() );
