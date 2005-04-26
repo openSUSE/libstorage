@@ -606,8 +606,7 @@ _("The partitioning on your disk %1$s is not readable by\n"
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with YaST2."), dev.c_str() );
 
-	// TODO: handle callback into ycp code for error popup
-	y2milestone( "parted invalid:%s", txt.c_str() );
+	getStorage()->infoPopupCb( txt );
 	ronly = true;
 	}
     if( range_exceed>0 )
@@ -619,8 +618,7 @@ _("Your disk %1$s contains %2$lu partitions. The maximal number\n"
 "of partitions to handle by the kernel driver of disk is %3$lu.\n"
 "You will not be able to access partitions numbered above %3$lu."),
                               (char*)dev.c_str(), range_exceed, range-1 );
-	// TODO: handle callback into ycp code for error popup
-	y2milestone( "range_exceed:%s", txt.c_str() );
+	getStorage()->infoPopupCb( txt );
 	}
     for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
 	{
