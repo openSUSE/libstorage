@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <fstream>
 #include <iterator>
 
 #include <y2storage/StorageInterface.h>
@@ -17,10 +18,11 @@ StorageInterface* s = 0;
 void
 print_fstab ()
 {
-    if (testmode)
-	system ("cat tmp/fstab");
-    else
-	system ("cat /etc/fstab");
+    ifstream fstab (testmode ? "tmp/fstab" : "/etc/fstab");
+    string line;
+
+    while (getline (fstab, line))
+	cout << line << '\n';
 }
 
 
