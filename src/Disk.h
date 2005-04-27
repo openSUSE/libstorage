@@ -3,17 +3,13 @@
 
 #include <list>
 
-using namespace std;
-
 #include "y2storage/Container.h"
 #include "y2storage/Partition.h"
-
-using namespace storage;
 
 class Storage;
 class SystemCmd;
 class ProcPart;
-class istream;
+class Region;
 
 class Disk : public Container
     {
@@ -43,24 +39,24 @@ class Disk : public Container
 	friend inline ostream& operator<< (ostream&, const Disk& );
 
 	static bool needP( const string& dev );
-	int createPartition( PartitionType type, long unsigned start,
+	int createPartition( storage::PartitionType type, long unsigned start,
 	                     long unsigned len, string& device,
 			     bool checkRelaxed=false );
 	int createPartition( long unsigned len, string& device,
 			     bool checkRelaxed=false );
-	int createPartition( PartitionType type, string& device );
+	int createPartition( storage::PartitionType type, string& device );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );
-	unsigned availablePartNumber( PartitionType type=PRIMARY );
-	void getCommitActions( list<commitAction*>& l ) const;
-	int getToCommit( CommitStage stage, list<Container*>& col,
-			 list<Volume*>& vol );
+	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
+	void getCommitActions( std::list<commitAction*>& l ) const;
+	int getToCommit( CommitStage stage, std::list<Container*>& col,
+			 std::list<Volume*>& vol );
 	int commitChanges( CommitStage stage );
 	int commitChanges( CommitStage stage, Volume* vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
-	void getUnusedSpace( list<Region>& free, bool all=true, 
+	void getUnusedSpace( std::list<Region>& free, bool all=true, 
 	                     bool logical=false );
 	bool hasExtended() const;
 	string setDiskLabelText( bool doing=true ) const;
@@ -69,7 +65,7 @@ class Disk : public Container
 	string getPartName( unsigned nr ) const;
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
-	static pair<string,long> getDiskPartition( const string& dev );
+	static std::pair<string,long> getDiskPartition( const string& dev );
 
     protected:
 
@@ -131,10 +127,10 @@ class Disk : public Container
 	bool checkPartedOutput( const SystemCmd& cmd );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
-			     PartitionType& type, string& parted_start,
+			     storage::PartitionType& type, string& parted_start,
 			     unsigned& id, bool& boot );
-	bool checkPartedValid( const ProcPart& pp, const list<string>& ps,
-	                       const list<Partition*>& pl );
+	bool checkPartedValid( const ProcPart& pp, const std::list<string>& ps,
+	                       const std::list<Partition*>& pl );
 	bool getPartedValues( Partition *p );
 	virtual void print( ostream& s ) const { s << *this; }
 
@@ -146,7 +142,7 @@ class Disk : public Container
 	int doSetType( Volume* v );
 	int doCreateLabel();
 
-	//list<Region> getUnusedRegions();
+	//std::list<Region> getUnusedRegions();
 	void logData( const string& Dir );
 	bool haveBsdPart() const;
 	void setLabelData( const string& );

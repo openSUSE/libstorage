@@ -1,6 +1,5 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
 #include <sys/stat.h>
 
 #include "y2storage/Loop.h"
@@ -10,6 +9,9 @@
 #include "y2storage/ProcPart.h"
 #include "y2storage/Storage.h"
 #include "y2storage/SystemCmd.h"
+
+using namespace storage;
+using namespace std;
 
 Loop::Loop( const Container& d, const string& LoopDev, const string& LoopFile ) : 
     Volume( d, 0, 0 )

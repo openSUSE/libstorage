@@ -1,13 +1,8 @@
 #ifndef MD_H
 #define MD_H
 
-using namespace std;
-
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Volume.h"
-
-using namespace storage;
-
 
 class Md : public Volume
     {
@@ -16,25 +11,25 @@ class Md : public Volume
 	enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 	                RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
 
-	Md( const Container& d, unsigned Pnr, MdType Type, 
-	    const list<string>& devs );
+	Md( const Container& d, unsigned Pnr, storage::MdType Type, 
+	    const std::list<string>& devs );
 	Md( const Container& d, const string& line, const string& line2 );
 
 	virtual ~Md();
-	MdType personality() const { return md_type; }
+	storage::MdType personality() const { return md_type; }
 	MdParity parity() const { return md_parity; }
 	unsigned long chunkSize() const { return chunk; }
 	void setMdUuid( const string&val ) { md_uuid=val; }
 	const string& getMdUuid() const { return(md_uuid); }
 	const string& pName() const { return md_names[md_type]; }
 	const string& ptName() const { return par_names[md_parity]; }
-	void getDevs( list<string>& devices, bool all=true, bool spare=false ) const; 
+	void getDevs( std::list<string>& devices, bool all=true, bool spare=false ) const; 
 	void addSpareDevice( const string& dev );
-	void raidtabLines( list<string>& ) const ; 
+	void raidtabLines( std::list<string>& ) const ; 
 	string mdadmLine() const; 
 	string createCmd() const;
 
-	static const string& pName( MdType t ) { return md_names[t]; }
+	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
 	friend inline ostream& operator<< (ostream& s, const Md& m );
 	virtual void print( ostream& s ) const { s << *this; }
@@ -44,16 +39,16 @@ class Md : public Volume
 
     protected:
 	void init();
-	static MdType toMdType( const string& val );
+	static storage::MdType toMdType( const string& val );
 	static MdParity toMdParity( const string& val );
 
-	MdType md_type;
+	storage::MdType md_type;
 	MdParity md_parity;
 	unsigned long chunk;
 	string md_uuid;
-	list<string> devs;
-	list<string> spare;
-	static string md_names[MULTIPATH+1];
+	std::list<string> devs;
+	std::list<string> spare;
+	static string md_names[storage::MULTIPATH+1];
 	static string par_names[RIGHT_SYMMETRIC+1];
     };
 

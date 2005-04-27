@@ -1,6 +1,5 @@
 #include <iostream>
-
-#include <ycp/y2log.h>
+#include <stdio.h>
 
 #include <string>
 #include <sstream>
@@ -20,6 +19,9 @@
 #include "y2storage/SystemCmd.h"
 
 #define PARTEDCMD "/usr/sbin/parted -s "  // blank at end !!
+
+using namespace std;
+using namespace storage;
 
 Disk::Disk( Storage * const s, const string& Name,
             unsigned long long SizeK ) :
@@ -1002,18 +1004,15 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    std::ostringstream b;
-	    b << "r:" << r << " p:" << i->region() << " inter:" << i->region().intersect(r);
-	    y2warning( "overlaps %s", b.str().c_str() );
+	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	           " inter:" << i->region().intersect(r) );
 	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
     if( ret==0 && ptype==LOGICAL && !ext.begin()->contains( r, fuzz ))
 	{
-	std::ostringstream b;
-	b << "r:" << r << " ext:" << ext.begin()->region() 
-	  << "inter:" << ext.begin()->region().intersect(r);
-	y2warning( "outside ext %s", b.str().c_str() );
+	y2war( "outside ext r:" <<  r << " ext:" << ext.begin()->region() <<
+	       "inter:" << ext.begin()->region().intersect(r) );
 	ret = DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
     if( ret==0 && ptype==EXTENDED )

@@ -1,6 +1,8 @@
 #ifndef DEREF_ITERATOR_H
 #define DEREF_ITERATOR_H
 
+#include "y2storage/AppUtil.h"
+
 template< class Iter, class Value > 
 class DerefIterator : public Iter
     {

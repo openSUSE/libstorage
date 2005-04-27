@@ -1,8 +1,6 @@
 #ifndef OUTPUT_PROCESSOR_H
 #define OUTPUT_PROCESSOR_H
 
-using namespace std;
-
 #include "y2storage/StorageInterface.h"
 
 class OutputProcessor 

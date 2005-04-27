@@ -1,9 +1,13 @@
-#include <getopt.h>
+#include <iostream>
 
-#include <ycp/y2log.h>
+#include <blocxx/AppenderLogger.hpp>
+#include <blocxx/FileAppender.hpp>
 
 #include <y2storage/Storage.h>
 #include <y2storage/ListListIterator.h>
+
+using namespace blocxx;
+using namespace std;
 
 struct test_hdb { bool operator()(const Container&d) const {return( d.name().find( "hdb" )!=string::npos);}};
 struct Smaller5 { bool operator()(const Volume&d) const {return(d.nr()<5);}};
@@ -16,7 +20,7 @@ struct DiskStart { bool operator()(const Partition&d) const {return(d.cylStart()
 template <class C> struct First 
     { bool operator()(const C&d) const {return(d.nr()==0);}};
 
-struct Raid5 { bool operator()(const Md&d) const {return(d.personality()==RAID5);}};
+struct Raid5 { bool operator()(const Md&d) const {return(d.personality()==storage::RAID5);}};
 struct FileOther { bool operator()(const Loop&d) const 
     {return(d.loopFile().find( "other" )!=string::npos);}};
 struct PVG1 { bool operator()(const LvmVg&d) const {return(d.numPv()>1);}};
@@ -53,9 +57,30 @@ void PrintPair( ostream& s, const pair& p, const string& txt )
 	}
     }
 
+void 
+initLogger()
+    {
+    String name = "testlog";
+    LoggerConfigMap configItems;
+    String StrKey;
+    String StrPath;
+    StrKey.format("log.%s.location", name.c_str());
+    StrPath = "/var/log/YaST2/y2log";
+    configItems[StrKey] = StrPath;
+    LogAppenderRef logApp = 
+	LogAppender::createLogAppender( name, LogAppender::ALL_COMPONENTS, 
+	                                LogAppender::ALL_CATEGORIES, 
+					"%d %-5p %c - %m",
+					LogAppender::TYPE_FILE,
+					configItems );
+    LoggerRef log( new AppenderLogger("libstorage", E_INFO_LEVEL, logApp));
+    Logger::setDefaultLogger(log);
+    }
+
 int
 main( int argc_iv, char** argv_ppcv )
     {
+    initLogger();
     Storage Sto( true, false, true );
     for( Storage::ConstContIterator i=Sto.contBegin(); i!=Sto.contEnd(); ++i )
 	{
@@ -251,7 +276,7 @@ main( int argc_iv, char** argv_ppcv )
 	static bool TestFirst( const Md& d ) 
 	    { return( d.nr()==0 ); };
 	static bool TestRaid5( const Md& d ) 
-	    { return( d.personality()==RAID5 ); };
+	    { return( d.personality()==storage::RAID5 ); };
 	};
     p = Sto.mdPair(tmp::TestFirst);
     PrintPair<Storage::ConstMdPair>( cout, p, "Md first " );

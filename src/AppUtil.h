@@ -4,8 +4,6 @@
 #ifndef _AppUtil_h
 #define _AppUtil_h
 
-#include <ycp/y2log.h>
-
 #include <time.h>
 #include <libintl.h>
 #include <cstdarg>
@@ -13,6 +11,7 @@
 #include <fstream>
 #include <string>
 #include <list>
+#include <map>
 
 using std::string;
 
@@ -26,18 +25,46 @@ void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
 
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
-list<string> splitString( const string& s, const string& delChars=" \t\n",
+std::list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true );
-string mergeString( const list<string>& l, const string& del=" " );
-map<string,string> makeMap( const list<string>& l, const string& delim = "=",
-			    const string& removeSur = " \t\n" );
+string mergeString( const std::list<string>& l, const string& del=" " );
+std::map<string,string> makeMap( const std::list<string>& l, 
+                                 const string& delim = "=",
+				 const string& removeSur = " \t\n" );
 void removeLastIf(string& Text_Cr, char Char_cv);
 string kbyteToHumanString( unsigned long long size );
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
 bool runningFromSystem();
-
 void delay(int Microsec_iv);
+
+void log_msg( unsigned level, const char* file, unsigned line, 
+              const char* func, const char* add_str, const char* format, ... ) 
+	__attribute__ ((format(printf, 6, 7)));
+void log_msg( unsigned level, const char* file, unsigned line, 
+              const char* func, const char* add_str, const char* format, ... ) 
+	__attribute__ ((format(printf, 6, 7)));
+
+#define y2debug(format, ...)  \
+    log_msg( 0, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
+#define y2milestone(format, ...)  \
+    log_msg( 1, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
+#define y2warning(format, ...)  \
+    log_msg( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", format, ##__VA_ARGS__ )
+#define y2error(format, ...)  \
+    log_msg( 2, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
+
+#define y2deb(op) log_op( 0, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+#define y2mil(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+#define y2war(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", op)
+#define y2err(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+
+#define log_op( level, file, line, function, add, op )                \
+    {                                                                 \
+    std::ostringstream __buf;                                         \
+    __buf << op;                                                      \
+    log_msg( level, file, line, function, add, __buf.str().c_str() ); \
+    }                                                                
 
 inline string sformat( const char* txt, ... )
     {
@@ -50,7 +77,6 @@ inline string sformat( const char* txt, ... )
 	vsnprintf( mem, s-1, txt, p );
 	va_end( p );
 	mem[s-1]=0;
-	y2milestone( "txt:%s", mem );
 	string s( mem );
 	delete [] mem;
 	return( s );

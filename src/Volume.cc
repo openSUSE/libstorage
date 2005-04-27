@@ -2,8 +2,6 @@
 
 #include <features.h>
 #include <sys/stat.h>
-#include <ycp/y2log.h>
-
 
 #include "y2storage/Volume.h"
 #include "y2storage/Disk.h"
@@ -16,6 +14,9 @@
 #include "y2storage/ProcMounts.h"
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
+
+using namespace std;
+using namespace storage;
 
 Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
     : cont(&d)

@@ -1,8 +1,6 @@
 #ifndef EVMS_H
 #define EVMS_H
 
-using namespace std;
-
 #include "y2storage/Container.h"
 
 class Evms : public Container

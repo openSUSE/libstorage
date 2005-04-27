@@ -3,8 +3,6 @@
 
 #include <list>
 
-using namespace std;
-
 #include "y2storage/Volume.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
@@ -15,7 +13,7 @@ class Container
     protected:
 	template<typename L1, typename L2> friend class ListListIterator;
 
-	typedef list<Volume*> VCont;
+	typedef std::list<Volume*> VCont;
 	typedef VCont::iterator VIter;
 	typedef VCont::const_iterator CVIter;
 	typedef VCont::reverse_iterator RVIter;
@@ -45,9 +43,9 @@ class Container
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
 
-	virtual void getCommitActions( list<commitAction*>& l ) const;
-	virtual int getToCommit( CommitStage stage, list<Container*>& col,
-	                         list<Volume*>& vol );
+	virtual void getCommitActions( std::list<commitAction*>& l ) const;
+	virtual int getToCommit( CommitStage stage, std::list<Container*>& col,
+	                         std::list<Volume*>& vol );
 	virtual int commitChanges( CommitStage stage );
 	virtual int commitChanges( CommitStage stage, Volume* vol );
 	unsigned numVolumes() const;
@@ -133,9 +131,9 @@ class Container
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
-	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
+	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
 	const usedBy& getUsedBy() { return( uby ); }
-	UsedByType getUsedByType() { return( uby.t ); }
+	storage::UsedByType getUsedByType() { return( uby.t ); }
 	const string& usedByName() { return( uby.name ); }
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;

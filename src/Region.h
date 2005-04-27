@@ -19,8 +19,8 @@ class Region
 	    Region ret;
 	    if( r.start() <= end() && r.end() >= start() )
 		{
-		unsigned long s = max( r.start(), start() );
-		unsigned long e = min( r.end(), end() );
+		unsigned long s = std::max( r.start(), start() );
+		unsigned long e = std::min( r.end(), end() );
 		ret = Region( s, e-s+1 );
 		}
 	    return( ret );
@@ -43,13 +43,13 @@ class Region
 	unsigned long l;
     };
 
-inline ostream& operator<< (ostream& s, const Region &p )
+inline std::ostream& operator<< (std::ostream& s, const Region &p )
     {
     s << "[" << p.start() << "," << p.len() << "]";
     return( s );
     }
 
-inline istream& operator>> (istream& s, Region &p )
+inline std::istream& operator>> (std::istream& s, Region &p )
     {
     unsigned long start, len;
     s >> start >> len;

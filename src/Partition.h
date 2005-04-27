@@ -1,13 +1,9 @@
 #ifndef PARTITION_H
 #define PARTITION_H
 
-using namespace std;
-
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Volume.h"
 #include "y2storage/Region.h"
-
-using namespace storage;
 
 class Disk;
 
@@ -23,7 +19,7 @@ class Partition : public Volume
 
 	Partition( const Disk& d, unsigned Pnr, unsigned long long SizeK,
 	           unsigned long Start, unsigned long CSize,
-		   PartitionType Type, const string& parted_start,
+		   storage::PartitionType Type, const string& parted_start,
 		   unsigned id=ID_LINUX, bool Boot=false );
 	Partition( const Disk& d, const string& Data );
 	virtual ~Partition();
@@ -37,7 +33,7 @@ class Partition : public Volume
 	unsigned OrigNr() const { return( orig_num ); }
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
-	PartitionType type() const { return typ; }
+	storage::PartitionType type() const { return typ; }
 	ostream& logData( ostream& file ) const;
 	const string& partedStart() const { return parted_start; }
 	void changePartedStart( const string& pstart ) { parted_start=pstart; }
@@ -50,7 +46,7 @@ class Partition : public Volume
 	string createText( bool doing=true ) const;
 	string formatText(bool doing=true) const;
 	string resizeText(bool doing=true) const;
-	void getCommitActions( list<commitAction*>& l ) const;
+	void getCommitActions( std::list<commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );
@@ -62,12 +58,12 @@ class Partition : public Volume
 	virtual void print( ostream& s ) const { s << *this; }
 	bool canUseDevice() const;
 
-	PartitionInfo getPartitionInfo () const;
+	storage::PartitionInfo getPartitionInfo () const;
 
     protected:
 	Region reg;
 	bool bootflag;
-	PartitionType typ;
+	storage::PartitionType typ;
 	unsigned idt;
 	unsigned orig_id;
 	string parted_start;
@@ -81,8 +77,8 @@ inline ostream& operator<< (ostream& s, const Partition &p )
       << " Start:" << p.reg.start()
       << " CylNum:" << p.reg.len()
       << " Id:" << std::hex << p.idt << std::dec;
-    if( p.typ!=PRIMARY )
-      s << ((p.typ==LOGICAL)?" logical":" extended");
+    if( p.typ!=storage::PRIMARY )
+      s << ((p.typ==storage::LOGICAL)?" logical":" extended");
     if( p.orig_num!=p.num )
       s << " OrigNr:" << p.orig_num;
     if( p.orig_id!=p.idt )

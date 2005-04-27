@@ -1,7 +1,5 @@
 // Maintainer: fehr@suse.de
 
-#include <ycp/y2log.h>
-
 #include <sstream>
 
 #include "y2storage/AppUtil.h"
@@ -9,6 +7,8 @@
 #include "y2storage/EtcRaidtab.h"
 #include "y2storage/AsciiFile.h"
 #include "y2storage/Md.h"
+
+using namespace std;
 
 EtcRaidtab::EtcRaidtab( const string& prefix ) 
     {

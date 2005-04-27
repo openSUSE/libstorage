@@ -1,8 +1,6 @@
 #ifndef VOLUME_H
 #define VOLUME_H
 
-using namespace std;
-
 #include "y2storage/StorageInterface.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
@@ -34,9 +32,9 @@ class Volume
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool fstabAdded() const { return( fstab_added ); }
 	const usedBy& getUsedBy()  const{ return( uby ); }
-	UsedByType getUsedByType() const { return( uby.t ); }
+	storage::UsedByType getUsedByType() const { return( uby.t ); }
 	const string& usedByName() const { return( uby.name ); }
-	void setUsedBy( UsedByType t, const string& name ) { uby.set( t, name );}
+	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
 
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
@@ -71,7 +69,7 @@ class Volume
 	              encryption!=orig_encryption ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
 	void setMkfsOption( const string& val ) { mkfs_opt=val; }
-	const list<string>& altNames() const { return( alt_names ); }
+	const std::list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
 	unsigned long long origSizeK() const { return orig_size_k; }
@@ -112,7 +110,7 @@ class Volume
 	virtual string createText(bool doing=true) const;
 	virtual string resizeText(bool doing=true) const; 
 	virtual string formatText(bool doing=true) const;
-	virtual void getCommitActions( list<commitAction*>& l ) const;
+	virtual void getCommitActions( std::list<commitAction*>& l ) const;
 	string mountText( bool doing=true ) const;
 	string labelText( bool doing=true ) const;
 	string losetupText( bool doing=true ) const;
@@ -189,7 +187,7 @@ class Volume
 	string fstab_loop_dev;
 	string crypt_pwd;
 	string nm;
-	list<string> alt_names;
+	std::list<string> alt_names;
 	unsigned num;
 	unsigned long long size_k;
 	unsigned long long orig_size_k;

@@ -11,8 +11,8 @@ class EtcRaidtab
     public:
 	EtcRaidtab( const string& prefix="" );
 	~EtcRaidtab();
-	void updateEntry( unsigned num, const list<string>& entries,
-	                  const string&, const list<string>& devs );
+	void updateEntry( unsigned num, const std::list<string>& entries,
+	                  const string&, const std::list<string>& devs );
 	void removeEntry( unsigned num );
     protected:
 	struct entry
@@ -21,9 +21,9 @@ class EtcRaidtab
 	    entry( unsigned f, unsigned l ) { first=f; last=l; }
 	    unsigned first;
 	    unsigned last;
-	    friend ostream& operator<< (ostream& s, const entry &v );
+	    friend std::ostream& operator<< (std::ostream& s, const entry &v );
 	    };
-	friend ostream& operator<< (ostream& s, const entry &v );
+	friend std::ostream& operator<< (std::ostream& s, const entry &v );
 
 	void updateMdadmFile();
 	void updateRaidtabFile();
@@ -35,14 +35,14 @@ class EtcRaidtab
 	string rtabname;
 	string mdadmname;
 	int mdadm_dev_line;
-	map<unsigned,entry> mtab;
-	map<unsigned,entry> rtab;
+	std::map<unsigned,entry> mtab;
+	std::map<unsigned,entry> rtab;
 	AsciiFile* raidtab;
 	AsciiFile* mdadm;
     };
 ///////////////////////////////////////////////////////////////////
 
-inline ostream& operator<< (ostream& s, const EtcRaidtab::entry& v )
+inline std::ostream& operator<< (std::ostream& s, const EtcRaidtab::entry& v )
     {
     s << "first=" << v.first << " last=" << v.last;
     return( s );

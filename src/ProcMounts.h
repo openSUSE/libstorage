@@ -10,10 +10,10 @@ class ProcMounts
     public:
 	ProcMounts();
 	string getMount( const string& Dev ) const;
-	string getMount( const list<string>& dl ) const;
-	map<string,string> allMounts() const;
+	string getMount( const std::list<string>& dl ) const;
+	std::map<string,string> allMounts() const;
     protected:
-	map<string,string> co;
+	std::map<string,string> co;
     };
 ///////////////////////////////////////////////////////////////////
 

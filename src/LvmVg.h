@@ -1,8 +1,6 @@
 #ifndef LVM_VG_H
 #define LVM_VG_H
 
-using namespace std;
-
 #include "y2storage/Container.h"
 #include "y2storage/LvmLv.h"
 
@@ -21,23 +19,23 @@ class LvmVg : public Container
 	friend inline ostream& operator<< (ostream&, const LvmVg& );
 
 	int removeVg();
-	int extendVg( const list<string>& dl );
+	int extendVg( const std::list<string>& dl );
 	int extendVg( const string& device );
-	int reduceVg( const list<string>& dl );
+	int reduceVg( const std::list<string>& dl );
 	int reduceVg( const string& device );
 	int createLv( const string& name, unsigned long long sizeK, 
 		      unsigned stripe, string& device );
 	int removeLv( const string& name );
 
 	int setPeSize( long long unsigned );
-	void getCommitActions( list<commitAction*>& l ) const;
+	void getCommitActions( std::list<commitAction*>& l ) const;
 	int commitChanges( CommitStage stage );
-	int getToCommit( CommitStage stage, list<Container*>& col,
-			 list<Volume*>& vol );
+	int getToCommit( CommitStage stage, std::list<Container*>& col,
+			 std::list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	static void activate( bool val=true );
-	static void getVgs( list<string>& l );
+	static void getVgs( std::list<string>& l );
 	
     protected:
 	// iterators over LVM LVs
@@ -121,13 +119,13 @@ class LvmVg : public Container
 	string extendVgText( bool doing, const string& dev ) const;
 	string reduceVgText( bool doing, const string& dev ) const;
 	unsigned long leByLvRemove() const;
-	int tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
-	                list<Pv>& plrem, unsigned long& removed_pe );
+	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
+	                std::list<Pv>& plrem, unsigned long& removed_pe );
 	static int addLvPeDistribution( unsigned long le, unsigned stripe,
-					list<Pv>& pl, list<Pv>& pladd, 
-					map<string,unsigned long>& pe_map );
-	static int remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
-					list<Pv>& pl, list<Pv>& pladd );
+					std::list<Pv>& pl, std::list<Pv>& pladd, 
+					std::map<string,unsigned long>& pe_map );
+	static int remLvPeDistribution( unsigned long le, std::map<string,unsigned long>& pe_map,
+					std::list<Pv>& pl, std::list<Pv>& pladd );
 	bool checkConsistency() const;
 
 	int doCreateVg();
@@ -152,9 +150,9 @@ class LvmVg : public Container
 	string status;
 	string uuid;
 	bool lvm1;
-	list<Pv> pv;
-	list<Pv> pv_add;
-	list<Pv> pv_remove;
+	std::list<Pv> pv;
+	std::list<Pv> pv_add;
+	std::list<Pv> pv_remove;
 	static bool lvm_active;
     };
 

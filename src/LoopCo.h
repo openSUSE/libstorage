@@ -1,8 +1,6 @@
 #ifndef LOOP_CO_H
 #define LOOP_CO_H
 
-using namespace std;
-
 #include "y2storage/Container.h"
 #include "y2storage/Loop.h"
 

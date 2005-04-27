@@ -1,13 +1,13 @@
 // Maintainer: fehr@suse.de
 
-#include <ycp/y2log.h>
-
 #include <sstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/Regex.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/ProcPart.h"
+
+using namespace std;
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {

@@ -1,12 +1,12 @@
 // Maintainer: fehr@suse.de
 
-#include <ycp/y2log.h>
-
 #include <sstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/ProcMounts.h"
+
+using namespace std;
 
 ProcMounts::ProcMounts() 
     {

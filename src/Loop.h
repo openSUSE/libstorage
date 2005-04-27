@@ -1,8 +1,6 @@
 #ifndef LOOP_H
 #define LOOP_H
 
-using namespace std;
-
 #include "y2storage/Volume.h"
 
 class Loop : public Volume

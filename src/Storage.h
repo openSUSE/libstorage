@@ -24,8 +24,6 @@
 #include "y2storage/ListListIterator.h"
 #include "y2storage/IterPair.h"
 
-using namespace std;
-
 template <int Value>
 class CheckType 
     {
@@ -101,11 +99,11 @@ class CastCheckIterator : public CheckType<Value>,
 
 class EtcFstab;
 
-class Storage : public StorageInterface
+class Storage : public storage::StorageInterface
     {
     protected:
 
-	typedef list<Container*> CCont;
+	typedef std::list<Container*> CCont;
 	typedef CCont::iterator CIter;
 	typedef CCont::const_iterator CCIter;
 
@@ -133,7 +131,8 @@ class Storage : public StorageInterface
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( ostream& str );
-	bool setUsedBy( const string& dev, UsedByType typ, const string& name );
+	bool setUsedBy( const string& dev, storage::UsedByType typ,
+	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	const Volume* getVolume( const string& dev );
@@ -147,17 +146,19 @@ class Storage : public StorageInterface
 	// functions for interface
 
 	bool getDisks (deque<string>& disks);
-	bool getPartitions (deque<PartitionInfo>& partitioninfos);
-	bool getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos);
-	bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities);
-	int createPartition( const string& disk, PartitionType type, unsigned long start,
-			     unsigned long size, string& device );
-	int createPartitionKb( const string& disk, PartitionType type,
+	bool getPartitions (deque<storage::PartitionInfo>& partitioninfos);
+	bool getPartitions (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
+	bool getFsCapabilities( storage::FsType fstype, 
+	                        storage::FsCapabilities& fscapabilities);
+	int createPartition( const string& disk, storage::PartitionType type, 
+	                     unsigned long start, unsigned long size, 
+			     string& device );
+	int createPartitionKb( const string& disk, storage::PartitionType type,
 	                       unsigned long long start,
 			       unsigned long long sizek, string& device );
 	int createPartitionAny( const string& disk, unsigned long long size,
 				string& device );
-	int createPartitionMax( const string& disk, PartitionType type,
+	int createPartitionMax( const string& disk, storage::PartitionType type,
 				string& device );
 	unsigned long kbToCylinder( const string& disk, unsigned long long size );
 	unsigned long long cylinderToKb( const string& disk, unsigned long size );
@@ -166,11 +167,12 @@ class Storage : public StorageInterface
 	int destroyPartitionTable( const string& disk, const string& label );
 	string defaultDiskLabel();
 
-	int changeFormatVolume( const string&, bool format, FsType fs );
+	int changeFormatVolume( const string&, bool format, 
+	                        storage::FsType fs );
 	int changeMountPoint( const string&, const string& mount );
 	int getMountPoint( const string&, string& mount );
-	int changeMountBy( const string& device, MountByType mby );
-	int getMountBy( const string& device, MountByType& mby );
+	int changeMountBy( const string& device, storage::MountByType mby );
+	int getMountBy( const string& device, storage::MountByType& mby );
 	int changeFstabOptions( const string&, const string& options );
 	int getFstabOptions( const string& device, string& options );
 	int addFstabOptions( const string&, const string& options );
@@ -197,9 +199,9 @@ class Storage : public StorageInterface
 
 	int removeEvmsContainer( const string& name );
 
-	int createMd( const string& name, MdType rtype,
+	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
-	int createMdAny( MdType rtype, const deque<string>& devs,
+	int createMdAny( storage::MdType rtype, const deque<string>& devs,
 			 string& device );
 	int removeMd( const string& name );
 
@@ -211,21 +213,21 @@ class Storage : public StorageInterface
 	deque<string> getCommitActions( bool mark_destructive );
         int commit();
 
-	void setCallbackProgressBar( CallbackProgressBar pfnc )
+	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }
-	CallbackProgressBar getCallbackProgressBar() 
+	storage::CallbackProgressBar getCallbackProgressBar() 
 	    { return progress_bar_cb; }
-	void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc )
+	void setCallbackShowInstallInfo( storage::CallbackShowInstallInfo pfnc )
 	    { install_info_cb=pfnc; }
-	CallbackShowInstallInfo getCallbackShowInstallInfo() 
+	storage::CallbackShowInstallInfo getCallbackShowInstallInfo() 
 	    { return install_info_cb; }
-	void setCallbackInfoPopup( CallbackInfoPopup pfnc )
+	void setCallbackInfoPopup( storage::CallbackInfoPopup pfnc )
 	    { info_popup_cb=pfnc; }
-	CallbackInfoPopup getCallbackInfoPopup() 
+	storage::CallbackInfoPopup getCallbackInfoPopup() 
 	    { return info_popup_cb; }
-	void setCallbackYesNoPopup( CallbackYesNoPopup pfnc )
+	void setCallbackYesNoPopup( storage::CallbackYesNoPopup pfnc )
 	    { yesno_popup_cb=pfnc; }
-	CallbackYesNoPopup getCallbackYesNoPopup() 
+	storage::CallbackYesNoPopup getCallbackYesNoPopup() 
 	    { return yesno_popup_cb; }
 
 	void progressBarCb( const string& id, unsigned cur, unsigned max );
@@ -1002,9 +1004,9 @@ class Storage : public StorageInterface
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p );
-	void sortCommitLists( CommitStage stage, list<Container*>& co,  
-			      list<Volume*>& vl );
-	int performContChanges( CommitStage stage, const list<Container*>& co,
+	void sortCommitLists( CommitStage stage, std::list<Container*>& co,  
+			      std::list<Volume*>& vl );
+	int performContChanges( CommitStage stage, const std::list<Container*>& co,
 	                        bool& cont_removed );
 
 
@@ -1024,10 +1026,10 @@ class Storage : public StorageInterface
 	static string proc_arch;
 	CCont cont;
 	EtcFstab *fstab;
-	CallbackProgressBar progress_bar_cb;
-	CallbackShowInstallInfo install_info_cb;
-	CallbackInfoPopup info_popup_cb;
-	CallbackYesNoPopup yesno_popup_cb;
+	storage::CallbackProgressBar progress_bar_cb;
+	storage::CallbackShowInstallInfo install_info_cb;
+	storage::CallbackInfoPopup info_popup_cb;
+	storage::CallbackYesNoPopup yesno_popup_cb;
 	unsigned max_log_num;
     };
 

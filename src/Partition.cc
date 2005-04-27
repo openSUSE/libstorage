@@ -1,10 +1,11 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/Partition.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Disk.h"
+
+using namespace storage;
+using namespace std;
 
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,

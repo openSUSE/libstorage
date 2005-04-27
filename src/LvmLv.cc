@@ -1,12 +1,13 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/LvmLv.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+
+using namespace storage;
+using namespace std;
 
 LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 	      const string& uuid, const string& stat, const string& alloc ) :

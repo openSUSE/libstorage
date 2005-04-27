@@ -1,13 +1,14 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/Md.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Regex.h"
 #include "y2storage/Container.h"
+
+using namespace storage;
+using namespace std;
 
 Md::Md( const Container& d, unsigned PNr, MdType Type, 
         const list<string>& devices ) : Volume( d, PNr, 0 )

@@ -2,8 +2,9 @@
 #include <glob.h>
 
 #include <fstream>
+#include <sstream>
+#include <iostream>
 
-#include <ycp/y2log.h>
 #include <sys/utsname.h>
 
 #include "y2storage/Storage.h"
@@ -18,6 +19,9 @@
 #include "y2storage/ProcMounts.h"
 #include "y2storage/EtcFstab.h"
 #include "y2storage/AsciiFile.h"
+
+using namespace std;
+using namespace storage;
 
 struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
 
@@ -1113,10 +1117,8 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
     {
     int ret = 0;
     assertInit();
-    std::ostringstream buf;
-    buf << "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1
-        << " devices:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1 <<
+	   " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
     if( readonly )
 	{
@@ -1190,9 +1192,7 @@ Storage::extendLvmVg( const string& name, const deque<string>& devs )
     {
     int ret = 0;
     assertInit();
-    std::ostringstream buf;
-    buf << "name:" << name << " devices:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "name:" << name << " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
     if( readonly )
 	{
@@ -1222,9 +1222,7 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
     {
     int ret = 0;
     assertInit();
-    std::ostringstream buf;
-    buf << "name:" << name << " devices:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "name:" << name << " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
     if( readonly )
 	{
@@ -1343,10 +1341,8 @@ Storage::createMd( const string& name, MdType rtype,
     {
     int ret = 0;
     assertInit();
-    std::ostringstream buf;
-    buf << "name:" << name << " MdType:" << Md::pName(rtype)
-	<< " devices:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "name:" << name << " MdType:" << Md::pName(rtype) << 
+           " devices:" << devs );
     unsigned num = 0;
     if( readonly )
 	{
@@ -1390,9 +1386,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
     {
     int ret = 0;
     assertInit();
-    std::ostringstream buf;
-    buf << "MdType:" << Md::pName(rtype) << " devices:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "MdType:" << Md::pName(rtype) << " devices:" << devs );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -2214,9 +2208,7 @@ int Storage::removeContainer( Container* val )
 
 int Storage::removeUsing( Volume* vol )
     {
-    ostringstream buf;
-    buf << "device:" << vol->device() << " usedBy:" << vol->getUsedBy();
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "device:" << vol->device() << " usedBy:" << vol->getUsedBy() );
     int ret=0;
     string uname = vol->usedByName();
     switch( vol->getUsedByType() )

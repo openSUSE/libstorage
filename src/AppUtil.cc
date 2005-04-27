@@ -5,10 +5,12 @@
 #include <signal.h>
 #include <unistd.h>
 #include <sstream>
+#include <iostream>
 #include <sys/stat.h>
 #include <sys/timeb.h>
 #include <sys/time.h>
-#include <ycp/y2log.h>
+
+#include <blocxx/Logger.hpp>
 
 #include <iomanip>
 #include <string>
@@ -17,6 +19,7 @@
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
 
+using namespace std;
 
 // #define MEMORY_DEBUG
 
@@ -387,6 +390,46 @@ bool runningFromSystem()
 	y2milestone( "RunningFromSystem %d", FromSystem_bs );
         }
     return( FromSystem_bs );
+    }
+
+static blocxx::String component = "libstorage";
+
+void
+log_msg( unsigned level, const char* file, unsigned line, const char* func,
+         const char* add_str, const char* format, ... ) 
+    {
+    using namespace blocxx;
+
+    char b[4096+1];
+    unsigned ret = 0;
+    if( add_str==NULL || *add_str==0 )
+	ret = snprintf( b, sizeof(b), "%s(%s):%u ", file, func, line );
+    else
+	ret = snprintf( b, sizeof(b), "%s(%s):%u %s ", file, func, line,
+	                add_str );
+    if( ret<sizeof(b) )
+	{
+	va_list p;
+	va_start( p, format );
+	vsnprintf( b+ret, sizeof(b)-ret, format, p );
+	}
+    b[sizeof(b)-1] = 0;
+    String category = Logger::STR_INFO_CATEGORY;
+    switch( level )
+	{
+	case 0:
+	    category = Logger::STR_DEBUG_CATEGORY;
+	    break;
+	case 1:
+	    break;
+	case 2:
+	    category = Logger::STR_ERROR_CATEGORY;
+	    break;
+	default:
+	    category = Logger::STR_FATAL_CATEGORY;
+	    break;
+	}
+    Logger::getCurrentLogger()->logMessage( component, category, b );
     }
 
 bool system_cmd_testmode = false;

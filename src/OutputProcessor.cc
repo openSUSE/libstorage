@@ -1,10 +1,10 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/OutputProcessor.h"
+
+using namespace std;
 
 void
 OutputProcessor::process( const string& val, bool stderr )

@@ -1,8 +1,7 @@
 #include <sstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/Evms.h"
+#include "y2storage/AppUtil.h"
 #include "y2storage/EvmsVol.h"
 
 EvmsVol::EvmsVol( const Evms& d, const string& name, unsigned Stripes ) 

@@ -5,10 +5,11 @@
 #define _AsciiFile_h
 
 #include <vector>
-
-using std::vector;
+#include <list>
 
 class Regex;
+
+using std::string;
 
 #define DBG(x)
 
@@ -36,13 +37,13 @@ class AsciiFile
 	bool updateFile();
 	bool saveToFile( const string& Name_Cv );
 	void append( const string& Line_Cv );
-	void append( const list<string>& Lines_Cv );
+	void append( const std::list<string>& Lines_Cv );
 	void insert( unsigned int Before_iv, const string& Line_Cv );
 	void remove( unsigned int Start_iv, unsigned int Cnt_iv );
 	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
 		      const string& Line_Cv );
 	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
-		      const list<string>& Line_Cv );
+		      const std::list<string>& Line_Cv );
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
 	int find( unsigned int Start_iv, const string& Pat_Cv );
@@ -52,12 +53,12 @@ class AsciiFile
 	unsigned differentLine( const AsciiFile& File_Cv ) const;
 
     protected:
-	bool appendFile( const string&  Name_Cv, vector<string>& Lines_Cr );
-	bool appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr );
+	bool appendFile( const string&  Name_Cv, std::vector<string>& Lines_Cr );
+	bool appendFile( AsciiFile& File_Cv, std::vector<string>& Lines_Cr );
 
 	bool BackupCreated_b;
 	string BackupExtension_C;
-	vector<string> Lines_C;
+	std::vector<string> Lines_C;
 	string Name_C;
     };
 ///////////////////////////////////////////////////////////////////

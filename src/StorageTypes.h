@@ -1,10 +1,12 @@
 #ifndef STORAGE_TYPES_H
 #define STORAGE_TYPES_H
 
-#include <y2storage/Regex.h>
-#include <y2storage/StorageInterface.h>
+#include <ostream>
 
-using namespace storage;
+#include "y2storage/Regex.h"
+#include "y2storage/StorageInterface.h"
+
+using std::ostream;
 
 typedef enum { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS } CType;
 
@@ -74,36 +76,36 @@ struct commitAction
 
 struct usedBy
     {
-    usedBy() : t(UB_NONE) {;}
-    usedBy( UsedByType typ, const string& n ) : t(typ), name(n) {;}
-    void clear() { t=UB_NONE; name.erase(); }
-    void set( UsedByType type, const string& n ) 
-	{ t=type; (t==UB_NONE)?name.erase():name=n; }
+    usedBy() : t(storage::UB_NONE) {;}
+    usedBy( storage::UsedByType typ, const string& n ) : t(typ), name(n) {;}
+    void clear() { t=storage::UB_NONE; name.erase(); }
+    void set( storage::UsedByType type, const string& n ) 
+	{ t=type; (t==storage::UB_NONE)?name.erase():name=n; }
     bool operator==( const usedBy& rhs ) const
 	{ return( t==rhs.t && name==rhs.name ); }
     friend inline ostream& operator<< (ostream&, const usedBy& );
 
-    UsedByType t;
+    storage::UsedByType t;
     string name;
     };
 
 inline ostream& operator<< (ostream& s, const usedBy& d )
     {
-    if( d.t!=UB_NONE )
+    if( d.t!=storage::UB_NONE )
 	{
 	string st;
 	switch( d.t )
 	    {
-	    case UB_LVM:
+	    case storage::UB_LVM:
 		st = "lvm";
 		break;
-	    case UB_MD: 
+	    case storage::UB_MD: 
 		st = "md";
 		break;
-	    case UB_EVMS: 
+	    case storage::UB_EVMS: 
 		st = "evms";
 		break;
-	    case UB_DM:
+	    case storage::UB_DM:
 		st = "dm";
 		break;
 	    default:

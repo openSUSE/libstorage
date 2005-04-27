@@ -1,14 +1,15 @@
 #include <iostream> 
 #include <sstream> 
 
-#include <ycp/y2log.h>
-
 #include "y2storage/LoopCo.h"
 #include "y2storage/Loop.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcFstab.h"
+
+using namespace storage;
+using namespace std;
 
 LoopCo::LoopCo( Storage * const s, bool detect ) :
     Container(s,"loop",staticType())

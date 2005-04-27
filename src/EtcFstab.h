@@ -21,7 +21,7 @@ struct FstabEntry
     string dentry;
     string mount;
     string fs;
-    list<string> opts;
+    std::list<string> opts;
     int freq;
     int passno;
     bool loop;
@@ -70,7 +70,7 @@ struct FstabChange
     string dentry;
     string mount;
     string fs;
-    list<string> opts;
+    std::list<string> opts;
     int freq;
     int passno;
     string loop_dev;
@@ -105,7 +105,7 @@ class EtcFstab
     public:
 	EtcFstab( const string& prefix = "" );
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
-	bool findDevice( const list<string>& dl, FstabEntry& entry ) const;
+	bool findDevice( const std::list<string>& dl, FstabEntry& entry ) const;
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findUuidLabel( const string& uuid, const string& label,
 			    FstabEntry& entry ) const;
@@ -116,7 +116,7 @@ class EtcFstab
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
 	int changeRootPrefix( const string& prfix );
-	void getFileBasedLoops( const string& prefix, list<FstabEntry>& l );
+	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l );
 	string addText( bool doing, bool crypto, const string&  mp );
 	string updateText( bool doing, bool crypto, const string&  mp );
 	string removeText( bool doing, bool crypto, const string&  mp );
@@ -134,14 +134,14 @@ class EtcFstab
 
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
 			     AsciiFile*& cryptotab, int& lineno );
-	void makeStringList( const FstabEntry& e, list<string>& ls );
+	void makeStringList( const FstabEntry& e, std::list<string>& ls );
 	string createTabLine( const FstabEntry& e );
 
 	static unsigned fstabFields[6];
 	static unsigned cryptotabFields[6];
 
 	string prefix;
-	list<Entry> co;
+	std::list<Entry> co;
     };
 ///////////////////////////////////////////////////////////////////
 

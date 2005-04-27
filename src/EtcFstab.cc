@@ -1,7 +1,5 @@
 // Maintainer: fehr@suse.de
 
-#include <ycp/y2log.h>
-
 #include <sstream>
 #include <algorithm>
 
@@ -14,6 +12,7 @@
 #include "y2storage/EtcFstab.h"
 
 using namespace storage;
+using namespace std;
 
 EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
     {

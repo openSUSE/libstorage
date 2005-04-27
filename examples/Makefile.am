@@ -28,7 +28,7 @@ TestLoop_SOURCES = TestLoop.cc
 
 exampledir = $(docdir)/examples/liby2storage
 
-example_DATA = TestDisk.cc TestDiskLog.cc TestStorage.cc TestProbing.cc TestLvm.cc TestMd.cc TestLoop.cc
+example_DATA = TestDisk.cc TestDiskLog.cc TestProbing.cc TestLvm.cc TestMd.cc TestLoop.cc
 
 EXTRA_DIST = $(example_DATA) Makefile.example
 

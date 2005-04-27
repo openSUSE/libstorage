@@ -7,13 +7,13 @@
 #include <fstream>
 #include <sys/wait.h>
 
-#include <ycp/y2log.h>
-
 #include <string>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/OutputProcessor.h"
+
+using namespace std;
 
 int SystemCmd::Nr_i = 0;
 

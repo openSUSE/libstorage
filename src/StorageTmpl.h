@@ -2,11 +2,16 @@
 #define STORAGE_TMPL_H
 
 #include <functional>
+#include <ostream>
 #include <sstream>
+#include <list>
+#include <map>
+#include <deque>
 
-#include <y2storage/IterPair.h>
-#include <y2storage/FilterIterator.h>
-#include <y2storage/DerefIterator.h>
+#include "y2storage/IterPair.h"
+#include "y2storage/FilterIterator.h"
+#include "y2storage/DerefIterator.h"
+#include "y2storage/AppUtil.h"
 
 template< class Value > 
 class CheckFnc
@@ -106,9 +111,9 @@ class CheckerIterator : public Checker, public ContIter
     };
 
 template < class C >
-void pointerIntoSortedList( list<C*>& l, C* e )
+void pointerIntoSortedList( std::list<C*>& l, C* e )
     {
-    typename list<C*>::iterator i = l.begin();
+    typename std::list<C*>::iterator i = l.begin();
     while( i!=l.end() && **i < *e )
 	i++;
     l.insert( i, e );
@@ -135,10 +140,10 @@ template<class Value> void operator>>( const string& d, Value& v)
     Data >> v;
     }
 
-template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
+template<class Value> std::ostream& operator<<( std::ostream& s, const std::list<Value>& l )
     {
     s << "<";
-    for( typename list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
+    for( typename std::list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	{
 	if( i!=l.begin() )
 	    s << " ";
@@ -148,10 +153,10 @@ template<class Value> ostream& operator<<( ostream& s, const list<Value>& l )
     return( s );
     }
 
-template<class Value> ostream& operator<<( ostream& s, const deque<Value>& l )
+template<class Value> std::ostream& operator<<( std::ostream& s, const std::deque<Value>& l )
     {
     s << "<";
-    for( typename deque<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
+    for( typename std::deque<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	{
 	if( i!=l.begin() )
 	    s << " ";
@@ -161,16 +166,16 @@ template<class Value> ostream& operator<<( ostream& s, const deque<Value>& l )
     return( s );
     }
 
-template<class F, class S> ostream& operator<<( ostream& s, const pair<F,S>& p )
+template<class F, class S> std::ostream& operator<<( std::ostream& s, const std::pair<F,S>& p )
     {
     s << "[" << p.first << ":" << p.second << "]";
     return( s );
     }
 
-template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,Value>& m )
+template<class Key, class Value> std::ostream& operator<<( std::ostream& s, const std::map<Key,Value>& m )
     {
     s << "<";
-    for( typename map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
+    for( typename std::map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
 	{
 	if( i!=m.begin() )
 	    s << " ";
@@ -181,7 +186,7 @@ template<class Key, class Value> ostream& operator<<( ostream& s, const map<Key,
     }
 
 template< class Val >
-struct cont_less : public binary_function<Val*,Val*,bool>
+struct cont_less : public std::binary_function<Val*,Val*,bool>
     {
     bool operator()(const Val* __x, const Val* __y) const { return *__x < *__y; }
     };

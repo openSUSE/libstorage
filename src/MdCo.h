@@ -1,8 +1,6 @@
 #ifndef MD_CO_H
 #define MD_CO_H
 
-using namespace std;
-
 #include "y2storage/Container.h"
 #include "y2storage/Md.h"
 
@@ -18,7 +16,8 @@ class MdCo : public Container
 	static CType const staticType() { return MD; }
 	friend inline ostream& operator<< (ostream&, const MdCo& );
 
-	int createMd( unsigned num, MdType type, const list<string>& devs );
+	int createMd( unsigned num, storage::MdType type, 
+	              const std::list<string>& devs );
 	int removeMd( unsigned num );
 	unsigned unusedNumber();
 	void syncRaidtab();

@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-using std::vector;
+using std::string;
 
 class OutputProcessor;
 
@@ -38,32 +38,32 @@ class SystemCmd
 	void setCombine( const bool Combine_b=true );
 	int retcode() const { return Ret_i; }
 
-	int getStdout( vector<string> &Ret_Cr, const bool Append_bv = false ) const
+	int getStdout( std::vector<string> &Ret_Cr, const bool Append_bv = false ) const
 	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
-	int getStderr( vector<string> &Ret_Cr, const bool Append_bv = false ) const
+	int getStderr( std::vector<string> &Ret_Cr, const bool Append_bv = false ) const
 	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
 
     protected:
 
-        int  placeOutput( unsigned Which_iv, vector<string> &Ret_Cr, const bool Append_bv ) const;
+        int  placeOutput( unsigned Which_iv, std::vector<string> &Ret_Cr, const bool Append_bv ) const;
 
 	void invalidate();
 	void closeOpenFds();
 	int doExecute( string Cmd_Cv );
 	bool doWait( bool Hang_bv, int& Ret_ir );
         void checkOutput();
-	void getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
+	void getUntilEOF( FILE* File_Cr, std::vector<string>& Lines_Cr,
 	                  bool& NewLineSeen_br, bool Stderr_bv );
 	void extractNewline( const char* Buf_ti, int Cnt_ii, bool& NewLineSeen_br,
-	                     string& Text_Cr, vector<string>& Lines_Cr );
-	void addLine( string Text_Cv, vector<string>& Lines_Cr );
+	                     string& Text_Cr, std::vector<string>& Lines_Cr );
+	void addLine( string Text_Cv, std::vector<string>& Lines_Cr );
 	void init();
 
 	mutable string Text_aC[2];
 	mutable bool Valid_ab[2];
 	FILE* File_aC[2];
-	vector<string> Lines_aC[2];
-	vector<string*> SelLines_aC[2];
+	std::vector<string> Lines_aC[2];
+	std::vector<string*> SelLines_aC[2];
 	bool NewLineSeen_ab[2];
 	bool Combine_b;
 	bool Background_b;

@@ -42,7 +42,7 @@ liby2storage_la_SOURCES =			\
 	StorageTmpl.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
-liby2storage_la_LIBADD = ${Y2UTIL_LIBS}
+liby2storage_la_LIBADD = -lblocxx
 
 pkgincludedir = $(includedir)/y2storage
 

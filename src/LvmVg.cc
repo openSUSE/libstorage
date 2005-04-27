@@ -1,13 +1,14 @@
 #include <iostream> 
 #include <sstream> 
 
-#include <ycp/y2log.h>
-
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+
+using namespace std;
+using namespace storage;
 
 LvmVg::LvmVg( Storage * const s, const string& Name ) :
     Container(s,Name,staticType())
@@ -112,9 +113,7 @@ int
 LvmVg::extendVg( const list<string>& devs )
     {
     int ret = 0;
-    std::ostringstream buf;
-    buf << devs;
-    y2milestone( "name:%s devices:%s", name().c_str(), buf.str().c_str() );
+    y2mil( "name:" << name() << " devices:" << devs );
 
     checkConsistency();
     list<string>::const_iterator i=devs.begin();
@@ -189,9 +188,7 @@ int
 LvmVg::reduceVg( const list<string>& devs )
     {
     int ret = 0;
-    std::ostringstream buf;
-    buf << devs;
-    y2milestone( "name:%s devices:%s", name().c_str(), buf.str().c_str() );
+    y2mil( "name:" << name() << " devices:" << devs );
 
     checkConsistency();
     list<string>::const_iterator i=devs.begin();
@@ -584,9 +581,7 @@ LvmVg::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& pl,
 	}
     if( ret==0 )
 	{
-	ostringstream buf;
-	buf << "pe_map:" << pe_map;
-	y2milestone( "%s", buf.str().c_str() );
+	y2mil( "pe_map:" << pe_map );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -597,10 +592,7 @@ LvmVg::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
                             list<Pv>& pl, list<Pv>& pladd )
     {
     int ret=0;
-    y2milestone( "le:%lu", le );
-    ostringstream buf;
-    buf << "pe_map:" << pe_map;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "le:" << le << " pe_map:" << pe_map );
     list<Pv>::iterator p;
     map<string,unsigned long>::iterator mit = pe_map.begin();
     while( le>0 && ret==0 && mit != pe_map.end() )
@@ -617,10 +609,8 @@ LvmVg::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
 	    ret = LVM_LV_PE_DEV_NOT_FOUND;
 	++mit;
 	}
-    buf.str("");
-    buf << "pe_map:" << pe_map;
-    y2milestone( "%s", buf.str().c_str() );
-    y2milestone( "ret:%d", ret );
+    y2mil( "pe_map:" << pe_map );
+    y2mil( "ret:" << ret );
     return( ret );
     }
 
@@ -1078,9 +1068,7 @@ void LvmVg::getVgs( list<string>& l )
 	    vgname.erase( pos );
 	l.push_back(vgname);
 	}
-    std::ostringstream buf;
-    buf << l;
-    y2milestone( "detected Vgs %s", buf.str().c_str() );
+    y2mil( "detected Vgs " << l );
     }
 
 unsigned long

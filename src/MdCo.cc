@@ -1,14 +1,15 @@
 #include <iostream> 
 #include <sstream> 
 
-#include <ycp/y2log.h>
-
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcRaidtab.h"
+
+using namespace std;
+using namespace storage;
 
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
@@ -242,9 +243,7 @@ int
 MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
     {
     int ret = 0;
-    ostringstream buf;
-    buf << "num:" << num << " type:" << Md::pName(type) << " devs:" << devs;
-    y2milestone( "%s", buf.str().c_str() );
+    y2mil( "num:" << num << " type:" << Md::pName(type) << " devs:" << devs );
     if( readonly() )
 	{
 	ret = MD_CHANGE_READONLY;

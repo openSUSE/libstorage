@@ -1,6 +1,7 @@
 #ifndef LISTLIST_ITERATOR_H
 #define LISTLIST_ITERATOR_H
 
+#include "y2storage/AppUtil.h"
 #include "y2storage/IterPair.h"
 
 template< class PIter, class Iter > 

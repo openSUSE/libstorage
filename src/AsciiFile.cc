@@ -5,15 +5,12 @@
 #include <unistd.h>
 #include <fstream>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/AppUtil.h"
 #include "y2storage/Regex.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AsciiFile.h"
 
-using std::ifstream;
-using std::ofstream;
+using namespace std;
 
 AsciiFile::AsciiFile( bool CreateBackup_bv, const char* BackupExt_Cv ) :
 	BackupCreated_b(!CreateBackup_bv),

@@ -2,13 +2,14 @@
 #include <algorithm>
 #include <list>
 
-#include <ycp/y2log.h>
-
 #include "y2storage/Container.h"
 #include "y2storage/Storage.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
 #include "y2storage/AppUtil.h"
+
+using namespace std;
+using namespace storage;
 
 Container::Container( Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)

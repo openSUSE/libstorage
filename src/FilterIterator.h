@@ -1,6 +1,7 @@
 #ifndef FILTER_ITERATOR_H
 #define FILTER_ITERATOR_H
 
+#include "y2storage/AppUtil.h"
 #include "y2storage/IterPair.h"
 
 template< class Pred, class Iter > 
