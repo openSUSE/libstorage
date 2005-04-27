@@ -68,7 +68,6 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    VolPair p = volPair( stageCreate );
 	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
 		{
-		cout << "dev:" << i->device() << endl;
 		vol.push_back( &(*i) );
 		}
 	    if( created() )
