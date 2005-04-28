@@ -63,12 +63,12 @@ inline ostream& operator<< (ostream& s, const Md& m )
 	s << " Chunk:" << m.chunk;
     if( m.md_parity!=Md::PAR_NONE )
 	s << " Parity:" << m.ptName();
-    if( m.md_uuid.size()>0 )
+    if( !m.md_uuid.empty() )
 	s << " MD UUID:" << m.md_uuid;
     if( m.destrSb )
 	s << " destroySb";
     s << " Devices:" << m.devs;
-    if( m.spare.size()>0 )
+    if( !m.spare.empty() )
 	s << " Spare:" << m.spare;
     return( s );
     }

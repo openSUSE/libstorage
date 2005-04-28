@@ -23,14 +23,6 @@
 using namespace std;
 using namespace storage;
 
-struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
-
-bool TestLg150( const Disk& d )
-    { return(d.cylinders()>150); };
-bool TestCG30( const Partition& d )
-    { return(d.cylSize()>30); };
-
-
 Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     readonly(ronly), testmode(tmode), initialized(false), autodetect(autodetec)
     {
@@ -125,7 +117,7 @@ Storage::~Storage()
 	    (*i)->logData( logdir );
 	delete( *i );
 	}
-    if( tempdir.size()>0 && access( tempdir.c_str(), R_OK )==0 )
+    if( !tempdir.empty() && access( tempdir.c_str(), R_OK )==0 )
 	{
 	SystemCmd c( "rmdir " + tempdir );
 	if( c.retcode()!=0 )
@@ -1298,7 +1290,7 @@ Storage::removeLvmLv( const string& device )
 	vg = d.substr( 0, pos );
 	name = d.substr( pos+1 );
 	}
-    if( vg.size()>0 && name.size()>0 )
+    if( !vg.empty() && !name.empty() )
 	ret = removeLvmLv( vg, name );
     else
 	ret = STORAGE_LVM_INVALID_DEVICE;
@@ -1527,7 +1519,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	{
 	ret = vol->setEncryption( true );
 	}
-    if( ret==0 and mp.size()>0 )
+    if( ret==0 and !mp.empty() )
 	{
 	ret = vol->changeMount( mp );
 	}
@@ -1745,7 +1737,7 @@ Storage::commitPair( CPair& p )
     y2milestone( "p.length:%d", p.length() );
     CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
     CommitStage* pt = a;
-    while( unsigned(pt-a) < sizeof(a)/sizeof(a[0]) )
+    while( unsigned(pt-a) < lengthof(a) )
 	{
 	bool cont_removed = false;
 	list<Container*> colist;
@@ -1772,7 +1764,7 @@ Storage::commitPair( CPair& p )
 		ret = co->commitChanges( *pt, *vli );
 	    ++vli;
 	    }
-	if( ret==0 && colist.size()>0 )
+	if( ret==0 && !colist.empty() )
 	    ret = performContChanges( *pt, colist, cont_removed );
 	if( cont_removed )
 	    p = cPair();
@@ -1802,7 +1794,7 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
 	    cont_remove.push_back( co );
 	++cli;
 	}
-    if( cont_remove.size()>0 )
+    if( !cont_remove.empty() )
 	{
 	for( list<Container*>::iterator c=cont_remove.begin();
 	     c!=cont_remove.end(); ++c )
@@ -2230,7 +2222,7 @@ int Storage::removeUsing( Volume* vol )
 	    ret = removeLvmVg( uname );
 	    break;
 	case UB_EVMS:
-	    if( uname.size()>0 )
+	    if( !uname.empty() )
 		ret = removeEvmsContainer( uname );
 	    else
 		ret = removeVolume( "/dev/evms/" + uname );
@@ -2250,7 +2242,7 @@ void Storage::rootMounted()
     {
     MdCo* md;
     root_mounted = true;
-    if( root().size()>0 )
+    if( !root().empty() )
 	{
     	if( haveMd(md) )
 	    md->syncRaidtab();

@@ -262,7 +262,7 @@ string Partition::createText( bool doing ) const
 	    txt = sformat( _("Create boot partition %1$s %2$s with %3$s"),
 	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
-	else if( mp.size()>0 )
+	else if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
@@ -318,7 +318,7 @@ string Partition::formatText( bool doing ) const
     else
 	{
 	string d = dev.substr( 5 );
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{

@@ -46,7 +46,7 @@ inline ostream& operator<< (ostream& s, const FstabEntry &v )
 	s << " crypto";
     if( v.loop )
 	s << " loop";
-    if( v.loop_dev.size()>0 )
+    if( !v.loop_dev.empty() )
 	s << " loop_dev:" << v.loop_dev;
     if( v.encr != storage::ENC_NONE )
 	s << " encr:" << v.encr;
@@ -93,7 +93,7 @@ inline ostream& operator<< (ostream& s, const FstabChange &v )
       << " dentry:" << v.dentry << " mount:" << v.mount 
       << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
-    if( v.loop_dev.size()>0 )
+    if( !v.loop_dev.empty() )
 	s << " loop_dev:" << v.loop_dev;
     if( v.encr != storage::ENC_NONE )
 	s << " encr:" << v.encr;

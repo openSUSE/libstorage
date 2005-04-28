@@ -190,4 +190,8 @@ struct cont_less : public std::binary_function<Val*,Val*,bool>
     {
     bool operator()(const Val* __x, const Val* __y) const { return *__x < *__y; }
     };
+
+template <class T, unsigned int sz>
+  inline unsigned int lengthof (T (&)[sz]) { return sz; }
+
 #endif

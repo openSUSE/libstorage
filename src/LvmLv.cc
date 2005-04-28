@@ -80,7 +80,7 @@ LvmLv::getTableInfo()
 	    le /= pesize;
 	    majmin = extractNthWord( 3, line );
 	    dev = cont->getStorage()->deviceByNumber( majmin );
-	    if( dev.size()>0 )
+	    if( !dev.empty() )
 		{
 		if( (mit=pe_map.find( dev ))==pe_map.end() )
 		    pe_map[dev] = le;
@@ -108,7 +108,7 @@ LvmLv::getTableInfo()
 		    {
 		    majmin = extractNthWord( 5+j*2, line );
 		    dev = cont->getStorage()->deviceByNumber( majmin );
-		    if( dev.size()>0 )
+		    if( !dev.empty() )
 			{
 			if( (mit=pe_map.find( dev ))==pe_map.end() )
 			    pe_map[dev] = le;
@@ -213,7 +213,7 @@ string LvmLv::createText( bool doing ) const
 	    txt = sformat( _("Create swap Logical volume %1$s %2$s"),
 	                   dev.c_str(), sizeString().c_str() );
 	    }
-	else if( mp.size()>0 )
+	else if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
@@ -260,7 +260,7 @@ string LvmLv::formatText( bool doing ) const
 	}
     else
 	{
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{

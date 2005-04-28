@@ -53,13 +53,13 @@ inline ostream& operator<< (ostream& s, const LvmLv &p )
     s << " LE:" << p.num_le;
     if( p.stripe>1 )
       s << " Stripes:" << p.stripe;
-    if( p.vol_uuid.size()>0 )
+    if( !p.vol_uuid.empty() )
       s << " UUID:" << p.vol_uuid;
-    if( p.status.size()>0 )
+    if( !p.status.empty() )
       s << " " << p.status;
-    if( p.allocation.size()>0 )
+    if( !p.allocation.empty() )
       s << " " << p.allocation;
-    if( p.pe_map.size()>0 )
+    if( !p.pe_map.empty() )
       s << " pe_map:" << p.pe_map;
     return( s );
     }

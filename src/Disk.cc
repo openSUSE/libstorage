@@ -231,7 +231,7 @@ bool Disk::detectPartitions()
     y2milestone( "Label:%s", dlabel.c_str() );
     setLabelData( dlabel );
     checkPartedOutput( Cmd );
-    if( dlabel.size()==0 )
+    if( dlabel.empty() )
 	{
 	Cmd.setCombine();
 	Cmd.execute( "/sbin/fdisk -l " + device() );
@@ -241,7 +241,7 @@ bool Disk::detectPartitions()
 	    }
 	}
     detected_label = dlabel;
-    if( dlabel.size()==0 )
+    if( dlabel.empty() )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
     y2milestone( "ret:%d partitons:%zd detected label:%s label:%s", ret,
@@ -293,11 +293,11 @@ Disk::setLabelData( const string& disklabel )
     {
     y2milestone( "disklabel:%s", disklabel.c_str() );
     int i=0;
-    while( labels[i].name.size()>0 && labels[i].name!=disklabel )
+    while( !labels[i].name.empty() && labels[i].name!=disklabel )
 	{
 	i++;
 	}
-    if( labels[i].name.size()==0 )
+    if( labels[i].name.empty() )
 	i=0;
     ext_possible = labels[i].extended;
     max_primary = labels[i].primary;
@@ -315,7 +315,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
         {
         y2error( "cmd:%s", cmd_line.c_str() );
         y2error( "err:%s", tmp.c_str() );
-	if( system_stderr.size()>0 )
+	if( !system_stderr.empty() )
 	    {
 	    system_stderr += "\n";
 	    }
@@ -326,7 +326,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
         {
         y2milestone( "cmd:%s", cmd_line.c_str() );
         y2milestone( "out:%s", tmp.c_str() );
-	if( system_stderr.size()>0 )
+	if( !system_stderr.empty() )
 	    {
 	    system_stderr += "\n";
 	    }
@@ -727,7 +727,7 @@ bool Disk::needP( const string& disk )
     {
     bool need_p = false;
     unsigned i=0;
-    while( !need_p && i<sizeof(p_disks)/sizeof(string) )
+    while( !need_p && i<lengthof(p_disks) )
 	{
 	string::size_type p = disk.find(p_disks[i]);
 	if( p==0 || (p==5 && disk.find( "/dev/" )==0 ))
@@ -882,7 +882,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     list<Region> free;
     getUnusedSpace( free );
     y2milestone( "free:" );
-    if( free.size()>0 )
+    if( !free.empty() )
 	{
 	free.sort( regions_sort_size );
 	list<Region>::iterator i = free.begin();
@@ -926,7 +926,7 @@ int Disk::createPartition( PartitionType type, string& device )
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free, type==PTYPE_ANY, type==LOGICAL );
-    if( free.size()>0 )
+    if( !free.empty() )
 	{
 	free.sort( regions_sort_size );
 	list<Region>::iterator i = free.begin();

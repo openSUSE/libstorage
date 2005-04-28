@@ -108,7 +108,7 @@ MdCo::getMdData()
 			device = extractNthWord( 1, line );
 		    else if( key=="spare-disk" )
 			{
-			if( device.size()>0 )
+			if( !device.empty() )
 			    {
 			    normalizeDevice(device);
 			    i->addSpareDevice( device );

@@ -183,7 +183,7 @@ string Md::createCmd() const
     if( md_parity!=PAR_NONE )
 	cmd += " --parity=" + ptName();
     cmd += " --raid-devices=" + decString(devs.size());
-    if( spare.size()>0 )
+    if( !spare.empty() )
 	cmd += " --spare-devices=" + decString(spare.size());
     for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
 	cmd += " " + *i;
@@ -281,7 +281,7 @@ string Md::createText( bool doing ) const
     else
 	{
 	d.erase( 0, 5 );
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
@@ -330,7 +330,7 @@ string Md::formatText( bool doing ) const
     else
 	{
 	d.erase( 0, 5 );
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{

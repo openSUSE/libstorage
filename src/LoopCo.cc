@@ -51,7 +51,7 @@ LoopCo::getLoopData()
 	string lfile = getStorage()->root() + i->dentry;
 	if( findLoop( i->dentry ))
 	    y2warning( "duplicate loop file %s", i->dentry.c_str() );
-	else if( i->loop_dev.size()>0 && Volume::loopInUse( getStorage(),
+	else if( !i->loop_dev.empty() && Volume::loopInUse( getStorage(),
 	                                                    i->loop_dev ) )
 	    y2warning( "duplicate loop_device %s", i->loop_dev.c_str() );
 	else if( !checkNormalFile( lfile ))

@@ -56,7 +56,7 @@ ProcMounts::getMount( const list<string>& dl ) const
     {
     string ret;
     list<string>::const_iterator i = dl.begin();
-    while( ret.size()==0 && i!=dl.end() )
+    while( ret.empty() && i!=dl.end() )
 	{
 	ret = getMount( *i );
 	++i;

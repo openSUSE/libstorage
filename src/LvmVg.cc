@@ -15,7 +15,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     {
     y2milestone( "construcing lvm vg %s", Name.c_str() );
     init();
-    if( Name.size()>0 )
+    if( !Name.empty() )
 	{
 	getVgData( Name, false );
 	}
@@ -31,7 +31,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     y2milestone( "constructing lvm vg %s lvm1:%d", Name.c_str(), lv1 );
     init();
     lvm1 = lv1;
-    if( Name.size()==0 )
+    if( Name.empty() )
 	{
 	y2error( "empty name in constructor" );
 	}
@@ -688,7 +688,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "LV Name" ) == 0 )
 		    {
-		    if( vname.size()>0 )
+		    if( !vname.empty() )
 			{
 			addLv( num_le, vname, uuid, status, allocation,
 			       readOnly );
@@ -719,7 +719,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    }
 		line = *c.getLine( i++ );
 		}
-	    if( vname.size()>0 )
+	    if( !vname.empty() )
 		{
 		addLv( num_le, vname, uuid, status, allocation, readOnly );
 		}
@@ -729,7 +729,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "PV Name" ) == 0 )
 		    {
-		    if( p->device.size()>0 )
+		    if( !p->device.empty() )
 			{
 			addPv( p );
 			}
@@ -750,7 +750,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    }
 		line = *c.getLine( i++ );
 		}
-	    if( p->device.size()>0 )
+	    if( !p->device.empty() )
 		{
 		addPv( p );
 		}
@@ -859,7 +859,7 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
     Container::getToCommit( stage, col, vol );
     if( stage==DECREASE )
         {
-	if( pv_remove.size()>0 && 
+	if( !pv_remove.empty() && 
 	    find( col.begin(), col.end(), this )==col.end() )
 	    {
 	    col.push_back( this );
@@ -867,7 +867,7 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
         }
     else if( stage==INCREASE )
         {
-	if( pv_add.size()>0 && 
+	if( !pv_add.empty() && 
 	    find( col.begin(), col.end(), this )==col.end() )
 	    {
 	    col.push_back( this );
@@ -889,7 +889,7 @@ int LvmVg::commitChanges( CommitStage stage )
 		{
 		ret = doRemoveVg();
 		}
-	    else if( pv_remove.size()>0 )
+	    else if( !pv_remove.empty() )
 		{
 		ret = doReduceVg();
 		}
@@ -901,7 +901,7 @@ int LvmVg::commitChanges( CommitStage stage )
 		{
 		ret = doCreateVg();
 		}
-	    else if( pv_add.size()>0 )
+	    else if( !pv_add.empty() )
 		{
 		ret = doExtendVg();
 		}
@@ -931,13 +931,13 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
 	}
     else 
 	{
-	if( pv_add.size()>0 )
+	if( !pv_add.empty() )
 	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end(); 
 	         ++i )
 		l.push_back( new commitAction( INCREASE, staticType(),
 					       extendVgText(false,i->device), 
 					       true, true ));
-	if( pv_remove.size()>0 )
+	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin(); 
 	         i!=pv_remove.end(); ++i )
 		l.push_back( new commitAction( DECREASE, staticType(),
@@ -1152,7 +1152,7 @@ LvmVg::doCreateVg()
 	list<Pv>::iterator p = pv_add.begin();
 	while( ret==0 && p!=pv_add.end() )
 	    {
-	    if( devices.size()>0 )
+	    if( !devices.empty() )
 		devices += " ";
 	    devices += p->device;
 	    ret = doCreatePv( p->device );
@@ -1172,7 +1172,7 @@ LvmVg::doCreateVg()
 	    {
 	    setCreated( false );
 	    getVgData( name() );
-	    if( pv_add.size()>0 )
+	    if( !pv_add.empty() )
 		{
 		pv_add.clear();
 		ret = LVM_PV_STILL_ADDED;

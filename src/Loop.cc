@@ -23,7 +23,7 @@ Loop::Loop( const Container& d, const string& LoopDev, const string& LoopFile ) 
     init();
     lfile = LoopFile;
     loop_dev = fstab_loop_dev = LoopDev;
-    if( loop_dev.size()==0 )
+    if( loop_dev.empty() )
 	getFreeLoop();
     dev = loop_dev;
     if( loopStringNum( loop_dev, num ))
@@ -151,7 +151,7 @@ string Loop::createText( bool doing ) const
     else
 	{
 	d.erase( 0, 5 );
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
@@ -205,7 +205,7 @@ string Loop::formatText( bool doing ) const
     else
 	{
 	d.erase( 0, 5 );
-	if( mp.size()>0 )
+	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{

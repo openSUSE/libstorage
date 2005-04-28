@@ -184,13 +184,13 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
     {
     y2milestone( "uuid:%s label:%s", uuid.c_str(), label.c_str() );
     list<Entry>::const_iterator i = co.begin();
-    if( uuid.size()>0 )
+    if( !uuid.empty() )
 	{
 	string dev = "UUID=" + uuid;
 	while( i!=co.end() && i->nnew.dentry != dev )
 	    ++i;
 	}
-    if( i==co.end() && label.size()>0 )
+    if( i==co.end() && !label.empty() )
 	{
 	string dev = "LABEL=" + label;
 	i = co.begin();
@@ -304,8 +304,8 @@ string EtcFstab::createTabLine( const FstabEntry& e )
     list<string> ls;
     makeStringList( e, ls );
     int count=0;
-    int max_fields = e.crypto ? sizeof(cryptotabFields)/sizeof(cryptotabFields[0])
-			      : sizeof(fstabFields)/sizeof(fstabFields[0]);
+    int max_fields = e.crypto ? lengthof(cryptotabFields)
+			      : lengthof(fstabFields);
     unsigned * fields = e.crypto ? cryptotabFields : fstabFields;
     for( list<string>::const_iterator i=ls.begin(); i!=ls.end(); ++i )
 	{
