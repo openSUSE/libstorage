@@ -1528,6 +1528,17 @@ int Disk::doCreate( Volume* v )
 	    if( !getPartedValues( p ))
 		ret = DISK_CREATE_PARTITION_NOT_FOUND;
 	    }
+	if( ret==0 && getStorage()->getZeroNewPartitions() )
+	    {
+	    string cmd;
+	    SystemCmd c;
+	    cmd = "dd if=/dev/zero of=" + p->device() + " bs=1k count=200";
+	    c.execute( cmd );
+	    cmd = "dd if=/dev/zero of=" + p->device() + 
+	          " seek=" + decString(p->sizeK()-10) +
+	          " bs=1k count=10";
+	    c.execute( cmd );
+	    }
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );

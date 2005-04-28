@@ -144,6 +144,7 @@ Md::~Md()
 void
 Md::init()
     {
+    destrSb = false;
     md_parity = PAR_NONE;
     chunk = 0;
     md_type = RAID_UNK;

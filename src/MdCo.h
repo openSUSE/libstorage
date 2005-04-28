@@ -18,7 +18,7 @@ class MdCo : public Container
 
 	int createMd( unsigned num, storage::MdType type, 
 	              const std::list<string>& devs );
-	int removeMd( unsigned num );
+	int removeMd( unsigned num, bool destroySb=true );
 	unsigned unusedNumber();
 	void syncRaidtab();
 

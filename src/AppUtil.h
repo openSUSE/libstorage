@@ -9,6 +9,7 @@
 #include <cstdarg>
 #include <cstdio>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <list>
 #include <map>

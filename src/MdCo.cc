@@ -335,7 +335,7 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
     }
 
 int 
-MdCo::removeMd( unsigned num )
+MdCo::removeMd( unsigned num, bool destroySb )
     {
     int ret = 0;
     y2milestone( "num:%u", num );
@@ -367,6 +367,7 @@ MdCo::removeMd( unsigned num )
 	    for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
 		getStorage()->setUsedBy( *s, UB_NONE, "" );
 	    i->setDeleted( true );
+	    i->setDestroySb( destroySb );
 	    }
 	}
     y2milestone( "ret:%d", ret );
@@ -453,6 +454,16 @@ MdCo::doRemove( Volume* v )
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = MD_REMOVE_FAILED;
+	    }
+	if( ret==0 && m->destroySb() )
+	    {
+	    SystemCmd c;
+	    list<string> d;
+	    m->getDevs( d );
+	    for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
+		{
+		c.execute( "mdadm --zero-superblock " + *i );
+		}
 	    }
 	if( ret==0 )
 	    {

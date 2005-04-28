@@ -400,36 +400,40 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
     {
     using namespace blocxx;
 
-    char b[4096+1];
-    unsigned ret = 0;
-    if( add_str==NULL || *add_str==0 )
-	ret = snprintf( b, sizeof(b), "%s(%s):%u ", file, func, line );
-    else
-	ret = snprintf( b, sizeof(b), "%s(%s):%u %s ", file, func, line,
-	                add_str );
-    if( ret<sizeof(b) )
+    if( level >= 
+        E_DEBUG_LEVEL-(unsigned)Logger::getCurrentLogger()->getLogLevel() )
 	{
-	va_list p;
-	va_start( p, format );
-	vsnprintf( b+ret, sizeof(b)-ret, format, p );
+	char b[4096+1];
+	unsigned ret = 0;
+	if( add_str==NULL || *add_str==0 )
+	    ret = snprintf( b, sizeof(b), "%s(%s):%u ", file, func, line );
+	else
+	    ret = snprintf( b, sizeof(b), "%s(%s):%u %s ", file, func, line,
+			    add_str );
+	if( ret<sizeof(b) )
+	    {
+	    va_list p;
+	    va_start( p, format );
+	    vsnprintf( b+ret, sizeof(b)-ret, format, p );
+	    }
+	b[sizeof(b)-1] = 0;
+	String category = Logger::STR_INFO_CATEGORY;
+	switch( level )
+	    {
+	    case 0:
+		category = Logger::STR_DEBUG_CATEGORY;
+		break;
+	    case 1:
+		break;
+	    case 2:
+		category = Logger::STR_ERROR_CATEGORY;
+		break;
+	    default:
+		category = Logger::STR_FATAL_CATEGORY;
+		break;
+	    }
+	Logger::getCurrentLogger()->logMessage( component, category, b );
 	}
-    b[sizeof(b)-1] = 0;
-    String category = Logger::STR_INFO_CATEGORY;
-    switch( level )
-	{
-	case 0:
-	    category = Logger::STR_DEBUG_CATEGORY;
-	    break;
-	case 1:
-	    break;
-	case 2:
-	    category = Logger::STR_ERROR_CATEGORY;
-	    break;
-	default:
-	    category = Logger::STR_FATAL_CATEGORY;
-	    break;
-	}
-    Logger::getCurrentLogger()->logMessage( component, category, b );
     }
 
 bool system_cmd_testmode = false;

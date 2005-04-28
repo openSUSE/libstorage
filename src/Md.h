@@ -20,6 +20,8 @@ class Md : public Volume
 	MdParity parity() const { return md_parity; }
 	unsigned long chunkSize() const { return chunk; }
 	void setMdUuid( const string&val ) { md_uuid=val; }
+	bool destroySb() const { return( destrSb ); }
+	void setDestroySb( bool val=true ) { destrSb=val; }
 	const string& getMdUuid() const { return(md_uuid); }
 	const string& pName() const { return md_names[md_type]; }
 	const string& ptName() const { return par_names[md_parity]; }
@@ -46,6 +48,7 @@ class Md : public Volume
 	MdParity md_parity;
 	unsigned long chunk;
 	string md_uuid;
+	bool destrSb;
 	std::list<string> devs;
 	std::list<string> spare;
 	static string md_names[storage::MULTIPATH+1];
@@ -62,6 +65,8 @@ inline ostream& operator<< (ostream& s, const Md& m )
 	s << " Parity:" << m.ptName();
     if( m.md_uuid.size()>0 )
 	s << " MD UUID:" << m.md_uuid;
+    if( m.destrSb )
+	s << " destroySb";
     s << " Devices:" << m.devs;
     if( m.spare.size()>0 )
 	s << " Spare:" << m.spare;

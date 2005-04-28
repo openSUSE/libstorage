@@ -183,6 +183,8 @@ class Storage : public storage::StorageInterface
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() { return recursiveRemove; }
+	void setZeroNewPartitions( bool val=true );
+	bool getZeroNewPartitions() { return zeroNewPartitions; }
 	int removeVolume( const string& device );
 	int removeUsing( Volume* vol );
 
@@ -203,7 +205,7 @@ class Storage : public storage::StorageInterface
 		      const deque<string>& devs );
 	int createMdAny( storage::MdType rtype, const deque<string>& devs,
 			 string& device );
-	int removeMd( const string& name );
+	int removeMd( const string& name, bool destroySb=true );
 
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,
@@ -1018,6 +1020,7 @@ class Storage : public storage::StorageInterface
 	bool initialized;
 	bool autodetect;
 	bool recursiveRemove;
+	bool zeroNewPartitions;
 	bool root_mounted;
 	string testdir;
 	string tempdir;

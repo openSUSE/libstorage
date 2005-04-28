@@ -595,7 +595,7 @@ namespace storage
 
 	/**
 	 * Set handling of deletion of entities that belong to other
-	 * volumes. Normally it is not possibly to remove a volume that
+	 * volumes. Normally it is not possible to remove a volume that
 	 * is part of another entity (e.g. you cannot remove a partition
 	 * that is part of an LVM Volume group or a Software raid).
 	 * This setting makes the removal recursive, this means all
@@ -603,6 +603,7 @@ namespace storage
 	 * removed. Use this setting with extreme care, it may cause
 	 * the removal of LVM Volume group spanning multiple disks just
 	 * because one partition of the LVM Volume group got deleted.
+	 * Default value of this flag is false.
 	 *
 	 * @param val flag if removal is done recursive
 	 */
@@ -616,6 +617,30 @@ namespace storage
 	 */
 
 	virtual bool getRecursiveRemoval() = 0;
+
+	/**
+	 * Set handling of newly created partitions. With this flag
+	 * once can make the library overwrite start and end of newly 
+	 * created partitions with zeroes. This prevents that obsolete
+	 * structures (e.g. LVM VGs or MD superblocks) still exists on
+	 * newly created partitions since the area on disk previously 
+	 * contained a LVM PV or a device of a software raid.
+	 * volumes. Use this setting with extreme care, it make libstorage
+	 * behave fundamentally different from all other partitioning tools.
+	 * Default value of this flag is false.
+	 *
+	 * @param val flag if newly created partitions should be zeroed
+	 */
+
+	virtual void setZeroNewPartitions( bool val ) = 0;
+
+	/**
+	 * Get value of the flag for zeroing newly created partitions
+	 *
+	 * @return value of the flag for zeroing newly created partitions
+	 */
+
+	virtual bool getZeroNewPartitions() = 0;
 
 	/**
 	 * Removes a volume from the system. This function can be used
@@ -727,9 +752,11 @@ namespace storage
 	 * logical volumes, these are automatically also removed.
 	 *
 	 * @param name name of software raid device to remove (e.g. /dev/md0)
+	 * @param destroySb flag if the MD superblocks on the physcal devices 
+	 *        should be destroyed after md device is deleted
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int removeMd( const string& name ) = 0;
+	virtual int removeMd( const string& name, bool destroySb ) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically

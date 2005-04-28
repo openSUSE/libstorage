@@ -162,7 +162,7 @@ main( int argc_iv, char** argv_ppcv )
 	}
     if( ret==0 )
 	{
-	ret = s->removeMd( "md0" );
+	ret = s->removeMd( "md0", false );
 	if( ret ) cerr << "retcode:" << ret << endl;
 	}
     if( ret==0 )

@@ -53,6 +53,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     info_popup_cb = NULL;
     yesno_popup_cb = NULL;
     recursiveRemove = false;
+    zeroNewPartitions = false;
     }
 
 void
@@ -428,6 +429,12 @@ void Storage::setRecursiveRemoval( bool val )
     {
     y2milestone( "val:%d", val );
     recursiveRemove = val;
+    }
+
+void Storage::setZeroNewPartitions( bool val )
+    {
+    y2milestone( "val:%d", val );
+    zeroNewPartitions = val;
     }
 
 string Storage::proc_arch;
@@ -1431,11 +1438,11 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
     return( ret );
     }
 
-int Storage::removeMd( const string& name )
+int Storage::removeMd( const string& name, bool destroySb )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "name:%s", name.c_str() );
+    y2milestone( "name:%s destroySb:%d", name.c_str(), destroySb );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1449,7 +1456,7 @@ int Storage::removeMd( const string& name )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->removeMd( num );
+	    ret = md->removeMd( num, destroySb );
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -1520,7 +1527,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	{
 	ret = vol->setEncryption( true );
 	}
-    if( ret==0 )
+    if( ret==0 and mp.size()>0 )
 	{
 	ret = vol->changeMount( mp );
 	}
