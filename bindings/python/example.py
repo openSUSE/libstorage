@@ -4,7 +4,7 @@ import Storage
 
 c = Storage.createStorageInterface (1, 0, 1)
 
-disks = Storage.dequestring()
+disks = Storage.dequestring ()
 c.getDisks (disks)
 
 for disk in disks:
@@ -16,7 +16,6 @@ for disk in disks:
 
     for partitioninfo in partitioninfos:
 
-        print partitioninfo.name
-        print partitioninfo.cylStart,partitioninfo.cylSize
+        print partitioninfo.name,partitioninfo.cylStart,partitioninfo.cylSize
 
 Storage.destroyStorageInterface (c)
