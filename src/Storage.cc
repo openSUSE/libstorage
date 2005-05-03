@@ -1823,7 +1823,7 @@ Storage::getDisks (deque<string>& disks)
 
 
 bool
-Storage::getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos)
+Storage::getPartitionsOfDisk (const string& disk, deque<PartitionInfo>& partitioninfos)
 {
     partitioninfos.clear ();
     assertInit();

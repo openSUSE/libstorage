@@ -75,7 +75,7 @@ main( int argc_iv, char** argv_ppcv )
     string device;
     deque<string> devs;
     deque<PartitionInfo> infos;
-    s->getPartitions( disk, infos );
+    s->getPartitionsOfDisk( disk, infos );
     for( deque<PartitionInfo>::iterator i=infos.begin(); i!=infos.end(); ++i )
 	if( i->partitionType!=EXTENDED )
 	    devs.push_back( i->name );

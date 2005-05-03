@@ -147,7 +147,7 @@ class Storage : public storage::StorageInterface
 
 	bool getDisks (deque<string>& disks);
 	bool getPartitions (deque<storage::PartitionInfo>& partitioninfos);
-	bool getPartitions (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
+	bool getPartitionsOfDisk (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
 	bool getFsCapabilities( storage::FsType fstype, 
 	                        storage::FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, storage::PartitionType type, 

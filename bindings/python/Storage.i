@@ -1,6 +1,6 @@
-//-------------------------------------
-// Interface definition for libstorage
-//-------------------------------------
+//
+// Python interface definition for libstorage
+//
 
 %module Storage
 %{

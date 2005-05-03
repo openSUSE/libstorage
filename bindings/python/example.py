@@ -12,7 +12,7 @@ for disk in disks:
     print disk
 
     partitioninfos = Storage.dequepartitioninfo()
-    c.getPartitions (disk, partitioninfos)
+    c.getPartitionsOfDisk (disk, partitioninfos)
 
     for partitioninfo in partitioninfos:
 

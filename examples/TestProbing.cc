@@ -53,7 +53,7 @@ main (int argc, char** argv)
 	cout << "Found Disk " << *i1 << '\n';
 
 	deque<PartitionInfo> partitions;
-	if (!s->getPartitions (*i1, partitions))
+	if (!s->getPartitionsOfDisk (*i1, partitions))
 	{
 	    cerr << "getPartitions failed\n";
 	    exit (EXIT_FAILURE);

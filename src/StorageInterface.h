@@ -335,7 +335,7 @@ namespace storage
 	/**
 	 * Query partitions on a single disks.
 	 */
-	virtual bool getPartitions (const string& disk, deque<PartitionInfo>& partitioninfos) = 0;
+	virtual bool getPartitionsOfDisk (const string& disk, deque<PartitionInfo>& partitioninfos) = 0;
 
 
 	/**
@@ -919,7 +919,7 @@ namespace storage
 					      bool autodetect = true);
 
     /**
-     *
+     * Destroy a StorageInterface object.
      */
     void destroyStorageInterface (StorageInterface*);
 
