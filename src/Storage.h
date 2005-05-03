@@ -196,7 +196,7 @@ class Storage : public storage::StorageInterface
 	int createLvmLv( const string& vg, const string& name,
 			 unsigned long long sizeM, unsigned stripe,
 			 string& device );
-	int removeLvmLv( const string& device );
+	int removeLvmLvByDevice( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
 
 	int removeEvmsContainer( const string& name );

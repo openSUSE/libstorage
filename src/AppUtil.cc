@@ -10,6 +10,8 @@
 #include <sys/timeb.h>
 #include <sys/time.h>
 
+#include <blocxx/AppenderLogger.hpp>
+#include <blocxx/FileAppender.hpp>
 #include <blocxx/Logger.hpp>
 
 #include <iomanip>
@@ -434,6 +436,56 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
 	    }
 	Logger::getCurrentLogger()->logMessage( component, category, b );
 	}
+    }
+
+int createLogger( const string& component, const string& name,
+                  const string& logpath, const string& logfile )
+    {
+    using namespace blocxx;
+
+    if( logpath != "NULL" && logfile != "NULL" )
+	{
+	String nm = name.c_str();
+	LoggerConfigMap configItems;
+	LogAppenderRef logApp;
+	if( logpath != "STDERR" && logfile != "STDERR" && 
+	    logpath != "SYSLOG" && logfile != "SYSLOG" )
+	    {
+	    String StrKey;
+	    String StrPath;
+	    StrKey.format("log.%s.location", name.c_str());
+	    StrPath = (logpath + "/" + logfile).c_str();
+	    configItems[StrKey] = StrPath;
+	    logApp = 
+		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
+						LogAppender::ALL_CATEGORIES,
+						"%d %-5p %c - %m", 
+						LogAppender::TYPE_FILE, 
+						configItems );
+	    }
+	else if( logpath == "STDERR" && logfile == "STDERR" )
+	    {
+	    logApp = 
+		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
+						LogAppender::ALL_CATEGORIES,
+						"%d %-5p %c - %m", 
+						LogAppender::TYPE_STDERR, 
+						configItems );
+	    }
+	else 
+	    {
+	    logApp = 
+		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
+						LogAppender::ALL_CATEGORIES,
+						"%d %-5p %c - %m", 
+						LogAppender::TYPE_SYSLOG, 
+						configItems );
+	    }
+	LoggerRef log( new AppenderLogger( component.c_str(), E_INFO_LEVEL, 
+	                                   logApp));
+	Logger::setDefaultLogger(log);
+	}
+    return( 0 );
     }
 
 bool system_cmd_testmode = false;

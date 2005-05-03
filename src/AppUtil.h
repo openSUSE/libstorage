@@ -39,6 +39,9 @@ void normalizeDevice( string& dev );
 bool runningFromSystem();
 void delay(int Microsec_iv);
 
+int createLogger( const string& component, const string& name,
+                  const string& logpath, const string& logfile );
+
 void log_msg( unsigned level, const char* file, unsigned line, 
               const char* func, const char* add_str, const char* format, ... ) 
 	__attribute__ ((format(printf, 6, 7)));

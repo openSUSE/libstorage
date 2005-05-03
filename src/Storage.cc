@@ -1277,7 +1277,7 @@ Storage::createLvmLv( const string& vg, const string& name,
     }
 
 int
-Storage::removeLvmLv( const string& device )
+Storage::removeLvmLvByDevice( const string& device )
     {
     int ret = 0;
     string vg, name;

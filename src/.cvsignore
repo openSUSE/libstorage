@@ -10,3 +10,4 @@ Makefile.in
 ag_fdisk
 *.kdoc
 y2storage
+evms_access
