@@ -3,12 +3,12 @@
 
 #include "y2storage/Volume.h"
 
-class Evms;
+class EvmsCo;
 
 class EvmsVol : public Volume
     {
     public:
-	EvmsVol( const Evms& d, const string& name, unsigned Stripes=1 );
+	EvmsVol( const EvmsCo& d, const string& name, unsigned Stripes=1 );
 	virtual ~EvmsVol();
 	unsigned stripes() const { return stripe; }
 	unsigned compatible() const { return compat; }

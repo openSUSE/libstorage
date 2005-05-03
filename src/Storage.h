@@ -13,7 +13,7 @@
 #include "y2storage/Partition.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
-#include "y2storage/Evms.h"
+#include "y2storage/EvmsCo.h"
 #include "y2storage/EvmsVol.h"
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
@@ -476,41 +476,41 @@ class Storage : public storage::StorageInterface
 // iterators over EVMS container
     protected:
 	// protected typedefs for iterators over EVMS container
-	typedef CastCheckIterator<CCIter, EVMS, const Evms *> ContainerCEvmsIter;
+	typedef CastCheckIterator<CCIter, EVMS, const EvmsCo *> ContainerCEvmsIter;
 	template< class Pred >
 	    struct ConstEvmsPI { typedef ContainerIter<Pred, ContainerCEvmsIter> type; };
-	typedef CastCheckIterator<CIter, EVMS, Evms *> ContainerEvmsIter;
+	typedef CastCheckIterator<CIter, EVMS, EvmsCo *> ContainerEvmsIter;
 	template< class Pred >
 	    struct EvmsPI { typedef ContainerIter<Pred, ContainerEvmsIter> type; };
 	template< class Pred >
-	    struct EvmsI { typedef ContainerDerIter<Pred, typename EvmsPI<Pred>::type, Evms> type; };
-	typedef CheckFnc<const Evms> CheckFncEvms;
+	    struct EvmsI { typedef ContainerDerIter<Pred, typename EvmsPI<Pred>::type, EvmsCo> type; };
+	typedef CheckFnc<const EvmsCo> CheckFncEvms;
 	typedef CheckerIterator< CheckFncEvms, ConstEvmsPI<CheckFncEvms>::type,
-	                         ContainerCEvmsIter, Evms > ConstEvmsPIterator;
+	                         ContainerCEvmsIter, EvmsCo > ConstEvmsPIterator;
 
     public:
 	// public typedefs for iterators over EVMS container
-	typedef DerefIterator<ConstEvmsPIterator,const Evms> ConstEvmsIterator;
+	typedef DerefIterator<ConstEvmsPIterator,const EvmsCo> ConstEvmsIterator;
 	template< class Pred >
 	    struct ConstEvmsI
 		{ typedef ContainerDerIter<Pred, typename ConstEvmsPI<Pred>::type,
-					   const Evms> type; };
+					   const EvmsCo> type; };
 	template< class Pred >
 	    struct EvmsCondIPair { typedef MakeCondIterPair<Pred, typename ConstEvmsI<Pred>::type> type; };
 	typedef IterPair<ConstEvmsIterator> ConstEvmsPair;
 
 	// public member functions for iterators over EVMS container
-	ConstEvmsPair evmsPair( bool (* CheckFnc)( const Evms& )=NULL ) const
+	ConstEvmsPair evmsPair( bool (* CheckFnc)( const EvmsCo& )=NULL ) const
 	    {
 	    return( ConstEvmsPair( evmsBegin( CheckFnc ), evmsEnd( CheckFnc ) ));
 	    }
-	ConstEvmsIterator evmsBegin( bool (* CheckFnc)( const Evms& )=NULL ) const
+	ConstEvmsIterator evmsBegin( bool (* CheckFnc)( const EvmsCo& )=NULL ) const
 	    {
 	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( cont.begin(), cont.end() ),
 	                                    ContainerCEvmsIter( cont.begin(), cont.end(), true ));
 	    return( ConstEvmsIterator( ConstEvmsPIterator( p, CheckFnc )) );
 	    }
-	ConstEvmsIterator evmsEnd( bool (* CheckFnc)( const Evms& )=NULL ) const
+	ConstEvmsIterator evmsEnd( bool (* CheckFnc)( const EvmsCo& )=NULL ) const
 	    {
 	    IterPair<ContainerCEvmsIter> p( ContainerCEvmsIter( cont.begin(), cont.end() ),
 	                                    ContainerCEvmsIter( cont.begin(), cont.end(), true ));
@@ -813,33 +813,33 @@ class Storage : public storage::StorageInterface
 	typedef IterPair<ConstEvmsVolIterator> ConstEvmsVolPair;
 
 	// public member functions for iterators over EVMS volumes
-	ConstEvmsVolPair evmsVolPair( bool (* CheckEvms)( const Evms& )) const
+	ConstEvmsVolPair evmsVolPair( bool (* CheckEvms)( const EvmsCo& )) const
 	    {
 	    return( ConstEvmsVolPair( evmsVolBegin( CheckEvms ), evmsVolEnd( CheckEvms ) ));
 	    }
 	ConstEvmsVolPair evmsVolPair( bool (* CheckEvmsVol)( const EvmsVol& )=NULL,
-				      bool (* CheckEvms)( const Evms& )=NULL) const
+				      bool (* CheckEvms)( const EvmsCo& )=NULL) const
 	    {
 	    return( ConstEvmsVolPair( evmsVolBegin( CheckEvmsVol, CheckEvms ),
 	                              evmsVolEnd( CheckEvmsVol, CheckEvms ) ));
 	    }
-	ConstEvmsVolIterator evmsVolBegin( bool (* CheckEvms)( const Evms& )) const
+	ConstEvmsVolIterator evmsVolBegin( bool (* CheckEvms)( const EvmsCo& )) const
 	    {
 	    return( evmsVolBegin( NULL, CheckEvms ) );
 	    }
 	ConstEvmsVolIterator evmsVolBegin( bool (* CheckEvmsVol)( const EvmsVol& )=NULL,
-	                                   bool (* CheckEvms)( const Evms& )=NULL) const
+	                                   bool (* CheckEvms)( const EvmsCo& )=NULL) const
 	    {
 	    IterPair<ConstEvmsVolInter2> p( (ConstEvmsVolInter(evmsPair( CheckEvms ))),
 					    (ConstEvmsVolInter(evmsPair( CheckEvms ), true )));
 	    return( ConstEvmsVolIterator( ConstEvmsVolPIterator(p, CheckEvmsVol )));
 	    }
-	ConstEvmsVolIterator evmsVolEnd( bool (* CheckEvms)( const Evms& )) const
+	ConstEvmsVolIterator evmsVolEnd( bool (* CheckEvms)( const EvmsCo& )) const
 	    {
 	    return( evmsVolEnd( NULL, CheckEvms ) );
 	    }
 	ConstEvmsVolIterator evmsVolEnd( bool (* CheckEvmsVol)( const EvmsVol& )=NULL,
-	                                 bool (* CheckEvms)( const Evms& )=NULL) const
+	                                 bool (* CheckEvms)( const EvmsCo& )=NULL) const
 	    {
 	    IterPair<ConstEvmsVolInter2> p( (ConstEvmsVolInter(evmsPair( CheckEvms ))),
 					    (ConstEvmsVolInter(evmsPair( CheckEvms ), true )));

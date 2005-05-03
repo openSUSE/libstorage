@@ -1,21 +1,21 @@
-#ifndef EVMS_H
-#define EVMS_H
+#ifndef EVMS_CO_H
+#define EVMS_CO_H
 
 #include "y2storage/Container.h"
 
-class Evms : public Container
+class EvmsCo : public Container
     {
     friend class Storage;
 
     public:
-	Evms( Storage * const s, const string& Name="" );
-	virtual ~Evms();
+	EvmsCo( Storage * const s, const string& Name="" );
+	virtual ~EvmsCo();
 	unsigned long long peSize() const { return pe_size; }
 	unsigned numVol() const { return vols.size(); }
 	unsigned numPv() const { return num_pv; }
 	unsigned isContainer() const { return is_container; }
 	static CType const staticType() { return EVMS; }
-	friend inline ostream& operator<< (ostream&, const Evms& );
+	friend inline ostream& operator<< (ostream&, const EvmsCo& );
 
     protected:
 	virtual void print( ostream& s ) const { s << *this; }
@@ -25,7 +25,7 @@ class Evms : public Container
 	bool is_container;
     };
 
-inline ostream& operator<< (ostream& s, const Evms& d )
+inline ostream& operator<< (ostream& s, const EvmsCo& d )
     {
     s << *((Container*)&d);
     s << " NumPv:" << d.num_pv

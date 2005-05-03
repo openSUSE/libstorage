@@ -18,7 +18,7 @@ liby2storage_la_SOURCES =			\
 	Container.cc     Container.h	     \
 	  Disk.cc        Disk.h	     	     \
 	  LvmVg.cc       LvmVg.h	     \
-	  Evms.cc        Evms.h	     	     \
+	  EvmsCo.cc      EvmsCo.h	     \
 	  MdCo.cc        MdCo.h	     	     \
 	  LoopCo.cc      LoopCo.h	     \
 	Volume.cc        Volume.h            \

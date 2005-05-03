@@ -1,10 +1,10 @@
 #include <iostream> 
 
-#include "y2storage/Evms.h"
+#include "y2storage/EvmsCo.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/EvmsVol.h"
 
-Evms::Evms( Storage * const s, const string& Name ) : 
+EvmsCo::EvmsCo( Storage * const s, const string& Name ) : 
     Container(s,Name,staticType())
     {
     dev = "/dev/evms";
@@ -48,7 +48,7 @@ Evms::Evms( Storage * const s, const string& Name ) :
     y2milestone( "constructed evms co %s", dev.c_str() );
     }
 
-Evms::~Evms()
+EvmsCo::~EvmsCo()
     {
     y2milestone( "destructed evmc co %s", dev.c_str() );
     }

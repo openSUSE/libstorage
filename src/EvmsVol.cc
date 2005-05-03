@@ -1,10 +1,8 @@
-#include <sstream>
-
-#include "y2storage/Evms.h"
+#include "y2storage/EvmsCo.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/EvmsVol.h"
 
-EvmsVol::EvmsVol( const Evms& d, const string& name, unsigned Stripes ) 
+EvmsVol::EvmsVol( const EvmsCo& d, const string& name, unsigned Stripes ) 
     : Volume( d, name, 0 )
     {
     stripe = Stripes;
