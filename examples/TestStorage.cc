@@ -26,15 +26,15 @@ struct FileOther { bool operator()(const Loop&d) const
 struct PVG1 { bool operator()(const LvmVg&d) const {return(d.numPv()>1);}};
 struct LVG1 { bool operator()(const LvmVg&d) const {return(d.numLv()>1);}};
 struct NoLv { bool operator()(const LvmVg&d) const {return(d.numLv()==0);}};
-struct PVG1E { bool operator()(const Evms&d) const {return(d.numPv()>1);}};
-struct LVG1E { bool operator()(const Evms&d) const {return(d.numVol()>1);}};
-struct NoLvE { bool operator()(const Evms&d) const {return(d.numVol()==0);}};
+struct PVG1E { bool operator()(const EvmsCo&d) const {return(d.numPv()>1);}};
+struct LVG1E { bool operator()(const EvmsCo&d) const {return(d.numVol()>1);}};
+struct NoLvE { bool operator()(const EvmsCo&d) const {return(d.numVol()==0);}};
 
 struct StripeG1 { bool operator()(const LvmLv&d) const {return(d.stripes()>1);}};
-struct StripeG1E { bool operator()(const EvmsVol&d) const {return(d.stripes()>1);}};
+struct StripeG1E { bool operator()(const Evms&d) const {return(d.stripes()>1);}};
 struct TestHaveA { bool operator()(const LvmLv&d) const 
     { return( d.name().find( "a" )!=string::npos); }};
-struct TestHaveAE { bool operator()(const EvmsVol&d) const 
+struct TestHaveAE { bool operator()(const Evms&d) const 
     { return( d.name().find( "a" )!=string::npos); }};
 
 template <class C> bool TestIsA( const C& d ) 
@@ -44,7 +44,7 @@ template <class C> bool TestIsB( const C& d )
 template <class C> bool TestFalse( const C& d ) { return( false ); };
 template <class C> bool TestTrue( const C& d ) { return( true ); };
 bool TestLvG1( const LvmVg& d ) { return( d.numLv()>1 ); };
-bool TestVolG1( const Evms& d ) { return( d.numVol()>1 ); };
+bool TestVolG1( const EvmsCo& d ) { return( d.numVol()>1 ); };
 
 template <class pair> 
 void PrintPair( ostream& s, const pair& p, const string& txt )
@@ -374,59 +374,59 @@ main( int argc_iv, char** argv_ppcv )
     PrintPair<Storage::LvmLvCondIPair<TestHaveA>::type>( cout, p, "LvmLv 'a' " );
     }
     {
-    Storage::ConstEvmsPair p = Sto.evmsPair();
-    PrintPair<Storage::ConstEvmsPair>( cout, p, "Evms " );
+    Storage::ConstEvmsCoPair p = Sto.evmsCoPair();
+    PrintPair<Storage::ConstEvmsCoPair>( cout, p, "Evms " );
     struct tmp { 
-	static bool TestPvGt1( const Evms& d ) 
+	static bool TestPvGt1( const EvmsCo& d ) 
 	    { return( d.numPv()>1 ); };
-	static bool TestLvGt1( const Evms& d ) 
+	static bool TestLvGt1( const EvmsCo& d ) 
 	    { return( d.numVol()>1 ); };
-	static bool TestEmpty( const Evms& d ) 
+	static bool TestEmpty( const EvmsCo& d ) 
 	    { return( d.numVol()==0 ); };
 	};
-    p = Sto.evmsPair(tmp::TestPvGt1);
-    PrintPair<Storage::ConstEvmsPair>( cout, p, "Evms PV>1 " );
-    p = Sto.evmsPair(tmp::TestLvGt1);
-    PrintPair<Storage::ConstEvmsPair>( cout, p, "Evms LV>1 " );
-    p = Sto.evmsPair(tmp::TestEmpty);
-    PrintPair<Storage::ConstEvmsPair>( cout, p, "Evms No LV " );
+    p = Sto.evmsCoPair(tmp::TestPvGt1);
+    PrintPair<Storage::ConstEvmsCoPair>( cout, p, "Evms PV>1 " );
+    p = Sto.evmsCoPair(tmp::TestLvGt1);
+    PrintPair<Storage::ConstEvmsCoPair>( cout, p, "Evms LV>1 " );
+    p = Sto.evmsCoPair(tmp::TestEmpty);
+    PrintPair<Storage::ConstEvmsCoPair>( cout, p, "Evms No LV " );
     }
     {
-    Storage::EvmsCondIPair<PVG1E>::type p = Sto.evmsCondPair<PVG1E>( PVG1E() );
-    PrintPair<Storage::EvmsCondIPair<PVG1E>::type>( cout, p, "Evms PV>1 " );
+    Storage::EvmsCoCondIPair<PVG1E>::type p = Sto.evmsCoCondPair<PVG1E>( PVG1E() );
+    PrintPair<Storage::EvmsCoCondIPair<PVG1E>::type>( cout, p, "Evms PV>1 " );
     }
     {
-    Storage::EvmsCondIPair<LVG1E>::type p = Sto.evmsCondPair<LVG1E>( LVG1E() );
-    PrintPair<Storage::EvmsCondIPair<LVG1E>::type>( cout, p, "Evms LV>1 " );
+    Storage::EvmsCoCondIPair<LVG1E>::type p = Sto.evmsCoCondPair<LVG1E>( LVG1E() );
+    PrintPair<Storage::EvmsCoCondIPair<LVG1E>::type>( cout, p, "Evms LV>1 " );
     }
     {
-    Storage::EvmsCondIPair<NoLvE>::type p = Sto.evmsCondPair<NoLvE>( NoLvE() );
-    PrintPair<Storage::EvmsCondIPair<NoLvE>::type>( cout, p, "Evms LV==0 " );
+    Storage::EvmsCoCondIPair<NoLvE>::type p = Sto.evmsCoCondPair<NoLvE>( NoLvE() );
+    PrintPair<Storage::EvmsCoCondIPair<NoLvE>::type>( cout, p, "Evms LV==0 " );
     }
     {
-    Storage::ConstEvmsVolPair p = Sto.evmsVolPair();
-    PrintPair<Storage::ConstEvmsVolPair>( cout, p, "EvmsVol " );
+    Storage::ConstEvmsPair p = Sto.evmsPair();
+    PrintPair<Storage::ConstEvmsPair>( cout, p, "EvmsVol " );
     struct tmp { 
-	static bool TestNameA( const EvmsVol& d ) 
+	static bool TestNameA( const Evms& d ) 
 	    { return( d.name().find("a")!=string::npos ); };
-	static bool TestStripeG1( const EvmsVol& d ) 
+	static bool TestStripeG1( const Evms& d ) 
 	    { return( d.stripes()>1 ); };
 	};
-    p = Sto.evmsVolPair(tmp::TestNameA);
-    PrintPair<Storage::ConstEvmsVolPair>( cout, p, "EvmsVol 'a' " );
-    p = Sto.evmsVolPair(tmp::TestStripeG1);
-    PrintPair<Storage::ConstEvmsVolPair>( cout, p, "EvmsVol S>1 " );
-    p = Sto.evmsVolPair( tmp::TestNameA, TestVolG1 );
-    PrintPair<Storage::ConstEvmsVolPair>( cout, p, "EvmsVol 'a' LV>1 " );
-    p = Sto.evmsVolPair( TestFalse<EvmsVol>, TestTrue<Evms> );
-    PrintPair<Storage::ConstEvmsVolPair>( cout, p, "EvmsVol impossible " );
+    p = Sto.evmsPair(tmp::TestNameA);
+    PrintPair<Storage::ConstEvmsPair>( cout, p, "EvmsVol 'a' " );
+    p = Sto.evmsPair(tmp::TestStripeG1);
+    PrintPair<Storage::ConstEvmsPair>( cout, p, "EvmsVol S>1 " );
+    p = Sto.evmsPair( tmp::TestNameA, TestVolG1 );
+    PrintPair<Storage::ConstEvmsPair>( cout, p, "EvmsVol 'a' LV>1 " );
+    p = Sto.evmsPair( TestFalse<Evms>, TestTrue<EvmsCo> );
+    PrintPair<Storage::ConstEvmsPair>( cout, p, "EvmsVol impossible " );
     }
     {
-    Storage::EvmsVolCondIPair<StripeG1E>::type p = Sto.evmsVolCondPair<StripeG1E>( StripeG1E() );
-    PrintPair<Storage::EvmsVolCondIPair<StripeG1E>::type>( cout, p, "EvmsVol S>1 " );
+    Storage::EvmsCondIPair<StripeG1E>::type p = Sto.evmsCondPair<StripeG1E>( StripeG1E() );
+    PrintPair<Storage::EvmsCondIPair<StripeG1E>::type>( cout, p, "EvmsVol S>1 " );
     }
     {
-    Storage::EvmsVolCondIPair<TestHaveAE>::type p = Sto.evmsVolCondPair<TestHaveAE>( TestHaveAE() );
-    PrintPair<Storage::EvmsVolCondIPair<TestHaveAE>::type>( cout, p, "EvmsVol 'a' " );
+    Storage::EvmsCondIPair<TestHaveAE>::type p = Sto.evmsCondPair<TestHaveAE>( TestHaveAE() );
+    PrintPair<Storage::EvmsCondIPair<TestHaveAE>::type>( cout, p, "EvmsVol 'a' " );
     }
     }

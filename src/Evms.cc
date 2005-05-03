@@ -1,8 +1,8 @@
 #include "y2storage/EvmsCo.h"
 #include "y2storage/AppUtil.h"
-#include "y2storage/EvmsVol.h"
+#include "y2storage/Evms.h"
 
-EvmsVol::EvmsVol( const EvmsCo& d, const string& name, unsigned Stripes ) 
+Evms::Evms( const EvmsCo& d, const string& name, unsigned Stripes ) 
     : Volume( d, name, 0 )
     {
     stripe = Stripes;
@@ -12,7 +12,7 @@ EvmsVol::EvmsVol( const EvmsCo& d, const string& name, unsigned Stripes )
                  cont->name().c_str() );
     }
 
-EvmsVol::~EvmsVol()
+Evms::~Evms()
     {
     y2milestone( "destructed evms vol %s", dev.c_str() );
     }

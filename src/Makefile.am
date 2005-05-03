@@ -24,7 +24,7 @@ liby2storage_la_SOURCES =			\
 	Volume.cc        Volume.h            \
 	  Partition.cc   Partition.h         \
 	  LvmLv.cc       LvmLv.h             \
-	  EvmsVol.cc     EvmsVol.h           \
+	  Evms.cc        Evms.h              \
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
 	SystemCmd.cc     SystemCmd.h         \
@@ -38,7 +38,7 @@ liby2storage_la_SOURCES =			\
 	AppUtil.cc       AppUtil.h           \
 	FilterIterator.h ListListIterator.h  \
 	DerefIterator.h  IterPair.h          \
-	Region.h         StorageTypes.h		\
+	Region.h         StorageTypes.h	     \
 	StorageTmpl.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
