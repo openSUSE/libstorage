@@ -134,7 +134,7 @@ main( int argc_iv, char** argv_ppcv )
 	}
     if( ret==0 )
 	{
-	ret = s->removeLvmLv( device );
+	ret = s->removeLvmLvByDevice( device );
 	if( ret ) cerr << "retcode:" << ret << endl;
 	}
     if( ret==0 )
