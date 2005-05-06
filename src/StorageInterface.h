@@ -99,7 +99,7 @@ namespace storage
     typedef void (*CallbackProgressBar)( const string& id, unsigned cur, unsigned max );
 
     /**
-     * typedef for a pointer to a function that is called with strings 
+     * typedef for a pointer to a function that is called with strings
      * telling the user what is currently going on
      */
     typedef void (*CallbackShowInstallInfo)( const string& id );
@@ -644,10 +644,10 @@ namespace storage
 
 	/**
 	 * Set handling of newly created partitions. With this flag
-	 * once can make the library overwrite start and end of newly 
+	 * once can make the library overwrite start and end of newly
 	 * created partitions with zeroes. This prevents that obsolete
 	 * structures (e.g. LVM VGs or MD superblocks) still exists on
-	 * newly created partitions since the area on disk previously 
+	 * newly created partitions since the area on disk previously
 	 * contained a LVM PV or a device of a software raid.
 	 * volumes. Use this setting with extreme care, it make libstorage
 	 * behave fundamentally different from all other partitioning tools.
@@ -776,7 +776,7 @@ namespace storage
 	 * logical volumes, these are automatically also removed.
 	 *
 	 * @param name name of software raid device to remove (e.g. /dev/md0)
-	 * @param destroySb flag if the MD superblocks on the physcal devices 
+	 * @param destroySb flag if the MD superblocks on the physcal devices
 	 *        should be destroyed after md device is deleted
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -786,7 +786,7 @@ namespace storage
 	 * Create a file based loop device. Encryption is automatically
 	 * activated on the loop device.
 	 *
-	 * @param lname name of file the loop device is based on 
+	 * @param lname name of file the loop device is based on
 	 * @param reuseExisting if true an alraedy existing file will be
 	 *    reused. if false the file will be created new. if false
 	 *    the format flag for the device is set by default.
@@ -802,11 +802,11 @@ namespace storage
 	                            unsigned long long sizeK,
 				    const string& mp, const string& pwd,
 				    string &device ) = 0;
-	
+
 	/**
 	 * Remove a file based loop device from the system.
 	 *
-	 * @param lname name of file the loop device is based on 
+	 * @param lname name of file the loop device is based on
 	 * @param removeFile if true the file is removed together with
 	 *    the based loop device. If false the file is not touched.
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -823,6 +823,9 @@ namespace storage
 	 */
 	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
 
+
+// temporarily disable callback function for swig
+#ifndef SWIG
 
 	/**
 	 * Sets the callback function called on progress bar events
@@ -845,6 +848,7 @@ namespace storage
 	 * @param pfnc pointer to funtcion
 	 */
 	virtual void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc ) = 0;
+
 	/**
 	 * Query the callback function called to display install info
 	 *
@@ -885,6 +889,8 @@ namespace storage
 	 * @return pointer to function currently called for progress bar events
 	 */
 	virtual CallbackYesNoPopup getCallbackYesNoPopup() = 0;
+
+#endif
 
 #if 0
 
