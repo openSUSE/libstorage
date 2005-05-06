@@ -2,30 +2,30 @@
 # /usr/lib/YaST2/bin/y2base example.ycp stdio
 
 {
-    import "Foo";
-    import "Foo::StorageInterface";
-    import "Foo::PartitionInfo";
+    import "LibStorage";
+    import "LibStorage::StorageInterface";
+    import "LibStorage::PartitionInfo";
 
-    any o = Foo::createStorageInterface (); // (true, false, true);
+    any o = LibStorage::createStorageInterface (); // (true, false, true);
 
     list <string> disks = [];
-    Foo::StorageInterface::getDisks (o, disks);
+    LibStorage::StorageInterface::getDisks (o, disks);
     foreach (string disk, disks, {
 	y2milestone ("found disk %1", disk);
 
 	list<any> partitioninfos = [];
-	Foo::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
+	LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
 	foreach (any partitioninfo, partitioninfos, {
 	    y2milestone ("found partition %1", partitioninfo);
-	    // integer cylStart = Foo::PartitionInfo::swig_cylStart_get (partitioninfo);
+	    // integer cylStart = LibStorage::PartitionInfo::swig_cylStart_get (partitioninfo);
 	});
     });
 
     string mount_point = "";
     string tmp = "/dev/hda2";
-    Foo::StorageInterface::getMountPoint (o, tmp, mount_point);
-    // Foo::StorageInterface::getMountPoint (o, "/dev/hda2", mount_point);
+    LibStorage::StorageInterface::getMountPoint (o, tmp, mount_point);
+    // LibStorage::StorageInterface::getMountPoint (o, "/dev/hda2", mount_point);
     y2milestone ("mount point of /dev/hda2 is %1", mount_point);
 
-    Foo::destroyStorageInterface (o);
+    LibStorage::destroyStorageInterface (o);
 }
