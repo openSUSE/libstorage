@@ -16,15 +16,13 @@
 	list<any> partitioninfos = [];
 	LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
 	foreach (any partitioninfo, partitioninfos, {
-	    y2milestone ("found partition %1", partitioninfo);
-	    // integer cylStart = LibStorage::PartitionInfo::swig_cylStart_get (partitioninfo);
+	    y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_name_get (partitioninfo));
 	});
     });
 
     string mount_point = "";
     string tmp = "/dev/hda2";
     LibStorage::StorageInterface::getMountPoint (o, tmp, mount_point);
-    // LibStorage::StorageInterface::getMountPoint (o, "/dev/hda2", mount_point);
     y2milestone ("mount point of /dev/hda2 is %1", mount_point);
 
     LibStorage::destroyStorageInterface (o);
