@@ -1,21 +1,21 @@
 #!/usr/bin/python
 
-import Storage
+import LibStorage
 
-c = Storage.createStorageInterface (1, 0, 1)
+c = LibStorage.createStorageInterface (1, 0, 1)
 
-disks = Storage.dequestring ()
+disks = LibStorage.dequestring ()
 c.getDisks (disks)
 
 for disk in disks:
 
     print disk
 
-    partitioninfos = Storage.dequepartitioninfo()
+    partitioninfos = LibStorage.dequepartitioninfo()
     c.getPartitionsOfDisk (disk, partitioninfos)
 
     for partitioninfo in partitioninfos:
 
         print partitioninfo.name,partitioninfo.cylStart,partitioninfo.cylSize
 
-Storage.destroyStorageInterface (c)
+LibStorage.destroyStorageInterface (c)

@@ -1,16 +1,16 @@
 
 export LD_LIBRARY_PATH=../..
 
-all: Storage.pyc Storage.pyo
+all: LibStorage.pyc LibStorage.pyo
 
-Storage.pyc: Storage_wrap.cxx
-	python -c "import Storage"
+LibStorage.pyc: LibStorage_wrap.cxx
+	python -c "import LibStorage"
 
-Storage.pyo: Storage_wrap.cxx
-	python -O -c "import Storage"
+LibStorage.pyo: LibStorage_wrap.cxx
+	python -O -c "import LibStorage"
 
-Storage_wrap.cxx: Storage.i ../../src/StorageInterface.h
-	swig -Wall -c++ -python Storage.i
-	g++ -c -I/usr/include/python -O2 -fPIC -pipe Storage_wrap.cxx
-	g++ -shared Storage_wrap.o -o _Storage.so -ly2storage
+LibStorage_wrap.cxx: LibStorage.i ../../src/StorageInterface.h
+	swig -Wall -c++ -python LibStorage.i
+	g++ -c -I/usr/include/python -O2 -fPIC -pipe LibStorage_wrap.cxx
+	g++ -shared LibStorage_wrap.o -o _LibStorage.so -ly2storage
 

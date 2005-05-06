@@ -2,7 +2,8 @@
 // Python interface definition for libstorage
 //
 
-%module Storage
+%module LibStorage
+
 %{
 #include "../../src/StorageInterface.h"
 %}
