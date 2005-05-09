@@ -222,7 +222,12 @@ class mstream : public std::iostream
   public:
     mstream( int fd, boolean input ) : std::iostream(NULL) 
       {
+#if GCC_VERSION >= 4000
       my_strbuf *strbuf = new my_strbuf(fd, input?std::ios::in:std::ios::out);
+#else
+      my_strbuf *strbuf = new my_strbuf(fd, input?std::ios::in:std::ios::out,
+					true, static_cast<size_t>(BUFSIZ));
+#endif
       rdbuf(strbuf);
       }
   };
