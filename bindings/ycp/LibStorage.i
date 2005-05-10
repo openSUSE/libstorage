@@ -17,5 +17,5 @@ using namespace std;
 
 specialize_sequence(storage::PartitionInfo, TO_PACK, FROM_PACK, CHECK)
 
-%include "/usr/include/YaST2/y2storage/StorageInterface.h"
+%include "../../src/StorageInterface.h"
 
