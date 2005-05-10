@@ -7,3 +7,5 @@ PLUGLIB_LIBRARY = ../../src/.libs/liby2storage.so
 
 include $(top_srcdir)/pluglib-bindings.ami
 
+EXTRA_DIST = LibStorage.i
+
