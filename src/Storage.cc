@@ -1281,9 +1281,7 @@ Storage::removeLvmLvByDevice( const string& device )
     {
     int ret = 0;
     string vg, name;
-    string d( device );
-    if( d.find( "/dev/" )==0 )
-	d.erase( 0, 5 );
+    string d = undevDevice( device );
     string::size_type pos = d.find( '/' );
     if( pos!=string::npos )
 	{

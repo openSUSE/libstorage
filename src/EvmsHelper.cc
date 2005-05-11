@@ -37,7 +37,7 @@ int EvmsCreateCoCmd( EvmsAccess& evms, const string& params )
     string name = extractNthWord( 0, params );
     unsigned long long peSizeK = 0;
     extractNthWord( 1, params ) >> peSizeK;
-    boolean lvm2 = false;
+    bool lvm2 = false;
     extractNthWord( 2, params ) >> lvm2;
     list <string> devs;
     string dev;
@@ -47,8 +47,6 @@ int EvmsCreateCoCmd( EvmsAccess& evms, const string& params )
 	devs.push_back( dev );
 	++i;
 	}
-    cerr << "EvmsCreateCoCmd name:" << name << " PeSize:" << peSizeK 
-         << " lvm2:" << lvm2 << " devs:" << devs << endl;
     ret = evms.createCo( name, peSizeK, lvm2, devs );
     return( ret );
     }
@@ -58,7 +56,6 @@ int EvmsExtendCoCmd( EvmsAccess& evms, const string& params )
     int ret = 0;
     string name = extractNthWord( 0, params );
     string device = extractNthWord( 1, params );
-    cerr << "EvmsExtendCoCmd name:" << name << " device:" << device << endl; 
     ret = evms.extendCo( name, device );
     return( ret );
     }
@@ -68,7 +65,6 @@ int EvmsShrinkCoCmd( EvmsAccess& evms, const string& params )
     int ret = 0;
     string name = extractNthWord( 0, params );
     string device = extractNthWord( 1, params );
-    cerr << "EvmsShrinkCoCmd name:" << name << " device:" << device << endl; 
     ret = evms.shrinkCo( name, device );
     return( ret );
     }
@@ -77,7 +73,6 @@ int EvmsDeleteCoCmd( EvmsAccess& evms, const string& params )
     {
     int ret = 0;
     string name = extractNthWord( 0, params );
-    cerr << "EvmsShrinkCoCmd name:" << name << endl; 
     ret = evms.deleteCo( name );
     return( ret );
     }
@@ -98,9 +93,6 @@ int EvmsCreateLvCmd( EvmsAccess& evms, const string& params )
 	if( !(tmp=extractNthWord( 4, params )).empty() )
 	    tmp >> stripeSize;
 	}
-    cerr << "EvmsCreateLvCmd coName:" << coname << " lvname:" << lvname 
-         << " sizeK:" << sizeK << " stripes:" << stripe 
-         << " stripeSize:" << stripeSize << endl;
     ret = evms.createLv( lvname, coname, sizeK, stripe, stripeSize );
     return( ret );
     }
@@ -110,7 +102,6 @@ int EvmsDeleteLvCmd( EvmsAccess& evms, const string& params )
     int ret = 0;
     string coname = extractNthWord( 0, params );
     string lvname = extractNthWord( 1, params );
-    cerr << "EvmsRemoveLvCmd coName:" << coname << " lvname:" << lvname << endl;
     ret = evms.deleteLv( lvname, coname );
     return( ret );
     }
@@ -122,8 +113,6 @@ int EvmsResizeLvCmd( EvmsAccess& evms, const string& params )
     string lvname = extractNthWord( 1, params );
     unsigned long long sizeK = 0;
     extractNthWord( 2, params ) >> sizeK;
-    cerr << "EvmsResizeLvCmd coName:" << coname << " lvname:" << lvname 
-         << " newSizeK:" << sizeK << endl;
     ret = evms.changeLvSize( lvname, coname, sizeK );
     return( ret );
     }
@@ -132,7 +121,6 @@ int EvmsCreateCompatVolume( EvmsAccess& evms, const string& params )
     {
     int ret = 0;
     string name = extractNthWord( 0, params );
-    cerr << "EvmsCreateCompatVolume name:" << name << endl; 
     ret = evms.createCompatVol( name );
     return( ret );
     }
@@ -186,6 +174,7 @@ void loop_cin()
 	string cmdline;
 	cout << "CMD> ";
 	getline( cin, cmdline );
+	//cmdline = "create_co testlvm2 4096 1 /dev/hdb10 /dev/hdb11 /dev/hdb12";
 	string cmd = extractNthWord( 0, cmdline );
 	if( cmd == "exit" )
 	    end_program = true;
@@ -220,7 +209,7 @@ typedef __gnu_cxx::stdio_filebuf<char> my_strbuf;
 class mstream : public std::iostream
   {
   public:
-    mstream( int fd, boolean input ) : std::iostream(NULL) 
+    mstream( int fd, bool input ) : std::iostream(NULL) 
       {
 #if __GNUC__ >= 4
       my_strbuf *strbuf = new my_strbuf(fd, input?std::ios::in:std::ios::out);

@@ -358,6 +358,19 @@ void normalizeDevice( string& dev )
 	dev = "/dev/" + dev;
     }
 
+string undevDevice( const string& dev )
+    {
+    string ret( dev );
+    undevDevice( ret );
+    return( ret );
+    }
+
+void undevDevice( string& dev )
+    {
+    if( dev.find( "/dev/" )==0 )
+	dev.erase( 0, 5 );
+    }
+
 void delay(int Microsec_iv)
 {
   timeval Timeout_ri;

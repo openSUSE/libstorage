@@ -914,9 +914,7 @@ string Volume::losetupText( bool doing ) const
 bool Volume::loopStringNum( const string& name, unsigned& num )
     {
     bool ret=false;
-    string d(name);
-    if( d.find( "/dev/" )==0 )
-	d.erase( 0, 5 );
+    string d = undevDevice(name);
     static Regex loop( "^loop[0-9]+$" );
     if( loop.match( d ))
 	{

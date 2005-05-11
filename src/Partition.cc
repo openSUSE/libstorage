@@ -32,7 +32,8 @@ Partition::Partition( const Disk& d, const string& Data ) :
     orig_size_k = size_k;
     orig_num = num;
     orig_id = idt;
-    nm = dev.substr (5);	// strip "/dev/"
+    nm = dev;
+    undevDevice(nm);	// strip "/dev/"
     if( ts == "extended" )
 	typ = EXTENDED;
     else if( ts == "logical" )

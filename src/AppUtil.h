@@ -36,6 +36,8 @@ void removeLastIf(string& Text_Cr, char Char_cv);
 string kbyteToHumanString( unsigned long long size );
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
+string undevDevice( const string& dev );
+void undevDevice( string& dev );
 bool runningFromSystem();
 void delay(int Microsec_iv);
 

@@ -1,6 +1,7 @@
 #include <dlfcn.h>
 #include <iterator>
 #include <string>
+#include <iostream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
@@ -808,12 +809,7 @@ int EvmsAccess::createCo( const string& Container_Cv,
     CmdLine_C += ">";
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     string name = Container_Cv;
-    if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0)
-	{
-	Error_C = "unknown container type" + Container_Cv;
-	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
-	}
-    else
+    if( Container_Cv.find( "lvm/" )==0 || Container_Cv.find( "lvm2/" )==0)
 	{
 	name.erase( 0, name.find_first_of( "/" )+1 );
 	}
@@ -837,10 +833,11 @@ int EvmsAccess::createCo( const string& Container_Cv,
     list<string>::const_iterator p=Devices_Cv.begin(); 
     while( ret==0 && count<input->count )
 	{
+	string dev = undevDevice( *p );
 	object_type_t ot = (object_type_t)(REGION|SEGMENT);
-	ret = evms_get_object_handle_for_name( ot, (char *)p->c_str(),
+	ret = evms_get_object_handle_for_name( ot, (char *)dev.c_str(),
 					       &input->handle[count] );
-	y2milestone( "ret %d handle for %s is %d", ret, p->c_str(), 
+	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
 	             input->handle[count] );
 	if( ret )
 	    {
@@ -901,7 +898,7 @@ int EvmsAccess::createCo( const string& Container_Cv,
 	    option->option[1].flags = 0;
 	    if( NewMeta_bv )
 		{
-		option->option[1].name = "Extent_Size";
+		option->option[1].name = "extent_size";
 		option->option[1].type = EVMS_Type_Unsigned_Int64;
 		option->option[1].value.i64 = PeSizeK_lv*2;
 		}
@@ -955,7 +952,7 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
     if( Stripe_lv>1 )
 	{
 	CmdLine_C += " Stripe:" + decString(Stripe_lv);
-	if( StripeSizeK_lv>1 )
+	if( StripeSizeK_lv>0 )
 	    {
 	    CmdLine_C += " StripeSize:" + decString(StripeSizeK_lv);
 	    }
@@ -963,7 +960,7 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
 	}
     bool lvm2 = Container_Cv.find( "lvm2/" )==0;
@@ -1167,7 +1164,7 @@ int EvmsAccess::deleteLv( const string& LvName_Cv, const string& Container_Cv )
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
 	}
     handle_array_t* reg = NULL;
@@ -1251,17 +1248,18 @@ int EvmsAccess::extendCo( const string& Container_Cv, const string& PvName_Cv )
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
 	}
     object_handle_t region = 0;
     if( ret==0 )
 	{
+	string dev = undevDevice( PvName_Cv );
 	object_type_t ot = (object_type_t)(REGION|SEGMENT);
 	int ret = evms_get_object_handle_for_name( ot, 
-	                                           (char *)PvName_Cv.c_str(),
+	                                           (char *)dev.c_str(),
 						   &region );
-	y2milestone( "ret %d handle for %s is %d", ret, PvName_Cv.c_str(), 
+	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
 	             region );
 	if( ret )
 	    {
@@ -1346,17 +1344,18 @@ int EvmsAccess::shrinkCo( const string& Container_Cv, const string& PvName_Cv )
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
 	}
     object_handle_t region = 0;
     if( ret==0 )
 	{
+	string dev = undevDevice( PvName_Cv );
 	object_type_t ot = (object_type_t)(REGION|SEGMENT);
 	int ret = evms_get_object_handle_for_name( ot, 
-	                                           (char *)PvName_Cv.c_str(),
+	                                           (char *)dev.c_str(),
 						   &region );
-	y2milestone( "ret %d handle for %s is %d", ret, PvName_Cv.c_str(), 
+	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
 	             region );
 	if( ret )
 	    {
@@ -1438,7 +1437,7 @@ int EvmsAccess::deleteCo( const string& Container_Cv )
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_UNSUPPORTED_CONTAINER_TYPE;
 	}
     const EvmsContainerObject* Co_p = NULL;
@@ -1511,7 +1510,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
     y2milestone( "CmdLine_C %s", CmdLine_C.c_str());
     if( Container_Cv.find( "lvm/" )!=0 && Container_Cv.find( "lvm2/" )!=0 )
 	{
-	Error_C = "unknown container type" + Container_Cv;
+	Error_C = "unknown container type: " + Container_Cv;
 	ret = EVMS_RESIZE_CONTAINER_NOT_FOUND;
 	}
     bool lvm2 = Container_Cv.find( "lvm2/" )==0;
@@ -1539,7 +1538,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 	    {
 	    option.option[0].is_number_based = false;
 	    option.option[0].flags = 0;
-	    if( lvm2 )
+	    if( !lvm2 )
 		{
 		option.option[0].name = "add_size";
 		option.option[0].type = EVMS_Type_Unsigned_Int32;
@@ -1549,7 +1548,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 		{
 		option.option[0].name = "size";
 		option.option[0].type = EVMS_Type_Unsigned_Int64;
-		option.option[0].value.i64 = SizeK_lv*2;
+		option.option[0].value.i64 = (SizeK_lv-Rg_p->sizeK())*2;
 		}
 	    ret = evms_expand( Rg_p->id(), NULL, &option );
 	    if( ret )
@@ -1565,7 +1564,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 	    {
 	    option.option[0].flags = 0;
 	    option.option[0].is_number_based = false;
-	    if( lvm2 )
+	    if( !lvm2 )
 		{
 		option.option[0].name = "remove_size";
 		option.option[0].type = EVMS_Type_Unsigned_Int32;
@@ -1575,7 +1574,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 		{
 		option.option[0].name = "size";
 		option.option[0].type = EVMS_Type_Unsigned_Int64;
-		option.option[0].value.i64 = SizeK_lv*2;
+		option.option[0].value.i64 = (Rg_p->sizeK()-SizeK_lv)*2;
 		}
 	    ret = evms_shrink( Rg_p->id(), NULL, &option );
 	    if( ret )
@@ -1600,7 +1599,7 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
     return( ret );
     }
 
-boolean EvmsAccess::endEvmsCommand()
+bool EvmsAccess::endEvmsCommand()
     {
     int ret = evms_commit_changes();
     if( ret )

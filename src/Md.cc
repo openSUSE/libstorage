@@ -391,9 +391,7 @@ Md::toMdParity( const string& val )
 bool Md::mdStringNum( const string& name, unsigned& num )
     {
     bool ret=false;
-    string d(name);
-    if( d.find( "/dev/" )==0 )
-	d.erase( 0, 5 );
+    string d = undevDevice(name);
     static Regex md( "^md[0-9]+$" );
     if( md.match( d ))
 	{

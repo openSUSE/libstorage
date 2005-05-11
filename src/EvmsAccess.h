@@ -155,11 +155,11 @@ class EvmsAccess
 	                                  const string& name );
 	const EvmsDataObject* findSegment( const string& name );
 	const EvmsVolumeObject* findVolume( const string& name );
-	boolean endEvmsCommand();
+	bool endEvmsCommand();
 	static int pluginFilterFunction( const char* plugin );
 
 	std::list<EvmsObject*> objects;
-	boolean EvmsOpen_b;
+	bool EvmsOpen_b;
 	string Error_C;
 	string CmdLine_C;
     };

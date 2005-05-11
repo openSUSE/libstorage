@@ -53,10 +53,7 @@ ProcPart::getSize( const string& Dev, unsigned long long& SizeK ) const
 string 
 ProcPart::devName( const string& Dev )
     {
-    string name( Dev );
-    if( name.find( "/dev/" )==0 )
-	name.erase( 0, 5 );
-    return( name );
+    return( undevDevice( Dev ));
     }
 
 list<string>  
