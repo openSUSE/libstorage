@@ -39,6 +39,14 @@ Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK
                  cont->name().c_str() );
     }
 
+Volume::Volume( const Container& c ) : cont(&c)
+    {
+    numeric = false;
+    size_k = orig_size_k = 0;
+    init();
+    y2milestone( "constructed late init volume" );
+    }
+
 Volume::~Volume()
     {
     y2milestone( "destructed volume %s", dev.c_str() );
@@ -52,7 +60,8 @@ void Volume::setNameDev()
     else
 	Buf_Ci << cont->device() << "/" << nm;
     dev = Buf_Ci.str();
-    nm = dev.substr( 5 );
+    if( nm.empty() )
+	nm = dev.substr( 5 );
     }
 
 void Volume::init()
@@ -62,9 +71,12 @@ void Volume::init()
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     encryption = orig_encryption = ENC_NONE;
-    setNameDev();
     mjr = mnr = 0;
-    getMajorMinor( dev, mjr, mnr );
+    if( numeric||!nm.empty() )
+	{
+	setNameDev();
+	getMajorMinor( dev, mjr, mnr );
+	}
     if( !numeric )
 	num = 0;
     }

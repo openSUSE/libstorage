@@ -17,6 +17,7 @@ class Volume
     public:
 	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
+	Volume( const Container& d );
 	virtual ~Volume();
 
 	const string& device() const { return dev; }
@@ -129,6 +130,7 @@ class Volume
 	    };
 	static SkipDeleted SkipDel;
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
+	static bool isDeleted( const Volume&d ) { return( d.deleted() ); }
 	static bool getMajorMinor( const string& device,
 	                           unsigned long& Major, unsigned long& Minor );
 	static bool loopStringNum( const string& name, unsigned& num );

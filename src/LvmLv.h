@@ -3,11 +3,11 @@
 
 #include <map>
 
-#include "y2storage/Volume.h"
+#include "y2storage/Dm.h"
 
 class LvmVg;
 
-class LvmLv : public Volume
+class LvmLv : public Dm
     {
     public:
 	LvmLv( const LvmVg& d, const string& name, unsigned long le,
@@ -16,18 +16,9 @@ class LvmLv : public Volume
 	       unsigned stripe );
 
 	virtual ~LvmLv();
-	unsigned long getLe() const { return num_le; }
-	void setLe( unsigned long le );
-	void calcSize();
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
 	void setAlloc( const string& a ) { allocation=a; }
-	const std::map<string,unsigned long>& getPeMap() const { return( pe_map ); }
-	void setPeMap( const std::map<string,unsigned long>& m ) { pe_map = m; }
-	unsigned long usingPe( const string& dev ) const;
-	void getTableInfo();
-	bool checkConsistency() const;
-	unsigned stripes() const { return stripe; }
 	friend ostream& operator<< (ostream& s, const LvmLv &p );
 	virtual void print( ostream& s ) const { s << *this; }
 	string removeText( bool doing ) const;
@@ -36,31 +27,23 @@ class LvmLv : public Volume
 	string resizeText( bool doing ) const;
 
     protected:
-	void init();
-	const LvmVg* const vg() const;
+	void init( const string& name );
 
 	string vol_uuid;
 	string status;
 	string allocation;
-	unsigned long num_le;
-	unsigned stripe;
-	std::map<string,unsigned long> pe_map;
+	virtual const string shortPrintedName() const { return( "Lv" ); }
     };
 
 inline ostream& operator<< (ostream& s, const LvmLv &p )
     {
-    s << "Lv " << *(Volume*)&p;
-    s << " LE:" << p.num_le;
-    if( p.stripe>1 )
-      s << " Stripes:" << p.stripe;
+    s << *(Dm*)&p;
     if( !p.vol_uuid.empty() )
       s << " UUID:" << p.vol_uuid;
     if( !p.status.empty() )
       s << " " << p.status;
     if( !p.allocation.empty() )
       s << " " << p.allocation;
-    if( !p.pe_map.empty() )
-      s << " pe_map:" << p.pe_map;
     return( s );
     }
 
