@@ -57,30 +57,10 @@ void PrintPair( ostream& s, const pair& p, const string& txt )
 	}
     }
 
-void 
-initLogger()
-    {
-    String name = "testlog";
-    LoggerConfigMap configItems;
-    String StrKey;
-    String StrPath;
-    StrKey.format("log.%s.location", name.c_str());
-    StrPath = "/var/log/YaST2/y2log";
-    configItems[StrKey] = StrPath;
-    LogAppenderRef logApp = 
-	LogAppender::createLogAppender( name, LogAppender::ALL_COMPONENTS, 
-	                                LogAppender::ALL_CATEGORIES, 
-					"%d %-5p %c - %m",
-					LogAppender::TYPE_FILE,
-					configItems );
-    LoggerRef log( new AppenderLogger("libstorage", E_INFO_LEVEL, logApp));
-    Logger::setDefaultLogger(log);
-    }
-
 int
 main( int argc_iv, char** argv_ppcv )
     {
-    initLogger();
+    Storage::initDefaultLogger();
     Storage Sto( true, false, true );
     for( Storage::ConstContIterator i=Sto.contBegin(); i!=Sto.contEnd(); ++i )
 	{
