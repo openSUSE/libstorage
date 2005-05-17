@@ -1,11 +1,17 @@
 #include <dirent.h>
 #include <glob.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 
 #include <sys/utsname.h>
+
+#include <blocxx/AppenderLogger.hpp>
+#include <blocxx/FileAppender.hpp>
 
 #include "y2storage/Storage.h"
 #include "y2storage/StorageTmpl.h"
@@ -22,6 +28,47 @@
 
 using namespace std;
 using namespace storage;
+
+
+void
+Storage::initDefaultLogger ()
+{
+    using namespace blocxx;
+
+    String name = "testlog";
+    LoggerConfigMap configItems;
+    String StrKey;
+    String StrPath;
+    StrKey.format("log.%s.location", name.c_str());
+
+    if (geteuid ())
+    {
+	struct passwd* pw = getpwuid (geteuid ());
+	if (pw)
+	{
+	    configItems[StrKey] = pw->pw_dir;
+	    configItems[StrKey] += "/.y2log";
+	}
+	else
+	{
+	    configItems[StrKey] = "/y2log";
+	}
+    }
+    else
+    {
+	configItems[StrKey] = "/var/log/YaST2/y2log";
+    }
+
+    LogAppenderRef logApp =
+	LogAppender::createLogAppender( name, LogAppender::ALL_COMPONENTS,
+					LogAppender::ALL_CATEGORIES,
+					"%d %-5p %c - %m",
+					LogAppender::TYPE_FILE,
+					configItems );
+    LoggerRef log( new AppenderLogger("libstorage", E_INFO_LEVEL, logApp));
+    Logger::setDefaultLogger(log);
+}
+
 
 Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     readonly(ronly), testmode(tmode), initialized(false), autodetect(autodetec)
@@ -434,6 +481,16 @@ string Storage::proc_arch;
 
 namespace storage
 {
+    void initDefaultLogger ()
+    {
+	Storage::initDefaultLogger ();
+    }
+
+    StorageInterface* createDefaultStorageInterface ()
+    {
+	return new Storage ();
+    }
+
     StorageInterface* createStorageInterface (bool ronly, bool testmode, bool autodetect)
     {
 	return new Storage (ronly, testmode, autodetect);

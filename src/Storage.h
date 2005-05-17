@@ -116,6 +116,8 @@ class Storage : public storage::StorageInterface
 	static SkipDeleted SkipDel;
 	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
 
+	static void initDefaultLogger ();
+
 	Storage( bool ronly=false, bool testmode=false, bool autodetect=true );
 	bool test() const { return( testmode ); }
 	bool instsys() const { return( inst_sys ); }

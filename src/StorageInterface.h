@@ -631,7 +631,6 @@ namespace storage
 	 *
 	 * @param val flag if removal is done recursive
 	 */
-
 	virtual void setRecursiveRemoval( bool val ) = 0;
 
 	/**
@@ -942,11 +941,23 @@ namespace storage
 
 
     /**
+     *
+     */
+    void initDefaultLogger ();
+
+
+    /**
      * Factory for creating a concrete StorageInterface object.
      */
-    StorageInterface* createStorageInterface (bool ronly = false,
-					      bool testmode = false,
-					      bool autodetect = true);
+    StorageInterface* createDefaultStorageInterface ();
+
+
+    /**
+     * Factory for creating a concrete StorageInterface object.
+     */
+    StorageInterface* createStorageInterface (bool ronly, bool testmode,
+					      bool autodetect);
+
 
     /**
      * Destroy a StorageInterface object.
