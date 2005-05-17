@@ -42,7 +42,7 @@ Mke2fsScrollbar::process( const string& val, bool stderr )
 	seen += val;
 	string::size_type pos;
 	string::size_type bpos = seen.find( "\b" );
-	y2debug( "bpos:%u", bpos );
+	y2debug( "bpos:%zu", bpos );
 	if( bpos==0 )
 	    {
 	    seen.erase( 0, seen.find_first_not_of( "\b", bpos ));
