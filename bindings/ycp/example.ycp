@@ -30,17 +30,17 @@
     void test2 ()
     {
 	string tmp = "hda1";
-    string mount_point = "";
-    LibStorage::StorageInterface::getMountPoint (o, tmp, mount_point);
-    y2milestone ("mount point of /dev/hda2 is %1", mount_point);
+	string mount_point = "";
+	LibStorage::StorageInterface::getMountPoint (o, tmp, mount_point);
+	y2milestone ("mount point of /dev/hda2 is %1", mount_point);
     }
 
 
     void test3 ()
     {
-	any fscapabilities = nil;
-	// LibStorage::StorageInterface::getFsCapabilities (o, LibStorage::REISERFS, fscapabilities);
-	// y2milestone ("isExtendable is %1", LibStorage::FsCapabilities::swig_isExtendable_get (fscapabilities));
+	any fscapabilities = LibStorage::FsCapabilities::New ();
+	LibStorage::StorageInterface::getFsCapabilities (o, LibStorage::REISERFS (), fscapabilities);
+	y2milestone ("isExtendable is %1", LibStorage::FsCapabilities::swig_isExtendable_get (fscapabilities));
     }
 
 
@@ -59,7 +59,7 @@
     {
 	string tmp = "hda1";
 	boolean b1 = true;
-	// LibStorage::StorageInterface::getCrypt (o, tmp1, b1);
+	// LibStorage::StorageInterface::getCrypt (o, tmp, b1);
 	y2milestone ("b1 = %1", b1);
     }
 
