@@ -59,7 +59,7 @@
     {
 	string tmp = "hda1";
 	boolean b1 = true;
-	// LibStorage::StorageInterface::getCrypt (o, tmp, b1);
+	LibStorage::StorageInterface::getCrypt (o, tmp, b1);
 	y2milestone ("b1 = %1", b1);
     }
 
