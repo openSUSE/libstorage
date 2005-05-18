@@ -606,7 +606,11 @@ namespace storage
 	 * @param val will be set if encryption is activated
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
+#ifndef SWIG
 	virtual int getCrypt( const string& device, bool& val ) = 0;
+#else
+	virtual int getCrypt( const string& device, bool& REFERENCE ) = 0;
+#endif
 
 	/**
 	 * Resizes a volume while keeping the data on the filesystem
