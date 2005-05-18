@@ -519,7 +519,7 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
     y2debug( "Text_Ci:%s NewLine:%d", Text_Ci.c_str(), NewLine_br );
     if( old_size != Lines_Cr.size() )
 	{
-	y2milestone( "pid:%d added lines:%d stderr:%d", Pid_i,
+	y2milestone( "pid:%d added lines:%zd stderr:%d", Pid_i,
 	             Lines_Cr.size()-old_size, Stderr_bv );
 	}
     }

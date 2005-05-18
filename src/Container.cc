@@ -93,7 +93,7 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    break;
 	}
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%d vol:%d", ret, col.size(), vol.size());
+	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
     return( ret );
     }
 

@@ -672,7 +672,7 @@ void EvmsAccess::listVolumes( list<const EvmsVolumeObject*>& l ) const
 	    l.push_back( (EvmsVolumeObject*)*Ptr_Ci );
 	    }
 	}
-    y2milestone( "size %d", l.size() );
+    y2milestone( "size %zd", l.size() );
     }
 
 void EvmsAccess::listContainer( list<const EvmsContainerObject*>& l ) const
@@ -687,7 +687,7 @@ void EvmsAccess::listContainer( list<const EvmsContainerObject*>& l ) const
 	    l.push_back( (EvmsContainerObject*)*Ptr_Ci );
 	    }
 	}
-    y2milestone( "size %d", l.size() );
+    y2milestone( "size %zd", l.size() );
     }
 
 plugin_handle_t EvmsAccess::getLvmPlugin( bool lvm2 )

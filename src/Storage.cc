@@ -1667,7 +1667,7 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
 	    ret.push_back( txt );
 	    }
 	}
-    y2milestone( "ret.size():%d", ret.size() );
+    y2milestone( "ret.size():%zd", ret.size() );
     return( ret );
     }
 
@@ -1833,7 +1833,7 @@ int
 Storage::performContChanges( CommitStage stage, const list<Container*>& co,
                              bool& cont_removed )
     {
-    y2milestone( "list size:%u", co.size() );
+    y2milestone( "list size:%zu", co.size() );
     int ret = 0;
     cont_removed = false;
     list<Container*> cont_remove;
