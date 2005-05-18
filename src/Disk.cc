@@ -155,7 +155,8 @@ bool Disk::detectGeometry()
 		     rcode, head, sector, cyl );
 	__uint64_t sect = 0;
 	rcode = ioctl( fd, BLKGETSIZE64, &sect);
-	y2milestone( "BLKGETSIZE64 Ret:%d Bytes:%llu", rcode, sect );
+	y2milestone( "BLKGETSIZE64 Ret:%d Bytes:%llu", rcode,
+		     (unsigned long long int) sect );
 	if( rcode==0 && sect!=0 )
 	    {
 	    sect /= 512;
