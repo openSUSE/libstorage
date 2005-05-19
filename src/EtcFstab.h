@@ -15,7 +15,7 @@ struct FstabEntry
     FstabEntry() { freq=passno=0; crypto=loop=noauto=false; 
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
     FstabEntry& operator=( const FstabChange& rhs );
-    friend ostream& operator<< (ostream& s, const FstabEntry &v );
+    friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
 
     string device;
     string dentry;
@@ -34,7 +34,7 @@ struct FstabEntry
     void calcDependent();
     };
 
-inline ostream& operator<< (ostream& s, const FstabEntry &v )
+inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
     {
     s << " device:" << v.device 
       << " dentry:" << v.dentry << " mount:" << v.mount 
@@ -65,7 +65,7 @@ struct FstabChange
 	loop_dev = rhs.loop_dev; encr = rhs.encr;
 	return( *this );
 	}
-    friend ostream& operator<< (ostream& s, const FstabChange &v );
+    friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
     string device;
     string dentry;
     string mount;
@@ -87,7 +87,7 @@ inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
     return( *this );
     }
 
-inline ostream& operator<< (ostream& s, const FstabChange &v )
+inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
     {
     s << " device:" << v.device 
       << " dentry:" << v.dentry << " mount:" << v.mount 

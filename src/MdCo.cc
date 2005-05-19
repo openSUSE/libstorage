@@ -14,7 +14,7 @@ using namespace storage;
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
     {
-    y2milestone( "construcing MdCo detect:%d", detect );
+    y2milestone( "constructing MdCo detect:%d", detect );
     init();
     if( detect )
 	getMdData();
@@ -23,7 +23,7 @@ MdCo::MdCo( Storage * const s, bool detect ) :
 MdCo::MdCo( Storage * const s, const string& file ) :
     Container(s,"md",staticType())
     {
-    y2milestone( "construcing MdCo file:%s", file.c_str() );
+    y2milestone( "constructing MdCo file:%s", file.c_str() );
     init();
     }
 
@@ -388,11 +388,11 @@ int MdCo::removeVolume( Volume* v )
 
 void MdCo::activate( bool val )
     {
-    y2milestone( "old active:%d val:%d", md_active, val );
-    if( md_active!=val )
+    y2milestone( "old active:%d val:%d", active, val );
+    if( active!=val )
 	{
 	SystemCmd c;
-	if( md_active )
+	if( val )
 	    {
 	    c.execute( "raidautorun" );
 	    }
@@ -400,7 +400,7 @@ void MdCo::activate( bool val )
 	    {
 	    c.execute( "mdadm --stop --scan" );
 	    }
-	md_active = val;
+	active = val;
 	}
     }
 
@@ -483,5 +483,5 @@ MdCo::doRemove( Volume* v )
 
 void MdCo::logData( const string& Dir ) {;}
 
-bool MdCo::md_active = false;
+bool MdCo::active = false;
 

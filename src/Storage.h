@@ -108,9 +108,9 @@ class Storage : public storage::StorageInterface
 	typedef CCont::const_iterator CCIter;
 
 	static bool isMd( const Container&d )
-	    { return( d.type()==MD ); };
+	    { return( d.type()==storage::MD ); };
 	static bool isLoop( const Container&d )
-	    { return( d.type()==LOOP ); };
+	    { return( d.type()==storage::LOOP ); };
     public:
 	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.deleted());}};
 	static SkipDeleted SkipDel;
@@ -132,7 +132,7 @@ class Storage : public storage::StorageInterface
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
-	void printInfo( ostream& str );
+	void printInfo( std::ostream& str );
 	bool setUsedBy( const string& dev, storage::UsedByType typ,
 	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
@@ -313,10 +313,10 @@ class Storage : public storage::StorageInterface
 // iterators over disks
     protected:
 	// protected typedefs for iterators over disks
-	typedef CastCheckIterator<CCIter, DISK, const Disk *> ContainerCDiskIter;
+	typedef CastCheckIterator<CCIter, storage::DISK, const Disk *> ContainerCDiskIter;
 	template< class Pred >
 	    struct ConstDiskPI { typedef ContainerIter<Pred, ContainerCDiskIter> type; };
-	typedef CastCheckIterator<CIter, DISK, Disk *> ContainerDiskIter;
+	typedef CastCheckIterator<CIter, storage::DISK, Disk *> ContainerDiskIter;
 	template< class Pred >
 	    struct DiskPI { typedef ContainerIter<Pred, ContainerDiskIter> type; };
 	template< class Pred >
@@ -396,10 +396,10 @@ class Storage : public storage::StorageInterface
 // iterators over LVM VGs
     protected:
 	// protected typedefs for iterators over LVM VGs
-	typedef CastCheckIterator<CCIter, LVM, const LvmVg *> ContainerCLvmVgIter;
+	typedef CastCheckIterator<CCIter, storage::LVM, const LvmVg *> ContainerCLvmVgIter;
 	template< class Pred >
 	    struct ConstLvmVgPI { typedef ContainerIter<Pred, ContainerCLvmVgIter> type; };
-	typedef CastCheckIterator<CIter, LVM, LvmVg *> ContainerLvmVgIter;
+	typedef CastCheckIterator<CIter, storage::LVM, LvmVg *> ContainerLvmVgIter;
 	template< class Pred >
 	    struct LvmVgPI { typedef ContainerIter<Pred, ContainerLvmVgIter> type; };
 	template< class Pred >
@@ -478,10 +478,10 @@ class Storage : public storage::StorageInterface
 // iterators over EVMS container
     protected:
 	// protected typedefs for iterators over EVMS container
-	typedef CastCheckIterator<CCIter, EVMS, const EvmsCo *> ContainerCEvmsIter;
+	typedef CastCheckIterator<CCIter, storage::EVMS, const EvmsCo *> ContainerCEvmsIter;
 	template< class Pred >
 	    struct ConstEvmsCoPI { typedef ContainerIter<Pred, ContainerCEvmsIter> type; };
-	typedef CastCheckIterator<CIter, EVMS, EvmsCo *> ContainerEvmsIter;
+	typedef CastCheckIterator<CIter, storage::EVMS, EvmsCo *> ContainerEvmsIter;
 	template< class Pred >
 	    struct EvmsCoPI { typedef ContainerIter<Pred, ContainerEvmsIter> type; };
 	template< class Pred >
@@ -991,6 +991,7 @@ class Storage : public storage::StorageInterface
 	void detectMds();
 	void detectLoops();
 	void detectLvmVgs();
+	void detectEvms();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	void detectFsDataTestMode( const string& file, 
@@ -1008,9 +1009,9 @@ class Storage : public storage::StorageInterface
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p );
-	void sortCommitLists( CommitStage stage, std::list<Container*>& co,  
+	void sortCommitLists( storage::CommitStage stage, std::list<Container*>& co,  
 			      std::list<Volume*>& vl );
-	int performContChanges( CommitStage stage, const std::list<Container*>& co,
+	int performContChanges( storage::CommitStage stage, const std::list<Container*>& co,
 	                        bool& cont_removed );
 
 

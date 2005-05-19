@@ -34,7 +34,7 @@ class Partition : public Volume
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
 	storage::PartitionType type() const { return typ; }
-	ostream& logData( ostream& file ) const;
+	std::ostream& logData( std::ostream& file ) const;
 	const string& partedStart() const { return parted_start; }
 	void changePartedStart( const string& pstart ) { parted_start=pstart; }
 	void changeRegion( unsigned long Start, unsigned long CSize,
@@ -46,16 +46,16 @@ class Partition : public Volume
 	string createText( bool doing=true ) const;
 	string formatText(bool doing=true) const;
 	string resizeText(bool doing=true) const;
-	void getCommitActions( std::list<commitAction*>& l ) const;
+	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );
 	const Disk* const disk() const;
 	bool isWindows() const;
-	friend ostream& operator<< (ostream& s, const Partition &p );
+	friend std::ostream& operator<< (std::ostream& s, const Partition &p );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	bool canUseDevice() const;
 
 	storage::PartitionInfo getPartitionInfo () const;
@@ -71,7 +71,7 @@ class Partition : public Volume
     };
 
 
-inline ostream& operator<< (ostream& s, const Partition &p )
+inline std::ostream& operator<< (std::ostream& s, const Partition &p )
     {
     s << "Partition " << *(Volume*)&p
       << " Start:" << p.reg.start()

@@ -15,9 +15,9 @@ class Loop : public Volume
 	bool removeFile();
 	bool createFile();
 	string lfileRealPath() const;
-	friend inline ostream& operator<< (ostream& s, const Loop& l );
+	friend inline std::ostream& operator<< (std::ostream& s, const Loop& l );
 
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
@@ -30,7 +30,7 @@ class Loop : public Volume
 	bool delFile;
     };
 
-inline ostream& operator<< (ostream& s, const Loop& l )
+inline std::ostream& operator<< (std::ostream& s, const Loop& l )
     {
     s << "Loop " << *(Volume*)&l
       << " LoopFile:" << l.lfile;

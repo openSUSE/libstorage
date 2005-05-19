@@ -252,7 +252,14 @@ EvmsContainerObject::EvmsContainerObject( EvmsObject *const obj )
 		if( strcmp( info_p->info[i].name, "PE_Size" )==0 )
 		    pe_size = info_p->info[i].value.ui32/2;
 		else if( strcmp( info_p->info[i].name, "Extent_Size" )==0 )
+		    {
 		    pe_size = info_p->info[i].value.ui64/2;
+		    lvm1 = false;
+		    }
+		else if( strcmp( info_p->info[i].name, "VG_UUID" )==0 )
+		    uuid = info_p->info[i].value.s;
+		else if( strcmp( info_p->info[i].name, "UUID" )==0 )
+		    uuid = info_p->info[i].value.s;
 		}
 	    if( pe_size == 0 )
 		{
@@ -284,6 +291,7 @@ void EvmsContainerObject::init()
     ctype.clear();
     free = 0;
     pe_size = 0;
+    lvm1 = true;
     }
 
 storage_container_info_t* EvmsContainerObject::getInfop()
@@ -303,9 +311,63 @@ void EvmsContainerObject::addRelation( EvmsAccess* Acc )
 	{
 	for( unsigned i=0; i<sinfo_p->objects_consumed->count; i++ )
 	    {
-	    EvmsObject* obj = 
-		Acc->addObject( sinfo_p->objects_consumed->handle[i] );
-	    cons.push_back( obj );
+	    peinfo pe;
+	    pe.obj = Acc->addObject( sinfo_p->objects_consumed->handle[i] );
+	    cons.push_back( pe );
+	    }
+	for( unsigned i=0; i<sinfo_p->objects_consumed->count; i++ )
+	    {
+	    string qname;
+	    if( lvm1 )
+		qname = "PV"+decString(i+1);
+	    else
+		qname = "Object"+decString(i);
+	    extended_info_array_t *info_p = NULL;
+	    int ret = evms_get_extended_info( idt, const_cast<char*>(qname.c_str()), &info_p );
+	    if( ret == 0 && info_p != NULL )
+		{
+		string uuid;
+		string name;
+		unsigned long long total = 0;
+		unsigned long long free = 0;
+
+		for( unsigned j=0; j<info_p->count; j++ )
+		    {
+		    if( strcmp( info_p->info[j].name, "Available_PEs" )==0 )
+			free = info_p->info[j].value.ui32;
+		    else if( strcmp( info_p->info[j].name, "Freespace" )==0 )
+			free = info_p->info[j].value.ui64/2/pe_size;
+		    else if( strncmp( info_p->info[j].name, "PEMapPV", 7 )==0 )
+			total = info_p->info[j].value.ui32;
+		    else if( strcmp( info_p->info[j].name, "Extents" )==0 )
+			total = info_p->info[j].value.ui64;
+		    else if( strcmp( info_p->info[j].name, "PV_Name" )==0 )
+			name = info_p->info[j].value.s;
+		    else if( strcmp( info_p->info[j].name, "Name" )==0 )
+			name = info_p->info[j].value.s;
+		    else if( strcmp( info_p->info[j].name, "PV_UUID" )==0 )
+			uuid = info_p->info[j].value.s;
+		    else if( strcmp( info_p->info[j].name, "UUID" )==0 )
+			uuid = info_p->info[j].value.s;
+		    }
+		list<peinfo>::iterator pe = cons.begin();
+		while( pe!=cons.end() && pe->obj->name()!=name )
+		    ++pe;
+		if( pe!=cons.end() )
+		    {
+		    pe->uuid = uuid;
+		    pe->size = total;
+		    pe->free = free;
+		    }
+		else
+		    y2error( "name %s not found in list", name.c_str() );
+		evms_free( info_p );
+		}
+	    else
+		{
+		y2error( "cannot get extended info %s of %d:%s", 
+		         qname.c_str(), idt, name().c_str() );
+		}
 	    }
 	for( unsigned i=0; i<sinfo_p->objects_produced->count; i++ )
 	    {
@@ -334,19 +396,8 @@ void EvmsContainerObject::output( ostream& str ) const
     str << " size:" << sizeK() 
         << " free:" << freeK()
         << " pesize:" << peSize()
-	<< " type:" << typeName();
-    if( cons.size()>0 )
-	{
-	str << " consumes:<";
-	for( list<EvmsObject *>::const_iterator i=cons.begin();
-	     i!=cons.end(); i++ )
-	    {
-	    if( i!=cons.begin() )
-		str << " ";
-	    str << (*i)->id();
-	    }
-	str << ">";
-	}
+	<< " type:" << typeName()
+	<< " uuid:" << uuid;
     if( creat.size()>0 )
 	{
 	str << " creates:<";
@@ -356,6 +407,18 @@ void EvmsContainerObject::output( ostream& str ) const
 	    if( i!=creat.begin() )
 		str << " ";
 	    str << (*i)->id();
+	    }
+	str << ">";
+	}
+    if( cons.size()>0 )
+	{
+	str << " consumes:<";
+	for( list<peinfo>::const_iterator i=cons.begin();
+	     i!=cons.end(); i++ )
+	    {
+	    if( i!=cons.begin() )
+		str << " ";
+	    str << i->obj->id() << "," << i->size << "," << i->free << "," << i->uuid;
 	    }
 	str << ">";
 	}
@@ -378,6 +441,7 @@ EvmsVolumeObject::EvmsVolumeObject( EvmsObject *const obj )
 	{
 	size = vinfo_p->vol_size/2;
 	dev = nam;
+	nam.erase( 0, 10 );
 	nat = !(vinfo_p->flags & VOLFLAG_COMPATIBILITY);
 	}
     else
@@ -565,14 +629,14 @@ void EvmsAccess::addObjectRelations()
 	{
 	if( (*Ptr_Ci)->type()==EVMS_CONTAINER )
 	    {
-	    const list<EvmsObject*>& cons 
+	    const list<EvmsContainerObject::peinfo>& cons 
 		= ((EvmsContainerObject*)*Ptr_Ci)->consumes();
-	    for( list<EvmsObject*>::const_iterator i=cons.begin(); 
+	    for( list<EvmsContainerObject::peinfo>::const_iterator i=cons.begin(); 
 	         i!=cons.end(); i++ )
 		{
-		if( (*i)->type()==EVMS_VOLUME )
+		if( i->obj->type()==EVMS_VOLUME )
 		    {
-		    ((EvmsVolumeObject*)*i)->setConsumedBy( *Ptr_Ci );
+		    ((EvmsVolumeObject*)i->obj)->setConsumedBy( *Ptr_Ci );
 		    }
 		}
 	    }
@@ -1453,10 +1517,10 @@ int EvmsAccess::deleteCo( const string& Container_Cv )
 	    {
 	    y2milestone( "handle for %s is %u", 
 	                 Container_Cv.c_str(), Co_p->id() );
-	    for( list<EvmsObject *>::const_iterator p=Co_p->consumes().begin(); 
+	    for( list<EvmsContainerObject::peinfo>::const_iterator p=Co_p->consumes().begin(); 
 	         p!=Co_p->consumes().end(); p++ )
 		{
-		y2milestone( "consumes %d", (*p)->id() );
+		y2milestone( "consumes %d", p->obj->id() );
 		}
 	    }
 	}
@@ -1472,17 +1536,17 @@ int EvmsAccess::deleteCo( const string& Container_Cv )
 	    }
 	else
 	    {
-	    for( list<EvmsObject *>::const_iterator p=Co_p->consumes().begin(); 
+	    for( list<EvmsContainerObject::peinfo>::const_iterator p=Co_p->consumes().begin(); 
 	         p!=Co_p->consumes().end(); p++ )
 		{
-		ret = evms_create_compatibility_volume( (*p)->id() );
+		ret = evms_create_compatibility_volume( p->obj->id() );
 		if( ret )
 		    {
 		    y2milestone( "evms_create_compatibility_volume ret %d", 
 		                 ret );
 		    y2milestone( "ret %s", evms_strerror(ret) );
 		    Error_C = "could not create compatibility volume " + 
-		              (*p)->name();
+		              p->obj->name();
 		    ret = EVMS_CREATE_COMPAT_VOLUME_FAILED;
 		    }
 		}

@@ -33,8 +33,8 @@ class Md : public Volume
 
 	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
-	friend inline ostream& operator<< (ostream& s, const Md& m );
-	virtual void print( ostream& s ) const { s << *this; }
+	friend inline std::ostream& operator<< (std::ostream& s, const Md& m );
+	virtual void print( std::ostream& s ) const { s << *this; }
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
@@ -55,7 +55,7 @@ class Md : public Volume
 	static string par_names[RIGHT_SYMMETRIC+1];
     };
 
-inline ostream& operator<< (ostream& s, const Md& m )
+inline std::ostream& operator<< (std::ostream& s, const Md& m )
     {
     s << "Md " << *(Volume*)&m
       << " Personality:" << m.pName();

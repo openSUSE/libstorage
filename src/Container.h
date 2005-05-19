@@ -43,11 +43,11 @@ class Container
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
 
-	virtual void getCommitActions( std::list<commitAction*>& l ) const;
-	virtual int getToCommit( CommitStage stage, std::list<Container*>& col,
+	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	virtual int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
 	                         std::list<Volume*>& vol );
-	virtual int commitChanges( CommitStage stage );
-	virtual int commitChanges( CommitStage stage, Volume* vol );
+	virtual int commitChanges( storage::CommitStage stage );
+	virtual int commitChanges( storage::CommitStage stage, Volume* vol );
 	unsigned numVolumes() const;
 	bool findVolume( const string& device, Volume*& vol );
 
@@ -120,19 +120,19 @@ class Container
 	    }
 
     public:
-	Container( Storage * const, const string& Name, CType typ );
+	Container( Storage * const, const string& Name, storage::CType typ );
 	Storage * const getStorage() const { return sto; }
 	virtual ~Container();
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
-	CType type() const { return typ; }
+	storage::CType type() const { return typ; }
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
-	const usedBy& getUsedBy() { return( uby ); }
+	const storage::usedBy& getUsedBy() { return( uby ); }
 	storage::UsedByType getUsedByType() { return( uby.t ); }
 	const string& usedByName() { return( uby.name ); }
 	bool readonly() const { return ronly; }
@@ -140,8 +140,8 @@ class Container
 	virtual string createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
 	virtual int removeVolume( Volume* v );
-	static CType const staticType() { return CUNKNOWN; } 
-	friend ostream& operator<< (ostream& s, const Container &c );
+	static storage::CType const staticType() { return storage::CUNKNOWN; } 
+	friend std::ostream& operator<< (std::ostream& s, const Container &c );
 
     protected:
 	typedef CVIter ConstPlainIterator;
@@ -152,7 +152,7 @@ class Container
 	PlainIterator begin() { return vols.begin(); }
 	PlainIterator end() { return vols.end(); }
 
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	void addToList( Volume* e )
 	    { pointerIntoSortedList<Volume>( vols, e ); }
 	bool removeFromList( Volume* e );
@@ -161,23 +161,23 @@ class Container
 	virtual int doResize( Volume * v ); 
 	virtual void logData( const string& Dir ) {;}
 
-	static string type_names[EVMS+1];
-	static unsigned order[EVMS+1];
+	static string type_names[storage::EVMS+1];
+	static unsigned order[storage::EVMS+1];
 
 	Storage * const sto;
-	CType typ;
+	storage::CType typ;
 	string nm;
 	string dev;
 	bool del;
 	bool create;
 	bool silent;
 	bool ronly;
-	usedBy uby;
+	storage::usedBy uby;
 	VCont vols;
 
     };
 
-inline ostream& operator<< (ostream& s, const Container &c )
+inline std::ostream& operator<< (std::ostream& s, const Container &c )
 {
     s << "Type:" << Container::type_names[c.typ] 
 	<< " Name:" << c.nm 

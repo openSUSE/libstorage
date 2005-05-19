@@ -12,7 +12,7 @@ using namespace storage;
 PeContainer::PeContainer( Storage * const s, CType t ) :
     Container(s,"",t)
     {
-    y2milestone( "construcing pe container type %d", t );
+    y2milestone( "constructing pe container type %d", t );
     init();
     }
 
@@ -30,7 +30,7 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     if( lvm1 )
 	{
 	if( peSizeK<8 || peSizeK>16*1024*1024 )
-	    ret = LVM_PE_SIZE_INVALID;
+	    ret = PEC_PE_SIZE_INVALID;
 	}
     if( ret==0 )
 	{
@@ -38,7 +38,7 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
 	while( sz>1 && sz%2==0 )
 	    sz /= 2;
 	if( sz!=1 )
-	    ret = LVM_PE_SIZE_INVALID;
+	    ret = PEC_PE_SIZE_INVALID;
 	}
     if( ret==0 )
 	{
@@ -63,7 +63,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	if( cur!=pladd.end() )
 	    added_pv = true;
 	else
-	    ret = LVM_PV_NOT_FOUND;
+	    ret = PEC_PV_NOT_FOUND;
 	}
     if( ret==0 )
 	cur_pv = *cur;
@@ -80,7 +80,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 		if( i->created() )
 		    li.push_back( dm );
 		else
-		    ret = LVM_REMOVE_PV_IN_USE;
+		    ret = PEC_REMOVE_PV_IN_USE;
 		}
 	    ++i;
 	    }
@@ -112,7 +112,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 		    }
 		else
 		    {
-		    ret = LVM_REMOVE_PV_SIZE_NEEDED;
+		    ret = PEC_REMOVE_PV_SIZE_NEEDED;
 		    }
 		++lii;
 		}
@@ -172,7 +172,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
 	    tmp.remove_if( Pv::no_free );
 	    }
 	if( per_stripe>0 )
-	    ret = LVM_LV_NO_SPACE_STRIPED;
+	    ret = PEC_LV_NO_SPACE_STRIPED;
 	else
 	    {
 	    list<Pv>::iterator p;
@@ -212,7 +212,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
 	    ++i;
 	    }
 	if( rest>0 )
-	    ret = LVM_LV_NO_SPACE_SINGLE;
+	    ret = PEC_LV_NO_SPACE_SINGLE;
 	else
 	    {
 	    rest = le;
@@ -269,7 +269,7 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
 	    le -= tmp;
 	    }
 	else 
-	    ret = LVM_LV_PE_DEV_NOT_FOUND;
+	    ret = PEC_LV_PE_DEV_NOT_FOUND;
 	++mit;
 	}
     y2mil( "pe_map:" << pe_map );
@@ -277,7 +277,7 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
     return( ret );
     }
 
-void PeContainer::addPv( Pv*& p )
+void PeContainer::addPv( const Pv* p )
     {
     list<Pv>::iterator i = find( pv.begin(), pv.end(), *p );
     if( i != pv.end() )

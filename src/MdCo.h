@@ -13,8 +13,8 @@ class MdCo : public Container
     public:
 	MdCo( Storage * const s, bool detect );
 	virtual ~MdCo();
-	static CType const staticType() { return MD; }
-	friend inline ostream& operator<< (ostream&, const MdCo& );
+	static storage::CType const staticType() { return storage::MD; }
+	friend inline std::ostream& operator<< (std::ostream&, const MdCo& );
 
 	int createMd( unsigned num, storage::MdType type, 
 	              const std::list<string>& devs );
@@ -89,7 +89,7 @@ class MdCo : public Container
 
 	void init();
 
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
@@ -98,10 +98,10 @@ class MdCo : public Container
 
 	EtcRaidtab *tab;
 
-	static bool md_active;
+	static bool active;
     };
 
-inline ostream& operator<< (ostream& s, const MdCo& d )
+inline std::ostream& operator<< (std::ostream& s, const MdCo& d )
     {
     s << *((Container*)&d);
     return( s );

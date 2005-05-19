@@ -14,7 +14,7 @@ using namespace std;
 LoopCo::LoopCo( Storage * const s, bool detect ) :
     Container(s,"loop",staticType())
     {
-    y2milestone( "construcing LoopCo detect:%d", detect );
+    y2milestone( "constructing LoopCo detect:%d", detect );
     init();
     if( detect )
 	getLoopData();
@@ -23,7 +23,7 @@ LoopCo::LoopCo( Storage * const s, bool detect ) :
 LoopCo::LoopCo( Storage * const s, const string& file ) :
     Container(s,"loop",staticType())
     {
-    y2milestone( "construcing LoopCo file:%s", file.c_str() );
+    y2milestone( "constructing LoopCo file:%s", file.c_str() );
     init();
     }
 

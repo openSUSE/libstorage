@@ -12,11 +12,9 @@ class LvmVg : public PeContainer
 	LvmVg( Storage * const s, const string& Name );
 	LvmVg( Storage * const s, const string& Name, bool lvm1 );
 	virtual ~LvmVg();
-	unsigned long long peSize() const { return pe_size; }
 	unsigned numLv() const { return vols.size(); }
-	unsigned numPv() const { return pv.size(); }
-	static CType const staticType() { return LVM; }
-	friend inline ostream& operator<< (ostream&, const LvmVg& );
+	static storage::CType const staticType() { return storage::LVM; }
+	friend inline std::ostream& operator<< (std::ostream&, const LvmVg& );
 
 	int removeVg();
 	int extendVg( const std::list<string>& dl );
@@ -27,10 +25,11 @@ class LvmVg : public PeContainer
 		      unsigned stripe, string& device );
 	int removeLv( const string& name );
 
-	int setPeSize( long long unsigned );
-	void getCommitActions( std::list<commitAction*>& l ) const;
-	int commitChanges( CommitStage stage );
-	int getToCommit( CommitStage stage, std::list<Container*>& col,
+	int setPeSize( long long unsigned peSizeK )
+	    { return( PeContainer::setPeSize( peSizeK, lvm1 ) ); }
+	void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	int commitChanges( storage::CommitStage stage );
+	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
 			 std::list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
@@ -90,7 +89,7 @@ class LvmVg : public PeContainer
 
 	void getVgData( const string& name, bool exists=true );
 	void init();
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	string createVgText( bool doing ) const;
 	string removeVgText( bool doing ) const;
 	string extendVgText( bool doing, const string& dev ) const;
@@ -115,10 +114,10 @@ class LvmVg : public PeContainer
 	string status;
 	string uuid;
 	bool lvm1;
-	static bool lvm_active;
+	static bool active;
     };
 
-inline ostream& operator<< (ostream& s, const LvmVg& d )
+inline std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     {
     s << *((PeContainer*)&d);
     s << " status:" << d.status;

@@ -74,11 +74,19 @@ class EvmsDataObject : public EvmsObject
 class EvmsContainerObject : public EvmsObject
     {
     public:
+	struct peinfo
+	    {
+	    EvmsObject * obj;
+	    unsigned long long size;
+	    unsigned long long free;
+	    string uuid;
+	    };
+
 	EvmsContainerObject( EvmsObject *const obj );
 	EvmsContainerObject( object_handle_t id );
 	unsigned long long freeK() const { return free; };
 	unsigned long long peSize() const { return pe_size; };
-	const std::list<EvmsObject *>& consumes() const { return cons; };
+	const std::list<peinfo>& consumes() const { return cons; };
 	const std::list<EvmsObject *>& creates() const { return creat; };
 	const string& typeName() const { return ctype; };
 	void output( std::ostream& Stream ) const;
@@ -90,9 +98,11 @@ class EvmsContainerObject : public EvmsObject
 
 	unsigned long long free;
 	unsigned long long pe_size;
-	std::list<EvmsObject *> cons;
+	string uuid;
+	std::list<peinfo> cons;
 	std::list<EvmsObject *> creat;
 	string ctype;
+	bool lvm1;
     };
 
 class EvmsVolumeObject : public EvmsObject

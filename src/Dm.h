@@ -24,10 +24,11 @@ class Dm : public Volume
 	void getTableInfo();
 	virtual bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }
-	friend ostream& operator<< (ostream& s, const Dm &p );
-	virtual void print( ostream& s ) const { s << *this; }
+	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
+	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual string removeText( bool doing ) const;
 	virtual string formatText( bool doing ) const;
+	static void activate( bool val=true );
 
     protected:
 	void init();
@@ -38,9 +39,10 @@ class Dm : public Volume
 	unsigned long num_le;
 	unsigned stripe;
 	std::map<string,unsigned long> pe_map;
+	static bool active;
     };
 
-inline ostream& operator<< (ostream& s, const Dm &p )
+inline std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
     s << p.shortPrintedName() << " ";
     s << *(Volume*)&p;

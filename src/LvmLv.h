@@ -19,8 +19,8 @@ class LvmLv : public Dm
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
 	void setAlloc( const string& a ) { allocation=a; }
-	friend ostream& operator<< (ostream& s, const LvmLv &p );
-	virtual void print( ostream& s ) const { s << *this; }
+	friend std::ostream& operator<< (std::ostream& s, const LvmLv &p );
+	virtual void print( std::ostream& s ) const { s << *this; }
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
@@ -28,14 +28,14 @@ class LvmLv : public Dm
 
     protected:
 	void init( const string& name );
+	virtual const string shortPrintedName() const { return( "Lv" ); }
 
 	string vol_uuid;
 	string status;
 	string allocation;
-	virtual const string shortPrintedName() const { return( "Lv" ); }
     };
 
-inline ostream& operator<< (ostream& s, const LvmLv &p )
+inline std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     {
     s << *(Dm*)&p;
     if( !p.vol_uuid.empty() )

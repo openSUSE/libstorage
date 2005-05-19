@@ -9,10 +9,11 @@ class PeContainer : public Container
     friend class Storage;
 
     public:
-	PeContainer( Storage * const s, CType t );
+	PeContainer( Storage * const s, storage::CType t );
 	virtual ~PeContainer();
 	unsigned long long peSize() const { return pe_size; }
-	friend inline ostream& operator<< (ostream&, const PeContainer& );
+	unsigned numPv() const { return pv.size(); }
+	friend inline std::ostream& operator<< (std::ostream&, const PeContainer& );
 
 	int setPeSize( long long unsigned, bool lvm1 );
 	
@@ -37,11 +38,11 @@ class PeContainer : public Container
 	    Pv() { num_pe = free_pe = 0; }
 	    };
 
-	friend inline ostream& operator<< (ostream&, const Pv& );
+	friend inline std::ostream& operator<< (std::ostream&, const Pv& );
 
 	void init();
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
 	                std::list<Pv>& plrem, unsigned long& removed_pe );
@@ -52,7 +53,7 @@ class PeContainer : public Container
 					std::list<Pv>& pl, std::list<Pv>& pladd );
 	virtual bool checkConsistency() const;
 
-	void addPv( Pv*& p );
+	void addPv( const Pv* p );
 
 	unsigned long long pe_size;
 	unsigned long num_pe;
@@ -62,7 +63,7 @@ class PeContainer : public Container
 	std::list<Pv> pv_remove;
     };
 
-inline ostream& operator<< (ostream& s, const PeContainer& d )
+inline std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
     s << *((Container*)&d);
     s << " SizeM:" << d.capacityInKb()/1024
@@ -72,7 +73,7 @@ inline ostream& operator<< (ostream& s, const PeContainer& d )
     return( s );
     }
 
-inline ostream& operator<< (ostream& s, const PeContainer::Pv& v )
+inline std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
     {
     s << "device:" << v.device
       << " PE:" << v.num_pe

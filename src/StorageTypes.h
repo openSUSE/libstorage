@@ -1,12 +1,14 @@
 #ifndef STORAGE_TYPES_H
 #define STORAGE_TYPES_H
 
-#include <ostream>
+#include <iostream>
+#include <ext/stdio_filebuf.h>
 
 #include "y2storage/Regex.h"
 #include "y2storage/StorageInterface.h"
 
-using std::ostream;
+namespace storage
+{
 
 typedef enum { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS } CType;
 
@@ -83,13 +85,13 @@ struct usedBy
 	{ t=type; (t==storage::UB_NONE)?name.erase():name=n; }
     bool operator==( const usedBy& rhs ) const
 	{ return( t==rhs.t && name==rhs.name ); }
-    friend inline ostream& operator<< (ostream&, const usedBy& );
+    friend inline std::ostream& operator<< (std::ostream&, const usedBy& );
 
     storage::UsedByType t;
     string name;
     };
 
-inline ostream& operator<< (ostream& s, const usedBy& d )
+inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
     {
     if( d.t!=storage::UB_NONE )
 	{
@@ -130,5 +132,31 @@ struct find_begin
     bool operator()(const string&s) { return( s.find(val)==0 ); }
     const string& val;
     };
+
+typedef __gnu_cxx::stdio_filebuf<char> my_strbuf;
+class fdstream : public std::iostream
+  {
+  public:
+    fdstream( int fd, bool input ) : std::iostream(NULL) 
+      {
+      init( fd, input?std::ios::in:std::ios::out );
+      }
+    fdstream( int fd ) : std::iostream(NULL) 
+      {
+      init( fd, std::ios::in|std::ios::out );
+      }
+    int fd() { return( rdbuf()?(static_cast<my_strbuf*>(rdbuf()))->fd():-1 ); }
+  protected:
+    void init( int fd, std::ios_base::openmode m )
+      {
+#if __GNUC__ >= 4
+      my_strbuf *strbuf = new my_strbuf(fd, m );
+#else
+      my_strbuf *strbuf = new my_strbuf(fd, m, true, static_cast<size_t>(BUFSIZ));
+#endif
+      rdbuf(strbuf);
+      }
+  };
+}
 
 #endif

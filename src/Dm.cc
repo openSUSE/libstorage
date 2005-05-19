@@ -223,3 +223,30 @@ string Dm::formatText( bool doing ) const
     return( txt );
     }
 
+void Dm::activate( bool val )
+    {
+    y2milestone( "old active:%d val:%d", active, val );
+    if( active!=val )
+	{
+	SystemCmd c;
+	if( val )
+	    {
+	    c.execute( "dmsetup version" );
+	    if( c.retcode()!=0 )
+		{
+		c.execute(" grep \"^dm[-_]mod[ 	]\" /proc/modules" );
+		if( c.numLines()<=0 )
+		    c.execute( "modprobe dm-mod" );
+		c.execute( "/sbin/devmap_mknod.sh" );
+		}
+	    }
+	else
+	    {
+	    c.execute( "dmsetup remove_all" );
+	    }
+	active = val;
+	}
+    }
+
+bool Dm::active = false;
+

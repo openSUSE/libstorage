@@ -126,11 +126,13 @@ Storage::initialize()
 	}
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
 
+    EvmsCo::activate(true);
     detectDisks();
     if( instsys() )
 	MdCo::activate( true );
     detectMds();
     detectLvmVgs();
+    detectEvms();
     if( instsys() )
 	MdCo::activate( false );
 
@@ -293,6 +295,44 @@ Storage::detectLvmVgs()
 	    }
 	if( instsys() )
 	    LvmVg::activate( false );
+	}
+    }
+
+void
+Storage::detectEvms()
+    {
+    if( test() )
+	{
+	glob_t globbuf;
+	if( glob( (testdir+"/evms_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
+	          &globbuf) == 0)
+	    {
+	    // TODO
+	    }
+ 	globfree (&globbuf);
+	}
+    else
+	{
+	EvmsCo::activate( true );
+	EvmsTree data;
+	EvmsCo::getEvmsList( data );
+	if( !data.cont.empty() || !data.volumes.empty() )
+	    {
+	    if( !data.cont.empty() )
+		{
+		EvmsCo * e = new EvmsCo( this, data );
+		addToList( e );
+		}
+	    for( list<EvmsCont>::const_iterator i=data.cont.begin(); 
+	         i!=data.cont.end(); ++i )
+		{
+		EvmsCo * e = new EvmsCo( this, *i, data );
+		addToList( e );
+		e->checkConsistency();
+		}
+	    }
+	if( (data.cont.empty()&&data.volumes.empty()) || instsys() )
+	    EvmsCo::activate( false );
 	}
     }
 

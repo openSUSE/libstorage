@@ -14,7 +14,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     PeContainer(s,staticType())
     {
     nm = Name;
-    y2milestone( "construcing lvm vg %s", Name.c_str() );
+    y2milestone( "constructing lvm vg %s", Name.c_str() );
     init();
     if( !Name.empty() )
 	{
@@ -42,40 +42,13 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 LvmVg::LvmVg( Storage * const s, const string& file, int ) :
     PeContainer(s,staticType())
     {
-    y2milestone( "construcing lvm vg %s from file %s", dev.c_str(), 
+    y2milestone( "constructing lvm vg %s from file %s", dev.c_str(), 
                  file.c_str() );
     }
 
 LvmVg::~LvmVg()
     {
     y2milestone( "destructed lvm vg %s", dev.c_str() );
-    }
-
-int
-LvmVg::setPeSize( unsigned long long peSizeK )
-    {
-    int ret = 0;
-    y2milestone( "peSize:%llu", peSizeK );
-    
-    if( lvm1 )
-	{
-	if( peSizeK<8 || peSizeK>16*1024*1024 )
-	    ret = LVM_PE_SIZE_INVALID;
-	}
-    if( ret==0 )
-	{
-	unsigned long long sz = peSizeK;
-	while( sz>1 && sz%2==0 )
-	    sz /= 2;
-	if( sz!=1 )
-	    ret = LVM_PE_SIZE_INVALID;
-	}
-    if( ret==0 )
-	{
-	pe_size = peSizeK;
-	}
-    y2milestone( "ret:%d", ret );
-    return( ret );
     }
 
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
@@ -799,20 +772,21 @@ LvmVg::init()
 
 void LvmVg::activate( bool val )
     {
-    y2milestone( "old active:%d val:%d", lvm_active, val );
-    if( lvm_active!=val )
+    y2milestone( "old active:%d val:%d", active, val );
+    if( active!=val )
 	{
 	SystemCmd c;
-	if( lvm_active )
+	if( val )
 	    {
-	    c.execute( "vgscan --mknodes" );
+	    Dm::activate(true);
+	    c.execute( "vgscan" );
 	    c.execute( "vgchange -a y" );
 	    }
 	else
 	    {
 	    c.execute( "vgchange -a n" );
 	    }
-	lvm_active = val;
+	active = val;
 	}
     }
 
@@ -822,8 +796,8 @@ void LvmVg::getVgs( list<string>& l )
     string vgname;
     string::size_type pos;
     SystemCmd c( "vgdisplay -s" );
-    if( !lvm_active && c.numLines()>0 )
-	lvm_active = true;
+    if( !active && c.numLines()>0 )
+	active = true;
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	vgname = *c.getLine(i);
@@ -1150,5 +1124,5 @@ int LvmVg::doCreatePv( const string& device )
 
 void LvmVg::logData( const string& Dir ) {;}
 
-bool LvmVg::lvm_active = false;
+bool LvmVg::active = false;
 

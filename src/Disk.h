@@ -35,8 +35,8 @@ class Disk : public Container
 	unsigned long majorNr() const { return mjr; }
 	unsigned long numMinor() const { return range; }
 	unsigned numPartitions() const;
-	static CType const staticType() { return DISK; }
-	friend inline ostream& operator<< (ostream&, const Disk& );
+	static storage::CType const staticType() { return storage::DISK; }
+	friend inline std::ostream& operator<< (std::ostream&, const Disk& );
 
 	static bool needP( const string& dev );
 	int createPartition( storage::PartitionType type, long unsigned start,
@@ -49,11 +49,11 @@ class Disk : public Container
 	int changePartitionId( unsigned nr, unsigned id );
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
-	void getCommitActions( std::list<commitAction*>& l ) const;
-	int getToCommit( CommitStage stage, std::list<Container*>& col,
+	void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
 			 std::list<Volume*>& vol );
-	int commitChanges( CommitStage stage );
-	int commitChanges( CommitStage stage, Volume* vol );
+	int commitChanges( storage::CommitStage stage );
+	int commitChanges( storage::CommitStage stage, Volume* vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getUnusedSpace( std::list<Region>& free, bool all=true, 
@@ -132,7 +132,7 @@ class Disk : public Container
 	bool checkPartedValid( const ProcPart& pp, const std::list<string>& ps,
 	                       const std::list<Partition*>& pl );
 	bool getPartedValues( Partition *p );
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
@@ -167,7 +167,7 @@ class Disk : public Container
 	unsigned long range;
     };
 
-inline ostream& operator<< (ostream& s, const Disk& d )
+inline std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
     s << *((Container*)&d);
     s << " Cyl:" << d.cyl

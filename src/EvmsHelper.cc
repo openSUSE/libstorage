@@ -5,13 +5,11 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 
-#include <iostream>
-#include <ext/stdio_filebuf.h>
-
-#include "EvmsAccess.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
+#include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
+#include "EvmsAccess.h"
 
 using namespace std;
 using namespace storage;
@@ -21,14 +19,16 @@ using namespace storage;
 #define OPT_LOG_FILE 202
 #define OPT_SOCKET   203
 #define OPT_TIMEOUT  204
+#define OPT_RETRY    205
 
 static struct option LongOpt_arm[] =
     {
-	{ "log_path",   required_argument, NULL, OPT_LOG_PATH   },
-	{ "log_name",   required_argument, NULL, OPT_LOG_NAME   },
-	{ "log_file",   required_argument, NULL, OPT_LOG_FILE   },
+	{ "log-path",   required_argument, NULL, OPT_LOG_PATH   },
+	{ "log-name",   required_argument, NULL, OPT_LOG_NAME   },
+	{ "log-file",   required_argument, NULL, OPT_LOG_FILE   },
+	{ "retry",      no_argument,       NULL, OPT_RETRY      },
 	{ "socket",     required_argument, NULL, OPT_SOCKET     },
-	{ "timeout",    required_argument, NULL, OPT_TIMEOUT   }
+	{ "timeout",    required_argument, NULL, OPT_TIMEOUT    }
     };
 
 int EvmsCreateCoCmd( EvmsAccess& evms, const string& params )
@@ -157,6 +157,7 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
     else if( cmd=="list" )
 	{
 	output << evms;
+	output << endl;
 	}
     else
 	{
@@ -205,101 +206,102 @@ void sigterm_handler(int sig)
     exit( 255 );
     }
 
-typedef __gnu_cxx::stdio_filebuf<char> my_strbuf;
-class mstream : public std::iostream
-  {
-  public:
-    mstream( int fd, bool input ) : std::iostream(NULL) 
-      {
-#if __GNUC__ >= 4
-      my_strbuf *strbuf = new my_strbuf(fd, input?std::ios::in:std::ios::out);
-#else
-      my_strbuf *strbuf = new my_strbuf(fd, input?std::ios::in:std::ios::out,
-					true, static_cast<size_t>(BUFSIZ));
-#endif
-      rdbuf(strbuf);
-      }
-  };
-
 void
-loop_socket( const string& spath, int timeout )
+loop_socket( const string& spath, int timeout, const char* ppath )
     {
+    int ret; 
     bool ok = true;
     fd_set fdset;
     struct sockaddr_un saddr;
     memset(&saddr, 0, sizeof(saddr));
     saddr.sun_family = AF_UNIX;
     strncpy( saddr.sun_path, spath.c_str(), sizeof(saddr.sun_path)-1 );
+    bool end_program = false;
+    struct sembuf s;
+    s.sem_num = 0;
+    s.sem_op = 0;
+    s.sem_flg = IPC_NOWAIT;
 
-    int lsock = socket(AF_UNIX, SOCK_STREAM, 0);
-    if( lsock<0 )
-	{
-	y2error( "error creating socket %s", strerror(errno));
-	ok = false;
-	}
-    if( ok &&
-	bind( lsock, (struct sockaddr *)&saddr, sizeof(saddr)) < 0)
-	{
-	y2error( "error bind to socket %s", strerror(errno));
-	shutdown(lsock, SHUT_RDWR);
-	close(lsock);
-	}
-    if( ok && listen( lsock, 20 )<0 )
-	{
-	y2error( "error listen on socket %s", strerror(errno));
-	shutdown(lsock, SHUT_RDWR);
-	close(lsock);
-	}
     EvmsAccess* evms = NULL;
     if( ok )
 	{
 	signal(SIGTERM, sigterm_handler);
 	signal(SIGQUIT, sigterm_handler);
 	signal(SIGINT, sigterm_handler);
-	key_t k = ftok( spath.c_str(), IPC_PROJ_ID );
+	key_t k = ftok( ppath, IPC_PROJ_ID );
 	semid = semget( k, 1, 0 );
 	y2milestone( "ipc key:%x semid:%d", k, semid );
-	evms = new EvmsAccess;
 	}
-    bool end_program = false;
+	int lsock = socket(AF_UNIX, SOCK_STREAM, 0);
+	if( lsock<0 )
+	    {
+	    y2error( "error creating socket %s", strerror(errno));
+	    ok = false;
+	    }
+	y2milestone( "socket ret:%d", lsock );
+	if( (ret=bind( lsock, (struct sockaddr *)&saddr, sizeof(saddr))) < 0)
+	    {
+	    y2error( "error bind to socket %s", strerror(errno));
+	    shutdown(lsock, SHUT_RDWR);
+	    close(lsock);
+	    ok = false;
+	    }
+	y2milestone( "bind ret:%d", ret );
     while( ok && !end_program )
 	{
-	struct timeval tv = { timeout/1000, (timeout%1000)*1000 };
-	FD_ZERO( &fdset );
-	FD_SET( lsock, &fdset );
-	int ret = select( lsock+1, &fdset, NULL, NULL, &tv );
-	if( ret<0 || (ret>0&&!FD_ISSET( lsock, &fdset )) )
+	if( ok && (ret=listen( lsock, 20 ))<0 )
 	    {
-	    if( errno != EINTR )
-		y2warning( "select: %s", strerror(errno));
+	    y2error( "error listen on socket %s", strerror(errno));
+	    shutdown(lsock, SHUT_RDWR);
+	    close(lsock);
+	    ok = false;
 	    }
-	else if( ret>0 )
+	if( ok && evms == NULL )
+	    evms = new EvmsAccess;
+	if( ok )
 	    {
-	    socklen_t aux = sizeof(saddr);
-	    int newsock = accept( lsock, (struct sockaddr *)&saddr, &aux );
-	    if( newsock<0 )
+	    struct timeval tv = { timeout/1000, (timeout%1000)*1000 };
+	    FD_ZERO( &fdset );
+	    FD_SET( lsock, &fdset );
+	    ret = select( lsock+1, &fdset, NULL, NULL, &tv );
+	    if( ret<0 || (ret>0&&!FD_ISSET( lsock, &fdset )) )
 		{
 		if( errno != EINTR )
-		    y2warning( "accept: %s", strerror(errno));
+		    y2warning( "select: %s", strerror(errno));
+		}
+	    else if( ret>0 )
+		{
+		socklen_t aux = sizeof(saddr);
+		int newsock = accept( lsock, (struct sockaddr *)&saddr, &aux );
+		if( newsock<0 )
+		    {
+		    if( errno != EINTR )
+			y2warning( "accept: %s", strerror(errno));
+		    }
+		else
+		    {
+		    fdstream input( newsock, true );
+		    fdstream output( newsock, false );
+		    string line;
+		    getline( input, line );
+		    y2milestone( "got line:\"%s\"", line.c_str() );
+		    string cmd = extractNthWord( 0, line );
+		    if( cmd == "exit" )
+			end_program = true;
+		    else if( !cmd.empty() )
+			searchExecCmd( cmd, *evms, extractNthWord( 1, line, true ), 
+				       output );
+		    close( newsock );
+		    }
 		}
 	    else
 		{
-		mstream input( newsock, true );
-		mstream output( newsock, false );
-		string line;
-		getline( input, line );
-		y2milestone( "got line:\"%s\"", line.c_str() );
-		string cmd = extractNthWord( 0, line );
-		if( cmd == "exit" )
+		int ret = semop( semid, &s, 1 );
+		if( ret==0 )
 		    end_program = true;
-		else
-		    searchExecCmd( cmd, *evms, extractNthWord( 1, line, true ), 
-		                   output );
 		}
 	    }
-	else
-	    {
-	    }
+	y2milestone("ok:%d end:%d", ok, end_program );
 	}
     delete evms;
     }
@@ -330,6 +332,9 @@ main( int argc_iv, char** argv_ppcv )
 	    case OPT_SOCKET:
 		spath = optarg;
 		break;
+	    case OPT_RETRY:
+		unlink( "/var/log/evms-engine.log" );
+		break;
 	    case OPT_TIMEOUT:
 		string(optarg)>>timeout;
 		break;
@@ -337,11 +342,12 @@ main( int argc_iv, char** argv_ppcv )
 	    }
 	}
     createLogger( "y2storage", lname, lpath, lfile );
+    y2milestone( "start:%s", argv_ppcv[0] );
     y2milestone( "evms_helper (pid:%d) started socket:%s timout:%d", 
                  getpid(), spath.c_str(), timeout );
     if( spath.empty() )
 	loop_cin();
     else
-	loop_socket( spath, timeout );
+	loop_socket( spath, timeout, argv_ppcv[0] );
     cleanup();
     }

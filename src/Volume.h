@@ -24,7 +24,7 @@ class Volume
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const string& loopDevice() const { return( loop_dev ); }
 	const Container* getContainer() const { return cont; }
-	CType cType() const;
+	storage::CType cType() const;
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
@@ -32,7 +32,7 @@ class Volume
 	void setReadonly( bool val=true ) { ronly=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool fstabAdded() const { return( fstab_added ); }
-	const usedBy& getUsedBy()  const{ return( uby ); }
+	const storage::usedBy& getUsedBy()  const{ return( uby ); }
 	storage::UsedByType getUsedByType() const { return( uby.t ); }
 	const string& usedByName() const { return( uby.name ); }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
@@ -93,7 +93,7 @@ class Volume
             { return( !(*this<rhs) ); }
         bool operator> ( const Volume& rhs ) const
             { return( !(*this<=rhs) ); }
-	friend ostream& operator<< (ostream& s, const Volume &v );
+	friend std::ostream& operator<< (std::ostream& s, const Volume &v );
 
 	int prepareRemove();
 	int umount( const string& mp="" );
@@ -111,7 +111,7 @@ class Volume
 	virtual string createText(bool doing=true) const;
 	virtual string resizeText(bool doing=true) const; 
 	virtual string formatText(bool doing=true) const;
-	virtual void getCommitActions( std::list<commitAction*>& l ) const;
+	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	string mountText( bool doing=true ) const;
 	string labelText( bool doing=true ) const;
 	string losetupText( bool doing=true ) const;
@@ -120,7 +120,7 @@ class Volume
 	string bootMount() const;
 	bool optNoauto() const;
 	bool inCrypto() const { return( is_loop && !optNoauto() ); }
-	virtual void print( ostream& s ) const { s << *this; }
+	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
@@ -156,7 +156,7 @@ class Volume
 	void getTestmodeData( const string& data );
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, const string& label ) const;
-	ostream& logVolume( ostream& file ) const;
+	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();
 
@@ -196,14 +196,14 @@ class Volume
 	string dev;
 	unsigned long mnr;
 	unsigned long mjr;
-	usedBy uby;
+	storage::usedBy uby;
 
 	static string fs_names[storage::FSNONE+1];
 	static string mb_names[storage::MOUNTBY_LABEL+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
     };
 
-inline ostream& operator<< (ostream& s, const Volume &v )
+inline std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
     s << "Device:" << v.dev;
     if( v.numeric )

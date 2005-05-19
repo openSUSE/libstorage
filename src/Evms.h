@@ -1,31 +1,36 @@
 #ifndef EVMS_H
 #define EVMS_H
 
-#include "y2storage/Volume.h"
+#include "y2storage/Dm.h"
 
 class EvmsCo;
 
-class Evms : public Volume
+class Evms : public Dm
     {
     public:
-	Evms( const EvmsCo& d, const string& name, unsigned Stripes=1 );
+	Evms( const EvmsCo& d, const string& name, unsigned long le, unsigned stripe );
+	Evms( const EvmsCo& d, const string& name, unsigned long le );
 	virtual ~Evms();
-	unsigned stripes() const { return stripe; }
 	unsigned compatible() const { return compat; }
-	friend ostream& operator<< (ostream& s, const Evms &p );
+	friend std::ostream& operator<< (std::ostream& s, const Evms &p );
+	virtual void print( std::ostream& s ) const { s << *this; }
+	string removeText( bool doing ) const;
+	string createText( bool doing ) const;
+	string formatText( bool doing ) const;
+	string resizeText( bool doing ) const;
 
     protected:
-	unsigned stripe;
+	void init( const string& name );
+	virtual const string shortPrintedName() const { return( "Evms" ); }
+
 	bool compat;
     };
 
-inline ostream& operator<< (ostream& s, const Evms &p )
+inline std::ostream& operator<< (std::ostream& s, const Evms &p )
     {
-    s << "Evms " << *(Volume*)&p;
-    if( p.compat )
-      s << " compatible";
-    if( p.stripe>1 )
-      s << " Stripes:" << p.stripe;
+    s << *(Dm*)&p;
+    if( !p.compat )
+      s << " native";
     return( s );
     }
 
