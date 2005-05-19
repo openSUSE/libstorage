@@ -58,7 +58,7 @@ EvmsCo::removeVg()
     y2milestone( "begin" );
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     if( ret==0 && !created() )
 	{
@@ -90,25 +90,25 @@ EvmsCo::extendVg( const list<string>& devs )
     list<Pv>::iterator p;
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
 	if( (p=find( pv.begin(), pv.end(), d ))!=pv.end() || 
 	    (p=find( pv_add.begin(), pv_add.end(), d ))!=pv_add.end())
-	    ret = LVM_PV_ALREADY_CONTAINED;
+	    ret = EVMS_PV_ALREADY_CONTAINED;
 	else if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
 	         pv_remove.end() )
 	    {
 	    }
 	else if( !getStorage()->knownDevice( d, true ) )
 	    {
-	    ret = LVM_PV_DEVICE_UNKNOWN;
+	    ret = EVMS_PV_DEVICE_UNKNOWN;
 	    }
 	else if( !getStorage()->canUseDevice( d, true ) )
 	    {
-	    ret = LVM_PV_DEVICE_USED;
+	    ret = EVMS_PV_DEVICE_USED;
 	    }
 	++i;
 	}
@@ -139,7 +139,7 @@ EvmsCo::extendVg( const list<string>& devs )
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
-	ret = LVM_VG_HAS_NONE_PV;
+	ret = EVMS_VG_HAS_NONE_PV;
     if( ret==0 )
 	checkConsistency();
     y2milestone( "ret:%d", ret );
@@ -169,7 +169,7 @@ EvmsCo::reduceVg( const list<string>& devs )
     unsigned long rem_pe = 0;
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     while( ret==0 && i!=devs.end() )
 	{
@@ -178,7 +178,7 @@ EvmsCo::reduceVg( const list<string>& devs )
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
-	ret = LVM_VG_HAS_NONE_PV;
+	ret = EVMS_VG_HAS_NONE_PV;
     if( ret == 0 )
 	{
 	pv = pl;
@@ -202,11 +202,11 @@ EvmsCo::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
     checkConsistency();
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     if( ret==0 && name.find( "\"\' /\n\t:*?" )!=string::npos )
 	{
-	ret = LVM_LV_INVALID_NAME;
+	ret = EVMS_LV_INVALID_NAME;
 	}
     if( ret==0 )
 	{
@@ -215,14 +215,14 @@ EvmsCo::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
 	if( i!=p.end() )
-	    ret = LVM_LV_DUPLICATE_NAME;
+	    ret = EVMS_LV_DUPLICATE_NAME;
 	}
     unsigned long num_le = (sizeK + pe_size - 1)/pe_size;
     if( stripe>1 )
 	num_le = ((num_le+stripe-1)/stripe)*stripe;
     if( ret==0 && free_pe<num_le )
 	{
-	ret = LVM_LV_NO_SPACE;
+	ret = EVMS_LV_NO_SPACE;
 	}
     map<string,unsigned long> pe_map;
     if( ret==0 )
@@ -249,7 +249,7 @@ int EvmsCo::resizeVolume( Volume* v, unsigned long long newSize )
     checkConsistency();
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     else 
 	{
@@ -295,7 +295,7 @@ int EvmsCo::resizeVolume( Volume* v, unsigned long long newSize )
 	    }
 	else
 	    {
-	    ret = LVM_CHECK_RESIZE_INVALID_VOLUME;
+	    ret = EVMS_CHECK_RESIZE_INVALID_VOLUME;
 	    }
 	}
     if( ret==0 )
@@ -318,7 +318,7 @@ EvmsCo::removeLv( const string& name )
     checkConsistency();
     if( readonly() )
 	{
-	ret = LVM_CHANGE_READONLY;
+	ret = EVMS_CHANGE_READONLY;
 	}
     if( ret==0 )
 	{
@@ -327,14 +327,14 @@ EvmsCo::removeLv( const string& name )
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
 	if( i==p.end() )
-	    ret = LVM_LV_UNKNOWN_NAME;
+	    ret = EVMS_LV_UNKNOWN_NAME;
 	}
     if( ret==0 && i->getUsedByType() != UB_NONE )
 	{
 	if( getStorage()->getRecursiveRemoval() )
 	    ret = getStorage()->removeUsing( &(*i) );
 	else
-	    ret = LVM_LV_REMOVE_USED_BY;
+	    ret = EVMS_LV_REMOVE_USED_BY;
 	}
     if( ret==0 )
 	{
@@ -346,7 +346,7 @@ EvmsCo::removeLv( const string& name )
 	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))
-		ret = LVM_LV_NOT_IN_LIST;
+		ret = EVMS_LV_NOT_IN_LIST;
 	    }
 	else
 	    i->setDeleted( true );
@@ -395,158 +395,18 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 		{
 		map<unsigned,EvmsVol>::const_iterator mi = 
 		    data.volumes.find( oi->second.vol );
-		Pv *p = new Pv;
-		p->device = unEvmsDevice( mi->second.device );
-		p->status = "allocatable";
-		p->uuid = i->uuid;
-		p->num_pe = i->size;
-		p->free_pe = i->free;
-		addPv( p );
+		Pv p;
+		p.device = unEvmsDevice( mi->second.device );
+		p.status = "allocatable";
+		p.uuid = i->uuid;
+		p.num_pe = i->size;
+		p.free_pe = i->free;
+		addPv( &p );
 		}
 	    else
 		y2warning( "volume not found:%u", i->id );
 	    }
 
-#if 0
-	unsigned cnt = c.numLines();
-	unsigned i = 0;
-	string line;
-	string tmp;
-	string::size_type pos;
-	while( i<cnt )
-	    {
-	    line = *c.getLine( i++ );
-	    if( line.find( "Volume group" )!=string::npos )
-		{
-		line = *c.getLine( i++ );
-		while( line.find( "Logical volume" )==string::npos &&
-		       line.find( "Physical volume" )==string::npos &&
-		       i<cnt )
-		    {
-		    line.erase( 0, line.find_first_not_of( app_ws ));
-		    if( line.find( "Format" ) == 0 )
-			{
-			if( check &&  co.lvm1 != lvm1 )
-			    y2warning( "inconsistent lvm1 my:%d evms:%d", 
-				       lvm1, co.lvm1 );
-			lvm1 = co.lvm1;
-			}
-		    else if( line.find( "PE Size" ) == 0 )
-			{
-			unsigned long long pes;
-			tmp = extractNthWord( 2, line );
-			pos = tmp.find( '.' );
-			if( pos!=string::npos )
-			    tmp.erase( pos );
-			tmp >> pes;
-			if( exists && pes != pe_size )
-			    y2warning( "inconsistent pe_size my:%llu lvm:%llu", 
-				       pe_size, pes );
-			pe_size = pes;
-			}
-		    else if( line.find( "Total PE" ) == 0 )
-			{
-			extractNthWord( 2, line ) >> num_pe;
-			}
-		    else if( line.find( "Free  PE" ) == 0 )
-			{
-			extractNthWord( 4, line ) >> free_pe;
-			}
-		    else if( line.find( "VG Status" ) == 0 )
-			{
-			status = extractNthWord( 2, line );
-			}
-		    else if( line.find( "VG Access" ) == 0 )
-			{
-			ronly = extractNthWord( 2, line, true ).find( "write" ) == string::npos;
-			}
-		    else if( line.find( "VG UUID" ) == 0 )
-			{
-			uuid = extractNthWord( 2, line );
-			}
-		    line = *c.getLine( i++ );
-		    }
-		string vname;
-		string uuid;
-		string status;
-		string allocation;
-		unsigned long num_le = 0;
-		bool readOnly = false;
-		while( line.find( "Physical volume" )==string::npos && i<cnt )
-		    {
-		    line.erase( 0, line.find_first_not_of( app_ws ));
-		    if( line.find( "LV Name" ) == 0 )
-			{
-			if( !vname.empty() )
-			    {
-			    addLv( num_le, vname, uuid, status, allocation,
-				   readOnly );
-			    }
-			vname = extractNthWord( 2, line );
-			if( (pos=vname.rfind( "/" ))!=string::npos )
-			    vname.erase( 0, pos+1 );
-			}
-		    else if( line.find( "LV Write Access" ) == 0 )
-			{
-			readOnly = extractNthWord( 3, line, true ).find( "only" ) != string::npos;
-			}
-		    else if( line.find( "LV Status" ) == 0 )
-			{
-			status = extractNthWord( 2, line, true );
-			}
-		    else if( line.find( "Current LE" ) == 0 )
-			{
-			extractNthWord( 2, line ) >> num_le;
-			}
-		    else if( line.find( "Allocation" ) == 0 )
-			{
-			allocation = extractNthWord( 1, line );
-			}
-		    else if( line.find( "LV UUID" ) == 0 )
-			{
-			uuid = extractNthWord( 2, line );
-			}
-		    line = *c.getLine( i++ );
-		    }
-		if( !vname.empty() )
-		    {
-		    addLv( num_le, vname, uuid, status, allocation, readOnly );
-		    }
-		Pv *p = new Pv;
-		while( i<cnt )
-		    {
-		    line.erase( 0, line.find_first_not_of( app_ws ));
-		    if( line.find( "PV Name" ) == 0 )
-			{
-			if( !p->device.empty() )
-			    {
-			    addPv( p );
-			    }
-			p->device = extractNthWord( 2, line );
-			}
-		    else if( line.find( "PV UUID" ) == 0 )
-			{
-			p->uuid = extractNthWord( 2, line );
-			}
-		    else if( line.find( "PV Status" ) == 0 )
-			{
-			p->status = extractNthWord( 2, line );
-			}
-		    else if( line.find( "Total PE" ) == 0 )
-			{
-			extractNthWord( 5, line ) >> p->num_pe;
-			extractNthWord( 7, line ) >> p->free_pe;
-			}
-		    line = *c.getLine( i++ );
-		    }
-		if( !p->device.empty() )
-		    {
-		    addPv( p );
-		    }
-		delete p;
-		}
-	    }
-#endif
 	EvmsPair p=evmsPair(lvDeleted);
 	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
 	    {
@@ -675,7 +535,7 @@ int EvmsCo::commitChanges( CommitStage stage )
 		ret = doReduceVg();
 		}
 	    else 
-		ret = LVM_COMMIT_NOTHING_TODO;
+		ret = EVMS_COMMIT_NOTHING_TODO;
 	    break;
 	case INCREASE:
 	    if( created() )
@@ -687,10 +547,10 @@ int EvmsCo::commitChanges( CommitStage stage )
 		ret = doExtendVg();
 		}
 	    else
-		ret = LVM_COMMIT_NOTHING_TODO;
+		ret = EVMS_COMMIT_NOTHING_TODO;
 	    break;
 	default:
-	    ret = LVM_COMMIT_NOTHING_TODO;
+	    ret = EVMS_COMMIT_NOTHING_TODO;
 	    break;
 	}
     y2milestone( "ret:%d", ret );
@@ -1163,17 +1023,15 @@ EvmsCo::doCreateVg()
 	    if( !devices.empty() )
 		devices += " ";
 	    devices += p->device;
-	    ret = doCreatePv( p->device );
 	    ++p;
 	    }
 	if( ret==0 )
 	    {
-	    string cmd = "vgcreate " + instSysString() + metaString() + 
-	                 "-s " + decString(pe_size) + "k " + name() + " " + devices;
+	    string cmd = "vgcreate -s " + decString(pe_size) + "k " + name() + " " + devices;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
-		ret = LVM_VG_CREATE_FAILED;
+		ret = EVMS_VG_CREATE_FAILED;
 		}
 	    }
 	if( ret==0 )
@@ -1185,7 +1043,7 @@ EvmsCo::doCreateVg()
 	    if( !pv_add.empty() )
 		{
 		pv_add.clear();
-		ret = LVM_PV_STILL_ADDED;
+		ret = EVMS_PV_STILL_ADDED;
 		}
 	    checkConsistency();
 	    }
@@ -1206,10 +1064,10 @@ EvmsCo::doRemoveVg()
 	    getStorage()->showInfoCb( removeVgText(true) );
 	    }
 	checkConsistency();
-	string cmd = "vgremove " + instSysString() + name();
+	string cmd = "vgremove " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
-	    ret = LVM_VG_REMOVE_FAILED;
+	    ret = EVMS_VG_REMOVE_FAILED;
 	if( ret==0 )
 	    {
 	    setDeleted( false );
@@ -1236,13 +1094,12 @@ EvmsCo::doExtendVg()
 	    {
 	    getStorage()->showInfoCb( extendVgText(true,*d) );
 	    }
-	ret = doCreatePv( *d );
 	if( ret==0 )
 	    {
-	    string cmd = "vgextend " + instSysString() + name() + " " + *d;
+	    string cmd = "vgextend " + name() + " " + *d;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
-		ret = LVM_VG_EXTEND_FAILED;
+		ret = EVMS_VG_EXTEND_FAILED;
 	    }
 	if( ret==0 )
 	    {
@@ -1256,7 +1113,7 @@ EvmsCo::doExtendVg()
 	    {
 	    pv_add.erase( p );
 	    if( ret==0 )
-		ret = LVM_PV_STILL_ADDED;
+		ret = EVMS_PV_STILL_ADDED;
 	    }
 	++d;
 	}
@@ -1281,10 +1138,10 @@ EvmsCo::doReduceVg()
 	    {
 	    getStorage()->showInfoCb( reduceVgText(true,*d) );
 	    }
-	string cmd = "vgreduce " + instSysString() + name() + " " + *d;
+	string cmd = "vgreduce " + name() + " " + *d;
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
-	    ret = LVM_VG_REDUCE_FAILED;
+	    ret = EVMS_VG_REDUCE_FAILED;
 	if( ret==0 )
 	    {
 	    EvmsTree t;
@@ -1296,7 +1153,7 @@ EvmsCo::doReduceVg()
 	if( p!=pv_remove.end() )
 	    pv_remove.erase( p );
 	else if( ret==0 )
-	    ret = LVM_PV_REMOVE_NOT_FOUND;
+	    ret = EVMS_PV_REMOVE_NOT_FOUND;
 	++d;
 	}
     y2milestone( "ret:%d", ret );
@@ -1316,14 +1173,14 @@ EvmsCo::doCreate( Volume* v )
 	    getStorage()->showInfoCb( l->createText(true) );
 	    }
 	checkConsistency();
-	string cmd = "lvcreate " + instSysString() + " -l " + decString(l->getLe());
+	string cmd = "lvcreate -l " + decString(l->getLe());
 	if( l->stripes()>1 )
 	    cmd += " -i " + decString(l->stripes());
 	cmd += " -n " + l->name();
 	cmd += " " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
-	    ret = LVM_LV_CREATE_FAILED;
+	    ret = EVMS_LV_CREATE_FAILED;
 	if( ret==0 )
 	    {
 	    EvmsTree t;
@@ -1333,7 +1190,7 @@ EvmsCo::doCreate( Volume* v )
 	    }
 	}
     else
-	ret = LVM_CREATE_LV_INVALID_VOLUME;
+	ret = EVMS_CREATE_LV_INVALID_VOLUME;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1353,15 +1210,15 @@ int EvmsCo::doRemove( Volume* v )
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "lvremove -f " + instSysString() + " " + l->device();
+	    string cmd = "lvremove -f " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
-		ret = LVM_LV_REMOVE_FAILED;
+		ret = EVMS_LV_REMOVE_FAILED;
 	    }
 	if( ret==0 )
 	    {
 	    if( !removeFromList( l ) )
-		ret = LVM_LV_NOT_IN_LIST;
+		ret = EVMS_LV_NOT_IN_LIST;
 	    EvmsTree t;
 	    getEvmsList( t );
 	    getCoData( name(), t, true );
@@ -1369,7 +1226,7 @@ int EvmsCo::doRemove( Volume* v )
 	    }
 	}
     else
-	ret = LVM_REMOVE_LV_INVALID_VOLUME;
+	ret = EVMS_REMOVE_LV_INVALID_VOLUME;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1403,19 +1260,17 @@ int EvmsCo::doResize( Volume* v )
 	    ret = v->resizeFs();
 	if( ret==0 && old_le>new_le )
 	    {
-	    string cmd = "lvreduce -f " + instSysString() + 
-	                 " -l -" + decString(old_le-new_le) + " " + l->device();
+	    string cmd = "lvreduce -f -l -" + decString(old_le-new_le) + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
-		ret = LVM_LV_RESIZE_FAILED;
+		ret = EVMS_LV_RESIZE_FAILED;
 	    }
 	if( ret==0 && old_le<new_le )
 	    {
-	    string cmd = "lvextend " + instSysString() + 
-	                 " -l +" + decString(new_le-old_le) + " " + l->device();
+	    string cmd = "lvextend -l +" + decString(new_le-old_le) + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
-		ret = LVM_LV_RESIZE_FAILED;
+		ret = EVMS_LV_RESIZE_FAILED;
 	    }
 	if( ret==0 && old_le<new_le && l->getFs()!=FSNONE )
 	    ret = v->resizeFs();
@@ -1432,35 +1287,7 @@ int EvmsCo::doResize( Volume* v )
 	    }
 	}
     else
-	ret = LVM_RESIZE_LV_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
-
-string EvmsCo::metaString()
-    {
-    return( (lvm1)?"-M1 ":"-M2 " );
-    }
-
-string EvmsCo::instSysString()
-    {
-    string ret;
-    if( getStorage()->instsys() )
-	ret = "-A n ";
-    return( ret );
-    }
-
-int EvmsCo::doCreatePv( const string& device )
-    {
-    int ret = 0;
-    y2milestone( "dev:%s", device.c_str() );
-    SystemCmd c;
-    string cmd = "mdadm --zero-superblock " + device;
-    c.execute( cmd );
-    cmd = "pvcreate -ff " + metaString() + device;
-    c.execute( cmd );
-    if( c.retcode()!=0 )
-	ret = LVM_CREATE_PV_FAILED;
+	ret = EVMS_RESIZE_LV_INVALID_VOLUME;
     y2milestone( "ret:%d", ret );
     return( ret );
     }

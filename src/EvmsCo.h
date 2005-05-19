@@ -171,9 +171,6 @@ class EvmsCo : public PeContainer
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );
-	int doCreatePv( const string& device );
-	string metaString();
-	string instSysString();
 
 	void logData( const string& Dir );
 	void addLv( unsigned long le, const string& name );
