@@ -4,6 +4,8 @@
 #include <sys/sem.h>
 #include <sys/socket.h>
 #include <sys/un.h>
+#include <sys/types.h>
+#include <pwd.h>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
@@ -311,8 +313,25 @@ main( int argc_iv, char** argv_ppcv )
     {
     int OptionChar_ii;
     int timeout = 1000;
+
     string lfile = "y2log";
     string lpath = "/var/log/YaST2";
+
+    if (geteuid ())
+    {
+	struct passwd* pw = getpwuid (geteuid ());
+	if (pw)
+	{
+	    lpath = pw->pw_dir;
+	    lfile = ".y2log";
+	}
+	else
+	{
+	    lpath = "/";
+	    lfile = "y2log";
+	}
+    }
+
     string lname = "evms_helper";
 
     while( (OptionChar_ii=getopt_long( argc_iv, argv_ppcv, "", LongOpt_arm,
