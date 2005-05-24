@@ -557,7 +557,7 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 	}
     evms_set_load_plugin_fct( pluginFilterFunction );
     int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
-                                DEBUG, NULL );
+                                DEFAULT, NULL );
     y2debug( "evms_open_engine ret %d", ret );
     if( ret != 0 )
 	{

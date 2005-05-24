@@ -132,6 +132,7 @@ Dm::setLe( unsigned long le )
 void Dm::init()
     {
     string dmn = "/dev/mapper/" + tname;
+    cout << "dmn:" << dmn << " tname:" << tname << endl;
     if( dev.empty() )
 	{
 	dev = dmn;

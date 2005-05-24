@@ -204,6 +204,10 @@ namespace storage
 	STORAGE_MEMORY_EXHAUSTED = -2016,
 	STORAGE_LOOP_NOT_FOUND = -2017,
 	STORAGE_CREATED_LOOP_NOT_FOUND = -2018,
+	STORAGE_EVMS_INVALID_NAME = -2019,
+	STORAGE_EVMS_CO_EXISTS = -2020,
+	STORAGE_EVMS_CO_NOT_FOUND = -2021,
+	STORAGE_EVMS_INVALID_DEVICE = -2022,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -321,29 +325,22 @@ namespace storage
 	EVMS_PV_ALREADY_CONTAINED = -8023,
 	EVMS_PV_DEVICE_UNKNOWN = -8024,
 	EVMS_PV_DEVICE_USED = -8025,
-	EVMS_VG_HAS_NONE_PV = -8026,
+	EVMS_CO_HAS_NONE_PV = -8026,
 	EVMS_LV_INVALID_NAME = -8027,
 	EVMS_LV_DUPLICATE_NAME = -8028,
 	EVMS_LV_NO_SPACE = -8020,
 	EVMS_LV_UNKNOWN_NAME = -8030,
 	EVMS_LV_NOT_IN_LIST = -8031,
-	EVMS_VG_CREATE_FAILED = -8032,
-	EVMS_VG_EXTEND_FAILED = -8033,
-	EVMS_VG_REDUCE_FAILED = -8034,
-	EVMS_VG_REMOVE_FAILED = -8035,
-	EVMS_LV_CREATE_FAILED = -8036,
-	EVMS_LV_REMOVE_FAILED = -8037,
-	EVMS_LV_RESIZE_FAILED = -8038,
-	EVMS_PV_STILL_ADDED = -8039,
-	EVMS_PV_REMOVE_NOT_FOUND = -8040,
-	EVMS_CREATE_LV_INVALID_VOLUME = -8041,
-	EVMS_REMOVE_LV_INVALID_VOLUME = -8042,
-	EVMS_RESIZE_LV_INVALID_VOLUME = -8043,
-	EVMS_CHANGE_READONLY = -8044,
-	EVMS_CHECK_RESIZE_INVALID_VOLUME = -8045,
-	EVMS_COMMIT_NOTHING_TODO = -8046,
-	EVMS_LV_REMOVE_USED_BY = -8047,
-
+	EVMS_PV_STILL_ADDED = -8032,
+	EVMS_PV_REMOVE_NOT_FOUND = -8033,
+	EVMS_CREATE_LV_INVALID_VOLUME = -8034,
+	EVMS_REMOVE_LV_INVALID_VOLUME = -8035,
+	EVMS_RESIZE_LV_INVALID_VOLUME = -8036,
+	EVMS_CHANGE_READONLY = -8037,
+	EVMS_CHECK_RESIZE_INVALID_VOLUME = -8038,
+	EVMS_COMMIT_NOTHING_TODO = -8039,
+	EVMS_LV_REMOVE_USED_BY = -8040,
+	EVMS_COMMUNICATION_FAILED = -8041,
 
 	PEC_PE_SIZE_INVALID = -9000,
 	PEC_PV_NOT_FOUND = -9001,
@@ -778,6 +775,80 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
+
+	/**
+	 * Create a EVMS container
+	 *
+	 * @param name name of container, must not contain blanks, colons
+	 * and shell special characters (e.g. system)
+	 * @param lvm1 flag if lvm1 compatible format should be used
+	 * @param devs list with physical devices to add to that volume group
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createEvmsContainer( const string& name,
+					 unsigned long long peSizeK, bool lvm1,
+					 const deque<string>& devs ) = 0;
+
+	/**
+	 * Remove a EVMS container. If the contaier contains
+	 * logical volumes, these are automatically also removed.
+	 *
+	 * @param name name of container
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeEvmsContainer( const string& name ) = 0;
+
+	/**
+	 * Extend a EVMS container with additional physical devices
+	 *
+	 * @param name name of container
+	 * @param devs list with physical devices to add to that container
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int extendEvmsContainer( const string& name,
+					 const deque<string>& devs ) = 0;
+
+	/**
+	 * Shrink a EVMS container
+	 *
+	 * @param name name of container
+	 * @param devs list with physical devices to remove from that container
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int shrinkEvmsContainer( const string& name,
+					 const deque<string>& devs ) = 0;
+
+	/**
+	 * Create a EVMS volume within a EVMS container
+	 *
+	 * @param name of container
+	 * @param name of volume
+	 * @param size size of volume in megabytes
+	 * @param stripe stripe count of volume (use 1 unless you know
+	 * exactly what you are doing)
+	 * @param device is set to the device name of the new volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createEvmsVolume( const string& coname, const string& name,
+				      unsigned long long sizeM, unsigned stripe,
+				      string& device ) = 0;
+
+	/**
+	 * Remove a EVMS volume 
+	 *
+	 * @param device name of EVMS volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeEvmsVolumeByDevice( const string& device ) = 0;
+
+	/**
+	 * Remove a EVMS volume from a EVMS container
+	 *
+	 * @param vg name of container
+	 * @param name of volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
 
 	/**
 	 * Create a Software raid device by name

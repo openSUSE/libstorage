@@ -9,6 +9,7 @@ class SystemCmd;
 class ProcMounts;
 class EtcFstab;
 class Container;
+class Storage;
 
 class Volume
     {

@@ -201,7 +201,16 @@ class Storage : public storage::StorageInterface
 	int removeLvmLvByDevice( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
 
+	int createEvmsContainer( const string& name, unsigned long long peSizeK,
+			         bool lvm1, const deque<string>& devs );
 	int removeEvmsContainer( const string& name );
+	int extendEvmsContainer( const string& name, const deque<string>& devs );
+	int shrinkEvmsContainer( const string& name, const deque<string>& devs );
+	int createEvmsVolume( const string& vg, const string& name,
+			      unsigned long long sizeM, unsigned stripe,
+			      string& device );
+	int removeEvmsVolumeByDevice( const string& device );
+	int removeEvmsVolume( const string& vg, const string& name );
 
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
@@ -489,6 +498,10 @@ class Storage : public storage::StorageInterface
 	typedef CheckFnc<const EvmsCo> CheckFncEvmsCo;
 	typedef CheckerIterator< CheckFncEvmsCo, ConstEvmsCoPI<CheckFncEvmsCo>::type,
 	                         ContainerCEvmsIter, EvmsCo > ConstEvmsCoPIterator;
+	typedef CheckerIterator< CheckFncEvmsCo, EvmsCoPI<CheckFncEvmsCo>::type,
+	                         ContainerEvmsIter, EvmsCo > EvmsCoPIterator;
+	typedef DerefIterator<EvmsCoPIterator,EvmsCo> EvmsCoIterator;
+	typedef IterPair<EvmsCoIterator> EvmsCoPair;
 
     public:
 	// public typedefs for iterators over EVMS container
@@ -536,6 +549,22 @@ class Storage : public storage::StorageInterface
 	    }
     protected:
 	// protected member functions for iterators over EVMS container
+	EvmsCoPair evCoPair( bool (* CheckFnc)( const EvmsCo& )=NULL )
+	    {
+	    return( EvmsCoPair( evCoBegin( CheckFnc ), evCoEnd( CheckFnc ) ));
+	    }
+	EvmsCoIterator evCoBegin( bool (* CheckFnc)( const EvmsCo& )=NULL )
+	    {
+	    IterPair<ContainerEvmsIter> p( ContainerEvmsIter( cont.begin(), cont.end() ),
+					   ContainerEvmsIter( cont.begin(), cont.end(), true ));
+	    return( EvmsCoIterator( EvmsCoPIterator( p, CheckFnc )) );
+	    }
+	EvmsCoIterator evCoEnd( bool (* CheckFnc)( const EvmsCo& )=NULL )
+	    {
+	    IterPair<ContainerEvmsIter> p( ContainerEvmsIter( cont.begin(), cont.end() ),
+					   ContainerEvmsIter( cont.begin(), cont.end(), true ));
+	    return( EvmsCoIterator( EvmsCoPIterator( p, CheckFnc, true )) );
+	    }
 
 // iterators over volumes
     protected:
@@ -1001,6 +1030,7 @@ class Storage : public storage::StorageInterface
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	LvmVgIterator findLvmVg( const string& name );
+	EvmsCoIterator findEvmsCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );

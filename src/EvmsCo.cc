@@ -22,6 +22,7 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsTree& data ) :
     nm = "";
     y2milestone( "constructing volume evms co" );
     init();
+    getNormalVolumes( data );
     }
 
 EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) :
@@ -33,6 +34,20 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) 
     lvm1 = cont.lvm1;
     getCoData( cont.name, data, false );
     }
+
+EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
+    PeContainer(s,staticType())
+    {
+    if( lvm1 )
+	nm = "lvm/" + name;
+    else
+	nm = "lvm2/" + name;
+    y2milestone( "constructing evms co %s lvm1:%d", nm.c_str(), lv1 );
+    init();
+    lvm1 = lv1;
+    }
+
+
 
 EvmsCo::EvmsCo( Storage * const s, const string& file, int ) :
     PeContainer(s,staticType())
@@ -52,7 +67,7 @@ static bool lvResized( const Evms& l ) { return( l.extendSize()!=0 ); }
 static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
 
 int
-EvmsCo::removeVg()
+EvmsCo::removeCo()
     {
     int ret = 0;
     y2milestone( "begin" );
@@ -64,7 +79,7 @@ EvmsCo::removeVg()
 	{
 	EvmsPair p=evmsPair(lvNotDeleted);
 	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
-	    ret = removeLv( i->name() );
+	    ret = removeVol( i->name() );
 	setDeleted( true );
 	}
     y2milestone( "ret:%d", ret );
@@ -72,15 +87,15 @@ EvmsCo::removeVg()
     }
 
 int
-EvmsCo::extendVg( const string& dev )
+EvmsCo::extendCo( const string& dev )
     {
     list<string> l;
     l.push_back( dev );
-    return( extendVg( l ) );
+    return( extendCo( l ) );
     }
 
 int
-EvmsCo::extendVg( const list<string>& devs )
+EvmsCo::extendCo( const list<string>& devs )
     {
     int ret = 0;
     y2mil( "name:" << name() << " devices:" << devs );
@@ -139,7 +154,7 @@ EvmsCo::extendVg( const list<string>& devs )
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
-	ret = EVMS_VG_HAS_NONE_PV;
+	ret = EVMS_CO_HAS_NONE_PV;
     if( ret==0 )
 	checkConsistency();
     y2milestone( "ret:%d", ret );
@@ -147,15 +162,15 @@ EvmsCo::extendVg( const list<string>& devs )
     }
 
 int
-EvmsCo::reduceVg( const string& dev )
+EvmsCo::reduceCo( const string& dev )
     {
     list<string> l;
     l.push_back( dev );
-    return( reduceVg( l ) );
+    return( reduceCo( l ) );
     }
 
 int
-EvmsCo::reduceVg( const list<string>& devs )
+EvmsCo::reduceCo( const list<string>& devs )
     {
     int ret = 0;
     y2mil( "name:" << name() << " devices:" << devs );
@@ -178,7 +193,7 @@ EvmsCo::reduceVg( const list<string>& devs )
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
-	ret = EVMS_VG_HAS_NONE_PV;
+	ret = EVMS_CO_HAS_NONE_PV;
     if( ret == 0 )
 	{
 	pv = pl;
@@ -194,8 +209,8 @@ EvmsCo::reduceVg( const list<string>& devs )
     }
 
 int 
-EvmsCo::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
-                 string& device )
+EvmsCo::createVol( const string& name, unsigned long long sizeK, 
+                   unsigned stripe, string& device )
     {
     int ret = 0;
     y2milestone( "name:%s sizeK:%llu stripe:%u", name.c_str(), sizeK, stripe );
@@ -306,11 +321,11 @@ int EvmsCo::resizeVolume( Volume* v, unsigned long long newSize )
 
 int EvmsCo::removeVolume( Volume* v )
     {
-    return( removeLv( v->name() ));
+    return( removeVol( v->name() ));
     }
 
 int 
-EvmsCo::removeLv( const string& name )
+EvmsCo::removeVol( const string& name )
     {
     int ret = 0;
     y2milestone( "name:%s", name.c_str() );
@@ -447,6 +462,23 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 	}
     }
 
+void EvmsCo::getNormalVolumes( const EvmsTree& data )
+    {
+    y2milestone( "begin" );
+    map<unsigned,EvmsVol>::const_iterator v=data.volumes.begin(); 
+    while( v!=data.volumes.end() )
+	{
+	pe_size = 1;
+	if( v->second.name.find( "lvm/" )!=0 && 
+	    v->second.name.find( "lvm2/" )!=0 )
+	    {
+	    addLv( v->second.sizeK, v->second.name );
+	    }
+	++v;
+	}
+    y2milestone( "end" );
+    }
+
 void EvmsCo::addLv( unsigned long le, const string& name )
     {
     y2milestone( "addLv:%s", name.c_str() );
@@ -528,11 +560,11 @@ int EvmsCo::commitChanges( CommitStage stage )
 	case DECREASE:
 	    if( deleted() )
 		{
-		ret = doRemoveVg();
+		ret = doRemoveCo();
 		}
 	    else if( !pv_remove.empty() )
 		{
-		ret = doReduceVg();
+		ret = doReduceCo();
 		}
 	    else 
 		ret = EVMS_COMMIT_NOTHING_TODO;
@@ -540,11 +572,11 @@ int EvmsCo::commitChanges( CommitStage stage )
 	case INCREASE:
 	    if( created() )
 		{
-		ret = doCreateVg();
+		ret = doCreateCo();
 		}
 	    else if( !pv_add.empty() )
 		{
-		ret = doExtendVg();
+		ret = doExtendCo();
 		}
 	    else
 		ret = EVMS_COMMIT_NOTHING_TODO;
@@ -563,12 +595,12 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
     if( deleted() )
 	{
 	l.push_back( new commitAction( DECREASE, staticType(), 
-				       removeVgText(false), true, true ));
+				       removeCoText(false), true, true ));
 	}
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createVgText(false), true, true ));
+				        createCoText(false), true, true ));
 	}
     else 
 	{
@@ -576,88 +608,88 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
 	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end(); 
 	         ++i )
 		l.push_back( new commitAction( INCREASE, staticType(),
-					       extendVgText(false,i->device), 
+					       extendCoText(false,i->device), 
 					       true, true ));
 	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin(); 
 	         i!=pv_remove.end(); ++i )
 		l.push_back( new commitAction( DECREASE, staticType(),
-					       reduceVgText(false,i->device), 
+					       reduceCoText(false,i->device), 
 					       false, true ));
 	}
     }
 
 string 
-EvmsCo::removeVgText( bool doing ) const
+EvmsCo::removeCoText( bool doing ) const
     {
     string txt;
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Removing Volume group %1$s"), name().c_str() );
+        // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
+        txt = sformat( _("Removing Container %1$s"), name().c_str() );
         }
     else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Remove Volume group %1$s"), name().c_str() );
+        // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
+        txt = sformat( _("Remove Container %1$s"), name().c_str() );
         }
     return( txt );
     }
 
 string 
-EvmsCo::createVgText( bool doing ) const
+EvmsCo::createCoText( bool doing ) const
     {
     string txt;
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Creating Volume group %1$s"), name().c_str() );
+        // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
+        txt = sformat( _("Creating Container %1$s"), name().c_str() );
         }
     else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Create Volume group %1$s"), name().c_str() );
+        // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
+        txt = sformat( _("Create Container %1$s"), name().c_str() );
         }
     return( txt );
     }
 
 string 
-EvmsCo::extendVgText( bool doing, const string& dev ) const
+EvmsCo::extendCoText( bool doing, const string& dev ) const
     {
     string txt;
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. system),
+        // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extending Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extending Container %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. system),
+        // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extend Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extend Container %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
     }
 
 string 
-EvmsCo::reduceVgText( bool doing, const string& dev ) const
+EvmsCo::reduceCoText( bool doing, const string& dev ) const
     {
     string txt;
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. system),
+        // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reducing Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reducing Container %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. system),
+        // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reduce Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reduce Container %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
@@ -1004,36 +1036,49 @@ void EvmsCo::getEvmsList( EvmsTree& data )
 	}
     }
 
-int
-EvmsCo::doCreateVg()
+int EvmsCo::executeCmd( const string& cmd )
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    int ret = EVMS_COMMUNICATION_FAILED;
+    list<string> l;
+    sendCommand( cmd, false, l );
+    y2milestone( "list size:%u", l.size() );
+    if( !l.empty() )
+	{
+	y2milestone( "ret:%s", l.front().c_str() );
+	l.front() >> ret;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+EvmsCo::doCreateCo()
+    {
+    y2milestone( "Co:%s", name().c_str() );
     int ret = 0;
     if( created() )
 	{
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( createVgText(true) );
+	    getStorage()->showInfoCb( createCoText(true) );
 	    }
 	string devices;
 	list<Pv>::iterator p = pv_add.begin();
-	while( ret==0 && p!=pv_add.end() )
+	while( p!=pv_add.end() )
 	    {
 	    if( !devices.empty() )
 		devices += " ";
 	    devices += p->device;
 	    ++p;
 	    }
-	if( ret==0 )
-	    {
-	    string cmd = "vgcreate -s " + decString(pe_size) + "k " + name() + " " + devices;
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		{
-		ret = EVMS_VG_CREATE_FAILED;
-		}
-	    }
+	string cmd = "create_co " + decString(pe_size) + " ";
+	if( lvm1 )
+	    cmd += "0";
+	else
+	    cmd += "1";
+	cmd +=  " " + devices;
+	ret = executeCmd( cmd );
 	if( ret==0 )
 	    {
 	    setCreated( false );
@@ -1053,21 +1098,18 @@ EvmsCo::doCreateVg()
     }
 
 int
-EvmsCo::doRemoveVg()
+EvmsCo::doRemoveCo()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2milestone( "Co:%s", name().c_str() );
     int ret = 0;
     if( deleted() )
 	{
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( removeVgText(true) );
+	    getStorage()->showInfoCb( removeCoText(true) );
 	    }
-	checkConsistency();
-	string cmd = "vgremove " + name();
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = EVMS_VG_REMOVE_FAILED;
+	string cmd = "delete_co " + name();
+	ret = executeCmd( cmd );
 	if( ret==0 )
 	    {
 	    setDeleted( false );
@@ -1078,9 +1120,9 @@ EvmsCo::doRemoveVg()
     }
 
 int
-EvmsCo::doExtendVg()
+EvmsCo::doExtendCo()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2milestone( "Co:%s", name().c_str() );
     int ret = 0;
     list<string> devs;
     list<Pv>::iterator p;
@@ -1092,14 +1134,12 @@ EvmsCo::doExtendVg()
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( extendVgText(true,*d) );
+	    getStorage()->showInfoCb( extendCoText(true,*d) );
 	    }
 	if( ret==0 )
 	    {
-	    string cmd = "vgextend " + name() + " " + *d;
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = EVMS_VG_EXTEND_FAILED;
+	    string cmd = "extend_co " + name() + " " + *d;
+	    ret = executeCmd( cmd );
 	    }
 	if( ret==0 )
 	    {
@@ -1122,9 +1162,9 @@ EvmsCo::doExtendVg()
     }
 
 int
-EvmsCo::doReduceVg()
+EvmsCo::doReduceCo()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2milestone( "Co:%s", name().c_str() );
     int ret = 0;
     list<string> devs;
     list<Pv>::iterator p;
@@ -1136,12 +1176,10 @@ EvmsCo::doReduceVg()
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( reduceVgText(true,*d) );
+	    getStorage()->showInfoCb( reduceCoText(true,*d) );
 	    }
-	string cmd = "vgreduce " + name() + " " + *d;
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = EVMS_VG_REDUCE_FAILED;
+	string cmd = "shrink_co " + name() + " " + *d;
+	ret = executeCmd( cmd );
 	if( ret==0 )
 	    {
 	    EvmsTree t;
@@ -1163,7 +1201,7 @@ EvmsCo::doReduceVg()
 int 
 EvmsCo::doCreate( Volume* v ) 
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2milestone( "Co:%s name:%s", name().c_str(), v->name().c_str() );
     Evms * l = dynamic_cast<Evms *>(v);
     int ret = 0;
     if( l != NULL )
@@ -1173,14 +1211,13 @@ EvmsCo::doCreate( Volume* v )
 	    getStorage()->showInfoCb( l->createText(true) );
 	    }
 	checkConsistency();
-	string cmd = "lvcreate -l " + decString(l->getLe());
+	string cmd = "create_lv " + name() + " " + l->name() + " ";
+	cmd += decString(l->sizeK());
 	if( l->stripes()>1 )
-	    cmd += " -i " + decString(l->stripes());
-	cmd += " -n " + l->name();
-	cmd += " " + name();
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = EVMS_LV_CREATE_FAILED;
+	    {
+	    cmd += " " + decString(l->stripes());
+	    }
+	ret = executeCmd( cmd );
 	if( ret==0 )
 	    {
 	    EvmsTree t;
@@ -1197,7 +1234,7 @@ EvmsCo::doCreate( Volume* v )
 
 int EvmsCo::doRemove( Volume* v )
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2milestone( "Co:%s name:%s", name().c_str(), v->name().c_str() );
     Evms * l = dynamic_cast<Evms *>(v);
     int ret = 0;
     if( l != NULL )
@@ -1210,10 +1247,8 @@ int EvmsCo::doRemove( Volume* v )
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "lvremove -f " + l->device();
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = EVMS_LV_REMOVE_FAILED;
+	    string cmd = "delete_lv " + name() + " " + l->name();
+	    ret = executeCmd( cmd );
 	    }
 	if( ret==0 )
 	    {
@@ -1233,7 +1268,7 @@ int EvmsCo::doRemove( Volume* v )
 
 int EvmsCo::doResize( Volume* v ) 
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2milestone( "Co:%s name:%s", name().c_str(), v->name().c_str() );
     Evms * l = dynamic_cast<Evms *>(v);
     int ret = 0;
     if( l != NULL )
@@ -1258,19 +1293,10 @@ int EvmsCo::doResize( Volume* v )
 	    }
 	if( ret==0 && old_le>new_le && l->getFs()!=FSNONE )
 	    ret = v->resizeFs();
-	if( ret==0 && old_le>new_le )
+	if( ret==0 && old_le!=new_le )
 	    {
-	    string cmd = "lvreduce -f -l -" + decString(old_le-new_le) + " " + l->device();
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = EVMS_LV_RESIZE_FAILED;
-	    }
-	if( ret==0 && old_le<new_le )
-	    {
-	    string cmd = "lvextend -l +" + decString(new_le-old_le) + " " + l->device();
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = EVMS_LV_RESIZE_FAILED;
+	    string cmd = "resize_lv " + name() + " " + l->name() + " " + decString(l->sizeK());
+	    ret = executeCmd( cmd );
 	    }
 	if( ret==0 && old_le<new_le && l->getFs()!=FSNONE )
 	    ret = v->resizeFs();

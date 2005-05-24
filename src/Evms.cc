@@ -10,7 +10,7 @@ using namespace storage;
 using namespace std;
 
 Evms::Evms( const EvmsCo& d, const string& name, unsigned long le ) :
-	Dm( d, d.name()+"-"+name )
+	Dm( d, d.name().empty()?name:d.name()+"/"+name )
     {
     init( name );
     setLe( le );
@@ -29,7 +29,6 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long le,
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
-    alt_names.push_back( "/dev/mapper/" + cont->name() + "-" + name );
     y2milestone( "constructed evms vol %s on vg %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -43,7 +42,7 @@ void Evms::init( const string& name )
     {
     compat = true;
     nm = name;
-    dev = normalizeDevice( cont->name() + "/" + name );
+    dev = "/dev/evms" + cont->name() + "/" + name;
     Dm::init();
     }
 

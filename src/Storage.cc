@@ -1220,7 +1220,8 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    if( name.find_first_of( "\"\' /\n\t:*?" ) != string::npos )
+    if( name.empty() ||
+        name.find_first_of( "\"\' /\n\t:*?" ) != string::npos )
 	{
 	ret = STORAGE_VG_INVALID_NAME;
 	}
@@ -1421,10 +1422,218 @@ Storage::removeLvmLv( const string& vg, const string& name )
     }
 
 int
+Storage::createEvmsContainer( const string& name, unsigned long long peSizeK,
+			      bool lvm1, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil( "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1 <<
+	   " devices:" << devs );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    if( name.empty() ||
+        name.find_first_of( "\"\' /\n\t:*?" ) != string::npos )
+	{
+	ret = STORAGE_EVMS_INVALID_NAME;
+	}
+    else if( i == evCoEnd() )
+	{
+	EvmsCo *v = new EvmsCo( this, name, lvm1 );
+	v->setCreated();
+	ret = v->setPeSize( peSizeK );
+	if( ret==0 )
+	    {
+	    list<string> d;
+	    back_insert_iterator<list<string> > inserter(d);
+	    copy( devs.begin(), devs.end(), inserter );
+	    ret = v->extendCo( d );
+	    }
+	if( ret==0 )
+	    addToList( v );
+	else
+	    delete( v );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_EXISTS;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::removeEvmsContainer( const string& name )
     {
-    int ret = STORAGE_NOT_YET_IMPLEMENTED;
+    int ret = 0;
     assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	if( i->created() )
+	    ret = removeContainer( &(*i) );
+	else
+	    ret = i->removeCo();
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::extendEvmsContainer( const string& name, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil( "name:" << name << " devices:" << devs );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	list<string> d;
+	back_insert_iterator<list<string> > inserter(d);
+	copy( devs.begin(), devs.end(), inserter );
+	ret = i->extendCo( d );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::shrinkEvmsContainer( const string& name, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil( "name:" << name << " devices:" << devs );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	list<string> d;
+	back_insert_iterator<list<string> > inserter(d);
+	copy( devs.begin(), devs.end(), inserter );
+	ret = i->reduceCo( d );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::createEvmsVolume( const string& co, const string& name,
+			   unsigned long long sizeM, unsigned stripe,
+			   string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "co:%s name:%s sizeM:%llu stripe:%u", co.c_str(),
+                 name.c_str(), sizeM, stripe );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	ret = i->createVol( name, sizeM*1024, stripe, device );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
+    return( ret );
+    }
+
+int
+Storage::removeEvmsVolumeByDevice( const string& device )
+    {
+    int ret = 0;
+    string co, name;
+    string d = undevDevice( device );
+    if( d.find( "evms/" )==0 )
+	d.erase( 0, 5 );
+    string::size_type pos = d.find( '/' );
+    pos = d.find( '/', pos+1 );
+    if( pos!=string::npos )
+	{
+	co = d.substr( 0, pos );
+	name = d.substr( pos+1 );
+	}
+    if( !co.empty() && !name.empty() )
+	ret = removeEvmsVolume( co, name );
+    else
+	ret = STORAGE_EVMS_INVALID_DEVICE;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::removeEvmsVolume( const string& co, const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "co:%s name:%s", co.c_str(), name.c_str() );
+    EvmsCoIterator i = findEvmsCo( name );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	ret = i->removeVol( name );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -2180,6 +2389,23 @@ Storage::LvmVgIterator Storage::findLvmVg( const string& name )
     LvmVgPair p = lvgPair();
     LvmVgIterator ret=p.begin();
     while( ret != p.end() && ret->name()!=name )
+	++ret;
+    return( ret );
+    }
+
+Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
+    {
+    assertInit();
+    EvmsCoPair p = evCoPair();
+    EvmsCoIterator ret=p.begin();
+    string name1 = name;
+    string name2 = name;
+    if( name.find( "lvm/" )!=0 && name.find( "lvm2/" )!=0 )
+	{
+	name1 = "lvm/" + name1;
+	name2 = "lvm2/" + name2;
+	}
+    while( ret != p.end() && ret->name()!=name1 && ret->name()!=name2 )
 	++ret;
     return( ret );
     }

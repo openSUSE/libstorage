@@ -81,19 +81,23 @@ class EvmsCo : public PeContainer
     public:
 	EvmsCo( Storage * const s, const EvmsTree& data );
 	EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data );
+	EvmsCo( Storage * const s, const string& name, bool lvm1 );
 	virtual ~EvmsCo();
 	unsigned numVol() const { return vols.size(); }
 	static storage::CType const staticType() { return storage::EVMS; }
 	friend inline std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
-	int removeVg();
-	int extendVg( const std::list<string>& dl );
-	int extendVg( const string& device );
-	int reduceVg( const std::list<string>& dl );
-	int reduceVg( const string& device );
-	int createLv( const string& name, unsigned long long sizeK, 
-		      unsigned stripe, string& device );
-	int removeLv( const string& name );
+	int removeCo();
+	int extendCo( const std::list<string>& dl );
+	int extendCo( const string& device );
+	int reduceCo( const std::list<string>& dl );
+	int reduceCo( const string& device );
+	int createVol( const string& name, unsigned long long sizeK, 
+		       unsigned stripe, string& device );
+	int removeVol( const string& name );
+
+	int setPeSize( long long unsigned peSizeK )
+	            { return( PeContainer::setPeSize( peSizeK, lvm1 ) ); }
 
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	int commitChanges( storage::CommitStage stage );
@@ -157,17 +161,18 @@ class EvmsCo : public PeContainer
 
 	void getCoData( const string& name, const EvmsTree& data, 
 	                bool check=false );
+	void getNormalVolumes( const EvmsTree& data );
 	void init();
 	virtual void print( std::ostream& s ) const { s << *this; }
-	string createVgText( bool doing ) const;
-	string removeVgText( bool doing ) const;
-	string extendVgText( bool doing, const string& dev ) const;
-	string reduceVgText( bool doing, const string& dev ) const;
+	string createCoText( bool doing ) const;
+	string removeCoText( bool doing ) const;
+	string extendCoText( bool doing, const string& dev ) const;
+	string reduceCoText( bool doing, const string& dev ) const;
 
-	int doCreateVg();
-	int doRemoveVg();
-	int doExtendVg();
-	int doReduceVg();
+	int doCreateCo();
+	int doRemoveCo();
+	int doExtendCo();
+	int doReduceCo();
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );
@@ -181,6 +186,7 @@ class EvmsCo : public PeContainer
 	static int getSocketFd();
 	static bool startHelper( bool retry=false );
 	static string unEvmsDevice( const string& dev );
+	static int executeCmd( const string& cmd );
 
 	string status;
 	string uuid;
