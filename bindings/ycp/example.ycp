@@ -72,6 +72,15 @@
     }
 
 
+    void test7 ()
+    {
+	string tmp = "hda1";
+	integer mb1 = LibStorage::MOUNTBY_LABEL ();
+	// LibStorage::StorageInterface::getMountBy (o, tmp, mb1);
+	y2milestone ("mb1 = %1", mb1);
+    }
+
+
     LibStorage::initDefaultLogger ();
 
     o = LibStorage::createStorageInterface (true, false, true);
@@ -82,6 +91,7 @@
     test4 ();
     test5 ();
     test6 ();
+    test7 ();
 
     LibStorage::destroyStorageInterface (o);
 }

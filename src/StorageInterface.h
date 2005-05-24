@@ -414,7 +414,7 @@ namespace storage
 	 */
 	virtual int createPartition( const string& disk, PartitionType type,
 				     unsigned long start,
-	                             unsigned long sizeCyl,
+				     unsigned long sizeCyl,
 				     string& device ) = 0;
 
 	/**
@@ -561,7 +561,11 @@ namespace storage
 	 * @param options will be set to the mount by value of the volume.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
+#ifndef SWIG
 	virtual int getMountBy( const string& device, MountByType& mby ) = 0;
+#else
+	virtual int getMountBy( const string& device, MountByType& REFERENCE ) = 0;
+#endif
 
 	/**
 	 * Changes the fstab options of a volume
@@ -834,7 +838,7 @@ namespace storage
 				      string& device ) = 0;
 
 	/**
-	 * Remove a EVMS volume 
+	 * Remove a EVMS volume
 	 *
 	 * @param device name of EVMS volume
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -870,7 +874,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createMdAny( MdType rtype, const deque<string>& devs,
-	                         string& device ) = 0;
+				 string& device ) = 0;
 
 	/**
 	 * Remove a LVM volume group. If the volume group contains
@@ -902,7 +906,7 @@ namespace storage
 	virtual int createFileLoop( const string& lname, bool reuseExisting,
 	                            unsigned long long sizeK,
 				    const string& mp, const string& pwd,
-				    string &device ) = 0;
+				    string& device ) = 0;
 
 	/**
 	 * Remove a file based loop device from the system.
