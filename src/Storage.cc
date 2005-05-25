@@ -2113,6 +2113,24 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
     return( ret );
     }
 
+void 
+Storage::getContainer( deque<ContainerInfo>& infos )
+    {
+    infos.clear ();
+    assertInit();
+    ConstContPair p = contPair( notDeleted );
+    for( ConstContIterator i = p.begin(); i != p.end(); ++i)
+	{
+	Container::ConstVolPair vp = i->volPair( Volume::notDeleted );
+	infos.push_back( ContainerInfo() );
+	ContainerInfo& info( infos.back() );
+	info.type = i->type();
+	info.name = i->name();
+	info.device = i->device();
+	info.volcnt = vp.length();
+	}
+    }
+
 bool
 Storage::getDisks (deque<string>& disks)
 {

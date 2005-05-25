@@ -7,8 +7,6 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/Evms.h"
 
-class storage::fdstream;
-
 struct EvmsObj
     {
     EvmsObj( unsigned i=0, const string& n="", unsigned v=0 ) : id(i), vol(v), name(n) {}

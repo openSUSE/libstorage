@@ -16,6 +16,7 @@ using namespace std;
 %include "std_deque.i"
 
 specialize_sequence(storage::PartitionInfo, TO_PACK, FROM_PACK, CHECK)
+specialize_sequence(storage::ContainerInfo, TO_PACK, FROM_PACK, CHECK)
 
 %include "../../src/StorageInterface.h"
 

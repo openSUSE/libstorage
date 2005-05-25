@@ -93,6 +93,8 @@ namespace storage
 
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM };
 
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS };
+
     /**
      *  typedef for a pointer to a function that is called on progress bar events
      */
@@ -134,6 +136,17 @@ namespace storage
 	unsigned labelLength;
 	unsigned long long minimalFsSizeK;
     };
+
+    /**
+     * Contains info about a generic container.
+     */
+    struct ContainerInfo
+	{
+	CType type;
+	unsigned volcnt;
+	string device;
+	string name;
+	};
 
 
     /**
@@ -368,6 +381,10 @@ namespace storage
 	StorageInterface () {}
 	virtual ~StorageInterface () {}
 
+	/**
+	 * Query all containers found in system
+	 */
+	virtual void getContainer( deque<ContainerInfo>& infos) = 0;
 
 	/**
 	 * Query all attatched disks.

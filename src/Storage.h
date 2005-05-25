@@ -147,6 +147,7 @@ class Storage : public storage::StorageInterface
 
 	// functions for interface
 
+        void getContainer( deque<storage::ContainerInfo>& infos );
 	bool getDisks (deque<string>& disks);
 	bool getPartitions (deque<storage::PartitionInfo>& partitioninfos);
 	bool getPartitionsOfDisk (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
