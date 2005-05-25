@@ -23,7 +23,7 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long le, bool native )
 
 Evms::Evms( const EvmsCo& d, const string& name, unsigned long le,
 	    unsigned str ) :
-	Dm( d, d.name()+"-"+name )
+	Dm( d, getMapperName(d,name) )
     {
     init( name );
     setLe( le );

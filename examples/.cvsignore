@@ -12,5 +12,6 @@ TestDiskLog
 TestStorage
 TestProbing
 TestLvm
+TestEvms
 TestMd
 TestLoop

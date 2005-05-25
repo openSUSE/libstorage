@@ -147,7 +147,7 @@ EvmsCo::extendCo( const list<string>& devs )
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
-	    getStorage()->setUsedBy( d, UB_LVM, name() );
+	    getStorage()->setUsedBy( d, UB_EVMS, name() );
 	    getStorage()->setUsedBy( "/dev/evms/"+dev.substr(5), UB_EVMS, name() );
 	    }
 	free_pe += pe;

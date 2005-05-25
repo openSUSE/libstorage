@@ -130,6 +130,13 @@ string Dm::getDevice( const string& majmin )
 	    }
 	while( ret.empty() && mj==dm_major && c.retcode()==0 );
 	}
+    if( ret.find( "/dev/evms/" )==0 )
+	{
+	string tmp( ret );
+	tmp.erase( 5, 5 );
+	if( cont->getStorage()->knownDevice( tmp, true ) )
+	    ret = tmp;
+	}
     return( ret );
     }
 
@@ -152,9 +159,7 @@ Dm::checkConsistency() const
          mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
     if( sum != num_le )
-	{
 	y2warning( "lv:%s sum:%lu num:%lu", dev.c_str(), sum, num_le );
-	}
     else
 	ret = true;
     return( ret );
