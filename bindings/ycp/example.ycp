@@ -13,17 +13,17 @@
 
     void test1 ()
     {
-    list <string> disks = [];
-    LibStorage::StorageInterface::getDisks (o, disks);
-    foreach (string disk, disks, {
-	y2milestone ("found disk %1", disk);
+	list <string> disks = [];
+	LibStorage::StorageInterface::getDisks (o, disks);
+	foreach (string disk, disks, {
+	    y2milestone ("found disk %1", disk);
 
-	list<any> partitioninfos = [];
-	LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
-	foreach (any partitioninfo, partitioninfos, {
-	    y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_name_get (partitioninfo));
+	    list<any> partitioninfos = [];
+	    LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
+	    foreach (any partitioninfo, partitioninfos, {
+		y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_name_get (partitioninfo));
+	    });
 	});
-    });
     }
 
 
