@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <getopt.h>
 #include <errno.h>
 #include <signal.h>
@@ -32,6 +33,53 @@ static struct option LongOpt_arm[] =
 	{ "socket",     required_argument, NULL, OPT_SOCKET     },
 	{ "timeout",    required_argument, NULL, OPT_TIMEOUT    }
     };
+
+
+bool
+read_line (int fd, string& line)
+{
+    const int size = 512;
+    char buffer[size];
+
+    line.clear ();
+
+    while (true)
+    {
+	int n = read (fd, buffer, size);
+	if (n == 0)
+	    return true;
+
+	if (n < 0)
+	    return false;
+
+	bool lineend = buffer[n - 1] == '\n';
+	line.append (buffer, lineend ? n - 1 : n);
+	if (lineend)
+	    return true;
+    }
+}
+
+
+bool
+write_string (int fd, const string& str)
+{
+    size_t len = str.size ();
+    const char* p = str.data ();
+
+    while (true)
+    {
+	if (len == 0)
+	    return true;
+
+	int n = write (fd, p, len);
+	if (n < 0)
+	    return false;
+
+	len -= n;
+	p += n;
+    }
+}
+
 
 int EvmsCreateCoCmd( EvmsAccess& evms, const string& params )
     {
@@ -145,10 +193,11 @@ static CmdEntry cmds[] = {
     };
 
 void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
-                    ostream& output )
+                    int fd )
     {
     int ret = 0;
     unsigned i=0;
+    ostringstream output;
     while( i<lengthof(cmds) && cmds[i].cmd!=cmd )
 	i++;
     if( i<lengthof(cmds) )
@@ -166,6 +215,8 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
 	ret = EVMS_HELPER_UNKNOWN_CMD;
 	output << ret << endl;
 	}
+
+    write_string (fd, output.str());
     }
 
 void loop_cin()
@@ -180,12 +231,13 @@ void loop_cin()
 	string cmdline;
 	cout << "CMD> ";
 	getline( cin, cmdline );
+	y2milestone( "got line:\"%s\"", cmdline.c_str() );
 	//cmdline = "create_co testlvm2 4096 1 /dev/hdb10 /dev/hdb11 /dev/hdb12";
 	string cmd = extractNthWord( 0, cmdline );
 	if( cmd == "exit" )
 	    end_program = true;
 	else
-	    searchExecCmd( cmd, evms, extractNthWord( 1, cmdline, true ), cout );
+	    searchExecCmd( cmd, evms, extractNthWord( 1, cmdline, true ), STDOUT_FILENO );
 	}
     while( !end_program );
     }
@@ -214,7 +266,7 @@ void sigterm_handler(int sig)
 void
 loop_socket( const string& spath, int timeout, const char* ppath )
     {
-    int ret; 
+    int ret;
     bool ok = true;
     fd_set fdset;
     struct sockaddr_un saddr;
@@ -288,17 +340,15 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 		    }
 		else
 		    {
-		    fdstream input( newsock, true );
-		    fdstream output( newsock, false );
 		    string line;
-		    getline( input, line );
+		    read_line (newsock, line);
 		    y2milestone( "got line:\"%s\"", line.c_str() );
 		    string cmd = extractNthWord( 0, line );
 		    if( cmd == "exit" )
 			end_program = true;
 		    else if( !cmd.empty() )
-			searchExecCmd( cmd, *evms, extractNthWord( 1, line, true ), 
-				       output );
+			searchExecCmd( cmd, *evms, extractNthWord( 1, line, true ),
+				       newsock );
 		    close( newsock );
 		    }
 		}
@@ -361,14 +411,14 @@ main( int argc_iv, char** argv_ppcv )
 		unlink( "/var/log/evms-engine.log" );
 		break;
 	    case OPT_TIMEOUT:
-		string(optarg)>>timeout;
+ 		string(optarg)>>timeout;
 		break;
 	    default: break;
 	    }
 	}
     createLogger( "y2storage", lname, lpath, lfile );
     y2milestone( "start:%s", argv_ppcv[0] );
-    y2milestone( "evms_helper (pid:%d) started socket:%s timout:%d", 
+    y2milestone( "evms_helper (pid:%d) started socket:%s timout:%d",
                  getpid(), spath.c_str(), timeout );
     if( spath.empty() )
 	loop_cin();
