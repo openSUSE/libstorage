@@ -1567,7 +1567,7 @@ Storage::createEvmsVolume( const string& co, const string& name,
     assertInit();
     y2milestone( "co:%s name:%s sizeM:%llu stripe:%u", co.c_str(),
                  name.c_str(), sizeM, stripe );
-    EvmsCoIterator i = findEvmsCo( name );
+    EvmsCoIterator i = findEvmsCo( co );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1617,7 +1617,7 @@ Storage::removeEvmsVolume( const string& co, const string& name )
     int ret = 0;
     assertInit();
     y2milestone( "co:%s name:%s", co.c_str(), name.c_str() );
-    EvmsCoIterator i = findEvmsCo( name );
+    EvmsCoIterator i = findEvmsCo( co );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;

@@ -9,13 +9,14 @@
 using namespace storage;
 using namespace std;
 
-Evms::Evms( const EvmsCo& d, const string& name, unsigned long le ) :
-	Dm( d, d.name().empty()?name:d.name()+"/"+name )
+Evms::Evms( const EvmsCo& d, const string& name, unsigned long le, bool native ) :
+	Dm( d, getMapperName(d,name) )
     {
     init( name );
     setLe( le );
     calcSize();
     getTableInfo();
+    compat = !native;
     y2milestone( "constructed evms vol %s on vg %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -38,11 +39,30 @@ Evms::~Evms()
     y2milestone( "destructed evms vol %s", dev.c_str() );
     }
 
+string Evms::getMapperName( const EvmsCo& d, const string& name )
+    {
+    string ret( name );
+    if( !d.name().empty() )
+	{
+	ret = d.name() + "/" + name;
+	string::size_type pos = ret.find( '/' );
+	while( pos!=string::npos )
+	    {
+	    ret[pos] = '|';
+	    pos = ret.find( '/', pos+1 );
+	    }
+	}
+    return( ret );
+    }
+
 void Evms::init( const string& name )
     {
     compat = true;
     nm = name;
-    dev = "/dev/evms" + cont->name() + "/" + name;
+    dev = "/dev/evms/";
+    if( !cont->name().empty() )
+	dev += cont->name() + "/";
+    dev += name;
     Dm::init();
     }
 

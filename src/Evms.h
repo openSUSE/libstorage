@@ -9,7 +9,7 @@ class Evms : public Dm
     {
     public:
 	Evms( const EvmsCo& d, const string& name, unsigned long le, unsigned stripe );
-	Evms( const EvmsCo& d, const string& name, unsigned long le );
+	Evms( const EvmsCo& d, const string& name, unsigned long le, bool native );
 	virtual ~Evms();
 	unsigned compatible() const { return compat; }
 	friend std::ostream& operator<< (std::ostream& s, const Evms &p );
@@ -22,6 +22,7 @@ class Evms : public Dm
     protected:
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return( "Evms" ); }
+	static string getMapperName( const EvmsCo& d, const string& name );
 
 	bool compat;
     };

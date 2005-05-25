@@ -443,6 +443,7 @@ EvmsVolumeObject::EvmsVolumeObject( EvmsObject *const obj )
 	dev = nam;
 	nam.erase( 0, 10 );
 	nat = !(vinfo_p->flags & VOLFLAG_COMPATIBILITY);
+	act = vinfo_p->flags & VOLFLAG_ACTIVE;
 	}
     else
 	{
@@ -460,6 +461,7 @@ void EvmsVolumeObject::init()
     {
     dev.clear();
     nat = false;
+    act = false;
     assc = NULL;
     consumed = NULL;
     cons = NULL;
@@ -557,7 +559,7 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 	}
     evms_set_load_plugin_fct( pluginFilterFunction );
     int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
-                                DEFAULT, NULL );
+                                DEBUG, NULL );
     y2debug( "evms_open_engine ret %d", ret );
     if( ret != 0 )
 	{
@@ -697,9 +699,17 @@ EvmsObject *const EvmsAccess::addObject( object_handle_t id )
 	    case EVMS_VOLUME:
 		{
 		EvmsVolumeObject* Vol = new EvmsVolumeObject( Obj );
-		objects.push_back( Vol );
+		if( Vol->active() )
+		    {
+		    objects.push_back( Vol );
+		    ret = Vol;
+		    }
+		else
+		    {
+		    delete Vol;
+		    ret = NULL;
+		    }
 		delete Obj;
-		ret = Vol;
 		}
 		break;
 	    default:
@@ -780,6 +790,7 @@ object_handle_t EvmsAccess::findUsingVolume( object_handle_t id )
 	    ((EvmsVolumeObject*)*Ptr_Ci)->consumes()->id()==id )
 	    {
 	    handle = (*Ptr_Ci)->id();
+	    y2mil( "UsingVol:" << *((EvmsVolumeObject*)*Ptr_Ci) );
 	    }
 	}
     y2milestone( "%d used by handle %d", id, handle );

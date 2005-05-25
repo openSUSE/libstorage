@@ -178,7 +178,7 @@ class EvmsCo : public PeContainer
 	int doResize( Volume* v );
 
 	void logData( const string& Dir );
-	void addLv( unsigned long le, const string& name );
+	void addLv( unsigned long le, const string& name, bool native );
 	void addPv( const Pv* p );
 	static bool attachToSocket( bool attach=true );
 	static bool sendCommand( const string& cmd, bool one_line, 
@@ -188,7 +188,6 @@ class EvmsCo : public PeContainer
 	static string unEvmsDevice( const string& dev );
 	static int executeCmd( const string& cmd );
 
-	string status;
 	string uuid;
 	bool lvm1;
 	static bool active;
@@ -198,7 +197,6 @@ class EvmsCo : public PeContainer
 inline std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     {
     s << *((PeContainer*)&d);
-    s << " status:" << d.status;
     if( d.lvm1 )
       s << " lvm1";
     s << " UUID:" << d.uuid;

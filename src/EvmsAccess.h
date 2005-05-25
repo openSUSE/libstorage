@@ -114,6 +114,7 @@ class EvmsVolumeObject : public EvmsObject
 	EvmsObject * consumes() const { return cons; };
 	const EvmsObject * assVol() const { return assc; };
 	bool native() const { return nat; };
+	bool active() const { return act; };
 	const string& device() const { return dev; };
 	void output( std::ostream& Stream ) const;
 	void setConsumedBy( EvmsObject* Obj );
@@ -124,6 +125,7 @@ class EvmsVolumeObject : public EvmsObject
 	logical_volume_info_s* getInfop();
 
 	bool nat;
+	bool act;
 	EvmsObject * consumed;
 	EvmsObject * cons;
 	EvmsObject * assc;

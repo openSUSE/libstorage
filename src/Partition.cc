@@ -420,5 +420,6 @@ Partition::getPartitionInfo () const
     tmp.cylStart = cylStart ();
     tmp.cylSize = cylSize ();
     tmp.fsType = fs;
+    tmp.nr = num;
     return tmp;
 }

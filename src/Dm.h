@@ -34,12 +34,15 @@ class Dm : public Volume
 	void init();
 	const PeContainer* const pec() const;
 	virtual const string shortPrintedName() const { return( "Dm" ); }
+	string getDevice( const string& majmin );
+	static void getDmMajor();
 
 	string tname;
 	unsigned long num_le;
 	unsigned stripe;
 	std::map<string,unsigned long> pe_map;
 	static bool active;
+	static unsigned dm_major;
     };
 
 inline std::ostream& operator<< (std::ostream& s, const Dm &p )

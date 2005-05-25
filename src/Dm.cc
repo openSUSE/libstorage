@@ -25,6 +25,8 @@ Dm::~Dm()
 void
 Dm::getTableInfo()
     {
+    if( dm_major==0 )
+	getDmMajor();
     SystemCmd c( "dmsetup table \"" + tname + "\"" );
     if( c.numLines()>0 )
 	{
@@ -49,7 +51,7 @@ Dm::getTableInfo()
 	    le += pesize-1;
 	    le /= pesize;
 	    majmin = extractNthWord( 3, line );
-	    dev = cont->getStorage()->deviceByNumber( majmin );
+	    dev = getDevice( majmin );
 	    if( !dev.empty() )
 		{
 		if( (mit=pe_map.find( dev ))==pe_map.end() )
@@ -59,7 +61,7 @@ Dm::getTableInfo()
 		}
 	    else
 		y2warning( "could not find major/minor pair %s", 
-		           majmin.c_str());
+			majmin.c_str());
 	    }
 	else if( type=="striped" )
 	    {
@@ -77,7 +79,7 @@ Dm::getTableInfo()
 		for( unsigned j=0; j<str; j++ )
 		    {
 		    majmin = extractNthWord( 5+j*2, line );
-		    dev = cont->getStorage()->deviceByNumber( majmin );
+		    dev = getDevice( majmin );
 		    if( !dev.empty() )
 			{
 			if( (mit=pe_map.find( dev ))==pe_map.end() )
@@ -87,7 +89,7 @@ Dm::getTableInfo()
 			}
 		    else
 			y2warning( "could not find major/minor pair %s", 
-				   majmin.c_str());
+				majmin.c_str());
 		    }
 		}
 	    }
@@ -96,6 +98,39 @@ Dm::getTableInfo()
 	    y2warning( "unknown table type \"%s\"", type.c_str() );
 	    }
 	}
+    }
+
+string Dm::getDevice( const string& majmin )
+    {
+    string ret = cont->getStorage()->deviceByNumber( majmin );
+    if( ret.empty() )
+	{
+	unsigned mj = 0;
+	string pair( majmin );
+	SystemCmd c;
+	do
+	    {
+	    string::size_type pos = pair.find( ':' );
+	    if( pos != string::npos )
+		pair[pos] = ' ';
+	    pair >> mj;
+	    if( mj==dm_major )
+		{
+		c.execute( "devmap_name " + pair );
+		if( c.retcode()==0 && c.numLines()>0 )
+		    {
+		    c.execute( "dmsetup table \"" + *c.getLine(0) + "\"" );
+		    if( c.retcode()==0 && c.numLines()>0 )
+			{
+			pair = extractNthWord( 3, *c.getLine(0) );
+			ret = cont->getStorage()->deviceByNumber( pair );
+			}
+		    }
+		}
+	    }
+	while( ret.empty() && mj==dm_major && c.retcode()==0 );
+	}
+    return( ret );
     }
 
 unsigned long 
@@ -117,7 +152,9 @@ Dm::checkConsistency() const
          mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
     if( sum != num_le )
+	{
 	y2warning( "lv:%s sum:%lu num:%lu", dev.c_str(), sum, num_le );
+	}
     else
 	ret = true;
     return( ret );
@@ -132,7 +169,6 @@ Dm::setLe( unsigned long le )
 void Dm::init()
     {
     string dmn = "/dev/mapper/" + tname;
-    cout << "dmn:" << dmn << " tname:" << tname << endl;
     if( dev.empty() )
 	{
 	dev = dmn;
@@ -249,5 +285,16 @@ void Dm::activate( bool val )
 	}
     }
 
+void Dm::getDmMajor()
+    {
+    SystemCmd c( "grep device-mapper /proc/devices" );
+    if( c.numLines()>0 )
+	{
+	extractNthWord( 0, *c.getLine(0)) >> dm_major;
+	y2milestone( "dm_major:%u", dm_major );
+	}
+    }
+
 bool Dm::active = false;
+unsigned Dm::dm_major = 0;
 

@@ -142,6 +142,7 @@ namespace storage
     struct PartitionInfo
     {
 	string name;
+	unsigned nr;
 	unsigned long cylStart;
 	unsigned long cylSize;
 	PartitionType partitionType;

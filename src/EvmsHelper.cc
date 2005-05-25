@@ -171,6 +171,9 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
 void loop_cin()
     {
     EvmsAccess evms;
+    ofstream log( "/tmp/evms_access" );
+    log << evms;
+    log.close();
     bool end_program = false;
     do
 	{
@@ -234,21 +237,21 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	semid = semget( k, 1, 0 );
 	y2milestone( "ipc key:%x semid:%d", k, semid );
 	}
-	int lsock = socket(AF_UNIX, SOCK_STREAM, 0);
-	if( lsock<0 )
-	    {
-	    y2error( "error creating socket %s", strerror(errno));
-	    ok = false;
-	    }
-	y2milestone( "socket ret:%d", lsock );
-	if( (ret=bind( lsock, (struct sockaddr *)&saddr, sizeof(saddr))) < 0)
-	    {
-	    y2error( "error bind to socket %s", strerror(errno));
-	    shutdown(lsock, SHUT_RDWR);
-	    close(lsock);
-	    ok = false;
-	    }
-	y2milestone( "bind ret:%d", ret );
+    int lsock = socket(AF_UNIX, SOCK_STREAM, 0);
+    if( lsock<0 )
+	{
+	y2error( "error creating socket %s", strerror(errno));
+	ok = false;
+	}
+    y2milestone( "socket ret:%d", lsock );
+    if( (ret=bind( lsock, (struct sockaddr *)&saddr, sizeof(saddr))) < 0)
+	{
+	y2error( "error bind to socket %s", strerror(errno));
+	shutdown(lsock, SHUT_RDWR);
+	close(lsock);
+	ok = false;
+	}
+    y2milestone( "bind ret:%d", ret );
     while( ok && !end_program )
 	{
 	if( ok && (ret=listen( lsock, 20 ))<0 )
@@ -262,6 +265,9 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	    evms = new EvmsAccess;
 	if( ok )
 	    {
+    ofstream log( "/tmp/evms_access1" );
+    log << *evms;
+    log.close();
 	    struct timeval tv = { timeout/1000, (timeout%1000)*1000 };
 	    FD_ZERO( &fdset );
 	    FD_SET( lsock, &fdset );
