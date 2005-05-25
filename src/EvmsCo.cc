@@ -554,8 +554,13 @@ void EvmsCo::addPv( const Pv* p )
     {
     PeContainer::addPv( p );
     string dev = unEvmsDevice( p->device );
-    getStorage()->setUsedBy( dev, UB_EVMS, name() );
-    getStorage()->setUsedBy( "/dev/evms/"+dev.substr(5), UB_EVMS, name() );
+    UsedByType t = getStorage()->usedBy( dev );
+    if( t==UB_EVMS || t==UB_NONE )
+	getStorage()->setUsedBy( dev, UB_EVMS, name() );
+    dev = "/dev/evms/"+dev.substr(5);
+    t = getStorage()->usedBy( dev );
+    if( t==UB_EVMS || t==UB_NONE )
+	getStorage()->setUsedBy( dev, UB_EVMS, name() );
     }
 
 int EvmsCo::getToCommit( CommitStage stage, list<Container*>& col,

@@ -2360,6 +2360,26 @@ bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
     return( ret );
     }
 
+UsedByType Storage::usedBy( const string& dev )
+    {
+    UsedByType ret=UB_NONE;
+    VolIterator v;
+    if( !findVolume( dev, v ) )
+	{
+	DiskIterator i = findDisk( dev );
+	if( i != dEnd() )
+	    {
+	    ret = i->getUsedByType();
+	    }
+	}
+    else
+	{
+	ret = v->getUsedByType();
+	}
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
 void Storage::progressBarCb( const string& id, unsigned cur, unsigned max )
     {
     y2milestone( "id:%s cur:%d max:%d", id.c_str(), cur, max );

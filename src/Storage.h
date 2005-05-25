@@ -133,6 +133,7 @@ class Storage : public storage::StorageInterface
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( std::ostream& str );
+	storage::UsedByType usedBy( const string& dev );
 	bool setUsedBy( const string& dev, storage::UsedByType typ,
 	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
