@@ -6,6 +6,7 @@
     import "LibStorage::StorageInterface";
     import "LibStorage::FsCapabilities";
     import "LibStorage::PartitionInfo";
+    import "LibStorage::ContainerInfo";
 
 
     any o = nil;
@@ -81,6 +82,21 @@
     }
 
 
+    void test8 ()
+    {
+	list <any> containerinfos = [];
+	LibStorage::StorageInterface::getContainer (o, containerinfos);
+
+	foreach (any containerinfo, containerinfos, {
+	    y2milestone ("found container %1", LibStorage::ContainerInfo::swig_name_get (containerinfo));
+	    y2milestone ("of type (any) %1", LibStorage::ContainerInfo::swig_type_get (containerinfo));
+	    // integer type = LibStorage::ContainerInfo::swig_type_get (containerinfo);
+	    integer type = tointeger (LibStorage::ContainerInfo::swig_type_get (containerinfo));
+	    y2milestone ("of type (integer) %1", type);
+	});
+    }
+
+
     LibStorage::initDefaultLogger ();
 
     o = LibStorage::createStorageInterface (true, false, true);
@@ -92,6 +108,7 @@
     test5 ();
     test6 ();
     test7 ();
+    test8 ();
 
     LibStorage::destroyStorageInterface (o);
 }
