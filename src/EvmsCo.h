@@ -82,6 +82,7 @@ class EvmsCo : public PeContainer
 	EvmsCo( Storage * const s, const string& name, bool lvm1 );
 	virtual ~EvmsCo();
 	unsigned numVol() const { return vols.size(); }
+	bool lvm2() const { return( !lvm1 ); }
 	static storage::CType const staticType() { return storage::EVMS; }
 	friend inline std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
@@ -103,8 +104,10 @@ class EvmsCo : public PeContainer
 			 std::list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
+	void getInfo( storage::EvmsCoInfo& info ) const;
 	static void activate( bool val=true );
 	static void getEvmsList( EvmsTree& data );
+	static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
 	
     protected:
 	// iterators over EVMS Volumes

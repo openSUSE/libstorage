@@ -22,7 +22,7 @@
 	    list<any> partitioninfos = [];
 	    LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
 	    foreach (any partitioninfo, partitioninfos, {
-		y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_name_get (partitioninfo));
+		y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_nr_get (partitioninfo));
 	    });
 	});
     }

@@ -54,7 +54,6 @@ LvmVg::~LvmVg()
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
 static bool lvCreated( const LvmLv& l ) { return( l.created() ); }
 static bool lvResized( const LvmLv& l ) { return( l.extendSize()!=0 ); }
-static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
 
 int
 LvmVg::removeVg()
@@ -1121,6 +1120,15 @@ int LvmVg::doCreatePv( const string& device )
     return( ret );
     }
 
+void LvmVg::getInfo( LvmVgInfo& info ) const
+    {
+    info.sizeK = sizeK();
+    info.peSize = peSize();
+    info.peCount = peCount();
+    info.peFree = peFree();
+    info.lvm2 = lvm2();
+    info.uuid = uuid;
+    }
 
 void LvmVg::logData( const string& Dir ) {;}
 

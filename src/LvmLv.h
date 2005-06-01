@@ -25,6 +25,7 @@ class LvmLv : public Dm
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
 	string resizeText( bool doing ) const;
+	void getInfo( storage::LvmLvInfo& info ) const;
 
     protected:
 	void init( const string& name );

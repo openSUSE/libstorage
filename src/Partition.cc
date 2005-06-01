@@ -411,15 +411,13 @@ Partition::~Partition()
     y2milestone( "destructed partition %s", dev.c_str() );
     }
 
-PartitionInfo
-Partition::getPartitionInfo () const
-{
-    PartitionInfo tmp;
-    tmp.name = name ();
-    tmp.partitionType = type ();
-    tmp.cylStart = cylStart ();
-    tmp.cylSize = cylSize ();
-    tmp.fsType = fs;
-    tmp.nr = num;
-    return tmp;
-}
+void
+Partition::getInfo( PartitionInfo& info ) const
+    {
+    info.partitionType = type ();
+    info.cylStart = cylStart ();
+    info.cylSize = cylSize ();
+    info.nr = num;
+    info.id = idt;
+    info.boot = bootflag;
+    }

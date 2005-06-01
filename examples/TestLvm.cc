@@ -58,7 +58,7 @@ main( int argc_iv, char** argv_ppcv )
     s->getPartitionsOfDisk( disk, infos );
     for( deque<PartitionInfo>::iterator i=infos.begin(); i!=infos.end(); ++i )
 	if( i->partitionType!=EXTENDED )
-	    devs.push_back( i->name );
+	    devs.push_back( i->v.name );
     if( ret==0 )
 	{
 	ret = s->createLvmVg( "testvg", 8*1024, false, devs );

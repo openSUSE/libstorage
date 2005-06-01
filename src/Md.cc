@@ -401,6 +401,14 @@ bool Md::mdStringNum( const string& name, unsigned& num )
     return( ret );
     }
 
+void Md::getInfo( MdInfo& info ) const
+    {
+    info.nr = num;
+    info.type = md_type;
+    info.uuid = md_uuid;
+    info.chunk = chunk;
+    }
+
 string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6", 
                           "raid10", "multipath" };
 string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric", 

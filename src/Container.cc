@@ -253,5 +253,17 @@ bool Container::findVolume( const string& device, Volume*& vol )
     return( v!=p.end() );
     }
 
+void Container::getInfo( storage::ContainerInfo& info ) const
+    {
+    Container::ConstVolPair vp = volPair( Volume::notDeleted );
+    info.type = type();
+    info.name = name();
+    info.device = device();
+    info.volcnt = vp.length();
+    info.usedBy = getUsedByType();
+    info.usedByName = usedByName();
+    }
+
+
 string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "EVMS" };
 

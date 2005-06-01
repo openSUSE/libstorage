@@ -58,7 +58,7 @@ class Partition : public Volume
 	virtual void print( std::ostream& s ) const { s << *this; }
 	bool canUseDevice() const;
 
-	storage::PartitionInfo getPartitionInfo () const;
+	void getInfo( storage::PartitionInfo& info ) const;
 
     protected:
 	Region reg;

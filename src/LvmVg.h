@@ -13,6 +13,7 @@ class LvmVg : public PeContainer
 	LvmVg( Storage * const s, const string& Name, bool lvm1 );
 	virtual ~LvmVg();
 	unsigned numLv() const { return vols.size(); }
+	bool lvm2() const { return( !lvm1 ); }
 	static storage::CType const staticType() { return storage::LVM; }
 	friend inline std::ostream& operator<< (std::ostream&, const LvmVg& );
 
@@ -33,8 +34,12 @@ class LvmVg : public PeContainer
 			 std::list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
+	void getInfo( storage::LvmVgInfo& info ) const;
+
 	static void activate( bool val=true );
 	static void getVgs( std::list<string>& l );
+	static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
+
 	
     protected:
 	// iterators over LVM LVs

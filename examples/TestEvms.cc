@@ -82,7 +82,7 @@ main( int argc_iv, char** argv_ppcv )
     bool lvm1 = false;
     for( deque<PartitionInfo>::const_iterator i=infos.begin(); i!=infos.end(); ++i )
 	if( i->partitionType!=EXTENDED && i->nr<16 )
-	    devs.push_back( i->name );
+	    devs.push_back( i->v.name );
     if( ret==0 )
 	{
 	ret = s->createEvmsContainer( "testevms", 8*1024, lvm1, devs );

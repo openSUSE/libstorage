@@ -37,8 +37,6 @@ LoopCo::init()
     {
     }
 
-static bool loopNotDeleted( const Loop& l ) { return( !l.deleted() ); }
-
 void
 LoopCo::getLoopData()
     {
@@ -85,7 +83,7 @@ LoopCo::checkLoop( Loop* m )
 bool
 LoopCo::findLoop( unsigned num, LoopIter& i )
     {
-    LoopPair p=loopPair(loopNotDeleted);
+    LoopPair p=loopPair(Loop::notDeleted);
     i=p.begin();
     while( i!=p.end() && i->nr()!=num )
 	++i;
@@ -102,7 +100,7 @@ LoopCo::findLoop( unsigned num )
 bool
 LoopCo::findLoop( const string& file, LoopIter& i )
     {
-    LoopPair p=loopPair(loopNotDeleted);
+    LoopPair p=loopPair(Loop::notDeleted);
     i=p.begin();
     while( i!=p.end() && i->loopFile()!=file )
 	++i;

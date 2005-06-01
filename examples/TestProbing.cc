@@ -42,7 +42,7 @@ main (int argc, char** argv)
 	for (deque<PartitionInfo>::iterator i2 = partitions.begin ();
 	     i2 != partitions.end(); i2++)
 	{
-	    cout << i2->name << ' ';
+	    cout << i2->v.name << ' ';
 	    switch (i2->partitionType)
 	    {
 		case PRIMARY: cout << "PRIMARY "; break;
@@ -50,7 +50,7 @@ main (int argc, char** argv)
 		case LOGICAL: cout << "LOGICAL "; break;
 		case PTYPE_ANY: cout << "ANY "; break;
 	    }
-	    switch (i2->fsType)
+	    switch (i2->v.fs)
 	    {
 		case FSUNKNOWN: cout << "UNKNOWN"; break;
 		case REISERFS: cout << "REISERFS"; break;

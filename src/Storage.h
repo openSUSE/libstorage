@@ -17,6 +17,7 @@
 #include "y2storage/Evms.h"
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
+#include "y2storage/DmCo.h"
 #include "y2storage/LoopCo.h"
 #include "y2storage/Loop.h"
 #include "y2storage/FilterIterator.h"
@@ -111,6 +112,8 @@ class Storage : public storage::StorageInterface
 	    { return( d.type()==storage::MD ); };
 	static bool isLoop( const Container&d )
 	    { return( d.type()==storage::LOOP ); };
+	static bool isDm( const Container&d )
+	    { return( d.type()==storage::DM ); };
     public:
 	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.deleted());}};
 	static SkipDeleted SkipDel;
@@ -149,6 +152,27 @@ class Storage : public storage::StorageInterface
 	// functions for interface
 
         void getContainer( deque<storage::ContainerInfo>& infos );
+	int getDiskInfo( const string& disk, storage::DiskInfo& info);
+	int getLvmVgInfo( const string& name, storage::LvmVgInfo& info);
+	int getEvmsCoInfo( const string& name, storage::EvmsCoInfo& info);
+	int getContDiskInfo( const string& disk, storage::ContainerInfo& cinfo,
+	                     storage::DiskInfo& info);
+	int getContLvmVgInfo( const string& name, storage::ContainerInfo& cinfo,
+	                      storage::LvmVgInfo& info);
+	int getContEvmsCoInfo( const string& name, 
+	                       storage::ContainerInfo& cinfo,
+	                       storage::EvmsCoInfo& info );
+	void getVolumes (deque<storage::VolumeInfo>& vlist);
+	int getPartitionInfo( const string& disk, 
+			      deque<storage::PartitionInfo>& plist );
+	int getLvmLvInfo( const string& name, 
+			  deque<storage::LvmLvInfo>& plist );
+	int getEvmsInfo( const string& name, 
+			 deque<storage::EvmsInfo>& plist );
+	int getMdInfo( deque<storage::MdInfo>& plist );
+	int getDmInfo( deque<storage::DmInfo>& plist );
+	int getLoopInfo( deque<storage::LoopInfo>& plist );
+
 	bool getDisks (deque<string>& disks);
 	bool getPartitions (deque<storage::PartitionInfo>& partitioninfos);
 	bool getPartitionsOfDisk (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
@@ -1015,6 +1039,66 @@ class Storage : public storage::StorageInterface
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
 	    }
 
+// iterators over device mapper devices
+    protected:
+	// protected typedefs for iterators over device mapper devices
+	typedef CastIterator<ConstVolInter, Dm *> ConstDmInter;
+	template< class Pred >
+	    struct ConstDmPI { typedef ContainerIter<Pred,
+	                                             ConstDmInter> type; };
+	typedef CheckFnc<const Dm> CheckFncDm;
+	typedef CheckerIterator< CheckFncDm, ConstDmPI<CheckFncDm>::type,
+	                         ConstDmInter, Dm > ConstDmPIterator;
+    public:
+	// public typedefs for iterators over device mapper devices
+	template< class Pred >
+	    struct ConstDmI
+		{ typedef ContainerDerIter<Pred, typename ConstDmPI<Pred>::type,
+		                           const Dm> type; };
+	template< class Pred >
+	    struct DmCondIPair
+		{ typedef MakeCondIterPair<Pred, typename ConstDmI<Pred>::type> type;};
+	typedef DerefIterator<ConstDmPIterator, const Dm> ConstDmIterator;
+	typedef IterPair<ConstDmIterator> ConstDmPair;
+
+	// public member functions for iterators over device mapper devices
+	ConstDmPair dmPair( bool (* CheckDm)( const Dm& )=NULL ) const
+	    {
+	    return( ConstDmPair( dmBegin( CheckDm ), dmEnd( CheckDm ) ));
+	    }
+	ConstDmIterator dmBegin( bool (* CheckDm)( const Dm& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
+	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
+	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm )));
+	    }
+	ConstDmIterator dmEnd( bool (* CheckDm)( const Dm& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
+	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
+	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm, true )));
+	    }
+	template< class Pred > typename DmCondIPair<Pred>::type dmCondPair( const Pred& p ) const
+	    {
+	    return( typename DmCondIPair<Pred>::type( dmCondBegin( p ), dmCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstDmI<Pred>::type dmCondBegin( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
+	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
+	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstDmI<Pred>::type dmCondEnd( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
+	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
+	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p, true )) );
+	    }
+
     protected:
 	// protected internal member functions
 	void initialize();
@@ -1023,6 +1107,7 @@ class Storage : public storage::StorageInterface
 	void detectLoops();
 	void detectLvmVgs();
 	void detectEvms();
+	void detectDm();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	void detectFsDataTestMode( const string& file, 
@@ -1034,6 +1119,7 @@ class Storage : public storage::StorageInterface
 	LvmVgIterator findLvmVg( const string& name );
 	EvmsCoIterator findEvmsCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );
 	bool findVolume( const string& device, VolIterator& v  );

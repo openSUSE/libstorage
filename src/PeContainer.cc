@@ -295,7 +295,8 @@ void PeContainer::addPv( const Pv* p )
 void 
 PeContainer::init()
     {
-    pe_size = num_pe = free_pe = 0;
+    num_pe = free_pe = 0;
+    pe_size = 1;
     }
 
 unsigned long

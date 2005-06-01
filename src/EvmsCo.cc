@@ -64,7 +64,6 @@ EvmsCo::~EvmsCo()
 static bool lvDeleted( const Evms& l ) { return( l.deleted() ); }
 static bool lvCreated( const Evms& l ) { return( l.created() ); }
 static bool lvResized( const Evms& l ) { return( l.extendSize()!=0 ); }
-static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
 
 int
 EvmsCo::removeCo()
@@ -798,7 +797,8 @@ int EvmsCo::getSocketFd()
 
 bool EvmsCo::startHelper( bool retry )
     {
-    bool ret = access( EXEC_PATH, X_OK )==0;
+    bool ret = access( EXEC_PATH, X_OK )==0 && 
+               getenv( "YAST2_STORAGE_NO_EVMS" )==NULL ;
     if( ret )
 	{
 	string cmd = EXEC_PATH;
@@ -1417,6 +1417,18 @@ std::ostream& operator<< (std::ostream& s, const EvmsTree& d )
 	}
     return( s );
     }
+
+void EvmsCo::getInfo( EvmsCoInfo& info ) const
+    {
+    info.sizeK = sizeK();
+    info.peSize = peSize();
+    info.peCount = peCount();
+    info.peFree = peFree();
+    info.lvm2 = lvm2();
+    info.uuid = uuid;
+    info.realContainer = !nm.empty();
+    }
+
 
 void EvmsCo::logData( const string& Dir ) {;}
 

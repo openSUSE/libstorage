@@ -22,6 +22,10 @@ class Loop : public Volume
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
 
+	void getInfo( storage::LoopInfo& info ) const;
+
+	static bool notDeleted( const Loop& l ) { return( !l.deleted() ); }
+
     protected:
 	void init();
 

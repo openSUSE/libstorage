@@ -12,6 +12,9 @@ class PeContainer : public Container
 	PeContainer( Storage * const s, storage::CType t );
 	virtual ~PeContainer();
 	unsigned long long peSize() const { return pe_size; }
+	unsigned long long sizeK() const { return pe_size*num_pe; }
+	unsigned long peCount() const { return num_pe; }
+	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
 	friend inline std::ostream& operator<< (std::ostream&, const PeContainer& );
 

@@ -19,7 +19,7 @@ print_partitions (const string& disk)
     for (deque<PartitionInfo>::iterator i = partitioninfos.begin ();
 	 i != partitioninfos.end(); i++)
     {
-	cout << i->name << ' ';
+	cout << i->v.name << ' ';
 	switch (i->partitionType)
 	{
 	    case PRIMARY: cout << "PRIMARY "; break;
@@ -28,7 +28,7 @@ print_partitions (const string& disk)
 	    case PTYPE_ANY: cout << "ANY "; break;
 	}
 	cout << i->cylStart << ' ' << i->cylSize << ' ';
-	switch (i->fsType)
+	switch (i->v.fs)
 	{
 	    case FSUNKNOWN: cout << "UNKNOWN"; break;
 	    case REISERFS: cout << "REISERFS"; break;

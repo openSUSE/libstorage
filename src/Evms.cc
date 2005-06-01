@@ -213,3 +213,12 @@ string Evms::resizeText( bool doing ) const
         }
     return( txt );
     }
+
+void Evms::getInfo( EvmsInfo& info ) const
+    {
+    info.stripe = stripe;
+    info.compatible = compat;
+    info.dm_table = tname;
+    info.dm_target = target;
+    }
+

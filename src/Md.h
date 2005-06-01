@@ -38,6 +38,9 @@ class Md : public Volume
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
+	static bool notDeleted( const Md& l ) { return( !l.deleted() ); }
+
+	void getInfo( storage::MdInfo& info ) const;
 
     protected:
 	void init();

@@ -41,14 +41,12 @@ MdCo::init()
 	tab = new EtcRaidtab( getStorage()->root() );
     }
 
-static bool mdNotDeleted( const Md& l ) { return( !l.deleted() ); }
-
 void
 MdCo::syncRaidtab()
     {
     delete tab;
     tab = new EtcRaidtab( getStorage()->root() );
-    MdPair p=mdPair(mdNotDeleted);
+    MdPair p=mdPair(Md::notDeleted);
     for( MdIter i=p.begin(); i!=p.end(); ++i )
 	{
 	updateEntry( &(*i) );
@@ -123,7 +121,7 @@ MdCo::getMdData()
 	    }
 	getline( file, line );
 	}
-    MdPair p=mdPair(mdNotDeleted);
+    MdPair p=mdPair(Md::notDeleted);
     for( MdIter i=p.begin(); i!=p.end(); ++i )
 	{
 	string num = decString(i->nr());
@@ -197,7 +195,7 @@ MdCo::checkMd( Md* m )
 bool
 MdCo::findMd( unsigned num, MdIter& i )
     {
-    MdPair p=mdPair(mdNotDeleted);
+    MdPair p=mdPair(Md::notDeleted);
     i=p.begin();
     while( i!=p.end() && i->nr()!=num )
 	++i;

@@ -49,6 +49,7 @@ class Container
 	virtual int commitChanges( storage::CommitStage stage );
 	virtual int commitChanges( storage::CommitStage stage, Volume* vol );
 	unsigned numVolumes() const;
+	void getInfo( storage::ContainerInfo& info ) const;
 	bool findVolume( const string& device, Volume*& vol );
 
 // iterators over volumes of a container
@@ -132,9 +133,9 @@ class Container
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
-	const storage::usedBy& getUsedBy() { return( uby ); }
-	storage::UsedByType getUsedByType() { return( uby.t ); }
-	const string& usedByName() { return( uby.name ); }
+	const storage::usedBy& getUsedBy() const { return( uby ); }
+	storage::UsedByType getUsedByType() const { return( uby.t ); }
+	const string& usedByName() const { return( uby.name ); }
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;

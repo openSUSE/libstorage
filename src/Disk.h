@@ -34,6 +34,10 @@ class Disk : public Container
 	unsigned long minorNr() const { return mnr; }
 	unsigned long majorNr() const { return mjr; }
 	unsigned long numMinor() const { return range; }
+	unsigned long cylSizeB() const { return byte_cyl; }
+	unsigned maxPrimary() const { return max_primary; }
+	unsigned maxLogical() const { return max_logical; }
+	const string& labelName() const { return label; }
 	unsigned numPartitions() const;
 	static storage::CType const staticType() { return storage::DISK; }
 	friend inline std::ostream& operator<< (std::ostream&, const Disk& );
@@ -63,6 +67,8 @@ class Disk : public Container
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
 	string getPartName( unsigned nr ) const;
+	void getInfo( storage::DiskInfo& info ) const;
+
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
 	static std::pair<string,long> getDiskPartition( const string& dev );

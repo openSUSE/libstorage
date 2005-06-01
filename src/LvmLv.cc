@@ -197,3 +197,13 @@ string LvmLv::resizeText( bool doing ) const
         }
     return( txt );
     }
+
+void LvmLv::getInfo( LvmLvInfo& info ) const
+    {
+    info.stripe = stripe;
+    info.uuid = vol_uuid;
+    info.status = status;
+    info.allocation = allocation;
+    info.dm_table = tname;
+    info.dm_target = target;
+    }

@@ -11,9 +11,11 @@ class Dm : public Volume
     {
     public:
 	Dm( const PeContainer& d, const string& tn );
+	Dm( const PeContainer& d, const string& tn, unsigned mnum );
 
 	virtual ~Dm();
-	const string& getTableName() { return( tname ); }
+	const string& getTableName() const { return( tname ); }
+	const string& getTargetName() const { return( target ); }
 	void setTableName( const string& name ) { tname=name; }
 	unsigned long getLe() const { return num_le; }
 	void setLe( unsigned long le );
@@ -28,6 +30,9 @@ class Dm : public Volume
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual string removeText( bool doing ) const;
 	virtual string formatText( bool doing ) const;
+	void getInfo( storage::DmInfo& info ) const;
+	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
+
 	static void activate( bool val=true );
 
     protected:
@@ -38,6 +43,7 @@ class Dm : public Volume
 	static void getDmMajor();
 
 	string tname;
+	string target;
 	unsigned long num_le;
 	unsigned stripe;
 	std::map<string,unsigned long> pe_map;

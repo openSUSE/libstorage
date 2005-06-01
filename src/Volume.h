@@ -123,6 +123,7 @@ class Volume
 	bool inCrypto() const { return( is_loop && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
+	void getInfo( storage::VolumeInfo& info ) const;
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted

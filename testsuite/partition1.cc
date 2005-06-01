@@ -19,7 +19,7 @@ print_partitions (const string& disk)
     for (deque<PartitionInfo>::iterator i = partitioninfos.begin ();
 	 i != partitioninfos.end(); i++)
     {
-	cout << i->name << ' ';
+	cout << i->v.name << ' ';
 	switch (i->partitionType)
 	{
 	    case PRIMARY: cout << "PRIMARY "; break;

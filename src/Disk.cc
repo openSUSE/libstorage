@@ -404,8 +404,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     int Add = cylinderToKb(1)*2/5;
     if( nr>0 )
       {
-      start = kbToCylinder( (unsigned long long)(StartM*1024)+Add );
-      csize = kbToCylinder( (unsigned long long)(EndM*1024)+Add ) - start + 1;
+      start = kbToCylinder( (unsigned long long)(StartM*1024)+Add ) - 1;
+      csize = kbToCylinder( (unsigned long long)(EndM*1024)-Add ) - start;
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;
@@ -1725,4 +1725,16 @@ int Disk::doResize( Volume* v )
 unsigned Disk::numPartitions() const
     {
     return(partPair( notDeleted ).length());
+    }
+
+void Disk::getInfo( DiskInfo& info ) const
+    {
+    info.sizeK = sizeK();
+    info.cyl = cylinders();
+    info.heads = heads();
+    info.sectors = sectors();
+    info.cylSizeB = cylSizeB();
+    info.disklabel = labelName();
+    info.maxLogical = maxLogical();
+    info.maxPrimary = maxPrimary();
     }

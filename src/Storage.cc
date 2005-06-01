@@ -19,6 +19,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
 #include "y2storage/MdCo.h"
+#include "y2storage/DmCo.h"
 #include "y2storage/LoopCo.h"
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
@@ -133,6 +134,7 @@ Storage::initialize()
     detectMds();
     detectLvmVgs();
     detectEvms();
+    detectDm();
     if( instsys() )
 	MdCo::activate( false );
 
@@ -333,6 +335,29 @@ Storage::detectEvms()
 	    }
 	if( (data.cont.empty()&&data.volumes.empty()) || instsys() )
 	    EvmsCo::activate( false );
+	}
+    }
+
+void
+Storage::detectDm()
+    {
+    if( test() )
+	{
+	glob_t globbuf;
+	if( glob( (testdir+"/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
+	          &globbuf) == 0)
+	    {
+	    // TODO
+	    }
+ 	globfree (&globbuf);
+	}
+    else if( getenv( "YAST2_STORAGE_NO_DM" )==NULL )
+	{
+	DmCo * v = new DmCo( this, true );
+	if( v->numVolumes()>0 )
+	    addToList( v );
+	else
+	    delete v;
 	}
     }
 
@@ -2121,14 +2146,217 @@ Storage::getContainer( deque<ContainerInfo>& infos )
     ConstContPair p = contPair( notDeleted );
     for( ConstContIterator i = p.begin(); i != p.end(); ++i)
 	{
-	Container::ConstVolPair vp = i->volPair( Volume::notDeleted );
 	infos.push_back( ContainerInfo() );
-	ContainerInfo& info( infos.back() );
-	info.type = i->type();
-	info.name = i->name();
-	info.device = i->device();
-	info.volcnt = vp.length();
+	i->getInfo( infos.back() );
 	}
+    }
+
+void 
+Storage::getVolumes( deque<VolumeInfo>& infos )
+    {
+    infos.clear ();
+    assertInit();
+    ConstVolPair p = volPair( Volume::notDeleted );
+    for( ConstVolIterator i = p.begin(); i != p.end(); ++i)
+	{
+	infos.push_back( VolumeInfo() );
+	i->getInfo( infos.back() );
+	}
+    }
+
+int Storage::getDiskInfo( const string& disk, DiskInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_DISK_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo, 
+			      DiskInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	((const Container*)&(*i))->getInfo( cinfo );
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_DISK_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getPartitionInfo( const string& disk, 
+			       deque<storage::PartitionInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	Disk::PartPair p = i->partPair (Disk::notDeleted);
+	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    {
+	    plist.push_back( PartitionInfo() );
+	    i2->getInfo( plist.back() );
+	    ((const Volume*)&(*i2))->getInfo( plist.back().v );
+	    }
+	}
+    else
+	ret = STORAGE_DISK_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getLvmVgInfo( const string& name, LvmVgInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    LvmVgIterator i = findLvmVg( name );
+    if( i != lvgEnd() )
+	{
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
+                               LvmVgInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    LvmVgIterator i = findLvmVg( name );
+    if( i != lvgEnd() )
+	{
+	((const Container*)&(*i))->getInfo( cinfo );
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getLvmLvInfo( const string& name, 
+			   deque<storage::LvmLvInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    LvmVgIterator i = findLvmVg( name );
+    if( i != lvgEnd() )
+	{
+	LvmVg::LvmLvPair p = i->lvmLvPair(LvmVg::lvNotDeleted);
+	for( LvmVg::LvmLvIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    {
+	    plist.push_back( LvmLvInfo() );
+	    i2->getInfo( plist.back() );
+	    ((const Volume*)&(*i2))->getInfo( plist.back().v );
+	    }
+	}
+    else
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getEvmsCoInfo( const string& name, EvmsCoInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    EvmsCoIterator i = findEvmsCo( name );
+    if( i != evCoEnd() )
+	{
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getContEvmsCoInfo( const string& name, ContainerInfo& cinfo,
+			        EvmsCoInfo& info )
+    {
+    int ret = 0;
+    assertInit();
+    EvmsCoIterator i = findEvmsCo( name );
+    if( i != evCoEnd() )
+	{
+	((const Container*)&(*i))->getInfo( cinfo );
+	i->getInfo( info );
+	}
+    else
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getEvmsInfo( const string& name, 
+			  deque<storage::EvmsInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    EvmsCoIterator i = findEvmsCo( name );
+    if( i != evCoEnd() )
+	{
+	EvmsCo::EvmsPair p = i->evmsPair(EvmsCo::lvNotDeleted);
+	for( EvmsCo::EvmsIter i2 = p.begin(); i2 != p.end(); ++i2 )
+	    {
+	    plist.push_back( EvmsInfo() );
+	    i2->getInfo( plist.back() );
+	    ((const Volume*)&(*i2))->getInfo( plist.back().v );
+	    }
+	}
+    else
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::getMdInfo( deque<storage::MdInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    ConstMdPair p = mdPair(Md::notDeleted);
+    for( ConstMdIterator i = p.begin(); i != p.end(); ++i )
+	{
+	plist.push_back( MdInfo() );
+	i->getInfo( plist.back() );
+	((const Volume*)&(*i))->getInfo( plist.back().v );
+	}
+    return( ret );
+    }
+
+int Storage::getLoopInfo( deque<storage::LoopInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    ConstLoopPair p = loopPair(Loop::notDeleted);
+    for( ConstLoopIterator i = p.begin(); i != p.end(); ++i )
+	{
+	plist.push_back( LoopInfo() );
+	i->getInfo( plist.back() );
+	((const Volume*)&(*i))->getInfo( plist.back().v );
+	}
+    return( ret );
+    }
+
+int Storage::getDmInfo( deque<storage::DmInfo>& plist )
+    {
+    int ret = 0;
+    assertInit();
+    ConstDmPair p = dmPair(Dm::notDeleted);
+    for( ConstDmIterator i = p.begin(); i != p.end(); ++i )
+	{
+	plist.push_back( DmInfo() );
+	i->getInfo( plist.back() );
+	((const Volume*)&(*i))->getInfo( plist.back().v );
+	}
+    return( ret );
     }
 
 bool
@@ -2156,7 +2384,11 @@ Storage::getPartitionsOfDisk (const string& disk, deque<PartitionInfo>& partitio
 	Disk::PartPair p = i->partPair (Disk::notDeleted);
 
 	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
-	    partitioninfos.push_back (i2->getPartitionInfo());
+	    {
+	    partitioninfos.push_back( PartitionInfo() );
+	    i2->getInfo( partitioninfos.back() );
+	    ((const Volume*)&(*i2))->getInfo( partitioninfos.back().v );
+	    }
     }
 
     return( i != dEnd() );
@@ -2170,7 +2402,10 @@ Storage::getPartitions (deque<PartitionInfo>& partitioninfos)
 
     ConstPartPair p = partPair(Partition::notDeleted);
     for (ConstPartIterator i = p.begin(); i != p.end(); ++i)
-	partitioninfos.push_back (i->getPartitionInfo());
+	{
+	partitioninfos.push_back( PartitionInfo() );
+	i->getInfo( partitioninfos.back() );
+	}
 
     return true;
 }

@@ -1660,6 +1660,26 @@ string Volume::removeText( bool doing ) const
     return( txt );
     }
 
+void Volume::getInfo( VolumeInfo& info ) const
+    {
+    info.sizeK = size_k;
+    info.major = mjr;
+    info.minor = mnr;
+    info.name = nm;
+    info.device = dev;
+    info.mount = mp;
+    info.mount_by = mount_by;
+    info.usedBy = uby.t;
+    info.usedByName = uby.name;
+    info.fstab_options = fstab_opt;
+    info.uuid = uuid;
+    info.label = label;
+    info.encryption = encryption;
+    info.crypt_pwd = crypt_pwd;
+    info.fs = fs;
+    }
+
+
 ostream& Volume::logVolume( ostream& file ) const
     {
     file << dev << " fs=" << fs_names[fs];

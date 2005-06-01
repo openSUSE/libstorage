@@ -146,21 +146,148 @@ namespace storage
 	unsigned volcnt;
 	string device;
 	string name;
+	UsedByType usedBy;
+	string usedByName;
 	};
 
+    /**
+     * Contains info about a disk
+     */
+    struct DiskInfo
+	{
+	unsigned long long sizeK;
+	unsigned long long cylSizeB;
+	unsigned long cyl;
+	unsigned long heads;
+	unsigned long sectors;
+	string disklabel;
+	unsigned maxLogical;
+	unsigned maxPrimary;
+	};
+
+    /**
+     * Contains info about a LVM VG
+     */
+    struct LvmVgInfo
+	{
+	unsigned long long sizeK;
+	unsigned long long peSize;
+	unsigned long peCount;
+	unsigned long peFree;
+	string uuid;
+	bool lvm2;
+	};
+
+
+    /**
+     * Contains info about a EVMS Container
+     */
+    struct EvmsCoInfo
+	{
+	unsigned long long sizeK;
+	unsigned long long peSize;
+	unsigned long peCount;
+	unsigned long peFree;
+	string uuid;
+	bool lvm2;
+	bool realContainer;
+	};
+
+    /**
+     * Contains info about a volume.
+     */
+    struct VolumeInfo
+	{
+	unsigned long long sizeK;
+	unsigned long major;
+	unsigned long minor;
+	string name;
+	string device;
+	string mount;
+	MountByType mount_by;
+	UsedByType usedBy;
+	string usedByName;
+	string fstab_options;
+	string uuid;
+	string label;
+	EncryptType encryption;
+	string crypt_pwd;
+	FsType fs;
+	};
 
     /**
      * Contains info about a partition.
      */
     struct PartitionInfo
-    {
-	string name;
+	{
+	VolumeInfo v;
 	unsigned nr;
 	unsigned long cylStart;
 	unsigned long cylSize;
 	PartitionType partitionType;
-	FsType fsType;
-    };
+	unsigned id;
+	bool boot;
+	};
+
+    /**
+     * Contains info about a LVM LV.
+     */
+    struct LvmLvInfo
+	{
+	VolumeInfo v;
+	unsigned stripe;
+	string uuid;
+	string status;
+	string allocation;
+	string dm_table;
+	string dm_target;
+	};
+
+    /**
+     * Contains info about a EVMS Volume.
+     */
+    struct EvmsInfo
+	{
+	VolumeInfo v;
+	unsigned stripe;
+	bool compatible;
+	string dm_table;
+	string dm_target;
+	};
+
+    /**
+     * Contains info about a software raid device.
+     */
+
+    struct MdInfo
+	{
+	VolumeInfo v;
+	unsigned nr;
+	MdType type;
+	string uuid;
+	unsigned long chunk;
+	};
+
+    /**
+     * Contains info about a file based loop devices.
+     */
+    struct LoopInfo
+	{
+	VolumeInfo v;
+	unsigned nr;
+	string file;
+	};
+
+    /**
+     * Contains info about a DM volume.
+     */
+    struct DmInfo
+	{
+	VolumeInfo v;
+	unsigned nr;
+	string table;
+	string target;
+	};
 
     /**
      * prelimiary list of error codes, must have negative values
@@ -364,6 +491,14 @@ namespace storage
 	PEC_LV_NO_SPACE_SINGLE = -9005,
 	PEC_LV_PE_DEV_NOT_FOUND = -9006,
 
+	DM_CHANGE_READONLY = -10000,
+	DM_UNKNOWN_TABLE = -10001,
+	DM_REMOVE_USED_BY = -10002,
+	DM_REMOVE_CREATE_NOT_FOUND = -10003,
+	DM_REMOVE_INVALID_VOLUME = -10004,
+	DM_REMOVE_FAILED = -10005,
+	DM_NOT_IN_LIST = -10006,
+
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
 
@@ -385,6 +520,125 @@ namespace storage
 	 * Query all containers found in system
 	 */
 	virtual void getContainer( deque<ContainerInfo>& infos) = 0;
+
+	/**
+	 * Query disk info for a disk device
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param info record that get filled with disk special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDiskInfo( const string& disk, DiskInfo& info) = 0;
+
+	/**
+	 * Query disk info for a disk device
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with disk special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContDiskInfo( const string& disk, ContainerInfo& cinfo,
+	                             DiskInfo& info ) = 0;
+
+	/**
+	 * Query info for a LVM volume group
+	 *
+	 * @param name name of volume group, e.g. system
+	 * @param info record that gets filled with LVM VG special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getLvmVgInfo( const string& name, LvmVgInfo& info) = 0;
+
+	/**
+	 * Query info for a LVM volume group
+	 *
+	 * @param name name of volume group, e.g. system
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with LVM VG special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
+	                              LvmVgInfo& info) = 0;
+
+	/**
+	 * Query container info for a EVMS container
+	 *
+	 * @param name name of container, e.g. lvm2/system
+	 * @param info record that gets filled with EVMS Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getEvmsCoInfo( const string& name, EvmsCoInfo& info) = 0;
+
+	/**
+	 * Query container info for a EVMS container
+	 *
+	 * @param name name of container, e.g. lvm2/system
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with EVMS Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContEvmsCoInfo( const string& name, ContainerInfo& cinfo,
+				       EvmsCoInfo& info) = 0;
+
+	/**
+	 * Query all volumes found in system
+	 */
+	virtual void getVolumes( deque<VolumeInfo>& infos) = 0;
+
+	/**
+	 * Query infos for partitions of a disk
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param plist list of records that get filled with partition specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getPartitionInfo( const string& disk, 
+	                              deque<PartitionInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for LVM LVs of a LVM VG
+	 *
+	 * @param name name of volume group, e.g. system
+	 * @param plist list of records that get filled with LV specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getLvmLvInfo( const string& name, 
+				  deque<LvmLvInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for EVMS volumes of a EVMS container
+	 *
+	 * @param name name of volume group, e.g. lvm2/system
+	 * @param plist list of records that get filled with EVMS specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getEvmsInfo( const string& name, 
+				 deque<EvmsInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for sofware raid devices in system 
+	 *
+	 * @param plist list of records that get filled with MD specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMdInfo( deque<MdInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for file based loop devices in system 
+	 *
+	 * @param plist list of records that get filled with loop specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getLoopInfo( deque<LoopInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for dm devices in system 
+	 *
+	 * @param plist list of records that get filled with dm specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDmInfo( deque<DmInfo>& plist ) = 0;
 
 	/**
 	 * Query all attatched disks.

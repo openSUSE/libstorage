@@ -19,6 +19,8 @@ class Evms : public Dm
 	string formatText( bool doing ) const;
 	string resizeText( bool doing ) const;
 
+	void getInfo(storage::EvmsInfo&) const;
+
     protected:
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return( "Evms" ); }

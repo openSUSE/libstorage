@@ -17,6 +17,18 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
     y2milestone( "constructed dm dev" );
     }
 
+Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
+	Volume( d ), tname(tn)
+    {
+    y2milestone( "constructed dm dev table \"%s\" %u", tn.c_str(), mnum );
+    num_le = 0;
+    stripe = 1;
+    dev = "/dev/dm-" + decString(mnum);
+    nm = tn;
+    init();
+    getTableInfo();
+    }
+
 Dm::~Dm()
     {
     y2milestone( "destructed dem dev %s", dev.c_str() );
@@ -31,7 +43,8 @@ Dm::getTableInfo()
     if( c.numLines()>0 )
 	{
 	string line = *c.getLine(0);
-	if( extractNthWord( 2, line )=="striped" )
+	target = extractNthWord( 2, line );
+	if( target=="striped" )
 	    extractNthWord( 3, line ) >> stripe;
 	}
     pe_map.clear();
@@ -43,8 +56,7 @@ Dm::getTableInfo()
 	string dev;
 	string majmin;
 	string line = *c.getLine(i);
-	string type = extractNthWord( 2, line );
-	if( type=="linear" )
+	if( target=="linear" )
 	    {
 	    extractNthWord( 1, line ) >> le;
 	    le /= 2;
@@ -63,7 +75,7 @@ Dm::getTableInfo()
 		y2warning( "could not find major/minor pair %s", 
 			majmin.c_str());
 	    }
-	else if( type=="striped" )
+	else if( target=="striped" )
 	    {
 	    unsigned str;
 	    extractNthWord( 1, line ) >> le;
@@ -95,7 +107,7 @@ Dm::getTableInfo()
 	    }
 	else
 	    {
-	    y2warning( "unknown table type \"%s\"", type.c_str() );
+	    y2warning( "unknown target type \"%s\"", target.c_str() );
 	    }
 	}
     }
@@ -184,7 +196,10 @@ void Dm::init()
     getMajorMinor( dev, mjr, mnr );
     if( majorNr()>0 )
 	{
-	alt_names.push_back( "/dev/dm-" + decString(minorNr()) );
+	num = minorNr();
+	string d = "/dev/dm-" + decString(minorNr());
+	if( d != dev )
+	    alt_names.push_back( "/dev/dm-" + decString(minorNr()) );
 	}
     }
 
@@ -299,6 +314,14 @@ void Dm::getDmMajor()
 	y2milestone( "dm_major:%u", dm_major );
 	}
     }
+
+void Dm::getInfo( DmInfo& info ) const
+    {
+    info.nr = num;
+    info.table = tname;
+    info.target = target;
+    }
+
 
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;

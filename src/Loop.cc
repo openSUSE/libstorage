@@ -244,3 +244,9 @@ string Loop::formatText( bool doing ) const
     return( txt );
     }
 
+void Loop::getInfo( LoopInfo& info ) const
+    {
+    info.nr = num;
+    info.file = lfile;
+    }
+
