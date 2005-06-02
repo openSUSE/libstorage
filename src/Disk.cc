@@ -301,8 +301,8 @@ Disk::setLabelData( const string& disklabel )
     if( labels[i].name.empty() )
 	i=0;
     ext_possible = labels[i].extended;
-    max_primary = labels[i].primary;
-    max_logical = labels[i].logical;
+    max_primary = min(labels[i].primary,unsigned(range-1));
+    max_logical = min(labels[i].logical,unsigned(range-1));
     label = labels[i].name;
     y2milestone( "name:%s ext:%d primary:%d logical:%d", label.c_str(),
                  ext_possible, max_primary, max_logical );
@@ -401,11 +401,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     TInfo += ",";
     y2milestone( "Fields Num:%d Start:%5.2f End:%5.2f Type:%d",
 		 nr, StartM, EndM, type );
-    int Add = cylinderToKb(1)*2/5;
+    int Add = cylinderToKb(1)/5;
     if( nr>0 )
       {
-      start = kbToCylinder( (unsigned long long)(StartM*1024)+Add ) - 1;
-      csize = kbToCylinder( (unsigned long long)(EndM*1024)-Add ) - start;
+      start = kbToCylinder( (unsigned long long)(StartM*1024)+2*Add ) - 1;
+      csize = kbToCylinder( (unsigned long long)(EndM*1024)-3*Add ) - start;
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;

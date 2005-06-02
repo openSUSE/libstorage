@@ -1677,6 +1677,7 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.encryption = encryption;
     info.crypt_pwd = crypt_pwd;
     info.fs = fs;
+    info.format = format;
     }
 
 

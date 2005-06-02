@@ -501,6 +501,19 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
 	    v->second.name.find( "lvm2/" )!=0 )
 	    {
 	    addLv( v->second.sizeK, v->second.name, v->second.native );
+	    if( v->second.native )
+		{
+		map<unsigned,EvmsObj>::const_iterator oi = 
+		    data.objects.find( v->second.uses );
+		if( oi!=data.objects.end() )
+		    {
+		    string s = normalizeDevice(oi->second.name);
+		    getStorage()->setUsedBy( s, UB_EVMS, v->second.name );
+		    s = undevDevice(unEvmsDevice(s));
+		    s = "/dev/evms/" + s;
+		    getStorage()->setUsedBy( s, UB_EVMS, v->second.name );
+		    }
+		}
 	    }
 	++v;
 	}
@@ -1005,6 +1018,12 @@ void EvmsCo::getEvmsList( EvmsTree& data )
 	    mi = m.find( "native" );
 	    if( mi != m.end() && mi->second=="1" )
 		obj.native = true;
+	    if( obj.native )
+		{
+		mi = m.find( "consumes" );
+		if( mi != m.end() )
+		    mi->second >> obj.uses;
+		}
 	    data.volumes[obj.id] = obj;
 	    }
 	}
@@ -1373,7 +1392,11 @@ std::ostream& operator<< (std::ostream& s, const EvmsVol& d )
     s << "id:" << d.id << " name:" << d.name;
     s << " sizeK:" << d.sizeK << " device:" << d.device;
     if( d.native )
+	{
 	s << " native";
+	if( d.uses!=0 )
+	    s << " uses:" << d.uses;
+	}
     return( s );
     }
 

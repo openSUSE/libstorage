@@ -213,6 +213,7 @@ namespace storage
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;
+	bool format;
 	};
 
     /**

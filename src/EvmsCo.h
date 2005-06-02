@@ -19,12 +19,13 @@ struct EvmsObj
 
 struct EvmsVol
     {
-    EvmsVol( unsigned i=0, const string& n="", unsigned s=0 ) : id(i),  sizeK(s), name(n) {native=false;}
+    EvmsVol( unsigned i=0, const string& n="", unsigned s=0 ) : id(i),  sizeK(s), name(n) {native=false; uses=0;}
     unsigned id;
     unsigned long long sizeK;
     bool native;
     string name;
     string device;
+    unsigned uses;
     inline bool operator==( const EvmsVol& rhs ) const
 	{ return( id==rhs.id && name==rhs.name && sizeK==rhs.sizeK && 
 		  device==rhs.device ); }

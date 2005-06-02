@@ -2673,7 +2673,7 @@ Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
     EvmsCoIterator ret=p.begin();
     string name1 = name;
     string name2 = name;
-    if( name.find( "lvm/" )!=0 && name.find( "lvm2/" )!=0 )
+    if( !name.empty() && name.find( "lvm/" )!=0 && name.find( "lvm2/" )!=0 )
 	{
 	name1 = "lvm/" + name1;
 	name2 = "lvm2/" + name2;
