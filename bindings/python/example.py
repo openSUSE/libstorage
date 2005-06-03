@@ -18,7 +18,7 @@ for disk in disks:
 
     for partitioninfo in partitioninfos:
 
-        print partitioninfo.name,partitioninfo.cylStart,partitioninfo.cylSize
+        print partitioninfo.v.name,partitioninfo.cylStart,partitioninfo.cylSize
 
 
 fscapabilities = LibStorage.FsCapabilities ();
