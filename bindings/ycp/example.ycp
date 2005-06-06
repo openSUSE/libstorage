@@ -14,6 +14,8 @@
 
     void test1 ()
     {
+	y2milestone ("test1");
+
 	list <string> disks = [];
 	LibStorage::StorageInterface::getDisks (o, disks);
 	foreach (string disk, disks, {
@@ -30,6 +32,8 @@
 
     void test2 ()
     {
+	y2milestone ("test2");
+
 	string tmp = "hda1";
 	string mount_point = "";
 	LibStorage::StorageInterface::getMountPoint (o, tmp, mount_point);
@@ -39,6 +43,8 @@
 
     void test3 ()
     {
+	y2milestone ("test3");
+
 	any fscapabilities = LibStorage::FsCapabilities::New ();
 	LibStorage::StorageInterface::getFsCapabilities (o, LibStorage::REISERFS (), fscapabilities);
 	y2milestone ("isExtendable is %1", LibStorage::FsCapabilities::swig_isExtendable_get (fscapabilities));
@@ -47,6 +53,8 @@
 
     void test4 ()
     {
+	y2milestone ("test4");
+
 	string tmp = "hda";
 	integer i1 = LibStorage::StorageInterface::cylinderToKb (o, tmp, 10);
 	y2milestone ("i1 = %1", i1);
@@ -58,6 +66,8 @@
 
     void test5 ()
     {
+	y2milestone ("test5");
+
 	string tmp = "hda1";
 	boolean b1 = true;
 	LibStorage::StorageInterface::getCrypt (o, tmp, b1);
@@ -67,6 +77,8 @@
 
     void test6 ()
     {
+	y2milestone ("test6");
+
 	LibStorage::StorageInterface::setRecursiveRemoval (o, false);
 	boolean b = LibStorage::StorageInterface::getRecursiveRemoval (o);
 	y2milestone ("b = %1", b);
@@ -75,6 +87,8 @@
 
     void test7 ()
     {
+	y2milestone ("test7");
+
 	string tmp = "hda1";
 	integer mb1 = LibStorage::MOUNTBY_LABEL ();
 	// LibStorage::StorageInterface::getMountBy (o, tmp, mb1);
@@ -84,15 +98,15 @@
 
     void test8 ()
     {
+	y2milestone ("test8");
+
 	list <any> containerinfos = [];
 	LibStorage::StorageInterface::getContainer (o, containerinfos);
 
 	foreach (any containerinfo, containerinfos, {
 	    y2milestone ("found container %1", LibStorage::ContainerInfo::swig_name_get (containerinfo));
-	    y2milestone ("of type (any) %1", LibStorage::ContainerInfo::swig_type_get (containerinfo));
-	    // integer type = LibStorage::ContainerInfo::swig_type_get (containerinfo);
-	    integer type = tointeger (LibStorage::ContainerInfo::swig_type_get (containerinfo));
-	    y2milestone ("of type (integer) %1", type);
+	    integer type = LibStorage::ContainerInfo::swig_type_get (containerinfo);
+	    y2milestone ("of type %1", type);
 	});
     }
 
