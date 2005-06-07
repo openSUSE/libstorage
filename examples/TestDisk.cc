@@ -22,7 +22,7 @@ main( int argc_iv, char** argv_ppcv )
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;
     unsigned long cyl = s->kbToCylinder( disk, 500*1024 );
-    ret = s->createPartition( disk, PRIMARY, 1, cyl, dev );
+    ret = s->createPartition( disk, PRIMARY, 0, cyl, dev );
     if( ret ) cerr << "retcode:" << ret << endl;
     cout << dev << endl;
     ret = s->commit();
@@ -35,7 +35,7 @@ main( int argc_iv, char** argv_ppcv )
     if( ret ) cerr << "retcode:" << ret << endl;
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;
-    ret = s->createPartition( disk, PRIMARY, 1, cyl*4, dev );
+    ret = s->createPartition( disk, PRIMARY, 0, cyl*4, dev );
     if( ret ) cerr << "retcode:" << ret << endl;
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;
