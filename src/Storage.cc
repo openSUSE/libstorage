@@ -2253,7 +2253,7 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
     }
 
 void 
-Storage::getContainer( deque<ContainerInfo>& infos )
+Storage::getContainers( deque<ContainerInfo>& infos )
     {
     infos.clear ();
     assertInit();

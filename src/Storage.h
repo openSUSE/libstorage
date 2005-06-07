@@ -151,7 +151,7 @@ class Storage : public storage::StorageInterface
 
 	// functions for interface
 
-        void getContainer( deque<storage::ContainerInfo>& infos );
+        void getContainers( deque<storage::ContainerInfo>& infos );
 	int getDiskInfo( const string& disk, storage::DiskInfo& info);
 	int getLvmVgInfo( const string& name, storage::LvmVgInfo& info);
 	int getEvmsCoInfo( const string& name, storage::EvmsCoInfo& info);

@@ -521,7 +521,7 @@ namespace storage
 	/**
 	 * Query all containers found in system
 	 */
-	virtual void getContainer( deque<ContainerInfo>& infos) = 0;
+	virtual void getContainers( deque<ContainerInfo>& infos) = 0;
 
 	/**
 	 * Query disk info for a disk device
