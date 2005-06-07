@@ -338,7 +338,10 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
                  fs_names[new_fs].c_str() );
     format = val;
     if( !format )
+	{
 	fs = detected_fs;
+	mkfs_opt = "";
+	}
     else
 	{
 	FsCapabilities caps;
@@ -376,6 +379,11 @@ int Volume::changeMount( const string& m )
     else
 	{
 	mp = m;
+	if( m.empty() )
+	    {
+	    orig_mount_by = mount_by = MOUNTBY_DEVICE;
+	    orig_fstab_opt = fstab_opt = "";
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

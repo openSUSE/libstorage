@@ -163,6 +163,7 @@ class Storage : public storage::StorageInterface
 	                       storage::ContainerInfo& cinfo,
 	                       storage::EvmsCoInfo& info );
 	void getVolumes (deque<storage::VolumeInfo>& vlist);
+	int getVolume( const string& device, storage::VolumeInfo& info);
 	int getPartitionInfo( const string& disk, 
 			      deque<storage::PartitionInfo>& plist );
 	int getLvmLvInfo( const string& name, 

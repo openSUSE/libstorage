@@ -1609,11 +1609,11 @@ int Disk::doCreate( Volume* v )
 	    {
 	    cmd_line << std::setprecision(3)
 		     << std::setiosflags(std::ios_base::fixed)
-		     << (double)(p->cylStart()-1)*cylinderToKb(1)/1024
+		     << (double)(p->cylStart())*cylinderToKb(1)/1024
 		     << " ";
 	    cmd_line << std::setprecision(3)
 		     << std::setiosflags(std::ios_base::fixed)
-		     << (double)((p->cylStart()+p->cylSize()-1)*cylinderToKb(1)+1023)/1024;
+		     << (double)((p->cylStart()+p->cylSize())*cylinderToKb(1)+1023)/1024;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;

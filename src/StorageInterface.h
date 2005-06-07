@@ -585,8 +585,19 @@ namespace storage
 
 	/**
 	 * Query all volumes found in system
+	 *
+	 * @param infos list of records that get filled with volume info
 	 */
 	virtual void getVolumes( deque<VolumeInfo>& infos) = 0;
+
+	/**
+	 * Query a volume by device name found in system
+	 *
+	 * @param device device name , e.g. /dev/hda1
+	 * @param info record that gets filled with data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getVolume( const string& device, VolumeInfo& info) = 0;
 
 	/**
 	 * Query infos for partitions of a disk
@@ -679,7 +690,7 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
+	 * @param start cylinder number of partition start (cylinders are numbered starting with 0)
 	 * @param sizeCyl size of partition in disk cylinders
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
@@ -697,7 +708,7 @@ namespace storage
 	 * committed.
 	 *
 	 * @param device device name of partition, e.g. /dev/hda1
-	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
+	 * @param start cylinder number of partition start (cylinders are numbered starting with 0)
 	 * @param sizeCyl size of partition in disk cylinders
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */

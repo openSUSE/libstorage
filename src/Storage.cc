@@ -2278,21 +2278,30 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 	}
     }
 
+int 
+Storage::getVolume( const string& device, VolumeInfo& info )
+    {
+    int ret = 0;
+    VolIterator v;
+    if( findVolume( device, v ))
+	{
+	v->getInfo( info );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    return( ret );
+    }
+
 int Storage::getDiskInfo( const string& disk, DiskInfo& info )
     {
-    y2milestone( "begin disk %s", disk.c_str() );
     int ret = 0;
     assertInit();
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
-	y2milestone( "after findDisk %s", i->name().c_str() );
-	DiskInfo in = info;
-	y2milestone( "after copy" );
-	i->getInfo( in );
-	y2milestone( "after getinfo" );
-	info = in;
-	y2milestone( "after copy" );
+	i->getInfo( info );
 	}
     else
 	ret = STORAGE_DISK_NOT_FOUND;
