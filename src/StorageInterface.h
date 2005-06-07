@@ -211,7 +211,7 @@ namespace storage
 	string fstab_options;
 	string uuid;
 	string label;
-	string mkfsOpt;
+	string mkfs_options;
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;

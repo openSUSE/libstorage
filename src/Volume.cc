@@ -1679,7 +1679,7 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.fs = fs;
     info.format = format;
     info.create = create;
-    info.mkfsOpt = mkfs_opt;
+    info.mkfs_options = mkfs_opt;
     }
 
 
