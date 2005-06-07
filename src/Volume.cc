@@ -1678,6 +1678,8 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.crypt_pwd = crypt_pwd;
     info.fs = fs;
     info.format = format;
+    info.create = create;
+    info.mkfsOpt = mkfs_opt;
     }
 
 

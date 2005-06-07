@@ -51,6 +51,10 @@ class Disk : public Container
 	int createPartition( storage::PartitionType type, string& device );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
+	int changePartitionArea( unsigned nr, unsigned long start, 
+	                         unsigned long size, bool checkRelaxed=false );
+	int nextFreePartition( storage::PartitionType type, unsigned& nr,
+	                       string& device );
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;

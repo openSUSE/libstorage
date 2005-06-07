@@ -181,6 +181,10 @@ class Storage : public storage::StorageInterface
 	int createPartition( const string& disk, storage::PartitionType type, 
 	                     unsigned long start, unsigned long size, 
 			     string& device );
+	int nextFreePartition( const string& disk, storage::PartitionType type,
+	                       unsigned &nr, string& device );
+	int updatePartitionArea( const string& device, 
+				 unsigned long start, unsigned long size );
 	int createPartitionKb( const string& disk, storage::PartitionType type,
 	                       unsigned long long start,
 			       unsigned long long sizek, string& device );
@@ -195,10 +199,12 @@ class Storage : public storage::StorageInterface
 	int destroyPartitionTable( const string& disk, const string& label );
 	string defaultDiskLabel();
 
-	int changeFormatVolume( const string&, bool format, 
+	int changeFormatVolume( const string& device, bool format, 
 	                        storage::FsType fs );
-	int changeMountPoint( const string&, const string& mount );
-	int getMountPoint( const string&, string& mount );
+	int changeLabelVolume( const string& device, const string& label );
+	int changeMkfsOptVolume( const string& device, const string& opts );
+	int changeMountPoint( const string& device, const string& mount );
+	int getMountPoint( const string& device, string& mount );
 	int changeMountBy( const string& device, storage::MountByType mby );
 	int getMountBy( const string& device, storage::MountByType& mby );
 	int changeFstabOptions( const string&, const string& options );

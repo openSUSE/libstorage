@@ -262,6 +262,7 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.volcnt = vp.length();
     info.usedBy = getUsedByType();
     info.usedByName = usedByName();
+    info.readonly = readonly();
     }
 
 

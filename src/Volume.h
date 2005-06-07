@@ -70,7 +70,7 @@ class Volume
 	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 	              encryption!=orig_encryption ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
-	void setMkfsOption( const string& val ) { mkfs_opt=val; }
+	int setMkfsOption( const string& val ) { mkfs_opt=val; return 0; }
 	const std::list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }

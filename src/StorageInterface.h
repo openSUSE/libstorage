@@ -148,6 +148,7 @@ namespace storage
 	string name;
 	UsedByType usedBy;
 	string usedByName;
+	bool readonly;
 	};
 
     /**
@@ -210,10 +211,12 @@ namespace storage
 	string fstab_options;
 	string uuid;
 	string label;
+	string mkfsOpt;
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;
 	bool format;
+	bool create;
 	};
 
     /**
@@ -295,37 +298,34 @@ namespace storage
      */
     enum ErrorCodes
     {
-	DISK_CREATE_PARTITION_OVERLAPS_EXISTING = -1000,
-	DISK_CREATE_PARTITION_EXCEEDS_DISK = -1001,
+	DISK_PARTITION_OVERLAPS_EXISTING = -1000,
+	DISK_PARTITION_EXCEEDS_DISK = -1001,
 	DISK_CREATE_PARTITION_EXT_ONLY_ONCE = -1002,
 	DISK_CREATE_PARTITION_EXT_IMPOSSIBLE = -1003,
-	DISK_CREATE_PARTITION_NO_FREE_NUMBER = -1004,
+	DISK_PARTITION_NO_FREE_NUMBER = -1004,
 	DISK_CREATE_PARTITION_INVALID_VOLUME = -1005,
 	DISK_CREATE_PARTITION_INVALID_TYPE = -1006,
 	DISK_CREATE_PARTITION_PARTED_FAILED = -1007,
-	DISK_CREATE_PARTITION_NOT_FOUND = -1008,
+	DISK_PARTITION_NOT_FOUND = -1008,
 	DISK_CREATE_PARTITION_LOGICAL_NO_EXT = -1009,
-	DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT = -1010,
+	DISK_PARTITION_LOGICAL_OUTSIDE_EXT = -1010,
 	DISK_SET_TYPE_INVALID_VOLUME = -1011,
 	DISK_SET_TYPE_PARTED_FAILED = -1012,
 	DISK_SET_LABEL_PARTED_FAILED = -1013,
-	DISK_REMOVE_PARTITION_NOT_FOUND = -1014,
-	DISK_REMOVE_PARTITION_PARTED_FAILED = -1015,
-	DISK_REMOVE_PARTITION_INVALID_VOLUME = -1016,
-	DISK_REMOVE_PARTITION_LIST_ERASE = -1017,
-	DISK_CHANGE_PARTITION_ID_NOT_FOUND = -1018,
-	DISK_DESTROY_TABLE_INVALID_LABEL = -1019,
-	DISK_CREATE_PARTITION_ZERO_SIZE = -1020,
-	DISK_CHANGE_READONLY = -1021,
-	DISK_RESIZE_PARTITION_INVALID_VOLUME = -1022,
-	DISK_RESIZE_PARTITION_PARTED_FAILED = -1023,
-	DISK_RESIZE_PARTITION_NOT_FOUND = -1024,
-	DISK_RESIZE_NO_SPACE = -1025,
-	DISK_CHECK_RESIZE_INVALID_VOLUME = -1026,
-	DISK_REMOVE_PARTITION_CREATE_NOT_FOUND = -1027,
-	DISK_COMMIT_NOTHING_TODO = -1028,
-	DISK_CREATE_PARTITION_NO_SPACE = -1029,
-	DISK_REMOVE_USED_BY = -1030,
+	DISK_REMOVE_PARTITION_PARTED_FAILED = -1014,
+	DISK_REMOVE_PARTITION_INVALID_VOLUME = -1015,
+	DISK_REMOVE_PARTITION_LIST_ERASE = -1016,
+	DISK_DESTROY_TABLE_INVALID_LABEL = -1017,
+	DISK_PARTITION_ZERO_SIZE = -1018,
+	DISK_CHANGE_READONLY = -1019,
+	DISK_RESIZE_PARTITION_INVALID_VOLUME = -1020,
+	DISK_RESIZE_PARTITION_PARTED_FAILED = -1021,
+	DISK_RESIZE_NO_SPACE = -1022,
+	DISK_CHECK_RESIZE_INVALID_VOLUME = -1023,
+	DISK_REMOVE_PARTITION_CREATE_NOT_FOUND = -1024,
+	DISK_COMMIT_NOTHING_TODO = -1025,
+	DISK_CREATE_PARTITION_NO_SPACE = -1026,
+	DISK_REMOVE_USED_BY = -1027,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -350,6 +350,7 @@ namespace storage
 	STORAGE_EVMS_CO_EXISTS = -2020,
 	STORAGE_EVMS_CO_NOT_FOUND = -2021,
 	STORAGE_EVMS_INVALID_DEVICE = -2022,
+	STORAGE_CHANGE_AREA_INVALID_CONTAINER = -2023,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -691,6 +692,33 @@ namespace storage
 				     string& device ) = 0;
 
 	/**
+	 * Update area used by a new partition. Units given in disk cylinders.
+	 * This function can only be used with a partition created but not yet
+	 * committed.
+	 *
+	 * @param device device name of partition, e.g. /dev/hda1
+	 * @param start cylinder number of partition start (cylinders are numbered starting with 1)
+	 * @param sizeCyl size of partition in disk cylinders
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int updatePartitionArea( const string& device,
+	                                 unsigned long start, 
+					 unsigned long size ) = 0;
+
+
+	/**
+	 * Determine the device name of the next created partition 
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param type type of partition to create, e.g. primary or extended
+	 * @param nr is set to the number of the next created partition
+	 * @param device is set to the device name of the next created partition
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int nextFreePartition( const string& disk, PartitionType type,
+	                               unsigned &nr, string& device ) = 0;
+
+	/**
 	 * Create a new partition. Units given in Kilobytes.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
@@ -798,6 +826,24 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeFormatVolume( const string& device, bool format, FsType fs ) = 0;
+
+	/**
+	 * Sets the value of the filesystem label.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param label value of the label
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeLabelVolume( const string& device, const string& label ) = 0;
+
+	/**
+	 * Sets the value of mkfs options.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param label value of the label
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMkfsOptVolume( const string& device, const string& opts ) = 0;
 
 	/**
 	 * Changes the mount point of a volume

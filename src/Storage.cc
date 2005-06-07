@@ -669,6 +669,26 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
     }
 
 int
+Storage::nextFreePartition( const string& disk, PartitionType type,
+                            unsigned& nr, string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "disk:%s type:%u", disk.c_str(), type );
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+	{
+	ret = i->nextFreePartition( type, nr, device );
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
+    return( ret );
+    }
+
+int
 Storage::createPartitionMax( const string& disk, PartitionType type,
                              string& device )
     {
@@ -758,6 +778,44 @@ Storage::removePartition( const string& partition )
 	else
 	    {
 	    ret = STORAGE_REMOVE_PARTITION_INVALID_CONTAINER;
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::updatePartitionArea( const string& partition, unsigned long start, 
+                              unsigned long size )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "partition:%s start:%ld size:%ld", partition.c_str(), 
+                 start, size );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( partition, cont, vol ) && cont->type()==DISK )
+	{
+	Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	if( disk!=NULL )
+	    {
+	    ret = disk->changePartitionArea( vol->nr(), start, size );
+	    }
+	else
+	    {
+	    ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
 	    }
 	}
     else
@@ -872,6 +930,62 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     }
 
 int
+Storage::changeLabelVolume( const string& device, const string& label )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s label:%s", device.c_str(), label.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setLabel( label );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::changeMkfsOptVolume( const string& device, const string& opts )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s opts:%s", device.c_str(), opts.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setMkfsOption( opts );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::changeMountPoint( const string& device, const string& mount )
     {
     int ret = 0;
@@ -895,7 +1009,7 @@ Storage::changeMountPoint( const string& device, const string& mount )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d mount:%s", ret, mount.c_str() );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -2166,12 +2280,19 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 
 int Storage::getDiskInfo( const string& disk, DiskInfo& info )
     {
+    y2milestone( "begin disk %s", disk.c_str() );
     int ret = 0;
     assertInit();
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
-	i->getInfo( info );
+	y2milestone( "after findDisk %s", i->name().c_str() );
+	DiskInfo in = info;
+	y2milestone( "after copy" );
+	i->getInfo( in );
+	y2milestone( "after getinfo" );
+	info = in;
+	y2milestone( "after copy" );
 	}
     else
 	ret = STORAGE_DISK_NOT_FOUND;

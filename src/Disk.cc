@@ -910,7 +910,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 		ret = createPartition( t, i->start(), cylLen, device, 
 				       checkRelaxed );
 	    else
-		ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
+		ret = DISK_PARTITION_NO_FREE_NUMBER;
 	    }
 	else
 	    ret = DISK_CREATE_PARTITION_NO_SPACE;
@@ -950,11 +950,31 @@ int Disk::createPartition( PartitionType type, string& device )
 	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(), 
 	                           i->len(), device, true );
 	else
-	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
+	    ret = DISK_PARTITION_NO_FREE_NUMBER;
 	}
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
     y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
+int Disk::nextFreePartition( PartitionType type, unsigned& nr, string& device )
+    {
+    int ret = 0;
+    device = "";
+    nr = 0;
+    unsigned number = availablePartNumber( type );
+    if( number==0 )
+	{
+	ret = DISK_PARTITION_NO_FREE_NUMBER;
+	}
+    else
+	{
+	Partition * p = new Partition( *this, number, 0, 0, 1, type, "" );
+	device = p->device();
+	nr = p->nr();
+	delete( p );
+	}
     return( ret );
     }
 
@@ -984,11 +1004,11 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     if( ret==0 && (r.end() > cylinders()+fuzz) )
 	{
 	y2milestone( "too large for disk cylinders %lu", cylinders() );
-	ret = DISK_CREATE_PARTITION_EXCEEDS_DISK;
+	ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
     if( ret==0 && len==0 )
 	{
-	ret = DISK_CREATE_PARTITION_ZERO_SIZE;
+	ret = DISK_PARTITION_ZERO_SIZE;
 	}
     if( ret==0 && ptype==LOGICAL && ext.empty() )
 	{
@@ -1007,14 +1027,14 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    {
 	    y2war( "overlaps r:" << r << " p:" << i->region() << 
 	           " inter:" << i->region().intersect(r) );
-	    ret = DISK_CREATE_PARTITION_OVERLAPS_EXISTING;
+	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
     if( ret==0 && ptype==LOGICAL && !ext.begin()->contains( r, fuzz ))
 	{
 	y2war( "outside ext r:" <<  r << " ext:" << ext.begin()->region() <<
 	       "inter:" << ext.begin()->region().intersect(r) );
-	ret = DISK_CREATE_PARTITION_LOGICAL_OUTSIDE_EXT;
+	ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
     if( ret==0 && ptype==EXTENDED )
 	{
@@ -1030,7 +1050,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	number = availablePartNumber( ptype );
 	if( number==0 )
 	    {
-	    ret = DISK_CREATE_PARTITION_NO_FREE_NUMBER;
+	    ret = DISK_PARTITION_NO_FREE_NUMBER;
 	    }
 	}
     if( ret==0 )
@@ -1046,6 +1066,82 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     return( ret );
     }
 
+int Disk::changePartitionArea( unsigned nr, unsigned long start,
+			       unsigned long len, bool checkRelaxed )
+    {
+    y2milestone( "begin nr %u at %ld len %ld relaxed:%d", nr, start, len, 
+                 checkRelaxed );
+    int ret = 0;
+    Region r( start, len );
+    unsigned fuzz = checkRelaxed ? 2 : 0;
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
+    PartPair p = partPair( notDeleted );
+    PartIter part = p.begin();
+    while( ret==0 && part!=p.end() && part->nr()!=nr)
+	{
+	++part;
+	}
+    if( ret==0 && part==p.end() )
+	{
+	ret = DISK_PARTITION_NOT_FOUND;
+	}
+    if( ret==0 && r.end() > cylinders()+fuzz )
+	{
+	y2milestone( "too large for disk cylinders %lu", cylinders() );
+	ret = DISK_PARTITION_EXCEEDS_DISK;
+	}
+    if( ret==0 && len==0 )
+	{
+	ret = DISK_PARTITION_ZERO_SIZE;
+	}
+    if( ret==0 && part->type()==LOGICAL )
+	{
+	PartPair ext = partPair(isExtended);
+	p = partPair( notDeletedLog );
+	PartIter i = p.begin();
+	while( i!=p.end() && (i==part||!i->intersectArea( r, fuzz )) )
+	    {
+	    ++i;
+	    }
+	if( i!=p.end() )
+	    {
+	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	           " inter:" << i->region().intersect(r) );
+	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
+	    }
+	if( ret==0 && !ext.begin()->contains( r, fuzz ))
+	    {
+	    y2war( "outside ext r:" <<  r << " ext:" << ext.begin()->region() <<
+		   "inter:" << ext.begin()->region().intersect(r) );
+	    ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
+	    }
+	}
+    if( ret==0 && part->type()!=LOGICAL )
+	{
+	PartIter i = p.begin();
+	while( i!=p.end() && 
+	       (i==part || i->nr()>max_primary || !i->intersectArea( r, fuzz )))
+	    {
+	    ++i;
+	    }
+	if( i!=p.end() )
+	    {
+	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	           " inter:" << i->region().intersect(r) );
+	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
+	    }
+	}
+    if( ret==0 )
+	{
+	part->changeRegion( start, len, cylinderToKb(len) );
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
 int Disk::removePartition( unsigned nr )
     {
     y2milestone( "begin nr %u", nr );
@@ -1058,7 +1154,7 @@ int Disk::removePartition( unsigned nr )
 	}
     if( i==p.end() )
 	{
-	ret = DISK_REMOVE_PARTITION_NOT_FOUND;
+	ret = DISK_PARTITION_NOT_FOUND;
 	}
     if( readonly() )
 	{
@@ -1110,7 +1206,7 @@ int Disk::removePartition( unsigned nr )
 	    while( ret==0 && vi!=l.end() )
 		{
 		if( !removeFromList( *vi ))
-		    ret = DISK_REMOVE_PARTITION_NOT_FOUND;
+		    ret = DISK_PARTITION_NOT_FOUND;
 		++vi;
 		}
 	    }
@@ -1175,7 +1271,7 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
 	}
     if( i==p.end() )
 	{
-	ret = DISK_CHANGE_PARTITION_ID_NOT_FOUND;
+	ret = DISK_PARTITION_NOT_FOUND;
 	}
     if( readonly() )
 	{
@@ -1527,7 +1623,7 @@ int Disk::doCreate( Volume* v )
 	    {
 	    p->setCreated( false );
 	    if( !getPartedValues( p ))
-		ret = DISK_CREATE_PARTITION_NOT_FOUND;
+		ret = DISK_PARTITION_NOT_FOUND;
 	    }
 	if( ret==0 && getStorage()->getZeroNewPartitions() )
 	    {
@@ -1704,7 +1800,7 @@ int Disk::doResize( Volume* v )
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )
-		    ret = DISK_RESIZE_PARTITION_NOT_FOUND;
+		    ret = DISK_PARTITION_NOT_FOUND;
 		}
 	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(), 
 	                 p->needShrink()||p->needExtend() );
