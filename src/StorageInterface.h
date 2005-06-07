@@ -619,7 +619,7 @@ namespace storage
 				 deque<EvmsInfo>& plist ) = 0;
 
 	/**
-	 * Query infos for sofware raid devices in system 
+	 * Query infos for software raid devices in system
 	 *
 	 * @param plist list of records that get filled with MD specific info
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -643,13 +643,13 @@ namespace storage
 	virtual int getDmInfo( deque<DmInfo>& plist ) = 0;
 
 	/**
-	 * Query all attatched disks.
+	 * Query all attached disks.
 	 */
 	virtual bool getDisks (deque<string>& disks) = 0;
 
 
 	/**
-	 * Query partitions on all attatched disks.
+	 * Query partitions on all attached disks.
 	 */
 	virtual bool getPartitions (deque<PartitionInfo>& partitioninfos) = 0;
 
@@ -667,7 +667,7 @@ namespace storage
 
 	/**
 	 * Print detected entities on a stream.
-	 * Exact output format may change between releses.
+	 * Exact output format may change between releases.
 	 * Function mainly meant for debugging purposes.
 	 *
 	 * @param str stream to print data to
@@ -811,9 +811,10 @@ namespace storage
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
 	/**
-	 * Returns the default disk label of the architecture of the
+	 * Query the default disk label of the architecture of the
 	 * machine (e.g. msdos for ix86, gpt for ia64, ...)
 	 *
+	 * @return default disk label of the architecture
 	 */
 	virtual string defaultDiskLabel() = 0;
 
@@ -822,7 +823,7 @@ namespace storage
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param format flag if format is set on or off
-	 * @param fs type of filesystem to create if fromat is true
+	 * @param fs type of filesystem to create if format is true
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeFormatVolume( const string& device, bool format, FsType fs ) = 0;
@@ -989,7 +990,6 @@ namespace storage
 	 *
 	 * @return value of the flag for recursive removal
 	 */
-
 	virtual bool getRecursiveRemoval() = 0;
 
 	/**
@@ -1005,7 +1005,6 @@ namespace storage
 	 *
 	 * @param val flag if newly created partitions should be zeroed
 	 */
-
 	virtual void setZeroNewPartitions( bool val ) = 0;
 
 	/**
@@ -1013,7 +1012,6 @@ namespace storage
 	 *
 	 * @return value of the flag for zeroing newly created partitions
 	 */
-
 	virtual bool getZeroNewPartitions() = 0;
 
 	/**
@@ -1030,6 +1028,7 @@ namespace storage
 	 *
 	 * @param name name of volume group, must not contain blanks, colons
 	 * and shell special characters (e.g. system)
+	 * @param peSizeK physical extent size in kilobytes
 	 * @param lvm1 flag if lvm1 compatible format should be used
 	 * @param devs list with physical devices to add to that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1104,6 +1103,7 @@ namespace storage
 	 *
 	 * @param name name of container, must not contain blanks, colons
 	 * and shell special characters (e.g. system)
+	 * @param peSizeK physical extent size in kilobytes
 	 * @param lvm1 flag if lvm1 compatible format should be used
 	 * @param devs list with physical devices to add to that volume group
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1113,7 +1113,7 @@ namespace storage
 					 const deque<string>& devs ) = 0;
 
 	/**
-	 * Remove a EVMS container. If the contaier contains
+	 * Remove a EVMS container. If the container contains
 	 * logical volumes, these are automatically also removed.
 	 *
 	 * @param name name of container
@@ -1318,15 +1318,6 @@ namespace storage
 
 #if 0
 
-	virtual bool reomveEvmsContainer (...) = 0;
-	virtual bool extendEvmsContainer (...) = 0;
-	virtual bool reduceEvmsContainer (...) = 0;
-
-	virtual bool createEvmsVolume (...) = 0;
-	virtual bool removeEvmsVolume (...) = 0;
-	virtual bool resizeEvmsVolume (...) = 0;
-
-
 	/**
 	 * Create a backup of the current state.
 	 */
@@ -1347,7 +1338,7 @@ namespace storage
 	/**
 	 * With the function setCacheChanges you can turn the caching mode on
 	 * and off.  Turning of caching mode will cause all changes done so
-	 * far to be commited upto the next modifying function.
+	 * far to be committed upto the next modifying function.
 	 */
 	virtual void setCacheChanges (bool cache) = 0;
 
