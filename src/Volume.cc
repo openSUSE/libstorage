@@ -621,6 +621,10 @@ int Volume::doFormat()
 	if( c.retcode()!=0 )
 	    ret = VOLUME_TUNE2FS_FAILED;
 	}
+    if( ret==0 && !orig_mp.empty() )
+	{
+	ret = doFstabUpdate();
+	}
     if( ret==0 )
 	{
 	format = false;
@@ -647,10 +651,6 @@ int Volume::doFormat()
 	int r = mount( orig_mp );
 	ret = (ret==0)?r:ret;
 	}
-    if( ret==0 && !orig_mp.empty() )
-	{
-	ret = doFstabUpdate();
-	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -659,7 +659,7 @@ int Volume::umount( const string& mp )
     {
     SystemCmd cmd;
     y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
-    string cmdline = ((fs != SWAP)?"umount ":"swapoff ") + mountDevice();
+    string cmdline = ((detected_fs != SWAP)?"umount ":"swapoff ") + mountDevice();
     int ret = cmd.execute( cmdline );
     if( fs != SWAP && ret != 0 && !mp.empty() )
 	{
@@ -671,6 +671,20 @@ int Volume::umount( const string& mp )
     else 
 	is_mounted = false;
     y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Volume::loUnsetup()
+    {
+    int ret=0;
+    if( is_loop && loop_active )
+	{
+	SystemCmd c( "losetup -d " + loop_dev );
+	if( c.retcode()!=0 )
+	    ret = VOLUME_LOUNSETUP_FAILED;
+	else
+	    loop_active = false;
+	}
     return( ret );
     }
 
@@ -886,7 +900,7 @@ int Volume::setEncryption( bool val )
 	    {
 	    if( !loop_dev.empty() && loop_active )
 		{
-		SystemCmd c( "losetup -d " + loop_dev );
+		loUnsetup();
 		loop_dev.erase();
 		fstab_loop_dev = loop_dev;
 		}
@@ -1088,7 +1102,7 @@ EncryptType Volume::detectLoopEncryption()
     is_loop = true;
     do
 	{
-	c.execute( "losetup -d " + loop_dev );
+	loUnsetup();
 	c.execute( getLosetupCmd( try_order[pos], fname ));
 	if( c.retcode()==0 )
 	    {
@@ -1138,7 +1152,7 @@ EncryptType Volume::detectLoopEncryption()
 	loop_active = false;
 	ret = encryption = orig_encryption = try_order[pos];
 	}
-    c.execute( "losetup -d " + loop_dev );
+    loUnsetup();
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
     y2milestone( "ret:%s", encTypeString(ret).c_str() );
@@ -1338,9 +1352,7 @@ int Volume::prepareRemove()
 	}
     if( is_loop && loop_active )
 	{
-	SystemCmd c( "losetup -d " + loop_dev );
-	if( c.retcode()!=0 )
-	    ret = VOLUME_LOUNSETUP_FAILED;
+	loUnsetup();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -1452,7 +1464,13 @@ int Volume::doFstabUpdate()
 	    if( fstab_opt!=orig_fstab_opt )
 		{
 		changed = true;
-		che.opts = splitString( fstab_opt, "," );
+		if( fstab_opt.empty() )
+		    {
+		    che.opts.clear();
+		    che.opts.push_back( is_loop?"noatime":"defaults" );
+		    }
+		else
+		    che.opts = splitString( fstab_opt, "," );
 		}
 	    if( mount_by!=orig_mount_by || (format && mount_by==MOUNTBY_UUID) ||
 	        (orig_label!=label && mount_by==MOUNTBY_LABEL) )
@@ -1464,6 +1482,13 @@ int Volume::doFstabUpdate()
 		{
 		changed = true;
 		che.fs = fs_names[fs];
+		if( fs==SWAP )
+		    che.freq = che.passno = 0;
+		else
+		    {
+		    che.freq = 1;
+		    che.passno = (mp=="/") ? 1 : 2;
+		    }
 		}
 	    if( encryption != orig_encryption )
 		{
@@ -1478,6 +1503,7 @@ int Volume::doFstabUpdate()
 		    cont->getStorage()->showInfoCb( 
 			fstab->updateText( true, inCrypto(), che.mount ));
 		    }
+		y2mil( "update fstab: " << che );
 		ret = fstab->updateEntry( che );
 		}
 	    }
@@ -1502,7 +1528,7 @@ int Volume::doFstabUpdate()
 		if( is_loop )
 		    fst = "noatime";
 		else
-		    fst = (mp=="swap") ? "pri=42" : "defaults";
+		    fst = "defaults";
 		}
 	    che.opts = splitString( fst, "," );
 	    che.mount = mp;
@@ -1688,6 +1714,7 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.format = format;
     info.create = create;
     info.mkfs_options = mkfs_opt;
+    info.is_mounted = is_mounted;
     }
 
 

@@ -150,7 +150,14 @@ string Evms::formatText( bool doing ) const
 	{
 	if( !mp.empty() )
 	    {
-	    if( encryption==ENC_NONE )
+	    if( mp=="swap" )
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Format EVMS volume %1$s %2$s for swap"),
+			       dev.c_str(), sizeString().c_str() );
+		}
+	    else if( encryption==ENC_NONE )
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 		// %2$s is replaced by size (e.g. 623.5 MB)

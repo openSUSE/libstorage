@@ -68,9 +68,7 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    {
 	    VolPair p = volPair( stageCreate );
 	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
-		{
 		vol.push_back( &(*i) );
-		}
 	    if( created() )
 		col.push_back( this );
 	    }
@@ -93,7 +91,8 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    break;
 	}
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+	y2milestone( "ret:%d stage:%d col:%zd vol:%zd", ret, stage,
+	             col.size(), vol.size());
     return( ret );
     }
 
@@ -101,19 +100,20 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
     {
     y2milestone( "name:%s stage %d vol:%s", name().c_str(), stage,
                  vol->name().c_str() );
+    y2mil( "vol:" << *vol );
     int ret = 0;
     switch( stage )
 	{
 	case DECREASE:
 	    if( vol->deleted() )
 		ret = doRemove( vol );
-	    else
+	    else if( vol->needShrink() )
 		ret = doResize( vol );
 	    break;
 	case INCREASE:
 	    if( vol->created() )
 		ret = doCreate( vol );
-	    else
+	    else if( vol->needExtend() )
 		ret = doResize( vol );
 	    break;
 	case FORMAT:

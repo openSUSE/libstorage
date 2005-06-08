@@ -217,6 +217,7 @@ namespace storage
 	FsType fs;
 	bool format;
 	bool create;
+	bool is_mounted;
 	};
 
     /**
@@ -1363,6 +1364,36 @@ namespace storage
 	 * mode.
 	 */
 	virtual int commit() = 0;
+
+	/**
+	 * Determine if the given device is known and mounted somewhere
+	 *
+	 * @param device device name to check (checks also all alias names)
+	 * @param mp set to current mount moint if mounted
+	 * @return bool that is true if device is mounted
+	 */
+	virtual bool checkDeviceMounted( const string& device, string& mp ) = 0;
+
+	/**
+	 * Umount the given device and do what is necessary to remove 
+	 * underlying volume (e.g. do losetup -d if loop is set up)
+	 * The function umounts at once, /etc/fstab is unaffected
+	 *
+	 * @param device device name to umount
+	 * @return bool if umount succeeded 
+	 */
+	virtual bool umountDevice( const string& device ) = 0;
+
+	/**
+	 * Mount the given device and do what is necessary to access 
+	 * volume (e.g. do losetup if loop is set up)
+	 * The function mounts at once, /etc/fstab is unaffected
+	 *
+	 * @param device device name to mount
+	 * @param mp mount point to mount to
+	 * @return bool if mount succeeded 
+	 */
+	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
     };
 

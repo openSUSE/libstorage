@@ -415,6 +415,8 @@ int EtcFstab::flush()
 			    }
 			(*cur)[lineno] = line;
 			}
+		    i->old = i->nnew;
+		    i->op = Entry::NONE;
 		    }
 		else
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;

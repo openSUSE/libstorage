@@ -45,6 +45,7 @@ class Volume
 	int changeMountBy( storage::MountByType mby );
 	virtual int changeMount( const string& m );
 	bool loop() const { return is_loop; }
+	bool loopActive() const { return( is_loop&&loop_active ); }
 	bool needLosetup() const { return is_loop&&!loop_active; }
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
@@ -98,6 +99,7 @@ class Volume
 
 	int prepareRemove();
 	int umount( const string& mp="" );
+	int loUnsetup();
 	int mount( const string& mp="" );
 	int canResize( unsigned long long newSizeK ) const;
 	int doMount();

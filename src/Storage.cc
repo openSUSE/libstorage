@@ -2976,4 +2976,62 @@ void Storage::rootMounted()
 	}
     }
 
+bool
+Storage::checkDeviceMounted( const string& device, string& mp )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+    VolIterator vol;
+    if( findVolume( device, vol ) )
+	{
+	ProcMounts mountData;
+	mp = mountData.getMount( vol->mountDevice() );
+	if( mp.empty() )
+	    mp = mountData.getMount( vol->altNames() );
+	ret = !mp.empty();
+	}
+    y2milestone( "ret:%d mp:%s", ret, mp.c_str() );
+    return( ret );
+    }
+
+bool
+Storage::umountDevice( const string& device )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+    VolIterator vol;
+    if( !readonly && findVolume( device, vol ) )
+	{
+	if( vol->umount()==0 && vol->loUnsetup()==0 )
+	    {
+	    ret = true;
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool
+Storage::mountDevice( const string& device, const string& mp )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "device:%s mp:%s", device.c_str(), mp.c_str() );
+    VolIterator vol;
+    if( !readonly && findVolume( device, vol ) )
+	{
+	if( vol->needLosetup() && vol->doLosetup() )
+	    {
+	    ret = vol->mount( mp )==0;
+	    if( !ret )
+		vol->loUnsetup();
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+
 Storage::SkipDeleted Storage::SkipDel;

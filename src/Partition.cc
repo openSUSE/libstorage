@@ -321,7 +321,14 @@ string Partition::formatText( bool doing ) const
 	string d = dev.substr( 5 );
 	if( !mp.empty() )
 	    {
-	    if( encryption==ENC_NONE )
+	    if( mp=="swap" )
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Format partition %1$s %2$s for swap"),
+			       d.c_str(), sizeString().c_str() );
+		}
+	    else if( encryption==ENC_NONE )
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
@@ -394,7 +401,7 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
         {
 	list<commitAction*>::iterator last = l.end();
 	--last;
-	if( (*last)->stage>INCREASE )
+	if( (*last)->stage>MOUNT )
 	    l.erase( last );
 	else
 	    change_id = false;

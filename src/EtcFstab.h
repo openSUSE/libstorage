@@ -36,7 +36,7 @@ struct FstabEntry
 
 inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
     {
-    s << " device:" << v.device 
+    s << "device:" << v.device 
       << " dentry:" << v.dentry << " mount:" << v.mount 
       << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
@@ -89,7 +89,7 @@ inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
 
 inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
     {
-    s << " device:" << v.device 
+    s << "device:" << v.device 
       << " dentry:" << v.dentry << " mount:" << v.mount 
       << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;

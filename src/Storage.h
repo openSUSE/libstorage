@@ -222,6 +222,9 @@ class Storage : public storage::StorageInterface
 	bool getZeroNewPartitions() { return zeroNewPartitions; }
 	int removeVolume( const string& device );
 	int removeUsing( Volume* vol );
+	bool checkDeviceMounted( const string& device, string& mp );
+	bool umountDevice( const string& device );
+	bool mountDevice( const string& device, const string& mp );
 
 	int createLvmVg( const string& name, unsigned long long peSizeK,
 	                 bool lvm1, const deque<string>& devs );
