@@ -16,16 +16,21 @@
     {
 	y2milestone ("test1");
 
-	list <string> disks = [];
-	LibStorage::StorageInterface::getDisks (o, disks);
-	foreach (string disk, disks, {
-	    y2milestone ("found disk %1", disk);
+	list <any> containers = [];
+	LibStorage::StorageInterface::getContainers (o, containers);
+	foreach (any container, containers, {
 
-	    list<any> partitioninfos = [];
-	    LibStorage::StorageInterface::getPartitionsOfDisk (o, disk, partitioninfos);
-	    foreach (any partitioninfo, partitioninfos, {
-		y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_nr_get (partitioninfo));
-	    });
+	    string name = LibStorage::ContainerInfo::swig_name_get (container);
+	    y2milestone ("found containers %1", name);
+
+	    if (LibStorage::ContainerInfo::swig_type_get (container) == LibStorage::DISK ())
+	    {
+		list<any> partitioninfos = [];
+		LibStorage::StorageInterface::getPartitionInfo (o, name, partitioninfos);
+		foreach (any partitioninfo, partitioninfos, {
+		    y2milestone ("found partition %1", LibStorage::PartitionInfo::swig_nr_get (partitioninfo));
+		});
+	    }
 	});
     }
 
