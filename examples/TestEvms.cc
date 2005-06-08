@@ -78,7 +78,7 @@ main( int argc_iv, char** argv_ppcv )
     string device;
     deque<string> devs;
     deque<PartitionInfo> infos;
-    s->getPartitionsOfDisk( disk, infos );
+    s->getPartitionInfo( disk, infos );
     bool lvm1 = false;
     for( deque<PartitionInfo>::const_iterator i=infos.begin(); i!=infos.end(); ++i )
 	if( i->partitionType!=EXTENDED && i->nr<16 )

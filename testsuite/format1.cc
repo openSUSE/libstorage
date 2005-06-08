@@ -15,7 +15,7 @@ void
 print_partitions (const string& disk)
 {
     deque<PartitionInfo> partitioninfos;
-    s->getPartitionsOfDisk (disk, partitioninfos);
+    s->getPartitionInfo (disk, partitioninfos);
     for (deque<PartitionInfo>::iterator i = partitioninfos.begin ();
 	 i != partitioninfos.end(); i++)
     {

@@ -655,24 +655,6 @@ namespace storage
 	virtual int getDmInfo( deque<DmInfo>& plist ) = 0;
 
 	/**
-	 * Query all attached disks.
-	 */
-	virtual bool getDisks (deque<string>& disks) = 0;
-
-
-	/**
-	 * Query partitions on all attached disks.
-	 */
-	virtual bool getPartitions (deque<PartitionInfo>& partitioninfos) = 0;
-
-
-	/**
-	 * Query partitions on a single disks.
-	 */
-	virtual bool getPartitionsOfDisk (const string& disk, deque<PartitionInfo>& partitioninfos) = 0;
-
-
-	/**
 	 * Query capabilities of a filesystem type.
 	 */
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;

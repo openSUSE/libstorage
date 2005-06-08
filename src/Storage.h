@@ -174,9 +174,6 @@ class Storage : public storage::StorageInterface
 	int getDmInfo( deque<storage::DmInfo>& plist );
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 
-	bool getDisks (deque<string>& disks);
-	bool getPartitions (deque<storage::PartitionInfo>& partitioninfos);
-	bool getPartitionsOfDisk (const string& disk, deque<storage::PartitionInfo>& partitioninfos);
 	bool getFsCapabilities( storage::FsType fstype, 
 	                        storage::FsCapabilities& fscapabilities);
 	int createPartition( const string& disk, storage::PartitionType type, 

@@ -21,19 +21,20 @@ main (int argc, char** argv)
     initDefaultLogger();
     StorageInterface* s = createStorageInterface (true, false, true);
 
-    deque<string> disks;
-    if (!s->getDisks (disks))
-    {
-	cerr << "getDisks failed\n";
-	exit (EXIT_FAILURE);
-    }
+    deque<ContainerInfo> containers;
+    s->getContainers (containers);
 
-    for (deque<string>::iterator i1 = disks.begin (); i1 != disks.end(); i1++)
+    for (deque<ContainerInfo>::iterator i1 = containers.begin ();
+	 i1 != containers.end(); i1++)
     {
-	cout << "Found Disk " << *i1 << '\n';
+	cout << "found container " << i1->name << '\n';
+
+	switch (i1->type)
+    {
+	    case DISK: {
 
 	deque<PartitionInfo> partitions;
-	if (!s->getPartitionsOfDisk (*i1, partitions))
+		if (s->getPartitionInfo (i1->name, partitions) != 0)
 	{
 	    cerr << "getPartitions failed\n";
 	    exit (EXIT_FAILURE);
@@ -64,6 +65,10 @@ main (int argc, char** argv)
 		case FSNONE: cout << "NONE"; break;
 	    }
 	    cout << '\n';
+	}
+
+	    } break;
+
 	}
 
 	cout << '\n';

@@ -2328,6 +2328,7 @@ int Storage::getPartitionInfo( const string& disk,
 			       deque<storage::PartitionInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
@@ -2379,6 +2380,7 @@ int Storage::getLvmLvInfo( const string& name,
 			   deque<storage::LvmLvInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     LvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
@@ -2430,6 +2432,7 @@ int Storage::getEvmsInfo( const string& name,
 			  deque<storage::EvmsInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     EvmsCoIterator i = findEvmsCo( name );
     if( i != evCoEnd() )
@@ -2450,6 +2453,7 @@ int Storage::getEvmsInfo( const string& name,
 int Storage::getMdInfo( deque<storage::MdInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     ConstMdPair p = mdPair(Md::notDeleted);
     for( ConstMdIterator i = p.begin(); i != p.end(); ++i )
@@ -2464,6 +2468,7 @@ int Storage::getMdInfo( deque<storage::MdInfo>& plist )
 int Storage::getLoopInfo( deque<storage::LoopInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     ConstLoopPair p = loopPair(Loop::notDeleted);
     for( ConstLoopIterator i = p.begin(); i != p.end(); ++i )
@@ -2478,6 +2483,7 @@ int Storage::getLoopInfo( deque<storage::LoopInfo>& plist )
 int Storage::getDmInfo( deque<storage::DmInfo>& plist )
     {
     int ret = 0;
+    plist.clear();
     assertInit();
     ConstDmPair p = dmPair(Dm::notDeleted);
     for( ConstDmIterator i = p.begin(); i != p.end(); ++i )
@@ -2488,57 +2494,6 @@ int Storage::getDmInfo( deque<storage::DmInfo>& plist )
 	}
     return( ret );
     }
-
-bool
-Storage::getDisks (deque<string>& disks)
-{
-    disks.clear ();
-    assertInit();
-
-    for (ConstDiskIterator i = diskBegin(); i != diskEnd(); ++i)
-	disks.push_back (i->device());
-
-    return true;
-}
-
-
-bool
-Storage::getPartitionsOfDisk (const string& disk, deque<PartitionInfo>& partitioninfos)
-{
-    partitioninfos.clear ();
-    assertInit();
-    DiskIterator i = findDisk( disk );
-
-    if( i != dEnd() )
-    {
-	Disk::PartPair p = i->partPair (Disk::notDeleted);
-
-	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
-	    {
-	    partitioninfos.push_back( PartitionInfo() );
-	    i2->getInfo( partitioninfos.back() );
-	    ((const Volume*)&(*i2))->getInfo( partitioninfos.back().v );
-	    }
-    }
-
-    return( i != dEnd() );
-}
-
-bool
-Storage::getPartitions (deque<PartitionInfo>& partitioninfos)
-{
-    partitioninfos.clear ();
-    assertInit();
-
-    ConstPartPair p = partPair(Partition::notDeleted);
-    for (ConstPartIterator i = p.begin(); i != p.end(); ++i)
-	{
-	partitioninfos.push_back( PartitionInfo() );
-	i->getInfo( partitioninfos.back() );
-	}
-
-    return true;
-}
 
 
 bool
