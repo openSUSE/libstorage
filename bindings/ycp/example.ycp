@@ -101,7 +101,7 @@
 	y2milestone ("test8");
 
 	list <any> containerinfos = [];
-	LibStorage::StorageInterface::getContainer (o, containerinfos);
+	LibStorage::StorageInterface::getContainers (o, containerinfos);
 
 	foreach (any containerinfo, containerinfos, {
 	    y2milestone ("found container %1", LibStorage::ContainerInfo::swig_name_get (containerinfo));
