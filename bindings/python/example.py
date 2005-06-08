@@ -6,23 +6,41 @@ import LibStorage
 c = LibStorage.createStorageInterface (1, 0, 1)
 
 
-disks = LibStorage.dequestring ()
-c.getDisks (disks)
+containers = LibStorage.dequecontainerinfo ()
+c.getContainers (containers)
 
-for disk in disks:
+for container in containers:
 
-    print disk
+    print container.device
 
-    partitioninfos = LibStorage.dequepartitioninfo ()
-    c.getPartitionsOfDisk (disk, partitioninfos)
+    if container.type == LibStorage.DISK:
 
-    for partitioninfo in partitioninfos:
+        diskinfo = LibStorage.DiskInfo ()
+        c.getDiskInfo (container.name, diskinfo)
+        print "  ", diskinfo.sizeK
 
-        print partitioninfo.v.name,partitioninfo.cylStart,partitioninfo.cylSize
+        partitioninfos = LibStorage.dequepartitioninfo ()
+        c.getPartitionInfo (container.name, partitioninfos)
+
+        for partitioninfo in partitioninfos:
+            print "  ", partitioninfo.v.device, partitioninfo.v.sizeK, \
+            partitioninfo.cylStart, partitioninfo.cylSize
+
+    if container.type == LibStorage.LVM:
+
+        lvmvginfo = LibStorage.LvmVgInfo ()
+        c.getLvmVgInfo (container.name, lvmvginfo)
+        print "  ", lvmvginfo.sizeK
+
+        lvmlvinfos = LibStorage.dequelvmlvinfo ()
+        c.getLvmLvInfo (container.name, lvmlvinfos)
+
+        for lvmlvinfo in lvmlvinfos:
+            print "  ", lvmlvinfo.v.device, lvmlvinfo.v.sizeK
 
 
-fscapabilities = LibStorage.FsCapabilities ();
-c.getFsCapabilities (LibStorage.REISERFS, fscapabilities);
+fscapabilities = LibStorage.FsCapabilities ()
+c.getFsCapabilities (LibStorage.REISERFS, fscapabilities)
 print fscapabilities.isExtendable,fscapabilities.minimalFsSizeK
 
 
