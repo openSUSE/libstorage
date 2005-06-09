@@ -657,7 +657,7 @@ namespace storage
 	/**
 	 * Query capabilities of a filesystem type.
 	 */
-	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) = 0;
+	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const = 0;
 
 	/**
 	 * Print detected entities on a stream.
@@ -810,7 +810,7 @@ namespace storage
 	 *
 	 * @return default disk label of the architecture
 	 */
-	virtual string defaultDiskLabel() = 0;
+	virtual string defaultDiskLabel() const = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.
@@ -931,6 +931,13 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
+	/**
+	 * Mkes library forgt a crypt password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int forgetCryptPassword( const string& device ) = 0;
 
 	/**
 	  * Get crypt password of a volume
@@ -993,7 +1000,7 @@ namespace storage
 	 *
 	 * @return value of the flag for recursive removal
 	 */
-	virtual bool getRecursiveRemoval() = 0;
+	virtual bool getRecursiveRemoval() const = 0;
 
 	/**
 	 * Set handling of newly created partitions. With this flag
@@ -1015,7 +1022,7 @@ namespace storage
 	 *
 	 * @return value of the flag for zeroing newly created partitions
 	 */
-	virtual bool getZeroNewPartitions() = 0;
+	virtual bool getZeroNewPartitions() const = 0;
 
 	/**
 	 * Removes a volume from the system. This function can be used
@@ -1249,6 +1256,12 @@ namespace storage
 	 */
 	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
 
+	/**
+	 * Gets action performed last during previous call to commit()
+	 *
+	 * @return string presentable to the user
+	 */
+	virtual const string& getLastAction() const = 0;
 
 // temporarily disable callback function for swig
 #ifndef SWIG
@@ -1265,7 +1278,7 @@ namespace storage
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
-	virtual CallbackProgressBar getCallbackProgressBar() = 0;
+	virtual CallbackProgressBar getCallbackProgressBar() const = 0;
 
 
 	/**
@@ -1280,7 +1293,7 @@ namespace storage
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
-	virtual CallbackShowInstallInfo getCallbackShowInstallInfo() = 0;
+	virtual CallbackShowInstallInfo getCallbackShowInstallInfo() const = 0;
 
 
 	/**
@@ -1297,7 +1310,7 @@ namespace storage
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
-	virtual CallbackInfoPopup getCallbackInfoPopup() = 0;
+	virtual CallbackInfoPopup getCallbackInfoPopup() const = 0;
 
 
 	/**
@@ -1314,7 +1327,7 @@ namespace storage
 	 *
 	 * @return pointer to function currently called for progress bar events
 	 */
-	virtual CallbackYesNoPopup getCallbackYesNoPopup() = 0;
+	virtual CallbackYesNoPopup getCallbackYesNoPopup() const = 0;
 
 #endif
 

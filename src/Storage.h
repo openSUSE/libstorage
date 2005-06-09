@@ -175,7 +175,7 @@ class Storage : public storage::StorageInterface
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 
 	bool getFsCapabilities( storage::FsType fstype, 
-	                        storage::FsCapabilities& fscapabilities);
+	                        storage::FsCapabilities& fscapabilities) const;
 	int createPartition( const string& disk, storage::PartitionType type, 
 	                     unsigned long start, unsigned long size, 
 			     string& device );
@@ -195,7 +195,7 @@ class Storage : public storage::StorageInterface
 	int removePartition( const string& partition );
 	int changePartitionId( const string& partition, unsigned id );
 	int destroyPartitionTable( const string& disk, const string& label );
-	string defaultDiskLabel();
+	string defaultDiskLabel() const;
 
 	int changeFormatVolume( const string& device, bool format, 
 	                        storage::FsType fs );
@@ -210,14 +210,15 @@ class Storage : public storage::StorageInterface
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
+	int forgetCryptPassword( const string& device );
 	int getCryptPassword( const string& device, string& pwd );
 	int setCrypt( const string& device, bool val );
 	int getCrypt( const string& device, bool& val );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 	void setRecursiveRemoval( bool val=true );
-	bool getRecursiveRemoval() { return recursiveRemove; }
+	bool getRecursiveRemoval() const { return recursiveRemove; }
 	void setZeroNewPartitions( bool val=true );
-	bool getZeroNewPartitions() { return zeroNewPartitions; }
+	bool getZeroNewPartitions() const { return zeroNewPartitions; }
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
@@ -258,23 +259,24 @@ class Storage : public storage::StorageInterface
 	int removeFileLoop( const string& lname, bool removeFile );
 
 	deque<string> getCommitActions( bool mark_destructive );
+	const string& getLastAction() const { return lastAction; }
         int commit();
 
 	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }
-	storage::CallbackProgressBar getCallbackProgressBar() 
+	storage::CallbackProgressBar getCallbackProgressBar() const
 	    { return progress_bar_cb; }
 	void setCallbackShowInstallInfo( storage::CallbackShowInstallInfo pfnc )
 	    { install_info_cb=pfnc; }
-	storage::CallbackShowInstallInfo getCallbackShowInstallInfo() 
+	storage::CallbackShowInstallInfo getCallbackShowInstallInfo() const
 	    { return install_info_cb; }
 	void setCallbackInfoPopup( storage::CallbackInfoPopup pfnc )
 	    { info_popup_cb=pfnc; }
-	storage::CallbackInfoPopup getCallbackInfoPopup() 
+	storage::CallbackInfoPopup getCallbackInfoPopup() const
 	    { return info_popup_cb; }
 	void setCallbackYesNoPopup( storage::CallbackYesNoPopup pfnc )
 	    { yesno_popup_cb=pfnc; }
-	storage::CallbackYesNoPopup getCallbackYesNoPopup() 
+	storage::CallbackYesNoPopup getCallbackYesNoPopup() const
 	    { return yesno_popup_cb; }
 
 	void progressBarCb( const string& id, unsigned cur, unsigned max );
@@ -1163,6 +1165,7 @@ class Storage : public storage::StorageInterface
 	storage::CallbackInfoPopup info_popup_cb;
 	storage::CallbackYesNoPopup yesno_popup_cb;
 	unsigned max_log_num;
+	string lastAction;
     };
 
 #endif

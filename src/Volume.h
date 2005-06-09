@@ -57,6 +57,7 @@ class Volume
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val ); 
+	void clearCryptPwd() { crypt_pwd.erase(); } 
 	const string& getMount() const { return mp; }
 	bool needRemount() const; 
 	bool needShrink() const { return(size_k<orig_size_k); }

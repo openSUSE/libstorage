@@ -661,9 +661,19 @@ int Volume::umount( const string& mp )
     y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
     string cmdline = ((detected_fs != SWAP)?"umount ":"swapoff ") + mountDevice();
     int ret = cmd.execute( cmdline );
-    if( fs != SWAP && ret != 0 && !mp.empty() )
+    if( ret != 0 && mountDevice()!=dev )
+	{
+	cmdline = ((detected_fs != SWAP)?"umount ":"swapoff ") + dev;
+	ret = cmd.execute( cmdline );
+	}
+    if( ret!=0 && !mp.empty() && mp!="swap" )
 	{
 	cmdline = "umount " + mp;
+	ret = cmd.execute( cmdline );
+	}
+    if( ret!=0 && !orig_mp.empty() && orig_mp!="swap" )
+	{
+	cmdline = "umount " + orig_mp;
 	ret = cmd.execute( cmdline );
 	}
     if( ret != 0 )
@@ -898,14 +908,7 @@ int Volume::setEncryption( bool val )
 	{
 	if( !val )
 	    {
-	    if( !loop_dev.empty() && loop_active )
-		{
-		loUnsetup();
-		loop_dev.erase();
-		fstab_loop_dev = loop_dev;
-		}
-	    is_loop = loop_active = false;
-	    encryption = orig_encryption = ENC_NONE;
+	    encryption = ENC_NONE;
 	    crypt_pwd.erase();
 	    }
 	else
@@ -1079,11 +1082,11 @@ EncryptType Volume::detectLoopEncryption()
     EncryptType ret = ENC_UNKNOWN;
 
     if( getContainer()->getStorage()->test() )
-    {
+	{
 	ret = encryption = orig_encryption = ENC_TWOFISH;
 	y2milestone( "ret:%s", encTypeString(ret).c_str() );
 	return( ret );
-    }
+	}
 
     unsigned pos=0;
     static EncryptType try_order[] = { ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD, 
@@ -1102,7 +1105,7 @@ EncryptType Volume::detectLoopEncryption()
     is_loop = true;
     do
 	{
-	loUnsetup();
+	c.execute( "losetup -d " + loop_dev );
 	c.execute( getLosetupCmd( try_order[pos], fname ));
 	if( c.retcode()==0 )
 	    {
@@ -1123,7 +1126,7 @@ EncryptType Volume::detectLoopEncryption()
 			    cmd = "fsck.ext2 -n -f " + loop_dev + " > /dev/null";
 			    break;
 			case REISERFS:
-			    cmd = "reiserfsck --check -q " + loop_dev;
+			    cmd = "reiserfsck --yes --check -q " + loop_dev;
 			    break;
 			default:
 			    cmd = "fsck -n -t " + fsTypeString(detected_fs) + 
@@ -1146,13 +1149,13 @@ EncryptType Volume::detectLoopEncryption()
 	    pos++;
 	}
     while( detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
+    c.execute( "losetup -d " + loop_dev );
     if( detected_fs!=FSUNKNOWN )
 	{
 	is_loop = true;
 	loop_active = false;
 	ret = encryption = orig_encryption = try_order[pos];
 	}
-    loUnsetup();
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
     y2milestone( "ret:%s", encTypeString(ret).c_str() );

@@ -895,7 +895,7 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     }
 
 string
-Storage::defaultDiskLabel()
+Storage::defaultDiskLabel() const
     {
     return( Disk::defaultLabel() );
     }
@@ -1265,6 +1265,34 @@ Storage::setCryptPassword( const string& device, const string& pwd )
     else if( findVolume( device, vol ) )
 	{
 	ret = vol->setCryptPwd( pwd );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::forgetCryptPassword( const string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+
+    VolIterator vol;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, vol ) )
+	{
+	vol->clearCryptPwd();
 	}
     else
 	{
@@ -2180,6 +2208,7 @@ static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
 int Storage::commit()
     {
     assertInit();
+    lastAction.clear();
     CPair p = cPair( notLoop );
     int ret = 0;
     y2milestone( "empty:%d", p.empty() );
@@ -2527,7 +2556,7 @@ int Storage::getDmInfo( deque<storage::DmInfo>& plist )
 
 
 bool
-Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities)
+Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 {
     static FsCapabilities reiserfsCaps = {
 	isExtendable: true,
@@ -2740,6 +2769,7 @@ void Storage::progressBarCb( const string& id, unsigned cur, unsigned max )
 void Storage::showInfoCb( const string& info )
     {
     y2milestone( "INSTALL INFO:%s", info.c_str() );
+    lastAction = info;
     if( install_info_cb )
 	(*install_info_cb)( info );
     }
@@ -2776,7 +2806,7 @@ Storage::LvmVgIterator Storage::findLvmVg( const string& name )
     assertInit();
     LvmVgPair p = lvgPair();
     LvmVgIterator ret=p.begin();
-    while( ret != p.end() && !ret->deleted() && ret->name()!=name )
+    while( ret != p.end() && ret->deleted() && ret->name()!=name )
 	++ret;
     return( ret );
     }
@@ -2793,7 +2823,7 @@ Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
 	name1 = "lvm/" + name1;
 	name2 = "lvm2/" + name2;
 	}
-    while( ret != p.end() && !ret->deleted() && ret->name()!=name1 && 
+    while( ret != p.end() && ret->deleted() && ret->name()!=name1 && 
            ret->name()!=name2 )
 	++ret;
     return( ret );
@@ -2989,8 +3019,9 @@ Storage::umountDevice( const string& device )
     VolIterator vol;
     if( !readonly && findVolume( device, vol ) )
 	{
-	if( vol->umount()==0 && vol->loUnsetup()==0 )
+	if( vol->umount()==0 )
 	    {
+	    vol->loUnsetup();
 	    ret = true;
 	    }
 	}
