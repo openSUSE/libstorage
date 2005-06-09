@@ -1247,7 +1247,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	getStorage()->setRecursiveRemoval(true);
 	if( getUsedByType() != UB_NONE ) 
 	    {
-	    getStorage()->removeUsing( device(), usedBy() ); 
+	    getStorage()->removeUsing( device(), getUsedBy() );
 	    }
 	RVIter i = vols.rbegin();
 	while( i!=vols.rend() )
