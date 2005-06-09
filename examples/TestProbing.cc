@@ -27,45 +27,71 @@ main (int argc, char** argv)
     for (deque<ContainerInfo>::iterator i1 = containers.begin ();
 	 i1 != containers.end(); i1++)
     {
-	cout << "found container " << i1->name << '\n';
-
 	switch (i1->type)
-    {
+	{
 	    case DISK: {
 
-	deque<PartitionInfo> partitions;
-		if (s->getPartitionInfo (i1->name, partitions) != 0)
-	{
-	    cerr << "getPartitions failed\n";
-	    exit (EXIT_FAILURE);
-	}
+		cout << "found container (disk) " << i1->name << '\n';
 
-	for (deque<PartitionInfo>::iterator i2 = partitions.begin ();
-	     i2 != partitions.end(); i2++)
-	{
-	    cout << i2->v.name << ' ';
-	    switch (i2->partitionType)
-	    {
-		case PRIMARY: cout << "PRIMARY "; break;
-		case EXTENDED: cout << "EXTENDED "; break;
-		case LOGICAL: cout << "LOGICAL "; break;
-		case PTYPE_ANY: cout << "ANY "; break;
-	    }
-	    switch (i2->v.fs)
-	    {
-		case FSUNKNOWN: cout << "UNKNOWN"; break;
-		case REISERFS: cout << "REISERFS"; break;
-		case EXT2: cout << "EXT2"; break;
-		case EXT3: cout << "EXT3"; break;
-		case VFAT: cout << "VFAT"; break;
-		case XFS: cout << "XFS"; break;
-		case JFS: cout << "JFS"; break;
-		case NTFS: cout << "NTFS"; break;
-		case SWAP: cout << "SWAP"; break;
-		case FSNONE: cout << "NONE"; break;
-	    }
-	    cout << '\n';
-	}
+		deque<PartitionInfo> partitions;
+		if (s->getPartitionInfo (i1->name, partitions) != 0)
+		{
+		    cerr << "getPartitionInfo failed\n";
+		    exit (EXIT_FAILURE);
+		}
+
+		for (deque<PartitionInfo>::iterator i2 = partitions.begin ();
+		     i2 != partitions.end(); i2++)
+		{
+		    cout << "  " << i2->v.name << ' ';
+		    switch (i2->partitionType)
+		    {
+			case PRIMARY: cout << "PRIMARY "; break;
+			case EXTENDED: cout << "EXTENDED "; break;
+			case LOGICAL: cout << "LOGICAL "; break;
+			case PTYPE_ANY: cout << "ANY "; break;
+		    }
+		    switch (i2->v.fs)
+		    {
+			case FSUNKNOWN: cout << "UNKNOWN"; break;
+			case REISERFS: cout << "REISERFS"; break;
+			case EXT2: cout << "EXT2"; break;
+			case EXT3: cout << "EXT3"; break;
+			case VFAT: cout << "VFAT"; break;
+			case XFS: cout << "XFS"; break;
+			case JFS: cout << "JFS"; break;
+			case NTFS: cout << "NTFS"; break;
+			case SWAP: cout << "SWAP"; break;
+			case FSNONE: cout << "NONE"; break;
+		    }
+		    cout << '\n';
+		}
+
+	    } break;
+
+	    case LVM: {
+
+		cout << "found container (lvm) " << i1->name << '\n';
+
+		deque<LvmLvInfo> lvmlvs;
+		if (s->getLvmLvInfo (i1->name, lvmlvs) != 0)
+		{
+		    cerr << "getLvmLvInfo failed\n";
+		    exit (EXIT_FAILURE);
+		}
+
+		for (deque<LvmLvInfo>::iterator i2 = lvmlvs.begin ();
+		     i2 != lvmlvs.end(); i2++)
+		{
+		    cout << "  " << i2->v.name;
+		    cout << '\n';
+		}
+
+	    } break;
+
+	    default: {
+
+		cout << "found container " << i1->name << '\n';
 
 	    } break;
 
