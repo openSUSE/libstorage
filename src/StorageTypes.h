@@ -76,16 +76,18 @@ struct commitAction
 struct usedBy
     {
     usedBy() : t(storage::UB_NONE) {;}
-    usedBy( storage::UsedByType typ, const string& n ) : t(typ), name(n) {;}
-    void clear() { t=storage::UB_NONE; name.erase(); }
+    usedBy( storage::UsedByType typ, const string& n ) : t(typ), nm(n) {;}
+    void clear() { t=storage::UB_NONE; nm.erase(); }
     void set( storage::UsedByType type, const string& n ) 
-	{ t=type; (t==storage::UB_NONE)?name.erase():name=n; }
+	{ t=type; (t==storage::UB_NONE)?nm.erase():nm=n; }
     bool operator==( const usedBy& rhs ) const
-	{ return( t==rhs.t && name==rhs.name ); }
+	{ return( t==rhs.t && nm==rhs.nm ); }
+    storage::UsedByType type() const { return( t ); }
+    const string& name() const { return( nm ); }
     friend inline std::ostream& operator<< (std::ostream&, const usedBy& );
 
     storage::UsedByType t;
-    string name;
+    string nm;
     };
 
 inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
@@ -111,7 +113,7 @@ inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
 		st = "UNKNOWN";
 		break;
 	    }
-	s << " UsedBy:" << st << "[" << d.name << "]";
+	s << " UsedBy:" << st << "[" << d.nm << "]";
 	}
     return( s );
     }

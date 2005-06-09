@@ -1703,8 +1703,8 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.device = dev;
     info.mount = mp;
     info.mount_by = mount_by;
-    info.usedBy = uby.t;
-    info.usedByName = uby.name;
+    info.usedBy = uby.type();
+    info.usedByName = uby.name();
     info.fstab_options = fstab_opt;
     info.uuid = uuid;
     info.label = label;

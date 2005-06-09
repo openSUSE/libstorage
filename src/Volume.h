@@ -34,8 +34,8 @@ class Volume
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool fstabAdded() const { return( fstab_added ); }
 	const storage::usedBy& getUsedBy()  const{ return( uby ); }
-	storage::UsedByType getUsedByType() const { return( uby.t ); }
-	const string& usedByName() const { return( uby.name ); }
+	storage::UsedByType getUsedByType() const { return( uby.type() ); }
+	const string& usedByName() const { return( uby.name() ); }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
 
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );

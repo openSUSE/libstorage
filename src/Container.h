@@ -134,8 +134,8 @@ class Container
 	void setSilent( bool val=true ) { silent=val; }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
 	const storage::usedBy& getUsedBy() const { return( uby ); }
-	storage::UsedByType getUsedByType() const { return( uby.t ); }
-	const string& usedByName() const { return( uby.name ); }
+	storage::UsedByType getUsedByType() const { return( uby.type() ); }
+	const string& usedByName() const { return( uby.name() ); }
 	bool readonly() const { return ronly; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;

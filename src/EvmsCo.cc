@@ -347,7 +347,7 @@ EvmsCo::removeVol( const string& name )
     if( ret==0 && i->getUsedByType() != UB_NONE )
 	{
 	if( getStorage()->getRecursiveRemoval() )
-	    ret = getStorage()->removeUsing( &(*i) );
+	    ret = getStorage()->removeUsing( i->device(), i->getUsedBy() );
 	else
 	    ret = EVMS_LV_REMOVE_USED_BY;
 	}

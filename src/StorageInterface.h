@@ -927,10 +927,19 @@ namespace storage
 	 * Set crypt password of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param pwd crypt password fro this volume
+	 * @param pwd crypt password for this volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
+
+	/**
+	  * Get crypt password of a volume
+	  *
+	  * @param device name of volume, e.g. /dev/hda1
+	  * @param pwd crypt password for this volume
+	  * @return zero if all is ok, a negative number to indicate an error
+	  */
+	virtual int getCryptPassword( const string& device, string& pwd ) = 0;
 
 	/**
 	 * Set encryption state of a volume

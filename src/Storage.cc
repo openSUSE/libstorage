@@ -770,7 +770,7 @@ Storage::removePartition( const string& partition )
 		ret = STORAGE_REMOVE_USED_VOLUME;
 	    else
 		{
-		ret = removeUsing( &(*vol) );
+		ret = removeUsing( vol->device(), vol->getUsedBy() );
 		if( ret==0 )
 		    disk->removePartition( vol->nr() );
 		}
@@ -1258,12 +1258,11 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 #endif
 
     VolIterator vol;
-    ContIterator cont;
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol ) )
+    else if( findVolume( device, vol ) )
 	{
 	ret = vol->setCryptPwd( pwd );
 	}
@@ -1275,6 +1274,34 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 	{
 	ret = checkCache();
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::getCryptPassword( const string& device, string& pwd )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+
+    pwd.clear();
+    VolIterator vol;
+    if( findVolume( device, vol ) )
+	{
+	pwd = vol->getCryptPwd();
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2milestone( "password:%s", pwd.c_str() );
+#endif
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1329,7 +1356,7 @@ Storage::removeVolume( const string& device )
 	    ret = STORAGE_REMOVE_USED_VOLUME;
 	else
 	    {
-	    ret = removeUsing( &(*vol) );
+	    ret = removeUsing( vol->device(), vol->getUsedBy() );
 	    if( ret==0 )
 		cont->removeVolume( &(*vol) );
 	    }
@@ -2252,12 +2279,15 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
     return( ret );
     }
 
+static bool showContainers( const Container& c ) 
+    { return( !c.deleted()||c.type()==DISK ); }
+
 void 
 Storage::getContainers( deque<ContainerInfo>& infos )
     {
     infos.clear ();
     assertInit();
-    ConstContPair p = contPair( notDeleted );
+    ConstContPair p = contPair( showContainers );
     for( ConstContIterator i = p.begin(); i != p.end(); ++i)
 	{
 	infos.push_back( ContainerInfo() );
@@ -2884,30 +2914,29 @@ int Storage::removeContainer( Container* val )
     return( ret );
     }
 
-int Storage::removeUsing( Volume* vol )
+int Storage::removeUsing( const string& device, const storage::usedBy& uby )
     {
-    y2mil( "device:" << vol->device() << " usedBy:" << vol->getUsedBy() );
+    y2mil( "device:" << device << " usedBy:" << uby );
     int ret=0;
-    string uname = vol->usedByName();
-    switch( vol->getUsedByType() )
+    switch( uby.type() )
 	{
 	case UB_MD:
-	    ret = removeVolume(  "/dev/md" + uname );
+	    ret = removeVolume(  "/dev/md" + uby.name() );
 	    break;
 	case UB_DM:
-	    ret = removeVolume(  "/dev/dm-" + uname );
+	    ret = removeVolume(  "/dev/dm-" + uby.name() );
 	    break;
 	case UB_LVM:
-	    ret = removeLvmVg( uname );
+	    ret = removeLvmVg( uby.name() );
 	    break;
 	case UB_EVMS:
-	    if( !uname.empty() )
-		ret = removeEvmsContainer( uname );
+	    if( !uby.name().empty() )
+		ret = removeEvmsContainer( uby.name() );
 	    else
-		ret = removeVolume( "/dev/evms/" + uname );
+		ret = removeVolume( "/dev/evms/" + uby.name() );
 	    break;
 	case UB_NONE:
-	    y2warning( "%s used by none", vol->device().c_str() );
+	    y2warning( "%s used by none", device.c_str() );
 	    break;
 	default:
 	    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;

@@ -210,6 +210,7 @@ class Storage : public storage::StorageInterface
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
+	int getCryptPassword( const string& device, string& pwd );
 	int setCrypt( const string& device, bool val );
 	int getCrypt( const string& device, bool& val );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
@@ -218,7 +219,7 @@ class Storage : public storage::StorageInterface
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() { return zeroNewPartitions; }
 	int removeVolume( const string& device );
-	int removeUsing( Volume* vol );
+	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
 	bool umountDevice( const string& device );
 	bool mountDevice( const string& device, const string& mp );
