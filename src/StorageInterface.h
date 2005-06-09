@@ -1161,8 +1161,8 @@ namespace storage
 	/**
 	 * Remove a EVMS volume from a EVMS container
 	 *
-	 * @param vg name of container
-	 * @param name of volume
+	 * @param coname name of container
+	 * @param name name of volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
@@ -1190,8 +1190,7 @@ namespace storage
 				 string& device ) = 0;
 
 	/**
-	 * Remove a LVM volume group. If the volume group contains
-	 * logical volumes, these are automatically also removed.
+	 * Remove a Software raid device.
 	 *
 	 * @param name name of software raid device to remove (e.g. /dev/md0)
 	 * @param destroySb flag if the MD superblocks on the physcal devices
