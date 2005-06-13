@@ -2259,7 +2259,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    Container *co = const_cast<Container*>((*vli)->getContainer());
 	    cli = find( colist.begin(), colist.end(), co );
 	    list<Container*>::iterator tcli=colist.begin();
-	    while( ret==0 && tcli!=cli )
+	    while( ret==0 && cli!=colist.end() && tcli!=cli )
 		{
 		Container *cot = *tcli;
 		ret = cot->commitChanges( *pt );
