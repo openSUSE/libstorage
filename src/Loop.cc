@@ -132,7 +132,7 @@ string Loop::removeText( bool doing ) const
 	d.erase( 0, 5 );
 	// displayed text before action, %1$s is replaced by device name e.g. loop0
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete file based %1$s %2$s"), d.c_str(),
+	txt = sformat( _("Delete file based loop %1$s %2$s"), d.c_str(),
 		       sizeString().c_str() );
 	}
     return( txt );
@@ -160,7 +160,7 @@ string Loop::createText( bool doing ) const
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create file based %1$s (%2$s) %3$s for %5$s with %4$s"),
+		txt = sformat( _("Create file based loop %1$s (%2$s) %3$s for %5$s with %4$s"),
 			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -171,7 +171,7 @@ string Loop::createText( bool doing ) const
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create crypted file based %1$s (%2$s) %3$s for %5$s with %5$s"),
+		txt = sformat( _("Create crypted file based loop %1$s (%2$s) %3$s for %5$s with %5$s"),
 			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -181,7 +181,7 @@ string Loop::createText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. loop0
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
 	    // %3$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create file based %1$s (%2$s) %3$s"),
+	    txt = sformat( _("Create file based loop %1$s (%2$s) %3$s"),
 			   dev.c_str(), lfile.c_str(), sizeString().c_str() );
 	    }
 	}
@@ -214,7 +214,7 @@ string Loop::formatText( bool doing ) const
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format file based %1$s (%2$s) %3$s for %5$s with %4$s"),
+		txt = sformat( _("Format file based loop %1$s (%2$s) %3$s for %5$s with %4$s"),
 			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -225,7 +225,7 @@ string Loop::formatText( bool doing ) const
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted file based %1$s (%2$s) %3$s for %5$s with %4$s"),
+		txt = sformat( _("Format crypted file based loop %1$s (%2$s) %3$s for %5$s with %4$s"),
 			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -236,7 +236,7 @@ string Loop::formatText( bool doing ) const
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
 	    // %3$s is replaced by size (e.g. 623.5 MB)
 	    // %4$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format file based %1$s (%2$s) %3$s with %4$s"),
+	    txt = sformat( _("Format file based loop %1$s (%2$s) %3$s with %4$s"),
 			   d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			   fsTypeString().c_str() );
 	    }
