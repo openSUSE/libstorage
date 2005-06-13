@@ -1136,7 +1136,7 @@ class Storage : public storage::StorageInterface
 
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
-	int commitPair( CPair& p );
+	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists( storage::CommitStage stage, std::list<Container*>& co,  
 			      std::list<Volume*>& vl );
 	int performContChanges( storage::CommitStage stage, const std::list<Container*>& co,

@@ -2218,13 +2218,13 @@ int Storage::commit()
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
 	{
-	ret = commitPair( p );
+	ret = commitPair( p, notLoop );
 	}
     p = cPair( isLoop );
     y2milestone( "empty:%d", p.empty() );
     if( ret==0 && !p.empty() )
 	{
-	ret = commitPair( p );
+	ret = commitPair( p, isLoop );
 	}
     VPair vp = vPair( fstabAdded );
     for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
@@ -2234,7 +2234,7 @@ int Storage::commit()
     }
 
 int  
-Storage::commitPair( CPair& p )
+Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     {
     int ret = 0;
     y2milestone( "p.length:%d", p.length() );
@@ -2258,7 +2258,14 @@ Storage::commitPair( CPair& p )
 	    {
 	    Container *co = const_cast<Container*>((*vli)->getContainer());
 	    cli = find( colist.begin(), colist.end(), co );
-	    if( *pt!=DECREASE && cli!=colist.end() )
+	    list<Container*>::iterator tcli=colist.begin();
+	    while( ret==0 && tcli!=cli )
+		{
+		Container *cot = *tcli;
+		ret = cot->commitChanges( *pt );
+		tcli = colist.erase( tcli );
+		}
+	    if( ret==0 && *pt!=DECREASE && cli!=colist.end() )
 		{
 		ret = co->commitChanges( *pt );
 		colist.erase( cli );
@@ -2270,7 +2277,7 @@ Storage::commitPair( CPair& p )
 	if( ret==0 && !colist.empty() )
 	    ret = performContChanges( *pt, colist, cont_removed );
 	if( cont_removed )
-	    p = cPair();
+	    p = cPair( fnc );
 	pt++;
 	}
     y2milestone( "ret:%d", ret );
