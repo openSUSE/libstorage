@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <stdio.h>
 #include <getopt.h>
 #include <errno.h>

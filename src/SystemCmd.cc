@@ -1,4 +1,7 @@
 // Maintainer: fehr@suse.de
+/*
+  Textdomain    "storage"
+*/
 
 #include <unistd.h>
 #include <errno.h>

@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <dlfcn.h>
 #include <iterator>
 #include <string>

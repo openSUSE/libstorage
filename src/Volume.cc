@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <sstream>
 
 #include <features.h>

@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <errno.h>
 #include <sys/sem.h>
 #include <sys/socket.h>

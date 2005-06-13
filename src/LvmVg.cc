@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <iostream> 
 #include <sstream> 
 
@@ -69,6 +73,10 @@ LvmVg::removeVg()
 	LvmLvPair p=lvmLvPair(lvNotDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	    ret = removeLv( i->name() );
+	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
+	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
 	setDeleted( true );
 	}
     y2milestone( "ret:%d", ret );

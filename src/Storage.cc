@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <dirent.h>
 #include <glob.h>
 #include <unistd.h>

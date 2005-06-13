@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <sstream>
 
 #include "y2storage/LvmLv.h"

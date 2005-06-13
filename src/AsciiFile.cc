@@ -1,4 +1,7 @@
 // Maintainer: fehr@suse.de
+/* 
+  Textdomain    "storage"
+*/
 
 #include <assert.h>
 #include <sys/stat.h>

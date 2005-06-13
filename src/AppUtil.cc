@@ -1,4 +1,8 @@
 // Maintainer: fehr@suse.de
+/* 
+  Textdomain    "storage"
+*/
+
 
 #include <pwd.h>
 #include <grp.h>

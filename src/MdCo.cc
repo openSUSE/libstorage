@@ -1,3 +1,7 @@
+/*
+  Textdomain    "storage"
+*/
+
 #include <iostream> 
 #include <sstream> 
 
