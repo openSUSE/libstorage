@@ -2806,7 +2806,7 @@ Storage::LvmVgIterator Storage::findLvmVg( const string& name )
     assertInit();
     LvmVgPair p = lvgPair();
     LvmVgIterator ret=p.begin();
-    while( ret != p.end() && ret->deleted() && ret->name()!=name )
+    while( ret != p.end() && (ret->deleted() || ret->name()!=name) )
 	++ret;
     return( ret );
     }
@@ -2823,8 +2823,8 @@ Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
 	name1 = "lvm/" + name1;
 	name2 = "lvm2/" + name2;
 	}
-    while( ret != p.end() && ret->deleted() && ret->name()!=name1 && 
-           ret->name()!=name2 )
+    while( ret != p.end() && 
+           (ret->deleted() || (ret->name()!=name1 && ret->name()!=name2)) )
 	++ret;
     return( ret );
     }

@@ -908,12 +908,13 @@ int Volume::setEncryption( bool val )
 	{
 	if( !val )
 	    {
+	    is_loop = false;
 	    encryption = ENC_NONE;
 	    crypt_pwd.erase();
 	    }
 	else
 	    {
-	    if( crypt_pwd.empty() )
+	    if( !loop_active && crypt_pwd.empty() )
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && format )
 		{
@@ -1165,37 +1166,64 @@ EncryptType Volume::detectLoopEncryption()
 int Volume::doLosetup()
     {
     int ret = 0;
-    y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
-    if( !silent )
+    y2milestone( "device:%s mp:%s is_loop:%d loop_active:%d", 
+                 dev.c_str(), mp.c_str(), is_loop, loop_active );
+    if( !silent && is_loop )
 	{
 	cont->getStorage()->showInfoCb( losetupText(true) );
 	}
-    if( ret==0 && loop_dev.empty() )
+    if( is_mounted )
 	{
-	ret = getFreeLoop();
+	umount( orig_mp );
 	}
-    if( ret==0 )
+    if( is_loop )
 	{
-	string fname = cont->getStorage()->tmpDir()+"/pwdf";
-	ofstream pwdfile( fname.c_str() );
-	pwdfile << crypt_pwd << endl;
-	pwdfile.close();
+	if( ret==0 && loop_dev.empty() )
+	    {
+	    ret = getFreeLoop();
+	    }
+	if( ret==0 )
+	    {
+	    string fname = cont->getStorage()->tmpDir()+"/pwdf";
+	    ofstream pwdfile( fname.c_str() );
+	    pwdfile << crypt_pwd << endl;
+	    pwdfile.close();
 
-	SystemCmd c( getLosetupCmd( encryption, fname ));
-	if( c.retcode()!=0 )
-	    ret = VOLUME_LOSETUP_FAILED;
-	unlink( fname.c_str() );
+	    SystemCmd c( getLosetupCmd( encryption, fname ));
+	    if( c.retcode()!=0 )
+		ret = VOLUME_LOSETUP_FAILED;
+	    unlink( fname.c_str() );
+	    }
+	if( ret==0 )
+	    {
+	    loop_active = true;
+	    list<string> l = splitString( fstab_opt, "," );
+	    list<string>::iterator i = find( l.begin(), l.end(), "loop" );
+	    if( i == l.end() )
+		i = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
+	    if( i!=l.end() )
+		*i = "loop=" + fstab_loop_dev;
+	    fstab_opt = mergeString( l, "," );
+	    }
 	}
-    if( ret==0 )
+    else 
 	{
-	loop_active = true;
-	list<string> l = splitString( fstab_opt, "," );
-	list<string>::iterator i = find( l.begin(), l.end(), "loop" );
-	if( i == l.end() )
-	    i = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
-	if( i!=l.end() )
-	    *i = "loop=" + fstab_loop_dev;
-	fstab_opt = mergeString( l, "," );
+	if( loop_dev.size()>0 )
+	    {
+	    SystemCmd c( "losetup -d " + loop_dev );
+	    loop_dev.erase();
+	    list<string> l = splitString( fstab_opt, "," );
+	    list<string>::iterator i = find( l.begin(), l.end(), "loop" );
+	    if( i == l.end() )
+		i = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
+	    if( i!=l.end() )
+		l.erase( i );
+	    i = find_if( l.begin(), l.end(), find_begin( "encryption=" ) );
+	    if( i!=l.end() )
+		l.erase( i );
+	    fstab_opt = mergeString( l, "," );
+	    }
+	loop_active = false;
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
