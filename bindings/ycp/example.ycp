@@ -96,7 +96,7 @@
 
 	string tmp = "hda1";
 	integer mb1 = LibStorage::MOUNTBY_LABEL ();
-	// LibStorage::StorageInterface::getMountBy (o, tmp, mb1);
+	LibStorage::StorageInterface::getMountBy (o, tmp, mb1);
 	y2milestone ("mb1 = %1", mb1);
     }
 
