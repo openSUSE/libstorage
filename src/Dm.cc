@@ -85,10 +85,12 @@ Dm::getTableInfo()
 	    {
 	    unsigned str;
 	    extractNthWord( 1, line ) >> le;
-	    extractNthWord( 3, line ) >> str;
 	    le /= 2;
 	    le += pesize-1;
 	    le /= pesize;
+	    extractNthWord( 4, line ) >> stripe_size;
+	    stripe_size /= 2;
+	    extractNthWord( 3, line ) >> str;
 	    if( str<2 )
 		y2warning( "invalid stripe count %u", str );
 	    else

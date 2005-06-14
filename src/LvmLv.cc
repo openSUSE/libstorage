@@ -212,6 +212,7 @@ string LvmLv::resizeText( bool doing ) const
 void LvmLv::getInfo( LvmLvInfo& info ) const
     {
     info.stripe = stripe;
+    info.stripe_size = stripe_size;
     info.uuid = vol_uuid;
     info.status = status;
     info.allocation = allocation;

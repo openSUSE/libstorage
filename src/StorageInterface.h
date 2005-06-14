@@ -241,6 +241,7 @@ namespace storage
 	{
 	VolumeInfo v;
 	unsigned stripe;
+	unsigned stripe_size;
 	string uuid;
 	string status;
 	string allocation;
@@ -255,6 +256,7 @@ namespace storage
 	{
 	VolumeInfo v;
 	unsigned stripe;
+	unsigned stripe_size;
 	bool compatible;
 	string dm_table;
 	string dm_target;

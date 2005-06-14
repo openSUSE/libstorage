@@ -1324,6 +1324,8 @@ EvmsCo::doCreate( Volume* v )
 	if( l->stripes()>1 )
 	    {
 	    cmd += " " + decString(l->stripes());
+	    if( l->stripeSize()>0 )
+		cmd += " " + decString(l->stripeSize());
 	    }
 	ret = executeCmd( cmd );
 	if( ret==0 )

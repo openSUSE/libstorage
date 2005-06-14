@@ -228,6 +228,7 @@ string Evms::resizeText( bool doing ) const
 void Evms::getInfo( EvmsInfo& info ) const
     {
     info.stripe = stripe;
+    info.stripe_size = stripe_size;
     info.compatible = compat;
     info.dm_table = tname;
     info.dm_target = target;

@@ -1031,7 +1031,7 @@ LvmVg::doCreate( Volume* v )
 	    {
 	    cmd += " -i " + decString(l->stripes());
 	    if( l->stripeSize()>0 )
-		cmd += " -I " + decString(l->stripeSize()/1024);
+		cmd += " -I " + decString(l->stripeSize());
 	    }
 	cmd += " -n " + l->name();
 	cmd += " " + name();
