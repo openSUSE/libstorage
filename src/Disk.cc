@@ -1293,6 +1293,32 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
     return( ret );
     }
 
+int Disk::forgetChangePartitionId( unsigned nr )
+    {
+    y2milestone( "begin nr:%u", nr );
+    int ret = 0;
+    PartPair p = partPair( notDeleted );
+    PartIter i = p.begin();
+    while( i!=p.end() && i->nr()!=nr)
+	{
+	++i;
+	}
+    if( i==p.end() )
+	{
+	ret = DISK_PARTITION_NOT_FOUND;
+	}
+    if( readonly() )
+	{
+	ret = DISK_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	i->unChangeId();
+	}
+    y2milestone( "ret %d", ret );
+    return( ret );
+    }
+
 int Disk::getToCommit( CommitStage stage, list<Container*>& col,
                        list<Volume*>& vol )
     {

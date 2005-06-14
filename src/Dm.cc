@@ -18,6 +18,7 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
     {
     num_le = 0;
     stripe = 1;
+    stripe_size = 0;
     y2milestone( "constructed dm dev" );
     }
 
@@ -27,6 +28,7 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     y2milestone( "constructed dm dev table \"%s\" %u", tn.c_str(), mnum );
     num_le = 0;
     stripe = 1;
+    stripe_size = 0;
     dev = "/dev/dm-" + decString(mnum);
     nm = tn;
     init();

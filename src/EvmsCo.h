@@ -95,6 +95,8 @@ class EvmsCo : public PeContainer
 	int createVol( const string& name, unsigned long long sizeK, 
 		       unsigned stripe, string& device );
 	int removeVol( const string& name );
+	int changeStripeSize( const string& name,  
+			      unsigned long long stripeSize );
 
 	int setPeSize( long long unsigned peSizeK )
 	            { return( PeContainer::setPeSize( peSizeK, lvm1 ) ); }

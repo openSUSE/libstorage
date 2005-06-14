@@ -101,6 +101,11 @@ void Partition::changeIdDone()
     orig_id = idt;
     }
 
+void Partition::unChangeId()
+    {
+    idt = orig_id;
+    }
+
 void Partition::changeRegion( unsigned long Start, unsigned long CSize,
 			      unsigned long long SizeK )
     {

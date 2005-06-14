@@ -26,6 +26,8 @@ class Dm : public Volume
 	void getTableInfo();
 	virtual bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }
+	unsigned long long stripeSize() const { return stripe_size; }
+	void setStripeSize( unsigned long long val ) { stripe_size=val; }
 	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual string removeText( bool doing ) const;
@@ -46,6 +48,7 @@ class Dm : public Volume
 	string target;
 	unsigned long num_le;
 	unsigned stripe;
+	unsigned long long stripe_size;
 	std::map<string,unsigned long> pe_map;
 	static bool active;
 	static unsigned dm_major;
@@ -57,7 +60,11 @@ inline std::ostream& operator<< (std::ostream& s, const Dm &p )
     s << *(Volume*)&p;
     s << " LE:" << p.num_le;
     if( p.stripe>1 )
+      {
       s << " Stripes:" << p.stripe;
+      if( p.stripe_size>0 )
+	s << " StripeSize:" << p.stripe_size;
+      }
     if( !p.pe_map.empty() )
       s << " pe_map:" << p.pe_map;
     return( s );

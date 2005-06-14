@@ -42,6 +42,7 @@ class Partition : public Volume
 	void changeNumber( unsigned new_num );
 	void changeId( unsigned id );
 	void changeIdDone();
+	void unChangeId();
 	string removeText( bool doing=true ) const;
 	string createText( bool doing=true ) const;
 	string formatText(bool doing=true) const;

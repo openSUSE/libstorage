@@ -194,6 +194,7 @@ class Storage : public storage::StorageInterface
 	unsigned long long cylinderToKb( const string& disk, unsigned long size );
 	int removePartition( const string& partition );
 	int changePartitionId( const string& partition, unsigned id );
+	int forgetChangePartitionId( const string& partition );
 	int destroyPartitionTable( const string& disk, const string& label );
 	string defaultDiskLabel() const;
 
@@ -235,6 +236,9 @@ class Storage : public storage::StorageInterface
 			 string& device );
 	int removeLvmLvByDevice( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
+	int changeLvStripeSize( const string& vg, const string& name, 
+				unsigned long long stripeSize );
+
 
 	int createEvmsContainer( const string& name, unsigned long long peSizeK,
 			         bool lvm1, const deque<string>& devs );
@@ -246,6 +250,8 @@ class Storage : public storage::StorageInterface
 			      string& device );
 	int removeEvmsVolumeByDevice( const string& device );
 	int removeEvmsVolume( const string& vg, const string& name );
+	int changeEvmsStripeSize( const string& coname, const string& name,
+				  unsigned long long stripeSize );
 
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
@@ -1121,14 +1127,16 @@ class Storage : public storage::StorageInterface
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	void detectFsDataTestMode( const string& file, 
-	                           const VolIterator& begin, const VolIterator& end );
+	                           const VolIterator& begin, 
+				   const VolIterator& end );
 	static void detectArch();
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
 	LvmVgIterator findLvmVg( const string& name );
 	EvmsCoIterator findEvmsCo( const string& name );
-	bool findVolume( const string& device, ContIterator& c, VolIterator& v  );
+	bool findVolume( const string& device, ContIterator& c, 
+	                 VolIterator& v  );
 
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );
@@ -1137,9 +1145,11 @@ class Storage : public storage::StorageInterface
 	int removeContainer( Container* val );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
-	void sortCommitLists( storage::CommitStage stage, std::list<Container*>& co,  
+	void sortCommitLists( storage::CommitStage stage, 
+	                      std::list<Container*>& co,  
 			      std::list<Volume*>& vl );
-	int performContChanges( storage::CommitStage stage, const std::list<Container*>& co,
+	int performContChanges( storage::CommitStage stage, 
+	                        const std::list<Container*>& co,
 	                        bool& cont_removed );
 
 

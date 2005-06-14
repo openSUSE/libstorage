@@ -150,8 +150,11 @@ EvmsCo::extendCo( const list<string>& devs )
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
+	    getStorage()->changeFormatVolume( d, false, FSNONE );
 	    getStorage()->setUsedBy( d, UB_EVMS, name() );
-	    getStorage()->setUsedBy( "/dev/evms/"+dev.substr(5), UB_EVMS, name() );
+	    d = "/dev/evms/"+dev.substr(5);
+	    getStorage()->changeFormatVolume( d, false, FSNONE );
+	    getStorage()->setUsedBy( d, UB_EVMS, name() );
 	    }
 	free_pe += pe;
 	num_pe += pe;
@@ -257,7 +260,7 @@ EvmsCo::createVol( const string& name, unsigned long long sizeK,
 	}
     if( ret==0 )
 	checkConsistency();
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -370,6 +373,42 @@ EvmsCo::removeVol( const string& name )
 	else
 	    i->setDeleted( true );
 	free_pe += i->getLe();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+EvmsCo::changeStripeSize( const string& name, unsigned long long stripeSize )
+    {
+    int ret = 0;
+    y2milestone( "name:%s stripeSize:%llu", name.c_str(), stripeSize );
+    EvmsIter i;
+    checkConsistency();
+    if( readonly() )
+	{
+	ret = EVMS_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	EvmsPair p=evmsPair(lvNotDeleted);
+	i=p.begin();
+	while( i!=p.end() && i->name()!=name )
+	    ++i;
+	if( i==p.end() )
+	    ret = EVMS_LV_UNKNOWN_NAME;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = EVMS_LV_ALREADY_ON_DISK;
+	}
+    if( ret==0 && i->stripes()<=1 )
+	{
+	ret = EVMS_LV_NO_STRIPE_SIZE;
+	}
+    if( ret==0 )
+	{
+	i->setStripeSize( stripeSize );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -569,14 +608,18 @@ string EvmsCo::unEvmsDevice( const string& dev )
 void EvmsCo::addPv( const Pv* p )
     {
     PeContainer::addPv( p );
-    string dev = unEvmsDevice( p->device );
-    UsedByType t = getStorage()->usedBy( dev );
-    if( t==UB_EVMS || t==UB_NONE )
-	getStorage()->setUsedBy( dev, UB_EVMS, name() );
-    dev = "/dev/evms/"+dev.substr(5);
-    t = getStorage()->usedBy( dev );
-    if( t==UB_EVMS || t==UB_NONE )
-	getStorage()->setUsedBy( dev, UB_EVMS, name() );
+    if( !deleted() && 
+        find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
+	{
+	string dev = unEvmsDevice( p->device );
+	UsedByType t = getStorage()->usedBy( dev );
+	if( t==UB_EVMS || t==UB_NONE )
+	    getStorage()->setUsedBy( dev, UB_EVMS, name() );
+	dev = "/dev/evms/"+dev.substr(5);
+	t = getStorage()->usedBy( dev );
+	if( t==UB_EVMS || t==UB_NONE )
+	    getStorage()->setUsedBy( dev, UB_EVMS, name() );
+	}
     }
 
 int EvmsCo::getToCommit( CommitStage stage, list<Container*>& col,
@@ -656,7 +699,7 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createCoText(false), true, true ));
+				        createCoText(false), false, true ));
 	}
     else 
 	{

@@ -871,6 +871,42 @@ Storage::changePartitionId( const string& partition, unsigned id )
     }
 
 int
+Storage::forgetChangePartitionId( const string& partition )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "partition:%s", partition.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( partition, cont, vol ) && cont->type()==DISK )
+	{
+	Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	if( disk!=NULL )
+	    {
+	    ret = disk->forgetChangePartitionId( vol->nr() );
+	    }
+	else
+	    {
+	    ret = STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER;
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::destroyPartitionTable( const string& disk, const string& label )
     {
     int ret = 0;
@@ -1353,7 +1389,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	ret = cont->resizeVolume( &(*vol), newSizeMb );
+	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
 	}
     else
 	{
@@ -1428,7 +1464,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	LvmVg *v = new LvmVg( this, name, lvm1 );
 	v->setCreated();
 	ret = v->setPeSize( peSizeK );
-	if( ret==0 )
+	if( ret==0 && !devs.empty() )
 	    {
 	    list<string> d;
 	    back_insert_iterator<list<string> > inserter(d);
@@ -1606,6 +1642,35 @@ Storage::removeLvmLv( const string& vg, const string& name )
     else if( i != lvgEnd() )
 	{
 	ret = i->removeLv( name );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::changeLvStripeSize( const string& vg, const string& name, 
+			     unsigned long long stripeSize )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "vg:%s name:%s striepSize:%llu", vg.c_str(), name.c_str(),
+                 stripeSize );
+    LvmVgIterator i = findLvmVg( vg );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->changeStripeSize( name, stripeSize );
 	}
     else
 	{
@@ -1823,6 +1888,35 @@ Storage::removeEvmsVolume( const string& co, const string& name )
     else if( i != evCoEnd() )
 	{
 	ret = i->removeVol( name );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::changeEvmsStripeSize( const string& coname, const string& name,
+                               unsigned long long stripeSize )
+
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "co:%s name:%s", coname.c_str(), name.c_str() );
+    EvmsCoIterator i = findEvmsCo( coname );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	ret = i->changeStripeSize( name, stripeSize );
 	}
     else
 	{
@@ -2296,12 +2390,11 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
     while( ret==0 && cli != co.end() )
 	{
 	Container *co = *cli;
-	y2milestone( "before commit:%p", co );
-	ret = co->commitChanges( stage );
-	y2milestone( "after commit:%p", co );
 	if( stage==DECREASE && co->deleted() &&
 	    (co->type()==LVM||co->type()==EVMS) )
 	    cont_remove.push_back( co );
+	ret = co->commitChanges( stage );
+	y2mil( "container after commit" << *co );
 	++cli;
 	}
     if( !cont_remove.empty() )

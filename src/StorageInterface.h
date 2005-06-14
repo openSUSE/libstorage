@@ -410,6 +410,8 @@ namespace storage
 	LVM_CHECK_RESIZE_INVALID_VOLUME = -4023,
 	LVM_COMMIT_NOTHING_TODO = -4024,
 	LVM_LV_REMOVE_USED_BY = -4025,
+	LVM_LV_ALREADY_ON_DISK = -4026,
+	LVM_LV_NO_STRIPE_SIZE = -4027,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -485,6 +487,8 @@ namespace storage
 	EVMS_COMMIT_NOTHING_TODO = -8039,
 	EVMS_LV_REMOVE_USED_BY = -8040,
 	EVMS_COMMUNICATION_FAILED = -8041,
+	EVMS_LV_ALREADY_ON_DISK = -8042,
+	EVMS_LV_NO_STRIPE_SIZE = -8043,
 
 	PEC_PE_SIZE_INVALID = -9000,
 	PEC_PV_NOT_FOUND = -9001,
@@ -793,6 +797,13 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
+	/**
+	 * Forget previouly issued change of partition id 
+	 *
+	 * @param partition name of partition, e.g. /dev/hda1
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int forgetChangePartitionId (const string& partition ) = 0;
 
 	/**
 	 * Destroys the partition table of a disk. An empty disk label
@@ -1109,6 +1120,18 @@ namespace storage
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
 
 	/**
+	 * Change strip size of a LVM logical volume. 
+	 * This can only be before the volume is created on disk.
+	 *
+	 * @param vg name of volume group
+	 * @param name of logical volume
+	 * @param stripeSize new stripe size of logical volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeLvStripeSize( const string& vg, const string& name,
+	                                unsigned long long stripeSize ) = 0;
+
+	/**
 	 * Create a EVMS container
 	 *
 	 * @param name name of container, must not contain blanks, colons
@@ -1182,6 +1205,19 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
+
+	/**
+	 * Change strip size of a EVMS volume. 
+	 * This can only be before the volume is created on disk.
+	 *
+	 * @param coname name of EVMS container
+	 * @param name of volume
+	 * @param stripeSize new stripe size of volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeEvmsStripeSize( const string& coname, 
+	                                  const string& name,
+					  unsigned long long stripeSize ) = 0;
 
 	/**
 	 * Create a Software raid device by name

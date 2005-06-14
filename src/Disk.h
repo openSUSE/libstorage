@@ -51,6 +51,7 @@ class Disk : public Container
 	int createPartition( storage::PartitionType type, string& device );
 	int removePartition( unsigned nr );
 	int changePartitionId( unsigned nr, unsigned id );
+	int forgetChangePartitionId( unsigned nr );
 	int changePartitionArea( unsigned nr, unsigned long start, 
 	                         unsigned long size, bool checkRelaxed=false );
 	int nextFreePartition( storage::PartitionType type, unsigned& nr,

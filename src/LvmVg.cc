@@ -144,6 +144,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
+	    getStorage()->changeFormatVolume( d, false, FSNONE );
 	    getStorage()->setUsedBy( d, UB_LVM, name() );
 	    }
 	free_pe += pe;
@@ -250,7 +251,7 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	}
     if( ret==0 )
 	checkConsistency();
-    y2milestone( "ret:%d device:%s", ret, ret?device.c_str():"" );
+    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
     return( ret );
     }
 
@@ -363,6 +364,42 @@ LvmVg::removeLv( const string& name )
 	else
 	    i->setDeleted( true );
 	free_pe += i->getLe();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
+    {
+    int ret = 0;
+    y2milestone( "name:%s stripeSize:%llu", name.c_str(), stripeSize );
+    LvmLvIter i;
+    checkConsistency();
+    if( readonly() )
+	{
+	ret = LVM_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	i=p.begin();
+	while( i!=p.end() && i->name()!=name )
+	    ++i;
+	if( i==p.end() )
+	    ret = LVM_LV_UNKNOWN_NAME;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = LVM_LV_ALREADY_ON_DISK;
+	}
+    if( ret==0 && i->stripes()<=1 )
+	{
+	ret = LVM_LV_NO_STRIPE_SIZE;
+	}
+    if( ret==0 )
+	{
+	i->setStripeSize( stripeSize );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -591,7 +628,9 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 void LvmVg::addPv( Pv*& p )
     {
     PeContainer::addPv( p );
-    getStorage()->setUsedBy( p->device, UB_LVM, name() );
+    if( !deleted() &&
+        find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
+	getStorage()->setUsedBy( p->device, UB_LVM, name() );
     p = new Pv;
     }
 
@@ -672,7 +711,7 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createVgText(false), true, true ));
+				        createVgText(false), false, true ));
 	}
     else 
 	{
@@ -832,6 +871,8 @@ LvmVg::doCreateVg()
 	    getStorage()->showInfoCb( createVgText(true) );
 	    }
 	string devices;
+	if( pv_add.size()+pv.size()-pv_remove.size()<=0 )
+	    ret = LVM_VG_HAS_NONE_PV;
 	list<Pv>::iterator p = pv_add.begin();
 	while( ret==0 && p!=pv_add.end() )
 	    {
@@ -987,7 +1028,11 @@ LvmVg::doCreate( Volume* v )
 	checkConsistency();
 	string cmd = "lvcreate " + instSysString() + " -l " + decString(l->getLe());
 	if( l->stripes()>1 )
+	    {
 	    cmd += " -i " + decString(l->stripes());
+	    if( l->stripeSize()>0 )
+		cmd += " -I " + decString(l->stripeSize()/1024);
+	    }
 	cmd += " -n " + l->name();
 	cmd += " " + name();
 	SystemCmd c( cmd );
