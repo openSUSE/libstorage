@@ -128,7 +128,7 @@ MdCo::getMdData()
     MdPair p=mdPair(Md::notDeleted);
     for( MdIter i=p.begin(); i!=p.end(); ++i )
 	{
-	string num = decString(i->nr());
+	string num = "md"+decString(i->nr());
 	list<string> devs;
 	i->getDevs( devs );
 	for( list<string>::iterator s=devs.begin(); s!=devs.end(); ++s )
@@ -181,7 +181,7 @@ MdCo::checkMd( Md* m )
 	if( m->personality()!=i->personality() )
 	    y2warning( "inconsistent raid type my:%s kernel:%s", 
 	               i->pName().c_str(), m->pName().c_str() );
-	if( i->parity()!=Md::PAR_NONE && m->parity()!=i->parity() )
+	if( i->parity()!=storage::PAR_NONE && m->parity()!=i->parity() )
 	    y2warning( "inconsistent parity my:%s kernel:%s", 
 	               i->ptName().c_str(), m->ptName().c_str() );
 	if( i->chunkSize()>0 && m->chunkSize()!=i->chunkSize() )
@@ -259,78 +259,201 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	if( findMd( num ))
 	    ret = MD_DUPLICATE_NUMBER;
 	}
-    unsigned long long sum = 0;
-    unsigned long long smallest = 0;
     list<string>::const_iterator i=devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
-	string d = normalizeDevice( *i );
-	const Volume* v = getStorage()->getVolume( d );
-	if( v==NULL )
-	    {
-	    ret = MD_DEVICE_UNKNOWN;
-	    }
-	else if( !v->canUseDevice() )
-	    {
-	    ret = MD_DEVICE_USED;
-	    }
-	else 
-	    {
-	    sum += v->sizeK();
-	    if( smallest==0 )
-		smallest = v->sizeK();
-	    else
-		smallest = min( smallest, v->sizeK() );
-	    }
+	ret = checkUse( normalizeDevice( *i ) );
 	++i;
 	}
-    unsigned long long rsize = 0;
-    unsigned nmin = 2;
-    if( ret==0 )
-	{
-	switch( type )
-	    {
-	    case RAID0:
-		rsize = sum;
-		break;
-	    case RAID1:
-	    case MULTIPATH:
-		rsize = smallest;
-		break;
-	    case RAID5:
-		nmin = 3;
-		rsize = smallest*(devs.size()-1);
-		break;
-	    case RAID6:
-		nmin = 4;
-		rsize = smallest*(devs.size()-2);
-		break;
-	    case RAID10:
-		rsize = smallest*devs.size()/2;
-		break;
-	    default:
-		break;
-	    }
-	if( devs.size()<nmin )
-	    {
-	    ret = MD_TOO_FEW_DEVICES;
-	    }
-	}
-    y2milestone( "min:%u smallest:%llu sum:%llu size:%llu", nmin, smallest, 
-                 sum, rsize );
     i=devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
-	getStorage()->setUsedBy( d, UB_MD, decString(num) );
+	getStorage()->setUsedBy( d, UB_MD, "md"+decString(num) );
 	++i;
 	}
     if( ret==0 )
 	{
 	Md* m = new Md( *this, num, type, devs );
 	m->setCreated( true );
-	m->setSize( rsize );
 	addToList( m );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int MdCo::checkUse( const string& dev )
+    {
+    int ret = 0;
+    const Volume* v = getStorage()->getVolume( dev );
+    if( v==NULL )
+	{
+	ret = MD_DEVICE_UNKNOWN;
+	}
+    else if( !v->canUseDevice() )
+	{
+	ret = MD_DEVICE_USED;
+	}
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
+bool 
+MdCo::checkMd( unsigned num )
+    {
+    int ret = false;
+    y2milestone( "num:%u", num );
+    MdIter i;
+    if( findMd( num, i ) && (!i->created() || i->checkDevices()==0) )
+	ret = true;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+MdCo::extendMd( unsigned num, const string& dev )
+    {
+    int ret = 0;
+    y2milestone( "num:%u dev:%s", num, dev.c_str() );
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	ret = checkUse( normalizeDevice( dev ) );
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_RESIZE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+	ret = i->addDevice( dev );
+	}
+    if( ret==0 )
+	{
+	string d = normalizeDevice( dev );
+	getStorage()->setUsedBy( d, UB_MD, "md"+decString(num) );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+MdCo::shrinkMd( unsigned num, const string& dev )
+    {
+    int ret = 0;
+    y2milestone( "num:%u dev:%s", num, dev.c_str() );
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_RESIZE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+	ret = i->removeDevice( dev );
+	}
+    if( ret==0 )
+	{
+	string d = normalizeDevice( dev );
+	getStorage()->setUsedBy( d, UB_NONE, "" );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+MdCo::changeMdType( unsigned num, MdType ptype )
+    {
+    int ret = 0;
+    y2milestone( "num:%u md_type:%d", num, ptype );
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_CHANGE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+	i->setPersonality( ptype );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+MdCo::changeMdChunk( unsigned num, unsigned long chunk )
+    {
+    int ret = 0;
+    y2milestone( "num:%u chunk:%lu", num, chunk );
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_CHANGE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+	i->setChunkSize( chunk );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+MdCo::changeMdParity( unsigned num, MdParity ptype )
+    {
+    int ret = 0;
+    y2milestone( "num:%u parity:%d", num, ptype );
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_RESIZE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+	i->setParity( ptype );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -357,6 +480,10 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	}
     if( ret==0 )
 	{
+	list<string> devs;
+	i->getDevs( devs );
+	for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
+	    getStorage()->setUsedBy( *s, UB_NONE, "" );
 	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))
@@ -364,10 +491,6 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	    }
 	else
 	    {
-	    list<string> devs;
-	    i->getDevs( devs );
-	    for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
-		getStorage()->setUsedBy( *s, UB_NONE, "" );
 	    i->setDeleted( true );
 	    i->setDestroySb( destroySb );
 	    }
@@ -418,10 +541,14 @@ MdCo::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( m->createText(true) );
 	    }
-	string cmd = m->createCmd();
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = MD_CREATE_FAILED;
+	ret =  m->checkDevices();
+	if( ret==0 )
+	    {
+	    string cmd = m->createCmd();
+	    SystemCmd c( cmd );
+	    if( c.retcode()!=0 )
+		ret = MD_CREATE_FAILED;
+	    }
 	if( ret==0 )
 	    {
 	    getMdData( m->nr() );

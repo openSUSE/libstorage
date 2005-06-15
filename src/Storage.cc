@@ -2056,6 +2056,173 @@ int Storage::removeMd( const string& name, bool destroySb )
     return( ret );
     }
 
+int Storage::extendMd( const string& name, const string& dev )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s dev:%s", name.c_str(), dev.c_str() );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->extendMd( num, dev );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Storage::shrinkMd( const string& name, const string& dev )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s dev:%s", name.c_str(), dev.c_str() );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->shrinkMd( num, dev );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Storage::changeMdType( const string& name, MdType rtype )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s rtype:%d", name.c_str(), rtype );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->changeMdType( num, rtype );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int Storage::changeMdChunk( const string& name, unsigned long chunk )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s dev:%lu", name.c_str(), chunk );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->changeMdChunk( num, chunk );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+	        int changeMdParity( const string& name, storage::MdParity ptype );
+
+int Storage::changeMdParity( const string& name, MdParity ptype )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "name:%s dev:%d", name.c_str(), ptype );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->changeMdParity( num, ptype );
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool Storage::checkMd( const string& name )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    unsigned num = 0;
+    MdCo *md = NULL;
+    if( Md::mdStringNum( name, num ) && haveMd(md) && md->checkMd(num))
+	{
+	ret = true;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;

@@ -19,6 +19,13 @@ class MdCo : public Container
 	int createMd( unsigned num, storage::MdType type, 
 	              const std::list<string>& devs );
 	int removeMd( unsigned num, bool destroySb=true );
+	int extendMd( unsigned num, const string& dev );
+	int shrinkMd( unsigned num, const string& dev );
+	int changeMdType( unsigned num, storage::MdType ptype );
+	int changeMdChunk( unsigned num, unsigned long chunk );
+	int changeMdParity( unsigned num, storage::MdParity ptype );
+	bool checkMd( unsigned num );
+
 	unsigned unusedNumber();
 	void syncRaidtab();
 
@@ -83,6 +90,7 @@ class MdCo : public Container
 	bool findMd( unsigned num ); 
 	bool findMd( const string& dev, MdIter& i );
 	bool findMd( const string& dev ); 
+	int checkUse( const string& dev );
 	void addMd( Md* m );
 	void checkMd( Md* m );
 	void updateEntry( const Md* m );

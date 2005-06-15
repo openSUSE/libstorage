@@ -258,6 +258,13 @@ class Storage : public storage::StorageInterface
 	int createMdAny( storage::MdType rtype, const deque<string>& devs,
 			 string& device );
 	int removeMd( const string& name, bool destroySb=true );
+	int extendMd( const string& name, const string& dev );
+	int shrinkMd( const string& name, const string& dev );
+	int changeMdType( const string& name, storage::MdType rtype );
+	int changeMdChunk( const string& name, unsigned long chunk );
+	int changeMdParity( const string& name, storage::MdParity ptype );
+	bool checkMd( const string& name );
+
 
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,

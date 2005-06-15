@@ -6,6 +6,7 @@
 
 #include "y2storage/Md.h"
 #include "y2storage/StorageTypes.h"
+#include "y2storage/Storage.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Regex.h"
@@ -26,6 +27,7 @@ Md::Md( const Container& d, unsigned PNr, MdType Type,
     md_type = Type;
     for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
 	devs.push_back( normalizeDevice( *i ) );
+    computeSize();
     }
 
 Md::Md( const Container& d, const string& line1, const string& line2 )
@@ -158,12 +160,121 @@ void
 Md::getDevs( list<string>& devices, bool all, bool spares ) const
     { 
     if( !all )
-	devices = spares ? devs : spare; 
+	devices = spares ? spare : devs ; 
     else
 	{
 	devices = devs;
 	devices.insert( devices.end(), spare.begin(), spare.end() );
 	}
+    }
+
+int
+Md::addDevice( const string& dev, bool to_spare )
+    {
+    int ret = 0;
+    string d = normalizeDevice( dev );
+    if( find( devs.begin(), devs.end(), dev )!=devs.end() ||
+        find( spare.begin(), spare.end(), dev )!=spare.end() )
+	{
+	ret = MD_ADD_DUPLICATE;
+	}
+    if( ret==0 )
+	{
+	if( to_spare )
+	    {
+	    spare.push_back(d);
+	    }
+	else
+	    {
+	    devs.push_back(d);
+	    computeSize();
+	    }
+	}
+    y2milestone( "dev:%s spare:%d ret:%d", dev.c_str(), to_spare, ret );
+    return( ret );
+    }
+
+int
+Md::removeDevice( const string& dev )
+    {
+    int ret = 0;
+    string d = normalizeDevice( dev );
+    list<string>::iterator i;
+    if( (i=find( devs.begin(), devs.end(), dev ))!=devs.end() )
+	{
+	devs.erase(i);
+	computeSize();
+	}
+    else if( (i=find( spare.begin(), spare.end(), dev ))!=spare.end() )
+	spare.erase(i);
+    else
+	ret = MD_REMOVE_NONEXISTENT;
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
+int 
+Md::checkDevices()
+    {
+    unsigned nmin = 2;
+    switch( md_type )
+	{
+	case RAID5:
+	    nmin = 3;
+	    break;
+	case RAID6:
+	    nmin = 4;
+	    break;
+	default:
+	    break;
+	}
+    int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
+    y2milestone( "type:%d min:%u size:%d ret:%d", md_type, nmin, devs.size(),
+                 ret );
+    return( ret );
+    }
+
+void
+Md::computeSize()
+    {
+    unsigned long long sum = 0;
+    unsigned long long smallest = 0;
+    list<string>::const_iterator i=devs.begin();
+    while( i!=devs.end() )
+	{
+	const Volume* v = getContainer()->getStorage()->getVolume( *i );
+	sum += v->sizeK();
+	if( smallest==0 )
+	    smallest = v->sizeK();
+	else
+	    smallest = min( smallest, v->sizeK() );
+	++i;
+	}
+    unsigned long long rsize = 0;
+    switch( md_type )
+	{
+	case RAID0:
+	    rsize = sum;
+	    break;
+	case RAID1:
+	case MULTIPATH:
+	    rsize = smallest;
+	    break;
+	case RAID5:
+	    rsize = devs.size()==0 ? 0 : smallest*(devs.size()-1);
+	    break;
+	case RAID6:
+	    rsize = devs.size()<2 ? 0 : smallest*(devs.size()-2);
+	    break;
+	case RAID10:
+	    rsize = smallest*devs.size()/2;
+	    break;
+	default:
+	    rsize = 0;
+	}
+    y2milestone( "type:%d smallest:%llu sum:%llu size:%llu", md_type, 
+                 smallest, sum, rsize );
+    setSize( rsize );
     }
 
 void 
@@ -381,7 +492,7 @@ Md::toMdType( const string& val )
     return( ret );
     }
 
-Md::MdParity
+MdParity
 Md::toMdParity( const string& val ) 
     {
     enum MdParity ret = RIGHT_SYMMETRIC;
@@ -405,12 +516,20 @@ bool Md::mdStringNum( const string& name, unsigned& num )
     return( ret );
     }
 
+void Md::setPersonality( MdType val ) 
+    { 
+    md_type=val; 
+    computeSize();
+    }
+
+
 void Md::getInfo( MdInfo& info ) const
     {
     info.nr = num;
     info.type = md_type;
     info.uuid = md_uuid;
     info.chunk = chunk;
+    info.parity = md_parity;
     }
 
 string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6", 

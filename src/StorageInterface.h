@@ -91,6 +91,9 @@ namespace storage
 
     enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
 
+    enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
+		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
+
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM };
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS };
@@ -271,6 +274,7 @@ namespace storage
 	VolumeInfo v;
 	unsigned nr;
 	MdType type;
+	MdParity parity;
 	string uuid;
 	unsigned long chunk;
 	};
@@ -435,6 +439,10 @@ namespace storage
 	MD_NUMBER_TOO_LARGE = -6011,
 	MD_REMOVE_INVALID_VOLUME = -6012,
 	MD_REMOVE_CREATE_NOT_FOUND = -6013,
+	MD_NO_RESIZE_ON_DISK = -6014,
+	MD_ADD_DUPLICATE = -6015,
+	MD_REMOVE_NONEXISTENT = -6016,
+	MD_NO_CHANGE_ON_DISK = -6017,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
@@ -1252,6 +1260,63 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeMd( const string& name, bool destroySb ) = 0;
+
+	/**
+	 * Add a partition to a raid device.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param dev partition to add to that raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int extendMd( const string& name, const string& dev ) = 0;
+
+	/**
+	 * Remove a partition from a raid device.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param dev partition to remove from that raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int shrinkMd( const string& name, const string& dev ) = 0;
+
+	/**
+	 * Change raid type of a raid device.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param rtype new raid personality of the software raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMdType( const string& name, MdType rtype ) = 0;
+
+	/**
+	 * Change chunk size of a raid device.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param chunk new chunk size of the software raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMdChunk( const string& name, unsigned long chunk ) = 0;
+	/**
+	 * Change parity of a raid device with raid type raid5.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param ptype new parity of the software raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeMdParity( const string& name, MdParity ptype ) = 0;
+
+	/**
+	 * Check if a raid device is valid
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @return true if all is ok, a false to indicate an error
+	 */
+	virtual bool checkMd( const string& name ) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically
