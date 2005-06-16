@@ -287,7 +287,7 @@ Storage::detectLvmVgs()
 	    }
  	globfree (&globbuf);
 	}
-    else
+    else if( getenv( "YAST2_STORAGE_NO_LVM" )==NULL )
 	{
 	list<string> l;
 	if( instsys() )
@@ -422,10 +422,13 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     ProcMounts Mounts;
     for( VolIterator i=begin; i!=end; ++i )
 	{
-	i->getLoopData( Losetup );
-	i->getFsData( Blkid );
-	i->getMountData( Mounts );
-	i->getFstabData( *fstab );
+	if( i->getUsedByType()==UB_NONE )
+	    {
+	    i->getLoopData( Losetup );
+	    i->getFsData( Blkid );
+	    i->getMountData( Mounts );
+	    i->getFstabData( *fstab );
+	    }
 	}
     if( max_log_num>0 )
 	logVolumes( logdir );

@@ -101,7 +101,7 @@ bool Volume::operator< ( const Volume& rhs ) const
     {
     if( *cont != *rhs.cont )
 	return( *cont<*rhs.cont );
-    else if( nm != rhs.nm )
+    else if( (numeric && num!=rhs.num) || (!numeric && nm != rhs.nm) )
 	{
 	if( numeric )
 	    return( num<rhs.num );
