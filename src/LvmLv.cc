@@ -60,13 +60,13 @@ string LvmLv::removeText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-	txt = sformat( _("Deleting Logical volume %1$s"), dev.c_str() );
+	txt = sformat( _("Deleting logical volume %1$s"), dev.c_str() );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete Logical volume %1$s %2$s"), dev.c_str(),
+	txt = sformat( _("Delete logical volume %1$s (%2$s)"), dev.c_str(),
 		       sizeString().c_str() );
 	}
     return( txt );
@@ -78,7 +78,7 @@ string LvmLv::createText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-	txt = sformat( _("Creating Logical volume %1$s"), dev.c_str() );
+	txt = sformat( _("Creating logical volume %1$s"), dev.c_str() );
 	}
     else
 	{
@@ -86,7 +86,7 @@ string LvmLv::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create swap Logical volume %1$s %2$s"),
+	    txt = sformat( _("Create swap logical volume %1$s (%2$s)"),
 	                   dev.c_str(), sizeString().c_str() );
 	    }
 	else if( !mp.empty() )
@@ -97,7 +97,7 @@ string LvmLv::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create Logical volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create logical volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -116,7 +116,7 @@ string LvmLv::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create Logical volume %1$s %2$s"),
+	    txt = sformat( _("Create logical volume %1$s (%2$s)"),
 			   dev.c_str(), sizeString().c_str() );
 	    }
 	}
@@ -131,7 +131,7 @@ string LvmLv::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting Logical volume %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting logical volume %1$s (%2$s) with %3$s"),
 		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -142,7 +142,7 @@ string LvmLv::formatText( bool doing ) const
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 		// %2$s is replaced by size (e.g. 623.5 MB)
-		txt = sformat( _("Format Logical volume %1$s %2$s for swap"),
+		txt = sformat( _("Format logical volume %1$s (%2$s) for swap"),
 			       dev.c_str(), sizeString().c_str() );
 		}
 	    else if( encryption==ENC_NONE )
@@ -151,7 +151,7 @@ string LvmLv::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format Logical volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format logical volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -161,7 +161,7 @@ string LvmLv::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted Logical volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -171,7 +171,7 @@ string LvmLv::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format Logical volume %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format logical volume %1$s (%2$s) with %3$s"),
 			   dev.c_str(), sizeString().c_str(), 
 			   fsTypeString().c_str() );
 	    }
@@ -187,11 +187,11 @@ string LvmLv::resizeText( bool doing ) const
 	if( needShrink() )
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrinking Logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Shrinking logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 	else
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extending Logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Extending logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 
         }
     else
@@ -199,11 +199,11 @@ string LvmLv::resizeText( bool doing ) const
 	if( needShrink() )
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrink Logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Shrink logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 	else
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extend Logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Extend logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 
         }
     return( txt );

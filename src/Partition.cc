@@ -155,7 +155,7 @@ string Partition::setTypeText( bool doing ) const
 	string d = dev.substr( 5 );
         // displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
         // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Setting type of partition %1$s to %2$X"),
+        txt = sformat( _("Set type of partition %1$s to %2$X"),
                       d.c_str(), id() );
         }
     return( txt );
@@ -217,14 +217,14 @@ string Partition::removeText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Delete Windows partition %1$s %2$s"), d.c_str(),
+	    txt = sformat( _("Delete Windows partition %1$s (%2$s)"), d.c_str(),
 	                      sizeString().c_str() );
 	    }
 	else
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Delete partition %1$s %2$s"), d.c_str(),
+	    txt = sformat( _("Delete partition %1$s (%2$s)"), d.c_str(),
 	                      sizeString().c_str() );
 	    }
 	}
@@ -246,14 +246,14 @@ string Partition::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create extended partition %1$s %2$s"),
+	    txt = sformat( _("Create extended partition %1$s (%2$s)"),
 	                   d.c_str(), sizeString().c_str() );
 	    }
 	else if( mp=="swap" )
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create swap partition %1$s %2$s"),
+	    txt = sformat( _("Create swap partition %1$s (%2$s)"),
 	                   d.c_str(), sizeString().c_str() );
 	    }
 	else if( mp=="/" )
@@ -261,7 +261,7 @@ string Partition::createText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Create root partition %1$s %2$s with %3$s"),
+	    txt = sformat( _("Create root partition %1$s (%2$s) with %3$s"),
 	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	else if( mp==bootMount() )
@@ -269,7 +269,7 @@ string Partition::createText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Create boot partition %1$s %2$s with %3$s"),
+	    txt = sformat( _("Create boot partition %1$s (%2$s) with %3$s"),
 	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	else if( !mp.empty() )
@@ -280,7 +280,7 @@ string Partition::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create partition %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create partition %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -290,7 +290,7 @@ string Partition::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create crypted partition %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create encrypted partition %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -300,14 +300,14 @@ string Partition::createText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by hexadecimal number (e.g. 8E)
-	    txt = sformat( _("Create partition %1$s (id=%3$X) %2$s"),
+	    txt = sformat( _("Create partition %1$s (%2$s) with id=%3$X"),
 			   d.c_str(), sizeString().c_str(), idt );
 	    }
 	else
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create partition %1$s %2$s"),
+	    txt = sformat( _("Create partition %1$s (%2$s)"),
 			   d.c_str(), sizeString().c_str() );
 	    }
 	}
@@ -322,7 +322,7 @@ string Partition::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting partition %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting partition %1$s (%2$s) with %3$s "),
 		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -334,7 +334,7 @@ string Partition::formatText( bool doing ) const
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
-		txt = sformat( _("Format partition %1$s %2$s for swap"),
+		txt = sformat( _("Format partition %1$s (%2$s) for swap"),
 			       d.c_str(), sizeString().c_str() );
 		}
 	    else if( encryption==ENC_NONE )
@@ -343,7 +343,7 @@ string Partition::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format partition %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format partition %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -353,7 +353,7 @@ string Partition::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted partition %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted partition %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -363,7 +363,7 @@ string Partition::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format partition %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format partition %1$s (%2$s) with %3$s"),
 			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	}

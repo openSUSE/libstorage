@@ -371,14 +371,14 @@ string Md::removeText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	txt = sformat( _("Deleting Software raid %1$s"), d.c_str() );
+	txt = sformat( _("Deleting software RAID %1$s"), d.c_str() );
 	}
     else
 	{
 	d.erase( 0, 5 );
 	// displayed text before action, %1$s is replaced by device name e.g. md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete Software raid %1$s %2$s"), d.c_str(),
+	txt = sformat( _("Delete software RAID %1$s (%2$s)"), d.c_str(),
 		       sizeString().c_str() );
 	}
     return( txt );
@@ -391,7 +391,7 @@ string Md::createText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	txt = sformat( _("Creating Software raid %1$s"), d.c_str() );
+	txt = sformat( _("Creating software RAID %1$s"), d.c_str() );
 	}
     else
 	{
@@ -404,7 +404,7 @@ string Md::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create Software raid %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create software RAID %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -414,7 +414,7 @@ string Md::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create crypted Software raid %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -423,7 +423,7 @@ string Md::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create Software raid %1$s %2$s"),
+	    txt = sformat( _("Create software RAID %1$s (%2$s)"),
 			   dev.c_str(), sizeString().c_str() );
 	    }
 	}
@@ -439,7 +439,7 @@ string Md::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting Software raid %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting software RAID %1$s (%2$s) with %3$s "),
 		       d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -453,7 +453,7 @@ string Md::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format Software raid %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -463,7 +463,7 @@ string Md::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted Software raid %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
@@ -473,7 +473,7 @@ string Md::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format Software raid %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format software RAID %1$s (%2$s) with %3$s"),
 			   d.c_str(), sizeString().c_str(), 
 			   fsTypeString().c_str() );
 	    }

@@ -82,7 +82,7 @@ string Evms::removeText( bool doing ) const
 	{
 	// displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete EVMS volume %1$s %2$s"), dev.c_str(),
+	txt = sformat( _("Delete EVMS volume %1$s (%2$s)"), dev.c_str(),
 		       sizeString().c_str() );
 	}
     return( txt );
@@ -102,7 +102,7 @@ string Evms::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create swap EVMS volume %1$s %2$s"),
+	    txt = sformat( _("Create swap EVMS volume %1$s (%2$s)"),
 	                   dev.c_str(), sizeString().c_str() );
 	    }
 	else if( !mp.empty() )
@@ -113,7 +113,7 @@ string Evms::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create EVMS volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create EVMS volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -123,7 +123,7 @@ string Evms::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create crypted EVMS volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create encrypted EVMS volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -132,7 +132,7 @@ string Evms::createText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create EVMS volume %1$s %2$s"),
+	    txt = sformat( _("Create EVMS volume %1$s (%2$s)"),
 			   dev.c_str(), sizeString().c_str() );
 	    }
 	}
@@ -147,7 +147,7 @@ string Evms::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting EVMS volume %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting EVMS volume %1$s (%2$s) with %3$s "),
 		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -158,7 +158,7 @@ string Evms::formatText( bool doing ) const
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 		// %2$s is replaced by size (e.g. 623.5 MB)
-		txt = sformat( _("Format EVMS volume %1$s %2$s for swap"),
+		txt = sformat( _("Format EVMS volume %1$s (%2$s) for swap"),
 			       dev.c_str(), sizeString().c_str() );
 		}
 	    else if( encryption==ENC_NONE )
@@ -167,7 +167,7 @@ string Evms::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format EVMS volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format EVMS volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -177,7 +177,7 @@ string Evms::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted EVMS volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted EVMS volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -187,7 +187,7 @@ string Evms::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format EVMS volume %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format EVMS volume %1$s (%2$s) with %3$s"),
 			   dev.c_str(), sizeString().c_str(), 
 			   fsTypeString().c_str() );
 	    }

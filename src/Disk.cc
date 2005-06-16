@@ -604,14 +604,14 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 	    }
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
-_("The partitioning on your disk %1$s is not readable by\n"
-"the partitioning tool \"parted\" that YaST2 uses to change the\n"
+_("The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool parted, which is used to change the\n"
 "partition table.\n"
 "\n"
-"You may use the partitions on disk %1$s as they are.\n"
-"You may format them and assign mount points to them, but you\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
 "cannot add, edit, resize, or remove partitions from that\n"
-"disk with YaST2."), dev.c_str() );
+"disk with this tool."), dev.c_str() );
 
 	getStorage()->infoPopupCb( txt );
 	ronly = true;
@@ -621,9 +621,9 @@ _("The partitioning on your disk %1$s is not readable by\n"
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	//            %2$lu and %3$lu are replaced by numbers.
 	string txt = sformat(
-_("Your disk %1$s contains %2$lu partitions. The maximal number\n"
-"of partitions to handle by the kernel driver of disk is %3$lu.\n"
-"You will not be able to access partitions numbered above %3$lu."),
+_("Your disk %1$s contains %2$lu partitions. The maximum number\n"
+"of partitions that the kernel driver of the disk can handle is %3$lu.\n"
+"Partitions numbered above %3$lu cannot be accessed."),
                               (char*)dev.c_str(), range_exceed, range-1 );
 	getStorage()->infoPopupCb( txt );
 	}
@@ -1394,7 +1394,7 @@ string Disk::setDiskLabelText( bool doing ) const
         {
         // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Initializing disk label of disk %1$s to %2$s"),
+        txt = sformat( _("Setting disk label of disk %1$s to %2$s"),
 		       dev.c_str(), label.c_str() );
         }
     else
@@ -1402,7 +1402,7 @@ string Disk::setDiskLabelText( bool doing ) const
 	string d = dev.substr( 5 );
         // displayed text before action, %1$s is replaced by disk name (e.g. hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Initialize disk label of disk %1$s to %2$s"),
+        txt = sformat( _("Set disk label of disk %1$s to %2$s"),
 		      d.c_str(), label.c_str() );
         }
     return( txt );

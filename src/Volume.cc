@@ -484,7 +484,7 @@ string Volume::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting device %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting device %1$s (%2$s) with %3$s "),
 		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -498,7 +498,7 @@ string Volume::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format device %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format device %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -508,7 +508,7 @@ string Volume::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted device %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted device %1$s (%2$s) for %4$s with %3$s"),
 			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -518,7 +518,7 @@ string Volume::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format device %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format device %1$s (%2$s) with %3$s"),
 			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
 	}
@@ -716,7 +716,7 @@ string Volume::mountText( bool doing ) const
 	else
 	    {
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Umounting %1$s"), dev.c_str() );
+	    txt = sformat( _("Unmounting %1$s"), dev.c_str() );
 	    }
         }
     else

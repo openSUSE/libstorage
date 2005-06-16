@@ -227,13 +227,13 @@ string Dm::removeText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-	txt = sformat( _("Deleting Device mapper volume %1$s"), dev.c_str() );
+	txt = sformat( _("Deleting device mapper volume %1$s"), dev.c_str() );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete Device mapper volume %1$s %2$s"), dev.c_str(),
+	txt = sformat( _("Delete device mapper volume %1$s (%2$s)"), dev.c_str(),
 		       sizeString().c_str() );
 	}
     return( txt );
@@ -247,7 +247,7 @@ string Dm::formatText( bool doing ) const
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting Device mapper volume %1$s %2$s with %3$s "),
+	txt = sformat( _("Formatting device mapper volume %1$s (%2$s) with %3$s "),
 		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
@@ -260,7 +260,7 @@ string Dm::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format Device mapper volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format device mapper volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -270,7 +270,7 @@ string Dm::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format crypted Device mapper volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
@@ -280,7 +280,7 @@ string Dm::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format Device mapper volume %1$s %2$s with %3$s"),
+	    txt = sformat( _("Format device mapper volume %1$s (%2$s) with %3$s"),
 			   dev.c_str(), sizeString().c_str(), 
 			   fsTypeString().c_str() );
 	    }

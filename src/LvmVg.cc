@@ -737,12 +737,12 @@ LvmVg::removeVgText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Removing Volume group %1$s"), name().c_str() );
+        txt = sformat( _("Removing volume group %1$s"), name().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Remove Volume group %1$s"), name().c_str() );
+        txt = sformat( _("Remove volume group %1$s"), name().c_str() );
         }
     return( txt );
     }
@@ -754,12 +754,12 @@ LvmVg::createVgText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Creating Volume group %1$s"), name().c_str() );
+        txt = sformat( _("Creating volume group %1$s"), name().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Create Volume group %1$s"), name().c_str() );
+        txt = sformat( _("Create volume group %1$s"), name().c_str() );
         }
     return( txt );
     }
@@ -772,14 +772,14 @@ LvmVg::extendVgText( bool doing, const string& dev ) const
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extending Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extending volume group %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extend Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extend volume group %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
@@ -793,14 +793,14 @@ LvmVg::reduceVgText( bool doing, const string& dev ) const
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reducing Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reducing volume group %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reduce Volume group %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reduce volume group %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );

@@ -725,12 +725,12 @@ EvmsCo::removeCoText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Removing Container %1$s"), name().c_str() );
+        txt = sformat( _("Removing container %1$s"), name().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Remove Container %1$s"), name().c_str() );
+        txt = sformat( _("Remove container %1$s"), name().c_str() );
         }
     return( txt );
     }
@@ -742,12 +742,12 @@ EvmsCo::createCoText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Creating Container %1$s"), name().c_str() );
+        txt = sformat( _("Creating container %1$s"), name().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Create Container %1$s"), name().c_str() );
+        txt = sformat( _("Create container %1$s"), name().c_str() );
         }
     return( txt );
     }
@@ -760,14 +760,14 @@ EvmsCo::extendCoText( bool doing, const string& dev ) const
         {
         // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extending Container %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extending container %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Extend Container %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extend container %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
@@ -781,14 +781,14 @@ EvmsCo::reduceCoText( bool doing, const string& dev ) const
         {
         // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reducing Container %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reducing container %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reduce Container %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reduce container %1$s with %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
