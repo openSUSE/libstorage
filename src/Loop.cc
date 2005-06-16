@@ -133,8 +133,8 @@ string Loop::removeText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
-	// displayed text before action, %1$s is replaced by device name e.g. loop0
+	d.erase( 0, 9 );
+	// displayed text before action, %1$s is replaced by loop number
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	txt = sformat( _("Delete file-based loop %1$s (%2$s)"), d.c_str(),
 		       sizeString().c_str() );
@@ -154,12 +154,12 @@ string Loop::createText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
+	d.erase( 0, 9 );
 	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. loop0
+		// displayed text before action, %1$s is replaced by loop number
 		// %2$s is replaced by filename (e.g. /var/adm/secure)
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
@@ -170,19 +170,19 @@ string Loop::createText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. loop0
+		// displayed text before action, %1$s is replaced by loop number
 		// %2$s is replaced by filename (e.g. /var/adm/secure)
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create encrypted file-based loop %1$s of %2$s (%3$s) as %5$s with %5$s"),
+		txt = sformat( _("Create encrypted file-based loop %1$s of %2$s (%3$s) as %5$s with %4$s"),
 			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. loop0
+	    // displayed text before action, %1$s is replaced by loop number
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
 	    // %3$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Create file-based loop %1$s of %2$s (%3$s)"),
@@ -208,12 +208,12 @@ string Loop::formatText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
+	d.erase( 0, 9 );
 	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. loop0
+		// displayed text before action, %1$s is replaced by loop number
 		// %2$s is replaced by filename (e.g. /var/adm/secure)
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
@@ -224,7 +224,7 @@ string Loop::formatText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. loop0 
+		// displayed text before action, %1$s is replaced by loop number
 		// %2$s is replaced by filename (e.g. /var/adm/secure)
 		// %3$s is replaced by size (e.g. 623.5 MB)
 		// %4$s is replaced by file system type (e.g. reiserfs)
@@ -236,7 +236,7 @@ string Loop::formatText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. loop0
+	    // displayed text before action, %1$s is replaced by loop number
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
 	    // %3$s is replaced by size (e.g. 623.5 MB)
 	    // %4$s is replaced by file system type (e.g. reiserfs)

@@ -1474,7 +1474,9 @@ int Volume::doFstabUpdate()
     y2milestone( "del:%d", deleted() );
     if( !orig_mp.empty() && (deleted()||mp.empty()) &&
         (fstab->findDevice( dev, entry ) ||
-	 fstab->findDevice( alt_names, entry ) ))
+	 fstab->findDevice( alt_names, entry ) ||
+	 (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
+	 (cType()==LOOP && fstab->findMount( mp, entry )) ))
 	{
 	changed = true;
 	if( !silent )
