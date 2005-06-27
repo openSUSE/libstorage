@@ -235,5 +235,82 @@ DmCo::doRemove( Volume* v )
     return( ret );
     }
 
+inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
+    {
+    s << *((Container*)&d);
+    return( s );
+    }
+
+void DmCo::logDifference( const DmCo& d ) const
+    {
+    string log = Container::logDifference( d );
+    y2milestone( "%s", log.c_str() );
+    ConstDmPair p=dmPair();
+    ConstDmIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstDmPair pc=d.dmPair();
+	ConstDmIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.dmPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstDmPair pc=dmPair();
+	ConstDmIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool DmCo::equalContent( const DmCo& rhs ) const
+    {
+    bool ret = Container::equalContent(rhs);
+    if( ret )
+	{
+	ConstDmPair p = dmPair();
+	ConstDmPair pc = rhs.dmPair();
+	ConstDmIter i = p.begin();
+	ConstDmIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
+    {
+    y2milestone( "constructed DmCo by copy constructor from %s", rhs.nm.c_str() );
+    ConstDmPair p = rhs.dmPair();
+    for( ConstDmIter i = p.begin(); i!=p.end(); ++i )
+	{
+	Dm * p = new Dm( *this, *i );
+	vols.push_back( p );
+        }
+    }
+
+
+
+
 void DmCo::logData( const string& Dir ) {;}
 

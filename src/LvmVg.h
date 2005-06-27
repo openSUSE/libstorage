@@ -11,11 +11,12 @@ class LvmVg : public PeContainer
     public:
 	LvmVg( Storage * const s, const string& Name );
 	LvmVg( Storage * const s, const string& Name, bool lvm1 );
+	LvmVg( const LvmVg& c );
 	virtual ~LvmVg();
 	unsigned numLv() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	static storage::CType const staticType() { return storage::LVM; }
-	friend inline std::ostream& operator<< (std::ostream&, const LvmVg& );
+	friend std::ostream& operator<< (std::ostream&, const LvmVg& );
 
 	int removeVg();
 	int extendVg( const std::list<string>& dl );
@@ -37,6 +38,8 @@ class LvmVg : public PeContainer
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getInfo( storage::LvmVgInfo& info ) const;
+	bool equalContent( const LvmVg& rhs ) const;
+	void logDifference( const LvmVg& rhs ) const;
 
 	static void activate( bool val=true );
 	static void getVgs( std::list<string>& l );
@@ -97,6 +100,8 @@ class LvmVg : public PeContainer
 	void getVgData( const string& name, bool exists=true );
 	void init();
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new LvmVg( *this ) ); }
+
 	string createVgText( bool doing ) const;
 	string removeVgText( bool doing ) const;
 	string extendVgText( bool doing, const string& dev ) const;
@@ -123,15 +128,5 @@ class LvmVg : public PeContainer
 	bool lvm1;
 	static bool active;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const LvmVg& d )
-    {
-    s << *((PeContainer*)&d);
-    s << " status:" << d.status;
-    if( d.lvm1 )
-      s << " lvm1";
-    s << " UUID:" << d.uuid;
-    return( s );
-    }
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <list>
+#include <map>
 
 #include "y2storage/StorageInterface.h"
 #include "y2storage/StorageTypes.h"
@@ -130,7 +131,7 @@ class Storage : public storage::StorageInterface
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
-	const string& tmpDir() const { return( tempdir ); }
+	const string& tmpDir() const; 
 	static const string& arch() { return( proc_arch ); }
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
@@ -220,11 +221,22 @@ class Storage : public storage::StorageInterface
 	bool getRecursiveRemoval() const { return recursiveRemove; }
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
+	void setDetectMountedVolumes( bool val=true );
+	bool getDetectMountedVolumes() const { return detectMounted; }
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
 	bool umountDevice( const string& device );
 	bool mountDevice( const string& device, const string& mp );
+	bool getFreeInfo( const string& device, unsigned long long& resize_free,
+	                  unsigned long long& df_free, 
+	                  unsigned long long& used, bool& win );
+	int createBackupState( const string& name );
+	int removeBackupState( const string& name );
+	int restoreBackupState( const string& name );
+	bool checkBackupState( const string& name );
+	bool equalBackupStates( const string& lhs, const string& rhs,
+	                        bool verbose_log ) const;
 
 	int createLvmVg( const string& name, unsigned long long peSizeK,
 	                 bool lvm1, const deque<string>& devs );
@@ -1158,6 +1170,7 @@ class Storage : public storage::StorageInterface
 	int performContChanges( storage::CommitStage stage, 
 	                        const std::list<Container*>& co,
 	                        bool& cont_removed );
+	string backupStates() const;
 
 
 	// protected internal member variables
@@ -1169,6 +1182,7 @@ class Storage : public storage::StorageInterface
 	bool autodetect;
 	bool recursiveRemove;
 	bool zeroNewPartitions;
+	bool detectMounted;
 	bool root_mounted;
 	string testdir;
 	string tempdir;
@@ -1183,6 +1197,7 @@ class Storage : public storage::StorageInterface
 	storage::CallbackYesNoPopup yesno_popup_cb;
 	unsigned max_log_num;
 	string lastAction;
+	std::map<string,CCont> backups;
     };
 
 #endif

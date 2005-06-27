@@ -358,6 +358,7 @@ namespace storage
 	STORAGE_EVMS_CO_NOT_FOUND = -2021,
 	STORAGE_EVMS_INVALID_DEVICE = -2022,
 	STORAGE_CHANGE_AREA_INVALID_CONTAINER = -2023,
+	STORAGE_BACKUP_STATE_NOT_FOUND = -2024,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -1046,6 +1047,20 @@ namespace storage
 	virtual bool getZeroNewPartitions() const = 0;
 
 	/**
+	 * Determine of libstorage should detect mounted volumes.
+	 *
+	 * @param val flag if mounted volumes should be detected
+	 */
+	virtual void setDetectMountedVolumes( bool val ) = 0;
+
+	/**
+	 * Get value of the flag for detection of mounted volumes.
+	 *
+	 * @return value of the flag for detection of mounted volumes
+	 */
+	virtual bool getDetectMountedVolumes() const = 0;
+
+	/**
 	 * Removes a volume from the system. This function can be used
 	 * for removing all types of volumes (partitions, LVM LVs, MD devices ...)
 	 *
@@ -1434,25 +1449,6 @@ namespace storage
 
 #endif
 
-#if 0
-
-	/**
-	 * Create a backup of the current state.
-	 */
-	virtual bool createBackupState (string state) = 0;
-
-	/**
-	 * Restore a backup of the current state.
-	 */
-	virtual bool restoreBackupState (string state) = 0;
-
-	/**
-	 * Delete a backup of the current state.
-	 */
-	virtual bool removeBackupState (string state) = 0;
-
-#endif
-
 	/**
 	 * With the function setCacheChanges you can turn the caching mode on
 	 * and off.  Turning of caching mode will cause all changes done so
@@ -1470,6 +1466,51 @@ namespace storage
 	 * mode.
 	 */
 	virtual int commit() = 0;
+
+	/**
+	 * Create backup of current state of all containers
+	 *
+	 * @param name name under which the backup should be created
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createBackupState( const string& name ) = 0;
+
+	/**
+	 * Restore state to a previously created backup 
+	 *
+	 * @param name name of the backup to restore 
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+
+	virtual int restoreBackupState( const string& name ) = 0;
+	/**
+	 * Checks if a backup with a certain name already exists
+	 *
+	 * @param name name of the backup to check 
+	 * @return boolean if the backup exists
+	 */
+	virtual bool checkBackupState( const string& name ) = 0;
+
+	/**
+	 * Compare two backup states
+	 *
+	 * @param lhs name of backup to compare, empty string means active state
+	 * @param rhs name of backup to compare, empty string means active state
+	 * @param verbose_log flag if differences should be logged in detail
+	 * @return true if states are equal
+	 */
+	virtual bool equalBackupStates( const string& lhs, 
+	                                const string& rhs,
+					bool verbose_log ) const = 0;
+
+	/**
+	 * Remove existing backup state 
+	 *
+	 * @param name name of backup to remove, empty string means to remove 
+	 *     all existing backup states
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeBackupState( const string& name ) = 0;
 
 	/**
 	 * Determine if the given device is known and mounted somewhere
@@ -1500,6 +1541,22 @@ namespace storage
 	 * @return bool if mount succeeded 
 	 */
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
+
+	/**
+	 * Detect potentially available free space on a partition
+	 *
+	 * @param device device to check 
+	 * @param resize_free free space in kilobytes available for resize
+	 * @param df_free free space in kilobytes available in filesystem
+	 * @param used used space in kilobytes for filesystem
+	 * @param win flag if partition contains a windows installation
+	 * @return bool if values could be succcessfully determined
+	 */
+	virtual bool getFreeInfo( const string& device, 
+	                          unsigned long long& resize_free,
+	                          unsigned long long& df_free,
+	                          unsigned long long& used,
+				  bool& win ) = 0;
 
     };
 

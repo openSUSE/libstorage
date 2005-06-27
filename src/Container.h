@@ -18,8 +18,6 @@ class Container
 	typedef VCont::const_iterator CVIter;
 	typedef VCont::reverse_iterator RVIter;
 	typedef VCont::const_reverse_iterator CRVIter;
-	Container operator=( const Container& );
-	Container( const Container& );
 
 
     public:
@@ -42,6 +40,8 @@ class Container
 	    { return( !(*this<rhs) ); }
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
+	bool equalContent( const Container& rhs ) const;
+	string logDifference( const Container& c ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	virtual int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
@@ -122,6 +122,7 @@ class Container
 
     public:
 	Container( Storage * const, const string& Name, storage::CType typ );
+	Container( const Container& );
 	Storage * const getStorage() const { return sto; }
 	virtual ~Container();
 	const string& name() const { return nm; }
@@ -143,6 +144,8 @@ class Container
 	virtual int removeVolume( Volume* v );
 	static storage::CType const staticType() { return storage::CUNKNOWN; } 
 	friend std::ostream& operator<< (std::ostream& s, const Container &c );
+	virtual Container* getCopy() const { return( new Container( *this ) ); }
+	bool compareContainer( const Container* c, bool verbose ) const;
 
     protected:
 	typedef CVIter ConstPlainIterator;
@@ -161,6 +164,7 @@ class Container
 	virtual int doRemove( Volume * v ); 
 	virtual int doResize( Volume * v ); 
 	virtual void logData( const string& Dir ) {;}
+	Container& operator=( const Container& );
 
 	static string type_names[storage::EVMS+1];
 	static unsigned order[storage::EVMS+1];
@@ -177,23 +181,5 @@ class Container
 	VCont vols;
 
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Container &c )
-{
-    s << "Type:" << Container::type_names[c.typ] 
-	<< " Name:" << c.nm 
-	<< " Device:" << c.dev 
-	<< " Vcnt:" << c.vols.size(); 
-    if( c.del )
-	s << " deleted";
-    if( c.create )
-	s << " created";
-    if( c.ronly )
-      s << " readonly";
-    if( c.silent )
-      s << " silent";
-    s << c.uby;
-    return( s );
-    }
 
 #endif

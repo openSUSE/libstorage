@@ -610,6 +610,83 @@ MdCo::doRemove( Volume* v )
     return( ret );
     }
 
+std::ostream& operator<< (std::ostream& s, const MdCo& d )
+    {
+    s << *((Container*)&d);
+    return( s );
+    }
+
+void MdCo::logDifference( const MdCo& d ) const
+    {
+    string log = Container::logDifference( d );
+    y2milestone( "%s", log.c_str() );
+    ConstMdPair p=mdPair();
+    ConstMdIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstMdPair pc=d.mdPair();
+	ConstMdIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.mdPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstMdPair pc=mdPair();
+	ConstMdIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool MdCo::equalContent( const MdCo& rhs ) const
+    {
+    bool ret = Container::equalContent(rhs);
+    if( ret )
+	{
+	ConstMdPair p = mdPair();
+	ConstMdPair pc = rhs.mdPair();
+	ConstMdIter i = p.begin();
+	ConstMdIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
+    {
+    y2milestone( "constructed MdCo by copy constructor from %s",
+		 rhs.nm.c_str() );
+    *this = rhs;
+    ConstMdPair p = rhs.mdPair();
+    for( ConstMdIter i=p.begin(); i!=p.end(); ++i )
+	 {
+	 Md * p = new Md( *this, *i );
+	 vols.push_back( p );
+	 }
+    }
+
+
 void MdCo::logData( const string& Dir ) {;}
 
 bool MdCo::active = false;

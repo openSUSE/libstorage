@@ -81,11 +81,12 @@ class EvmsCo : public PeContainer
 	EvmsCo( Storage * const s, const EvmsTree& data );
 	EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data );
 	EvmsCo( Storage * const s, const string& name, bool lvm1 );
+	EvmsCo( const EvmsCo& c );
 	virtual ~EvmsCo();
 	unsigned numVol() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	static storage::CType const staticType() { return storage::EVMS; }
-	friend inline std::ostream& operator<< (std::ostream&, const EvmsCo& );
+	friend std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
 	int removeCo();
 	int extendCo( const std::list<string>& dl );
@@ -108,6 +109,9 @@ class EvmsCo : public PeContainer
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getInfo( storage::EvmsCoInfo& info ) const;
+	bool equalContent( const EvmsCo& rhs ) const;
+	void logDifference( const EvmsCo& d ) const;
+
 	static void activate( bool val=true );
 	static void getEvmsList( EvmsTree& data );
 	static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
@@ -168,6 +172,8 @@ class EvmsCo : public PeContainer
 	void getNormalVolumes( const EvmsTree& data );
 	void init();
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new EvmsCo( *this ) ); }
+
 	string createCoText( bool doing ) const;
 	string removeCoText( bool doing ) const;
 	string extendCoText( bool doing, const string& dev ) const;
@@ -197,14 +203,5 @@ class EvmsCo : public PeContainer
 	static bool active;
 	static int sockfd;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
-    {
-    s << *((PeContainer*)&d);
-    if( d.lvm1 )
-      s << " lvm1";
-    s << " UUID:" << d.uuid;
-    return( s );
-    }
 
 #endif

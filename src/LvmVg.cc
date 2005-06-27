@@ -1183,6 +1183,100 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.uuid = uuid;
     }
 
+std::ostream& operator<< (std::ostream& s, const LvmVg& d )
+    {
+    s << *((PeContainer*)&d);
+    s << " status:" << d.status;
+    if( d.lvm1 )
+      s << " lvm1";
+    s << " UUID:" << d.uuid;
+    return( s );
+    }
+
+void LvmVg::logDifference( const LvmVg& d ) const
+    {
+    string log = PeContainer::logDifference( d );
+    if( status!=d.status )
+	log += " status:" + status + "-->" + d.status;
+    if( lvm1!=d.lvm1 )
+	{
+	if( d.lvm1 )
+	    log += " -->lvm1";
+	else
+	    log += " lvm1-->";
+	}
+    if( uuid!=d.uuid )
+	log += " UUID:" + uuid + "-->" + d.uuid;
+    y2milestone( "%s", log.c_str() );
+    ConstLvmLvPair p=lvmLvPair();
+    ConstLvmLvIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstLvmLvPair pc=d.lvmLvPair();
+	ConstLvmLvIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.lvmLvPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstLvmLvPair pc=lvmLvPair();
+	ConstLvmLvIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool LvmVg::equalContent( const LvmVg& rhs ) const
+    {
+    bool ret = PeContainer::equalContent(rhs,false) &&
+	       status==rhs.status && uuid==rhs.uuid && lvm1==rhs.lvm1;
+    if( ret )
+	{
+	ConstLvmLvPair p = lvmLvPair();
+	ConstLvmLvPair pc = rhs.lvmLvPair();
+	ConstLvmLvIter i = p.begin();
+	ConstLvmLvIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
+    {
+    y2milestone( "constructed LvmVg by copy constructor from %s", 
+                 rhs.nm.c_str() );
+    status = rhs.status;
+    uuid = rhs.uuid;
+    lvm1 = rhs.lvm1;
+    ConstLvmLvPair p = rhs.lvmLvPair();
+    for( ConstLvmLvIter i = p.begin(); i!=p.end(); ++i )
+	{
+	LvmLv * p = new LvmLv( *this, *i );
+	vols.push_back( p );
+	}
+    }
+
 void LvmVg::logData( const string& Dir ) {;}
 
 bool LvmVg::active = false;

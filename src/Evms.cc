@@ -234,3 +234,45 @@ void Evms::getInfo( EvmsInfo& info ) const
     info.dm_target = target;
     }
 
+std::ostream& operator<< (std::ostream& s, const Evms &p )
+    {
+    s << *(Dm*)&p;
+    if( !p.compat )
+      s << " native";
+    return( s );
+    }
+
+bool Evms::equalContent( const Evms& rhs ) const
+    {
+    return( Dm::equalContent(rhs) &&
+            compat==rhs.compat );
+    }
+
+void Evms::logDifference( const Evms& rhs ) const
+    {
+    string log = stringDifference( rhs );
+    if( compat!=rhs.compat )
+	{
+	if( rhs.compat )
+	    log += " -->compat";
+	else
+	    log += " compat-->";
+	}
+    y2milestone( "%s", log.c_str() );
+    }
+
+Evms& Evms::operator= ( const Evms& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    *((Dm*)this) = rhs;
+    compat = rhs.compat;
+    return( *this );
+    }
+
+Evms::Evms( const EvmsCo& d, const Evms& rhs ) : Dm(d,rhs)
+    {
+    y2milestone( "constructed evms vol by copy constructor from %s", 
+                 rhs.dev.c_str() );
+    *this = rhs;
+    }
+

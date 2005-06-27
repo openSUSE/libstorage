@@ -330,6 +330,71 @@ void Dm::getInfo( DmInfo& info ) const
     info.target = target;
     }
 
+std::ostream& operator<< (std::ostream& s, const Dm &p )
+    {
+    s << p.shortPrintedName() << " ";
+    s << *(Volume*)&p;
+    s << " LE:" << p.num_le;
+    if( p.stripe>1 )
+      {
+      s << " Stripes:" << p.stripe;
+      if( p.stripe_size>0 )
+	s << " StripeSize:" << p.stripe_size;
+      }
+    if( !p.pe_map.empty() )
+      s << " pe_map:" << p.pe_map;
+    return( s );
+    }
+    
+bool Dm::equalContent( const Dm& rhs ) const
+    {
+    return( Volume::equalContent(rhs) &&
+            num_le==rhs.num_le && stripe==rhs.stripe && 
+            stripe_size==rhs.stripe_size && pe_map==rhs.pe_map );
+    }
+
+void Dm::logDifference( const Dm& rhs ) const
+    {
+    string log = stringDifference( rhs );
+    y2milestone( "%s", log.c_str() );
+    }
+
+string Dm::stringDifference( const Dm& rhs ) const
+    {
+    string ret = Volume::logDifference( rhs );
+    if( num_le!=rhs.num_le )
+	ret += " LE:" + decString(num_le) + "-->" + decString(rhs.num_le);
+    if( stripe!=rhs.stripe )
+	ret += " Stripes:" + decString(stripe) + "-->" + decString(rhs.stripe);
+    if( stripe_size!=rhs.stripe_size )
+	ret += " StripeSize:" + decString(stripe_size) + "-->" + 
+	       decString(rhs.stripe_size);
+    if( pe_map!=rhs.pe_map )
+	{
+	std::ostringstream b;
+	b << " pe_map:" << pe_map << "-->" << rhs.pe_map;
+	ret += b.str();
+	}
+    return( ret );
+    }
+
+Dm& Dm::operator= ( const Dm& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    *((Volume*)this) = rhs;
+    num_le = rhs.num_le;
+    stripe = rhs.stripe;
+    stripe_size = rhs.stripe_size;
+    pe_map = rhs.pe_map;
+    return( *this );
+    }
+
+Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
+    {
+    y2milestone( "constructed dm by copy constructor from %s", 
+                 rhs.dev.c_str() );
+    *this = rhs;
+    }
 
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;

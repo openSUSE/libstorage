@@ -5,7 +5,9 @@
 #include <dirent.h>
 #include <glob.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/statvfs.h>
 #include <pwd.h>
 
 #include <fstream>
@@ -98,6 +100,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     yesno_popup_cb = NULL;
     recursiveRemove = false;
     zeroNewPartitions = false;
+    detectMounted = true;
     }
 
 void
@@ -112,7 +115,10 @@ Storage::initialize()
 	exit(1);
 	}
     else
+	{
 	tempdir = tbuf;
+	rmdir( tempdir.c_str() );
+	}
     if( autodetect )
 	{
 	detectArch();
@@ -183,6 +189,13 @@ Storage::~Storage()
 	    }
 	}
     y2milestone( "destructed Storage" );
+    }
+
+const string& Storage::tmpDir() const
+    {
+    if( access( tempdir.c_str(), W_OK )!= 0 )
+	mkdir( tempdir.c_str(), 0700 );
+    return( tempdir );
     }
 
 void
@@ -426,7 +439,8 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
 	    {
 	    i->getLoopData( Losetup );
 	    i->getFsData( Blkid );
-	    i->getMountData( Mounts );
+	    if( detectMounted )
+		i->getMountData( Mounts );
 	    i->getFstabData( *fstab );
 	    }
 	}
@@ -546,6 +560,12 @@ void Storage::setZeroNewPartitions( bool val )
     {
     y2milestone( "val:%d", val );
     zeroNewPartitions = val;
+    }
+
+void Storage::setDetectMountedVolumes( bool val )
+    {
+    y2milestone( "val:%d", val );
+    detectMounted = val;
     }
 
 string Storage::proc_arch;
@@ -3308,12 +3328,111 @@ Storage::umountDevice( const string& device )
 bool
 Storage::mountDevice( const string& device, const string& mp )
     {
-    bool ret = false;
+    bool ret = true;
     assertInit();
     y2milestone( "device:%s mp:%s", device.c_str(), mp.c_str() );
     VolIterator vol;
     if( !readonly && findVolume( device, vol ) )
 	{
+	if( vol->needLosetup() )
+	    {
+	    ret = vol->doLosetup()==0;
+	    }
+	if( ret )
+	    {
+	    ret = vol->mount( mp )==0;
+	    }
+	if( !ret )
+	    vol->loUnsetup();
+	}
+    else
+	ret = false;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool
+Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
+		      unsigned long long& df_free, 
+		      unsigned long long& used, bool& win )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+    VolIterator vol;
+    if( findVolume( device, vol ) )
+	{
+	bool needUmount = false;
+	string mp;
+	if( !vol->isMounted() )
+	    {
+	    string mdir = tmpDir() + "/tmp_mp";
+	    unlink( mdir.c_str() );
+	    rmdir( mdir.c_str() );
+	    if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
+		mountDevice( device, mdir ) )
+		{
+		needUmount = true;
+		mp = mdir;
+		}
+	    }
+	else
+	    mp = vol->getMount();
+	if( !mp.empty() )
+	    {
+	    struct statvfs fsbuf;
+	    ret = statvfs( mp.c_str(), &fsbuf )==0;
+	    if( ret )
+		{
+		resize_free = df_free = fsbuf.f_bfree*fsbuf.f_bsize/1024;
+		used = (fsbuf.f_blocks-fsbuf.f_bfree)*fsbuf.f_bsize/1024;
+		}
+	    if( ret && vol->getFs()==NTFS )
+		{
+		SystemCmd c( "ntfsresize -f -i " + device );
+		string fstr = " might resize at ";
+		string::size_type pos;
+		if( c.retcode()==0 && 
+		    (pos=c.getString()->find( fstr ))!=string::npos )
+		    {
+		    y2milestone( "pos %zd", pos );
+		    pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
+		    y2milestone( "pos %zd", pos );
+		    string number = c.getString()->substr( pos, 
+		                                           c.getString()->find_first_not_of( "0123456789", pos ));
+		    y2milestone( "number \"%s\"", number.c_str() );
+		    unsigned long long t;
+		    number >> t;
+		    y2milestone( "number %llu", t );
+		    if( t-vol->sizeK()<resize_free )
+			resize_free = t-vol->sizeK();
+		    y2milestone( "resize_free %llu", t );
+		    }
+		else
+		    ret = false;
+		}
+	    if( ret )
+		{
+		win = false;
+		char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
+		                   "config.sys", "MSDOS.SYS", "IO.SYS" };
+		string f;
+		unsigned i=0;
+		while( !win && i<lengthof(files) )
+		    {
+		    f = mp + "/" + files[i];
+		    win = access( f.c_str(), R_OK )==0;
+		    i++;
+		    }
+		}
+	    }
+	if( needUmount )
+	    {
+	    umountDevice( device );
+	    rmdir( mp.c_str() );
+	    rmdir( tmpDir().c_str() );
+	    }
+
 	if( vol->needLosetup() && vol->doLosetup() )
 	    {
 	    ret = vol->mount( mp )==0;
@@ -3321,7 +3440,178 @@ Storage::mountDevice( const string& device, const string& mp )
 		vol->loUnsetup();
 	    }
 	}
+    if( ret )
+	y2milestone( "resize_free:%llu df_free:%llu used:%llu win:%d", 
+	             resize_free, df_free, used, win );
     y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+Storage::createBackupState( const string& name )
+    {
+    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    if( ret==0 )
+	{
+	removeBackupState( name );
+	CCIter i=cont.begin();
+	while( i!=cont.end() )
+	    {
+	    backups[name].push_back( (*i)->getCopy() );
+	    ++i;
+	    }
+	}
+    y2mil( "states:" << backupStates() );
+    y2milestone( "ret:%d", ret );
+    if( ret==0 )
+	y2milestone( "comp:%d", equalBackupStates( name, "", true ));
+    return( ret );
+    }
+
+int
+Storage::removeBackupState( const string& name )
+    {
+    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    if( ret==0 )
+	{
+	if( !name.empty() )
+	    {
+	    map<string,CCont>::iterator i = backups.find( name );
+	    if( i!=backups.end())
+		backups.erase(i);
+	    else
+		ret = STORAGE_BACKUP_STATE_NOT_FOUND;
+	    }
+	else
+	    backups.clear();
+	}
+    y2mil( "states:" << backupStates() );
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::restoreBackupState( const string& name )
+    {
+    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    if( ret==0 )
+	{
+	map<string,CCont>::iterator b = backups.find( name );
+	if( b!=backups.end())
+	    {
+	    cont.clear();
+	    CCIter i=b->second.begin();
+	    while( i!=b->second.end() )
+		{
+		cont.push_back( (*i)->getCopy() );
+		++i;
+		}
+	    }
+	else
+	    ret = STORAGE_BACKUP_STATE_NOT_FOUND;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool
+Storage::checkBackupState( const string& name )
+    {
+    bool ret = false;
+    assertInit();
+    y2milestone( "name:%s", name.c_str() );
+    map<string,CCont>::iterator i = backups.find( name );
+    ret = i!=backups.end();
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+struct equal_name
+    {
+    equal_name( const string& n ) : val(n) {};
+    bool operator()(const Container* c) { return( c->name()==val ); }
+    const string& val;
+    };
+
+bool
+Storage::equalBackupStates( const string& lhs, const string& rhs,
+                            bool verbose_log ) const
+    {
+    y2milestone( "lhs:%s rhs:%s verbose:%d", lhs.c_str(), rhs.c_str(), 
+                 verbose_log );
+    map<string,CCont>::const_iterator i;
+    const CCont* l = NULL;
+    const CCont* r = NULL;
+    if( lhs.empty() )
+	l = &cont;
+    else
+	{
+	i = backups.find( lhs );
+	if( i!=backups.end() )
+	    l = &i->second;
+	}
+    if( rhs.empty() )
+	r = &cont;
+    else
+	{
+	i = backups.find( rhs );
+	if( i!=backups.end() )
+	    r = &i->second;
+	}
+    bool ret = (l==NULL&&r==NULL) || (r!=NULL&&l!=NULL);
+    if( ret && r!=NULL && l!=NULL )
+	{
+	CCIter i=l->begin();
+	CCIter j;
+	while( (ret||verbose_log) && i!=l->end() )
+	    {
+	    j = find_if( r->begin(), r->end(), equal_name( (*i)->name()) );
+	    if( j!=r->end() )
+		ret = (*i)->compareContainer( *j, verbose_log ) && ret;
+	    else
+		{
+		ret = false;
+		if( verbose_log )
+		    y2mil( "container -->" << (**i) );
+		}
+	    ++i;
+	    }
+	i=r->begin();
+	while( (ret||verbose_log) && i!=r->end() )
+	    {
+	    j = find_if( l->begin(), l->end(), equal_name( (*i)->name()) );
+	    if( j==r->end() )
+		{
+		ret = false;
+		if( verbose_log )
+		    y2mil( "container <--" << (**i) );
+		}
+	    ++i;
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+string
+Storage::backupStates() const
+    {
+    string ret;
+    map<string,CCont>::const_iterator i = backups.begin();
+    for( map<string,CCont>::const_iterator i = backups.begin();
+         i!=backups.end(); ++i )
+	{
+	if( i!=backups.begin() )
+	    ret += ',';
+	ret += i->first;
+	}
+
     return( ret );
     }
 

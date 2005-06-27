@@ -10,9 +10,12 @@ class DmCo : public PeContainer
 
     public:
 	DmCo( Storage * const s, bool detect );
+	DmCo( const DmCo& rhs );
 	virtual ~DmCo();
 	static storage::CType const staticType() { return storage::DM; }
-	friend inline std::ostream& operator<< (std::ostream&, const DmCo& );
+	friend std::ostream& operator<< (std::ostream&, const DmCo& );
+	bool equalContent( const DmCo& rhs ) const;
+	void logDifference( const DmCo& d ) const;
 
 	int removeDm( const string& table );
 	int removeVolume( Volume* v );
@@ -86,11 +89,5 @@ class DmCo : public PeContainer
 
 	void logData( const string& Dir );
     };
-
-inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
-    {
-    s << *((Container*)&d);
-    return( s );
-    }
 
 #endif

@@ -10,15 +10,19 @@ class LoopCo : public Container
 
     public:
 	LoopCo( Storage * const s, bool detect );
+	LoopCo( const LoopCo& rhs );
+
 	virtual ~LoopCo();
 	static storage::CType const staticType() { return storage::LOOP; }
-	friend inline std::ostream& operator<< (std::ostream&, const LoopCo& );
+	friend std::ostream& operator<< (std::ostream&, const LoopCo& );
 
 	int createLoop( const string& file, bool reuseExisting, 
 	                unsigned long long sizeK, string& device );
 	int removeLoop( const string& file, bool removeFile = false );
 
 	int removeVolume( Volume* v );
+	bool equalContent( const LoopCo& rhs ) const;
+	void logDifference( const LoopCo& d ) const;
 	
     protected:
 	// iterators over LOOP volumes
@@ -84,17 +88,12 @@ class LoopCo : public Container
 	void init();
 
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new LoopCo( *this ) ); }
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 
 	void logData( const string& Dir );
     };
-
-inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
-    {
-    s << *((Container*)&d);
-    return( s );
-    }
 
 #endif

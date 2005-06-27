@@ -4,12 +4,15 @@
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Volume.h"
 
+class MdCo;
+
 class Md : public Volume
     {
     public:
-	Md( const Container& d, unsigned Pnr, storage::MdType Type, 
+	Md( const MdCo& d, unsigned Pnr, storage::MdType Type, 
 	    const std::list<string>& devs );
-	Md( const Container& d, const string& line, const string& line2 );
+	Md( const MdCo& d, const string& line, const string& line2 );
+	Md( const MdCo& d, const Md& m );
 
 	virtual ~Md();
 	storage::MdType personality() const { return md_type; }
@@ -35,7 +38,7 @@ class Md : public Volume
 
 	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
-	friend inline std::ostream& operator<< (std::ostream& s, const Md& m );
+	friend std::ostream& operator<< (std::ostream& s, const Md& m );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
@@ -43,10 +46,14 @@ class Md : public Volume
 	static bool notDeleted( const Md& l ) { return( !l.deleted() ); }
 
 	void getInfo( storage::MdInfo& info ) const;
+	bool equalContent( const Md& rhs ) const;
+	void logDifference( const Md& d ) const;
 
     protected:
 	void init();
 	void computeSize();
+	Md& operator=( const Md& );
+
 	static storage::MdType toMdType( const string& val );
 	static storage::MdParity toMdParity( const string& val );
 
@@ -60,24 +67,5 @@ class Md : public Volume
 	static string md_names[storage::MULTIPATH+1];
 	static string par_names[storage::RIGHT_SYMMETRIC+1];
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Md& m )
-    {
-    s << "Md " << *(Volume*)&m
-      << " Personality:" << m.pName();
-    if( m.chunk>0 )
-	s << " Chunk:" << m.chunk;
-    if( m.md_parity!=storage::PAR_NONE )
-	s << " Parity:" << m.ptName();
-    if( !m.md_uuid.empty() )
-	s << " MD UUID:" << m.md_uuid;
-    if( m.destrSb )
-	s << " destroySb";
-    s << " Devices:" << m.devs;
-    if( !m.spare.empty() )
-	s << " Spare:" << m.spare;
-    return( s );
-    }
-
 
 #endif

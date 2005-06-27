@@ -15,7 +15,7 @@
 using namespace storage;
 using namespace std;
 
-Md::Md( const Container& d, unsigned PNr, MdType Type, 
+Md::Md( const MdCo& d, unsigned PNr, MdType Type, 
         const list<string>& devices ) : Volume( d, PNr, 0 )
 
     {
@@ -30,7 +30,7 @@ Md::Md( const Container& d, unsigned PNr, MdType Type,
     computeSize();
     }
 
-Md::Md( const Container& d, const string& line1, const string& line2 )
+Md::Md( const MdCo& d, const string& line1, const string& line2 )
     : Volume( d, 0, 0 )
     {
     y2milestone( "constructed md lines1:\"%s\" line2:\"%s\"", line1.c_str(), 
@@ -375,7 +375,6 @@ string Md::removeText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
 	// displayed text before action, %1$s is replaced by device name e.g. md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	txt = sformat( _("Delete software RAID %1$s (%2$s)"), d.c_str(),
@@ -395,7 +394,6 @@ string Md::createText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
 	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
@@ -444,12 +442,11 @@ string Md::formatText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
 	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. md0
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -459,7 +456,7 @@ string Md::formatText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. md0 
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0 
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -470,7 +467,7 @@ string Md::formatText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. md0
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format software RAID %1$s (%2$s) with %3$s"),
@@ -531,6 +528,90 @@ void Md::getInfo( MdInfo& info ) const
     info.chunk = chunk;
     info.parity = md_parity;
     }
+
+std::ostream& operator<< (std::ostream& s, const Md& m )
+    {
+    s << "Md " << *(Volume*)&m
+      << " Personality:" << m.pName();
+    if( m.chunk>0 )
+	s << " Chunk:" << m.chunk;
+    if( m.md_parity!=storage::PAR_NONE )
+	s << " Parity:" << m.ptName();
+    if( !m.md_uuid.empty() )
+	s << " MD UUID:" << m.md_uuid;
+    if( m.destrSb )
+	s << " destroySb";
+    s << " Devices:" << m.devs;
+    if( !m.spare.empty() )
+	s << " Spare:" << m.spare;
+    return( s );
+    }
+
+
+bool Md::equalContent( const Md& rhs ) const
+    {
+    return( Volume::equalContent(rhs) &&
+            md_type==rhs.md_type && md_parity==rhs.md_parity && 
+	    chunk==rhs.chunk && md_uuid==rhs.md_uuid && destrSb==rhs.destrSb &&
+	    devs == rhs.devs && spare==rhs.spare );
+    }
+
+void Md::logDifference( const Md& rhs ) const
+    {
+    string log = Volume::logDifference( rhs );
+    if( md_type!=rhs.md_type )
+	log += " Personality:" + md_names[md_type] + "-->" + 
+	       md_names[rhs.md_type];
+    if( md_parity!=rhs.md_parity )
+	log += " Parity:" + par_names[md_parity] + "-->" + 
+	       par_names[rhs.md_parity];
+    if( chunk!=rhs.chunk )
+	log += " Chunk:" + decString(chunk) + "-->" + decString(rhs.chunk);
+    if( md_uuid!=rhs.md_uuid )
+	log += " MD-UUID:" + md_uuid + "-->" + rhs.md_uuid;
+    if( destrSb!=rhs.destrSb )
+	{
+	if( rhs.destrSb )
+	    log += " -->destrSb";
+	else
+	    log += " destrSb-->";
+	}
+    if( devs!=rhs.devs )
+	{
+	std::ostringstream b;
+	b << " Devices:" << devs << "-->" << rhs.devs;
+	log += b.str();
+	}
+    if( spare!=rhs.spare )
+	{
+	std::ostringstream b;
+	b << " Devices:" << spare << "-->" << rhs.spare;
+	log += b.str();
+	}
+    y2milestone( "%s", log.c_str() );
+    }
+
+Md& Md::operator= ( const Md& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    *((Volume*)this) = rhs;
+    md_type = rhs.md_type;
+    md_parity = rhs.md_parity;
+    chunk = rhs.chunk;
+    md_uuid = rhs.md_uuid;
+    destrSb = rhs.destrSb;
+    devs = rhs.devs;
+    spare = rhs.spare;
+    return( *this );
+    }
+
+Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
+    {
+    y2milestone( "constructed md by copy constructor from %s", 
+                 rhs.dev.c_str() );
+    *this = rhs;
+    }
+
 
 string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6", 
                           "raid10", "multipath" };

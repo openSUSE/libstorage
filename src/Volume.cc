@@ -479,22 +479,22 @@ int Volume::changeFstabOptions( const string& options )
 string Volume::formatText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
 	txt = sformat( _("Formatting device %1$s (%2$s) with %3$s "),
-		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+		       d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	}
     else
 	{
-	string d = dev.substr( 5 );
 	if( !mp.empty() )
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -504,7 +504,7 @@ string Volume::formatText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -515,7 +515,7 @@ string Volume::formatText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format device %1$s (%2$s) with %3$s"),
@@ -705,43 +705,52 @@ int Volume::loUnsetup()
 string Volume::mountText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
         {
 	if( !mp.empty() )
 	    {
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by mount point e.g. /home
-	    txt = sformat( _("Mounting %1$s to %2$s"), dev.c_str(), mp.c_str() );
+	    txt = sformat( _("Mounting %1$s to %2$s"), d.c_str(), mp.c_str() );
 	    }
 	else
 	    {
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Unmounting %1$s"), dev.c_str() );
+	    txt = sformat( _("Unmounting %1$s"), d.c_str() );
 	    }
         }
     else
         {
-	string d = dev.substr( 5 );
 	if( !orig_mp.empty() && !mp.empty() )
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by mount point e.g. /home
 	    txt = sformat( _("Change mount point of %1$s to %2$s"), d.c_str(),
 	                   mp.c_str() );
 	    }
 	else if( !mp.empty() )
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. hda1
-	    // %2$s is replaced by mount point e.g. /home
-	    txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str(), 
-	                   mp.c_str() );
+	    if( mp != "swap" )
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by mount point e.g. /home
+		txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str(), 
+			       mp.c_str() );
+		}
+	    else
+		{
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by "swap"
+		txt = sformat( _("Use %1$s as %2$s"), d.c_str(), mp.c_str() );
+		}
 	    }
 	else if( !orig_mp.empty() )
 	    {
 	    string fn = "/etc/fstab";
 	    if( encryption!=ENC_NONE && !optNoauto() )
 		fn = "/etc/cryptotab";
-	    // displayed text before action, %1$s is replaced by device name e.g. hda1
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by pathname e.g. /etc/fstab
 	    txt = sformat( _("Remove %1$s from %2$s"), d.c_str(), fn.c_str() );
 	    }
@@ -885,6 +894,7 @@ int Volume::resizeFs()
 		if( needrmdir )
 		    {
 		    rmdir( mpoint.c_str() );
+		    rmdir( cont->getStorage()->tmpDir().c_str() );
 		    }
 		}
 		break;
@@ -939,15 +949,15 @@ int Volume::setEncryption( bool val )
 string Volume::losetupText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Setting up encrypted loop device on %1$s"), dev.c_str() );
+        txt = sformat( _("Setting up encrypted loop device on %1$s"), d.c_str() );
         }
     else
         {
-	string d = dev.substr( 5 );
-	// displayed text before action, %1$s is replaced by device name e.g. hda1
+	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
         txt = sformat( _("Set up encrypted loop device on %1$s"), d.c_str() );
         }
     return( txt );
@@ -1163,6 +1173,7 @@ EncryptType Volume::detectLoopEncryption()
 	}
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
+    rmdir( cont->getStorage()->tmpDir().c_str() );
     y2milestone( "ret:%s", encTypeString(ret).c_str() );
     return( ret );
     }
@@ -1197,6 +1208,7 @@ int Volume::doLosetup()
 	    if( c.retcode()!=0 )
 		ret = VOLUME_LOSETUP_FAILED;
 	    unlink( fname.c_str() );
+	    rmdir( cont->getStorage()->tmpDir().c_str() );
 	    }
 	if( ret==0 )
 	    {
@@ -1236,16 +1248,16 @@ int Volume::doLosetup()
 string Volume::labelText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by a name e.g. ROOT
-        txt = sformat( _("Setting label on %1$s to %2$s"), dev.c_str(), label.c_str() );
+        txt = sformat( _("Setting label on %1$s to %2$s"), d.c_str(), label.c_str() );
         }
     else
         {
-	string d = dev.substr( 5 );
-	// displayed text before action, %1$s is replaced by device name e.g. hda1
+	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by a name e.g. ROOT
 	txt = sformat( _("Set label on %1$s to %2$s"), d.c_str(), label.c_str() );
         }
@@ -1687,21 +1699,21 @@ string Volume::createText( bool doing ) const
 string Volume::resizeText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
         {
 	if( needShrink() )
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrinking %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Shrinking %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	else
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extending %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Extending %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 
         }
     else
         {
-	string d = dev.substr( 5 );
 	if( needShrink() )
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
@@ -1817,6 +1829,273 @@ void Volume::getTestmodeData( const string& data )
     i = m.find( "pwd" );
     if( i!=m.end() )
 	crypt_pwd = i->second;
+    }
+
+std::ostream& operator<< (std::ostream& s, const Volume &v )
+    {
+    s << "Device:" << v.dev;
+    if( v.numeric )
+	s << " Nr:" << v.num;
+    else
+	s << " Name:" << v.nm;
+    s << " SizeK:" << v.size_k;
+    if( v.size_k != v.orig_size_k )
+	s << " orig_SizeK:" << v.orig_size_k;
+    s << " Node <" << v.mjr << ":" << v.mnr << ">";
+    if( v.ronly )
+	s << " readonly";
+    if( v.del )
+	s << " deleted";
+    if( v.create )
+	s << " created";
+    if( v.format )
+	s << " format";
+    s << v.uby;
+    if( v.fs != storage::FSUNKNOWN )
+	{
+	s << " fs:" << Volume::fs_names[v.fs];
+	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
+	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
+	}
+    if( v.mp.length()>0 )
+	{
+	s << " mount:" << v.mp;
+	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
+	    s << " orig_mount:" << v.orig_mp;
+	if( !v.is_mounted )
+	    s << " not_mounted";
+	}
+    if( v.mount_by != storage::MOUNTBY_DEVICE )
+	{
+	s << " mount_by:" << Volume::mb_names[v.mount_by];
+	if( v.mount_by != v.orig_mount_by )
+	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
+	}
+    if( v.uuid.length()>0 )
+	{
+	s << " uuid:" << v.uuid;
+	}
+    if( v.label.length()>0 )
+	{
+	s << " label:" << v.label;
+	if( v.label != v.orig_label && v.orig_label.length()>0 )
+	    s << " orig_label:" << v.orig_label;
+	}
+    if( v.fstab_opt.length()>0 )
+	{
+	s << " fstopt:" << v.fstab_opt;
+	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
+	    s << " orig_fstopt:" << v.orig_fstab_opt;
+	}
+    if( v.mkfs_opt.length()>0 )
+	{
+	s << " mkfsopt:" << v.mkfs_opt;
+	}
+    if( v.alt_names.begin() != v.alt_names.end() )
+	{
+	s << " alt_names:" << v.alt_names;
+	}
+    if( v.is_loop )
+	{
+	if( v.loop_active )
+	    s << " active";
+	s << " loop:" << v.loop_dev;
+	if( v.fstab_loop_dev != v.loop_dev )
+	    {
+	    s << " fstab_loop:" << v.fstab_loop_dev;
+	    }
+	s << " encr:" << v.enc_names[v.encryption];
+	if( v.encryption != v.orig_encryption && v.orig_encryption!=storage::ENC_NONE )
+	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+	s << " pwd:" << v.crypt_pwd;
+#endif
+	}
+    return( s );
+    }
+
+string
+Volume::logDifference( const Volume& rhs ) const
+    {
+    string ret = "Device:" + dev;
+    if( dev!=rhs.dev )
+	ret += "-->"+rhs.dev;
+    if( numeric && num!=rhs.num )
+	ret += " Nr:" + decString(num) + "-->" + decString(rhs.num);
+    if( !numeric && nm!=rhs.nm )
+	ret += " Name:" + nm + "-->" + rhs.nm;
+    if( size_k!=rhs.size_k )
+	ret += " SizeK:" + decString(size_k) + "-->" + decString(rhs.size_k);
+    if( orig_size_k!=rhs.orig_size_k )
+	ret += " orig_SizeK:" + decString(orig_size_k) + "-->" + decString(rhs.size_k);
+    if( mjr!=rhs.mjr )
+	ret += " SizeK:" + decString(mjr) + "-->" + decString(rhs.mjr);
+    if( mnr!=rhs.mnr )
+	ret += " SizeK:" + decString(mnr) + "-->" + decString(rhs.mnr);
+    if( del!=rhs.del )
+	{
+	if( rhs.del )
+	    ret += " -->deleted";
+	else
+	    ret += " deleted-->";
+	}
+    if( create!=rhs.create )
+	{
+	if( rhs.create )
+	    ret += " -->created";
+	else
+	    ret += " created-->";
+	}
+    if( ronly!=rhs.ronly )
+	{
+	if( rhs.ronly )
+	    ret += " -->readonly";
+	else
+	    ret += " readonly-->";
+	}
+    if( format!=rhs.format )
+	{
+	if( rhs.format )
+	    ret += " -->format";
+	else
+	    ret += " format-->";
+	}
+    if( uby!=rhs.uby )
+	{
+	std::ostringstream b;
+	b << uby << "-->" << string(rhs.uby);
+	ret += b.str();
+	}
+    if( fs!=rhs.fs )
+	ret += " fs:" + Volume::fs_names[fs] + "-->" + Volume::fs_names[rhs.fs];
+    if( detected_fs!=rhs.detected_fs )
+	ret += " det_fs:" + Volume::fs_names[detected_fs] + "-->" + 
+	       Volume::fs_names[rhs.detected_fs];
+    if( mp!=rhs.mp )
+	ret += " mount:" + mp + "-->" + rhs.mp;
+    if( orig_mp!=rhs.orig_mp )
+	ret += " orig_mount:" + orig_mp + "-->" + rhs.orig_mp;
+    if( is_mounted!=rhs.is_mounted )
+	{
+	if( rhs.is_mounted )
+	    ret += " -->mounted";
+	else
+	    ret += " mounted-->";
+	}
+    if( mount_by!=rhs.mount_by )
+	ret += " mount_by:" + Volume::mb_names[mount_by] + "-->" + 
+	       Volume::mb_names[rhs.mount_by];
+    if( orig_mount_by!=rhs.orig_mount_by )
+	ret += " orig_mount_by:" + Volume::mb_names[orig_mount_by] + "-->" + 
+	       Volume::mb_names[rhs.orig_mount_by];
+    if( uuid!=rhs.uuid )
+	ret += " uuid:" + uuid + "-->" + rhs.uuid;
+    if( label!=rhs.label )
+	ret += " label:" + label + "-->" + rhs.label;
+    if( orig_label!=rhs.orig_label )
+	ret += " orig_label:" + orig_label + "-->" + rhs.orig_label;
+    if( fstab_opt!=rhs.fstab_opt )
+	ret += " fstopt:" + fstab_opt + "-->" + rhs.fstab_opt;
+    if( orig_fstab_opt!=rhs.orig_fstab_opt )
+	ret += " orig_fstopt:" + orig_fstab_opt + "-->" + rhs.orig_fstab_opt;
+    if( mkfs_opt!=rhs.mkfs_opt )
+	ret += " mkfsopt:" + mkfs_opt + "-->" + rhs.mkfs_opt;
+    if( is_loop!=rhs.is_loop )
+	{
+	if( rhs.is_loop )
+	    ret += " -->loop";
+	else
+	    ret += " loop-->";
+	}
+    if( loop_active!=rhs.loop_active )
+	{
+	if( rhs.loop_active )
+	    ret += " -->loop_active";
+	else
+	    ret += " loop_active-->";
+	}
+    if( loop_dev!=rhs.loop_dev )
+	ret += " loop:" + loop_dev + "-->" + rhs.loop_dev;
+    if( fstab_loop_dev!=rhs.fstab_loop_dev )
+	ret += " fstab_loop:" + fstab_loop_dev + "-->" + rhs.fstab_loop_dev;
+    if( encryption!=rhs.encryption )
+	ret += " encr:" + Volume::enc_names[encryption] + "-->" + 
+	       Volume::enc_names[rhs.encryption];
+    if( orig_encryption!=rhs.orig_encryption )
+	ret += " orig_encr:" + Volume::enc_names[orig_encryption] + "-->" + 
+	       Volume::enc_names[rhs.orig_encryption];
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    if( crypt_pwd!=rhs.crypt_pwd )
+	ret += " pwd:" + crypt_pwd + "-->" + rhs.crypt_pwd;
+#endif
+    return( ret );
+    }
+
+
+bool Volume::equalContent( const Volume& rhs ) const
+    {
+    return( dev==rhs.dev && numeric==rhs.numeric && 
+            ((numeric&&num==rhs.num)||(!numeric&&nm==rhs.nm)) &&
+	    size_k==rhs.size_k && mnr==rhs.mnr && mjr==rhs.mjr &&
+	    ronly==rhs.ronly && create==rhs.create && del==rhs.del && 
+	    silent==rhs.silent && format==rhs.format && 
+	    fstab_added==rhs.fstab_added && 
+	    fs==rhs.fs && mount_by==rhs.mount_by &&
+	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
+	    fstab_opt==rhs.fstab_opt && mkfs_opt==rhs.mkfs_opt &&
+	    is_loop==rhs.is_loop && loop_active==rhs.loop_active &&
+	    is_mounted==rhs.is_mounted && encryption==rhs.encryption &&
+	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev &&
+	    uby==rhs.uby );
+    }
+
+Volume& Volume::operator= ( const Volume& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.dev.c_str() );
+    dev = rhs.dev;
+    numeric = rhs.numeric;
+    num = rhs.num;
+    nm = rhs.nm;
+    size_k = rhs.size_k;
+    orig_size_k = rhs.orig_size_k;
+    mnr = rhs.mnr;
+    mjr = rhs.mjr;
+    ronly = rhs.ronly;
+    create = rhs.create;
+    del = rhs.del;
+    silent = rhs.silent;
+    format = rhs.format;
+    fstab_added = rhs.fstab_added;
+    fs = rhs.fs;
+    detected_fs = rhs.detected_fs;
+    mount_by = rhs.mount_by;
+    orig_mount_by = rhs.orig_mount_by;
+    uuid = rhs.uuid;
+    label = rhs.label;
+    orig_label = rhs.orig_label;
+    mp = rhs.mp;
+    orig_mp = rhs.orig_mp;
+    fstab_opt = rhs.fstab_opt;
+    orig_fstab_opt = rhs.orig_fstab_opt;
+    mkfs_opt = rhs.mkfs_opt;
+    is_loop = rhs.is_loop;
+    loop_active = rhs.loop_active;
+    is_mounted = rhs.is_mounted;
+    encryption = rhs.encryption;
+    orig_encryption = rhs.orig_encryption;
+    loop_dev = rhs.loop_dev;
+    fstab_loop_dev = rhs.fstab_loop_dev;
+    crypt_pwd = rhs.crypt_pwd;
+    uby = rhs.uby;
+    alt_names = rhs.alt_names;
+    return( *this );
+    }
+
+Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
+    {
+    y2milestone( "constructed vol by copy constructor from %s", 
+                 rhs.dev.c_str() );
+    *this = rhs;
     }
 
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",

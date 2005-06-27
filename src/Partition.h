@@ -22,6 +22,7 @@ class Partition : public Volume
 		   storage::PartitionType Type, const string& parted_start,
 		   unsigned id=ID_LINUX, bool Boot=false );
 	Partition( const Disk& d, const string& Data );
+	Partition( const Disk& d, const Partition& d );
 	virtual ~Partition();
 
 	unsigned long cylStart() const { return reg.start(); }
@@ -60,8 +61,12 @@ class Partition : public Volume
 	bool canUseDevice() const;
 
 	void getInfo( storage::PartitionInfo& info ) const;
+	bool equalContent( const Partition& rhs ) const;
+	void logDifference( const Partition& d ) const;
 
     protected:
+	Partition& operator=( const Partition& );
+
 	Region reg;
 	bool bootflag;
 	storage::PartitionType typ;
@@ -69,24 +74,8 @@ class Partition : public Volume
 	unsigned orig_id;
 	string parted_start;
 	unsigned orig_num;
+
+	static string pt_names[storage::PTYPE_ANY+1];
     };
-
-
-inline std::ostream& operator<< (std::ostream& s, const Partition &p )
-    {
-    s << "Partition " << *(Volume*)&p
-      << " Start:" << p.reg.start()
-      << " CylNum:" << p.reg.len()
-      << " Id:" << std::hex << p.idt << std::dec;
-    if( p.typ!=storage::PRIMARY )
-      s << ((p.typ==storage::LOGICAL)?" logical":" extended");
-    if( p.orig_num!=p.num )
-      s << " OrigNr:" << p.orig_num;
-    if( p.orig_id!=p.idt )
-      s << " OrigId:" << p.orig_id;
-    if( p.bootflag )
-      s << " boot";
-    return( s );
-    }
 
 #endif

@@ -1501,6 +1501,95 @@ void EvmsCo::getInfo( EvmsCoInfo& info ) const
     info.realContainer = !nm.empty();
     }
 
+inline std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
+    {
+    s << *((PeContainer*)&d);
+    if( d.lvm1 )
+      s << " lvm1";
+    s << " UUID:" << d.uuid;
+    return( s );
+    }
+
+void EvmsCo::logDifference( const EvmsCo& d ) const
+    {
+    string log = PeContainer::logDifference( d );
+    if( lvm1!=d.lvm1 )
+	{
+	if( d.lvm1 )
+	    log += " -->lvm1";
+	else
+	    log += " lvm1-->";
+	}
+    if( uuid!=d.uuid )
+	log += " UUID:" + uuid + "-->" + d.uuid;
+    y2milestone( "%s", log.c_str() );
+    ConstEvmsPair p=evmsPair();
+    ConstEvmsIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstEvmsPair pc=d.evmsPair();
+	ConstEvmsIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.evmsPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstEvmsPair pc=evmsPair();
+	ConstEvmsIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool EvmsCo::equalContent( const EvmsCo& rhs ) const
+    {
+    bool ret = PeContainer::equalContent(rhs,false) &&
+	       uuid==rhs.uuid && lvm1==rhs.lvm1;
+    if( ret )
+	{
+	ConstEvmsPair p = evmsPair();
+	ConstEvmsPair pc = rhs.evmsPair();
+	ConstEvmsIter i = p.begin();
+	ConstEvmsIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+EvmsCo::EvmsCo( const EvmsCo& rhs ) : PeContainer(rhs)
+    {
+    y2milestone( "constructed EvmsCo by copy constructor from %s",
+                 rhs.nm.c_str() );
+    uuid = rhs.uuid;
+    lvm1 = rhs.lvm1;
+    ConstEvmsPair p = rhs.evmsPair();
+    for( ConstEvmsIter i = p.begin(); i!=p.end(); ++i )
+        {
+        Evms * p = new Evms( *this, *i );
+        vols.push_back( p );
+        }
+    }
 
 void EvmsCo::logData( const string& Dir ) {;}
 

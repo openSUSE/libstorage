@@ -17,7 +17,7 @@
 using namespace storage;
 using namespace std;
 
-Loop::Loop( const Container& d, const string& LoopDev, const string& LoopFile ) : 
+Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile ) : 
     Volume( d, 0, 0 )
     {
     y2milestone( "constructed loop dev:%s file:%s", 
@@ -50,7 +50,7 @@ Loop::Loop( const Container& d, const string& LoopDev, const string& LoopFile ) 
 	}
     }
 
-Loop::Loop( const Container& d, const string& file, bool reuseExisting,
+Loop::Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	    unsigned long long sizeK ) : Volume( d, 0, 0 )
     {
     y2milestone( "constructed loop file:%s reuseExisting:%d sizek:%llu", 
@@ -252,5 +252,62 @@ void Loop::getInfo( LoopInfo& info ) const
     {
     info.nr = num;
     info.file = lfile;
+    }
+
+std::ostream& operator<< (std::ostream& s, const Loop& l )
+    {
+    s << "Loop " << *(Volume*)&l
+      << " LoopFile:" << l.lfile;
+    if( l.reuseFile )
+      s << " reuse";
+    if( l.delFile )
+      s << " delFile";
+    return( s );
+    }
+
+bool Loop::equalContent( const Loop& rhs ) const
+    {
+    return( Volume::equalContent(rhs) &&
+	    lfile==rhs.lfile && reuseFile==rhs.reuseFile && 
+	    delFile==rhs.delFile );
+    }
+
+void Loop::logDifference( const Loop& rhs ) const
+    {
+    string log = Volume::logDifference( rhs );
+    if( lfile!=rhs.lfile )
+	log += " LoopFile:" + lfile + "-->" + rhs.lfile;
+    if( reuseFile!=rhs.reuseFile )
+	{
+	if( rhs.reuseFile )
+	    log += " -->reuse";
+	else
+	    log += " reuse-->";
+	}
+    if( delFile!=rhs.delFile )
+	{
+	if( rhs.delFile )
+	    log += " -->delFile";
+	else
+	    log += " delFile-->";
+	}
+    y2milestone( "%s", log.c_str() );
+    }
+
+Loop& Loop::operator= ( const Loop& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    *((Volume*)this) = rhs;
+    lfile = rhs.lfile;
+    reuseFile = rhs.reuseFile;
+    delFile = rhs.delFile;
+    return( *this );
+    }
+
+Loop::Loop( const LoopCo& d, const Loop& rhs ) : Volume(d)
+    {
+    y2milestone( "constructed loop by copy constructor from %s", 
+                 rhs.nm.c_str() );
+    *this = rhs;
     }
 

@@ -19,6 +19,9 @@ class Volume
 	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
 	Volume( const Container& d, const string& PName, unsigned long long SizeK );
 	Volume( const Container& d );
+	Volume( const Volume& );
+	Volume& operator=( const Volume& );
+
 	virtual ~Volume();
 
 	const string& device() const { return dev; }
@@ -96,6 +99,8 @@ class Volume
             { return( !(*this<rhs) ); }
         bool operator> ( const Volume& rhs ) const
             { return( !(*this<=rhs) ); }
+	bool equalContent( const Volume& rhs ) const;
+	string logDifference( const Volume& c ) const;
 	friend std::ostream& operator<< (std::ostream& s, const Volume &v );
 
 	int prepareRemove();
@@ -207,88 +212,5 @@ class Volume
 	static string mb_names[storage::MOUNTBY_LABEL+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Volume &v )
-    {
-    s << "Device:" << v.dev;
-    if( v.numeric )
-	s << " Nr:" << v.num;
-    else
-	s << " Name:" << v.nm;
-    s << " SizeK:" << v.size_k;
-    if( v.size_k != v.orig_size_k )
-	s << " orig_SizeK:" << v.orig_size_k;
-    s << " Node <" << v.mjr << ":" << v.mnr << ">";
-    if( v.ronly )
-	s << " readonly";
-    if( v.del )
-	s << " deleted";
-    if( v.create )
-	s << " created";
-    if( v.format )
-	s << " format";
-    s << v.uby;
-    if( v.fs != storage::FSUNKNOWN )
-	{
-	s << " fs:" << Volume::fs_names[v.fs];
-	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
-	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
-	}
-    if( v.mp.length()>0 )
-	{
-	s << " mount:" << v.mp;
-	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
-	    s << " orig_mount:" << v.orig_mp;
-	if( !v.is_mounted )
-	    s << " not_mounted";
-	}
-    if( v.mount_by != storage::MOUNTBY_DEVICE )
-	{
-	s << " mount_by:" << Volume::mb_names[v.mount_by];
-	if( v.mount_by != v.orig_mount_by )
-	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
-	}
-    if( v.uuid.length()>0 )
-	{
-	s << " uuid:" << v.uuid;
-	}
-    if( v.label.length()>0 )
-	{
-	s << " label:" << v.label;
-	if( v.label != v.orig_label && v.orig_label.length()>0 )
-	    s << " orig_label:" << v.orig_label;
-	}
-    if( v.fstab_opt.length()>0 )
-	{
-	s << " fstopt:" << v.fstab_opt;
-	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
-	    s << " orig_fstopt:" << v.orig_fstab_opt;
-	}
-    if( v.mkfs_opt.length()>0 )
-	{
-	s << " mkfsopt:" << v.mkfs_opt;
-	}
-    if( v.alt_names.begin() != v.alt_names.end() )
-	{
-	s << " alt_names:" << v.alt_names;
-	}
-    if( v.is_loop )
-	{
-	if( v.loop_active )
-	    s << " active";
-	s << " loop:" << v.loop_dev;
-	if( v.fstab_loop_dev != v.loop_dev )
-	    {
-	    s << " fstab_loop:" << v.fstab_loop_dev;
-	    }
-	s << " encr:" << v.enc_names[v.encryption];
-	if( v.encryption != v.orig_encryption && v.orig_encryption!=storage::ENC_NONE )
-	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
-	s << " pwd:" << v.crypt_pwd;
-#endif
-	}
-    return( s );
-    }
 
 #endif

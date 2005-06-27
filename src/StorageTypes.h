@@ -82,6 +82,10 @@ struct usedBy
 	{ t=type; (t==storage::UB_NONE)?nm.erase():nm=n; }
     bool operator==( const usedBy& rhs ) const
 	{ return( t==rhs.t && nm==rhs.nm ); }
+    bool operator!=( const usedBy& rhs ) const
+	{ return( !(*this==rhs)); }
+    inline operator string() const;
+
     storage::UsedByType type() const { return( t ); }
     const string& name() const { return( nm ); }
     friend inline std::ostream& operator<< (std::ostream&, const usedBy& );
@@ -90,12 +94,12 @@ struct usedBy
     string nm;
     };
 
-inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
+inline usedBy::operator string() const
     {
-    if( d.t!=storage::UB_NONE )
+    string st;
+    if( t!=storage::UB_NONE )
 	{
-	string st;
-	switch( d.t )
+	switch( t )
 	    {
 	    case storage::UB_LVM:
 		st = "lvm";
@@ -113,7 +117,16 @@ inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
 		st = "UNKNOWN";
 		break;
 	    }
-	s << " UsedBy:" << st << "[" << d.nm << "]";
+	st += "[" + nm + "]";
+	}
+    return( st );
+    }
+
+inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
+    {
+    if( d.t!=storage::UB_NONE )
+	{
+	s << " UsedBy:" << string(d);
 	}
     return( s );
     }

@@ -25,6 +25,7 @@ class Disk : public Container
 
     public:
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
+	Disk( const Disk& rhs );
 	virtual ~Disk();
 
 	unsigned long cylinders() const { return cyl; }
@@ -40,7 +41,7 @@ class Disk : public Container
 	const string& labelName() const { return label; }
 	unsigned numPartitions() const;
 	static storage::CType const staticType() { return storage::DISK; }
-	friend inline std::ostream& operator<< (std::ostream&, const Disk& );
+	friend std::ostream& operator<< (std::ostream&, const Disk& );
 
 	static bool needP( const string& dev );
 	int createPartition( storage::PartitionType type, long unsigned start,
@@ -73,6 +74,9 @@ class Disk : public Container
 	unsigned long kbToCylinder( unsigned long long ) const;
 	string getPartName( unsigned nr ) const;
 	void getInfo( storage::DiskInfo& info ) const;
+	bool equalContent( const Disk& rhs ) const;
+	void logDifference( const Disk& d ) const;
+
 
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
@@ -144,6 +148,7 @@ class Disk : public Container
 	                       const std::list<Partition*>& pl );
 	bool getPartedValues( Partition *p );
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new Disk( *this ) ); }
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
@@ -157,6 +162,7 @@ class Disk : public Container
 	void logData( const string& Dir );
 	bool haveBsdPart() const;
 	void setLabelData( const string& );
+	Disk& operator= ( const Disk& rhs );
 
 	static string defaultLabel();
 	static label_info labels[];
@@ -177,23 +183,5 @@ class Disk : public Container
 	unsigned long mjr;
 	unsigned long range;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Disk& d )
-    {
-    s << *((Container*)&d);
-    s << " Cyl:" << d.cyl
-      << " Head:" << d.head
-      << " Sect:" << d.sector
-      << " Node <" << d.mjr
-      << ":" << d.mnr << ">"
-      << " Range:" << d.range
-      << " SizeM:" << d.size_k/1024
-      << " Label:" << d.label
-      << " MaxPrimary:" << d.max_primary;
-    if( d.ext_possible )
-	s << " ExtPossible MaxLogical:" << d.max_logical;
-    return( s );
-    }
-
 
 #endif

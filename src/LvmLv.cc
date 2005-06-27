@@ -219,3 +219,52 @@ void LvmLv::getInfo( LvmLvInfo& info ) const
     info.dm_table = tname;
     info.dm_target = target;
     }
+
+std::ostream& operator<< (std::ostream& s, const LvmLv &p )
+    {
+    s << *(Dm*)&p;
+    if( !p.vol_uuid.empty() )
+      s << " UUID:" << p.vol_uuid;
+    if( !p.status.empty() )
+      s << " " << p.status;
+    if( !p.allocation.empty() )
+      s << " " << p.allocation;
+    return( s );
+    }
+
+bool LvmLv::equalContent( const LvmLv& rhs ) const
+    {
+    return( Dm::equalContent(rhs) &&
+            vol_uuid==rhs.vol_uuid && status==rhs.status && 
+            allocation==rhs.allocation );
+    }
+
+void LvmLv::logDifference( const LvmLv& rhs ) const
+    {
+    string log = stringDifference( rhs );
+    if( vol_uuid!=rhs.vol_uuid )
+	log += " UUID:" + vol_uuid + "-->" + rhs.vol_uuid;
+    if( status!=rhs.status )
+	log += " Status:" + status + "-->" + rhs.status;
+    if( allocation!=rhs.allocation )
+	log += " Alloc:" + allocation + "-->" + rhs.allocation;
+    y2milestone( "%s", log.c_str() );
+    }
+
+LvmLv& LvmLv::operator= ( const LvmLv& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    *((Dm*)this) = rhs;
+    vol_uuid = rhs.vol_uuid;
+    status = rhs.status;
+    allocation = rhs.allocation;
+    return( *this );
+    }
+
+LvmLv::LvmLv( const LvmVg& d, const LvmLv& rhs ) : Dm(d,rhs)
+    {
+    y2milestone( "constructed lvm lv by copy constructor from %s", 
+                 rhs.dev.c_str() );
+    *this = rhs;
+    }
+

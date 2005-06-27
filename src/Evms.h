@@ -10,6 +10,8 @@ class Evms : public Dm
     public:
 	Evms( const EvmsCo& d, const string& name, unsigned long le, unsigned stripe );
 	Evms( const EvmsCo& d, const string& name, unsigned long le, bool native );
+	Evms( const EvmsCo& d, const Evms& d );
+
 	virtual ~Evms();
 	unsigned compatible() const { return compat; }
 	friend std::ostream& operator<< (std::ostream& s, const Evms &p );
@@ -20,22 +22,18 @@ class Evms : public Dm
 	string resizeText( bool doing ) const;
 
 	void getInfo(storage::EvmsInfo&) const;
+	bool equalContent( const Evms& rhs ) const;
+	void logDifference( const Evms& d ) const;
+
 
     protected:
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return( "Evms" ); }
+	Evms& operator=( const Evms& );
+
 	static string getMapperName( const EvmsCo& d, const string& name );
 
 	bool compat;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Evms &p )
-    {
-    s << *(Dm*)&p;
-    if( !p.compat )
-      s << " native";
-    return( s );
-    }
-
 
 #endif

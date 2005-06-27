@@ -1390,17 +1390,17 @@ void Disk::getCommitActions( list<commitAction*>& l ) const
 string Disk::setDiskLabelText( bool doing ) const
     {
     string txt;
+    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
         txt = sformat( _("Setting disk label of disk %1$s to %2$s"),
-		       dev.c_str(), label.c_str() );
+		       d.c_str(), label.c_str() );
         }
     else
         {
-	string d = dev.substr( 5 );
-        // displayed text before action, %1$s is replaced by disk name (e.g. hda),
+        // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
         txt = sformat( _("Set disk label of disk %1$s to %2$s"),
 		      d.c_str(), label.c_str() );
@@ -1868,3 +1868,140 @@ void Disk::getInfo( DiskInfo& info ) const
     info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
     }
+
+std::ostream& operator<< (std::ostream& s, const Disk& d )
+    {
+    s << *((Container*)&d);
+    s << " Cyl:" << d.cyl
+      << " Head:" << d.head
+      << " Sect:" << d.sector
+      << " Node <" << d.mjr
+      << ":" << d.mnr << ">"
+      << " Range:" << d.range
+      << " SizeM:" << d.size_k/1024
+      << " Label:" << d.label
+      << " MaxPrimary:" << d.max_primary;
+    if( d.ext_possible )
+	s << " ExtPossible MaxLogical:" << d.max_logical;
+    return( s );
+    }
+
+void Disk::logDifference( const Disk& d ) const
+    {
+    string log = Container::logDifference( d );
+    if( cyl!=d.cyl )
+	log += " Cyl:" + decString(cyl) + "-->" + decString(d.cyl);
+    if( head!=d.head )
+	log += " Head:" + decString(head) + "-->" + decString(d.head);
+    if( sector!=d.sector )
+	log += " Sect:" + decString(sector) + "-->" + decString(d.sector);
+    if( mjr!=d.mjr )
+	log += " Mjr:" + decString(mjr) + "-->" + decString(d.mjr);
+    if( mnr!=d.mnr )
+	log += " Mnr:" + decString(mnr) + "-->" + decString(d.mnr);
+    if( range!=d.range )
+	log += " Range:" + decString(range) + "-->" + decString(d.range);
+    if( size_k!=d.size_k )
+	log += " SizeK:" + decString(size_k) + "-->" + decString(d.size_k);
+    if( label!=d.label )
+	log += " Label:" + label + "-->" + d.label;
+    if( max_primary!=d.max_primary )
+	log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(d.max_primary);
+    if( ext_possible!=d.ext_possible )
+	{
+	if( d.ext_possible )
+	    log += " -->ExtPossible";
+	else
+	    log += " ExtPossible-->";
+	}
+    if( max_logical!=d.max_logical )
+	log += " MaxLogical:" + decString(max_logical) + "-->" + decString(d.max_logical);
+    y2milestone( "%s", log.c_str() );
+    ConstPartPair p=partPair();
+    ConstPartIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstPartPair pc=d.partPair();
+	ConstPartIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.partPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstPartPair pc=partPair();
+	ConstPartIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool Disk::equalContent( const Disk& rhs ) const
+    {
+    bool ret = Container::equalContent(rhs) && 
+	       cyl==rhs.cyl && head==rhs.head && sector==rhs.sector && 
+	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range && 
+	       size_k==rhs.size_k && max_primary==rhs.max_primary && 
+	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical;
+    if( ret )
+	{
+	ConstPartPair p = partPair();
+	ConstPartPair pc = rhs.partPair();
+	ConstPartIter i = p.begin();
+	ConstPartIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+Disk& Disk::operator= ( const Disk& rhs )
+    {
+    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    cyl = rhs.cyl;
+    head = rhs.head;
+    sector = rhs.sector;
+    label = rhs.label;
+    mjr = rhs.mjr;
+    mnr = rhs.mnr;
+    range = rhs.range;
+    size_k = rhs.size_k;
+    byte_cyl = rhs.byte_cyl;
+    max_primary = rhs.max_primary;
+    ext_possible = rhs.ext_possible;
+    max_logical = rhs.max_logical;
+    return( *this );
+    }
+
+Disk::Disk( const Disk& rhs ) : Container(rhs)
+    {
+    y2milestone( "constructed disk by copy constructor from %s", 
+                 rhs.nm.c_str() );
+    *this = rhs;
+    ConstPartPair p = rhs.partPair();
+    for( ConstPartIter i = p.begin(); i!=p.end(); ++i )
+	{
+	Partition * p = new Partition( *this, *i );
+	vols.push_back( p );
+	}
+    }
+

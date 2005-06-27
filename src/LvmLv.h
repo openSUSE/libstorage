@@ -14,6 +14,7 @@ class LvmLv : public Dm
 	       const string& uuid, const string& status, const string& alloc );
 	LvmLv( const LvmVg& d, const string& name, unsigned long le,
 	       unsigned stripe );
+	LvmLv( const LvmVg& d, const LvmLv& l );
 
 	virtual ~LvmLv();
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
@@ -26,27 +27,17 @@ class LvmLv : public Dm
 	string formatText( bool doing ) const;
 	string resizeText( bool doing ) const;
 	void getInfo( storage::LvmLvInfo& info ) const;
+	bool equalContent( const LvmLv& rhs ) const;
+	void logDifference( const LvmLv& d ) const;
 
     protected:
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return( "Lv" ); }
+	LvmLv& operator=( const LvmLv& );
 
 	string vol_uuid;
 	string status;
 	string allocation;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const LvmLv &p )
-    {
-    s << *(Dm*)&p;
-    if( !p.vol_uuid.empty() )
-      s << " UUID:" << p.vol_uuid;
-    if( !p.status.empty() )
-      s << " " << p.status;
-    if( !p.allocation.empty() )
-      s << " " << p.allocation;
-    return( s );
-    }
-
 
 #endif

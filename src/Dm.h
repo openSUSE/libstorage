@@ -12,6 +12,8 @@ class Dm : public Volume
     public:
 	Dm( const PeContainer& d, const string& tn );
 	Dm( const PeContainer& d, const string& tn, unsigned mnum );
+	Dm( const PeContainer& d, const Dm& d );
+	Dm& operator=( const Dm& );
 
 	virtual ~Dm();
 	const string& getTableName() const { return( tname ); }
@@ -33,9 +35,13 @@ class Dm : public Volume
 	virtual string removeText( bool doing ) const;
 	virtual string formatText( bool doing ) const;
 	void getInfo( storage::DmInfo& info ) const;
+
 	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
 
 	static void activate( bool val=true );
+	bool equalContent( const Dm& rhs ) const;
+	void logDifference( const Dm& d ) const;
+	string stringDifference( const Dm& d ) const;
 
     protected:
 	void init();
@@ -53,22 +59,5 @@ class Dm : public Volume
 	static bool active;
 	static unsigned dm_major;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const Dm &p )
-    {
-    s << p.shortPrintedName() << " ";
-    s << *(Volume*)&p;
-    s << " LE:" << p.num_le;
-    if( p.stripe>1 )
-      {
-      s << " Stripes:" << p.stripe;
-      if( p.stripe_size>0 )
-	s << " StripeSize:" << p.stripe_size;
-      }
-    if( !p.pe_map.empty() )
-      s << " pe_map:" << p.pe_map;
-    return( s );
-    }
-
 
 #endif

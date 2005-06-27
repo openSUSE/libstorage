@@ -10,15 +10,20 @@ class PeContainer : public Container
 
     public:
 	PeContainer( Storage * const s, storage::CType t );
+	PeContainer( const PeContainer& c );
+	PeContainer& operator= ( const PeContainer& rhs );
 	virtual ~PeContainer();
+
 	unsigned long long peSize() const { return pe_size; }
 	unsigned long long sizeK() const { return pe_size*num_pe; }
 	unsigned long peCount() const { return num_pe; }
 	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
-	friend inline std::ostream& operator<< (std::ostream&, const PeContainer& );
+	friend std::ostream& operator<< (std::ostream&, const PeContainer& );
 
 	int setPeSize( long long unsigned, bool lvm1 );
+	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
+	string logDifference( const PeContainer& d ) const;
 	
     protected:
 	struct Pv
@@ -38,14 +43,20 @@ class PeContainer : public Container
 		{ return( device==rhs.device ); }
 	    bool operator== ( const string& dev ) const
 		{ return( device==dev); }
+	    bool equalContent( const Pv& rhs ) const
+		{ return( device==rhs.device && uuid==rhs.uuid &&
+		          status==rhs.status && num_pe==rhs.num_pe &&
+			  free_pe==rhs.free_pe ); }
 	    Pv() { num_pe = free_pe = 0; }
 	    };
 
-	friend inline std::ostream& operator<< (std::ostream&, const Pv& );
+	friend std::ostream& operator<< (std::ostream&, const Pv& );
 
 	void init();
 	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
+
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
 	                std::list<Pv>& plrem, unsigned long& removed_pe );
@@ -65,25 +76,5 @@ class PeContainer : public Container
 	std::list<Pv> pv_add;
 	std::list<Pv> pv_remove;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const PeContainer& d )
-    {
-    s << *((Container*)&d);
-    s << " SizeM:" << d.capacityInKb()/1024
-      << " PeSize:" << d.pe_size
-      << " NumPE:" << d.num_pe
-      << " FreePE:" << d.free_pe;
-    return( s );
-    }
-
-inline std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
-    {
-    s << "device:" << v.device
-      << " PE:" << v.num_pe
-      << " Free:" << v.free_pe
-      << " Status:" << v.status
-      << " UUID:" << v.uuid;
-    return( s );
-    }
 
 #endif

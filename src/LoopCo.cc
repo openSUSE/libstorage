@@ -251,3 +251,81 @@ LoopCo::doRemove( Volume* v )
     }
 
 void LoopCo::logData( const string& Dir ) {;}
+
+inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
+    {
+    s << *((Container*)&d);
+    return( s );
+    }
+
+void LoopCo::logDifference( const LoopCo& d ) const
+    {
+    string log = Container::logDifference( d );
+    y2milestone( "%s", log.c_str() );
+    ConstLoopPair p=loopPair();
+    ConstLoopIter i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstLoopPair pc=d.loopPair();
+	ConstLoopIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j!=pc.end() )
+	    {
+	    if( !i->equalContent( *j ) )
+		i->logDifference( *j );
+	    }
+	else
+	    y2mil( "  -->" << *i );
+	++i;
+	}
+    p=d.loopPair();
+    i=p.begin();
+    while( i!=p.end() )
+	{
+	ConstLoopPair pc=loopPair();
+	ConstLoopIter j = pc.begin();
+	while( j!=pc.end() && 
+	       (i->device()!=j->device() || i->created()!=j->created()) )
+	    ++j;
+	if( j==pc.end() )
+	    y2mil( "  <--" << *i );
+	++i;
+	}
+    }
+
+bool LoopCo::equalContent( const LoopCo& rhs ) const
+    {
+    bool ret = Container::equalContent(rhs);
+    if( ret )
+	{
+	ConstLoopPair p = loopPair();
+	ConstLoopPair pc = rhs.loopPair();
+	ConstLoopIter i = p.begin();
+	ConstLoopIter j = pc.begin();
+	while( ret && i!=p.end() && j!=pc.end() ) 
+	    {
+	    ret = ret && i->equalContent( *j );
+	    ++i;
+	    ++j;
+	    }
+	ret == ret && i==p.end() && j==pc.end();
+	}
+    return( ret );
+    }
+
+LoopCo::LoopCo( const LoopCo& rhs ) : Container(rhs)
+    {
+    y2milestone( "constructed LoopCo by copy constructor from %s",
+                 rhs.nm.c_str() );
+    *this = rhs;
+    ConstLoopPair p = rhs.loopPair();
+    for( ConstLoopIter i=p.begin(); i!=p.end(); ++i )
+         {
+         Loop * p = new Loop( *this, *i );
+         vols.push_back( p );
+         }
+    }
+
+

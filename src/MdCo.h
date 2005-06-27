@@ -12,9 +12,11 @@ class MdCo : public Container
 
     public:
 	MdCo( Storage * const s, bool detect );
+	MdCo( const MdCo& rhs );
+
 	virtual ~MdCo();
 	static storage::CType const staticType() { return storage::MD; }
-	friend inline std::ostream& operator<< (std::ostream&, const MdCo& );
+	friend std::ostream& operator<< (std::ostream&, const MdCo& );
 
 	int createMd( unsigned num, storage::MdType type, 
 	              const std::list<string>& devs );
@@ -25,6 +27,8 @@ class MdCo : public Container
 	int changeMdChunk( unsigned num, unsigned long chunk );
 	int changeMdParity( unsigned num, storage::MdParity ptype );
 	bool checkMd( unsigned num );
+	bool equalContent( const MdCo& rhs ) const;
+	void logDifference( const MdCo& d ) const;
 
 	unsigned unusedNumber();
 	void syncRaidtab();
@@ -98,6 +102,7 @@ class MdCo : public Container
 	void init();
 
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new MdCo( *this ) ); }
 
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
@@ -108,11 +113,5 @@ class MdCo : public Container
 
 	static bool active;
     };
-
-inline std::ostream& operator<< (std::ostream& s, const MdCo& d )
-    {
-    s << *((Container*)&d);
-    return( s );
-    }
 
 #endif
