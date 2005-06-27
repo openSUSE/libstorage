@@ -24,6 +24,7 @@ bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
 void timeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
 void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
+bool checkDir(string Path_Cv);
 
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
 std::list<string> splitString( const string& s, const string& delChars=" \t\n",

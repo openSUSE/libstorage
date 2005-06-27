@@ -49,6 +49,9 @@ void
 MdCo::syncRaidtab()
     {
     delete tab;
+    string d = getStorage()->root()+"/etc";
+    if( !checkDir( d ) )
+	createPath( d );
     tab = new EtcRaidtab( getStorage()->root() );
     MdPair p=mdPair(Md::notDeleted);
     for( MdIter i=p.begin(); i!=p.end(); ++i )

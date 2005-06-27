@@ -18,14 +18,33 @@
 using namespace storage;
 using namespace std;
 
-EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
+EtcFstab::EtcFstab( const string& pfx, bool rootMounted ) : prefix(pfx)
+    {
+    y2milestone( "prefix:%s rootMounted:%d", pfx.c_str(), rootMounted );
+    if( rootMounted )
+	readFiles();
+    }
+
+void
+EtcFstab::readFiles()
     {
     string file = prefix+"/fstab";
     ifstream mounts( file.c_str() );
     string line;
+    unsigned lineno = 0;
     getline( mounts, line );
+    list<Entry>::iterator i = co.begin();
+    while( i!=co.end() )
+	{
+	if( i->op!=Entry::ADD )
+	    i=co.erase(i);
+	else
+	    ++i;
+	}
+    y2milestone( "entries:%zd", co.size() );
     while( mounts.good() )
 	{
+	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
 	if( l.begin()!=l.end() && i->find( '#' )!=0 )
@@ -51,12 +70,15 @@ EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
 	getline( mounts, line );
 	}
     mounts.close();
+    y2milestone( "file:%s lines:%u", file.c_str(), lineno );
+    lineno=0;
     file = prefix+"/cryptotab";
     mounts.clear();
     mounts.open( file.c_str() );
     getline( mounts, line );
     while( mounts.good() )
 	{
+	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
 	Entry *p = new Entry;
@@ -80,6 +102,8 @@ EtcFstab::EtcFstab( const string& pfx ) : prefix(pfx)
 
 	getline( mounts, line );
 	}
+    y2milestone( "file:%s lines:%u", file.c_str(), lineno );
+    y2milestone( "entries:%zd", co.size() );
     }
 
 void
@@ -158,18 +182,22 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 
 int EtcFstab::changeRootPrefix( const string& prfix )
     {
+    y2milestone( "new prefix:%s", prfix.c_str() );
     int ret = 0;
     if( prfix != prefix )
 	{
 	list<Entry>::const_iterator i = co.begin();
-	while( i!=co.end() && i->op == Entry::ADD )
+	while( i!=co.end() && (i->op==Entry::ADD || i->op==Entry::NONE) )
 	    ++i;
 	if( i==co.end() )
+	    {
 	    prefix = prfix;
+	    readFiles();
+	    }
 	else 
 	    ret = FSTAB_CHANGE_PREFIX_IMPOSSIBLE;
 	}
-    y2milestone( "new prefix:%s ret:%d", prefix.c_str(), ret );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -228,10 +256,15 @@ int EtcFstab::updateEntry( const FstabChange& entry )
     {
     y2milestone( "dev:%s mp:%s", entry.dentry.c_str(), entry.mount.c_str() );
     list<Entry>::iterator i = co.begin();
-    while( i != co.end() && 
-           (i->op==Entry::REMOVE || entry.device!=i->old.device ))
+    bool found = false;
+    while( i != co.end() && !found )
 	{
-	++i;
+	if( i->op==Entry::REMOVE || 
+	    (i->op!=Entry::ADD && entry.device!=i->old.device) ||
+	    (i->op==Entry::ADD && entry.device!=i->nnew.device) )
+	    ++i;
+	else
+	    found = true;
 	}
     if( i != co.end() )
 	{
@@ -350,6 +383,8 @@ int EtcFstab::flush()
     AsciiFile *cryptotab = NULL;
     AsciiFile *cur = NULL;
     int lineno;
+    if( i!=co.end() && !checkDir( prefix ) )
+	createPath( prefix );
     while( i!=co.end() && ret==0 )
 	{
 	switch( i->op )

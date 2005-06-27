@@ -103,7 +103,7 @@ inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
 class EtcFstab 
     {
     public:
-	EtcFstab( const string& prefix = "" );
+	EtcFstab( const string& prefix = "", bool rootMounted=true );
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
 	bool findDevice( const std::list<string>& dl, FstabEntry& entry ) const;
 	bool findMount( const string& mount, FstabEntry& entry ) const;
@@ -132,6 +132,7 @@ class EtcFstab
 	    FstabEntry old;
 	    };
 
+	void readFiles();
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
 			     AsciiFile*& cryptotab, int& lineno );
 	void makeStringList( const FstabEntry& e, std::list<string>& ls );

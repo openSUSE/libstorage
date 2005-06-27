@@ -216,6 +216,8 @@ class Storage : public storage::StorageInterface
 	int getCryptPassword( const string& device, string& pwd );
 	int setCrypt( const string& device, bool val );
 	int getCrypt( const string& device, bool& val );
+	int setIgnoreFstab( const string& device, bool val );
+	int getIgnoreFstab( const string& device, bool& val );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() const { return recursiveRemove; }
@@ -223,6 +225,7 @@ class Storage : public storage::StorageInterface
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
 	void setDetectMountedVolumes( bool val=true );
 	bool getDetectMountedVolumes() const { return detectMounted; }
+	void setRootPrefix( const string& root ); 
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );

@@ -1181,6 +1181,24 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.peFree = peFree();
     info.lvm2 = lvm2();
     info.uuid = uuid;
+    info.dlist.clear();
+    list<Pv>::const_iterator i=pv.begin();
+    while( i!=pv.end() )
+	{
+	if( !info.dlist.empty() )
+	    info.dlist += ' ';
+	info.dlist += i->device;
+	++i;
+	}
+    i=pv_add.begin();
+    while( i!=pv_add.end() )
+	{
+	if( !info.dlist.empty() )
+	    info.dlist += ' ';
+	info.dlist += i->device;
+	++i;
+	}
+    y2mil( "dlist:" << info.dlist );
     }
 
 std::ostream& operator<< (std::ostream& s, const LvmVg& d )

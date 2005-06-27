@@ -161,7 +161,7 @@ Storage::initialize()
 	}
     else
 	{
-	fstab = new EtcFstab( "/etc" );
+	fstab = new EtcFstab( "/etc", isRootMounted() );
 	detectLoops();
 	detectFsData( vBegin(), vEnd() );
 	}
@@ -560,6 +560,12 @@ void Storage::setZeroNewPartitions( bool val )
     {
     y2milestone( "val:%d", val );
     zeroNewPartitions = val;
+    }
+
+void Storage::setRootPrefix( const string& root )
+    {
+    y2milestone( "root:%s", root.c_str() );
+    rootprefix = root;
     }
 
 void Storage::setDetectMountedVolumes( bool val )
@@ -1292,23 +1298,23 @@ Storage::setCrypt( const string& device, bool val )
 
 int
 Storage::getCrypt( const string& device, bool& val )
-{
+    {
     int ret = 0;
     assertInit();
     y2milestone( "device:%s", device.c_str());
     VolIterator vol;
     ContIterator cont;
     if( findVolume( device, cont, vol ) )
-    {
+	{
 	val = vol->getEncryption();
-    }
+	}
     else
-    {
+	{
 	ret = STORAGE_VOLUME_NOT_FOUND;
-    }
-    y2milestone( "ret:%d  val:%d", ret, val );
+	}
+    y2milestone( "ret:%d val:%d", ret, val );
     return( ret );
-}
+    }
 
 int
 Storage::setCryptPassword( const string& device, const string& pwd )
@@ -1394,6 +1400,54 @@ Storage::getCryptPassword( const string& device, string& pwd )
     y2milestone( "password:%s", pwd.c_str() );
 #endif
     y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::setIgnoreFstab( const string& device, bool val )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s val:%d", device.c_str(), val );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	vol->setIgnoreFstab( val );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::getIgnoreFstab( const string& device, bool& val )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str());
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( device, cont, vol ) )
+	{
+	val = vol->ignoreFstab();
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    y2milestone( "ret:%d val:%d", ret, val );
     return( ret );
     }
 
@@ -3248,10 +3302,10 @@ int Storage::removeUsing( const string& device, const storage::usedBy& uby )
     switch( uby.type() )
 	{
 	case UB_MD:
-	    ret = removeVolume(  "/dev/md" + uby.name() );
+	    ret = removeVolume( "/dev/md" + uby.name() );
 	    break;
 	case UB_DM:
-	    ret = removeVolume(  "/dev/dm-" + uby.name() );
+	    ret = removeVolume( "/dev/dm-" + uby.name() );
 	    break;
 	case UB_LVM:
 	    ret = removeLvmVg( uby.name() );
@@ -3281,7 +3335,7 @@ void Storage::rootMounted()
 	{
     	if( haveMd(md) )
 	    md->syncRaidtab();
-	int ret = fstab->changeRootPrefix( root() );
+	int ret = fstab->changeRootPrefix( root()+"/etc" );
 	if( ret!=0 )
 	    y2error( "changeRootPrefix returns %d", ret );
 	}

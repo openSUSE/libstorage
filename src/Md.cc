@@ -527,6 +527,16 @@ void Md::getInfo( MdInfo& info ) const
     info.uuid = md_uuid;
     info.chunk = chunk;
     info.parity = md_parity;
+    info.dlist.clear();
+    list<string>::const_iterator i=devs.begin();
+    while( i!=devs.end() )
+	{
+	if( !info.dlist.empty() )
+	    info.dlist += ' ';
+	info.dlist += *i;
+	++i;
+	}
+    y2milestone( "dlist:\"%s\"", info.dlist.c_str() );
     }
 
 std::ostream& operator<< (std::ostream& s, const Md& m )

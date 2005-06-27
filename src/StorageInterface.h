@@ -180,6 +180,7 @@ namespace storage
 	unsigned long peFree;
 	string uuid;
 	bool lvm2;
+	string dlist;
 	};
 
 
@@ -195,6 +196,7 @@ namespace storage
 	string uuid;
 	bool lvm2;
 	bool realContainer;
+	string dlist;
 	};
 
     /**
@@ -277,6 +279,7 @@ namespace storage
 	MdParity parity;
 	string uuid;
 	unsigned long chunk;
+	string dlist;
 	};
 
     /**
@@ -993,6 +996,30 @@ namespace storage
 #endif
 
 	/**
+	 * Set fstab handling state of a volume. This way one can make 
+	 * libstorage ignore fstab handling for a volume. 
+	 * Use this with care.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param val flag if fstab should be ignored for this volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int setIgnoreFstab( const string& device, bool val ) = 0;
+
+	/**
+	 * Get fstab handling state of a volume.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param val will be set if encryption is activated
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+#ifndef SWIG
+	virtual int getIgnoreFstab( const string& device, bool& val ) = 0;
+#else
+	virtual int getIgnoreFstab( const string& device, bool& REFERENCE ) = 0;
+#endif
+
+	/**
 	 * Resizes a volume while keeping the data on the filesystem
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
@@ -1045,6 +1072,17 @@ namespace storage
 	 * @return value of the flag for zeroing newly created partitions
 	 */
 	virtual bool getZeroNewPartitions() const = 0;
+
+	/**
+	 * Set value for root prefix. 
+	 * This value is appended to all mount points of volumes, when
+	 * changes are commited. Config files fstab, cryptotab, raidtab and  
+	 * mdadm.conf are also created relative to this prefix. 
+	 * This variable must be set before first call to commit.
+	 *
+	 * @param root new value for root prefix
+	 */
+	virtual void setRootPrefix( const string& root ) = 0;
 
 	/**
 	 * Determine of libstorage should detect mounted volumes.

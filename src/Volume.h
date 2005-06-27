@@ -34,6 +34,8 @@ class Volume
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
+	bool ignoreFstab() const { return( ignore_fstab ); }
+	void setIgnoreFstab( bool val=true ) { ignore_fstab=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool fstabAdded() const { return( fstab_added ); }
 	const storage::usedBy& getUsedBy()  const{ return( uby ); }
@@ -72,8 +74,9 @@ class Volume
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }
 	bool needFstabUpdate() const
-	    { return( fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
-	              encryption!=orig_encryption ); }
+	    { return( !ignore_fstab && 
+	              (fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
+	               encryption!=orig_encryption) ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
 	int setMkfsOption( const string& val ) { mkfs_opt=val; return 0; }
 	const std::list<string>& altNames() const { return( alt_names ); }
@@ -191,6 +194,7 @@ class Volume
 	string mkfs_opt;
 	bool is_loop;
 	bool is_mounted;
+	bool ignore_fstab;
 	bool loop_active;
 	bool ronly;
 	storage::EncryptType encryption;

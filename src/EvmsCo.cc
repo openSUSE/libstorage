@@ -1499,6 +1499,23 @@ void EvmsCo::getInfo( EvmsCoInfo& info ) const
     info.lvm2 = lvm2();
     info.uuid = uuid;
     info.realContainer = !nm.empty();
+    info.dlist.clear();
+    list<Pv>::const_iterator i=pv.begin();
+    while( i!=pv.end() )
+	{
+	if( !info.dlist.empty() )
+	    info.dlist += ' ';
+	info.dlist += i->device;
+	++i;
+	}
+    i=pv_add.begin();
+    while( i!=pv_add.end() )
+	{
+	if( !info.dlist.empty() )
+	    info.dlist += ' ';
+	info.dlist += i->device;
+	++i;
+	}
     }
 
 inline std::ostream& operator<< (std::ostream& s, const EvmsCo& d )

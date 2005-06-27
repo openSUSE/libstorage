@@ -71,7 +71,7 @@ void Volume::setNameDev()
 void Volume::init()
     {
     del = create = format = is_loop = loop_active = silent = false;
-    is_mounted = ronly = fstab_added = false;
+    is_mounted = ronly = fstab_added = ignore_fstab = false;
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
     encryption = orig_encryption = ENC_NONE;
@@ -761,8 +761,12 @@ string Volume::mountText( bool doing ) const
 int Volume::doMount()
     {
     int ret = 0;
-    string lmount = cont->getStorage()->root()+mp;
-    y2milestone( "device:%s mp:%s old mp:%s",  dev.c_str(), mp.c_str(),
+    string lmount;
+    if( mp != "swap" )
+	lmount += cont->getStorage()->root();
+    if( mp!="/" )
+	lmount += mp;
+    y2milestone( "device:%s mp:%s old mp:%s", dev.c_str(), mp.c_str(),
                  orig_mp.c_str() );
     if( !silent )
 	{
@@ -774,9 +778,12 @@ int Volume::doMount()
 	}
     if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
-	ret = umount( cont->getStorage()->root()+orig_mp );
+	string um = orig_mp;
+	if( um != "swap" )
+	    um = cont->getStorage()->root() + um;
+	ret = umount( um );
 	}
-    if( ret==0 && access( lmount.c_str(), R_OK )!=0 )
+    if( ret==0 && lmount!="swap" && access( lmount.c_str(), R_OK )!=0 )
 	{
 	createPath( lmount );
 	}
@@ -1479,126 +1486,131 @@ int Volume::doFstabUpdate()
     {
     int ret = 0;
     bool changed = false;
-    y2milestone( "device:%s mp:%s options:%s",  dev.c_str(), mp.c_str(), 
-                 fstab_opt.c_str() );
-    EtcFstab* fstab = cont->getStorage()->getFstab();
-    FstabEntry entry;
-    y2milestone( "del:%d", deleted() );
-    if( !orig_mp.empty() && (deleted()||mp.empty()) &&
-        (fstab->findDevice( dev, entry ) ||
-	 fstab->findDevice( alt_names, entry ) ||
-	 (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
-	 (cType()==LOOP && fstab->findMount( mp, entry )) ))
+    y2milestone( "device:%s mp:%s options:%s ignore_fstab:%d",  dev.c_str(), 
+                 mp.c_str(), fstab_opt.c_str(), ignore_fstab );
+    if( !ignore_fstab )
 	{
-	changed = true;
-	if( !silent )
+	EtcFstab* fstab = cont->getStorage()->getFstab();
+	FstabEntry entry;
+	y2milestone( "del:%d", deleted() );
+	if( !orig_mp.empty() && (deleted()||mp.empty()) &&
+	    (fstab->findDevice( dev, entry ) ||
+	     fstab->findDevice( alt_names, entry ) ||
+	     (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
+	     (cType()==LOOP && fstab->findMount( mp, entry )) ))
 	    {
-	    cont->getStorage()->showInfoCb( 
-		fstab->removeText( true, entry.crypto, entry.mount ));
+	    changed = true;
+	    if( !silent )
+		{
+		cont->getStorage()->showInfoCb( 
+		    fstab->removeText( true, entry.crypto, entry.mount ));
+		}
+	    y2milestone( "before removeEntry" );
+	    ret = fstab->removeEntry( entry );
 	    }
-	y2milestone( "before removeEntry" );
-	ret = fstab->removeEntry( entry );
-	}
-    else if( !mp.empty() && !deleted() )
-	{
-	if( fstab->findDevice( dev, entry ) ||
-	    fstab->findDevice( alt_names, entry ))
+	else if( !mp.empty() && !deleted() )
 	    {
-	    FstabChange che( entry );
-	    if( orig_mp!=mp )
+	    if( fstab->findDevice( dev, entry ) ||
+		fstab->findDevice( alt_names, entry ))
 		{
-		changed = true;
-		che.mount = mp;
-		}
-	    if( fstab_opt!=orig_fstab_opt )
-		{
-		changed = true;
-		if( fstab_opt.empty() )
+		FstabChange che( entry );
+		if( orig_mp!=mp )
 		    {
-		    che.opts.clear();
-		    che.opts.push_back( is_loop?"noatime":"defaults" );
+		    changed = true;
+		    che.mount = mp;
 		    }
+		if( fstab_opt!=orig_fstab_opt )
+		    {
+		    changed = true;
+		    if( fstab_opt.empty() )
+			{
+			che.opts.clear();
+			che.opts.push_back( is_loop?"noatime":"defaults" );
+			}
+		    else
+			che.opts = splitString( fstab_opt, "," );
+		    }
+		if( mount_by!=orig_mount_by || 
+		    (format && mount_by==MOUNTBY_UUID) ||
+		    (orig_label!=label && mount_by==MOUNTBY_LABEL) )
+		    {
+		    changed = true;
+		    che.dentry = getMountByString( mount_by, dev, uuid, label );
+		    }
+		if( fs != detected_fs )
+		    {
+		    changed = true;
+		    che.fs = fs_names[fs];
+		    if( fs==SWAP )
+			che.freq = che.passno = 0;
+		    else
+			{
+			che.freq = 1;
+			che.passno = (mp=="/") ? 1 : 2;
+			}
+		    }
+		if( encryption != orig_encryption )
+		    {
+		    changed = true;
+		    che.encr = encryption;
+		    che.loop_dev = fstab_loop_dev;
+		    }
+		if( changed )
+		    {
+		    if( !silent && !fstab_added )
+			{
+			cont->getStorage()->showInfoCb( 
+			    fstab->updateText( true, inCrypto(), che.mount ));
+			}
+		    y2mil( "update fstab: " << che );
+		    ret = fstab->updateEntry( che );
+		    }
+		}
+	    else
+		{
+		changed = true;
+		FstabChange che;
+		che.device = dev;
+		if( cont->type()!=LOOP )
+		    che.dentry = getMountByString( mount_by, dev, uuid, label );
 		else
-		    che.opts = splitString( fstab_opt, "," );
-		}
-	    if( mount_by!=orig_mount_by || (format && mount_by==MOUNTBY_UUID) ||
-	        (orig_label!=label && mount_by==MOUNTBY_LABEL) )
-		{
-		changed = true;
-		che.dentry = getMountByString( mount_by, dev, uuid, label );
-		}
-	    if( fs != detected_fs )
-		{
-		changed = true;
+		    {
+		    const Loop* l = static_cast<const Loop*>(this);
+		    che.dentry = l->loopFile();
+		    }
+		che.encr = encryption;
+		che.loop_dev = fstab_loop_dev;
 		che.fs = fs_names[fs];
-		if( fs==SWAP )
-		    che.freq = che.passno = 0;
-		else
+		string fst = fstab_opt;
+		if( fst.empty() )
+		    {
+		    if( is_loop )
+			fst = "noatime";
+		    else
+			fst = "defaults";
+		    }
+		che.opts = splitString( fst, "," );
+		che.mount = mp;
+		if( fs != SWAP && fs != FSUNKNOWN && fs != NTFS && fs != VFAT &&
+		    !is_loop && !optNoauto() )
 		    {
 		    che.freq = 1;
 		    che.passno = (mp=="/") ? 1 : 2;
 		    }
-		}
-	    if( encryption != orig_encryption )
-		{
-		changed = true;
-		che.encr = encryption;
-		che.loop_dev = fstab_loop_dev;
-		}
-	    if( changed )
-		{
-		if( !silent && !fstab_added )
+		if( !silent )
 		    {
-		    cont->getStorage()->showInfoCb( 
-			fstab->updateText( true, inCrypto(), che.mount ));
+		    cont->getStorage()->showInfoCb( fstab->addText( true, 
+		                                                    inCrypto(),
+								    che.mount ));
 		    }
-		y2mil( "update fstab: " << che );
-		ret = fstab->updateEntry( che );
+		ret = fstab->addEntry( che );
+		fstab_added = true;
 		}
 	    }
-	else
+	if( changed && ret==0 && cont->getStorage()->isRootMounted() )
 	    {
-	    changed = true;
-	    FstabChange che;
-	    che.device = dev;
-	    if( cont->type()!=LOOP )
-		che.dentry = getMountByString( mount_by, dev, uuid, label );
-	    else
-		{
-		const Loop* l = static_cast<const Loop*>(this);
-		che.dentry = l->loopFile();
-		}
-	    che.encr = encryption;
-	    che.loop_dev = fstab_loop_dev;
-	    che.fs = fs_names[fs];
-	    string fst = fstab_opt;
-	    if( fst.empty() )
-		{
-		if( is_loop )
-		    fst = "noatime";
-		else
-		    fst = "defaults";
-		}
-	    che.opts = splitString( fst, "," );
-	    che.mount = mp;
-	    if( fs != FSUNKNOWN && fs != NTFS && fs != VFAT && !is_loop &&
-	        !optNoauto() )
-		{
-		che.freq = 1;
-		che.passno = (mp=="/") ? 1 : 2;
-		}
-	    if( !silent )
-		{
-		cont->getStorage()->showInfoCb( fstab->addText( true, inCrypto(),
-		                                                che.mount ));
-		}
-	    ret = fstab->addEntry( che );
-	    fstab_added = true;
+	    ret = fstab->flush();
 	    }
-	}
-    if( changed && ret==0 && cont->getStorage()->isRootMounted() )
-	{
-	ret = fstab->flush();
 	}
     y2milestone( "changed:%d ret:%d", changed, ret );
     return( ret );
