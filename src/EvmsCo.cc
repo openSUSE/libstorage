@@ -1518,7 +1518,7 @@ void EvmsCo::getInfo( EvmsCoInfo& info ) const
 	}
     }
 
-inline std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
+std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     {
     s << *((PeContainer*)&d);
     if( d.lvm1 )
