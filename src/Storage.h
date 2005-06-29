@@ -278,7 +278,7 @@ class Storage : public storage::StorageInterface
 	int changeMdType( const string& name, storage::MdType rtype );
 	int changeMdChunk( const string& name, unsigned long chunk );
 	int changeMdParity( const string& name, storage::MdParity ptype );
-	bool checkMd( const string& name );
+	int checkMd( const string& name );
 
 
 	int createFileLoop( const string& lname, bool reuseExisting,

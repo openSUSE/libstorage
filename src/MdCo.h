@@ -26,7 +26,7 @@ class MdCo : public Container
 	int changeMdType( unsigned num, storage::MdType ptype );
 	int changeMdChunk( unsigned num, unsigned long chunk );
 	int changeMdParity( unsigned num, storage::MdParity ptype );
-	bool checkMd( unsigned num );
+	int checkMd( unsigned num );
 	bool equalContent( const MdCo& rhs ) const;
 	void logDifference( const MdCo& d ) const;
 

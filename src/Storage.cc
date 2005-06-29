@@ -2285,17 +2285,17 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
     return( ret );
     }
 
-bool Storage::checkMd( const string& name )
+int Storage::checkMd( const string& name )
     {
-    bool ret = false;
+    int ret = 0;
     assertInit();
     y2milestone( "name:%s", name.c_str() );
     unsigned num = 0;
     MdCo *md = NULL;
-    if( Md::mdStringNum( name, num ) && haveMd(md) && md->checkMd(num))
-	{
-	ret = true;
-	}
+    if( Md::mdStringNum( name, num ) && haveMd(md) )
+	ret = md->checkMd(num);
+    else
+	ret = STORAGE_MD_NOT_FOUND;
     y2milestone( "ret:%d", ret );
     return( ret );
     }

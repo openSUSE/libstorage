@@ -31,8 +31,13 @@ void createMD( MdType type, deque<string> devs )
 {
     s = createStorageInterface( false, true, false );
 
-    cout << "createMD: " << s->createMd( "/dev/md0", type, devs );
-    print_md_info();
+    int ret = s->createMd( "/dev/md0", type, devs );
+    if( ret==0 )
+	ret = s->checkMd( "/dev/md0" );
+
+    cout << "createMD: " << ret;
+    if(ret==0)
+	print_md_info();
     cout << endl;
 
     delete s;
@@ -64,7 +69,7 @@ int main( int argc_iv, char** argv_ppcv )
     createMD(RAID6, devs); // fails, too few devices
     createMD(RAID10,devs); // fails, too few devices
     createMD(MULTIPATH, devs); // fails, too few devices
-    createMD(RAID_UNK, devs); // fails, too few devices
+    createMD(RAID_UNK, devs); // RAID_UNK always fails
 
     /*
      * Check that this works for some raid levels with two devices
@@ -77,7 +82,7 @@ int main( int argc_iv, char** argv_ppcv )
     createMD(RAID6, devs); // fails, too few devices
     createMD(RAID10,devs); // works now
     createMD(MULTIPATH, devs); // works now
-    createMD(RAID_UNK, devs); // works now
+    createMD(RAID_UNK, devs); // RAID_UNK always fails
 
     /*
      * RAID6 still fails
@@ -106,7 +111,6 @@ int main( int argc_iv, char** argv_ppcv )
     createMD(RAID6, devs);
     createMD(RAID10,devs);
     createMD(MULTIPATH, devs);
-    createMD(RAID_UNK, devs);
 
 
     /*
@@ -120,5 +124,4 @@ int main( int argc_iv, char** argv_ppcv )
     createMD(RAID6, devs);
     createMD(RAID10,devs);
     createMD(MULTIPATH, devs);
-    createMD(RAID_UNK, devs);
 }

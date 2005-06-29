@@ -257,6 +257,10 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	{
 	ret = MD_NUMBER_TOO_LARGE;
 	}
+    if( ret==0 && type==RAID_UNK )
+	{
+	ret = MD_NO_CREATE_UNKNOWN;
+	}
     if( ret==0 )
 	{
 	if( findMd( num ))
@@ -301,14 +305,16 @@ int MdCo::checkUse( const string& dev )
     return( ret );
     }
 
-bool 
+int 
 MdCo::checkMd( unsigned num )
     {
-    int ret = false;
+    int ret = 0;
     y2milestone( "num:%u", num );
     MdIter i;
-    if( findMd( num, i ) && (!i->created() || i->checkDevices()==0) )
-	ret = true;
+    if( !findMd( num, i ) )
+	ret = MD_DEVICE_UNKNOWN;
+    else if( i->created() )
+	ret = i->checkDevices();
     y2milestone( "ret:%d", ret );
     return( ret );
     }

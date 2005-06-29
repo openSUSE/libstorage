@@ -447,6 +447,7 @@ namespace storage
 	MD_ADD_DUPLICATE = -6015,
 	MD_REMOVE_NONEXISTENT = -6016,
 	MD_NO_CHANGE_ON_DISK = -6017,
+	MD_NO_CREATE_UNKNOWN = -6018,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
@@ -1369,7 +1370,7 @@ namespace storage
 	 * @param name name of software raid device (e.g. /dev/md0)
 	 * @return true if all is ok, a false to indicate an error
 	 */
-	virtual bool checkMd( const string& name ) = 0;
+	virtual int checkMd( const string& name ) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically
