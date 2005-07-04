@@ -209,7 +209,7 @@ string LvmLv::resizeText( bool doing ) const
     return( txt );
     }
 
-void LvmLv::getInfo( LvmLvInfo& info ) const
+void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
     info.stripe = stripe;
     info.stripe_size = stripe_size;
@@ -218,6 +218,7 @@ void LvmLv::getInfo( LvmLvInfo& info ) const
     info.allocation = allocation;
     info.dm_table = tname;
     info.dm_target = target;
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const LvmLv &p )

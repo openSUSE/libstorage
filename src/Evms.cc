@@ -225,13 +225,14 @@ string Evms::resizeText( bool doing ) const
     return( txt );
     }
 
-void Evms::getInfo( EvmsInfo& info ) const
+void Evms::getInfo( EvmsInfo& tinfo ) const
     {
     info.stripe = stripe;
     info.stripe_size = stripe_size;
     info.compatible = compat;
     info.dm_table = tname;
     info.dm_target = target;
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Evms &p )

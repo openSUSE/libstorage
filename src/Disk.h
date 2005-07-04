@@ -182,6 +182,7 @@ class Disk : public Container
 	unsigned long mnr;
 	unsigned long mjr;
 	unsigned long range;
+	mutable storage::DiskInfo info;
     };
 
 #endif

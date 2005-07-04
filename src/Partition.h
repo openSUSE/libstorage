@@ -76,6 +76,7 @@ class Partition : public Volume
 	unsigned orig_num;
 
 	static string pt_names[storage::PTYPE_ANY+1];
+	mutable storage::PartitionInfo info;
     };
 
 #endif

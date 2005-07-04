@@ -180,7 +180,9 @@ namespace storage
 	unsigned long peFree;
 	string uuid;
 	bool lvm2;
-	string dlist;
+	string devices;
+	string devices_add;
+	string devices_rem;
 	};
 
 
@@ -196,7 +198,9 @@ namespace storage
 	string uuid;
 	bool lvm2;
 	bool realContainer;
-	string dlist;
+	string devices;
+	string devices_add;
+	string devices_rem;
 	};
 
     /**
@@ -275,11 +279,11 @@ namespace storage
 	{
 	VolumeInfo v;
 	unsigned nr;
-	MdType type;
-	MdParity parity;
+	unsigned type;
+	unsigned parity;
 	string uuid;
 	unsigned long chunk;
-	string dlist;
+	string devices;
 	};
 
     /**

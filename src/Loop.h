@@ -38,6 +38,7 @@ class Loop : public Volume
 	string lfile;
 	bool reuseFile;
 	bool delFile;
+	mutable storage::LoopInfo info;
     };
 
 #endif

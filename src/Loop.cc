@@ -248,10 +248,11 @@ string Loop::formatText( bool doing ) const
     return( txt );
     }
 
-void Loop::getInfo( LoopInfo& info ) const
+void Loop::getInfo( LoopInfo& tinfo ) const
     {
     info.nr = num;
     info.file = lfile;
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Loop& l )

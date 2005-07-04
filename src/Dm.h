@@ -58,6 +58,7 @@ class Dm : public Volume
 	std::map<string,unsigned long> pe_map;
 	static bool active;
 	static unsigned dm_major;
+	mutable storage::DmInfo info;
     };
 
 #endif

@@ -1490,7 +1490,7 @@ std::ostream& operator<< (std::ostream& s, const EvmsTree& d )
     return( s );
     }
 
-void EvmsCo::getInfo( EvmsCoInfo& info ) const
+void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
     {
     info.sizeK = sizeK();
     info.peSize = peSize();
@@ -1499,23 +1499,36 @@ void EvmsCo::getInfo( EvmsCoInfo& info ) const
     info.lvm2 = lvm2();
     info.uuid = uuid;
     info.realContainer = !nm.empty();
-    info.dlist.clear();
     list<Pv>::const_iterator i=pv.begin();
     while( i!=pv.end() )
 	{
-	if( !info.dlist.empty() )
-	    info.dlist += ' ';
-	info.dlist += i->device;
+	if( !info.devices.empty() )
+	    info.devices += ' ';
+	info.devices += i->device;
 	++i;
 	}
+    y2mil( "device:" << info.devices );
+    info.devices_add.clear();
     i=pv_add.begin();
     while( i!=pv_add.end() )
 	{
-	if( !info.dlist.empty() )
-	    info.dlist += ' ';
-	info.dlist += i->device;
+	if( !info.devices_add.empty() )
+	    info.devices_add += ' ';
+	info.devices_add += i->device;
 	++i;
 	}
+    y2mil( "devices_add:" << info.devices_add );
+    info.devices_rem.clear();
+    i=pv_remove.begin();
+    while( i!=pv_remove.end() )
+	{
+	if( !info.devices_rem.empty() )
+	    info.devices_rem += ' ';
+	info.devices_rem += i->device;
+	++i;
+	}
+    y2mil( "devices_rem:" << info.devices_rem );
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const EvmsCo& d )

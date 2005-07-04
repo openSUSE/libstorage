@@ -38,6 +38,7 @@ class LvmLv : public Dm
 	string vol_uuid;
 	string status;
 	string allocation;
+	mutable storage::LvmLvInfo info;
     };
 
 #endif

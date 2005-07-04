@@ -215,6 +215,8 @@ class Volume
 	static string fs_names[storage::FSNONE+1];
 	static string mb_names[storage::MOUNTBY_LABEL+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
+
+	mutable storage::VolumeInfo info;
     };
 
 #endif

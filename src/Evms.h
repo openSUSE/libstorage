@@ -34,6 +34,7 @@ class Evms : public Dm
 	static string getMapperName( const EvmsCo& d, const string& name );
 
 	bool compat;
+	mutable storage::EvmsInfo info;
     };
 
 #endif

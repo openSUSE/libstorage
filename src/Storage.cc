@@ -3348,13 +3348,17 @@ Storage::checkDeviceMounted( const string& device, string& mp )
     assertInit();
     y2milestone( "device:%s", device.c_str() );
     VolIterator vol;
+    ProcMounts mountData;
     if( findVolume( device, vol ) )
 	{
-	ProcMounts mountData;
 	mp = mountData.getMount( vol->mountDevice() );
 	if( mp.empty() )
 	    mp = mountData.getMount( vol->altNames() );
 	ret = !mp.empty();
+	}
+    else
+	{
+	mp = mountData.getMount( device );
 	}
     y2milestone( "ret:%d mp:%s", ret, mp.c_str() );
     return( ret );

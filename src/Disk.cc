@@ -1857,7 +1857,7 @@ unsigned Disk::numPartitions() const
     return(partPair( notDeleted ).length());
     }
 
-void Disk::getInfo( DiskInfo& info ) const
+void Disk::getInfo( DiskInfo& tinfo ) const
     {
     info.sizeK = sizeK();
     info.cyl = cylinders();
@@ -1867,6 +1867,7 @@ void Disk::getInfo( DiskInfo& info ) const
     info.disklabel = labelName();
     info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Disk& d )

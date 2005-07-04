@@ -323,11 +323,12 @@ void Dm::getDmMajor()
 	}
     }
 
-void Dm::getInfo( DmInfo& info ) const
+void Dm::getInfo( DmInfo& tinfo ) const
     {
     info.nr = num;
     info.table = tname;
     info.target = target;
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Dm &p )

@@ -1173,7 +1173,7 @@ int LvmVg::doCreatePv( const string& device )
     return( ret );
     }
 
-void LvmVg::getInfo( LvmVgInfo& info ) const
+void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     {
     info.sizeK = sizeK();
     info.peSize = peSize();
@@ -1181,24 +1181,37 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.peFree = peFree();
     info.lvm2 = lvm2();
     info.uuid = uuid;
-    info.dlist.clear();
+    info.devices.clear();
     list<Pv>::const_iterator i=pv.begin();
     while( i!=pv.end() )
 	{
-	if( !info.dlist.empty() )
-	    info.dlist += ' ';
-	info.dlist += i->device;
+	if( !info.devices.empty() )
+	    info.devices += ' ';
+	info.devices += i->device;
 	++i;
 	}
+    y2mil( "device:" << info.devices );
+    info.devices_add.clear();
     i=pv_add.begin();
     while( i!=pv_add.end() )
 	{
-	if( !info.dlist.empty() )
-	    info.dlist += ' ';
-	info.dlist += i->device;
+	if( !info.devices_add.empty() )
+	    info.devices_add += ' ';
+	info.devices_add += i->device;
 	++i;
 	}
-    y2mil( "dlist:" << info.dlist );
+    y2mil( "devices_add:" << info.devices_add );
+    info.devices_rem.clear();
+    i=pv_remove.begin();
+    while( i!=pv_remove.end() )
+	{
+	if( !info.devices_rem.empty() )
+	    info.devices_rem += ' ';
+	info.devices_rem += i->device;
+	++i;
+	}
+    y2mil( "devices_rem:" << info.devices_rem );
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const LvmVg& d )

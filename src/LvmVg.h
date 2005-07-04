@@ -127,6 +127,7 @@ class LvmVg : public PeContainer
 	string uuid;
 	bool lvm1;
 	static bool active;
+	mutable storage::LvmVgInfo info;
     };
 
 #endif

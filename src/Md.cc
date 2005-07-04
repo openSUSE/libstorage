@@ -520,23 +520,27 @@ void Md::setPersonality( MdType val )
     }
 
 
-void Md::getInfo( MdInfo& info ) const
+void Md::getInfo( MdInfo& tinfo ) const
     {
     info.nr = num;
     info.type = md_type;
     info.uuid = md_uuid;
     info.chunk = chunk;
     info.parity = md_parity;
-    info.dlist.clear();
+    info.devices.clear();
     list<string>::const_iterator i=devs.begin();
     while( i!=devs.end() )
 	{
-	if( !info.dlist.empty() )
-	    info.dlist += ' ';
-	info.dlist += *i;
+	if( !info.devices.empty() )
+	    info.devices += ' ';
+	info.devices += *i;
 	++i;
 	}
-    y2milestone( "dlist:\"%s\"", info.dlist.c_str() );
+    tinfo = info;
+    y2milestone( "%s pointer:%p", nm.c_str(), &tinfo );
+    y2milestone( "%s devices:\"%s\"", nm.c_str(), tinfo.devices.c_str() );
+    y2milestone( "%s size MdInfo:%zd", nm.c_str(), sizeof(tinfo) );
+    y2milestone( "offset devices:%d", ((char*)&tinfo.devices)-((char*)&tinfo) );
     }
 
 std::ostream& operator<< (std::ostream& s, const Md& m )

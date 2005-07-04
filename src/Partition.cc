@@ -428,7 +428,7 @@ Partition::~Partition()
     }
 
 void
-Partition::getInfo( PartitionInfo& info ) const
+Partition::getInfo( PartitionInfo& tinfo ) const
     {
     info.partitionType = type ();
     info.cylStart = cylStart ();
@@ -436,6 +436,7 @@ Partition::getInfo( PartitionInfo& info ) const
     info.nr = num;
     info.id = idt;
     info.boot = bootflag;
+    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Partition &p )

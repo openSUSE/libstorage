@@ -179,7 +179,7 @@ class Container
 	bool ronly;
 	storage::usedBy uby;
 	VCont vols;
-
+	mutable storage::ContainerInfo info;
     };
 
 #endif

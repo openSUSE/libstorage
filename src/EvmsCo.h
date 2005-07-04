@@ -202,6 +202,7 @@ class EvmsCo : public PeContainer
 	bool lvm1;
 	static bool active;
 	static int sockfd;
+	mutable storage::EvmsCoInfo info;
     };
 
 #endif

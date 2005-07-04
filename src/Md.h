@@ -66,6 +66,7 @@ class Md : public Volume
 	std::list<string> spare;
 	static string md_names[storage::MULTIPATH+1];
 	static string par_names[storage::RIGHT_SYMMETRIC+1];
+	mutable storage::MdInfo info;
     };
 
 #endif
