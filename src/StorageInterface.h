@@ -366,6 +366,8 @@ namespace storage
 	STORAGE_EVMS_INVALID_DEVICE = -2022,
 	STORAGE_CHANGE_AREA_INVALID_CONTAINER = -2023,
 	STORAGE_BACKUP_STATE_NOT_FOUND = -2024,
+	STORAGE_INVALID_FSTAB_VALUE = -2025,
+	STORAGE_NO_FSTAB_PTR = -2026,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -1023,6 +1025,22 @@ namespace storage
 #else
 	virtual int getIgnoreFstab( const string& device, bool& REFERENCE ) = 0;
 #endif
+
+	/**
+	 * Adds the specified entry to /etc/fstab
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param mount mount point, e.g. /home
+	 * @param vfs virtual filesystem type, e.g. reiserfs or ext3
+	 * @param options fstab options e.g. noauto,user,sync
+	 * @param freq value for fifth fstab field
+	 * @param passno value for sixth fstab field
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int addFstabEntry( const string& device, const string& mount,
+	                           const string& vfs, const string& options,
+				   unsigned freq, unsigned passno ) = 0;
+	                           
 
 	/**
 	 * Resizes a volume while keeping the data on the filesystem

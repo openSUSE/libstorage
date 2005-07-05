@@ -3700,4 +3700,41 @@ Storage::activateHld( bool val )
     MdCo::activate(val);
     }
 
+int Storage::addFstabEntry( const string& device, const string& mount,
+                            const string& vfs, const string& options,
+			    unsigned freq, unsigned passno )
+    {
+    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    assertInit();
+    y2milestone( "device:%s mount:%s vfs:%s opts:%s freq:%u passno:%u", 
+                 device.c_str(), mount.c_str(), vfs.c_str(), options.c_str(),
+		 freq, passno );
+    if( ret==0 && (device.empty()||mount.empty()||vfs.empty()))
+	{
+	ret = STORAGE_INVALID_FSTAB_VALUE;
+	}
+    if( ret==0 && fstab==NULL )
+	{
+	ret = STORAGE_NO_FSTAB_PTR;
+	}
+    if( ret==0 )
+	{
+	FstabChange c;
+	c.device = c.dentry = device;
+	c.mount = mount;
+	c.fs = vfs;
+	if( options.empty() )
+	    c.opts.push_back( "defaults" );
+	else
+	    c.opts = splitString( options, "," );
+	c.freq = freq;
+	c.passno = passno;
+	fstab->addEntry( c );
+	if( isRootMounted() )
+	    ret = fstab->flush();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 Storage::SkipDeleted Storage::SkipDel;

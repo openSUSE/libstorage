@@ -218,6 +218,9 @@ class Storage : public storage::StorageInterface
 	int getCrypt( const string& device, bool& val );
 	int setIgnoreFstab( const string& device, bool val );
 	int getIgnoreFstab( const string& device, bool& val );
+	int addFstabEntry( const string& device, const string& mount, 
+	                   const string& vfs, const string& options,
+			   unsigned freq, unsigned passno );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() const { return recursiveRemove; }
