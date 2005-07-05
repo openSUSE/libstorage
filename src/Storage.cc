@@ -3731,7 +3731,12 @@ int Storage::addFstabEntry( const string& device, const string& mount,
 	c.passno = passno;
 	fstab->addEntry( c );
 	if( isRootMounted() )
+	    {
+	    string dir = root() + mount;
+	    if( access( dir.c_str(), R_OK )!=0 )
+		createPath( dir );
 	    ret = fstab->flush();
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
