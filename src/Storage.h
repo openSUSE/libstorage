@@ -289,6 +289,7 @@ class Storage : public storage::StorageInterface
 	deque<string> getCommitActions( bool mark_destructive );
 	const string& getLastAction() const { return lastAction; }
         int commit();
+	void activateHld( bool val=true );
 
 	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }

@@ -2589,9 +2589,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    ret = i->getToCommit( *pt, colist, vlist );
 	    ++i;
 	    }
+	if( *pt == FORMAT )
+	    {
+	    activateHld( true );
+	    }
 	sortCommitLists( *pt, colist, vlist );
 	list<Volume*>::iterator vli = vlist.begin();
 	list<Container*>::iterator cli;
+	bool disks_unused = false;
 	while( ret==0 && vli != vlist.end() )
 	    {
 	    Container *co = const_cast<Container*>((*vli)->getContainer());
@@ -2600,6 +2605,11 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    while( ret==0 && cli!=colist.end() && tcli!=cli )
 		{
 		Container *cot = *tcli;
+		if( !disks_unused && *pt==DECREASE && cot->type()==DISK )
+		    {
+		    activateHld( false );
+		    disks_unused = true;
+		    }
 		ret = cot->commitChanges( *pt );
 		tcli = colist.erase( tcli );
 		}
@@ -2609,7 +2619,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		colist.erase( cli );
 		}
 	    if( ret==0 )
+		{
+		if( !disks_unused && *pt==DECREASE && co->type()==DISK )
+		    {
+		    activateHld( false );
+		    disks_unused = true;
+		    }
 		ret = co->commitChanges( *pt, *vli );
+		}
 	    ++vli;
 	    }
 	if( ret==0 && !colist.empty() )
@@ -3673,5 +3690,14 @@ Storage::backupStates() const
     return( ret );
     }
 
+void 
+Storage::activateHld( bool val )
+    {
+    y2milestone( "val:%d", val );
+    LvmVg::activate(val);
+    EvmsCo::activate(val);
+    Dm::activate(val);
+    MdCo::activate(val);
+    }
 
 Storage::SkipDeleted Storage::SkipDel;

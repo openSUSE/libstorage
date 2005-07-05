@@ -295,6 +295,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    fs = (m["SEC_TYPE"]=="ext3")?EXT3:EXT2;
 		    }
+		else if( i->second == "ext3" )
+		    {
+		    fs = EXT3;
+		    }
 		else if( i->second == "vfat" )
 		    {
 		    fs = VFAT;
@@ -1755,7 +1759,7 @@ string Volume::removeText( bool doing ) const
     return( txt );
     }
 
-void Volume::getInfo( VolumeInfo& info ) const
+void Volume::getInfo( VolumeInfo& tinfo ) const
     {
     info.sizeK = size_k;
     info.major = mjr;
@@ -1776,6 +1780,7 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.create = create;
     info.mkfs_options = mkfs_opt;
     info.is_mounted = is_mounted;
+    tinfo = info;
     }
 
 

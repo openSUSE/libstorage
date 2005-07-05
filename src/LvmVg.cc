@@ -825,7 +825,7 @@ void LvmVg::activate( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
-	    c.execute( "vgscan" );
+	    c.execute( "vgscan --mknodes" );
 	    c.execute( "vgchange -a y" );
 	    }
 	else
@@ -884,6 +884,12 @@ LvmVg::doCreateVg()
 	    }
 	if( ret==0 )
 	    {
+	    string ddir = "/dev/" + name();
+	    if( access( ddir.c_str(), R_OK )==0 )
+		{
+		SystemCmd c( "find " + ddir + " -type l | xargs -r rm" );
+		rmdir( ddir.c_str() );
+		}
 	    string cmd = "vgcreate " + instSysString() + metaString() + 
 	                 "-s " + decString(pe_size) + "k " + name() + " " + devices;
 	    SystemCmd c( cmd );
@@ -915,12 +921,14 @@ LvmVg::doRemoveVg()
     int ret = 0;
     if( deleted() )
 	{
+	if( !active )
+	    activate(true);
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( removeVgText(true) );
 	    }
 	checkConsistency();
-	string cmd = "vgremove " + instSysString() + name();
+	string cmd = "vgremove " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    ret = LVM_VG_REMOVE_FAILED;
@@ -939,6 +947,8 @@ LvmVg::doExtendVg()
     y2milestone( "Vg:%s", name().c_str() );
     int ret = 0;
     list<string> devs;
+    if( !active )
+	activate(true);
     list<Pv>::iterator p;
     for( p=pv_add.begin(); p!=pv_add.end(); ++p )
 	devs.push_back( p->device );
@@ -981,6 +991,8 @@ LvmVg::doReduceVg()
     {
     y2milestone( "Vg:%s", name().c_str() );
     int ret = 0;
+    if( !active )
+	activate(true);
     list<string> devs;
     list<Pv>::iterator p;
     for( p=pv_remove.begin(); p!=pv_remove.end(); ++p )
@@ -1021,6 +1033,8 @@ LvmVg::doCreate( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
+	if( !active )
+	    activate(true);
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( l->createText(true) );
@@ -1057,6 +1071,8 @@ int LvmVg::doRemove( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
+	if( !active )
+	    activate(true);
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( l->removeText(true) );
@@ -1091,6 +1107,8 @@ int LvmVg::doResize( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
+	if( !active )
+	    activate(true);
 	FsCapabilities caps;
 	bool remount = false;
 	unsigned long new_le = l->getLe();
@@ -1190,7 +1208,6 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 	info.devices += i->device;
 	++i;
 	}
-    y2mil( "device:" << info.devices );
     info.devices_add.clear();
     i=pv_add.begin();
     while( i!=pv_add.end() )
@@ -1200,7 +1217,6 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 	info.devices_add += i->device;
 	++i;
 	}
-    y2mil( "devices_add:" << info.devices_add );
     info.devices_rem.clear();
     i=pv_remove.begin();
     while( i!=pv_remove.end() )
@@ -1210,7 +1226,8 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 	info.devices_rem += i->device;
 	++i;
 	}
-    y2mil( "devices_rem:" << info.devices_rem );
+    y2mil( "device:" << info.devices << " devices_add:" << info.devices_add <<
+           " devices_rem:" << info.devices_rem );
     tinfo = info;
     }
 

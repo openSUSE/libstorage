@@ -1362,7 +1362,9 @@ int Disk::commitChanges( CommitStage stage )
     y2milestone( "name %s stage %d", name().c_str(), stage );
     int ret = 0;
     if( stage==DECREASE && deleted() )
+	{
 	ret = doCreateLabel();
+	}
     else
 	ret = DISK_COMMIT_NOTHING_TODO;
     y2milestone( "ret:%d", ret );
@@ -1594,6 +1596,8 @@ int Disk::doCreate( Volume* v )
 		     p->name().c_str() );
 	y2milestone( "doCreate nr:%d start %ld len %ld", p->nr(),
 	             p->cylStart(), p->cylSize() );
+	y2milestone( "doCreate detected_label:%s label:%s", 
+	             detected_label.c_str(), label.c_str() );
 	if( detected_label != label )
 	    {
 	    ret = doCreateLabel();
@@ -1880,8 +1884,10 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
       << ":" << d.mnr << ">"
       << " Range:" << d.range
       << " SizeM:" << d.size_k/1024
-      << " Label:" << d.label
-      << " MaxPrimary:" << d.max_primary;
+      << " Label:" << d.label;
+    if( d.detected_label!=d.label )
+	s << " DetectedLabel:" << d.detected_label;
+    s << " MaxPrimary:" << d.max_primary;
     if( d.ext_possible )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
     return( s );
@@ -1957,7 +1963,8 @@ bool Disk::equalContent( const Disk& rhs ) const
 	       cyl==rhs.cyl && head==rhs.head && sector==rhs.sector && 
 	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range && 
 	       size_k==rhs.size_k && max_primary==rhs.max_primary && 
-	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical;
+	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
+	       label==rhs.label;
     if( ret )
 	{
 	ConstPartPair p = partPair();
@@ -1982,6 +1989,7 @@ Disk& Disk::operator= ( const Disk& rhs )
     head = rhs.head;
     sector = rhs.sector;
     label = rhs.label;
+    detected_label = rhs.detected_label;
     mjr = rhs.mjr;
     mnr = rhs.mnr;
     range = rhs.range;

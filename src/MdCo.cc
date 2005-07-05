@@ -581,6 +581,8 @@ MdCo::doRemove( Volume* v )
     int ret = 0;
     if( m != NULL )
 	{
+	if( !active )
+	    activate(true);
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( m->removeText(true) );

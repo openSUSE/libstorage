@@ -292,7 +292,8 @@ Md::addSpareDevice( const string& dev )
 
 string Md::createCmd() const
     {
-    string cmd = "mdadm --create " + device() + " --run --level=" + pName();
+    string cmd = "modprobe " + pName() + "; mdadm --create " + device() +
+                 " --run --level=" + pName();
     if( chunk>0 )
 	cmd += " --chunk=" + decString(chunk);
     if( md_parity!=PAR_NONE )
