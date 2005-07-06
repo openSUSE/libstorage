@@ -867,7 +867,7 @@ namespace storage
 	 * Sets the value of mkfs options.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param label value of the label
+	 * @param opts options for mkfs command
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMkfsOptVolume( const string& device, const string& opts ) = 0;
@@ -963,6 +963,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
+
 	/**
 	 * Mkes library forgt a crypt password of a volume
 	 *
@@ -1376,6 +1377,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMdChunk( const string& name, unsigned long chunk ) = 0;
+
 	/**
 	 * Change parity of a raid device with raid type raid5.
 	 * This can only be done before the raid is created on disk.
@@ -1542,8 +1544,8 @@ namespace storage
 	 * @param name name of the backup to restore 
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-
 	virtual int restoreBackupState( const string& name ) = 0;
+
 	/**
 	 * Checks if a backup with a certain name already exists
 	 *
