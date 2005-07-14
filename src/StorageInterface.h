@@ -530,7 +530,6 @@ namespace storage
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
 
-
     };
 
 
@@ -632,7 +631,7 @@ namespace storage
 	 * @param plist list of records that get filled with partition specific info
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getPartitionInfo( const string& disk, 
+	virtual int getPartitionInfo( const string& disk,
 	                              deque<PartitionInfo>& plist ) = 0;
 
 	/**
@@ -642,7 +641,7 @@ namespace storage
 	 * @param plist list of records that get filled with LV specific info
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getLvmLvInfo( const string& name, 
+	virtual int getLvmLvInfo( const string& name,
 				  deque<LvmLvInfo>& plist ) = 0;
 
 	/**
@@ -652,7 +651,7 @@ namespace storage
 	 * @param plist list of records that get filled with EVMS specific info
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getEvmsInfo( const string& name, 
+	virtual int getEvmsInfo( const string& name,
 				 deque<EvmsInfo>& plist ) = 0;
 
 	/**
@@ -664,7 +663,7 @@ namespace storage
 	virtual int getMdInfo( deque<MdInfo>& plist ) = 0;
 
 	/**
-	 * Query infos for file based loop devices in system 
+	 * Query infos for file based loop devices in system
 	 *
 	 * @param plist list of records that get filled with loop specific info
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -672,7 +671,7 @@ namespace storage
 	virtual int getLoopInfo( deque<LoopInfo>& plist ) = 0;
 
 	/**
-	 * Query infos for dm devices in system 
+	 * Query infos for dm devices in system
 	 *
 	 * @param plist list of records that get filled with dm specific info
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -721,12 +720,12 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int updatePartitionArea( const string& device,
-	                                 unsigned long start, 
+	                                 unsigned long start,
 					 unsigned long size ) = 0;
 
 
 	/**
-	 * Determine the device name of the next created partition 
+	 * Determine the device name of the next created partition
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
@@ -819,7 +818,7 @@ namespace storage
 	 */
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
 	/**
-	 * Forget previouly issued change of partition id 
+	 * Forget previouly issued change of partition id
 	 *
 	 * @param partition name of partition, e.g. /dev/hda1
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1004,8 +1003,8 @@ namespace storage
 #endif
 
 	/**
-	 * Set fstab handling state of a volume. This way one can make 
-	 * libstorage ignore fstab handling for a volume. 
+	 * Set fstab handling state of a volume. This way one can make
+	 * libstorage ignore fstab handling for a volume.
 	 * Use this with care.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
@@ -1041,7 +1040,7 @@ namespace storage
 	virtual int addFstabEntry( const string& device, const string& mount,
 	                           const string& vfs, const string& options,
 				   unsigned freq, unsigned passno ) = 0;
-	                           
+
 
 	/**
 	 * Resizes a volume while keeping the data on the filesystem
@@ -1098,10 +1097,10 @@ namespace storage
 	virtual bool getZeroNewPartitions() const = 0;
 
 	/**
-	 * Set value for root prefix. 
+	 * Set value for root prefix.
 	 * This value is appended to all mount points of volumes, when
-	 * changes are commited. Config files fstab, cryptotab, raidtab and  
-	 * mdadm.conf are also created relative to this prefix. 
+	 * changes are commited. Config files fstab, cryptotab, raidtab and
+	 * mdadm.conf are also created relative to this prefix.
 	 * This variable must be set before first call to commit.
 	 *
 	 * @param root new value for root prefix
@@ -1207,7 +1206,7 @@ namespace storage
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
 
 	/**
-	 * Change strip size of a LVM logical volume. 
+	 * Change strip size of a LVM logical volume.
 	 * This can only be before the volume is created on disk.
 	 *
 	 * @param vg name of volume group
@@ -1294,7 +1293,7 @@ namespace storage
 	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
 
 	/**
-	 * Change strip size of a EVMS volume. 
+	 * Change strip size of a EVMS volume.
 	 * This can only be before the volume is created on disk.
 	 *
 	 * @param coname name of EVMS container
@@ -1302,7 +1301,7 @@ namespace storage
 	 * @param stripeSize new stripe size of volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeEvmsStripeSize( const string& coname, 
+	virtual int changeEvmsStripeSize( const string& coname,
 	                                  const string& name,
 					  unsigned long long stripeSize ) = 0;
 
@@ -1539,9 +1538,9 @@ namespace storage
 	virtual int createBackupState( const string& name ) = 0;
 
 	/**
-	 * Restore state to a previously created backup 
+	 * Restore state to a previously created backup
 	 *
-	 * @param name name of the backup to restore 
+	 * @param name name of the backup to restore
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int restoreBackupState( const string& name ) = 0;
@@ -1549,7 +1548,7 @@ namespace storage
 	/**
 	 * Checks if a backup with a certain name already exists
 	 *
-	 * @param name name of the backup to check 
+	 * @param name name of the backup to check
 	 * @return boolean if the backup exists
 	 */
 	virtual bool checkBackupState( const string& name ) = 0;
@@ -1562,14 +1561,14 @@ namespace storage
 	 * @param verbose_log flag if differences should be logged in detail
 	 * @return true if states are equal
 	 */
-	virtual bool equalBackupStates( const string& lhs, 
+	virtual bool equalBackupStates( const string& lhs,
 	                                const string& rhs,
 					bool verbose_log ) const = 0;
 
 	/**
-	 * Remove existing backup state 
+	 * Remove existing backup state
 	 *
-	 * @param name name of backup to remove, empty string means to remove 
+	 * @param name name of backup to remove, empty string means to remove
 	 *     all existing backup states
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -1585,37 +1584,37 @@ namespace storage
 	virtual bool checkDeviceMounted( const string& device, string& mp ) = 0;
 
 	/**
-	 * Umount the given device and do what is necessary to remove 
+	 * Umount the given device and do what is necessary to remove
 	 * underlying volume (e.g. do losetup -d if loop is set up)
 	 * The function umounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to umount
-	 * @return bool if umount succeeded 
+	 * @return bool if umount succeeded
 	 */
 	virtual bool umountDevice( const string& device ) = 0;
 
 	/**
-	 * Mount the given device and do what is necessary to access 
+	 * Mount the given device and do what is necessary to access
 	 * volume (e.g. do losetup if loop is set up)
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to mount
 	 * @param mp mount point to mount to
-	 * @return bool if mount succeeded 
+	 * @return bool if mount succeeded
 	 */
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
 	/**
 	 * Detect potentially available free space on a partition
 	 *
-	 * @param device device to check 
+	 * @param device device to check
 	 * @param resize_free free space in kilobytes available for resize
 	 * @param df_free free space in kilobytes available in filesystem
 	 * @param used used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
 	 * @return bool if values could be succcessfully determined
 	 */
-	virtual bool getFreeInfo( const string& device, 
+	virtual bool getFreeInfo( const string& device,
 	                          unsigned long long& resize_free,
 	                          unsigned long long& df_free,
 	                          unsigned long long& used,

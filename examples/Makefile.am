@@ -27,7 +27,7 @@ TestMd_SOURCES = TestMd.cc
 
 TestLoop_SOURCES = TestLoop.cc
 
-exampledir = $(docdir)/examples/liby2storage
+exampledir = $(docdir)/examples/libstorage
 
 example_DATA = TestDisk.cc TestDiskLog.cc TestProbing.cc TestLvm.cc TestEvms.cc TestMd.cc TestLoop.cc 
 
