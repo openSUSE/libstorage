@@ -145,6 +145,7 @@ namespace storage
      */
     struct ContainerInfo
 	{
+	ContainerInfo() {};
 	CType type;
 	unsigned volcnt;
 	string device;
@@ -159,6 +160,7 @@ namespace storage
      */
     struct DiskInfo
 	{
+	DiskInfo() {};
 	unsigned long long sizeK;
 	unsigned long long cylSizeB;
 	unsigned long cyl;
@@ -174,6 +176,7 @@ namespace storage
      */
     struct LvmVgInfo
 	{
+	LvmVgInfo() {};
 	unsigned long long sizeK;
 	unsigned long long peSize;
 	unsigned long peCount;
@@ -191,6 +194,7 @@ namespace storage
      */
     struct EvmsCoInfo
 	{
+	EvmsCoInfo() {};
 	unsigned long long sizeK;
 	unsigned long long peSize;
 	unsigned long peCount;
@@ -208,6 +212,7 @@ namespace storage
      */
     struct VolumeInfo
 	{
+	VolumeInfo() {};
 	unsigned long long sizeK;
 	unsigned long major;
 	unsigned long minor;
@@ -234,6 +239,7 @@ namespace storage
      */
     struct PartitionInfo
 	{
+	PartitionInfo() {};
 	VolumeInfo v;
 	unsigned nr;
 	unsigned long cylStart;
@@ -248,6 +254,7 @@ namespace storage
      */
     struct LvmLvInfo
 	{
+	LvmLvInfo() {};
 	VolumeInfo v;
 	unsigned stripe;
 	unsigned stripe_size;
@@ -263,6 +270,7 @@ namespace storage
      */
     struct EvmsInfo
 	{
+	EvmsInfo() {};
 	VolumeInfo v;
 	unsigned stripe;
 	unsigned stripe_size;
@@ -277,6 +285,7 @@ namespace storage
 
     struct MdInfo
 	{
+	MdInfo() {};
 	VolumeInfo v;
 	unsigned nr;
 	unsigned type;
@@ -291,6 +300,7 @@ namespace storage
      */
     struct LoopInfo
 	{
+	LoopInfo() {};
 	VolumeInfo v;
 	unsigned nr;
 	string file;
@@ -301,6 +311,7 @@ namespace storage
      */
     struct DmInfo
 	{
+	DmInfo() {};
 	VolumeInfo v;
 	unsigned nr;
 	string table;
