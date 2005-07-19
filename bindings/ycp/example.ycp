@@ -50,7 +50,7 @@
     {
 	y2milestone ("test3");
 
-	any fscapabilities = LibStorage::FsCapabilities::new ();
+	any fscapabilities = LibStorage::FsCapabilities::new ("LibStorage::FsCapabilities");
 	LibStorage::StorageInterface::getFsCapabilities (o, LibStorage::REISERFS (), fscapabilities);
 	y2milestone ("isExtendable is %1", LibStorage::FsCapabilities::swig_isExtendable_get (fscapabilities));
     }

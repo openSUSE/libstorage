@@ -129,6 +129,7 @@ namespace storage
      */
     struct FsCapabilities
     {
+	FsCapabilities () {}
 	bool isExtendable;
 	bool isExtendableWhileMounted;
 	bool isReduceable;
@@ -136,7 +137,7 @@ namespace storage
 	bool supportsUuid;
 	bool supportsLabel;
 	bool labelWhileMounted;
-	unsigned labelLength;
+	unsigned int labelLength;
 	unsigned long long minimalFsSizeK;
     };
 

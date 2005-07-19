@@ -2923,89 +2923,47 @@ int Storage::getDmInfo( deque<storage::DmInfo>& plist )
 bool
 Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 {
-    static FsCapabilities reiserfsCaps = {
-	isExtendable: true,
-	isExtendableWhileMounted: true,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: true,
-	supportsLabel: true,
-	labelWhileMounted: false,
-	labelLength: 16,
-	minimalFsSizeK: 50*1024
+    struct FsCapabilitiesX : public FsCapabilities
+    {
+	FsCapabilitiesX (bool isExtendableX, bool isExtendableWhileMountedX,
+			 bool isReduceableX, bool isReduceableWhileMountedX,
+			 bool supportsUuidX, bool supportsLabelX,
+			 bool labelWhileMountedX, unsigned int labelLengthX,
+			 unsigned long long minimalFsSizeKX)
+	    : FsCapabilities ()
+	{
+	    isExtendable = isExtendableX;
+	    isExtendableWhileMounted = isExtendableWhileMountedX;
+	    isReduceable = isReduceableX;
+	    isReduceableWhileMounted = isReduceableWhileMountedX;
+	    supportsUuid = supportsUuidX;
+	    supportsLabel = supportsLabelX;
+	    labelWhileMounted = labelWhileMountedX;
+	    labelLength = labelLengthX;
+	    minimalFsSizeK = minimalFsSizeKX;
+	}
     };
 
-    static FsCapabilities ext2Caps = {
-	isExtendable: true,
-	isExtendableWhileMounted: false,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: true,
-	supportsLabel: true,
-	labelWhileMounted: true,
-	labelLength: 16,
-	minimalFsSizeK: 1*1024
-    };
+    static FsCapabilitiesX reiserfsCaps (true, true, true, false, true, true,
+					 false, 16, 50*1024);
 
-    static FsCapabilities ext3Caps = {
-	isExtendable: true,
-	isExtendableWhileMounted: false,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: true,
-	supportsLabel: true,
-	labelWhileMounted: true,
-	labelLength: 16,
-	minimalFsSizeK: 10*1024
-    };
+    static FsCapabilitiesX ext2Caps (true, false, true, false, true, true,
+				     true, 16, 1*1024);
 
-    static FsCapabilities xfsCaps = {
-	isExtendable: true,
-	isExtendableWhileMounted: true,
-	isReduceable: false,
-	isReduceableWhileMounted: false,
-	supportsUuid: true,
-	supportsLabel: true,
-	labelWhileMounted: false,
-	labelLength: 12,
-	minimalFsSizeK: 40*1024
-    };
+    static FsCapabilitiesX ext3Caps (true, false, true, false, true, true,
+				     true, 16, 10*1024);
 
-    static FsCapabilities ntfsCaps = {
-	isExtendable: true,
-	isExtendableWhileMounted: false,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: false,
-	supportsLabel: false,
-	labelWhileMounted: false,
-	labelLength: 0,
-	minimalFsSizeK: 10*1024
-    };
+    static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
+				    false, 12, 40*1024);
 
-    static FsCapabilities fatCaps = {
-	isExtendable: true,
-	isExtendableWhileMounted: false,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: false,
-	supportsLabel: false,
-	labelWhileMounted: false,
-	labelLength: 0,
-	minimalFsSizeK: 1*1024
-	};
+    static FsCapabilitiesX ntfsCaps (true, false, true, false, false, false,
+				     false, 0, 10*1024);
 
-    static FsCapabilities swapCaps = {
-	isExtendable: true,
-	isExtendableWhileMounted: false,
-	isReduceable: true,
-	isReduceableWhileMounted: false,
-	supportsUuid: false,
-	supportsLabel: false,
-	labelWhileMounted: false,
-	labelLength: 0,
-	minimalFsSizeK: 1*1024
-	};
+    static FsCapabilitiesX fatCaps (true, false, true, false, false, false,
+				    false, 0, 1*1024);
+
+    static FsCapabilitiesX swapCaps (true, false, true, false, false, false,
+				     false, 0, 1*1024);
 
     switch (fstype)
     {
