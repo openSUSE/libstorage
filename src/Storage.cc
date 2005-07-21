@@ -3653,13 +3653,17 @@ Storage::activateHld( bool val )
     {
     y2milestone( "val:%d", val );
     if( val )
+	{
 	Dm::activate(val);
 	MdCo::activate(val);
+	}
     LvmVg::activate(val);
     EvmsCo::activate(val);
     if( !val )
+	{
 	Dm::activate(val);
 	MdCo::activate(val);
+	}
     }
 
 int Storage::addFstabEntry( const string& device, const string& mount,
