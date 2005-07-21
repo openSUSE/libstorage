@@ -50,7 +50,7 @@ DmCo::getDmData()
     Storage::ConstEvmsPair ev = getStorage()->evmsPair();
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     y2milestone( "begin" );
-    SystemCmd c( "dmsetup ls" );
+    SystemCmd c( "dmsetup ls | grep \"(.*)\"" );
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	string line = *c.getLine(i);
