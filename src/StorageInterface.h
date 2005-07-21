@@ -1632,6 +1632,14 @@ namespace storage
 	                          unsigned long long& used,
 				  bool& win ) = 0;
 
+	/**
+	 * Activate or deactivate higher level devices as MD,LVM,DM,EVMS
+	 *
+	 * @param val flag if devices should be activated or deactivated
+	 * @return bool if values could be succcessfully determined
+	 */
+	virtual void activateHld( bool val ) = 0;
+
     };
 
 
