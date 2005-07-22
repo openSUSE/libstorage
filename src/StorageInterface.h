@@ -733,7 +733,7 @@ namespace storage
 	 */
 	virtual int updatePartitionArea( const string& device,
 	                                 unsigned long start,
-					 unsigned long size ) = 0;
+					 unsigned long sizeCyl ) = 0;
 
 
 	/**
@@ -1029,7 +1029,7 @@ namespace storage
 	 * Get fstab handling state of a volume.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param val will be set if encryption is activated
+	 * @param val will be set if fstab should be ignored for this volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 #ifndef SWIG
