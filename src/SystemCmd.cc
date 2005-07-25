@@ -163,7 +163,7 @@ SystemCmd::doExecute( string Cmd )
 		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
 			     strerror(errno));
 		    }
-		if( Combine_b && dup2( 2, 1 )<0 )
+		if( Combine_b && dup2( 1, 2 )<0 )
 		    {
 		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
 			     strerror(errno));

@@ -1601,6 +1601,8 @@ int Disk::doCreate( Volume* v )
 	if( detected_label != label )
 	    {
 	    ret = doCreateLabel();
+	    if( ret==0 )
+		detected_label = label;
 	    }
 	std::ostringstream cmd_line;
 	if( ret==0 )
