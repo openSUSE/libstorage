@@ -140,13 +140,14 @@ Storage::initialize()
     EvmsCo::activate(true);
     detectDisks();
     if( instsys() )
+	{
 	MdCo::activate( true );
+	LvmVg::activate( true );
+	}
     detectMds();
     detectLvmVgs();
     detectEvms();
     detectDm();
-    if( instsys() )
-	MdCo::activate( false );
 
     if( testmode )
         {
@@ -164,6 +165,12 @@ Storage::initialize()
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	detectLoops();
 	detectFsData( vBegin(), vEnd() );
+	}
+    if( instsys() )
+	{
+	LvmVg::activate( false );
+	EvmsCo::activate( false );
+	MdCo::activate( false );
 	}
     setCacheChanges( true );
     }
@@ -303,8 +310,6 @@ Storage::detectLvmVgs()
     else if( getenv( "YAST2_STORAGE_NO_LVM" )==NULL )
 	{
 	list<string> l;
-	if( instsys() )
-	    LvmVg::activate( true );
 	LvmVg::getVgs( l );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
@@ -312,8 +317,6 @@ Storage::detectLvmVgs()
 	    addToList( v );
 	    v->checkConsistency();
 	    }
-	if( instsys() )
-	    LvmVg::activate( false );
 	}
     }
 
@@ -3380,6 +3383,34 @@ Storage::mountDevice( const string& device, const string& mp )
 	}
     else
 	ret = false;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool 
+Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
+    {
+    bool ret = false;
+    VolIterator vol;
+    assertInit();
+    y2milestone( "dir:%s", dir.c_str() );
+    EtcFstab *fstab = new EtcFstab( dir, true );
+    list<FstabEntry> le;
+    fstab->getEntries( le );
+    for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
+	{
+	y2mil( "entry:" << *i );
+	if( findVolume( i->device, vol ) )
+	    {
+	    VolumeInfo info;
+	    vol->getInfo( info );
+	    vol->mergeFstabInfo( info, *i );
+	    y2mil( "volume:" << *vol );
+	    infos.push_back( info );
+	    }
+	}
+    delete fstab;
+    ret = !infos.empty();
     y2milestone( "ret:%d", ret );
     return( ret );
     }

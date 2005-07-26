@@ -8,6 +8,7 @@
 class SystemCmd;
 class ProcMounts;
 class EtcFstab;
+class FstabEntry;
 class Container;
 class Storage;
 
@@ -135,6 +136,7 @@ class Volume
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
 	void getInfo( storage::VolumeInfo& info ) const;
+	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted

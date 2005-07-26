@@ -1633,6 +1633,15 @@ namespace storage
 				  bool& win ) = 0;
 
 	/**
+	 * Read fstab and cryptotab, if existent, from a specified directory and
+	 * return the volumes found in fstab and cryptotab
+	 *
+	 * @param dir directory where fstab and cryptotab are read from
+	 * @param infos list of records that get filled with volume info
+	 */
+	virtual bool readFstab( const string& dir, deque<VolumeInfo>& infos) = 0;
+
+	/**
 	 * Activate or deactivate higher level devices as MD,LVM,DM,EVMS
 	 *
 	 * @param val flag if devices should be activated or deactivated

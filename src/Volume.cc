@@ -1783,6 +1783,14 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     tinfo = info;
     }
 
+void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
+    {
+    info.mount = fste.mount;
+    info.mount_by = fste.mount_by;
+    info.fstab_options = mergeString( fste.opts, "," );
+    info.encryption = fste.encr;
+    tinfo = info;
+    }
 
 ostream& Volume::logVolume( ostream& file ) const
     {

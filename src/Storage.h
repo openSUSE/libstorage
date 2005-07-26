@@ -234,6 +234,7 @@ class Storage : public storage::StorageInterface
 	bool checkDeviceMounted( const string& device, string& mp );
 	bool umountDevice( const string& device );
 	bool mountDevice( const string& device, const string& mp );
+	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
 	                  unsigned long long& df_free, 
 	                  unsigned long long& used, bool& win );

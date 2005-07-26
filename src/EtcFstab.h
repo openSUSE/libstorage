@@ -117,6 +117,7 @@ class EtcFstab
 	int removeEntry( const FstabEntry& entry );
 	int changeRootPrefix( const string& prfix );
 	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l );
+	void getEntries( std::list<FstabEntry>& l );
 	string addText( bool doing, bool crypto, const string&  mp );
 	string updateText( bool doing, bool crypto, const string&  mp );
 	string removeText( bool doing, bool crypto, const string&  mp );

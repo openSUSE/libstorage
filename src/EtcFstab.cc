@@ -375,6 +375,20 @@ void EtcFstab::getFileBasedLoops( const string& prefix, list<FstabEntry>& l )
 	}
     }
 
+void EtcFstab::getEntries( list<FstabEntry>& l )
+    {
+    l.clear();
+    list<Entry>::iterator i = co.begin();
+    while( i!=co.end() )
+	{
+	if( i->op==Entry::NONE )
+	    {
+	    l.push_back( i->old );
+	    }
+	++i;
+	}
+    }
+
 int EtcFstab::flush()
     {
     int ret = 0;
