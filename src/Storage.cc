@@ -2951,7 +2951,7 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 					 false, 16, 50*1024);
 
     static FsCapabilitiesX ext2Caps (true, false, true, false, true, true,
-				     true, 16, 1*1024);
+				     true, 16, 16);
 
     static FsCapabilitiesX ext3Caps (true, false, true, false, true, true,
 				     true, 16, 10*1024);
@@ -2963,10 +2963,10 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 				     false, 0, 10*1024);
 
     static FsCapabilitiesX fatCaps (true, false, true, false, false, false,
-				    false, 0, 1*1024);
+				    false, 0, 16);
 
     static FsCapabilitiesX swapCaps (true, false, true, false, false, false,
-				     false, 0, 1*1024);
+				     false, 0, 16);
 
     switch (fstype)
     {
