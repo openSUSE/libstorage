@@ -64,6 +64,7 @@ class Disk : public Container
 			 std::list<Volume*>& vol );
 	int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
+	int resizePartition( Partition* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getUnusedSpace( std::list<Region>& free, bool all=true, 
@@ -142,7 +143,7 @@ class Disk : public Container
 	bool checkPartedOutput( const SystemCmd& cmd );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
-			     storage::PartitionType& type, string& parted_start,
+			     storage::PartitionType& type, 
 			     unsigned& id, bool& boot );
 	bool checkPartedValid( const ProcPart& pp, const std::list<string>& ps,
 	                       const std::list<Partition*>& pl );

@@ -90,7 +90,8 @@ class Volume
 	void setMajorMinor( unsigned long Major, unsigned long Minor )
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
-	void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
+	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
+	virtual void forgetResize() { size_k=orig_size_k; }
 	virtual bool canUseDevice() const;
 
         bool operator== ( const Volume& rhs ) const;

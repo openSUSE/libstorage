@@ -903,6 +903,43 @@ Storage::changePartitionId( const string& partition, unsigned id )
     }
 
 int
+Storage::resizePartition( const string& partition, unsigned long sizeCyl )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "partition:%s newCyl:%lu", partition.c_str(), sizeCyl );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( partition, cont, vol ) && cont->type()==DISK )
+	{
+	Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	Partition* p = dynamic_cast<Partition *>(&(*vol));
+	if( disk!=NULL && p!=NULL )
+	    {
+	    ret = disk->resizePartition( p, sizeCyl );
+	    }
+	else
+	    {
+	    ret = STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER;
+	    }
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::forgetChangePartitionId( const string& partition )
     {
     int ret = 0;
@@ -1470,6 +1507,34 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     else if( findVolume( device, cont, vol ) )
 	{
 	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::forgetResizeVolume( const string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	vol->forgetResize();
 	}
     else
 	{
@@ -2968,6 +3033,9 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     static FsCapabilitiesX swapCaps (true, false, true, false, false, false,
 				     false, 0, 16);
 
+    static FsCapabilitiesX jfsCaps (false, false, false, false, false, false,
+				     false, 0, 16);
+
     switch (fstype)
     {
 	case REISERFS:
@@ -2992,6 +3060,10 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 
 	case NTFS:
 	    fscapabilities = ntfsCaps;
+	    return true;
+
+	case JFS:
+	    fscapabilities = jfsCaps;
 	    return true;
 
 	case SWAP:
@@ -3448,8 +3520,16 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 	    ret = statvfs( mp.c_str(), &fsbuf )==0;
 	    if( ret )
 		{
-		resize_free = df_free = fsbuf.f_bfree*fsbuf.f_bsize/1024;
-		used = (fsbuf.f_blocks-fsbuf.f_bfree)*fsbuf.f_bsize/1024;
+		df_free = fsbuf.f_bfree;
+		df_free *= fsbuf.f_bsize;
+		df_free /= 1024;
+		resize_free = df_free;
+		used = fsbuf.f_blocks-fsbuf.f_bfree;
+		used *= fsbuf.f_bsize;
+		used /= 1024;
+		y2milestone( "blocks:%lu free:%lu bsize:%lu", fsbuf.f_blocks,
+		             fsbuf.f_bfree, fsbuf.f_bsize );
+		y2milestone( "free:%llu used:%llu", df_free, used );
 		}
 	    if( ret && vol->getFs()==NTFS )
 		{

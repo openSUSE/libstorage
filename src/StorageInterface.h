@@ -233,6 +233,8 @@ namespace storage
 	bool format;
 	bool create;
 	bool is_mounted;
+	bool resize;
+	unsigned long long OrigSizeK;
 	};
 
     /**
@@ -722,6 +724,16 @@ namespace storage
 				     string& device ) = 0;
 
 	/**
+	 * Resize an existing disk partition. Units given in disk cylinders.
+	 *
+	 * @param device device name of partition
+	 * @param sizeCyl new size of partition in disk cylinders
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int resizePartition( const string& device,
+				     unsigned long sizeCyl ) = 0;
+
+	/**
 	 * Update area used by a new partition. Units given in disk cylinders.
 	 * This function can only be used with a partition created but not yet
 	 * committed.
@@ -1062,6 +1074,14 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
+
+	/**
+	 * Forget about possible resize of an volume.
+	 *
+	 * @param device device name of volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int forgetResizeVolume( const string& device ) = 0;
 
 	/**
 	 * Set handling of deletion of entities that belong to other

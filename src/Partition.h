@@ -19,7 +19,7 @@ class Partition : public Volume
 
 	Partition( const Disk& d, unsigned Pnr, unsigned long long SizeK,
 	           unsigned long Start, unsigned long CSize,
-		   storage::PartitionType Type, const string& parted_start,
+		   storage::PartitionType Type, 
 		   unsigned id=ID_LINUX, bool Boot=false );
 	Partition( const Disk& d, const string& Data );
 	Partition( const Disk& d, const Partition& d );
@@ -36,8 +36,6 @@ class Partition : public Volume
 	unsigned id() const { return idt; }
 	storage::PartitionType type() const { return typ; }
 	std::ostream& logData( std::ostream& file ) const;
-	const string& partedStart() const { return parted_start; }
-	void changePartedStart( const string& pstart ) { parted_start=pstart; }
 	void changeRegion( unsigned long Start, unsigned long CSize,
 	                   unsigned long long SizeK );
 	void changeNumber( unsigned new_num );
@@ -58,6 +56,8 @@ class Partition : public Volume
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
+	void setResizedSize( unsigned long long SizeK );
+	void forgetResize(); 
 	bool canUseDevice() const;
 
 	void getInfo( storage::PartitionInfo& info ) const;

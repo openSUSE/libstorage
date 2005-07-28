@@ -13,14 +13,12 @@ using namespace std;
 
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,
-		      PartitionType Type, const string& PartedStart,
-		      unsigned Id, bool Boot )
+		      PartitionType Type, unsigned Id, bool Boot )
     : Volume( d, PNr, SizeK ), reg( Start, CSize )
     {
     bootflag = Boot;
     idt = orig_id = Id;
     typ = Type;
-    parted_start = PartedStart;
     orig_num = num;
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
@@ -119,6 +117,18 @@ bool Partition::canUseDevice() const
     if( ret )
 	ret = type()!=EXTENDED;
     return( ret );
+    }
+
+void Partition::setResizedSize( unsigned long long SizeK ) 
+    {
+    Volume::setResizedSize(SizeK);
+    reg = Region( cylStart(), disk()->kbToCylinder(SizeK) );
+    }
+
+void Partition::forgetResize() 
+    { 
+    Volume::forgetResize();
+    reg = Region( cylStart(), disk()->kbToCylinder(size_k) );
     }
 
 
@@ -480,8 +490,6 @@ void Partition::logDifference( const Partition& rhs ) const
 	else
 	    log += " boot-->";
 	}
-    if( parted_start!=rhs.parted_start )
-	log += " PartedStart:" + parted_start + "-->" + rhs.parted_start;
     y2milestone( "%s", log.c_str() );
     }
 
@@ -489,7 +497,7 @@ bool Partition::equalContent( const Partition& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
             reg==rhs.reg && bootflag==rhs.bootflag && typ==rhs.typ && 
-            idt==rhs.idt && parted_start==rhs.parted_start );
+            idt==rhs.idt );
     }
 
 Partition& Partition::operator= ( const Partition& rhs )
@@ -501,7 +509,6 @@ Partition& Partition::operator= ( const Partition& rhs )
     typ = rhs.typ;
     idt = rhs.idt;
     orig_id = rhs.orig_id;
-    parted_start = rhs.parted_start;
     orig_num = rhs.orig_num;
     return( *this );
     }
