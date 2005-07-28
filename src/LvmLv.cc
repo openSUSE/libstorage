@@ -107,7 +107,7 @@ string LvmLv::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create crypted Logical volume %1$s %2$s for %4$s with %3$s"),
+		txt = sformat( _("Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"),
 			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			       mp.c_str() );
 		}
