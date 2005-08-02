@@ -394,20 +394,32 @@ string Partition::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
-
-        }
+	}
     else
         {
-	if( needShrink() )
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrink partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
-	else
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extend partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
-
-        }
+	if( isWindows() )
+	    {
+	    if( needShrink() )
+		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Shrink Windows partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    else
+		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Extend Windows partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+    	    }
+        else
+            {
+	    if( needShrink() )
+		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Shrink partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    else
+		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Extend partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    }
+	}
     return( txt );
     }
 
