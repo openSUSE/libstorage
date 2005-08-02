@@ -2518,6 +2518,7 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
 	    if( mark_destructive && (*i)->destructive )
 		txt += "</font>";
 	    ret.push_back( txt );
+	    delete *i;
 	    }
 	}
     y2milestone( "ret.size():%zd", ret.size() );
