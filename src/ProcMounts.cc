@@ -38,7 +38,13 @@ ProcMounts::ProcMounts()
     getline( mounts, line );
     while( mounts.good() )
 	{
+	string::size_type pos;
 	string dev = extractNthWord( 0, line );
+	if( (pos=dev.find( "\\040" ))!=string::npos )
+	    {
+	    y2mil( "dev:" << dev );
+	    dev.erase( pos );
+	    }
 	co[dev] = "swap";
 	getline( mounts, line );
 	}
