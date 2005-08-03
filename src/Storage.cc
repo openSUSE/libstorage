@@ -136,7 +136,12 @@ Storage::initialize()
 	    }
 	}
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
+    detectObjects();
+    setCacheChanges( true );
+    }
 
+void Storage::detectObjects()
+    {
     EvmsCo::activate(true);
     detectDisks();
     if( instsys() )
@@ -172,19 +177,38 @@ Storage::initialize()
 	EvmsCo::activate( false );
 	MdCo::activate( false );
 	}
-    setCacheChanges( true );
+    }
+
+void Storage::deleteClist( CCont& co )
+    {
+    for( CIter i=co.begin(); i!=co.end(); ++i )
+	delete( *i );
+    co.clear();
+    }
+
+void Storage::deleteBackups()
+    {
+    map<string,CCont>::iterator i = backups.begin();
+    while( i!=backups.end() )
+	{
+	deleteClist( i->second );
+	++i;
+	}
+    backups.clear();
     }
 
 Storage::~Storage()
     {
     if( max_log_num>0 )
-	logVolumes( logdir );
-    for( CIter i=cont.begin(); i!=cont.end(); ++i )
 	{
-	if( max_log_num>0 )
+	logVolumes( logdir );
+	for( CIter i=cont.begin(); i!=cont.end(); ++i )
+	    {
 	    (*i)->logData( logdir );
-	delete( *i );
+	    }
 	}
+    deleteClist(cont);
+    deleteBackups();
     if( !tempdir.empty() && access( tempdir.c_str(), R_OK )==0 )
 	{
 	SystemCmd c( "rmdir " + tempdir );
@@ -196,6 +220,13 @@ Storage::~Storage()
 	    }
 	}
     y2milestone( "destructed Storage" );
+    }
+
+void Storage::rescanEverything()
+    {
+    deleteClist(cont);
+    deleteBackups();
+    detectObjects();
     }
 
 const string& Storage::tmpDir() const
@@ -3627,12 +3658,15 @@ Storage::removeBackupState( const string& name )
 	    {
 	    map<string,CCont>::iterator i = backups.find( name );
 	    if( i!=backups.end())
+		{
+		deleteClist( i->second );
 		backups.erase(i);
+		}
 	    else
 		ret = STORAGE_BACKUP_STATE_NOT_FOUND;
 	    }
 	else
-	    backups.clear();
+	    deleteBackups();
 	}
     y2mil( "states:" << backupStates() );
     y2milestone( "ret:%d", ret );

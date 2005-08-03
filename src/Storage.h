@@ -128,6 +128,7 @@ class Storage : public storage::StorageInterface
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool isCacheChanges() const { return( cache ); }
 	void assertInit() { if( !initialized ) initialize(); }
+	void rescanEverything();
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
@@ -1181,7 +1182,9 @@ class Storage : public storage::StorageInterface
 	                        const std::list<Container*>& co,
 	                        bool& cont_removed );
 	string backupStates() const;
-
+	void detectObjects();
+	void deleteClist( CCont& co );
+	void deleteBackups();
 
 	// protected internal member variables
 	bool readonly;

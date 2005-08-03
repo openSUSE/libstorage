@@ -1669,6 +1669,17 @@ namespace storage
 	 */
 	virtual void activateHld( bool val ) = 0;
 
+	/**
+	 * Rescan all disks. 
+	 * Alle currently detected objects are forgotten and a new scan
+	 * for all type of objects (disks, LVM, EVMS, MD) is initiated.
+	 * This function makes sense to be called after something outside
+	 * of libstorage changed disk layout or created storage objects.
+	 * Any changes already cached are lost.
+	 *
+	 */
+	virtual void rescanEverything() = 0;
+
     };
 
 
