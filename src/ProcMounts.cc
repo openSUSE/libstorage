@@ -40,7 +40,7 @@ ProcMounts::ProcMounts()
 	{
 	string::size_type pos;
 	string dev = extractNthWord( 0, line );
-	if( (pos=dev.find( "\\040" ))!=string::npos )
+	if( (pos=dev.find( "\\040(deleted)" ))!=string::npos )
 	    {
 	    y2mil( "dev:" << dev );
 	    dev.erase( pos );
