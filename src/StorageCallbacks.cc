@@ -336,8 +336,8 @@ StorageCallbacks::ShowInstallInfo (const YCPString & callback)
 	return YCPVoid ();
     }
 
-    progress_bar = ns->createFunctionCall (name, Type::Unspec);
-    if (progress_bar == NULL)
+    show_install_info = ns->createFunctionCall (name, Type::Unspec);
+    if (show_install_info == NULL)
     {
 	ycp2error ("Cannot find function %s in module %s as a callback",
 		   name.c_str(), module.c_str () );
@@ -382,8 +382,8 @@ StorageCallbacks::InfoPopup (const YCPString & callback)
 	return YCPVoid ();
     }
 
-    progress_bar = ns->createFunctionCall (name, Type::Unspec);
-    if (progress_bar == NULL)
+    info_popup = ns->createFunctionCall (name, Type::Unspec);
+    if (info_popup == NULL)
     {
 	ycp2error ("Cannot find function %s in module %s as a callback",
 		   name.c_str(), module.c_str () );
@@ -428,8 +428,8 @@ StorageCallbacks::YesNoPopup (const YCPString & callback)
 	return YCPVoid ();
     }
 
-    progress_bar = ns->createFunctionCall (name, Type::Unspec);
-    if (progress_bar == NULL)
+    yesno_popup = ns->createFunctionCall (name, Type::Unspec);
+    if (yesno_popup == NULL)
     {
 	ycp2error ("Cannot find function %s in module %s as a callback",
 		   name.c_str(), module.c_str () );
