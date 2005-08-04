@@ -1390,6 +1390,17 @@ int Volume::mount( const string& m )
     else
 	{
 	cmdline = "swapon " + mountDevice();
+	if( cont->getStorage()->instsys() )
+	    {
+	    ProcMounts mountData;
+	    string m = mountData.getMount( mountDevice() );
+	    if( m.empty() )
+		{
+		m = mountData.getMount( alt_names );
+		}
+	    if( m == "swap" )
+		cmdline = "echo " + cmdline;
+	    }
 	}
     int ret = cmd.execute( cmdline );
     if( ret != 0 )
