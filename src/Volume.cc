@@ -1382,8 +1382,10 @@ int Volume::mount( const string& m )
 	y2milestone( "device:%s mp:%s", dev.c_str(), lmount.c_str() );
 	cmdline = "modprobe " + fs_names[fs];
 	cmd.execute( cmdline );
-	cmdline = "mount -t " + fs_names[fs] + " " + mountDevice() + " " + 
-	          lmount;
+	cmdline = "mount ";
+	if( fs == NTFS )
+	    cmdline += "-r ";
+	cmdline += "-t " + fs_names[fs] + " " + mountDevice() + " " + lmount;
 	}
     else
 	{
