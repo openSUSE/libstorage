@@ -559,6 +559,11 @@ int Volume::doFormat()
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
 	}
+    if( ret==0 && mountDevice().find( "/dev/md" )!=0 )
+	{
+	SystemCmd c;
+	c.execute( "mdadm --zero-superblock " + mountDevice() );
+	}
     if( ret==0 )
 	{
 	string cmd;
