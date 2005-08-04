@@ -2,11 +2,13 @@
 # Makefile.am for libstorage/src
 #
 
-AM_CXXFLAGS = 
+AM_CXXFLAGS =
 INCLUDES = -I$(includedir) -I/usr/include/evms
 
 y2storage:
 	ln -sf . y2storage
+	mkdir .libs
+	ln -sf . .libs/plugin
 
 BUILT_SOURCES = y2storage StorageCallbacksBuiltinTable.h StorageCallbacksBuiltinCalls.h
 
@@ -68,7 +70,7 @@ pkgincludedir = $(includedir)/y2storage
 
 # these go to $(pkgincludedir)
 
-pkginclude_HEADERS = StorageInterface.h 
+pkginclude_HEADERS = StorageInterface.h
 
 #<INSTALL-HEADER-TARGET>
 
@@ -79,7 +81,7 @@ evms_access_INCLUDES = -I$(includedir) -I/usr/include/evms
 
 evms_access_SOURCES = EvmsAccess.cc EvmsHelper.cc EvmsAccess.h
 
-evms_access_LDADD = liby2storage.la -lblocxx -levms 
+evms_access_LDADD = liby2storage.la -lblocxx -levms
 
 
 CLEANFILES = $(BUILT_SOURCES)
