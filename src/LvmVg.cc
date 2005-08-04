@@ -73,11 +73,14 @@ LvmVg::removeVg()
 	LvmLvPair p=lvmLvPair(lvNotDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	    ret = removeLv( i->name() );
+	setDeleted( true );
+	}
+    if( ret==0 )
+	{
 	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
 	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
 	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
 	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
-	setDeleted( true );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -145,8 +148,8 @@ LvmVg::extendVg( const list<string>& devs )
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
 	    getStorage()->changeFormatVolume( d, false, FSNONE );
-	    getStorage()->setUsedBy( d, UB_LVM, name() );
 	    }
+	getStorage()->setUsedBy( d, UB_LVM, name() );
 	free_pe += pe;
 	num_pe += pe;
 	++i;

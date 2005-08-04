@@ -1677,10 +1677,9 @@ Storage::removeLvmVg( const string& name )
 	}
     else if( i != lvgEnd() )
 	{
-	if( i->created() )
+	ret = i->removeVg();
+	if( ret==0 && i->created() )
 	    ret = removeContainer( &(*i) );
-	else
-	    ret = i->removeVg();
 	}
     else
 	{
@@ -1920,10 +1919,9 @@ Storage::removeEvmsContainer( const string& name )
 	}
     else if( i != evCoEnd() )
 	{
-	if( i->created() )
+	ret = i->removeCo();
+	if( ret==0 && i->created() )
 	    ret = removeContainer( &(*i) );
-	else
-	    ret = i->removeCo();
 	}
     else
 	{

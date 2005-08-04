@@ -85,6 +85,13 @@ EvmsCo::removeCo()
 	    ret = removeVol( i->name() );
 	setDeleted( true );
 	}
+    if( ret==0 )
+	{
+	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
+	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -141,6 +148,9 @@ EvmsCo::extendCo( const list<string>& devs )
 	    pv.push_back( *p );
 	    pe = p->num_pe;
 	    pv_remove.erase( p );
+	    getStorage()->setUsedBy( d, UB_EVMS, name() );
+	    d = "/dev/evms/"+dev.substr(5);
+	    getStorage()->setUsedBy( d, UB_EVMS, name() );
 	    }
 	else
 	    {
