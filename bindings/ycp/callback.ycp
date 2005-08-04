@@ -1,0 +1,53 @@
+
+# /usr/lib/YaST2/bin/y2base callback.ycp stdio
+
+{
+    import "Storage";
+    import "LibStorage";
+    import "LibStorage::StorageInterface";
+    import "StorageCallbacks";
+
+    /*
+    // place this in Storage.ycp
+    global define void test_log_progress (string id, integer cur, integer max)
+    {
+	y2milestone ("IN YCP %1 %2 %3", id, cur, max);
+    }
+    */
+
+    LibStorage::initDefaultLogger ();
+
+    // change read-only (1st param) to false for real testing
+    any o = LibStorage::createStorageInterface (true, false, true);
+
+    integer r = 0;
+
+    StorageCallbacks::ProgressBar ("Storage::test_log_progress");
+
+    LibStorage::StorageInterface::setRecursiveRemoval (o, true);
+
+    string tmp1 = "/dev/hdb";
+    string tmp2 = "msdos";
+    r = LibStorage::StorageInterface::destroyPartitionTable (o, tmp1, tmp2);
+    y2milestone ("destroyPartitionTable ret = %1", r);
+
+    string tmp3 = "/dev/hdb";
+    string name = "";
+    r = LibStorage::StorageInterface::createPartition (o, tmp3,
+						       LibStorage::PRIMARY (),
+						       0, 1100, name);
+    y2milestone ("createPartition ret = %1, name = %2", r, name);
+
+    r = LibStorage::StorageInterface::changeFormatVolume (o, name, true,
+							  LibStorage::REISERFS ());
+    y2milestone ("changeFormatVolume ret = %1", r);
+
+    string tmp4 = "/foo";
+    r = LibStorage::StorageInterface::changeMountPoint (o, name, tmp4);
+    y2milestone ("changeMountPoint ret = %1", r);
+
+    r = LibStorage::StorageInterface::commit (o);
+    y2milestone ("commit ret = %1", r);
+
+    LibStorage::destroyStorageInterface (o);
+}
