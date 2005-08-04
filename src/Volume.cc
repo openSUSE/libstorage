@@ -564,7 +564,7 @@ int Volume::doFormat()
 	string cmd;
 	string params;
 	ScrollBarHandler* p = NULL;
-	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBar();
+	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBarTheOne();
 	
 	switch( fs )
 	    {

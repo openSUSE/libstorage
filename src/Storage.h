@@ -315,6 +315,32 @@ class Storage : public storage::StorageInterface
 	storage::CallbackYesNoPopup getCallbackYesNoPopup() const
 	    { return yesno_popup_cb; }
 
+	static void setCallbackProgressBarYcp( storage::CallbackProgressBar pfnc )
+	    { progress_bar_cb_ycp=pfnc; }
+	static storage::CallbackProgressBar getCallbackProgressBarYcp()
+	    { return progress_bar_cb_ycp; }
+	static void setCallbackShowInstallInfoYcp( storage::CallbackShowInstallInfo pfnc )
+	    { install_info_cb_ycp=pfnc; }
+	static storage::CallbackShowInstallInfo getCallbackShowInstallInfoYcp()
+	    { return install_info_cb_ycp; }
+	static void setCallbackInfoPopupYcp( storage::CallbackInfoPopup pfnc )
+	    { info_popup_cb_ycp=pfnc; }
+	static storage::CallbackInfoPopup getCallbackInfoPopupYcp()
+	    { return info_popup_cb_ycp; }
+	static void setCallbackYesNoPopupYcp( storage::CallbackYesNoPopup pfnc )
+	    { yesno_popup_cb_ycp=pfnc; }
+	static storage::CallbackYesNoPopup getCallbackYesNoPopupYcp()
+	    { return yesno_popup_cb_ycp; }
+
+	storage::CallbackProgressBar getCallbackProgressBarTheOne() const
+	    { return progress_bar_cb ? progress_bar_cb : progress_bar_cb_ycp; }
+	storage::CallbackShowInstallInfo getCallbackShowInstallInfoTheOne() const
+	    { return install_info_cb ? install_info_cb : install_info_cb_ycp; }
+	storage::CallbackInfoPopup getCallbackInfoPopupTheOne() const
+	    { return info_popup_cb ? info_popup_cb : info_popup_cb_ycp; }
+	storage::CallbackYesNoPopup getCallbackYesNoPopupTheOne() const
+	    { return yesno_popup_cb ? yesno_popup_cb : yesno_popup_cb_ycp; }
+
 	void progressBarCb( const string& id, unsigned cur, unsigned max );
 	void showInfoCb( const string& info );
 	void infoPopupCb( const string& info );
@@ -1204,10 +1230,16 @@ class Storage : public storage::StorageInterface
 	static string proc_arch;
 	CCont cont;
 	EtcFstab *fstab;
+
 	storage::CallbackProgressBar progress_bar_cb;
 	storage::CallbackShowInstallInfo install_info_cb;
 	storage::CallbackInfoPopup info_popup_cb;
 	storage::CallbackYesNoPopup yesno_popup_cb;
+	static storage::CallbackProgressBar progress_bar_cb_ycp;
+	static storage::CallbackShowInstallInfo install_info_cb_ycp;
+	static storage::CallbackInfoPopup info_popup_cb_ycp;
+	static storage::CallbackYesNoPopup yesno_popup_cb_ycp;
+
 	unsigned max_log_num;
 	string lastAction;
 	std::map<string,CCont> backups;

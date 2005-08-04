@@ -8,7 +8,14 @@ INCLUDES = -I$(includedir) -I/usr/include/evms
 y2storage:
 	ln -sf . y2storage
 
-BUILT_SOURCES = y2storage
+BUILT_SOURCES = y2storage StorageCallbacksBuiltinTable.h StorageCallbacksBuiltinCalls.h
+
+StorageCallbacksBuiltinTable.h : StorageCallbacks.h
+	y2tool generateYCPWrappers StorageCallbacks.h StorageCallbacksBuiltinCalls.h StorageCallbacksBuiltinTable.h
+
+StorageCallbacksBuiltinCalls.h : StorageCallbacks.h
+	y2tool generateYCPWrappers StorageCallbacks.h StorageCallbacksBuiltinCalls.h StorageCallbacksBuiltinTable.h
+
 
 lib_LTLIBRARIES = liby2storage.la
 
@@ -47,6 +54,16 @@ liby2storage_la_SOURCES =			\
 liby2storage_la_LDFLAGS = -version-info 2:0
 liby2storage_la_LIBADD = -lblocxx
 
+plugin_LTLIBRARIES = libpy2StorageCallbacks.la
+
+libpy2StorageCallbacks_la_SOURCES =						\
+	Y2StorageCallbacksComponent.cc Y2StorageCallbacksComponent.h	\
+	Y2CCStorageCallbacks.cc Y2CCStorageCallbacks.h			\
+	StorageCallbacks.h StorageCallbacks.cc
+
+libpy2StorageCallbacks_la_LDFLAGS = -version-info 2:0
+libpy2StorageCallbacks_la_LIBADD = -ly2 -lycp liby2storage.la
+
 pkgincludedir = $(includedir)/y2storage
 
 # these go to $(pkgincludedir)
@@ -64,3 +81,5 @@ evms_access_SOURCES = EvmsAccess.cc EvmsHelper.cc EvmsAccess.h
 
 evms_access_LDADD = liby2storage.la -lblocxx -levms 
 
+
+CLEANFILES = $(BUILT_SOURCES)

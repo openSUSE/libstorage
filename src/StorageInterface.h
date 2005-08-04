@@ -98,6 +98,7 @@ namespace storage
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS };
 
+
     /**
      *  typedef for a pointer to a function that is called on progress bar events
      */
@@ -1698,7 +1699,7 @@ namespace storage
     /**
      * Factory for creating a concrete StorageInterface object.
      */
-    StorageInterface* createStorageInterface (bool ronly, bool testmode,
+    StorageInterface* createStorageInterface (bool readonly, bool testmode,
 					      bool autodetect);
 
 

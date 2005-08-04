@@ -3192,30 +3192,34 @@ UsedByType Storage::usedBy( const string& dev )
 void Storage::progressBarCb( const string& id, unsigned cur, unsigned max )
     {
     y2milestone( "id:%s cur:%d max:%d", id.c_str(), cur, max );
-    if( progress_bar_cb )
-	(*progress_bar_cb)( id, cur, max );
+    CallbackProgressBar cb = getCallbackProgressBarTheOne();
+    if( cb )
+	(*cb)( id, cur, max );
     }
 
 void Storage::showInfoCb( const string& info )
     {
     y2milestone( "INSTALL INFO:%s", info.c_str() );
+    CallbackShowInstallInfo cb = getCallbackShowInstallInfoTheOne();
     lastAction = info;
-    if( install_info_cb )
-	(*install_info_cb)( info );
+    if( cb )
+	(*cb)( info );
     }
 
 void Storage::infoPopupCb( const string& info )
     {
     y2milestone( "INFO POPUP:%s", info.c_str() );
-    if( info_popup_cb )
-	(*info_popup_cb)( info );
+    CallbackInfoPopup cb = getCallbackInfoPopupTheOne();
+    if( cb )
+	(*cb)( info );
     }
 
 bool Storage::yesnoPopupCb( const string& info )
     {
     y2milestone( "YESNO POPUP:%s", info.c_str() );
-    if( yesno_popup_cb )
-	return (*yesno_popup_cb)( info );
+    CallbackYesNoPopup cb = getCallbackYesNoPopupTheOne();
+    if( cb )
+	return (*cb)( info );
     else
 	return( true );
     }
@@ -3853,3 +3857,9 @@ int Storage::addFstabEntry( const string& device, const string& mount,
     }
 
 Storage::SkipDeleted Storage::SkipDel;
+
+storage::CallbackProgressBar Storage::progress_bar_cb_ycp;
+storage::CallbackShowInstallInfo Storage::install_info_cb_ycp;
+storage::CallbackInfoPopup Storage::info_popup_cb_ycp;
+storage::CallbackYesNoPopup Storage::yesno_popup_cb_ycp;
+
