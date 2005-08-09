@@ -464,7 +464,7 @@ void
 Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     {
     y2milestone( "detectFsData begin" );
-    SystemCmd Blkid( "/sbin/blkid -c /dev/null" );
+    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null" );
     SystemCmd Losetup( "/sbin/losetup -a" );
     ProcMounts Mounts;
     for( VolIterator i=begin; i!=end; ++i )
@@ -2716,7 +2716,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		ret = co->commitChanges( *pt );
 		colist.erase( cli );
 		}
-	    if( ret==0 )
+	    while( ret==0 && co==(*vli)->getContainer() )
 		{
 		if( !disks_unused && *pt==DECREASE && co->type()==DISK )
 		    {
@@ -2724,8 +2724,13 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		    disks_unused = true;
 		    }
 		ret = co->commitChanges( *pt, *vli );
+		++vli;
 		}
-	    ++vli;
+	    if( ret==0 && *pt==DECREASE && cli!=colist.end() )
+		{
+		ret = co->commitChanges( *pt );
+		colist.erase( cli );
+		}
 	    }
 	if( ret==0 && !colist.empty() )
 	    ret = performContChanges( *pt, colist, cont_removed );

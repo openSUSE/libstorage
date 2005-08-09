@@ -644,7 +644,7 @@ int Volume::doFormat()
 	detected_fs = fs;
 	if( fs != SWAP && !cont->getStorage()->test() )
 	    {
-	    SystemCmd Blkid( "/sbin/blkid -c /dev/null " + mountDevice() );
+	    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
 	    FsType old=fs;
 	    getFsData( Blkid );
 	    if( fs != old )
@@ -1140,7 +1140,7 @@ EncryptType Volume::detectLoopEncryption()
 	c.execute( getLosetupCmd( try_order[pos], fname ));
 	if( c.retcode()==0 )
 	    {
-	    c.execute( "/sbin/blkid -c /dev/null " + mountDevice() );
+	    c.execute( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
 	    getFsData( c );
 	    if( detected_fs!=FSUNKNOWN )
 		{
