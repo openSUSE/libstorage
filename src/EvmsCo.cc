@@ -375,6 +375,7 @@ EvmsCo::removeVol( const string& name )
 	}
     if( ret==0 )
 	{
+	free_pe += i->getLe();
 	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))
@@ -382,7 +383,6 @@ EvmsCo::removeVol( const string& name )
 	    }
 	else
 	    i->setDeleted( true );
-	free_pe += i->getLe();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
