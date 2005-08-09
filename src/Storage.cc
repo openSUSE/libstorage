@@ -2649,6 +2649,8 @@ int Storage::commit()
     {
     assertInit();
     lastAction.clear();
+    SystemCmd c;
+    c.execute( "/sbin/udevcontrol stop_exec_queue" );
     CPair p = cPair( notLoop );
     int ret = 0;
     y2milestone( "empty:%d", p.empty() );
@@ -2666,6 +2668,7 @@ int Storage::commit()
     for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
 	i->setFstabAdded(false);
     y2milestone( "ret:%d", ret );
+    c.execute( "/sbin/udevcontrol start_exec_queue" );
     return( ret );
     }
 
