@@ -26,6 +26,7 @@ void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
 bool checkDir(string Path_Cv);
 
+string dupDash(const string& s);
 string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi = false);
 std::list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true );

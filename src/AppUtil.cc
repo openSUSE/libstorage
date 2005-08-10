@@ -31,6 +31,18 @@ using namespace std;
 
 #define BUF_SIZE 512
 
+string dupDash(const string& s)
+    {
+    string ret(s);
+    string::size_type pos = ret.find("-");
+    while(pos!=string::npos)
+	{
+	ret.insert(pos,1,'-');
+	pos = ret.find("-",pos+2);
+	}
+    return(ret);
+    }
+
 bool
 searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr)
 {

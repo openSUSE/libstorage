@@ -30,14 +30,14 @@ LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 
 LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 	      unsigned str ) :
-	Dm( d, d.name()+"-"+name )
+	Dm( d, d.name()+"-"+dupDash(name) )
     {
     init( name );
     setLe( le );
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
-    alt_names.push_back( "/dev/mapper/" + cont->name() + "-" + name );
+    alt_names.push_back( "/dev/mapper/" + cont->name() + "-" + dupDash(name) );
     y2milestone( "constructed lvm lv %s on vg %s", dev.c_str(),
                  cont->name().c_str() );
     }

@@ -201,6 +201,7 @@ void Dm::init()
 	}
     else
 	alt_names.push_back( dmn );
+    alt_names.push_back( "/dev/"+tname );
     getMajorMinor( dev, mjr, mnr );
     if( majorNr()>0 )
 	{
