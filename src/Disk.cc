@@ -243,7 +243,7 @@ bool Disk::detectPartitions()
 	unsigned long val = 0;
 	if( i!=geo.end() )
 	    {
-	    *i >> val; 
+	    *i >> val;
 	    if( val>0 )
 		cyl = val;
 	    }
@@ -251,7 +251,7 @@ bool Disk::detectPartitions()
 	val = 0;
 	if( i!=geo.end() )
 	    {
-	    *i >> val; 
+	    *i >> val;
 	    if( val>0 )
 		head = (unsigned)val;
 	    }
@@ -259,7 +259,7 @@ bool Disk::detectPartitions()
 	val = 0;
 	if( i!=geo.end() )
 	    {
-	    *i >> val; 
+	    *i >> val;
 	    if( val>0 )
 		sector = (unsigned)val;
 	    }
@@ -338,7 +338,10 @@ Disk::setLabelData( const string& disklabel )
 	i++;
 	}
     if( labels[i].name.empty() )
+	{
 	i=0;
+	y2error ("unknown disklabel %s", disklabel.c_str());
+	}
     ext_possible = labels[i].extended;
     max_primary = min(labels[i].primary,unsigned(range-1));
     max_logical = min(labels[i].logical,unsigned(range-1));
@@ -749,7 +752,7 @@ Disk::label_info Disk::labels[] = {
 	{ "gpt", false, 63, 0 },
 	{ "bsd", false, 8, 0 },
 	{ "sun", false, 8, 0 },
-	{ "max", false, 16, 0 },
+	{ "mac", false, 16, 0 },
 	{ "aix", false, 0, 0 },
 	{ "", false, 0, 0 }
     };
@@ -939,7 +942,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	    while( i!=free.begin() && !usable );
 	    usable = availablePartNumber(t)>0;
 	    if( usable )
-		ret = createPartition( t, i->start(), cylLen, device, 
+		ret = createPartition( t, i->start(), cylLen, device,
 				       checkRelaxed );
 	    else
 		ret = DISK_PARTITION_NO_FREE_NUMBER;
@@ -979,7 +982,7 @@ int Disk::createPartition( PartitionType type, string& device )
 	while( i!=free.begin() && !usable );
 	usable = availablePartNumber(t)>0;
 	if( usable )
-	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(), 
+	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(),
 	                           i->len(), device, true );
 	else
 	    ret = DISK_PARTITION_NO_FREE_NUMBER;
@@ -1014,7 +1017,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len, 
+    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
                  checkRelaxed );
     unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
@@ -1057,7 +1060,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	    y2war( "overlaps r:" << r << " p:" << i->region() <<
 	           " inter:" << i->region().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
@@ -1100,7 +1103,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 int Disk::changePartitionArea( unsigned nr, unsigned long start,
 			       unsigned long len, bool checkRelaxed )
     {
-    y2milestone( "begin nr %u at %ld len %ld relaxed:%d", nr, start, len, 
+    y2milestone( "begin nr %u at %ld len %ld relaxed:%d", nr, start, len,
                  checkRelaxed );
     int ret = 0;
     Region r( start, len );
@@ -1139,7 +1142,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	    y2war( "overlaps r:" << r << " p:" << i->region() <<
 	           " inter:" << i->region().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
@@ -1153,14 +1156,14 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
     if( ret==0 && part->type()!=LOGICAL )
 	{
 	PartIter i = p.begin();
-	while( i!=p.end() && 
+	while( i!=p.end() &&
 	       (i==part || i->nr()>max_primary || !i->intersectArea( r, fuzz )))
 	    {
 	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() << 
+	    y2war( "overlaps r:" << r << " p:" << i->region() <<
 	           " inter:" << i->region().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
@@ -1271,12 +1274,12 @@ int Disk::destroyPartitionTable( const string& new_label )
 		delete( *j );
 		j = vols.erase( j );
 		}
-	    else 
+	    else
 		++j;
 	    }
 	bool save = getStorage()->getRecursiveRemoval();
 	getStorage()->setRecursiveRemoval(true);
-	if( getUsedByType() != UB_NONE ) 
+	if( getUsedByType() != UB_NONE )
 	    {
 	    getStorage()->removeUsing( device(), getUsedBy() );
 	    }
@@ -1350,7 +1353,7 @@ int Disk::getToCommit( CommitStage stage, list<Container*>& col,
                        list<Volume*>& vol )
     {
     int ret = 0;
-    unsigned long oco = col.size(); 
+    unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
@@ -1411,7 +1414,7 @@ void Disk::getCommitActions( list<commitAction*>& l ) const
 	    else
 		++i;
 	    }
-	l.push_front( new commitAction( DECREASE, staticType(), 
+	l.push_front( new commitAction( DECREASE, staticType(),
 				        setDiskLabelText(false), true, true ));
 	}
     }
@@ -1562,7 +1565,7 @@ int Disk::doSetType( Volume* v )
     return( ret );
     }
 
-bool 
+bool
 Disk::getPartedValues( Partition *p )
     {
     bool ret = false;
@@ -1593,7 +1596,7 @@ Disk::getPartedValues( Partition *p )
 		{
 		if( !ppart.getSize( p->device(), s ) || s==0 )
 		    {
-		    y2error( "device %s not found in /proc/partitions", 
+		    y2error( "device %s not found in /proc/partitions",
 		             p->device().c_str() );
 		    ret = false;
 		    }
@@ -1620,7 +1623,7 @@ int Disk::doCreate( Volume* v )
 		     p->name().c_str() );
 	y2milestone( "doCreate nr:%d start %ld len %ld", p->nr(),
 	             p->cylStart(), p->cylSize() );
-	y2milestone( "doCreate detected_label:%s label:%s", 
+	y2milestone( "doCreate detected_label:%s label:%s",
 	             detected_label.c_str(), label.c_str() );
 	if( detected_label != label )
 	    {
@@ -1689,7 +1692,7 @@ int Disk::doCreate( Volume* v )
 	    SystemCmd c;
 	    cmd = "dd if=/dev/zero of=" + p->device() + " bs=1k count=200";
 	    c.execute( cmd );
-	    cmd = "dd if=/dev/zero of=" + p->device() + 
+	    cmd = "dd if=/dev/zero of=" + p->device() +
 	          " seek=" + decString(p->sizeK()-10) +
 	          " bs=1k count=10";
 	    c.execute( cmd );
@@ -1751,7 +1754,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else 
+    else
 	{
 	unsigned long long newSize = cylinderToKb(newCyl);
 	if( newCyl!=p->cylSize() )
@@ -1775,7 +1778,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	    PartIter i = pp.begin();
 	    while( i != pp.end() )
 		{
-		if( i->type()==p->type() && i->cylStart()>=start && 
+		if( i->type()==p->type() && i->cylStart()>=start &&
 		    i->cylStart()<end )
 		    end = i->cylStart();
 		++i;
@@ -1783,11 +1786,11 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	    unsigned long free = 0;
 	    if( end>start )
 		free = end-start;
-	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lu", 
+	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lu",
 			 free, cylinderToKb(free), increase );
 	    if( cylinderToKb(free) < increase )
 		ret = DISK_RESIZE_NO_SPACE;
-	    else 
+	    else
 		{
 		if( p->created() )
 		    p->changeRegion( p->cylStart(), newCyl, newSize );
@@ -1807,7 +1810,7 @@ int Disk::resizeVolume( Volume* v, unsigned long long newSize )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else 
+    else
 	{
 	Partition * p = dynamic_cast<Partition *>(v);
 	unsigned new_cyl_cnt = kbToCylinder(newSize);
@@ -1858,8 +1861,8 @@ int Disk::doResize( Volume* v )
 	    std::ostringstream cmd_line;
 	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(p->sizeK());
 	    y2milestone( "new_cyl_end %u", new_cyl_end );
-	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device() 
-	             << " unit cyl resize " << p->nr() << " " 
+	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
+	             << " unit cyl resize " << p->nr() << " "
 	             << p->cylStart() << " " << new_cyl_end;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
@@ -1870,7 +1873,7 @@ int Disk::doResize( Volume* v )
 		if( ret==0 )
 		    ret = DISK_PARTITION_NOT_FOUND;
 		}
-	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(), 
+	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(),
 	                 p->needShrink()||p->needExtend() );
 	    }
 	if( needExtend && p->getFs()!=VFAT && p->getFs()!=FSNONE )
@@ -1960,7 +1963,7 @@ void Disk::logDifference( const Disk& d ) const
 	{
 	ConstPartPair pc=d.partPair();
 	ConstPartIter j = pc.begin();
-	while( j!=pc.end() && 
+	while( j!=pc.end() &&
 	       (i->device()!=j->device() || i->created()!=j->created()) )
 	    ++j;
 	if( j!=pc.end() )
@@ -1978,7 +1981,7 @@ void Disk::logDifference( const Disk& d ) const
 	{
 	ConstPartPair pc=partPair();
 	ConstPartIter j = pc.begin();
-	while( j!=pc.end() && 
+	while( j!=pc.end() &&
 	       (i->device()!=j->device() || i->created()!=j->created()) )
 	    ++j;
 	if( j==pc.end() )
@@ -1989,10 +1992,10 @@ void Disk::logDifference( const Disk& d ) const
 
 bool Disk::equalContent( const Disk& rhs ) const
     {
-    bool ret = Container::equalContent(rhs) && 
-	       cyl==rhs.cyl && head==rhs.head && sector==rhs.sector && 
-	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range && 
-	       size_k==rhs.size_k && max_primary==rhs.max_primary && 
+    bool ret = Container::equalContent(rhs) &&
+	       cyl==rhs.cyl && head==rhs.head && sector==rhs.sector &&
+	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range &&
+	       size_k==rhs.size_k && max_primary==rhs.max_primary &&
 	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
 	       label==rhs.label;
     if( ret )
@@ -2001,7 +2004,7 @@ bool Disk::equalContent( const Disk& rhs ) const
 	ConstPartPair pc = rhs.partPair();
 	ConstPartIter i = p.begin();
 	ConstPartIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() ) 
+	while( ret && i!=p.end() && j!=pc.end() )
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
@@ -2033,7 +2036,7 @@ Disk& Disk::operator= ( const Disk& rhs )
 
 Disk::Disk( const Disk& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed disk by copy constructor from %s", 
+    y2milestone( "constructed disk by copy constructor from %s",
                  rhs.nm.c_str() );
     *this = rhs;
     ConstPartPair p = rhs.partPair();
