@@ -752,7 +752,7 @@ Disk::label_info Disk::labels[] = {
 	{ "gpt", false, 63, 0 },
 	{ "bsd", false, 8, 0 },
 	{ "sun", false, 8, 0 },
-	{ "mac", false, 16, 0 },
+	{ "mac", false, 64, 0 },
 	{ "aix", false, 0, 0 },
 	{ "", false, 0, 0 }
     };
