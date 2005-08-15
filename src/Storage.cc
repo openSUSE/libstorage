@@ -2719,7 +2719,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		ret = co->commitChanges( *pt );
 		colist.erase( cli );
 		}
-	    while( ret==0 && co==(*vli)->getContainer() )
+	    while( ret==0 && vli != vlist.end() && co==(*vli)->getContainer() )
 		{
 		if( !disks_unused && *pt==DECREASE && co->type()==DISK )
 		    {
