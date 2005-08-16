@@ -653,7 +653,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	if( i->getUsedByType() != UB_NONE )
 	    ret = STORAGE_DISK_USED_BY;
 	else
-	    ret = i->createPartition( type, start, size, device );
+	    ret = i->createPartition( type, start, size, device, true );
 	}
     else
 	{
