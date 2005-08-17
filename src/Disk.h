@@ -161,7 +161,7 @@ class Disk : public Container
 
 	//std::list<Region> getUnusedRegions();
 	void logData( const string& Dir );
-	bool haveBsdPart() const;
+	bool haveBsdPart( const std::list<Partition*>& pl) const;
 	void setLabelData( const string& );
 	Disk& operator= ( const Disk& rhs );
 

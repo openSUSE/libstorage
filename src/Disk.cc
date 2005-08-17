@@ -694,7 +694,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	}
     bool openbsd = false;
     if( proc_l.size()==parted_l.size() ||
-        ((openbsd=haveBsdPart()) && proc_l.size()>parted_l.size()) )
+        ((openbsd=haveBsdPart(pl)) && proc_l.size()>parted_l.size()) )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
 	for( i=proc_l.begin(); i!=proc_l.end(); i++ )
@@ -724,6 +724,8 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	{
 	ret = false;
 	}
+    y2milestone("haveBsd:%d pr.size:%zd pa.size:%zd", openbsd,
+                 proc_l.size(), parted_l.size() );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -731,9 +733,16 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 static bool isBsdPart( const Partition& p )
     { return( p.id()==0xa5 || p.id()==0xa6 || p.id()==0xeb ); }
 
-bool Disk::haveBsdPart() const
+bool Disk::haveBsdPart(const list<Partition*>& pl) const
     {
-    return( !partPair(isBsdPart).empty() );
+    bool ret = false;
+    list<Partition*>::const_iterator i = pl.begin();
+    while( !ret && i!=pl.end() )
+	{
+	ret = isBsdPart(**i);
+	++i;
+	}
+    return( ret );
     }
 
 string Disk::defaultLabel()
