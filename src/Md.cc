@@ -40,6 +40,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     init();
     if( mdStringNum( extractNthWord( 0, line1 ), num ))
 	{
+	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
