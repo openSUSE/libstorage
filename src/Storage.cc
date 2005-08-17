@@ -3641,7 +3641,8 @@ Storage::createBackupState( const string& name )
     y2milestone( "name:%s", name.c_str() );
     if( ret==0 )
 	{
-	removeBackupState( name );
+	if(checkBackupState(name))
+	    removeBackupState( name );
 	CCIter i=cont.begin();
 	while( i!=cont.end() )
 	    {
