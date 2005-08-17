@@ -3145,6 +3145,14 @@ bool Storage::findVolume( const string& device, VolIterator& v )
 	    break;
 	++v;
 	}
+    if( v==p.end() && d.find("/dev/loop")==0 )
+	{
+	v = p.begin();
+	while( v!=p.end() && v->loopDevice()!=d )
+	    {
+	    ++v;
+	    }
+	}
     return( v!=p.end() );
     }
 
