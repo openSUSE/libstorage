@@ -3394,7 +3394,7 @@ int Storage::removeUsing( const string& device, const storage::usedBy& uby )
     switch( uby.type() )
 	{
 	case UB_MD:
-	    ret = removeVolume( "/dev/md" + uby.name() );
+	    ret = removeVolume( "/dev/" + uby.name() );
 	    break;
 	case UB_DM:
 	    ret = removeVolume( "/dev/dm-" + uby.name() );
