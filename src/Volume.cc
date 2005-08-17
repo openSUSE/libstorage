@@ -1797,6 +1797,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.format = format;
     info.create = create;
     info.mkfs_options = mkfs_opt;
+    info.loop = loop_dev;
     info.is_mounted = is_mounted;
     info.resize = size_k!=orig_size_k;
     if( info.resize )

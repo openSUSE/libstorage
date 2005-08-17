@@ -228,6 +228,7 @@ namespace storage
 	string uuid;
 	string label;
 	string mkfs_options;
+	string loop;
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;
