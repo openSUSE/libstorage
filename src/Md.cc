@@ -539,10 +539,6 @@ void Md::getInfo( MdInfo& tinfo ) const
 	++i;
 	}
     tinfo = info;
-    y2milestone( "%s pointer:%p", nm.c_str(), &tinfo );
-    y2milestone( "%s devices:\"%s\"", nm.c_str(), tinfo.devices.c_str() );
-    y2milestone( "%s size MdInfo:%zd", nm.c_str(), sizeof(tinfo) );
-    y2milestone( "offset devices:%d", ((char*)&tinfo.devices)-((char*)&tinfo) );
     }
 
 std::ostream& operator<< (std::ostream& s, const Md& m )

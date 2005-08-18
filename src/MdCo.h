@@ -98,6 +98,7 @@ class MdCo : public Container
 	void addMd( Md* m );
 	void checkMd( Md* m );
 	void updateEntry( const Md* m );
+	void initTab();
 
 	void init();
 

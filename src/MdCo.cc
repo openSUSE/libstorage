@@ -41,7 +41,13 @@ void
 MdCo::init()
     {
     tab = NULL;
-    if( !getStorage()->instsys() )
+    initTab();
+    }
+
+void
+MdCo::initTab()
+    {
+    if( tab==NULL && !getStorage()->instsys() )
 	tab = new EtcRaidtab( getStorage()->root() );
     }
 
@@ -62,6 +68,7 @@ MdCo::syncRaidtab()
 
 void MdCo::updateEntry( const Md* m )
     {
+    initTab();
     if( tab )
 	{
 	list<string> lines;
@@ -561,10 +568,7 @@ MdCo::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    getMdData( m->nr() );
-	    if( tab!=NULL )
-		{
-		updateEntry( m );
-		}
+	    updateEntry( m );
 	    }
 	}
     else
@@ -607,6 +611,7 @@ MdCo::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    initTab();
 	    if( tab!=NULL )
 		{
 		tab->removeEntry( m->nr() );
@@ -689,6 +694,7 @@ MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
     y2milestone( "constructed MdCo by copy constructor from %s",
 		 rhs.nm.c_str() );
     *this = rhs;
+    this->tab = NULL;
     ConstMdPair p = rhs.mdPair();
     for( ConstMdIter i=p.begin(); i!=p.end(); ++i )
 	 {
