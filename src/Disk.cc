@@ -444,6 +444,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
       {
       start = StartM;
       csize = EndM-StartM+1;
+      if( start+csize > cylinders() )
+	  {
+	  csize = cylinders()-start;
+	  y2milestone( "new csize:%lu", csize );
+	  }
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;
