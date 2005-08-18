@@ -225,7 +225,6 @@ Storage::~Storage()
 void Storage::rescanEverything()
     {
     deleteClist(cont);
-    deleteBackups();
     detectObjects();
     }
 
