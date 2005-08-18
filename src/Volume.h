@@ -165,6 +165,8 @@ class Volume
     protected:
 	void init();
 	void setNameDev();
+	int checkDevice();
+	int checkDevice( const string& device );
 	void getFsData( SystemCmd& blkidData );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );

@@ -548,6 +548,10 @@ int Volume::doFormat()
 	ret = umount( orig_mp );
 	needMount = ret==0;
 	}
+    if( ret==0 )
+	{
+	ret = checkDevice();
+	}
     if( ret==0 &&
         (Storage::arch().find( "sparc" )!=0 || encryption!=ENC_NONE ))
 	{
@@ -558,6 +562,10 @@ int Volume::doFormat()
 	cmd += decString(min(50ull,size_k));
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
+	}
+    if( ret==0 && mountDevice()!=dev )
+	{
+	ret = checkDevice(mountDevice());
 	}
     if( ret==0 && mountDevice().find( "/dev/md" )!=0 )
 	{
@@ -767,6 +775,23 @@ string Volume::mountText( bool doing ) const
     return( txt );
     }
 
+int Volume::checkDevice()
+    {
+    return( checkDevice(dev));
+    }
+
+int Volume::checkDevice( const string& device )
+    {
+    struct stat sbuf;
+    int ret = 0;
+    if( stat(device.c_str(), &sbuf)<0 )
+	ret = VOLUME_DEVICE_NOT_PRESENT;
+    else if( !S_ISBLK(sbuf.st_mode) )
+	ret = VOLUME_DEVICE_NOT_BLOCK;
+    y2milestone( "checkDevice:%s ret:%d", device.c_str(), ret );
+    return( ret );
+    }
+
 int Volume::doMount()
     {
     int ret = 0;
@@ -798,7 +823,9 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() )
 	{
-	ret = mount( lmount );
+	ret = checkDevice(mountDevice());
+	if( ret==0 )
+	    ret = mount( lmount );
 	}
     if( ret==0 )
 	{
