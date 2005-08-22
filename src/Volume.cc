@@ -548,7 +548,7 @@ int Volume::doFormat()
 	ret = umount( orig_mp );
 	needMount = ret==0;
 	}
-    if( ret==0 )
+    if( ret==0 && !cont->getStorage()->test() )
 	{
 	ret = checkDevice();
 	}
@@ -563,7 +563,7 @@ int Volume::doFormat()
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
 	}
-    if( ret==0 && mountDevice()!=dev )
+    if( ret==0 && mountDevice()!=dev && !cont->getStorage()->test() )
 	{
 	ret = checkDevice(mountDevice());
 	}
@@ -821,7 +821,7 @@ int Volume::doMount()
 	{
 	createPath( lmount );
 	}
-    if( ret==0 && !mp.empty() )
+    if( ret==0 && !mp.empty() && !cont->getStorage()->test() )
 	{
 	ret = checkDevice(mountDevice());
 	if( ret==0 )
