@@ -698,16 +698,13 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	    }
 	}
     bool openbsd = false;
-    if( proc_l.size()==parted_l.size() ||
-        ((openbsd=haveBsdPart(pl)) && proc_l.size()>parted_l.size()) )
+    if( proc_l.size()>=parted_l.size() )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
 	for( i=proc_l.begin(); i!=proc_l.end(); i++ )
 	    {
 	    j=parted_l.find(i->first);
-	    if( j==parted_l.end() )
-		ret = ret && openbsd;
-	    else
+	    if( j!=parted_l.end() )
 		{
 		ret = ret && (abs((long)i->second-(long)j->second)<=2 ||
 		              abs((long)i->second-(long)j->second)<(long)j->second/100);
