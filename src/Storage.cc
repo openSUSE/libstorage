@@ -424,6 +424,7 @@ Storage::autodetectDisks()
 	    int Range=0;
 	    unsigned long long Size = 0;
 	    string SysfsFile = SysfsDir+"/"+Entry->d_name+"/range";
+	    y2milestone( "autodetectDisks sysfsfile:%s", SysfsFile.c_str() );
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
@@ -437,7 +438,16 @@ Storage::autodetectDisks()
 		}
 	    if( Range>1 && Size>0 )
 		{
-		Disk * d = new Disk( this, Entry->d_name, Size/2 );
+		string dn = Entry->d_name;
+		string::size_type pos = dn.find('!');
+		while( pos!=string::npos )
+		    {
+		    dn[pos] = '/';
+		    pos = dn.find('!',pos);
+		    }
+		y2milestone( "autodetectDisks disk sysfs:%s parted:%s", 
+		             Entry->d_name, dn.c_str() );
+		Disk * d = new Disk( this, dn, Size/2 );
 		if( d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
 		    d->detectGeometry() && d->detectPartitions() )
 		    {
