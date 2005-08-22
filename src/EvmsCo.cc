@@ -1507,6 +1507,7 @@ void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
     info.peCount = peCount();
     info.peFree = peFree();
     info.lvm2 = lvm2();
+    info.create = created();
     info.uuid = uuid;
     info.realContainer = !nm.empty();
     list<Pv>::const_iterator i=pv.begin();

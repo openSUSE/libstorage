@@ -185,6 +185,7 @@ namespace storage
 	unsigned long peFree;
 	string uuid;
 	bool lvm2;
+	bool create;
 	string devices;
 	string devices_add;
 	string devices_rem;
@@ -203,6 +204,7 @@ namespace storage
 	unsigned long peFree;
 	string uuid;
 	bool lvm2;
+	bool create;
 	bool realContainer;
 	string devices;
 	string devices_add;

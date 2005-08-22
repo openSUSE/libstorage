@@ -1201,6 +1201,7 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     info.peCount = peCount();
     info.peFree = peFree();
     info.lvm2 = lvm2();
+    info.create = created();
     info.uuid = uuid;
     info.devices.clear();
     list<Pv>::const_iterator i=pv.begin();
