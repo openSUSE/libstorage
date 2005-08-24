@@ -3553,6 +3553,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     {
     bool ret = false;
     assertInit();
+    resize_free = df_free = used = 0;
     y2milestone( "device:%s", device.c_str() );
     VolIterator vol;
     if( findVolume( device, vol ) )
@@ -3614,19 +3615,16 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		else
 		    ret = false;
 		}
-	    if( ret )
+	    win = false;
+	    char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
+			       "config.sys", "MSDOS.SYS", "IO.SYS" };
+	    string f;
+	    unsigned i=0;
+	    while( !win && i<lengthof(files) )
 		{
-		win = false;
-		char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
-		                   "config.sys", "MSDOS.SYS", "IO.SYS" };
-		string f;
-		unsigned i=0;
-		while( !win && i<lengthof(files) )
-		    {
-		    f = mp + "/" + files[i];
-		    win = access( f.c_str(), R_OK )==0;
-		    i++;
-		    }
+		f = mp + "/" + files[i];
+		win = access( f.c_str(), R_OK )==0;
+		i++;
 		}
 	    }
 	if( needUmount )
@@ -3644,9 +3642,9 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 	    }
 	}
     if( ret )
-	y2milestone( "resize_free:%llu df_free:%llu used:%llu win:%d", 
-	             resize_free, df_free, used, win );
-    y2milestone( "ret:%d", ret );
+	y2milestone( "resize_free:%llu df_free:%llu used:%llu", 
+	             resize_free, df_free, used );
+    y2milestone( "ret:%d win:%d", ret, win );
     return( ret );
     }
 
