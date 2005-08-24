@@ -311,6 +311,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    fs = JFS;
 		    }
+		else if( i->second == "hfs" )
+		    {
+		    fs = HFS;
+		    }
 		else if( i->second == "xfs" )
 		    {
 		    fs = XFS;
@@ -603,6 +607,9 @@ int Volume::doFormat()
 	    case JFS:
 		cmd = "/sbin/mkfs.jfs";
 		params = "-q";
+		break;
+	    case HFS:
+		cmd = "/usr/bin/hformat";
 		break;
 	    case XFS:
 		cmd = "/sbin/mkfs.xfs";
@@ -2175,7 +2182,7 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     }
 
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
-                              "xfs", "jfs", "ntfs", "swap", "none" };
+                              "xfs", "jfs", "hfs", "ntfs", "swap", "none" };
 
 string Volume::mb_names[] = { "device", "uuid", "label" };
 

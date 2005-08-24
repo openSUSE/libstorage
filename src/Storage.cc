@@ -3081,7 +3081,10 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 				     false, 0, 16);
 
     static FsCapabilitiesX jfsCaps (false, false, false, false, false, false,
-				     false, 0, 16);
+				     false, 0, 10*1024);
+
+    static FsCapabilitiesX hfsCaps (false, false, false, false, false, false,
+				     false, 0, 10*1024);
 
     switch (fstype)
     {
@@ -3111,6 +3114,10 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 
 	case JFS:
 	    fscapabilities = jfsCaps;
+	    return true;
+
+	case HFS:
+	    fscapabilities = hfsCaps;
 	    return true;
 
 	case SWAP:
