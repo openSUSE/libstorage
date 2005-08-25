@@ -7,6 +7,7 @@
 #include <list>
 
 #include "y2storage/Container.h"
+#include "y2storage/SystemCmd.h"
 #include "y2storage/Storage.h"
 #include "y2storage/Md.h"
 #include "y2storage/Loop.h"
@@ -239,6 +240,24 @@ bool Container::removeFromList( Volume* e )
 	}
     y2milestone( "P:%p ret:%d", e, ret );
     return( ret );
+    }
+
+void Container::setExtError( const string& txt ) const
+    {
+    if( sto )
+	sto->setExtError(txt);
+    }
+
+void Container::setExtError( const SystemCmd& cmd, bool serr ) const
+    {
+    const string& s = serr ? cmd.stderr() : cmd.stdout();
+    if( s.size()>0 )
+	{
+	sto->setExtError( cmd.cmd() + ":\n" + s );
+	}
+    else
+	y2warning( "called with empty %s cmd:%s",
+		   (serr?"stderr":"stdout"), cmd.cmd().c_str());
     }
 
 bool Container::findVolume( const string& device, Volume*& vol )

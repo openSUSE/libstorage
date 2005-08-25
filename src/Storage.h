@@ -178,6 +178,7 @@ class Storage : public storage::StorageInterface
 
 	bool getFsCapabilities( storage::FsType fstype, 
 	                        storage::FsCapabilities& fscapabilities) const;
+	void setExtError( const string& txt );
 	int createPartition( const string& disk, storage::PartitionType type, 
 	                     unsigned long start, unsigned long size, 
 			     string& device );
@@ -295,6 +296,8 @@ class Storage : public storage::StorageInterface
 
 	deque<string> getCommitActions( bool mark_destructive );
 	const string& getLastAction() const { return lastAction; }
+	const string& getExtendedErrorMessage() const { return extendedError; }
+
         int commit();
 	void activateHld( bool val=true );
 
@@ -1242,6 +1245,7 @@ class Storage : public storage::StorageInterface
 
 	unsigned max_log_num;
 	string lastAction;
+	string extendedError;
 	std::map<string,CCont> backups;
     };
 

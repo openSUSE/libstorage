@@ -31,6 +31,9 @@ class SystemCmd
 	    { output_proc = proc; }
 	int select( string Reg_Cv, bool Invert_bv=false,
 	            unsigned Idx_ii=IDX_STDOUT );
+	const string& stderr() const { return( *getString(IDX_STDERR)); }
+	const string& stdout() const { return( *getString(IDX_STDOUT)); }
+	const string& cmd() const { return( lastCmd ); }
 	const string* getString( unsigned Idx_ii=IDX_STDOUT ) const;
 	const string* getLine( unsigned Num_iv, bool Selected_bv=false,
 			       unsigned Idx_ii=IDX_STDOUT ) const;
@@ -67,6 +70,7 @@ class SystemCmd
 	bool NewLineSeen_ab[2];
 	bool Combine_b;
 	bool Background_b;
+	string lastCmd;
 	int Ret_i;
 	int Pid_i;
 	void (* OutputHandler_f)( void*, string, bool );

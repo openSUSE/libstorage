@@ -2658,6 +2658,7 @@ int Storage::commit()
     {
     assertInit();
     lastAction.clear();
+    extendedError.clear();
     SystemCmd c;
     c.execute( "/sbin/udevcontrol stop_exec_queue" );
     CPair p = cPair( notLoop );
@@ -3885,6 +3886,11 @@ int Storage::addFstabEntry( const string& device, const string& mount,
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void Storage::setExtError( const string& txt )
+    {
+    extendedError = txt;
     }
 
 Storage::SkipDeleted Storage::SkipDel;

@@ -103,6 +103,7 @@ SystemCmd::doExecute( string Cmd )
     {
     string Shell_Ci = "/bin/sh";
 
+    lastCmd = Cmd;
     if( output_proc )
 	{
 	output_proc->reset();

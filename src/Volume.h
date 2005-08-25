@@ -174,6 +174,8 @@ class Volume
 	void getTestmodeData( const string& data );
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, const string& label ) const;
+	void setExtError( const SystemCmd& cmd, bool serr=true );
+
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();

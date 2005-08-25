@@ -1481,6 +1481,14 @@ namespace storage
 	 */
 	virtual const string& getLastAction() const = 0;
 
+	/**
+	 * Gets a possible existing extended error message describing failure 
+	 * of to last call commit()
+	 *
+	 * @return string error text provided by external program
+	 */
+	virtual const string& getExtendedErrorMessage() const = 0;
+
 // temporarily disable callback function for swig
 #ifndef SWIG
 

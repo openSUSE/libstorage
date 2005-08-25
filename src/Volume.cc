@@ -638,7 +638,10 @@ int Volume::doFormat()
 	    c.setOutputProcessor( p );
 	    c.execute( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = VOLUME_FORMAT_FAILED;
+		setExtError( c );
+		}
 	    }
 	delete p;
 	}
@@ -895,7 +898,10 @@ int Volume::resizeFs()
 		cmd += mountDevice();
 		c.execute( cmd );
 		if( c.retcode()!=0 )
+		    {
 		    ret = VOLUME_RESIZE_FAILED;
+		    setExtError( c );
+		    }
 		break;
 	    case NTFS:
 		cmd = "echo y | ntfsresize -f ";
@@ -904,7 +910,10 @@ int Volume::resizeFs()
 		cmd += mountDevice();
 		c.execute( cmd );
 		if( c.retcode()!=0 )
+		    {
 		    ret = VOLUME_RESIZE_FAILED;
+		    setExtError( c );
+		    }
 		break;
 	    case EXT2:
 	    case EXT3:
@@ -913,7 +922,10 @@ int Volume::resizeFs()
 		    cmd += " " + decString(size_k) + "K";
 		c.execute( cmd );
 		if( c.retcode()!=0 )
+		    {
 		    ret = VOLUME_RESIZE_FAILED;
+		    setExtError( c );
+		    }
 		break;
 	    case XFS:
 		{
@@ -934,7 +946,10 @@ int Volume::resizeFs()
 		    cmd = "xfs_growfs " + mpoint;
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
+			{
 			ret = VOLUME_RESIZE_FAILED;
+			setExtError( c );
+			}
 		    }
 		if( needumount )
 		    {
@@ -1438,7 +1453,10 @@ int Volume::mount( const string& m )
 	}
     int ret = cmd.execute( cmdline );
     if( ret != 0 )
+	{
 	ret = VOLUME_MOUNT_FAILED;
+	setExtError( cmd );
+	}
     else
 	is_mounted = true;
     y2milestone( "ret:%d", ret );
@@ -1746,6 +1764,11 @@ bool Volume::optNoauto() const
     {
     list<string> l = splitString( fstab_opt, "," );
     return( find( l.begin(), l.end(), "noauto" )!=l.end() );
+    }
+
+void Volume::setExtError( const SystemCmd& cmd, bool serr )
+    {
+    cont->setExtError( cmd, serr );
     }
 
 string Volume::createText( bool doing ) const
