@@ -389,6 +389,8 @@ Disk::execCheckFailed( const string& cmd_line )
     int ret = 0;
     cmd.execute( cmd_line );
     ret = checkSystemError( cmd_line, cmd );
+    if( ret!=0 )
+	setExtError( cmd );
     return( ret );
     }
 

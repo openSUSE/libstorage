@@ -563,7 +563,10 @@ MdCo::doCreate( Volume* v )
 	    string cmd = m->createCmd();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = MD_CREATE_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 )
 	    {
@@ -597,7 +600,10 @@ MdCo::doRemove( Volume* v )
 	    string cmd = "mdadm --stop " + m->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = MD_REMOVE_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 && m->destroySb() )
 	    {

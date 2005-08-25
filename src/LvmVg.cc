@@ -934,7 +934,10 @@ LvmVg::doRemoveVg()
 	string cmd = "vgremove " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
+	    {
 	    ret = LVM_VG_REMOVE_FAILED;
+	    setExtError( c );
+	    }
 	if( ret==0 )
 	    {
 	    setDeleted( false );
@@ -969,7 +972,10 @@ LvmVg::doExtendVg()
 	    string cmd = "vgextend " + instSysString() + name() + " " + *d;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = LVM_VG_EXTEND_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 )
 	    {
@@ -1011,7 +1017,10 @@ LvmVg::doReduceVg()
 	string cmd = "vgreduce " + instSysString() + name() + " " + *d;
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
+	    {
 	    ret = LVM_VG_REDUCE_FAILED;
+	    setExtError( c );
+	    }
 	if( ret==0 )
 	    {
 	    getVgData( name() );
@@ -1054,7 +1063,10 @@ LvmVg::doCreate( Volume* v )
 	cmd += " " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
+	    {
 	    ret = LVM_LV_CREATE_FAILED;
+	    setExtError( c );
+	    }
 	if( ret==0 )
 	    {
 	    getVgData( name() );
@@ -1087,7 +1099,10 @@ int LvmVg::doRemove( Volume* v )
 	    string cmd = "lvremove -f " + instSysString() + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = LVM_LV_REMOVE_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 )
 	    {
@@ -1138,7 +1153,10 @@ int LvmVg::doResize( Volume* v )
 	                 " -l -" + decString(old_le-new_le) + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = LVM_LV_RESIZE_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 && old_le<new_le )
 	    {
@@ -1146,7 +1164,10 @@ int LvmVg::doResize( Volume* v )
 	                 " -l +" + decString(new_le-old_le) + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
+		{
 		ret = LVM_LV_RESIZE_FAILED;
+		setExtError( c );
+		}
 	    }
 	if( ret==0 && old_le<new_le && l->getFs()!=FSNONE )
 	    ret = v->resizeFs();
@@ -1189,7 +1210,10 @@ int LvmVg::doCreatePv( const string& device )
     cmd = "pvcreate -ff " + metaString() + device;
     c.execute( cmd );
     if( c.retcode()!=0 )
+	{
 	ret = LVM_CREATE_PV_FAILED;
+	setExtError( c );
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
