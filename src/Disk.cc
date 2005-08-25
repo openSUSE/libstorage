@@ -1222,6 +1222,7 @@ int Disk::removePartition( unsigned nr )
 	    }
 	else
 	    i->setDeleted();
+	p = partPair( notDeleted );
 	if( ret==0 && nr>max_primary )
 	    {
 	    i = p.begin();
