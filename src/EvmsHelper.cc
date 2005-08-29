@@ -226,9 +226,6 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
 void loop_cin()
     {
     EvmsAccess evms;
-    ofstream log( "/tmp/evms_access" );
-    log << evms;
-    log.close();
     bool end_program = false;
     do
 	{
@@ -321,9 +318,6 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	    evms = new EvmsAccess;
 	if( ok )
 	    {
-    ofstream log( "/tmp/evms_access1" );
-    log << *evms;
-    log.close();
 	    struct timeval tv = { timeout/1000, (timeout%1000)*1000 };
 	    FD_ZERO( &fdset );
 	    FD_SET( lsock, &fdset );
