@@ -1876,6 +1876,8 @@ int Disk::doResize( Volume* v )
 			 p->name().c_str() );
 	    std::ostringstream cmd_line;
 	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(p->sizeK());
+	    if( new_cyl_end>cylinders()-1 )
+		new_cyl_end = cylinders()-1;
 	    y2milestone( "new_cyl_end %u", new_cyl_end );
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
 	             << " unit cyl resize " << p->nr() << " "
