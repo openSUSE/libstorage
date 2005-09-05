@@ -3155,14 +3155,15 @@ bool Storage::findVolume( const string& device, VolIterator& v )
     assertInit();
     string label;
     string uuid;
-    string d = normalizeDevice( device );
-    if( d.find( "/" )!=0 )
-	{
-	if( d.find( "LABEL=" )==0 )
-	    label = d.substr( 6 );
-	else if( d.find( "UUID=" )==0 )
-	    label = d.substr( 5 );
-	}
+    string d;
+    if( device.find( "LABEL=" )==0 )
+	label = device.substr( 6 );
+    else if( device.find( "UUID=" )==0 )
+	uuid = device.substr( 5 );
+    else
+	d = normalizeDevice( device );
+    if( !label.empty() || !uuid.empty() )
+	y2milestone( "label:%s uuid:%s", label.c_str(), uuid.c_str() );
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
     if( label.empty() && uuid.empty() )
