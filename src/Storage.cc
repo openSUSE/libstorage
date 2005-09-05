@@ -3183,13 +3183,11 @@ bool Storage::findVolume( const string& device, VolIterator& v )
 	}
     else if( !label.empty() )
 	{
-	v = p.begin();
 	while( v!=p.end() && v->getLabel()!=label )
 	    ++v;
 	}
     else if( !uuid.empty() )
 	{
-	v = p.begin();
 	while( v!=p.end() && v->getUuid()!=uuid )
 	    ++v;
 	}
