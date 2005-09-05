@@ -631,8 +631,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 			}
 		    Partition *p =
 			new Partition( *this, pr.second, s, cyl_start, cyl,
-			               type,
-				       id, false );
+			               type, id, false );
 		    pl.push_back( p );
 		    }
 		else
@@ -1688,7 +1687,10 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    cmd_line << p->cylStart() << " " << p->cylStart()+p->cylSize();
+	    unsigned long end = p->cylStart()+p->cylSize();
+	    if( end>cylinders()-1 )
+		end = cylinders()-1;
+	    cmd_line << p->cylStart() << " " << end;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
