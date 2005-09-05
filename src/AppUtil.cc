@@ -276,13 +276,15 @@ string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
   }
 
 list<string> splitString( const string& s, const string& delChars, 
-		          bool multipleDelim, bool skipEmpty )
+		          bool multipleDelim, bool skipEmpty,
+			  const string& quotes )
     {
     string::size_type pos;
     string::size_type cur = 0;
+    string::size_type nfind = 0;
     list<string> ret;
 
-    while( cur<s.size() && (pos=s.find_first_of(delChars,cur))!=string::npos )
+    while( cur<s.size() && (pos=s.find_first_of(delChars,nfind))!=string::npos )
 	{
 	if( pos==cur )
 	    {
@@ -297,11 +299,23 @@ list<string> splitString( const string& s, const string& delChars,
 	    }
 	else
 	    cur = pos+1;
+	nfind = cur;
+	if( !quotes.empty() )
+	    {
+	    string::size_type qpos=s.find_first_of(quotes,cur);
+	    string::size_type lpos=s.find_first_of(delChars,cur);
+	    if( qpos!=string::npos && qpos<lpos && 
+	        (qpos=s.find_first_of(quotes,qpos+1))!=string::npos )
+		{
+		nfind = qpos;
+		}
+	    }
 	}
     if( cur<s.size() )
 	ret.push_back( s.substr( cur ));
     if( !skipEmpty && !s.empty() && s.find_last_of(delChars)==s.size()-1 )
 	ret.push_back( "" );
+    //y2mil( "ret:" << ret );
     return( ret );
     }
 

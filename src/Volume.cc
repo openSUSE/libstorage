@@ -271,7 +271,8 @@ void Volume::getFsData( SystemCmd& blkidData )
 	}
     if( found )
 	{
-	list<string> l = splitString( *blkidData.getLine( 0, true ));
+	list<string> l = splitString( *blkidData.getLine( 0, true ), " \t\n",
+	                              true, true, "\"" );
 	std::ostringstream b;
 	b << "line[" << device() << "]=" << l;
 	y2milestone( "%s", b.str().c_str() );
