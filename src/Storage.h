@@ -115,6 +115,19 @@ class Storage : public storage::StorageInterface
 	    { return( d.type()==storage::LOOP ); };
 	static bool isDm( const Container&d )
 	    { return( d.type()==storage::DM ); };
+	struct FreeInfo
+	    {
+	    unsigned long long resize_free;
+	    unsigned long long df_free;
+	    unsigned long long used;
+	    bool win;
+	    FreeInfo() { resize_free=df_free=used=0; win=false; }
+	    FreeInfo( unsigned long long df,
+		      unsigned long long resize,
+		      unsigned long long usd, bool w=false ) 
+		      { resize_free=resize; df_free=df; used=usd; win=w; }
+	    };
+
     public:
 	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.deleted());}};
 	static SkipDeleted SkipDel;
@@ -241,7 +254,7 @@ class Storage : public storage::StorageInterface
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
 	                  unsigned long long& df_free, 
-	                  unsigned long long& used, bool& win );
+	                  unsigned long long& used, bool& win, bool use_cache );
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
 	int restoreBackupState( const string& name );
@@ -297,6 +310,7 @@ class Storage : public storage::StorageInterface
 	deque<string> getCommitActions( bool mark_destructive );
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
+	void eraseFreeInfo( const string& device );
 
         int commit();
 	void activateHld( bool val=true );
@@ -1214,6 +1228,12 @@ class Storage : public storage::StorageInterface
 	void detectObjects();
 	void deleteClist( CCont& co );
 	void deleteBackups();
+	void setFreeInfo( const string& device, unsigned long long df_free,
+			  unsigned long long resize_free,
+			  unsigned long long used, bool win );
+	bool getFreeInfo( const string& device, unsigned long long& df_free,
+			  unsigned long long& resize_free,
+			  unsigned long long& used, bool& win );
 
 	// protected internal member variables
 	bool readonly;
@@ -1247,6 +1267,7 @@ class Storage : public storage::StorageInterface
 	string lastAction;
 	string extendedError;
 	std::map<string,CCont> backups;
+	std::map<string,FreeInfo> freeInfo;
     };
 
 #endif

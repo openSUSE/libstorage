@@ -3557,96 +3557,105 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 bool
 Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		      unsigned long long& df_free, 
-		      unsigned long long& used, bool& win )
+		      unsigned long long& used, bool& win, bool use_cache )
     {
     bool ret = false;
     assertInit();
     resize_free = df_free = used = 0;
-    y2milestone( "device:%s", device.c_str() );
+    y2milestone( "device:%s use_cache:%d", device.c_str(), use_cache );
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	bool needUmount = false;
-	string mp;
-	if( !vol->isMounted() )
+	if( use_cache && getFreeInfo( vol->device(), df_free, resize_free, 
+	                              used, win ))
 	    {
-	    string mdir = tmpDir() + "/tmp_mp";
-	    unlink( mdir.c_str() );
-	    rmdir( mdir.c_str() );
-	    if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
-		mountDevice( device, mdir ) )
-		{
-		needUmount = true;
-		mp = mdir;
-		}
+	    ret = true;
 	    }
 	else
-	    mp = vol->getMount();
-	if( !mp.empty() )
 	    {
-	    struct statvfs fsbuf;
-	    ret = statvfs( mp.c_str(), &fsbuf )==0;
-	    if( ret )
+	    bool needUmount = false;
+	    string mp;
+	    if( !vol->isMounted() )
 		{
-		df_free = fsbuf.f_bfree;
-		df_free *= fsbuf.f_bsize;
-		df_free /= 1024;
-		resize_free = df_free;
-		used = fsbuf.f_blocks-fsbuf.f_bfree;
-		used *= fsbuf.f_bsize;
-		used /= 1024;
-		y2milestone( "blocks:%lu free:%lu bsize:%lu", fsbuf.f_blocks,
-		             fsbuf.f_bfree, fsbuf.f_bsize );
-		y2milestone( "free:%llu used:%llu", df_free, used );
-		}
-	    if( ret && vol->getFs()==NTFS )
-		{
-		SystemCmd c( "ntfsresize -f -i " + device );
-		string fstr = " might resize at ";
-		string::size_type pos;
-		if( c.retcode()==0 && 
-		    (pos=c.getString()->find( fstr ))!=string::npos )
+		string mdir = tmpDir() + "/tmp_mp";
+		unlink( mdir.c_str() );
+		rmdir( mdir.c_str() );
+		if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
+		    mountDevice( device, mdir ) )
 		    {
-		    y2milestone( "pos %zd", pos );
-		    pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
-		    y2milestone( "pos %zd", pos );
-		    string number = c.getString()->substr( pos, 
-		                                           c.getString()->find_first_not_of( "0123456789", pos ));
-		    y2milestone( "number \"%s\"", number.c_str() );
-		    unsigned long long t;
-		    number >> t;
-		    y2milestone( "number %llu", t );
-		    if( t-vol->sizeK()<resize_free )
-			resize_free = t-vol->sizeK();
-		    y2milestone( "resize_free %llu", t );
+		    needUmount = true;
+		    mp = mdir;
 		    }
-		else
-		    ret = false;
 		}
-	    win = false;
-	    char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
-			       "config.sys", "MSDOS.SYS", "IO.SYS" };
-	    string f;
-	    unsigned i=0;
-	    while( !win && i<lengthof(files) )
+	    else
+		mp = vol->getMount();
+	    if( !mp.empty() )
 		{
-		f = mp + "/" + files[i];
-		win = access( f.c_str(), R_OK )==0;
-		i++;
+		struct statvfs fsbuf;
+		ret = statvfs( mp.c_str(), &fsbuf )==0;
+		if( ret )
+		    {
+		    df_free = fsbuf.f_bfree;
+		    df_free *= fsbuf.f_bsize;
+		    df_free /= 1024;
+		    resize_free = df_free;
+		    used = fsbuf.f_blocks-fsbuf.f_bfree;
+		    used *= fsbuf.f_bsize;
+		    used /= 1024;
+		    y2milestone( "blocks:%lu free:%lu bsize:%lu", fsbuf.f_blocks,
+				 fsbuf.f_bfree, fsbuf.f_bsize );
+		    y2milestone( "free:%llu used:%llu", df_free, used );
+		    }
+		if( ret && vol->getFs()==NTFS )
+		    {
+		    SystemCmd c( "ntfsresize -f -i " + device );
+		    string fstr = " might resize at ";
+		    string::size_type pos;
+		    if( c.retcode()==0 && 
+			(pos=c.getString()->find( fstr ))!=string::npos )
+			{
+			y2milestone( "pos %zd", pos );
+			pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
+			y2milestone( "pos %zd", pos );
+			string number = c.getString()->substr( pos, 
+							       c.getString()->find_first_not_of( "0123456789", pos ));
+			y2milestone( "number \"%s\"", number.c_str() );
+			unsigned long long t;
+			number >> t;
+			y2milestone( "number %llu", t );
+			if( t-vol->sizeK()<resize_free )
+			    resize_free = t-vol->sizeK();
+			y2milestone( "resize_free %llu", t );
+			}
+		    else
+			ret = false;
+		    }
+		win = false;
+		char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
+				   "config.sys", "MSDOS.SYS", "IO.SYS" };
+		string f;
+		unsigned i=0;
+		while( !win && i<lengthof(files) )
+		    {
+		    f = mp + "/" + files[i];
+		    win = access( f.c_str(), R_OK )==0;
+		    i++;
+		    }
 		}
-	    }
-	if( needUmount )
-	    {
-	    umountDevice( device );
-	    rmdir( mp.c_str() );
-	    rmdir( tmpDir().c_str() );
-	    }
+	    if( needUmount )
+		{
+		umountDevice( device );
+		rmdir( mp.c_str() );
+		rmdir( tmpDir().c_str() );
+		}
 
-	if( vol->needLosetup() && vol->doLosetup() )
-	    {
-	    ret = vol->mount( mp )==0;
-	    if( !ret )
-		vol->loUnsetup();
+	    if( vol->needLosetup() && vol->doLosetup() )
+		{
+		ret = vol->mount( mp )==0;
+		if( !ret )
+		    vol->loUnsetup();
+		}
+	    setFreeInfo( vol->device(), df_free, resize_free, used, win );
 	    }
 	}
     if( ret )
@@ -3654,6 +3663,46 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 	             resize_free, df_free, used );
     y2milestone( "ret:%d win:%d", ret, win );
     return( ret );
+    }
+
+void Storage::setFreeInfo( const string& device, unsigned long long df_free,
+                           unsigned long long resize_free,
+			   unsigned long long used, bool win )
+    {
+    y2milestone( "device:%s df_free:%llu resize_free:%llu used:%llu win:%d",
+		 device.c_str(), df_free, resize_free, used, win );
+
+    FreeInfo inf( df_free, resize_free, used, win );
+    freeInfo[device] = inf;
+    }
+
+bool
+Storage::getFreeInfo( const string& device, unsigned long long& df_free,
+		      unsigned long long& resize_free,
+		      unsigned long long& used, bool& win )
+    {
+    map<string,FreeInfo>::iterator i = freeInfo.find( device );
+    bool ret = i!=freeInfo.end();
+    if( ret )
+	{
+	df_free = i->second.df_free;
+	resize_free = i->second.resize_free;
+	used = i->second.used;
+	win = i->second.win;
+	}
+    y2milestone( "device:%s ret:%d", device.c_str(), ret );
+    if( ret )
+	y2milestone( "df_free:%llu resize_free:%llu used:%llu win:%d",
+		     df_free, resize_free, used, win );
+    return( ret );
+    }
+
+void
+Storage::eraseFreeInfo( const string& device )
+    {
+    map<string,FreeInfo>::iterator i = freeInfo.find( device );
+    if( i!=freeInfo.end() )
+	freeInfo.erase(i);
     }
 
 int 

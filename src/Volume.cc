@@ -1483,6 +1483,7 @@ int Volume::prepareRemove()
 	{
 	loUnsetup();
 	}
+    cont->getStorage()->eraseFreeInfo(dev);
     y2milestone( "ret:%d", ret );
     return( ret );
     }

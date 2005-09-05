@@ -1658,13 +1658,14 @@ namespace storage
 	 * @param df_free free space in kilobytes available in filesystem
 	 * @param used used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
+	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be succcessfully determined
 	 */
 	virtual bool getFreeInfo( const string& device,
 	                          unsigned long long& resize_free,
 	                          unsigned long long& df_free,
 	                          unsigned long long& used,
-				  bool& win ) = 0;
+				  bool& win, bool use_cache ) = 0;
 
 	/**
 	 * Read fstab and cryptotab, if existent, from a specified directory and
