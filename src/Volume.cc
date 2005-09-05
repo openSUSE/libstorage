@@ -1003,8 +1003,12 @@ int Volume::setEncryption( bool val )
 		}
 	    if( ret == 0 && !format && !loop_active )
 		{
+		if( cont->getStorage()->instsys() )
+		    cont->getStorage()->activateHld(true);
 		if( detectLoopEncryption()==ENC_UNKNOWN )
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
+		if( cont->getStorage()->instsys() )
+		    cont->getStorage()->activateHld(false);
 		}
 	    }
 	}
