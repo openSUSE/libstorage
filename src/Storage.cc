@@ -3561,7 +3561,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
 	{
 	y2mil( "entry:" << *i );
-	if( findVolume( i->device, vol ) )
+	if( findVolume( i->dentry, vol ) )
 	    {
 	    VolumeInfo info;
 	    vol->getInfo( info );
