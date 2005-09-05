@@ -1547,6 +1547,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     else if( findVolume( device, cont, vol ) )
 	{
 	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
+	eraseFreeInfo( vol->device() );
 	}
     else
 	{
@@ -3152,23 +3153,45 @@ bool Storage::findVolume( const string& device, ContIterator& c,
 bool Storage::findVolume( const string& device, VolIterator& v )
     {
     assertInit();
+    string label;
+    string uuid;
     string d = normalizeDevice( device );
+    if( d.find( "/" )!=0 )
+	{
+	if( d.find( "LABEL=" )==0 )
+	    label = d.substr( 6 );
+	else if( d.find( "UUID=" )==0 )
+	    label = d.substr( 5 );
+	}
     VPair p = vPair( Volume::notDeleted );
     v = p.begin();
-    while( v!=p.end() && v->device()!=d )
-        {
-	const list<string>& al( v->altNames() );
-	if( find( al.begin(), al.end(), d )!=al.end() )
-	    break;
-	++v;
-	}
-    if( v==p.end() && d.find("/dev/loop")==0 )
+    if( label.empty() && uuid.empty() )
 	{
-	v = p.begin();
-	while( v!=p.end() && v->loopDevice()!=d )
+	while( v!=p.end() && v->device()!=d )
 	    {
+	    const list<string>& al( v->altNames() );
+	    if( find( al.begin(), al.end(), d )!=al.end() )
+		break;
 	    ++v;
 	    }
+	if( v==p.end() && d.find("/dev/loop")==0 )
+	    {
+	    v = p.begin();
+	    while( v!=p.end() && v->loopDevice()!=d )
+		++v;
+	    }
+	}
+    else if( !label.empty() )
+	{
+	v = p.begin();
+	while( v!=p.end() && v->getLabel()!=label )
+	    ++v;
+	}
+    else if( !uuid.empty() )
+	{
+	v = p.begin();
+	while( v!=p.end() && v->getUuid()!=uuid )
+	    ++v;
 	}
     return( v!=p.end() );
     }
