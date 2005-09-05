@@ -1433,9 +1433,12 @@ int Volume::mount( const string& m )
 	cmdline = "modprobe " + fs_names[fs];
 	cmd.execute( cmdline );
 	cmdline = "mount ";
+	string fsn = fs_names[fs];
 	if( fs == NTFS )
 	    cmdline += "-r ";
-	cmdline += "-t " + fs_names[fs] + " " + mountDevice() + " " + lmount;
+	else if( fs == FSUNKNOWN )
+	    fsn = "auto";
+	cmdline += "-t " + fsn + " " + mountDevice() + " " + lmount;
 	}
     else
 	{
