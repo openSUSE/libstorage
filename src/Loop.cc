@@ -252,6 +252,7 @@ void Loop::getInfo( LoopInfo& tinfo ) const
     {
     info.nr = num;
     info.file = lfile;
+    info.reuseFile = reuseFile;
     tinfo = info;
     }
 

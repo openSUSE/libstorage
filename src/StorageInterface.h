@@ -309,6 +309,7 @@ namespace storage
 	{
 	LoopInfo() {};
 	VolumeInfo v;
+	bool reuseFile;
 	unsigned nr;
 	string file;
 	};
