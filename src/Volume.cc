@@ -572,7 +572,8 @@ int Volume::doFormat()
 	{
 	ret = checkDevice(mountDevice());
 	}
-    if( ret==0 && mountDevice().find( "/dev/md" )!=0 )
+    if( ret==0 && mountDevice().find( "/dev/md" )!=0 &&
+        mountDevice().find( "/dev/loop" )!=0 )
 	{
 	SystemCmd c;
 	c.execute( "mdadm --zero-superblock " + mountDevice() );
@@ -1901,7 +1902,7 @@ ostream& Volume::logVolume( ostream& file ) const
 	file << " encr=" << enc_names[encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     if( is_loop && encryption!=ENC_NONE && !crypt_pwd.empty() )
-	s << " pwd:" << v.crypt_pwd;
+	file << " pwd:" << crypt_pwd;
 #endif
     file << endl;
     return( file );
