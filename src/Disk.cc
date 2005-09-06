@@ -1218,10 +1218,10 @@ int Disk::removePartition( unsigned nr )
 	    {
 	    if( !removeFromList( &(*i) ))
 		ret = DISK_REMOVE_PARTITION_CREATE_NOT_FOUND;
+	    p = partPair( notDeleted );
 	    }
 	else
 	    i->setDeleted();
-	p = partPair( notDeleted );
 	if( ret==0 && nr>max_primary )
 	    {
 	    i = p.begin();
