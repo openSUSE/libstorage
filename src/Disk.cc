@@ -1688,8 +1688,28 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    unsigned long end = p->cylStart()+p->cylSize();
-	    if( end>cylinders()-1 )
-		end = cylinders()-1;
+	    PartPair pp = (p->type()!=LOGICAL) ? partPair( notDeletedNotLog )
+					       : partPair( notDeletedLog );
+	    unsigned long maxc = cylinders()-1;
+	    if( p->type()==LOGICAL )
+		{
+		PartPair ext = partPair(isExtended);
+		if( !ext.empty() )
+		    maxc = ext.begin()->cylEnd();
+		}
+	    y2milestone( "max %lu", maxc );
+	    for( PartIter i=pp.begin(); i!=pp.end(); ++i )
+		{
+		if( i->cylStart()<maxc && i->cylStart()<end && 
+		    !i->cylEnd()>=p->cylStart() )
+		    maxc=i->cylStart();
+		}
+	    y2milestone( "max %lu", maxc );
+	    if( end>maxc )
+		{
+		y2milestone( "corrected end from %lu to max %lu", end, maxc );
+		end = maxc;
+		}
 	    cmd_line << p->cylStart() << " " << end;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
