@@ -1195,6 +1195,7 @@ EncryptType Volume::detectLoopEncryption()
 	c.execute( getLosetupCmd( try_order[pos], fname ));
 	if( c.retcode()==0 )
 	    {
+	    cont->getStorage()->waitForDevice( loop_dev );
 	    c.execute( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
 	    getFsData( c );
 	    if( detected_fs!=FSUNKNOWN )
@@ -1280,6 +1281,7 @@ int Volume::doLosetup()
 		ret = VOLUME_LOSETUP_FAILED;
 	    unlink( fname.c_str() );
 	    rmdir( cont->getStorage()->tmpDir().c_str() );
+	    cont->getStorage()->waitForDevice( loop_dev );
 	    }
 	if( ret==0 )
 	    {

@@ -14,6 +14,8 @@
 using namespace std;
 using namespace storage;
 
+static bool lvNotCreated( const LvmLv& l ) { return( !l.created() ); }
+
 LvmVg::LvmVg( Storage * const s, const string& Name ) :
     PeContainer(s,staticType())
     {
@@ -23,6 +25,9 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     if( !Name.empty() )
 	{
 	getVgData( Name, false );
+	LvmLvPair p=lvmLvPair(lvNotCreated);
+	if( !p.empty() )
+	    getStorage()->waitForDevice( p.begin()->device() );
 	}
     else
 	{
@@ -1069,6 +1074,7 @@ LvmVg::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    getStorage()->waitForDevice( l->device() );
 	    getVgData( name() );
 	    checkConsistency();
 	    }

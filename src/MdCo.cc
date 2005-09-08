@@ -570,6 +570,7 @@ MdCo::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    getStorage()->waitForDevice( m->device() );
 	    getMdData( m->nr() );
 	    updateEntry( m );
 	    }

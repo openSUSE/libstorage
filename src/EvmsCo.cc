@@ -29,6 +29,8 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsTree& data ) :
     getNormalVolumes( data );
     }
 
+static bool lvNotCreated( const Evms& l ) { return( !l.created() ); }
+
 EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) :
     PeContainer(s,staticType())
     {
@@ -37,6 +39,9 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) 
     init();
     lvm1 = cont.lvm1;
     getCoData( cont.name, data, false );
+    EvmsPair p=evmsPair(lvNotCreated);
+    if( !p.empty() )
+	getStorage()->waitForDevice( p.begin()->device() );
     }
 
 EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
@@ -1338,6 +1343,7 @@ EvmsCo::doCreate( Volume* v )
 		cmd += " " + decString(l->stripeSize());
 	    }
 	ret = executeCmd( cmd );
+	getStorage()->waitForDevice( l->device() );
 	if( ret==0 )
 	    {
 	    EvmsTree t;

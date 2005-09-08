@@ -1718,6 +1718,15 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    if( p->type()!=EXTENDED )
+		getStorage()->waitForDevice( p->device() );
+	    if( p->type()==LOGICAL && p->nr()==5 && getStorage()->instsys() )
+		{
+		// kludge to make the extended partition visible in 
+		// /proc/partitions otherwise grub refuses to install if root
+		// filesystem is a logical partition
+		SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
+		}
 	    p->setCreated( false );
 	    if( !getPartedValues( p ))
 		ret = DISK_PARTITION_NOT_FOUND;

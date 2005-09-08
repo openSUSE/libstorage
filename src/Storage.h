@@ -311,6 +311,7 @@ class Storage : public storage::StorageInterface
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );
+	int waitForDevice( const string& device ) const;
 
         int commit();
 	void activateHld( bool val=true );
