@@ -1621,12 +1621,16 @@ Disk::getPartedValues( Partition *p )
     return( ret );
     }
 
+static bool logicalCreated( const Partition& p ) 
+    { return( p.type()==LOGICAL && p.created() ); }
+
 int Disk::doCreate( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
     if( p != NULL )
 	{
+	bool call_blockdev = false;
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( p->createText(true) );
@@ -1720,12 +1724,15 @@ int Disk::doCreate( Volume* v )
 	    {
 	    if( p->type()!=EXTENDED )
 		getStorage()->waitForDevice( p->device() );
-	    if( p->type()==LOGICAL && p->nr()==5 && getStorage()->instsys() )
+	    if( p->type()==LOGICAL && getStorage()->instsys() )
 		{
 		// kludge to make the extended partition visible in 
 		// /proc/partitions otherwise grub refuses to install if root
 		// filesystem is a logical partition
-		SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
+		PartPair lc = partPair(logicalCreated);
+		call_blockdev = lc.length()<=1;
+		y2milestone( "logicalCreated:%d call_blockdev:%d", 
+		             lc.length(), call_blockdev );
 		}
 	    p->setCreated( false );
 	    if( !getPartedValues( p ))
@@ -1745,6 +1752,10 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 && p->id()!=Partition::ID_LINUX )
 	    {
 	    ret = doSetType( p );
+	    }
+	if( call_blockdev )
+	    {
+	    SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
 	    }
 	}
     else
