@@ -3980,6 +3980,7 @@ int Storage::waitForDevice( const string& device ) const
 	    {
 	    usleep( 10000 );
 	    exist = access( device.c_str(), R_OK )==0;
+	    count++;
 	    }
 	y2milestone( "device:%s exist:%d", device.c_str(), exist );
 	}
