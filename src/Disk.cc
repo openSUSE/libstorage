@@ -218,6 +218,41 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
     return( ret );
     }
 
+void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
+                        unsigned& s )
+    {
+    string tmp( line );
+    tmp.erase( 0, tmp.find(':')+1 );
+    tmp = extractNthWord( 0, tmp );
+    list<string> geo = splitString( extractNthWord( 0, tmp ), "," );
+    list<string>::const_iterator i = geo.begin();
+    unsigned long val = 0;
+    if( i!=geo.end() )
+	{
+	*i >> val;
+	if( val>0 )
+	    c = val;
+	}
+    ++i;
+    val = 0;
+    if( i!=geo.end() )
+	{
+	*i >> val;
+	if( val>0 )
+	    h = (unsigned)val;
+	}
+    ++i;
+    val = 0;
+    if( i!=geo.end() )
+	{
+	*i >> val;
+	if( val>0 )
+	    s = (unsigned)val;
+	}
+    y2milestone( "line:%s", line.c_str() );
+    y2milestone( "c:%lu h:%u s:%u", c, h, s );
+    }
+
 bool Disk::detectPartitions()
     {
     bool ret = true;
@@ -236,33 +271,10 @@ bool Disk::detectPartitions()
     if( Cmd.select( "BIOS cylinder" )>0 )
 	{
 	string tmp = *Cmd.getLine(0, true);
-	tmp.erase( 0, tmp.find(':')+1 );
-	tmp = extractNthWord( 0, tmp );
-	list<string> geo = splitString( extractNthWord( 0, tmp ), "," );
-	list<string>::const_iterator i = geo.begin();
-	unsigned long val = 0;
-	if( i!=geo.end() )
-	    {
-	    *i >> val;
-	    if( val>0 )
-		cyl = val;
-	    }
-	++i;
-	val = 0;
-	if( i!=geo.end() )
-	    {
-	    *i >> val;
-	    if( val>0 )
-		head = (unsigned)val;
-	    }
-	++i;
-	val = 0;
-	if( i!=geo.end() )
-	    {
-	    *i >> val;
-	    if( val>0 )
-		sector = (unsigned)val;
-	    }
+	getGeometry( tmp, cyl, head, sector );
+	new_cyl = cyl;
+	new_head = head;
+	new_sector = sector;
 	y2milestone( "After parted Head:%u Sector:%u Cylinder:%lu",
 		     head, sector, cyl );
 	byte_cyl = head * sector * 512;
@@ -881,6 +893,21 @@ static bool notDeletedNotLog( const Partition& p )
     return( !p.deleted() && p.type()!=LOGICAL );
     }
 
+static bool existingNotLog( const Partition& p )
+    {
+    return( !p.deleted() && !p.created() && p.type()!=LOGICAL );
+    }
+
+static bool existingLog( const Partition& p )
+    {
+    return( !p.deleted() && !p.created() && p.type()==LOGICAL );
+    }
+
+static bool notCreatedPrimary( const Partition& p )
+    {
+    return( !p.created() && p.type()==PRIMARY );
+    }
+
 void Disk::getUnusedSpace( list<Region>& free, bool all, bool logical )
     {
     y2milestone( "all:%d logical:%d", all, logical );
@@ -1496,8 +1523,35 @@ int Disk::doCreateLabel()
 		++i;
 	    }
 	}
+    if( ret==0 )
+	{
+	redetectGeometry();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void Disk::redetectGeometry()
+    {
+    string cmd_line = PARTEDCMD + device() + " unit cyl print";
+    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    SystemCmd Cmd( cmd_line );
+    if( Cmd.select( "BIOS cylinder" )>0 )
+	{
+	unsigned long c;
+	unsigned h;
+	unsigned s;
+	string tmp = *Cmd.getLine(0, true);
+	getGeometry( tmp, c, h, s );
+	if( c!=0 && c!=cyl )
+	    {
+	    new_cyl = c;
+	    new_head = h;
+	    new_sector = s;
+	    y2milestone( "new parted geometry Head:%u Sector:%u Cylinder:%lu",
+			 new_head, new_sector, new_cyl );
+	    }
+	}
     }
 
 int Disk::doSetType( Volume* v )
@@ -1617,6 +1671,9 @@ Disk::getPartedValues( Partition *p )
 		    p->setSize( s );
 		}
 	    }
+	cmd_line.str("");
+	cmd_line << PARTEDCMD << device() << " unit cyl print";
+	cmd.execute( cmd_line.str() );
 	}
     return( ret );
     }
@@ -1691,9 +1748,10 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    unsigned long start = p->cylStart();
 	    unsigned long end = p->cylStart()+p->cylSize();
-	    PartPair pp = (p->type()!=LOGICAL) ? partPair( notDeletedNotLog )
-					       : partPair( notDeletedLog );
+	    PartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
+					       : partPair( existingLog );
 	    unsigned long maxc = cylinders()-1;
 	    if( p->type()==LOGICAL )
 		{
@@ -1714,7 +1772,18 @@ int Disk::doCreate( Volume* v )
 		y2milestone( "corrected end from %lu to max %lu", end, maxc );
 		end = maxc;
 		}
-	    cmd_line << p->cylStart() << " " << end;
+	    if( new_cyl!=cyl )
+		{
+		y2milestone( "parted geometry changed old c:%lu h:%u s:%u",
+		             cyl, head, sector );
+		y2milestone( "parted geometry changed new c:%lu h:%u s:%u",
+		             new_cyl, new_head, new_sector );
+		y2milestone( "old start:%lu end:%lu", start, end );
+		start = start * new_cyl / cyl;
+		end = end * new_cyl / cyl;
+		y2milestone( "new start:%lu end:%lu", start, end );
+		}
+	    cmd_line << start << " " << end;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
@@ -1793,6 +1862,12 @@ int Disk::doRemove( Volume* v )
 	    {
 	    if( !removeFromList( p ) )
 		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
+	    }
+	if( ret==0 )
+	    {
+	    PartPair p = partPair( notCreatedPrimary );
+	    if( p.empty() )
+		redetectGeometry();
 	    }
 	}
     else
@@ -2079,6 +2154,9 @@ Disk& Disk::operator= ( const Disk& rhs )
     cyl = rhs.cyl;
     head = rhs.head;
     sector = rhs.sector;
+    new_cyl = rhs.new_cyl;
+    new_head = rhs.new_head;
+    new_sector = rhs.new_sector;
     label = rhs.label;
     detected_label = rhs.detected_label;
     mjr = rhs.mjr;

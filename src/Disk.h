@@ -150,6 +150,9 @@ class Disk : public Container
 	bool getPartedValues( Partition *p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
+	void getGeometry( const string& line, unsigned long& c, unsigned& h,
+			  unsigned& s );
+	void redetectGeometry();
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
@@ -172,6 +175,9 @@ class Disk : public Container
 	unsigned long cyl;
 	unsigned head;
 	unsigned sector;
+	unsigned long new_cyl;
+	unsigned new_head;
+	unsigned new_sector;
 	string label;
 	string detected_label;
 	string system_stderr;
