@@ -3969,7 +3969,8 @@ void Storage::setExtError( const string& txt )
 int Storage::waitForDevice( const string& device ) const
     {
     int ret = 0;
-    bool exist = access( device.c_str(), R_OK )==0;
+    struct stat sbuf;
+    bool exist = stat( device.c_str(), &sbuf )==0;
     bool inst = instsys();
     char * prog = "/usr/bin/udev.count_events"; 
     y2milestone( "device:%s exist:%d instsys:%d", device.c_str(), exist, inst );
