@@ -1200,6 +1200,7 @@ EncryptType Volume::detectLoopEncryption()
 	    getFsData( c );
 	    if( detected_fs!=FSUNKNOWN )
 		{
+		c.execute( "modprobe " + fs_names[detected_fs] );
 		c.execute( "mount -oro -t " + fsTypeString(detected_fs) + " " +
 		           loop_dev + " " + mpname );
 		if( c.retcode()==0 )
