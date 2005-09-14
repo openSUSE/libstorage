@@ -370,6 +370,17 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	else
 	    {
 	    fs = new_fs;
+	    FsCapabilities caps;
+	    if( !cont->getStorage()->getFsCapabilities( fs, caps ) ||
+	        !caps.supportsLabel )
+		{
+		label.clear();
+		orig_label.clear();
+		}
+	    else if( caps.labelLength < label.size() )
+		{
+		label.erase( caps.labelLength );
+		}
 	    }
 	}
     y2milestone( "ret:%d", ret );
