@@ -475,16 +475,21 @@ int EtcFstab::flush()
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;
 		break;
 	    case Entry::ADD:
+		{
 		cur = findFile( i->nnew, fstab, cryptotab, lineno );
+		string line = createTabLine( i->nnew );
 		if( lineno<0 )
 		    {
-		    string line = createTabLine( i->nnew );
 		    cur->append( line );
 		    }
 		else
-		    ret = FSTAB_ADD_ENTRY_FOUND;
+		    {
+		    y2war( "replacing line:" << (*cur)[lineno] );
+		    (*cur)[lineno] = line;
+		    }
 		i->old = i->nnew;
 		i->op = Entry::NONE;
+		}
 		break;
 	    default:
 		break;

@@ -2661,8 +2661,6 @@ int Storage::commit()
     lastAction.clear();
     extendedError.clear();
     SystemCmd c;
-    if( instsys() )
-	c.execute( "/sbin/udevcontrol stop_exec_queue" );
     CPair p = cPair( notLoop );
     int ret = 0;
     y2milestone( "empty:%d", p.empty() );
@@ -2680,8 +2678,6 @@ int Storage::commit()
     for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
 	i->setFstabAdded(false);
     y2milestone( "ret:%d", ret );
-    if( instsys() )
-	c.execute( "/sbin/udevcontrol start_exec_queue" );
     return( ret );
     }
 
@@ -3971,10 +3967,9 @@ int Storage::waitForDevice( const string& device ) const
     int ret = 0;
     struct stat sbuf;
     bool exist = stat( device.c_str(), &sbuf )==0;
-    bool inst = instsys();
     char * prog = "/usr/bin/udev.count_events"; 
-    y2milestone( "device:%s exist:%d instsys:%d", device.c_str(), exist, inst );
-    if( !exist && !inst )
+    y2milestone( "device:%s exist:%d", device.c_str(), exist );
+    if( !exist )
 	{
 	unsigned count=0;
 	while( !exist && count<500 )
@@ -3987,7 +3982,7 @@ int Storage::waitForDevice( const string& device ) const
 	}
     if( !exist )
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
-    if( exist && !inst && access( prog, X_OK )==0 )
+    if( exist && access( prog, X_OK )==0 )
 	{
 	y2milestone( "calling prog:%s", prog );
 	SystemCmd c( prog );
