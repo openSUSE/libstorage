@@ -249,6 +249,7 @@ static int lsock = -1;
 
 void cleanup()
     {
+    y2milestone( "lsock:%d spath:%s semid:%d", lsock, spath.c_str(), semid );
     if( lsock>=0 )
 	close(lsock);
     if( !spath.empty() )
