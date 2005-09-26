@@ -77,7 +77,7 @@ class Disk : public Container
 	void getInfo( storage::DiskInfo& info ) const;
 	bool equalContent( const Disk& rhs ) const;
 	void logDifference( const Disk& d ) const;
-
+	Disk& operator= ( const Disk& rhs );
 
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
@@ -136,7 +136,7 @@ class Disk : public Container
 	Disk( Storage * const s, const string& File );
 	unsigned long long capacityInKb() const { return size_k; }
 	bool detectGeometry();
-	bool detectPartitions();
+	virtual bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	int execCheckFailed( const string& cmd_line );
@@ -150,9 +150,9 @@ class Disk : public Container
 	bool getPartedValues( Partition *p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
-	void getGeometry( const string& line, unsigned long& c, unsigned& h,
-			  unsigned& s );
-	void redetectGeometry();
+	void getGeometry( const string& line, unsigned long& c, 
+			  unsigned& h, unsigned& s );
+	virtual void redetectGeometry();
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
@@ -166,7 +166,6 @@ class Disk : public Container
 	void logData( const string& Dir );
 	bool haveBsdPart( const std::list<Partition*>& pl) const;
 	void setLabelData( const string& );
-	Disk& operator= ( const Disk& rhs );
 
 	static string defaultLabel();
 	static label_info labels[];

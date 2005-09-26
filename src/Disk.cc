@@ -711,7 +711,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	    }
 	}
     bool openbsd = false;
-    if( proc_l.size()>=parted_l.size() )
+    if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
 	for( i=proc_l.begin(); i!=proc_l.end(); i++ )
@@ -777,6 +777,7 @@ Disk::label_info Disk::labels[] = {
 	{ "bsd", false, 8, 0 },
 	{ "sun", false, 8, 0 },
 	{ "mac", false, 64, 0 },
+	{ "dasd", false, 3, 0 },
 	{ "aix", false, 0, 0 },
 	{ "", false, 0, 0 }
     };

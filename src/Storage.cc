@@ -24,6 +24,7 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Dasd.h"
 #include "y2storage/MdCo.h"
 #include "y2storage/DmCo.h"
 #include "y2storage/LoopCo.h"
@@ -447,7 +448,11 @@ Storage::autodetectDisks()
 		    }
 		y2milestone( "autodetectDisks disk sysfs:%s parted:%s", 
 		             Entry->d_name, dn.c_str() );
-		Disk * d = new Disk( this, dn, Size/2 );
+		Disk * d = NULL;
+		if( dn.find( "dasd" )==0 )
+		    d = new Dasd( this, dn, Size/2 );
+		else
+		    d = new Disk( this, dn, Size/2 );
 		if( d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
 		    d->detectGeometry() && d->detectPartitions() )
 		    {

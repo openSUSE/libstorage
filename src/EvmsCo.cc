@@ -661,7 +661,7 @@ int EvmsCo::getToCommit( CommitStage stage, list<Container*>& col,
 	    }
         }
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%d vol:%d", ret, col.size(), vol.size());
+	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
     return( ret );
     }
 
@@ -1040,7 +1040,7 @@ void EvmsCo::getEvmsList( EvmsTree& data )
     {
     list<string> l;
     sendCommand( "list", false, l );
-    y2milestone( "list size:%u", l.size() );
+    y2milestone( "list size:%zu", l.size() );
     for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
 	if( i->find( "SEG D " )==0 || i->find( "REG D " )==0 )
@@ -1164,7 +1164,7 @@ int EvmsCo::executeCmd( const string& cmd )
     int ret = EVMS_COMMUNICATION_FAILED;
     list<string> l;
     sendCommand( cmd, true, l );
-    y2milestone( "list size:%u", l.size() );
+    y2milestone( "list size:%zu", l.size() );
     if( !l.empty() )
 	{
 	y2milestone( "ret:%s", l.front().c_str() );

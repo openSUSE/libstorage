@@ -230,7 +230,7 @@ Md::checkDevices()
 	    break;
 	}
     int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
-    y2milestone( "type:%d min:%u size:%d ret:%d", md_type, nmin, devs.size(),
+    y2milestone( "type:%d min:%u size:%zd ret:%d", md_type, nmin, devs.size(),
                  ret );
     return( ret );
     }
