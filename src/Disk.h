@@ -148,6 +148,8 @@ class Disk : public Container
 	bool checkPartedValid( const ProcPart& pp, const std::list<string>& ps,
 	                       const std::list<Partition*>& pl );
 	bool getPartedValues( Partition *p );
+	bool getPartedSectors( Partition *p, unsigned long long& start,
+	                       unsigned long long& end );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
 	void getGeometry( const string& line, unsigned long& c, 

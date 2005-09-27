@@ -1679,6 +1679,39 @@ Disk::getPartedValues( Partition *p )
     return( ret );
     }
 
+bool
+Disk::getPartedSectors( Partition *p, unsigned long long& start, 
+                        unsigned long long& end )
+    {
+    bool ret = false;
+    if( getStorage()->test() )
+	{
+	ret = true;
+	start = p->cylStart()*new_head*new_sector;
+	end = (p->cylEnd()+1)*new_head*new_sector-1;
+	}
+    else
+	{
+	std::ostringstream cmd_line;
+	cmd_line << PARTEDCMD << device() << " unit s print | grep -w ^" << p->nr();
+	SystemCmd cmd( cmd_line.str() );
+	if( cmd.numLines()>0 )
+	    {
+	    string dummy, s1, s2;
+	    std::istringstream data( *cmd.getLine(0) );
+	    data >> dummy >> s1 >> s2;
+	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(), 
+	                 s1.c_str(), s2.c_str() );
+	    start = end = 0;
+	    s1 >> start;
+	    s2 >> end;
+	    y2milestone( "start:%llu end:%llu", start, end );
+	    ret = end>0;
+	    }
+	}
+    return( ret );
+    }
+
 static bool logicalCreated( const Partition& p ) 
     { return( p.type()==LOGICAL && p.created() ); }
 
@@ -1991,13 +2024,13 @@ int Disk::doResize( Volume* v )
 	    y2milestone( "doResize container %s name %s", name().c_str(),
 			 p->name().c_str() );
 	    std::ostringstream cmd_line;
-	    unsigned new_cyl_end = p->cylStart() + kbToCylinder(p->sizeK());
-	    if( new_cyl_end>cylinders()-1 )
-		new_cyl_end = cylinders()-1;
-	    y2milestone( "new_cyl_end %u", new_cyl_end );
+	    unsigned long long start_sect, end_sect;
+	    getPartedSectors( p, start_sect, end_sect );
+	    end_sect = start_sect + p->sizeK()*2 - 1;
+	    y2milestone( "end_sect %llu", end_sect );
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
-	             << " unit cyl resize " << p->nr() << " "
-	             << p->cylStart() << " " << new_cyl_end;
+	             << " unit s resize " << p->nr() << " " 
+	             << start_sect << " " << end_sect;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
