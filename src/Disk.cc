@@ -737,7 +737,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	}
     else
 	{
-	ret = false;
+	ret = parted_l.empty() && proc_l.empty();
 	}
     y2milestone("haveBsd:%d pr.size:%zd pa.size:%zd", openbsd,
                  proc_l.size(), parted_l.size() );
