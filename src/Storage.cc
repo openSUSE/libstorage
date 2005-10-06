@@ -216,7 +216,7 @@ Storage::~Storage()
 	if( c.retcode()!=0 )
 	    {
 	    y2error( "stray tmpfile" );
-	    c.execute( "ls " + tempdir );
+	    c.execute( "ls -l" + tempdir );
 	    c.execute( "rm -rf " + tempdir );
 	    }
 	}
@@ -437,9 +437,9 @@ Storage::autodetectDisks()
 		ifstream File( SysfsFile.c_str() );
 		File >> Size;
 		}
-	    if( Range>1 && Size>0 )
+	    string dn = Entry->d_name;
+	    if( Range>1 && (Size>0||dn.find( "dasd" )==0) )
 		{
-		string dn = Entry->d_name;
 		string::size_type pos = dn.find('!');
 		while( pos!=string::npos )
 		    {
@@ -1025,7 +1025,7 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "disk:%s", disk.c_str() );
+    y2milestone( "disk:%s label:%s", disk.c_str(), label.c_str() );
     DiskIterator i = findDisk( disk );
 
     if( readonly )
@@ -1035,6 +1035,34 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     else if( i != dEnd() )
 	{
 	ret = i->destroyPartitionTable( label );
+	}
+    else
+	{
+	ret = STORAGE_DISK_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::initializeDisk( const string& disk, bool value )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "disk:%s value:%d", disk.c_str(), value );
+    DiskIterator i = findDisk( disk );
+
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != dEnd() )
+	{
+	ret = i->initializeDisk( value );
 	}
     else
 	{
@@ -2549,7 +2577,9 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
 	list<commitAction*> ac;
 	for( ContIterator i = p.begin(); i != p.end(); ++i )
 	    {
-	    i->getCommitActions( ac );
+	    list<commitAction*> l;
+	    i->getCommitActions( l );
+	    ac.splice( ac.end(), l );
 	    }
 	ac.sort( cont_less<commitAction>() );
 	string txt;
@@ -2791,6 +2821,20 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void
+Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
+    {
+    dl.clear();
+    DiskPair dp = dPair( CheckFnc );
+    DiskIterator i = dp.begin();
+    while( i!=dp.end() )
+	{
+	y2mil( "disk:" << i->device() );
+	dl.push_back( &(*i) );
+	++i;
+	}
     }
 
 static bool showContainers( const Container& c ) 

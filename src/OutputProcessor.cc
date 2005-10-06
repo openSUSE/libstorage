@@ -121,3 +121,35 @@ ReiserScrollbar::process( const string& val, bool stderr )
 	    }
 	}
     }
+
+void
+DasdfmtScrollbar::process( const string& val, bool stderr )
+    {
+    y2debug( "val:%s err:%d", val.c_str(), stderr );
+    if( !stderr )
+	{
+	seen += val;
+	string::size_type pos;
+	string::size_type bpos = seen.find( '|' );
+	while( first && (pos=seen.find( '\n' )) != string::npos && pos<bpos )
+	    {
+	    unsigned long cyl = 0;
+	    seen >> cyl;
+	    max_cyl += cyl;
+	    y2milestone( "cyl:%lu max_cyl:%lu", cyl, max_cyl );
+	    seen.erase( 0, pos+1 );
+	    }
+	if( bpos != string::npos && max_cyl==0 )
+	    {
+	    y2error( "max_cyl is zero, this should not happen" );
+	    max_cyl = 100;
+	    }
+	while( bpos != string::npos )
+	    {
+	    cur_cyl++;
+	    setCurValue( cur_cyl*max/max_cyl );
+	    seen.erase( 0, bpos+1 );
+	    bpos = seen.find( "|" );
+	    }
+	}
+    }

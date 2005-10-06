@@ -167,6 +167,10 @@ class Container
 	virtual int doResize( Volume * v ); 
 	virtual void logData( const string& Dir ) {;}
 	Container& operator=( const Container& );
+	static bool stageDecrease( const Volume& v ) 
+	    { return( v.deleted()||v.needShrink()); }
+	static bool stageCreate( const Volume& v )
+	    { return( v.created()||v.needExtend()); }
 
 	static string type_names[storage::EVMS+1];
 	static unsigned order[storage::EVMS+1];

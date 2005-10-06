@@ -14,6 +14,7 @@ class Region;
 class Disk : public Container
     {
     friend class Storage;
+    friend class Dasd;
 
     struct label_info
 	{
@@ -40,18 +41,22 @@ class Disk : public Container
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
 	unsigned numPartitions() const;
+	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	static storage::CType const staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 
 	static bool needP( const string& dev );
-	int createPartition( storage::PartitionType type, long unsigned start,
-	                     long unsigned len, string& device,
-			     bool checkRelaxed=false );
+	virtual int createPartition( storage::PartitionType type, long unsigned start,
+				     long unsigned len, string& device,
+				     bool checkRelaxed=false );
 	int createPartition( long unsigned len, string& device,
 			     bool checkRelaxed=false );
 	int createPartition( storage::PartitionType type, string& device );
-	int removePartition( unsigned nr );
-	int changePartitionId( unsigned nr, unsigned id );
+	virtual int removePartition( unsigned nr );
+	virtual int changePartitionId( unsigned nr, unsigned id );
+	virtual int initializeDisk( bool ) { return storage::DISK_INIT_NOT_POSSIBLE;}
+	bool initializeDisk() const { return init_disk; }
+	void resetInitDisk() { init_disk=false; }
 	int forgetChangePartitionId( unsigned nr );
 	int changePartitionArea( unsigned nr, unsigned long start, 
 	                         unsigned long size, bool checkRelaxed=false );
@@ -59,12 +64,13 @@ class Disk : public Container
 	                       string& device );
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
-	void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
-			 std::list<Volume*>& vol );
-	int commitChanges( storage::CommitStage stage );
+	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	virtual int getToCommit( storage::CommitStage stage, 
+	                         std::list<Container*>& col,
+				 std::list<Volume*>& vol );
+	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
-	int resizePartition( Partition* p, unsigned long newCyl );
+	virtual int resizePartition( Partition* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getUnusedSpace( std::list<Region>& free, bool all=true, 
@@ -135,11 +141,12 @@ class Disk : public Container
 
 	Disk( Storage * const s, const string& File );
 	unsigned long long capacityInKb() const { return size_k; }
-	bool detectGeometry();
+	virtual bool detectGeometry();
 	virtual bool detectPartitions();
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	int execCheckFailed( const string& cmd_line );
+	int execCheckFailed( SystemCmd& cmd, const string& cmd_line );
 	bool checkPartedOutput( const SystemCmd& cmd );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
@@ -155,14 +162,20 @@ class Disk : public Container
 	void getGeometry( const string& line, unsigned long& c, 
 			  unsigned& h, unsigned& s );
 	virtual void redetectGeometry();
+	void changeNumbers( const PartIter& b, const PartIter& e, 
+	                    unsigned start, int incr );
+	int createChecks( storage::PartitionType& type, unsigned long start,
+	                  unsigned long len, bool checkRelaxed );
+	void removePresentPartitions();
+	void removeFromMemory();
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 
-	int doCreate( Volume* v );
-	int doRemove( Volume* v );
-	int doResize( Volume* v );
-	int doSetType( Volume* v );
-	int doCreateLabel();
+	virtual int doCreate( Volume* v );
+	virtual int doRemove( Volume* v );
+	virtual int doResize( Volume* v );
+	virtual int doSetType( Volume* v );
+	virtual int doCreateLabel();
 
 	//std::list<Region> getUnusedRegions();
 	void logData( const string& Dir );
@@ -184,6 +197,7 @@ class Disk : public Container
 	string system_stderr;
 	unsigned max_primary;
 	bool ext_possible;
+	bool init_disk;
 	unsigned max_logical;
 	unsigned long byte_cyl;
 	unsigned long long size_k;

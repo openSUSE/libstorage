@@ -433,7 +433,10 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
 	list<commitAction*>::iterator last = l.end();
 	--last;
 	if( (*last)->stage>MOUNT )
+	    {
+	    delete( *last );
 	    l.erase( last );
+	    }
 	else
 	    change_id = false;
 	}

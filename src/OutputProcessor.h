@@ -28,8 +28,8 @@ class ScrollBarHandler : public OutputProcessor
 	unsigned getCurValue() {  return( cur ); }
 
     protected:
-	unsigned max;
-	unsigned cur;
+	unsigned long max;
+	unsigned long cur;
 	bool first;
 	string id;
 	storage::CallbackProgressBar callback;
@@ -54,6 +54,18 @@ class ReiserScrollbar : public ScrollBarHandler
 	virtual void process( const string& txt, bool stderr );
     protected:
 	string seen;
+    };
+
+class DasdfmtScrollbar : public ScrollBarHandler
+    {
+    public:
+	DasdfmtScrollbar( storage::CallbackProgressBar cb ) :
+	    ScrollBarHandler( "dasdfmt", cb ) { max=100; max_cyl=cur_cyl=0; }
+	virtual void process( const string& txt, bool stderr );
+    protected:
+	string seen;
+	unsigned long cur_cyl;
+	unsigned long max_cyl;
     };
 
 #endif

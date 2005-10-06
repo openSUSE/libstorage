@@ -171,6 +171,7 @@ namespace storage
 	string disklabel;
 	unsigned maxLogical;
 	unsigned maxPrimary;
+	bool initDisk;
 	};
 
     /**
@@ -359,6 +360,7 @@ namespace storage
 	DISK_COMMIT_NOTHING_TODO = -1025,
 	DISK_CREATE_PARTITION_NO_SPACE = -1026,
 	DISK_REMOVE_USED_BY = -1027,
+	DISK_INIT_NOT_POSSIBLE = -1028,
 
 	STORAGE_DISK_NOT_FOUND = -2000,
 	STORAGE_VOLUME_NOT_FOUND = -2001,
@@ -548,6 +550,10 @@ namespace storage
 	DM_REMOVE_INVALID_VOLUME = -10004,
 	DM_REMOVE_FAILED = -10005,
 	DM_NOT_IN_LIST = -10006,
+
+	DASD_NOT_POSSIBLE = -11000,
+	DASD_FDASD_FAILED = -11001,
+	DASD_DASDFMT_FAILED = -11002,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -866,6 +872,18 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
+
+	/**
+	 * Do a what is needed for low level initialisation of a Disk. 
+	 * This function does nothing on normal disks but is needed e.g. on S390 
+	 * DASD devices where it executes a dasdfmt. If should be considered as
+	 * destroying all data on the disk.
+	 *
+	 * @param disk device name of disk, e.g. /dev/hda
+	 * @param value toggle if disk should be initialized or not
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int initializeDisk( const string& disk, bool value ) = 0;
 
 	/**
 	 * Query the default disk label of the architecture of the

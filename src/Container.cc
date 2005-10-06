@@ -43,10 +43,6 @@ unsigned Container::numVolumes() const
     return( p.length() );
     }
 
-static bool stageDecrease( const Volume& v ) 
-    { return( v.deleted()||v.needShrink()); }
-static bool stageCreate( const Volume& v )
-    { return( v.created()||v.needExtend()); }
 static bool stageFormat( const Volume& v ) 
     { return( v.getFormat()||v.needLosetup()||v.needLabel()); }
 static bool stageMount( const Volume& v ) 

@@ -110,11 +110,11 @@ class Storage : public storage::StorageInterface
 	typedef CCont::const_iterator CCIter;
 
 	static bool isMd( const Container&d )
-	    { return( d.type()==storage::MD ); };
+	    { return( d.type()==storage::MD ); }
 	static bool isLoop( const Container&d )
-	    { return( d.type()==storage::LOOP ); };
+	    { return( d.type()==storage::LOOP ); }
 	static bool isDm( const Container&d )
-	    { return( d.type()==storage::DM ); };
+	    { return( d.type()==storage::DM ); }
 	struct FreeInfo
 	    {
 	    unsigned long long resize_free;
@@ -213,6 +213,7 @@ class Storage : public storage::StorageInterface
 	int changePartitionId( const string& partition, unsigned id );
 	int forgetChangePartitionId( const string& partition );
 	int destroyPartitionTable( const string& disk, const string& label );
+	int initializeDisk( const string& disk, bool value );
 	string defaultDiskLabel() const;
 
 	int changeFormatVolume( const string& device, bool format, 
@@ -312,6 +313,8 @@ class Storage : public storage::StorageInterface
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );
 	int waitForDevice( const string& device ) const;
+	void getDiskList( bool (* CheckFnc)( const Disk& ), 
+	                  std::list<Disk*>& dl );
 
         int commit();
 	void activateHld( bool val=true );

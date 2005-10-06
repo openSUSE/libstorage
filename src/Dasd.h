@@ -7,14 +7,26 @@ class SystemCmd;
 
 class Dasd : public Disk
     {
+    friend class Storage;
     public:
 	Dasd( Storage * const s, const string& Name, unsigned long long Size );
 	Dasd( const Dasd& rhs );
 	virtual ~Dasd();
-	bool equalContent( const Dasd& rhs ) const;
-	void logDifference( const Dasd& d ) const;
-
-	friend std::ostream& operator<< (std::ostream&, const Dasd& );
+        int createPartition( storage::PartitionType type, long unsigned start,
+	                     long unsigned len, string& device,
+			     bool checkRelaxed=false );
+        int removePartition( unsigned nr );
+        int changePartitionId( unsigned nr, unsigned id ) { return 0; }
+        int resizePartition( Partition* p, unsigned long newCyl );
+	int initializeDisk( bool value );
+	string fdasdText() const;
+	string dasdfmtText( bool doing ) const;
+	static string dasdfmtTexts( bool single, const string& devs );
+	void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
+			 std::list<Volume*>& vol );
+	int commitChanges( storage::CommitStage stage );
+	bool detectGeometry();
 
     protected:
 	bool detectPartitions();
@@ -24,7 +36,16 @@ class Dasd : public Disk
 	void getGeometry( SystemCmd& cmd, unsigned long& c,
 			  unsigned& h, unsigned& s );
 	void redetectGeometry() {};
+        int doCreate( Volume* v ) { return(doFdasd()); }
+        int doRemove( Volume* v ) { return(init_disk?0:doFdasd()); }
+	int doFdasd();
+        int doResize( Volume* v );
+        int doSetType( Volume* v ) { return 0; }
+        int doCreateLabel() { return 0; }
+	int doDasdfmt();
+
 	Dasd& operator= ( const Dasd& rhs );
+
     };
 
 #endif
