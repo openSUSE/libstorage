@@ -284,17 +284,22 @@ bool Disk::detectPartitions()
 	y2milestone( "byte_cyl:%lu", byte_cyl );
 	}
     y2milestone( "Label:%s", dlabel.c_str() );
-    setLabelData( dlabel );
-    checkPartedOutput( Cmd );
-    if( dlabel.empty() )
+    if( dlabel!="loop" )
 	{
-	Cmd.setCombine();
-	Cmd.execute( "/sbin/fdisk -l " + device() );
-	if( Cmd.select( "AIX label" )>0 )
+	setLabelData( dlabel );
+	checkPartedOutput( Cmd );
+	if( dlabel.empty() )
 	    {
-	    detected_label = "aix";
+	    Cmd.setCombine();
+	    Cmd.execute( "/sbin/fdisk -l " + device() );
+	    if( Cmd.select( "AIX label" )>0 )
+		{
+		detected_label = "aix";
+		}
 	    }
 	}
+    else
+	dlabel.erase();
     detected_label = dlabel;
     if( dlabel.empty() )
 	dlabel = defaultLabel();
@@ -616,7 +621,12 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 		}
 	    }
 	}
-    list<string> ps = ppart.getMatchingEntries( nm + "p?[0-9]+" );
+    string reg = nm;
+    if( reg.find( '/' )>=0 )
+	reg += "p?";
+    reg += "[0-9]+";
+    y2milestone( "/proc/partititons regex %s", reg.c_str() );
+    list<string> ps = ppart.getMatchingEntries( reg );
     if( !checkPartedValid( ppart, ps, pl ) )
 	{
 	range_exceed = 0;
