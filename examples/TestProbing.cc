@@ -60,6 +60,7 @@ main (int argc, char** argv)
 			case VFAT: cout << "VFAT"; break;
 			case XFS: cout << "XFS"; break;
 			case JFS: cout << "JFS"; break;
+			case HFS: cout << "HFS"; break;
 			case NTFS: cout << "NTFS"; break;
 			case SWAP: cout << "SWAP"; break;
 			case FSNONE: cout << "NONE"; break;
