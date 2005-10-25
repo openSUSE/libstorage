@@ -304,6 +304,24 @@ bool Disk::detectPartitions()
     if( dlabel.empty() )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
+
+    if (label == "unsupported")
+	{
+	// popup text %1$s is replaced by disk name e.g. /dev/hda
+	string txt = sformat(
+_("The partition table type on disk %1$s cannot be handled by\n"
+"this tool.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."), dev.c_str() );
+	getStorage()->infoPopupCb( txt );
+
+	detected_label = label;
+	ronly = true;
+	}
+
     y2milestone( "ret:%d partitons:%zd detected label:%s label:%s", ret,
                  vols.size(), detected_label.c_str(), label.c_str() );
     return( ret );
@@ -359,13 +377,19 @@ Disk::setLabelData( const string& disklabel )
 	}
     if( labels[i].name.empty() )
 	{
-	i=0;
 	y2error ("unknown disklabel %s", disklabel.c_str());
+	ext_possible = false;
+	max_primary = 0;
+	max_logical = 0;
+	label = "unsupported";
 	}
+    else
+        {
     ext_possible = labels[i].extended;
     max_primary = min(labels[i].primary,unsigned(range-1));
     max_logical = min(labels[i].logical,unsigned(range-1));
     label = labels[i].name;
+	}
     y2milestone( "name:%s ext:%d primary:%d logical:%d", label.c_str(),
                  ext_possible, max_primary, max_logical );
     }
@@ -1330,11 +1354,7 @@ int Disk::destroyPartitionTable( const string& new_label )
     y2milestone( "begin" );
     int ret = 0;
     setLabelData( new_label );
-    if( readonly() )
-	{
-	ret = DISK_CHANGE_READONLY;
-	}
-    else if( max_primary==0 )
+    if( max_primary==0 )
 	{
 	setLabelData( label );
 	ret = DISK_DESTROY_TABLE_INVALID_LABEL;
@@ -1368,6 +1388,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	    }
 	getStorage()->setRecursiveRemoval(save);
 	setDeleted( true );
+	ronly = false;
 	}
     y2milestone( "ret %d", ret );
     return( ret );
