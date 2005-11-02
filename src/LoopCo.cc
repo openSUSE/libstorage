@@ -252,11 +252,16 @@ LoopCo::doRemove( Volume* v )
 
 void LoopCo::logData( const string& Dir ) {;}
 
+namespace storage
+{
+
 inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
     {
     s << *((Container*)&d);
     return( s );
     }
+
+}
 
 void LoopCo::logDifference( const LoopCo& d ) const
     {

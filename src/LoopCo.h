@@ -4,6 +4,9 @@
 #include "y2storage/Container.h"
 #include "y2storage/Loop.h"
 
+namespace storage
+{
+
 class LoopCo : public Container
     {
     friend class Storage;
@@ -95,5 +98,7 @@ class LoopCo : public Container
 
 	void logData( const string& Dir );
     };
+
+}
 
 #endif

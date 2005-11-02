@@ -9,6 +9,7 @@
 #include "y2storage/OutputProcessor.h"
 
 using namespace std;
+using namespace storage;
 
 void
 OutputProcessor::process( const string& val, bool stderr )

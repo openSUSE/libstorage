@@ -1265,6 +1265,9 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     {
     s << *((PeContainer*)&d);
@@ -1274,6 +1277,8 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     s << " UUID:" << d.uuid;
     return( s );
     }
+
+}
 
 void LvmVg::logDifference( const LvmVg& d ) const
     {

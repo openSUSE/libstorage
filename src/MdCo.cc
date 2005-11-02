@@ -633,11 +633,16 @@ MdCo::doRemove( Volume* v )
     return( ret );
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const MdCo& d )
     {
     s << *((Container*)&d);
     return( s );
     }
+
+}
 
 void MdCo::logDifference( const MdCo& d ) const
     {

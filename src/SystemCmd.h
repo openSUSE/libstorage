@@ -12,6 +12,9 @@
 
 using std::string;
 
+namespace storage
+{
+
 class OutputProcessor;
 
 class SystemCmd
@@ -79,5 +82,7 @@ class SystemCmd
 	struct pollfd pfds[2];
 	static int Nr_i;
     };
+
+}
 
 #endif

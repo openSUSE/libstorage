@@ -221,6 +221,9 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     {
     s << *(Dm*)&p;
@@ -232,6 +235,8 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
       s << " " << p.allocation;
     return( s );
     }
+
+}
 
 bool LvmLv::equalContent( const LvmLv& rhs ) const
     {

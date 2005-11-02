@@ -7,6 +7,9 @@
 
 #include "y2storage/AsciiFile.h"
 
+namespace storage
+{
+
 class ProcPart : public AsciiFile
     {
     public:
@@ -19,6 +22,7 @@ class ProcPart : public AsciiFile
 	static string devName( const string& Dev );
 	std::map<string,int> co;
     };
-///////////////////////////////////////////////////////////////////
+
+}
 
 #endif

@@ -3,6 +3,9 @@
 
 #include "y2storage/StorageInterface.h"
 
+namespace storage
+{
+
 class OutputProcessor 
     {
     public:
@@ -67,5 +70,7 @@ class DasdfmtScrollbar : public ScrollBarHandler
 	unsigned long cur_cyl;
 	unsigned long max_cyl;
     };
+
+}
 
 #endif

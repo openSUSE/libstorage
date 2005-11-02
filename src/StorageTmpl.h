@@ -13,6 +13,9 @@
 #include "y2storage/DerefIterator.h"
 #include "y2storage/AppUtil.h"
 
+namespace storage
+{
+
 template< class Value > 
 class CheckFnc
     {
@@ -193,5 +196,7 @@ struct cont_less : public std::binary_function<Val*,Val*,bool>
 
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }
+
+}
 
 #endif

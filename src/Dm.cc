@@ -332,6 +332,9 @@ void Dm::getInfo( DmInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
     s << p.shortPrintedName() << " ";
@@ -348,6 +351,8 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     return( s );
     }
     
+}
+
 bool Dm::equalContent( const Dm& rhs ) const
     {
     return( Volume::equalContent(rhs) &&

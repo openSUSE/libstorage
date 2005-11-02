@@ -541,6 +541,9 @@ void Md::getInfo( MdInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Md& m )
     {
     s << "Md " << *(Volume*)&m
@@ -559,6 +562,7 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
     return( s );
     }
 
+}
 
 bool Md::equalContent( const Md& rhs ) const
     {

@@ -16,6 +16,9 @@
 
 using std::string;
 
+namespace storage
+{
+
 class AsciiFile;
 
 bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
@@ -108,5 +111,7 @@ inline const char* _(const char* msgid1, const char* msgid2, unsigned long int n
 
 extern bool system_cmd_testmode;
 extern const string app_ws;
+
+}
 
 #endif

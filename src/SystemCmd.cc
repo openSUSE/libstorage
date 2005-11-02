@@ -17,6 +17,7 @@
 #include "y2storage/OutputProcessor.h"
 
 using namespace std;
+using namespace storage;
 
 int SystemCmd::Nr_i = 0;
 

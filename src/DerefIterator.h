@@ -3,6 +3,9 @@
 
 #include "y2storage/AppUtil.h"
 
+namespace storage
+{
+
 template< class Iter, class Value > 
 class DerefIterator : public Iter
     {
@@ -44,5 +47,7 @@ class DerefIterator : public Iter
 	    return( Iter::operator*() );
 	    }
     };
+
+}
 
 #endif

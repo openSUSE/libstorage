@@ -4,6 +4,9 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/Dm.h"
 
+namespace storage
+{
+
 class DmCo : public PeContainer
     {
     friend class Storage;
@@ -89,5 +92,7 @@ class DmCo : public PeContainer
 
 	void logData( const string& Dir );
     };
+
+}
 
 #endif

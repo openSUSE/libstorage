@@ -1444,6 +1444,9 @@ int EvmsCo::doResize( Volume* v )
     return( ret );
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const EvmsObj& d )
     {
     s << "id:" << d.id << " name:" << d.name;
@@ -1506,6 +1509,8 @@ std::ostream& operator<< (std::ostream& s, const EvmsTree& d )
     return( s );
     }
 
+}
+
 void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
     {
     info.sizeK = sizeK();
@@ -1548,6 +1553,9 @@ void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     {
     s << *((PeContainer*)&d);
@@ -1556,6 +1564,8 @@ std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     s << " UUID:" << d.uuid;
     return( s );
     }
+
+}
 
 void EvmsCo::logDifference( const EvmsCo& d ) const
     {

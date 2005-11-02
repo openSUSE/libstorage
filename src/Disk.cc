@@ -2148,6 +2148,9 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
     s << *((Container*)&d);
@@ -2168,6 +2171,8 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " InitDisk";
     return( s );
     }
+
+}
 
 void Disk::logDifference( const Disk& d ) const
     {

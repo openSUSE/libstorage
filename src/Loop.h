@@ -3,6 +3,9 @@
 
 #include "y2storage/Volume.h"
 
+namespace storage
+{
+
 class LoopCo;
 
 class Loop : public Volume
@@ -40,5 +43,7 @@ class Loop : public Volume
 	bool delFile;
 	mutable storage::LoopInfo info;
     };
+
+}
 
 #endif

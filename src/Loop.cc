@@ -256,6 +256,9 @@ void Loop::getInfo( LoopInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Loop& l )
     {
     s << "Loop " << *(Volume*)&l
@@ -266,6 +269,8 @@ std::ostream& operator<< (std::ostream& s, const Loop& l )
       s << " delFile";
     return( s );
     }
+
+}
 
 bool Loop::equalContent( const Loop& rhs ) const
     {

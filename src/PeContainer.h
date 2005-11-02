@@ -4,6 +4,9 @@
 #include "y2storage/Container.h"
 #include "y2storage/Dm.h"
 
+namespace storage
+{
+
 class PeContainer : public Container
     {
     friend class Storage;
@@ -76,5 +79,7 @@ class PeContainer : public Container
 	std::list<Pv> pv_add;
 	std::list<Pv> pv_remove;
     };
+
+}
 
 #endif

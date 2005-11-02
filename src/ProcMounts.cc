@@ -10,6 +10,7 @@
 #include "y2storage/ProcMounts.h"
 
 using namespace std;
+using namespace storage;
 
 ProcMounts::ProcMounts() 
     {

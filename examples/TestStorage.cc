@@ -8,6 +8,7 @@
 
 using namespace blocxx;
 using namespace std;
+using namespace storage;
 
 struct test_hdb { bool operator()(const Container&d) const {return( d.name().find( "hdb" )!=string::npos);}};
 struct Smaller5 { bool operator()(const Volume&d) const {return(d.nr()<5);}};

@@ -4,6 +4,9 @@
 #include <string>
 #include <map>
 
+namespace storage
+{
+
 class AsciiFile;
 
 class EtcRaidtab
@@ -47,5 +50,7 @@ inline std::ostream& operator<< (std::ostream& s, const EtcRaidtab::entry& v )
     s << "first=" << v.first << " last=" << v.last;
     return( s );
     }
+
+}
 
 #endif

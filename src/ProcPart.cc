@@ -11,6 +11,7 @@
 #include "y2storage/ProcPart.h"
 
 using namespace std;
+using namespace storage;
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {

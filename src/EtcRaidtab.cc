@@ -12,6 +12,7 @@
 #include "y2storage/Md.h"
 
 using namespace std;
+using namespace storage;
 
 EtcRaidtab::EtcRaidtab( const string& prefix ) 
     {

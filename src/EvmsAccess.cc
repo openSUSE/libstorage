@@ -102,6 +102,9 @@ void EvmsObject::output( ostream &str ) const
     str << " id:" << id() << " name:" << name();
     }
 
+namespace storage
+{
+
 ostream& operator<<( ostream &str, const EvmsObject& obj )
     {
     obj.output( str );
@@ -138,6 +141,8 @@ ostream& operator<<( ostream &str, ObjType obj )
 	}
     return( str );
     }
+
+}
 
 EvmsDataObject::EvmsDataObject( EvmsObject *const obj ) 
     {
@@ -231,12 +236,17 @@ void EvmsDataObject::output( ostream& str ) const
 	}
     }
 
+namespace storage
+{
+
 ostream& operator<<( ostream &str, const EvmsDataObject& obj )
     {
     obj.output( str );
     str << endl;
     return( str );
     }
+
+}
 
 EvmsContainerObject::EvmsContainerObject( EvmsObject *const obj ) 
     {
@@ -428,12 +438,17 @@ void EvmsContainerObject::output( ostream& str ) const
 	}
     }
 
+namespace storage
+{
+
 ostream& operator<<( ostream &str, const EvmsContainerObject& obj )
     {
     obj.output( str );
     str << endl;
     return( str );
     }
+
+}
 
 EvmsVolumeObject::EvmsVolumeObject( EvmsObject *const obj ) 
     {
@@ -532,12 +547,17 @@ void EvmsVolumeObject::output( ostream& str ) const
 	}
     }
 
+namespace storage
+{
+
 ostream& operator<<( ostream &str, const EvmsVolumeObject& obj )
     {
     obj.output( str );
     str << endl;
     return( str );
     }
+
+}
 
 int EvmsAccess::pluginFilterFunction( const char* plugin )
     {
@@ -1716,8 +1736,13 @@ void EvmsAccess::output( ostream& str ) const
 	}
     }
 
+namespace storage
+{
+
 ostream& operator<<( ostream &str, const EvmsAccess& obj )
     {
     obj.output( str );
     return( str );
     }
+
+}

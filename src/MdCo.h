@@ -4,6 +4,9 @@
 #include "y2storage/Container.h"
 #include "y2storage/Md.h"
 
+namespace storage
+{
+
 class EtcRaidtab;
 
 class MdCo : public Container
@@ -114,5 +117,7 @@ class MdCo : public Container
 
 	static bool active;
     };
+
+}
 
 #endif

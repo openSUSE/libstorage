@@ -1742,7 +1742,7 @@ namespace storage
      */
     void destroyStorageInterface (StorageInterface*);
 
-};
+}
 
 
 #endif

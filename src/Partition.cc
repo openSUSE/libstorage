@@ -464,6 +464,9 @@ Partition::getInfo( PartitionInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Partition &p )
     {
     s << "Partition " << *(Volume*)&p
@@ -480,6 +483,8 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
       s << " boot";
     return( s );
     }
+
+}
 
 void Partition::logDifference( const Partition& rhs ) const
     {

@@ -5,6 +5,9 @@
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 
+namespace storage
+{
+
 class SystemCmd;
 class ProcMounts;
 class EtcFstab;
@@ -225,5 +228,7 @@ class Volume
 
 	mutable storage::VolumeInfo info;
     };
+
+}
 
 #endif

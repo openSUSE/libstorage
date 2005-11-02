@@ -1961,6 +1961,9 @@ void Volume::getTestmodeData( const string& data )
 	crypt_pwd = i->second;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
     s << "Device:" << v.dev;
@@ -2043,6 +2046,8 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	}
     return( s );
     }
+
+}
 
 string
 Volume::logDifference( const Volume& rhs ) const

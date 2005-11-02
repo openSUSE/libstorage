@@ -13,6 +13,9 @@
 
 using std::string;
 
+namespace storage
+{
+
 class Regex
 {
 public:
@@ -42,5 +45,7 @@ private:
 
     mutable string last_str;
 };
+
+}
 
 #endif

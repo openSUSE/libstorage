@@ -5,6 +5,9 @@
 #include "y2storage/Volume.h"
 #include "y2storage/Region.h"
 
+namespace storage
+{
+
 class Disk;
 
 class Partition : public Volume
@@ -78,5 +81,7 @@ class Partition : public Volume
 	static string pt_names[storage::PTYPE_ANY+1];
 	mutable storage::PartitionInfo info;
     };
+
+}
 
 #endif

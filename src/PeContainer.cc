@@ -369,6 +369,9 @@ PeContainer::checkConsistency() const
     return( ret );
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
     s << *((Container*)&d);
@@ -388,6 +391,8 @@ std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
       << " UUID:" << v.uuid;
     return( s );
     }
+
+}
 
 string PeContainer::logDifference( const PeContainer& rhs ) const
     {

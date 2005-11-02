@@ -9,6 +9,7 @@
 
 namespace storage
 {
+
 struct contOrder
     {
     contOrder(CType t) : order(0)

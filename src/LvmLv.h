@@ -5,6 +5,9 @@
 
 #include "y2storage/Dm.h"
 
+namespace storage
+{
+
 class LvmVg;
 
 class LvmLv : public Dm
@@ -40,5 +43,7 @@ class LvmLv : public Dm
 	string allocation;
 	mutable storage::LvmLvInfo info;
     };
+
+}
 
 #endif

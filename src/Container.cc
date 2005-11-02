@@ -284,6 +284,9 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.readonly = readonly();
     }
 
+namespace storage
+{
+
 std::ostream& operator<< ( std::ostream& s, const Container &c )
     {
     s << "Type:" << Container::type_names[c.typ]
@@ -301,6 +304,7 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
     s << c.uby;
     return( s );
     }
+}
 
 string 
 Container::logDifference( const Container& c ) const

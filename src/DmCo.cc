@@ -235,11 +235,16 @@ DmCo::doRemove( Volume* v )
     return( ret );
     }
 
+namespace storage
+{
+
 inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
     {
     s << *((Container*)&d);
     return( s );
     }
+
+}
 
 void DmCo::logDifference( const DmCo& d ) const
     {

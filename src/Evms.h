@@ -3,6 +3,9 @@
 
 #include "y2storage/Dm.h"
 
+namespace storage
+{
+
 class EvmsCo;
 
 class Evms : public Dm
@@ -36,5 +39,7 @@ class Evms : public Dm
 	bool compat;
 	mutable storage::EvmsInfo info;
     };
+
+}
 
 #endif

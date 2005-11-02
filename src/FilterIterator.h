@@ -4,6 +4,9 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/IterPair.h"
 
+namespace storage
+{
+
 template< class Pred, class Iter > 
 class FilterIterator : public std::iterator<std::bidirectional_iterator_tag, 
                                             typename Iter::value_type>
@@ -126,5 +129,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    };
 
     };
+
+}
 
 #endif

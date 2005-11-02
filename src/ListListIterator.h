@@ -4,6 +4,9 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/IterPair.h"
 
+namespace storage
+{
+
 template< class PIter, class Iter > 
 class ListListIterator : public PIter
     {
@@ -171,5 +174,7 @@ class ListListIterator : public PIter
     };
 
 template< typename PIter, typename Iter > const PIter ListListIterator<PIter,Iter>::empty = PIter();
+
+}
 
 #endif

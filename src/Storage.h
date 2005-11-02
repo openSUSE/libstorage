@@ -26,6 +26,9 @@
 #include "y2storage/ListListIterator.h"
 #include "y2storage/IterPair.h"
 
+namespace storage
+{
+
 template <int Value>
 class CheckType 
     {
@@ -1273,5 +1276,7 @@ class Storage : public storage::StorageInterface
 	std::map<string,CCont> backups;
 	std::map<string,FreeInfo> freeInfo;
     };
+
+}
 
 #endif

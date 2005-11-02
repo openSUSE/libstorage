@@ -27,6 +27,9 @@
 
 using namespace std;
 
+namespace storage
+{
+
 // #define MEMORY_DEBUG
 
 #define BUF_SIZE 512
@@ -534,3 +537,4 @@ int createLogger( const string& component, const string& name,
 bool system_cmd_testmode = false;
 const string app_ws = " \t\n";
 
+}

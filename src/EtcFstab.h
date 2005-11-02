@@ -7,6 +7,9 @@
 
 #include "y2storage/StorageInterface.h"
 
+namespace storage
+{
+
 class AsciiFile;
 struct FstabChange;
 
@@ -145,6 +148,7 @@ class EtcFstab
 	string prefix;
 	std::list<Entry> co;
     };
-///////////////////////////////////////////////////////////////////
+
+}
 
 #endif

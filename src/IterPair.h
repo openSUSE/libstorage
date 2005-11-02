@@ -3,6 +3,9 @@
 
 #include <iterator>
 
+namespace storage
+{
+
 template< class Iter >
 class IterPair
     {
@@ -46,5 +49,7 @@ class MakeCondIterPair : public IterPair<Iter>
 	MakeCondIterPair( const Iter& b, const Iter& e ) :
 	    _bclass( b, e ) {}
     };
+
+}
 
 #endif

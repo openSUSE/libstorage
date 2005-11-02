@@ -6,6 +6,9 @@
 #include "y2storage/Container.h"
 #include "y2storage/Partition.h"
 
+namespace storage
+{
+
 class Storage;
 class SystemCmd;
 class ProcPart;
@@ -206,5 +209,7 @@ class Disk : public Container
 	unsigned long range;
 	mutable storage::DiskInfo info;
     };
+
+}
 
 #endif

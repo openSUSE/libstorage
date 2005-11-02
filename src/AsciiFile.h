@@ -7,9 +7,12 @@
 #include <vector>
 #include <list>
 
-class Regex;
-
 using std::string;
+
+namespace storage
+{
+
+class Regex;
 
 #define DBG(x)
 
@@ -61,6 +64,7 @@ class AsciiFile
 	std::vector<string> Lines_C;
 	string Name_C;
     };
-///////////////////////////////////////////////////////////////////
+
+}
 
 #endif

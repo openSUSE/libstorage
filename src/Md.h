@@ -4,6 +4,9 @@
 #include "y2storage/StorageInterface.h"
 #include "y2storage/Volume.h"
 
+namespace storage
+{
+
 class MdCo;
 
 class Md : public Volume
@@ -68,5 +71,7 @@ class Md : public Volume
 	static string par_names[storage::RIGHT_SYMMETRIC+1];
 	mutable storage::MdInfo info;
     };
+
+}
 
 #endif

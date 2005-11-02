@@ -40,7 +40,10 @@
 #undef y2error
 #undef y2warning
 #undef y2debug
+
 #include <Storage.h>
+
+using namespace storage;
 
 class Y2StorageCallbackFunction : public Y2Function
 {

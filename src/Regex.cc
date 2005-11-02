@@ -6,6 +6,8 @@
 
 #include "Regex.h"
 
+using namespace storage;
+
 
 extern int _nl_msg_cat_cntr;
 

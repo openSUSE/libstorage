@@ -7,6 +7,9 @@
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 
+namespace storage
+{
+
 class Container
     {
     friend class Storage;
@@ -172,8 +175,8 @@ class Container
 	static bool stageCreate( const Volume& v )
 	    { return( v.created()||v.needExtend()); }
 
-	static string type_names[storage::EVMS+1];
-	static unsigned order[storage::EVMS+1];
+	static string type_names[EVMS+1];
+	static unsigned order[EVMS+1];
 
 	Storage * const sto;
 	storage::CType typ;
@@ -187,5 +190,7 @@ class Container
 	VCont vols;
 	mutable storage::ContainerInfo info;
     };
+
+}
 
 #endif

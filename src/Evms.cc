@@ -235,6 +235,9 @@ void Evms::getInfo( EvmsInfo& tinfo ) const
     tinfo = info;
     }
 
+namespace storage
+{
+
 std::ostream& operator<< (std::ostream& s, const Evms &p )
     {
     s << *(Dm*)&p;
@@ -242,6 +245,8 @@ std::ostream& operator<< (std::ostream& s, const Evms &p )
       s << " native";
     return( s );
     }
+
+}
 
 bool Evms::equalContent( const Evms& rhs ) const
     {

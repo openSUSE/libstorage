@@ -3,6 +3,9 @@
 
 #include "y2storage/Disk.h"
 
+namespace storage
+{
+
 class SystemCmd;
 
 class Dasd : public Disk
@@ -47,5 +50,7 @@ class Dasd : public Disk
 	Dasd& operator= ( const Dasd& rhs );
 
     };
+
+}
 
 #endif

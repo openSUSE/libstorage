@@ -7,6 +7,9 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/Evms.h"
 
+namespace storage
+{
+
 struct EvmsObj
     {
     EvmsObj( unsigned i=0, const string& n="", unsigned v=0 ) : id(i), vol(v), name(n) {}
@@ -204,5 +207,7 @@ class EvmsCo : public PeContainer
 	static int sockfd;
 	mutable storage::EvmsCoInfo info;
     };
+
+}
 
 #endif

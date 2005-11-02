@@ -5,6 +5,9 @@
 #include <list>
 #include <map>
 
+namespace storage
+{
+
 class ProcMounts 
     {
     public:
@@ -15,6 +18,7 @@ class ProcMounts
     protected:
 	std::map<string,string> co;
     };
-///////////////////////////////////////////////////////////////////
+
+}
 
 #endif

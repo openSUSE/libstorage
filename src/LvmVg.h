@@ -4,6 +4,9 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/LvmLv.h"
 
+namespace storage
+{
+
 class LvmVg : public PeContainer
     {
     friend class Storage;
@@ -129,5 +132,7 @@ class LvmVg : public PeContainer
 	static bool active;
 	mutable storage::LvmVgInfo info;
     };
+
+}
 
 #endif

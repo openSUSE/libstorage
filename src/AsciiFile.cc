@@ -14,6 +14,7 @@
 #include "y2storage/AsciiFile.h"
 
 using namespace std;
+using namespace storage;
 
 AsciiFile::AsciiFile( bool CreateBackup_bv, const char* BackupExt_Cv ) :
 	BackupCreated_b(!CreateBackup_bv),

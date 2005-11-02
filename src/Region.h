@@ -3,6 +3,9 @@
 
 #include <algorithm>
 
+namespace storage
+{
+
 class Region 
     {
     public:
@@ -56,5 +59,7 @@ inline std::istream& operator>> (std::istream& s, Region &p )
     p = Region( start, len );
     return( s );
     }
+
+}
 
 #endif

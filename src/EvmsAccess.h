@@ -16,6 +16,9 @@ extern "C"
 
 using std::string;
 
+namespace storage
+{
+
 typedef enum { EVMS_UNKNOWN, EVMS_DISK, EVMS_SEGMENT, EVMS_REGION, EVMS_PLUGIN,
                EVMS_CONTAINER, EVMS_VOLUME, EVMS_OBJ } ObjType;
 
@@ -182,5 +185,7 @@ extern std::ostream& operator<<( std::ostream &Stream, const EvmsObject& Obj );
 extern std::ostream& operator<<( std::ostream &Stream, const EvmsDataObject& Obj );
 extern std::ostream& operator<<( std::ostream &Stream, const EvmsContainerObject& Obj );
 extern std::ostream& operator<<( std::ostream &Stream, const EvmsVolumeObject& Obj );
+
+}
 
 #endif

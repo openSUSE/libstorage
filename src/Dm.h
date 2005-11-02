@@ -5,6 +5,9 @@
 
 #include "y2storage/Volume.h"
 
+namespace storage
+{
+
 class PeContainer;
 
 class Dm : public Volume
@@ -60,5 +63,7 @@ class Dm : public Volume
 	static unsigned dm_major;
 	mutable storage::DmInfo info;
     };
+
+}
 
 #endif
