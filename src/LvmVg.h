@@ -18,6 +18,7 @@ class LvmVg : public PeContainer
 	virtual ~LvmVg();
 	unsigned numLv() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
+	bool inactive() const { return( inactiv ); }
 	static storage::CType const staticType() { return storage::LVM; }
 	friend std::ostream& operator<< (std::ostream&, const LvmVg& );
 
@@ -32,8 +33,7 @@ class LvmVg : public PeContainer
 	int changeStripeSize( const string& name, 
 	                      unsigned long long stripeSize );
 
-	int setPeSize( long long unsigned peSizeK )
-	    { return( PeContainer::setPeSize( peSizeK, lvm1 ) ); }
+	int setPeSize( long long unsigned peSizeK );
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	int commitChanges( storage::CommitStage stage );
 	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
@@ -129,6 +129,8 @@ class LvmVg : public PeContainer
 	string status;
 	string uuid;
 	bool lvm1;
+	bool inactiv;
+	unsigned num_lv;
 	static bool active;
 	mutable storage::LvmVgInfo info;
     };

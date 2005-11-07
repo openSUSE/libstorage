@@ -2071,6 +2071,14 @@ int Disk::removeVolume( Volume* v )
     return( removePartition( v->nr() ));
     }
 
+bool Disk::isLogical( unsigned nr ) const
+    {
+    bool ret = ext_possible && nr>max_primary;
+    y2milestone( "nr:%u ret:%d", nr, ret );
+    return( ret );
+    }
+
+
 int Disk::doResize( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);

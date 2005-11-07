@@ -597,6 +597,31 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
     y2debug( "End Konstruktor EvmsAccess" );
     }
 
+
+int EvmsAccess::activate()
+    {
+    evms_close_engine();
+    int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
+                                DEFAULT, NULL );
+    if( ret != 0 )
+	{
+	y2error( "evms_open_engine evms_strerror %s", evms_strerror(ret));
+	}
+    else
+	{
+	ret = evms_commit_changes();
+	if( ret != 0 )
+	    {
+	    y2error( "evms_commit_changes evms_strerror %s", evms_strerror(ret));
+	    }
+	else
+	    {
+	    rereadAllObjects();
+	    }
+	}
+    return( ret );
+    }
+
 void EvmsAccess::rereadAllObjects()
     {
     for( list<EvmsObject*>::iterator p=objects.begin(); p!=objects.end(); p++ )

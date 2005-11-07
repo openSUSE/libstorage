@@ -9,8 +9,6 @@
 #include "y2storage/Container.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Storage.h"
-#include "y2storage/Md.h"
-#include "y2storage/Loop.h"
 #include "y2storage/AppUtil.h"
 
 using namespace std;
@@ -60,7 +58,10 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    {
 	    VolPair p = volPair( stageDecrease );
 	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+		{
+		y2mil( "i:" << *i );
 		vol.push_back( &(*i) );
+		}
 	    if( deleted() )
 		col.push_back( this );
 	    }
@@ -154,7 +155,8 @@ void Container::getCommitActions( list<commitAction*>& l ) const
     {
     ConstVolPair p = volPair();
     for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-	i->getCommitActions( l );
+	if( !i->silent() )
+	    i->getCommitActions( l );
     }
 
 string Container::createText( bool doing ) const

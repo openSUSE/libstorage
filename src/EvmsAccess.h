@@ -147,6 +147,7 @@ class EvmsAccess
 	void listContainer(std::list<const EvmsContainerObject*>& l ) const;
 	const string& getErrorText() {return Error_C;};
 	const string& getCmdLine() {return CmdLine_C;};
+	int activate();
 	int deleteCo( const string& Container_Cv );
 	int extendCo( const string& Container_Cv, const string& PvName_Cv );
 	int shrinkCo( const string& Container_Cv, const string& PvName_Cv );

@@ -70,7 +70,7 @@ void Volume::setNameDev()
 
 void Volume::init()
     {
-    del = create = format = is_loop = loop_active = silent = false;
+    del = create = format = is_loop = loop_active = silnt = false;
     is_mounted = ronly = fstab_added = ignore_fstab = false;
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = MOUNTBY_DEVICE;
@@ -551,7 +551,7 @@ int Volume::doFormat()
     int ret = 0;
     bool needMount = false;
     y2milestone( "device:%s", dev.c_str() );
-    if( !silent )
+    if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( formatText(true) );
 	}
@@ -798,6 +798,25 @@ string Volume::mountText( bool doing ) const
     return( txt );
     }
 
+void Volume::rename( const string& newName )
+    {
+    y2milestone( "rename old:%s new:%s", nm.c_str(), newName.c_str() );
+    string::size_type pos;
+    if( (pos=dev.rfind( nm ))!=string::npos )
+	{
+	dev.replace( pos, nm.size(), newName );
+	}
+    for( list<string>::iterator i=alt_names.begin(); i!=alt_names.end(); ++i )
+	{
+	if( (pos=i->rfind( nm ))!=string::npos )
+	    {
+	    i->replace( pos, nm.size(), newName );
+	    }
+	}
+    nm = newName;
+    }
+
+
 int Volume::checkDevice()
     {
     return( checkDevice(dev));
@@ -825,7 +844,7 @@ int Volume::doMount()
 	lmount += mp;
     y2milestone( "device:%s mp:%s old mp:%s", dev.c_str(), mp.c_str(),
                  orig_mp.c_str() );
-    if( !silent )
+    if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( mountText(true) );
 	}
@@ -1267,7 +1286,7 @@ int Volume::doLosetup()
     int ret = 0;
     y2milestone( "device:%s mp:%s is_loop:%d loop_active:%d", 
                  dev.c_str(), mp.c_str(), is_loop, loop_active );
-    if( !silent && is_loop )
+    if( !silent() && is_loop )
 	{
 	cont->getStorage()->showInfoCb( losetupText(true) );
 	}
@@ -1356,7 +1375,7 @@ int Volume::doSetLabel()
     FsCapabilities caps;
     y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(), 
                  label.c_str() );
-    if( !silent )
+    if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( labelText(true) );
 	}
@@ -1598,7 +1617,7 @@ int Volume::doFstabUpdate()
 	     (cType()==LOOP && fstab->findMount( mp, entry )) ))
 	    {
 	    changed = true;
-	    if( !silent )
+	    if( !silent() )
 		{
 		cont->getStorage()->showInfoCb( 
 		    fstab->removeText( true, entry.crypto, entry.mount ));
@@ -1655,7 +1674,7 @@ int Volume::doFstabUpdate()
 		    }
 		if( changed )
 		    {
-		    if( !silent && !fstab_added )
+		    if( !silent() && !fstab_added )
 			{
 			cont->getStorage()->showInfoCb( 
 			    fstab->updateText( true, inCrypto(), che.mount ));
@@ -1695,7 +1714,7 @@ int Volume::doFstabUpdate()
 		    che.freq = 1;
 		    che.passno = (mp=="/") ? 1 : 2;
 		    }
-		if( !silent )
+		if( !silent() )
 		    {
 		    cont->getStorage()->showInfoCb( fstab->addText( true, 
 		                                                    inCrypto(),
@@ -1983,6 +2002,8 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " created";
     if( v.format )
 	s << " format";
+    if( v.silnt )
+	s << " silent";
     s << v.uby;
     if( v.fs != storage::FSUNKNOWN )
 	{
@@ -2173,7 +2194,7 @@ bool Volume::equalContent( const Volume& rhs ) const
             ((numeric&&num==rhs.num)||(!numeric&&nm==rhs.nm)) &&
 	    size_k==rhs.size_k && mnr==rhs.mnr && mjr==rhs.mjr &&
 	    ronly==rhs.ronly && create==rhs.create && del==rhs.del && 
-	    silent==rhs.silent && format==rhs.format && 
+	    silnt==rhs.silnt && format==rhs.format && 
 	    fstab_added==rhs.fstab_added && 
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
@@ -2198,7 +2219,7 @@ Volume& Volume::operator= ( const Volume& rhs )
     ronly = rhs.ronly;
     create = rhs.create;
     del = rhs.del;
-    silent = rhs.silent;
+    silnt = rhs.silnt;
     format = rhs.format;
     fstab_added = rhs.fstab_added;
     fs = rhs.fs;

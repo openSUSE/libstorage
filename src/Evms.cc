@@ -13,7 +13,7 @@
 using namespace storage;
 using namespace std;
 
-Evms::Evms( const EvmsCo& d, const string& name, unsigned long le, bool native ) :
+Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le, bool native ) :
 	Dm( d, getMapperName(d,name) )
     {
     init( name );
@@ -25,7 +25,7 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long le, bool native )
                  cont->name().c_str() );
     }
 
-Evms::Evms( const EvmsCo& d, const string& name, unsigned long le,
+Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le,
 	    unsigned str ) :
 	Dm( d, getMapperName(d,name) )
     {

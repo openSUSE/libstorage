@@ -154,6 +154,7 @@ class Storage : public storage::StorageInterface
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( std::ostream& str );
+	void logCo( Container* c );
 	storage::UsedByType usedBy( const string& dev );
 	bool setUsedBy( const string& dev, storage::UsedByType typ,
 	                const string& name );
@@ -279,9 +280,11 @@ class Storage : public storage::StorageInterface
 	int changeLvStripeSize( const string& vg, const string& name, 
 				unsigned long long stripeSize );
 
-
+	int evmsActivate();
 	int createEvmsContainer( const string& name, unsigned long long peSizeK,
 			         bool lvm1, const deque<string>& devs );
+	int modifyEvmsContainer( const string& old_name, const string& new_name,
+				 unsigned long long peSizeK, bool lvm1 ); 
 	int removeEvmsContainer( const string& name );
 	int extendEvmsContainer( const string& name, const deque<string>& devs );
 	int shrinkEvmsContainer( const string& name, const deque<string>& devs );
@@ -1217,12 +1220,16 @@ class Storage : public storage::StorageInterface
 	EvmsCoIterator findEvmsCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c, 
 	                 VolIterator& v  );
+	bool findVolume( const string& device, VolIterator& v  );
+	bool findContainer( const string& device, ContIterator& c );
 
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );
-	bool findVolume( const string& device, VolIterator& v  );
+	bool haveEvms();
+	void handleEvmsRemoveDevice( const string& d, bool rename );
+	void handleEvmsCreateDevice( const string& d );
 
-	int removeContainer( Container* val );
+	int removeContainer( Container* val, bool call_del=true );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists( storage::CommitStage stage, 
@@ -1230,7 +1237,7 @@ class Storage : public storage::StorageInterface
 			      std::list<Volume*>& vl );
 	int performContChanges( storage::CommitStage stage, 
 	                        const std::list<Container*>& co,
-	                        bool& cont_removed );
+	                        bool activate_evms, bool& cont_removed );
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );

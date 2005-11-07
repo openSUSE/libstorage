@@ -35,9 +35,11 @@ class Volume
 	storage::CType cType() const;
 	bool deleted() const { return del; }
 	bool created() const { return create; }
+	bool silent() const { return silnt; }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
+	void setSilent( bool val=true ) { silnt=val; }
 	bool ignoreFstab() const { return( ignore_fstab ); }
 	void setIgnoreFstab( bool val=true ) { ignore_fstab=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
@@ -50,6 +52,7 @@ class Volume
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
+	void rename( const string& newName );
 	int changeFstabOptions( const string& options );
 	int changeMountBy( storage::MountByType mby );
 	virtual int changeMount( const string& m );
@@ -188,7 +191,7 @@ class Volume
 	bool create;
 	bool del;
 	bool format;
-	bool silent;
+	bool silnt;
 	bool fstab_added;
 	storage::FsType fs;
 	storage::FsType detected_fs;

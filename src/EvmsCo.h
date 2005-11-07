@@ -96,14 +96,15 @@ class EvmsCo : public PeContainer
 	int extendCo( const string& device );
 	int reduceCo( const std::list<string>& dl );
 	int reduceCo( const string& device );
+	int modifyCo( const string& name, long long unsigned peSizeK, 
+	              bool lvm1 );
 	int createVol( const string& name, unsigned long long sizeK, 
 		       unsigned stripe, string& device );
 	int removeVol( const string& name );
 	int changeStripeSize( const string& name,  
 			      unsigned long long stripeSize );
 
-	int setPeSize( long long unsigned peSizeK )
-	            { return( PeContainer::setPeSize( peSizeK, lvm1 ) ); }
+	int setPeSize( long long unsigned peSizeK );
 
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	int commitChanges( storage::CommitStage stage );
@@ -111,11 +112,14 @@ class EvmsCo : public PeContainer
 			 std::list<Volume*>& vol );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
+	void addVolume( Evms* v );
 	void getInfo( storage::EvmsCoInfo& info ) const;
 	bool equalContent( const EvmsCo& rhs ) const;
 	void logDifference( const EvmsCo& d ) const;
+	bool checkConsistency() const;
 
 	static void activate( bool val=true );
+	static int activateDevices();
 	static void getEvmsList( EvmsTree& data );
 	static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
 	
@@ -173,6 +177,8 @@ class EvmsCo : public PeContainer
 	void getCoData( const string& name, const EvmsTree& data, 
 	                bool check=false );
 	void getNormalVolumes( const EvmsTree& data );
+	void setUsed( const string& device, storage::UsedByType typ,
+	              const string& name );
 	void init();
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new EvmsCo( *this ) ); }

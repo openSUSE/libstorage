@@ -82,10 +82,7 @@ LvmVg::removeVg()
 	}
     if( ret==0 )
 	{
-	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
-	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
-	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
-	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	unuseDev();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -210,6 +207,31 @@ LvmVg::reduceVg( const list<string>& devs )
 	}
     if( ret==0 )
 	checkConsistency();
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+
+int 
+LvmVg::setPeSize( long long unsigned peSizeK )
+    {
+    int ret = 0;
+    y2milestone( "old:%llu new:%llu", pe_size, peSizeK );
+    if( peSizeK != pe_size )
+	{
+	unsigned long long old_pe = pe_size;
+	ret = PeContainer::setPeSize( peSizeK, lvm1 );
+	if( ret==0 )
+	    {
+	    LvmLvPair p=lvmLvPair();
+	    LvmLvIter i=p.begin();
+	    while( i!=p.end() )
+		{
+		i->modifyPeSize( old_pe, peSizeK );
+		++i;
+		}
+	    }
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -419,6 +441,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     SystemCmd c( "/sbin/vgdisplay --units k -v " + name );
     unsigned cnt = c.numLines();
     unsigned i = 0;
+    num_lv = 0;
     string line;
     string tmp;
     string::size_type pos;
@@ -567,6 +590,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     p=lvmLvPair(lvCreated);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
+	num_lv++;
 	//cout << "Created:" << *i << endl;
 	map<string,unsigned long> pe_map;
 	if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add, 
@@ -592,6 +616,11 @@ void LvmVg::getVgData( const string& name, bool exists )
 		i->setPeMap( pe_map );
 	    }
 	free_pe -= size_diff;
+	}
+    if( num_lv>0 && lvmLvPair().empty() )
+	{
+	y2milestone( "inactive VG %s num_lv:%u", nm.c_str(), num_lv );
+	inactiv = true;
 	}
     }
 
@@ -623,10 +652,17 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	}
     else
 	{
+	num_lv++;
 	LvmLv *n = new LvmLv( *this, name, le, uuid, status, alloc );
 	if( ro )
 	    n->setReadonly();
-	addToList( n );
+	if( !n->inactive() )
+	    addToList( n );
+	else
+	    {
+	    y2milestone( "inactive Lv %s", name.c_str() );
+	    delete n;
+	    }
 	}
     name = uuid = status = alloc = "";
     le = 0; 
@@ -819,10 +855,9 @@ LvmVg::init()
     {
     dev = nm;
     normalizeDevice(dev);
-    pe_size = num_pe = free_pe = 0;
-    lvm1 = false;
+    num_lv = pe_size = num_pe = free_pe = 0;
+    inactiv = lvm1 = false;
     }
-
 
 void LvmVg::activate( bool val )
     {
@@ -1274,7 +1309,10 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     s << " status:" << d.status;
     if( d.lvm1 )
       s << " lvm1";
-    s << " UUID:" << d.uuid;
+    if( d.inactiv )
+      s << " inactive";
+    s << " UUID:" << d.uuid 
+      << " lv:" << d.num_lv;
     return( s );
     }
 
@@ -1331,7 +1369,8 @@ void LvmVg::logDifference( const LvmVg& d ) const
 bool LvmVg::equalContent( const LvmVg& rhs ) const
     {
     bool ret = PeContainer::equalContent(rhs,false) &&
-	       status==rhs.status && uuid==rhs.uuid && lvm1==rhs.lvm1;
+	       status==rhs.status && uuid==rhs.uuid && lvm1==rhs.lvm1 &&
+	       inactiv==rhs.inactiv && num_lv==rhs.num_lv;
     if( ret )
 	{
 	ConstLvmLvPair p = lvmLvPair();
@@ -1356,6 +1395,8 @@ LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
     status = rhs.status;
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;
+    inactiv = rhs.inactiv;
+    num_lv = rhs.num_lv;
     ConstLvmLvPair p = rhs.lvmLvPair();
     for( ConstLvmLvIter i = p.begin(); i!=p.end(); ++i )
 	{

@@ -22,12 +22,15 @@ class Dm : public Volume
 	const string& getTableName() const { return( tname ); }
 	const string& getTargetName() const { return( target ); }
 	void setTableName( const string& name ) { tname=name; }
-	unsigned long getLe() const { return num_le; }
-	void setLe( unsigned long le );
+	bool inactive() const { return( inactiv ); }
+	unsigned long long getLe() const { return num_le; }
+	void setLe( unsigned long long le );
+	void modifyPeSize( unsigned long long old, unsigned long long neww );
+	bool removeTable();
 	void calcSize();
 	const std::map<string,unsigned long>& getPeMap() const { return( pe_map ); }
 	void setPeMap( const std::map<string,unsigned long>& m ) { pe_map = m; }
-	unsigned long usingPe( const string& dev ) const;
+	unsigned long long usingPe( const string& dev ) const;
 	void getTableInfo();
 	virtual bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }
@@ -55,9 +58,10 @@ class Dm : public Volume
 
 	string tname;
 	string target;
-	unsigned long num_le;
+	unsigned long long num_le;
 	unsigned stripe;
 	unsigned long long stripe_size;
+	bool inactiv;
 	std::map<string,unsigned long> pe_map;
 	static bool active;
 	static unsigned dm_major;

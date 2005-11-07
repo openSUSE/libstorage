@@ -25,6 +25,7 @@ class PeContainer : public Container
 	friend std::ostream& operator<< (std::ostream&, const PeContainer& );
 
 	int setPeSize( long long unsigned, bool lvm1 );
+	void unuseDev();
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
 	string logDifference( const PeContainer& d ) const;
 	

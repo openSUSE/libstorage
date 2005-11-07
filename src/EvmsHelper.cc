@@ -179,6 +179,13 @@ int EvmsCreateCompatVolume( EvmsAccess& evms, const string& params )
     return( ret );
     }
 
+int EvmsActivate( EvmsAccess& evms, const string& params )
+    {
+    int ret = 0;
+    ret = evms.activate();
+    return( ret );
+    }
+
 struct CmdEntry
     {
     char *cmd;
@@ -193,7 +200,8 @@ static CmdEntry cmds[] = {
     { "create_lv", EvmsCreateLvCmd },
     { "delete_lv", EvmsDeleteLvCmd },
     { "resize_lv", EvmsResizeLvCmd },
-    { "cc_vol", EvmsCreateCompatVolume }
+    { "cc_vol", EvmsCreateCompatVolume },
+    { "activate", EvmsActivate }
     };
 
 void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
@@ -323,6 +331,8 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	    FD_ZERO( &fdset );
 	    FD_SET( lsock, &fdset );
 	    ret = select( lsock+1, &fdset, NULL, NULL, &tv );
+	    y2milestone( "select: ret %d isset:%d", ret, 
+	                 FD_ISSET( lsock, &fdset ));
 	    if( ret<0 || (ret>0&&!FD_ISSET( lsock, &fdset )) )
 		{
 		if( errno != EINTR )

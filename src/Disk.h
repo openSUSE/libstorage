@@ -45,6 +45,7 @@ class Disk : public Container
 	const string& labelName() const { return label; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
+	bool isLogical( unsigned nr ) const;
 	static storage::CType const staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 

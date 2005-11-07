@@ -519,7 +519,7 @@ namespace storage
 	EVMS_CO_HAS_NONE_PV = -8026,
 	EVMS_LV_INVALID_NAME = -8027,
 	EVMS_LV_DUPLICATE_NAME = -8028,
-	EVMS_LV_NO_SPACE = -8020,
+	EVMS_LV_NO_SPACE = -8029,
 	EVMS_LV_UNKNOWN_NAME = -8030,
 	EVMS_LV_NOT_IN_LIST = -8031,
 	EVMS_PV_STILL_ADDED = -8032,
@@ -534,6 +534,8 @@ namespace storage
 	EVMS_COMMUNICATION_FAILED = -8041,
 	EVMS_LV_ALREADY_ON_DISK = -8042,
 	EVMS_LV_NO_STRIPE_SIZE = -8043,
+	EVMS_ACTIVATE_FAILED = -8044,
+	EVMS_CONTAINER_NOT_CREATED = -8045,
 
 	PEC_PE_SIZE_INVALID = -9000,
 	PEC_PV_NOT_FOUND = -9001,
@@ -1264,7 +1266,7 @@ namespace storage
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
 
 	/**
-	 * Change strip size of a LVM logical volume.
+	 * Change stripe size of a LVM logical volume.
 	 * This can only be before the volume is created on disk.
 	 *
 	 * @param vg name of volume group
@@ -1288,6 +1290,25 @@ namespace storage
 	virtual int createEvmsContainer( const string& name,
 					 unsigned long long peSizeK, bool lvm1,
 					 const deque<string>& devs ) = 0;
+
+	/**
+	 * Modify a EVMS container. 
+	 * This function can only be used between the creation of a 
+	 * EVMS container and the next call to commit(). Containers that
+	 * are already written to disk cannot have these properties changed.
+	 *
+	 * @param old_name name of container, must not contain blanks, colons
+	 * and shell special characters (e.g. system)
+	 * @param new_name new name of container, same restrictions as for 
+	 * first parameter 
+	 * @param peSizeK physical extent size in kilobytes
+	 * @param lvm1 flag if lvm1 compatible format should be used
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int modifyEvmsContainer( const string& old_name,
+	                                 const string& new_name,
+					 unsigned long long peSizeK, 
+					 bool lvm1 ) = 0;
 
 	/**
 	 * Remove a EVMS container. If the container contains
@@ -1321,7 +1342,7 @@ namespace storage
 	/**
 	 * Create a EVMS volume within a EVMS container
 	 *
-	 * @param name of container
+	 * @param coname of container
 	 * @param name of volume
 	 * @param size size of volume in megabytes
 	 * @param stripe stripe count of volume (use 1 unless you know
@@ -1362,6 +1383,16 @@ namespace storage
 	virtual int changeEvmsStripeSize( const string& coname,
 	                                  const string& name,
 					  unsigned long long stripeSize ) = 0;
+
+	/**
+	 * Activate EVMS devices on the system.
+	 * This is only neseccary on systems where EVMS is not activated 
+	 * during system startup. This command is executed immediately,
+	 * there is no need for a call to commit().
+	 *
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int evmsActivate() = 0;
 
 	/**
 	 * Create a Software raid device by name

@@ -19,6 +19,7 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
     num_le = 0;
     stripe = 1;
     stripe_size = 0;
+    inactiv = true;
     y2milestone( "constructed dm dev" );
     }
 
@@ -29,6 +30,7 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     num_le = 0;
     stripe = 1;
     stripe_size = 0;
+    inactiv = true;
     dev = "/dev/dm-" + decString(mnum);
     nm = tn;
     init();
@@ -46,6 +48,9 @@ Dm::getTableInfo()
     if( dm_major==0 )
 	getDmMajor();
     SystemCmd c( "dmsetup table \"" + tname + "\"" );
+    inactiv = c.retcode()!=0;
+    y2milestone( "table %s retcode:%d numLines:%u inactive:%d", 
+                 tname.c_str(), c.retcode(), c.numLines(), inactiv );
     if( c.numLines()>0 )
 	{
 	string line = *c.getLine(0);
@@ -120,6 +125,14 @@ Dm::getTableInfo()
 	}
     }
 
+bool Dm::removeTable()
+    {
+    SystemCmd c( "dmsetup remove " + tname );
+    bool ret = c.retcode()==0;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 string Dm::getDevice( const string& majmin )
     {
     string ret = cont->getStorage()->deviceByNumber( majmin );
@@ -139,11 +152,19 @@ string Dm::getDevice( const string& majmin )
 		c.execute( "devmap_name " + pair );
 		if( c.retcode()==0 && c.numLines()>0 )
 		    {
-		    c.execute( "dmsetup table \"" + *c.getLine(0) + "\"" );
-		    if( c.retcode()==0 && c.numLines()>0 )
+		    string tmp = "/dev/"+*c.getLine(0);
+		    if( cont->getStorage()->knownDevice( tmp, true ) )
 			{
-			pair = extractNthWord( 3, *c.getLine(0) );
-			ret = cont->getStorage()->deviceByNumber( pair );
+			ret = tmp;
+			}
+		    else
+			{
+			c.execute( "dmsetup table \"" + *c.getLine(0) + "\"" );
+			if( c.retcode()==0 && c.numLines()>0 )
+			    {
+			    pair = extractNthWord( 3, *c.getLine(0) );
+			    ret = cont->getStorage()->deviceByNumber( pair );
+			    }
 			}
 		    }
 		}
@@ -160,7 +181,7 @@ string Dm::getDevice( const string& majmin )
     return( ret );
     }
 
-unsigned long 
+unsigned long long
 Dm::usingPe( const string& dev ) const
     {
     unsigned long ret = 0;
@@ -179,14 +200,14 @@ Dm::checkConsistency() const
          mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
     if( sum != num_le )
-	y2warning( "lv:%s sum:%lu num:%lu", dev.c_str(), sum, num_le );
+	y2warning( "lv:%s sum:%lu num:%llu", dev.c_str(), sum, num_le );
     else
 	ret = true;
     return( ret );
     }
 
 void
-Dm::setLe( unsigned long le )
+Dm::setLe( unsigned long long le )
     {
     num_le = le;
     }
@@ -201,7 +222,7 @@ void Dm::init()
 	}
     else
 	alt_names.push_back( dmn );
-    alt_names.push_back( "/dev/"+tname );
+    //alt_names.push_back( "/dev/"+tname );
     getMajorMinor( dev, mjr, mnr );
     if( majorNr()>0 )
 	{
@@ -215,6 +236,15 @@ void Dm::init()
 const PeContainer* const Dm::pec() const
     { 
     return(dynamic_cast<const PeContainer* const>(cont));
+    }
+
+void Dm::modifyPeSize( unsigned long long old, unsigned long long neww )
+    {
+    num_le = num_le * old / neww;
+    calcSize();
+    for( map<string,unsigned long>::iterator mit=pe_map.begin();
+         mit!=pe_map.end(); ++mit )
+	 mit->second = mit->second * old / neww;
     }
 	        
 void Dm::calcSize()
@@ -340,6 +370,10 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     s << p.shortPrintedName() << " ";
     s << *(Volume*)&p;
     s << " LE:" << p.num_le;
+    if( p.inactiv>1 )
+      {
+      s << " inactive";
+      }
     if( p.stripe>1 )
       {
       s << " Stripes:" << p.stripe;
@@ -356,7 +390,7 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
 bool Dm::equalContent( const Dm& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
-            num_le==rhs.num_le && stripe==rhs.stripe && 
+            num_le==rhs.num_le && stripe==rhs.stripe && inactiv==rhs.inactiv &&
             stripe_size==rhs.stripe_size && pe_map==rhs.pe_map );
     }
 
@@ -392,6 +426,7 @@ Dm& Dm::operator= ( const Dm& rhs )
     num_le = rhs.num_le;
     stripe = rhs.stripe;
     stripe_size = rhs.stripe_size;
+    inactiv = rhs.inactiv;
     pe_map = rhs.pe_map;
     return( *this );
     }

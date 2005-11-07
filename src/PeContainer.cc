@@ -25,28 +25,57 @@ PeContainer::~PeContainer()
     y2milestone( "destructed pe container %s", dev.c_str() );
     }
 
+void PeContainer::unuseDev()
+    {
+    for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
+	getStorage()->setUsedBy( s->device, UB_NONE, "" );
+    for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+	getStorage()->setUsedBy( s->device, UB_NONE, "" );
+    }
+
 int
 PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     {
     int ret = 0;
     y2milestone( "peSize:%llu", peSizeK );
-    
-    if( lvm1 )
+
+    if( pe_size!=peSizeK )
 	{
-	if( peSizeK<8 || peSizeK>16*1024*1024 )
-	    ret = PEC_PE_SIZE_INVALID;
-	}
-    if( ret==0 )
-	{
-	unsigned long long sz = peSizeK;
-	while( sz>1 && sz%2==0 )
-	    sz /= 2;
-	if( sz!=1 )
-	    ret = PEC_PE_SIZE_INVALID;
-	}
-    if( ret==0 )
-	{
-	pe_size = peSizeK;
+	if( lvm1 )
+	    {
+	    if( peSizeK<8 || peSizeK>16*1024*1024 )
+		ret = PEC_PE_SIZE_INVALID;
+	    }
+	if( ret==0 )
+	    {
+	    unsigned long long sz = peSizeK;
+	    while( sz>1 && sz%2==0 )
+		sz /= 2;
+	    if( sz!=1 )
+		ret = PEC_PE_SIZE_INVALID;
+	    }
+	if( ret==0 )
+	    {
+	    num_pe = num_pe * pe_size / peSizeK;
+	    free_pe = free_pe * pe_size / peSizeK;
+	    list<Pv>::iterator p;
+	    for( p=pv.begin(); p!=pv.end(); ++p )
+		{
+		p->num_pe = p->num_pe * pe_size / peSizeK;
+		p->free_pe = p->free_pe * pe_size / peSizeK;
+		}
+	    for( p=pv_add.begin(); p!=pv_add.end(); ++p )
+		{
+		p->num_pe = p->num_pe * pe_size / peSizeK;
+		p->free_pe = p->free_pe * pe_size / peSizeK;
+		}
+	    for( p=pv_remove.begin(); p!=pv_remove.end(); ++p )
+		{
+		p->num_pe = p->num_pe * pe_size / peSizeK;
+		p->free_pe = p->free_pe * pe_size / peSizeK;
+		}
+	    pe_size = peSizeK;
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -262,6 +291,8 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
     y2mil( "le:" << le << " pe_map:" << pe_map );
     list<Pv>::iterator p;
     map<string,unsigned long>::iterator mit = pe_map.begin();
+    y2mil( "pl:" << pl );
+    y2mil( "pladd:" << pladd );
     while( le>0 && ret==0 && mit != pe_map.end() )
 	{
 	if( (p=find( pl.begin(), pl.end(), mit->first))!=pl.end() ||

@@ -11,8 +11,8 @@ class EvmsCo;
 class Evms : public Dm
     {
     public:
-	Evms( const EvmsCo& d, const string& name, unsigned long le, unsigned stripe );
-	Evms( const EvmsCo& d, const string& name, unsigned long le, bool native );
+	Evms( const EvmsCo& d, const string& name, unsigned long long le, unsigned stripe );
+	Evms( const EvmsCo& d, const string& name, unsigned long long le, bool native );
 	Evms( const EvmsCo& d, const Evms& d );
 
 	virtual ~Evms();

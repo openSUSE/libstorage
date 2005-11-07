@@ -70,6 +70,15 @@ EvmsCo::~EvmsCo()
     y2milestone( "destructed evms co %s", dev.c_str() );
     }
 
+bool
+EvmsCo::checkConsistency() const
+    { 
+    bool ret = true;
+    if( !nm.empty() )
+	ret = PeContainer::checkConsistency();
+    return( ret );
+    }
+
 static bool lvDeleted( const Evms& l ) { return( l.deleted() ); }
 static bool lvCreated( const Evms& l ) { return( l.created() ); }
 static bool lvResized( const Evms& l ) { return( l.extendSize()!=0 ); }
@@ -92,10 +101,60 @@ EvmsCo::removeCo()
 	}
     if( ret==0 )
 	{
-	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
-	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
-	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
-	    getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	unuseDev();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+EvmsCo::modifyCo( const string& name, long long unsigned peSizeK, bool lv1 )
+    {
+    int ret = 0;
+    y2milestone( "old name:%s new name:%s pesize:%llu lvm1:%d", nm.c_str(), 
+                 name.c_str(), peSizeK, lv1 );
+    if( created() )
+	{
+	string old_nm(nm);
+	if( lv1 )
+	    nm = "lvm/" + name;
+	else
+	    nm = "lvm2/" + name;
+	dev = "evms/" + nm;
+	normalizeDevice(dev);
+	lvm1 = lv1;
+	if( old_nm != nm )
+	    {
+	    for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+		setUsed( s->device, UB_EVMS, nm );
+	    }
+	ret = setPeSize( peSizeK );
+	}
+    else
+	ret = EVMS_CONTAINER_NOT_CREATED;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
+EvmsCo::setPeSize( long long unsigned peSizeK )
+    {
+    int ret = 0;
+    y2milestone( "old:%llu new:%llu", pe_size, peSizeK );
+    if( peSizeK != pe_size )
+	{
+	unsigned long long old_pe = pe_size;
+	ret = PeContainer::setPeSize( peSizeK, lvm1 );
+	if( ret==0 )
+	    {
+	    EvmsPair p=evmsPair();
+	    EvmsIter i=p.begin();
+	    while( i!=p.end() )
+		{
+		i->modifyPeSize( old_pe, peSizeK );
+		++i;
+		}
+	    }
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -153,9 +212,7 @@ EvmsCo::extendCo( const list<string>& devs )
 	    pv.push_back( *p );
 	    pe = p->num_pe;
 	    pv_remove.erase( p );
-	    getStorage()->setUsedBy( d, UB_EVMS, name() );
-	    d = "/dev/evms/"+dev.substr(5);
-	    getStorage()->setUsedBy( d, UB_EVMS, name() );
+	    setUsed( d, UB_EVMS, name() );
 	    }
 	else
 	    {
@@ -165,11 +222,7 @@ EvmsCo::extendCo( const list<string>& devs )
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
-	    getStorage()->changeFormatVolume( d, false, FSNONE );
-	    getStorage()->setUsedBy( d, UB_EVMS, name() );
-	    d = "/dev/evms/"+dev.substr(5);
-	    getStorage()->changeFormatVolume( d, false, FSNONE );
-	    getStorage()->setUsedBy( d, UB_EVMS, name() );
+	    setUsed( d, UB_EVMS, name() );
 	    }
 	free_pe += pe;
 	num_pe += pe;
@@ -181,6 +234,23 @@ EvmsCo::extendCo( const list<string>& devs )
 	checkConsistency();
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void 
+EvmsCo::setUsed( const string& device, storage::UsedByType typ,
+                 const string& name )
+    {
+    string d = normalizeDevice(device);
+    getStorage()->setUsedBy( d, typ, name );
+    if( typ!=UB_NONE )
+	getStorage()->changeFormatVolume( d, false, FSNONE );
+    d = "/dev/evms/"+d.substr(5);
+    if( getStorage()->knownDevice( d ))
+	{
+	getStorage()->setUsedBy( d, typ, name );
+	if( typ!=UB_NONE )
+	    getStorage()->changeFormatVolume( d, false, FSNONE );
+	}
     }
 
 int
@@ -212,6 +282,7 @@ EvmsCo::reduceCo( const list<string>& devs )
 	{
 	string d = normalizeDevice( *i );
 	ret = tryUnusePe( d, pl, pladd, plrem, rem_pe );
+	setUsed( d, UB_NONE, "" );
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
@@ -565,11 +636,7 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
 		    data.objects.find( v->second.uses );
 		if( oi!=data.objects.end() )
 		    {
-		    string s = normalizeDevice(oi->second.name);
-		    getStorage()->setUsedBy( s, UB_EVMS, v->second.name );
-		    s = undevDevice(unEvmsDevice(s));
-		    s = "/dev/evms/" + s;
-		    getStorage()->setUsedBy( s, UB_EVMS, v->second.name );
+		    setUsed( oi->second.name, UB_EVMS, v->second.name );
 		    }
 		}
 	    }
@@ -612,6 +679,12 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
 	}
     }
 
+void EvmsCo::addVolume( Evms* v )
+    {
+    y2mil( "v:" << *v );
+    addToList( v );
+    }
+
 string EvmsCo::unEvmsDevice( const string& dev )
     {
     string ret( dev );
@@ -626,14 +699,10 @@ void EvmsCo::addPv( const Pv* p )
     if( !deleted() && 
         find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
 	{
-	string dev = unEvmsDevice( p->device );
-	UsedByType t = getStorage()->usedBy( dev );
+	string d = unEvmsDevice( p->device );
+	UsedByType t = getStorage()->usedBy( d );
 	if( t==UB_EVMS || t==UB_NONE )
-	    getStorage()->setUsedBy( dev, UB_EVMS, name() );
-	dev = "/dev/evms/"+dev.substr(5);
-	t = getStorage()->usedBy( dev );
-	if( t==UB_EVMS || t==UB_NONE )
-	    getStorage()->setUsedBy( dev, UB_EVMS, name() );
+	    setUsed( d, UB_EVMS, name() );
 	}
     }
 
@@ -803,7 +872,7 @@ EvmsCo::reduceCoText( bool doing, const string& dev ) const
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
 	// %2$s is replaced by a device name (e.g. /dev/hda1)
-        txt = sformat( _("Reduce container %1$s with %2$s"), name().c_str(),
+        txt = sformat( _("Reduce container %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
@@ -979,6 +1048,16 @@ void EvmsCo::activate( bool val )
 	}
     }
 
+int EvmsCo::activateDevices()
+    {
+    int ret = executeCmd( "activate" );
+    y2milestone( "cmd ret:%d", ret );
+    if( ret!=0 )
+	ret = EVMS_ACTIVATE_FAILED;
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 bool EvmsCo::sendCommand( const string& cmd, bool one_line, list<string>& lines )
     {
     y2milestone( "cmd:%s fd:%d", cmd.c_str(), sockfd );
@@ -1093,6 +1172,7 @@ void EvmsCo::getEvmsList( EvmsTree& data )
 	{
 	if( i->find( "CNT " )==0 )
 	    {
+	    y2milestone( "container %s", (*i).c_str() );
 	    EvmsCont obj;
 	    map<string,string> m = makeMap( splitString( i->substr(4) ), ":" );
 	    map<string,string>::const_iterator mi = m.find( "size" );
@@ -1329,7 +1409,7 @@ EvmsCo::doCreate( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
-	if( !silent )
+	if( !silent && !v->silent() )
 	    {
 	    getStorage()->showInfoCb( l->createText(true) );
 	    }
@@ -1365,16 +1445,20 @@ int EvmsCo::doRemove( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
-	if( !silent )
+	if( !silent && !v->silent() )
 	    {
 	    getStorage()->showInfoCb( l->removeText(true) );
 	    }
 	checkConsistency();
 	ret = v->prepareRemove();
-	if( ret==0 )
+	if( ret==0 && !nm.empty() )
 	    {
 	    string cmd = "delete_lv " + name() + " " + l->name();
 	    ret = executeCmd( cmd );
+	    }
+	else
+	    {
+	    l->removeTable();
 	    }
 	if( ret==0 )
 	    {
@@ -1521,6 +1605,7 @@ void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
     info.create = created();
     info.uuid = uuid;
     info.realContainer = !nm.empty();
+    info.devices.clear();
     list<Pv>::const_iterator i=pv.begin();
     while( i!=pv.end() )
 	{
