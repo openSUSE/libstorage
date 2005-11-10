@@ -675,7 +675,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	else
 	    {
 	    ret = i->createPartition( type, start, size, device, true );
-	    if( ret==0 && haveEvms() )
+	    if( ret==0 && type!=EXTENDED && haveEvms() )
 		{
 		handleEvmsCreateDevice( device );
 		}
@@ -721,7 +721,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 		tmp_start = 0;
 	    unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
 	    ret = i->createPartition( type, start_cyl, num_cyl, device, true );
-	    if( ret==0 && haveEvms() )
+	    if( ret==0 && type!=EXTENDED && haveEvms() )
 		{
 		handleEvmsCreateDevice( device );
 		}
@@ -2854,6 +2854,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	list<Container*>::iterator cli;
 	bool disks_unused = false;
 	bool evms_activate = false;
+	bool evms_activate_done = false;
 	while( ret==0 && vli != vlist.end() )
 	    {
 	    Container *co = const_cast<Container*>((*vli)->getContainer());
@@ -2876,6 +2877,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		if( evms_activate && cot->type()==EVMS )
 		    {
 		    EvmsCo::activateDevices();
+		    evms_activate_done = true;
 		    }
 		ret = cot->commitChanges( *pt );
 		tcli = colist.erase( tcli );
@@ -2890,6 +2892,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		if( evms_activate && co->type()==EVMS )
 		    {
 		    EvmsCo::activateDevices();
+		    evms_activate_done = true;
 		    }
 		ret = co->commitChanges( *pt );
 		colist.erase( cli );
@@ -2910,6 +2913,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		if( evms_activate && co->type()==EVMS )
 		    {
 		    EvmsCo::activateDevices();
+		    evms_activate_done = true;
 		    }
 		ret = co->commitChanges( *pt, *vli );
 		++vli;
@@ -2922,9 +2926,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    }
 	if( ret==0 && !colist.empty() )
 	    ret = performContChanges( *pt, colist, evms_activate, 
-	                              cont_removed );
+	                              evms_activate_done, cont_removed );
 	if( cont_removed )
 	    p = cPair( fnc );
+	if( evms_activate && !evms_activate_done && haveEvms() )
+	    {
+	    EvmsCo::activateDevices();
+	    evms_activate_done = true;
+	    }
 	pt++;
 	}
     y2milestone( "ret:%d", ret );
@@ -2933,7 +2942,8 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 
 int
 Storage::performContChanges( CommitStage stage, const list<Container*>& co,
-                             bool activate_evms, bool& cont_removed )
+                             bool activate_evms, bool& evms_activate_done,
+			     bool& cont_removed )
     {
     y2milestone( "stage:%d list size:%zu activate_evms:%d", stage, co.size(), 
                  activate_evms );
@@ -2948,7 +2958,10 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
 	    (co->type()==LVM||co->type()==EVMS) )
 	    cont_remove.push_back( co );
 	if( stage==INCREASE && activate_evms && co->type()==EVMS )
+	    {
 	    EvmsCo::activateDevices();
+	    evms_activate_done = true;
+	    }
 	ret = co->commitChanges( stage );
 	y2mil( "container after commit" << *co );
 	++cli;
@@ -3340,6 +3353,35 @@ void Storage::handleEvmsRemoveDevice( const string& d, bool rename )
     if( findContainer( "/dev/evms", c ))
 	{
 	VolIterator v;
+	if( findVolume( d, v, true ) )
+	    {
+	    Partition* p = dynamic_cast<Partition *>(&(*v));
+	    if( p && p->type()==EXTENDED )
+		{
+		string dname = p->disk()->name();
+		DiskIterator d = findDisk( dname );
+		if( d!=dEnd() )
+		    {
+		    Disk::PartPair dp = d->partPair();
+		    Disk::PartIter pi = dp.begin();
+		    while( pi!=dp.end() )
+			{
+			if( pi->type()==LOGICAL )
+			    {
+			    string dev = "/dev/evms/" + pi->name();
+			    y2mil( "evms new dev:" << dev );
+			    VolIterator vv;
+			    if( findVolume( dev, vv ))
+				{
+				vv->setDeleted();
+				vv->setSilent();
+				}
+			    }
+			++pi;
+			}
+		    }
+		}
+	    }
 	string dev = "/dev/evms/" + undevDevice(d);
 	if( findVolume( dev, v ))
 	    {
@@ -3440,7 +3482,7 @@ bool Storage::findContainer( const string& device, ContIterator& c )
     return( c!=cp.end() );
     }
 
-bool Storage::findVolume( const string& device, VolIterator& v )
+bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
     {
     assertInit();
     string label;
@@ -3454,7 +3496,7 @@ bool Storage::findVolume( const string& device, VolIterator& v )
 	d = normalizeDevice( device );
     if( !label.empty() || !uuid.empty() )
 	y2milestone( "label:%s uuid:%s", label.c_str(), uuid.c_str() );
-    VPair p = vPair( Volume::notDeleted );
+    VPair p = vPair( also_del?NULL:Volume::notDeleted );
     v = p.begin();
     if( label.empty() && uuid.empty() )
 	{

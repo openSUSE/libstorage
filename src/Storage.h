@@ -1220,7 +1220,8 @@ class Storage : public storage::StorageInterface
 	EvmsCoIterator findEvmsCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c, 
 	                 VolIterator& v  );
-	bool findVolume( const string& device, VolIterator& v  );
+	bool findVolume( const string& device, VolIterator& v, 
+	                 bool also_del=false );
 	bool findContainer( const string& device, ContIterator& c );
 
 	bool haveMd( MdCo*& md );
@@ -1237,7 +1238,8 @@ class Storage : public storage::StorageInterface
 			      std::list<Volume*>& vl );
 	int performContChanges( storage::CommitStage stage, 
 	                        const std::list<Container*>& co,
-	                        bool activate_evms, bool& cont_removed );
+	                        bool activate_evms, bool& activate_evms_done,
+				bool& cont_removed );
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );
