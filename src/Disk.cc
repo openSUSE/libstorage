@@ -1563,6 +1563,7 @@ int Disk::doCreateLabel()
 	}
     if( ret==0 )
 	{
+	getStorage()->waitForDevice();
 	redetectGeometry();
 	}
     y2milestone( "ret:%d", ret );
@@ -1696,7 +1697,10 @@ int Disk::doSetType( Volume* v )
 		}
 	    }
 	if( ret==0 )
+	    {
+	    getStorage()->waitForDevice( device() );
 	    p->changeIdDone();
+	}
 	}
     else
 	{
@@ -1900,6 +1904,8 @@ int Disk::doCreate( Volume* v )
 	    {
 	    if( p->type()!=EXTENDED )
 		getStorage()->waitForDevice( p->device() );
+	    else
+		getStorage()->waitForDevice();
 	    if( p->type()==LOGICAL && getStorage()->instsys() )
 		{
 		// kludge to make the extended partition visible in 
@@ -1932,6 +1938,8 @@ int Disk::doCreate( Volume* v )
 	if( call_blockdev )
 	    {
 	    SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
+	    if( p->type()!=EXTENDED )
+		getStorage()->waitForDevice( device() );
 	    }
 	}
     else
@@ -1976,6 +1984,8 @@ int Disk::doRemove( Volume* v )
 	    if( p.empty() )
 		redetectGeometry();
 	    }
+	if( ret==0 )
+	    getStorage()->waitForDevice();
 	}
     else
 	{
@@ -2116,6 +2126,8 @@ int Disk::doResize( Volume* v )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
+	    if( ret==0 )
+		getStorage()->waitForDevice( device() );
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )

@@ -318,6 +318,7 @@ class Storage : public storage::StorageInterface
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );
+	int waitForDevice() const;
 	int waitForDevice( const string& device ) const;
 	void getDiskList( bool (* CheckFnc)( const Disk& ), 
 	                  std::list<Disk*>& dl );

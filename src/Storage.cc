@@ -2501,8 +2501,6 @@ int Storage::changeMdChunk( const string& name, unsigned long chunk )
     return( ret );
     }
 
-	        int changeMdParity( const string& name, storage::MdParity ptype );
-
 int Storage::changeMdParity( const string& name, MdParity ptype )
     {
     int ret = 0;
@@ -4297,12 +4295,25 @@ void Storage::setExtError( const string& txt )
     extendedError = txt;
     }
 
+int Storage::waitForDevice() const
+    {
+    int ret = 0;
+    char * prog = "/usr/bin/udev.count_events"; 
+    if( access( prog, X_OK )==0 )
+	{
+	y2milestone( "calling prog:%s", prog );
+	SystemCmd c( prog );
+	y2milestone( "returned prog:%s retcode:%d", prog, c.retcode() );
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
 int Storage::waitForDevice( const string& device ) const
     {
     int ret = 0;
-    struct stat sbuf;
-    bool exist = stat( device.c_str(), &sbuf )==0;
-    char * prog = "/usr/bin/udev.count_events"; 
+    waitForDevice();
+    bool exist = access( device.c_str(), R_OK )==0;
     y2milestone( "device:%s exist:%d", device.c_str(), exist );
     if( !exist )
 	{
@@ -4317,12 +4328,6 @@ int Storage::waitForDevice( const string& device ) const
 	}
     if( !exist )
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
-    if( exist && access( prog, X_OK )==0 )
-	{
-	y2milestone( "calling prog:%s", prog );
-	SystemCmd c( prog );
-	y2milestone( "returned prog:%s retcode:%d", prog, c.retcode() );
-	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }
