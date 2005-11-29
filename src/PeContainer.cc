@@ -2,11 +2,10 @@
   Textdomain    "storage"
 */
 
-#include <iostream> 
-#include <sstream> 
+#include <iostream>
+#include <sstream>
 
 #include "y2storage/PeContainer.h"
-#include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 
@@ -82,7 +81,7 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     }
 
 int
-PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd, 
+PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 		         list<Pv>& plrem, unsigned long& removed_pe )
     {
     int ret = 0;
@@ -117,7 +116,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 		}
 	    ++i;
 	    }
-	list<Dm*>::iterator lii=li.begin(); 
+	list<Dm*>::iterator lii=li.begin();
 	if( ret==0 )
 	    {
 	    while( ret==0 && lii!=li.end() )
@@ -133,7 +132,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 		pladd.erase( cur );
 	    else
 		pl.erase( cur );
-	    lii=li.begin(); 
+	    lii=li.begin();
 	    while( ret==0 && lii!=li.end() )
 		{
 		map<string,unsigned long> pe_map;
@@ -165,13 +164,13 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	if( !added_pv )
 	    plrem.push_back( cur_pv );
 	}
-    y2milestone( "ret:%d removed_pe:%lu dev:%s", ret, removed_pe, 
+    y2milestone( "ret:%d removed_pe:%lu dev:%s", ret, removed_pe,
                  cur_pv.device.c_str() );
     return( ret );
     }
 
 int
-PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& pl, 
+PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& pl,
 				  list<Pv>& pladd, map<string,unsigned long>& pe_map )
     {
     int ret=0;
@@ -180,7 +179,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
     list<Pv>::iterator i;
     if( stripe>1 )
 	{
-	// this is only a very rough estimate if the creation of the striped 
+	// this is only a very rough estimate if the creation of the striped
 	// lv may be possible, no sense in emulating LVM allocation strategy
 	// here
 	unsigned long per_stripe = (le+stripe-1)/stripe;
@@ -284,7 +283,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
     }
 
 int
-PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map, 
+PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
 				  list<Pv>& pl, list<Pv>& pladd )
     {
     int ret=0;
@@ -303,7 +302,7 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
 	    mit->second -= tmp;
 	    le -= tmp;
 	    }
-	else 
+	else
 	    ret = PEC_LV_PE_DEV_NOT_FOUND;
 	++mit;
 	}
@@ -327,7 +326,7 @@ void PeContainer::addPv( const Pv* p )
     }
 
 
-void 
+void
 PeContainer::init()
     {
     num_pe = free_pe = 0;
@@ -378,7 +377,7 @@ PeContainer::checkConsistency() const
 	    {
 	    if( mit->second != p->num_pe-p->free_pe )
 		{
-		y2warning( "Vg:%s used pv %s is %lu should be %lu", 
+		y2warning( "Vg:%s used pv %s is %lu should be %lu",
 		           name().c_str(), mit->first.c_str(),
 		           mit->second,  p->num_pe-p->free_pe );
 		ret = false;
@@ -499,9 +498,9 @@ string PeContainer::logDifference( const PeContainer& rhs ) const
 bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     {
     bool ret = Container::equalContent(rhs) &&
-	       pe_size==rhs.pe_size && num_pe==rhs.num_pe && 
+	       pe_size==rhs.pe_size && num_pe==rhs.num_pe &&
 	       free_pe==rhs.free_pe && pv==rhs.pv && pv_add==rhs.pv_add &&
-	       pv_remove==rhs.pv_remove; 
+	       pv_remove==rhs.pv_remove;
     if( ret )
 	{
 	list<Pv>::const_iterator i = rhs.pv.begin();
@@ -532,7 +531,7 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     if( ret && comp_vol )
 	{
 	CVIter i = rhs.begin();
-	CVIter j = begin();  
+	CVIter j = begin();
 	while( ret && i!=rhs.end() && j!=end() )
 	    ret = ret && ((Dm*)(&(*j)))->equalContent( *(Dm*)(&(*i)));
 	ret == ret && i==rhs.end() && j==end();
@@ -553,7 +552,7 @@ PeContainer& PeContainer::operator=( const PeContainer& rhs )
 
 PeContainer::PeContainer( const PeContainer& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed PeContainer by copy constructor from %s", 
+    y2milestone( "constructed PeContainer by copy constructor from %s",
                  rhs.nm.c_str() );
     *this = rhs;
     }

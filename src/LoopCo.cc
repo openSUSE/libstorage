@@ -2,12 +2,11 @@
   Textdomain    "storage"
 */
 
-#include <iostream> 
-#include <sstream> 
+#include <iostream>
+#include <sstream>
 
 #include "y2storage/LoopCo.h"
 #include "y2storage/Loop.h"
-#include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcFstab.h"
@@ -79,7 +78,7 @@ LoopCo::checkLoop( Loop* m )
 	}
     else
 	{
-	y2warning( "checkLoop does not exist %u", m->nr() ); 
+	y2warning( "checkLoop does not exist %u", m->nr() );
 	}
     delete m;
     }
@@ -118,12 +117,12 @@ LoopCo::findLoop( const string& file )
     return( findLoop( file, i ));
     }
 
-int 
+int
 LoopCo::createLoop( const string& file, bool reuseExisting,
                     unsigned long long sizeK, string& device )
     {
     int ret = 0;
-    y2milestone( "file:%s reuseEx:%d sizeK:%llu", file.c_str(), 
+    y2milestone( "file:%s reuseEx:%d sizeK:%llu", file.c_str(),
                  reuseExisting, sizeK );
     if( readonly() )
 	{
@@ -145,7 +144,7 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
     return( ret );
     }
 
-int 
+int
 LoopCo::removeLoop( const string& file, bool removeFile )
     {
     int ret = 0;
@@ -194,8 +193,8 @@ int LoopCo::removeVolume( Volume* v )
     return( ret );
     }
 
-int 
-LoopCo::doCreate( Volume* v ) 
+int
+LoopCo::doCreate( Volume* v )
     {
     y2milestone( "name:%s", v->name().c_str() );
     Loop * l = dynamic_cast<Loop *>(v);
@@ -223,7 +222,7 @@ LoopCo::doCreate( Volume* v )
     return( ret );
     }
 
-int 
+int
 LoopCo::doRemove( Volume* v )
     {
     y2milestone( "name:%s", v->name().c_str() );
@@ -273,7 +272,7 @@ void LoopCo::logDifference( const LoopCo& d ) const
 	{
 	ConstLoopPair pc=d.loopPair();
 	ConstLoopIter j = pc.begin();
-	while( j!=pc.end() && 
+	while( j!=pc.end() &&
 	       (i->device()!=j->device() || i->created()!=j->created()) )
 	    ++j;
 	if( j!=pc.end() )
@@ -291,7 +290,7 @@ void LoopCo::logDifference( const LoopCo& d ) const
 	{
 	ConstLoopPair pc=loopPair();
 	ConstLoopIter j = pc.begin();
-	while( j!=pc.end() && 
+	while( j!=pc.end() &&
 	       (i->device()!=j->device() || i->created()!=j->created()) )
 	    ++j;
 	if( j==pc.end() )
@@ -309,7 +308,7 @@ bool LoopCo::equalContent( const LoopCo& rhs ) const
 	ConstLoopPair pc = rhs.loopPair();
 	ConstLoopIter i = p.begin();
 	ConstLoopIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() ) 
+	while( ret && i!=p.end() && j!=pc.end() )
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
