@@ -49,6 +49,7 @@ liby2storage_la_SOURCES =			\
 	ProcMounts.cc    ProcMounts.h        \
 	EtcFstab.cc      EtcFstab.h 	     \
 	AppUtil.cc       AppUtil.h           \
+	UDev.cc          UDev.h		     \
 	FilterIterator.h ListListIterator.h  \
 	DerefIterator.h  IterPair.h          \
 	Region.h         StorageTypes.h	     \
