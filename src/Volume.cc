@@ -394,7 +394,7 @@ int Volume::changeMount( const string& m )
     if( (!m.empty() && m[0]!='/' && m!="swap") ||
 	m.find_first_of( " \t\n" ) != string::npos )
 	{
-	ret = VOLUME_MOUNT_POINT_INAVLID;
+	ret = VOLUME_MOUNT_POINT_INVALID;
 	}
     else if( uby.t != UB_NONE )
 	{
