@@ -101,6 +101,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     yesno_popup_cb = NULL;
     recursiveRemove = false;
     zeroNewPartitions = false;
+    defaultMountBy = MOUNTBY_DEVICE;
     detectMounted = true;
     }
 
@@ -382,7 +383,7 @@ Storage::detectEvms()
 	    {
 	    EvmsCo * e = new EvmsCo( this, data );
 	    addToList( e );
-	    for( list<EvmsCont>::const_iterator i=data.cont.begin(); 
+	    for( list<EvmsCont>::const_iterator i=data.cont.begin();
 	         i!=data.cont.end(); ++i )
 		{
 		EvmsCo * e = new EvmsCo( this, *i, data );
@@ -452,7 +453,7 @@ Storage::autodetectDisks()
 		    dn[pos] = '/';
 		    pos = dn.find('!',pos);
 		    }
-		y2milestone( "autodetectDisks disk sysfs:%s parted:%s", 
+		y2milestone( "autodetectDisks disk sysfs:%s parted:%s",
 		             Entry->d_name, dn.c_str() );
 		Disk * d = NULL;
 		if( dn.find( "dasd" )==0 )
@@ -614,6 +615,12 @@ void Storage::setZeroNewPartitions( bool val )
     {
     y2milestone( "val:%d", val );
     zeroNewPartitions = val;
+    }
+
+void Storage::setDefaultMountBy( MountByType val )
+    {
+    y2milestone( "val:%d", val );
+    defaultMountBy = val;
     }
 
 void Storage::setRootPrefix( const string& root )
@@ -877,11 +884,11 @@ Storage::removePartition( const string& partition )
 		    ret = disk->removePartition( vol->nr() );
 		if( ret==0 && cont->type()==DISK && haveEvms() )
 		    {
-		    handleEvmsRemoveDevice( vol->device(), 
+		    handleEvmsRemoveDevice( vol->device(),
 		                            disk->isLogical(vol->nr()) );
 		    }
 		}
-	    else 
+	    else
 		ret = STORAGE_REMOVE_USED_VOLUME;
 	    }
 	else
@@ -902,12 +909,12 @@ Storage::removePartition( const string& partition )
     }
 
 int
-Storage::updatePartitionArea( const string& partition, unsigned long start, 
+Storage::updatePartitionArea( const string& partition, unsigned long start,
                               unsigned long size )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "partition:%s start:%ld size:%ld", partition.c_str(), 
+    y2milestone( "partition:%s start:%ld size:%ld", partition.c_str(),
                  start, size );
     VolIterator vol;
     ContIterator cont;
@@ -1913,7 +1920,7 @@ Storage::removeLvmLv( const string& vg, const string& name )
     }
 
 int
-Storage::changeLvStripeSize( const string& vg, const string& name, 
+Storage::changeLvStripeSize( const string& vg, const string& name,
 			     unsigned long long stripeSize )
     {
     int ret = 0;
@@ -2021,7 +2028,7 @@ Storage::modifyEvmsContainer( const string& old_name, const string& new_name,
     {
     int ret = 0;
     assertInit();
-    y2mil( "old name:" << old_name << " new name:" << new_name << 
+    y2mil( "old name:" << old_name << " new name:" << new_name <<
            " peSizeK:" << peSizeK << " lvm1:" << lvm1 );
     EvmsCoIterator i = findEvmsCo( old_name );
     if( readonly )
@@ -2261,7 +2268,7 @@ Storage::createMd( const string& name, MdType rtype,
     {
     int ret = 0;
     assertInit();
-    y2mil( "name:" << name << " MdType:" << Md::pName(rtype) << 
+    y2mil( "name:" << name << " MdType:" << Md::pName(rtype) <<
            " devices:" << devs );
     unsigned num = 0;
     if( readonly )
@@ -2558,7 +2565,7 @@ bool Storage::haveMd( MdCo*& md )
     return( i != p.end() );
     }
 
-int 
+int
 Storage::createFileLoop( const string& lname, bool reuseExisting,
                          unsigned long long sizeK, const string& mp,
 			 const string& pwd, string& device )
@@ -2626,7 +2633,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
     return( ret );
     }
 
-int 
+int
 Storage::removeFileLoop( const string& lname, bool removeFile )
     {
     int ret = 0;
@@ -2825,7 +2832,7 @@ int Storage::commit()
     return( ret );
     }
 
-int  
+int
 Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     {
     int ret = 0;
@@ -2861,7 +2868,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    while( ret==0 && cli!=colist.end() && tcli!=cli )
 		{
 		Container *cot = *tcli;
-		if( instsys() && !disks_unused && *pt==DECREASE && 
+		if( instsys() && !disks_unused && *pt==DECREASE &&
 		    cot->type()==DISK )
 		    {
 		    activateHld( false );
@@ -2897,7 +2904,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    while( ret==0 && vli != vlist.end() && co==(*vli)->getContainer() )
 		{
-		if( instsys() && !disks_unused && *pt==DECREASE && 
+		if( instsys() && !disks_unused && *pt==DECREASE &&
 		    co->type()==DISK )
 		    {
 		    activateHld( false );
@@ -2923,7 +2930,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    }
 	if( ret==0 && !colist.empty() )
-	    ret = performContChanges( *pt, colist, evms_activate, 
+	    ret = performContChanges( *pt, colist, evms_activate,
 	                              evms_activate_done, cont_removed );
 	if( cont_removed )
 	    p = cPair( fnc );
@@ -2943,7 +2950,7 @@ Storage::performContChanges( CommitStage stage, const list<Container*>& co,
                              bool activate_evms, bool& evms_activate_done,
 			     bool& cont_removed )
     {
-    y2milestone( "stage:%d list size:%zu activate_evms:%d", stage, co.size(), 
+    y2milestone( "stage:%d list size:%zu activate_evms:%d", stage, co.size(),
                  activate_evms );
     int ret = 0;
     cont_removed = false;
@@ -2993,10 +3000,10 @@ Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
 	}
     }
 
-static bool showContainers( const Container& c ) 
+static bool showContainers( const Container& c )
     { return( !c.deleted()||c.type()==DISK ); }
 
-void 
+void
 Storage::getContainers( deque<ContainerInfo>& infos )
     {
     infos.clear ();
@@ -3009,7 +3016,7 @@ Storage::getContainers( deque<ContainerInfo>& infos )
 	}
     }
 
-void 
+void
 Storage::getVolumes( deque<VolumeInfo>& infos )
     {
     infos.clear ();
@@ -3022,7 +3029,7 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 	}
     }
 
-int 
+int
 Storage::getVolume( const string& device, VolumeInfo& info )
     {
     int ret = 0;
@@ -3052,7 +3059,7 @@ int Storage::getDiskInfo( const string& disk, DiskInfo& info )
     return( ret );
     }
 
-int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo, 
+int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo,
 			      DiskInfo& info )
     {
     int ret = 0;
@@ -3068,7 +3075,7 @@ int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo,
     return( ret );
     }
 
-int Storage::getPartitionInfo( const string& disk, 
+int Storage::getPartitionInfo( const string& disk,
 			       deque<storage::PartitionInfo>& plist )
     {
     int ret = 0;
@@ -3120,7 +3127,7 @@ int Storage::getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
     return( ret );
     }
 
-int Storage::getLvmLvInfo( const string& name, 
+int Storage::getLvmLvInfo( const string& name,
 			   deque<storage::LvmLvInfo>& plist )
     {
     int ret = 0;
@@ -3172,7 +3179,7 @@ int Storage::getContEvmsCoInfo( const string& name, ContainerInfo& cinfo,
     return( ret );
     }
 
-int Storage::getEvmsInfo( const string& name, 
+int Storage::getEvmsInfo( const string& name,
 			  deque<storage::EvmsInfo>& plist )
     {
     int ret = 0;
@@ -3642,7 +3649,7 @@ Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
 	name1 = "lvm/" + name1;
 	name2 = "lvm2/" + name2;
 	}
-    while( ret != p.end() && 
+    while( ret != p.end() &&
            (ret->deleted() || (ret->name()!=name1 && ret->name()!=name2)) )
 	++ret;
     return( ret );
@@ -3879,7 +3886,7 @@ Storage::mountDevice( const string& device, const string& mp )
     return( ret );
     }
 
-bool 
+bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     {
     bool ret = false;
@@ -3909,7 +3916,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 
 bool
 Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
-		      unsigned long long& df_free, 
+		      unsigned long long& df_free,
 		      unsigned long long& used, bool& win, bool use_cache )
     {
     bool ret = false;
@@ -3919,7 +3926,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if( use_cache && getFreeInfo( vol->device(), df_free, resize_free, 
+	if( use_cache && getFreeInfo( vol->device(), df_free, resize_free,
 	                              used, win ))
 	    {
 	    ret = true;
@@ -3964,13 +3971,13 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    SystemCmd c( "ntfsresize -f -i " + device );
 		    string fstr = " might resize at ";
 		    string::size_type pos;
-		    if( c.retcode()==0 && 
+		    if( c.retcode()==0 &&
 			(pos=c.getString()->find( fstr ))!=string::npos )
 			{
 			y2milestone( "pos %zd", pos );
 			pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
 			y2milestone( "pos %zd", pos );
-			string number = c.getString()->substr( pos, 
+			string number = c.getString()->substr( pos,
 							       c.getString()->find_first_not_of( "0123456789", pos ));
 			y2milestone( "number \"%s\"", number.c_str() );
 			unsigned long long t;
@@ -3984,7 +3991,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 			ret = false;
 		    }
 		win = false;
-		char * files[] = { "boot.ini", "msdos.sys", "io.sys", 
+		char * files[] = { "boot.ini", "msdos.sys", "io.sys",
 				   "config.sys", "MSDOS.SYS", "IO.SYS" };
 		string f;
 		unsigned i=0;
@@ -4012,7 +4019,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 	    }
 	}
     if( ret )
-	y2milestone( "resize_free:%llu df_free:%llu used:%llu", 
+	y2milestone( "resize_free:%llu df_free:%llu used:%llu",
 	             resize_free, df_free, used );
     y2milestone( "ret:%d win:%d", ret, win );
     return( ret );
@@ -4058,7 +4065,7 @@ Storage::eraseFreeInfo( const string& device )
 	freeInfo.erase(i);
     }
 
-int 
+int
 Storage::createBackupState( const string& name )
     {
     int ret = readonly?STORAGE_CHANGE_READONLY:0;
@@ -4158,7 +4165,7 @@ bool
 Storage::equalBackupStates( const string& lhs, const string& rhs,
                             bool verbose_log ) const
     {
-    y2milestone( "lhs:%s rhs:%s verbose:%d", lhs.c_str(), rhs.c_str(), 
+    y2milestone( "lhs:%s rhs:%s verbose:%d", lhs.c_str(), rhs.c_str(),
                  verbose_log );
     map<string,CCont>::const_iterator i;
     const CCont* l = NULL;
@@ -4230,7 +4237,7 @@ Storage::backupStates() const
     return( ret );
     }
 
-void 
+void
 Storage::activateHld( bool val )
     {
     y2milestone( "val:%d", val );
@@ -4254,7 +4261,7 @@ int Storage::addFstabEntry( const string& device, const string& mount,
     {
     int ret = readonly?STORAGE_CHANGE_READONLY:0;
     assertInit();
-    y2milestone( "device:%s mount:%s vfs:%s opts:%s freq:%u passno:%u", 
+    y2milestone( "device:%s mount:%s vfs:%s opts:%s freq:%u passno:%u",
                  device.c_str(), mount.c_str(), vfs.c_str(), options.c_str(),
 		 freq, passno );
     if( ret==0 && (device.empty()||mount.empty()||vfs.empty()))
@@ -4298,7 +4305,7 @@ void Storage::setExtError( const string& txt )
 int Storage::waitForDevice() const
     {
     int ret = 0;
-    char * prog = "/usr/bin/udev.count_events"; 
+    char * prog = "/usr/bin/udev.count_events";
     if( access( prog, X_OK )==0 )
 	{
 	y2milestone( "calling prog:%s", prog );

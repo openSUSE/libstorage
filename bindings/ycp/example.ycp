@@ -116,6 +116,15 @@
     }
 
 
+    void test9 ()
+    {
+	y2milestone ("test9");
+	integer mb1 = LibStorage::MOUNTBY_UUID ();
+	mb1= LibStorage::StorageInterface::getDefaultMountBy (o);
+	y2milestone ("mb1 = %1", mb1);
+    }
+
+
     LibStorage::initDefaultLogger ();
 
     o = LibStorage::createStorageInterface (true, false, true);
@@ -128,6 +137,7 @@
     test6 ();
     test7 ();
     test8 ();
+    test9 ();
 
     LibStorage::destroyStorageInterface (o);
 }

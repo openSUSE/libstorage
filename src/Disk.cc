@@ -49,6 +49,16 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	{
 	dev = extractNthWord( 1, line );
 	}
+    p_id.clear();
+    if( searchFile( file, "^DeviceId:", line ) )
+	{
+	p_id = extractNthWord( 1, line );
+	}
+    p_path.clear();
+    if( searchFile( file, "^DevicePath:", line ) )
+	{
+	p_path = extractNthWord( 1, line );
+	}
     mnr = mjr = 0;
     if( searchFile( file, "^Major:", line ) )
 	{
@@ -333,6 +343,8 @@ Disk::logData( const string& Dir )
     string fname( Dir + "/disk_" + name() + ".tmp" );
     ofstream file( fname.c_str() );
     file << "Device: " << dev << endl;
+    file << "DeviceId: " << "/dev/disk/by-id/" << pId() << endl;
+    file << "DevicePath: " << "/dev/disk/by-path/" << pPath() << endl;
     file << "Major: " << mjr << endl;
     file << "Minor: " << mnr << endl;
     file << "Range: " << range << endl;
@@ -1757,7 +1769,7 @@ Disk::getPartedValues( Partition *p )
     }
 
 bool
-Disk::getPartedSectors( Partition *p, unsigned long long& start, 
+Disk::getPartedSectors( Partition *p, unsigned long long& start,
                         unsigned long long& end )
     {
     bool ret = false;
@@ -1777,7 +1789,7 @@ Disk::getPartedSectors( Partition *p, unsigned long long& start,
 	    string dummy, s1, s2;
 	    std::istringstream data( *cmd.getLine(0) );
 	    data >> dummy >> s1 >> s2;
-	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(), 
+	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(),
 	                 s1.c_str(), s2.c_str() );
 	    start = end = 0;
 	    s1 >> start;
@@ -1789,7 +1801,7 @@ Disk::getPartedSectors( Partition *p, unsigned long long& start,
     return( ret );
     }
 
-static bool logicalCreated( const Partition& p ) 
+static bool logicalCreated( const Partition& p )
     { return( p.type()==LOGICAL && p.created() ); }
 
 int Disk::doCreate( Volume* v )
@@ -1873,7 +1885,7 @@ int Disk::doCreate( Volume* v )
 	    y2milestone( "max %lu", maxc );
 	    for( PartIter i=pp.begin(); i!=pp.end(); ++i )
 		{
-		if( i->cylStart()<maxc && i->cylStart()<end && 
+		if( i->cylStart()<maxc && i->cylStart()<end &&
 		    !i->cylEnd()>=p->cylStart() )
 		    maxc=i->cylStart();
 		}
@@ -1908,12 +1920,12 @@ int Disk::doCreate( Volume* v )
 		getStorage()->waitForDevice();
 	    if( p->type()==LOGICAL && getStorage()->instsys() )
 		{
-		// kludge to make the extended partition visible in 
+		// kludge to make the extended partition visible in
 		// /proc/partitions otherwise grub refuses to install if root
 		// filesystem is a logical partition
 		PartPair lc = partPair(logicalCreated);
 		call_blockdev = lc.length()<=1;
-		y2milestone( "logicalCreated:%d call_blockdev:%d", 
+		y2milestone( "logicalCreated:%d call_blockdev:%d",
 		             lc.length(), call_blockdev );
 		}
 	    p->setCreated( false );
@@ -2120,7 +2132,7 @@ int Disk::doResize( Volume* v )
 	    end_sect = start_sect + p->sizeK()*2 - 1;
 	    y2milestone( "end_sect %llu", end_sect );
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
-	             << " unit s resize " << p->nr() << " " 
+	             << " unit s resize " << p->nr() << " "
 	             << start_sect << " " << end_sect;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{

@@ -15,7 +15,7 @@ struct FstabChange;
 
 struct FstabEntry
     {
-    FstabEntry() { freq=passno=0; crypto=loop=noauto=false; 
+    FstabEntry() { freq=passno=0; crypto=loop=noauto=false;
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
     FstabEntry& operator=( const FstabChange& rhs );
     friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
@@ -39,8 +39,8 @@ struct FstabEntry
 
 inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
     {
-    s << "device:" << v.device 
-      << " dentry:" << v.dentry << " mount:" << v.mount 
+    s << "device:" << v.device
+      << " dentry:" << v.dentry << " mount:" << v.mount
       << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
     if( v.noauto )
@@ -92,8 +92,8 @@ inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
 
 inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
     {
-    s << "device:" << v.device 
-      << " dentry:" << v.dentry << " mount:" << v.mount 
+    s << "device:" << v.device
+      << " dentry:" << v.dentry << " mount:" << v.mount
       << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
     if( !v.loop_dev.empty() )
@@ -103,7 +103,7 @@ inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
     return( s );
     }
 
-class EtcFstab 
+class EtcFstab
     {
     public:
 	EtcFstab( const string& prefix = "", bool rootMounted=true );
@@ -112,6 +112,8 @@ class EtcFstab
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findUuidLabel( const string& uuid, const string& label,
 			    FstabEntry& entry ) const;
+	bool findIdPath( const string& id, const string& path,
+			 FstabEntry& entry ) const;
 	void setDevice( const FstabEntry& entry, const string& device );
 	int updateEntry( const string& dev, const string& mount,
 	                 const string& fs, const string& opts="defaults" );
@@ -121,9 +123,9 @@ class EtcFstab
 	int changeRootPrefix( const string& prfix );
 	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l );
 	void getEntries( std::list<FstabEntry>& l );
-	string addText( bool doing, bool crypto, const string&  mp );
-	string updateText( bool doing, bool crypto, const string&  mp );
-	string removeText( bool doing, bool crypto, const string&  mp );
+	string addText( bool doing, bool crypto, const string& mp );
+	string updateText( bool doing, bool crypto, const string& mp );
+	string removeText( bool doing, bool crypto, const string& mp );
 	int flush();
 
     protected:

@@ -84,7 +84,7 @@ namespace storage
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
-    enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL };
+    enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL, MOUNTBY_ID, MOUNTBY_PATH };
 
     enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD,
                        ENC_TWOFISH256_OLD, ENC_UNKNOWN };
@@ -152,6 +152,8 @@ namespace storage
 	unsigned volcnt;
 	string device;
 	string name;
+	string pId;
+	string pPath;
 	UsedByType usedBy;
 	string usedByName;
 	bool readonly;
@@ -192,7 +194,6 @@ namespace storage
 	string devices_rem;
 	};
 
-
     /**
      * Contains info about a EVMS Container
      */
@@ -230,6 +231,8 @@ namespace storage
 	string fstab_options;
 	string uuid;
 	string label;
+	string pId;
+	string pPath;
 	string mkfs_options;
 	string loop;
 	EncryptType encryption;
@@ -423,6 +426,7 @@ namespace storage
 	VOLUME_LOUNSETUP_FAILED = -3029,
 	VOLUME_DEVICE_NOT_PRESENT = -3030,
 	VOLUME_DEVICE_NOT_BLOCK = -3031,
+	VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME = -3032,
 
 	LVM_CREATE_PV_FAILED = -4000,
 	LVM_PV_ALREADY_CONTAINED = -4001,
@@ -848,7 +852,6 @@ namespace storage
 	 */
 	virtual int removePartition (const string& partition) = 0;
 
-
 	/**
 	 * Change partition id of a partition
 	 *
@@ -857,6 +860,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
+
 	/**
 	 * Forget previouly issued change of partition id
 	 *
@@ -876,8 +880,8 @@ namespace storage
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
 	/**
-	 * Do a what is needed for low level initialisation of a Disk. 
-	 * This function does nothing on normal disks but is needed e.g. on S390 
+	 * Do a what is needed for low level initialisation of a Disk.
+	 * This function does nothing on normal disks but is needed e.g. on S390
 	 * DASD devices where it executes a dasdfmt. If should be considered as
 	 * destroying all data on the disk.
 	 *
@@ -1157,6 +1161,16 @@ namespace storage
 	virtual bool getZeroNewPartitions() const = 0;
 
 	/**
+	 *
+	 */
+	virtual void setDefaultMountBy( MountByType val ) = 0;
+
+	/**
+	 *
+	 */
+	virtual MountByType getDefaultMountBy() const = 0;
+
+	/**
 	 * Set value for root prefix.
 	 * This value is appended to all mount points of volumes, when
 	 * changes are commited. Config files fstab, cryptotab, raidtab and
@@ -1292,22 +1306,22 @@ namespace storage
 					 const deque<string>& devs ) = 0;
 
 	/**
-	 * Modify a EVMS container. 
-	 * This function can only be used between the creation of a 
+	 * Modify a EVMS container.
+	 * This function can only be used between the creation of a
 	 * EVMS container and the next call to commit(). Containers that
 	 * are already written to disk cannot have these properties changed.
 	 *
 	 * @param old_name name of container, must not contain blanks, colons
 	 * and shell special characters (e.g. system)
-	 * @param new_name new name of container, same restrictions as for 
-	 * first parameter 
+	 * @param new_name new name of container, same restrictions as for
+	 * first parameter
 	 * @param peSizeK physical extent size in kilobytes
 	 * @param lvm1 flag if lvm1 compatible format should be used
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int modifyEvmsContainer( const string& old_name,
 	                                 const string& new_name,
-					 unsigned long long peSizeK, 
+					 unsigned long long peSizeK,
 					 bool lvm1 ) = 0;
 
 	/**
@@ -1386,7 +1400,7 @@ namespace storage
 
 	/**
 	 * Activate EVMS devices on the system.
-	 * This is only neseccary on systems where EVMS is not activated 
+	 * This is only neseccary on systems where EVMS is not activated
 	 * during system startup. This command is executed immediately,
 	 * there is no need for a call to commit().
 	 *
@@ -1533,7 +1547,7 @@ namespace storage
 	virtual const string& getLastAction() const = 0;
 
 	/**
-	 * Gets a possible existing extended error message describing failure 
+	 * Gets a possible existing extended error message describing failure
 	 * of to last call commit()
 	 *
 	 * @return string error text provided by external program
@@ -1736,7 +1750,7 @@ namespace storage
 	virtual void activateHld( bool val ) = 0;
 
 	/**
-	 * Rescan all disks. 
+	 * Rescan all disks.
 	 * Alle currently detected objects are forgotten and a new scan
 	 * for all type of objects (disks, LVM, EVMS, MD) is initiated.
 	 * This function makes sense to be called after something outside

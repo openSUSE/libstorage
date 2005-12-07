@@ -29,6 +29,8 @@ class Volume
 	virtual ~Volume();
 
 	const string& device() const { return dev; }
+	const string& pId() const { return p_id; }
+	const string& pPath() const { return p_path; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const string& loopDevice() const { return( loop_dev ); }
 	const Container* getContainer() const { return cont; }
@@ -61,17 +63,17 @@ class Volume
 	bool needLosetup() const { return is_loop!=loop_active; }
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
-	int setLabel( const string& val ); 
+	int setLabel( const string& val );
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
 	    { encryption=orig_encryption=val; }
 	int setEncryption( bool val );
 	const string& getCryptPwd() const { return crypt_pwd; }
-	int setCryptPwd( const string& val ); 
-	void clearCryptPwd() { crypt_pwd.erase(); } 
+	int setCryptPwd( const string& val );
+	void clearCryptPwd() { crypt_pwd.erase(); }
 	const string& getMount() const { return mp; }
-	bool needRemount() const; 
+	bool needRemount() const;
 	bool needShrink() const { return(size_k<orig_size_k); }
 	bool needExtend() const { return(size_k>orig_size_k); }
 	long long extendSize() const { return(orig_size_k-size_k);}
@@ -81,7 +83,7 @@ class Volume
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }
 	bool needFstabUpdate() const
-	    { return( !ignore_fstab && 
+	    { return( !ignore_fstab &&
 	              (fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 	               encryption!=orig_encryption) ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
@@ -129,7 +131,7 @@ class Volume
 	bool isMounted() const { return( is_mounted ); }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
-	virtual string resizeText(bool doing=true) const; 
+	virtual string resizeText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const;
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	string mountText( bool doing=true ) const;
@@ -221,12 +223,14 @@ class Volume
 	unsigned long long size_k;
 	unsigned long long orig_size_k;
 	string dev;
+	string p_id;
+	string p_path;
 	unsigned long mnr;
 	unsigned long mjr;
 	storage::usedBy uby;
 
 	static string fs_names[storage::FSNONE+1];
-	static string mb_names[storage::MOUNTBY_LABEL+1];
+	static string mb_names[storage::MOUNTBY_PATH+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
 
 	mutable storage::VolumeInfo info;

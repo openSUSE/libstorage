@@ -18,17 +18,20 @@
 #include "y2storage/ProcMounts.h"
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
+#include "y2storage/UDev.h"
 
 using namespace std;
 using namespace storage;
 
-Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK ) 
+Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
     : cont(&d)
     {
     numeric = true;
     num = PNr;
     size_k = orig_size_k = SizeK;
     init();
+    if (!dev.empty())
+	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
                  cont->name().c_str() );
     }
@@ -39,6 +42,8 @@ Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK
     nm = Name;
     size_k = orig_size_k = SizeK;
     init();
+    if (!dev.empty())
+	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed volume \"%s\" on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -48,6 +53,8 @@ Volume::Volume( const Container& c ) : cont(&c)
     numeric = false;
     size_k = orig_size_k = 0;
     init();
+    if (!dev.empty())
+	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed late init volume" );
     }
 
@@ -92,9 +99,9 @@ CType Volume::cType() const
 
 bool Volume::operator== ( const Volume& rhs ) const
     {
-    return( (*cont)==(*rhs.cont) && 
-            nm == rhs.nm && 
-	    del == rhs.del ); 
+    return( (*cont)==(*rhs.cont) &&
+            nm == rhs.nm &&
+	    del == rhs.del );
     }
 
 bool Volume::operator< ( const Volume& rhs ) const
@@ -146,6 +153,11 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	if( !found && !(uuid.empty()&&label.empty()) )
 	    {
 	    found = fstabData.findUuidLabel( uuid, label, entry );
+	    fstabData.setDevice( entry, device() );
+	    }
+	if( !found && !(pId().empty()&&pPath().empty()) )
+	    {
+	    found = fstabData.findIdPath( pId(), pPath(), entry );
 	    fstabData.setDevice( entry, device() );
 	    }
 	}
@@ -347,7 +359,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 int Volume::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
-    y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val, 
+    y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val,
                  fs_names[new_fs].c_str() );
     format = val;
     if( !format )
@@ -362,7 +374,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	    {
 	    ret = VOLUME_ALREADY_IN_USE;
 	    }
-	else if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
+	else if( cont->getStorage()->getFsCapabilities( fs, caps ) &&
 		 caps.minimalFsSizeK > size_k  )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
@@ -405,7 +417,8 @@ int Volume::changeMount( const string& m )
 	mp = m;
 	if( m.empty() )
 	    {
-	    orig_mount_by = mount_by = MOUNTBY_DEVICE;
+	    // FIXME: check for disk
+	    orig_mount_by = mount_by = cont->getStorage()->getDefaultMountBy();
 	    orig_fstab_opt = fstab_opt = "";
 	    }
 	}
@@ -419,7 +432,7 @@ int Volume::changeMountBy( MountByType mby )
     y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
     if( !mp.empty() )
 	{
-	if( mby != MOUNTBY_DEVICE )
+	if( mby == MOUNTBY_LABEL || mby == MOUNTBY_UUID )
 	    {
 	    FsCapabilities caps;
 	    if( encryption != ENC_NONE )
@@ -430,6 +443,11 @@ int Volume::changeMountBy( MountByType mby )
 		{
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
 		}
+	    }
+	else if( mby == MOUNTBY_ID || mby == MOUNTBY_PATH )
+	    {
+	    if (cType() != DISK)
+		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME;
 	    }
 	if( ret==0 )
 	    mount_by = mby;
@@ -482,7 +500,7 @@ int Volume::changeFstabOptions( const string& options )
 		    l.erase( enc );
 		}
 	    fstab_opt = mergeString( l, "," );
-	    y2milestone( "update encrypted (opt_noauto:%d) fstab_opt:%s", 
+	    y2milestone( "update encrypted (opt_noauto:%d) fstab_opt:%s",
 	                 optNoauto(), fstab_opt.c_str() );
 	    }
 	}
@@ -595,7 +613,7 @@ int Volume::doFormat()
 	string params;
 	ScrollBarHandler* p = NULL;
 	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBarTheOne();
-	
+
 	switch( fs )
 	    {
 	    case EXT2:
@@ -722,7 +740,7 @@ int Volume::umount( const string& mp )
 	}
     if( ret != 0 )
 	ret = VOLUME_UMOUNT_FAILED;
-    else 
+    else
 	is_mounted = false;
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -775,7 +793,7 @@ string Volume::mountText( bool doing ) const
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by mount point e.g. /home
-		txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str(), 
+		txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str(),
 			       mp.c_str() );
 		}
 	    else
@@ -890,11 +908,11 @@ int Volume::canResize( unsigned long long newSizeK ) const
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
-    else 
+    else
 	{
 	FsCapabilities caps;
 	if( !format && fs!=FSNONE &&
-	    (!cont->getStorage()->getFsCapabilities( fs, caps ) || 
+	    (!cont->getStorage()->getFsCapabilities( fs, caps ) ||
 	     (newSizeK < size_k && !caps.isReduceable) ||
 	     (newSizeK > size_k && !caps.isExtendable)) )
 	    {
@@ -1129,7 +1147,7 @@ int Volume::getFreeLoop()
 	    else
 		fstab_loop_dev = loop_dev;
 	    }
-	y2milestone( "loop_dev:%s fstab_loop_dev:%s", loop_dev.c_str(), 
+	y2milestone( "loop_dev:%s fstab_loop_dev:%s", loop_dev.c_str(),
 	             fstab_loop_dev.c_str() );
 	}
     y2milestone( "ret:%d", ret );
@@ -1170,22 +1188,22 @@ string Volume::getLosetupCmd( storage::EncryptType e, const string& pwdfile ) co
     return( cmd );
     }
 
-int 
-Volume::setCryptPwd( const string& val ) 
-    { 
+int
+Volume::setCryptPwd( const string& val )
+    {
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     y2milestone( "password:%s", val.c_str() );
 #endif
     int ret = 0;
 
     if( ((encryption==ENC_UNKNOWN||encryption==ENC_TWOFISH_OLD||
-          encryption==ENC_NONE) && val.size()<5) || 
-        ((encryption==ENC_TWOFISH||encryption==ENC_TWOFISH256_OLD) && 
+          encryption==ENC_NONE) && val.size()<5) ||
+        ((encryption==ENC_TWOFISH||encryption==ENC_TWOFISH256_OLD) &&
 	  val.size()<8) )
 	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
     else
 	{
-	crypt_pwd=val; 
+	crypt_pwd=val;
 	if( encryption==ENC_UNKNOWN )
 	    detectLoopEncryption();
 	}
@@ -1205,7 +1223,7 @@ EncryptType Volume::detectLoopEncryption()
 	}
 
     unsigned pos=0;
-    static EncryptType try_order[] = { ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD, 
+    static EncryptType try_order[] = { ENC_TWOFISH_OLD, ENC_TWOFISH256_OLD,
                                        ENC_TWOFISH };
     string fname = cont->getStorage()->tmpDir()+"/pwdf";
     string mpname = cont->getStorage()->tmpDir()+"/mp";
@@ -1247,7 +1265,7 @@ EncryptType Volume::detectLoopEncryption()
 			    cmd = "reiserfsck --yes --check -q " + loop_dev;
 			    break;
 			default:
-			    cmd = "fsck -n -t " + fsTypeString(detected_fs) + 
+			    cmd = "fsck -n -t " + fsTypeString(detected_fs) +
 		                  " " + loop_dev;
 			    break;
 			}
@@ -1284,7 +1302,7 @@ EncryptType Volume::detectLoopEncryption()
 int Volume::doLosetup()
     {
     int ret = 0;
-    y2milestone( "device:%s mp:%s is_loop:%d loop_active:%d", 
+    y2milestone( "device:%s mp:%s is_loop:%d loop_active:%d",
                  dev.c_str(), mp.c_str(), is_loop, loop_active );
     if( !silent() && is_loop )
 	{
@@ -1326,7 +1344,7 @@ int Volume::doLosetup()
 	    fstab_opt = mergeString( l, "," );
 	    }
 	}
-    else 
+    else
 	{
 	if( loop_dev.size()>0 )
 	    {
@@ -1373,13 +1391,13 @@ int Volume::doSetLabel()
     int ret = 0;
     bool remount = false;
     FsCapabilities caps;
-    y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(), 
+    y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(),
                  label.c_str() );
     if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( labelText(true) );
 	}
-    if( !cont->getStorage()->getFsCapabilities( fs, caps ) || 
+    if( !cont->getStorage()->getFsCapabilities( fs, caps ) ||
         !caps.supportsLabel  )
 	{
 	ret = VOLUME_LABEL_TOO_LONG;
@@ -1393,7 +1411,7 @@ int Volume::doSetLabel()
 	ret = umount( cont->getStorage()->root()+orig_mp );
 	if( ret!=0 )
 	    ret = VOLUME_LABEL_WHILE_MOUNTED;
-	else 
+	else
 	    remount = true;
 	}
     if( ret==0 )
@@ -1443,7 +1461,7 @@ int Volume::setLabel( const string& val )
     int ret=0;
     y2milestone( "label:%s", val.c_str() );
     FsCapabilities caps;
-    if( cont->getStorage()->getFsCapabilities( fs, caps ) && 
+    if( cont->getStorage()->getFsCapabilities( fs, caps ) &&
         caps.supportsLabel  )
 	{
 	if( caps.labelLength < val.size() )
@@ -1529,7 +1547,7 @@ int Volume::prepareRemove()
     return( ret );
     }
 
-string Volume::getMountByString( MountByType mby, const string& dev, 
+string Volume::getMountByString( MountByType mby, const string& dev,
 				 const string& uuid, const string& label ) const
     {
     string ret = dev;
@@ -1540,6 +1558,14 @@ string Volume::getMountByString( MountByType mby, const string& dev,
     else if( mby==MOUNTBY_LABEL )
 	{
 	ret = "LABEL=" + label;
+	}
+    else if( mby==MOUNTBY_ID )
+	{
+	ret = "/dev/disk/by-id/" + pId();
+	}
+    else if( mby==MOUNTBY_PATH )
+	{
+	ret = "/dev/disk/by-path/" + pPath();
 	}
     return( ret );
     }
@@ -1603,7 +1629,7 @@ int Volume::doFstabUpdate()
     {
     int ret = 0;
     bool changed = false;
-    y2milestone( "device:%s mp:%s options:%s ignore_fstab:%d",  dev.c_str(), 
+    y2milestone( "device:%s mp:%s options:%s ignore_fstab:%d",  dev.c_str(),
                  mp.c_str(), fstab_opt.c_str(), ignore_fstab );
     if( !ignore_fstab )
 	{
@@ -1619,7 +1645,7 @@ int Volume::doFstabUpdate()
 	    changed = true;
 	    if( !silent() )
 		{
-		cont->getStorage()->showInfoCb( 
+		cont->getStorage()->showInfoCb(
 		    fstab->removeText( true, entry.crypto, entry.mount ));
 		}
 	    y2milestone( "before removeEntry" );
@@ -1647,7 +1673,7 @@ int Volume::doFstabUpdate()
 		    else
 			che.opts = splitString( fstab_opt, "," );
 		    }
-		if( mount_by!=orig_mount_by || 
+		if( mount_by!=orig_mount_by ||
 		    (format && mount_by==MOUNTBY_UUID) ||
 		    (orig_label!=label && mount_by==MOUNTBY_LABEL) )
 		    {
@@ -1676,7 +1702,7 @@ int Volume::doFstabUpdate()
 		    {
 		    if( !silent() && !fstab_added )
 			{
-			cont->getStorage()->showInfoCb( 
+			cont->getStorage()->showInfoCb(
 			    fstab->updateText( true, inCrypto(), che.mount ));
 			}
 		    y2mil( "update fstab: " << che );
@@ -1716,7 +1742,7 @@ int Volume::doFstabUpdate()
 		    }
 		if( !silent() )
 		    {
-		    cont->getStorage()->showInfoCb( fstab->addText( true, 
+		    cont->getStorage()->showInfoCb( fstab->addText( true,
 		                                                    inCrypto(),
 								    che.mount ));
 		    }
@@ -1884,6 +1910,8 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.minor = mnr;
     info.name = nm;
     info.device = dev;
+    info.pId = pId();
+    info.pPath = pPath();
     info.mount = mp;
     info.mount_by = mount_by;
     info.usedBy = uby.type();
@@ -2125,7 +2153,7 @@ Volume::logDifference( const Volume& rhs ) const
     if( fs!=rhs.fs )
 	ret += " fs:" + Volume::fs_names[fs] + "-->" + Volume::fs_names[rhs.fs];
     if( detected_fs!=rhs.detected_fs )
-	ret += " det_fs:" + Volume::fs_names[detected_fs] + "-->" + 
+	ret += " det_fs:" + Volume::fs_names[detected_fs] + "-->" +
 	       Volume::fs_names[rhs.detected_fs];
     if( mp!=rhs.mp )
 	ret += " mount:" + mp + "-->" + rhs.mp;
@@ -2139,10 +2167,10 @@ Volume::logDifference( const Volume& rhs ) const
 	    ret += " mounted-->";
 	}
     if( mount_by!=rhs.mount_by )
-	ret += " mount_by:" + Volume::mb_names[mount_by] + "-->" + 
+	ret += " mount_by:" + Volume::mb_names[mount_by] + "-->" +
 	       Volume::mb_names[rhs.mount_by];
     if( orig_mount_by!=rhs.orig_mount_by )
-	ret += " orig_mount_by:" + Volume::mb_names[orig_mount_by] + "-->" + 
+	ret += " orig_mount_by:" + Volume::mb_names[orig_mount_by] + "-->" +
 	       Volume::mb_names[rhs.orig_mount_by];
     if( uuid!=rhs.uuid )
 	ret += " uuid:" + uuid + "-->" + rhs.uuid;
@@ -2175,10 +2203,10 @@ Volume::logDifference( const Volume& rhs ) const
     if( fstab_loop_dev!=rhs.fstab_loop_dev )
 	ret += " fstab_loop:" + fstab_loop_dev + "-->" + rhs.fstab_loop_dev;
     if( encryption!=rhs.encryption )
-	ret += " encr:" + Volume::enc_names[encryption] + "-->" + 
+	ret += " encr:" + Volume::enc_names[encryption] + "-->" +
 	       Volume::enc_names[rhs.encryption];
     if( orig_encryption!=rhs.orig_encryption )
-	ret += " orig_encr:" + Volume::enc_names[orig_encryption] + "-->" + 
+	ret += " orig_encr:" + Volume::enc_names[orig_encryption] + "-->" +
 	       Volume::enc_names[rhs.orig_encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     if( crypt_pwd!=rhs.crypt_pwd )
@@ -2190,12 +2218,12 @@ Volume::logDifference( const Volume& rhs ) const
 
 bool Volume::equalContent( const Volume& rhs ) const
     {
-    return( dev==rhs.dev && numeric==rhs.numeric && 
+    return( dev==rhs.dev && numeric==rhs.numeric &&
             ((numeric&&num==rhs.num)||(!numeric&&nm==rhs.nm)) &&
 	    size_k==rhs.size_k && mnr==rhs.mnr && mjr==rhs.mjr &&
-	    ronly==rhs.ronly && create==rhs.create && del==rhs.del && 
-	    silnt==rhs.silnt && format==rhs.format && 
-	    fstab_added==rhs.fstab_added && 
+	    ronly==rhs.ronly && create==rhs.create && del==rhs.del &&
+	    silnt==rhs.silnt && format==rhs.format &&
+	    fstab_added==rhs.fstab_added &&
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
 	    fstab_opt==rhs.fstab_opt && mkfs_opt==rhs.mkfs_opt &&
@@ -2249,7 +2277,7 @@ Volume& Volume::operator= ( const Volume& rhs )
 
 Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     {
-    y2milestone( "constructed vol by copy constructor from %s", 
+    y2milestone( "constructed vol by copy constructor from %s",
                  rhs.dev.c_str() );
     *this = rhs;
     }
@@ -2257,9 +2285,8 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "hfs", "ntfs", "swap", "none" };
 
-string Volume::mb_names[] = { "device", "uuid", "label" };
+string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
-string Volume::enc_names[] = { "none", "twofish256", "twofish", 
+string Volume::enc_names[] = { "none", "twofish256", "twofish",
                                "twofishSL92", "unknown" };
-
 

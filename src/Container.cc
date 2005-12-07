@@ -1,4 +1,4 @@
-/* 
+/*
   Textdomain    "storage"
 */
 
@@ -10,6 +10,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Storage.h"
 #include "y2storage/AppUtil.h"
+#include "y2storage/UDev.h"
 
 using namespace std;
 using namespace storage;
@@ -20,6 +21,7 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     del = silent = ronly = create = false;
     dev = "/dev/" + nm;
     typ = t;
+    udevinfo (dev, p_id, p_path);
     y2milestone( "constructed cont %s", nm.c_str() );
     }
 
@@ -32,7 +34,7 @@ Container::~Container()
     y2milestone( "destructed cont %s", dev.c_str() );
     }
 
-static bool existingVol( const Volume& v ) 
+static bool existingVol( const Volume& v )
     { return( !v.deleted()&&!v.created()); }
 
 unsigned Container::numVolumes() const
@@ -41,17 +43,17 @@ unsigned Container::numVolumes() const
     return( p.length() );
     }
 
-static bool stageFormat( const Volume& v ) 
+static bool stageFormat( const Volume& v )
     { return( v.getFormat()||v.needLosetup()||v.needLabel()); }
-static bool stageMount( const Volume& v ) 
+static bool stageMount( const Volume& v )
     { return( v.needRemount()||v.needFstabUpdate()); }
 
-int Container::getToCommit( CommitStage stage, list<Container*>& col, 
+int Container::getToCommit( CommitStage stage, list<Container*>& col,
                             list<Volume*>& vol )
     {
     int ret = 0;
-    unsigned long oco = col.size(); 
-    unsigned long ovo = vol.size(); 
+    unsigned long oco = col.size();
+    unsigned long ovo = vol.size();
     switch( stage )
 	{
 	case DECREASE:
@@ -191,31 +193,31 @@ string Container::removeText( bool doing ) const
     return( txt );
     }
 
-int Container::doCreate( Volume * v ) 
-    { 
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
-               name().c_str() ); 
+int Container::doCreate( Volume * v )
+    {
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
+               name().c_str() );
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
-int Container::doRemove( Volume * v ) 
-    { 
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
-               name().c_str() ); 
+int Container::doRemove( Volume * v )
+    {
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
+               name().c_str() );
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
-int Container::doResize( Volume * v ) 
-    { 
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
-               name().c_str() ); 
+int Container::doResize( Volume * v )
+    {
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
+               name().c_str() );
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
-int Container::removeVolume( Volume * v ) 
-    { 
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(), 
-               name().c_str() ); 
+int Container::removeVolume( Volume * v )
+    {
+    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
+               name().c_str() );
     return( CONTAINER_INVALID_VIRTUAL_CALL );
     }
 
@@ -280,6 +282,8 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.type = type();
     info.name = name();
     info.device = device();
+    info.pId = pId();
+    info.pPath = pPath();
     info.volcnt = vp.length();
     info.usedBy = getUsedByType();
     info.usedByName = usedByName();
@@ -308,7 +312,7 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
     }
 }
 
-string 
+string
 Container::logDifference( const Container& c ) const
     {
     string ret = "Name:" + nm;
@@ -430,7 +434,7 @@ Container& Container::operator= ( const Container& rhs )
 
 Container::Container( const Container& rhs ) : sto(rhs.sto)
     {
-    y2milestone( "constructed cont by copy constructor from %s", 
+    y2milestone( "constructed cont by copy constructor from %s",
                  rhs.nm.c_str() );
     *this = rhs;
     }

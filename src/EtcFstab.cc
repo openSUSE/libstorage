@@ -143,10 +143,21 @@ FstabEntry::calcDependent()
 	mount_by = MOUNTBY_UUID;
 	device.erase();
 	}
+    else if( device.substr(0, 16) == "/dev/disk/by-id/" )
+        {
+	mount_by = MOUNTBY_ID;
+	device.erase();
+	}
+    else if( device.substr(0, 18) == "/dev/disk/by-path/" )
+        {
+	mount_by = MOUNTBY_PATH;
+	device.erase();
+	}
+
     crypto = !noauto && encr!=ENC_NONE;
     }
 
-bool 
+bool
 EtcFstab::findDevice( const string& dev, FstabEntry& entry ) const
     {
     list<Entry>::const_iterator i = co.begin();
@@ -157,11 +168,11 @@ EtcFstab::findDevice( const string& dev, FstabEntry& entry ) const
     return( i!=co.end() );
     }
 
-bool 
+bool
 EtcFstab::findDevice( const list<string>& dl, FstabEntry& entry ) const
     {
     list<Entry>::const_iterator i = co.begin();
-    while( i!=co.end() && 
+    while( i!=co.end() &&
            find( dl.begin(), dl.end(), i->nnew.device )==dl.end() )
 	++i;
     if( i!=co.end() )
@@ -169,7 +180,7 @@ EtcFstab::findDevice( const list<string>& dl, FstabEntry& entry ) const
     return( i!=co.end() );
     }
 
-bool 
+bool
 EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
     {
     list<Entry>::const_iterator i = co.begin();
@@ -194,7 +205,7 @@ int EtcFstab::changeRootPrefix( const string& prfix )
 	    prefix = prfix;
 	    readFiles();
 	    }
-	else 
+	else
 	    ret = FSTAB_CHANGE_PREFIX_IMPOSSIBLE;
 	}
     y2milestone( "ret:%d", ret );
@@ -210,8 +221,8 @@ void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
 	i->nnew.device = i->old.device = device;
     }
 
-bool 
-EtcFstab::findUuidLabel( const string& uuid, const string& label, 
+bool
+EtcFstab::findUuidLabel( const string& uuid, const string& label,
                          FstabEntry& entry ) const
     {
     y2milestone( "uuid:%s label:%s", uuid.c_str(), label.c_str() );
@@ -235,11 +246,36 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
     return( i!=co.end() );
     }
 
+bool
+EtcFstab::findIdPath( const string& id, const string& path,
+		      FstabEntry& entry ) const
+{
+    y2milestone( "uuid:%s label:%s", id.c_str(), path.c_str() );
+    list<Entry>::const_iterator i = co.begin();
+    if( !id.empty() )
+	{
+	string dev = "/dev/disk/by-id/" + id;
+	while( i!=co.end() && i->nnew.dentry != dev )
+	    ++i;
+	}
+    if( i==co.end() && !path.empty() )
+	{
+	string dev = "/dev/disk/by-path/" + path;
+	i = co.begin();
+	while( i!=co.end() && i->nnew.dentry != dev )
+	    ++i;
+	}
+    if( i!=co.end())
+	entry = i->nnew;
+    y2milestone( "ret:%d", i!=co.end() );
+    return( i!=co.end() );
+}
+
 int EtcFstab::removeEntry( const FstabEntry& entry )
     {
     y2milestone( "dev:%s mp:%s", entry.dentry.c_str(), entry.mount.c_str() );
     list<Entry>::iterator i = co.begin();
-    while( i != co.end() && 
+    while( i != co.end() &&
            (i->op==Entry::REMOVE || i->nnew.device != entry.device) )
 	++i;
     if( i != co.end() )
@@ -259,7 +295,7 @@ int EtcFstab::updateEntry( const FstabChange& entry )
     bool found = false;
     while( i != co.end() && !found )
 	{
-	if( i->op==Entry::REMOVE || 
+	if( i->op==Entry::REMOVE ||
 	    (i->op!=Entry::ADD && entry.device!=i->old.device) ||
 	    (i->op==Entry::ADD && entry.device!=i->nnew.device) )
 	    ++i;
@@ -433,9 +469,9 @@ int EtcFstab::flush()
 			makeStringList( i->old, ol );
 			list<string>::const_iterator oi = ol.begin();
 			list<string>::const_iterator ni = nl.begin();
-			string::size_type pos = 
+			string::size_type pos =
 			    line.find_first_not_of( app_ws );
-			string::size_type posn = 
+			string::size_type posn =
 			    line.find_first_of( app_ws, pos );
 			posn = line.find_first_not_of( app_ws, posn );
 			while( ni != nl.end() )
@@ -448,7 +484,7 @@ int EtcFstab::flush()
 				    unsigned diff = posn-pos-1;
 				    if( diff > nstr.size() )
 					{
-					nstr.replace( nstr.size(), 0, 
+					nstr.replace( nstr.size(), 0,
 						      diff-nstr.size(), ' ' );
 					}
 				    line.replace( pos, posn-1-pos, nstr );

@@ -30,7 +30,7 @@ namespace storage
 {
 
 template <int Value>
-class CheckType 
+class CheckType
     {
     public:
 	bool operator()( const Container& d ) const
@@ -40,7 +40,7 @@ class CheckType
     };
 
 template< class Iter, int Value, class CastResult >
-class CastCheckIterator : public CheckType<Value>, 
+class CastCheckIterator : public CheckType<Value>,
                           public FilterIterator< CheckType<Value>, Iter >
     {
     typedef FilterIterator<CheckType<Value>, Iter> _bclass;
@@ -50,9 +50,9 @@ class CastCheckIterator : public CheckType<Value>,
 	typedef CastResult* pointer;
 
 	CastCheckIterator() : _bclass() {}
-	CastCheckIterator( const Iter& b, const Iter& e, bool atend=false) : 
+	CastCheckIterator( const Iter& b, const Iter& e, bool atend=false) :
 	    _bclass( b, e, *this, atend ) {}
-	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) : 
+	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) :
 	    _bclass( pair, *this, atend ) {}
 	CastCheckIterator( const CastCheckIterator& i) { *this=i;}
 	CastResult operator*() const
@@ -63,27 +63,27 @@ class CastCheckIterator : public CheckType<Value>,
 	    {
 	    return( static_cast<CastResult*>(_bclass::operator->()) );
 	    }
-	CastCheckIterator& operator++() 
-	    { 
-	    _bclass::operator++(); return(*this); 
+	CastCheckIterator& operator++()
+	    {
+	    _bclass::operator++(); return(*this);
 	    }
-	CastCheckIterator operator++(int) 
-	    { 
+	CastCheckIterator operator++(int)
+	    {
 	    y2warning( "Expensive ++ CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
-	    _bclass::operator++(); 
-	    return(tmp); 
+	    _bclass::operator++();
+	    return(tmp);
 	    }
-	CastCheckIterator& operator--() 
-	    { 
-	    _bclass::operator--(); return(*this); 
+	CastCheckIterator& operator--()
+	    {
+	    _bclass::operator--(); return(*this);
 	    }
-	CastCheckIterator operator--(int) 
-	    { 
+	CastCheckIterator operator--(int)
+	    {
 	    y2warning( "Expensive -- CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
-	    _bclass::operator--(); 
-	    return(tmp); 
+	    _bclass::operator--();
+	    return(tmp);
 	    }
     };
 
@@ -127,7 +127,7 @@ class Storage : public storage::StorageInterface
 	    FreeInfo() { resize_free=df_free=used=0; win=false; }
 	    FreeInfo( unsigned long long df,
 		      unsigned long long resize,
-		      unsigned long long usd, bool w=false ) 
+		      unsigned long long usd, bool w=false )
 		      { resize_free=resize; df_free=df; used=usd; win=w; }
 	    };
 
@@ -148,7 +148,7 @@ class Storage : public storage::StorageInterface
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
-	const string& tmpDir() const; 
+	const string& tmpDir() const;
 	static const string& arch() { return( proc_arch ); }
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
@@ -178,31 +178,31 @@ class Storage : public storage::StorageInterface
 	                     storage::DiskInfo& info);
 	int getContLvmVgInfo( const string& name, storage::ContainerInfo& cinfo,
 	                      storage::LvmVgInfo& info);
-	int getContEvmsCoInfo( const string& name, 
+	int getContEvmsCoInfo( const string& name,
 	                       storage::ContainerInfo& cinfo,
 	                       storage::EvmsCoInfo& info );
 	void getVolumes (deque<storage::VolumeInfo>& vlist);
 	int getVolume( const string& device, storage::VolumeInfo& info);
-	int getPartitionInfo( const string& disk, 
+	int getPartitionInfo( const string& disk,
 			      deque<storage::PartitionInfo>& plist );
-	int getLvmLvInfo( const string& name, 
+	int getLvmLvInfo( const string& name,
 			  deque<storage::LvmLvInfo>& plist );
-	int getEvmsInfo( const string& name, 
+	int getEvmsInfo( const string& name,
 			 deque<storage::EvmsInfo>& plist );
 	int getMdInfo( deque<storage::MdInfo>& plist );
 	int getDmInfo( deque<storage::DmInfo>& plist );
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 
-	bool getFsCapabilities( storage::FsType fstype, 
+	bool getFsCapabilities( storage::FsType fstype,
 	                        storage::FsCapabilities& fscapabilities) const;
 	void setExtError( const string& txt );
-	int createPartition( const string& disk, storage::PartitionType type, 
-	                     unsigned long start, unsigned long size, 
+	int createPartition( const string& disk, storage::PartitionType type,
+	                     unsigned long start, unsigned long size,
 			     string& device );
 	int resizePartition( const string& device, unsigned long sizeCyl );
 	int nextFreePartition( const string& disk, storage::PartitionType type,
 	                       unsigned &nr, string& device );
-	int updatePartitionArea( const string& device, 
+	int updatePartitionArea( const string& device,
 				 unsigned long start, unsigned long size );
 	int createPartitionKb( const string& disk, storage::PartitionType type,
 	                       unsigned long long start,
@@ -220,7 +220,7 @@ class Storage : public storage::StorageInterface
 	int initializeDisk( const string& disk, bool value );
 	string defaultDiskLabel() const;
 
-	int changeFormatVolume( const string& device, bool format, 
+	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );
 	int changeLabelVolume( const string& device, const string& label );
 	int changeMkfsOptVolume( const string& device, const string& opts );
@@ -239,7 +239,7 @@ class Storage : public storage::StorageInterface
 	int getCrypt( const string& device, bool& val );
 	int setIgnoreFstab( const string& device, bool val );
 	int getIgnoreFstab( const string& device, bool& val );
-	int addFstabEntry( const string& device, const string& mount, 
+	int addFstabEntry( const string& device, const string& mount,
 	                   const string& vfs, const string& options,
 			   unsigned freq, unsigned passno );
 	int resizeVolume( const string& device, unsigned long long newSizeMb );
@@ -248,9 +248,11 @@ class Storage : public storage::StorageInterface
 	bool getRecursiveRemoval() const { return recursiveRemove; }
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
+	void setDefaultMountBy (MountByType mby = MOUNTBY_DEVICE);
+	MountByType getDefaultMountBy() const { return defaultMountBy; }
 	void setDetectMountedVolumes( bool val=true );
 	bool getDetectMountedVolumes() const { return detectMounted; }
-	void setRootPrefix( const string& root ); 
+	void setRootPrefix( const string& root );
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
@@ -258,7 +260,7 @@ class Storage : public storage::StorageInterface
 	bool mountDevice( const string& device, const string& mp );
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
-	                  unsigned long long& df_free, 
+	                  unsigned long long& df_free,
 	                  unsigned long long& used, bool& win, bool use_cache );
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
@@ -277,14 +279,14 @@ class Storage : public storage::StorageInterface
 			 string& device );
 	int removeLvmLvByDevice( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
-	int changeLvStripeSize( const string& vg, const string& name, 
+	int changeLvStripeSize( const string& vg, const string& name,
 				unsigned long long stripeSize );
 
 	int evmsActivate();
 	int createEvmsContainer( const string& name, unsigned long long peSizeK,
 			         bool lvm1, const deque<string>& devs );
 	int modifyEvmsContainer( const string& old_name, const string& new_name,
-				 unsigned long long peSizeK, bool lvm1 ); 
+				 unsigned long long peSizeK, bool lvm1 );
 	int removeEvmsContainer( const string& name );
 	int extendEvmsContainer( const string& name, const deque<string>& devs );
 	int shrinkEvmsContainer( const string& name, const deque<string>& devs );
@@ -320,7 +322,7 @@ class Storage : public storage::StorageInterface
 	void eraseFreeInfo( const string& device );
 	int waitForDevice() const;
 	int waitForDevice( const string& device ) const;
-	void getDiskList( bool (* CheckFnc)( const Disk& ), 
+	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );
 
         int commit();
@@ -1210,8 +1212,8 @@ class Storage : public storage::StorageInterface
 	void detectDm();
 	void autodetectDisks();
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
-	void detectFsDataTestMode( const string& file, 
-	                           const VolIterator& begin, 
+	void detectFsDataTestMode( const string& file,
+	                           const VolIterator& begin,
 				   const VolIterator& end );
 	static void detectArch();
 	void addToList( Container* e )
@@ -1219,9 +1221,9 @@ class Storage : public storage::StorageInterface
 	DiskIterator findDisk( const string& disk );
 	LvmVgIterator findLvmVg( const string& name );
 	EvmsCoIterator findEvmsCo( const string& name );
-	bool findVolume( const string& device, ContIterator& c, 
+	bool findVolume( const string& device, ContIterator& c,
 	                 VolIterator& v  );
-	bool findVolume( const string& device, VolIterator& v, 
+	bool findVolume( const string& device, VolIterator& v,
 	                 bool also_del=false );
 	bool findContainer( const string& device, ContIterator& c );
 
@@ -1234,10 +1236,10 @@ class Storage : public storage::StorageInterface
 	int removeContainer( Container* val, bool call_del=true );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
-	void sortCommitLists( storage::CommitStage stage, 
-	                      std::list<Container*>& co,  
+	void sortCommitLists( storage::CommitStage stage,
+	                      std::list<Container*>& co,
 			      std::list<Volume*>& vl );
-	int performContChanges( storage::CommitStage stage, 
+	int performContChanges( storage::CommitStage stage,
 	                        const std::list<Container*>& co,
 	                        bool activate_evms, bool& activate_evms_done,
 				bool& cont_removed );
@@ -1261,6 +1263,7 @@ class Storage : public storage::StorageInterface
 	bool autodetect;
 	bool recursiveRemove;
 	bool zeroNewPartitions;
+	MountByType defaultMountBy;
 	bool detectMounted;
 	bool root_mounted;
 	string testdir;
