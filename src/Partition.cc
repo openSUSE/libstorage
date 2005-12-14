@@ -11,6 +11,16 @@
 using namespace storage;
 using namespace std;
 
+static string udevCompleteIdPath( const string& s, unsigned nr )
+    {
+    return( "/dev/disk/by-id/" + s + "-part" + decString(nr) );
+    }
+
+static string udevCompletePathPath( const string& s, unsigned nr )
+    {
+    return( "/dev/disk/by-path/" + s + "-part" + decString(nr) );
+    }
+
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,
 		      PartitionType Type, unsigned Id, bool Boot )
@@ -20,6 +30,10 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     idt = orig_id = Id;
     typ = Type;
     orig_num = num;
+    if( !d.udevPath().empty() )
+	alt_names.push_back( udevCompletePathPath( d.udevPath(), PNr ));
+    if( !d.udevId().empty() )
+	alt_names.push_back( udevCompleteIdPath( d.udevId(), PNr ));
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -46,8 +60,26 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	bootflag = true;
     else
 	bootflag = false;
+    if( !d.udevPath().empty() )
+	alt_names.push_back( udevCompletePathPath( d.udevPath(), num ));
+    if( !d.udevId().empty() )
+	alt_names.push_back( udevCompleteIdPath( d.udevId(), num ));
     y2milestone( "constructed partition %s on disk %s", dev.c_str(),
                  cont->name().c_str() );
+    }
+
+const string& Partition::udevId() const 
+    { 
+    list<string>::const_iterator i = 
+	find_if( alt_names.begin(), alt_names.end(), find_any( "/by-id/" ));
+    return( i==alt_names.end() ? empty_string : *i );
+    }
+
+const string& Partition::udevPath() const 
+    { 
+    list<string>::const_iterator i = 
+	find_if( alt_names.begin(), alt_names.end(), find_any( "/by-path/" ));
+    return( i==alt_names.end() ? empty_string : *i );
     }
 
 bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
@@ -73,6 +105,13 @@ void Partition::changeNumber( unsigned new_num )
 	    {
 	    orig_num = num;
 	    }
+	list<string>::iterator i = find_if( alt_names.begin(), alt_names.end(), 
+	                                    find_any( "/by-id/" ));
+	if( i!=alt_names.end() )
+	    *i = udevCompleteIdPath( disk()->udevId(), num );
+	i = find_if( alt_names.begin(), alt_names.end(), find_any( "/by-path/" ));
+	if( i!=alt_names.end() )
+	    *i = udevCompletePathPath( disk()->udevPath(), num );
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
@@ -461,6 +500,10 @@ Partition::getInfo( PartitionInfo& tinfo ) const
     info.nr = num;
     info.id = idt;
     info.boot = bootflag;
+    string tmp = udevPath();
+    info.udevPath = tmp.substr( tmp.find_last_of('/')+1 );
+    tmp = udevId();
+    info.udevId = tmp.substr( tmp.find_last_of('/')+1 );
     tinfo = info;
     }
 

@@ -33,6 +33,8 @@ public:
     regoff_t eo (unsigned int) const;
 
     string cap (unsigned int) const;
+    static const string& ws;
+    static const string& number;
 
 private:
     const string pattern;

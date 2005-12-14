@@ -43,6 +43,8 @@ class Disk : public Container
 	unsigned maxPrimary() const { return max_primary; }
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
+	const string& udevPath() const { return udev_path; }
+	const string& udevId() const { return udev_id; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
@@ -50,6 +52,7 @@ class Disk : public Container
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 
 	static bool needP( const string& dev );
+	void setUdevData( const string& path, const string& id );
 	virtual int createPartition( storage::PartitionType type, long unsigned start,
 				     long unsigned len, string& device,
 				     bool checkRelaxed=false );
@@ -197,6 +200,8 @@ class Disk : public Container
 	unsigned new_head;
 	unsigned new_sector;
 	string label;
+	string udev_path;
+	string udev_id;
 	string detected_label;
 	string system_stderr;
 	unsigned max_primary;

@@ -9,6 +9,7 @@
 
 #include <string>
 #include <vector>
+#include <list>
 
 using std::string;
 
@@ -48,10 +49,15 @@ class SystemCmd
 	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
 	int getStderr( std::vector<string> &Ret_Cr, const bool Append_bv = false ) const
 	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
+	int getStdout( std::list<string> &Ret_Cr, const bool Append_bv = false ) const
+	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
+	int getStderr( std::list<string> &Ret_Cr, const bool Append_bv = false ) const
+	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
 
     protected:
 
         int  placeOutput( unsigned Which_iv, std::vector<string> &Ret_Cr, const bool Append_bv ) const;
+        int  placeOutput( unsigned Which_iv, std::list<string> &Ret_Cr, const bool Append_bv ) const;
 
 	void invalidate();
 	void closeOpenFds();

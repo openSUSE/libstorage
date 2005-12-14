@@ -29,8 +29,6 @@ class Volume
 	virtual ~Volume();
 
 	const string& device() const { return dev; }
-	const string& pId() const { return p_id; }
-	const string& pPath() const { return p_path; }
 	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
 	const string& loopDevice() const { return( loop_dev ); }
 	const Container* getContainer() const { return cont; }
@@ -38,6 +36,8 @@ class Volume
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	bool silent() const { return silnt; }
+	virtual const string& udevId() const { return(empty_string); }
+	virtual const string& udevPath() const { return(empty_string); }
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
@@ -175,6 +175,8 @@ class Volume
 	void setNameDev();
 	int checkDevice();
 	int checkDevice( const string& device );
+	storage::MountByType defaultMountBy( const string& mp="" );
+	bool allowedMountBy( storage::MountByType mby, const string& mp="" );
 	void getFsData( SystemCmd& blkidData );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );
@@ -223,8 +225,6 @@ class Volume
 	unsigned long long size_k;
 	unsigned long long orig_size_k;
 	string dev;
-	string p_id;
-	string p_path;
 	unsigned long mnr;
 	unsigned long mjr;
 	storage::usedBy uby;
@@ -232,6 +232,7 @@ class Volume
 	static string fs_names[storage::FSNONE+1];
 	static string mb_names[storage::MOUNTBY_PATH+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
+	static string empty_string;
 
 	mutable storage::VolumeInfo info;
     };

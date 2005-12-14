@@ -534,6 +534,14 @@ int createLogger( const string& component, const string& name,
     return( 0 );
     }
 
+void tolower( string& s )
+    {
+    for( string::iterator i=s.begin(); i!=s.end(); i++ )
+	{
+	*i = std::tolower(*i);
+        }
+    }
+
 bool system_cmd_testmode = false;
 const string app_ws = " \t\n";
 

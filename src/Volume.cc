@@ -18,7 +18,6 @@
 #include "y2storage/ProcMounts.h"
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
-#include "y2storage/UDev.h"
 
 using namespace std;
 using namespace storage;
@@ -30,8 +29,6 @@ Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
     num = PNr;
     size_k = orig_size_k = SizeK;
     init();
-    if (!dev.empty())
-	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
                  cont->name().c_str() );
     }
@@ -42,8 +39,6 @@ Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK
     nm = Name;
     size_k = orig_size_k = SizeK;
     init();
-    if (!dev.empty())
-	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed volume \"%s\" on disk %s", dev.c_str(),
                  cont->name().c_str() );
     }
@@ -53,8 +48,6 @@ Volume::Volume( const Container& c ) : cont(&c)
     numeric = false;
     size_k = orig_size_k = 0;
     init();
-    if (!dev.empty())
-	udevinfo (dev, p_id, p_path);
     y2milestone( "constructed late init volume" );
     }
 
@@ -75,12 +68,32 @@ void Volume::setNameDev()
 	nm = dev.substr( 5 );
     }
 
+storage::MountByType Volume::defaultMountBy( const string& mp )
+    {
+    MountByType mb = cont->getStorage()->getDefaultMountBy();
+    if( cType()!=DISK && (mb==MOUNTBY_ID || mb==MOUNTBY_PATH) )
+	mb = MOUNTBY_DEVICE;
+    if( mp=="swap" && (mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
+	mb = MOUNTBY_DEVICE;
+    return( mb );
+    }
+
+bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
+    {
+    bool ret = true;
+    if( (cType()!=DISK && (mby==MOUNTBY_ID || mby==MOUNTBY_PATH)) ||
+        (mp=="swap" && (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL)) )
+	ret = false;
+    y2mil( "mby:" << mb_names[mby] << " mp:" << mp << " ret:" << ret )
+    return( ret );
+    }
+
 void Volume::init()
     {
     del = create = format = is_loop = loop_active = silnt = false;
     is_mounted = ronly = fstab_added = ignore_fstab = false;
     detected_fs = fs = FSUNKNOWN;
-    mount_by = orig_mount_by = MOUNTBY_DEVICE;
+    mount_by = orig_mount_by = defaultMountBy();
     encryption = orig_encryption = ENC_NONE;
     mjr = mnr = 0;
     if( numeric||!nm.empty() )
@@ -155,9 +168,9 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    found = fstabData.findUuidLabel( uuid, label, entry );
 	    fstabData.setDevice( entry, device() );
 	    }
-	if( !found && !(pId().empty()&&pPath().empty()) )
+	if( !found && !(udevId().empty()&&udevPath().empty()) )
 	    {
-	    found = fstabData.findIdPath( pId(), pPath(), entry );
+	    found = fstabData.findIdPath( udevId(), udevPath(), entry );
 	    fstabData.setDevice( entry, device() );
 	    }
 	}
@@ -417,10 +430,11 @@ int Volume::changeMount( const string& m )
 	mp = m;
 	if( m.empty() )
 	    {
-	    // FIXME: check for disk
-	    orig_mount_by = mount_by = cont->getStorage()->getDefaultMountBy();
 	    orig_fstab_opt = fstab_opt = "";
+	    orig_mount_by = mount_by = defaultMountBy(m);
 	    }
+	else if( !allowedMountBy( mount_by, m ))
+	    mount_by = defaultMountBy(m);
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -430,6 +444,7 @@ int Volume::changeMountBy( MountByType mby )
     {
     int ret = 0;
     y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
+    y2mil( "vorher:" << *this );
     if( !mp.empty() )
 	{
 	if( mby == MOUNTBY_LABEL || mby == MOUNTBY_UUID )
@@ -458,6 +473,8 @@ int Volume::changeMountBy( MountByType mby )
 	}
     else
 	ret = VOLUME_FSTAB_EMPTY_MOUNT;
+    y2mil( "nachher:" << *this );
+    y2mil( "needFstabUdpate:" << needFstabUpdate() );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -883,6 +900,7 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() && !cont->getStorage()->test() )
 	{
+	cont->getStorage()->removeDmTable( *this );
 	ret = checkDevice(mountDevice());
 	if( ret==0 )
 	    ret = mount( lmount );
@@ -1052,12 +1070,16 @@ int Volume::setEncryption( bool val )
 		}
 	    if( ret == 0 && !format && !loop_active )
 		{
+#if 0
 		if( cont->getStorage()->instsys() )
 		    cont->getStorage()->activateHld(true);
+#endif
 		if( detectLoopEncryption()==ENC_UNKNOWN )
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
+#if 0
 		if( cont->getStorage()->instsys() )
 		    cont->getStorage()->activateHld(false);
+#endif
 		}
 	    }
 	}
@@ -1314,6 +1336,7 @@ int Volume::doLosetup()
 	}
     if( is_loop )
 	{
+	cont->getStorage()->removeDmTable( *this );
 	if( ret==0 && loop_dev.empty() )
 	    {
 	    ret = getFreeLoop();
@@ -1543,6 +1566,7 @@ int Volume::prepareRemove()
 	loUnsetup();
 	}
     cont->getStorage()->eraseFreeInfo(dev);
+    cont->getStorage()->removeDmTable(*this);
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1561,11 +1585,11 @@ string Volume::getMountByString( MountByType mby, const string& dev,
 	}
     else if( mby==MOUNTBY_ID )
 	{
-	ret = "/dev/disk/by-id/" + pId();
+	ret = udevId();
 	}
     else if( mby==MOUNTBY_PATH )
 	{
-	ret = "/dev/disk/by-path/" + pPath();
+	ret = udevPath();
 	}
     return( ret );
     }
@@ -1910,8 +1934,6 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.minor = mnr;
     info.name = nm;
     info.device = dev;
-    info.pId = pId();
-    info.pPath = pPath();
     info.mount = mp;
     info.mount_by = mount_by;
     info.usedBy = uby.type();
@@ -2289,4 +2311,5 @@ string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
 string Volume::enc_names[] = { "none", "twofish256", "twofish",
                                "twofishSL92", "unknown" };
+string Volume::empty_string;
 

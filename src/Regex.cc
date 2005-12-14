@@ -77,3 +77,6 @@ Regex::cap (unsigned int i) const
 	return last_str.substr (rm[i].rm_so, rm[i].rm_eo - rm[i].rm_so);
     return "";
 }
+
+const string& Regex::ws = "[ 	]*";
+const string& Regex::number = "[o-9]+";

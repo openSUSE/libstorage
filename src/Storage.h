@@ -327,6 +327,9 @@ class Storage : public storage::StorageInterface
 
         int commit();
 	void activateHld( bool val=true );
+	void removeDmTable( const Volume& vol );
+	void removeDmTable( const string& table );
+	void removeDmMapsTo( const string& dev );
 
 	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }
@@ -1230,19 +1233,19 @@ class Storage : public storage::StorageInterface
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );
 	bool haveEvms();
-	void handleEvmsRemoveDevice( const string& d, bool rename );
-	void handleEvmsCreateDevice( const string& d );
+	void handleEvmsRemoveDevice( const string& disk, const string& d,
+	                             bool rename );
+	void handleEvmsCreateDevice( const string& disk, const string& dev, 
+	                             bool extended=false );
 
 	int removeContainer( Container* val, bool call_del=true );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists( storage::CommitStage stage,
-	                      std::list<Container*>& co,
-			      std::list<Volume*>& vl );
-	int performContChanges( storage::CommitStage stage,
-	                        const std::list<Container*>& co,
-	                        bool activate_evms, bool& activate_evms_done,
-				bool& cont_removed );
+			      std::list<Container*>& co,
+			      std::list<Volume*>& vl,
+			      std::list<storage::commitAction*>& todo );
+	void evmsActivateDevices();
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );

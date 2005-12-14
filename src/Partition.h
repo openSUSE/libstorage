@@ -32,6 +32,8 @@ class Partition : public Volume
 	unsigned long cylSize() const { return reg.len(); }
 	unsigned long cylEnd() const { return reg.start()+reg.len()-1; }
 	const Region& region() const { return reg; }
+	const string& udevId() const;
+	const string& udevPath() const;
 	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
 	bool contains( const Region& r, unsigned fuzz=0 ) const;
 	unsigned OrigNr() const { return( orig_num ); }

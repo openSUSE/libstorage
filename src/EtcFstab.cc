@@ -249,20 +249,18 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
 bool
 EtcFstab::findIdPath( const string& id, const string& path,
 		      FstabEntry& entry ) const
-{
-    y2milestone( "uuid:%s label:%s", id.c_str(), path.c_str() );
+    {
+    y2milestone( "id:%s path:%s", id.c_str(), path.c_str() );
     list<Entry>::const_iterator i = co.begin();
     if( !id.empty() )
 	{
-	string dev = "/dev/disk/by-id/" + id;
-	while( i!=co.end() && i->nnew.dentry != dev )
+	while( i!=co.end() && i->nnew.dentry != id )
 	    ++i;
 	}
     if( i==co.end() && !path.empty() )
 	{
-	string dev = "/dev/disk/by-path/" + path;
 	i = co.begin();
-	while( i!=co.end() && i->nnew.dentry != dev )
+	while( i!=co.end() && i->nnew.dentry != path )
 	    ++i;
 	}
     if( i!=co.end())
@@ -308,7 +306,9 @@ int EtcFstab::updateEntry( const FstabChange& entry )
 	    i->op = Entry::UPDATE;
 	i->nnew = entry;
 	}
-    return( (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND );
+    int ret = (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND;
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
 int EtcFstab::addEntry( const FstabChange& entry )

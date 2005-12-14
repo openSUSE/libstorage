@@ -56,8 +56,6 @@ EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
     lvm1 = lv1;
     }
 
-
-
 EvmsCo::EvmsCo( Storage * const s, const string& file, int ) :
     PeContainer(s,staticType())
     {
@@ -101,7 +99,10 @@ EvmsCo::removeCo()
 	}
     if( ret==0 )
 	{
-	unuseDev();
+	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
+	    setUsed( s->device, UB_NONE, "" );
+	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+	    setUsed( s->device, UB_NONE, "" );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -642,12 +643,29 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
 	    }
 	++v;
 	}
+    Storage::ConstDiskPair dp = getStorage()->diskPair();
+    EvmsPair ep=evmsPair(lvNotDeleted);
+    EvmsIter i;
+    for( Storage::ConstDiskIterator d = dp.begin(); d!=dp.end(); ++d )
+	{
+	if( d->isEmpty() )
+	    {
+	    y2milestone( "empty disk %s", d->name().c_str() );
+	    i = ep.begin();
+	    while( i!=ep.end() && i->name()!=d->name() )
+		++i;
+	    if( i!=ep.end() )
+		{
+		addLv( d->sizeK(), d->name(), false );
+		}
+	    }
+	}
     y2milestone( "end" );
     }
 
 void EvmsCo::addLv( unsigned long le, const string& name, bool native )
     {
-    y2milestone( "addLv:%s le:%lu", name.c_str(), le );
+    y2milestone( "name:%s le:%lu", name.c_str(), le );
     string n( name );
     string::size_type pos = n.rfind( '/' );
     if( pos!=string::npos )
@@ -1122,7 +1140,8 @@ void EvmsCo::getEvmsList( EvmsTree& data )
     y2milestone( "list size:%zu", l.size() );
     for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
-	if( i->find( "SEG D " )==0 || i->find( "REG D " )==0 )
+	if( i->find( "SEG D " )==0 || i->find( "REG D " )==0 || 
+	    i->find( "DSK D " )==0 )
 	    {
 	    EvmsObj obj;
 	    map<string,string> m = makeMap( splitString( i->substr(6) ), ":" );

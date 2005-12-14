@@ -8,6 +8,7 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
+#include "y2storage/Regex.h"
 #include "y2storage/Storage.h"
 
 using namespace storage;
@@ -188,6 +189,27 @@ Dm::usingPe( const string& dev ) const
     map<string,unsigned long>::const_iterator mit = pe_map.find( dev );
     if( mit!=pe_map.end() )
 	ret = mit->second;
+    return( ret );
+    }
+
+bool
+Dm::mapsTo( const string& dev ) const
+    {
+    bool ret = false;
+    map<string,unsigned long>::const_iterator mit;
+    if( dev.find_first_of( "[.*^$" ) != string::npos )
+	{
+	Regex r(dev);
+	mit = pe_map.begin();
+	while( mit!=pe_map.end() && !r.match( mit->first ))
+	    ++mit;
+	}
+    else
+	{
+	mit = pe_map.find( dev );
+	}
+    ret = mit != pe_map.end();
+    y2milestone( "table:%s dev:%s ret:%d", tname.c_str(), dev.c_str(), ret );
     return( ret );
     }
 

@@ -1147,6 +1147,8 @@ int LvmVg::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    string tbl = lvm2()?"lvm2":"lvm";
+	    getStorage()->removeDmTable( tbl+'|'+name()+'|'+l->name() );
 	    if( !removeFromList( l ) )
 		ret = LVM_LV_NOT_IN_LIST;
 	    getVgData( name() );

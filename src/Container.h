@@ -47,11 +47,14 @@ class Container
 	string logDifference( const Container& c ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	virtual int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
+	virtual int getToCommit( storage::CommitStage stage, 
+	                         std::list<Container*>& col,
 	                         std::list<Volume*>& vol );
+
 	virtual int commitChanges( storage::CommitStage stage );
 	virtual int commitChanges( storage::CommitStage stage, Volume* vol );
 	unsigned numVolumes() const;
+	bool isEmpty() const;
 	void getInfo( storage::ContainerInfo& info ) const;
 	bool findVolume( const string& device, Volume*& vol );
 
@@ -130,8 +133,6 @@ class Container
 	virtual ~Container();
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
-	const string& pId() const { return p_id; }
-	const string& pPath() const { return p_path; }
 	storage::CType type() const { return typ; }
 	bool deleted() const { return del; }
 	bool created() const { return create; }
@@ -184,8 +185,6 @@ class Container
 	storage::CType typ;
 	string nm;
 	string dev;
-	string p_id;
-	string p_path;
 	bool del;
 	bool create;
 	bool silent;

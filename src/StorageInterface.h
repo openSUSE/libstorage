@@ -152,8 +152,6 @@ namespace storage
 	unsigned volcnt;
 	string device;
 	string name;
-	string pId;
-	string pPath;
 	UsedByType usedBy;
 	string usedByName;
 	bool readonly;
@@ -171,6 +169,8 @@ namespace storage
 	unsigned long heads;
 	unsigned long sectors;
 	string disklabel;
+	string udevPath;
+	string udevId;
 	unsigned maxLogical;
 	unsigned maxPrimary;
 	bool initDisk;
@@ -231,8 +231,6 @@ namespace storage
 	string fstab_options;
 	string uuid;
 	string label;
-	string pId;
-	string pPath;
 	string mkfs_options;
 	string loop;
 	EncryptType encryption;
@@ -258,6 +256,8 @@ namespace storage
 	PartitionType partitionType;
 	unsigned id;
 	bool boot;
+	string udevPath;
+	string udevId;
 	};
 
     /**

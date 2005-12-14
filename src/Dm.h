@@ -31,6 +31,7 @@ class Dm : public Volume
 	const std::map<string,unsigned long>& getPeMap() const { return( pe_map ); }
 	void setPeMap( const std::map<string,unsigned long>& m ) { pe_map = m; }
 	unsigned long long usingPe( const string& dev ) const;
+	bool mapsTo( const string& dev ) const;
 	void getTableInfo();
 	virtual bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }

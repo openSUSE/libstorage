@@ -10,7 +10,6 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Storage.h"
 #include "y2storage/AppUtil.h"
-#include "y2storage/UDev.h"
 
 using namespace std;
 using namespace storage;
@@ -21,7 +20,6 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     del = silent = ronly = create = false;
     dev = "/dev/" + nm;
     typ = t;
-    udevinfo (dev, p_id, p_path);
     y2milestone( "constructed cont %s", nm.c_str() );
     }
 
@@ -34,13 +32,19 @@ Container::~Container()
     y2milestone( "destructed cont %s", dev.c_str() );
     }
 
-static bool existingVol( const Volume& v )
-    { return( !v.deleted()&&!v.created()); }
+static bool notDeleted( const Volume& v )
+    { return( !v.deleted()); }
 
 unsigned Container::numVolumes() const
     {
-    ConstVolPair p = volPair( existingVol );
+    ConstVolPair p = volPair( notDeleted );
     return( p.length() );
+    }
+
+bool Container::isEmpty() const
+    {
+    ConstVolPair p = volPair( notDeleted );
+    return( p.empty() );
     }
 
 static bool stageFormat( const Volume& v )
@@ -282,8 +286,6 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.type = type();
     info.name = name();
     info.device = device();
-    info.pId = pId();
-    info.pPath = pPath();
     info.volcnt = vp.length();
     info.usedBy = getUsedByType();
     info.usedByName = usedByName();

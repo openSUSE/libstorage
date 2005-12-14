@@ -595,6 +595,7 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 	rereadAllObjects();
 	}
     y2debug( "End Konstruktor EvmsAccess" );
+    y2mil( "ret:" << endl << *this );
     }
 
 
@@ -617,6 +618,8 @@ int EvmsAccess::activate()
 	else
 	    {
 	    rereadAllObjects();
+	    y2mil( "after rereadAllObjects" );
+	    y2mil( "ret:" << endl << *this );
 	    }
 	}
     return( ret );
@@ -958,11 +961,39 @@ int EvmsAccess::createCo( const string& Container_Cv,
     while( ret==0 && count<input->count )
 	{
 	string dev = undevDevice( *p );
-	object_type_t ot = (object_type_t)(REGION|SEGMENT);
+	object_type_t ot = (object_type_t)(REGION|SEGMENT|DISK);
+	y2mil( "dev:" << dev << " ot:" << ot  );
 	ret = evms_get_object_handle_for_name( ot, (char *)dev.c_str(),
 					       &input->handle[count] );
 	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
-	             input->handle[count] );
+		     input->handle[count] );
+	if( ret!=0 )
+	    {
+	    std::list<EvmsObject*>::const_iterator i=objects.begin();
+	    while( i!=objects.end() && (*i)->type()!=EVMS_DISK && 
+	           (*i)->name()!=dev )
+		++i;
+	    if( i!=objects.end() )
+		{
+		y2mil( "dev:" << dev << " id:" << (*i)->id()  );
+		ret = evms_unassign( (*i)->id() );
+		y2milestone( "ret %d evms_unassign id %d", ret, (*i)->id() );
+		input->handle[count] = (*i)->id();
+		}
+	    if( ret!=0 )
+		{
+		i=objects.begin();
+		while( i!=objects.end() && (*i)->type()!=EVMS_VOLUME && 
+		       (*i)->name()!=dev )
+		    ++i;
+		if( i!=objects.end() )
+		    {
+		    ret = 0;
+		    y2milestone( "volume with id %d", (*i)->id() );
+		    input->handle[count] = (*i)->id();
+		    }
+		}
+	    }
 	if( ret )
 	    {
 	    y2milestone( "error: %s", evms_strerror(ret) );

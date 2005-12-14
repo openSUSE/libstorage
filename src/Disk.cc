@@ -3,7 +3,6 @@
 */
 
 #include <iostream>
-#include <stdio.h>
 
 #include <string>
 #include <sstream>
@@ -48,16 +47,6 @@ Disk::Disk( Storage * const s, const string& fname ) :
     if( searchFile( file, "^Device:", line ) )
 	{
 	dev = extractNthWord( 1, line );
-	}
-    p_id.clear();
-    if( searchFile( file, "^DeviceId:", line ) )
-	{
-	p_id = extractNthWord( 1, line );
-	}
-    p_path.clear();
-    if( searchFile( file, "^DevicePath:", line ) )
-	{
-	p_path = extractNthWord( 1, line );
 	}
     mnr = mjr = 0;
     if( searchFile( file, "^Major:", line ) )
@@ -118,6 +107,16 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	{
 	extractNthWord( 1, line ) >> size_k;
 	}
+    udev_path.clear();
+    if( searchFile( file, "^UdevPath:", line ) )
+	{
+	udev_path = extractNthWord( 1, line );
+	}
+    udev_id.clear();
+    if( searchFile( file, "^UdevId:", line ) )
+	{
+	udev_id = extractNthWord( 1, line );
+	}
     int lnr = 0;
     while( searchFile( file, "^Partition:", line, lnr ))
 	{
@@ -133,6 +132,14 @@ Disk::~Disk()
     {
     y2milestone( "destructed disk %s", dev.c_str() );
     }
+
+void Disk::setUdevData( const string& path, const string& id )
+    {
+    y2milestone( "disk %s id %s path %s", nm.c_str(), path.c_str(), id.c_str() );
+    udev_path = path;
+    udev_id = id;
+    }
+
 
 unsigned long long
 Disk::cylinderToKb( unsigned long cylinder ) const
@@ -310,7 +317,8 @@ bool Disk::detectPartitions()
 	}
     else
 	dlabel.erase();
-    detected_label = dlabel;
+    if( detected_label.empty() )
+	detected_label = dlabel;
     if( dlabel.empty() )
 	dlabel = defaultLabel();
     setLabelData( dlabel );
@@ -343,8 +351,10 @@ Disk::logData( const string& Dir )
     string fname( Dir + "/disk_" + name() + ".tmp" );
     ofstream file( fname.c_str() );
     file << "Device: " << dev << endl;
-    file << "DeviceId: " << "/dev/disk/by-id/" << pId() << endl;
-    file << "DevicePath: " << "/dev/disk/by-path/" << pPath() << endl;
+    if( !udev_path.empty() )
+	file << "UdevPath: " << udev_path << endl;
+    if( !udev_id.empty() )
+	file << "UdevId: " << udev_id << endl;
     file << "Major: " << mjr << endl;
     file << "Minor: " << mnr << endl;
     file << "Range: " << range << endl;
@@ -516,10 +526,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
       id = Partition::ID_LINUX;
       boot = TInfo.find( ",boot," ) != string::npos;
       string OrigTInfo = TInfo;
-      for( string::iterator i=TInfo.begin(); i!=TInfo.end(); i++ )
-	  {
-	  *i = tolower(*i);
-	  }
+      tolower( TInfo );
       if( ext_possible )
 	  {
 	  if( PartitionType == "extended" )
@@ -1560,6 +1567,7 @@ int Disk::doCreateLabel()
 	{
 	getStorage()->showInfoCb( setDiskLabelText(true) );
 	}
+    getStorage()->removeDmMapsTo( device()+".*" );
     removePresentPartitions();
     system_stderr.erase();
     std::ostringstream cmd_line;
@@ -1815,6 +1823,7 @@ int Disk::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->createText(true) );
 	    }
+	getStorage()->removeDmMapsTo( device()+".*" );
 	system_stderr.erase();
 	y2milestone( "doCreate container %s name %s", name().c_str(),
 		     p->name().c_str() );
@@ -1972,6 +1981,7 @@ int Disk::doRemove( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
+	getStorage()->removeDmMapsTo( device()+".*" );
 	system_stderr.erase();
 	y2milestone( "doRemove container %s name %s", name().c_str(),
 		     p->name().c_str() );
@@ -2177,6 +2187,8 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
     info.initDisk = init_disk;
+    info.udevPath = udev_path;
+    info.udevId = udev_id;
     tinfo = info;
     }
 
@@ -2196,6 +2208,10 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
       << " Label:" << d.label;
     if( d.detected_label!=d.label )
 	s << " DetectedLabel:" << d.detected_label;
+    if( !d.udev_path.empty() )
+	s << " UdevPath:" << d.udev_path;
+    if( !d.udev_id.empty() )
+	s << " UdevId:" << d.udev_id;
     s << " MaxPrimary:" << d.max_primary;
     if( d.ext_possible )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
@@ -2322,6 +2338,8 @@ Disk& Disk::operator= ( const Disk& rhs )
     ext_possible = rhs.ext_possible;
     max_logical = rhs.max_logical;
     init_disk = rhs.init_disk;
+    udev_path = rhs.udev_path;
+    udev_id = rhs.udev_id;
     return( *this );
     }
 

@@ -5,6 +5,7 @@
 #include <ext/stdio_filebuf.h>
 
 #include "y2storage/Regex.h"
+#include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
 
 namespace storage
@@ -24,16 +25,31 @@ struct contOrder
 
 typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 
+class Volume;
+class Container;
+
 struct commitAction
     {
     commitAction( CommitStage s, CType t, const string& d, bool destr=false,
                   bool cont=false ) 
-	{ stage=s; type=t; descr=d; destructive=destr; container=cont; }
+	{ stage=s; type=t; descr=d; destructive=destr; container=cont; 
+	  u.co=NULL; u.vol=NULL; }
+    commitAction( CommitStage s, CType t, Volume* v )
+	{ stage=s; type=t; destructive=false; container=false; u.vol=v; }
+    commitAction( CommitStage s, CType t, Container* c )
+	{ stage=s; type=t; destructive=false; container=true; u.co=c; }
     CommitStage stage;
     CType type;
     string descr;
     bool destructive;
     bool container;
+    union 
+	{
+	Volume* vol;
+	Container* co;
+	} u;
+    Container* co() { return( container?u.co:NULL ); }
+    Volume* vol() { return( container?NULL:u.vol ); }
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
     bool operator<( const commitAction& rhs ) const
@@ -143,6 +159,13 @@ struct find_begin
     {
     find_begin( const string& t ) : val(t) {};
     bool operator()(const string&s) { return( s.find(val)==0 ); }
+    const string& val;
+    };
+
+struct find_any
+    {
+    find_any( const string& t ) : val(t) {};
+    bool operator()(const string&s) { return( s.find(val)!=string::npos ); }
     const string& val;
     };
 

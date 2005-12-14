@@ -24,6 +24,7 @@ class AsciiFile;
 bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
 bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
 		int& StartLine_ir);
+void tolower( string& s );
 void timeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
 void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
