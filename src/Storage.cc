@@ -938,7 +938,7 @@ Storage::removePartition( const string& partition )
 		    ret = disk->removePartition( vol->nr() );
 		if( ret==0 && cont->type()==DISK && haveEvms() )
 		    {
-		    handleEvmsRemoveDevice( disk->device(), vol->device(),
+		    handleEvmsRemoveDevice( disk, vol->device(),
 		                            disk->isLogical(vol->nr()) );
 		    }
 		}
@@ -1742,7 +1742,7 @@ Storage::removeVolume( const string& device )
 		if( !tmp.empty() )
 		    tmp >> num;
 		bool rename = disk!=NULL && num>0 && disk->isLogical(num);
-		handleEvmsRemoveDevice( disk->device(), vol->device(), rename );
+		handleEvmsRemoveDevice( disk, vol->device(), rename );
 		}
 	    }
 	else
@@ -2941,7 +2941,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     bool evms_activate = false;
     while( unsigned(pt-a) < lengthof(a) )
 	{
-	bool cont_removed = false;
+	bool new_pair = false;
 	list<Container*> colist;
 	list<Volume*> vlist;
 	ContIterator i = p.begin();
@@ -2986,9 +2986,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    if( cont )
 		{
-		cont_removed = co->deleted() && (type==LVM||type==EVMS);
+		bool cont_removed = co->deleted() && (type==LVM||type==EVMS);
 		ret = co->commitChanges( *pt );
 		cont_removed = cont_removed && ret==0;
+		if( cont_removed )
+		    {
+		    removeContainer( co );
+		    new_pair = true;
+		    }
 		}
 	    else
 		{
@@ -2997,12 +3002,12 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    delete( *ac );
 	    ++ac;
 	    }
-	y2milestone( "stage:%d evms_activate:%d cont_removed:%d", *pt,
-	             evms_activate, cont_removed );
-	if( cont_removed )
+	y2milestone( "stage:%d evms_activate:%d new_pair:%d", *pt,
+	             evms_activate, new_pair );
+	if( new_pair )
 	    {
 	    p = cPair( fnc );
-	    cont_removed = false;
+	    new_pair = false;
 	    }
 	pt++;
 	}
@@ -3457,7 +3462,7 @@ bool Storage::haveEvms()
     return( ret );
     }
 
-void Storage::handleEvmsRemoveDevice( const string& disk, const string& d,
+void Storage::handleEvmsRemoveDevice( const Disk* disk, const string& d,
                                       bool rename )
     {
     y2mil( "device:" << d << " rename:" << rename );
@@ -3500,6 +3505,12 @@ void Storage::handleEvmsRemoveDevice( const string& disk, const string& d,
 	    v->setDeleted();
 	    v->setSilent();
 	    y2mil( "v:" << *v );
+	    }
+	if( disk->isEmpty() && !findVolume( "/dev/evms/"+disk->name(), v) )
+	    {
+	    EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
+	    if( co != NULL )
+		co->addLv( disk->sizeK(), disk->name(), false );
 	    }
 	if( rename )
 	    {
@@ -3564,7 +3575,7 @@ void Storage::handleEvmsCreateDevice( const string& disk, const string& d, bool 
 	}
     }
 
-void Storage::removeDmTable( const Volume& vol )
+void Storage::removeDmTableTo( const Volume& vol )
     {
     if( vol.cType()==DISK || vol.cType()==MD )
 	{
@@ -3574,6 +3585,14 @@ void Storage::removeDmTable( const Volume& vol )
 	    removeDmMapsTo( vol.getContainer()->device() );
 	removeDmTable( undevDevice( vol.device() ));
 	}
+    }
+    
+void Storage::removeDmTableTo( const string& device )
+    {
+    y2mil( "dev:" << device );
+    VolIterator vol;
+    if( findVolume( device, vol ))
+	removeDmTableTo( *vol );
     }
     
 void Storage::removeDmTable( const string& table )
@@ -3806,6 +3825,12 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
     return( ret );
     }
+
+bool Storage::isDisk( const string& dev )
+    {
+    return( findDisk( dev ) != dEnd() );
+    }
+
 
 const Volume*
 Storage::getVolume( const string& dev )

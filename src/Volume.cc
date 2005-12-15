@@ -900,7 +900,7 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() && !cont->getStorage()->test() )
 	{
-	cont->getStorage()->removeDmTable( *this );
+	cont->getStorage()->removeDmTableTo( *this );
 	ret = checkDevice(mountDevice());
 	if( ret==0 )
 	    ret = mount( lmount );
@@ -1336,7 +1336,7 @@ int Volume::doLosetup()
 	}
     if( is_loop )
 	{
-	cont->getStorage()->removeDmTable( *this );
+	cont->getStorage()->removeDmTableTo( *this );
 	if( ret==0 && loop_dev.empty() )
 	    {
 	    ret = getFreeLoop();
@@ -1566,7 +1566,7 @@ int Volume::prepareRemove()
 	loUnsetup();
 	}
     cont->getStorage()->eraseFreeInfo(dev);
-    cont->getStorage()->removeDmTable(*this);
+    cont->getStorage()->removeDmTableTo(*this);
     y2milestone( "ret:%d", ret );
     return( ret );
     }

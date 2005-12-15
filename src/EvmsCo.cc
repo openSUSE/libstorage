@@ -243,7 +243,7 @@ EvmsCo::setUsed( const string& device, storage::UsedByType typ,
     {
     string d = normalizeDevice(device);
     getStorage()->setUsedBy( d, typ, name );
-    if( typ!=UB_NONE )
+    if( typ!=UB_NONE && !getStorage()->isDisk(d) )
 	getStorage()->changeFormatVolume( d, false, FSNONE );
     d = "/dev/evms/"+d.substr(5);
     if( getStorage()->knownDevice( d ))
@@ -648,13 +648,14 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
     EvmsIter i;
     for( Storage::ConstDiskIterator d = dp.begin(); d!=dp.end(); ++d )
 	{
+	y2mil( "disk:" << d->device() << " empty:" << d->isEmpty() );
 	if( d->isEmpty() )
 	    {
 	    y2milestone( "empty disk %s", d->name().c_str() );
 	    i = ep.begin();
 	    while( i!=ep.end() && i->name()!=d->name() )
 		++i;
-	    if( i!=ep.end() )
+	    if( i==ep.end() )
 		{
 		addLv( d->sizeK(), d->name(), false );
 		}

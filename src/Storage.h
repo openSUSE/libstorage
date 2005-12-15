@@ -160,6 +160,7 @@ class Storage : public storage::StorageInterface
 	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
+	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );
 	string deviceByNumber( const string& majmin );
@@ -327,7 +328,8 @@ class Storage : public storage::StorageInterface
 
         int commit();
 	void activateHld( bool val=true );
-	void removeDmTable( const Volume& vol );
+	void removeDmTableTo( const Volume& vol );
+	void removeDmTableTo( const string& device );
 	void removeDmTable( const string& table );
 	void removeDmMapsTo( const string& dev );
 
@@ -1233,7 +1235,7 @@ class Storage : public storage::StorageInterface
 	bool haveMd( MdCo*& md );
 	bool haveLoop( LoopCo*& loop );
 	bool haveEvms();
-	void handleEvmsRemoveDevice( const string& disk, const string& d,
+	void handleEvmsRemoveDevice( const Disk* disk, const string& d,
 	                             bool rename );
 	void handleEvmsCreateDevice( const string& disk, const string& dev, 
 	                             bool extended=false );

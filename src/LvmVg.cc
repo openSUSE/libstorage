@@ -149,7 +149,8 @@ LvmVg::extendVg( const list<string>& devs )
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 	    pv_add.push_back( pvn );
-	    getStorage()->changeFormatVolume( d, false, FSNONE );
+	    if( !getStorage()->isDisk(d))
+		getStorage()->changeFormatVolume( d, false, FSNONE );
 	    }
 	getStorage()->setUsedBy( d, UB_LVM, name() );
 	free_pe += pe;
@@ -1250,6 +1251,7 @@ int LvmVg::doCreatePv( const string& device )
     SystemCmd c;
     string cmd = "mdadm --zero-superblock " + device;
     c.execute( cmd );
+    getStorage()->removeDmTableTo( device );
     cmd = "pvcreate -ff " + metaString() + device;
     c.execute( cmd );
     if( c.retcode()!=0 )
