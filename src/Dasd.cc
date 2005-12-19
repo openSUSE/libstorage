@@ -313,7 +313,7 @@ string Dasd::fdasdText() const
     {
     string txt;
     // displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-    txt = sformat( _("Executing fdasd for disk %1$s"), dev.c_str() );
+    txt = sformat( _("Executing fdasd for disk %1$s..."), dev.c_str() );
     return( txt );
     }
 
@@ -411,12 +411,12 @@ string Dasd::dasdfmtTexts( bool single, const string& devs )
     if( single )
 	{
         // displayed text during action, %1$s is replaced by disk name (e.g. dasda),
-        txt = sformat( _("Executing dasdfmt for disk %1$s"), devs.c_str() );
+        txt = sformat( _("Executing dasdfmt for disk %1$s..."), devs.c_str() );
 	}
     else
 	{
         // displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
-        txt = sformat( _("Executing dasdfmt for disks: %1$s"), devs.c_str() );
+        txt = sformat( _("Executing dasdfmt for disks: %1$s..."), devs.c_str() );
 	}
     return( txt );
     }
