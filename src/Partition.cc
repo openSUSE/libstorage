@@ -261,7 +261,6 @@ string Partition::removeText( bool doing ) const
 	}
     else
 	{
-	d.erase( 0, 5 );
 	if( isWindows() )
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1

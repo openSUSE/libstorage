@@ -610,7 +610,7 @@ int Volume::doFormat()
 	string cmd = "/bin/dd if=";
 	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
 	cmd += " of=" + dev + " bs=1024 count=";
-	cmd += decString(min(50ull,size_k));
+	cmd += decString(min(100ull,size_k));
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
 	}
