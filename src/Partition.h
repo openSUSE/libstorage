@@ -18,7 +18,8 @@ class Partition : public Volume
 	               ID_EXTENDED=0x0f,
 		       ID_LINUX=0x83, ID_SWAP=0x82, ID_LVM=0x8e, ID_RAID=0xfd,
 		       ID_APPLE_OTHER=0x101, ID_APPLE_HFS=0x102,
-		       ID_GPT_BOOT=0x103, ID_GPT_SERVICE=0x104 } IdNum;
+		       ID_GPT_BOOT=0x103, ID_GPT_SERVICE=0x104,
+		       ID_GPT_MSFTRES=0x105 } IdNum;
 
 	Partition( const Disk& d, unsigned Pnr, unsigned long long SizeK,
 	           unsigned long Start, unsigned long CSize,

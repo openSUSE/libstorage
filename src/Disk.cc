@@ -613,6 +613,10 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	      {
 	      id = Partition::ID_GPT_SERVICE;
 	      }
+	  if( TInfo.find( ",msftres," ) != string::npos )
+	      {
+	      id = Partition::ID_GPT_MSFTRES;
+	      }
 	  }
       y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
 		   nr, id, type, start, csize );
