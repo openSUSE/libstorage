@@ -407,10 +407,10 @@ Disk::setLabelData( const string& disklabel )
 	}
     else
         {
-    ext_possible = labels[i].extended;
-    max_primary = min(labels[i].primary,unsigned(range-1));
-    max_logical = min(labels[i].logical,unsigned(range-1));
-    label = labels[i].name;
+	ext_possible = labels[i].extended;
+	max_primary = min(labels[i].primary,unsigned(range-1));
+	max_logical = min(labels[i].logical,unsigned(range-1));
+	label = labels[i].name;
 	}
     y2milestone( "name:%s ext:%d primary:%d logical:%d", label.c_str(),
                  ext_possible, max_primary, max_logical );
