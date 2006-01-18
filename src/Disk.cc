@@ -1722,7 +1722,7 @@ int Disk::doSetType( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    getStorage()->waitForDevice( device() );
+	    getStorage()->waitForDevice( p->device() );
 	    p->changeIdDone();
 	}
 	}
@@ -1964,7 +1964,7 @@ int Disk::doCreate( Volume* v )
 	    {
 	    SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
 	    if( p->type()!=EXTENDED )
-		getStorage()->waitForDevice( device() );
+		getStorage()->waitForDevice( p->device() );
 	    }
 	}
     else
@@ -2153,7 +2153,7 @@ int Disk::doResize( Volume* v )
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
 	    if( ret==0 )
-		getStorage()->waitForDevice( device() );
+		getStorage()->waitForDevice( p->device() );
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )

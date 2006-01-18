@@ -1452,6 +1452,9 @@ int Volume::doSetLabel()
 	    case XFS:
 		cmd = "/usr/sbin/xfs_admin -L " + label + " " + mountDevice();
 		break;
+	    case SWAP:
+		cmd = "/sbin/mkswap -L " + label + " " + mountDevice();
+		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
 		break;
