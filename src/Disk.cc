@@ -669,11 +669,12 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 	    }
 	}
     string reg = nm;
-    if( reg.find( '/' )>=0 )
+    if( reg.find( '/' )!=string::npos )
 	reg += "p?";
     reg += "[0-9]+";
     y2milestone( "/proc/partititons regex %s", reg.c_str() );
     list<string> ps = ppart.getMatchingEntries( reg );
+    y2mil( "ps " << ps );
     if( !checkPartedValid( ppart, ps, pl ) )
 	{
 	range_exceed = 0;
