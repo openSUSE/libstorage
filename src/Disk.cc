@@ -1898,9 +1898,11 @@ int Disk::doCreate( Volume* v )
 		if( !ext.empty() )
 		    maxc = ext.begin()->cylEnd();
 		}
-	    y2milestone( "max %lu", maxc );
+	    y2milestone( "max %lu end:%lu", maxc, end );
+	    y2mil( "pp " << *p );
 	    for( PartIter i=pp.begin(); i!=pp.end(); ++i )
 		{
+		y2mil( "i " << *i );
 		if( i->cylStart()<maxc && i->cylStart()<end &&
 		    !i->cylEnd()>=p->cylStart() )
 		    maxc=i->cylStart();
