@@ -38,7 +38,7 @@ bool Dasd::detectPartitions()
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
-    y2milestone( "recode:%d", Cmd.retcode() );
+    y2milestone( "retcode:%d", Cmd.retcode() );
     if( Cmd.retcode() == 0 )
 	{
 	getGeometry( Cmd, cyl, head, sector );
@@ -204,37 +204,49 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	{
 	val = 0;
 	y2milestone( "Cylinder line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 0, *cmd.getLine(0, true));
+	tmp = extractNthWord( 2, *cmd.getLine(0, true));
 	tmp >> val;
 	if( val>0 )
+	    {
+	    y2mil( "val:" << val );
 	    c=val;
+	    }
 	}
     if( cmd.select( "tracks per" )>0 )
 	{
 	val = 0;
 	y2milestone( "Tracks line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 0, *cmd.getLine(0, true));
+	tmp = extractNthWord( 4, *cmd.getLine(0, true));
 	tmp >> val;
 	if( val>0 )
+	    {
+	    y2mil( "val:" << val );
 	    h=val;
+	    }
 	}
     if( cmd.select( "blocks per" )>0 )
 	{
 	val = 0;
 	y2milestone( "Blocks line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 0, *cmd.getLine(0, true));
+	tmp = extractNthWord( 4, *cmd.getLine(0, true));
 	tmp >> val;
 	if( val>0 )
+	    {
+	    y2mil( "val:" << val );
 	    s=val;
+	    }
 	}
-    if( cmd.select( "bytes  per" )>0 )
+    if( cmd.select( "bytes per" )>0 )
 	{
 	val = 0;
 	y2milestone( "Bytes line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 0, *cmd.getLine(0, true));
+	tmp = extractNthWord( 4, *cmd.getLine(0, true));
 	tmp >> val;
 	if( val>0 )
+	    {
+	    y2mil( "val:" << val );
 	    s*=val/512;
+	    }
 	}
     y2milestone( "c:%lu h:%u s:%u", c, h, s );
     }

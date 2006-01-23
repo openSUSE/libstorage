@@ -777,6 +777,8 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	    }
 	}
     bool openbsd = false;
+    y2mil( "proc  :" << proc_l );
+    y2mil( "parted:" << parted_l );
     if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
