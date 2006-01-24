@@ -727,7 +727,7 @@ int Volume::doFormat()
 	}
     if( needMount )
 	{
-	int r = mount( orig_mp );
+	int r = mount( (ret==0)?mp:orig_mp );
 	ret = (ret==0)?r:ret;
 	}
     y2milestone( "ret:%d", ret );
