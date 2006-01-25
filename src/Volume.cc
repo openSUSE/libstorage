@@ -1153,7 +1153,7 @@ int Volume::getFreeLoop()
 	SystemCmd c( "losetup -a" );
 	do
 	    {
-	    ldev = "^/dev/loop" + decString(num) + " ";
+	    ldev = "^/dev/loop" + decString(num) + ":";
 	    found = c.select( ldev )>0;
 	    if( found || find( lnum.begin(), lnum.end(), num )!=lnum.end())
 		num++;
