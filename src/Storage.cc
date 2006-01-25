@@ -4055,6 +4055,7 @@ Storage::mountDevice( const string& device, const string& mp )
 bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     {
+    static deque<VolumeInfo> vil;
     bool ret = false;
     VolIterator vol;
     assertInit();
@@ -4071,10 +4072,11 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    vol->getInfo( info );
 	    vol->mergeFstabInfo( info, *i );
 	    y2mil( "volume:" << *vol );
-	    infos.push_back( info );
+	    vil.push_back( info );
 	    }
 	}
     delete fstab;
+    infos = vil;
     ret = !infos.empty();
     y2milestone( "ret:%d", ret );
     return( ret );
