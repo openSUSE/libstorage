@@ -1512,10 +1512,17 @@ int Volume::mount( const string& m )
 	{
 	string lmount = (!m.empty())?m:mp;
 	y2milestone( "device:%s mp:%s", dev.c_str(), lmount.c_str() );
-	cmdline = "modprobe " + fs_names[fs];
-	cmd.execute( cmdline );
-	cmdline = "mount ";
 	string fsn = fs_names[fs];
+	cmdline = "modprobe " + fsn;
+	cmd.execute( cmdline );
+	if( fs == VFAT )
+	    {
+	    cmdline = "modprobe nls_cp437";
+	    cmd.execute( cmdline );
+	    cmdline = "modprobe nls_iso8859-1";
+	    cmd.execute( cmdline );
+	    }
+	cmdline = "mount ";
 	if( fs == NTFS )
 	    cmdline += "-r ";
 	else if( fs == FSUNKNOWN )
