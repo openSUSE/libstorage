@@ -315,6 +315,8 @@ class Storage : public storage::StorageInterface
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,
 			    const string& pwd, string& device );
+	int modifyFileLoop( const string& device, const string& lname, 
+	                    bool reuseExisting, unsigned long long sizeK );
 	int removeFileLoop( const string& lname, bool removeFile );
 
 	deque<string> getCommitActions( bool mark_destructive );

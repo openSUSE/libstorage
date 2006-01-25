@@ -68,14 +68,7 @@ Loop::Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	getMajorMinor( dev, mjr, mnr );
 	}
     is_loop = true;
-    if( reuseFile )
-	{
-	struct stat st;
-	if( stat( lfileRealPath().c_str(), &st )>=0 )
-	    setSize( st.st_size/1024 );
-	else
-	    reuseFile = false;
-	}
+    checkReuse();
     if( !reuseFile )
 	setSize( sizeK );
     }
@@ -89,6 +82,31 @@ void
 Loop::init()
     {
     reuseFile = delFile = false;
+    }
+
+void Loop::setLoopFile( const string& file )
+    {
+    lfile = file;
+    checkReuse();
+    }
+
+void Loop::setReuse( bool reuseExisting )
+    {
+    reuseFile = reuseExisting;
+    checkReuse();
+    }
+
+void Loop::checkReuse()
+    {
+    if( reuseFile )
+	{
+	struct stat st;
+	if( stat( lfileRealPath().c_str(), &st )>=0 )
+	    setSize( st.st_size/1024 );
+	else
+	    reuseFile = false;
+	y2mil( "reuseFile:" << reuseFile << " size:" << sizeK() );
+	}
     }
 
 bool

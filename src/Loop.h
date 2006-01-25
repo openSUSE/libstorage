@@ -17,6 +17,9 @@ class Loop : public Volume
 	Loop( const LoopCo& d, const Loop& d );
 	virtual ~Loop();
 	const string& loopFile() const { return lfile; }
+	void setLoopFile( const string& file );
+	bool getReuse() { return( reuseFile ); }
+	void setReuse( bool reuseExisting );
 	void setDelFile( bool val=true ) { delFile=val; }
 	bool removeFile();
 	bool createFile();
@@ -36,6 +39,7 @@ class Loop : public Volume
 
     protected:
 	void init();
+	void checkReuse();
 	Loop& operator=( const Loop& );
 
 	string lfile;

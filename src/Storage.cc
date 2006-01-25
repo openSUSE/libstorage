@@ -2715,6 +2715,34 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
     }
 
 int
+Storage::modifyFileLoop( const string& device, const string& lname, 
+                         bool reuseExisting, unsigned long long sizeK )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s lname:%s reuse:%d sizeK:%lld", device.c_str(), 
+                 lname.c_str(), reuseExisting, sizeK );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	LoopCo *loop = NULL;
+	if( haveLoop(loop) )
+	    ret = loop->updateLoop( device, lname, reuseExisting, sizeK );
+	else
+	    ret = STORAGE_LOOP_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::removeFileLoop( const string& lname, bool removeFile )
     {
     int ret = 0;

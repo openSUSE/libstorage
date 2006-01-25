@@ -493,6 +493,7 @@ namespace storage
 	LOOP_REMOVE_INVALID_VOLUME = -7007,
 	LOOP_NOT_IN_LIST = -7008,
 	LOOP_REMOVE_CREATE_NOT_FOUND = -7009,
+	LOOP_MODIFY_EXISTING = -7010,
 
 	EVMS_HELPER_UNKNOWN_CMD = -8000,
 	EVMS_UNSUPPORTED_CONTAINER_TYPE = -8001,
@@ -1503,7 +1504,7 @@ namespace storage
 	 * activated on the loop device.
 	 *
 	 * @param lname name of file the loop device is based on
-	 * @param reuseExisting if true an alraedy existing file will be
+	 * @param reuseExisting if true an already existing file will be
 	 *    reused. if false the file will be created new. if false
 	 *    the format flag for the device is set by default.
 	 * @param sizeK size of the created file, this parameter is ignored
@@ -1518,6 +1519,27 @@ namespace storage
 	                            unsigned long long sizeK,
 				    const string& mp, const string& pwd,
 				    string& device ) = 0;
+
+	/**
+	 * Modify size and pathname of a file based loop device. 
+	 * This function can only be used between the creation of a
+	 * devce and the next call to commit(). Containers that
+	 * are already created cannot have these properties changed.
+	 * The size has only a meaning if reuseExisting is true,
+	 * otherwise it is ignored.
+	 *
+	 * @param device device name of the loop device
+	 * @param lname name of file the loop device is based on
+	 * @param reuseExisting if true an already existing file will be
+	 *    reused. if false the file will be created new. if false
+	 *    the format flag for the device is set by default.
+	 * @param sizeK size of the created file, this parameter is ignored
+	 *    if reuseExisting is false
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int modifyFileLoop( const string& device, const string& lname,
+	                            bool reuseExisting,
+	                            unsigned long long sizeK ) = 0;
 
 	/**
 	 * Remove a file based loop device from the system.

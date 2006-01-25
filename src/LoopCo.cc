@@ -67,22 +67,6 @@ LoopCo::getLoopData()
 	}
     }
 
-void
-LoopCo::checkLoop( Loop* m )
-    {
-    LoopIter i;
-    if( findLoop( m->device(), i ))
-	{
-	i->setSize( m->sizeK() );
-	i->setCreated( false );
-	}
-    else
-	{
-	y2warning( "checkLoop does not exist %u", m->nr() );
-	}
-    delete m;
-    }
-
 bool
 LoopCo::findLoop( unsigned num, LoopIter& i )
     {
@@ -117,6 +101,16 @@ LoopCo::findLoop( const string& file )
     return( findLoop( file, i ));
     }
 
+bool
+LoopCo::findLoopDev( const string& dev, LoopIter& i )
+    {
+    LoopPair p=loopPair(Loop::notDeleted);
+    i=p.begin();
+    while( i!=p.end() && i->device()!=dev )
+	++i;
+    return( i!=p.end() );
+    }
+
 int
 LoopCo::createLoop( const string& file, bool reuseExisting,
                     unsigned long long sizeK, string& device )
@@ -139,6 +133,38 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
 	l->setCreated( true );
 	addToList( l );
 	device = l->device();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+LoopCo::updateLoop( const string& device, const string& file, 
+                    bool reuseExisting, unsigned long long sizeK )
+    {
+    int ret = 0;
+    y2milestone( "device:%s file:%s reuse:%d sizeK:%lld", device.c_str(), 
+                 file.c_str(), reuseExisting, sizeK );
+    LoopIter i;
+    if( readonly() )
+	{
+	ret = LOOP_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findLoopDev( device, i ))
+	    ret = LOOP_UNKNOWN_FILE;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = LOOP_MODIFY_EXISTING;
+	}
+    if( ret==0 )
+	{
+	i->setLoopFile( file );
+	i->setReuse( reuseExisting );
+	if( !i->getReuse() )
+	    i->setSize( sizeK );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

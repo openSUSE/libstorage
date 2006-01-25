@@ -21,6 +21,8 @@ class LoopCo : public Container
 
 	int createLoop( const string& file, bool reuseExisting, 
 	                unsigned long long sizeK, string& device );
+	int updateLoop( const string& device, const string& file, 
+	                bool reuseExisting, unsigned long long sizeK );
 	int removeLoop( const string& file, bool removeFile = false );
 
 	int removeVolume( Volume* v );
@@ -81,10 +83,10 @@ class LoopCo : public Container
 	void getLoopData();
 	bool findLoop( unsigned num, LoopIter& i );
 	bool findLoop( unsigned num ); 
-	bool findLoop( const string& dev, LoopIter& i );
-	bool findLoop( const string& dev ); 
+	bool findLoop( const string& file, LoopIter& i );
+	bool findLoop( const string& file ); 
+	bool findLoopDev( const string& dev, LoopIter& i );
 	void addLoop( Loop* m );
-	void checkLoop( Loop* m );
 	void updateEntry( const Loop* m );
 	static int getFreeLoop( string& dev );
 
