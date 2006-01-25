@@ -22,6 +22,9 @@ Dasd::Dasd( Storage * const s, const string& Name,
             unsigned long long SizeK ) : 
     Disk(s,Name,SizeK)
     {
+    head = 15;
+    sectors = 96;
+    cylinders = 1;
     y2milestone( "constructed dasd %s", dev.c_str() );
     }
 
