@@ -355,6 +355,9 @@ void Dm::activate( bool val )
 		c.execute(" grep \"^dm[-_]mod[ 	]\" /proc/modules" );
 		if( c.numLines()<=0 )
 		    c.execute( "modprobe dm-mod" );
+		c.execute(" grep \"^dm[-_]snapshot[ 	]\" /proc/modules" );
+		if( c.numLines()<=0 )
+		    c.execute( "modprobe dm-snapshot" );
 		c.execute( "/sbin/devmap_mknod.sh" );
 		}
 	    }

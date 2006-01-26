@@ -22,9 +22,6 @@ Dasd::Dasd( Storage * const s, const string& Name,
             unsigned long long SizeK ) : 
     Disk(s,Name,SizeK)
     {
-    head = 15;
-    sector = 96;
-    cyl = 1;
     y2milestone( "constructed dasd %s", dev.c_str() );
     }
 
@@ -257,6 +254,10 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 bool Dasd::detectGeometry()
     {
     Disk::detectGeometry();
+    sector *= 8;
+    byte_cyl *= 8;
+    cyl /= 8;
+    y2milestone( "cyl:%lu sector:%u byte_cyl:%lu", cyl, sector, byte_cyl  );
     return( true );
     }
 
