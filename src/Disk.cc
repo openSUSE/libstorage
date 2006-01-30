@@ -1904,8 +1904,11 @@ int Disk::doCreate( Volume* v )
 		{
 		y2mil( "i " << *i );
 		if( i->cylStart()<maxc && i->cylStart()<end &&
-		    !i->cylEnd()>=p->cylStart() )
+		    i->cylEnd()>=p->cylStart() )
+		    {
 		    maxc=i->cylStart();
+		    y2mil( "new maxc " << maxc );
+		    }
 		}
 	    y2milestone( "max %lu", maxc );
 	    if( end>maxc && maxc<cylinders()-1 )
