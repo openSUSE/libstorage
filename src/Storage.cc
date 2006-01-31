@@ -2890,8 +2890,21 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	todo.push_back( new commitAction( stage, (*i)->type(), *i ));
     for( list<Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
 	todo.push_back( new commitAction( stage, (*i)->cType(), *i ));
-    todo.sort( cont_less<commitAction>() );
     std::ostringstream b;
+    b.str("");
+    b << "unsorted actions <";
+    for( list<commitAction*>::const_iterator i=todo.begin(); i!=todo.end(); ++i )
+	{
+	if( i!=todo.begin() )
+	    b << " ";
+	if( (*i)->container )
+	    b << "C:" << (*i)->co()->device();
+	else
+	    b << "V:" << (*i)->vol()->device();
+	}
+    b << "> ";
+    y2milestone( "%s", b.str().c_str() );
+    todo.sort( cont_less<commitAction>() );
     y2milestone( "stage %d", stage );
     b << "sorted co <";
     for( list<Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )

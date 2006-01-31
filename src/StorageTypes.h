@@ -57,7 +57,9 @@ struct commitAction
 	contOrder l(type);
 	contOrder r(rhs.type);
 
-	if( unsigned(r)==unsigned(l) )
+	if( stage==rhs.stage && stage==MOUNT )
+	    return( false );
+	else if( unsigned(r)==unsigned(l) )
 	    {
 	    if( stage==rhs.stage )
 		{
