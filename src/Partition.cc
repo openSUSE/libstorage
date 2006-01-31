@@ -221,7 +221,10 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
     y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val,
 		 fs_names[new_fs].c_str() );
     if( typ==EXTENDED )
-	ret = VOLUME_FORMAT_EXTENDED_UNSUPPORTED;
+	{
+	if( val )
+	    ret = VOLUME_FORMAT_EXTENDED_UNSUPPORTED;
+	}
     else
 	ret = Volume::setFormat( val, new_fs );
     y2milestone( "ret:%d", ret );
