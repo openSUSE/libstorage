@@ -710,9 +710,8 @@ int Volume::doFormat()
 	detected_fs = fs;
 	if( fs != SWAP && !cont->getStorage()->test() )
 	    {
-	    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
 	    FsType old=fs;
-	    getFsData( Blkid );
+	    updateFsData();
 	    if( fs != old )
 		ret = VOLUME_FORMAT_FS_UNDETECTED;
 	    }
@@ -733,6 +732,13 @@ int Volume::doFormat()
     y2milestone( "ret:%d", ret );
     return( ret );
     }
+
+void Volume::updateFsData()
+    {
+    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
+    getFsData( Blkid );
+    }
+
 
 int Volume::umount( const string& mp )
     {
@@ -1266,8 +1272,7 @@ EncryptType Volume::detectLoopEncryption()
 	if( c.retcode()==0 )
 	    {
 	    cont->getStorage()->waitForDevice( loop_dev );
-	    c.execute( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
-	    getFsData( c );
+	    updateFsData();
 	    if( detected_fs!=FSUNKNOWN )
 		{
 		c.execute( "modprobe " + fs_names[detected_fs] );

@@ -146,6 +146,7 @@ class Volume
 	int getFreeLoop();
 	void getInfo( storage::VolumeInfo& info ) const;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
+	void updateFsData();
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted
