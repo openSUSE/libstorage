@@ -923,12 +923,17 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	}
     else if( type==LOGICAL )
 	{
-	ret = (--p.end())->nr()+1;
-	if( ret<=max_primary )
-	    ret = max_primary+1;
-	if( !ext_possible || !hasExtended() )
-	    ret = 0;
-	if( ret>max_logical )
+	unsigned mx = max_primary;
+	PartIter i=p.begin();
+	while( i!=p.end() )
+	    {
+	    y2mil( "i:" << *i );
+	    if( i->nr()>mx )
+		mx = i->nr();
+	    ++i;
+	    }
+	ret = mx+1;
+	if( !ext_possible || !hasExtended() || ret>max_logical )
 	    ret = 0;
 	}
     else
