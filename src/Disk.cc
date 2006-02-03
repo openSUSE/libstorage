@@ -1147,6 +1147,17 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	{
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type );
+	PartPair pp = partPair();
+	PartIter i=pp.begin();
+	while( i!=pp.end() && !(i->deleted() && i->cylStart()==start) )
+	    ++i;
+	if( i!=pp.end() )
+	    {
+	    y2mil( "deleted at same start:" << *i );
+	    p->setFs( i->getFs() );
+	    p->setUuid( i->getUuid() );
+	    p->initLabel( i->getLabel() );
+	    }
 	p->setCreated();
 	device = p->device();
 	addToList( p );

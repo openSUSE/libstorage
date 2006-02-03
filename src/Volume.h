@@ -79,6 +79,8 @@ class Volume
 	long long extendSize() const { return(orig_size_k-size_k);}
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
+	void setUuid( const string& id ) { uuid=id; }
+	void initLabel( const string& lbl ) { label=orig_label=lbl; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }

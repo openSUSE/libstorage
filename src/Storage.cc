@@ -4097,6 +4097,7 @@ bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     {
     static deque<VolumeInfo> vil;
+    vil.clear();
     bool ret = false;
     VolIterator vol;
     assertInit();
