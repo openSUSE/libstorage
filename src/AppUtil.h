@@ -39,6 +39,8 @@ string mergeString( const std::list<string>& l, const string& del=" " );
 std::map<string,string> makeMap( const std::list<string>& l, 
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );
+void getFindMap( const char* path, std::map<string,string>& m );
+void getFindRevMap( const char* path, std::map<string,string>& m );
 void removeLastIf(string& Text_Cr, char Char_cv);
 string kbyteToHumanString( unsigned long long size );
 string normalizeDevice( const string& dev );

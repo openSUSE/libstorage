@@ -20,7 +20,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     PeContainer(s,staticType())
     {
     nm = Name;
-    y2milestone( "constructing lvm vg %s", Name.c_str() );
+    y2debug( "constructing lvm vg %s", Name.c_str() );
     init();
     if( !Name.empty() )
 	{
@@ -39,7 +39,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     PeContainer(s,staticType())
     {
     nm = Name;
-    y2milestone( "constructing lvm vg %s lvm1:%d", Name.c_str(), lv1 );
+    y2debug( "constructing lvm vg %s lvm1:%d", Name.c_str(), lv1 );
     init();
     lvm1 = lv1;
     if( Name.empty() )
@@ -51,13 +51,12 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 LvmVg::LvmVg( Storage * const s, const string& file, int ) :
     PeContainer(s,staticType())
     {
-    y2milestone( "constructing lvm vg %s from file %s", dev.c_str(), 
-                 file.c_str() );
+    y2debug( "constructing lvm vg %s from file %s", dev.c_str(), file.c_str() );
     }
 
 LvmVg::~LvmVg()
     {
-    y2milestone( "destructed lvm vg %s", dev.c_str() );
+    y2debug( "destructed lvm vg %s", dev.c_str() );
     }
 
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
@@ -1394,8 +1393,7 @@ bool LvmVg::equalContent( const LvmVg& rhs ) const
 
 LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
     {
-    y2milestone( "constructed LvmVg by copy constructor from %s", 
-                 rhs.nm.c_str() );
+    y2debug( "constructed LvmVg by copy constructor from %s", rhs.nm.c_str() );
     status = rhs.status;
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;

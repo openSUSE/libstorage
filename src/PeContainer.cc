@@ -15,13 +15,13 @@ using namespace storage;
 PeContainer::PeContainer( Storage * const s, CType t ) :
     Container(s,"",t)
     {
-    y2milestone( "constructing pe container type %d", t );
+    y2debug( "constructing pe container type %d", t );
     init();
     }
 
 PeContainer::~PeContainer()
     {
-    y2milestone( "destructed pe container %s", dev.c_str() );
+    y2debug( "destructed pe container %s", dev.c_str() );
     }
 
 void PeContainer::unuseDev()
@@ -552,8 +552,8 @@ PeContainer& PeContainer::operator=( const PeContainer& rhs )
 
 PeContainer::PeContainer( const PeContainer& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed PeContainer by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed PeContainer by copy constructor from %s",
+	     rhs.nm.c_str() );
     *this = rhs;
     }
 

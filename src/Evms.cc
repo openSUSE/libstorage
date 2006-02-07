@@ -21,8 +21,8 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le, bool nat
     calcSize();
     getTableInfo();
     compat = !native;
-    y2milestone( "constructed evms vol %s on vg %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed evms vol %s on vg %s", dev.c_str(),
+	     cont->name().c_str() );
     }
 
 Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le,
@@ -34,13 +34,13 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le,
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
-    y2milestone( "constructed evms vol %s on vg %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed evms vol %s on vg %s", dev.c_str(),
+	     cont->name().c_str() );
     }
 
 Evms::~Evms()
     {
-    y2milestone( "destructed evms vol %s", dev.c_str() );
+    y2debug( "destructed evms vol %s", dev.c_str() );
     }
 
 string Evms::getMapperName( const EvmsCo& d, const string& name )
@@ -269,7 +269,7 @@ void Evms::logDifference( const Evms& rhs ) const
 
 Evms& Evms::operator= ( const Evms& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Dm*)this) = rhs;
     compat = rhs.compat;
     return( *this );
@@ -277,8 +277,8 @@ Evms& Evms::operator= ( const Evms& rhs )
 
 Evms::Evms( const EvmsCo& d, const Evms& rhs ) : Dm(d,rhs)
     {
-    y2milestone( "constructed evms vol by copy constructor from %s", 
-                 rhs.dev.c_str() );
+    y2debug( "constructed evms vol by copy constructor from %s", 
+	     rhs.dev.c_str() );
     *this = rhs;
     }
 

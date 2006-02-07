@@ -20,7 +20,7 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     del = silent = ronly = create = false;
     dev = "/dev/" + nm;
     typ = t;
-    y2milestone( "constructed cont %s", nm.c_str() );
+    y2debug( "constructed cont %s", nm.c_str() );
     }
 
 Container::~Container()
@@ -29,7 +29,7 @@ Container::~Container()
 	{
 	delete( *i );
 	}
-    y2milestone( "destructed cont %s", dev.c_str() );
+    y2debug( "destructed cont %s", dev.c_str() );
     }
 
 static bool notDeleted( const Volume& v )
@@ -422,7 +422,7 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 
 Container& Container::operator= ( const Container& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     typ = rhs.typ;
     nm = rhs.nm;
     dev = rhs.dev;
@@ -436,8 +436,7 @@ Container& Container::operator= ( const Container& rhs )
 
 Container::Container( const Container& rhs ) : sto(rhs.sto)
     {
-    y2milestone( "constructed cont by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed cont by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     }
 

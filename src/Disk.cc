@@ -32,7 +32,7 @@ Disk::Disk( Storage * const s, const string& Name,
     {
     init_disk = false;
     size_k = SizeK;
-    y2milestone( "constructed disk %s", dev.c_str() );
+    y2debug( "constructed disk %s", dev.c_str() );
     }
 
 Disk::Disk( Storage * const s, const string& fname ) :
@@ -124,13 +124,13 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	Partition *p = new Partition( *this, extractNthWord( 1, line, true ));
 	addToList( p );
 	}
-    y2milestone( "constructed disk %s from file %s", dev.c_str(), fname.c_str() );
+    y2debug( "constructed disk %s from file %s", dev.c_str(), fname.c_str() );
     }
 
 
 Disk::~Disk()
     {
-    y2milestone( "destructed disk %s", dev.c_str() );
+    y2debug( "destructed disk %s", dev.c_str() );
     }
 
 void Disk::setUdevData( const string& path, const string& id )
@@ -2355,7 +2355,7 @@ bool Disk::equalContent( const Disk& rhs ) const
 
 Disk& Disk::operator= ( const Disk& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     cyl = rhs.cyl;
     head = rhs.head;
     sector = rhs.sector;
@@ -2380,8 +2380,7 @@ Disk& Disk::operator= ( const Disk& rhs )
 
 Disk::Disk( const Disk& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed disk by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed disk by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     ConstPartPair p = rhs.partPair();
     for( ConstPartIter i = p.begin(); i!=p.end(); ++i )

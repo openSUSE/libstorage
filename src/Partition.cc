@@ -34,8 +34,8 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
 	alt_names.push_back( udevCompletePathPath( d.udevPath(), PNr ));
     if( !d.udevId().empty() )
 	alt_names.push_back( udevCompleteIdPath( d.udevId(), PNr ));
-    y2milestone( "constructed partition %s on disk %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed partition %s on disk %s", dev.c_str(),
+	     cont->name().c_str() );
     }
 
 Partition::Partition( const Disk& d, const string& Data ) :
@@ -64,8 +64,8 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	alt_names.push_back( udevCompletePathPath( d.udevPath(), num ));
     if( !d.udevId().empty() )
 	alt_names.push_back( udevCompleteIdPath( d.udevId(), num ));
-    y2milestone( "constructed partition %s on disk %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed partition %s on disk %s", dev.c_str(),
+	     cont->name().c_str() );
     }
 
 const string& Partition::udevId() const 
@@ -490,7 +490,7 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
 
 Partition::~Partition()
     {
-    y2milestone( "destructed partition %s", dev.c_str() );
+    y2debug( "destructed partition %s", dev.c_str() );
     }
 
 void
@@ -567,7 +567,7 @@ bool Partition::equalContent( const Partition& rhs ) const
 
 Partition& Partition::operator= ( const Partition& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Volume*)this) = rhs;
     reg = rhs.reg;
     bootflag = rhs.bootflag;
@@ -580,8 +580,8 @@ Partition& Partition::operator= ( const Partition& rhs )
 
 Partition::Partition( const Disk& d, const Partition& rhs ) : Volume(d)
     {
-    y2milestone( "constructed partition by copy constructor from %s", 
-                 rhs.dev.c_str() );
+    y2debug( "constructed partition by copy constructor from %s", 
+	     rhs.dev.c_str() );
     *this = rhs;
     }
 

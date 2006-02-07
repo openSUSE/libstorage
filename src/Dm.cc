@@ -21,7 +21,7 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
     stripe = 1;
     stripe_size = 0;
     inactiv = true;
-    y2milestone( "constructed dm dev" );
+    y2debug( "constructed dm dev" );
     }
 
 Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
@@ -40,7 +40,7 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
 
 Dm::~Dm()
     {
-    y2milestone( "destructed dem dev %s", dev.c_str() );
+    y2debug( "destructed dem dev %s", dev.c_str() );
     }
 
 void
@@ -446,7 +446,7 @@ string Dm::stringDifference( const Dm& rhs ) const
 
 Dm& Dm::operator= ( const Dm& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Volume*)this) = rhs;
     num_le = rhs.num_le;
     stripe = rhs.stripe;
@@ -458,8 +458,7 @@ Dm& Dm::operator= ( const Dm& rhs )
 
 Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
     {
-    y2milestone( "constructed dm by copy constructor from %s", 
-                 rhs.dev.c_str() );
+    y2debug( "constructed dm by copy constructor from %s", rhs.dev.c_str() );
     *this = rhs;
     }
 

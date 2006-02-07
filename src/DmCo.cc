@@ -18,7 +18,7 @@ using namespace storage;
 DmCo::DmCo( Storage * const s, bool detect ) :
     PeContainer(s,staticType())
     {
-    y2milestone( "constructing DmCo detect:%d", detect );
+    y2debug( "constructing DmCo detect:%d", detect );
     init();
     if( detect )
 	getDmData();
@@ -27,13 +27,13 @@ DmCo::DmCo( Storage * const s, bool detect ) :
 DmCo::DmCo( Storage * const s, const string& file ) :
     PeContainer(s,staticType())
     {
-    y2milestone( "constructing DmCo file:%s", file.c_str() );
+    y2debug( "constructing DmCo file:%s", file.c_str() );
     init();
     }
 
 DmCo::~DmCo()
     {
-    y2milestone( "destructed DmCo" );
+    y2debug( "destructed DmCo" );
     }
 
 void
@@ -305,7 +305,7 @@ bool DmCo::equalContent( const DmCo& rhs ) const
 
 DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
     {
-    y2milestone( "constructed DmCo by copy constructor from %s", rhs.nm.c_str() );
+    y2debug( "constructed DmCo by copy constructor from %s", rhs.nm.c_str() );
     ConstDmPair p = rhs.dmPair();
     for( ConstDmIter i = p.begin(); i!=p.end(); ++i )
 	{

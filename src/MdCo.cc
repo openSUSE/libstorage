@@ -18,7 +18,7 @@ using namespace storage;
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
     {
-    y2milestone( "constructing MdCo detect:%d", detect );
+    y2debug( "constructing MdCo detect:%d", detect );
     init();
     if( detect )
 	getMdData();
@@ -27,13 +27,13 @@ MdCo::MdCo( Storage * const s, bool detect ) :
 MdCo::MdCo( Storage * const s, const string& file ) :
     Container(s,"md",staticType())
     {
-    y2milestone( "constructing MdCo file:%s", file.c_str() );
+    y2debug( "constructing MdCo file:%s", file.c_str() );
     init();
     }
 
 MdCo::~MdCo()
     {
-    y2milestone( "destructed MdCo" );
+    y2debug( "destructed MdCo" );
     delete tab;
     }
 
@@ -703,8 +703,7 @@ bool MdCo::equalContent( const MdCo& rhs ) const
 
 MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed MdCo by copy constructor from %s",
-		 rhs.nm.c_str() );
+    y2debug( "constructed MdCo by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     this->tab = NULL;
     ConstMdPair p = rhs.mdPair();

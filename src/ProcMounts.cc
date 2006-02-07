@@ -8,12 +8,17 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/ProcMounts.h"
+#include "y2storage/StorageTmpl.h"
 
 using namespace std;
 using namespace storage;
 
 ProcMounts::ProcMounts() 
     {
+    map<string,string> by_label;
+    map<string,string> by_uuid;
+    getFindRevMap( "/dev/disk/by-label", by_label );
+    getFindRevMap( "/dev/disk/by-uuid", by_uuid );
     ifstream mounts( "/proc/mounts" );
     string line;
     getline( mounts, line );
@@ -21,6 +26,28 @@ ProcMounts::ProcMounts()
 	{
 	y2mil( "line:\"" << line << "\"" );
 	string dev = extractNthWord( 0, line );
+	if( dev.find( "/by-label/" ) != string::npos )
+	    {
+	    dev = dev.substr( dev.rfind( "/" )+1 );
+	    y2mil( "dev:" << dev );
+	    if( !by_label[dev].empty() )
+		{
+		dev = by_label[dev];
+		normalizeDevice( dev );
+		y2mil( "dev:" << dev );
+		}
+	    }
+	else if( dev.find( "/by-uuid/" ) != string::npos )
+	    {
+	    dev = dev.substr( dev.rfind( "/" )+1 );
+	    y2mil( "dev:" << dev );
+	    if( !by_uuid[dev].empty() )
+		{
+		dev = by_uuid[dev];
+		normalizeDevice( dev );
+		y2mil( "dev:" << dev );
+		}
+	    }
 	if( dev!= "rootfs" && dev!="/dev/root" )
 	    {
 	    co[dev] = extractNthWord( 1, line );
@@ -51,6 +78,7 @@ ProcMounts::ProcMounts()
 	co[dev] = "swap";
 	getline( mounts, line );
 	}
+    y2mil( "co:" << co );
     }
 
 string 

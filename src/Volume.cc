@@ -29,8 +29,8 @@ Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
     num = PNr;
     size_k = orig_size_k = SizeK;
     init();
-    y2milestone( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
-                 cont->name().c_str() );
+    y2debug( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
+	     cont->name().c_str() );
     }
 
 Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK ) : cont(&c)
@@ -39,8 +39,8 @@ Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK
     nm = Name;
     size_k = orig_size_k = SizeK;
     init();
-    y2milestone( "constructed volume \"%s\" on disk %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed volume \"%s\" on disk %s", dev.c_str(),
+	     cont->name().c_str() );
     }
 
 Volume::Volume( const Container& c ) : cont(&c)
@@ -48,12 +48,12 @@ Volume::Volume( const Container& c ) : cont(&c)
     numeric = false;
     size_k = orig_size_k = 0;
     init();
-    y2milestone( "constructed late init volume" );
+    y2debug( "constructed late init volume" );
     }
 
 Volume::~Volume()
     {
-    y2milestone( "destructed volume %s", dev.c_str() );
+    y2debug( "destructed volume %s", dev.c_str() );
     }
 
 void Volume::setNameDev()
@@ -357,12 +357,28 @@ void Volume::getFsData( SystemCmd& blkidData )
 		{
 		uuid = i->second;
 		b << " uuid:" << uuid;
+		list<string>::iterator i = find_if( alt_names.begin(), 
+		                                    alt_names.end(), 
+		                                    find_any( "/by-uuid/" ) );
+		if( i!=alt_names.end() )
+		    {
+		    alt_names.erase(i);
+		    }
+		alt_names.push_back( "/dev/disk/by-uuid/" + uuid );
 		}
 	    i = m.find( "LABEL" );
 	    if( i != m.end() )
 		{
 		label = orig_label = i->second;
 		b << " label:\"" << label << "\"";
+		list<string>::iterator i = find_if( alt_names.begin(), 
+		                                    alt_names.end(), 
+		                                    find_any( "/by-label/" ) );
+		if( i!=alt_names.end() )
+		    {
+		    alt_names.erase(i);
+		    }
+		alt_names.push_back( "/dev/disk/by-label/" + label );
 		}
 	    y2milestone( "%s", b.str().c_str() );
 	    }
@@ -2272,7 +2288,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 
 Volume& Volume::operator= ( const Volume& rhs )
     {
-    y2milestone( "operator= from %s", rhs.dev.c_str() );
+    y2debug( "operator= from %s", rhs.dev.c_str() );
     dev = rhs.dev;
     numeric = rhs.numeric;
     num = rhs.num;
@@ -2314,8 +2330,7 @@ Volume& Volume::operator= ( const Volume& rhs )
 
 Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     {
-    y2milestone( "constructed vol by copy constructor from %s",
-                 rhs.dev.c_str() );
+    y2debug( "constructed vol by copy constructor from %s", rhs.dev.c_str() );
     *this = rhs;
     }
 

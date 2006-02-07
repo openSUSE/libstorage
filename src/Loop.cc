@@ -20,8 +20,8 @@ using namespace std;
 Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile ) : 
     Volume( d, 0, 0 )
     {
-    y2milestone( "constructed loop dev:%s file:%s", 
-                 LoopDev.c_str(), LoopFile.c_str() );
+    y2debug( "constructed loop dev:%s file:%s", 
+	     LoopDev.c_str(), LoopFile.c_str() );
     if( d.type() != LOOP )
 	y2error( "constructed loop with wrong container" );
     init();
@@ -75,7 +75,7 @@ Loop::Loop( const LoopCo& d, const string& file, bool reuseExisting,
 
 Loop::~Loop()
     {
-    y2milestone( "destructed loop %s", dev.c_str() );
+    y2debug( "destructed loop %s", dev.c_str() );
     }
 
 void
@@ -321,7 +321,7 @@ void Loop::logDifference( const Loop& rhs ) const
 
 Loop& Loop::operator= ( const Loop& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Volume*)this) = rhs;
     lfile = rhs.lfile;
     reuseFile = rhs.reuseFile;
@@ -331,8 +331,7 @@ Loop& Loop::operator= ( const Loop& rhs )
 
 Loop::Loop( const LoopCo& d, const Loop& rhs ) : Volume(d)
     {
-    y2milestone( "constructed loop by copy constructor from %s", 
-                 rhs.nm.c_str() );
+    y2debug( "constructed loop by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     }
 

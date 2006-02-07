@@ -17,7 +17,7 @@ using namespace std;
 LoopCo::LoopCo( Storage * const s, bool detect ) :
     Container(s,"loop",staticType())
     {
-    y2milestone( "constructing LoopCo detect:%d", detect );
+    y2debug( "constructing LoopCo detect:%d", detect );
     init();
     if( detect )
 	getLoopData();
@@ -26,13 +26,13 @@ LoopCo::LoopCo( Storage * const s, bool detect ) :
 LoopCo::LoopCo( Storage * const s, const string& file ) :
     Container(s,"loop",staticType())
     {
-    y2milestone( "constructing LoopCo file:%s", file.c_str() );
+    y2debug( "constructing LoopCo file:%s", file.c_str() );
     init();
     }
 
 LoopCo::~LoopCo()
     {
-    y2milestone( "destructed LoopCo" );
+    y2debug( "destructed LoopCo" );
     }
 
 void
@@ -347,8 +347,7 @@ bool LoopCo::equalContent( const LoopCo& rhs ) const
 
 LoopCo::LoopCo( const LoopCo& rhs ) : Container(rhs)
     {
-    y2milestone( "constructed LoopCo by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed LoopCo by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     ConstLoopPair p = rhs.loopPair();
     for( ConstLoopIter i=p.begin(); i!=p.end(); ++i )

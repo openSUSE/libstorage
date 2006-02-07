@@ -24,7 +24,7 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsTree& data ) :
     PeContainer(s,staticType())
     {
     nm = "";
-    y2milestone( "constructing volume evms co" );
+    y2debug( "constructing volume evms co" );
     init();
     getNormalVolumes( data );
     }
@@ -35,7 +35,7 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) 
     PeContainer(s,staticType())
     {
     nm = cont.name;
-    y2milestone( "constructing evms co %s lvm1:%d", nm.c_str(), cont.lvm1 );
+    y2debug( "constructing evms co %s lvm1:%d", nm.c_str(), cont.lvm1 );
     init();
     lvm1 = cont.lvm1;
     getCoData( cont.name, data, false );
@@ -51,7 +51,7 @@ EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
 	nm = "lvm/" + name;
     else
 	nm = "lvm2/" + name;
-    y2milestone( "constructing evms co %s lvm1:%d", nm.c_str(), lv1 );
+    y2debug( "constructing evms co %s lvm1:%d", nm.c_str(), lv1 );
     init();
     lvm1 = lv1;
     }
@@ -59,13 +59,13 @@ EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
 EvmsCo::EvmsCo( Storage * const s, const string& file, int ) :
     PeContainer(s,staticType())
     {
-    y2milestone( "constructing evms co %s from file %s", dev.c_str(), 
-                 file.c_str() );
+    y2debug( "constructing evms co %s from file %s", dev.c_str(), 
+	     file.c_str() );
     }
 
 EvmsCo::~EvmsCo()
     {
-    y2milestone( "destructed evms co %s", dev.c_str() );
+    y2debug( "destructed evms co %s", dev.c_str() );
     }
 
 bool
@@ -1741,8 +1741,7 @@ bool EvmsCo::equalContent( const EvmsCo& rhs ) const
 
 EvmsCo::EvmsCo( const EvmsCo& rhs ) : PeContainer(rhs)
     {
-    y2milestone( "constructed EvmsCo by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed EvmsCo by copy constructor from %s", rhs.nm.c_str() );
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;
     ConstEvmsPair p = rhs.evmsPair();

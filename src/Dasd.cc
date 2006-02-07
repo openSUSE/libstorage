@@ -22,12 +22,12 @@ Dasd::Dasd( Storage * const s, const string& Name,
             unsigned long long SizeK ) : 
     Disk(s,Name,SizeK)
     {
-    y2milestone( "constructed dasd %s", dev.c_str() );
+    y2debug( "constructed dasd %s", dev.c_str() );
     }
 
 Dasd::~Dasd()
     {
-    y2milestone( "destructed dasd %s", dev.c_str() );
+    y2debug( "destructed dasd %s", dev.c_str() );
     }
 
 bool Dasd::detectPartitions()
@@ -592,14 +592,13 @@ int Dasd::initializeDisk( bool value )
 
 Dasd& Dasd::operator= ( const Dasd& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Disk*)this) = rhs;
     return( *this );
     }
 
 Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
     {
-    y2milestone( "constructed dasd by copy constructor from %s",
-                 rhs.nm.c_str() );
+    y2debug( "constructed dasd by copy constructor from %s", rhs.nm.c_str() );
     }
 

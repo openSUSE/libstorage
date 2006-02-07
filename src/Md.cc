@@ -19,8 +19,8 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type,
         const list<string>& devices ) : Volume( d, PNr, 0 )
 
     {
-    y2milestone( "constructed md %s on container %s", dev.c_str(),
-                 cont->name().c_str() );
+    y2debug( "constructed md %s on container %s", dev.c_str(),
+	     cont->name().c_str() );
     if( d.type() != MD )
 	y2error( "constructed md with wrong container" );
     init();
@@ -145,7 +145,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 
 Md::~Md()
     {
-    y2milestone( "destructed md %s", dev.c_str() );
+    y2debug( "destructed md %s", dev.c_str() );
     }
 
 void
@@ -609,7 +609,7 @@ void Md::logDifference( const Md& rhs ) const
 
 Md& Md::operator= ( const Md& rhs )
     {
-    y2milestone( "operator= from %s", rhs.nm.c_str() );
+    y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Volume*)this) = rhs;
     md_type = rhs.md_type;
     md_parity = rhs.md_parity;
@@ -623,8 +623,7 @@ Md& Md::operator= ( const Md& rhs )
 
 Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
     {
-    y2milestone( "constructed md by copy constructor from %s", 
-                 rhs.dev.c_str() );
+    y2debug( "constructed md by copy constructor from %s", rhs.dev.c_str() );
     *this = rhs;
     }
 

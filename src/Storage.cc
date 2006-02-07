@@ -452,30 +452,6 @@ Storage::detectDm()
 	}
     }
 
-static void get_find_map( const char* path, map<string,string>& m )
-    {
-    if( access( path, R_OK )==0 )
-	{
-	string cmd = "/usr/bin/find ";
-	cmd += path;
-	cmd += " -type l -printf '%f %l\n'";
-	SystemCmd findcmd( cmd.c_str() );
-	list<string> l;
-	findcmd.getStdout( l );
-	list<string>::iterator i=l.begin();
-	while( i!=l.end() )
-	    {
-	    list<string> tlist = splitString( *i );
-	    if( tlist.size()==2 )
-		{
-		string& tmp = tlist.back();
-		m[tmp.substr( tmp.find_first_not_of( "./" ) )] = tlist.front();
-		}
-	    ++i;
-	    }
-	}
-    }
-
 void
 Storage::autodetectDisks()
     {
@@ -486,10 +462,8 @@ Storage::autodetectDisks()
 	{
 	map<string,string> by_path;
 	map<string,string> by_id;
-	get_find_map( "/dev/disk/by-path", by_path );
-	get_find_map( "/dev/disk/by-id", by_id );
-	y2mil( "by-id:" << by_id );
-	y2mil( "by-path:" << by_path );
+	getFindMap( "/dev/disk/by-path", by_path );
+	getFindMap( "/dev/disk/by-id", by_id );
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
 	    int Range=0;

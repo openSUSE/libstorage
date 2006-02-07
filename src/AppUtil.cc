@@ -24,6 +24,7 @@
 #include "y2storage/AsciiFile.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
+#include "y2storage/SystemCmd.h"
 
 using namespace std;
 
@@ -540,6 +541,60 @@ void tolower( string& s )
 	{
 	*i = std::tolower(*i);
         }
+    }
+
+void getFindMap( const char* path, map<string,string>& m )
+    {
+    y2mil( "path: " << path );
+    m.clear();
+    if( access( path, R_OK )==0 )
+	{
+	string cmd = "/usr/bin/find ";
+	cmd += path;
+	cmd += " -type l -printf '%f %l\n'";
+	SystemCmd findcmd( cmd.c_str() );
+	list<string> l;
+	findcmd.getStdout( l );
+	list<string>::iterator i=l.begin();
+	while( i!=l.end() )
+	    {
+	    list<string> tlist = splitString( *i );
+	    if( tlist.size()==2 )
+		{
+		string& tmp = tlist.back();
+		m[tmp.substr( tmp.find_first_not_of( "./" ) )] = tlist.front();
+		}
+	    ++i;
+	    }
+	}
+    y2mil( "map: " << m );
+    }
+
+void getFindRevMap( const char* path, map<string,string>& m )
+    {
+    y2mil( "path: " << path );
+    m.clear();
+    if( access( path, R_OK )==0 )
+	{
+	string cmd = "/usr/bin/find ";
+	cmd += path;
+	cmd += " -type l -printf '%f %l\n'";
+	SystemCmd findcmd( cmd.c_str() );
+	list<string> l;
+	findcmd.getStdout( l );
+	list<string>::iterator i=l.begin();
+	while( i!=l.end() )
+	    {
+	    list<string> tlist = splitString( *i );
+	    if( tlist.size()==2 )
+		{
+		string& tmp = tlist.back();
+		m[tlist.front()] = tmp.substr( tmp.find_first_not_of( "./" ) );
+		}
+	    ++i;
+	    }
+	}
+    y2mil( "map: " << m );
     }
 
 bool system_cmd_testmode = false;
