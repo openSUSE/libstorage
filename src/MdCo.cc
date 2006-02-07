@@ -353,6 +353,10 @@ MdCo::extendMd( unsigned num, const string& dev )
 	{
 	ret = i->addDevice( dev );
 	}
+    if( ret==0 && !getStorage()->isDisk(dev) )
+	{
+	getStorage()->changeFormatVolume( dev, false, FSNONE );
+	}
     if( ret==0 )
 	{
 	string d = normalizeDevice( dev );
