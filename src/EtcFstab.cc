@@ -44,6 +44,7 @@ EtcFstab::readFiles()
     y2milestone( "entries:%zd", co.size() );
     while( mounts.good() )
 	{
+	y2mil( "line:\"" << line << "\"" );
 	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
@@ -78,6 +79,7 @@ EtcFstab::readFiles()
     getline( mounts, line );
     while( mounts.good() )
 	{
+	y2mil( "line:\"" << line << "\"" );
 	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();

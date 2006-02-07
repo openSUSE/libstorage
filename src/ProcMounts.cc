@@ -19,6 +19,7 @@ ProcMounts::ProcMounts()
     getline( mounts, line );
     while( mounts.good() )
 	{
+	y2mil( "line:\"" << line << "\"" );
 	string dev = extractNthWord( 0, line );
 	if( dev!= "rootfs" && dev!="/dev/root" )
 	    {
@@ -39,6 +40,7 @@ ProcMounts::ProcMounts()
     getline( mounts, line );
     while( mounts.good() )
 	{
+	y2mil( "line:\"" << line << "\"" );
 	string::size_type pos;
 	string dev = extractNthWord( 0, line );
 	if( (pos=dev.find( "\\040(deleted)" ))!=string::npos )

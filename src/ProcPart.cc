@@ -15,8 +15,10 @@ using namespace storage;
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {
+    y2mil( "numLines " << numLines() );
     for( unsigned i=0; i<numLines(); i++ )
 	{
+	y2mil( "line " << (i+1) << " is \"" << (*this)[i] << "\"" );
 	string tmp = extractNthWord( 3, (*this)[i] );
 	if( !tmp.empty() && tmp!="name" )
 	    {

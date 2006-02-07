@@ -1289,6 +1289,7 @@ class Storage : public storage::StorageInterface
 	static storage::CallbackShowInstallInfo install_info_cb_ycp;
 	static storage::CallbackInfoPopup info_popup_cb_ycp;
 	static storage::CallbackYesNoPopup yesno_popup_cb_ycp;
+	friend std::ostream& operator<< (std::ostream& s, Storage &v );
 
 	unsigned max_log_num;
 	string lastAction;

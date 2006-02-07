@@ -160,6 +160,17 @@ Storage::initialize()
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
     detectObjects();
     setCacheChanges( true );
+    ostringstream buf;
+    printInfo( buf );
+    std::list<string> l = splitString( buf.str(), "\n" );
+    y2milestone( "DETECTED OBJECTS" );
+    std::list<string>::const_iterator i = l.begin();
+    while( i!=l.end() )
+	{
+	y2milestone( "%s", i->c_str() );
+	++i;
+	}
+    y2milestone( "END DETECTED OBJECTS" );
     }
 
 void Storage::detectObjects()
@@ -568,9 +579,9 @@ Storage::printInfo( ostream& str )
 	Container::ConstVolPair vp = i->volPair();
 	i->print( str );
 	str << endl;
-	for( Container::ConstVolIterator i=vp.begin(); i!=vp.end(); ++i )
+	for( Container::ConstVolIterator j=vp.begin(); j!=vp.end(); ++j )
 	    {
-	    i->print( str );
+	    j->print( str );
 	    str << endl;
 	    }
 	}
@@ -4548,6 +4559,16 @@ int Storage::waitForDevice( const string& device ) const
     y2milestone( "ret:%d", ret );
     return( ret );
     }
+
+namespace storage
+{
+std::ostream& operator<< (std::ostream& s, Storage &v )
+    {
+    v.printInfo(s);
+    return(s);
+    }
+}
+
 
 
 Storage::SkipDeleted Storage::SkipDel;
