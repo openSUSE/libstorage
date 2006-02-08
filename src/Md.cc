@@ -293,8 +293,15 @@ Md::addSpareDevice( const string& dev )
 
 string Md::createCmd() const
     {
-    string cmd = "modprobe " + pName() + "; mdadm --create " + device() +
-                 " --run --level=" + pName();
+    string dnames;
+    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
+	dnames += " " + *i;
+    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
+	dnames += " " + *i;
+
+    string cmd = "ls -l --full-time " + dnames + "; ";
+    cmd += "modprobe " + pName() + "; mdadm --create " + device() +
+	   " --run --level=" + pName();
     if( chunk>0 )
 	cmd += " --chunk=" + decString(chunk);
     if( md_parity!=PAR_NONE )
@@ -302,10 +309,7 @@ string Md::createCmd() const
     cmd += " --raid-devices=" + decString(devs.size());
     if( !spare.empty() )
 	cmd += " --spare-devices=" + decString(spare.size());
-    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
-	cmd += " " + *i;
-    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
-	cmd += " " + *i;
+    cmd += " " + dnames;
     y2milestone( "ret:%s", cmd.c_str() );
     return( cmd );
     }
