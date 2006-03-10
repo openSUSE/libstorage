@@ -350,6 +350,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    detected_fs = FSNONE;
 		    }
+		if( FSNONE == fs || FSUNKNOWN == fs ) fs = detected_fs;
 		b << "detected_fs:" << fs_names[detected_fs];
 		}
 	    i = m.find( "UUID" );
