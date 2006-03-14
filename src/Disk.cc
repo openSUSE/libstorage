@@ -1982,17 +1982,9 @@ int Disk::doCreate( Volume* v )
 		      " bs=1k count=10";
 		c.execute( cmd );
 		}
-	    else
+	    else if( !p->getFormat() )
 		{
-                    /* FIXME:
-                       Thomas, I know you did this line on purpose
-                       but you break partitioning in some cases with that updateFsData()
-                       you wanted to fix #144595 but now the partitioning
-                       fails if hda1 was for example a reiserfs partition
-                       and is a swap partition now, then it's formated and
-                       mounted as reiserfs but to the mountpoint "swap"
-                       */
-		//p->updateFsData();
+		p->updateFsData();
 		}
 	    }
 	if( ret==0 && p->id()!=Partition::ID_LINUX )

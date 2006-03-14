@@ -309,49 +309,48 @@ void Volume::getFsData( SystemCmd& blkidData )
 	    b.str("");
 	    if( i !=m.end() )
 		{
-		detected_fs = fs;
 		if( i->second == "reiserfs" )
 		    {
-		    detected_fs = REISERFS;
+		    fs = REISERFS;
 		    }
 		else if( i->second == "swap" )
 		    {
-		    detected_fs = SWAP;
+		    fs = SWAP;
 		    }
 		else if( i->second == "ext2" )
 		    {
-		    detected_fs = (m["SEC_TYPE"]=="ext3")?EXT3:EXT2;
+		    fs = (m["SEC_TYPE"]=="ext3")?EXT3:EXT2;
 		    }
 		else if( i->second == "ext3" )
 		    {
-		    detected_fs = EXT3;
+		    fs = EXT3;
 		    }
 		else if( i->second == "vfat" )
 		    {
-		    detected_fs = VFAT;
+		    fs = VFAT;
 		    }
 		else if( i->second == "ntfs" )
 		    {
-		    detected_fs = NTFS;
+		    fs = NTFS;
 		    }
 		else if( i->second == "jfs" )
 		    {
-		    detected_fs = JFS;
+		    fs = JFS;
 		    }
 		else if( i->second == "hfs" )
 		    {
-		    detected_fs = HFS;
+		    fs = HFS;
 		    }
 		else if( i->second == "xfs" )
 		    {
-		    detected_fs = XFS;
+		    fs = XFS;
 		    }
 		else if( i->second == "(null)" )
 		    {
-		    detected_fs = FSNONE;
+		    fs = FSNONE;
 		    }
-		if( FSNONE == fs || FSUNKNOWN == fs ) fs = detected_fs;
-		b << "detected_fs:" << fs_names[detected_fs];
+		detected_fs = fs;
+		b << "fs:" << fs_names[fs];
 		}
 	    i = m.find( "UUID" );
 	    if( i != m.end() )
