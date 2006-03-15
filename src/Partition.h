@@ -33,7 +33,7 @@ class Partition : public Volume
 	unsigned long cylSize() const { return reg.len(); }
 	unsigned long cylEnd() const { return reg.start()+reg.len()-1; }
 	const Region& region() const { return reg; }
-	const string& udevId() const;
+	const std::list<string> udevId() const;
 	const string& udevPath() const;
 	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
 	bool contains( const Region& r, unsigned fuzz=0 ) const;
@@ -81,6 +81,7 @@ class Partition : public Volume
 	string parted_start;
 	unsigned orig_num;
 
+	void addAltUdevId( unsigned num );
 	static string pt_names[storage::PTYPE_ANY+1];
 	mutable storage::PartitionInfo info;
     };

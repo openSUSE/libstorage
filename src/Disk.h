@@ -44,7 +44,7 @@ class Disk : public Container
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
-	const string& udevId() const { return udev_id; }
+	const std::list<string>& udevId() const { return udev_id; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
@@ -201,7 +201,7 @@ class Disk : public Container
 	unsigned new_sector;
 	string label;
 	string udev_path;
-	string udev_id;
+	std::list<string> udev_id;
 	string detected_label;
 	string system_stderr;
 	unsigned max_primary;

@@ -249,14 +249,15 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
     }
 
 bool
-EtcFstab::findIdPath( const string& id, const string& path,
+EtcFstab::findIdPath( const std::list<string>& id, const string& path,
 		      FstabEntry& entry ) const
     {
-    y2milestone( "id:%s path:%s", id.c_str(), path.c_str() );
+    y2mil( "id:" << id << " path:" << path );
     list<Entry>::const_iterator i = co.begin();
     if( !id.empty() )
 	{
-	while( i!=co.end() && i->nnew.dentry != id )
+	while( i!=co.end() && 
+	       find( id.begin(), id.end(), i->nnew.dentry )==id.end() )
 	    ++i;
 	}
     if( i==co.end() && !path.empty() )
@@ -269,7 +270,7 @@ EtcFstab::findIdPath( const string& id, const string& path,
 	entry = i->nnew;
     y2milestone( "ret:%d", i!=co.end() );
     return( i!=co.end() );
-}
+    }
 
 int EtcFstab::removeEntry( const FstabEntry& entry )
     {

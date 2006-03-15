@@ -543,9 +543,9 @@ void tolower( string& s )
         }
     }
 
-void getFindMap( const char* path, map<string,string>& m )
+void getFindMap( const char* path, map<string,string>& m, bool unique )
     {
-    y2mil( "path: " << path );
+    y2mil( "path: " << path << " unique:" << unique );
     m.clear();
     if( access( path, R_OK )==0 )
 	{
@@ -562,7 +562,15 @@ void getFindMap( const char* path, map<string,string>& m )
 	    if( tlist.size()==2 )
 		{
 		string& tmp = tlist.back();
-		m[tmp.substr( tmp.find_first_not_of( "./" ) )] = tlist.front();
+		string dsk = tmp.substr( tmp.find_first_not_of( "./" ) );
+		map<string,string>::const_iterator mi = m.find(dsk);
+		if( unique || mi==m.end() )
+		    m[dsk] = tlist.front();
+		else
+		    {
+		    m[dsk] += " ";
+		    m[dsk] += tlist.front();
+		    }
 		}
 	    ++i;
 	    }

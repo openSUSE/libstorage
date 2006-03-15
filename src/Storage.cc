@@ -463,7 +463,7 @@ Storage::autodetectDisks()
 	map<string,string> by_path;
 	map<string,string> by_id;
 	getFindMap( "/dev/disk/by-path", by_path );
-	getFindMap( "/dev/disk/by-id", by_id );
+	getFindMap( "/dev/disk/by-id", by_id, false );
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
 	    int Range=0;

@@ -1616,7 +1616,8 @@ string Volume::getMountByString( MountByType mby, const string& dev,
 	}
     else if( mby==MOUNTBY_ID )
 	{
-	ret = udevId();
+	if( !udevId().empty() )
+	    ret = udevId().front();
 	}
     else if( mby==MOUNTBY_PATH )
 	{
@@ -2341,5 +2342,7 @@ string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
 string Volume::enc_names[] = { "none", "twofish256", "twofish",
                                "twofishSL92", "unknown" };
+
 string Volume::empty_string;
+list<string> Volume::empty_slist;
 

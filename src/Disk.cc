@@ -115,7 +115,7 @@ Disk::Disk( Storage * const s, const string& fname ) :
     udev_id.clear();
     if( searchFile( file, "^UdevId:", line ) )
 	{
-	udev_id = extractNthWord( 1, line );
+	udev_id.push_back( extractNthWord( 1, line ));
 	}
     int lnr = 0;
     while( searchFile( file, "^Partition:", line, lnr ))
@@ -137,7 +137,16 @@ void Disk::setUdevData( const string& path, const string& id )
     {
     y2milestone( "disk %s id %s path %s", nm.c_str(), path.c_str(), id.c_str() );
     udev_path = path;
-    udev_id = id;
+    udev_id.clear();
+    list<string> tmp = splitString( id );
+    list<string>::iterator i = find_if( tmp.begin(), tmp.end(), 
+                                        find_begin( "edd_" ) );
+    if( i!=tmp.end() )
+	{
+	udev_id.push_back( *i );
+	tmp.erase( i );
+	}
+    udev_id.splice( udev_id.end(), tmp );
     }
 
 
@@ -2223,7 +2232,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.maxPrimary = maxPrimary();
     info.initDisk = init_disk;
     info.udevPath = udev_path;
-    info.udevId = udev_id;
+    info.udevId = mergeString( udev_id );
     tinfo = info;
     }
 
