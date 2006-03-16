@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <getopt.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
 #include <sys/sem.h>
@@ -41,14 +42,14 @@ static struct option LongOpt_arm[] =
 
 bool
 read_line (int fd, string& line)
-{
+    {
     const int size = 512;
     char buffer[size];
 
     line.clear ();
 
     while (true)
-    {
+	{
 	int n = read (fd, buffer, size);
 	if (n == 0)
 	    return true;
@@ -60,18 +61,19 @@ read_line (int fd, string& line)
 	line.append (buffer, lineend ? n - 1 : n);
 	if (lineend)
 	    return true;
+	}
     }
-}
 
 
 bool
 write_string (int fd, const string& str)
-{
-    size_t len = str.size ();
-    const char* p = str.data ();
+    {
+    y2milestone( "fd:%d len:%zd", fd, str.size() );
+    size_t len = str.size();
+    const char* p = str.data();
 
     while (true)
-    {
+	{
 	if (len == 0)
 	    return true;
 
@@ -81,8 +83,8 @@ write_string (int fd, const string& str)
 
 	len -= n;
 	p += n;
+	}
     }
-}
 
 
 int EvmsCreateCoCmd( EvmsAccess& evms, const string& params )
@@ -207,6 +209,7 @@ static CmdEntry cmds[] = {
 void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
                     int fd )
     {
+    y2milestone( "cmd:%s params:%s fd:%d", cmd.c_str(), params.c_str(), fd );
     int ret = 0;
     unsigned i=0;
     ostringstream output;
@@ -227,8 +230,8 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
 	ret = EVMS_HELPER_UNKNOWN_CMD;
 	output << ret << endl;
 	}
-
     write_string (fd, output.str());
+    y2milestone( "return" );
     }
 
 void loop_cin()
@@ -331,8 +334,7 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	    FD_ZERO( &fdset );
 	    FD_SET( lsock, &fdset );
 	    ret = select( lsock+1, &fdset, NULL, NULL, &tv );
-	    y2milestone( "select: ret %d isset:%d", ret, 
-	                 FD_ISSET( lsock, &fdset ));
+	    y2debug( "select: ret %d isset:%d", ret, FD_ISSET( lsock, &fdset ));
 	    if( ret<0 || (ret>0&&!FD_ISSET( lsock, &fdset )) )
 		{
 		if( errno != EINTR )
@@ -342,6 +344,7 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 		{
 		socklen_t aux = sizeof(saddr);
 		int newsock = accept( lsock, (struct sockaddr *)&saddr, &aux );
+		y2milestone( "newsock:%d", newsock );
 		if( newsock<0 )
 		    {
 		    if( errno != EINTR )
@@ -349,6 +352,8 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 		    }
 		else
 		    {
+		    //ret = fcntl( newsock, F_SETFL, O_NONBLOCK );
+		    //y2milestone( "fcntl ret:%d", ret );
 		    string line;
 		    read_line (newsock, line);
 		    y2milestone( "got line:\"%s\"", line.c_str() );
@@ -356,14 +361,17 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 		    if( cmd == "exit" )
 			end_program = true;
 		    else if( !cmd.empty() )
+			{
 			searchExecCmd( cmd, *evms, extractNthWord( 1, line, true ),
 				       newsock );
+			}
 		    close( newsock );
 		    }
 		}
 	    else
 		{
 		int ret = semop( semid, &s, 1 );
+		y2milestone( "semop semid %d ret:%d", semid, ret );
 		if( ret==0 )
 		    end_program = true;
 		}

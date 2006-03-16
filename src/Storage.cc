@@ -424,7 +424,7 @@ Storage::detectEvms()
 		e->checkConsistency();
 		}
 	    }
-	if( (data.cont.empty()&&data.volumes.empty()) || instsys() )
+	if( (data.cont.empty()&&data.volumes.empty()) )
 	    EvmsCo::activate( false );
 	}
     }

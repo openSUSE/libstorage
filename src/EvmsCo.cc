@@ -991,6 +991,7 @@ bool EvmsCo::attachToSocket(bool attach)
     {
     bool ret = true;
     static int semid = -1;
+    y2milestone( "semid:%d", semid );
     if( attach && semid<0 )
 	{
 	if( access( EXEC_PATH, X_OK )!=0 )
@@ -1042,7 +1043,8 @@ bool EvmsCo::attachToSocket(bool attach)
 	s.sem_num = 0;
 	s.sem_op = -1;
 	s.sem_flg = IPC_NOWAIT;
-	semop( semid, &s, 1 );
+	int r = semop( semid, &s, 1 );
+	y2milestone( "ret:%d", r );
 	semid = -1;
 	}
     y2milestone( "ret:%d", ret );
@@ -1090,6 +1092,7 @@ bool EvmsCo::sendCommand( const string& cmd, bool one_line, list<string>& lines 
 	while( retry && retry_cnt++<2 )
 	    {
 	    retry = false;
+	    y2milestone( "write: size:%d", tmp.size() );
 	    val = write( sockfd, tmp.c_str(), tmp.size() );
 	    if( (size_t)val!=tmp.size() )
 		y2error( "write fd:%d ret:%ld size:%zu", sockfd, val, cmd.size() );
@@ -1127,7 +1130,7 @@ bool EvmsCo::sendCommand( const string& cmd, bool one_line, list<string>& lines 
 		}
 	    }
 	}
-    sockfd = getSocketFd();
+    //sockfd = getSocketFd();
     y2milestone( "ret:%d", ret );
     if( ret && !lines.empty() )
 	y2milestone( "line:%s", lines.front().c_str() );
