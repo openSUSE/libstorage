@@ -1471,7 +1471,12 @@ int Volume::doSetLabel()
 		cmd = "/sbin/reiserfstune -l \"" + label + "\" " + mountDevice();
 		break;
 	    case XFS:
-		cmd = "/usr/sbin/xfs_admin -L " + label + " " + mountDevice();
+		{
+		string tlabel = label;
+		if( label.empty() )
+		    tlabel = "--";
+		cmd = "/usr/sbin/xfs_admin -L " + tlabel + " " + mountDevice();
+		}
 		break;
 	    case SWAP:
 		cmd = "/sbin/mkswap -L " + label + " " + mountDevice();
