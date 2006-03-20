@@ -1251,6 +1251,11 @@ int LvmVg::doCreatePv( const string& device )
     string cmd = "mdadm --zero-superblock " + device;
     c.execute( cmd );
     getStorage()->removeDmTableTo( device );
+    if( getStorage()->isDisk(device) )
+	{
+	cmd = "parted " + device + " mklabel msdos";
+	c.execute( cmd );
+	}
     cmd = "pvcreate -ff " + metaString() + device;
     c.execute( cmd );
     if( c.retcode()!=0 )
