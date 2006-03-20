@@ -1707,7 +1707,7 @@ int Disk::doSetType( Volume* v )
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
 	    }
-	if( ret==0 )
+	if( ret==0 && label!="mac" )
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line.seekp(0, ios_base::end );
