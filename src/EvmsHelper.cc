@@ -371,12 +371,12 @@ loop_socket( const string& spath, int timeout, const char* ppath )
 	    else
 		{
 		int ret = semop( semid, &s, 1 );
-		y2milestone( "semop semid %d ret:%d", semid, ret );
+		y2debug( "semop semid %d ret:%d", semid, ret );
 		if( ret==0 )
 		    end_program = true;
 		}
 	    }
-	y2milestone("ok:%d end:%d", ok, end_program );
+	y2debug("ok:%d end:%d", ok, end_program );
 	}
     delete evms;
     }
