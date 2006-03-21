@@ -89,10 +89,12 @@ MdCo::getMdData()
     getline( file, line );
     while( file.good() )
 	{
+	y2mil( "mdstat line:" << line );
 	if( Md::mdStringNum(extractNthWord( 0, line ),dummy) ) 
 	    {
 	    string line2;
 	    getline( file, line2 );
+	    y2mil( "mdstat line:" << line2 );
 	    Md* m = new Md( *this, line, line2 );
 	    addMd( m );
 	    }
@@ -105,10 +107,12 @@ MdCo::getMdData()
     getline( file, line );
     while( file.good() )
 	{
+	y2mil( "raidtab line:" << line );
 	if( extractNthWord( 0, line )=="raiddev" )
 	    {
 	    string md = extractNthWord( 1, line );
 	    getline( file, line );
+	    y2mil( "raidtab line:" << line );
 	    if( findMd( md, i ))
 		{
 		string key;
@@ -156,10 +160,12 @@ MdCo::getMdData( unsigned num )
     getline( file, line );
     while( file.good() )
 	{
+	y2mil( "mdstat line:" << line );
 	if( extractNthWord( 0, line ) == md ) 
 	    {
 	    string line2;
 	    getline( file, line2 );
+	    y2mil( "mdstat line2:" << line );
 	    Md* m = new Md( *this, line, line2 );
 	    checkMd( m );
 	    }
