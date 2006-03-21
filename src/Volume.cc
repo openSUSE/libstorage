@@ -905,10 +905,6 @@ int Volume::doMount()
 	{
 	cont->getStorage()->showInfoCb( mountText(true) );
 	}
-    if( uby.t != UB_NONE )
-	{
-	ret = VOLUME_ALREADY_IN_USE;
-	}
     if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
 	string um = orig_mp;
@@ -919,6 +915,10 @@ int Volume::doMount()
     if( ret==0 && lmount!="swap" && access( lmount.c_str(), R_OK )!=0 )
 	{
 	createPath( lmount );
+	}
+    if( ret==0 && !mp.empty() && uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
 	}
     if( ret==0 && !mp.empty() && !cont->getStorage()->test() )
 	{
