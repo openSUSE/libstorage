@@ -1809,7 +1809,7 @@ Disk::getPartedValues( Partition *p )
     }
 
 bool
-Disk::getPartedSectors( Partition *p, unsigned long long& start,
+Disk::getPartedSectors( const Partition *p, unsigned long long& start,
                         unsigned long long& end )
     {
     bool ret = false;
@@ -2063,6 +2063,7 @@ int Disk::doRemove( Volume* v )
 
 int Disk::resizePartition( Partition* p, unsigned long newCyl )
     {
+    y2mil( "newCyl:" << newCyl << " p:" << *p );
     int ret = 0;
     if( readonly() )
 	{
@@ -2080,6 +2081,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	    else
 		p->setResizedSize( newSize );
 	    }
+	y2mil( "newCyl:" << newCyl << " p->cylSize():" << p->cylSize() );
 	if( ret==0 && newCyl>p->cylSize() )
 	    {
 	    unsigned long increase = newCyl - p->cylSize();
@@ -2185,6 +2187,19 @@ int Disk::doResize( Volume* v )
 	    getPartedSectors( p, start_sect, end_sect );
 	    end_sect = start_sect + p->sizeK()*2 - 1;
 	    y2milestone( "end_sect %llu", end_sect );
+	    const Partition * after = getPartitionAfter( p );
+	    if( after!=NULL )
+		{
+		unsigned long long start_after, end_after;
+		getPartedSectors( after, start_after, end_after );
+		if( start_after<=end_sect ||
+		    start_after-end_sect < byte_cyl/512*2 )
+		    {
+		    y2mil( "start_after:" << start_after << " end_sect:" << end_sect );
+		    end_sect=start_after-1;
+		    y2mil( "after new end_sect:" << end_sect );
+		    }
+		}
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
 	             << " unit s resize " << p->nr() << " "
 	             << start_sect << " " << end_sect;
@@ -2212,6 +2227,24 @@ int Disk::doResize( Volume* v )
 	ret = DISK_RESIZE_PARTITION_INVALID_VOLUME;
 	}
     y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+const Partition * Disk::getPartitionAfter( const Partition * p )
+    {
+    const Partition * ret = NULL;
+    y2mil( "p:" << *p );
+    PartPair pp = partPair( notDeleted );
+    for( PartIter pi=pp.begin(); pi!=pp.end(); ++pi )
+	{
+	if( pi->cylStart()>p->cylStart() &&
+	    (ret==NULL || ret->cylStart()>p->cylStart()) )
+	    ret = &(*pi);
+	}
+    if( ret==NULL )
+	y2milestone( "ret:NULL" );
+    else
+	y2mil( "ret:" << *ret );
     return( ret );
     }
 
