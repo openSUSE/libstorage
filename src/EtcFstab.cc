@@ -260,6 +260,8 @@ EtcFstab::findIdPath( const std::list<string>& id, const string& path,
 	       find( id.begin(), id.end(), i->nnew.dentry )==id.end() )
 	    ++i;
 	}
+    else 
+	i = co.end();
     if( i==co.end() && !path.empty() )
 	{
 	i = co.begin();
