@@ -1256,7 +1256,7 @@ int LvmVg::doCreatePv( const string& device )
 	cmd = "parted " + device + " mklabel msdos";
 	c.execute( cmd );
 	}
-    cmd = "pvcreate -ff " + metaString() + device;
+    cmd = "echo y | pvcreate -ff " + metaString() + device;
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{
