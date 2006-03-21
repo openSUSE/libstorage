@@ -1255,6 +1255,14 @@ Volume::setCryptPwd( const string& val )
     return( ret );
     }
 
+bool Volume::needLosetup() const
+    {
+    y2mil( "v:" << *this );
+    y2mil( "enc:" << encryption << " pwd:" << crypt_pwd );
+    return( (is_loop!=loop_active) && 
+            (encryption==ENC_NONE || !crypt_pwd.empty()) );
+    }
+
 EncryptType Volume::detectLoopEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
@@ -1885,7 +1893,8 @@ bool Volume::needRemount() const
     {
     bool need = false;
     need = mp!=orig_mp;
-    if( !need && !mp.empty() && !isMounted() && !optNoauto() )
+    if( !need && !mp.empty() && !isMounted() && !optNoauto() && 
+        is_loop==loop_active )
 	need = true;
     return( need );
     }
