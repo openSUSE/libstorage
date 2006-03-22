@@ -15,7 +15,7 @@ using namespace std;
 
 LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 	      const string& uuid, const string& stat, const string& alloc ) :
-	Dm( d, d.name()+"-"+name )
+	Dm( d, dupDash(d.name())+"-"+dupDash(name) )
     {
     init( name );
     setUuid( uuid );
@@ -30,7 +30,7 @@ LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 
 LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
 	      unsigned str ) :
-	Dm( d, d.name()+"-"+dupDash(name) )
+	Dm( d, dupDash(d.name())+"-"+dupDash(name) )
     {
     init( name );
     setLe( le );
