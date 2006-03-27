@@ -528,7 +528,7 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	             Lines_Cr.size()-old_size, Stderr_bv );
 	if( Lines_Cr.size()>0 )
 	    {
-	    y2mil( "last line:\"" << Lines_Cr.back() );
+	    y2mil( "last line:\"" << Lines_Cr.back() << '"' );
 	    }
 	}
     }
