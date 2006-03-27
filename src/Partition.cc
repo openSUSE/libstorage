@@ -286,7 +286,7 @@ string Partition::removeText( bool doing ) const
 	}
     else
 	{
-	if( isWindows() )
+	if( isWindows() && sizeK()>700*1024 )
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
