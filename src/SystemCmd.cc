@@ -526,6 +526,10 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	{
 	y2milestone( "pid:%d added lines:%zd stderr:%d", Pid_i,
 	             Lines_Cr.size()-old_size, Stderr_bv );
+	if( Lines_Cr.size()>0 )
+	    {
+	    y2mil( "last line:\"" << Lines_Cr.back() );
+	    }
 	}
     }
 
