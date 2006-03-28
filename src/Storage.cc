@@ -527,6 +527,7 @@ Storage::autodetectDisks()
 		string::size_type p = dn.find_last_not_of( "0123456789" );
 		int nr = -1;
 		dn.substr( p+1 ) >> nr;
+		dn.erase( p+1 ) >> nr;
 		if( nr>=0 )
 		    {
 		    Disk *d = new Disk( this, dn, (unsigned)nr, Size/2 );
