@@ -91,6 +91,69 @@ SystemCmd::executeBackground( const string& Cmd_Cv )
     return( doExecute( Cmd_Cv ));
     }
 
+int SystemCmd::executeRestricted( const string& Command_Cv, 
+                                  long unsigned MaxTimeSec,
+				  long unsigned MaxLineOut, 
+				  bool& ExceedTime, bool& ExceedLines )
+    {
+    y2milestone( "cmd:%s MaxTime:%lu MaxLines:%lu", Command_Cv.c_str(), 
+                 MaxTimeSec, MaxLineOut );
+    ExceedTime = ExceedLines = false;
+    int ret = executeBackground( Command_Cv );
+    unsigned long ts = 0;
+    unsigned long ls = 0;
+    unsigned long start_time = time(NULL);
+    while( !ExceedTime && !ExceedLines && !doWait( false, ret ) )
+	{
+	if( MaxTimeSec>0 )
+	    {
+	    ts = time(NULL)-start_time;
+	    y2mil( "time used:" << ts );
+	    }
+	if( MaxLineOut>0 )
+	    {
+	    ls = numLines()+numLines(false,IDX_STDERR);
+	    y2mil( "lines out:" << ls );
+	    }
+	ExceedTime = MaxTimeSec>0 && ts>MaxTimeSec;
+	ExceedLines = MaxLineOut>0 && ls>MaxLineOut;
+	sleep( 1 );
+	}
+    if( ExceedTime || ExceedLines )
+	{
+	int r = kill( Pid_i, SIGKILL );
+	y2mil( "kill pid:" << Pid_i << " ret:" << r );
+	unsigned count=0;
+	int Status_ii;
+	int Wait_ii = -1;
+	while( count<5 && Wait_ii<=0 )
+	    {
+	    Wait_ii = waitpid( Pid_i, &Status_ii, WNOHANG );
+	    y2mil( "waitpid:" << Wait_ii );
+	    count++;
+	    sleep( 1 );
+	    }
+	/*
+	r = kill( Pid_i, SIGKILL );
+	y2mil( "kill pid:" << Pid_i << " ret:" << r );
+	count=0;
+	waitDone = false;
+	while( count<8 && !waitDone )
+	    {
+	    y2mil( "doWait:" << count );
+	    waitDone = doWait( false, ret );
+	    count++;
+	    sleep( 1 );
+	    }
+	*/
+	Ret_i = -257;
+	}
+    y2milestone( "ret:%d ExceedTime:%d ExceedLines:%d", ret, ExceedTime,
+                 ExceedLines );
+    return( ret );
+    }
+
+
 int
 SystemCmd::execute( const string& Cmd_Cv )
     {
@@ -526,10 +589,6 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	{
 	y2milestone( "pid:%d added lines:%zd stderr:%d", Pid_i,
 	             Lines_Cr.size()-old_size, Stderr_bv );
-	if( Lines_Cr.size()>0 )
-	    {
-	    y2mil( "last line:\"" << Lines_Cr.back() << '"' );
-	    }
 	}
     }
 

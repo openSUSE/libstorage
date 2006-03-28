@@ -28,6 +28,10 @@ class SystemCmd
 	virtual ~SystemCmd();
 	int execute( const string& Command_Cv );
 	int executeBackground( const string& Command_Cv );
+	int executeRestricted( const string& Command_Cv, 
+	                       unsigned long MaxTimeSec,
+			       unsigned long MaxLineOut, 
+			       bool& ExceedTime, bool& ExceedLines);
 	void setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                       void * Par_p );
 	void logOutput();

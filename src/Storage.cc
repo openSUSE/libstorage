@@ -3103,7 +3103,7 @@ Storage::evmsActivateDevices()
 	    {
 	    if( i!=vol.begin() )
 		b << " ";
-	    b << (*i)->device();
+	    b << (*i)->mountDevice();
 	    }
 	b << "> ";
 	y2milestone( "%s", b.str().c_str() );

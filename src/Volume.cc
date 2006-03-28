@@ -1302,7 +1302,8 @@ EncryptType Volume::detectLoopEncryption()
 		c.execute( "modprobe " + fs_names[detected_fs] );
 		c.execute( "mount -oro -t " + fsTypeString(detected_fs) + " " +
 		           loop_dev + " " + mpname );
-		if( c.retcode()==0 )
+		bool ok = c.retcode()==0;
+		if( ok )
 		    {
 		    c.execute( "umount " + mpname );
 		    string cmd;
@@ -1310,7 +1311,7 @@ EncryptType Volume::detectLoopEncryption()
 			{
 			case EXT2:
 			case EXT3:
-			    cmd = "fsck.ext2 -n -f " + loop_dev + " > /dev/null";
+			    cmd = "fsck.ext2 -n -f " + loop_dev;
 			    break;
 			case REISERFS:
 			    cmd = "reiserfsck --yes --check -q " + loop_dev;
@@ -1320,16 +1321,19 @@ EncryptType Volume::detectLoopEncryption()
 		                  " " + loop_dev;
 			    break;
 			}
-		    c.execute( cmd );
+		    bool excTime, excLines;
+		    c.executeRestricted( cmd, 15, 500, excTime, excLines );
+		    ok = c.retcode()==0 || (excTime && !excLines);
+		    y2milestone( "ok:%d retcode:%d excTime:%d excLines:%d",
+		                 ok, c.retcode(), excTime, excLines );
 		    }
-		if( c.retcode()!=0 )
+		if( !ok )
 		    {
 		    detected_fs = fs = FSUNKNOWN;
 		    label.erase();
 		    orig_label.erase();
 		    uuid.erase();
 		    }
-		c.execute( "umount " + mpname );
 		}
 	    }
 	if( fs==FSUNKNOWN )
