@@ -481,6 +481,15 @@ Storage::autodetectDisks()
 		ifstream File( SysfsFile.c_str() );
 		File >> Size;
 		}
+	    SysfsFile = SysfsDir+"/"+Entry->d_name+"/device";
+	    string devname;
+	    int ret;
+	    char lbuf[1024+1];
+	    if( access( SysfsFile.c_str(), R_OK )==0 &&
+	        (ret=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
+		{
+		devname.append( lbuf, ret );
+		}
 	    string dn = Entry->d_name;
 	    if( Range>1 && (Size>0||dn.find( "dasd" )==0) )
 		{
@@ -508,6 +517,24 @@ Storage::autodetectDisks()
 		else
 		    {
 		    delete d;
+		    }
+		}
+	    else if( Range==1 && devname.find( "/xen/vbd" )!=string::npos &&
+	             isdigit(dn[dn.size()-1]) )
+		{
+		y2milestone( "autodetectDisks xen sysfs:%s devname:%s dn:%s",
+		             Entry->d_name, devname.c_str(), dn.c_str() );
+		string::size_type p = dn.find_last_not_of( "0123456789" );
+		int nr = -1;
+		dn.substr( p+1 ) >> nr;
+		if( nr>=0 )
+		    {
+		    Disk *d = new Disk( this, dn, (unsigned)nr, Size/2 );
+		    d->setUdevData( by_path[dn], by_id[dn] );
+		    d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ); 
+		    if( max_log_num>0 )
+			d->logData( logdir );
+		    addToList( d );
 		    }
 		}
 	    }

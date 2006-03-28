@@ -30,10 +30,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     idt = orig_id = Id;
     typ = Type;
     orig_num = num;
-    if( !d.udevPath().empty() )
-	alt_names.push_back( udevCompletePathPath( d.udevPath(), PNr ));
-    if( !d.udevId().empty() )
-	addAltUdevId( num );
+    addUdevData( d );
     y2debug( "constructed partition %s on disk %s", dev.c_str(),
 	     cont->name().c_str() );
     }
@@ -60,10 +57,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	bootflag = true;
     else
 	bootflag = false;
-    if( !d.udevPath().empty() )
-	alt_names.push_back( udevCompletePathPath( d.udevPath(), num ));
-    if( !d.udevId().empty() )
-	addAltUdevId( num );
+    addUdevData( d );
     y2debug( "constructed partition %s on disk %s", dev.c_str(),
 	     cont->name().c_str() );
     }
@@ -96,6 +90,13 @@ bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
 bool Partition::contains( const Region& r, unsigned fuzz ) const
     {
     return( (r.len() - reg.intersect( r ).len()) <= fuzz );
+    }
+
+void Partition::addUdevData( const Disk& d )
+    {
+    if( !d.udevPath().empty() )
+	alt_names.push_back( udevCompletePathPath( d.udevPath(), num ));
+    addAltUdevId( num );
     }
 
 void Partition::addAltUdevId( unsigned num )

@@ -31,14 +31,38 @@ Disk::Disk( Storage * const s, const string& Name,
     Container(s,Name,staticType())
     {
     init_disk = false;
+    logfile_name = Name;
     size_k = SizeK;
     y2debug( "constructed disk %s", dev.c_str() );
+    }
+
+Disk::Disk( Storage * const s, const string& Name,
+            unsigned num, unsigned long long SizeK ) :
+    Container(s,Name,staticType())
+    {
+    y2milestone( "constructed disk %s nr %u sizeK:%llu", Name.c_str(), num,
+                 SizeK );
+    logfile_name = Name + decString(num);
+    init_disk = false;
+    ronly = true;
+    size_k = SizeK;
+    head = new_head = 16;
+    sector = new_sector = 32;
+    cyl = new_cyl = std::max( size_k*2 / head / sector, 1ULL );
+    byte_cyl = head * sector * 512;
+    unsigned long long sz = size_k;
+    Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
+    ProcPart ppart;
+    if( ppart.getSize( p->device(), sz ) && sz>0 )
+	{
+	p->setSize( sz );
+	}
+    addToList( p );
     }
 
 Disk::Disk( Storage * const s, const string& fname ) :
     Container(s,"",staticType())
     {
-    init_disk = false;
     nm = fname.substr( fname.find_last_of( '/' )+1);
     if( nm.find("disk_")==0 )
 	nm.erase( 0, 5 );
@@ -102,6 +126,11 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	{
 	extractNthWord( 1, line ) >> ronly;
 	}
+    if( FakeDisk() && isdigit( nm[nm.size()-1] ))
+	{
+	string::size_type p = nm.find_last_not_of( "0123456789" );
+	nm.erase( p+1 );
+	}
     size_k = 0;
     if( searchFile( file, "^SizeK:", line ) )
 	{
@@ -127,7 +156,6 @@ Disk::Disk( Storage * const s, const string& fname ) :
     y2debug( "constructed disk %s from file %s", dev.c_str(), fname.c_str() );
     }
 
-
 Disk::~Disk()
     {
     y2debug( "destructed disk %s", dev.c_str() );
@@ -147,6 +175,14 @@ void Disk::setUdevData( const string& path, const string& id )
 	tmp.erase( i );
 	}
     udev_id.splice( udev_id.end(), tmp );
+    if( FakeDisk() )
+	{
+	PartPair pp = partPair();
+	for( PartIter p=pp.begin(); p!=pp.end(); ++p )
+	    {
+	    p->addUdevData(*this);
+	    }
+	}
     }
 
 
@@ -357,7 +393,7 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 void
 Disk::logData( const string& Dir )
     {
-    string fname( Dir + "/disk_" + name() + ".tmp" );
+    string fname( Dir + "/disk_" + logfile_name + ".tmp" );
     ofstream file( fname.c_str() );
     file << "Device: " << dev << endl;
     if( !udev_path.empty() )
@@ -379,7 +415,6 @@ Disk::logData( const string& Dir )
 	file << "ExtPossible: " << ext_possible << endl;
 	file << "MaxLogical: " << max_logical << endl;
 	}
-
     if( ronly )
 	{
 	file << "Readonly: " << ronly << endl;
@@ -2417,6 +2452,7 @@ Disk& Disk::operator= ( const Disk& rhs )
     init_disk = rhs.init_disk;
     udev_path = rhs.udev_path;
     udev_id = rhs.udev_id;
+    logfile_name = rhs.logfile_name;
     return( *this );
     }
 

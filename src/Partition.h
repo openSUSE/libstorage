@@ -69,6 +69,7 @@ class Partition : public Volume
 	void getInfo( storage::PartitionInfo& info ) const;
 	bool equalContent( const Partition& rhs ) const;
 	void logDifference( const Partition& d ) const;
+	void addUdevData( const Disk& d );
 
     protected:
 	Partition& operator=( const Partition& );

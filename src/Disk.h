@@ -29,6 +29,8 @@ class Disk : public Container
 
     public:
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
+	Disk( Storage * const s, const string& Name, unsigned num, 
+	      unsigned long long Size );
 	Disk( const Disk& rhs );
 	virtual ~Disk();
 
@@ -91,6 +93,7 @@ class Disk : public Container
 	bool equalContent( const Disk& rhs ) const;
 	void logDifference( const Disk& d ) const;
 	Disk& operator= ( const Disk& rhs );
+	bool FakeDisk() const { return(range==1); }
 
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
@@ -205,6 +208,7 @@ class Disk : public Container
 	std::list<string> udev_id;
 	string detected_label;
 	string system_stderr;
+	string logfile_name;
 	unsigned max_primary;
 	bool ext_possible;
 	bool init_disk;
