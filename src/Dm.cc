@@ -128,7 +128,8 @@ Dm::getTableInfo()
 
 bool Dm::removeTable()
     {
-    SystemCmd c( "dmsetup remove " + tname );
+    string cmd = "dmsetup remove " + tname;
+    SystemCmd c( cmd );
     bool ret = c.retcode()==0;
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -395,6 +396,7 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     s << p.shortPrintedName() << " ";
     s << *(Volume*)&p;
     s << " LE:" << p.num_le;
+    s << " Table:" << p.tname;
     if( p.inactiv>1 )
       {
       s << " inactive";
@@ -452,6 +454,7 @@ Dm& Dm::operator= ( const Dm& rhs )
     stripe = rhs.stripe;
     stripe_size = rhs.stripe_size;
     inactiv = rhs.inactiv;
+    tname = rhs.tname;
     pe_map = rhs.pe_map;
     return( *this );
     }

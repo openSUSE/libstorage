@@ -1634,7 +1634,6 @@ int Disk::doCreateLabel()
 	{
 	getStorage()->showInfoCb( setDiskLabelText(true) );
 	}
-    getStorage()->removeDmMapsTo( device()+".*" );
     removePresentPartitions();
     system_stderr.erase();
     std::ostringstream cmd_line;
@@ -1890,7 +1889,6 @@ int Disk::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->createText(true) );
 	    }
-	getStorage()->removeDmMapsTo( device()+".*" );
 	system_stderr.erase();
 	y2milestone( "doCreate container %s name %s", name().c_str(),
 		     p->name().c_str() );
@@ -2060,10 +2058,10 @@ int Disk::doRemove( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
-	getStorage()->removeDmMapsTo( device()+".*" );
 	system_stderr.erase();
 	y2milestone( "doRemove container %s name %s", name().c_str(),
 		     p->name().c_str() );
+	getStorage()->removeDmMapsTo( getPartName(p->OrigNr()) );
 	ret = v->prepareRemove();
 	if( ret==0 && !p->created() )
 	    {

@@ -619,6 +619,10 @@ int Volume::doFormat()
 	{
 	ret = checkDevice();
 	}
+    if( ret==0 )
+	{
+	cont->getStorage()->removeDmTableTo( *this );
+	}
     if( ret==0 &&
         (Storage::arch().find( "sparc" )!=0 || encryption!=ENC_NONE ))
 	{
