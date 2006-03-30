@@ -1750,7 +1750,7 @@ Storage::removeVolume( const string& device )
 	    if( ret==0 && cont->type()==DISK && haveEvms() )
 		{
 		Disk* disk = dynamic_cast<Disk *>(&(*cont));
-		y2mil( "disk:" << disk << " vol:" << &(*vol) );
+		y2mil( "disk:" << disk );
 		string tmp = vdev;
 		string::size_type pos = tmp.find_last_not_of( "0123456789" );
 		tmp.erase( 0, pos+1 );
