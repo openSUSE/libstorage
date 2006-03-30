@@ -1742,21 +1742,23 @@ Storage::removeVolume( const string& device )
 	{
 	if( vol->getUsedByType() == UB_NONE || recursiveRemove )
 	    {
+	    string vdev = vol->device();
 	    if( vol->getUsedByType() != UB_NONE )
-		ret = removeUsing( vol->device(), vol->getUsedBy() );
+		ret = removeUsing( vdev, vol->getUsedBy() );
 	    if( ret==0 )
 		ret = cont->removeVolume( &(*vol) );
 	    if( ret==0 && cont->type()==DISK && haveEvms() )
 		{
 		Disk* disk = dynamic_cast<Disk *>(&(*cont));
-		string tmp = vol->device();
+		y2mil( "disk:" << disk << " vol:" << &(*vol) );
+		string tmp = vdev;
 		string::size_type pos = tmp.find_last_not_of( "0123456789" );
 		tmp.erase( 0, pos+1 );
 		unsigned num = 0;
 		if( !tmp.empty() )
 		    tmp >> num;
 		bool rename = disk!=NULL && num>0 && disk->isLogical(num);
-		handleEvmsRemoveDevice( disk, vol->device(), rename );
+		handleEvmsRemoveDevice( disk, vdev, rename );
 		}
 	    }
 	else
