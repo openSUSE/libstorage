@@ -325,6 +325,7 @@ class Storage : public storage::StorageInterface
 	void eraseFreeInfo( const string& device );
 	int waitForDevice() const;
 	int waitForDevice( const string& device ) const;
+	void checkDeviceExclusive( const string& device, unsigned secs );
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );
 

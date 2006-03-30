@@ -2011,6 +2011,10 @@ int Disk::doCreate( Volume* v )
 	    if( !getPartedValues( p ))
 		ret = DISK_PARTITION_NOT_FOUND;
 	    }
+	if( ret==0 && p->type()!=EXTENDED )
+	    {
+	    getStorage()->checkDeviceExclusive( p->device(), 3 );
+	    }
 	if( ret==0 )
 	    {
 	    if( getStorage()->getZeroNewPartitions() )

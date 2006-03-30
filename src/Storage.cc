@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <glob.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/statvfs.h>
@@ -4560,6 +4561,22 @@ int Storage::waitForDevice( const string& device ) const
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void Storage::checkDeviceExclusive( const string& device, unsigned secs )
+    {
+    const int delay = 50000;
+    unsigned count = secs * 1000000/delay;
+    int fd;
+    y2mil( "dev:" << device << " sec:" << secs << " count:" << count );
+    for( unsigned i=0; i<count; i++ )
+	{
+	fd = open( device.c_str(), O_RDONLY|O_EXCL );
+	y2mil( "count:" << i << " fd:" << fd );
+	if( fd>=0 )
+	    close(fd);
+	usleep( delay );
+	}
     }
 
 namespace storage
