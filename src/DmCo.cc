@@ -222,6 +222,8 @@ DmCo::doRemove( Volume* v )
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = DM_REMOVE_FAILED;
+	    else
+		getStorage()->waitForDevice();
 	    }
 	if( ret==0 )
 	    {

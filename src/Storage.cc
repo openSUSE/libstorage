@@ -3110,7 +3110,7 @@ Storage::evmsActivateDevices()
 	    }
 	b << "> ";
 	y2milestone( "%s", b.str().c_str() );
-	c.execute( "dmsetup remove " + tblname );
+	removeDmTable( tblname );
 	string fname = tmpDir()+"/tfile";
 	unlink( fname.c_str() );
 	ofstream tfile( fname.c_str() );
@@ -3128,7 +3128,7 @@ Storage::evmsActivateDevices()
 	}
     EvmsCo::activateDevices();
     if( !vol.empty() )
-	c.execute( "dmsetup remove " + tblname );
+	removeDmTable( tblname );
     }
 
 static bool isDmContainer( const Container& co )
@@ -3652,13 +3652,18 @@ void Storage::removeDmTableTo( const string& device )
 	removeDmTableTo( *vol );
     }
     
-void Storage::removeDmTable( const string& table )
+bool Storage::removeDmTable( const string& table )
     {
     SystemCmd c( "dmsetup table \"" + table + "\"" );
+    bool ret = false;
     if( c.retcode()==0 )
 	{
 	c.execute( "dmsetup remove \"" + table + "\"" );
+	waitForDevice();
+	ret = c.retcode()==0;
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
 void

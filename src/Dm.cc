@@ -128,11 +128,7 @@ Dm::getTableInfo()
 
 bool Dm::removeTable()
     {
-    string cmd = "dmsetup remove " + tname;
-    SystemCmd c( cmd );
-    bool ret = c.retcode()==0;
-    y2milestone( "ret:%d", ret );
-    return( ret );
+    return( getContainer()->getStorage()->removeDmTable( tname ));
     }
 
 string Dm::getDevice( const string& majmin )
