@@ -334,7 +334,8 @@ class Storage : public storage::StorageInterface
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
 	bool removeDmTable( const string& table );
-	void removeDmMapsTo( const string& dev );
+	bool removeDmMapsTo( const string& dev );
+	bool checkDmMapsTo( const string& dev );
 
 	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }

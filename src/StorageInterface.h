@@ -1738,6 +1738,22 @@ namespace storage
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
 	/**
+	 * Check if there are dm maps to a given device 
+	 *
+	 * @param device device name for which dm maps should be checked
+	 * @return bool true if there are map to device
+	 */
+	virtual bool checkDmMapsTo( const string& device ) = 0;
+
+	/**
+	 * Remove all possibly existing dm maps to a given device 
+	 *
+	 * @param device device name for which dm maps should be removed
+	 * @return bool true if maps to remove existed 
+	 */
+	virtual bool removeDmMapsTo( const string& device ) = 0;
+
+	/**
 	 * Detect potentially available free space on a partition
 	 *
 	 * @param device device to check
