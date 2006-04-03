@@ -644,6 +644,10 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		      {
 		      id = Partition::ID_APPLE_HFS;
 		      }
+		  else if( val.find( "Apple_UFS" ) != string::npos )
+		      {
+		      id = Partition::ID_APPLE_UFS;
+		      }
 		  }
 	      }
 	  }
