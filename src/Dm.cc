@@ -366,6 +366,22 @@ void Dm::activate( bool val )
 	}
     }
 
+string Dm::devToTable( const string& dev )
+    {
+    string ret(undevDevice(dev));
+    string::iterator it = ret.begin();
+    while( it!=ret.end() )
+	{
+	if( *it == '/' )
+	    *it = '|';
+	++it;
+	}
+    if( dev!=ret )
+	y2milestone( "dev:%s --> %s", dev.c_str(), ret.c_str() );
+    return( ret );
+    }
+
+
 void Dm::getDmMajor()
     {
     SystemCmd c( "grep device-mapper /proc/devices" );

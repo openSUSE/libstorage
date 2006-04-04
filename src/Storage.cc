@@ -3663,7 +3663,7 @@ void Storage::removeDmTableTo( const Volume& vol )
 	removeDmMapsTo( vol.device() );
 	if( vol.cType()==DISK )
 	    removeDmMapsTo( vol.getContainer()->device() );
-	removeDmTable( undevDevice( vol.device() ));
+	removeDmTable( Dm::devToTable(vol.device()));
 	}
     }
     

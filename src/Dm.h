@@ -46,6 +46,7 @@ class Dm : public Volume
 	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
 
 	static void activate( bool val=true );
+	static string devToTable( const string& dev );
 	bool equalContent( const Dm& rhs ) const;
 	void logDifference( const Dm& d ) const;
 	string stringDifference( const Dm& d ) const;
