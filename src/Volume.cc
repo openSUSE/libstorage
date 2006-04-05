@@ -1493,7 +1493,7 @@ int Volume::doSetLabel()
 		}
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap -L " + label + " " + mountDevice();
+		cmd = "/sbin/mkswap -L \"" + label + "\" " + mountDevice();
 		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
@@ -2134,9 +2134,9 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if( v.label.length()>0 )
 	{
 	s << " label:" << v.label;
-	if( v.label != v.orig_label && v.orig_label.length()>0 )
-	    s << " orig_label:" << v.orig_label;
 	}
+    if( v.label != v.orig_label && v.orig_label.length()>0 )
+	s << " orig_label:" << v.orig_label;
     if( v.fstab_opt.length()>0 )
 	{
 	s << " fstopt:" << v.fstab_opt;
