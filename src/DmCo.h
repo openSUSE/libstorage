@@ -83,6 +83,7 @@ class DmCo : public PeContainer
 	void addDm( Dm* m );
 	void checkDm( Dm* m );
 	void updateEntry( const Dm* m );
+	virtual Container* getCopy() const { return( new DmCo( *this ) ); }
 
 	void init();
 

@@ -1261,8 +1261,6 @@ Volume::setCryptPwd( const string& val )
 
 bool Volume::needLosetup() const
     {
-    y2mil( "v:" << *this );
-    y2mil( "enc:" << encryption << " pwd:" << crypt_pwd );
     return( (is_loop!=loop_active) && 
             (encryption==ENC_NONE || !crypt_pwd.empty()) );
     }

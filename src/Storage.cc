@@ -161,6 +161,11 @@ Storage::initialize()
     y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
     detectObjects();
     setCacheChanges( true );
+    dumpObjectList();
+    }
+
+void Storage::dumpObjectList()
+    {
     ostringstream buf;
     printInfo( buf );
     std::list<string> l = splitString( buf.str(), "\n" );
@@ -176,6 +181,11 @@ Storage::initialize()
 
 void Storage::detectObjects()
     {
+    char * file = "/etc/evms.conf"; 
+    if( access( file, R_OK )==0 )
+	{
+	SystemCmd cmd( (string)"grep exclude " + file );
+	}
     EvmsCo::activate(true);
     detectDisks();
     if( instsys() )
@@ -3022,7 +3032,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    CType type = cont ? (*ac)->co()->type() : (*ac)->vol()->cType();
 	    Container *co = cont ? (*ac)->co() : 
 	                           const_cast<Container*>((*ac)->vol()->getContainer());
-	    if( !evms_activate && *pt==INCREASE && (type==DISK||type==MD) )
+	    if( !evms_activate && *pt==INCREASE && (type==DISK||type==MD||(cont&&type==EVMS)) )
 		{
 		evms_activate = true;
 		}
@@ -3083,6 +3093,9 @@ Storage::evmsActivateDevices()
     SystemCmd c;
     list<Container*> co;
     list<Volume*> vol;
+    list<string> save_disks;
+
+    y2milestone( "evmsActivateDevices start" );
     CPair p = cPair( needSaveFromEvms );
     ContIterator i = p.begin();
     while( i != p.end() )
@@ -3093,6 +3106,7 @@ Storage::evmsActivateDevices()
 	}
     if( !vol.empty() )
 	{
+	const Container* cp;
 	vol.sort( sort_vol_normal );
 	vol.unique();
 	std::ostringstream b;
@@ -3101,10 +3115,25 @@ Storage::evmsActivateDevices()
 	    {
 	    if( i!=vol.begin() )
 		b << " ";
-	    b << (*i)->mountDevice();
+	    b << (*i)->device();
+	    if( (*i)->cType()==DISK &&
+	        (cp = (*i)->getContainer())!=NULL )
+		{
+		if( find( save_disks.begin(), save_disks.end(), cp->device() ) 
+		    == save_disks.end() )
+		    {
+		    save_disks.push_back( cp->device() );
+		    }
+		}
 	    }
 	b << "> ";
 	y2milestone( "%s", b.str().c_str() );
+	y2mil( "saved_disks " << save_disks );
+	for( list<string>::const_iterator i=save_disks.begin(); 
+	     i!=save_disks.end(); ++i )
+	     {
+	     removeDmMapsTo( *i, true );
+	     }
 	removeDmTable( tblname );
 	string fname = tmpDir()+"/tfile";
 	unlink( fname.c_str() );
@@ -3132,16 +3161,17 @@ static bool isDmContainer( const Container& co )
     return( co.type()==EVMS || co.type()==DM || co.type()==LVM );
     }
 
-bool Storage::removeDmMapsTo( const string& dev )
+bool Storage::removeDmMapsTo( const string& dev, bool also_evms )
     {
     bool ret = false;
-    y2milestone( "dev:%s", dev.c_str() );
+    y2milestone( "dev:%s also_evms:%d", dev.c_str(), also_evms );
     VPair vp = vPair( isDmContainer );
     for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
 	{
 	Dm * dm = dynamic_cast<Dm *>(&(*v));
-	if( dm!=NULL )
+	if( (also_evms||v->getUsedByType()!=UB_EVMS) && dm!=NULL )
 	    {
+	    y2mil( "dm:" << *dm );
 	    if( dm->mapsTo( dev ) )
 		{
 		dm->removeTable();
@@ -4048,7 +4078,7 @@ int Storage::removeUsing( const string& device, const storage::usedBy& uby )
 	    ret = removeVolume( "/dev/" + name );
 	    break;
 	case UB_DM:
-	    ret = removeVolume( "/dev/dm-" + name );
+	    ret = removeVolume( "/dev/" + name );
 	    break;
 	case UB_LVM:
 	    ret = removeLvmVg( name );

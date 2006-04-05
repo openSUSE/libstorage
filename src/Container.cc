@@ -402,7 +402,7 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 		    ((const LvmVg*)this)->logDifference( *(const LvmVg*)c );
 		break;
 	    case DM:
-		ret = ((const PeContainer*)this)->equalContent( *(const PeContainer*)c );
+		ret = ((const DmCo*)this)->equalContent( *(const DmCo*)c );
 		if( !ret && verbose )
 		    ((const DmCo*)this)->logDifference( *(const DmCo*)c );
 		break;
