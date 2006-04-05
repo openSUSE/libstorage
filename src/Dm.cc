@@ -206,7 +206,11 @@ Dm::mapsTo( const string& dev ) const
 	mit = pe_map.find( dev );
 	}
     ret = mit != pe_map.end();
-    y2milestone( "table:%s dev:%s ret:%d", tname.c_str(), dev.c_str(), ret );
+    if( ret )
+	{
+	y2mil( "map:" << pe_map );
+	y2milestone( "table:%s dev:%s ret:%d", tname.c_str(), dev.c_str(), ret );
+	}
     return( ret );
     }
 

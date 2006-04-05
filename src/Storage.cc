@@ -3031,10 +3031,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		{
 		evms_activate = true;
 		}
-	    if( !evms_activate && (*pt==MOUNT||*pt==FORMAT) )
-		{
-		evms_activate = true;
-		}
 	    if( evms_activate && haveEvms() &&
 	        ((*pt==INCREASE && type==EVMS)||*pt==FORMAT||*pt==MOUNT))
 		{
@@ -3070,7 +3066,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	}
     if( evms_activate && haveEvms() )
 	{
-	// Todo schützen normale devices
 	evmsActivateDevices();
 	evms_activate = false;
 	}
@@ -3129,6 +3124,7 @@ Storage::evmsActivateDevices()
     EvmsCo::activateDevices();
     if( !vol.empty() )
 	removeDmTable( tblname );
+    updateDmEmptyPeMap();
     }
 
 static bool isDmContainer( const Container& co )
@@ -3157,6 +3153,25 @@ bool Storage::removeDmMapsTo( const string& dev )
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void Storage::updateDmEmptyPeMap()
+    {
+    VPair vp = vPair( isDmContainer );
+    for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
+	{
+	Dm * dm = dynamic_cast<Dm *>(&(*v));
+	if( dm!=NULL )
+	    {
+	    if( dm->getPeMap().empty() )
+		{
+		y2mil( "dm:" << *dm );
+		dm->getTableInfo();
+		}
+	    }
+	else
+	    y2warning( "not a Dm descendant %s", v->device().c_str() );
+	}
     }
 
 bool Storage::checkDmMapsTo( const string& dev )
