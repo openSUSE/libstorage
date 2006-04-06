@@ -7,6 +7,7 @@ namespace storage
 {
 
 class SystemCmd;
+class ProcPart;
 
 class Dasd : public Disk
     {
@@ -32,8 +33,12 @@ class Dasd : public Disk
 	bool detectGeometry();
 
     protected:
+	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
+
+	virtual void print( std::ostream& s ) const { s << *this; }
+	bool detectPartitionsFdasd(ProcPart& ppart);
 	bool detectPartitions();
-	bool checkFdasdOutput( SystemCmd& Cmd );
+	bool checkFdasdOutput( SystemCmd& Cmd, ProcPart& ppart );
 	bool scanFdasdLine( const string& Line, unsigned& nr, 
 	                    unsigned long& start, unsigned long& csize );
 	void getGeometry( SystemCmd& cmd, unsigned long& c,
@@ -46,8 +51,10 @@ class Dasd : public Disk
         int doSetType( Volume* v ) { return 0; }
         int doCreateLabel() { return 0; }
 	int doDasdfmt();
+	DasdFormat fmt;
 
 	Dasd& operator= ( const Dasd& rhs );
+	friend std::ostream& operator<< (std::ostream&, const Dasd& );
 
     };
 

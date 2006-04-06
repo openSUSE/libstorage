@@ -30,28 +30,80 @@ Dasd::~Dasd()
     y2debug( "destructed dasd %s", dev.c_str() );
     }
 
-bool Dasd::detectPartitions()
+bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     {
     bool ret = true;
     string cmd_line = "/sbin/fdasd -p " + device();
-    setLabelData( "dasd" );
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
     y2milestone( "retcode:%d", Cmd.retcode() );
     if( Cmd.retcode() == 0 )
+	checkFdasdOutput( Cmd, ppart );
+    y2milestone( "ret:%d partitons:%zd", ret, vols.size() );
+    return( ret );
+    }
+
+bool Dasd::detectPartitions()
+    {
+    bool ret = true;
+    string cmd_line = "dasdview -x " + device();
+    system_stderr.erase();
+    detected_label = "dasd";
+    setLabelData( "dasd" );
+    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    SystemCmd Cmd( cmd_line );
+    y2milestone( "retcode:%d", Cmd.retcode() );
+    if( Cmd.retcode() == 0 )
 	{
+	ProcPart ppart;
+	if( Cmd.select( "^format" )>0 )
+	    {
+	    string tmp = *Cmd.getLine(0, true);
+	    y2milestone( "Format line:%s", tmp.c_str() );
+	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
+	    tmp = extractNthWord( 4, tmp );
+	    tolower( tmp );
+	    if( tmp == "cdl" )
+		fmt = DASDF_CDL;
+	    else if( tmp == "ldl" )
+		fmt = DASDF_LDL;
+	    }
 	getGeometry( Cmd, cyl, head, sector );
 	new_cyl = cyl;
 	new_head = head;
 	new_sector = sector;
 
-	y2milestone( "After fdasd Head:%u Sector:%u Cylinder:%lu SizeK:%llu",
+	y2milestone( "After dasdview Head:%u Sector:%u Cylinder:%lu SizeK:%llu",
 		     head, sector, cyl, size_k );
 	if( size_k==0 )
 	    {
 	    size_k = (head*sector*cyl)/2;
 	    y2milestone( "New SizeK:%llu", size_k );
+	    }
+	y2mil( "fmt:" << fmt );
+	switch( fmt )
+	    {
+	    case DASDF_CDL:
+		ret = Dasd::detectPartitionsFdasd(ppart);
+		break;
+	    case DASDF_LDL:
+		{
+		max_primary = 1;
+		unsigned long long s = cylinderToKb(cyl);
+		Partition *p = new Partition( *this, 1, s, 0, cyl,
+					      PRIMARY, Partition::ID_LINUX,
+					      false );
+		if( ppart.getSize( p->device(), s ))
+		    {
+		    p->setSize( s );
+		    }
+		addToList( p );
+		ret = true;
+		}
+		break;
+	    default:
+		break;
 	    }
 	}
     else
@@ -61,10 +113,6 @@ bool Dasd::detectPartitions()
 	}
     byte_cyl = head * sector * 512;
     y2milestone( "byte_cyl:%lu", byte_cyl );
-    if( Cmd.retcode() == 0 )
-	checkFdasdOutput( Cmd );
-    detected_label = "dasd";
-    setLabelData( "dasd" );
     y2milestone( "ret:%d partitons:%zd detected label:%s", ret, vols.size(), 
                  label.c_str() );
     return( ret );
@@ -102,12 +150,11 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
    }
 
 bool
-Dasd::checkFdasdOutput( SystemCmd& cmd )
+Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
     {
     int cnt;
     string line;
     string tmp;
-    ProcPart ppart;
     list<Partition *> pl;
     Regex part( "^"+device()+"[0-9]+$" );
 
@@ -203,8 +250,10 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "cylinders" )>0 )
 	{
 	val = 0;
-	y2milestone( "Cylinder line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 2, *cmd.getLine(0, true));
+	tmp = *cmd.getLine(0, true);
+	y2milestone( "Cylinder line:%s", tmp.c_str() );
+	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
+	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
 	if( val>0 )
 	    {
@@ -215,8 +264,10 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "tracks per" )>0 )
 	{
 	val = 0;
-	y2milestone( "Tracks line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 4, *cmd.getLine(0, true));
+	tmp = *cmd.getLine(0, true);
+	y2milestone( "Tracks line:%s", tmp.c_str() );
+	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
+	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
 	if( val>0 )
 	    {
@@ -227,8 +278,10 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "blocks per" )>0 )
 	{
 	val = 0;
-	y2milestone( "Blocks line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 4, *cmd.getLine(0, true));
+	tmp = *cmd.getLine(0, true);
+	y2milestone( "Blocks line:%s", tmp.c_str() );
+	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
+	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
 	if( val>0 )
 	    {
@@ -236,11 +289,13 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	    s=val;
 	    }
 	}
-    if( cmd.select( "bytes per" )>0 )
+    if( cmd.select( "blocksize" )>0 )
 	{
 	val = 0;
-	y2milestone( "Bytes line:%s", (*cmd.getLine(0, true)).c_str() );
-	tmp = extractNthWord( 4, *cmd.getLine(0, true));
+	tmp = *cmd.getLine(0, true);
+	y2milestone( "Bytes line:%s", tmp.c_str() );
+	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
+	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
 	if( val>0 )
 	    {
@@ -594,11 +649,25 @@ Dasd& Dasd::operator= ( const Dasd& rhs )
     {
     y2debug( "operator= from %s", rhs.nm.c_str() );
     *((Disk*)this) = rhs;
+    fmt = rhs.fmt;
     return( *this );
     }
 
 Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
     {
+    fmt = DASDF_NONE;
     y2debug( "constructed dasd by copy constructor from %s", rhs.nm.c_str() );
     }
+
+namespace storage
+{
+std::ostream& operator<< (std::ostream& s, const Dasd& d )
+    {
+    s << *((Disk*)&d);
+    s << " fmt:" << d.fmt;
+    return( s );
+    }
+}
+
+
 
