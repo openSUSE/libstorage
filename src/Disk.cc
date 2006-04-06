@@ -2231,17 +2231,31 @@ int Disk::doResize( Volume* v )
 	    end_sect = start_sect + p->sizeK()*2 - 1;
 	    y2milestone( "end_sect %llu", end_sect );
 	    const Partition * after = getPartitionAfter( p );
+	    unsigned long max_end = sizeK()*2-1;
 	    if( after!=NULL )
 		{
 		unsigned long long start_after, end_after;
 		getPartedSectors( after, start_after, end_after );
-		if( start_after<=end_sect ||
-		    start_after-end_sect < byte_cyl/512*2 )
+		max_end = start_after-1;
+		if( p->type() == LOGICAL )
+		    max_end--;
+		}
+	    else if( p->type()==LOGICAL )
+		{
+		PartPair ext = partPair(isExtended);
+		if( !ext.empty() )
 		    {
-		    y2mil( "start_after:" << start_after << " end_sect:" << end_sect );
-		    end_sect=start_after-1;
-		    y2mil( "after new end_sect:" << end_sect );
+		    unsigned long long start_ext, end_ext;
+		    getPartedSectors( &(*ext.begin()), start_ext, end_ext );
+		    max_end = end_ext;
 		    }
+		}
+	    y2mil( "max_end:" << max_end << " end_sect:" << end_sect );
+	    if( max_end<end_sect ||
+		max_end-end_sect < byte_cyl/512*2 )
+		{
+		end_sect = max_end;
+		y2mil( "new end_sect:" << end_sect );
 		}
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << device()
 	             << " unit s resize " << p->nr() << " "
@@ -2277,7 +2291,7 @@ const Partition * Disk::getPartitionAfter( const Partition * p )
     {
     const Partition * ret = NULL;
     y2mil( "p:" << *p );
-    PartPair pp = partPair( notDeleted );
+    PartPair pp = partPair( (p->type()==LOGICAL)?notDeleted:notDeletedLog );
     for( PartIter pi=pp.begin(); pi!=pp.end(); ++pi )
 	{
 	if( pi->cylStart()>p->cylStart() &&
