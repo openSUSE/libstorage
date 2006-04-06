@@ -3610,7 +3610,8 @@ void Storage::handleEvmsRemoveDevice( const Disk* disk, const string& d,
 			{
 			if( pi->type()==LOGICAL )
 			    {
-			    string dev = "/dev/evms/" + pi->name();
+			    //string dev = "/dev/evms/" + pi->name();
+			    string dev = EvmsCo::devToEvms( pi->device() );
 			    y2mil( "evms new dev:" << dev );
 			    VolIterator vv;
 			    if( findVolume( dev, vv ))
@@ -3624,18 +3625,23 @@ void Storage::handleEvmsRemoveDevice( const Disk* disk, const string& d,
 		    }
 		}
 	    }
-	string dev = "/dev/evms/" + undevDevice(d);
+	string dev = EvmsCo::devToEvms( d );
+	y2mil( "evmsdev:" << dev );
 	if( findVolume( dev, v ))
 	    {
 	    v->setDeleted();
 	    v->setSilent();
 	    y2mil( "v:" << *v );
 	    }
-	if( disk->isEmpty() && !findVolume( "/dev/evms/"+disk->name(), v) )
+	if( disk->isEmpty() && !findVolume( EvmsCo::devToEvms(disk->device()), v) )
 	    {
 	    EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
 	    if( co != NULL )
-		co->addLv( disk->sizeK(), disk->name(), false );
+		{
+		string name = EvmsCo::devToEvms(disk->device());
+		y2mil( "evmsdev:" << dev );
+		co->addLv( disk->sizeK(), name.substr(10), false );
+		}
 	    }
 	if( rename )
 	    {
@@ -3673,14 +3679,13 @@ void Storage::handleEvmsCreateDevice( const string& disk, const string& d, bool 
 	string dev;
 	if( !extended )
 	    {
-	    dev = "/dev/evms/" + undevDevice(d);
+	    dev = EvmsCo::devToEvms(d);
 	    if( findVolume( d, v ) && !findVolume( dev, w ))
 		{
 		EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
 		if( co != NULL )
 		    {
-		    string name = dev.substr( dev.rfind( '/' )+1 );
-		    Evms* l = new Evms( *co, name, v->sizeK(), 1u );
+		    Evms* l = new Evms( *co, dev.substr(10), v->sizeK(), 1u );
 		    co->addVolume( l );
 		    y2mil( "l:" << *l );
 		    if( findVolume( dev, w ))
@@ -3689,7 +3694,7 @@ void Storage::handleEvmsCreateDevice( const string& disk, const string& d, bool 
 		}
 	    logCo( &(*c) );
 	    }
-	dev = "/dev/evms/" + undevDevice(disk);
+	dev = EvmsCo::devToEvms( disk );
 	if( findVolume( dev, v ))
 	    {
 	    v->setDeleted();

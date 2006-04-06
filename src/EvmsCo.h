@@ -204,8 +204,9 @@ class EvmsCo : public PeContainer
 	                         std::list<string>& lines );
 	static int getSocketFd();
 	static bool startHelper( bool retry=false );
-	static string unEvmsDevice( const string& dev );
 	static int executeCmd( const string& cmd );
+	static string devToEvms( const string& dev );
+	static string evmsToDev( const string& edev );
 
 	string uuid;
 	bool lvm1;

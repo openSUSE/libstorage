@@ -555,7 +555,7 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 		    if( mi!=data.volumes.end() )
 			{
 			Pv p;
-			p.device = unEvmsDevice( mi->second.device );
+			p.device = evmsToDev( mi->second.device );
 			p.status = "allocatable";
 			p.uuid = i->uuid;
 			p.num_pe = i->size;
@@ -704,11 +704,32 @@ void EvmsCo::addVolume( Evms* v )
     addToList( v );
     }
 
-string EvmsCo::unEvmsDevice( const string& dev )
+string EvmsCo::evmsToDev( const string& edev )
     {
-    string ret( dev );
+    string ret( edev );
     if( ret.find( "/dev/evms/" )==0 )
 	ret.erase( 5, 5 );
+    string::iterator it = ret.begin();
+    while( it!=ret.end() )
+	{
+	if( *it == '!' || *it == '|' )
+	    *it = '/';
+	++it;
+	}
+    return( ret );
+    }
+
+string EvmsCo::devToEvms( const string& dev )
+    {
+    string ret( dev );
+    string::size_type pos = ret.find( '|', 5 );
+    while( pos!=string::npos )
+	{
+	ret[pos++] = '!';
+	pos = ret.find( '|', pos );
+	}
+    if( ret.find( "/dev/" )==0 )
+	ret.insert( 5, "evms/" );
     return( ret );
     }
 
@@ -718,7 +739,7 @@ void EvmsCo::addPv( const Pv* p )
     if( !deleted() && 
         find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
 	{
-	string d = unEvmsDevice( p->device );
+	string d = evmsToDev( p->device );
 	UsedByType t = getStorage()->usedBy( d );
 	if( t==UB_EVMS || t==UB_NONE )
 	    setUsed( d, UB_EVMS, name() );
