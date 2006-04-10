@@ -670,6 +670,10 @@ int Volume::doFormat()
 		list<string> l=splitString( mkfs_opt );
 		if( find_if( l.begin(), l.end(), find_begin( "-F" ) ) != l.end())
 		    params = "-F 32";
+		else if( sizeK()>2*1024*1024 )
+		    {
+		    params += " -F 32";
+		    }
 		break;
 		}
 	    case JFS:
