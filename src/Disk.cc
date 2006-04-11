@@ -630,7 +630,12 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		  }
 	      if( id == Partition::ID_LINUX )
 		  {
-		  if( val.find( "Apple_partition" ) != string::npos ||
+		  if( val.find( "Apple_HFS" ) != string::npos ||
+		      val.find( "Apple_Bootstrap" ) != string::npos )
+		      {
+		      id = Partition::ID_APPLE_HFS;
+		      }
+		  else if( val.find( "Apple_partition" ) != string::npos ||
 		      val.find( "Apple_Driver" ) != string::npos ||
 		      val.find( "Apple_Loader" ) != string::npos ||
 		      val.find( "Apple_Boot" ) != string::npos ||
@@ -639,10 +644,6 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		      val.find( "Apple_Patches" ) != string::npos )
 		      {
 		      id = Partition::ID_APPLE_OTHER;
-		      }
-		  else if( val.find( "Apple_HFS" ) != string::npos )
-		      {
-		      id = Partition::ID_APPLE_HFS;
 		      }
 		  else if( val.find( "Apple_UFS" ) != string::npos )
 		      {
