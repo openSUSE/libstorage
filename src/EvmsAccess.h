@@ -94,6 +94,8 @@ class EvmsContainerObject : public EvmsObject
 	const string& typeName() const { return ctype; };
 	void output( std::ostream& Stream ) const;
 	virtual void addRelation( EvmsAccess* Acc );
+	bool isLvm() const { return lvm; }
+	bool isLvm1() const { return lvm1; }
 
     protected:
 	void init();
@@ -106,6 +108,7 @@ class EvmsContainerObject : public EvmsObject
 	std::list<EvmsObject *> creat;
 	string ctype;
 	bool lvm1;
+	bool lvm;
     };
 
 class EvmsVolumeObject : public EvmsObject
@@ -143,6 +146,7 @@ class EvmsAccess
 	EvmsAccess();
 	~EvmsAccess();
 	void output( std::ostream &Stream ) const;
+	void listLibstorage( std::ostream &Stream ) const;
 	void listVolumes( std::list<const EvmsVolumeObject*>& l ) const;
 	void listContainer(std::list<const EvmsContainerObject*>& l ) const;
 	const string& getErrorText() {return Error_C;};

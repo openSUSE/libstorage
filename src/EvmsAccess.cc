@@ -306,6 +306,7 @@ void EvmsContainerObject::init()
     free = 0;
     pe_size = 0;
     lvm1 = true;
+    lvm = false;
     }
 
 storage_container_info_t* EvmsContainerObject::getInfop()
@@ -399,7 +400,17 @@ void EvmsContainerObject::addRelation( EvmsAccess* Acc )
 	if( sinfo_p->plugin>0 )
 	    {
 	    EvmsObject *plugin = Acc->addObject( sinfo_p->plugin );
+	    y2mil( "plugin id:" << sinfo_p->plugin 
+	           << " name:" << plugin->name() );
 	    ctype = plugin->name();
+	    string tmp = ctype;
+	    tolower(tmp);
+	    lvm = (tmp == "lvm2") || (tmp == "lvmregmgr");
+	    if( lvm )
+		{
+		lvm1 = tmp == "lvmregmgr";
+		}
+	    y2mil( "isLvm:" << isLvm() << " isLvm1:" << isLvm1() );
 	    }
 	}
     }
@@ -1791,6 +1802,39 @@ void EvmsAccess::output( ostream& str ) const
 	    }
 	}
     }
+
+void EvmsAccess::listLibstorage( std::ostream &str ) const
+    {
+    for( list<EvmsObject*>::const_iterator Ptr_Ci = objects.begin(); 
+         Ptr_Ci != objects.end(); Ptr_Ci++ )
+	{
+	switch( (*Ptr_Ci)->type() )
+	    {
+	    case EVMS_DISK:
+	    case EVMS_SEGMENT:
+	    case EVMS_REGION:
+	    case EVMS_OBJ:
+		str << *(EvmsDataObject*)*Ptr_Ci;
+		break;
+	    case EVMS_CONTAINER:
+		{
+		EvmsContainerObject* co = (EvmsContainerObject*)*Ptr_Ci;
+		if( co->isLvm() )
+		    {
+		    str << *co;
+		    }
+		}
+		break;
+	    case EVMS_VOLUME:
+		str << *(EvmsVolumeObject*)*Ptr_Ci;
+		break;
+	    default:
+		str << **Ptr_Ci;
+		break;
+	    }
+	}
+    }
+
 
 namespace storage
 {

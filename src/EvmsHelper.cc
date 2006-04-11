@@ -222,7 +222,7 @@ void searchExecCmd( const string& cmd, EvmsAccess& evms, const string& params,
 	}
     else if( cmd=="list" )
 	{
-	output << evms;
+	evms.listLibstorage( output );
 	output << endl;
 	}
     else

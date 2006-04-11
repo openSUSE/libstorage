@@ -75,6 +75,9 @@ struct EvmsTree
     };
 
 std::ostream& operator<< (std::ostream&, const EvmsTree& );
+std::ostream& operator<< (std::ostream&, const EvmsCont& );
+std::ostream& operator<< (std::ostream&, const EvmsVol& );
+std::ostream& operator<< (std::ostream&, const EvmsObj& );
 
 class EvmsCo : public PeContainer
     {

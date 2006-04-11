@@ -423,6 +423,7 @@ Storage::detectEvms()
 	EvmsCo::activate( true );
 	EvmsTree data;
 	EvmsCo::getEvmsList( data );
+	y2mil( "EVMS TREE:" << data );
 	if( !data.volumes.empty() )
 	    {
 	    EvmsCo * e = new EvmsCo( this, data );
@@ -430,6 +431,7 @@ Storage::detectEvms()
 	    for( list<EvmsCont>::const_iterator i=data.cont.begin();
 	         i!=data.cont.end(); ++i )
 		{
+		y2mil( "EVMS Container:" << *i );
 		EvmsCo * e = new EvmsCo( this, *i, data );
 		addToList( e );
 		e->checkConsistency();

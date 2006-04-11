@@ -1252,13 +1252,25 @@ void EvmsCo::getEvmsList( EvmsTree& data )
 		    pe.id = 0;
 		    list<string> fields = splitString( *i, "," );
 		    list<string>::const_iterator f = fields.begin();
-		    *f >> pe.id;
-		    f++;
-		    *f >> pe.size;
-		    f++;
-		    *f >> pe.free;
-		    f++;
-		    pe.uuid = *f;
+		    if( f != fields.end() )
+			{
+			*f >> pe.id;
+			f++;
+			}
+		    if( f != fields.end() )
+			{
+			*f >> pe.size;
+			f++;
+			}
+		    if( f != fields.end() )
+			{
+			*f >> pe.free;
+			f++;
+			}
+		    if( f != fields.end() )
+			{
+			pe.uuid = *f;
+			}
 		    if( pe.id>0 )
 			obj.consumes.push_back(pe);
 		    ++i;
@@ -1280,6 +1292,7 @@ void EvmsCo::getEvmsList( EvmsTree& data )
 		    ++i;
 		    }
 		}
+	    y2mil( "cont:" << obj );
 	    data.cont.push_back( obj );
 	    }
 	}
