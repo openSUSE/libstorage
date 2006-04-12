@@ -254,7 +254,9 @@ bool Disk::detectGeometry()
 bool Disk::getSysfsInfo( const string& SysfsDir )
     {
     bool ret = true;
-    string SysfsFile = SysfsDir+"/range";
+    sysfs_dir = SysfsDir;
+    y2mil( "sysfs_dir:" << sysfs_dir );
+    string SysfsFile = sysfs_dir+"/range";
     if( access( SysfsFile.c_str(), R_OK )==0 )
 	{
 	ifstream File( SysfsFile.c_str() );
@@ -265,7 +267,7 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
 	{
 	ret = false;
 	}
-    SysfsFile = SysfsDir+"/dev";
+    SysfsFile = sysfs_dir+"/dev";
     if( access( SysfsFile.c_str(), R_OK )==0 )
 	{
 	ifstream File( SysfsFile.c_str() );
@@ -2343,6 +2345,7 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
       << " Label:" << d.label;
     if( d.detected_label!=d.label )
 	s << " DetectedLabel:" << d.detected_label;
+    s << " SysfsDir:" << d.sysfs_dir;
     if( !d.udev_path.empty() )
 	s << " UdevPath:" << d.udev_path;
     if( !d.udev_id.empty() )
@@ -2376,6 +2379,8 @@ void Disk::logDifference( const Disk& d ) const
 	log += " SizeK:" + decString(size_k) + "-->" + decString(d.size_k);
     if( label!=d.label )
 	log += " Label:" + label + "-->" + d.label;
+    if( sysfs_dir!=d.sysfs_dir )
+	log += " SysfsDir:" + sysfs_dir + "-->" + d.sysfs_dir;
     if( max_primary!=d.max_primary )
 	log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(d.max_primary);
     if( ext_possible!=d.ext_possible )
@@ -2435,7 +2440,8 @@ bool Disk::equalContent( const Disk& rhs ) const
 	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range &&
 	       size_k==rhs.size_k && max_primary==rhs.max_primary &&
 	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
-	       init_disk==rhs.init_disk && label==rhs.label;
+	       init_disk==rhs.init_disk && label==rhs.label &&
+	       sysfs_dir==rhs.sysfs_dir;
     if( ret )
 	{
 	ConstPartPair p = partPair();
@@ -2476,6 +2482,7 @@ Disk& Disk::operator= ( const Disk& rhs )
     udev_path = rhs.udev_path;
     udev_id = rhs.udev_id;
     logfile_name = rhs.logfile_name;
+    sysfs_dir = rhs.sysfs_dir;
     return( *this );
     }
 

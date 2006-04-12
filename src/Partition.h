@@ -35,6 +35,7 @@ class Partition : public Volume
 	const Region& region() const { return reg; }
 	const std::list<string> udevId() const;
 	const string& udevPath() const;
+	string sysfsPath() const;
 	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
 	bool contains( const Region& r, unsigned fuzz=0 ) const;
 	unsigned OrigNr() const { return( orig_num ); }

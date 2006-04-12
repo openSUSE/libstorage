@@ -246,13 +246,28 @@ void Dm::init()
     else
 	alt_names.push_back( dmn );
     //alt_names.push_back( "/dev/"+tname );
+    updateMajorMinor();
+    }
+
+void Dm::updateMajorMinor()
+    {
     getMajorMinor( dev, mjr, mnr );
     if( majorNr()>0 )
 	{
-	num = minorNr();
 	string d = "/dev/dm-" + decString(minorNr());
-	if( d != dev )
-	    alt_names.push_back( "/dev/dm-" + decString(minorNr()) );
+	if( d!=dev )
+	    {
+	    list<string>::iterator i = 
+	        find_if( alt_names.begin(), alt_names.end(), 
+		         find_begin( "/dev/dm-" ) );
+	    if( i!=alt_names.end() )
+		{
+		if( *i != d )
+		    *i = d;
+		}
+	    else
+		alt_names.push_back( d );
+	    }
 	}
     }
 
@@ -385,6 +400,23 @@ string Dm::devToTable( const string& dev )
     return( ret );
     }
 
+string Dm::sysfsPath() const
+    {
+    string ret = Storage::sysfsDir() + "/";
+    list<string>::const_iterator i = 
+	find_if( alt_names.begin(), alt_names.end(), find_begin( "/dev/dm-" ) );
+    if( i != alt_names.end() )
+	{
+	string::size_type pos = i->rfind( '/' ) + 1;
+	ret += i->substr( pos );
+	}
+    else
+	{
+	y2mil( "no dm device found " << *this );
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
 void Dm::getDmMajor()
     {

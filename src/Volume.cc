@@ -724,6 +724,10 @@ int Volume::doFormat()
 	if( c.retcode()!=0 )
 	    ret = VOLUME_TUNE2FS_FAILED;
 	}
+    if( ret==0 )
+	{
+	triggerUdevUpdate();
+	}
     if( ret==0 && !orig_mp.empty() )
 	{
 	ret = doFstabUpdate();
@@ -763,6 +767,50 @@ void Volume::updateFsData()
     getFsData( Blkid );
     }
 
+string Volume::sysfsPath() const
+    {
+    string ret = Storage::sysfsDir() + "/";
+    string::size_type pos = dev.rfind( '/' ) + 1;
+    ret += dev.substr( pos );
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+string Volume::getFilesysSysfsPath() const
+    {
+    string ret;
+    if( is_loop )
+	{
+	ret = Storage::sysfsDir() + "/";
+	string::size_type pos = loop_dev.rfind( '/' ) + 1;
+	ret += loop_dev.substr( pos );
+	}
+    else
+	ret = sysfsPath();
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+void Volume::triggerUdevUpdate()
+    {
+    string path = getFilesysSysfsPath() + "/uevent";
+    if( access( path.c_str(), R_OK )==0 )
+	{
+	ofstream file( path.c_str() );
+	if( file.good() )
+	    {
+	    y2mil( "writing \"add\" to " << path );
+	    file << "add" << endl;
+	    file.close();
+	    cont->getStorage()->waitForDevice();
+	    }
+	else
+	    y2mil( "error opening " << path << " err:" <<
+	           hex << file.rdstate() );
+	}
+    else
+	y2mil( "no access to " << path );
+    }
 
 int Volume::umount( const string& mp )
     {
@@ -1509,6 +1557,10 @@ int Volume::doSetLabel()
 	    if( c.retcode()!= 0 )
 		ret = VOLUME_MKLABEL_FAILED;
 	    }
+	}
+    if( ret==0 )
+	{
+	triggerUdevUpdate();
 	}
     if( remount )
 	{

@@ -38,6 +38,7 @@ class Volume
 	bool silent() const { return silnt; }
 	virtual const std::list<string> udevId() const { return(empty_slist); }
 	virtual const string& udevPath() const { return(empty_string); }
+	virtual string sysfsPath() const; 
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
@@ -192,6 +193,8 @@ class Volume
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	storage::EncryptType detectLoopEncryption();
+	string getFilesysSysfsPath() const;
+	void triggerUdevUpdate();
 
 	const Container* const cont;
 	bool numeric;

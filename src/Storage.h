@@ -150,6 +150,7 @@ class Storage : public storage::StorageInterface
 	const string& root() const { return( rootprefix ); }
 	const string& tmpDir() const;
 	static const string& arch() { return( proc_arch ); }
+	static const string& sysfsDir() { return( sysfs_dir ); }
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
@@ -1282,6 +1283,7 @@ class Storage : public storage::StorageInterface
 	string rootprefix;
 	string logdir;
 	static string proc_arch;
+	static string sysfs_dir;
 	CCont cont;
 	EtcFstab *fstab;
 

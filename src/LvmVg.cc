@@ -648,6 +648,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	i->setStatus( status );
 	i->setAlloc( alloc );
 	i->getTableInfo();
+	i->updateMajorMinor();
 	i->setReadonly(ro);
 	}
     else

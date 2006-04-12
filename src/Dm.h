@@ -37,6 +37,9 @@ class Dm : public Volume
 	unsigned stripes() const { return stripe; }
 	unsigned long long stripeSize() const { return stripe_size; }
 	void setStripeSize( unsigned long long val ) { stripe_size=val; }
+	string sysfsPath() const;
+	void updateMajorMinor();
+
 	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual string removeText( bool doing ) const;

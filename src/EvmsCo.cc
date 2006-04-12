@@ -692,6 +692,7 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
 	    i->calcSize();
 	    }
 	i->getTableInfo();
+	i->updateMajorMinor();
 	}
     else
 	{

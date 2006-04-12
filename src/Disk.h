@@ -47,6 +47,7 @@ class Disk : public Container
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
 	const std::list<string>& udevId() const { return udev_id; }
+	const string& sysfsDir() const { return sysfs_dir; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
@@ -209,6 +210,7 @@ class Disk : public Container
 	string detected_label;
 	string system_stderr;
 	string logfile_name;
+	string sysfs_dir;
 	unsigned max_primary;
 	bool ext_possible;
 	bool init_disk;

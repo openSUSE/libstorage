@@ -468,10 +468,9 @@ Storage::detectDm()
 void
 Storage::autodetectDisks()
     {
-    string SysfsDir = "/sys/block";
     DIR *Dir;
     struct dirent *Entry;
-    if( (Dir=opendir( SysfsDir.c_str() ))!=NULL )
+    if( (Dir=opendir( sysfs_dir.c_str() ))!=NULL )
 	{
 	map<string,string> by_path;
 	map<string,string> by_id;
@@ -481,20 +480,20 @@ Storage::autodetectDisks()
 	    {
 	    int Range=0;
 	    unsigned long long Size = 0;
-	    string SysfsFile = SysfsDir+"/"+Entry->d_name+"/range";
+	    string SysfsFile = sysfs_dir+"/"+Entry->d_name+"/range";
 	    y2milestone( "autodetectDisks sysfsfile:%s", SysfsFile.c_str() );
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
 		File >> Range;
 		}
-	    SysfsFile = SysfsDir+"/"+Entry->d_name+"/size";
+	    SysfsFile = sysfs_dir+"/"+Entry->d_name+"/size";
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
 		File >> Size;
 		}
-	    SysfsFile = SysfsDir+"/"+Entry->d_name+"/device";
+	    SysfsFile = sysfs_dir+"/"+Entry->d_name+"/device";
 	    string devname;
 	    int ret;
 	    char lbuf[1024+1];
@@ -520,7 +519,7 @@ Storage::autodetectDisks()
 		else
 		    d = new Disk( this, dn, Size/2 );
 		d->setUdevData( by_path[dn], by_id[dn] );
-		if( d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ) &&
+		if( d->getSysfsInfo( sysfs_dir+"/"+Entry->d_name ) &&
 		    d->detectGeometry() && d->detectPartitions() )
 		    {
 		    if( max_log_num>0 )
@@ -540,12 +539,12 @@ Storage::autodetectDisks()
 		string::size_type p = dn.find_last_not_of( "0123456789" );
 		int nr = -1;
 		dn.substr( p+1 ) >> nr;
-		dn.erase( p+1 ) >> nr;
+		dn.erase( p+1 );
 		if( nr>=0 )
 		    {
 		    Disk *d = new Disk( this, dn, (unsigned)nr, Size/2 );
 		    d->setUdevData( by_path[dn], by_id[dn] );
-		    d->getSysfsInfo( SysfsDir+"/"+Entry->d_name ); 
+		    d->getSysfsInfo( sysfs_dir+"/"+Entry->d_name ); 
 		    if( max_log_num>0 )
 			d->logData( logdir );
 		    addToList( d );
@@ -556,7 +555,7 @@ Storage::autodetectDisks()
 	}
     else
 	{
-	y2error( "Failed to open:%s", SysfsDir.c_str() );
+	y2error( "Failed to open:%s", sysfs_dir.c_str() );
 	}
     }
 
@@ -716,6 +715,7 @@ void Storage::setDetectMountedVolumes( bool val )
     }
 
 string Storage::proc_arch;
+string Storage::sysfs_dir = "/sys/block";
 
 
 namespace storage
@@ -3199,6 +3199,7 @@ void Storage::updateDmEmptyPeMap()
 		{
 		y2mil( "dm:" << *dm );
 		dm->getTableInfo();
+		dm->updateMajorMinor();
 		}
 	    }
 	else

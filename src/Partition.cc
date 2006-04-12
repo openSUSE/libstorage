@@ -82,6 +82,20 @@ const string& Partition::udevPath() const
     return( i==alt_names.end() ? empty_string : *i );
     }
 
+string Partition::sysfsPath() const
+    {
+    string ret = disk()->sysfsDir() + "/";
+    string tmp = undevDevice(dev);
+    string::size_type pos = 0;
+    while( (pos=tmp.find( '/', pos ))!=string::npos )
+	{
+	tmp[pos++] = '!';
+	}
+    ret += tmp;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
     {
     return( r.intersect( reg ).len()>fuzz );
