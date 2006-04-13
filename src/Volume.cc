@@ -403,7 +403,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	    {
 	    ret = VOLUME_ALREADY_IN_USE;
 	    }
-	else if( cont->getStorage()->getFsCapabilities( fs, caps ) &&
+	else if( cont->getStorage()->getFsCapabilities( new_fs, caps ) &&
 		 caps.minimalFsSizeK > size_k  )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
