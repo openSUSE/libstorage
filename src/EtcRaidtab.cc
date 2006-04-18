@@ -71,19 +71,24 @@ EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
 	}
     if( mdadm_dev_line<0 )
 	{
-	dline = "DEVICE";
+	dline = "DEVICE partitions";
+	/*
 	for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); i++ )
 	    dline += " " + *i;
+	*/
 	mdadm_dev_line = mdadm->numLines();
 	mdadm->insert( 0, dline );
 	}
     else
 	{
+	/*
 	dline = (*mdadm)[mdadm_dev_line];
 	list<string> d = splitString( dline );
 	for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); i++ )
 	    if( find( d.begin(), d.end(), *i )==d.end() )
 		dline += " " + *i;
+	*/
+	dline = "DEVICE partitions";
 	(*mdadm)[mdadm_dev_line] = dline;
 	}
     updateRaidtabFile();
