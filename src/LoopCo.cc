@@ -14,13 +14,13 @@
 using namespace storage;
 using namespace std;
 
-LoopCo::LoopCo( Storage * const s, bool detect ) :
+LoopCo::LoopCo( Storage * const s, bool detect, ProcPart& ppart ) :
     Container(s,"loop",staticType())
     {
     y2debug( "constructing LoopCo detect:%d", detect );
     init();
     if( detect )
-	getLoopData();
+	getLoopData( ppart );
     }
 
 LoopCo::LoopCo( Storage * const s, const string& file ) :
@@ -41,7 +41,7 @@ LoopCo::init()
     }
 
 void
-LoopCo::getLoopData()
+LoopCo::getLoopData( ProcPart& ppart )
     {
     y2milestone( "begin" );
     list<FstabEntry> l;
@@ -59,7 +59,7 @@ LoopCo::getLoopData()
 	    y2warning( "file %s not existent or special", lfile.c_str() );
 	else
 	    {
-	    Loop *l = new Loop( *this, i->loop_dev, lfile );
+	    Loop *l = new Loop( *this, i->loop_dev, lfile, ppart );
 	    l->setEncryption( i->encr );
 	    l->setFs( Volume::toFsType(i->fs) );
 	    addToList( l );

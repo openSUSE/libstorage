@@ -37,7 +37,7 @@ Disk::Disk( Storage * const s, const string& Name,
     }
 
 Disk::Disk( Storage * const s, const string& Name,
-            unsigned num, unsigned long long SizeK ) :
+            unsigned num, unsigned long long SizeK, ProcPart& ppart ) :
     Container(s,Name,staticType())
     {
     y2milestone( "constructed disk %s nr %u sizeK:%llu", Name.c_str(), num,
@@ -52,7 +52,6 @@ Disk::Disk( Storage * const s, const string& Name,
     byte_cyl = head * sector * 512;
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
-    ProcPart ppart;
     if( ppart.getSize( p->device(), sz ) && sz>0 )
 	{
 	p->setSize( sz );
@@ -175,13 +174,10 @@ void Disk::setUdevData( const string& path, const string& id )
 	tmp.erase( i );
 	}
     udev_id.splice( udev_id.end(), tmp );
-    if( FakeDisk() )
+    PartPair pp = partPair();
+    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
-	PartPair pp = partPair();
-	for( PartIter p=pp.begin(); p!=pp.end(); ++p )
-	    {
-	    p->addUdevData(*this);
-	    }
+	p->addUdevData();
 	}
     }
 
@@ -320,7 +316,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     y2milestone( "c:%lu h:%u s:%u", c, h, s );
     }
 
-bool Disk::detectPartitions()
+bool Disk::detectPartitions( ProcPart& ppart )
     {
     bool ret = true;
     string cmd_line = PARTEDCMD + device() + " unit cyl print | sort -n";
@@ -351,7 +347,7 @@ bool Disk::detectPartitions()
     if( dlabel!="loop" )
 	{
 	setLabelData( dlabel );
-	checkPartedOutput( Cmd );
+	checkPartedOutput( Cmd, ppart );
 	if( dlabel.empty() )
 	    {
 	    Cmd.setCombine();
@@ -676,12 +672,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
    }
 
 bool
-Disk::checkPartedOutput( const SystemCmd& Cmd )
+Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
     {
     int cnt;
     string line;
     string tmp;
-    ProcPart ppart;
     unsigned long range_exceed = 0;
     list<Partition *> pl;
 
@@ -719,56 +714,8 @@ Disk::checkPartedOutput( const SystemCmd& Cmd )
 		}
 	    }
 	}
-    string reg = nm;
-    if( reg.find( '/' )!=string::npos )
-	reg += "p?";
-    reg += "[0-9]+";
-    y2milestone( "/proc/partititons regex %s", reg.c_str() );
-    list<string> ps = ppart.getMatchingEntries( reg );
-    y2mil( "ps " << ps );
-    if( !checkPartedValid( ppart, ps, pl ) )
+    if( !checkPartedValid( ppart, nm, pl, range_exceed ) )
 	{
-	range_exceed = 0;
-	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
-	    {
-	    delete *i;
-	    }
-	pl.clear();
-	unsigned cyl_start = 1;
-	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
-	    {
-	    unsigned long cyl;
-	    unsigned long long s;
-	    pair<string,long> pr = getDiskPartition( *i );
-	    if( ppart.getSize( *i, s ))
-		{
-		cyl = kbToCylinder(s);
-		if( pr.second < (long)range )
-		    {
-		    unsigned id = Partition::ID_LINUX;
-		    PartitionType type = PRIMARY;
-		    if( ext_possible )
-			{
-			if( s==1 )
-			    {
-			    type = EXTENDED;
-			    id = Partition::ID_EXTENDED;
-			    }
-			if( (unsigned)pr.second>max_primary )
-			    {
-			    type = LOGICAL;
-			    }
-			}
-		    Partition *p =
-			new Partition( *this, pr.second, s, cyl_start, cyl,
-			               type, id, false );
-		    pl.push_back( p );
-		    }
-		else
-		    range_exceed = max( range_exceed, (unsigned long)pr.second );
-		cyl_start += cyl;
-		}
-	    }
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
 _("The partitioning on disk %1$s is not readable by\n"
@@ -801,8 +748,8 @@ _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
     return( true );
     }
 
-bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
-                             const list<Partition*>& pl )
+bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
+                             list<Partition*>& pl, unsigned long& range_exceed )
     {
     long ext_nr = 0;
     bool ret=true;
@@ -819,6 +766,13 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
 	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
+    string reg = diskname;
+    if( !reg.empty() && reg.find( '/' )!=string::npos && 
+        isdigit(reg[reg.length()-1]) )
+	reg += "p";
+    reg += "[0-9]+";
+    list<string> ps = pp.getMatchingEntries( reg );
+    y2mil( "regex " << reg << " ps " << ps );
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
 	pair<string,long> p = getDiskPartition( *i );
@@ -858,6 +812,50 @@ bool Disk::checkPartedValid( const ProcPart& pp, const list<string>& ps,
     else
 	{
 	ret = parted_l.empty() && proc_l.empty();
+	}
+    if( !ret )
+	{
+	range_exceed = 0;
+	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
+	    {
+	    delete *i;
+	    }
+	pl.clear();
+	unsigned cyl_start = 1;
+	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
+	    {
+	    unsigned long cyl;
+	    unsigned long long s;
+	    pair<string,long> pr = getDiskPartition( *i );
+	    if( pp.getSize( *i, s ))
+		{
+		cyl = kbToCylinder(s);
+		if( pr.second < (long)range )
+		    {
+		    unsigned id = Partition::ID_LINUX;
+		    PartitionType type = PRIMARY;
+		    if( ext_possible )
+			{
+			if( s==1 )
+			    {
+			    type = EXTENDED;
+			    id = Partition::ID_EXTENDED;
+			    }
+			if( (unsigned)pr.second>max_primary )
+			    {
+			    type = LOGICAL;
+			    }
+			}
+		    Partition *p =
+			new Partition( *this, pr.second, s, cyl_start, cyl,
+			               type, id, false );
+		    pl.push_back( p );
+		    }
+		else
+		    range_exceed = max( range_exceed, (unsigned long)pr.second );
+		cyl_start += cyl;
+		}
+	    }
 	}
     y2milestone("haveBsd:%d pr.size:%zd pa.size:%zd", openbsd,
                  proc_l.size(), parted_l.size() );

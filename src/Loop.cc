@@ -17,7 +17,8 @@
 using namespace storage;
 using namespace std;
 
-Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile ) : 
+Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
+            ProcPart& ppart ) : 
     Volume( d, 0, 0 )
     {
     y2debug( "constructed loop dev:%s file:%s", 
@@ -37,7 +38,6 @@ Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile ) :
 	}
     is_loop = true;
     unsigned long long s = 0;
-    ProcPart ppart;
     if( ppart.getSize( loop_dev, s ))
 	{
 	setSize( s );

@@ -37,7 +37,7 @@ class Dasd : public Disk
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	bool detectPartitionsFdasd(ProcPart& ppart);
-	bool detectPartitions();
+	bool detectPartitions( ProcPart& ppart );
 	bool checkFdasdOutput( SystemCmd& Cmd, ProcPart& ppart );
 	bool scanFdasdLine( const string& Line, unsigned& nr, 
 	                    unsigned long& start, unsigned long& csize );

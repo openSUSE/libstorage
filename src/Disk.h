@@ -30,7 +30,7 @@ class Disk : public Container
     public:
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
 	Disk( Storage * const s, const string& Name, unsigned num, 
-	      unsigned long long Size );
+	      unsigned long long Size, ProcPart& ppart );
 	Disk( const Disk& rhs );
 	virtual ~Disk();
 
@@ -153,18 +153,18 @@ class Disk : public Container
 	Disk( Storage * const s, const string& File );
 	unsigned long long capacityInKb() const { return size_k; }
 	virtual bool detectGeometry();
-	virtual bool detectPartitions();
+	virtual bool detectPartitions( ProcPart& ppart );
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	int execCheckFailed( const string& cmd_line );
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line );
-	bool checkPartedOutput( const SystemCmd& cmd );
+	bool checkPartedOutput( const SystemCmd& cmd, ProcPart& ppart );
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
 			     storage::PartitionType& type, 
 			     unsigned& id, bool& boot );
-	bool checkPartedValid( const ProcPart& pp, const std::list<string>& ps,
-	                       const std::list<Partition*>& pl );
+	bool checkPartedValid( const ProcPart& pp, const string& diskname,
+	                       std::list<Partition*>& pl, unsigned long& rng );
 	bool getPartedValues( Partition *p );
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
 	                       unsigned long long& end );

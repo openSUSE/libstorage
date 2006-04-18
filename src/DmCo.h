@@ -6,13 +6,14 @@
 
 namespace storage
 {
+class ProcPart;
 
 class DmCo : public PeContainer
     {
     friend class Storage;
 
     public:
-	DmCo( Storage * const s, bool detect );
+	DmCo( Storage * const s, bool detect, ProcPart& ppart );
 	DmCo( const DmCo& rhs );
 	virtual ~DmCo();
 	static storage::CType const staticType() { return storage::DM; }
@@ -74,7 +75,7 @@ class DmCo : public PeContainer
 
 	DmCo( Storage * const s, const string& File );
 
-	void getDmData();
+	void getDmData( ProcPart& ppart );
 	void getDmData( unsigned num );
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 

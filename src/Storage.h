@@ -28,7 +28,6 @@
 
 namespace storage
 {
-
 template <int Value>
 class CheckType
     {
@@ -103,6 +102,7 @@ class CastCheckIterator : public CheckType<Value>,
  */
 
 class EtcFstab;
+class DiskData;
 
 class Storage : public storage::StorageInterface
     {
@@ -1216,13 +1216,14 @@ class Storage : public storage::StorageInterface
     protected:
 	// protected internal member functions
 	void initialize();
-	void detectDisks();
+	void detectDisks( ProcPart& ppart );
+	void autodetectDisks( ProcPart& ppart );
 	void detectMds();
-	void detectLoops();
+	void detectLoops( ProcPart& ppart );
 	void detectLvmVgs();
 	void detectEvms();
-	void detectDm();
-	void autodetectDisks();
+	void detectDm( ProcPart& ppart );
+	void initDisk( DiskData& data, ProcPart& pp );
 	void detectFsData( const VolIterator& begin, const VolIterator& end );
 	void detectFsDataTestMode( const string& file,
 	                           const VolIterator& begin,

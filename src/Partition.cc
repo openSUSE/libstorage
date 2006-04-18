@@ -30,7 +30,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     idt = orig_id = Id;
     typ = Type;
     orig_num = num;
-    addUdevData( d );
+    addUdevData();
     y2debug( "constructed partition %s on disk %s", dev.c_str(),
 	     cont->name().c_str() );
     }
@@ -57,7 +57,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
 	bootflag = true;
     else
 	bootflag = false;
-    addUdevData( d );
+    addUdevData();
     y2debug( "constructed partition %s on disk %s", dev.c_str(),
 	     cont->name().c_str() );
     }
@@ -106,10 +106,9 @@ bool Partition::contains( const Region& r, unsigned fuzz ) const
     return( (r.len() - reg.intersect( r ).len()) <= fuzz );
     }
 
-void Partition::addUdevData( const Disk& d )
+void Partition::addUdevData()
     {
-    if( !d.udevPath().empty() )
-	alt_names.push_back( udevCompletePathPath( d.udevPath(), num ));
+    addAltUdevPath( num );
     addAltUdevId( num );
     }
 
@@ -129,6 +128,20 @@ void Partition::addAltUdevId( unsigned num )
 	alt_names.push_back( udevCompleteIdPath( *j, num ));
 	++j;
 	}
+    }
+
+void Partition::addAltUdevPath( unsigned num )
+    {
+    list<string>::iterator i = alt_names.begin();
+    while( i!=alt_names.end() )
+	{
+	if( i->find( "/by-path/" ) != string::npos )
+	    i = alt_names.erase( i );
+	else
+	    ++i;
+	}
+    if( !disk()->udevPath().empty() )
+	alt_names.push_back( udevCompletePathPath( disk()->udevPath(), num ));
     }
 
 void Partition::changeNumber( unsigned new_num )

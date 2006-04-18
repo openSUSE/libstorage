@@ -70,7 +70,7 @@ class Partition : public Volume
 	void getInfo( storage::PartitionInfo& info ) const;
 	bool equalContent( const Partition& rhs ) const;
 	void logDifference( const Partition& d ) const;
-	void addUdevData( const Disk& d );
+	void addUdevData();
 
     protected:
 	Partition& operator=( const Partition& );
@@ -84,6 +84,7 @@ class Partition : public Volume
 	unsigned orig_num;
 
 	void addAltUdevId( unsigned num );
+	void addAltUdevPath( unsigned num );
 	static string pt_names[storage::PTYPE_ANY+1];
 	mutable storage::PartitionInfo info;
     };

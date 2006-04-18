@@ -44,7 +44,7 @@ bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     return( ret );
     }
 
-bool Dasd::detectPartitions()
+bool Dasd::detectPartitions( ProcPart& ppart )
     {
     bool ret = true;
     string cmd_line = "dasdview -x " + device();
@@ -56,7 +56,6 @@ bool Dasd::detectPartitions()
     y2milestone( "retcode:%d", Cmd.retcode() );
     if( Cmd.retcode() == 0 )
 	{
-	ProcPart ppart;
 	if( Cmd.select( "^format" )>0 )
 	    {
 	    string tmp = *Cmd.getLine(0, true);
@@ -189,38 +188,17 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 		}
 	    }
 	}
-    list<string> ps = ppart.getMatchingEntries( nm + "p?[0-9]+" );
-    if( !checkPartedValid( ppart, ps, pl ) )
+    y2mil( "nm:" << nm );
+    string reg = nm;
+    if( !reg.empty() && reg.find( '/' )!=string::npos &&
+	isdigit(reg[reg.length()-1]) )
+	reg += "p";
+    reg += "[0-9]+";
+    list<string> ps = ppart.getMatchingEntries( reg );
+    y2mil( "regex " << reg << " ps " << ps );
+    unsigned long dummy = 0;
+    if( !checkPartedValid( ppart, nm, pl, dummy ) )
 	{
-	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
-	    {
-	    delete *i;
-	    }
-	pl.clear();
-	unsigned cyl_start = 1;
-	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
-	    {
-	    unsigned long cyl;
-	    unsigned long long s;
-	    pair<string,long> pr = getDiskPartition( *i );
-	    if( ppart.getSize( *i, s ))
-		{
-		cyl = kbToCylinder(s);
-		if( pr.second < (long)range )
-		    {
-		    unsigned id = Partition::ID_LINUX;
-		    PartitionType type = PRIMARY;
-		    Partition *p =
-			new Partition( *this, pr.second, s, cyl_start, cyl,
-			               type, id, false );
-		    pl.push_back( p );
-		    }
-		else
-		    y2warning( "partition nr %ld outside range %lu", 
-		               pr.second, range );
-		cyl_start += cyl;
-		}
-	    }
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
 _("The partitioning on disk %1$s is not readable by\n"
@@ -593,10 +571,11 @@ int Dasd::doDasdfmt()
 	    }
 	if( ret==0 )
 	    {
+	    ProcPart ppart;
 	    for( list<Disk*>::iterator i = dl.begin(); i!=dl.end(); ++i )
 		{
 		Dasd * ds = static_cast<Dasd *>(*i);
-		ds->detectPartitions();
+		ds->detectPartitions( ppart );
 		ds->resetInitDisk();
 		ds->removeFromMemory();
 		}

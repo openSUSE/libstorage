@@ -15,13 +15,13 @@
 using namespace std;
 using namespace storage;
 
-DmCo::DmCo( Storage * const s, bool detect ) :
+DmCo::DmCo( Storage * const s, bool detect, ProcPart& ppart ) :
     PeContainer(s,staticType())
     {
     y2debug( "constructing DmCo detect:%d", detect );
     init();
     if( detect )
-	getDmData();
+	getDmData( ppart );
     }
 
 DmCo::DmCo( Storage * const s, const string& file ) :
@@ -44,9 +44,8 @@ DmCo::init()
     }
 
 void
-DmCo::getDmData()
+DmCo::getDmData( ProcPart& ppart )
     {
-    ProcPart ppart;
     Storage::ConstEvmsPair ev = getStorage()->evmsPair();
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     y2milestone( "begin" );

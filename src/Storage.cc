@@ -32,6 +32,7 @@
 #include "y2storage/LvmVg.h"
 #include "y2storage/IterPair.h"
 #include "y2storage/ProcMounts.h"
+#include "y2storage/ProcPart.h"
 #include "y2storage/EtcFstab.h"
 #include "y2storage/AsciiFile.h"
 
@@ -181,13 +182,14 @@ void Storage::dumpObjectList()
 
 void Storage::detectObjects()
     {
+    ProcPart ppart;
     char * file = "/etc/evms.conf"; 
     if( access( file, R_OK )==0 )
 	{
 	SystemCmd cmd( (string)"grep exclude " + file );
 	}
     EvmsCo::activate(true);
-    detectDisks();
+    detectDisks( ppart );
     if( instsys() )
 	{
 	MdCo::activate( true );
@@ -196,7 +198,7 @@ void Storage::detectObjects()
     detectMds();
     detectLvmVgs();
     detectEvms();
-    detectDm();
+    detectDm( ppart );
 
     if( testmode )
         {
@@ -212,7 +214,7 @@ void Storage::detectObjects()
     else
 	{
 	fstab = new EtcFstab( "/etc", isRootMounted() );
-	detectLoops();
+	detectLoops( ppart );
 	detectFsData( vBegin(), vEnd() );
 	}
 #if 0
@@ -309,7 +311,7 @@ Storage::detectArch()
     }
 
 void
-Storage::detectDisks()
+Storage::detectDisks( ProcPart& ppart )
     {
     if( test() )
 	{
@@ -325,7 +327,7 @@ Storage::detectDisks()
 	}
     else if( autodetect )
 	{
-	autodetectDisks();
+	autodetectDisks( ppart );
 	}
     }
 
@@ -349,7 +351,7 @@ void Storage::detectMds()
 	}
     }
 
-void Storage::detectLoops()
+void Storage::detectLoops( ProcPart& ppart )
     {
     if( test() )
 	{
@@ -361,7 +363,7 @@ void Storage::detectLoops()
 	}
     else
 	{
-	LoopCo * v = new LoopCo( this, true );
+	LoopCo * v = new LoopCo( this, true, ppart );
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -443,7 +445,7 @@ Storage::detectEvms()
     }
 
 void
-Storage::detectDm()
+Storage::detectDm( ProcPart& ppart )
     {
     if( test() )
 	{
@@ -457,7 +459,7 @@ Storage::detectDm()
 	}
     else if( getenv( "YAST2_STORAGE_NO_DM" )==NULL )
 	{
-	DmCo * v = new DmCo( this, true );
+	DmCo * v = new DmCo( this, true, ppart );
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -465,8 +467,83 @@ Storage::detectDm()
 	}
     }
 
+namespace storage
+{
+struct DiskData
+    {
+    enum DTyp { DISK, DASD, XEN };
+
+    DiskData() { d=0; s=0; typ=DISK; };
+    DiskData( const string& n, DTyp t, unsigned long long sz ) { d=0; s=sz; typ=t; name=n; };
+
+    Disk* d;
+    DTyp typ;
+    unsigned long long s;
+    string name;
+    string dev;
+    };
+
+std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
+    {
+    s << d.name << "," << d.typ << "," << d.s << "," << d.d;
+    if( !d.dev.empty() && d.dev!=d.name )
+	s << "," << d.dev;
+    s << "," << d.typ << "," << d.s << "," << d.d;
+    return( s );
+    }
+}
+
+
 void
-Storage::autodetectDisks()
+Storage::initDisk( DiskData& data, ProcPart& pp )
+    {
+    y2mil( "data:" << data );
+    data.dev = data.name;
+    string::size_type pos = data.dev.find('!');
+    while( pos!=string::npos )
+	{
+	data.dev[pos] = '/';
+	pos = data.dev.find('!',pos+1);
+	}
+    y2milestone( "name sysfs:%s parted:%s", data.name.c_str(), 
+                 data.dev.c_str() );
+    Disk * d = NULL;
+    switch( data.typ )
+	{
+	case DiskData::DISK:
+	    d = new Disk( this, data.dev, data.s );
+	    break;
+	case DiskData::DASD:
+	    d = new Dasd( this, data.dev, data.s );
+	    break;
+	case DiskData::XEN:
+	    {
+	    string::size_type p = data.dev.find_last_not_of( "0123456789" );
+	    int nr = -1;
+	    data.dev.substr( p+1 ) >> nr;
+	    data.dev.erase( p+1 );
+	    if( nr>=0 )
+		{
+		d = new Disk( this, data.dev, (unsigned)nr, data.s, pp );
+		}
+	    break;
+	    }
+	}
+    if( d && d->getSysfsInfo( sysfs_dir+"/"+data.name ) &&
+	d->detectGeometry() && d->detectPartitions(pp) )
+	{
+	if( max_log_num>0 )
+	    d->logData( logdir );
+	data.d = d;
+	}
+    else if( d )
+	{
+	delete d;
+	}
+    }
+
+void
+Storage::autodetectDisks( ProcPart& ppart )
     {
     DIR *Dir;
     struct dirent *Entry;
@@ -476,82 +553,66 @@ Storage::autodetectDisks()
 	map<string,string> by_id;
 	getFindMap( "/dev/disk/by-path", by_path );
 	getFindMap( "/dev/disk/by-id", by_id, false );
+	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
 	    int Range=0;
 	    unsigned long long Size = 0;
-	    string SysfsFile = sysfs_dir+"/"+Entry->d_name+"/range";
-	    y2milestone( "autodetectDisks sysfsfile:%s", SysfsFile.c_str() );
+	    string SysfsDir = sysfs_dir+"/"+Entry->d_name;
+	    string SysfsFile = SysfsDir+"/range";
+	    y2milestone( "autodetectDisks sysfsdir:%s", SysfsDir.c_str() );
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
 		File >> Range;
 		}
-	    SysfsFile = sysfs_dir+"/"+Entry->d_name+"/size";
+	    SysfsFile = SysfsDir+"/size";
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
 		File >> Size;
 		}
-	    SysfsFile = sysfs_dir+"/"+Entry->d_name+"/device";
-	    string devname;
-	    int ret;
-	    char lbuf[1024+1];
-	    if( access( SysfsFile.c_str(), R_OK )==0 &&
-	        (ret=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
-		{
-		devname.append( lbuf, ret );
-		}
 	    string dn = Entry->d_name;
 	    if( Range>1 && (Size>0||dn.find( "dasd" )==0) )
 		{
-		string::size_type pos = dn.find('!');
-		while( pos!=string::npos )
-		    {
-		    dn[pos] = '/';
-		    pos = dn.find('!',pos);
-		    }
-		y2milestone( "autodetectDisks disk sysfs:%s parted:%s",
-		             Entry->d_name, dn.c_str() );
-		Disk * d = NULL;
-		if( dn.find( "dasd" )==0 )
-		    d = new Dasd( this, dn, Size/2 );
-		else
-		    d = new Disk( this, dn, Size/2 );
-		d->setUdevData( by_path[dn], by_id[dn] );
-		if( d->getSysfsInfo( sysfs_dir+"/"+Entry->d_name ) &&
-		    d->detectGeometry() && d->detectPartitions() )
-		    {
-		    if( max_log_num>0 )
-			d->logData( logdir );
-		    addToList( d );
-		    }
-		else
-		    {
-		    delete d;
-		    }
+		DiskData::DTyp t = (dn.find( "dasd" )==0)?DiskData::DASD
+		                                         :DiskData::DISK;
+		dl.push_back( DiskData( dn, t, Size/2 ) );
 		}
-	    else if( Range==1 && devname.find( "/xen/vbd" )!=string::npos &&
-	             isdigit(dn[dn.size()-1]) )
+	    else if( Range==1 && Size>0 )
 		{
-		y2milestone( "autodetectDisks xen sysfs:%s devname:%s dn:%s",
-		             Entry->d_name, devname.c_str(), dn.c_str() );
-		string::size_type p = dn.find_last_not_of( "0123456789" );
-		int nr = -1;
-		dn.substr( p+1 ) >> nr;
-		dn.erase( p+1 );
-		if( nr>=0 )
+		SysfsFile = SysfsDir+"/device";
+		string devname;
+		int ret;
+		char lbuf[1024+1];
+		if( access( SysfsFile.c_str(), R_OK )==0 &&
+		    (ret=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
 		    {
-		    Disk *d = new Disk( this, dn, (unsigned)nr, Size/2 );
-		    d->setUdevData( by_path[dn], by_id[dn] );
-		    d->getSysfsInfo( sysfs_dir+"/"+Entry->d_name ); 
-		    if( max_log_num>0 )
-			d->logData( logdir );
-		    addToList( d );
+		    devname.append( lbuf, ret );
+		    y2mil( "devname:" << devname );
+		    }
+		if( devname.find( "/xen/vbd" )!=string::npos &&
+	            isdigit(dn[dn.size()-1]) )
+		    {
+		    dl.push_back( DiskData( dn, DiskData::XEN, Size/2 ) );
 		    }
 		}
 	    }
 	closedir( Dir );
+	y2mil( "dl: " << dl );
+	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
+	    {
+	    initDisk( *i, ppart );
+	    }
+	y2mil( "dl: " << dl );
+	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
+	    {
+	    if( i->d )
+		{
+		i->d->setUdevData( by_path[i->dev], by_id[i->dev] );
+		addToList( i->d );
+		}
+	    }
 	}
     else
 	{

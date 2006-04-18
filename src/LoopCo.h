@@ -6,13 +6,14 @@
 
 namespace storage
 {
+class ProcPart;
 
 class LoopCo : public Container
     {
     friend class Storage;
 
     public:
-	LoopCo( Storage * const s, bool detect );
+	LoopCo( Storage * const s, bool detect, ProcPart& ppart );
 	LoopCo( const LoopCo& rhs );
 
 	virtual ~LoopCo();
@@ -80,7 +81,7 @@ class LoopCo : public Container
 
 	LoopCo( Storage * const s, const string& File );
 
-	void getLoopData();
+	void getLoopData( ProcPart& ppart );
 	bool findLoop( unsigned num, LoopIter& i );
 	bool findLoop( unsigned num ); 
 	bool findLoop( const string& file, LoopIter& i );
