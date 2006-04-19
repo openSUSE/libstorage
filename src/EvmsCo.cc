@@ -670,10 +670,13 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
     {
     y2milestone( "name:%s le:%lu", name.c_str(), le );
     string n( name );
-    string::size_type pos = n.rfind( '/' );
-    if( pos!=string::npos )
+    if( !nm.empty() )
 	{
-	n.erase( 0, pos+1 );
+	string::size_type pos = n.rfind( '/' );
+	if( pos!=string::npos )
+	    {
+	    n.erase( 0, pos+1 );
+	    }
 	}
     EvmsPair p=evmsPair(lvNotDeleted);
     EvmsIter i=p.begin();
@@ -812,6 +815,12 @@ int EvmsCo::commitChanges( CommitStage stage )
 	    break;
 	}
     y2milestone( "ret:%d", ret );
+    if( ret!=0 && ret!=EVMS_COMMIT_NOTHING_TODO )
+	{
+	EvmsTree data;
+	EvmsCo::getEvmsList( data );
+	y2mil( "EVMS TREE:" << data );
+	}
     return( ret );
     }
 
@@ -1116,7 +1125,7 @@ bool EvmsCo::sendCommand( const string& cmd, bool one_line, list<string>& lines 
 	while( retry && retry_cnt++<2 )
 	    {
 	    retry = false;
-	    y2milestone( "write: size:%d", tmp.size() );
+	    y2milestone( "write: size:%zd", tmp.size() );
 	    val = write( sockfd, tmp.c_str(), tmp.size() );
 	    if( (size_t)val!=tmp.size() )
 		y2error( "write fd:%d ret:%ld size:%zu", sockfd, val, cmd.size() );

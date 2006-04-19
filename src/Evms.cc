@@ -49,13 +49,14 @@ string Evms::getMapperName( const EvmsCo& d, const string& name )
     if( !d.name().empty() )
 	{
 	ret = d.name() + "/" + name;
-	string::size_type pos = ret.find( '/' );
-	while( pos!=string::npos )
-	    {
-	    ret[pos] = '|';
-	    pos = ret.find( '/', pos+1 );
-	    }
 	}
+    string::size_type pos = ret.find( '/' );
+    while( pos!=string::npos )
+	{
+	ret[pos] = '|';
+	pos = ret.find( '/', pos+1 );
+	}
+    y2mil( "name:" << name << " disk:" << d.name() << " ret:" << ret );
     return( ret );
     }
 
