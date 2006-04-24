@@ -420,7 +420,7 @@ Storage::detectEvms()
 	    }
  	globfree (&globbuf);
 	}
-    else if( getenv( "YAST2_STORAGE_NO_EVMS" )==NULL )
+    else if( EvmsCo::canDoEvms() )
 	{
 	EvmsCo::activate( true );
 	EvmsTree data;
@@ -439,8 +439,6 @@ Storage::detectEvms()
 		e->checkConsistency();
 		}
 	    }
-	if( (data.cont.empty()&&data.volumes.empty()) )
-	    EvmsCo::activate( false );
 	}
     }
 
@@ -3641,12 +3639,21 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     }
 }
 
+static bool isEvmsContainer( const Container& c )
+    { return( c.type()==EVMS && !c.name().empty() ); }
+
 bool Storage::haveEvms()
     {
     bool ret = false;
     ContIterator c;
     if( findContainer( "/dev/evms", c ) && !c->isEmpty() )
 	ret = true;
+    if( !ret )
+	{
+	CPair cp = cPair( isEvmsContainer );
+	y2mil( "num EVMS cont:" << cp.length() );
+	ret = !cp.empty();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }

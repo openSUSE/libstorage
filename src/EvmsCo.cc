@@ -993,8 +993,8 @@ int EvmsCo::getSocketFd()
 
 bool EvmsCo::startHelper( bool retry )
     {
-    bool ret = access( EXEC_PATH, X_OK )==0 && 
-               getenv( "YAST2_STORAGE_NO_EVMS" )==NULL ;
+    bool ret = canDoEvms();
+    y2mil( "ret:" << ret );
     if( ret )
 	{
 	string cmd = EXEC_PATH;
@@ -1024,7 +1024,7 @@ bool EvmsCo::attachToSocket(bool attach)
     {
     bool ret = true;
     static int semid = -1;
-    y2milestone( "semid:%d", semid );
+    y2milestone( "semid:%d attach:%d", semid, attach );
     if( attach && semid<0 )
 	{
 	if( access( EXEC_PATH, X_OK )!=0 )
@@ -1066,7 +1066,7 @@ bool EvmsCo::attachToSocket(bool attach)
 	    if( sockfd < 0 )
 		ret = false;
 	    }
-	y2milestone( "ret:%d", ret );
+	y2milestone( "ret:%d semaphore incremented:%d", ret, sem_incremented );
 	if( !ret && sem_incremented )
 	    attachToSocket( false );
 	}
@@ -1077,10 +1077,18 @@ bool EvmsCo::attachToSocket(bool attach)
 	s.sem_op = -1;
 	s.sem_flg = IPC_NOWAIT;
 	int r = semop( semid, &s, 1 );
-	y2milestone( "ret:%d", r );
+	y2milestone( "semaphore decremented ret:%d", r );
 	semid = -1;
 	}
     y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+bool EvmsCo::canDoEvms()
+    {
+    bool ret = access( EXEC_PATH, X_OK )==0 && 
+               getenv( "YAST2_STORAGE_NO_EVMS" )==NULL;
+    y2mil( "ret:" << ret );
     return( ret );
     }
 

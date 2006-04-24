@@ -123,6 +123,7 @@ class EvmsCo : public PeContainer
 
 	static void activate( bool val=true );
 	static int activateDevices();
+	static bool canDoEvms();
 	static void getEvmsList( EvmsTree& data );
 	static bool lvNotDeleted( const Evms& l ) { return( !l.deleted() ); }
 	
