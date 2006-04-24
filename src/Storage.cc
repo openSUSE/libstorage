@@ -624,13 +624,20 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
     y2milestone( "detectFsData begin" );
     SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null" );
     SystemCmd Losetup( "/sbin/losetup -a" );
-    ProcMounts Mounts;
     for( VolIterator i=begin; i!=end; ++i )
 	{
 	if( i->getUsedByType()==UB_NONE )
 	    {
 	    i->getLoopData( Losetup );
 	    i->getFsData( Blkid );
+	    y2mil( "detect:" << *i );
+	    }
+	}
+    ProcMounts Mounts( this );
+    for( VolIterator i=begin; i!=end; ++i )
+	{
+	if( i->getUsedByType()==UB_NONE )
+	    {
 	    if( detectMounted )
 		i->getMountData( Mounts );
 	    i->getFstabData( *fstab );
@@ -3897,6 +3904,16 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
     return( v!=p.end() );
     }
 
+string Storage::findNormalDevice( const string& device )
+    {
+    string ret;
+    VolIterator v;
+    if( findVolume( device, v ))
+	ret = v->device();
+    y2mil( "device:" << device << " ret:" << ret );
+    return( ret );
+    }
+
 bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
     {
     bool ret=true;
@@ -4197,7 +4214,7 @@ Storage::checkDeviceMounted( const string& device, string& mp )
     assertInit();
     y2milestone( "device:%s", device.c_str() );
     VolIterator vol;
-    ProcMounts mountData;
+    ProcMounts mountData( this );
     if( findVolume( device, vol ) )
 	{
 	mp = mountData.getMount( vol->mountDevice() );

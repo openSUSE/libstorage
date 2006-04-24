@@ -1630,7 +1630,7 @@ int Volume::mount( const string& m )
 	cmdline = "swapon " + mountDevice();
 	if( cont->getStorage()->instsys() )
 	    {
-	    ProcMounts mountData;
+	    ProcMounts mountData( cont->getStorage() );
 	    string m = mountData.getMount( mountDevice() );
 	    if( m.empty() )
 		{

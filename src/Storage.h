@@ -167,6 +167,7 @@ class Storage : public storage::StorageInterface
 	string deviceByNumber( const string& majmin );
 	void rootMounted();
 	bool isRootMounted() const { return( root_mounted ); }
+	string findNormalDevice( const string& device );
 
 	virtual ~Storage();
 

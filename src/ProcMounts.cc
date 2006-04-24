@@ -9,11 +9,12 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/ProcMounts.h"
 #include "y2storage/StorageTmpl.h"
+#include "y2storage/Storage.h"
 
 using namespace std;
 using namespace storage;
 
-ProcMounts::ProcMounts() 
+ProcMounts::ProcMounts( Storage * const sto ) 
     {
     map<string,string> by_label;
     map<string,string> by_uuid;
@@ -58,6 +59,10 @@ ProcMounts::ProcMounts()
     if( mt.numLines()>0 )
 	{
 	string dev = extractNthWord( 0, *mt.getLine(0));
+	if( !dev.empty() && dev[0]!='/' )
+	    {
+	    dev = sto->findNormalDevice( dev );
+	    }
 	co[dev] = "/";
 	}
     mounts.close();

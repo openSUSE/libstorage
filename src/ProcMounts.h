@@ -7,11 +7,12 @@
 
 namespace storage
 {
+class Storage;
 
 class ProcMounts 
     {
     public:
-	ProcMounts();
+	ProcMounts( Storage * const s );
 	string getMount( const string& Dev ) const;
 	string getMount( const std::list<string>& dl ) const;
 	std::map<string,string> allMounts() const;
