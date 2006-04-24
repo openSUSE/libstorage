@@ -114,6 +114,8 @@ bool Dasd::detectPartitions( ProcPart& ppart )
     y2milestone( "byte_cyl:%lu", byte_cyl );
     y2milestone( "ret:%d partitons:%zd detected label:%s", ret, vols.size(), 
                  label.c_str() );
+    ronly = fmt!=DASDF_CDL;
+    y2milestone( "fmt:%d readonly:%d", fmt, ronly );
     return( ret );
     }
 
