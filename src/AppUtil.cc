@@ -578,15 +578,14 @@ void getFindMap( const char* path, map<string,string>& m, bool unique )
     y2mil( "map: " << m );
     }
 
-void getFindRevMap( const char* path, map<string,string>& m )
+void getFindRevMap( const char* path, map<string,string>& ret )
     {
     y2mil( "path: " << path );
-    m.clear();
+    map<string,string> m;
     if( access( path, R_OK )==0 )
 	{
-	string cmd = "/usr/bin/find ";
+	string cmd = "/bin/ls -lt ";
 	cmd += path;
-	cmd += " -type l -printf '%f %l\n'";
 	SystemCmd findcmd( cmd.c_str() );
 	list<string> l;
 	findcmd.getStdout( l );
@@ -594,15 +593,40 @@ void getFindRevMap( const char* path, map<string,string>& m )
 	while( i!=l.end() )
 	    {
 	    list<string> tlist = splitString( *i );
-	    if( tlist.size()==2 )
+	    string dev, id;
+	    y2mil( "tlist:" << tlist );
+	    if( !tlist.empty() )
 		{
-		string& tmp = tlist.back();
-		m[tlist.front()] = tmp.substr( tmp.find_first_not_of( "./" ) );
+		dev = tlist.back();
+		tlist.pop_back();
+		dev.erase( 0, dev.find_first_not_of( "./" ) );
+		if( !tlist.empty() && tlist.back() == "->" )
+		    {
+		    tlist.pop_back();
+		    if( !tlist.empty() )
+			id = tlist.back();
+		    }
+		if( !id.empty() && !dev.empty() )
+		    {
+		    map<string,string>::iterator mi = m.find( dev );
+		    if( mi == m.end() )
+			{
+			m[dev] = id;
+			}
+		    else
+			y2mil( "already here dev:" << mi->first <<
+			       " id:" << mi->second );
+		    }
 		}
 	    ++i;
 	    }
+	ret.clear();
+	for( map<string,string>::iterator mi = m.begin(); mi!=m.end(); ++mi )
+	    {
+	    ret[mi->second] = mi->first;
+	    }
 	}
-    y2mil( "map: " << m );
+    y2mil( "map: " << ret );
     }
 
 bool system_cmd_testmode = false;

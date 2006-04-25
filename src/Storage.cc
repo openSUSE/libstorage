@@ -486,7 +486,6 @@ std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
     s << d.name << "," << d.typ << "," << d.s << "," << d.d;
     if( !d.dev.empty() && d.dev!=d.name )
 	s << "," << d.dev;
-    s << "," << d.typ << "," << d.s << "," << d.d;
     return( s );
     }
 }

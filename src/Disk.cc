@@ -162,18 +162,18 @@ Disk::~Disk()
 
 void Disk::setUdevData( const string& path, const string& id )
     {
-    y2milestone( "disk %s id %s path %s", nm.c_str(), path.c_str(), id.c_str() );
+    y2milestone( "disk %s path %s id %s", nm.c_str(), path.c_str(), id.c_str() );
     udev_path = path;
     udev_id.clear();
-    list<string> tmp = splitString( id );
-    list<string>::iterator i = find_if( tmp.begin(), tmp.end(), 
-                                        find_begin( "edd_" ) );
-    if( i!=tmp.end() )
+    udev_id = splitString( id );
+    list<string>::iterator i = find_if( udev_id.begin(), udev_id.end(), 
+                                        find_begin( "edd-" ) );
+    if( i!=udev_id.end() )
 	{
 	udev_id.push_back( *i );
-	tmp.erase( i );
+	udev_id.erase( i );
 	}
-    udev_id.splice( udev_id.end(), tmp );
+    y2mil( "id:" << udev_id );
     PartPair pp = partPair();
     for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
