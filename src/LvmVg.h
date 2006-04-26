@@ -34,6 +34,7 @@ class LvmVg : public PeContainer
 	                      unsigned long long stripeSize );
 
 	int setPeSize( long long unsigned peSizeK );
+	void normalizeDmDevices();
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	int commitChanges( storage::CommitStage stage );
 	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,

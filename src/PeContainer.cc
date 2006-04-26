@@ -402,6 +402,19 @@ PeContainer::checkConsistency() const
 namespace storage
 {
 
+void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
+    {
+    s << "<";
+    for( std::list<PeContainer::Pv>::const_iterator i=l.begin(); 
+	 i!=l.end(); ++i )
+	{
+	if( i!=l.begin() )
+	    s << " ";
+	s << i->device;
+	}
+    s << ">";
+    }
+
 std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
     s << *((Container*)&d);
@@ -409,6 +422,21 @@ std::ostream& operator<< (std::ostream& s, const PeContainer& d )
       << " PeSize:" << d.pe_size
       << " NumPE:" << d.num_pe
       << " FreePE:" << d.free_pe;
+    if( !d.pv.empty() )
+	{
+	s << " pv:";
+	printDevList( s, d.pv );
+	}
+    if( !d.pv_add.empty() )
+	{
+	s << " pv_add:";
+	printDevList( s, d.pv_add );
+	}
+    if( !d.pv_remove.empty() )
+	{
+	s << " pv_remove:";
+	printDevList( s, d.pv_remove );
+	}
     return( s );
     }
 

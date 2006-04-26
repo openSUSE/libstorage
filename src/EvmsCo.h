@@ -203,6 +203,7 @@ class EvmsCo : public PeContainer
 	void logData( const string& Dir );
 	void addLv( unsigned long le, const string& name, bool native );
 	void addPv( const Pv* p );
+	string evmsNormalizeDevice( const string& dev ) const;
 	static bool attachToSocket( bool attach=true );
 	static bool sendCommand( const string& cmd, bool one_line, 
 	                         std::list<string>& lines );

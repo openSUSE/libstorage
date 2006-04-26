@@ -506,12 +506,17 @@ Md::toMdParity( const string& val )
     return( ret );
     }
 
+bool Md::matchRegex( const string& dev )
+    {
+    static Regex md( "^md[0-9]+$" );
+    return( md.match(dev));
+    }
+
 bool Md::mdStringNum( const string& name, unsigned& num )
     {
     bool ret=false;
     string d = undevDevice(name);
-    static Regex md( "^md[0-9]+$" );
-    if( md.match( d ))
+    if( matchRegex( d ))
 	{
 	d.substr( 2 )>>num;
 	ret = true;

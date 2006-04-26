@@ -184,7 +184,7 @@ EvmsCo::extendCo( const list<string>& devs )
 	}
     while( ret==0 && i!=devs.end() )
 	{
-	string d = normalizeDevice( *i );
+	string d = evmsNormalizeDevice( *i );
 	if( (p=find( pv.begin(), pv.end(), d ))!=pv.end() || 
 	    (p=find( pv_add.begin(), pv_add.end(), d ))!=pv_add.end())
 	    ret = EVMS_PV_ALREADY_CONTAINED;
@@ -205,7 +205,7 @@ EvmsCo::extendCo( const list<string>& devs )
     i=devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
-	string d = normalizeDevice( *i );
+	string d = evmsNormalizeDevice( *i );
 	unsigned long pe = 0;
 	if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
 	     pv_remove.end() )
@@ -237,15 +237,26 @@ EvmsCo::extendCo( const list<string>& devs )
     return( ret );
     }
 
+string EvmsCo::evmsNormalizeDevice( const string& dev ) const
+    {
+    string ret = normalizeDevice(dev);
+    if( !getStorage()->knownDevice( ret, true ) )
+	ret = "/dev/evms/" + dev;
+    y2mil( "dev:" << dev << " ret:" << ret );
+    return( ret );
+    }
+
 void 
 EvmsCo::setUsed( const string& device, storage::UsedByType typ,
                  const string& name )
     {
     string d = normalizeDevice(device);
+    if( d.find( "/dev/md/" )==0 )
+	d.erase( 5, 3 );
     getStorage()->setUsedBy( d, typ, name );
     if( typ!=UB_NONE && !getStorage()->isDisk(d) )
 	getStorage()->changeFormatVolume( d, false, FSNONE );
-    d = "/dev/evms/"+d.substr(5);
+    d = "/dev/evms/"+normalizeDevice(device).substr(5);
     if( getStorage()->knownDevice( d ))
 	{
 	getStorage()->setUsedBy( d, typ, name );
@@ -281,7 +292,7 @@ EvmsCo::reduceCo( const list<string>& devs )
 	}
     while( ret==0 && i!=devs.end() )
 	{
-	string d = normalizeDevice( *i );
+	string d = evmsNormalizeDevice(*i);
 	ret = tryUnusePe( d, pl, pladd, plrem, rem_pe );
 	setUsed( d, UB_NONE, "" );
 	++i;
@@ -556,6 +567,7 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 			{
 			Pv p;
 			p.device = evmsToDev( mi->second.device );
+			y2mil( "p.device:" << p.device );
 			p.status = "allocatable";
 			p.uuid = i->uuid;
 			p.num_pe = i->size;
@@ -568,7 +580,11 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 		else
 		    {
 		    Pv p;
-		    p.device = "/dev/" + oi->second.name;
+		    p.device = "/dev/";
+		    if( oi->second.name.find( "md/" )==0 )
+			p.device += "evms/";
+		    p.device += oi->second.name;
+		    y2mil( "p.device:" << p.device );
 		    p.status = "allocatable";
 		    p.uuid = i->uuid;
 		    p.num_pe = i->size;
@@ -713,7 +729,9 @@ void EvmsCo::addVolume( Evms* v )
 string EvmsCo::evmsToDev( const string& edev )
     {
     string ret( edev );
-    if( ret.find( "/dev/evms/" )==0 )
+    if( ret.find( "/dev/md/" )==0 )
+	ret.erase( 5, 3 );
+    else if( ret.find( "/dev/evms/" )==0 )
 	ret.erase( 5, 5 );
     string::iterator it = ret.begin();
     while( it!=ret.end() )
@@ -749,6 +767,14 @@ void EvmsCo::addPv( const Pv* p )
 	UsedByType t = getStorage()->usedBy( d );
 	if( t==UB_EVMS || t==UB_NONE )
 	    setUsed( d, UB_EVMS, name() );
+	}
+    if( p->device.find( "/dev/evms/md/" )==0 )
+	{
+	string tmp = p->device;
+	tmp.erase( 5, 8 );
+	list<Pv>::iterator i = find( pv_add.begin(), pv_add.end(), tmp );
+	if( i!=pv_add.end() )
+	    pv_add.erase(i);
 	}
     }
 
@@ -1361,10 +1387,12 @@ EvmsCo::doCreateCo()
 	ret = executeCmd( cmd );
 	if( ret==0 )
 	    {
+	    y2mil( "co:" << *this );
 	    setCreated( false );
 	    EvmsTree t;
 	    getEvmsList( t );
 	    getCoData( name(), t, true );
+	    y2mil( "co:" << *this );
 	    if( !pv_add.empty() )
 		{
 		pv_add.clear();

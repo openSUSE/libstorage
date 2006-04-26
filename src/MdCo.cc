@@ -570,6 +570,15 @@ MdCo::doCreate( Volume* v )
 	ret =  m->checkDevices();
 	if( ret==0 )
 	    {
+	    list<string> devs;
+	    m->getDevs( devs );
+	    for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
+		{
+		getStorage()->removeDmTableTo( *i );
+		}
+	    }
+	if( ret==0 )
+	    {
 	    string cmd = m->createCmd();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )

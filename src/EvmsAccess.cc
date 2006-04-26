@@ -10,6 +10,9 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
 #include "y2storage/StorageTmpl.h"
+#include "Md.h"
+#include "Regex.h"
+#include "AsciiFile.h"
 #include "EvmsAccess.h"
 
 using namespace std;
@@ -613,8 +616,44 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 int EvmsAccess::activate()
     {
     evms_close_engine();
-    int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
-                                DEFAULT, NULL );
+    string line;
+    debug_level_t log_level = DEFAULT;
+    AsciiFile conf( "/etc/evms.conf" );
+    Regex rx( "[ \t]*debug_level[ \t]*=[ \t]*" );
+    int ret = conf.find( 0, rx );
+    y2mil( "debug line:" << ret );
+    if( ret>=0 )
+	{
+	list<string> ls = splitString( conf[ret], " \t=" );
+	y2mil( "debug line:" << conf[ret] << " list:" << ls );
+	if( ls.size()>=2 )
+	    {
+	    list<string>::iterator i = ls.begin();
+	    ++i;
+	    if( *i == "critical" )
+		log_level = CRITICAL;
+	    else if( *i == "serious" )
+		log_level = SERIOUS;
+	    else if( *i == "error" )
+		log_level = ERROR;
+	    else if( *i == "warning" )
+		log_level = WARNING;
+	    else if( *i == "details" )
+		log_level = DETAILS;
+	    else if( *i == "entry_exit" )
+		log_level = ENTRY_EXIT;
+	    else if( *i == "debug" )
+		log_level = DEBUG;
+	    else if( *i == "extra" )
+		log_level = EXTRA;
+	    else if( *i == "everything" )
+		log_level = EVERYTHING;
+	    y2mil( "level string:\"" << *i << "\" val:" << log_level );
+	    }
+	}
+    y2mil( "log level:" << log_level );
+    ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
+			    log_level, NULL );
     if( ret != 0 )
 	{
 	y2error( "evms_open_engine evms_strerror %s", evms_strerror(ret));
@@ -972,6 +1011,10 @@ int EvmsAccess::createCo( const string& Container_Cv,
     while( ret==0 && count<input->count )
 	{
 	string dev = undevDevice( *p );
+	if( dev.find( "evms/" )==0 )
+	    dev.erase( 0, 5 );
+	if( Md::matchRegex( dev ))
+	    dev = "md/" + dev;
 	object_type_t ot = (object_type_t)(REGION|SEGMENT|DISK);
 	y2mil( "dev:" << dev << " ot:" << ot  );
 	ret = evms_get_object_handle_for_name( ot, (char *)dev.c_str(),

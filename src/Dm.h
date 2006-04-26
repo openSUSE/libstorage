@@ -53,6 +53,7 @@ class Dm : public Volume
 	bool equalContent( const Dm& rhs ) const;
 	void logDifference( const Dm& d ) const;
 	string stringDifference( const Dm& d ) const;
+	static unsigned dmMajor();
 
     protected:
 	void init();

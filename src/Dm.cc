@@ -43,6 +43,13 @@ Dm::~Dm()
     y2debug( "destructed dem dev %s", dev.c_str() );
     }
 
+unsigned Dm::dmMajor()
+    {
+    if( dm_major==0 )
+	getDmMajor();
+    return( dm_major );
+    }
+
 void
 Dm::getTableInfo()
     {

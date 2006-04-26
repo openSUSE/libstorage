@@ -1268,6 +1268,29 @@ int LvmVg::doCreatePv( const string& device )
     return( ret );
     }
 
+void LvmVg::normalizeDmDevices()
+    {
+    string dm = decString(Dm::dmMajor());
+    SystemCmd c;
+    for( list<Pv>::iterator i=pv.begin(); i!=pv.end(); ++i )
+	{
+	if( i->device.find( "/dev/dm-" )==0 )
+	    {
+	    c.execute( "devmap_name "+dm+":"+i->device.substr( 8 ) );
+	    if( c.retcode()==0 )
+		{
+		string dev = "/dev/" + *c.getLine( 0 );
+		y2mil( "dev:" << i->device << " normal dev:" << dev );
+		if( getStorage()->knownDevice( dev ) )
+		    {
+		    y2mil( "replace " << i->device << " with " << dev );
+		    i->device = dev;
+		    }
+		}
+	    }
+	}
+    }
+
 void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     {
     info.sizeK = sizeK();

@@ -200,6 +200,11 @@ void Storage::detectObjects()
     detectEvms();
     detectDm( ppart );
 
+    LvmVgPair p = lvgPair();
+    y2mil( "p length:" << p.length() );
+    for( LvmVgIterator i=p.begin(); i!=p.end(); ++i )
+	i->normalizeDmDevices();
+
     if( testmode )
         {
  	system_cmd_testmode = true;

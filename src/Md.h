@@ -38,6 +38,7 @@ class Md : public Volume
 	void raidtabLines( std::list<string>& ) const ; 
 	string mdadmLine() const; 
 	string createCmd() const;
+	static bool matchRegex( const string& dev );
 
 	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
