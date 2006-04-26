@@ -2766,8 +2766,12 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
     if( ret==0 )
 	{
 	have_loop = haveLoop(loop);
+	y2mil( "have_loop:" << have_loop );
 	if( !have_loop )
-	    loop = new LoopCo( this, false );
+	    {
+	    ProcPart ppart;
+	    loop = new LoopCo( this, false, ppart );
+	    }
 	if( loop==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;
 	}
