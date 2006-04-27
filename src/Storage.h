@@ -168,6 +168,7 @@ class Storage : public storage::StorageInterface
 	void rootMounted();
 	bool isRootMounted() const { return( root_mounted ); }
 	string findNormalDevice( const string& device );
+	bool findVolume( const string& device, Volume const* &vol );
 
 	virtual ~Storage();
 

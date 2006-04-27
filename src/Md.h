@@ -39,6 +39,7 @@ class Md : public Volume
 	string mdadmLine() const; 
 	string createCmd() const;
 	static bool matchRegex( const string& dev );
+	static unsigned mdMajor();
 
 	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
@@ -58,6 +59,7 @@ class Md : public Volume
 	void computeSize();
 	Md& operator=( const Md& );
 
+	static void getMdMajor();
 	static storage::MdType toMdType( const string& val );
 	static storage::MdParity toMdParity( const string& val );
 
@@ -70,6 +72,7 @@ class Md : public Volume
 	std::list<string> spare;
 	static string md_names[storage::MULTIPATH+1];
 	static string par_names[storage::RIGHT_SYMMETRIC+1];
+	static unsigned md_major;
 	mutable storage::MdInfo info;
     };
 

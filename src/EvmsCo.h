@@ -120,6 +120,7 @@ class EvmsCo : public PeContainer
 	bool equalContent( const EvmsCo& rhs ) const;
 	void logDifference( const EvmsCo& d ) const;
 	bool checkConsistency() const;
+	void updateMd();
 
 	static void activate( bool val=true );
 	static int activateDevices();

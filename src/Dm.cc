@@ -427,12 +427,8 @@ string Dm::sysfsPath() const
 
 void Dm::getDmMajor()
     {
-    SystemCmd c( "grep device-mapper /proc/devices" );
-    if( c.numLines()>0 )
-	{
-	extractNthWord( 0, *c.getLine(0)) >> dm_major;
-	y2milestone( "dm_major:%u", dm_major );
-	}
+    dm_major = getMajorDevices( "device-mapper" );
+    y2milestone( "dm_major:%u", dm_major );
     }
 
 void Dm::getInfo( DmInfo& tinfo ) const

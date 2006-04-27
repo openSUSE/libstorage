@@ -50,6 +50,7 @@ string undevDevice( const string& dev );
 void undevDevice( string& dev );
 bool runningFromSystem();
 void delay(int Microsec_iv);
+unsigned getMajorDevices( const string& driver );
 
 int createLogger( const string& component, const string& name,
                   const string& logpath, const string& logfile );

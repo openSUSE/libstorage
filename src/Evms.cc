@@ -73,7 +73,36 @@ void Evms::init( const string& name )
     Dm::init();
     if( majorNr()!=Dm::dmMajor())
 	{
-	alt_names.clear();
+	list<string>::iterator it;
+	y2mil( "alt_names:" << alt_names );
+	while( (it=find_if( alt_names.begin(), alt_names.end(),
+	                    find_begin("/dev/dm-")))!=alt_names.end() )
+	    alt_names.erase(it);
+	y2mil( "alt_names:" << alt_names );
+	while( (it=find_if( alt_names.begin(), alt_names.end(),
+	                    find_begin("/dev/mapper/")))!=alt_names.end() )
+	    alt_names.erase(it);
+	y2mil( "alt_names:" << alt_names );
+	}
+    }
+
+void Evms::updateMd()
+    {
+    if( majorNr()==Md::mdMajor() )
+	{
+	Volume const *v;
+	string dev = "/dev/md" + decString( minorNr() );
+	if( cont->getStorage()->findVolume( dev, v ))
+	    {
+	    y2mil( "bef update " << *this );
+	    setUuid( v->getUuid() );
+	    initLabel( v->getLabel() );
+	    alt_names = v->altNames();
+	    fs = detected_fs = v->getFs();
+	    mp = orig_mp = v->getMount();
+	    is_mounted = v->isMounted();
+	    y2mil( "aft update " << *this );
+	    }
 	}
     }
 

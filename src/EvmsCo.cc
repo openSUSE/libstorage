@@ -77,6 +77,20 @@ EvmsCo::checkConsistency() const
     return( ret );
     }
 
+static bool isMdMajor( const Evms& l ) { return( l.majorNr()==Md::mdMajor() ); }
+
+void EvmsCo::updateMd()
+    {
+    if( nm.empty() )
+	{
+	EvmsPair p=evmsPair(isMdMajor);
+	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
+	    i->updateMd();
+	}
+    else
+	y2war( "updateMd called for:" << nm );
+    }
+
 static bool lvDeleted( const Evms& l ) { return( l.deleted() ); }
 static bool lvCreated( const Evms& l ) { return( l.created() ); }
 static bool lvResized( const Evms& l ) { return( l.extendSize()!=0 ); }

@@ -222,14 +222,9 @@ void Storage::detectObjects()
 	detectLoops( ppart );
 	detectFsData( vBegin(), vEnd() );
 	}
-#if 0
-    if( instsys() )
-	{
-	LvmVg::activate( false );
-	EvmsCo::activate( false );
-	MdCo::activate( false );
-	}
-#endif
+    EvmsCoIterator e = findEvmsCo( "" );
+    if( e!=evCoEnd() )
+	e->updateMd();
     }
 
 void Storage::deleteClist( CCont& co )
@@ -3920,6 +3915,22 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
 	    ++v;
 	}
     return( v!=p.end() );
+    }
+
+bool Storage::findVolume( const string& device, Volume const * &vol )
+    {
+    bool ret = false;
+    vol = NULL;
+    VolIterator v;
+    if( findVolume( device, v ))
+	{
+	vol = &(*v);
+	ret = true;
+	}
+    y2mil( "device:" << device << " ret:" << ret );
+    if( vol )
+	y2mil( "vol:" << *vol );
+    return( ret );
     }
 
 string Storage::findNormalDevice( const string& device )

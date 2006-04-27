@@ -629,6 +629,19 @@ void getFindRevMap( const char* path, map<string,string>& ret )
     y2mil( "map: " << ret );
     }
 
+unsigned getMajorDevices( const string& driver )
+    {
+    unsigned ret=0;
+    string cmd = "grep \" " + driver + "$\" /proc/devices";
+    SystemCmd c( cmd );
+    if( c.numLines()>0 )
+	{
+	extractNthWord( 0, *c.getLine(0)) >> ret;
+	}
+    y2mil( "driver:" << driver << " ret:" << ret );
+    return( ret );
+    }
+
 bool system_cmd_testmode = false;
 const string app_ws = " \t\n";
 

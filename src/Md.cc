@@ -530,6 +530,20 @@ void Md::setPersonality( MdType val )
     computeSize();
     }
 
+unsigned Md::mdMajor()
+    {
+    if( md_major==0 )
+	getMdMajor();
+    return( md_major );
+    }
+
+void Md::getMdMajor()
+    {
+    md_major = getMajorDevices( "md" );
+    y2milestone( "md_major:%u", md_major );
+    }
+
+
 
 void Md::getInfo( MdInfo& tinfo ) const
     {
@@ -636,9 +650,9 @@ Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
     *this = rhs;
     }
 
-
 string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6", 
                           "raid10", "multipath" };
 string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric", 
                            "right-asymmetric", "right-symmetric" };
+unsigned Md::md_major = 0;
 

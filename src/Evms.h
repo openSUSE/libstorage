@@ -24,6 +24,7 @@ class Evms : public Dm
 	string formatText( bool doing ) const;
 	string resizeText( bool doing ) const;
 
+	void updateMd();
 	void getInfo(storage::EvmsInfo&) const;
 	bool equalContent( const Evms& rhs ) const;
 	void logDifference( const Evms& d ) const;
