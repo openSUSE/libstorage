@@ -412,6 +412,11 @@ Storage::detectLvmVgs()
 	}
     }
 
+static bool isEvmsMd( const Volume& v )
+    {
+    return( v.device().find( "/dev/evms/md/" )==0 );
+    }
+
 void
 Storage::detectEvms()
     {
@@ -434,12 +439,17 @@ Storage::detectEvms()
 	if( !data.volumes.empty() )
 	    {
 	    EvmsCo * e = new EvmsCo( this, data );
-	    addToList( e );
+	    Container::VolPair ep = e->volPair( isEvmsMd );
+	    y2mil( "md:" << ep.length() << " evms:" << e->numVolumes() );
+	    if( ep.length()!=e->numVolumes() )
+		addToList( e );
+	    else
+		delete e;
 	    for( list<EvmsCont>::const_iterator i=data.cont.begin();
 	         i!=data.cont.end(); ++i )
 		{
 		y2mil( "EVMS Container:" << *i );
-		EvmsCo * e = new EvmsCo( this, *i, data );
+		e = new EvmsCo( this, *i, data );
 		addToList( e );
 		e->checkConsistency();
 		}
@@ -4705,12 +4715,14 @@ void Storage::setExtError( const string& txt )
 int Storage::waitForDevice() const
     {
     int ret = 0;
-    char * prog = "/usr/bin/udev.count_events";
+    char * prog = "/sbin/udevsettle";
     if( access( prog, X_OK )==0 )
 	{
-	y2milestone( "calling prog:%s", prog );
-	SystemCmd c( prog );
-	y2milestone( "returned prog:%s retcode:%d", prog, c.retcode() );
+	string cmd( prog );
+	cmd += " --timeout=20";
+	y2milestone( "calling prog:%s", cmd.c_str() );
+	SystemCmd c( cmd );
+	y2milestone( "returned prog:%s retcode:%d", cmd.c_str(), c.retcode() );
 	}
     y2milestone( "ret:%d", ret );
     return( ret );

@@ -17,9 +17,11 @@ Evms::Evms( const EvmsCo& d, const string& name, unsigned long long le, bool nat
 	Dm( d, getMapperName(d,name) )
     {
     init( name );
+    y2mil( "init:" << *this );
     setLe( le );
     calcSize();
-    getTableInfo();
+    if( majorNr()==Dm::dmMajor())
+	getTableInfo();
     compat = !native;
     y2debug( "constructed evms vol %s on vg %s", dev.c_str(),
 	     cont->name().c_str() );
@@ -69,6 +71,10 @@ void Evms::init( const string& name )
 	dev += cont->name() + "/";
     dev += name;
     Dm::init();
+    if( majorNr()!=Dm::dmMajor())
+	{
+	alt_names.clear();
+	}
     }
 
 string Evms::removeText( bool doing ) const
