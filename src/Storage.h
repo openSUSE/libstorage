@@ -156,6 +156,7 @@ class Storage : public storage::StorageInterface
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo( std::ostream& str );
 	void logCo( Container* c );
+	void logProcData( const string& l="" );
 	storage::UsedByType usedBy( const string& dev );
 	bool setUsedBy( const string& dev, storage::UsedByType typ,
 	                const string& name );

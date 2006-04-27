@@ -163,6 +163,7 @@ Storage::initialize()
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();
+    logProcData();
     }
 
 void Storage::dumpObjectList()
@@ -225,6 +226,16 @@ void Storage::detectObjects()
     EvmsCoIterator e = findEvmsCo( "" );
     if( e!=evCoEnd() )
 	e->updateMd();
+
+    if( instsys() )
+	{
+	SystemCmd c( "grep ^md.*dm- /proc/mdstat" );
+	SystemCmd rm;
+	for( unsigned i=0; i<c.numLines(); i++ )
+	    {
+	    rm.execute( "mdadm --stop /dev/" + extractNthWord(0, *c.getLine(i)) );
+	    }
+	}
     }
 
 void Storage::deleteClist( CCont& co )
@@ -3825,6 +3836,8 @@ bool Storage::removeDmTable( const string& table )
 	c.execute( "dmsetup remove \"" + table + "\"" );
 	waitForDevice();
 	ret = c.retcode()==0;
+	c.execute( "dmsetup table | grep  \"" + table + "\"" );
+	logProcData();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -3843,6 +3856,20 @@ Storage::logCo( Container* c )
 	y2mil( "log vo:" << b.str() );
 	}
     }
+
+void Storage::logProcData( const string& l )
+    {
+    y2mil( "begin:" << l );
+    ProcPart t;
+    AsciiFile md( "/proc/mdstat" );
+    for( unsigned i=0; i<md.numLines(); i++ )
+	y2mil( "mdstat:" << i+1 << ". line:" << md[i] );
+    AsciiFile mo( "/proc/mounts" );
+    for( unsigned i=0; i<mo.numLines(); i++ )
+	y2mil( "mounts:" << i+1 << ". line:" << mo[i] );
+    y2mil( "end" << l );
+    }
+
 
 bool Storage::findVolume( const string& device, ContIterator& c,
                           VolIterator& v )
