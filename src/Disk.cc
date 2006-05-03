@@ -1974,7 +1974,7 @@ int Disk::doCreate( Volume* v )
 		    }
 		}
 	    y2milestone( "max %lu", maxc );
-	    if( end>maxc && maxc<cylinders()-1 )
+	    if( end>maxc && maxc<=cylinders()-1 )
 		{
 		y2milestone( "corrected end from %lu to max %lu", end, maxc );
 		end = maxc;
