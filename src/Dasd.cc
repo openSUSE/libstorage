@@ -22,6 +22,7 @@ Dasd::Dasd( Storage * const s, const string& Name,
             unsigned long long SizeK ) : 
     Disk(s,Name,SizeK)
     {
+    fmt = DASDF_NONE;
     y2debug( "constructed dasd %s", dev.c_str() );
     }
 
@@ -235,11 +236,8 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	if( val>0 )
-	    {
-	    y2mil( "val:" << val );
-	    c=val;
-	    }
+	y2mil( "val:" << val );
+	c=val;
 	}
     if( cmd.select( "tracks per" )>0 )
 	{
@@ -249,11 +247,8 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	if( val>0 )
-	    {
-	    y2mil( "val:" << val );
-	    h=val;
-	    }
+	y2mil( "val:" << val );
+	h=val;
 	}
     if( cmd.select( "blocks per" )>0 )
 	{
@@ -263,11 +258,8 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	if( val>0 )
-	    {
-	    y2mil( "val:" << val );
-	    s=val;
-	    }
+	y2mil( "val:" << val );
+	s=val;
 	}
     if( cmd.select( "blocksize" )>0 )
 	{
@@ -277,11 +269,8 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	if( val>0 )
-	    {
-	    y2mil( "val:" << val );
-	    s*=val/512;
-	    }
+	y2mil( "val:" << val );
+	s*=val/512;
 	}
     y2milestone( "c:%lu h:%u s:%u", c, h, s );
     }
@@ -595,6 +584,13 @@ int Dasd::initializeDisk( bool value )
 	init_disk = value;
 	if( init_disk )
 	    {
+	    new_sector = sector = 96;
+	    new_head = head = 15;
+	    y2milestone( "new sector:%u head:%u", sector, head );
+	    size_k = (head*sector*cyl)/2;
+	    y2milestone( "new SizeK:%llu", size_k );
+	    byte_cyl = head * sector * 512;
+	    y2milestone( "new byte_cyl:%lu", byte_cyl );
 	    ret = destroyPartitionTable( "dasd" );
 	    }
 	else
