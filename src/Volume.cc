@@ -633,6 +633,22 @@ int Volume::doFormat()
 	cmd += decString(min(100ull,size_k));
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
+	ofstream s( mountDevice().c_str() );
+	ofstream::pos_type p = s.seekp( 0, ios_base::end ).tellp();
+	y2mil( "good:" << s.good() << " pos_type:" << p );
+	const unsigned count=5;
+	const unsigned bufsize=1024;
+	if( s.good() && p>count*bufsize )
+	    {
+	    char buf[bufsize];
+	    memset( buf, 0, sizeof(buf) );
+	    p -= count*bufsize;
+	    s.seekp( p );
+	    y2mil( "pos_type:" << s.tellp() );
+	    for( unsigned i=0; i<count; ++i )
+		s.write( buf, bufsize );
+	    }
+	
 	}
     if( ret==0 && mountDevice()!=dev && !cont->getStorage()->test() )
 	{
