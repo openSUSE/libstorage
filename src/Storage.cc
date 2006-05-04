@@ -184,12 +184,15 @@ void Storage::dumpObjectList()
 void Storage::detectObjects()
     {
     ProcPart ppart;
-    char * file = "/etc/evms.conf"; 
-    if( access( file, R_OK )==0 )
+    if( EvmsCo::canDoEvms() )
 	{
-	SystemCmd cmd( (string)"grep exclude " + file );
+	char * file = "/etc/evms.conf"; 
+	if( access( file, R_OK )==0 )
+	    {
+	    SystemCmd cmd( (string)"grep exclude " + file );
+	    }
+	EvmsCo::activate(true);
 	}
-    EvmsCo::activate(true);
     detectDisks( ppart );
     if( instsys() )
 	{
