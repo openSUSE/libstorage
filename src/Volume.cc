@@ -636,7 +636,7 @@ int Volume::doFormat()
 	ofstream s( mountDevice().c_str() );
 	ofstream::pos_type p = s.seekp( 0, ios_base::end ).tellp();
 	y2mil( "good:" << s.good() << " pos_type:" << p );
-	const unsigned count=5;
+	const unsigned count=32;
 	const unsigned bufsize=1024;
 	if( s.good() && p>count*bufsize )
 	    {
