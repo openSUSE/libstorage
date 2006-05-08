@@ -32,7 +32,6 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     stripe = 1;
     stripe_size = 0;
     inactiv = true;
-    dev = "/dev/dm-" + decString(mnum);
     nm = tn;
     init();
     getTableInfo();

@@ -40,7 +40,7 @@ void
 DmCo::init()
     {
     nm = "dm";
-    dev = "/dev/dm-";
+    dev = "/dev/mapper";
     }
 
 void
@@ -80,8 +80,10 @@ DmCo::getDmData( ProcPart& ppart )
 	    minor >> min_num;
 	    Dm * m = new Dm( *this, table, min_num );
 	    unsigned long long s = 0;
-	    if( ppart.getSize( m->device(), s ))
+	    string dev = "/dev/dm-" + decString(min_num);
+	    if( ppart.getSize( dev, s ))
 		{
+		y2mil( "new dm size:" << s );
 		m->setSize( s );
 		}
 	    bool in_use = false;
