@@ -124,11 +124,15 @@ DmCo::getDmData( ProcPart& ppart )
 		if( !in_use || multipath )
 		    getStorage()->setUsedBy( it->first, UB_DM, table );
 		}
-	    y2mil( "in_use:" << in_use << " multipath:" << multipath );
-	    if( !in_use || multipath )
+	    string tmp = m->device();
+	    tmp.erase( 5, 7 );
+	    bool known = getStorage()->knownDevice( tmp, true );
+	    y2mil( "in_use:" << in_use << " multipath:" << multipath <<
+	           " known " << tmp << " is:" << known );
+	    if( !known )
 		addDm( m );
 	    else
-		delete m;
+		delete( m );
 	    }
 	}
     }

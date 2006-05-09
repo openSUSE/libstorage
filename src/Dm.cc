@@ -176,9 +176,11 @@ string Dm::getDevice( const string& majmin )
 	    if( pos != string::npos )
 		pair[pos] = ' ';
 	    pair >> mj;
-	    if( mj==dm_major )
+	    list<string> ls = splitString(pair);
+	    if( mj==dm_major && ls.size()>=2 )
 		{
-		c.execute( "devmap_name " + pair );
+		c.execute( "dmsetup info -c --noheadings -j " + *ls.begin() +
+		           " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
 		if( c.retcode()==0 && c.numLines()>0 )
 		    {
 		    string tmp = "/dev/"+*c.getLine(0);

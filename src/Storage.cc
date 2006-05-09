@@ -3273,10 +3273,12 @@ bool Storage::removeDmMapsTo( const string& dev, bool also_evms )
 	    if( dm->mapsTo( dev ) )
 		{
 		dm->removeTable();
+		dm->setSilent();
+		dm->setDeleted();
 		ret = true;
 		}
 	    }
-	else
+	else if( dm==NULL )
 	    y2warning( "not a Dm descendant %s", v->device().c_str() );
 	}
     y2milestone( "ret:%d", ret );
