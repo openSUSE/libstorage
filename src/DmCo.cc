@@ -36,6 +36,30 @@ DmCo::~DmCo()
     y2debug( "destructed DmCo" );
     }
 
+void DmCo::updateDmMaps()
+    {
+    DmPair dp = dmPair();
+    bool success;
+    do
+	{
+	success = false;
+	for( DmIter i=dp.begin(); i!=dp.end(); ++i )
+	    {
+	    if( i->getPeMap().empty() )
+		{
+		y2mil( "dm:" << *i );
+		i->getTableInfo();
+		if( !i->getPeMap().empty() )
+		    {
+		    success = true;
+		    y2mil( "dm:" << *i );
+		    }
+		}
+	    }
+	}
+    while( success );
+    }
+
 void
 DmCo::init()
     {
@@ -78,7 +102,9 @@ DmCo::getDmData( ProcPart& ppart )
 	    if( (pos=minor.find( ")" ))!=string::npos )
 		minor.erase( pos );
 	    minor >> min_num;
+	    y2mil( "minor:\"" << minor << "\" minor:" << min_num );
 	    Dm * m = new Dm( *this, table, min_num );
+	    y2mil( "new Dm:" << *m  );
 	    unsigned long long s = 0;
 	    string dev = "/dev/dm-" + decString(min_num);
 	    if( ppart.getSize( dev, s ))
@@ -88,16 +114,18 @@ DmCo::getDmData( ProcPart& ppart )
 		}
 	    bool in_use = false;
 	    const map<string,unsigned long>& pe = m->getPeMap();
+	    bool multipath = m->getTargetName()=="multipath" ||
+			     m->getTargetName()=="emc";
 	    for( map<string,unsigned long>::const_iterator it = pe.begin();
 		 it!=pe.end(); ++it )
 		{
 		if( !getStorage()->canUseDevice( it->first, true ))
 		    in_use = true;
-		else
-		    getStorage()->setUsedBy( it->first, UB_DM, 
-					     undevDevice(m->device()) );
+		if( !in_use || multipath )
+		    getStorage()->setUsedBy( it->first, UB_DM, table );
 		}
-	    if( !in_use )
+	    y2mil( "in_use:" << in_use << " multipath:" << multipath );
+	    if( !in_use || multipath )
 		addDm( m );
 	    else
 		delete m;

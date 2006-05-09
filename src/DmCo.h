@@ -20,6 +20,7 @@ class DmCo : public PeContainer
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
 	bool equalContent( const DmCo& rhs ) const;
 	void logDifference( const DmCo& d ) const;
+	void updateDmMaps();
 
 	int removeDm( const string& table );
 	int removeVolume( Volume* v );

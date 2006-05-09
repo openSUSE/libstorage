@@ -128,6 +128,31 @@ Dm::getTableInfo()
 	else
 	    {
 	    y2warning( "unknown target type \"%s\"", target.c_str() );
+	    extractNthWord( 1, line ) >> le;
+	    le /= 2;
+	    le += pesize-1;
+	    le /= pesize;
+	    list<string> sl = splitString( extractNthWord( 2, line, true ));
+	    y2mil( "sl:" << sl );
+	    Regex devspec( "^[0-9]+:[0-9]+$" );
+	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+		{
+		if( devspec.match( *i ))
+		    {
+		    y2mil( "match \"" << *i << "\"" );
+		    dev = getDevice( *i );
+		    if( !dev.empty() )
+			{
+			if( (mit=pe_map.find( dev ))==pe_map.end() )
+			    pe_map[dev] = le;
+			else
+			    mit->second += le;
+			}
+		    else
+			y2warning( "could not find major/minor pair %s", 
+				majmin.c_str());
+		    }
+		}
 	    }
 	}
     }
@@ -275,6 +300,7 @@ void Dm::updateMajorMinor()
 		alt_names.push_back( d );
 	    }
 	}
+    num = mnr;
     }
 
 const PeContainer* const Dm::pec() const
@@ -447,6 +473,7 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     s << *(Volume*)&p;
     s << " LE:" << p.num_le;
     s << " Table:" << p.tname;
+    s << " Target:" << p.target;
     if( p.inactiv>1 )
       {
       s << " inactive";

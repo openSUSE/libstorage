@@ -483,7 +483,10 @@ Storage::detectDm( ProcPart& ppart )
 	{
 	DmCo * v = new DmCo( this, true, ppart );
 	if( !v->isEmpty() )
+	    {
 	    addToList( v );
+	    v->updateDmMaps();
+	    }
 	else
 	    delete v;
 	}
@@ -4230,7 +4233,7 @@ int Storage::removeUsing( const string& device, const storage::usedBy& uby )
 	    ret = removeVolume( "/dev/" + name );
 	    break;
 	case UB_DM:
-	    ret = removeVolume( "/dev/" + name );
+	    ret = removeVolume( "/dev/mapper/" + name );
 	    break;
 	case UB_LVM:
 	    ret = removeLvmVg( name );
