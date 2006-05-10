@@ -3987,9 +3987,7 @@ bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
 	DiskIterator i = findDisk( dev );
 	if( i != dEnd() )
 	    {
-	    y2mil( "disk before" << *i << endl );
 	    i->setUsedBy( typ, name );
-	    y2mil( "disk after" << *i << endl );
 	    }
 	else
 	    {

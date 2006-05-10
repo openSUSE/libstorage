@@ -1024,22 +1024,29 @@ int EvmsAccess::createCo( const string& Container_Cv,
 	if( ret!=0 )
 	    {
 	    std::list<EvmsObject*>::const_iterator i=objects.begin();
-	    while( i!=objects.end() && (*i)->type()!=EVMS_DISK && 
-	           (*i)->name()!=dev )
+	    while( i!=objects.end() && 
+	           ((*i)->type()!=EVMS_DISK || (*i)->name()!=dev) )
+		{
+		y2mil( "*i type:" << (*i)->type() << " name:" << (*i)->name() );
 		++i;
+		}
 	    if( i!=objects.end() )
 		{
 		y2mil( "dev:" << dev << " id:" << (*i)->id()  );
 		ret = evms_unassign( (*i)->id() );
 		y2milestone( "ret %d evms_unassign id %d", ret, (*i)->id() );
 		input->handle[count] = (*i)->id();
+		ret = 0;
 		}
-	    if( ret!=0 )
+	    else
 		{
 		i=objects.begin();
-		while( i!=objects.end() && (*i)->type()!=EVMS_VOLUME && 
-		       (*i)->name()!=dev )
+		while( i!=objects.end() && 
+		       ((*i)->type()!=EVMS_VOLUME || (*i)->name()!=dev) )
+		    {
+		    y2mil( "*i type:" << (*i)->type() << " name:" << (*i)->name() );
 		    ++i;
+		    }
 		if( i!=objects.end() )
 		    {
 		    ret = 0;
