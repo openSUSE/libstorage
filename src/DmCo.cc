@@ -129,7 +129,7 @@ DmCo::getDmData( ProcPart& ppart )
 	    bool known = getStorage()->knownDevice( tmp, true );
 	    y2mil( "in_use:" << in_use << " multipath:" << multipath <<
 	           " known " << tmp << " is:" << known );
-	    if( !known )
+	    if( !known && m->sizeK()>0 )
 		addDm( m );
 	    else
 		delete( m );
