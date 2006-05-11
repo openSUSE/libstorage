@@ -342,6 +342,68 @@ Storage::detectDisks( ProcPart& ppart )
     else if( autodetect )
 	{
 	autodetectDisks( ppart );
+	detectMultipath();
+	}
+    }
+
+void
+Storage::detectMultipath()
+    {
+    bool acc_ok = access( "/sbin/multipath", X_OK )==0;
+    y2mil( "detectMultipath acc_ok:" << acc_ok );
+    if( acc_ok )
+	{
+	list<string> mp_list;
+	string line;
+	unsigned i=0;
+	SystemCmd c( "/sbin/multipath -d -v 2+ -ll" );
+	if( i<c.numLines() )
+	    line = *c.getLine(i);
+	while( i<c.numLines() )
+	    {
+	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+		if( ++i<c.numLines() )
+		    line = *c.getLine(i);
+	    y2mil( "mp unit:" << line );
+	    mp_list.clear();
+	    if( ++i<c.numLines() )
+		line = *c.getLine(i);
+	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+		{
+		if( line.find( " \\_" )==0 )
+		    {
+		    y2mil( "mp element:" << line );
+		    string dev = deviceByNumber( extractNthWord(3,line) );
+		    if( !dev.empty() && 
+		        find( mp_list.begin(), mp_list.end(), dev )==
+			    mp_list.end() )
+			mp_list.push_back(dev);
+		    }
+		if( ++i<c.numLines() )
+		    line = *c.getLine(i);
+		}
+	    y2mil( "mp_list:" << mp_list );
+	    if( mp_list.size()>1 )
+		{
+		for( list<string>::const_iterator i=mp_list.begin(); 
+		     i!=mp_list.end(); ++i )
+		    {
+		    Storage::DiskIterator di = findDisk( *i );
+		    if( di != dEnd() )
+			{
+			di->clearMpAlias();
+			for( list<string>::const_iterator j=mp_list.begin();
+			     j!=mp_list.end(); ++j )
+			     {
+			     if( i!=j )
+				di->addMpAlias( *j );
+			     }
+			}
+		    else
+			y2war( "Disk not found:" << *i );
+		    }
+		}
+	    }
 	}
     }
 

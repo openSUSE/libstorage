@@ -1221,6 +1221,7 @@ class Storage : public storage::StorageInterface
 	void initialize();
 	void detectDisks( ProcPart& ppart );
 	void autodetectDisks( ProcPart& ppart );
+	void detectMultipath();
 	void detectMds();
 	void detectLoops( ProcPart& ppart );
 	void detectLvmVgs();

@@ -47,6 +47,9 @@ class Disk : public Container
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
 	const std::list<string>& udevId() const { return udev_id; }
+	void addMpAlias( const string& dev ); 
+	void clearMpAlias() { mp_alias.clear(); }
+	const std::list<string>& mpAlias() const { return mp_alias; }
 	const string& sysfsDir() const { return sysfs_dir; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
@@ -207,6 +210,7 @@ class Disk : public Container
 	string label;
 	string udev_path;
 	std::list<string> udev_id;
+	std::list<string> mp_alias;
 	string detected_label;
 	string system_stderr;
 	string logfile_name;
