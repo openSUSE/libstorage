@@ -2295,7 +2295,8 @@ const Partition * Disk::getPartitionAfter( const Partition * p )
     PartPair pp = partPair( (p->type()==LOGICAL)?notDeleted:notDeletedLog );
     for( PartIter pi=pp.begin(); pi!=pp.end(); ++pi )
 	{
-	if( pi->cylStart()>p->cylStart() &&
+	if( !pi->created() &&
+	    pi->cylStart()>p->cylStart() &&
 	    (ret==NULL || ret->cylStart()>p->cylStart()) )
 	    ret = &(*pi);
 	}
