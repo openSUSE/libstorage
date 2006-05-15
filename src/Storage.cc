@@ -10,6 +10,7 @@
 #include <sys/types.h>
 #include <sys/statvfs.h>
 #include <pwd.h>
+#include <config.h>
 
 #include <fstream>
 #include <sstream>
@@ -85,6 +86,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     {
     y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
                  ronly, testmode, autodetect );
+    y2milestone( "package string \"%s\"", PACKAGE_STRING );
     char * tenv = getenv( "YAST_IS_RUNNING" );
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     root_mounted = !inst_sys;
