@@ -615,8 +615,10 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
 	    break;
 	    }
 	}
-    if( d && d->getSysfsInfo( sysfs_dir+"/"+data.name ) &&
-	d->detectGeometry() && d->detectPartitions(pp) )
+    if( d && 
+        (d->getSysfsInfo( sysfs_dir+"/"+data.name )||data.typ==DiskData::XEN) &&
+	(data.typ==DiskData::XEN||d->detectGeometry()) &&
+	(data.typ==DiskData::XEN||d->detectPartitions(pp)))
 	{
 	if( max_log_num>0 )
 	    d->logData( logdir );
