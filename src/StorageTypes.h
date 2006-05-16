@@ -48,8 +48,8 @@ struct commitAction
 	Volume* vol;
 	Container* co;
 	} u;
-    Container* co() { return( container?u.co:NULL ); }
-    Volume* vol() { return( container?NULL:u.vol ); }
+    Container* co() const { return( container?u.co:NULL ); }
+    Volume* vol() const { return( container?NULL:u.vol ); }
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
     bool operator<( const commitAction& rhs ) const

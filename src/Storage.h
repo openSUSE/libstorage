@@ -1259,6 +1259,8 @@ class Storage : public storage::StorageInterface
 			      std::list<Container*>& co,
 			      std::list<Volume*>& vl,
 			      std::list<storage::commitAction*>& todo );
+	bool ignoreError( std::list<commitAction*>::iterator i,
+			  std::list<commitAction*>& al );
 	void evmsActivateDevices();
 	string backupStates() const;
 	void detectObjects();
@@ -1307,6 +1309,18 @@ class Storage : public storage::StorageInterface
 	string extendedError;
 	std::map<string,CCont> backups;
 	std::map<string,FreeInfo> freeInfo;
+    };
+
+inline std::ostream& operator<< (std::ostream& s, commitAction &a )
+    {
+    s << "stage:" << a.stage
+      << " type:" << a.type
+      << " cont:" << a.container
+      << " dest:" << a.destructive
+      << " name:" << (a.container?a.co()->name():a.vol()->name());
+    if( !a.descr.empty() )
+      s << " desc:" << a.descr;
+    return( s );
     };
 
 }

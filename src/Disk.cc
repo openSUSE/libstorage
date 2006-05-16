@@ -1483,6 +1483,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	    {
 	    getStorage()->removeUsing( device(), getUsedBy() );
 	    }
+	ronly = false;
 	RVIter i = vols.rbegin();
 	while( i!=vols.rend() )
 	    {
@@ -1492,7 +1493,6 @@ int Disk::destroyPartitionTable( const string& new_label )
 	    }
 	getStorage()->setRecursiveRemoval(save);
 	setDeleted( true );
-	ronly = false;
 	}
     y2milestone( "ret %d", ret );
     return( ret );
@@ -1652,6 +1652,7 @@ int Disk::doCreateLabel()
 	{
 	getStorage()->showInfoCb( setDiskLabelText(true) );
 	}
+    getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
     system_stderr.erase();
     std::ostringstream cmd_line;

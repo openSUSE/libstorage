@@ -3162,6 +3162,25 @@ int Storage::commit()
     return( ret );
     }
 
+bool 
+Storage::ignoreError( list<commitAction*>::iterator i,
+                      list<commitAction*>& al )
+    {
+    bool ret = false;
+    if( !(*i)->container && (*i)->type==DISK && (*i)->stage==DECREASE )
+	{
+	++i;
+	while( ret==false && i!=al.end() )
+	    {
+	    y2mil( "it:" << **i );
+	    ret = (*i)->container && (*i)->type==DISK && (*i)->stage==DECREASE;
+	    ++i;
+	    }
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 int
 Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     {
@@ -3193,10 +3212,11 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	while( ret==0 && ac != todo.end() )
 	    {
 	    bool cont = (*ac)->container;
-	    CType type = cont ? (*ac)->co()->type() : (*ac)->vol()->cType();
+	    CType type = (*ac)->type;
 	    Container *co = cont ? (*ac)->co() : 
 	                           const_cast<Container*>((*ac)->vol()->getContainer());
-	    if( !evms_activate && *pt==INCREASE && (type==DISK||type==MD||(cont&&type==EVMS)) )
+	    if( !evms_activate && *pt==INCREASE && 
+	        (type==DISK||type==MD||(cont&&type==EVMS)) )
 		{
 		evms_activate = true;
 		}
@@ -3225,6 +3245,12 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    else
 		{
 		ret = co->commitChanges( *pt, (*ac)->vol() );
+		}
+	    if( ret!=0 )
+		{
+		y2mil( "err at " << **ac );
+		if( ignoreError( ac, todo ))
+		    ret = 0;
 		}
 	    delete( *ac );
 	    ++ac;
