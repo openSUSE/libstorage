@@ -3339,8 +3339,11 @@ bool Storage::removeDmMapsTo( const string& dev, bool also_evms )
 	    if( dm->mapsTo( dev ) )
 		{
 		dm->removeTable();
-		dm->setSilent();
-		dm->setDeleted();
+		if( !dm->created() )
+		    {
+		    dm->setSilent();
+		    dm->setDeleted();
+		    }
 		ret = true;
 		}
 	    }
