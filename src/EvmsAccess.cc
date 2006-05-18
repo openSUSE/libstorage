@@ -576,7 +576,7 @@ ostream& operator<<( ostream &str, const EvmsVolumeObject& obj )
 int EvmsAccess::pluginFilterFunction( const char* plugin )
     {
     static char *ExcludeList[] = { "/ext2-", "/reiser-", "/jfs-", "/xfs-", 
-				   "/swap-", "/ocfs2-", "/ntfs-" };
+				   "/swap-", "/ocfs2-", "/ntfs-", "/hb2-" };
     int ret = 0;
     unsigned i = 0;
     while( !ret && i<sizeof(ExcludeList)/sizeof(char*) )
