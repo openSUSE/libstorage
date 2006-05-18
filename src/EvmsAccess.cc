@@ -596,9 +596,10 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 	unlink( "/var/lock/evms-engine" );
 	}
     evms_set_load_plugin_fct( pluginFilterFunction );
+    y2milestone( "before evms_open_engine" );
     int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
                                 DEFAULT, NULL );
-    y2debug( "evms_open_engine ret %d", ret );
+    y2milestone( "evms_open_engine ret %d", ret );
     if( ret != 0 )
 	{
 	y2error( "evms_open_engine evms_strerror %s", evms_strerror(ret));
