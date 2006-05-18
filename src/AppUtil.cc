@@ -441,7 +441,7 @@ bool runningFromSystem()
     return( FromSystem_bs );
     }
 
-static blocxx::String component = "libstorage";
+static blocxx::String component = "libstorage(" + decString(getpid()) + ")";
 
 void
 log_msg( unsigned level, const char* file, unsigned line, const char* func,
