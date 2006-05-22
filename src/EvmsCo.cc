@@ -267,7 +267,8 @@ EvmsCo::setUsed( const string& device, storage::UsedByType typ,
     string d = normalizeDevice(device);
     if( d.find( "/dev/md/" )==0 )
 	d.erase( 5, 3 );
-    getStorage()->setUsedBy( d, typ, name );
+    if( getStorage()->usedBy( d )!=UB_LVM )
+	getStorage()->setUsedBy( d, typ, name );
     if( typ!=UB_NONE && !getStorage()->isDisk(d) )
 	getStorage()->changeFormatVolume( d, false, FSNONE );
     d = "/dev/evms/"+normalizeDevice(device).substr(5);
