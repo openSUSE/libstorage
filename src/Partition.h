@@ -26,7 +26,7 @@ class Partition : public Volume
 		   storage::PartitionType Type, 
 		   unsigned id=ID_LINUX, bool Boot=false );
 	Partition( const Disk& d, const string& Data );
-	Partition( const Disk& d, const Partition& d );
+	Partition( const Disk& d, const Partition& p );
 	virtual ~Partition();
 
 	unsigned long cylStart() const { return reg.start(); }
