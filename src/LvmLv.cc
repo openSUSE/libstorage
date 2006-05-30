@@ -37,7 +37,7 @@ LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
-    alt_names.push_back( "/dev/mapper/" + cont->name() + "-" + dupDash(name) );
+    alt_names.push_back( "/dev/mapper/" + dupDash(cont->name()) + "-" + dupDash(name) );
     y2debug( "constructed lvm lv %s on vg %s", dev.c_str(),
 	     cont->name().c_str() );
     }
