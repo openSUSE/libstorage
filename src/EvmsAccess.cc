@@ -14,6 +14,7 @@
 #include "Regex.h"
 #include "AsciiFile.h"
 #include "EvmsAccess.h"
+#include "SystemCmd.h"
 
 using namespace std;
 using namespace storage;
@@ -597,8 +598,44 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 	}
     evms_set_load_plugin_fct( pluginFilterFunction );
     y2milestone( "before evms_open_engine" );
-    int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
-                                DEFAULT, NULL );
+    string line;
+    logLevel = DEFAULT;
+    AsciiFile conf( "/etc/evms.conf" );
+    Regex rx( "[ \t]*debug_level[ \t]*=[ \t]*" );
+    int ret = conf.find( 0, rx );
+    y2mil( "debug line:" << ret );
+    if( ret>=0 )
+	{
+	list<string> ls = splitString( conf[ret], " \t=" );
+	y2mil( "debug line:" << conf[ret] << " list:" << ls );
+	if( ls.size()>=2 )
+	    {
+	    list<string>::iterator i = ls.begin();
+	    ++i;
+	    if( *i == "critical" )
+		logLevel = CRITICAL;
+	    else if( *i == "serious" )
+		logLevel = SERIOUS;
+	    else if( *i == "error" )
+		logLevel = ERROR;
+	    else if( *i == "warning" )
+		logLevel = WARNING;
+	    else if( *i == "details" )
+		logLevel = DETAILS;
+	    else if( *i == "entry_exit" )
+		logLevel = ENTRY_EXIT;
+	    else if( *i == "debug" )
+		logLevel = DEBUG;
+	    else if( *i == "extra" )
+		logLevel = EXTRA;
+	    else if( *i == "everything" )
+		logLevel = EVERYTHING;
+	    y2mil( "level string:\"" << *i << "\" val:" << logLevel );
+	    }
+	}
+    y2mil( "log level:" << logLevel );
+    ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
+			    logLevel, NULL );
     y2milestone( "evms_open_engine ret %d", ret );
     if( ret != 0 )
 	{
@@ -617,51 +654,19 @@ EvmsAccess::EvmsAccess() : EvmsOpen_b(false)
 int EvmsAccess::activate()
     {
     evms_close_engine();
-    string line;
-    debug_level_t log_level = DEFAULT;
-    AsciiFile conf( "/etc/evms.conf" );
-    Regex rx( "[ \t]*debug_level[ \t]*=[ \t]*" );
-    int ret = conf.find( 0, rx );
-    y2mil( "debug line:" << ret );
-    if( ret>=0 )
-	{
-	list<string> ls = splitString( conf[ret], " \t=" );
-	y2mil( "debug line:" << conf[ret] << " list:" << ls );
-	if( ls.size()>=2 )
-	    {
-	    list<string>::iterator i = ls.begin();
-	    ++i;
-	    if( *i == "critical" )
-		log_level = CRITICAL;
-	    else if( *i == "serious" )
-		log_level = SERIOUS;
-	    else if( *i == "error" )
-		log_level = ERROR;
-	    else if( *i == "warning" )
-		log_level = WARNING;
-	    else if( *i == "details" )
-		log_level = DETAILS;
-	    else if( *i == "entry_exit" )
-		log_level = ENTRY_EXIT;
-	    else if( *i == "debug" )
-		log_level = DEBUG;
-	    else if( *i == "extra" )
-		log_level = EXTRA;
-	    else if( *i == "everything" )
-		log_level = EVERYTHING;
-	    y2mil( "level string:\"" << *i << "\" val:" << log_level );
-	    }
-	}
-    y2mil( "log level:" << log_level );
-    ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
-			    log_level, NULL );
+    y2mil( "log level:" << logLevel );
+    int ret = evms_open_engine( NULL, (engine_mode_t)ENGINE_READWRITE, NULL, 
+			    logLevel, NULL );
+    y2mil( "after evms_open_engine ret:" << ret );
     if( ret != 0 )
 	{
 	y2error( "evms_open_engine evms_strerror %s", evms_strerror(ret));
 	}
     else
 	{
+	y2mil( "before evms_commit_changes" );
 	ret = evms_commit_changes();
+	y2mil( "after evms_commit_changes ret:" << ret );
 	if( ret != 0 )
 	    {
 	    y2error( "evms_commit_changes evms_strerror %s", evms_strerror(ret));

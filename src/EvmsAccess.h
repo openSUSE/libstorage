@@ -170,6 +170,7 @@ class EvmsAccess
 	void rereadAllObjects();
 	plugin_handle_t getLvmPlugin( bool lvm2=false );
 	object_handle_t findUsingVolume( object_handle_t id );
+	debug_level_t logLevel;
 	const EvmsContainerObject* findContainer( const string& name );
 	const EvmsDataObject* findRegion( const string& container, 
 	                                  const string& name );
