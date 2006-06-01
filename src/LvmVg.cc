@@ -654,16 +654,26 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	}
     else
 	{
-	num_lv++;
-	LvmLv *n = new LvmLv( *this, name, le, uuid, status, alloc );
-	if( ro )
-	    n->setReadonly();
-	if( !n->inactive() )
-	    addToList( n );
-	else
+	p=lvmLvPair();
+	i=p.begin();
+	while( i!=p.end() && i->name()!=name )
 	    {
-	    y2milestone( "inactive Lv %s", name.c_str() );
-	    delete n;
+	    ++i;
+	    }
+	y2milestone( "addLv exists deleted %d", i!=p.end() );
+	if( i==p.end() )
+	    {
+	    num_lv++;
+	    LvmLv *n = new LvmLv( *this, name, le, uuid, status, alloc );
+	    if( ro )
+		n->setReadonly();
+	    if( !n->inactive() )
+		addToList( n );
+	    else
+		{
+		y2milestone( "inactive Lv %s", name.c_str() );
+		delete n;
+		}
 	    }
 	}
     name = uuid = status = alloc = "";
