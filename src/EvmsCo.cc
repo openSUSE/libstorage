@@ -597,10 +597,10 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 		else
 		    {
 		    Pv p;
-		    p.device = "/dev/";
-		    if( oi->second.name.find( "md/" )==0 )
-			p.device += "evms/";
-		    p.device += oi->second.name;
+		    p.device = oi->second.name;
+		    if( p.device.find( "md/" )==0 )
+			p.device.erase(0,3);
+		    p.device = "/dev/" + p.device;
 		    y2mil( "p.device:" << p.device );
 		    p.status = "allocatable";
 		    p.uuid = i->uuid;
@@ -732,8 +732,17 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
 	}
     else
 	{
-	Evms *e = new Evms( *this, n, le, native );
-	addToList( e );
+	p=evmsPair();
+	i=p.begin();
+	while( i!=p.end() && i->name()!=n )
+	    {
+	    ++i;
+	    }
+	if( i==p.end() )
+	    {
+	    Evms *e = new Evms( *this, n, le, native );
+	    addToList( e );
+	    }
 	}
     }
 
@@ -746,10 +755,10 @@ void EvmsCo::addVolume( Evms* v )
 string EvmsCo::evmsToDev( const string& edev )
     {
     string ret( edev );
+    if( ret.find( "/dev/evms/" )==0 )
+	ret.erase( 5, 5 );
     if( ret.find( "/dev/md/" )==0 )
 	ret.erase( 5, 3 );
-    else if( ret.find( "/dev/evms/" )==0 )
-	ret.erase( 5, 5 );
     string::iterator it = ret.begin();
     while( it!=ret.end() )
 	{
