@@ -2038,7 +2038,11 @@ int Disk::doCreate( Volume* v )
 #endif
 	if( ret==0 )
 	    {
-	    if( getStorage()->getZeroNewPartitions() )
+	    bool used_as_pv = p->getUsedByType()==UB_EVMS ||
+	                      p->getUsedByType()==UB_LVM;
+	    y2milestone( "zeroNew:%d used_as_pv:%d", 
+	                 getStorage()->getZeroNewPartitions(), used_as_pv );
+	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
 		string cmd;
 		SystemCmd c;
