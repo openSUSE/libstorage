@@ -1372,6 +1372,11 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
     return( ret );
     }
 
+static bool volume_ptr_sort_nr( Partition*& rhs, Partition*& lhs )
+    {
+    return( rhs->nr()<lhs->nr() );
+    }
+
 int Disk::removePartition( unsigned nr )
     {
     y2milestone( "begin nr %u", nr );
@@ -1410,7 +1415,33 @@ int Disk::removePartition( unsigned nr )
 	    {
 	    changeNumbers( p.begin(), p.end(), nr, -1 );
 	    }
-	else if( t==EXTENDED )
+	else if( ret==0 && nr<=max_primary )
+	    {
+	    list<Partition*> l;
+	    i = p.begin();
+	    while( i!=p.end() )
+		{
+		if( i->created() && i->nr()<=max_primary && i->nr()>nr )
+		    {
+		    l.push_back( &(*i) );
+		    }
+		++i;
+		}
+	    if( !l.empty() )
+		{
+		l.sort( volume_ptr_sort_nr );
+		unsigned old = nr;
+		list<Partition*>::iterator vi = l.begin();
+		while( vi!=l.end() )
+		    {
+		    unsigned save = (*vi)->nr();
+		    (*vi)->changeNumber( old );
+		    old = save;
+		    ++vi;
+		    }
+		}
+	    }
+	if( t==EXTENDED )
 	    {
 	    list<Volume*> l;
 	    i = p.begin();
@@ -1988,11 +2019,6 @@ int Disk::doCreate( Volume* v )
 		    }
 		}
 	    y2milestone( "max %lu", maxc );
-	    if( end>maxc && maxc<=cylinders()-1 )
-		{
-		y2milestone( "corrected end from %lu to max %lu", end, maxc );
-		end = maxc;
-		}
 	    if( new_cyl!=cyl )
 		{
 		y2milestone( "parted geometry changed old c:%lu h:%u s:%u",
@@ -2003,6 +2029,11 @@ int Disk::doCreate( Volume* v )
 		start = start * new_cyl / cyl;
 		end = end * new_cyl / cyl;
 		y2milestone( "new start:%lu end:%lu", start, end );
+		}
+	    if( end>maxc && maxc<=cylinders()-1 )
+		{
+		y2milestone( "corrected end from %lu to max %lu", end, maxc );
+		end = maxc;
 		}
 	    cmd_line << start << " " << end;
 	    if( execCheckFailed( cmd_line.str() ) )
