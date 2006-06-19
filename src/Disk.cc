@@ -336,11 +336,11 @@ bool Disk::detectPartitions( ProcPart& ppart )
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
     checkSystemError( cmd_line, Cmd );
-    if( Cmd.select( "Disk label type:" )>0 )
+    if( Cmd.select( "Partition Table:" )>0 )
 	{
 	string tmp = *Cmd.getLine(0, true);
 	y2milestone( "Label line:%s", tmp.c_str() );
-	dlabel = extractNthWord( 3, tmp );
+	dlabel = extractNthWord( 2, tmp );
 	}
     if( Cmd.select( "BIOS cylinder" )>0 )
 	{
@@ -1859,7 +1859,7 @@ Disk::getPartedValues( Partition *p )
 	{
 	ProcPart ppart;
 	std::ostringstream cmd_line;
-	cmd_line << PARTEDCMD << device() << " unit cyl print | grep -w ^" << p->nr();
+	cmd_line << PARTEDCMD << device() << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	unsigned nr, id;
 	unsigned long start, csize;
