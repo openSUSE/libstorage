@@ -124,11 +124,12 @@ class Storage : public storage::StorageInterface
 	    unsigned long long df_free;
 	    unsigned long long used;
 	    bool win;
-	    FreeInfo() { resize_free=df_free=used=0; win=false; }
+	    bool rok;
+	    FreeInfo() { resize_free=df_free=used=0; win=rok=false; }
 	    FreeInfo( unsigned long long df,
 		      unsigned long long resize,
-		      unsigned long long usd, bool w=false )
-		      { resize_free=resize; df_free=df; used=usd; win=w; }
+		      unsigned long long usd, bool w=false, bool r=true )
+		      { resize_free=resize; df_free=df; used=usd; win=w; rok=r; }
 	    };
 
     public:
@@ -1268,10 +1269,10 @@ class Storage : public storage::StorageInterface
 	void deleteBackups();
 	void setFreeInfo( const string& device, unsigned long long df_free,
 			  unsigned long long resize_free,
-			  unsigned long long used, bool win );
-	bool getFreeInfo( const string& device, unsigned long long& df_free,
-			  unsigned long long& resize_free,
-			  unsigned long long& used, bool& win );
+			  unsigned long long used, bool win, bool resize_ok );
+	bool getFreeInf( const string& device, unsigned long long& df_free,
+			 unsigned long long& resize_free,
+			 unsigned long long& used, bool& win, bool& resize_ok );
 
 	// protected internal member variables
 	bool readonly;

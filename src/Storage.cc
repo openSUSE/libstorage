@@ -4475,10 +4475,9 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if( use_cache && getFreeInfo( vol->device(), df_free, resize_free,
-	                              used, win ))
+	if( use_cache && getFreeInf( vol->device(), df_free, resize_free,
+	                             used, win, ret ))
 	    {
-	    ret = true;
 	    }
 	else
 	    {
@@ -4564,7 +4563,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->loUnsetup();
 		}
-	    setFreeInfo( vol->device(), df_free, resize_free, used, win );
+	    setFreeInfo( vol->device(), df_free, resize_free, used, win, ret );
 	    }
 	}
     if( ret )
@@ -4576,19 +4575,19 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 
 void Storage::setFreeInfo( const string& device, unsigned long long df_free,
                            unsigned long long resize_free,
-			   unsigned long long used, bool win )
+			   unsigned long long used, bool win, bool resize_ok )
     {
     y2milestone( "device:%s df_free:%llu resize_free:%llu used:%llu win:%d",
 		 device.c_str(), df_free, resize_free, used, win );
 
-    FreeInfo inf( df_free, resize_free, used, win );
+    FreeInfo inf( df_free, resize_free, used, win, resize_ok );
     freeInfo[device] = inf;
     }
 
 bool
-Storage::getFreeInfo( const string& device, unsigned long long& df_free,
-		      unsigned long long& resize_free,
-		      unsigned long long& used, bool& win )
+Storage::getFreeInf( const string& device, unsigned long long& df_free,
+		     unsigned long long& resize_free,
+		     unsigned long long& used, bool& win, bool& resize_ok )
     {
     map<string,FreeInfo>::iterator i = freeInfo.find( device );
     bool ret = i!=freeInfo.end();
@@ -4598,11 +4597,12 @@ Storage::getFreeInfo( const string& device, unsigned long long& df_free,
 	resize_free = i->second.resize_free;
 	used = i->second.used;
 	win = i->second.win;
+	resize_ok = i->second.rok;
 	}
     y2milestone( "device:%s ret:%d", device.c_str(), ret );
     if( ret )
-	y2milestone( "df_free:%llu resize_free:%llu used:%llu win:%d",
-		     df_free, resize_free, used, win );
+	y2milestone( "df_free:%llu resize_free:%llu used:%llu win:%d resize_ok:%d",
+		     df_free, resize_free, used, win, resize_ok );
     return( ret );
     }
 
