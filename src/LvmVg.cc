@@ -100,6 +100,7 @@ LvmVg::extendVg( const list<string>& devs )
     {
     int ret = 0;
     y2mil( "name:" << name() << " devices:" << devs );
+    y2mil( "this:" << *this );
 
     checkConsistency();
     list<string>::const_iterator i=devs.begin();
@@ -115,7 +116,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    (p=find( pv_add.begin(), pv_add.end(), d ))!=pv_add.end())
 	    ret = LVM_PV_ALREADY_CONTAINED;
 	else if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
-	         pv_remove.end() )
+	         pv_remove.end() && !getStorage()->deletedDevice( d ) )
 	    {
 	    }
 	else if( !getStorage()->knownDevice( d, true ) )
@@ -134,7 +135,7 @@ LvmVg::extendVg( const list<string>& devs )
 	string d = normalizeDevice( *i );
 	unsigned long pe = 0;
 	if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
-	     pv_remove.end() )
+	     pv_remove.end() && !getStorage()->deletedDevice( d ) )
 	    {
 	    pv.push_back( *p );
 	    pe = p->num_pe;
@@ -160,6 +161,7 @@ LvmVg::extendVg( const list<string>& devs )
 	ret = LVM_VG_HAS_NONE_PV;
     if( ret==0 )
 	checkConsistency();
+    y2mil( "this:" << *this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -177,6 +179,7 @@ LvmVg::reduceVg( const list<string>& devs )
     {
     int ret = 0;
     y2mil( "name:" << name() << " devices:" << devs );
+    y2mil( "this:" << *this );
 
     checkConsistency();
     list<string>::const_iterator i=devs.begin();
@@ -208,6 +211,7 @@ LvmVg::reduceVg( const list<string>& devs )
 	}
     if( ret==0 )
 	checkConsistency();
+    y2mil( "this:" << *this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -759,6 +763,7 @@ int LvmVg::commitChanges( CommitStage stage )
 void LvmVg::getCommitActions( list<commitAction*>& l ) const
     {
     Container::getCommitActions( l );
+    y2mil( "Container::getCommitActions:" << l );
     if( deleted() )
 	{
 	l.push_back( new commitAction( DECREASE, staticType(), 
@@ -1003,6 +1008,7 @@ int
 LvmVg::doExtendVg()
     {
     y2milestone( "Vg:%s", name().c_str() );
+    y2mil( "this:" << *this );
     int ret = 0;
     list<string> devs;
     if( !active )
@@ -1043,6 +1049,7 @@ LvmVg::doExtendVg()
 	    }
 	++d;
 	}
+    y2mil( "this:" << *this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1051,6 +1058,7 @@ int
 LvmVg::doReduceVg()
     {
     y2milestone( "Vg:%s", name().c_str() );
+    y2mil( "this:" << *this );
     int ret = 0;
     if( !active )
 	activate(true);
@@ -1085,6 +1093,7 @@ LvmVg::doReduceVg()
 	    ret = LVM_PV_REMOVE_NOT_FOUND;
 	++d;
 	}
+    y2mil( "this:" << *this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1135,10 +1144,12 @@ LvmVg::doCreate( Volume* v )
 int LvmVg::doRemove( Volume* v )
     {
     y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil( "this:" << *this );
     LvmLv * l = dynamic_cast<LvmLv *>(v);
     int ret = 0;
     if( l != NULL )
 	{
+	y2mil( "lv:" << *l );
 	if( !active )
 	    activate(true);
 	if( !silent )
@@ -1169,6 +1180,7 @@ int LvmVg::doRemove( Volume* v )
 	}
     else
 	ret = LVM_REMOVE_LV_INVALID_VOLUME;
+    y2mil( "this:" << *this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }

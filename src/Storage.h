@@ -163,6 +163,7 @@ class Storage : public storage::StorageInterface
 	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
+	bool deletedDevice( const string& dev );
 	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );

@@ -4206,6 +4206,17 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
+bool Storage::deletedDevice( const string& dev )
+    {
+    VPair p = vPair( Volume::isDeleted );
+    VolIterator v = p.begin();
+    while( v!=p.end() && v->device()!=dev )
+	++v;
+    bool ret = v!=p.end();
+    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    return( ret );
+    }
+
 bool Storage::isDisk( const string& dev )
     {
     return( findDisk( dev ) != dEnd() );

@@ -316,7 +316,8 @@ void PeContainer::addPv( const Pv* p )
     list<Pv>::iterator i = find( pv.begin(), pv.end(), *p );
     if( i != pv.end() )
 	*i = *p;
-    else
+    else if( find( pv_remove.begin(), pv_remove.end(), *p ) == 
+             pv_remove.end() )
 	{
 	i = find( pv_add.begin(), pv_add.end(), *p );
 	if( i!=pv_add.end() )
