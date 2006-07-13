@@ -898,6 +898,8 @@ string Disk::defaultLabel()
 	ret = "gpt";
     else if( Storage::arch()=="sparc" )
 	ret = "sun";
+    else if( Storage::arch()=="ppc" && Storage::isPPCMac() )
+	ret = "mac";
     y2milestone( "ret %s", ret.c_str() );
     return( ret );
     }
