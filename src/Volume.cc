@@ -1070,12 +1070,14 @@ int Volume::resizeFs()
 		if( needShrink() )
 		    cmd += "-s " + decString(size_k) + "k ";
 		cmd += mountDevice();
+		c.setCombine();
 		c.execute( cmd );
 		if( c.retcode()!=0 )
 		    {
 		    ret = VOLUME_RESIZE_FAILED;
-		    setExtError( c );
+		    setExtError( c, false );
 		    }
+		c.setCombine(false);
 		break;
 	    case EXT2:
 	    case EXT3:
