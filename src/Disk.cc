@@ -983,7 +983,10 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	}
     else if( p.empty() )
 	{
-	ret = type==LOGICAL ? (max_primary+1) : 1;
+	if( type==LOGICAL )
+	    ret = max_primary + 1;
+	else
+	    ret = label!="mac" ? 1 : 2;
 	}
     else if( type==LOGICAL )
 	{
