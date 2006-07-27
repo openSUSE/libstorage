@@ -1006,7 +1006,7 @@ unsigned Disk::availablePartNumber( PartitionType type )
     else
 	{
 	PartIter i=p.begin();
-	unsigned start = 1;
+	unsigned start = label!="mac" ? 1 : 2;
 	while( i!=p.end() && i->nr()==start && i->nr()<=max_primary )
 	    {
 	    ++i;
