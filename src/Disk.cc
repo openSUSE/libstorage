@@ -1007,10 +1007,11 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	{
 	PartIter i=p.begin();
 	unsigned start = label!="mac" ? 1 : 2;
-	while( i!=p.end() && i->nr()==start && i->nr()<=max_primary )
+	while( i!=p.end() && i->nr()<=start && i->nr()<=max_primary )
 	    {
+	    if( i->nr()==start )
+		start++;
 	    ++i;
-	    start++;
 	    }
 	if( start<=max_primary )
 	    ret = start;
@@ -2040,6 +2041,8 @@ int Disk::doCreate( Volume* v )
 		y2milestone( "corrected end from %lu to max %lu", end, maxc );
 		end = maxc;
 		}
+	    if( start==0 && label == "mac" )
+		start = 1;
 	    cmd_line << start << " " << end;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
