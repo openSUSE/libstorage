@@ -29,18 +29,13 @@ class EtcRaidtab
 	friend std::ostream& operator<< (std::ostream& s, const entry &v );
 
 	void updateMdadmFile();
-	void updateRaidtabFile();
-	void buildRaidtabMap();
 	void buildMdadmMap();
 
 	Regex *whitespace;
 	Regex *comment;
-	string rtabname;
 	string mdadmname;
 	int mdadm_dev_line;
 	std::map<unsigned,entry> mtab;
-	std::map<unsigned,entry> rtab;
-	AsciiFile* raidtab;
 	AsciiFile* mdadm;
     };
 ///////////////////////////////////////////////////////////////////
