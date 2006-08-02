@@ -739,6 +739,20 @@ int Volume::doFormat()
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    ret = VOLUME_TUNE2FS_FAILED;
+	if( ret==0 && mp=="/" && 
+	    (fstab_opt.find( "data=writeback" )!=string::npos ||
+	     fstab_opt.find( "data=journal" )!=string::npos) )
+	    {
+	    cmd = "/sbin/tune2fs -o ";
+	    if( fstab_opt.find( "data=writeback" )!=string::npos )
+		cmd += "journal_data_writeback ";
+	    else
+		cmd += "journal_data ";
+	    cmd += mountDevice();
+	    c.execute( cmd );
+	    if( c.retcode()!=0 )
+		ret = VOLUME_TUNE2FS_FAILED;
+	    }
 	}
     if( ret==0 )
 	{
