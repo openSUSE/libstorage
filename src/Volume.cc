@@ -1568,6 +1568,9 @@ int Volume::doSetLabel()
 	    case REISERFS:
 		cmd = "/sbin/reiserfstune -l \"" + label + "\" " + mountDevice();
 		break;
+	    case JFS:
+		cmd = "/sbin/jfs_tune -L \"" + label + "\" " + mountDevice();
+		break;
 	    case XFS:
 		{
 		string tlabel = label;
