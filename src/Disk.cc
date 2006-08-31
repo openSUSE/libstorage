@@ -2005,7 +2005,7 @@ int Disk::doCreate( Volume* v )
 	    unsigned long end = p->cylStart()+p->cylSize();
 	    PartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
 					       : partPair( existingLog );
-	    unsigned long maxc = cylinders()-1;
+	    unsigned long maxc = cylinders();
 	    if( p->type()==LOGICAL )
 		{
 		PartPair ext = partPair(isExtended);
@@ -2036,15 +2036,19 @@ int Disk::doCreate( Volume* v )
 		end = end * new_cyl / cyl;
 		y2milestone( "new start:%lu end:%lu", start, end );
 		}
-	    if( end>maxc && maxc<=cylinders()-1 )
+	    if( end>maxc && maxc<=cylinders() )
 		{
 		y2milestone( "corrected end from %lu to max %lu", end, maxc );
 		end = maxc;
 		}
 	    if( start==0 && label == "mac" )
 		start = 1;
-	    cmd_line << start << " " << end;
-	    if( execCheckFailed( cmd_line.str() ) )
+	    cmd_line << start << " ";
+	    string save = cmd_line.str();
+	    y2mil( "end:" << end << " cylinders:" << cylinders() );
+	    if( execCheckFailed( save + decString(end) ) && 
+	        end==cylinders() &&
+	        execCheckFailed( save + decString(end-1) ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 		}
