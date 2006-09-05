@@ -1375,7 +1375,7 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
 
 void LvmVg::logDifference( const LvmVg& d ) const
     {
-    string log = PeContainer::logDifference( d );
+    string log = PeContainer::logDiff( d );
     if( status!=d.status )
 	log += " status:" + status + "-->" + d.status;
     if( lvm1!=d.lvm1 )

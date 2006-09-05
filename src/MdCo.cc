@@ -41,6 +41,7 @@ void
 MdCo::init()
     {
     tab = NULL;
+    mjr = Md::mdMajor();
     initTab();
     }
 

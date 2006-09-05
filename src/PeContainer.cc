@@ -330,6 +330,7 @@ void PeContainer::addPv( const Pv* p )
 void
 PeContainer::init()
     {
+    mjr = Dm::dmMajor();
     num_pe = free_pe = 0;
     pe_size = 1;
     }
@@ -419,7 +420,7 @@ void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
 std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
     s << *((Container*)&d);
-    s << " SizeM:" << d.capacityInKb()/1024
+    s << " SizeM:" << d.sizeK()/1024
       << " PeSize:" << d.pe_size
       << " NumPE:" << d.num_pe
       << " FreePE:" << d.free_pe;
@@ -453,7 +454,7 @@ std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
 
 }
 
-string PeContainer::logDifference( const PeContainer& rhs ) const
+string PeContainer::logDiff( const PeContainer& rhs ) const
     {
     string ret = Container::logDifference( rhs );
     if( pe_size!=rhs.pe_size )

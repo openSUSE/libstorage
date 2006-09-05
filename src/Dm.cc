@@ -168,16 +168,21 @@ string Dm::getDevice( const string& majmin )
     if( ret.empty() )
 	{
 	unsigned mj = 0;
+	unsigned mi = 0;
 	string pair( majmin );
 	SystemCmd c;
 	do
 	    {
+	    mj = mi = 0;
 	    string::size_type pos = pair.find( ':' );
 	    if( pos != string::npos )
 		pair[pos] = ' ';
-	    pair >> mj;
+	    istringstream i( pair );
+	    i >> mj >> mi;
 	    list<string> ls = splitString(pair);
-	    if( mj==dm_major && ls.size()>=2 )
+	    if( cont->majorNr()>0 && mj==cont->majorNr() && mi==cont->minorNr())
+		ret = cont->device();
+	    if( ret.empty() && mj==dmMajor() && ls.size()>=2 )
 		{
 		c.execute( "dmsetup info -c --noheadings -j " + *ls.begin() +
 		           " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
@@ -276,7 +281,7 @@ void Dm::init()
 	dev = dmn;
 	nm = tname;
 	}
-    else
+    else if( dmn != dev )
 	alt_names.push_back( dmn );
     //alt_names.push_back( "/dev/"+tname );
     updateMajorMinor();
@@ -434,6 +439,32 @@ string Dm::devToTable( const string& dev )
     return( ret );
     }
 
+string Dm::dmName( const string& table )
+    {
+    string ret = "";
+    int num = Dm::dmNumber( table );
+    if( num>=0 )
+	ret = "dm-" + decString(num);
+    y2mil( "table:" << table << " ret:" << ret );
+    return( ret );
+    }
+
+int Dm::dmNumber( const string& table )
+    {
+    int ret = -1;
+    SystemCmd c( "dmsetup -c --noheadings info " + table );
+    list<string> sl = splitString( *c.getLine(0), ":" );
+    if( sl.size()>=3 )
+	{
+	list<string>::const_iterator ci = sl.begin();
+	++ci;
+	++ci;
+	*ci >> ret;
+	}
+    y2mil( "table:" << table << " ret:" << ret );
+    return( ret );
+    }
+
 string Dm::sysfsPath() const
     {
     string ret = Storage::sysfsDir() + "/";
@@ -460,6 +491,7 @@ void Dm::getDmMajor()
 
 void Dm::getInfo( DmInfo& tinfo ) const
     {
+    ((Volume*)this)->getInfo( info.v );
     info.nr = num;
     info.table = tname;
     info.target = target;
@@ -473,10 +505,12 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
     s << p.shortPrintedName() << " ";
     s << *(Volume*)&p;
-    s << " LE:" << p.num_le;
+    if( p.num_le>0 )
+	s << " LE:" << p.num_le;
     s << " Table:" << p.tname;
-    s << " Target:" << p.target;
-    if( p.inactiv>1 )
+    if( !p.target.empty() )
+	s << " Target:" << p.target;
+    if( p.inactiv )
       {
       s << " inactive";
       }

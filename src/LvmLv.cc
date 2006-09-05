@@ -197,11 +197,11 @@ string LvmLv::resizeText( bool doing ) const
     else
         {
 	if( needShrink() )
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Shrink logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 	else
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extend logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 
@@ -211,6 +211,7 @@ string LvmLv::resizeText( bool doing ) const
 
 void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
+    ((Volume*)this)->getInfo( info.v );
     info.stripe = stripe;
     info.stripe_size = stripe_size;
     info.uuid = vol_uuid;

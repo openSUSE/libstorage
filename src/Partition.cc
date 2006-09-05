@@ -266,7 +266,7 @@ const Disk* const Partition::disk() const
     }
 
 int Partition::setFormat( bool val, storage::FsType new_fs )
-{
+    {
     int ret = 0;
     y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val,
 		 fs_names[new_fs].c_str() );
@@ -279,7 +279,7 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
 	ret = Volume::setFormat( val, new_fs );
     y2milestone( "ret:%d", ret );
     return( ret );
-}
+    }
 
 int Partition::changeMount( const string& val )
     {
@@ -491,22 +491,22 @@ string Partition::resizeText( bool doing ) const
 	if( isWindows() )
 	    {
 	    if( needShrink() )
-		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		txt = sformat( _("Shrink Windows partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	    else
-		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		txt = sformat( _("Extend Windows partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
     	    }
         else
             {
 	    if( needShrink() )
-		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		txt = sformat( _("Shrink partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	    else
-		// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		txt = sformat( _("Extend partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	    }
@@ -520,17 +520,7 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
     bool change_id = idt!=orig_id;
     Volume::getCommitActions( l );
     if( s<l.size() && change_id )
-        {
-	list<commitAction*>::iterator last = l.end();
-	--last;
-	if( (*last)->stage>MOUNT )
-	    {
-	    delete( *last );
-	    l.erase( last );
-	    }
-	else
-	    change_id = false;
-	}
+	change_id = false;
     if( change_id )
 	{
 	l.push_back( new commitAction( INCREASE, cont->staticType(),
@@ -544,25 +534,46 @@ Partition::~Partition()
     }
 
 void
-Partition::getInfo( PartitionInfo& tinfo ) const
+Partition::getInfo( PartitionAddInfo& tinfo ) const
     {
-    info.partitionType = type ();
-    info.cylStart = cylStart ();
-    info.cylSize = cylSize ();
-    info.nr = num;
-    info.id = idt;
-    info.boot = bootflag;
+    tinfo.partitionType = type ();
+    tinfo.cylStart = cylStart ();
+    tinfo.cylSize = cylSize ();
+    tinfo.nr = num;
+    tinfo.id = idt;
+    tinfo.boot = bootflag;
     string tmp = udevPath();
-    info.udevPath = tmp.substr( tmp.find_last_of('/')+1 );
+    tinfo.udevPath = tmp.substr( tmp.find_last_of('/')+1 );
     list<string> l = udevId();
     for( list<string>::iterator i=l.begin(); i!=l.end(); ++i )
 	i->erase( 0, i->find_last_of('/')+1 );
-    info.udevId = mergeString( l );
+    tinfo.udevId = mergeString( l );
+    }
+
+void
+Partition::getInfo( PartitionInfo& tinfo ) const
+    {
+    ((Volume*)this)->getInfo( info.v );
+    PartitionAddInfo tmp;
+    getInfo( tmp );
+    info = tmp;
     tinfo = info;
     }
 
 namespace storage
 {
+PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
+    {
+    nr = rhs.nr;
+    cylStart = rhs.cylStart;
+    cylSize = rhs.cylSize;
+    partitionType = rhs.partitionType;
+    id = rhs.id;
+    boot = rhs.boot;
+    udevPath = rhs.udevPath;
+    udevId = rhs.udevId;
+    return( *this );
+    }
 
 std::ostream& operator<< (std::ostream& s, const Partition &p )
     {

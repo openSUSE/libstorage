@@ -38,6 +38,7 @@ LoopCo::~LoopCo()
 void
 LoopCo::init()
     {
+    mjr = Loop::loopMajor();
     }
 
 void

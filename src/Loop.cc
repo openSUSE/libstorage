@@ -140,6 +140,20 @@ Loop::lfileRealPath() const
     return( cont->getStorage()->root() + lfile );
     }
 
+unsigned Loop::loopMajor()
+    {
+    if( loop_major==0 )
+	getLoopMajor();
+    return( loop_major );
+    }
+
+void Loop::getLoopMajor()
+    {
+    loop_major = getMajorDevices( "loop" );
+    y2milestone( "loop_major:%u", loop_major );
+    }
+
+
 string Loop::removeText( bool doing ) const
     {
     string txt;
@@ -268,6 +282,7 @@ string Loop::formatText( bool doing ) const
 
 void Loop::getInfo( LoopInfo& tinfo ) const
     {
+    ((Volume*)this)->getInfo( info.v );
     info.nr = num;
     info.file = lfile;
     info.reuseFile = reuseFile;
@@ -334,4 +349,6 @@ Loop::Loop( const LoopCo& d, const Loop& rhs ) : Volume(d)
     y2debug( "constructed loop by copy constructor from %s", rhs.nm.c_str() );
     *this = rhs;
     }
+
+unsigned Loop::loop_major = 0;
 

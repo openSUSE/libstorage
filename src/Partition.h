@@ -68,6 +68,7 @@ class Partition : public Volume
 	bool canUseDevice() const;
 
 	void getInfo( storage::PartitionInfo& info ) const;
+	void getInfo( storage::PartitionAddInfo& info ) const;
 	bool equalContent( const Partition& rhs ) const;
 	void logDifference( const Partition& d ) const;
 	void addUdevData();

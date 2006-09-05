@@ -35,17 +35,21 @@ class Loop : public Volume
 	void getInfo( storage::LoopInfo& info ) const;
 	bool equalContent( const Loop& rhs ) const;
 	void logDifference( const Loop& d ) const;
+	static unsigned loopMajor();
 
 	static bool notDeleted( const Loop& l ) { return( !l.deleted() ); }
 
     protected:
 	void init();
 	void checkReuse();
+	static void getLoopMajor();
 	Loop& operator=( const Loop& );
 
 	string lfile;
 	bool reuseFile;
 	bool delFile;
+
+	static unsigned loop_major;
 	mutable storage::LoopInfo info;
     };
 

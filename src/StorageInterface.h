@@ -94,10 +94,10 @@ namespace storage
     enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
 
-    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM };
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM, UB_DMRAID };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS };
-
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS, DMRAID, 
+                 COTYPE_LAST_ENTRY };
 
     /**
      *  typedef for a pointer to a function that is called on progress bar events
@@ -214,6 +214,22 @@ namespace storage
 	};
 
     /**
+     * Contains info about a DmPart disk
+     */
+    struct DmPartCoInfo
+	{
+	DmPartCoInfo() {};
+	DiskInfo d;
+	string devices;
+	};
+
+    struct DmraidCoInfo
+	{
+	DmraidCoInfo() {};
+	DmPartCoInfo p;
+	};
+
+    /**
      * Contains info about a volume.
      */
     struct VolumeInfo
@@ -243,12 +259,26 @@ namespace storage
 	unsigned long long OrigSizeK;
 	};
 
+    struct PartitionAddInfo
+	{
+	PartitionAddInfo() {};
+	unsigned nr;
+	unsigned long cylStart;
+	unsigned long cylSize;
+	PartitionType partitionType;
+	unsigned id;
+	bool boot;
+	string udevPath;
+	string udevId;
+	};
+
     /**
      * Contains info about a partition.
      */
     struct PartitionInfo
 	{
 	PartitionInfo() {};
+	PartitionInfo& operator=( const PartitionAddInfo& rhs );
 	VolumeInfo v;
 	unsigned nr;
 	unsigned long cylStart;
@@ -331,6 +361,28 @@ namespace storage
 	};
 
     /**
+     * Contains info about a DmPart volume.
+     */
+    struct DmPartInfo
+	{
+	DmPartInfo() {};
+	VolumeInfo v;
+	PartitionAddInfo p;
+	bool part;
+	string table;
+	string target;
+	};
+
+    /**
+     * Contains info about a DMRAID volume.
+     */
+    struct DmraidInfo
+	{
+	DmraidInfo() {};
+	DmPartInfo p;
+	};
+
+    /**
      * prelimiary list of error codes, must have negative values
      */
     enum ErrorCodes
@@ -393,6 +445,8 @@ namespace storage
 	STORAGE_INVALID_FSTAB_VALUE = -2025,
 	STORAGE_NO_FSTAB_PTR = -2026,
 	STORAGE_DEVICE_NODE_NOT_FOUND = -2027,
+	STORAGE_DMRAID_CO_NOT_FOUND = -2028,
+	STORAGE_RESIZE_INVALID_CONTAINER = -2029,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -562,6 +616,16 @@ namespace storage
 	DASD_FDASD_FAILED = -11001,
 	DASD_DASDFMT_FAILED = -11002,
 
+	DMPART_CHANGE_READONLY = -12001,
+	DMPART_INTERNAL_ERR = -12002,
+	DMPART_INVALID_VOLUME = -12003,
+	DMPART_PARTITION_NOT_FOUND = -12004,
+	DMPART_REMOVE_PARTITION_LIST_ERASE = -12005,
+	DMPART_COMMIT_NOTHING_TODO = -12006,
+	DMPART_NO_REMOVE = -12007,
+
+	DMRAID_REMOVE_FAILED = -13001,
+
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
 
@@ -644,6 +708,26 @@ namespace storage
 				       EvmsCoInfo& info) = 0;
 
 	/**
+	 * Query container info for a DMRAID container
+	 *
+	 * @param name name of container, e.g. pdc_ccaihgii
+	 * @param info record that gets filled with DMRAID Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDmraidCoInfo( const string& name, DmraidCoInfo& info) = 0;
+
+	/**
+	 * Query container info for a DMRAID container
+	 *
+	 * @param name name of container, e.g. pdc_ccaihgii
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with DMRAID Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContDmraidCoInfo( const string& name, ContainerInfo& cinfo,
+				         DmraidCoInfo& info) = 0;
+
+	/**
 	 * Query all volumes found in system
 	 *
 	 * @param infos list of records that get filled with volume info
@@ -714,18 +798,38 @@ namespace storage
 	virtual int getDmInfo( deque<DmInfo>& plist ) = 0;
 
 	/**
+	 * Query infos for dmraid devices in system
+	 *
+	 * @param plist list of records that get filled with dmraid specific info
+	 * @param name name of dmraid, e.g. pdc_igeeeadj
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDmraidInfo( const string& name, 
+	                           deque<DmraidInfo>& plist ) = 0;
+
+	/**
 	 * Query capabilities of a filesystem type.
 	 */
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const = 0;
 
 	/**
-	 * Print detected entities on a stream.
+	 * Print all detected entities to a stream.
 	 * Exact output format may change between releases.
 	 * Function mainly meant for debugging purposes.
 	 *
 	 * @param str stream to print data to
 	 */
 	virtual void printInfo( std::ostream& str ) = 0;
+
+	/**
+	 * Print names entities to a stream.
+	 * Exact output format may change between releases.
+	 * Function mainly meant for debugging purposes.
+	 *
+	 * @param str stream to print data to
+	 * @param name name of container to print
+	 */
+	virtual void printInfoCo( std::ostream& str, const string& name ) = 0;
 
 	/**
 	 * Create a new partition. Units given in disk cylinders.
@@ -1550,6 +1654,14 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeFileLoop( const string& lname, bool removeFile ) = 0;
+
+	/**
+	 * Remove a Software raid device.
+	 *
+	 * @param name name of dmraid device to remove (e.g. pdc_dabaheedj)
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeDmraid( const string& name ) = 0;
 
 	/**
 	 * Gets a list of string describing the actions to be executed

@@ -73,7 +73,7 @@ void log_msg( unsigned level, const char* file, unsigned line,
 
 #define y2deb(op) log_op( 0, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 #define y2mil(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, NULL, op )
-#define y2war(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", op)
+#define y2war(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", op )
 #define y2err(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 
 #define log_op( level, file, line, function, add, op )                \

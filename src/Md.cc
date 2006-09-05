@@ -547,6 +547,7 @@ void Md::getMdMajor()
 
 void Md::getInfo( MdInfo& tinfo ) const
     {
+    ((Volume*)this)->getInfo( info.v );
     info.nr = num;
     info.type = md_type;
     info.uuid = md_uuid;

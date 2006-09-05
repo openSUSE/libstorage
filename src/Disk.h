@@ -17,7 +17,7 @@ class Region;
 class Disk : public Container
     {
     friend class Storage;
-    friend class Dasd;
+    friend class DmPartCo;
 
     struct label_info
 	{
@@ -37,9 +37,6 @@ class Disk : public Container
 	unsigned long cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
 	unsigned sectors() const { return sector; }
-	unsigned long long sizeK() const { return size_k; }
-	unsigned long minorNr() const { return mnr; }
-	unsigned long majorNr() const { return mjr; }
 	unsigned long numMinor() const { return range; }
 	unsigned long cylSizeB() const { return byte_cyl; }
 	unsigned maxPrimary() const { return max_primary; }
@@ -47,6 +44,8 @@ class Disk : public Container
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
 	const std::list<string>& udevId() const { return udev_id; }
+	void setSlave( bool val=true ) { dmp_slave=val; }
+	void setNumMinor( unsigned long val ) { range=val; }
 	void addMpAlias( const string& dev ); 
 	void clearMpAlias() { mp_alias.clear(); }
 	const std::list<string>& mpAlias() const { return mp_alias; }
@@ -54,6 +53,7 @@ class Disk : public Container
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
+	bool detect( ProcPart& ppart );
 	static storage::CType const staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 
@@ -119,9 +119,7 @@ class Disk : public Container
         typedef CheckerIterator< CheckFncPartition, PartitionCPI<CheckFncPartition>::type,
                                  PartCInter, const Partition > PartCPIterator;
 	typedef DerefIterator<PartPIterator,Partition> PartIter;
-	typedef DerefIterator<PartCPIterator,const Partition> ConstPartIter;
         typedef IterPair<PartIter> PartPair;
-        typedef IterPair<ConstPartIter> ConstPartPair;
 
         PartPair partPair( bool (* CheckPart)( const Partition& )=NULL)
             {
@@ -138,6 +136,9 @@ class Disk : public Container
             return( PartIter( PartPIterator( p, CheckPart, true )) );
 	    }
 
+    public:
+	typedef DerefIterator<PartCPIterator,const Partition> ConstPartIter;
+        typedef IterPair<ConstPartIter> ConstPartPair;
         ConstPartPair partPair( bool (* CheckPart)( const Partition& )=NULL) const
             {
             return( ConstPartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
@@ -153,8 +154,8 @@ class Disk : public Container
             return( ConstPartIter( PartCPIterator( p, CheckPart, true )) );
 	    }
 
+    protected:
 	Disk( Storage * const s, const string& File );
-	unsigned long long capacityInKb() const { return size_k; }
 	virtual bool detectGeometry();
 	virtual bool detectPartitions( ProcPart& ppart );
 	bool getSysfsInfo( const string& SysFsDir );
@@ -218,11 +219,9 @@ class Disk : public Container
 	unsigned max_primary;
 	bool ext_possible;
 	bool init_disk;
+	bool dmp_slave;
 	unsigned max_logical;
 	unsigned long byte_cyl;
-	unsigned long long size_k;
-	unsigned long mnr;
-	unsigned long mjr;
 	unsigned long range;
 	mutable storage::DiskInfo info;
     };

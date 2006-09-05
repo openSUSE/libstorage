@@ -95,10 +95,8 @@ void Evms::updateMd()
 	if( cont->getStorage()->findVolume( dev, v ))
 	    {
 	    y2mil( "bef update " << *this );
-	    setUuid( v->getUuid() );
-	    initLabel( v->getLabel() );
+	    getFsInfo( v );
 	    alt_names = v->altNames();
-	    fs = detected_fs = v->getFs();
 	    mp = orig_mp = v->getMount();
 	    is_mounted = v->isMounted();
 	    y2mil( "aft update " << *this );
@@ -249,11 +247,11 @@ string Evms::resizeText( bool doing ) const
     else
         {
 	if( needShrink() )
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Shrink EVMS volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 	else
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/evms/lvm/system/usr
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extend EVMS volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 
@@ -263,6 +261,7 @@ string Evms::resizeText( bool doing ) const
 
 void Evms::getInfo( EvmsInfo& tinfo ) const
     {
+    ((Volume*)this)->getInfo( info.v );
     info.stripe = stripe;
     info.stripe_size = stripe_size;
     info.compatible = compat;

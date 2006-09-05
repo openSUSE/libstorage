@@ -1785,7 +1785,7 @@ std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
 
 void EvmsCo::logDifference( const EvmsCo& d ) const
     {
-    string log = PeContainer::logDifference( d );
+    string log = PeContainer::logDiff( d );
     if( lvm1!=d.lvm1 )
 	{
 	if( d.lvm1 )

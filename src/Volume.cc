@@ -113,7 +113,7 @@ CType Volume::cType() const
 bool Volume::operator== ( const Volume& rhs ) const
     {
     return( (*cont)==(*rhs.cont) &&
-            nm == rhs.nm &&
+            ((numeric && num == rhs.num) || (!numeric && nm == rhs.nm)) &&
 	    del == rhs.del );
     }
 
@@ -145,6 +145,14 @@ bool Volume::getMajorMinor( const string& device,
 	ret = true;
 	}
     return( ret );
+    }
+
+void Volume::getFsInfo( const Volume* source )
+    {
+    setFs( source->getFs() );
+    setFormat( source->getFormat(), source->getFs() );
+    setUuid( source->getUuid() );
+    initLabel( source->getLabel() );
     }
 
 void Volume::getFstabData( EtcFstab& fstabData )
@@ -2042,11 +2050,11 @@ string Volume::resizeText( bool doing ) const
     else
         {
 	if( needShrink() )
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Shrink %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	else
-	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extend %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 

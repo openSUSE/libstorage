@@ -132,6 +132,9 @@ inline usedBy::operator string() const
 	    case storage::UB_DM:
 		st = "dm";
 		break;
+	    case storage::UB_DMRAID:
+		st = "dmraid";
+		break;
 	    default:
 		st = "UNKNOWN";
 		break;

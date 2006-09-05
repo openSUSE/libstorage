@@ -27,7 +27,7 @@ class PeContainer : public Container
 	int setPeSize( long long unsigned, bool lvm1 );
 	void unuseDev();
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
-	string logDifference( const PeContainer& d ) const;
+	virtual string logDiff( const PeContainer& d ) const;
 	
     protected:
 	struct Pv
@@ -58,7 +58,6 @@ class PeContainer : public Container
 	friend void printDevList (std::ostream&, const std::list<Pv>& );
 
 	void init();
-	unsigned long long capacityInKb() const {return pe_size*num_pe;}
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
 

@@ -1025,7 +1025,7 @@ int EvmsAccess::createCo( const string& Container_Cv,
 	y2mil( "dev:" << dev << " ot:" << ot  );
 	ret = evms_get_object_handle_for_name( ot, (char *)dev.c_str(),
 					       &input->handle[count] );
-	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
+	y2milestone( "ret:%d handle for %s is %d", ret, dev.c_str(), 
 		     input->handle[count] );
 	if( ret!=0 )
 	    {
@@ -1040,7 +1040,7 @@ int EvmsAccess::createCo( const string& Container_Cv,
 		{
 		y2mil( "dev:" << dev << " id:" << (*i)->id()  );
 		ret = evms_unassign( (*i)->id() );
-		y2milestone( "ret %d evms_unassign id %d", ret, (*i)->id() );
+		y2milestone( "ret:%d evms_unassign id %d", ret, (*i)->id() );
 		input->handle[count] = (*i)->id();
 		ret = 0;
 		}
@@ -1208,7 +1208,7 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
 	int ret = evms_get_object_handle_for_name( REGION, 
 	                                           (char *)name.c_str(),
 						   &reg->handle[0] );
-	y2milestone( "ret %d handle for %s is %u", ret, name.c_str(),
+	y2milestone( "ret:%d handle for %s is %u", ret, name.c_str(),
 	             reg->handle[0] );
 	if( ret )
 	    {
@@ -1411,7 +1411,7 @@ int EvmsAccess::deleteLv( const string& LvName_Cv, const string& Container_Cv )
 	int ret = evms_get_object_handle_for_name( REGION, 
 	                                           (char *)name.c_str(),
 						   &reg->handle[0] );
-	y2milestone( "ret %d handle for %s is %u", ret, name.c_str(),
+	y2milestone( "ret:%d handle for %s is %u", ret, name.c_str(),
 	             reg->handle[0] );
 	if( ret )
 	    {
@@ -1481,7 +1481,7 @@ int EvmsAccess::extendCo( const string& Container_Cv, const string& PvName_Cv )
 	int ret = evms_get_object_handle_for_name( ot, 
 	                                           (char *)dev.c_str(),
 						   &region );
-	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
+	y2milestone( "ret:%d handle for %s is %d", ret, dev.c_str(), 
 	             region );
 	if( ret )
 	    {
@@ -1577,7 +1577,7 @@ int EvmsAccess::shrinkCo( const string& Container_Cv, const string& PvName_Cv )
 	int ret = evms_get_object_handle_for_name( ot, 
 	                                           (char *)dev.c_str(),
 						   &region );
-	y2milestone( "ret %d handle for %s is %d", ret, dev.c_str(), 
+	y2milestone( "ret:%d handle for %s is %d", ret, dev.c_str(), 
 	             region );
 	if( ret )
 	    {

@@ -213,7 +213,7 @@ _("The partitioning on disk %1$s is not readable by\n"
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."), dev.c_str() );
 
-	getStorage()->infoPopupCb( txt );
+	getStorage()->addInfoPopupText( dev, txt );
 	ronly = true;
 	}
     for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
@@ -304,7 +304,7 @@ int Dasd::removePartition( unsigned nr )
 	PartPair p = partPair( notDeleted );
 	changeNumbers( p.begin(), p.end(), nr, -1 );
 	}
-    y2milestone( "ret %d", ret );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
@@ -345,7 +345,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
-    y2milestone( "ret %d", ret );
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 

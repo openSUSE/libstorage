@@ -30,6 +30,8 @@ liby2storage_la_SOURCES =			\
 	  PeContainer.cc PeContainer.h	     \
 	    LvmVg.cc     LvmVg.h	     \
 	    EvmsCo.cc    EvmsCo.h	     \
+	    DmPartCo.cc  DmPartCo.h	     \
+		DmraidCo.cc  DmraidCo.h	     \
 	    DmCo.cc      DmCo.h	     	     \
 	  MdCo.cc        MdCo.h	     	     \
 	  LoopCo.cc      LoopCo.h	     \
@@ -38,6 +40,8 @@ liby2storage_la_SOURCES =			\
 	  Dm.cc          Dm.h                \
 	    LvmLv.cc     LvmLv.h             \
 	    Evms.cc      Evms.h              \
+	    DmPart.cc    DmPart.h            \
+		Dmraid.cc    Dmraid.h        \
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
 	SystemCmd.cc     SystemCmd.h         \

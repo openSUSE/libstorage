@@ -50,6 +50,8 @@ class Dm : public Volume
 
 	static void activate( bool val=true );
 	static string devToTable( const string& dev );
+	static string dmName( const string& table );
+	static int dmNumber( const string& table );
 	bool equalContent( const Dm& rhs ) const;
 	void logDifference( const Dm& d ) const;
 	string stringDifference( const Dm& d ) const;

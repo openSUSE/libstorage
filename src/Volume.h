@@ -51,6 +51,7 @@ class Volume
 	storage::UsedByType getUsedByType() const { return( uby.type() ); }
 	const string& usedByName() const { return( uby.name() ); }
 	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
+	void getFsInfo( const Volume* source );
 
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }

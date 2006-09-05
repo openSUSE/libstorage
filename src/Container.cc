@@ -19,6 +19,7 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     {
     del = silent = ronly = create = false;
     dev = "/dev/" + nm;
+    size_k = mnr = mjr = 0;
     typ = t;
     y2debug( "constructed cont %s", nm.c_str() );
     }
@@ -64,10 +65,7 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    {
 	    VolPair p = volPair( stageDecrease );
 	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
-		{
-		y2mil( "i:" << *i );
 		vol.push_back( &(*i) );
-		}
 	    if( deleted() )
 		col.push_back( this );
 	    }
@@ -427,6 +425,9 @@ Container& Container::operator= ( const Container& rhs )
     nm = rhs.nm;
     dev = rhs.dev;
     del = rhs.del;
+    mjr = rhs.mjr;
+    mnr = rhs.mnr;
+    size_k = rhs.size_k;
     create = rhs.create;
     ronly = rhs.ronly;
     silent = rhs.silent;
@@ -440,5 +441,6 @@ Container::Container( const Container& rhs ) : sto(rhs.sto)
     *this = rhs;
     }
 
-string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "EVMS" };
+string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", 
+                                   "DM", "EVMS", "DMRAID" };
 

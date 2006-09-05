@@ -144,6 +144,9 @@ class Container
 	storage::UsedByType getUsedByType() const { return( uby.type() ); }
 	const string& usedByName() const { return( uby.name() ); }
 	bool readonly() const { return ronly; }
+	unsigned long minorNr() const { return mnr; }
+	unsigned long majorNr() const { return mjr; }
+	unsigned long long sizeK() const { return size_k; }
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
@@ -178,8 +181,8 @@ class Container
 	static bool stageCreate( const Volume& v )
 	    { return( v.created()||v.needExtend()); }
 
-	static string type_names[EVMS+1];
-	static unsigned order[EVMS+1];
+	static string type_names[COTYPE_LAST_ENTRY];
+	static unsigned order[COTYPE_LAST_ENTRY];
 
 	Storage * const sto;
 	storage::CType typ;
@@ -190,6 +193,9 @@ class Container
 	bool silent;
 	bool ronly;
 	storage::usedBy uby;
+	unsigned long long size_k;
+	unsigned long mnr;
+	unsigned long mjr;
 	VCont vols;
 	mutable storage::ContainerInfo info;
     };
