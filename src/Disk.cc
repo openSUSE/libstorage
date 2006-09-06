@@ -402,7 +402,7 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 "You can format them and assign mount points to them, but you\n"
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."), dev.c_str() );
-	getStorage()->addInfoPopupText( dev, txt );
+	y2war( "unsupported disk label on " << dev << " txt:" << txt );
 
 	detected_label = label;
 	ronly = true;
@@ -716,7 +716,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
     list<Partition *> pl;
 
     cnt = Cmd.numLines();
-    for( int i=0; i<cnt; i++)
+    for( int i=0; i<cnt; i++ )
 	{
 	unsigned pnr;
 	unsigned long c_start;
@@ -849,7 +849,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 	{
 	ret = parted_l.empty() && proc_l.empty();
 	}
-    if( !ret )
+    if( !ret || label=="unsupported" )
 	{
 	range_exceed = 0;
 	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
