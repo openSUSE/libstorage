@@ -772,7 +772,7 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createVgText(false), false, true ));
+				        createVgText(false), true, true ));
 	}
     else 
 	{
@@ -815,12 +815,16 @@ LvmVg::createVgText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Creating volume group %1$s"), name().c_str() );
+	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+        txt = sformat( _("Creating volume group %1$s from %2$s"), name().c_str(),
+	               addList().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
-        txt = sformat( _("Create volume group %1$s"), name().c_str() );
+	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+        txt = sformat( _("Create volume group %1$s from %2$s"), name().c_str(),
+	               addList().c_str() );
         }
     return( txt );
     }

@@ -91,7 +91,7 @@ bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
 void Volume::init()
     {
     del = create = format = is_loop = loop_active = silnt = false;
-    is_mounted = ronly = fstab_added = ignore_fstab = false;
+    is_mounted = ronly = fstab_added = ignore_fstab = ignore_fs = false;
     detected_fs = fs = FSUNKNOWN;
     mount_by = orig_mount_by = defaultMountBy();
     encryption = orig_encryption = ENC_NONE;
@@ -1045,7 +1045,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
     else
 	{
 	FsCapabilities caps;
-	if( !format && fs!=FSNONE &&
+	if( !format && fs!=FSNONE && !ignore_fs &&
 	    (!cont->getStorage()->getFsCapabilities( fs, caps ) ||
 	     (newSizeK < size_k && !caps.isReduceable) ||
 	     (newSizeK > size_k && !caps.isExtendable)) )
@@ -1060,7 +1060,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
 int Volume::resizeFs()
     {
     int ret = 0;
-    if( !format )
+    if( !format && !ignore_fs )
 	{
 	string cmd;
 	SystemCmd c;
@@ -1157,6 +1157,7 @@ int Volume::resizeFs()
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
 	}
+    ignore_fs = false;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -2100,6 +2101,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.mkfs_options = mkfs_opt;
     info.loop = loop_dev;
     info.is_mounted = is_mounted;
+    info.ignore_fs = ignore_fs;
     info.resize = size_k!=orig_size_k;
     if( info.resize )
 	info.OrigSizeK = orig_size_k;
@@ -2205,6 +2207,10 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " format";
     if( v.silnt )
 	s << " silent";
+    if( v.ignore_fstab )
+	s << " ignoreFstab";
+    if( v.ignore_fs )
+	s << " ignoreFs";
     s << v.uby;
     if( v.fs != storage::FSUNKNOWN )
 	{

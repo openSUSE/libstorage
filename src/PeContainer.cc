@@ -326,6 +326,19 @@ void PeContainer::addPv( const Pv* p )
 	}
     }
 
+string PeContainer::addList() const
+    {
+    string ret;
+    list<Pv>::const_iterator i = pv_add.begin();
+    while( i!=pv_add.end() )
+	{
+	if( !ret.empty() )
+	    ret += ' ';
+	ret+= i->device;
+	++i;
+	}
+    return( ret );
+    }
 
 void
 PeContainer::init()

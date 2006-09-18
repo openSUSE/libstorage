@@ -1119,6 +1119,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 			   bool checkRelaxed )
     {
     y2milestone( "len %ld relaxed:%d", cylLen, checkRelaxed );
+    getStorage()->logCo( this );
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free );
@@ -1157,6 +1158,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	}
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
+    getStorage()->logCo( this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1225,6 +1227,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     {
     y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
                  checkRelaxed );
+    getStorage()->logCo( this );
     int ret = createChecks( type, start, len, checkRelaxed );
     int number = 0;
     if( ret==0 )
@@ -1252,6 +1255,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
+    getStorage()->logCo( this );
     y2milestone( "ret:%d device:%s", ret, ret==0?device.c_str():"" );
     return( ret );
     }
@@ -1408,6 +1412,7 @@ static bool volume_ptr_sort_nr( Partition*& rhs, Partition*& lhs )
 int Disk::removePartition( unsigned nr )
     {
     y2milestone( "begin nr %u", nr );
+    getStorage()->logCo( this );
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
@@ -1493,6 +1498,7 @@ int Disk::removePartition( unsigned nr )
 		}
 	    }
 	}
+    getStorage()->logCo( this );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -2225,8 +2231,9 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	    PartIter i = pp.begin();
 	    while( i != pp.end() )
 		{
-		if( i->type()==p->type() && i->cylStart()>=start &&
-		    i->cylStart()<end )
+		if( (i->type()==p->type()||
+		     i->type()==EXTENDED&&p->type()==PRIMARY) && 
+		    i->cylStart()>=start && i->cylStart()<end )
 		    end = i->cylStart();
 		++i;
 		}
@@ -2235,7 +2242,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 		free = end-start;
 	    y2milestone( "free cylinders after %lu SizeK:%llu Extend:%lu",
 			 free, cylinderToKb(free), increase );
-	    if( cylinderToKb(free) < increase )
+	    if( free < increase )
 		ret = DISK_RESIZE_NO_SPACE;
 	    else
 		{

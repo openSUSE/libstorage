@@ -1501,9 +1501,23 @@ Storage::changePartitionId( const string& partition, unsigned id )
 int
 Storage::resizePartition( const string& partition, unsigned long sizeCyl )
     {
+    return( resizePartition( partition, sizeCyl, false ));
+    }
+
+int
+Storage::resizePartitionNoFs( const string& partition, unsigned long sizeCyl )
+    {
+    return( resizePartition( partition, sizeCyl, true ));
+    }
+
+int
+Storage::resizePartition( const string& partition, unsigned long sizeCyl,
+                          bool ignoreFs )
+    {
     int ret = 0;
     assertInit();
-    y2milestone( "partition:%s newCyl:%lu", partition.c_str(), sizeCyl );
+    y2milestone( "partition:%s newCyl:%lu ignoreFs:%d", partition.c_str(), 
+                 sizeCyl, ignoreFs );
     VolIterator vol;
     ContIterator cont;
     if( readonly )
@@ -1518,6 +1532,8 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl )
 	    Partition* p = dynamic_cast<Partition *>(&(*vol));
 	    if( disk!=NULL && p!=NULL )
 		{
+		if( ignoreFs )
+		    p->setIgnoreFs();
 		ret = disk->resizePartition( p, sizeCyl );
 		}
 	    else
@@ -1531,6 +1547,8 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl )
 	    DmPart* p = dynamic_cast<DmPart *>(&(*vol));
 	    if( disk!=NULL && p!=NULL )
 		{
+		if( ignoreFs )
+		    p->setIgnoreFs();
 		ret = disk->resizePartition( p, sizeCyl );
 		}
 	    else
@@ -2185,10 +2203,23 @@ Storage::getIgnoreFstab( const string& device, bool& val )
 int
 Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
     {
+    return( resizeVolume( device, newSizeMb, false ));
+    }
+
+int
+Storage::resizeVolumeNoFs( const string& device, unsigned long long newSizeMb )
+    {
+    return( resizeVolume( device, newSizeMb, true ));
+    }
+
+int
+Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
+                       bool ignoreFs )
+    {
     int ret = 0;
     assertInit();
-    y2milestone( "device:%s newSizeMb:%llu", device.c_str(), newSizeMb );
-
+    y2milestone( "device:%s newSizeMb:%llu ignoreFs:%d", device.c_str(), 
+                 newSizeMb, ignoreFs );
     VolIterator vol;
     ContIterator cont;
     if( readonly )
@@ -2197,8 +2228,12 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
+	y2mil( "vol:" << *vol );
+	if( ignoreFs )
+	    vol->setIgnoreFs();
 	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
 	eraseFreeInfo( vol->device() );
+	y2mil( "vol:" << *vol );
 	}
     else
 	{
@@ -4351,6 +4386,16 @@ bool Storage::removeDmTable( const string& table )
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
+    }
+
+void
+Storage::logCo( const string& device )
+    {
+    ContIterator cc;
+    if( findContainer( device, cc ))
+	logCo( &(*cc) );
+    else
+	y2mil( "not found:" << device );
     }
 
 void

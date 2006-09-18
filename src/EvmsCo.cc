@@ -887,7 +887,7 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createCoText(false), false, true ));
+				        createCoText(false), true, true ));
 	}
     else 
 	{
@@ -930,12 +930,16 @@ EvmsCo::createCoText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Creating container %1$s"), name().c_str() );
+	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+        txt = sformat( _("Creating container %1$s from %2$s"), name().c_str(),
+	               addList().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. lvm2/system),
-        txt = sformat( _("Create container %1$s"), name().c_str() );
+	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+        txt = sformat( _("Create container %1$s from %2$s"), name().c_str(),
+	               addList().c_str() );
         }
     return( txt );
     }

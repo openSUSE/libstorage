@@ -58,6 +58,7 @@ class PeContainer : public Container
 	friend void printDevList (std::ostream&, const std::list<Pv>& );
 
 	void init();
+	string addList() const;
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
 

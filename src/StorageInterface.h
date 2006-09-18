@@ -256,6 +256,7 @@ namespace storage
 	bool create;
 	bool is_mounted;
 	bool resize;
+	bool ignore_fs;
 	unsigned long long OrigSizeK;
 	};
 
@@ -850,6 +851,7 @@ namespace storage
 
 	/**
 	 * Resize an existing disk partition. Units given in disk cylinders.
+	 * Filesystem data is resized accordingly.
 	 *
 	 * @param device device name of partition
 	 * @param sizeCyl new size of partition in disk cylinders
@@ -857,6 +859,17 @@ namespace storage
 	 */
 	virtual int resizePartition( const string& device,
 				     unsigned long sizeCyl ) = 0;
+
+	/**
+	 * Resize an existing disk partition. Units given in disk cylinders.
+	 * Filesystem data is ignored.
+	 *
+	 * @param device device name of partition
+	 * @param sizeCyl new size of partition in disk cylinders
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int resizePartitionNoFs( const string& device,
+					 unsigned long sizeCyl ) = 0;
 
 	/**
 	 * Update area used by a new partition. Units given in disk cylinders.
@@ -1211,6 +1224,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
+
+	/**
+	 * Resizes a volume while ignoring the data on the filesystem
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param newSizeMb new size desired volume in Megabyte
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int resizeVolumeNoFs( const string& device, unsigned long long newSizeMb ) = 0;
 
 	/**
 	 * Forget about possible resize of an volume.

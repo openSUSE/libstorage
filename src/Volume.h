@@ -45,6 +45,8 @@ class Volume
 	void setSilent( bool val=true ) { silnt=val; }
 	bool ignoreFstab() const { return( ignore_fstab ); }
 	void setIgnoreFstab( bool val=true ) { ignore_fstab=val; }
+	bool ignoreFs() const { return( ignore_fs ); }
+	void setIgnoreFs( bool val=true ) { ignore_fs=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool fstabAdded() const { return( fstab_added ); }
 	const storage::usedBy& getUsedBy()  const{ return( uby ); }
@@ -219,6 +221,7 @@ class Volume
 	bool is_loop;
 	bool is_mounted;
 	bool ignore_fstab;
+	bool ignore_fs;
 	bool loop_active;
 	bool ronly;
 	storage::EncryptType encryption;
