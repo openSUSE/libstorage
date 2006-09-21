@@ -68,6 +68,7 @@ Dm::getTableInfo()
     pe_map.clear();
     map<string,unsigned long>::iterator mit;
     unsigned long long pesize = pec()->peSize();
+    y2mil("pesize:" << pesize );
     for( unsigned i=0; i<c.numLines(); i++ )
 	{
 	unsigned long le;
@@ -129,9 +130,16 @@ Dm::getTableInfo()
 	    {
 	    y2warning( "unknown target type \"%s\"", target.c_str() );
 	    extractNthWord( 1, line ) >> le;
+	    y2mil( "le:" << le );
 	    le /= 2;
-	    le += pesize-1;
-	    le /= pesize;
+	    y2mil( "le:" << le );
+	    if( pesize>0 )
+		{
+		le += pesize-1;
+		y2mil( "le:" << le );
+		le /= pesize;
+		y2mil( "le:" << le );
+		}
 	    list<string> sl = splitString( extractNthWord( 2, line, true ));
 	    y2mil( "sl:" << sl );
 	    Regex devspec( "^[0-9]+:[0-9]+$" );
