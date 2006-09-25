@@ -343,6 +343,7 @@ string PeContainer::addList() const
 void
 PeContainer::init()
     {
+    y2mil( "init:" << nm );
     mjr = Dm::dmMajor();
     num_pe = free_pe = 0;
     pe_size = 1;

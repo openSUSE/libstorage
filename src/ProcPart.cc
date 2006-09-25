@@ -53,6 +53,7 @@ ProcPart::getSize( const string& Dev, unsigned long long& SizeK ) const
 	extractNthWord( 2, (*this)[i->second] ) >> SizeK;
 	ret = true;
 	}
+    y2mil( "dev:" << Dev << " ret:" << ret << " Size:" << (ret?SizeK:0) );
     return( ret );
     }
 

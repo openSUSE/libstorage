@@ -196,7 +196,7 @@ void Storage::dumpObjectList()
 
 void Storage::detectObjects()
     {
-    ProcPart ppart;
+    ProcPart* ppart = new ProcPart;
     if( EvmsCo::canDoEvms() )
 	{
 	char * file = "/etc/evms.conf"; 
@@ -206,18 +206,20 @@ void Storage::detectObjects()
 	    }
 	EvmsCo::activate(true);
 	}
-    detectDisks( ppart );
+    detectDisks( *ppart );
     if( instsys() )
 	{
 	MdCo::activate( true );
 	LvmVg::activate( true );
 	DmraidCo::activate( true );
+	delete ppart;
+	ppart = new ProcPart;
 	}
     detectMds();
     detectLvmVgs();
     detectEvms();
-    detectDmraid( ppart );
-    detectDm( ppart );
+    detectDmraid( *ppart );
+    detectDm( *ppart );
 
     LvmVgPair p = lvgPair();
     y2mil( "p length:" << p.length() );
@@ -238,7 +240,7 @@ void Storage::detectObjects()
     else
 	{
 	fstab = new EtcFstab( "/etc", isRootMounted() );
-	detectLoops( ppart );
+	detectLoops( *ppart );
 	detectFsData( vBegin(), vEnd() );
 	}
     EvmsCoIterator e = findEvmsCo( "" );
@@ -254,6 +256,7 @@ void Storage::detectObjects()
 	    rm.execute( "mdadm --stop /dev/" + extractNthWord(0, *c.getLine(i)) );
 	    }
 	}
+    delete ppart;
     }
 
 void Storage::deleteClist( CCont& co )

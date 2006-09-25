@@ -23,7 +23,7 @@ DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
     y2debug( "constructing DmPart co %s", name.c_str() );
     dev = name;
     nm = undevName(name);
-    num_part = pe_size = num_pe = free_pe = 0;
+    num_part = num_pe = free_pe = 0;
     active = valid = del_ptable = false;
     disk = NULL;
     init( ppart );
@@ -237,7 +237,12 @@ DmPartCo::init( ProcPart& ppart )
 	{
 	mnr = Dm::dmNumber( nm );
 	ppart.getSize( "dm-"+decString(mnr), size_k );
-	pe_size = size_k;
+	y2mil( "mnr:" << mnr << " nm:" << nm );
+	y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
+	if( size_k>0 )
+	    pe_size = size_k;
+	else
+	    y2war( "size_k zero for dm minor " << mnr );
 	num_pe = 1;
 	createDisk( ppart );
 	if( disk->numPartitions()>0 )
