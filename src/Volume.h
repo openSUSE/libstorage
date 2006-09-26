@@ -94,6 +94,8 @@ class Volume
 	               encryption!=orig_encryption) ); }
 	const string& getMkfsOption() const { return mkfs_opt; }
 	int setMkfsOption( const string& val ) { mkfs_opt=val; return 0; }
+	const string& getDescText() const { return dtxt; }
+	int setDescText( const string& val ) { dtxt=val; return 0; }
 	const std::list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long sizeK() const { return size_k; }
@@ -235,6 +237,7 @@ class Volume
 	unsigned long long size_k;
 	unsigned long long orig_size_k;
 	string dev;
+	string dtxt;
 	unsigned long mnr;
 	unsigned long mjr;
 	storage::usedBy uby;

@@ -102,7 +102,7 @@ void DmPart::getCommitActions( std::list<storage::commitAction*>& l ) const
 	{
 	if( s==l.size() && Partition::toChangeId( *p ) )
 	    l.push_back( new commitAction( INCREASE, cont->staticType(),
-					   setTypeText(false), false ));
+					   setTypeText(false), this, false ));
 	}
     }
 

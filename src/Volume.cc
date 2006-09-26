@@ -1750,42 +1750,42 @@ void Volume::getCommitActions( list<commitAction*>& l ) const
     if( deleted() )
 	{
 	l.push_back( new commitAction( DECREASE, cont->type(),
-				       removeText(false), true ));
+				       removeText(false), this, true ));
 	}
     else if( needShrink() )
 	{
 	l.push_back( new commitAction( DECREASE, cont->type(),
-				       resizeText(false), true ));
+				       resizeText(false), this, true ));
 	}
     else if( created() )
 	{
 	l.push_back( new commitAction( INCREASE, cont->type(),
-				       createText(false), false ));
+				       createText(false), this, false ));
 	}
     else if( needExtend() )
 	{
 	l.push_back( new commitAction( INCREASE, cont->type(),
-				       resizeText(false), true ));
+				       resizeText(false), this, true ));
 	}
     else if( format )
 	{
 	l.push_back( new commitAction( FORMAT, cont->type(),
-				       formatText(false), true ));
+				       formatText(false), this, true ));
 	}
     else if( mp != orig_mp )
 	{
 	l.push_back( new commitAction( MOUNT, cont->type(),
-				       mountText(false), false ));
+				       mountText(false), this, false ));
 	}
     else if( label != orig_label )
 	{
 	l.push_back( new commitAction( MOUNT, cont->type(),
-				       labelText(false), false ));
+				       labelText(false), this, false ));
 	}
     else if( needFstabUpdate() )
 	{
 	l.push_back( new commitAction( MOUNT, cont->type(),
-				       fstabUpdateText(), false ));
+				       fstabUpdateText(), this, false ));
 	}
     }
 
@@ -2099,6 +2099,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.format = format;
     info.create = create;
     info.mkfs_options = mkfs_opt;
+    info.dtxt = dtxt;
     info.loop = loop_dev;
     info.is_mounted = is_mounted;
     info.ignore_fs = ignore_fs;
@@ -2252,6 +2253,10 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	{
 	s << " mkfsopt:" << v.mkfs_opt;
 	}
+    if( v.dtxt.length()>0 )
+	{
+	s << " dtxt:" << v.dtxt;
+	}
     if( v.alt_names.begin() != v.alt_names.end() )
 	{
 	s << " alt_names:" << v.alt_names;
@@ -2363,6 +2368,8 @@ Volume::logDifference( const Volume& rhs ) const
 	ret += " orig_fstopt:" + orig_fstab_opt + "-->" + rhs.orig_fstab_opt;
     if( mkfs_opt!=rhs.mkfs_opt )
 	ret += " mkfsopt:" + mkfs_opt + "-->" + rhs.mkfs_opt;
+    if( dtxt!=rhs.dtxt )
+	ret += " dtxt:" + dtxt + "-->" + rhs.dtxt;
     if( is_loop!=rhs.is_loop )
 	{
 	if( rhs.is_loop )
@@ -2406,6 +2413,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
 	    fstab_opt==rhs.fstab_opt && mkfs_opt==rhs.mkfs_opt &&
+	    dtxt==rhs.dtxt && 
 	    is_loop==rhs.is_loop && loop_active==rhs.loop_active &&
 	    is_mounted==rhs.is_mounted && encryption==rhs.encryption &&
 	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev &&
@@ -2441,6 +2449,7 @@ Volume& Volume::operator= ( const Volume& rhs )
     fstab_opt = rhs.fstab_opt;
     orig_fstab_opt = rhs.orig_fstab_opt;
     mkfs_opt = rhs.mkfs_opt;
+    dtxt = rhs.dtxt;
     is_loop = rhs.is_loop;
     loop_active = rhs.loop_active;
     is_mounted = rhs.is_mounted;

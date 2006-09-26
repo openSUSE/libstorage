@@ -305,6 +305,7 @@ class Storage : public storage::StorageInterface
 	                        storage::FsType fs );
 	int changeLabelVolume( const string& device, const string& label );
 	int changeMkfsOptVolume( const string& device, const string& opts );
+	int changeDescText( const string& device, const string& txt );
 	int changeMountPoint( const string& device, const string& mount );
 	int getMountPoint( const string& device, string& mount );
 	int changeMountBy( const string& device, storage::MountByType mby );
@@ -1640,8 +1641,11 @@ inline std::ostream& operator<< (std::ostream& s, commitAction &a )
     s << "stage:" << a.stage
       << " type:" << a.type
       << " cont:" << a.container
-      << " dest:" << a.destructive
-      << " name:" << (a.container?a.co()->name():a.vol()->name());
+      << " dest:" << a.destructive;
+    if( a.container && a.co() )
+      s << " name:" << a.co()->name();
+    else if( a.vol() )
+      s << " name:" << a.vol()->name();
     if( !a.descr.empty() )
       s << " desc:" << a.descr;
     return( s );

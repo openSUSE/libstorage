@@ -708,7 +708,7 @@ void DmPartCo::getCommitActions( list<commitAction*>& l ) const
 	string txt = deleted() ? removeText(false) : 
 	                         setDiskLabelText(false);
 	l.push_front( new commitAction( DECREASE, staticType(),
-				        txt, true, true ));
+				        txt, this, true ));
 	}
     y2mil( "l:" << l );
     }

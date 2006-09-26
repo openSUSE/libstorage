@@ -30,10 +30,14 @@ class Container;
 
 struct commitAction
     {
-    commitAction( CommitStage s, CType t, const string& d, bool destr=false,
-                  bool cont=false ) 
-	{ stage=s; type=t; descr=d; destructive=destr; container=cont; 
-	  u.co=NULL; u.vol=NULL; }
+    commitAction( CommitStage s, CType t, const string& d, const Volume* v, 
+                  bool destr=false ) 
+	{ stage=s; type=t; descr=d; destructive=destr; container=false; 
+	  u.vol=v; }
+    commitAction( CommitStage s, CType t, const string& d, const Container* co, 
+                  bool destr=false ) 
+	{ stage=s; type=t; descr=d; destructive=destr; container=true; 
+	  u.co=co; }
     commitAction( CommitStage s, CType t, Volume* v )
 	{ stage=s; type=t; destructive=false; container=false; u.vol=v; }
     commitAction( CommitStage s, CType t, Container* c )
@@ -45,11 +49,11 @@ struct commitAction
     bool container;
     union 
 	{
-	Volume* vol;
-	Container* co;
+	const Volume* vol;
+	const Container* co;
 	} u;
-    Container* co() const { return( container?u.co:NULL ); }
-    Volume* vol() const { return( container?NULL:u.vol ); }
+    const Container* co() const { return( container?u.co:NULL ); }
+    const Volume* vol() const { return( container?NULL:u.vol ); }
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
     bool operator<( const commitAction& rhs ) const

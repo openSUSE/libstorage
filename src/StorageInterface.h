@@ -249,6 +249,7 @@ namespace storage
 	string label;
 	string mkfs_options;
 	string loop;
+	string dtxt;
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;
@@ -1199,6 +1200,16 @@ namespace storage
 #else
 	virtual int getIgnoreFstab( const string& device, bool& REFERENCE ) = 0;
 #endif
+
+	/**
+	 * Sets the value of description text. 
+	 * This text will be returned together with the txt returned by getCommitActions 
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param txt description text for this partition
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeDescText( const string& device, const string& txt ) = 0;
 
 	/**
 	 * Adds the specified entry to /etc/fstab

@@ -1807,6 +1807,34 @@ Storage::changeMkfsOptVolume( const string& device, const string& opts )
     }
 
 int
+Storage::changeDescText( const string& device, const string& txt )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s txt:%s", device.c_str(), txt.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setDescText( txt );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::changeMountPoint( const string& device, const string& mount )
     {
     int ret = 0;
@@ -3398,6 +3426,12 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
 	    if( mark_destructive && (*i)->destructive )
 		txt += "<font color=red>";
 	    txt += (*i)->descr;
+	    const Volume *v = (*i)->vol();
+	    if( v && !v->getDescText().empty() )
+		{
+		txt += ". ";
+		txt += v->getDescText();
+		}
 	    if( mark_destructive && (*i)->destructive )
 		txt += "</font>";
 	    ret.push_back( txt );
@@ -3613,7 +3647,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    {
 	    bool cont = (*ac)->container;
 	    CType type = (*ac)->type;
-	    Container *co = cont ? (*ac)->co() : 
+	    Container *co = cont ? const_cast<Container*>((*ac)->co()) : 
 	                           const_cast<Container*>((*ac)->vol()->getContainer());
 	    if( !evms_activate && *pt==INCREASE && 
 	        (type==DISK||type==MD||(cont&&type==EVMS)) )
@@ -3644,7 +3678,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    else
 		{
-		ret = co->commitChanges( *pt, (*ac)->vol() );
+		ret = co->commitChanges( *pt, const_cast<Volume*>((*ac)->vol()) );
 		}
 	    if( ret!=0 )
 		{

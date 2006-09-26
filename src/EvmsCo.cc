@@ -882,12 +882,12 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
     if( deleted() )
 	{
 	l.push_back( new commitAction( DECREASE, staticType(), 
-				       removeCoText(false), true, true ));
+				       removeCoText(false), this, true ));
 	}
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createCoText(false), true, true ));
+				        createCoText(false), this, true ));
 	}
     else 
 	{
@@ -896,13 +896,13 @@ void EvmsCo::getCommitActions( list<commitAction*>& l ) const
 	         ++i )
 		l.push_back( new commitAction( INCREASE, staticType(),
 					       extendCoText(false,i->device), 
-					       true, true ));
+					       this, true ));
 	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin(); 
 	         i!=pv_remove.end(); ++i )
 		l.push_back( new commitAction( DECREASE, staticType(),
 					       reduceCoText(false,i->device), 
-					       false, true ));
+					       this, false ));
 	}
     }
 

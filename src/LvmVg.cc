@@ -767,12 +767,12 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
     if( deleted() )
 	{
 	l.push_back( new commitAction( DECREASE, staticType(), 
-				       removeVgText(false), true, true ));
+				       removeVgText(false), this, true ));
 	}
     else if( created() )
 	{
 	l.push_front( new commitAction( INCREASE, staticType(), 
-				        createVgText(false), true, true ));
+				        createVgText(false), this, true ));
 	}
     else 
 	{
@@ -781,13 +781,13 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
 	         ++i )
 		l.push_back( new commitAction( INCREASE, staticType(),
 					       extendVgText(false,i->device), 
-					       true, true ));
+					       this, true ));
 	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin(); 
 	         i!=pv_remove.end(); ++i )
 		l.push_back( new commitAction( DECREASE, staticType(),
 					       reduceVgText(false,i->device), 
-					       false, true ));
+					       this, false ));
 	}
     }
 

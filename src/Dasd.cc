@@ -441,7 +441,7 @@ void Dasd::getCommitActions( list<commitAction*>& l ) const
 		++i;
 	    }
 	l.push_front( new commitAction( DECREASE, staticType(),
-				        dasdfmtText(false), true, true ));
+				        dasdfmtText(false), this, true ));
 	}
     }
 
