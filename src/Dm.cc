@@ -244,12 +244,15 @@ Dm::mapsTo( const string& dev ) const
 	{
 	Regex r(dev);
 	mit = pe_map.begin();
-	while( mit!=pe_map.end() && !r.match( mit->first ))
+	while( mit!=pe_map.end() && !r.match( mit->first ) && 
+	       !pec()->addedPv(mit->first) )
 	    ++mit;
 	}
     else
 	{
 	mit = pe_map.find( dev );
+	if( mit != pe_map.end() && pec()->addedPv(mit->first) )
+	    mit = pe_map.end();
 	}
     ret = mit != pe_map.end();
     if( ret )

@@ -80,7 +80,7 @@ class Volume
 	bool needRemount() const;
 	bool needShrink() const { return(size_k<orig_size_k); }
 	bool needExtend() const { return(size_k>orig_size_k); }
-	long long extendSize() const { return(orig_size_k-size_k);}
+	long long extendSize() const { return(size_k-orig_size_k);}
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
 	void setUuid( const string& id ) { uuid=id; }

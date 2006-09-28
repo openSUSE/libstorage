@@ -391,7 +391,7 @@ int EvmsCo::resizeVolume( Volume* v, unsigned long long newSize )
     else 
 	{
 	Evms * l = dynamic_cast<Evms *>(v);
-	unsigned long new_le = (newSize+pe_size-1)/pe_size;
+	unsigned long new_le = sizeToLe(newSize);
 	if( l->stripes()>1 )
 	    new_le = ((new_le+l->stripes()-1)/l->stripes())*l->stripes();
 	newSize = new_le*pe_size;
@@ -636,7 +636,7 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 	    {
 	    //cout << "Resized:" << *i << endl;
 	    map<string,unsigned long> pe_map = i->getPeMap();
-	    long size_diff = i->getLe() - (i->origSizeK()+pe_size-1)/pe_size;
+	    long size_diff = i->getLe() - sizeToLe(i->origSizeK());
 	    if( size_diff>0 )
 		{
 		if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add, 
@@ -1425,10 +1425,12 @@ EvmsCo::doCreateCo()
 	    y2mil( "co:" << *this );
 	    if( !pv_add.empty() )
 		{
+		y2err( "still added:" << pv_add );
 		pv_add.clear();
 		ret = EVMS_PV_STILL_ADDED;
 		}
 	    checkConsistency();
+	    checkCreateConstraints();
 	    }
 	}
     y2milestone( "ret:%d", ret );
@@ -1495,6 +1497,8 @@ EvmsCo::doExtendCo()
 	    }
 	++d;
 	}
+    if( devs.size()>0 )
+	checkCreateConstraints();
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -1621,7 +1625,7 @@ int EvmsCo::doResize( Volume* v )
 	FsCapabilities caps;
 	bool remount = false;
 	unsigned long new_le = l->getLe();
-	unsigned long old_le = (v->origSizeK()+pe_size-1)/pe_size;
+	unsigned long old_le = sizeToLe(v->origSizeK());
 	getStorage()->getFsCapabilities( l->getFs(), caps );
 	if( !silent && old_le!=new_le )
 	    {

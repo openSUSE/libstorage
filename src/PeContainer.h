@@ -23,6 +23,8 @@ class PeContainer : public Container
 	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
 	friend std::ostream& operator<< (std::ostream&, const PeContainer& );
+	bool addedPv( const string& dev ) const;
+	unsigned long sizeToLe( unsigned long long sizeK ) const;
 
 	int setPeSize( long long unsigned, bool lvm1 );
 	void unuseDev();
@@ -65,6 +67,7 @@ class PeContainer : public Container
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
 	                std::list<Pv>& plrem, unsigned long& removed_pe );
+	bool checkCreateConstraints();
 	static int addLvPeDistribution( unsigned long le, unsigned stripe,
 					std::list<Pv>& pl, std::list<Pv>& pladd, 
 					std::map<string,unsigned long>& pe_map );

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <utility>
 
 #include "y2storage/PeContainer.h"
 #include "y2storage/AppUtil.h"
@@ -308,6 +309,100 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
 	}
     y2mil( "pe_map:" << pe_map );
     y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
+    {
+    if( pe_size>0 )
+	{
+	sizeK += pe_size-1;
+	sizeK /= pe_size;
+	}
+    return( sizeK );
+    }
+
+bool PeContainer::addedPv( const string& dev ) const
+    {
+    bool ret = find( pv_add.begin(), pv_add.end(), dev )!=pv_add.end();
+    y2mil( "dev:" << dev << " ret:" << ret );
+    return( ret );
+    }
+
+bool PeContainer::checkCreateConstraints()
+    {
+    y2mil( "peContainer:" << *this )
+    int ret = false;
+    unsigned long increase = 0;
+    unsigned long current = 0;
+    typedef pair<unsigned long,Dm*> tpair;
+    list< tpair > li;
+    VolPair lp=volPair();
+    VolIterator i=lp.begin();
+    if( pv_add.size()>0 )
+	y2war( "should not happen pv_add:" << pv_add )
+    if( pv_remove.size()>0 )
+	y2war( "should not happen pv_rem:" << pv_remove )
+    while( i!=lp.end() )
+	{
+	unsigned long long tmp;
+	if( i->deleted() || i->needShrink() )
+	    y2war( "should not happen vol:" << *i )
+	else if( i->created() || i->extendSize()>0 )
+	    {
+	    tmp = sizeToLe(i->created() ? i->sizeK() : i->extendSize());
+	    if( !i->created() )
+		current += sizeToLe( i->origSizeK() );
+	    li.push_back( make_pair(tmp,static_cast<Dm*>(&(*i))) );
+	    increase += tmp;
+	    y2mil( "inc:" << tmp << " sum:" << increase );
+	    y2mil( "vol:" << *i )
+	    }
+	else
+	    current += sizeToLe( i->sizeK() );
+	++i;
+	}
+    y2mil( "increase:" << increase << " current:" << current << " num_pe:" << num_pe );
+    if( increase+current>num_pe )
+	{
+	unsigned long diff = increase+current - num_pe;
+	y2mil( "too much:" << diff );
+	if( diff<=5 || diff<=pv.size()*2 )
+	    {
+	    list<unsigned long> l;
+	    y2mil( "li:" << li );
+	    li.sort();
+	    y2mil( "li:" << li );
+	    for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		{
+		unsigned long tmp = (diff * i->first + i->first/2) / increase;
+		l.push_back(tmp);
+		diff -= tmp;
+		increase -= i->first;
+		}
+	    y2mil( "l:" << l );
+	    list<unsigned long>::const_iterator di = l.begin();
+	    for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		{
+		if( *di > 0 )
+		    {
+		    y2mil( "modified vol:" << *i->second );
+		    map<string,unsigned long> pe_map = i->second->getPeMap();
+		    ret = remLvPeDistribution( *di, pe_map, pv, pv_add );
+		    i->second->setLe( i->second->getLe()-*di );
+		    i->second->setPeMap( pe_map );
+		    if( i->second->created() )
+			i->second->calcSize();
+		    else
+			i->second->setResizedSize( i->second->getLe()*pe_size );
+		    y2mil( "modified vol:" << *i->second );
+		    }
+		++di;
+		}
+	    }
+	ret = true;
+	}
+    y2milestone( "ret:%d", ret );
     return( ret );
     }
 
