@@ -935,6 +935,7 @@ Disk::label_info Disk::labels[] = {
 	{ "mac", false, 64, 0 },
 	{ "dasd", false, 3, 0 },
 	{ "aix", false, 0, 0 },
+	{ "amiga", false, 63, 0 },
 	{ "", false, 0, 0 }
     };
 
