@@ -923,6 +923,8 @@ string Disk::defaultLabel()
 	ret = "sun";
     else if( Storage::arch()=="ppc" && Storage::isPPCMac() )
 	ret = "mac";
+    else if( Storage::arch()=="ppc" && Storage::isPPCPegasos() )
+	ret = "amiga";
     y2milestone( "ret:%s", ret.c_str() );
     return( ret );
     }
