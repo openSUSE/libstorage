@@ -215,6 +215,7 @@ class Storage : public storage::StorageInterface
 	static const string& arch() { return( proc_arch ); }
 	static const string& sysfsDir() { return( sysfs_dir ); }
 	static bool isPPCMac() { return( is_ppc_mac ); }
+	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile( const string& name );
 	static bool testFilesEqual( const string& n1, const string& n2 );
@@ -1615,6 +1616,7 @@ class Storage : public storage::StorageInterface
 	static string proc_arch;
 	static string sysfs_dir;
 	static bool is_ppc_mac;
+	static bool is_ppc_pegasos;
 	CCont cont;
 	EtcFstab *fstab;
 

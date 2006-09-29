@@ -350,9 +350,16 @@ Storage::detectArch()
 	    line = extractNthWord( 2, line );
 	    y2milestone( "line:%s", line.c_str() );
 	    is_ppc_mac = line.find( "PowerMac" )==0 || line.find( "PowerBook" )==0;
+	    if( is_ppc_mac == 0)
+		{
+		line = cpu[l];
+		line = extractNthWord( 3, line );
+		y2milestone( "line:%s", line.c_str() );
+		is_ppc_pegasos = line.find( "Pegasos" )==0;
+		}
 	    }
 	}
-    y2milestone( "Arch:%s IsPPCMac:%d", proc_arch.c_str(), is_ppc_mac );
+    y2milestone( "Arch:%s IsPPCMac:%d IsPPCPegasos:%d", proc_arch.c_str(), is_ppc_mac, is_ppc_pegasos );
     }
 
 void
@@ -941,6 +948,7 @@ void Storage::setDetectMountedVolumes( bool val )
 string Storage::proc_arch;
 string Storage::sysfs_dir = "/sys/block";
 bool Storage::is_ppc_mac = false;
+bool Storage::is_ppc_pegasos = false;
 
 
 namespace storage
