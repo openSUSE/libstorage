@@ -2073,7 +2073,7 @@ int Disk::doCreate( Volume* v )
 		y2milestone( "corrected end from %lu to max %lu", end, maxc );
 		end = maxc;
 		}
-	    if( start==0 && label == "mac" )
+	    if( start==0 && (label == "mac" || label == "amiga") )
 		start = 1;
 	    cmd_line << start << " ";
 	    string save = cmd_line.str();
