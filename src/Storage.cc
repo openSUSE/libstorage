@@ -2623,6 +2623,11 @@ Storage::changeLvStripeSize( const string& vg, const string& name,
     return( ret );
     }
 
+static bool isEvms( const Volume& v )
+    {
+    return( v.cType()==EVMS );
+    }
+
 int Storage::evmsActivate()
     {
     int ret = 0;
@@ -2643,6 +2648,8 @@ int Storage::evmsActivate()
 	    if( ret==0 )
 		{
 		detectEvms();
+		VPair p = vPair( isEvms );
+		detectFsData( p.begin(), p.end() );
 		}
 	    }
 	}
