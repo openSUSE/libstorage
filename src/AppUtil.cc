@@ -17,6 +17,7 @@
 #include <blocxx/AppenderLogger.hpp>
 #include <blocxx/FileAppender.hpp>
 #include <blocxx/Logger.hpp>
+#include <blocxx/LogMessage.hpp>
 
 #include <iomanip>
 #include <string>
@@ -441,7 +442,7 @@ bool runningFromSystem()
     return( FromSystem_bs );
     }
 
-static blocxx::String component = "libstorage(" + decString(getpid()) + ")";
+static blocxx::String component = "libstorage";
 
 void
 log_msg( unsigned level, const char* file, unsigned line, const char* func,
@@ -449,16 +450,51 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
     {
     using namespace blocxx;
 
-    if( level >= 
-        E_DEBUG_LEVEL-(unsigned)Logger::getCurrentLogger()->getLogLevel() )
+#if BLOCXX_LIBRARY_VERSION >= 5
+    ELogLevel   curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
+#else
+    ELogLevel   curLevel = Logger::getCurrentLogger()->getLogLevel();
+#endif
+    String      category;
+    switch( level )
 	{
-	char b[4096+1];
+	case 0:
+	    if( curLevel >= ::blocxx::E_DEBUG_LEVEL)
+	    	category = Logger::STR_DEBUG_CATEGORY;
+	    break;
+	case 1:
+	    if( curLevel >= ::blocxx::E_INFO_LEVEL)
+	    	category = Logger::STR_INFO_CATEGORY;
+	    break;
+	case 2:
+#if BLOCXX_LIBRARY_VERSION >= 5
+	    if( curLevel >= ::blocxx::E_WARNING_LEVEL)
+		category = Logger::STR_WARNING_CATEGORY;
+#else
+	    if( curLevel >= ::blocxx::E_INFO_LEVEL)
+		{
+		category = Logger::STR_INFO_CATEGORY;
+		if( add_str == NULL )
+			add_str = "[WARNING]";
+		}
+#endif
+	    break;
+	case 3:
+	    if( curLevel >= ::blocxx::E_ERROR_LEVEL)
+		category = Logger::STR_ERROR_CATEGORY;
+	    break;
+	default:
+	    if( curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL)
+		category = Logger::STR_FATAL_CATEGORY;
+	    break;
+	}
+
+    if( !category.empty())
+	{
+	char b[4096+1] = {'\0'};
 	unsigned ret = 0;
-	if( add_str==NULL || *add_str==0 )
-	    ret = snprintf( b, sizeof(b), "%s(%s):%u ", file, func, line );
-	else
-	    ret = snprintf( b, sizeof(b), "%s(%s):%u %s ", file, func, line,
-			    add_str );
+	if( add_str != NULL && *add_str != '\0')
+	    ret = snprintf( b, sizeof(b), "%s ", add_str );
 	if( ret<sizeof(b) )
 	    {
 	    va_list p;
@@ -466,29 +502,25 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
 	    vsnprintf( b+ret, sizeof(b)-ret, format, p );
 	    }
 	b[sizeof(b)-1] = 0;
-	String category = Logger::STR_INFO_CATEGORY;
-	switch( level )
-	    {
-	    case 0:
-		category = Logger::STR_DEBUG_CATEGORY;
-		break;
-	    case 1:
-		break;
-	    case 2:
-		category = Logger::STR_ERROR_CATEGORY;
-		break;
-	    default:
-		category = Logger::STR_FATAL_CATEGORY;
-		break;
-	    }
-	Logger::getCurrentLogger()->logMessage( component, category, b );
+
+#if BLOCXX_LIBRARY_VERSION >= 5
+	LogAppender::getCurrentLogAppender()->logMessage( LogMessage(component, category, String(b), file, line , func) );
+#else
+	Logger::getCurrentLogger()->logMessage( component, category, String(b), file, line , func );
+#endif
 	}
     }
 
-int createLogger( const string& component, const string& name,
+int createLogger( const string& lcomponent, const string& name,
                   const string& logpath, const string& logfile )
     {
     using namespace blocxx;
+
+#if BLOCXX_LIBRARY_VERSION <  5
+    // Add PID to our global component name in blocxx-1.x
+    // that does not support the %P log format specifier.
+    component = "libstorage(" + decString(getpid()) + ")";
+#endif
 
     if( logpath != "NULL" && logfile != "NULL" )
 	{
@@ -506,7 +538,11 @@ int createLogger( const string& component, const string& name,
 	    logApp = 
 		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
 						LogAppender::ALL_CATEGORIES,
-						"%d %-5p %c - %m", 
+#if BLOCXX_LIBRARY_VERSION >= 5
+						"%d %-5p %c(%P) %F(%M):%L - %m", 
+#else
+						"%d %-5p %c %F(%M):%L - %m",
+#endif
 						LogAppender::TYPE_FILE, 
 						configItems );
 	    }
@@ -515,7 +551,11 @@ int createLogger( const string& component, const string& name,
 	    logApp = 
 		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
 						LogAppender::ALL_CATEGORIES,
-						"%d %-5p %c - %m", 
+#if BLOCXX_LIBRARY_VERSION >= 5
+						"%d %-5p %c(%P) %F(%M):%L - %m",
+#else
+						"%d %-5p %c %F(%M):%L - %m",
+#endif
 						LogAppender::TYPE_STDERR, 
 						configItems );
 	    }
@@ -524,13 +564,21 @@ int createLogger( const string& component, const string& name,
 	    logApp = 
 		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
 						LogAppender::ALL_CATEGORIES,
-						"%d %-5p %c - %m", 
+#if BLOCXX_LIBRARY_VERSION >= 5
+						"%d %-5p %c(%P) %F(%M):%L - %m",
+#else
+						"%d %-5p %c %F(%M):%L - %m",
+#endif
 						LogAppender::TYPE_SYSLOG, 
 						configItems );
 	    }
-	LoggerRef log( new AppenderLogger( component.c_str(), E_INFO_LEVEL, 
+#if BLOCXX_LIBRARY_VERSION >= 5
+	LogAppender::setDefaultLogAppender(logApp);
+#else
+	LoggerRef log( new AppenderLogger( lcomponent.c_str(), E_INFO_LEVEL, 
 	                                   logApp));
 	Logger::setDefaultLogger(log);
+#endif
 	}
     return( 0 );
     }

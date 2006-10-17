@@ -58,29 +58,26 @@ int createLogger( const string& component, const string& name,
 void log_msg( unsigned level, const char* file, unsigned line, 
               const char* func, const char* add_str, const char* format, ... ) 
 	__attribute__ ((format(printf, 6, 7)));
-void log_msg( unsigned level, const char* file, unsigned line, 
-              const char* func, const char* add_str, const char* format, ... ) 
-	__attribute__ ((format(printf, 6, 7)));
 
 #define y2debug(format, ...)  \
     log_msg( 0, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
 #define y2milestone(format, ...)  \
     log_msg( 1, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
 #define y2warning(format, ...)  \
-    log_msg( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", format, ##__VA_ARGS__ )
-#define y2error(format, ...)  \
     log_msg( 2, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
+#define y2error(format, ...)  \
+    log_msg( 3, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
 
 #define y2deb(op) log_op( 0, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 #define y2mil(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, NULL, op )
-#define y2war(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, "[WARNING]", op )
-#define y2err(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+#define y2war(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+#define y2err(op) log_op( 3, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 
 #define log_op( level, file, line, function, add, op )                \
     {                                                                 \
     std::ostringstream __buf;                                         \
     __buf << op;                                                      \
-    log_msg( level, file, line, function, add, __buf.str().c_str() ); \
+    log_msg( level, file, line, function, add, "%s", __buf.str().c_str() ); \
     }                                                                
 
 inline string sformat( const char* txt, ... )

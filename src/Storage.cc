@@ -46,38 +46,29 @@ Storage::initDefaultLogger ()
 {
     using namespace blocxx;
 
-    String name = "testlog";
-    LoggerConfigMap configItems;
-    String StrKey;
-    String StrPath;
-    StrKey.format("log.%s.location", name.c_str());
-
+    string path;
+    string file;
     if (geteuid ())
     {
 	struct passwd* pw = getpwuid (geteuid ());
 	if (pw)
 	{
-	    configItems[StrKey] = pw->pw_dir;
-	    configItems[StrKey] += "/.y2log";
+	    path = pw->pw_dir;
+	    file = ".y2log";
 	}
 	else
 	{
-	    configItems[StrKey] = "/y2log";
+	    path = "/";
+	    file = "y2log";
 	}
     }
     else
     {
-	configItems[StrKey] = "/var/log/YaST2/y2log";
+	path = "/var/log/YaST2";
+	file = "y2log";
     }
 
-    LogAppenderRef logApp =
-	LogAppender::createLogAppender( name, LogAppender::ALL_COMPONENTS,
-					LogAppender::ALL_CATEGORIES,
-					"%d %-5p %c - %m",
-					LogAppender::TYPE_FILE,
-					configItems );
-    LoggerRef log( new AppenderLogger("libstorage", E_INFO_LEVEL, logApp));
-    Logger::setDefaultLogger(log);
+    storage::createLogger("libstorage", "default", path, file);
 }
 
 

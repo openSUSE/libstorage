@@ -58,11 +58,15 @@ initLogger()
     LogAppenderRef logApp = 
 	LogAppender::createLogAppender( name, LogAppender::ALL_COMPONENTS, 
 	                                LogAppender::ALL_CATEGORIES, 
-					"%d %-5p %c - %m",
+					"%d %-5p %c(%P) %F(%M):%L - %m",
 					LogAppender::TYPE_FILE,
 					configItems );
+#if BLOCXX_LIBRARY_VERSION >= 5
+    LogAppender::setDefaultLogAppender(logApp);
+#else
     LoggerRef log( new AppenderLogger("libstorage", E_INFO_LEVEL, logApp));
     Logger::setDefaultLogger(log);
+#endif
     }
 
 int
