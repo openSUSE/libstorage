@@ -783,7 +783,7 @@ int DmPartCo::doRemove( Volume* v )
 	Partition *p = l->getPtr();
 	if( p==NULL )
 	    ret = DMPART_PARTITION_NOT_FOUND;
-	else
+	else if( !deleted() )
 	    ret = disk->doRemove( p );
 	}
     if( ret==0 )
@@ -791,7 +791,7 @@ int DmPartCo::doRemove( Volume* v )
 	if( !removeFromList( l ) )
 	    ret = DMPART_REMOVE_PARTITION_LIST_ERASE;
 	}
-    if( save_act )
+    if( save_act && !deleted() )
 	{
 	activate_part(true);
 	updateMinor();

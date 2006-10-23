@@ -168,18 +168,20 @@ DmraidCo::doRemove()
     if( deleted() )
 	{
 	if( active )
+	    {
+	    activate_part(false);
 	    activate(false);
+	    }
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( removeText(true) );
 	    }
-	string cmd = "cd /var/log/YaST2 && dmraid -E -r";
+	string cmd = "cd /var/log/YaST2 && echo y | dmraid -E -r";
+	SystemCmd c;
 	for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
 	    {
-	    cmd += " ";
-	    cmd += i->device;
+	    c.execute( cmd + " " + i->device );
 	    }
-	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
 	    ret = DMRAID_REMOVE_FAILED;
