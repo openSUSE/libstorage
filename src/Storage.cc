@@ -766,7 +766,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	}
     else
 	{
-	y2error( "Failed to open:%s", sysfs_dir.c_str() );
+	y2warning( "Failed to open:%s", sysfs_dir.c_str() );
 	}
     }
 
