@@ -228,10 +228,11 @@ EtcFstab::findUuidLabel( const string& uuid, const string& label,
                          FstabEntry& entry ) const
     {
     y2milestone( "uuid:%s label:%s", uuid.c_str(), label.c_str() );
-    list<Entry>::const_iterator i = co.begin();
+    list<Entry>::const_iterator i = co.end();
     if( !uuid.empty() )
 	{
 	string dev = "UUID=" + uuid;
+	i = co.begin();
 	while( i!=co.end() && i->nnew.dentry != dev )
 	    ++i;
 	}
