@@ -3734,6 +3734,10 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    new_pair = false;
 	    }
 	pt++;
+	SystemCmd c;
+	c.execute( "dmsetup ls" );
+	c.execute( "dmsetup table" );
+	c.execute( "dmsetup info" );
 	logProcData();
 	}
     if( evms_activate && haveEvms() )
@@ -4455,6 +4459,7 @@ bool Storage::removeDmTable( const string& table )
     bool ret = false;
     if( c.retcode()==0 )
 	{
+	c.execute( "dmsetup info \"" + table + "\"" );
 	c.execute( "dmsetup remove \"" + table + "\"" );
 	waitForDevice();
 	ret = c.retcode()==0;
