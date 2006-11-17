@@ -104,16 +104,16 @@ void DmraidCo::activate( bool val )
 void DmraidCo::getRaids( list<string>& l )
     {
     l.clear();
-    SystemCmd c( "dmraid -r -c -c" );
+    SystemCmd c( "dmraid -s -c -c -c" );
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	list<string> sl = splitString( *c.getLine(i), ":" );
 	if( sl.size()>=3 )
 	    {
 	    list<string>::const_iterator ci = sl.begin();
-	    ++ci;
-	    ++ci;
-	    if( !ci->empty() && find( l.begin(), l.end(), *ci )==l.end())
+	    if( !ci->empty()
+		&& ci->find( "/dev/" )==string::npos
+		&& find( l.begin(), l.end(), *ci )==l.end())
 		{
 		l.push_back( *ci );
 		}
