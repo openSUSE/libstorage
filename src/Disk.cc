@@ -2395,7 +2395,7 @@ const Partition * Disk::getPartitionAfter( const Partition * p )
 	{
 	if( !pi->created() &&
 	    pi->cylStart()>p->cylStart() &&
-	    (ret==NULL || ret->cylStart()>p->cylStart()) )
+	    (ret==NULL || ret->cylStart()>pi->cylStart()) )
 	    ret = &(*pi);
 	}
     if( ret==NULL )
