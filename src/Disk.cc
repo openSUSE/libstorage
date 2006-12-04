@@ -32,10 +32,11 @@ Disk::Disk( Storage * const s, const string& Name,
     {
     init_disk = dmp_slave = false;
     nm = Name;
-    string::size_type pos = nm.rfind( '/' );
-    if( pos!=string::npos )
-	nm.erase( pos+1 );
-    logfile_name = Name;
+    undevDevice(nm);
+    logfile_name = nm;
+    string::size_type pos = 0;
+    while( (pos=logfile_name.find( '/', pos )) != string::npos )
+	logfile_name[pos] = '_';
     if( Name.find( "/dev/" )==0 )
 	dev = Name;
     else 
