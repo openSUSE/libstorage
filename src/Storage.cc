@@ -1751,6 +1751,12 @@ Storage::defaultDiskLabel() const
     return( Disk::defaultLabel() );
     }
 
+unsigned long long 
+Storage::maxSizeLabelK( const string& label ) const
+    {
+    return( Disk::maxSizeLabelK(label) );
+    }
+
 int
 Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {

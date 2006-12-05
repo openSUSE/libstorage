@@ -486,6 +486,23 @@ Disk::setLabelData( const string& disklabel )
                  ext_possible, max_primary, max_logical );
     }
 
+unsigned long long
+Disk::maxSizeLabelK( const string& label )
+    {
+    unsigned long long ret = 0;
+    int i=0;
+    while( !labels[i].name.empty() && labels[i].name!=label )
+	{
+	i++;
+	}
+    if( !labels[i].name.empty() )
+        {
+	ret = labels[i].max_size_k;
+	}
+    y2milestone( "label:%s ret:%llu", label.c_str(), ret );
+    return( ret );
+    }
+
 int
 Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     {
@@ -935,17 +952,25 @@ string Disk::defaultLabel()
     return( ret );
     }
 
+#define TB (1024ULL * 1024ULL * 1024ULL)
+#define EB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
+#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL)
+
 Disk::label_info Disk::labels[] = {
-	{ "msdos", true, 4, 63 },
-	{ "gpt", false, 63, 0 },
-	{ "bsd", false, 8, 0 },
-	{ "sun", false, 8, 0 },
-	{ "mac", false, 64, 0 },
-	{ "dasd", false, 3, 0 },
-	{ "aix", false, 0, 0 },
-	{ "amiga", false, 63, 0 },
-	{ "", false, 0, 0 }
+	{ "msdos", true, 4, 63, 2*TB },
+	{ "gpt", false, 128, 0, 16*PB },
+	{ "bsd", false, 8, 0, 2*TB },
+	{ "sun", false, 8, 0, 2*TB },
+	{ "mac", false, 64, 0, 2*TB },
+	{ "dasd", false, 3, 0, 2*TB },
+	{ "aix", false, 0, 0, 2*TB },
+	{ "amiga", false, 63, 0, 2*TB },
+	{ "", false, 0, 0, 0 }
     };
+
+#undef TB
+#undef EB
+#undef PB
 
 string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/" };
 

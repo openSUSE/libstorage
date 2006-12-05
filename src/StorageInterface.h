@@ -1019,6 +1019,13 @@ namespace storage
 	virtual string defaultDiskLabel() const = 0;
 
 	/**
+	 * Query the maximal allowed size the given disk label supports.
+	 *
+	 * @return maximal supported size of disk label 
+	 */
+	virtual unsigned long long maxSizeLabelK( const string& label ) const = 0;
+
+	/**
 	 * Sets or unsets the format flag for the given volume.
 	 *
 	 * @param device name of volume, e.g. /dev/hda1

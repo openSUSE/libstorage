@@ -301,6 +301,7 @@ class Storage : public storage::StorageInterface
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );
 	string defaultDiskLabel() const;
+	unsigned long long maxSizeLabelK( const string& label ) const;
 
 	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );
