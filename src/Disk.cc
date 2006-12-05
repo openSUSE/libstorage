@@ -700,6 +700,11 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	      {
 	      id = Partition::ID_GPT_MSFTRES;
 	      }
+	  if( TInfo.find( ",hfs+," ) != string::npos || 
+	      TInfo.find( ",hfs," ) != string::npos )
+	      {
+	      id = Partition::ID_APPLE_HFS;
+	      }
 	  }
       y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
 		   nr, id, type, start, csize );
