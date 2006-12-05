@@ -1809,6 +1809,30 @@ Storage::changeLabelVolume( const string& device, const string& label )
     }
 
 int
+Storage::eraseLabelVolume( const string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s", device.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->eraseLabel();
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::changeMkfsOptVolume( const string& device, const string& opts )
     {
     int ret = 0;

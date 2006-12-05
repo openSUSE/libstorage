@@ -408,6 +408,7 @@ bool PeContainer::checkCreateConstraints()
 
 void PeContainer::addPv( const Pv* p )
     {
+    getStorage()->eraseLabelVolume( p->device );
     list<Pv>::iterator i = find( pv.begin(), pv.end(), *p );
     if( i != pv.end() )
 	*i = *p;

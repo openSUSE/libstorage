@@ -68,6 +68,7 @@ class Volume
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
 	int setLabel( const string& val );
+	int eraseLabel() { label.erase(); orig_label.erase(); return 0; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
