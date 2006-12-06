@@ -232,7 +232,7 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void 
 DmPartCo::init( ProcPart& ppart )
     {
-    SystemCmd c( "dmsetup table " + nm );
+    SystemCmd c( "dmsetup table \"" + nm + "\"" );
     if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0] ))
 	{
 	mnr = Dm::dmNumber( nm );
@@ -499,11 +499,11 @@ void DmPartCo::activate_part( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
-	    c.execute( "kpartx -a -p _part " + dev );
+	    c.execute( "kpartx -a -p _part \"" + dev + "\"" );
 	    }
 	else
 	    {
-	    c.execute( "kpartx -d -p _part " + dev );
+	    c.execute( "kpartx -d -p _part \"" + dev + "\"" );
 	    }
 	active = val;
 	}

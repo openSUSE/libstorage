@@ -30,9 +30,11 @@ DmraidCo::~DmraidCo()
 void DmraidCo::getRaidData( const string& name )
     {
     y2milestone( "name:%s", name.c_str() );
-    SystemCmd c( "dmraid -s -c -c -c " + name );
+    SystemCmd c( "dmraid -s -c -c -c \"" + name + "\"" );
     list<string>::const_iterator ci;
-    list<string> sl = splitString( *c.getLine(0), ":" );
+    list<string> sl;
+    if( c.numLines()>0 )
+	sl = splitString( *c.getLine(0), ":" );
     Pv *pve = new Pv;
     if( sl.size()>=4 )
 	{
