@@ -5541,6 +5541,12 @@ void Storage::checkDeviceExclusive( const string& device, unsigned secs )
 	}
     }
 
+void Storage::setNoEvms( bool val ) 
+    { 
+    y2mil( "val:" << val ); 
+    no_evms=val; 
+    }
+
 namespace storage
 {
 std::ostream& operator<< (std::ostream& s, Storage &v )
@@ -5558,4 +5564,5 @@ storage::CallbackProgressBar Storage::progress_bar_cb_ycp;
 storage::CallbackShowInstallInfo Storage::install_info_cb_ycp;
 storage::CallbackInfoPopup Storage::info_popup_cb_ycp;
 storage::CallbackYesNoPopup Storage::yesno_popup_cb_ycp;
+bool Storage::no_evms;
 

@@ -1933,6 +1933,22 @@ namespace storage
 	virtual bool readFstab( const string& dir, deque<VolumeInfo>& infos) = 0;
 
 	/**
+	 * Possibility to switch Evms handling off or on in libstorage. 
+	 * This function must be called prior to libstorage initialisation.
+	 * Default is on. 
+	 *
+	 * @param val determines if Evms is switched off or on
+	 */
+	virtual void setNoEvms( bool val ) = 0;
+
+	/**
+	 * Returns the state of Evms handling in libstorage.
+	 *
+	 * @param val determines if Evms is switched off or on
+	 */
+	virtual bool getNoEvms() = 0;
+
+	/**
 	 * Activate or deactivate higher level devices as MD,LVM,DM,EVMS
 	 *
 	 * @param val flag if devices should be activated or deactivated

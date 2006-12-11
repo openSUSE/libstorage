@@ -383,6 +383,9 @@ class Storage : public storage::StorageInterface
 	int removeEvmsVolume( const string& vg, const string& name );
 	int changeEvmsStripeSize( const string& coname, const string& name,
 				  unsigned long long stripeSize );
+	void setNoEvms( bool val ); 
+	bool getNoEvms() { return( no_evms ); }
+	static bool getNoEv() { return( no_evms ); }
 
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
@@ -1619,6 +1622,7 @@ class Storage : public storage::StorageInterface
 	static string sysfs_dir;
 	static bool is_ppc_mac;
 	static bool is_ppc_pegasos;
+	static bool no_evms;
 	CCont cont;
 	EtcFstab *fstab;
 
