@@ -6,6 +6,7 @@
 #include <map>
 
 #include "y2storage/StorageInterface.h"
+#include "y2storage/AppUtil.h"
 
 namespace storage
 {
@@ -127,6 +128,7 @@ class EtcFstab
 	string updateText( bool doing, bool crypto, const string& mp );
 	string removeText( bool doing, bool crypto, const string& mp );
 	int flush();
+	int findPrefix( AsciiFile& tab, const string& mount );
 
     protected:
 	struct Entry

@@ -354,6 +354,23 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
     return( ret );
     }
 
+int EtcFstab::findPrefix( AsciiFile& tab, const string& mount )
+    {
+    bool crypto = tab.fileName().find( "/cryptotab" )>=0;
+    y2milestone( "mp:%s crypto:%d", mount.c_str(), crypto );
+    string reg = "[ \t]*[^ \t]+";
+    if( crypto )
+	reg += "[ \t]+[^ \t]+";
+    reg = "[ \t]+" + mount;
+    if( mount.length()>0 && mount[mount.length()-1] != '/' )
+	reg += "/";
+    Regex *fi = new Regex( reg );
+    int lineno = tab.find( 0, *fi );
+    delete fi;
+    y2milestone( "reg:%s lineno:%d", reg.c_str(), lineno );
+    return( lineno );
+    }
+
 void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls )
     {
     ls.clear();
@@ -522,7 +539,11 @@ int EtcFstab::flush()
 		string line = createTabLine( i->nnew );
 		if( lineno<0 )
 		    {
-		    cur->append( line );
+		    lineno = findPrefix( *cur, i->nnew.mount );
+		    if( lineno>=0 )
+			cur->insert( lineno, line );
+		    else
+			cur->append( line );
 		    }
 		else
 		    {
