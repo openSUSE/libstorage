@@ -108,6 +108,9 @@ bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
     if( (cType()!=DISK && (mby==MOUNTBY_ID || mby==MOUNTBY_PATH)) ||
         (mp=="swap" && mby==MOUNTBY_UUID ) )
 	ret = false;
+    if( (mby==MOUNTBY_PATH && udevPath().empty()) ||
+	(mby==MOUNTBY_ID && udevId().empty()) )
+	ret = false;
     if( ret && encryption != ENC_NONE && 
         (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL) )
 	ret = false;
