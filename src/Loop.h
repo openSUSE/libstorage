@@ -12,9 +12,10 @@ class Loop : public Volume
     {
     public:
 	Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
-	      ProcPart& ppart );
+	      bool dmcrypt, const string& dm_dev, 
+	      ProcPart& ppart, SystemCmd& losetup );
 	Loop( const LoopCo& d, const string& file, bool reuseExisting,
-	      unsigned long long sizeK );
+	      unsigned long long sizeK, bool dmcr );
 	Loop( const LoopCo& d, const Loop& d );
 	virtual ~Loop();
 	const string& loopFile() const { return lfile; }
@@ -25,9 +26,12 @@ class Loop : public Volume
 	bool removeFile();
 	bool createFile();
 	string lfileRealPath() const;
+	void setDmcryptDev( const string& dm_dev, bool active=true );
 	friend std::ostream& operator<< (std::ostream& s, const Loop& l );
 
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual int setEncryption( bool val, storage::EncryptType typ=storage::ENC_LUKS );
+
 	string removeText( bool doing ) const;
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
@@ -35,7 +39,8 @@ class Loop : public Volume
 	void getInfo( storage::LoopInfo& info ) const;
 	bool equalContent( const Loop& rhs ) const;
 	void logDifference( const Loop& d ) const;
-	static unsigned loopMajor();
+	static unsigned major();
+	static string loopDeviceName( unsigned num );
 
 	static bool notDeleted( const Loop& l ) { return( !l.deleted() ); }
 

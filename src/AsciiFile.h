@@ -49,11 +49,12 @@ class AsciiFile
 		      const std::list<string>& Line_Cv );
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
-	int find( unsigned int Start_iv, const string& Pat_Cv );
-	int find( unsigned int Start_iv, Regex& Pat_Cv );
+	int find( unsigned int Start_iv, const string& Pat_Cv ) const;
+	int find( unsigned int Start_iv, Regex& Pat_Cv ) const;
 	unsigned numLines() const; 
-	const string& fileName();
+	const string& fileName() const;
 	unsigned differentLine( const AsciiFile& File_Cv ) const;
+	bool removeIfEmpty();
 
     protected:
 	bool appendFile( const string&  Name_Cv, std::vector<string>& Lines_Cr );

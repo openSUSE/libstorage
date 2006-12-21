@@ -63,7 +63,7 @@ liby2storage_la_LIBADD = -lblocxx
 
 plugin_LTLIBRARIES = libpy2StorageCallbacks.la
 
-libpy2StorageCallbacks_la_SOURCES =						\
+libpy2StorageCallbacks_la_SOURCES =					\
 	Y2StorageCallbacksComponent.cc Y2StorageCallbacksComponent.h	\
 	Y2CCStorageCallbacks.cc Y2CCStorageCallbacks.h			\
 	StorageCallbacks.h StorageCallbacks.cc

@@ -126,7 +126,7 @@ Dm::getTableInfo()
 		    }
 		}
 	    }
-	else
+	else 
 	    {
 	    y2warning( "unknown target type \"%s\"", target.c_str() );
 	    extractNthWord( 1, line ) >> le;
@@ -190,6 +190,8 @@ string Dm::getDevice( const string& majmin )
 	    list<string> ls = splitString(pair);
 	    if( cont->majorNr()>0 && mj==cont->majorNr() && mi==cont->minorNr())
 		ret = cont->device();
+	    if( mj==Loop::major() )
+		ret = Loop::loopDeviceName(mi);
 	    if( ret.empty() && mj==dmMajor() && ls.size()>=2 )
 		{
 		c.execute( "dmsetup info -c --noheadings -j " + *ls.begin() +
@@ -305,18 +307,7 @@ void Dm::updateMajorMinor()
 	{
 	string d = "/dev/dm-" + decString(minorNr());
 	if( d!=dev )
-	    {
-	    list<string>::iterator i = 
-	        find_if( alt_names.begin(), alt_names.end(), 
-		         find_begin( "/dev/dm-" ) );
-	    if( i!=alt_names.end() )
-		{
-		if( *i != d )
-		    *i = d;
-		}
-	    else
-		alt_names.push_back( d );
-	    }
+	    replaceAltName( "/dev/dm-", d );
 	}
     num = mnr;
     }
@@ -458,6 +449,11 @@ string Dm::dmName( const string& table )
 	ret = "dm-" + decString(num);
     y2mil( "table:" << table << " ret:" << ret );
     return( ret );
+    }
+
+string Dm::dmDeviceName( unsigned long num )
+    {
+    return( "/dev/dm-" + decString(num));
     }
 
 int Dm::dmNumber( const string& table )

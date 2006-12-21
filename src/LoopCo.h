@@ -21,10 +21,11 @@ class LoopCo : public Container
 	friend std::ostream& operator<< (std::ostream&, const LoopCo& );
 
 	int createLoop( const string& file, bool reuseExisting, 
-	                unsigned long long sizeK, string& device );
+	                unsigned long long sizeK, bool dmcr, string& device );
 	int updateLoop( const string& device, const string& file, 
 	                bool reuseExisting, unsigned long long sizeK );
 	int removeLoop( const string& file, bool removeFile = false );
+	void loopIds( std::list<unsigned>& l ) const;
 
 	int removeVolume( Volume* v );
 	bool equalContent( const LoopCo& rhs ) const;

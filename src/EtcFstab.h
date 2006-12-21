@@ -16,7 +16,7 @@ struct FstabChange;
 
 struct FstabEntry
     {
-    FstabEntry() { freq=passno=0; crypto=loop=noauto=false;
+    FstabEntry() { freq=passno=0; crypto=cryptt=loop=noauto=dmcrypt=false;
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
     FstabEntry& operator=( const FstabChange& rhs );
     friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
@@ -29,9 +29,14 @@ struct FstabEntry
     int freq;
     int passno;
     bool loop;
+    bool dmcrypt;
     bool noauto;
     bool crypto;
+    bool cryptt;
     string loop_dev;
+    string cr_opts;
+    string cr_key;
+    string cr_info;
     storage::EncryptType encr;
     storage::MountByType mount_by;
 
@@ -48,10 +53,20 @@ inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
 	s << " noauto";
     if( v.crypto )
 	s << " crypto";
+    if( v.cryptt )
+	s << " cryptt";
     if( v.loop )
 	s << " loop";
+    if( v.dmcrypt )
+	s << " dmcrypt";
     if( !v.loop_dev.empty() )
 	s << " loop_dev:" << v.loop_dev;
+    if( !v.cr_key.empty() )
+	s << " cr_key:" << v.cr_key;
+    if( !v.cr_opts.empty() )
+	s << " cr_opts:" << v.cr_opts;
+    if( !v.cr_info.empty() )
+	s << " cr_info:" << v.cr_info;
     if( v.encr != storage::ENC_NONE )
 	s << " encr:" << v.encr;
     return( s );
@@ -66,7 +81,7 @@ struct FstabChange
 	device = rhs.device;
 	dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
 	opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
-	loop_dev = rhs.loop_dev; encr = rhs.encr;
+	loop_dev = rhs.loop_dev; encr = rhs.encr; 
 	return( *this );
 	}
     friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
@@ -128,7 +143,7 @@ class EtcFstab
 	string updateText( bool doing, bool crypto, const string& mp );
 	string removeText( bool doing, bool crypto, const string& mp );
 	int flush();
-	int findPrefix( AsciiFile& tab, const string& mount );
+	int findPrefix( const AsciiFile& tab, const string& mount );
 
     protected:
 	struct Entry
@@ -143,11 +158,23 @@ class EtcFstab
 	void readFiles();
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
 			     AsciiFile*& cryptotab, int& lineno );
+	bool findCrtab( const FstabEntry& e, const AsciiFile& crtab,
+			int& lineno );
+	bool findCrtab( const string& device, const AsciiFile& crtab,
+			int& lineno );
 	void makeStringList( const FstabEntry& e, std::list<string>& ls );
+	void makeCrtabStringList( const FstabEntry& e, std::list<string>& ls );
+	string updateLine( const std::list<string>& ol, 
+			   const std::list<string>& nl, const string& line );
+	string createLine( const std::list<string>& ls, unsigned fields, 
+	                   unsigned* flen );
 	string createTabLine( const FstabEntry& e );
+	void makeCrStringList( const FstabEntry& e, std::list<string>& ls );
+	string createCrtabLine( const FstabEntry& e );
 
 	static unsigned fstabFields[6];
 	static unsigned cryptotabFields[6];
+	static unsigned crypttabFields[6];
 
 	string prefix;
 	std::list<Entry> co;

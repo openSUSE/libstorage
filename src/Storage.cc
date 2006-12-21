@@ -96,7 +96,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     yesno_popup_cb = NULL;
     recursiveRemove = false;
     zeroNewPartitions = false;
-    defaultMountBy = MOUNTBY_DEVICE;
+    defaultMountBy = MOUNTBY_ID;
     detectMounted = true;
     ifstream File( "/proc/version" );
     string line;
@@ -828,6 +828,8 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
 		i->getMountData( Mounts );
 	    i->getFstabData( *fstab );
 	    y2mil( "detect:" << *i );
+	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )
+		i->getStartData();
 	    }
 	}
     if( max_log_num>0 )
@@ -2114,9 +2116,16 @@ Storage::removeFstabOptions( const string& device, const string& options )
 int
 Storage::setCrypt( const string& device, bool val )
     {
+    y2milestone( "device:%s val:%d", device.c_str(), val );
+    return( setCryptType( device, val, ENC_LUKS ));
+    }
+    
+int
+Storage::setCryptType( const string& device, bool val, EncryptType typ )
+    {
     int ret = 0;
     assertInit();
-    y2milestone( "device:%s val:%d", device.c_str(), val );
+    y2milestone( "device:%s val:%d type:%d", device.c_str(), val, typ );
     VolIterator vol;
     ContIterator cont;
     if( readonly )
@@ -2125,7 +2134,7 @@ Storage::setCrypt( const string& device, bool val )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	ret = vol->setEncryption( val );
+	ret = vol->setEncryption( val, typ );
 	}
     else
 	{
@@ -3346,7 +3355,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	}
     if( ret==0 )
 	{
-	ret = loop->createLoop( lname, reuseExisting, sizeK, device );
+	ret = loop->createLoop( lname, reuseExisting, sizeK, true, device );
 	}
     if( ret==0 && !loop->findVolume( device, vol ))
 	{
@@ -3767,11 +3776,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    new_pair = false;
 	    }
 	pt++;
-	SystemCmd c;
-	c.execute( "dmsetup ls" );
-	c.execute( "dmsetup table" );
-	c.execute( "dmsetup info" );
-	logProcData();
+	if( !todo.empty() )
+	    {
+	    SystemCmd c;
+	    c.execute( "dmsetup ls" );
+	    c.execute( "dmsetup table" );
+	    c.execute( "dmsetup info" );
+	    logProcData();
+	    }
 	}
     if( evms_activate && haveEvms() )
 	{
@@ -4560,6 +4572,65 @@ bool Storage::findVolume( const string& device, ContIterator& c,
     return( ret );
     }
 
+bool Storage::findDm( const string& device, const Dm*& dm )
+    {
+    bool ret = false;
+    ConstDmPair p = dmPair();
+    ConstDmIterator i = p.begin();
+    while( !ret && i!=p.end() )
+	{
+	ret = i->device()==device ||
+	      find( i->altNames().begin(), i->altNames().end(), device )!=
+		  i->altNames().end();
+	if( !ret )
+	    ++i;
+	}
+    if( ret )
+	{
+	dm = &(*i);
+	y2mil( "dm:" << *dm );
+	}
+    y2mil( "device:" << device << " ret:" << ret );
+    return( ret );
+    }
+
+bool Storage::findDmUsing( const string& device, const Dm*& dm )
+    {
+    bool ret = false;
+    ConstDmPair p = dmPair();
+    ConstDmIterator i = p.begin();
+    while( !ret && i!=p.end() )
+	{
+	ret = i->usingPe(device);
+	if( !ret )
+	    ++i;
+	}
+    if( ret )
+	{
+	dm = &(*i);
+	y2mil( "dm:" << *dm );
+	}
+    y2mil( "device:" << device << " ret:" << ret );
+    return( ret );
+    }
+
+bool Storage::removeDm( const string& device )
+    {
+    const Dm* dm = 0;
+    if( findDm( device, dm ))
+	{
+	ContIterator c;
+	if( findContainer( dm->getContainer()->device(), c ))
+	    {
+	    c->removeFromList( const_cast<Dm*>(dm) );
+	    if( c->isEmpty() )
+		removeContainer( &(*c), true );
+	    }
+	}
+    y2mil( "device:" << device << " ret:" << (dm!=0)  );
+    return( dm!=0 );
+    }
+
 bool Storage::findContainer( const string& device, ContIterator& c )
     {
     CPair cp = cPair();
@@ -4818,6 +4889,21 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
+bool Storage::setDmcryptData( const string& dev, const string& dm, unsigned long long siz )
+    {
+    y2milestone( "dev:%s dm:%s sizeK:%llu", dev.c_str(), dm.c_str(), siz );
+    bool ret=false;
+    VolIterator v;
+    if( findVolume( dev, v ) )
+	{
+	v->setDmcryptDev( dm, siz!=0 );
+	v->setSize( siz );
+	ret = true;
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 bool Storage::deletedDevice( const string& dev )
     {
     VPair p = vPair( Volume::isDeleted );
@@ -5033,7 +5119,7 @@ Storage::umountDevice( const string& device )
 	{
 	if( vol->umount()==0 )
 	    {
-	    vol->loUnsetup();
+	    vol->crUnsetup();
 	    ret = true;
 	    }
 	}
@@ -5050,16 +5136,16 @@ Storage::mountDevice( const string& device, const string& mp )
     VolIterator vol;
     if( !readonly && findVolume( device, vol ) )
 	{
-	if( vol->needLosetup() )
+	if( vol->needCrsetup() )
 	    {
-	    ret = vol->doLosetup()==0;
+	    ret = vol->doCrsetup()==0;
 	    }
 	if( ret )
 	    {
 	    ret = vol->mount( mp )==0;
 	    }
 	if( !ret )
-	    vol->loUnsetup();
+	    vol->crUnsetup();
 	}
     else
 	ret = false;
@@ -5192,11 +5278,11 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		rmdir( tmpDir().c_str() );
 		}
 
-	    if( vol->needLosetup() && vol->doLosetup() )
+	    if( vol->needCrsetup() && vol->doCrsetup() )
 		{
 		ret = vol->mount( mp )==0;
 		if( !ret )
-		    vol->loUnsetup();
+		    vol->crUnsetup();
 		}
 	    setFreeInfo( vol->device(), df_free, resize_free, used, win, ret );
 	    }

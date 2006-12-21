@@ -71,8 +71,7 @@ void DmPart::updateMinor()
 	{
 	mnr = mi;
 	mjr = mj;
-	alt_names.remove_if( find_begin("/dev/dm-" ) );
-	alt_names.push_back( "/dev/dm-" + decString(mnr) );
+	replaceAltName( "/dev/dm-", "/dev/dm-"+decString(mnr) );
 	getTableInfo();
 	}
     }

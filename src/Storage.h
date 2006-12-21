@@ -231,6 +231,7 @@ class Storage : public storage::StorageInterface
 	                const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
+	bool setDmcryptData( const string& dev, const string& dm, unsigned long long siz );
 	bool deletedDevice( const string& dev );
 	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );
@@ -240,6 +241,9 @@ class Storage : public storage::StorageInterface
 	bool isRootMounted() const { return( root_mounted ); }
 	string findNormalDevice( const string& device );
 	bool findVolume( const string& device, Volume const* &vol );
+	bool findDm( const string& device, const Dm*& dm );
+	bool findDmUsing( const string& device, const Dm*& dm );
+	bool removeDm( const string& device );
 
 	virtual ~Storage();
 
@@ -321,6 +325,7 @@ class Storage : public storage::StorageInterface
 	int forgetCryptPassword( const string& device );
 	int getCryptPassword( const string& device, string& pwd );
 	int setCrypt( const string& device, bool val );
+	int setCryptType( const string& device, bool val, EncryptType typ );
 	int getCrypt( const string& device, bool& val );
 	int setIgnoreFstab( const string& device, bool val );
 	int getIgnoreFstab( const string& device, bool& val );

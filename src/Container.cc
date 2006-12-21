@@ -49,7 +49,7 @@ bool Container::isEmpty() const
     }
 
 static bool stageFormat( const Volume& v )
-    { return( v.getFormat()||v.needLosetup()||v.needLabel()); }
+    { return( v.getFormat()||v.needCrsetup()||v.needLabel()); }
 static bool stageMount( const Volume& v )
     { return( v.needRemount()||v.needFstabUpdate()); }
 
@@ -123,8 +123,8 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 		ret = doResize( vol );
 	    break;
 	case FORMAT:
-	    if( vol->needLosetup() )
-		ret = vol->doLosetup();
+	    if( vol->needCrsetup() )
+		ret = vol->doCrsetup();
 	    if( ret==0 && vol->getFormat() )
 		ret = vol->doFormat();
 	    if( ret==0 && vol->needLabel() )

@@ -87,7 +87,7 @@ namespace storage
     enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL, MOUNTBY_ID, MOUNTBY_PATH };
 
     enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD,
-                       ENC_TWOFISH256_OLD, ENC_UNKNOWN };
+                       ENC_TWOFISH256_OLD, ENC_LUKS, ENC_UNKNOWN };
 
     enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
 
@@ -483,6 +483,9 @@ namespace storage
 	VOLUME_DEVICE_NOT_PRESENT = -3030,
 	VOLUME_DEVICE_NOT_BLOCK = -3031,
 	VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME = -3032,
+	VOLUME_CRYPTFORMAT_FAILED = -3033,
+	VOLUME_CRYPTSETUP_FAILED = -3034,
+	VOLUME_CRYPTUNSETUP_FAILED = -3035,
 
 	LVM_CREATE_PV_FAILED = -4000,
 	LVM_PV_ALREADY_CONTAINED = -4001,
@@ -1170,6 +1173,16 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int setCrypt( const string& device, bool val ) = 0;
+
+	/**
+	 * Set encryption state of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param val flag if encryption should be activated
+	 * @param typ type of encryption to set up
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int setCryptType( const string& device, bool val, EncryptType typ ) = 0;
 
 	/**
 	 * Get encryption state of a volume

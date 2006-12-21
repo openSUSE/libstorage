@@ -56,6 +56,7 @@ class Dm : public Volume
 	void logDifference( const Dm& d ) const;
 	string stringDifference( const Dm& d ) const;
 	static unsigned dmMajor();
+	static string dmDeviceName( unsigned long num );
 
     protected:
 	void init();

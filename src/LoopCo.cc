@@ -7,6 +7,9 @@
 
 #include "y2storage/LoopCo.h"
 #include "y2storage/Loop.h"
+#include "y2storage/SystemCmd.h"
+#include "y2storage/Dm.h"
+#include "y2storage/ProcMounts.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcFstab.h"
@@ -38,7 +41,7 @@ LoopCo::~LoopCo()
 void
 LoopCo::init()
     {
-    mjr = Loop::loopMajor();
+    mjr = Loop::major();
     }
 
 void
@@ -48,23 +51,76 @@ LoopCo::getLoopData( ProcPart& ppart )
     list<FstabEntry> l;
     EtcFstab* fstab = getStorage()->getFstab();
     fstab->getFileBasedLoops( getStorage()->root(), l );
-    for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
+    if( !l.empty() )
 	{
-	string lfile = getStorage()->root() + i->dentry;
-	if( findLoop( i->dentry ))
-	    y2warning( "duplicate loop file %s", i->dentry.c_str() );
-	else if( !i->loop_dev.empty() && Volume::loopInUse( getStorage(),
-	                                                    i->loop_dev ) )
-	    y2warning( "duplicate loop_device %s", i->loop_dev.c_str() );
-	else if( !checkNormalFile( lfile ))
-	    y2warning( "file %s not existent or special", lfile.c_str() );
-	else
+	SystemCmd c( "losetup -a" );
+	for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-	    Loop *l = new Loop( *this, i->loop_dev, lfile, ppart );
-	    l->setEncryption( i->encr );
-	    l->setFs( Volume::toFsType(i->fs) );
-	    addToList( l );
+	    y2mil( "i:" << *i );
+	    string lfile = getStorage()->root() + i->device;
+	    if( findLoop( i->dentry ))
+		y2warning( "duplicate loop file %s", i->dentry.c_str() );
+	    else if( !i->loop_dev.empty() && Volume::loopInUse( getStorage(),
+								i->loop_dev ) )
+		y2warning( "duplicate loop_device %s", i->loop_dev.c_str() );
+	    else if( !checkNormalFile( lfile ))
+		y2warning( "file %s not existent or special", lfile.c_str() );
+	    else
+		{
+		Loop *l = new Loop( *this, i->loop_dev, lfile, 
+				    i->dmcrypt, !i->noauto?i->dentry:"",
+				    ppart, c );
+		l->setEncryption( i->encr );
+		l->setFs( Volume::toFsType(i->fs) );
+		y2mil( "l:" << *l );
+		addToList( l );
+		}
 	    }
+	LoopPair p=loopPair(Loop::notDeleted);
+	LoopIter i=p.begin();
+	std::map<string,string> mp = ProcMounts(getStorage()).allMounts();
+	while( i!=p.end() )
+	    {
+	    if( i->dmcrypt() )
+		{
+		y2mil( "i:" << *i );
+		if( i->dmcryptDevice().empty() )
+		    {
+		    const Dm* dm = 0;
+		    if( !i->loopDevice().empty() )
+			{
+			getStorage()->findDmUsing( i->loopDevice(), dm );
+			}
+		    if( dm==0 && !i->getMount().empty() && 
+			!mp[i->getMount()].empty() )
+			{
+			y2mil( "mp:" << i->getMount() << " dev:" << 
+			       mp[i->getMount()] );
+			getStorage()->findDm( mp[i->getMount()], dm );
+			}
+		    if( dm )
+			{
+			i->setDmcryptDev( dm->device() );
+			i->setSize( dm->sizeK() );
+			}
+		    y2mil( "i:" << *i );
+		    }
+		getStorage()->removeDm( i->dmcryptDevice() );
+		}
+	    ++i;
+	    }
+	}
+    }
+
+void LoopCo::loopIds( std::list<unsigned>& l ) const
+    {
+    l.clear();
+    ConstLoopPair p=loopPair(Loop::notDeleted);
+    ConstLoopIter i=p.begin();
+    while( i!=p.end() )
+	{
+	l.push_back( i->nr() );
+	++i;
 	}
     }
 
@@ -114,11 +170,11 @@ LoopCo::findLoopDev( const string& dev, LoopIter& i )
 
 int
 LoopCo::createLoop( const string& file, bool reuseExisting,
-                    unsigned long long sizeK, string& device )
+                    unsigned long long sizeK, bool dmcr, string& device )
     {
     int ret = 0;
-    y2milestone( "file:%s reuseEx:%d sizeK:%llu", file.c_str(),
-                 reuseExisting, sizeK );
+    y2milestone( "file:%s reuseEx:%d sizeK:%llu dmcr:%d", file.c_str(),
+                 reuseExisting, sizeK, dmcr );
     if( readonly() )
 	{
 	ret = LOOP_CHANGE_READONLY;
@@ -130,7 +186,7 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
 	}
     if( ret==0 )
 	{
-	Loop* l = new Loop( *this, file, reuseExisting, sizeK );
+	Loop* l = new Loop( *this, file, reuseExisting, sizeK, dmcr );
 	l->setCreated( true );
 	addToList( l );
 	device = l->device();
@@ -183,7 +239,7 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 	}
     if( ret==0 )
 	{
-	if( !findLoop( file, i ))
+	if( !findLoop( file, i ) && !findLoopDev( file, i ) )
 	    ret = LOOP_UNKNOWN_FILE;
 	}
     if( ret==0 && i->getUsedByType() != UB_NONE )
@@ -236,7 +292,7 @@ LoopCo::doCreate( Volume* v )
 	    ret = LOOP_FILE_CREATE_FAILED;
 	if( ret==0 )
 	    {
-	    ret = l->doLosetup();
+	    ret = l->doCrsetup();
 	    }
 	if( ret==0 )
 	    {

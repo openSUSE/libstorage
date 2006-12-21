@@ -136,8 +136,8 @@ DmCo::getDmData( ProcPart& ppart )
 	    const map<string,unsigned long>& pe = m->getPeMap();
 	    bool multipath = m->getTargetName()=="multipath" ||
 			     m->getTargetName()=="emc";
-	    for( map<string,unsigned long>::const_iterator it = pe.begin();
-		 it!=pe.end(); ++it )
+	    map<string,unsigned long>::const_iterator it;
+	    for( it=pe.begin(); it!=pe.end(); ++it )
 		{
 		if( !getStorage()->canUseDevice( it->first, true ))
 		    in_use = true;
@@ -146,10 +146,19 @@ DmCo::getDmData( ProcPart& ppart )
 		}
 	    string tmp = m->device();
 	    tmp.erase( 5, 7 );
-	    bool known = getStorage()->knownDevice( tmp, true );
+	    bool skip = getStorage()->knownDevice( tmp, true );
 	    y2mil( "in_use:" << in_use << " multipath:" << multipath <<
-	           " known " << tmp << " is:" << known );
-	    if( !known && m->sizeK()>0 )
+	           " known " << tmp << " is:" << skip );
+	    it=pe.begin();
+	    if( !skip && m->getTargetName()=="crypt" && it!=pe.end() &&
+		getStorage()->knownDevice( it->first ))
+		{
+		skip = true;
+		getStorage()->setDmcryptData( it->first, m->device(),
+		                              m->sizeK() );
+		getStorage()->setUsedBy( it->first, UB_NONE, "" );
+		}
+	    if( !skip && m->sizeK()>0 )
 		addDm( m );
 	    else
 		delete( m );

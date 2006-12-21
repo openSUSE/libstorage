@@ -29,8 +29,9 @@ class Volume
 	virtual ~Volume();
 
 	const string& device() const { return dev; }
-	const string& mountDevice() const { return( is_loop?loop_dev:dev ); }
+	const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
+	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
 	const Container* getContainer() const { return cont; }
 	storage::CType cType() const;
 	bool deleted() const { return del; }
@@ -63,17 +64,19 @@ class Volume
 	int changeMountBy( storage::MountByType mby );
 	virtual int changeMount( const string& m );
 	bool loop() const { return is_loop; }
+	bool dmcrypt() const { return( encryption==ENC_LUKS ); }
 	bool loopActive() const { return( is_loop&&loop_active ); }
-	bool needLosetup() const; 
+	bool dmcryptActive() const { return( dmcrypt()&&dmcrypt_active ); }
+	bool needCrsetup() const; 
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
 	int setLabel( const string& val );
 	int eraseLabel() { label.erase(); orig_label.erase(); return 0; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
-	void setEncryption( storage::EncryptType val=storage::ENC_TWOFISH )
+	void setEncryption( storage::EncryptType val=storage::ENC_LUKS )
 	    { encryption=orig_encryption=val; }
-	int setEncryption( bool val );
+	virtual int setEncryption( bool val, storage::EncryptType typ=storage::ENC_LUKS );
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val );
 	void clearCryptPwd() { crypt_pwd.erase(); }
@@ -89,10 +92,8 @@ class Volume
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { fstab_opt=val; }
-	bool needFstabUpdate() const
-	    { return( !ignore_fstab &&
-	              (fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
-	               encryption!=orig_encryption) ); }
+	void updateFstabOptions();
+	bool needFstabUpdate() const;
 	const string& getMkfsOption() const { return mkfs_opt; }
 	int setMkfsOption( const string& val ) { mkfs_opt=val; return 0; }
 	const string& getDescText() const { return dtxt; }
@@ -108,6 +109,7 @@ class Volume
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
+	void setDmcryptDev( const string& dm, bool active );
 	virtual void forgetResize() { size_k=orig_size_k; }
 	virtual bool canUseDevice() const;
 
@@ -127,12 +129,12 @@ class Volume
 
 	int prepareRemove();
 	int umount( const string& mp="" );
-	int loUnsetup();
+	int crUnsetup( bool force=false );
 	int mount( const string& mp="" );
 	int canResize( unsigned long long newSizeK ) const;
 	int doMount();
 	int doFormat();
-	int doLosetup();
+	int doCrsetup();
 	int doSetLabel();
 	int doFstabUpdate();
 	int resizeFs();
@@ -146,13 +148,17 @@ class Volume
 	string mountText( bool doing=true ) const;
 	string labelText( bool doing=true ) const;
 	string losetupText( bool doing=true ) const;
+	string crsetupText( bool doing=true ) const;
 	string fstabUpdateText() const;
 	string sizeString() const;
 	string bootMount() const;
 	bool optNoauto() const;
-	bool inCrypto() const { return( is_loop && !optNoauto() ); }
+	bool inCryptotab() const { return( !dmcrypt() && is_loop && !optNoauto() ); }
+	bool inCrypttab() const { return( dmcrypt() && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
+	int getFreeLoop( SystemCmd& loopData );
+	int getFreeLoop( SystemCmd& loopData, const std::list<unsigned>& ids );
 	void getInfo( storage::VolumeInfo& info ) const;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
 	void updateFsData();
@@ -191,14 +197,30 @@ class Volume
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData );
 	void getFstabData( EtcFstab& fstabData );
+	void getStartData();
 	void getTestmodeData( const string& data );
+	void replaceAltName( const string& prefix, const string& newn );
 	string getMountByString( storage::MountByType mby, const string& dev,
-	                         const string& uuid, const string& label ) const;
+	                         const string& uuid, 
+				 const string& label ) const;
+	string getFstabDevice();
+	string getFstabDentry();
+	void getFstabOpts( std::list<string>& ol );
+	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
+	string getDmcryptName();
+	bool needLosetup() const; 
+	bool needCryptsetup() const; 
+	int doLosetup();
+	int doCryptsetup();
+	int loUnsetup( bool force=false );
+	int cryptUnsetup( bool force=false );
 
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
-	storage::EncryptType detectLoopEncryption();
+	string getCryptsetupCmd( const string& dmdev, const string& mp, 
+	                         const string& pwdfile, bool format ) const;
+	storage::EncryptType detectEncryption();
 	string getFilesysSysfsPath() const;
 	void triggerUdevUpdate();
 
@@ -226,10 +248,12 @@ class Volume
 	bool ignore_fstab;
 	bool ignore_fs;
 	bool loop_active;
+	bool dmcrypt_active;
 	bool ronly;
 	storage::EncryptType encryption;
 	storage::EncryptType orig_encryption;
 	string loop_dev;
+	string dmcrypt_dev;
 	string fstab_loop_dev;
 	string crypt_pwd;
 	string nm;
