@@ -96,6 +96,9 @@ storage::MountByType Volume::defaultMountBy( const string& mp )
     if( (mb==MOUNTBY_PATH && udevPath().empty()) || 
         (mb==MOUNTBY_ID && udevId().empty()) )
 	mb = MOUNTBY_DEVICE;
+    if( encryption != ENC_NONE &&
+	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
+	mb = MOUNTBY_DEVICE;
     return( mb );
     }
 
