@@ -78,6 +78,13 @@ void Volume::setDmcryptDev( const string& dm, bool active )
     y2mil( "this:" << *this );
     }
 
+bool Volume::sameDevice( const string& device ) const
+    {
+    string d = normalizeDevice(device);
+    return( d==dev || 
+            find( alt_names.begin(), alt_names.end(), d )!=alt_names.end() );
+    }
+
 const string& Volume::mountDevice() const
     {
     if( dmcrypt() && !dmcrypt_dev.empty() )

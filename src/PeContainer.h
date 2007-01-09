@@ -63,7 +63,10 @@ class PeContainer : public Container
 	string addList() const;
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
-
+	bool findPe( const string& dev, const std::list<Pv>& pl, 
+	             std::list<Pv>::const_iterator& i ) const;
+	bool findPe( const string& dev, std::list<Pv>& pl, 
+	             std::list<Pv>::iterator& i );
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
 	                std::list<Pv>& plrem, unsigned long& removed_pe );
@@ -71,8 +74,8 @@ class PeContainer : public Container
 	static int addLvPeDistribution( unsigned long le, unsigned stripe,
 					std::list<Pv>& pl, std::list<Pv>& pladd, 
 					std::map<string,unsigned long>& pe_map );
-	static int remLvPeDistribution( unsigned long le, std::map<string,unsigned long>& pe_map,
-					std::list<Pv>& pl, std::list<Pv>& pladd );
+	int remLvPeDistribution( unsigned long le, std::map<string,unsigned long>& pe_map,
+				 std::list<Pv>& pl, std::list<Pv>& pladd );
 	virtual bool checkConsistency() const;
 
 	void addPv( const Pv* p );

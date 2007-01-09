@@ -49,6 +49,7 @@ class Volume
 	bool ignoreFs() const { return( ignore_fs ); }
 	void setIgnoreFs( bool val=true ) { ignore_fs=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
+	bool sameDevice( const string& device ) const;
 	bool fstabAdded() const { return( fstab_added ); }
 	const storage::usedBy& getUsedBy()  const{ return( uby ); }
 	storage::UsedByType getUsedByType() const { return( uby.type() ); }

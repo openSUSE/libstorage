@@ -89,11 +89,9 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
     int added_pv = false;
     Pv cur_pv;
     list<Pv>::iterator cur;
-    cur = find( pl.begin(), pl.end(), dev );
-    if( cur==pl.end() )
+    if( !findPe( dev, pl, cur ))
 	{
-	cur = find( pladd.begin(), pladd.end(), dev );
-	if( cur!=pladd.end() )
+	if( findPe( dev, pladd, cur ))
 	    added_pv = true;
 	else
 	    ret = PEC_PV_NOT_FOUND;
@@ -295,8 +293,7 @@ PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& p
     y2mil( "pladd:" << pladd );
     while( le>0 && ret==0 && mit != pe_map.end() )
 	{
-	if( (p=find( pl.begin(), pl.end(), mit->first))!=pl.end() ||
-	    (p=find( pladd.begin(), pladd.end(), mit->first))!=pladd.end())
+	if( findPe( mit->first, pl, p ) || findPe( mit->first, pladd, p ) )
 	    {
 	    int tmp = min(le,mit->second);
 	    p->free_pe += tmp;
@@ -324,7 +321,8 @@ unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
 
 bool PeContainer::addedPv( const string& dev ) const
     {
-    bool ret = find( pv_add.begin(), pv_add.end(), dev )!=pv_add.end();
+    list<Pv>::const_iterator i;
+    bool ret = findPe( dev, pv_add, i );
     y2mil( "dev:" << dev << " ret:" << ret );
     return( ret );
     }
@@ -406,17 +404,63 @@ bool PeContainer::checkCreateConstraints()
     return( ret );
     }
 
+bool PeContainer::findPe( const string& dev, const std::list<Pv>& pl,
+			  std::list<Pv>::const_iterator& i ) const
+    {
+    bool ret = !pl.empty();
+    if( ret )
+	{
+	const Volume *vol;
+	if( getStorage()->findVolume( dev, vol ))
+	    {
+	    i = pl.begin();
+	    while( i!=pl.end() && !vol->sameDevice( i->device ))
+		++i;
+	    }
+	else
+	    {
+	    y2war( "unknown volume:" << dev );
+	    i = find( pl.begin(), pl.end(), dev );
+	    }
+	ret = i!=pl.end();
+	}
+    y2mil( "dev:" << dev << " ret:" << ret );
+    return( ret );
+    }
+
+bool PeContainer::findPe( const string& dev, std::list<Pv>& pl,
+			  std::list<Pv>::iterator& i )
+    {
+    bool ret = !pl.empty();
+    if( ret )
+	{
+	const Volume *vol;
+	if( getStorage()->findVolume( dev, vol ))
+	    {
+	    i = pl.begin();
+	    while( i!=pl.end() && !vol->sameDevice( i->device ))
+		++i;
+	    }
+	else
+	    {
+	    y2war( "unknown volume:" << dev );
+	    i = find( pl.begin(), pl.end(), dev );
+	    }
+	ret = i!=pl.end();
+	}
+    y2mil( "dev:" << dev << " ret:" << ret );
+    return( ret );
+    }
+
 void PeContainer::addPv( const Pv* p )
     {
     getStorage()->eraseLabelVolume( p->device );
-    list<Pv>::iterator i = find( pv.begin(), pv.end(), *p );
-    if( i != pv.end() )
+    list<Pv>::iterator i;
+    if( findPe( p->device, pv, i ))
 	*i = *p;
-    else if( find( pv_remove.begin(), pv_remove.end(), *p ) == 
-             pv_remove.end() )
+    else if( !findPe( p->device, pv_remove, i ))
 	{
-	i = find( pv_add.begin(), pv_add.end(), *p );
-	if( i!=pv_add.end() )
+	if( findPe( p->device, pv_add, i ))
 	    pv_add.erase(i);
 	pv.push_back( *p );
 	}
@@ -484,8 +528,7 @@ PeContainer::checkConsistency() const
 	 mit!=peg.end(); ++mit )
 	{
 	sum += mit->second;
-	if( (p=find( pv.begin(), pv.end(), mit->first ))!=pv.end()||
-	    (p=find( pv_add.begin(), pv_add.end(), mit->first ))!=pv_add.end())
+	if( findPe( mit->first, pv, p ) || findPe( mit->first, pv_add, p ) )
 	    {
 	    if( mit->second != p->num_pe-p->free_pe )
 		{
