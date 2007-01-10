@@ -1014,8 +1014,9 @@ pair<string,long> Disk::getDiskPartition( const string& dev )
     if( p != string::npos && (!need_p||dev[p]=='p') && isdigit(dev[p+1]))
 	{
 	dev.substr(p+1) >> nr;
-	disk = dev.substr( 0, p-(need_p?1:0));
+	disk = dev.substr( 0, p+(need_p?0:1));
 	}
+    y2mil( "dev:" << " disk:" << disk << " nr:" << nr );
     return( make_pair<string,long>(disk,nr) );
     }
 

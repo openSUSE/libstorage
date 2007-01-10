@@ -96,16 +96,19 @@ const string& Volume::mountDevice() const
 storage::MountByType Volume::defaultMountBy( const string& mp )
     {
     MountByType mb = cont->getStorage()->getDefaultMountBy();
+    y2mil( "mby:" << mb_names[mb] << " type:" << cType() );
     if( cType()!=DISK && (mb==MOUNTBY_ID || mb==MOUNTBY_PATH) )
 	mb = MOUNTBY_DEVICE;
     if( mp=="swap" && mb==MOUNTBY_UUID )
 	mb = MOUNTBY_DEVICE;
+    y2mil( "path:" << udevPath() << " id:" << udevId() );
     if( (mb==MOUNTBY_PATH && udevPath().empty()) || 
         (mb==MOUNTBY_ID && udevId().empty()) )
 	mb = MOUNTBY_DEVICE;
     if( encryption != ENC_NONE &&
 	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
 	mb = MOUNTBY_DEVICE;
+    y2mil( "dev:" << dev << " mp:" << mp << " mby:" << mb_names[mb] );
     return( mb );
     }
 
@@ -131,7 +134,6 @@ void Volume::init()
     is_mounted = ronly = fstab_added = ignore_fstab = ignore_fs = false;
     dmcrypt_active = false;
     detected_fs = fs = FSUNKNOWN;
-    mount_by = orig_mount_by = defaultMountBy();
     encryption = orig_encryption = ENC_NONE;
     mjr = mnr = 0;
     if( numeric||!nm.empty() )
@@ -141,6 +143,7 @@ void Volume::init()
 	}
     if( !numeric )
 	num = 0;
+    mount_by = orig_mount_by = defaultMountBy();
     }
 
 CType Volume::cType() const
@@ -512,7 +515,7 @@ int Volume::changeMount( const string& m )
 	    orig_fstab_opt = fstab_opt = "";
 	    orig_mount_by = mount_by = defaultMountBy(m);
 	    }
-	else if( !allowedMountBy( mount_by, m ))
+	else
 	    mount_by = defaultMountBy(m);
 	}
     y2milestone( "ret:%d", ret );
