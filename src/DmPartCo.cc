@@ -42,10 +42,11 @@ DmPartCo::~DmPartCo()
 int DmPartCo::addNewDev( string& device )
     {
     int ret = 0;
-    std::pair<string,long> dp = Disk::getDiskPartition( device );
-    y2mil( "dp:" << dp );
-    device = "/dev/mapper/" + numToName(dp.second);
-    Partition *p = getPartition( dp.second, false );
+    unsigned number;
+    device.substr( dev.length() ) >> number;
+    y2mil( "device:" << device << " dev:" << dev << " num:" << number );
+    device = "/dev/mapper/" + numToName(number);
+    Partition *p = getPartition( number, false );
     if( p==NULL )
 	ret = DMPART_PARTITION_NOT_FOUND;
     else
