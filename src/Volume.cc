@@ -1259,7 +1259,7 @@ int Volume::setEncryption( bool val, EncryptType typ )
 	    }
 	else
 	    {
-	    if( !loop_active && mp!="swap" && crypt_pwd.empty() )
+	    if( !loop_active && !isTmpCryptMp(mp) && crypt_pwd.empty() )
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret==0 && format )
 		{
@@ -1458,7 +1458,7 @@ string Volume::getCryptsetupCmd( const string& dmdev, const string& mount,
     string cmd = "/sbin/cryptsetup -q";
     if( format )
 	{
-	if( mount=="swap" )
+	if( isTmpCryptMp(mount) )
 	    {
 	    cmd += " --key-file /dev/urandom create";
 	    cmd += ' ';
@@ -1501,7 +1501,7 @@ Volume::setCryptPwd( const string& val )
 	 val.size()<8) ||
 	(encryption==ENC_LUKS && val.size()<1))
 	{
-	if( mp != "swap" )
+	if( !isTmpCryptMp(mp) )
 	    ret = VOLUME_CRYPT_PWD_TOO_SHORT;
 	}
     else
@@ -1524,7 +1524,7 @@ bool Volume::needLosetup() const
 bool Volume::needCryptsetup() const
     {
     return( dmcrypt()!=dmcrypt_active && 
-            (encryption==ENC_NONE || !crypt_pwd.empty() || mp=="swap"));
+            (encryption==ENC_NONE || !crypt_pwd.empty() || isTmpCryptMp(mp)));
     }
 
 bool Volume::needCrsetup() const
@@ -1584,6 +1584,10 @@ EncryptType Volume::detectEncryption()
 	string cmd = losetup ? getLosetupCmd( try_order[pos], fname )
 			     : getCryptsetupCmd( dmcrypt_dev, "", fname, 
 			                         false );
+	if( !losetup )
+	    {
+	    c.execute( "modprobe dm-crypt; modprobe aes" );
+	    }
 	c.execute( cmd );
         string use_dev = losetup?loop_dev:dmcrypt_dev;
 	if( c.retcode()==0 )
@@ -1778,7 +1782,7 @@ int Volume::doCryptsetup()
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();
 	    SystemCmd c;
-	    if( format || mp=="swap" )
+	    if( format || isTmpCryptMp(mp) )
 		{
 		c.execute( getCryptsetupCmd( dmcrypt_dev, mp, fname, true ));
 		if( c.retcode()!=0 )
@@ -1786,7 +1790,7 @@ int Volume::doCryptsetup()
 		if( ret==0 && mp=="swap" )
 		    c.execute( "mkswap " + dmcrypt_dev );
 		}
-	    if( ret==0 && mp!="swap" )
+	    if( ret==0 && !isTmpCryptMp(mp) )
 		{
 		c.execute( getCryptsetupCmd( dmcrypt_dev, mp, fname, false ));
 		if( c.retcode()!=0 )
@@ -2302,6 +2306,9 @@ int Volume::doFstabUpdate()
 		che.device = getFstabDevice();
 		che.dentry = getFstabDentry();
 		che.encr = encryption;
+		if( dmcrypt() && isTmpCryptMp(mp ) && mp!="swap" &&
+		    crypt_pwd.empty() )
+		    che.tmpcrypt = "tmp";
 		if( !dmcrypt() )
 		    che.loop_dev = fstab_loop_dev;
 		che.fs = fs_names[fs];
@@ -2875,6 +2882,14 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     *this = rhs;
     }
 
+bool Volume::isTmpCryptMp( const string& mp )
+    {
+    string *end = tmp_mount + lengthof(tmp_mount);
+    y2mil( "lengthof(tmp_mount):" << lengthof(tmp_mount) );
+    y2mil( "find mp:" << mp << " is:" << (find( tmp_mount, end, mp )!=end) );
+    return( find( tmp_mount, end, mp )!=end );
+    }
+
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
                               "xfs", "jfs", "hfs", "ntfs", "swap", "none" };
 
@@ -2882,6 +2897,8 @@ string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
 string Volume::enc_names[] = { "none", "twofish256", "twofish",
                                "twofishSL92", "luks", "unknown" };
+
+string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
 
 string Volume::empty_string;
 list<string> Volume::empty_slist;

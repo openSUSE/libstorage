@@ -185,6 +185,7 @@ class Volume
 	    { return enc_names[type]; }
 	static const string& mbyTypeString( const storage::MountByType type )
 	    { return mb_names[type]; }
+	static bool isTmpCryptMp( const string& mp );
 
 
     protected:
@@ -271,6 +272,7 @@ class Volume
 	static string fs_names[storage::FSNONE+1];
 	static string mb_names[storage::MOUNTBY_PATH+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
+	static string tmp_mount[3];
 	static string empty_string;
 	static std::list<string> empty_slist;
 

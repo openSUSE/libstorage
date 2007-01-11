@@ -989,11 +989,11 @@ EvmsCo::reduceCoText( bool doing, const string& dev ) const
 void 
 EvmsCo::init()
     {
+    PeContainer::init();
     dev = "evms";
     if( !nm.empty() )
 	dev += "/" + nm;
     normalizeDevice(dev);
-    pe_size = num_pe = free_pe = 0;
     lvm1 = false;
     }
 

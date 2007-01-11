@@ -33,6 +33,7 @@ struct FstabEntry
     bool noauto;
     bool crypto;
     bool cryptt;
+    bool tmpcrypt;
     string loop_dev;
     string cr_opts;
     string cr_key;
@@ -55,6 +56,8 @@ inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
 	s << " crypto";
     if( v.cryptt )
 	s << " cryptt";
+    if( v.tmpcrypt )
+	s << " tmpcrypt";
     if( v.loop )
 	s << " loop";
     if( v.dmcrypt )
@@ -74,7 +77,7 @@ inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
 
 struct FstabChange
     {
-    FstabChange() { freq=passno=0; encr=storage::ENC_NONE; }
+    FstabChange() { freq=passno=0; encr=storage::ENC_NONE; tmpcrypt=false; }
     FstabChange( const FstabEntry& e ) { *this = e; }
     FstabChange& operator=( const FstabEntry& rhs )
 	{
@@ -82,6 +85,7 @@ struct FstabChange
 	dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
 	opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
 	loop_dev = rhs.loop_dev; encr = rhs.encr; 
+	tmpcrypt = rhs.tmpcrypt;
 	return( *this );
 	}
     friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
@@ -94,6 +98,7 @@ struct FstabChange
     int passno;
     string loop_dev;
     storage::EncryptType encr;
+    bool tmpcrypt;
     };
 
 inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
@@ -102,6 +107,7 @@ inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
     dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
     opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
     loop_dev = rhs.loop_dev; encr = rhs.encr;
+    tmpcrypt = rhs.tmpcrypt;
     calcDependent();
     return( *this );
     }
@@ -116,6 +122,8 @@ inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
 	s << " loop_dev:" << v.loop_dev;
     if( v.encr != storage::ENC_NONE )
 	s << " encr:" << v.encr;
+    if( v.tmpcrypt )
+	s << " tmpcrypt";
     return( s );
     }
 

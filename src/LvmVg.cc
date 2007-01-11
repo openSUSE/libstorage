@@ -874,9 +874,10 @@ LvmVg::reduceVgText( bool doing, const string& dev ) const
 void 
 LvmVg::init()
     {
+    PeContainer::init();
     dev = nm;
     normalizeDevice(dev);
-    num_lv = pe_size = num_pe = free_pe = 0;
+    num_lv = 0;
     inactiv = lvm1 = false;
     }
 

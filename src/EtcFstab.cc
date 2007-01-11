@@ -541,22 +541,26 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
     string tmp = e.device;
     ls.push_back( tmp );
-    ls.push_back( e.cr_key.empty()?"none":e.cr_key );
+    tmp = e.cr_key;
+    if( e.tmpcrypt || e.mount=="swap" )
+	tmp = "/dev/urandom";
+    ls.push_back( tmp.empty()?"none":tmp );
     tmp = e.cr_opts;
-    if( tmp.empty() )
-	tmp = (e.mount=="swap")?"swap":"none";
-    else
-	{
-	list<string>::iterator i;
-	list<string> ls = splitString( tmp );
-	if( e.mount=="swap" && 
-	    find( ls.begin(), ls.end(), "swap" )==ls.end() )
-	    ls.push_back("swap");
-	else if( e.mount!="swap" && 
-		 (i=find( ls.begin(), ls.end(), "swap" ))!=ls.end() )
-	    ls.erase(i);
-	tmp = mergeString( ls, "," );
-	}
+    list<string>::iterator i;
+    list<string> tls = splitString( tmp );
+    if( e.mount=="swap" && 
+	find( tls.begin(), tls.end(), "swap" )==tls.end() )
+	tls.push_back("swap");
+    else if( e.mount!="swap" && 
+	     (i=find( tls.begin(), tls.end(), "swap" ))!=tls.end() )
+	tls.erase(i);
+    if( e.tmpcrypt && 
+	find( tls.begin(), tls.end(), "tmp" )==tls.end() )
+	tls.push_back("tmp");
+    else if( e.tmpcrypt && 
+	     (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
+	tls.erase(i);
+    tmp = mergeString( tls, "," );
     ls.push_back( tmp );
     tmp = e.cr_info;
     if( tmp.empty() )
