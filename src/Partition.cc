@@ -110,6 +110,11 @@ void Partition::addUdevData()
     {
     addAltUdevPath( num );
     addAltUdevId( num );
+    y2mil( "dev:" << dev << " mby:" << mbyTypeString(mount_by) << 
+           " orig:" << mbyTypeString(orig_mount_by) );
+    mount_by = orig_mount_by = defaultMountBy();
+    y2mil( "dev:" << dev << " mby:" << mbyTypeString(mount_by) << 
+           " orig:" << mbyTypeString(orig_mount_by) );
     }
 
 void Partition::addAltUdevId( unsigned num )

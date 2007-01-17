@@ -515,8 +515,10 @@ int Volume::changeMount( const string& m )
 	    orig_fstab_opt = fstab_opt = "";
 	    orig_mount_by = mount_by = defaultMountBy(m);
 	    }
+	/*
 	else
 	    mount_by = defaultMountBy(m);
+	*/
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -527,7 +529,11 @@ int Volume::changeMountBy( MountByType mby )
     int ret = 0;
     y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
     y2mil( "vorher:" << *this );
-    if( !mp.empty() )
+    if( uby.t != UB_NONE )
+	{
+	ret = VOLUME_ALREADY_IN_USE;
+	}
+    else
 	{
 	if( mby == MOUNTBY_LABEL || mby == MOUNTBY_UUID )
 	    {
@@ -549,12 +555,6 @@ int Volume::changeMountBy( MountByType mby )
 	if( ret==0 )
 	    mount_by = mby;
 	}
-    else if( uby.t != UB_NONE )
-	{
-	ret = VOLUME_ALREADY_IN_USE;
-	}
-    else
-	ret = VOLUME_FSTAB_EMPTY_MOUNT;
     y2mil( "nachher:" << *this );
     y2mil( "needFstabUdpate:" << needFstabUpdate() );
     y2milestone( "ret:%d", ret );
@@ -573,17 +573,15 @@ int Volume::changeFstabOptions( const string& options )
     int ret = 0;
     y2milestone( "device:%s options:%s encr:%s", dev.c_str(), options.c_str(),
                  encTypeString(encryption).c_str() );
-    if( !mp.empty() )
-	{
-	fstab_opt = options;
-	updateFstabOptions();
-	}
-    else if( uby.t != UB_NONE )
+    if( uby.t != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
     else
-	ret = VOLUME_FSTAB_EMPTY_MOUNT;
+	{
+	fstab_opt = options;
+	updateFstabOptions();
+	}
     y2milestone( "ret:%d", ret );
     return( ret );
     }

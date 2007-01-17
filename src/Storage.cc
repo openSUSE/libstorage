@@ -1980,23 +1980,24 @@ Storage::changeMountBy( const string& device, MountByType mby )
 
 int
 Storage::getMountBy( const string& device, MountByType& mby )
-{
+    {
     int ret = 0;
     assertInit();
     y2milestone( "device:%s", device.c_str());
     VolIterator vol;
     ContIterator cont;
     if( findVolume( device, cont, vol ) )
-    {
+	{
 	mby = vol->getMountBy();
-    }
+	}
     else
-    {
+	{
+	mby = defaultMountBy;
 	ret = STORAGE_VOLUME_NOT_FOUND;
-    }
+	}
     y2milestone( "ret:%d mby:%s", ret, Volume::mbyTypeString(mby).c_str());
     return( ret );
-}
+    }
 
 int
 Storage::changeFstabOptions( const string& device, const string& options )
