@@ -2716,6 +2716,32 @@ int Storage::evmsActivate()
 		detectEvms();
 		VPair p = vPair( isEvms );
 		detectFsData( p.begin(), p.end() );
+		EvmsCoPair ep = evCoPair();
+		std::map<string,CCont>::iterator i=backups.find("initial");
+		if( !evCoPair().empty() && i!=backups.end() )
+		    {
+		    std::list<Container*>::iterator ci=i->second.begin();
+		    while( ci!=i->second.end() && (*ci)->device()!="/dev/evms" )
+			++ci;
+		    if( ci==i->second.end() )
+			{
+			EvmsCoIterator coi = ep.begin();
+			while( coi != ep.end() )
+			    {
+			    ci=i->second.begin();
+			    while( ci!=i->second.end() && (*ci)->device()!=coi->device() )
+				++ci;
+			    if( ci==i->second.end() )
+				{
+				EvmsCo* co = new EvmsCo( *coi );
+				y2mil( "adding:" << co->device() );
+				logCo( co );
+				i->second.push_back( co );
+				}
+			    ++coi;
+			    }
+			}
+		    }
 		}
 	    }
 	}
@@ -3670,10 +3696,9 @@ int Storage::commit()
     VPair vp = vPair( fstabAdded );
     for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
 	i->setFstabAdded(false);
+    if( ret!=0 )
+	dumpObjectList();
     y2milestone( "ret:%d", ret );
-    ContIterator cc;
-    if( findContainer( "/dev/evms", cc ))
-	logCo( &(*cc) );
     return( ret );
     }
 
@@ -4484,11 +4509,11 @@ void Storage::removeDmTableTo( const Volume& vol )
     {
     if( vol.cType()==DISK || vol.cType()==MD )
 	{
+	removeDmTable( Dm::devToTable(vol.device()));
 	y2mil( "dev:" << vol.device() );
 	removeDmMapsTo( vol.device() );
 	if( vol.cType()==DISK )
 	    removeDmMapsTo( vol.getContainer()->device() );
-	removeDmTable( Dm::devToTable(vol.device()));
 	}
     }
     
