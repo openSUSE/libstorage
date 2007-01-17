@@ -2304,11 +2304,13 @@ int Volume::doFstabUpdate()
 		changed = true;
 		FstabChange che;
 		che.device = getFstabDevice();
+		if( !udevId().empty() )
+		    che.device = udevId().front();
 		che.dentry = getFstabDentry();
 		che.encr = encryption;
 		if( dmcrypt() && isTmpCryptMp(mp ) && mp!="swap" &&
 		    crypt_pwd.empty() )
-		    che.tmpcrypt = "tmp";
+		    che.tmpcrypt = true;
 		if( !dmcrypt() )
 		    che.loop_dev = fstab_loop_dev;
 		che.fs = fs_names[fs];

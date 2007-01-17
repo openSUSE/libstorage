@@ -745,6 +745,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    string SysfsDir = sysfs_dir+"/"+Entry->d_name;
 	    string SysfsFile = SysfsDir+"/range";
 	    y2milestone( "autodetectDisks sysfsdir:%s", SysfsDir.c_str() );
+	    y2mil( "autodetectDisks Range access:" << access( SysfsFile.c_str(), R_OK ) );
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
@@ -757,6 +758,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 		File >> Size;
 		}
 	    string dn = Entry->d_name;
+	    y2mil( "autodetectDisks Range:" << Range << " Size:" << Size );
 	    if( Range>1 && (Size>0||dn.find( "dasd" )==0) )
 		{
 		DiskData::DTyp t = (dn.find( "dasd" )==0)?DiskData::DASD
