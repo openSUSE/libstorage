@@ -15,6 +15,7 @@ using namespace std;
 using namespace storage;
 
 static bool lvNotCreated( const LvmLv& l ) { return( !l.created() ); }
+static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.deleted() ); }
 
 LvmVg::LvmVg( Storage * const s, const string& Name ) :
     PeContainer(s,staticType())
@@ -633,7 +634,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
                    string& status, string& alloc, bool& ro )
     {
     y2milestone( "addLv:%s", name.c_str() );
-    LvmLvPair p=lvmLvPair(lvNotDeleted);
+    LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
     LvmLvIter i=p.begin();
     while( i!=p.end() && i->name()!=name )
 	{
@@ -658,7 +659,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	}
     else
 	{
-	p=lvmLvPair();
+	p=lvmLvPair(lvNotCreated);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    {
@@ -1140,6 +1141,7 @@ LvmVg::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    getStorage()->waitForDevice( l->device() );
+	    l->setCreated(false);
 	    getVgData( name() );
 	    checkConsistency();
 	    }

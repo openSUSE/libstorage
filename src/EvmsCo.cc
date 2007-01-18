@@ -30,6 +30,7 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsTree& data ) :
     }
 
 static bool lvNotCreated( const Evms& l ) { return( !l.created() ); }
+static bool lvNotDeletedCreated( const Evms& l ) { return( !l.created()&&!l.deleted() ); }
 
 EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) :
     PeContainer(s,staticType())
@@ -711,7 +712,7 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
 	    n.erase( 0, pos+1 );
 	    }
 	}
-    EvmsPair p=evmsPair(lvNotDeleted);
+    EvmsPair p=evmsPair(lvNotDeletedCreated);
     EvmsIter i=p.begin();
     while( i!=p.end() && i->name()!=n )
 	{
@@ -732,7 +733,7 @@ void EvmsCo::addLv( unsigned long le, const string& name, bool native )
 	}
     else
 	{
-	p=evmsPair();
+	p=evmsPair(lvNotCreated);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=n )
 	    {
@@ -1566,6 +1567,7 @@ EvmsCo::doCreate( Volume* v )
 	getStorage()->waitForDevice( l->device() );
 	if( ret==0 )
 	    {
+	    l->setCreated(false);
 	    EvmsTree t;
 	    getEvmsList( t );
 	    getCoData( name(), t, true );
