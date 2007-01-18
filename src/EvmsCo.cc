@@ -657,7 +657,7 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
     {
     y2milestone( "begin" );
     map<unsigned,EvmsVol>::const_iterator v=data.volumes.begin(); 
-    Regex loop( "^loop[0-9]+$" );
+    Regex loop( "^loop[0123456789]+$" );
     while( v!=data.volumes.end() )
 	{
 	pe_size = 1;

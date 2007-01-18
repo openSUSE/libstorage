@@ -1317,7 +1317,7 @@ bool Volume::loopStringNum( const string& name, unsigned& num )
     {
     bool ret=false;
     string d = undevDevice(name);
-    static Regex loop( "^loop[0-9]+$" );
+    static Regex loop( "^loop[0123456789]+$" );
     if( loop.match( d ))
 	{
 	d.substr( 4 )>>num;

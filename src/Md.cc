@@ -508,7 +508,7 @@ Md::toMdParity( const string& val )
 
 bool Md::matchRegex( const string& dev )
     {
-    static Regex md( "^md[0-9]+$" );
+    static Regex md( "^md[0123456789]+$" );
     return( md.match(dev));
     }
 

@@ -158,7 +158,7 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
     string line;
     string tmp;
     list<Partition *> pl;
-    Regex part( "^"+device()+"[0-9]+$" );
+    Regex part( "^"+device()+"[0123456789]+$" );
 
     cmd.select( device() );
     cnt = cmd.numLines();

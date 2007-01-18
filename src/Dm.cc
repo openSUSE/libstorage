@@ -142,7 +142,7 @@ Dm::getTableInfo()
 		}
 	    list<string> sl = splitString( extractNthWord( 2, line, true ));
 	    y2mil( "sl:" << sl );
-	    Regex devspec( "^[0-9]+:[0-9]+$" );
+	    Regex devspec( "^[0123456789]+:[0123456789]+$" );
 	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
 		{
 		if( devspec.match( *i ))
