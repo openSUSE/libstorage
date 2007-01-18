@@ -1232,7 +1232,7 @@ bool EvmsCo::sendCommand( const string& cmd, bool one_line, list<string>& lines 
     //sockfd = getSocketFd();
     y2milestone( "ret:%d", ret );
     if( ret && !lines.empty() )
-	y2milestone( "line:%s", lines.front().c_str() );
+	y2mil( "lines:" << lines );
     return( ret );
     }
 
