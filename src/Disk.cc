@@ -552,10 +552,12 @@ Disk::execCheckFailed( const string& cmd_line )
 
 int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
     {
+    getStorage()->handleHald(true);
     cmd.execute( cmd_line );
     int ret = checkSystemError( cmd_line, cmd );
     if( ret!=0 )
 	setExtError( cmd );
+    getStorage()->handleHald(false);
     return( ret );
     }
 

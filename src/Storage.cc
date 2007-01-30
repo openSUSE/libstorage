@@ -11,6 +11,7 @@
 #include <sys/statvfs.h>
 #include <pwd.h>
 #include <config.h>
+#include <signal.h>
 
 #include <fstream>
 #include <sstream>
@@ -81,6 +82,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
     char * tenv = getenv( "YAST_IS_RUNNING" );
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     root_mounted = !inst_sys;
+    hald_pid = 0;
     if( !testmode )
 	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
     max_log_num = 5;
@@ -3677,6 +3679,33 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
     b << "> ";
     y2milestone( "%s", b.str().c_str() );
     }
+
+void Storage::handleHald( bool stop )
+    {
+    y2mil( "stop:" << stop );
+    int ret;
+    if( stop )
+	{
+	hald_pid = 0;
+	SystemCmd c( "ps ax | grep -w /usr/sbin/hald | grep -v grep" );
+	if( c.numLines()>0 )
+	    {
+	    extractNthWord( 0, *c.getLine(0) ) >> hald_pid;
+	    y2mil( "hald_pid:" << hald_pid );
+	    }
+	if( hald_pid>0 )
+	    {
+	    ret = kill( hald_pid, SIGSTOP );
+	    y2mil( "ret kill:" << ret << " pid:" << hald_pid );
+	    }
+	}
+    else if( !stop && hald_pid>0 )
+	{
+	ret = kill( hald_pid, SIGCONT );
+	y2mil( "ret kill:" << ret << " pid:" << hald_pid );
+	}
+    }
+
 
 static bool notLoop( const Container& c ) { return( c.type()!=LOOP ); }
 static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
