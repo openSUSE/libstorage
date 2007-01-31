@@ -3869,6 +3869,7 @@ Storage::evmsActivateDevices()
     list<Container*> co;
     list<Volume*> vol;
     list<string> save_disks;
+    list<string> dev_dm_remove;
 
     y2milestone( "evmsActivateDevices start" );
     CPair p = cPair( needSaveFromEvms );
@@ -3878,6 +3879,17 @@ Storage::evmsActivateDevices()
 	i->getToCommit( FORMAT, co, vol );
 	i->getToCommit( MOUNT, co, vol );
 	++i;
+	Disk* disk;
+	if( i->type()==DISK && (disk = dynamic_cast<Disk *>(&(*i)))!=NULL )
+	    {
+	    Disk::PartPair dp = disk->partPair(Disk::bootSpecial);
+	    for (Disk::PartIter i2 = dp.begin(); i2 != dp.end(); ++i2)
+		{
+		y2mil( "boot:" << *i2 );
+		dev_dm_remove.push_back(i2->device());
+		vol.push_back( &(*i2) );
+		}
+	    }
 	}
     if( !vol.empty() )
 	{
@@ -3927,7 +3939,13 @@ Storage::evmsActivateDevices()
 	}
     EvmsCo::activateDevices();
     if( !vol.empty() )
+	{
 	removeDmTable( tblname );
+	y2mil( "dev_dm_remove:" << dev_dm_remove );
+	for( list<string>::const_iterator i=dev_dm_remove.begin(); 
+	     i!=dev_dm_remove.end(); ++i )
+	    removeDmTableTo( *i );
+	}
     updateDmEmptyPeMap();
     }
 
