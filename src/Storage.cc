@@ -4549,7 +4549,23 @@ void Storage::removeDmTableTo( const Volume& vol )
 	y2mil( "dev:" << vol.device() );
 	removeDmMapsTo( vol.device() );
 	if( vol.cType()==DISK )
+	    {
 	    removeDmMapsTo( vol.getContainer()->device() );
+	    if( vol.getContainer()->majorNr()>0 )
+		{
+		string cmd = "dmsetup table | grep -w ";
+		cmd += decString(vol.getContainer()->majorNr()) + ":" +
+		       decString(vol.getContainer()->minorNr());
+		cmd += " | sed s/:.*// | uniq";
+		SystemCmd c( cmd );
+		unsigned line=0;
+		while( line<c.numLines() )
+		    {
+		    removeDmTable( *c.getLine(line) );
+		    line++;
+		    }
+		}
+	    }
 	}
     }
     

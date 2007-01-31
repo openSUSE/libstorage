@@ -36,6 +36,7 @@ class Dasd : public Disk
 	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
 
 	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
 	bool detectPartitionsFdasd(ProcPart& ppart);
 	bool detectPartitions( ProcPart& ppart );
 	bool checkFdasdOutput( SystemCmd& Cmd, ProcPart& ppart );
