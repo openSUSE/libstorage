@@ -3580,7 +3580,12 @@ static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
         if( rhs->isMounted() )
 	    return( rhs->getMount()>lhs->getMount() );
 	else
-	    return( *rhs > *lhs );
+	    {
+	    if( rhs->needShrink() == lhs->needShrink() )
+		return( *rhs > *lhs );
+	    else
+		return( rhs->needShrink() );
+	    }
 	}
     else
 	return( rhs->isMounted() );
