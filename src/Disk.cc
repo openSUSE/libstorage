@@ -180,7 +180,6 @@ void Disk::setUdevData( const string& path, const string& id )
                                         find_begin( "edd-" ) );
     if( i!=udev_id.end() )
 	{
-	udev_id.push_back( *i );
 	udev_id.erase( i );
 	}
     y2mil( "id:" << udev_id );
