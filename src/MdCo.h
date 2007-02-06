@@ -35,7 +35,7 @@ class MdCo : public Container
 
 	unsigned unusedNumber();
 	void syncRaidtab();
-
+	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate( bool val=true );
 	int removeVolume( Volume* v );

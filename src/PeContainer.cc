@@ -101,15 +101,14 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
     if( ret==0 && cur->free_pe<cur->num_pe )
 	{
 	list<Dm*> li;
-	VolPair lp=volPair(Volume::notDeleted);
-	VolIterator i=lp.begin();
+	DmPair lp=dmPair(Dm::notDeleted);
+	DmIter i=lp.begin();
 	while( ret==0 && i!=lp.end() )
 	    {
-	    Dm* dm = static_cast<Dm*>(&(*i));
-	    if( dm->usingPe( dev )>0 )
+	    if( i->usingPe( dev )>0 )
 		{
 		if( i->created() )
-		    li.push_back( dm );
+		    li.push_back( &(*i) );
 		else
 		    ret = PEC_REMOVE_PV_IN_USE;
 		}
@@ -335,8 +334,8 @@ bool PeContainer::checkCreateConstraints()
     unsigned long current = 0;
     typedef pair<unsigned long,Dm*> tpair;
     list< tpair > li;
-    VolPair lp=volPair();
-    VolIterator i=lp.begin();
+    DmPair lp=dmPair();
+    DmIter i=lp.begin();
     if( pv_add.size()>0 )
 	y2war( "should not happen pv_add:" << pv_add )
     if( pv_remove.size()>0 )
@@ -345,13 +344,13 @@ bool PeContainer::checkCreateConstraints()
 	{
 	unsigned long long tmp;
 	if( i->deleted() || i->needShrink() )
-	    y2war( "should not happen vol:" << *i )
+	    y2war( "should not happen dm:" << *i )
 	else if( i->created() || i->extendSize()>0 )
 	    {
 	    tmp = sizeToLe(i->created() ? i->sizeK() : i->extendSize());
 	    if( !i->created() )
 		current += sizeToLe( i->origSizeK() );
-	    li.push_back( make_pair(tmp,static_cast<Dm*>(&(*i))) );
+	    li.push_back( make_pair(tmp,&(*i)) );
 	    increase += tmp;
 	    y2mil( "inc:" << tmp << " sum:" << increase );
 	    y2mil( "vol:" << *i )
@@ -489,13 +488,15 @@ PeContainer::init()
     pe_size = 1;
     }
 
+static bool isDeleted( const Dm& l ) { return( l.deleted() ); }
+
 unsigned long
 PeContainer::leByLvRemove() const
     {
     unsigned long ret=0;
-    ConstVolPair p=volPair(Volume::isDeleted);
-    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-	ret += static_cast<const Dm*>(&(*i))->getLe();
+    ConstDmPair p=dmPair(isDeleted);
+    for( ConstDmIter i=p.begin(); i!=p.end(); ++i )
+	ret += i->getLe();
     y2milestone( "ret:%lu", ret );
     return( ret );
     }
@@ -505,14 +506,13 @@ PeContainer::checkConsistency() const
     {
     bool ret = true;
     unsigned long sum = 0;
-    ConstVolPair lp=volPair(Volume::notDeleted);
+    ConstDmPair lp=dmPair(Dm::notDeleted);
     map<string,unsigned long> peg;
     map<string,unsigned long>::iterator mi;
-    for( ConstVolIterator l = lp.begin(); l!=lp.end(); ++l )
+    for( ConstDmIter l = lp.begin(); l!=lp.end(); ++l )
 	{
-	const Dm * dm = static_cast<const Dm*>(&(*l));
-	ret = ret && dm->checkConsistency();
-	map<string,unsigned long> pem = dm->getPeMap();
+	ret = ret && l->checkConsistency();
+	map<string,unsigned long> pem = l->getPeMap();
 	for( map<string,unsigned long>::const_iterator mit=pem.begin();
 	     mit!=pem.end(); ++mit )
 	    {
@@ -552,6 +552,18 @@ PeContainer::checkConsistency() const
 	ret = false;
 	}
     return( ret );
+    }
+
+void PeContainer::changeDeviceName( const string& old, const string& nw )
+    {
+    list<Pv>::iterator i = find( pv_add.begin(), pv_add.end(), old );
+    if( i!=pv_add.end() )
+	i->device = nw;
+    DmPair dp=dmPair();
+    for( DmIter di=dp.begin(); di!=dp.end(); ++di )
+	{
+	di->changeDeviceName( old, nw );
+	}
     }
 
 namespace storage

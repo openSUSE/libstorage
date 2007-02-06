@@ -7,6 +7,7 @@
 #include "y2storage/Partition.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Disk.h"
+#include "y2storage/Storage.h"
 
 using namespace storage;
 using namespace std;
@@ -153,6 +154,7 @@ void Partition::changeNumber( unsigned new_num )
     {
     if( new_num!=num )
 	{
+	string old = dev;
 	if( orig_num==num )
 	    {
 	    orig_num = num;
@@ -167,8 +169,10 @@ void Partition::changeNumber( unsigned new_num )
 	                                    find_any( "/by-path/" ));
 	if( i!=alt_names.end() )
 	    *i = udevCompletePathPath( disk()->udevPath(), num );
+	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
+	getContainer()->getStorage()->changeDeviceName( old, dev );
 	}
     }
 

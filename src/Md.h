@@ -49,6 +49,7 @@ class Md : public Volume
 	string createText( bool doing ) const;
 	string formatText( bool doing ) const;
 	static bool notDeleted( const Md& l ) { return( !l.deleted() ); }
+	void changeDeviceName( const string& old, const string& nw );
 
 	void getInfo( storage::MdInfo& info ) const;
 	bool equalContent( const Md& rhs ) const;

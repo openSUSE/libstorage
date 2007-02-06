@@ -653,6 +653,16 @@ MdCo::doRemove( Volume* v )
     return( ret );
     }
 
+void MdCo::changeDeviceName( const string& old, const string& nw )
+    {
+    MdPair md=mdPair();
+    for( MdIter i=md.begin(); i!=md.end(); ++i )
+	{
+	i->changeDeviceName( old, nw );
+	}
+    }
+
+
 namespace storage
 {
 

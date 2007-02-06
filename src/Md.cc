@@ -291,6 +291,16 @@ Md::addSpareDevice( const string& dev )
 	spare.push_back(d);
     }
 
+void Md::changeDeviceName( const string& old, const string& nw )
+    {
+    list<string>::iterator i = find( devs.begin(), devs.end(), old );
+    if( i!=devs.end() )
+	*i = nw;
+    i = find( spare.begin(), spare.end(), old );
+    if( i!=spare.end() )
+	*i = nw;
+    }
+
 string Md::createCmd() const
     {
     string dnames;

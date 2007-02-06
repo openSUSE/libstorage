@@ -53,6 +53,8 @@ class Container
 
 	virtual int commitChanges( storage::CommitStage stage );
 	virtual int commitChanges( storage::CommitStage stage, Volume* vol );
+	virtual void changeDeviceName( const string& old, const string& nw )
+	    {};
 	unsigned numVolumes() const;
 	bool isEmpty() const;
 	void getInfo( storage::ContainerInfo& info ) const;

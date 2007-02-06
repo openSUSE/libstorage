@@ -45,6 +45,7 @@ class Dm : public Volume
 	virtual string removeText( bool doing ) const;
 	virtual string formatText( bool doing ) const;
 	void getInfo( storage::DmInfo& info ) const;
+	void changeDeviceName( const string& old, const string& nw );
 
 	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
 

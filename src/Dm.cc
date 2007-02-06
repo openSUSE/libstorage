@@ -331,6 +331,16 @@ void Dm::calcSize()
     setSize( num_le*pec()->peSize() );
     }
 
+void Dm::changeDeviceName( const string& old, const string& nw )
+    {
+    map<string,unsigned long>::const_iterator mit = pe_map.find( old );
+    if( mit != pe_map.end() )
+	{
+        pe_map[nw] = mit->second;
+	pe_map.erase(mit->first);
+	}
+    }
+
 string Dm::removeText( bool doing ) const
     {
     string txt;

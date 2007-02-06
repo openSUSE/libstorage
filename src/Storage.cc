@@ -4026,6 +4026,19 @@ bool Storage::checkDmMapsTo( const string& dev )
     return( ret );
     }
 
+void Storage::changeDeviceName( const string& old, const string& nw )
+    {
+    y2mil( "old:" << old << " new:" << nw );
+    CPair p = cPair();
+    ContIterator ci = p.begin();
+    while( ci!=p.end() )
+	{
+	ci->changeDeviceName( old, nw );
+	++ci;
+	}
+    }
+
+
 void
 Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
     {
