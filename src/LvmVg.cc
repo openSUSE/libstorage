@@ -406,6 +406,58 @@ LvmVg::removeLv( const string& name )
     }
 
 int 
+LvmVg::changeStripe( const string& name, unsigned long stripe )
+    {
+    int ret = 0;
+    y2milestone( "name:%s stripe:%lu", name.c_str(), stripe );
+    LvmLvIter i;
+    checkConsistency();
+    if( readonly() )
+	{
+	ret = LVM_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	i=p.begin();
+	while( i!=p.end() && i->name()!=name )
+	    ++i;
+	if( i==p.end() )
+	    ret = LVM_LV_UNKNOWN_NAME;
+	}
+    if( i->stripes()!=stripe )
+	{
+	if( !i->created() )
+	    ret = LVM_LV_ALREADY_ON_DISK;
+	map<string,unsigned long> pe_map;
+	if( ret==0 )
+	    {
+	    pe_map = i->getPeMap();
+	    ret = remLvPeDistribution( i->getLe(), pe_map, pv, pv_add );
+	    }
+	if( ret==0 )
+	    {
+	    free_pe += i->getLe();
+	    pe_map.clear();
+	    unsigned long num_le = sizeToLe(i->sizeK());
+	    if( stripe>1 )
+		num_le = ((num_le+stripe-1)/stripe)*stripe;
+	    ret = addLvPeDistribution( num_le, stripe, pv, pv_add, pe_map );
+	    if( ret==0 )
+		{
+		i->setPeMap( pe_map );
+		free_pe -= num_le;
+		i->setStripes( stripe );
+		}
+	    else 
+		free_pe -= i->getLe();
+	    }
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
 LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
     {
     int ret = 0;

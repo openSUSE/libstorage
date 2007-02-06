@@ -30,6 +30,7 @@ class LvmVg : public PeContainer
 	int createLv( const string& name, unsigned long long sizeK, 
 		      unsigned stripe, string& device );
 	int removeLv( const string& name );
+	int changeStripe( const string& name, unsigned long stripe );
 	int changeStripeSize( const string& name, 
 	                      unsigned long long stripeSize );
 

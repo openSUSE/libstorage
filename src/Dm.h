@@ -35,6 +35,7 @@ class Dm : public Volume
 	void getTableInfo();
 	virtual bool checkConsistency() const;
 	unsigned stripes() const { return stripe; }
+	unsigned setStripes( unsigned long val ) { return stripe=val; }
 	unsigned long long stripeSize() const { return stripe_size; }
 	void setStripeSize( unsigned long long val ) { stripe_size=val; }
 	string sysfsPath() const;

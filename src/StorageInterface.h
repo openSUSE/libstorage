@@ -1438,6 +1438,18 @@ namespace storage
 	virtual int removeLvmLv( const string& vg, const string& name ) = 0;
 
 	/**
+	 * Change stripe count of a LVM logical volume.
+	 * This can only be before the volume is created on disk.
+	 *
+	 * @param vg name of volume group
+	 * @param name of logical volume
+	 * @param stripe new stripe count of logical volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeLvStripeCount( const string& vg, const string& name,
+	                                 unsigned long stripes ) = 0;
+
+	/**
 	 * Change stripe size of a LVM logical volume.
 	 * This can only be before the volume is created on disk.
 	 *
@@ -1542,6 +1554,19 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
+
+	/**
+	 * Change strip count of a EVMS volume.
+	 * This can only be before the volume is created on disk.
+	 *
+	 * @param coname name of EVMS container
+	 * @param name of volume
+	 * @param stripe new stripe count of volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeEvmsStripeCount( const string& coname,
+	                                   const string& name,
+					   unsigned long stripe ) = 0;
 
 	/**
 	 * Change strip size of a EVMS volume.

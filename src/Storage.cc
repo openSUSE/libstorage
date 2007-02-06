@@ -2670,12 +2670,41 @@ Storage::removeLvmLv( const string& vg, const string& name )
     }
 
 int
+Storage::changeLvStripeCount( const string& vg, const string& name,
+			      unsigned long stripe )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "vg:%s name:%s stripe:%lu", vg.c_str(), name.c_str(),
+                 stripe );
+    LvmVgIterator i = findLvmVg( vg );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->changeStripe( name, stripe );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::changeLvStripeSize( const string& vg, const string& name,
 			     unsigned long long stripeSize )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "vg:%s name:%s striepSize:%llu", vg.c_str(), name.c_str(),
+    y2milestone( "vg:%s name:%s stripeSize:%llu", vg.c_str(), name.c_str(),
                  stripeSize );
     LvmVgIterator i = findLvmVg( vg );
     if( readonly )
@@ -3028,13 +3057,42 @@ Storage::removeEvmsVolume( const string& co, const string& name )
     }
 
 int
-Storage::changeEvmsStripeSize( const string& coname, const string& name,
-                               unsigned long long stripeSize )
-
+Storage::changeEvmsStripeCount( const string& coname, const string& name,
+			        unsigned long stripe )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "co:%s name:%s", coname.c_str(), name.c_str() );
+    y2milestone( "co:%s name:%s stripe:%llu", coname.c_str(), name.c_str(), 
+                 stripe );
+    EvmsCoIterator i = findEvmsCo( coname );
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != evCoEnd() )
+	{
+	ret = i->changeStripe( name, stripe );
+	}
+    else
+	{
+	ret = STORAGE_EVMS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+Storage::changeEvmsStripeSize( const string& coname, const string& name,
+                               unsigned long long stripeSize )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "co:%s name:%s stripeSize:%llu", coname.c_str(), 
+                 name.c_str(), stripeSize );
     EvmsCoIterator i = findEvmsCo( coname );
     if( readonly )
 	{
