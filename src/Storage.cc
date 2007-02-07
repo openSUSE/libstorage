@@ -3062,7 +3062,7 @@ Storage::changeEvmsStripeCount( const string& coname, const string& name,
     {
     int ret = 0;
     assertInit();
-    y2milestone( "co:%s name:%s stripe:%llu", coname.c_str(), name.c_str(), 
+    y2milestone( "co:%s name:%s stripe:%lu", coname.c_str(), name.c_str(), 
                  stripe );
     EvmsCoIterator i = findEvmsCo( coname );
     if( readonly )
