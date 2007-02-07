@@ -5379,6 +5379,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 	    string mp;
 	    if( !vol->isMounted() )
 		{
+		removeDmTableTo( *vol );
 		string mdir = tmpDir() + "/tmp_mp";
 		unlink( mdir.c_str() );
 		rmdir( mdir.c_str() );
