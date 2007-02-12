@@ -2144,7 +2144,7 @@ int Disk::doCreate( Volume* v )
 	    if( !getPartedValues( p ))
 		ret = DISK_PARTITION_NOT_FOUND;
 	    }
-	if( ret==0 )
+	if( ret==0 && p->type()!=EXTENDED )
 	    {
 	    bool used_as_pv = p->getUsedByType()==UB_EVMS ||
 	                      p->getUsedByType()==UB_LVM;
