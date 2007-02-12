@@ -28,7 +28,7 @@ class Evms : public Dm
 	void getInfo(storage::EvmsInfo&) const;
 	bool equalContent( const Evms& rhs ) const;
 	void logDifference( const Evms& d ) const;
-
+	const EvmsCo* const evmsCo() const;
 
     protected:
 	void init( const string& name );

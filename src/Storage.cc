@@ -2732,6 +2732,13 @@ static bool isEvms( const Volume& v )
     return( v.cType()==EVMS );
     }
 
+static bool evmsCo( const EvmsCo& co )
+    {
+    y2mil( "co:" << co );
+    y2mil( "isContainer:" << co.isContainer() );
+    return( co.isContainer());
+    }
+
 int Storage::evmsActivate()
     {
     int ret = 0;
@@ -2743,9 +2750,13 @@ int Storage::evmsActivate()
 	}
     else
 	{
-	ConstEvmsPair p = evmsPair();
+	ConstEvmsPair p = evmsPair(evmsCo);
 	if( !p.empty() )
+	    {
 	    y2warning( "evms already active:%u", p.length() );
+	    for( ConstEvmsIterator ei=p.begin(); ei!=p.end(); ++ei )
+		y2war( "vol:" << *ei );
+	    }
 	else
 	    {
 	    ret = EvmsCo::activateDevices();

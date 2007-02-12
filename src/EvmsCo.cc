@@ -38,6 +38,7 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) 
     nm = cont.name;
     y2debug( "constructing evms co %s lvm1:%d", nm.c_str(), cont.lvm1 );
     init();
+    container = true;
     lvm1 = cont.lvm1;
     getCoData( cont.name, data, false );
     EvmsPair p=evmsPair(lvNotCreated);
@@ -54,6 +55,7 @@ EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
 	nm = "lvm2/" + name;
     y2debug( "constructing evms co %s lvm1:%d", nm.c_str(), lv1 );
     init();
+    container = true;
     lvm1 = lv1;
     }
 
@@ -1047,7 +1049,7 @@ EvmsCo::init()
     if( !nm.empty() )
 	dev += "/" + nm;
     normalizeDevice(dev);
-    lvm1 = false;
+    lvm1 = container = false;
     }
 
 #define SOCKET_PATH "/var/lib/YaST2/socket_libstorage_evms"
@@ -1841,6 +1843,7 @@ std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     if( d.lvm1 )
       s << " lvm1";
     s << " UUID:" << d.uuid;
+    s << " cont:" << d.container;
     return( s );
     }
 
@@ -1855,6 +1858,13 @@ void EvmsCo::logDifference( const EvmsCo& d ) const
 	    log += " -->lvm1";
 	else
 	    log += " lvm1-->";
+	}
+    if( container!=d.container )
+	{
+	if( d.container )
+	    log += " -->cont";
+	else
+	    log += " cont-->";
 	}
     if( uuid!=d.uuid )
 	log += " UUID:" + uuid + "-->" + d.uuid;
@@ -1895,7 +1905,7 @@ void EvmsCo::logDifference( const EvmsCo& d ) const
 bool EvmsCo::equalContent( const EvmsCo& rhs ) const
     {
     bool ret = PeContainer::equalContent(rhs,false) &&
-	       uuid==rhs.uuid && lvm1==rhs.lvm1;
+	       uuid==rhs.uuid && lvm1==rhs.lvm1 && container==rhs.container;
     if( ret )
 	{
 	ConstEvmsPair p = evmsPair();
@@ -1918,6 +1928,7 @@ EvmsCo::EvmsCo( const EvmsCo& rhs ) : PeContainer(rhs)
     y2debug( "constructed EvmsCo by copy constructor from %s", rhs.nm.c_str() );
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;
+    container = rhs.container;
     ConstEvmsPair p = rhs.evmsPair();
     for( ConstEvmsIter i = p.begin(); i!=p.end(); ++i )
         {

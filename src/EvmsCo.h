@@ -91,6 +91,7 @@ class EvmsCo : public PeContainer
 	virtual ~EvmsCo();
 	unsigned numVol() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
+	bool isContainer() const { return( container ); } 
 	static storage::CType const staticType() { return storage::EVMS; }
 	friend std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
@@ -217,6 +218,7 @@ class EvmsCo : public PeContainer
 
 	string uuid;
 	bool lvm1;
+	bool container;
 	static bool active;
 	static int sockfd;
 	mutable storage::EvmsCoInfo info;

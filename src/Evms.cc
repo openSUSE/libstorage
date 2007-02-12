@@ -86,6 +86,11 @@ void Evms::init( const string& name )
 	}
     }
 
+const EvmsCo* const Evms::evmsCo() const
+    {
+    return(dynamic_cast<const EvmsCo* const>(cont));
+    }
+
 void Evms::updateMd()
     {
     if( majorNr()==Md::mdMajor() )
