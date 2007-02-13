@@ -216,12 +216,10 @@ FstabEntry::calcDependent()
     else if( device.substr(0, 16) == "/dev/disk/by-id/" )
         {
 	mount_by = MOUNTBY_ID;
-	device.erase();
 	}
     else if( device.substr(0, 18) == "/dev/disk/by-path/" )
         {
 	mount_by = MOUNTBY_PATH;
-	device.erase();
 	}
     dmcrypt = encr==ENC_LUKS;
     crypto = !noauto && encr!=ENC_NONE && !dmcrypt;
@@ -392,6 +390,7 @@ int EtcFstab::addEntry( const FstabChange& entry )
     Entry e;
     e.op = Entry::ADD;
     e.nnew = entry;
+    y2mil( "e.nnew " << e.nnew );
     co.push_back( e );
     return( 0 );
     }
@@ -561,10 +560,14 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
 	     (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
 	tls.erase(i);
     tmp = mergeString( tls, "," );
-    ls.push_back( tmp );
+    ls.push_back( tmp.empty()?"none":tmp );
     tmp = e.cr_info;
     if( tmp.empty() )
-	tmp = e.device.substr(e.device.rfind( '/' )+1);
+	{
+	tmp = ls.front();
+	if( tmp.find( "cr_" )==0 )
+	    tmp.erase( 0, 3 );
+	}
     ls.push_back( tmp );
     tmp.erase();
     if( e.fs=="ext2" || e.fs=="ext3" ||  e.fs=="reiser" )
