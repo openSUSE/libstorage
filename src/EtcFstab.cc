@@ -486,7 +486,7 @@ void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls )
 	ls.push_back( Volume::encTypeString(e.encr) );
 	}
     ls.push_back( mergeString( e.opts, "," ) );
-    if( e.dmcrypt &&
+    if( (e.dmcrypt&&e.mount!="swap") &&
         find( e.opts.begin(), e.opts.end(), "noauto" )==e.opts.end() )
 	{
 	if( ls.back() == "defaults" )
