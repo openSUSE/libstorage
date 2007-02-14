@@ -4446,7 +4446,7 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     static FsCapabilitiesX ext2Caps (true, false, true, false, true, true,
 				     true, 16, 16);
 
-    static FsCapabilitiesX ext3Caps (true, false, true, false, true, true,
+    static FsCapabilitiesX ext3Caps (true, true, true, false, true, true,
 				     true, 16, 10*1024);
 
     static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
