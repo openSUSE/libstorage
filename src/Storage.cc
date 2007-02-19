@@ -4618,7 +4618,8 @@ void Storage::handleEvmsRemoveDevice( const Disk* disk, const string& d,
 	    v->setSilent();
 	    y2mil( "v:" << *v );
 	    }
-	if( disk->isEmpty() && !findVolume( EvmsCo::devToEvms(disk->device()), v) )
+	if( disk->isEmpty() && disk->device().find("/dev/dasd")!=0 &&
+	    !findVolume( EvmsCo::devToEvms(disk->device()), v) )
 	    {
 	    EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
 	    if( co != NULL )

@@ -739,7 +739,7 @@ void EvmsCo::getNormalVolumes( const EvmsTree& data )
     for( Storage::ConstDiskIterator d = dp.begin(); d!=dp.end(); ++d )
 	{
 	y2mil( "disk:" << d->device() << " empty:" << d->isEmpty() );
-	if( d->isEmpty() )
+	if( d->isEmpty() && d->device().find("/dev/dasd")!=0 )
 	    {
 	    y2milestone( "empty disk %s", d->name().c_str() );
 	    i = ep.begin();
