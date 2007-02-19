@@ -2739,6 +2739,11 @@ static bool evmsCo( const EvmsCo& co )
     return( co.isContainer());
     }
 
+static bool isDiskCreated( const Volume& v )
+    {
+    return( v.cType()==DISK && v.created() );
+    }
+
 int Storage::evmsActivate()
     {
     int ret = 0;
@@ -2766,6 +2771,44 @@ int Storage::evmsActivate()
 		VPair p = vPair( isEvms );
 		detectFsData( p.begin(), p.end() );
 		EvmsCoPair ep = evCoPair();
+		EvmsCoIterator coi = ep.begin();
+		while( coi!=ep.end() && coi->device()!="/dev/evms" )
+		    ++coi;
+		if( coi!=ep.end() )
+		    {
+		    EvmsCo::EvmsPair vp = coi->evmsPair(EvmsCo::lvNotDeleted);
+		    EvmsCo::EvmsIter ei = vp.begin();
+		    p = vPair( Volume::isDeleted );
+		    while( ei!=vp.end() )
+			{
+			y2mil( "ev:" << *ei );
+			string dev = EvmsCo::evmsToDev( ei->device() );
+			y2mil( "disk dev:" << dev );
+			VolIterator vi = p.begin();
+			while( vi!=p.end() && 
+			       (!vi->deleted() || vi->device()!=dev) )
+			    ++vi;
+			if( vi!=p.end() )
+			    {
+			    y2mil( "ev del :" << *ei );
+			    ei->setDeleted();
+			    ei->setSilent();
+			    }
+			++ei;
+			}
+		    }
+		p = vPair( isDiskCreated );
+		VolIterator vi=p.begin();
+		while( vi!=p.end() )
+		    {
+		    y2mil( "vi:" << *vi );
+		    Partition* p = dynamic_cast<Partition *>(&(*vi));
+		    if( p!=NULL )
+			handleEvmsCreateDevice( p->disk()->device(),
+						vi->device(),  
+						p->type()==EXTENDED );
+		    ++vi;
+		    }
 		std::map<string,CCont>::iterator i=backups.find("initial");
 		if( !evCoPair().empty() && i!=backups.end() )
 		    {
@@ -2774,7 +2817,7 @@ int Storage::evmsActivate()
 			++ci;
 		    if( ci==i->second.end() )
 			{
-			EvmsCoIterator coi = ep.begin();
+			coi = ep.begin();
 			while( coi != ep.end() )
 			    {
 			    ci=i->second.begin();
