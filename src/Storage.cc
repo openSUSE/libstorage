@@ -2790,9 +2790,11 @@ int Storage::evmsActivate()
 			    ++vi;
 			if( vi!=p.end() )
 			    {
+			    const Partition* p = dynamic_cast<const Partition *>(&(*vi));
+			    bool rename = p!=NULL && p->nr()>0 && 
+			                  p->disk()->isLogical(p->nr());
 			    y2mil( "ev del :" << *ei );
-			    ei->setDeleted();
-			    ei->setSilent();
+			    handleEvmsRemoveDevice( p->disk(), vi->device(), rename );
 			    }
 			++ei;
 			}
