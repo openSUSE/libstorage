@@ -240,9 +240,9 @@ void Storage::detectObjects()
 	ppart = new ProcPart;
 	}
     detectMds();
+    detectDmraid( *ppart );
     detectLvmVgs();
     detectEvms();
-    detectDmraid( *ppart );
     detectDm( *ppart );
 
     LvmVgPair p = lvgPair();
