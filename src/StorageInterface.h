@@ -818,6 +818,12 @@ namespace storage
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const = 0;
 
 	/**
+	 * Get list of filesystem types present on any block devices.
+	 * List elements are separated by blanks.
+	 */
+	virtual string getAllUsedFs() const = 0;
+
+	/**
 	 * Print all detected entities to a stream.
 	 * Exact output format may change between releases.
 	 * Function mainly meant for debugging purposes.

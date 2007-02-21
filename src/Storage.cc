@@ -4460,6 +4460,27 @@ int Storage::getDmraidInfo( const string& name,
     return( ret );
     }
 
+string Storage::getAllUsedFs() const 
+    {
+    list<FsType> fs;
+    ConstVolPair p = volPair( Volume::notDeleted );
+    for( ConstVolIterator v=p.begin(); v!=p.end(); ++v )
+	{
+	FsType t = v->getFs();
+	if( t!=FSUNKNOWN && t!=FSNONE && 
+	    find( fs.begin(), fs.end(), t )==fs.end() )
+	    fs.push_back(t);
+	}
+    string ret;
+    for( list<FsType>::const_iterator i=fs.begin(); i!=fs.end(); ++i )
+	{
+	if( !ret.empty() )
+	    ret += ' ';
+	ret += Volume::fsTypeString(*i);
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
 bool
 Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const

@@ -280,6 +280,7 @@ class Storage : public storage::StorageInterface
 
 	bool getFsCapabilities( storage::FsType fstype,
 	                        storage::FsCapabilities& fscapabilities) const;
+	string getAllUsedFs() const;
 	void setExtError( const string& txt );
 	int createPartition( const string& disk, storage::PartitionType type,
 	                     unsigned long start, unsigned long size,
