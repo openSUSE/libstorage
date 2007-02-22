@@ -1945,10 +1945,8 @@ namespace storage
 	 * Remove all possibly existing dm maps to a given device 
 	 *
 	 * @param device device name for which dm maps should be removed
-	 * @param also_evms flag if maps used by evms entities should also be removed
-	 * @return bool true if maps to remove existed 
 	 */
-	virtual bool removeDmMapsTo( const string& device, bool also_evms ) = 0;
+	virtual void removeDmTableTo( const string& device ) = 0;
 
 	/**
 	 * Detect potentially available free space on a partition
