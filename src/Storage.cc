@@ -1368,13 +1368,12 @@ Storage::removePartition( const string& partition )
 		    {
 		    if( vol->getUsedByType() != UB_NONE )
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
-		    if( ret==0 )
-			ret = disk->removePartition( vol->nr() );
 		    if( ret==0 && haveEvms() )
 			{
-			handleEvmsRemoveDevice( disk, vol->device(),
-						disk->isLogical(vol->nr()) );
+			handleEvmsRemoveDevice( disk, vol->device(), false );
 			}
+		    if( ret==0 )
+			ret = disk->removePartition( vol->nr() );
 		    }
 		else
 		    ret = STORAGE_REMOVE_USED_VOLUME;
@@ -1393,15 +1392,14 @@ Storage::removePartition( const string& partition )
 		    {
 		    if( vol->getUsedByType() != UB_NONE )
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
-		    if( ret==0 )
-			ret = disk->removePartition( vol->nr() );
 		    /*
 		    if( ret==0 && haveEvms() )
 			{
-			handleEvmsRemoveDevice( disk, vol->device(),
-						disk->isLogical(vol->nr()) );
+			handleEvmsRemoveDevice( disk, vol->device(), false );
 			}
 		    */
+		    if( ret==0 )
+			ret = disk->removePartition( vol->nr() );
 		    }
 		else
 		    ret = STORAGE_REMOVE_USED_VOLUME;
@@ -2409,8 +2407,6 @@ Storage::removeVolume( const string& device )
 	    string vdev = vol->device();
 	    if( vol->getUsedByType() != UB_NONE )
 		ret = removeUsing( vdev, vol->getUsedBy() );
-	    if( ret==0 )
-		ret = cont->removeVolume( &(*vol) );
 	    if( ret==0 && cont->type()==DISK && haveEvms() )
 		{
 		Disk* disk = dynamic_cast<Disk *>(&(*cont));
@@ -2421,9 +2417,10 @@ Storage::removeVolume( const string& device )
 		unsigned num = 0;
 		if( !tmp.empty() )
 		    tmp >> num;
-		bool rename = disk!=NULL && num>0 && disk->isLogical(num);
-		handleEvmsRemoveDevice( disk, vdev, rename );
+		handleEvmsRemoveDevice( disk, vdev, false );
 		}
+	    if( ret==0 )
+		ret = cont->removeVolume( &(*vol) );
 	    }
 	else
 	    ret = STORAGE_REMOVE_USED_VOLUME;
@@ -2791,10 +2788,8 @@ int Storage::evmsActivate()
 			if( vi!=p.end() )
 			    {
 			    const Partition* p = dynamic_cast<const Partition *>(&(*vi));
-			    bool rename = p!=NULL && p->nr()>0 && 
-			                  p->disk()->isLogical(p->nr());
 			    y2mil( "ev del :" << *ei );
-			    handleEvmsRemoveDevice( p->disk(), vi->device(), rename );
+			    handleEvmsRemoveDevice( p->disk(), vi->device(), false );
 			    }
 			++ei;
 			}

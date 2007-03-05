@@ -123,6 +123,7 @@ class EvmsCo : public PeContainer
 	void logDifference( const EvmsCo& d ) const;
 	bool checkConsistency() const;
 	void updateMd();
+	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate( bool val=true );
 	static int activateDevices();

@@ -1724,6 +1724,30 @@ int EvmsCo::doResize( Volume* v )
     return( ret );
     }
 
+void EvmsCo::changeDeviceName( const string& old, const string& nw )
+    {
+    PeContainer::changeDeviceName( old, nw );
+    if( !container )
+	{
+	string nm = devToEvms(undevDevice(old));
+	y2mil( "old:" << old << " new:" << nw << " nm:" << nm );
+	EvmsPair ep = evmsPair(lvNotDeleted);
+	EvmsIter i = ep.begin();
+	while( i!=ep.end() && i->name()!=nm )
+	    ++i;
+	if( i!=ep.end() )
+	    {
+	    y2mil( "ev:" << *i );
+	    string n = devToEvms(undevDevice(nw));
+	    y2mil( "new:" << n );
+	    i->rename( n );
+	    i->setTableName( n );
+	    y2mil( "ev:" << *i );
+	    }
+        }
+    }
+
+
 namespace storage
 {
 
