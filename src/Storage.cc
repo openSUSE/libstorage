@@ -3994,7 +3994,8 @@ Storage::evmsActivateDevices()
 	i->getToCommit( FORMAT, co, vol );
 	i->getToCommit( MOUNT, co, vol );
 	Disk* disk;
-	if( i->type()==DISK && (disk = dynamic_cast<Disk *>(&(*i)))!=NULL )
+	if( i->type()==DISK && arch().find("ppc")==0 && 
+	    (disk = dynamic_cast<Disk *>(&(*i)))!=NULL )
 	    {
 	    Disk::PartPair dp = disk->partPair(Disk::bootSpecial);
 	    for (Disk::PartIter i2 = dp.begin(); i2 != dp.end(); ++i2)
