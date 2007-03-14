@@ -163,6 +163,7 @@ class Volume
 	void getInfo( storage::VolumeInfo& info ) const;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
 	void updateFsData();
+	void triggerUdevUpdate();
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted
@@ -224,7 +225,6 @@ class Volume
 	                         const string& pwdfile, bool format ) const;
 	storage::EncryptType detectEncryption();
 	string getFilesysSysfsPath() const;
-	void triggerUdevUpdate();
 
 	const Container* const cont;
 	bool numeric;

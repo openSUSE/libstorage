@@ -2741,11 +2741,11 @@ static bool isDiskCreated( const Volume& v )
     return( v.cType()==DISK && v.created() );
     }
 
-int Storage::evmsActivate()
+int Storage::evmsActivate( bool forced )
     {
     int ret = 0;
     assertInit();
-    y2mil( "start" );
+    y2mil( "start forced:" << forced );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -2753,7 +2753,7 @@ int Storage::evmsActivate()
     else
 	{
 	ConstEvmsPair p = evmsPair(evmsCo);
-	if( !p.empty() )
+	if( !p.empty() && !forced )
 	    {
 	    y2warning( "evms already active:%u", p.length() );
 	    for( ConstEvmsIterator ei=p.begin(); ei!=p.end(); ++ei )
@@ -4096,6 +4096,17 @@ bool Storage::removeDmMapsTo( const string& dev, bool also_evms )
 	else if( dm==NULL )
 	    y2warning( "not a Dm descendant %s", v->device().c_str() );
 	}
+    VolIterator v;
+    DiskIterator d;
+    if( findVolume( dev, v ))
+	{
+	v->triggerUdevUpdate();
+	}
+    else if( (d=findDisk( dev ))!=dEnd())
+	{
+	d->triggerUdevUpdate();
+	}
+    waitForDevice();
     y2milestone( "ret:%d", ret );
     return( ret );
     }

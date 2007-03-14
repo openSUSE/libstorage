@@ -170,6 +170,16 @@ Disk::~Disk()
     y2debug( "destructed disk %s", dev.c_str() );
     }
 
+void Disk::triggerUdevUpdate()
+    {
+    PartPair pp = partPair();
+    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
+	{
+	if( !p->deleted() && !p->created() )
+	    p->triggerUdevUpdate();
+	}
+    }
+
 void Disk::setUdevData( const string& path, const string& id )
     {
     y2milestone( "disk %s path %s id %s", nm.c_str(), path.c_str(), id.c_str() );

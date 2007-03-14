@@ -1593,9 +1593,10 @@ namespace storage
 	 * during system startup. This command is executed immediately,
 	 * there is no need for a call to commit().
 	 *
+	 * @param force flag if activation should be forced
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int evmsActivate() = 0;
+	virtual int evmsActivate( bool force ) = 0;
 
 	/**
 	 * Create a Software raid device by name

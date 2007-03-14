@@ -376,7 +376,7 @@ class Storage : public storage::StorageInterface
 	int changeLvStripeSize( const string& vg, const string& name,
 				unsigned long long stripeSize );
 
-	int evmsActivate();
+	int evmsActivate( bool force );
 	int createEvmsContainer( const string& name, unsigned long long peSizeK,
 			         bool lvm1, const deque<string>& devs );
 	int modifyEvmsContainer( const string& old_name, const string& new_name,
