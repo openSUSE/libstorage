@@ -1501,8 +1501,7 @@ int Disk::removePartition( unsigned nr )
     if( ret==0 )
 	{
 	PartitionType t = i->type();
-	bool creat = i->created();
-	if( creat )
+	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))
 		ret = DISK_REMOVE_PARTITION_CREATE_NOT_FOUND;
@@ -1548,7 +1547,7 @@ int Disk::removePartition( unsigned nr )
 		{
 		if( i->nr()>max_primary )
 		    {
-		    if( creat )
+		    if( i->created() )
 			l.push_back( &(*i) );
 		    else
 			i->setDeleted();

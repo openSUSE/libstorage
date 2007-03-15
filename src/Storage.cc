@@ -3691,7 +3691,15 @@ static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
 	else
 	    {
 	    if( rhs->needShrink() == lhs->needShrink() )
-		return( *rhs > *lhs );
+		{
+		if( rhs->cType()!=DISK || rhs->cType()!=DISK )
+		    return( *rhs > *lhs );
+		else
+		    {
+		    return( *static_cast<const Partition*>(rhs) >
+		            *static_cast<const Partition*>(lhs) );
+		    }
+		}
 	    else
 		return( rhs->needShrink() );
 	    }
