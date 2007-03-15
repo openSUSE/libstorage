@@ -2,8 +2,11 @@ Makefile
 Makefile.in
 *.html
 *.png
+*.ttf
 *.tag
+*.gif
 doxygen.css
 doxygen.log
 doxygen.conf
 installdox
+tabs.css
