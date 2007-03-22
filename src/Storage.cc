@@ -2182,7 +2182,7 @@ Storage::setCryptPassword( const string& device, const string& pwd )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "device:%s l:%u", device.c_str(), pwd.length() );
+    y2milestone( "device:%s l:%zu", device.c_str(), pwd.length() );
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     y2milestone( "password:%s", pwd.c_str() );
 #endif
