@@ -174,6 +174,7 @@ namespace storage
 	unsigned maxLogical;
 	unsigned maxPrimary;
 	bool initDisk;
+	bool iscsi;
 	};
 
     /**
@@ -382,6 +383,19 @@ namespace storage
 	{
 	DmraidInfo() {};
 	DmPartInfo p;
+	};
+
+    /**
+     * Contains info about a DM volume.
+     */
+    struct ContVolInfo
+	{
+	ContVolInfo() {numeric=false; nr=0; type=CUNKNOWN;};
+	CType type;
+	string cname;
+	string vname;
+	bool numeric;
+	unsigned nr;
 	};
 
     /**
@@ -2015,6 +2029,17 @@ namespace storage
 	 *
 	 */
 	virtual void dumpObjectList() = 0;
+
+	/**
+	 * Split volume device name up into container name and a volume
+	 * name. For Containers where this is appropriate (e.g. disks, 
+	 * MD, loop) also a volume number is provided.
+	 *
+	 * @param disk device name of volume, e.g. /dev/hda1
+	 * @param info record that get filled with split data
+	 * @return zero if all is ok, negative number to indicate an error
+	 */
+	virtual int getContVolInfo( const string& dev, ContVolInfo& info) = 0;
 
     };
 

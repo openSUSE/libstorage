@@ -30,7 +30,7 @@ Disk::Disk( Storage * const s, const string& Name,
             unsigned long long SizeK ) :
     Container(s,"",staticType())
     {
-    init_disk = dmp_slave = false;
+    init_disk = dmp_slave = iscsi = false;
     nm = Name;
     undevDevice(nm);
     logfile_name = nm;
@@ -52,7 +52,7 @@ Disk::Disk( Storage * const s, const string& Name,
     y2milestone( "constructed disk %s nr %u sizeK:%llu", Name.c_str(), num,
                  SizeK );
     logfile_name = Name + decString(num);
-    init_disk = dmp_slave = false;
+    init_disk = dmp_slave = iscsi = false;
     ronly = true;
     size_k = SizeK;
     head = new_head = 16;
@@ -71,7 +71,7 @@ Disk::Disk( Storage * const s, const string& Name,
 Disk::Disk( Storage * const s, const string& fname ) :
     Container(s,"",staticType())
     {
-    init_disk = dmp_slave = false;
+    init_disk = dmp_slave = iscsi = false;
     nm = fname.substr( fname.find_last_of( '/' )+1);
     if( nm.find("disk_")==0 )
 	nm.erase( 0, 5 );
@@ -311,8 +311,19 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
 	{
 	ret = false;
 	}
-    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld", ret, range, mjr,
-                 mnr );
+    SysfsFile = sysfs_dir+"/device";
+    char lbuf[1024+1];
+    int count;
+    if( access( SysfsFile.c_str(), R_OK )==0 &&
+	(count=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
+	{
+	string lname( lbuf, count );
+	if( lname.find( "/session" )!=string::npos )
+	    iscsi = true;
+	y2mil( "lname:" << lname );
+	}
+    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld iSCSI:%d", 
+                 ret, range, mjr, mnr, iscsi );
     return( ret );
     }
 
@@ -865,8 +876,8 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
     y2mil( "regex " << reg << " ps " << ps );
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
-	pair<string,long> p = getDiskPartition( *i );
-	if( p.second>=0 && p.second!=ext_nr &&
+	pair<string,unsigned> p = getDiskPartition( *i );
+	if( p.second>0 && p.second!=ext_nr &&
 	    pp.getInfo( *i, SizeK, Dummy, Dummy ))
 	    {
 	    proc_l[unsigned(p.second)] = kbToCylinder( SizeK );
@@ -916,11 +927,11 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 	    {
 	    unsigned long cyl;
 	    unsigned long long s;
-	    pair<string,long> pr = getDiskPartition( *i );
+	    pair<string,unsigned> pr = getDiskPartition( *i );
 	    if( pp.getSize( *i, s ))
 		{
 		cyl = kbToCylinder(s);
-		if( pr.second < (long)range )
+		if( pr.second!=0 && pr.second < range )
 		    {
 		    unsigned id = Partition::ID_LINUX;
 		    PartitionType type = PRIMARY;
@@ -931,7 +942,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 			    type = EXTENDED;
 			    id = Partition::ID_EXTENDED;
 			    }
-			if( (unsigned)pr.second>max_primary )
+			if( pr.second>max_primary )
 			    {
 			    type = LOGICAL;
 			    }
@@ -941,7 +952,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 			               type, id, false );
 		    pl.push_back( p );
 		    }
-		else
+		else if( pr.second>0 )
 		    range_exceed = max( range_exceed, (unsigned long)pr.second );
 		cyl_start += cyl;
 		}
@@ -1036,19 +1047,28 @@ string Disk::getPartName( unsigned nr ) const
     return( getPartName( dev, nr ) );
     }
 
-pair<string,long> Disk::getDiskPartition( const string& dev )
+pair<string,unsigned> Disk::getDiskPartition( const string& dev )
     {
-    long nr = -1;
+    static Regex prx( "[0123456789]p[0123456789]+$" );
+    static Regex partrx( "-part[0123456789]+$" );
+    unsigned nr = 0;
     string disk = dev;
-    bool need_p = Disk::needP(dev);
+    bool need_p = prx.match( dev );
+    bool part = partrx.match( dev );
     string::size_type p = dev.find_last_not_of( "0123456789" );
-    if( p != string::npos && (!need_p||dev[p]=='p') && isdigit(dev[p+1]))
+    if( p != string::npos && p<dev.size() && (!need_p||dev[p]=='p') &&
+	(dev.find("/disk/by-")==string::npos||part) )
 	{
 	dev.substr(p+1) >> nr;
-	disk = dev.substr( 0, p+(need_p?0:1));
+	unsigned pos = p+1;
+	if( need_p )
+	    pos--;
+	else if( part )
+	    pos -= 5;
+	disk = dev.substr( 0, pos );
 	}
-    y2mil( "dev:" << " disk:" << disk << " nr:" << nr );
-    return( make_pair<string,long>(disk,nr) );
+    y2mil( "dev:" << dev << " disk:" << disk << " nr:" << nr );
+    return( make_pair<string,unsigned>(disk,nr) );
     }
 
 static bool isExtended( const Partition& p )
@@ -2483,6 +2503,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
     info.initDisk = init_disk;
+    info.iscsi = iscsi;
     info.udevPath = udev_path;
     info.udevId = mergeString( udev_id );
     tinfo = info;
@@ -2515,6 +2536,8 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
     if( d.init_disk )
 	s << " InitDisk";
+    if( d.iscsi )
+	s << " iSCSI";
     if( d.dmp_slave )
 	s << " DmpSlave";
     return( s );
@@ -2561,6 +2584,13 @@ void Disk::logDifference( const Disk& d ) const
 	else
 	    log += " InitDisk-->";
 	}
+    if( iscsi!=d.iscsi )
+	{
+	if( d.init_disk )
+	    log += " -->iSCSI";
+	else
+	    log += " iSCSI-->";
+	}
     y2milestone( "%s", log.c_str() );
     ConstPartPair p=partPair();
     ConstPartIter i=p.begin();
@@ -2602,8 +2632,9 @@ bool Disk::equalContent( const Disk& rhs ) const
 	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range &&
 	       size_k==rhs.size_k && max_primary==rhs.max_primary &&
 	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
-	       init_disk==rhs.init_disk && label==rhs.label &&
-	       sysfs_dir==rhs.sysfs_dir && dmp_slave==rhs.dmp_slave;
+	       init_disk==rhs.init_disk && label==rhs.label && 
+	       iscsi==rhs.iscsi && sysfs_dir==rhs.sysfs_dir && 
+	       dmp_slave==rhs.dmp_slave;
     if( ret )
 	{
 	ConstPartPair p = partPair();
@@ -2638,6 +2669,7 @@ Disk& Disk::operator= ( const Disk& rhs )
     ext_possible = rhs.ext_possible;
     max_logical = rhs.max_logical;
     init_disk = rhs.init_disk;
+    iscsi = rhs.iscsi;
     udev_path = rhs.udev_path;
     udev_id = rhs.udev_id;
     mp_alias = rhs.mp_alias;

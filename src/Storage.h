@@ -277,6 +277,7 @@ class Storage : public storage::StorageInterface
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 	int getDmraidInfo( const string& name,
 	                   deque<storage::DmraidInfo>& plist );
+	int getContVolInfo( const string& dev, ContVolInfo& info);
 
 	bool getFsCapabilities( storage::FsType fstype,
 	                        storage::FsCapabilities& fscapabilities) const;
@@ -1575,6 +1576,8 @@ class Storage : public storage::StorageInterface
 	void addToList( Container* e )
 	    { pointerIntoSortedList<Container>( cont, e ); }
 	DiskIterator findDisk( const string& disk );
+	DiskIterator findDiskId( const string& id );
+	DiskIterator findDiskPath( const string& path );
 	LvmVgIterator findLvmVg( const string& name );
 	EvmsCoIterator findEvmsCo( const string& name );
 	DmraidCoIterator findDmraidCo( const string& name );

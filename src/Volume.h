@@ -106,6 +106,7 @@ class Volume
 	const string& name() const { return nm; }
 	unsigned long minorNr() const { return mnr; }
 	unsigned long majorNr() const { return mjr; }
+	bool isNumeric() const { return numeric; }
 	void setMajorMinor( unsigned long Major, unsigned long Minor )
 	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }

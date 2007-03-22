@@ -1993,7 +1993,7 @@ Storage::getMountBy( const string& device, MountByType& mby )
     else
 	{
 	mby = defaultMountBy;
-	pair<string,long> dp = Disk::getDiskPartition(device);
+	pair<string,unsigned> dp = Disk::getDiskPartition(device);
 	y2mil( "dp:" << dp );
 	DiskIterator i = findDisk( dp.first );
 	if( (i==dEnd()) || (mby == MOUNTBY_ID && i->udevId().empty()) ||
@@ -4213,6 +4213,136 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 	}
     }
 
+int 
+Storage::getContVolInfo( const string& device, ContVolInfo& info)
+    {
+    int ret = 0;
+    string dev = device;
+    ContIterator c;
+    VolIterator v;
+    info.type = CUNKNOWN;
+    assertInit();
+    if( findVolume( dev, c, v ))
+	{
+	info.type = c->type();
+	info.cname = c->device();
+	info.vname = v->name();
+	info.numeric = v->isNumeric();
+	if( info.numeric )
+	    info.nr = v->nr();
+	else
+	    info.nr = 0;
+	}
+    else 
+	{
+	DiskIterator d;
+	DmraidCoIterator r;
+	std::pair<string,unsigned> p = Disk::getDiskPartition( dev );
+	if( p.first=="/dev/md" )
+	    {
+	    info.cname = p.first;
+	    info.vname = undevDevice(device);
+	    info.type = MD;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( p.first=="/dev/loop" )
+	    {
+	    info.cname = p.first;
+	    info.vname = undevDevice(device);
+	    info.type = LOOP;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( p.first=="/dev/dm-" )
+	    {
+	    info.cname = p.first;
+	    info.vname = undevDevice(device);
+	    info.type = DM;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( (d=findDisk(p.first))!=dEnd() )
+	    {
+	    info.cname = d->device();
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.type = DISK;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( (r=findDmraidCo(p.first))!=dmrCoEnd() )
+	    {
+	    info.cname = d->device();
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.type = DMRAID;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( dev.find("/dev/evms/")==0 )
+	    {
+	    info.type = EVMS;
+	    info.numeric = false;
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.cname = dev.substr( 0, dev.find_last_of('/') );
+	    }
+	else if( dev.find("/dev/disk/by-uuid/")==0 ||
+	         dev.find("/dev/disk/by-label/")==0 ||
+	         dev.find("UUID=")==0 || dev.find("LABEL=")==0 )
+	    {
+	    if( dev[0] == '/' )
+		{
+		bool uuid = dev.find( "/by-uuid/" )!=string::npos;
+		dev.erase( 0, dev.find_last_of('/')+1 );
+		dev = (uuid?"UUID=":"LABEL=")+dev;
+		}
+	    if( findVolume(dev, v) )
+		{
+		info.type = v->cType();
+		info.numeric = v->isNumeric();
+		if( info.numeric )
+		    info.nr = v->nr();
+		info.vname = v->name();
+		info.cname = v->getContainer()->name();
+		}
+	    }
+	else if( (dev.find("/dev/disk/by-id/")==0 &&
+	          (d=findDiskId(p.first))!=dEnd()) ||
+		 (dev.find("/dev/disk/by-path/")==0 &&
+		  (d=findDiskPath(p.first))!=dEnd()) )
+	    {
+	    info.type = DISK;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    info.cname = d->device();
+	    if( p.second>0 )
+		info.vname = Disk::getPartName( d->name(), p.second );
+	    else
+		info.vname = d->name();
+	    if( info.vname.find('/')!=string::npos )
+		info.vname.erase( 0, info.vname.find_last_of('/')+1 );
+	    }
+	else if( splitString( dev, "/" ).size()==3 && !Disk::needP( dev ) )
+	    {
+	    info.type = LVM;
+	    info.numeric = false;
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.cname = dev.substr( 0, dev.find_last_of('/') );
+	    }
+	else
+	    {
+	    info.cname = p.first;
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	}
+    y2mil( "dev:" << dev << " ret:" << ret << " cn:" << info.cname << 
+           " vn:" << info.vname )
+    if( info.numeric )
+	y2mil( "nr:" << info.nr );
+    return( ret );
+    }
+
 int
 Storage::getVolume( const string& device, VolumeInfo& info )
     {
@@ -5091,6 +5221,40 @@ Storage::DiskIterator Storage::findDisk( const string& disk )
     DiskIterator ret=p.begin();
     while( ret != p.end() && ret->device()!=d )
 	++ret;
+    return( ret );
+    }
+
+Storage::DiskIterator Storage::findDiskId( const string& id )
+    {
+    assertInit();
+    string val = id;
+    if( val.find( '/' )!=string::npos )
+	val.erase( 0, val.find_last_of('/')+1 );
+    DiskPair p = dPair();
+    DiskIterator ret=p.begin();
+    bool found = false;
+    while( ret != p.end() && !found )
+	{
+	const std::list<string>& ul( ret->udevId() );
+	found = find(ul.begin(),ul.end(),val) != ul.end();
+	if( !found )
+	    ++ret;
+	}
+    y2mil( "ret:" << (ret!=p.end()?ret->device():"NULL") );
+    return( ret );
+    }
+
+Storage::DiskIterator Storage::findDiskPath( const string& path )
+    {
+    assertInit();
+    string val = path;
+    if( val.find( '/' )!=string::npos )
+	val.erase( 0, val.find_last_of('/')+1 );
+    DiskPair p = dPair();
+    DiskIterator ret=p.begin();
+    while( ret != p.end() && ret->udevPath()!=val )
+	++ret;
+    y2mil( "ret:" << (ret!=p.end()?ret->device():"NULL") );
     return( ret );
     }
 

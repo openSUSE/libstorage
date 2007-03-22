@@ -103,7 +103,7 @@ class Disk : public Container
 
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
-	static std::pair<string,long> getDiskPartition( const string& dev );
+	static std::pair<string,unsigned> getDiskPartition( const string& dev );
 	static unsigned long long maxSizeLabelK( const string& label );
 
     protected:
@@ -223,6 +223,7 @@ class Disk : public Container
 	unsigned max_primary;
 	bool ext_possible;
 	bool init_disk;
+	bool iscsi;
 	bool dmp_slave;
 	unsigned max_logical;
 	unsigned long byte_cyl;
