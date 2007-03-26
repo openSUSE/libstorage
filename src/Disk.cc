@@ -193,6 +193,16 @@ void Disk::setUdevData( const string& path, const string& id )
 	udev_id.erase( i );
 	}
     y2mil( "id:" << udev_id );
+    if( udev_id.size()>1 )
+	{
+	i = find_if( udev_id.begin(), udev_id.end(), find_begin( "scsi-" ) );
+	if( i!=udev_id.end() && i!=udev_id.begin() )
+	    {
+	    string tmp = *i;
+	    udev_id.erase( i );
+	    udev_id.push_front(tmp);
+	    }
+	}
     PartPair pp = partPair();
     for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
