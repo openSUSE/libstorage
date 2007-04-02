@@ -862,7 +862,7 @@ _("openSUSE is switching to the new IDE drivers using the libata\n"
 bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
                              list<Partition*>& pl, unsigned long& range_exceed )
     {
-    long ext_nr = 0;
+    unsigned ext_nr = 0;
     bool ret=true;
     unsigned long Dummy;
     unsigned long long SizeK;
@@ -890,7 +890,7 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 	if( p.second>0 && p.second!=ext_nr &&
 	    pp.getInfo( *i, SizeK, Dummy, Dummy ))
 	    {
-	    proc_l[unsigned(p.second)] = kbToCylinder( SizeK );
+	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
 	}
     bool openbsd = false;
@@ -2408,7 +2408,8 @@ int Disk::doResize( Volume* v )
 		remount = true;
 	    }
 	if( ret==0 && !dmp_slave && !needExtend && 
-	    p->getFs()!=VFAT && p->getFs()!=FSNONE )
+	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
+	    p->getFs()!=FSNONE )
 	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
@@ -2465,7 +2466,8 @@ int Disk::doResize( Volume* v )
 	                 p->needShrink()||p->needExtend() );
 	    }
 	if( needExtend && !dmp_slave && 
-	    p->getFs()!=VFAT && p->getFs()!=FSNONE )
+	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
+	    p->getFs()!=FSNONE )
 	    ret = p->resizeFs();
 	if( ret==0 && remount )
 	    ret = p->mount();

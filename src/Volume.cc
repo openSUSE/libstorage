@@ -408,6 +408,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    fs = HFS;
 		    }
+		else if( i->second == "hfsplus" )
+		    {
+		    fs = HFSPLUS;
+		    }
 		else if( i->second == "xfs" )
 		    {
 		    fs = XFS;
@@ -737,6 +741,9 @@ int Volume::doFormat()
 		break;
 	    case HFS:
 		cmd = "/usr/bin/hformat";
+		break;
+	    case HFSPLUS:
+		ret = VOLUME_FORMAT_NOT_IMPLEMENTED;
 		break;
 	    case XFS:
 		cmd = "/sbin/mkfs.xfs";
@@ -2890,7 +2897,8 @@ bool Volume::isTmpCryptMp( const string& mp )
     }
 
 string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
-                              "xfs", "jfs", "hfs", "ntfs", "swap", "none" };
+                              "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus",
+			      "none" };
 
 string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
