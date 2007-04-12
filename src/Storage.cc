@@ -374,7 +374,8 @@ Storage::detectArch()
 	    line = extractNthWord( 2, line );
 	    y2milestone( "line:%s", line.c_str() );
 	    is_ppc_mac = line.find( "PowerMac" )==0 || line.find( "PowerBook" )==0;
-	    if( is_ppc_mac == 0)
+	    is_ppc_pegasos = line.find( "EFIKA5K2" )==0;
+	    if( is_ppc_mac == 0 || is_ppc_pegasos == 0 )
 		{
 		line = cpu[l];
 		line = extractNthWord( 3, line );
