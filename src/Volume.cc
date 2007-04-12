@@ -1454,16 +1454,18 @@ string Volume::getLosetupCmd( storage::EncryptType e, const string& pwdfile ) co
     }
 
 string Volume::getCryptsetupCmd( const string& dmdev, const string& mount, 
-                                 const string& pwdf, bool format ) const
+                                 const string& pwdf, bool format,
+				 bool empty_pwd ) const
     {
     string table = dmdev;
-    y2mil( "dmdev:" << dmdev << " mount:" << mount << " format:" << format );
+    y2mil( "dmdev:" << dmdev << " mount:" << mount << " format:" << format <<
+           " pwempty:" << empty_pwd );
     if( table.find( '/' )!=string::npos )
 	table.erase( 0, table.find_last_of( '/' )+1 );
     string cmd = "/sbin/cryptsetup -q";
     if( format )
 	{
-	if( isTmpCryptMp(mount) )
+	if( isTmpCryptMp(mount) && empty_pwd )
 	    {
 	    cmd += " --key-file /dev/urandom create";
 	    cmd += ' ';
@@ -1789,13 +1791,14 @@ int Volume::doCryptsetup()
 	    SystemCmd c;
 	    if( format || isTmpCryptMp(mp) )
 		{
-		c.execute( getCryptsetupCmd( dmcrypt_dev, mp, fname, true ));
+		c.execute( getCryptsetupCmd( dmcrypt_dev, mp, fname, true,
+		                             crypt_pwd.empty() ));
 		if( c.retcode()!=0 )
 		    ret = VOLUME_CRYPTFORMAT_FAILED;
 		if( ret==0 && mp=="swap" )
 		    c.execute( "mkswap " + dmcrypt_dev );
 		}
-	    if( ret==0 && !isTmpCryptMp(mp) )
+	    if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
 		{
 		c.execute( getCryptsetupCmd( dmcrypt_dev, mp, fname, false ));
 		if( c.retcode()!=0 )

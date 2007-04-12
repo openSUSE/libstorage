@@ -570,7 +570,7 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
 	}
     ls.push_back( tmp );
     tmp.erase();
-    if( e.fs=="ext2" || e.fs=="ext3" ||  e.fs=="reiser" )
+    if( e.fs=="ext2" || e.fs=="ext3" ||  e.fs=="reiserfs" )
 	tmp = e.fs;
     ls.push_back( tmp );
     }

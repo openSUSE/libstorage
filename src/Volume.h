@@ -223,7 +223,8 @@ class Volume
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
 	string getCryptsetupCmd( const string& dmdev, const string& mp, 
-	                         const string& pwdfile, bool format ) const;
+	                         const string& pwdfile, bool format,
+				 bool empty_pwd=false ) const;
 	storage::EncryptType detectEncryption();
 	string getFilesysSysfsPath() const;
 
