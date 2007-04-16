@@ -600,7 +600,8 @@ int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
 
 bool
 Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
-                      unsigned long& csize, PartitionType& type, unsigned& id, bool& boot )
+                      unsigned long& csize, PartitionType& type, unsigned& id,
+		      bool& boot )
     {
     unsigned long StartM, EndM;
     string PartitionType, TInfo;
@@ -620,12 +621,17 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	{
 	Data >> nr >> StartM >> skip >> EndM >> skip >> skip;
 	}
+    if( !Data.good() )
+	{
+	y2mil( "invalid line:" << Line );
+	nr = 0;
+	}
     char c;
     TInfo = ",";
     Data.unsetf(ifstream::skipws);
     Data >> c;
     char last_char = ',';
-    while( !Data.eof() )
+    while( Data.good() && !Data.eof() )
 	{
 	if( !isspace(c) )
 	    {
@@ -643,128 +649,128 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	Data >> c;
 	}
     TInfo += ",";
-    y2milestone( "Fields Num:%d Start:%lu End:%lu Type:%d",
-		 nr, StartM, EndM, type );
-    y2milestone( "TInfo:%s", TInfo.c_str() );
     if( nr>0 )
-      {
-      start = StartM;
-      csize = EndM-StartM+1;
-      if( start+csize > cylinders() )
-	  {
-	  csize = cylinders()-start;
-	  y2milestone( "new csize:%lu", csize );
-	  }
-      id = Partition::ID_LINUX;
-      boot = TInfo.find( ",boot," ) != string::npos;
-      string OrigTInfo = TInfo;
-      tolower( TInfo );
-      if( ext_possible )
-	  {
-	  if( PartitionType == "extended" )
-	      {
-	      type = EXTENDED;
-	      id = Partition::ID_EXTENDED;
-	      }
-	  else if( nr>=5 )
-	      {
-	      type = LOGICAL;
-	      }
-	  }
-      else if( TInfo.find( ",fat" )!=string::npos )
-	  {
-	  id = Partition::ID_DOS;
-	  }
-      else if( TInfo.find( ",ntfs," )!=string::npos )
-	  {
-	  id = Partition::ID_NTFS;
-	  }
-      else if( TInfo.find( "swap," )!=string::npos )
-	  {
-	  id = Partition::ID_SWAP;
-	  }
-      else if( TInfo.find( ",raid," )!=string::npos )
-	  {
-	  id = Partition::ID_RAID;
-	  }
-      else if( TInfo.find( ",lvm," )!=string::npos )
-	  {
-	  id = Partition::ID_LVM;
-	  }
-      string::size_type pos = TInfo.find( ",type=" );
-      if( pos != string::npos )
-	  {
-	  string val;
-	  int tmp_id = 0;
-	  if( label != "mac" )
-	      {
-	      val = TInfo.substr( pos+6, 2 );
-	      Data.clear();
-	      Data.str( val );
-	      Data >> std::hex >> tmp_id;
-	      y2debug( "val=%s id=%d", val.c_str(), tmp_id );
-	      if( tmp_id>0 )
-		  {
-		  id = tmp_id;
-		  }
-	      }
-	  else
-	      {
-	      pos = OrigTInfo.find("type=");
-	      val = OrigTInfo.substr( pos+5 );
-	      if( (pos=val.find_first_of( ", \t\n" )) != string::npos )
-		  {
-		  val = val.substr( 0, pos );
-		  }
-	      if( id == Partition::ID_LINUX )
-		  {
-		  if( val.find( "Apple_HFS" ) != string::npos ||
-		      val.find( "Apple_Bootstrap" ) != string::npos )
-		      {
-		      id = Partition::ID_APPLE_HFS;
-		      }
-		  else if( val.find( "Apple_partition" ) != string::npos ||
-		      val.find( "Apple_Driver" ) != string::npos ||
-		      val.find( "Apple_Loader" ) != string::npos ||
-		      val.find( "Apple_Boot" ) != string::npos ||
-		      val.find( "Apple_ProDOS" ) != string::npos ||
-		      val.find( "Apple_FWDriver" ) != string::npos ||
-		      val.find( "Apple_Patches" ) != string::npos )
-		      {
-		      id = Partition::ID_APPLE_OTHER;
-		      }
-		  else if( val.find( "Apple_UFS" ) != string::npos )
-		      {
-		      id = Partition::ID_APPLE_UFS;
-		      }
-		  }
-	      }
-	  }
-      if( label == "gpt" )
-	  {
-	  if( TInfo.find( ",boot," ) != string::npos )
-	      {
-	      id = Partition::ID_GPT_BOOT;
-	      }
-	  if( TInfo.find( ",hp-service," ) != string::npos )
-	      {
-	      id = Partition::ID_GPT_SERVICE;
-	      }
-	  if( TInfo.find( ",msftres," ) != string::npos )
-	      {
-	      id = Partition::ID_GPT_MSFTRES;
-	      }
-	  if( TInfo.find( ",hfs+," ) != string::npos || 
-	      TInfo.find( ",hfs," ) != string::npos )
-	      {
-	      id = Partition::ID_APPLE_HFS;
-	      }
-	  }
-      y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
-		   nr, id, type, start, csize );
-      }
-   return( nr>0 );
-   }
+	{
+	y2milestone( "Fields Num:%d Start:%lu End:%lu Type:%d",
+		     nr, StartM, EndM, type );
+	y2milestone( "TInfo:%s", TInfo.c_str() );
+	start = StartM;
+	csize = EndM-StartM+1;
+	if( start+csize > cylinders() )
+	    {
+	    csize = cylinders()-start;
+	    y2milestone( "new csize:%lu", csize );
+	    }
+	id = Partition::ID_LINUX;
+	boot = TInfo.find( ",boot," ) != string::npos;
+	string OrigTInfo = TInfo;
+	tolower( TInfo );
+	if( ext_possible )
+	    {
+	    if( PartitionType == "extended" )
+		{
+		type = EXTENDED;
+		id = Partition::ID_EXTENDED;
+		}
+	    else if( nr>=5 )
+		{
+		type = LOGICAL;
+		}
+	    }
+	else if( TInfo.find( ",fat" )!=string::npos )
+	    {
+	    id = Partition::ID_DOS;
+	    }
+	else if( TInfo.find( ",ntfs," )!=string::npos )
+	    {
+	    id = Partition::ID_NTFS;
+	    }
+	else if( TInfo.find( "swap," )!=string::npos )
+	    {
+	    id = Partition::ID_SWAP;
+	    }
+	else if( TInfo.find( ",raid," )!=string::npos )
+	    {
+	    id = Partition::ID_RAID;
+	    }
+	else if( TInfo.find( ",lvm," )!=string::npos )
+	    {
+	    id = Partition::ID_LVM;
+	    }
+	string::size_type pos = TInfo.find( ",type=" );
+	if( pos != string::npos )
+	    {
+	    string val;
+	    int tmp_id = 0;
+	    if( label != "mac" )
+		{
+		val = TInfo.substr( pos+6, 2 );
+		Data.clear();
+		Data.str( val );
+		Data >> std::hex >> tmp_id;
+		y2debug( "val=%s id=%d", val.c_str(), tmp_id );
+		if( tmp_id>0 )
+		    {
+		    id = tmp_id;
+		    }
+		}
+	    else
+		{
+		pos = OrigTInfo.find("type=");
+		val = OrigTInfo.substr( pos+5 );
+		if( (pos=val.find_first_of( ", \t\n" )) != string::npos )
+		    {
+		    val = val.substr( 0, pos );
+		    }
+		if( id == Partition::ID_LINUX )
+		    {
+		    if( val.find( "Apple_HFS" ) != string::npos ||
+			val.find( "Apple_Bootstrap" ) != string::npos )
+			{
+			id = Partition::ID_APPLE_HFS;
+			}
+		    else if( val.find( "Apple_partition" ) != string::npos ||
+			val.find( "Apple_Driver" ) != string::npos ||
+			val.find( "Apple_Loader" ) != string::npos ||
+			val.find( "Apple_Boot" ) != string::npos ||
+			val.find( "Apple_ProDOS" ) != string::npos ||
+			val.find( "Apple_FWDriver" ) != string::npos ||
+			val.find( "Apple_Patches" ) != string::npos )
+			{
+			id = Partition::ID_APPLE_OTHER;
+			}
+		    else if( val.find( "Apple_UFS" ) != string::npos )
+			{
+			id = Partition::ID_APPLE_UFS;
+			}
+		    }
+		}
+	    }
+	if( label == "gpt" )
+	    {
+	    if( TInfo.find( ",boot," ) != string::npos )
+		{
+		id = Partition::ID_GPT_BOOT;
+		}
+	    if( TInfo.find( ",hp-service," ) != string::npos )
+		{
+		id = Partition::ID_GPT_SERVICE;
+		}
+	    if( TInfo.find( ",msftres," ) != string::npos )
+		{
+		id = Partition::ID_GPT_MSFTRES;
+		}
+	    if( TInfo.find( ",hfs+," ) != string::npos || 
+		TInfo.find( ",hfs," ) != string::npos )
+		{
+		id = Partition::ID_APPLE_HFS;
+		}
+	    }
+	y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
+		     nr, id, type, start, csize );
+	}
+    return( nr>0 );
+    }
 
 bool
 Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
