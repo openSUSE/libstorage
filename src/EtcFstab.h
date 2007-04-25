@@ -37,7 +37,6 @@ struct FstabEntry
     string loop_dev;
     string cr_opts;
     string cr_key;
-    string cr_info;
     storage::EncryptType encr;
     storage::MountByType mount_by;
 
@@ -68,8 +67,6 @@ inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
 	s << " cr_key:" << v.cr_key;
     if( !v.cr_opts.empty() )
 	s << " cr_opts:" << v.cr_opts;
-    if( !v.cr_info.empty() )
-	s << " cr_info:" << v.cr_info;
     if( v.encr != storage::ENC_NONE )
 	s << " encr:" << v.encr;
     return( s );

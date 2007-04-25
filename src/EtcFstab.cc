@@ -162,10 +162,6 @@ EtcFstab::readFiles()
 		    p->old.cr_opts = *i;
 		++i;
 		}
-	    if( i!=l.end() )
-		p->old.cr_info = *i++;
-	    if( i!=l.end() )
-		p->old.fs = *i;
 	    p->nnew = p->old;
 	    y2mil( "after crtab " << p->nnew );
 	    }
@@ -561,18 +557,6 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
 	tls.erase(i);
     tmp = mergeString( tls, "," );
     ls.push_back( tmp.empty()?"none":tmp );
-    tmp = e.cr_info;
-    if( tmp.empty() )
-	{
-	tmp = ls.front();
-	if( tmp.find( "cr_" )==0 )
-	    tmp.erase( 0, 3 );
-	}
-    ls.push_back( tmp );
-    tmp.erase();
-    if( e.fs=="ext2" || e.fs=="ext3" ||  e.fs=="reiserfs" )
-	tmp = e.fs;
-    ls.push_back( tmp );
     }
 
 string EtcFstab::createCrtabLine( const FstabEntry& e )
@@ -866,5 +850,5 @@ string EtcFstab::removeText( bool doing, bool crypto, const string& mp )
 
 unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
 unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
-unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 10, 10, 1 };
+unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };
 
