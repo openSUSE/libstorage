@@ -73,9 +73,10 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 	new_cyl = cyl;
 	new_head = head;
 	new_sector = sector;
-
 	y2milestone( "After dasdview Head:%u Sector:%u Cylinder:%lu SizeK:%llu",
 		     head, sector, cyl, size_k );
+	byte_cyl = head * sector * 512;
+	y2milestone( "byte_cyl:%lu", byte_cyl );
 	if( size_k==0 )
 	    {
 	    size_k = (head*sector*cyl)/2;
