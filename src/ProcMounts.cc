@@ -23,6 +23,7 @@ ProcMounts::ProcMounts( Storage * const sto )
     ifstream mounts( "/proc/mounts" );
     string line;
     getline( mounts, line );
+    SystemCmd mt( "mount" );
     while( mounts.good() )
 	{
 	y2mil( "line:\"" << line << "\"" );
@@ -49,16 +50,47 @@ ProcMounts::ProcMounts( Storage * const sto )
 		y2mil( "dev:" << dev );
 		}
 	    }
-	if( dev!= "rootfs" && dev!="/dev/root" )
+	bool skip = false;
+	string dir = extractNthWord( 1, line );
+	mt.select( (string)" on "+dir+' ' );
+	if( mt.numLines(true)>0 )
 	    {
-	    co[dev] = extractNthWord( 1, line );
+	    list<string> sl = splitString( *mt.getLine(0,true) );
+	    y2mil( "sl:" << sl );
+	    if( sl.size()>=6 )
+		{
+		list<string>::const_iterator i=sl.begin();
+		++i;
+		++i;
+		++i;
+		++i;
+		if( *i == "none" )
+		    {
+		    ++i;
+		    string opt = *i;
+		    if( !opt.empty() && opt[0]=='(' )
+			opt.erase( 0, 1 );
+		    if( !opt.empty() && opt[opt.size()-1]==')' )
+			opt.erase( opt.size()-1, 1 );
+		    sl = splitString( opt, "," );
+		    y2mil( "sl:" << sl );
+		    skip = find( sl.begin(), sl.end(), "bind" )!=sl.end();
+		    if( skip )
+			y2mil( "skiping line:" << line );
+		    }
+		}
+	    }
+	if( !skip && dev!= "rootfs" && dev!="/dev/root" )
+	    {
+	    co[dev] = dir;
 	    }
 	getline( mounts, line );
 	}
-    SystemCmd mt( "mount | grep \" / \"" );
+    mt.select( " / " );
     if( mt.numLines()>0 )
 	{
-	string dev = extractNthWord( 0, *mt.getLine(0));
+	y2mil( "root mount:" << *mt.getLine(0,true) );
+	string dev = extractNthWord( 0, *mt.getLine(0,true));
 	if( !dev.empty() && dev[0]!='/' )
 	    {
 	    dev = sto->findNormalDevice( dev );
