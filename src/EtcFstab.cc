@@ -537,7 +537,7 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
     string tmp = e.device;
     ls.push_back( tmp );
     tmp = e.cr_key;
-    if( e.tmpcrypt || e.mount=="swap" )
+    if( e.tmpcrypt )
 	tmp = "/dev/urandom";
     ls.push_back( tmp.empty()?"none":tmp );
     tmp = e.cr_opts;
@@ -549,11 +549,10 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
     else if( e.mount!="swap" && 
 	     (i=find( tls.begin(), tls.end(), "swap" ))!=tls.end() )
 	tls.erase(i);
-    if( e.tmpcrypt && 
-	find( tls.begin(), tls.end(), "tmp" )==tls.end() )
+    bool need_tmp = e.tmpcrypt && e.mount!="swap";
+    if( need_tmp && find( tls.begin(), tls.end(), "tmp" )==tls.end() )
 	tls.push_back("tmp");
-    else if( e.tmpcrypt && 
-	     (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
+    else if( !need_tmp && (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
 	tls.erase(i);
     tmp = mergeString( tls, "," );
     ls.push_back( tmp.empty()?"none":tmp );
