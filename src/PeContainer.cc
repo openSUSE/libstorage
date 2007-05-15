@@ -729,7 +729,7 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	CVIter j = begin();
 	while( ret && i!=rhs.end() && j!=end() )
 	    ret = ret && ((Dm*)(&(*j)))->equalContent( *(Dm*)(&(*i)));
-	ret == ret && i==rhs.end() && j==end();
+	ret = ret && i==rhs.end() && j==end();
 	}
     return( ret );
     }

@@ -726,7 +726,7 @@ bool MdCo::equalContent( const MdCo& rhs ) const
 	    ++i;
 	    ++j;
 	    }
-	ret == ret && i==p.end() && j==pc.end();
+	ret = ret && i==p.end() && j==pc.end();
 	}
     return( ret );
     }
