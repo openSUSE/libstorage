@@ -593,6 +593,21 @@ MdCo::doCreate( Volume* v )
 	    getStorage()->waitForDevice( m->device() );
 	    getMdData( m->nr() );
 	    updateEntry( m );
+	    bool used_as_pv = m->getUsedByType()==UB_EVMS ||
+	                      m->getUsedByType()==UB_LVM;
+	    y2milestone( "zeroNew:%d used_as_pv:%d",
+			 getStorage()->getZeroNewPartitions(), used_as_pv );
+	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
+		{
+		string cmd;
+		SystemCmd c;
+		cmd = "dd if=/dev/zero of=" + m->device() + " bs=1k count=200";
+		c.execute( cmd );
+		cmd = "dd if=/dev/zero of=" + m->device() +
+		      " seek=" + decString(m->sizeK()-10) +
+		      " bs=1k count=10";
+		c.execute( cmd );
+		}
 	    }
 	}
     else
