@@ -2789,8 +2789,13 @@ int Storage::evmsActivate( bool forced )
 			if( vi!=p.end() )
 			    {
 			    const Partition* p = dynamic_cast<const Partition *>(&(*vi));
-			    y2mil( "ev del :" << *ei );
-			    handleEvmsRemoveDevice( p->disk(), vi->device(), false );
+			    y2mil( "ev del:" << *vi );
+			    y2mil( "part del:" << p );
+			    if( p!=NULL )
+				{
+				y2mil( "part:" << *p );
+				handleEvmsRemoveDevice( p->disk(), vi->device(), false );
+				}
 			    }
 			++ei;
 			}
@@ -2801,10 +2806,14 @@ int Storage::evmsActivate( bool forced )
 		    {
 		    y2mil( "vi:" << *vi );
 		    Partition* p = dynamic_cast<Partition *>(&(*vi));
+		    y2mil( "part del:" << p );
 		    if( p!=NULL )
+			{
+			y2mil( "part:" << *p );
 			handleEvmsCreateDevice( p->disk()->device(),
 						vi->device(),  
 						p->type()==EXTENDED );
+			}
 		    ++vi;
 		    }
 		std::map<string,CCont>::iterator i=backups.find("initial");
