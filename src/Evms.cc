@@ -248,6 +248,7 @@ string Evms::resizeText( bool doing ) const
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending EVMS volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
 
+        txt += _(" (progress bar might not move)");
         }
     else
         {
