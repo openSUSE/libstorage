@@ -346,11 +346,16 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     list<string> geo = splitString( extractNthWord( 0, tmp ), "," );
     list<string>::const_iterator i = geo.begin();
     unsigned long val = 0;
+    bool sect_head_changed = false;
+    bool cyl_changed = false;
     if( i!=geo.end() )
 	{
 	*i >> val;
 	if( val>0 )
+	    {
 	    c = val;
+	    cyl_changed = true;
+	    }
 	}
     ++i;
     val = 0;
@@ -358,7 +363,10 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 	{
 	*i >> val;
 	if( val>0 )
+	    {
 	    h = (unsigned)val;
+	    sect_head_changed = true;
+	    }
 	}
     ++i;
     val = 0;
@@ -366,7 +374,17 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 	{
 	*i >> val;
 	if( val>0 )
+	    {
 	    s = (unsigned)val;
+	    sect_head_changed = true;
+	    }
+	}
+    if( !cyl_changed && sect_head_changed )
+	{
+	c = sizeK()*2/(s*h);
+	if( c<=0 )
+	    c=1;
+	y2mil( "new c:" << c );
 	}
     y2milestone( "line:%s", line.c_str() );
     y2milestone( "c:%lu h:%u s:%u", c, h, s );
