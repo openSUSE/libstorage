@@ -187,6 +187,7 @@ class Disk : public Container
 	                  unsigned long len, bool checkRelaxed );
 	void removePresentPartitions();
 	void removeFromMemory();
+	void enlargeGpt();
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
 	static bool bootSpecial( const Partition&d ) { return( !d.deleted()&&(d.id()==0x41||d.id()==0x06) ); }
@@ -225,6 +226,7 @@ class Disk : public Container
 	bool init_disk;
 	bool iscsi;
 	bool dmp_slave;
+	bool gpt_enlarge;
 	unsigned max_logical;
 	unsigned long byte_cyl;
 	unsigned long range;

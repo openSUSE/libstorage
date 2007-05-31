@@ -21,7 +21,8 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
 
-#define PARTEDCMD "/usr/sbin/parted -s "  // blank at end !!
+#define PARTEDBIN "/usr/sbin/parted"
+#define PARTEDCMD PARTEDBIN " -s "  // blank at end !!
 
 using namespace std;
 using namespace storage;
@@ -30,7 +31,7 @@ Disk::Disk( Storage * const s, const string& Name,
             unsigned long long SizeK ) :
     Container(s,"",staticType())
     {
-    init_disk = dmp_slave = iscsi = false;
+    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     nm = Name;
     undevDevice(nm);
     logfile_name = nm;
@@ -52,7 +53,7 @@ Disk::Disk( Storage * const s, const string& Name,
     y2milestone( "constructed disk %s nr %u sizeK:%llu", Name.c_str(), num,
                  SizeK );
     logfile_name = Name + decString(num);
-    init_disk = dmp_slave = iscsi = false;
+    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     ronly = true;
     size_k = SizeK;
     head = new_head = 16;
@@ -71,7 +72,7 @@ Disk::Disk( Storage * const s, const string& Name,
 Disk::Disk( Storage * const s, const string& fname ) :
     Container(s,"",staticType())
     {
-    init_disk = dmp_slave = iscsi = false;
+    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     nm = fname.substr( fname.find_last_of( '/' )+1);
     if( nm.find("disk_")==0 )
 	nm.erase( 0, 5 );
@@ -417,7 +418,8 @@ bool Disk::detectPartitions( ProcPart& ppart )
 	byte_cyl = head * sector * 512;
 	y2milestone( "byte_cyl:%lu", byte_cyl );
 	}
-    y2milestone( "Label:%s", dlabel.c_str() );
+    gpt_enlarge = Cmd.select( "fix the GPT to use all" )>0;
+    y2milestone( "Label:%s gpt_enlarge:%d", dlabel.c_str(), gpt_enlarge );
     if( dlabel!="loop" )
 	{
 	setLabelData( dlabel );
@@ -1857,6 +1859,7 @@ int Disk::doCreateLabel()
 	    getStorage()->waitForDevice();
 	redetectGeometry();
 	}
+    gpt_enlarge = false;
     y2milestone( "ret:%d", ret );
     return( ret );
     }
@@ -2082,8 +2085,23 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     return( ret );
     }
 
+void Disk::enlargeGpt()
+    {
+    y2mil( "gpt_enlarge:" << gpt_enlarge );
+    if( gpt_enlarge )
+	{
+	string cmd_line( "yes Fix | " PARTEDBIN );
+	cmd_line += " ---pretend-input-tty ";
+	cmd_line += device();
+	cmd_line += " print ";
+	SystemCmd cmd( cmd_line );
+	gpt_enlarge = false;
+	}
+    }
+
 static bool logicalCreated( const Partition& p )
     { return( p.type()==LOGICAL && p.created() ); }
+
 
 int Disk::doCreate( Volume* v )
     {
@@ -2108,6 +2126,10 @@ int Disk::doCreate( Volume* v )
 	    ret = doCreateLabel();
 	    if( ret==0 )
 		detected_label = label;
+	    }
+	if( ret==0 && gpt_enlarge )
+	    {
+	    enlargeGpt();
 	    }
 	std::ostringstream cmd_line;
 	if( ret==0 )
@@ -2576,6 +2598,8 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " iSCSI";
     if( d.dmp_slave )
 	s << " DmpSlave";
+    if( d.gpt_enlarge )
+	s << " GptEnlarge";
     return( s );
     }
 
@@ -2670,7 +2694,7 @@ bool Disk::equalContent( const Disk& rhs ) const
 	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
 	       init_disk==rhs.init_disk && label==rhs.label && 
 	       iscsi==rhs.iscsi && sysfs_dir==rhs.sysfs_dir && 
-	       dmp_slave==rhs.dmp_slave;
+	       dmp_slave==rhs.dmp_slave && gpt_enlarge==rhs.gpt_enlarge;
     if( ret )
 	{
 	ConstPartPair p = partPair();
@@ -2712,6 +2736,7 @@ Disk& Disk::operator= ( const Disk& rhs )
     logfile_name = rhs.logfile_name;
     sysfs_dir = rhs.sysfs_dir;
     dmp_slave = rhs.dmp_slave;
+    gpt_enlarge = rhs.gpt_enlarge;
     return( *this );
     }
 
