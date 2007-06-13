@@ -61,6 +61,7 @@ main (int argc, char** argv)
 			case XFS: cout << "XFS"; break;
 			case JFS: cout << "JFS"; break;
 			case HFS: cout << "HFS"; break;
+			case HFSPLUS: cout << "HFSPLUS"; break;
 			case NTFS: cout << "NTFS"; break;
 			case SWAP: cout << "SWAP"; break;
 			case FSNONE: cout << "NONE"; break;
