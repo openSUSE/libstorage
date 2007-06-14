@@ -1983,6 +1983,7 @@ int Volume::setLabel( const string& val )
 
 int Volume::mount( const string& m )
     {
+
     SystemCmd cmd;
     y2milestone( "device:%s mp:%s", dev.c_str(), m.c_str() );
     string cmdline;
@@ -2005,7 +2006,27 @@ int Volume::mount( const string& m )
 	    cmdline += "-r ";
 	else if( fs == FSUNKNOWN )
 	    fsn = "auto";
-	cmdline += "-t " + fsn + " " + mountDevice() + " " + lmount;
+	const char * ign_opt[] = { "defaults", "" };
+	const char * ign_beg[] = { "loop", "encryption=", "phash=", 
+	                           "itercountk=" };
+	if( cont->getStorage()->instsys() )
+	    ign_opt[1] = "ro";
+	list<string> l = splitString( fstab_opt, "," );
+	y2mil( "l before:" << l );
+	for( unsigned i=0; i<lengthof(ign_opt); i++ )
+	    l.erase( remove(l.begin(), l.end(), ign_opt[i]), l.end() );
+	for( unsigned i=0; i<lengthof(ign_beg); i++ )
+	    l.erase( remove_if(l.begin(), l.end(), find_begin(ign_beg[i])), 
+	             l.end() );
+	y2mil( "l  after:" << l );
+	string opts = " ";
+	if( !l.empty() )
+	    {
+	    opts += "-o";
+	    opts += mergeString( l, "," );
+	    opts += " ";
+	    }
+	cmdline += "-t " + fsn + opts + mountDevice() + " " + lmount;
 	}
     else
 	{
@@ -2340,6 +2361,16 @@ int Volume::doFstabUpdate()
 	if( changed && ret==0 && cont->getStorage()->isRootMounted() )
 	    {
 	    ret = fstab->flush();
+	    }
+	}
+    if( ret==0 && !format && mp==orig_mp && mp!="swap" )
+	{
+	int r = umount( mp );
+	y2mil( "remount umount:" << r );
+	if( r==0 )
+	    {
+	    ret = mount( mp );
+	    y2mil( "remount mount:" << ret );
 	    }
 	}
     y2milestone( "changed:%d ret:%d", changed, ret );
