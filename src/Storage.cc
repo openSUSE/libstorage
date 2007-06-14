@@ -5337,15 +5337,18 @@ bool Storage::knownDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
-bool Storage::setDmcryptData( const string& dev, const string& dm, unsigned long long siz )
+bool Storage::setDmcryptData( const string& dev, const string& dm, 
+                              unsigned dmnum, unsigned long long siz )
     {
-    y2milestone( "dev:%s dm:%s sizeK:%llu", dev.c_str(), dm.c_str(), siz );
+    y2milestone( "dev:%s dm:%s dmn:%u sizeK:%llu", dev.c_str(), dm.c_str(), 
+                 dmnum, siz );
     bool ret=false;
     VolIterator v;
     if( dm.find("/temporary-cryptsetup-")==string::npos && 
         findVolume( dev, v ) )
 	{
 	v->setDmcryptDev( dm, siz!=0 );
+	v->replaceAltName( "/dev/dm-", Dm::dmDeviceName(dmnum) );
 	v->setSize( siz );
 	ret = true;
 	}

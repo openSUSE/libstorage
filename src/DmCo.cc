@@ -154,7 +154,7 @@ DmCo::getDmData( ProcPart& ppart )
 		getStorage()->knownDevice( it->first ))
 		{
 		skip = true;
-		getStorage()->setDmcryptData( it->first, m->device(),
+		getStorage()->setDmcryptData( it->first, m->device(), min_num,
 		                              m->sizeK() );
 		getStorage()->setUsedBy( it->first, UB_NONE, "" );
 		}

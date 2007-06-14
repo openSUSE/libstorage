@@ -1756,8 +1756,13 @@ void Volume::replaceAltName( const string& prefix, const string& newn )
     list<string>::iterator i =
 	find_if( alt_names.begin(), alt_names.end(), find_begin( prefix ) );
     if( i!=alt_names.end() )
-	*i = newn;
-    else
+	{
+	if( !newn.empty() )
+	    *i = newn;
+	else
+	    alt_names.erase(i);
+	}
+    else if( !newn.empty() )
 	alt_names.push_back(newn);
     }
 
