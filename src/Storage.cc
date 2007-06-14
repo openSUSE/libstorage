@@ -5342,7 +5342,8 @@ bool Storage::setDmcryptData( const string& dev, const string& dm, unsigned long
     y2milestone( "dev:%s dm:%s sizeK:%llu", dev.c_str(), dm.c_str(), siz );
     bool ret=false;
     VolIterator v;
-    if( findVolume( dev, v ) )
+    if( dm.find("/temporary-cryptsetup-")==string::npos && 
+        findVolume( dev, v ) )
 	{
 	v->setDmcryptDev( dm, siz!=0 );
 	v->setSize( siz );
