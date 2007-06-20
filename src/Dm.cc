@@ -128,7 +128,9 @@ Dm::getTableInfo()
 	    }
 	else 
 	    {
-	    y2warning( "unknown target type \"%s\"", target.c_str() );
+	    if( find( known_types.begin(), known_types.end(), target ) == 
+	        known_types.end() )
+		y2warning( "unknown target type \"%s\"", target.c_str() );
 	    extractNthWord( 1, line ) >> le;
 	    y2mil( "le:" << le );
 	    le /= 2;
@@ -597,4 +599,6 @@ Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
 
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;
+static const char* elem[] = { "crypt" };
+list<string> Dm::known_types( elem, elem+lengthof(elem) );
 
