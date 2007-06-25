@@ -829,8 +829,7 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end )
 	{
 	if( i->getUsedByType()==UB_NONE )
 	    {
-	    if( detectMounted )
-		i->getMountData( Mounts );
+	    i->getMountData( Mounts, !detectMounted );
 	    i->getFstabData( *fstab );
 	    y2mil( "detect:" << *i );
 	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )

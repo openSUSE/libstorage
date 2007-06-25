@@ -268,10 +268,10 @@ void Volume::getStartData()
 	}
     }
 
-void Volume::getMountData( const ProcMounts& mountData )
+void Volume::getMountData( const ProcMounts& mountData, bool swap_only )
     {
     y2mil( "this:" << *this );
-    y2mil( "mountDevice:" << mountDevice() );
+    y2mil( "swap_only:" << swap_only << " mountDevice:" << mountDevice() );
     mp = mountData.getMount( mountDevice() );
     if( mp.empty() )
 	{
@@ -280,7 +280,13 @@ void Volume::getMountData( const ProcMounts& mountData )
     if( !mp.empty() )
 	{
 	is_mounted = true;
-	y2milestone( "%s mounted on %s", device().c_str(), mp.c_str() );
+	if( swap_only && mp!="swap" )
+	    {
+	    is_mounted = false;
+	    mp.clear();
+	    }
+	if( is_mounted )
+	    y2milestone( "%s mounted on %s", device().c_str(), mp.c_str() );
 	}
     orig_mp = mp;
     }
