@@ -2368,8 +2368,12 @@ int Volume::doFstabUpdate()
 	    ret = fstab->flush();
 	    }
 	}
-    if( ret==0 && !format && mp==orig_mp && mp!="swap" )
+    if( ret==0 && !format && !cont->getStorage()->instsys() &&
+        fstab_opt!=orig_fstab_opt && !orig_fstab_opt.empty() && 
+        mp==orig_mp && mp!="swap" )
 	{
+	y2mil( "fstab_opt:" << fstab_opt << " fstab_opt_orig:" << orig_fstab_opt );
+	y2mil( "remount:" << *this );
 	int r = umount( mp );
 	y2mil( "remount umount:" << r );
 	if( r==0 )
