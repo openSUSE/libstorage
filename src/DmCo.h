@@ -29,7 +29,6 @@ class DmCo : public PeContainer
 	DmCo( Storage * const s, const string& File );
 
 	void getDmData( ProcPart& ppart );
-	void getDmData( unsigned num );
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 
 	bool findDm( const string& dev, DmIter& i );
@@ -40,6 +39,8 @@ class DmCo : public PeContainer
 	virtual Container* getCopy() const { return( new DmCo( *this ) ); }
 
 	void init();
+
+	storage::EncryptType detectEncryption( const string& device ) const;
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 

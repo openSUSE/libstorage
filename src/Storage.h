@@ -232,7 +232,8 @@ class Storage : public storage::StorageInterface
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	bool setDmcryptData( const string& dev, const string& dm, 
-	                     unsigned dmnum, unsigned long long siz );
+	                     unsigned dmnum, unsigned long long siz,
+			     storage::EncryptType typ );
 	bool deletedDevice( const string& dev );
 	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );

@@ -65,7 +65,7 @@ class Volume
 	int changeMountBy( storage::MountByType mby );
 	virtual int changeMount( const string& m );
 	bool loop() const { return is_loop; }
-	bool dmcrypt() const { return( encryption==ENC_LUKS ); }
+	bool dmcrypt() const { return encryption != ENC_NONE && encryption != ENC_UNKNOWN; }
 	bool loopActive() const { return( is_loop&&loop_active ); }
 	bool dmcryptActive() const { return( dmcrypt()&&dmcrypt_active ); }
 	bool needCrsetup() const; 
@@ -112,6 +112,7 @@ class Volume
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
 	void setDmcryptDev( const string& dm, bool active );
+	void setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active );
 	virtual void forgetResize() { size_k=orig_size_k; }
 	virtual bool canUseDevice() const;
 
@@ -155,8 +156,8 @@ class Volume
 	string sizeString() const;
 	string bootMount() const;
 	bool optNoauto() const;
-	bool inCryptotab() const { return( !dmcrypt() && is_loop && !optNoauto() ); }
-	bool inCrypttab() const { return( dmcrypt() && !optNoauto() ); }
+	bool inCryptotab() const { return( encryption!=ENC_LUKS && is_loop && !optNoauto() ); }
+	bool inCrypttab() const { return( encryption==ENC_LUKS && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
 	int getFreeLoop( SystemCmd& loopData );
@@ -221,9 +222,9 @@ class Volume
 	int cryptUnsetup( bool force=false );
 
 	std::ostream& logVolume( std::ostream& file ) const;
-	string getLosetupCmd( storage::EncryptType e, const string& pwdfile ) const;
-	string getCryptsetupCmd( const string& dmdev, const string& mp, 
-	                         const string& pwdfile, bool format,
+	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
+	string getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
+				 const string& mp, const string& pwdfile, bool format,
 				 bool empty_pwd=false ) const;
 	storage::EncryptType detectEncryption();
 	string getFilesysSysfsPath() const;

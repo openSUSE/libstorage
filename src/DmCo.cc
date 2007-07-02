@@ -67,6 +67,44 @@ DmCo::init()
     dev = "/dev/mapper";
     }
 
+
+// dev should be something like /dev/mapper/cr_test
+storage::EncryptType
+DmCo::detectEncryption( const string& dev ) const
+{
+    storage::EncryptType ret = ENC_UNKNOWN;
+
+    if( dev.substr( 0, 12 ) == "/dev/mapper/")
+    {
+	string tdev = dev.substr (12);
+	SystemCmd c( "cryptsetup status \"" + tdev + "\"" );
+
+	string cipher, keysize;
+	for( unsigned int i = 0; i < c.numLines(); i++)
+	{
+	    string line = *c.getLine(i);
+	    string key = extractNthWord( 0, line );
+	    if( key == "cipher:" )
+		cipher = extractNthWord( 1, line );
+	    if( key == "keysize:" )
+		keysize = extractNthWord( 1, line );
+	}
+
+	if( cipher == "aes-cbc-essiv:sha256" )
+	    ret = ENC_LUKS;
+	else if( cipher == "twofish-cbc-plain" )
+	    ret = ENC_TWOFISH;
+	else if( cipher == "twofish-cbc-null" && keysize == "192" )
+	    ret = ENC_TWOFISH_OLD;
+	else if( cipher == "twofish-cbc-null" && keysize == "256" )
+	    ret = ENC_TWOFISH256_OLD;
+    }
+
+    y2milestone( "ret:%d", ret );
+    return ret;
+}
+
+
 void
 DmCo::getDmData( ProcPart& ppart )
     {
@@ -155,7 +193,7 @@ DmCo::getDmData( ProcPart& ppart )
 		{
 		skip = true;
 		getStorage()->setDmcryptData( it->first, m->device(), min_num,
-		                              m->sizeK() );
+		                              m->sizeK(), detectEncryption (m->device()) );
 		getStorage()->setUsedBy( it->first, UB_NONE, "" );
 		}
 	    if( !skip && m->sizeK()>0 )
@@ -173,7 +211,7 @@ DmCo::addDm( Dm* m )
 	addToList( m );
     else
 	{
-	y2warning( "addDm alread exists %u", m->nr() ); 
+	y2warning( "addDm already exists %u", m->nr() );
 	delete m;
 	}
     }
