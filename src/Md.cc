@@ -311,7 +311,10 @@ string Md::createCmd() const
 
     string cmd = "ls -l --full-time " + dnames + "; ";
     cmd += "modprobe " + pName() + "; mdadm --create " + device() +
-	   " --run --level=" + pName();
+	   " --run --level=" + pName() + " -e 1.0";
+    if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
+        pName() == "raid10")
+            cmd += " -b internal";
     if( chunk>0 )
 	cmd += " --chunk=" + decString(chunk);
     if( md_parity!=PAR_NONE )
