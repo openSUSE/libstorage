@@ -1979,7 +1979,7 @@ namespace storage
 	                          unsigned long long& resize_free,
 	                          unsigned long long& df_free,
 	                          unsigned long long& used,
-				  bool& win, bool use_cache ) = 0;
+				  bool& win, bool& efi, bool use_cache ) = 0;
 
 	/**
 	 * Read fstab and cryptotab, if existent, from a specified directory and

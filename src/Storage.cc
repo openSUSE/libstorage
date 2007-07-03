@@ -5639,7 +5639,8 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 bool
 Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		      unsigned long long& df_free,
-		      unsigned long long& used, bool& win, bool use_cache )
+		      unsigned long long& used, bool& win, bool& efi,
+		      bool use_cache )
     {
     bool ret = false;
     assertInit();
@@ -5649,7 +5650,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     if( findVolume( device, vol ) )
 	{
 	if( use_cache && getFreeInf( vol->device(), df_free, resize_free,
-	                             used, win, ret ))
+	                             used, win, efi, ret ))
 	    {
 	    }
 	else
@@ -5723,6 +5724,9 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    win = access( f.c_str(), R_OK )==0;
 		    i++;
 		    }
+		efi = vol->getFs()==VFAT && checkDir( mp + "/efi" );
+		if( efi )
+		    win = false;
 		}
 	    if( needUmount )
 		{
@@ -5737,7 +5741,8 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->crUnsetup();
 		}
-	    setFreeInfo( vol->device(), df_free, resize_free, used, win, ret );
+	    setFreeInfo( vol->device(), df_free, resize_free, used, win, efi,
+	                 ret );
 	    }
 	}
     if( ret )
@@ -5749,19 +5754,21 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 
 void Storage::setFreeInfo( const string& device, unsigned long long df_free,
                            unsigned long long resize_free,
-			   unsigned long long used, bool win, bool resize_ok )
+			   unsigned long long used, bool win, bool efi,
+			   bool resize_ok )
     {
-    y2milestone( "device:%s df_free:%llu resize_free:%llu used:%llu win:%d",
-		 device.c_str(), df_free, resize_free, used, win );
+    y2milestone( "device:%s df_free:%llu resize_free:%llu used:%llu win:%d efi:%d",
+		 device.c_str(), df_free, resize_free, used, win, efi );
 
-    FreeInfo inf( df_free, resize_free, used, win, resize_ok );
+    FreeInfo inf( df_free, resize_free, used, win, efi, resize_ok );
     freeInfo[device] = inf;
     }
 
 bool
 Storage::getFreeInf( const string& device, unsigned long long& df_free,
 		     unsigned long long& resize_free,
-		     unsigned long long& used, bool& win, bool& resize_ok )
+		     unsigned long long& used, bool& win,  bool& efi,
+		     bool& resize_ok )
     {
     map<string,FreeInfo>::iterator i = freeInfo.find( device );
     bool ret = i!=freeInfo.end();
@@ -5771,12 +5778,13 @@ Storage::getFreeInf( const string& device, unsigned long long& df_free,
 	resize_free = i->second.resize_free;
 	used = i->second.used;
 	win = i->second.win;
+	efi = i->second.efi;
 	resize_ok = i->second.rok;
 	}
     y2milestone( "device:%s ret:%d", device.c_str(), ret );
     if( ret )
-	y2milestone( "df_free:%llu resize_free:%llu used:%llu win:%d resize_ok:%d",
-		     df_free, resize_free, used, win, resize_ok );
+	y2milestone( "df_free:%llu resize_free:%llu used:%llu win:%d efi:%d resize_ok:%d",
+		     df_free, resize_free, used, win, efi, resize_ok );
     return( ret );
     }
 
