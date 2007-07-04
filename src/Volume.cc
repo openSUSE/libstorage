@@ -688,13 +688,13 @@ int Volume::doFormat()
 	string cmd = "/bin/dd if=";
 	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
 	cmd += " of=" + mountDevice() + " bs=1024 count=";
-	cmd += decString(min(100ull,size_k));
+	cmd += decString(min(200ull,size_k));
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
 	ofstream s( mountDevice().c_str() );
 	ofstream::pos_type p = s.seekp( 0, ios_base::end ).tellp();
 	y2mil( "good:" << s.good() << " pos_type:" << p );
-	const unsigned count=32;
+	const unsigned count=200;
 	const unsigned bufsize=1024;
 	if( s.good() && p>count*bufsize )
 	    {

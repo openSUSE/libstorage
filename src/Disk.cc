@@ -2261,10 +2261,14 @@ int Disk::doCreate( Volume* v )
 		SystemCmd c;
 		cmd = "dd if=/dev/zero of=" + p->device() + " bs=1k count=200";
 		c.execute( cmd );
-		cmd = "dd if=/dev/zero of=" + p->device() +
-		      " seek=" + decString(p->sizeK()-10) +
-		      " bs=1k count=10";
-		c.execute( cmd );
+		unsigned long long pos = p->sizeK();
+		if( pos>200 )
+		    {
+		    pos -= 200;
+		    cmd = "dd if=/dev/zero of=" + p->device() +
+			  " seek=" + decString(pos) + " bs=1k count=10";
+		    c.execute( cmd );
+		    }
 		}
 	    else if( !dmp_slave && !p->getFormat() )
 		{
