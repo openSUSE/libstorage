@@ -133,7 +133,7 @@ class Volume
 	int prepareRemove();
 	int umount( const string& mp="" );
 	int crUnsetup( bool force=false );
-	int mount( const string& mp="" );
+	int mount( const string& mp="", bool ro=false );
 	int canResize( unsigned long long newSizeK ) const;
 	int doMount();
 	int doFormat();

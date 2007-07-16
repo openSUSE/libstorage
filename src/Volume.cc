@@ -2040,11 +2040,11 @@ int Volume::setLabel( const string& val )
     return( ret );
     }
 
-int Volume::mount( const string& m )
+int Volume::mount( const string& m, bool ro )
     {
 
     SystemCmd cmd;
-    y2milestone( "device:%s mp:%s", dev.c_str(), m.c_str() );
+    y2milestone( "device:%s mp:%s ro:%d", dev.c_str(), m.c_str(), ro );
     string cmdline;
     if( fs != SWAP )
 	{
@@ -2072,6 +2072,8 @@ int Volume::mount( const string& m )
 	    cmd.execute( cmdline );
 	    }
 	cmdline = "mount ";
+	if( ro )
+	    cmdline += "-r ";
 	const char * ign_opt[] = { "defaults", "" };
 	const char * ign_beg[] = { "loop", "encryption=", "phash=",
 	                           "itercountk=" };

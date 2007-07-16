@@ -223,7 +223,7 @@ void Storage::detectObjects()
     ProcPart* ppart = new ProcPart;
     if( EvmsCo::canDoEvms() )
 	{
-	char * file = "/etc/evms.conf"; 
+	const char * file = "/etc/evms.conf"; 
 	if( access( file, R_OK )==0 )
 	    {
 	    SystemCmd cmd( (string)"grep exclude " + file );
@@ -5580,11 +5580,11 @@ Storage::umountDevice( const string& device )
     }
 
 bool
-Storage::mountDevice( const string& device, const string& mp )
+Storage::mountDev( const string& device, const string& mp, bool ro )
     {
     bool ret = true;
     assertInit();
-    y2milestone( "device:%s mp:%s", device.c_str(), mp.c_str() );
+    y2milestone( "device:%s mp:%s ro:%d", device.c_str(), mp.c_str(), ro );
     VolIterator vol;
     if( !readonly && findVolume( device, vol ) )
 	{
@@ -5594,7 +5594,7 @@ Storage::mountDevice( const string& device, const string& mp )
 	    }
 	if( ret )
 	    {
-	    ret = vol->mount( mp )==0;
+	    ret = vol->mount( mp, ro )==0;
 	    }
 	if( !ret )
 	    vol->crUnsetup();
@@ -5664,7 +5664,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		unlink( mdir.c_str() );
 		rmdir( mdir.c_str() );
 		if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
-		    mountDevice( device, mdir ) )
+		    mountDev( device, mdir ) )
 		    {
 		    needUmount = true;
 		    mp = mdir;
@@ -5714,8 +5714,8 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 			ret = false;
 		    }
 		win = false;
-		char * files[] = { "boot.ini", "msdos.sys", "io.sys",
-				   "config.sys", "MSDOS.SYS", "IO.SYS" };
+		const char * files[] = { "boot.ini", "msdos.sys", "io.sys",
+				         "config.sys", "MSDOS.SYS", "IO.SYS" };
 		string f;
 		unsigned i=0;
 		while( !win && i<lengthof(files) )
@@ -6036,7 +6036,7 @@ void Storage::setExtError( const string& txt )
 int Storage::waitForDevice() const
     {
     int ret = 0;
-    char * prog = "/sbin/udevsettle";
+    const char * prog = "/sbin/udevsettle";
     if( access( prog, X_OK )==0 )
 	{
 	string cmd( prog );
