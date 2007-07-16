@@ -2051,8 +2051,19 @@ int Volume::mount( const string& m )
 	string lmount = (!m.empty())?m:mp;
 	y2milestone( "device:%s mp:%s", dev.c_str(), lmount.c_str() );
 	string fsn = fs_names[fs];
-	cmdline = "modprobe " + fsn;
-	cmd.execute( cmdline );
+	switch( fs )
+	    {
+	    case NTFS:
+		fsn = "ntfs-3g";
+		break;
+	    case FSUNKNOWN:
+		fsn = "auto";
+		break;
+	    default:
+		cmdline = "modprobe " + fsn;
+		cmd.execute( cmdline );
+		break;
+	    }
 	if( fs == VFAT )
 	    {
 	    cmdline = "modprobe nls_cp437";
@@ -2061,10 +2072,6 @@ int Volume::mount( const string& m )
 	    cmd.execute( cmdline );
 	    }
 	cmdline = "mount ";
-	if( fs == NTFS )
-	    cmdline += "-r ";
-	else if( fs == FSUNKNOWN )
-	    fsn = "auto";
 	const char * ign_opt[] = { "defaults", "" };
 	const char * ign_beg[] = { "loop", "encryption=", "phash=",
 	                           "itercountk=" };
