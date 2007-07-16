@@ -63,6 +63,8 @@ EtcFstab::readFiles()
 		    p->old.dmcrypt = true;
 		    p->old.encr = ENC_LUKS;
 		    }
+		else if( p->old.fs=="ntfs-3g" )
+		    p->old.fs=="ntfs";
 		}
 	    if( i!=l.end() )
 		p->old.opts = splitString( *i++, "," );
@@ -100,7 +102,11 @@ EtcFstab::readFiles()
 	if( i!=l.end() )
 	    p->old.mount = *i++;
 	if( i!=l.end() )
+	    {
 	    p->old.fs = *i++;
+	    if( p->old.fs=="ntfs-3g" )
+		p->old.fs=="ntfs";
+	    }
 	if( i!=l.end() )
 	    p->old.encr = Volume::toEncType( *i++ );
 	if( i!=l.end() )
@@ -476,7 +482,9 @@ void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls )
     if( e.dmcrypt && e.noauto )
 	ls.push_back( "crypt" );
     else
-	ls.push_back( e.fs );
+	{
+	ls.push_back( (e.fs!="ntfs")?e.fs:"ntfs-3g" );
+	}
     if( e.crypto )
 	{
 	ls.push_back( Volume::encTypeString(e.encr) );
