@@ -1436,72 +1436,83 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
 
 }
 
-void LvmVg::logDifference( const LvmVg& d ) const
+void LvmVg::logDifference( const Container& d ) const
     {
-    string log = PeContainer::logDiff( d );
-    if( status!=d.status )
-	log += " status:" + status + "-->" + d.status;
-    if( lvm1!=d.lvm1 )
+    const LvmVg * p = dynamic_cast<const LvmVg*>(&d);
+    if( p )
 	{
-	if( d.lvm1 )
-	    log += " -->lvm1";
-	else
-	    log += " lvm1-->";
-	}
-    if( uuid!=d.uuid )
-	log += " UUID:" + uuid + "-->" + d.uuid;
-    y2milestone( "%s", log.c_str() );
-    ConstLvmLvPair p=lvmLvPair();
-    ConstLvmLvIter i=p.begin();
-    while( i!=p.end() )
-	{
-	ConstLvmLvPair pc=d.lvmLvPair();
-	ConstLvmLvIter j = pc.begin();
-	while( j!=pc.end() && 
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j!=pc.end() )
+	string log = PeContainer::getDiffString( *p );
+	if( status!=p->status )
+	    log += " status:" + status + "-->" + p->status;
+	if( lvm1!=p->lvm1 )
 	    {
-	    if( !i->equalContent( *j ) )
-		i->logDifference( *j );
+	    if( p->lvm1 )
+		log += " -->lvm1";
+	    else
+		log += " lvm1-->";
 	    }
-	else
-	    y2mil( "  -->" << *i );
-	++i;
+	if( uuid!=p->uuid )
+	    log += " UUID:" + uuid + "-->" + p->uuid;
+	y2milestone( "%s", log.c_str() );
+	ConstLvmLvPair pp=lvmLvPair();
+	ConstLvmLvIter i=pp.begin();
+	while( i!=pp.end() )
+	    {
+	    ConstLvmLvPair pc=p->lvmLvPair();
+	    ConstLvmLvIter j = pc.begin();
+	    while( j!=pc.end() && 
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j!=pc.end() )
+		{
+		if( !i->equalContent( *j ) )
+		    i->logDifference( *j );
+		}
+	    else
+		y2mil( "  -->" << *i );
+	    ++i;
+	    }
+	pp=p->lvmLvPair();
+	i=pp.begin();
+	while( i!=pp.end() )
+	    {
+	    ConstLvmLvPair pc=lvmLvPair();
+	    ConstLvmLvIter j = pc.begin();
+	    while( j!=pc.end() && 
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j==pc.end() )
+		y2mil( "  <--" << *i );
+	    ++i;
+	    }
 	}
-    p=d.lvmLvPair();
-    i=p.begin();
-    while( i!=p.end() )
-	{
-	ConstLvmLvPair pc=lvmLvPair();
-	ConstLvmLvIter j = pc.begin();
-	while( j!=pc.end() && 
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j==pc.end() )
-	    y2mil( "  <--" << *i );
-	++i;
-	}
+    else
+	y2mil( "" << Container::getDiffString(d) );
     }
 
-bool LvmVg::equalContent( const LvmVg& rhs ) const
+bool LvmVg::equalContent( const Container& rhs ) const
     {
-    bool ret = PeContainer::equalContent(rhs,false) &&
-	       status==rhs.status && uuid==rhs.uuid && lvm1==rhs.lvm1 &&
-	       inactiv==rhs.inactiv && num_lv==rhs.num_lv;
+    const LvmVg * p = NULL;
+    bool ret = Container::equalContent(rhs);
     if( ret )
+	p = dynamic_cast<const LvmVg*>(&rhs);
+    if( ret && p )
+	ret = PeContainer::equalContent(*p,false) &&
+	      status==p->status && uuid==p->uuid && lvm1==p->lvm1 &&
+	      inactiv==p->inactiv && num_lv==p->num_lv;
+    if( ret && p )
 	{
-	ConstLvmLvPair p = lvmLvPair();
-	ConstLvmLvPair pc = rhs.lvmLvPair();
-	ConstLvmLvIter i = p.begin();
+	ConstLvmLvPair pp = lvmLvPair();
+	ConstLvmLvPair pc = p->lvmLvPair();
+	ConstLvmLvIter i = pp.begin();
 	ConstLvmLvIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() ) 
+	while( ret && i!=pp.end() && j!=pc.end() ) 
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
 	    ++j;
 	    }
-	ret = ret && i==p.end() && j==pc.end();
+	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
     }

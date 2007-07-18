@@ -931,40 +931,44 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
 
 }
 
-string DmPartCo::logDiff( const DmPartCo& d ) const
+string DmPartCo::getDiffString( const Container& d ) const
     {
-    string log = PeContainer::logDifference( d );
-    if( del_ptable!=d.del_ptable )
+    string log = Container::getDiffString( d );
+    const DmPartCo* p = dynamic_cast<const DmPartCo*>(&d);
+    if( p )
 	{
-	if( d.del_ptable )
-	    log += " -->delPT";
-	else
-	    log += " delPT-->";
-	}
-    if( active!=d.active )
-	{
-	if( d.active )
-	    log += " -->active";
-	else
-	    log += " active-->";
-	}
-    if( valid!=d.valid )
-	{
-	if( d.valid )
-	    log += " -->valid";
-	else
-	    log += " valid-->";
+	if( del_ptable!=p->del_ptable )
+	    {
+	    if( p->del_ptable )
+		log += " -->delPT";
+	    else
+		log += " delPT-->";
+	    }
+	if( active!=p->active )
+	    {
+	    if( p->active )
+		log += " -->active";
+	    else
+		log += " active-->";
+	    }
+	if( valid!=p->valid )
+	    {
+	    if( p->valid )
+		log += " -->valid";
+	    else
+		log += " valid-->";
+	    }
 	}
     return( log );
     }
 
 void DmPartCo::logDifference( const DmPartCo& d ) const
     {
-    string log = logDiff( d );
+    string log = getDiffString( d );
     y2milestone( "%s", log.c_str() );
-    ConstDmPartPair p=dmpartPair();
-    ConstDmPartIter i=p.begin();
-    while( i!=p.end() )
+    ConstDmPartPair pp=dmpartPair();
+    ConstDmPartIter i=pp.begin();
+    while( i!=pp.end() )
 	{
 	ConstDmPartPair pc=d.dmpartPair();
 	ConstDmPartIter j = pc.begin();
@@ -980,9 +984,9 @@ void DmPartCo::logDifference( const DmPartCo& d ) const
 	    y2mil( "  -->" << *i );
 	++i;
 	}
-    p=d.dmpartPair();
-    i=p.begin();
-    while( i!=p.end() )
+    pp=d.dmpartPair();
+    i=pp.begin();
+    while( i!=pp.end() )
 	{
 	ConstDmPartPair pc=dmpartPair();
 	ConstDmPartIter j = pc.begin();
@@ -1002,17 +1006,17 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 	       del_ptable==rhs.del_ptable;
     if( ret )
 	{
-	ConstDmPartPair p = dmpartPair();
+	ConstDmPartPair pp = dmpartPair();
 	ConstDmPartPair pc = rhs.dmpartPair();
-	ConstDmPartIter i = p.begin();
+	ConstDmPartIter i = pp.begin();
 	ConstDmPartIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() ) 
+	while( ret && i!=pp.end() && j!=pc.end() ) 
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
 	    ++j;
 	    }
-	ret = ret && i==p.end() && j==pc.end();
+	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
     }

@@ -119,8 +119,8 @@ class EvmsCo : public PeContainer
 	int removeVolume( Volume* v );
 	void addVolume( Evms* v );
 	void getInfo( storage::EvmsCoInfo& info ) const;
-	bool equalContent( const EvmsCo& rhs ) const;
-	void logDifference( const EvmsCo& d ) const;
+	bool equalContent( const Container& rhs ) const;
+	void logDifference( const Container& d ) const;
 	bool checkConsistency() const;
 	void updateMd();
 	void changeDeviceName( const string& old, const string& nw );

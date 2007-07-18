@@ -43,8 +43,9 @@ class Container
 	    { return( !(*this<rhs) ); }
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
-	bool equalContent( const Container& rhs ) const;
-	string logDifference( const Container& c ) const;
+	virtual bool equalContent( const Container& rhs ) const;
+	virtual string getDiffString( const Container& c ) const;
+	virtual void logDifference( const Container& c ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	virtual int getToCommit( storage::CommitStage stage, 

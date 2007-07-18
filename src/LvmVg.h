@@ -43,8 +43,8 @@ class LvmVg : public PeContainer
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getInfo( storage::LvmVgInfo& info ) const;
-	bool equalContent( const LvmVg& rhs ) const;
-	void logDifference( const LvmVg& rhs ) const;
+	bool equalContent( const Container& rhs ) const;
+	void logDifference( const Container& rhs ) const;
 
 	static void activate( bool val=true );
 	static void getVgs( std::list<string>& l );

@@ -96,8 +96,8 @@ class Disk : public Container
 	unsigned long kbToCylinder( unsigned long long ) const;
 	string getPartName( unsigned nr ) const;
 	void getInfo( storage::DiskInfo& info ) const;
-	bool equalContent( const Disk& rhs ) const;
-	void logDifference( const Disk& d ) const;
+	bool equalContent( const Container& rhs ) const;
+	void logDifference( const Container& d ) const;
 	Disk& operator= ( const Disk& rhs );
 	bool FakeDisk() const { return(range==1); }
 

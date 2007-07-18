@@ -28,8 +28,8 @@ class LoopCo : public Container
 	void loopIds( std::list<unsigned>& l ) const;
 
 	int removeVolume( Volume* v );
-	bool equalContent( const LoopCo& rhs ) const;
-	void logDifference( const LoopCo& d ) const;
+	bool equalContent( const Container& rhs ) const;
+	void logDifference( const Container& d ) const;
 	
     protected:
 	// iterators over LOOP volumes

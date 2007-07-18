@@ -619,76 +619,80 @@ std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
 
 }
 
-string PeContainer::logDiff( const PeContainer& rhs ) const
+string PeContainer::getDiffString( const Container& rhs ) const
     {
-    string ret = Container::logDifference( rhs );
-    if( pe_size!=rhs.pe_size )
-	ret += " PeSize:" + decString(pe_size) + "-->" + decString(rhs.pe_size);
-    if( num_pe!=rhs.num_pe )
-	ret += " PE:" + decString(num_pe) + "-->" + decString(rhs.num_pe);
-    if( free_pe!=rhs.free_pe )
-	ret += " Free:" + decString(free_pe) + "-->" + decString(rhs.free_pe);
-    string tmp;
-    list<Pv>::const_iterator i = pv.begin();
-    list<Pv>::const_iterator j;
-    while( i!=pv.end() )
+    string ret = Container::getDiffString( rhs );
+    const PeContainer* p = dynamic_cast<const PeContainer*>(&rhs);
+    if( p )
 	{
-	j = find( rhs.pv.begin(), rhs.pv.end(), *i );
-	if( j==rhs.pv.end() )
-	    tmp += i->device + "-->";
-	++i;
+	if( pe_size!=p->pe_size )
+	    ret += " PeSize:" + decString(pe_size) + "-->" + decString(p->pe_size);
+	if( num_pe!=p->num_pe )
+	    ret += " PE:" + decString(num_pe) + "-->" + decString(p->num_pe);
+	if( free_pe!=p->free_pe )
+	    ret += " Free:" + decString(free_pe) + "-->" + decString(p->free_pe);
+	string tmp;
+	list<Pv>::const_iterator i = pv.begin();
+	list<Pv>::const_iterator j;
+	while( i!=pv.end() )
+	    {
+	    j = find( p->pv.begin(), p->pv.end(), *i );
+	    if( j==p->pv.end() )
+		tmp += i->device + "-->";
+	    ++i;
+	    }
+	i = p->pv.begin();
+	while( i!=p->pv.end() )
+	    {
+	    j = find( pv.begin(), pv.end(), *i );
+	    if( j==pv.end() )
+		tmp += "<--" + i->device;
+	    ++i;
+	    }
+	if( !tmp.empty() )
+	    ret += " Pv:" + tmp;
+	tmp.erase();
+	i = pv_add.begin();
+	while( i!=pv_add.end() )
+	    {
+	    j = find( p->pv_add.begin(), p->pv_add.end(), *i );
+	    if( j==p->pv_add.end() )
+		tmp += i->device + "-->";
+	    ++i;
+	    }
+	i = p->pv_add.begin();
+	while( i!=p->pv_add.end() )
+	    {
+	    j = find( pv_add.begin(), pv_add.end(), *i );
+	    if( j==pv_add.end() )
+		tmp += "<--" + i->device;
+	    ++i;
+	    }
+	if( !tmp.empty() )
+	    ret += " PvAdd:" + tmp;
+	tmp.erase();
+	i = pv_remove.begin();
+	while( i!=pv_remove.end() )
+	    {
+	    j = find( p->pv_remove.begin(), p->pv_remove.end(), *i );
+	    if( j==p->pv_remove.end() )
+		tmp += i->device + "-->";
+	    ++i;
+	    }
+	i = p->pv_remove.begin();
+	while( i!=p->pv_remove.end() )
+	    {
+	    j = find( pv_remove.begin(), pv_remove.end(), *i );
+	    if( j==pv_remove.end() )
+		tmp += "<--" + i->device;
+	    ++i;
+	    }
+	if( !tmp.empty() )
+	    ret += " PvRemove:" + tmp;
 	}
-    i = rhs.pv.begin();
-    while( i!=rhs.pv.end() )
-	{
-	j = find( pv.begin(), pv.end(), *i );
-	if( j==pv.end() )
-	    tmp += "<--" + i->device;
-	++i;
-	}
-    if( !tmp.empty() )
-	ret += " Pv:" + tmp;
-    tmp.erase();
-    i = pv_add.begin();
-    while( i!=pv_add.end() )
-	{
-	j = find( rhs.pv_add.begin(), rhs.pv_add.end(), *i );
-	if( j==rhs.pv_add.end() )
-	    tmp += i->device + "-->";
-	++i;
-	}
-    i = rhs.pv_add.begin();
-    while( i!=rhs.pv_add.end() )
-	{
-	j = find( pv_add.begin(), pv_add.end(), *i );
-	if( j==pv_add.end() )
-	    tmp += "<--" + i->device;
-	++i;
-	}
-    if( !tmp.empty() )
-	ret += " PvAdd:" + tmp;
-    tmp.erase();
-    i = pv_remove.begin();
-    while( i!=pv_remove.end() )
-	{
-	j = find( rhs.pv_remove.begin(), rhs.pv_remove.end(), *i );
-	if( j==rhs.pv_remove.end() )
-	    tmp += i->device + "-->";
-	++i;
-	}
-    i = rhs.pv_remove.begin();
-    while( i!=rhs.pv_remove.end() )
-	{
-	j = find( pv_remove.begin(), pv_remove.end(), *i );
-	if( j==pv_remove.end() )
-	    tmp += "<--" + i->device;
-	++i;
-	}
-    if( !tmp.empty() )
-	ret += " PvRemove:" + tmp;
-    tmp.erase();
     return( ret );
     }
+
 
 bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     {

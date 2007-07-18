@@ -96,7 +96,7 @@ namespace storage
 
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM, UB_DMRAID };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS, DMRAID, 
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS, DMRAID, NFSC,
                  COTYPE_LAST_ENTRY };
 
     /**

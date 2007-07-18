@@ -72,7 +72,7 @@ class DmPartCo : public PeContainer
 	Partition* getPartition( unsigned nr, bool del );
 	void getInfo( storage::DmPartCoInfo& info ) const;
 	bool equalContent( const DmPartCo& rhs ) const;
-	virtual string logDiff( const DmPartCo& d ) const;
+	virtual string getDiffString( const Container& d ) const;
 	void logDifference( const DmPartCo& d ) const;
 	DmPartCo& operator= ( const DmPartCo& rhs );
 	static string undevName( const string& name );

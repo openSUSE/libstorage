@@ -345,59 +345,65 @@ inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
 
 }
 
-void LoopCo::logDifference( const LoopCo& d ) const
+void LoopCo::logDifference( const Container& d ) const
     {
-    string log = Container::logDifference( d );
-    y2milestone( "%s", log.c_str() );
-    ConstLoopPair p=loopPair();
-    ConstLoopIter i=p.begin();
-    while( i!=p.end() )
+    y2mil( "" << getDiffString( d ));
+    const LoopCo * p = dynamic_cast<const LoopCo*>(&d);
+    if( p != NULL )
 	{
-	ConstLoopPair pc=d.loopPair();
-	ConstLoopIter j = pc.begin();
-	while( j!=pc.end() &&
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j!=pc.end() )
+	ConstLoopPair pp=loopPair();
+	ConstLoopIter i=pp.begin();
+	while( i!=pp.end() )
 	    {
-	    if( !i->equalContent( *j ) )
-		i->logDifference( *j );
+	    ConstLoopPair pc=p->loopPair();
+	    ConstLoopIter j = pc.begin();
+	    while( j!=pc.end() &&
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j!=pc.end() )
+		{
+		if( !i->equalContent( *j ) )
+		    i->logDifference( *j );
+		}
+	    else
+		y2mil( "  -->" << *i );
+	    ++i;
 	    }
-	else
-	    y2mil( "  -->" << *i );
-	++i;
-	}
-    p=d.loopPair();
-    i=p.begin();
-    while( i!=p.end() )
-	{
-	ConstLoopPair pc=loopPair();
-	ConstLoopIter j = pc.begin();
-	while( j!=pc.end() &&
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j==pc.end() )
-	    y2mil( "  <--" << *i );
-	++i;
+	pp=p->loopPair();
+	i=pp.begin();
+	while( i!=pp.end() )
+	    {
+	    ConstLoopPair pc=loopPair();
+	    ConstLoopIter j = pc.begin();
+	    while( j!=pc.end() &&
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j==pc.end() )
+		y2mil( "  <--" << *i );
+	    ++i;
+	    }
 	}
     }
 
-bool LoopCo::equalContent( const LoopCo& rhs ) const
+bool LoopCo::equalContent( const Container& rhs ) const
     {
+    const LoopCo * p = NULL;
     bool ret = Container::equalContent(rhs);
     if( ret )
+	p = dynamic_cast<const LoopCo*>(&rhs);
+    if( ret && p )
 	{
-	ConstLoopPair p = loopPair();
-	ConstLoopPair pc = rhs.loopPair();
-	ConstLoopIter i = p.begin();
+	ConstLoopPair pp = loopPair();
+	ConstLoopPair pc = p->loopPair();
+	ConstLoopIter i = pp.begin();
 	ConstLoopIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() )
+	while( ret && i!=pp.end() && j!=pc.end() )
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
 	    ++j;
 	    }
-	ret = ret && i==p.end() && j==pc.end();
+	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
     }

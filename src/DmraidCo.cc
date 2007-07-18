@@ -217,20 +217,29 @@ std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
 
 }
 
-string DmraidCo::logDiff( const DmraidCo& d ) const
+string DmraidCo::getDiffString( const Container& d ) const
     {
-    string log = DmPartCo::logDiff( d );
-    if( controller!=d.controller )
-	log += " controller:" + controller + "-->" + d.controller;
-    if( raidtype!=d.raidtype )
-	log += " raidtype:" + raidtype + "-->" + d.raidtype;
+    string log = DmPartCo::getDiffString( d );
+    const DmraidCo * p = dynamic_cast<const DmraidCo*>(&d);
+    if( p )
+	{
+	if( controller!=p->controller )
+	    log += " controller:" + controller + "-->" + p->controller;
+	if( raidtype!=p->raidtype )
+	    log += " raidtype:" + raidtype + "-->" + p->raidtype;
+	}
     return( log );
     }
 
-bool DmraidCo::equalContent( const DmraidCo& rhs ) const
+bool DmraidCo::equalContent( const Container& rhs ) const
     {
-    bool ret = DmPartCo::equalContent( rhs ) &&
-               controller==rhs.controller && raidtype==rhs.raidtype;
+    bool ret = Container::equalContent(rhs);
+    if( ret )
+	{
+	const DmraidCo *p = dynamic_cast<const DmraidCo*>(&rhs);
+	ret = p && DmPartCo::equalContent( *p ) &&
+              controller==p->controller && raidtype==p->raidtype;
+	}
     return( ret );
     }
 

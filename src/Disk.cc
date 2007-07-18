@@ -2609,109 +2609,119 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 
 }
 
-void Disk::logDifference( const Disk& d ) const
+void Disk::logDifference( const Container& d ) const
     {
-    string log = Container::logDifference( d );
-    if( cyl!=d.cyl )
-	log += " Cyl:" + decString(cyl) + "-->" + decString(d.cyl);
-    if( head!=d.head )
-	log += " Head:" + decString(head) + "-->" + decString(d.head);
-    if( sector!=d.sector )
-	log += " Sect:" + decString(sector) + "-->" + decString(d.sector);
-    if( mjr!=d.mjr )
-	log += " Mjr:" + decString(mjr) + "-->" + decString(d.mjr);
-    if( mnr!=d.mnr )
-	log += " Mnr:" + decString(mnr) + "-->" + decString(d.mnr);
-    if( range!=d.range )
-	log += " Range:" + decString(range) + "-->" + decString(d.range);
-    if( size_k!=d.size_k )
-	log += " SizeK:" + decString(size_k) + "-->" + decString(d.size_k);
-    if( label!=d.label )
-	log += " Label:" + label + "-->" + d.label;
-    if( sysfs_dir!=d.sysfs_dir )
-	log += " SysfsDir:" + sysfs_dir + "-->" + d.sysfs_dir;
-    if( max_primary!=d.max_primary )
-	log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(d.max_primary);
-    if( ext_possible!=d.ext_possible )
+    string log = getDiffString( d );
+    const Disk * p = dynamic_cast<const Disk*>(&d);
+    if( p != NULL )
 	{
-	if( d.ext_possible )
-	    log += " -->ExtPossible";
-	else
-	    log += " ExtPossible-->";
-	}
-    if( max_logical!=d.max_logical )
-	log += " MaxLogical:" + decString(max_logical) + "-->" + decString(d.max_logical);
-    if( init_disk!=d.init_disk )
-	{
-	if( d.init_disk )
-	    log += " -->InitDisk";
-	else
-	    log += " InitDisk-->";
-	}
-    if( iscsi!=d.iscsi )
-	{
-	if( d.init_disk )
-	    log += " -->iSCSI";
-	else
-	    log += " iSCSI-->";
-	}
-    y2milestone( "%s", log.c_str() );
-    ConstPartPair p=partPair();
-    ConstPartIter i=p.begin();
-    while( i!=p.end() )
-	{
-	ConstPartPair pc=d.partPair();
-	ConstPartIter j = pc.begin();
-	while( j!=pc.end() &&
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j!=pc.end() )
+	if( cyl!=p->cyl )
+	    log += " Cyl:" + decString(cyl) + "-->" + decString(p->cyl);
+	if( head!=p->head )
+	    log += " Head:" + decString(head) + "-->" + decString(p->head);
+	if( sector!=p->sector )
+	    log += " Sect:" + decString(sector) + "-->" + decString(p->sector);
+	if( mjr!=p->mjr )
+	    log += " Mjr:" + decString(mjr) + "-->" + decString(p->mjr);
+	if( mnr!=p->mnr )
+	    log += " Mnr:" + decString(mnr) + "-->" + decString(p->mnr);
+	if( range!=p->range )
+	    log += " Range:" + decString(range) + "-->" + decString(p->range);
+	if( size_k!=p->size_k )
+	    log += " SizeK:" + decString(size_k) + "-->" + decString(p->size_k);
+	if( label!=p->label )
+	    log += " Label:" + label + "-->" + p->label;
+	if( sysfs_dir!=p->sysfs_dir )
+	    log += " SysfsDir:" + sysfs_dir + "-->" + p->sysfs_dir;
+	if( max_primary!=p->max_primary )
+	    log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(p->max_primary);
+	if( ext_possible!=p->ext_possible )
 	    {
-	    if( !i->equalContent( *j ) )
-		i->logDifference( *j );
+	    if( p->ext_possible )
+		log += " -->ExtPossible";
+	    else
+		log += " ExtPossible-->";
 	    }
-	else
-	    y2mil( "  -->" << *i );
-	++i;
+	if( max_logical!=p->max_logical )
+	    log += " MaxLogical:" + decString(max_logical) + "-->" + decString(p->max_logical);
+	if( init_disk!=p->init_disk )
+	    {
+	    if( p->init_disk )
+		log += " -->InitDisk";
+	    else
+		log += " InitDisk-->";
+	    }
+	if( iscsi!=p->iscsi )
+	    {
+	    if( p->iscsi )
+		log += " -->iSCSI";
+	    else
+		log += " iSCSI-->";
+	    }
+	y2milestone( "%s", log.c_str() );
+	ConstPartPair pp=partPair();
+	ConstPartIter i=pp.begin();
+	while( i!=pp.end() )
+	    {
+	    ConstPartPair pc=p->partPair();
+	    ConstPartIter j = pc.begin();
+	    while( j!=pc.end() &&
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j!=pc.end() )
+		{
+		if( !i->equalContent( *j ) )
+		    i->logDifference( *j );
+		}
+	    else
+		y2mil( "  -->" << *i );
+	    ++i;
+	    }
+	pp=p->partPair();
+	i=pp.begin();
+	while( i!=pp.end() )
+	    {
+	    ConstPartPair pc=partPair();
+	    ConstPartIter j = pc.begin();
+	    while( j!=pc.end() &&
+		   (i->device()!=j->device() || i->created()!=j->created()) )
+		++j;
+	    if( j==pc.end() )
+		y2mil( "  <--" << *i );
+	    ++i;
+	    }
 	}
-    p=d.partPair();
-    i=p.begin();
-    while( i!=p.end() )
-	{
-	ConstPartPair pc=partPair();
-	ConstPartIter j = pc.begin();
-	while( j!=pc.end() &&
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j==pc.end() )
-	    y2mil( "  <--" << *i );
-	++i;
-	}
+    else
+	y2mil( "" << log );
     }
 
-bool Disk::equalContent( const Disk& rhs ) const
+bool Disk::equalContent( const Container& rhs ) const
     {
-    bool ret = Container::equalContent(rhs) &&
-	       cyl==rhs.cyl && head==rhs.head && sector==rhs.sector &&
-	       mjr==rhs.mjr && mnr==rhs.mnr && range==rhs.range &&
-	       size_k==rhs.size_k && max_primary==rhs.max_primary &&
-	       ext_possible==rhs.ext_possible && max_logical==rhs.max_logical &&
-	       init_disk==rhs.init_disk && label==rhs.label && 
-	       iscsi==rhs.iscsi && sysfs_dir==rhs.sysfs_dir && 
-	       dmp_slave==rhs.dmp_slave && gpt_enlarge==rhs.gpt_enlarge;
+    const Disk * p = NULL;
+    bool ret = Container::equalContent(rhs);
     if( ret )
+	p = dynamic_cast<const Disk*>(&rhs);
+    if( ret && p )
+	ret = cyl==p->cyl && head==p->head && sector==p->sector &&
+	      mjr==p->mjr && mnr==p->mnr && range==p->range &&
+	      size_k==p->size_k && max_primary==p->max_primary &&
+	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
+	      init_disk==p->init_disk && label==p->label && 
+	      iscsi==p->iscsi && sysfs_dir==p->sysfs_dir && 
+	      dmp_slave==p->dmp_slave && gpt_enlarge==p->gpt_enlarge;
+    if( ret && p )
 	{
-	ConstPartPair p = partPair();
-	ConstPartPair pc = rhs.partPair();
-	ConstPartIter i = p.begin();
+	ConstPartPair pp = partPair();
+	ConstPartPair pc = p->partPair();
+	ConstPartIter i = pp.begin();
 	ConstPartIter j = pc.begin();
-	while( ret && i!=p.end() && j!=pc.end() )
+	while( ret && i!=pp.end() && j!=pc.end() )
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;
 	    ++j;
 	    }
-	ret = ret && i==p.end() && j==pc.end();
+	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
     }

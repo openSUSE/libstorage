@@ -29,8 +29,8 @@ class DmraidCo : public DmPartCo
 	friend std::ostream& operator<< (std::ostream&, const DmraidCo& );
 	void getInfo( storage::DmraidCoInfo& info ) const;
 
-	bool equalContent( const DmraidCo& rhs ) const;
-	string logDiff( const DmraidCo& d ) const;
+	bool equalContent( const Container& rhs ) const;
+	string getDiffString( const Container& d ) const;
 	DmraidCo& operator= ( const DmraidCo& rhs );
 
     protected:

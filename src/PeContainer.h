@@ -30,7 +30,7 @@ class PeContainer : public Container
 	void unuseDev();
 	void changeDeviceName( const string& old, const string& nw );
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
-	virtual string logDiff( const PeContainer& d ) const;
+	virtual string getDiffString( const Container& d ) const;
 	
     protected:
 	struct Pv

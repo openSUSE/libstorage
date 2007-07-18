@@ -2054,7 +2054,8 @@ int Volume::mount( const string& m, bool ro )
 	switch( fs )
 	    {
 	    case NTFS:
-		fsn = "ntfs-3g";
+		if( !ro )
+		    fsn = "ntfs-3g";
 		break;
 	    case FSUNKNOWN:
 		fsn = "auto";
