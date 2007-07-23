@@ -1030,6 +1030,7 @@ DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
     disk = NULL;
     if( rhs.disk )
 	disk = new Disk( *rhs.disk );
+    getStorage()->waitForDevice();
     ConstDmPartPair p = rhs.dmpartPair();
     for( ConstDmPartIter i = p.begin(); i!=p.end(); ++i )
 	{

@@ -610,12 +610,18 @@ Storage::detectDmraid( ProcPart& ppart )
     else if( getenv( "YAST2_STORAGE_NO_DMRAID" )==NULL )
 	{
 	list<string> l;
+	map<string,string> by_id;
 	DmraidCo::getRaids( l );
+	if( !l.empty() )
+	    getFindMap( "/dev/disk/by-id", by_id, false );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    DmraidCo * v = new DmraidCo( this, *i, ppart );
 	    if( v->isValid() )
 		{
+		string nm = by_id["dm-"+decString(v->minorNr())];
+		if( !nm.empty() )
+		    v->setUdevData( nm );
 		addToList( v );
 		}
 	    else
@@ -4281,7 +4287,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( (r=findDmraidCo(p.first))!=dmrCoEnd() )
 	    {
-	    info.cname = d->device();
+	    info.cname = r->device();
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.type = DMRAID;
 	    info.numeric = true;

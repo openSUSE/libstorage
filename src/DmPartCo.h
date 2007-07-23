@@ -33,6 +33,7 @@ class DmPartCo : public PeContainer
 	unsigned numPartitions() const { return disk->numPartitions(); }
 	static storage::CType const staticType() { return storage::DMRAID; }
 	friend std::ostream& operator<< (std::ostream&, const DmPartCo& );
+	void setUdevData( const string& id );
 
 	int createPartition( storage::PartitionType type, long unsigned start,
 			     long unsigned len, string& device,

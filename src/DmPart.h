@@ -31,6 +31,7 @@ class DmPart : public Dm
 	void updateSize( ProcPart& pp );
 	void updateSize();
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	void addUdevData();
 	virtual string setTypeText( bool doing=true ) const;
 	static bool notDeleted( const DmPart& l ) { return( !l.deleted() ); }
 
@@ -39,6 +40,7 @@ class DmPart : public Dm
 	void dataFromPart( const Partition* p );
 	virtual const string shortPrintedName() const { return( "DmPart" ); }
 	const DmPartCo* co() const; 
+	void addAltUdevId( unsigned num );
 	Partition* p;
 
 	mutable storage::DmPartInfo info;

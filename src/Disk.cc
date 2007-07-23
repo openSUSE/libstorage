@@ -1086,7 +1086,7 @@ string Disk::getPartName( unsigned nr ) const
 pair<string,unsigned> Disk::getDiskPartition( const string& dev )
     {
     static Regex prx( "[0123456789]p[0123456789]+$" );
-    static Regex partrx( "-part[0123456789]+$" );
+    static Regex partrx( "[-_]part[0123456789]+$" );
     unsigned nr = 0;
     string disk = dev;
     bool need_p = prx.match( dev );

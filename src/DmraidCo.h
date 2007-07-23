@@ -28,6 +28,7 @@ class DmraidCo : public DmPartCo
 	static storage::CType const staticType() { return storage::DMRAID; }
 	friend std::ostream& operator<< (std::ostream&, const DmraidCo& );
 	void getInfo( storage::DmraidCoInfo& info ) const;
+	void setUdevData( const string& id );
 
 	bool equalContent( const Container& rhs ) const;
 	string getDiffString( const Container& d ) const;

@@ -93,6 +93,34 @@ void DmPart::updateSize( ProcPart& pp )
 	setSize( si );
     }
 
+void DmPart::addUdevData()
+    {
+    addAltUdevId( num );
+    }
+
+static string udevCompleteIdPath( const string& s, unsigned nr )
+    {
+    return( "/dev/disk/by-id/" + s + "_part" + decString(nr) );
+    }
+
+void DmPart::addAltUdevId( unsigned num )
+    {
+    list<string>::iterator i = alt_names.begin();
+    while( i!=alt_names.end() )
+	{
+	if( i->find( "/by-id/" ) != string::npos )
+	    i = alt_names.erase( i );
+	else
+	    ++i;
+	}
+    list<string>::const_iterator j = co()->udevId().begin();
+    while( j!=co()->udevId().end() )
+	{
+	alt_names.push_back( udevCompleteIdPath( *j, num ));
+	++j;
+	}
+    }
+
 void DmPart::getCommitActions( std::list<storage::commitAction*>& l ) const
     {
     unsigned s = l.size();

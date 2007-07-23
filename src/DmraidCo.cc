@@ -70,6 +70,21 @@ void DmraidCo::getRaidData( const string& name )
     }
 
 void
+DmraidCo::setUdevData( const string& id )
+    {
+    y2milestone( "disk %s id %s", nm.c_str(), id.c_str() );
+    udev_id.clear();
+    udev_id = splitString( id );
+    udev_id.sort();
+    y2mil( "id:" << udev_id );
+    DmraidPair pp = dmraidPair();
+    for( DmraidIter p=pp.begin(); p!=pp.end(); ++p )
+	{
+	p->addUdevData();
+	}
+    }
+
+void
 DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p ) 
     {
     y2mil( "num:" << num );
