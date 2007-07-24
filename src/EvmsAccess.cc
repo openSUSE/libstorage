@@ -576,8 +576,8 @@ ostream& operator<<( ostream &str, const EvmsVolumeObject& obj )
 
 int EvmsAccess::pluginFilterFunction( const char* plugin )
     {
-    static char *ExcludeList[] = { "/ext2-", "/reiser-", "/jfs-", "/xfs-", 
-				   "/swap-", "/ocfs2-", "/ntfs-", "/hb2-" };
+    static const char *ExcludeList[] = { "/ext2-", "/reiser-", "/jfs-", "/xfs-", 
+				         "/swap-", "/ocfs2-", "/ntfs-", "/hb2-" };
     int ret = 0;
     unsigned i = 0;
     while( !ret && i<sizeof(ExcludeList)/sizeof(char*) )
@@ -1111,7 +1111,7 @@ int EvmsAccess::createCo( const string& Container_Cv,
 	else
 	    {
 	    option->count = count;
-	    option->option[0].name = "name";
+	    option->option[0].name = (char *)"name";
 	    option->option[0].is_number_based = false;
 	    option->option[0].type = EVMS_Type_String;
 	    option->option[0].flags = 0;
@@ -1120,13 +1120,13 @@ int EvmsAccess::createCo( const string& Container_Cv,
 	    option->option[1].flags = 0;
 	    if( NewMeta_bv )
 		{
-		option->option[1].name = "extent_size";
+		option->option[1].name = (char *)"extent_size";
 		option->option[1].type = EVMS_Type_Unsigned_Int64;
 		option->option[1].value.i64 = PeSizeK_lv*2;
 		}
 	    else
 		{
-		option->option[1].name = "pe_size";
+		option->option[1].name = (char *)"pe_size";
 		option->option[1].type = EVMS_Type_Unsigned_Int32;
 		option->option[1].value.i32 = PeSizeK_lv*2;
 		}
@@ -1247,12 +1247,12 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
 	else
 	    {
 	    option->count = count;
-	    option->option[0].name = "name";
+	    option->option[0].name = (char *)"name";
 	    option->option[0].is_number_based = false;
 	    option->option[0].type = EVMS_Type_String;
 	    option->option[0].flags = 0;
 	    option->option[0].value.s = (char*)LvName_Cv.c_str();
-	    option->option[1].name = "size";
+	    option->option[1].name = (char *)"size";
 	    option->option[1].is_number_based = false;
 	    option->option[1].flags = 0;
 	    if( lvm2 )
@@ -1267,7 +1267,7 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
 		}
 	    if( Stripe_lv>1 )
 		{
-		option->option[2].name = "stripes";
+		option->option[2].name = (char *)"stripes";
 		option->option[2].is_number_based = false;
 		option->option[2].flags = 0;
 		if( lvm2 )
@@ -1282,7 +1282,7 @@ int EvmsAccess::createLv( const string& LvName_Cv, const string& Container_Cv,
 		    }
 		if( StripeSizeK_lv )
 		    {
-		    option->option[3].name = "stripe_size";
+		    option->option[3].name = (char *)"stripe_size";
 		    option->option[3].is_number_based = false;
 		    option->option[3].flags = 0;
 		    if( lvm2 )
@@ -1762,13 +1762,13 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 	    option.option[0].flags = 0;
 	    if( !lvm2 )
 		{
-		option.option[0].name = "add_size";
+		option.option[0].name = (char *)"add_size";
 		option.option[0].type = EVMS_Type_Unsigned_Int32;
 		option.option[0].value.i32 = (SizeK_lv-Rg_p->sizeK())*2;
 		}
 	    else
 		{
-		option.option[0].name = "size";
+		option.option[0].name = (char *)"size";
 		option.option[0].type = EVMS_Type_Unsigned_Int64;
 		option.option[0].value.i64 = (SizeK_lv-Rg_p->sizeK())*2;
 		}
@@ -1788,13 +1788,13 @@ int EvmsAccess::changeLvSize( const string& Name_Cv, const string& Container_Cv,
 	    option.option[0].is_number_based = false;
 	    if( !lvm2 )
 		{
-		option.option[0].name = "remove_size";
+		option.option[0].name = (char *)"remove_size";
 		option.option[0].type = EVMS_Type_Unsigned_Int32;
 		option.option[0].value.i32 = (Rg_p->sizeK()-SizeK_lv)*2;
 		}
 	    else
 		{
-		option.option[0].name = "size";
+		option.option[0].name = (char *)"size";
 		option.option[0].type = EVMS_Type_Unsigned_Int64;
 		option.option[0].value.i64 = (Rg_p->sizeK()-SizeK_lv)*2;
 		}

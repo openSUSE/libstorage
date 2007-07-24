@@ -5,6 +5,8 @@
 #include <list>
 #include <map>
 
+#include "y2storage/EtcFstab.h"
+
 namespace storage
 {
 class Storage;
@@ -16,8 +18,9 @@ class ProcMounts
 	string getMount( const string& Dev ) const;
 	string getMount( const std::list<string>& dl ) const;
 	std::map<string,string> allMounts() const;
+	void getEntries( std::list<FstabEntry>& l ) const;
     protected:
-	std::map<string,string> co;
+	std::map<string,FstabEntry> co;
     };
 
 }

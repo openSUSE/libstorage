@@ -13,7 +13,7 @@ namespace storage
 
 inline bool operator<( CType a, CType b )
     {
-    static int order[COTYPE_LAST_ENTRY] = { 0, 1, 3, 7, 5, 4, 6, 2 };
+    static int order[COTYPE_LAST_ENTRY] = { 0, 1, 3, 7, 5, 4, 6, 2, 8 };
     bool ret = order[a] < order[b];
     y2mil( "a:" << a << " o(a):" << order[a] << " b:" << b << " o(b):" << order[b] << " ret:" << ret );
     return( ret );

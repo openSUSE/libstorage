@@ -80,7 +80,7 @@ using std::deque;
 
 namespace storage
 {
-    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, HFS, NTFS, SWAP, HFSPLUS, FSNONE };
+    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, HFS, NTFS, SWAP, HFSPLUS, NFS, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
@@ -340,6 +340,15 @@ namespace storage
 	};
 
     /**
+     * Contains info about a nfs volumes
+     */
+    struct NfsInfo
+	{
+	NfsInfo() {};
+	VolumeInfo v;
+	};
+
+    /**
      * Contains info about a file based loop devices.
      */
     struct LoopInfo
@@ -501,6 +510,8 @@ namespace storage
 	VOLUME_CRYPTSETUP_FAILED = -3034,
 	VOLUME_CRYPTUNSETUP_FAILED = -3035,
 	VOLUME_FORMAT_NOT_IMPLEMENTED = -3036,
+	VOLUME_FORMAT_NFS_IMPOSSIBLE = -3037,
+	VOLUME_CRYPT_NFS_IMPOSSIBLE = -3038,
 
 	LVM_CREATE_PV_FAILED = -4000,
 	LVM_PV_ALREADY_CONTAINED = -4001,
@@ -800,6 +811,14 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMdInfo( deque<MdInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for nfs devices in system
+	 *
+	 * @param plist list of records that get filled with nfs info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getNfsInfo( deque<NfsInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for file based loop devices in system
@@ -1702,6 +1721,28 @@ namespace storage
 	 * @return true if all is ok, a false to indicate an error
 	 */
 	virtual int checkMd( const string& name ) = 0;
+
+	/**
+	 * Add knowdlege about existence of nfs device.
+	 *
+	 * @param nfsDev name of nfs device 
+	 * @param sizeK size of the nfs device
+	 * @param mp mount point of the nfs device
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int addNfsDevice( const string& nfsDev, 
+	                          unsigned long long sizeK,
+				  const string& mp ) = 0;
+
+	/**
+	 * Check accessability and size of nfs device.
+	 *
+	 * @param nfsDev name of nfs device 
+	 * @param sizeK size of the nfs device
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int checkNfsDevice( const string& nfsDev, 
+	                            unsigned long long& sizeK ) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically

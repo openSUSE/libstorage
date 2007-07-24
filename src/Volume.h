@@ -92,7 +92,8 @@ class Volume
 	void initLabel( const string& lbl ) { label=orig_label=lbl; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
-	void setFstabOption( const string& val ) { fstab_opt=val; }
+	void setFstabOption( const string& val ) { orig_fstab_opt=fstab_opt=val; }
+	void setMount( const string& val ) { orig_mp=mp=val; }
 	void updateFstabOptions();
 	bool needFstabUpdate() const;
 	const string& getMkfsOption() const { return mkfs_opt; }

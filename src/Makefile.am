@@ -35,6 +35,7 @@ liby2storage_la_SOURCES =			\
 	    DmCo.cc      DmCo.h	     	     \
 	  MdCo.cc        MdCo.h	     	     \
 	  LoopCo.cc      LoopCo.h	     \
+	  NfsCo.cc       NfsCo.h             \
 	Volume.cc        Volume.h            \
 	  Partition.cc   Partition.h         \
 	  Dm.cc          Dm.h                \
@@ -44,6 +45,7 @@ liby2storage_la_SOURCES =			\
 		Dmraid.cc    Dmraid.h        \
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
+	  Nfs.cc         Nfs.h               \
 	SystemCmd.cc     SystemCmd.h         \
 	OutputProcessor.cc OutputProcessor.h \
 	Regex.cc         Regex.h             \

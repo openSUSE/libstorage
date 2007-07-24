@@ -26,7 +26,6 @@ ProcMounts::ProcMounts( Storage * const sto )
     SystemCmd mt( "mount" );
     while( mounts.good() )
 	{
-	y2mil( "line:\"" << line << "\"" );
 	string dev = extractNthWord( 0, line );
 	if( dev.find( "/by-label/" ) != string::npos )
 	    {
@@ -82,7 +81,10 @@ ProcMounts::ProcMounts( Storage * const sto )
 	    }
 	if( !skip && dev!= "rootfs" && dev!="/dev/root" )
 	    {
-	    co[dev] = dir;
+	    co[dev].device = dev;
+	    co[dev].mount = dir;
+	    co[dev].fs = extractNthWord( 2, line );
+	    co[dev].opts = splitString( extractNthWord( 3, line ), "," );
 	    }
 	getline( mounts, line );
 	}
@@ -95,7 +97,8 @@ ProcMounts::ProcMounts( Storage * const sto )
 	    {
 	    dev = sto->findNormalDevice( dev );
 	    }
-	co[dev] = "/";
+	co[dev].device = dev;
+	co[dev].mount = "/";
 	}
     mounts.close();
     mounts.clear();
@@ -112,19 +115,26 @@ ProcMounts::ProcMounts( Storage * const sto )
 	    y2mil( "dev:" << dev );
 	    dev.erase( pos );
 	    }
-	co[dev] = "swap";
+	co[dev].device = dev;
+	co[dev].mount = "swap";
+	co[dev].fs = "swap";
 	getline( mounts, line );
 	}
-    y2mil( "co:" << co );
+    map<string,FstabEntry>::const_iterator i = co.begin();
+    while( i!=co.end() )
+	{
+	y2mil( "co:[" << i->first << "]-->" << i->second );
+	++i;
+	}
     }
 
 string 
 ProcMounts::getMount( const string& dev ) const
     {
     string ret;
-    map<string,string>::const_iterator i = co.find( dev );
+    map<string,FstabEntry>::const_iterator i = co.find( dev );
     if( i!=co.end() )
-	ret = i->second;
+	ret = i->second.mount;
     return( ret );
     }
 
@@ -145,12 +155,19 @@ map<string,string>
 ProcMounts::allMounts() const
     {
     map<string,string> ret;
-    map<string,string>::const_iterator i = co.begin();
-    for( map<string,string>::const_iterator i = co.begin(); i!=co.end(); ++i )
+    for( map<string,FstabEntry>::const_iterator i = co.begin(); i!=co.end(); ++i )
 	{
-	ret[i->second] = i->first;
+	ret[i->second.mount] = i->first;
 	}
     return( ret );
     }
 
+void ProcMounts::getEntries( list<FstabEntry>& l ) const
+    {
+    l.clear();
+    for( map<string,FstabEntry>::const_iterator i = co.begin(); i!=co.end(); ++i )
+	{
+	l.push_back( i->second );
+	}
+    }
 
