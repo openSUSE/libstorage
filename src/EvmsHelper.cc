@@ -190,7 +190,7 @@ int EvmsActivate( EvmsAccess& evms, const string& params )
 
 struct CmdEntry
     {
-    char *cmd;
+    const char *cmd;
     int (*fnc)( EvmsAccess& evms, const string& params );
     };
 
