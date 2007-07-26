@@ -390,9 +390,15 @@ string normalizeDevice( const string& dev )
     return( ret );
     }
 
+bool isNfsDev( const string& dev )
+    {
+    return( !dev.empty() && dev[0]!='/' &&
+            dev.find( ':' )!=string::npos );
+    }
+
 void normalizeDevice( string& dev )
     {
-    if( dev.find( "/dev/" )!=0 )
+    if( dev.find( "/dev/" )!=0 && !isNfsDev(dev) )
 	dev = "/dev/" + dev;
     }
 

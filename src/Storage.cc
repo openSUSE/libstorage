@@ -3539,6 +3539,8 @@ Storage::addNfsDevice( const string& nfsDev, unsigned long long sizeK,
 	}
     if( ret==0 && co!=NULL )
 	{
+	if( sizeK==0 )
+	    checkNfsDevice( nfsDev, sizeK );
 	ret = co->addNfs( nfsDev, sizeK, mp );
 	}
     if( !have )
@@ -3565,6 +3567,7 @@ Storage::checkNfsDevice( const string& nfsDev, unsigned long long& sizeK )
     string mdir = tmpDir() + "/tmp_mp";
     unlink( mdir.c_str() );
     rmdir( mdir.c_str() );
+    createPath( mdir );
     ret = co.addNfs( nfsDev, 0, "" );
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
 	{
@@ -4668,7 +4671,7 @@ int Storage::getNfsInfo( deque<storage::NfsInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstNfsPair p = nfsPair();
+    ConstNfsPair p = nfsPair(Nfs::notDeleted);
     for( ConstNfsIterator i = p.begin(); i != p.end(); ++i )
 	{
 	plist.push_back( NfsInfo() );
@@ -5650,6 +5653,11 @@ void Storage::rootMounted()
 	{
     	if( haveMd(md) )
 	    md->syncRaidtab();
+	if( instsys() )
+	    {
+	    string path = root()+"/etc/fstab";
+	    unlink( path.c_str() );
+	    }
 	int ret = fstab->changeRootPrefix( root()+"/etc" );
 	if( ret!=0 )
 	    y2error( "changeRootPrefix returns %d", ret );

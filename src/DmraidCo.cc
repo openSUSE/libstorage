@@ -75,6 +75,8 @@ DmraidCo::setUdevData( const string& id )
     y2milestone( "disk %s id %s", nm.c_str(), id.c_str() );
     udev_id.clear();
     udev_id = splitString( id );
+    udev_id.erase( remove_if(udev_id.begin(), udev_id.end(), 
+                             find_begin("dm-uuid-dmraid")));
     udev_id.sort();
     y2mil( "id:" << udev_id );
     DmraidPair pp = dmraidPair();

@@ -920,6 +920,8 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     s << *((PeContainer*)&d);
     s << " DmNr:" << d.mnr
       << " PNum:" << d.num_part;
+    if( !d.udev_id.empty() )
+	s << " UdevId:" << d.udev_id;
     if( d.del_ptable )
       s << " delPT";
     if( !d.active )

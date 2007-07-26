@@ -16,12 +16,15 @@ class Nfs : public Volume
 	friend std::ostream& operator<< (std::ostream& s, const Nfs& l );
 
 	static string canonicalName( const string& dev );
+	static bool notDeleted( const Nfs& l ) { return( !l.deleted() ); }
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 
 	void getInfo( storage::NfsInfo& info ) const;
 	bool equalContent( const Nfs& rhs ) const;
 	void logDifference( const Nfs& d ) const;
+
+	string removeText( bool doing=true ) const;
 
     protected:
 	void init();

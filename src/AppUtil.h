@@ -48,6 +48,7 @@ string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
 string undevDevice( const string& dev );
 void undevDevice( string& dev );
+bool isNfsDev( const string& dev );
 bool runningFromSystem();
 void delay(int Microsec_iv);
 unsigned getMajorDevices( const string& driver );

@@ -1121,8 +1121,11 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() && !cont->getStorage()->test() )
 	{
-	cont->getStorage()->removeDmTableTo( *this );
-	ret = checkDevice(mountDevice());
+	if( fs!=NFS )
+	    {
+	    cont->getStorage()->removeDmTableTo( *this );
+	    ret = checkDevice(mountDevice());
+	    }
 	if( ret==0 )
 	    ret = mount( lmount );
 	}
@@ -2374,7 +2377,7 @@ int Volume::doFstabUpdate()
 		    {
 		    changed = true;
 		    che.fs = fs_names[fs];
-		    if( fs==SWAP )
+		    if( fs==SWAP || fs==NFS )
 			che.freq = che.passno = 0;
 		    else
 			{
@@ -2716,7 +2719,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.num>0 )
 	    s << " Nr:" << v.num;
 	}
-    else
+    else if( v.nm!=v.dev )
 	s << " Name:" << v.nm;
     s << " SizeK:" << v.size_k;
     if( v.size_k != v.orig_size_k )

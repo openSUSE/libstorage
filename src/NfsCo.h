@@ -22,6 +22,8 @@ class NfsCo : public Container
 		    const string& mp );
 
 	static bool isNfsDev( const string& dev );
+	int removeVolume( Volume* v );
+	int doRemove( Volume* );
 
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;

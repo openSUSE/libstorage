@@ -33,9 +33,27 @@ Nfs::~Nfs()
     y2debug( "destructed nfs %s", dev.c_str() );
     }
 
+string Nfs::removeText( bool doing ) const
+    {
+    string txt;
+    if( doing )
+	{
+	// displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
+	txt = sformat( _("Removing nfs volume %1$s"), dev.c_str() );
+	}
+    else
+	{
+	// displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
+	txt = sformat( _("Remove nfs volume %1$s"), dev.c_str() );
+	}
+    return( txt );
+    }
+
 void
 Nfs::init()
     {
+    numeric = false;
+    nm = dev;
     setFs(NFS);
     }
 

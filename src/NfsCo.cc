@@ -55,12 +55,68 @@ bool NfsCo::isNfsDev( const string& dev )
     }
 
 int 
+NfsCo::removeVolume( Volume* v )
+    {
+    y2mil( "v:" << *v );
+    int ret = 0;
+    NfsIter nfs;
+    if( !findNfs( v->device(), nfs ))
+	{
+	ret = NFS_VOLUME_NOT_FOUND;
+	}
+    if( readonly() )
+	{
+	ret = NFS_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( nfs->created() )
+	    {
+	    if( !removeFromList( &(*nfs) ))
+		ret = NFS_REMOVE_VOLUME_CREATE_NOT_FOUND;
+	    }
+	else
+	    nfs->setDeleted();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
+NfsCo::doRemove( Volume* v )
+    {
+    Nfs * p = dynamic_cast<Nfs *>(v);
+    int ret = 0;
+    if( p != NULL )
+	{
+	if( !silent )
+	    {
+	    getStorage()->showInfoCb( p->removeText(true) );
+	    }
+	y2milestone( "doRemove container %s name %s", name().c_str(),
+		     p->name().c_str() );
+	ret = v->prepareRemove();
+	if( ret==0 )
+	    {
+	    if( !removeFromList( p ) )
+		ret = NFS_REMOVE_VOLUME_LIST_ERASE;
+	    }
+	}
+    else
+	{
+	ret = NFS_REMOVE_INVALID_VOLUME;
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int 
 NfsCo::addNfs( const string& nfsDev, unsigned long long sizeK,
                const string& mp )
     {
     y2mil( "nfsDev:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp );
     Nfs *n = new Nfs( *this, nfsDev );
-    n->setMount( mp );
+    n->changeMount( mp );
     n->setSize( sizeK );
     addToList( n );
     return( 0 );
