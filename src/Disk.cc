@@ -768,7 +768,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	    }
 	if( label == "gpt" )
 	    {
-	    if( TInfo.find( ",boot," ) != string::npos )
+	    if( TInfo.find( ",boot," ) != string::npos &&
+	        TInfo.find( ",fat" ) != string::npos )
 		{
 		id = Partition::ID_GPT_BOOT;
 		}
