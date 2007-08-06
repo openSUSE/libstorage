@@ -2086,14 +2086,16 @@ int Volume::mount( const string& m, bool ro )
 	    cmdline += "-r ";
 	const char * ign_opt[] = { "defaults", "" };
 	const char * ign_beg[] = { "loop", "encryption=", "phash=",
-	                           "itercountk=" };
+	                           "itercountk=", "" };
 	if( cont->getStorage()->instsys() )
-	    ign_opt[1] = "ro";
+	    ign_opt[lengthof(ign_opt)-1] = "ro";
+	if( fsn=="ntfs" )
+	    ign_beg[lengthof(ign_beg)-1] = "locale=";
 	list<string> l = splitString( fstab_opt, "," );
 	y2mil( "l before:" << l );
-	for( unsigned i=0; i<lengthof(ign_opt); i++ )
+	for( unsigned i=0; i<lengthof(ign_opt) && *ign_opt[i]!=0; i++ )
 	    l.erase( remove(l.begin(), l.end(), ign_opt[i]), l.end() );
-	for( unsigned i=0; i<lengthof(ign_beg); i++ )
+	for( unsigned i=0; i<lengthof(ign_beg) && *ign_beg[i]!=0; i++ )
 	    l.erase( remove_if(l.begin(), l.end(), find_begin(ign_beg[i])),
 	             l.end() );
 	y2mil( "l  after:" << l );
