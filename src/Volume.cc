@@ -1654,33 +1654,33 @@ EncryptType Volume::detectEncryption()
 	    updateFsData();
 	    if( detected_fs!=FSUNKNOWN )
 		{
-		c.execute( "modprobe " + fs_names[detected_fs] );
-		c.execute( "mount -oro -t " + fsTypeString(detected_fs) + " " +
-		           use_dev + " " + mpname );
-		bool ok = c.retcode()==0;
+		string cmd;
+		switch( detected_fs )
+		    {
+		    case EXT2:
+		    case EXT3:
+			cmd = "fsck.ext2 -n -f " + use_dev;
+			break;
+		    case REISERFS:
+			cmd = "reiserfsck --yes --check -q " + use_dev;
+			break;
+		    default:
+			cmd = "fsck -n -t " + fsTypeString(detected_fs) +
+			      " " + use_dev;
+			break;
+		    }
+		bool excTime, excLines;
+		c.executeRestricted( cmd, 15, 500, excTime, excLines );
+		bool ok = c.retcode()==0 || (excTime && !excLines);
+		y2milestone( "ok:%d retcode:%d excTime:%d excLines:%d",
+			     ok, c.retcode(), excTime, excLines );
 		if( ok )
 		    {
+		    c.execute( "modprobe " + fs_names[detected_fs] );
+		    c.execute( "mount -oro -t " + fsTypeString(detected_fs) + " " +
+			       use_dev + " " + mpname );
+		    ok = c.retcode()==0;
 		    c.execute( "umount " + mpname );
-		    string cmd;
-		    switch( detected_fs )
-			{
-			case EXT2:
-			case EXT3:
-			    cmd = "fsck.ext2 -n -f " + use_dev;
-			    break;
-			case REISERFS:
-			    cmd = "reiserfsck --yes --check -q " + use_dev;
-			    break;
-			default:
-			    cmd = "fsck -n -t " + fsTypeString(detected_fs) +
-		                  " " + use_dev;
-			    break;
-			}
-		    bool excTime, excLines;
-		    c.executeRestricted( cmd, 15, 500, excTime, excLines );
-		    ok = c.retcode()==0 || (excTime && !excLines);
-		    y2milestone( "ok:%d retcode:%d excTime:%d excLines:%d",
-		                 ok, c.retcode(), excTime, excLines );
 		    }
 		if( !ok )
 		    {

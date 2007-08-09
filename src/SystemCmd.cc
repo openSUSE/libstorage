@@ -148,6 +148,8 @@ int SystemCmd::executeRestricted( const string& Command_Cv,
 	*/
 	Ret_i = -257;
 	}
+    else
+	Ret_i = ret;
     y2milestone( "ret:%d ExceedTime:%d ExceedLines:%d", ret, ExceedTime,
                  ExceedLines );
     return( ret );
