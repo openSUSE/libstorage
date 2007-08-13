@@ -1016,7 +1016,8 @@ string Volume::mountText( bool doing ) const
         }
     else
         {
-	if( !orig_mp.empty() && !mp.empty() )
+	if( !orig_mp.empty() && !mp.empty() && 
+	    (!cont->getStorage()->instsys()||mp!=orig_mp||mp!="swap") )
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by mount point e.g. /home
@@ -1601,7 +1602,8 @@ bool Volume::needCrsetup() const
 bool Volume::needFstabUpdate() const
     {
     bool ret = !ignore_fstab && !(mp.empty() && orig_mp.empty()) &&
-	       (fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
+	       ((cont->getStorage()->instsys()&&mp=="swap"&&mp==orig_mp) ||
+	        fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 		encryption!=orig_encryption);
     return( ret );
     }
@@ -2051,7 +2053,6 @@ int Volume::setLabel( const string& val )
 
 int Volume::mount( const string& m, bool ro )
     {
-
     SystemCmd cmd;
     y2milestone( "device:%s mp:%s ro:%d", dev.c_str(), m.c_str(), ro );
     string cmdline;
@@ -2211,7 +2212,8 @@ void Volume::getCommitActions( list<commitAction*>& l ) const
 	l.push_back( new commitAction( FORMAT, cont->type(),
 				       formatText(false), this, true ));
 	}
-    else if( mp != orig_mp )
+    else if( mp != orig_mp || 
+             (cont->getStorage()->instsys()&&mp=="swap") )
 	{
 	l.push_back( new commitAction( MOUNT, cont->type(),
 				       mountText(false), this, false ));
