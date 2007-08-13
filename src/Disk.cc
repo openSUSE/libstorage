@@ -2156,7 +2156,7 @@ int Disk::doCreate( Volume* v )
 	    {
 	    if( p->id()==Partition::ID_SWAP )
 		{
-		cmd_line << "linux-swap\\(new\\) ";
+		cmd_line << "linux-swap ";
 		}
 	    else if( p->id()==Partition::ID_GPT_BOOT ||
 		     p->id()==Partition::ID_DOS16 ||
