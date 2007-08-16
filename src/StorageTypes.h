@@ -26,12 +26,12 @@ inline bool operator<=( CType a, CType b )
 
 inline bool operator>=( CType a, CType b )
     {
-    return( !a<b );
+    return( !(a<b) );
     }
 
 inline bool operator>( CType a, CType b )
     {
-    return( a!=b && !a<b );
+    return( a!=b && !(a<b) );
     }
 
 struct contOrder

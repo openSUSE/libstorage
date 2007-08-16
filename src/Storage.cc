@@ -3876,6 +3876,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	}
     b << "> ";
     y2milestone( "%s", b.str().c_str() );
+    b.str("");
     todo.sort( cont_less<commitAction>() );
     y2milestone( "stage %d", stage );
     b << "sorted co <";
