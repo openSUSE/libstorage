@@ -2458,6 +2458,13 @@ int Volume::doFstabUpdate()
 	    ret = mount( mp );
 	    y2mil( "remount mount:" << ret );
 	    }
+	else
+	    {
+	    SystemCmd c( (string)"mount -oremount " + mp );
+	    y2mil( "remount remount:" << c.retcode() );
+	    if( c.retcode()!=0 )
+		ret = VOLUME_REMOUNT_FAILED;
+	    }
 	}
     y2milestone( "changed:%d ret:%d", changed, ret );
     return( ret );
