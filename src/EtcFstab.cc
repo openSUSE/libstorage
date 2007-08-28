@@ -650,6 +650,21 @@ string EtcFstab::updateLine( const list<string>& ol,
     return( line );
     }
 
+static void printFile( const string& fname )
+    {
+    y2mil( "name:" << fname );
+    ifstream file( fname.c_str() );
+    string line;
+    int count = 1;
+    getline( file, line );
+    while( file.good() )
+	{
+	y2mil( "line:" << count++ << " \"" << line << "\"" );
+	getline( file, line );
+	}
+    file.close();
+    }
+
 int EtcFstab::flush()
     {
     int ret = 0;
@@ -786,6 +801,9 @@ int EtcFstab::flush()
 	}
     if( !crypttab.removeIfEmpty() )
 	crypttab.updateFile();
+    printFile( prefix + "/fstab" );
+    printFile( prefix + "/cryptotab" );
+    printFile( prefix + "/crypttab" );
     y2milestone( "ret:%d", ret );
     return( ret );
     }
