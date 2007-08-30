@@ -2323,6 +2323,21 @@ bool Volume::getLoopFile( string& fname ) const
     return( l!=NULL );
     }
 
+static bool haveQuota( const string& fstopt )
+    {
+    bool ret = false;
+    list<string> opt = splitString( fstopt, "," );
+    list<string>::const_iterator i = opt.begin();
+    while( !ret && i!=opt.end() )
+	{
+	ret = (*i=="usrquota") || (*i=="usrquota") ||
+	      i->find("usrjquota=")==0 || i->find("grpjquota=")==0;
+	++i;
+	}
+    y2mil( "fstopt:" << fstopt << " ret:" << ret );
+    return( ret );
+    }
+
 int Volume::doFstabUpdate()
     {
     int ret = 0;
@@ -2449,6 +2464,7 @@ int Volume::doFstabUpdate()
         fstab_opt!=orig_fstab_opt && !orig_fstab_opt.empty() &&
         mp==orig_mp && mp!="swap" )
 	{
+	SystemCmd c;
 	y2mil( "fstab_opt:" << fstab_opt << " fstab_opt_orig:" << orig_fstab_opt );
 	y2mil( "remount:" << *this );
 	int r = umount( mp );
@@ -2460,10 +2476,14 @@ int Volume::doFstabUpdate()
 	    }
 	else
 	    {
-	    SystemCmd c( (string)"mount -oremount " + mp );
+	    c.execute( (string)"mount -oremount " + mp );
 	    y2mil( "remount remount:" << c.retcode() );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_REMOUNT_FAILED;
+	    }
+	if( haveQuota(fstab_opt)!=haveQuota(orig_fstab_opt) )
+	    {
+	    c.execute( "/etc/init.d/boot.quota restart" );
 	    }
 	}
     y2milestone( "changed:%d ret:%d", changed, ret );
