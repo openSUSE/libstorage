@@ -2481,7 +2481,8 @@ int Volume::doFstabUpdate()
 	    if( c.retcode()!=0 )
 		ret = VOLUME_REMOUNT_FAILED;
 	    }
-	if( haveQuota(fstab_opt)!=haveQuota(orig_fstab_opt) )
+	if( !cont->getStorage()->instsys() &&
+	    haveQuota(fstab_opt)!=haveQuota(orig_fstab_opt) )
 	    {
 	    c.execute( "/etc/init.d/boot.quota restart" );
 	    }
