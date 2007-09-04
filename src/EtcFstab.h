@@ -16,7 +16,8 @@ struct FstabChange;
 
 struct FstabEntry
     {
-    FstabEntry() { freq=passno=0; crypto=cryptt=loop=noauto=dmcrypt=false;
+    FstabEntry() { freq=passno=0; 
+                   crypto=cryptt=loop=noauto=dmcrypt=tmpcrypt=false;
                    encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
     FstabEntry& operator=( const FstabChange& rhs );
     friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );

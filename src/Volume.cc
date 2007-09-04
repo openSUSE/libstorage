@@ -1168,11 +1168,17 @@ int Volume::canResize( unsigned long long newSizeK ) const
 
 int Volume::resizeFs()
     {
+    SystemCmd c;
+    string cmd;
     int ret = 0;
+    if( encryption!=ENC_NONE && !dmcrypt_dev.empty() )
+	{
+	cmd = "cryptsetup resize ";
+	cmd += dmcrypt_dev.substr(dmcrypt_dev.rfind( '/' )+1);
+	c.execute( cmd );
+	}
     if( !format && !ignore_fs )
 	{
-	string cmd;
-	SystemCmd c;
 	switch( fs )
 	    {
 	    case SWAP:
@@ -2396,7 +2402,7 @@ int Volume::doFstabUpdate()
 		    {
 		    changed = true;
 		    che.fs = fs_names[fs];
-		    if( fs==SWAP || fs==NFS )
+		    if( fs==SWAP || fs==NFS || encryption!=ENC_NONE )
 			che.freq = che.passno = 0;
 		    else
 			{
