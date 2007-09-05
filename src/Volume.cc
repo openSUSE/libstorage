@@ -2417,6 +2417,13 @@ int Volume::doFstabUpdate()
 		    if( !dmcrypt() )
 			che.loop_dev = fstab_loop_dev;
 		    che.dentry = de;
+		    if( encryption!=ENC_NONE )
+			che.freq = che.passno = 0;
+		    else
+			{
+			che.freq = 1;
+			che.passno = (mp=="/") ? 1 : 2;
+			}
 		    }
 		if( changed )
 		    {
