@@ -3576,6 +3576,7 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
 	{
 	SystemCmd c;
 	c.execute( "/sbin/portmap" );
+	c.execute( "/usr/sbin/rpc.statd" );
 	}
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
 	{
