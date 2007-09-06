@@ -3519,8 +3519,8 @@ bool Storage::haveNfs( NfsCo*& co )
     }
 
 int 
-Storage::addNfsDevice( const string& nfsDev, unsigned long long sizeK,
-		       const string& mp )
+Storage::addNfsDevice( const string& nfsDev, const string& opts,
+                       unsigned long long sizeK, const string& mp )
     {
     int ret = 0;
     assertInit();
@@ -3540,7 +3540,7 @@ Storage::addNfsDevice( const string& nfsDev, unsigned long long sizeK,
     if( ret==0 && co!=NULL )
 	{
 	if( sizeK==0 )
-	    checkNfsDevice( nfsDev, sizeK );
+	    checkNfsDevice( nfsDev, opts, sizeK );
 	ret = co->addNfs( nfsDev, sizeK, mp );
 	}
     if( !have )
@@ -3559,7 +3559,8 @@ Storage::addNfsDevice( const string& nfsDev, unsigned long long sizeK,
     }
 
 int 
-Storage::checkNfsDevice( const string& nfsDev, unsigned long long& sizeK )
+Storage::checkNfsDevice( const string& nfsDev, const string& opts,
+                         unsigned long long& sizeK )
     {
     int ret = 0;
     assertInit();
@@ -3569,12 +3570,20 @@ Storage::checkNfsDevice( const string& nfsDev, unsigned long long& sizeK )
     rmdir( mdir.c_str() );
     createPath( mdir );
     ret = co.addNfs( nfsDev, 0, "" );
+    if( !opts.empty() )
+	co.vBegin()->setFstabOption( opts );
+    if( instsys() )
+	{
+	SystemCmd c;
+	c.execute( "/sbin/portmap" );
+	}
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
 	{
 	sizeK = getDfSize( mdir );
 	ret = co.vBegin()->umount( mdir );
 	}
-    y2mil( "name:" << nfsDev << " ret:" << ret << " sizeK:" << sizeK );
+    y2mil( "name:" << nfsDev << " opts:" << opts << " ret:" << ret <<
+           " sizeK:" << sizeK );
     return( ret );
     }
 

@@ -1734,10 +1734,11 @@ namespace storage
 	 *
 	 * @param nfsDev name of nfs device 
 	 * @param sizeK size of the nfs device
+	 * @param opts mount options for nfs mount
 	 * @param mp mount point of the nfs device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int addNfsDevice( const string& nfsDev, 
+	virtual int addNfsDevice( const string& nfsDev, const string& opts,
 	                          unsigned long long sizeK,
 				  const string& mp ) = 0;
 
@@ -1745,10 +1746,11 @@ namespace storage
 	 * Check accessability and size of nfs device.
 	 *
 	 * @param nfsDev name of nfs device 
+	 * @param opts mount options for nfs mount
 	 * @param sizeK size of the nfs device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int checkNfsDevice( const string& nfsDev, 
+	virtual int checkNfsDevice( const string& nfsDev, const string& opts,
 	                            unsigned long long& sizeK ) = 0;
 
 	/**

@@ -426,9 +426,10 @@ class Storage : public storage::StorageInterface
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
 
-	int addNfsDevice( const string& nfsDev, unsigned long long sizeK,
-			  const string& mp );
-	int checkNfsDevice( const string& nfsDev, unsigned long long& sizeK );
+	int addNfsDevice( const string& nfsDev, const string& opts,
+	                  unsigned long long sizeK, const string& mp );
+	int checkNfsDevice( const string& nfsDev, const string& opts,
+	                    unsigned long long& sizeK );
 
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,
