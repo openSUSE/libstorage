@@ -104,6 +104,7 @@ ProcMounts::ProcMounts( Storage * const sto )
     mounts.clear();
     mounts.open( "/proc/swaps" );
     getline( mounts, line );
+    y2mil( "line:\"" << line << "\"" );
     getline( mounts, line );
     while( mounts.good() )
 	{
