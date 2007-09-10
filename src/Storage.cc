@@ -5823,12 +5823,25 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		string mdir = tmpDir() + "/tmp_mp";
 		unlink( mdir.c_str() );
 		rmdir( mdir.c_str() );
+		string save_opt;
+		string cur_opt;
+		if( vol->getFs()==NTFS )
+		    {
+		    save_opt = vol->getFstabOption();
+		    cur_opt = save_opt;
+		    if( !cur_opt.empty() )
+			cur_opt += ",";
+		    cur_opt += "show_sys_files";
+		    vol->changeFstabOptions( cur_opt );
+		    }
 		if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
 		    mountDev( device, mdir ) )
 		    {
 		    needUmount = true;
 		    mp = mdir;
 		    }
+		if( vol->getFs()==NTFS )
+		    vol->changeFstabOptions( save_opt );
 		}
 	    else
 		mp = vol->getMount();
@@ -5875,7 +5888,8 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    }
 		win = false;
 		const char * files[] = { "boot.ini", "msdos.sys", "io.sys",
-				         "config.sys", "MSDOS.SYS", "IO.SYS" };
+				         "config.sys", "MSDOS.SYS", "IO.SYS",
+					 "bootmgr", "$Boot" };
 		string f;
 		unsigned i=0;
 		while( !win && i<lengthof(files) )
