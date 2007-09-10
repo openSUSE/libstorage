@@ -266,7 +266,8 @@ void Storage::detectObjects()
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	detectLoops( *ppart );
 	ProcMounts pm( this );
-	detectNfs( pm );
+	if( !instsys() )
+	    detectNfs( pm );
 	detectFsData( vBegin(), vEnd(), pm );
 	}
     EvmsCoIterator e = findEvmsCo( "" );
