@@ -174,6 +174,14 @@ Loop::createFile()
     bool ret = true;
     if( !reuseFile )
 	{
+	string pa = lfileRealPath();
+	string::size_type pos;
+	if( (pos=pa.rfind( '/' ))!=string::npos )
+	    {
+	    pa.erase( pos );
+	    y2mil( "pa:" << pa );
+	    createPath( pa );
+	    }
 	string cmd = "dd if=/dev/zero of=" + lfileRealPath();
 	cmd += " bs=1k count=" + decString( sizeK() );
 	SystemCmd c( cmd );
