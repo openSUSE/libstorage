@@ -233,7 +233,7 @@ void Storage::detectObjects()
     detectDisks( *ppart );
     if( instsys() )
 	{
-	MdCo::activate( true );
+	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
 	DmraidCo::activate( true );
 	delete ppart;
@@ -6149,14 +6149,14 @@ Storage::activateHld( bool val )
     if( val )
 	{
 	Dm::activate(val);
-	MdCo::activate(val);
+	MdCo::activate(val,tmpDir());
 	}
     LvmVg::activate(val);
     EvmsCo::activate(val);
     if( !val )
 	{
 	Dm::activate(val);
-	MdCo::activate(val);
+	MdCo::activate(val,tmpDir());
 	}
     }
 

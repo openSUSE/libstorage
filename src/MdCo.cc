@@ -538,15 +538,21 @@ int MdCo::removeVolume( Volume* v )
     return( ret );
     }
 
-void MdCo::activate( bool val )
+void MdCo::activate( bool val, const string& tmpDir )
     {
-    y2milestone( "old active:%d val:%d", active, val );
+    y2milestone( "old active:%d val:%d tmp:%s", active, val, tmpDir.c_str() );
     if( active!=val )
 	{
 	SystemCmd c;
 	if( val )
 	    {
-	    c.execute( "raidautorun" );
+	    string mdconf = tmpDir + "/mdadm.conf";
+	    string cmd = "echo 1 > /sys/module/md_mod/parameters/start_ro";
+	    c.execute( cmd );
+	    cmd = "mdadm --examine --scan --config=partitions >" + mdconf;
+	    c.execute( cmd );
+	    cmd = "mdadm --assemble --scan --config=" + mdconf;
+	    c.execute( cmd );
 	    }
 	else
 	    {
@@ -625,7 +631,7 @@ MdCo::doRemove( Volume* v )
     if( m != NULL )
 	{
 	if( !active )
-	    activate(true);
+	    activate(true, getStorage()->tmpDir());
 	if( !silent )
 	    {
 	    getStorage()->showInfoCb( m->removeText(true) );
