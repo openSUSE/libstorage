@@ -90,7 +90,6 @@ class LoopCo : public Container
 	bool findLoopDev( const string& dev, LoopIter& i );
 	void addLoop( Loop* m );
 	void updateEntry( const Loop* m );
-	static int getFreeLoop( string& dev );
 
 	void init();
 

@@ -2268,7 +2268,7 @@ string Volume::getFstabDentry()
     if( cont->type()!=LOOP )
 	{
 	if( dmcrypt() )
-	    ret = optNoauto()?dev:dmcrypt_dev;
+	    ret = (inCryptotab()||optNoauto())?dev:dmcrypt_dev;
 	else
 	    ret = getMountByString( mount_by, dev, uuid, label );
 	}
@@ -2414,8 +2414,11 @@ int Volume::doFstabUpdate()
 		    {
 		    changed = true;
 		    che.encr = encryption;
-		    if( !dmcrypt() )
+		    if( inCryptotab() )
+			{
+			getFreeLoop();
 			che.loop_dev = fstab_loop_dev;
+			}
 		    che.dentry = de;
 		    if( encryption!=ENC_NONE )
 			che.freq = che.passno = 0;
@@ -2448,8 +2451,11 @@ int Volume::doFstabUpdate()
 		che.encr = encryption;
 		if( dmcrypt() && isTmpCryptMp(mp) && crypt_pwd.empty() )
 		    che.tmpcrypt = true;
-		if( !dmcrypt() )
+		if( inCryptotab() )
+		    {
+		    getFreeLoop();
 		    che.loop_dev = fstab_loop_dev;
+		    }
 		che.fs = fs_names[fs];
 		getFstabOpts( che.opts );
 		che.mount = mp;
