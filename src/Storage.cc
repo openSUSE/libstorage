@@ -5748,6 +5748,7 @@ bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     {
     static deque<VolumeInfo> vil;
+    static Regex disk_part( "^/dev/[sh]d[a-z]+[0-9]+$" );
     vil.clear();
     bool ret = false;
     VolIterator vol;
@@ -5759,13 +5760,31 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
 	{
 	y2mil( "entry:" << *i );
-	if( findVolume( i->dentry, vol ) )
+	VolumeInfo* info = NULL;
+	if( disk_part.match( i->dentry ) )
 	    {
-	    VolumeInfo info;
-	    vol->getInfo( info );
-	    vol->mergeFstabInfo( info, *i );
+	    info = new VolumeInfo;
+	    info->create = info->format = info->resize = false;
+	    info->sizeK = info->OrigSizeK = info->minor = info->major = 0;
+	    info->device = i->dentry;
+	    info->mount = i->mount;
+	    info->mount_by = MOUNTBY_DEVICE;
+	    info->fs = Volume::toFsType( i->fs );
+	    info->fstab_options = mergeString( i->opts, "," );
+	    vil.push_back( *info );
+	    }
+	else if( findVolume( i->dentry, vol ) )
+	    {
+	    info = new VolumeInfo;
+	    vol->getInfo( *info );
+	    vol->mergeFstabInfo( *info, *i );
 	    y2mil( "volume:" << *vol );
-	    vil.push_back( info );
+	    vil.push_back( *info );
+	    }
+	if( info )
+	    {
+	    delete info;
+	    info = NULL;
 	    }
 	}
     delete fstab;
