@@ -471,14 +471,17 @@ string Dm::dmDeviceName( unsigned long num )
 int Dm::dmNumber( const string& table )
     {
     int ret = -1;
-    SystemCmd c( "dmsetup -c --noheadings info " + table );
-    list<string> sl = splitString( *c.getLine(0), ":" );
-    if( sl.size()>=3 )
+    SystemCmd c( "dmsetup -c --noheadings info \"" + table + "\"" );
+    if( c.retcode()==0 && c.numLines()>0 )
 	{
-	list<string>::const_iterator ci = sl.begin();
-	++ci;
-	++ci;
-	*ci >> ret;
+	list<string> sl = splitString( *c.getLine(0), ":" );
+	if( sl.size()>=3 )
+	    {
+	    list<string>::const_iterator ci = sl.begin();
+	    ++ci;
+	    ++ci;
+	    *ci >> ret;
+	    }
 	}
     y2mil( "table:" << table << " ret:" << ret );
     return( ret );
