@@ -166,6 +166,12 @@ Storage::initialize()
 		    setDefaultMountBy( MOUNTBY_ID );
 		else if( val == "path" )
 		    setDefaultMountBy( MOUNTBY_PATH );
+		else if( val == "device" )
+		    setDefaultMountBy( MOUNTBY_DEVICE );
+		else if( val == "uuid" )
+		    setDefaultMountBy( MOUNTBY_UUID );
+		else if( val == "label" )
+		    setDefaultMountBy( MOUNTBY_LABEL );
 		}
 	    }
 	}
