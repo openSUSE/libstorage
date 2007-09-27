@@ -157,7 +157,9 @@ class Volume
 	string sizeString() const;
 	string bootMount() const;
 	bool optNoauto() const;
-	bool inCryptotab() const { return( encryption!=ENC_LUKS && !optNoauto() ); }
+	bool inCryptotab() const { return( encryption!=ENC_NONE && 
+	                                   encryption!=ENC_LUKS && 
+					   !optNoauto() ); }
 	bool inCrypttab() const { return( encryption==ENC_LUKS && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
