@@ -18,7 +18,7 @@ class MdCo : public Container
 	MdCo( const MdCo& rhs );
 
 	virtual ~MdCo();
-	static storage::CType const staticType() { return storage::MD; }
+	static storage::CType staticType() { return storage::MD; }
 	friend std::ostream& operator<< (std::ostream&, const MdCo& );
 
 	int createMd( unsigned num, storage::MdType type, 

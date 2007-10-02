@@ -86,7 +86,7 @@ void Evms::init( const string& name )
 	}
     }
 
-const EvmsCo* const Evms::evmsCo() const
+const EvmsCo* Evms::evmsCo() const
     {
     return(dynamic_cast<const EvmsCo* const>(cont));
     }

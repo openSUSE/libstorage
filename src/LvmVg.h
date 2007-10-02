@@ -19,7 +19,7 @@ class LvmVg : public PeContainer
 	unsigned numLv() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	bool inactive() const { return( inactiv ); }
-	static storage::CType const staticType() { return storage::LVM; }
+	static storage::CType staticType() { return storage::LVM; }
 	friend std::ostream& operator<< (std::ostream&, const LvmVg& );
 
 	int removeVg();

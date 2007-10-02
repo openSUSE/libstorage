@@ -25,7 +25,7 @@ class DmraidCo : public DmPartCo
 	DmraidCo( const DmraidCo& rhs );
 	virtual ~DmraidCo();
 
-	static storage::CType const staticType() { return storage::DMRAID; }
+	static storage::CType staticType() { return storage::DMRAID; }
 	friend std::ostream& operator<< (std::ostream&, const DmraidCo& );
 	void getInfo( storage::DmraidCoInfo& info ) const;
 	void setUdevData( const string& id );

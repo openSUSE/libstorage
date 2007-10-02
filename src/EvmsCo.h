@@ -92,7 +92,7 @@ class EvmsCo : public PeContainer
 	unsigned numVol() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	bool isContainer() const { return( container ); } 
-	static storage::CType const staticType() { return storage::EVMS; }
+	static storage::CType staticType() { return storage::EVMS; }
 	friend std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
 	int removeCo();

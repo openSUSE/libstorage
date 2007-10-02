@@ -17,7 +17,7 @@ class LoopCo : public Container
 	LoopCo( const LoopCo& rhs );
 
 	virtual ~LoopCo();
-	static storage::CType const staticType() { return storage::LOOP; }
+	static storage::CType staticType() { return storage::LOOP; }
 	friend std::ostream& operator<< (std::ostream&, const LoopCo& );
 
 	int createLoop( const string& file, bool reuseExisting, 

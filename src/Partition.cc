@@ -283,7 +283,7 @@ string Partition::setTypeText( bool doing ) const
     return( txt );
     }
 
-const Disk* const Partition::disk() const
+const Disk* Partition::disk() const
     {
     return(dynamic_cast<const Disk* const>(cont));
     }

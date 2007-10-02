@@ -132,7 +132,7 @@ class Container
     public:
 	Container( Storage * const, const string& Name, storage::CType typ );
 	Container( const Container& );
-	Storage * const getStorage() const { return sto; }
+	Storage * getStorage() const { return sto; }
 	virtual ~Container();
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
@@ -154,7 +154,7 @@ class Container
 	virtual string createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
 	virtual int removeVolume( Volume* v );
-	static storage::CType const staticType() { return storage::CUNKNOWN; }
+	static storage::CType staticType() { return storage::CUNKNOWN; }
 	friend std::ostream& operator<< (std::ostream& s, const Container &c );
 	virtual Container* getCopy() const { return( new Container( *this ) ); }
 	bool compareContainer( const Container* c, bool verbose ) const;

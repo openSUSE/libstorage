@@ -775,7 +775,7 @@ EvmsAccess::~EvmsAccess()
 	}
     }
 
-EvmsObject *const EvmsAccess::addObject( object_handle_t id )
+EvmsObject * EvmsAccess::addObject( object_handle_t id )
     {
     EvmsObject * ret;
     if( (ret=find( id )) == NULL )
@@ -828,7 +828,7 @@ EvmsObject *const EvmsAccess::addObject( object_handle_t id )
     return( ret );
     }
 
-EvmsObject *const EvmsAccess::find( object_handle_t id )
+EvmsObject * EvmsAccess::find( object_handle_t id )
     {
     EvmsObject *ret = NULL;
     list<EvmsObject*>::const_iterator Ptr_Ci = objects.begin();

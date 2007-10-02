@@ -57,7 +57,7 @@ class Partition : public Volume
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );
-	const Disk* const disk() const;
+	const Disk* disk() const;
 	bool isWindows() const;
 	friend std::ostream& operator<< (std::ostream& s, const Partition &p );
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }

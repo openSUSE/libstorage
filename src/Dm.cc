@@ -314,7 +314,7 @@ void Dm::updateMajorMinor()
     num = mnr;
     }
 
-const PeContainer* const Dm::pec() const
+const PeContainer* Dm::pec() const
     { 
     return(dynamic_cast<const PeContainer* const>(cont));
     }

@@ -55,7 +55,7 @@ class Disk : public Container
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
 	bool detect( ProcPart& ppart );
-	static storage::CType const staticType() { return storage::DISK; }
+	static storage::CType staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 	void triggerUdevUpdate();
 

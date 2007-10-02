@@ -33,7 +33,7 @@ class EvmsObject
 
 	ObjType type() const { return typ; };
 	const string& name() const { return nam; };
-	const object_handle_t id() const { return idt; };
+	object_handle_t id() const { return idt; };
 
 	void disownPtr() { own_ptr = false; };
 	void output( std::ostream& Stream ) const;
@@ -61,8 +61,8 @@ class EvmsDataObject : public EvmsObject
     public:
 	EvmsDataObject( EvmsObject *const obj );
 	EvmsDataObject( object_handle_t id );
-	const EvmsObject *const consumedBy() const { return consumed; };
-	const EvmsObject *const volume() const { return vol; };
+	const EvmsObject * consumedBy() const { return consumed; };
+	const EvmsObject * volume() const { return vol; };
 	void output( std::ostream& Stream ) const;
 	virtual void addRelation( EvmsAccess* Acc );
 
@@ -141,8 +141,8 @@ class EvmsVolumeObject : public EvmsObject
 class EvmsAccess
     {
     public:
-	EvmsObject *const addObject( object_handle_t id );
-	EvmsObject *const find( object_handle_t id );
+	EvmsObject * addObject( object_handle_t id );
+	EvmsObject * find( object_handle_t id );
 	EvmsAccess();
 	~EvmsAccess();
 	void output( std::ostream &Stream ) const;
