@@ -1766,7 +1766,7 @@ Storage::initializeDisk( const string& disk, bool value )
 	    ret = i->initializeDisk( value );
 	    }
 	}
-    if( ret==0 & !done )
+    if( ret==0 && !done )
 	{
 	DmPartCoIterator i = findDmPartCo( disk );
 	if( i != dmpCoEnd() )
@@ -1775,7 +1775,7 @@ Storage::initializeDisk( const string& disk, bool value )
 	    ret = DISK_INIT_NOT_POSSIBLE;
 	    }
 	}
-    if( ret==0 & !done )
+    if( ret==0 && !done )
 	{
 	ret = STORAGE_DISK_NOT_FOUND;
 	}
