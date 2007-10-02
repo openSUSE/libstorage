@@ -6,6 +6,7 @@
 
 #include <time.h>
 #include <libintl.h>
+#include <string.h>
 #include <cstdarg>
 #include <cstdio>
 #include <fstream>

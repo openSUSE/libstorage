@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <iostream>
 
 #include <y2storage/StorageInterface.h>

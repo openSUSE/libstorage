@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <getopt.h>
 #include <errno.h>
 
