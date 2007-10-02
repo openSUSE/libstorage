@@ -15,7 +15,7 @@ class Dm : public Volume
     public:
 	Dm( const PeContainer& d, const string& tn );
 	Dm( const PeContainer& d, const string& tn, unsigned mnum );
-	Dm( const PeContainer& d, const Dm& d );
+	Dm( const PeContainer& d, const Dm& rhs );
 	Dm& operator=( const Dm& );
 
 	virtual ~Dm();

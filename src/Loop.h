@@ -12,11 +12,11 @@ class Loop : public Volume
     {
     public:
 	Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
-	      bool dmcrypt, const string& dm_dev, 
+	      bool dmcrypt, const string& dm_dev,
 	      ProcPart& ppart, SystemCmd& losetup );
 	Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	      unsigned long long sizeK, bool dmcr );
-	Loop( const LoopCo& d, const Loop& d );
+	Loop( const LoopCo& d, const Loop& rhs );
 	virtual ~Loop();
 	const string& loopFile() const { return lfile; }
 	void setLoopFile( const string& file );

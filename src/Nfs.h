@@ -11,7 +11,7 @@ class Nfs : public Volume
     {
     public:
 	Nfs( const NfsCo& d, const string& NfsDev );
-	Nfs( const NfsCo& d, const Nfs& d );
+	Nfs( const NfsCo& d, const Nfs& rhs );
 	virtual ~Nfs();
 	friend std::ostream& operator<< (std::ostream& s, const Nfs& l );
 
