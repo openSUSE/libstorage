@@ -1128,7 +1128,11 @@ int Volume::doMount()
 	    ret = checkDevice(mountDevice());
 	    }
 	if( ret==0 )
+	    {
 	    ret = mount( lmount );
+	    if( ret!=0 && cont->getStorage()->instsys() && fs==NTFS )
+		ret = mount( lmount, true );
+	    }
 	}
     if( ret==0 )
 	{
