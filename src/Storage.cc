@@ -3852,9 +3852,11 @@ static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
 static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
     {
     if( rhs->getMount()=="swap" )
-	return( false );
-    else if( lhs->getMount()=="swap" )
 	return( true );
+    else if( lhs->getMount()=="swap" )
+	return( false );
+    else if( lhs->hasOrigMount() != rhs->hasOrigMount() )
+	return( rhs->hasOrigMount() );
     else
 	return( rhs->getMount()<lhs->getMount() );
     }
