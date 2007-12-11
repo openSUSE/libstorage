@@ -104,11 +104,11 @@ ProcMounts::ProcMounts( Storage * const sto )
     mounts.clear();
     mounts.open( "/proc/swaps" );
     getline( mounts, line );
-    y2mil( "line:\"" << line << "\"" );
+    y2mil( "swap line:\"" << line << "\"" );
     getline( mounts, line );
     while( mounts.good() )
 	{
-	y2mil( "line:\"" << line << "\"" );
+	y2mil( "swap line:\"" << line << "\"" );
 	string::size_type pos;
 	string dev = extractNthWord( 0, line );
 	if( (pos=dev.find( "\\040(deleted)" ))!=string::npos )
