@@ -3852,9 +3852,9 @@ static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
 static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
     {
     if( rhs->getMount()=="swap" )
-	return( true );
-    else if( lhs->getMount()=="swap" )
 	return( false );
+    else if( lhs->getMount()=="swap" )
+	return( true );
     else if( lhs->hasOrigMount() != rhs->hasOrigMount() )
 	return( rhs->hasOrigMount() );
     else
@@ -5727,11 +5727,13 @@ Storage::umountDevice( const string& device )
     }
 
 bool
-Storage::mountDev( const string& device, const string& mp, bool ro )
+Storage::mountDev( const string& device, const string& mp, bool ro,
+                   const string& opts )
     {
     bool ret = true;
     assertInit();
-    y2milestone( "device:%s mp:%s ro:%d", device.c_str(), mp.c_str(), ro );
+    y2milestone( "device:%s mp:%s ro:%d opts:%s", device.c_str(), mp.c_str(), 
+                 ro, opts.c_str() );
     VolIterator vol;
     if( !readonly && findVolume( device, vol ) )
 	{
@@ -5741,7 +5743,10 @@ Storage::mountDev( const string& device, const string& mp, bool ro )
 	    }
 	if( ret )
 	    {
+	    string save = vol->getFstabOption();
+	    vol->setFstabOption( opts );
 	    ret = vol->mount( mp, ro )==0;
+	    vol->setFstabOption( save );
 	    }
 	if( !ret )
 	    vol->crUnsetup();

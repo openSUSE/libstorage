@@ -79,38 +79,7 @@ struct commitAction
     const Volume* vol() const { return( container?NULL:u.vol ); }
     bool operator==( const commitAction& rhs ) const
 	{ return( stage==rhs.stage && type==rhs.type ); }
-    bool operator<( const commitAction& rhs ) const
-	{
-	contOrder l(type);
-	contOrder r(rhs.type);
-
-	if( stage==rhs.stage && stage==MOUNT )
-	    return( false );
-	else if( unsigned(r)==unsigned(l) )
-	    {
-	    if( stage==rhs.stage )
-		{
-		if( stage==DECREASE )
-		    {
-		    if( type!=rhs.type )
-			return( type>rhs.type );
-		    else
-			return( container<rhs.container );
-		    }
-		else
-		    {
-		    if( type!=rhs.type )
-			return( type<rhs.type );
-		    else
-			return( container>rhs.container );
-		    }
-		}
-	    else
-		return( stage<rhs.stage );
-	    }
-	else
-	    return( unsigned(l)<unsigned(r) );
-	}
+    bool operator<( const commitAction& rhs ) const;
     bool operator<=( const commitAction& rhs ) const
 	{ return( *this < rhs || *this == rhs ); }
     bool operator>=( const commitAction& rhs ) const

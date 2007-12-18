@@ -2000,15 +2000,30 @@ namespace storage
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
 	/**
+	 * Mount the given device with given options and do what is necessary 
+	 * to access volume (e.g. do losetup if loop is set up)
+	 * The function mounts at once, /etc/fstab is unaffected
+	 *
+	 * @param device device name to mount
+	 * @param mp mount point to mount to
+	 * @param opts options to use for mount
+	 * @return bool if mount succeeded
+	 */
+	virtual bool mountDeviceOpts( const string& device, const string& mp,
+	                              const string& opts ) = 0;
+
+	/**
 	 * Mount the given device readonly and do what is necessary to access
 	 * volume (e.g. do losetup if loop is set up)
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to mount
 	 * @param mp mount point to mount to
+	 * @param opts options to use for mount
 	 * @return bool if mount succeeded
 	 */
-	virtual bool mountDeviceRo( const string& device, const string& mp ) = 0;
+	virtual bool mountDeviceRo( const string& device, const string& mp,
+	                            const string& opts ) = 0;
 
 	/**
 	 * Check if there are dm maps to a given device 

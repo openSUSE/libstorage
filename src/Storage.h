@@ -360,11 +360,16 @@ class Storage : public storage::StorageInterface
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
 	bool umountDevice( const string& device );
-	bool mountDev( const string& device, const string& mp, bool ro=true );
+	bool mountDev( const string& device, const string& mp, bool ro=true,
+	               const string& opts="" );
 	bool mountDevice( const string& device, const string& mp )
 	    { return( mountDev( device, mp, false )); }
-	bool mountDeviceRo( const string& device, const string& mp )
-	    { return( mountDev( device, mp, true )); }
+	bool mountDeviceOpts( const string& device, const string& mp,
+	                      const string& opts )
+	    { return( mountDev( device, mp, false, opts )); }
+	bool mountDeviceRo( const string& device, const string& mp, 
+	                    const string& opts )
+	    { return( mountDev( device, mp, true, opts )); }
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
 	                  unsigned long long& df_free,
