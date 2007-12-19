@@ -162,7 +162,7 @@ bool AsciiFile::updateFile()
 	    if( access( BakName_Ci.c_str(), R_OK ) == 0 &&
 		access( OldBakName_Ci.c_str(), R_OK ) != 0 )
 		{
-		(void)link( BakName_Ci.c_str(), OldBakName_Ci.c_str() );
+		int r = link( BakName_Ci.c_str(), OldBakName_Ci.c_str() );
 		unlink( BakName_Ci.c_str() );
 		}
 	    SystemCmd Cmd_Ci;

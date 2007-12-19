@@ -2378,7 +2378,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	    while( i != pp.end() )
 		{
 		if( (i->type()==p->type()||
-		     i->type()==EXTENDED&&p->type()==PRIMARY) && 
+		     (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
 		    i->cylStart()>=start && i->cylStart()<end )
 		    end = i->cylStart();
 		++i;

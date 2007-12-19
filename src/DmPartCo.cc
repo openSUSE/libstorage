@@ -119,8 +119,7 @@ int DmPartCo::updateDelDev()
     while( i!=p.end() )
 	{
 	Partition *p = i->getPtr();
-	if( p )
-	if( validPartition( p ) )
+	if( p && validPartition( p ) )
 	    {
 	    if( i->nr()!=p->nr() )
 		{
