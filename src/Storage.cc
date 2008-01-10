@@ -3460,7 +3460,7 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
     {
     int ret = 0;
     assertInit();
-    y2milestone( "name:%s dev:%d", name.c_str(), ptype );
+    y2milestone( "name:%s parity:%d", name.c_str(), ptype );
     if( readonly )
 	{
 	ret = STORAGE_CHANGE_READONLY;
