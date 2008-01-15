@@ -203,7 +203,7 @@ class Disk : public Container
 	bool haveBsdPart( const std::list<Partition*>& pl) const;
 	void setLabelData( const string& );
 
-	static string defaultLabel();
+	static string defaultLabel( unsigned long long size_k );
 	static label_info labels[];
 	static string p_disks[];
 

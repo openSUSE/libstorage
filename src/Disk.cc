@@ -439,7 +439,7 @@ bool Disk::detectPartitions( ProcPart& ppart )
     if( detected_label.empty() )
 	detected_label = dlabel;
     if( dlabel.empty() )
-	dlabel = defaultLabel();
+	dlabel = defaultLabel(size_k);
     setLabelData( dlabel );
 
     if (label == "unsupported")
@@ -1016,7 +1016,11 @@ bool Disk::haveBsdPart(const list<Partition*>& pl) const
     return( ret );
     }
 
-string Disk::defaultLabel()
+#define TB (1024ULL * 1024ULL * 1024ULL)
+#define EB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
+#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL)
+
+string Disk::defaultLabel( unsigned long long size_k )
     {
     string ret = "msdos";
     if( Storage::arch()=="ia64" )
@@ -1027,13 +1031,11 @@ string Disk::defaultLabel()
 	ret = "mac";
     else if( Storage::arch()=="ppc" && Storage::isPPCPegasos() )
 	ret = "amiga";
-    y2milestone( "ret:%s", ret.c_str() );
+    if( size_k>2*TB )
+	ret = "gpt";
+    y2milestone( "size_k:%llu ret:%s", size_k, ret.c_str() );
     return( ret );
     }
-
-#define TB (1024ULL * 1024ULL * 1024ULL)
-#define EB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
-#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL)
 
 Disk::label_info Disk::labels[] = {
 	{ "msdos", true, 4, 63, 2*TB },

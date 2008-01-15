@@ -1790,7 +1790,13 @@ Storage::initializeDisk( const string& disk, bool value )
 string
 Storage::defaultDiskLabel() const
     {
-    return( Disk::defaultLabel() );
+    return( Disk::defaultLabel(0) );
+    }
+
+string
+Storage::defaultDiskLabelSize( unsigned long long size_k ) const
+    {
+    return( Disk::defaultLabel(size_k) );
     }
 
 unsigned long long 

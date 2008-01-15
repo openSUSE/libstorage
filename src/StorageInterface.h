@@ -1069,6 +1069,17 @@ namespace storage
 	virtual string defaultDiskLabel() const = 0;
 
 	/**
+	 * Query the default disk label of the architecture of the
+	 * machine (e.g. msdos for ix86, gpt for ia64, ...) for a disk
+	 * with certain size 
+	 *
+	 * @param size_k size of disk in kilobyte
+	 *
+	 * @return default disk label of the disk
+	 */
+	virtual string defaultDiskLabelSize( unsigned long long size_k ) const = 0;
+
+	/**
 	 * Query the maximal allowed size the given disk label supports.
 	 *
 	 * @return maximal supported size of disk label 
