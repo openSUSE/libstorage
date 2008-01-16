@@ -2463,8 +2463,8 @@ int Volume::doFstabUpdate()
 		che.fs = fs_names[fs];
 		getFstabOpts( che.opts );
 		che.mount = mp;
-		if( fs != SWAP && fs != FSUNKNOWN && fs != NTFS && fs != VFAT &&
-		    !is_loop && !dmcrypt() && !optNoauto() )
+		if( fs != NFS && fs != SWAP && fs != FSUNKNOWN && fs != NTFS &&
+		    fs != VFAT && !is_loop && !dmcrypt() && !optNoauto() )
 		    {
 		    che.freq = 1;
 		    che.passno = (mp=="/") ? 1 : 2;
