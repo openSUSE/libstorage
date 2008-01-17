@@ -1159,6 +1159,8 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	    {
 	    if( i->nr()==start )
 		start++;
+	    if( label=="sun" && start==3 )
+		start++;
 	    ++i;
 	    }
 	if( start<=max_primary )
@@ -1365,6 +1367,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	}
     if( ret==0 )
 	{
+	if( label=="sun" && start==0 )
+	    start=1;
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type );
 	PartPair pp = partPair();
@@ -1953,7 +1957,7 @@ int Disk::doSetType( Volume* v )
 		ret = DISK_SET_TYPE_PARTED_FAILED;
 		}
 	    }
-	if( ret==0 )
+	if( ret==0 && (label!="sun"))
 	    {
 	    cmd_line.str( start_cmd );
 	    cmd_line.seekp(0, ios_base::end );
@@ -2138,20 +2142,23 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    cmd_line << PARTEDCMD << device() << " unit cyl mkpart ";
-	    switch( p->type() )
+	    if( label != "sun" )
 		{
-		case LOGICAL:
-		    cmd_line << "logical ";
-		    break;
-		case PRIMARY:
-		    cmd_line << "primary ";
-		    break;
-		case EXTENDED:
-		    cmd_line << "extended ";
-		    break;
-		default:
-		    ret = DISK_CREATE_PARTITION_INVALID_TYPE;
-		    break;
+		switch( p->type() )
+		    {
+		    case LOGICAL:
+			cmd_line << "logical ";
+			break;
+		    case PRIMARY:
+			cmd_line << "primary ";
+			break;
+		    case EXTENDED:
+			cmd_line << "extended ";
+			break;
+		    default:
+			ret = DISK_CREATE_PARTITION_INVALID_TYPE;
+			break;
+		    }
 		}
 	    }
 	if( ret==0 && p->type()!=EXTENDED )
