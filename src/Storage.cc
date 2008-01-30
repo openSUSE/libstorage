@@ -6097,11 +6097,11 @@ Storage::checkBackupState( const string& name )
     return( ret );
     }
 
-struct equal_name
+struct equal_co
     {
-    equal_name( const string& n ) : val(n) {};
-    bool operator()(const Container* c) { return( c->name()==val ); }
-    const string& val;
+    equal_co( const Container* const co ) : c(co) {};
+    bool operator()(const Container* co) { return( *co==*c ); }
+    const Container* const c;
     };
 
 bool
@@ -6136,7 +6136,7 @@ Storage::equalBackupStates( const string& lhs, const string& rhs,
 	CCIter j;
 	while( (ret||verbose_log) && i!=l->end() )
 	    {
-	    j = find_if( r->begin(), r->end(), equal_name( (*i)->name()) );
+	    j = find_if( r->begin(), r->end(), equal_co( *i ) );
 	    if( j!=r->end() )
 		ret = (*i)->compareContainer( *j, verbose_log ) && ret;
 	    else
@@ -6150,7 +6150,7 @@ Storage::equalBackupStates( const string& lhs, const string& rhs,
 	i=r->begin();
 	while( (ret||verbose_log) && i!=r->end() )
 	    {
-	    j = find_if( l->begin(), l->end(), equal_name( (*i)->name()) );
+	    j = find_if( l->begin(), l->end(), equal_co( *i ) );
 	    if( j==r->end() )
 		{
 		ret = false;
