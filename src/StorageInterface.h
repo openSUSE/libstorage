@@ -273,7 +273,7 @@ namespace storage
 	bool boot;
 	string udevPath;
 	string udevId;
-	};
+};
 
     /**
      * Contains info about a partition.
@@ -326,7 +326,6 @@ namespace storage
     /**
      * Contains info about a software raid device.
      */
-
     struct MdInfo
 	{
 	MdInfo() {};
@@ -408,7 +407,7 @@ namespace storage
 	};
 
     /**
-     * prelimiary list of error codes, must have negative values
+     * preliminary list of error codes, must have negative values
      */
     enum ErrorCodes
     {
@@ -850,7 +849,7 @@ namespace storage
 	 * @param name name of dmraid, e.g. pdc_igeeeadj
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getDmraidInfo( const string& name, 
+	virtual int getDmraidInfo( const string& name,
 	                           deque<DmraidInfo>& plist ) = 0;
 
 	/**
@@ -1031,7 +1030,7 @@ namespace storage
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
 
 	/**
-	 * Forget previouly issued change of partition id
+	 * Forget previously issued change of partition id
 	 *
 	 * @param partition name of partition, e.g. /dev/hda1
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1071,7 +1070,7 @@ namespace storage
 	/**
 	 * Query the default disk label of the architecture of the
 	 * machine (e.g. msdos for ix86, gpt for ia64, ...) for a disk
-	 * with certain size 
+	 * with certain size
 	 *
 	 * @param size_k size of disk in kilobyte
 	 *
@@ -1082,7 +1081,7 @@ namespace storage
 	/**
 	 * Query the maximal allowed size the given disk label supports.
 	 *
-	 * @return maximal supported size of disk label 
+	 * @return maximal supported size of disk label
 	 */
 	virtual unsigned long long maxSizeLabelK( const string& label ) const = 0;
 
@@ -1207,7 +1206,7 @@ namespace storage
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
 
 	/**
-	 * Mkes library forgt a crypt password of a volume
+	 * Makes library forgt a crypt password of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1280,8 +1279,8 @@ namespace storage
 #endif
 
 	/**
-	 * Sets the value of description text. 
-	 * This text will be returned together with the txt returned by getCommitActions 
+	 * Sets the value of description text.
+	 * This text will be returned together with the text returned by getCommitActions
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param txt description text for this partition
@@ -1641,7 +1640,7 @@ namespace storage
 
 	/**
 	 * Activate EVMS devices on the system.
-	 * This is only neseccary on systems where EVMS is not activated
+	 * This is only necessary on systems where EVMS is not activated
 	 * during system startup. This command is executed immediately,
 	 * there is no need for a call to commit().
 	 *
@@ -1676,7 +1675,7 @@ namespace storage
 	 * Remove a Software raid device.
 	 *
 	 * @param name name of software raid device to remove (e.g. /dev/md0)
-	 * @param destroySb flag if the MD superblocks on the physcal devices
+	 * @param destroySb flag if the MD superblocks on the physical devices
 	 *        should be destroyed after md device is deleted
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -1741,9 +1740,9 @@ namespace storage
 	virtual int checkMd( const string& name ) = 0;
 
 	/**
-	 * Add knowdlege about existence of nfs device.
+	 * Add knowledge about existence of nfs device.
 	 *
-	 * @param nfsDev name of nfs device 
+	 * @param nfsDev name of nfs device
 	 * @param sizeK size of the nfs device
 	 * @param opts mount options for nfs mount
 	 * @param mp mount point of the nfs device
@@ -1754,9 +1753,9 @@ namespace storage
 				  const string& mp ) = 0;
 
 	/**
-	 * Check accessability and size of nfs device.
+	 * Check accessibility and size of nfs device.
 	 *
-	 * @param nfsDev name of nfs device 
+	 * @param nfsDev name of nfs device
 	 * @param opts mount options for nfs mount
 	 * @param sizeK size of the nfs device
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -1773,7 +1772,7 @@ namespace storage
 	 *    reused. if false the file will be created new. if false
 	 *    the format flag for the device is set by default.
 	 * @param sizeK size of the created file, this parameter is ignored
-	 *    if reuseExisting is true and a file alraedy exists.
+	 *    if reuseExisting is true and a file already exists.
 	 * @param mp mount point of the file based loop device
 	 * @param pwd crypt password for the loop device, encryption type
 	 *    is determined automatically by the system
@@ -1786,9 +1785,9 @@ namespace storage
 				    string& device ) = 0;
 
 	/**
-	 * Modify size and pathname of a file based loop device. 
+	 * Modify size and pathname of a file based loop device.
 	 * This function can only be used between the creation of a
-	 * devce and the next call to commit(). Containers that
+	 * device and the next call to commit(). Containers that
 	 * are already created cannot have these properties changed.
 	 * The size has only a meaning if reuseExisting is true,
 	 * otherwise it is ignored.
@@ -1855,7 +1854,7 @@ namespace storage
 	/**
 	 * Sets the callback function called on progress bar events
 	 *
-	 * @param pfnc pointer to funtcion
+	 * @param pfnc pointer to function
 	 */
 	virtual void setCallbackProgressBar( CallbackProgressBar pfnc ) = 0;
 
@@ -1870,7 +1869,7 @@ namespace storage
 	/**
 	 * Sets the callback function called to display install info
 	 *
-	 * @param pfnc pointer to funtcion
+	 * @param pfnc pointer to function
 	 */
 	virtual void setCallbackShowInstallInfo( CallbackShowInstallInfo pfnc ) = 0;
 
@@ -1886,7 +1885,7 @@ namespace storage
 	 * Sets the callback function called to display a info popup to the
 	 * user
 	 *
-	 * @param pfnc pointer to funtcion
+	 * @param pfnc pointer to function
 	 */
 	virtual void setCallbackInfoPopup( CallbackInfoPopup pfnc ) = 0;
 
@@ -1903,7 +1902,7 @@ namespace storage
 	 * Sets the callback function called to get a Yes/No decision by
 	 * the user.
 	 *
-	 * @param pfnc pointer to funtcion
+	 * @param pfnc pointer to function
 	 */
 	virtual void setCallbackYesNoPopup( CallbackYesNoPopup pfnc ) = 0;
 
@@ -1984,7 +1983,7 @@ namespace storage
 	 * Determine if the given device is known and mounted somewhere
 	 *
 	 * @param device device name to check (checks also all alias names)
-	 * @param mp set to current mount moint if mounted
+	 * @param mp set to current mount point if mounted
 	 * @return bool that is true if device is mounted
 	 */
 	virtual bool checkDeviceMounted( const string& device, string& mp ) = 0;
@@ -2011,7 +2010,7 @@ namespace storage
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
 	/**
-	 * Mount the given device with given options and do what is necessary 
+	 * Mount the given device with given options and do what is necessary
 	 * to access volume (e.g. do losetup if loop is set up)
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
@@ -2037,7 +2036,7 @@ namespace storage
 	                            const string& opts ) = 0;
 
 	/**
-	 * Check if there are dm maps to a given device 
+	 * Check if there are dm maps to a given device
 	 *
 	 * @param device device name for which dm maps should be checked
 	 * @return bool true if there are map to device
@@ -2045,7 +2044,7 @@ namespace storage
 	virtual bool checkDmMapsTo( const string& device ) = 0;
 
 	/**
-	 * Remove all possibly existing dm maps to a given device 
+	 * Remove all possibly existing dm maps to a given device
 	 *
 	 * @param device device name for which dm maps should be removed
 	 */
@@ -2060,7 +2059,7 @@ namespace storage
 	 * @param used used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
 	 * @param use_cache function should return cached data if available
-	 * @return bool if values could be succcessfully determined
+	 * @return bool if values could be successfully determined
 	 */
 	virtual bool getFreeInfo( const string& device,
 	                          unsigned long long& resize_free,
@@ -2078,9 +2077,9 @@ namespace storage
 	virtual bool readFstab( const string& dir, deque<VolumeInfo>& infos) = 0;
 
 	/**
-	 * Possibility to switch Evms handling off or on in libstorage. 
+	 * Possibility to switch Evms handling off or on in libstorage.
 	 * This function must be called prior to libstorage initialisation.
-	 * Default is on. 
+	 * Default is on.
 	 *
 	 * @param val determines if Evms is switched off or on
 	 */
@@ -2097,30 +2096,28 @@ namespace storage
 	 * Activate or deactivate higher level devices as MD,LVM,DM,EVMS
 	 *
 	 * @param val flag if devices should be activated or deactivated
-	 * @return bool if values could be succcessfully determined
+	 * @return bool if values could be successfully determined
 	 */
 	virtual void activateHld( bool val ) = 0;
 
 	/**
 	 * Rescan all disks.
-	 * Alle currently detected objects are forgotten and a new scan
+	 * All currently detected objects are forgotten and a new scan
 	 * for all type of objects (disks, LVM, EVMS, MD) is initiated.
 	 * This function makes sense to be called after something outside
 	 * of libstorage changed disk layout or created storage objects.
 	 * Any changes already cached are lost.
-	 *
 	 */
 	virtual void rescanEverything() = 0;
 
 	/**
 	 * Dump list of all objects to log file.
-	 *
 	 */
 	virtual void dumpObjectList() = 0;
 
 	/**
 	 * Split volume device name up into container name and a volume
-	 * name. For Containers where this is appropriate (e.g. disks, 
+	 * name. For Containers where this is appropriate (e.g. disks,
 	 * MD, loop) also a volume number is provided.
 	 *
 	 * @param disk device name of volume, e.g. /dev/hda1
