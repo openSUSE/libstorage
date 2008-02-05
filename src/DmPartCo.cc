@@ -898,6 +898,7 @@ void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
 	{
 	disk->getInfo( info.d );
 	}
+    info.minor = mnr;
     info.devices.clear();
     list<Pv>::const_iterator i=pv.begin();
     while( i!=pv.end() )

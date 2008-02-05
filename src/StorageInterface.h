@@ -222,6 +222,7 @@ namespace storage
 	DmPartCoInfo() {};
 	DiskInfo d;
 	string devices;
+	unsigned long minor;
 	};
 
     struct DmraidCoInfo
