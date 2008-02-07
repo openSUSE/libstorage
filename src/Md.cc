@@ -44,15 +44,24 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
-    SystemCmd c( "mdadm -D " + device() + " | grep 'UUID : '" );
+    SystemCmd c( "mdadm -D " + device() );
+    c.select( "UUID : " );
     string::size_type pos;
-    if( c.retcode()==0 && c.numLines()>0 )
+    if( c.retcode()==0 && c.numLines(true)>0 )
 	{
-	md_uuid = *c.getLine(0);
+	md_uuid = *c.getLine(0,true);
 	if( (pos=md_uuid.find( "UUID : " ))!=string::npos )
 	    md_uuid.erase( 0, pos+7 );
 	md_uuid = extractNthWord( 0, md_uuid );
 	}
+    c.select( "Version : " );
+    if( c.retcode()==0 && c.numLines(true)>0 )
+	sb_ver = extractNthWord( 2, *c.getLine(0,true) );
+    y2mil( "line:\"" << *c.getLine(0,true) << "\"" );
+    y2mil( "sb_ver:\"" << sb_ver << "\"" );
+    y2mil( "word0:\"" << extractNthWord( 0, *c.getLine(0,true)) << "\"" );
+    y2mil( "word1:\"" << extractNthWord( 1, *c.getLine(0,true)) << "\"" );
+    y2mil( "word2:\"" << extractNthWord( 2, *c.getLine(0,true)) << "\"" );
     string tmp;
     string line = line1;
     if( (pos=line.find( ':' ))!=string::npos )
@@ -154,6 +163,7 @@ Md::init()
     destrSb = false;
     md_parity = PAR_NONE;
     chunk = 0;
+    sb_ver = "01.00.00";
     md_type = RAID_UNK;
     }
 
@@ -564,6 +574,7 @@ void Md::getInfo( MdInfo& tinfo ) const
     info.nr = num;
     info.type = md_type;
     info.uuid = md_uuid;
+    info.sb_ver = sb_ver;
     info.chunk = chunk;
     info.parity = md_parity;
     info.devices.clear();
@@ -589,6 +600,8 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
 	s << " Chunk:" << m.chunk;
     if( m.md_parity!=storage::PAR_NONE )
 	s << " Parity:" << m.ptName();
+    if( !m.sb_ver.empty() )
+	s << " SbVer:" << m.sb_ver;
     if( !m.md_uuid.empty() )
 	s << " MD UUID:" << m.md_uuid;
     if( m.destrSb )
@@ -605,8 +618,8 @@ bool Md::equalContent( const Md& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
             md_type==rhs.md_type && md_parity==rhs.md_parity && 
-	    chunk==rhs.chunk && md_uuid==rhs.md_uuid && destrSb==rhs.destrSb &&
-	    devs == rhs.devs && spare==rhs.spare );
+	    chunk==rhs.chunk && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
+	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare );
     }
 
 void Md::logDifference( const Md& rhs ) const
@@ -620,6 +633,8 @@ void Md::logDifference( const Md& rhs ) const
 	       par_names[rhs.md_parity];
     if( chunk!=rhs.chunk )
 	log += " Chunk:" + decString(chunk) + "-->" + decString(rhs.chunk);
+    if( sb_ver!=rhs.sb_ver )
+	log += " SbVer:" + sb_ver + "-->" + rhs.sb_ver;
     if( md_uuid!=rhs.md_uuid )
 	log += " MD-UUID:" + md_uuid + "-->" + rhs.md_uuid;
     if( destrSb!=rhs.destrSb )
@@ -652,6 +667,7 @@ Md& Md::operator= ( const Md& rhs )
     md_parity = rhs.md_parity;
     chunk = rhs.chunk;
     md_uuid = rhs.md_uuid;
+    sb_ver = rhs.sb_ver;
     destrSb = rhs.destrSb;
     devs = rhs.devs;
     spare = rhs.spare;

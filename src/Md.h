@@ -68,6 +68,7 @@ class Md : public Volume
 	storage::MdParity md_parity;
 	unsigned long chunk;
 	string md_uuid;
+	string sb_ver;
 	bool destrSb;
 	std::list<string> devs;
 	std::list<string> spare;

@@ -335,6 +335,7 @@ namespace storage
 	unsigned type;
 	unsigned parity;
 	string uuid;
+	string sb_ver;
 	unsigned long chunk;
 	string devices;
 	};
