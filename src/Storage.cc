@@ -2857,6 +2857,35 @@ int Storage::evmsActivate( bool forced )
 			}
 		    ++vi;
 		    }
+		ep = evCoPair(evmsCo);
+		coi = ep.begin();
+		list<string> rem_co;
+		while( coi!=ep.end())
+		    {
+		    if( coi->name().find( "lvm/" )==0 || 
+		        coi->name().find( "lvm2/" )==0 )
+			{
+			string n = coi->name();
+			y2mil("n:"<<n);
+			n.erase(0,n.find('/')+1);
+			y2mil("n:"<<n);
+			ContIterator cc;
+			if( findContainer( "/dev/"+n, cc ) && cc->deleted())
+			    rem_co.push_back( coi->device() );
+			}
+		    ++coi;
+		    }
+		if( rem_co.size()>0 )
+		    {
+		    y2mil("rem_co:" << rem_co);
+		    for( list<string>::iterator s = rem_co.begin();
+		         s!=rem_co.end(); s++ )
+			{
+			ContIterator cc;
+			if( findContainer( *s, cc ))
+			    removeContainer( &(*cc) );
+			}
+		    }
 		std::map<string,CCont>::iterator i=backups.find("initial");
 		if( !evCoPair().empty() && i!=backups.end() )
 		    {
