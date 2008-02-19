@@ -398,6 +398,7 @@ int Dasd::doFdasd()
 	    if( i->deleted() )
 		{
 		rem_list.push_back( &(*i) );
+		i->prepareRemove();
 		}
 	    if( i->created() )
 		{
