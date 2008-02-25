@@ -92,6 +92,7 @@ class EvmsCo : public PeContainer
 	unsigned numVol() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	bool isContainer() const { return( container ); } 
+	bool isValid() const { return( valid ); }
 	static storage::CType staticType() { return storage::EVMS; }
 	friend std::ostream& operator<< (std::ostream&, const EvmsCo& );
 
@@ -182,7 +183,7 @@ class EvmsCo : public PeContainer
 
 	EvmsCo( Storage * const s, const string& File, int );
 
-	void getCoData( const string& name, const EvmsTree& data, 
+	bool getCoData( const string& name, const EvmsTree& data, 
 	                bool check=false );
 	void getNormalVolumes( const EvmsTree& data );
 	void setUsed( const string& device, storage::UsedByType typ,
@@ -220,6 +221,7 @@ class EvmsCo : public PeContainer
 	string uuid;
 	bool lvm1;
 	bool container;
+	bool valid;
 	static bool active;
 	static int sockfd;
 	mutable storage::EvmsCoInfo info;

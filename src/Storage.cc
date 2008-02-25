@@ -613,11 +613,16 @@ Storage::detectEvms()
 		{
 		y2mil( "EVMS Container:" << *i );
 		e = new EvmsCo( this, *i, data );
-		EvmsCoIterator eco = findEvmsCo( i->name );
-		if( eco != evCoEnd() )
-		    removeContainer( &(*eco) );
-		addToList( e );
-		e->checkConsistency();
+		if( e->isValid() )
+		    {
+		    EvmsCoIterator eco = findEvmsCo( i->name );
+		    if( eco != evCoEnd() )
+			removeContainer( &(*eco) );
+		    addToList( e );
+		    e->checkConsistency();
+		    }
+		else
+		    delete( e );
 		}
 	    }
 	}

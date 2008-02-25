@@ -40,10 +40,13 @@ EvmsCo::EvmsCo( Storage * const s, const EvmsCont& cont, const EvmsTree& data ) 
     init();
     container = true;
     lvm1 = cont.lvm1;
-    getCoData( cont.name, data, false );
-    EvmsPair p=evmsPair(lvNotCreated);
-    if( !p.empty() )
-	getStorage()->waitForDevice( p.begin()->device() );
+    valid = getCoData( cont.name, data, false );
+    if( valid )
+	{
+	EvmsPair p=evmsPair(lvNotCreated);
+	if( !p.empty() )
+	    getStorage()->waitForDevice( p.begin()->device() );
+	}
     }
 
 EvmsCo::EvmsCo( Storage * const s, const string& name, bool lv1 ) :
@@ -584,9 +587,10 @@ EvmsCo::changeStripeSize( const string& name, unsigned long long stripeSize )
     return( ret );
     }
 
-void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
+bool EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
     {
     y2milestone( "name:%s check:%d", name.c_str(), check );
+    bool ret = true;
     list<EvmsCont>::const_iterator co=data.cont.begin(); 
     while( co!=data.cont.end() && name!=co->name )
 	++co;
@@ -607,26 +611,9 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 	pe_size = co->peSize;
 	num_pe = co->sizeK/pe_size;
 	free_pe = co->free/pe_size;
-	for( list<unsigned>::const_iterator i=co->creates.begin(); 
-	     i!=co->creates.end(); ++i )
-	    {
-	    map<unsigned,EvmsObj>::const_iterator oi = data.objects.find( *i );
-	    if( oi!=data.objects.end() )
-		{
-		map<unsigned,EvmsVol>::const_iterator mi = 
-		    data.volumes.find( oi->second.vol );
-		if( mi!=data.volumes.end() )
-		    {
-		    addLv( mi->second.sizeK/pe_size, mi->second.name, mi->second.native );
-		    }
-		else
-		    y2warning( "volume not found:%u", oi->second.vol );
-		}
-	    else
-		y2warning( "object not found:%u", *i );
-	    }
-	for( list<EvmsCont::peinfo>::const_iterator i=co->consumes.begin(); 
-	     i!=co->consumes.end(); ++i )
+	list<EvmsCont::peinfo>::const_iterator i=co->consumes.begin(); 
+	string dev;
+	while( ret && i!=co->consumes.end() )
 	    {
 	    map<unsigned,EvmsObj>::const_iterator oi = data.objects.find( i->id );
 	    if( oi!=data.objects.end() )
@@ -637,8 +624,82 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 			data.volumes.find( oi->second.vol );
 		    if( mi!=data.volumes.end() )
 			{
+			dev = evmsToDev( mi->second.device );
+			ret = dev.find( "Error/" )==string::npos;
+			if( !ret )
+			    y2mil( "err device:" << dev );
+			}
+		    else
+			y2warning( "volume not found:%u", oi->second.vol );
+		    }
+		else
+		    {
+		    dev = oi->second.name;
+		    ret = dev.find( "Error/" )==string::npos;
+		    if( !ret )
+			y2mil( "err device:" << dev );
+		    }
+		}
+	    else
+		y2warning( "object not found:%u", i->id );
+	    ++i;
+	    }
+	if( !ret )
+	    y2milestone( "container %s contains erroneous PVs", co->name.c_str() );
+	else
+	    {
+	    for( list<unsigned>::const_iterator i=co->creates.begin(); 
+		 i!=co->creates.end(); ++i )
+		{
+		map<unsigned,EvmsObj>::const_iterator oi = 
+		    data.objects.find( *i );
+		if( oi!=data.objects.end() )
+		    {
+		    map<unsigned,EvmsVol>::const_iterator mi = 
+			data.volumes.find( oi->second.vol );
+		    if( mi!=data.volumes.end() )
+			{
+			addLv( mi->second.sizeK/pe_size, mi->second.name, 
+			       mi->second.native );
+			}
+		    else
+			y2warning( "volume not found:%u", oi->second.vol );
+		    }
+		else
+		    y2warning( "object not found:%u", *i );
+		}
+	    for( list<EvmsCont::peinfo>::const_iterator i=co->consumes.begin(); 
+		 i!=co->consumes.end(); ++i )
+		{
+		map<unsigned,EvmsObj>::const_iterator oi = 
+		    data.objects.find( i->id );
+		if( oi!=data.objects.end() )
+		    {
+		    if( oi->second.vol>0 )
+			{
+			map<unsigned,EvmsVol>::const_iterator mi = 
+			    data.volumes.find( oi->second.vol );
+			if( mi!=data.volumes.end() )
+			    {
+			    Pv p;
+			    p.device = evmsToDev( mi->second.device );
+			    y2mil( "p.device:" << p.device );
+			    p.status = "allocatable";
+			    p.uuid = i->uuid;
+			    p.num_pe = i->size;
+			    p.free_pe = i->free;
+			    addPv( &p );
+			    }
+			else
+			    y2warning( "volume not found:%u", oi->second.vol );
+			}
+		    else
+			{
 			Pv p;
-			p.device = evmsToDev( mi->second.device );
+			p.device = oi->second.name;
+			if( p.device.find( "md/" )==0 )
+			    p.device.erase(0,3);
+			p.device = "/dev/" + p.device;
 			y2mil( "p.device:" << p.device );
 			p.status = "allocatable";
 			p.uuid = i->uuid;
@@ -646,66 +707,51 @@ void EvmsCo::getCoData( const string& name, const EvmsTree& data, bool check )
 			p.free_pe = i->free;
 			addPv( &p );
 			}
-		    else
-			y2warning( "volume not found:%u", oi->second.vol );
 		    }
 		else
-		    {
-		    Pv p;
-		    p.device = oi->second.name;
-		    if( p.device.find( "md/" )==0 )
-			p.device.erase(0,3);
-		    p.device = "/dev/" + p.device;
-		    y2mil( "p.device:" << p.device );
-		    p.status = "allocatable";
-		    p.uuid = i->uuid;
-		    p.num_pe = i->size;
-		    p.free_pe = i->free;
-		    addPv( &p );
-		    }
+		    y2warning( "object not found:%u", i->id );
 		}
-	    else
-		y2warning( "object not found:%u", i->id );
-	    }
-
-	EvmsPair p=evmsPair(lvDeleted);
-	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
-	    {
-	    //cout << "Deleted:" << *i << endl;
-	    map<string,unsigned long> pe_map = i->getPeMap();
-	    remLvPeDistribution( i->getLe(), pe_map, pv, pv_add );
-	    free_pe += i->getLe();
-	    }
-	p=evmsPair(lvCreated);
-	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
-	    {
-	    //cout << "Created:" << *i << endl;
-	    map<string,unsigned long> pe_map;
-	    if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add, 
-				     pe_map ) == 0 )
-		i->setPeMap( pe_map );
-	    free_pe -= i->getLe();
-	    }
-	p=evmsPair(lvResized);
-	for( EvmsIter i=p.begin(); i!=p.end(); ++i )
-	    {
-	    //cout << "Resized:" << *i << endl;
-	    map<string,unsigned long> pe_map = i->getPeMap();
-	    long size_diff = i->getLe() - sizeToLe(i->origSizeK());
-	    if( size_diff>0 )
+	    EvmsPair p=evmsPair(lvDeleted);
+	    for( EvmsIter i=p.begin(); i!=p.end(); ++i )
 		{
-		if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add, 
+		//cout << "Deleted:" << *i << endl;
+		map<string,unsigned long> pe_map = i->getPeMap();
+		remLvPeDistribution( i->getLe(), pe_map, pv, pv_add );
+		free_pe += i->getLe();
+		}
+	    p=evmsPair(lvCreated);
+	    for( EvmsIter i=p.begin(); i!=p.end(); ++i )
+		{
+		//cout << "Created:" << *i << endl;
+		map<string,unsigned long> pe_map;
+		if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add, 
 					 pe_map ) == 0 )
 		    i->setPeMap( pe_map );
+		free_pe -= i->getLe();
 		}
-	    else if( size_diff<0 )
+	    p=evmsPair(lvResized);
+	    for( EvmsIter i=p.begin(); i!=p.end(); ++i )
 		{
-		if( remLvPeDistribution( -size_diff, pe_map, pv, pv_add )==0 )
-		    i->setPeMap( pe_map );
+		//cout << "Resized:" << *i << endl;
+		map<string,unsigned long> pe_map = i->getPeMap();
+		long size_diff = i->getLe() - sizeToLe(i->origSizeK());
+		if( size_diff>0 )
+		    {
+		    if( addLvPeDistribution( size_diff, i->stripes(), pv, 
+		                             pv_add, pe_map ) == 0 )
+			i->setPeMap( pe_map );
+		    }
+		else if( size_diff<0 )
+		    {
+		    if( remLvPeDistribution( -size_diff, pe_map, pv, pv_add )==0 )
+			i->setPeMap( pe_map );
+		    }
+		free_pe -= size_diff;
 		}
-	    free_pe -= size_diff;
 	    }
 	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
     }
 
 void EvmsCo::getNormalVolumes( const EvmsTree& data )
@@ -1050,6 +1096,7 @@ EvmsCo::init()
 	dev += "/" + nm;
     normalizeDevice(dev);
     lvm1 = container = false;
+    valid = true;
     }
 
 #define SOCKET_PATH "/var/lib/YaST2/socket_libstorage_evms"
@@ -1866,6 +1913,8 @@ std::ostream& operator<< (std::ostream& s, const EvmsCo& d )
     s << *((PeContainer*)&d);
     if( d.lvm1 )
       s << " lvm1";
+    if( !d.valid )
+	s << " invalid";
     s << " UUID:" << d.uuid;
     s << " cont:" << d.container;
     return( s );
@@ -1892,6 +1941,13 @@ void EvmsCo::logDifference( const Container& d ) const
 		log += " -->cont";
 	    else
 		log += " cont-->";
+	    }
+	if( valid!=p->valid )
+	    {
+	    if( !p->valid )
+		log += " -->invalid";
+	    else
+		log += " invalid-->";
 	    }
 	if( uuid!=p->uuid )
 	    log += " UUID:" + uuid + "-->" + p->uuid;
@@ -1941,7 +1997,8 @@ bool EvmsCo::equalContent( const Container& rhs ) const
     if( ret && p )
 	{
 	ret = PeContainer::equalContent(*p,false) &&
-	      uuid==p->uuid && lvm1==p->lvm1 && container==p->container;
+	      uuid==p->uuid && lvm1==p->lvm1 && container==p->container &&
+	      valid==p->valid;
 	}
     if( ret && p )
 	{
@@ -1965,6 +2022,7 @@ EvmsCo::EvmsCo( const EvmsCo& rhs ) : PeContainer(rhs)
     y2debug( "constructed EvmsCo by copy constructor from %s", rhs.nm.c_str() );
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;
+    valid = rhs.valid;
     container = rhs.container;
     ConstEvmsPair p = rhs.evmsPair();
     for( ConstEvmsIter i = p.begin(); i!=p.end(); ++i )
