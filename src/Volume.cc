@@ -1303,7 +1303,7 @@ int Volume::setEncryption( bool val, EncryptType typ )
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && cType()==NFSC )
 		ret = VOLUME_CRYPT_NFS_IMPOSSIBLE;
-	    if( ret==0 && format )
+	    if( ret==0 && (format||loop_active) )
 		{
 		encryption = typ;
 		is_loop = cont->type()==LOOP;
