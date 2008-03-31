@@ -71,7 +71,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     if( (pos=line.find_first_of( app_ws ))!=string::npos )
 	{
 	tmp = line.substr( 0, pos );
-	if( tmp=="(read-only)" || tmp=="inactive" )
+	if( tmp=="(read-only)" || tmp=="(auto-read-only)" || tmp=="inactive" )
 	    {
 	    setReadonly();
 	    y2warning( "readonly or inactive md device %d", nr() );
