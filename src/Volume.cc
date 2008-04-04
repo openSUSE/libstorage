@@ -800,21 +800,24 @@ int Volume::doFormat()
 	}
     if( ret==0 && fs==EXT3 )
 	{
-	string cmd = "/sbin/tune2fs " + tunefs_opt + " " + mountDevice();
-	SystemCmd c( cmd );
-	if( c.retcode()!=0 )
-	    ret = VOLUME_TUNE2FS_FAILED;
+	if (!tunefs_opt.empty())
+	    {
+	    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + mountDevice();
+	    SystemCmd c( cmd );
+	    if( c.retcode()!=0 )
+		ret = VOLUME_TUNE2FS_FAILED;
+	    }
 	if( ret==0 && mp=="/" &&
 	    (fstab_opt.find( "data=writeback" )!=string::npos ||
 	     fstab_opt.find( "data=journal" )!=string::npos) )
 	    {
-	    cmd = "/sbin/tune2fs -o ";
+	    string cmd = "/sbin/tune2fs -o ";
 	    if( fstab_opt.find( "data=writeback" )!=string::npos )
 		cmd += "journal_data_writeback ";
 	    else
 		cmd += "journal_data ";
 	    cmd += mountDevice();
-	    c.execute( cmd );
+	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_TUNE2FS_FAILED;
 	    }
