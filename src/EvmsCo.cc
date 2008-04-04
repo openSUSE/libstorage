@@ -1247,6 +1247,7 @@ bool EvmsCo::canDoEvms()
     bool ret = access( EXEC_PATH, X_OK )==0 && 
                getenv( "YAST2_STORAGE_NO_EVMS" )==NULL &&
 	       !Storage::getNoEv();
+    ret = false;		// hard disable EVMS
     y2mil( "ret:" << ret );
     return( ret );
     }
