@@ -250,6 +250,7 @@ namespace storage
 	string uuid;
 	string label;
 	string mkfs_options;
+	string tunefs_options;
 	string loop;
 	string dtxt;
 	EncryptType encryption;
@@ -1114,6 +1115,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMkfsOptVolume( const string& device, const string& opts ) = 0;
+
+	/**
+	 * Sets the value of tunefs options.
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param opts options for tunefs command
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int changeTunefsOptVolume( const string& device, const string& opts ) = 0;
 
 	/**
 	 * Changes the mount point of a volume

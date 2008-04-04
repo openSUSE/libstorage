@@ -481,6 +481,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	{
 	fs = detected_fs;
 	mkfs_opt = "";
+	tunefs_opt = "";
 	}
     else
 	{
@@ -799,7 +800,7 @@ int Volume::doFormat()
 	}
     if( ret==0 && fs==EXT3 )
 	{
-	string cmd = "/sbin/tune2fs -c 500 -i 2m " + mountDevice();
+	string cmd = "/sbin/tune2fs " + tunefs_opt + " " + mountDevice();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    ret = VOLUME_TUNE2FS_FAILED;
@@ -2678,6 +2679,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.format = format;
     info.create = create;
     info.mkfs_options = mkfs_opt;
+    info.tunefs_options = tunefs_opt;
     info.dtxt = dtxt;
     info.loop = loop_dev;
     info.is_mounted = is_mounted;
@@ -2835,6 +2837,10 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if( v.mkfs_opt.length()>0 )
 	{
 	s << " mkfsopt:" << v.mkfs_opt;
+	} 
+    if( v.tunefs_opt.length()>0 )
+	{
+	s << " tunefsopt:" << v.tunefs_opt;
 	}
     if( v.dtxt.length()>0 )
 	{
@@ -2960,6 +2966,8 @@ Volume::logDifference( const Volume& rhs ) const
 	ret += " orig_fstopt:" + orig_fstab_opt + "-->" + rhs.orig_fstab_opt;
     if( mkfs_opt!=rhs.mkfs_opt )
 	ret += " mkfsopt:" + mkfs_opt + "-->" + rhs.mkfs_opt;
+    if( tunefs_opt!=rhs.tunefs_opt )
+	ret += " tunefsopt:" + tunefs_opt + "-->" + rhs.tunefs_opt;
     if( dtxt!=rhs.dtxt )
 	ret += " dtxt:" + dtxt + "-->" + rhs.dtxt;
     if( is_loop!=rhs.is_loop )
@@ -3005,7 +3013,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
 	    fstab_opt==rhs.fstab_opt && mkfs_opt==rhs.mkfs_opt &&
-	    dtxt==rhs.dtxt &&
+	    tunefs_opt==rhs.tunefs_opt && dtxt==rhs.dtxt &&
 	    is_loop==rhs.is_loop && loop_active==rhs.loop_active &&
 	    is_mounted==rhs.is_mounted && encryption==rhs.encryption &&
 	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev &&
@@ -3041,6 +3049,7 @@ Volume& Volume::operator= ( const Volume& rhs )
     fstab_opt = rhs.fstab_opt;
     orig_fstab_opt = rhs.orig_fstab_opt;
     mkfs_opt = rhs.mkfs_opt;
+    tunefs_opt = rhs.tunefs_opt;
     dtxt = rhs.dtxt;
     is_loop = rhs.is_loop;
     loop_active = rhs.loop_active;

@@ -1920,6 +1920,34 @@ Storage::changeMkfsOptVolume( const string& device, const string& opts )
     }
 
 int
+Storage::changeTunefsOptVolume( const string& device, const string& opts )
+    {
+    int ret = 0;
+    assertInit();
+    y2milestone( "device:%s opts:%s", device.c_str(), opts.c_str() );
+    VolIterator vol;
+    ContIterator cont;
+    if( readonly )
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( findVolume( device, cont, vol ) )
+	{
+	ret = vol->setTunefsOption( opts );
+	}
+    else
+	{
+	ret = STORAGE_VOLUME_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2milestone( "ret:%d", ret );
+    return( ret );
+    }
+
+int
 Storage::changeDescText( const string& device, const string& txt )
     {
     int ret = 0;

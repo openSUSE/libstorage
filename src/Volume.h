@@ -99,6 +99,8 @@ class Volume
 	bool needFstabUpdate() const;
 	const string& getMkfsOption() const { return mkfs_opt; }
 	int setMkfsOption( const string& val ) { mkfs_opt=val; return 0; }
+	const string& getTunefsOption() const { return tunefs_opt; }
+	int setTunefsOption( const string& val ) { tunefs_opt=val; return 0; }
 	const string& getDescText() const { return dtxt; }
 	int setDescText( const string& val ) { dtxt=val; return 0; }
 	const std::list<string>& altNames() const { return( alt_names ); }
@@ -252,6 +254,7 @@ class Volume
 	string fstab_opt;
 	string orig_fstab_opt;
 	string mkfs_opt;
+	string tunefs_opt;
 	bool is_loop;
 	bool is_mounted;
 	bool ignore_fstab;

@@ -325,6 +325,7 @@ class Storage : public storage::StorageInterface
 	int changeLabelVolume( const string& device, const string& label );
 	int eraseLabelVolume( const string& device );
 	int changeMkfsOptVolume( const string& device, const string& opts );
+	int changeTunefsOptVolume( const string& device, const string& opts );
 	int changeDescText( const string& device, const string& txt );
 	int changeMountPoint( const string& device, const string& mount );
 	int getMountPoint( const string& device, string& mount );
