@@ -67,7 +67,7 @@ void createLvs( const string& vg, int n, deque<string>& disks )
     cout << s->createLvmVg( vg, 4, false, getDevs(disks) ) << endl;
 
     /* create n logical volumes */
-    int ret;
+    int ret = 0;
     for ( int i = 0; i < n; i++ ) 
     {
 	ostringstream name;
