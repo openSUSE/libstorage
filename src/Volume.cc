@@ -822,6 +822,16 @@ int Volume::doFormat()
 		ret = VOLUME_TUNE2FS_FAILED;
 	    }
 	}
+    if( ret==0 && fs==REISERFS )
+	{
+	if (!tunefs_opt.empty())
+	    {
+	    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + mountDevice();
+	    SystemCmd c( cmd );
+	    if( c.retcode()!=0 )
+		ret = VOLUME_TUNE2FS_FAILED;
+	    }
+	}
     if( ret==0 )
 	{
 	triggerUdevUpdate();
