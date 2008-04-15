@@ -734,7 +734,7 @@ int Volume::doFormat()
 	    case EXT2:
 	    case EXT3:
 		cmd = "/sbin/mke2fs";
-		params = (fs==EXT2) ? "-v -I 128" : "-j -v -I 128";
+		params = (fs==EXT2) ? "-v" : "-j -v";
 		p = new Mke2fsScrollbar( cb );
 		break;
 	    case REISERFS:
