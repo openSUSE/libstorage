@@ -1955,17 +1955,33 @@ string Volume::labelText( bool doing ) const
     string txt;
     string d = dev;
     if( doing )
-        {
-        // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by a name e.g. ROOT
-        txt = sformat( _("Setting label on %1$s to %2$s"), d.c_str(), label.c_str() );
-        }
+    {
+	if( label.empty() )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Clearing label on %1$s"), d.c_str() );
+	}
+	else
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by a name e.g. ROOT
+	    txt = sformat( _("Setting label on %1$s to %2$s"), d.c_str(), label.c_str() );
+	}
+    }
     else
-        {
-	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by a name e.g. ROOT
-	txt = sformat( _("Set label on %1$s to %2$s"), d.c_str(), label.c_str() );
-        }
+    {
+	if( label.empty() )
+	{
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Clear label on %1$s"), d.c_str() );
+	}
+	else
+	{  
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by a name e.g. ROOT
+	    txt = sformat( _("Set label on %1$s to %2$s"), d.c_str(), label.c_str() );
+	}
+    }
     return( txt );
     }
 
