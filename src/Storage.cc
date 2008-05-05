@@ -1010,6 +1010,14 @@ void Storage::setRootPrefix( const string& root )
     rootprefix = root;
     }
 
+string Storage::prependRoot(const string& mp) const
+{ 
+    string ret = mp;
+    if (mp != "swap")
+	ret.insert(0, rootprefix);
+    return ret;
+}
+
 void Storage::setDetectMountedVolumes( bool val )
     {
     y2milestone( "val:%d", val );

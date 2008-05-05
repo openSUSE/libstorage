@@ -2524,7 +2524,7 @@ int Volume::doFstabUpdate()
 	y2mil( "remount umount:" << r );
 	if( r==0 )
 	    {
-	    ret = mount( mp );
+	    ret = mount(cont->getStorage()->prependRoot(mp));
 	    y2mil( "remount mount:" << ret );
 	    }
 	else

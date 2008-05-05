@@ -218,6 +218,7 @@ class Storage : public storage::StorageInterface
 	int checkCache();
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
+	string prependRoot(const string& mp) const;
 	const string& tmpDir() const;
 	static const string& arch() { return( proc_arch ); }
 	static const string& sysfsDir() { return( sysfs_dir ); }
