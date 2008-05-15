@@ -5303,6 +5303,12 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
 	    while( v!=p.end() && v->loopDevice()!=d )
 		++v;
 	    }
+	if( !p.empty() && v==p.end() && d.find("/dev/mapper/cr_")==0 )
+	    {
+	    v = p.begin();
+	    while( v!=p.end() && v->dmcryptDevice()!=d )
+		++v;
+	    }
 	if( !p.empty() && v==p.end() )
 	    {
 	    d.replace( 0, 5, "/dev/mapper/" );
