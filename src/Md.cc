@@ -608,7 +608,7 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
 	s << " destroySb";
     s << " Devices:" << m.devs;
     if( !m.spare.empty() )
-	s << " Spare:" << m.spare;
+	s << " Spares:" << m.spare;
     return( s );
     }
 
@@ -653,7 +653,7 @@ void Md::logDifference( const Md& rhs ) const
     if( spare!=rhs.spare )
 	{
 	std::ostringstream b;
-	b << " Devices:" << spare << "-->" << rhs.spare;
+	b << " Spares:" << spare << "-->" << rhs.spare;
 	log += b.str();
 	}
     y2milestone( "%s", log.c_str() );
