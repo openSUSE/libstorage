@@ -333,6 +333,24 @@ void Dm::calcSize()
     setSize( num_le*pec()->peSize() );
     }
 
+
+void Dm::setPeMap( const std::map<string,unsigned long>& m )
+{
+    pe_map = m;
+
+    // remove usused entries
+    // TODO: do not generate pe_maps with unused entries in the first place
+    for(std::map<string,unsigned long>::iterator i = pe_map.begin(); i != pe_map.end(); ) {
+	if (i->second == 0)
+	    pe_map.erase(i++);
+	else
+	    ++i;
+    }
+
+    y2mil("device:" << device() << " pe_map:" << pe_map);
+}
+
+
 void Dm::changeDeviceName( const string& old, const string& nw )
     {
     map<string,unsigned long>::const_iterator mit = pe_map.find( old );

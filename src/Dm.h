@@ -29,7 +29,7 @@ class Dm : public Volume
 	bool removeTable();
 	void calcSize();
 	const std::map<string,unsigned long>& getPeMap() const { return( pe_map ); }
-	void setPeMap( const std::map<string,unsigned long>& m ) { pe_map = m; }
+	void setPeMap( const std::map<string,unsigned long>& m );
 	unsigned long long usingPe( const string& dev ) const;
 	bool mapsTo( const string& dev ) const;
 	void getTableInfo();

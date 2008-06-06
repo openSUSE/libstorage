@@ -199,7 +199,7 @@ LvmVg::reduceVg( const list<string>& devs )
 	ret = tryUnusePe( d, pl, pladd, plrem, rem_pe );
 	++i;
 	}
-    y2mil( "add:" << pv_add.size() << " pv:" << pv.size() << " remove:" << devs.size() );
+    y2mil( "add:" << pv_add.size() << " pv:" << pv.size() << " remove:" << pv_remove.size() );
     if( ret==0 && pv_add.size()+pv.size()-devs.size()<=0 )
 	ret = LVM_VG_HAS_NONE_PV;
     if( ret == 0 )
