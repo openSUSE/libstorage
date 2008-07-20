@@ -81,14 +81,4 @@ pkginclude_HEADERS = StorageInterface.h
 
 #<INSTALL-HEADER-TARGET>
 
-
-ybin_PROGRAMS = evms_access
-
-evms_access_INCLUDES = -I$(includedir) -I/usr/include/evms
-
-evms_access_SOURCES = EvmsAccess.cc EvmsHelper.cc EvmsAccess.h
-
-evms_access_LDADD = liby2storage.la -lblocxx -levms
-
-
 CLEANFILES = $(BUILT_SOURCES)
