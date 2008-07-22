@@ -342,6 +342,15 @@ namespace storage
 	};
 
     /**
+     * Contains state of a software raid device.
+     */
+    struct MdStateInfo
+    {
+	bool active;
+	bool degraded;
+    };
+
+    /**
      * Contains info about a nfs volumes
      */
     struct NfsInfo
@@ -570,6 +579,7 @@ namespace storage
 	MD_REMOVE_NONEXISTENT = -6016,
 	MD_NO_CHANGE_ON_DISK = -6017,
 	MD_NO_CREATE_UNKNOWN = -6018,
+	MD_STATE_NOT_ON_DISK = -6019,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
@@ -1750,6 +1760,16 @@ namespace storage
 	 * @return true if all is ok, a false to indicate an error
 	 */
 	virtual int checkMd( const string& name ) = 0;
+
+	/**
+	 * Get state of a raid device.
+	 * This can only be done after the raid has been created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param info record that gets filled with raid special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMdState(const string& name, MdStateInfo& info) = 0;
 
 	/**
 	 * Add knowledge about existence of nfs device.

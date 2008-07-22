@@ -3,6 +3,7 @@
 */
 
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/Md.h"
 #include "y2storage/StorageTypes.h"
@@ -244,6 +245,35 @@ Md::checkDevices()
                  ret );
     return( ret );
     }
+
+void
+Md::getState(MdStateInfo& info) const
+{
+    SystemCmd c("mdadm --detail " + device());
+
+    c.select("State : ");
+    if( c.retcode()==0 && c.numLines(true)>0 )
+    {
+	string state = *c.getLine(0,true);
+	string::size_type pos;
+	if( (pos=state.find( "State : " ))!=string::npos )
+	    state.erase( 0, pos+8 );
+
+	list<string> entries;
+	boost::algorithm::split(entries, state, boost::algorithm::is_any_of(","));
+
+	info.active = false;
+	info.degraded = false;
+	for (list<string>::const_iterator i = entries.begin(); i != entries.end(); i++)
+	{
+	    string s = boost::trim_copy(*i, locale::classic());
+	    if (s == "active")
+		info.active = true;
+	    else if (s == "degraded")
+		info.degraded = true;
+	}
+    }
+}
 
 void
 Md::computeSize()

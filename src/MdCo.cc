@@ -486,6 +486,28 @@ MdCo::changeMdParity( unsigned num, MdParity ptype )
     return( ret );
     }
 
+int
+MdCo::getMdState(unsigned num, MdStateInfo& info)
+{
+    int ret = 0;
+    MdIter i;
+    if( ret==0 )
+    {
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+    }
+    if( ret==0 && i->created() )
+    {
+	ret = MD_STATE_NOT_ON_DISK;
+    }
+    if( ret==0 )
+    {
+	i->getState(info);
+    }
+    y2milestone("ret:%d", ret);
+    return ret;
+}
+
 int 
 MdCo::removeMd( unsigned num, bool destroySb )
     {

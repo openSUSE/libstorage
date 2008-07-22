@@ -433,6 +433,7 @@ class Storage : public storage::StorageInterface
 	int changeMdChunk( const string& name, unsigned long chunk );
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
+	int getMdState(const string& name, MdStateInfo& info);
 
 	int addNfsDevice( const string& nfsDev, const string& opts,
 	                  unsigned long long sizeK, const string& mp );

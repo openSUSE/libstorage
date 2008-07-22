@@ -3578,6 +3578,28 @@ int Storage::checkMd( const string& name )
     return( ret );
     }
 
+int Storage::getMdState(const string& name, MdStateInfo& info)
+{
+    int ret = 0;
+    assertInit();
+    y2milestone("name:%s", name.c_str());
+    unsigned num = 0;
+    if (ret == 0 && !Md::mdStringNum(name, num))
+    {
+	ret = STORAGE_MD_INVALID_NAME;
+    }
+    if (ret == 0)
+    {
+	MdCo *md = NULL;
+	if (haveMd(md))
+	    ret = md->getMdState(num, info);
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+    }
+    y2milestone("ret:%d", ret);
+    return ret;
+}
+
 bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;
