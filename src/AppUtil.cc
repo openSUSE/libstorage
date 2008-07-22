@@ -424,33 +424,6 @@ void delay(int Microsec_iv)
   select(0, NULL, NULL, NULL, &Timeout_ri);
 }
 
-void removeSurrounding(char Delim_ci, string& Text_Cr)
-{
-  if (Text_Cr.length() > 0 && Text_Cr[0] == Delim_ci)
-    Text_Cr.erase(0, 1);
-  if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Delim_ci)
-    Text_Cr.erase(Text_Cr.length() - 1);
-}
-
-int
-compareGt(string Lhs_Cv, string Rhs_Cv)
-{
-  return Lhs_Cv > Rhs_Cv;
-}
-
-bool runningFromSystem()
-    {
-    static bool FirstCall_bs = true;
-    static bool FromSystem_bs;
-    if( FirstCall_bs )
-        {
-        FirstCall_bs = false;
-	FromSystem_bs = access( "/usr/lib/YaST2/.Reh", R_OK )!=0;
-	y2milestone( "RunningFromSystem %d", FromSystem_bs );
-        }
-    return( FromSystem_bs );
-    }
-
 static blocxx::String component = "libstorage";
 
 void
