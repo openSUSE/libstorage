@@ -3,7 +3,7 @@
 #
 
 AM_CXXFLAGS =
-INCLUDES = -I$(includedir) -I/usr/include/evms
+INCLUDES = -I$(includedir)
 
 y2storage:
 	ln -sf . y2storage
