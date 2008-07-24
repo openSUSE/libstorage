@@ -4,12 +4,8 @@
 */
 
 
-#include <pwd.h>
-#include <grp.h>
-#include <signal.h>
 #include <unistd.h>
-#include <sstream>
-#include <iostream>
+#include <string>
 #include <sys/stat.h>
 #include <sys/timeb.h>
 #include <sys/time.h>
@@ -18,9 +14,6 @@
 #include <blocxx/FileAppender.hpp>
 #include <blocxx/Logger.hpp>
 #include <blocxx/LogMessage.hpp>
-
-#include <iomanip>
-#include <string>
 
 #include "y2storage/AsciiFile.h"
 #include "y2storage/StorageTmpl.h"
@@ -31,8 +24,6 @@ using namespace std;
 
 namespace storage
 {
-
-// #define MEMORY_DEBUG
 
 string dupDash(const string& s)
     {
@@ -63,10 +54,6 @@ searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
   int LineNr_ii;
   string Search_Ci(Pat_Cv);
 
-#ifdef MEMORY_DEBUG
-  //  MemoryTrace();
-  mcheck(MemoryAbort);
-#endif
   BeginOfLine_bi = Search_Ci.length() > 0 && Search_Ci[0] == '^';
   if (BeginOfLine_bi)
     Search_Ci.erase(0, 1);

@@ -16,6 +16,8 @@
 using namespace std;
 using namespace storage;
 
+#define DBG(x)
+
 AsciiFile::AsciiFile( bool CreateBackup_bv, const char* BackupExt_Cv ) :
 	BackupCreated_b(!CreateBackup_bv),
 	BackupExtension_C( BackupExt_Cv )
