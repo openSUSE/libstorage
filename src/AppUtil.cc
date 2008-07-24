@@ -623,6 +623,21 @@ unsigned getMajorDevices( const string& driver )
     return( ret );
     }
 
+string sformat(const char* format, ...)
+{
+    char* result;
+    va_list ap;
+
+    va_start(ap, format);
+    if (vasprintf(&result, format, ap) == -1)
+	return string();
+    va_end(ap);
+
+    string str(result);
+    free(result);
+    return str;
+}
+
 bool system_cmd_testmode = false;
 const string app_ws = " \t\n";
 

@@ -81,34 +81,17 @@ void log_msg( unsigned level, const char* file, unsigned line,
     log_msg( level, file, line, function, add, "%s", __buf.str().c_str() ); \
     }                                                                
 
-inline string sformat( const char* txt, ... )
-    {
-    unsigned s = strlen(txt)+3072;
-    char * mem = new char[s];
-    if( mem != NULL )
-	{
-	va_list p;
-	va_start( p, txt );
-	vsnprintf( mem, s-1, txt, p );
-	va_end( p );
-	mem[s-1]=0;
-	string s( mem );
-	delete [] mem;
-	return( s );
-	}
-    else
-	return( "" );
-    }
+string sformat(const char* format, ...);
 
 inline const char* _(const char* msgid)
-    {
-    return( dgettext("storage", msgid) );
-    }
+{
+    return dgettext("storage", msgid);
+}
 
-inline const char* _(const char* msgid1, const char* msgid2, unsigned long int n)
-    {
-    return( dngettext ("storage", msgid1, msgid2, n) );
-    }
+inline const char* _(const char* msgid, const char* msgid_plural, unsigned long int n)
+{
+    return dngettext("storage", msgid, msgid_plural, n);
+}
 
 #define IPC_PROJ_ID 7890
 
