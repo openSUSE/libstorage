@@ -34,8 +34,6 @@ namespace storage
 
 // #define MEMORY_DEBUG
 
-#define BUF_SIZE 512
-
 string dupDash(const string& s)
     {
     string ret(s);
@@ -126,44 +124,6 @@ void createPath(string Path_Cv)
       mkdir(Tmp_Ci.c_str(), 0777);
     }
   mkdir(Path_Ci.c_str(), 0777);
-}
-
-bool
-getUid(string Name_Cv, unsigned& Uid_ir)
-{
-  struct passwd *Passwd_pri;
-
-  Passwd_pri = getpwnam(Name_Cv.c_str());
-  Uid_ir = Passwd_pri ? Passwd_pri->pw_uid : 0;
-  return Passwd_pri != NULL;
-}
-
-bool
-getGid(string Name_Cv, unsigned& Gid_ir)
-{
-  struct group *Group_pri;
-
-  Group_pri = getgrnam(Name_Cv.c_str());
-  Gid_ir = Group_pri ? Group_pri->gr_gid : 0;
-  return Group_pri != NULL;
-}
-
-int
-getGid(string Name_Cv)
-{
-  unsigned Tmp_ii;
-
-  getGid(Name_Cv, Tmp_ii);
-  return Tmp_ii;
-}
-
-int
-getUid(string Name_Cv)
-{
-  unsigned Tmp_ii;
-
-  getUid(Name_Cv, Tmp_ii);
-  return Tmp_ii;
 }
 
 bool
@@ -414,15 +374,6 @@ void undevDevice( string& dev )
     if( dev.find( "/dev/" )==0 )
 	dev.erase( 0, 5 );
     }
-
-void delay(int Microsec_iv)
-{
-  timeval Timeout_ri;
-
-  Timeout_ri.tv_sec = Microsec_iv / 1000000;
-  Timeout_ri.tv_usec = Microsec_iv % 1000000;
-  select(0, NULL, NULL, NULL, &Timeout_ri);
-}
 
 static blocxx::String component = "libstorage";
 
