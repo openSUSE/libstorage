@@ -1398,12 +1398,16 @@ namespace storage
 	virtual bool getZeroNewPartitions() const = 0;
 
 	/**
+	 * Set default value for mount by.
 	 *
+	 * @param val new default mount by value.
 	 */
 	virtual void setDefaultMountBy( MountByType val ) = 0;
 
 	/**
+	 * Set default value for mount by.
 	 *
+	 * @return default value for mount by
 	 */
 	virtual MountByType getDefaultMountBy() const = 0;
 
@@ -2162,7 +2166,7 @@ namespace storage
 
 
     /**
-     *
+     * Initializes default logging.
      */
     void initDefaultLogger ();
 
