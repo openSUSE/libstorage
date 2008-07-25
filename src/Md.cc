@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/tokenizer.hpp>
 
 #include "y2storage/Md.h"
 #include "y2storage/StorageTypes.h"
@@ -249,7 +250,7 @@ Md::checkDevices()
 void
 Md::getState(MdStateInfo& info) const
 {
-    SystemCmd c("mdadm --detail " + device());
+    SystemCmd c("mdadm --detail " + SystemCmd::quote(device()));
 
     c.select("State : ");
     if( c.retcode()==0 && c.numLines(true)>0 )
@@ -259,14 +260,14 @@ Md::getState(MdStateInfo& info) const
 	if( (pos=state.find( "State : " ))!=string::npos )
 	    state.erase( 0, pos+8 );
 
-	list<string> entries;
-	boost::split(entries, state, boost::is_any_of(","));
+	typedef boost::tokenizer<boost::char_separator<char>> char_tokenizer;
+	char_tokenizer toker(state, boost::char_separator<char>(","));
 
 	info.active = false;
 	info.degraded = false;
-	for (list<string>::const_iterator i = entries.begin(); i != entries.end(); i++)
+	for (char_tokenizer::const_iterator it = toker.begin(); it != toker.end(); it++)
 	{
-	    string s = boost::trim_copy(*i, locale::classic());
+	    string s = boost::trim_copy(*it, locale::classic());
 	    if (s == "active")
 		info.active = true;
 	    else if (s == "degraded")
