@@ -260,7 +260,7 @@ Md::getState(MdStateInfo& info) const
 	    state.erase( 0, pos+8 );
 
 	list<string> entries;
-	boost::algorithm::split(entries, state, boost::algorithm::is_any_of(","));
+	boost::split(entries, state, boost::is_any_of(","));
 
 	info.active = false;
 	info.degraded = false;
