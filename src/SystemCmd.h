@@ -58,7 +58,15 @@ class SystemCmd
 	int getStderr( std::list<string> &Ret_Cr, const bool Append_bv = false ) const
 	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
 
+	/**
+	 * Quotes and protects a single string for shell execution.
+	 */
 	static string quote(const string& str);
+
+	/**
+	 * Quotes and protects every single string in the list for shell execution.
+	 */
+	static string quote(const std::list<string>& strs);
 
     protected:
 

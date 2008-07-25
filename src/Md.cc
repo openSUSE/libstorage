@@ -344,14 +344,8 @@ void Md::changeDeviceName( const string& old, const string& nw )
 
 string Md::createCmd() const
     {
-    string dnames;
-    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
-	dnames += " " + *i;
-    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
-	dnames += " " + *i;
-
-    string cmd = "ls -l --full-time " + dnames + "; ";
-    cmd += "modprobe " + pName() + "; mdadm --create " + device() +
+    string cmd = "ls -l --full-time " + SystemCmd::quote(devs) + " " + SystemCmd::quote(spare) + "; ";
+    cmd += "modprobe " + pName() + "; mdadm --create " + SystemCmd::quote(device()) +
 	   " --run --level=" + pName() + " -e 1.0";
     if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
         pName() == "raid10")
@@ -363,7 +357,7 @@ string Md::createCmd() const
     cmd += " --raid-devices=" + decString(devs.size());
     if( !spare.empty() )
 	cmd += " --spare-devices=" + decString(spare.size());
-    cmd += " " + dnames;
+    cmd += " " + SystemCmd::quote(devs) + " " + SystemCmd::quote(spare);
     y2milestone( "ret:%s", cmd.c_str() );
     return( cmd );
     }
