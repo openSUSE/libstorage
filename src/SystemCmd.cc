@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 
 #include <string>
+#include <boost/algorithm/string/replace.hpp>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
@@ -676,4 +677,10 @@ int SystemCmd::placeOutput( unsigned Which_iv, list<string> &Ret_Cr,
     Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
 
   return( Lines_ii );
+}
+
+
+string SystemCmd::quote(const string& str)
+{ 
+    return "'" + boost::replace_all_copy(str, "'", "'\\''") + "'";
 }
