@@ -2588,7 +2588,7 @@ MountByType Volume::toMountByType( const string& val )
 
 string Volume::sizeString() const
 {
-    return cont->getStorage()->byteToHumanString(1024 * size_k, false, 2, false);
+    return byteToHumanString(1024 * size_k, false, 2, false);
 }
 
 bool Volume::canUseDevice() const

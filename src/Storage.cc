@@ -12,13 +12,11 @@
 #include <pwd.h>
 #include <config.h>
 #include <signal.h>
+#include <sys/utsname.h>
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <boost/algorithm/string.hpp>
-
-#include <sys/utsname.h>
 
 #include <blocxx/AppenderLogger.hpp>
 #include <blocxx/FileAppender.hpp>
@@ -6536,103 +6534,16 @@ void Storage::setNoEvms( bool val )
     }
 
 
-static int numSuffixes()
-{
-    return 6;
-}
-
-
-static string suffixes(int i, bool classic)
-{
-    switch (i)
-    {
-	case 0:
-	    /* Byte abbreviated */
-	    return classic ? "B" : _("B");
-
-	case 1:
-	    /* KiloByte abbreviated */
-	    return classic ? "kB" : _("kB");
-
-	case 2:
-	    /* MegaByte abbreviated */
-	    return classic ? "MB" : _("MB");
-
-	case 3:
-	    /* GigaByte abbreviated */
-	    return classic ? "GB" : _("GB");
-
-	case 4:
-	    /* TeraByte abbreviated */
-	    return classic ? "TB" : _("TB");
-
-	case 5:
-	    /* PetaByte abbreviated */
-	    return classic ? "PB" : _("PB");
-    }
-
-    return string("error");
-}
-
-
 string Storage::byteToHumanString(unsigned long long size, bool classic, int precision, 
 				  bool omit_zeroes) const
 {
-    const locale loc = classic ? locale::classic() : locale();
-
-    double f = (double)(size);
-    int suffix = 0;
-
-    while (f >= 1024.0 && suffix + 1 < numSuffixes())
-    {
-	f /= 1024.0;
-	suffix++;
-    }
-
-    if (omit_zeroes && (f == (unsigned long long)(f)))
-    {
-	precision = 0;
-    }
-
-    ostringstream s;
-    s.imbue(loc);
-    s.setf(ios::fixed);
-    s.precision(precision);
-
-    s << f << ' ' << suffixes(suffix, classic);
-
-    return s.str();
+    return storage::byteToHumanString(size, classic, precision, omit_zeroes);
 }
 
 
 bool Storage::humanStringToByte(const string& str, bool classic, unsigned long long& size) const
 {
-    const locale loc = classic ? locale::classic() : locale();
-
-    istringstream s(boost::trim_copy(str, loc));
-    s.imbue(loc);
-
-    double f;
-    string suffix;
-    s >> f >> suffix;
-
-    if (s.fail() || !s.eof() || f < 0.0)
-	return false;
-
-    boost::to_lower(suffix, loc);
-
-    for(int i = 0; i < numSuffixes(); i++)
-    {
-	if (suffix == boost::to_lower_copy(suffixes(i, classic)))
-	{
-	    size = f;
-	    return true;
-	}
-
-	f *= 1024.0;
-    }
-
-    return false;
+    return storage::humanStringToByte(str, classic, size);
 }
 
 

@@ -10,6 +10,9 @@
 #include <sys/timeb.h>
 #include <sys/time.h>
 
+#include <locale>
+#include <boost/algorithm/string.hpp>
+
 #include <blocxx/AppenderLogger.hpp>
 #include <blocxx/FileAppender.hpp>
 #include <blocxx/Logger.hpp>
@@ -593,6 +596,106 @@ string sformat(const char* format, ...)
     string str(result);
     free(result);
     return str;
+}
+
+
+int numSuffixes()
+{
+    return 6;
+}
+
+
+string getSuffix(int i, bool classic)
+{
+    switch (i)
+    {
+	case 0:
+	    /* Byte abbreviated */
+	    return classic ? "B" : _("B");
+
+	case 1:
+	    /* KiloByte abbreviated */
+	    return classic ? "kB" : _("kB");
+
+	case 2:
+	    /* MegaByte abbreviated */
+	    return classic ? "MB" : _("MB");
+
+	case 3:
+	    /* GigaByte abbreviated */
+	    return classic ? "GB" : _("GB");
+
+	case 4:
+	    /* TeraByte abbreviated */
+	    return classic ? "TB" : _("TB");
+
+	case 5:
+	    /* PetaByte abbreviated */
+	    return classic ? "PB" : _("PB");
+    }
+
+    return string("error");
+}
+
+
+string byteToHumanString(unsigned long long size, bool classic, int precision, 
+			 bool omit_zeroes)
+{
+    const locale loc = classic ? locale::classic() : locale();
+
+    double f = (double)(size);
+    int i = 0;
+
+    while (f >= 1024.0 && i + 1 < numSuffixes())
+    {
+	f /= 1024.0;
+	i++;
+    }
+
+    if (omit_zeroes && (f == (unsigned long long)(f)))
+    {
+	precision = 0;
+    }
+
+    ostringstream s;
+    s.imbue(loc);
+    s.setf(ios::fixed);
+    s.precision(precision);
+
+    s << f << ' ' << getSuffix(i, classic);
+
+    return s.str();
+}
+
+
+bool humanStringToByte(const string& str, bool classic, unsigned long long& size)
+{
+    const locale loc = classic ? locale::classic() : locale();
+
+    istringstream s(boost::trim_copy(str, loc));
+    s.imbue(loc);
+
+    double f;
+    string suffix;
+    s >> f >> suffix;
+
+    if (s.fail() || !s.eof() || f < 0.0)
+	return false;
+
+    boost::to_lower(suffix, loc);
+
+    for(int i = 0; i < numSuffixes(); i++)
+    {
+	if (suffix == boost::to_lower_copy(getSuffix(i, classic)))
+	{
+	    size = f;
+	    return true;
+	}
+
+	f *= 1024.0;
+    }
+
+    return false;
 }
 
 bool system_cmd_testmode = false;
