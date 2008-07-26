@@ -1127,21 +1127,15 @@ static bool notDeletedLog( const Partition& p )
 }
 
 
-static bool isExtended( const Partition& p )
-    {
-    return( Volume::notDeleted(p) && p.type()==EXTENDED );
-    }
-
-
 unsigned int Disk::numPrimary() const
 {
     return partPair(notDeletedPri).length();
 }
 
 bool Disk::hasExtended() const
-    {
-    return( ext_possible && !partPair(isExtended).empty() );
-    }
+{
+    return ext_possible && !partPair(notDeletedExt).empty();
+}
 
 unsigned int Disk::numLogical() const
 {
@@ -1244,7 +1238,7 @@ void Disk::getUnusedSpace( list<Region>& free, bool all, bool logical )
 	}
     if( all || logical )
 	{
-	PartPair ext = partPair(isExtended);
+	PartPair ext = partPair(notDeletedExt);
 	if( !ext.empty() )
 	    {
 	    PartPair p = partPair( notDeletedLog );
@@ -1284,7 +1278,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	--i;
 	if( i->len()>=cylLen )
 	    {
-	    PartPair ext = partPair(isExtended);
+	    PartPair ext = partPair(notDeletedExt);
 	    PartitionType t = PRIMARY;
 	    bool usable = false;
 	    do
@@ -1324,7 +1318,7 @@ int Disk::createPartition( PartitionType type, string& device )
 	{
 	free.sort( regions_sort_size );
 	list<Region>::iterator i = free.begin();
-	PartPair ext = partPair(isExtended);
+	PartPair ext = partPair(notDeletedExt);
 	PartitionType t = type;
 	bool usable = false;
 	do
@@ -1421,7 +1415,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
     unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
     Region r( start, len );
-    PartPair ext = partPair(isExtended);
+    PartPair ext = partPair(notDeletedExt);
     if( type==PTYPE_ANY )
 	{
 	if( ext.empty() || !ext.begin()->contains( Region(start,1) ))
@@ -1514,7 +1508,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	}
     if( ret==0 && part->type()==LOGICAL )
 	{
-	PartPair ext = partPair(isExtended);
+	PartPair ext = partPair(notDeletedExt);
 	p = partPair( notDeletedLog );
 	PartIter i = p.begin();
 	while( i!=p.end() && (i==part||!i->intersectArea( r, fuzz )) )
@@ -2215,7 +2209,7 @@ int Disk::doCreate( Volume* v )
 	    unsigned long maxc = cylinders();
 	    if( p->type()==LOGICAL )
 		{
-		PartPair ext = partPair(isExtended);
+		PartPair ext = partPair(notDeletedExt);
 		if( !ext.empty() )
 		    maxc = ext.begin()->cylEnd();
 		}
@@ -2401,7 +2395,7 @@ int Disk::resizePartition( Partition* p, unsigned long newCyl )
 	if( ret==0 && newCyl>p->cylSize() )
 	    {
 	    unsigned long increase = newCyl - p->cylSize();
-	    PartPair pp = partPair( isExtended );
+	    PartPair pp = partPair(notDeletedExt);
 	    unsigned long start = p->cylEnd()+1;
 	    unsigned long end = cylinders();
 	    if( p->type()==LOGICAL && !pp.empty() )
@@ -2517,7 +2511,7 @@ int Disk::doResize( Volume* v )
 		}
 	    else if( p->type()==LOGICAL )
 		{
-		PartPair ext = partPair(isExtended);
+		PartPair ext = partPair(notDeletedExt);
 		if( !ext.empty() )
 		    {
 		    unsigned long long start_ext, end_ext;
