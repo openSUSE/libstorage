@@ -46,7 +46,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
-    SystemCmd c( "mdadm -D " + device() );
+    SystemCmd c( "mdadm --detail " + SystemCmd::quote(device()) );
     c.select( "UUID : " );
     string::size_type pos;
     if( c.retcode()==0 && c.numLines(true)>0 )
