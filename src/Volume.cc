@@ -133,7 +133,7 @@ bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
     if( ret && encryption != ENC_NONE &&
         (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL) )
 	ret = false;
-    y2mil( "mby:" << mb_names[mby] << " mp:" << mp << " ret:" << ret )
+    y2mil( "mby:" << mb_names[mby] << " mp:" << mp << " ret:" << ret );
     return( ret );
     }
 
@@ -2410,7 +2410,7 @@ int Volume::doFstabUpdate()
 		(cont->type()==LOOP && getLoopFile(fname) &&
 		     fstab->findDevice( fname, entry )))
 		{
-		y2mil( "changed:" << entry )
+		y2mil( "changed:" << entry );    
 		FstabChange che( entry );
 		string de = getFstabDentry();
 		if( orig_mp!=mp )

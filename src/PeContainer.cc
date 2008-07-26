@@ -328,7 +328,7 @@ bool PeContainer::addedPv( const string& dev ) const
 
 bool PeContainer::checkCreateConstraints()
     {
-    y2mil( "peContainer:" << *this )
+    y2mil( "peContainer:" << *this );
     int ret = false;
     unsigned long increase = 0;
     unsigned long current = 0;
@@ -337,14 +337,14 @@ bool PeContainer::checkCreateConstraints()
     DmPair lp=dmPair();
     DmIter i=lp.begin();
     if( pv_add.size()>0 )
-	y2war( "should not happen pv_add:" << pv_add )
+	y2war( "should not happen pv_add:" << pv_add );
     if( pv_remove.size()>0 )
-	y2war( "should not happen pv_rem:" << pv_remove )
+	y2war( "should not happen pv_rem:" << pv_remove );
     while( i!=lp.end() )
 	{
 	unsigned long long tmp;
 	if( i->deleted() || i->needShrink() )
-	    y2war( "should not happen dm:" << *i )
+	    y2war( "should not happen dm:" << *i );
 	else if( i->created() || i->extendSize()>0 )
 	    {
 	    tmp = sizeToLe(i->created() ? i->sizeK() : i->extendSize());
@@ -353,7 +353,7 @@ bool PeContainer::checkCreateConstraints()
 	    li.push_back( make_pair(tmp,&(*i)) );
 	    increase += tmp;
 	    y2mil( "inc:" << tmp << " sum:" << increase );
-	    y2mil( "vol:" << *i )
+	    y2mil( "vol:" << *i );
 	    }
 	else
 	    current += sizeToLe( i->sizeK() );

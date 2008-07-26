@@ -72,12 +72,12 @@ void log_msg( unsigned level, const char* file, unsigned line,
 #define y2war(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 #define y2err(op) log_op( 3, __FILE__, __LINE__, __FUNCTION__, NULL, op )
 
-#define log_op( level, file, line, function, add, op )                \
-    {                                                                 \
-    std::ostringstream __buf;                                         \
-    __buf << op;                                                      \
-    log_msg( level, file, line, function, add, "%s", __buf.str().c_str() ); \
-    }                                                                
+#define log_op(level, file, line, function, add, op)				\
+    do {									\
+	std::ostringstream __buf;						\
+	__buf << op;								\
+	log_msg(level, file, line, function, add, "%s", __buf.str().c_str());	\
+    } while (0)
 
 string sformat(const char* format, ...);
 

@@ -330,9 +330,9 @@ DmPartCo::getPartition( unsigned nr, bool del )
     if( i!=pp.end() )
 	ret = &(*i);
     if( ret )
-	y2mil( "nr:" << nr << " del:" << del << " *p:" << *ret )
+	y2mil( "nr:" << nr << " del:" << del << " *p:" << *ret );
     else
-	y2mil( "nr:" << nr << " del:" << del << " p:NULL" )
+	y2mil( "nr:" << nr << " del:" << del << " p:NULL" );
     return( ret );
     }
 
@@ -345,7 +345,7 @@ DmPartCo::validPartition( const Partition* p )
     while( i!=pp.end() && p != &(*i) )
 	++i;
     ret = i!=pp.end();
-    y2mil( "nr:" << p->nr() << " ret:" << ret )
+    y2mil( "nr:" << p->nr() << " ret:" << ret );
     return( ret );
     }
 

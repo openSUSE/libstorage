@@ -4694,7 +4694,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	}
     y2mil( "dev:" << dev << " ret:" << ret << " cn:" << info.cname << 
-           " vn:" << info.vname )
+           " vn:" << info.vname );
     if( info.numeric )
 	y2mil( "nr:" << info.nr );
     return( ret );
