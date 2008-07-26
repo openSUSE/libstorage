@@ -2,15 +2,15 @@
   Textdomain    "storage"
 */
 
-#include <iostream>
-
-#include <string>
-#include <sstream>
-#include <iomanip>
-
 #include <fcntl.h>
 #include <sys/mount.h>         /* for BLKGETSIZE */
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
+
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/Region.h"
 #include "y2storage/Partition.h"
@@ -684,7 +684,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	id = Partition::ID_LINUX;
 	boot = TInfo.find( ",boot," ) != string::npos;
 	string OrigTInfo = TInfo;
-	tolower( TInfo );
+	boost::to_lower(TInfo, locale::classic());
 	if( ext_possible )
 	    {
 	    if( PartitionType == "extended" )

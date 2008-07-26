@@ -8,6 +8,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/SystemCmd.h"
 #include "y2storage/ProcPart.h"
@@ -62,8 +63,7 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 	    string tmp = *Cmd.getLine(0, true);
 	    y2milestone( "Format line:%s", tmp.c_str() );
 	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = extractNthWord( 4, tmp );
-	    tolower( tmp );
+	    tmp = boost::to_lower_copy(extractNthWord(4, tmp), locale::classic());
 	    if( tmp == "cdl" )
 		fmt = DASDF_CDL;
 	    else if( tmp == "ldl" )

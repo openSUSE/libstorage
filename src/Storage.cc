@@ -17,6 +17,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 
 #include <blocxx/AppenderLogger.hpp>
 #include <blocxx/FileAppender.hpp>
@@ -159,8 +160,7 @@ Storage::initialize()
 	    y2mil( "ls:" << ls );
 	    if( ls.size()==2 )
 		{
-		string val = ls.back();
-		tolower(val);
+		string val = boost::to_lower_copy(ls.back(), locale::classic());
 		if( val == "id" )
 		    setDefaultMountBy( MOUNTBY_ID );
 		else if( val == "path" )

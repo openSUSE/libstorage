@@ -476,13 +476,6 @@ int createLogger( const string& lcomponent, const string& name,
     return( 0 );
     }
 
-void tolower( string& s )
-    {
-    for( string::iterator i=s.begin(); i!=s.end(); i++ )
-	{
-	*i = std::tolower(*i);
-        }
-    }
 
 void getFindMap( const char* path, map<string,string>& m, bool unique )
     {
@@ -582,6 +575,7 @@ unsigned getMajorDevices( const string& driver )
     y2mil( "driver:" << driver << " ret:" << ret );
     return( ret );
     }
+
 
 string sformat(const char* format, ...)
 {
@@ -686,7 +680,7 @@ bool humanStringToByte(const string& str, bool classic, unsigned long long& size
 
     for(int i = 0; i < numSuffixes(); i++)
     {
-	if (suffix == boost::to_lower_copy(getSuffix(i, classic)))
+	if (suffix == boost::to_lower_copy(getSuffix(i, classic), loc))
 	{
 	    size = f;
 	    return true;
