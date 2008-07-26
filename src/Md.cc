@@ -46,7 +46,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
-    SystemCmd c( "mdadm --detail " + SystemCmd::quote(device()) );
+    SystemCmd c( "mdadm --detail " + quote(device()) );
     c.select( "UUID : " );
     string::size_type pos;
     if( c.retcode()==0 && c.numLines(true)>0 )
@@ -250,7 +250,7 @@ Md::checkDevices()
 void
 Md::getState(MdStateInfo& info) const
 {
-    SystemCmd c("mdadm --detail " + SystemCmd::quote(device()));
+    SystemCmd c("mdadm --detail " + quote(device()));
 
     c.select("State : ");
     if( c.retcode()==0 && c.numLines(true)>0 )
@@ -309,8 +309,8 @@ void Md::changeDeviceName( const string& old, const string& nw )
 
 string Md::createCmd() const
     {
-    string cmd = "ls -l --full-time " + SystemCmd::quote(devs) + " " + SystemCmd::quote(spare) + "; ";
-    cmd += "modprobe " + pName() + "; mdadm --create " + SystemCmd::quote(device()) +
+    string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
+    cmd += "modprobe " + pName() + "; mdadm --create " + quote(device()) +
 	   " --run --level=" + pName() + " -e 1.0";
     if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
         pName() == "raid10")
@@ -322,7 +322,7 @@ string Md::createCmd() const
     cmd += " --raid-devices=" + decString(devs.size());
     if( !spare.empty() )
 	cmd += " --spare-devices=" + decString(spare.size());
-    cmd += " " + SystemCmd::quote(devs) + " " + SystemCmd::quote(spare);
+    cmd += " " + quote(devs) + " " + quote(spare);
     y2milestone( "ret:%s", cmd.c_str() );
     return( cmd );
     }

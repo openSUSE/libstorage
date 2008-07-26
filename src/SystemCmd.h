@@ -103,6 +103,17 @@ class SystemCmd
 	static int Nr_i;
     };
 
+
+    inline string quote(const string& str)
+    {
+	return SystemCmd::quote(str);
+    }
+
+    inline string quote(const std::list<string>& strs)
+    {
+	return SystemCmd::quote(strs);
+    }
+
 }
 
 #endif

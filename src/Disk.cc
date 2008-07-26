@@ -394,7 +394,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 bool Disk::detectPartitions( ProcPart& ppart )
     {
     bool ret = true;
-    string cmd_line = PARTEDCMD + SystemCmd::quote(device()) + " unit cyl print | sort -n";
+    string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
     string dlabel;
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
@@ -1868,7 +1868,7 @@ int Disk::doCreateLabel()
     removePresentPartitions();
     system_stderr.erase();
     std::ostringstream cmd_line;
-    cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " mklabel " << label;
+    cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
     if( execCheckFailed( cmd_line.str() ) )
 	{
 	ret = DISK_SET_LABEL_PARTED_FAILED;
@@ -1928,7 +1928,7 @@ void Disk::removeFromMemory()
 
 void Disk::redetectGeometry()
     {
-    string cmd_line = PARTEDCMD + SystemCmd::quote(device()) + " unit cyl print";
+    string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print";
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
     if( Cmd.select( "BIOS cylinder" )>0 )
@@ -1963,7 +1963,7 @@ int Disk::doSetType( Volume* v )
 	    }
 	system_stderr.erase();
 	std::ostringstream cmd_line;
-	cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " set " << p->nr() << " ";
+	cmd_line << PARTEDCMD << quote(device()) << " set " << p->nr() << " ";
 	string start_cmd = cmd_line.str();
 	if( ret==0 )
 	    {
@@ -2044,7 +2044,7 @@ Disk::getPartedValues( Partition *p )
 	{
 	ProcPart ppart;
 	std::ostringstream cmd_line;
-	cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
+	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	unsigned nr, id;
 	unsigned long start, csize;
@@ -2071,7 +2071,7 @@ Disk::getPartedValues( Partition *p )
 		}
 	    }
 	cmd_line.str("");
-	cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " unit cyl print";
+	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print";
 	cmd.execute( cmd_line.str() );
 	}
     return( ret );
@@ -2091,7 +2091,7 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     else
 	{
 	std::ostringstream cmd_line;
-	cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " unit s print | grep -w \"^[ \t]*\"" << p->nr();
+	cmd_line << PARTEDCMD << quote(device()) << " unit s print | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	if( cmd.numLines()>0 )
 	    {
@@ -2117,7 +2117,7 @@ void Disk::enlargeGpt()
 	{
 	string cmd_line( "yes Fix | " PARTEDBIN );
 	cmd_line += " ---pretend-input-tty ";
-	cmd_line += SystemCmd::quote(device());
+	cmd_line += quote(device());
 	cmd_line += " print ";
 	SystemCmd cmd( cmd_line );
 	gpt_enlarge = false;
@@ -2159,7 +2159,7 @@ int Disk::doCreate( Volume* v )
 	std::ostringstream cmd_line;
 	if( ret==0 )
 	    {
-	    cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " unit cyl mkpart ";
+	    cmd_line << PARTEDCMD << quote(device()) << " unit cyl mkpart ";
 	    if( label != "sun" )
 		{
 		switch( p->type() )
@@ -2343,7 +2343,7 @@ int Disk::doRemove( Volume* v )
 	if( ret==0 && !p->created() )
 	    {
 	    std::ostringstream cmd_line;
-	    cmd_line << PARTEDCMD << SystemCmd::quote(device()) << " rm " << p->OrigNr();
+	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
@@ -2526,7 +2526,7 @@ int Disk::doResize( Volume* v )
 		end_sect = max_end;
 		y2mil( "new end_sect:" << end_sect );
 		}
-	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << SystemCmd::quote(device())
+	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << quote(device())
 	             << " unit s resize " << p->nr() << " "
 	             << start_sect << " " << end_sect;
 	    if( execCheckFailed( cmd_line.str() ) )
