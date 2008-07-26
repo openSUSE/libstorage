@@ -278,46 +278,11 @@ Md::getState(MdStateInfo& info) const
 
 void
 Md::computeSize()
-    {
-    unsigned long long sum = 0;
-    unsigned long long smallest = 0;
-    list<string>::const_iterator i=devs.begin();
-    while( i!=devs.end() )
-	{
-	const Volume* v = getContainer()->getStorage()->getVolume( *i );
-	sum += v->sizeK();
-	if( smallest==0 )
-	    smallest = v->sizeK();
-	else
-	    smallest = min( smallest, v->sizeK() );
-	++i;
-	}
-    unsigned long long rsize = 0;
-    switch( md_type )
-	{
-	case RAID0:
-	    rsize = sum;
-	    break;
-	case RAID1:
-	case MULTIPATH:
-	    rsize = smallest;
-	    break;
-	case RAID5:
-	    rsize = devs.size()==0 ? 0 : smallest*(devs.size()-1);
-	    break;
-	case RAID6:
-	    rsize = devs.size()<2 ? 0 : smallest*(devs.size()-2);
-	    break;
-	case RAID10:
-	    rsize = smallest*devs.size()/2;
-	    break;
-	default:
-	    rsize = 0;
-	}
-    y2milestone( "type:%d smallest:%llu sum:%llu size:%llu", md_type, 
-                 smallest, sum, rsize );
-    setSize( rsize );
-    }
+{
+    unsigned long long size_k;
+    getContainer()->getStorage()->computeMdSize(md_type, devs, size_k);
+    setSize(size_k);
+}
 
 void 
 Md::addSpareDevice( const string& dev ) 

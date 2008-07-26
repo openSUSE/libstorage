@@ -4,10 +4,12 @@
 
 #include <string>
 #include <deque>
+#include <list>
 #include <ostream>
 
 using std::string;
 using std::deque;
+using std::list;
 
 
 /*!
@@ -417,6 +419,22 @@ namespace storage
 	bool numeric;
 	unsigned nr;
 	};
+
+    /**
+     * Contains info about a partition slot.
+     */
+    struct PartitionSlotInfo
+    {
+	PartitionSlotInfo() {}
+	unsigned long cylStart;
+	unsigned long cylSize;
+	bool primarySlot;
+	bool primaryPossible;
+	bool extendedSlot;
+	bool extendedPossible;
+	bool logicalSlot;
+	bool logicalPossible;
+    };
 
     /**
      * preliminary list of error codes, must have negative values
@@ -1051,6 +1069,18 @@ namespace storage
 	virtual int forgetChangePartitionId (const string& partition ) = 0;
 
 	/**
+	 * Query unused slots on a disk suitable for creating partitions.
+	 *
+	 * This functions ignores size limitations of the partition table type,
+	 * e.g. on MSDOS labels partitions cannot exceed 2TB.
+	 *
+	 * @param partition name of partition, e.g. /dev/hda1
+	 * @param slots list of records that get filled with partition slot specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots) = 0;
+
+	/**
 	 * Destroys the partition table of a disk. An empty disk label
 	 * of the given type without any partition is created.
 	 *
@@ -1676,6 +1706,15 @@ namespace storage
 	virtual int evmsActivate( bool force ) = 0;
 
 	/**
+         * Determine the device name of the next created software raid device
+         *
+         * @param nr is set to the number of the next created software raid device
+         * @param device is set to the device name of the next created software raid device
+         * @return zero if all is ok, a negative number to indicate an error
+         */
+	virtual int nextFreeMd(int &nr, string &device) = 0;
+
+	/**
 	 * Create a Software raid device by name
 	 *
 	 * @param name name of software raid device to create (e.g. /dev/md0)
@@ -1774,6 +1813,19 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMdState(const string& name, MdStateInfo& info) = 0;
+
+	/**
+	 * Compute the size of a raid device.
+	 *
+	 * The size compute may not be accurate. It should not be used for
+	 * further computations.
+	 *
+	 * @param md_type raid type of the software raid
+	 * @param devices list with physical devices for the software raid
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int computeMdSize(MdType md_type, list<string> devices,
+				  unsigned long long& sizeK) = 0;
 
 	/**
 	 * Add knowledge about existence of nfs device.
@@ -2162,6 +2214,38 @@ namespace storage
 	 */
 	virtual int getContVolInfo( const string& dev, ContVolInfo& info) = 0;
 
+	/**
+	 * Return a pretty description of a size with required precision
+	 * and using B, kB, MB, GB or TB as unit as appropriate.
+	 *
+	 * @param size size in bytes
+	 * @param classic use classic locale
+	 * @param precision number of fraction digits in output
+	 * @param omit_zeroes if true omit trailing zeroes for exact values
+	 * @return formatted string
+	 *
+	 * @example byteToHumanString(128, true, 2, true) -> "128 B"
+	 * @example byteToHumanString(4096, true, 2, true) -> "4 kB"
+	 * @example byteToHumanString(4096, true, 2, false) -> "4.00 kB"
+	 * @example byteToHumanString(1024*1024, true, 2, true) -> "1 MB"
+	 */
+	virtual string byteToHumanString(unsigned long long size, bool classic, int precision,
+					 bool omit_zeroes) const = 0;
+
+	/**
+	 * Converts a size description using B, kB, MB, GB or TB into an integer.
+	 *
+	 * @param str size string
+	 * @param classic use classic locale
+	 * @param size size in bytes
+	 * @return true on successful conversion
+	 *
+	 * @example humanStringToByte("4kB", true, size) -> true and size = 4*1024
+	 * @example humanStringToByte("4 MB", true, size) -> true and size = 4*1024*1024
+	 * @example humanStringToByte("0.5 GB", true, size) -> true and size = 512*1024*1024
+	 */
+	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long& 
+				       size) const = 0;
     };
 
 

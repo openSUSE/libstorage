@@ -14,6 +14,7 @@ using namespace std;
 
 %include "std_string.i"
 %include "std_deque.i"
+%include "std_list.i"
 
 specialize_sequence(storage::ContainerInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DiskInfo, TO_PACK, FROM_PACK, CHECK)
@@ -32,6 +33,7 @@ specialize_sequence(storage::DmPartCoInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmraidCoInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmPartInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmraidInfo, TO_PACK, FROM_PACK, CHECK)
+specialize_sequence(storage::PartitionSlotInfo, TO_PACK, FROM_PACK, CHECK)
 
 %include "../../src/StorageInterface.h"
 

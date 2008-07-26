@@ -71,7 +71,7 @@ libpy2StorageCallbacks_la_SOURCES =					\
 	StorageCallbacks.h StorageCallbacks.cc
 
 libpy2StorageCallbacks_la_LDFLAGS = -version-info 2:0
-libpy2StorageCallbacks_la_LIBADD = -ly2 -lycp liby2storage.la
+libpy2StorageCallbacks_la_LIBADD = -L$(libdir) -ly2 -lycp liby2storage.la
 
 pkgincludedir = $(includedir)/y2storage
 

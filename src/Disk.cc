@@ -1110,15 +1110,44 @@ pair<string,unsigned> Disk::getDiskPartition( const string& dev )
     return( make_pair<string,unsigned>(disk,nr) );
     }
 
+
+static bool notDeletedPri( const Partition& p )
+{
+    return !p.deleted() && p.type()==PRIMARY;
+}
+
+static bool notDeletedExt( const Partition& p )
+{
+    return !p.deleted() && p.type()==EXTENDED;
+}
+
+static bool notDeletedLog( const Partition& p )
+{
+    return !p.deleted() && p.type()==LOGICAL;
+}
+
+
 static bool isExtended( const Partition& p )
     {
     return( Volume::notDeleted(p) && p.type()==EXTENDED );
     }
 
+
+unsigned int Disk::numPrimary() const
+{
+    return partPair(notDeletedPri).length();
+}
+
 bool Disk::hasExtended() const
     {
     return( ext_possible && !partPair(isExtended).empty() );
     }
+
+unsigned int Disk::numLogical() const
+{
+    return partPair(notDeletedLog).length();
+}
+
 
 unsigned Disk::availablePartNumber( PartitionType type )
     {
@@ -1174,11 +1203,6 @@ unsigned Disk::availablePartNumber( PartitionType type )
 
     y2milestone( "ret:%d", ret );
     return( ret );
-    }
-
-static bool notDeletedLog( const Partition& p )
-    {
-    return( !p.deleted() && p.type()==LOGICAL );
     }
 
 static bool notDeletedNotLog( const Partition& p )

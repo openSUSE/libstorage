@@ -44,7 +44,6 @@ void getFindMap( const char* path, std::map<string,string>& m,
 		 bool unique=true );
 void getFindRevMap( const char* path, std::map<string,string>& m );
 void removeLastIf(string& Text_Cr, char Char_cv);
-string kbyteToHumanString( unsigned long long size );
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
 string undevDevice( const string& dev );

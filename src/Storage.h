@@ -315,6 +315,7 @@ class Storage : public storage::StorageInterface
 	int removePartition( const string& partition );
 	int changePartitionId( const string& partition, unsigned id );
 	int forgetChangePartitionId( const string& partition );
+	int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots);
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );
 	string defaultDiskLabel() const;
@@ -422,6 +423,7 @@ class Storage : public storage::StorageInterface
 	bool getNoEvms() { return( no_evms ); }
 	static bool getNoEv() { return( no_evms ); }
 
+	int nextFreeMd(int &nr, string &device);
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
 	int createMdAny( storage::MdType rtype, const deque<string>& devs,
@@ -434,6 +436,8 @@ class Storage : public storage::StorageInterface
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
 	int getMdState(const string& name, MdStateInfo& info);
+	int computeMdSize(MdType md_type, list<string> devices,
+			  unsigned long long& sizeK);
 
 	int addNfsDevice( const string& nfsDev, const string& opts,
 	                  unsigned long long sizeK, const string& mp );
@@ -470,6 +474,9 @@ class Storage : public storage::StorageInterface
 	bool checkDmMapsTo( const string& dev );
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
+
+	string byteToHumanString(unsigned long long size, bool classic, int precision, bool omit_zeroes) const;
+	bool humanStringToByte(const string& str, bool classic, unsigned long long& size) const;
 
 	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb=pfnc; }

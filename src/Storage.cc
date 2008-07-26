@@ -16,6 +16,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 
 #include <sys/utsname.h>
 
@@ -1716,6 +1717,66 @@ Storage::forgetChangePartitionId( const string& partition )
     return( ret );
     }
 
+
+int
+Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots)
+{
+    int ret = 0;
+    slots.clear();
+    assertInit();
+    DiskIterator i = findDisk( disk );
+    if( i != dEnd() )
+    {
+	// maxPrimary() and maxLogical() include limits from partition table type and
+	// minor number range
+
+	// TODO: check these restrictions
+
+	bool primaryPossible = i->numPrimary() + (i->hasExtended() ? 1 : 0) < i->maxPrimary();
+	bool extendedPossible = primaryPossible && i->extendedPossible() && !i->hasExtended();
+	bool logicalPossible = i->hasExtended() && i->numLogical() < (i->maxLogical() - i->maxPrimary());
+
+	list<Region> regions;
+
+	i->getUnusedSpace(regions, false, false);
+	for( list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++ )
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region->start();
+	    slot.cylSize = region->len();
+	    slot.primarySlot = true;
+	    slot.primaryPossible = primaryPossible;
+	    slot.extendedSlot = true;
+	    slot.extendedPossible = extendedPossible;
+	    slot.logicalSlot = false;
+	    slot.logicalPossible = false;
+	    slots.push_back(slot);
+	}
+
+	i->getUnusedSpace(regions, false, true);
+	for( list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++ )
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region->start();
+	    slot.cylSize = region->len();
+	    slot.primarySlot = false;
+	    slot.primaryPossible = false;
+	    slot.extendedSlot = false;
+	    slot.extendedPossible = false;
+	    slot.logicalSlot = true;
+	    slot.logicalPossible = logicalPossible;
+	    slots.push_back(slot);
+	}
+    }
+    else
+    {
+	ret = STORAGE_DISK_NOT_FOUND;
+    }
+    y2milestone( "ret:%d", ret );
+    return ret;
+}
+
+
 int
 Storage::destroyPartitionTable( const string& disk, const string& label )
     {
@@ -3288,6 +3349,20 @@ Storage::changeEvmsStripeSize( const string& coname, const string& name,
     }
 
 int
+Storage::nextFreeMd(int &nr, string &device)
+{
+    int ret = 0;
+    assertInit();
+    MdCo *md = NULL;
+    nr = 0;
+    if (haveMd(md))
+	nr = md->unusedNumber();
+    device = "/dev/md" + decString(nr);
+    y2milestone("ret:%d nr:%d device:%s", ret, nr, device.c_str());
+    return ret;
+}
+
+int
 Storage::createMd( const string& name, MdType rtype,
                    const deque<string>& devs )
     {
@@ -3578,6 +3653,7 @@ int Storage::checkMd( const string& name )
     return( ret );
     }
 
+
 int Storage::getMdState(const string& name, MdStateInfo& info)
 {
     int ret = 0;
@@ -3599,6 +3675,60 @@ int Storage::getMdState(const string& name, MdStateInfo& info)
     y2milestone("ret:%d", ret);
     return ret;
 }
+
+
+int
+Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long& sizeK)
+{
+    int ret = 0;
+
+    unsigned long long sumK = 0;
+    unsigned long long smallestK = 0;
+
+    for (list<string>::const_iterator i = devices.begin(); i != devices.end(); i++)
+    {
+	const Volume* v = getVolume(*i);
+	if (!v)
+	{
+	    ret = STORAGE_VOLUME_NOT_FOUND;
+	    break;
+	}
+
+	sumK += v->sizeK();
+	if (smallestK == 0)
+	    smallestK = v->sizeK();
+	else
+	    smallestK = min(smallestK, v->sizeK());
+    }
+
+    switch (md_type)
+    {
+	case RAID0:
+	    sizeK = sumK;
+	    break;
+	case RAID1:
+	case MULTIPATH:
+	    sizeK = smallestK;
+	    break;
+	case RAID5:
+	    sizeK = devices.size()<1 ? 0 : smallestK*(devices.size()-1);
+	    break;
+	case RAID6:
+	    sizeK = devices.size()<2 ? 0 : smallestK*(devices.size()-2);
+	    break;
+	case RAID10:
+	    sizeK = smallestK*devices.size()/2;
+	    break;
+	default:
+	    break;
+    }
+
+    y2milestone ("type:%d smallest:%llu sum:%llu size:%llu", md_type,
+		 smallestK, sumK, sizeK);
+
+    return ret;
+}
+
 
 bool Storage::haveMd( MdCo*& md )
     {
@@ -6404,6 +6534,107 @@ void Storage::setNoEvms( bool val )
     y2mil( "val:" << val ); 
     no_evms=val; 
     }
+
+
+static int numSuffixes()
+{
+    return 6;
+}
+
+
+static string suffixes(int i, bool classic)
+{
+    switch (i)
+    {
+	case 0:
+	    /* Byte abbreviated */
+	    return classic ? "B" : _("B");
+
+	case 1:
+	    /* KiloByte abbreviated */
+	    return classic ? "kB" : _("kB");
+
+	case 2:
+	    /* MegaByte abbreviated */
+	    return classic ? "MB" : _("MB");
+
+	case 3:
+	    /* GigaByte abbreviated */
+	    return classic ? "GB" : _("GB");
+
+	case 4:
+	    /* TeraByte abbreviated */
+	    return classic ? "TB" : _("TB");
+
+	case 5:
+	    /* PetaByte abbreviated */
+	    return classic ? "PB" : _("PB");
+    }
+
+    return string("error");
+}
+
+
+string Storage::byteToHumanString(unsigned long long size, bool classic, int precision, 
+				  bool omit_zeroes) const
+{
+    const locale loc = classic ? locale::classic() : locale();
+
+    double f = (double)(size);
+    int suffix = 0;
+
+    while (f >= 1024.0 && suffix + 1 < numSuffixes())
+    {
+	f /= 1024.0;
+	suffix++;
+    }
+
+    if (omit_zeroes && (f == (unsigned long long)(f)))
+    {
+	precision = 0;
+    }
+
+    ostringstream s;
+    s.imbue(loc);
+    s.setf(ios::fixed);
+    s.precision(precision);
+
+    s << f << ' ' << suffixes(suffix, classic);
+
+    return s.str();
+}
+
+
+bool Storage::humanStringToByte(const string& str, bool classic, unsigned long long& size) const
+{
+    const locale loc = classic ? locale::classic() : locale();
+
+    istringstream s(boost::trim_copy(str, loc));
+    s.imbue(loc);
+
+    double f;
+    string suffix;
+    s >> f >> suffix;
+
+    if (s.fail() || !s.eof() || f < 0.0)
+	return false;
+
+    boost::to_lower(suffix, loc);
+
+    for(int i = 0; i < numSuffixes(); i++)
+    {
+	if (suffix == boost::to_lower_copy(suffixes(i, classic)))
+	{
+	    size = f;
+	    return true;
+	}
+
+	f *= 1024.0;
+    }
+
+    return false;
+}
+
 
 namespace storage
 {

@@ -41,6 +41,7 @@ class Disk : public Container
 	unsigned long numMinor() const { return range; }
 	unsigned long cylSizeB() const { return byte_cyl; }
 	unsigned maxPrimary() const { return max_primary; }
+	bool extendedPossible() const { return ext_possible; };
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
@@ -90,7 +91,9 @@ class Disk : public Container
 	int removeVolume( Volume* v );
 	void getUnusedSpace( std::list<Region>& free, bool all=true, 
 	                     bool logical=false );
+	unsigned int numPrimary() const;
 	bool hasExtended() const;
+	unsigned int numLogical() const;
 	string setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
@@ -198,7 +201,6 @@ class Disk : public Container
 	virtual int doSetType( Volume* v );
 	virtual int doCreateLabel();
 
-	//std::list<Region> getUnusedRegions();
 	void logData( const string& Dir );
 	bool haveBsdPart( const std::list<Partition*>& pl) const;
 	void setLabelData( const string& );
