@@ -77,7 +77,7 @@ class CastIterator : public Iter
 	    }
 	CastIterator operator++(int) 
 	    { 
-	    y2warning( "Expensive ++ CastIterator" );
+	    y2war( "Expensive ++ CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator++(); 
 	    return(tmp); 
@@ -88,7 +88,7 @@ class CastIterator : public Iter
 	    }
 	CastIterator operator--(int) 
 	    { 
-	    y2warning( "Expensive -- CastIterator" );
+	    y2war( "Expensive -- CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator--(); 
 	    return(tmp); 

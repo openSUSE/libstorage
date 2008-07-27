@@ -72,7 +72,7 @@ class CastCheckIterator : public CheckType<Value>,
 	    }
 	CastCheckIterator operator++(int)
 	    {
-	    y2warning( "Expensive ++ CastCheckIterator" );
+	    y2war( "Expensive ++ CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
 	    _bclass::operator++();
 	    return(tmp);
@@ -83,7 +83,7 @@ class CastCheckIterator : public CheckType<Value>,
 	    }
 	CastCheckIterator operator--(int)
 	    {
-	    y2warning( "Expensive -- CastCheckIterator" );
+	    y2war( "Expensive -- CastCheckIterator" );
 	    CastCheckIterator tmp(*this);
 	    _bclass::operator--();
 	    return(tmp);
@@ -130,7 +130,7 @@ class CastCheckFncIterator : public CheckByFnc<FncP>,
 	    }
 	CastCheckFncIterator operator++(int)
 	    {
-	    y2warning( "Expensive ++ CastCheckFncIterator" );
+	    y2war( "Expensive ++ CastCheckFncIterator" );
 	    CastCheckFncIterator tmp(*this);
 	    _bclass::operator++();
 	    return(tmp);
@@ -141,7 +141,7 @@ class CastCheckFncIterator : public CheckByFnc<FncP>,
 	    }
 	CastCheckFncIterator operator--(int)
 	    {
-	    y2warning( "Expensive -- CastCheckFncIterator" );
+	    y2war( "Expensive -- CastCheckFncIterator" );
 	    CastCheckFncIterator tmp(*this);
 	    _bclass::operator--();
 	    return(tmp);

@@ -51,32 +51,35 @@ bool isNfsDev( const string& dev );
 void delay(int Microsec_iv);
 unsigned getMajorDevices( const string& driver );
 
-int createLogger( const string& component, const string& name,
-                  const string& logpath, const string& logfile );
+void createLogger(const string& component, const string& name,
+		  const string& logpath, const string& logfile);
 
-void log_msg( unsigned level, const char* file, unsigned line, 
-              const char* func, const char* add_str, const char* format, ... ) 
-	__attribute__ ((format(printf, 6, 7)));
+void logMsg(unsigned level, const char* file, unsigned line,
+	    const char* func, const string& str);
 
-#define y2debug(format, ...)  \
-    log_msg( 0, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
-#define y2milestone(format, ...)  \
-    log_msg( 1, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
-#define y2warning(format, ...)  \
-    log_msg( 2, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
-#define y2error(format, ...)  \
-    log_msg( 3, __FILE__, __LINE__, __FUNCTION__, NULL, format, ##__VA_ARGS__ )
+void logMsgVaArgs(unsigned level, const char* file, unsigned line,
+		  const char* func, const char* format, ...)
+    __attribute__ ((format(printf, 5, 6)));
 
-#define y2deb(op) log_op( 0, __FILE__, __LINE__, __FUNCTION__, NULL, op )
-#define y2mil(op) log_op( 1, __FILE__, __LINE__, __FUNCTION__, NULL, op )
-#define y2war(op) log_op( 2, __FILE__, __LINE__, __FUNCTION__, NULL, op )
-#define y2err(op) log_op( 3, __FILE__, __LINE__, __FUNCTION__, NULL, op )
+#define y2debug(format, ...) \
+    logMsgVaArgs(0, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define y2milestone(format, ...) \
+    logMsgVaArgs(1, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define y2warning(format, ...) \
+    logMsgVaArgs(2, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+#define y2error(format, ...) \
+    logMsgVaArgs(3, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 
-#define log_op(level, file, line, function, add, op)				\
-    do {									\
-	std::ostringstream __buf;						\
-	__buf << op;								\
-	log_msg(level, file, line, function, add, "%s", __buf.str().c_str());	\
+#define y2deb(op) y2log_op(0, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2mil(op) y2log_op(1, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2war(op) y2log_op(2, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2err(op) y2log_op(3, __FILE__, __LINE__, __FUNCTION__, op)
+
+#define y2log_op(level, file, line, function, op)			\
+    do {								\
+	std::ostringstream __buf;					\
+	__buf << op;							\
+	logMsg(level, file, line, function, __buf.str());		\
     } while (0)
 
 string sformat(const char* format, ...);

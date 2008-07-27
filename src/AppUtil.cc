@@ -335,22 +335,69 @@ void undevDevice( string& dev )
 	dev.erase( 0, 5 );
     }
 
-static blocxx::String component = "libstorage";
 
-void
-log_msg( unsigned level, const char* file, unsigned line, const char* func,
-         const char* add_str, const char* format, ... ) 
-    {
+static const blocxx::String component = "libstorage";
+
+
+void createLogger(const string& lcomponent, const string& name,
+		  const string& logpath, const string& logfile)
+{
     using namespace blocxx;
 
-#if BLOCXX_LIBRARY_VERSION >= 5
-    ELogLevel   curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
-#else
-    ELogLevel   curLevel = Logger::getCurrentLogger()->getLogLevel();
-#endif
-    String      category;
-    switch( level )
+    if (logpath != "NULL" && logfile != "NULL")
+    {
+	String nm = name.c_str();
+	LoggerConfigMap configItems;
+	LogAppenderRef logApp;
+	if (logpath != "STDERR" && logfile != "STDERR" &&
+	    logpath != "SYSLOG" && logfile != "SYSLOG")
 	{
+	    String StrKey;
+	    String StrPath;
+	    StrKey.format("log.%s.location", name.c_str());
+	    StrPath = (logpath + "/" + logfile).c_str();
+	    configItems[StrKey] = StrPath;
+	    logApp =
+		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
+					       LogAppender::ALL_CATEGORIES,
+					       "%d %-5p %c(%P) %F(%M):%L - %m",
+					       LogAppender::TYPE_FILE,
+					       configItems);
+	}
+	else if (logpath == "STDERR" && logfile == "STDERR")
+	{
+	    logApp =
+		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
+					       LogAppender::ALL_CATEGORIES,
+					       "%d %-5p %c(%P) %F(%M):%L - %m",
+					       LogAppender::TYPE_STDERR,
+					       configItems);
+	}
+	else
+	{
+	    logApp =
+		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
+					       LogAppender::ALL_CATEGORIES,
+					       "%d %-5p %c(%P) %F(%M):%L - %m",
+					       LogAppender::TYPE_SYSLOG,
+					       configItems);
+	}
+
+	LogAppender::setDefaultLogAppender(logApp);
+    }
+}
+
+
+void
+logMsg(unsigned level, const char* file, unsigned line, const char* func,
+       const string& str)
+{
+    using namespace blocxx;
+
+    ELogLevel curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
+    String category;
+    switch( level )
+    {
 	case 0:
 	    if( curLevel >= ::blocxx::E_DEBUG_LEVEL)
 	    	category = Logger::STR_DEBUG_CATEGORY;
@@ -360,17 +407,8 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
 	    	category = Logger::STR_INFO_CATEGORY;
 	    break;
 	case 2:
-#if BLOCXX_LIBRARY_VERSION >= 5
 	    if( curLevel >= ::blocxx::E_WARNING_LEVEL)
 		category = Logger::STR_WARNING_CATEGORY;
-#else
-	    if( curLevel >= ::blocxx::E_INFO_LEVEL)
-		{
-		category = Logger::STR_INFO_CATEGORY;
-		if( add_str == NULL )
-			add_str = "[WARNING]";
-		}
-#endif
 	    break;
 	case 3:
 	    if( curLevel >= ::blocxx::E_ERROR_LEVEL)
@@ -380,101 +418,33 @@ log_msg( unsigned level, const char* file, unsigned line, const char* func,
 	    if( curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL)
 		category = Logger::STR_FATAL_CATEGORY;
 	    break;
-	}
-
-    if( !category.empty())
-	{
-	char b[4096+1] = {'\0'};
-	unsigned ret = 0;
-	if( add_str != NULL && *add_str != '\0')
-	    ret = snprintf( b, sizeof(b), "%s ", add_str );
-	if( ret<sizeof(b) )
-	    {
-	    va_list p;
-	    va_start( p, format );
-	    vsnprintf( b+ret, sizeof(b)-ret, format, p );
-	    }
-	b[sizeof(b)-1] = 0;
-
-#if BLOCXX_LIBRARY_VERSION >= 5
-	LogAppender::getCurrentLogAppender()->logMessage( LogMessage(component, category, String(b), file, line , func) );
-#else
-	Logger::getCurrentLogger()->logMessage( component, category, String(b), file, line , func );
-#endif
-	}
     }
 
-int createLogger( const string& lcomponent, const string& name,
-                  const string& logpath, const string& logfile )
+    if (!category.empty())
     {
-    using namespace blocxx;
-
-#if BLOCXX_LIBRARY_VERSION <  5
-    // Add PID to our global component name in blocxx-1.x
-    // that does not support the %P log format specifier.
-    component = "libstorage(" + decString(getpid()) + ")";
-#endif
-
-    if( logpath != "NULL" && logfile != "NULL" )
-	{
-	String nm = name.c_str();
-	LoggerConfigMap configItems;
-	LogAppenderRef logApp;
-	if( logpath != "STDERR" && logfile != "STDERR" && 
-	    logpath != "SYSLOG" && logfile != "SYSLOG" )
-	    {
-	    String StrKey;
-	    String StrPath;
-	    StrKey.format("log.%s.location", name.c_str());
-	    StrPath = (logpath + "/" + logfile).c_str();
-	    configItems[StrKey] = StrPath;
-	    logApp = 
-		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
-						LogAppender::ALL_CATEGORIES,
-#if BLOCXX_LIBRARY_VERSION >= 5
-						"%d %-5p %c(%P) %F(%M):%L - %m", 
-#else
-						"%d %-5p %c %F(%M):%L - %m",
-#endif
-						LogAppender::TYPE_FILE, 
-						configItems );
-	    }
-	else if( logpath == "STDERR" && logfile == "STDERR" )
-	    {
-	    logApp = 
-		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
-						LogAppender::ALL_CATEGORIES,
-#if BLOCXX_LIBRARY_VERSION >= 5
-						"%d %-5p %c(%P) %F(%M):%L - %m",
-#else
-						"%d %-5p %c %F(%M):%L - %m",
-#endif
-						LogAppender::TYPE_STDERR, 
-						configItems );
-	    }
-	else 
-	    {
-	    logApp = 
-		LogAppender::createLogAppender( nm, LogAppender::ALL_COMPONENTS,
-						LogAppender::ALL_CATEGORIES,
-#if BLOCXX_LIBRARY_VERSION >= 5
-						"%d %-5p %c(%P) %F(%M):%L - %m",
-#else
-						"%d %-5p %c %F(%M):%L - %m",
-#endif
-						LogAppender::TYPE_SYSLOG, 
-						configItems );
-	    }
-#if BLOCXX_LIBRARY_VERSION >= 5
-	LogAppender::setDefaultLogAppender(logApp);
-#else
-	LoggerRef log( new AppenderLogger( lcomponent.c_str(), E_INFO_LEVEL, 
-	                                   logApp));
-	Logger::setDefaultLogger(log);
-#endif
-	}
-    return( 0 );
+	LogAppender::getCurrentLogAppender()->logMessage(LogMessage(component, category,
+								    String(str), file,
+								    line, func));
     }
+}
+
+
+void
+logMsgVaArgs(unsigned level, const char* file, unsigned line, const char* func,
+	     const char* format, ...)
+{
+    char* str;
+    va_list ap;
+
+    va_start(ap, format);
+    if (vasprintf(&str, format, ap) == -1)
+	return;
+    va_end(ap);
+
+    logMsg(level, file, line, func, str);
+
+    free(str);
+}
 
 
 void getFindMap( const char* path, map<string,string>& m, bool unique )
