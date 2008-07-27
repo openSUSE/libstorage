@@ -25,7 +25,6 @@ class AsciiFile;
 bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
 bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
 		int& StartLine_ir);
-void timeMark(const char*const Text_pcv, bool PrintDiff_bi = true);
 void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
 bool checkDir(string Path_Cv);
@@ -48,7 +47,6 @@ void normalizeDevice( string& dev );
 string undevDevice( const string& dev );
 void undevDevice( string& dev );
 bool isNfsDev( const string& dev );
-void delay(int Microsec_iv);
 unsigned getMajorDevices( const string& driver );
 
 void createLogger(const string& component, const string& name,

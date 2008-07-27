@@ -176,7 +176,6 @@ SystemCmd::doExecute( string Cmd )
 	{
 	output_proc->reset();
 	}
-    timeMark( "System", false );
     y2debug( "Cmd:%s", Cmd.c_str() );
     if( access( Shell_Ci.c_str(), X_OK ) != 0 )
 	{
@@ -299,7 +298,6 @@ SystemCmd::doExecute( string Cmd )
 	Ret_i = 0;
 	y2milestone( "TESTMODE would execute \"%s\"", Cmd.c_str() );
 	}
-    timeMark( "After fork()" );
     if( Ret_i==-127 || Ret_i==-1 )
 	{
 	y2error("system (%s) = %d", Cmd.c_str(), Ret_i);
@@ -309,7 +307,6 @@ SystemCmd::doExecute( string Cmd )
     y2milestone( "system() Returns:%d", Ret_i );
     if( Ret_i!=0 )
 	logOutput();
-    timeMark( "After CheckOutput" );
     return( Ret_i );
     }
 

@@ -84,23 +84,6 @@ searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
   return Found_bi;
 }
 
-void timeMark(const char*const Text_pcv, bool PrintDiff_bi)
-{
-  static unsigned long Start_ls;
-  unsigned long Diff_li;
-  struct timeb Time_ri;
-
-  if (PrintDiff_bi)
-    {
-      ftime(&Time_ri);
-      Diff_li = Time_ri.time % 1000000 * 1000 + Time_ri.millitm - Start_ls;
-    }
-  else
-    {
-      ftime(&Time_ri);
-      Start_ls = Time_ri.time % 1000000 * 1000 + Time_ri.millitm;
-    }
-}
 
 void createPath(string Path_Cv)
 {
