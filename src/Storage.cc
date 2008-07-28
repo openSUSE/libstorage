@@ -6050,8 +6050,8 @@ Storage::getDfSize( const string& mp )
 	ret = fsbuf.f_blocks;
 	ret *= fsbuf.f_bsize;
 	ret /= 1024;
-	y2milestone( "blocks:%llu free:%llu bsize:%lu", fsbuf.f_blocks,
-		     fsbuf.f_bfree, fsbuf.f_bsize );
+	y2mil("blocks:" << fsbuf.f_blocks << " free:" << fsbuf.f_bfree <<
+	      " bsize:" << fsbuf.f_bsize);
 	}
     else
 	{
@@ -6123,9 +6123,9 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    used = fsbuf.f_blocks-fsbuf.f_bfree;
 		    used *= fsbuf.f_bsize;
 		    used /= 1024;
-		    y2milestone( "blocks:%llu free:%llu bsize:%lu", 
-		                 fsbuf.f_blocks, fsbuf.f_bfree, fsbuf.f_bsize );
-		    y2milestone( "free:%llu used:%llu", df_free, used );
+		    y2mil("blocks:" << fsbuf.f_blocks << " free:" << fsbuf.f_bfree <<
+			  " bsize:" << fsbuf.f_bsize);
+		    y2mil("free:" << df_free << " used:" << used);
 		    }
 		if( ret && vol->getFs()==NTFS )
 		    {
