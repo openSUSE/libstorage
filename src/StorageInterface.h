@@ -1055,7 +1055,7 @@ namespace storage
 	 * Change partition id of a partition
 	 *
 	 * @param partition name of partition, e.g. /dev/hda1
-	 * @param new partition id (e.g. 0x82 swap, 0x8e for lvm, ...)
+	 * @param id new partition id (e.g. 0x82 swap, 0x8e for lvm, ...)
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changePartitionId (const string& partition, unsigned id) = 0;
@@ -1074,7 +1074,7 @@ namespace storage
 	 * This functions ignores size limitations of the partition table type,
 	 * e.g. on MSDOS labels partitions cannot exceed 2TB.
 	 *
-	 * @param partition name of partition, e.g. /dev/hda1
+	 * @param disk name of disk, e.g. /dev/hda1
 	 * @param slots list of records that get filled with partition slot specific info
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -1188,7 +1188,7 @@ namespace storage
 	 * Changes mount by value in fstab of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param options new mount by value of the volume.
+	 * @param mby new mount by value of the volume.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMountBy( const string& device, MountByType mby ) = 0;
@@ -1197,7 +1197,7 @@ namespace storage
 	 * Get mount by value in fstab of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param options will be set to the mount by value of the volume.
+	 * @param mby will be set to the mount by value of the volume.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 #ifndef SWIG
@@ -1523,7 +1523,7 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
-	 * @param size size of logical volume in megabytes
+	 * @param sizeM size of logical volume in megabytes
 	 * @param stripe stripe count of logical volume (use 1 unless you know
 	 * exactly what you are doing)
 	 * @param device is set to the device name of the new LV
@@ -1556,7 +1556,7 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
-	 * @param stripe new stripe count of logical volume
+	 * @param stripes new stripe count of logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvStripeCount( const string& vg, const string& name,
@@ -1822,6 +1822,7 @@ namespace storage
 	 *
 	 * @param md_type raid type of the software raid
 	 * @param devices list with physical devices for the software raid
+	 * @param sizeK will contain the computed size in kilobytes
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int computeMdSize(MdType md_type, list<string> devices,
@@ -1915,8 +1916,8 @@ namespace storage
 	 * Gets a list of string describing the actions to be executed
 	 * after next call to commit()
 	 *
-	 * @param mark_destructive if true use <red> around </red> destructive
-	 *    actions (like e.g. deletion, formatting, ...)
+	 * @param mark_destructive if true use &lt;red&gt; around &lt;/red&gt;
+	 *    destructive actions (like e.g. deletion, formatting, ...)
 	 * @return list of strings presentable to the user
 	 */
 	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
@@ -2208,7 +2209,7 @@ namespace storage
 	 * name. For Containers where this is appropriate (e.g. disks,
 	 * MD, loop) also a volume number is provided.
 	 *
-	 * @param disk device name of volume, e.g. /dev/hda1
+	 * @param dev device name of volume, e.g. /dev/hda1
 	 * @param info record that get filled with split data
 	 * @return zero if all is ok, negative number to indicate an error
 	 */
