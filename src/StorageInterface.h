@@ -267,7 +267,7 @@ namespace storage
 	};
 
     struct PartitionAddInfo
-	{
+    {
 	PartitionAddInfo() {};
 	unsigned nr;
 	unsigned long cylStart;
@@ -277,7 +277,7 @@ namespace storage
 	bool boot;
 	string udevPath;
 	string udevId;
-};
+    };
 
     /**
      * Contains info about a partition.
@@ -1806,7 +1806,8 @@ namespace storage
 
 	/**
 	 * Get state of a raid device.
-	 * This can only be done after the raid has been created on disk.
+	 *
+	 * @pre This can only be done after the raid has been created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
 	 * @param info record that gets filled with raid special data
@@ -2245,7 +2246,7 @@ namespace storage
 	 * @example humanStringToByte("4 MB", true, size) -> true and size = 4*1024*1024
 	 * @example humanStringToByte("0.5 GB", true, size) -> true and size = 512*1024*1024
 	 */
-	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long& 
+	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long&
 				       size) const = 0;
     };
 
