@@ -77,7 +77,7 @@ DmCo::detectEncryption( const string& dev ) const
     if( dev.substr( 0, 12 ) == "/dev/mapper/")
     {
 	string tdev = dev.substr (12);
-	SystemCmd c( "cryptsetup status \"" + tdev + "\"" );
+	SystemCmd c("cryptsetup status " + quote(tdev));
 
 	string cipher, keysize;
 	for( unsigned int i = 0; i < c.numLines(); i++)

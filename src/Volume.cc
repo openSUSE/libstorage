@@ -987,7 +987,7 @@ int Volume::cryptUnsetup( bool force )
 	    table.erase( 0, table.find_last_of( '/' )+1 );
 	if( !table.empty() )
 	    {
-	    SystemCmd c( "cryptsetup remove " + table );
+	    SystemCmd c("cryptsetup remove " + quote(table));
 	    if( c.retcode()!=0 )
 		ret = VOLUME_CRYPTUNSETUP_FAILED;
 	    else
