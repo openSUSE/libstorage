@@ -232,7 +232,7 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void 
 DmPartCo::init( ProcPart& ppart )
     {
-    SystemCmd c( "dmsetup table \"" + nm + "\"" );
+    SystemCmd c("dmsetup table " + quote(nm));
     if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0] ))
 	{
 	mnr = Dm::dmNumber( nm );

@@ -54,7 +54,7 @@ Dm::getTableInfo()
     {
     if( dm_major==0 )
 	getDmMajor();
-    SystemCmd c( "dmsetup table \"" + tname + "\"" );
+    SystemCmd c("dmsetup table " + quote(tname));
     inactiv = c.retcode()!=0;
     y2milestone( "table %s retcode:%d numLines:%u inactive:%d", 
                  tname.c_str(), c.retcode(), c.numLines(), inactiv );
@@ -207,7 +207,7 @@ string Dm::getDevice( const string& majmin )
 			}
 		    else
 			{
-			c.execute( "dmsetup table \"" + *c.getLine(0) + "\"" );
+			c.execute("dmsetup table " + quote(*c.getLine(0)));
 			if( c.retcode()==0 && c.numLines()>0 )
 			    {
 			    pair = extractNthWord( 3, *c.getLine(0) );
@@ -489,7 +489,7 @@ string Dm::dmDeviceName( unsigned long num )
 int Dm::dmNumber( const string& table )
     {
     int ret = -1;
-    SystemCmd c( "dmsetup -c --noheadings info \"" + table + "\"" );
+    SystemCmd c("dmsetup -c --noheadings info " + quote(table));
     if( c.retcode()==0 && c.numLines()>0 )
 	{
 	list<string> sl = splitString( *c.getLine(0), ":" );

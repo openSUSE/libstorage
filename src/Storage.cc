@@ -4415,7 +4415,7 @@ Storage::evmsActivateDevices()
 	    }
 	tfile.close();
 	c.execute( "cat " + fname );
-	c.execute( "dmsetup create " + tblname + " <" + fname );
+	c.execute("dmsetup create " + quote(tblname) + " <" + fname);
 	unlink( fname.c_str() );
 	}
     EvmsCo::activateDevices();
@@ -5282,15 +5282,15 @@ void Storage::removeDmTableTo( const string& device )
     
 bool Storage::removeDmTable( const string& table )
     {
-    SystemCmd c( "dmsetup table \"" + table + "\"" );
+    SystemCmd c("dmsetup table " + quote(table));
     bool ret = false;
     if( c.retcode()==0 )
 	{
-	c.execute( "dmsetup info \"" + table + "\"" );
-	c.execute( "dmsetup remove \"" + table + "\"" );
+	c.execute("dmsetup info " + quote(table));
+	c.execute("dmsetup remove " + quote(table));
 	waitForDevice();
 	ret = c.retcode()==0;
-	c.execute( "dmsetup table | grep  \"" + table + "\"" );
+	c.execute("dmsetup table | grep " + quote(table));
 	logProcData();
 	}
     y2milestone( "ret:%d", ret );
