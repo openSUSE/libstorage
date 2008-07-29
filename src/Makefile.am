@@ -75,10 +75,6 @@ libpy2StorageCallbacks_la_LIBADD = -L$(libdir) -ly2 -lycp liby2storage.la
 
 pkgincludedir = $(includedir)/y2storage
 
-# these go to $(pkgincludedir)
-
 pkginclude_HEADERS = StorageInterface.h
-
-#<INSTALL-HEADER-TARGET>
 
 CLEANFILES = $(BUILT_SOURCES)
