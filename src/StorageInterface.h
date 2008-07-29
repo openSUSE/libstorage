@@ -148,8 +148,8 @@ namespace storage
      * Contains info about a generic container.
      */
     struct ContainerInfo
-	{
-	ContainerInfo() {};
+    {
+	ContainerInfo() {}
 	CType type;
 	unsigned volcnt;
 	string device;
@@ -157,14 +157,14 @@ namespace storage
 	UsedByType usedBy;
 	string usedByName;
 	bool readonly;
-	};
+    };
 
     /**
      * Contains info about a disk
      */
     struct DiskInfo
-	{
-	DiskInfo() {};
+    {
+	DiskInfo() {}
 	unsigned long long sizeK;
 	unsigned long long cylSizeB;
 	unsigned long cyl;
@@ -177,14 +177,14 @@ namespace storage
 	unsigned maxPrimary;
 	bool initDisk;
 	bool iscsi;
-	};
+    };
 
     /**
      * Contains info about a LVM VG
      */
     struct LvmVgInfo
-	{
-	LvmVgInfo() {};
+    {
+	LvmVgInfo() {}
 	unsigned long long sizeK;
 	unsigned long long peSize;
 	unsigned long peCount;
@@ -195,14 +195,14 @@ namespace storage
 	string devices;
 	string devices_add;
 	string devices_rem;
-	};
+    };
 
     /**
      * Contains info about a EVMS Container
      */
     struct EvmsCoInfo
-	{
-	EvmsCoInfo() {};
+    {
+	EvmsCoInfo() {}
 	unsigned long long sizeK;
 	unsigned long long peSize;
 	unsigned long peCount;
@@ -214,31 +214,31 @@ namespace storage
 	string devices;
 	string devices_add;
 	string devices_rem;
-	};
+    };
 
     /**
      * Contains info about a DmPart disk
      */
     struct DmPartCoInfo
-	{
-	DmPartCoInfo() {};
+    {
+	DmPartCoInfo() {}
 	DiskInfo d;
 	string devices;
 	unsigned long minor;
-	};
+    };
 
     struct DmraidCoInfo
-	{
-	DmraidCoInfo() {};
+    {
+	DmraidCoInfo() {}
 	DmPartCoInfo p;
-	};
+    };
 
     /**
      * Contains info about a volume.
      */
     struct VolumeInfo
-	{
-	VolumeInfo() {};
+    {
+	VolumeInfo() {}
 	unsigned long long sizeK;
 	unsigned long major;
 	unsigned long minor;
@@ -264,11 +264,11 @@ namespace storage
 	bool resize;
 	bool ignore_fs;
 	unsigned long long OrigSizeK;
-	};
+    };
 
     struct PartitionAddInfo
     {
-	PartitionAddInfo() {};
+	PartitionAddInfo() {}
 	unsigned nr;
 	unsigned long cylStart;
 	unsigned long cylSize;
@@ -283,8 +283,8 @@ namespace storage
      * Contains info about a partition.
      */
     struct PartitionInfo
-	{
-	PartitionInfo() {};
+    {
+	PartitionInfo() {}
 	PartitionInfo& operator=( const PartitionAddInfo& rhs );
 	VolumeInfo v;
 	unsigned nr;
@@ -295,14 +295,14 @@ namespace storage
 	bool boot;
 	string udevPath;
 	string udevId;
-	};
+    };
 
     /**
      * Contains info about a LVM LV.
      */
     struct LvmLvInfo
-	{
-	LvmLvInfo() {};
+    {
+	LvmLvInfo() {}
 	VolumeInfo v;
 	unsigned stripe;
 	unsigned stripe_size;
@@ -311,28 +311,28 @@ namespace storage
 	string allocation;
 	string dm_table;
 	string dm_target;
-	};
+    };
 
     /**
      * Contains info about a EVMS Volume.
      */
     struct EvmsInfo
-	{
-	EvmsInfo() {};
+    {
+	EvmsInfo() {}
 	VolumeInfo v;
 	unsigned stripe;
 	unsigned stripe_size;
 	bool compatible;
 	string dm_table;
 	string dm_target;
-	};
+    };
 
     /**
      * Contains info about a software raid device.
      */
     struct MdInfo
-	{
-	MdInfo() {};
+    {
+	MdInfo() {}
 	VolumeInfo v;
 	unsigned nr;
 	unsigned type;
@@ -341,13 +341,14 @@ namespace storage
 	string sb_ver;
 	unsigned long chunk;
 	string devices;
-	};
+    };
 
     /**
-     * Contains state of a software raid device.
+     * Contains state info about a software raid device.
      */
     struct MdStateInfo
     {
+	MdStateInfo() {}
 	bool active;
 	bool degraded;
     };
@@ -356,69 +357,69 @@ namespace storage
      * Contains info about a nfs volumes
      */
     struct NfsInfo
-	{
-	NfsInfo() {};
+    {
+	NfsInfo() {}
 	VolumeInfo v;
-	};
+    };
 
     /**
      * Contains info about a file based loop devices.
      */
     struct LoopInfo
-	{
-	LoopInfo() {};
+    {
+	LoopInfo() {}
 	VolumeInfo v;
 	bool reuseFile;
 	unsigned nr;
 	string file;
-	};
+    };
 
     /**
      * Contains info about a DM volume.
      */
     struct DmInfo
-	{
-	DmInfo() {};
+    {
+	DmInfo() {}
 	VolumeInfo v;
 	unsigned nr;
 	string table;
 	string target;
-	};
+    };
 
     /**
      * Contains info about a DmPart volume.
      */
     struct DmPartInfo
-	{
-	DmPartInfo() {};
+    {
+	DmPartInfo() {}
 	VolumeInfo v;
 	PartitionAddInfo p;
 	bool part;
 	string table;
 	string target;
-	};
+    };
 
     /**
      * Contains info about a DMRAID volume.
      */
     struct DmraidInfo
-	{
-	DmraidInfo() {};
+    {
+	DmraidInfo() {}
 	DmPartInfo p;
-	};
+    };
 
     /**
      * Contains info about a DM volume.
      */
     struct ContVolInfo
-	{
+    {
 	ContVolInfo() {numeric=false; nr=0; type=CUNKNOWN;};
 	CType type;
 	string cname;
 	string vname;
 	bool numeric;
 	unsigned nr;
-	};
+    };
 
     /**
      * Contains info about a partition slot.
@@ -1813,7 +1814,7 @@ namespace storage
 	 * @param info record that gets filled with raid special data
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getMdState(const string& name, MdStateInfo& info) = 0;
+	virtual int getMdStateInfo(const string& name, MdStateInfo& info) = 0;
 
 	/**
 	 * Compute the size of a raid device.

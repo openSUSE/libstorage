@@ -435,7 +435,7 @@ class Storage : public storage::StorageInterface
 	int changeMdChunk( const string& name, unsigned long chunk );
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
-	int getMdState(const string& name, MdStateInfo& info);
+	int getMdStateInfo(const string& name, MdStateInfo& info);
 	int computeMdSize(MdType md_type, list<string> devices,
 			  unsigned long long& sizeK);
 

@@ -3652,7 +3652,7 @@ int Storage::checkMd( const string& name )
     }
 
 
-int Storage::getMdState(const string& name, MdStateInfo& info)
+int Storage::getMdStateInfo(const string& name, MdStateInfo& info)
 {
     int ret = 0;
     assertInit();
