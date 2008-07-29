@@ -2226,11 +2226,6 @@ namespace storage
 	 * @param precision number of fraction digits in output
 	 * @param omit_zeroes if true omit trailing zeroes for exact values
 	 * @return formatted string
-	 *
-	 * @example byteToHumanString(128, true, 2, true) -> "128 B"
-	 * @example byteToHumanString(4096, true, 2, true) -> "4 kB"
-	 * @example byteToHumanString(4096, true, 2, false) -> "4.00 kB"
-	 * @example byteToHumanString(1024*1024, true, 2, true) -> "1 MB"
 	 */
 	virtual string byteToHumanString(unsigned long long size, bool classic, int precision,
 					 bool omit_zeroes) const = 0;
@@ -2242,10 +2237,6 @@ namespace storage
 	 * @param classic use classic locale
 	 * @param size size in bytes
 	 * @return true on successful conversion
-	 *
-	 * @example humanStringToByte("4kB", true, size) -> true and size = 4*1024
-	 * @example humanStringToByte("4 MB", true, size) -> true and size = 4*1024*1024
-	 * @example humanStringToByte("0.5 GB", true, size) -> true and size = 512*1024*1024
 	 */
 	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long&
 				       size) const = 0;
