@@ -9,5 +9,12 @@
 
 #define PVCREATEBIN "/sbin/pvcreate"
 
+#define LVCREATEBIN "/sbin/lvcreate"
+#define LVREMOVEBIN "/sbin/lvremove"
+
+#define VGCREATEBIN "/sbin/vgcreate"
+#define VGREMOVEBIN "/sbin/vgremove"
+#define VGDISPLAYBIN "/sbin/vgdisplay"
+
 
 #endif

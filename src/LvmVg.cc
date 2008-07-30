@@ -497,7 +497,7 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 void LvmVg::getVgData( const string& name, bool exists )
     {
     y2milestone( "name:%s", name.c_str() );
-    SystemCmd c( "/sbin/vgdisplay --units k -v " + name );
+    SystemCmd c(VGDISPLAYBIN " --units k -v " + name);
     unsigned cnt = c.numLines();
     unsigned i = 0;
     num_lv = 0;
@@ -960,7 +960,7 @@ void LvmVg::getVgs( list<string>& l )
     l.clear();
     string vgname;
     string::size_type pos;
-    SystemCmd c( "vgdisplay -s" );
+    SystemCmd c(VGDISPLAYBIN " -s");
     if( !active && c.numLines()>0 )
 	active = true;
     for( unsigned i=0; i<c.numLines(); ++i )
@@ -1009,7 +1009,7 @@ LvmVg::doCreateVg()
 		SystemCmd c( "find " + ddir + " -type l | xargs -r rm" );
 		rmdir( ddir.c_str() );
 		}
-	    string cmd = "vgcreate " + instSysString() + metaString() + 
+	    string cmd = VGCREATEBIN " " + instSysString() + metaString() + 
 	                 "-s " + decString(pe_size) + "k " + name() + " " + devices;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
@@ -1049,7 +1049,7 @@ LvmVg::doRemoveVg()
 	    getStorage()->showInfoCb( removeVgText(true) );
 	    }
 	checkConsistency();
-	string cmd = "vgremove " + name();
+	string cmd = VGREMOVEBIN " " + name();
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1176,7 +1176,7 @@ LvmVg::doCreate( Volume* v )
 	    getStorage()->showInfoCb( l->createText(true) );
 	    }
 	checkConsistency();
-	string cmd = "lvcreate " + instSysString() + " -l " + decString(l->getLe());
+	string cmd = LVCREATEBIN " " + instSysString() + " -l " + decString(l->getLe());
 	if( l->stripes()>1 )
 	    {
 	    cmd += " -i " + decString(l->stripes());
@@ -1224,7 +1224,7 @@ int LvmVg::doRemove( Volume* v )
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "lvremove -f " + instSysString() + " " + l->device();
+	    string cmd = LVREMOVEBIN " -f " + instSysString() + " " + l->device();
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
