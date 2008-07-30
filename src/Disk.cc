@@ -20,9 +20,7 @@
 #include "y2storage/AsciiFile.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
-
-#define PARTEDBIN "/usr/sbin/parted"
-#define PARTEDCMD PARTEDBIN " -s "  // blank at end !!
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;

@@ -13,6 +13,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/Regex.h"
 #include "y2storage/Container.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace storage;
 using namespace std;
@@ -46,7 +47,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
 	}
-    SystemCmd c( "mdadm --detail " + quote(device()) );
+    SystemCmd c(MDADMBIN " --detail " + quote(device()));
     c.select( "UUID : " );
     string::size_type pos;
     if( c.retcode()==0 && c.numLines(true)>0 )
@@ -59,11 +60,14 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     c.select( "Version : " );
     if( c.retcode()==0 && c.numLines(true)>0 )
 	sb_ver = extractNthWord( 2, *c.getLine(0,true) );
-    y2mil( "line:\"" << *c.getLine(0,true) << "\"" );
-    y2mil( "sb_ver:\"" << sb_ver << "\"" );
-    y2mil( "word0:\"" << extractNthWord( 0, *c.getLine(0,true)) << "\"" );
-    y2mil( "word1:\"" << extractNthWord( 1, *c.getLine(0,true)) << "\"" );
-    y2mil( "word2:\"" << extractNthWord( 2, *c.getLine(0,true)) << "\"" );
+    if (c.retcode()==0 && c.numLines(true)>0 )
+    {
+	y2mil( "line:\"" << *c.getLine(0,true) << "\"" );
+	y2mil( "sb_ver:\"" << sb_ver << "\"" );
+	y2mil( "word0:\"" << extractNthWord( 0, *c.getLine(0,true)) << "\"" );
+	y2mil( "word1:\"" << extractNthWord( 1, *c.getLine(0,true)) << "\"" );
+	y2mil( "word2:\"" << extractNthWord( 2, *c.getLine(0,true)) << "\"" );
+    }
     string tmp;
     string line = line1;
     if( (pos=line.find( ':' ))!=string::npos )
@@ -250,7 +254,7 @@ Md::checkDevices()
 void
 Md::getState(MdStateInfo& info) const
 {
-    SystemCmd c("mdadm --detail " + quote(device()));
+    SystemCmd c(MDADMBIN " --detail " + quote(device()));
 
     c.select("State : ");
     if( c.retcode()==0 && c.numLines(true)>0 )
@@ -310,7 +314,7 @@ void Md::changeDeviceName( const string& old, const string& nw )
 string Md::createCmd() const
     {
     string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
-    cmd += "modprobe " + pName() + "; mdadm --create " + quote(device()) +
+    cmd += "modprobe " + pName() + "; " MDADMBIN " --create " + quote(device()) +
 	   " --run --level=" + pName() + " -e 1.0";
     if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
         pName() == "raid10")

@@ -58,7 +58,8 @@ liby2storage_la_SOURCES =			\
 	StorageTypes.cc  StorageTypes.h	     \
 	FilterIterator.h ListListIterator.h  \
 	DerefIterator.h  IterPair.h          \
-	Region.h         StorageTmpl.h
+	Region.h         StorageTmpl.h		\
+	StorageDefines.h
 
 liby2storage_la_LDFLAGS = -version-info 2:0
 liby2storage_la_LIBADD = -lblocxx

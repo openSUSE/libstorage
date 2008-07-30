@@ -10,6 +10,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -1335,15 +1336,15 @@ int LvmVg::doCreatePv( const string& device )
     int ret = 0;
     y2milestone( "dev:%s", device.c_str() );
     SystemCmd c;
-    string cmd = "mdadm --zero-superblock " + device;
+    string cmd = MDADMBIN " --zero-superblock " + quote(device);
     c.execute( cmd );
     getStorage()->removeDmTableTo( device );
     if( getStorage()->isDisk(device) )
 	{
-	cmd = "parted " + device + " mklabel msdos";
+	cmd = PARTEDCMD + quote(device) + " mklabel msdos";
 	c.execute( cmd );
 	}
-    cmd = "echo y | pvcreate -ff " + metaString() + device;
+    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + device;
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{
