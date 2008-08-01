@@ -418,6 +418,13 @@ unsigned AsciiFile::differentLine( const AsciiFile& File_Cv ) const
     }
 
 
+void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
+{
+    if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
+	Text_Cr.erase(Text_Cr.length() - 1);
+}
+
+
 #if 0
 void AsciiFile::put( const Regex& Pat_Cv, const String& Line_Cv )
     {

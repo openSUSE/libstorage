@@ -272,20 +272,6 @@ makeMap( const list<string>& l, const string& delim, const string& removeSur )
     }
 
 
-void putNthWord(int Num_iv, string Word_Cv, string& Line_Cr)
-{
-  string Last_Ci = extractNthWord(Num_iv, Line_Cr, true);
-  int Len_ii = Last_Ci.find_first_of(app_ws);
-  Line_Cr.replace(Line_Cr.length() - Last_Ci.length(), Len_ii, Word_Cv);
-}
-
-
-void removeLastIf (string& Text_Cr, char Char_cv)
-{
-  if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
-    Text_Cr.erase(Text_Cr.length() - 1);
-}
-
 string normalizeDevice( const string& dev )
     {
     string ret( dev );

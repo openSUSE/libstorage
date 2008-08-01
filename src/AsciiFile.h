@@ -57,6 +57,7 @@ class AsciiFile
     protected:
 	bool appendFile( const string&  Name_Cv, std::vector<string>& Lines_Cr );
 	bool appendFile( AsciiFile& File_Cv, std::vector<string>& Lines_Cr );
+	void removeLastIf(string& Text_Cr, char Char_cv) const;
 
 	bool BackupCreated_b;
 	string BackupExtension_C;
