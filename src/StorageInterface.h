@@ -56,6 +56,8 @@ using std::list;
  *
  * The support for multiple read-only locks is experimental.
  *
+ * Locking may also fail for other reasons, e.g. limited permissions.
+ *
  * \section Example
  *
  * Here is a simple example to demonstrate the usage of libstorage:

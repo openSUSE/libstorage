@@ -9,6 +9,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <stdlib.h>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/Lock.h"
@@ -31,16 +32,19 @@ namespace storage
     Lock::Lock(bool readonly)
 	: fd(-1)
     {
+	if (getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
+	    return;
+
 	y2mil("getting " << (readonly ? "read-only" : "read-write") << " lock");
 
-	if (mkdir("/var/lock/libstorage", 0622) < 0)
+	if (mkdir("/var/lock/libstorage", 0755) < 0)
 	{
-	    // Creating directory failed. Not fatal (should already exist).
+	    // Creating directory failed. Not fatal (it should already exist).
 	    y2deb("creating directory for lock-file failed: " << strerror(errno));
 	}
 
 	fd = open("/var/lock/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT,
-		  S_IRUSR | S_IWUSR);
+		  S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd < 0)
 	{
 	    // Opening lock-file failed.
@@ -79,11 +83,14 @@ namespace storage
 
     Lock::~Lock() throw()
     {
+	if (getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
+	    return;
+
 	y2mil("releasing lock");
 	close(fd);
 
-	// Do not bother deleting lock-file. This is difficult if there are
-	// several read-only locks.
+	// Do not bother deleting lock-file. Likelihood of race conditions is
+	// to high.
     }
 
 }
