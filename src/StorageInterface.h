@@ -42,6 +42,18 @@ using std::list;
  * queried with \link storage::StorageInterface::isCacheChanges()
  * isCacheChanges()\endlink.
  *
+ * \section Locking
+ *
+ * During initialisation libstorage installs a global lock so that several
+ * programs trying to use libstorage at the same time do not interfere. This
+ * lock is either read-only or read-write depending on the readonly parameter
+ * used in \link storage::StorageInterface::createStorageInterface()
+ * createStorageInterface() \endlink.
+ *
+ * Several processes may hold a read-lock, but only one process may hold a
+ * read-write lock. An read-write lock excludes all other locks, both
+ * read-only and read-write.
+ *
  * \section Example
  *
  * Here is a simple example to demonstrate the usage of libstorage:
