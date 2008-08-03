@@ -33,8 +33,13 @@ namespace storage
     {
 	y2mil("getting " << (readonly ? "read-only" : "read-write") << " lock");
 
-	// TODO filename
-	fd = open("/tmp/lock-test", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT,
+	if (mkdir("/var/lock/libstorage", 0622) < 0)
+	{
+	    // Creating directory failed. Not fatal (should already exist).
+	    y2deb("creating directory for lock-file failed: " << strerror(errno));
+	}
+
+	fd = open("/var/lock/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT,
 		  S_IRUSR | S_IWUSR);
 	if (fd < 0)
 	{
@@ -76,6 +81,9 @@ namespace storage
     {
 	y2mil("releasing lock");
 	close(fd);
+
+	// Do not bother deleting lock-file. This is difficult if there are
+	// several read-only locks.
     }
 
 }
