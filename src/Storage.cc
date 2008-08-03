@@ -73,9 +73,10 @@ Storage::initDefaultLogger ()
 }
 
 
-Storage::Storage( bool ronly, bool tmode, bool autodetec ) :
-    readonly(ronly), testmode(tmode), initialized(false), autodetect(autodetec)
-    {
+Storage::Storage( bool ronly, bool tmode, bool autodetec )
+    : lock(ronly), readonly(ronly), testmode(tmode), initialized(false),
+      autodetect(autodetec)
+{
     y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
                  ronly, testmode, autodetect );
     y2milestone( "package string \"%s\"", PACKAGE_STRING );
@@ -1044,6 +1045,27 @@ namespace storage
     StorageInterface* createStorageInterface (bool ronly, bool testmode, bool autodetect)
     {
 	return new Storage (ronly, testmode, autodetect);
+    }
+
+    StorageInterface* createStorageInterfacePid (bool ronly, bool testmode, bool autodetect,
+						 pid_t& locker_pid)
+    {
+	try
+	{
+	    return new Storage (ronly, testmode, autodetect);
+	}
+	catch (LockException& e)
+	{
+	    locker_pid = e.GetLockerPid();
+	    y2mil("returning NULL");
+	    return NULL;
+	}
+	catch (...)
+	{
+	    locker_pid = 0;
+	    y2mil("returning NULL");
+	    return NULL;
+	}
     }
 
     void destroyStorageInterface (StorageInterface* p)

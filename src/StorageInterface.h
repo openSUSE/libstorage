@@ -2251,15 +2251,30 @@ namespace storage
 
     /**
      * Factory for creating a concrete StorageInterface object.
+     *
+     * Throws an exception when locking fails.
      */
     StorageInterface* createDefaultStorageInterface ();
 
 
     /**
      * Factory for creating a concrete StorageInterface object.
+     *
+     * Throws an exception when locking fails.
      */
     StorageInterface* createStorageInterface (bool readonly, bool testmode,
 					      bool autodetect);
+
+
+    /**
+     * Factory for creating a concrete StorageInterface object.
+     *
+     * Returns NULL if locking failed. In that case locker_pid is set to the
+     * pid of one process holding a conflicting lock. If the pid cannot be
+     * determined it is set to 0. The lock holder may run on another system.
+     */
+    StorageInterface* createStorageInterfacePid (bool readonly, bool testmode,
+						 bool autodetect, int& locker_pid);
 
 
     /**

@@ -9,7 +9,7 @@ LDADD = ../src/liby2storage.la
 
 AM_CXXFLAGS =
 
-noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm TestMd TestLoop
+noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm TestMd TestLoop TestLock
 
 TestDisk_SOURCES = TestDisk.cc
 
@@ -24,6 +24,8 @@ TestLvm_SOURCES = TestLvm.cc
 TestMd_SOURCES = TestMd.cc
 
 TestLoop_SOURCES = TestLoop.cc
+
+TestLock_SOURCES = TestLock.cc
 
 exampledir = $(docdir)/examples/libstorage
 

@@ -29,6 +29,7 @@
 #include "y2storage/DerefIterator.h"
 #include "y2storage/ListListIterator.h"
 #include "y2storage/IterPair.h"
+#include "y2storage/Lock.h"
 
 namespace storage
 {
@@ -1720,6 +1721,7 @@ class Storage : public storage::StorageInterface
 			 bool& resize_ok );
 
 	// protected internal member variables
+	Lock lock;
 	bool readonly;
 	bool testmode;
 	bool inst_sys;
