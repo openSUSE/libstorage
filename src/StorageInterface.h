@@ -54,6 +54,8 @@ using std::list;
  * read-write lock. An read-write lock excludes all other locks, both
  * read-only and read-write.
  *
+ * The support for multiple read-only locks is experimental.
+ *
  * \section Example
  *
  * Here is a simple example to demonstrate the usage of libstorage:
