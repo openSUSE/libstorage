@@ -44,6 +44,7 @@ namespace storage
     private:
 
 	int fd;
+	bool disabled;
 
     };
 }

@@ -30,9 +30,9 @@ namespace storage
 
 
     Lock::Lock(bool readonly)
-	: fd(-1)
+	: fd(-1), disabled(getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
     {
-	if (getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
+	if (disabled)
 	    return;
 
 	y2mil("getting " << (readonly ? "read-only" : "read-write") << " lock");
@@ -83,7 +83,7 @@ namespace storage
 
     Lock::~Lock() throw()
     {
-	if (getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
+	if (disabled)
 	    return;
 
 	y2mil("releasing lock");
