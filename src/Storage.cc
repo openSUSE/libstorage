@@ -1058,13 +1058,6 @@ namespace storage
 	catch (LockException& e)
 	{
 	    locker_pid = e.GetLockerPid();
-	    y2mil("returning NULL");
-	    return NULL;
-	}
-	catch (...)
-	{
-	    locker_pid = 0;
-	    y2mil("returning NULL");
 	    return NULL;
 	}
     }
