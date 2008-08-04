@@ -182,7 +182,7 @@ Loop::createFile()
 	    y2mil( "pa:" << pa );
 	    createPath( pa );
 	    }
-	string cmd = "dd if=/dev/zero of=" + lfileRealPath();
+	string cmd = "dd if=/dev/zero of=" + quote(lfileRealPath());
 	cmd += " bs=1k count=" + decString( sizeK() );
 	SystemCmd c( cmd );
 	ret = c.retcode()==0;

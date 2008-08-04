@@ -11,6 +11,7 @@
 #include "y2storage/ProcPart.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -77,7 +78,7 @@ DmCo::detectEncryption( const string& dev ) const
     if( dev.substr( 0, 12 ) == "/dev/mapper/")
     {
 	string tdev = dev.substr (12);
-	SystemCmd c("cryptsetup status " + quote(tdev));
+	SystemCmd c(CRYPTSETUPBIN " status " + quote(tdev));
 
 	string cipher, keysize;
 	for( unsigned int i = 0; i < c.numLines(); i++)
@@ -113,7 +114,7 @@ DmCo::getDmData( ProcPart& ppart )
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
     Storage::ConstDmraidPair dmr = getStorage()->dmrPair();
     y2milestone( "begin" );
-    SystemCmd c( "dmsetup ls | grep \"(.*)\"" );
+    SystemCmd c(DMSETUPBIN " ls | grep \"(.*)\"" );
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	string line = *c.getLine(i);
@@ -318,7 +319,7 @@ DmCo::doRemove( Volume* v )
 	ret = m->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "dmsetup remove " + m->getTableName();
+	    string cmd = DMSETUPBIN " remove " + quote(m->getTableName());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = DM_REMOVE_FAILED;

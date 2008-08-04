@@ -37,6 +37,7 @@
 #include "y2storage/ProcPart.h"
 #include "y2storage/EtcFstab.h"
 #include "y2storage/AsciiFile.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -286,7 +287,7 @@ void Storage::detectObjects()
 	SystemCmd rm;
 	for( unsigned i=0; i<c.numLines(); i++ )
 	    {
-	    rm.execute( "mdadm --stop /dev/" + extractNthWord(0, *c.getLine(i)) );
+	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, *c.getLine(i))));
 	    }
 	}
     delete ppart;
@@ -421,14 +422,14 @@ Storage::detectDisks( ProcPart& ppart )
 void
 Storage::detectMultipath()
     {
-    bool acc_ok = access( "/sbin/multipath", X_OK )==0;
+    bool acc_ok = access(MULTIPATHBIN, X_OK) == 0;
     y2mil( "detectMultipath acc_ok:" << acc_ok );
     if( acc_ok )
 	{
 	list<string> mp_list;
 	string line;
 	unsigned i=0;
-	SystemCmd c( "/sbin/multipath -d -v 2+ -ll" );
+	SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
 	if( i<c.numLines() )
 	    line = *c.getLine(i);
 	while( i<c.numLines() )
@@ -855,7 +856,7 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
     {
     y2milestone( "detectFsData begin" );
     SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null" );
-    SystemCmd Losetup( "/sbin/losetup -a" );
+    SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
 	if( i->getUsedByType()==UB_NONE )
@@ -4343,9 +4344,9 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	if( !todo.empty() )
 	    {
 	    SystemCmd c;
-	    c.execute( "dmsetup ls" );
-	    c.execute( "dmsetup table" );
-	    c.execute( "dmsetup info" );
+	    c.execute(DMSETUPBIN " ls");
+	    c.execute(DMSETUPBIN " table");
+	    c.execute(DMSETUPBIN " info");
 	    logProcData();
 	    }
 	}
@@ -4437,7 +4438,7 @@ Storage::evmsActivateDevices()
 	    }
 	tfile.close();
 	c.execute( "cat " + fname );
-	c.execute("dmsetup create " + quote(tblname) + " <" + fname);
+	c.execute(DMSETUPBIN " create " + quote(tblname) + " <" + fname);
 	unlink( fname.c_str() );
 	}
     EvmsCo::activateDevices();
@@ -5278,7 +5279,7 @@ void Storage::removeDmTableTo( const Volume& vol )
 	    removeDmMapsTo( vol.getContainer()->device() );
 	    if( vol.getContainer()->majorNr()>0 )
 		{
-		string cmd = "dmsetup table | grep -w ";
+		string cmd = DMSETUPBIN " table | grep -w ";
 		cmd += decString(vol.getContainer()->majorNr()) + ":" +
 		       decString(vol.getContainer()->minorNr());
 		cmd += " | sed s/:.*// | uniq";
@@ -5304,15 +5305,15 @@ void Storage::removeDmTableTo( const string& device )
     
 bool Storage::removeDmTable( const string& table )
     {
-    SystemCmd c("dmsetup table " + quote(table));
+    SystemCmd c(DMSETUPBIN " table " + quote(table));
     bool ret = false;
     if( c.retcode()==0 )
 	{
-	c.execute("dmsetup info " + quote(table));
-	c.execute("dmsetup remove " + quote(table));
+	c.execute(DMSETUPBIN " info " + quote(table));
+	c.execute(DMSETUPBIN " remove " + quote(table));
 	waitForDevice();
 	ret = c.retcode()==0;
-	c.execute("dmsetup table | grep " + quote(table));
+	c.execute(DMSETUPBIN " table | grep " + quote(table));
 	logProcData();
 	}
     y2milestone( "ret:%d", ret );
@@ -6151,7 +6152,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    }
 		if( ret && vol->getFs()==NTFS )
 		    {
-		    SystemCmd c( "ntfsresize -f -i " + device );
+		    SystemCmd c( "ntfsresize -f -i " + quote(device));
 		    string fstr = " might resize at ";
 		    string::size_type pos;
 		    if( c.retcode()==0 &&

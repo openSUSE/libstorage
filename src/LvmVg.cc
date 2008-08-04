@@ -497,7 +497,7 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 void LvmVg::getVgData( const string& name, bool exists )
     {
     y2milestone( "name:%s", name.c_str() );
-    SystemCmd c(VGDISPLAYBIN " --units k -v " + name);
+    SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
     unsigned cnt = c.numLines();
     unsigned i = 0;
     num_lv = 0;
@@ -1010,7 +1010,7 @@ LvmVg::doCreateVg()
 		rmdir( ddir.c_str() );
 		}
 	    string cmd = VGCREATEBIN " " + instSysString() + metaString() + 
-	                 "-s " + decString(pe_size) + "k " + name() + " " + devices;
+		"-s " + decString(pe_size) + "k " + quote(name()) + " " + quote(devices);
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1088,7 +1088,7 @@ LvmVg::doExtendVg()
 	ret = doCreatePv( *d );
 	if( ret==0 )
 	    {
-	    string cmd = "vgextend " + instSysString() + name() + " " + *d;
+	    string cmd = VGEXTENDBIN " " + instSysString() + quote(name()) + " " + quote(*d);
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1137,7 +1137,7 @@ LvmVg::doReduceVg()
 	    {
 	    getStorage()->showInfoCb( reduceVgText(true,*d) );
 	    }
-	string cmd = "vgreduce " + instSysString() + name() + " " + *d;
+	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(*d);
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1183,8 +1183,8 @@ LvmVg::doCreate( Volume* v )
 	    if( l->stripeSize()>0 )
 		cmd += " -I " + decString(l->stripeSize());
 	    }
-	cmd += " -n " + l->name();
-	cmd += " " + name();
+	cmd += " -n " + quote(l->name());
+	cmd += " " + quote(name());
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1224,7 +1224,7 @@ int LvmVg::doRemove( Volume* v )
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = LVREMOVEBIN " -f " + instSysString() + " " + l->device();
+	    string cmd = LVREMOVEBIN " -f " + instSysString() + " " + quote(l->device());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1280,8 +1280,8 @@ int LvmVg::doResize( Volume* v )
 	    ret = v->resizeFs();
 	if( ret==0 && old_le>new_le )
 	    {
-	    string cmd = "lvreduce -f " + instSysString() + 
-	                 " -l -" + decString(old_le-new_le) + " " + l->device();
+	    string cmd = LVREDUCEBIN " -f " + instSysString() +
+		" -l -" + decString(old_le-new_le) + " " + quote(l->device());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1291,8 +1291,8 @@ int LvmVg::doResize( Volume* v )
 	    }
 	if( ret==0 && old_le<new_le )
 	    {
-	    string cmd = "lvextend " + instSysString() + 
-	                 " -l +" + decString(new_le-old_le) + " " + l->device();
+	    string cmd = LVEXTENDBIN " " + instSysString() +
+		" -l +" + decString(new_le-old_le) + " " + quote(l->device());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{

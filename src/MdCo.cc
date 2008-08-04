@@ -11,6 +11,7 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcRaidtab.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -571,14 +572,14 @@ void MdCo::activate( bool val, const string& tmpDir )
 	    string mdconf = tmpDir + "/mdadm.conf";
 	    string cmd = "echo 1 > /sys/module/md_mod/parameters/start_ro";
 	    c.execute( cmd );
-	    cmd = "mdadm --examine --scan --config=partitions >" + mdconf;
+	    cmd = MDADMBIN " --examine --scan --config=partitions >" + mdconf;
 	    c.execute( cmd );
-	    cmd = "mdadm --assemble --scan --config=" + mdconf;
+	    cmd = MDADMBIN " --assemble --scan --config=" + mdconf;
 	    c.execute( cmd );
 	    }
 	else
 	    {
-	    c.execute( "mdadm --stop --scan" );
+	    c.execute(MDADMBIN " --stop --scan");
 	    }
 	active = val;
 	}
@@ -629,9 +630,9 @@ MdCo::doCreate( Volume* v )
 		{
 		string cmd;
 		SystemCmd c;
-		cmd = "dd if=/dev/zero of=" + m->device() + " bs=1k count=200";
+		cmd = "dd if=/dev/zero of=" + quote(m->device()) + " bs=1k count=200";
 		c.execute( cmd );
-		cmd = "dd if=/dev/zero of=" + m->device() +
+		cmd = "dd if=/dev/zero of=" + quote(m->device()) +
 		      " seek=" + decString(m->sizeK()-10) +
 		      " bs=1k count=10";
 		c.execute( cmd );
@@ -661,7 +662,7 @@ MdCo::doRemove( Volume* v )
 	ret = m->prepareRemove();
 	if( ret==0 )
 	    {
-	    string cmd = "mdadm --stop " + m->device();
+	    string cmd = MDADMBIN " --stop " + quote(m->device());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -676,7 +677,7 @@ MdCo::doRemove( Volume* v )
 	    m->getDevs( d );
 	    for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
 		{
-		c.execute( "mdadm --zero-superblock " + *i );
+		c.execute(MDADMBIN " --zero-superblock " + quote(*i));
 		}
 	    }
 	if( ret==0 )

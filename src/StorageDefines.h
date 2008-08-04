@@ -11,10 +11,20 @@
 
 #define LVCREATEBIN "/sbin/lvcreate"
 #define LVREMOVEBIN "/sbin/lvremove"
+#define LVEXTENDBIN "/sbin/lvextend"
+#define LVREDUCEBIN "/sbin/lvreduce"
 
 #define VGCREATEBIN "/sbin/vgcreate"
 #define VGREMOVEBIN "/sbin/vgremove"
+#define VGEXTENDBIN "/sbin/vgextend"
+#define VGREDUCEBIN "/sbin/vgreduce"
 #define VGDISPLAYBIN "/sbin/vgdisplay"
+
+#define CRYPTSETUPBIN "/sbin/cryptsetup"
+#define LOSETUPBIN "/sbin/losetup"
+#define MULTIPATHBIN "/sbin/multipath"
+#define DMSETUPBIN "/sbin/dmsetup"
+#define KPARTXBIN "/sbin/kpartx"
 
 
 #endif

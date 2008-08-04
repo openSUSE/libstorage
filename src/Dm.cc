@@ -10,6 +10,7 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Regex.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace storage;
 using namespace std;
@@ -54,7 +55,7 @@ Dm::getTableInfo()
     {
     if( dm_major==0 )
 	getDmMajor();
-    SystemCmd c("dmsetup table " + quote(tname));
+    SystemCmd c(DMSETUPBIN " table " + quote(tname));
     inactiv = c.retcode()!=0;
     y2milestone( "table %s retcode:%d numLines:%u inactive:%d", 
                  tname.c_str(), c.retcode(), c.numLines(), inactiv );
@@ -196,8 +197,8 @@ string Dm::getDevice( const string& majmin )
 		ret = Loop::loopDeviceName(mi);
 	    if( ret.empty() && mj==dmMajor() && ls.size()>=2 )
 		{
-		c.execute( "dmsetup info -c --noheadings -j " + *ls.begin() +
-		           " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
+		c.execute(DMSETUPBIN " info -c --noheadings -j " + *ls.begin() +
+			  " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
 		if( c.retcode()==0 && c.numLines()>0 )
 		    {
 		    string tmp = "/dev/"+*c.getLine(0);
@@ -207,7 +208,7 @@ string Dm::getDevice( const string& majmin )
 			}
 		    else
 			{
-			c.execute("dmsetup table " + quote(*c.getLine(0)));
+			c.execute(DMSETUPBIN " table " + quote(*c.getLine(0)));
 			if( c.retcode()==0 && c.numLines()>0 )
 			    {
 			    pair = extractNthWord( 3, *c.getLine(0) );
@@ -436,7 +437,7 @@ void Dm::activate( bool val )
 	SystemCmd c;
 	if( val )
 	    {
-	    c.execute( "dmsetup version" );
+	    c.execute(DMSETUPBIN " version");
 	    if( c.retcode()!=0 )
 		{
 		c.execute(" grep \"^dm[-_]mod[ 	]\" /proc/modules" );
@@ -450,7 +451,7 @@ void Dm::activate( bool val )
 	    }
 	else
 	    {
-	    c.execute( "dmsetup remove_all" );
+	    c.execute(DMSETUPBIN " remove_all");
 	    }
 	active = val;
 	}
@@ -489,7 +490,7 @@ string Dm::dmDeviceName( unsigned long num )
 int Dm::dmNumber( const string& table )
     {
     int ret = -1;
-    SystemCmd c("dmsetup -c --noheadings info " + quote(table));
+    SystemCmd c(DMSETUPBIN " -c --noheadings info " + quote(table));
     if( c.retcode()==0 && c.numLines()>0 )
 	{
 	list<string> sl = splitString( *c.getLine(0), ":" );

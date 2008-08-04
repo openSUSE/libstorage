@@ -35,7 +35,7 @@ Dasd::~Dasd()
 bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     {
     bool ret = true;
-    string cmd_line = "/sbin/fdasd -p " + device();
+    string cmd_line = "/sbin/fdasd -p " + quote(device());
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
@@ -49,7 +49,7 @@ bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
 bool Dasd::detectPartitions( ProcPart& ppart )
     {
     bool ret = true;
-    string cmd_line = "dasdview -x " + device();
+    string cmd_line = "dasdview -x " + quote(device());
     system_stderr.erase();
     detected_label = "dasd";
     setLabelData( "dasd" );
@@ -381,7 +381,7 @@ int Dasd::doFdasd()
 	++i;
 	}
     inpfile.close();
-    string cmd_line =  "/sbin/fdasd -c " + inpname + " " + device();
+    string cmd_line = "/sbin/fdasd -c " + inpname + " " + quote(device());
     if( execCheckFailed( cmd_line ) )
 	{
 	SystemCmd cmd( "cat " + inpname );

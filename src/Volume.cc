@@ -19,6 +19,7 @@
 #include "y2storage/ProcPart.h"
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -692,7 +693,7 @@ int Volume::doFormat()
 	SystemCmd c;
 	string cmd = "/bin/dd if=";
 	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
-	cmd += " of=" + mountDevice() + " bs=1024 count=";
+	cmd += " of=" + quote(mountDevice()) + " bs=1024 count=";
 	cmd += decString(min(200ull,size_k));
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
@@ -720,7 +721,7 @@ int Volume::doFormat()
         mountDevice().find( "/dev/loop" )!=0 )
 	{
 	SystemCmd c;
-	c.execute( "mdadm --zero-superblock " + mountDevice() );
+	c.execute(MDADMBIN " --zero-superblock " + quote(mountDevice()));
 	}
     if( ret==0 )
 	{
@@ -802,7 +803,7 @@ int Volume::doFormat()
 	{
 	if (!tunefs_opt.empty())
 	    {
-	    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + mountDevice();
+	    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_TUNE2FS_FAILED;
@@ -826,7 +827,7 @@ int Volume::doFormat()
 	{
 	if (!tunefs_opt.empty())
 	    {
-	    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + mountDevice();
+	    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + quote(mountDevice());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_TUNE2FS_FAILED;
@@ -872,7 +873,7 @@ int Volume::doFormat()
 
 void Volume::updateFsData()
     {
-    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + mountDevice() );
+    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + quote(mountDevice()));
     getFsData( Blkid );
     }
 
@@ -962,7 +963,7 @@ int Volume::loUnsetup( bool force )
 	{
 	if( !loop_dev.empty() )
 	    {
-	    SystemCmd c( "losetup -d " + loop_dev );
+	    SystemCmd c(LOSETUPBIN " -d " + quote(loop_dev));
 	    if( c.retcode()!=0 )
 		ret = VOLUME_LOUNSETUP_FAILED;
 	    else
@@ -987,7 +988,7 @@ int Volume::cryptUnsetup( bool force )
 	    table.erase( 0, table.find_last_of( '/' )+1 );
 	if( !table.empty() )
 	    {
-	    SystemCmd c("cryptsetup remove " + quote(table));
+	    SystemCmd c(CRYPTSETUPBIN " remove " + quote(table));
 	    if( c.retcode()!=0 )
 		ret = VOLUME_CRYPTUNSETUP_FAILED;
 	    else
@@ -1191,7 +1192,7 @@ int Volume::resizeFs()
     int ret = 0;
     if( encryption!=ENC_NONE && !dmcrypt_dev.empty() )
 	{
-	cmd = "cryptsetup resize ";
+	cmd = CRYPTSETUPBIN " resize ";
 	cmd += dmcrypt_dev.substr(dmcrypt_dev.rfind( '/' )+1);
 	c.execute( cmd );
 	}
@@ -1460,7 +1461,7 @@ int Volume::getFreeLoop()
     int ret = 0;
     if( loop_dev.empty() )
 	{
-	SystemCmd c( "losetup -a" );
+	SystemCmd c(LOSETUPBIN " -a" );
 	ret = getFreeLoop( c );
 	}
     y2milestone( "ret:%d", ret );
@@ -1469,10 +1470,7 @@ int Volume::getFreeLoop()
 
 string Volume::getLosetupCmd( storage::EncryptType, const string& pwdfile ) const
     {
-    string cmd = "/sbin/losetup";
-    cmd += " ";
-    cmd += loop_dev;
-    cmd += " ";
+    string cmd = LOSETUPBIN " " + quote(loop_dev) + " ";
     const Loop* l = static_cast<const Loop*>(this);
     cmd += l->lfileRealPath();
     y2milestone( "cmd:%s", cmd.c_str() );
@@ -1488,7 +1486,7 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 	   " format:" << format << " pwempty:" << empty_pwd );
     if( table.find( '/' )!=string::npos )
 	table.erase( 0, table.find_last_of( '/' )+1 );
-    string cmd = "/sbin/cryptsetup -q";
+    string cmd = CRYPTSETUPBIN " -q";
 
     if( format )
     {
@@ -1667,8 +1665,8 @@ EncryptType Volume::detectEncryption()
 	    {
 	    string lfile;
 	    if( getLoopFile( lfile ))
-		c.execute( "losetup " + loop_dev + " " +
-		           cont->getStorage()->root() + lfile );
+		c.execute(LOSETUPBIN " " + quote(loop_dev) + " " +
+			  quote(cont->getStorage()->root() + lfile));
 	    }
 	string cmd = getCryptsetupCmd( try_order[pos], dmcrypt_dev, "", fname, false );
 	c.execute( "modprobe dm-crypt" );
@@ -1799,7 +1797,7 @@ int Volume::doLosetup()
 	{
 	if( loop_dev.size()>0 )
 	    {
-	    SystemCmd c( "losetup -d " + loop_dev );
+	    SystemCmd c(LOSETUPBIN " -d " + quote(loop_dev));
 	    loop_dev.erase();
 	    }
 	updateFstabOptions();

@@ -30,7 +30,7 @@ DmraidCo::~DmraidCo()
 void DmraidCo::getRaidData( const string& name )
     {
     y2milestone( "name:%s", name.c_str() );
-    SystemCmd c( "dmraid -s -c -c -c \"" + name + "\"" );
+    SystemCmd c( "dmraid -s -c -c -c " + quote(name));
     list<string>::const_iterator ci;
     list<string> sl;
     if( c.numLines()>0 )

@@ -2285,7 +2285,7 @@ int Disk::doCreate( Volume* v )
 		{
 		string cmd;
 		SystemCmd c;
-		cmd = "dd if=/dev/zero of=" + p->device() + " bs=1k count=200";
+		cmd = "dd if=/dev/zero of=" + quote(p->device()) + " bs=1k count=200";
 		c.execute( cmd );
 		unsigned long long pos = p->sizeK();
 		if( pos>200 )
@@ -2307,7 +2307,7 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( !dmp_slave && call_blockdev )
 	    {
-	    SystemCmd c( "/sbin/blockdev --rereadpt " + device() );
+	    SystemCmd c("/sbin/blockdev --rereadpt " + quote(device()));
 	    if( p->type()!=EXTENDED )
 		getStorage()->waitForDevice( p->device() );
 	    }

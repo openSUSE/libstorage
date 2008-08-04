@@ -13,6 +13,7 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 #include "y2storage/EtcFstab.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace storage;
 using namespace std;
@@ -53,7 +54,7 @@ LoopCo::getLoopData( ProcPart& ppart )
     fstab->getFileBasedLoops( getStorage()->root(), l );
     if( !l.empty() )
 	{
-	SystemCmd c( "losetup -a" );
+	SystemCmd c(LOSETUPBIN " -a");
 	for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    y2mil( "i:" << *i );

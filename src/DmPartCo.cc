@@ -12,6 +12,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -232,7 +233,7 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void 
 DmPartCo::init( ProcPart& ppart )
     {
-    SystemCmd c("dmsetup table " + quote(nm));
+    SystemCmd c(DMSETUPBIN " table " + quote(nm));
     if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0] ))
 	{
 	mnr = Dm::dmNumber( nm );
@@ -249,7 +250,7 @@ DmPartCo::init( ProcPart& ppart )
 	    {
 	    string pat = numToName(1);
 	    pat.erase( pat.length()-1, 1 );
-	    c.execute( "dmsetup ls | grep -w ^" + pat + "[0-9]\\\\+" );
+	    c.execute(DMSETUPBIN " ls | grep -w ^" + pat + "[0-9]\\\\+" );
 	    if( c.numLines()==0 )
 		activate_part(true);
 	    }
@@ -499,11 +500,11 @@ void DmPartCo::activate_part( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
-	    c.execute( "kpartx -a -p _part \"" + dev + "\"" );
+	    c.execute(KPARTXBIN " -a -p _part " + quote(dev));
 	    }
 	else
 	    {
-	    c.execute( "kpartx -d -p _part \"" + dev + "\"" );
+	    c.execute(KPARTXBIN " -d -p _part " + quote(dev));
 	    }
 	active = val;
 	}
