@@ -787,7 +787,7 @@ int Volume::doFormat()
 		{
 		cmd += params + " ";
 		}
-	    cmd += mountDevice();
+	    cmd += quote(mountDevice());
 	    SystemCmd c;
 	    c.setOutputProcessor( p );
 	    c.execute( cmd );
@@ -817,7 +817,7 @@ int Volume::doFormat()
 		cmd += "journal_data_writeback ";
 	    else
 		cmd += "journal_data ";
-	    cmd += mountDevice();
+	    cmd += quote(mountDevice());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_TUNE2FS_FAILED;
@@ -931,21 +931,21 @@ int Volume::umount( const string& mp )
 	d = dmcrypt_dev;
     else if( loop_active )
 	d = loop_dev;
-    string cmdline = ((detected_fs != SWAP)?"umount ":"swapoff ") + d;
+    string cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(d);
     int ret = cmd.execute( cmdline );
     if( ret != 0 && mountDevice()!=dev )
 	{
-	cmdline = ((detected_fs != SWAP)?"umount ":"swapoff ") + dev;
+	cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(dev);
 	ret = cmd.execute( cmdline );
 	}
     if( ret!=0 && !mp.empty() && mp!="swap" )
 	{
-	cmdline = "umount " + mp;
+	cmdline = UMOUNTBIN " " + quote(mp);
 	ret = cmd.execute( cmdline );
 	}
     if( ret!=0 && !orig_mp.empty() && orig_mp!="swap" )
 	{
-	cmdline = "umount " + orig_mp;
+	cmdline = UMOUNTBIN " " + quote(orig_mp);
 	ret = cmd.execute( cmdline );
 	}
     if( ret != 0 )
@@ -1701,10 +1701,10 @@ EncryptType Volume::detectEncryption()
 		if( ok )
 		    {
 		    c.execute( "modprobe " + fs_names[detected_fs] );
-		    c.execute( "mount -oro -t " + fsTypeString(detected_fs) + " " +
-			       use_dev + " " + mpname );
+		    c.execute(MOUNTBIN " -oro -t " + fsTypeString(detected_fs) + " " +
+			      quote(use_dev) + " " + quote(mpname));
 		    ok = c.retcode()==0;
-		    c.execute( "umount " + mpname );
+		    c.execute(UMOUNTBIN " " + quote(mpname));
 		    }
 		if( !ok )
 		    {
@@ -2120,7 +2120,7 @@ int Volume::mount( const string& m, bool ro )
 	    cmdline = "modprobe nls_iso8859-1";
 	    cmd.execute( cmdline );
 	    }
-	cmdline = "mount ";
+	cmdline = MOUNTBIN " ";
 	if( ro )
 	    cmdline += "-r ";
 	const char * ign_opt[] = { "defaults", "" };
@@ -2145,11 +2145,11 @@ int Volume::mount( const string& m, bool ro )
 	    opts += mergeString( l, "," );
 	    opts += " ";
 	    }
-	cmdline += "-t " + fsn + opts + mountDevice() + " " + lmount;
+	cmdline += "-t " + fsn + opts + quote(mountDevice()) + " " + quote(lmount);
 	}
     else
 	{
-	cmdline = "swapon " + mountDevice();
+	cmdline = SWAPONBIN " " + quote(mountDevice());
 	if( cont->getStorage()->instsys() )
 	    {
 	    ProcMounts mountData( cont->getStorage() );
@@ -2527,7 +2527,7 @@ int Volume::doFstabUpdate()
 	    }
 	else
 	    {
-	    c.execute( (string)"mount -oremount " + mp );
+	    c.execute(MOUNTBIN " -oremount " + quote(mp));
 	    y2mil( "remount remount:" << c.retcode() );
 	    if( c.retcode()!=0 )
 		ret = VOLUME_REMOUNT_FAILED;

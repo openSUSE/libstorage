@@ -27,5 +27,10 @@
 #define KPARTXBIN "/sbin/kpartx"
 #define DMRAIDBIN "/sbin/dmraid"
 
+#define MOUNTBIN "/bin/mount"
+#define UMOUNTBIN "/bin/umount"
+#define SWAPONBIN "/sbin/swapon"
+#define SWAPOFFBIN "/sbin/swapoff"
+
 
 #endif
