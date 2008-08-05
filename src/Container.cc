@@ -314,9 +314,9 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
 
 void
 Container::logDifference( const Container& c ) const
-    {
-    y2milestone( "%s", getDiffString(c).c_str() );
-    }
+{
+    y2mil(getDiffString(c));
+}
     
 string
 Container::getDiffString( const Container& c ) const
@@ -379,7 +379,7 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
     if( !ret )
 	{
 	if( verbose )
-	    y2milestone( "%s", getDiffString( *c ).c_str() );
+	    y2mil(getDiffString( *c ));
 	}
     else
 	{

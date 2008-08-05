@@ -261,7 +261,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    loop_dev = fstab_loop_dev = entry.loop_dev;
 	    b << " loop_dev:" << loop_dev << " encr:" << enc_names[encryption];
 	    }
-	y2milestone( "%s", b.str().c_str() );
+	y2mil(b.str());
 	}
     }
 
@@ -330,7 +330,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 	list<string> l = splitString( *loopData.getLine( 0, true ));
 	std::ostringstream b;
 	b << "line[" << device() << "]=" << l;
-	y2milestone( "%s", b.str().c_str() );
+	y2mil(b.str());
 	if( !l.empty() )
 	    {
 	    list<string>::const_iterator el = l.begin();
@@ -360,7 +360,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 		    }
 		}
 	    b << " encr:" << encryption;
-	    y2milestone( "%s", b.str().c_str() );
+	    y2mil(b.str());
 	    }
 	}
     }
@@ -383,7 +383,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 	                              true, true, "\"" );
 	std::ostringstream b;
 	b << "line[" << device() << "]=" << l;
-	y2milestone( "%s", b.str().c_str() );
+	y2mil(b.str());
 	if( !l.empty() )
 	    {
 	    l.pop_front();
@@ -467,7 +467,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    }
 		alt_names.push_back( "/dev/disk/by-label/" + label );
 		}
-	    y2milestone( "%s", b.str().c_str() );
+	    y2mil(b.str());
 	    }
 	}
     }

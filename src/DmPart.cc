@@ -182,10 +182,10 @@ bool DmPart::equalContent( const DmPart& rhs ) const
     }
 
 void DmPart::logDifference( const DmPart& rhs ) const
-    {
-    string log = stringDifference( rhs );
-    y2milestone( "%s", log.c_str() );
-    }
+{
+    string log = stringDifference(rhs);
+    y2mil(log);
+}
 
 DmPart& DmPart::operator= ( const DmPart& rhs )
     {

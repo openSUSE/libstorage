@@ -1454,7 +1454,7 @@ void LvmVg::logDifference( const Container& d ) const
 	    }
 	if( uuid!=p->uuid )
 	    log += " UUID:" + uuid + "-->" + p->uuid;
-	y2milestone( "%s", log.c_str() );
+	y2mil(log);
 	ConstLvmLvPair pp=lvmLvPair();
 	ConstLvmLvIter i=pp.begin();
 	while( i!=pp.end() )

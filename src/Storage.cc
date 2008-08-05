@@ -211,19 +211,15 @@ Storage::initialize()
     }
 
 void Storage::dumpObjectList()
-    {
+{
     ostringstream buf;
-    printInfo( buf );
+    printInfo(buf);
     std::list<string> l = splitString( buf.str(), "\n" );
-    y2milestone( "DETECTED OBJECTS" );
-    std::list<string>::const_iterator i = l.begin();
-    while( i!=l.end() )
-	{
-	y2milestone( "%s", i->c_str() );
-	++i;
-	}
-    y2milestone( "END DETECTED OBJECTS" );
-    }
+    y2mil("DETECTED OBJECTS");
+    for (std::list<string>::const_iterator i = l.begin(); i != l.end(); i++)
+	y2mil(*i);
+    y2mil("END DETECTED OBJECTS");
+}
 
 void Storage::detectObjects()
     {
@@ -3514,7 +3510,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	    b << "V:" << (*i)->vol()->device();
 	}
     b << "> ";
-    y2milestone( "%s", b.str().c_str() );
+    y2mil(b.str());
     b.str("");
     todo.sort( cont_less<commitAction>() );
     y2milestone( "stage %d", stage );
@@ -3526,7 +3522,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	b << (*i)->name();
 	}
     b << "> ";
-    y2milestone( "%s", b.str().c_str() );
+    y2mil(b.str());
     b.str("");
     b << "sorted vol <";
     for( list<Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
@@ -3536,7 +3532,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	b << (*i)->device();
 	}
     b << "> ";
-    y2milestone( "%s", b.str().c_str() );
+    y2mil(b.str());
     b.str("");
     b << "sorted actions <";
     for( list<commitAction*>::const_iterator i=todo.begin(); i!=todo.end(); ++i )
@@ -3549,7 +3545,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	    b << "V:" << (*i)->vol()->device();
 	}
     b << "> ";
-    y2milestone( "%s", b.str().c_str() );
+    y2mil(b.str());
     }
 
 void Storage::handleHald( bool stop )

@@ -255,7 +255,7 @@ void LvmLv::logDifference( const LvmLv& rhs ) const
 	log += " Status:" + status + "-->" + rhs.status;
     if( allocation!=rhs.allocation )
 	log += " Alloc:" + allocation + "-->" + rhs.allocation;
-    y2milestone( "%s", log.c_str() );
+    y2mil(log);
     }
 
 LvmLv& LvmLv::operator= ( const LvmLv& rhs )

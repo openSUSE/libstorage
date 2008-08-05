@@ -2683,7 +2683,7 @@ void Disk::logDifference( const Container& d ) const
 	    else
 		log += " iSCSI-->";
 	    }
-	y2milestone( "%s", log.c_str() );
+	y2mil(log);
 	ConstPartPair pp=partPair();
 	ConstPartIter i=pp.begin();
 	while( i!=pp.end() )

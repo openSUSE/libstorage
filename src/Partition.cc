@@ -642,7 +642,7 @@ void Partition::logDifference( const Partition& rhs ) const
 	else
 	    log += " boot-->";
 	}
-    y2milestone( "%s", log.c_str() );
+    y2mil(log);
     }
 
 bool Partition::equalContent( const Partition& rhs ) const

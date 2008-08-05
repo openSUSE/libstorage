@@ -569,10 +569,10 @@ bool Dm::equalContent( const Dm& rhs ) const
     }
 
 void Dm::logDifference( const Dm& rhs ) const
-    {
-    string log = stringDifference( rhs );
-    y2milestone( "%s", log.c_str() );
-    }
+{
+    string log = stringDifference(rhs);
+    y2mil(log);
+}
 
 string Dm::stringDifference( const Dm& rhs ) const
     {

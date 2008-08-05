@@ -93,10 +93,10 @@ bool Nfs::equalContent( const Nfs& rhs ) const
     }
 
 void Nfs::logDifference( const Nfs& rhs ) const
-    {
-    string log = Volume::logDifference( rhs );
-    y2milestone( "%s", log.c_str() );
-    }
+{
+    string log = Volume::logDifference(rhs);
+    y2mil(log);
+}
 
 Nfs& Nfs::operator= ( const Nfs& rhs )
     {

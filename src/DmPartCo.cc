@@ -968,7 +968,7 @@ string DmPartCo::getDiffString( const Container& d ) const
 void DmPartCo::logDifference( const DmPartCo& d ) const
     {
     string log = getDiffString( d );
-    y2milestone( "%s", log.c_str() );
+    y2mil(log);
     ConstDmPartPair pp=dmpartPair();
     ConstDmPartIter i=pp.begin();
     while( i!=pp.end() )

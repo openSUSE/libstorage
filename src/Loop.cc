@@ -417,7 +417,7 @@ void Loop::logDifference( const Loop& rhs ) const
 	else
 	    log += " delFile-->";
 	}
-    y2milestone( "%s", log.c_str() );
+    y2mil(log);
     }
 
 Loop& Loop::operator= ( const Loop& rhs )

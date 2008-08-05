@@ -650,7 +650,7 @@ void Md::logDifference( const Md& rhs ) const
 	b << " Spares:" << spare << "-->" << rhs.spare;
 	log += b.str();
 	}
-    y2milestone( "%s", log.c_str() );
+    y2mil(log);
     }
 
 Md& Md::operator= ( const Md& rhs )
