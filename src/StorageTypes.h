@@ -2,7 +2,6 @@
 #define STORAGE_TYPES_H
 
 #include <iostream>
-#include <ext/stdio_filebuf.h>
 
 #include "y2storage/Regex.h"
 #include "y2storage/AppUtil.h"
@@ -11,13 +10,24 @@
 namespace storage
 {
 
-inline bool operator<( CType a, CType b )
-    {
-    static int order[COTYPE_LAST_ENTRY] = { 0, 1, 3, 7, 5, 4, 6, 2, 8 };
+inline bool operator<(CType a, CType b)
+{
+    static const int order[COTYPE_LAST_ENTRY] = {
+	0, // CUNKNOWN
+	1, // DISK
+	3, // MD
+	7, // LOOP
+	5, // LVM
+	4, // DM
+	6, // EVMS
+	2, // DMRAID
+	8  // NFSC
+    };
+
     bool ret = order[a] < order[b];
-    y2mil( "a:" << a << " o(a):" << order[a] << " b:" << b << " o(b):" << order[b] << " ret:" << ret );
-    return( ret );
-    }
+    y2mil("a:" << a << " o(a):" << order[a] << " b:" << b << " o(b):" << order[b] << " ret:" << ret);
+    return ret;
+}
 
 inline bool operator<=( CType a, CType b )
     {
@@ -53,13 +63,13 @@ class Container;
 
 struct commitAction
     {
-    commitAction( CommitStage s, CType t, const string& d, const Volume* v, 
-                  bool destr=false ) 
-	{ stage=s; type=t; descr=d; destructive=destr; container=false; 
+    commitAction( CommitStage s, CType t, const string& d, const Volume* v,
+                  bool destr=false )
+	{ stage=s; type=t; descr=d; destructive=destr; container=false;
 	  u.vol=v; }
-    commitAction( CommitStage s, CType t, const string& d, const Container* co, 
-                  bool destr=false ) 
-	{ stage=s; type=t; descr=d; destructive=destr; container=true; 
+    commitAction( CommitStage s, CType t, const string& d, const Container* co,
+                  bool destr=false )
+	{ stage=s; type=t; descr=d; destructive=destr; container=true;
 	  u.co=co; }
     commitAction( CommitStage s, CType t, Volume* v )
 	{ stage=s; type=t; destructive=false; container=false; u.vol=v; }
@@ -70,7 +80,7 @@ struct commitAction
     string descr;
     bool destructive;
     bool container;
-    union 
+    union
 	{
 	const Volume* vol;
 	const Container* co;
@@ -93,7 +103,7 @@ struct usedBy
     usedBy() : t(storage::UB_NONE) {;}
     usedBy( storage::UsedByType typ, const string& n ) : t(typ), nm(n) {;}
     void clear() { t=storage::UB_NONE; nm.erase(); }
-    void set( storage::UsedByType type, const string& n ) 
+    void set( storage::UsedByType type, const string& n )
 	{ t=type; (t==storage::UB_NONE)?nm.erase():nm=n; }
     bool operator==( const usedBy& rhs ) const
 	{ return( t==rhs.t && nm==rhs.nm ); }
@@ -119,7 +129,7 @@ inline usedBy::operator string() const
 	    case storage::UB_LVM:
 		st = "lvm";
 		break;
-	    case storage::UB_MD: 
+	    case storage::UB_MD:
 		st = "md";
 		break;
 	    case storage::UB_DM:
