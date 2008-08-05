@@ -21,30 +21,29 @@
 using namespace std;
 using namespace storage;
 
-int SystemCmd::Nr_i = 0;
 
 //#define FULL_DEBUG_SYSTEM_CMD
 
+
 SystemCmd::SystemCmd( const char* Command )
-    {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" Nr:%d", Command, Nr_i );
+{
+    y2mil("constructor SystemCmd:\"" << Command << "\"");
     init();
     execute( Command );
-    }
+}
 
 SystemCmd::SystemCmd( const string& Command_Cv )
-    {
-    y2milestone( "Konstruktor SystemCmd:\"%s\" Nr:%d", Command_Cv.c_str(), 
-                 Nr_i );
+{
+    y2mil("constructor SystemCmd:\"" << Command_Cv << "\"");
     init();
     execute( Command_Cv );
-    }
+}
 
 SystemCmd::SystemCmd()
-    {
+{
+    y2mil("constructor SystemCmd");
     init();
-    y2milestone( "Konstruktor SystemCmd Nr:%d", Nr_i );
-    }
+}
 
 void SystemCmd::init()
     {
@@ -93,12 +92,12 @@ SystemCmd::executeBackground( const string& Cmd_Cv )
     return( doExecute( Cmd_Cv ));
     }
 
-int SystemCmd::executeRestricted( const string& Command_Cv, 
+int SystemCmd::executeRestricted( const string& Command_Cv,
                                   long unsigned MaxTimeSec,
-				  long unsigned MaxLineOut, 
+				  long unsigned MaxLineOut,
 				  bool& ExceedTime, bool& ExceedLines )
     {
-    y2milestone( "cmd:%s MaxTime:%lu MaxLines:%lu", Command_Cv.c_str(), 
+    y2milestone( "cmd:%s MaxTime:%lu MaxLines:%lu", Command_Cv.c_str(),
                  MaxTimeSec, MaxLineOut );
     ExceedTime = ExceedLines = false;
     int ret = executeBackground( Command_Cv );
@@ -188,14 +187,14 @@ SystemCmd::doExecute( string Cmd )
     bool ok_bi = true;
     if( !testmode && pipe(sout)<0 )
 	{
-	y2error( "pipe stdout creation failed errno=%d (%s)", errno, 
-	         strerror(errno)); 
+	y2error( "pipe stdout creation failed errno=%d (%s)", errno,
+	         strerror(errno));
 	ok_bi = false;
 	}
-    if( !testmode && !Combine_b && pipe(serr)<0 ) 
+    if( !testmode && !Combine_b && pipe(serr)<0 )
 	{
-	y2error( "pipe stderr creation failed errno=%d (%s)", errno, 
-	         strerror(errno)); 
+	y2error( "pipe stderr creation failed errno=%d (%s)", errno,
+	         strerror(errno));
 	ok_bi = false;
 	}
     if( !testmode && ok_bi )
@@ -203,16 +202,16 @@ SystemCmd::doExecute( string Cmd )
 	pfds[0].fd = sout[0];
 	if( fcntl( pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
 	    {
-	    y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno, 
-		     strerror(errno)); 
+	    y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno,
+		     strerror(errno));
 	    }
 	if( !Combine_b )
 	    {
 	    pfds[1].fd = serr[0];
 	    if( fcntl( pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
 		{
-		y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno, 
-			 strerror(errno)); 
+		y2error( "fcntl O_NONBLOCK failed errno=%d (%s)", errno,
+			 strerror(errno));
 		}
 	    }
 	y2debug( "sout:%d serr:%d", pfds[0].fd, Combine_b?-1:pfds[1].fd );
@@ -223,28 +222,28 @@ SystemCmd::doExecute( string Cmd )
 		setenv( "LANGUAGE", "C", 1 );
 		if( dup2( sout[1], 1 )<0 )
 		    {
-		    y2error( "dup2 stdout child failed errno=%d (%s)", errno, 
+		    y2error( "dup2 stdout child failed errno=%d (%s)", errno,
 			     strerror(errno));
 		    }
 		if( !Combine_b && dup2( serr[1], 2 )<0 )
 		    {
-		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
+		    y2error( "dup2 stderr child failed errno=%d (%s)", errno,
 			     strerror(errno));
 		    }
 		if( Combine_b && dup2( 1, 2 )<0 )
 		    {
-		    y2error( "dup2 stderr child failed errno=%d (%s)", errno, 
+		    y2error( "dup2 stderr child failed errno=%d (%s)", errno,
 			     strerror(errno));
 		    }
 		if( close( sout[0] )<0 )
 		    {
-		    y2error( "close child failed errno=%d (%s)", errno, 
-		             strerror(errno)); 
+		    y2error( "close child failed errno=%d (%s)", errno,
+		             strerror(errno));
 		    }
 		if( !Combine_b && close( serr[0] )<0 )
 		    {
-		    y2error( "close child failed errno=%d (%s)", errno, 
-		             strerror(errno)); 
+		    y2error( "close child failed errno=%d (%s)", errno,
+		             strerror(errno));
 		    }
 		closeOpenFds();
 		Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
@@ -258,28 +257,28 @@ SystemCmd::doExecute( string Cmd )
 	    default:
 		if( close( sout[1] )<0 )
 		    {
-		    y2error( "close parent failed errno=%d (%s)", errno, 
-		             strerror(errno)); 
+		    y2error( "close parent failed errno=%d (%s)", errno,
+		             strerror(errno));
 		    }
 		if( !Combine_b && close( serr[1] )<0 )
 		    {
-		    y2error( "close parent failed errno=%d (%s)", errno, 
-		             strerror(errno)); 
+		    y2error( "close parent failed errno=%d (%s)", errno,
+		             strerror(errno));
 		    }
 		Ret_i = 0;
 		File_aC[IDX_STDOUT] = fdopen( sout[0], "r" );
 		if( File_aC[IDX_STDOUT] == NULL )
 		    {
-		    y2error( "fdopen stdout failed errno=%d (%s)", errno, 
-		             strerror(errno)); 
+		    y2error( "fdopen stdout failed errno=%d (%s)", errno,
+		             strerror(errno));
 		    }
 		if( !Combine_b )
 		    {
 		    File_aC[IDX_STDERR] = fdopen( serr[0], "r" );
 		    if( File_aC[IDX_STDERR] == NULL )
 			{
-			y2error( "fdopen stderr failed errno=%d (%s)", errno, 
-				 strerror(errno)); 
+			y2error( "fdopen stderr failed errno=%d (%s)", errno,
+				 strerror(errno));
 			}
 		    }
 		if( !Background_b )
@@ -320,12 +319,12 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 
     do
 	{
-	y2debug( "[0] id:%d ev:%x [1] fs:%d ev:%x", 
+	y2debug( "[0] id:%d ev:%x [1] fs:%d ev:%x",
 	             pfds[0].fd, (unsigned)pfds[0].events,
 		     Combine_b?-1:pfds[1].fd, Combine_b?0:(unsigned)pfds[1].events );
 	if( (sel=poll( pfds, Combine_b?1:2, 1000 ))<0 )
 	    {
-	    y2error( "poll failed errno=%d (%s)", errno, strerror(errno)); 
+	    y2error( "poll failed errno=%d (%s)", errno, strerror(errno));
 	    }
 	y2debug( "poll ret:%d", sel );
 	if( sel>0 )
@@ -479,7 +478,7 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
 	    Size_ii++;
 	    }
 	}
-    y2milestone( "Pid:%d Idx:%d Pattern:\"%s\" Invert:%d Lines %d", Pid_i, 
+    y2milestone( "Pid:%d Idx:%d Pattern:\"%s\" Invert:%d Lines %d", Pid_i,
                  Idx_iv, Pat_Cv.c_str(), Invert_bv, Size_ii );
     return( Size_ii );
     }
@@ -678,7 +677,7 @@ int SystemCmd::placeOutput( unsigned Which_iv, list<string> &Ret_Cr,
 
 
 string SystemCmd::quote(const string& str)
-{ 
+{
     return "'" + boost::replace_all_copy(str, "'", "'\\''") + "'";
 }
 

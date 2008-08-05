@@ -28,9 +28,9 @@ class SystemCmd
 	virtual ~SystemCmd();
 	int execute( const string& Command_Cv );
 	int executeBackground( const string& Command_Cv );
-	int executeRestricted( const string& Command_Cv, 
+	int executeRestricted( const string& Command_Cv,
 	                       unsigned long MaxTimeSec,
-			       unsigned long MaxLineOut, 
+			       unsigned long MaxLineOut,
 			       bool& ExceedTime, bool& ExceedLines);
 	void setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                       void * Par_p );
@@ -102,7 +102,7 @@ class SystemCmd
 	void *HandlerPar_p;
 	OutputProcessor* output_proc;
 	struct pollfd pfds[2];
-	static int Nr_i;
+
     };
 
 
