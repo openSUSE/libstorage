@@ -112,7 +112,7 @@ namespace storage
     enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
 
-    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_EVMS, UB_DM, UB_DMRAID };
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_DM, UB_DMRAID };
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, EVMS, DMRAID, NFSC,
                  COTYPE_LAST_ENTRY };

@@ -29,7 +29,6 @@ liby2storage_la_SOURCES =			\
 	      Dasd.cc        Dasd.h	     \
 	  PeContainer.cc PeContainer.h	     \
 	    LvmVg.cc     LvmVg.h	     \
-	    EvmsCo.cc    EvmsCo.h	     \
 	    DmPartCo.cc  DmPartCo.h	     \
 		DmraidCo.cc  DmraidCo.h	     \
 	    DmCo.cc      DmCo.h	     	     \
@@ -40,7 +39,6 @@ liby2storage_la_SOURCES =			\
 	  Partition.cc   Partition.h         \
 	  Dm.cc          Dm.h                \
 	    LvmLv.cc     LvmLv.h             \
-	    Evms.cc      Evms.h              \
 	    DmPart.cc    DmPart.h            \
 		Dmraid.cc    Dmraid.h        \
 	  Md.cc          Md.h                \
