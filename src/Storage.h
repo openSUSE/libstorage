@@ -1561,7 +1561,7 @@ class Storage : public storage::StorageInterface
 	typedef CheckerIterator< CheckFncDmraid, ConstDmraidPI<CheckFncDmraid>::type,
 	                         ConstDmraidInter2, Dmraid > ConstDmraidPIterator;
     public:
-	// public typedefs for iterators over EVMS volumes
+	// public typedefs for iterators over dmraid volumes
 	template< class Pred >
 	    struct ConstDmraidI
 		{ typedef ContainerDerIter<Pred, typename ConstDmraidPI<Pred>::type,
@@ -1572,7 +1572,7 @@ class Storage : public storage::StorageInterface
 	typedef DerefIterator<ConstDmraidPIterator, const Dmraid> ConstDmraidIterator;
 	typedef IterPair<ConstDmraidIterator> ConstDmraidPair;
 
-	// public member functions for iterators over EVMS volumes
+	// public member functions for iterators over dmraid volumes
 	ConstDmraidPair dmrPair( bool (* CheckDmraidCo)( const DmraidCo& )) const
 	    {
 	    return( ConstDmraidPair( dmrBegin( CheckDmraidCo ), dmrEnd( CheckDmraidCo ) ));
