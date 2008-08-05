@@ -48,14 +48,13 @@ class Container
 	virtual void logDifference( const Container& c ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	virtual int getToCommit( storage::CommitStage stage, 
+	virtual int getToCommit( storage::CommitStage stage,
 	                         std::list<Container*>& col,
 	                         std::list<Volume*>& vol );
 
 	virtual int commitChanges( storage::CommitStage stage );
 	virtual int commitChanges( storage::CommitStage stage, Volume* vol );
-	virtual void changeDeviceName( const string& old, const string& nw )
-	    {};
+	virtual void changeDeviceName( const string& old, const string& nw ) {}
 	unsigned numVolumes() const;
 	bool isEmpty() const;
 	void getInfo( storage::ContainerInfo& info ) const;
@@ -142,7 +141,7 @@ class Container
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
-	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name );}
+	void setUsedBy( storage::UsedByType t, const string& name ) { uby.set( t, name ); }
 	const storage::usedBy& getUsedBy() const { return( uby ); }
 	storage::UsedByType getUsedByType() const { return( uby.type() ); }
 	const string& usedByName() const { return( uby.name() ); }
@@ -177,15 +176,14 @@ class Container
 	virtual int doCreate( Volume * v );
 	virtual int doRemove( Volume * v );
 	virtual int doResize( Volume * v );
-	virtual void logData( const string& Dir ) {;}
+	virtual void logData( const string& Dir ) {}
 	Container& operator=( const Container& );
 	static bool stageDecrease( const Volume& v )
 	    { return( v.deleted()||v.needShrink()); }
 	static bool stageCreate( const Volume& v )
 	    { return( v.created()||v.needExtend()); }
 
-	static string type_names[COTYPE_LAST_ENTRY];
-	static unsigned order[COTYPE_LAST_ENTRY];
+	static const string type_names[COTYPE_LAST_ENTRY];
 
 	Storage * const sto;
 	storage::CType typ;
