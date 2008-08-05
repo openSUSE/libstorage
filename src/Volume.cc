@@ -1201,7 +1201,7 @@ int Volume::resizeFs()
 	switch( fs )
 	    {
 	    case SWAP:
-		cmd = "mkswap " + mountDevice();
+		cmd = "mkswap " + quote(mountDevice());
 		c.execute( cmd );
 		if( c.retcode()!=0 )
 		    ret = VOLUME_RESIZE_FAILED;
@@ -1213,7 +1213,7 @@ int Volume::resizeFs()
 		    cmd = "echo y | " + cmd;
 		    cmd += "-s " + decString(size_k) + "K ";
 		    }
-		cmd += mountDevice();
+		cmd += quote(mountDevice());
 		c.execute( cmd );
 		if( c.retcode()!=0 )
 		    {
@@ -1225,7 +1225,7 @@ int Volume::resizeFs()
 		cmd = "echo y | ntfsresize -f ";
 		if( needShrink() )
 		    cmd += "-s " + decString(size_k) + "k ";
-		cmd += mountDevice();
+		cmd += quote(mountDevice());
 		c.setCombine();
 		c.execute( cmd );
 		if( c.retcode()!=0 )
@@ -1237,7 +1237,7 @@ int Volume::resizeFs()
 		break;
 	    case EXT2:
 	    case EXT3:
-		cmd = "resize2fs -f " + mountDevice();
+		cmd = "resize2fs -f " + quote(mountDevice());
 		if( needShrink() )
 		    cmd += " " + decString(size_k) + "K";
 		c.execute( cmd );
@@ -2018,24 +2018,24 @@ int Volume::doSetLabel()
 	    {
 	    case EXT2:
 	    case EXT3:
-		cmd = "/sbin/tune2fs -L \"" + label + "\" " + mountDevice();
+		cmd = "/sbin/tune2fs -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case REISERFS:
-		cmd = "/sbin/reiserfstune -l \"" + label + "\" " + mountDevice();
+		cmd = "/sbin/reiserfstune -l " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case JFS:
-		cmd = "/sbin/jfs_tune -L \"" + label + "\" " + mountDevice();
+		cmd = "/sbin/jfs_tune -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case XFS:
 		{
 		string tlabel = label;
 		if( label.empty() )
 		    tlabel = "--";
-		cmd = "/usr/sbin/xfs_admin -L " + tlabel + " " + mountDevice();
+		cmd = "/usr/sbin/xfs_admin -L " + tlabel + " " + quote(mountDevice());
 		}
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap -L \"" + label + "\" " + mountDevice();
+		cmd = "/sbin/mkswap -L " + quote(label) + "\" " + quote(mountDevice());
 		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
