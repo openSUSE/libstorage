@@ -1,8 +1,5 @@
-// -*- C++ -*-
-// Maintainer: fehr@suse.de
-
-#ifndef _AsciiFile_h
-#define _AsciiFile_h
+#ifndef ASCII_FILE_H
+#define ASCII_FILE_H
 
 #include <vector>
 #include <list>

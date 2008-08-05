@@ -1,8 +1,5 @@
-// -*- C++ -*-
-// Maintainer: fehr@suse.de
-
-#ifndef _AppUtil_h
-#define _AppUtil_h
+#ifndef APP_UTIL_H
+#define APP_UTIL_H
 
 #include <time.h>
 #include <libintl.h>

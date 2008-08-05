@@ -1,8 +1,5 @@
-// -*- C++ -*-
-// Maintainer: fehr@suse.de
-
-#ifndef _SystemCmd_h
-#define _SystemCmd_h
+#ifndef SYSTEM_CMD_H
+#define SYSTEM_CMD_H
 
 #include <sys/poll.h>
 #include <stdio.h>

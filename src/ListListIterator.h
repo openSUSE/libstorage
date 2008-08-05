@@ -1,5 +1,5 @@
-#ifndef LISTLIST_ITERATOR_H
-#define LISTLIST_ITERATOR_H
+#ifndef LIST_LIST_ITERATOR_H
+#define LIST_LIST_ITERATOR_H
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/IterPair.h"

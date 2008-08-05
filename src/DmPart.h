@@ -1,5 +1,5 @@
-#ifndef DMPART_H
-#define DMPART_H
+#ifndef DM_PART_H
+#define DM_PART_H
 
 #include "y2storage/Dm.h"
 #include "y2storage/Partition.h"

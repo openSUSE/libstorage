@@ -1,5 +1,5 @@
-#ifndef DMPART_CO_H
-#define DMPART_CO_H
+#ifndef DM_PART_CO_H
+#define DM_PART_CO_H
 
 #include <list>
 

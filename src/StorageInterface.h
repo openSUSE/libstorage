@@ -1,5 +1,5 @@
-#ifndef STORAGEINTERFACE_H
-#define STORAGEINTERFACE_H
+#ifndef STORAGE_INTERFACE_H
+#define STORAGE_INTERFACE_H
 
 
 #include <string>
