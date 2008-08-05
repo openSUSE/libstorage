@@ -263,15 +263,11 @@ class Storage : public storage::StorageInterface
         void getContainers( deque<storage::ContainerInfo>& infos );
 	int getDiskInfo( const string& disk, storage::DiskInfo& info);
 	int getLvmVgInfo( const string& name, storage::LvmVgInfo& info);
-	int getEvmsCoInfo( const string& name, storage::EvmsCoInfo& info);
 	int getDmraidCoInfo( const string& name, storage::DmraidCoInfo& info);
 	int getContDiskInfo( const string& disk, storage::ContainerInfo& cinfo,
 	                     storage::DiskInfo& info);
 	int getContLvmVgInfo( const string& name, storage::ContainerInfo& cinfo,
 	                      storage::LvmVgInfo& info);
-	int getContEvmsCoInfo( const string& name,
-	                       storage::ContainerInfo& cinfo,
-	                       storage::EvmsCoInfo& info );
 	int getContDmraidCoInfo( const string& name,
 	                         storage::ContainerInfo& cinfo,
 	                         storage::DmraidCoInfo& info );
@@ -281,8 +277,6 @@ class Storage : public storage::StorageInterface
 			      deque<storage::PartitionInfo>& plist );
 	int getLvmLvInfo( const string& name,
 			  deque<storage::LvmLvInfo>& plist );
-	int getEvmsInfo( const string& name,
-			 deque<storage::EvmsInfo>& plist );
 	int getMdInfo( deque<storage::MdInfo>& plist );
 	int getDmInfo( deque<storage::DmInfo>& plist );
 	int getNfsInfo( deque<storage::NfsInfo>& plist );
@@ -402,27 +396,6 @@ class Storage : public storage::StorageInterface
 				 unsigned long stripes );
 	int changeLvStripeSize( const string& vg, const string& name,
 				unsigned long long stripeSize );
-
-	int evmsActivate( bool force );
-	int createEvmsContainer( const string& name, unsigned long long peSizeK,
-			         bool lvm1, const deque<string>& devs );
-	int modifyEvmsContainer( const string& old_name, const string& new_name,
-				 unsigned long long peSizeK, bool lvm1 );
-	int removeEvmsContainer( const string& name );
-	int extendEvmsContainer( const string& name, const deque<string>& devs );
-	int shrinkEvmsContainer( const string& name, const deque<string>& devs );
-	int createEvmsVolume( const string& vg, const string& name,
-			      unsigned long long sizeM, unsigned stripe,
-			      string& device );
-	int removeEvmsVolumeByDevice( const string& device );
-	int removeEvmsVolume( const string& vg, const string& name );
-	int changeEvmsStripeCount( const string& coname, const string& name,
-				   unsigned long stripes );
-	int changeEvmsStripeSize( const string& coname, const string& name,
-				  unsigned long long stripeSize );
-	void setNoEvms( bool val ); 
-	bool getNoEvms() { return( no_evms ); }
-	static bool getNoEv() { return( no_evms ); }
 
 	int nextFreeMd(int &nr, string &device);
 	int createMd( const string& name, storage::MdType rtype,
