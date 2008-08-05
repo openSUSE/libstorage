@@ -3714,14 +3714,13 @@ static bool isDmContainer( const Container& co )
 
 bool Storage::removeDmMapsTo( const string& dev )
     {
-    bool also_evms = false;
     bool ret = false;
-    y2milestone( "dev:%s also_evms:%d", dev.c_str(), also_evms );
+    y2mil("dev:" << dev);
     VPair vp = vPair( isDmContainer );
     for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
 	{
 	Dm * dm = dynamic_cast<Dm *>(&(*v));
-	if( (also_evms||v->getUsedByType()!=UB_EVMS) && dm!=NULL )
+	if (dm != NULL)
 	    {
 	    y2mil( "dm:" << *dm );
 	    if( dm->mapsTo( dev ) )
@@ -3735,7 +3734,7 @@ bool Storage::removeDmMapsTo( const string& dev )
 		ret = true;
 		}
 	    }
-	else if( dm==NULL )
+	else
 	    y2warning( "not a Dm descendant %s", v->device().c_str() );
 	}
     VolIterator v;
