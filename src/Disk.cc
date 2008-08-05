@@ -871,7 +871,7 @@ _("openSUSE is switching to the new IDE drivers using the libata\n"
 "    \'hwprobe=-modules.pata\' as argument to the kernel\n"
 "  - Repartition your system so that maximal 15 partitions are used.\n"
 "    To repartition, use your existing operating system.\n"
-"  - Use LVM/EVMS since they can provide an arbitrary and flexible\n"
+"  - Use LVM since it can provide an arbitrary and flexible\n"
 "    number of block devices partitions. This needs a repartition\n"
 "    as well.");
 	    }
