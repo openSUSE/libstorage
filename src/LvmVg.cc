@@ -997,7 +997,7 @@ LvmVg::doCreateVg()
 	    {
 	    if( !devices.empty() )
 		devices += " ";
-	    devices += p->device;
+	    devices += quote(p->device);
 	    ret = doCreatePv( p->device );
 	    ++p;
 	    }
@@ -1010,7 +1010,7 @@ LvmVg::doCreateVg()
 		rmdir( ddir.c_str() );
 		}
 	    string cmd = VGCREATEBIN " " + instSysString() + metaString() + 
-		"-s " + decString(pe_size) + "k " + quote(name()) + " " + quote(devices);
+		"-s " + decString(pe_size) + "k " + quote(name()) + " " + devices;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
