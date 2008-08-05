@@ -119,7 +119,6 @@ class EvmsCo : public PeContainer
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void addVolume( Evms* v );
-	void getInfo( storage::EvmsCoInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;
 	bool checkConsistency() const;
@@ -224,7 +223,7 @@ class EvmsCo : public PeContainer
 	bool valid;
 	static bool active;
 	static int sockfd;
-	mutable storage::EvmsCoInfo info;
+
     };
 
 }

@@ -214,25 +214,6 @@ namespace storage
     };
 
     /**
-     * Contains info about a EVMS Container
-     */
-    struct EvmsCoInfo
-    {
-	EvmsCoInfo() {}
-	unsigned long long sizeK;
-	unsigned long long peSize;
-	unsigned long peCount;
-	unsigned long peFree;
-	string uuid;
-	bool lvm2;
-	bool create;
-	bool realContainer;
-	string devices;
-	string devices_add;
-	string devices_rem;
-    };
-
-    /**
      * Contains info about a DmPart disk
      */
     struct DmPartCoInfo
@@ -325,20 +306,6 @@ namespace storage
 	string uuid;
 	string status;
 	string allocation;
-	string dm_table;
-	string dm_target;
-    };
-
-    /**
-     * Contains info about a EVMS Volume.
-     */
-    struct EvmsInfo
-    {
-	EvmsInfo() {}
-	VolumeInfo v;
-	unsigned stripe;
-	unsigned stripe_size;
-	bool compatible;
 	string dm_table;
 	string dm_target;
     };

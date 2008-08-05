@@ -1191,14 +1191,6 @@ bool EvmsCo::attachToSocket(bool attach)
 	    }
 	if( ret )
 	    {
-	    key_t k = ftok( EXEC_PATH, IPC_PROJ_ID );
-	    semid = semget( k, 1, IPC_CREAT|0600 );
-	    y2milestone( "ipc key:%x semid:%d", k, semid );
-	    if( semid<0 )
-		{
-		ret = false;
-		y2error( "semget failed errno=%d (%s)", errno, strerror(errno) );
-		}
 	    }
 	if( ret )
 	    {
@@ -1858,48 +1850,6 @@ std::ostream& operator<< (std::ostream& s, const EvmsTree& d )
 
 }
 
-void EvmsCo::getInfo( EvmsCoInfo& tinfo ) const
-    {
-    info.sizeK = sizeK();
-    info.peSize = peSize();
-    info.peCount = peCount();
-    info.peFree = peFree();
-    info.lvm2 = lvm2();
-    info.create = created();
-    info.uuid = uuid;
-    info.realContainer = !nm.empty();
-    info.devices.clear();
-    list<Pv>::const_iterator i=pv.begin();
-    while( i!=pv.end() )
-	{
-	if( !info.devices.empty() )
-	    info.devices += ' ';
-	info.devices += i->device;
-	++i;
-	}
-    y2mil( "device:" << info.devices );
-    info.devices_add.clear();
-    i=pv_add.begin();
-    while( i!=pv_add.end() )
-	{
-	if( !info.devices_add.empty() )
-	    info.devices_add += ' ';
-	info.devices_add += i->device;
-	++i;
-	}
-    y2mil( "devices_add:" << info.devices_add );
-    info.devices_rem.clear();
-    i=pv_remove.begin();
-    while( i!=pv_remove.end() )
-	{
-	if( !info.devices_rem.empty() )
-	    info.devices_rem += ' ';
-	info.devices_rem += i->device;
-	++i;
-	}
-    y2mil( "devices_rem:" << info.devices_rem );
-    tinfo = info;
-    }
 
 namespace storage
 {

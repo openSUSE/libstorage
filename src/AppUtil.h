@@ -96,8 +96,6 @@ inline const char* _(const char* msgid, const char* msgid_plural, unsigned long 
     return dngettext("storage", msgid, msgid_plural, n);
 }
 
-#define IPC_PROJ_ID 7890
-
 extern bool system_cmd_testmode;
 extern const string app_ws;
 

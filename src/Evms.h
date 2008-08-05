@@ -25,7 +25,6 @@ class Evms : public Dm
 	string resizeText( bool doing ) const;
 
 	void updateMd();
-	void getInfo(storage::EvmsInfo&) const;
 	bool equalContent( const Evms& rhs ) const;
 	void logDifference( const Evms& d ) const;
 	const EvmsCo* evmsCo() const;
@@ -38,7 +37,7 @@ class Evms : public Dm
 	static string getMapperName( const EvmsCo& d, const string& name );
 
 	bool compat;
-	mutable storage::EvmsInfo info;
+
     };
 
 }
