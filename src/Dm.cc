@@ -220,13 +220,6 @@ string Dm::getDevice( const string& majmin )
 	    }
 	while( ret.empty() && mj==dm_major && c.retcode()==0 );
 	}
-    if( ret.find( "/dev/evms/" )==0 )
-	{
-	string tmp( ret );
-	tmp.erase( 5, 5 );
-	if( cont->getStorage()->knownDevice( tmp, true ) )
-	    ret = tmp;
-	}
     return( ret );
     }
 

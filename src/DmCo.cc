@@ -109,7 +109,6 @@ DmCo::detectEncryption( const string& dev ) const
 void
 DmCo::getDmData( ProcPart& ppart )
     {
-    Storage::ConstEvmsPair ev = getStorage()->evmsPair();
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
     Storage::ConstDmraidPair dmr = getStorage()->dmrPair();
@@ -125,15 +124,6 @@ DmCo::getDmData( ProcPart& ppart )
 	    {
 	    found = i->getTableName()==table;
 	    ++i;
-	    }
-	if( !found )
-	    {
-	    Storage::ConstEvmsIterator i=ev.begin();
-	    while( !found && i!=ev.end() )
-		{
-		found = i->getTableName()==table;
-		++i;
-		}
 	    }
 	if( !found )
 	    {

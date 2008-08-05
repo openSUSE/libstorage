@@ -228,15 +228,6 @@ void Storage::dumpObjectList()
 void Storage::detectObjects()
     {
     ProcPart* ppart = new ProcPart;
-    if( EvmsCo::canDoEvms() )
-	{
-	const char * file = "/etc/evms.conf"; 
-	if( access( file, R_OK )==0 )
-	    {
-	    SystemCmd cmd( (string)"grep exclude " + file );
-	    }
-	EvmsCo::activate(true);
-	}
     detectDisks( *ppart );
     if( instsys() )
 	{
@@ -276,9 +267,6 @@ void Storage::detectObjects()
 	    detectNfs( pm );
 	detectFsData( vBegin(), vEnd(), pm );
 	}
-    EvmsCoIterator e = findEvmsCo( "" );
-    if( e!=evCoEnd() )
-	e->updateMd();
 
     if( instsys() )
 	{
@@ -3924,13 +3912,6 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    info.numeric = true;
 	    info.nr = p.second;
 	    }
-	else if( dev.find("/dev/evms/")==0 )
-	    {
-	    info.type = EVMS;
-	    info.numeric = false;
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.cname = dev.substr( 0, dev.find_last_of('/') );
-	    }
 	else if( dev.find("/dev/disk/by-uuid/")==0 ||
 	         dev.find("/dev/disk/by-label/")==0 ||
 	         dev.find("UUID=")==0 || dev.find("LABEL=")==0 )
@@ -4762,24 +4743,6 @@ Storage::LvmVgIterator Storage::findLvmVg( const string& name )
     return( ret );
     }
 
-Storage::EvmsCoIterator Storage::findEvmsCo( const string& name )
-    {
-    assertInit();
-    EvmsCoPair p = evCoPair();
-    EvmsCoIterator ret=p.begin();
-    string name1 = name;
-    string name2 = name;
-    if( !name.empty() && name.find( "lvm/" )!=0 && name.find( "lvm2/" )!=0 )
-	{
-	name1 = "lvm/" + name1;
-	name2 = "lvm2/" + name2;
-	}
-    while( ret != p.end() &&
-           (ret->deleted() || (ret->name()!=name1 && ret->name()!=name2)) )
-	++ret;
-    return( ret );
-    }
-
 Storage::DmraidCoIterator Storage::findDmraidCo( const string& name )
     {
     assertInit();
@@ -5514,7 +5477,6 @@ Storage::activateHld( bool val )
 	MdCo::activate(val,tmpDir());
 	}
     LvmVg::activate(val);
-    EvmsCo::activate(val);
     if( !val )
 	{
 	Dm::activate(val);

@@ -1651,7 +1651,6 @@ class Storage : public storage::StorageInterface
 	DiskIterator findDiskId( const string& id );
 	DiskIterator findDiskPath( const string& path );
 	LvmVgIterator findLvmVg( const string& name );
-	EvmsCoIterator findEvmsCo( const string& name );
 	DmraidCoIterator findDmraidCo( const string& name );
 	DmPartCoIterator findDmPartCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c,
