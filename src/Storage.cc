@@ -1040,10 +1040,6 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	    else
 		{
 		ret = i->createPartition( type, start, size, device, true );
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device, type==EXTENDED );
-		    }
 		}
 	    }
 	}
@@ -1058,12 +1054,6 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	    else
 		{
 		ret = i->createPartition( type, start, size, device, true );
-		/*
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device, type==EXTENDED );
-		    }
-		*/
 		}
 	    }
 	}
@@ -1111,10 +1101,6 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 		    tmp_start = 0;
 		unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
 		ret = i->createPartition( type, start_cyl, num_cyl, device, true );
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device, type==EXTENDED );
-		    }
 		}
 	    }
 	}
@@ -1136,12 +1122,6 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 		    tmp_start = 0;
 		unsigned long start_cyl = i->kbToCylinder( tmp_start )+1;
 		ret = i->createPartition( type, start_cyl, num_cyl, device, true );
-		/*
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device, type==EXTENDED );
-		    }
-		*/
 		}
 	    }
 	}
@@ -1177,10 +1157,6 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 		{
 		unsigned long num_cyl = i->kbToCylinder( sizeK );
 		ret = i->createPartition( num_cyl, device, true );
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device );
-		    }
 		}
 	    }
 	}
@@ -1196,12 +1172,6 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 		{
 		unsigned long num_cyl = i->kbToCylinder( sizeK );
 		ret = i->createPartition( num_cyl, device, true );
-		/*
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device );
-		    }
-		*/
 		}
 	    }
 	}
@@ -1268,10 +1238,6 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	    else
 		{
 		ret = i->createPartition( type, device );
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device );
-		    }
 		}
 	    }
 	}
@@ -1286,12 +1252,6 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	    else
 		{
 		ret = i->createPartition( type, device );
-		/*
-		if( ret==0 && haveEvms() )
-		    {
-		    handleEvmsCreateDevice( disk, device );
-		    }
-		*/
 		}
 	    }
 	}
@@ -1378,10 +1338,6 @@ Storage::removePartition( const string& partition )
 		    {
 		    if( vol->getUsedByType() != UB_NONE )
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
-		    if( ret==0 && haveEvms() )
-			{
-			handleEvmsRemoveDevice( disk, vol->device(), false );
-			}
 		    if( ret==0 )
 			ret = disk->removePartition( vol->nr() );
 		    }
@@ -1402,12 +1358,6 @@ Storage::removePartition( const string& partition )
 		    {
 		    if( vol->getUsedByType() != UB_NONE )
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
-		    /*
-		    if( ret==0 && haveEvms() )
-			{
-			handleEvmsRemoveDevice( disk, vol->device(), false );
-			}
-		    */
 		    if( ret==0 )
 			ret = disk->removePartition( vol->nr() );
 		    }
@@ -2511,18 +2461,6 @@ Storage::removeVolume( const string& device )
 	    string vdev = vol->device();
 	    if( vol->getUsedByType() != UB_NONE )
 		ret = removeUsing( vdev, vol->getUsedBy() );
-	    if( ret==0 && cont->type()==DISK && haveEvms() )
-		{
-		Disk* disk = dynamic_cast<Disk *>(&(*cont));
-		y2mil( "disk:" << disk );
-		string tmp = vdev;
-		string::size_type pos = tmp.find_last_not_of( "0123456789" );
-		tmp.erase( 0, pos+1 );
-		unsigned num = 0;
-		if( !tmp.empty() )
-		    tmp >> num;
-		handleEvmsRemoveDevice( disk, vdev, false );
-		}
 	    if( ret==0 )
 		ret = cont->removeVolume( &(*vol) );
 	    }
@@ -2604,22 +2542,6 @@ Storage::removeLvmVg( const string& name )
 	ret = i->removeVg();
 	if( ret==0 && i->created() )
 	    ret = removeContainer( &(*i) );
-	if( ret==0 && haveEvms() )
-	    {
-	    string evn = (string)"lvm2/" + name;
-	    EvmsCoIterator e = findEvmsCo( evn );
-	    y2mil( "n1:" << evn << " found:" << (e!=evCoEnd()) );
-	    if( e==evCoEnd() )
-		{
-		evn = (string)"lvm/" + name;
-		e = findEvmsCo( evn );
-		y2mil( "n2:" << evn << " found:" << (e!=evCoEnd()) );
-		}
-	    if( e!=evCoEnd() )
-		{
-		removeContainer( &(*e) );
-		}
-	    }
 	}
     else
 	{
@@ -3726,7 +3648,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     y2milestone( "p.length:%d", p.length() );
     CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
     CommitStage* pt = a;
-    bool evms_activate = false;
     while( unsigned(pt-a) < lengthof(a) )
 	{
 	bool new_pair = false;
@@ -3753,25 +3674,9 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    CType type = (*ac)->type;
 	    Container *co = cont ? const_cast<Container*>((*ac)->co()) : 
 	                           const_cast<Container*>((*ac)->vol()->getContainer());
-	    if( !evms_activate && *pt==INCREASE && 
-	        (type==DISK||type==MD||(cont&&type==EVMS)) )
-		{
-		evms_activate = true;
-		}
-	    if( !evms_activate && *pt==DECREASE && 
-	        (type==LVM||type==DISK||type==MD) )
-		{
-		evms_activate = true;
-		}
-	    if( evms_activate && haveEvms() &&
-	        ((*pt==INCREASE && type==EVMS)||*pt==FORMAT||*pt==MOUNT))
-		{
-		// evmsActivateDevices();
-		evms_activate = false;
-		}
 	    if( cont )
 		{
-		bool cont_removed = co->deleted() && (type==LVM||type==EVMS);
+		bool cont_removed = co->deleted() && type==LVM;
 		ret = co->commitChanges( *pt );
 		cont_removed = cont_removed && ret==0;
 		if( cont_removed )
@@ -3793,8 +3698,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    delete( *ac );
 	    ++ac;
 	    }
-	y2milestone( "stage:%d evms_activate:%d new_pair:%d", *pt,
-	             evms_activate, new_pair );
+	y2milestone( "stage:%d new_pair:%d", *pt, new_pair );
 	if( new_pair )
 	    {
 	    p = cPair( fnc );
@@ -3809,12 +3713,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    c.execute(DMSETUPBIN " info");
 	    logProcData();
 	    }
-	}
-    if( evms_activate && haveEvms() )
-	{
-	// evmsActivateDevices();
-	evms_activate = false;
-	logProcData();
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -4448,143 +4346,6 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     }
 }
 
-static bool isEvmsContainer( const Container& c )
-    { return( c.type()==EVMS && !c.name().empty() ); }
-
-bool Storage::haveEvms()
-    {
-    bool ret = false;
-    ContIterator c;
-    if( findContainer( "/dev/evms", c ) && !c->isEmpty() )
-	ret = true;
-    if( !ret )
-	{
-	CPair cp = cPair( isEvmsContainer );
-	y2mil( "num EVMS cont:" << cp.length() );
-	ret = !cp.empty();
-	}
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
-
-void Storage::handleEvmsRemoveDevice( const Disk* disk, const string& d,
-                                      bool rename )
-    {
-    y2mil( "device:" << d << " rename:" << rename );
-    ContIterator c;
-    if( findContainer( "/dev/evms", c ))
-	{
-	VolIterator v;
-	if( findVolume( d, v, true ) )
-	    {
-	    Partition* p = dynamic_cast<Partition *>(&(*v));
-	    if( p && p->type()==EXTENDED )
-		{
-		string dname = p->disk()->name();
-		DiskIterator d = findDisk( dname );
-		if( d!=dEnd() )
-		    {
-		    Disk::PartPair dp = d->partPair();
-		    Disk::PartIter pi = dp.begin();
-		    while( pi!=dp.end() )
-			{
-			if( pi->type()==LOGICAL )
-			    {
-			    //string dev = "/dev/evms/" + pi->name();
-			    string dev = EvmsCo::devToEvms( pi->device() );
-			    y2mil( "evms new dev:" << dev );
-			    VolIterator vv;
-			    if( findVolume( dev, vv ))
-				{
-				vv->setDeleted();
-				vv->setSilent();
-				}
-			    }
-			++pi;
-			}
-		    }
-		}
-	    }
-	string dev = EvmsCo::devToEvms( d );
-	y2mil( "evmsdev:" << dev );
-	if( findVolume( dev, v ))
-	    {
-	    v->setDeleted();
-	    v->setSilent();
-	    y2mil( "v:" << *v );
-	    }
-	if( disk->isEmpty() && disk->device().find("/dev/dasd")!=0 &&
-	    !findVolume( EvmsCo::devToEvms(disk->device()), v) )
-	    {
-	    EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
-	    if( co != NULL )
-		{
-		string name = EvmsCo::devToEvms(disk->device());
-		y2mil( "evmsdev:" << dev );
-		co->addLv( disk->sizeK(), name.substr(10), false );
-		}
-	    }
-	if( rename )
-	    {
-	    string tmp( dev );
-	    string::size_type pos = tmp.find_last_not_of( "0123456789" );
-	    tmp.erase( 0, pos+1 );
-	    y2mil( "tmp:" << tmp << " pos:" << pos );
-	    unsigned num = 0;
-	    if( !tmp.empty() )
-		tmp >> num;
-	    num++;
-	    dev.erase( pos+1 );
-	    while( findVolume( dev+decString(num), v ))
-		{
-		string tmp = dev+decString(num-1);
-		y2mil( "bef rename:" << *v );
-		v->rename( tmp.substr( dev.rfind( '/' )+1 ));
-		y2mil( "aft rename:" << *v );
-		num++;
-		}
-	    }
-	logCo( &(*c) );
-	}
-    }
-
-
-void Storage::handleEvmsCreateDevice( const string& disk, const string& d, bool extended )
-    {
-    y2mil( "disk:" << disk << " device:" << d << " ext:" << extended );
-    ContIterator c;
-    if( findContainer( "/dev/evms", c ) && c->type()==EVMS )
-	{
-	VolIterator v;
-	VolIterator w;
-	string dev;
-	if( !extended )
-	    {
-	    dev = EvmsCo::devToEvms(d);
-	    if( findVolume( d, v ) && !findVolume( dev, w ))
-		{
-		EvmsCo* co = dynamic_cast<EvmsCo *>(&(*c));
-		if( co != NULL )
-		    {
-		    Evms* l = new Evms( *co, dev.substr(10), v->sizeK(), 1u );
-		    co->addVolume( l );
-		    y2mil( "l:" << *l );
-		    if( findVolume( dev, w ))
-			y2mil( "w:" << *w );
-		    }
-		}
-	    logCo( &(*c) );
-	    }
-	dev = EvmsCo::devToEvms( disk );
-	if( findVolume( dev, v ))
-	    {
-	    v->setDeleted();
-	    v->setSilent();
-	    y2mil( "del evms disk:" << *v );
-	    logCo( &(*c) );
-	    }
-	}
-    }
 
 void Storage::removeDmTableTo( const Volume& vol )
     {

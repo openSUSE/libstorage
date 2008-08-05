@@ -1663,12 +1663,6 @@ class Storage : public storage::StorageInterface
 	bool haveMd( MdCo*& md );
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
-	bool haveEvms();
-	void handleEvmsRemoveDevice( const Disk* disk, const string& d,
-	                             bool rename );
-	void handleEvmsCreateDevice( const string& disk, const string& dev, 
-	                             bool extended=false );
-
 	int removeContainer( Container* val, bool call_del=true );
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
