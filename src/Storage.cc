@@ -245,7 +245,7 @@ void Storage::detectObjects()
 
     if( testmode )
         {
- 	system_cmd_testmode = true;
+	SystemCmd::testmode = true;
  	rootprefix = testdir;
  	fstab = new EtcFstab( rootprefix );
 	string t = testdir+"/volume_info";

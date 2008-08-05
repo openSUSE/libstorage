@@ -186,19 +186,19 @@ SystemCmd::doExecute( string Cmd )
     int sout[2];
     int serr[2];
     bool ok_bi = true;
-    if( !system_cmd_testmode && pipe(sout)<0 )
+    if( !testmode && pipe(sout)<0 )
 	{
 	y2error( "pipe stdout creation failed errno=%d (%s)", errno, 
 	         strerror(errno)); 
 	ok_bi = false;
 	}
-    if( !system_cmd_testmode && !Combine_b && pipe(serr)<0 ) 
+    if( !testmode && !Combine_b && pipe(serr)<0 ) 
 	{
 	y2error( "pipe stderr creation failed errno=%d (%s)", errno, 
 	         strerror(errno)); 
 	ok_bi = false;
 	}
-    if( ok_bi && !system_cmd_testmode )
+    if( !testmode && ok_bi )
 	{
 	pfds[0].fd = sout[0];
 	if( fcntl( pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
@@ -289,7 +289,7 @@ SystemCmd::doExecute( string Cmd )
 		break;
 	    }
 	}
-    else if( !system_cmd_testmode )
+    else if( !testmode )
 	{
 	Ret_i = -1;
 	}
@@ -302,7 +302,7 @@ SystemCmd::doExecute( string Cmd )
 	{
 	y2error("system (%s) = %d", Cmd.c_str(), Ret_i);
 	}
-    if( !system_cmd_testmode )
+    if( !testmode )
 	checkOutput();
     y2milestone( "system() Returns:%d", Ret_i );
     if( Ret_i!=0 )
@@ -694,3 +694,7 @@ string SystemCmd::quote(const list<string>& strs)
     }
     return ret;
 }
+
+
+bool SystemCmd::testmode = false;
+

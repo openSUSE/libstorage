@@ -68,6 +68,8 @@ class SystemCmd
 	 */
 	static string quote(const std::list<string>& strs);
 
+	static bool testmode;
+
     protected:
 
         int  placeOutput( unsigned Which_iv, std::vector<string> &Ret_Cr, const bool Append_bv ) const;
