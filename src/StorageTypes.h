@@ -19,7 +19,6 @@ inline bool operator<(CType a, CType b)
 	7, // LOOP
 	5, // LVM
 	4, // DM
-	6, // EVMS
 	2, // DMRAID
 	8  // NFSC
     };
