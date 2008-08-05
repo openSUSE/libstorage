@@ -3827,8 +3827,9 @@ static bool isDmContainer( const Container& co )
             co.type()==DMRAID );
     }
 
-bool Storage::removeDmMapsTo( const string& dev, bool also_evms )
+bool Storage::removeDmMapsTo( const string& dev )
     {
+    bool also_evms = false;
     bool ret = false;
     y2milestone( "dev:%s also_evms:%d", dev.c_str(), also_evms );
     VPair vp = vPair( isDmContainer );

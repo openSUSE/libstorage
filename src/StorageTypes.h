@@ -122,9 +122,6 @@ inline usedBy::operator string() const
 	    case storage::UB_MD: 
 		st = "md";
 		break;
-	    case storage::UB_EVMS: 
-		st = "evms";
-		break;
 	    case storage::UB_DM:
 		st = "dm";
 		break;

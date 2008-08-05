@@ -622,8 +622,7 @@ MdCo::doCreate( Volume* v )
 	    getStorage()->waitForDevice( m->device() );
 	    getMdData( m->nr() );
 	    updateEntry( m );
-	    bool used_as_pv = m->getUsedByType()==UB_EVMS ||
-	                      m->getUsedByType()==UB_LVM;
+	    bool used_as_pv = m->getUsedByType() == UB_LVM;
 	    y2milestone( "zeroNew:%d used_as_pv:%d",
 			 getStorage()->getZeroNewPartitions(), used_as_pv );
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
