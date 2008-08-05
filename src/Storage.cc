@@ -249,7 +249,6 @@ void Storage::detectObjects()
     detectMds();
     detectDmraid( *ppart );
     detectLvmVgs();
-    detectEvms();
     detectDm( *ppart );
 
     LvmVgPair p = lvgPair();
@@ -576,58 +575,6 @@ Storage::detectLvmVgs()
 	}
     }
 
-static bool isEvmsMd( const Volume& v )
-    {
-    return( v.device().find( "/dev/evms/md/" )==0 );
-    }
-
-void
-Storage::detectEvms()
-    {
-    if( test() )
-	{
-	glob_t globbuf;
-	if( glob( (testdir+"/evms_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
-	    {
-	    // TODO
-	    }
- 	globfree (&globbuf);
-	}
-    else if( EvmsCo::canDoEvms() )
-	{
-	EvmsCo::activate( true );
-	EvmsTree data;
-	EvmsCo::getEvmsList( data );
-	y2mil( "EVMS TREE:" << data );
-	if( !data.volumes.empty() || !data.cont.empty() )
-	    {
-	    EvmsCo * e = new EvmsCo( this, data );
-	    Container::VolPair ep = e->volPair( isEvmsMd );
-	    y2mil( "md:" << ep.length() << " evms:" << e->numVolumes() );
-	    if( ep.length()!=e->numVolumes() )
-		addToList( e );
-	    else
-		delete e;
-	    for( list<EvmsCont>::const_iterator i=data.cont.begin();
-	         i!=data.cont.end(); ++i )
-		{
-		y2mil( "EVMS Container:" << *i );
-		e = new EvmsCo( this, *i, data );
-		if( e->isValid() )
-		    {
-		    EvmsCoIterator eco = findEvmsCo( i->name );
-		    if( eco != evCoEnd() )
-			removeContainer( &(*eco) );
-		    addToList( e );
-		    e->checkConsistency();
-		    }
-		else
-		    delete( e );
-		}
-	    }
-	}
-    }
 
 void
 Storage::detectDmraid( ProcPart& ppart )
@@ -3819,7 +3766,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    if( evms_activate && haveEvms() &&
 	        ((*pt==INCREASE && type==EVMS)||*pt==FORMAT||*pt==MOUNT))
 		{
-		evmsActivateDevices();
+		// evmsActivateDevices();
 		evms_activate = false;
 		}
 	    if( cont )
@@ -3865,7 +3812,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	}
     if( evms_activate && haveEvms() )
 	{
-	evmsActivateDevices();
+	// evmsActivateDevices();
 	evms_activate = false;
 	logProcData();
 	}
@@ -3873,98 +3820,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     return( ret );
     }
 
-static bool needSaveFromEvms( const Container& c ) 
-    { return( c.type()==DISK||c.type()==MD); }
-
-void
-Storage::evmsActivateDevices()
-    {
-    string tblname = "wrzlbrnft";
-    SystemCmd c;
-    list<Container*> co;
-    list<Volume*> vol;
-    list<string> save_disks;
-    list<string> dev_dm_remove;
-
-    y2milestone( "start" );
-    CPair p = cPair( needSaveFromEvms );
-    ContIterator i = p.begin();
-    while( i != p.end() )
-	{
-	y2mil( "save:" << *i );
-	i->getToCommit( FORMAT, co, vol );
-	i->getToCommit( MOUNT, co, vol );
-	Disk* disk;
-	if( i->type()==DISK && arch().find("ppc")==0 && 
-	    (disk = dynamic_cast<Disk *>(&(*i)))!=NULL )
-	    {
-	    Disk::PartPair dp = disk->partPair(Disk::bootSpecial);
-	    for (Disk::PartIter i2 = dp.begin(); i2 != dp.end(); ++i2)
-		{
-		y2mil( "boot:" << *i2 );
-		dev_dm_remove.push_back(i2->device());
-		vol.push_back( &(*i2) );
-		}
-	    }
-	++i;
-	}
-    if( !vol.empty() )
-	{
-	const Container* cp;
-	vol.sort( sort_vol_normal );
-	vol.unique();
-	std::ostringstream b;
-	b << "saved vol <";
-	for( list<Volume*>::const_iterator i=vol.begin(); i!=vol.end(); ++i )
-	    {
-	    if( i!=vol.begin() )
-		b << " ";
-	    b << (*i)->device();
-	    if( (*i)->cType()==DISK &&
-	        (cp = (*i)->getContainer())!=NULL )
-		{
-		if( find( save_disks.begin(), save_disks.end(), cp->device() ) 
-		    == save_disks.end() )
-		    {
-		    save_disks.push_back( cp->device() );
-		    }
-		}
-	    }
-	b << "> ";
-	y2milestone( "%s", b.str().c_str() );
-	y2mil( "saved_disks " << save_disks );
-	for( list<string>::const_iterator i=save_disks.begin(); 
-	     i!=save_disks.end(); ++i )
-	     {
-	     removeDmMapsTo( *i, true );
-	     }
-	removeDmTable( tblname );
-	string fname = tmpDir()+"/tfile";
-	unlink( fname.c_str() );
-	ofstream tfile( fname.c_str() );
-	unsigned count=0;
-	for( list<Volume*>::const_iterator i=vol.begin(); i!=vol.end(); ++i )
-	    {
-	    tfile << count*10 << " 10 linear " << (*i)->device() <<  " 0"
-	          << endl;
-	    count++;
-	    }
-	tfile.close();
-	c.execute( "cat " + fname );
-	c.execute(DMSETUPBIN " create " + quote(tblname) + " <" + fname);
-	unlink( fname.c_str() );
-	}
-    EvmsCo::activateDevices();
-    if( !vol.empty() )
-	{
-	removeDmTable( tblname );
-	y2mil( "dev_dm_remove:" << dev_dm_remove );
-	for( list<string>::const_iterator i=dev_dm_remove.begin(); 
-	     i!=dev_dm_remove.end(); ++i )
-	    removeDmTableTo( *i );
-	}
-    updateDmEmptyPeMap();
-    }
 
 static bool isDmContainer( const Container& co )
     {

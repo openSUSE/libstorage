@@ -1632,7 +1632,6 @@ class Storage : public storage::StorageInterface
 	void detectLoops( ProcPart& ppart );
 	void detectNfs( ProcMounts& mounts );
 	void detectLvmVgs();
-	void detectEvms();
 	void detectDmraid( ProcPart& ppart );
 	void detectDm( ProcPart& ppart );
 	void initDisk( DiskData& data, ProcPart& pp );
@@ -1679,7 +1678,6 @@ class Storage : public storage::StorageInterface
 			      std::list<storage::commitAction*>& todo );
 	bool ignoreError( std::list<commitAction*>::iterator i,
 			  std::list<commitAction*>& al );
-	void evmsActivateDevices();
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );
@@ -1715,7 +1713,6 @@ class Storage : public storage::StorageInterface
 	static string sysfs_dir;
 	static bool is_ppc_mac;
 	static bool is_ppc_pegasos;
-	static bool no_evms;
 	CCont cont;
 	EtcFstab *fstab;
 
