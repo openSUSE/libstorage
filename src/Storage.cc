@@ -3549,7 +3549,7 @@ static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
     {
     if( rhs->cType()==lhs->cType() )
 	{
-	if( rhs->cType()==LVM||rhs->cType()==EVMS )
+	if( rhs->cType()==LVM )
 	    return( static_cast<const Dm*>(rhs)->stripes() >
 	            static_cast<const Dm*>(lhs)->stripes() );
 	else
@@ -3823,8 +3823,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 
 static bool isDmContainer( const Container& co )
     {
-    return( co.type()==EVMS || co.type()==DM || co.type()==LVM ||
-            co.type()==DMRAID );
+    return co.type()==DM || co.type()==LVM || co.type()==DMRAID;
     }
 
 bool Storage::removeDmMapsTo( const string& dev )
