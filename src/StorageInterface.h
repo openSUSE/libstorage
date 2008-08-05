@@ -773,26 +773,6 @@ namespace storage
 	                              LvmVgInfo& info) = 0;
 
 	/**
-	 * Query container info for a EVMS container
-	 *
-	 * @param name name of container, e.g. lvm2/system
-	 * @param info record that gets filled with EVMS Container special data
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int getEvmsCoInfo( const string& name, EvmsCoInfo& info) = 0;
-
-	/**
-	 * Query container info for a EVMS container
-	 *
-	 * @param name name of container, e.g. lvm2/system
-	 * @param cinfo record that gets filled with container general data
-	 * @param info record that gets filled with EVMS Container special data
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int getContEvmsCoInfo( const string& name, ContainerInfo& cinfo,
-				       EvmsCoInfo& info) = 0;
-
-	/**
 	 * Query container info for a DMRAID container
 	 *
 	 * @param name name of container, e.g. pdc_ccaihgii
@@ -847,16 +827,6 @@ namespace storage
 	 */
 	virtual int getLvmLvInfo( const string& name,
 				  deque<LvmLvInfo>& plist ) = 0;
-
-	/**
-	 * Query infos for EVMS volumes of a EVMS container
-	 *
-	 * @param name name of volume group, e.g. lvm2/system
-	 * @param plist list of records that get filled with EVMS specific info
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int getEvmsInfo( const string& name,
-				 deque<EvmsInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for software raid devices in system
@@ -1592,137 +1562,6 @@ namespace storage
 	                                unsigned long long stripeSize ) = 0;
 
 	/**
-	 * Create a EVMS container
-	 *
-	 * @param name name of container, must not contain blanks, colons
-	 * and shell special characters (e.g. system)
-	 * @param peSizeK physical extent size in kilobytes
-	 * @param lvm1 flag if lvm1 compatible format should be used
-	 * @param devs list with physical devices to add to that volume group
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int createEvmsContainer( const string& name,
-					 unsigned long long peSizeK, bool lvm1,
-					 const deque<string>& devs ) = 0;
-
-	/**
-	 * Modify a EVMS container.
-	 * This function can only be used between the creation of a
-	 * EVMS container and the next call to commit(). Containers that
-	 * are already written to disk cannot have these properties changed.
-	 *
-	 * @param old_name name of container, must not contain blanks, colons
-	 * and shell special characters (e.g. system)
-	 * @param new_name new name of container, same restrictions as for
-	 * first parameter
-	 * @param peSizeK physical extent size in kilobytes
-	 * @param lvm1 flag if lvm1 compatible format should be used
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int modifyEvmsContainer( const string& old_name,
-	                                 const string& new_name,
-					 unsigned long long peSizeK,
-					 bool lvm1 ) = 0;
-
-	/**
-	 * Remove a EVMS container. If the container contains
-	 * logical volumes, these are automatically also removed.
-	 *
-	 * @param name name of container
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int removeEvmsContainer( const string& name ) = 0;
-
-	/**
-	 * Extend a EVMS container with additional physical devices
-	 *
-	 * @param name name of container
-	 * @param devs list with physical devices to add to that container
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int extendEvmsContainer( const string& name,
-					 const deque<string>& devs ) = 0;
-
-	/**
-	 * Shrink a EVMS container
-	 *
-	 * @param name name of container
-	 * @param devs list with physical devices to remove from that container
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int shrinkEvmsContainer( const string& name,
-					 const deque<string>& devs ) = 0;
-
-	/**
-	 * Create a EVMS volume within a EVMS container
-	 *
-	 * @param coname of container
-	 * @param name of volume
-	 * @param size size of volume in megabytes
-	 * @param stripe stripe count of volume (use 1 unless you know
-	 * exactly what you are doing)
-	 * @param device is set to the device name of the new volume
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int createEvmsVolume( const string& coname, const string& name,
-				      unsigned long long sizeM, unsigned stripe,
-				      string& device ) = 0;
-
-	/**
-	 * Remove a EVMS volume
-	 *
-	 * @param device name of EVMS volume
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int removeEvmsVolumeByDevice( const string& device ) = 0;
-
-	/**
-	 * Remove a EVMS volume from a EVMS container
-	 *
-	 * @param coname name of container
-	 * @param name name of volume
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int removeEvmsVolume( const string& coname, const string& name ) = 0;
-
-	/**
-	 * Change strip count of a EVMS volume.
-	 * This can only be before the volume is created on disk.
-	 *
-	 * @param coname name of EVMS container
-	 * @param name of volume
-	 * @param stripe new stripe count of volume
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int changeEvmsStripeCount( const string& coname,
-	                                   const string& name,
-					   unsigned long stripe ) = 0;
-
-	/**
-	 * Change strip size of a EVMS volume.
-	 * This can only be before the volume is created on disk.
-	 *
-	 * @param coname name of EVMS container
-	 * @param name of volume
-	 * @param stripeSize new stripe size of volume
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int changeEvmsStripeSize( const string& coname,
-	                                  const string& name,
-					  unsigned long long stripeSize ) = 0;
-
-	/**
-	 * Activate EVMS devices on the system.
-	 * This is only necessary on systems where EVMS is not activated
-	 * during system startup. This command is executed immediately,
-	 * there is no need for a call to commit().
-	 *
-	 * @param force flag if activation should be forced
-	 * @return zero if all is ok, a negative number to indicate an error
-	 */
-	virtual int evmsActivate( bool force ) = 0;
-
-	/**
          * Determine the device name of the next created software raid device
          *
          * @param nr is set to the number of the next created software raid device
@@ -2184,23 +2023,7 @@ namespace storage
 	virtual bool readFstab( const string& dir, deque<VolumeInfo>& infos) = 0;
 
 	/**
-	 * Possibility to switch Evms handling off or on in libstorage.
-	 * This function must be called prior to libstorage initialisation.
-	 * Default is on.
-	 *
-	 * @param val determines if Evms is switched off or on
-	 */
-	virtual void setNoEvms( bool val ) = 0;
-
-	/**
-	 * Returns the state of Evms handling in libstorage.
-	 *
-	 * @param val determines if Evms is switched off or on
-	 */
-	virtual bool getNoEvms() = 0;
-
-	/**
-	 * Activate or deactivate higher level devices as MD,LVM,DM,EVMS
+	 * Activate or deactivate higher level devices as MD, LVM, DM
 	 *
 	 * @param val flag if devices should be activated or deactivated
 	 * @return bool if values could be successfully determined
@@ -2210,7 +2033,7 @@ namespace storage
 	/**
 	 * Rescan all disks.
 	 * All currently detected objects are forgotten and a new scan
-	 * for all type of objects (disks, LVM, EVMS, MD) is initiated.
+	 * for all type of objects (disks, LVM, MD) is initiated.
 	 * This function makes sense to be called after something outside
 	 * of libstorage changed disk layout or created storage objects.
 	 * Any changes already cached are lost.
