@@ -1049,7 +1049,7 @@ LvmVg::doRemoveVg()
 	    getStorage()->showInfoCb( removeVgText(true) );
 	    }
 	checkConsistency();
-	string cmd = VGREMOVEBIN " " + name();
+	string cmd = VGREMOVEBIN " " + quote(name());
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
