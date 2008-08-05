@@ -25,6 +25,7 @@
 #define MULTIPATHBIN "/sbin/multipath"
 #define DMSETUPBIN "/sbin/dmsetup"
 #define KPARTXBIN "/sbin/kpartx"
+#define DMRAIDBIN "/sbin/dmraid"
 
 
 #endif

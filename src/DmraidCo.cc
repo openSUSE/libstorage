@@ -10,6 +10,7 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -30,7 +31,7 @@ DmraidCo::~DmraidCo()
 void DmraidCo::getRaidData( const string& name )
     {
     y2milestone( "name:%s", name.c_str() );
-    SystemCmd c( "dmraid -s -c -c -c " + quote(name));
+    SystemCmd c(DMRAIDBIN " -s -c -c -c " + quote(name));
     list<string>::const_iterator ci;
     list<string> sl;
     if( c.numLines()>0 )
@@ -110,11 +111,11 @@ void DmraidCo::activate( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
-	    c.execute( "dmraid -ay -p " );
+	    c.execute(DMRAIDBIN " -ay -p");
 	    }
 	else
 	    {
-	    c.execute( "dmraid -an " );
+	    c.execute(DMRAIDBIN " -an");
 	    }
 	active = val;
 	}
@@ -123,7 +124,7 @@ void DmraidCo::activate( bool val )
 void DmraidCo::getRaids( list<string>& l )
     {
     l.clear();
-    SystemCmd c( "dmraid -s -c -c -c" );
+    SystemCmd c(DMRAIDBIN " -s -c -c -c");
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
 	list<string> sl = splitString( *c.getLine(i), ":" );
@@ -195,11 +196,11 @@ DmraidCo::doRemove()
 	    {
 	    getStorage()->showInfoCb( removeText(true) );
 	    }
-	string cmd = "cd /var/log/YaST2 && echo y | dmraid -E -r";
+	string cmd = "cd /var/log/YaST2 && echo y | " DMRAIDBIN " -E -r";
 	SystemCmd c;
 	for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
 	    {
-	    c.execute( cmd + " " + i->device );
+	    c.execute(cmd + " " + quote(i->device));
 	    }
 	if( c.retcode()!=0 )
 	    {
