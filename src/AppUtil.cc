@@ -631,7 +631,7 @@ bool humanStringToByte(const string& str, bool classic, unsigned long long& size
     return false;
 }
 
-bool system_cmd_testmode = false;
+
 const string app_ws = " \t\n";
 
 }
