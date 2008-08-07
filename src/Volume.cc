@@ -691,7 +691,7 @@ int Volume::doFormat()
         (Storage::arch().find( "sparc" )!=0 || encryption!=ENC_NONE ))
 	{
 	SystemCmd c;
-	string cmd = "/bin/dd if=";
+	string cmd = DDBIN " if=";
 	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
 	cmd += " of=" + quote(mountDevice()) + " bs=1024 count=";
 	cmd += decString(min(200ull,size_k));

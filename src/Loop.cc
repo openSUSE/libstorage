@@ -13,6 +13,7 @@
 #include "y2storage/ProcPart.h"
 #include "y2storage/Storage.h"
 #include "y2storage/SystemCmd.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace storage;
 using namespace std;
@@ -182,7 +183,7 @@ Loop::createFile()
 	    y2mil( "pa:" << pa );
 	    createPath( pa );
 	    }
-	string cmd = "dd if=/dev/zero of=" + quote(lfileRealPath());
+	string cmd = DDBIN " if=/dev/zero of=" + quote(lfileRealPath());
 	cmd += " bs=1k count=" + decString( sizeK() );
 	SystemCmd c( cmd );
 	ret = c.retcode()==0;

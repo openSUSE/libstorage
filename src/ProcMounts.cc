@@ -10,6 +10,7 @@
 #include "y2storage/ProcMounts.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -23,7 +24,7 @@ ProcMounts::ProcMounts( Storage * const sto )
     ifstream mounts( "/proc/mounts" );
     string line;
     getline( mounts, line );
-    SystemCmd mt( "mount" );
+    SystemCmd mt(MOUNTBIN);
     while( mounts.good() )
 	{
 	string dev = extractNthWord( 0, line );

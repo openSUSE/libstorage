@@ -32,5 +32,7 @@
 #define SWAPONBIN "/sbin/swapon"
 #define SWAPOFFBIN "/sbin/swapoff"
 
+#define DDBIN "/bin/dd"
+
 
 #endif

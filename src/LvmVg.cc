@@ -1344,7 +1344,7 @@ int LvmVg::doCreatePv( const string& device )
 	cmd = PARTEDCMD + quote(device) + " mklabel msdos";
 	c.execute( cmd );
 	}
-    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + device;
+    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(device);
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{

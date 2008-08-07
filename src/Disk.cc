@@ -2284,13 +2284,13 @@ int Disk::doCreate( Volume* v )
 		{
 		string cmd;
 		SystemCmd c;
-		cmd = "dd if=/dev/zero of=" + quote(p->device()) + " bs=1k count=200";
+		cmd = DDBIN " if=/dev/zero of=" + quote(p->device()) + " bs=1k count=200";
 		c.execute( cmd );
 		unsigned long long pos = p->sizeK();
 		if( pos>200 )
 		    {
 		    pos -= 200;
-		    cmd = "dd if=/dev/zero of=" + p->device() +
+		    cmd = DDBIN " if=/dev/zero of=" + quote(p->device()) +
 			  " seek=" + decString(pos) + " bs=1k count=10";
 		    c.execute( cmd );
 		    }

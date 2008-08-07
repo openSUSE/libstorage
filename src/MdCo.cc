@@ -629,9 +629,9 @@ MdCo::doCreate( Volume* v )
 		{
 		string cmd;
 		SystemCmd c;
-		cmd = "dd if=/dev/zero of=" + quote(m->device()) + " bs=1k count=200";
+		cmd = DDBIN " if=/dev/zero of=" + quote(m->device()) + " bs=1k count=200";
 		c.execute( cmd );
-		cmd = "dd if=/dev/zero of=" + quote(m->device()) +
+		cmd = DDBIN " if=/dev/zero of=" + quote(m->device()) +
 		      " seek=" + decString(m->sizeK()-10) +
 		      " bs=1k count=10";
 		c.execute( cmd );
