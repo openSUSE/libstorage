@@ -425,7 +425,7 @@ bool Disk::detectPartitions( ProcPart& ppart )
 	if( dlabel.empty() )
 	    {
 	    Cmd.setCombine();
-	    Cmd.execute( "/sbin/fdisk -l " + device() );
+	    Cmd.execute(FDISKBIN " -l " + quote(device()));
 	    if( Cmd.select( "AIX label" )>0 )
 		{
 		detected_label = "aix";

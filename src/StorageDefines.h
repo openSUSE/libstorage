@@ -5,6 +5,8 @@
 #define PARTEDBIN "/usr/sbin/parted"
 #define PARTEDCMD PARTEDBIN " -s "	// blank at end !!
 
+#define FDISKBIN "/sbin/fdisk"
+
 #define MDADMBIN "/sbin/mdadm"
 
 #define PVCREATEBIN "/sbin/pvcreate"
