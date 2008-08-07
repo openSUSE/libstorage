@@ -38,7 +38,7 @@ namespace storage
 
     public:
 
-	Lock(bool readonly);
+	Lock(bool readonly, bool disable = false);
 	~Lock() throw();
 
     private:

@@ -29,8 +29,8 @@ namespace storage
     }
 
 
-    Lock::Lock(bool readonly)
-	: fd(-1), disabled(getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
+    Lock::Lock(bool readonly, bool disable)
+	: fd(-1), disabled(disable || getenv("YAST2_STORAGE_NO_LOCKING") != NULL)
     {
 	if (disabled)
 	    return;

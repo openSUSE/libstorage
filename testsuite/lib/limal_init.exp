@@ -40,8 +40,6 @@ proc single-run { src } {
 
   # run the test
 
-  setenv YAST2_STORAGE_NO_LOCKING
-
   set result ""
   set oops [catch { set result [exec $src >$outfile 2>$errfile] } catched]
 

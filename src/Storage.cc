@@ -75,7 +75,7 @@ Storage::initDefaultLogger ()
 
 
 Storage::Storage( bool ronly, bool tmode, bool autodetec )
-    : lock(ronly), readonly(ronly), testmode(tmode), initialized(false),
+    : lock(ronly, tmode), readonly(ronly), testmode(tmode), initialized(false),
       autodetect(autodetec)
 {
     y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
