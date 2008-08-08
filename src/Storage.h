@@ -235,8 +235,8 @@ class Storage : public storage::StorageInterface
 	storage::UsedByType usedBy( const string& dev );
 	bool usedBy( const string& dev, storage::usedBy& ub );
 	bool clearUsedBy(const string& dev);
-	bool setUsedBy(const string& dev, storage::UsedByType typ,
-		       const string& name );
+	bool setUsedBy(const string& dev, storage::UsedByType ub_type,
+		       const string& ub_name);
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	bool setDmcryptData( const string& dev, const string& dm, 

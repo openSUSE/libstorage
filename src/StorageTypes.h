@@ -101,24 +101,28 @@ struct commitAction
 class usedBy
 {
 public:
-    usedBy() : t(storage::UB_NONE) {}
-    usedBy(storage::UsedByType typ, const string& n) : t(typ), nm(n) {}
-    void clear() { t=storage::UB_NONE; nm.erase(); }
-    void set( storage::UsedByType type, const string& n )
-	{ t=type; (t==storage::UB_NONE)?nm.erase():nm=n; }
-    bool operator==( const usedBy& rhs ) const
-	{ return( t==rhs.t && nm==rhs.nm ); }
-    bool operator!=( const usedBy& rhs ) const
-	{ return( !(*this==rhs)); }
+    usedBy() : ub_type(storage::UB_NONE) {}
+    usedBy(storage::UsedByType type, const string& name) : ub_type(type), ub_name(name) {}
+
+    void clear() { ub_type = storage::UB_NONE; ub_name.erase(); }
+    void set(storage::UsedByType type, const string& name)
+	{ ub_type = type; (ub_type==storage::UB_NONE)?ub_name.erase():ub_name = name; }
+
+    bool operator==(const usedBy& rhs) const
+	{ return ub_type == rhs.ub_type && ub_name == rhs.ub_name; }
+    bool operator!=(const usedBy& rhs) const
+	{ return !(*this == rhs); }
+
     operator string() const;
 
-    storage::UsedByType type() const { return t; }
-    const string& name() const { return nm; }
+    storage::UsedByType type() const { return ub_type; }
+    const string& name() const { return ub_name; }
+
     friend std::ostream& operator<< (std::ostream&, const usedBy&);
 
 private:
-    storage::UsedByType t;
-    string nm;
+    storage::UsedByType ub_type;
+    string ub_name;
 };
 
 

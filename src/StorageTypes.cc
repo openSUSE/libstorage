@@ -55,9 +55,9 @@ bool commitAction::operator<( const commitAction& rhs ) const
     usedBy::operator string() const
     {
 	string st;
-	if( t!=storage::UB_NONE )
+	if (type() != storage::UB_NONE)
 	{
-	    switch( t )
+	    switch (type())
 	    {
 		case storage::UB_LVM:
 		    st = "lvm";
@@ -75,7 +75,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
 		    st = "UNKNOWN";
 		    break;
 	    }
-	    st += "[" + nm + "]";
+	    st += "[" + name() + "]";
 	}
 	return st;
     }
@@ -83,7 +83,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
 
     std::ostream& operator<<(std::ostream& s, const usedBy& d)
     {
-	if( d.t!=storage::UB_NONE )
+	if (d.type() != storage::UB_NONE)
 	{
 	    s << " UsedBy:" << string(d);
 	}

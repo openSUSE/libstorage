@@ -4592,32 +4592,31 @@ bool Storage::clearUsedBy(const string& dev)
 }
 
 
-bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
-    {
+bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_name)
+{
     bool ret=true;
     VolIterator v;
     if( !findVolume( dev, v ) )
-	{
+    {
 	DiskIterator i = findDisk( dev );
 	if( i != dEnd() )
-	    {
-	    i->setUsedBy( typ, name );
-	    }
-	else
-	    {
-	    ret = false;
-	    y2error( "could not set used by %d:%s for %s", typ, name.c_str(),
-		     dev.c_str() );
-	    }
-	}
-    else
 	{
-	v->setUsedBy( typ, name );
+	    i->setUsedBy(ub_type, ub_name);
 	}
-    y2milestone( "dev:%s usedBy %d:%s ret:%d", dev.c_str(), typ, name.c_str(),
-                 ret );
-    return( ret );
+	else
+	{
+	    ret = false;
+	    y2err("could not set ub_type:" << ub_type << " ub_name:" << ub_name <<
+		  "for dev: " << dev);
+	}
     }
+    else
+    {
+	v->setUsedBy(ub_type, ub_name);
+    }
+    y2mil("dev:" << dev << " ub_type:" << ub_type << " ub_name:" << ub_name << " ret:" << ret);
+    return ret;
+}
 
 
 bool Storage::usedBy( const string& dev, storage::usedBy& ub )
@@ -4931,9 +4930,10 @@ int Storage::removeContainer( Container* val, bool call_del )
     return( ret );
     }
 
-int Storage::removeUsing( const string& device, const storage::usedBy& uby )
-    {
-    y2mil( "device:" << device << uby );
+
+int Storage::removeUsing(const string& device, const storage::usedBy& uby)
+{
+    y2mil("device:" << device << " uby:" << uby);
     string name = uby.name();
     int ret=0;
     switch( uby.type() )
@@ -4957,9 +4957,10 @@ int Storage::removeUsing( const string& device, const storage::usedBy& uby )
 	    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;
 	    break;
 	}
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
 
 void Storage::rootMounted()
     {
