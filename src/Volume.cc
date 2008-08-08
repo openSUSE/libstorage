@@ -1497,15 +1497,15 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 		{
 		    cmd += " --key-file /dev/urandom create";
 		    cmd += ' ';
-		    cmd += table;
+		    cmd += quote(table);
 		    cmd += ' ';
-		    cmd += is_loop?loop_dev:dev;
+		    cmd += quote(is_loop?loop_dev:dev);
 		}
 		else
 		{
 		    cmd += " luksFormat";
 		    cmd += ' ';
-		    cmd += is_loop?loop_dev:dev;
+		    cmd += quote(is_loop?loop_dev:dev);
 		    cmd += ' ';
 		    cmd += pwdf;
 		}
