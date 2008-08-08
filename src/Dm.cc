@@ -433,13 +433,13 @@ void Dm::activate( bool val )
 	    c.execute(DMSETUPBIN " version");
 	    if( c.retcode()!=0 )
 		{
-		c.execute(" grep \"^dm[-_]mod[ 	]\" /proc/modules" );
+		c.execute("grep \"^dm[-_]mod[ \t]\" /proc/modules");
 		if( c.numLines()<=0 )
-		    c.execute( "modprobe dm-mod" );
-		c.execute(" grep \"^dm[-_]snapshot[ 	]\" /proc/modules" );
+		    c.execute("modprobe dm-mod");
+		c.execute("grep \"^dm[-_]snapshot[ \t]\" /proc/modules");
 		if( c.numLines()<=0 )
-		    c.execute( "modprobe dm-snapshot" );
-		c.execute( "/sbin/devmap_mknod.sh" );
+		    c.execute("modprobe dm-snapshot");
+		c.execute("/sbin/devmap_mknod.sh");
 		}
 	    }
 	else
