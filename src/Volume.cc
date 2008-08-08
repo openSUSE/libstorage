@@ -487,7 +487,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
     else
 	{
 	FsCapabilities caps;
-	if( uby.t != UB_NONE )
+	if( uby.type() != UB_NONE )
 	    {
 	    ret = VOLUME_ALREADY_IN_USE;
 	    }
@@ -528,7 +528,7 @@ int Volume::changeMount( const string& m )
 	{
 	ret = VOLUME_MOUNT_POINT_INVALID;
 	}
-    else if( uby.t != UB_NONE )
+    else if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -554,7 +554,7 @@ int Volume::changeMountBy( MountByType mby )
     int ret = 0;
     y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
     y2mil( "vorher:" << *this );
-    if( uby.t != UB_NONE )
+    if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -598,7 +598,7 @@ int Volume::changeFstabOptions( const string& options )
     int ret = 0;
     y2milestone( "device:%s options:%s encr:%s", dev.c_str(), options.c_str(),
                  encTypeString(encryption).c_str() );
-    if( uby.t != UB_NONE )
+    if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -670,7 +670,7 @@ int Volume::doFormat()
 	{
 	cont->getStorage()->showInfoCb( formatText(true) );
 	}
-    if( uby.t != UB_NONE )
+    if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1131,7 +1131,7 @@ int Volume::doMount()
 	{
 	createPath( lmount );
 	}
-    if( ret==0 && !mp.empty() && uby.t != UB_NONE )
+    if( ret==0 && !mp.empty() && uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1166,7 +1166,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
     {
     int ret=0;
     y2milestone( "val:%llu", newSizeK );
-    if( uby.t != UB_NONE )
+    if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}

@@ -97,10 +97,12 @@ struct commitAction
 	{ return( !(*this < rhs && *this == rhs) ); }
     };
 
-struct usedBy
-    {
-    usedBy() : t(storage::UB_NONE) {;}
-    usedBy( storage::UsedByType typ, const string& n ) : t(typ), nm(n) {;}
+
+class usedBy
+{
+public:
+    usedBy() : t(storage::UB_NONE) {}
+    usedBy(storage::UsedByType typ, const string& n) : t(typ), nm(n) {}
     void clear() { t=storage::UB_NONE; nm.erase(); }
     void set( storage::UsedByType type, const string& n )
 	{ t=type; (t==storage::UB_NONE)?nm.erase():nm=n; }
@@ -108,52 +110,17 @@ struct usedBy
 	{ return( t==rhs.t && nm==rhs.nm ); }
     bool operator!=( const usedBy& rhs ) const
 	{ return( !(*this==rhs)); }
-    inline operator string() const;
+    operator string() const;
 
-    storage::UsedByType type() const { return( t ); }
-    const string& name() const { return( nm ); }
-    friend inline std::ostream& operator<< (std::ostream&, const usedBy& );
+    storage::UsedByType type() const { return t; }
+    const string& name() const { return nm; }
+    friend std::ostream& operator<< (std::ostream&, const usedBy&);
 
+private:
     storage::UsedByType t;
     string nm;
-    };
+};
 
-inline usedBy::operator string() const
-    {
-    string st;
-    if( t!=storage::UB_NONE )
-	{
-	switch( t )
-	    {
-	    case storage::UB_LVM:
-		st = "lvm";
-		break;
-	    case storage::UB_MD:
-		st = "md";
-		break;
-	    case storage::UB_DM:
-		st = "dm";
-		break;
-	    case storage::UB_DMRAID:
-		st = "dmraid";
-		break;
-	    default:
-		st = "UNKNOWN";
-		break;
-	    }
-	st += "[" + nm + "]";
-	}
-    return( st );
-    }
-
-inline std::ostream& operator<< (std::ostream& s, const usedBy& d )
-    {
-    if( d.t!=storage::UB_NONE )
-	{
-	s << " UsedBy:" << string(d);
-	}
-    return( s );
-    }
 
 struct match_string
     {
