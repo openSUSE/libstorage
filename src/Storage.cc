@@ -4585,6 +4585,13 @@ string Storage::findNormalDevice( const string& device )
     return( ret );
     }
 
+
+bool Storage::clearUsedBy(const string& dev)
+{
+    return setUsedBy(dev, UB_NONE, "");
+}
+
+
 bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
     {
     bool ret=true;
@@ -4611,6 +4618,7 @@ bool Storage::setUsedBy( const string& dev, UsedByType typ, const string& name )
                  ret );
     return( ret );
     }
+
 
 bool Storage::usedBy( const string& dev, storage::usedBy& ub )
     {

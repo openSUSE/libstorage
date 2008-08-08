@@ -185,7 +185,7 @@ DmCo::getDmData( ProcPart& ppart )
 		skip = true;
 		getStorage()->setDmcryptData( it->first, m->device(), min_num,
 		                              m->sizeK(), detectEncryption (m->device()) );
-		getStorage()->setUsedBy( it->first, UB_NONE, "" );
+		getStorage()->clearUsedBy(it->first);
 		}
 	    if( !skip && m->sizeK()>0 )
 		addDm( m );
@@ -273,7 +273,7 @@ DmCo::removeDm( const string& tname )
 	    for( map<string,unsigned long>::const_iterator it = pe.begin();
 		 it!=pe.end(); ++it )
 		{
-		getStorage()->setUsedBy( it->first, UB_NONE, "" );
+		getStorage()->clearUsedBy(it->first);
 		}
 	    i->setDeleted( true );
 	    }

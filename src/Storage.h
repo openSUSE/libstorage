@@ -234,8 +234,9 @@ class Storage : public storage::StorageInterface
 	void logProcData( const string& l="" );
 	storage::UsedByType usedBy( const string& dev );
 	bool usedBy( const string& dev, storage::usedBy& ub );
-	bool setUsedBy( const string& dev, storage::UsedByType typ,
-	                const string& name );
+	bool clearUsedBy(const string& dev);
+	bool setUsedBy(const string& dev, storage::UsedByType typ,
+		       const string& name );
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	bool setDmcryptData( const string& dev, const string& dm, 

@@ -400,7 +400,7 @@ MdCo::shrinkMd( unsigned num, const string& dev )
     if( ret==0 )
 	{
 	string d = normalizeDevice( dev );
-	getStorage()->setUsedBy( d, UB_NONE, "" );
+	getStorage()->clearUsedBy(d);
 	}
     y2milestone( "ret:%d", ret );
     return( ret );
@@ -533,7 +533,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	list<string> devs;
 	i->getDevs( devs );
 	for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
-	    getStorage()->setUsedBy( *s, UB_NONE, "" );
+	    getStorage()->clearUsedBy(*s);
 	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))

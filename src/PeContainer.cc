@@ -28,9 +28,9 @@ PeContainer::~PeContainer()
 void PeContainer::unuseDev()
     {
     for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
-	getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	getStorage()->clearUsedBy(s->device);
     for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
-	getStorage()->setUsedBy( s->device, UB_NONE, "" );
+	getStorage()->clearUsedBy(s->device);
     }
 
 int
@@ -157,7 +157,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	}
     if( ret==0 )
 	{
-	getStorage()->setUsedBy( dev, UB_NONE, "" );
+	getStorage()->clearUsedBy(dev);
 	removed_pe += cur_pv.num_pe;
 	if( !added_pv )
 	    plrem.push_back( cur_pv );
