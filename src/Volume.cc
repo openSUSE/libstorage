@@ -830,7 +830,7 @@ int Volume::doFormat()
 	    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + quote(mountDevice());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
-		ret = VOLUME_TUNE2FS_FAILED;
+		ret = VOLUME_TUNEREISERFS_FAILED;
 	    }
 	}
     if( ret==0 )
@@ -1263,7 +1263,7 @@ int Volume::resizeFs()
 		    }
 		if( ret==0 )
 		    {
-		    cmd = "xfs_growfs " + mpoint;
+		    cmd = "xfs_growfs " + quote(mpoint);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
@@ -1461,7 +1461,7 @@ int Volume::getFreeLoop()
     int ret = 0;
     if( loop_dev.empty() )
 	{
-	SystemCmd c(LOSETUPBIN " -a" );
+	SystemCmd c(LOSETUPBIN " -a");
 	ret = getFreeLoop( c );
 	}
     y2milestone( "ret:%d", ret );
@@ -1472,7 +1472,7 @@ string Volume::getLosetupCmd( storage::EncryptType, const string& pwdfile ) cons
     {
     string cmd = LOSETUPBIN " " + quote(loop_dev) + " ";
     const Loop* l = static_cast<const Loop*>(this);
-    cmd += l->lfileRealPath();
+    cmd += quote(l->lfileRealPath());
     y2milestone( "cmd:%s", cmd.c_str() );
     return( cmd );
     }
@@ -1530,35 +1530,35 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 	    case ENC_LUKS:
 		cmd += " --key-file " + pwdf;
 		cmd += " luksOpen ";
-		cmd += is_loop?loop_dev:dev;
+		cmd += quote(is_loop?loop_dev:dev);
 		cmd += ' ';
-		cmd += table;
+		cmd += quote(table);
 		break;
 
 	    case ENC_TWOFISH:
 		cmd += " --hash sha512 --cipher twofish";
 		cmd += " create ";
-		cmd += table;
+		cmd += quote(table);
 		cmd += ' ';
-		cmd += is_loop?loop_dev:dev;
+		cmd += quote(is_loop?loop_dev:dev);
 		cmd += " < " + pwdf;
 		break;
 
 	    case ENC_TWOFISH_OLD:
 		cmd += " --hash ripemd160:20 --cipher twofish-cbc-null --key-size 192";
 		cmd += " create ";
-		cmd += table;
+		cmd += quote(table);
 		cmd += ' ';
-		cmd += is_loop?loop_dev:dev;
+		cmd += quote(is_loop?loop_dev:dev);
 		cmd += " < " + pwdf;
 		break;
 
 	    case ENC_TWOFISH256_OLD:
 		cmd += " --hash sha512 --cipher twofish-cbc-null --key-size 256";
 		cmd += " create ";
-		cmd += table;
+		cmd += quote(table);
 		cmd += ' ';
-		cmd += is_loop?loop_dev:dev;
+		cmd += quote(is_loop?loop_dev:dev);
 		cmd += " < " + pwdf;
 		break;
 
@@ -1883,7 +1883,7 @@ int Volume::doCryptsetup()
 		    if( cmd.retcode()!=0 )
 		    ret = VOLUME_CRYPTFORMAT_FAILED;
 		if( ret==0 && mp=="swap" )
-			cmd.execute( "mkswap " + dmcrypt_dev );
+		    cmd.execute("mkswap " + quote(dmcrypt_dev));
 		}
 		}
 	    if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
