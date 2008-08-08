@@ -15,6 +15,7 @@
 #include "y2storage/Storage.h"
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/Dasd.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace std;
 using namespace storage;
@@ -35,7 +36,7 @@ Dasd::~Dasd()
 bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     {
     bool ret = true;
-    string cmd_line = "/sbin/fdasd -p " + quote(device());
+    string cmd_line = FDASDBIN " -p " + quote(device());
     system_stderr.erase();
     y2milestone( "executing cmd:%s", cmd_line.c_str() );
     SystemCmd Cmd( cmd_line );
@@ -49,7 +50,7 @@ bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
 bool Dasd::detectPartitions( ProcPart& ppart )
     {
     bool ret = true;
-    string cmd_line = "dasdview -x " + quote(device());
+    string cmd_line = DASDVIEWBIN " -x " + quote(device());
     system_stderr.erase();
     detected_label = "dasd";
     setLabelData( "dasd" );
@@ -381,7 +382,7 @@ int Dasd::doFdasd()
 	++i;
 	}
     inpfile.close();
-    string cmd_line = "/sbin/fdasd -c " + inpname + " " + quote(device());
+    string cmd_line = FDASDBIN " -c " + inpname + " " + quote(device());
     if( execCheckFailed( cmd_line ) )
 	{
 	SystemCmd cmd( "cat " + inpname );
@@ -551,8 +552,7 @@ int Dasd::doDasdfmt()
 	    normalizeDevice(*i);
 	    *i = "-f " + *i;
 	    }
-	string cmd_line = "dasdfmt -Y -P 4 -b 4096 -y -m 1 -d cdl " +
-	                  mergeString(devs);
+	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + quote(devs);
 	y2milestone( "cmdline:%s", cmd_line.c_str() );
 	CallbackProgressBar cb = getStorage()->getCallbackProgressBarTheOne();
 	ScrollBarHandler* sb = new DasdfmtScrollbar( cb );
@@ -647,6 +647,3 @@ std::ostream& operator<< (std::ostream& s, const Dasd& d )
     return( s );
     }
 }
-
-
-

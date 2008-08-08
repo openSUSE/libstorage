@@ -38,5 +38,9 @@
 
 #define DDBIN "/bin/dd"
 
+#define DASDFMTBIN "/sbin/dasdfmt"
+#define DASDVIEWBIN "/sbin/dasdview"
+#define FDASDBIN "/sbin/fdasd"
+
 
 #endif
