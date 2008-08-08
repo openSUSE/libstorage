@@ -944,12 +944,12 @@ void LvmVg::activate( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
-	    c.execute( "vgscan --mknodes" );
-	    c.execute( "vgchange -a y" );
+	    c.execute(VGSCANBIN " --mknodes");
+	    c.execute(VGCHANGEBIN " -a y");
 	    }
 	else
 	    {
-	    c.execute( "vgchange -a n" );
+	    c.execute(VGCHANGEBIN " -a n");
 	    }
 	active = val;
 	}

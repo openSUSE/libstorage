@@ -21,6 +21,8 @@
 #define VGEXTENDBIN "/sbin/vgextend"
 #define VGREDUCEBIN "/sbin/vgreduce"
 #define VGDISPLAYBIN "/sbin/vgdisplay"
+#define VGSCANBIN "/sbin/vgscan"
+#define VGCHANGEBIN "/sbin/vgchange"
 
 #define CRYPTSETUPBIN "/sbin/cryptsetup"
 #define LOSETUPBIN "/sbin/losetup"
