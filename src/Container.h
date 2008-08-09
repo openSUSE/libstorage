@@ -146,7 +146,6 @@ class Container
 	void setUsedBy(storage::UsedByType ub_type, const string& ub_name) { uby.set(ub_type, ub_name); }
 	const storage::usedBy& getUsedBy() const { return uby; }
 	storage::UsedByType getUsedByType() const { return uby.type(); }
-	const string& usedByName() const { return uby.name(); }
 
 	bool readonly() const { return ronly; }
 	unsigned long minorNr() const { return mnr; }

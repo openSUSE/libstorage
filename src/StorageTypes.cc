@@ -52,6 +52,24 @@ bool commitAction::operator<( const commitAction& rhs ) const
     }
 
 
+    const string usedBy::device() const
+    {
+	switch (ub_type)
+	{
+	    case UB_NONE:
+		return "";
+
+	    case UB_LVM:
+	    case UB_MD:
+	    case UB_DMRAID:
+		return "/dev/" + ub_name;
+
+	    case UB_DM:
+		return "/dev/mapper/" + ub_name;
+	}
+    }
+
+
     usedBy::operator string() const
     {
 	string st;

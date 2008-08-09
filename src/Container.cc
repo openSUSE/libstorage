@@ -285,8 +285,9 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.name = name();
     info.device = device();
     info.volcnt = vp.length();
-    info.usedBy = getUsedByType();
-    info.usedByName = usedByName();
+    info.usedByType = uby.type();
+    info.usedByName = uby.name();
+    info.usedByDevice = uby.device();
     info.readonly = readonly();
     }
 

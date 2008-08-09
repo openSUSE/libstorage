@@ -4934,24 +4934,23 @@ int Storage::removeContainer( Container* val, bool call_del )
 int Storage::removeUsing(const string& device, const storage::usedBy& uby)
 {
     y2mil("device:" << device << " uby:" << uby);
-    string name = uby.name();
     int ret=0;
     switch( uby.type() )
 	{
 	case UB_MD:
-	    ret = removeVolume( "/dev/" + name );
+	    ret = removeVolume(uby.device());
 	    break;
 	case UB_DM:
-	    ret = removeVolume( "/dev/mapper/" + name );
+	    ret = removeVolume(uby.device());
 	    break;
 	case UB_LVM:
-	    ret = removeLvmVg( name );
+	    ret = removeLvmVg(uby.name());
 	    break;
 	case UB_DMRAID:
 	    //ret = removeDmraidCo( name );
 	    break;
 	case UB_NONE:
-	    y2warning( "%s used by none", device.c_str() );
+	    y2war(device << " used by none");
 	    break;
 	default:
 	    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;

@@ -170,8 +170,9 @@ namespace storage
 	unsigned volcnt;
 	string device;
 	string name;
-	UsedByType usedBy;
+	UsedByType usedByType;
 	string usedByName;
+	string usedByDevice;
 	bool readonly;
     };
 
@@ -243,8 +244,9 @@ namespace storage
 	string device;
 	string mount;
 	MountByType mount_by;
-	UsedByType usedBy;
+	UsedByType usedByType;
 	string usedByName;
+	string usedByDevice;
 	string fstab_options;
 	string uuid;
 	string label;

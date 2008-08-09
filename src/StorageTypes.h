@@ -100,6 +100,8 @@ struct commitAction
 
 class usedBy
 {
+    // TODO: save device instead of name?
+
 public:
     usedBy() : ub_type(storage::UB_NONE) {}
     usedBy(storage::UsedByType type, const string& name) : ub_type(type), ub_name(name) {}
@@ -117,8 +119,9 @@ public:
 
     storage::UsedByType type() const { return ub_type; }
     const string& name() const { return ub_name; }
+    const string device() const;
 
-    friend std::ostream& operator<< (std::ostream&, const usedBy&);
+    friend std::ostream& operator<<(std::ostream&, const usedBy&);
 
 private:
     storage::UsedByType ub_type;
