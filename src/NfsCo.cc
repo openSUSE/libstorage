@@ -221,7 +221,7 @@ inline std::ostream& operator<< (std::ostream& s, const NfsCo& d )
 
 void NfsCo::logDifference( const Container& d ) const
     {
-    y2mil( "" << Container::getDiffString( d ));
+    y2mil(Container::getDiffString(d));
     const NfsCo* p = dynamic_cast<const NfsCo*>(&d);
     if( p != NULL )
 	{

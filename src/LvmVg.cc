@@ -1488,7 +1488,7 @@ void LvmVg::logDifference( const Container& d ) const
 	    }
 	}
     else
-	y2mil( "" << Container::getDiffString(d) );
+	y2mil(Container::getDiffString(d));
     }
 
 bool LvmVg::equalContent( const Container& rhs ) const

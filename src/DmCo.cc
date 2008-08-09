@@ -343,7 +343,7 @@ inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
 
 void DmCo::logDifference( const Container& d ) const
     {
-    y2mil( "" << getDiffString( d ));
+    y2mil(getDiffString(d));
     const DmCo * p = dynamic_cast<const DmCo*>(&d);
     if( p != NULL )
 	{

@@ -348,7 +348,7 @@ inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
 
 void LoopCo::logDifference( const Container& d ) const
     {
-    y2mil( "" << getDiffString( d ));
+    y2mil(getDiffString(d));
     const LoopCo * p = dynamic_cast<const LoopCo*>(&d);
     if( p != NULL )
 	{

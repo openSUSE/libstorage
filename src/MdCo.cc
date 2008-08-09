@@ -719,7 +719,7 @@ std::ostream& operator<< (std::ostream& s, const MdCo& d )
 
 void MdCo::logDifference( const Container& d ) const
     {
-    y2mil( "" << getDiffString( d ));
+    y2mil(getDiffString(d));
     const MdCo * p = dynamic_cast<const MdCo*>(&d);
     if( p != NULL )
 	{

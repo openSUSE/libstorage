@@ -2717,7 +2717,7 @@ void Disk::logDifference( const Container& d ) const
 	    }
 	}
     else
-	y2mil( "" << log );
+	y2mil(log);
     }
 
 bool Disk::equalContent( const Container& rhs ) const
