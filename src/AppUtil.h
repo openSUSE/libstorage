@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <fstream>
 #include <sstream>
+#include <locale>
 #include <string>
 #include <list>
 #include <map>
@@ -45,6 +46,14 @@ void undevDevice( string& dev );
 bool isNfsDev( const string& dev );
 unsigned getMajorDevices( const string& driver );
 
+
+template<class StreamType>
+void classic(StreamType& stream)
+{
+    stream.imbue(std::locale::classic());
+}
+
+
 void createLogger(const string& component, const string& name,
 		  const string& logpath, const string& logfile);
 
@@ -72,16 +81,20 @@ void logMsgVaArgs(unsigned level, const char* file, unsigned line,
 #define y2log_op(level, file, line, function, op)			\
     do {								\
 	std::ostringstream __buf;					\
+	classic(__buf);							\
 	__buf << op;							\
 	logMsg(level, file, line, function, __buf.str());		\
     } while (0)
 
+
 string sformat(const char* format, ...);
+
 
 string byteToHumanString(unsigned long long size, bool classic, int precision,
 			 bool omit_zeroes);
 
 bool humanStringToByte(const string& str, bool classic, unsigned long long& size);
+
 
 inline const char* _(const char* msgid)
 {
@@ -92,6 +105,7 @@ inline const char* _(const char* msgid, const char* msgid_plural, unsigned long 
 {
     return dngettext("storage", msgid, msgid_plural, n);
 }
+
 
 extern const string app_ws;
 

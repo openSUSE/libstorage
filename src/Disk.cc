@@ -626,6 +626,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 
     y2debug( "Line: %s", Line.c_str() );
     std::istringstream Data( Line );
+    classic(Data);
 
     nr=0;
     StartM = EndM = 0;
@@ -639,7 +640,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	{
 	Data >> nr >> StartM >> skip >> EndM >> skip >> skip;
 	}
-    if( !Data.good() )
+    if (Data.fail())
 	{
 	y2mil( "invalid line:" << Line );
 	nr = 0;
