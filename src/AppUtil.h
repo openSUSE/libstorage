@@ -81,9 +81,9 @@ void logMsgVaArgs(unsigned level, const char* file, unsigned line,
 #define y2log_op(level, file, line, function, op)			\
     do {								\
 	std::ostringstream __buf;					\
-	classic(__buf);							\
+	storage::classic(__buf);					\
 	__buf << op;							\
-	logMsg(level, file, line, function, __buf.str());		\
+	storage::logMsg(level, file, line, function, __buf.str());	\
     } while (0)
 
 
