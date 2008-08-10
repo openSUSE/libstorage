@@ -171,7 +171,7 @@ namespace storage
 	string device;
 	string name;
 	UsedByType usedByType;
-	string usedByName;
+	string usedByName;	// deprecated
 	string usedByDevice;
 	bool readonly;
     };
@@ -245,7 +245,7 @@ namespace storage
 	string mount;
 	MountByType mount_by;
 	UsedByType usedByType;
-	string usedByName;
+	string usedByName;	// deprecated
 	string usedByDevice;
 	string fstab_options;
 	string uuid;
@@ -1593,8 +1593,8 @@ namespace storage
 	/**
 	 * Compute the size of a raid device.
 	 *
-	 * The size compute may not be accurate. It should not be used for
-	 * further computations.
+	 * The size compute may not be accurate. It must not be used for
+	 * further computations. Do not used in new code.
 	 *
 	 * @param md_type raid type of the software raid
 	 * @param devices list with physical devices for the software raid
