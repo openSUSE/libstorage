@@ -103,6 +103,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
     defaultMountBy = MOUNTBY_ID;
     detectMounted = true;
     ifstream File( "/proc/version" );
+    classic(File);
     string line;
     getline( File, line );
     File.close();
@@ -213,6 +214,7 @@ Storage::initialize()
 void Storage::dumpObjectList()
 {
     ostringstream buf;
+    classic(buf);
     printInfo(buf);
     std::list<string> l = splitString( buf.str(), "\n" );
     y2mil("DETECTED OBJECTS");
@@ -724,12 +726,14 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
+		classic(File);
 		File >> Range;
 		}
 	    SysfsFile = SysfsDir+"/size";
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
+		classic(File);
 		File >> Size;
 		}
 	    string dn = Entry->d_name;
@@ -856,6 +860,7 @@ Storage::logVolumes( const string& Dir )
     {
     string fname( Dir + "/volume_info.tmp" );
     ofstream file( fname.c_str() );
+    classic(file);
     for( VolIterator i=vBegin(); i!=vEnd(); ++i )
 	{
 	if( i->getFs()!=FSUNKNOWN )
@@ -3483,6 +3488,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
     {
     co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
     std::ostringstream b;
+    classic(b);
     if( stage==DECREASE )
 	{
 	vl.reverse();
@@ -4390,6 +4396,7 @@ void
 Storage::logCo( Container* c ) const
     {
     std::ostringstream b;
+    classic(b);
     c->print( b );
     y2mil( "log co:" << b.str() );
     for( Container::ConstPlainIterator i=c->begin(); i!=c->end(); ++i )

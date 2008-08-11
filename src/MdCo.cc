@@ -87,6 +87,7 @@ MdCo::getMdData()
     y2milestone( "begin" );
     string line;
     std::ifstream file( "/proc/mdstat" );
+    classic(file);
     unsigned dummy;
     getline( file, line );
     while( file.good() )
@@ -158,6 +159,7 @@ MdCo::getMdData( unsigned num )
     y2milestone( "num:%u", num );
     string line;
     std::ifstream file( "/proc/mdstat" );
+    classic(file);
     string md = "md" + decString(num);
     getline( file, line );
     while( file.good() )

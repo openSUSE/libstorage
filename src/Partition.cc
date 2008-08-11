@@ -41,6 +41,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
     {
     string ts, rs;
     istringstream i( Data );
+    classic(i);
     i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
 	 hex >> idt >> dec >> ts >> rs;
     orig_size_k = size_k;

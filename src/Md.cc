@@ -641,12 +641,14 @@ void Md::logDifference( const Md& rhs ) const
     if( devs!=rhs.devs )
 	{
 	std::ostringstream b;
+	classic(b);
 	b << " Devices:" << devs << "-->" << rhs.devs;
 	log += b.str();
 	}
     if( spare!=rhs.spare )
 	{
 	std::ostringstream b;
+	classic(b);
 	b << " Spares:" << spare << "-->" << rhs.spare;
 	log += b.str();
 	}

@@ -61,6 +61,7 @@ Volume::~Volume()
 void Volume::setNameDev()
     {
     std::ostringstream Buf_Ci;
+    classic(Buf_Ci);
     if( numeric )
 	Buf_Ci << cont->device() << (Disk::needP(cont->device())?"p":"") << num;
     else
@@ -240,6 +241,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
     if( found )
 	{
 	std::ostringstream b;
+	classic(b);
 	b << "line[" << device() << "]=";
 	b << "noauto:" << entry.noauto;
 	if( mp.empty() )
@@ -271,6 +273,7 @@ void Volume::getStartData()
 	{
 	char buf[10];
 	ifstream file( dev.c_str() );
+	classic(file);
 	file.read( buf, sizeof(buf) );
 	if( file.good() && strncmp( buf, "LUKS", 4 )==0 )
 	    setEncryption( ENC_LUKS );
@@ -329,6 +332,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 	{
 	list<string> l = splitString( *loopData.getLine( 0, true ));
 	std::ostringstream b;
+	classic(b);
 	b << "line[" << device() << "]=" << l;
 	y2mil(b.str());
 	if( !l.empty() )
@@ -382,6 +386,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 	list<string> l = splitString( *blkidData.getLine( 0, true ), " \t\n",
 	                              true, true, "\"" );
 	std::ostringstream b;
+	classic(b);
 	b << "line[" << device() << "]=" << l;
 	y2mil(b.str());
 	if( !l.empty() )
@@ -698,6 +703,7 @@ int Volume::doFormat()
 	if( c.execute( cmd ) != 0 )
 	    ret = VOLUME_FORMAT_DD_FAILED;
 	ofstream s( mountDevice().c_str() );
+	classic(s);
 	ofstream::pos_type p = s.seekp( 0, ios_base::end ).tellp();
 	y2mil( "good:" << s.good() << " pos_type:" << p );
 	const unsigned count=200;
@@ -907,6 +913,7 @@ void Volume::triggerUdevUpdate()
     if( access( path.c_str(), R_OK )==0 )
 	{
 	ofstream file( path.c_str() );
+	classic(file);
 	if( file.good() )
 	    {
 	    y2mil( "writing \"add\" to " << path );
@@ -1655,6 +1662,7 @@ EncryptType Volume::detectEncryption()
     do
 	{
 	ofstream pwdfile( fname.c_str() );
+	classic(pwdfile);
 	pwdfile << crypt_pwd;
 	pwdfile.close();
 	encryption = orig_encryption = try_order[pos];
@@ -1765,6 +1773,7 @@ int Volume::doLosetup()
 		{
 		fname = cont->getStorage()->tmpDir()+"/pwdf";
 		ofstream pwdfile( fname.c_str() );
+		classic(pwdfile);
 		pwdfile << crypt_pwd << endl;
 		pwdfile.close();
 		}
@@ -1870,6 +1879,7 @@ int Volume::doCryptsetup()
 	    {
 	    string fname = cont->getStorage()->tmpDir()+"/pwdf";
 	    ofstream pwdfile( fname.c_str() );
+	    classic(pwdfile);
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();
 	    SystemCmd cmd;
@@ -2957,6 +2967,7 @@ Volume::logDifference( const Volume& rhs ) const
     if( uby!=rhs.uby )
 	{
 	std::ostringstream b;
+	classic(b);
 	b << uby << "-->" << string(rhs.uby);
 	ret += b.str();
 	}

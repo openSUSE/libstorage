@@ -22,6 +22,7 @@ ProcMounts::ProcMounts( Storage * const sto )
     getFindRevMap( "/dev/disk/by-label", by_label );
     getFindRevMap( "/dev/disk/by-uuid", by_uuid );
     ifstream mounts( "/proc/mounts" );
+    classic(mounts);
     string line;
     getline( mounts, line );
     SystemCmd mt(MOUNTBIN);

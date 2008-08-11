@@ -75,6 +75,7 @@ bool AsciiFile::appendFile( AsciiFile& File_Cv )
 bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr )
 {
     ifstream File_Ci( Name_Cv.c_str() );
+    classic(File_Ci);
     string Line_Ci;
 
     bool Ret_bi = File_Ci.good();
@@ -103,6 +104,7 @@ bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
 bool AsciiFile::insertFile( const string& Name_Cv, unsigned int BeforeLine_iv )
 {
     ifstream File_Ci( Name_Cv.c_str() );
+    classic(File_Ci);
     string Line_Ci;
     vector<string> New_Ci;
 
@@ -178,6 +180,7 @@ bool AsciiFile::updateFile()
 	BackupCreated_b = true;
 	}
     ofstream File_Ci( Name_C.c_str() );
+    classic(File_Ci);
     unsigned int Idx_ii = 0;
 
     DBG( App_pC->Dbg() << "Writing File:\"" << Name_C << "\"\n"; )
@@ -207,6 +210,7 @@ bool AsciiFile::removeIfEmpty()
 bool AsciiFile::saveToFile( const string& Name_Cv )
     {
     ofstream File_Ci( Name_Cv.c_str() );
+    classic(File_Ci);
     unsigned int Idx_ii = 0;
 
     DBG( App_pC->Dbg() << "SaveToFile File:\"" << Name_Cv << "\"\n"; )

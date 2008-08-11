@@ -189,6 +189,7 @@ string Dm::getDevice( const string& majmin )
 	    if( pos != string::npos )
 		pair[pos] = ' ';
 	    istringstream i( pair );
+	    classic(i);
 	    i >> mj >> mi;
 	    list<string> ls = splitString(pair);
 	    if( cont->majorNr()>0 && mj==cont->majorNr() && mi==cont->minorNr())
@@ -587,6 +588,7 @@ string Dm::stringDifference( const Dm& rhs ) const
     if( pe_map!=rhs.pe_map )
 	{
 	std::ostringstream b;
+	classic(b);
 	b << " pe_map:" << pe_map << "-->" << rhs.pe_map;
 	ret += b.str();
 	}

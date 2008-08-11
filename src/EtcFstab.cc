@@ -30,6 +30,7 @@ EtcFstab::readFiles()
     {
     string file = prefix+"/fstab";
     ifstream mounts( file.c_str() );
+    classic(mounts);
     string line;
     unsigned lineno = 0;
     getline( mounts, line );
@@ -654,6 +655,7 @@ static void printFile( const string& fname )
     {
     y2mil( "name:" << fname );
     ifstream file( fname.c_str() );
+    classic(file);
     string line;
     int count = 1;
     getline( file, line );

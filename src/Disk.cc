@@ -300,6 +300,7 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
     if( access( SysfsFile.c_str(), R_OK )==0 )
 	{
 	ifstream File( SysfsFile.c_str() );
+	classic(File);
 	File >> range;
 	if( range<=1 ) ret = false;
 	}
@@ -311,6 +312,7 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
     if( access( SysfsFile.c_str(), R_OK )==0 )
 	{
 	ifstream File( SysfsFile.c_str() );
+	classic(File);
 	char c;
 	File >> mjr;
 	File >> c;
@@ -467,6 +469,7 @@ Disk::logData( const string& Dir )
     {
     string fname( Dir + "/disk_" + logfile_name + ".tmp" );
     ofstream file( fname.c_str() );
+    classic(file);
     file << "Device: " << dev << endl;
     if( !udev_path.empty() )
 	file << "UdevPath: " << udev_path << endl;
@@ -1867,6 +1870,7 @@ int Disk::doCreateLabel()
     removePresentPartitions();
     system_stderr.erase();
     std::ostringstream cmd_line;
+    classic(cmd_line);
     cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
     if( execCheckFailed( cmd_line.str() ) )
 	{
@@ -1962,6 +1966,7 @@ int Disk::doSetType( Volume* v )
 	    }
 	system_stderr.erase();
 	std::ostringstream cmd_line;
+	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " set " << p->nr() << " ";
 	string start_cmd = cmd_line.str();
 	if( ret==0 )
@@ -2043,6 +2048,7 @@ Disk::getPartedValues( Partition *p )
 	{
 	ProcPart ppart;
 	std::ostringstream cmd_line;
+	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	unsigned nr, id;
@@ -2090,12 +2096,14 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     else
 	{
 	std::ostringstream cmd_line;
+	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " unit s print | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	if( cmd.numLines()>0 )
 	    {
 	    string dummy, s1, s2;
 	    std::istringstream data( *cmd.getLine(0) );
+	    classic(data);
 	    data >> dummy >> s1 >> s2;
 	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(),
 	                 s1.c_str(), s2.c_str() );
@@ -2156,6 +2164,7 @@ int Disk::doCreate( Volume* v )
 	    enlargeGpt();
 	    }
 	std::ostringstream cmd_line;
+	classic(cmd_line);
 	if( ret==0 )
 	    {
 	    cmd_line << PARTEDCMD << quote(device()) << " unit cyl mkpart ";
@@ -2341,6 +2350,7 @@ int Disk::doRemove( Volume* v )
 	if( ret==0 && !p->created() )
 	    {
 	    std::ostringstream cmd_line;
+	    classic(cmd_line);
 	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
@@ -2493,6 +2503,7 @@ int Disk::doResize( Volume* v )
 	    y2milestone( "doResize container %s name %s", name().c_str(),
 			 p->name().c_str() );
 	    std::ostringstream cmd_line;
+	    classic(cmd_line);
 	    unsigned long long start_sect, end_sect;
 	    getPartedSectors( p, start_sect, end_sect );
 	    end_sect = start_sect + p->sizeK()*2 - 1;

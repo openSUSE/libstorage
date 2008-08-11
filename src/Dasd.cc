@@ -131,6 +131,7 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
 
     y2debug( "Line: %s", Line.c_str() );
     std::istringstream Data( Line );
+    classic(Data);
 
     nr=0;
     StartM = EndM = 0;
@@ -368,6 +369,7 @@ int Dasd::doFdasd()
 	}
     string inpname = getStorage()->tmpDir()+"/fdasd_inp";
     ofstream inpfile( inpname.c_str() );
+    classic(inpfile);
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
     while( i!=p.end() )
