@@ -991,7 +991,7 @@ namespace storage
 	{
 	    return new Storage (ronly, testmode, autodetect);
 	}
-	catch (LockException& e)
+	catch (const LockException& e)
 	{
 	    locker_pid = e.GetLockerPid();
 	    return NULL;
