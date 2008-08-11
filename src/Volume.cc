@@ -1208,7 +1208,7 @@ int Volume::resizeFs()
 	switch( fs )
 	    {
 	    case SWAP:
-		cmd = "mkswap " + quote(mountDevice());
+		cmd = "/sbin/mkswap " + quote(mountDevice());
 		c.execute( cmd );
 		if( c.retcode()!=0 )
 		    ret = VOLUME_RESIZE_FAILED;
@@ -1893,7 +1893,7 @@ int Volume::doCryptsetup()
 		    if( cmd.retcode()!=0 )
 		    ret = VOLUME_CRYPTFORMAT_FAILED;
 		if( ret==0 && mp=="swap" )
-		    cmd.execute("mkswap " + quote(dmcrypt_dev));
+		    cmd.execute("/sbin/mkswap " + quote(dmcrypt_dev));
 		}
 		}
 	    if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
@@ -2045,7 +2045,7 @@ int Volume::doSetLabel()
 		}
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap -L " + quote(label) + "\" " + quote(mountDevice());
+		cmd = "/sbin/mkswap -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
