@@ -135,7 +135,7 @@ checkNormalFile(string Path_Cv)
 	  S_ISREG(Stat_ri.st_mode));
 }
 
-string extractNthWord(int Num_iv, string Line_Cv, bool GetRest_bi)
+string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi)
   {
   string::size_type pos;
   int I_ii=0;
