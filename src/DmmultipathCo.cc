@@ -119,6 +119,8 @@ DmmultipathCo::addPv(Pv*& p)
 
 void DmmultipathCo::activate(bool val)
 {
+    // TODO: ask hannes
+/*
     y2milestone( "old active:%d val:%d", active, val );
     if (active != val)
     {
@@ -134,6 +136,7 @@ void DmmultipathCo::activate(bool val)
 	}
 	active = val;
     }
+*/
 }
 
 
