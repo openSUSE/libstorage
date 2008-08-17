@@ -198,14 +198,14 @@ string DmmultipathCo::setDiskLabelText( bool doing ) const
         {
         // displayed text during action, %1$s is replaced by multipath name (e.g. pdc_igeeeadj),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Setting disk label of multipath %1$s to %2$s"),
+        txt = sformat( _("Setting disk label of multipath disk %1$s to %2$s"),
 		       d.c_str(), labelName().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by multipath name (e.g. pdc_igeeeadj),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Set disk label of multipath %1$s to %2$s"),
+        txt = sformat( _("Set disk label of multipath disk %1$s to %2$s"),
 		      d.c_str(), labelName().c_str() );
         }
     return( txt );
