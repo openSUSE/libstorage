@@ -65,6 +65,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
 		return "/dev/" + ub_name;
 
 	    case UB_DM:
+	    case UB_DMMULTIPATH:
 		return "/dev/mapper/" + ub_name;
 	}
     }
@@ -88,6 +89,9 @@ bool commitAction::operator<( const commitAction& rhs ) const
 		    break;
 		case storage::UB_DMRAID:
 		    st = "dmraid";
+		    break;
+		case UB_DMMULTIPATH:
+		    st = "dmmultipath";
 		    break;
 		default:
 		    st = "UNKNOWN";

@@ -112,6 +112,8 @@ DmCo::getDmData( ProcPart& ppart )
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
     Storage::ConstDmraidPair dmr = getStorage()->dmrPair();
+    Storage::ConstDmmultipathCoPair dmmco = getStorage()->dmmultipathCoPair();
+    Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
     y2milestone( "begin" );
     SystemCmd c(DMSETUPBIN " ls | grep \"(.*)\"" );
     for( unsigned i=0; i<c.numLines(); ++i )
@@ -138,6 +140,24 @@ DmCo::getDmData( ProcPart& ppart )
 	    {
 	    Storage::ConstDmraidIterator i=dmr.begin();
 	    while( !found && i!=dmr.end() )
+		{
+		found = i->getTableName()==table;
+		++i;
+		}
+	    }
+	if( !found )
+	    {
+	    Storage::ConstDmmultipathCoIterator i=dmmco.begin();
+	    while( !found && i!=dmmco.end() )
+		{
+		found = i->name()==table;
+		++i;
+		}
+	    }
+	if( !found )
+	    {
+	    Storage::ConstDmmultipathIterator i=dmm.begin();
+	    while( !found && i!=dmm.end() )
 		{
 		found = i->getTableName()==table;
 		++i;

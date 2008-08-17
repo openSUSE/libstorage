@@ -16,6 +16,8 @@
 #include "y2storage/LvmLv.h"
 #include "y2storage/DmraidCo.h"
 #include "y2storage/Dmraid.h"
+#include "y2storage/DmmultipathCo.h"
+#include "y2storage/Dmmultipath.h"
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"
 #include "y2storage/DmCo.h"
@@ -203,7 +205,7 @@ class Storage : public storage::StorageInterface
 	static SkipDeleted SkipDel;
 	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
 	static bool isDmPart( const Container&d )
-	    { return( d.type()==storage::DMRAID ); }
+	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
 
 	static void initDefaultLogger ();
 
@@ -263,6 +265,7 @@ class Storage : public storage::StorageInterface
 	int getDiskInfo( const string& disk, storage::DiskInfo& info);
 	int getLvmVgInfo( const string& name, storage::LvmVgInfo& info);
 	int getDmraidCoInfo( const string& name, storage::DmraidCoInfo& info);
+	int getDmmultipathCoInfo( const string& name, storage::DmmultipathCoInfo& info);
 	int getContDiskInfo( const string& disk, storage::ContainerInfo& cinfo,
 	                     storage::DiskInfo& info);
 	int getContLvmVgInfo( const string& name, storage::ContainerInfo& cinfo,
@@ -270,6 +273,9 @@ class Storage : public storage::StorageInterface
 	int getContDmraidCoInfo( const string& name,
 	                         storage::ContainerInfo& cinfo,
 	                         storage::DmraidCoInfo& info );
+	int getContDmmultipathCoInfo( const string& name,
+				      storage::ContainerInfo& cinfo,
+				      storage::DmmultipathCoInfo& info );
 	void getVolumes (deque<storage::VolumeInfo>& vlist);
 	int getVolume( const string& device, storage::VolumeInfo& info);
 	int getPartitionInfo( const string& disk,
@@ -282,6 +288,8 @@ class Storage : public storage::StorageInterface
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 	int getDmraidInfo( const string& name,
 	                   deque<storage::DmraidInfo>& plist );
+	int getDmmultipathInfo( const string& name,
+				deque<storage::DmmultipathInfo>& plist );
 	int getContVolInfo( const string& dev, ContVolInfo& info);
 
 	bool getFsCapabilities( storage::FsType fstype,
@@ -900,6 +908,90 @@ class Storage : public storage::StorageInterface
 	    return( DmraidCoIterator( DmraidCoPIterator( p, CheckFnc, true )) );
 	    }
 
+
+// iterators over DMMULTIPATH container
+    protected:
+	// protected typedefs for iterators over DMMULTIPATH container
+	typedef CastCheckIterator<CCIter, storage::DMMULTIPATH, const DmmultipathCo *> ContainerCDmmultipathIter;
+	template< class Pred >
+	    struct ConstDmmultipathCoPI { typedef ContainerIter<Pred, ContainerCDmmultipathIter> type; };
+	typedef CastCheckIterator<CIter, storage::DMMULTIPATH, DmmultipathCo *> ContainerDmmultipathIter;
+	template< class Pred >
+	    struct DmmultipathCoPI { typedef ContainerIter<Pred, ContainerDmmultipathIter> type; };
+	template< class Pred >
+	    struct DmmultipathCoI { typedef ContainerDerIter<Pred, typename DmmultipathCoPI<Pred>::type, DmmultipathCo> type; };
+	typedef CheckFnc<const DmmultipathCo> CheckFncDmmultipathCo;
+	typedef CheckerIterator< CheckFncDmmultipathCo, ConstDmmultipathCoPI<CheckFncDmmultipathCo>::type,
+	                         ContainerCDmmultipathIter, DmmultipathCo > ConstDmmultipathCoPIterator;
+	typedef CheckerIterator< CheckFncDmmultipathCo, DmmultipathCoPI<CheckFncDmmultipathCo>::type,
+	                         ContainerDmmultipathIter, DmmultipathCo > DmmultipathCoPIterator;
+	typedef DerefIterator<DmmultipathCoPIterator,DmmultipathCo> DmmultipathCoIterator;
+	typedef IterPair<DmmultipathCoIterator> DmmultipathCoPair;
+
+    public:
+	// public typedefs for iterators over DMMULTIPATH container
+	typedef DerefIterator<ConstDmmultipathCoPIterator,const DmmultipathCo> ConstDmmultipathCoIterator;
+	template< class Pred >
+	    struct ConstDmmultipathCoI
+		{ typedef ContainerDerIter<Pred, typename ConstDmmultipathCoPI<Pred>::type,
+					   const DmmultipathCo> type; };
+	template< class Pred >
+	    struct DmmultipathCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmmultipathCoI<Pred>::type> type; };
+	typedef IterPair<ConstDmmultipathCoIterator> ConstDmmultipathCoPair;
+
+	// public member functions for iterators over DMMULTIPATH container
+	ConstDmmultipathCoPair dmmultipathCoPair( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
+	    {
+	    return( ConstDmmultipathCoPair( dmmultipathCoBegin( CheckFnc ), dmmultipathCoEnd( CheckFnc ) ));
+	    }
+	ConstDmmultipathCoIterator dmmultipathCoBegin( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
+	    {
+	    IterPair<ContainerCDmmultipathIter> p( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
+	                                      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( ConstDmmultipathCoIterator( ConstDmmultipathCoPIterator( p, CheckFnc )) );
+	    }
+	ConstDmmultipathCoIterator dmmultipathCoEnd( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
+	    {
+	    IterPair<ContainerCDmmultipathIter> p( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
+	                                      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( ConstDmmultipathCoIterator( ConstDmmultipathCoPIterator( p, CheckFnc, true )) );
+	    }
+	template< class Pred > typename DmmultipathCoCondIPair<Pred>::type dmmultipathCoCondPair( const Pred& p ) const
+	    {
+	    return( typename DmmultipathCoCondIPair<Pred>::type( dmmultipathCoCondBegin( p ), dmmultipathCoCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstDmmultipathCoI<Pred>::type dmmultipathCoCondBegin( const Pred& p ) const
+	    {
+	    IterPair<ContainerCDmmultipathIter> pair( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
+					         ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( typename ConstDmmultipathCoI<Pred>::type( typename ConstDmmultipathCoPI<Pred>::type( pair, p )) );
+	    }
+	template< class Pred > typename ConstDmmultipathCoI<Pred>::type dmmultipathCoCondEnd( const Pred& p ) const
+	    {
+	    IterPair<ContainerCDmmultipathIter> pair( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
+					         ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( typename ConstDmmultipathCoI<Pred>::type( typename ConstDmmultipathCoPI<Pred>::type( pair, p, true )) );
+	    }
+    protected:
+	// protected member functions for iterators over DMMULTIPATH container
+	DmmultipathCoPair dmmCoPair( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
+	    {
+	    return( DmmultipathCoPair( dmmCoBegin( CheckFnc ), dmmCoEnd( CheckFnc ) ));
+	    }
+	DmmultipathCoIterator dmmCoBegin( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
+	    {
+	    IterPair<ContainerDmmultipathIter> p( ContainerDmmultipathIter( cont.begin(), cont.end() ),
+					     ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( DmmultipathCoIterator( DmmultipathCoPIterator( p, CheckFnc )) );
+	    }
+	DmmultipathCoIterator dmmCoEnd( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
+	    {
+	    IterPair<ContainerDmmultipathIter> p( ContainerDmmultipathIter( cont.begin(), cont.end() ),
+					     ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
+	    return( DmmultipathCoIterator( DmmultipathCoPIterator( p, CheckFnc, true )) );
+	    }
+
+
 // iterators over volumes
     protected:
 	// protected typedefs for iterators over volumes
@@ -1467,6 +1559,80 @@ class Storage : public storage::StorageInterface
 	    return( typename ConstDmraidI<Pred>::type( typename ConstDmraidPI<Pred>::type(pair, p, true )) );
 	    }
 
+
+// iterators over dmmultipath devices
+    protected:
+	// protected typedefs for iterators over dmmultipath devices
+	typedef ListListIterator<Container::ConstPlainIterator, ConstDmmultipathCoIterator> ConstDmmultipathInter;
+	typedef CastIterator<ConstDmmultipathInter, Dmmultipath *> ConstDmmultipathInter2;
+	template< class Pred >
+	    struct ConstDmmultipathPI { typedef ContainerIter<Pred, ConstDmmultipathInter2> type; };
+	typedef CheckFnc<const Dmmultipath> CheckFncDmmultipath;
+	typedef CheckerIterator< CheckFncDmmultipath, ConstDmmultipathPI<CheckFncDmmultipath>::type,
+	                         ConstDmmultipathInter2, Dmmultipath > ConstDmmultipathPIterator;
+    public:
+	// public typedefs for iterators over dmmultipath volumes
+	template< class Pred >
+	    struct ConstDmmultipathI
+		{ typedef ContainerDerIter<Pred, typename ConstDmmultipathPI<Pred>::type,
+		                           const Dmmultipath> type; };
+	template< class Pred >
+	    struct DmmultipathCondIPair
+		{ typedef MakeCondIterPair<Pred, typename ConstDmmultipathI<Pred>::type> type; };
+	typedef DerefIterator<ConstDmmultipathPIterator, const Dmmultipath> ConstDmmultipathIterator;
+	typedef IterPair<ConstDmmultipathIterator> ConstDmmultipathPair;
+
+	// public member functions for iterators over dmmultipath volumes
+	ConstDmmultipathPair dmmPair( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
+	    {
+	    return( ConstDmmultipathPair( dmmBegin( CheckDmmultipathCo ), dmmEnd( CheckDmmultipathCo ) ));
+	    }
+	ConstDmmultipathPair dmmPair( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
+				 bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
+	    {
+	    return( ConstDmmultipathPair( dmmBegin( CheckDmmultipath, CheckDmmultipathCo ),
+				     dmmEnd( CheckDmmultipath, CheckDmmultipathCo ) ));
+	    }
+	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
+	    {
+	    return( dmmBegin( NULL, CheckDmmultipathCo ) );
+	    }
+	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
+				      bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
+	    {
+	    IterPair<ConstDmmultipathInter2> p( (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ))),
+					   (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
+	    return( ConstDmmultipathIterator( ConstDmmultipathPIterator(p, CheckDmmultipath )));
+	    }
+	ConstDmmultipathIterator dmmEnd( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
+	    {
+	    return( dmmEnd( NULL, CheckDmmultipathCo ) );
+	    }
+	ConstDmmultipathIterator dmmEnd( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
+				     bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
+	    {
+	    IterPair<ConstDmmultipathInter2> p( (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ))),
+					   (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
+	    return( ConstDmmultipathIterator( ConstDmmultipathPIterator(p, CheckDmmultipath, true )));
+	    }
+	template< class Pred > typename DmmultipathCondIPair<Pred>::type dmmCondPair( const Pred& p ) const
+	    {
+	    return( typename DmmultipathCondIPair<Pred>::type( dmmCondBegin( p ), dmmCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstDmmultipathI<Pred>::type dmmCondBegin( const Pred& p ) const
+	    {
+	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmultipathCoPair())),
+					      (ConstDmmultipathInter( dmmultipathCoPair(), true )));
+	    return( typename ConstDmmultipathI<Pred>::type( typename ConstDmmultipathPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstDmmultipathI<Pred>::type dmmCondEnd( const Pred& p ) const
+	    {
+	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmCoPair())),
+					      (ConstDmmultipathInter( dmmCoPair(), true )));
+	    return( typename ConstDmmultipathI<Pred>::type( typename ConstDmmultipathPI<Pred>::type(pair, p, true )) );
+	    }
+
+
     protected:
 	// protected internal member functions
 	void initialize();
@@ -1478,6 +1644,7 @@ class Storage : public storage::StorageInterface
 	void detectNfs( ProcMounts& mounts );
 	void detectLvmVgs();
 	void detectDmraid( ProcPart& ppart );
+	void detectDmmultipath( ProcPart& ppart );
 	void detectDm( ProcPart& ppart );
 	void initDisk( DiskData& data, ProcPart& pp );
 	void detectFsData( const VolIterator& begin, const VolIterator& end,
@@ -1497,6 +1664,7 @@ class Storage : public storage::StorageInterface
 	DiskIterator findDiskPath( const string& path );
 	LvmVgIterator findLvmVg( const string& name );
 	DmraidCoIterator findDmraidCo( const string& name );
+	DmmultipathCoIterator findDmmultipathCo( const string& name );
 	DmPartCoIterator findDmPartCo( const string& name );
 	bool findVolume( const string& device, ContIterator& c,
 	                 VolIterator& v  );

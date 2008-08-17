@@ -209,17 +209,6 @@ void Disk::setUdevData( const string& path, const string& id )
 	}
     }
 
-void 
-Disk::addMpAlias( const string& dev )
-    {
-    y2mil( "dev:" << dev );
-    if( dev != device() &&
-        find( mp_alias.begin(), mp_alias.end(), dev )==mp_alias.end() )
-	{
-	mp_alias.push_back( dev );
-	y2mil( "mp_alias:" << mp_alias );
-	}
-    }
 
 unsigned long long
 Disk::cylinderToKb( unsigned long cylinder ) const
@@ -475,8 +464,6 @@ Disk::logData( const string& Dir )
 	file << "UdevPath: " << udev_path << endl;
     if( !udev_id.empty() )
 	file << "UdevId: " << udev_id << endl;
-    if( !mp_alias.empty() )
-	file << "MpAlias: " << mp_alias << endl;
     file << "Major: " << mjr << endl;
     file << "Minor: " << mnr << endl;
     file << "Range: " << range << endl;
@@ -2628,8 +2615,6 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " UdevPath:" << d.udev_path;
     if( !d.udev_id.empty() )
 	s << " UdevId:" << d.udev_id;
-    if( !d.mp_alias.empty() )
-	s << " MpAlias:" << d.mp_alias;
     s << " MaxPrimary:" << d.max_primary;
     if( d.ext_possible )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
@@ -2783,7 +2768,6 @@ Disk& Disk::operator= ( const Disk& rhs )
     iscsi = rhs.iscsi;
     udev_path = rhs.udev_path;
     udev_id = rhs.udev_id;
-    mp_alias = rhs.mp_alias;
     logfile_name = rhs.logfile_name;
     sysfs_dir = rhs.sysfs_dir;
     dmp_slave = rhs.dmp_slave;

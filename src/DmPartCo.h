@@ -54,9 +54,18 @@ class DmPartCo : public PeContainer
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	int removeDmPart();
-	void getUnusedSpace( std::list<Region>& free, bool all=true, 
-	                     bool logical=false );
-	bool hasExtended() const;
+
+	unsigned maxPrimary() const { return disk->maxPrimary(); }
+	bool extendedPossible() const { return disk->extendedPossible(); }
+	unsigned maxLogical() const { return disk->maxLogical(); }
+
+	unsigned int numPrimary() const { return disk->numPrimary(); }
+	bool hasExtended() const { return disk->hasExtended(); }
+	unsigned int numLogical() const { return disk->numLogical(); }
+
+	void getUnusedSpace(std::list<Region>& free, bool all = true, bool logical = false)
+	    { disk->getUnusedSpace(free, all, logical); }
+
 	unsigned long long cylinderToKb( unsigned long val ) const 
 	    { return disk->cylinderToKb( val ); }
 	unsigned long kbToCylinder( unsigned long long val ) const

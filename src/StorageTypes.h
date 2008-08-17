@@ -15,12 +15,13 @@ inline bool operator<(CType a, CType b)
     static const int order[COTYPE_LAST_ENTRY] = {
 	0, // CUNKNOWN
 	1, // DISK
-	3, // MD
+	4, // MD
 	7, // LOOP
-	5, // LVM
-	4, // DM
+	6, // LVM
+	5, // DM
 	2, // DMRAID
-	8  // NFSC
+	8, // NFSC
+	3  // DMMULTIPATH
     };
 
     bool ret = order[a] < order[b];

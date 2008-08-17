@@ -232,11 +232,13 @@ void Storage::detectObjects()
 	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
 	DmraidCo::activate( true );
+	DmmultipathCo::activate( true );
 	delete ppart;
 	ppart = new ProcPart;
 	}
     detectMds();
     detectDmraid( *ppart );
+    detectDmmultipath( *ppart );
     detectLvmVgs();
     detectDm( *ppart );
 
@@ -400,70 +402,9 @@ Storage::detectDisks( ProcPart& ppart )
     else if( autodetect )
 	{
 	autodetectDisks( ppart );
-	detectMultipath();
 	}
     }
 
-void
-Storage::detectMultipath()
-    {
-    bool acc_ok = access(MULTIPATHBIN, X_OK) == 0;
-    y2mil( "detectMultipath acc_ok:" << acc_ok );
-    if( acc_ok )
-	{
-	list<string> mp_list;
-	string line;
-	unsigned i=0;
-	SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
-	if( i<c.numLines() )
-	    line = *c.getLine(i);
-	while( i<c.numLines() )
-	    {
-	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
-		if( ++i<c.numLines() )
-		    line = *c.getLine(i);
-	    y2mil( "mp unit:" << line );
-	    mp_list.clear();
-	    if( ++i<c.numLines() )
-		line = *c.getLine(i);
-	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
-		{
-		if( line.find( " \\_" )==0 )
-		    {
-		    y2mil( "mp element:" << line );
-		    string dev = deviceByNumber( extractNthWord(3,line) );
-		    if( !dev.empty() && 
-		        find( mp_list.begin(), mp_list.end(), dev )==
-			    mp_list.end() )
-			mp_list.push_back(dev);
-		    }
-		if( ++i<c.numLines() )
-		    line = *c.getLine(i);
-		}
-	    y2mil( "mp_list:" << mp_list );
-	    if( mp_list.size()>1 )
-		{
-		for( list<string>::const_iterator i=mp_list.begin(); 
-		     i!=mp_list.end(); ++i )
-		    {
-		    Storage::DiskIterator di = findDisk( *i );
-		    if( di != dEnd() )
-			{
-			di->clearMpAlias();
-			for( list<string>::const_iterator j=mp_list.begin();
-			     j!=mp_list.end(); ++j )
-			     {
-			     if( i!=j )
-				di->addMpAlias( *j );
-			     }
-			}
-		    else
-			y2war( "Disk not found:" << *i );
-		    }
-		}
-	    }
-	}
-    }
 
 void Storage::detectMds()
     {
@@ -601,6 +542,50 @@ Storage::detectDmraid( ProcPart& ppart )
 	    }
 	}
     }
+
+
+void
+Storage::detectDmmultipath( ProcPart& ppart )
+{
+    if( test() )
+    {
+	glob_t globbuf;
+	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
+	          &globbuf) == 0)
+	{
+	    // TODO
+	}
+ 	globfree (&globbuf);
+    }
+    else if( getenv( "YAST2_STORAGE_NO_DMMULTIPATH" )==NULL )
+    {
+	list<string> l;
+	map<string, string> by_id;
+	DmmultipathCo::getMultipaths( l );
+	if( !l.empty() )
+	    getFindMap( "/dev/disk/by-id", by_id, false );
+	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	{
+	    DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
+	    if( v->isValid() )
+	    {
+		/*
+		string nm = by_id["dm-"+decString(v->minorNr())];
+		if( !nm.empty() )
+		    v->setUdevData( nm );
+		*/
+		addToList( v );
+	    }
+	    else
+	    {
+		y2mil("inactive DMMULTIPATH " << *i);
+		v->unuseDev();
+		delete v;
+	    }
+	}
+    }
+}
+
 
 void
 Storage::detectDm( ProcPart& ppart )
@@ -1045,7 +1030,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 		ret = i->createPartition( type, start, size, device, true );
 		}
 	    }
-	}
+	}  
     if( !done && ret==0 )
 	{
 	ret = STORAGE_DISK_NOT_FOUND;
@@ -1338,7 +1323,7 @@ Storage::removePartition( const string& partition )
 		ret = STORAGE_REMOVE_PARTITION_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()==DMRAID )
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	    {
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
@@ -1403,7 +1388,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 		ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()==DMRAID )
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	    {
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
@@ -1458,7 +1443,7 @@ Storage::changePartitionId( const string& partition, unsigned id )
 		ret = STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()==DMRAID )
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	    {
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
@@ -1530,7 +1515,7 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl,
 		ret = STORAGE_RESIZE_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()==DMRAID )
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	    {
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    DmPart* p = dynamic_cast<DmPart *>(&(*vol));
@@ -1588,7 +1573,7 @@ Storage::forgetChangePartitionId( const string& partition )
 		ret = STORAGE_CHANGE_PARTITION_ID_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()==DMRAID )
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	    {
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
@@ -1624,22 +1609,25 @@ Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& sl
     int ret = 0;
     slots.clear();
     assertInit();
-    DiskIterator i = findDisk( disk );
-    if( i != dEnd() )
+
+    // TODO: don't have code below twice
+
+    DiskIterator i1 = findDisk( disk );
+    DmPartCoIterator i2 = findDmPartCo( disk );
+
+    if (i1 != dEnd())
     {
 	// maxPrimary() and maxLogical() include limits from partition table type and
 	// minor number range
 
-	// TODO: check these restrictions
-
-	bool primaryPossible = i->numPrimary() + (i->hasExtended() ? 1 : 0) < i->maxPrimary();
-	bool extendedPossible = primaryPossible && i->extendedPossible() && !i->hasExtended();
-	bool logicalPossible = i->hasExtended() && i->numLogical() < (i->maxLogical() - i->maxPrimary());
+	bool primaryPossible = i1->numPrimary() + (i1->hasExtended() ? 1 : 0) < i1->maxPrimary();
+	bool extendedPossible = primaryPossible && i1->extendedPossible() && !i1->hasExtended();
+	bool logicalPossible = i1->hasExtended() && i1->numLogical() < (i1->maxLogical() - i1->maxPrimary());
 
 	list<Region> regions;
 
-	i->getUnusedSpace(regions, false, false);
-	for( list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++ )
+	i1->getUnusedSpace(regions, false, false);
+	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
 	{
 	    PartitionSlotInfo slot;
 	    slot.cylStart = region->start();
@@ -1653,8 +1641,49 @@ Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& sl
 	    slots.push_back(slot);
 	}
 
-	i->getUnusedSpace(regions, false, true);
-	for( list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++ )
+	i1->getUnusedSpace(regions, false, true);
+	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region->start();
+	    slot.cylSize = region->len();
+	    slot.primarySlot = false;
+	    slot.primaryPossible = false;
+	    slot.extendedSlot = false;
+	    slot.extendedPossible = false;
+	    slot.logicalSlot = true;
+	    slot.logicalPossible = logicalPossible;
+	    slots.push_back(slot);
+	}
+    }
+    else if (i2 != dmpCoEnd())
+    {
+	// maxPrimary() and maxLogical() include limits from partition table type and
+	// minor number range
+
+	bool primaryPossible = i2->numPrimary() + (i2->hasExtended() ? 1 : 0) < i2->maxPrimary();
+	bool extendedPossible = primaryPossible && i2->extendedPossible() && !i2->hasExtended();
+	bool logicalPossible = i2->hasExtended() && i2->numLogical() < (i2->maxLogical() - i2->maxPrimary());
+
+	list<Region> regions;
+
+	i2->getUnusedSpace(regions, false, false);
+	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region->start();
+	    slot.cylSize = region->len();
+	    slot.primarySlot = true;
+	    slot.primaryPossible = primaryPossible;
+	    slot.extendedSlot = true;
+	    slot.extendedPossible = extendedPossible;
+	    slot.logicalSlot = false;
+	    slot.logicalPossible = false;
+	    slots.push_back(slot);
+	}
+
+	i2->getUnusedSpace(regions, false, true);
+	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
 	{
 	    PartitionSlotInfo slot;
 	    slot.cylStart = region->start();
@@ -1672,7 +1701,7 @@ Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& sl
     {
 	ret = STORAGE_DISK_NOT_FOUND;
     }
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return ret;
 }
 
@@ -3710,9 +3739,10 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 
 
 static bool isDmContainer( const Container& co )
-    {
-    return co.type()==DM || co.type()==LVM || co.type()==DMRAID;
-    }
+{
+    return co.type()==DM || co.type()==LVM || co.type()==DMRAID || co.type()==DMMULTIPATH;
+}
+
 
 bool Storage::removeDmMapsTo( const string& dev )
     {
@@ -3872,6 +3902,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	{
 	DiskIterator d;
 	DmraidCoIterator r;
+	DmmultipathCoIterator m;
 	std::pair<string,unsigned> p = Disk::getDiskPartition( dev );
 	if( p.first=="/dev/md" )
 	    {
@@ -3910,6 +3941,14 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    info.cname = r->device();
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.type = DMRAID;
+	    info.numeric = true;
+	    info.nr = p.second;
+	    }
+	else if( (m=findDmmultipathCo(p.first))!=dmmCoEnd() )
+	    {
+	    info.cname = m->device();
+	    info.vname = dev.substr( dev.find_last_of('/')+1 );
+	    info.type = DMMULTIPATH;
 	    info.numeric = true;
 	    info.nr = p.second;
 	    }
@@ -4121,6 +4160,39 @@ int Storage::getContDmraidCoInfo( const string& name, ContainerInfo& cinfo,
     }
 
 
+int
+Storage::getDmmultipathCoInfo( const string& name, DmmultipathCoInfo& info )
+{
+    int ret = 0;
+    assertInit();
+    DmmultipathCoIterator i = findDmmultipathCo( name );
+    if( i != dmmCoEnd() )
+    {
+	i->getInfo( info );
+    }
+    else
+	ret = STORAGE_DMMULTIPATH_CO_NOT_FOUND;
+    return( ret );
+}
+
+int
+Storage::getContDmmultipathCoInfo( const string& name, ContainerInfo& cinfo,
+				   DmmultipathCoInfo& info )
+{
+    int ret = 0;
+    assertInit();
+    DmmultipathCoIterator i = findDmmultipathCo( name );
+    if( i != dmmCoEnd() )
+    {
+	((const Container*)&(*i))->getInfo( cinfo );
+	i->getInfo( info );
+    }
+    else
+	ret = STORAGE_DMMULTIPATH_CO_NOT_FOUND;
+    return( ret );
+}
+
+
 int Storage::getMdInfo( deque<storage::MdInfo>& plist )
     {
     int ret = 0;
@@ -4197,6 +4269,30 @@ int Storage::getDmraidInfo( const string& name,
 	ret = STORAGE_DMRAID_CO_NOT_FOUND;
     return( ret );
     }
+
+
+int
+Storage::getDmmultipathInfo( const string& name,
+			     deque<storage::DmmultipathInfo>& plist )
+{
+    int ret = 0;
+    plist.clear();
+    assertInit();
+    DmmultipathCoIterator i = findDmmultipathCo( name );
+    if( i != dmmCoEnd() )
+    {
+	DmmultipathCo::DmmultipathPair p = i->dmmultipathPair(DmmultipathCo::multipathNotDeleted);
+	for( DmmultipathCo::DmmultipathIter i2 = p.begin(); i2 != p.end(); ++i2 )
+	{
+	    plist.push_back( DmmultipathInfo() );
+	    i2->getInfo( plist.back() );
+	}
+    }
+    else
+	ret = STORAGE_DMMULTIPATH_CO_NOT_FOUND;
+    return( ret );
+}
+
 
 string Storage::getAllUsedFs() const 
     {
@@ -4763,6 +4859,17 @@ Storage::DmraidCoIterator Storage::findDmraidCo( const string& name )
     return( ret );
     }
 
+Storage::DmmultipathCoIterator Storage::findDmmultipathCo( const string& name )
+    {
+    assertInit();
+    DmmultipathCoPair p = dmmCoPair();
+    DmmultipathCoIterator ret=p.begin();
+    string tname = DmPartCo::undevName(name);
+    while( ret!=p.end() && (ret->deleted() || ret->name()!=tname))
+	++ret;
+    return( ret );
+    }
+
 Storage::DmPartCoIterator Storage::findDmPartCo( const string& name )
     {
     assertInit();
@@ -4955,6 +5062,8 @@ int Storage::removeUsing(const string& device, const storage::usedBy& uby)
 	    break;
 	case UB_DMRAID:
 	    //ret = removeDmraidCo( name );
+	    break;
+	case UB_DMMULTIPATH:
 	    break;
 	case UB_NONE:
 	    y2war(device << " used by none");

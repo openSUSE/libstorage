@@ -30,7 +30,8 @@ liby2storage_la_SOURCES =			\
 	  PeContainer.cc PeContainer.h	     \
 	    LvmVg.cc     LvmVg.h	     \
 	    DmPartCo.cc  DmPartCo.h	     \
-		DmraidCo.cc  DmraidCo.h	     \
+	      DmraidCo.cc  DmraidCo.h	     \
+	      DmmultipathCo.cc	DmmultipathCo.h		\
 	    DmCo.cc      DmCo.h	     	     \
 	  MdCo.cc        MdCo.h	     	     \
 	  LoopCo.cc      LoopCo.h	     \
@@ -40,7 +41,8 @@ liby2storage_la_SOURCES =			\
 	  Dm.cc          Dm.h                \
 	    LvmLv.cc     LvmLv.h             \
 	    DmPart.cc    DmPart.h            \
-		Dmraid.cc    Dmraid.h        \
+	      Dmraid.cc    Dmraid.h        \
+	      Dmmultipath.cc	Dmmultipath.h		\
 	  Md.cc          Md.h                \
 	  Loop.cc        Loop.h              \
 	  Nfs.cc         Nfs.h               \

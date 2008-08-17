@@ -30,8 +30,10 @@ specialize_sequence(storage::DmInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::NfsInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmPartCoInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmraidCoInfo, TO_PACK, FROM_PACK, CHECK)
+specialize_sequence(storage::DmmultipathCoInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmPartInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::DmraidInfo, TO_PACK, FROM_PACK, CHECK)
+specialize_sequence(storage::DmmultipathInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::PartitionSlotInfo, TO_PACK, FROM_PACK, CHECK)
 
 %include "../../src/StorageInterface.h"

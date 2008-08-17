@@ -41,16 +41,13 @@ class Disk : public Container
 	unsigned long numMinor() const { return range; }
 	unsigned long cylSizeB() const { return byte_cyl; }
 	unsigned maxPrimary() const { return max_primary; }
-	bool extendedPossible() const { return ext_possible; };
+	bool extendedPossible() const { return ext_possible; }
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
 	const string& udevPath() const { return udev_path; }
 	const std::list<string>& udevId() const { return udev_id; }
 	void setSlave( bool val=true ) { dmp_slave=val; }
 	void setNumMinor( unsigned long val ) { range=val; }
-	void addMpAlias( const string& dev ); 
-	void clearMpAlias() { mp_alias.clear(); }
-	const std::list<string>& mpAlias() const { return mp_alias; }
 	const string& sysfsDir() const { return sysfs_dir; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
@@ -218,18 +215,17 @@ class Disk : public Container
 	string label;
 	string udev_path;
 	std::list<string> udev_id;
-	std::list<string> mp_alias;
 	string detected_label;
 	string system_stderr;
 	string logfile_name;
 	string sysfs_dir;
 	unsigned max_primary;
 	bool ext_possible;
+	unsigned max_logical;
 	bool init_disk;
 	bool iscsi;
 	bool dmp_slave;
 	bool gpt_enlarge;
-	unsigned max_logical;
 	unsigned long byte_cyl;
 	unsigned long range;
 	mutable storage::DiskInfo info;

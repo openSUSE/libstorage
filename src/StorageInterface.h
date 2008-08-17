@@ -112,9 +112,9 @@ namespace storage
     enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
 
-    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_DM, UB_DMRAID };
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC,
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH,
                  COTYPE_LAST_ENTRY };
 
     /**
@@ -229,6 +229,14 @@ namespace storage
     {
 	DmraidCoInfo() {}
 	DmPartCoInfo p;
+    };
+
+    struct DmmultipathCoInfo
+    {
+	DmmultipathCoInfo() {}
+	DmPartCoInfo p;
+	string vendor;
+	string model;
     };
 
     /**
@@ -394,6 +402,15 @@ namespace storage
     };
 
     /**
+     * Contains info about a DMMULTIPATH volume.
+     */
+    struct DmmultipathInfo
+    {
+	DmmultipathInfo() {}
+	DmPartInfo p;
+    };
+
+    /**
      * Contains info about a DM volume.
      */
     struct ContVolInfo
@@ -483,6 +500,7 @@ namespace storage
 	STORAGE_DEVICE_NODE_NOT_FOUND = -2027,
 	STORAGE_DMRAID_CO_NOT_FOUND = -2028,
 	STORAGE_RESIZE_INVALID_CONTAINER = -2029,
+	STORAGE_DMMULTIPATH_CO_NOT_FOUND = -2030,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -712,6 +730,26 @@ namespace storage
 				         DmraidCoInfo& info) = 0;
 
 	/**
+	 * Query container info for a DMMULTIPATH container
+	 *
+	 * @param name name of container, e.g. 3600508b400105f590000900000300000
+	 * @param info record that gets filled with DMMULTIPATH Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDmmultipathCoInfo( const string& name, DmmultipathCoInfo& info) = 0;
+
+	/**
+	 * Query container info for a DMMULTIPATH container
+	 *
+	 * @param name name of container, e.g. 3600508b400105f590000900000300000
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with DMMULTIPATH Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContDmmultipathCoInfo( const string& name, ContainerInfo& cinfo,
+					      DmmultipathCoInfo& info) = 0;
+
+	/**
 	 * Query all volumes found in system
 	 *
 	 * @param infos list of records that get filled with volume info
@@ -788,6 +826,16 @@ namespace storage
 	 */
 	virtual int getDmraidInfo( const string& name,
 	                           deque<DmraidInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for dmmultipath devices in system
+	 *
+	 * @param plist list of records that get filled with dmmultipath specific info
+	 * @param name name of dmmultipath, e.g. 3600508b400105f590000900000300000
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getDmmultipathInfo( const string& name,
+					deque<DmmultipathInfo>& plist ) = 0;
 
 	/**
 	 * Query capabilities of a filesystem type.
