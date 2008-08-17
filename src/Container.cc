@@ -278,8 +278,9 @@ bool Container::findVolume( const string& device, Volume*& vol )
     return( v!=p.end() );
     }
 
-void Container::getInfo( storage::ContainerInfo& info ) const
-    {
+
+void Container::getInfo(storage::ContainerInfo& tinfo) const
+{
     Container::ConstVolPair vp = volPair( Volume::notDeleted );
     info.type = type();
     info.name = name();
@@ -289,7 +290,9 @@ void Container::getInfo( storage::ContainerInfo& info ) const
     info.usedByName = uby.name();
     info.usedByDevice = uby.device();
     info.readonly = readonly();
-    }
+    tinfo = info;
+}
+
 
 namespace storage
 {
