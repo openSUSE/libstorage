@@ -60,7 +60,7 @@ DmmultipathCo::getMultipathData(const string& name)
 	for (unsigned int i = 1; i < c.numLines(); i++)
 	{
 	    string line = *c.getLine(i);
-	    if (line.find( " \\_" ) == 0)
+	    if (boost::starts_with(line, " \\_"))
 	    {
 		y2mil("mp element:" << line);
 		string dev = getStorage()->deviceByNumber(extractNthWord(3,line));
@@ -169,7 +169,7 @@ DmmultipathCo::getMultipaths( list<string>& l )
 	    line = *c.getLine(i);
 	while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
 	{
-	    if( line.find( " \\_" )==0 )
+	    if (boost::starts_with(line, " \\_"))
 	    {
 		y2mil( "mp element:" << line );
 		string dev = extractNthWord(3,line);
