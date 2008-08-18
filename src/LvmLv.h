@@ -13,13 +13,26 @@ class LvmVg;
 class LvmLv : public Dm
     {
     public:
-	LvmLv( const LvmVg& d, const string& name, unsigned long le,
-	       const string& uuid, const string& status, const string& alloc );
-	LvmLv( const LvmVg& d, const string& name, unsigned long le,
-	       unsigned stripe );
-	LvmLv( const LvmVg& d, const LvmLv& l );
+	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
+	      const string& uuid, const string& status, const string& alloc);
+	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
+	      unsigned stripe);
+	LvmLv(const LvmVg& d, const LvmLv& l);
 
 	virtual ~LvmLv();
+
+	const LvmVg* vg() const;
+
+	void calcSize();
+
+	void getState(LvmLvSnapshotStateInfo& info);
+
+	void setOrigin( const string& o ) { origin=o; }
+	string getOrigin() const { return origin; }
+
+	bool isSnapshot() const { return !origin.empty(); }
+	bool hasSnapshots() const;	
+
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
 	void setAlloc( const string& a ) { allocation=a; }
@@ -37,6 +50,8 @@ class LvmLv : public Dm
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return( "Lv" ); }
 	LvmLv& operator=( const LvmLv& );
+
+	string origin;		// only for snapshots, empty otherwise
 
 	string vol_uuid;
 	string status;

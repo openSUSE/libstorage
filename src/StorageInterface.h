@@ -318,6 +318,18 @@ namespace storage
 	string allocation;
 	string dm_table;
 	string dm_target;
+	string origin;
+	unsigned long long sizeK;
+    };
+
+    /**
+     *
+     */
+    struct LvmLvSnapshotStateInfo
+    {
+	LvmLvSnapshotStateInfo() {}
+	bool active;
+	double allocated;
     };
 
     /**
@@ -572,6 +584,11 @@ namespace storage
 	LVM_LV_REMOVE_USED_BY = -4025,
 	LVM_LV_ALREADY_ON_DISK = -4026,
 	LVM_LV_NO_STRIPE_SIZE = -4027,
+	LVM_LV_UNKNOWN_ORIGIN = -4028,
+	LVM_LV_NOT_ON_DISK = -4029,
+	LVM_LV_NOT_SNAPSHOT = -4030,
+	LVM_LV_HAS_SNAPSHOTS = -4031,
+	LVM_LV_IS_SNAPSHOT = -4032,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -1527,6 +1544,41 @@ namespace storage
 	 */
 	virtual int changeLvStripeSize( const string& vg, const string& name,
 	                                unsigned long long stripeSize ) = 0;
+
+	/**
+	 * Create a LVM logical volume snapshot
+	 *
+	 * @param vg name of volume group
+	 * @param origin name of logical volume origin
+	 * @param name of logical volume snapshot
+	 * @param cowSizeK size of snapshot in kilobytes
+	 * @param device is set to the device name of the new snapshot
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createLvmLvSnapshot(const string& vg, const string& origin,
+					const string& name, unsigned long long cowSizeK,
+					string& device) = 0;
+
+	/**
+	 * Remove a LVM logical volume snapshot
+	 *
+	 * @param vg name of volume group
+	 * @param device name of logical volume snapshot
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeLvmLvSnapshot(const string& vg, const string& name) = 0;
+
+	/**
+	 * Get state of a LVM logical volume snapshot
+	 *
+	 * @pre This can only be done after the snapshot has been created on disk.
+	 *
+	 * @param name name of snapshot
+	 * @param info record that gets filled with snapshot special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getLvmLvSnapshotStateInfo(const string& vg, const string& name,
+					      LvmLvSnapshotStateInfo& info) = 0;
 
 	/**
          * Determine the device name of the next created software raid device

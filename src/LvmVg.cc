@@ -279,7 +279,7 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	ret = addLvPeDistribution( num_le, stripe, pv, pv_add, pe_map );
     if( ret==0 )
 	{
-	LvmLv* l = new LvmLv( *this, name, num_le, stripe );
+	LvmLv* l = new LvmLv( *this, name, "", num_le, stripe );
 	l->setCreated( true );
 	l->setPeMap( pe_map );
 	device = l->device();
@@ -297,13 +297,24 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     int ret = 0;
     y2milestone( "newSizeK:%llu vol:%s", newSize, v->name().c_str() );
     checkConsistency();
-    if( readonly() )
-	{
+
+    LvmLv * l = dynamic_cast<LvmLv *>(v);
+
+    if (readonly())
+    {
 	ret = LVM_CHANGE_READONLY;
-	}
-    else 
-	{
-	LvmLv * l = dynamic_cast<LvmLv *>(v);
+    }
+    else if (l->isSnapshot())
+    {
+	ret = LVM_LV_IS_SNAPSHOT;
+    }
+    else if (l->hasSnapshots())
+    {
+	ret = LVM_LV_HAS_SNAPSHOTS;
+    }
+
+    if (ret == 0)
+    {
 	unsigned long new_le = sizeToLe(newSize);
 	if( l->stripes()>1 )
 	    new_le = ((new_le+l->stripes()-1)/l->stripes())*l->stripes();
@@ -347,7 +358,7 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
 	    {
 	    ret = LVM_CHECK_RESIZE_INVALID_VOLUME;
 	    }
-	}
+    }
     if( ret==0 )
 	checkConsistency();
     y2milestone( "ret:%d", ret );
@@ -378,6 +389,8 @@ LvmVg::removeLv( const string& name )
 	    ++i;
 	if( i==p.end() )
 	    ret = LVM_LV_UNKNOWN_NAME;
+	else if (i->hasSnapshots())
+	    ret = LVM_LV_HAS_SNAPSHOTS;
 	}
     if( ret==0 && i->getUsedByType() != UB_NONE )
 	{
@@ -494,6 +507,126 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
     return( ret );
     }
 
+
+int
+LvmVg::createLvSnapshot(const string& origin, const string& name,
+			unsigned long long cowSizeK, string& device)
+{
+    int ret = 0;
+    device.erase();
+    y2mil("origin:" << origin << " name:" << name << " cowSizeK:" << cowSizeK );
+    checkConsistency();
+    if (readonly())
+    {
+	ret = LVM_CHANGE_READONLY;
+    }
+    if (ret == 0 && name.find("\"\' /\n\t:*?") != string::npos)
+    {
+	ret = LVM_LV_INVALID_NAME;
+    }
+    int stripe = 1;
+    if (ret == 0)
+    {
+	LvmLvPair p = lvmLvPair(lvNotDeleted);
+	LvmLvIter i = p.begin();
+	while (i != p.end() && i->name() != origin)
+	    ++i;
+	if (i == p.end())
+	    ret = LVM_LV_UNKNOWN_ORIGIN;
+	else
+	    stripe = i->stripes();
+    }
+    if (ret == 0)
+    {
+	LvmLvPair p = lvmLvPair(lvNotDeleted);
+	LvmLvIter i = p.begin();
+	while (i != p.end() && i->name() != name)
+	    ++i;
+	if (i != p.end())
+	    ret = LVM_LV_DUPLICATE_NAME;
+    }
+    unsigned long num_le = sizeToLe(cowSizeK);
+    if( stripe>1 )
+	num_le = ((num_le+stripe-1)/stripe)*stripe;
+    if (ret == 0 && free_pe < num_le)
+    {
+	ret = LVM_LV_NO_SPACE;
+    }
+    map<string, unsigned long> pe_map;
+    if (ret == 0)
+	ret = addLvPeDistribution(num_le, stripe, pv, pv_add, pe_map);
+    if (ret == 0)
+    {
+	LvmLv* l = new LvmLv(*this, name, origin, num_le, stripe);
+	l->setCreated(true);
+	l->setPeMap(pe_map);
+	device = l->device();
+	free_pe -= num_le;
+	addToList(l);
+    }
+    if (ret == 0)
+	checkConsistency();
+    y2mil("ret:" << ret << " device:" << device);
+    return ret;
+}
+
+
+int
+LvmVg::removeLvSnapshot(const string& name)
+{
+    int ret = 0;
+    y2mil("name:" << name);
+    if( ret==0 )
+    {
+	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvIter i=p.begin();
+	while( i!=p.end() && i->name()!=name )
+	    ++i;
+	if (i==p.end())
+	    ret = LVM_LV_UNKNOWN_NAME;
+	else if (!i->isSnapshot())
+	    ret = LVM_LV_NOT_SNAPSHOT;
+    }
+    if (ret == 0)
+    {
+	ret = removeLv(name);
+    }  
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
+int
+LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
+{
+    int ret = 0;
+    y2mil("name:" << name);
+    LvmLvIter i;
+    checkConsistency();
+    if (ret == 0)
+    {
+	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	i=p.begin();
+	while( i!=p.end() && i->name()!=name )
+	    ++i;
+	if (i == p.end())
+	    ret = LVM_LV_UNKNOWN_NAME;
+	else if (!i->isSnapshot())
+	    ret = LVM_LV_NOT_SNAPSHOT;
+    }
+    if (ret == 0 && i->created())
+    {
+	ret = LVM_LV_NOT_ON_DISK;
+    }
+    if (ret == 0)
+    {
+	i->getState(info);
+    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
 void LvmVg::getVgData( const string& name, bool exists )
     {
     y2milestone( "name:%s", name.c_str() );
@@ -559,10 +692,12 @@ void LvmVg::getVgData( const string& name, bool exists )
 		line = *c.getLine( i++ );
 		}
 	    string vname;
+	    string origin;
 	    string uuid;
 	    string status;
 	    string allocation;
 	    unsigned long num_le = 0;
+	    unsigned long num_cow_le = 0;
 	    bool readOnly = false;
 	    while( line.find( "Physical volume" )==string::npos && i<cnt )
 		{
@@ -570,10 +705,10 @@ void LvmVg::getVgData( const string& name, bool exists )
 		if( line.find( "LV Name" ) == 0 )
 		    {
 		    if( !vname.empty() )
-			{
-			addLv( num_le, vname, uuid, status, allocation,
-			       readOnly );
-			}
+		    {
+			addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation,
+			      readOnly);
+		    }
 		    vname = extractNthWord( 2, line );
 		    if( (pos=vname.rfind( "/" ))!=string::npos )
 			vname.erase( 0, pos+1 );
@@ -582,6 +717,16 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    readOnly = extractNthWord( 3, line, true ).find( "only" ) != string::npos;
 		    }
+		else if (line.find("LV snapshot status") == 0)
+		{
+		    if (line.find("destination for") != string::npos)
+		    {
+			origin = extractNthWord(6, line, true);
+			string::size_type pos = origin.find("/", 5);
+			if (pos != string::npos)
+			    origin.erase(0, pos + 1);
+		    }
+		}
 		else if( line.find( "LV Status" ) == 0 )
 		    {
 		    status = extractNthWord( 2, line, true );
@@ -590,6 +735,10 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    extractNthWord( 2, line ) >> num_le;
 		    }
+		else if (line.find( "COW-table LE" ) == 0)
+		{
+		    extractNthWord( 2, line ) >> num_cow_le;
+		}
 		else if( line.find( "Allocation" ) == 0 )
 		    {
 		    allocation = extractNthWord( 1, line );
@@ -601,9 +750,9 @@ void LvmVg::getVgData( const string& name, bool exists )
 		line = *c.getLine( i++ );
 		}
 	    if( !vname.empty() )
-		{
-		addLv( num_le, vname, uuid, status, allocation, readOnly );
-		}
+	    {
+		addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation, readOnly);
+	    }
 	    Pv *p = new Pv;
 	    while( i<cnt )
 		{
@@ -683,8 +832,8 @@ void LvmVg::getVgData( const string& name, bool exists )
 	}
     }
 
-void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
-                   string& status, string& alloc, bool& ro )
+void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid, 
+		  string& status, string& alloc, bool& ro)
     {
     y2milestone( "addLv:%s", name.c_str() );
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
@@ -695,7 +844,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	}
     y2milestone( "addLv exists %d", i!=p.end() );
     if( i!=p.end() )
-	{
+    {
 	if( !lvResized( *i ))
 	    i->setLe( le );
 	if( i->created() )
@@ -705,6 +854,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	    }
 	i->setUuid( uuid );
 	i->setStatus( status );
+	i->setOrigin( origin );
 	i->setAlloc( alloc );
 	i->getTableInfo();
 	i->updateMajorMinor();
@@ -722,7 +872,7 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 	if( i==p.end() )
 	    {
 	    num_lv++;
-	    LvmLv *n = new LvmLv( *this, name, le, uuid, status, alloc );
+	    LvmLv *n = new LvmLv( *this, name, origin, le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
 	    if( !n->inactive() )
@@ -734,10 +884,11 @@ void LvmVg::addLv( unsigned long& le, string& name, string& uuid,
 		}
 	    }
 	}
-    name = uuid = status = alloc = "";
+    name = origin = uuid = status = alloc = "";
     le = 0; 
     ro = false;
     }
+
 
 void LvmVg::addPv( Pv*& p )
     {
@@ -1177,14 +1328,23 @@ LvmVg::doCreate( Volume* v )
 	    }
 	checkConsistency();
 	string cmd = LVCREATEBIN " " + instSysString() + " -l " + decString(l->getLe());
-	if( l->stripes()>1 )
+	if (l->getOrigin().empty())
+	{
+	    if( l->stripes()>1 )
 	    {
-	    cmd += " -i " + decString(l->stripes());
-	    if( l->stripeSize()>0 )
-		cmd += " -I " + decString(l->stripeSize());
+		cmd += " -i " + decString(l->stripes());
+		if( l->stripeSize()>0 )
+		    cmd += " -I " + decString(l->stripeSize());
 	    }
-	cmd += " -n " + quote(l->name());
-	cmd += " " + quote(name());
+	    cmd += " --name " + quote(l->name());
+	    cmd += " " + quote(name());
+	}
+	else
+	{
+	    cmd += " --snapshot";
+	    cmd += " --name " + quote(l->name());
+	    cmd += " " + quote(name() + "/" + l->getOrigin());
+	}
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {

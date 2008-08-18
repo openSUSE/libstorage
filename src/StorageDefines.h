@@ -15,6 +15,7 @@
 #define LVREMOVEBIN "/sbin/lvremove"
 #define LVEXTENDBIN "/sbin/lvextend"
 #define LVREDUCEBIN "/sbin/lvreduce"
+#define LVSBIN "/sbin/lvs"
 
 #define VGCREATEBIN "/sbin/vgcreate"
 #define VGREMOVEBIN "/sbin/vgremove"

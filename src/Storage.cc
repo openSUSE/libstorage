@@ -2770,6 +2770,90 @@ Storage::changeLvStripeSize( const string& vg, const string& name,
 
 
 int
+Storage::createLvmLvSnapshot(const string& vg, const string& origin,
+			     const string& name, unsigned long long cowSizeK,
+			     string& device)
+{
+    int ret = 0;
+    device.erase();
+    assertInit();
+    y2mil("vg:" << vg << " origin:" << origin << " name:" << name << " cowSizeK:" << cowSizeK);
+    LvmVgIterator i = findLvmVg(vg);
+    if (readonly)
+    {
+	ret = STORAGE_CHANGE_READONLY;
+    }
+    else if (i != lvgEnd())
+    {
+	ret = i->createLvSnapshot(origin, name, cowSizeK, device);
+    }
+    else
+    {
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    }
+    if (ret == 0)
+    {
+	ret = checkCache();
+    }
+    y2mil("ret:" << ret << " device:" << device);
+    return ret;
+}
+
+
+int
+Storage::removeLvmLvSnapshot(const string& vg, const string& name)
+{
+    int ret = 0;
+    assertInit();
+    y2mil("vg:" << vg << " name:" << name);
+    LvmVgIterator i = findLvmVg(vg);
+    if (readonly)
+    {
+	ret = STORAGE_CHANGE_READONLY;
+    }
+    else if (i != lvgEnd())
+    {
+	ret = i->removeLvSnapshot(name);
+    }
+    else
+    {
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    }
+    if (ret == 0)
+    {
+	ret = checkCache();
+    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
+int
+Storage::getLvmLvSnapshotStateInfo(const string& vg, const string& name, 
+				   LvmLvSnapshotStateInfo& info)
+{
+    int ret = 0;
+    assertInit();
+    y2mil("vg:" << vg << " name:" << name);
+    LvmVgIterator i = findLvmVg(vg);
+    if (i != lvgEnd())
+    {
+	ret = i->getLvSnapshotState(name, info);
+    }
+    else
+    {
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+    }
+    if (ret == 0)
+    {
+	ret = checkCache();
+    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
+int
 Storage::nextFreeMd(int &nr, string &device)
 {
     int ret = 0;

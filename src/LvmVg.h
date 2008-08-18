@@ -10,6 +10,7 @@ namespace storage
 class LvmVg : public PeContainer
     {
     friend class Storage;
+    friend class LvmLv;
 
     public:
 	LvmVg( Storage * const s, const string& Name );
@@ -33,6 +34,11 @@ class LvmVg : public PeContainer
 	int changeStripe( const string& name, unsigned long stripe );
 	int changeStripeSize( const string& name, 
 	                      unsigned long long stripeSize );
+
+	int createLvSnapshot(const string& origin, const string& name,
+			     unsigned long long cowSizeK, string& device);
+	int removeLvSnapshot(const string& name);
+	int getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info);
 
 	int setPeSize( long long unsigned peSizeK );
 	void normalizeDmDevices();
@@ -124,8 +130,8 @@ class LvmVg : public PeContainer
 	string instSysString();
 
 	void logData( const string& Dir );
-	void addLv( unsigned long& le, string& name, string& uuid,
-	            string& status, string& alloc, bool& ro );
+	void addLv(unsigned long& le, string& name, string& origin, string& uuid, 
+		   string& status, string& alloc, bool& ro);
 	void addPv( Pv*& p );
 
 	string status;

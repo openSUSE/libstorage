@@ -9,14 +9,18 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
+#include "y2storage/StorageDefines.h"
 
 using namespace storage;
 using namespace std;
 
-LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
-	      const string& uuid, const string& stat, const string& alloc ) :
-	Dm( d, dupDash(d.name())+"-"+dupDash(name) )
-    {
+
+LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
+	     unsigned long le, const string& uuid, const string& stat, 
+	     const string& alloc)
+    : Dm( d, dupDash(d.name())+"-"+dupDash(name) ),
+      origin(origi)
+{
     init( name );
     setUuid( uuid );
     setStatus( stat );
@@ -24,28 +28,38 @@ LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
     setLe( le );
     calcSize();
     getTableInfo();
-    y2debug( "constructed lvm lv %s on vg %s", dev.c_str(),
-	     cont->name().c_str() );
-    }
 
-LvmLv::LvmLv( const LvmVg& d, const string& name, unsigned long le,
-	      unsigned str ) :
-	Dm( d, dupDash(d.name())+"-"+dupDash(name) )
-    {
+    y2deb("constructed lvm lv dev:" << dev << " vg:" << cont->name() << " origin:" << origin);
+}
+
+
+LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi, 
+	     unsigned long le, unsigned str)
+    : Dm( d, dupDash(d.name())+"-"+dupDash(name) ),
+      origin(origi)
+{
     init( name );
     setLe( le );
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
     alt_names.push_back( "/dev/mapper/" + dupDash(cont->name()) + "-" + dupDash(name) );
-    y2debug( "constructed lvm lv %s on vg %s", dev.c_str(),
-	     cont->name().c_str() );
-    }
+
+    y2deb("constructed lvm lv dev:" << dev << " vg:" << cont->name() << " origin:" << origin);
+}
+
 
 LvmLv::~LvmLv()
-    {
-    y2debug( "destructed lvm lv %s", dev.c_str() );
-    }
+{
+    y2deb("destructed lvm lv dev:" << dev);
+}
+
+
+const LvmVg* LvmLv::vg() const
+{
+    return(dynamic_cast<const LvmVg* const>(cont));
+}
+
 
 void LvmLv::init( const string& name )
     {
@@ -53,6 +67,67 @@ void LvmLv::init( const string& name )
     dev = normalizeDevice( cont->name() + "/" + name );
     Dm::init();
     }
+
+
+void LvmLv::calcSize()
+{
+    if (!isSnapshot())
+    {
+	Dm::calcSize();
+    }
+    else
+    {
+	LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmVg::lvNotDeleted);
+	LvmVg::ConstLvmLvIter i = p.begin();
+	while( i!=p.end() && i->name()!=origin )
+	    ++i;
+	if (i != p.end())
+	{
+	    setSize(i->sizeK());
+	}
+	else
+	{
+	    setSize(0);
+	    y2err("not found " << origin);
+	}
+    }
+}
+
+
+bool
+LvmLv::hasSnapshots() const
+{
+    LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmVg::lvNotDeleted);
+    LvmVg::ConstLvmLvIter i = p.begin();
+    while( i!=p.end() && i->getOrigin()!=name() )
+	++i;
+    return i != p.end();
+}
+
+
+void
+LvmLv::getState(LvmLvSnapshotStateInfo& info)
+{
+    SystemCmd cmd(LVSBIN " --options lv_name,lv_attr,snap_percent " + quote(cont->name()));
+
+    if (cmd.retcode() == 0 && cmd.numLines() > 0)
+    {
+	for (unsigned int l = 1; l < cmd.numLines(); l++)
+	{
+	    string line = *cmd.getLine(l);
+	    
+	    if (extractNthWord(0, line) == name())
+	    {
+		string attr = extractNthWord(1, line);
+		info.active = attr.size() >= 6 && attr[4] == 'a';
+		
+		string percent = extractNthWord(2, line);
+		percent >> info.allocated;
+	    }
+	}
+    }
+}
+
 
 string LvmLv::removeText( bool doing ) const
     {
@@ -219,6 +294,10 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     info.allocation = allocation;
     info.dm_table = tname;
     info.dm_target = target;
+
+    info.sizeK = num_le * pec()->peSize();
+    info.origin = origin;
+
     tinfo = info;
     }
 

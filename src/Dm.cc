@@ -95,6 +95,14 @@ Dm::getTableInfo()
 		y2warning( "could not find major/minor pair %s", 
 			majmin.c_str());
 	    }
+	else if (target == "snapshot-origin")
+	{
+	    // AFAIS snapshot-origins do not really use space.
+	}
+	else if (target == "snapshot")
+	{
+	    // AFAIS think snapshots do not really use space.
+	}
 	else if( target=="striped" )
 	    {
 	    unsigned str;

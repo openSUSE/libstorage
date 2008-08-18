@@ -27,7 +27,7 @@ class Dm : public Volume
 	void setLe( unsigned long long le );
 	void modifyPeSize( unsigned long long old, unsigned long long neww );
 	bool removeTable();
-	void calcSize();
+	virtual void calcSize();
 	const std::map<string,unsigned long>& getPeMap() const { return( pe_map ); }
 	void setPeMap( const std::map<string,unsigned long>& m );
 	unsigned long long usingPe( const string& dev ) const;
