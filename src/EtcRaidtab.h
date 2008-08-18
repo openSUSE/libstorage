@@ -31,14 +31,12 @@ class EtcRaidtab
 	void updateMdadmFile();
 	void buildMdadmMap();
 
-	Regex *whitespace;
-	Regex *comment;
 	string mdadmname;
 	int mdadm_dev_line;
 	std::map<unsigned,entry> mtab;
 	AsciiFile* mdadm;
     };
-///////////////////////////////////////////////////////////////////
+
 
 inline std::ostream& operator<< (std::ostream& s, const EtcRaidtab::entry& v )
     {

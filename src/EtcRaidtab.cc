@@ -18,16 +18,12 @@ EtcRaidtab::EtcRaidtab( const string& prefix )
     {
     mdadm_dev_line = -1;
     mdadmname = prefix+"/etc/mdadm.conf";
-    comment = new Regex( "^[ \t]*#" );
-    whitespace = new Regex( "^[ \t]*$" );
     mdadm = new AsciiFile( mdadmname ); 
     buildMdadmMap();
     }
 
 EtcRaidtab::~EtcRaidtab()
     {
-    delete whitespace;
-    delete comment;
     delete mdadm;
     }
 

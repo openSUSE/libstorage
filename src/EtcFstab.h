@@ -6,7 +6,6 @@
 #include <map>
 
 #include "y2storage/StorageInterface.h"
-#include "y2storage/AppUtil.h"
 
 namespace storage
 {

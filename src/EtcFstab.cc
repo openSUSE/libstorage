@@ -4,7 +4,7 @@
 */
 
 
-#include <sstream>
+#include <fstream>
 #include <algorithm>
 
 #include "y2storage/AppUtil.h"
