@@ -2844,10 +2844,6 @@ Storage::getLvmLvSnapshotStateInfo(const string& vg, const string& name,
     {
 	ret = STORAGE_LVM_VG_NOT_FOUND;
     }
-    if (ret == 0)
-    {
-	ret = checkCache();
-    }
     y2mil("ret:" << ret);
     return ret;
 }
@@ -5734,21 +5730,21 @@ void Storage::setExtError( const string& txt )
     extendedError = txt;
     }
 
+
 int Storage::waitForDevice() const
-    {
+{
     int ret = 0;
-    const char * prog = "/sbin/udevsettle";
-    if( access( prog, X_OK )==0 )
-	{
-	string cmd( prog );
-	cmd += " --timeout=20";
-	y2milestone( "calling prog:%s", cmd.c_str() );
-	SystemCmd c( cmd );
-	y2milestone( "returned prog:%s retcode:%d", cmd.c_str(), c.retcode() );
-	}
-    y2milestone( "ret:%d", ret );
-    return( ret );
+    if (access(UDEVSETTLEBIN, X_OK) == 0)
+    {
+	string cmd(UDEVSETTLEBIN " --timeout=20");
+	y2mil("calling prog:" << cmd);
+	SystemCmd c(cmd);
+	y2mil("returned prog:" << cmd << " retcode:" << c.retcode());
     }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
 
 int Storage::waitForDevice( const string& device ) const
     {
@@ -5773,21 +5769,21 @@ int Storage::waitForDevice( const string& device ) const
     return( ret );
     }
 
+
 void Storage::checkDeviceExclusive( const string& device, unsigned secs )
-    {
+{
     const int delay = 50000;
-    unsigned count = secs * 1000000/delay;
-    int fd;
+    const unsigned count = secs * 1000000/delay;
     y2mil( "dev:" << device << " sec:" << secs << " count:" << count );
     for( unsigned i=0; i<count; i++ )
-	{
-	fd = open( device.c_str(), O_RDONLY|O_EXCL );
+    {
+	int fd = open( device.c_str(), O_RDONLY|O_EXCL );
 	y2mil( "count:" << i << " fd:" << fd );
 	if( fd>=0 )
 	    close(fd);
 	usleep( delay );
-	}
     }
+}
 
 
 string Storage::byteToHumanString(unsigned long long size, bool classic, int precision, 

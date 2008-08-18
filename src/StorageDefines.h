@@ -43,5 +43,7 @@
 #define DASDVIEWBIN "/sbin/dasdview"
 #define FDASDBIN "/sbin/fdasd"
 
+#define UDEVSETTLEBIN "/sbin/udevsettle"
+
 
 #endif

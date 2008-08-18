@@ -9,8 +9,8 @@ namespace storage
 class Region 
     {
     public:
-	Region() : s(0), l(0) {};
-	Region( unsigned long start, unsigned long len ) : s(start), l(len) {};
+	Region() : s(0), l(0) {}
+	Region( unsigned long start, unsigned long len ) : s(start), l(len) {}
 	Region( const Region& x ) 
 	    { *this = x; }
 	Region& operator=(const Region& r)
