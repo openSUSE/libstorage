@@ -7,8 +7,8 @@
 #include <unistd.h>
 #include <string>
 #include <sys/stat.h>
-#include <sys/timeb.h>
-#include <sys/time.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #include <locale>
 #include <boost/algorithm/string.hpp>
@@ -416,85 +416,75 @@ logMsgVaArgs(unsigned level, const char* file, unsigned line, const char* func,
 }
 
 
-void
-getFindMap(const char* path, map<string, list<string>>& m)
+int
+readlink(const char* path, string& buf)
 {
-    y2mil( "path: " << path);
-    m.clear();
-    if( access( path, R_OK )==0 )
+    const int size = 1024;
+    char tmp[size];
+    int ret = ::readlink(path, tmp, size);
+    if (ret >= 0)
+	buf = string(tmp, ret);
+    return ret;
+}
+
+
+map<string, string>
+getUdevLinks(const char* path)
 	{
-	string cmd = "/usr/bin/find ";
-	cmd += path;
-	cmd += " -type l -printf '%f %l\n'";
-	SystemCmd findcmd( cmd.c_str() );
-	list<string> l;
-	findcmd.getStdout( l );
-	list<string>::iterator i=l.begin();
-	while( i!=l.end() )
+    map<string, string> links;
+
+    DIR* dir;
+    if ((dir = opendir(path)) != NULL)
 	    {
-	    list<string> tlist = splitString( *i );
-	    if( tlist.size()==2 )
+	struct dirent* entry;
+	while ((entry = readdir(dir)) != NULL)
 		{
-		string& tmp = tlist.back();
-		string dsk = tmp.substr( tmp.find_first_not_of( "./" ) );
-		m[dsk].push_back(tlist.front());
+	    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+		continue;
+
+	    string full = string(path) + "/" + entry->d_name;
+
+	    string tmp;
+	    if (readlink(full.c_str(), tmp) != -1)
+	    {
+		string::size_type pos = tmp.find_last_of('/');
+		if (pos == string::npos)
+		    links[entry->d_name] = tmp;
+		else
+		    links[entry->d_name] = tmp.substr(pos + 1);
 		}
-	    ++i;
 	    }
+	closedir(dir);
 	}
-    y2mil( "map: " << m );
+
+    return links;
     }
 
-void getFindRevMap( const char* path, map<string,string>& ret )
+
+void
+getFindMap(const char* path, map<string, list<string>>& m)
     {
     y2mil( "path: " << path );
-    map<string,string> m;
-    if( access( path, R_OK )==0 )
-	{
-	string cmd = "/bin/ls -lt ";
-	cmd += path;
-	SystemCmd findcmd( cmd.c_str() );
-	list<string> l;
-	findcmd.getStdout( l );
-	list<string>::iterator i=l.begin();
-	while( i!=l.end() )
-	    {
-	    list<string> tlist = splitString( *i );
-	    string dev, id;
-	    y2mil( "tlist:" << tlist );
-	    if( !tlist.empty() )
-		{
-		dev = tlist.back();
-		tlist.pop_back();
-		dev.erase( 0, dev.find_first_not_of( "./" ) );
-		if( !tlist.empty() && tlist.back() == "->" )
-		    {
-		    tlist.pop_back();
-		    if( !tlist.empty() )
-			id = tlist.back();
+
+    map<string, string> links = getUdevLinks(path);
+
+    m.clear();
+    for (map<string, string>::const_iterator it = links.begin(); it != links.end(); it++)
+        m[it->second].push_back(it->first);
+
+    y2mil("map: " << m);
 		    }
-		if( !id.empty() && !dev.empty() )
+
+void
+getFindRevMap(const char* path, map<string, string>& m)
 		    {
-		    map<string,string>::iterator mi = m.find( dev );
-		    if( mi == m.end() )
-			{
-			m[dev] = id;
+    y2mil("path: " << path);
+
+    m = getUdevLinks(path);
+
+    y2mil("map: " << m);
 			}
-		    else
-			y2mil( "already here dev:" << mi->first <<
-			       " id:" << mi->second );
-		    }
-		}
-	    ++i;
-	    }
-	ret.clear();
-	for( map<string,string>::iterator mi = m.begin(); mi!=m.end(); ++mi )
-	    {
-	    ret[mi->second] = mi->first;
-	    }
-	}
-    y2mil( "map: " << ret );
-    }
+
 
 unsigned getMajorDevices( const string& driver )
     {
