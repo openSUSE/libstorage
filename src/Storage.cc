@@ -13,14 +13,12 @@
 #include <config.h>
 #include <signal.h>
 #include <sys/utsname.h>
+#include <errno.h>
 
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
 
 #include "y2storage/Storage.h"
 #include "y2storage/StorageTmpl.h"
@@ -46,8 +44,6 @@ using namespace storage;
 void
 Storage::initDefaultLogger ()
 {
-    using namespace blocxx;
-
     string path;
     string file;
     if (geteuid ())
