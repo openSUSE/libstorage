@@ -760,7 +760,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    if( i->d )
 	        {
 		string tmp;
-		if (by_path[i->dev].size() > 0)
+		if (!by_path[i->dev].empty())
 		    tmp = by_path[i->dev].front();
 		i->d->setUdevData(tmp, by_id[i->dev]);
 		addToList( i->d );
