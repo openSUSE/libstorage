@@ -203,6 +203,7 @@ Storage::initialize()
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();
+
     std::list<std::pair<string,string> >::const_iterator i;
     for( i=infoPopupTxts.begin(); i!=infoPopupTxts.end(); ++i )
 	{
@@ -681,7 +682,7 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
 	    }
 	}
     if( d && 
-        (d->getSysfsInfo( sysfs_dir+"/"+data.name )||data.typ==DiskData::XEN) &&
+        (d->getSysfsInfo(SYSFSDIR "/" + data.name)||data.typ==DiskData::XEN) &&
 	(data.typ==DiskData::XEN||d->detect(pp)))
 	{
 	if( max_log_num>0 )
@@ -699,7 +700,7 @@ Storage::autodetectDisks( ProcPart& ppart )
     {
     DIR *Dir;
     struct dirent *Entry;
-    if( (Dir=opendir( sysfs_dir.c_str() ))!=NULL )
+    if( (Dir=opendir(SYSFSDIR))!=NULL )
     {
 	map<string,list<string>> by_path;
 	map<string,list<string>> by_id;
@@ -710,10 +711,10 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    {
 	    int Range=0;
 	    unsigned long long Size = 0;
-	    string SysfsDir = sysfs_dir+"/"+Entry->d_name;
-	    string SysfsFile = SysfsDir+"/range";
-	    y2milestone( "autodetectDisks sysfsdir:%s", SysfsDir.c_str() );
-	    y2mil( "autodetectDisks Range access:" << access( SysfsFile.c_str(), R_OK ) );
+	    string SysfsDir = string(SYSFSDIR "/") + Entry->d_name;
+	    string SysfsFile = SysfsDir + "/range";
+	    y2mil("autodetectDisks sysfsdir:" << SysfsDir);
+	    y2mil("autodetectDisks Range access:" << access(SysfsFile.c_str(), R_OK));
 	    if( access( SysfsFile.c_str(), R_OK )==0 )
 		{
 		ifstream File( SysfsFile.c_str() );
@@ -775,7 +776,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	}
     else
 	{
-	y2warning( "Failed to open:%s", sysfs_dir.c_str() );
+	y2war("Failed to open:" SYSFSDIR);
 	}
     }
 
@@ -956,7 +957,6 @@ void Storage::setDetectMountedVolumes( bool val )
     }
 
 string Storage::proc_arch;
-string Storage::sysfs_dir = "/sys/block";
 bool Storage::is_ppc_mac = false;
 bool Storage::is_ppc_pegasos = false;
 

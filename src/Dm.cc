@@ -510,7 +510,7 @@ int Dm::dmNumber( const string& table )
 
 string Dm::sysfsPath() const
     {
-    string ret = Storage::sysfsDir() + "/";
+    string ret = SYSFSDIR "/";
     list<string>::const_iterator i = 
 	find_if( alt_names.begin(), alt_names.end(), find_begin( "/dev/dm-" ) );
     if( i != alt_names.end() )

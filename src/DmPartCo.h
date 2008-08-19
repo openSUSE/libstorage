@@ -170,7 +170,6 @@ class DmPartCo : public PeContainer
 	string udev_path;
 	std::list<string> udev_id;
 	string logfile_name;
-	string sysfs_dir;
 
 	Disk* disk;
 	bool active;

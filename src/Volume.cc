@@ -885,7 +885,7 @@ void Volume::updateFsData()
 
 string Volume::sysfsPath() const
     {
-    string ret = Storage::sysfsDir() + "/";
+    string ret = SYSFSDIR "/";
     string::size_type pos = dev.rfind( '/' ) + 1;
     ret += dev.substr( pos );
     y2mil( "ret:" << ret );
@@ -897,7 +897,7 @@ string Volume::getFilesysSysfsPath() const
     string ret;
     if( is_loop )
 	{
-	ret = Storage::sysfsDir() + "/";
+	ret = SYSFSDIR "/";
 	string::size_type pos = loop_dev.rfind( '/' ) + 1;
 	ret += loop_dev.substr( pos );
 	}

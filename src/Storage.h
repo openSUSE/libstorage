@@ -222,7 +222,6 @@ class Storage : public storage::StorageInterface
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const;
 	static const string& arch() { return( proc_arch ); }
-	static const string& sysfsDir() { return( sysfs_dir ); }
 	static bool isPPCMac() { return( is_ppc_mac ); }
 	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
 	EtcFstab* getFstab() { return fstab; }
@@ -1724,7 +1723,6 @@ class Storage : public storage::StorageInterface
 	string logdir;
 	unsigned hald_pid;
 	static string proc_arch;
-	static string sysfs_dir;
 	static bool is_ppc_mac;
 	static bool is_ppc_pegasos;
 	CCont cont;

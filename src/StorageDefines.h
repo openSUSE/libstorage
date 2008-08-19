@@ -2,6 +2,9 @@
 #define STORAGE_DEFINES_H
 
 
+#define SYSFSDIR "/sys/block"
+
+
 #define PARTEDBIN "/usr/sbin/parted"
 #define PARTEDCMD PARTEDBIN " -s "	// blank at end !!
 
