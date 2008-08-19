@@ -179,19 +179,20 @@ void Disk::triggerUdevUpdate()
 	}
     }
 
-void Disk::setUdevData( const string& path, const string& id )
-    {
-    y2milestone( "disk %s path %s id %s", nm.c_str(), path.c_str(), id.c_str() );
+
+void
+Disk::setUdevData(const string& path, const list<string>& id)
+{
+    y2mil("disk:" << nm << " path:" << path << "id:" << id);
     udev_path = path;
-    udev_id.clear();
-    udev_id = splitString( id );
+    udev_id = id;
+
     list<string>::iterator i = find_if( udev_id.begin(), udev_id.end(), 
                                         find_begin( "edd-" ) );
     if( i!=udev_id.end() )
 	{
 	udev_id.erase( i );
 	}
-    y2mil( "id:" << udev_id );
     if( udev_id.size()>1 )
 	{
 	i = find_if( udev_id.begin(), udev_id.end(), find_begin( "scsi-" ) );
@@ -202,12 +203,14 @@ void Disk::setUdevData( const string& path, const string& id )
 	    udev_id.push_front(tmp);
 	    }
 	}
+    y2mil("id:" << udev_id);
+
     PartPair pp = partPair();
     for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
 	p->addUdevData();
 	}
-    }
+}
 
 
 unsigned long long

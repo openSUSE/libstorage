@@ -759,7 +759,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    {
 	    if( i->d )
 		{
-		i->d->setUdevData( by_path[i->dev], by_id[i->dev] );
+		i->d->setUdevData( by_path[i->dev], splitString(by_id[i->dev]));
 		addToList( i->d );
 		}
 	    }
