@@ -98,12 +98,21 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
     zeroNewPartitions = false;
     defaultMountBy = MOUNTBY_ID;
     detectMounted = true;
+
+    logSystemInfo();
+}
+
+
+void
+Storage::logSystemInfo() const
+{
     ifstream File( "/proc/version" );
     classic(File);
     string line;
     getline( File, line );
     File.close();
     y2mil( "kernel version:" << line );
+
     if( inst_sys )
 	{
 	DIR *dir;
@@ -130,7 +139,8 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
 	    SystemCmd c( line );
 	    }
 	}
-    }
+}
+
 
 void
 Storage::initialize()

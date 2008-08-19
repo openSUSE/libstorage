@@ -1643,6 +1643,7 @@ class Storage : public storage::StorageInterface
     protected:
 	// protected internal member functions
 	void initialize();
+	void logSystemInfo() const;
 	void detectDisks( ProcPart& ppart );
 	void autodetectDisks( ProcPart& ppart );
 	void detectMultipath();
