@@ -416,9 +416,10 @@ logMsgVaArgs(unsigned level, const char* file, unsigned line, const char* func,
 }
 
 
-void getFindMap( const char* path, map<string,string>& m, bool unique )
-    {
-    y2mil( "path: " << path << " unique:" << unique );
+void
+getFindMap(const char* path, map<string, list<string>>& m)
+{
+    y2mil( "path: " << path);
     m.clear();
     if( access( path, R_OK )==0 )
 	{
@@ -436,14 +437,7 @@ void getFindMap( const char* path, map<string,string>& m, bool unique )
 		{
 		string& tmp = tlist.back();
 		string dsk = tmp.substr( tmp.find_first_not_of( "./" ) );
-		map<string,string>::const_iterator mi = m.find(dsk);
-		if( unique || mi==m.end() )
-		    m[dsk] = tlist.front();
-		else
-		    {
-		    m[dsk] += " ";
-		    m[dsk] += tlist.front();
-		    }
+		m[dsk].push_back(tlist.front());
 		}
 	    ++i;
 	    }

@@ -28,7 +28,7 @@ class DmmultipathCo : public DmPartCo
 	static storage::CType staticType() { return storage::DMMULTIPATH; }
 	friend std::ostream& operator<< (std::ostream&, const DmmultipathCo& );
 	void getInfo( storage::DmmultipathCoInfo& info ) const;
-	void setUdevData( const string& id );
+	void setUdevData(const list<string>& id);
 
 	bool equalContent( const Container& rhs ) const;
 	string getDiffString( const Container& d ) const;

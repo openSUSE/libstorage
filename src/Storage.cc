@@ -519,16 +519,16 @@ Storage::detectDmraid( ProcPart& ppart )
     else if( getenv( "YAST2_STORAGE_NO_DMRAID" )==NULL )
 	{
 	list<string> l;
-	map<string,string> by_id;
 	DmraidCo::getRaids( l );
+	map<string, list<string>> by_id;
 	if( !l.empty() )
-	    getFindMap( "/dev/disk/by-id", by_id, false );
+	    getFindMap("/dev/disk/by-id", by_id);
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    DmraidCo * v = new DmraidCo( this, *i, ppart );
 	    if( v->isValid() )
 		{
-		string nm = by_id["dm-"+decString(v->minorNr())];
+		list<string> nm = by_id["dm-"+decString(v->minorNr())];
 		if( !nm.empty() )
 		    v->setUdevData( nm );
 		addToList( v );
@@ -560,17 +560,17 @@ Storage::detectDmmultipath( ProcPart& ppart )
     else if( getenv( "YAST2_STORAGE_NO_DMMULTIPATH" )==NULL )
     {
 	list<string> l;
-	map<string, string> by_id;
 	DmmultipathCo::getMultipaths( l );
+	map<string, list<string>> by_id;
 	if( !l.empty() )
-	    getFindMap( "/dev/disk/by-id", by_id, false );
+	    getFindMap("/dev/disk/by-id", by_id);
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
 	    DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
 	    if( v->isValid() )
 	    {
 		/*
-		string nm = by_id["dm-"+decString(v->minorNr())];
+		list<string> nm = by_id["dm-"+decString(v->minorNr())];
 		if( !nm.empty() )
 		    v->setUdevData( nm );
 		*/
@@ -694,11 +694,11 @@ Storage::autodetectDisks( ProcPart& ppart )
     DIR *Dir;
     struct dirent *Entry;
     if( (Dir=opendir( sysfs_dir.c_str() ))!=NULL )
-	{
-	map<string,string> by_path;
-	map<string,string> by_id;
-	getFindMap( "/dev/disk/by-path", by_path );
-	getFindMap( "/dev/disk/by-id", by_id, false );
+    {
+	map<string,list<string>> by_path;
+	map<string,list<string>> by_id;
+	getFindMap("/dev/disk/by-path", by_path);
+	getFindMap("/dev/disk/by-id", by_id);
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
@@ -758,8 +758,11 @@ Storage::autodetectDisks( ProcPart& ppart )
 	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
 	    {
 	    if( i->d )
-		{
-		i->d->setUdevData( by_path[i->dev], splitString(by_id[i->dev]));
+	        {
+		string tmp;
+		if (by_path[i->dev].size() > 0)
+		    tmp = by_path[i->dev].front();
+		i->d->setUdevData(tmp, by_id[i->dev]);
 		addToList( i->d );
 		}
 	    }

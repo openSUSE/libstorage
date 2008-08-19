@@ -83,21 +83,22 @@ DmmultipathCo::getMultipathData(const string& name)
 
 
 void
-DmmultipathCo::setUdevData( const string& id )
-    {
-    y2milestone( "disk %s id %s", nm.c_str(), id.c_str() );
-    udev_id.clear();
-    udev_id = splitString( id );
+DmmultipathCo::setUdevData(const list<string>& id)
+{
+    y2mil("disk:" << nm << " id:" << id);
+    udev_id = id;
     udev_id.erase( remove_if(udev_id.begin(), udev_id.end(),
                              find_begin("dm-uuid-mpath")));
     udev_id.sort();
     y2mil( "id:" << udev_id );
+
     DmmultipathPair pp = dmmultipathPair();
     for( DmmultipathIter p=pp.begin(); p!=pp.end(); ++p )
 	{
 	p->addUdevData();
 	}
-    }
+}
+
 
 void
 DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
