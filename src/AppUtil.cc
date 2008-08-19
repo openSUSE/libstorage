@@ -430,15 +430,15 @@ readlink(const char* path, string& buf)
 
 map<string, string>
 getUdevLinks(const char* path)
-	{
+{
     map<string, string> links;
 
     DIR* dir;
     if ((dir = opendir(path)) != NULL)
-	    {
+    {
 	struct dirent* entry;
 	while ((entry = readdir(dir)) != NULL)
-		{
+	{
 	    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
 		continue;
 
@@ -452,38 +452,39 @@ getUdevLinks(const char* path)
 		    links[entry->d_name] = tmp;
 		else
 		    links[entry->d_name] = tmp.substr(pos + 1);
-		}
 	    }
-	closedir(dir);
 	}
+	closedir(dir);
+    }
 
     return links;
-    }
+}
 
 
 void
 getFindMap(const char* path, map<string, list<string>>& m)
-    {
+{
     y2mil( "path: " << path );
 
     map<string, string> links = getUdevLinks(path);
 
     m.clear();
     for (map<string, string>::const_iterator it = links.begin(); it != links.end(); it++)
-        m[it->second].push_back(it->first);
+	m[it->second].push_back(it->first);
 
     y2mil("map: " << m);
-		    }
+}
+
 
 void
 getFindRevMap(const char* path, map<string, string>& m)
-		    {
+{
     y2mil("path: " << path);
 
     m = getUdevLinks(path);
 
     y2mil("map: " << m);
-			}
+}
 
 
 unsigned getMajorDevices( const string& driver )
