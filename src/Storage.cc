@@ -159,30 +159,25 @@ Storage::initialize()
 	rmdir( tempdir.c_str() );
 	}
     if( access( "/etc/sysconfig/storage", R_OK )==0 )
-	{
+    {
 	AsciiFile sc( "/etc/sysconfig/storage" );
-	Regex r( '^' + Regex::ws + "DEVICE_NAMES" + Regex::ws + '=' );
+	Regex r('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
 	int line = sc.find( 0, r );
 	if( line >= 0 )
-	    {
-	    list<string> ls = splitString( sc[line], " \t=\"" );
-	    y2mil( "ls:" << ls );
-	    if( ls.size()==2 )
-		{
-		string val = boost::to_lower_copy(ls.back(), locale::classic());
-		if( val == "id" )
-		    setDefaultMountBy( MOUNTBY_ID );
-		else if( val == "path" )
-		    setDefaultMountBy( MOUNTBY_PATH );
-		else if( val == "device" )
-		    setDefaultMountBy( MOUNTBY_DEVICE );
-		else if( val == "uuid" )
-		    setDefaultMountBy( MOUNTBY_UUID );
-		else if( val == "label" )
-		    setDefaultMountBy( MOUNTBY_LABEL );
-		}
-	    }
+	{
+	    string val = boost::to_lower_copy(r.cap(2), locale::classic());
+	    if( val == "id" )
+		setDefaultMountBy( MOUNTBY_ID );
+	    else if( val == "path" )
+		setDefaultMountBy( MOUNTBY_PATH );
+	    else if( val == "device" )
+		setDefaultMountBy( MOUNTBY_DEVICE );
+	    else if( val == "uuid" )
+		setDefaultMountBy( MOUNTBY_UUID );
+	    else if( val == "label" )
+		setDefaultMountBy( MOUNTBY_LABEL );
 	}
+    }
     if( autodetect )
 	{
 	detectArch();
