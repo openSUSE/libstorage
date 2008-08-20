@@ -7,7 +7,6 @@
  */
 
 
-#include <sys/types.h>
 #include <regex.h>
 #include <string>
 
@@ -20,23 +19,25 @@ class Regex
 {
 public:
 
-    Regex (const char*, int = REG_EXTENDED, unsigned int = 10);
-    Regex (const string&, int = REG_EXTENDED, unsigned int = 10);
+    Regex (const char* pattern, int cflags = REG_EXTENDED, unsigned int = 10);
+    Regex (const string& pattern, int cflags = REG_EXTENDED, unsigned int = 10);
     ~Regex ();
 
     string getPattern () const { return pattern; };
     int getCflags () const { return cflags; }
 
-    bool match (const string&, int = 0) const;
+    bool match (const string&, int eflags = 0) const;
 
     regoff_t so (unsigned int) const;
     regoff_t eo (unsigned int) const;
 
     string cap (unsigned int) const;
-    static const string& ws;
-    static const string& number;
+
+    static const string ws;
+    static const string number;
 
 private:
+
     const string pattern;
     const int cflags;
     const unsigned int nm;
