@@ -48,5 +48,7 @@
 
 #define UDEVSETTLEBIN "/sbin/udevsettle"
 
+#define MODPROBEBIN "/sbin/modprobe"
+
 
 #endif

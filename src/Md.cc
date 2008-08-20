@@ -311,25 +311,28 @@ void Md::changeDeviceName( const string& old, const string& nw )
 	*i = nw;
     }
 
-string Md::createCmd() const
-    {
+
+string
+Md::createCmd() const
+{
     string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
-    cmd += "modprobe " + pName() + "; " MDADMBIN " --create " + quote(device()) +
-	   " --run --level=" + pName() + " -e 1.0";
+    cmd += MODPROBEBIN " " + pName() + "; " MDADMBIN " --create " + quote(device()) +
+	" --run --level=" + pName() + " -e 1.0";
     if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
         pName() == "raid10")
-            cmd += " -b internal";
-    if( chunk>0 )
+	cmd += " -b internal";
+    if (chunk > 0)
 	cmd += " --chunk=" + decString(chunk);
-    if( md_parity!=PAR_NONE )
+    if (md_parity != PAR_NONE)
 	cmd += " --parity=" + ptName();
     cmd += " --raid-devices=" + decString(devs.size());
-    if( !spare.empty() )
+    if (!spare.empty())
 	cmd += " --spare-devices=" + decString(spare.size());
     cmd += " " + quote(devs) + " " + quote(spare);
-    y2milestone( "ret:%s", cmd.c_str() );
-    return( cmd );
-    }
+    y2mil("ret:" << cmd);
+    return cmd;
+}
+
 
 string Md::mdadmLine() const
     {

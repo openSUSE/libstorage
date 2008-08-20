@@ -1677,7 +1677,7 @@ EncryptType Volume::detectEncryption()
 			  quote(cont->getStorage()->root() + lfile));
 	    }
 	string cmd = getCryptsetupCmd( try_order[pos], dmcrypt_dev, "", fname, false );
-	c.execute( "modprobe dm-crypt" );
+	c.execute(MODPROBEBIN " dm-crypt");
 	c.execute( cmd );
         string use_dev = dmcrypt_dev;
 	if( c.retcode()==0 )
@@ -1708,7 +1708,7 @@ EncryptType Volume::detectEncryption()
 			     ok, c.retcode(), excTime, excLines );
 		if( ok )
 		    {
-		    c.execute( "modprobe " + fs_names[detected_fs] );
+		    c.execute(MODPROBEBIN " " + fs_names[detected_fs]);
 		    c.execute(MOUNTBIN " -oro -t " + fsTypeString(detected_fs) + " " +
 			      quote(use_dev) + " " + quote(mpname));
 		    ok = c.retcode()==0;
@@ -2119,15 +2119,15 @@ int Volume::mount( const string& m, bool ro )
 		fsn = "auto";
 		break;
 	    default:
-		cmdline = "modprobe " + fsn;
+		cmdline = MODPROBEBIN " " + fsn;
 		cmd.execute( cmdline );
 		break;
 	    }
 	if( fs == VFAT )
 	    {
-	    cmdline = "modprobe nls_cp437";
+	    cmdline = MODPROBEBIN " nls_cp437";
 	    cmd.execute( cmdline );
-	    cmdline = "modprobe nls_iso8859-1";
+	    cmdline = MODPROBEBIN " nls_iso8859-1";
 	    cmd.execute( cmdline );
 	    }
 	cmdline = MOUNTBIN " ";
