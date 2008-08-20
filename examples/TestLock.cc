@@ -108,7 +108,7 @@ main(int argc, char** argv)
     catch (LockException& e)
     {
 	cerr << "lock failed" << endl;
-	cerr << "locker-pid is " << e.GetLockerPid() << endl;
+	cerr << "locker-pid is " << e.getLockerPid() << endl;
 	exit(EXIT_FAILURE);
     }
 
