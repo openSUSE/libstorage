@@ -132,21 +132,21 @@ private:
 
 struct match_string
     {
-    match_string( const string& t ) : r(t) {};
+    match_string( const string& t ) : r(t) {}
     bool operator()(const string&s) { return( r.match( s )); }
-    Regex r;
+    const Regex& r;
     };
 
 struct find_begin
     {
-    find_begin( const string& t ) : val(t) {};
+    find_begin( const string& t ) : val(t) {}
     bool operator()(const string&s) { return( s.find(val)==0 ); }
     const string& val;
     };
 
 struct find_any
     {
-    find_any( const string& t ) : val(t) {};
+    find_any( const string& t ) : val(t) {}
     bool operator()(const string&s) { return( s.find(val)!=string::npos ); }
     const string& val;
     };

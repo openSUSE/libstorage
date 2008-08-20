@@ -9,13 +9,14 @@
 
 #include <regex.h>
 #include <string>
+#include <boost/noncopyable.hpp>
 
 using std::string;
 
 namespace storage
 {
 
-class Regex
+class Regex : boost::noncopyable
 {
 public:
 
