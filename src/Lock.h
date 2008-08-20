@@ -22,13 +22,14 @@ namespace storage
 	LockException(pid_t locker_pid);
 	virtual ~LockException() throw();
 
-	pid_t GetLockerPid() const { return locker_pid; }
+	pid_t getLockerPid() const { return locker_pid; }
 
     protected:
 
 	pid_t locker_pid;
 
     };
+
 
     /**
      * Implement a global read-only or read-write lock.
@@ -43,8 +44,8 @@ namespace storage
 
     private:
 
-	int fd;
 	bool disabled;
+	int fd;
 
     };
 }

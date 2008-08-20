@@ -112,33 +112,6 @@ Storage::logSystemInfo() const
     getline( File, line );
     File.close();
     y2mil( "kernel version:" << line );
-
-    if( inst_sys )
-	{
-	DIR *dir;
-	struct dirent *entry;
-	string mtest;
-	if( (dir=opendir( "/lib/modules" ))!=NULL )
-	    {
-	    while( (entry=readdir( dir ))!=NULL )
-		{
-		if( strcmp( entry->d_name, "." )!=0 &&
-		    strcmp( entry->d_name, ".." )!=0 )
-		    {
-		    y2mil( "modules dir:" << entry->d_name );
-		    line = (string)"/lib/modules/" + entry->d_name + "/updates/initrd/ext3.ko";
-		    if( access( line.c_str(), R_OK )==0 )
-			mtest = line;
-		    }
-		}
-	    closedir( dir );
-	    }
-	if( mtest.length()>0 )
-	    {
-	    line = "/sbin/modinfo " + mtest;
-	    SystemCmd c( line );
-	    }
-	}
 }
 
 
@@ -868,15 +841,15 @@ Storage::testFilesEqual( const string& n1, const string& n2 )
     bool ret = false;
     if( access( n1.c_str(), R_OK )==0 && access( n2.c_str(), R_OK )==0 )
 	{
-	SystemCmd c( "md5sum " + n1 + " " + n2 );
+	SystemCmd c("/usr/bin/md5sum " + quote(n1) + " " + quote(n2));
 	if( c.retcode()==0 && c.numLines()>=2 )
 	    {
 	    ret = extractNthWord( 0, *c.getLine(0) )==
 	          extractNthWord( 0, *c.getLine(1) );
 	    }
 	}
-    y2milestone( "ret:%d n1:%s n2:%s", ret, n1.c_str(), n2.c_str() );
-    return( ret );
+    y2mil("ret:" << ret << "n1:" << n1 << " n2:" << n2);
+    return ret;
     }
 
 void
@@ -982,7 +955,7 @@ namespace storage
 	}
 	catch (const LockException& e)
 	{
-	    locker_pid = e.GetLockerPid();
+	    locker_pid = e.getLockerPid();
 	    return NULL;
 	}
     }
