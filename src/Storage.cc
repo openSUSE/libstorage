@@ -2182,7 +2182,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
 	list<string> opts = splitString( vol->getFstabOption(), "," );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	    {
-	    opts.remove_if( match_string( *i ));
+	    opts.remove_if(match_regex(*i));
 	    }
 	ret = vol->changeFstabOptions( mergeString( opts, "," ) );
 	}

@@ -132,7 +132,14 @@ private:
 
 struct match_string
     {
-    match_string(const Regex& t) : r(t) {}
+    match_string(const string& t) : val(t) {}
+    bool operator()(const string&s) { return s == val; }
+    const string& val;
+    };
+
+struct match_regex
+    {
+    match_regex(const Regex& t) : r(t) {}
     bool operator()(const string&s) { return r.match(s); }
     const Regex& r;
     };
