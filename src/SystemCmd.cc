@@ -82,20 +82,29 @@ SystemCmd::closeOpenFds()
     }
 
 
-#define ALTERNATE_SHELL "/bin/bash"
+int
+SystemCmd::execute( const string& Cmd_Cv )
+{
+    y2mil("SystemCmd Executing:\"" << Cmd_Cv << "\"");
+    Background_b = false;
+    return doExecute(Cmd_Cv);
+}
+
 
 int
 SystemCmd::executeBackground( const string& Cmd_Cv )
-    {
-    y2milestone( "SystemCmd Executing (Background):\"%s\"", Cmd_Cv.c_str() );
+{
+    y2mil("SystemCmd Executing (Background):\"" << Cmd_Cv << "\"");
     Background_b = true;
-    return( doExecute( Cmd_Cv ));
-    }
+    return doExecute(Cmd_Cv);
+}
 
-int SystemCmd::executeRestricted( const string& Command_Cv,
-                                  long unsigned MaxTimeSec,
-				  long unsigned MaxLineOut,
-				  bool& ExceedTime, bool& ExceedLines )
+
+int
+SystemCmd::executeRestricted( const string& Command_Cv,
+			      long unsigned MaxTimeSec,
+			      long unsigned MaxLineOut,
+			      bool& ExceedTime, bool& ExceedLines )
     {
     y2milestone( "cmd:%s MaxTime:%lu MaxLines:%lu", Command_Cv.c_str(),
                  MaxTimeSec, MaxLineOut );
@@ -157,18 +166,17 @@ int SystemCmd::executeRestricted( const string& Command_Cv,
     }
 
 
-int
-SystemCmd::execute( const string& Cmd_Cv )
-    {
-    y2milestone( "SystemCmd Executing:\"%s\"", Cmd_Cv.c_str() );
-    Background_b = false;
-    return( doExecute( Cmd_Cv ));
-    }
+#define PRIMARY_SHELL "/bin/sh"
+#define ALTERNATE_SHELL "/bin/bash"
 
 int
 SystemCmd::doExecute( string Cmd )
     {
-    string Shell_Ci = "/bin/sh";
+    string Shell_Ci = PRIMARY_SHELL;
+    if( access( Shell_Ci.c_str(), X_OK ) != 0 )
+	{
+	Shell_Ci = ALTERNATE_SHELL;
+	}
 
     lastCmd = Cmd;
     if( output_proc )
@@ -176,10 +184,7 @@ SystemCmd::doExecute( string Cmd )
 	output_proc->reset();
 	}
     y2debug( "Cmd:%s", Cmd.c_str() );
-    if( access( Shell_Ci.c_str(), X_OK ) != 0 )
-	{
-	Shell_Ci = ALTERNATE_SHELL;
-	}
+
     File_aC[IDX_STDERR] = File_aC[IDX_STDOUT] = NULL;
     invalidate();
     int sout[2];
@@ -684,8 +689,8 @@ string SystemCmd::quote(const string& str)
 
 string SystemCmd::quote(const list<string>& strs)
 {
-    string ret("");
-    for(std::list<string>::const_iterator it = strs.begin(); it != strs.end(); it++)
+    string ret;
+    for (std::list<string>::const_iterator it = strs.begin(); it != strs.end(); it++)
     {
 	if (it != strs.begin())
 	    ret.append(" ");
