@@ -600,11 +600,9 @@ bool humanStringToByte(const string& str, bool classic, unsigned long long& size
     if (s.fail() || !s.eof() || f < 0.0)
 	return false;
 
-    boost::to_lower(suffix, loc);
-
     for(int i = 0; i < numSuffixes(); i++)
     {
-	if (suffix == boost::to_lower_copy(getSuffix(i, classic), loc))
+	if (boost::equals(suffix, getSuffix(i, classic), boost::is_iequal(loc)))
 	{
 	    size = f;
 	    return true;
