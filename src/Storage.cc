@@ -5780,13 +5780,13 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
     startK = min(startK, sizeK);
     cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK);
     if (c.execute(cmd) != 0)
-	ret = VOLUME_FORMAT_DD_FAILED;
+	ret = STORAGE_ZERO_DEVICE_FAILED;
 
     endK = min(endK, sizeK);
     cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
 	" bs=1k count=" + decString(endK);
     if (c.execute(cmd) != 0)
-	ret = VOLUME_FORMAT_DD_FAILED;
+	ret = STORAGE_ZERO_DEVICE_FAILED;
 
     y2mil("ret:" << ret);
     return ret;
