@@ -5631,7 +5631,6 @@ string
 Storage::backupStates() const
     {
     string ret;
-    map<string,CCont>::const_iterator i = backups.begin();
     for( map<string,CCont>::const_iterator i = backups.begin();
          i!=backups.end(); ++i )
 	{
@@ -5639,7 +5638,6 @@ Storage::backupStates() const
 	    ret += ',';
 	ret += i->first;
 	}
-
     return( ret );
     }
 
