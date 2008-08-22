@@ -2282,18 +2282,7 @@ int Disk::doCreate( Volume* v )
 	                 getStorage()->getZeroNewPartitions(), used_as_pv );
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
-		string cmd;
-		SystemCmd c;
-		cmd = DDBIN " if=/dev/zero of=" + quote(p->device()) + " bs=1k count=200";
-		c.execute( cmd );
-		unsigned long long pos = p->sizeK();
-		if( pos>200 )
-		    {
-		    pos -= 200;
-		    cmd = DDBIN " if=/dev/zero of=" + quote(p->device()) +
-			  " seek=" + decString(pos) + " bs=1k count=10";
-		    c.execute( cmd );
-		    }
+		ret = getStorage()->zeroDevice(p->device(), p->sizeK());
 		}
 	    else if( !dmp_slave && !p->getFormat() )
 		{

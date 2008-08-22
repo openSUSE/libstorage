@@ -692,32 +692,9 @@ int Volume::doFormat()
 	{
 	cont->getStorage()->removeDmTableTo( *this );
 	}
-    if( ret==0 &&
-        (Storage::arch().find( "sparc" )!=0 || encryption!=ENC_NONE ))
+    if( ret==0 && encryption!=ENC_NONE )
 	{
-	SystemCmd c;
-	string cmd = DDBIN " if=";
-	cmd += (encryption!=ENC_NONE) ? "/dev/urandom" : "/dev/zero";
-	cmd += " of=" + quote(mountDevice()) + " bs=1024 count=";
-	cmd += decString(min(200ull,size_k));
-	if( c.execute( cmd ) != 0 )
-	    ret = VOLUME_FORMAT_DD_FAILED;
-	ofstream s( mountDevice().c_str() );
-	classic(s);
-	ofstream::pos_type p = s.seekp( 0, ios_base::end ).tellp();
-	y2mil( "good:" << s.good() << " pos_type:" << p );
-	const unsigned count=200;
-	const unsigned bufsize=1024;
-	if( s.good() && p>count*bufsize )
-	    {
-	    char buf[bufsize];
-	    memset( buf, 0, sizeof(buf) );
-	    p -= count*bufsize;
-	    s.seekp( p );
-	    y2mil( "pos_type:" << s.tellp() );
-	    for( unsigned i=0; i<count; ++i )
-		s.write( buf, bufsize );
-	    }
+	ret = cont->getStorage()->zeroDevice(mountDevice(), size_k, true);
 	}
     if( ret==0 && mountDevice()!=dev && !cont->getStorage()->test() )
 	{

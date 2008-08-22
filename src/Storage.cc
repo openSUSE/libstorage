@@ -5763,6 +5763,36 @@ void Storage::checkDeviceExclusive( const string& device, unsigned secs )
 }
 
 
+int
+Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
+		    unsigned long long startK, unsigned long long endK)
+{
+    y2mil("device:" << device << " sizeK:" << sizeK << " random:" << random <<
+	  "startK:" << startK << " endK:" << endK);
+
+    int ret = 0;
+
+    const string source = (random ? "/dev/urandom" : "/dev/zero");
+
+    SystemCmd c;
+    string cmd;
+
+    startK = min(startK, sizeK);
+    cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK);
+    if (c.execute(cmd) != 0)
+	ret = VOLUME_FORMAT_DD_FAILED;
+
+    endK = min(endK, sizeK);
+    cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
+	" bs=1k count=" + decString(endK);
+    if (c.execute(cmd) != 0)
+	ret = VOLUME_FORMAT_DD_FAILED;
+
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
 string Storage::byteToHumanString(unsigned long long size, bool classic, int precision, 
 				  bool omit_zeroes) const
 {

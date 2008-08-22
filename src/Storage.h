@@ -444,9 +444,13 @@ class Storage : public storage::StorageInterface
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );
+
 	int waitForDevice() const;
 	int waitForDevice( const string& device ) const;
 	void checkDeviceExclusive( const string& device, unsigned secs );
+	int zeroDevice(const string& device, unsigned long long sizeK, bool random = false, 
+		       unsigned long long beginK = 200, unsigned long long endK = 10);
+
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );
 	void changeDeviceName( const string& old, const string& nw );

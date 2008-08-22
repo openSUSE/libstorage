@@ -629,14 +629,7 @@ MdCo::doCreate( Volume* v )
 			 getStorage()->getZeroNewPartitions(), used_as_pv );
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
-		string cmd;
-		SystemCmd c;
-		cmd = DDBIN " if=/dev/zero of=" + quote(m->device()) + " bs=1k count=200";
-		c.execute( cmd );
-		cmd = DDBIN " if=/dev/zero of=" + quote(m->device()) +
-		      " seek=" + decString(m->sizeK()-10) +
-		      " bs=1k count=10";
-		c.execute( cmd );
+		ret = getStorage()->zeroDevice(m->device(), m->sizeK());
 		}
 	    }
 	}
