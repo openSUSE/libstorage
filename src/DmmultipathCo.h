@@ -87,7 +87,6 @@ class DmmultipathCo : public DmPartCo
 	DmmultipathCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }
-	static void activate( bool val );
 	void getMultipathData( const string& name );
 	void addMultipath( const string& name );
 	void addPv( Pv*& p );
@@ -103,8 +102,6 @@ class DmmultipathCo : public DmPartCo
 
 	string vendor;
 	string model;
-
-	static bool active;
     };
 
 }

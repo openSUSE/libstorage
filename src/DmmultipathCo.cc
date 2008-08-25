@@ -118,29 +118,6 @@ DmmultipathCo::addPv(Pv*& p)
 }
 
 
-void DmmultipathCo::activate(bool val)
-{
-    // TODO: ask hannes
-/*
-    y2milestone( "old active:%d val:%d", active, val );
-    if (active != val)
-    {
-	SystemCmd c;
-	if (val)
-	{
-	    Dm::activate(true);
-	    c.execute("/etc/init.d/multipathd start");
-	}
-	else
-	{
-	    c.execute("/etc/init.d/multipathd stop");
-	}
-	active = val;
-    }
-*/
-}
-
-
 void
 DmmultipathCo::getMultipaths( list<string>& l )
 {
@@ -267,6 +244,3 @@ DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
 }
 
 void DmmultipathCo::logData( const string& Dir ) {}
-
-bool DmmultipathCo::active = false;
-

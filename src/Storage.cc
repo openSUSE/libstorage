@@ -207,7 +207,6 @@ void Storage::detectObjects()
 	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
 	DmraidCo::activate( true );
-	DmmultipathCo::activate( true );
 	delete ppart;
 	ppart = new ProcPart;
 	}
