@@ -76,10 +76,9 @@ DmraidCo::setUdevData( const list<string>& id )
 {
     y2mil("disk:" << nm << " id:" << id);
     udev_id = id;
-    udev_id.erase( remove_if(udev_id.begin(), udev_id.end(), 
-                             find_begin("dm-uuid-dmraid")));
+    udev_id.erase(remove_if(udev_id.begin(), udev_id.end(), find_begin("dm-")), udev_id.end());
     udev_id.sort();
-    y2mil( "id:" << udev_id );
+    y2mil("id:" << udev_id);
 
     DmraidPair pp = dmraidPair();
     for( DmraidIter p=pp.begin(); p!=pp.end(); ++p )

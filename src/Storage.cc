@@ -543,11 +543,9 @@ Storage::detectDmmultipath( ProcPart& ppart )
 	    DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
 	    if( v->isValid() )
 	    {
-		/*
 		list<string> nm = by_id["dm-"+decString(v->minorNr())];
 		if( !nm.empty() )
 		    v->setUdevData( nm );
-		*/
 		addToList( v );
 	    }
 	    else
