@@ -91,6 +91,8 @@ DmmultipathCo::setUdevData(const list<string>& id)
     udev_id.sort();
     y2mil("id:" << udev_id);
 
+    DmPartCo::setUdevData(udev_id);
+
     DmmultipathPair pp = dmmultipathPair();
     for( DmmultipathIter p=pp.begin(); p!=pp.end(); ++p )
 	{

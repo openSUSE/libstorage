@@ -893,6 +893,17 @@ string DmPartCo::removeText( bool doing ) const
     return( txt );
     }
 
+
+void
+DmPartCo::setUdevData(const list<string>& id)
+{  
+    if (disk)
+    {
+	disk->setUdevData("", id);
+    }
+}
+
+
 void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
     {
     if( disk )
