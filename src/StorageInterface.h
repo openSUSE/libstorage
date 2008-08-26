@@ -1056,7 +1056,7 @@ namespace storage
 	 * of the given type without any partition is created.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
-	 * @param label disk label to create on disk , e.g. msdos, gpt, ...
+	 * @param label disk label to create on disk, e.g. msdos, gpt, ...
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
