@@ -1,5 +1,5 @@
 // Maintainer: fehr@suse.de
-/* 
+/*
   Textdomain    "storage"
 */
 
@@ -130,7 +130,7 @@ bool
 checkNormalFile(string Path_Cv)
 {
   struct stat Stat_ri;
-  
+
   return (stat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
 	  S_ISREG(Stat_ri.st_mode));
 }
@@ -183,7 +183,7 @@ string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi)
   return Ret_Ci;
   }
 
-list<string> splitString( const string& s, const string& delChars, 
+list<string> splitString( const string& s, const string& delChars,
 		          bool multipleDelim, bool skipEmpty,
 			  const string& quotes )
     {
@@ -212,7 +212,7 @@ list<string> splitString( const string& s, const string& delChars,
 	    {
 	    string::size_type qpos=s.find_first_of(quotes,cur);
 	    string::size_type lpos=s.find_first_of(delChars,cur);
-	    if( qpos!=string::npos && qpos<lpos && 
+	    if( qpos!=string::npos && qpos<lpos &&
 	        (qpos=s.find_first_of(quotes,qpos+1))!=string::npos )
 		{
 		nfind = qpos;
@@ -227,19 +227,15 @@ list<string> splitString( const string& s, const string& delChars,
     return( ret );
     }
 
-string mergeString( const list<string>& l, const string& del )
-    {
-    string ret;
-    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	{
-	if( i!=l.begin() )
-	    ret += del;
-	ret += *i;
-	}
-    return( ret );
-    }
 
-map<string,string> 
+string
+mergeString(const list<string>& l, const string& del)
+{
+    return boost::join(l, del);
+}
+
+
+map<string,string>
 makeMap( const list<string>& l, const string& delim, const string& removeSur )
     {
     map<string,string> ret;
@@ -448,10 +444,11 @@ getUdevLinks(const char* path)
 	    if (readlink(full.c_str(), tmp) != -1)
 	    {
 		string::size_type pos = tmp.find_last_of('/');
-		if (pos == string::npos)
-		    links[entry->d_name] = tmp;
-		else
+		if (pos != string::npos)
 		    links[entry->d_name] = tmp.substr(pos + 1);
+		else
+		    y2war("ignoring strange udev link \"" << entry->d_name <<
+			  "\" -> \"" << tmp << "\" in \"" << path << "\"");
 	    }
 	}
 	closedir(dir);
@@ -517,13 +514,15 @@ string sformat(const char* format, ...)
 }
 
 
-int numSuffixes()
+int
+numSuffixes()
 {
     return 6;
 }
 
 
-string getSuffix(int i, bool classic)
+string
+getSuffix(int i, bool classic)
 {
     switch (i)
     {
@@ -556,8 +555,8 @@ string getSuffix(int i, bool classic)
 }
 
 
-string byteToHumanString(unsigned long long size, bool classic, int precision, 
-			 bool omit_zeroes)
+string
+byteToHumanString(unsigned long long size, bool classic, int precision, bool omit_zeroes)
 {
     const locale loc = classic ? locale::classic() : locale();
 
@@ -586,7 +585,8 @@ string byteToHumanString(unsigned long long size, bool classic, int precision,
 }
 
 
-bool humanStringToByte(const string& str, bool classic, unsigned long long& size)
+bool
+humanStringToByte(const string& str, bool classic, unsigned long long& size)
 {
     const locale loc = classic ? locale::classic() : locale();
 
