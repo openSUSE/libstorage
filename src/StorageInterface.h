@@ -1563,7 +1563,7 @@ namespace storage
 	 * Remove a LVM logical volume snapshot
 	 *
 	 * @param vg name of volume group
-	 * @param device name of logical volume snapshot
+	 * @param name name of logical volume snapshot
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeLvmLvSnapshot(const string& vg, const string& name) = 0;
@@ -1573,7 +1573,8 @@ namespace storage
 	 *
 	 * @pre This can only be done after the snapshot has been created on disk.
 	 *
-	 * @param name name of snapshot
+	 * @param vg name of volume group
+	 * @param name name of logical volume snapshot
 	 * @param info record that gets filled with snapshot special data
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
