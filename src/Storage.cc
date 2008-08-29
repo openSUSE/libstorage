@@ -4349,18 +4349,17 @@ Storage::getDmmultipathInfo( const string& name,
 
 
 string Storage::getAllUsedFs() const 
-    {
-    list<FsType> fs;
+{
+    set<FsType> fs;
     ConstVolPair p = volPair( Volume::notDeleted );
     for( ConstVolIterator v=p.begin(); v!=p.end(); ++v )
 	{
 	FsType t = v->getFs();
-	if( t!=FSUNKNOWN && t!=FSNONE && 
-	    find( fs.begin(), fs.end(), t )==fs.end() )
-	    fs.push_back(t);
+	if (t!=FSUNKNOWN && t!=FSNONE)
+	    fs.insert(t);
 	}
     string ret;
-    for( list<FsType>::const_iterator i=fs.begin(); i!=fs.end(); ++i )
+    for( set<FsType>::const_iterator i=fs.begin(); i!=fs.end(); ++i )
 	{
 	if( !ret.empty() )
 	    ret += ' ';
@@ -4368,7 +4367,8 @@ string Storage::getAllUsedFs() const
 	}
     y2mil( "ret:" << ret );
     return( ret );
-    }
+}
+
 
 bool
 Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
