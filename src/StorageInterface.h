@@ -861,9 +861,8 @@ namespace storage
 
 	/**
 	 * Get list of filesystem types present on any block devices.
-	 * List elements are separated by blanks.
 	 */
-	virtual string getAllUsedFs() const = 0;
+	virtual list<string> getAllUsedFs() const = 0;
 
 	/**
 	 * Print all detected entities to a stream.
