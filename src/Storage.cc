@@ -486,7 +486,7 @@ Storage::detectDmraid( ProcPart& ppart )
 	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
 	    {
-	    // TODO
+	    // TODO: load test data
 	    }
  	globfree (&globbuf);
 	}
@@ -527,7 +527,7 @@ Storage::detectDmmultipath( ProcPart& ppart )
 	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
 	{
-	    // TODO
+	    // TODO: load test data
 	}
  	globfree (&globbuf);
     }
@@ -568,7 +568,7 @@ Storage::detectDm( ProcPart& ppart )
 	if( glob( (testdir+"/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
 	    {
-	    // TODO
+	    // TODO: load test data
 	    }
  	globfree (&globbuf);
 	}
