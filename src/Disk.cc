@@ -436,8 +436,8 @@ bool Disk::detectPartitions( ProcPart& ppart )
 
     if (label == "unsupported")
 	{
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
+	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partition table type on disk %1$s cannot be handled by\n"
 "this tool.\n"
 "\n"
@@ -831,8 +831,8 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
     y2mil( "nm:" << nm );
     if( !dmp_slave && !checkPartedValid( ppart, nm, pl, range_exceed ) )
 	{
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
+	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partitioning on disk %1$s is not readable by\n"
 "the partitioning tool parted, which is used to change the\n"
 "partition table.\n"
@@ -847,9 +847,9 @@ _("The partitioning on disk %1$s is not readable by\n"
 	}
     if( range_exceed>0 )
 	{
+	string txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	//            %2$lu and %3$lu are replaced by numbers.
-	string txt = sformat(
 _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."),
@@ -858,6 +858,7 @@ _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 	    {
 	    txt += "\n";
 	    txt += 
+	    // popup text
 _("openSUSE is switching to the new IDE drivers using the libata\n"
 "modules.  These do only support partitions with up to 15\n"
 "partitions.  You have the following options with openSUSE 10.3:\n"

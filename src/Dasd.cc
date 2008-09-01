@@ -205,8 +205,8 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
     unsigned long dummy = 0;
     if( !checkPartedValid( ppart, nm, pl, dummy ) )
 	{
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	string txt = sformat(
+	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partitioning on disk %1$s is not readable by\n"
 "the partitioning tool fdasd, which is used to change the\n"
 "partition table.\n"

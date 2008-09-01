@@ -176,7 +176,8 @@ string Dmmultipath::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
-	txt += _(" (progress bar might not move)");
+	// text displayed during action
+	txt += ' ' + _("(progress bar might not move)");
         }
     else
         {
