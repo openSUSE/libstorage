@@ -140,6 +140,7 @@ DmmultipathCo::getMultipaths( list<string>& l )
 	string::size_type pos = unit.rfind("dm-");
 	if (pos != string::npos)
 	    unit.erase(pos);
+	boost::trim_right(unit, locale::classic());
 	y2mil("mp name:" << unit);
 
 	list<string> mp_list;
