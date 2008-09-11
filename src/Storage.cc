@@ -496,7 +496,7 @@ Storage::detectDmraid( ProcPart& ppart )
 	DmraidCo::getRaids( l );
 	map<string, list<string>> by_id;
 	if( !l.empty() )
-	    getFindMap("/dev/disk/by-id", by_id);
+	    getUdevMap("/dev/disk/by-id", by_id);
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    DmraidCo * v = new DmraidCo( this, *i, ppart );
@@ -537,7 +537,7 @@ Storage::detectDmmultipath( ProcPart& ppart )
 	DmmultipathCo::getMultipaths( l );
 	map<string, list<string>> by_id;
 	if( !l.empty() )
-	    getFindMap("/dev/disk/by-id", by_id);
+	    getUdevMap("/dev/disk/by-id", by_id);
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
 	    DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
@@ -669,8 +669,8 @@ Storage::autodetectDisks( ProcPart& ppart )
     {
 	map<string,list<string>> by_path;
 	map<string,list<string>> by_id;
-	getFindMap("/dev/disk/by-path", by_path);
-	getFindMap("/dev/disk/by-id", by_id);
+	getUdevMap("/dev/disk/by-path", by_path);
+	getUdevMap("/dev/disk/by-id", by_id);
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {

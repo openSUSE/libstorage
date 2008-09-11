@@ -459,7 +459,7 @@ getUdevLinks(const char* path)
 
 
 void
-getFindMap(const char* path, map<string, list<string>>& m)
+getUdevMap(const char* path, map<string, list<string>>& m)
 {
     y2mil( "path: " << path );
 
@@ -474,7 +474,7 @@ getFindMap(const char* path, map<string, list<string>>& m)
 
 
 void
-getFindRevMap(const char* path, map<string, string>& m)
+getRevUdevMap(const char* path, map<string, string>& m)
 {
     y2mil("path: " << path);
 

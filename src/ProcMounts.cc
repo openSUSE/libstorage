@@ -19,8 +19,8 @@ ProcMounts::ProcMounts( Storage * const sto )
     {
     map<string,string> by_label;
     map<string,string> by_uuid;
-    getFindRevMap( "/dev/disk/by-label", by_label );
-    getFindRevMap( "/dev/disk/by-uuid", by_uuid );
+    getRevUdevMap("/dev/disk/by-label", by_label);
+    getRevUdevMap("/dev/disk/by-uuid", by_uuid);
     ifstream mounts( "/proc/mounts" );
     classic(mounts);
     string line;

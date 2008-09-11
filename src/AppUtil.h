@@ -37,8 +37,8 @@ std::map<string,string> makeMap( const std::list<string>& l,
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );
 
-void getFindMap(const char* path, std::map<string, std::list<string>>& m);
-void getFindRevMap(const char* path, std::map<string, string>& m);
+void getUdevMap(const char* path, std::map<string, std::list<string>>& m);
+void getRevUdevMap(const char* path, std::map<string, string>& m);
 
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
