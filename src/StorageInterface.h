@@ -118,7 +118,7 @@ namespace storage
                  COTYPE_LAST_ENTRY };
 
     /**
-     *  typedef for a pointer to a function that is called on progress bar events
+     * typedef for a pointer to a function that is called on progress bar events
      */
     typedef void (*CallbackProgressBar)( const string& id, unsigned cur, unsigned max );
 
@@ -1228,7 +1228,7 @@ namespace storage
 	virtual int setCryptPassword( const string& device, const string& pwd ) = 0;
 
 	/**
-	 * Makes library forgt a crypt password of a volume
+	 * Makes library forget a crypt password of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @return zero if all is ok, a negative number to indicate an error
