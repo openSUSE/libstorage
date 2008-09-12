@@ -33,12 +33,12 @@ string Dmmultipath::removeText( bool doing ) const
 	d = co()->numToName(p->OrigNr());
     if( doing )
 	{
-	// displayed text during action, %1$s is replaced by multipath partition name e.g. pdc_dabaheedj1
+	// displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 	txt = sformat( _("Deleting multipath partition %1$s"), d.c_str() );
 	}
     else
 	{
-	// displayed text before action, %1$s is replaced by multipath partition name e.g. pdc_dabaheedj1
+	// displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	txt = sformat( _("Delete multipath partition %1$s (%2$s)"), d.c_str(),
 		       sizeString().c_str() );
@@ -52,14 +52,14 @@ string Dmmultipath::createText( bool doing ) const
     string d = dev.substr(12);
     if( doing )
 	{
-	// displayed text during action, %1$s is replaced by multipath partition name e.g. pdc_dabaheedj1
+	// displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 	txt = sformat( _("Creating multipath partition %1$s"), d.c_str() );
 	}
     else
 	{
 	if( mp=="swap" )
 	    {
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Create swap multipath partition %1$s (%2$s)"),
 	                   d.c_str(), sizeString().c_str() );
@@ -68,7 +68,7 @@ string Dmmultipath::createText( bool doing ) const
 	    {
 	    if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+		// displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -78,7 +78,7 @@ string Dmmultipath::createText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+		// displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -89,14 +89,14 @@ string Dmmultipath::createText( bool doing ) const
 	    }
 	else if( p && p->type()==EXTENDED )
 	    {
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Create extended multipath partition %1$s (%2$s)"),
 			   d.c_str(), sizeString().c_str() );
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Create multipath partition %1$s (%2$s)"),
 			   d.c_str(), sizeString().c_str() );
@@ -111,7 +111,7 @@ string Dmmultipath::formatText( bool doing ) const
     string d = dev.substr(12);
     if( doing )
 	{
-	// displayed text during action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	// displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
 	txt = sformat( _("Formatting multipath partition %1$s (%2$s) with %3$s"),
@@ -123,14 +123,14 @@ string Dmmultipath::formatText( bool doing ) const
 	    {
 	    if( mp=="swap" )
 		{
-		// displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+		// displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		txt = sformat( _("Format multipath partition %1$s (%2$s) for swap"),
 			       d.c_str(), sizeString().c_str() );
 		}
 	    else if( encryption==ENC_NONE )
 		{
-		// displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+		// displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -140,7 +140,7 @@ string Dmmultipath::formatText( bool doing ) const
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+		// displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
@@ -151,7 +151,7 @@ string Dmmultipath::formatText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format multipath partition %1$s (%2$s) with %3$s"),
@@ -169,11 +169,11 @@ string Dmmultipath::resizeText( bool doing ) const
     if( doing )
         {
 	if( needShrink() )
-	    // displayed text during action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Shrinking multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	else
-	    // displayed text during action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	// text displayed during action
@@ -182,11 +182,11 @@ string Dmmultipath::resizeText( bool doing ) const
     else
         {
 	if( needShrink() )
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Shrink multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	else
-	    // displayed text before action, %1$s is replaced by multipath partition e.g. pdc_dabaheedj1
+	    // displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extend multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 
@@ -200,14 +200,14 @@ string Dmmultipath::setTypeText( bool doing ) const
     string d = dev.substr(12);
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+        // displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
         // %2$s is replaced by hexadecimal number (e.g. 8E)
         txt = sformat( _("Setting type of multipath partition %1$s to %2$X"),
                       d.c_str(), id() );
         }
     else
         {
-        // displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+        // displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
         // %2$s is replaced by hexadecimal number (e.g. 8E)
         txt = sformat( _("Set type of multipath partition %1$s to %2$X"),
                       d.c_str(), id() );
