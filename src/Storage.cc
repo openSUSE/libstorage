@@ -5704,9 +5704,9 @@ void Storage::setExtError( const string& txt )
 int Storage::waitForDevice() const
 {
     int ret = 0;
-    if (access(UDEVSETTLEBIN, X_OK) == 0)
+    if (access(UDEVADM, X_OK) == 0)
     {
-	string cmd(UDEVSETTLEBIN " --timeout=20");
+	string cmd(UDEVADM " settle --timeout=20");
 	y2mil("calling prog:" << cmd);
 	SystemCmd c(cmd);
 	y2mil("returned prog:" << cmd << " retcode:" << c.retcode());
