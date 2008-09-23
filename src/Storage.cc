@@ -3286,7 +3286,17 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
     if( instsys() )
 	{
 	SystemCmd c;
-	c.execute( "/sbin/portmap" );
+	string prog_name = "/sbin/rpcbind";
+
+	//We don't have rpcbind (#423026, #427428) ...
+	if ( !checkNormalFile(prog_name) )
+	{
+	    //... so let's try portmap instead
+	    y2mil("No rpcbind found, trying portmap instead ...");
+	    prog_name = "/sbin/portmap";
+	}
+
+	c.execute( prog_name );
 	c.execute( "/usr/sbin/rpc.statd" );
 	}
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
