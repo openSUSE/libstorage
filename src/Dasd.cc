@@ -552,9 +552,9 @@ int Dasd::doDasdfmt()
 	for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
 	    {
 	    normalizeDevice(*i);
-	    *i = "-f " + *i;
+	    *i = "-f " + quote(*i);
 	    }
-	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + quote(devs);
+	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + mergeString(devs);
 	y2milestone( "cmdline:%s", cmd_line.c_str() );
 	CallbackProgressBar cb = getStorage()->getCallbackProgressBarTheOne();
 	ScrollBarHandler* sb = new DasdfmtScrollbar( cb );
