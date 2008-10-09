@@ -221,6 +221,7 @@ class Storage : public storage::StorageInterface
 	const string& root() const { return( rootprefix ); }
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const;
+	bool efiBoot() const { return efiboot; }
 	static const string& arch() { return( proc_arch ); }
 	static bool isPPCMac() { return( is_ppc_mac ); }
 	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
@@ -360,7 +361,10 @@ class Storage : public storage::StorageInterface
 	MountByType getDefaultMountBy() const { return defaultMountBy; }
 	void setDetectMountedVolumes( bool val=true );
 	bool getDetectMountedVolumes() const { return detectMounted; }
+	void setEfiBoot(bool val);
+	bool getEfiBoot() const { return efiboot; }
 	void setRootPrefix( const string& root );
+	string getRootPrefix() const { return rootprefix; }
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
 	bool checkDeviceMounted( const string& device, string& mp );
@@ -1726,6 +1730,7 @@ class Storage : public storage::StorageInterface
 	string rootprefix;
 	string logdir;
 	unsigned hald_pid;
+	bool efiboot;
 	static string proc_arch;
 	static bool is_ppc_mac;
 	static bool is_ppc_pegasos;
