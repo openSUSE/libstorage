@@ -1215,41 +1215,63 @@ static bool notCreatedPrimary( const Partition& p )
     return( !p.created() && p.type()==PRIMARY );
     }
 
-void Disk::getUnusedSpace( list<Region>& free, bool all, bool logical )
-    {
-    y2milestone( "all:%d logical:%d", all, logical );
+
+void
+Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
+{
+    y2mil("all:" << all << " logical:" << logical);
+
     free.clear();
-    if( all || !logical )
-	{
-	PartPair p = partPair( notDeletedNotLog );
+
+    if (all || !logical)
+    {
+	PartPair p = partPair(notDeletedNotLog);
+
 	unsigned long start = 1;
-	for( PartIter i=p.begin(); i!=p.end(); ++i )
-	    {
-	    if( i->cylStart()>start )
-		free.push_back( Region( start, i->cylStart()-start ));
-	    start = i->cylEnd()+1;
-	    }
-	if( cylinders()>start )
-	    free.push_back( Region( start, cylinders()-start ));
-	}
-    if( all || logical )
+	unsigned long end = cylinders();
+
+	list<Region> tmp;
+	for (PartIter i = p.begin(); i != p.end(); ++i)
+	    tmp.push_back(i->cylStart(), i->cylEnd() - i->cylStart() + 1);
+	tmp.sort();
+
+	for (list<Region>::const_iterator i=tmp.begin(); i!=tmp.end(); ++i)
 	{
+	    if (i->start()>start)
+		free.push_back(Region(start, i->start() - start));
+	    start = i->end() + 1;
+	}
+	if (end > start)
+	    free.push_back(Region(start, end - start));
+    }
+
+    if (all || logical)
+    {
 	PartPair ext = partPair(notDeletedExt);
-	if( !ext.empty() )
-	    {
-	    PartPair p = partPair( notDeletedLog );
+	if (!ext.empty())
+	{
+	    PartPair p = partPair(notDeletedLog);
+
 	    unsigned long start = ext.begin()->cylStart();
-	    for( PartIter i=p.begin(); i!=p.end(); ++i )
-		{
-		if( i->cylStart()>start )
-		    free.push_back( Region( start, i->cylStart()-start ));
-		start = i->cylEnd()+1;
-		}
-	    if( ext.begin()->cylEnd()>start )
-		free.push_back( Region( start, ext.begin()->cylEnd()-start ));
+	    unsigned long end = ext.begin()->cylEnd();
+
+	    list<Region> tmp;
+	    for (PartIter i = p.begin(); i != p.end(); ++i)
+		tmp.push_back(i->cylStart(), i->cylEnd() - i->cylStart() + 1);
+	    tmp.sort();
+
+	    for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    {
+		if (i->start() > start)
+		    free.push_back(Region(start, i->start() - start));
+		start = i->end() + 1;
 	    }
+	    if (end > start)
+		free.push_back(Region(start, end - start));
 	}
     }
+}
+
 
 static bool regions_sort_size( const Region& rhs, const Region& lhs )
     {
