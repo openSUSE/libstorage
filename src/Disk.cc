@@ -187,15 +187,11 @@ Disk::setUdevData(const string& path, const list<string>& id)
     udev_path = path;
     udev_id = id;
 
-    list<string>::iterator i = find_if( udev_id.begin(), udev_id.end(), 
-                                        find_begin( "edd-" ) );
-    if( i!=udev_id.end() )
-	{
-	udev_id.erase( i );
-	}
+    udev_id.erase(remove_if(udev_id.begin(), udev_id.end(), find_begin("edd-")), udev_id.end());
+
     if( udev_id.size()>1 )
 	{
-	i = find_if( udev_id.begin(), udev_id.end(), find_begin( "scsi-" ) );
+	list<string>::iterator i = find_if( udev_id.begin(), udev_id.end(), find_begin( "scsi-" ) );
 	if( i!=udev_id.end() && i!=udev_id.begin() )
 	    {
 	    string tmp = *i;
