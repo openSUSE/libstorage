@@ -1235,9 +1235,9 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 	    tmp.push_back(i->cylStart(), i->cylEnd() - i->cylStart() + 1);
 	tmp.sort();
 
-	for (list<Region>::const_iterator i=tmp.begin(); i!=tmp.end(); ++i)
+	for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
 	{
-	    if (i->start()>start)
+	    if (i->start() > start)
 		free.push_back(Region(start, i->start() - start));
 	    start = i->end() + 1;
 	}
@@ -1270,6 +1270,8 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 		free.push_back(Region(start, end - start));
 	}
     }
+
+    y2deb("free:" << free);
 }
 
 
