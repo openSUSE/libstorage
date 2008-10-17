@@ -2018,7 +2018,7 @@ int Volume::doSetLabel()
 		string tlabel = label;
 		if( label.empty() )
 		    tlabel = "--";
-		cmd = "/usr/sbin/xfs_admin -L " + tlabel + " " + quote(mountDevice());
+		cmd = "/usr/sbin/xfs_admin -L " + quote(tlabel) + " " + quote(mountDevice());
 		}
 		break;
 	    case SWAP:
