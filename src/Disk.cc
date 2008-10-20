@@ -1978,6 +1978,8 @@ int Disk::doSetType( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->setTypeText(true) );
 	    }
+	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
+	    p->eraseLabel();
 	system_stderr.erase();
 	std::ostringstream cmd_line;
 	classic(cmd_line);
@@ -2310,7 +2312,16 @@ int Disk::doCreate( Volume* v )
 		}
 	    else if( !dmp_slave && !p->getFormat() )
 		{
+		bool lsave = false;
+		string lbl;
+		if( p->needLabel() )
+		    {
+		    lsave = true;
+		    lbl = p->getLabel();
+		    }
 		p->updateFsData();
+		if( lsave )
+		    p->setLabel(lbl);
 		}
 	    }
 	if( ret==0 && !dmp_slave && p->id()!=Partition::ID_LINUX )
