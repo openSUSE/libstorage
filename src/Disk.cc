@@ -1228,7 +1228,7 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 
 	list<Region> tmp;
 	for (PartIter i = p.begin(); i != p.end(); ++i)
-	    tmp.push_back(i->cylStart(), i->cylEnd() - i->cylStart() + 1);
+	    tmp.push_back(Region(i->cylStart(), i->cylEnd() - i->cylStart() + 1));
 	tmp.sort();
 
 	for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
@@ -1253,7 +1253,7 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 
 	    list<Region> tmp;
 	    for (PartIter i = p.begin(); i != p.end(); ++i)
-		tmp.push_back(i->cylStart(), i->cylEnd() - i->cylStart() + 1);
+		tmp.push_back(Region(i->cylStart(), i->cylEnd() - i->cylStart() + 1));
 	    tmp.sort();
 
 	    for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
