@@ -42,8 +42,12 @@ DmmultipathCo::getMultipathData(const string& name)
     if (c.numLines() > 0)
     {
 	string line = *c.getLine(0);
-	y2mil("line:" << line);
-	list<string> tmp = splitString(extractNthWord(1, line, true), ",");
+	y2mil("mp line:" << line);
+
+	string unit = extractNthWord(0, line);
+	y2mil("mp name:" << unit);
+
+	list<string> tmp = splitString(extractNthWord(2, line, true), ",");
 	if (tmp.size() >= 2)
 	{
 	    list<string>::const_iterator it = tmp.begin();
@@ -135,12 +139,9 @@ DmmultipathCo::getMultipaths( list<string>& l )
 	    if( ++i<c.numLines() )
 		line = *c.getLine(i);
 
-	y2mil("mp unit:" << line);
+	y2mil("mp line:" << line);
+
 	string unit = extractNthWord(0, line);
-	string::size_type pos = unit.rfind("dm-");
-	if (pos != string::npos)
-	    unit.erase(pos);
-	boost::trim_right(unit, locale::classic());
 	y2mil("mp name:" << unit);
 
 	list<string> mp_list;
