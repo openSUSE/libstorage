@@ -522,33 +522,56 @@ numSuffixes()
 
 
 string
-getSuffix(int i, bool classic)
+getSuffix(int i, bool classic, bool sloppy = false)
 {
     switch (i)
     {
 	case 0:
-	    /* Byte abbreviated */
-	    return classic ? "B" : _("B");
+	    if (sloppy)
+		return "";
+	    else
+		/* Byte abbreviated */
+		return classic ? "B" : _("B");
 
 	case 1:
-	    /* KiloByte abbreviated */
-	    return classic ? "kB" : _("kB");
+	    if (sloppy)
+		/* Kilo abbreviated */
+		return classic ? "k" : _("k");
+	    else
+		/* KiloByte abbreviated */
+		return classic ? "kB" : _("kB");
 
 	case 2:
-	    /* MegaByte abbreviated */
-	    return classic ? "MB" : _("MB");
+	    if (sloppy)
+		/* Mega abbreviated */
+		return classic ? "M" : _("M");
+	    else
+		/* MegaByte abbreviated */
+		return classic ? "MB" : _("MB");
 
 	case 3:
-	    /* GigaByte abbreviated */
-	    return classic ? "GB" : _("GB");
+	    if (sloppy)
+		/* Giga abbreviated */
+		return classic ? "G" : _("G");
+	    else
+		/* GigaByte abbreviated */
+		return classic ? "GB" : _("GB");
 
 	case 4:
-	    /* TeraByte abbreviated */
-	    return classic ? "TB" : _("TB");
+	    if (sloppy)
+		/* Tera abbreviated */
+		return classic ? "T" : _("T");
+	    else
+		/* TeraByte abbreviated */
+		return classic ? "TB" : _("TB");
 
 	case 5:
-	    /* PetaByte abbreviated */
-	    return classic ? "PB" : _("PB");
+	    if (sloppy)
+		/* Peta abbreviated */
+		return classic ? "P" : _("P");
+	    else
+		/* PetaByte abbreviated */
+		return classic ? "PB" : _("PB");
     }
 
     return string("error");
@@ -595,17 +618,30 @@ humanStringToByte(const string& str, bool classic, unsigned long long& size)
 
     double f;
     string suffix;
-    s >> f >> suffix;
+    s >> f;
+    if (!s.eof()) s >> suffix;
 
     if (s.fail() || !s.eof() || f < 0.0)
 	return false;
 
     for(int i = 0; i < numSuffixes(); i++)
     {
-	if (boost::equals(suffix, getSuffix(i, classic), boost::is_iequal(loc)))
+	if (classic)
 	{
-	    size = f;
-	    return true;
+	    if (boost::equals(suffix, getSuffix(i, true), boost::is_equal()))
+	    {
+		size = f;
+		return true;
+	    }
+	}
+	else
+	{
+	    if (boost::equals(suffix, getSuffix(i, false, false), boost::is_iequal(loc)) ||
+		boost::equals(suffix, getSuffix(i, false, true), boost::is_iequal(loc)))
+	    {
+		size = f;
+		return true;
+	    }
 	}
 
 	f *= 1024.0;

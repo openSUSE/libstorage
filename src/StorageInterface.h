@@ -2121,6 +2121,9 @@ namespace storage
 	 * @param classic use classic locale
 	 * @param size size in bytes
 	 * @return true on successful conversion
+	 *
+	 * With classic set to false the conversion is also case-insensitive
+	 * and sloppy concerning omission of 'B'.
 	 */
 	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long&
 				       size) const = 0;
