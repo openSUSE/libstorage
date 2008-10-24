@@ -15,6 +15,7 @@
 #include <sys/utsname.h>
 #include <errno.h>
 
+#include <set>
 #include <fstream>
 #include <sstream>
 #include <iostream>
