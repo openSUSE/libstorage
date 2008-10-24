@@ -2642,7 +2642,7 @@ string Volume::resizeText( bool doing ) const
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending %1$s to %2$s"), d.c_str(), sizeString().c_str() );
 	// text displayed during action
-	txt += ' ' + _("(progress bar might not move)");
+	txt += string(" ") + _("(progress bar might not move)");
         }
     else
         {
