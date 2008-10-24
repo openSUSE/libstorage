@@ -18,9 +18,8 @@
 using namespace storage;
 using namespace std;
 
-Md::Md( const MdCo& d, unsigned PNr, MdType Type, 
+Md::Md( const MdCo& d, unsigned PNr, MdType Type,
         const list<string>& devices ) : Volume( d, PNr, 0 )
-
     {
     y2debug( "constructed md %s on container %s", dev.c_str(),
 	     cont->name().c_str() );
@@ -36,8 +35,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type,
 Md::Md( const MdCo& d, const string& line1, const string& line2 )
     : Volume( d, 0, 0 )
     {
-    y2milestone( "constructed md lines1:\"%s\" line2:\"%s\"", line1.c_str(), 
-                 line2.c_str() );
+    y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
     if( d.type() != MD )
 	y2error( "constructed md with wrong container" );
     init();
@@ -72,13 +70,13 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     string line = line1;
     if( (pos=line.find( ':' ))!=string::npos )
 	line.erase( 0, pos+1 );
-    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	line.erase( 0, pos );
+    boost::trim_left(line, locale::classic());
     if( (pos=line.find_first_of( app_ws ))!=string::npos )
     {
 	if (line.substr(0, pos) == "active")
 	    line.erase(0, pos);
     }
+    boost::trim_left(line, locale::classic());
     if( (pos=line.find_first_of( app_ws ))!=string::npos )
 	{
 	tmp = line.substr( 0, pos );
@@ -87,17 +85,16 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	    setReadonly();
 	    y2warning( "readonly or inactive md device %d", nr() );
 	    line.erase( 0, pos );
+	    boost::trim_left(line, locale::classic());
 	    }
 	}
-    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	line.erase( 0, pos );
+    boost::trim_left(line, locale::classic());
     if( (pos=line.find_first_of( app_ws ))!=string::npos )
 	{
 	if( line.substr( 0, pos ).find( "active" )!=string::npos )
 	    line.erase( 0, pos );
 	}
-    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	line.erase( 0, pos );
+    boost::trim_left(line, locale::classic());
     tmp = extractNthWord( 0, line );
     md_type = toMdType( tmp );
     if( md_type == RAID_UNK )
@@ -178,11 +175,11 @@ Md::init()
     md_type = RAID_UNK;
     }
 
-void 
+void
 Md::getDevs( list<string>& devices, bool all, bool spares ) const
-    { 
+    {
     if( !all )
-	devices = spares ? spare : devs ; 
+	devices = spares ? spare : devs;
     else
 	{
 	devices = devs;
@@ -235,7 +232,7 @@ Md::removeDevice( const string& dev )
     return( ret );
     }
 
-int 
+int
 Md::checkDevices()
     {
     unsigned nmin = 2;
@@ -293,9 +290,9 @@ Md::computeSize()
     setSize(size_k);
 }
 
-void 
-Md::addSpareDevice( const string& dev ) 
-    { 
+void
+Md::addSpareDevice( const string& dev )
+    {
     string d = normalizeDevice(dev);
     if( find( spare.begin(), spare.end(), d )!=spare.end() ||
         find( devs.begin(), devs.end(), d )!=devs.end() )
@@ -482,17 +479,17 @@ string Md::formatText( bool doing ) const
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), 
+			       d.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0 
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), 
+			       d.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    }
@@ -502,7 +499,7 @@ string Md::formatText( bool doing ) const
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format software RAID %1$s (%2$s) with %3$s"),
-			   d.c_str(), sizeString().c_str(), 
+			   d.c_str(), sizeString().c_str(),
 			   fsTypeString().c_str() );
 	    }
 	}
@@ -521,7 +518,7 @@ Md::toMdType( const string& val )
     }
 
 MdParity
-Md::toMdParity( const string& val ) 
+Md::toMdParity( const string& val )
     {
     enum MdParity ret = RIGHT_SYMMETRIC;
     while( ret!=PAR_NONE && val!=par_names[ret] )
@@ -549,9 +546,9 @@ bool Md::mdStringNum( const string& name, unsigned& num )
     return( ret );
     }
 
-void Md::setPersonality( MdType val ) 
-    { 
-    md_type=val; 
+void Md::setPersonality( MdType val )
+    {
+    md_type=val;
     computeSize();
     }
 
@@ -619,7 +616,7 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
 bool Md::equalContent( const Md& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
-            md_type==rhs.md_type && md_parity==rhs.md_parity && 
+            md_type==rhs.md_type && md_parity==rhs.md_parity &&
 	    chunk==rhs.chunk && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
 	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare );
     }
@@ -628,10 +625,10 @@ void Md::logDifference( const Md& rhs ) const
     {
     string log = Volume::logDifference( rhs );
     if( md_type!=rhs.md_type )
-	log += " Personality:" + md_names[md_type] + "-->" + 
+	log += " Personality:" + md_names[md_type] + "-->" +
 	       md_names[rhs.md_type];
     if( md_parity!=rhs.md_parity )
-	log += " Parity:" + par_names[md_parity] + "-->" + 
+	log += " Parity:" + par_names[md_parity] + "-->" +
 	       par_names[rhs.md_parity];
     if( chunk!=rhs.chunk )
 	log += " Chunk:" + decString(chunk) + "-->" + decString(rhs.chunk);
@@ -684,9 +681,9 @@ Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
     *this = rhs;
     }
 
-string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6", 
+string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
                           "raid10", "multipath" };
-string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric", 
+string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
                            "right-asymmetric", "right-symmetric" };
 unsigned Md::md_major = 0;
 
