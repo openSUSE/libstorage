@@ -2,8 +2,8 @@
   Textdomain    "storage"
 */
 
-#include <iostream> 
-#include <sstream> 
+#include <iostream>
+#include <sstream>
 
 #include "y2storage/LvmVg.h"
 #include "y2storage/LvmLv.h"
@@ -114,10 +114,10 @@ LvmVg::extendVg( const list<string>& devs )
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
-	if( (p=find( pv.begin(), pv.end(), d ))!=pv.end() || 
+	if( (p=find( pv.begin(), pv.end(), d ))!=pv.end() ||
 	    (p=find( pv_add.begin(), pv_add.end(), d ))!=pv_add.end())
 	    ret = LVM_PV_ALREADY_CONTAINED;
-	else if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
+	else if( (p=find( pv_remove.begin(), pv_remove.end(), d )) !=
 	         pv_remove.end() && !getStorage()->deletedDevice( d ) )
 	    {
 	    }
@@ -136,7 +136,7 @@ LvmVg::extendVg( const list<string>& devs )
 	{
 	string d = normalizeDevice( *i );
 	unsigned long pe = 0;
-	if( (p=find( pv_remove.begin(), pv_remove.end(), d )) != 
+	if( (p=find( pv_remove.begin(), pv_remove.end(), d )) !=
 	     pv_remove.end() && !getStorage()->deletedDevice( d ) )
 	    {
 	    pv.push_back( *p );
@@ -219,7 +219,7 @@ LvmVg::reduceVg( const list<string>& devs )
     }
 
 
-int 
+int
 LvmVg::setPeSize( long long unsigned peSizeK )
     {
     int ret = 0;
@@ -243,7 +243,7 @@ LvmVg::setPeSize( long long unsigned peSizeK )
     return( ret );
     }
 
-int 
+int
 LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
                  string& device )
     {
@@ -370,7 +370,7 @@ int LvmVg::removeVolume( Volume* v )
     return( removeLv( v->name() ));
     }
 
-int 
+int
 LvmVg::removeLv( const string& name )
     {
     int ret = 0;
@@ -419,7 +419,7 @@ LvmVg::removeLv( const string& name )
     return( ret );
     }
 
-int 
+int
 LvmVg::changeStripe( const string& name, unsigned long stripe )
     {
     int ret = 0;
@@ -463,7 +463,7 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
 		free_pe -= num_le;
 		i->setStripes( stripe );
 		}
-	    else 
+	    else
 		free_pe -= i->getLe();
 	    }
 	}
@@ -471,7 +471,7 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
     return( ret );
     }
 
-int 
+int
 LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
     {
     int ret = 0;
@@ -590,7 +590,7 @@ LvmVg::removeLvSnapshot(const string& name)
     if (ret == 0)
     {
 	ret = removeLv(name);
-    }  
+    }
     y2mil("ret:" << ret);
     return ret;
 }
@@ -652,7 +652,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    bool lv1 = extractNthWord( 1, line )=="lvm1";
 		    if( exists && lv1 != lvm1 )
-			y2warning( "inconsistent lvm1 my:%d lvm:%d", 
+			y2warning( "inconsistent lvm1 my:%d lvm:%d",
 			           lvm1, lv1 );
 		    lvm1 = lv1;
 		    }
@@ -665,7 +665,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 			tmp.erase( pos );
 		    tmp >> pes;
 		    if( exists && pes != pe_size )
-			y2warning( "inconsistent pe_size my:%llu lvm:%llu", 
+			y2warning( "inconsistent pe_size my:%llu lvm:%llu",
 			           pe_size, pes );
 		    pe_size = pes;
 		    }
@@ -801,7 +801,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	num_lv++;
 	//cout << "Created:" << *i << endl;
 	map<string,unsigned long> pe_map;
-	if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add, 
+	if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
 	                         pe_map ) == 0 )
 	    i->setPeMap( pe_map );
 	free_pe -= i->getLe();
@@ -814,7 +814,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	long size_diff = i->getLe() - sizeToLe(i->origSizeK());
 	if( size_diff>0 )
 	    {
-	    if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add, 
+	    if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add,
 				     pe_map ) == 0 )
 		i->setPeMap( pe_map );
 	    }
@@ -832,7 +832,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	}
     }
 
-void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid, 
+void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		  string& status, string& alloc, bool& ro)
     {
     y2milestone( "addLv:%s", name.c_str() );
@@ -885,7 +885,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	    }
 	}
     name = origin = uuid = status = alloc = "";
-    le = 0; 
+    le = 0;
     ro = false;
     }
 
@@ -903,12 +903,12 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
                         list<Volume*>& vol )
     {
     int ret = 0;
-    unsigned long oco = col.size(); 
-    unsigned long ovo = vol.size(); 
+    unsigned long oco = col.size();
+    unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
     if( stage==DECREASE )
         {
-	if( !pv_remove.empty() && 
+	if( !pv_remove.empty() &&
 	    find( col.begin(), col.end(), this )==col.end() )
 	    {
 	    col.push_back( this );
@@ -916,7 +916,7 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
         }
     else if( stage==INCREASE )
         {
-	if( !pv_add.empty() && 
+	if( !pv_add.empty() &&
 	    find( col.begin(), col.end(), this )==col.end() )
 	    {
 	    col.push_back( this );
@@ -942,7 +942,7 @@ int LvmVg::commitChanges( CommitStage stage )
 		{
 		ret = doReduceVg();
 		}
-	    else 
+	    else
 		ret = LVM_COMMIT_NOTHING_TODO;
 	    break;
 	case INCREASE:
@@ -971,32 +971,32 @@ void LvmVg::getCommitActions( list<commitAction*>& l ) const
     y2mil( "Container::getCommitActions:" << l );
     if( deleted() )
 	{
-	l.push_back( new commitAction( DECREASE, staticType(), 
+	l.push_back( new commitAction( DECREASE, staticType(),
 				       removeVgText(false), this, true ));
 	}
     else if( created() )
 	{
-	l.push_front( new commitAction( INCREASE, staticType(), 
+	l.push_front( new commitAction( INCREASE, staticType(),
 				        createVgText(false), this, true ));
 	}
-    else 
+    else
 	{
 	if( !pv_add.empty() )
-	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end(); 
+	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end();
 	         ++i )
 		l.push_back( new commitAction( INCREASE, staticType(),
-					       extendVgText(false,i->device), 
+					       extendVgText(false,i->device),
 					       this, true ));
 	if( !pv_remove.empty() )
-	    for( list<Pv>::const_iterator i=pv_remove.begin(); 
+	    for( list<Pv>::const_iterator i=pv_remove.begin();
 	         i!=pv_remove.end(); ++i )
 		l.push_back( new commitAction( DECREASE, staticType(),
-					       reduceVgText(false,i->device), 
+					       reduceVgText(false,i->device),
 					       this, false ));
 	}
     }
 
-string 
+string
 LvmVg::removeVgText( bool doing ) const
     {
     string txt;
@@ -1013,7 +1013,7 @@ LvmVg::removeVgText( bool doing ) const
     return( txt );
     }
 
-string 
+string
 LvmVg::createVgText( bool doing ) const
     {
     string txt;
@@ -1034,7 +1034,7 @@ LvmVg::createVgText( bool doing ) const
     return( txt );
     }
 
-string 
+string
 LvmVg::extendVgText( bool doing, const string& dev ) const
     {
     string txt;
@@ -1055,7 +1055,7 @@ LvmVg::extendVgText( bool doing, const string& dev ) const
     return( txt );
     }
 
-string 
+string
 LvmVg::reduceVgText( bool doing, const string& dev ) const
     {
     string txt;
@@ -1076,7 +1076,7 @@ LvmVg::reduceVgText( bool doing, const string& dev ) const
     return( txt );
     }
 
-void 
+void
 LvmVg::init()
     {
     PeContainer::init();
@@ -1086,47 +1086,56 @@ LvmVg::init()
     inactiv = lvm1 = false;
     }
 
-void LvmVg::activate( bool val )
+
+void
+LvmVg::activate(bool val)
+{
+    y2mil("old active:" << active << " val:" << val);
+
+    if (active != val)
     {
-    y2milestone( "old active:%d val:%d", active, val );
-    if( active!=val )
-	{
 	SystemCmd c;
-	if( val )
-	    {
+	if (val)
+	{
 	    Dm::activate(true);
 	    c.execute(VGSCANBIN " --mknodes");
 	    c.execute(VGCHANGEBIN " -a y");
-	    }
+	}
 	else
-	    {
+	{
 	    c.execute(VGCHANGEBIN " -a n");
-	    }
+	}
 	active = val;
+    }
+}
+
+
+void
+LvmVg::getVgs(list<string>& l)
+{
+    l.clear();
+
+    SystemCmd c(VGDISPLAYBIN " -s");
+    if (c.numLines() > 0)
+    {
+	active = true;
+
+	for( unsigned i=0; i<c.numLines(); ++i )
+	{
+	    string vgname = *c.getLine(i);
+	    string::size_type pos=vgname.find_first_not_of( app_ws+"\"" );
+	    if( pos>0 )
+		vgname.erase( 0, pos );
+	    pos=vgname.find_first_of( app_ws+"\"" );
+	    if( pos>0 )
+		vgname.erase( pos );
+	    l.push_back(vgname);
 	}
     }
 
-void LvmVg::getVgs( list<string>& l )
-    {
-    l.clear();
-    string vgname;
-    string::size_type pos;
-    SystemCmd c(VGDISPLAYBIN " -s");
-    if( !active && c.numLines()>0 )
-	active = true;
-    for( unsigned i=0; i<c.numLines(); ++i )
-	{
-	vgname = *c.getLine(i);
-	pos=vgname.find_first_not_of( app_ws+"\"" );
-	if( pos>0 )
-	    vgname.erase( 0, pos );
-	pos=vgname.find_first_of( app_ws+"\"" );
-	if( pos>0 )
-	    vgname.erase( pos );
-	l.push_back(vgname);
-	}
-    y2mil( "detected Vgs " << l );
-    }
+    y2mil("detected vgs " << l);
+}
+
 
 int
 LvmVg::doCreateVg()
@@ -1160,7 +1169,7 @@ LvmVg::doCreateVg()
 		SystemCmd c( "find " + ddir + " -type l | xargs -r rm" );
 		rmdir( ddir.c_str() );
 		}
-	    string cmd = VGCREATEBIN " " + instSysString() + metaString() + 
+	    string cmd = VGCREATEBIN " " + instSysString() + metaString() +
 		"-s " + decString(pe_size) + "k " + quote(name()) + " " + devices;
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
@@ -1312,8 +1321,8 @@ LvmVg::doReduceVg()
     return( ret );
     }
 
-int 
-LvmVg::doCreate( Volume* v ) 
+int
+LvmVg::doCreate( Volume* v )
     {
     y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
     LvmLv * l = dynamic_cast<LvmLv *>(v);
@@ -1409,7 +1418,7 @@ int LvmVg::doRemove( Volume* v )
     return( ret );
     }
 
-int LvmVg::doResize( Volume* v ) 
+int LvmVg::doResize( Volume* v )
     {
     y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
     LvmLv * l = dynamic_cast<LvmLv *>(v);
@@ -1428,7 +1437,7 @@ int LvmVg::doResize( Volume* v )
 	    getStorage()->showInfoCb( l->resizeText(true) );
 	    }
 	checkConsistency();
-	if( v->isMounted() && 
+	if( v->isMounted() &&
 	    ((old_le>new_le&&!caps.isReduceableWhileMounted)||
 	     (old_le<new_le&&!caps.isExtendableWhileMounted)))
 	    {
@@ -1590,7 +1599,7 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
       s << " lvm1";
     if( d.inactiv )
       s << " inactive";
-    s << " UUID:" << d.uuid 
+    s << " UUID:" << d.uuid
       << " lv:" << d.num_lv;
     return( s );
     }
@@ -1621,7 +1630,7 @@ void LvmVg::logDifference( const Container& d ) const
 	    {
 	    ConstLvmLvPair pc=p->lvmLvPair();
 	    ConstLvmLvIter j = pc.begin();
-	    while( j!=pc.end() && 
+	    while( j!=pc.end() &&
 		   (i->device()!=j->device() || i->created()!=j->created()) )
 		++j;
 	    if( j!=pc.end() )
@@ -1639,7 +1648,7 @@ void LvmVg::logDifference( const Container& d ) const
 	    {
 	    ConstLvmLvPair pc=lvmLvPair();
 	    ConstLvmLvIter j = pc.begin();
-	    while( j!=pc.end() && 
+	    while( j!=pc.end() &&
 		   (i->device()!=j->device() || i->created()!=j->created()) )
 		++j;
 	    if( j==pc.end() )
@@ -1667,7 +1676,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	ConstLvmLvPair pc = p->lvmLvPair();
 	ConstLvmLvIter i = pp.begin();
 	ConstLvmLvIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() ) 
+	while( ret && i!=pp.end() && j!=pc.end() )
 	    {
 	    ret = ret && i->equalContent( *j );
 	    ++i;

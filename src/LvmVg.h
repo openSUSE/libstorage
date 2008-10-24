@@ -28,11 +28,11 @@ class LvmVg : public PeContainer
 	int extendVg( const string& device );
 	int reduceVg( const std::list<string>& dl );
 	int reduceVg( const string& device );
-	int createLv( const string& name, unsigned long long sizeK, 
+	int createLv( const string& name, unsigned long long sizeK,
 		      unsigned stripe, string& device );
 	int removeLv( const string& name );
 	int changeStripe( const string& name, unsigned long stripe );
-	int changeStripeSize( const string& name, 
+	int changeStripeSize( const string& name,
 	                      unsigned long long stripeSize );
 
 	int createLvSnapshot(const string& origin, const string& name,
@@ -56,7 +56,7 @@ class LvmVg : public PeContainer
 	static void getVgs( std::list<string>& l );
 	static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
 
-	
+
     protected:
 	// iterators over LVM LVs
 	// protected typedefs for iterators over LVMLVs
@@ -130,7 +130,7 @@ class LvmVg : public PeContainer
 	string instSysString();
 
 	void logData( const string& Dir );
-	void addLv(unsigned long& le, string& name, string& origin, string& uuid, 
+	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		   string& status, string& alloc, bool& ro);
 	void addPv( Pv*& p );
 

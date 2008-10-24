@@ -124,50 +124,79 @@ DmmultipathCo::addPv(Pv*& p)
 
 
 void
-DmmultipathCo::getMultipaths( list<string>& l )
+DmmultipathCo::activate(bool val)
+{
+    y2mil("old active:" << active << " val:" << val);
+
+    if (active != val)
+    {
+	SystemCmd c;
+	if (val)
+	{
+	    Dm::activate(true);
+	    c.execute(MODPROBEBIN " dm-multipath");
+	    c.execute(MULTIPATHBIN);
+	}
+	else
+	{
+	    c.execute(MULTIPATHBIN " -F");
+	}
+	active = val;
+    }
+}
+
+
+void
+DmmultipathCo::getMultipaths(list<string>& l)
 {
     l.clear();
 
-    string line;
-    unsigned i=0;
     SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
-    if( i<c.numLines() )
-	line = *c.getLine(i);
-    while( i<c.numLines() )
+    if (c.numLines() > 0)
     {
-	while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
-	    if( ++i<c.numLines() )
-		line = *c.getLine(i);
+	active = true;
 
-	y2mil("mp line:" << line);
+	string line;
+	unsigned i=0;
 
-	string unit = extractNthWord(0, line);
-	y2mil("mp name:" << unit);
-
-	list<string> mp_list;
-
-	if( ++i<c.numLines() )
+	if( i<c.numLines() )
 	    line = *c.getLine(i);
-	while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+	while( i<c.numLines() )
 	{
-	    if (boost::starts_with(line, " \\_"))
-	    {
-		y2mil( "mp element:" << line );
-		string dev = extractNthWord(3,line);
-		if( find( mp_list.begin(), mp_list.end(), dev )== mp_list.end() )
-		    mp_list.push_back(dev);
-	    }
+	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+		if( ++i<c.numLines() )
+		    line = *c.getLine(i);
+
+	    y2mil("mp line:" << line);
+
+	    string unit = extractNthWord(0, line);
+	    y2mil("mp name:" << unit);
+
+	    list<string> mp_list;
+
 	    if( ++i<c.numLines() )
 		line = *c.getLine(i);
-	}
-	y2mil( "mp_list:" << mp_list );
-	if (mp_list.size() >= 1)
-	{
-	    l.push_back(unit);
+	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+	    {
+		if (boost::starts_with(line, " \\_"))
+		{
+		    y2mil( "mp element:" << line );
+		    string dev = extractNthWord(3,line);
+		    if( find( mp_list.begin(), mp_list.end(), dev )== mp_list.end() )
+			mp_list.push_back(dev);
+		}
+		if( ++i<c.numLines() )
+		    line = *c.getLine(i);
+	    }
+	    y2mil( "mp_list:" << mp_list );
+	    if (mp_list.size() >= 1)
+	    {
+		l.push_back(unit);
+	    }
 	}
     }
 
-    y2mil("ret:" << l);
+    y2mil("detected multipaths " << l);
 }
 
 
@@ -247,3 +276,6 @@ DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
 }
 
 void DmmultipathCo::logData( const string& Dir ) {}
+
+bool DmmultipathCo::active = false;
+

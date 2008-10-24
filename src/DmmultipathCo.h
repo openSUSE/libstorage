@@ -95,6 +95,7 @@ class DmmultipathCo : public DmPartCo
 
 	static string undevName( const string& name );
 
+	static void activate( bool val=true );
 	static void getMultipaths( std::list<string>& l );
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
 
@@ -102,6 +103,8 @@ class DmmultipathCo : public DmPartCo
 
 	string vendor;
 	string model;
+
+	static bool active;
     };
 
 }

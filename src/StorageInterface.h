@@ -2076,6 +2076,14 @@ namespace storage
 	virtual void activateHld( bool val ) = 0;
 
 	/**
+	 * Activate or deactivate multipath
+	 *
+	 * @param val flag if multipath should be activated or deactivated
+	 * @return bool if values could be successfully determined
+	 */
+	virtual void activateMultipath( bool val ) = 0;
+
+	/**
 	 * Rescan all disks.
 	 * All currently detected objects are forgotten and a new scan
 	 * for all type of objects (disks, LVM, MD) is initiated.

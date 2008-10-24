@@ -5657,22 +5657,32 @@ Storage::backupStates() const
     return( ret );
     }
 
+
 void
-Storage::activateHld( bool val )
+Storage::activateHld(bool val)
+{
+    y2mil("val:" << val);
+    if (val)
     {
-    y2milestone( "val:%d", val );
-    if( val )
-	{
 	Dm::activate(val);
-	MdCo::activate(val,tmpDir());
-	}
-    LvmVg::activate(val);
-    if( !val )
-	{
-	Dm::activate(val);
-	MdCo::activate(val,tmpDir());
-	}
+	MdCo::activate(val, tmpDir());
     }
+    LvmVg::activate(val);
+    if (!val)
+    {
+	Dm::activate(val);
+	MdCo::activate(val, tmpDir());
+    }
+}
+
+
+void
+Storage::activateMultipath(bool val)
+{
+    y2mil("val:" << val);
+    DmmultipathCo::activate(val);
+}
+
 
 int Storage::addFstabEntry( const string& device, const string& mount,
                             const string& vfs, const string& options,
