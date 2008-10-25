@@ -2111,7 +2111,7 @@ namespace storage
 
 	/**
 	 * Return a pretty description of a size with required precision
-	 * and using B, kB, MB, GB or TB as unit as appropriate.
+	 * and using B, kB, MB, GB, TB or PB as unit as appropriate.
 	 *
 	 * @param size size in bytes
 	 * @param classic use classic locale
@@ -2123,15 +2123,15 @@ namespace storage
 					 bool omit_zeroes) const = 0;
 
 	/**
-	 * Converts a size description using B, kB, MB, GB or TB into an integer.
+	 * Converts a size description using B, kB, MB, GB, TB or PB into an integer.
 	 *
 	 * @param str size string
 	 * @param classic use classic locale
 	 * @param size size in bytes
 	 * @return true on successful conversion
 	 *
-	 * With classic set to false the conversion is also case-insensitive
-	 * and sloppy concerning omission of 'B'.
+	 * The conversion is always case-insensitive. With classic set to
+	 * false the conversion is also sloppy concerning omission of 'B'.
 	 */
 	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long&
 				       size) const = 0;

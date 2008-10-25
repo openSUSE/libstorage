@@ -624,24 +624,13 @@ humanStringToByte(const string& str, bool classic, unsigned long long& size)
     if (s.fail() || !s.eof() || f < 0.0)
 	return false;
 
-    for(int i = 0; i < numSuffixes(); i++)
+    for (int i = 0; i < numSuffixes(); i++)
     {
-	if (classic)
+	if (boost::equals(suffix, getSuffix(i, classic, false), boost::is_iequal(loc)) ||
+	    (!classic && boost::equals(suffix, getSuffix(i, classic, true), boost::is_iequal(loc))))
 	{
-	    if (boost::equals(suffix, getSuffix(i, true), boost::is_equal()))
-	    {
-		size = f;
-		return true;
-	    }
-	}
-	else
-	{
-	    if (boost::equals(suffix, getSuffix(i, false, false), boost::is_iequal(loc)) ||
-		boost::equals(suffix, getSuffix(i, false, true), boost::is_iequal(loc)))
-	    {
-		size = f;
-		return true;
-	    }
+	    size = f;
+	    return true;
 	}
 
 	f *= 1024.0;
