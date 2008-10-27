@@ -146,8 +146,7 @@ DmmultipathCo::activate(bool val)
 	    c.execute(MULTIPATHBIN " -F");
 	}
 
-	if (lvm_active)
-	    LvmVg::activate(true);
+	LvmVg::activate(lvm_active);
 
 	active = val;
     }
