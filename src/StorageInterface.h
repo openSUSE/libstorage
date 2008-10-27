@@ -2084,6 +2084,13 @@ namespace storage
 	virtual void activateMultipath( bool val ) = 0;
 
 	/**
+	 * Query whether multipath is active or not.
+	 *
+	 * @return bool multipath active state
+	 */
+	virtual bool getMultipathActive() = 0;
+
+	/**
 	 * Rescan all disks.
 	 * All currently detected objects are forgotten and a new scan
 	 * for all type of objects (disks, LVM, MD) is initiated.
