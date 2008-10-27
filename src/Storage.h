@@ -463,7 +463,6 @@ class Storage : public storage::StorageInterface
 	void handleHald( bool stop );
 	void activateHld( bool val=true );
 	void activateMultipath( bool val=true );
-	bool getMultipathActive();
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
 	bool removeDmTable( const string& table );

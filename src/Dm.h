@@ -51,6 +51,8 @@ class Dm : public Volume
 	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
 
 	static void activate( bool val=true );
+	static bool isActive() { return active; }
+
 	static string devToTable( const string& dev );
 	static string dmName( const string& table );
 	static int dmNumber( const string& table );

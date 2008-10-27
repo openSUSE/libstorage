@@ -53,9 +53,10 @@ class LvmVg : public PeContainer
 	void logDifference( const Container& rhs ) const;
 
 	static void activate( bool val=true );
+	static bool isActive() { return active; }
+
 	static void getVgs( std::list<string>& l );
 	static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
-
 
     protected:
 	// iterators over LVM LVs

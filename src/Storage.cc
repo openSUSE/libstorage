@@ -5684,15 +5684,6 @@ Storage::activateMultipath(bool val)
 }
 
 
-bool
-Storage::getMultipathActive()
-{
-    bool ret = DmmultipathCo::getActive();
-    y2mil("ret:" << ret);
-    return ret;
-}
-
-
 int Storage::addFstabEntry( const string& device, const string& mount,
                             const string& vfs, const string& options,
 			    unsigned freq, unsigned passno )

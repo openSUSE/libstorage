@@ -130,10 +130,14 @@ DmmultipathCo::activate(bool val)
 
     if (active != val)
     {
+	bool lvm_active = LvmVg::isActive();
+	LvmVg::activate(false);
+
 	SystemCmd c;
 	if (val)
 	{
 	    Dm::activate(true);
+
 	    c.execute(MODPROBEBIN " dm-multipath");
 	    c.execute(MULTIPATHBIN);
 	}
@@ -141,6 +145,10 @@ DmmultipathCo::activate(bool val)
 	{
 	    c.execute(MULTIPATHBIN " -F");
 	}
+
+	if (lvm_active)
+	    LvmVg::activate(true);
+
 	active = val;
     }
 }
@@ -154,8 +162,6 @@ DmmultipathCo::getMultipaths(list<string>& l)
     SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
     if (c.numLines() > 0)
     {
-	active = true;
-
 	string line;
 	unsigned i=0;
 
@@ -194,6 +200,9 @@ DmmultipathCo::getMultipaths(list<string>& l)
 		l.push_back(unit);
 	    }
 	}
+
+	if (!l.empty())
+	    active = true;
     }
 
     y2mil("detected multipaths " << l);
