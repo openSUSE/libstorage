@@ -31,7 +31,7 @@ class Partition : public Volume
 
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
-	unsigned long cylEnd() const { return reg.start()+reg.len()-1; }
+	unsigned long cylEnd() const { return reg.end(); }
 	const Region& region() const { return reg; }
 	const std::list<string> udevId() const;
 	const string& udevPath() const;
