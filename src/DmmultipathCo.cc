@@ -290,4 +290,3 @@ DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
 void DmmultipathCo::logData( const string& Dir ) {}
 
 bool DmmultipathCo::active = false;
-

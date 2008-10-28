@@ -13,17 +13,19 @@
 using namespace storage;
 using namespace std;
 
-Dmmultipath::Dmmultipath( const DmmultipathCo& d, unsigned nr, Partition* p ) :
-	DmPart( d, nr, p )
-    {
-    y2milestone( "constructed dmmultipath %s on co %s", dev.c_str(),
-		 cont->name().c_str() );
-    }
+
+Dmmultipath::Dmmultipath(const DmmultipathCo& d, unsigned nr, Partition* p)
+    : DmPart(d, nr, p)
+{
+    y2mil("constructed dmmultipath " << dev << " on co " << cont->name());
+}
+
 
 Dmmultipath::~Dmmultipath()
-    {
-    y2debug( "destructed dmmultipath %s", dev.c_str() );
-    }
+{
+    y2deb("destructed dmmultipath " << dev);
+}
+
 
 string Dmmultipath::removeText( bool doing ) const
     {
@@ -242,10 +244,10 @@ void Dmmultipath::logDifference( const Dmmultipath& rhs ) const
     DmPart::logDifference(rhs);
     }
 
-Dmmultipath& Dmmultipath::operator= ( const Dmmultipath& rhs )
-    {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
-    *((DmPart*)this) = rhs;
-    return( *this );
-    }
 
+Dmmultipath& Dmmultipath::operator=(const Dmmultipath& rhs)
+{
+    y2deb("operator= from " << rhs.nm);
+    *((DmPart*)this) = rhs;
+    return *this;
+}

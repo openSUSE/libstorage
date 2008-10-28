@@ -13,17 +13,19 @@
 using namespace storage;
 using namespace std;
 
-Dmraid::Dmraid( const DmraidCo& d, unsigned nr, Partition* p ) :
-	DmPart( d, nr, p )
-    {
-    y2milestone( "constructed dmraid %s on co %s", dev.c_str(),
-		 cont->name().c_str() );
-    }
+
+Dmraid::Dmraid(const DmraidCo& d, unsigned nr, Partition* p)
+    : DmPart(d, nr, p)
+{
+    y2mil("constructed dmraid " << dev << " on co " << cont->name());
+}
+
 
 Dmraid::~Dmraid()
-    {
-    y2debug( "destructed dmraid %s", dev.c_str() );
-    }
+{
+    y2deb("destructed dmraid " << dev);
+}
+
 
 string Dmraid::removeText( bool doing ) const
     {
@@ -94,7 +96,7 @@ string Dmraid::createText( bool doing ) const
 	    txt = sformat( _("Create extended raid partition %1$s (%2$s)"),
 			   d.c_str(), sizeString().c_str() );
 	    }
-	else 
+	else
 	    {
 	    // displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
@@ -155,7 +157,7 @@ string Dmraid::formatText( bool doing ) const
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format raid partition %1$s (%2$s) with %3$s"),
-			   d.c_str(), sizeString().c_str(), 
+			   d.c_str(), sizeString().c_str(),
 			   fsTypeString().c_str() );
 	    }
 	}
@@ -242,10 +244,10 @@ void Dmraid::logDifference( const Dmraid& rhs ) const
     DmPart::logDifference(rhs);
     }
 
-Dmraid& Dmraid::operator= ( const Dmraid& rhs )
-    {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
-    *((DmPart*)this) = rhs;
-    return( *this );
-    }
 
+Dmraid& Dmraid::operator=(const Dmraid& rhs)
+{
+    y2deb("operator= from " << rhs.nm);
+    *((DmPart*)this) = rhs;
+    return *this;
+}

@@ -14,9 +14,10 @@
 using namespace storage;
 using namespace std;
 
-DmPart::DmPart( const DmPartCo& d, unsigned nr, Partition* pa ) :
-	Dm( d, "" )
-    {
+
+DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
+    : Dm(d, "")
+{
     init( d.numToName(nr) );
     numeric = true;
     num = nr;
@@ -24,14 +25,15 @@ DmPart::DmPart( const DmPartCo& d, unsigned nr, Partition* pa ) :
     p = pa;
     if( pa )
 	setSize( pa->sizeK() );
-    y2milestone( "constructed DmPart %s on co %s", dev.c_str(),
-		 cont->name().c_str() );
-    }
+    y2mil("constructed DmPart " << dev << " on co " << cont->name());
+}
+
 
 DmPart::~DmPart()
-    {
-    y2debug( "destructed DmPart %s", dev.c_str() );
-    }
+{
+    y2deb("destructed DmPart " << dev);
+}
+
 
 void DmPart::init( const string& name )
     {
@@ -187,16 +189,18 @@ void DmPart::logDifference( const DmPart& rhs ) const
     y2mil(log);
 }
 
-DmPart& DmPart::operator= ( const DmPart& rhs )
-    {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
-    *((Dm*)this) = rhs;
-    return( *this );
-    }
 
-DmPart::DmPart( const DmPartCo& d, const DmPart& rhs ) : Dm(d,rhs)
-    {
-    y2debug( "constructed dmraid by copy constructor from %s",
-	     rhs.dev.c_str() );
+DmPart& DmPart::operator=(const DmPart& rhs)
+{
+    y2deb("operator= from " << rhs.nm);
+    *((Dm*)this) = rhs;
+    return *this;
+}
+
+
+DmPart::DmPart(const DmPartCo& d, const DmPart& rhs)
+    : Dm(d, rhs)
+{
+    y2deb("constructed dmraid by copy constructor from " << rhs.dev);
     *this = rhs;
-    }
+}

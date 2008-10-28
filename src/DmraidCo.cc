@@ -2,8 +2,8 @@
   Textdomain    "storage"
 */
 
-#include <iostream> 
-#include <sstream> 
+#include <iostream>
+#include <sstream>
 
 #include "y2storage/DmraidCo.h"
 #include "y2storage/Dmraid.h"
@@ -15,18 +15,21 @@
 using namespace std;
 using namespace storage;
 
-DmraidCo::DmraidCo( Storage * const s, const string& Name, ProcPart& ppart ) :
-    DmPartCo(s, "/dev/mapper/"+Name, staticType(), ppart )
-    {
-    DmPartCo::init( ppart );
-    getRaidData( Name );
-    y2debug( "constructing dmraid co %s", Name.c_str() );
-    }
+
+DmraidCo::DmraidCo(Storage * const s, const string& Name, ProcPart& ppart)
+    : DmPartCo(s, "/dev/mapper/"+Name, staticType(), ppart)
+{
+    DmPartCo::init(ppart);
+    getRaidData(Name);
+    y2deb("constructing dmraid co " << Name);
+}
+
 
 DmraidCo::~DmraidCo()
-    {
-    y2debug( "destructed raid co %s", dev.c_str() );
-    }
+{
+    y2deb("destructed raid co " << dev);
+}
+
 
 void DmraidCo::getRaidData( const string& name )
     {
@@ -91,7 +94,7 @@ DmraidCo::setUdevData( const list<string>& id )
 
 
 void
-DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p ) 
+DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
     y2mil( "num:" << num );
     dm = new Dmraid( *this, num, p );
@@ -273,5 +276,3 @@ DmraidCo::DmraidCo( const DmraidCo& rhs ) : DmPartCo(rhs)
 void DmraidCo::logData( const string& Dir ) {;}
 
 bool DmraidCo::active = false;
-
-
