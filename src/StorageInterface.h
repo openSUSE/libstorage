@@ -427,7 +427,7 @@ namespace storage
      */
     struct ContVolInfo
     {
-	ContVolInfo() {numeric=false; nr=0; type=CUNKNOWN;};
+	ContVolInfo() { numeric=false; nr=0; type=CUNKNOWN; }
 	CType type;
 	string cname;
 	string vname;
@@ -1236,12 +1236,12 @@ namespace storage
 	virtual int forgetCryptPassword( const string& device ) = 0;
 
 	/**
-	  * Get crypt password of a volume
-	  *
-	  * @param device name of volume, e.g. /dev/hda1
-	  * @param pwd crypt password for this volume
-	  * @return zero if all is ok, a negative number to indicate an error
-	  */
+	 * Get crypt password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param pwd crypt password for this volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
 	virtual int getCryptPassword( const string& device, string& pwd ) = 0;
 
 	/**
