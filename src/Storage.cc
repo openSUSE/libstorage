@@ -75,9 +75,9 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
     : lock(ronly, tmode), readonly(ronly), testmode(tmode), initialized(false),
       autodetect(autodetec)
 {
-    y2milestone( "constructed Storage ronly:%d testmode:%d autodetect:%d",
-                 ronly, testmode, autodetect );
-    y2milestone( "package string \"%s\"", PACKAGE_STRING );
+    y2mil("constructed Storage ronly:" << ronly << " testmode:" << testmode <<
+	  " autodetect:" << autodetect);
+    y2mil("package string \"" PACKAGE_STRING "\"");
     char * tenv = getenv( "YAST_IS_RUNNING" );
     inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
     root_mounted = !inst_sys;
@@ -90,8 +90,8 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
     logdir = "/var/log/YaST2";
     if( tenv!=0 )
 	string(tenv) >> max_log_num;
-    y2milestone( "instsys:%d testmode:%d autodetect:%d log:%d", inst_sys,
-                 testmode, autodetect, max_log_num );
+    y2mil("instsys:" << inst_sys << " testmode:" << testmode << " autodetect:" << autodetect <<
+	  " log:" << max_log_num);
     progress_bar_cb = NULL;
     install_info_cb = NULL;
     info_popup_cb = NULL;
@@ -170,7 +170,7 @@ Storage::initialize()
 	    testdir = logdir;
 	    }
 	}
-    y2milestone( "instsys:%d testdir:%s", inst_sys, testdir.c_str() );
+    y2mil("instsys:" << inst_sys << " testdir:" << testdir);
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();
@@ -292,16 +292,17 @@ Storage::~Storage()
 	SystemCmd c( "rmdir " + tempdir );
 	if( c.retcode()!=0 )
 	    {
-	    y2error( "stray tmpfile" );
+	    y2err("stray tmpfile");
 	    c.execute( "ls -l" + tempdir );
 	    c.execute( "rm -rf " + tempdir );
 	    }
 	}
-    y2milestone( "destructed Storage" );
+    y2mil("destructed Storage");
     }
 
 void Storage::rescanEverything()
     {
+    y2mil("rescan everything");
     deleteClist(cont);
     detectObjects();
     }
@@ -341,24 +342,24 @@ Storage::detectArch()
 	{
 	AsciiFile cpu( "/proc/cpuinfo" );
 	int l = cpu.find( 0, "^machine\t" );
-	y2milestone( "line:%d", l );
+	y2mil("line:" << l);
 	if( l >= 0 )
 	    {
 	    string line = cpu[l];
 	    line = extractNthWord( 2, line );
-	    y2milestone( "line:%s", line.c_str() );
+	    y2mil("line:" << line);
 	    is_ppc_mac = line.find( "PowerMac" )==0 || line.find( "PowerBook" )==0;
 	    is_ppc_pegasos = line.find( "EFIKA5K2" )==0;
 	    if( is_ppc_mac == 0 && is_ppc_pegasos == 0 )
 		{
 		line = cpu[l];
 		line = extractNthWord( 3, line );
-		y2milestone( "line:%s", line.c_str() );
+		y2mil("line:" << line);
 		is_ppc_pegasos = line.find( "Pegasos" )==0;
 		}
 	    }
 	}
-    y2milestone( "Arch:%s IsPPCMac:%d IsPPCPegasos:%d", proc_arch.c_str(), is_ppc_mac, is_ppc_pegasos );
+    y2mil("Arch:" << proc_arch << " IsPPCMac:" << is_ppc_mac << " IsPPCPegasos:" << is_ppc_pegasos);
     }
 
 void
