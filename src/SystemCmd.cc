@@ -518,7 +518,6 @@ SystemCmd::checkOutput()
     }
 
 #define BUF_LEN 256
-#define MAX_STRING (STRING_MAXLEN - BUF_LEN - 10)
 
 void
 SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
