@@ -1005,9 +1005,10 @@ bool Disk::haveBsdPart(const list<Partition*>& pl) const
     return( ret );
     }
 
+
+// note: factors are in the context of kilo
 #define TB (1024ULL * 1024ULL * 1024ULL)
-#define EB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
-#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL)
+#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
 
 string
 Disk::defaultLabel(const Storage& storage, unsigned long long size_k)
@@ -1042,8 +1043,8 @@ Disk::label_info Disk::labels[] = {
     };
 
 #undef TB
-#undef EB
 #undef PB
+
 
 string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/" };
 
