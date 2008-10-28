@@ -140,9 +140,13 @@ DmmultipathCo::activate(bool val)
 
 	    c.execute(MODPROBEBIN " dm-multipath");
 	    c.execute(MULTIPATHBIN);
+	    sleep(1);
+	    c.execute(MULTIPATHDBIN);
 	}
 	else
 	{
+	    c.execute(MULTIPATHDBIN " -F");
+	    sleep(1);
 	    c.execute(MULTIPATHBIN " -F");
 	}
 

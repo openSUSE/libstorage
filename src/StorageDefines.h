@@ -31,6 +31,7 @@
 #define CRYPTSETUPBIN "/sbin/cryptsetup"
 #define LOSETUPBIN "/sbin/losetup"
 #define MULTIPATHBIN "/sbin/multipath"
+#define MULTIPATHDBIN "/sbin/multipathd"
 #define DMSETUPBIN "/sbin/dmsetup"
 #define KPARTXBIN "/sbin/kpartx"
 #define DMRAIDBIN "/sbin/dmraid"
