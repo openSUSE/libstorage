@@ -38,10 +38,12 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     getTableInfo();
     }
 
+
 Dm::~Dm()
-    {
-    y2debug( "destructed dem dev %s", dev.c_str() );
-    }
+{
+    y2deb("destructed dm dev " << dev);
+}
+
 
 unsigned Dm::dmMajor()
     {
