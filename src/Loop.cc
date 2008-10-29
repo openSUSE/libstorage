@@ -18,15 +18,16 @@
 using namespace storage;
 using namespace std;
 
-Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
-            bool dmcrypt, const string& dm_dev,
-            ProcPart& ppart, SystemCmd& losetup ) : 
-    Volume( d, 0, 0 )
-    {
-    y2milestone( "constructed loop dev:%s file:%s dmcrypt:%d dmdev:%s", 
-		 LoopDev.c_str(), LoopFile.c_str(), dmcrypt, dm_dev.c_str() );
+
+Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
+	   bool dmcrypt, const string& dm_dev, ProcPart& ppart,
+	   SystemCmd& losetup)
+    : Volume(d, 0, 0)
+{
+    y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
+	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
     if( d.type() != LOOP )
-	y2error( "constructed loop with wrong container" );
+	y2err("constructed loop with wrong container");
     init();
     lfile = LoopFile;
     loop_dev = fstab_loop_dev = LoopDev;
@@ -73,15 +74,17 @@ Loop::Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	if( stat( lfile.c_str(), &st )>=0 )
 	    setSize( st.st_size/1024 );
 	}
-    }
+}
 
-Loop::Loop( const LoopCo& d, const string& file, bool reuseExisting,
-	    unsigned long long sizeK, bool dmcr ) : Volume( d, 0, 0 )
-    {
-    y2milestone( "constructed loop file:%s reuseExisting:%d sizek:%llu dmcrypt:%d", 
-                 file.c_str(), reuseExisting, sizeK, dmcr );
+
+Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
+	   unsigned long long sizeK, bool dmcr)
+    : Volume(d, 0, 0)
+{
+    y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
+	  " sizek:" << sizeK << " dmcrypt:" << dmcr);
     if( d.type() != LOOP )
-	y2error( "constructed loop with wrong container" );
+	y2err("constructed loop with wrong container");
     init();
     reuseFile = reuseExisting;
     lfile = file;
@@ -107,12 +110,14 @@ Loop::Loop( const LoopCo& d, const string& file, bool reuseExisting,
     checkReuse();
     if( !reuseFile )
 	setSize( sizeK );
-    }
+}
+
 
 Loop::~Loop()
-    {
-    y2debug( "destructed loop %s", dev.c_str() );
-    }
+{
+    y2deb("destructed loop " << dev);
+}
+
 
 void
 Loop::init()
@@ -191,7 +196,7 @@ Loop::createFile()
     return( ret );
     }
 
-string 
+string
 Loop::lfileRealPath() const
     {
     return( cont->getStorage()->root() + lfile );
@@ -281,7 +286,7 @@ string Loop::createText( bool doing ) const
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
+			       d.c_str(), lfile.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    else
@@ -292,7 +297,7 @@ string Loop::createText( bool doing ) const
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
+			       d.c_str(), lfile.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    }
@@ -320,7 +325,7 @@ string Loop::formatText( bool doing ) const
 	// %3$s is replaced by size (e.g. 623.5 MB)
 	// %4$s is replaced by file system type (e.g. reiserfs)
 	txt = sformat( _("Formatting file-based device %1$s of %2$s (%3$s) with %4$s "),
-		       d.c_str(), lfile.c_str(), sizeString().c_str(), 
+		       d.c_str(), lfile.c_str(), sizeString().c_str(),
 		       fsTypeString().c_str() );
 	}
     else
@@ -338,7 +343,7 @@ string Loop::formatText( bool doing ) const
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
+			       d.c_str(), lfile.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    else
@@ -349,7 +354,7 @@ string Loop::formatText( bool doing ) const
 		// %4$s is replaced by file system type (e.g. reiserfs)
 		// %5$s is replaced by mount point (e.g. /usr)
 		txt = sformat( _("Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(), 
+			       d.c_str(), lfile.c_str(), sizeString().c_str(),
 			       fsTypeString().c_str(), mp.c_str() );
 		}
 	    }
@@ -360,7 +365,7 @@ string Loop::formatText( bool doing ) const
 	    // %3$s is replaced by size (e.g. 623.5 MB)
 	    // %4$s is replaced by file system type (e.g. reiserfs)
 	    txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) with %4$s"),
-			   d.c_str(), lfile.c_str(), sizeString().c_str(), 
+			   d.c_str(), lfile.c_str(), sizeString().c_str(),
 			   fsTypeString().c_str() );
 	    }
 	}
@@ -395,7 +400,7 @@ std::ostream& operator<< (std::ostream& s, const Loop& l )
 bool Loop::equalContent( const Loop& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
-	    lfile==rhs.lfile && reuseFile==rhs.reuseFile && 
+	    lfile==rhs.lfile && reuseFile==rhs.reuseFile &&
 	    delFile==rhs.delFile );
     }
 
@@ -421,21 +426,24 @@ void Loop::logDifference( const Loop& rhs ) const
     y2mil(log);
     }
 
-Loop& Loop::operator= ( const Loop& rhs )
-    {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+
+Loop& Loop::operator=(const Loop& rhs)
+{
+    y2deb("operator= from " << rhs.nm);
     *((Volume*)this) = rhs;
     lfile = rhs.lfile;
     reuseFile = rhs.reuseFile;
     delFile = rhs.delFile;
-    return( *this );
-    }
+    return *this;
+}
 
-Loop::Loop( const LoopCo& d, const Loop& rhs ) : Volume(d)
-    {
-    y2debug( "constructed loop by copy constructor from %s", rhs.nm.c_str() );
+
+Loop::Loop(const LoopCo& d, const Loop& rhs)
+    : Volume(d)
+{
+    y2deb("constructed loop by copy constructor from " << rhs.nm);
     *this = rhs;
-    }
+}
+
 
 unsigned Loop::loop_major = 0;
-

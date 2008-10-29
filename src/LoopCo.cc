@@ -18,26 +18,30 @@
 using namespace storage;
 using namespace std;
 
-LoopCo::LoopCo( Storage * const s, bool detect, ProcPart& ppart ) :
-    Container(s,"loop",staticType())
-    {
-    y2debug( "constructing LoopCo detect:%d", detect );
+
+LoopCo::LoopCo(Storage * const s, bool detect, ProcPart& ppart)
+    : Container(s, "loop", staticType())
+{
+    y2deb("constructing LoopCo detect:" << detect);
     init();
     if( detect )
 	getLoopData( ppart );
-    }
+}
 
-LoopCo::LoopCo( Storage * const s, const string& file ) :
-    Container(s,"loop",staticType())
-    {
-    y2debug( "constructing LoopCo file:%s", file.c_str() );
+
+LoopCo::LoopCo(Storage * const s, const string& file)
+    : Container(s, "loop", staticType())
+{
+    y2deb("constructing LoopCo file:" << file);
     init();
-    }
+}
+
 
 LoopCo::~LoopCo()
-    {
-    y2debug( "destructed LoopCo" );
-    }
+{
+    y2deb("destructed LoopCo");
+}
+
 
 void
 LoopCo::init()
@@ -68,7 +72,7 @@ LoopCo::getLoopData( ProcPart& ppart )
 		y2warning( "file %s not existent or special", lfile.c_str() );
 	    else
 		{
-		Loop *l = new Loop( *this, i->loop_dev, lfile, 
+		Loop *l = new Loop( *this, i->loop_dev, lfile,
 				    i->dmcrypt, !i->noauto?i->dentry:"",
 				    ppart, c );
 		l->setEncryption( i->encr );
@@ -92,10 +96,10 @@ LoopCo::getLoopData( ProcPart& ppart )
 			{
 			getStorage()->findDmUsing( i->loopDevice(), dm );
 			}
-		    if( dm==0 && !i->getMount().empty() && 
+		    if( dm==0 && !i->getMount().empty() &&
 			!mp[i->getMount()].empty() )
 			{
-			y2mil( "mp:" << i->getMount() << " dev:" << 
+			y2mil( "mp:" << i->getMount() << " dev:" <<
 			       mp[i->getMount()] );
 			getStorage()->findDm( mp[i->getMount()], dm );
 			}
@@ -197,11 +201,11 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
     }
 
 int
-LoopCo::updateLoop( const string& device, const string& file, 
+LoopCo::updateLoop( const string& device, const string& file,
                     bool reuseExisting, unsigned long long sizeK )
     {
     int ret = 0;
-    y2milestone( "device:%s file:%s reuse:%d sizeK:%lld", device.c_str(), 
+    y2milestone( "device:%s file:%s reuse:%d sizeK:%lld", device.c_str(),
                  file.c_str(), reuseExisting, sizeK );
     LoopIter i;
     if( readonly() )
@@ -409,16 +413,16 @@ bool LoopCo::equalContent( const Container& rhs ) const
     return( ret );
     }
 
-LoopCo::LoopCo( const LoopCo& rhs ) : Container(rhs)
-    {
-    y2debug( "constructed LoopCo by copy constructor from %s", rhs.nm.c_str() );
+
+LoopCo::LoopCo(const LoopCo& rhs)
+    : Container(rhs)
+{
+    y2deb("constructed LoopCo by copy constructor from " << rhs.nm);
     *this = rhs;
     ConstLoopPair p = rhs.loopPair();
     for( ConstLoopIter i=p.begin(); i!=p.end(); ++i )
-         {
-         Loop * p = new Loop( *this, *i );
-         vols.push_back( p );
-         }
+    {
+	Loop * p = new Loop( *this, *i );
+	vols.push_back( p );
     }
-
-
+}
