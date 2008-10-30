@@ -1820,7 +1820,7 @@ namespace storage
 	 *    destructive actions (like e.g. deletion, formatting, ...)
 	 * @return list of strings presentable to the user
 	 */
-	virtual deque<string> getCommitActions( bool mark_destructive ) = 0;
+	virtual deque<string> getCommitActions( bool mark_destructive ) const = 0;
 
 	/**
 	 * Gets action performed last during previous call to commit()

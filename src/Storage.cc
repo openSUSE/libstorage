@@ -3482,15 +3482,16 @@ int Storage::checkCache()
     return(ret);
     }
 
-deque<string> Storage::getCommitActions( bool mark_destructive )
+
+deque<string> Storage::getCommitActions( bool mark_destructive ) const
     {
     deque<string> ret;
-    CPair p = cPair();
+    ConstContPair p = contPair();
     y2milestone( "empty:%d", p.empty() );
     if( !p.empty() )
 	{
 	list<commitAction*> ac;
-	for( ContIterator i = p.begin(); i != p.end(); ++i )
+	for( ConstContIterator i = p.begin(); i != p.end(); ++i )
 	    {
 	    list<commitAction*> l;
 	    i->getCommitActions( l );
@@ -3516,9 +3517,10 @@ deque<string> Storage::getCommitActions( bool mark_destructive )
 	    delete *i;
 	    }
 	}
-    y2milestone( "ret.size():%zd", ret.size() );
-    return( ret );
+    y2mil("ret.size():" << ret.size());
+    return ret;
     }
+
 
 static bool sort_cont_up( const Container* rhs, const Container* lhs )
     {
