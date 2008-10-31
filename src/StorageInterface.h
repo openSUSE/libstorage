@@ -452,6 +452,16 @@ namespace storage
     };
 
     /**
+     * Contains info about actions performed during commit().
+     */
+    struct CommitInfo
+    {
+	bool destructive;
+	deque<string> actions;
+    };
+
+
+    /**
      * preliminary list of error codes, must have negative values
      */
     enum ErrorCodes
@@ -1302,7 +1312,8 @@ namespace storage
 
 	/**
 	 * Sets the value of description text.
-	 * This text will be returned together with the text returned by getCommitActions
+	 * This text will be returned together with the text returned by 
+	 * getCommitInfo().
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param txt description text for this partition
@@ -1814,13 +1825,24 @@ namespace storage
 
 	/**
 	 * Gets a list of string describing the actions to be executed
-	 * after next call to commit()
+	 * after next call to commit().
 	 *
+	 * Deprecated, use getCommitInfo().
+	 * 
 	 * @param mark_destructive if true use &lt;red&gt; around &lt;/red&gt;
 	 *    destructive actions (like e.g. deletion, formatting, ...)
 	 * @return list of strings presentable to the user
 	 */
-	virtual deque<string> getCommitActions( bool mark_destructive ) const = 0;
+	virtual deque<string> getCommitActions(bool mark_destructive) const = 0;
+
+	/**
+	 * Gets info about actions to be executed after next call to commit().
+	 *
+	 * @param mark_destructive if true use &lt;red&gt; around &lt;/red&gt;
+	 *    destructive actions (like e.g. deletion, formatting, ...)
+	 * @param info record that gets filled with data
+	 */
+	virtual void getCommitInfo(bool mark_destructive, CommitInfo& info) const = 0;
 
 	/**
 	 * Gets action performed last during previous call to commit()
