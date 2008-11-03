@@ -20,7 +20,7 @@ class Region
 	Region intersect( const Region& r ) const
 	    {
 	    Region ret;
-	    if( r.start() <= end() && r.end() >= start() )
+	    if (doIntersect(r))
 		{
 		unsigned long s = std::max( r.start(), start() );
 		unsigned long e = std::min( r.end(), end() );
