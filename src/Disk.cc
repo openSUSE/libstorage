@@ -1136,11 +1136,12 @@ unsigned int Disk::numLogical() const
 }
 
 
-unsigned Disk::availablePartNumber( PartitionType type )
-    {
-    y2milestone( "begin name:%s type %d", name().c_str(), type );
+unsigned
+Disk::availablePartNumber(PartitionType type) const
+{
+    y2mil("begin name:" << name() << " type:" << type);
     unsigned ret = 0;
-    PartPair p = partPair( notDeleted );
+    ConstPartPair p = partPair( notDeleted );
     if( !ext_possible && type==LOGICAL )
 	{
 	ret = 0;
@@ -1155,7 +1156,7 @@ unsigned Disk::availablePartNumber( PartitionType type )
     else if( type==LOGICAL )
 	{
 	unsigned mx = max_primary;
-	PartIter i=p.begin();
+	ConstPartIter i=p.begin();
 	while( i!=p.end() )
 	    {
 	    y2mil( "i:" << *i );
@@ -1169,7 +1170,7 @@ unsigned Disk::availablePartNumber( PartitionType type )
 	}
     else
 	{
-	PartIter i=p.begin();
+	ConstPartIter i=p.begin();
 	unsigned start = label!="mac" ? 1 : 2;
 	while( i!=p.end() && i->nr()<=start && i->nr()<=max_primary )
 	    {
@@ -1188,9 +1189,10 @@ unsigned Disk::availablePartNumber( PartitionType type )
     if( ret >= range )
 	ret = 0;
 
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
 
 static bool notDeletedNotLog( const Partition& p )
     {
@@ -1214,7 +1216,7 @@ static bool notCreatedPrimary( const Partition& p )
 
 
 void
-Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
+Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
 {
     y2mil("all:" << all << " logical:" << logical);
 
@@ -1222,13 +1224,13 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 
     if (all || !logical)
     {
-	PartPair p = partPair(notDeletedNotLog);
+	ConstPartPair p = partPair(notDeletedNotLog);
 
 	unsigned long start = 1;
 	unsigned long end = cylinders();
 
 	list<Region> tmp;
-	for (PartIter i = p.begin(); i != p.end(); ++i)
+	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
 	    tmp.push_back(Region(i->cylStart(), i->cylEnd() - i->cylStart() + 1));
 	tmp.sort();
 
@@ -1244,16 +1246,16 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical)
 
     if (all || logical)
     {
-	PartPair ext = partPair(notDeletedExt);
+	ConstPartPair ext = partPair(notDeletedExt);
 	if (!ext.empty())
 	{
-	    PartPair p = partPair(notDeletedLog);
+	    ConstPartPair p = partPair(notDeletedLog);
 
 	    unsigned long start = ext.begin()->cylStart();
 	    unsigned long end = ext.begin()->cylEnd();
 
 	    list<Region> tmp;
-	    for (PartIter i = p.begin(); i != p.end(); ++i)
+	    for (ConstPartIter i = p.begin(); i != p.end(); ++i)
 		tmp.push_back(Region(i->cylStart(), i->cylEnd() - i->cylStart() + 1));
 	    tmp.sort();
 
@@ -1362,8 +1364,10 @@ int Disk::createPartition( PartitionType type, string& device )
     return( ret );
     }
 
-int Disk::nextFreePartition( PartitionType type, unsigned& nr, string& device )
-    {
+
+int
+Disk::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
+{
     int ret = 0;
     device = "";
     nr = 0;
@@ -1379,9 +1383,10 @@ int Disk::nextFreePartition( PartitionType type, unsigned& nr, string& device )
 	nr = p->nr();
 	delete( p );
 	}
-    y2milestone( "ret:%d nr:%d device:%s", ret, nr, device.c_str() );
-    return( ret );
-    }
+    y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+    return ret;
+}
+
 
 int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
@@ -2396,7 +2401,7 @@ int Disk::doRemove( Volume* v )
 
 
 int
-Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls)
+Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const
 {
     int ret = 0;
     freeCyls = 0;
@@ -2404,11 +2409,11 @@ Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls)
     unsigned long end = cylinders();
     if (p->type() == LOGICAL && hasExtended())
     {
-	PartPair pp = partPair(notDeletedExt);
+	ConstPartPair pp = partPair(notDeletedExt);
 	end = pp.begin()->cylEnd() + 1;
     }
-    PartPair pp = partPair(notDeleted);
-    PartIter i = pp.begin();
+    ConstPartPair pp = partPair(notDeleted);
+    ConstPartIter i = pp.begin();
     while (i != pp.end())
     {
 	if( (i->type()==p->type()||

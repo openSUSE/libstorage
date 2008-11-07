@@ -188,7 +188,7 @@ DmPartCo::removeVolume( Volume* v )
 
 
 int
-DmPartCo::freeCylindersAfterPartition(const DmPart* dm, unsigned long& freeCyls)
+DmPartCo::freeCylindersAfterPartition(const DmPart* dm, unsigned long& freeCyls) const
 {
     const Partition* p = dm->getPtr();
     int ret = p ? 0 : DMPART_PARTITION_NOT_FOUND;
@@ -471,16 +471,19 @@ int DmPartCo::forgetChangePartitionId( unsigned nr )
     return( ret );
     }
 
-int DmPartCo::nextFreePartition( PartitionType type, unsigned& nr, string& device )
-    {
+
+int
+DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
+{
     int ret = disk->nextFreePartition( type, nr, device );
     if( ret==0 )
 	{
 	device = "/dev/mapper/" + numToName(nr);
 	}
-    y2milestone( "ret:%d nr:%d device:%s", ret, nr, device.c_str() );
-    return( ret );
-    }
+    y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+    return ret;
+}
+
 
 int DmPartCo::changePartitionArea( unsigned nr, unsigned long start,
 				   unsigned long len, bool checkRelaxed )

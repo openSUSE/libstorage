@@ -46,11 +46,10 @@ class DmPartCo : public PeContainer
 	int forgetChangePartitionId( unsigned nr );
 	int changePartitionArea( unsigned nr, unsigned long start, 
 	                         unsigned long size, bool checkRelaxed=false );
-	int nextFreePartition( storage::PartitionType type, unsigned& nr,
-	                       string& device );
+	int nextFreePartition(storage::PartitionType type, unsigned& nr,
+			      string& device) const;
 	int destroyPartitionTable( const string& new_label );
-	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
-	int freeCylindersAfterPartition(const DmPart* p, unsigned long& freeCyls);
+	int freeCylindersAfterPartition(const DmPart* p, unsigned long& freeCyls) const;
 	int resizePartition( DmPart* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
@@ -64,10 +63,10 @@ class DmPartCo : public PeContainer
 	bool hasExtended() const { return disk->hasExtended(); }
 	unsigned int numLogical() const { return disk->numLogical(); }
 
-	void getUnusedSpace(std::list<Region>& free, bool all = true, bool logical = false)
+	void getUnusedSpace(std::list<Region>& free, bool all = true, bool logical = false) const
 	    { disk->getUnusedSpace(free, all, logical); }
 
-	unsigned long long cylinderToKb( unsigned long val ) const 
+	unsigned long long cylinderToKb( unsigned long val ) const
 	    { return disk->cylinderToKb( val ); }
 	unsigned long kbToCylinder( unsigned long long val ) const
 	    { return disk->kbToCylinder( val ); }

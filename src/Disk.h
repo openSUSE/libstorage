@@ -67,28 +67,28 @@ class Disk : public Container
 	int createPartition( storage::PartitionType type, string& device );
 	virtual int removePartition( unsigned nr );
 	virtual int changePartitionId( unsigned nr, unsigned id );
-	virtual int initializeDisk( bool ) { return storage::DISK_INIT_NOT_POSSIBLE;}
+	virtual int initializeDisk( bool ) { return storage::DISK_INIT_NOT_POSSIBLE; }
 	bool initializeDisk() const { return init_disk; }
 	void resetInitDisk() { init_disk=false; }
 	int forgetChangePartitionId( unsigned nr );
 	int changePartitionArea( unsigned nr, unsigned long start, 
 	                         unsigned long size, bool checkRelaxed=false );
-	int nextFreePartition( storage::PartitionType type, unsigned& nr,
-	                       string& device );
+	int nextFreePartition(storage::PartitionType type, unsigned& nr,
+			      string& device) const;
 	int destroyPartitionTable( const string& new_label );
-	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
+	unsigned availablePartNumber(storage::PartitionType type = storage::PRIMARY) const;
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	virtual int getToCommit( storage::CommitStage stage, 
 	                         std::list<Container*>& col,
 				 std::list<Volume*>& vol );
 	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
-	int freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls);
+	int freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const;
 	virtual int resizePartition( Partition* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
-	void getUnusedSpace( std::list<Region>& free, bool all=true, 
-	                     bool logical=false );
+	void getUnusedSpace(std::list<Region>& free, bool all = true, 
+			    bool logical = false) const;
 	unsigned int numPrimary() const;
 	bool hasExtended() const;
 	unsigned int numLogical() const;
