@@ -186,6 +186,21 @@ DmPartCo::removeVolume( Volume* v )
     return( ret );
     }
 
+
+int
+DmPartCo::freeCylindersAfterPartition(const DmPart* dm, unsigned long& freeCyls)
+{
+    const Partition* p = dm->getPtr();
+    int ret = p ? 0 : DMPART_PARTITION_NOT_FOUND;
+    if (ret == 0)
+    {
+	ret = disk->freeCylindersAfterPartition(p, freeCyls);
+    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
 int DmPartCo::resizePartition( DmPart* dm, unsigned long newCyl )
     {
     Partition * p = dm->getPtr();

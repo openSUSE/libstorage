@@ -1401,6 +1401,57 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
     return( ret );
     }
 
+
+int
+Storage::freeCylindersAfterPartition(const string& partition, unsigned long& freeCyls)
+{
+    int ret = 0;
+    assertInit();
+    y2mil("partition:" << partition);
+    VolIterator vol;
+    ContIterator cont;
+    if( findVolume( partition, cont, vol ) )
+    {
+	if( cont->type()==DISK )
+	{
+	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
+	    Partition* p = dynamic_cast<Partition *>(&(*vol));
+	    if( disk!=NULL && p!=NULL )
+	    {
+		ret = disk->freeCylindersAfterPartition(p, freeCyls);
+	    }
+	    else
+	    {
+		ret = STORAGE_RESIZE_INVALID_CONTAINER;
+	    }
+	}
+	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
+	{
+	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
+	    DmPart* p = dynamic_cast<DmPart *>(&(*vol));
+	    if( disk!=NULL && p!=NULL )
+	    {
+		ret = disk->freeCylindersAfterPartition(p, freeCyls);
+	    }
+	    else
+	    {
+		ret = STORAGE_RESIZE_INVALID_CONTAINER;
+	    }
+	}
+	else
+	{
+	    ret = STORAGE_RESIZE_INVALID_CONTAINER;
+	}
+    }
+    else
+    {
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
 int
 Storage::changePartitionId( const string& partition, unsigned id )
     {

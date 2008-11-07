@@ -305,6 +305,7 @@ class Storage : public storage::StorageInterface
 	                       unsigned &nr, string& device );
 	int updatePartitionArea( const string& device,
 				 unsigned long start, unsigned long size );
+	int freeCylindersAfterPartition(const string& device, unsigned long& freeCyls);
 	int createPartitionKb( const string& disk, storage::PartitionType type,
 	                       unsigned long long start,
 			       unsigned long long sizek, string& device );

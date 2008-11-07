@@ -50,6 +50,7 @@ class DmPartCo : public PeContainer
 	                       string& device );
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber( storage::PartitionType type=storage::PRIMARY );
+	int freeCylindersAfterPartition(const DmPart* p, unsigned long& freeCyls);
 	int resizePartition( DmPart* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
