@@ -207,9 +207,9 @@ void Storage::detectObjects()
     detectDisks( *ppart );
     if( instsys() )
 	{
+	DmraidCo::activate( true );
 	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
-	DmraidCo::activate( true );
 	delete ppart;
 	ppart = new ProcPart;
 	}
