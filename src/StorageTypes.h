@@ -71,9 +71,9 @@ struct commitAction
                   bool destr=false )
 	{ stage=s; type=t; descr=d; destructive=destr; container=true;
 	  u.co=co; }
-    commitAction( CommitStage s, CType t, Volume* v )
+    commitAction( CommitStage s, CType t, const Volume* v )
 	{ stage=s; type=t; destructive=false; container=false; u.vol=v; }
-    commitAction( CommitStage s, CType t, Container* c )
+    commitAction( CommitStage s, CType t, const Container* c )
 	{ stage=s; type=t; destructive=false; container=true; u.co=c; }
     CommitStage stage;
     CType type;
