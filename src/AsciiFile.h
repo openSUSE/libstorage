@@ -11,12 +11,7 @@ namespace storage
 
 class Regex;
 
-///////////////////////////////////////////////////////////////////
-//
-//	CLASS NAME : AsciiFile
-//
-//	DESCRIPTION :
-//
+
 class AsciiFile
     {
     public:

@@ -16,7 +16,6 @@
 using namespace std;
 using namespace storage;
 
-#define DBG(x)
 
 AsciiFile::AsciiFile( bool CreateBackup_bv, const char* BackupExt_Cv ) :
 	BackupCreated_b(!CreateBackup_bv),
@@ -48,28 +47,26 @@ bool AsciiFile::loadFile( const string& Name_Cv )
     {
     bool Ret_bi;
 
-    y2milestone( "Loading File:\"%s\"", Name_Cv.c_str() );
+    y2mil("Loading File:\"" << Name_Cv << "\"");
     Lines_C.clear();
     Ret_bi = appendFile( Name_Cv, Lines_C );
     Name_C = Name_Cv;
-    return( Ret_bi );
+    return Ret_bi;
     }
 
 const string& AsciiFile::fileName() const
     {
-    return( Name_C );
+    return Name_C;
     }
 
 bool AsciiFile::appendFile( const string& Name_Cv )
     {
-    DBG( App_pC->Dbg() << "Appending File:\"" << Name_Cv << "\"\n"; )
-    return( appendFile( Name_Cv, Lines_C ) );
+    return appendFile( Name_Cv, Lines_C );
     }
 
 bool AsciiFile::appendFile( AsciiFile& File_Cv )
 {
-    DBG( App_pC->Dbg() << "Appending AsciiFile Lines:" << File_Cv.numLines() << "\n"; )
-    return( appendFile( File_Cv, Lines_C ) );
+    return appendFile( File_Cv, Lines_C );
 }
 
 bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr )
@@ -86,7 +83,7 @@ bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr )
 	Lines_Cr.push_back( Line_Ci );
 	getline( File_Ci, Line_Ci );
       }
-    return( Ret_bi );
+    return Ret_bi;
 }
 
 bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
@@ -98,7 +95,7 @@ bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
 	Lines_Cr.push_back( File_Cv[Idx_ii] );
 	Idx_ii++;
       }
-    return( true );
+    return true;
 }
 
 bool AsciiFile::insertFile( const string& Name_Cv, unsigned int BeforeLine_iv )
@@ -125,7 +122,7 @@ bool AsciiFile::insertFile( const string& Name_Cv, unsigned int BeforeLine_iv )
 	    }
 	Lines_C = New_Ci;
 	}
-    return( Ret_bi );
+    return Ret_bi;
     }
 
 bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
@@ -134,8 +131,6 @@ bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
     vector<string> New_Ci;
     bool Ret_bi;
 
-    DBG( App_pC->Dbg() << "Inserting AsciiFile Lines:" << File_Cv.numLines()
-                       << " before:" << BeforeLine_iv << endl; )
     unsigned int Idx_ii=0;
     while( Idx_ii<BeforeLine_iv )
 	{
@@ -149,7 +144,7 @@ bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
 	Idx_ii++;
 	}
     Lines_C = New_Ci;
-    return( Ret_bi );
+    return Ret_bi;
     }
 
 bool AsciiFile::updateFile()
@@ -183,7 +178,6 @@ bool AsciiFile::updateFile()
     classic(File_Ci);
     unsigned int Idx_ii = 0;
 
-    DBG( App_pC->Dbg() << "Writing File:\"" << Name_C << "\"\n"; )
     while( File_Ci.good() && Idx_ii<Lines_C.size() )
 	{
 	File_Ci << Lines_C[Idx_ii] << std::endl;
@@ -193,7 +187,7 @@ bool AsciiFile::updateFile()
 	{
 	chmod( Name_C.c_str(), Stat_ri.st_mode );
 	}
-    return( File_Ci.good() );
+    return File_Ci.good();
     }
 
 bool AsciiFile::removeIfEmpty()
@@ -204,7 +198,7 @@ bool AsciiFile::removeIfEmpty()
 	unlink( Name_C.c_str() );
 	y2mil( "deleting file " << Name_C );
 	}
-    return( ret );
+    return ret;
     }
 
 bool AsciiFile::saveToFile( const string& Name_Cv )
@@ -213,13 +207,12 @@ bool AsciiFile::saveToFile( const string& Name_Cv )
     classic(File_Ci);
     unsigned int Idx_ii = 0;
 
-    DBG( App_pC->Dbg() << "SaveToFile File:\"" << Name_Cv << "\"\n"; )
     while( File_Ci.good() && Idx_ii < Lines_C.size() )
 	{
 	File_Ci << Lines_C[Idx_ii] << std::endl;
 	Idx_ii++;
 	}
-    return( File_Ci.good() );
+    return File_Ci.good();
     }
 
 
@@ -228,7 +221,6 @@ void AsciiFile::append( const string& Line_Cv )
     string::size_type Idx_ii;
     string Line_Ci = Line_Cv;
 
-    DBG( App_pC->Dbg() << "Append Line:\"" << Line_Ci << "\"\n"; )
     removeLastIf( Line_Ci, '\n' );
     while( (Idx_ii=Line_Ci.find( '\n' ))!= string::npos )
 	{
@@ -262,9 +254,6 @@ void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
 
 void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
     {
-    DBG( App_pC->Dbg() << "Delete Line From:" << Start_iv
-                       << " Length:" << Cnt_iv << "\n"; )
-    DBG( App_pC->Dbg() << "Before Delete Lines:" << Lines_C.size() << std::endl; );
     Start_iv = max( 0u, Start_iv );
     if( Start_iv < Lines_C.size() )
 	{
@@ -278,15 +267,11 @@ void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
 	    Lines_C.pop_back();
 	    }
 	}
-    DBG( App_pC->Dbg() << "After Delete Lines:" << Lines_C.size() << std::endl; );
     }
 
 void AsciiFile::insert( unsigned int Before_iv, const string& Line_Cv )
     {
     unsigned int Idx_ii = Lines_C.size();
-    DBG( App_pC->Dbg() << "Insert Line Before:" << Before_iv
-                       << " High:" << Lines_C.size()
-                       << " Text:\"" << Line_Cv << "\"\n"; )
     if( Before_iv>=Idx_ii )
 	{
 	append( Line_Cv );
@@ -324,13 +309,13 @@ void AsciiFile::insert( unsigned int Before_iv, const string& Line_Cv )
 const string& AsciiFile::operator [] ( unsigned int Idx_iv ) const
     {
     assert( Idx_iv < Lines_C.size( ) );
-    return( Lines_C[Idx_iv] );
+    return Lines_C[Idx_iv];
     }
 
 string& AsciiFile::operator [] ( unsigned int Idx_iv )
     {
     assert( Idx_iv < Lines_C.size( ) );
-    return( Lines_C[Idx_iv] );
+    return Lines_C[Idx_iv];
     }
 
 int AsciiFile::find( unsigned Start_iv, Regex& Pat_Cv ) const
@@ -348,13 +333,7 @@ int AsciiFile::find( unsigned Start_iv, Regex& Pat_Cv ) const
 	    Idx_ii++;
 	    }
 	}
-    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii
-		       << " Start:" << Start_iv << std::endl; )
-    if( Ret_ii>=0 )
-	{
-	DBG( App_pC->Dbg() << "Line:\"" << Lines_C[Idx_ii] << "\"\n"; )
-	}
-    return( Ret_ii );
+    return Ret_ii;
     }
 
 int AsciiFile::find( unsigned int Start_iv, const string& Pat_Cv ) const
@@ -387,18 +366,12 @@ int AsciiFile::find( unsigned int Start_iv, const string& Pat_Cv ) const
 	    Idx_ii++;
 	    }
 	}
-    DBG( App_pC->Dbg() << "Found Idx:" << Ret_ii
-		       << " Start:" << Start_iv << std::endl; )
-    if( Ret_ii>=0 )
-	{
-	DBG( App_pC->Dbg() << "Line:\"" << Lines_C[Idx_ii] << "\"\n"; )
-	}
-    return( Ret_ii );
+    return Ret_ii;
     }
 
 unsigned AsciiFile::numLines() const
     {
-    return( Lines_C.size() );
+    return Lines_C.size();
     }
 
 unsigned AsciiFile::differentLine( const AsciiFile& File_Cv ) const
@@ -418,7 +391,7 @@ unsigned AsciiFile::differentLine( const AsciiFile& File_Cv ) const
         {
         Ret_ii = Cnt_ii;
         }
-    return( Ret_ii );
+    return Ret_ii;
     }
 
 
@@ -427,21 +400,3 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
     if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
 	Text_Cr.erase(Text_Cr.length() - 1);
 }
-
-
-#if 0
-void AsciiFile::put( const Regex& Pat_Cv, const String& Line_Cv )
-    {
-    int Idx_ii;
-
-    if( (Idx_ii=Find( 0, Pat_Cv ))>=0 )
-	{
-	(*this)[Idx_ii] = Line_Cv;
-	}
-    else
-	{
-	append( Line_Cv );
-	}
-    }
-
-#endif
