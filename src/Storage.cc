@@ -4618,30 +4618,33 @@ bool Storage::removeDmTable( const string& table )
     return( ret );
     }
 
+
 void
-Storage::logCo( const string& device )
-    {
+Storage::logCo(const string& device)
+{
     ContIterator cc;
     if( findContainer( device, cc ))
 	logCo( &(*cc) );
     else
 	y2mil( "not found:" << device );
-    }
+}
+
 
 void
-Storage::logCo( Container* c ) const
-    {
+Storage::logCo(const Container* c) const
+{
     std::ostringstream b;
     classic(b);
     c->print( b );
     y2mil( "log co:" << b.str() );
     for( Container::ConstPlainIterator i=c->begin(); i!=c->end(); ++i )
-	{
+    {
 	b.str("");
 	(*i)->print( b );
 	y2mil( "log vo:" << b.str() );
-	}
     }
+}
+
 
 void Storage::logProcData( const string& l )
     {

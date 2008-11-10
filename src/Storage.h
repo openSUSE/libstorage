@@ -231,8 +231,8 @@ class Storage : public storage::StorageInterface
 	void printInfo( std::ostream& str ) { printInfo( str, "" ); }
 	void printInfo( std::ostream& str, const string& name );
 	void printInfoCo( std::ostream& str, const string& name ) { printInfo( str, name ); }
-	void logCo( Container* c ) const;
-	void logCo( const string& device );
+	void logCo(const Container* c) const;
+	void logCo(const string& device);
 	void logProcData( const string& l="" );
 	storage::UsedByType usedBy( const string& dev );
 	bool usedBy( const string& dev, storage::usedBy& ub );
