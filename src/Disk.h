@@ -200,7 +200,6 @@ class Disk : public Container
 	virtual int doCreateLabel();
 
 	void logData( const string& Dir );
-	bool haveBsdPart( const std::list<Partition*>& pl) const;
 	void setLabelData( const string& );
 
 	static string defaultLabel( const Storage&, unsigned long long size_k );

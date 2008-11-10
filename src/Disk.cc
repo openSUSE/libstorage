@@ -875,9 +875,11 @@ _("openSUSE is switching to the new IDE drivers using the libata\n"
     return( true );
     }
 
-bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
-                             list<Partition*>& pl, unsigned long& range_exceed )
-    {
+
+bool
+Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
+		       list<Partition*>& pl, unsigned long& range_exceed)
+{
     unsigned ext_nr = 0;
     bool ret=true;
     unsigned long Dummy;
@@ -909,7 +911,6 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
 	}
-    bool openbsd = false;
     y2mil( "proc  :" << proc_l );
     y2mil( "parted:" << parted_l );
     if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
@@ -984,26 +985,10 @@ bool Disk::checkPartedValid( const ProcPart& pp, const string& diskname,
 		}
 	    }
 	}
-    y2milestone("haveBsd:%d pr.size:%zd pa.size:%zd", openbsd,
-                 proc_l.size(), parted_l.size() );
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
-
-static bool isBsdPart( const Partition& p )
-    { return( p.id()==0xa5 || p.id()==0xa6 || p.id()==0xeb ); }
-
-bool Disk::haveBsdPart(const list<Partition*>& pl) const
-    {
-    bool ret = false;
-    list<Partition*>::const_iterator i = pl.begin();
-    while( !ret && i!=pl.end() )
-	{
-	ret = isBsdPart(**i);
-	++i;
-	}
-    return( ret );
-    }
+    y2mil("pr.size:" << proc_l.size() << " pa.size:" << parted_l.size());
+    y2mil("ret:" << ret);
+    return ret;
+}
 
 
 // note: factors are in the context of kilo
