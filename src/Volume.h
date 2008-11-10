@@ -173,7 +173,7 @@ class Volume
 	void getInfo( storage::VolumeInfo& info ) const;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
 	void updateFsData();
-	void triggerUdevUpdate();
+	void triggerUdevUpdate() const;
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
 	struct SkipDeleted

@@ -169,15 +169,17 @@ Disk::~Disk()
     y2debug( "destructed disk %s", dev.c_str() );
     }
 
-void Disk::triggerUdevUpdate()
+
+void
+Disk::triggerUdevUpdate() const
+{
+    ConstPartPair pp = partPair();
+    for( ConstPartIter p=pp.begin(); p!=pp.end(); ++p )
     {
-    PartPair pp = partPair();
-    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
-	{
 	if( !p->deleted() && !p->created() )
 	    p->triggerUdevUpdate();
-	}
     }
+}
 
 
 void

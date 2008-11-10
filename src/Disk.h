@@ -55,7 +55,7 @@ class Disk : public Container
 	bool detect( ProcPart& ppart );
 	static storage::CType staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
-	void triggerUdevUpdate();
+	void triggerUdevUpdate() const;
 
 	static bool needP( const string& dev );
 	void setUdevData(const string& path, const list<string>& id);

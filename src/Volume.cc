@@ -884,7 +884,7 @@ string Volume::getFilesysSysfsPath() const
     return( ret );
     }
 
-void Volume::triggerUdevUpdate()
+void Volume::triggerUdevUpdate() const
     {
     string path = getFilesysSysfsPath() + "/uevent";
     if( access( path.c_str(), R_OK )==0 )
