@@ -31,7 +31,7 @@ class SystemCmd
 			       bool& ExceedTime, bool& ExceedLines);
 	void setOutputHandler( void (*Handle_f)( void *, string, bool ),
 	                       void * Par_p );
-	void logOutput();
+	void logOutput() const;
 	void setOutputProcessor( OutputProcessor * proc )
 	    { output_proc = proc; }
 	int select( string Reg_Cv, bool Invert_bv=false,

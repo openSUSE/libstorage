@@ -22,9 +22,6 @@ using namespace std;
 using namespace storage;
 
 
-//#define FULL_DEBUG_SYSTEM_CMD
-
-
 SystemCmd::SystemCmd( const char* Command )
 {
     y2mil("constructor SystemCmd:\"" << Command << "\"");
@@ -162,7 +159,7 @@ SystemCmd::executeRestricted( const string& Command_Cv,
 	Ret_i = ret;
     y2milestone( "ret:%d ExceedTime:%d ExceedLines:%d", ret, ExceedTime,
                  ExceedLines );
-    return( ret );
+    return ret;
     }
 
 
@@ -311,7 +308,7 @@ SystemCmd::doExecute( string Cmd )
     y2milestone( "system() Returns:%d", Ret_i );
     if( Ret_i!=0 )
 	logOutput();
-    return( Ret_i );
+    return Ret_i;
     }
 
 
@@ -365,7 +362,7 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	}
     y2debug( "Wait:%d pid=%d stat=%d Hang:%d Ret:%d", Wait_ii, Pid_i,
              Status_ii, Hang_bv, Ret_ir );
-    return( Wait_ii != 0 );
+    return Wait_ii != 0;
     }
 
 void
@@ -395,7 +392,7 @@ SystemCmd::getString( unsigned Idx_iv ) const
 	    }
 	Valid_ab[Idx_iv] = true;
 	}
-    return( &Text_aC[Idx_iv] );
+    return &Text_aC[Idx_iv];
     }
 
 unsigned
@@ -416,7 +413,7 @@ SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
 	Ret_ii = Lines_aC[Idx_iv].size();
 	}
     y2debug("ret:%u", Ret_ii );
-    return( Ret_ii );
+    return Ret_ii;
     }
 
 const string *
@@ -442,7 +439,7 @@ SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
 	    Ret_pCi = &Lines_aC[Idx_iv][Nr_iv];
 	    }
 	}
-    return( Ret_pCi );
+    return Ret_pCi;
     }
 
 int
@@ -485,7 +482,7 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
 	}
     y2milestone( "Pid:%d Idx:%d Pattern:\"%s\" Invert:%d Lines %d", Pid_i,
                  Idx_iv, Pat_Cv.c_str(), Invert_bv, Size_ii );
-    return( Size_ii );
+    return Size_ii;
     }
 
 void
@@ -546,10 +543,7 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 		}
 	    if( OutputHandler_f )
 		{
-#ifdef SYSTEMCMD_VERBOSE_DEBUG
-		y2debug( "Calling Output-Handler Buf:\"%s\" Stderr:%d", Buf_ti,
-		         Stderr_bv );
-#endif
+		y2deb("Calling Output-Handler Buf:\"" << Buf_ti << "\" Stderr:" << Stderr_bv);
 		OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 		}
 	    }
@@ -565,10 +559,7 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	    }
 	if( OutputHandler_f )
 	    {
-#ifdef SYSTEMCMD_VERBOSE_DEBUG
-	    y2debug( "Calling Output-Handler Buf:\"%s\" Stderr:%d",< Buf_ti
-		     Stderr_bv );
-#endif
+	    y2deb("Calling Output-Handler Buf:\"" << Buf_ti << "\" Stderr:" << Stderr_bv);
 	    OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 	    }
 	}
@@ -619,22 +610,25 @@ SystemCmd::extractNewline( const char* Buf_ti, int Cnt_iv, bool& NewLine_br,
     y2debug( "Text_Ci:%s NewLine:%d", Text_Cr.c_str(), NewLine_br );
     }
 
-void
-SystemCmd::addLine( string Text_Cv, vector<string>& Lines_Cr )
-    {
-#ifndef FULL_DEBUG_SYSTEM_CMD
-    if( Lines_Cr.size()<100 )
-	{
-#endif
-	y2milestone( "Adding Line %zd \"%s\"", Lines_Cr.size()+1, Text_Cv.c_str() );
-#ifndef FULL_DEBUG_SYSTEM_CMD
-	}
-#endif
-    Lines_Cr.push_back( Text_Cv );
-    }
 
 void
-SystemCmd::logOutput()
+SystemCmd::addLine(string Text_Cv, vector<string>& Lines_Cr)
+{
+    if (Lines_Cr.size() < 100)
+    {
+	y2mil("Adding Line " << Lines_Cr.size() + 1 << " \"" << Text_Cv << "\"");
+    }
+    else
+    {
+	y2deb("Adding Line " << Lines_Cr.size() + 1 << " \"" << Text_Cv << "\"");
+    }
+    
+    Lines_Cr.push_back(Text_Cv);
+}
+
+
+void
+SystemCmd::logOutput() const
     {
     for( unsigned i=0; i<numLines(false,IDX_STDERR); ++i )
 	y2milestone( "stderr:%s", getLine( i, false, IDX_STDERR )->c_str() );
@@ -662,7 +656,7 @@ int SystemCmd::placeOutput( unsigned Which_iv, vector<string> &Ret_Cr,
   for ( int i_ii = 0; i_ii < Lines_ii; i_ii++ )
     Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
 
-  return( Lines_ii );
+  return Lines_ii;
 }
 
 int SystemCmd::placeOutput( unsigned Which_iv, list<string> &Ret_Cr,
@@ -676,7 +670,7 @@ int SystemCmd::placeOutput( unsigned Which_iv, list<string> &Ret_Cr,
   for ( int i_ii = 0; i_ii < Lines_ii; i_ii++ )
     Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
 
-  return( Lines_ii );
+  return Lines_ii;
 }
 
 
@@ -700,4 +694,3 @@ string SystemCmd::quote(const list<string>& strs)
 
 
 bool SystemCmd::testmode = false;
-
