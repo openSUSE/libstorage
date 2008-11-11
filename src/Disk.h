@@ -191,7 +191,6 @@ class Disk : public Container
 	void enlargeGpt();
 
 	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
-	static bool bootSpecial( const Partition&d ) { return( !d.deleted()&&(d.id()==0x41||d.id()==0x06) ); }
 
 	virtual int doCreate( Volume* v );
 	virtual int doRemove( Volume* v );
