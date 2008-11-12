@@ -353,34 +353,58 @@ void createLogger(const string& lcomponent, const string& name,
 }
 
 
+bool
+testLogLevel(LogLevel level)
+{
+    using namespace blocxx;
+
+    ELogLevel curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
+
+    switch (level)
+    {
+	case DEBUG:
+	    return curLevel >= ::blocxx::E_DEBUG_LEVEL;
+	case MILESTONE:
+	    return curLevel >= ::blocxx::E_INFO_LEVEL;
+	case WARNING:
+	    return curLevel >= ::blocxx::E_WARNING_LEVEL;
+	case ERROR:
+	    return curLevel >= ::blocxx::E_ERROR_LEVEL;
+	default:
+	    return curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL;
+    }
+}
+
+
 void
-logMsg(unsigned level, const char* file, unsigned line, const char* func,
+logMsg(LogLevel level, const char* file, unsigned line, const char* func,
        const string& str)
 {
     using namespace blocxx;
 
     ELogLevel curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
     String category;
-    switch( level )
+
+    switch (level)
     {
-	case 0:
-	    if( curLevel >= ::blocxx::E_DEBUG_LEVEL)
+	case DEBUG:
+	    if (curLevel >= ::blocxx::E_DEBUG_LEVEL)
 	    	category = Logger::STR_DEBUG_CATEGORY;
 	    break;
-	case 1:
-	    if( curLevel >= ::blocxx::E_INFO_LEVEL)
+	case MILESTONE:
+	    if (curLevel >= ::blocxx::E_INFO_LEVEL)
 	    	category = Logger::STR_INFO_CATEGORY;
 	    break;
-	case 2:
-	    if( curLevel >= ::blocxx::E_WARNING_LEVEL)
+	case WARNING:
+	    if (curLevel >= ::blocxx::E_WARNING_LEVEL)
 		category = Logger::STR_WARNING_CATEGORY;
 	    break;
-	case 3:
-	    if( curLevel >= ::blocxx::E_ERROR_LEVEL)
+	case ERROR:
+	    if (curLevel >= ::blocxx::E_ERROR_LEVEL)
 		category = Logger::STR_ERROR_CATEGORY;
 	    break;
 	default:
-	    if( curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL)
+	    if (curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL)
 		category = Logger::STR_FATAL_CATEGORY;
 	    break;
     }
@@ -395,20 +419,23 @@ logMsg(unsigned level, const char* file, unsigned line, const char* func,
 
 
 void
-logMsgVaArgs(unsigned level, const char* file, unsigned line, const char* func,
+logMsgVaArgs(LogLevel level, const char* file, unsigned line, const char* func,
 	     const char* format, ...)
 {
-    char* str;
-    va_list ap;
+    if (testLogLevel(level))
+    {
+	char* str;
+	va_list ap;
 
-    va_start(ap, format);
-    if (vasprintf(&str, format, ap) == -1)
-	return;
-    va_end(ap);
+	va_start(ap, format);
+	if (vasprintf(&str, format, ap) == -1)
+	    return;
+	va_end(ap);
 
-    logMsg(level, file, line, func, str);
+	logMsg(level, file, line, func, str);
 
-    free(str);
+	free(str);
+    }
 }
 
 

@@ -55,36 +55,43 @@ void classic(StreamType& stream)
 }
 
 
+enum LogLevel { DEBUG, MILESTONE, WARNING, ERROR };
+
 void createLogger(const string& component, const string& name,
 		  const string& logpath, const string& logfile);
 
-void logMsg(unsigned level, const char* file, unsigned line,
+bool testLogLevel(LogLevel level);
+
+void logMsg(LogLevel level, const char* file, unsigned line,
 	    const char* func, const string& str);
 
-void logMsgVaArgs(unsigned level, const char* file, unsigned line,
+void logMsgVaArgs(LogLevel level, const char* file, unsigned line,
 		  const char* func, const char* format, ...)
     __attribute__ ((format(printf, 5, 6)));
 
 #define y2debug(format, ...) \
-    logMsgVaArgs(0, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+    logMsgVaArgs(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define y2milestone(format, ...) \
-    logMsgVaArgs(1, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+    logMsgVaArgs(storage::MILESTONE, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define y2warning(format, ...) \
-    logMsgVaArgs(2, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+    logMsgVaArgs(storage::WARNING, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define y2error(format, ...) \
-    logMsgVaArgs(3, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
+    logMsgVaArgs(storage::ERROR, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 
-#define y2deb(op) y2log_op(0, __FILE__, __LINE__, __FUNCTION__, op)
-#define y2mil(op) y2log_op(1, __FILE__, __LINE__, __FUNCTION__, op)
-#define y2war(op) y2log_op(2, __FILE__, __LINE__, __FUNCTION__, op)
-#define y2err(op) y2log_op(3, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2deb(op) y2log_op(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2mil(op) y2log_op(storage::MILESTONE, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2war(op) y2log_op(storage::WARNING, __FILE__, __LINE__, __FUNCTION__, op)
+#define y2err(op) y2log_op(storage::ERROR, __FILE__, __LINE__, __FUNCTION__, op)
 
 #define y2log_op(level, file, line, function, op)			\
     do {								\
-	std::ostringstream __buf;					\
-	storage::classic(__buf);					\
-	__buf << op;							\
-	storage::logMsg(level, file, line, function, __buf.str());	\
+	if (storage::testLogLevel(level))				\
+	{								\
+	    std::ostringstream __buf;					\
+	    storage::classic(__buf);					\
+	    __buf << op;						\
+	    storage::logMsg(level, file, line, function, __buf.str());	\
+	}								\
     } while (0)
 
 
