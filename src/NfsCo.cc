@@ -18,7 +18,7 @@ using namespace std;
 NfsCo::NfsCo( Storage * const s, ProcMounts& mounts ) :
     Container(s,"nfs",staticType())
     {
-    y2debug( "constructing NfsCo detect" );
+    y2deb("constructing NfsCo detect");
     init();
     getNfsData( mounts );
     }
@@ -26,20 +26,20 @@ NfsCo::NfsCo( Storage * const s, ProcMounts& mounts ) :
 NfsCo::NfsCo( Storage * const s ) :
     Container(s,"nfs",staticType())
     {
-    y2debug( "constructing NfsCo" );
+    y2deb("constructing NfsCo");
     init();
     }
 
 NfsCo::NfsCo( Storage * const s, const string& file ) :
     Container(s,"nfs",staticType())
     {
-    y2debug( "constructing NfsCo file:%s", file.c_str() );
+    y2deb("constructing NfsCo file:" << file);
     init();
     }
 
 NfsCo::~NfsCo()
     {
-    y2debug( "destructed NfsCo" );
+    y2deb("destructed NfsCo");
     }
 
 void
@@ -93,8 +93,7 @@ NfsCo::doRemove( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
-	y2milestone( "doRemove container %s name %s", name().c_str(),
-		     p->name().c_str() );
+	y2mil("doRemove container: " << name() << " name:" << p->name());
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
@@ -284,7 +283,7 @@ bool NfsCo::equalContent( const Container& rhs ) const
 
 NfsCo::NfsCo( const NfsCo& rhs ) : Container(rhs)
     {
-    y2debug( "constructed NfsCo by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed NfsCo by copy constructor from " << rhs.nm);
     *this = rhs;
     ConstNfsPair p = rhs.nfsPair();
     for( ConstNfsIter i=p.begin(); i!=p.end(); ++i )
@@ -293,5 +292,3 @@ NfsCo::NfsCo( const NfsCo& rhs ) : Container(rhs)
          vols.push_back( p );
          }
     }
-
-

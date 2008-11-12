@@ -19,9 +19,9 @@ using namespace std;
 Nfs::Nfs( const NfsCo& d, const string& NfsDev ) :
     Volume( d, 0, 0 )
     {
-    y2debug( "constructed nfs dev:%s", NfsDev.c_str() );
+    y2deb("constructed nfs dev:" << NfsDev);
     if( d.type() != NFSC )
-	y2error( "constructed nfs with wrong container" );
+	y2err("constructed nfs with wrong container");
     dev = canonicalName(NfsDev);
     if( dev != NfsDev )
 	alt_names.push_back( NfsDev );
@@ -30,7 +30,7 @@ Nfs::Nfs( const NfsCo& d, const string& NfsDev ) :
 
 Nfs::~Nfs()
     {
-    y2debug( "destructed nfs %s", dev.c_str() );
+    y2deb("destructed nfs " << dev);
     }
 
 string Nfs::removeText( bool doing ) const
@@ -100,14 +100,13 @@ void Nfs::logDifference( const Nfs& rhs ) const
 
 Nfs& Nfs::operator= ( const Nfs& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Volume*)this) = rhs;
     return( *this );
     }
 
 Nfs::Nfs( const NfsCo& d, const Nfs& rhs ) : Volume(d)
     {
-    y2debug( "constructed nfs by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed nfs by copy constructor from " << rhs.nm);
     *this = rhs;
     }
-
