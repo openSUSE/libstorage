@@ -14,7 +14,7 @@ using namespace storage;
 void
 OutputProcessor::process( const string& val, bool stderr )
     {
-    y2milestone( "stderr:%d val:%s", stderr, val.c_str() );
+    y2mil("stderr:" << stderr << " val:" << val);
     }
 
 void
@@ -30,7 +30,7 @@ ScrollBarHandler::setCurValue( unsigned val )
     {
     if( first || val!=cur )
 	{
-	y2milestone( "val %u", val );
+	y2mil("val:" << val);
 	cur = val;
 	first = false;
 	if( callback )
@@ -41,13 +41,13 @@ ScrollBarHandler::setCurValue( unsigned val )
 void
 Mke2fsScrollbar::process( const string& val, bool stderr )
     {
-    y2debug( "val:%s err:%d done:%d", val.c_str(), stderr, done );
+    y2deb("val:" << val << " err:" << stderr << " done:" << done);
     if( !stderr && !done )
 	{
 	seen += val;
 	string::size_type pos;
 	string::size_type bpos = seen.find( "\b" );
-	y2debug( "bpos:%zu", bpos );
+	y2deb("bpos:" << bpos);
 	if( bpos==0 )
 	    {
 	    seen.erase( 0, seen.find_first_not_of( "\b", bpos ));
@@ -61,9 +61,9 @@ Mke2fsScrollbar::process( const string& val, bool stderr )
 	    pos = seen.find_first_of( "0123456789" );
 	    if( pos != string::npos )
 		seen.erase( 0, pos );
-	    y2debug( "seen:%s", seen.c_str() );
+	    y2deb("seen:" << seen);
 	    string number = seen.substr( 0, bpos );
-	    y2debug( "number:%s", seen.c_str() );
+	    y2deb("number:" << number);
 	    list<string> l = splitString(number, "/" );
 	    list<string>::const_iterator i = l.begin();
 	    if( i != l.end() )
@@ -96,7 +96,7 @@ Mke2fsScrollbar::process( const string& val, bool stderr )
 void
 ReiserScrollbar::process( const string& val, bool stderr )
     {
-    y2debug( "val:%s err:%d", val.c_str(), stderr );
+    y2deb("val:" << val << " err:" << stderr);
     if( !stderr )
 	{
 	seen += val;
@@ -112,8 +112,9 @@ ReiserScrollbar::process( const string& val, bool stderr )
 	    pos = seen.find_first_of( "0123456789" );
 	    if( pos != string::npos )
 		seen.erase( 0, pos );
-	    y2debug( "seen:%s", seen.c_str() );
+	    y2deb("seen:" << seen);
 	    string number = seen.substr( 0, bpos );
+	    y2deb("number:" << number);
 	    unsigned cval;
 	    number >> cval;
 	    setCurValue( cval );
@@ -126,7 +127,7 @@ ReiserScrollbar::process( const string& val, bool stderr )
 void
 DasdfmtScrollbar::process( const string& val, bool stderr )
     {
-    y2debug( "val:%s err:%d", val.c_str(), stderr );
+    y2deb("val:" << val << " err:" << stderr);
     if( !stderr )
 	{
 	seen += val;
@@ -137,12 +138,12 @@ DasdfmtScrollbar::process( const string& val, bool stderr )
 	    unsigned long cyl = 0;
 	    seen >> cyl;
 	    max_cyl += cyl;
-	    y2milestone( "cyl:%lu max_cyl:%lu", cyl, max_cyl );
+	    y2mil( "cyl:" << cyl << " max_cyl:" << max_cyl);
 	    seen.erase( 0, pos+1 );
 	    }
 	if( bpos != string::npos && max_cyl==0 )
 	    {
-	    y2error( "max_cyl is zero, this should not happen" );
+	    y2err("max_cyl is zero, this should not happen");
 	    max_cyl = 100;
 	    }
 	while( bpos != string::npos )
