@@ -19,7 +19,7 @@ using namespace storage;
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
     {
-    y2debug( "constructing MdCo detect:%d", detect );
+    y2deb("constructing MdCo detect:" << detect);
     init();
     if( detect )
 	getMdData();
@@ -28,13 +28,13 @@ MdCo::MdCo( Storage * const s, bool detect ) :
 MdCo::MdCo( Storage * const s, const string& file ) :
     Container(s,"md",staticType())
     {
-    y2debug( "constructing MdCo file:%s", file.c_str() );
+    y2deb("constructing MdCo file:" << file);
     init();
     }
 
 MdCo::~MdCo()
     {
-    y2debug( "destructed MdCo" );
+    y2deb("destructed MdCo");
     delete tab;
     }
 

@@ -556,7 +556,7 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
 
 Partition::~Partition()
     {
-    y2debug( "destructed partition %s", dev.c_str() );
+    y2deb("destructed partition " << dev);
     }
 
 void
@@ -669,8 +669,7 @@ Partition& Partition::operator= ( const Partition& rhs )
 
 Partition::Partition( const Disk& d, const Partition& rhs ) : Volume(d)
     {
-    y2debug( "constructed partition by copy constructor from %s", 
-	     rhs.dev.c_str() );
+    y2deb("constructed partition by copy constructor from " << rhs.dev);
     *this = rhs;
     }
 

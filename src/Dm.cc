@@ -22,7 +22,7 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
     stripe = 1;
     stripe_size = 0;
     inactiv = true;
-    y2debug( "constructed dm dev" );
+    y2deb("constructed dm dev");
     }
 
 Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
@@ -620,7 +620,7 @@ Dm& Dm::operator= ( const Dm& rhs )
 
 Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
     {
-    y2debug( "constructed dm by copy constructor from %s", rhs.dev.c_str() );
+    y2deb("constructed dm by copy constructor from " << rhs.dev);
     *this = rhs;
     }
 

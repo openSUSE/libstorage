@@ -162,7 +162,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 
 Md::~Md()
     {
-    y2debug( "destructed md %s", dev.c_str() );
+    y2deb("destructed md " << dev);
     }
 
 void
@@ -677,7 +677,7 @@ Md& Md::operator= ( const Md& rhs )
 
 Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
     {
-    y2debug( "constructed md by copy constructor from %s", rhs.dev.c_str() );
+    y2deb("constructed md by copy constructor from " << rhs.dev);
     *this = rhs;
     }
 

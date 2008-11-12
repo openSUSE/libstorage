@@ -21,7 +21,7 @@ DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
                     ProcPart& ppart ) :
     PeContainer(s,t)
     {
-    y2debug( "constructing DmPart co %s", name.c_str() );
+    y2deb("constructing DmPart co " << name);
     dev = name;
     nm = undevName(name);
     num_part = num_pe = free_pe = 0;
@@ -37,7 +37,7 @@ DmPartCo::~DmPartCo()
 	delete disk;
 	disk = NULL;
 	}
-    y2debug( "destructed DmPart co %s", dev.c_str() );
+    y2deb("destructed DmPart co " << dev);
     }
 
 int DmPartCo::addNewDev( string& device )

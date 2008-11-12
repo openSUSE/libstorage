@@ -19,7 +19,7 @@ using namespace storage;
 DmCo::DmCo( Storage * const s, bool detect, ProcPart& ppart ) :
     PeContainer(s,staticType())
     {
-    y2debug( "constructing DmCo detect:%d", detect );
+    y2deb("constructing DmCo detect:" << detect);
     init();
     if( detect )
 	getDmData( ppart );
@@ -28,13 +28,13 @@ DmCo::DmCo( Storage * const s, bool detect, ProcPart& ppart ) :
 DmCo::DmCo( Storage * const s, const string& file ) :
     PeContainer(s,staticType())
     {
-    y2debug( "constructing DmCo file:%s", file.c_str() );
+    y2deb("constructing DmCo file:" << file);
     init();
     }
 
 DmCo::~DmCo()
     {
-    y2debug( "destructed DmCo" );
+    y2deb("destructed DmCo");
     }
 
 void DmCo::updateDmMaps()

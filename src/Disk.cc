@@ -41,7 +41,7 @@ Disk::Disk( Storage * const s, const string& Name,
     else 
 	dev = "/dev/" + Name;
     size_k = SizeK;
-    y2debug( "constructed disk %s", dev.c_str() );
+    y2deb("constructed disk " << dev);
     }
 
 Disk::Disk( Storage * const s, const string& Name,
@@ -161,12 +161,12 @@ Disk::Disk( Storage * const s, const string& fname ) :
 	Partition *p = new Partition( *this, extractNthWord( 1, line, true ));
 	addToList( p );
 	}
-    y2debug( "constructed disk %s from file %s", dev.c_str(), fname.c_str() );
+    y2deb("constructed disk " << dev << " from file " << fname);
     }
 
 Disk::~Disk()
     {
-    y2debug( "destructed disk %s", dev.c_str() );
+    y2deb("destructed disk " << dev);
     }
 
 
@@ -615,7 +615,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     unsigned long StartM, EndM;
     string PartitionType, TInfo;
 
-    y2debug( "Line: %s", Line.c_str() );
+    y2deb("Line:" << Line);
     std::istringstream Data( Line );
     classic(Data);
 

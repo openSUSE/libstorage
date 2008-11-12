@@ -22,7 +22,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
     PeContainer(s,staticType())
     {
     nm = Name;
-    y2debug( "constructing lvm vg %s", Name.c_str() );
+    y2deb("constructing lvm vg " << Name);
     init();
     if( !Name.empty() )
 	{
@@ -33,7 +33,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 	}
     else
 	{
-	y2error( "empty name in constructor" );
+	y2err("empty name in constructor");
 	}
     }
 
@@ -46,7 +46,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     lvm1 = lv1;
     if( Name.empty() )
 	{
-	y2error( "empty name in constructor" );
+	y2error("empty name in constructor");
 	}
     }
 
@@ -58,7 +58,7 @@ LvmVg::LvmVg( Storage * const s, const string& file, int ) :
 
 LvmVg::~LvmVg()
     {
-    y2debug( "destructed lvm vg %s", dev.c_str() );
+    y2deb("destructed lvm vg " << dev);
     }
 
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }

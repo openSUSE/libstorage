@@ -350,8 +350,7 @@ LvmLv& LvmLv::operator= ( const LvmLv& rhs )
 
 LvmLv::LvmLv( const LvmVg& d, const LvmLv& rhs ) : Dm(d,rhs)
     {
-    y2debug( "constructed lvm lv by copy constructor from %s", 
-	     rhs.dev.c_str() );
+    y2deb("constructed lvm lv by copy constructor from " << rhs.dev);
     *this = rhs;
     }
 

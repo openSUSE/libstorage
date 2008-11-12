@@ -25,12 +25,12 @@ Dasd::Dasd( Storage * const s, const string& Name,
     Disk(s,Name,SizeK)
     {
     fmt = DASDF_NONE;
-    y2debug( "constructed dasd %s", dev.c_str() );
+    y2deb("constructed dasd " << dev);
     }
 
 Dasd::~Dasd()
     {
-    y2debug( "destructed dasd %s", dev.c_str() );
+    y2deb("destructed dasd " << dev);
     }
 
 bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
@@ -129,7 +129,7 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
     unsigned long StartM, EndM;
     string PartitionType, TInfo;
 
-    y2debug( "Line: %s", Line.c_str() );
+    y2deb("Line:" << Line);
     std::istringstream Data( Line );
     classic(Data);
 

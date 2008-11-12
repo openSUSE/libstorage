@@ -50,12 +50,12 @@ Volume::Volume( const Container& c ) : cont(&c)
     numeric = false;
     size_k = orig_size_k = 0;
     init();
-    y2debug( "constructed late init volume" );
+    y2deb("constructed late init volume");
     }
 
 Volume::~Volume()
     {
-    y2debug( "destructed volume %s", dev.c_str() );
+    y2deb("destructed volume " << dev);
     }
 
 void Volume::setNameDev()
@@ -3100,7 +3100,7 @@ Volume& Volume::operator= ( const Volume& rhs )
 
 Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     {
-    y2debug( "constructed vol by copy constructor from %s", rhs.dev.c_str() );
+    y2deb("constructed vol by copy constructor from " << rhs.dev);
     *this = rhs;
     }
 

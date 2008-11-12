@@ -21,7 +21,7 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
     dev = "/dev/" + nm;
     size_k = mnr = mjr = 0;
     typ = t;
-    y2debug( "constructed cont %s", nm.c_str() );
+    y2deb("constructed cont " << nm);
     }
 
 Container::~Container()
@@ -30,7 +30,7 @@ Container::~Container()
 	{
 	delete( *i );
 	}
-    y2debug( "destructed cont %s", dev.c_str() );
+    y2deb("destructed cont " << dev);
     }
 
 static bool notDeleted( const Volume& v )
