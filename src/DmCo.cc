@@ -101,7 +101,7 @@ DmCo::detectEncryption( const string& dev ) const
 	    ret = ENC_TWOFISH256_OLD;
     }
 
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return ret;
 }
 
@@ -298,7 +298,7 @@ DmCo::removeDm( const string& tname )
 	    i->setDeleted( true );
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -346,7 +346,7 @@ DmCo::doRemove( Volume* v )
 	}
     else
 	ret = DM_REMOVE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

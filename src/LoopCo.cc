@@ -196,7 +196,7 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
 	addToList( l );
 	device = l->device();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -228,7 +228,7 @@ LoopCo::updateLoop( const string& device, const string& file,
 	if( !i->getReuse() )
 	    i->setSize( sizeK );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -264,7 +264,7 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 	    i->setDelFile( removeFile );
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -277,7 +277,7 @@ int LoopCo::removeVolume( Volume* v )
 	ret = removeLoop( l->loopFile(), false );
     else
 	ret = LOOP_REMOVE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -306,7 +306,7 @@ LoopCo::doCreate( Volume* v )
 	}
     else
 	ret = LOOP_CREATE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -333,7 +333,7 @@ LoopCo::doRemove( Volume* v )
 	}
     else
 	ret = LOOP_REMOVE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

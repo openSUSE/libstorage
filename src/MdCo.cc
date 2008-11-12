@@ -302,7 +302,7 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	m->setCreated( true );
 	addToList( m );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -332,7 +332,7 @@ MdCo::checkMd( unsigned num )
 	ret = MD_DEVICE_UNKNOWN;
     else if( i->created() )
 	ret = i->checkDevices();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -372,7 +372,7 @@ MdCo::extendMd( unsigned num, const string& dev )
 	string d = normalizeDevice( dev );
 	getStorage()->setUsedBy( d, UB_MD, "md"+decString(num) );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -404,7 +404,7 @@ MdCo::shrinkMd( unsigned num, const string& dev )
 	string d = normalizeDevice( dev );
 	getStorage()->clearUsedBy(d);
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -431,7 +431,7 @@ MdCo::changeMdType( unsigned num, MdType ptype )
 	{
 	i->setPersonality( ptype );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -458,7 +458,7 @@ MdCo::changeMdChunk( unsigned num, unsigned long chunk )
 	{
 	i->setChunkSize( chunk );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -485,7 +485,7 @@ MdCo::changeMdParity( unsigned num, MdParity ptype )
 	{
 	i->setParity( ptype );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -547,7 +547,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	    i->setDestroySb( destroySb );
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -635,7 +635,7 @@ MdCo::doCreate( Volume* v )
 	}
     else
 	ret = MD_CREATE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -687,7 +687,7 @@ MdCo::doRemove( Volume* v )
 	}
     else
 	ret = MD_REMOVE_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

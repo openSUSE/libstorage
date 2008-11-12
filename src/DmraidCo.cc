@@ -218,7 +218,7 @@ DmraidCo::doRemove()
 	    setDeleted( false );
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

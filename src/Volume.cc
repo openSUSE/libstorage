@@ -531,7 +531,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 		}
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -629,7 +629,7 @@ int Volume::changeFstabOptions( const string& options )
 	fstab_opt = options;
 	updateFstabOptions();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -867,7 +867,7 @@ int Volume::doFormat()
 	int r = mount( orig_mp );
 	ret = (ret==0)?r:ret;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -953,7 +953,7 @@ int Volume::umount( const string& mp )
 	ret = VOLUME_UMOUNT_FAILED;
     else
 	is_mounted = false;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1159,7 +1159,7 @@ int Volume::doMount()
 	{
 	cont->getStorage()->rootMounted();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1182,7 +1182,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
 	    ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1293,7 +1293,7 @@ int Volume::resizeFs()
 	    }
 	}
     ignore_fs = false;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1335,7 +1335,7 @@ int Volume::setEncryption( bool val, EncryptType typ )
 	{
 	updateFstabOptions();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1453,7 +1453,7 @@ int Volume::getFreeLoop( SystemCmd& loopData )
 	list<unsigned> ids;
 	ret = getFreeLoop( loopData, ids );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1465,7 +1465,7 @@ int Volume::getFreeLoop()
 	SystemCmd c(LOSETUPBIN " -a");
 	ret = getFreeLoop( c );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1597,7 +1597,7 @@ Volume::setCryptPwd( const string& val )
 	if( encryption==ENC_UNKNOWN )
 	    detectEncryption();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1806,7 +1806,7 @@ int Volume::doLosetup()
 	updateFstabOptions();
 	loop_active = false;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1927,7 +1927,7 @@ int Volume::doCryptsetup()
 	cryptUnsetup();
 	updateFstabOptions();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1948,7 +1948,7 @@ int Volume::doCrsetup()
 	}
     if( ret==0 )
 	updateFsData();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2068,7 +2068,7 @@ int Volume::doSetLabel()
 	{
 	orig_label = label;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2089,7 +2089,7 @@ int Volume::setLabel( const string& val )
 	}
     else
 	ret = VOLUME_LABEL_NOT_SUPPORTED;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2174,7 +2174,7 @@ int Volume::mount( const string& m, bool ro )
 	}
     else
 	is_mounted = true;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2199,7 +2199,7 @@ int Volume::prepareRemove()
 	}
     cont->getStorage()->eraseFreeInfo(dev);
     cont->getStorage()->removeDmTableTo(*this);
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

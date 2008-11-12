@@ -307,7 +307,7 @@ int Dasd::removePartition( unsigned nr )
 	PartPair p = partPair( notDeleted );
 	changeNumbers( p.begin(), p.end(), nr, -1 );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -348,7 +348,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
 	device = p->device();
 	addToList( p );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -424,7 +424,7 @@ int Dasd::doFdasd()
 	    }
 	}
     unlink( inpname.c_str() );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -520,7 +520,7 @@ int Dasd::commitChanges( CommitStage stage )
 	{
 	ret = Disk::commitChanges( stage );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

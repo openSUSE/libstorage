@@ -143,7 +143,7 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 	default:
 	    ret = VOLUME_COMMIT_UNKNOWN_STAGE;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -151,7 +151,7 @@ int Container::commitChanges( CommitStage stage )
     {
     y2milestone( "name %s stage %d", name().c_str(), stage );
     int ret = CONTAINER_INVALID_VIRTUAL_CALL;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

@@ -77,7 +77,7 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
 	    pe_size = peSizeK;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -276,7 +276,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
 	{
 	y2mil( "pe_map:" << pe_map );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -399,7 +399,7 @@ bool PeContainer::checkCreateConstraints()
 	    }
 	ret = true;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

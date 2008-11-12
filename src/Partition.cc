@@ -301,7 +301,7 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
 	}
     else
 	ret = Volume::setFormat( val, new_fs );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -313,7 +313,7 @@ int Partition::changeMount( const string& val )
 	ret = VOLUME_MOUNT_EXTENDED_UNSUPPORTED;
     else
 	ret = Volume::changeMount( val );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

@@ -77,7 +77,7 @@ DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
 	ret = disk->createPartition( type, start, len, device, checkRelaxed );
     if( ret==0 )
 	ret = addNewDev( device );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -92,7 +92,7 @@ DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed 
 	ret = disk->createPartition( len, device, checkRelaxed );
     if( ret==0 )
 	ret = addNewDev( device );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -107,7 +107,7 @@ DmPartCo::createPartition( storage::PartitionType type, string& device )
 	ret = disk->createPartition( type, device );
     if( ret==0 )
 	ret = addNewDev( device );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -163,7 +163,7 @@ DmPartCo::removePartition( unsigned nr )
 	}
     if( ret==0 )
 	ret = updateDelDev();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -182,7 +182,7 @@ DmPartCo::removeVolume( Volume* v )
     if( ret==0 )
 	ret = updateDelDev();
     getStorage()->logCo( this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -212,7 +212,7 @@ int DmPartCo::resizePartition( DmPart* dm, unsigned long newCyl )
 	dm->updateSize();
 	}
     y2mil( "dm:" << *dm );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -241,7 +241,7 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 	{
 	l->updateSize();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -445,7 +445,7 @@ int DmPartCo::destroyPartitionTable( const string& new_label )
 	getStorage()->setRecursiveRemoval(save);
 	del_ptable = true;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -456,7 +456,7 @@ int DmPartCo::changePartitionId( unsigned nr, unsigned id )
 	{
 	ret = disk->changePartitionId( nr, id );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -467,7 +467,7 @@ int DmPartCo::forgetChangePartitionId( unsigned nr )
 	{
 	ret = disk->forgetChangePartitionId( nr );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -496,7 +496,7 @@ int DmPartCo::changePartitionArea( unsigned nr, unsigned long start,
 	if( findDm( nr, i ))
 	    i->updateSize();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -542,7 +542,7 @@ int DmPartCo::doSetType( DmPart* dm )
 	    }
 	ret = disk->doSetType( p );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -564,7 +564,7 @@ int DmPartCo::doCreateLabel()
 	handleWholeDevice();
 	getStorage()->waitForDevice();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -597,7 +597,7 @@ DmPartCo::removeDmPart()
 	{
 	unuseDev();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -684,7 +684,7 @@ int DmPartCo::commitChanges( CommitStage stage, Volume* vol )
         else
             ret = DMPART_INVALID_VOLUME;
         }
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -702,7 +702,7 @@ int DmPartCo::commitChanges( CommitStage stage )
 	}
     else
 	ret = DMPART_COMMIT_NOTHING_TODO;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -769,7 +769,7 @@ DmPartCo::doCreate( Volume* v )
 	if( p->type()!=EXTENDED )
 	    getStorage()->waitForDevice( l->device() );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -817,7 +817,7 @@ int DmPartCo::doRemove( Volume* v )
 	}
     if( ret==0 )
 	getStorage()->waitForDevice();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -870,7 +870,7 @@ int DmPartCo::doResize( Volume* v )
 	}
     if( ret==0 && remount )
 	ret = l->mount();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

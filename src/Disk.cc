@@ -1310,7 +1310,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
     getStorage()->logCo( this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1347,7 +1347,7 @@ int Disk::createPartition( PartitionType type, string& device )
 	}
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1480,7 +1480,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1556,7 +1556,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	{
 	part->changeRegion( start, len, cylinderToKb(len) );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1654,7 +1654,7 @@ int Disk::removePartition( unsigned nr )
 	    }
 	}
     getStorage()->logCo( this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1714,7 +1714,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	getStorage()->setRecursiveRemoval(save);
 	setDeleted( true );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1740,7 +1740,7 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
 	{
 	i->changeId( id );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1766,7 +1766,7 @@ int Disk::forgetChangePartitionId( unsigned nr )
 	{
 	i->unChangeId();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1804,7 +1804,7 @@ int Disk::commitChanges( CommitStage stage, Volume* vol )
 	else
 	    ret = DISK_SET_TYPE_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1818,7 +1818,7 @@ int Disk::commitChanges( CommitStage stage )
 	}
     else
 	ret = DISK_COMMIT_NOTHING_TODO;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1895,7 +1895,7 @@ int Disk::doCreateLabel()
 	redetectGeometry();
 	}
     gpt_enlarge = false;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2040,7 +2040,7 @@ int Disk::doSetType( Volume* v )
 	{
 	ret = DISK_SET_TYPE_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2332,7 +2332,7 @@ int Disk::doCreate( Volume* v )
 	{
 	ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2382,7 +2382,7 @@ int Disk::doRemove( Volume* v )
 	{
 	ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2485,7 +2485,7 @@ int Disk::resizeVolume( Volume* v, unsigned long long newSize )
 	    ret = DISK_CHECK_RESIZE_INVALID_VOLUME;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2589,7 +2589,7 @@ int Disk::doResize( Volume* v )
 	{
 	ret = DISK_RESIZE_PARTITION_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

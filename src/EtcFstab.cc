@@ -280,7 +280,7 @@ int EtcFstab::changeRootPrefix( const string& prfix )
 	else
 	    ret = FSTAB_CHANGE_PREFIX_IMPOSSIBLE;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -383,7 +383,7 @@ int EtcFstab::updateEntry( const FstabChange& entry )
 	i->nnew = entry;
 	}
     int ret = (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -806,7 +806,7 @@ int EtcFstab::flush()
     printFile( prefix + "/fstab" );
     printFile( prefix + "/cryptotab" );
     printFile( prefix + "/crypttab" );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

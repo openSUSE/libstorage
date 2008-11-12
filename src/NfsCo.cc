@@ -78,7 +78,7 @@ NfsCo::removeVolume( Volume* v )
 	else
 	    nfs->setDeleted();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -106,7 +106,7 @@ NfsCo::doRemove( Volume* v )
 	{
 	ret = NFS_REMOVE_INVALID_VOLUME;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

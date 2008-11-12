@@ -1340,7 +1340,7 @@ Storage::removePartition( const string& partition )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1397,7 +1397,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1503,7 +1503,7 @@ Storage::changePartitionId( const string& partition, unsigned id )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1578,7 +1578,7 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1633,7 +1633,7 @@ Storage::forgetChangePartitionId( const string& partition )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1779,7 +1779,7 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1821,7 +1821,7 @@ Storage::initializeDisk( const string& disk, bool value )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1870,7 +1870,7 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1898,7 +1898,7 @@ Storage::changeLabelVolume( const string& device, const string& label )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1922,7 +1922,7 @@ Storage::eraseLabelVolume( const string& device )
 	{
 	ret = STORAGE_VOLUME_NOT_FOUND;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1950,7 +1950,7 @@ Storage::changeMkfsOptVolume( const string& device, const string& opts )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1978,7 +1978,7 @@ Storage::changeTunefsOptVolume( const string& device, const string& opts )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2006,7 +2006,7 @@ Storage::changeDescText( const string& device, const string& txt )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2034,7 +2034,7 @@ Storage::changeMountPoint( const string& device, const string& mount )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2054,7 +2054,7 @@ Storage::getMountPoint( const string& device, string& mount )
 	{
 	ret = STORAGE_VOLUME_NOT_FOUND;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2083,7 +2083,7 @@ Storage::changeMountBy( const string& device, MountByType mby )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2138,7 +2138,7 @@ Storage::changeFstabOptions( const string& device, const string& options )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2193,7 +2193,7 @@ Storage::addFstabOptions( const string& device, const string& options )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2227,7 +2227,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2262,7 +2262,7 @@ Storage::setCryptType( const string& device, bool val, EncryptType typ )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2313,7 +2313,7 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2341,7 +2341,7 @@ Storage::forgetCryptPassword( const string& device )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2369,7 +2369,7 @@ Storage::getCryptPassword( const string& device, string& pwd )
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     y2milestone( "password:%s", pwd.c_str() );
 #endif
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2397,7 +2397,7 @@ Storage::setIgnoreFstab( const string& device, bool val )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2464,7 +2464,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2492,7 +2492,7 @@ Storage::forgetResizeVolume( const string& device )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2530,7 +2530,7 @@ Storage::removeVolume( const string& device )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2577,7 +2577,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2606,7 +2606,7 @@ Storage::removeLvmVg( const string& name )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2636,7 +2636,7 @@ Storage::extendLvmVg( const string& name, const deque<string>& devs )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2666,7 +2666,7 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2716,7 +2716,7 @@ Storage::removeLvmLvByDevice( const string& device )
 	ret = removeLvmLv( vg, name );
     else
 	ret = STORAGE_LVM_INVALID_DEVICE;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2743,7 +2743,7 @@ Storage::removeLvmLv( const string& vg, const string& name )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2772,7 +2772,7 @@ Storage::changeLvStripeCount( const string& vg, const string& name,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2801,7 +2801,7 @@ Storage::changeLvStripeSize( const string& vg, const string& name,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -2942,7 +2942,7 @@ Storage::createMd( const string& name, MdType rtype,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3022,7 +3022,7 @@ int Storage::removeMd( const string& name, bool destroySb )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3052,7 +3052,7 @@ int Storage::extendMd( const string& name, const string& dev )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3082,7 +3082,7 @@ int Storage::shrinkMd( const string& name, const string& dev )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3112,7 +3112,7 @@ int Storage::changeMdType( const string& name, MdType rtype )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3142,7 +3142,7 @@ int Storage::changeMdChunk( const string& name, unsigned long chunk )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3172,7 +3172,7 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3187,7 +3187,7 @@ int Storage::checkMd( const string& name )
 	ret = md->checkMd(num);
     else
 	ret = STORAGE_MD_NOT_FOUND;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3328,7 +3328,7 @@ Storage::addNfsDevice( const string& nfsDev, const string& opts,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3468,7 +3468,7 @@ Storage::modifyFileLoop( const string& device, const string& lname,
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3494,7 +3494,7 @@ Storage::removeFileLoop( const string& lname, bool removeFile )
 	{
 	ret = checkCache();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3779,7 +3779,7 @@ int Storage::commit()
 	i->setFstabAdded(false);
     if( ret!=0 )
 	dumpObjectList();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3875,7 +3875,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    logProcData();
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3922,7 +3922,7 @@ bool Storage::removeDmMapsTo( const string& dev )
 	d->triggerUdevUpdate();
 	}
     waitForDevice();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -3959,7 +3959,7 @@ bool Storage::checkDmMapsTo( const string& dev )
 	    ret = ret && dm->mapsTo( dev );
 	++v;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -4614,7 +4614,7 @@ bool Storage::removeDmTable( const string& table )
 	c.execute(DMSETUPBIN " table | grep " + quote(table));
 	logProcData();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5183,7 +5183,7 @@ int Storage::removeContainer( Container* val, bool call_del )
 	{
 	ret = STORAGE_CONTAINER_NOT_FOUND;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5277,7 +5277,7 @@ Storage::umountDevice( const string& device )
 	    ret = true;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5308,7 +5308,7 @@ Storage::mountDev( const string& device, const string& mp, bool ro,
 	}
     else
 	ret = false;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5358,7 +5358,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     delete fstab;
     infos = vil;
     ret = !infos.empty();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5575,7 +5575,7 @@ Storage::createBackupState( const string& name )
 	    }
 	}
     y2mil( "states:" << backupStates() );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     if( ret==0 )
 	y2milestone( "comp:%d", equalBackupStates( name, "", true ));
     return( ret );
@@ -5604,7 +5604,7 @@ Storage::removeBackupState( const string& name )
 	    deleteBackups();
 	}
     y2mil( "states:" << backupStates() );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5630,7 +5630,7 @@ Storage::restoreBackupState( const string& name )
 	else
 	    ret = STORAGE_BACKUP_STATE_NOT_FOUND;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5642,7 +5642,7 @@ Storage::checkBackupState( const string& name )
     y2milestone( "name:%s", name.c_str() );
     map<string,CCont>::iterator i = backups.find( name );
     ret = i!=backups.end();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5709,7 +5709,7 @@ Storage::equalBackupStates( const string& lhs, const string& rhs,
 	    ++i;
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5792,7 +5792,7 @@ int Storage::addFstabEntry( const string& device, const string& mount,
 	    ret = fstab->flush();
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -5836,7 +5836,7 @@ int Storage::waitForDevice( const string& device ) const
 	}
     if( !exist )
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 

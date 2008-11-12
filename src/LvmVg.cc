@@ -85,7 +85,7 @@ LvmVg::removeVg()
 	{
 	unuseDev();
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -164,7 +164,7 @@ LvmVg::extendVg( const list<string>& devs )
     if( ret==0 )
 	checkConsistency();
     y2mil( "this:" << *this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -214,7 +214,7 @@ LvmVg::reduceVg( const list<string>& devs )
     if( ret==0 )
 	checkConsistency();
     y2mil( "this:" << *this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -239,7 +239,7 @@ LvmVg::setPeSize( long long unsigned peSizeK )
 		}
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -361,7 +361,7 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     }
     if( ret==0 )
 	checkConsistency();
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -415,7 +415,7 @@ LvmVg::removeLv( const string& name )
 	else
 	    i->setDeleted( true );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -467,7 +467,7 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
 		free_pe -= i->getLe();
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -503,7 +503,7 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 	{
 	i->setStripeSize( stripeSize );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -961,7 +961,7 @@ int LvmVg::commitChanges( CommitStage stage )
 	    ret = LVM_COMMIT_NOTHING_TODO;
 	    break;
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1191,7 +1191,7 @@ LvmVg::doCreateVg()
 	    checkCreateConstraints();
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1221,7 +1221,7 @@ LvmVg::doRemoveVg()
 	    setDeleted( false );
 	    }
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1273,7 +1273,7 @@ LvmVg::doExtendVg()
     if( devs.size()>0 )
 	checkCreateConstraints();
     y2mil( "this:" << *this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1317,7 +1317,7 @@ LvmVg::doReduceVg()
 	++d;
 	}
     y2mil( "this:" << *this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1370,7 +1370,7 @@ LvmVg::doCreate( Volume* v )
 	}
     else
 	ret = LVM_CREATE_LV_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1414,7 +1414,7 @@ int LvmVg::doRemove( Volume* v )
     else
 	ret = LVM_REMOVE_LV_INVALID_VOLUME;
     y2mil( "this:" << *this );
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1483,7 +1483,7 @@ int LvmVg::doResize( Volume* v )
 	}
     else
 	ret = LVM_RESIZE_LV_INVALID_VOLUME;
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -1520,7 +1520,7 @@ int LvmVg::doCreatePv( const string& device )
 	ret = LVM_CREATE_PV_FAILED;
 	setExtError( c );
 	}
-    y2milestone( "ret:%d", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
