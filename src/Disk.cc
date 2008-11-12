@@ -2789,7 +2789,7 @@ bool Disk::equalContent( const Container& rhs ) const
 
 Disk& Disk::operator= ( const Disk& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     cyl = rhs.cyl;
     head = rhs.head;
     sector = rhs.sector;
@@ -2816,7 +2816,7 @@ Disk& Disk::operator= ( const Disk& rhs )
 
 Disk::Disk( const Disk& rhs ) : Container(rhs)
     {
-    y2debug( "constructed disk by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed disk by copy constructor from " << rhs.nm);
     *this = rhs;
     ConstPartPair p = rhs.partPair();
     for( ConstPartIter i = p.begin(); i!=p.end(); ++i )

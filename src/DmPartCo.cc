@@ -1055,7 +1055,7 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 
 DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
     {
-    y2debug( "constructed DmPartCo by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed DmPartCo by copy constructor from " << rhs.nm);
     active = rhs.active;
     valid = rhs.valid;
     del_ptable = rhs.del_ptable;

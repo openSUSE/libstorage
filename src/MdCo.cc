@@ -777,7 +777,7 @@ bool MdCo::equalContent( const Container& rhs ) const
 
 MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
     {
-    y2debug( "constructed MdCo by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed MdCo by copy constructor from " << rhs.nm);
     *this = rhs;
     this->tab = NULL;
     ConstMdPair p = rhs.mdPair();

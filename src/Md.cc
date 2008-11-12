@@ -662,7 +662,7 @@ void Md::logDifference( const Md& rhs ) const
 
 Md& Md::operator= ( const Md& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Volume*)this) = rhs;
     md_type = rhs.md_type;
     md_parity = rhs.md_parity;

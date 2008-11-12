@@ -607,7 +607,7 @@ string Dm::stringDifference( const Dm& rhs ) const
 
 Dm& Dm::operator= ( const Dm& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Volume*)this) = rhs;
     num_le = rhs.num_le;
     stripe = rhs.stripe;

@@ -340,7 +340,7 @@ void LvmLv::logDifference( const LvmLv& rhs ) const
 
 LvmLv& LvmLv::operator= ( const LvmLv& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Dm*)this) = rhs;
     vol_uuid = rhs.vol_uuid;
     status = rhs.status;

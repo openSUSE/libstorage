@@ -426,7 +426,7 @@ bool DmCo::equalContent( const Container& rhs ) const
 
 DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
     {
-    y2debug( "constructed DmCo by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed DmCo by copy constructor from " << rhs.nm);
     ConstDmPair p = rhs.dmPair();
     for( ConstDmIter i = p.begin(); i!=p.end(); ++i )
 	{

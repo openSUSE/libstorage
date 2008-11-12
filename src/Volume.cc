@@ -3056,7 +3056,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 
 Volume& Volume::operator= ( const Volume& rhs )
     {
-    y2debug( "operator= from %s", rhs.dev.c_str() );
+    y2deb("operator= from " << rhs.dev);
     dev = rhs.dev;
     numeric = rhs.numeric;
     num = rhs.num;

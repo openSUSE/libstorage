@@ -656,7 +656,7 @@ bool Partition::equalContent( const Partition& rhs ) const
 
 Partition& Partition::operator= ( const Partition& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Volume*)this) = rhs;
     reg = rhs.reg;
     bootflag = rhs.bootflag;

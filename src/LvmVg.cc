@@ -1689,7 +1689,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
 
 LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
     {
-    y2debug( "constructed LvmVg by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed LvmVg by copy constructor from " << rhs.nm);
     status = rhs.status;
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;

@@ -400,7 +400,7 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 
 Container& Container::operator= ( const Container& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     typ = rhs.typ;
     nm = rhs.nm;
     dev = rhs.dev;
@@ -417,7 +417,7 @@ Container& Container::operator= ( const Container& rhs )
 
 Container::Container( const Container& rhs ) : sto(rhs.sto)
     {
-    y2debug( "constructed cont by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed cont by copy constructor from " << rhs.nm);
     *this = rhs;
     }
 

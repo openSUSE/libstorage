@@ -628,7 +628,7 @@ int Dasd::initializeDisk( bool value )
 
 Dasd& Dasd::operator= ( const Dasd& rhs )
     {
-    y2debug( "operator= from %s", rhs.nm.c_str() );
+    y2deb("operator= from " << rhs.nm);
     *((Disk*)this) = rhs;
     fmt = rhs.fmt;
     return( *this );
@@ -637,7 +637,7 @@ Dasd& Dasd::operator= ( const Dasd& rhs )
 Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
     {
     fmt = DASDF_NONE;
-    y2debug( "constructed dasd by copy constructor from %s", rhs.nm.c_str() );
+    y2deb("constructed dasd by copy constructor from " << rhs.nm);
     }
 
 namespace storage
