@@ -212,7 +212,7 @@ unsigned Loop::major()
 void Loop::getLoopMajor()
     {
     loop_major = getMajorDevices( "loop" );
-    y2milestone( "loop_major:%u", loop_major );
+    y2mil("loop_major:" << loop_major);
     }
 
 string Loop::loopDeviceName( unsigned num )

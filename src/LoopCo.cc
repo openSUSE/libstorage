@@ -52,7 +52,7 @@ LoopCo::init()
 void
 LoopCo::getLoopData( ProcPart& ppart )
     {
-    y2milestone( "begin" );
+    y2mil("begin");
     list<FstabEntry> l;
     EtcFstab* fstab = getStorage()->getFstab();
     fstab->getFileBasedLoops( getStorage()->root(), l );
