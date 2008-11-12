@@ -104,11 +104,15 @@ const string& Volume::mountDevice() const
 	return( is_loop?loop_dev:dev );
     }
 
-storage::MountByType Volume::defaultMountBy( const string& mp )
-    {
+
+storage::MountByType
+Volume::defaultMountBy(const string& mp)
+{
     MountByType mb = cont->getStorage()->getDefaultMountBy();
     y2mil( "mby:" << mb_names[mb] << " type:" << cType() );
     if( cType()!=DISK && (mb==MOUNTBY_ID || mb==MOUNTBY_PATH) )
+	mb = MOUNTBY_DEVICE;
+    if (cType() == NFSC && mb != MOUNTBY_DEVICE)
 	mb = MOUNTBY_DEVICE;
     if( mp=="swap" && mb==MOUNTBY_UUID )
 	mb = MOUNTBY_DEVICE;
@@ -120,14 +124,18 @@ storage::MountByType Volume::defaultMountBy( const string& mp )
 	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
 	mb = MOUNTBY_DEVICE;
     y2mil( "dev:" << dev << " mp:" << mp << " mby:" << mb_names[mb] );
-    return( mb );
-    }
+    return mb;
+}
 
-bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
-    {
+
+bool 
+Volume::allowedMountBy(storage::MountByType mby, const string& mp)
+{
     bool ret = true;
     if( (cType()!=DISK && (mby==MOUNTBY_ID || mby==MOUNTBY_PATH)) ||
         (mp=="swap" && mby==MOUNTBY_UUID ) )
+	ret = false;
+    if (cType() == NFSC && mby != MOUNTBY_DEVICE)
 	ret = false;
     if( (mby==MOUNTBY_PATH && udevPath().empty()) ||
 	(mby==MOUNTBY_ID && udevId().empty()) )
@@ -136,8 +144,9 @@ bool Volume::allowedMountBy( storage::MountByType mby, const string& mp )
         (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL) )
 	ret = false;
     y2mil( "mby:" << mb_names[mby] << " mp:" << mp << " ret:" << ret );
-    return( ret );
-    }
+    return ret;
+}
+
 
 void Volume::init()
     {
