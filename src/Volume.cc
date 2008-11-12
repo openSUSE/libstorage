@@ -110,7 +110,7 @@ Volume::defaultMountBy(const string& mp)
 {
     MountByType mb = cont->getStorage()->getDefaultMountBy();
     y2mil( "mby:" << mb_names[mb] << " type:" << cType() );
-    if( cType()!=DISK && (mb==MOUNTBY_ID || mb==MOUNTBY_PATH) )
+    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
 	mb = MOUNTBY_DEVICE;
     if (cType() == NFSC && mb != MOUNTBY_DEVICE)
 	mb = MOUNTBY_DEVICE;
@@ -128,12 +128,14 @@ Volume::defaultMountBy(const string& mp)
 }
 
 
+// TODO: allowedMountBy is never used
 bool 
 Volume::allowedMountBy(storage::MountByType mby, const string& mp)
 {
     bool ret = true;
-    if( (cType()!=DISK && (mby==MOUNTBY_ID || mby==MOUNTBY_PATH)) ||
-        (mp=="swap" && mby==MOUNTBY_UUID ) )
+    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
+	ret = false;
+    if (mp == "swap" && mby == MOUNTBY_UUID)
 	ret = false;
     if (cType() == NFSC && mby != MOUNTBY_DEVICE)
 	ret = false;
@@ -533,10 +535,12 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
     return( ret );
     }
 
-int Volume::changeMount( const string& m )
-    {
+
+int
+Volume::changeMount(const string& m)
+{
     int ret = 0;
-    y2milestone( "device:%s mount:%s", dev.c_str(), m.c_str() );
+    y2mil("device:" << dev << " mount:" << m);
     if( (!m.empty() && m[0]!='/' && m!="swap") ||
 	m.find_first_of( " \t\n" ) != string::npos )
 	{
@@ -559,14 +563,16 @@ int Volume::changeMount( const string& m )
 	    mount_by = defaultMountBy(m);
 	*/
 	}
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
+    y2mil("ret:" << ret);
+    return ret;
+}
 
-int Volume::changeMountBy( MountByType mby )
-    {
+
+int
+Volume::changeMountBy(MountByType mby)
+{
     int ret = 0;
-    y2milestone( "device:%s mby:%s", dev.c_str(), mbyTypeString(mby).c_str() );
+    y2mil("device:" << dev << " mby:" << mbyTypeString(mby));
     y2mil( "vorher:" << *this );
     if( uby.type() != UB_NONE )
 	{
@@ -588,7 +594,8 @@ int Volume::changeMountBy( MountByType mby )
 	    }
 	else if( mby == MOUNTBY_ID || mby == MOUNTBY_PATH )
 	    {
-	    if (cType() != DISK)
+	    // TODO: why not use allowedMountBy()?
+	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH)
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME;
 	    }
 	if( ret==0 )
@@ -596,9 +603,10 @@ int Volume::changeMountBy( MountByType mby )
 	}
     y2mil( "nachher:" << *this );
     y2mil( "needFstabUdpate:" << needFstabUpdate() );
-    y2milestone( "ret:%d", ret );
-    return( ret );
-    }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
 
 void Volume::updateFstabOptions()
     {
