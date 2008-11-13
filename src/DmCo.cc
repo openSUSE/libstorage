@@ -114,7 +114,7 @@ DmCo::getDmData( ProcPart& ppart )
     Storage::ConstDmraidPair dmr = getStorage()->dmrPair();
     Storage::ConstDmmultipathCoPair dmmco = getStorage()->dmmultipathCoPair();
     Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
-    y2milestone( "begin" );
+    y2mil("begin");
     SystemCmd c(DMSETUPBIN " ls | grep \"(.*)\"" );
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
@@ -222,7 +222,7 @@ DmCo::addDm( Dm* m )
 	addToList( m );
     else
 	{
-	y2warning( "addDm already exists %u", m->nr() );
+	y2war("addDm already exists " << m->nr());
 	delete m;
 	}
     }
@@ -265,7 +265,7 @@ int
 DmCo::removeDm( const string& tname )
     {
     int ret = 0;
-    y2milestone( "tname:%s", tname.c_str() );
+    y2mil("tname:" << tname);
     DmIter i;
     if( readonly() )
 	{
@@ -305,7 +305,7 @@ DmCo::removeDm( const string& tname )
 int DmCo::removeVolume( Volume* v )
     {
     int ret = 0;
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Dm * m = dynamic_cast<Dm *>(v);
     if( m != NULL )
 	ret = removeDm( m->getTableName() );
@@ -317,7 +317,7 @@ int DmCo::removeVolume( Volume* v )
 int 
 DmCo::doRemove( Volume* v )
     {
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Dm * m = dynamic_cast<Dm *>(v);
     int ret = 0;
     if( m != NULL )
@@ -436,7 +436,4 @@ DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
     }
 
 
-
-
 void DmCo::logData( const string& Dir ) {;}
-

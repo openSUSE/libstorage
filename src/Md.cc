@@ -21,10 +21,9 @@ using namespace std;
 Md::Md( const MdCo& d, unsigned PNr, MdType Type,
         const list<string>& devices ) : Volume( d, PNr, 0 )
     {
-    y2debug( "constructed md %s on container %s", dev.c_str(),
-	     cont->name().c_str() );
+    y2deb("constructed md " << dev << " on container " << cont->name());
     if( d.type() != MD )
-	y2error( "constructed md with wrong container" );
+	y2err("constructed md with wrong container");
     init();
     md_type = Type;
     for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
@@ -37,7 +36,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
     if( d.type() != MD )
-	y2error( "constructed md with wrong container" );
+	y2err("constructed md with wrong container");
     init();
     if( mdStringNum( extractNthWord( 0, line1 ), num ))
 	{
@@ -83,7 +82,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	if( tmp=="(read-only)" || tmp=="(auto-read-only)" || tmp=="inactive" )
 	    {
 	    setReadonly();
-	    y2warning( "readonly or inactive md device %d", nr() );
+	    y2war("readonly or inactive md device " << nr());
 	    line.erase( 0, pos );
 	    boost::trim_left(line, locale::classic());
 	    }
@@ -99,7 +98,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     md_type = toMdType( tmp );
     if( md_type == RAID_UNK )
 	{
-	y2warning( "unknown raid type %s", tmp.c_str() );
+	y2war("unknown raid type " << tmp);
 	}
     if( (pos=line.find_first_of( app_ws ))!=string::npos )
 	line.erase( 0, pos );
@@ -154,7 +153,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 		md_parity = RIGHT_SYMMETRIC;
 		break;
 	    default:
-		y2warning( "unknown parity %s", line2.substr( pos ).c_str() );
+		y2war("unknown parity " << line2.substr(pos));
 		break;
 	    }
 	}
@@ -209,7 +208,7 @@ Md::addDevice( const string& dev, bool to_spare )
 	    computeSize();
 	    }
 	}
-    y2milestone( "dev:%s spare:%d ret:%d", dev.c_str(), to_spare, ret );
+    y2mil("dev:" << dev << " spare:" << to_spare << " ret:" << ret);
     return( ret );
     }
 
@@ -228,7 +227,7 @@ Md::removeDevice( const string& dev )
 	spare.erase(i);
     else
 	ret = MD_REMOVE_NONEXISTENT;
-    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    y2mil("dev:" << dev << " ret:" << ret);
     return( ret );
     }
 
@@ -248,8 +247,8 @@ Md::checkDevices()
 	    break;
 	}
     int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
-    y2milestone( "type:%d min:%u size:%zd ret:%d", md_type, nmin, devs.size(),
-                 ret );
+    y2mil("type:" << md_type << " min:" << nmin << " size:" << devs.size() <<
+	  " ret:" << ret);
     return( ret );
     }
 
@@ -297,7 +296,7 @@ Md::addSpareDevice( const string& dev )
     if( find( spare.begin(), spare.end(), d )!=spare.end() ||
         find( devs.begin(), devs.end(), d )!=devs.end() )
 	{
-	y2warning( "spare %s already present", dev.c_str() );
+	y2war("spare " << dev << " already present");
 	}
     else
 	spare.push_back(d);
@@ -340,7 +339,7 @@ string Md::mdadmLine() const
     {
     string line = "ARRAY " + device() + " level=" + pName();
     line += " UUID=" + md_uuid;
-    y2milestone( "line:%s", line.c_str() );
+    y2mil("line:" << line);
     return( line );
     }
 
@@ -562,9 +561,8 @@ unsigned Md::mdMajor()
 void Md::getMdMajor()
     {
     md_major = getMajorDevices( "md" );
-    y2milestone( "md_major:%u", md_major );
+    y2mil("md_major:" << md_major);
     }
-
 
 
 void Md::getInfo( MdInfo& tinfo ) const
