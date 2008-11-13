@@ -64,12 +64,12 @@ LoopCo::getLoopData( ProcPart& ppart )
 	    y2mil( "i:" << *i );
 	    string lfile = getStorage()->root() + i->device;
 	    if( findLoop( i->dentry ))
-		y2warning( "duplicate loop file %s", i->dentry.c_str() );
+		y2war("duplicate loop file " << i->dentry);
 	    else if( !i->loop_dev.empty() && Volume::loopInUse( getStorage(),
 								i->loop_dev ) )
-		y2warning( "duplicate loop_device %s", i->loop_dev.c_str() );
+		y2war("duplicate loop_device " << i->loop_dev);
 	    else if( !checkNormalFile( lfile ))
-		y2warning( "file %s not existent or special", lfile.c_str() );
+		y2war("not existent or special file " << lfile);
 	    else
 		{
 		Loop *l = new Loop( *this, i->loop_dev, lfile,
@@ -178,8 +178,8 @@ LoopCo::createLoop( const string& file, bool reuseExisting,
                     unsigned long long sizeK, bool dmcr, string& device )
     {
     int ret = 0;
-    y2milestone( "file:%s reuseEx:%d sizeK:%llu dmcr:%d", file.c_str(),
-                 reuseExisting, sizeK, dmcr );
+    y2mil("file:" << file << " reuse:" << reuseExisting << " sizeK:" <<
+	  sizeK << " dmcr:" << dmcr);
     if( readonly() )
 	{
 	ret = LOOP_CHANGE_READONLY;
@@ -205,8 +205,8 @@ LoopCo::updateLoop( const string& device, const string& file,
                     bool reuseExisting, unsigned long long sizeK )
     {
     int ret = 0;
-    y2milestone( "device:%s file:%s reuse:%d sizeK:%lld", device.c_str(),
-                 file.c_str(), reuseExisting, sizeK );
+    y2mil("device:" << device << " reuse:" << reuseExisting << " sizeK:" <<
+	  sizeK);
     LoopIter i;
     if( readonly() )
 	{
@@ -236,7 +236,7 @@ int
 LoopCo::removeLoop( const string& file, bool removeFile )
     {
     int ret = 0;
-    y2milestone( "file:%s removeFile:%d", file.c_str(), removeFile );
+    y2mil("file:" << file << " removeFile:" << removeFile);
     LoopIter i;
     if( readonly() )
 	{
@@ -271,7 +271,7 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 int LoopCo::removeVolume( Volume* v )
     {
     int ret = 0;
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Loop * l = dynamic_cast<Loop *>(v);
     if( l != NULL )
 	ret = removeLoop( l->loopFile(), false );
@@ -284,7 +284,7 @@ int LoopCo::removeVolume( Volume* v )
 int
 LoopCo::doCreate( Volume* v )
     {
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Loop * l = dynamic_cast<Loop *>(v);
     int ret = 0;
     if( l != NULL )
@@ -313,7 +313,7 @@ LoopCo::doCreate( Volume* v )
 int
 LoopCo::doRemove( Volume* v )
     {
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Loop * l = dynamic_cast<Loop *>(v);
     int ret = 0;
     if( l != NULL )

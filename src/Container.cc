@@ -97,16 +97,15 @@ int Container::getToCommit( CommitStage stage, list<Container*>& col,
 	    break;
 	}
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d stage:%d col:%zd vol:%zd", ret, stage,
-	             col.size(), vol.size());
+	y2mil("ret:" << ret << " stage:" << stage << " col:" << col.size() << " vol:" <<
+	      vol.size());
     return( ret );
     }
 
 int Container::commitChanges( CommitStage stage, Volume* vol )
     {
-    y2milestone( "name:%s stage %d vol:%s", name().c_str(), stage,
-                 vol->name().c_str() );
-    y2mil( "vol:" << *vol );
+    y2mil("name:" << name() << " stage:" << stage << " vol:" << vol->name());
+    y2mil("vol:" << *vol);
     int ret = 0;
     switch( stage )
 	{
@@ -149,7 +148,7 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 
 int Container::commitChanges( CommitStage stage )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name " << name() << " stage " << stage);
     int ret = CONTAINER_INVALID_VIRTUAL_CALL;
     y2mil("ret:" << ret);
     return( ret );
@@ -196,37 +195,33 @@ string Container::removeText( bool doing ) const
     }
 
 int Container::doCreate( Volume * v )
-    {
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
-               name().c_str() );
+{
+    y2war("invalid container:" << type_names[typ] << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
-    }
+}
 
 int Container::doRemove( Volume * v )
-    {
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
-               name().c_str() );
+{
+    y2war("invalid container:" << type_names[typ] << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
-    }
+}
 
 int Container::doResize( Volume * v )
-    {
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
-               name().c_str() );
+{
+    y2war("invalid container:" << type_names[typ] << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
-    }
+}
 
 int Container::removeVolume( Volume * v )
-    {
-    y2warning( "invalid Container:%s name:%s", type_names[typ].c_str(),
-               name().c_str() );
+{
+    y2war("invalid container:" << type_names[typ] << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
-    }
+}
 
 int Container::resizeVolume( Volume * v, unsigned long long )
-    {
+{
     return( VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER );
-    }
+}
 
 bool Container::removeFromList( Volume* e )
     {
