@@ -482,48 +482,50 @@ Storage::detectLvmVgs()
 
 
 void
-Storage::detectDmraid( ProcPart& ppart )
-    {
+Storage::detectDmraid(ProcPart& ppart)
+{
     if( test() )
-	{
+    {
 	glob_t globbuf;
 	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
 	          &globbuf) == 0)
-	    {
-	    // TODO: load test data
-	    }
- 	globfree (&globbuf);
-	}
-    else if( getenv( "YAST2_STORAGE_NO_DMRAID" )==NULL )
 	{
+	    // TODO: load test data
+	}
+ 	globfree (&globbuf);
+    }
+    else if( getenv( "YAST2_STORAGE_NO_DMRAID" )==NULL )
+    {
 	list<string> l;
-	DmraidCo::getRaids( l );
-	map<string, list<string>> by_id;
-	if( !l.empty() )
+	DmraidCo::getRaids(l);
+	if (!l.empty())
+	{
+	    map<string, list<string>> by_id;
 	    getUdevMap("/dev/disk/by-id", by_id);
-	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-	    DmraidCo * v = new DmraidCo( this, *i, ppart );
-	    if( v->isValid() )
+		DmraidCo * v = new DmraidCo( this, *i, ppart );
+		if( v->isValid() )
 		{
-		list<string> nm = by_id["dm-"+decString(v->minorNr())];
-		if( !nm.empty() )
-		    v->setUdevData( nm );
-		addToList( v );
+		    list<string> nm = by_id["dm-"+decString(v->minorNr())];
+		    if( !nm.empty() )
+			v->setUdevData( nm );
+		    addToList( v );
 		}
-	    else
+		else
 		{
-		y2milestone( "inactive DMRAID %s", i->c_str() );
-		v->unuseDev();
-		delete( v );
+		    y2milestone( "inactive DMRAID %s", i->c_str() );
+		    v->unuseDev();
+		    delete( v );
 		}
 	    }
 	}
     }
+}
 
 
 void
-Storage::detectDmmultipath( ProcPart& ppart )
+Storage::detectDmmultipath(ProcPart& ppart)
 {
     if( test() )
     {
@@ -538,25 +540,27 @@ Storage::detectDmmultipath( ProcPart& ppart )
     else if( getenv( "YAST2_STORAGE_NO_DMMULTIPATH" )==NULL )
     {
 	list<string> l;
-	DmmultipathCo::getMultipaths( l );
-	map<string, list<string>> by_id;
-	if( !l.empty() )
-	    getUdevMap("/dev/disk/by-id", by_id);
-	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	DmmultipathCo::getMultipaths(l);
+	if (!l.empty())
 	{
-	    DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
-	    if( v->isValid() )
+	    map<string, list<string>> by_id;
+	    getUdevMap("/dev/disk/by-id", by_id);
+	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		list<string> nm = by_id["dm-"+decString(v->minorNr())];
-		if( !nm.empty() )
-		    v->setUdevData( nm );
-		addToList( v );
-	    }
-	    else
-	    {
-		y2mil("inactive DMMULTIPATH " << *i);
-		v->unuseDev();
-		delete v;
+		DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
+		if( v->isValid() )
+		{
+		    list<string> nm = by_id["dm-"+decString(v->minorNr())];
+		    if (!nm.empty())
+			v->setUdevData( nm );
+		    addToList( v );
+		}
+		else
+		{
+		    y2mil("inactive DMMULTIPATH " << *i);
+		    v->unuseDev();
+		    delete v;
+		}
 	    }
 	}
     }
