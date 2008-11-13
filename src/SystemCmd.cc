@@ -102,9 +102,8 @@ SystemCmd::executeRestricted( const string& Command_Cv,
 			      long unsigned MaxTimeSec,
 			      long unsigned MaxLineOut,
 			      bool& ExceedTime, bool& ExceedLines )
-    {
-    y2milestone( "cmd:%s MaxTime:%lu MaxLines:%lu", Command_Cv.c_str(),
-                 MaxTimeSec, MaxLineOut );
+{
+    y2mil("cmd:" << Command_Cv << " MaxTime:" << MaxTimeSec << " MaxLines:" << MaxLineOut);
     ExceedTime = ExceedLines = false;
     int ret = executeBackground( Command_Cv );
     unsigned long ts = 0;
@@ -157,10 +156,9 @@ SystemCmd::executeRestricted( const string& Command_Cv,
 	}
     else
 	Ret_i = ret;
-    y2milestone( "ret:%d ExceedTime:%d ExceedLines:%d", ret, ExceedTime,
-                 ExceedLines );
+    y2mil("ret:" << ret << " ExceedTime:" << ExceedTime << " ExceedLines:" << ExceedLines);
     return ret;
-    }
+}
 
 
 #define PRIMARY_SHELL "/bin/sh"
@@ -180,7 +178,7 @@ SystemCmd::doExecute( string Cmd )
 	{
 	output_proc->reset();
 	}
-    y2debug( "Cmd:%s", Cmd.c_str() );
+    y2deb("Cmd:" << Cmd);
 
     File_aC[IDX_STDERR] = File_aC[IDX_STDOUT] = NULL;
     invalidate();
@@ -297,15 +295,15 @@ SystemCmd::doExecute( string Cmd )
     else
 	{
 	Ret_i = 0;
-	y2milestone( "TESTMODE would execute \"%s\"", Cmd.c_str() );
+	y2mil("TESTMODE would execute \"" << Cmd << "\"");
 	}
     if( Ret_i==-127 || Ret_i==-1 )
 	{
-	y2error("system (%s) = %d", Cmd.c_str(), Ret_i);
+	y2err("system (\"" << Cmd << "\") = " << Ret_i);
 	}
     if( !testmode )
 	checkOutput();
-    y2milestone( "system() Returns:%d", Ret_i );
+    y2mil("system() Returns:" << Ret_i);
     if( Ret_i!=0 )
 	logOutput();
     return Ret_i;
@@ -376,7 +374,7 @@ SystemCmd::getString( unsigned Idx_iv ) const
     {
     if( Idx_iv > 1 )
 	{
-	y2error("invalid index %d", Idx_iv );
+	y2err("invalid index " << Idx_iv);
 	}
     if( !Valid_ab[Idx_iv] )
 	{
@@ -402,7 +400,7 @@ SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
 
     if( Idx_iv > 1 )
 	{
-	y2error("invalid index %d", Idx_iv );
+	y2err("invalid index " << Idx_iv);
 	}
     if( Sel_bv )
 	{
@@ -412,7 +410,7 @@ SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
 	{
 	Ret_ii = Lines_aC[Idx_iv].size();
 	}
-    y2debug("ret:%u", Ret_ii );
+    y2deb("ret:" << Ret_ii);
     return Ret_ii;
     }
 
@@ -423,7 +421,7 @@ SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
 
     if( Idx_iv > 1 )
 	{
-	y2error("invalid index %d", Idx_iv );
+	y2err("invalid index " << Idx_iv);
 	}
     if( Sel_bv )
 	{
@@ -454,7 +452,7 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
 
     if( Idx_iv > 1 )
 	{
-	y2error("invalid index %d", Idx_iv );
+	y2err("invalid index " << Idx_iv);
 	}
     BeginOfLine_bi = Search_Ci.length()>0 && Search_Ci[0]=='^';
     if( BeginOfLine_bi )
@@ -579,11 +577,10 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	{
 	NewLine_br = true;
 	}
-    y2debug( "Text_Ci:%s NewLine:%d", Text_Ci.c_str(), NewLine_br );
+    y2deb("Text_Ci:" << Text_Ci << " NewLine:" << NewLine_br);
     if( old_size != Lines_Cr.size() )
 	{
-	y2milestone( "pid:%d added lines:%zd stderr:%d", Pid_i,
-	             Lines_Cr.size()-old_size, Stderr_bv );
+	y2mil("pid:" << Pid_i << " added lines:" << Lines_Cr.size() - old_size << " stderr:" << Stderr_bv);
 	}
     }
 
@@ -629,12 +626,13 @@ SystemCmd::addLine(string Text_Cv, vector<string>& Lines_Cr)
 
 void
 SystemCmd::logOutput() const
-    {
-    for( unsigned i=0; i<numLines(false,IDX_STDERR); ++i )
-	y2milestone( "stderr:%s", getLine( i, false, IDX_STDERR )->c_str() );
-    for( unsigned i=0; i<numLines(); ++i )
-	y2milestone( "stderr:%s", getLine( i )->c_str() );
-    }
+{
+    for (unsigned i = 0; i < numLines(false, IDX_STDERR); ++i)
+	y2mil("stderr:" << *getLine(i, false, IDX_STDERR));
+    for (unsigned i = 0; i < numLines(false, IDX_STDOUT); ++i)
+	y2mil("stdout:" << *getLine(i, false, IDX_STDOUT));
+}
+
 
 ///////////////////////////////////////////////////////////////////
 //
