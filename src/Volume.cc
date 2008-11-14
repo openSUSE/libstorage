@@ -687,7 +687,7 @@ int Volume::doFormat()
     static int fcount=1000;
     int ret = 0;
     bool needMount = false;
-    y2milestone( "device:%s", dev.c_str() );
+    y2mil("device:" << dev);
     if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( formatText(true) );
@@ -1202,13 +1202,18 @@ int Volume::resizeFs()
 	switch( fs )
 	    {
 	    case SWAP:
-		cmd = "/sbin/mkswap " + quote(mountDevice());
-		c.execute( cmd );
+		cmd = "/sbin/mkswap";
+		if (!label.empty())
+		    cmd += " -L " + quote(label);
+		if (!uuid.empty())
+		    cmd += " -U " + quote(uuid);
+		cmd += " " + quote(mountDevice());	
+		c.execute(cmd);
 		if( c.retcode()!=0 )
 		    ret = VOLUME_RESIZE_FAILED;
 		break;
 	    case REISERFS:
-		cmd = "resize_reiserfs -f ";
+		cmd = "/sbin/resize_reiserfs -f ";
 		if( needShrink() )
 		    {
 		    cmd = "echo y | " + cmd;
@@ -1223,7 +1228,7 @@ int Volume::resizeFs()
 		    }
 		break;
 	    case NTFS:
-		cmd = "echo y | ntfsresize -f ";
+		cmd = "echo y | /usr/sbin/ntfsresize -f ";
 		if( needShrink() )
 		    cmd += "-s " + decString(size_k) + "k ";
 		cmd += quote(mountDevice());
@@ -1238,7 +1243,7 @@ int Volume::resizeFs()
 		break;
 	    case EXT2:
 	    case EXT3:
-		cmd = "resize2fs -f " + quote(mountDevice());
+		cmd = "/sbin/resize2fs -f " + quote(mountDevice());
 		if( needShrink() )
 		    cmd += " " + decString(size_k) + "K";
 		c.execute( cmd );
@@ -1264,7 +1269,7 @@ int Volume::resizeFs()
 		    }
 		if( ret==0 )
 		    {
-		    cmd = "xfs_growfs " + quote(mpoint);
+		    cmd = "/sbin/xfs_growfs " + quote(mpoint);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
@@ -1992,8 +1997,7 @@ int Volume::doSetLabel()
     int ret = 0;
     bool remount = false;
     FsCapabilities caps;
-    y2milestone( "device:%s mp:%s label:%s",  dev.c_str(), mp.c_str(),
-                 label.c_str() );
+    y2mil("device:" << dev << " mp:" << mp << " label:" << label);
     if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( labelText(true) );
@@ -2039,7 +2043,10 @@ int Volume::doSetLabel()
 		}
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap -L " + quote(label) + " " + quote(mountDevice());
+		cmd = "/sbin/mkswap -L " + quote(label);
+		if (!uuid.empty())
+		    cmd += " -U " + quote(uuid);
+		cmd += " " + quote(mountDevice());
 		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
