@@ -5455,24 +5455,24 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    }
 		if( ret && vol->getFs()==NTFS )
 		    {
-		    SystemCmd c( "ntfsresize -f -i " + quote(device));
+		    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(device));
 		    string fstr = " might resize at ";
 		    string::size_type pos;
 		    if( c.retcode()==0 &&
 			(pos=c.getString()->find( fstr ))!=string::npos )
 			{
-			y2milestone( "pos %zd", pos );
+			y2mil("pos:" << pos);
 			pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
-			y2milestone( "pos %zd", pos );
+			y2mil("pos:" << pos);
 			string number = c.getString()->substr( pos,
 							       c.getString()->find_first_not_of( "0123456789", pos ));
-			y2milestone( "number \"%s\"", number.c_str() );
+			y2mil("number:\"" << number << "\"");
 			unsigned long long t;
 			number >> t;
-			y2milestone( "number %llu", t );
+			y2mil("number:" << t);
 			if( t-vol->sizeK()<resize_free )
 			    resize_free = t-vol->sizeK();
-			y2milestone( "resize_free %llu", t );
+			y2mil("resize_free:" << t);
 			}
 		    else
 			ret = false;
