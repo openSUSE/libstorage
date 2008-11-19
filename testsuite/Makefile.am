@@ -36,4 +36,3 @@ md_create_single_LDADD = ../src/liby2storage.la
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak
-

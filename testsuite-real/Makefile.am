@@ -20,4 +20,3 @@ lvmextend1_LDADD = ../src/liby2storage.la
 
 lvmextend2_SOURCES = lvmextend2.cc
 lvmextend2_LDADD = ../src/liby2storage.la
-
