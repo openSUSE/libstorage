@@ -38,5 +38,9 @@ main()
     test("fr_FR.UTF-8", 123456789, true, 4, false);
     test("fr_FR.UTF-8", 123456789, false, 4, false);
 
+    test("en_GB.UTF-8", 1000*1024, false, 2, false);
+    test("de_DE.UTF-8", 1000*1024, false, 2, false);
+    test("fr_FR.UTF-8", 1000*1024, false, 2, false);
+
     delete s;
 }

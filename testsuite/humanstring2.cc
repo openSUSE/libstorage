@@ -34,12 +34,12 @@ main()
 {
     s = createStorageInterface(true, true, false);
 
-    test("en_GB.UTF-8", "42", true);
+    test("en_GB.UTF-8", "42", true);			// FAILS: classic=true needs a suffix
     test("en_GB.UTF-8", "42B", true);
-    test("en_GB.UTF-8", "42 B", true);
+    test("en_GB.UTF-8", "42 b", true);
 
     test("en_GB.UTF-8", "42", false);
-    test("en_GB.UTF-8", "42B", false);
+    test("en_GB.UTF-8", "42b", false);
     test("en_GB.UTF-8", "42 B", false);
 
     test("en_GB.UTF-8", "12.4GB", true);
