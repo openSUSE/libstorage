@@ -11,7 +11,9 @@ INCLUDES = -I$(top_srcdir)/libstorage/src
 AM_CPPFLAGS =
 AM_CXXFLAGS =
 
-noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single lvm_create.single lvm_extend.single md_create.single
+noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
+	lvm_create.single lvm_extend.single md_create.single			\
+	humanstring1.single humanstring2.single
 
 partition1_single_SOURCES = partition1.cc
 partition1_single_LDADD = ../src/liby2storage.la
@@ -33,6 +35,12 @@ lvm_extend_single_LDADD = ../src/liby2storage.la
 
 md_create_single_SOURCES = md_create.cc
 md_create_single_LDADD = ../src/liby2storage.la
+
+humanstring1_single_SOURCES = humanstring1.cc
+humanstring1_single_LDADD = ../src/liby2storage.la
+
+humanstring2_single_SOURCES = humanstring2.cc
+humanstring2_single_LDADD = ../src/liby2storage.la
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak
