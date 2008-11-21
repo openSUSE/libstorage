@@ -610,7 +610,7 @@ byteToHumanString(unsigned long long size, bool classic, int precision, bool omi
 {
     const locale loc = classic ? locale::classic() : locale();
 
-    double f = (double)(size);
+    double f = size;
     int i = 0;
 
     while (f >= 1024.0 && i + 1 < numSuffixes())
@@ -640,24 +640,31 @@ humanStringToByte(const string& str, bool classic, unsigned long long& size)
 {
     const locale loc = classic ? locale::classic() : locale();
 
-    istringstream s(boost::trim_copy(str, loc));
-    s.imbue(loc);
+    const string str_trimmed = boost::trim_copy(str, loc);
 
-    double f;
-    string suffix;
-    s >> f;
-    if (!s.eof()) s >> suffix;
-
-    if (s.fail() || !s.eof() || f < 0.0)
-	return false;
-
+    double f = 1.0;
+    
     for (int i = 0; i < numSuffixes(); i++)
     {
-	if (boost::equals(suffix, getSuffix(i, classic, false), boost::is_iequal(loc)) ||
-	    (!classic && boost::equals(suffix, getSuffix(i, classic, true), boost::is_iequal(loc))))
+	for (int j = 0; j < (classic ? 1 : 2); j++)
 	{
-	    size = f;
-	    return true;
+	    string suffix = getSuffix(i, classic, j != 0);
+	    if (boost::iends_with(str_trimmed, suffix, loc))
+	    {
+		string number = str_trimmed.substr(0, str_trimmed.size() - suffix.size());
+
+		istringstream s(boost::trim_copy(number, loc));
+		s.imbue(loc);
+
+		double g;
+		s >> g;
+
+		if (!s.fail() && s.eof() && g >= 0.0)
+		{
+		    size = g * f;
+		    return true;
+		}
+	    }
 	}
 
 	f *= 1024.0;
