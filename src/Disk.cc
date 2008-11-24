@@ -1051,6 +1051,20 @@ bool Disk::needP( const string& disk )
     return( need_p );
     }
 
+
+string
+Disk::partNaming(const string& disk)
+{
+    // TODO: this is hackish
+    if (boost::starts_with(disk, "/dev/mapper/"))
+	return "_part";
+    else if (needP(disk))
+	return "p";
+    else
+	return "";
+}
+
+
 string Disk::getPartName( const string& disk, unsigned nr )
     {
     return( disk + (Disk::needP(disk)?"p":"") + decString(nr) );

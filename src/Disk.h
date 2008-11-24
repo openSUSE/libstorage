@@ -58,6 +58,7 @@ class Disk : public Container
 	void triggerUdevUpdate() const;
 
 	static bool needP( const string& dev );
+	static string partNaming(const string& disk);
 	void setUdevData(const string& path, const list<string>& id);
 	virtual int createPartition( storage::PartitionType type, long unsigned start,
 				     long unsigned len, string& device,

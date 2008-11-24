@@ -63,7 +63,7 @@ void Volume::setNameDev()
     std::ostringstream Buf_Ci;
     classic(Buf_Ci);
     if( numeric )
-	Buf_Ci << cont->device() << (Disk::needP(cont->device())?"p":"") << num;
+	Buf_Ci << cont->device() << Disk::partNaming(cont->device()) << num;
     else
 	Buf_Ci << cont->device() << "/" << nm;
     dev = Buf_Ci.str();
