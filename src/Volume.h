@@ -37,8 +37,8 @@ class Volume
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	bool silent() const { return silnt; }
-	virtual const std::list<string> udevId() const { return(empty_slist); }
-	virtual const string& udevPath() const { return(empty_string); }
+	virtual const std::list<string> udevId() const { return empty_slist; }
+	virtual const string& udevPath() const { return empty_string; }
 	virtual string sysfsPath() const; 
 	void setDeleted( bool val=true ) { del=val; }
 	void setCreated( bool val=true ) { create=val; }
@@ -285,8 +285,9 @@ class Volume
 	static string mb_names[storage::MOUNTBY_PATH+1];
 	static string enc_names[storage::ENC_UNKNOWN+1];
 	static string tmp_mount[3];
-	static string empty_string;
-	static std::list<string> empty_slist;
+
+	static const string empty_string;
+	static const std::list<string> empty_slist;
 
 	mutable storage::VolumeInfo info;
     };

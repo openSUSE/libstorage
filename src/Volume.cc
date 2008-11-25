@@ -3130,6 +3130,6 @@ string Volume::enc_names[] = { "none", "twofish256", "twofish",
 
 string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
 
-string Volume::empty_string;
-list<string> Volume::empty_slist;
+const string Volume::empty_string;
+const list<string> Volume::empty_slist;
 
