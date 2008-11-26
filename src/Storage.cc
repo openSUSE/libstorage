@@ -3427,7 +3427,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	{
 	ret = vol->setEncryption( true );
 	}
-    if( ret==0 and !mp.empty() )
+    if( ret==0 && !mp.empty() )
 	{
 	ret = vol->changeMount( mp );
 	}
