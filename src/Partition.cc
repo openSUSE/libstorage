@@ -177,21 +177,31 @@ void Partition::changeNumber( unsigned new_num )
 	}
     }
 
-void Partition::changeId( unsigned new_id )
+
+int
+Partition::changeId(unsigned new_id)
+{
+    int ret = 0;
+    if (new_id == 0)
     {
-    if( new_id!=idt )
-	{
+	ret = DISK_INVALID_PARTITION_ID;
+    }
+    if (ret == 0 && new_id != idt)
+    {
 	if( orig_id==idt )
-	    {
+	{
 	    orig_id = idt;
-	    }
+	}
 	idt = new_id;
 	if( created() )
-	    {
+	{
 	    orig_id = idt;
-	    }
 	}
     }
+    y2mil("ret:" << ret);
+    return ret;
+}
+
 
 void Partition::changeIdDone()
     {

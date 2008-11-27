@@ -46,7 +46,7 @@ class Partition : public Volume
 	void changeRegion( unsigned long Start, unsigned long CSize,
 	                   unsigned long long SizeK );
 	void changeNumber( unsigned new_num );
-	void changeId( unsigned id );
+	int changeId(unsigned id);
 	void changeIdDone();
 	void unChangeId();
 	string removeText( bool doing=true ) const;

@@ -1732,9 +1732,11 @@ int Disk::destroyPartitionTable( const string& new_label )
     return( ret );
     }
 
-int Disk::changePartitionId( unsigned nr, unsigned id )
-    {
-    y2milestone( "begin nr:%u id:%x", nr, id );
+
+int
+Disk::changePartitionId(unsigned nr, unsigned id)
+{
+    y2mil("begin nr:" << nr << " id:0x" << hex << id);
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
@@ -1752,11 +1754,12 @@ int Disk::changePartitionId( unsigned nr, unsigned id )
 	}
     if( ret==0 )
 	{
-	i->changeId( id );
+	ret = i->changeId( id );
 	}
     y2mil("ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
+
 
 int Disk::forgetChangePartitionId( unsigned nr )
     {
