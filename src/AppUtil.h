@@ -69,6 +69,8 @@ void logMsgVaArgs(LogLevel level, const char* file, unsigned line,
 		  const char* func, const char* format, ...)
     __attribute__ ((format(printf, 5, 6)));
 
+void prepareLogStream(std::ostringstream& s);
+    
 #define y2debug(format, ...) \
     logMsgVaArgs(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
 #define y2milestone(format, ...) \
@@ -88,7 +90,7 @@ void logMsgVaArgs(LogLevel level, const char* file, unsigned line,
 	if (storage::testLogLevel(level))				\
 	{								\
 	    std::ostringstream __buf;					\
-	    storage::classic(__buf);					\
+	    storage::prepareLogStream(__buf);				\
 	    __buf << op;						\
 	    storage::logMsg(level, file, line, function, __buf.str());	\
 	}								\

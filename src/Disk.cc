@@ -1736,7 +1736,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 int
 Disk::changePartitionId(unsigned nr, unsigned id)
 {
-    y2mil("begin nr:" << nr << " id:0x" << hex << id);
+    y2mil("begin nr:" << nr << " id:" << hex << id);
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();

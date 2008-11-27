@@ -377,6 +377,14 @@ testLogLevel(LogLevel level)
 
 
 void
+prepareLogStream(std::ostringstream& s)
+{
+    s.imbue(std::locale::classic());
+    s.setf(std::ios::showbase);
+}
+
+
+void
 logMsg(LogLevel level, const char* file, unsigned line, const char* func,
        const string& str)
 {
@@ -643,7 +651,7 @@ humanStringToByte(const string& str, bool classic, unsigned long long& size)
     const string str_trimmed = boost::trim_copy(str, loc);
 
     double f = 1.0;
-    
+
     for (int i = 0; i < numSuffixes(); i++)
     {
 	for (int j = 0; j < (classic ? 1 : 2); j++)
