@@ -5657,12 +5657,12 @@ struct equal_co
     const Container* const c;
     };
 
+
 bool
-Storage::equalBackupStates( const string& lhs, const string& rhs,
-                            bool verbose_log ) const
-    {
-    y2milestone( "lhs:%s rhs:%s verbose:%d", lhs.c_str(), rhs.c_str(),
-                 verbose_log );
+Storage::equalBackupStates(const string& lhs, const string& rhs,
+			   bool verbose_log) const
+{
+    y2mil("lhs:" << lhs << " rhs:" << rhs << " verbose:" << verbose_log);
     map<string,CCont>::const_iterator i;
     const CCont* l = NULL;
     const CCont* r = NULL;
@@ -5704,7 +5704,7 @@ Storage::equalBackupStates( const string& lhs, const string& rhs,
 	while( (ret||verbose_log) && i!=r->end() )
 	    {
 	    j = find_if( l->begin(), l->end(), equal_co( *i ) );
-	    if( j==r->end() )
+	    if( j==l->end() )
 		{
 		ret = false;
 		if( verbose_log )
@@ -5714,8 +5714,9 @@ Storage::equalBackupStates( const string& lhs, const string& rhs,
 	    }
 	}
     y2mil("ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
+
 
 string
 Storage::backupStates() const
