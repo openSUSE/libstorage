@@ -472,7 +472,9 @@ void Volume::getFsData( SystemCmd& blkidData )
 	    i = m.find( "LABEL" );
 	    if( i != m.end() )
 		{
-		label = orig_label = i->second;
+		// ignore label for hfs since we cannot set it (bnc #447782)
+		if (fs != HFS)
+		    label = orig_label = i->second;
 		b << " label:\"" << label << "\"";
 		list<string>::iterator i = find_if( alt_names.begin(),
 		                                    alt_names.end(),
