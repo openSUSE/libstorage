@@ -5481,14 +5481,17 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		const char * files[] = { "boot.ini", "msdos.sys", "io.sys",
 				         "config.sys", "MSDOS.SYS", "IO.SYS",
 					 "bootmgr", "$Boot" };
-		string f;
 		unsigned i=0;
 		while( !win && i<lengthof(files) )
+		{
+		    string f = mp + "/" + files[i];
+		    if (access(f.c_str(), R_OK) == 0)
 		    {
-		    f = mp + "/" + files[i];
-		    win = access( f.c_str(), R_OK )==0;
-		    i++;
+			y2mil("found windows file " << quote(f));
+			win = true;
 		    }
+		    i++;
+		}
 		efi = vol->getFs()==VFAT && checkDir( mp + "/efi" );
 		if( efi )
 		    win = false;
