@@ -532,6 +532,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 		label.erase( caps.labelLength );
 		}
 	    }
+	uuid.erase();
 	}
     y2mil("ret:" << ret);
     return( ret );
