@@ -5870,7 +5870,7 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
 		    unsigned long long startK, unsigned long long endK)
 {
     y2mil("device:" << device << " sizeK:" << sizeK << " random:" << random <<
-	  "startK:" << startK << " endK:" << endK);
+	  " startK:" << startK << " endK:" << endK);
 
     int ret = 0;
 
