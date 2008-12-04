@@ -533,6 +533,18 @@ unsigned getMajorDevices( const string& driver )
     }
 
 
+string escapeHtml(const string& str)
+{
+    string ret = str;  
+    boost::replace_all(ret, "&", "&amp;");
+    boost::replace_all(ret, "<", "&lt;");
+    boost::replace_all(ret, ">", "&gt;");
+    boost::replace_all(ret, "\"", "&quot;");
+    boost::replace_all(ret, "'", "&apos;");
+    return ret;
+}
+
+
 string sformat(const char* format, ...)
 {
     char* result;
