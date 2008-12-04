@@ -749,7 +749,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	}
     else
 	{
-	y2war("Failed to open:" SYSFSDIR);
+	y2err("Failed to open:" SYSFSDIR);
 	}
     }
 
