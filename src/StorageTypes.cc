@@ -61,10 +61,10 @@ bool commitAction::operator<( const commitAction& rhs ) const
 
 	    case UB_LVM:
 	    case UB_MD:
-	    case UB_DMRAID:
 		return "/dev/" + ub_name;
 
 	    case UB_DM:
+	    case UB_DMRAID:
 	    case UB_DMMULTIPATH:
 		return "/dev/mapper/" + ub_name;
 	}
