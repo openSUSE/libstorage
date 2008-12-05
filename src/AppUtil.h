@@ -47,8 +47,6 @@ void undevDevice( string& dev );
 bool isNfsDev( const string& dev );
 unsigned getMajorDevices( const string& driver );
 
-string escapeHtml(const string& str);
-
 
 template<class StreamType>
 void classic(StreamType& stream)
