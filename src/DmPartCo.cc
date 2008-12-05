@@ -40,29 +40,39 @@ DmPartCo::~DmPartCo()
     y2deb("destructed DmPart co " << dev);
     }
 
-int DmPartCo::addNewDev( string& device )
-    {
+
+int
+DmPartCo::addNewDev(string& device)
+{
     int ret = 0;
-    unsigned number;
-    device.substr( dev.length() ) >> number;
-    y2mil( "device:" << device << " dev:" << dev << " num:" << number );
-    device = "/dev/mapper/" + numToName(number);
-    Partition *p = getPartition( number, false );
-    if( p==NULL )
+    y2mil("device:" << device << " dev:" << dev);
+    string::size_type pos = device.rfind("_part");
+    if (pos == string::npos)
 	ret = DMPART_PARTITION_NOT_FOUND;
     else
+    {
+	unsigned number;
+	device.substr(pos + 5) >> number;
+	y2mil("num:" << number);
+	device = "/dev/mapper/" + numToName(number);
+	Partition *p = getPartition( number, false );
+	if( p==NULL )
+	    ret = DMPART_PARTITION_NOT_FOUND;
+	else
 	{
-	y2mil( "*p:" << *p );
-	DmPart * dm = NULL;
-	newP( dm, p->nr(), p );
-	dm->getFsInfo( p );
-	dm->setCreated();
-	addToList( dm );
+	    y2mil("*p:" << *p);
+	    DmPart * dm = NULL;
+	    newP( dm, p->nr(), p );
+	    dm->getFsInfo( p );
+	    dm->setCreated();
+	    addToList( dm );
 	}
-    handleWholeDevice();
-    y2mil( "device:" << device << " ret:" << ret );
-    return( ret );
+	handleWholeDevice();
     }
+    y2mil("device:" << device << " ret:" << ret);
+    return ret;
+}
+
 
 int 
 DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
