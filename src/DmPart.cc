@@ -105,8 +105,10 @@ static string udevCompleteIdPath( const string& s, unsigned nr )
     return( "/dev/disk/by-id/" + s + "_part" + decString(nr) );
     }
 
-void DmPart::addAltUdevId( unsigned num )
-    {
+
+void
+DmPart::addAltUdevId( unsigned num )
+{
     list<string>::iterator i = alt_names.begin();
     while( i!=alt_names.end() )
 	{
@@ -121,7 +123,23 @@ void DmPart::addAltUdevId( unsigned num )
 	alt_names.push_back( udevCompleteIdPath( *j, num ));
 	++j;
 	}
+    mount_by = orig_mount_by = defaultMountBy();
+}
+
+
+const std::list<string>
+DmPart::udevId() const
+{
+    list<string> ret;
+    for (list<string>::const_iterator i = alt_names.begin(); 
+	 i != alt_names.end(); i++)
+    {
+	if (i->find("/by-id/") != string::npos)
+	    ret.push_back(*i);
     }
+    return ret;
+}
+
 
 void DmPart::getCommitActions( std::list<storage::commitAction*>& l ) const
     {

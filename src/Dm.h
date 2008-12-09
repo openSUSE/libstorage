@@ -41,6 +41,7 @@ class Dm : public Volume
 	string sysfsPath() const;
 	void updateMajorMinor();
 
+	virtual const std::list<string> udevId() const { return Volume::udevId(); }
 	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual string removeText( bool doing ) const;

@@ -32,6 +32,7 @@ class DmPart : public Dm
 	void updateSize();
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	void addUdevData();
+	virtual const std::list<string> udevId() const;
 	virtual string setTypeText( bool doing=true ) const;
 	static bool notDeleted( const DmPart& l ) { return( !l.deleted() ); }
 
