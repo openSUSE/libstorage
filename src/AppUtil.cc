@@ -478,12 +478,9 @@ getUdevLinks(const char* path)
 	    string tmp;
 	    if (readlink(full.c_str(), tmp) != -1)
 	    {
-		string::size_type pos = tmp.find_last_of('/');
+		string::size_type pos = tmp.find_first_not_of("./");
 		if (pos != string::npos)
-		    links[entry->d_name] = tmp.substr(pos + 1);
-		else
-		    y2war("ignoring strange udev link \"" << entry->d_name <<
-			  "\" -> \"" << tmp << "\" in \"" << path << "\"");
+		    links[entry->d_name] = tmp.substr(pos);
 	    }
 	}
 	closedir(dir);
