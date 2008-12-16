@@ -20,12 +20,13 @@ void installInfoCb( const string& info )
     }
 
 void
-printCommitActions( StorageInterface* s )
-    {
-    deque<string> l = s->getCommitActions( false );
-    for( deque<string>::iterator i=l.begin(); i!=l.end(); ++i )
-	cout << *i << endl;
-    }
+printCommitActions(StorageInterface* s)
+{
+    list<CommitInfo> l;
+    s->getCommitInfos(l);
+    for (list<CommitInfo>::iterator i=l.begin(); i!=l.end(); ++i)
+	cout << i->text << endl;
+}
 
 int doCommit( StorageInterface* s )
     {

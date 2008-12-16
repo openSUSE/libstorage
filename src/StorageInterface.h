@@ -105,7 +105,7 @@ namespace storage
     enum MountByType { MOUNTBY_DEVICE, MOUNTBY_UUID, MOUNTBY_LABEL, MOUNTBY_ID, MOUNTBY_PATH };
 
     enum EncryptType { ENC_NONE, ENC_TWOFISH, ENC_TWOFISH_OLD,
-                       ENC_TWOFISH256_OLD, ENC_LUKS, ENC_UNKNOWN };
+		       ENC_TWOFISH256_OLD, ENC_LUKS, ENC_UNKNOWN };
 
     enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
 
@@ -115,30 +115,31 @@ namespace storage
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH,
-                 COTYPE_LAST_ENTRY };
+		 COTYPE_LAST_ENTRY };
 
     /**
-     * typedef for a pointer to a function that is called on progress bar events
+     * typedef for a pointer to a function that is called on progress bar
+     * events.
      */
     typedef void (*CallbackProgressBar)( const string& id, unsigned cur, unsigned max );
 
     /**
-     * typedef for a pointer to a function that is called with strings
-     * telling the user what is currently going on
+     * typedef for a pointer to a function that is called with strings telling
+     * the user what is currently going on.
      */
     typedef void (*CallbackShowInstallInfo)( const string& id );
 
     /**
-     * typedef for a pointer to a function that displays a popup with
-     * the given text and waits for user confirmation
+     * typedef for a pointer to a function that displays a popup with the
+     * given text and waits for user confirmation.
      */
     typedef void (*CallbackInfoPopup)( const string& text );
 
     /**
-     * typedef for a pointer to a function that displays a popup with
-     * the given text and two buttons labels "Yes" and "No". The user
-     * has to press on of these buttons. If he presses "Yes" true is
-     * returned, false otherwise.
+     * typedef for a pointer to a function that displays a popup with the
+     * given text and two buttons labels "Yes" and "No". The user
+     * has to press on of these buttons. If he presses "Yes" true is returned,
+     * false otherwise.
      */
     typedef bool (*CallbackYesNoPopup)( const string& text );
 
@@ -456,8 +457,9 @@ namespace storage
      */
     struct CommitInfo
     {
+	CommitInfo() {}
 	bool destructive;
-	deque<string> actions;
+	string text;
     };
 
 
@@ -1321,8 +1323,8 @@ namespace storage
 
 	/**
 	 * Sets the value of description text.
-	 * This text will be returned together with the text returned by 
-	 * getCommitInfo().
+	 * This text will be returned together with the text returned by
+	 * getCommitInfos().
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param txt description text for this partition
@@ -1833,25 +1835,11 @@ namespace storage
 	virtual int removeDmraid( const string& name ) = 0;
 
 	/**
-	 * Gets a list of string describing the actions to be executed
-	 * after next call to commit().
-	 *
-	 * Deprecated, use getCommitInfo().
-	 * 
-	 * @param mark_destructive if true use &lt;red&gt; around &lt;/red&gt;
-	 *    destructive actions (like e.g. deletion, formatting, ...)
-	 * @return list of strings presentable to the user
-	 */
-	virtual deque<string> getCommitActions(bool mark_destructive) const = 0;
-
-	/**
 	 * Gets info about actions to be executed after next call to commit().
 	 *
-	 * @param mark_destructive if true use &lt;red&gt; around &lt;/red&gt;
-	 *    destructive actions (like e.g. deletion, formatting, ...)
-	 * @param info record that gets filled with data
+	 * @param infos list of records that gets filled with infos
 	 */
-	virtual void getCommitInfo(bool mark_destructive, CommitInfo& info) const = 0;
+	virtual void getCommitInfos(list<CommitInfo>& infos) const = 0;
 
 	/**
 	 * Gets action performed last during previous call to commit()

@@ -445,8 +445,7 @@ class Storage : public storage::StorageInterface
 
 	int removeDmraid( const string& name );
 
-	deque<string> getCommitActions( bool mark_destructive ) const;
-	void getCommitInfo(bool mark_destructive, CommitInfo& info) const;
+	void getCommitInfos(list<CommitInfo>& infos) const;
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );

@@ -3538,21 +3538,11 @@ int Storage::checkCache()
     }
 
 
-deque<string> 
-Storage::getCommitActions(bool mark_destructive) const
-{
-    CommitInfo info;
-    getCommitInfo(mark_destructive, info);
-    return info.actions;
-}
-
-
 void
-Storage::getCommitInfo(bool mark_destructive, CommitInfo& info) const
+Storage::getCommitInfos(list<CommitInfo>& infos) const
 {
-    info.destructive = false;
-    info.actions.clear();
-    
+    static list<CommitInfo> s_infos;
+    s_infos.clear();
     ConstContPair p = contPair();
     y2mil("empty:" << p.empty());
     if( !p.empty() )
@@ -3565,28 +3555,23 @@ Storage::getCommitInfo(bool mark_destructive, CommitInfo& info) const
 	    ac.splice( ac.end(), l );
 	}
 	ac.sort( cont_less<commitAction>() );
-	string txt;
 	for( list<commitAction*>::const_iterator i=ac.begin(); i!=ac.end(); ++i )
 	{
-	    if ((*i)->destructive)
-		info.destructive = true;
-	    txt.erase();
-	    if( mark_destructive && (*i)->destructive )
-		txt += "<font color=red>";
-	    txt += (*i)->descr;
+	    CommitInfo info;
+	    info.destructive = (*i)->destructive;
+	    info.text = (*i)->descr;
 	    const Volume *v = (*i)->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
-		txt += ". ";
-		txt += v->getDescText();
+		info.text += ". ";
+		info.text += v->getDescText();
 	    }
-	    if( mark_destructive && (*i)->destructive )
-		txt += "</font>";
-	    info.actions.push_back( txt );
+	    s_infos.push_back(info);
 	    delete *i;
 	}
     }
-    y2mil("destructive:" << info.destructive << " actions.size():" << info.actions.size());
+    infos = s_infos;
+    y2mil("infos.size:" << infos.size());
 }
 
 
