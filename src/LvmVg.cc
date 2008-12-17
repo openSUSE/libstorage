@@ -1020,14 +1020,14 @@ LvmVg::createVgText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
-	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
         txt = sformat( _("Creating volume group %1$s from %2$s"), name().c_str(),
 	               addList().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. system),
-	// %2$ is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
         txt = sformat( _("Create volume group %1$s from %2$s"), name().c_str(),
 	               addList().c_str() );
         }

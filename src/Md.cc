@@ -417,6 +417,7 @@ string Md::createText( bool doing ) const
     if( doing )
     {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 	txt = sformat(_("Creating software RAID %1$s from %2$s"), dev.c_str(), 
 		      boost::join(devs, " ").c_str());
     }
@@ -430,6 +431,7 @@ string Md::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
+		// %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 		txt = sformat(_("Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
 			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			      mp.c_str(), boost::join(devs, " ").c_str());
@@ -440,6 +442,7 @@ string Md::createText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
+		// %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 		txt = sformat(_("Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
 			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
 			      mp.c_str(), boost::join(devs, " ").c_str());
@@ -449,6 +452,7 @@ string Md::createText( bool doing ) const
 	{
 	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 	    txt = sformat(_("Create software RAID %1$s (%2$s) from %3$s"), dev.c_str(),
 			  sizeString().c_str(), boost::join(devs, " ").c_str());
 	}
