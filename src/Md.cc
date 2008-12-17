@@ -391,119 +391,120 @@ void Md::raidtabLines( list<string>& lines ) const
 	}
     }
 
+
 string Md::removeText( bool doing ) const
-    {
+{
     string txt;
-    string d = dev;
     if( doing )
-	{
+    {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	txt = sformat( _("Deleting software RAID %1$s"), d.c_str() );
-	}
+	txt = sformat(_("Deleting software RAID %1$s"), dev.c_str());
+    }
     else
-	{
+    {
 	// displayed text before action, %1$s is replaced by device name e.g. md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete software RAID %1$s (%2$s)"), d.c_str(),
-		       sizeString().c_str() );
-	}
-    return( txt );
+	txt = sformat(_("Delete software RAID %1$s (%2$s)"), dev.c_str(),
+		      sizeString().c_str());
     }
+    return txt;
+}
+
 
 string Md::createText( bool doing ) const
-    {
+{
     string txt;
-    string d = dev;
     if( doing )
-	{
+    {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	txt = sformat( _("Creating software RAID %1$s"), d.c_str() );
-	}
+	txt = sformat(_("Creating software RAID %1$s from %2$s"), dev.c_str(), 
+		      boost::join(devs, " ").c_str());
+    }
     else
-	{
+    {
 	if( !mp.empty() )
-	    {
+	{
 	    if( encryption==ENC_NONE )
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
-		}
-	    else
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
-		}
-	    }
-	else
 	    {
+		// displayed text before action, %1$s is replaced by device name e.g. md0
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str(), boost::join(devs, " ").c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. md0
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str(), boost::join(devs, " ").c_str());
+	    }
+	}
+	else
+	{
 	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create software RAID %1$s (%2$s)"),
-			   dev.c_str(), sizeString().c_str() );
-	    }
+	    txt = sformat(_("Create software RAID %1$s (%2$s) from %3$s"), dev.c_str(),
+			  sizeString().c_str(), boost::join(devs, " ").c_str());
 	}
-    return( txt );
     }
+    return txt;
+}
+
 
 string Md::formatText( bool doing ) const
-    {
+{
     string txt;
-    string d = dev;
     if( doing )
-	{
+    {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting software RAID %1$s (%2$s) with %3$s "),
-		       d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
-	}
+	txt = sformat(_("Formatting software RAID %1$s (%2$s) with %3$s "),
+		      dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+    }
     else
-	{
+    {
 	if( !mp.empty() )
-	    {
+	{
 	    if( encryption==ENC_NONE )
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
-	    else
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
-	    }
-	else
 	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
+	    }
+	}
+	else
+	{
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format software RAID %1$s (%2$s) with %3$s"),
-			   d.c_str(), sizeString().c_str(),
-			   fsTypeString().c_str() );
-	    }
+	    txt = sformat(_("Format software RAID %1$s (%2$s) with %3$s"),
+			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
 	}
-    return( txt );
     }
+    return txt;
+}
+
 
 MdType
 Md::toMdType( const string& val )
