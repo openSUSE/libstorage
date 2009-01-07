@@ -6,7 +6,7 @@
 #include <sys/mount.h>         /* for BLKGETSIZE */
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
 
-#include <iostream>
+#include <ostream>
 #include <string>
 #include <sstream>
 #include <iomanip>
@@ -188,19 +188,8 @@ Disk::setUdevData(const string& path, const list<string>& id)
     y2mil("disk:" << nm << " path:" << path << "id:" << id);
     udev_path = path;
     udev_id = id;
-
-    udev_id.erase(remove_if(udev_id.begin(), udev_id.end(), find_begin("edd-")), udev_id.end());
-
-    if( udev_id.size()>1 )
-	{
-	list<string>::iterator i = find_if( udev_id.begin(), udev_id.end(), find_begin( "ata-" ) );
-	if( i!=udev_id.end() && i!=udev_id.begin() )
-	    {
-	    string tmp = *i;
-	    udev_id.erase( i );
-	    udev_id.push_front(tmp);
-	    }
-	}
+    udev_id.remove_if(find_begin("edd-"));
+    partition(udev_id.begin(), udev_id.end(), find_begin("ata-"));
     y2mil("id:" << udev_id);
 
     PartPair pp = partPair();
