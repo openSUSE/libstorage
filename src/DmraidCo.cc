@@ -2,7 +2,7 @@
   Textdomain    "storage"
 */
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 
 #include "y2storage/DmraidCo.h"
@@ -79,8 +79,7 @@ DmraidCo::setUdevData( const list<string>& id )
 {
     y2mil("disk:" << nm << " id:" << id);
     udev_id = id;
-    udev_id.erase(remove_if(udev_id.begin(), udev_id.end(), find_begin("dm-")), udev_id.end());
-    udev_id.sort();
+    udev_id.remove_if(find_begin("dm-"));
     y2mil("id:" << udev_id);
 
     DmPartCo::setUdevData(udev_id);
