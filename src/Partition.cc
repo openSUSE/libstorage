@@ -119,16 +119,11 @@ void Partition::addUdevData()
            " orig:" << mbyTypeString(orig_mount_by) );
     }
 
+
 void Partition::addAltUdevId( unsigned num )
     {
-    list<string>::iterator i = alt_names.begin();
-    while( i!=alt_names.end() )
-	{
-	if( i->find( "/by-id/" ) != string::npos )
-	    i = alt_names.erase( i );
-	else
-	    ++i;
-	}
+    alt_names.remove_if(find_any("/by-id/"));
+
     list<string>::const_iterator j = disk()->udevId().begin();
     while( j!=disk()->udevId().end() )
 	{
@@ -137,19 +132,15 @@ void Partition::addAltUdevId( unsigned num )
 	}
     }
 
+
 void Partition::addAltUdevPath( unsigned num )
     {
-    list<string>::iterator i = alt_names.begin();
-    while( i!=alt_names.end() )
-	{
-	if( i->find( "/by-path/" ) != string::npos )
-	    i = alt_names.erase( i );
-	else
-	    ++i;
-	}
+    alt_names.remove_if(find_any("/by-path/"));
+
     if( !disk()->udevPath().empty() )
 	alt_names.push_back( udevCompletePathPath( disk()->udevPath(), num ));
     }
+
 
 void Partition::changeNumber( unsigned new_num )
     {

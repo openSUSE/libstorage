@@ -460,13 +460,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		{
 		uuid = i->second;
 		b << " uuid:" << uuid;
-		list<string>::iterator i = find_if( alt_names.begin(),
-		                                    alt_names.end(),
-		                                    find_any( "/by-uuid/" ) );
-		if( i!=alt_names.end() )
-		    {
-		    alt_names.erase(i);
-		    }
+		alt_names.remove_if(find_any("/by-uuid/"));
 		alt_names.push_back( "/dev/disk/by-uuid/" + uuid );
 		}
 	    i = m.find( "LABEL" );
@@ -476,13 +470,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		if (fs != HFS)
 		    label = orig_label = i->second;
 		b << " label:\"" << label << "\"";
-		list<string>::iterator i = find_if( alt_names.begin(),
-		                                    alt_names.end(),
-		                                    find_any( "/by-label/" ) );
-		if( i!=alt_names.end() )
-		    {
-		    alt_names.erase(i);
-		    }
+		alt_names.remove_if(find_any("/by-label/"));
 		alt_names.push_back( "/dev/disk/by-label/" + label );
 		}
 	    y2mil(b.str());
@@ -2147,10 +2135,9 @@ int Volume::mount( const string& m, bool ro )
 	list<string> l = splitString( fstab_opt, "," );
 	y2mil( "l before:" << l );
 	for( unsigned i=0; i<lengthof(ign_opt) && *ign_opt[i]!=0; i++ )
-	    l.erase( remove(l.begin(), l.end(), ign_opt[i]), l.end() );
+	    l.remove(ign_opt[i]);
 	for( unsigned i=0; i<lengthof(ign_beg) && *ign_beg[i]!=0; i++ )
-	    l.erase( remove_if(l.begin(), l.end(), find_begin(ign_beg[i])),
-	             l.end() );
+	    l.remove_if(find_begin(ign_beg[i]));
 	y2mil( "l  after:" << l );
 	string opts = " ";
 	if( !l.empty() )
