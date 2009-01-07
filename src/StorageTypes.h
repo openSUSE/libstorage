@@ -1,7 +1,8 @@
 #ifndef STORAGE_TYPES_H
 #define STORAGE_TYPES_H
 
-#include <iostream>
+#include <ostream>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/Regex.h"
 #include "y2storage/AppUtil.h"
@@ -130,13 +131,6 @@ private:
 };
 
 
-struct match_string
-    {
-    match_string(const string& t) : val(t) {}
-    bool operator()(const string&s) { return s == val; }
-    const string& val;
-    };
-
 struct match_regex
     {
     match_regex(const Regex& t) : r(t) {}
@@ -147,14 +141,14 @@ struct match_regex
 struct find_begin
     {
     find_begin(const string& t) : val(t) {}
-    bool operator()(const string&s) { return s.find(val) == 0; }
+    bool operator()(const string& s) { return boost::starts_with(s, val); }
     const string& val;
     };
 
 struct find_any
     {
     find_any(const string& t) : val(t) {}
-    bool operator()(const string&s) { return s.find(val) != string::npos; }
+    bool operator()(const string& s) { return boost::contains(s, val); }
     const string& val;
     };
 
