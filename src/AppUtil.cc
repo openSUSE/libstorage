@@ -99,6 +99,7 @@ void createPath(string Path_Cv)
   mkdir(Path_Ci.c_str(), 0777);
 }
 
+
 bool
 checkDir(string Path_Cv)
 {
@@ -108,23 +109,6 @@ checkDir(string Path_Cv)
 	  S_ISDIR(Stat_ri.st_mode));
 }
 
-bool
-checkSymlink(string Path_Cv)
-{
-  struct stat Stat_ri;
-
-  return (lstat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
-	  S_ISLNK(Stat_ri.st_mode));
-}
-
-bool
-checkBlockDevice(string Path_Cv)
-{
-  struct stat Stat_ri;
-
-  return (stat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
-	  S_ISBLK(Stat_ri.st_mode));
-}
 
 bool
 checkNormalFile(string Path_Cv)
@@ -134,6 +118,7 @@ checkNormalFile(string Path_Cv)
   return (stat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
 	  S_ISREG(Stat_ri.st_mode));
 }
+
 
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi)
   {
