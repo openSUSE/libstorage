@@ -2,11 +2,11 @@
   Textdomain    "storage"
 */
 
-#include <iostream>
 #include <stdio.h>
 
 #include <string>
 #include <sstream>
+#include <ostream>
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
 

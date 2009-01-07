@@ -2,7 +2,7 @@
   Textdomain    "storage"
 */
 
-#include <iostream>
+#include <ostream>
 #include <sstream>
 
 #include "y2storage/LoopCo.h"

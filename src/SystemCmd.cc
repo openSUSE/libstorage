@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <fcntl.h>
-#include <iostream>
+#include <ostream>
 #include <fstream>
 #include <sys/wait.h>
 

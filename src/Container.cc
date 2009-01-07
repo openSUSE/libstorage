@@ -2,7 +2,7 @@
   Textdomain    "storage"
 */
 
-#include <iostream>
+#include <ostream>
 #include <algorithm>
 #include <list>
 
