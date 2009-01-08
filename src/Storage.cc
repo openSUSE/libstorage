@@ -18,7 +18,6 @@
 #include <set>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 #include <boost/algorithm/string.hpp>
 
 #include "y2storage/Storage.h"
@@ -125,8 +124,8 @@ Storage::initialize()
     strncpy( tbuf, "/tmp/liby2storageXXXXXX", sizeof(tbuf)-1 );
     if( mkdtemp( tbuf )==NULL )
 	{
-	cerr << "tmpdir creation " << tbuf << " failed. Aborting..." << endl;
-	exit(1);
+	y2err("tmpdir creation " << tbuf << " failed. Aborting...");
+	exit(EXIT_FAILURE);
 	}
     else
 	{
