@@ -43,9 +43,9 @@ namespace storage
 	const string node2;
     };
 
-    string dotQuote(const string& s)
+    string dotQuote(const string& str)
     {
-	return '"' + s + '"';
+	return '"' + boost::replace_all_copy(str, "\"", "\\\"") + '"';
     }
 
     std::ostream& operator<<(std::ostream& s, const Node& node)
@@ -173,7 +173,7 @@ Storage::saveGraph(const string& filename)
 
     out << "digraph storage" << endl;
     out << "{" << endl;
-    out << "    node [ shape=rectangle ];" << endl;
+    out << "    node [shape=rectangle, style=filled];" << endl;
     out << endl;
 
     for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
@@ -186,7 +186,7 @@ Storage::saveGraph(const string& filename)
 	list<string> ids;
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
 	    if (node->rank == *rank)
-		ids.push_back(dotQuote(node->id) + ";");
+		ids.push_back(dotQuote(node->id));
 
 	if (!ids.empty())
 	    out << "    { rank=same; " << boost::join(ids, " ") << " };" << endl;
