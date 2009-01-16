@@ -15,7 +15,7 @@ using namespace storage;
 
 namespace storage
 {
-    enum Rank { RANK_DISK, RANK_PARTITION, RANK_LVMVG, RANK_LVMLV,
+    enum Rank { RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG, RANK_LVMLV,
 		RANK_MOUNTPOINT, RANK_NONE };
 
     struct Node
@@ -134,6 +134,33 @@ Storage::saveGraph(const string& filename)
 		}
 
 	    } break;
+
+	    case MD: {
+
+		deque<MdInfo> mds;
+		getMdInfo(mds);
+
+		for (deque<MdInfo>::iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
+		{
+		    Node md_node("device:" + i2->v.device, RANK_MD, i2->v.device);
+		    nodes.push_back(md_node);
+
+		    if (!i2->v.usedByDevice.empty())
+		    {
+			edges.push_back(Edge(md_node.id, "device:" + i2->v.usedByDevice));
+		    }
+
+		    if (!i2->v.mount.empty())
+		    {
+			Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
+			nodes.push_back(mountpoint_node);
+
+			edges.push_back(Edge(md_node.id, mountpoint_node.id));
+		    }
+		}
+
+	    } break;
+
 	}
     }
 
