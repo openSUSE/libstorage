@@ -471,6 +471,7 @@ class Storage : public storage::StorageInterface
 	bool checkDmMapsTo( const string& dev );
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
+	int saveGraph(const string& filename);
 
 	string byteToHumanString(unsigned long long size, bool classic, int precision, bool omit_zeroes) const;
 	bool humanStringToByte(const string& str, bool classic, unsigned long long& size) const;

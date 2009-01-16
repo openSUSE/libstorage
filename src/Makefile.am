@@ -46,6 +46,7 @@ liby2storage_la_SOURCES =				\
 	  Md.cc			Md.h			\
 	  Loop.cc		Loop.h			\
 	  Nfs.cc		Nfs.h			\
+	Graph.cc					\
 	SystemCmd.cc		SystemCmd.h		\
 	OutputProcessor.cc	OutputProcessor.h	\
 	Regex.cc		Regex.h			\

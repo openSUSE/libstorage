@@ -2118,6 +2118,14 @@ namespace storage
 	virtual void dumpObjectList() = 0;
 
 	/**
+	 * Saves a graph of the storage devices as DOT file for graphviz.
+	 *
+	 * @param filename filename of graph
+	 * @return zero if all is ok, negative number to indicate an error
+	 */
+	virtual int saveGraph(const string& filename) = 0;
+
+	/**
 	 * Split volume device name up into container name and a volume
 	 * name. For Containers where this is appropriate (e.g. disks,
 	 * MD, loop) also a volume number is provided.
