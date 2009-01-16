@@ -5,6 +5,7 @@
 
 #include <string>
 #include <fstream>
+#include <array>
 
 #include "y2storage/Storage.h"
 
@@ -15,8 +16,11 @@ using namespace storage;
 
 namespace storage
 {
-    enum Rank { RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG, RANK_LVMLV,
-		RANK_MOUNTPOINT, RANK_NONE };
+    enum Rank { RANK_NONE, RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG, RANK_LVMLV,
+		RANK_MOUNTPOINT };
+    typedef array<Rank, 6> Ranks;
+    const Ranks ranks = { { RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG,
+			    RANK_LVMLV, RANK_MOUNTPOINT } };
 
     struct Node
     {
@@ -177,12 +181,11 @@ Storage::saveGraph(const string& filename)
 
     out << endl;
 
-    // TODO
-    for (Rank rank = RANK_DISK; rank != RANK_NONE; rank = (storage::Rank)(rank + 1))
+    for (Ranks::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
     {
 	list<string> ids;
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-	    if (node->rank == rank)
+	    if (node->rank == *rank)
 		ids.push_back(dotQuote(node->id) + ";");
 
 	if (!ids.empty())
