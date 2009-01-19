@@ -10,7 +10,6 @@
 #include <sys/types.h>
 #include <sys/statvfs.h>
 #include <pwd.h>
-#include <config.h>
 #include <signal.h>
 #include <sys/utsname.h>
 #include <errno.h>
@@ -20,6 +19,7 @@
 #include <sstream>
 #include <boost/algorithm/string.hpp>
 
+#include "config.h"
 #include "y2storage/Storage.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
