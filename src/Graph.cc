@@ -176,7 +176,7 @@ Storage::saveGraph(const string& filename)
 
     out << "digraph storage" << endl;
     out << "{" << endl;
-    out << "    node [shape=rectangle, style=filled];" << endl;
+    out << "    node [shape=rectangle, style=filled, fontname=Helvetica];" << endl;
     out << endl;
 
     for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
