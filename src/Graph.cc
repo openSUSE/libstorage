@@ -1,6 +1,6 @@
 /*
-  Textdomain    "storage"
-*/
+ *  Author: Arvin Schnell <aschnell@suse.de>
+ */
 
 
 #include <string>
@@ -20,28 +20,30 @@ namespace storage
     enum Rank { RANK_NONE, RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG, RANK_LVMLV,
 		RANK_MOUNTPOINT };
     typedef array<Rank, 6> Ranks;
-    const Ranks ranks = { { RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG,
-			    RANK_LVMLV, RANK_MOUNTPOINT } };
+    const Ranks ranks = { { RANK_DISK, RANK_PARTITION, RANK_MD, RANK_LVMVG, RANK_LVMLV,
+			    RANK_MOUNTPOINT } };
 
     struct Node
     {
-	Node(const string& id, Rank rank, const string& label)
-	    : id(id), rank(rank), label(label)
+	Node(const string& id, Rank rank, const string& label, const string& attributes = "")
+	    : id(id), rank(rank), label(label), attributes(attributes)
 	    {}
 
-	const string id;
-	const Rank rank;
-	const string label;
+	string id;
+	Rank rank;
+	string label;
+	string attributes;
     };
 
     struct Edge
     {
-	Edge(const string& node1, const string& node2)
-	    : node1(node1), node2(node2)
+	Edge(const string& id1, const string& id2, const string& attributes = "")
+	    : id1(id1), id2(id2), attributes(attributes)
 	    {}
 
-	const string node1;
-	const string node2;
+	string id1;
+	string id2;
+	string attributes;
     };
 
     string dotQuote(const string& str)
@@ -51,12 +53,18 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Node& node)
     {
-	return s << dotQuote(node.id) << " [label=" << dotQuote(node.label) << "];";
+	s << dotQuote(node.id) << " [label=" << dotQuote(node.label);
+	if (!node.attributes.empty())
+	    s << ", " << node.attributes;
+	return s << "];";
     }
 
     std::ostream& operator<<(std::ostream& s, const Edge& edge)
     {
-	return s << dotQuote(edge.node1) << " -> " << dotQuote(edge.node2) << ";";
+	s << dotQuote(edge.id1) << " -> " << dotQuote(edge.id2);
+	if (!edge.attributes.empty())
+	    s << " [" << edge.attributes << "]";
+	return s << ";";
     }
 }
 
@@ -100,7 +108,7 @@ Storage::saveGraph(const string& filename)
 
 		    if (!i2->v.usedByDevice.empty())
 		    {
-			edges.push_back(Edge(partition_node.id, "device:" + i2->v.usedByDevice));
+			edges.push_back(Edge(partition_node.id, "device:" + i2->v.usedByDevice, "color=green"));
 		    }
 
 		    if (!i2->v.mount.empty())
@@ -108,7 +116,7 @@ Storage::saveGraph(const string& filename)
 			Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
 			nodes.push_back(mountpoint_node);
 
-			edges.push_back(Edge(partition_node.id, mountpoint_node.id));
+			edges.push_back(Edge(partition_node.id, mountpoint_node.id, "color=blue"));
 		    }
 		}
 
@@ -147,7 +155,7 @@ Storage::saveGraph(const string& filename)
 
 		for (deque<MdInfo>::iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
 		{
-		    Node md_node("device:" + i2->v.device, RANK_MD, i2->v.device);
+		    Node md_node("device:" + i2->v.device, RANK_MD, i2->v.device, "color=red, fillcolor=yellow");
 		    nodes.push_back(md_node);
 
 		    if (!i2->v.usedByDevice.empty())
@@ -195,7 +203,6 @@ Storage::saveGraph(const string& filename)
 	    out << "    { rank=same; " << boost::join(ids, " ") << " };" << endl;
     }
     out << endl;
-
 
     for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
 	out << "    " << (*edge) << endl;
