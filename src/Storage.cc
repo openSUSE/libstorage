@@ -207,11 +207,8 @@ void Storage::detectObjects()
     if( instsys() )
 	{
 	DmraidCo::activate( true );
-	waitForDevice();
 	MdCo::activate( true, tmpDir() );
-	waitForDevice();
 	LvmVg::activate( true );
-	waitForDevice();
 	delete ppart;
 	ppart = new ProcPart;
 	}
@@ -5797,25 +5794,16 @@ void Storage::setExtError( const string& txt )
     }
 
 
-int Storage::waitForDevice() const
+void Storage::waitForDevice() const
 {
-    int ret = 0;
-    if (access(UDEVADM, X_OK) == 0)
-    {
-	string cmd(UDEVADM " settle --timeout=20");
-	y2mil("calling prog:" << cmd);
-	SystemCmd c(cmd);
-	y2mil("returned prog:" << cmd << " retcode:" << c.retcode());
-    }
-    y2mil("ret:" << ret);
-    return ret;
+    udevSettle();
 }
 
 
 int Storage::waitForDevice( const string& device ) const
     {
     int ret = 0;
-    waitForDevice();
+    udevSettle();
     bool exist = access( device.c_str(), R_OK )==0;
     y2milestone( "device:%s exist:%d", device.c_str(), exist );
     if( !exist )

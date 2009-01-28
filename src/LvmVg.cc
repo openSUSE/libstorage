@@ -1107,6 +1107,8 @@ LvmVg::activate(bool val)
 	}
 	active = val;
     }
+
+    udevSettle();
 }
 
 
