@@ -841,22 +841,16 @@ _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."),
                               (char*)dev.c_str(), range_exceed, range-1 );
-	if( dev.find( "/dev/sd" )==0 )
-	    {
-	    txt += "\n";
-	    txt += 
-	    // popup text
-_("openSUSE is switching to the new IDE drivers using the libata\n"
-"modules.  These do only support partitions with up to 15\n"
-"partitions.  You have the following options with openSUSE 10.3:\n"
-"  - Use the old IDE drivers: Boot again and add\n"
-"    \'hwprobe=-modules.pata\' as argument to the kernel\n"
-"  - Repartition your system so that maximal 15 partitions are used.\n"
-"    To repartition, use your existing operating system.\n"
+	txt += "\n";
+	txt += 
+	// popup text
+_("You have the following options:\n"
+"  - Repartition your system so that only the maximal allowed number\n"
+"    of partitions is used. To repartition, use your existing operating\n"
+"    system.\n"
 "  - Use LVM since it can provide an arbitrary and flexible\n"
 "    number of block devices partitions. This needs a repartition\n"
 "    as well.");
-	    }
 	getStorage()->addInfoPopupText( dev, txt );
 	}
     for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )

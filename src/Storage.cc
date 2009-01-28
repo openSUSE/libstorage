@@ -207,8 +207,11 @@ void Storage::detectObjects()
     if( instsys() )
 	{
 	DmraidCo::activate( true );
+	waitForDevice();
 	MdCo::activate( true, tmpDir() );
+	waitForDevice();
 	LvmVg::activate( true );
+	waitForDevice();
 	delete ppart;
 	ppart = new ProcPart;
 	}

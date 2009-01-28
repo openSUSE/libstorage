@@ -102,7 +102,7 @@ void DmPart::addUdevData()
 
 static string udevCompleteIdPath( const string& s, unsigned nr )
     {
-    return( "/dev/disk/by-id/" + s + "_part" + decString(nr) );
+    return( "/dev/disk/by-id/" + s + "-part" + decString(nr) );
     }
 
 
