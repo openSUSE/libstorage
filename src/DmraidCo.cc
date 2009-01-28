@@ -124,7 +124,7 @@ void DmraidCo::activate( bool val )
 	    }
 	active = val;
 	}
-    udevSettle();
+    Storage::waitForDevice();
     }
 
 void DmraidCo::getRaids( list<string>& l )

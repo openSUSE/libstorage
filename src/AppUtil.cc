@@ -22,7 +22,6 @@
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
-#include "y2storage/StorageDefines.h"
 
 using namespace std;
 
@@ -499,23 +498,6 @@ getRevUdevMap(const char* path, map<string, string>& m)
     m = getUdevLinks(path);
 
     y2mil("map: " << m);
-}
-
-
-void
-udevSettle()
-{
-    if (access(UDEVADM, X_OK) == 0)
-    {
-	string cmd(UDEVADM " settle --timeout=20");
-	y2mil("calling prog:" << cmd);
-	SystemCmd c(cmd);
-	y2mil("returned prog:" << cmd << " retcode:" << c.retcode());
-    }
-    else
-    {
-	y2error(UDEVADM " not available");
-    }
 }
 
 

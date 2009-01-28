@@ -572,7 +572,7 @@ int DmPartCo::doCreateLabel()
 	del_ptable = false;
 	removeFromMemory();
 	handleWholeDevice();
-	getStorage()->waitForDevice();
+	Storage::waitForDevice();
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -826,7 +826,7 @@ int DmPartCo::doRemove( Volume* v )
 	updateMinor();
 	}
     if( ret==0 )
-	getStorage()->waitForDevice();
+	Storage::waitForDevice();
     y2mil("ret:" << ret);
     return( ret );
     }
@@ -1072,7 +1072,7 @@ DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
     disk = NULL;
     if( rhs.disk )
 	disk = new Disk( *rhs.disk );
-    getStorage()->waitForDevice();
+    Storage::waitForDevice();
     ConstDmPartPair p = rhs.dmpartPair();
     for( ConstDmPartIter i = p.begin(); i!=p.end(); ++i )
 	{

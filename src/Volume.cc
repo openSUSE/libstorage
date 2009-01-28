@@ -904,7 +904,7 @@ void Volume::triggerUdevUpdate() const
 	    y2mil( "writing \"add\" to " << path );
 	    file << "add" << endl;
 	    file.close();
-	    cont->getStorage()->waitForDevice();
+	    Storage::waitForDevice();
 	    }
 	else
 	    y2mil( "error opening " << path << " err:" <<

@@ -585,7 +585,7 @@ void MdCo::activate( bool val, const string& tmpDir )
 	    }
 	active = val;
 	}
-    udevSettle();
+    Storage::waitForDevice();
     }
 
 int 

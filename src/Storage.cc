@@ -5794,34 +5794,39 @@ void Storage::setExtError( const string& txt )
     }
 
 
-void Storage::waitForDevice() const
-{
-    udevSettle();
+void
+Storage::waitForDevice()
+{ 
+    string cmd(UDEVADM " settle --timeout=20");
+    y2mil("calling prog:" << cmd);
+    SystemCmd c(cmd);
+    y2mil("returned prog:" << cmd << " retcode:" << c.retcode());
 }
 
 
-int Storage::waitForDevice( const string& device ) const
-    {
+int
+Storage::waitForDevice(const string& device) const
+{
     int ret = 0;
-    udevSettle();
-    bool exist = access( device.c_str(), R_OK )==0;
-    y2milestone( "device:%s exist:%d", device.c_str(), exist );
-    if( !exist )
+    waitForDevice();
+    bool exist = access(device.c_str(), R_OK)==0;
+    y2mil("device:" << device << " exist:" << exist);
+    if (!exist)
+    {
+	for (int count = 0; count < 500; count++)
 	{
-	unsigned count=0;
-	while( !exist && count<500 )
-	    {
-	    usleep( 10000 );
-	    exist = access( device.c_str(), R_OK )==0;
-	    count++;
-	    }
-	y2milestone( "device:%s exist:%d", device.c_str(), exist );
+	    usleep(10000);
+	    exist = access(device.c_str(), R_OK) == 0;
+	    if (exist)
+		break;
 	}
-    if( !exist )
+	y2mil("device:" << device << " exist:" << exist);
+    }
+    if (!exist)
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
     y2mil("ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
 
 
 void Storage::checkDeviceExclusive( const string& device, unsigned secs )

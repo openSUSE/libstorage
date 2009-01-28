@@ -334,7 +334,7 @@ DmCo::doRemove( Volume* v )
 	    if( c.retcode()!=0 )
 		ret = DM_REMOVE_FAILED;
 	    else
-		getStorage()->waitForDevice();
+		Storage::waitForDevice();
 	    y2mil( "this:" << *this );
 	    getStorage()->logProcData( cmd );
 	    }

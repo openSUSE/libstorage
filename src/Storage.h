@@ -450,8 +450,8 @@ class Storage : public storage::StorageInterface
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseFreeInfo( const string& device );
 
-	void waitForDevice() const;
-	int waitForDevice( const string& device ) const;
+	static void waitForDevice();
+	int waitForDevice(const string& device) const;
 	void checkDeviceExclusive( const string& device, unsigned secs );
 	int zeroDevice(const string& device, unsigned long long sizeK, bool random = false, 
 		       unsigned long long beginK = 200, unsigned long long endK = 10);

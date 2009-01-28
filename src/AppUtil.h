@@ -40,8 +40,6 @@ std::map<string,string> makeMap( const std::list<string>& l,
 void getUdevMap(const char* path, std::map<string, std::list<string>>& m);
 void getRevUdevMap(const char* path, std::map<string, string>& m);
 
-void udevSettle();
-
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );
 string undevDevice( const string& dev );

@@ -1891,7 +1891,7 @@ int Disk::doCreateLabel()
     if( ret==0 )
 	{
 	if( !dmp_slave )
-	    getStorage()->waitForDevice();
+	    Storage::waitForDevice();
 	redetectGeometry();
 	}
     gpt_enlarge = false;
@@ -2278,7 +2278,7 @@ int Disk::doCreate( Volume* v )
 		if( p->type()!=EXTENDED )
 		    getStorage()->waitForDevice( p->device() );
 		else
-		    getStorage()->waitForDevice();
+		    Storage::waitForDevice();
 		if( p->type()==LOGICAL && getStorage()->instsys() )
 		    {
 		    // kludge to make the extended partition visible in
@@ -2376,7 +2376,7 @@ int Disk::doRemove( Volume* v )
 		redetectGeometry();
 	    }
 	if( ret==0 && !dmp_slave )
-	    getStorage()->waitForDevice();
+	    Storage::waitForDevice();
 	}
     else
 	{
