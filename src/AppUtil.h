@@ -100,12 +100,6 @@ void prepareLogStream(std::ostringstream& s);
 string sformat(const char* format, ...);
 
 
-string byteToHumanString(unsigned long long size, bool classic, int precision,
-			 bool omit_zeroes);
-
-bool humanStringToByte(const string& str, bool classic, unsigned long long& size);
-
-
 inline const char* _(const char* msgid)
 {
     return dgettext("storage", msgid);

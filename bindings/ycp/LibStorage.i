@@ -8,6 +8,8 @@
 
 %{
 #include "../../src/StorageInterface.h"
+#include "../../src/HumanString.h"
+#include "../../src/Graph.h"
 %}
 
 using namespace std;
@@ -38,4 +40,6 @@ specialize_sequence(storage::PartitionSlotInfo, TO_PACK, FROM_PACK, CHECK)
 specialize_sequence(storage::CommitInfo, TO_PACK, FROM_PACK, CHECK)
 
 %include "../../src/StorageInterface.h"
+%include "../../src/HumanString.h"
+%include "../../src/Graph.h"
 

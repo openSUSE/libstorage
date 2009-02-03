@@ -2118,14 +2118,6 @@ namespace storage
 	virtual void dumpObjectList() = 0;
 
 	/**
-	 * Saves a graph of the storage devices as DOT file for graphviz.
-	 *
-	 * @param filename filename of graph
-	 * @return zero if all is ok, negative number to indicate an error
-	 */
-	virtual int saveGraph(const string& filename) = 0;
-
-	/**
 	 * Split volume device name up into container name and a volume
 	 * name. For Containers where this is appropriate (e.g. disks,
 	 * MD, loop) also a volume number is provided.
@@ -2136,32 +2128,6 @@ namespace storage
 	 */
 	virtual int getContVolInfo( const string& dev, ContVolInfo& info) = 0;
 
-	/**
-	 * Return a pretty description of a size with required precision
-	 * and using B, kB, MB, GB, TB or PB as unit as appropriate.
-	 *
-	 * @param size size in bytes
-	 * @param classic use classic locale
-	 * @param precision number of fraction digits in output
-	 * @param omit_zeroes if true omit trailing zeroes for exact values
-	 * @return formatted string
-	 */
-	virtual string byteToHumanString(unsigned long long size, bool classic, int precision,
-					 bool omit_zeroes) const = 0;
-
-	/**
-	 * Converts a size description using B, kB, MB, GB, TB or PB into an integer.
-	 *
-	 * @param str size string
-	 * @param classic use classic locale
-	 * @param size size in bytes
-	 * @return true on successful conversion
-	 *
-	 * The conversion is always case-insensitive. With classic set to
-	 * false the conversion is also sloppy concerning omission of 'B'.
-	 */
-	virtual bool humanStringToByte(const string& str, bool classic, unsigned long long&
-				       size) const = 0;
     };
 
 

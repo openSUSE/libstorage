@@ -5875,19 +5875,6 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
 }
 
 
-string Storage::byteToHumanString(unsigned long long size, bool classic, int precision, 
-				  bool omit_zeroes) const
-{
-    return storage::byteToHumanString(size, classic, precision, omit_zeroes);
-}
-
-
-bool Storage::humanStringToByte(const string& str, bool classic, unsigned long long& size) const
-{
-    return storage::humanStringToByte(str, classic, size);
-}
-
-
 namespace storage
 {
 std::ostream& operator<< (std::ostream& s, Storage &v )

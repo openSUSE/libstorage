@@ -6,9 +6,10 @@
 #include <string>
 #include <fstream>
 #include <array>
+#include <boost/algorithm/string.hpp>
 
 #include "config.h"
-#include "y2storage/Storage.h"
+#include "y2storage/Graph.h"
 
 
 using namespace std;
@@ -66,151 +67,152 @@ namespace storage
 	    s << " [" << edge.attributes << "]";
 	return s << ";";
     }
-}
 
 
-int
-Storage::saveGraph(const string& filename)
-{
-    list<Node> nodes;
-    list<Edge> edges;
-
-
-    deque<ContainerInfo> containers;
-    getContainers(containers);
-    for (deque<ContainerInfo>::iterator i1 = containers.begin();
-	 i1 != containers.end(); ++i1)
+    int
+    saveGraph(StorageInterface* s, const string& filename)
     {
-	switch (i1->type)
+	list<Node> nodes;
+	list<Edge> edges;
+
+
+	deque<ContainerInfo> containers;
+	s->getContainers(containers);
+	for (deque<ContainerInfo>::iterator i1 = containers.begin();
+	     i1 != containers.end(); ++i1)
 	{
-	    case DISK: {
+	    switch (i1->type)
+	    {
+		case DISK: {
 
-		Node disk_node("device:" + i1->device, RANK_DISK, i1->device);
-		nodes.push_back(disk_node);
+		    Node disk_node("device:" + i1->device, RANK_DISK, i1->device);
+		    nodes.push_back(disk_node);
 
-		if (!i1->usedByDevice.empty())
-		{
-		    edges.push_back(Edge(disk_node.id, "device:" + i1->usedByDevice));
-		}
-
-		deque<PartitionInfo> partitions;
-		getPartitionInfo(i1->name, partitions);
-		for (deque<PartitionInfo>::iterator i2 = partitions.begin();
-		     i2 != partitions.end(); ++i2)
-		{
-		    if (i2->partitionType == EXTENDED)
-			continue;
-
-		    Node partition_node("device:" + i2->v.device, RANK_PARTITION, i2->v.device);
-		    nodes.push_back(partition_node);
-
-		    edges.push_back(Edge(disk_node.id, partition_node.id));
-
-		    if (!i2->v.usedByDevice.empty())
+		    if (!i1->usedByDevice.empty())
 		    {
-			edges.push_back(Edge(partition_node.id, "device:" + i2->v.usedByDevice, "color=green"));
+			edges.push_back(Edge(disk_node.id, "device:" + i1->usedByDevice));
 		    }
 
-		    if (!i2->v.mount.empty())
+		    deque<PartitionInfo> partitions;
+		    s->getPartitionInfo(i1->name, partitions);
+		    for (deque<PartitionInfo>::iterator i2 = partitions.begin();
+			 i2 != partitions.end(); ++i2)
 		    {
-			Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
-			nodes.push_back(mountpoint_node);
+			if (i2->partitionType == EXTENDED)
+			    continue;
 
-			edges.push_back(Edge(partition_node.id, mountpoint_node.id, "color=blue"));
-		    }
-		}
+			Node partition_node("device:" + i2->v.device, RANK_PARTITION, i2->v.device);
+			nodes.push_back(partition_node);
 
-	    } break;
+			edges.push_back(Edge(disk_node.id, partition_node.id));
 
-	    case LVM: {
+			if (!i2->v.usedByDevice.empty())
+			{
+			    edges.push_back(Edge(partition_node.id, "device:" + i2->v.usedByDevice, "color=green"));
+			}
 
-		Node vg_node("device:" + i1->device, RANK_LVMVG, i1->device);
-		nodes.push_back(vg_node);
+			if (!i2->v.mount.empty())
+			{
+			    Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
+			    nodes.push_back(mountpoint_node);
 
-		deque<LvmLvInfo> lvs;
-		getLvmLvInfo(i1->name, lvs);
-		for (deque<LvmLvInfo>::iterator i2 = lvs.begin();
-		     i2 != lvs.end(); ++i2)
-		{
-		    Node lv_node("device:" + i2->v.device, RANK_LVMLV, i2->v.device);
-		    nodes.push_back(lv_node);
-
-		    edges.push_back(Edge(vg_node.id, lv_node.id));
-
-		    if (!i2->v.mount.empty())
-		    {
-			Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
-			nodes.push_back(mountpoint_node);
-
-			edges.push_back(Edge(lv_node.id, mountpoint_node.id));
-		    }
-		}
-
-	    } break;
-
-	    case MD: {
-
-		deque<MdInfo> mds;
-		getMdInfo(mds);
-
-		for (deque<MdInfo>::iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
-		{
-		    Node md_node("device:" + i2->v.device, RANK_MD, i2->v.device, "color=red, fillcolor=yellow");
-		    nodes.push_back(md_node);
-
-		    if (!i2->v.usedByDevice.empty())
-		    {
-			edges.push_back(Edge(md_node.id, "device:" + i2->v.usedByDevice));
+			    edges.push_back(Edge(partition_node.id, mountpoint_node.id, "color=blue"));
+			}
 		    }
 
-		    if (!i2->v.mount.empty())
+		} break;
+
+		case LVM: {
+
+		    Node vg_node("device:" + i1->device, RANK_LVMVG, i1->device);
+		    nodes.push_back(vg_node);
+
+		    deque<LvmLvInfo> lvs;
+		    s->getLvmLvInfo(i1->name, lvs);
+		    for (deque<LvmLvInfo>::iterator i2 = lvs.begin();
+			 i2 != lvs.end(); ++i2)
 		    {
-			Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
-			nodes.push_back(mountpoint_node);
+			Node lv_node("device:" + i2->v.device, RANK_LVMLV, i2->v.device);
+			nodes.push_back(lv_node);
 
-			edges.push_back(Edge(md_node.id, mountpoint_node.id));
+			edges.push_back(Edge(vg_node.id, lv_node.id));
+
+			if (!i2->v.mount.empty())
+			{
+			    Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
+			    nodes.push_back(mountpoint_node);
+
+			    edges.push_back(Edge(lv_node.id, mountpoint_node.id));
+			}
 		    }
-		}
 
-	    } break;
+		} break;
 
+		case MD: {
+
+		    deque<MdInfo> mds;
+		    s->getMdInfo(mds);
+
+		    for (deque<MdInfo>::iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
+		    {
+			Node md_node("device:" + i2->v.device, RANK_MD, i2->v.device, "color=red, fillcolor=yellow");
+			nodes.push_back(md_node);
+
+			if (!i2->v.usedByDevice.empty())
+			{
+			    edges.push_back(Edge(md_node.id, "device:" + i2->v.usedByDevice));
+			}
+
+			if (!i2->v.mount.empty())
+			{
+			    Node mountpoint_node("mountpoint:" + i2->v.mount, RANK_MOUNTPOINT, i2->v.mount);
+			    nodes.push_back(mountpoint_node);
+
+			    edges.push_back(Edge(md_node.id, mountpoint_node.id));
+			}
+		    }
+
+		} break;
+
+	    }
 	}
-    }
 
 
-    ofstream out(filename.c_str());
+	ofstream out(filename.c_str());
 
-    out << "// generated by YaST (" << PACKAGE_STRING << ")" << endl;
+	out << "// generated by YaST (" << PACKAGE_STRING << ")" << endl;
 
-    out << "digraph storage" << endl;
-    out << "{" << endl;
-    out << "    node [shape=rectangle, style=filled, fontname=Helvetica];" << endl;
-    out << endl;
+	out << "digraph storage" << endl;
+	out << "{" << endl;
+	out << "    node [shape=rectangle, style=filled, fontname=Helvetica];" << endl;
+	out << endl;
 
-    for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-	out << "    " << (*node) << endl;
-
-    out << endl;
-
-    for (Ranks::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
-    {
-	list<string> ids;
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-	    if (node->rank == *rank)
-		ids.push_back(dotQuote(node->id));
+	    out << "    " << (*node) << endl;
 
-	if (!ids.empty())
-	    out << "    { rank=same; " << boost::join(ids, " ") << " };" << endl;
+	out << endl;
+
+	for (Ranks::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
+	{
+	    list<string> ids;
+	    for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
+		if (node->rank == *rank)
+		    ids.push_back(dotQuote(node->id));
+
+	    if (!ids.empty())
+		out << "    { rank=same; " << boost::join(ids, " ") << " };" << endl;
+	}
+	out << endl;
+
+	for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
+	    out << "    " << (*edge) << endl;
+
+	out << "}" << endl;
+
+	out.close();
+
+
+	return 0;
     }
-    out << endl;
 
-    for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
-	out << "    " << (*edge) << endl;
-
-    out << "}" << endl;
-
-    out.close();
-
-
-    return 0;
 }

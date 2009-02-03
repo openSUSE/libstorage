@@ -2,7 +2,7 @@
 #include <iostream>
 #include <locale>
 
-#include <y2storage/StorageInterface.h>
+#include <y2storage/HumanString.h>
 
 using namespace std;
 using namespace storage;
@@ -12,9 +12,6 @@ using namespace storage;
 // during package build.
 
 
-StorageInterface* s = 0;
-
-
 void
 test(const char* loc, const char* str, bool classic)
 {
@@ -22,7 +19,7 @@ test(const char* loc, const char* str, bool classic)
 
     unsigned long long size = 0;
 
-    if (s->humanStringToByte(str, classic, size))
+    if (humanStringToByte(str, classic, size))
 	cout << "parse ok " << size << endl;
     else
 	cout << "parse error" << endl;
@@ -32,8 +29,6 @@ test(const char* loc, const char* str, bool classic)
 int
 main()
 {
-    s = createStorageInterface(true, true, false);
-
     test("en_GB.UTF-8", "42", true);			// FAILS: classic=true needs a suffix
     test("en_GB.UTF-8", "42B", true);
     test("en_GB.UTF-8", "42 b", true);
@@ -68,6 +63,4 @@ main()
     test("en_US.UTF-8", "5 G B", false);		// FAILS
     test("de_DE.UTF-8", "12.34 kB", false);		// FAILS
     test("fr_FR.UTF-8", "12 34 GB", false);		// FAILS
-
-    delete s;
 }

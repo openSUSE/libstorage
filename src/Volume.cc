@@ -20,6 +20,7 @@
 #include "y2storage/OutputProcessor.h"
 #include "y2storage/EtcFstab.h"
 #include "y2storage/StorageDefines.h"
+#include "y2storage/HumanString.h"
 
 using namespace std;
 using namespace storage;
