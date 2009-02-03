@@ -69,7 +69,7 @@ namespace storage
     }
 
 
-    int
+    bool
     saveGraph(StorageInterface* s, const string& filename)
     {
 	list<Node> nodes;
@@ -211,8 +211,7 @@ namespace storage
 
 	out.close();
 
-
-	return 0;
+	return !out.bad();
     }
 
 }

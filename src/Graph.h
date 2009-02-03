@@ -4,7 +4,6 @@
 
 #include <string>
 
-
 #include "StorageInterface.h"
 
 
@@ -14,10 +13,11 @@ namespace storage
     /**
      * Saves a graph of the storage devices as a DOT file for graphviz.
      *
+     * @param s StorageInterface
      * @param filename filename of graph
-     * @return zero if all is ok, negative number to indicate an error
+     * @return true on successful writing of graph
      */
-    int saveGraph(StorageInterface* s, const std::string& filename);
+    bool saveGraph(StorageInterface* s, const std::string& filename);
 
 }
 
