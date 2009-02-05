@@ -18,7 +18,8 @@ using namespace storage;
 
 namespace storage
 {
-    enum NodeType { NODE_DISK, NODE_PARTITION, NODE_MDRAID, NODE_LVMVG, NODE_LVMLV, NODE_MOUNTPOINT };
+    enum NodeType { NODE_DISK, NODE_PARTITION, NODE_MDRAID, NODE_LVMVG, NODE_LVMLV, NODE_DM,
+		    NODE_MOUNTPOINT };
 
     struct Node
     {
@@ -63,17 +64,30 @@ namespace storage
 	switch (node.type)
 	{
 	    case NODE_DISK:
-		s << ", color=red, fillcolor=yellow";
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"";
 		break;
 	    case NODE_PARTITION:
-		s << ", color=blue, fillcolor=lightblue";
+		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\"";
+		break;
+	    case NODE_MDRAID:
+		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"";
+		break;
+	    case NODE_LVMVG:
+		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\"";
+		break;
+	    case NODE_LVMLV:
+		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\"";
+		break;
+	    case NODE_DM:
+		s << ", color=\"#885511\", fillcolor=\"#ddbb99\"";
 		break;
 	    case NODE_MOUNTPOINT:
-		s << ", color=green, fillcolor=lightgreen";
+		s << ", color=\"#008800\", fillcolor=\"#99ee99\"";
 		break;
 	}
 	return s << "];";
     }
+
 
     std::ostream& operator<<(std::ostream& s, const Edge& edge)
     {
@@ -81,13 +95,13 @@ namespace storage
 	switch (edge.type)
 	{
 	    case EDGE_SUBDEVICE:
-		s << " [color=blue]";
+		s << " [color=\"#444444\", style=solid]";
 		break;
 	    case EDGE_MOUNT:
-		s << " [color=green]";
+		s << " [color=\"#444444\", style=dashed]";
 		break;
 	    case EDGE_USED:
-		s << " [color=red]";
+		s << " [color=\"#444444\", style=dotted]";
 		break;
 	}
 	return s << ";";
@@ -194,6 +208,32 @@ namespace storage
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(EDGE_MOUNT, md_node.id, mountpoint_node.id);
+			}
+		    }
+
+		} break;
+
+		case DM: {
+
+		    deque<DmInfo> dms;
+		    s->getDmInfo(dms);
+
+		    for (deque<DmInfo>::iterator i2 = dms.begin(); i2 != dms.end(); ++i2)
+		    {
+			Node dm_node(NODE_DM, "device:" + i2->v.device, i2->v.device);
+			nodes.push_back(dm_node);
+
+			if (!i2->v.usedByDevice.empty())
+			{
+			    edges.push_back(EDGE_USED, dm_node.id, "device:" + i2->v.usedByDevice);
+			}
+
+			if (!i2->v.mount.empty())
+			{
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount);
+			    nodes.push_back(mountpoint_node);
+
+			    edges.push_back(EDGE_MOUNT, dm_node.id, mountpoint_node.id);
 			}
 		    }
 
