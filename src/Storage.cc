@@ -4841,7 +4841,7 @@ bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_
 	{
 	    ret = false;
 	    y2err("could not set ub_type:" << ub_type << " ub_name:" << ub_name <<
-		  "for dev: " << dev);
+		  " for dev: " << dev);
 	}
     }
     else
