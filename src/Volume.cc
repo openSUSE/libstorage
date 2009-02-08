@@ -1261,7 +1261,7 @@ int Volume::resizeFs()
 		    }
 		if( ret==0 )
 		    {
-		    cmd = "/sbin/xfs_growfs " + quote(mpoint);
+		    cmd = "/usr/sbin/xfs_growfs " + quote(mpoint);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
