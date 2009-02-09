@@ -47,9 +47,8 @@ namespace storage
     };
 
 
-    typedef array<NodeType, 6> Ranks;
-    const Ranks ranks = { { NODE_DISK, NODE_PARTITION, NODE_MDRAID, NODE_LVMVG, NODE_LVMLV,
-			    NODE_MOUNTPOINT } };
+    typedef array<NodeType, 5> Ranks;
+    const Ranks ranks = { { NODE_DISK, NODE_PARTITION, NODE_LVMVG, NODE_LVMLV, NODE_MOUNTPOINT } };
 
 
     string dotQuote(const string& str)
