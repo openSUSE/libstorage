@@ -47,8 +47,20 @@ namespace storage
     };
 
 
-    typedef array<NodeType, 5> Ranks;
-    const Ranks ranks = { { NODE_DISK, NODE_PARTITION, NODE_LVMVG, NODE_LVMLV, NODE_MOUNTPOINT } };
+    struct Rank
+    {
+	Rank(NodeType type, const string& name)
+	    : type(type), name(name)
+	    {}
+
+	NodeType type;
+	string name;
+    };
+
+    typedef array<Rank, 5> Ranks;
+    const Ranks ranks = { { Rank(NODE_DISK, "source"), Rank(NODE_PARTITION, "same"),
+			    Rank(NODE_LVMVG, "same"), Rank(NODE_LVMLV, "same"),
+			    Rank(NODE_MOUNTPOINT, "sink") } };
 
 
     string dotQuote(const string& str)
@@ -260,11 +272,11 @@ namespace storage
 	{
 	    list<string> ids;
 	    for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-		if (node->type == *rank)
+		if (node->type == rank->type)
 		    ids.push_back(dotQuote(node->id));
 
 	    if (!ids.empty())
-		out << "    { rank=same; " << boost::join(ids, " ") << " };" << endl;
+		out << "    { rank=" << rank->name << "; " << boost::join(ids, " ") << " };" << endl;
 	}
 	out << endl;
 
