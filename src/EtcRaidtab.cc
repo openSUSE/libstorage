@@ -31,7 +31,7 @@ void
 EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
                          const string& mline, const list<string>& devs )
     {
-    y2mil("num:" <<num);
+    y2mil("num:" << num);
     string dline;
     map<unsigned,entry>::iterator i = mtab.find( num );
     if( i != mtab.end() )

@@ -235,7 +235,7 @@ bool Container::removeFromList( Volume* e )
 	vols.erase( i );
 	ret = true;
 	}
-    y2milestone( "P:%p ret:%d", e, ret );
+    y2mil("P:" << e << " ret:" << ret);
     return( ret );
     }
 
@@ -253,8 +253,7 @@ void Container::setExtError( const SystemCmd& cmd, bool serr ) const
 	sto->setExtError( cmd.cmd() + ":\n" + s );
 	}
     else
-	y2warning( "called with empty %s cmd:%s",
-		   (serr?"stderr":"stdout"), cmd.cmd().c_str());
+	y2war("called with empty " << (serr?"stderr":"stdout") << " cmd:" << cmd.cmd());
     }
 
 bool Container::findVolume( const string& device, Volume*& vol )
