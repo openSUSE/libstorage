@@ -194,10 +194,10 @@ void Storage::dumpObjectList()
     classic(buf);
     printInfo(buf);
     std::list<string> l = splitString( buf.str(), "\n" );
-    y2mil("DETECTED OBJECTS");
+    y2mil("DETECTED OBJECTS BEGIN");
     for (std::list<string>::const_iterator i = l.begin(); i != l.end(); i++)
 	y2mil(*i);
-    y2mil("END DETECTED OBJECTS");
+    y2mil("DETECTED OBJECTS END");
 }
 
 void Storage::detectObjects()
@@ -756,7 +756,7 @@ void
 Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
                        ProcMounts& mounts )
     {
-    y2milestone( "detectFsData begin" );
+    y2mil("detectFsData begin");
     SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null" );
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
@@ -781,7 +781,7 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
 	}
     if( max_log_num>0 )
 	logVolumes( logdir );
-    y2milestone( "detectFsData end" );
+    y2mil("detectFsData end");
     }
 
 void
@@ -890,49 +890,51 @@ Storage::handleLogFile( const string& name )
 	rename( name.c_str(), bname.c_str() );
     }
 
-void Storage::setRecursiveRemoval( bool val )
-    {
-    y2milestone( "val:%d", val );
+
+void Storage::setRecursiveRemoval(bool val)
+{
+    y2mil("val:" << val);
     recursiveRemove = val;
-    }
+}
 
-void Storage::setZeroNewPartitions( bool val )
-    {
-    y2milestone( "val:%d", val );
+void Storage::setZeroNewPartitions(bool val)
+{
+    y2mil("val:" << val);
     zeroNewPartitions = val;
-    }
+}
 
-void Storage::setDefaultMountBy( MountByType val )
-    {
-    y2mil( "val:" << Volume::mbyTypeString(val) );
+void Storage::setDefaultMountBy(MountByType val)
+{
+    y2mil("val:" << Volume::mbyTypeString(val));
     defaultMountBy = val;
-    }
+}
 
 void Storage::setEfiBoot(bool val)
-{  
-    y2milestone("val:%d", val);
+{
+    y2mil("val:" << val);
     efiboot = val;
 }
 
-void Storage::setRootPrefix( const string& root )
-    {
-    y2milestone( "root:%s", root.c_str() );
+void Storage::setRootPrefix(const string& root)
+{
+    y2mil("root:" << root);
     rootprefix = root;
-    }
+}
 
 string Storage::prependRoot(const string& mp) const
-{ 
+{
     string ret = mp;
     if (mp != "swap")
 	ret.insert(0, rootprefix);
     return ret;
 }
 
-void Storage::setDetectMountedVolumes( bool val )
-    {
-    y2milestone( "val:%d", val );
+void Storage::setDetectMountedVolumes(bool val)
+{
+    y2mil("val:" << val);
     detectMounted = val;
-    }
+}
+
 
 string Storage::proc_arch;
 bool Storage::is_ppc_mac = false;
