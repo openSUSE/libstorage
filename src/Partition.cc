@@ -32,8 +32,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     typ = Type;
     orig_num = num;
     addUdevData();
-    y2debug( "constructed partition %s on disk %s", dev.c_str(),
-	     cont->name().c_str() );
+    y2deb("constructed partition " << dev << " on disk " << cont->name());
     }
 
 Partition::Partition( const Disk& d, const string& Data ) :
@@ -60,8 +59,7 @@ Partition::Partition( const Disk& d, const string& Data ) :
     else
 	bootflag = false;
     addUdevData();
-    y2debug( "constructed partition %s on disk %s", dev.c_str(),
-	     cont->name().c_str() );
+    y2deb("constructed partition " << dev << " on disk " << cont->name());
     }
 
 const list<string> Partition::udevId() const 
@@ -293,8 +291,7 @@ const Disk* Partition::disk() const
 int Partition::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
-    y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val,
-		 fs_names[new_fs].c_str() );
+    y2mil("device:" << dev << " val:" << val << " fs:" << fs_names[new_fs]);
     if( typ==EXTENDED )
 	{
 	if( val )
@@ -309,7 +306,7 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
 int Partition::changeMount( const string& val )
     {
     int ret = 0;
-    y2milestone( "device:%s val:%s", dev.c_str(), val.c_str() );
+    y2mil("device:" << dev << " val:" << val);
     if( typ==EXTENDED )
 	ret = VOLUME_MOUNT_EXTENDED_UNSUPPORTED;
     else
