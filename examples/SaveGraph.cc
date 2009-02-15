@@ -10,9 +10,12 @@ int
 main (int argc, char** argv)
 {
     initDefaultLogger();
+
     StorageInterface* s = createStorageInterface(true, false, true);
 
-    saveGraph(s, "storage.dot");
+    saveGraph(s, "storage.gv");
+
+    destroyStorageInterface(s);
 
     exit(EXIT_SUCCESS);
 }
