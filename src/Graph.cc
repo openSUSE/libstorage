@@ -18,8 +18,8 @@ using namespace storage;
 
 namespace storage
 {
-    enum NodeType { NODE_DISK, NODE_PARTITION, NODE_MDRAID, NODE_LVMVG, NODE_LVMLV, NODE_DM,
-		    NODE_MOUNTPOINT };
+    enum NodeType { NODE_DISK, NODE_DMMULTIPATH, NODE_DMRAID, NODE_PARTITION, NODE_MDRAID,
+		    NODE_LVMVG, NODE_LVMLV, NODE_DM, NODE_MOUNTPOINT };
 
     struct Node
     {
@@ -75,6 +75,12 @@ namespace storage
 	switch (node.type)
 	{
 	    case NODE_DISK:
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"";
+		break;
+	    case NODE_DMRAID:
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"";
+		break;
+	    case NODE_DMMULTIPATH:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"";
 		break;
 	    case NODE_PARTITION:
@@ -250,6 +256,89 @@ namespace storage
 
 		} break;
 
+		case DMRAID: {
+
+		    Node dmraid_node(NODE_DMRAID, "device:" + i1->device, i1->device);
+		    nodes.push_back(dmraid_node);
+
+		    if (!i1->usedByDevice.empty())
+		    {
+			edges.push_back(EDGE_USED, dmraid_node.id, "device:" + i1->usedByDevice);
+		    }
+
+		    deque<DmraidInfo> partitions;
+		    s->getDmraidInfo(i1->name, partitions);
+		    for (deque<DmraidInfo>::iterator i2 = partitions.begin();
+			 i2 != partitions.end(); ++i2)
+		    {
+			if (i2->p.p.partitionType == EXTENDED)
+			    continue;
+
+			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device);
+			nodes.push_back(partition_node);
+
+			edges.push_back(EDGE_SUBDEVICE, dmraid_node.id, partition_node.id);
+
+			if (!i2->p.v.usedByDevice.empty())
+			{
+			    edges.push_back(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice);
+			}
+
+			if (!i2->p.v.mount.empty())
+			{
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount);
+			    nodes.push_back(mountpoint_node);
+
+			    edges.push_back(EDGE_MOUNT, partition_node.id, mountpoint_node.id);
+			}
+		    }
+
+		} break;
+
+		case DMMULTIPATH: {
+
+		    Node dmmultipath_node(NODE_DMMULTIPATH, "device:" + i1->device, i1->device);
+		    nodes.push_back(dmmultipath_node);
+
+		    if (!i1->usedByDevice.empty())
+		    {
+			edges.push_back(EDGE_USED, dmmultipath_node.id, "device:" + i1->usedByDevice);
+		    }
+
+		    deque<DmmultipathInfo> partitions;
+		    s->getDmmultipathInfo(i1->name, partitions);
+		    for (deque<DmmultipathInfo>::iterator i2 = partitions.begin();
+			 i2 != partitions.end(); ++i2)
+		    {
+			if (i2->p.p.partitionType == EXTENDED)
+			    continue;
+
+			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device);
+			nodes.push_back(partition_node);
+
+			edges.push_back(EDGE_SUBDEVICE, dmmultipath_node.id, partition_node.id);
+
+			if (!i2->p.v.usedByDevice.empty())
+			{
+			    edges.push_back(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice);
+			}
+
+			if (!i2->p.v.mount.empty())
+			{
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount);
+			    nodes.push_back(mountpoint_node);
+
+			    edges.push_back(EDGE_MOUNT, partition_node.id, mountpoint_node.id);
+			}
+		    }
+
+		} break;
+
+		case LOOP:
+		case NFSC:
+		case CUNKNOWN:
+		case COTYPE_LAST_ENTRY:
+		    break;
 	    }
 	}
 
