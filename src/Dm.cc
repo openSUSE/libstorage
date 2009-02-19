@@ -28,7 +28,7 @@ Dm::Dm( const PeContainer& d, const string& tn ) :
 Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
 	Volume( d ), tname(tn)
     {
-    y2milestone( "constructed dm dev table \"%s\" %u", tn.c_str(), mnum );
+    y2mil("constructed dm dev table \"" << tn << "\" " << mnum);
     num_le = 0;
     stripe = 1;
     stripe_size = 0;
@@ -59,8 +59,8 @@ Dm::getTableInfo()
 	getDmMajor();
     SystemCmd c(DMSETUPBIN " table " + quote(tname));
     inactiv = c.retcode()!=0;
-    y2milestone( "table %s retcode:%d numLines:%u inactive:%d", 
-                 tname.c_str(), c.retcode(), c.numLines(), inactiv );
+    y2mil("table:" << tname << " retcode:" << c.retcode() << " numLines:" << c.numLines() <<
+	  " inactive:" << inactiv);
     if( c.numLines()>0 )
 	{
 	string line = *c.getLine(0);
@@ -94,8 +94,7 @@ Dm::getTableInfo()
 		    mit->second += le;
 		}
 	    else
-		y2warning( "could not find major/minor pair %s", 
-			majmin.c_str());
+		y2war("could not find major/minor pair " << majmin);
 	    }
 	else if (target == "snapshot-origin")
 	{
@@ -116,7 +115,7 @@ Dm::getTableInfo()
 	    stripe_size /= 2;
 	    extractNthWord( 3, line ) >> str;
 	    if( str<2 )
-		y2warning( "invalid stripe count %u", str );
+		y2war("invalid stripe count " << str);
 	    else
 		{
 		le = (le+str-1)/str;
@@ -132,8 +131,7 @@ Dm::getTableInfo()
 			    mit->second += le;
 			}
 		    else
-			y2warning( "could not find major/minor pair %s", 
-				majmin.c_str());
+			y2war("could not find major/minor pair " << majmin);
 		    }
 		}
 	    }
@@ -141,7 +139,7 @@ Dm::getTableInfo()
 	    {
 	    if( find( known_types.begin(), known_types.end(), target ) == 
 	        known_types.end() )
-		y2warning( "unknown target type \"%s\"", target.c_str() );
+		y2war("unknown target type \"" << target << "\"");
 	    extractNthWord( 1, line ) >> le;
 	    y2mil( "le:" << le );
 	    le /= 2;
@@ -170,8 +168,7 @@ Dm::getTableInfo()
 			    mit->second += le;
 			}
 		    else
-			y2warning( "could not find major/minor pair %s", 
-				majmin.c_str());
+			y2war("could not find major/minor pair " << majmin);
 		    }
 		}
 	    }
@@ -266,8 +263,8 @@ Dm::mapsTo( const string& dev ) const
     ret = mit != pe_map.end();
     if( ret )
 	{
-	y2mil( "map:" << pe_map );
-	y2milestone( "table:%s dev:%s ret:%d", tname.c_str(), dev.c_str(), ret );
+	y2mil("map:" << pe_map);
+	y2mil("table:" << tname << " dev:" << dev << " ret:" << ret);
 	}
     return( ret );
     }
@@ -281,7 +278,7 @@ Dm::checkConsistency() const
          mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
     if( sum != num_le )
-	y2warning( "lv:%s sum:%lu num:%llu", dev.c_str(), sum, num_le );
+	y2war("lv:" << dev << " sum:" << sum << " num:" << num_le);
     else
 	ret = true;
     return( ret );
@@ -435,7 +432,7 @@ string Dm::formatText( bool doing ) const
 
 void Dm::activate( bool val )
     {
-    y2milestone( "old active:%d val:%d", active, val );
+    y2mil("old active:" << active << " val:" << val);
     if( active!=val )
 	{
 	SystemCmd c;
@@ -472,7 +469,7 @@ string Dm::devToTable( const string& dev )
 	++it;
 	}
     if( dev!=ret )
-	y2milestone( "dev:%s --> %s", dev.c_str(), ret.c_str() );
+	y2mil("dev:" << dev << " ret:" << ret);
     return( ret );
     }
 
@@ -531,7 +528,7 @@ string Dm::sysfsPath() const
 void Dm::getDmMajor()
     {
     dm_major = getMajorDevices( "device-mapper" );
-    y2milestone( "dm_major:%u", dm_major );
+    y2mil("dm_major:" << dm_major);
     }
 
 void Dm::getInfo( DmInfo& tinfo ) const

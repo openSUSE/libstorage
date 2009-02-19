@@ -325,7 +325,7 @@ DmPartCo::getVolumes( ProcPart& ppart )
 void DmPartCo::handleWholeDevice()
     {
     Disk::PartPair pp = disk->partPair( Partition::notDeleted );
-    y2milestone( "empty:%d", pp.empty() );
+    y2mil("empty:" << pp.empty());
     if( pp.empty() )
 	{
 	DmPart * p = NULL;
@@ -423,7 +423,7 @@ string DmPartCo::undevName( const string& name )
 
 int DmPartCo::destroyPartitionTable( const string& new_label )
     {
-    y2milestone( "begin" );
+    y2mil("begin");
     int ret = disk->destroyPartitionTable( new_label );
     if( ret==0 )
 	{
@@ -521,7 +521,7 @@ bool DmPartCo::findDm( unsigned nr, DmPartIter& i )
 
 void DmPartCo::activate_part( bool val )
     {
-    y2milestone( "old active:%d val:%d", active, val );
+    y2mil("old active:" << active << " val:" << val);
     if( active != val )
 	{
 	SystemCmd c;
@@ -558,7 +558,7 @@ int DmPartCo::doSetType( DmPart* dm )
 
 int DmPartCo::doCreateLabel()
     {
-    y2milestone( "label:%s", labelName().c_str() );
+    y2mil("label:" << labelName());
     int ret = 0;
     if( !silent )
 	{
@@ -582,7 +582,7 @@ int
 DmPartCo::removeDmPart()
     {
     int ret = 0;
-    y2milestone( "begin" );
+    y2mil("begin");
     if( readonly() )
 	{
 	ret = DMPART_CHANGE_READONLY;
@@ -680,7 +680,7 @@ int DmPartCo::getToCommit( CommitStage stage, list<Container*>& col,
 
 int DmPartCo::commitChanges( CommitStage stage, Volume* vol )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = Container::commitChanges( stage, vol );
     if( ret==0 && stage==INCREASE )
         {
@@ -700,7 +700,7 @@ int DmPartCo::commitChanges( CommitStage stage, Volume* vol )
 
 int DmPartCo::commitChanges( CommitStage stage )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = 0;
     if( stage==DECREASE && deleted() )
 	{

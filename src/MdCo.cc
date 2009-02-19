@@ -84,7 +84,7 @@ void MdCo::updateEntry( const Md* m )
 void
 MdCo::getMdData()
     {
-    y2milestone( "begin" );
+    y2mil("begin");
     string line;
     std::ifstream file( "/proc/mdstat" );
     classic(file);
@@ -156,7 +156,7 @@ MdCo::getMdData()
 void
 MdCo::getMdData( unsigned num )
     {
-    y2milestone( "num:%u", num );
+    y2mil("num:" << num);
     string line;
     std::ifstream file( "/proc/mdstat" );
     classic(file);
@@ -318,7 +318,7 @@ int MdCo::checkUse( const string& dev )
 	{
 	ret = MD_DEVICE_USED;
 	}
-    y2milestone( "dev:%s ret:%d", dev.c_str(), ret );
+    y2mil("dev:" << dev << " ret:" << ret);
     return( ret );
     }
 
@@ -326,7 +326,7 @@ int
 MdCo::checkMd( unsigned num )
     {
     int ret = 0;
-    y2milestone( "num:%u", num );
+    y2mil("num:" << num);
     MdIter i;
     if( !findMd( num, i ) )
 	ret = MD_DEVICE_UNKNOWN;
@@ -340,7 +340,7 @@ int
 MdCo::extendMd( unsigned num, const string& dev )
     {
     int ret = 0;
-    y2milestone( "num:%u dev:%s", num, dev.c_str() );
+    y2mil("num:" << num << " dev:" << dev);
     MdIter i;
     if( readonly() )
 	{
@@ -380,7 +380,7 @@ int
 MdCo::shrinkMd( unsigned num, const string& dev )
     {
     int ret = 0;
-    y2milestone( "num:%u dev:%s", num, dev.c_str() );
+    y2mil("num:" << num << " dev:" << dev);
     MdIter i;
     if( readonly() )
 	{
@@ -412,7 +412,7 @@ int
 MdCo::changeMdType( unsigned num, MdType ptype )
     {
     int ret = 0;
-    y2milestone( "num:%u md_type:%d", num, ptype );
+    y2mil("num:" << num << " md_type:" << ptype);
     MdIter i;
     if( readonly() )
 	{
@@ -439,7 +439,7 @@ int
 MdCo::changeMdChunk( unsigned num, unsigned long chunk )
     {
     int ret = 0;
-    y2milestone( "num:%u chunk:%lu", num, chunk );
+    y2mil("num:" << num << " chunk:" << chunk);
     MdIter i;
     if( readonly() )
 	{
@@ -466,7 +466,7 @@ int
 MdCo::changeMdParity( unsigned num, MdParity ptype )
     {
     int ret = 0;
-    y2milestone( "num:%u parity:%d", num, ptype );
+    y2mil("num:" << num << " parity:" << ptype);
     MdIter i;
     if( readonly() )
 	{
@@ -507,7 +507,7 @@ MdCo::getMdState(unsigned num, MdStateInfo& info)
     {
 	i->getState(info);
     }
-    y2milestone("ret:%d", ret);
+    y2mil("ret:" << ret);
     return ret;
 }
 
@@ -515,7 +515,7 @@ int
 MdCo::removeMd( unsigned num, bool destroySb )
     {
     int ret = 0;
-    y2milestone( "num:%u", num );
+    y2mil("num:" << num);
     MdIter i;
     if( readonly() )
 	{
@@ -554,7 +554,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 int MdCo::removeVolume( Volume* v )
     {
     int ret = 0;
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Md * m = dynamic_cast<Md *>(v);
     if( m != NULL )
 	ret = removeMd( v->nr() );
@@ -565,7 +565,7 @@ int MdCo::removeVolume( Volume* v )
 
 void MdCo::activate( bool val, const string& tmpDir )
     {
-    y2milestone( "old active:%d val:%d tmp:%s", active, val, tmpDir.c_str() );
+    y2mil("old active:" << active << " val:" << val << " tmp:" << tmpDir);
     if( active!=val )
 	{
 	SystemCmd c;
@@ -591,7 +591,7 @@ void MdCo::activate( bool val, const string& tmpDir )
 int 
 MdCo::doCreate( Volume* v ) 
     {
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Md * m = dynamic_cast<Md *>(v);
     int ret = 0;
     if( m != NULL )
@@ -643,7 +643,7 @@ MdCo::doCreate( Volume* v )
 int 
 MdCo::doRemove( Volume* v )
     {
-    y2milestone( "name:%s", v->name().c_str() );
+    y2mil("name:" << v->name());
     Md * m = dynamic_cast<Md *>(v);
     int ret = 0;
     if( m != NULL )

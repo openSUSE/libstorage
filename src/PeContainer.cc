@@ -37,7 +37,7 @@ int
 PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     {
     int ret = 0;
-    y2milestone( "peSize:%llu", peSizeK );
+    y2mil("peSize:" << peSizeK);
 
     if( pe_size!=peSizeK )
 	{
@@ -162,8 +162,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	if( !added_pv )
 	    plrem.push_back( cur_pv );
 	}
-    y2milestone( "ret:%d removed_pe:%lu dev:%s", ret, removed_pe,
-                 cur_pv.device.c_str() );
+    y2mil("ret:" << ret << " removed_pe:" << removed_pe << " dev:" << cur_pv.device);
     return( ret );
     }
 
@@ -172,7 +171,7 @@ PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& p
 				  list<Pv>& pladd, map<string,unsigned long>& pe_map )
     {
     int ret=0;
-    y2milestone( "le:%lu stripe:%u", le, stripe );
+    y2mil("le:" << le << " stripe:" << stripe);
     map<string,unsigned long>::iterator mit;
     list<Pv>::iterator i;
     if( stripe>1 )
@@ -497,7 +496,7 @@ PeContainer::leByLvRemove() const
     ConstDmPair p=dmPair(isDeleted);
     for( ConstDmIter i=p.begin(); i!=p.end(); ++i )
 	ret += i->getLe();
-    y2milestone( "ret:%lu", ret );
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -532,23 +531,20 @@ PeContainer::checkConsistency() const
 	    {
 	    if( mit->second != p->num_pe-p->free_pe )
 		{
-		y2warning( "Vg:%s used pv %s is %lu should be %lu",
-		           name().c_str(), mit->first.c_str(),
-		           mit->second,  p->num_pe-p->free_pe );
+		y2war("Vg:" << name() << " used pv " << mit->first << " is " <<
+		      mit->second << " should be " << p->num_pe - p->free_pe);
 		ret = false;
 		}
 	    }
 	else
 	    {
-	    y2warning( "Vg:%s pv %s not found", name().c_str(),
-	               mit->first.c_str() );
+	    y2war("Vg:" << name() << " pv " << mit->first << " not found");
 	    ret = false;
 	    }
 	}
     if( sum != num_pe-free_pe )
 	{
-	y2warning( "Vg:%s used PE is %lu should be %lu", name().c_str(),
-	           sum, num_pe-free_pe );
+	y2war("Vg:" << name() << " used PE is " << sum << " should be " << num_pe - free_pe);
 	ret = false;
 	}
     return( ret );

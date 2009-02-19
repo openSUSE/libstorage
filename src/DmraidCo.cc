@@ -33,7 +33,7 @@ DmraidCo::~DmraidCo()
 
 void DmraidCo::getRaidData( const string& name )
     {
-    y2milestone( "name:%s", name.c_str() );
+    y2mil("name:" << name);
     SystemCmd c(DMRAIDBIN " -s -c -c -c " + quote(name));
     list<string>::const_iterator ci;
     list<string> sl;
@@ -109,7 +109,7 @@ void DmraidCo::addPv( Pv*& p )
 
 void DmraidCo::activate( bool val )
     {
-    y2milestone( "old active:%d val:%d", active, val );
+    y2mil("old active:" << active << " val:" << val);
     if( active != val )
 	{
 	SystemCmd c;
@@ -189,7 +189,7 @@ string DmraidCo::setDiskLabelText( bool doing ) const
 int
 DmraidCo::doRemove()
     {
-    y2milestone( "Raid:%s", name().c_str() );
+    y2mil("Raid:" << name());
     int ret = 0;
     if( deleted() )
 	{
