@@ -1,9 +1,9 @@
 /*
- *  Author: Arvin Schnell <aschnell@suse.de>
+ *  Author:	Arvin Schnell <aschnell@suse.de>
  */
 
 /*
-  Textdomain    "storage"
+    Textdomain	"storage"
 */
 
 

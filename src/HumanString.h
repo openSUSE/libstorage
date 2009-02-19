@@ -1,3 +1,8 @@
+/*
+ *  Author:	Arvin Schnell <aschnell@suse.de>
+ */
+
+
 #ifndef HUMAN_STRING_H
 #define HUMAN_STRING_H
 

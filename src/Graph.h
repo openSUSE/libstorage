@@ -1,3 +1,8 @@
+/*
+ *  Author:	Arvin Schnell <aschnell@suse.de>
+ */
+
+
 #ifndef GRAPH_H
 #define GRAPH_H
 
