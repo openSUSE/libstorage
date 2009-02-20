@@ -190,7 +190,7 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 		    pl.push_back( p );
 		    }
 		else
-		    y2warning( "partition nr %d outside range %lu", pnr, range );
+		    y2war("partition nr " << pnr << " outside range " << range);
 		}
 	    }
 	}
@@ -510,7 +510,7 @@ int Dasd::getToCommit( CommitStage stage, list<Container*>& col,
 
 int Dasd::commitChanges( CommitStage stage )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = 0;
     if( stage==DECREASE && init_disk )
 	{

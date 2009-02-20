@@ -223,7 +223,7 @@ bool Disk::detect( ProcPart& ppart )
 
 bool Disk::detectGeometry()
     {
-    y2milestone( "disk:%s", device().c_str() );
+    y2mil("disk:" << device());
     bool ret = false;
     int fd = open( device().c_str(), O_RDONLY );
     if( fd >= 0 )
@@ -262,7 +262,7 @@ bool Disk::detectGeometry()
 		ret = true;
 		}
 	    }
-	y2milestone( "After getsize Cylinder:%lu", cyl );
+	y2mil("After getsize Cylinder:" << cyl);
 	close( fd );
 	}
     byte_cyl = head * sector * 512;
@@ -376,13 +376,13 @@ bool Disk::detectPartitions( ProcPart& ppart )
     string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
     string dlabel;
     system_stderr.erase();
-    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     checkSystemError( cmd_line, Cmd );
     if( Cmd.select( "Partition Table:" )>0 )
 	{
 	string tmp = *Cmd.getLine(0, true);
-	y2milestone( "Label line:%s", tmp.c_str() );
+	y2mil("Label line:" << tmp);
 	dlabel = extractNthWord( 2, tmp );
 	}
     if( Cmd.select( "BIOS cylinder" )>0 )
@@ -489,7 +489,7 @@ Disk::logData( const string& Dir )
 void
 Disk::setLabelData( const string& disklabel )
     {
-    y2milestone( "disklabel:%s", disklabel.c_str() );
+    y2mil("disklabel:" << disklabel);
     int i=0;
     while( !labels[i].name.empty() && labels[i].name!=disklabel )
 	{
@@ -497,7 +497,7 @@ Disk::setLabelData( const string& disklabel )
 	}
     if( labels[i].name.empty() )
 	{
-	y2error ("unknown disklabel %s", disklabel.c_str());
+	y2err("unknown disklabel " << disklabel);
 	ext_possible = false;
 	max_primary = 0;
 	max_logical = 0;
@@ -537,8 +537,8 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     string tmp = *cmd.getString(SystemCmd::IDX_STDERR);
     if( tmp.length()>0 )
         {
-        y2error( "cmd:%s", cmd_line.c_str() );
-        y2error( "err:%s", tmp.c_str() );
+	y2err("cmd:" << cmd_line);
+	y2err("err:" << tmp);
 	if( !system_stderr.empty() )
 	    {
 	    system_stderr += "\n";
@@ -548,8 +548,8 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     tmp = *cmd.getString(SystemCmd::IDX_STDOUT);
     if( tmp.length()>0 )
         {
-        y2milestone( "cmd:%s", cmd_line.c_str() );
-        y2milestone( "out:%s", tmp.c_str() );
+	y2mil("cmd:" << cmd_line);
+	y2mil("out:" << tmp);
 	if( !system_stderr.empty() )
 	    {
 	    system_stderr += "\n";
@@ -571,7 +571,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
 	    ret = 0;
 	    }
 	else
-	    y2error( "retcode:%d", cmd.retcode() );
+	    y2err("retcode:" << cmd.retcode());
         }
     return( ret );
     }
@@ -658,7 +658,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	if( start+csize > cylinders() )
 	    {
 	    csize = cylinders()-start;
-	    y2milestone( "new csize:%lu", csize );
+	    y2mil("new csize:" << csize);
 	    }
 	id = Partition::ID_LINUX;
 	boot = TInfo.find( ",boot," ) != string::npos;
@@ -707,7 +707,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		Data.clear();
 		Data.str( val );
 		Data >> std::hex >> tmp_id;
-		y2debug( "val=%s id=%d", val.c_str(), tmp_id );
+		y2deb("val=" << val << " id=" << tmp_id);
 		if( tmp_id>0 )
 		    {
 		    id = tmp_id;
@@ -1271,7 +1271,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free );
-    y2milestone( "free:" );
+    y2mil("free:");
     if( !free.empty() )
 	{
 	free.sort( regions_sort_size );
@@ -1313,7 +1313,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 
 int Disk::createPartition( PartitionType type, string& device )
     {
-    y2milestone( "type %u", type );
+    y2mil("type " << type);
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free, type==PTYPE_ANY, type==LOGICAL );
@@ -1564,7 +1564,7 @@ static bool volume_ptr_sort_nr( Partition*& rhs, Partition*& lhs )
 
 int Disk::removePartition( unsigned nr )
     {
-    y2milestone( "begin nr %u", nr );
+    y2mil("begin nr " << nr);
     getStorage()->logCo( this );
     int ret = 0;
     PartPair p = partPair( notDeleted );
@@ -1672,7 +1672,7 @@ void Disk::changeNumbers( const PartIter& b, const PartIter& e,
 
 int Disk::destroyPartitionTable( const string& new_label )
     {
-    y2milestone( "begin" );
+    y2mil("begin");
     int ret = 0;
     setLabelData( new_label );
     if( max_primary==0 )
@@ -1746,7 +1746,7 @@ Disk::changePartitionId(unsigned nr, unsigned id)
 
 int Disk::forgetChangePartitionId( unsigned nr )
     {
-    y2milestone( "begin nr:%u", nr );
+    y2mil("begin nr:" << nr);
     int ret = 0;
     PartPair p = partPair( notDeleted );
     PartIter i = p.begin();
@@ -1791,7 +1791,7 @@ int Disk::getToCommit( CommitStage stage, list<Container*>& col,
 
 int Disk::commitChanges( CommitStage stage, Volume* vol )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = Container::commitChanges( stage, vol );
     if( ret==0 && stage==INCREASE )
 	{
@@ -1810,7 +1810,7 @@ int Disk::commitChanges( CommitStage stage, Volume* vol )
 
 int Disk::commitChanges( CommitStage stage )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = 0;
     if( stage==DECREASE && deleted() )
 	{
@@ -1939,7 +1939,7 @@ void Disk::removeFromMemory()
 void Disk::redetectGeometry()
     {
     string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print";
-    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     if( Cmd.select( "BIOS cylinder" )>0 )
 	{
@@ -2076,8 +2076,7 @@ Disk::getPartedValues( Partition *p )
 		{
 		if( !ppart.getSize( p->device(), s ) || s==0 )
 		    {
-		    y2error( "device %s not found in /proc/partitions",
-		             p->device().c_str() );
+		    y2err("device " << p->device() << " not found in /proc/partitions");
 		    ret = false;
 		    }
 		else

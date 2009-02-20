@@ -25,39 +25,44 @@
 using namespace std;
 using namespace storage;
 
-Volume::Volume( const Container& d, unsigned PNr, unsigned long long SizeK )
+
+Volume::Volume(const Container& d, unsigned PNr, unsigned long long SizeK)
     : cont(&d)
-    {
+{
     numeric = true;
     num = PNr;
     size_k = orig_size_k = SizeK;
     init();
-    y2debug( "constructed volume %s on disk %s", (num>0)?dev.c_str():"",
-	     cont->name().c_str() );
-    }
+    y2deb("constructed volume " << ((num>0)?dev:"") << " on disk " << cont->name());
+}
 
-Volume::Volume( const Container& c, const string& Name, unsigned long long SizeK ) : cont(&c)
-    {
+
+Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
+    : cont(&c)
+{
     numeric = false;
     nm = Name;
     size_k = orig_size_k = SizeK;
     init();
-    y2debug( "constructed volume \"%s\" on disk %s", dev.c_str(),
-	     cont->name().c_str() );
-    }
+    y2deb("constructed volume " << dev << " on disk " << cont->name());
+}
 
-Volume::Volume( const Container& c ) : cont(&c)
-    {
+
+Volume::Volume(const Container& c)
+    : cont(&c)
+{
     numeric = false;
     size_k = orig_size_k = 0;
     init();
     y2deb("constructed late init volume");
-    }
+}
+
 
 Volume::~Volume()
-    {
+{
     y2deb("destructed volume " << dev);
-    }
+}
+
 
 void Volume::setNameDev()
     {

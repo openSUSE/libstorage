@@ -138,7 +138,7 @@ MdCo::getMdData()
 		    }
 		}
 	    else
-		y2warning( "raid %s from /etc/raidtab not found", md.c_str() );
+		y2war("raid " << md << " from /etc/raidtab not found");
 	    }
 	getline( file, line );
 	}
@@ -184,7 +184,7 @@ MdCo::addMd( Md* m )
 	addToList( m );
     else
 	{
-	y2warning( "addMd alread exists %u", m->nr() ); 
+	y2war("addMd already exists " << m->nr()); 
 	delete m;
 	}
     }
@@ -199,18 +199,15 @@ MdCo::checkMd( Md* m )
 	i->setMdUuid( m->getMdUuid() );
 	i->setCreated( false );
 	if( m->personality()!=i->personality() )
-	    y2warning( "inconsistent raid type my:%s kernel:%s", 
-	               i->pName().c_str(), m->pName().c_str() );
+	    y2war("inconsistent raid type my:" << i->pName() << " kernel:" << m->pName());
 	if( i->parity()!=storage::PAR_NONE && m->parity()!=i->parity() )
-	    y2warning( "inconsistent parity my:%s kernel:%s", 
-	               i->ptName().c_str(), m->ptName().c_str() );
+	    y2war("inconsistent parity my:" << i->ptName() << " kernel:" << m->ptName());
 	if( i->chunkSize()>0 && m->chunkSize()!=i->chunkSize() )
-	    y2warning( "inconsistent chunk size my:%lu kernel:%lu", 
-	               i->chunkSize(), m->chunkSize() );
+	    y2war("inconsistent chunk size my:" << i->chunkSize() << " kernel:" << m->chunkSize());
 	}
     else
 	{
-	y2warning( "checkMd does not exist %u", m->nr() ); 
+	y2war("checkMd does not exist " << m->nr());
 	}
     delete m;
     }
@@ -626,8 +623,7 @@ MdCo::doCreate( Volume* v )
 	    getMdData( m->nr() );
 	    updateEntry( m );
 	    bool used_as_pv = m->getUsedByType() == UB_LVM;
-	    y2milestone( "zeroNew:%d used_as_pv:%d",
-			 getStorage()->getZeroNewPartitions(), used_as_pv );
+	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
 		ret = getStorage()->zeroDevice(m->device(), m->sizeK());

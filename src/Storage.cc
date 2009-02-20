@@ -3899,7 +3899,7 @@ bool Storage::removeDmMapsTo( const string& dev )
 		}
 	    }
 	else
-	    y2warning( "not a Dm descendant %s", v->device().c_str() );
+	    y2war("not a Dm descendant " << v->device());
 	}
     VolIterator v;
     DiskIterator d;
@@ -3932,7 +3932,7 @@ void Storage::updateDmEmptyPeMap()
 		}
 	    }
 	else
-	    y2warning( "not a Dm descendant %s", v->device().c_str() );
+	    y2war("not a Dm descendant " << v->device());
 	}
     }
 
@@ -5225,7 +5225,7 @@ void Storage::rootMounted()
 	    }
 	int ret = fstab->changeRootPrefix( root()+"/etc" );
 	if( ret!=0 )
-	    y2error( "changeRootPrefix returns %d", ret );
+	    y2err("changeRootPrefix returns " << ret);
 	}
     }
 

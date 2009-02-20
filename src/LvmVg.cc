@@ -41,20 +41,22 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     PeContainer(s,staticType())
     {
     nm = Name;
-    y2debug( "constructing lvm vg %s lvm1:%d", Name.c_str(), lv1 );
+    y2deb("constructing lvm vg " << Name << " lvm1:" << lv1);
     init();
     lvm1 = lv1;
     if( Name.empty() )
 	{
-	y2error("empty name in constructor");
+	y2err("empty name in constructor");
 	}
     }
 
-LvmVg::LvmVg( Storage * const s, const string& file, int ) :
-    PeContainer(s,staticType())
-    {
-    y2debug( "constructing lvm vg %s from file %s", dev.c_str(), file.c_str() );
-    }
+
+LvmVg::LvmVg(Storage * const s, const string& file, int) 
+    : PeContainer(s, staticType())
+{
+    y2deb("constructing lvm vg " << dev << " from file " << file);
+}
+
 
 LvmVg::~LvmVg()
     {
@@ -69,7 +71,7 @@ int
 LvmVg::removeVg()
     {
     int ret = 0;
-    y2milestone( "begin" );
+    y2mil("begin");
     if( readonly() )
 	{
 	ret = LVM_CHANGE_READONLY;
@@ -374,7 +376,7 @@ int
 LvmVg::removeLv( const string& name )
     {
     int ret = 0;
-    y2milestone( "name:%s", name.c_str() );
+    y2mil("name:" << name);
     LvmLvIter i;
     checkConsistency();
     if( readonly() )
@@ -423,7 +425,7 @@ int
 LvmVg::changeStripe( const string& name, unsigned long stripe )
     {
     int ret = 0;
-    y2milestone( "name:%s stripe:%lu", name.c_str(), stripe );
+    y2mil("name:" << name << " stripe:" << stripe);
     LvmLvIter i;
     checkConsistency();
     if( readonly() )
@@ -475,7 +477,7 @@ int
 LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
     {
     int ret = 0;
-    y2milestone( "name:%s stripeSize:%llu", name.c_str(), stripeSize );
+    y2mil("name:" << name << " stripeSize:" << stripeSize);
     LvmLvIter i;
     checkConsistency();
     if( readonly() )
@@ -629,7 +631,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 
 void LvmVg::getVgData( const string& name, bool exists )
     {
-    y2milestone( "name:%s", name.c_str() );
+    y2mil("name:" << name);
     SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
     unsigned cnt = c.numLines();
     unsigned i = 0;
@@ -652,8 +654,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    bool lv1 = extractNthWord( 1, line )=="lvm1";
 		    if( exists && lv1 != lvm1 )
-			y2warning( "inconsistent lvm1 my:%d lvm:%d",
-			           lvm1, lv1 );
+			y2war("inconsistent lvm1 my:" << lvm1 << " lvm:" << lv1);
 		    lvm1 = lv1;
 		    }
 		else if( line.find( "PE Size" ) == 0 )
@@ -665,8 +666,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 			tmp.erase( pos );
 		    tmp >> pes;
 		    if( exists && pes != pe_size )
-			y2warning( "inconsistent pe_size my:%llu lvm:%llu",
-			           pe_size, pes );
+			y2war("inconsistent pe_size my:" << pe_size << " lvm:" << pes);
 		    pe_size = pes;
 		    }
 		else if( line.find( "Total PE" ) == 0 )
@@ -835,14 +835,14 @@ void LvmVg::getVgData( const string& name, bool exists )
 void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		  string& status, string& alloc, bool& ro)
     {
-    y2milestone( "addLv:%s", name.c_str() );
+    y2mil("addLv:" << name);
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
     LvmLvIter i=p.begin();
     while( i!=p.end() && i->name()!=name )
 	{
 	++i;
 	}
-    y2milestone( "addLv exists %d", i!=p.end() );
+    y2mil("addLv exists " << (i!=p.end()));
     if( i!=p.end() )
     {
 	if( !lvResized( *i ))
@@ -868,7 +868,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	    {
 	    ++i;
 	    }
-	y2milestone( "addLv exists deleted %d", i!=p.end() );
+	y2mil("addLv exists deleted " << (i!=p.end()));
 	if( i==p.end() )
 	    {
 	    num_lv++;
@@ -879,7 +879,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		addToList( n );
 	    else
 		{
-		y2milestone( "inactive Lv %s", name.c_str() );
+		y2mil("inactive Lv " << name);
 		delete n;
 		}
 	    }
@@ -929,7 +929,7 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
 
 int LvmVg::commitChanges( CommitStage stage )
     {
-    y2milestone( "name %s stage %d", name().c_str(), stage );
+    y2mil("name:" << name() << " stage:" << stage);
     int ret = 0;
     switch( stage )
 	{
@@ -1142,7 +1142,7 @@ LvmVg::getVgs(list<string>& l)
 int
 LvmVg::doCreateVg()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2mil("Vg:" << name());
     int ret = 0;
     if( created() )
 	{
@@ -1200,7 +1200,7 @@ LvmVg::doCreateVg()
 int
 LvmVg::doRemoveVg()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2mil("Vg:" << name());
     int ret = 0;
     if( deleted() )
 	{
@@ -1230,7 +1230,7 @@ LvmVg::doRemoveVg()
 int
 LvmVg::doExtendVg()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2mil("Vg:" << name());
     y2mil( "this:" << *this );
     int ret = 0;
     list<string> devs;
@@ -1282,7 +1282,7 @@ LvmVg::doExtendVg()
 int
 LvmVg::doReduceVg()
     {
-    y2milestone( "Vg:%s", name().c_str() );
+    y2mil("Vg:" << name());
     y2mil( "this:" << *this );
     int ret = 0;
     if( !active )
@@ -1326,7 +1326,7 @@ LvmVg::doReduceVg()
 int
 LvmVg::doCreate( Volume* v )
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil("Vg:" << name() << " name:" << v->name());
     LvmLv * l = dynamic_cast<LvmLv *>(v);
     int ret = 0;
     if( l != NULL )
@@ -1378,7 +1378,7 @@ LvmVg::doCreate( Volume* v )
 
 int LvmVg::doRemove( Volume* v )
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil("Vg:" << name() << " name:" << v->name());
     y2mil( "this:" << *this );
     LvmLv * l = dynamic_cast<LvmLv *>(v);
     int ret = 0;
@@ -1422,7 +1422,7 @@ int LvmVg::doRemove( Volume* v )
 
 int LvmVg::doResize( Volume* v )
     {
-    y2milestone( "Vg:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil("Vg:" << name() << " name:" << v->name());
     LvmLv * l = dynamic_cast<LvmLv *>(v);
     int ret = 0;
     if( l != NULL )
@@ -1505,7 +1505,7 @@ string LvmVg::instSysString()
 int LvmVg::doCreatePv( const string& device )
     {
     int ret = 0;
-    y2milestone( "dev:%s", device.c_str() );
+    y2mil("dev:" << device);
     SystemCmd c;
     string cmd = MDADMBIN " --zero-superblock " + quote(device);
     c.execute( cmd );
