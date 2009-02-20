@@ -63,4 +63,8 @@ main()
     test("en_US.UTF-8", "5 G B", false);		// FAILS
     test("de_DE.UTF-8", "12.34 kB", false);		// FAILS
     test("fr_FR.UTF-8", "12 34 GB", false);		// FAILS
+
+    test("en_GB.UTF-8", "3.14 G", false);
+    test("en_GB.UTF-8", "3.14 GB", false);
+    test("en_GB.UTF-8", "3.14 GiB", false);
 }

@@ -27,60 +27,72 @@ namespace storage
     }
 
 
-    string
+    list<string>
     getSuffix(int i, bool classic, bool sloppy = false)
     {
+	list<string> ret;
+
 	switch (i)
 	{
 	    case 0:
+		/* symbol for "bytes" (best keep untranslated) */
+		ret.push_back(classic ? "B" : _("B"));
 		if (sloppy)
-		    return "";
-		else
-		    /* Byte abbreviated */
-		    return classic ? "B" : _("B");
+		    ret.push_back("");
+		break;
 
 	    case 1:
+		/* symbol for "kilo bytes" (best keep untranslated) */
+		ret.push_back(classic ? "kB" : _("kB"));
+		/* symbol for "kibi bytes" (best keep untranslated) */
+		ret.push_back(classic ? "KiB" : _("KiB"));
 		if (sloppy)
-		    /* Kilo abbreviated */
-		    return classic ? "k" : _("k");
-		else
-		    /* KiloByte abbreviated */
-		    return classic ? "kB" : _("kB");
+		    /* symbol for "kilo" (best keep untranslated) */
+		    ret.push_back(classic ? "k" : _("k"));
+		break;
 
 	    case 2:
+		/* symbol for "mega bytes" (best keep untranslated) */
+		ret.push_back(classic ? "MB" : _("MB"));
+		/* symbol for "mebi bytes" (best keep untranslated) */
+		ret.push_back(classic ? "MiB" : _("MiB"));
 		if (sloppy)
-		    /* Mega abbreviated */
-		    return classic ? "M" : _("M");
-		else
-		    /* MegaByte abbreviated */
-		    return classic ? "MB" : _("MB");
+		    /* symbol for "mega" (best keep untranslated) */
+		    ret.push_back(classic ? "M" : _("M"));
+		break;
 
 	    case 3:
+		/* symbol for "giga bytes" (best keep untranslated) */
+		ret.push_back(classic ? "GB" : _("GB"));
+		/* symbol for "gibi bytes" (best keep untranslated) */
+		ret.push_back(classic ? "GiB" : _("GiB"));
 		if (sloppy)
-		    /* Giga abbreviated */
-		    return classic ? "G" : _("G");
-		else
-		    /* GigaByte abbreviated */
-		    return classic ? "GB" : _("GB");
+		    /* symbol for "giga" (best keep untranslated) */
+		    ret.push_back(classic ? "G" : _("G"));
+		break;
 
 	    case 4:
+		/* symbol for "tera bytes" (best keep untranslated) */
+		ret.push_back(classic ? "TB" : _("TB"));
+		/* symbol for "tebi bytes" (best keep untranslated) */
+		ret.push_back(classic ? "TiB" : _("TiB"));
 		if (sloppy)
-		    /* Tera abbreviated */
-		    return classic ? "T" : _("T");
-		else
-		    /* TeraByte abbreviated */
-		    return classic ? "TB" : _("TB");
+		    /* symbol for "tera" (best keep untranslated) */
+		    ret.push_back(classic ? "T" : _("T"));
+		break;
 
 	    case 5:
+		/* symbol for "peta bytes" (best keep untranslated) */
+		ret.push_back(classic ? "PB" : _("PB"));
+		/* symbol for "pebi bytes" (best keep untranslated) */
+		ret.push_back(classic ? "PiB" : _("PiB"));
 		if (sloppy)
-		    /* Peta abbreviated */
-		    return classic ? "P" : _("P");
-		else
-		    /* PetaByte abbreviated */
-		    return classic ? "PB" : _("PB");
+		    /* symbol for "peta" (best keep untranslated) */
+		    ret.push_back(classic ? "P" : _("P"));
+		break;
 	}
 
-	return string("error");
+	return ret;
     }
 
 
@@ -108,7 +120,7 @@ namespace storage
 	s.setf(ios::fixed);
 	s.precision(precision);
 
-	s << f << ' ' << getSuffix(i, classic);
+	s << f << ' ' << getSuffix(i, classic).front();
 
 	return s.str();
     }
@@ -125,12 +137,13 @@ namespace storage
 
 	for (int i = 0; i < numSuffixes(); i++)
 	{
-	    for (int j = 0; j < (classic ? 1 : 2); j++)
+	    list<string> suffix = getSuffix(i, classic, !classic);
+
+	    for (list<string>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
 	    {
-		string suffix = getSuffix(i, classic, j != 0);
-		if (boost::iends_with(str_trimmed, suffix, loc))
+		if (boost::iends_with(str_trimmed, *j, loc))
 		{
-		    string number = str_trimmed.substr(0, str_trimmed.size() - suffix.size());
+		    string number = str_trimmed.substr(0, str_trimmed.size() - j->size());
 
 		    istringstream s(boost::trim_copy(number, loc));
 		    s.imbue(loc);
