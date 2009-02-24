@@ -76,9 +76,12 @@ namespace storage
     }
 
 
-    string makeTooltip(const char* text, unsigned long long sizeK)
+    string makeTooltip(const char* text, const string& label, unsigned long long sizeK)
     {
-	return dotQuote(string(text) + string(", ") + byteToHumanString(1024 * sizeK, false, 2, false));
+	ostringstream s;
+	s << "<p>" << text << "<br>" << label << "<br>"
+	  << byteToHumanString(1024 * sizeK, false, 2, false) << "</p>";
+	return dotQuote(s.str());
     }
 
 
@@ -89,39 +92,39 @@ namespace storage
 	{
 	    case NODE_DISK:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("Hard Disk"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Hard Disk"), node.label, node.sizeK);
 		break;
 	    case NODE_DMRAID:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("BIOS RAID"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("BIOS RAID"), node.label, node.sizeK);
 		break;
 	    case NODE_DMMULTIPATH:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("Multipath"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Multipath"), node.label, node.sizeK);
 		break;
 	    case NODE_PARTITION:
 		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\""
-		  << ", tooltip=" << makeTooltip(_("Partition"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Partition"), node.label, node.sizeK);
 		break;
 	    case NODE_MDRAID:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\""
-		  << ", tooltip=" << makeTooltip(_("RAID"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("RAID"), node.label, node.sizeK);
 		break;
 	    case NODE_LVMVG:
 		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\""
-		  << ", tooltip=" << makeTooltip(_("Volume Group"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Volume Group"), node.label, node.sizeK);
 		break;
 	    case NODE_LVMLV:
 		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\""
-		  << ", tooltip=" << makeTooltip(_("Logical Volume"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Logical Volume"), node.label, node.sizeK);
 		break;
 	    case NODE_DM:
 		s << ", color=\"#885511\", fillcolor=\"#ddbb99\""
-		  << ", tooltip=" << makeTooltip(_("DM Device"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("DM Device"), node.label, node.sizeK);
 		break;
 	    case NODE_MOUNTPOINT:
 		s << ", color=\"#008800\", fillcolor=\"#99ee99\""
-		  << ", tooltip=" << makeTooltip(_("Mount Point"), node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Mount Point"), node.label, node.sizeK);
 		break;
 	}
 	return s << "];";
