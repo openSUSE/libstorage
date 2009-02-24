@@ -79,8 +79,7 @@ namespace storage
     string makeTooltip(const char* text, const string& label, unsigned long long sizeK)
     {
 	ostringstream s;
-	s << "<p>" << text << "<br>" << label << "<br>"
-	  << byteToHumanString(1024 * sizeK, false, 2, false) << "</p>";
+	s << text << "\\n" << label << "\\n" << byteToHumanString(1024 * sizeK, false, 2, false);
 	return dotQuote(s.str());
     }
 
