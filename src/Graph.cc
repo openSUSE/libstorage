@@ -56,7 +56,7 @@ namespace storage
 
     struct Rank
     {
-	Rank(NodeType type, const string& name)
+	Rank(NodeType type, const char* name)
 	    : type(type), name(name)
 	    {}
 
