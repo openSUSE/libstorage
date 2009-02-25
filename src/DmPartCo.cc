@@ -78,8 +78,7 @@ int
 DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
 			   long unsigned len, string& device, bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
-		 checkRelaxed );
+    y2mil("begin type:" << type << " start:" << start << " len:" << len << " relaxed:" << checkRelaxed);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
 	ret = DMPART_CHANGE_READONLY;
@@ -94,7 +93,7 @@ DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
 int 
 DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed )
     {
-    y2milestone( "len %ld relaxed:%d", len, checkRelaxed );
+    y2mil("len:" << len << " relaxed:" << checkRelaxed);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
 	ret = DMPART_CHANGE_READONLY;
@@ -109,7 +108,7 @@ DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed 
 int 
 DmPartCo::createPartition( storage::PartitionType type, string& device )
     {
-    y2milestone( "type %u", type );
+    y2mil("type:" << type);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
 	ret = DMPART_CHANGE_READONLY;
@@ -540,8 +539,7 @@ void DmPartCo::activate_part( bool val )
 
 int DmPartCo::doSetType( DmPart* dm )
     {
-    y2milestone( "doSetType container %s name %s", name().c_str(),
-		 dm->name().c_str() );
+    y2mil("doSetType container " << name() << " name " << dm->name());
     Partition * p = dm->getPtr();
     int ret = p?0:DMPART_PARTITION_NOT_FOUND;
     if( ret==0 )
@@ -658,7 +656,7 @@ int DmPartCo::getToCommit( CommitStage stage, list<Container*>& col,
 			   list<Volume*>& vol )
     {
     int ret = 0;
-    y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+    y2mil("col:" << col.size() << " vol:" << vol.size());
     getStorage()->logCo( this );
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
@@ -673,7 +671,7 @@ int DmPartCo::getToCommit( CommitStage stage, list<Container*>& col,
     if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
 	col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
     return( ret );
     }
 
@@ -745,7 +743,7 @@ void DmPartCo::getCommitActions( list<commitAction*>& l ) const
 int 
 DmPartCo::doCreate( Volume* v ) 
     {
-    y2milestone( "Raid:%s part:%s", name().c_str(), v->name().c_str() );
+    y2mil("DmPart:" << name() << " name:" << v->name());
     DmPart * l = dynamic_cast<DmPart *>(v);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && l == NULL )
@@ -790,7 +788,7 @@ int DmPartCo::doRemove()
 
 int DmPartCo::doRemove( Volume* v )
     {
-    y2milestone( "Raid:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil("DmPart:" << name() << " name:" << v->name());
     DmPart * l = dynamic_cast<DmPart *>(v);
     bool save_act = false;
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
@@ -833,7 +831,7 @@ int DmPartCo::doRemove( Volume* v )
 
 int DmPartCo::doResize( Volume* v ) 
     {
-    y2milestone( "DmPart:%s name:%s", name().c_str(), v->name().c_str() );
+    y2mil("DmPart:" << name() << " name:" << v->name());
     DmPart * l = dynamic_cast<DmPart *>(v);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && l == NULL )

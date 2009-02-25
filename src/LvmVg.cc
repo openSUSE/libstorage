@@ -225,7 +225,7 @@ int
 LvmVg::setPeSize( long long unsigned peSizeK )
     {
     int ret = 0;
-    y2milestone( "old:%llu new:%llu", pe_size, peSizeK );
+    y2mil("old:" << pe_size << " new:" << peSizeK);
     if( peSizeK != pe_size )
 	{
 	unsigned long long old_pe = pe_size;
@@ -250,7 +250,7 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
                  string& device )
     {
     int ret = 0;
-    y2milestone( "name:%s sizeK:%llu stripe:%u", name.c_str(), sizeK, stripe );
+    y2mil("name:" << name << " sizeK:" << sizeK << " stripe:" << stripe);
     checkConsistency();
     if( readonly() )
 	{
@@ -290,14 +290,14 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	}
     if( ret==0 )
 	checkConsistency();
-    y2milestone( "ret:%d device:%s", ret, ret?"":device.c_str() );
+    y2mil("ret:" << ret << " device:" << (ret?"":device));
     return( ret );
     }
 
 int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     {
     int ret = 0;
-    y2milestone( "newSizeK:%llu vol:%s", newSize, v->name().c_str() );
+    y2mil("newSizeK:" << newSize << " vol:" << v->name());
     checkConsistency();
 
     LvmLv * l = dynamic_cast<LvmLv *>(v);
@@ -827,7 +827,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	}
     if( num_lv>0 && lvmLvPair().empty() )
 	{
-	y2milestone( "inactive VG %s num_lv:%u", nm.c_str(), num_lv );
+	y2mil("inactive VG " << nm << " num_lv:" << num_lv);
 	inactiv = true;
 	}
     }
@@ -923,7 +923,7 @@ int LvmVg::getToCommit( CommitStage stage, list<Container*>& col,
 	    }
         }
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
     return( ret );
     }
 
