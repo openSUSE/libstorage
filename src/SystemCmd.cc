@@ -634,44 +634,6 @@ SystemCmd::logOutput() const
 }
 
 
-///////////////////////////////////////////////////////////////////
-//
-//	METHOD NAME : SystemCmd::PlaceOutput
-//	METHOD TYPE : int
-//
-//	INPUT  :
-//	OUTPUT :
-//	DESCRIPTION : Place stdout/stderr linewise in Ret_Cr
-//
-int SystemCmd::placeOutput( unsigned Which_iv, vector<string> &Ret_Cr,
-                            const bool Append_bv ) const
-{
-  if ( !Append_bv )
-    Ret_Cr.clear();
-
-  int Lines_ii = numLines( false, Which_iv );
-
-  for ( int i_ii = 0; i_ii < Lines_ii; i_ii++ )
-    Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
-
-  return Lines_ii;
-}
-
-int SystemCmd::placeOutput( unsigned Which_iv, list<string> &Ret_Cr,
-                            const bool Append_bv ) const
-{
-  if ( !Append_bv )
-    Ret_Cr.clear();
-
-  int Lines_ii = numLines( false, Which_iv );
-
-  for ( int i_ii = 0; i_ii < Lines_ii; i_ii++ )
-    Ret_Cr.push_back( *getLine( i_ii, false, Which_iv ) );
-
-  return Lines_ii;
-}
-
-
 string SystemCmd::quote(const string& str)
 {
     return "'" + boost::replace_all_copy(str, "'", "'\\''") + "'";

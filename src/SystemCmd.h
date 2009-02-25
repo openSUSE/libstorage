@@ -46,15 +46,6 @@ class SystemCmd
 	void setCombine( const bool Combine_b=true );
 	int retcode() const { return Ret_i; }
 
-	int getStdout( std::vector<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
-	int getStderr( std::vector<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
-	int getStdout( std::list<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return placeOutput( IDX_STDOUT, Ret_Cr, Append_bv); }
-	int getStderr( std::list<string> &Ret_Cr, const bool Append_bv = false ) const
-	    { return placeOutput( IDX_STDERR, Ret_Cr, Append_bv); }
-
 	/**
 	 * Quotes and protects a single string for shell execution.
 	 */
@@ -68,9 +59,6 @@ class SystemCmd
 	static bool testmode;
 
     protected:
-
-        int  placeOutput( unsigned Which_iv, std::vector<string> &Ret_Cr, const bool Append_bv ) const;
-        int  placeOutput( unsigned Which_iv, std::list<string> &Ret_Cr, const bool Append_bv ) const;
 
 	void invalidate();
 	void closeOpenFds();
