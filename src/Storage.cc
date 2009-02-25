@@ -5444,14 +5444,12 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(device));
 		    string fstr = " might resize at ";
 		    string::size_type pos;
-		    if( c.retcode()==0 &&
-			(pos=c.getString()->find( fstr ))!=string::npos )
+		    if (c.retcode()==0 && (pos=c.stdout().find(fstr))!=string::npos)
 			{
 			y2mil("pos:" << pos);
-			pos = c.getString()->find_first_not_of( " \t\n", pos+fstr.size());
+			pos = c.stdout().find_first_not_of(" \t\n", pos + fstr.size());
 			y2mil("pos:" << pos);
-			string number = c.getString()->substr( pos,
-							       c.getString()->find_first_not_of( "0123456789", pos ));
+			string number = c.stdout().substr(pos, c.stdout().find_first_not_of("0123456789", pos));
 			y2mil("number:\"" << number << "\"");
 			unsigned long long t;
 			number >> t;

@@ -39,7 +39,6 @@ class SystemCmd
 	const string& stderr() const { return( *getString(IDX_STDERR)); }
 	const string& stdout() const { return( *getString(IDX_STDOUT)); }
 	const string& cmd() const { return( lastCmd ); }
-	const string* getString( unsigned Idx_ii=IDX_STDOUT ) const;
 	const string* getLine( unsigned Num_iv, bool Selected_bv=false,
 			       unsigned Idx_ii=IDX_STDOUT ) const;
 	unsigned numLines( bool Selected_bv=false, unsigned Idx_ii=IDX_STDOUT ) const;
@@ -71,6 +70,8 @@ class SystemCmd
 	                     string& Text_Cr, std::vector<string>& Lines_Cr );
 	void addLine( string Text_Cv, std::vector<string>& Lines_Cr );
 	void init();
+
+	const string* getString( unsigned Idx_ii=IDX_STDOUT ) const;
 
 	mutable string Text_aC[2];
 	mutable bool Valid_ab[2];

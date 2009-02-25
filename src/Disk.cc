@@ -534,8 +534,8 @@ Disk::maxSizeLabelK( const string& label )
 int
 Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     {
-    string tmp = *cmd.getString(SystemCmd::IDX_STDERR);
-    if( tmp.length()>0 )
+    string tmp = cmd.stderr();
+    if (!tmp.empty())
         {
 	y2err("cmd:" << cmd_line);
 	y2err("err:" << tmp);
@@ -545,8 +545,8 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
 	    }
 	system_stderr += tmp;
         }
-    tmp = *cmd.getString(SystemCmd::IDX_STDOUT);
-    if( tmp.length()>0 )
+    tmp = cmd.stdout();
+    if (!tmp.empty())
         {
 	y2mil("cmd:" << cmd_line);
 	y2mil("out:" << tmp);
