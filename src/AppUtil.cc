@@ -364,6 +364,7 @@ void
 prepareLogStream(std::ostringstream& s)
 {
     s.imbue(std::locale::classic());
+    s.setf(std::ios::boolalpha);
     s.setf(std::ios::showbase);
 }
 
