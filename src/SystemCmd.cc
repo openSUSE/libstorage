@@ -12,7 +12,7 @@
 #include <sys/wait.h>
 
 #include <string>
-#include <boost/algorithm/string/replace.hpp>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
@@ -364,16 +364,7 @@ SystemCmd::getString( unsigned Idx_iv ) const
 	}
     if( !Valid_ab[Idx_iv] )
 	{
-	unsigned int I_ii;
-
-	Text_aC[Idx_iv] = "";
-	I_ii=0;
-	while( I_ii<Lines_aC[Idx_iv].size() )
-	    {
-	    Text_aC[Idx_iv] += Lines_aC[Idx_iv][I_ii];
-	    Text_aC[Idx_iv] += '\n';
-	    I_ii++;
-	    }
+	Text_aC[Idx_iv] = boost::join(Lines_aC[Idx_iv], "\n");
 	Valid_ab[Idx_iv] = true;
 	}
     return &Text_aC[Idx_iv];
