@@ -38,12 +38,12 @@ bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     bool ret = true;
     string cmd_line = FDASDBIN " -p " + quote(device());
     system_stderr.erase();
-    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
-    y2milestone( "retcode:%d", Cmd.retcode() );
+    y2mil("retcode:" << Cmd.retcode());
     if( Cmd.retcode() == 0 )
 	checkFdasdOutput( Cmd, ppart );
-    y2milestone( "ret:%d partitons:%zd", ret, vols.size() );
+    y2mil("ret:" << ret << " partitons:" << vols.size());
     return( ret );
     }
 
@@ -54,15 +54,15 @@ bool Dasd::detectPartitions( ProcPart& ppart )
     system_stderr.erase();
     detected_label = "dasd";
     setLabelData( "dasd" );
-    y2milestone( "executing cmd:%s", cmd_line.c_str() );
+    y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
-    y2milestone( "retcode:%d", Cmd.retcode() );
+    y2mil("retcode:" << Cmd.retcode());
     if( Cmd.retcode() == 0 )
 	{
 	if( Cmd.select( "^format" )>0 )
 	    {
 	    string tmp = Cmd.getLine(0, true);
-	    y2milestone( "Format line:%s", tmp.c_str() );
+	    y2mil("Format line:" << tmp);
 	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	    tmp = boost::to_lower_copy(extractNthWord(4, tmp), locale::classic());
 	    if( tmp == "cdl" )
@@ -74,16 +74,15 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 	new_cyl = cyl;
 	new_head = head;
 	new_sector = sector;
-	y2milestone( "After dasdview Head:%u Sector:%u Cylinder:%lu SizeK:%llu",
-		     head, sector, cyl, size_k );
+	y2mil("After dasdview head:" << head << " sector:" << sector << " cylinder:" << cyl << " sizeK:" << size_k);
 	byte_cyl = head * sector * 512;
-	y2milestone( "byte_cyl:%lu", byte_cyl );
+	y2mil("byte_cyl:" << byte_cyl);
 	if( size_k==0 )
 	    {
 	    size_k = (head*sector*cyl)/2;
-	    y2milestone( "New SizeK:%llu", size_k );
+	    y2mil("New SizeK:" << size_k);
 	    }
-	y2mil( "fmt:" << fmt );
+	y2mil("fmt:" << fmt);
 	switch( fmt )
 	    {
 	    case DASDF_CDL:
@@ -111,14 +110,13 @@ bool Dasd::detectPartitions( ProcPart& ppart )
     else
 	{
 	new_sector = sector = 96;
-	y2milestone( "new sector:%u", sector );
+	y2mil("new sector:" << sector);
 	}
     byte_cyl = head * sector * 512;
-    y2milestone( "byte_cyl:%lu", byte_cyl );
-    y2milestone( "ret:%d partitons:%zd detected label:%s", ret, vols.size(), 
-                 label.c_str() );
+    y2mil("byte_cyl:" << byte_cyl);
+    y2mil("ret:" << ret << " partitons:" << vols.size() << " detected label:" << label);
     ronly = fmt!=DASDF_CDL;
-    y2milestone( "fmt:%d readonly:%d", fmt, ronly );
+    y2mil("fmt:" << fmt << " readonly:" << ronly);
     return( ret );
     }
 
@@ -139,7 +137,7 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
     Data >> devname >> StartM >> EndM;
     devname.erase(0,device().size());
     devname >> nr;
-    y2milestone( "Fields Num:%d Start:%lu End:%lu", nr, StartM, EndM );
+    y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM);
     if( nr>0 )
       {
       start = StartM/head;
@@ -147,9 +145,9 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
       if( start+csize > cylinders() )
 	  {
 	  csize = cylinders()-start;
-	  y2milestone( "new csize:%lu", csize );
+	  y2mil("new csize:" << csize);
 	  }
-      y2milestone( "Fields Num:%d Start:%ld Size:%ld", nr, start, csize );
+      y2mil("Fields Num:" << nr << " Start:" << start << " Size:" << csize);
       }
    return( nr>0 );
    }
@@ -194,14 +192,14 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 		}
 	    }
 	}
-    y2mil( "nm:" << nm );
+    y2mil("nm:" << nm);
     string reg = nm;
     if( !reg.empty() && reg.find( '/' )!=string::npos &&
 	isdigit(reg[reg.length()-1]) )
 	reg += "p";
     reg += "[0-9]+";
     list<string> ps = ppart.getMatchingEntries( reg );
-    y2mil( "regex " << reg << " ps " << ps );
+    y2mil("regex " << reg << " ps " << ps);
     unsigned long dummy = 0;
     if( !checkPartedValid( ppart, nm, pl, dummy ) )
 	{
@@ -235,47 +233,47 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
 	{
 	val = 0;
 	tmp = cmd.getLine(0, true);
-	y2milestone( "Cylinder line:%s", tmp.c_str() );
+	y2mil("Cylinder line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	y2mil( "val:" << val );
+	y2mil("val:" << val);
 	c=val;
 	}
     if( cmd.select( "tracks per" )>0 )
 	{
 	val = 0;
 	tmp = cmd.getLine(0, true);
-	y2milestone( "Tracks line:%s", tmp.c_str() );
+	y2mil("Tracks line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	y2mil( "val:" << val );
+	y2mil("val:" << val);
 	h=val;
 	}
     if( cmd.select( "blocks per" )>0 )
 	{
 	val = 0;
 	tmp = cmd.getLine(0, true);
-	y2milestone( "Blocks line:%s", tmp.c_str() );
+	y2mil("Blocks line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	y2mil( "val:" << val );
+	y2mil("val:" << val);
 	s=val;
 	}
     if( cmd.select( "blocksize" )>0 )
 	{
 	val = 0;
 	tmp = cmd.getLine(0, true);
-	y2milestone( "Bytes line:%s", tmp.c_str() );
+	y2mil("Bytes line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
 	tmp >> val;
-	y2mil( "val:" << val );
+	y2mil("val:" << val);
 	s*=val/512;
 	}
-    y2milestone( "c:%lu h:%u s:%u", c, h, s );
+    y2mil("c:" << c << " h:" << h << " s:" << s);
     }
 
 bool Dasd::detectGeometry()
@@ -284,7 +282,7 @@ bool Dasd::detectGeometry()
     sector *= 8;
     byte_cyl *= 8;
     cyl /= 8;
-    y2milestone( "cyl:%lu sector:%u byte_cyl:%lu", cyl, sector, byte_cyl  );
+    y2mil("cyl:" << cyl << " sector:" << sector << " byte_cyl:" << byte_cyl);
     return( true );
     }
 
@@ -300,7 +298,7 @@ int Dasd::resizePartition( Partition* p, unsigned long newCyl )
 
 int Dasd::removePartition( unsigned nr )
     {
-    y2milestone( "begin nr %u", nr );
+    y2mil("begin nr:" << nr);
     int ret = Disk::removePartition( nr );
     if( ret==0 )
 	{
@@ -315,8 +313,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
-		 checkRelaxed );
+    y2mil("begin type:" << type << " start:" << start << " len:" << len << " relaxed:" << checkRelaxed);
     int ret = createChecks( type, start, len, checkRelaxed );
     int number = 0;
     if( ret==0 )
@@ -336,7 +333,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
 		number++;
 		++i;
 		}
-	    y2milestone( "number %u", number );
+	    y2mil("number:" << number);
 	    changeNumbers( p.begin(), p.end(), number-1, 1 );
 	    }
 	}
@@ -430,7 +427,7 @@ int Dasd::doFdasd()
 
 void Dasd::getCommitActions( list<commitAction*>& l ) const
     {
-    y2mil( "begin:" << name() << " init_disk:" << init_disk );
+    y2mil("begin:" << name() << " init_disk:" << init_disk);
     Disk::getCommitActions( l );
     if( init_disk )
 	{
@@ -504,7 +501,7 @@ int Dasd::getToCommit( CommitStage stage, list<Container*>& col,
     else
 	ret = Disk::getToCommit( stage, col, vol );
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
     return( ret );
     }
 
@@ -533,7 +530,7 @@ static bool needDasdfmt( const Disk&d )
 int Dasd::doDasdfmt()
     {
     int ret = 0;
-    y2milestone( "dasd:%s", device().c_str() );
+    y2mil("dasd:" << device());
     list<Disk*> dl;
     list<string> devs;
     getStorage()->getDiskList( needDasdfmt, dl );
@@ -543,7 +540,7 @@ int Dasd::doDasdfmt()
 	    {
 	    devs.push_back( undevDevice((*i)->device()) );
 	    }
-	y2mil( "devs:" << devs );
+	y2mil("devs:" << devs);
 	if( !silent ) 
 	    {
 	    string txt = dasdfmtTexts( dl.size()==1, mergeString(devs) );
@@ -555,7 +552,7 @@ int Dasd::doDasdfmt()
 	    *i = "-f " + quote(*i);
 	    }
 	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + mergeString(devs);
-	y2milestone( "cmdline:%s", cmd_line.c_str() );
+	y2mil("cmdline:" << cmd_line);
 	CallbackProgressBar cb = getStorage()->getCallbackProgressBarTheOne();
 	ScrollBarHandler* sb = new DasdfmtScrollbar( cb );
 	SystemCmd cmd;
@@ -581,7 +578,7 @@ int Dasd::doDasdfmt()
 
 int Dasd::initializeDisk( bool value )
     {
-    y2milestone( "value:%d old:%d", value, init_disk );
+    y2mil("value:" << value << " old:" << init_disk);
     int ret = 0;
     if( init_disk != value )
 	{
@@ -590,11 +587,11 @@ int Dasd::initializeDisk( bool value )
 	    {
 	    new_sector = sector = 96;
 	    new_head = head = 15;
-	    y2milestone( "new sector:%u head:%u", sector, head );
+	    y2mil("new sector:" << sector << " head:" << head);
 	    size_k = (head*sector*cyl)/2;
-	    y2milestone( "new SizeK:%llu", size_k );
+	    y2mil("new SizeK:" << size_k);
 	    byte_cyl = head * sector * 512;
-	    y2milestone( "new byte_cyl:%lu", byte_cyl );
+	    y2mil("new byte_cyl:" << byte_cyl);
 	    ret = destroyPartitionTable( "dasd" );
 	    }
 	else
