@@ -48,8 +48,7 @@ Disk::Disk( Storage * const s, const string& Name,
             unsigned num, unsigned long long SizeK, ProcPart& ppart ) :
     Container(s,Name,staticType())
     {
-    y2milestone( "constructed disk %s nr %u sizeK:%llu", Name.c_str(), num,
-                 SizeK );
+    y2mil("constructed disk " << Name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = Name + decString(num);
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     ronly = true;
@@ -212,7 +211,7 @@ Disk::kbToCylinder( unsigned long long kb ) const
     unsigned long long bytes = kb * 1024;
     bytes += byte_cyl - 1;
     unsigned long ret = bytes/byte_cyl;
-    y2milestone( "KB:%lld ret:%ld byte_cyl:%ld", kb, ret, byte_cyl );
+    y2mil("KB:" << kb << " ret:" << ret << " byte_cyl:" << byte_cyl);
     return (ret);
     }
 
@@ -239,12 +238,11 @@ bool Disk::detectGeometry()
 	    sector = geometry.sectors>0?geometry.sectors:sector;
 	    cyl = geometry.cylinders>0?geometry.cylinders:cyl;
 	    }
-	y2milestone( "After HDIO_GETGEO ret %d Head:%u Sector:%u Cylinder:%lu",
-		     rcode, head, sector, cyl );
+	y2mil("After HDIO_GETGEO ret " << rcode << " Head:" << head << " Sector:" << sector <<
+	      " Cylinder:" << cyl);
 	__uint64_t sect = 0;
 	rcode = ioctl( fd, BLKGETSIZE64, &sect);
-	y2milestone( "BLKGETSIZE64 Ret:%d Bytes:%llu", rcode,
-		     (unsigned long long int) sect );
+	y2mil("BLKGETSIZE64 Ret:" << rcode << " Bytes:" << sect);
 	if( rcode==0 && sect!=0 )
 	    {
 	    sect /= 512;
@@ -255,7 +253,7 @@ bool Disk::detectGeometry()
 	    {
 	    unsigned long lsect;
 	    rcode = ioctl( fd, BLKGETSIZE, &lsect );
-	    y2milestone( "BLKGETSIZE Ret:%d Sect:%lu", rcode, lsect );
+	    y2mil("BLKGETSIZE Ret:" << rcode << " Sect:" << lsect);
 	    if( rcode==0 && lsect!=0 )
 		{
 		cyl = lsect / (unsigned long)(head*sector);
@@ -266,7 +264,7 @@ bool Disk::detectGeometry()
 	close( fd );
 	}
     byte_cyl = head * sector * 512;
-    y2milestone( "ret:%d byte_cyl:%lu", ret, byte_cyl );
+    y2mil("ret:" << ret << " byte_cyl:" << byte_cyl);
     return( ret );
     }
 
@@ -274,7 +272,7 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
     {
     bool ret = true;
     sysfs_dir = SysfsDir;
-    y2mil( "sysfs_dir:" << sysfs_dir );
+    y2mil("sysfs_dir:" << sysfs_dir);
     string SysfsFile = sysfs_dir+"/range";
     if( access( SysfsFile.c_str(), R_OK )==0 )
 	{
@@ -310,10 +308,10 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
 	string lname( lbuf, count );
 	if( lname.find( "/session" )!=string::npos )
 	    iscsi = true;
-	y2mil( "lname:" << lname );
+	y2mil("lname:" << lname);
 	}
-    y2milestone( "Ret:%d Range:%ld Major:%ld Minor:%ld iSCSI:%d", 
-                 ret, range, mjr, mnr, iscsi );
+    y2mil("Ret:" << ret << " Range:" << range << " Major:" << mjr << " Minor:" << mnr <<
+	  " iSCSI:" << iscsi);
     return( ret );
     }
 
@@ -364,10 +362,10 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 	c = sizeK()*2/(s*h);
 	if( c<=0 )
 	    c=1;
-	y2mil( "new c:" << c );
+	y2mil("new c:" << c);
 	}
-    y2milestone( "line:%s", line.c_str() );
-    y2milestone( "c:%lu h:%u s:%u", c, h, s );
+    y2mil("line:" << line);
+    y2mil("c:" << c << " h:" << h << " s:" << s);
     }
 
 bool Disk::detectPartitions( ProcPart& ppart )
@@ -392,13 +390,12 @@ bool Disk::detectPartitions( ProcPart& ppart )
 	new_cyl = cyl;
 	new_head = head;
 	new_sector = sector;
-	y2milestone( "After parted Head:%u Sector:%u Cylinder:%lu",
-		     head, sector, cyl );
+	y2mil("After parted Head:" << head << " Sector:" << sector << " Cylinder:" << cyl);
 	byte_cyl = head * sector * 512;
-	y2milestone( "byte_cyl:%lu", byte_cyl );
+	y2mil("byte_cyl:" << byte_cyl);
 	}
     gpt_enlarge = Cmd.select( "fix the GPT to use all" )>0;
-    y2milestone( "Label:%s gpt_enlarge:%d", dlabel.c_str(), gpt_enlarge );
+    y2mil("Label:" << dlabel << " gpt_enlarge:" << gpt_enlarge);
     if( dlabel!="loop" )
 	{
 	setLabelData( dlabel );
@@ -438,8 +435,8 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 	ronly = true;
 	}
 
-    y2milestone( "ret:%d partitons:%zd detected label:%s label:%s", ret,
-                 vols.size(), detected_label.c_str(), label.c_str() );
+    y2mil("ret:" << ret << " partitons:" << vols.size() << " detected label:" << detected_label <<
+	  " label:" << label);
     return( ret );
     }
 
@@ -510,8 +507,8 @@ Disk::setLabelData( const string& disklabel )
 	max_logical = min(labels[i].logical,unsigned(range-1));
 	label = labels[i].name;
 	}
-    y2milestone( "name:%s ext:%d primary:%d logical:%d", label.c_str(),
-                 ext_possible, max_primary, max_logical );
+    y2mil("name:" << label << " ext:" << ext_possible << " primary:" << max_logical << 
+	  " logical:" << max_logical);
     }
 
 unsigned long long
@@ -527,7 +524,7 @@ Disk::maxSizeLabelK( const string& label )
         {
 	ret = labels[i].max_size_k;
 	}
-    y2milestone( "label:%s ret:%llu", label.c_str(), ret );
+    y2mil("label:" << label << " ret:" << ret);
     return( ret );
     }
 
@@ -650,9 +647,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     TInfo += ",";
     if( nr>0 )
 	{
-	y2milestone( "Fields Num:%d Start:%lu End:%lu Type:%d",
-		     nr, StartM, EndM, type );
-	y2milestone( "TInfo:%s", TInfo.c_str() );
+	y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM << " Type:" << type);
+	y2mil("TInfo:" << TInfo);
 	start = StartM;
 	csize = EndM-StartM+1;
 	if( start+csize > cylinders() )
@@ -766,8 +762,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		id = Partition::ID_APPLE_HFS;
 		}
 	    }
-	y2milestone( "Fields Num:%d Id:%x Ptype:%d Start:%ld Size:%ld",
-		     nr, id, type, start, csize );
+	y2mil("Fields Num:" << nr << " Id:" << id << " Ptype:" << type << " Start:" << start <<
+	      " Size:" << csize);
 	}
     return( nr>0 );
     }
@@ -815,7 +811,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
 		}
 	    }
 	}
-    y2mil( "nm:" << nm );
+    y2mil("nm:" << nm);
     if( !dmp_slave && !checkPartedValid( ppart, nm, pl, range_exceed ) )
 	{
 	string txt = sformat(
@@ -886,7 +882,7 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 	reg += "p";
     reg += "[0-9]+";
     list<string> ps = pp.getMatchingEntries( reg );
-    y2mil( "regex " << reg << " ps " << ps );
+    y2mil("regex " << reg << " ps " << ps);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
 	pair<string,unsigned> p = getDiskPartition( *i );
@@ -896,8 +892,8 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
 	}
-    y2mil( "proc  :" << proc_l );
-    y2mil( "parted:" << parted_l );
+    y2mil("proc  :" << proc_l);
+    y2mil("parted:" << parted_l);
     if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;
@@ -1266,7 +1262,7 @@ static bool regions_sort_size( const Region& rhs, const Region& lhs )
 int Disk::createPartition( unsigned long cylLen, string& device,
 			   bool checkRelaxed )
     {
-    y2milestone( "len %ld relaxed:%d", cylLen, checkRelaxed );
+    y2mil("len:" << cylLen << " relaxed:" << checkRelaxed);
     getStorage()->logCo( this );
     int ret = 0;
     list<Region> free;
@@ -1376,8 +1372,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
-                 checkRelaxed );
+    y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     getStorage()->logCo( this );
     int ret = createChecks( type, start, len, checkRelaxed );
     int number = 0;
@@ -1409,15 +1404,14 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	addToList( p );
 	}
     getStorage()->logCo( this );
-    y2milestone( "ret:%d device:%s", ret, ret==0?device.c_str():"" );
+    y2mil("ret:" << ret << " device:" << (ret==0?device:""));
     return( ret );
     }
 
 int Disk::createChecks( PartitionType& type, unsigned long start,
                         unsigned long len, bool checkRelaxed )
     {
-    y2milestone( "begin type %d at %ld len %ld relaxed:%d", type, start, len,
-                 checkRelaxed );
+    y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
     Region r( start, len );
@@ -1436,7 +1430,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	}
     if( ret==0 && (r.end() > cylinders()+fuzz) )
 	{
-	y2milestone( "too large for disk cylinders %lu", cylinders() );
+	y2mil("too large for disk cylinders " << cylinders());
 	ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
     if( ret==0 && len==0 )
@@ -1484,8 +1478,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 int Disk::changePartitionArea( unsigned nr, unsigned long start,
 			       unsigned long len, bool checkRelaxed )
     {
-    y2milestone( "begin nr %u at %ld len %ld relaxed:%d", nr, start, len,
-                 checkRelaxed );
+    y2mil("begin nr " << nr << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     int ret = 0;
     Region r( start, len );
     unsigned fuzz = checkRelaxed ? 2 : 0;
@@ -1505,7 +1498,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	}
     if( ret==0 && r.end() > cylinders()+fuzz )
 	{
-	y2milestone( "too large for disk cylinders %lu", cylinders() );
+	y2mil("too large for disk cylinders " << cylinders());
 	ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
     if( ret==0 && len==0 )
@@ -1658,7 +1651,7 @@ int Disk::removePartition( unsigned nr )
 void Disk::changeNumbers( const PartIter& b, const PartIter& e,
                           unsigned start, int incr )
     {
-    y2milestone( "start:%u incr:%d", start, incr );
+    y2mil("start:" << start << " incr:" << incr);
     PartIter i(b);
     while( i!=e )
 	{
@@ -1785,7 +1778,7 @@ int Disk::getToCommit( CommitStage stage, list<Container*>& col,
 		vol.push_back( &(*i) );
 	}
     if( col.size()!=oco || vol.size()!=ovo )
-	y2milestone( "ret:%d col:%zd vol:%zd", ret, col.size(), vol.size());
+	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
     return( ret );
     }
 
@@ -1866,7 +1859,7 @@ string Disk::setDiskLabelText( bool doing ) const
 
 int Disk::doCreateLabel()
     {
-    y2milestone( "label:%s", label.c_str() );
+    y2mil("label:" << label);
     int ret = 0;
     if( !silent )
 	{
@@ -1953,16 +1946,15 @@ void Disk::redetectGeometry()
 	    new_cyl = c;
 	    new_head = h;
 	    new_sector = s;
-	    y2milestone( "new parted geometry Head:%u Sector:%u Cylinder:%lu",
-			 new_head, new_sector, new_cyl );
+	    y2mil("new parted geometry Head:" << new_head << " Sector:" << new_sector <<
+		  " Cylinder:" << new_cyl);
 	    }
 	}
     }
 
 int Disk::doSetType( Volume* v )
     {
-    y2milestone( "doSetType container %s name %s", name().c_str(),
-		 v->name().c_str() );
+    y2mil("doSetType container " << name() << " name " << v->name());
     Partition * p = dynamic_cast<Partition *>(v);
     int ret = 0;
     if( p != NULL )
@@ -2067,7 +2059,7 @@ Disk::getPartedValues( Partition *p )
 	if( cmd.numLines()>0 &&
 	    scanPartedLine( cmd.getLine(0), nr, start, csize, type, id, boot ))
 	    {
-	    y2milestone( "really created at cyl:%ld csize:%ld", start, csize );
+	    y2mil("really created at cyl:" << start << " csize:" << csize);
 	    p->changeRegion( start, csize, cylinderToKb(csize) );
 	    unsigned long long s=0;
 	    ret = true;
@@ -2112,12 +2104,11 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
 	    std::istringstream data( cmd.getLine(0) );
 	    classic(data);
 	    data >> dummy >> s1 >> s2;
-	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(),
-	                 s1.c_str(), s2.c_str() );
+	    y2mil("dummy:\"" << dummy << "\" s1:\"" << s1 << "\" s2:\"" << s2 << "\"");
 	    start = end = 0;
 	    s1 >> start;
 	    s2 >> end;
-	    y2milestone( "start:%llu end:%llu", start, end );
+	    y2mil("start:" << start << " end:" << end);
 	    ret = end>0;
 	    }
 	}
@@ -2154,12 +2145,9 @@ int Disk::doCreate( Volume* v )
 	    getStorage()->showInfoCb( p->createText(true) );
 	    }
 	system_stderr.erase();
-	y2milestone( "doCreate container %s name %s", name().c_str(),
-		     p->name().c_str() );
-	y2milestone( "doCreate nr:%d start %ld len %ld", p->nr(),
-	             p->cylStart(), p->cylSize() );
-	y2milestone( "doCreate detected_label:%s label:%s",
-	             detected_label.c_str(), label.c_str() );
+	y2mil("doCreate container " << name() << " name " << p->name());
+	y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
+	y2mil("doCreate detected_label:" << detected_label << " label:" << label);
 	if( detected_label != label )
 	    {
 	    ret = doCreateLabel();
@@ -2228,8 +2216,8 @@ int Disk::doCreate( Volume* v )
 		if( !ext.empty() )
 		    maxc = ext.begin()->cylEnd();
 		}
-	    y2milestone( "max %lu end:%lu", maxc, end );
-	    y2mil( "pp " << *p );
+	    y2mil("max " << maxc << " end:" << end);
+	    y2mil("pp " << *p);
 	    for( PartIter i=pp.begin(); i!=pp.end(); ++i )
 		{
 		y2mil( "i " << *i );
@@ -2240,21 +2228,19 @@ int Disk::doCreate( Volume* v )
 		    y2mil( "new maxc " << maxc );
 		    }
 		}
-	    y2milestone( "max %lu", maxc );
+	    y2mil("max " << maxc);
 	    if( new_cyl!=cyl )
 		{
-		y2milestone( "parted geometry changed old c:%lu h:%u s:%u",
-		             cyl, head, sector );
-		y2milestone( "parted geometry changed new c:%lu h:%u s:%u",
-		             new_cyl, new_head, new_sector );
-		y2milestone( "old start:%lu end:%lu", start, end );
+		y2mil("parted geometry changed old c:" << cyl << " h:" << head << " s:" << sector);
+		y2mil("parted geometry changed new c:" << new_cyl << " h:" << new_head << " s:" << new_sector);
+		y2mil("old start:" << start << " end:" << end);
 		start = start * new_cyl / cyl;
 		end = end * new_cyl / cyl;
-		y2milestone( "new start:%lu end:%lu", start, end );
+		y2mil("new start:" << start << " end:" << end);
 		}
 	    if( end>maxc && maxc<=cylinders() )
 		{
-		y2milestone( "corrected end from %lu to max %lu", end, maxc );
+		y2mil("corrected end from " << end << " to max " << maxc);
 		end = maxc;
 		}
 	    if( start==0 && (label == "mac" || label == "amiga") )
@@ -2284,8 +2270,7 @@ int Disk::doCreate( Volume* v )
 		    // filesystem is a logical partition
 		    PartPair lc = partPair(logicalCreated);
 		    call_blockdev = lc.length()<=1;
-		    y2milestone( "logicalCreated:%d call_blockdev:%d",
-				 lc.length(), call_blockdev );
+		    y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
 		    }
 		}
 	    p->setCreated( false );
@@ -2295,8 +2280,7 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 && p->type()!=EXTENDED )
 	    {
 	    bool used_as_pv = p->getUsedByType() == UB_LVM;
-	    y2milestone( "zeroNew:%d used_as_pv:%d", 
-	                 getStorage()->getZeroNewPartitions(), used_as_pv );
+	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
 		ret = getStorage()->zeroDevice(p->device(), p->sizeK());
@@ -2345,8 +2329,7 @@ int Disk::doRemove( Volume* v )
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
 	system_stderr.erase();
-	y2milestone( "doRemove container %s name %s", name().c_str(),
-		     p->name().c_str() );
+	y2mil("doRemove container " << name() << " name " << p->name());
 	if( !dmp_slave )
 	    {
 	    getStorage()->removeDmMapsTo( getPartName(p->OrigNr()) );
@@ -2495,7 +2478,7 @@ int Disk::removeVolume( Volume* v )
 bool Disk::isLogical( unsigned nr ) const
     {
     bool ret = ext_possible && nr>max_primary;
-    y2milestone( "nr:%u ret:%d", nr, ret );
+    y2mil("nr:" << nr << " ret:" << ret);
     return( ret );
     }
 
@@ -2524,14 +2507,13 @@ int Disk::doResize( Volume* v )
 	if( ret==0 )
 	    {
 	    system_stderr.erase();
-	    y2milestone( "doResize container %s name %s", name().c_str(),
-			 p->name().c_str() );
+	    y2mil("doResize container " << name() << " name " << p->name());
 	    std::ostringstream cmd_line;
 	    classic(cmd_line);
 	    unsigned long long start_sect, end_sect;
 	    getPartedSectors( p, start_sect, end_sect );
 	    end_sect = start_sect + p->sizeK()*2 - 1;
-	    y2milestone( "end_sect %llu", end_sect );
+	    y2mil("end_sect " << end_sect);
 	    const Partition * after = getPartitionAfter( p );
 	    unsigned long max_end = sizeK()*2-1;
 	    if( after!=NULL )
@@ -2573,8 +2555,7 @@ int Disk::doResize( Volume* v )
 		if( ret==0 )
 		    ret = DISK_PARTITION_NOT_FOUND;
 		}
-	    y2milestone( "after resize size:%llu resize:%d", p->sizeK(),
-	                 p->needShrink()||p->needExtend() );
+	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
 	    }
 	if( needExtend && !dmp_slave && 
 	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
@@ -2604,7 +2585,7 @@ const Partition * Disk::getPartitionAfter( const Partition * p )
 	    ret = &(*pi);
 	}
     if( ret==NULL )
-	y2milestone( "ret:NULL" );
+	y2mil( "ret:NULL" );
     else
 	y2mil( "ret:" << *ret );
     return( ret );
