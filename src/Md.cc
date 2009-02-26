@@ -49,21 +49,21 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     string::size_type pos;
     if( c.retcode()==0 && c.numLines(true)>0 )
 	{
-	md_uuid = *c.getLine(0,true);
+	md_uuid = c.getLine(0,true);
 	if( (pos=md_uuid.find( "UUID : " ))!=string::npos )
 	    md_uuid.erase( 0, pos+7 );
 	md_uuid = extractNthWord( 0, md_uuid );
 	}
     c.select( "Version : " );
     if( c.retcode()==0 && c.numLines(true)>0 )
-	sb_ver = extractNthWord( 2, *c.getLine(0,true) );
+	sb_ver = extractNthWord( 2, c.getLine(0,true) );
     if (c.retcode()==0 && c.numLines(true)>0 )
     {
-	y2mil( "line:\"" << *c.getLine(0,true) << "\"" );
+	y2mil( "line:\"" << c.getLine(0,true) << "\"" );
 	y2mil( "sb_ver:\"" << sb_ver << "\"" );
-	y2mil( "word0:\"" << extractNthWord( 0, *c.getLine(0,true)) << "\"" );
-	y2mil( "word1:\"" << extractNthWord( 1, *c.getLine(0,true)) << "\"" );
-	y2mil( "word2:\"" << extractNthWord( 2, *c.getLine(0,true)) << "\"" );
+	y2mil( "word0:\"" << extractNthWord( 0, c.getLine(0,true)) << "\"" );
+	y2mil( "word1:\"" << extractNthWord( 1, c.getLine(0,true)) << "\"" );
+	y2mil( "word2:\"" << extractNthWord( 2, c.getLine(0,true)) << "\"" );
     }
     string tmp;
     string line = line1;
@@ -260,7 +260,7 @@ Md::getState(MdStateInfo& info) const
     c.select("State : ");
     if( c.retcode()==0 && c.numLines(true)>0 )
     {
-	string state = *c.getLine(0,true);
+	string state = c.getLine(0,true);
 	string::size_type pos;
 	if( (pos=state.find( "State : " ))!=string::npos )
 	    state.erase( 0, pos+8 );

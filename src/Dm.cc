@@ -63,7 +63,7 @@ Dm::getTableInfo()
 	  " inactive:" << inactiv);
     if( c.numLines()>0 )
 	{
-	string line = *c.getLine(0);
+	string line = c.getLine(0);
 	target = extractNthWord( 2, line );
 	if( target=="striped" )
 	    extractNthWord( 3, line ) >> stripe;
@@ -77,7 +77,7 @@ Dm::getTableInfo()
 	unsigned long le;
 	string dev;
 	string majmin;
-	string line = *c.getLine(i);
+	string line = c.getLine(i);
 	if( target=="linear" )
 	    {
 	    extractNthWord( 1, line ) >> le;
@@ -209,17 +209,17 @@ string Dm::getDevice( const string& majmin )
 			  " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
 		if( c.retcode()==0 && c.numLines()>0 )
 		    {
-		    string tmp = "/dev/"+*c.getLine(0);
+		    string tmp = "/dev/" + c.getLine(0);
 		    if( cont->getStorage()->knownDevice( tmp, true ) )
 			{
 			ret = tmp;
 			}
 		    else
 			{
-			c.execute(DMSETUPBIN " table " + quote(*c.getLine(0)));
+			c.execute(DMSETUPBIN " table " + quote(c.getLine(0)));
 			if( c.retcode()==0 && c.numLines()>0 )
 			    {
-			    pair = extractNthWord( 3, *c.getLine(0) );
+			    pair = extractNthWord( 3, c.getLine(0) );
 			    ret = cont->getStorage()->deviceByNumber( pair );
 			    }
 			}
@@ -494,7 +494,7 @@ int Dm::dmNumber( const string& table )
     SystemCmd c(DMSETUPBIN " -c --noheadings info " + quote(table));
     if( c.retcode()==0 && c.numLines()>0 )
 	{
-	list<string> sl = splitString( *c.getLine(0), ":" );
+	list<string> sl = splitString( c.getLine(0), ":" );
 	if( sl.size()>=3 )
 	    {
 	    list<string>::const_iterator ci = sl.begin();

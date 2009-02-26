@@ -38,7 +38,7 @@ void DmraidCo::getRaidData( const string& name )
     list<string>::const_iterator ci;
     list<string> sl;
     if( c.numLines()>0 )
-	sl = splitString( *c.getLine(0), ":" );
+	sl = splitString( c.getLine(0), ":" );
     Pv *pve = new Pv;
     if( sl.size()>=4 )
 	{
@@ -49,7 +49,7 @@ void DmraidCo::getRaidData( const string& name )
     unsigned num = 1;
     while( num<c.numLines() )
 	{
-	sl = splitString( *c.getLine(num), ":" );
+	sl = splitString( c.getLine(num), ":" );
 	y2mil( "sl:" << sl );
 	if( sl.size()>=3 )
 	    {
@@ -133,7 +133,7 @@ void DmraidCo::getRaids( list<string>& l )
     SystemCmd c(DMRAIDBIN " -s -c -c -c");
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
-	list<string> sl = splitString( *c.getLine(i), ":" );
+	list<string> sl = splitString( c.getLine(i), ":" );
 	if( sl.size()>=3 )
 	    {
 	    list<string>::const_iterator ci = sl.begin();

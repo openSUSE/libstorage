@@ -41,7 +41,7 @@ DmmultipathCo::getMultipathData(const string& name)
 
     if (c.numLines() > 0)
     {
-	string line = *c.getLine(0);
+	string line = c.getLine(0);
 	y2mil("mp line:" << line);
 
 	string unit = extractNthWord(0, line);
@@ -63,7 +63,7 @@ DmmultipathCo::getMultipathData(const string& name)
 	list<string> devs;
 	for (unsigned int i = 1; i < c.numLines(); i++)
 	{
-	    string line = *c.getLine(i);
+	    string line = c.getLine(i);
 	    if (boost::starts_with(line, " \\_"))
 	    {
 		y2mil("mp element:" << line);
@@ -168,12 +168,12 @@ DmmultipathCo::getMultipaths(list<string>& l)
 	unsigned i=0;
 
 	if( i<c.numLines() )
-	    line = *c.getLine(i);
+	    line = c.getLine(i);
 	while( i<c.numLines() )
 	{
 	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
 		if( ++i<c.numLines() )
-		    line = *c.getLine(i);
+		    line = c.getLine(i);
 
 	    y2mil("mp line:" << line);
 
@@ -183,7 +183,7 @@ DmmultipathCo::getMultipaths(list<string>& l)
 	    list<string> mp_list;
 
 	    if( ++i<c.numLines() )
-		line = *c.getLine(i);
+		line = c.getLine(i);
 	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
 	    {
 		if (boost::starts_with(line, " \\_"))
@@ -194,7 +194,7 @@ DmmultipathCo::getMultipaths(list<string>& l)
 			mp_list.push_back(dev);
 		}
 		if( ++i<c.numLines() )
-		    line = *c.getLine(i);
+		    line = c.getLine(i);
 	    }
 	    y2mil( "mp_list:" << mp_list );
 	    if (mp_list.size() >= 1)

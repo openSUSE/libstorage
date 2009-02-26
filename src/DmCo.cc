@@ -83,7 +83,7 @@ DmCo::detectEncryption( const string& dev ) const
 	string cipher, keysize;
 	for( unsigned int i = 0; i < c.numLines(); i++)
 	{
-	    string line = *c.getLine(i);
+	    string line = c.getLine(i);
 	    string key = extractNthWord( 0, line );
 	    if( key == "cipher:" )
 		cipher = extractNthWord( 1, line );
@@ -118,7 +118,7 @@ DmCo::getDmData( ProcPart& ppart )
     SystemCmd c(DMSETUPBIN " ls | grep \"(.*)\"" );
     for( unsigned i=0; i<c.numLines(); ++i )
 	{
-	string line = *c.getLine(i);
+	string line = c.getLine(i);
 	string table = extractNthWord( 0, line );
 	bool found=false;
 	Storage::ConstLvmLvIterator i=lv.begin();

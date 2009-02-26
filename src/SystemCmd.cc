@@ -29,6 +29,7 @@ SystemCmd::SystemCmd( const char* Command )
     execute( Command );
 }
 
+
 SystemCmd::SystemCmd( const string& Command_Cv )
 {
     y2mil("constructor SystemCmd:\"" << Command_Cv << "\"");
@@ -36,11 +37,13 @@ SystemCmd::SystemCmd( const string& Command_Cv )
     execute( Command_Cv );
 }
 
+
 SystemCmd::SystemCmd()
 {
     y2mil("constructor SystemCmd");
     init();
 }
+
 
 void SystemCmd::init()
     {
@@ -52,6 +55,7 @@ void SystemCmd::init()
     pfds[0].events = pfds[1].events = POLLIN;
     }
 
+
 SystemCmd::~SystemCmd()
     {
     if( File_aC[IDX_STDOUT] )
@@ -60,13 +64,14 @@ SystemCmd::~SystemCmd()
 	fclose( File_aC[IDX_STDERR] );
     }
 
+
 void
-SystemCmd::setOutputHandler( void (*Handle_f)( void *, string, bool ),
-	                     void * Par_p )
+SystemCmd::setOutputHandler( void (*Handle_f)( void *, string, bool ), void * Par_p )
     {
     OutputHandler_f = Handle_f;
     HandlerPar_p = Par_p;
     }
+
 
 void
 SystemCmd::closeOpenFds()
@@ -99,8 +104,7 @@ SystemCmd::executeBackground( const string& Cmd_Cv )
 
 int
 SystemCmd::executeRestricted( const string& Command_Cv,
-			      long unsigned MaxTimeSec,
-			      long unsigned MaxLineOut,
+			      long unsigned MaxTimeSec, long unsigned MaxLineOut,
 			      bool& ExceedTime, bool& ExceedLines )
 {
     y2mil("cmd:" << Command_Cv << " MaxTime:" << MaxTimeSec << " MaxLines:" << MaxLineOut);
@@ -349,29 +353,34 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
     return Wait_ii != 0;
     }
 
-void
-SystemCmd::setCombine( const bool Comb_bv )
-    {
-    Combine_b = Comb_bv;
-    }
 
-const string *
-SystemCmd::getString( unsigned Idx_iv ) const
+void
+SystemCmd::setCombine(bool val)
+{
+    Combine_b = val;
+}
+
+
+void
+SystemCmd::setTestmode(bool val)
+{
+    testmode = val;
+}
+
+
+string
+SystemCmd::getString( OutputStream Idx_iv ) const
     {
     if( Idx_iv > 1 )
 	{
 	y2err("invalid index " << Idx_iv);
 	}
-    if( !Valid_ab[Idx_iv] )
-	{
-	Text_aC[Idx_iv] = boost::join(Lines_aC[Idx_iv], "\n");
-	Valid_ab[Idx_iv] = true;
-	}
-    return &Text_aC[Idx_iv];
+    return boost::join(Lines_aC[Idx_iv], "\n");
     }
 
+
 unsigned
-SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
+SystemCmd::numLines( bool Sel_bv, OutputStream Idx_iv ) const
     {
     unsigned Ret_ii;
 
@@ -391,10 +400,11 @@ SystemCmd::numLines( bool Sel_bv, unsigned Idx_iv ) const
     return Ret_ii;
     }
 
-const string *
-SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
+
+string
+SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, OutputStream Idx_iv ) const
     {
-    const string * Ret_pCi = NULL;
+    string ret;
 
     if( Idx_iv > 1 )
 	{
@@ -404,21 +414,22 @@ SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, unsigned Idx_iv ) const
 	{
 	if( Nr_iv < SelLines_aC[Idx_iv].capacity() )
 	    {
-	    Ret_pCi = SelLines_aC[Idx_iv][Nr_iv];
+	    ret = *SelLines_aC[Idx_iv][Nr_iv];
 	    }
 	}
     else
 	{
 	if( Nr_iv < Lines_aC[Idx_iv].size() )
 	    {
-	    Ret_pCi = &Lines_aC[Idx_iv][Nr_iv];
+	    ret = Lines_aC[Idx_iv][Nr_iv];
 	    }
 	}
-    return Ret_pCi;
+    return ret;
     }
 
+
 int
-SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
+SystemCmd::select( string Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
     {
     int I_ii;
     int End_ii;
@@ -460,14 +471,12 @@ SystemCmd::select( string Pat_Cv, bool Invert_bv, unsigned Idx_iv )
     return Size_ii;
     }
 
+
 void
 SystemCmd::invalidate()
     {
-    int Idx_ii;
-
-    for( Idx_ii=0; Idx_ii<2; Idx_ii++ )
+    for (int Idx_ii = 0; Idx_ii < 2; Idx_ii++)
 	{
-	Valid_ab[Idx_ii] = false;
 	SelLines_aC[Idx_ii].resize(0);
 	Lines_aC[Idx_ii].clear();
 	NewLineSeen_ab[Idx_ii] = true;
@@ -559,6 +568,7 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	}
     }
 
+
 void
 SystemCmd::extractNewline( const char* Buf_ti, int Cnt_iv, bool& NewLine_br,
                            string& Text_Cr, vector<string>& Lines_Cr )
@@ -603,9 +613,9 @@ void
 SystemCmd::logOutput() const
 {
     for (unsigned i = 0; i < numLines(false, IDX_STDERR); ++i)
-	y2mil("stderr:" << *getLine(i, false, IDX_STDERR));
+	y2mil("stderr:" << getLine(i, false, IDX_STDERR));
     for (unsigned i = 0; i < numLines(false, IDX_STDOUT); ++i)
-	y2mil("stdout:" << *getLine(i, false, IDX_STDOUT));
+	y2mil("stdout:" << getLine(i, false, IDX_STDOUT));
 }
 
 

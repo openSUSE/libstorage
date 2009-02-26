@@ -225,7 +225,7 @@ void Storage::detectObjects()
 
     if( testmode )
         {
-	SystemCmd::testmode = true;
+	SystemCmd::setTestmode();
  	rootprefix = testdir;
  	fstab = new EtcFstab( rootprefix );
 	string t = testdir+"/volume_info";
@@ -250,7 +250,7 @@ void Storage::detectObjects()
 	SystemCmd rm;
 	for( unsigned i=0; i<c.numLines(); i++ )
 	    {
-	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, *c.getLine(i))));
+	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, c.getLine(i))));
 	    }
 	}
     delete ppart;
@@ -848,8 +848,7 @@ Storage::testFilesEqual( const string& n1, const string& n2 )
 	SystemCmd c("/usr/bin/md5sum " + quote(n1) + " " + quote(n2));
 	if( c.retcode()==0 && c.numLines()>=2 )
 	    {
-	    ret = extractNthWord( 0, *c.getLine(0) )==
-	          extractNthWord( 0, *c.getLine(1) );
+	    ret = extractNthWord( 0, c.getLine(0) ) == extractNthWord( 0, c.getLine(1) );
 	    }
 	}
     y2mil("ret:" << ret << "n1:" << n1 << " n2:" << n2);
@@ -3725,7 +3724,7 @@ void Storage::handleHald( bool stop )
 	SystemCmd c( "ps ax | grep -w /usr/sbin/hald | grep -v grep" );
 	if( c.numLines()>0 )
 	    {
-	    extractNthWord( 0, *c.getLine(0) ) >> hald_pid;
+	    extractNthWord( 0, c.getLine(0) ) >> hald_pid;
 	    y2mil( "hald_pid:" << hald_pid );
 	    }
 	if( hald_pid>0 )
@@ -4575,7 +4574,7 @@ void Storage::removeDmTableTo( const Volume& vol )
 		unsigned line=0;
 		while( line<c.numLines() )
 		    {
-		    removeDmTable( *c.getLine(line) );
+		    removeDmTable( c.getLine(line) );
 		    line++;
 		    }
 		}
@@ -5444,12 +5443,13 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(device));
 		    string fstr = " might resize at ";
 		    string::size_type pos;
-		    if (c.retcode()==0 && (pos=c.stdout().find(fstr))!=string::npos)
+		    string stdout = c.stdout();
+		    if (c.retcode()==0 && (pos=stdout.find(fstr))!=string::npos)
 			{
 			y2mil("pos:" << pos);
-			pos = c.stdout().find_first_not_of(" \t\n", pos + fstr.size());
+			pos = stdout.find_first_not_of(" \t\n", pos + fstr.size());
 			y2mil("pos:" << pos);
-			string number = c.stdout().substr(pos, c.stdout().find_first_not_of("0123456789", pos));
+			string number = stdout.substr(pos, stdout.find_first_not_of("0123456789", pos));
 			y2mil("number:\"" << number << "\"");
 			unsigned long long t;
 			number >> t;

@@ -347,7 +347,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 	}
     if( found )
 	{
-	list<string> l = splitString( *loopData.getLine( 0, true ));
+	list<string> l = splitString( loopData.getLine( 0, true ));
 	std::ostringstream b;
 	classic(b);
 	b << "line[" << device() << "]=" << l;
@@ -400,7 +400,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 	}
     if( found )
 	{
-	list<string> l = splitString( *blkidData.getLine( 0, true ), " \t\n",
+	list<string> l = splitString( blkidData.getLine( 0, true ), " \t\n",
 	                              true, true, "\"" );
 	std::ostringstream b;
 	classic(b);

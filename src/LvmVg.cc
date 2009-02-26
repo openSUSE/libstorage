@@ -641,10 +641,10 @@ void LvmVg::getVgData( const string& name, bool exists )
     string::size_type pos;
     while( i<cnt )
 	{
-	line = *c.getLine( i++ );
+	line = c.getLine( i++ );
 	if( line.find( "Volume group" )!=string::npos )
 	    {
-	    line = *c.getLine( i++ );
+	    line = c.getLine( i++ );
 	    while( line.find( "Logical volume" )==string::npos &&
 		   line.find( "Physical volume" )==string::npos &&
 		   i<cnt )
@@ -689,7 +689,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    uuid = extractNthWord( 2, line );
 		    }
-		line = *c.getLine( i++ );
+		line = c.getLine( i++ );
 		}
 	    string vname;
 	    string origin;
@@ -747,7 +747,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    uuid = extractNthWord( 2, line );
 		    }
-		line = *c.getLine( i++ );
+		line = c.getLine( i++ );
 		}
 	    if( !vname.empty() )
 	    {
@@ -778,7 +778,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    extractNthWord( 5, line ) >> p->num_pe;
 		    extractNthWord( 7, line ) >> p->free_pe;
 		    }
-		line = *c.getLine( i++ );
+		line = c.getLine( i++ );
 		}
 	    if( !p->device.empty() )
 		{
@@ -1124,7 +1124,7 @@ LvmVg::getVgs(list<string>& l)
 
 	for( unsigned i=0; i<c.numLines(); ++i )
 	{
-	    string vgname = *c.getLine(i);
+	    string vgname = c.getLine(i);
 	    string::size_type pos=vgname.find_first_not_of( app_ws+"\"" );
 	    if( pos>0 )
 		vgname.erase( 0, pos );
@@ -1537,7 +1537,7 @@ void LvmVg::normalizeDmDevices()
 	    c.execute( "devmap_name "+dm+":"+i->device.substr( 8 ) );
 	    if( c.retcode()==0 )
 		{
-		string dev = "/dev/" + *c.getLine( 0 );
+		string dev = "/dev/" + c.getLine( 0 );
 		y2mil( "dev:" << i->device << " normal dev:" << dev );
 		if( getStorage()->knownDevice( dev ) )
 		    {

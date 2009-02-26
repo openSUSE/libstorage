@@ -56,7 +56,7 @@ ProcMounts::ProcMounts( Storage * const sto )
 	mt.select( (string)" on "+dir+' ' );
 	if( mt.numLines(true)>0 )
 	    {
-	    list<string> sl = splitString( *mt.getLine(0,true) );
+	    list<string> sl = splitString( mt.getLine(0,true) );
 	    y2mil( "sl:" << sl );
 	    if( sl.size()>=6 )
 		{
@@ -93,8 +93,8 @@ ProcMounts::ProcMounts( Storage * const sto )
     mt.select( " / " );
     if( mt.numLines()>0 )
 	{
-	y2mil( "root mount:" << *mt.getLine(0,true) );
-	string dev = extractNthWord( 0, *mt.getLine(0,true));
+	y2mil( "root mount:" << mt.getLine(0,true) );
+	string dev = extractNthWord( 0, mt.getLine(0,true));
 	if( !dev.empty() && dev[0]!='/' )
 	    {
 	    dev = sto->findNormalDevice( dev );

@@ -381,13 +381,13 @@ bool Disk::detectPartitions( ProcPart& ppart )
     checkSystemError( cmd_line, Cmd );
     if( Cmd.select( "Partition Table:" )>0 )
 	{
-	string tmp = *Cmd.getLine(0, true);
+	string tmp = Cmd.getLine(0, true);
 	y2mil("Label line:" << tmp);
 	dlabel = extractNthWord( 2, tmp );
 	}
     if( Cmd.select( "BIOS cylinder" )>0 )
 	{
-	string tmp = *Cmd.getLine(0, true);
+	string tmp = Cmd.getLine(0, true);
 	getGeometry( tmp, cyl, head, sector );
 	new_cyl = cyl;
 	new_head = head;
@@ -791,7 +791,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
 	unsigned id;
 	bool boot;
 
-	line = *Cmd.getLine(i);
+	line = Cmd.getLine(i);
 	tmp = extractNthWord( 0, line );
 	if( tmp.length()>0 && isdigit(tmp[0]) )
 	    {
@@ -1946,7 +1946,7 @@ void Disk::redetectGeometry()
 	unsigned long c;
 	unsigned h;
 	unsigned s;
-	string tmp = *Cmd.getLine(0, true);
+	string tmp = Cmd.getLine(0, true);
 	getGeometry( tmp, c, h, s );
 	if( c!=0 && c!=cyl )
 	    {
@@ -2065,8 +2065,7 @@ Disk::getPartedValues( Partition *p )
 	PartitionType type;
 	bool boot;
 	if( cmd.numLines()>0 &&
-	    scanPartedLine( *cmd.getLine(0), nr, start, csize, type,
-			    id, boot ))
+	    scanPartedLine( cmd.getLine(0), nr, start, csize, type, id, boot ))
 	    {
 	    y2milestone( "really created at cyl:%ld csize:%ld", start, csize );
 	    p->changeRegion( start, csize, cylinderToKb(csize) );
@@ -2110,7 +2109,7 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
 	if( cmd.numLines()>0 )
 	    {
 	    string dummy, s1, s2;
-	    std::istringstream data( *cmd.getLine(0) );
+	    std::istringstream data( cmd.getLine(0) );
 	    classic(data);
 	    data >> dummy >> s1 >> s2;
 	    y2milestone( "dummy:\"%s\" s1:\"%s\" s2:\"%s\"", dummy.c_str(),

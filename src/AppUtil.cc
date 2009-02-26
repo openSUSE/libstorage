@@ -508,7 +508,7 @@ unsigned getMajorDevices( const string& driver )
     SystemCmd c( cmd );
     if( c.numLines()>0 )
 	{
-	extractNthWord( 0, *c.getLine(0)) >> ret;
+	extractNthWord( 0, c.getLine(0)) >> ret;
 	}
     y2mil( "driver:" << driver << " ret:" << ret );
     return( ret );

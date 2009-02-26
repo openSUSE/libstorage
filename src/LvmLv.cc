@@ -114,7 +114,7 @@ LvmLv::getState(LvmLvSnapshotStateInfo& info)
     {
 	for (unsigned int l = 1; l < cmd.numLines(); l++)
 	{
-	    string line = *cmd.getLine(l);
+	    string line = cmd.getLine(l);
 	    
 	    if (extractNthWord(0, line) == name())
 	    {

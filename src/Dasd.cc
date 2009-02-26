@@ -61,7 +61,7 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 	{
 	if( Cmd.select( "^format" )>0 )
 	    {
-	    string tmp = *Cmd.getLine(0, true);
+	    string tmp = Cmd.getLine(0, true);
 	    y2milestone( "Format line:%s", tmp.c_str() );
 	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	    tmp = boost::to_lower_copy(extractNthWord(4, tmp), locale::classic());
@@ -171,7 +171,7 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 	unsigned long c_start;
 	unsigned long c_size;
 
-	line = *cmd.getLine(i);
+	line = cmd.getLine(i);
 	tmp = extractNthWord( 0, line );
 	if( part.match(tmp) )
 	    {
@@ -234,7 +234,7 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "cylinders" )>0 )
 	{
 	val = 0;
-	tmp = *cmd.getLine(0, true);
+	tmp = cmd.getLine(0, true);
 	y2milestone( "Cylinder line:%s", tmp.c_str() );
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
@@ -245,7 +245,7 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "tracks per" )>0 )
 	{
 	val = 0;
-	tmp = *cmd.getLine(0, true);
+	tmp = cmd.getLine(0, true);
 	y2milestone( "Tracks line:%s", tmp.c_str() );
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
@@ -256,7 +256,7 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "blocks per" )>0 )
 	{
 	val = 0;
-	tmp = *cmd.getLine(0, true);
+	tmp = cmd.getLine(0, true);
 	y2milestone( "Blocks line:%s", tmp.c_str() );
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
@@ -267,7 +267,7 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     if( cmd.select( "blocksize" )>0 )
 	{
 	val = 0;
-	tmp = *cmd.getLine(0, true);
+	tmp = cmd.getLine(0, true);
 	y2milestone( "Bytes line:%s", tmp.c_str() );
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
