@@ -411,27 +411,6 @@ logMsg(LogLevel level, const char* file, unsigned line, const char* func,
 }
 
 
-void
-logMsgVaArgs(LogLevel level, const char* file, unsigned line, const char* func,
-	     const char* format, ...)
-{
-    if (testLogLevel(level))
-    {
-	char* str;
-	va_list ap;
-
-	va_start(ap, format);
-	if (vasprintf(&str, format, ap) == -1)
-	    return;
-	va_end(ap);
-
-	logMsg(level, file, line, func, str);
-
-	free(str);
-    }
-}
-
-
 int
 readlink(const char* path, string& buf)
 {

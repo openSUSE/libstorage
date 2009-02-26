@@ -36,11 +36,6 @@
 #include <y2/Y2Component.h>
 #include <y2/Y2ComponentBroker.h>
 
-#undef y2milestone
-#undef y2error
-#undef y2warning
-#undef y2debug
-
 #include <Storage.h>
 
 using namespace storage;

@@ -64,21 +64,8 @@ bool testLogLevel(LogLevel level);
 void logMsg(LogLevel level, const char* file, unsigned line,
 	    const char* func, const string& str);
 
-void logMsgVaArgs(LogLevel level, const char* file, unsigned line,
-		  const char* func, const char* format, ...)
-    __attribute__ ((format(printf, 5, 6)));
-
 void prepareLogStream(std::ostringstream& s);
     
-#define y2debug(format, ...) \
-    logMsgVaArgs(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-#define y2milestone(format, ...) \
-    logMsgVaArgs(storage::MILESTONE, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-#define y2warning(format, ...) \
-    logMsgVaArgs(storage::WARNING, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-#define y2error(format, ...) \
-    logMsgVaArgs(storage::ERROR, __FILE__, __LINE__, __FUNCTION__, format, ##__VA_ARGS__)
-
 #define y2deb(op) y2log_op(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, op)
 #define y2mil(op) y2log_op(storage::MILESTONE, __FILE__, __LINE__, __FUNCTION__, op)
 #define y2war(op) y2log_op(storage::WARNING, __FILE__, __LINE__, __FUNCTION__, op)
