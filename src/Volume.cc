@@ -316,7 +316,7 @@ void Volume::getMountData( const ProcMounts& mountData, bool swap_only )
 	    mp.clear();
 	    }
 	if( is_mounted )
-	    y2milestone( "%s mounted on %s", device().c_str(), mp.c_str() );
+	    y2mil(device() << " mounted on " << mp);
 	}
     orig_mp = mp;
     }
@@ -487,8 +487,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 int Volume::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
-    y2milestone( "device:%s val:%d fs:%s", dev.c_str(), val,
-                 fs_names[new_fs].c_str() );
+    y2mil("device:" << dev << " val:" << val << " fs:" << fs_names[new_fs]);
     format = val;
     if( !format )
 	{
@@ -615,8 +614,7 @@ void Volume::updateFstabOptions()
 int Volume::changeFstabOptions( const string& options )
     {
     int ret = 0;
-    y2milestone( "device:%s options:%s encr:%s", dev.c_str(), options.c_str(),
-                 encTypeString(encryption).c_str() );
+    y2mil("device:" << dev << " options:" << options << " encr:" << encTypeString(encryption));
     if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -923,7 +921,7 @@ void Volume::triggerUdevUpdate() const
 int Volume::umount( const string& mp )
     {
     SystemCmd cmd;
-    y2milestone( "device:%s mp:%s", dev.c_str(), mp.c_str() );
+    y2mil("device:" << dev << " mp:" << mp);
     string d = mountDevice();
     if( dmcrypt_active )
 	d = dmcrypt_dev;
@@ -1070,7 +1068,7 @@ string Volume::mountText( bool doing ) const
 
 void Volume::rename( const string& newName )
     {
-    y2milestone( "rename old:%s new:%s", nm.c_str(), newName.c_str() );
+    y2mil("rename old:" << nm << " new:" << newName);
     string::size_type pos;
     if( (pos=dev.rfind( nm ))!=string::npos )
 	{
@@ -1100,7 +1098,7 @@ int Volume::checkDevice( const string& device )
 	ret = VOLUME_DEVICE_NOT_PRESENT;
     else if( !S_ISBLK(sbuf.st_mode) )
 	ret = VOLUME_DEVICE_NOT_BLOCK;
-    y2milestone( "checkDevice:%s ret:%d", device.c_str(), ret );
+    y2mil("checkDevice:" << device << " ret:" << ret);
     return( ret );
     }
 
@@ -1112,8 +1110,7 @@ int Volume::doMount()
 	lmount += cont->getStorage()->root();
     if( mp!="/" )
 	lmount += mp;
-    y2milestone( "device:%s mp:%s old mp:%s", dev.c_str(), mp.c_str(),
-                 orig_mp.c_str() );
+    y2mil("device:" << dev << " mp:" << mp << " old mp:" << orig_mp);
     if( !silent() )
 	{
 	cont->getStorage()->showInfoCb( mountText(true) );
@@ -1163,7 +1160,7 @@ int Volume::doMount()
 int Volume::canResize( unsigned long long newSizeK ) const
     {
     int ret=0;
-    y2milestone( "val:%llu", newSizeK );
+    y2mil("val:" << newSizeK);
     if( uby.type() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -1302,7 +1299,7 @@ int Volume::resizeFs()
 int Volume::setEncryption( bool val, EncryptType typ )
     {
     int ret = 0;
-    y2milestone( "val:%d typ:%d", val, typ );
+    y2mil("val:" << val << " typ:" << typ);
     if( getUsedByType() != UB_NONE )
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -1442,8 +1439,7 @@ int Volume::getFreeLoop( SystemCmd& loopData, const list<unsigned>& ids )
 	else
 	    fstab_loop_dev = loop_dev;
 	}
-    y2milestone( "loop_dev:%s fstab_loop_dev:%s", loop_dev.c_str(),
-		 fstab_loop_dev.c_str() );
+    y2mil("loop_dev:" << loop_dev << " fstab_loop_dev:" << fstab_loop_dev);
     return( ret );
     }
 
@@ -1476,7 +1472,7 @@ string Volume::getLosetupCmd( storage::EncryptType, const string& pwdfile ) cons
     string cmd = LOSETUPBIN " " + quote(loop_dev) + " ";
     const Loop* l = static_cast<const Loop*>(this);
     cmd += quote(l->lfileRealPath());
-    y2milestone( "cmd:%s", cmd.c_str() );
+    y2mil("cmd:" << cmd);
     return( cmd );
     }
 
@@ -1572,7 +1568,7 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 	}
     }
 
-    y2milestone( "cmd:%s", cmd.c_str() );
+    y2mil("cmd:" << cmd);
     return( cmd );
     }
 
@@ -1580,7 +1576,7 @@ int
 Volume::setCryptPwd( const string& val )
     {
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2milestone( "password:%s", val.c_str() );
+    y2mil("password:" << val);
 #endif
     int ret = 0;
 
@@ -1640,7 +1636,7 @@ EncryptType Volume::detectEncryption()
     if( getContainer()->getStorage()->test() )
 	{
 	ret = encryption = orig_encryption = ENC_TWOFISH;
-	y2milestone( "ret:%s", encTypeString(ret).c_str() );
+	y2mil("ret:" << encTypeString(ret));
 	return( ret );
 	}
 
@@ -1650,7 +1646,7 @@ EncryptType Volume::detectEncryption()
     string fname = cont->getStorage()->tmpDir()+"/pwdf";
     string mpname = cont->getStorage()->tmpDir()+"/mp";
     SystemCmd c;
-    y2milestone( "device:%s", dev.c_str() );
+    y2mil("device:" << dev);
 
     mkdir( mpname.c_str(), 0700 );
     getFreeLoop();
@@ -1700,8 +1696,8 @@ EncryptType Volume::detectEncryption()
 		bool excTime, excLines;
 		c.executeRestricted( cmd, 15, 500, excTime, excLines );
 		bool ok = c.retcode()==0 || (excTime && !excLines);
-		y2milestone( "ok:%d retcode:%d excTime:%d excLines:%d",
-			     ok, c.retcode(), excTime, excLines );
+		y2mil("ok:" << ok << " retcode:" << c.retcode() << " excTime:" << excTime <<
+		      " excLines:" << excLines);
 		if( ok )
 		    {
 		    c.execute(MODPROBEBIN " " + fs_names[detected_fs]);
@@ -1738,15 +1734,14 @@ EncryptType Volume::detectEncryption()
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
     rmdir( cont->getStorage()->tmpDir().c_str() );
-    y2milestone( "ret:%s", encTypeString(ret).c_str() );
+    y2mil("ret:" << encTypeString(ret));
     return( ret );
     }
 
 int Volume::doLosetup()
     {
     int ret = 0;
-    y2milestone( "device:%s mp:%s is_loop:%d loop_active:%d",
-                 dev.c_str(), mp.c_str(), is_loop, loop_active );
+    y2mil("device:" << dev << " mp:" << mp << " is_loop:" << is_loop << " loop_active:" << loop_active);
     if( !silent() && is_loop && !dmcrypt() )
 	{
 	cont->getStorage()->showInfoCb( losetupText(true) );
@@ -1850,8 +1845,7 @@ void Volume::replaceAltName( const string& prefix, const string& newn )
 int Volume::doCryptsetup()
     {
     int ret = 0;
-    y2milestone( "device:%s mp:%s dmcrypt:%d active:%d",
-                 dev.c_str(), mp.c_str(), dmcrypt(), dmcrypt_active );
+    y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << " active:" << dmcrypt_active);
     if( !silent() && dmcrypt() )
 	{
 	cont->getStorage()->showInfoCb( crsetupText(true) );
@@ -2079,7 +2073,7 @@ int Volume::doSetLabel()
 int Volume::setLabel( const string& val )
     {
     int ret=0;
-    y2milestone( "label:%s", val.c_str() );
+    y2mil("label:" << val);
     FsCapabilities caps;
     if( cont->getStorage()->getFsCapabilities( fs, caps ) &&
         caps.supportsLabel  )
@@ -2100,12 +2094,12 @@ int Volume::setLabel( const string& val )
 int Volume::mount( const string& m, bool ro )
     {
     SystemCmd cmd;
-    y2milestone( "device:%s mp:%s ro:%d", dev.c_str(), m.c_str(), ro );
+    y2mil("device:" << dev << " mp:" << m << " ro:" << ro);
     string cmdline;
     if( fs != SWAP )
 	{
 	string lmount = (!m.empty())?m:mp;
-	y2milestone( "device:%s mp:%s", dev.c_str(), lmount.c_str() );
+	y2mil("device:" << dev << " mp:" << lmount);
 	string fsn = fs_names[fs];
 	switch( fs )
 	    {
@@ -2184,7 +2178,7 @@ int Volume::mount( const string& m, bool ro )
 int Volume::prepareRemove()
     {
     int ret = 0;
-    y2milestone( "device:%s", dev.c_str() );
+    y2mil("device:" << dev);
     if( !orig_mp.empty() )
 	{
 	if( isMounted() )
@@ -2404,7 +2398,7 @@ int Volume::doFstabUpdate()
 		cont->getStorage()->showInfoCb(
 		    fstab->removeText( true, entry.crypto, entry.mount ));
 		}
-	    y2milestone( "before removeEntry" );
+	    y2mil("before removeEntry");
 	    ret = fstab->removeEntry( entry );
 	    }
 	else if( !mp.empty() && !deleted() )
@@ -2545,13 +2539,13 @@ int Volume::doFstabUpdate()
 	    c.execute( "/etc/init.d/boot.quota restart" );
 	    }
 	}
-    y2milestone( "changed:%d ret:%d", changed, ret );
+    y2mil("changed:" << changed << " ret:" << ret);
     return( ret );
     }
 
 void Volume::fstabUpdateDone()
     {
-    y2milestone( "begin" );
+    y2mil("begin");
     orig_fstab_opt = fstab_opt;
     orig_mount_by = mount_by;
     orig_encryption = encryption;
