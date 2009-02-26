@@ -1683,14 +1683,13 @@ EncryptType Volume::detectEncryption()
 		    {
 		    case EXT2:
 		    case EXT3:
-			cmd = "fsck.ext2 -n -f " + use_dev;
+			cmd = "fsck.ext2 -n -f " + quote(use_dev);
 			break;
 		    case REISERFS:
-			cmd = "reiserfsck --yes --check -q " + use_dev;
+			cmd = "reiserfsck --yes --check -q " + quote(use_dev);
 			break;
 		    default:
-			cmd = "fsck -n -t " + fsTypeString(detected_fs) +
-			      " " + use_dev;
+			cmd = "fsck -n -t " + fsTypeString(detected_fs) + " " + quote(use_dev);
 			break;
 		    }
 		bool excTime, excLines;
