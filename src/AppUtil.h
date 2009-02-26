@@ -1,7 +1,6 @@
 #ifndef APP_UTIL_H
 #define APP_UTIL_H
 
-#include <time.h>
 #include <libintl.h>
 #include <string.h>
 #include <cstdarg>
