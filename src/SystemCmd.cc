@@ -22,14 +22,6 @@ using namespace std;
 using namespace storage;
 
 
-SystemCmd::SystemCmd( const char* Command )
-{
-    y2mil("constructor SystemCmd:\"" << Command << "\"");
-    init();
-    execute( Command );
-}
-
-
 SystemCmd::SystemCmd( const string& Command_Cv )
 {
     y2mil("constructor SystemCmd:\"" << Command_Cv << "\"");
@@ -48,8 +40,6 @@ SystemCmd::SystemCmd()
 void SystemCmd::init()
     {
     Combine_b = false;
-    OutputHandler_f = NULL;
-    HandlerPar_p = NULL;
     output_proc = NULL;
     File_aC[0] = File_aC[1] = NULL;
     pfds[0].events = pfds[1].events = POLLIN;
@@ -66,14 +56,6 @@ SystemCmd::~SystemCmd()
 
 
 void
-SystemCmd::setOutputHandler( void (*Handle_f)( void *, string, bool ), void * Par_p )
-    {
-    OutputHandler_f = Handle_f;
-    HandlerPar_p = Par_p;
-    }
-
-
-void
 SystemCmd::closeOpenFds()
     {
     int max_fd = getdtablesize();
@@ -85,7 +67,7 @@ SystemCmd::closeOpenFds()
 
 
 int
-SystemCmd::execute( const string& Cmd_Cv )
+SystemCmd::execute(const string& Cmd_Cv)
 {
     y2mil("SystemCmd Executing:\"" << Cmd_Cv << "\"");
     Background_b = false;
@@ -169,7 +151,7 @@ SystemCmd::executeRestricted( const string& Command_Cv,
 #define ALTERNATE_SHELL "/bin/bash"
 
 int
-SystemCmd::doExecute( string Cmd )
+SystemCmd::doExecute( const string& Cmd )
     {
     string Shell_Ci = PRIMARY_SHELL;
     if( access( Shell_Ci.c_str(), X_OK ) != 0 )
@@ -305,13 +287,13 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
     {
     int Wait_ii;
     int Status_ii;
-    int sel;
 
     do
 	{
 	y2deb("[0] id:" <<  pfds[0].fd << " ev:" << hex << (unsigned)pfds[0].events << dec << " [1] fs:" <<
 	      (Combine_b?-1:pfds[1].fd) << " ev:" << hex << (Combine_b?0:(unsigned)pfds[1].events));
-	if( (sel=poll( pfds, Combine_b?1:2, 1000 ))<0 )
+	int sel = poll( pfds, Combine_b?1:2, 1000 );
+	if (sel < 0)
 	    {
 	    y2err("poll failed errno:" << errno << " (" << strerror(errno) << ")");
 	    }
@@ -324,6 +306,7 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	y2deb("Wait ret:" << Wait_ii);
 	}
     while( Hang_bv && Wait_ii == 0 );
+
     if( Wait_ii != 0 )
 	{
 	checkOutput();
@@ -429,30 +412,24 @@ SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, OutputStream Idx_iv ) const
 
 
 int
-SystemCmd::select( string Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
+SystemCmd::select( const string& Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
     {
-    int I_ii;
-    int End_ii;
-    int Size_ii;
-    string::size_type Pos_ii;
-    bool BeginOfLine_bi;
-    string Search_Ci( Pat_Cv );
-
     if( Idx_iv > 1 )
 	{
 	y2err("invalid index " << Idx_iv);
 	}
-    BeginOfLine_bi = Search_Ci.length()>0 && Search_Ci[0]=='^';
+    string Search_Ci( Pat_Cv );
+    bool BeginOfLine_bi = Search_Ci.length()>0 && Search_Ci[0]=='^';
     if( BeginOfLine_bi )
 	{
 	Search_Ci.erase( 0, 1 );
 	}
     SelLines_aC[Idx_iv].resize(0);
-    Size_ii = 0;
-    End_ii = Lines_aC[Idx_iv].size();
-    for( I_ii=0; I_ii<End_ii; I_ii++ )
+    int Size_ii = 0;
+    int End_ii = Lines_aC[Idx_iv].size();
+    for( int I_ii=0; I_ii<End_ii; I_ii++ )
 	{
-	Pos_ii = Lines_aC[Idx_iv][I_ii].find( Search_Ci );
+	string::size_type Pos_ii = Lines_aC[Idx_iv][I_ii].find( Search_Ci );
 	if( Pos_ii>0 && BeginOfLine_bi )
 	    {
 	    Pos_ii = string::npos;
@@ -523,11 +500,6 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 		{
 		output_proc->process( Buf_ti, Stderr_bv );
 		}
-	    if( OutputHandler_f )
-		{
-		y2deb("Calling Output-Handler Buf:\"" << Buf_ti << "\" Stderr:" << Stderr_bv);
-		OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
-		}
 	    }
 	Char_ii = EOF;
 	}
@@ -538,11 +510,6 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 	if( output_proc )
 	    {
 	    output_proc->process( Buf_ti, Stderr_bv );
-	    }
-	if( OutputHandler_f )
-	    {
-	    y2deb("Calling Output-Handler Buf:\"" << Buf_ti << "\" Stderr:" << Stderr_bv);
-	    OutputHandler_f( HandlerPar_p, Buf_ti, Stderr_bv );
 	    }
 	}
     if( Text_Ci.length() > 0 )
@@ -570,8 +537,8 @@ SystemCmd::getUntilEOF( FILE* File_Cr, vector<string>& Lines_Cr,
 
 
 void
-SystemCmd::extractNewline( const char* Buf_ti, int Cnt_iv, bool& NewLine_br,
-                           string& Text_Cr, vector<string>& Lines_Cr )
+SystemCmd::extractNewline(const string& Buf_ti, int Cnt_iv, bool& NewLine_br,
+			  string& Text_Cr, vector<string>& Lines_Cr)
     {
     string::size_type Idx_ii;
 
@@ -594,7 +561,7 @@ SystemCmd::extractNewline( const char* Buf_ti, int Cnt_iv, bool& NewLine_br,
 
 
 void
-SystemCmd::addLine(string Text_Cv, vector<string>& Lines_Cr)
+SystemCmd::addLine(const string& Text_Cv, vector<string>& Lines_Cr)
 {
     if (Lines_Cr.size() < 100)
     {
@@ -619,13 +586,15 @@ SystemCmd::logOutput() const
 }
 
 
-string SystemCmd::quote(const string& str)
+string
+SystemCmd::quote(const string& str)
 {
     return "'" + boost::replace_all_copy(str, "'", "'\\''") + "'";
 }
 
 
-string SystemCmd::quote(const list<string>& strs)
+string
+SystemCmd::quote(const list<string>& strs)
 {
     string ret;
     for (std::list<string>::const_iterator it = strs.begin(); it != strs.end(); it++)
