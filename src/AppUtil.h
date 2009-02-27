@@ -32,7 +32,7 @@ std::list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true,
 			  const string& quotes="" );
 string mergeString( const std::list<string>& l, const string& del=" " );
-std::map<string,string> makeMap( const std::list<string>& l, 
+std::map<string,string> makeMap( const std::list<string>& l,
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );
 
@@ -61,24 +61,23 @@ void createLogger(const string& component, const string& name,
 
 bool testLogLevel(LogLevel level);
 
-void logMsg(LogLevel level, const char* file, unsigned line,
-	    const char* func, const string& str);
+std::ostringstream* logStreamOpen();
 
-void prepareLogStream(std::ostringstream& s);
-    
+void logStreamClose(LogLevel level, const char* file, unsigned line,
+		    const char* func, std::ostringstream*);
+
 #define y2deb(op) y2log_op(storage::DEBUG, __FILE__, __LINE__, __FUNCTION__, op)
 #define y2mil(op) y2log_op(storage::MILESTONE, __FILE__, __LINE__, __FUNCTION__, op)
 #define y2war(op) y2log_op(storage::WARNING, __FILE__, __LINE__, __FUNCTION__, op)
 #define y2err(op) y2log_op(storage::ERROR, __FILE__, __LINE__, __FUNCTION__, op)
 
-#define y2log_op(level, file, line, function, op)			\
+#define y2log_op(level, file, line, func, op)				\
     do {								\
 	if (storage::testLogLevel(level))				\
 	{								\
-	    std::ostringstream __buf;					\
-	    storage::prepareLogStream(__buf);				\
-	    __buf << op;						\
-	    storage::logMsg(level, file, line, function, __buf.str());	\
+	    std::ostringstream* __buf = storage::logStreamOpen();	\
+	    *__buf << op;						\
+	    storage::logStreamClose(level, file, line, func, __buf);	\
 	}								\
     } while (0)
 

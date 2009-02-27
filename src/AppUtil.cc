@@ -360,18 +360,22 @@ testLogLevel(LogLevel level)
 }
 
 
-void
-prepareLogStream(std::ostringstream& s)
+ostringstream*
+logStreamOpen()
 {
-    s.imbue(std::locale::classic());
-    s.setf(std::ios::boolalpha);
-    s.setf(std::ios::showbase);
+    std::ostringstream* stream = new ostringstream;
+
+    stream->imbue(std::locale::classic());
+    stream->setf(std::ios::boolalpha);
+    stream->setf(std::ios::showbase);
+
+    return stream;
 }
 
 
 void
-logMsg(LogLevel level, const char* file, unsigned line, const char* func,
-       const string& str)
+logStreamClose(LogLevel level, const char* file, unsigned line, const char* func,
+	       ostringstream* stream)
 {
     using namespace blocxx;
 
@@ -405,9 +409,11 @@ logMsg(LogLevel level, const char* file, unsigned line, const char* func,
     if (!category.empty())
     {
 	LogAppender::getCurrentLogAppender()->logMessage(LogMessage(component, category,
-								    String(str), file,
-								    line, func));
+								    String(stream->str()),
+								    file, line, func));
     }
+
+    delete stream;
 }
 
 
