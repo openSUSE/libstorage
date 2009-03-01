@@ -172,7 +172,7 @@ namespace storage
 
 		    if (!i1->usedByDevice.empty())
 		    {
-			edges.push_back(EDGE_USED, disk_node.id, "device:" + i1->usedByDevice);
+			edges.push_back(Edge(EDGE_USED, disk_node.id, "device:" + i1->usedByDevice));
 		    }
 
 		    deque<PartitionInfo> partitions;
@@ -185,11 +185,11 @@ namespace storage
 			Node partition_node(NODE_PARTITION, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(EDGE_SUBDEVICE, disk_node.id, partition_node.id);
+			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id, partition_node.id));
 
 			if (!i2->v.usedByDevice.empty())
 			{
-			    edges.push_back(EDGE_USED, partition_node.id, "device:" + i2->v.usedByDevice);
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->v.usedByDevice));
 			}
 
 			if (!i2->v.mount.empty())
@@ -197,7 +197,7 @@ namespace storage
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, partition_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
 			}
 		    }
 
@@ -218,14 +218,14 @@ namespace storage
 			Node lv_node(NODE_LVMLV, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(lv_node);
 
-			edges.push_back(EDGE_SUBDEVICE, vg_node.id, lv_node.id);
+			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id, lv_node.id));
 
 			if (!i2->v.mount.empty())
 			{
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, lv_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, lv_node.id, mountpoint_node.id));
 			}
 		    }
 
@@ -243,7 +243,7 @@ namespace storage
 
 			if (!i2->v.usedByDevice.empty())
 			{
-			    edges.push_back(EDGE_USED, md_node.id, "device:" + i2->v.usedByDevice);
+			    edges.push_back(Edge(EDGE_USED, md_node.id, "device:" + i2->v.usedByDevice));
 			}
 
 			if (!i2->v.mount.empty())
@@ -251,7 +251,7 @@ namespace storage
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, md_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, md_node.id, mountpoint_node.id));
 			}
 		    }
 
@@ -269,7 +269,7 @@ namespace storage
 
 			if (!i2->v.usedByDevice.empty())
 			{
-			    edges.push_back(EDGE_USED, dm_node.id, "device:" + i2->v.usedByDevice);
+			    edges.push_back(Edge(EDGE_USED, dm_node.id, "device:" + i2->v.usedByDevice));
 			}
 
 			if (!i2->v.mount.empty())
@@ -277,7 +277,7 @@ namespace storage
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, dm_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, dm_node.id, mountpoint_node.id));
 			}
 		    }
 
@@ -293,7 +293,7 @@ namespace storage
 
 		    if (!i1->usedByDevice.empty())
 		    {
-			edges.push_back(EDGE_USED, dmraid_node.id, "device:" + i1->usedByDevice);
+			edges.push_back(Edge(EDGE_USED, dmraid_node.id, "device:" + i1->usedByDevice));
 		    }
 
 		    deque<DmraidInfo> partitions;
@@ -306,11 +306,11 @@ namespace storage
 			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(EDGE_SUBDEVICE, dmraid_node.id, partition_node.id);
+			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id, partition_node.id));
 
 			if (!i2->p.v.usedByDevice.empty())
 			{
-			    edges.push_back(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice);
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice));
 			}
 
 			if (!i2->p.v.mount.empty())
@@ -318,7 +318,7 @@ namespace storage
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, partition_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
 			}
 		    }
 
@@ -334,7 +334,7 @@ namespace storage
 
 		    if (!i1->usedByDevice.empty())
 		    {
-			edges.push_back(EDGE_USED, dmmultipath_node.id, "device:" + i1->usedByDevice);
+			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id, "device:" + i1->usedByDevice));
 		    }
 
 		    deque<DmmultipathInfo> partitions;
@@ -347,11 +347,11 @@ namespace storage
 			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(EDGE_SUBDEVICE, dmmultipath_node.id, partition_node.id);
+			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id, partition_node.id));
 
 			if (!i2->p.v.usedByDevice.empty())
 			{
-			    edges.push_back(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice);
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice));
 			}
 
 			if (!i2->p.v.mount.empty())
@@ -359,7 +359,7 @@ namespace storage
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(EDGE_MOUNT, partition_node.id, mountpoint_node.id);
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
 			}
 		    }
 
