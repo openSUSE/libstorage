@@ -194,7 +194,7 @@ namespace storage
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
@@ -222,7 +222,7 @@ namespace storage
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, lv_node.id, mountpoint_node.id));
@@ -248,7 +248,7 @@ namespace storage
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, md_node.id, mountpoint_node.id));
@@ -274,7 +274,7 @@ namespace storage
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.mount, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, dm_node.id, mountpoint_node.id));
@@ -315,7 +315,7 @@ namespace storage
 
 			if (!i2->p.v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount, i2->p.v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
@@ -356,7 +356,7 @@ namespace storage
 
 			if (!i2->p.v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.mount, i2->p.v.mount, i2->p.v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
 			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
