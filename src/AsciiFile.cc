@@ -69,7 +69,7 @@ bool AsciiFile::appendFile( AsciiFile& File_Cv )
     return appendFile( File_Cv, Lines_C );
 }
 
-bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr )
+bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr ) const
 {
     ifstream File_Ci( Name_Cv.c_str() );
     classic(File_Ci);
@@ -86,7 +86,7 @@ bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr )
     return Ret_bi;
 }
 
-bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr )
+bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr ) const
 {
     unsigned Idx_ii = 0;
 
@@ -190,7 +190,7 @@ bool AsciiFile::updateFile()
     return File_Ci.good();
     }
 
-bool AsciiFile::removeIfEmpty()
+bool AsciiFile::removeIfEmpty() const
     {
     bool ret = Lines_C.empty();
     if( ret && access( Name_C.c_str(), W_OK )==0 )

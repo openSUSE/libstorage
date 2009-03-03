@@ -46,13 +46,13 @@ class AsciiFile
 	unsigned numLines() const; 
 	const string& fileName() const;
 	unsigned differentLine( const AsciiFile& File_Cv ) const;
-	bool removeIfEmpty();
+	bool removeIfEmpty() const;
 
 	const vector<string>& lines() const { return Lines_C; }
 
     protected:
-	bool appendFile( const string&  Name_Cv, std::vector<string>& Lines_Cr );
-	bool appendFile( AsciiFile& File_Cv, std::vector<string>& Lines_Cr );
+	bool appendFile( const string& Name_Cv, std::vector<string>& Lines_Cr ) const;
+	bool appendFile( AsciiFile& File_Cv, std::vector<string>& Lines_Cr ) const;
 	void removeLastIf(string& Text_Cr, char Char_cv) const;
 
 	bool BackupCreated_b;
