@@ -571,7 +571,7 @@ Partition::getInfo( PartitionAddInfo& tinfo ) const
     list<string> l = udevId();
     for( list<string>::iterator i=l.begin(); i!=l.end(); ++i )
 	i->erase( 0, i->find_last_of('/')+1 );
-    tinfo.udevId = mergeString( l );
+    tinfo.udevId = boost::join(l, " ");
     }
 
 void

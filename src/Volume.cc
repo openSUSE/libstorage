@@ -271,7 +271,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    {
 	    b << " mountby:" << mb_names[mount_by];
 	    }
-	fstab_opt = orig_fstab_opt = mergeString( entry.opts, "," );
+	fstab_opt = orig_fstab_opt = boost::join( entry.opts, "," );
 	b << " fstopt:" << fstab_opt;
 	if( !is_loop && entry.loop )
 	    {
@@ -608,7 +608,7 @@ void Volume::updateFstabOptions()
     {
     list<string> l;
     getFstabOpts( l );
-    fstab_opt = mergeString( l, "," );
+    fstab_opt = boost::join( l, "," );
     }
 
 int Volume::changeFstabOptions( const string& options )
@@ -1788,7 +1788,7 @@ int Volume::doLosetup()
 		    i = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
 		if( i!=l.end() )
 		    *i = "loop=" + fstab_loop_dev;
-		fstab_opt = mergeString( l, "," );
+		fstab_opt = boost::join( l, "," );
 		}
 	    }
 	}
@@ -2142,7 +2142,7 @@ int Volume::mount( const string& m, bool ro )
 	if( !l.empty() )
 	    {
 	    opts += "-o";
-	    opts += mergeString( l, "," );
+	    opts += boost::join( l, "," );
 	    opts += " ";
 	    }
 	cmdline += "-t " + fsn + opts + quote(mountDevice()) + " " + quote(lmount);
@@ -2725,7 +2725,7 @@ void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
     {
     info.mount = fste.mount;
     info.mount_by = fste.mount_by;
-    info.fstab_options = mergeString( fste.opts, "," );
+    info.fstab_options = boost::join( fste.opts, "," );
     info.encryption = fste.encr;
     tinfo = info;
     }

@@ -2180,7 +2180,7 @@ Storage::addFstabOptions( const string& device, const string& options )
 	    if( find( opts.begin(), opts.end(), *i )==opts.end() )
 		opts.push_back( *i );
 	    }
-	ret = vol->changeFstabOptions( mergeString( opts, "," ) );
+	ret = vol->changeFstabOptions( boost::join( opts, "," ) );
 	}
     else
 	{
@@ -2214,7 +2214,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
 	    {
 	    opts.remove_if(match_regex(*i));
 	    }
-	ret = vol->changeFstabOptions( mergeString( opts, "," ) );
+	ret = vol->changeFstabOptions( boost::join( opts, "," ) );
 	}
     else
 	{
@@ -5309,7 +5309,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info->mount = i->mount;
 	    info->mount_by = MOUNTBY_DEVICE;
 	    info->fs = Volume::toFsType( i->fs );
-	    info->fstab_options = mergeString( i->opts, "," );
+	    info->fstab_options = boost::join( i->opts, "," );
 	    vil.push_back( *info );
 	    }
 	else if( findVolume( i->dentry, vol ) )

@@ -133,7 +133,7 @@ NfsCo::getNfsData( ProcMounts& mounts )
 	    {
 	    Nfs *n = new Nfs( *this, i->device );
 	    n->setMount( i->mount );
-	    string op = mergeString(i->opts, "," );
+	    string op = boost::join(i->opts, "," );
 	    if( op != "defaults" )
 		n->setFstabOption( op );
 	    addToList( n );
@@ -177,7 +177,7 @@ NfsCo::getNfsData( ProcMounts& mounts )
 			}
 		    }
 		n->setIgnoreFstab();
-		n->setFstabOption( mergeString(i->opts, "," ) );
+		n->setFstabOption( boost::join(i->opts, "," ) );
 		addToList( n );
 		}
 	    unsigned long long sz = getStorage()->getDfSize( i->mount );

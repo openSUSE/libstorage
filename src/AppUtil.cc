@@ -214,13 +214,6 @@ list<string> splitString( const string& s, const string& delChars,
     }
 
 
-string
-mergeString(const list<string>& l, const string& del)
-{
-    return boost::join(l, del);
-}
-
-
 map<string,string>
 makeMap( const list<string>& l, const string& delim, const string& removeSur )
     {

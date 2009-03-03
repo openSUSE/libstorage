@@ -2609,7 +2609,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.initDisk = init_disk;
     info.iscsi = iscsi;
     info.udevPath = udev_path;
-    info.udevId = mergeString( udev_id );
+    info.udevId = boost::join(udev_id, " ");
     tinfo = info;
     }
 

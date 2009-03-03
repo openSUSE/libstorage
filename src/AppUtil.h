@@ -31,7 +31,6 @@ string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi = false
 std::list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true,
 			  const string& quotes="" );
-string mergeString( const std::list<string>& l, const string& del=" " );
 std::map<string,string> makeMap( const std::list<string>& l,
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );

@@ -490,7 +490,7 @@ void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls )
 	{
 	ls.push_back( Volume::encTypeString(e.encr) );
 	}
-    ls.push_back( mergeString( e.opts, "," ) );
+    ls.push_back( boost::join( e.opts, "," ) );
     if( (e.dmcrypt&&e.mount!="swap") &&
         find( e.opts.begin(), e.opts.end(), "noauto" )==e.opts.end() )
 	{
@@ -563,7 +563,7 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls )
 	tls.push_back("tmp");
     else if( !need_tmp && (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
 	tls.erase(i);
-    tmp = mergeString( tls, "," );
+    tmp = boost::join( tls, "," );
     ls.push_back( tmp.empty()?"none":tmp );
     }
 

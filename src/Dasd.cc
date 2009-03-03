@@ -543,7 +543,7 @@ int Dasd::doDasdfmt()
 	y2mil("devs:" << devs);
 	if( !silent ) 
 	    {
-	    string txt = dasdfmtTexts( dl.size()==1, mergeString(devs) );
+	    string txt = dasdfmtTexts( dl.size()==1, boost::join(devs, " ") );
 	    getStorage()->showInfoCb( txt );
 	    }
 	for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
@@ -551,7 +551,7 @@ int Dasd::doDasdfmt()
 	    normalizeDevice(*i);
 	    *i = "-f " + quote(*i);
 	    }
-	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + mergeString(devs);
+	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + boost::join(devs, " ");
 	y2mil("cmdline:" << cmd_line);
 	CallbackProgressBar cb = getStorage()->getCallbackProgressBarTheOne();
 	ScrollBarHandler* sb = new DasdfmtScrollbar( cb );

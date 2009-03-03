@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/StorageInterface.h"
 
@@ -47,7 +48,7 @@ inline std::ostream& operator<< (std::ostream& s, const FstabEntry &v )
     {
     s << "device:" << v.device
       << " dentry:" << v.dentry << " mount:" << v.mount
-      << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
+      << " fs:" << v.fs << " opts:" << boost::join( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
     if( v.noauto )
 	s << " noauto";
@@ -113,7 +114,7 @@ inline std::ostream& operator<< (std::ostream& s, const FstabChange &v )
     {
     s << "device:" << v.device
       << " dentry:" << v.dentry << " mount:" << v.mount
-      << " fs:" << v.fs << " opts:" << mergeString( v.opts, "," )
+      << " fs:" << v.fs << " opts:" << boost::join( v.opts, "," )
       << " freq:" << v.freq << " passno:" << v.passno;
     if( !v.loop_dev.empty() )
 	s << " loop_dev:" << v.loop_dev;
