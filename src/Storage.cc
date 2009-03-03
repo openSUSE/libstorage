@@ -5425,7 +5425,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(device));
 		    string fstr = " might resize at ";
 		    string::size_type pos;
-		    string stdout = c.stdout();
+		    string stdout = boost::join(c.stdout(), "\n");
 		    if (c.retcode()==0 && (pos=stdout.find(fstr))!=string::npos)
 			{
 			y2mil("pos:" << pos);

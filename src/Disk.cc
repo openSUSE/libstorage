@@ -531,7 +531,7 @@ Disk::maxSizeLabelK( const string& label )
 int
 Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     {
-    string tmp = cmd.stderr();
+    string tmp = boost::join(cmd.stderr(), "\n");
     if (!tmp.empty())
         {
 	y2err("cmd:" << cmd_line);
@@ -542,7 +542,7 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
 	    }
 	system_stderr += tmp;
         }
-    tmp = cmd.stdout();
+    tmp = boost::join(cmd.stdout(), "\n");
     if (!tmp.empty())
         {
 	y2mil("cmd:" << cmd_line);

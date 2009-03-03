@@ -247,7 +247,7 @@ void Container::setExtError( const string& txt ) const
 
 void Container::setExtError( const SystemCmd& cmd, bool serr ) const
     {
-    const string& s = serr ? cmd.stderr() : cmd.stdout();
+    const string& s = boost::join(serr ? cmd.stderr() : cmd.stdout(), "\n");
     if( s.size()>0 )
 	{
 	sto->setExtError( cmd.cmd() + ":\n" + s );

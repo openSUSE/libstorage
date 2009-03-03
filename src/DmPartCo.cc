@@ -258,7 +258,7 @@ void
 DmPartCo::init( ProcPart& ppart )
     {
     SystemCmd c(DMSETUPBIN " table " + quote(nm));
-    if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0] ))
+    if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0][0] ))
 	{
 	mnr = Dm::dmNumber( nm );
 	ppart.getSize( "dm-"+decString(mnr), size_k );

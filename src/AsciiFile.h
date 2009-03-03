@@ -4,10 +4,12 @@
 #include <vector>
 #include <list>
 
-using std::string;
 
 namespace storage
 {
+    using std::string;
+    using std::vector;
+    
 
 class Regex;
 
@@ -45,6 +47,8 @@ class AsciiFile
 	const string& fileName() const;
 	unsigned differentLine( const AsciiFile& File_Cv ) const;
 	bool removeIfEmpty();
+
+	const vector<string>& lines() const { return Lines_C; }
 
     protected:
 	bool appendFile( const string&  Name_Cv, std::vector<string>& Lines_Cr );

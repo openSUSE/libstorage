@@ -351,17 +351,6 @@ SystemCmd::setTestmode(bool val)
 }
 
 
-string
-SystemCmd::getString( OutputStream Idx_iv ) const
-    {
-    if( Idx_iv > 1 )
-	{
-	y2err("invalid index " << Idx_iv);
-	}
-    return boost::join(Lines_aC[Idx_iv], "\n");
-    }
-
-
 unsigned
 SystemCmd::numLines( bool Sel_bv, OutputStream Idx_iv ) const
     {

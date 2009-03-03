@@ -8,10 +8,10 @@
 #include <vector>
 #include <list>
 
-using std::string;
-
 namespace storage
 {
+    using std::string;
+    using std::vector;
 
 class OutputProcessor;
 
@@ -36,8 +36,9 @@ class SystemCmd
 
 	void logOutput() const;
 
-	string stderr() const { return getString(IDX_STDERR); }
-	string stdout() const { return getString(IDX_STDOUT); }
+	const vector<string>& stdout() const { return Lines_aC[IDX_STDOUT]; }
+	const vector<string>& stderr() const { return Lines_aC[IDX_STDERR]; }
+
 	string cmd() const { return lastCmd; }
 	int retcode() const { return Ret_i; }
 
@@ -72,8 +73,6 @@ class SystemCmd
 			    string& Text_Cr, std::vector<string>& Lines_Cr);
 	void addLine(const string& Text_Cv, std::vector<string>& Lines_Cr);
 	void init();
-
-	string getString(OutputStream Idx_ii = IDX_STDOUT) const;
 
 	FILE* File_aC[2];
 	std::vector<string> Lines_aC[2];
