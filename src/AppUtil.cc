@@ -21,6 +21,8 @@
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
+#include "y2storage/StorageTypes.h"
+
 
 using namespace std;
 
@@ -486,18 +488,25 @@ getRevUdevMap(const char* path, map<string, string>& m)
 }
 
 
-unsigned getMajorDevices( const string& driver )
-    {
-    unsigned ret=0;
-    string cmd = "grep \" " + driver + "$\" /proc/devices";
-    SystemCmd c( cmd );
-    if( c.numLines()>0 )
-	{
-	extractNthWord( 0, c.getLine(0)) >> ret;
-	}
-    y2mil( "driver:" << driver << " ret:" << ret );
-    return( ret );
-    }
+unsigned
+getMajorDevices(const char* driver)
+{
+    unsigned ret = 0;
+
+    AsciiFile file("/proc/devices");
+    const std::vector<string>& lines = file.lines();
+
+    Regex rx("^" + Regex::ws + "([0-9]+)" + Regex::ws + string(driver) + "$");
+
+    std::vector<string>::const_iterator it = find_if(lines.begin(), lines.end(), match_regex(rx));
+    if (it == lines.end())
+	y2err("did not find " << driver << " in /proc/devices");
+    else
+	rx.cap(1) >> ret;
+
+    y2mil("driver:" << driver << " ret:" << ret);
+    return ret;
+}
 
 
 string sformat(const char* format, ...)

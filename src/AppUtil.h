@@ -44,7 +44,8 @@ void normalizeDevice( string& dev );
 string undevDevice( const string& dev );
 void undevDevice( string& dev );
 bool isNfsDev( const string& dev );
-unsigned getMajorDevices( const string& driver );
+
+unsigned getMajorDevices(const char* driver);
 
 
 template<class StreamType>
