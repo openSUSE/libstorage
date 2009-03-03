@@ -54,10 +54,6 @@ bool AsciiFile::loadFile( const string& Name_Cv )
     return Ret_bi;
     }
 
-const string& AsciiFile::fileName() const
-    {
-    return Name_C;
-    }
 
 bool AsciiFile::appendFile( const string& Name_Cv )
     {
@@ -230,9 +226,9 @@ void AsciiFile::append( const string& Line_Cv )
     Lines_C.push_back( Line_Ci );
     }
 
-void AsciiFile::append( const list<string>& lines )
+void AsciiFile::append( const vector<string>& lines )
     {
-    for( list<string>::const_iterator i=lines.begin(); i!=lines.end(); ++i )
+    for( vector<string>::const_iterator i=lines.begin(); i!=lines.end(); ++i )
 	append( *i );
     }
 
@@ -244,10 +240,10 @@ void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
     }
 
 void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv, 
-                         const list<string>& lines )
+                         const vector<string>& lines )
     {
     remove( Start_iv, Cnt_iv );
-    for( list<string>::const_reverse_iterator i=lines.rbegin(); i!=lines.rend();
+    for( vector<string>::const_reverse_iterator i=lines.rbegin(); i!=lines.rend();
          ++i )
 	insert( Start_iv, *i );
     }
@@ -366,31 +362,6 @@ int AsciiFile::find( unsigned int Start_iv, const string& Pat_Cv ) const
 	    Idx_ii++;
 	    }
 	}
-    return Ret_ii;
-    }
-
-unsigned AsciiFile::numLines() const
-    {
-    return Lines_C.size();
-    }
-
-unsigned AsciiFile::differentLine( const AsciiFile& File_Cv ) const
-    {
-    int Ret_ii = -1;
-    unsigned Cnt_ii = min( numLines(), File_Cv.numLines() );
-    unsigned I_ii = 0;
-    while( I_ii<Cnt_ii && (*this)[I_ii]==File_Cv[I_ii] )
-        {
-        I_ii++;
-        }
-    if( I_ii<Cnt_ii )
-        {
-        Ret_ii = I_ii;
-        }
-    else if( numLines()>Cnt_ii || File_Cv.numLines()>Cnt_ii )
-        {
-        Ret_ii = Cnt_ii;
-        }
     return Ret_ii;
     }
 
