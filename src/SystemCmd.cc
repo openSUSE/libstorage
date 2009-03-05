@@ -401,7 +401,7 @@ SystemCmd::getLine( unsigned Nr_iv, bool Sel_bv, OutputStream Idx_iv ) const
 
 
 int
-SystemCmd::select( const string& Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
+SystemCmd::select( const string& Pat_Cv, OutputStream Idx_iv )
     {
     if( Idx_iv > 1 )
 	{
@@ -423,7 +423,7 @@ SystemCmd::select( const string& Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
 	    {
 	    Pos_ii = string::npos;
 	    }
-	if( (Pos_ii != string::npos) != Invert_bv )
+	if (Pos_ii != string::npos)
 	    {
 	    SelLines_aC[Idx_iv].resize( Size_ii+1 );
 	    SelLines_aC[Idx_iv][Size_ii] = &Lines_aC[Idx_iv][I_ii];
@@ -432,8 +432,7 @@ SystemCmd::select( const string& Pat_Cv, bool Invert_bv, OutputStream Idx_iv )
 	    }
 	}
 
-    y2mil("Pid:" << Pid_i << " Idx:" << Idx_iv << " Pattern:\"" << Pat_Cv << "\" Invert:" << 
-	  Invert_bv << " Lines:" << Size_ii);
+    y2mil("Pid:" << Pid_i << " Idx:" << Idx_iv << " Pattern:\"" << Pat_Cv << "\" Lines:" << Size_ii);
     return Size_ii;
     }
 

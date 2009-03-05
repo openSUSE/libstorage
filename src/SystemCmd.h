@@ -42,7 +42,7 @@ class SystemCmd
 	string cmd() const { return lastCmd; }
 	int retcode() const { return Ret_i; }
 
-	int select(const string& Reg_Cv, bool Invert_bv = false, OutputStream Idx_ii = IDX_STDOUT);
+	int select(const string& Reg_Cv, OutputStream Idx_ii = IDX_STDOUT);
 	unsigned numLines(bool Selected_bv = false, OutputStream Idx_ii = IDX_STDOUT) const;
 	string getLine(unsigned Num_iv, bool Selected_bv = false, OutputStream Idx_ii = IDX_STDOUT) const;
 
