@@ -838,21 +838,23 @@ Storage::logVolumes( const string& Dir )
     handleLogFile( fname );
     }
 
+
 bool
-Storage::testFilesEqual( const string& n1, const string& n2 )
-    {
+Storage::testFilesEqual(const string& n1, const string& n2)
+{
     bool ret = false;
-    if( access( n1.c_str(), R_OK )==0 && access( n2.c_str(), R_OK )==0 )
+    if (access(n1.c_str(), R_OK) == 0 && access(n2.c_str(), R_OK) == 0)
+    {
+ 	SystemCmd cmd("/usr/bin/md5sum " + quote(n1) + " " + quote(n2));
+	if (cmd.retcode() == 0 && cmd.stdout().size() >= 2)
 	{
-	SystemCmd c("/usr/bin/md5sum " + quote(n1) + " " + quote(n2));
-	if( c.retcode()==0 && c.numLines()>=2 )
-	    {
-	    ret = extractNthWord( 0, c.getLine(0) ) == extractNthWord( 0, c.getLine(1) );
-	    }
+	    ret = extractNthWord(0, cmd.stdout()[0]) == extractNthWord(0, cmd.stdout()[1]);
 	}
-    y2mil("ret:" << ret << "n1:" << n1 << " n2:" << n2);
-    return ret;
     }
+    y2mil("ret:" << ret << " n1:" << n1 << " n2:" << n2);
+    return ret;
+}
+
 
 void
 Storage::handleLogFile( const string& name )
