@@ -188,7 +188,7 @@ FstabEntry::calcDependent()
 
     noauto = find( beg, end, "noauto" ) != end;
 
-    list<string>::const_iterator i = find_if( beg, end, find_begin("loop") );
+    list<string>::const_iterator i = find_if( beg, end, string_starts_with("loop") );
     if( i!=end )
 	{
 	loop = true;
@@ -198,7 +198,7 @@ FstabEntry::calcDependent()
 	    loop_dev = i->substr( pos+1 );
 	    }
 	}
-    i = find_if( beg, end, find_begin("encryption=") );
+    i = find_if( beg, end, string_starts_with("encryption=") );
     if( i!=end )
 	{
 	string::size_type pos = i->find("=");

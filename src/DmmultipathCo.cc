@@ -91,7 +91,7 @@ DmmultipathCo::setUdevData(const list<string>& id)
 {
     y2mil("disk:" << nm << " id:" << id);
     udev_id = id;
-    udev_id.remove_if(find_begin("dm-"));
+    udev_id.remove_if(string_starts_with("dm-"));
     y2mil("id:" << udev_id);
 
     DmPartCo::setUdevData(udev_id);

@@ -131,25 +131,25 @@ private:
 };
 
 
-struct match_regex
+    struct regex_matches
     {
-    match_regex(const Regex& t) : r(t) {}
-    bool operator()(const string&s) { return r.match(s); }
-    const Regex& r;
+	regex_matches(const Regex& t) : val(t) {}
+	bool operator()(const string& s) { return val.match(s); }
+	const Regex& val;
     };
 
-struct find_begin
+    struct string_starts_with
     {
-    find_begin(const string& t) : val(t) {}
-    bool operator()(const string& s) { return boost::starts_with(s, val); }
-    const string& val;
+	string_starts_with(const string& t) : val(t) {}
+	bool operator()(const string& s) { return boost::starts_with(s, val); }
+	const string& val;
     };
 
-struct find_any
+    struct string_contains
     {
-    find_any(const string& t) : val(t) {}
-    bool operator()(const string& s) { return boost::contains(s, val); }
-    const string& val;
+	string_contains(const string& t) : val(t) {}
+	bool operator()(const string& s) { return boost::contains(s, val); }
+	const string& val;
     };
 
 }

@@ -109,7 +109,7 @@ static string udevCompleteIdPath( const string& s, unsigned nr )
 void
 DmPart::addAltUdevId( unsigned num )
 {
-    alt_names.remove_if(find_any("/by-id/"));
+    alt_names.remove_if(string_contains("/by-id/"));
 
     list<string>::const_iterator j = co()->udevId().begin();
     while( j!=co()->udevId().end() )

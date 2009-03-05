@@ -491,7 +491,7 @@ getMajorDevices(const char* driver)
 
     Regex rx("^" + Regex::ws + "([0-9]+)" + Regex::ws + string(driver) + "$");
 
-    std::vector<string>::const_iterator it = find_if(lines.begin(), lines.end(), match_regex(rx));
+    std::vector<string>::const_iterator it = find_if(lines.begin(), lines.end(), regex_matches(rx));
     if (it == lines.end())
 	y2err("did not find " << driver << " in /proc/devices");
     else

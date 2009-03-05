@@ -2214,7 +2214,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
 	list<string> opts = splitString( vol->getFstabOption(), "," );
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	    {
-	    opts.remove_if(match_regex(*i));
+	    opts.remove_if(regex_matches(*i));
 	    }
 	ret = vol->changeFstabOptions( boost::join( opts, "," ) );
 	}

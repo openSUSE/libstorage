@@ -78,7 +78,7 @@ const list<string> Partition::udevId() const
 const string& Partition::udevPath() const 
     { 
     list<string>::const_iterator i = 
-	find_if( alt_names.begin(), alt_names.end(), find_any( "/by-path/" ));
+	find_if( alt_names.begin(), alt_names.end(), string_contains( "/by-path/" ));
     return( i==alt_names.end() ? empty_string : *i );
     }
 
@@ -120,7 +120,7 @@ void Partition::addUdevData()
 
 void Partition::addAltUdevId( unsigned num )
     {
-    alt_names.remove_if(find_any("/by-id/"));
+    alt_names.remove_if(string_contains("/by-id/"));
 
     list<string>::const_iterator j = disk()->udevId().begin();
     while( j!=disk()->udevId().end() )
@@ -133,7 +133,7 @@ void Partition::addAltUdevId( unsigned num )
 
 void Partition::addAltUdevPath( unsigned num )
     {
-    alt_names.remove_if(find_any("/by-path/"));
+    alt_names.remove_if(string_contains("/by-path/"));
 
     if( !disk()->udevPath().empty() )
 	alt_names.push_back( udevCompletePathPath( disk()->udevPath(), num ));
@@ -156,7 +156,7 @@ void Partition::changeNumber( unsigned new_num )
 	    }
 	addAltUdevId( num );
 	list<string>::iterator i = find_if( alt_names.begin(), alt_names.end(),
-	                                    find_any( "/by-path/" ));
+	                                    string_contains( "/by-path/" ));
 	if( i!=alt_names.end() )
 	    *i = udevCompletePathPath( disk()->udevPath(), num );
 	nm.clear();

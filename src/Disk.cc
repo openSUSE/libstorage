@@ -187,8 +187,8 @@ Disk::setUdevData(const string& path, const list<string>& id)
     y2mil("disk:" << nm << " path:" << path << "id:" << id);
     udev_path = path;
     udev_id = id;
-    udev_id.remove_if(find_begin("edd-"));
-    partition(udev_id.begin(), udev_id.end(), find_begin("ata-"));
+    udev_id.remove_if(string_starts_with("edd-"));
+    partition(udev_id.begin(), udev_id.end(), string_starts_with("ata-"));
     y2mil("id:" << udev_id);
 
     PartPair pp = partPair();

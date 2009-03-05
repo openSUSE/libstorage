@@ -511,7 +511,7 @@ string Dm::sysfsPath() const
     {
     string ret = SYSFSDIR "/";
     list<string>::const_iterator i = 
-	find_if( alt_names.begin(), alt_names.end(), find_begin( "/dev/dm-" ) );
+	find_if( alt_names.begin(), alt_names.end(), string_starts_with( "/dev/dm-" ) );
     if( i != alt_names.end() )
 	{
 	string::size_type pos = i->rfind( '/' ) + 1;

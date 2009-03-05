@@ -466,7 +466,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		{
 		uuid = i->second;
 		b << " uuid:" << uuid;
-		alt_names.remove_if(find_any("/by-uuid/"));
+		alt_names.remove_if(string_contains("/by-uuid/"));
 		alt_names.push_back( "/dev/disk/by-uuid/" + uuid );
 		}
 	    i = m.find( "LABEL" );
@@ -476,7 +476,7 @@ void Volume::getFsData( SystemCmd& blkidData )
 		if (fs != HFS)
 		    label = orig_label = i->second;
 		b << " label:\"" << label << "\"";
-		alt_names.remove_if(find_any("/by-label/"));
+		alt_names.remove_if(string_contains("/by-label/"));
 		alt_names.push_back( "/dev/disk/by-label/" + label );
 		}
 	    y2mil(b.str());
@@ -742,7 +742,7 @@ int Volume::doFormat()
 		{
 		cmd = "/sbin/mkdosfs";
 		list<string> l=splitString( mkfs_opt );
-		if( find_if( l.begin(), l.end(), find_begin( "-F" ) ) != l.end())
+		if( find_if( l.begin(), l.end(), string_starts_with( "-F" ) ) != l.end())
 		    params = "-F 32";
 		else if( sizeK()>2*1024*1024 )
 		    {
@@ -1785,7 +1785,7 @@ int Volume::doLosetup()
 		list<string> l = splitString( fstab_opt, "," );
 		list<string>::iterator i = find( l.begin(), l.end(), "loop" );
 		if( i == l.end() )
-		    i = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
+		    i = find_if( l.begin(), l.end(), string_starts_with( "loop=" ) );
 		if( i!=l.end() )
 		    *i = "loop=" + fstab_loop_dev;
 		fstab_opt = boost::join( l, "," );
@@ -1828,7 +1828,7 @@ void Volume::replaceAltName( const string& prefix, const string& newn )
     {
     y2mil( "prefix:" << prefix << " new:" << newn );
     list<string>::iterator i =
-	find_if( alt_names.begin(), alt_names.end(), find_begin( prefix ) );
+	find_if( alt_names.begin(), alt_names.end(), string_starts_with( prefix ) );
     if( i!=alt_names.end() )
 	{
 	if( !newn.empty() )
@@ -2136,7 +2136,7 @@ int Volume::mount( const string& m, bool ro )
 	for( unsigned i=0; i<lengthof(ign_opt) && *ign_opt[i]!=0; i++ )
 	    l.remove(ign_opt[i]);
 	for( unsigned i=0; i<lengthof(ign_beg) && *ign_beg[i]!=0; i++ )
-	    l.remove_if(find_begin(ign_beg[i]));
+	    l.remove_if(string_starts_with(ign_beg[i]));
 	y2mil( "l  after:" << l );
 	string opts = " ";
 	if( !l.empty() )
@@ -2325,9 +2325,9 @@ void Volume::getFstabOpts( list<string>& l )
 	l = splitString( fstab_opt, "," );
     list<string>::iterator loop = find( l.begin(), l.end(), "loop" );
     if( loop == l.end() )
-	loop = find_if( l.begin(), l.end(), find_begin( "loop=" ) );
+	loop = find_if( l.begin(), l.end(), string_starts_with( "loop=" ) );
     list<string>::iterator enc =
-	find_if( l.begin(), l.end(), find_begin( "encryption=" ) );
+	find_if( l.begin(), l.end(), string_starts_with( "encryption=" ) );
     string lstr;
     if( optNoauto() &&
         ((encryption!=ENC_NONE && !dmcrypt()) || cont->type()==LOOP ))
