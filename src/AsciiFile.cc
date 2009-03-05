@@ -314,57 +314,6 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     return Lines_C[Idx_iv];
     }
 
-int AsciiFile::find( Regex& Pat_Cv ) const
-    {
-    unsigned Idx_ii = 0;
-    int Ret_ii = -1;
-    while( Ret_ii<0 && Idx_ii<Lines_C.size() )
-	{
-	if( Pat_Cv.match( Lines_C[Idx_ii] ))
-	    {
-	    Ret_ii = Idx_ii;
-	    }
-	else
-	    {
-	    Idx_ii++;
-	    }
-	}
-    return Ret_ii;
-    }
-
-int AsciiFile::find( const string& Pat_Cv ) const
-    {
-    string::size_type Pos_ii;
-    unsigned int Idx_ii = 0;
-    int Ret_ii = -1;
-    string Pat_Ci = Pat_Cv;
-    bool BeginOfLine_bi = Pat_Ci.length()>0 && Pat_Ci[0]=='^';
-
-    if( BeginOfLine_bi )
-	{
-	Pat_Ci.erase( 0, 1 );
-	}
-    while( Ret_ii<0 && Idx_ii<Lines_C.size() )
-	{
-	if( (Pos_ii=Lines_C[Idx_ii].find( Pat_Ci )) != string::npos )
-	    {
-	    if( !BeginOfLine_bi || (BeginOfLine_bi && Pos_ii==0) )
-		{
-		Ret_ii = Idx_ii;
-		}
-	    else
-		{
-		Idx_ii++;
-		}
-	    }
-	else
-	    {
-	    Idx_ii++;
-	    }
-	}
-    return Ret_ii;
-    }
-
 
 void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
 {

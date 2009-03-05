@@ -4,6 +4,7 @@
 
 #include <string>
 #include <vector>
+#include <algorithm>
 
 
 namespace storage
@@ -49,8 +50,14 @@ namespace storage
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
 
-	int find( const string& Pat_Cv ) const;
-	int find( Regex& Pat_Cv ) const;
+	template <class Pred>
+	int find_if(Pred pred) const
+	{
+	    vector<string>::const_iterator it = std::find_if(Lines_C.begin(), Lines_C.end(), pred);
+	    if (it == Lines_C.end())
+		return -1;
+	    return std::distance(Lines_C.begin(), it);
+	}
 
 	unsigned numLines() const { return Lines_C.size(); }
 

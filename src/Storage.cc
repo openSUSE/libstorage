@@ -135,11 +135,10 @@ Storage::initialize()
     if( access( "/etc/sysconfig/storage", R_OK )==0 )
     {
 	AsciiFile sc( "/etc/sysconfig/storage" );
-	Regex r('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	int line = sc.find( r );
-	if( line >= 0 )
+	Regex rx('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
+	if (sc.find_if(regex_matches(rx)) >= 0)
 	{
-	    string val = boost::to_lower_copy(r.cap(2), locale::classic());
+	    string val = boost::to_lower_copy(rx.cap(2), locale::classic());
 	    if( val == "id" )
 		setDefaultMountBy( MOUNTBY_ID );
 	    else if( val == "path" )
@@ -340,7 +339,7 @@ Storage::detectArch()
     if( proc_arch == "ppc" )
 	{
 	AsciiFile cpu( "/proc/cpuinfo" );
-	int l = cpu.find( "^machine\t" );
+	int l = cpu.find_if(string_starts_with("machine\t"));
 	y2mil("line:" << l);
 	if( l >= 0 )
 	    {
@@ -805,21 +804,23 @@ Storage::printInfo( ostream& str, const string& name )
 	}
     }
 
+
 void
 Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 			       const VolIterator& end )
-    {
+{
     AsciiFile vd( file );
     for( VolIterator i=begin; i!=end; ++i )
+    {
+	int pos = vd.find_if(string_starts_with(i->device() + " "));
+	if (pos >= 0)
 	{
-	int pos = -1;
-	if( (pos=vd.find( "^"+i->device()+" " ))>=0 )
-	    {
 	    i->getTestmodeData( vd[pos] );
-	    }
-	i->getFstabData( *fstab );
 	}
+	i->getFstabData( *fstab );
     }
+}
+
 
 void
 Storage::logVolumes( const string& Dir )
@@ -4623,8 +4624,9 @@ Storage::logCo(const Container* c) const
 }
 
 
-void Storage::logProcData( const string& l )
-    {
+void
+Storage::logProcData( const string& l )
+{
     y2mil( "begin:" << l );
     ProcPart t;
     AsciiFile md( "/proc/mdstat" );
@@ -4634,7 +4636,7 @@ void Storage::logProcData( const string& l )
     for( unsigned i=0; i<mo.numLines(); i++ )
 	y2mil( "mounts:" << i+1 << ". line:" << mo[i] );
     y2mil( "end" << l );
-    }
+}
 
 
 bool Storage::findVolume( const string& device, ContIterator& c,

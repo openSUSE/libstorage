@@ -404,23 +404,22 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
     {
     y2mil("device:" << e.dentry << " mp:" << e.mount << "  fstab:" << fstab << " cryptotab:" << cryptotab);
     AsciiFile* ret=NULL;
-    Regex *fi = NULL;
+    string reg;
     if( e.crypto )
 	{
 	if( cryptotab==NULL )
 	    cryptotab = new AsciiFile( prefix + "/cryptotab" );
 	ret = cryptotab;
-	fi = new Regex( "[ \t]" + e.dentry + "[ \t]" );
+	reg = "[ \t]" + e.dentry + "[ \t]";
 	}
     else
 	{
 	if( fstab==NULL )
 	    fstab = new AsciiFile( prefix + "/fstab" );
 	ret = fstab;
-	fi = new Regex( "^[ \t]*" + e.dentry + "[ \t]" );
+	reg = "^[ \t]*" + e.dentry + "[ \t]";
 	}
-    lineno = ret->find( *fi );
-    delete fi;
+    lineno = ret->find_if(regex_matches(reg));
     y2mil("fstab:" << fstab << " cryptotab:" << cryptotab << " lineno:" << lineno);
     return( ret );
     }
@@ -436,9 +435,7 @@ int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount )
     reg += "[ \t]+" + mount;
     if( mount.length()>0 && mount[mount.length()-1] != '/' )
 	reg += "/";
-    Regex *fi = new Regex( reg );
-    int lineno = tab.find( *fi );
-    delete fi;
+    int lineno = tab.find_if(regex_matches(reg));
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno );
     }
@@ -448,13 +445,11 @@ bool EtcFstab::findCrtab( const FstabEntry& e, const AsciiFile& tab,
     {
     y2mil("dev:" << e.device);
     string reg = "^[ \t]*[^ \t]+[ \t]+" + e.device + "[ \t]";
-    Regex fi( reg );
-    lineno = tab.find( fi );
+    lineno = tab.find_if(regex_matches(reg));
     if( lineno<0 )
 	{
 	reg = "^[ \t]*" + e.dentry + "[ \t]";
-	Regex fil( reg );
-	lineno = tab.find( fil );
+	lineno = tab.find_if(regex_matches(reg));
 	}
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno>=0 );
@@ -465,8 +460,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     {
     y2mil("dev:" << dev.c_str());
     string reg = "^[ \t]*[^ \t]+[ \t]+" + dev + "[ \t]";
-    Regex fi( reg );
-    lineno = tab.find( fi );
+    lineno = tab.find_if(regex_matches(reg));
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno>=0 );
     }
