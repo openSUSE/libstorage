@@ -1117,14 +1117,14 @@ LvmVg::getVgs(list<string>& l)
 {
     l.clear();
 
-    SystemCmd c(VGDISPLAYBIN " -s");
-    if (c.numLines() > 0)
+    SystemCmd cmd(VGDISPLAYBIN " -s");
+    if (!cmd.stdout().empty())
     {
 	active = true;
 
-	for( unsigned i=0; i<c.numLines(); ++i )
+	for (vector<string>::const_iterator it = cmd.stdout().begin(); it != cmd.stdout().end(); ++it)
 	{
-	    string vgname = c.getLine(i);
+	    string vgname = *it;
 	    string::size_type pos=vgname.find_first_not_of( app_ws+"\"" );
 	    if( pos>0 )
 		vgname.erase( 0, pos );
