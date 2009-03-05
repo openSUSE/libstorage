@@ -49,8 +49,8 @@ namespace storage
 	const string& operator []( unsigned int Index_iv ) const;
 	string& operator []( unsigned int Index_iv );
 
-	int find( unsigned int Start_iv, const string& Pat_Cv ) const;
-	int find( unsigned int Start_iv, Regex& Pat_Cv ) const;
+	int find( const string& Pat_Cv ) const;
+	int find( Regex& Pat_Cv ) const;
 
 	unsigned numLines() const { return Lines_C.size(); }
 

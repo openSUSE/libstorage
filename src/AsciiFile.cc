@@ -314,9 +314,9 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     return Lines_C[Idx_iv];
     }
 
-int AsciiFile::find( unsigned Start_iv, Regex& Pat_Cv ) const
+int AsciiFile::find( Regex& Pat_Cv ) const
     {
-    unsigned Idx_ii = Start_iv;
+    unsigned Idx_ii = 0;
     int Ret_ii = -1;
     while( Ret_ii<0 && Idx_ii<Lines_C.size() )
 	{
@@ -332,10 +332,10 @@ int AsciiFile::find( unsigned Start_iv, Regex& Pat_Cv ) const
     return Ret_ii;
     }
 
-int AsciiFile::find( unsigned int Start_iv, const string& Pat_Cv ) const
+int AsciiFile::find( const string& Pat_Cv ) const
     {
     string::size_type Pos_ii;
-    unsigned int Idx_ii = Start_iv;
+    unsigned int Idx_ii = 0;
     int Ret_ii = -1;
     string Pat_Ci = Pat_Cv;
     bool BeginOfLine_bi = Pat_Ci.length()>0 && Pat_Ci[0]=='^';

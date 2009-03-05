@@ -136,7 +136,7 @@ Storage::initialize()
     {
 	AsciiFile sc( "/etc/sysconfig/storage" );
 	Regex r('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	int line = sc.find( 0, r );
+	int line = sc.find( r );
 	if( line >= 0 )
 	{
 	    string val = boost::to_lower_copy(r.cap(2), locale::classic());
@@ -340,7 +340,7 @@ Storage::detectArch()
     if( proc_arch == "ppc" )
 	{
 	AsciiFile cpu( "/proc/cpuinfo" );
-	int l = cpu.find( 0, "^machine\t" );
+	int l = cpu.find( "^machine\t" );
 	y2mil("line:" << l);
 	if( l >= 0 )
 	    {
@@ -813,7 +813,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
     for( VolIterator i=begin; i!=end; ++i )
 	{
 	int pos = -1;
-	if( (pos=vd.find( 0, "^"+i->device()+" " ))>=0 )
+	if( (pos=vd.find( "^"+i->device()+" " ))>=0 )
 	    {
 	    i->getTestmodeData( vd[pos] );
 	    }

@@ -419,7 +419,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	ret = fstab;
 	fi = new Regex( "^[ \t]*" + e.dentry + "[ \t]" );
 	}
-    lineno = ret->find( 0, *fi );
+    lineno = ret->find( *fi );
     delete fi;
     y2mil("fstab:" << fstab << " cryptotab:" << cryptotab << " lineno:" << lineno);
     return( ret );
@@ -437,7 +437,7 @@ int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount )
     if( mount.length()>0 && mount[mount.length()-1] != '/' )
 	reg += "/";
     Regex *fi = new Regex( reg );
-    int lineno = tab.find( 0, *fi );
+    int lineno = tab.find( *fi );
     delete fi;
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno );
@@ -449,12 +449,12 @@ bool EtcFstab::findCrtab( const FstabEntry& e, const AsciiFile& tab,
     y2mil("dev:" << e.device);
     string reg = "^[ \t]*[^ \t]+[ \t]+" + e.device + "[ \t]";
     Regex fi( reg );
-    lineno = tab.find( 0, fi );
+    lineno = tab.find( fi );
     if( lineno<0 )
 	{
 	reg = "^[ \t]*" + e.dentry + "[ \t]";
 	Regex fil( reg );
-	lineno = tab.find( 0, fil );
+	lineno = tab.find( fil );
 	}
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno>=0 );
@@ -466,7 +466,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     y2mil("dev:" << dev.c_str());
     string reg = "^[ \t]*[^ \t]+[ \t]+" + dev + "[ \t]";
     Regex fi( reg );
-    lineno = tab.find( 0, fi );
+    lineno = tab.find( fi );
     y2mil("reg:" << reg << " lineno:" << lineno);
     return( lineno>=0 );
     }
