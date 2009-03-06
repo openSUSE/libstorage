@@ -28,15 +28,15 @@ namespace storage
 		   const char* BackupExt_Cv=".orig" );
 	~AsciiFile();
 
-	bool insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv=0 );
-	bool appendFile( AsciiFile& File_Cv );
+	bool insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv = 0);
+	bool appendFile(const AsciiFile& File_Cv);
 	bool insertFile( const string& Name_Cv, unsigned int BeforeLine_iv=0 );
 	bool appendFile( const string& Name_Cv );
 
 	string fileName() const { return Name_C; }
 	bool loadFile( const string& Name_Cv );
 	bool updateFile();
-	bool saveToFile( const string& Name_Cv );
+	bool saveToFile(const string& Name_Cv) const;
 
 	void append( const string& Line_Cv );
 	void append( const vector<string>& Lines_Cv );
@@ -68,7 +68,7 @@ namespace storage
     protected:
 
 	bool appendFile( const string& Name_Cv, vector<string>& Lines_Cr ) const;
-	bool appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr ) const;
+	bool appendFile(const AsciiFile& File_Cv, vector<string>& Lines_Cr) const;
 	void removeLastIf(string& Text_Cr, char Char_cv) const;
 
 	bool BackupCreated_b;

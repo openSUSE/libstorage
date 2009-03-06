@@ -60,7 +60,7 @@ bool AsciiFile::appendFile( const string& Name_Cv )
     return appendFile( Name_Cv, Lines_C );
     }
 
-bool AsciiFile::appendFile( AsciiFile& File_Cv )
+bool AsciiFile::appendFile(const AsciiFile& File_Cv)
 {
     return appendFile( File_Cv, Lines_C );
 }
@@ -82,7 +82,7 @@ bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr ) co
     return Ret_bi;
 }
 
-bool AsciiFile::appendFile( AsciiFile& File_Cv, vector<string>& Lines_Cr ) const
+bool AsciiFile::appendFile(const AsciiFile& File_Cv, vector<string>& Lines_Cr) const
 {
     unsigned Idx_ii = 0;
 
@@ -121,7 +121,7 @@ bool AsciiFile::insertFile( const string& Name_Cv, unsigned int BeforeLine_iv )
     return Ret_bi;
     }
 
-bool AsciiFile::insertFile( AsciiFile& File_Cv, unsigned int BeforeLine_iv )
+bool AsciiFile::insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv)
     {
     string Line_Ci;
     vector<string> New_Ci;
@@ -197,7 +197,7 @@ bool AsciiFile::removeIfEmpty() const
     return ret;
     }
 
-bool AsciiFile::saveToFile( const string& Name_Cv )
+bool AsciiFile::saveToFile(const string& Name_Cv) const
     {
     ofstream File_Ci( Name_Cv.c_str() );
     classic(File_Ci);
