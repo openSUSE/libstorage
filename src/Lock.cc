@@ -50,7 +50,7 @@ namespace storage
 	{
 	    // Opening lock-file failed.
 	    y2err("opening lock-file failed: " << strerror(errno));
-	    throw(LockException(0));
+	    throw LockException(0);
 	}
 
 	struct flock lock;
@@ -69,12 +69,12 @@ namespace storage
 		    // still 0).
 		    fcntl(fd, F_GETLK, &lock);
 		    y2err("locked by process " << lock.l_pid);
-		    throw(LockException(lock.l_pid));
+		    throw LockException(lock.l_pid);
 
 		default:
 		    // Some other error.
 		    y2err("getting lock failed: " << strerror(errno));
-		    throw(LockException(0));
+		    throw LockException(0);
 	    }
 	}
 

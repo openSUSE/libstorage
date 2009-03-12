@@ -3,7 +3,7 @@
   Textdomain    "storage"
 */
 
-#include <sstream>
+#include <fstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"

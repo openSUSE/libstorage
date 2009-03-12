@@ -3,7 +3,7 @@
 */
 
 #include <ostream>
-#include <sstream> 
+#include <fstream>
 
 #include "y2storage/MdCo.h"
 #include "y2storage/Md.h"

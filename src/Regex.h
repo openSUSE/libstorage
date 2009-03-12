@@ -11,10 +11,11 @@
 #include <string>
 #include <boost/noncopyable.hpp>
 
-using std::string;
 
 namespace storage
 {
+    using std::string;
+
 
 class Regex : boost::noncopyable
 {

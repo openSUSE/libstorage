@@ -4,12 +4,12 @@
 */
 
 
+#include <stdarg.h>
 #include <unistd.h>
-#include <string>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
-
+#include <string>
 #include <boost/algorithm/string.hpp>
 
 #include <blocxx/AppenderLogger.hpp>

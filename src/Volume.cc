@@ -2,10 +2,10 @@
   Textdomain    "storage"
 */
 
-#include <sstream>
-
 #include <features.h>
 #include <sys/stat.h>
+#include <sstream>
+#include <fstream>
 
 #include "y2storage/Volume.h"
 #include "y2storage/Disk.h"

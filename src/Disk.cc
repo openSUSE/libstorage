@@ -6,8 +6,9 @@
 #include <sys/mount.h>         /* for BLKGETSIZE */
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
 
-#include <ostream>
 #include <string>
+#include <ostream>
+#include <fstream>
 #include <sstream>
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
