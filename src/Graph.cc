@@ -16,6 +16,7 @@
 #include "y2storage/Graph.h"
 #include "y2storage/AppUtil.h"
 #include "y2storage/HumanString.h"
+#include "y2storage/StorageInterface.h"
 
 
 using namespace std;

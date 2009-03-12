@@ -9,6 +9,8 @@
 
 #include <string>
 
+using std::string;
+
 
 namespace storage
 {
@@ -23,8 +25,8 @@ namespace storage
      * @param omit_zeroes if true omit trailing zeroes for exact values
      * @return formatted string
      */
-    std::string byteToHumanString(unsigned long long size, bool classic, int precision,
-				  bool omit_zeroes);
+    string byteToHumanString(unsigned long long size, bool classic, int precision,
+			     bool omit_zeroes);
 
     /**
      * Converts a size description using B, kB, MB, GB, TB or PB into an integer.
@@ -37,7 +39,7 @@ namespace storage
      * The conversion is always case-insensitive. With classic set to
      * false the conversion is also sloppy concerning omission of 'B'.
      */
-    bool humanStringToByte(const std::string& str, bool classic, unsigned long long& size);
+    bool humanStringToByte(const string& str, bool classic, unsigned long long& size);
 
 }
 
