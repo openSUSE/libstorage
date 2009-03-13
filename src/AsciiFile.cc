@@ -1,5 +1,5 @@
 // Maintainer: fehr@suse.de
-/* 
+/*
   Textdomain    "storage"
 */
 
@@ -16,30 +16,33 @@ using namespace std;
 using namespace storage;
 
 
-AsciiFile::AsciiFile(const char* Name_Cv)
-    {
-    loadFile( Name_Cv );
-    }
+AsciiFile::AsciiFile(const char* Name_Cv, bool remove_empty)
+    : Name_C(Name_Cv),
+      remove_empty(remove_empty)
+{
+    load();
+}
 
-AsciiFile::AsciiFile(const string& Name_Cv)
-    {
-    loadFile( Name_Cv.c_str() );
-    }
+
+AsciiFile::AsciiFile(const string& Name_Cv, bool remove_empty)
+    : Name_C(Name_Cv),
+      remove_empty(remove_empty)
+{
+    load();
+}
+
 
 AsciiFile::~AsciiFile()
-    {
-    }
+{
+}
 
-bool AsciiFile::loadFile( const string& Name_Cv )
-    {
-    bool Ret_bi;
 
-    y2mil("Loading File:\"" << Name_Cv << "\"");
-    Lines_C.clear();
-    Ret_bi = appendFile( Name_Cv, Lines_C );
-    Name_C = Name_Cv;
-    return Ret_bi;
-    }
+bool AsciiFile::load()
+{
+    y2mil("loading file " << Name_C);
+    clear();
+    return appendFile( Name_C, Lines_C );
+}
 
 
 bool AsciiFile::appendFile( const string& Name_Cv )
@@ -130,37 +133,35 @@ bool AsciiFile::insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv)
     return Ret_bi;
     }
 
-bool AsciiFile::updateFile()
+
+bool
+AsciiFile::save()
+{
+    if (remove_empty && Lines_C.empty())
     {
-    struct stat Stat_ri;
-    bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
+	y2mil("deleting file " << Name_C);
 
-    ofstream File_Ci( Name_C.c_str() );
-    classic(File_Ci);
-    unsigned int Idx_ii = 0;
-
-    while( File_Ci.good() && Idx_ii<Lines_C.size() )
-	{
-	File_Ci << Lines_C[Idx_ii] << std::endl;
-	Idx_ii++;
-	}
-    if( Status_b )
-	{
-	chmod( Name_C.c_str(), Stat_ri.st_mode );
-	}
-    return File_Ci.good();
+	return unlink(Name_C.c_str()) == 0;
     }
+    else
+    {	
+	y2mil("saving file " << Name_C);
 
-bool AsciiFile::removeIfEmpty() const
-    {
-    bool ret = Lines_C.empty();
-    if( ret && access( Name_C.c_str(), W_OK )==0 )
-	{
-	unlink( Name_C.c_str() );
-	y2mil( "deleting file " << Name_C );
-	}
-    return ret;
+	struct stat Stat_ri;
+	bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
+	
+	ofstream File_Ci( Name_C.c_str() );
+	classic(File_Ci);
+	
+	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
+	    File_Ci << *it << std::endl;
+	
+	if( Status_b )
+	    chmod( Name_C.c_str(), Stat_ri.st_mode );
+	
+	return File_Ci.good();
     }
+}
 
 
 void AsciiFile::append( const string& Line_Cv )
@@ -183,14 +184,14 @@ void AsciiFile::append( const vector<string>& lines )
 	append( *i );
     }
 
-void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv, 
+void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
                          const string& Lines_Cv )
     {
     remove( Start_iv, Cnt_iv );
     insert( Start_iv, Lines_Cv );
     }
 
-void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv, 
+void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
                          const vector<string>& lines )
     {
     remove( Start_iv, Cnt_iv );
@@ -198,6 +199,14 @@ void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
          ++i )
 	insert( Start_iv, *i );
     }
+
+
+void
+AsciiFile::clear()
+{
+    Lines_C.clear();
+}
+
 
 void AsciiFile::remove( unsigned int Start_iv, unsigned int Cnt_iv )
     {

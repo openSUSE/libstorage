@@ -17,22 +17,24 @@ namespace storage
     {
     public:
 
-	AsciiFile(const char* Name_Cv);
-	AsciiFile(const string& Name_Cv);
+	AsciiFile(const char* name, bool remove_empty = false);
+	AsciiFile(const string& name, bool remove_empty = false);
 	~AsciiFile();
+
+	string name() const { return Name_C; }
+
+	bool load();
+	bool save();
 
 	bool insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv = 0);
 	bool appendFile(const AsciiFile& File_Cv);
 	bool insertFile( const string& Name_Cv, unsigned int BeforeLine_iv=0 );
 	bool appendFile( const string& Name_Cv );
 
-	string fileName() const { return Name_C; }
-	bool loadFile( const string& Name_Cv );
-	bool updateFile();
-
 	void append( const string& Line_Cv );
 	void append( const vector<string>& Lines_Cv );
 	void insert( unsigned int Before_iv, const string& Line_Cv );
+	void clear();
 	void remove( unsigned int Start_iv, unsigned int Cnt_iv );
 	void replace( unsigned int Start_iv, unsigned int Cnt_iv,
 		      const string& Line_Cv );
@@ -53,8 +55,6 @@ namespace storage
 
 	unsigned numLines() const { return Lines_C.size(); }
 
-	bool removeIfEmpty() const;
-
 	const vector<string>& lines() const { return Lines_C; }
 
     protected:
@@ -63,11 +63,14 @@ namespace storage
 	bool appendFile(const AsciiFile& File_Cv, vector<string>& Lines_Cr) const;
 	void removeLastIf(string& Text_Cr, char Char_cv) const;
 
+	const string Name_C;
+	const bool remove_empty;
+
 	vector<string> Lines_C;
-	string Name_C;
 
     };
 
 }
+
 
 #endif

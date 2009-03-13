@@ -4,10 +4,11 @@
 #include <string>
 #include <map>
 
+#include "y2storage/AsciiFile.h"
+
+
 namespace storage
 {
-
-class AsciiFile;
 
 class EtcRaidtab
     {
@@ -31,10 +32,9 @@ class EtcRaidtab
 	void updateMdadmFile();
 	void buildMdadmMap();
 
-	string mdadmname;
 	int mdadm_dev_line;
 	std::map<unsigned,entry> mtab;
-	AsciiFile* mdadm;
+	AsciiFile mdadm;
     };
 
 

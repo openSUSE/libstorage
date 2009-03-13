@@ -408,7 +408,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
     if( e.crypto )
 	{
 	if( cryptotab==NULL )
-	    cryptotab = new AsciiFile( prefix + "/cryptotab" );
+	    cryptotab = new AsciiFile( prefix + "/cryptotab", true );
 	ret = cryptotab;
 	reg = "[ \t]" + e.dentry + "[ \t]";
 	}
@@ -426,8 +426,8 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 
 int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount )
     {
-    bool crypto = tab.fileName().find( "/cryptotab" )>=0;
-    y2mil( "file:" << tab.fileName() << " mp:" << mount << 
+    bool crypto = tab.name().find( "/cryptotab" )>=0;
+    y2mil( "file:" << tab.name() << " mp:" << mount << 
            " crypto:" << crypto );
     string reg = "^[ \t]*[^ \t]+";
     if( crypto )
@@ -667,7 +667,7 @@ int EtcFstab::flush()
     AsciiFile *fstab = NULL;
     AsciiFile *cryptotab = NULL;
     AsciiFile *cur = NULL;
-    AsciiFile crypttab( prefix + "/crypttab" );
+    AsciiFile crypttab( prefix + "/crypttab", true );
     int lineno;
     if( i!=co.end() && !checkDir( prefix ) )
 	createPath( prefix );
@@ -785,17 +785,18 @@ int EtcFstab::flush()
 	}
     if( fstab != NULL )
 	{
-	fstab->updateFile();
+	fstab->save();
 	delete( fstab );
 	}
     if( cryptotab != NULL )
 	{
-	if( !cryptotab->removeIfEmpty() )
-	    cryptotab->updateFile();
+	cryptotab->save();
 	delete( cryptotab );
 	}
-    if( !crypttab.removeIfEmpty() )
-	crypttab.updateFile();
+    if( true )
+        {
+	crypttab.save();
+	}
     printFile( prefix + "/fstab" );
     printFile( prefix + "/cryptotab" );
     printFile( prefix + "/crypttab" );
@@ -865,7 +866,6 @@ string EtcFstab::removeText( bool doing, bool crypto, const string& mp )
 	}
     return( txt );
     }
-
 
 
 unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };

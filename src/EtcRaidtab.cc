@@ -14,18 +14,19 @@
 using namespace std;
 using namespace storage;
 
-EtcRaidtab::EtcRaidtab( const string& prefix ) 
-    {
+
+EtcRaidtab::EtcRaidtab(const string& prefix)
+    : mdadm(prefix + "/etc/mdadm.conf")
+{
     mdadm_dev_line = -1;
-    mdadmname = prefix+"/etc/mdadm.conf";
-    mdadm = new AsciiFile( mdadmname ); 
     buildMdadmMap();
-    }
+}
+
 
 EtcRaidtab::~EtcRaidtab()
-    {
-    delete mdadm;
-    }
+{
+}
+
 
 void 
 EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
@@ -36,22 +37,22 @@ EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
     map<unsigned,entry>::iterator i = mtab.find( num );
     if( i != mtab.end() )
 	{
-	mdadm->replace( i->second.first, i->second.last-i->second.first+1, mline );
+	mdadm.replace( i->second.first, i->second.last-i->second.first+1, mline );
 	}
     else
 	{
-	mdadm->append( mline );
+	mdadm.append( mline );
 	}
     if( mdadm_dev_line<0 )
 	{
 	dline = "DEVICE partitions";
-	mdadm_dev_line = mdadm->numLines();
-	mdadm->insert( 0, dline );
+	mdadm_dev_line = mdadm.numLines();
+	mdadm.insert( 0, dline );
 	}
     else
 	{
 	dline = "DEVICE partitions";
-	(*mdadm)[mdadm_dev_line] = dline;
+	mdadm[mdadm_dev_line] = dline;
 	}
     updateMdadmFile();
     }
@@ -62,7 +63,7 @@ EtcRaidtab::removeEntry( unsigned num )
     map<unsigned,entry>::iterator i = mtab.find( num );
     if( i != mtab.end() )
 	{
-	mdadm->remove( i->second.first, i->second.last-i->second.first+1 );
+	mdadm.remove( i->second.first, i->second.last-i->second.first+1 );
 	updateMdadmFile();
 	}
     }
@@ -71,8 +72,7 @@ void
 EtcRaidtab::updateMdadmFile()
     {
     mtab.clear();
-    mdadm->updateFile();
-    mdadm->loadFile( mdadmname );
+    mdadm.save();
     buildMdadmMap();
     }
 
@@ -83,20 +83,20 @@ EtcRaidtab::buildMdadmMap()
     unsigned mdnum;
     mdadm_dev_line = -1;
     entry e;
-    while( lineno<mdadm->numLines() )
+    while (lineno < mdadm.numLines())
 	{
-	string key = extractNthWord( 0, (*mdadm)[lineno] );
+	string key = extractNthWord( 0, mdadm[lineno] );
 	if( mdadm_dev_line<0 && key == "DEVICE"  )
 	    mdadm_dev_line = lineno;
 	else if( key == "ARRAY" &&
-		 Md::mdStringNum( extractNthWord( 1, (*mdadm)[lineno] ), mdnum ))
+		 Md::mdStringNum( extractNthWord( 1, mdadm[lineno] ), mdnum ))
 	    {
 	    e.first = lineno++;
-	    while( lineno<mdadm->numLines() && 
-	           (key = extractNthWord( 0, (*mdadm)[lineno] ))!="ARRAY" &&
+	    while( lineno < mdadm.numLines() && 
+	           (key = extractNthWord( 0, mdadm[lineno] ))!="ARRAY" &&
 		   key != "DEVICE" )
 		{
-		key = extractNthWord( 0, (*mdadm)[lineno++] );
+		key = extractNthWord( 0, mdadm[lineno++] );
 		}
 	    e.last = lineno-1;
 	    mtab[mdnum] = e;
