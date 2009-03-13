@@ -845,14 +845,8 @@ Storage::testFilesEqual(const string& n1, const string& n2)
 {
     bool ret = false;
     if (access(n1.c_str(), R_OK) == 0 && access(n2.c_str(), R_OK) == 0)
-    {
- 	SystemCmd cmd("/usr/bin/md5sum " + quote(n1) + " " + quote(n2));
-	if (cmd.retcode() == 0 && cmd.stdout().size() >= 2)
-	{
-	    ret = extractNthWord(0, cmd.stdout()[0]) == extractNthWord(0, cmd.stdout()[1]);
-	}
-    }
-    y2mil("ret:" << ret << " n1:" << n1 << " n2:" << n2);
+	ret = AsciiFile(n1).lines() == AsciiFile(n2).lines();
+    y2deb("ret:" << ret << " n1:" << n1 << " n2:" << n2);
     return ret;
 }
 
