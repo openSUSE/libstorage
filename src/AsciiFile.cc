@@ -4,7 +4,6 @@
 */
 
 #include <assert.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #include <fstream>
 
@@ -66,25 +65,24 @@ AsciiFile::save()
     {
 	y2mil("deleting file " << Name_C);
 
+	if (access(Name_C.c_str(), F_OK) != 0)
+	    return true;
+
 	return unlink(Name_C.c_str()) == 0;
     }
     else
     {
 	y2mil("saving file " << Name_C);
 
-	struct stat Stat_ri;
-	bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
-
-	ofstream File_Ci( Name_C.c_str() );
-	classic(File_Ci);
+	ofstream file( Name_C.c_str() );
+	classic(file);
 
 	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
-	    File_Ci << *it << std::endl;
+	    file << *it << std::endl;
 
-	if( Status_b )
-	    chmod( Name_C.c_str(), Stat_ri.st_mode );
+	file.close();
 
-	return File_Ci.good();
+	return file.good();
     }
 }
 
