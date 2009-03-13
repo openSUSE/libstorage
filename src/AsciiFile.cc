@@ -9,7 +9,6 @@
 #include <fstream>
 
 #include "y2storage/AppUtil.h"
-#include "y2storage/Regex.h"
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AsciiFile.h"
 
@@ -17,24 +16,12 @@ using namespace std;
 using namespace storage;
 
 
-AsciiFile::AsciiFile( bool CreateBackup_bv, const char* BackupExt_Cv ) :
-	BackupCreated_b(!CreateBackup_bv),
-	BackupExtension_C( BackupExt_Cv )
-{
-}
-
-AsciiFile::AsciiFile( const char* Name_Cv, bool CreateBackup_bv,
-		      const char* BackupExt_Cv ) :
-	BackupCreated_b(!CreateBackup_bv),
-	BackupExtension_C( BackupExt_Cv )
+AsciiFile::AsciiFile(const char* Name_Cv)
     {
     loadFile( Name_Cv );
     }
 
-AsciiFile::AsciiFile( const string& Name_Cv, bool CreateBackup_bv,
-		      const char* BackupExt_Cv ) :
-	BackupCreated_b(!CreateBackup_bv),
-	BackupExtension_C( BackupExt_Cv )
+AsciiFile::AsciiFile(const string& Name_Cv)
     {
     loadFile( Name_Cv.c_str() );
     }
@@ -148,28 +135,6 @@ bool AsciiFile::updateFile()
     struct stat Stat_ri;
     bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
 
-    if( !BackupCreated_b )
-	{
-	string BakName_Ci = Name_C + BackupExtension_C;
-	if( access( Name_C.c_str(), R_OK ) == 0 )
-	    {
-	    string OldBakName_Ci = BakName_Ci  + ".o";
-	    if( access( BakName_Ci.c_str(), R_OK ) == 0 &&
-		access( OldBakName_Ci.c_str(), R_OK ) != 0 )
-		{
-		int r = link( BakName_Ci.c_str(), OldBakName_Ci.c_str() );
-		if( r==0 )
-		    unlink( BakName_Ci.c_str() );
-		}
-	    SystemCmd Cmd_Ci;
-	    string Tmp_Ci = "cp -a ";
-	    Tmp_Ci += Name_C;
-	    Tmp_Ci += ' ';
-	    Tmp_Ci += BakName_Ci;
-	    Cmd_Ci.execute( Tmp_Ci );
-	    }
-	BackupCreated_b = true;
-	}
     ofstream File_Ci( Name_C.c_str() );
     classic(File_Ci);
     unsigned int Idx_ii = 0;
@@ -195,20 +160,6 @@ bool AsciiFile::removeIfEmpty() const
 	y2mil( "deleting file " << Name_C );
 	}
     return ret;
-    }
-
-bool AsciiFile::saveToFile(const string& Name_Cv) const
-    {
-    ofstream File_Ci( Name_Cv.c_str() );
-    classic(File_Ci);
-    unsigned int Idx_ii = 0;
-
-    while( File_Ci.good() && Idx_ii < Lines_C.size() )
-	{
-	File_Ci << Lines_C[Idx_ii] << std::endl;
-	Idx_ii++;
-	}
-    return File_Ci.good();
     }
 
 

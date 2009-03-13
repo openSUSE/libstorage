@@ -13,19 +13,12 @@ namespace storage
     using std::vector;
 
 
-    class Regex;
-
-
     class AsciiFile
     {
     public:
 
-	AsciiFile( bool CreateBackup_bv=false,
-		   const char* BackupExt_Cv=".orig" );
-	AsciiFile( const char* Name_Cv, bool CreateBackup_bv=false,
-		   const char* BackupExt_Cv=".orig" );
-	AsciiFile( const string& Name_Cv, bool CreateBackup_bv=false,
-		   const char* BackupExt_Cv=".orig" );
+	AsciiFile(const char* Name_Cv);
+	AsciiFile(const string& Name_Cv);
 	~AsciiFile();
 
 	bool insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv = 0);
@@ -36,7 +29,6 @@ namespace storage
 	string fileName() const { return Name_C; }
 	bool loadFile( const string& Name_Cv );
 	bool updateFile();
-	bool saveToFile(const string& Name_Cv) const;
 
 	void append( const string& Line_Cv );
 	void append( const vector<string>& Lines_Cv );
@@ -71,8 +63,6 @@ namespace storage
 	bool appendFile(const AsciiFile& File_Cv, vector<string>& Lines_Cr) const;
 	void removeLastIf(string& Text_Cr, char Char_cv) const;
 
-	bool BackupCreated_b;
-	string BackupExtension_C;
 	vector<string> Lines_C;
 	string Name_C;
 
