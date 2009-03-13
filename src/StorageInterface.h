@@ -5,7 +5,6 @@
 #include <string>
 #include <deque>
 #include <list>
-#include <ostream>
 
 using std::string;
 using std::deque;
@@ -876,25 +875,6 @@ namespace storage
 	 * Get list of filesystem types present on any block devices.
 	 */
 	virtual list<string> getAllUsedFs() const = 0;
-
-	/**
-	 * Print all detected entities to a stream.
-	 * Exact output format may change between releases.
-	 * Function mainly meant for debugging purposes.
-	 *
-	 * @param str stream to print data to
-	 */
-	virtual void printInfo( std::ostream& str ) = 0;
-
-	/**
-	 * Print names entities to a stream.
-	 * Exact output format may change between releases.
-	 * Function mainly meant for debugging purposes.
-	 *
-	 * @param str stream to print data to
-	 * @param name name of container to print
-	 */
-	virtual void printInfoCo( std::ostream& str, const string& name ) = 0;
 
 	/**
 	 * Create a new partition. Units given in disk cylinders.

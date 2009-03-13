@@ -852,7 +852,7 @@ Storage::testFilesEqual(const string& n1, const string& n2)
 
 
 void
-Storage::handleLogFile( const string& name )
+Storage::handleLogFile(const string& name) const
     {
     string bname( name );
     string::size_type pos = bname.rfind( '.' );

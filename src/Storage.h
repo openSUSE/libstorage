@@ -226,11 +226,9 @@ class Storage : public storage::StorageInterface
 	static bool isPPCMac() { return( is_ppc_mac ); }
 	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
 	EtcFstab* getFstab() { return fstab; }
-	void handleLogFile( const string& name );
+	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
-	void printInfo( std::ostream& str ) { printInfo( str, "" ); }
-	void printInfo( std::ostream& str, const string& name );
-	void printInfoCo( std::ostream& str, const string& name ) { printInfo( str, name ); }
+	void printInfo(std::ostream& str, const string& name = "");
 	void logCo(const Container* c) const;
 	void logCo(const string& device);
 	void logProcData( const string& l="" );
