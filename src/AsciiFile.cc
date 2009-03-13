@@ -37,27 +37,13 @@ AsciiFile::~AsciiFile()
 }
 
 
-bool AsciiFile::load()
+bool
+AsciiFile::load()
 {
     y2mil("loading file " << Name_C);
     clear();
-    return appendFile( Name_C, Lines_C );
-}
 
-
-bool AsciiFile::appendFile( const string& Name_Cv )
-    {
-    return appendFile( Name_Cv, Lines_C );
-    }
-
-bool AsciiFile::appendFile(const AsciiFile& File_Cv)
-{
-    return appendFile( File_Cv, Lines_C );
-}
-
-bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr ) const
-{
-    ifstream File_Ci( Name_Cv.c_str() );
+    ifstream File_Ci(Name_C.c_str());
     classic(File_Ci);
     string Line_Ci;
 
@@ -65,73 +51,12 @@ bool AsciiFile::appendFile( const string& Name_Cv, vector<string>& Lines_Cr ) co
     File_Ci.unsetf(ifstream::skipws);
     getline( File_Ci, Line_Ci );
     while( File_Ci.good() )
-      {
-	Lines_Cr.push_back( Line_Ci );
-	getline( File_Ci, Line_Ci );
-      }
-    return Ret_bi;
-}
-
-bool AsciiFile::appendFile(const AsciiFile& File_Cv, vector<string>& Lines_Cr) const
-{
-    unsigned Idx_ii = 0;
-
-    while( Idx_ii<File_Cv.numLines() )
-      {
-	Lines_Cr.push_back( File_Cv[Idx_ii] );
-	Idx_ii++;
-      }
-    return true;
-}
-
-bool AsciiFile::insertFile( const string& Name_Cv, unsigned int BeforeLine_iv )
-{
-    ifstream File_Ci( Name_Cv.c_str() );
-    classic(File_Ci);
-    string Line_Ci;
-    vector<string> New_Ci;
-
-    bool Ret_bi = File_Ci.good();
-    if( Ret_bi )
-      {
-	unsigned int Idx_ii=0;
-	while( Idx_ii<BeforeLine_iv )
-	  {
-	    New_Ci.push_back( Lines_C[Idx_ii] );
-	    Idx_ii++;
-	    }
-	Ret_bi = appendFile( Name_Cv, New_Ci );
-	while( Idx_ii<Lines_C.size() )
-	    {
-	    New_Ci.push_back( Lines_C[Idx_ii] );
-	    Idx_ii++;
-	    }
-	Lines_C = New_Ci;
-	}
-    return Ret_bi;
-    }
-
-bool AsciiFile::insertFile(const AsciiFile& File_Cv, unsigned int BeforeLine_iv)
     {
-    string Line_Ci;
-    vector<string> New_Ci;
-    bool Ret_bi;
-
-    unsigned int Idx_ii=0;
-    while( Idx_ii<BeforeLine_iv )
-	{
-	New_Ci.push_back( Lines_C[Idx_ii] );
-	Idx_ii++;
-	}
-    Ret_bi = appendFile( File_Cv, New_Ci );
-    while( Idx_ii<Lines_C.size() )
-	{
-	New_Ci.push_back( Lines_C[Idx_ii] );
-	Idx_ii++;
-	}
-    Lines_C = New_Ci;
-    return Ret_bi;
+	Lines_C.push_back( Line_Ci );
+	getline( File_Ci, Line_Ci );
     }
+    return Ret_bi;
+}
 
 
 bool
@@ -144,21 +69,21 @@ AsciiFile::save()
 	return unlink(Name_C.c_str()) == 0;
     }
     else
-    {	
+    {
 	y2mil("saving file " << Name_C);
 
 	struct stat Stat_ri;
 	bool Status_b = stat( Name_C.c_str(), &Stat_ri )==0;
-	
+
 	ofstream File_Ci( Name_C.c_str() );
 	classic(File_Ci);
-	
+
 	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
 	    File_Ci << *it << std::endl;
-	
+
 	if( Status_b )
 	    chmod( Name_C.c_str(), Stat_ri.st_mode );
-	
+
 	return File_Ci.good();
     }
 }
