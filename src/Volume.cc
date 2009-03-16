@@ -739,17 +739,8 @@ int Volume::doFormat()
 		p = new ReiserScrollbar( cb );
 		break;
 	    case VFAT:
-		{
 		cmd = "/sbin/mkdosfs";
-		list<string> l=splitString( mkfs_opt );
-		if( find_if( l.begin(), l.end(), string_starts_with( "-F" ) ) != l.end())
-		    params = "-F 32";
-		else if( sizeK()>2*1024*1024 )
-		    {
-		    params += " -F 32";
-		    }
 		break;
-		}
 	    case JFS:
 		cmd = "/sbin/mkfs.jfs";
 		params = "-q";
