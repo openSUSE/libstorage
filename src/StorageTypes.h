@@ -57,46 +57,63 @@ struct contOrder
 	unsigned order;
     };
 
-typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 
-class Volume;
-class Container;
+    typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
 
-struct commitAction
+    class Volume;
+    class Container;
+
+    struct commitAction
     {
-    commitAction( CommitStage s, CType t, const string& d, const Volume* v,
-                  bool destr=false )
-	{ stage=s; type=t; descr=d; destructive=destr; container=false;
-	  u.vol=v; }
-    commitAction( CommitStage s, CType t, const string& d, const Container* co,
-                  bool destr=false )
-	{ stage=s; type=t; descr=d; destructive=destr; container=true;
-	  u.co=co; }
-    commitAction( CommitStage s, CType t, const Volume* v )
-	{ stage=s; type=t; destructive=false; container=false; u.vol=v; }
-    commitAction( CommitStage s, CType t, const Container* c )
-	{ stage=s; type=t; destructive=false; container=true; u.co=c; }
-    CommitStage stage;
-    CType type;
-    string descr;
-    bool destructive;
-    bool container;
-    union
+	commitAction(CommitStage s, CType t, const string& d, const Volume* v,
+		     bool destr = false)
+	    : stage(s), type(t), description(d), destructive(destr), container(false), u(v)
 	{
-	const Volume* vol;
-	const Container* co;
+	}
+
+	commitAction(CommitStage s, CType t, const string& d, const Container* c,
+		     bool destr = false)
+	    : stage(s), type(t), description(d), destructive(destr), container(true), u(c)
+	{
+	}
+
+	commitAction(CommitStage s, CType t, const Volume* v)
+	    : stage(s), type(t), destructive(false), container(false), u(v)
+	{
+	}
+
+	commitAction(CommitStage s, CType t, const Container* c)
+	    : stage(s), type(t), destructive(false), container(true), u(c)
+	{
+	}
+
+	const CommitStage stage;
+	const CType type;
+	const string description;
+	const bool destructive;
+	const bool container;
+
+	const union U
+	{
+	    U(const Volume* v) : vol(v) {}
+	    U(const Container* c) : co(c) {}
+
+	    const Volume* vol;
+	    const Container* co;
 	} u;
-    const Container* co() const { return( container?u.co:NULL ); }
-    const Volume* vol() const { return( container?NULL:u.vol ); }
-    bool operator==( const commitAction& rhs ) const
-	{ return( stage==rhs.stage && type==rhs.type ); }
-    bool operator<( const commitAction& rhs ) const;
-    bool operator<=( const commitAction& rhs ) const
-	{ return( *this < rhs || *this == rhs ); }
-    bool operator>=( const commitAction& rhs ) const
-	{ return( ! (*this < rhs) ); }
-    bool operator>( const commitAction& rhs ) const
-	{ return( !(*this < rhs && *this == rhs) ); }
+
+	const Container* co() const { return container ? u.co : NULL; }
+	const Volume* vol() const { return container ? NULL : u.vol; }
+
+	bool operator==(const commitAction& rhs) const
+	    { return stage == rhs.stage && type == rhs.type; }
+	bool operator<(const commitAction& rhs) const;
+	bool operator<=(const commitAction& rhs) const
+	    { return *this < rhs || *this == rhs; }
+	bool operator>=(const commitAction& rhs) const
+	    { return !(*this < rhs); }
+	bool operator>(const commitAction& rhs) const
+	    { return !(*this < rhs && *this == rhs); }
     };
 
 

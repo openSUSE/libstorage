@@ -1762,8 +1762,8 @@ inline std::ostream& operator<< (std::ostream& s, commitAction &a )
       s << " name:" << a.co()->name();
     else if( a.vol() )
       s << " name:" << a.vol()->name();
-    if( !a.descr.empty() )
-      s << " desc:" << a.descr;
+    if( !a.description.empty() )
+      s << " desc:" << a.description;
     return( s );
     };
 

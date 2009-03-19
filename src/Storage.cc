@@ -3542,7 +3542,7 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 	{
 	    CommitInfo info;
 	    info.destructive = (*i)->destructive;
-	    info.text = (*i)->descr;
+	    info.text = (*i)->description;
 	    const Volume *v = (*i)->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
