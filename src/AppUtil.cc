@@ -487,10 +487,11 @@ getMajorDevices(const char* driver)
     unsigned ret = 0;
 
     AsciiFile file("/proc/devices");
+    const vector<string>& lines = file.lines();
 
     Regex rx("^" + Regex::ws + "([0-9]+)" + Regex::ws + string(driver) + "$");
 
-    if (file.find_if(regex_matches(rx)) >= 0)
+    if (find_if(lines.begin(), lines.end(), regex_matches(rx)) != lines.end())
 	rx.cap(1) >> ret;
     else
 	y2err("did not find " << driver << " in /proc/devices");

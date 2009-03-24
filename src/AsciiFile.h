@@ -40,7 +40,7 @@ namespace storage
 	string& operator []( unsigned int Index_iv );
 
 	template <class Pred>
-	int find_if(Pred pred) const
+	int find_if_idx(Pred pred) const
 	{
 	    vector<string>::const_iterator it = std::find_if(Lines_C.begin(), Lines_C.end(), pred);
 	    if (it == Lines_C.end())

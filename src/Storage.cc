@@ -135,8 +135,9 @@ Storage::initialize()
     if( access( "/etc/sysconfig/storage", R_OK )==0 )
     {
 	AsciiFile sc( "/etc/sysconfig/storage" );
+	const vector<string>& lines = sc.lines();
 	Regex rx('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (sc.find_if(regex_matches(rx)) >= 0)
+	if (find_if(lines.begin(), lines.end(), regex_matches(rx)) != lines.end())
 	{
 	    string val = boost::to_lower_copy(rx.cap(2), locale::classic());
 	    if( val == "id" )
@@ -339,7 +340,7 @@ Storage::detectArch()
     if( proc_arch == "ppc" )
 	{
 	AsciiFile cpu( "/proc/cpuinfo" );
-	int l = cpu.find_if(string_starts_with("machine\t"));
+	int l = cpu.find_if_idx(string_starts_with("machine\t"));
 	y2mil("line:" << l);
 	if( l >= 0 )
 	    {
@@ -810,12 +811,14 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 			       const VolIterator& end )
 {
     AsciiFile vd( file );
+    const vector<string>& lines = vd.lines();
+
     for( VolIterator i=begin; i!=end; ++i )
     {
-	int pos = vd.find_if(string_starts_with(i->device() + " "));
-	if (pos >= 0)
+	vector<string>::const_iterator pos = find_if(lines.begin(), lines.end(), string_starts_with(i->device() + " "));
+	if (pos != lines.end())
 	{
-	    i->getTestmodeData( vd[pos] );
+	    i->getTestmodeData(*pos);
 	}
 	i->getFstabData( *fstab );
     }
