@@ -67,107 +67,94 @@ Disk::Disk( Storage * const s, const string& Name,
     addToList( p );
     }
 
-Disk::Disk( Storage * const s, const string& fname ) :
-    Container(s,"",staticType())
-    {
+
+Disk::Disk(Storage * const s, const string& fname)
+    : Container(s, "", staticType())
+{
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     nm = fname.substr( fname.find_last_of( '/' )+1);
     if( nm.find("disk_")==0 )
 	nm.erase( 0, 5 );
-    AsciiFile file( fname );
-    string line;
-    if( searchFile( file, "^Device:", line ) )
-	{
-	dev = extractNthWord( 1, line );
-	}
+
+    AsciiFile file(fname);
+    const vector<string>& lines = file.lines();
+    vector<string>::const_iterator it;
+
+    if ((it = find_if(lines, string_starts_with("Device:"))) != lines.end())
+	dev = extractNthWord(1, *it);
+
     mnr = mjr = 0;
-    if( searchFile( file, "^Major:", line ) )
-	{
-	extractNthWord( 1, line ) >> mjr;
-	}
-    if( searchFile( file, "^Minor:", line ) )
-	{
-	extractNthWord( 1, line ) >> mnr;
-	}
+    if ((it = find_if(lines, string_starts_with("Major:"))) != lines.end())
+	extractNthWord(1, *it) >> mjr;
+    if ((it = find_if(lines, string_starts_with("Minor:"))) != lines.end())
+	extractNthWord(1, *it) >> mnr;
+
     range = 4;
-    if( searchFile( file, "^Range:", line ) )
-	{
-	extractNthWord( 1, line ) >> range;
-	}
+    if ((it = find_if(lines, string_starts_with("Range:"))) != lines.end())
+	extractNthWord(1, *it) >> range;
+
     cyl = 1024;
-    if( searchFile( file, "^Cylinder:", line ) )
-	{
-	extractNthWord( 1, line ) >> cyl;
-	}
+    if ((it = find_if(lines, string_starts_with("Cylinder:"))) != lines.end())
+	extractNthWord(1, *it) >> cyl;
     head = 1024;
-    if( searchFile( file, "^Head:", line ) )
-	{
-	extractNthWord( 1, line ) >> head;
-	}
+    if ((it = find_if(lines, string_starts_with("Head:"))) != lines.end())
+	extractNthWord(1, *it) >> head;
     sector = 32;
-    if( searchFile( file, "^Sector:", line ) )
-	{
-	extractNthWord( 1, line ) >> sector;
-	}
+    if ((it = find_if(lines, string_starts_with("Sector:"))) != lines.end())
+	extractNthWord(1, *it) >> sector;
     byte_cyl = head * sector * 512;
-    if( searchFile( file, "^Label:", line ) )
-	{
-	label = extractNthWord( 1, line );
-	}
+
+    if ((it = find_if(lines, string_starts_with("Label:"))) != lines.end())
+	label = extractNthWord(1, *it);
+
     max_primary = 0;
-    if( searchFile( file, "^MaxPrimary:", line ) )
-	{
-	extractNthWord( 1, line ) >> max_primary;
-	}
+    if ((it = find_if(lines, string_starts_with("MaxPrimary:"))) != lines.end())
+	extractNthWord(1, *it) >> max_primary;
     ext_possible = false;
-    if( searchFile( file, "^ExtPossible:", line ) )
-	{
-	extractNthWord( 1, line ) >> ext_possible;
-	}
+    if ((it = find_if(lines, string_starts_with("ExtPossible:"))) != lines.end())
+	extractNthWord(1, *it) >> ext_possible;
     max_logical = 0;
-    if( searchFile( file, "^MaxLogical:", line ) )
-	{
-	extractNthWord( 1, line ) >> max_logical;
-	}
+    if ((it = find_if(lines, string_starts_with("MaxLogical:"))) != lines.end())
+	extractNthWord(1, *it) >> max_logical;
+
     ronly = false;
-    if( searchFile( file, "^Readonly:", line ) )
-	{
-	extractNthWord( 1, line ) >> ronly;
-	}
+    if ((it = find_if(lines, string_starts_with("Readonly:"))) != lines.end())
+	extractNthWord(1, *it) >> ronly;
+
     if( FakeDisk() && isdigit( nm[nm.size()-1] ))
-	{
+    {
 	string::size_type p = nm.find_last_not_of( "0123456789" );
 	nm.erase( p+1 );
-	}
-    size_k = 0;
-    if( searchFile( file, "^SizeK:", line ) )
-	{
-	extractNthWord( 1, line ) >> size_k;
-	}
-    udev_path.clear();
-    if( searchFile( file, "^UdevPath:", line ) )
-	{
-	udev_path = extractNthWord( 1, line );
-	}
-    udev_id.clear();
-    if( searchFile( file, "^UdevId:", line ) )
-	{
-	udev_id.push_back( extractNthWord( 1, line ));
-	}
-    int lnr = 0;
-    while( searchFile( file, "^Partition:", line, lnr ))
-	{
-	lnr++;
-	Partition *p = new Partition( *this, extractNthWord( 1, line, true ));
-	addToList( p );
-	}
-    y2deb("constructed disk " << dev << " from file " << fname);
     }
 
-Disk::~Disk()
+    size_k = 0;
+    if ((it = find_if(lines, string_starts_with("SizeK:"))) != lines.end())
+	extractNthWord(1, *it) >> size_k;
+
+    udev_path.clear();
+    if ((it = find_if(lines, string_starts_with("UdevPath:"))) != lines.end())
+	udev_path = extractNthWord(1, *it);
+    udev_id.clear();
+    if ((it = find_if(lines, string_starts_with("UdevId:"))) != lines.end())
+	udev_id.push_back(extractNthWord(1, *it));
+
+    for (it = lines.begin(); it != lines.end(); ++it)
     {
-    y2deb("destructed disk " << dev);
+	if (string_starts_with("Partition:")(*it))
+	{
+	    Partition* p = new Partition(*this, extractNthWord(1, *it, true));
+	    addToList( p );
+	}
     }
+
+    y2deb("constructed disk " << dev << " from file " << fname);
+}
+
+
+Disk::~Disk()
+{
+    y2deb("destructed disk " << dev);
+}
 
 
 void

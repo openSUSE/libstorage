@@ -137,7 +137,7 @@ Storage::initialize()
 	AsciiFile sc( "/etc/sysconfig/storage" );
 	const vector<string>& lines = sc.lines();
 	Regex rx('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (find_if(lines.begin(), lines.end(), regex_matches(rx)) != lines.end())
+	if (find_if(lines, regex_matches(rx)) != lines.end())
 	{
 	    string val = boost::to_lower_copy(rx.cap(2), locale::classic());
 	    if( val == "id" )
@@ -815,7 +815,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 
     for( VolIterator i=begin; i!=end; ++i )
     {
-	vector<string>::const_iterator pos = find_if(lines.begin(), lines.end(), string_starts_with(i->device() + " "));
+	vector<string>::const_iterator pos = find_if(lines, string_starts_with(i->device() + " "));
 	if (pos != lines.end())
 	{
 	    i->getTestmodeData(*pos);

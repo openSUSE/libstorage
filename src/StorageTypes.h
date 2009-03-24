@@ -1,6 +1,9 @@
 #ifndef STORAGE_TYPES_H
 #define STORAGE_TYPES_H
 
+
+#include <string>
+#include <vector>
 #include <ostream>
 #include <boost/algorithm/string.hpp>
 
@@ -8,8 +11,12 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageInterface.h"
 
+
 namespace storage
 {
+    using std::string;
+    using std::vector;
+
 
 inline bool operator<(CType a, CType b)
 {
@@ -169,6 +176,15 @@ private:
 	const string& val;
     };
 
+
+    template <class Pred>
+    vector<string>::const_iterator
+    find_if(const vector<string>& lines, Pred pred)
+    {
+	return std::find_if(lines.begin(), lines.end(), pred);
+    }
+
 }
+
 
 #endif

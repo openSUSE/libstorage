@@ -41,50 +41,6 @@ string dupDash(const string& s)
     return(ret);
     }
 
-bool
-searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr)
-{
-  int LineNr_ii = 0;
-  return searchFile(File_Cr, Pat_Cv, Line_Cr, LineNr_ii);
-}
-
-bool
-searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr, int& LineNr_ir)
-{
-  int End_ii;
-  bool Found_bi = false;
-  bool BeginOfLine_bi;
-  string Tmp_Ci;
-  int LineNr_ii;
-  string Search_Ci(Pat_Cv);
-
-  BeginOfLine_bi = Search_Ci.length() > 0 && Search_Ci[0] == '^';
-  if (BeginOfLine_bi)
-    Search_Ci.erase(0, 1);
-  End_ii = File_Cr.numLines();
-  LineNr_ii = LineNr_ir;
-  while (!Found_bi && LineNr_ii < End_ii)
-    {
-      string::size_type Idx_ii;
-
-      Tmp_Ci = File_Cr[LineNr_ii++];
-      Idx_ii = Tmp_Ci.find(Search_Ci);
-      if (Idx_ii != string::npos)
-	{
-	  if (BeginOfLine_bi)
-	    Found_bi = Idx_ii == 0;
-	  else
-	    Found_bi = true;
-	}
-    }
-  if (Found_bi)
-    {
-      Line_Cr = Tmp_Ci;
-      LineNr_ir = LineNr_ii - 1;
-    }
-  return Found_bi;
-}
-
 
 void createPath(string Path_Cv)
 {
@@ -491,7 +447,7 @@ getMajorDevices(const char* driver)
 
     Regex rx("^" + Regex::ws + "([0-9]+)" + Regex::ws + string(driver) + "$");
 
-    if (find_if(lines.begin(), lines.end(), regex_matches(rx)) != lines.end())
+    if (find_if(lines, regex_matches(rx)) != lines.end())
 	rx.cap(1) >> ret;
     else
 	y2err("did not find " << driver << " in /proc/devices");

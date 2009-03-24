@@ -13,12 +13,6 @@ namespace storage
 {
     using std::string;
 
-
-class AsciiFile;
-
-bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr);
-bool searchFile(AsciiFile& File_Cr, string Pat_Cv, string& Line_Cr,
-		int& StartLine_ir);
 void createPath(string Path_Cv);
 bool checkNormalFile(string Path_Cv);
 bool checkDir(string Path_Cv);
