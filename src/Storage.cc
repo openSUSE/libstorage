@@ -37,8 +37,10 @@
 #include "y2storage/AsciiFile.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 void
@@ -592,8 +594,7 @@ Storage::detectDm( ProcPart& ppart )
 	}
     }
 
-namespace storage
-{
+
 struct DiskData
     {
     enum DTyp { DISK, DASD, XEN };
@@ -608,6 +609,7 @@ struct DiskData
     string dev;
     };
 
+
 std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
     {
     s << d.name << "," << d.typ << "," << d.s << "," << d.d;
@@ -615,7 +617,6 @@ std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
 	s << "," << d.dev;
     return( s );
     }
-}
 
 
 void
@@ -939,8 +940,6 @@ bool Storage::is_ppc_mac = false;
 bool Storage::is_ppc_pegasos = false;
 
 
-namespace storage
-{
     void initDefaultLogger ()
     {
 	Storage::initDefaultLogger ();
@@ -974,7 +973,6 @@ namespace storage
     {
 	delete p;
     }
-}
 
 
 int
@@ -5856,15 +5854,11 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
 }
 
 
-namespace storage
-{
 std::ostream& operator<< (std::ostream& s, Storage &v )
     {
     v.printInfo(s);
     return(s);
     }
-}
-
 
 
 Storage::SkipDeleted Storage::SkipDel;
@@ -5873,3 +5867,5 @@ storage::CallbackProgressBar Storage::progress_bar_cb_ycp;
 storage::CallbackShowInstallInfo Storage::install_info_cb_ycp;
 storage::CallbackInfoPopup Storage::info_popup_cb_ycp;
 storage::CallbackYesNoPopup Storage::yesno_popup_cb_ycp;
+
+}

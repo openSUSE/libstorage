@@ -23,8 +23,11 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 Disk::Disk( Storage * const s, const string& Name,
             unsigned long long SizeK ) :
@@ -2601,8 +2604,6 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
@@ -2635,7 +2636,6 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
     return( s );
     }
 
-}
 
 void Disk::logDifference( const Container& d ) const
     {
@@ -2793,3 +2793,4 @@ Disk::Disk( const Disk& rhs ) : Container(rhs)
 	}
     }
 
+}

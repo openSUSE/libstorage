@@ -11,8 +11,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/AppUtil.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 Container::Container( Storage * const s, const string& Name, CType t ) :
     sto(s), nm(Name)
@@ -288,9 +291,6 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
 }
 
 
-namespace storage
-{
-
 std::ostream& operator<< ( std::ostream& s, const Container &c )
     {
     s << "Type:" << Container::type_names[c.typ]
@@ -308,7 +308,7 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
     s << c.uby;
     return( s );
     }
-}
+
 
 void
 Container::logDifference( const Container& c ) const
@@ -418,3 +418,4 @@ Container::Container( const Container& rhs ) : sto(rhs.sto)
 const string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", 
 					 "DM", "DMRAID", "NFS", "DMMULTIPATH" };
 
+}

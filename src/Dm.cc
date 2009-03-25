@@ -12,8 +12,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 Dm::Dm( const PeContainer& d, const string& tn ) :
 	Volume( d ), tname(tn)
@@ -540,8 +543,6 @@ void Dm::getInfo( DmInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
@@ -567,7 +568,6 @@ std::ostream& operator<< (std::ostream& s, const Dm &p )
     return( s );
     }
     
-}
 
 bool Dm::equalContent( const Dm& rhs ) const
     {
@@ -626,3 +626,4 @@ unsigned Dm::dm_major = 0;
 static const char* elem[] = { "crypt" };
 list<string> Dm::known_types( elem, elem+lengthof(elem) );
 
+}

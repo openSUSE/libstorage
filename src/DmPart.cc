@@ -11,8 +11,10 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
@@ -179,8 +181,6 @@ void DmPart::getInfo( DmPartInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const DmPart &p )
     {
@@ -188,7 +188,6 @@ std::ostream& operator<< (std::ostream& s, const DmPart &p )
     return( s );
     }
 
-}
 
 bool DmPart::equalContent( const DmPart& rhs ) const
     {
@@ -215,4 +214,6 @@ DmPart::DmPart(const DmPartCo& d, const DmPart& rhs)
 {
     y2deb("constructed dmraid by copy constructor from " << rhs.dev);
     *this = rhs;
+}
+
 }

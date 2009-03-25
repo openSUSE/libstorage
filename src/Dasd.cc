@@ -16,8 +16,11 @@
 #include "y2storage/Dasd.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 Dasd::Dasd( Storage * const s, const string& Name,
             unsigned long long SizeK ) : 
@@ -636,12 +639,12 @@ Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
     y2deb("constructed dasd by copy constructor from " << rhs.nm);
     }
 
-namespace storage
-{
+
 std::ostream& operator<< (std::ostream& s, const Dasd& d )
     {
     s << *((Disk*)&d);
     s << " fmt:" << d.fmt;
     return( s );
     }
+
 }

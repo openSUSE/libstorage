@@ -15,8 +15,11 @@
 #include "y2storage/Container.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 Md::Md( const MdCo& d, unsigned PNr, MdType Type,
         const list<string>& devices ) : Volume( d, PNr, 0 )
@@ -591,8 +594,6 @@ void Md::getInfo( MdInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Md& m )
     {
@@ -614,7 +615,6 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
     return( s );
     }
 
-}
 
 bool Md::equalContent( const Md& rhs ) const
     {
@@ -690,3 +690,4 @@ string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
                            "right-asymmetric", "right-symmetric" };
 unsigned Md::md_major = 0;
 
+}

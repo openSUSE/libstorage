@@ -10,8 +10,10 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 Dmmultipath::Dmmultipath(const DmmultipathCo& d, unsigned nr, Partition* p)
@@ -223,8 +225,6 @@ void Dmmultipath::getInfo( DmmultipathInfo& tinfo ) const
     tinfo.p = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Dmmultipath &p )
     {
@@ -232,7 +232,6 @@ std::ostream& operator<< (std::ostream& s, const Dmmultipath &p )
     return( s );
     }
 
-}
 
 bool Dmmultipath::equalContent( const Dmmultipath& rhs ) const
     {
@@ -250,4 +249,6 @@ Dmmultipath& Dmmultipath::operator=(const Dmmultipath& rhs)
     y2deb("operator= from " << rhs.nm);
     *((DmPart*)this) = rhs;
     return *this;
+}
+
 }

@@ -10,8 +10,10 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 Dmraid::Dmraid(const DmraidCo& d, unsigned nr, Partition* p)
@@ -223,8 +225,6 @@ void Dmraid::getInfo( DmraidInfo& tinfo ) const
     tinfo.p = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Dmraid &p )
     {
@@ -232,7 +232,6 @@ std::ostream& operator<< (std::ostream& s, const Dmraid &p )
     return( s );
     }
 
-}
 
 bool Dmraid::equalContent( const Dmraid& rhs ) const
     {
@@ -250,4 +249,6 @@ Dmraid& Dmraid::operator=(const Dmraid& rhs)
     y2deb("operator= from " << rhs.nm);
     *((DmPart*)this) = rhs;
     return *this;
+}
+
 }

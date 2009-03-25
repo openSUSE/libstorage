@@ -24,10 +24,10 @@
 #include "y2storage/StorageTypes.h"
 
 
-using namespace std;
-
 namespace storage
 {
+    using namespace std;
+
 
 string dupDash(const string& s)
     {

@@ -11,8 +11,10 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
@@ -302,8 +304,6 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     {
@@ -317,7 +317,6 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     return( s );
     }
 
-}
 
 bool LvmLv::equalContent( const LvmLv& rhs ) const
     {
@@ -354,3 +353,4 @@ LvmLv::LvmLv( const LvmVg& d, const LvmLv& rhs ) : Dm(d,rhs)
     *this = rhs;
     }
 
+}

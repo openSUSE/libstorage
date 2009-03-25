@@ -8,8 +8,11 @@
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/OutputProcessor.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 void
 OutputProcessor::process( const string& val, bool stderr )
@@ -155,3 +158,5 @@ DasdfmtScrollbar::process( const string& val, bool stderr )
 	    }
 	}
     }
+
+}

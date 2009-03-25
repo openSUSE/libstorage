@@ -13,8 +13,11 @@
 #include "y2storage/EtcRaidtab.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 MdCo::MdCo( Storage * const s, bool detect ) :
     Container(s,"md",staticType())
@@ -698,16 +701,12 @@ void MdCo::changeDeviceName( const string& old, const string& nw )
     }
 
 
-namespace storage
-{
-
 std::ostream& operator<< (std::ostream& s, const MdCo& d )
     {
     s << *((Container*)&d);
     return( s );
     }
 
-}
 
 void MdCo::logDifference( const Container& d ) const
     {
@@ -790,3 +789,4 @@ void MdCo::logData( const string& Dir ) {;}
 
 bool MdCo::active = false;
 
+}

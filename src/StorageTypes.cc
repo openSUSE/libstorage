@@ -1,6 +1,7 @@
 #include "y2storage/StorageTypes.h"
 #include "y2storage/Volume.h"
 
+
 namespace storage
 {
 
@@ -111,6 +112,5 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	}
 	return s;
     }
-
 
 }

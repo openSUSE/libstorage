@@ -19,12 +19,11 @@
 #include "y2storage/StorageInterface.h"
 
 
-using namespace std;
-using namespace storage;
-
-
 namespace storage
 {
+    using namespace std;
+
+
     enum NodeType { NODE_DISK, NODE_DMMULTIPATH, NODE_DMRAID, NODE_PARTITION, NODE_MDRAID,
 		    NODE_LVMVG, NODE_LVMLV, NODE_DM, NODE_MOUNTPOINT };
 

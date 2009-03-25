@@ -6,11 +6,11 @@
 
 #include "Regex.h"
 
-using namespace storage;
-
-
 extern int _nl_msg_cat_cntr;
 
+
+namespace storage
+{
 
 Regex::Regex (const char* pattern, int cflags, unsigned int nm)
     : pattern (pattern),
@@ -78,5 +78,8 @@ Regex::cap (unsigned int i) const
     return "";
 }
 
+
 const string Regex::ws = "[ \t]*";
 const string Regex::number = "[0123456789]+";
+
+}

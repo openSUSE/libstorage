@@ -14,11 +14,10 @@
 #include "HumanString.h"
 
 
-using namespace std;
-
-
 namespace storage
 {
+    using namespace std;
+
 
     int
     numSuffixes()

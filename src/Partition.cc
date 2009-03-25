@@ -9,8 +9,11 @@
 #include "y2storage/Disk.h"
 #include "y2storage/Storage.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 static string udevCompleteIdPath( const string& s, unsigned nr )
     {
@@ -584,8 +587,7 @@ Partition::getInfo( PartitionInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
+
 PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
     {
     nr = rhs.nr;
@@ -616,7 +618,6 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
     return( s );
     }
 
-}
 
 void Partition::logDifference( const Partition& rhs ) const
     {
@@ -673,3 +674,4 @@ Partition::Partition( const Disk& d, const Partition& rhs ) : Volume(d)
 
 string Partition::pt_names[] = { "primary", "extended", "logical", "any" };
 
+}

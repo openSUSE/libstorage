@@ -11,8 +11,10 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/AsciiFile.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 AsciiFile::AsciiFile(const char* Name_Cv, bool remove_empty)
@@ -202,4 +204,6 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
 {
     if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
 	Text_Cr.erase(Text_Cr.length() - 1);
+}
+
 }

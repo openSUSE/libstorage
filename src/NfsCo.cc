@@ -12,8 +12,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/EtcFstab.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 NfsCo::NfsCo( Storage * const s, ProcMounts& mounts ) :
     Container(s,"nfs",staticType())
@@ -207,8 +210,6 @@ NfsCo::findNfs( const string& dev )
 
 void NfsCo::logData( const string& Dir ) {;}
 
-namespace storage
-{
 
 inline std::ostream& operator<< (std::ostream& s, const NfsCo& d )
     {
@@ -216,7 +217,6 @@ inline std::ostream& operator<< (std::ostream& s, const NfsCo& d )
     return( s );
     }
 
-}
 
 void NfsCo::logDifference( const Container& d ) const
     {
@@ -292,3 +292,5 @@ NfsCo::NfsCo( const NfsCo& rhs ) : Container(rhs)
          vols.push_back( p );
          }
     }
+
+}

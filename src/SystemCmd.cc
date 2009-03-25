@@ -18,8 +18,10 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/OutputProcessor.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 SystemCmd::SystemCmd( const string& Command_Cv )
@@ -596,3 +598,5 @@ SystemCmd::quote(const list<string>& strs)
 
 
 bool SystemCmd::testmode = false;
+
+}

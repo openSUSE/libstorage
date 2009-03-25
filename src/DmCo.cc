@@ -13,8 +13,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 DmCo::DmCo( Storage * const s, bool detect, ProcPart& ppart ) :
     PeContainer(s,staticType())
@@ -350,8 +353,6 @@ DmCo::doRemove( Volume* v )
     return( ret );
     }
 
-namespace storage
-{
 
 inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
     {
@@ -359,7 +360,6 @@ inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
     return( s );
     }
 
-}
 
 void DmCo::logDifference( const Container& d ) const
     {
@@ -437,3 +437,5 @@ DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
 
 
 void DmCo::logData( const string& Dir ) {;}
+
+}

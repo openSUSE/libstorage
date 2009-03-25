@@ -10,8 +10,11 @@
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/ProcPart.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
     {
@@ -78,3 +81,4 @@ ProcPart::getMatchingEntries( const string& regexp ) const
     return( ret );
     }
 
+}

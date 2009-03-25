@@ -12,8 +12,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 ProcMounts::ProcMounts( Storage * const sto ) 
     {
@@ -174,3 +177,4 @@ void ProcMounts::getEntries( list<FstabEntry>& l ) const
 	}
     }
 
+}

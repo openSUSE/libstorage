@@ -14,8 +14,10 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 DmmultipathCo::DmmultipathCo( Storage * const s, const string& Name, ProcPart& ppart ) :
@@ -241,8 +243,6 @@ void DmmultipathCo::getInfo( DmmultipathCoInfo& tinfo ) const
     tinfo.model = model;
     }
 
-namespace storage
-{
 
 std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
 {
@@ -252,7 +252,6 @@ std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
     return s;
 }
 
-}
 
 string DmmultipathCo::getDiffString( const Container& d ) const
 {
@@ -289,3 +288,5 @@ DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
 void DmmultipathCo::logData( const string& Dir ) {}
 
 bool DmmultipathCo::active = false;
+
+}

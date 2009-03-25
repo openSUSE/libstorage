@@ -15,8 +15,10 @@
 #include "y2storage/SystemCmd.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
@@ -381,8 +383,6 @@ void Loop::getInfo( LoopInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Loop& l )
     {
@@ -395,7 +395,6 @@ std::ostream& operator<< (std::ostream& s, const Loop& l )
     return( s );
     }
 
-}
 
 bool Loop::equalContent( const Loop& rhs ) const
     {
@@ -447,3 +446,5 @@ Loop::Loop(const LoopCo& d, const Loop& rhs)
 
 
 unsigned Loop::loop_major = 0;
+
+}

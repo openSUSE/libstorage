@@ -15,8 +15,11 @@
 #include "y2storage/Volume.h"
 #include "y2storage/EtcFstab.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 EtcFstab::EtcFstab(const string& pfx, bool rootMounted) 
     : prefix(pfx)
@@ -872,3 +875,4 @@ unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
 unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
 unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };
 
+}

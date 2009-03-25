@@ -22,8 +22,10 @@
 #include "y2storage/StorageDefines.h"
 #include "y2storage/HumanString.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 Volume::Volume(const Container& d, unsigned PNr, unsigned long long SizeK)
@@ -2785,8 +2787,6 @@ void Volume::getTestmodeData( const string& data )
 	crypt_pwd = i->second;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
@@ -2898,7 +2898,6 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     return( s );
     }
 
-}
 
 string
 Volume::logDifference( const Volume& rhs ) const
@@ -3113,3 +3112,5 @@ string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
 const string Volume::empty_string;
 const list<string> Volume::empty_slist;
 
+
+}

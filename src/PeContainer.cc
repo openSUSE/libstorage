@@ -10,8 +10,11 @@
 #include "y2storage/AppUtil.h"
 #include "y2storage/Storage.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 PeContainer::PeContainer( Storage * const s, CType t ) :
     Container(s,"",t)
@@ -562,8 +565,6 @@ void PeContainer::changeDeviceName( const string& old, const string& nw )
 	}
     }
 
-namespace storage
-{
 
 void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
     {
@@ -613,7 +614,6 @@ std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
     return( s );
     }
 
-}
 
 string PeContainer::getDiffString( const Container& rhs ) const
     {
@@ -751,3 +751,4 @@ PeContainer::PeContainer( const PeContainer& rhs ) : Container(rhs)
     *this = rhs;
     }
 
+}

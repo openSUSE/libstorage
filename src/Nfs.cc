@@ -13,8 +13,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/SystemCmd.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
+
 
 Nfs::Nfs( const NfsCo& d, const string& NfsDev ) :
     Volume( d, 0, 0 )
@@ -76,8 +79,6 @@ void Nfs::getInfo( NfsInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const Nfs& l )
     {
@@ -85,7 +86,6 @@ std::ostream& operator<< (std::ostream& s, const Nfs& l )
     return( s );
     }
 
-}
 
 bool Nfs::equalContent( const Nfs& rhs ) const
     {
@@ -110,3 +110,5 @@ Nfs::Nfs( const NfsCo& d, const Nfs& rhs ) : Volume(d)
     y2deb("constructed nfs by copy constructor from " << rhs.nm);
     *this = rhs;
     }
+
+}

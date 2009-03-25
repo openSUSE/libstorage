@@ -12,8 +12,11 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
+
 
 static bool lvNotCreated( const LvmLv& l ) { return( !l.created() ); }
 static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.deleted() ); }
@@ -1590,8 +1593,6 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     tinfo = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     {
@@ -1606,7 +1607,6 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     return( s );
     }
 
-}
 
 void LvmVg::logDifference( const Container& d ) const
     {
@@ -1709,3 +1709,4 @@ void LvmVg::logData( const string& Dir ) {;}
 
 bool LvmVg::active = false;
 
+}

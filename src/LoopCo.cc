@@ -15,8 +15,10 @@
 #include "y2storage/EtcFstab.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace storage;
-using namespace std;
+
+namespace storage
+{
+    using namespace std;
 
 
 LoopCo::LoopCo(Storage * const s, bool detect, ProcPart& ppart)
@@ -339,8 +341,6 @@ LoopCo::doRemove( Volume* v )
 
 void LoopCo::logData( const string& Dir ) {;}
 
-namespace storage
-{
 
 inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
     {
@@ -348,7 +348,6 @@ inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )
     return( s );
     }
 
-}
 
 void LoopCo::logDifference( const Container& d ) const
     {
@@ -425,4 +424,6 @@ LoopCo::LoopCo(const LoopCo& rhs)
 	Loop * p = new Loop( *this, *i );
 	vols.push_back( p );
     }
+}
+
 }

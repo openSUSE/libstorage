@@ -11,8 +11,10 @@
 #include "y2storage/AsciiFile.h"
 #include "y2storage/Md.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 EtcRaidtab::EtcRaidtab(const string& prefix)
@@ -105,3 +107,5 @@ EtcRaidtab::buildMdadmMap()
 	    lineno++;
 	}
     }
+
+}

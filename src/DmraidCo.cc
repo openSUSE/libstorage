@@ -12,8 +12,10 @@
 #include "y2storage/Storage.h"
 #include "y2storage/StorageDefines.h"
 
-using namespace std;
-using namespace storage;
+
+namespace storage
+{
+    using namespace std;
 
 
 DmraidCo::DmraidCo(Storage * const s, const string& Name, ProcPart& ppart)
@@ -228,8 +230,6 @@ void DmraidCo::getInfo( DmraidCoInfo& tinfo ) const
     tinfo.p = info;
     }
 
-namespace storage
-{
 
 std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
     {
@@ -239,7 +239,6 @@ std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
     return( s );
     }
 
-}
 
 string DmraidCo::getDiffString( const Container& d ) const
     {
@@ -276,3 +275,5 @@ DmraidCo::DmraidCo( const DmraidCo& rhs ) : DmPartCo(rhs)
 void DmraidCo::logData( const string& Dir ) {;}
 
 bool DmraidCo::active = false;
+
+}
