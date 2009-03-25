@@ -1754,10 +1754,10 @@ int Disk::forgetChangePartitionId( unsigned nr )
     return( ret );
     }
 
-int Disk::getToCommit( CommitStage stage, list<Container*>& col,
-                       list<Volume*>& vol )
+
+void
+Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
     {
-    int ret = 0;
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
@@ -1769,8 +1769,7 @@ int Disk::getToCommit( CommitStage stage, list<Container*>& col,
 		vol.push_back( &(*i) );
 	}
     if( col.size()!=oco || vol.size()!=ovo )
-	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
-    return( ret );
+	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
     }
 
 int Disk::commitChanges( CommitStage stage, Volume* vol )

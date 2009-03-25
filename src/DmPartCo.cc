@@ -655,10 +655,10 @@ static bool toChangeId( const DmPart&d )
     return( p!=NULL && !d.deleted() && Partition::toChangeId(*p) );
     }
 
-int DmPartCo::getToCommit( CommitStage stage, list<Container*>& col,
-			   list<Volume*>& vol )
-    {
-    int ret = 0;
+
+void
+DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+{
     y2mil("col:" << col.size() << " vol:" << vol.size());
     getStorage()->logCo( this );
     unsigned long oco = col.size();
@@ -674,9 +674,8 @@ int DmPartCo::getToCommit( CommitStage stage, list<Container*>& col,
     if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
 	col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
-	y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
-    return( ret );
-    }
+	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
+}
 
 
 int DmPartCo::commitChanges( CommitStage stage, Volume* vol )

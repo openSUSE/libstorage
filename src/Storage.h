@@ -1691,8 +1691,8 @@ class Storage : public storage::StorageInterface
 	void logVolumes( const string& Dir );
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists( storage::CommitStage stage,
-			      std::list<Container*>& co,
-			      std::list<Volume*>& vl,
+			      std::list<const Container*>& co,
+			      std::list<const Volume*>& vl,
 			      std::list<storage::commitAction*>& todo );
 	bool ignoreError( std::list<commitAction*>::iterator i,
 			  std::list<commitAction*>& al );

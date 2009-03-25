@@ -4,8 +4,11 @@
 #include "y2storage/PeContainer.h"
 #include "y2storage/LvmLv.h"
 
+
 namespace storage
 {
+    using std::list;
+
 
 class LvmVg : public PeContainer
     {
@@ -44,8 +47,8 @@ class LvmVg : public PeContainer
 	void normalizeDmDevices();
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
 	int commitChanges( storage::CommitStage stage );
-	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
-			 std::list<Volume*>& vol );
+	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
+			 list<const Volume*>& vol);
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 	void getInfo( storage::LvmVgInfo& info ) const;

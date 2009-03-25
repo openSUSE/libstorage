@@ -3627,8 +3627,8 @@ static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
     }
 
 void
-Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
-                          list<Volume*>& vl, list<commitAction*>& todo )
+Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
+                          list<const Volume*>& vl, list<commitAction*>& todo )
     {
     co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
     std::ostringstream b;
@@ -3644,9 +3644,9 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
 	vl.sort( sort_vol_mount );
     else
 	vl.sort( sort_vol_normal );
-    for( list<Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
+    for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
 	todo.push_back( new commitAction( stage, (*i)->type(), *i ));
-    for( list<Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
+    for( list<const Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
 	todo.push_back( new commitAction( stage, (*i)->cType(), *i ));
     b.str("");
     b << "unsorted actions <";
@@ -3665,7 +3665,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
     todo.sort( cont_less<commitAction>() );
     y2mil("stage:" << stage);
     b << "sorted co <";
-    for( list<Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
+    for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
 	{
 	if( i!=co.begin() )
 	    b << " ";
@@ -3675,7 +3675,7 @@ Storage::sortCommitLists( CommitStage stage, list<Container*>& co,
     y2mil(b.str());
     b.str("");
     b << "sorted vol <";
-    for( list<Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
+    for( list<const Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
 	{
 	if( i!=vl.begin() )
 	    b << " ";
@@ -3784,14 +3784,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     while( unsigned(pt-a) < lengthof(a) )
 	{
 	bool new_pair = false;
-	list<Container*> colist;
-	list<Volume*> vlist;
-	ContIterator i = p.begin();
-	while( ret==0 && i != p.end() )
-	    {
-	    ret = i->getToCommit( *pt, colist, vlist );
-	    ++i;
-	    }
+	list<const Container*> colist;
+	list<const Volume*> vlist;
+
+	if (ret == 0)
+	{
+	    for (ContIterator i = p.begin(); i != p.end(); ++i)
+		i->getToCommit(*pt, colist, vlist);
+	}
 #if 0
 	if( *pt == FORMAT && instsys() )
 	    {

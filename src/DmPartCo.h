@@ -7,8 +7,11 @@
 #include "y2storage/Disk.h"
 #include "y2storage/DmPart.h"
 
+
 namespace storage
 {
+    using std::list;
+
 
 class Storage;
 class SystemCmd;
@@ -73,9 +76,8 @@ class DmPartCo : public PeContainer
 	string getPartName( unsigned nr ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	virtual int getToCommit( storage::CommitStage stage,
-				 std::list<Container*>& col,
-			         std::list<Volume*>& vol );
+	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
+				 list<const Volume*>& vol);
 	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
 

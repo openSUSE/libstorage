@@ -6,8 +6,11 @@
 #include "y2storage/Container.h"
 #include "y2storage/Partition.h"
 
+
 namespace storage
 {
+    using std::list;
+
 
 class Storage;
 class SystemCmd;
@@ -79,9 +82,8 @@ class Disk : public Container
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber(storage::PartitionType type = storage::PRIMARY) const;
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	virtual int getToCommit( storage::CommitStage stage, 
-	                         std::list<Container*>& col,
-				 std::list<Volume*>& vol );
+	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
+				 list<const Volume*>& vol);
 	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
 	int freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const;

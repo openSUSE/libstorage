@@ -7,8 +7,11 @@
 #include "y2storage/StorageTypes.h"
 #include "y2storage/StorageTmpl.h"
 
+
 namespace storage
 {
+    using std::list;
+
 
 class Container
     {
@@ -48,9 +51,8 @@ class Container
 	virtual void logDifference( const Container& c ) const;
 
 	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	virtual int getToCommit( storage::CommitStage stage,
-	                         std::list<Container*>& col,
-	                         std::list<Volume*>& vol );
+	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
+				 list<const Volume*>& vol);
 
 	virtual int commitChanges( storage::CommitStage stage );
 	virtual int commitChanges( storage::CommitStage stage, Volume* vol );

@@ -3,8 +3,11 @@
 
 #include "y2storage/Disk.h"
 
+
 namespace storage
 {
+    using std::list;
+
 
 class SystemCmd;
 class ProcPart;
@@ -27,8 +30,8 @@ class Dasd : public Disk
 	string dasdfmtText( bool doing ) const;
 	static string dasdfmtTexts( bool single, const string& devs );
 	void getCommitActions( std::list<storage::commitAction*>& l ) const;
-	int getToCommit( storage::CommitStage stage, std::list<Container*>& col,
-			 std::list<Volume*>& vol );
+	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
+			 list<const Volume*>& vol);
 	int commitChanges( storage::CommitStage stage );
 	bool detectGeometry();
 
