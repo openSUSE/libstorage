@@ -42,23 +42,20 @@ string dupDash(const string& s)
     }
 
 
-void createPath(string Path_Cv)
+void createPath(const string& Path_Cv)
 {
-  string Path_Ci = Path_Cv;
-  string Tmp_Ci;
-
   string::size_type Pos_ii = 0;
-  while ((Pos_ii = Path_Ci.find('/', Pos_ii + 1)) != string::npos)
+  while ((Pos_ii = Path_Cv.find('/', Pos_ii + 1)) != string::npos)
     {
-      Tmp_Ci = Path_Ci.substr(0, Pos_ii);
+      string Tmp_Ci = Path_Cv.substr(0, Pos_ii);
       mkdir(Tmp_Ci.c_str(), 0777);
     }
-  mkdir(Path_Ci.c_str(), 0777);
+  mkdir(Path_Cv.c_str(), 0777);
 }
 
 
 bool
-checkDir(string Path_Cv)
+checkDir(const string& Path_Cv)
 {
   struct stat Stat_ri;
 
@@ -68,7 +65,7 @@ checkDir(string Path_Cv)
 
 
 bool
-checkNormalFile(string Path_Cv)
+checkNormalFile(const string& Path_Cv)
 {
   struct stat Stat_ri;
 

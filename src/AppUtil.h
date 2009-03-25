@@ -13,9 +13,10 @@ namespace storage
 {
     using std::string;
 
-void createPath(string Path_Cv);
-bool checkNormalFile(string Path_Cv);
-bool checkDir(string Path_Cv);
+
+void createPath(const string& Path_Cv);
+bool checkNormalFile(const string& Path_Cv);
+bool checkDir(const string& Path_Cv);
 
 string dupDash(const string& s);
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi = false);
