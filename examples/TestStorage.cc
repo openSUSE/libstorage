@@ -1,12 +1,9 @@
-#include <iostream>
 
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
+#include <iostream>
 
 #include <y2storage/Storage.h>
 #include <y2storage/ListListIterator.h>
 
-using namespace blocxx;
 using namespace std;
 using namespace storage;
 

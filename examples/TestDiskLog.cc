@@ -1,14 +1,11 @@
+
 #include <getopt.h>
 #include <iostream>
-
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
 
 #include <y2storage/StorageInterface.h>
 
 using namespace storage;
 using namespace std;
-using namespace blocxx;
 
 int
 main( int argc_iv, char** argv_ppcv )

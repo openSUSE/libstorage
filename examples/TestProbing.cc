@@ -4,16 +4,13 @@
  *  the disk_* and volume_* files in /var/log/YaST2/ will be generated.
  */
 
+#include <stdlib.h>
 #include <iostream>
-
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
 
 #include <y2storage/StorageInterface.h>
 
 using namespace storage;
 using namespace std;
-using namespace blocxx;
 
 int
 main (int argc, char** argv)

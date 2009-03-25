@@ -1,13 +1,10 @@
-#include <iostream>
 
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
+#include <iostream>
 
 #include <y2storage/StorageInterface.h>
 
 using namespace storage;
 using namespace std;
-using namespace blocxx;
 
 void scrollbarCb( const string& id, unsigned cur, unsigned max )
     {
