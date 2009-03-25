@@ -387,7 +387,7 @@ class Storage : public storage::StorageInterface
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
 	int restoreBackupState( const string& name );
-	bool checkBackupState( const string& name );
+	bool checkBackupState( const string& name ) const;
 	bool equalBackupStates( const string& lhs, const string& rhs,
 	                        bool verbose_log ) const;
 

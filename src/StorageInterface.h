@@ -65,7 +65,6 @@ using std::list;
  *
  * #include <y2storage/StorageInterface.h>
  *
- * using namespace std;
  * using namespace storage;
  *
  * int
@@ -1942,9 +1941,9 @@ namespace storage
 	 * Checks if a backup with a certain name already exists
 	 *
 	 * @param name name of the backup to check
-	 * @return boolean if the backup exists
+	 * @return true if the backup exists
 	 */
-	virtual bool checkBackupState( const string& name ) = 0;
+	virtual bool checkBackupState(const string& name) const = 0;
 
 	/**
 	 * Compare two backup states
@@ -1954,9 +1953,8 @@ namespace storage
 	 * @param verbose_log flag if differences should be logged in detail
 	 * @return true if states are equal
 	 */
-	virtual bool equalBackupStates( const string& lhs,
-	                                const string& rhs,
-					bool verbose_log ) const = 0;
+	virtual bool equalBackupStates(const string& lhs, const string& rhs,
+				       bool verbose_log) const = 0;
 
 	/**
 	 * Remove existing backup state

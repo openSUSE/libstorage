@@ -5602,15 +5602,13 @@ Storage::restoreBackupState( const string& name )
     }
 
 bool
-Storage::checkBackupState( const string& name )
+Storage::checkBackupState( const string& name ) const
     {
     bool ret = false;
-    assertInit();
     y2mil("name:" << name);
-    map<string,CCont>::iterator i = backups.find( name );
-    ret = i!=backups.end();
+    ret = backups.find(name) != backups.end();
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 struct equal_co
