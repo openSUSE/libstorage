@@ -65,7 +65,8 @@ struct contOrder
     };
 
 
-    typedef enum { DECREASE, INCREASE, FORMAT, MOUNT } CommitStage;
+    enum CommitStage { DECREASE, INCREASE, FORMAT, MOUNT };
+
 
     class Volume;
     class Container;

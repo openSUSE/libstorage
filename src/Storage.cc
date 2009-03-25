@@ -15,6 +15,7 @@
 #include <errno.h>
 
 #include <set>
+#include <array>
 #include <fstream>
 #include <sstream>
 #include <boost/algorithm/string.hpp>
@@ -3779,27 +3780,24 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     {
     int ret = 0;
     y2mil("p.length:" << p.length());
-    CommitStage a[] = { DECREASE, INCREASE, FORMAT, MOUNT };
-    CommitStage* pt = a;
-    while( unsigned(pt-a) < lengthof(a) )
-	{
-	bool new_pair = false;
+
+    typedef array<CommitStage, 4> Stages;
+    const Stages stages = { { DECREASE, INCREASE, FORMAT, MOUNT } };
+
+    for (Stages::const_iterator stage = stages.begin(); stage != stages.end(); ++stage)
+    {
 	list<const Container*> colist;
 	list<const Volume*> vlist;
 
 	if (ret == 0)
 	{
 	    for (ContIterator i = p.begin(); i != p.end(); ++i)
-		i->getToCommit(*pt, colist, vlist);
+		i->getToCommit(*stage, colist, vlist);
 	}
-#if 0
-	if( *pt == FORMAT && instsys() )
-	    {
-	    activateHld( true );
-	    }
-#endif
+
+	bool new_pair = false;
 	list<commitAction*> todo;
-	sortCommitLists( *pt, colist, vlist, todo );
+	sortCommitLists(*stage, colist, vlist, todo);
 	list<commitAction*>::iterator ac = todo.begin();
 	while( ret==0 && ac != todo.end() )
 	    {
@@ -3810,7 +3808,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    if( cont )
 		{
 		bool cont_removed = co->deleted() && type==LVM;
-		ret = co->commitChanges( *pt );
+		ret = co->commitChanges(*stage);
 		cont_removed = cont_removed && ret==0;
 		if( cont_removed )
 		    {
@@ -3820,7 +3818,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    else
 		{
-		ret = co->commitChanges( *pt, const_cast<Volume*>((*ac)->vol()) );
+		ret = co->commitChanges(*stage, const_cast<Volume*>((*ac)->vol()));
 		}
 	    if( ret!=0 )
 		{
@@ -3831,13 +3829,12 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    delete( *ac );
 	    ++ac;
 	    }
-	y2mil("stage:" << *pt << " new_pair:" << new_pair);
+	y2mil("stage:" << *stage << " new_pair:" << new_pair);
 	if( new_pair )
 	    {
 	    p = cPair( fnc );
 	    new_pair = false;
 	    }
-	pt++;
 	if( !todo.empty() )
 	    {
 	    SystemCmd c;
