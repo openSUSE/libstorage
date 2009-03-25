@@ -1693,7 +1693,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	    ++i;
 	    }
 	getStorage()->setRecursiveRemoval(save);
-	setDeleted( true );
+	setDeleted();
 	}
     y2mil("ret:" << ret);
     return( ret );

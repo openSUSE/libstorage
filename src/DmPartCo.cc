@@ -602,7 +602,7 @@ DmPartCo::removeDmPart()
 	    if( !removeFromList( &(*p.begin()) ))
 		y2err( "not found:" << *p.begin() );
 	    }
-	setDeleted( true );
+	setDeleted();
 	}
     if( ret==0 )
 	{

@@ -84,7 +84,7 @@ LvmVg::removeVg()
 	LvmLvPair p=lvmLvPair(lvNotDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	    ret = removeLv( i->name() );
-	setDeleted( true );
+	setDeleted();
 	}
     if( ret==0 )
 	{
@@ -418,7 +418,7 @@ LvmVg::removeLv( const string& name )
 		ret = LVM_LV_NOT_IN_LIST;
 	    }
 	else
-	    i->setDeleted( true );
+	    i->setDeleted();
 	}
     y2mil("ret:" << ret);
     return( ret );

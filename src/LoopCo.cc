@@ -262,7 +262,7 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 	    }
 	else
 	    {
-	    i->setDeleted( true );
+	    i->setDeleted();
 	    i->setDelFile( removeFile );
 	    }
 	}

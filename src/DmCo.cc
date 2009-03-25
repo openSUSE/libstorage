@@ -298,7 +298,7 @@ DmCo::removeDm( const string& tname )
 		{
 		getStorage()->clearUsedBy(it->first);
 		}
-	    i->setDeleted( true );
+	    i->setDeleted();
 	    }
 	}
     y2mil("ret:" << ret);

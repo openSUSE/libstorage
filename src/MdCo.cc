@@ -543,7 +543,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	    }
 	else
 	    {
-	    i->setDeleted( true );
+	    i->setDeleted();
 	    i->setDestroySb( destroySb );
 	    }
 	}
