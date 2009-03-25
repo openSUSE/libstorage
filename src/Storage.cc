@@ -3733,7 +3733,6 @@ int Storage::commit()
     assertInit();
     lastAction.clear();
     extendedError.clear();
-    SystemCmd c;
     CPair p = cPair( notLoop );
     int ret = 0;
     y2mil("empty:" << p.empty());
