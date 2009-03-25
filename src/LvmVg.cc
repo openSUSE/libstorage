@@ -904,7 +904,7 @@ void LvmVg::addPv( Pv*& p )
 
 
 void
-LvmVg::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+LvmVg::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
 {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();

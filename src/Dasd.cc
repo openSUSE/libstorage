@@ -482,13 +482,13 @@ string Dasd::dasdfmtText( bool doing ) const
 
 
 void
-Dasd::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+Dasd::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
 {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     if( stage==DECREASE ) 
 	{
-	VolPair p = volPair( stageDecrease );
+	ConstVolPair p = volPair( stageDecrease );
 	if( !p.empty() )
 	    vol.push_back( &(*(p.begin())) );
 	if( deleted() || init_disk )
@@ -496,7 +496,7 @@ Dasd::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vol
 	}
     else if( stage==INCREASE )
 	{
-	VolPair p = volPair( stageCreate );
+	ConstVolPair p = volPair( stageCreate );
 	if( !p.empty() )
 	    vol.push_back( &(*(p.begin())) );
 	}

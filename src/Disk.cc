@@ -1756,15 +1756,15 @@ int Disk::forgetChangePartitionId( unsigned nr )
 
 
 void
-Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
     {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
 	{
-	PartPair p = partPair( Partition::toChangeId );
-	for( PartIter i=p.begin(); i!=p.end(); ++i )
+	ConstPartPair p = partPair( Partition::toChangeId );
+	for( ConstPartIter i=p.begin(); i!=p.end(); ++i )
 	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
 		vol.push_back( &(*i) );
 	}

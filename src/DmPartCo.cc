@@ -657,7 +657,7 @@ static bool toChangeId( const DmPart&d )
 
 
 void
-DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
 {
     y2mil("col:" << col.size() << " vol:" << vol.size());
     getStorage()->logCo( this );
@@ -666,8 +666,8 @@ DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
 	{
-	DmPartPair p = dmpartPair( toChangeId );
-	for( DmPartIter i=p.begin(); i!=p.end(); ++i )
+	ConstDmPartPair p = dmpartPair( toChangeId );
+	for( ConstDmPartIter i=p.begin(); i!=p.end(); ++i )
 	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
 		vol.push_back( &(*i) );
 	}

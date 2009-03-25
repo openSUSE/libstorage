@@ -58,7 +58,7 @@ static bool stageMount( const Volume& v )
 
 
 void
-Container::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol)
+Container::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
 {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
@@ -66,8 +66,8 @@ Container::getToCommit(CommitStage stage, list<const Container*>& col, list<cons
 	{
 	case DECREASE:
 	    {
-	    VolPair p = volPair( stageDecrease );
-	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    ConstVolPair p = volPair( stageDecrease );
+	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 		vol.push_back( &(*i) );
 	    if( deleted() )
 		col.push_back( this );
@@ -75,8 +75,8 @@ Container::getToCommit(CommitStage stage, list<const Container*>& col, list<cons
 	    break;
 	case INCREASE:
 	    {
-	    VolPair p = volPair( stageCreate );
-	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    ConstVolPair p = volPair( stageCreate );
+	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 		vol.push_back( &(*i) );
 	    if( created() )
 		col.push_back( this );
@@ -84,15 +84,15 @@ Container::getToCommit(CommitStage stage, list<const Container*>& col, list<cons
 	    break;
 	case FORMAT:
 	    {
-	    VolPair p = volPair( stageFormat );
-	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    ConstVolPair p = volPair( stageFormat );
+	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 		vol.push_back( &(*i) );
 	    }
 	    break;
 	case MOUNT:
 	    {
-	    VolPair p = volPair( stageMount );
-	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    ConstVolPair p = volPair( stageMount );
+	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 		vol.push_back( &(*i) );
 	    }
 	    break;

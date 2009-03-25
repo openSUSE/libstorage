@@ -81,9 +81,9 @@ class Disk : public Container
 			      string& device) const;
 	int destroyPartitionTable( const string& new_label );
 	unsigned availablePartNumber(storage::PartitionType type = storage::PRIMARY) const;
-	virtual void getCommitActions( std::list<storage::commitAction*>& l ) const;
+	virtual void getCommitActions(list<storage::commitAction*>& l) const;
 	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
-				 list<const Volume*>& vol);
+				 list<const Volume*>& vol) const;
 	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
 	int freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const;
