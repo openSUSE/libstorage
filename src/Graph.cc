@@ -174,30 +174,32 @@ namespace storage
 		    {
 			edges.push_back(Edge(EDGE_USED, disk_node.id, "device:" + i1->usedByDevice));
 		    }
-
-		    deque<PartitionInfo> partitions;
-		    s->getPartitionInfo(i1->name, partitions);
-		    for (deque<PartitionInfo>::iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    else
 		    {
-			if (i2->partitionType == EXTENDED)
-			    continue;
-
-			Node partition_node(NODE_PARTITION, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
-			nodes.push_back(partition_node);
-
-			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id, partition_node.id));
-
-			if (!i2->v.usedByDevice.empty())
+			deque<PartitionInfo> partitions;
+			s->getPartitionInfo(i1->name, partitions);
+			for (deque<PartitionInfo>::iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->v.usedByDevice));
-			}
+			    if (i2->partitionType == EXTENDED)
+				continue;
 
-			if (!i2->v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
-			    nodes.push_back(mountpoint_node);
+			    Node partition_node(NODE_PARTITION, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
+			    nodes.push_back(partition_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id, partition_node.id));
+
+			    if (!i2->v.usedByDevice.empty())
+			    {
+				edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->v.usedByDevice));
+			    }
+
+			    if (!i2->v.mount.empty())
+			    {
+				Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
+				nodes.push_back(mountpoint_node);
+
+				edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
+			    }
 			}
 		    }
 
