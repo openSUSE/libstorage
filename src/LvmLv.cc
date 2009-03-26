@@ -3,6 +3,7 @@
 */
 
 #include <sstream>
+#include <boost/algorithm/string.hpp>
 
 #include "y2storage/LvmLv.h"
 #include "y2storage/LvmVg.h"
@@ -20,7 +21,7 @@ namespace storage
 LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 	     unsigned long le, const string& uuid, const string& stat, 
 	     const string& alloc)
-    : Dm( d, dupDash(d.name())+"-"+dupDash(name) ),
+    : Dm(d, makeDmTableName(d.name(), name)),
       origin(origi)
 {
     init( name );
@@ -37,7 +38,7 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 
 LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi, 
 	     unsigned long le, unsigned str)
-    : Dm( d, dupDash(d.name())+"-"+dupDash(name) ),
+    : Dm(d, makeDmTableName(d.name(), name)),
       origin(origi)
 {
     init( name );
@@ -45,7 +46,7 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
     calcSize();
     stripe = str;
     fs = detected_fs = FSNONE;
-    alt_names.push_back( "/dev/mapper/" + dupDash(cont->name()) + "-" + dupDash(name) );
+    alt_names.push_back("/dev/mapper/" + getTableName());
 
     y2deb("constructed lvm lv dev:" << dev << " vg:" << cont->name() << " origin:" << origin);
 }
@@ -61,6 +62,14 @@ const LvmVg* LvmLv::vg() const
 {
     return(dynamic_cast<const LvmVg* const>(cont));
 }
+
+
+    string
+    LvmLv::makeDmTableName(const string& vg_name, const string& lv_name)
+    {
+	return boost::replace_all_copy(vg_name, "-", "--") + "-" +
+	    boost::replace_all_copy(lv_name, "-", "--");
+    }
 
 
 void LvmLv::init( const string& name )

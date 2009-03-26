@@ -29,19 +29,6 @@ namespace storage
     using namespace std;
 
 
-string dupDash(const string& s)
-    {
-    string ret(s);
-    string::size_type pos = ret.find("-");
-    while(pos!=string::npos)
-	{
-	ret.insert(pos,1,'-');
-	pos = ret.find("-",pos+2);
-	}
-    return(ret);
-    }
-
-
 void createPath(const string& Path_Cv)
 {
   string::size_type Pos_ii = 0;

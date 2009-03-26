@@ -1,8 +1,6 @@
 #ifndef LVM_LV_H
 #define LVM_LV_H
 
-#include <map>
-
 #include "y2storage/Dm.h"
 
 namespace storage
@@ -47,8 +45,9 @@ class LvmLv : public Dm
 	void logDifference( const LvmLv& d ) const;
 
     protected:
+	static string makeDmTableName(const string& vg_name, const string& lv_name);
 	void init( const string& name );
-	virtual const string shortPrintedName() const { return( "Lv" ); }
+	virtual const string shortPrintedName() const { return "Lv"; }
 	LvmLv& operator=( const LvmLv& );
 
 	string origin;		// only for snapshots, empty otherwise
