@@ -12,6 +12,8 @@
 namespace storage
 {
     using std::string;
+    using std::list;
+    using std::map;
 
 
 void createPath(const string& Path_Cv);
@@ -26,8 +28,8 @@ std::map<string,string> makeMap( const std::list<string>& l,
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );
 
-void getUdevMap(const char* path, std::map<string, std::list<string>>& m);
-void getRevUdevMap(const char* path, std::map<string, string>& m);
+    map<string, list<string>> getUdevMap(const char* path);
+    map<string, string> getRevUdevMap(const char* path);
 
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );

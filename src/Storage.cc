@@ -502,16 +502,15 @@ Storage::detectDmraid(ProcPart& ppart)
 	DmraidCo::getRaids(l);
 	if (!l.empty())
 	{
-	    map<string, list<string>> by_id;
-	    getUdevMap("/dev/disk/by-id", by_id);
+	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		DmraidCo * v = new DmraidCo( this, *i, ppart );
 		if( v->isValid() )
 		{
-		    list<string> nm = by_id["dm-"+decString(v->minorNr())];
-		    if( !nm.empty() )
-			v->setUdevData( nm );
+		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
+		    if (it != by_id.end())
+			v->setUdevData(it->second);
 		    addToList( v );
 		}
 		else
@@ -545,16 +544,15 @@ Storage::detectDmmultipath(ProcPart& ppart)
 	DmmultipathCo::getMultipaths(l);
 	if (!l.empty())
 	{
-	    map<string, list<string>> by_id;
-	    getUdevMap("/dev/disk/by-id", by_id);
+	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
 		if( v->isValid() )
 		{
-		    list<string> nm = by_id["dm-"+decString(v->minorNr())];
-		    if (!nm.empty())
-			v->setUdevData( nm );
+		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
+		    if (it != by_id.end())
+			v->setUdevData(it->second);
 		    addToList( v );
 		}
 		else
@@ -675,10 +673,8 @@ Storage::autodetectDisks( ProcPart& ppart )
     struct dirent *Entry;
     if( (Dir=opendir(SYSFSDIR))!=NULL )
     {
-	map<string,list<string>> by_path;
-	map<string,list<string>> by_id;
-	getUdevMap("/dev/disk/by-path", by_path);
-	getUdevMap("/dev/disk/by-id", by_id);
+	const map<string, list<string>> by_path = getUdevMap("/dev/disk/by-path");
+	const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
@@ -739,10 +735,17 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    {
 	    if( i->d )
 	        {
-		string tmp;
-		if (!by_path[i->dev].empty())
-		    tmp = by_path[i->dev].front();
-		i->d->setUdevData(tmp, by_id[i->dev]);
+		string tmp1;
+		map<string, list<string>>::const_iterator it1 = by_path.find(i->dev);
+		if (it1 != by_path.end())
+		    tmp1 = it1->second.front();
+
+		list<string> tmp2;
+		map<string, list<string>>::const_iterator it2 = by_id.find(i->dev);			
+		if (it2 != by_id.end())
+		    tmp2 = it2->second;
+
+		i->d->setUdevData(tmp1, tmp2);
 		addToList( i->d );
 		}
 	    }

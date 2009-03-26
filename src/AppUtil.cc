@@ -395,29 +395,31 @@ getUdevLinks(const char* path)
 }
 
 
-void
-getUdevMap(const char* path, map<string, list<string>>& m)
-{
-    y2mil( "path: " << path );
-
-    map<string, string> links = getUdevLinks(path);
-
-    m.clear();
-    for (map<string, string>::const_iterator it = links.begin(); it != links.end(); it++)
-	m[it->second].push_back(it->first);
-
-    y2mil("map: " << m);
-}
-
-
-void
-getRevUdevMap(const char* path, map<string, string>& m)
+map<string, list<string>>
+getUdevMap(const char* path)
 {
     y2mil("path: " << path);
 
-    m = getUdevLinks(path);
+    const map<string, string> links = getUdevLinks(path);
 
-    y2mil("map: " << m);
+    map<string, list<string>> ret;
+    for (map<string, string>::const_iterator it = links.begin(); it != links.end(); ++it)
+	ret[it->second].push_back(it->first);
+
+    y2mil("map: " << ret);
+    return ret;
+}
+
+
+map<string, string>
+getRevUdevMap(const char* path)
+{
+    y2mil("path: " << path);
+
+    map<string, string> ret = getUdevLinks(path);
+
+    y2mil("map: " << ret);
+    return ret;
 }
 
 

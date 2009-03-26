@@ -20,10 +20,8 @@ namespace storage
 
 ProcMounts::ProcMounts( Storage * const sto ) 
     {
-    map<string,string> by_label;
-    map<string,string> by_uuid;
-    getRevUdevMap("/dev/disk/by-label", by_label);
-    getRevUdevMap("/dev/disk/by-uuid", by_uuid);
+    const map<string, string> by_label = getRevUdevMap("/dev/disk/by-label");
+    const map<string, string> by_uuid = getRevUdevMap("/dev/disk/by-uuid");
     ifstream mounts( "/proc/mounts" );
     classic(mounts);
     string line;
@@ -32,24 +30,26 @@ ProcMounts::ProcMounts( Storage * const sto )
     while( mounts.good() )
 	{
 	string dev = extractNthWord( 0, line );
-	if( dev.find( "/by-label/" ) != string::npos )
+	if (boost::contains(dev, "/by-label/"))
 	    {
 	    dev = dev.substr( dev.rfind( "/" )+1 );
 	    y2mil( "dev:" << dev );
-	    if( !by_label[dev].empty() )
-		{
-		dev = by_label[dev];
+	    map<string, string>::const_iterator it = by_label.find(dev);
+	    if (it != by_label.end())
+	        {
+		dev = it->second;
 		normalizeDevice( dev );
 		y2mil( "dev:" << dev );
 		}
 	    }
-	else if( dev.find( "/by-uuid/" ) != string::npos )
+	else if (boost::contains(dev, "/by-uuid/"))
 	    {
 	    dev = dev.substr( dev.rfind( "/" )+1 );
 	    y2mil( "dev:" << dev );
-	    if( !by_uuid[dev].empty() )
+	    map<string, string>::const_iterator it = by_uuid.find(dev);
+	    if (it != by_uuid.end())
 		{
-		dev = by_uuid[dev];
+		dev = it->second;
 		normalizeDevice( dev );
 		y2mil( "dev:" << dev );
 		}
