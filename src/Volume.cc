@@ -724,7 +724,7 @@ int Volume::doFormat()
 	{
 	string cmd;
 	string params;
-	ProgressBar* p = NULL;
+	ProgressBar* progressbar = NULL;
 	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBarTheOne();
 
 	switch( fs )
@@ -733,12 +733,12 @@ int Volume::doFormat()
 	    case EXT3:
 		cmd = "/sbin/mke2fs";
 		params = (fs==EXT2) ? "-v" : "-j -v";
-		p = new Mke2fsProgressBar( cb );
+		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case REISERFS:
 		cmd = "/sbin/mkreiserfs";
 		params = "-f -f";
-		p = new ReiserProgressBar( cb );
+		progressbar = new ReiserProgressBar( cb );
 		break;
 	    case VFAT:
 		cmd = "/sbin/mkdosfs";
@@ -777,7 +777,7 @@ int Volume::doFormat()
 		}
 	    cmd += quote(mountDevice());
 	    SystemCmd c;
-	    c.setOutputProcessor( p );
+	    c.setOutputProcessor(progressbar);
 	    c.execute( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -785,7 +785,7 @@ int Volume::doFormat()
 		setExtError( c );
 		}
 	    }
-	delete p;
+	delete progressbar;
 	}
     if( ret==0 && fs==EXT3 )
 	{
