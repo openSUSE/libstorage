@@ -854,7 +854,6 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 {
     unsigned ext_nr = 0;
     bool ret=true;
-    unsigned long Dummy;
     unsigned long long SizeK;
     map<unsigned,unsigned long> proc_l;
     map<unsigned,unsigned long> parted_l;
@@ -878,7 +877,7 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 	{
 	pair<string,unsigned> p = getDiskPartition( *i );
 	if( p.second>0 && p.second!=ext_nr &&
-	    pp.getInfo( *i, SizeK, Dummy, Dummy ))
+	    pp.getSize(*i, SizeK))
 	    {
 	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
