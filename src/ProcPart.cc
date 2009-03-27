@@ -3,11 +3,11 @@
   Textdomain    "storage"
 */
 
-#include <sstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/Regex.h"
 #include "y2storage/StorageTmpl.h"
+#include "y2storage/AsciiFile.h"
 #include "y2storage/ProcPart.h"
 
 
@@ -16,69 +16,59 @@ namespace storage
     using namespace std;
 
 
-ProcPart::ProcPart() : AsciiFile( "/proc/partitions" )
+    ProcPart::ProcPart()
     {
-    y2mil( "numLines " << numLines() );
-    for( unsigned i=0; i<numLines(); i++ )
+	reload();
+    }
+
+
+    void
+    ProcPart::reload()
+    {
+	data.clear();
+
+	AsciiFile file("/proc/partitions");
+	const vector<string>& lines = file.lines();
+
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	y2mil( "line " << (i+1) << " is \"" << (*this)[i] << "\"" );
-	string tmp = extractNthWord( 3, (*this)[i] );
-	if( !tmp.empty() && tmp!="name" )
+	    string device = extractNthWord(3, *it);
+	    if (!device.empty() && device != "name")
 	    {
-	    co[tmp] = i;
+		unsigned long long sizeK;
+		extractNthWord(2, *it) >> sizeK;
+		data[device] = sizeK;
 	    }
 	}
     }
 
-bool 
-ProcPart::getInfo( const string& Dev, unsigned long long& SizeK,
-		   unsigned long& Major, unsigned long& Minor ) const
+
+    bool
+    ProcPart::getSize(const string& device, unsigned long long& sizeK) const
     {
-    bool ret = false;
-    map<string,int>::const_iterator i = co.find( devName(Dev) );
-    if( i != co.end() )
+	bool ret = false;
+	map<string, unsigned long long>::const_iterator i = data.find(undevDevice(device));
+	if (i != data.end())
 	{
-	extractNthWord( 0, (*this)[i->second] ) >> Major;
-	extractNthWord( 1, (*this)[i->second] ) >> Minor;
-	extractNthWord( 2, (*this)[i->second] ) >> SizeK;
-	ret = true;
+	    sizeK = i->second;
+	    ret = true;
 	}
-    return( ret );
+	y2mil("dev:" << device << " ret:" << ret << " sizeK:" << (ret ? sizeK : 0));
+	return ret;
     }
 
-bool 
-ProcPart::getSize( const string& Dev, unsigned long long& SizeK ) const
-    {
-    bool ret = false;
-    map<string,int>::const_iterator i = co.find( devName(Dev) );
-    if( i != co.end() )
-	{
-	extractNthWord( 2, (*this)[i->second] ) >> SizeK;
-	ret = true;
-	}
-    y2mil( "dev:" << Dev << " ret:" << ret << " Size:" << (ret?SizeK:0) );
-    return( ret );
-    }
 
-string 
-ProcPart::devName( const string& Dev )
+    list<string>
+    ProcPart::getMatchingEntries(const string& regexp) const
     {
-    return( undevDevice( Dev ));
-    }
-
-list<string>  
-ProcPart::getMatchingEntries( const string& regexp ) const
-    {
-    Regex reg( "^" + regexp + "$" );
-    list<string> ret;
-    for( map<string,int>::const_iterator i=co.begin(); i!=co.end(); i++ )
+	Regex reg("^" + regexp + "$");
+	list<string> ret;
+	for (map<string, unsigned long long>::const_iterator i = data.begin(); i != data.end(); ++i)
 	{
-	if( reg.match( i->first ))
-	    {
-	    ret.push_back( i->first );
-	    }
+	    if (reg.match(i->first))
+		ret.push_back(i->first);
 	}
-    return( ret );
+	return ret;
     }
 
 }

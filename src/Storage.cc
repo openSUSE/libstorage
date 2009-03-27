@@ -199,22 +199,21 @@ void Storage::dumpObjectList()
 }
 
 void Storage::detectObjects()
-    {
-    ProcPart* ppart = new ProcPart;
-    detectDisks( *ppart );
+{
+    ProcPart ppart;
+    detectDisks(ppart);
     if( instsys() )
 	{
 	DmraidCo::activate( true );
 	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
-	delete ppart;
-	ppart = new ProcPart;
+	ppart.reload();
 	}
     detectMds();
-    detectDmraid( *ppart );
-    detectDmmultipath( *ppart );
+    detectDmraid(ppart);
+    detectDmmultipath(ppart);
     detectLvmVgs();
-    detectDm( *ppart );
+    detectDm(ppart);
 
     LvmVgPair p = lvgPair();
     y2mil( "p length:" << p.length() );
@@ -235,7 +234,7 @@ void Storage::detectObjects()
     else
 	{
 	fstab = new EtcFstab( "/etc", isRootMounted() );
-	detectLoops( *ppart );
+	detectLoops(ppart);
 	ProcMounts pm( this );
 	if( !instsys() )
 	    detectNfs( pm );
@@ -251,7 +250,6 @@ void Storage::detectObjects()
 	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, c.getLine(i))));
 	    }
 	}
-    delete ppart;
     }
 
 void Storage::deleteClist( CCont& co )
