@@ -110,12 +110,7 @@ Storage::Storage( bool ronly, bool tmode, bool autodetec )
 void
 Storage::logSystemInfo() const
 {
-    ifstream File( "/proc/version" );
-    classic(File);
-    string line;
-    getline( File, line );
-    File.close();
-    y2mil( "kernel version:" << line );
+    AsciiFile("/proc/version").logContent();
 }
 
 
@@ -4618,19 +4613,17 @@ Storage::logCo(const Container* c) const
 }
 
 
-void
-Storage::logProcData( const string& l )
-{
-    y2mil( "begin:" << l );
-    ProcPart t;
-    AsciiFile md( "/proc/mdstat" );
-    for( unsigned i=0; i<md.numLines(); i++ )
-	y2mil( "mdstat:" << i+1 << ". line:" << md[i] );
-    AsciiFile mo( "/proc/mounts" );
-    for( unsigned i=0; i<mo.numLines(); i++ )
-	y2mil( "mounts:" << i+1 << ". line:" << mo[i] );
-    y2mil( "end" << l );
-}
+    void
+    Storage::logProcData(const string& str) const
+    {
+	y2mil("begin:" << str);
+
+	AsciiFile("/proc/partitions").logContent();
+	AsciiFile("/proc/mdstat").logContent();
+	AsciiFile("/proc/mounts").logContent();
+
+	y2mil("end" << str);
+    }
 
 
 bool Storage::findVolume( const string& device, ContIterator& c,

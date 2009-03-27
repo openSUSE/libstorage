@@ -21,7 +21,7 @@ AsciiFile::AsciiFile(const char* Name_Cv, bool remove_empty)
     : Name_C(Name_Cv),
       remove_empty(remove_empty)
 {
-    load();
+    reload();
 }
 
 
@@ -29,7 +29,7 @@ AsciiFile::AsciiFile(const string& Name_Cv, bool remove_empty)
     : Name_C(Name_Cv),
       remove_empty(remove_empty)
 {
-    load();
+    reload();
 }
 
 
@@ -39,7 +39,7 @@ AsciiFile::~AsciiFile()
 
 
 bool
-AsciiFile::load()
+AsciiFile::reload()
 {
     y2mil("loading file " << Name_C);
     clear();
@@ -87,6 +87,15 @@ AsciiFile::save()
 	return file.good();
     }
 }
+
+
+    void
+    AsciiFile::logContent() const
+    {
+	y2mil("content of " << Name_C);
+	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
+	    y2mil(*it);
+    }
 
 
 void AsciiFile::append( const string& Line_Cv )

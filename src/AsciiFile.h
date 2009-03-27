@@ -23,8 +23,10 @@ namespace storage
 
 	string name() const { return Name_C; }
 
-	bool load();
+	bool reload();
 	bool save();
+
+	void logContent() const;
 
 	void append( const string& Line_Cv );
 	void append( const vector<string>& Lines_Cv );
