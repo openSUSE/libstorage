@@ -329,7 +329,7 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	    }
 	if( output_proc )
 	    {
-	    output_proc->finished();
+	    output_proc->finish();
 	    }
 	}
 

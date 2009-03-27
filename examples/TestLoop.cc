@@ -6,9 +6,9 @@
 using namespace storage;
 using namespace std;
 
-void scrollbarCb( const string& id, unsigned cur, unsigned max )
+void progressbarCb( const string& id, unsigned cur, unsigned max )
     {
-    cout << "SCROLLBAR id:" << id << " cur:" << cur << " max:" << max << endl;
+    cout << "PROGRESSBAR id:" << id << " cur:" << cur << " max:" << max << endl;
     }
 
 void installInfoCb( const string& info )
@@ -49,7 +49,7 @@ main( int argc_iv, char** argv_ppcv )
     initDefaultLogger();
     //StorageInterface* s = createStorageInterface(false,true);
     StorageInterface* s = createDefaultStorageInterface();
-    s->setCallbackProgressBar( scrollbarCb );
+    s->setCallbackProgressBar( progressbarCb );
     s->setCallbackShowInstallInfo( installInfoCb );
     string disk = "/dev/hdb";
     string device;

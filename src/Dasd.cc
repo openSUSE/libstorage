@@ -556,7 +556,7 @@ int Dasd::doDasdfmt()
 	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + boost::join(devs, " ");
 	y2mil("cmdline:" << cmd_line);
 	CallbackProgressBar cb = getStorage()->getCallbackProgressBarTheOne();
-	ScrollBarHandler* sb = new DasdfmtScrollbar( cb );
+	ProgressBar* sb = new DasdfmtProgressBar( cb );
 	SystemCmd cmd;
 	cmd.setOutputProcessor( sb );
 	if( execCheckFailed( cmd, cmd_line ) )

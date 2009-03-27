@@ -724,7 +724,7 @@ int Volume::doFormat()
 	{
 	string cmd;
 	string params;
-	ScrollBarHandler* p = NULL;
+	ProgressBar* p = NULL;
 	CallbackProgressBar cb = cont->getStorage()->getCallbackProgressBarTheOne();
 
 	switch( fs )
@@ -733,12 +733,12 @@ int Volume::doFormat()
 	    case EXT3:
 		cmd = "/sbin/mke2fs";
 		params = (fs==EXT2) ? "-v" : "-j -v";
-		p = new Mke2fsScrollbar( cb );
+		p = new Mke2fsProgressBar( cb );
 		break;
 	    case REISERFS:
 		cmd = "/sbin/mkreiserfs";
 		params = "-f -f";
-		p = new ReiserScrollbar( cb );
+		p = new ReiserProgressBar( cb );
 		break;
 	    case VFAT:
 		cmd = "/sbin/mkdosfs";

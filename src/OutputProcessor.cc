@@ -2,7 +2,6 @@
   Textdomain    "storage"
 */
 
-#include <sstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/StorageTmpl.h"
@@ -15,15 +14,7 @@ namespace storage
 
 
 void
-ScrollBarHandler::process( const string& val, bool stderr )
-    {
-    y2mil("val:" << val << " stderr:" << stderr);
-    static int cnt=0;
-    setCurValue( cnt++/2 );
-    }
-
-void
-ScrollBarHandler::setCurValue( unsigned val )
+ProgressBar::setCurValue(unsigned val)
     {
     if( first || val!=cur )
 	{
@@ -36,7 +27,7 @@ ScrollBarHandler::setCurValue( unsigned val )
     }
 
 void
-Mke2fsScrollbar::process( const string& val, bool stderr )
+Mke2fsProgressBar::process(const string& val, bool stderr)
     {
     y2deb("val:" << val << " err:" << stderr << " done:" << done);
     if( !stderr && !done )
@@ -84,14 +75,14 @@ Mke2fsScrollbar::process( const string& val, bool stderr )
 	    }
 	if( seen.find( "done" )!=string::npos )
 	    {
-	    setCurValue( max-4 );
+	    setCurValue(getMaxValue() - 4);
 	    done = true;
 	    }
 	}
     }
 
 void
-ReiserScrollbar::process( const string& val, bool stderr )
+ReiserProgressBar::process(const string& val, bool stderr)
     {
     y2deb("val:" << val << " err:" << stderr);
     if( !stderr )
@@ -122,7 +113,7 @@ ReiserScrollbar::process( const string& val, bool stderr )
     }
 
 void
-DasdfmtScrollbar::process( const string& val, bool stderr )
+DasdfmtProgressBar::process(const string& val, bool stderr)
     {
     y2deb("val:" << val << " err:" << stderr);
     if( !stderr )
@@ -146,7 +137,7 @@ DasdfmtScrollbar::process( const string& val, bool stderr )
 	while( bpos != string::npos )
 	    {
 	    cur_cyl++;
-	    setCurValue( cur_cyl*max/max_cyl );
+	    setCurValue( cur_cyl*getMaxValue()/max_cyl );
 	    seen.erase( 0, bpos+1 );
 	    bpos = seen.find( "|" );
 	    }
