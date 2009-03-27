@@ -126,12 +126,9 @@ ProcMounts::ProcMounts( Storage * const sto )
 	co[dev].fs = "swap";
 	getline( mounts, line );
 	}
-    map<string,FstabEntry>::const_iterator i = co.begin();
-    while( i!=co.end() )
-	{
-	y2mil( "co:[" << i->first << "]-->" << i->second );
-	++i;
-	}
+
+    for (map<string, FstabEntry>::const_iterator it = co.begin(); it != co.end(); ++it)
+	y2mil("co:[" << it->first << "]-->" << it->second);
     }
 
 string 
