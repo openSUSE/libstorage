@@ -6,15 +6,16 @@
 namespace storage
 {
 
-class OutputProcessor 
+    class OutputProcessor
     {
     public:
 	OutputProcessor() {}
 	virtual ~OutputProcessor() {}
-	virtual void reset() {}
-	virtual void finished() {}
-	virtual void process( const string& txt, bool stderr );
+	virtual void reset() = 0;
+	virtual void finished() = 0;
+	virtual void process(const string& txt, bool stderr) = 0;
     };
+
 
 class ScrollBarHandler : public OutputProcessor
     {

@@ -15,15 +15,9 @@ namespace storage
 
 
 void
-OutputProcessor::process( const string& val, bool stderr )
-    {
-    y2mil("stderr:" << stderr << " val:" << val);
-    }
-
-void
 ScrollBarHandler::process( const string& val, bool stderr )
     {
-    OutputProcessor::process( val, stderr );
+    y2mil("val:" << val << " stderr:" << stderr);
     static int cnt=0;
     setCurValue( cnt++/2 );
     }
