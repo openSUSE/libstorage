@@ -191,11 +191,20 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     return( s );
     }
 
-template< class Val >
-struct cont_less : public std::binary_function<Val*,Val*,bool>
+
+    template<class Type>
+    struct deref_less : public std::binary_function<const Type*, const Type*, bool>
     {
-    bool operator()(const Val* __x, const Val* __y) const { return *__x < *__y; }
+	bool operator()(const Type* x, const Type* y) const { return *x < *y; }
     };
+
+
+    template<class Type>
+    struct deref_equal_to : public std::binary_function<const Type*, const Type*, bool>
+    {	
+	bool operator()(const Type* x, const Type* y) const { return *x == *y; }
+    };
+
 
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }

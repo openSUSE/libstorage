@@ -3532,7 +3532,7 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 	    i->getCommitActions( l );
 	    ac.splice( ac.end(), l );
 	}
-	ac.sort( cont_less<commitAction>() );
+	ac.sort(deref_less<commitAction>());
 	for( list<commitAction*>::const_iterator i=ac.begin(); i!=ac.end(); ++i )
 	{
 	    CommitInfo info;
@@ -3656,7 +3656,7 @@ Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
     b << "> ";
     y2mil(b.str());
     b.str("");
-    todo.sort( cont_less<commitAction>() );
+    todo.sort(deref_less<commitAction>());
     y2mil("stage:" << stage);
     b << "sorted co <";
     for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
@@ -5595,13 +5595,6 @@ Storage::checkBackupState( const string& name ) const
     return ret;
     }
 
-struct equal_co
-    {
-    equal_co( const Container* const co ) : c(co) {};
-    bool operator()(const Container* co) { return( *co==*c ); }
-    const Container* const c;
-    };
-
 
 bool
 Storage::equalBackupStates(const string& lhs, const string& rhs,
@@ -5634,7 +5627,7 @@ Storage::equalBackupStates(const string& lhs, const string& rhs,
 	CCIter j;
 	while( (ret||verbose_log) && i!=l->end() )
 	    {
-	    j = find_if( r->begin(), r->end(), equal_co( *i ) );
+	    j = find_if(r->begin(), r->end(), bind2nd(deref_equal_to<Container>(), *i));
 	    if( j!=r->end() )
 		ret = (*i)->compareContainer( *j, verbose_log ) && ret;
 	    else
@@ -5648,7 +5641,7 @@ Storage::equalBackupStates(const string& lhs, const string& rhs,
 	i=r->begin();
 	while( (ret||verbose_log) && i!=r->end() )
 	    {
-	    j = find_if( l->begin(), l->end(), equal_co( *i ) );
+	    j = find_if(l->begin(), l->end(), bind2nd(deref_equal_to<Container>(), *i));
 	    if( j==l->end() )
 		{
 		ret = false;
