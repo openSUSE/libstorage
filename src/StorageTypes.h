@@ -159,21 +159,21 @@ private:
     struct regex_matches
     {
 	regex_matches(const Regex& t) : val(t) {}
-	bool operator()(const string& s) { return val.match(s); }
+	bool operator()(const string& s) const { return val.match(s); }
 	const Regex& val;
     };
 
     struct string_starts_with
     {
 	string_starts_with(const string& t) : val(t) {}
-	bool operator()(const string& s) { return boost::starts_with(s, val); }
+	bool operator()(const string& s) const { return boost::starts_with(s, val); }
 	const string& val;
     };
 
     struct string_contains
     {
 	string_contains(const string& t) : val(t) {}
-	bool operator()(const string& s) { return boost::contains(s, val); }
+	bool operator()(const string& s) const { return boost::contains(s, val); }
 	const string& val;
     };
 
