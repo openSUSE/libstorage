@@ -27,19 +27,19 @@ namespace storage
     {
 	data.clear();
 
-	AsciiFile file("/proc/partitions");
-	const vector<string>& lines = file.lines();
+	AsciiFile parts("/proc/partitions");
+	parts.remove(0, 2);
 
-	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	for (vector<string>::const_iterator it = parts.lines().begin(); it != parts.lines().end(); ++it)
 	{
 	    string device = extractNthWord(3, *it);
-	    if (!device.empty() && device != "name")
-	    {
-		unsigned long long sizeK;
-		extractNthWord(2, *it) >> sizeK;
-		data[device] = sizeK;
-	    }
+	    unsigned long long sizeK;
+	    extractNthWord(2, *it) >> sizeK;
+	    data[device] = sizeK;
 	}
+
+	for (map<string, unsigned long long>::const_iterator it = data.begin(); it != data.end(); ++it)
+	    y2mil("data[" << it->first << "] -> " << it->second);
     }
 
 

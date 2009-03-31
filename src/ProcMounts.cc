@@ -7,6 +7,7 @@
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
+#include "y2storage/AsciiFile.h"
 #include "y2storage/ProcMounts.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/Storage.h"
@@ -106,26 +107,21 @@ ProcMounts::ProcMounts( Storage * const sto )
 	co[dev].mount = "/";
 	}
     mounts.close();
-    mounts.clear();
-    mounts.open( "/proc/swaps" );
-    getline( mounts, line );
-    y2mil( "swap line:\"" << line << "\"" );
-    getline( mounts, line );
-    while( mounts.good() )
-	{
-	y2mil( "swap line:\"" << line << "\"" );
-	string::size_type pos;
-	string dev = extractNthWord( 0, line );
-	if( (pos=dev.find( "\\040(deleted)" ))!=string::npos )
-	    {
-	    y2mil( "dev:" << dev );
-	    dev.erase( pos );
-	    }
+
+    AsciiFile swaps("/proc/swaps");
+    swaps.remove(0, 1);
+
+    for (vector<string>::const_iterator it = swaps.lines().begin(); it != swaps.lines().end(); ++it)
+    {
+	string dev = extractNthWord(0, *it);
+	string::size_type pos = dev.find("\\040(deleted)");
+	if (pos != string::npos)
+	    dev.erase(pos);
+
 	co[dev].device = dev;
 	co[dev].mount = "swap";
 	co[dev].fs = "swap";
-	getline( mounts, line );
-	}
+    }
 
     for (map<string, FstabEntry>::const_iterator it = co.begin(); it != co.end(); ++it)
 	y2mil("co:[" << it->first << "]-->" << it->second);
