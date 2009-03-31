@@ -4619,6 +4619,7 @@ Storage::logCo(const Container* c) const
 	AsciiFile("/proc/partitions").logContent();
 	AsciiFile("/proc/mdstat").logContent();
 	AsciiFile("/proc/mounts").logContent();
+	AsciiFile("/proc/swaps").logContent();
 
 	y2mil("end" << str);
     }
