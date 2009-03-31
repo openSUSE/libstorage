@@ -5850,8 +5850,6 @@ std::ostream& operator<< (std::ostream& s, Storage &v )
     }
 
 
-Storage::SkipDeleted Storage::SkipDel;
-
 storage::CallbackProgressBar Storage::progress_bar_cb_ycp;
 storage::CallbackShowInstallInfo Storage::install_info_cb_ycp;
 storage::CallbackInfoPopup Storage::info_popup_cb_ycp;

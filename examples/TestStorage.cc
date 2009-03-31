@@ -8,6 +8,7 @@ using namespace std;
 using namespace storage;
 
 struct test_hdb { bool operator()(const Container&d) const {return( d.name().find( "hdb" )!=string::npos);}};
+struct NotDeleted { bool operator()(const Container& d) const { return !d.deleted(); } };
 struct Smaller5 { bool operator()(const Volume&d) const {return(d.nr()<5);}};
 struct Smaller150 { bool operator()(const Disk&d) const {return(d.cylinders()<150);}};
 struct Larger150 { bool operator()(const Disk&d) const {return(d.cylinders()>150);}};
@@ -67,13 +68,12 @@ main( int argc_iv, char** argv_ppcv )
 	}
     }
     {
-    Storage::ContCondIPair<Storage::SkipDeleted>::type p = 
-	Sto.contCondPair<Storage::SkipDeleted>( Storage::SkipDel );
-    cout << "SkipDeleted pair empty:" << p.empty() << " length:" << p.length() << endl;
-    for( Storage::ConstContainerI<Storage::SkipDeleted>::type i=p.begin();
-         i!=p.end(); ++i )
+	NotDeleted NotDel;
+	Storage::ContCondIPair<NotDeleted>::type p = Sto.contCondPair<NotDeleted>(NotDel);
+	cout << "NotDeleted pair empty:" << p.empty() << " length:" << p.length() << endl;
+	for (Storage::ConstContainerI<NotDeleted>::type i = p.begin(); i != p.end(); ++i)
 	{
-	cout << *i << endl;
+	    cout << *i << endl;
 	}
     }
     struct tmp { 

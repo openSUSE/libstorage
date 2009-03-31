@@ -176,11 +176,6 @@ class Volume
 	void triggerUdevUpdate() const;
 	static bool loopInUse( Storage* sto, const string& loopdev );
 
-	struct SkipDeleted
-	    {
-	    bool operator()(const Volume&d) const { return( !d.deleted());}
-	    };
-	static SkipDeleted SkipDel;
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
 	static bool isDeleted( const Volume&d ) { return( d.deleted() ); }
 	static bool getMajorMinor( const string& device,

@@ -201,8 +201,6 @@ class Storage : public storage::StorageInterface
 	    };
 
     public:
-	struct SkipDeleted { bool operator()(const Container&d) const {return( !d.deleted());}};
-	static SkipDeleted SkipDel;
 	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
 	static bool isDmPart( const Container&d )
 	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
