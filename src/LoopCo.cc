@@ -339,7 +339,11 @@ LoopCo::doRemove( Volume* v )
     return( ret );
     }
 
-void LoopCo::logData( const string& Dir ) {;}
+
+void
+LoopCo::logData(const string& Dir) const
+{
+}
 
 
 inline std::ostream& operator<< (std::ostream& s, const LoopCo& d )

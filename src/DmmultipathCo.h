@@ -101,7 +101,7 @@ class DmmultipathCo : public DmPartCo
 	static void getMultipaths( std::list<string>& l );
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
 
 	string vendor;
 	string model;

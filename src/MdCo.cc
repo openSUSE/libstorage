@@ -785,7 +785,11 @@ MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
     }
 
 
-void MdCo::logData( const string& Dir ) {;}
+void
+MdCo::logData(const string& Dir) const
+{
+}
+
 
 bool MdCo::active = false;
 

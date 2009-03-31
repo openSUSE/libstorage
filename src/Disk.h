@@ -201,7 +201,7 @@ class Disk : public Container
 	virtual int doSetType( Volume* v );
 	virtual int doCreateLabel();
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
 	void setLabelData( const string& );
 
 	static string defaultLabel( const Storage&, unsigned long long size_k );

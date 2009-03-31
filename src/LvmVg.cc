@@ -1705,7 +1705,12 @@ LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
 	}
     }
 
-void LvmVg::logData( const string& Dir ) {;}
+
+void
+LvmVg::logData(const string& Dir) const
+{
+}
+
 
 bool LvmVg::active = false;
 

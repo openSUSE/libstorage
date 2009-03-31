@@ -285,7 +285,12 @@ DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
     model = rhs.model;
 }
 
-void DmmultipathCo::logData( const string& Dir ) {}
+
+void
+DmmultipathCo::logData(const string& Dir) const
+{
+}
+
 
 bool DmmultipathCo::active = false;
 

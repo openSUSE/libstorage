@@ -168,7 +168,7 @@ class DmPartCo : public PeContainer
 	virtual string removeText( bool doing ) const;
 	virtual string setDiskLabelText( bool doing ) const;
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
 	string udev_path;
 	std::list<string> udev_id;
 	string logfile_name;

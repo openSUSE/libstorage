@@ -102,7 +102,7 @@ class DmraidCo : public DmPartCo
 
 	int doRemove();
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
 
 	string raidtype;
 	string controller;

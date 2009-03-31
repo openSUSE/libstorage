@@ -46,7 +46,7 @@ class DmCo : public PeContainer
 
 	int doRemove( Volume* v );
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
     };
 
 }

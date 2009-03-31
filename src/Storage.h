@@ -1686,7 +1686,7 @@ class Storage : public storage::StorageInterface
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
 	int removeContainer( Container* val, bool call_del=true );
-	void logVolumes( const string& Dir );
+	void logVolumes(const string& Dir) const;
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists( storage::CommitStage stage,
 			      std::list<const Container*>& co,

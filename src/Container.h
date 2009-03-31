@@ -180,7 +180,7 @@ class Container
 	virtual int doCreate( Volume * v );
 	virtual int doRemove( Volume * v );
 	virtual int doResize( Volume * v );
-	virtual void logData( const string& Dir ) {}
+	virtual void logData(const string& Dir) const {}
 	Container& operator=( const Container& );
 	static bool stageDecrease( const Volume& v )
 	    { return( v.deleted()||v.needShrink()); }

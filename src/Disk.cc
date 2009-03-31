@@ -431,8 +431,9 @@ _("The partition table type on disk %1$s cannot be handled by\n"
     return( ret );
     }
 
+
 void
-Disk::logData( const string& Dir )
+Disk::logData(const string& Dir) const
     {
     string fname( Dir + "/disk_" + logfile_name + ".tmp" );
     ofstream file( fname.c_str() );
@@ -463,8 +464,8 @@ Disk::logData( const string& Dir )
 	}
     file << "SizeK: " << size_k << endl;
 
-    PartPair pp = partPair();
-    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
+    ConstPartPair pp = partPair();
+    for (ConstPartIter p = pp.begin(); p != pp.end(); ++p)
 	{
 	file << "Partition: ";
 	p->logData(file);
@@ -473,6 +474,7 @@ Disk::logData( const string& Dir )
     file.close();
     getStorage()->handleLogFile( fname );
     }
+
 
 void
 Disk::setLabelData( const string& disklabel )

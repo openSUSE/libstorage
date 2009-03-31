@@ -272,7 +272,12 @@ DmraidCo::DmraidCo( const DmraidCo& rhs ) : DmPartCo(rhs)
     controller = rhs.controller;
     }
 
-void DmraidCo::logData( const string& Dir ) {;}
+
+void
+DmraidCo::logData(const string& Dir) const
+{
+}
+
 
 bool DmraidCo::active = false;
 

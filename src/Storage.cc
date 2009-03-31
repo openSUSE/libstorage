@@ -255,18 +255,14 @@ void Storage::detectObjects()
 void Storage::deleteClist( CCont& co )
     {
     for( CIter i=co.begin(); i!=co.end(); ++i )
-	delete( *i );
+	delete *i;
     co.clear();
     }
 
 void Storage::deleteBackups()
     {
-    map<string,CCont>::iterator i = backups.begin();
-    while( i!=backups.end() )
-	{
+    for (map<string, CCont>::iterator i = backups.begin(); i != backups.end(); ++i)
 	deleteClist( i->second );
-	++i;
-	}
     backups.clear();
     }
 
@@ -275,7 +271,7 @@ Storage::~Storage()
     if( max_log_num>0 )
 	{
 	logVolumes( logdir );
-	for( CIter i=cont.begin(); i!=cont.end(); ++i )
+	for (CCIter i = cont.begin(); i != cont.end(); ++i)
 	    {
 	    (*i)->logData( logdir );
 	    }
@@ -824,12 +820,13 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 
 
 void
-Storage::logVolumes( const string& Dir )
+Storage::logVolumes(const string& Dir) const
     {
     string fname( Dir + "/volume_info.tmp" );
     ofstream file( fname.c_str() );
     classic(file);
-    for( VolIterator i=vBegin(); i!=vEnd(); ++i )
+    ConstVolPair p = volPair();
+    for (ConstVolIterator i = p.begin(); i != p.end(); ++i)
 	{
 	if( i->getFs()!=FSUNKNOWN )
 	    {
@@ -5527,14 +5524,10 @@ Storage::createBackupState( const string& name )
     y2mil("name:" << name);
     if( ret==0 )
 	{
-	if(checkBackupState(name))
-	    removeBackupState( name );
-	CCIter i=cont.begin();
-	while( i!=cont.end() )
-	    {
+	if (checkBackupState(name))
+	    removeBackupState(name);
+	for (CCIter i = cont.begin(); i != cont.end(); ++i)
 	    backups[name].push_back( (*i)->getCopy() );
-	    ++i;
-	    }
 	}
     y2mil( "states:" << backupStates() );
     y2mil("ret:" << ret);
@@ -5582,12 +5575,8 @@ Storage::restoreBackupState( const string& name )
 	if( b!=backups.end())
 	    {
 	    cont.clear();
-	    CCIter i=b->second.begin();
-	    while( i!=b->second.end() )
-		{
+	    for (CCIter i = b->second.begin(); i != b->second.end(); ++i)
 		cont.push_back( (*i)->getCopy() );
-		++i;
-		}
 	    }
 	else
 	    ret = STORAGE_BACKUP_STATE_NOT_FOUND;

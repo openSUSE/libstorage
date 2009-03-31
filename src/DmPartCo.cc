@@ -1079,6 +1079,9 @@ DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
     updatePointers(true);
     }
 
-void DmPartCo::logData( const string& Dir ) {;}
+void
+DmPartCo::logData(const string& Dir) const
+{
+}
 
 }

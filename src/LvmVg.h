@@ -133,7 +133,8 @@ class LvmVg : public PeContainer
 	string metaString();
 	string instSysString();
 
-	void logData( const string& Dir );
+	void logData(const string& Dir) const;
+
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		   string& status, string& alloc, bool& ro);
 	void addPv( Pv*& p );
