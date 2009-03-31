@@ -10,9 +10,7 @@ namespace storage
 {
 
 class Storage;
-class SystemCmd;
 class ProcPart;
-class Region;
 
 class DmmultipathCo : public DmPartCo
     {
