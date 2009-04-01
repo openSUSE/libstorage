@@ -613,14 +613,14 @@ MdCo::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    getStorage()->waitForDevice( m->device() );
+	    Storage::waitForDevice(m->device());
 	    getMdData( m->nr() );
 	    updateEntry( m );
 	    bool used_as_pv = m->getUsedByType() == UB_LVM;
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
-		ret = getStorage()->zeroDevice(m->device(), m->sizeK());
+		ret = Storage::zeroDevice(m->device(), m->sizeK());
 		}
 	    }
 	}

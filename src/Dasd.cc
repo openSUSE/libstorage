@@ -405,7 +405,7 @@ int Dasd::doFdasd()
 	    if( i->created() )
 		{
 		unsigned long long s;
-		getStorage()->waitForDevice( i->device() );
+		Storage::waitForDevice(i->device());
 		i->setCreated( false );
 		if( ppart.getSize( i->device(), s ))
 		    {

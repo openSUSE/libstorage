@@ -32,7 +32,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 	getVgData( Name, false );
 	LvmLvPair p=lvmLvPair(lvNotCreated);
 	if( !p.empty() )
-	    getStorage()->waitForDevice( p.begin()->device() );
+	    Storage::waitForDevice(p.begin()->device());
 	}
     else
 	{
@@ -1367,7 +1367,7 @@ LvmVg::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    getStorage()->waitForDevice( l->device() );
+	    Storage::waitForDevice(l->device());
 	    l->setCreated(false);
 	    getVgData( name() );
 	    checkConsistency();

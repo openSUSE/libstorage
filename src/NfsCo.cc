@@ -183,8 +183,7 @@ NfsCo::getNfsData( ProcMounts& mounts )
 		n->setFstabOption( boost::join(i->opts, "," ) );
 		addToList( n );
 		}
-	    unsigned long long sz = getStorage()->getDfSize( i->mount );
-	    n->setSize( sz );
+	    n->setSize(Storage::getDfSize(i->mount));
 	    }
 	}
     l.clear();

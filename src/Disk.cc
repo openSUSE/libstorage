@@ -2015,7 +2015,7 @@ int Disk::doSetType( Volume* v )
 	if( ret==0 )
 	    {
 	    if( !dmp_slave )
-		getStorage()->waitForDevice( p->device() );
+		Storage::waitForDevice(p->device());
 	    p->changeIdDone();
 	    }
 	}
@@ -2251,7 +2251,7 @@ int Disk::doCreate( Volume* v )
 	    if( !dmp_slave )
 		{
 		if( p->type()!=EXTENDED )
-		    getStorage()->waitForDevice( p->device() );
+		    Storage::waitForDevice(p->device());
 		else
 		    Storage::waitForDevice();
 		if( p->type()==LOGICAL && getStorage()->instsys() )
@@ -2274,7 +2274,7 @@ int Disk::doCreate( Volume* v )
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
-		ret = getStorage()->zeroDevice(p->device(), p->sizeK());
+		ret = Storage::zeroDevice(p->device(), p->sizeK());
 		}
 	    else if( !dmp_slave && !p->getFormat() )
 		{
@@ -2298,7 +2298,7 @@ int Disk::doCreate( Volume* v )
 	    {
 	    SystemCmd c("/sbin/blockdev --rereadpt " + quote(device()));
 	    if( p->type()!=EXTENDED )
-		getStorage()->waitForDevice( p->device() );
+		Storage::waitForDevice(p->device());
 	    }
 	}
     else
@@ -2540,7 +2540,7 @@ int Disk::doResize( Volume* v )
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
 	    if( ret==0 && !dmp_slave )
-		getStorage()->waitForDevice( p->device() );
+		Storage::waitForDevice(p->device());
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )

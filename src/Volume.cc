@@ -708,7 +708,7 @@ int Volume::doFormat()
 	}
     if( ret==0 && encryption!=ENC_NONE )
 	{
-	ret = cont->getStorage()->zeroDevice(mountDevice(), size_k, true);
+	ret = Storage::zeroDevice(mountDevice(), size_k, true);
 	}
     if( ret==0 && mountDevice()!=dev && !cont->getStorage()->test() )
 	{
@@ -1667,7 +1667,7 @@ EncryptType Volume::detectEncryption()
         string use_dev = dmcrypt_dev;
 	if( c.retcode()==0 )
 	    {
-	    cont->getStorage()->waitForDevice( use_dev );
+	    Storage::waitForDevice(use_dev);
 	    updateFsData();
 	    if( detected_fs!=FSUNKNOWN )
 		{
@@ -1768,7 +1768,7 @@ int Volume::doLosetup()
 		unlink( fname.c_str() );
 		rmdir( cont->getStorage()->tmpDir().c_str() );
 		}
-	    cont->getStorage()->waitForDevice( loop_dev );
+	    Storage::waitForDevice(loop_dev);
 	    }
 	if( ret==0 )
 	    {
@@ -1890,7 +1890,7 @@ int Volume::doCryptsetup()
 		}
 	    unlink( fname.c_str() );
 	    rmdir( cont->getStorage()->tmpDir().c_str() );
-	    cont->getStorage()->waitForDevice( dmcrypt_dev );
+	    Storage::waitForDevice(dmcrypt_dev);
 	    }
 	if( ret==0 )
 	    {

@@ -777,7 +777,7 @@ DmPartCo::doCreate( Volume* v )
 	    l->updateSize( pp );
 	    }
 	if( p->type()!=EXTENDED )
-	    getStorage()->waitForDevice( l->device() );
+	    Storage::waitForDevice(l->device());
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -876,7 +876,7 @@ int DmPartCo::doResize( Volume* v )
 	ProcPart pp;
 	updateMinor();
 	l->updateSize( pp );
-	getStorage()->waitForDevice( l->device() );
+	Storage::waitForDevice(l->device());
 	}
     if( ret==0 && remount )
 	ret = l->mount();

@@ -4821,7 +4821,7 @@ bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_
 	    ret = false;
 	    danglingUsedBy[dev] = storage::usedBy(ub_type, ub_name);
 	    y2mil("adding ub_type:" << ub_type << " ub_name:" << ub_name <<
-		  " for dev: " << dev << " to dangling usedby");
+		  " for dev:" << dev << " to dangling usedby");
 	}
     }
     else
@@ -5040,16 +5040,19 @@ bool Storage::setDmcryptData( const string& dev, const string& dm,
     return( ret );
     }
 
-bool Storage::deletedDevice( const string& dev )
-    {
-    VPair p = vPair( Volume::isDeleted );
-    VolIterator v = p.begin();
+
+bool
+Storage::deletedDevice(const string& dev) const
+{
+    ConstVolPair p = volPair(Volume::isDeleted);
+    ConstVolIterator v = p.begin();
     while( v!=p.end() && v->device()!=dev )
 	++v;
     bool ret = v!=p.end();
     y2mil("dev:" << dev << " ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
+
 
 bool Storage::isDisk( const string& dev )
     {
@@ -5093,8 +5096,10 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
-string Storage::deviceByNumber( const string& majmin )
-    {
+
+string
+Storage::deviceByNumber(const string& majmin) const
+{
     string ret="";
     string::size_type pos = majmin.find( ":" );
     if( pos!=string::npos )
@@ -5130,8 +5135,9 @@ string Storage::deviceByNumber( const string& majmin )
 	    }
 	}
     y2mil("majmin:" << majmin << " ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
+
 
 unsigned long long Storage::deviceSize( const string& dev )
     {
@@ -5344,9 +5350,10 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     return( ret );
     }
 
-unsigned long long 
-Storage::getDfSize( const string& mp )
-    {
+
+unsigned long long
+Storage::getDfSize(const string& mp)
+{
     unsigned long long ret = 0;
     struct statvfs64 fsbuf;
     if( statvfs64( mp.c_str(), &fsbuf )==0 )
@@ -5362,8 +5369,9 @@ Storage::getDfSize( const string& mp )
 	y2war( "errno:" << errno << " " << strerror(errno));
 	}
     y2mil( "mp:" << mp << " ret:" << ret );
-    return( ret );
-    }
+    return ret;
+}
+
 
 bool
 Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
@@ -5779,7 +5787,7 @@ Storage::waitForDevice()
 
 
 int
-Storage::waitForDevice(const string& device) const
+Storage::waitForDevice(const string& device)
 {
     int ret = 0;
     waitForDevice();
@@ -5800,22 +5808,6 @@ Storage::waitForDevice(const string& device) const
 	ret = STORAGE_DEVICE_NODE_NOT_FOUND;
     y2mil("ret:" << ret);
     return ret;
-}
-
-
-void Storage::checkDeviceExclusive( const string& device, unsigned secs )
-{
-    const int delay = 50000;
-    const unsigned count = secs * 1000000/delay;
-    y2mil( "dev:" << device << " sec:" << secs << " count:" << count );
-    for( unsigned i=0; i<count; i++ )
-    {
-	int fd = open( device.c_str(), O_RDONLY|O_EXCL );
-	y2mil( "count:" << i << " fd:" << fd );
-	if( fd>=0 )
-	    close(fd);
-	usleep( delay );
-    }
 }
 
 

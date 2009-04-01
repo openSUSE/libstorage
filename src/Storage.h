@@ -241,11 +241,11 @@ class Storage : public storage::StorageInterface
 	bool setDmcryptData( const string& dev, const string& dm, 
 	                     unsigned dmnum, unsigned long long siz,
 			     storage::EncryptType typ );
-	bool deletedDevice( const string& dev );
+	bool deletedDevice(const string& dev) const;
 	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );
-	string deviceByNumber( const string& majmin );
+	string deviceByNumber(const string& majmin) const;
 	void rootMounted();
 	bool isRootMounted() const { return( root_mounted ); }
 	string findNormalDevice( const string& device );
@@ -382,7 +382,7 @@ class Storage : public storage::StorageInterface
 	                  unsigned long long& df_free,
 	                  unsigned long long& used, bool& win, bool& efi,
 			  bool use_cache );
-	unsigned long long getDfSize( const string& mp );
+	static unsigned long long getDfSize(const string& mp);
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
 	int restoreBackupState( const string& name );
@@ -448,10 +448,10 @@ class Storage : public storage::StorageInterface
 	void eraseFreeInfo( const string& device );
 
 	static void waitForDevice();
-	int waitForDevice(const string& device) const;
-	void checkDeviceExclusive( const string& device, unsigned secs );
-	int zeroDevice(const string& device, unsigned long long sizeK, bool random = false, 
-		       unsigned long long beginK = 200, unsigned long long endK = 10);
+	static int waitForDevice(const string& device);
+
+	static int zeroDevice(const string& device, unsigned long long sizeK, bool random = false,
+			      unsigned long long beginK = 200, unsigned long long endK = 10);
 
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );
