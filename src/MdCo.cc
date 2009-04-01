@@ -145,15 +145,6 @@ MdCo::getMdData()
 	    }
 	getline( file, line );
 	}
-    MdPair p=mdPair(Md::notDeleted);
-    for( MdIter i=p.begin(); i!=p.end(); ++i )
-	{
-	string num = "md"+decString(i->nr());
-	list<string> devs;
-	i->getDevs( devs );
-	for( list<string>::iterator s=devs.begin(); s!=devs.end(); ++s )
-	    getStorage()->setUsedBy( *s, UB_MD, num );
-	}
     }
 
 void

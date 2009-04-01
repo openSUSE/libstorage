@@ -21,8 +21,8 @@ namespace storage
     using namespace std;
 
 
-Md::Md( const MdCo& d, unsigned PNr, MdType Type,
-        const list<string>& devices ) : Volume( d, PNr, 0 )
+Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
+    : Volume( d, PNr, 0 )
     {
     y2deb("constructed md " << dev << " on container " << cont->name());
     if( d.type() != MD )
@@ -33,6 +33,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type,
 	devs.push_back( normalizeDevice( *i ) );
     computeSize();
     }
+
 
 Md::Md( const MdCo& d, const string& line1, const string& line2 )
     : Volume( d, 0, 0 )
@@ -46,6 +47,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
+	getContainer()->getStorage()->fetchDanglingUsedBy(dev, uby);
 	}
     SystemCmd c(MDADMBIN " --detail " + quote(device()));
     c.select( "UUID : " );
@@ -160,7 +162,11 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 		break;
 	    }
 	}
+
+    for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
+	getContainer()->getStorage()->setUsedBy(*it, UB_MD, dev.substr(5));
     }
+
 
 Md::~Md()
     {
