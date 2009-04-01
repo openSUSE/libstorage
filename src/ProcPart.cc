@@ -5,7 +5,6 @@
 
 
 #include "y2storage/AppUtil.h"
-#include "y2storage/Regex.h"
 #include "y2storage/StorageTmpl.h"
 #include "y2storage/AsciiFile.h"
 #include "y2storage/ProcPart.h"
@@ -59,15 +58,11 @@ namespace storage
 
 
     list<string>
-    ProcPart::getMatchingEntries(const string& regexp) const
+    ProcPart::getEntries() const
     {
-	Regex reg("^" + regexp + "$");
 	list<string> ret;
 	for (map<string, unsigned long long>::const_iterator i = data.begin(); i != data.end(); ++i)
-	{
-	    if (reg.match(i->first))
-		ret.push_back(i->first);
-	}
+	    ret.push_back(i->first);
 	return ret;
     }
 

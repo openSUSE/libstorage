@@ -872,9 +872,9 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
     if( !reg.empty() && reg.find( '/' )!=string::npos && 
         isdigit(reg[reg.length()-1]) )
 	reg += "p";
-    reg += "[0-9]+";
-    list<string> ps = pp.getMatchingEntries( reg );
-    y2mil("regex " << reg << " ps " << ps);
+    reg = "^" + reg + "[0-9]+" "$";
+    list<string> ps = pp.getMatchingEntries(regex_matches(reg));
+    y2mil("regex:\"" << reg << "\" ps:" << ps);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
 	pair<string,unsigned> p = getDiskPartition( *i );

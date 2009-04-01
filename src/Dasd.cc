@@ -199,9 +199,9 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
     if( !reg.empty() && reg.find( '/' )!=string::npos &&
 	isdigit(reg[reg.length()-1]) )
 	reg += "p";
-    reg += "[0-9]+";
-    list<string> ps = ppart.getMatchingEntries( reg );
-    y2mil("regex " << reg << " ps " << ps);
+    reg = "^" + reg + "[0-9]+" "$";
+    list<string> ps = ppart.getMatchingEntries(regex_matches(reg));
+    y2mil("regex:\"" << reg << "\" ps:" << ps);
     unsigned long dummy = 0;
     if( !checkPartedValid( ppart, nm, pl, dummy ) )
 	{

@@ -24,7 +24,17 @@ namespace storage
 
 	bool getSize(const string& device, unsigned long long& sizeK) const;
 
-	list<string> getMatchingEntries(const string& regexp) const;
+	list<string> getEntries() const;
+
+	template<class Pred>
+	list<string> getMatchingEntries(Pred pred) const
+	{
+	    list<string> ret;
+	    for (map<string, unsigned long long>::const_iterator i = data.begin(); i != data.end(); ++i)
+		if (pred(i->first))
+		    ret.push_back(i->first);
+	    return ret;
+	}
 
     protected:
 
