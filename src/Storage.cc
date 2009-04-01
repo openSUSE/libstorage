@@ -198,8 +198,11 @@ void Storage::dumpObjectList()
     y2mil("DETECTED OBJECTS END");
 }
 
+
 void Storage::detectObjects()
 {
+    danglingUsedBy.clear();
+
     ProcPart ppart;
     detectDisks(ppart);
     if( instsys() )
@@ -215,6 +218,9 @@ void Storage::detectObjects()
     detectLvmVgs();
     detectDm(ppart);
 
+    if (!danglingUsedBy.empty())
+	y2err("dangling used-by left after detection: " << danglingUsedBy);
+    
     LvmVgPair p = lvgPair();
     y2mil( "p length:" << p.length() );
     for( LvmVgIterator i=p.begin(); i!=p.end(); ++i )
@@ -4813,8 +4819,9 @@ bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_
 	else
 	{
 	    ret = false;
-	    y2err("could not set ub_type:" << ub_type << " ub_name:" << ub_name <<
-		  " for dev: " << dev);
+	    danglingUsedBy[dev] = storage::usedBy(ub_type, ub_name);
+	    y2mil("adding ub_type:" << ub_type << " ub_name:" << ub_name <<
+		  " for dev: " << dev << " to dangling usedby");
 	}
     }
     else
@@ -4823,6 +4830,23 @@ bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_
     }
     y2mil("dev:" << dev << " ub_type:" << ub_type << " ub_name:" << ub_name << " ret:" << ret);
     return ret;
+}
+
+
+void
+Storage::fetchDanglingUsedBy(const string& dev, storage::usedBy& uby)
+{
+    map<string, storage::usedBy>::iterator pos = danglingUsedBy.find(dev);
+    if (pos != danglingUsedBy.end())
+    {
+	uby = pos->second;
+	danglingUsedBy.erase(pos);
+	y2mil("dev:" << dev << " usedby:" << uby);
+    }
+    else
+    {
+	y2mil("dev:" << dev << " not found");
+    }
 }
 
 

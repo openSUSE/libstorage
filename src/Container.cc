@@ -356,7 +356,7 @@ Container::getDiffString( const Container& c ) const
 	{
 	std::ostringstream b;
 	classic(b);
-	b << uby << "-->" << string(c.uby);
+	b << uby << "-->" << c.uby;
 	ret += b.str();
 	}
     return( ret );

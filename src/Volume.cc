@@ -2949,7 +2949,7 @@ Volume::logDifference( const Volume& rhs ) const
 	{
 	std::ostringstream b;
 	classic(b);
-	b << uby << "-->" << string(rhs.uby);
+	b << uby << "-->" << rhs.uby;
 	ret += b.str();
 	}
     if( fs!=rhs.fs )

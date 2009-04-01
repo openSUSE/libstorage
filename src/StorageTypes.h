@@ -142,8 +142,6 @@ public:
     bool operator!=(const usedBy& rhs) const
 	{ return !(*this == rhs); }
 
-    operator string() const;
-
     storage::UsedByType type() const { return ub_type; }
     const string& name() const { return ub_name; }
     const string device() const;
@@ -151,6 +149,7 @@ public:
     friend std::ostream& operator<<(std::ostream&, const usedBy&);
 
 private:
+    operator string() const;
     storage::UsedByType ub_type;
     string ub_name;
 };
