@@ -783,27 +783,25 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
     y2mil("detectFsData end");
     }
 
+
 void
-Storage::printInfo( ostream& str, const string& name )
-    {
+Storage::printInfo(ostream& str)
+{
     assertInit();
     ConstContPair p = contPair();
-    string n = DmPartCo::undevName(name);
-    for( ConstContIterator i=p.begin(); i!=p.end(); ++i )
+    for (ConstContIterator i = p.begin(); i != p.end(); ++i)
+    {
+	i->print(str);
+	str << endl;
+
+	Container::ConstVolPair vp = i->volPair();
+	for (Container::ConstVolIterator j = vp.begin(); j != vp.end(); ++j)
 	{
-	if( name.empty() || i->name()==n )
-	    {
-	    Container::ConstVolPair vp = i->volPair();
-	    i->print( str );
+	    j->print(str);
 	    str << endl;
-	    for( Container::ConstVolIterator j=vp.begin(); j!=vp.end(); ++j )
-		{
-		j->print( str );
-		str << endl;
-		}
-	    }
 	}
     }
+}
 
 
 void
@@ -4585,17 +4583,6 @@ bool Storage::removeDmTable( const string& table )
     y2mil("ret:" << ret);
     return( ret );
     }
-
-
-void
-Storage::logCo(const string& device)
-{
-    ContIterator cc;
-    if( findContainer( device, cc ))
-	logCo( &(*cc) );
-    else
-	y2mil( "not found:" << device );
-}
 
 
 void

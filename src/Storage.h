@@ -226,9 +226,8 @@ class Storage : public storage::StorageInterface
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
-	void printInfo(std::ostream& str, const string& name = "");
+	void printInfo(std::ostream& str);
 	void logCo(const Container* c) const;
-	void logCo(const string& device);
 	void logProcData(const string& str = "") const;
 	storage::UsedByType usedBy( const string& dev );
 	bool usedBy( const string& dev, storage::usedBy& ub );
