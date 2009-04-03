@@ -166,7 +166,7 @@ namespace storage
     {
 	ContainerInfo() {}
 	CType type;
-	unsigned volcnt;
+	unsigned volcnt;	// deprecated
 	string device;
 	string name;
 	UsedByType usedByType;
