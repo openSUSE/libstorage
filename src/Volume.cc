@@ -2264,7 +2264,7 @@ void Volume::getCommitActions( list<commitAction*>& l ) const
 string Volume::fstabUpdateText() const
     {
     string txt;
-    EtcFstab* fstab = cont->getStorage()->getFstab();
+    const EtcFstab* fstab = cont->getStorage()->getFstab();
     if( !orig_mp.empty() && mp.empty() )
 	txt = fstab->removeText( false, inCryptotab(), orig_mp );
     else

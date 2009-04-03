@@ -56,7 +56,7 @@ LoopCo::getLoopData( ProcPart& ppart )
     {
     y2mil("begin");
     list<FstabEntry> l;
-    EtcFstab* fstab = getStorage()->getFstab();
+    const EtcFstab* fstab = getStorage()->getFstab();
     fstab->getFileBasedLoops( getStorage()->root(), l );
     if( !l.empty() )
 	{

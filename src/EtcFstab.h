@@ -143,13 +143,13 @@ class EtcFstab
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
 	int changeRootPrefix( const string& prfix );
-	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l );
-	void getEntries( std::list<FstabEntry>& l );
-	string addText( bool doing, bool crypto, const string& mp );
-	string updateText( bool doing, bool crypto, const string& mp );
-	string removeText( bool doing, bool crypto, const string& mp );
+	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l ) const;
+	void getEntries( std::list<FstabEntry>& l ) const;
+	string addText( bool doing, bool crypto, const string& mp ) const;
+	string updateText( bool doing, bool crypto, const string& mp ) const;
+	string removeText( bool doing, bool crypto, const string& mp ) const;
 	int flush();
-	int findPrefix( const AsciiFile& tab, const string& mount );
+	int findPrefix( const AsciiFile& tab, const string& mount ) const;
 
     protected:
 	struct Entry
@@ -163,20 +163,20 @@ class EtcFstab
 
 	void readFiles();
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
-			     AsciiFile*& cryptotab, int& lineno );
+			     AsciiFile*& cryptotab, int& lineno ) const;
 	bool findCrtab( const FstabEntry& e, const AsciiFile& crtab,
-			int& lineno );
+			int& lineno ) const;
 	bool findCrtab( const string& device, const AsciiFile& crtab,
-			int& lineno );
-	void makeStringList( const FstabEntry& e, std::list<string>& ls );
-	void makeCrtabStringList( const FstabEntry& e, std::list<string>& ls );
+			int& lineno ) const;
+	void makeStringList( const FstabEntry& e, std::list<string>& ls ) const;
+	void makeCrtabStringList( const FstabEntry& e, std::list<string>& ls ) const;
 	string updateLine( const std::list<string>& ol, 
-			   const std::list<string>& nl, const string& line );
+			   const std::list<string>& nl, const string& line ) const;
 	string createLine( const std::list<string>& ls, unsigned fields, 
-	                   unsigned* flen );
-	string createTabLine( const FstabEntry& e );
-	void makeCrStringList( const FstabEntry& e, std::list<string>& ls );
-	string createCrtabLine( const FstabEntry& e );
+	                   unsigned* flen ) const;
+	string createTabLine( const FstabEntry& e ) const;
+	void makeCrStringList( const FstabEntry& e, std::list<string>& ls ) const;
+	string createCrtabLine( const FstabEntry& e ) const;
 
 	static unsigned fstabFields[6];
 	static unsigned cryptotabFields[6];
