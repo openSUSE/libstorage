@@ -69,7 +69,7 @@ Storage::initDefaultLogger ()
 	file = "y2log";
     }
 
-    storage::createLogger("libstorage", "default", path, file);
+    storage::createLogger("default", path, file);
 }
 
 

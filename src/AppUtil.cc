@@ -223,8 +223,7 @@ void undevDevice( string& dev )
 static const blocxx::String component = "libstorage";
 
 
-void createLogger(const string& lcomponent, const string& name,
-		  const string& logpath, const string& logfile)
+void createLogger(const string& name, const string& logpath, const string& logfile)
 {
     using namespace blocxx;
 

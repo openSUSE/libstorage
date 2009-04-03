@@ -49,8 +49,7 @@ void classic(StreamType& stream)
 
 enum LogLevel { DEBUG, MILESTONE, WARNING, ERROR };
 
-void createLogger(const string& component, const string& name,
-		  const string& logpath, const string& logfile);
+void createLogger(const string& name, const string& logpath, const string& logfile);
 
 bool testLogLevel(LogLevel level);
 
