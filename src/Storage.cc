@@ -230,6 +230,7 @@ void Storage::detectObjects()
         {
 	SystemCmd::setTestmode();
  	rootprefix = testdir;
+	delete fstab;
  	fstab = new EtcFstab( rootprefix );
 	string t = testdir+"/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
@@ -239,6 +240,7 @@ void Storage::detectObjects()
 	}
     else
 	{
+	delete fstab;
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	detectLoops(ppart);
 	ProcMounts pm( this );
