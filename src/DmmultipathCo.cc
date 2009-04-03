@@ -117,9 +117,10 @@ DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
 void
 DmmultipathCo::addPv(Pv*& p)
 {
-    PeContainer::addPv(p);
+    PeContainer::addPv(*p);
     if (!deleted())
 	getStorage()->setUsedBy(p->device, UB_DMMULTIPATH, name());
+    delete p;
     p = new Pv;
 }
 

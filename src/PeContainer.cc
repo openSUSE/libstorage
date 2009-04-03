@@ -453,19 +453,23 @@ bool PeContainer::findPe( const string& dev, std::list<Pv>& pl,
     return( ret );
     }
 
-void PeContainer::addPv( const Pv* p )
+
+    void
+    PeContainer::addPv(const Pv& p)
     {
-    getStorage()->eraseLabelVolume( p->device );
-    list<Pv>::iterator i;
-    if( findPe( p->device, pv, i ))
-	*i = *p;
-    else if( !findPe( p->device, pv_remove, i ))
+	getStorage()->eraseLabelVolume(p.device);
+
+	list<Pv>::iterator i;
+	if (findPe(p.device, pv, i))
+	    *i = p;
+	else if (!findPe(p.device, pv_remove, i))
 	{
-	if( findPe( p->device, pv_add, i ))
-	    pv_add.erase(i);
-	pv.push_back( *p );
+	    if (findPe(p.device, pv_add, i))
+		pv_add.erase(i);
+	    pv.push_back(p);
 	}
     }
+
 
 string PeContainer::addList() const
     {

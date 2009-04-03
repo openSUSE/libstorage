@@ -35,6 +35,8 @@ class PeContainer : public Container
     protected:
 	struct Pv
 	    {
+	    Pv() : num_pe(0), free_pe(0) {}
+
 	    string device;
 	    string uuid;
 	    string status;
@@ -54,7 +56,6 @@ class PeContainer : public Container
 		{ return( device==rhs.device && uuid==rhs.uuid &&
 		          status==rhs.status && num_pe==rhs.num_pe &&
 			  free_pe==rhs.free_pe ); }
-	    Pv() { num_pe = free_pe = 0; }
 	    };
 
 	// iterators over Dm volumes
@@ -127,7 +128,7 @@ class PeContainer : public Container
 				 std::list<Pv>& pl, std::list<Pv>& pladd );
 	virtual bool checkConsistency() const;
 
-	void addPv( const Pv* p );
+	void addPv(const Pv& p);
 
 	unsigned long long pe_size;
 	unsigned long num_pe;

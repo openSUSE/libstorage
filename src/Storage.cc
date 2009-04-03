@@ -75,7 +75,7 @@ Storage::initDefaultLogger ()
 
 Storage::Storage( bool ronly, bool tmode, bool autodetec )
     : lock(ronly, tmode), readonly(ronly), testmode(tmode), initialized(false),
-      autodetect(autodetec)
+      autodetect(autodetec), fstab(NULL)
 {
     y2mil("constructed Storage ronly:" << ronly << " testmode:" << testmode <<
 	  " autodetect:" << autodetect);
@@ -294,6 +294,7 @@ Storage::~Storage()
 	    c.execute( "rm -rf " + tempdir );
 	    }
 	}
+    delete fstab;
     y2mil("destructed Storage");
     }
 
@@ -5287,9 +5288,10 @@ Storage::mountDev( const string& device, const string& mp, bool ro,
     return( ret );
     }
 
+
 bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
-    {
+{
     static deque<VolumeInfo> vil;
     static Regex disk_part( "^/dev/[sh]d[a-z]+[0-9]+$" );
     vil.clear();
@@ -5297,45 +5299,38 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     VolIterator vol;
     assertInit();
     y2mil("dir:" << dir);
-    EtcFstab *fstab = new EtcFstab( dir, true );
+    EtcFstab fstab(dir, true);
     list<FstabEntry> le;
-    fstab->getEntries( le );
+    fstab.getEntries(le);
     for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
-	{
+    {
 	y2mil( "entry:" << *i );
-	VolumeInfo* info = NULL;
 	if( disk_part.match( i->dentry ) )
-	    {
-	    info = new VolumeInfo;
-	    info->create = info->format = info->resize = false;
-	    info->sizeK = info->OrigSizeK = info->minor = info->major = 0;
-	    info->device = i->dentry;
-	    info->mount = i->mount;
-	    info->mount_by = MOUNTBY_DEVICE;
-	    info->fs = Volume::toFsType( i->fs );
-	    info->fstab_options = boost::join( i->opts, "," );
-	    vil.push_back( *info );
-	    }
-	else if( findVolume( i->dentry, vol ) )
-	    {
-	    info = new VolumeInfo;
-	    vol->getInfo( *info );
-	    vol->mergeFstabInfo( *info, *i );
-	    y2mil( "volume:" << *vol );
-	    vil.push_back( *info );
-	    }
-	if( info )
-	    {
-	    delete info;
-	    info = NULL;
-	    }
+	{
+	    VolumeInfo info;
+	    info.create = info.format = info.resize = false;
+	    info.sizeK = info.OrigSizeK = info.minor = info.major = 0;
+	    info.device = i->dentry;
+	    info.mount = i->mount;
+	    info.mount_by = MOUNTBY_DEVICE;
+	    info.fs = Volume::toFsType( i->fs );
+	    info.fstab_options = boost::join( i->opts, "," );
+	    vil.push_back(info);
 	}
-    delete fstab;
+	else if( findVolume( i->dentry, vol ) )
+	{
+	    VolumeInfo info;
+	    vol->getInfo( info );
+	    vol->mergeFstabInfo( info, *i );
+	    y2mil( "volume:" << *vol );
+	    vil.push_back(info);
+	}
+    }
     infos = vil;
     ret = !infos.empty();
     y2mil("ret:" << ret);
-    return( ret );
-    }
+    return ret;
+}
 
 
 unsigned long long

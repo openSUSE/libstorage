@@ -895,10 +895,11 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 
 void LvmVg::addPv( Pv*& p )
     {
-    PeContainer::addPv( p );
+    PeContainer::addPv( *p );
     if( !deleted() &&
         find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
 	getStorage()->setUsedBy( p->device, UB_LVM, name() );
+    delete p;
     p = new Pv;
     }
 
@@ -1492,18 +1493,21 @@ int LvmVg::doResize( Volume* v )
     return( ret );
     }
 
-string LvmVg::metaString()
+
+string LvmVg::metaString() const
     {
     return( (lvm1)?"-M1 ":"-M2 " );
     }
 
-string LvmVg::instSysString()
+
+string LvmVg::instSysString() const
     {
     string ret;
     if( getStorage()->instsys() )
 	ret = "-A n ";
     return( ret );
     }
+
 
 int LvmVg::doCreatePv( const string& device )
     {

@@ -103,9 +103,10 @@ DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
 
 void DmraidCo::addPv( Pv*& p )
     {
-    PeContainer::addPv( p );
+    PeContainer::addPv( *p );
     if( !deleted() )
 	getStorage()->setUsedBy( p->device, UB_DMRAID, name() );
+    delete p;
     p = new Pv;
     }
 
