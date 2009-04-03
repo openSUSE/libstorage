@@ -197,8 +197,8 @@ class Volume
     protected:
 	void init();
 	void setNameDev();
-	int checkDevice();
-	int checkDevice( const string& device );
+	int checkDevice() const;
+	int checkDevice(const string& device) const;
 	storage::MountByType defaultMountBy( const string& mp="" );
 	bool allowedMountBy( storage::MountByType mby, const string& mp="" );
 	void getFsData( SystemCmd& blkidData );
@@ -216,7 +216,7 @@ class Volume
 	void getFstabOpts( std::list<string>& ol );
 	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
-	string getDmcryptName();
+	string getDmcryptName() const;
 	bool needLosetup() const; 
 	bool needCryptsetup() const; 
 	int doLosetup();

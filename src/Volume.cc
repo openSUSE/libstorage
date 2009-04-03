@@ -1078,12 +1078,12 @@ void Volume::rename( const string& newName )
     }
 
 
-int Volume::checkDevice()
+int Volume::checkDevice() const
     {
     return( checkDevice(dev));
     }
 
-int Volume::checkDevice( const string& device )
+int Volume::checkDevice(const string& device) const
     {
     struct stat sbuf;
     int ret = 0;
@@ -1799,7 +1799,7 @@ int Volume::doLosetup()
     return( ret );
     }
 
-string Volume::getDmcryptName()
+string Volume::getDmcryptName() const
     {
     string nm;
     if( cont->type()!=LOOP )
