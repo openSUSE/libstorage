@@ -55,7 +55,8 @@ class Loop : public Volume
 	bool delFile;
 
 	static unsigned loop_major;
-	mutable storage::LoopInfo info;
+
+	mutable storage::LoopInfo info; // workaround for broken ycp bindings
     };
 
 }

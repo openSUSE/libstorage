@@ -98,7 +98,8 @@ class Partition : public Volume
 	void addAltUdevId( unsigned num );
 	void addAltUdevPath( unsigned num );
 	static string pt_names[storage::PTYPE_ANY+1];
-	mutable storage::PartitionInfo info;
+
+	mutable storage::PartitionInfo info; // workaround for broken ycp bindings
     };
 
 }

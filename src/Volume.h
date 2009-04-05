@@ -286,7 +286,7 @@ class Volume
 	static const string empty_string;
 	static const std::list<string> empty_slist;
 
-	mutable storage::VolumeInfo info;
+	mutable storage::VolumeInfo info; // workaround for broken ycp bindings
     };
 
 }

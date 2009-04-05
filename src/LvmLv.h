@@ -55,7 +55,8 @@ class LvmLv : public Dm
 	string vol_uuid;
 	string status;
 	string allocation;
-	mutable storage::LvmLvInfo info;
+
+	mutable storage::LvmLvInfo info; // workaround for broken ycp bindings
     };
 
 }

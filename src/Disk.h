@@ -230,7 +230,8 @@ class Disk : public Container
 	bool gpt_enlarge;
 	unsigned long byte_cyl;
 	unsigned long range;
-	mutable storage::DiskInfo info;
+
+	mutable storage::DiskInfo info; // workaround for broken ycp bindings
     };
 
 }

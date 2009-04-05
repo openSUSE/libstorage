@@ -202,7 +202,8 @@ class Container
 	unsigned long mnr;
 	unsigned long mjr;
 	VCont vols;
-	mutable storage::ContainerInfo info;
+
+	mutable storage::ContainerInfo info; // workaround for broken ycp bindings
     };
 
 }

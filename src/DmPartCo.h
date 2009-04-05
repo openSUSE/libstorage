@@ -178,7 +178,7 @@ class DmPartCo : public PeContainer
 	bool del_ptable;
 	unsigned num_part;
 
-	mutable storage::DmPartCoInfo info;
+	mutable storage::DmPartCoInfo info; // workaround for broken ycp bindings
     };
 
 }

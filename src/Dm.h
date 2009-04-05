@@ -80,7 +80,8 @@ class Dm : public Volume
 	static bool active;
 	static unsigned dm_major;
 	static std::list<string> known_types;
-	mutable storage::DmInfo info;
+
+	mutable storage::DmInfo info; // workaround for broken ycp bindings
     };
 
 }

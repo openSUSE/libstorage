@@ -76,7 +76,8 @@ class Md : public Volume
 	static string md_names[storage::MULTIPATH+1];
 	static string par_names[storage::RIGHT_SYMMETRIC+1];
 	static unsigned md_major;
-	mutable storage::MdInfo info;
+
+	mutable storage::MdInfo info; // workaround for broken ycp bindings
     };
 
 }

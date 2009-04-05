@@ -30,7 +30,7 @@ class Nfs : public Volume
 	void init();
 	Nfs& operator=( const Nfs& );
 
-	mutable storage::NfsInfo info;
+	mutable storage::NfsInfo info; // workaround for broken ycp bindings
     };
 
 }

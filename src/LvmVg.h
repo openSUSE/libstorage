@@ -146,7 +146,8 @@ class LvmVg : public PeContainer
 	bool inactiv;
 	unsigned num_lv;
 	static bool active;
-	mutable storage::LvmVgInfo info;
+
+	mutable storage::LvmVgInfo info; // workaround for broken ycp bindings
     };
 
 }
