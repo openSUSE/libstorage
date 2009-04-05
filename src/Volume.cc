@@ -114,7 +114,7 @@ const string& Volume::mountDevice() const
 
 
 storage::MountByType
-Volume::defaultMountBy(const string& mp)
+Volume::defaultMountBy(const string& mp) const
 {
     MountByType mb = cont->getStorage()->getDefaultMountBy();
     y2mil( "mby:" << mb_names[mb] << " type:" << cType() );
@@ -138,7 +138,7 @@ Volume::defaultMountBy(const string& mp)
 
 // TODO: allowedMountBy is never used
 bool 
-Volume::allowedMountBy(storage::MountByType mby, const string& mp)
+Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
 {
     bool ret = true;
     if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
@@ -2272,7 +2272,7 @@ string Volume::fstabUpdateText() const
     return( txt );
     }
 
-string Volume::getFstabDevice()
+string Volume::getFstabDevice() const
     {
     string ret = dev;
     const Loop* l = NULL;
@@ -2284,7 +2284,7 @@ string Volume::getFstabDevice()
     return( ret );
     }
 
-string Volume::getFstabDentry()
+string Volume::getFstabDentry() const
     {
     string ret;
     const Loop* l = NULL;
@@ -2307,7 +2307,7 @@ string Volume::getFstabDentry()
     return( ret );
     }
 
-void Volume::getFstabOpts( list<string>& l )
+void Volume::getFstabOpts(list<string>& l) const
     {
     if( fstab_opt.empty() )
 	{

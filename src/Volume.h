@@ -7,6 +7,8 @@
 
 namespace storage
 {
+    using std::list;
+
 
 class SystemCmd;
 class ProcMounts;
@@ -199,8 +201,8 @@ class Volume
 	void setNameDev();
 	int checkDevice() const;
 	int checkDevice(const string& device) const;
-	storage::MountByType defaultMountBy( const string& mp="" );
-	bool allowedMountBy( storage::MountByType mby, const string& mp="" );
+	storage::MountByType defaultMountBy(const string& mp = "") const;
+	bool allowedMountBy(storage::MountByType mby, const string& mp = "") const;
 	void getFsData( SystemCmd& blkidData );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData, bool swap_only=false );
@@ -211,9 +213,9 @@ class Volume
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, 
 				 const string& label ) const;
-	string getFstabDevice();
-	string getFstabDentry();
-	void getFstabOpts( std::list<string>& ol );
+	string getFstabDevice() const;
+	string getFstabDentry() const;
+	void getFstabOpts(list<string>& ol) const;
 	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
 	string getDmcryptName() const;
