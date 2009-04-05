@@ -1314,6 +1314,9 @@ namespace storage
 	/**
 	 * Adds the specified entry to /etc/fstab
 	 *
+	 * This function does not cache the changes but writes them
+	 * immediately.
+	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param mount mount point, e.g. /home
 	 * @param vfs virtual filesystem type, e.g. reiserfs or ext3
@@ -1977,6 +1980,7 @@ namespace storage
 	/**
 	 * Umount the given device and do what is necessary to remove
 	 * underlying volume (e.g. do losetup -d if loop is set up)
+	 *
 	 * The function umounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to umount
@@ -1987,6 +1991,7 @@ namespace storage
 	/**
 	 * Mount the given device and do what is necessary to access
 	 * volume (e.g. do losetup if loop is set up)
+	 *
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to mount
@@ -1998,6 +2003,7 @@ namespace storage
 	/**
 	 * Mount the given device with given options and do what is necessary
 	 * to access volume (e.g. do losetup if loop is set up)
+	 *
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to mount
@@ -2011,6 +2017,7 @@ namespace storage
 	/**
 	 * Mount the given device readonly and do what is necessary to access
 	 * volume (e.g. do losetup if loop is set up)
+	 *
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
 	 * @param device device name to mount
