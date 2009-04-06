@@ -1752,7 +1752,7 @@ class Storage : public storage::StorageInterface
 	std::list<std::pair<string,string> > infoPopupTxts;
     };
 
-inline std::ostream& operator<< (std::ostream& s, commitAction &a )
+inline std::ostream& operator<<(std::ostream& s, const commitAction& a)
     {
     s << "stage:" << a.stage
       << " type:" << a.type
