@@ -185,8 +185,10 @@ Storage::initialize()
     logProcData();
     }
 
+
 void Storage::dumpObjectList()
 {
+    assertInit();
     ostringstream buf;
     classic(buf);
     printInfo(buf);
@@ -786,9 +788,8 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
 
 
 void
-Storage::printInfo(ostream& str)
+Storage::printInfo(ostream& str) const
 {
-    assertInit();
     ConstContPair p = contPair();
     for (ConstContIterator i = p.begin(); i != p.end(); ++i)
     {
@@ -5823,7 +5824,7 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
 }
 
 
-std::ostream& operator<< (std::ostream& s, Storage &v )
+std::ostream& operator<<(std::ostream& s, const Storage& v)
     {
     v.printInfo(s);
     return(s);

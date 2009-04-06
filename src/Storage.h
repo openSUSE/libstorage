@@ -226,7 +226,7 @@ class Storage : public storage::StorageInterface
 	EtcFstab* getFstab() { return fstab; }
 	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
-	void printInfo(std::ostream& str);
+	void printInfo(std::ostream& str) const;
 	void logCo(const Container* c) const;
 	void logProcData(const string& str = "") const;
 	storage::UsedByType usedBy( const string& dev );
@@ -1740,7 +1740,8 @@ class Storage : public storage::StorageInterface
 	static storage::CallbackShowInstallInfo install_info_cb_ycp;
 	static storage::CallbackInfoPopup info_popup_cb_ycp;
 	static storage::CallbackYesNoPopup yesno_popup_cb_ycp;
-	friend std::ostream& operator<< (std::ostream& s, Storage &v );
+
+	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
 
 	map<string, storage::usedBy> danglingUsedBy;
 
