@@ -21,8 +21,8 @@ main (int argc, char** argv)
     deque<ContainerInfo> containers;
     s->getContainers (containers);
 
-    for (deque<ContainerInfo>::iterator i1 = containers.begin ();
-	 i1 != containers.end(); i1++)
+    for (deque<ContainerInfo>::const_iterator i1 = containers.begin();
+	 i1 != containers.end(); ++i1)
     {
 	switch (i1->type)
 	{
@@ -37,8 +37,8 @@ main (int argc, char** argv)
 		    exit (EXIT_FAILURE);
 		}
 
-		for (deque<PartitionInfo>::iterator i2 = partitions.begin ();
-		     i2 != partitions.end(); i2++)
+		for (deque<PartitionInfo>::const_iterator i2 = partitions.begin();
+		     i2 != partitions.end(); ++i2)
 		{
 		    cout << "  " << i2->v.name << ' ';
 		    switch (i2->partitionType)
@@ -80,8 +80,8 @@ main (int argc, char** argv)
 		    exit (EXIT_FAILURE);
 		}
 
-		for (deque<LvmLvInfo>::iterator i2 = lvmlvs.begin ();
-		     i2 != lvmlvs.end(); i2++)
+		for (deque<LvmLvInfo>::const_iterator i2 = lvmlvs.begin();
+		     i2 != lvmlvs.end(); ++i2)
 		{
 		    cout << "  " << i2->v.name;
 		    cout << '\n';
