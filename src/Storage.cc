@@ -118,8 +118,7 @@ void
 Storage::initialize()
     {
     initialized = true;
-    char tbuf[100];
-    strncpy( tbuf, "/tmp/liby2storageXXXXXX", sizeof(tbuf)-1 );
+    char tbuf[32] = "/tmp/liby2storageXXXXXX";
     if( mkdtemp( tbuf )==NULL )
 	{
 	y2err("tmpdir creation " << tbuf << " failed. Aborting...");
@@ -293,7 +292,6 @@ Storage::~Storage()
 	    {
 	    y2err("stray tmpfile");
 	    c.execute( "ls -l" + tempdir );
-	    c.execute( "rm -rf " + tempdir );
 	    }
 	}
     delete fstab;
