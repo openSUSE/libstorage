@@ -1691,9 +1691,8 @@ class Storage : public storage::StorageInterface
 	void sortCommitLists( storage::CommitStage stage,
 			      std::list<const Container*>& co,
 			      std::list<const Volume*>& vl,
-			      std::list<storage::commitAction*>& todo );
-	bool ignoreError( std::list<commitAction*>::iterator i,
-			  std::list<commitAction*>& al );
+			      std::list<storage::commitAction*>& todo ) const;
+	bool ignoreError(list<commitAction*>::const_iterator i, const list<commitAction*>& al) const;
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );

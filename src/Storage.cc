@@ -3628,7 +3628,7 @@ static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
 
 void
 Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
-                          list<const Volume*>& vl, list<commitAction*>& todo )
+                          list<const Volume*>& vl, list<commitAction*>& todo ) const
     {
     co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
     std::ostringstream b;
@@ -3755,9 +3755,8 @@ int Storage::commit()
     return( ret );
     }
 
-bool 
-Storage::ignoreError( list<commitAction*>::iterator i,
-                      list<commitAction*>& al )
+bool
+Storage::ignoreError(list<commitAction*>::const_iterator i, const list<commitAction*>& al) const
     {
     bool ret = false;
     if( !(*i)->container && (*i)->type==DISK && (*i)->stage==DECREASE )
