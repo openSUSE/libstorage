@@ -113,15 +113,6 @@ class CheckerIterator : public Checker, public ContIter
 	CheckerIterator( const CheckerIterator& i ) { *this=i; }
     };
 
-template < class C >
-void pointerIntoSortedList( std::list<C*>& l, C* e )
-    {
-    typename std::list<C*>::iterator i = l.begin();
-    while( i!=l.end() && **i < *e )
-	i++;
-    l.insert( i, e );
-    }
-
 
 template<class Num> string decString(Num number)
 {
@@ -204,6 +195,13 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     {	
 	bool operator()(const Type* x, const Type* y) const { return *x == *y; }
     };
+
+
+    template <class Type>
+    void pointerIntoSortedList(list<Type*>& l, Type* e)
+    {
+	l.insert(lower_bound(l.begin(), l.end(), e, deref_less<Type>()), e);
+    }
 
 
 template <class T, unsigned int sz>
