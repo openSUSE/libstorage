@@ -1813,14 +1813,7 @@ Disk::getCommitActions(list<commitAction>& l) const
     Container::getCommitActions( l );
     if( deleted() )
 	{
-	list<commitAction>::iterator i = l.begin();
-	while( i!=l.end() )
-	    {
-	    if( i->stage==DECREASE )
-		i=l.erase( i );
-	    else
-		++i;
-	    }
+	l.remove_if(stage_equal_to(DECREASE));
 	l.push_front(commitAction(DECREASE, staticType(), setDiskLabelText(false), this, true));
 	}
     }

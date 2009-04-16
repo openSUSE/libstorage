@@ -725,14 +725,7 @@ DmPartCo::getCommitActions(list<commitAction>& l) const
     y2mil( "l:" << l );
     if( deleted() || del_ptable )
 	{
-	list<commitAction>::iterator i = l.begin();
-	while( i!=l.end() )
-	    {
-	    if( i->stage==DECREASE )
-		i=l.erase( i );
-	    else
-		++i;
-	    }
+	l.remove_if(stage_equal_to(DECREASE));
 	string txt = deleted() ? removeText(false) : setDiskLabelText(false);
 	l.push_front(commitAction(DECREASE, staticType(), txt, this, true));
 	}

@@ -125,6 +125,14 @@ struct contOrder
     };
 
 
+    struct stage_equal_to
+    {
+	stage_equal_to(CommitStage t) : val(t) {}
+	bool operator()(const commitAction& t) const { return t.stage == val; }
+	const CommitStage val;
+    };
+
+
 class usedBy
 {
     // TODO: save device instead of name?
