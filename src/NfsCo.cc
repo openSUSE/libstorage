@@ -50,12 +50,6 @@ NfsCo::init()
     {
     }
 
-bool NfsCo::isNfsDev( const string& dev )
-    {
-    bool ret = dev.find( ":/" )<dev.find( '/' );
-    y2mil( "dev:" << dev << " ret:" << ret );
-    return( ret );
-    }
 
 int 
 NfsCo::removeVolume( Volume* v )

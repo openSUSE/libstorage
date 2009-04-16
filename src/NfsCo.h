@@ -21,7 +21,6 @@ class NfsCo : public Container
 	int addNfs( const string& nfsDev, unsigned long long sizeK,
 		    const string& mp );
 
-	static bool isNfsDev( const string& dev );
 	int removeVolume( Volume* v );
 	int doRemove( Volume* );
 
