@@ -351,15 +351,14 @@ logStreamClose(LogLevel level, const char* file, unsigned line, const char* func
 }
 
 
-int
-readlink(const char* path, string& buf)
+bool
+readlink(const string& path, string& buf)
 {
-    const int size = 1024;
-    char tmp[size];
-    int ret = ::readlink(path, tmp, size);
-    if (ret >= 0)
-	buf = string(tmp, ret);
-    return ret;
+    char tmp[1024];
+    int count = ::readlink(path.c_str(), tmp, sizeof(tmp));
+    if (count >= 0)
+	buf = string(tmp, count);
+    return count != -1;
 }
 
 
@@ -380,7 +379,7 @@ getUdevLinks(const char* path)
 	    string full = string(path) + "/" + entry->d_name;
 
 	    string tmp;
-	    if (readlink(full.c_str(), tmp) != -1)
+	    if (readlink(full, tmp))
 	    {
 		string::size_type pos = tmp.find_first_not_of("./");
 		if (pos != string::npos)

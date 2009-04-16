@@ -291,12 +291,9 @@ bool Disk::getSysfsInfo( const string& SysfsDir )
 	ret = false;
 	}
     SysfsFile = sysfs_dir+"/device";
-    char lbuf[1024+1];
-    int count;
-    if( access( SysfsFile.c_str(), R_OK )==0 &&
-	(count=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
+    string lname;
+    if (access(SysfsFile.c_str(), R_OK) == 0 && readlink(SysfsFile, lname))
 	{
-	string lname( lbuf, count );
 	if( lname.find( "/session" )!=string::npos )
 	    iscsi = true;
 	y2mil("lname:" << lname);

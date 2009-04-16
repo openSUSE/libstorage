@@ -368,9 +368,7 @@ Storage::detectDisks( ProcPart& ppart )
     if( test() )
 	{
 	glob_t globbuf;
-
-	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
+	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new Disk( this, *p ) );
@@ -450,8 +448,7 @@ Storage::detectLvmVgs()
     if( test() )
 	{
 	glob_t globbuf;
-	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
+	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new LvmVg( this, *p, true ) );
@@ -487,8 +484,7 @@ Storage::detectDmraid(ProcPart& ppart)
     if( test() )
     {
 	glob_t globbuf;
-	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
+	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -529,8 +525,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
     if( test() )
     {
 	glob_t globbuf;
-	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
+	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -707,12 +702,10 @@ Storage::autodetectDisks( ProcPart& ppart )
 		{
 		SysfsFile = SysfsDir+"/device";
 		string devname;
-		int ret;
-		char lbuf[1024+1];
-		if( access( SysfsFile.c_str(), R_OK )==0 &&
-		    (ret=readlink( SysfsFile.c_str(), lbuf, sizeof(lbuf) ))>0 )
+		string lname;
+		if (access(SysfsFile.c_str(), R_OK) == 0 && readlink(SysfsFile, lname))
 		    {
-		    devname.append( lbuf, ret );
+		    devname.append(lname);
 		    y2mil( "devname:" << devname );
 		    }
 		if( devname.find( "/xen/vbd" )!=string::npos &&
