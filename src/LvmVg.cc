@@ -969,36 +969,35 @@ int LvmVg::commitChanges( CommitStage stage )
     return( ret );
     }
 
-void LvmVg::getCommitActions( list<commitAction*>& l ) const
+
+void
+LvmVg::getCommitActions(list<commitAction>& l) const
     {
     Container::getCommitActions( l );
     y2mil( "Container::getCommitActions:" << l );
     if( deleted() )
 	{
-	l.push_back( new commitAction( DECREASE, staticType(),
-				       removeVgText(false), this, true ));
+	l.push_back(commitAction(DECREASE, staticType(), removeVgText(false), this, true));
 	}
     else if( created() )
 	{
-	l.push_front( new commitAction( INCREASE, staticType(),
-				        createVgText(false), this, true ));
+	l.push_front(commitAction( INCREASE, staticType(), createVgText(false), this, true));
 	}
     else
 	{
 	if( !pv_add.empty() )
 	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end();
 	         ++i )
-		l.push_back( new commitAction( INCREASE, staticType(),
-					       extendVgText(false,i->device),
-					       this, true ));
+		l.push_back(commitAction(INCREASE, staticType(),
+					 extendVgText(false, i->device), this, true));
 	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin();
 	         i!=pv_remove.end(); ++i )
-		l.push_back( new commitAction( DECREASE, staticType(),
-					       reduceVgText(false,i->device),
-					       this, false ));
+		l.push_back(commitAction(DECREASE, staticType(),
+					 reduceVgText(false, i->device), this, false ));
 	}
     }
+
 
 string
 LvmVg::removeVgText( bool doing ) const

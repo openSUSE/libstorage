@@ -716,31 +716,29 @@ int DmPartCo::commitChanges( CommitStage stage )
     return( ret );
     }
 
-void DmPartCo::getCommitActions( list<commitAction*>& l ) const
+
+void
+DmPartCo::getCommitActions(list<commitAction>& l) const
     {
     y2mil( "l:" << l );
     Container::getCommitActions( l );
     y2mil( "l:" << l );
     if( deleted() || del_ptable )
 	{
-	list<commitAction*>::iterator i = l.begin();
+	list<commitAction>::iterator i = l.begin();
 	while( i!=l.end() )
 	    {
-	    if( (*i)->stage==DECREASE )
-		{
-		delete( *i );
+	    if( i->stage==DECREASE )
 		i=l.erase( i );
-		}
 	    else
 		++i;
 	    }
-	string txt = deleted() ? removeText(false) : 
-	                         setDiskLabelText(false);
-	l.push_front( new commitAction( DECREASE, staticType(),
-				        txt, this, true ));
+	string txt = deleted() ? removeText(false) : setDiskLabelText(false);
+	l.push_front(commitAction(DECREASE, staticType(), txt, this, true));
 	}
     y2mil( "l:" << l );
     }
+
 
 int 
 DmPartCo::doCreate( Volume* v ) 

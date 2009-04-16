@@ -50,7 +50,7 @@ class Container
 	virtual string getDiffString( const Container& c ) const;
 	virtual void logDifference( const Container& c ) const;
 
-	virtual void getCommitActions(list<storage::commitAction*>& l) const;
+	virtual void getCommitActions(list<commitAction>& l) const;
 	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 				 list<const Volume*>& vol) const;
 

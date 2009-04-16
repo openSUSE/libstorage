@@ -427,27 +427,26 @@ int Dasd::doFdasd()
     return( ret );
     }
 
-void Dasd::getCommitActions( list<commitAction*>& l ) const
+
+void
+Dasd::getCommitActions(list<commitAction>& l) const
     {
     y2mil("begin:" << name() << " init_disk:" << init_disk);
     Disk::getCommitActions( l );
     if( init_disk )
 	{
-	list<commitAction*>::iterator i = l.begin();
+	list<commitAction>::iterator i = l.begin();
 	while( i!=l.end() )
 	    {
-	    if( (*i)->stage==DECREASE )
-		{
-		delete( *i );
+	    if( i->stage==DECREASE )
 		i=l.erase( i );
-		}
 	    else
 		++i;
 	    }
-	l.push_front( new commitAction( DECREASE, staticType(),
-				        dasdfmtText(false), this, true ));
+	l.push_front(commitAction(DECREASE, staticType(), dasdfmtText(false), this, true));
 	}
     }
+
 
 string Dasd::dasdfmtTexts( bool single, const string& devs )
     {

@@ -53,7 +53,7 @@ class Partition : public Volume
 	string createText( bool doing=true ) const;
 	string formatText(bool doing=true) const;
 	string resizeText(bool doing=true) const;
-	void getCommitActions(list<storage::commitAction*>& l) const;
+	void getCommitActions(list<commitAction>& l) const;
 	string setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );

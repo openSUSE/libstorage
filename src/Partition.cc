@@ -541,7 +541,9 @@ string Partition::resizeText( bool doing ) const
     return( txt );
     }
 
-void Partition::getCommitActions( list<commitAction*>& l ) const
+
+void
+Partition::getCommitActions(list<commitAction>& l) const
     {
     unsigned s = l.size();
     bool change_id = idt!=orig_id;
@@ -550,10 +552,11 @@ void Partition::getCommitActions( list<commitAction*>& l ) const
 	change_id = false;
     if( change_id )
 	{
-	l.push_back( new commitAction( INCREASE, cont->staticType(),
-				       setTypeText(false), this, false ));
+	l.push_back(commitAction(INCREASE, cont->staticType(),
+				 setTypeText(false), this, false));
 	}
     }
+
 
 Partition::~Partition()
     {

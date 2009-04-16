@@ -2216,50 +2216,45 @@ string Volume::getMountByString( MountByType mby, const string& dev,
     return( ret );
     }
 
-void Volume::getCommitActions( list<commitAction*>& l ) const
+
+void
+Volume::getCommitActions(list<commitAction>& l) const
     {
     if( deleted() )
 	{
-	l.push_back( new commitAction( DECREASE, cont->type(),
-				       removeText(false), this, true ));
+	l.push_back(commitAction(DECREASE, cont->type(), removeText(false), this, true));
 	}
     else if( needShrink() )
 	{
-	l.push_back( new commitAction( DECREASE, cont->type(),
-				       resizeText(false), this, true ));
+	l.push_back(commitAction(DECREASE, cont->type(), resizeText(false), this, true));
 	}
     else if( created() )
 	{
-	l.push_back( new commitAction( INCREASE, cont->type(),
-				       createText(false), this, false ));
+	l.push_back(commitAction(INCREASE, cont->type(), createText(false), this, false));
 	}
     else if( needExtend() )
 	{
-	l.push_back( new commitAction( INCREASE, cont->type(),
-				       resizeText(false), this, true ));
+	l.push_back(commitAction(INCREASE, cont->type(), resizeText(false), this, true));
 	}
     else if( format )
 	{
-	l.push_back( new commitAction( FORMAT, cont->type(),
-				       formatText(false), this, true ));
+	l.push_back(commitAction(FORMAT, cont->type(), formatText(false), this, true));
 	}
     else if( mp != orig_mp || 
              (cont->getStorage()->instsys()&&mp=="swap") )
 	{
-	l.push_back( new commitAction( MOUNT, cont->type(),
-				       mountText(false), this, false ));
+	l.push_back(commitAction(MOUNT, cont->type(), mountText(false), this, false));
 	}
     else if( label != orig_label )
 	{
-	l.push_back( new commitAction( MOUNT, cont->type(),
-				       labelText(false), this, false ));
+	l.push_back(commitAction(MOUNT, cont->type(), labelText(false), this, false));
 	}
     else if( needFstabUpdate() )
 	{
-	l.push_back( new commitAction( MOUNT, cont->type(),
-				       fstabUpdateText(), this, false ));
+	l.push_back(commitAction(MOUNT, cont->type(), fstabUpdateText(), this, false));
 	}
     }
+
 
 string Volume::fstabUpdateText() const
     {

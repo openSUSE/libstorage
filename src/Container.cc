@@ -154,13 +154,16 @@ int Container::commitChanges( CommitStage stage )
     return( ret );
     }
 
-void Container::getCommitActions( list<commitAction*>& l ) const
+
+void
+Container::getCommitActions(list<commitAction>& l) const
     {
     ConstVolPair p = volPair();
     for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 	if( !i->silent() )
 	    i->getCommitActions( l );
     }
+
 
 string Container::createText( bool doing ) const
     {

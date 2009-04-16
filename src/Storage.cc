@@ -3531,27 +3531,26 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
     y2mil("empty:" << p.empty());
     if( !p.empty() )
     {
-	list<commitAction*> ac;
+	list<commitAction> ac;
 	for( ConstContIterator i = p.begin(); i != p.end(); ++i )
 	{
-	    list<commitAction*> l;
+	    list<commitAction> l;
 	    i->getCommitActions( l );
 	    ac.splice( ac.end(), l );
 	}
-	ac.sort(deref_less<commitAction>());
-	for( list<commitAction*>::const_iterator i=ac.begin(); i!=ac.end(); ++i )
+	ac.sort();
+	for (list<commitAction>::const_iterator i = ac.begin(); i != ac.end(); ++i)
 	{
 	    CommitInfo info;
-	    info.destructive = (*i)->destructive;
-	    info.text = (*i)->description;
-	    const Volume *v = (*i)->vol();
+	    info.destructive = i->destructive;
+	    info.text = i->description;
+	    const Volume* v = i->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
 		info.text += ". ";
 		info.text += v->getDescText();
 	    }
 	    s_infos.push_back(info);
-	    delete *i;
 	}
     }
     infos = s_infos;
@@ -3626,9 +3625,10 @@ static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )
 	return( rhs->getMount()<lhs->getMount() );
     }
 
+
 void
-Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
-                          list<const Volume*>& vl, list<commitAction*>& todo ) const
+Storage::sortCommitLists(CommitStage stage, list<const Container*>& co,
+			 list<const Volume*>& vl, list<commitAction>& todo) const
     {
     co.sort( (stage==DECREASE)?sort_cont_up:sort_cont_down );
     std::ostringstream b;
@@ -3645,24 +3645,24 @@ Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
     else
 	vl.sort( sort_vol_normal );
     for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
-	todo.push_back( new commitAction( stage, (*i)->type(), *i ));
+	todo.push_back(commitAction(stage, (*i)->type(), *i));
     for( list<const Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
-	todo.push_back( new commitAction( stage, (*i)->cType(), *i ));
+	todo.push_back(commitAction(stage, (*i)->cType(), *i));
     b.str("");
     b << "unsorted actions <";
-    for( list<commitAction*>::const_iterator i=todo.begin(); i!=todo.end(); ++i )
+    for (list<commitAction>::const_iterator i = todo.begin(); i != todo.end(); ++i)
 	{
 	if( i!=todo.begin() )
 	    b << " ";
-	if( (*i)->container )
-	    b << "C:" << (*i)->co()->device();
+	if( i->container )
+	    b << "C:" << i->co()->device();
 	else
-	    b << "V:" << (*i)->vol()->device();
+	    b << "V:" << i->vol()->device();
 	}
     b << "> ";
     y2mil(b.str());
     b.str("");
-    todo.sort(deref_less<commitAction>());
+    todo.sort();
     y2mil("stage:" << stage);
     b << "sorted co <";
     for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
@@ -3685,14 +3685,14 @@ Storage::sortCommitLists( CommitStage stage, list<const Container*>& co,
     y2mil(b.str());
     b.str("");
     b << "sorted actions <";
-    for( list<commitAction*>::const_iterator i=todo.begin(); i!=todo.end(); ++i )
+    for (list<commitAction>::const_iterator i = todo.begin(); i != todo.end(); ++i)
 	{
 	if( i!=todo.begin() )
 	    b << " ";
-	if( (*i)->container )
-	    b << "C:" << (*i)->co()->device();
+	if( i->container )
+	    b << "C:" << i->co()->device();
 	else
-	    b << "V:" << (*i)->vol()->device();
+	    b << "V:" << i->vol()->device();
 	}
     b << "> ";
     y2mil(b.str());
@@ -3756,16 +3756,16 @@ int Storage::commit()
     }
 
 bool
-Storage::ignoreError(list<commitAction*>::const_iterator i, const list<commitAction*>& al) const
+Storage::ignoreError(list<commitAction>::const_iterator i, const list<commitAction>& al) const
     {
     bool ret = false;
-    if( !(*i)->container && (*i)->type==DISK && (*i)->stage==DECREASE )
+    if( !i->container && i->type==DISK && i->stage==DECREASE )
 	{
 	++i;
 	while( ret==false && i!=al.end() )
 	    {
-	    y2mil( "it:" << **i );
-	    ret = (*i)->container && (*i)->type==DISK && (*i)->stage==DECREASE;
+	    y2mil( "it:" << *i );
+	    ret = i->container && i->type==DISK && i->stage==DECREASE;
 	    ++i;
 	    }
 	}
@@ -3794,15 +3794,15 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	}
 
 	bool new_pair = false;
-	list<commitAction*> todo;
+	list<commitAction> todo;
 	sortCommitLists(*stage, colist, vlist, todo);
-	list<commitAction*>::iterator ac = todo.begin();
+	list<commitAction>::iterator ac = todo.begin();
 	while( ret==0 && ac != todo.end() )
 	    {
-	    bool cont = (*ac)->container;
-	    CType type = (*ac)->type;
-	    Container *co = cont ? const_cast<Container*>((*ac)->co()) : 
-	                           const_cast<Container*>((*ac)->vol()->getContainer());
+	    bool cont = ac->container;
+	    CType type = ac->type;
+	    Container *co = cont ? const_cast<Container*>(ac->co()) : 
+	                           const_cast<Container*>(ac->vol()->getContainer());
 	    if( cont )
 		{
 		bool cont_removed = co->deleted() && type==LVM;
@@ -3816,15 +3816,14 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    else
 		{
-		ret = co->commitChanges(*stage, const_cast<Volume*>((*ac)->vol()));
+		ret = co->commitChanges(*stage, const_cast<Volume*>(ac->vol()));
 		}
 	    if( ret!=0 )
 		{
-		y2mil( "err at " << **ac );
+		y2mil("err at " << *ac);
 		if( ignoreError( ac, todo ))
 		    ret = 0;
 		}
-	    delete( *ac );
 	    ++ac;
 	    }
 	y2mil("stage:" << *stage << " new_pair:" << new_pair);

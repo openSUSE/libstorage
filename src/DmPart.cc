@@ -137,17 +137,19 @@ DmPart::udevId() const
 }
 
 
-void DmPart::getCommitActions( std::list<storage::commitAction*>& l ) const
+void
+DmPart::getCommitActions(list<commitAction>& l) const
     {
     unsigned s = l.size();
     Dm::getCommitActions(l);
     if( p )
 	{
 	if( s==l.size() && Partition::toChangeId( *p ) )
-	    l.push_back( new commitAction( INCREASE, cont->staticType(),
-					   setTypeText(false), this, false ));
+	    l.push_back(commitAction(INCREASE, cont->staticType(),
+				     setTypeText(false), this, false));
 	}
     }
+
 
 string DmPart::setTypeText( bool doing ) const
     {

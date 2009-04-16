@@ -29,7 +29,7 @@ class Dasd : public Disk
 	string fdasdText() const;
 	string dasdfmtText( bool doing ) const;
 	static string dasdfmtTexts( bool single, const string& devs );
-	void getCommitActions(list<storage::commitAction*>& l) const;
+	void getCommitActions(list<commitAction>& l) const;
 	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 			 list<const Volume*>& vol) const;
 	int commitChanges( storage::CommitStage stage );

@@ -155,7 +155,7 @@ class Volume
 	virtual string createText(bool doing=true) const;
 	virtual string resizeText(bool doing=true) const;
 	virtual string formatText(bool doing=true) const;
-	virtual void getCommitActions(list<storage::commitAction*>& l) const;
+	virtual void getCommitActions(list<commitAction>& l) const;
 	string mountText( bool doing=true ) const;
 	string labelText( bool doing=true ) const;
 	string losetupText( bool doing=true ) const;

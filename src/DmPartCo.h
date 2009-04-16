@@ -74,7 +74,7 @@ class DmPartCo : public PeContainer
 	    { return disk->kbToCylinder( val ); }
 	string getPartName( unsigned nr ) const;
 
-	virtual void getCommitActions(list<storage::commitAction*>& l) const;
+	virtual void getCommitActions(list<commitAction>& l) const;
 	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 				 list<const Volume*>& vol) const;
 	virtual int commitChanges( storage::CommitStage stage );

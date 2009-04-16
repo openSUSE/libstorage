@@ -45,7 +45,7 @@ class LvmVg : public PeContainer
 
 	int setPeSize( long long unsigned peSizeK );
 	void normalizeDmDevices();
-	void getCommitActions(list<storage::commitAction*>& l) const;
+	void getCommitActions(list<commitAction>& l) const;
 	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 			 list<const Volume*>& vol) const;
 	int commitChanges( storage::CommitStage stage );

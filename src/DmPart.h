@@ -30,7 +30,7 @@ class DmPart : public Dm
 	void updateMinor();
 	void updateSize( ProcPart& pp );
 	void updateSize();
-	void getCommitActions(list<storage::commitAction*>& l) const;
+	void getCommitActions(list<commitAction>& l) const;
 	void addUdevData();
 	virtual const std::list<string> udevId() const;
 	virtual string setTypeText( bool doing=true ) const;

@@ -1688,11 +1688,9 @@ class Storage : public storage::StorageInterface
 	int removeContainer( Container* val, bool call_del=true );
 	void logVolumes(const string& Dir) const;
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
-	void sortCommitLists( storage::CommitStage stage,
-			      std::list<const Container*>& co,
-			      std::list<const Volume*>& vl,
-			      std::list<storage::commitAction*>& todo ) const;
-	bool ignoreError(list<commitAction*>::const_iterator i, const list<commitAction*>& al) const;
+	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,
+			     list<const Volume*>& vl, list<commitAction>& todo) const;
+	bool ignoreError(list<commitAction>::const_iterator i, const list<commitAction>& al) const;
 	string backupStates() const;
 	void detectObjects();
 	void deleteClist( CCont& co );
