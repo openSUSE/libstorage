@@ -226,6 +226,14 @@ int Container::resizeVolume( Volume * v, unsigned long long )
     return( VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER );
 }
 
+
+    void
+    Container::addToList(Volume* e)
+    {
+	pointerIntoSortedList<Volume>(vols, e);
+    }
+
+
 bool Container::removeFromList( Volume* e )
     {
     bool ret=false;
@@ -234,7 +242,7 @@ bool Container::removeFromList( Volume* e )
 	++i;
     if( i!=vols.end() )
 	{
-	delete( *i );
+	delete *i;
 	vols.erase( i );
 	ret = true;
 	}

@@ -174,8 +174,7 @@ class Container
 	PlainIterator end() { return vols.end(); }
 
 	virtual void print( std::ostream& s ) const { s << *this; }
-	void addToList( Volume* e )
-	    { pointerIntoSortedList<Volume>( vols, e ); }
+	void addToList(Volume* e);
 	bool removeFromList( Volume* e );
 	virtual int doCreate( Volume * v );
 	virtual int doRemove( Volume * v );

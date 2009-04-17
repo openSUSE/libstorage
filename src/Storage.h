@@ -1667,8 +1667,7 @@ class Storage : public storage::StorageInterface
 	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignore_fs );
 	static void detectArch();
-	void addToList( Container* e )
-	    { pointerIntoSortedList<Container>( cont, e ); }
+	void addToList(Container* e);
 	DiskIterator findDisk( const string& disk );
 	DiskIterator findDiskId( const string& id );
 	DiskIterator findDiskPath( const string& path );
@@ -1685,7 +1684,7 @@ class Storage : public storage::StorageInterface
 	bool haveMd( MdCo*& md );
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
-	int removeContainer( Container* val, bool call_del=true );
+	int removeContainer( Container* val );
 	void logVolumes(const string& Dir) const;
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,

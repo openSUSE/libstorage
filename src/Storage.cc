@@ -4678,7 +4678,7 @@ bool Storage::removeDm( const string& device )
 	    {
 	    c->removeFromList( const_cast<Dm*>(dm) );
 	    if( c->isEmpty() )
-		removeContainer( &(*c), true );
+		removeContainer( &(*c) );
 	    }
 	}
     y2mil( "device:" << device << " ret:" << (dm!=0)  );
@@ -5135,17 +5135,24 @@ unsigned long long Storage::deviceSize( const string& dev )
     return( ret );
     }
 
-int Storage::removeContainer( Container* val, bool call_del )
+
+    void
+    Storage::addToList(Container* e)
     {
-    y2mil("name:" << val->name() << " call_del:" << call_del);
+	pointerIntoSortedList<Container>(cont, e);
+    }
+
+
+int Storage::removeContainer( Container* val )
+    {
+    y2mil("name:" << val->name());
     int ret = 0;
     CIter i=cont.begin();
     while( i!=cont.end() && *i!=val )
 	++i;
     if( i!=cont.end() )
 	{
-	if( call_del )
-	    delete( *i );
+	delete *i;
 	cont.erase( i );
 	}
     else
