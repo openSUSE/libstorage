@@ -122,12 +122,14 @@ struct contOrder
 	    { return !(*this < rhs); }
 	bool operator>(const commitAction& rhs) const
 	    { return !(*this < rhs && *this == rhs); }
+
+	friend std::ostream& operator<<(std::ostream& s, const commitAction& a);
     };
 
 
-    struct stage_equal_to
+    struct stage_is
     {
-	stage_equal_to(CommitStage t) : val(t) {}
+	stage_is(CommitStage t) : val(t) {}
 	bool operator()(const commitAction& t) const { return t.stage == val; }
 	const CommitStage val;
     };

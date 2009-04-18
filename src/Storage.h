@@ -33,7 +33,7 @@
 
 namespace storage
 {
-template <int Value>
+template <CType Value>
 class CheckType
     {
     public:
@@ -43,7 +43,7 @@ class CheckType
 	    }
     };
 
-template< class Iter, int Value, class CastResult >
+template< class Iter, CType Value, class CastResult >
 class CastCheckIterator : public CheckType<Value>,
                           public FilterIterator< CheckType<Value>, Iter >
     {
@@ -1747,21 +1747,6 @@ class Storage : public storage::StorageInterface
 	std::map<string,CCont> backups;
 	std::map<string,FreeInfo> freeInfo;
 	std::list<std::pair<string,string> > infoPopupTxts;
-    };
-
-inline std::ostream& operator<<(std::ostream& s, const commitAction& a)
-    {
-    s << "stage:" << a.stage
-      << " type:" << a.type
-      << " cont:" << a.container
-      << " dest:" << a.destructive;
-    if( a.container && a.co() )
-      s << " name:" << a.co()->name();
-    else if( a.vol() )
-      s << " name:" << a.vol()->name();
-    if( !a.description.empty() )
-      s << " desc:" << a.description;
-    return( s );
     };
 
 }

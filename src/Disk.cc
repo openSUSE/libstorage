@@ -1810,7 +1810,7 @@ Disk::getCommitActions(list<commitAction>& l) const
     Container::getCommitActions( l );
     if( deleted() )
 	{
-	l.remove_if(stage_equal_to(DECREASE));
+	l.remove_if(stage_is(DECREASE));
 	l.push_front(commitAction(DECREASE, staticType(), setDiskLabelText(false), this, true));
 	}
     }

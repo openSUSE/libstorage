@@ -21,13 +21,11 @@ class EtcRaidtab
     protected:
 	struct entry
 	    {
-	    entry() { first=last=0; }
-	    entry( unsigned f, unsigned l ) { first=f; last=l; }
+	    entry() : first(0), last(0) {}
+	    entry(unsigned f, unsigned l) : first(f), last(l) {}
 	    unsigned first;
 	    unsigned last;
-	    friend std::ostream& operator<< (std::ostream& s, const entry &v );
 	    };
-	friend std::ostream& operator<< (std::ostream& s, const entry &v );
 
 	void updateMdadmFile();
 	void buildMdadmMap();
@@ -36,13 +34,6 @@ class EtcRaidtab
 	std::map<unsigned,entry> mtab;
 	AsciiFile mdadm;
     };
-
-
-inline std::ostream& operator<< (std::ostream& s, const EtcRaidtab::entry& v )
-    {
-    s << "first=" << v.first << " last=" << v.last;
-    return( s );
-    }
 
 }
 

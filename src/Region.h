@@ -41,23 +41,25 @@ class Region
 	unsigned long start() const { return( s ); }
 	unsigned long end() const { return( s+l-1 ); }
 	unsigned long len() const { return( l ); }
+
+	friend std::ostream& operator<<(std::ostream& s, const Region& p);
+	friend std::istream& operator>>(std::istream& s, Region& p);
+
     protected:
 	unsigned long s;
 	unsigned long l;
     };
 
-inline std::ostream& operator<< (std::ostream& s, const Region &p )
+
+    inline std::ostream& operator<<(std::ostream& s, const Region& p)
     {
-    s << "[" << p.start() << "," << p.len() << "]";
-    return( s );
+	return s << "[" << p.s << "," << p.l << "]";
     }
 
-inline std::istream& operator>> (std::istream& s, Region &p )
+
+    inline std::istream& operator>>(std::istream& s, Region& p)
     {
-    unsigned long start, len;
-    s >> start >> len;
-    p = Region( start, len );
-    return( s );
+	return s >> p.s >> p.l;
     }
 
 }

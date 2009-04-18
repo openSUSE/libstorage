@@ -872,6 +872,52 @@ string EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
     }
 
 
+    std::ostream& operator<<(std::ostream& s, const FstabEntry& v)
+    {
+	s << "device:" << v.device
+	  << " dentry:" << v.dentry << " mount:" << v.mount
+	  << " fs:" << v.fs << " opts:" << boost::join(v.opts, ",")
+	  << " freq:" << v.freq << " passno:" << v.passno;
+	if( v.noauto )
+	    s << " noauto";
+	if( v.crypto )
+	    s << " crypto";
+	if( v.cryptt )
+	    s << " cryptt";
+	if( v.tmpcrypt )
+	    s << " tmpcrypt";
+	if( v.loop )
+	    s << " loop";
+	if( v.dmcrypt )
+	    s << " dmcrypt";
+	if( !v.loop_dev.empty() )
+	    s << " loop_dev:" << v.loop_dev;
+	if( !v.cr_key.empty() )
+	    s << " cr_key:" << v.cr_key;
+	if( !v.cr_opts.empty() )
+	    s << " cr_opts:" << v.cr_opts;
+	if( v.encr != storage::ENC_NONE )
+	    s << " encr:" << v.encr;
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const FstabChange& v)
+    {
+	s << "device:" << v.device
+	  << " dentry:" << v.dentry << " mount:" << v.mount
+	  << " fs:" << v.fs << " opts:" << boost::join(v.opts, ",")
+	  << " freq:" << v.freq << " passno:" << v.passno;
+	if( !v.loop_dev.empty() )
+	    s << " loop_dev:" << v.loop_dev;
+	if( v.encr != storage::ENC_NONE )
+	    s << " encr:" << v.encr;
+	if( v.tmpcrypt )
+	    s << " tmpcrypt";
+	return s;
+    }
+
+
 unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
 unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
 unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };

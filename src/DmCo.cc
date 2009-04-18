@@ -354,7 +354,7 @@ DmCo::doRemove( Volume* v )
     }
 
 
-inline std::ostream& operator<< (std::ostream& s, const DmCo& d )
+    std::ostream& operator<<(std::ostream& s, const DmCo& d)
     {
     s << *((Container*)&d);
     return( s );

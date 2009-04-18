@@ -1,3 +1,5 @@
+
+#include "y2storage/Storage.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/Volume.h"
 
@@ -51,6 +53,22 @@ bool commitAction::operator<( const commitAction& rhs ) const
     else
 	return( unsigned(l)<unsigned(r) );
     }
+
+
+    std::ostream& operator<<(std::ostream& s, const commitAction& a)
+    {
+	s << "stage:" << a.stage
+	  << " type:" << a.type
+	  << " cont:" << a.container
+	  << " dest:" << a.destructive;
+	if (a.co())
+	    s << " name:" << a.co()->name();
+	if (a.vol())
+	    s << " name:" << a.vol()->name();
+	if (!a.description.empty())
+	    s << " desc:" << a.description;
+	return s;
+    };
 
 
     const string usedBy::device() const

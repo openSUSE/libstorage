@@ -3,8 +3,6 @@
   Textdomain    "storage"
 */
 
-#include <sstream>
-
 #include "y2storage/AppUtil.h"
 #include "y2storage/Regex.h"
 #include "y2storage/EtcRaidtab.h"
