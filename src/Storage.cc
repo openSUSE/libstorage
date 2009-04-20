@@ -248,6 +248,7 @@ void Storage::detectObjects()
 	if( !instsys() )
 	    detectNfs( pm );
 	detectFsData( vBegin(), vEnd(), pm );
+	logContainersAndVolumes(logdir);
 	}
 
     if( instsys() )
@@ -277,14 +278,7 @@ void Storage::deleteBackups()
 
 Storage::~Storage()
     {
-    if( max_log_num>0 )
-	{
-	logVolumes( logdir );
-	for (CCIter i = cont.begin(); i != cont.end(); ++i)
-	    {
-	    (*i)->logData( logdir );
-	    }
-	}
+    logContainersAndVolumes(logdir);
     deleteClist(cont);
     deleteBackups();
     if( !tempdir.empty() && access( tempdir.c_str(), R_OK )==0 )
@@ -649,8 +643,6 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
         (d->getSysfsInfo(SYSFSDIR "/" + data.name)||data.typ==DiskData::XEN) &&
 	(data.typ==DiskData::XEN||d->detect(pp)))
 	{
-	if( max_log_num>0 )
-	    d->logData( logdir );
 	data.d = d;
 	}
     else if( d )
@@ -774,8 +766,6 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
 		i->getStartData();
 	    }
 	}
-    if( max_log_num>0 )
-	logVolumes( logdir );
     y2mil("detectFsData end");
     }
 
@@ -816,6 +806,19 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 	i->getFstabData( *fstab );
     }
 }
+
+
+    void
+    Storage::logContainersAndVolumes(const string& Dir) const
+    {
+	if (max_log_num > 0)
+	{
+	    for (CCIter i = cont.begin(); i != cont.end(); ++i)
+		(*i)->logData(Dir);
+
+	    logVolumes(Dir);
+	}
+    }
 
 
 void
