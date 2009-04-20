@@ -484,7 +484,7 @@ class Storage : public storage::StorageInterface
 	    { yesno_popup_cb=pfnc; }
 	storage::CallbackYesNoPopup getCallbackYesNoPopup() const
 	    { return yesno_popup_cb; }
-	void addInfoPopupText( const string& disk, const string txt );
+	void addInfoPopupText( const string& disk, const string& txt );
 
 	static void setCallbackProgressBarYcp( storage::CallbackProgressBar pfnc )
 	    { progress_bar_cb_ycp=pfnc; }

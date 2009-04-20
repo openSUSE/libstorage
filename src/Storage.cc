@@ -171,8 +171,8 @@ Storage::initialize()
     setCacheChanges( true );
     dumpObjectList();
 
-    std::list<std::pair<string,string> >::const_iterator i;
-    for( i=infoPopupTxts.begin(); i!=infoPopupTxts.end(); ++i )
+    for (list<std::pair<string, string>>::const_iterator i = infoPopupTxts.begin(); 
+	 i != infoPopupTxts.end(); ++i)
 	{
 	storage::usedBy ub;
 	usedBy( i->first, ub );
@@ -4888,7 +4888,7 @@ void Storage::infoPopupCb( const string& info )
 	(*cb)( info );
     }
 
-void Storage::addInfoPopupText( const string& disk, const string txt )
+void Storage::addInfoPopupText( const string& disk, const string& txt )
     {
     y2mil( "d:" << disk << " txt:" << txt );
     infoPopupTxts.push_back( make_pair(disk,txt) );
