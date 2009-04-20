@@ -262,24 +262,18 @@ void Storage::detectObjects()
 	}
     }
 
-void Storage::deleteClist( CCont& co )
-    {
-    for( CIter i=co.begin(); i!=co.end(); ++i )
-	delete *i;
-    co.clear();
-    }
 
 void Storage::deleteBackups()
     {
     for (map<string, CCont>::iterator i = backups.begin(); i != backups.end(); ++i)
-	deleteClist( i->second );
+	clearPointerList(i->second);
     backups.clear();
     }
 
 Storage::~Storage()
     {
     logContainersAndVolumes(logdir);
-    deleteClist(cont);
+    clearPointerList(cont);
     deleteBackups();
     if( !tempdir.empty() && access( tempdir.c_str(), R_OK )==0 )
 	{
@@ -297,7 +291,7 @@ Storage::~Storage()
 void Storage::rescanEverything()
     {
     y2mil("rescan everything");
-    deleteClist(cont);
+    clearPointerList(cont);
     detectObjects();
     }
 
@@ -5565,7 +5559,7 @@ Storage::removeBackupState( const string& name )
 	    map<string,CCont>::iterator i = backups.find( name );
 	    if( i!=backups.end())
 		{
-		deleteClist( i->second );
+		clearPointerList(i->second);
 		backups.erase(i);
 		}
 	    else
@@ -5587,10 +5581,10 @@ Storage::restoreBackupState( const string& name )
     y2mil("name:" << name);
     if( ret==0 )
 	{
-	map<string,CCont>::iterator b = backups.find( name );
+	map<string, CCont>::const_iterator b = backups.find(name);
 	if( b!=backups.end())
 	    {
-	    cont.clear();
+	    clearPointerList(cont);
 	    for (CCIter i = b->second.begin(); i != b->second.end(); ++i)
 		cont.push_back( (*i)->getCopy() );
 	    }

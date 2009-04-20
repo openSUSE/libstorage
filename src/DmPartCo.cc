@@ -308,7 +308,7 @@ DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
 void
 DmPartCo::getVolumes( ProcPart& ppart )
     {
-    vols.clear();
+    clearPointerList(vols);
     num_part = 0;
     Disk::PartPair pp = disk->partPair();
     Disk::PartIter i = pp.begin();

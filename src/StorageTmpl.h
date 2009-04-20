@@ -204,6 +204,16 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     }
 
 
+    template <class Type>
+    void clearPointerList(list<Type*>& l)
+    {
+	for (typename list<Type*>::iterator i = l.begin(); i != l.end(); ++i)
+	    delete *i;
+	l.clear();
+    }
+
+
+
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }
 

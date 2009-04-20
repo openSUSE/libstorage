@@ -1693,7 +1693,6 @@ class Storage : public storage::StorageInterface
 	bool ignoreError(list<commitAction>::const_iterator i, const list<commitAction>& al) const;
 	string backupStates() const;
 	void detectObjects();
-	void deleteClist( CCont& co );
 	void deleteBackups();
 	void setFreeInfo( const string& device, unsigned long long df_free,
 			  unsigned long long resize_free,
