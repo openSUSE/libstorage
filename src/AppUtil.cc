@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/utsname.h>
 #include <dirent.h>
 #include <string>
 #include <boost/algorithm/string.hpp>
@@ -455,6 +456,29 @@ string sformat(const char* format, ...)
     free(result);
     return str;
 }
+
+
+    string
+    hostname()
+    {
+	struct utsname buf;
+	if (uname(&buf) != 0)
+	    return string("unknown");
+	return string(buf.nodename) + "." + string(buf.domainname);
+    }
+
+
+    string
+    datetime()
+    {
+	time_t t1 = time(NULL);
+	struct tm t2;
+	gmtime_r(&t1, &t2);
+	char buf[64 + 1];
+	if (strftime(buf, sizeof(buf), "%F %T %Z", &t2) == 0)
+	    return string("unknown");
+	return string(buf);
+    }
 
 
 const string app_ws = " \t\n";

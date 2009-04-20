@@ -78,6 +78,9 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
 
 string sformat(const char* format, ...);
 
+    string hostname();
+    string datetime();
+
 
 inline const char* _(const char* msgid)
 {
