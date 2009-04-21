@@ -36,10 +36,7 @@ Disk::Disk( Storage * const s, const string& Name,
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     nm = Name;
     undevDevice(nm);
-    logfile_name = nm;
-    string::size_type pos = 0;
-    while( (pos=logfile_name.find( '/', pos )) != string::npos )
-	logfile_name[pos] = '_';
+    logfile_name = boost::replace_all_copy(nm, "/", "_");
     if( Name.find( "/dev/" )==0 )
 	dev = Name;
     else 
