@@ -5532,6 +5532,8 @@ Storage::createBackupState( const string& name )
     int ret = readonly?STORAGE_CHANGE_READONLY:0;
     assertInit();
     y2mil("name:" << name);
+    if (ret == 0 && name.empty())
+	ret = STORAGE_INVALID_BACKUP_STATE_NAME;
     if( ret==0 )
 	{
 	if (checkBackupState(name))
@@ -5611,14 +5613,13 @@ Storage::equalBackupStates(const string& lhs, const string& rhs,
 			   bool verbose_log) const
 {
     y2mil("lhs:" << lhs << " rhs:" << rhs << " verbose:" << verbose_log);
-    map<string,CCont>::const_iterator i;
     const CCont* l = NULL;
     const CCont* r = NULL;
     if( lhs.empty() )
 	l = &cont;
     else
 	{
-	i = backups.find( lhs );
+	map<string, CCont>::const_iterator i = backups.find(lhs);
 	if( i!=backups.end() )
 	    l = &i->second;
 	}
@@ -5626,7 +5627,7 @@ Storage::equalBackupStates(const string& lhs, const string& rhs,
 	r = &cont;
     else
 	{
-	i = backups.find( rhs );
+	map<string, CCont>::const_iterator i = backups.find(rhs);
 	if( i!=backups.end() )
 	    r = &i->second;
 	}
