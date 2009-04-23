@@ -642,6 +642,7 @@ void DmPartCo::removeFromMemory()
 	y2mil( "rem:" << *i );
 	if( !(*i)->created() )
 	    {
+	    delete *i;
 	    i = vols.erase( i );
 	    }
 	else
