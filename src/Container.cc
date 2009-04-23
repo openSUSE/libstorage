@@ -29,10 +29,7 @@ Container::Container( Storage * const s, const string& Name, CType t ) :
 
 Container::~Container()
     {
-    for( PlainIterator i=begin(); i!=end(); i++ )
-	{
-	delete( *i );
-	}
+    clearPointerList(vols);
     y2deb("destructed cont " << dev);
     }
 
