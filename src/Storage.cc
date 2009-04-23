@@ -5368,6 +5368,10 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 					   used, win, efi, ret))
 	    {
 	    }
+	else if (vol->getUsedByType() != UB_NONE)
+	{
+	    ret = false;
+	}
 	else
 	    {
 	    bool needUmount = false;
