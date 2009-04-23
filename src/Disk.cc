@@ -583,7 +583,7 @@ int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
 bool
 Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
                       unsigned long& csize, PartitionType& type, unsigned& id,
-		      bool& boot )
+		      bool& boot ) const
     {
     unsigned long StartM, EndM;
     string PartitionType, TInfo;
@@ -846,7 +846,7 @@ _("You have the following options:\n"
 
 bool
 Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
-		       list<Partition*>& pl, unsigned long& range_exceed)
+		       list<Partition*>& pl, unsigned long& range_exceed) const
 {
     unsigned ext_nr = 0;
     bool ret=true;
@@ -1395,13 +1395,13 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     }
 
 int Disk::createChecks( PartitionType& type, unsigned long start,
-                        unsigned long len, bool checkRelaxed )
+                        unsigned long len, bool checkRelaxed ) const
     {
     y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     unsigned fuzz = checkRelaxed ? 2 : 0;
     int ret = 0;
     Region r( start, len );
-    PartPair ext = partPair(notDeletedExt);
+    ConstPartPair ext = partPair(notDeletedExt);
     if( type==PTYPE_ANY )
 	{
 	if( ext.empty() || !ext.begin()->contains( Region(start,1) ))
@@ -1429,9 +1429,8 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	}
     if( ret==0 )
 	{
-	PartPair p = (type!=LOGICAL) ? partPair( notDeleted )
-	                             : partPair( notDeletedLog );
-	PartIter i = p.begin();
+	ConstPartPair p = (type != LOGICAL) ? partPair(notDeleted) : partPair(notDeletedLog);
+	ConstPartIter i = p.begin();
 	while( i!=p.end() && !i->intersectArea( r, fuzz ))
 	    {
 	    ++i;
@@ -1458,7 +1457,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	    }
 	}
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 int Disk::changePartitionArea( unsigned nr, unsigned long start,
@@ -2014,7 +2013,7 @@ int Disk::doSetType( Volume* v )
     }
 
 bool
-Disk::getPartedValues( Partition *p )
+Disk::getPartedValues( Partition *p ) const
     {
     bool ret = false;
     if( getStorage()->test() )
@@ -2060,7 +2059,7 @@ Disk::getPartedValues( Partition *p )
 
 bool
 Disk::getPartedSectors( const Partition *p, unsigned long long& start,
-                        unsigned long long& end )
+                        unsigned long long& end ) const
     {
     bool ret = false;
     if( getStorage()->test() )
@@ -2549,12 +2548,12 @@ int Disk::doResize( Volume* v )
     return( ret );
     }
 
-const Partition * Disk::getPartitionAfter( const Partition * p )
+const Partition* Disk::getPartitionAfter(const Partition* p) const
     {
-    const Partition * ret = NULL;
+    const Partition* ret = NULL;
     y2mil( "p:" << *p );
-    PartPair pp = partPair( (p->type()==LOGICAL)?notDeleted:notDeletedLog );
-    for( PartIter pi=pp.begin(); pi!=pp.end(); ++pi )
+    ConstPartPair pp = partPair((p->type() == LOGICAL) ? notDeleted : notDeletedLog);
+    for (ConstPartIter pi = pp.begin(); pi != pp.end(); ++pi)
 	{
 	if( !pi->created() &&
 	    pi->cylStart()>p->cylStart() &&
@@ -2565,7 +2564,7 @@ const Partition * Disk::getPartitionAfter( const Partition * p )
 	y2mil( "ret:NULL" );
     else
 	y2mil( "ret:" << *ret );
-    return( ret );
+    return ret;
     }
 
 unsigned Disk::numPartitions() const

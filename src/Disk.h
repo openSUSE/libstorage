@@ -173,13 +173,13 @@ class Disk : public Container
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
 			     storage::PartitionType& type, 
-			     unsigned& id, bool& boot );
+			     unsigned& id, bool& boot ) const;
 	bool checkPartedValid( const ProcPart& pp, const string& diskname,
-	                       std::list<Partition*>& pl, unsigned long& rng );
-	bool getPartedValues( Partition *p );
+	                       std::list<Partition*>& pl, unsigned long& rng ) const;
+	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
-	                       unsigned long long& end );
-	const Partition * getPartitionAfter( const Partition * p );
+	                       unsigned long long& end ) const;
+	const Partition * getPartitionAfter( const Partition * p ) const;
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
 	void getGeometry( const string& line, unsigned long& c, 
@@ -188,7 +188,7 @@ class Disk : public Container
 	void changeNumbers( const PartIter& b, const PartIter& e, 
 	                    unsigned start, int incr );
 	int createChecks( storage::PartitionType& type, unsigned long start,
-	                  unsigned long len, bool checkRelaxed );
+	                  unsigned long len, bool checkRelaxed ) const;
 	void removePresentPartitions();
 	void removeFromMemory();
 	void enlargeGpt();
