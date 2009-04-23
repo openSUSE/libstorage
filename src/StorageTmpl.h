@@ -213,6 +213,17 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     }
 
 
+    template<typename Map, typename Key, typename Value>
+    typename Map::iterator mapInsertOrReplace(Map& m, const Key& k, const Value& v)
+    {
+	typename Map::iterator pos = m.lower_bound(k);
+	if (pos != m.end() && !typename Map::key_compare()(k, pos->first))
+	    pos->second = v;
+	else
+	    pos = m.insert(pos, typename Map::value_type(k, v));
+	return pos;
+    }
+
 
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }

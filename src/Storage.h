@@ -183,6 +183,7 @@ class Storage : public storage::StorageInterface
 	    { return( d.type()==storage::NFSC ); }
 	static bool isDm( const Container&d )
 	    { return( d.type()==storage::DM ); }
+
 	struct FreeInfo
 	    {
 	    unsigned long long resize_free;
@@ -191,7 +192,6 @@ class Storage : public storage::StorageInterface
 	    bool win;
 	    bool efi;
 	    bool rok;
-	    FreeInfo() { resize_free=df_free=used=0; efi=win=rok=false; }
 	    FreeInfo( unsigned long long df,
 		      unsigned long long resize,
 		      unsigned long long usd, bool w=false, bool e=false,
@@ -444,7 +444,7 @@ class Storage : public storage::StorageInterface
 	void getCommitInfos(list<CommitInfo>& infos) const;
 	const string& getLastAction() const { return lastAction; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
-	void eraseFreeInfo( const string& device );
+	void eraseCachedFreeInfo(const string& device);
 
 	static void waitForDevice();
 	static int waitForDevice(const string& device);
@@ -1694,14 +1694,14 @@ class Storage : public storage::StorageInterface
 	string backupStates() const;
 	void detectObjects();
 	void deleteBackups();
-	void setFreeInfo( const string& device, unsigned long long df_free,
-			  unsigned long long resize_free,
-			  unsigned long long used, bool win, bool efi,
-			  bool resize_ok );
-	bool getFreeInf( const string& device, unsigned long long& df_free,
-			 unsigned long long& resize_free,
-			 unsigned long long& used, bool& win, bool& efi,
-			 bool& resize_ok );
+	void setCachedFreeInfo(const string& device, unsigned long long df_free,
+			       unsigned long long resize_free,
+			       unsigned long long used, bool win, bool efi,
+			       bool resize_ok);
+	bool getCachedFreeInfo(const string& device, unsigned long long& df_free,
+			       unsigned long long& resize_free,
+			       unsigned long long& used, bool& win, bool& efi,
+			       bool& resize_ok) const;
 
 	// protected internal member variables
 	Lock lock;

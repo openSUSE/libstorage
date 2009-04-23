@@ -2186,7 +2186,7 @@ int Volume::prepareRemove()
 	{
 	crUnsetup();
 	}
-    cont->getStorage()->eraseFreeInfo(dev);
+    cont->getStorage()->eraseCachedFreeInfo(dev);
     cont->getStorage()->removeDmTableTo(*this);
     y2mil("ret:" << ret);
     return( ret );

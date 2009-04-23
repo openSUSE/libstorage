@@ -2437,7 +2437,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
 	if( ignoreFs )
 	    vol->setIgnoreFs();
 	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
-	eraseFreeInfo( vol->device() );
+	eraseCachedFreeInfo(vol->device());
 	y2mil( "vol:" << *vol );
 	}
     else
@@ -5352,10 +5352,10 @@ Storage::getDfSize(const string& mp)
 
 
 bool
-Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
-		      unsigned long long& df_free,
-		      unsigned long long& used, bool& win, bool& efi,
-		      bool use_cache )
+Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
+		     unsigned long long& df_free,
+		     unsigned long long& used, bool& win, bool& efi,
+		     bool use_cache)
     {
     bool ret = false;
     assertInit();
@@ -5364,8 +5364,8 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if( use_cache && getFreeInf( vol->device(), df_free, resize_free,
-	                             used, win, efi, ret ))
+	if (use_cache && getCachedFreeInfo(vol->device(), df_free, resize_free,
+					   used, win, efi, ret))
 	    {
 	    }
 	else
@@ -5472,8 +5472,7 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->crUnsetup();
 		}
-	    setFreeInfo( vol->device(), df_free, resize_free, used, win, efi,
-	                 ret );
+	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, ret);
 	    }
 	}
     if( ret )
@@ -5482,25 +5481,27 @@ Storage::getFreeInfo( const string& device, unsigned long long& resize_free,
     return( ret );
     }
 
-void Storage::setFreeInfo( const string& device, unsigned long long df_free,
-                           unsigned long long resize_free,
+
+void
+Storage::setCachedFreeInfo(const string& device, unsigned long long df_free,
+			   unsigned long long resize_free,
 			   unsigned long long used, bool win, bool efi,
-			   bool resize_ok )
-    {
+			   bool resize_ok)
+{
     y2mil("device:" << device << " df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
 	  " win:" << win << " efi:" << efi);
 
-    FreeInfo inf( df_free, resize_free, used, win, efi, resize_ok );
-    freeInfo[device] = inf;
-    }
+    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, resize_ok));
+}
+
 
 bool
-Storage::getFreeInf( const string& device, unsigned long long& df_free,
-		     unsigned long long& resize_free,
-		     unsigned long long& used, bool& win,  bool& efi,
-		     bool& resize_ok )
-    {
-    map<string,FreeInfo>::iterator i = freeInfo.find( device );
+Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
+			   unsigned long long& resize_free,
+			   unsigned long long& used, bool& win, bool& efi,
+			   bool& resize_ok) const
+{
+    map<string, FreeInfo>::const_iterator i = freeInfo.find(device);
     bool ret = i!=freeInfo.end();
     if( ret )
 	{
@@ -5515,16 +5516,18 @@ Storage::getFreeInf( const string& device, unsigned long long& df_free,
     if( ret )
 	y2mil("df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
 	      " win:" << win << " efi:" << efi << " resize_ok:" << resize_ok);
-    return( ret );
-    }
+    return ret;
+}
+
 
 void
-Storage::eraseFreeInfo( const string& device )
-    {
+Storage::eraseCachedFreeInfo(const string& device)
+{
     map<string,FreeInfo>::iterator i = freeInfo.find( device );
     if( i!=freeInfo.end() )
 	freeInfo.erase(i);
-    }
+}
+
 
 int
 Storage::createBackupState( const string& name )
