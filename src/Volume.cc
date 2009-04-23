@@ -1059,24 +1059,6 @@ string Volume::mountText( bool doing ) const
     return( txt );
     }
 
-void Volume::rename( const string& newName )
-    {
-    y2mil("rename old:" << nm << " new:" << newName);
-    string::size_type pos;
-    if( (pos=dev.rfind( nm ))!=string::npos )
-	{
-	dev.replace( pos, nm.size(), newName );
-	}
-    for( list<string>::iterator i=alt_names.begin(); i!=alt_names.end(); ++i )
-	{
-	if( (pos=i->rfind( nm ))!=string::npos )
-	    {
-	    i->replace( pos, nm.size(), newName );
-	    }
-	}
-    nm = newName;
-    }
-
 
 int Volume::checkDevice() const
     {

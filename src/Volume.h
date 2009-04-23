@@ -64,7 +64,6 @@ class Volume
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	void formattingDone() { format=false; detected_fs=fs; }
 	bool getFormat() const { return format; }
-	void rename( const string& newName );
 	int changeFstabOptions( const string& options );
 	int changeMountBy( storage::MountByType mby );
 	virtual int changeMount( const string& m );
