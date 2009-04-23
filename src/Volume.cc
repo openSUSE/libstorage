@@ -2536,7 +2536,7 @@ EncryptType Volume::toEncType( const string& val )
 
 FsType Volume::toFsType( const string& val )
     {
-    enum FsType ret = FSNONE;
+    FsType ret = FSNONE;
     while( ret!=FSUNKNOWN && val!=fs_names[ret] )
 	{
 	ret = FsType(ret-1);
@@ -2546,7 +2546,7 @@ FsType Volume::toFsType( const string& val )
 
 MountByType Volume::toMountByType( const string& val )
     {
-    enum MountByType ret = MOUNTBY_LABEL;
+    MountByType ret = MOUNTBY_LABEL;
     while( ret!=MOUNTBY_DEVICE && val!=mb_names[ret] )
 	{
 	ret = MountByType(ret-1);

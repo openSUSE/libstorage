@@ -579,8 +579,7 @@ struct DiskData
     {
     enum DTyp { DISK, DASD, XEN };
 
-    DiskData() { d=0; s=0; typ=DISK; };
-    DiskData( const string& n, DTyp t, unsigned long long sz ) { d=0; s=sz; typ=t; name=n; };
+    DiskData( const string& n, DTyp t, unsigned long long sz ) { d=0; s=sz; typ=t; name=n; }
 
     Disk* d;
     DTyp typ;

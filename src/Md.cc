@@ -522,7 +522,7 @@ string Md::formatText( bool doing ) const
 MdType
 Md::toMdType( const string& val )
     {
-    enum MdType ret = MULTIPATH;
+    MdType ret = MULTIPATH;
     while( ret!=RAID_UNK && val!=md_names[ret] )
 	{
 	ret = MdType(ret-1);
