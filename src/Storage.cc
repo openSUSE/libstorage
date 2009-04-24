@@ -579,7 +579,7 @@ struct DiskData
     {
     enum DTyp { DISK, DASD, XEN };
 
-    DiskData( const string& n, DTyp t, unsigned long long sz ) { d=0; s=sz; typ=t; name=n; }
+    DiskData( const string& n, DTyp t, unsigned long long sz ) : d(NULL) { s=sz; typ=t; name=n; }
 
     Disk* d;
     DTyp typ;
@@ -602,13 +602,7 @@ void
 Storage::initDisk( DiskData& data, ProcPart& pp )
     {
     y2mil( "data:" << data );
-    data.dev = data.name;
-    string::size_type pos = data.dev.find('!');
-    while( pos!=string::npos )
-	{
-	data.dev[pos] = '/';
-	pos = data.dev.find('!',pos+1);
-	}
+    data.dev = boost::replace_all_copy(data.name, "!", "/");
     y2mil("name sysfs:" << data.name << " parted:" << data.dev);
     Disk * d = NULL;
     switch( data.typ )
@@ -638,7 +632,7 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
 	{
 	data.d = d;
 	}
-    else if( d )
+    else
 	{
 	delete d;
 	}
@@ -707,7 +701,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	    initDisk( *i, ppart );
 	    }
 	y2mil( "dl: " << dl );
-	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
+	for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
 	    {
 	    if( i->d )
 	        {
