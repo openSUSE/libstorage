@@ -13,7 +13,7 @@ main (int argc, char** argv)
 
     StorageInterface* s = createStorageInterface(true, false, true);
 
-    saveGraph(s, "storage.gv");
+    saveGraph(s, "storage.gv", "Helvetica");
 
     destroyStorageInterface(s);
 

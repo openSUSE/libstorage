@@ -147,7 +147,7 @@ namespace storage
 
 
     bool
-    saveGraph(StorageInterface* s, const string& filename)
+    saveGraph(StorageInterface* s, const string& filename, const string& fontname)
     {
 	list<Node> nodes;
 	list<Edge> edges;
@@ -382,7 +382,7 @@ namespace storage
 
 	out << "digraph storage" << endl;
 	out << "{" << endl;
-	out << "    node [shape=rectangle, style=filled, fontname=Helvetica];" << endl;
+	out << "    node [shape=rectangle, style=filled, fontname=" << dotQuote(fontname) << "];" << endl;
 	out << endl;
 
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
