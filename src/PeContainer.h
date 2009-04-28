@@ -113,10 +113,8 @@ class PeContainer : public Container
 	string addList() const;
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
-	bool findPe( const string& dev, const std::list<Pv>& pl, 
-	             std::list<Pv>::const_iterator& i ) const;
-	bool findPe( const string& dev, std::list<Pv>& pl, 
-	             std::list<Pv>::iterator& i );
+	bool findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_iterator& i) const;
+	bool findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) const;
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
 	                std::list<Pv>& plrem, unsigned long& removed_pe );

@@ -405,8 +405,9 @@ bool PeContainer::checkCreateConstraints()
     return( ret );
     }
 
-bool PeContainer::findPe( const string& dev, const std::list<Pv>& pl,
-			  std::list<Pv>::const_iterator& i ) const
+
+bool
+PeContainer::findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_iterator& i) const
     {
     bool ret = !pl.empty();
     if( ret )
@@ -429,8 +430,9 @@ bool PeContainer::findPe( const string& dev, const std::list<Pv>& pl,
     return( ret );
     }
 
-bool PeContainer::findPe( const string& dev, std::list<Pv>& pl,
-			  std::list<Pv>::iterator& i )
+
+bool
+PeContainer::findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) const
     {
     bool ret = !pl.empty();
     if( ret )
