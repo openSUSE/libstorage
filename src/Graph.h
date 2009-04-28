@@ -22,10 +22,9 @@ namespace storage
      *
      * @param s StorageInterface
      * @param filename filename of graph
-     * @param fontname name of font to use
      * @return true on successful writing of graph
      */
-    bool saveGraph(StorageInterface* s, const string& filename, const string& fontname);
+    bool saveGraph(StorageInterface* s, const string& filename);
 
 }
 
