@@ -467,14 +467,7 @@ void Dm::activate( bool val )
 
 string Dm::devToTable( const string& dev )
     {
-    string ret(undevDevice(dev));
-    string::iterator it = ret.begin();
-    while( it!=ret.end() )
-	{
-	if( *it == '/' )
-	    *it = '|';
-	++it;
-	}
+    string ret = boost::replace_all_copy(undevDevice(dev), "/", "|");
     if( dev!=ret )
 	y2mil("dev:" << dev << " ret:" << ret);
     return( ret );
