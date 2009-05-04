@@ -432,6 +432,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    fs = EXT3;
 		    }
+		else if( i->second == "ext4" )
+		    {
+		    fs = EXT4;
+		    }
 		else if( i->second == "vfat" )
 		    {
 		    fs = VFAT;
@@ -729,10 +733,19 @@ int Volume::doFormat()
 
 	switch( fs )
 	    {
-	    case EXT2:
+	    case EXT2:	
+		cmd = "/sbin/mke2fs";
+		params = "-t ext2 -v";
+		progressbar = new Mke2fsProgressBar( cb );
+		break;
 	    case EXT3:
 		cmd = "/sbin/mke2fs";
-		params = (fs==EXT2) ? "-v" : "-j -v";
+		params = "-t ext3 -v";
+		progressbar = new Mke2fsProgressBar( cb );
+		break;
+	    case EXT4:
+		cmd = "/sbin/mke2fs";
+		params = "-t ext4 -v";
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case REISERFS:
@@ -787,40 +800,64 @@ int Volume::doFormat()
 	    }
 	delete progressbar;
 	}
-    if( ret==0 && fs==EXT3 )
+
+    if (ret == 0)
+    {
+	switch (fs)
 	{
-	if (!tunefs_opt.empty())
+	    case EXT3:
 	    {
-	    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = VOLUME_TUNE2FS_FAILED;
+		if (!tunefs_opt.empty())
+		{
+		    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
+		    SystemCmd c( cmd );
+		    if( c.retcode()!=0 )
+			ret = VOLUME_TUNE2FS_FAILED;
+		}
+
+		if( ret==0 && mp=="/" &&
+		    (fstab_opt.find( "data=writeback" )!=string::npos ||
+		     fstab_opt.find( "data=journal" )!=string::npos) )
+		{
+		    string cmd = "/sbin/tune2fs -o ";
+		    if( fstab_opt.find( "data=writeback" )!=string::npos )
+			cmd += "journal_data_writeback ";
+		    else
+			cmd += "journal_data ";
+		    cmd += quote(mountDevice());
+		    SystemCmd c( cmd );
+		    if( c.retcode()!=0 )
+			ret = VOLUME_TUNE2FS_FAILED;
+		}
 	    }
-	if( ret==0 && mp=="/" &&
-	    (fstab_opt.find( "data=writeback" )!=string::npos ||
-	     fstab_opt.find( "data=journal" )!=string::npos) )
+	    break;
+
+	    case EXT4:
 	    {
-	    string cmd = "/sbin/tune2fs -o ";
-	    if( fstab_opt.find( "data=writeback" )!=string::npos )
-		cmd += "journal_data_writeback ";
-	    else
-		cmd += "journal_data ";
-	    cmd += quote(mountDevice());
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = VOLUME_TUNE2FS_FAILED;
+		if (!tunefs_opt.empty())
+		{
+		    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
+		    SystemCmd c( cmd );
+		    if( c.retcode()!=0 )
+			ret = VOLUME_TUNE2FS_FAILED;
+		}
 	    }
+	    break;
+
+	    case REISERFS:
+	    {
+		if (!tunefs_opt.empty())
+		{
+		    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + quote(mountDevice());
+		    SystemCmd c( cmd );
+		    if( c.retcode()!=0 )
+			ret = VOLUME_TUNEREISERFS_FAILED;
+		}
+	    }
+	    break;
 	}
-    if( ret==0 && fs==REISERFS )
-	{
-	if (!tunefs_opt.empty())
-	    {
-	    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + quote(mountDevice());
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		ret = VOLUME_TUNEREISERFS_FAILED;
-	    }
-	}
+    }
+
     if( ret==0 )
 	{
 	triggerUdevUpdate();
@@ -1212,6 +1249,7 @@ int Volume::resizeFs()
 		break;
 	    case EXT2:
 	    case EXT3:
+	    case EXT4:
 		cmd = "/sbin/resize2fs -f " + quote(mountDevice());
 		if( needShrink() )
 		    cmd += " " + decString(size_k) + "K";
@@ -1657,8 +1695,13 @@ EncryptType Volume::detectEncryption()
 		switch( detected_fs )
 		    {
 		    case EXT2:
+			cmd = "/sbin/fsck.ext2 -n -f " + quote(use_dev);
+			break;
 		    case EXT3:
-			cmd = "fsck.ext2 -n -f " + quote(use_dev);
+			cmd = "/sbin/fsck.ext3 -n -f " + quote(use_dev);
+			break;
+		    case EXT4:
+			cmd = "/sbin/fsck.ext4 -n -f " + quote(use_dev);
 			break;
 		    case REISERFS:
 			cmd = "reiserfsck --yes --check -q " + quote(use_dev);
@@ -1991,6 +2034,7 @@ int Volume::doSetLabel()
 	    {
 	    case EXT2:
 	    case EXT3:
+	    case EXT4:
 		cmd = "/sbin/tune2fs -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case REISERFS:
@@ -3075,9 +3119,9 @@ bool Volume::isTmpCryptMp( const string& mp )
     return( find( tmp_mount, end, mp )!=end );
     }
 
-string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "vfat",
-                              "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus",
-			      "nfs", "none" };
+string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "vfat",
+                              "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", "nfs",
+			      "none" };
 
 string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 

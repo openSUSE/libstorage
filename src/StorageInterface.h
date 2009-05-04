@@ -96,7 +96,8 @@ using std::list;
 
 namespace storage
 {
-    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, VFAT, XFS, JFS, HFS, NTFS, SWAP, HFSPLUS, NFS, FSNONE };
+    enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, EXT4, VFAT, XFS, JFS, HFS, NTFS, SWAP, HFSPLUS,
+		  NFS, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
