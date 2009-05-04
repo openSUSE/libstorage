@@ -806,6 +806,7 @@ int Volume::doFormat()
 	switch (fs)
 	{
 	    case EXT3:
+	    case EXT4:
 	    {
 		if (!tunefs_opt.empty())
 		{
@@ -825,18 +826,6 @@ int Volume::doFormat()
 		    else
 			cmd += "journal_data ";
 		    cmd += quote(mountDevice());
-		    SystemCmd c( cmd );
-		    if( c.retcode()!=0 )
-			ret = VOLUME_TUNE2FS_FAILED;
-		}
-	    }
-	    break;
-
-	    case EXT4:
-	    {
-		if (!tunefs_opt.empty())
-		{
-		    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
 		    SystemCmd c( cmd );
 		    if( c.retcode()!=0 )
 			ret = VOLUME_TUNE2FS_FAILED;
