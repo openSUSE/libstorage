@@ -119,6 +119,7 @@ void DmraidCo::activate( bool val )
 	if( val )
 	    {
 	    Dm::activate(true);
+	    // option '-p' since udev creates the partition nodes
 	    c.execute(DMRAIDBIN " -ay -p");
 	    }
 	else
