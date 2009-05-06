@@ -844,6 +844,9 @@ int Volume::doFormat()
 		}
 	    }
 	    break;
+
+	    default:
+		break;
 	}
     }
 
