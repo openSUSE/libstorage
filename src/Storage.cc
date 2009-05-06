@@ -3197,7 +3197,7 @@ Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long&
     unsigned long long sumK = 0;
     unsigned long long smallestK = 0;
 
-    for (list<string>::const_iterator i = devices.begin(); i != devices.end(); i++)
+    for (list<string>::const_iterator i = devices.begin(); i != devices.end(); ++i)
     {
 	const Volume* v = getVolume(*i);
 	if (!v)
@@ -3213,26 +3213,49 @@ Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long&
 	    smallestK = min(smallestK, v->sizeK());
     }
 
-    switch (md_type)
+    if (ret == 0)
     {
-	case RAID0:
-	    sizeK = sumK;
-	    break;
-	case RAID1:
-	case MULTIPATH:
-	    sizeK = smallestK;
-	    break;
-	case RAID5:
-	    sizeK = devices.size()<1 ? 0 : smallestK*(devices.size()-1);
-	    break;
-	case RAID6:
-	    sizeK = devices.size()<2 ? 0 : smallestK*(devices.size()-2);
-	    break;
-	case RAID10:
-	    sizeK = smallestK*devices.size()/2;
-	    break;
-	default:
-	    break;
+	switch (md_type)
+	{
+	    case RAID0:
+		if (devices.size() < 2)
+		    ret = MD_TOO_FEW_DEVICES;
+		else
+		    sizeK = sumK;
+		break;
+
+	    case RAID1:
+	    case MULTIPATH:
+		if (devices.size() < 2)
+		    ret = MD_TOO_FEW_DEVICES;
+		else
+		    sizeK = smallestK;
+		break;
+
+	    case RAID5:
+		if (devices.size() < 3)
+		    ret = MD_TOO_FEW_DEVICES;
+		else
+		    sizeK = smallestK*(devices.size()-1);
+		break;
+
+	    case RAID6:
+		if (devices.size() < 4)
+		    ret = MD_TOO_FEW_DEVICES;
+		else
+		    sizeK = smallestK*(devices.size()-2);
+		break;
+
+	    case RAID10:
+		if (devices.size() < 2)
+		    ret = MD_TOO_FEW_DEVICES;
+		else
+		    sizeK = smallestK*devices.size()/2;
+		break;
+
+	    default:
+		break;
+	}
     }
 
     y2mil("type:" << md_type << " smallest:" << smallestK << " sum:" << sumK << " size:" << sizeK);
