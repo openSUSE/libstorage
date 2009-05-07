@@ -2830,7 +2830,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " ignoreFstab";
     if( v.ignore_fs )
 	s << " ignoreFs";
-    s << v.uby;
+    s << " " << v.uby;
     if( v.fs != storage::FSUNKNOWN )
 	{
 	s << " fs:" << Volume::fs_names[v.fs];
@@ -2962,7 +2962,7 @@ Volume::logDifference( const Volume& rhs ) const
 	{
 	std::ostringstream b;
 	classic(b);
-	b << uby << "-->" << rhs.uby;
+	b << " " << uby << "-->" << rhs.uby;
 	ret += b.str();
 	}
     if( fs!=rhs.fs )

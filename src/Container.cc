@@ -310,8 +310,8 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
       s << " readonly";
     if( c.silent )
       s << " silent";
-    s << c.uby;
-    return( s );
+    s << " " << c.uby;
+    return s;
     }
 
 
@@ -364,7 +364,7 @@ Container::getDiffString( const Container& c ) const
 	{
 	std::ostringstream b;
 	classic(b);
-	b << uby << "-->" << c.uby;
+	b << " " << uby << "-->" << c.uby;
 	ret += b.str();
 	}
     return( ret );
