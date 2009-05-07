@@ -523,6 +523,8 @@ bool DmPartCo::findDm( unsigned nr, DmPartIter& i )
 
 void DmPartCo::activate_part( bool val )
     {
+// should be obsolete since parted generates correct nodes now, see bnc #471440
+/*
     y2mil("old active:" << active << " val:" << val);
     if( active != val )
 	{
@@ -538,6 +540,7 @@ void DmPartCo::activate_part( bool val )
 	    }
 	active = val;
 	}
+*/
     }
 
 int DmPartCo::doSetType( DmPart* dm )
