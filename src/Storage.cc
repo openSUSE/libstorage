@@ -213,9 +213,9 @@ void Storage::detectObjects()
 	LvmVg::activate( true );
 	ppart.reload();
 	}
-    detectMds();
     detectDmraid(ppart);
     detectDmmultipath(ppart);
+    detectMds();
     detectLvmVgs();
     detectDm(ppart);
 
