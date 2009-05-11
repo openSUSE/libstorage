@@ -538,9 +538,9 @@ void DmPartCo::activate_part( bool val )
 	    {
 	    c.execute(KPARTXBIN " -d -p _part " + quote(dev));
 	    }
-	active = val;
 	}
 */
+	active = val;
     }
 
 int DmPartCo::doSetType( DmPart* dm )
