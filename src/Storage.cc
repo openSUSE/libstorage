@@ -5248,12 +5248,12 @@ Storage::checkDeviceMounted( const string& device, string& mp )
 	mp = mountData.getMount( vol->mountDevice() );
 	if( mp.empty() )
 	    mp = mountData.getMount( vol->altNames() );
-	ret = !mp.empty();
 	}
     else
 	{
 	mp = mountData.getMount( device );
 	}
+    ret = !mp.empty();
     y2mil("ret:" << ret << " mp:" << mp);
     return( ret );
     }
