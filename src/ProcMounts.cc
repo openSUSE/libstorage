@@ -71,6 +71,8 @@ ProcMounts::ProcMounts( Storage * const sto )
 	}
     }
 
+    /*
+    // code seems to be obsolete
     mt.select( " / " );
     if( mt.numLines()>0 )
     {
@@ -83,6 +85,7 @@ ProcMounts::ProcMounts( Storage * const sto )
 	co[dev].device = dev;
 	co[dev].mount = "/";
     }
+    */
 
     AsciiFile swaps("/proc/swaps");
     swaps.remove(0, 1);
