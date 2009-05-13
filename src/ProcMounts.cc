@@ -19,94 +19,70 @@ namespace storage
     using namespace std;
 
 
-ProcMounts::ProcMounts( Storage * const sto ) 
+ProcMounts::ProcMounts( Storage * const sto )
     {
     const map<string, string> by_label = getRevUdevMap("/dev/disk/by-label");
     const map<string, string> by_uuid = getRevUdevMap("/dev/disk/by-uuid");
-    ifstream mounts( "/proc/mounts" );
-    classic(mounts);
-    string line;
-    getline( mounts, line );
+
     SystemCmd mt(MOUNTBIN);
-    while( mounts.good() )
-	{
-	string dev = extractNthWord( 0, line );
+
+    AsciiFile mounts("/proc/mounts");
+
+    for (vector<string>::const_iterator it = mounts.lines().begin(); it != mounts.lines().end(); ++it)
+    {
+	string dev = extractNthWord(0, *it);
+	string dir = extractNthWord(1, *it);
+
 	if (boost::contains(dev, "/by-label/"))
-	    {
+	{
 	    dev = dev.substr( dev.rfind( "/" )+1 );
 	    y2mil( "dev:" << dev );
 	    map<string, string>::const_iterator it = by_label.find(dev);
 	    if (it != by_label.end())
-	        {
+	    {
 		dev = it->second;
 		normalizeDevice( dev );
 		y2mil( "dev:" << dev );
-		}
 	    }
+	}
 	else if (boost::contains(dev, "/by-uuid/"))
-	    {
+	{
 	    dev = dev.substr( dev.rfind( "/" )+1 );
 	    y2mil( "dev:" << dev );
 	    map<string, string>::const_iterator it = by_uuid.find(dev);
 	    if (it != by_uuid.end())
-		{
+	    {
 		dev = it->second;
 		normalizeDevice( dev );
 		y2mil( "dev:" << dev );
-		}
 	    }
-	bool skip = false;
-	string dir = extractNthWord( 1, line );
-	mt.select( (string)" on "+dir+' ' );
-	if( mt.numLines(true)>0 )
-	    {
-	    list<string> sl = splitString( mt.getLine(0,true) );
-	    y2mil( "sl:" << sl );
-	    if( sl.size()>=6 )
-		{
-		list<string>::const_iterator i=sl.begin();
-		++i;
-		++i;
-		++i;
-		++i;
-		if( *i == "none" )
-		    {
-		    ++i;
-		    string opt = *i;
-		    if( !opt.empty() && opt[0]=='(' )
-			opt.erase( 0, 1 );
-		    if( !opt.empty() && opt[opt.size()-1]==')' )
-			opt.erase( opt.size()-1, 1 );
-		    sl = splitString( opt, "," );
-		    y2mil( "sl:" << sl );
-		    skip = find( sl.begin(), sl.end(), "bind" )!=sl.end();
-		    if( skip )
-			y2mil( "skiping line:" << line );
-		    }
-		}
-	    }
-	if( !skip && dev!= "rootfs" && dev!="/dev/root" )
-	    {
+	}
+
+	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
+	{
+	    y2mil("skipping line:" << *it);
+	}
+	else
+	{
 	    co[dev].device = dev;
 	    co[dev].mount = dir;
-	    co[dev].fs = extractNthWord( 2, line );
-	    co[dev].opts = splitString( extractNthWord( 3, line ), "," );
-	    }
-	getline( mounts, line );
+	    co[dev].fs = extractNthWord(2, *it);
+	    co[dev].opts = splitString(extractNthWord(3, *it), ",");
 	}
+    }
+
     mt.select( " / " );
     if( mt.numLines()>0 )
-	{
+    {
 	y2mil( "root mount:" << mt.getLine(0,true) );
 	string dev = extractNthWord( 0, mt.getLine(0,true));
 	if( !dev.empty() && dev[0]!='/' )
-	    {
+	{
 	    dev = sto->findNormalDevice( dev );
-	    }
+	}
 	co[dev].device = dev;
 	co[dev].mount = "/";
-	}
-    mounts.close();
+    }
 
     AsciiFile swaps("/proc/swaps");
     swaps.remove(0, 1);
@@ -127,7 +103,44 @@ ProcMounts::ProcMounts( Storage * const sto )
 	y2mil("co:[" << it->first << "]-->" << it->second);
     }
 
-string 
+
+    bool
+    ProcMounts::isBind(SystemCmd& mt, const string& dir) const
+    {
+	bool ret = false;
+
+	mt.select( (string)" on "+dir+' ' );
+	if( mt.numLines(true)>0 )
+	{
+	    list<string> sl = splitString( mt.getLine(0,true) );
+	    y2mil( "sl:" << sl );
+	    if( sl.size()>=6 )
+	    {
+		list<string>::const_iterator i=sl.begin();
+		++i;
+		++i;
+		++i;
+		++i;
+		if( *i == "none" )
+		{
+		    ++i;
+		    string opt = *i;
+		    if( !opt.empty() && opt[0]=='(' )
+			opt.erase( 0, 1 );
+		    if( !opt.empty() && opt[opt.size()-1]==')' )
+			opt.erase( opt.size()-1, 1 );
+		    sl = splitString( opt, "," );
+		    y2mil( "sl:" << sl );
+		    ret = find(sl.begin(), sl.end(), "bind") != sl.end();
+		}
+	    }
+	}
+
+	return ret;
+    }
+
+
+string
 ProcMounts::getMount( const string& dev ) const
     {
     string ret;

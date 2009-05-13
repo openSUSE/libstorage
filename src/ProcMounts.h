@@ -9,9 +9,10 @@
 
 namespace storage
 {
-class Storage;
+    class Storage;
+    class SystemCmd;
 
-class ProcMounts 
+    class ProcMounts
     {
     public:
 	ProcMounts( Storage * const s );
@@ -19,8 +20,14 @@ class ProcMounts
 	string getMount( const std::list<string>& dl ) const;
 	std::map<string,string> allMounts() const;
 	void getEntries( std::list<FstabEntry>& l ) const;
+
     protected:
 	std::map<string,FstabEntry> co;
+
+    private:
+
+	bool isBind(SystemCmd& mt, const string& dir) const;
+
     };
 
 }
