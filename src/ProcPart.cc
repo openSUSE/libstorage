@@ -37,7 +37,7 @@ namespace storage
 	    data[device] = sizeK;
 	}
 
-	for (map<string, unsigned long long>::const_iterator it = data.begin(); it != data.end(); ++it)
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
 	    y2mil("data[" << it->first << "] -> " << it->second);
     }
 
@@ -46,7 +46,7 @@ namespace storage
     ProcPart::getSize(const string& device, unsigned long long& sizeK) const
     {
 	bool ret = false;
-	map<string, unsigned long long>::const_iterator i = data.find(undevDevice(device));
+	const_iterator i = data.find(undevDevice(device));
 	if (i != data.end())
 	{
 	    sizeK = i->second;
@@ -61,7 +61,7 @@ namespace storage
     ProcPart::getEntries() const
     {
 	list<string> ret;
-	for (map<string, unsigned long long>::const_iterator i = data.begin(); i != data.end(); ++i)
+	for (const_iterator i = data.begin(); i != data.end(); ++i)
 	    ret.push_back(i->first);
 	return ret;
     }

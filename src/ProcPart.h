@@ -30,13 +30,15 @@ namespace storage
 	list<string> getMatchingEntries(Pred pred) const
 	{
 	    list<string> ret;
-	    for (map<string, unsigned long long>::const_iterator i = data.begin(); i != data.end(); ++i)
+	    for (const_iterator i = data.begin(); i != data.end(); ++i)
 		if (pred(i->first))
 		    ret.push_back(i->first);
 	    return ret;
 	}
 
     protected:
+
+	typedef map<string, unsigned long long>::const_iterator const_iterator;
 
 	map<string, unsigned long long> data;
 
