@@ -364,7 +364,7 @@ class Storage : public storage::StorageInterface
 	string getRootPrefix() const { return rootprefix; }
 	int removeVolume( const string& device );
 	int removeUsing( const string& device, const storage::usedBy& uby );
-	bool checkDeviceMounted( const string& device, string& mp );
+	bool checkDeviceMounted(const string& device, list<string>& mps);
 	bool umountDevice( const string& device );
 	bool mountDev( const string& device, const string& mp, bool ro=true,
 	               const string& opts="" );

@@ -5236,7 +5236,7 @@ void Storage::rootMounted()
     }
 
 bool
-Storage::checkDeviceMounted( const string& device, string& mp )
+Storage::checkDeviceMounted(const string& device, list<string>& mps)
     {
     bool ret = false;
     assertInit();
@@ -5245,17 +5245,16 @@ Storage::checkDeviceMounted( const string& device, string& mp )
     ProcMounts mountData( this );
     if( findVolume( device, vol ) )
 	{
-	mp = mountData.getMount( vol->mountDevice() );
-	if( mp.empty() )
-	    mp = mountData.getMount( vol->altNames() );
+	mps = mountData.getAllMounts(vol->mountDevice());
+	mps.splice(mps.end(), mountData.getAllMounts(vol->altNames()));
 	}
     else
 	{
-	mp = mountData.getMount( device );
+	mps = mountData.getAllMounts(device);
 	}
-    ret = !mp.empty();
-    y2mil("ret:" << ret << " mp:" << mp);
-    return( ret );
+    ret = !mps.empty();
+    y2mil("ret:" << ret << " mps:" << mps);
+    return ret;
     }
 
 bool

@@ -1974,10 +1974,10 @@ namespace storage
 	 * Determine if the given device is known and mounted somewhere
 	 *
 	 * @param device device name to check (checks also all alias names)
-	 * @param mp set to current mount point if mounted
+	 * @param mps set to current mount points if mounted
 	 * @return bool that is true if device is mounted
 	 */
-	virtual bool checkDeviceMounted( const string& device, string& mp ) = 0;
+	virtual bool checkDeviceMounted(const string& device, list<string>& mps) = 0;
 
 	/**
 	 * Umount the given device and do what is necessary to remove
