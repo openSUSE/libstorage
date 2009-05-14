@@ -136,8 +136,7 @@ NfsCo::getNfsData( ProcMounts& mounts )
 	    addToList( n );
 	    }
 	}
-    l.clear();
-    mounts.getEntries(l);
+    l = mounts.getEntries();
     const char * ign_opt[] = { "hard", "rw", "v3", "v2", "lock" };
     const char * ign_beg[] = { "proto=", "addr=", "vers=" };
     for( list<FstabEntry>::iterator i=l.begin(); i!=l.end(); ++i )

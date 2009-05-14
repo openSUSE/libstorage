@@ -3,7 +3,6 @@
   Textdomain    "storage"
 */
 
-#include <fstream>
 
 #include "y2storage/AppUtil.h"
 #include "y2storage/SystemCmd.h"
@@ -64,10 +63,12 @@ ProcMounts::ProcMounts( Storage * const sto )
 	}
 	else
 	{
-	    co[dev].device = dev;
-	    co[dev].mount = dir;
-	    co[dev].fs = extractNthWord(2, *it);
-	    co[dev].opts = splitString(extractNthWord(3, *it), ",");
+	    FstabEntry entry;
+	    entry.device = dev;
+	    entry.mount = dir;
+	    entry.fs = extractNthWord(2, *it);
+	    entry.opts = splitString(extractNthWord(3, *it), ",");
+	    data.insert(make_pair(dev, entry));
 	}
     }
 
@@ -97,13 +98,15 @@ ProcMounts::ProcMounts( Storage * const sto )
 	if (pos != string::npos)
 	    dev.erase(pos);
 
-	co[dev].device = dev;
-	co[dev].mount = "swap";
-	co[dev].fs = "swap";
+	FstabEntry entry;
+	entry.device = dev;
+	entry.mount = "swap";
+	entry.fs = "swap";
+	data.insert(make_pair(dev, entry));
     }
 
-    for (map<string, FstabEntry>::const_iterator it = co.begin(); it != co.end(); ++it)
-	y2mil("co:[" << it->first << "]-->" << it->second);
+    for (const_iterator it = data.begin(); it != data.end(); ++it)
+	y2mil("data[" << it->first << "] -> " << it->second);
     }
 
 
@@ -144,46 +147,73 @@ ProcMounts::ProcMounts( Storage * const sto )
 
 
 string
-ProcMounts::getMount( const string& dev ) const
+ProcMounts::getMount(const string& device) const
     {
     string ret;
-    map<string,FstabEntry>::const_iterator i = co.find( dev );
-    if( i!=co.end() )
+    const_iterator i = data.find(device);
+    if (i != data.end())
 	ret = i->second.mount;
-    return( ret );
+    return ret;
     }
 
 string
-ProcMounts::getMount( const list<string>& dl ) const
+ProcMounts::getMount(const list<string>& devices) const
     {
     string ret;
-    list<string>::const_iterator i = dl.begin();
-    while( ret.empty() && i!=dl.end() )
+    list<string>::const_iterator i = devices.begin();
+    while (ret.empty() && i != devices.end())
 	{
 	ret = getMount( *i );
 	++i;
 	}
-    return( ret );
+    return ret;
     }
 
-map<string,string>
+
+    list<string>
+    ProcMounts::getAllMounts(const string& device) const
+    {
+	list<string> ret;
+
+	pair<const_iterator, const_iterator> range = data.equal_range(device);
+	for (const_iterator i = range.first; i != range.second; ++i)
+	    ret.push_back(i->second.mount);
+
+	return ret;
+    }
+
+
+    list<string>
+    ProcMounts::getAllMounts(const list<string>& devices) const
+    {
+	list<string> ret;
+
+	for (list<string>::const_iterator i = devices.begin(); i != devices.end(); ++i)
+	    ret.splice(ret.end(), getAllMounts(*i));
+
+	return ret;
+    }
+
+
+map<string, string>
 ProcMounts::allMounts() const
     {
-    map<string,string> ret;
-    for( map<string,FstabEntry>::const_iterator i = co.begin(); i!=co.end(); ++i )
+    map<string, string> ret;
+    for (const_iterator i = data.begin(); i != data.end(); ++i)
 	{
 	ret[i->second.mount] = i->first;
 	}
-    return( ret );
+    return ret;
     }
 
-void ProcMounts::getEntries( list<FstabEntry>& l ) const
+
+    list<FstabEntry>
+    ProcMounts::getEntries() const
     {
-    l.clear();
-    for( map<string,FstabEntry>::const_iterator i = co.begin(); i!=co.end(); ++i )
-	{
-	l.push_back( i->second );
-	}
+	list<FstabEntry> ret;
+	for (const_iterator i = data.begin(); i != data.end(); ++i)
+	    ret.push_back(i->second);
+	return ret;
     }
 
 }
