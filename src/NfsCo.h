@@ -80,6 +80,8 @@ class NfsCo : public Container
 
 	bool findNfs( const string& dev, NfsIter& i );
 	bool findNfs( const string& dev );
+
+	static list<string> filterOpts(const list<string>& opts);
 	void getNfsData( ProcMounts& mounts );
 	void init();
 

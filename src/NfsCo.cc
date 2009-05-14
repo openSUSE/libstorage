@@ -118,27 +118,44 @@ NfsCo::addNfs( const string& nfsDev, unsigned long long sizeK,
     return( 0 );
     }
 
+
+    list<string>
+    NfsCo::filterOpts(const list<string>& opts)
+    {
+	const char* ign_opt[] = { "hard", "rw", "v3", "v2", "lock" };
+	const char* ign_opt_start[] = { "proto=", "addr=", "vers=" };
+
+	list<string> ret = opts;
+
+	for (size_t i = 0; i < lengthof(ign_opt); ++i)
+	    ret.remove(ign_opt[i]);
+
+	for (size_t i = 0; i < lengthof(ign_opt_start); ++i)
+	    ret.remove_if(string_starts_with(ign_opt_start[i]));
+
+	return ret;
+    }
+
+
 void
 NfsCo::getNfsData( ProcMounts& mounts )
     {
-    y2mil( "begin fstab:" << getStorage()->getFstab() );
-    list<FstabEntry> l = getStorage()->getFstab()->getEntries();
-    for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
+    const list<FstabEntry> l1 = getStorage()->getFstab()->getEntries();
+    for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
 	{
 	if( i->fs == "nfs" )
 	    {
 	    Nfs *n = new Nfs( *this, i->device );
 	    n->setMount( i->mount );
-	    string op = boost::join(i->opts, "," );
-	    if( op != "defaults" )
-		n->setFstabOption( op );
+	    string opt = boost::join(i->opts, ",");
+	    if (opt != "defaults")
+		n->setFstabOption(opt);
 	    addToList( n );
 	    }
 	}
-    l = mounts.getEntries();
-    const char * ign_opt[] = { "hard", "rw", "v3", "v2", "lock" };
-    const char * ign_beg[] = { "proto=", "addr=", "vers=" };
-    for( list<FstabEntry>::iterator i=l.begin(); i!=l.end(); ++i )
+
+    const list<FstabEntry> l2 = mounts.getEntries();
+    for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
 	{
 	if( i->fs == "nfs" )
 	    {
@@ -151,35 +168,16 @@ NfsCo::getNfsData( ProcMounts& mounts )
 	    else
 		{
 		n = new Nfs( *this, i->device );
-		list<string>::iterator si = i->opts.begin();
-		unsigned pos = 0;
-		while( si!=i->opts.end() )
-		    {
-		    pos=0; 
-		    while( pos<lengthof(ign_opt) && *si!=ign_opt[pos] )
-			++pos;
-		    if( pos<lengthof(ign_opt) )
-			si = i->opts.erase(si);
-		    else
-			{
-			pos=0;
-			while( pos<lengthof(ign_beg) && si->find(ign_beg[pos])!=0 )
-			    ++pos;
-			if( pos<lengthof(ign_beg) )
-			    si = i->opts.erase(si);
-			else
-			    ++si;
-			}
-		    }
 		n->setIgnoreFstab();
-		n->setFstabOption( boost::join(i->opts, "," ) );
+		string opt = boost::join(filterOpts(i->opts), ",");
+		n->setFstabOption(opt);
 		addToList( n );
 		}
 	    n->setSize(Storage::getDfSize(i->mount));
 	    }
 	}
-    l.clear();
     }
+
 
 bool
 NfsCo::findNfs( const string& dev, NfsIter& i )
