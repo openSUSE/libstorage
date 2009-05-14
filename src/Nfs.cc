@@ -4,8 +4,6 @@
 
 #include <sstream>
 
-#include <sys/stat.h>
-
 #include "y2storage/Nfs.h"
 #include "y2storage/StorageTypes.h"
 #include "y2storage/Container.h"
@@ -60,18 +58,18 @@ Nfs::init()
     setFs(NFS);
     }
 
-string Nfs::canonicalName( const string& d )
+
+    string
+    Nfs::canonicalName(const string& d)
     {
-    string dev(d);
-    string::size_type pos = 0;
-    while( (pos=dev.find("//",pos))!=string::npos )
-	dev.erase(pos,1);
-    if( !dev.empty() && *dev.rbegin()=='/' )
-	dev.erase(dev.size()-1);
-    if( dev!=d )
-	y2mil( "dev:" << dev << " d:" << d );
-    return(dev);
+	string dev = boost::replace_all_copy(d, "//", "/");
+	if (!dev.empty() && *dev.rbegin() == '/')
+	    dev.erase(dev.size() - 1);
+	if (dev != d)
+	    y2mil("dev:" << dev << " d:" << d);
+	return dev;
     }
+
 
 void Nfs::getInfo( NfsInfo& tinfo ) const
     {
