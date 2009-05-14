@@ -5319,8 +5319,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     assertInit();
     y2mil("dir:" << dir);
     EtcFstab fstab(dir, true);
-    list<FstabEntry> le;
-    fstab.getEntries(le);
+    const list<FstabEntry> le = fstab.getEntries();
     for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
     {
 	y2mil( "entry:" << *i );

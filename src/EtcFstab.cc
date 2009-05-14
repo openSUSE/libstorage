@@ -589,17 +589,16 @@ string EtcFstab::createCrtabLine( const FstabEntry& e ) const
     }
 
 
-    void
-    EtcFstab::getEntries( list<FstabEntry>& l ) const
+    list<FstabEntry>
+    EtcFstab::getEntries() const
     {
-	l.clear();
+	list<FstabEntry> ret;
 	for (list<Entry>::const_iterator i = co.begin(); i != co.end(); ++i)
 	{
 	    if (i->op == Entry::NONE)
-	    {
-		l.push_back(i->old);
-	    }
+		ret.push_back(i->old);
 	}
+	return ret;
     }
 
 

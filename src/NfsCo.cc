@@ -122,8 +122,7 @@ void
 NfsCo::getNfsData( ProcMounts& mounts )
     {
     y2mil( "begin fstab:" << getStorage()->getFstab() );
-    list<FstabEntry> l;
-    getStorage()->getFstab()->getEntries(l);
+    list<FstabEntry> l = getStorage()->getFstab()->getEntries();
     for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
 	if( i->fs == "nfs" )
