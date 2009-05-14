@@ -18,12 +18,12 @@ namespace storage
     using namespace std;
 
 
-NfsCo::NfsCo( Storage * const s, ProcMounts& mounts ) :
-    Container(s,"nfs",staticType())
+    NfsCo::NfsCo(Storage * const s, const EtcFstab& fstab, const ProcMounts& mounts)
+	: Container(s, "nfs", staticType())
     {
     y2deb("constructing NfsCo detect");
     init();
-    getNfsData( mounts );
+    getNfsData(fstab, mounts);
     }
 
 NfsCo::NfsCo( Storage * const s ) :
@@ -138,9 +138,9 @@ NfsCo::addNfs( const string& nfsDev, unsigned long long sizeK,
 
 
 void
-NfsCo::getNfsData( ProcMounts& mounts )
+NfsCo::getNfsData(const EtcFstab& fstab, const ProcMounts& mounts)
     {
-    const list<FstabEntry> l1 = getStorage()->getFstab()->getEntries();
+    const list<FstabEntry> l1 = fstab.getEntries();
     for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
 	{
 	if( i->fs == "nfs" )

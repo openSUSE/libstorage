@@ -11,7 +11,7 @@ class NfsCo : public Container
     friend class Storage;
 
     public:
-	NfsCo( Storage * const s, ProcMounts& mounts );
+	NfsCo(Storage * const s, const EtcFstab& fstab, const ProcMounts& mounts);
 	NfsCo( Storage * const s );
 	NfsCo( const NfsCo& rhs );
 
@@ -82,7 +82,7 @@ class NfsCo : public Container
 	bool findNfs( const string& dev );
 
 	static list<string> filterOpts(const list<string>& opts);
-	void getNfsData( ProcMounts& mounts );
+	void getNfsData(const EtcFstab& fstab, const ProcMounts& mounts);
 	void init();
 
 	virtual void print( std::ostream& s ) const { s << *this; }

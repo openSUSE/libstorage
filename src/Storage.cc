@@ -246,7 +246,7 @@ void Storage::detectObjects()
 	detectLoops(ppart);
 	ProcMounts pm( this );
 	if( !instsys() )
-	    detectNfs( pm );
+	    detectNfs(*fstab, pm);
 	detectFsData( vBegin(), vEnd(), pm );
 	logContainersAndVolumes(logdir);
 	}
@@ -410,7 +410,9 @@ void Storage::detectLoops( ProcPart& ppart )
 	}
     }
 
-void Storage::detectNfs( ProcMounts& mounts )
+
+    void
+    Storage::detectNfs(const EtcFstab& fstab, const ProcMounts& mounts)
     {
     if( test() )
 	{
@@ -422,7 +424,7 @@ void Storage::detectNfs( ProcMounts& mounts )
 	}
     else
 	{
-	NfsCo * v = new NfsCo( this, mounts );
+	NfsCo * v = new NfsCo(this, fstab, mounts);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else

@@ -1651,7 +1651,7 @@ class Storage : public storage::StorageInterface
 	void detectMultipath();
 	void detectMds();
 	void detectLoops( ProcPart& ppart );
-	void detectNfs( ProcMounts& mounts );
+	void detectNfs(const EtcFstab& fstab, const ProcMounts& mounts);
 	void detectLvmVgs();
 	void detectDmraid( ProcPart& ppart );
 	void detectDmmultipath( ProcPart& ppart );
