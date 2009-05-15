@@ -41,8 +41,11 @@ for container in containers:
             print "  ", lvmlvinfo.v.device, lvmlvinfo.v.sizeK
 
 
+print
+
+
 fscapabilities = LibStorage.FsCapabilities()
-c.getFsCapabilities(LibStorage.REISERFS, fscapabilities)
+c.getFsCapabilities(LibStorage.EXT4, fscapabilities)
 print fscapabilities.isExtendable, fscapabilities.minimalFsSizeK
 
 
