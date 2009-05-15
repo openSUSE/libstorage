@@ -5560,8 +5560,10 @@ Storage::createBackupState( const string& name )
 	{
 	if (checkBackupState(name))
 	    removeBackupState(name);
+	CCont tmp;
 	for (CCIter i = cont.begin(); i != cont.end(); ++i)
-	    backups[name].push_back( (*i)->getCopy() );
+	    tmp.push_back((*i)->getCopy());
+	backups.insert(make_pair(name, tmp));
 	}
     y2mil( "states:" << backupStates() );
     y2mil("ret:" << ret);
