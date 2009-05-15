@@ -21,6 +21,8 @@ using namespace std;
 }
 
 %include "../../src/StorageInterface.h"
+%include "../../src/HumanString.h"
+%include "../../src/Graph.h"
 
 using namespace storage;
 

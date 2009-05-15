@@ -3,7 +3,7 @@
 import LibStorage
 
 
-env = LibStorage.Environment(1)
+env = LibStorage.Environment(True)
 
 c = LibStorage.createStorageInterface(env)
 
@@ -25,8 +25,8 @@ for container in containers:
         c.getPartitionInfo(container.name, partitioninfos)
 
         for partitioninfo in partitioninfos:
-            print "  ", partitioninfo.v.device, partitioninfo.v.sizeK, \
-            partitioninfo.cylStart, partitioninfo.cylSize
+            print "  ", partitioninfo.v.device, partitioninfo.v.sizeK,  \
+                partitioninfo.cylStart, partitioninfo.cylSize
 
     if container.type == LibStorage.LVM:
 
@@ -46,7 +46,12 @@ print
 
 fscapabilities = LibStorage.FsCapabilities()
 c.getFsCapabilities(LibStorage.EXT4, fscapabilities)
-print fscapabilities.isExtendable, fscapabilities.minimalFsSizeK
+print fscapabilities.isExtendable, fscapabilities.minimalFsSizeK,       \
+    fscapabilities.isExtendableWhileMounted
+
+print LibStorage.byteToHumanString(1234567890, True, 4, False)
+
+print LibStorage.saveGraph(c, "storage.gv")
 
 
 LibStorage.destroyStorageInterface(c)
