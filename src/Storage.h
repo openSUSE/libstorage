@@ -167,7 +167,7 @@ class CastCheckFncIterator : public CheckByFnc<FncP>,
 class EtcFstab;
 class DiskData;
 
-class Storage : public storage::StorageInterface
+    class Storage : public storage::StorageInterface, boost::noncopyable
     {
     protected:
 
