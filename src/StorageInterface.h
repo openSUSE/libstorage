@@ -68,19 +68,22 @@ using std::list;
  * using namespace storage;
  *
  * int
- * main ()
+ * main()
  * {
+ *     // Environment for StorageInterface with read-write enabled.
+ *     Environment env(false);
+ *
  *     // First we must create a concrete StorageInterface object.
- *     StorageInterface* s = createStorageInterface (false, false, true);
+ *     StorageInterface* s = createStorageInterface(env);
  *
  *     int ret;
  *     string name;
  *
  *     // Create a primary partition on /dev/hda.
- *     ret = s->createPartitionKb ("/dev/hda", PRIMARY, 0, 100000, name);
+ *     ret = s->createPartitionKb("/dev/hda", PRIMARY, 0, 100000, name);
  *
  *     // Commit the change to the system.
- *     ret = s->commit ();
+ *     ret = s->commit();
  *
  *     // Finally destroy the StorageInterface object.
  *     delete s;
@@ -2125,11 +2128,17 @@ namespace storage
 
 
     /**
-     * Factory for creating a concrete StorageInterface object.
-     *
-     * Throws an exception when locking fails.
+     * Contains basic environment settings controlling the behaviour of libstorage.
      */
-    StorageInterface* createDefaultStorageInterface ();
+    struct Environment
+    {
+	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true), instsys(false) {}
+
+	bool readonly;
+	bool testmode;
+	bool autodetect;
+	bool instsys;
+    };
 
 
     /**
@@ -2137,8 +2146,7 @@ namespace storage
      *
      * Throws an exception when locking fails.
      */
-    StorageInterface* createStorageInterface (bool readonly, bool testmode,
-					      bool autodetect);
+    StorageInterface* createStorageInterface(const Environment& env);
 
 
     /**
@@ -2148,8 +2156,7 @@ namespace storage
      * pid of one process holding a conflicting lock. If the pid cannot be
      * determined it is set to 0. The lock holder may run on another system.
      */
-    StorageInterface* createStorageInterfacePid (bool readonly, bool testmode,
-						 bool autodetect, int& locker_pid);
+    StorageInterface* createStorageInterfacePid(const Environment& env, int& locker_pid);
 
 
     /**

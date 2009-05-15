@@ -2017,7 +2017,7 @@ bool
 Disk::getPartedValues( Partition *p ) const
     {
     bool ret = false;
-    if( getStorage()->test() )
+    if (getStorage()->testmode())
 	{
 	ret = true;
 	p->setSize( p->sizeK() );
@@ -2063,7 +2063,7 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
                         unsigned long long& end ) const
     {
     bool ret = false;
-    if( getStorage()->test() )
+    if (getStorage()->testmode())
 	{
 	ret = true;
 	start = p->cylStart()*new_head*new_sector;

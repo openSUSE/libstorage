@@ -5,6 +5,9 @@
 
 #include <y2storage/StorageInterface.h>
 
+#include "common.h"
+
+
 using namespace std;
 using namespace storage;
 
@@ -58,7 +61,7 @@ test ()
 {
     printf ("test\n");
 
-    s = createStorageInterface (false, true, false);
+    s = createStorageInterface(TestEnvironment());
 
     cout << s->changeFormatVolume ("/dev/hda1", true, REISERFS) << '\n';
     cout << s->changeFormatVolume ("/dev/hda2", true, EXT2) << '\n';

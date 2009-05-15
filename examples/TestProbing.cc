@@ -16,7 +16,8 @@ int
 main (int argc, char** argv)
 {
     initDefaultLogger();
-    StorageInterface* s = createStorageInterface (true, false, true);
+
+    StorageInterface* s = createStorageInterface(Environment(true));
 
     deque<ContainerInfo> containers;
     s->getContainers (containers);

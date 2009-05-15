@@ -11,7 +11,7 @@ using namespace std;
 void
 doit ()
 {
-    StorageInterface* s = createDefaultStorageInterface ();
+    StorageInterface* s = createStorageInterface(Environment(false));
 
 
     cout << s->destroyPartitionTable ("hdb", s->defaultDiskLabel ()) << '\n';
@@ -48,7 +48,7 @@ doit ()
     delete s;
 
 
-    s = createDefaultStorageInterface ();
+    s = createStorageInterface(Environment(false));
 
 
     deque <string> pds34;

@@ -12,7 +12,7 @@ main( int argc_iv, char** argv_ppcv )
     {
     int ret;
     initDefaultLogger();
-    StorageInterface* s = createDefaultStorageInterface();
+    StorageInterface* s = createStorageInterface(Environment(false));
     string dev;
     ret = s->destroyPartitionTable( "/dev/hdb", s->defaultDiskLabel() );
     if( ret ) cerr << "retcode:" << ret << endl;

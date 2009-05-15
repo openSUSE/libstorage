@@ -207,9 +207,13 @@ class DiskData;
 
 	static void initDefaultLogger ();
 
-	Storage( bool ronly=false, bool testmode=false, bool autodetect=true );
-	bool test() const { return( testmode ); }
-	bool instsys() const { return( inst_sys ); }
+	Storage(const Environment& env);
+
+	bool readonly() const { return env.readonly; }
+	bool testmode() const { return env.testmode; }
+	bool autodetect() const { return env.autodetect; }
+	bool instsys() const { return env.instsys; }
+
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool isCacheChanges() const { return( cache ); }
 	void assertInit() { if( !initialized ) initialize(); }
@@ -1704,13 +1708,10 @@ class DiskData;
 			       bool& resize_ok) const;
 
 	// protected internal member variables
+	const Environment env;
 	Lock lock;
-	bool readonly;
-	bool testmode;
-	bool inst_sys;
 	bool cache;
 	bool initialized;
-	bool autodetect;
 	bool recursiveRemove;
 	bool zeroNewPartitions;
 	MountByType defaultMountBy;

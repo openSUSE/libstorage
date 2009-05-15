@@ -32,7 +32,7 @@ run1 ()
 {
     cout << "run1\n";
 
-    s = createStorageInterface (false, testmode, true);
+    s = createStorageInterface(TestEnvironment());
 
     s->destroyPartitionTable (disk, "msdos");
 
@@ -58,7 +58,7 @@ run2 ()
 {
     cout << "run2\n";
 
-    s = createStorageInterface (false, testmode, true);
+    s = createStorageInterface(TestEnvironment());
 
     string name = disk + "1";
     cout << name << '\n';

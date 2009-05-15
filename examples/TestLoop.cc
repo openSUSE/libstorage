@@ -47,8 +47,7 @@ main( int argc_iv, char** argv_ppcv )
     {
     int ret = 0;
     initDefaultLogger();
-    //StorageInterface* s = createStorageInterface(false,true);
-    StorageInterface* s = createDefaultStorageInterface();
+    StorageInterface* s = createStorageInterface(Environment(false));
     s->setCallbackProgressBar( progressbarCb );
     s->setCallbackShowInstallInfo( installInfoCb );
     string disk = "/dev/hdb";

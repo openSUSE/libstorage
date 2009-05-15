@@ -73,27 +73,25 @@ Storage::initDefaultLogger ()
 }
 
 
-Storage::Storage( bool ronly, bool tmode, bool autodetec )
-    : lock(ronly, tmode), readonly(ronly), testmode(tmode), initialized(false),
-      autodetect(autodetec), fstab(NULL)
+Storage::Storage(const Environment& env)
+    : env(env), lock(readonly(), testmode()), initialized(false), fstab(NULL)
 {
-    y2mil("constructed Storage ronly:" << ronly << " testmode:" << testmode <<
-	  " autodetect:" << autodetect);
+    y2mil("constructed Storage with readonly:" << readonly() << " testmode:" << testmode() 
+	  << " autodetect:" << autodetect() << " instsys:" << instsys());
     y2mil("package string \"" PACKAGE_STRING "\"");
-    char * tenv = getenv( "YAST_IS_RUNNING" );
-    inst_sys = tenv!=NULL && strcmp(tenv,"instsys")==0;
-    root_mounted = !inst_sys;
+
+    root_mounted = !instsys();
     efiboot = false;
     hald_pid = 0;
-    if( !testmode )
-	testmode = getenv( "YAST2_STORAGE_TMODE" )!=NULL;
+
     max_log_num = 5;
-    tenv = getenv( "Y2MAXLOGNUM" );
-    logdir = "/var/log/YaST2";
+    char* tenv = getenv("Y2MAXLOGNUM");
     if( tenv!=0 )
 	string(tenv) >> max_log_num;
-    y2mil("instsys:" << inst_sys << " testmode:" << testmode << " autodetect:" << autodetect <<
-	  " log:" << max_log_num);
+    y2mil("max_log_num:" << max_log_num);
+
+    logdir = "/var/log/YaST2";
+
     progress_bar_cb = NULL;
     install_info_cb = NULL;
     info_popup_cb = NULL;
@@ -149,12 +147,12 @@ Storage::initialize()
 		setDefaultMountBy( MOUNTBY_LABEL );
 	}
     }
-    if( autodetect )
+    if (autodetect())
 	{
 	detectArch();
 	efiboot = (arch() == "ia64");
 	}
-    if( testmode )
+    if (testmode())
 	{
 	char * tenv = getenv( "YAST2_STORAGE_TDIR" );
 	if( tenv!=NULL && strlen(tenv)>0 )
@@ -166,7 +164,7 @@ Storage::initialize()
 	    testdir = logdir;
 	    }
 	}
-    y2mil("instsys:" << inst_sys << " testdir:" << testdir);
+    y2mil("instsys:" << instsys() << " testdir:" << testdir);
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();
@@ -227,7 +225,7 @@ void Storage::detectObjects()
     for( LvmVgIterator i=p.begin(); i!=p.end(); ++i )
 	i->normalizeDmDevices();
 
-    if( testmode )
+    if (testmode())
         {
 	SystemCmd::setTestmode();
  	rootprefix = testdir;
@@ -353,7 +351,7 @@ Storage::detectArch()
 void
 Storage::detectDisks( ProcPart& ppart )
     {
-    if( test() )
+    if (testmode())
 	{
 	glob_t globbuf;
 	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
@@ -363,7 +361,7 @@ Storage::detectDisks( ProcPart& ppart )
 	    }
  	globfree (&globbuf);
 	}
-    else if( autodetect )
+    else if (autodetect())
 	{
 	autodetectDisks( ppart );
 	}
@@ -372,7 +370,7 @@ Storage::detectDisks( ProcPart& ppart )
 
 void Storage::detectMds()
     {
-    if( test() )
+    if (testmode())
 	{
 	string file = testdir+"/md";
 	if( access( file.c_str(), R_OK )==0 )
@@ -392,7 +390,7 @@ void Storage::detectMds()
 
 void Storage::detectLoops( ProcPart& ppart )
     {
-    if( test() )
+    if (testmode())
 	{
 	string file = testdir+"/loop";
 	if( access( file.c_str(), R_OK )==0 )
@@ -414,7 +412,7 @@ void Storage::detectLoops( ProcPart& ppart )
     void
     Storage::detectNfs(const EtcFstab& fstab, const ProcMounts& mounts)
     {
-    if( test() )
+    if (testmode())
 	{
 	string file = testdir+"/nfs";
 	if( access( file.c_str(), R_OK )==0 )
@@ -435,7 +433,7 @@ void Storage::detectLoops( ProcPart& ppart )
 void
 Storage::detectLvmVgs()
     {
-    if( test() )
+    if (testmode())
 	{
 	glob_t globbuf;
 	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
@@ -471,7 +469,7 @@ Storage::detectLvmVgs()
 void
 Storage::detectDmraid(ProcPart& ppart)
 {
-    if( test() )
+    if (testmode())
     {
 	glob_t globbuf;
 	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
@@ -512,7 +510,7 @@ Storage::detectDmraid(ProcPart& ppart)
 void
 Storage::detectDmmultipath(ProcPart& ppart)
 {
-    if( test() )
+    if (testmode())
     {
 	glob_t globbuf;
 	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
@@ -553,7 +551,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
 void
 Storage::detectDm( ProcPart& ppart )
     {
-    if( test() )
+    if (testmode())
 	{
 	glob_t globbuf;
 	if( glob( (testdir+"/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
@@ -930,22 +928,16 @@ bool Storage::is_ppc_pegasos = false;
 	Storage::initDefaultLogger ();
     }
 
-    StorageInterface* createDefaultStorageInterface ()
+    StorageInterface* createStorageInterface(const Environment& env)
     {
-	return new Storage ();
+	return new Storage(env);
     }
 
-    StorageInterface* createStorageInterface (bool ronly, bool testmode, bool autodetect)
-    {
-	return new Storage (ronly, testmode, autodetect);
-    }
-
-    StorageInterface* createStorageInterfacePid (bool ronly, bool testmode, bool autodetect,
-						 pid_t& locker_pid)
+    StorageInterface* createStorageInterfacePid(const Environment& env, pid_t& locker_pid)
     {
 	try
 	{
-	    return new Storage (ronly, testmode, autodetect);
+	    return new Storage(env);
 	}
 	catch (const LockException& e)
 	{
@@ -968,7 +960,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " type:" << type << " start:" << start << " size:" << size);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1021,7 +1013,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " type:" << type << " start:" << start << " sizeK:" << sizeK);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1083,7 +1075,7 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " sizeK:" << sizeK);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1165,7 +1157,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
     assertInit();
     y2mil("disk:" << disk << " type:" << type);
     DiskIterator i = findDisk( disk );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1265,7 +1257,7 @@ Storage::removePartition( const string& partition )
     y2mil("partition:" << partition);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1337,7 +1329,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
     y2mil("partition:" << partition << " start:" << start << " size:" << size);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1443,7 +1435,7 @@ Storage::changePartitionId( const string& partition, unsigned id )
     y2mil("partition:" << partition << " id:" << hex << id);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1511,7 +1503,7 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl,
     y2mil("partition:" << partition << " newCyl:" << sizeCyl << " ignoreFs:" << ignoreFs);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1572,7 +1564,7 @@ Storage::forgetChangePartitionId( const string& partition )
     y2mil("partition:" << partition);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1731,7 +1723,7 @@ Storage::destroyPartitionTable( const string& disk, const string& label )
     assertInit();
     y2mil("disk:" << disk << " label:" << label);
 
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1773,7 +1765,7 @@ Storage::initializeDisk( const string& disk, bool value )
     assertInit();
     y2mil("disk:" << disk << " value:" << value);
 
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1835,7 +1827,7 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     y2mil("device:" << device << " format:" << format << " type:" << Volume::fsTypeString(fs));
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1863,7 +1855,7 @@ Storage::changeLabelVolume( const string& device, const string& label )
     y2mil("device:" << device << " label:" << label);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1891,7 +1883,7 @@ Storage::eraseLabelVolume( const string& device )
     y2mil("device:" << device);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1915,7 +1907,7 @@ Storage::changeMkfsOptVolume( const string& device, const string& opts )
     y2mil("device:" << device << " opts:" << opts);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1943,7 +1935,7 @@ Storage::changeTunefsOptVolume( const string& device, const string& opts )
     y2mil("device:" << device << " opts:" << opts);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1971,7 +1963,7 @@ Storage::changeDescText( const string& device, const string& txt )
     y2mil("device:" << device << " txt:" << txt);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -1999,7 +1991,7 @@ Storage::changeMountPoint( const string& device, const string& mount )
     y2mil("device:" << device << " mount:" <<  mount);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2047,7 +2039,7 @@ Storage::changeMountBy( const string& device, MountByType mby )
     y2mil("device:" << device << " mby:" << Volume::mbyTypeString(mby));
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2102,7 +2094,7 @@ Storage::changeFstabOptions( const string& device, const string& options )
     y2mil("device:" << device << " options:" << options);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2150,7 +2142,7 @@ Storage::addFstabOptions( const string& device, const string& options )
     y2mil("device:" << device << " options:" << options);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2185,7 +2177,7 @@ Storage::removeFstabOptions( const string& device, const string& options )
     y2mil("device:" << device << " options:" << options);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2226,7 +2218,7 @@ Storage::setCryptType( const string& device, bool val, EncryptType typ )
     y2mil("device:" << device << " val:" << val << " type:" << typ);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2277,7 +2269,7 @@ Storage::setCryptPassword( const string& device, const string& pwd )
 #endif
 
     VolIterator vol;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2305,7 +2297,7 @@ Storage::forgetCryptPassword( const string& device )
     y2mil("device:" << device);
 
     VolIterator vol;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2361,7 +2353,7 @@ Storage::setIgnoreFstab( const string& device, bool val )
     y2mil("device:" << device << " val:" << val);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2422,7 +2414,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
     y2mil("device:" << device << " newSizeMb:" << newSizeMb << " ignoreFs:" << ignoreFs);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2455,7 +2447,7 @@ Storage::forgetResizeVolume( const string& device )
     y2mil("device:" << device);
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2484,7 +2476,7 @@ Storage::removeVolume( const string& device )
 
     VolIterator vol;
     ContIterator cont;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2522,7 +2514,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
     y2mil( "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1 <<
 	   " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2567,7 +2559,7 @@ Storage::removeLvmVg( const string& name )
     assertInit();
     y2mil("name:" << name);
     LvmVgIterator i = findLvmVg( name );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2596,7 +2588,7 @@ Storage::extendLvmVg( const string& name, const deque<string>& devs )
     assertInit();
     y2mil( "name:" << name << " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2626,7 +2618,7 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
     assertInit();
     y2mil( "name:" << name << " devices:" << devs );
     LvmVgIterator i = findLvmVg( name );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2658,7 +2650,7 @@ Storage::createLvmLv( const string& vg, const string& name,
     assertInit();
     y2mil("vg:" << vg << " name:" << name << " sizeM:" << sizeM << " stripe:" << stripe);
     LvmVgIterator i = findLvmVg( vg );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2705,7 +2697,7 @@ Storage::removeLvmLv( const string& vg, const string& name )
     assertInit();
     y2mil("vg:" << vg << " name:" << name);
     LvmVgIterator i = findLvmVg( vg );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2733,7 +2725,7 @@ Storage::changeLvStripeCount( const string& vg, const string& name,
     assertInit();
     y2mil("vg:" << vg << " name:" << name << " stripe:" << stripe);
     LvmVgIterator i = findLvmVg( vg );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2761,7 +2753,7 @@ Storage::changeLvStripeSize( const string& vg, const string& name,
     assertInit();
     y2mil("vg:" << vg << " name:" << name << " stripeSize:" << stripeSize);
     LvmVgIterator i = findLvmVg( vg );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2792,7 +2784,7 @@ Storage::createLvmLvSnapshot(const string& vg, const string& origin,
     assertInit();
     y2mil("vg:" << vg << " origin:" << origin << " name:" << name << " cowSizeK:" << cowSizeK);
     LvmVgIterator i = findLvmVg(vg);
-    if (readonly)
+    if (readonly())
     {
 	ret = STORAGE_CHANGE_READONLY;
     }
@@ -2820,7 +2812,7 @@ Storage::removeLvmLvSnapshot(const string& vg, const string& name)
     assertInit();
     y2mil("vg:" << vg << " name:" << name);
     LvmVgIterator i = findLvmVg(vg);
-    if (readonly)
+    if (readonly())
     {
 	ret = STORAGE_CHANGE_READONLY;
     }
@@ -2885,7 +2877,7 @@ Storage::createMd( const string& name, MdType rtype,
     y2mil( "name:" << name << " MdType:" << Md::pName(rtype) <<
            " devices:" << devs );
     unsigned num = 0;
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2928,7 +2920,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
     int ret = 0;
     assertInit();
     y2mil( "MdType:" << Md::pName(rtype) << " devices:" << devs );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -2977,7 +2969,7 @@ int Storage::removeMd( const string& name, bool destroySb )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " destroySb:" << destroySb);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3007,7 +2999,7 @@ int Storage::extendMd( const string& name, const string& dev )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " dev:" << dev);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3037,7 +3029,7 @@ int Storage::shrinkMd( const string& name, const string& dev )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " dev:" << dev);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3067,7 +3059,7 @@ int Storage::changeMdType( const string& name, MdType rtype )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " rtype:" << rtype);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3097,7 +3089,7 @@ int Storage::changeMdChunk( const string& name, unsigned long chunk )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " chunk:" << chunk);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3127,7 +3119,7 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " parity:" << ptype);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3297,7 +3289,7 @@ Storage::addNfsDevice( const string& nfsDev, const string& opts,
     int ret = 0;
     assertInit();
     y2mil( "name:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp );
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3381,7 +3373,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     y2mil("pwd:" << pwd);
 #endif
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3448,7 +3440,7 @@ Storage::modifyFileLoop( const string& device, const string& lname,
     int ret = 0;
     assertInit();
     y2mil("device:" << device << " lname:" << lname << " reuse:" << reuseExisting << " sizeK:" << sizeK);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -3474,7 +3466,7 @@ Storage::removeFileLoop( const string& lname, bool removeFile )
     int ret = 0;
     assertInit();
     y2mil("lname:" << lname << " removeFile:" << removeFile);
-    if( readonly )
+    if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
@@ -5266,7 +5258,7 @@ Storage::umountDevice( const string& device )
     assertInit();
     y2mil("device:" << device);
     VolIterator vol;
-    if( !readonly && findVolume( device, vol ) )
+    if( !readonly() && findVolume( device, vol ) )
 	{
 	if( vol->umount()==0 )
 	    {
@@ -5286,7 +5278,7 @@ Storage::mountDev( const string& device, const string& mp, bool ro,
     assertInit();
     y2mil("device:" << device << " mp:" << mp << " ro:" << ro << " opts:" << opts);
     VolIterator vol;
-    if( !readonly && findVolume( device, vol ) )
+    if( !readonly() && findVolume( device, vol ) )
 	{
 	if( vol->needCrsetup() )
 	    {
@@ -5559,7 +5551,7 @@ Storage::eraseCachedFreeInfo(const string& device)
 int
 Storage::createBackupState( const string& name )
     {
-    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    int ret = readonly()?STORAGE_CHANGE_READONLY:0;
     assertInit();
     y2mil("name:" << name);
     if (ret == 0 && name.empty())
@@ -5581,7 +5573,7 @@ Storage::createBackupState( const string& name )
 int
 Storage::removeBackupState( const string& name )
     {
-    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    int ret = readonly()?STORAGE_CHANGE_READONLY:0;
     assertInit();
     y2mil("name:" << name);
     if( ret==0 )
@@ -5608,7 +5600,7 @@ Storage::removeBackupState( const string& name )
 int
 Storage::restoreBackupState( const string& name )
     {
-    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    int ret = readonly()?STORAGE_CHANGE_READONLY:0;
     assertInit();
     y2mil("name:" << name);
     if( ret==0 )
@@ -5742,7 +5734,7 @@ int Storage::addFstabEntry( const string& device, const string& mount,
                             const string& vfs, const string& options,
 			    unsigned freq, unsigned passno )
     {
-    int ret = readonly?STORAGE_CHANGE_READONLY:0;
+    int ret = readonly()?STORAGE_CHANGE_READONLY:0;
     assertInit();
     y2mil("device:" << device << " mount:" << mount << " vfs:" << vfs << " opts:" << options <<
 	  " freq:" << freq << " passno:" << passno);

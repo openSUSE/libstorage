@@ -4,14 +4,17 @@
 #include <iterator>
 #include <sstream>
 
-#include <y2storage/StorageInterface.h>
+#include "common.h"
+
 
 using namespace storage;
 using namespace std;
 
+
 StorageInterface *s = 0;
 
-void print_num_pvs( const string& vg) {
+void print_num_pvs( const string& vg)
+{
     deque<string> disks;
     disks.push_back( "/dev/hda" );
     disks.push_back( "/dev/hdb" );
@@ -40,8 +43,8 @@ void extendVg( const string& vg, deque<string> devs_extend )
 {
     printf("extendVg\n");
 
-    s = createStorageInterface( false, true, false );
-    
+    s = createStorageInterface(TestEnvironment());
+
     deque<string> devs;
     devs.push_back( "/dev/hda1" );
     /* create volume group with the above disk */
@@ -98,5 +101,4 @@ int main( int argc_iv, char** argv_ppcv )
     devs.push_back("/dev/sdb1");
     extendVg( "system", devs );
     devs.clear();
-
 }

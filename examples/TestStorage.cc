@@ -53,7 +53,7 @@ int
 main( int argc_iv, char** argv_ppcv )
 {
     Storage::initDefaultLogger();
-    Storage Sto( true, false, true );
+    Storage Sto(Environment(true));
     for( Storage::ConstContIterator i=Sto.contBegin(); i!=Sto.contEnd(); ++i )
 	{
 	cout << *i << endl;

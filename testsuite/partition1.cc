@@ -5,6 +5,9 @@
 
 #include <y2storage/StorageInterface.h>
 
+#include "common.h"
+
+
 using namespace std;
 using namespace storage;
 
@@ -40,7 +43,7 @@ msdos (const string& disk, int n)
 {
     printf ("msdos %s %d\n", disk.c_str(), n);
 
-    s = createStorageInterface (false, true, false);
+    s = createStorageInterface(TestEnvironment());
 
     s->destroyPartitionTable (disk, "msdos");
 
@@ -69,7 +72,7 @@ gpt (const string& disk, int n)
 {
     printf ("gpt %s %d\n", disk.c_str(), n);
 
-    s = createStorageInterface (false, true, false);
+    s = createStorageInterface(TestEnvironment());
 
     s->destroyPartitionTable (disk, "gpt");
 
