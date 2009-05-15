@@ -204,7 +204,7 @@ class Disk : public Container
 	void logData(const string& Dir) const;
 	void setLabelData( const string& );
 
-	static string defaultLabel( const Storage&, unsigned long long size_k );
+	static string defaultLabel(bool efiboot, unsigned long long size_k);
 	static label_info labels[];
 	static string p_disks[];
 

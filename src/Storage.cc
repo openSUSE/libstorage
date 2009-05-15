@@ -1811,13 +1811,13 @@ Storage::initializeDisk( const string& disk, bool value )
 string
 Storage::defaultDiskLabel() const
 {
-    return Disk::defaultLabel(this, 0);
+    return Disk::defaultLabel(efiBoot(), 0);
 }
 
 string
 Storage::defaultDiskLabelSize( unsigned long long size_k ) const
 {
-    return Disk::defaultLabel(this, size_k);
+    return Disk::defaultLabel(efiBoot(), size_k);
 }
 
 

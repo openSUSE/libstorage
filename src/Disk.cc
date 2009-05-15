@@ -400,7 +400,7 @@ bool Disk::detectPartitions( ProcPart& ppart )
     if( detected_label.empty() )
 	detected_label = dlabel;
     if( dlabel.empty() )
-	dlabel = defaultLabel(getStorage(), size_k);
+	dlabel = defaultLabel(getStorage()->efiBoot(), size_k);
     setLabelData( dlabel );
 
     if (label == "unsupported")
@@ -963,10 +963,10 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 #define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
 
 string
-Disk::defaultLabel(const Storage& storage, unsigned long long size_k)
+Disk::defaultLabel(bool efiboot, unsigned long long size_k)
 {
     string ret = "msdos";
-    if (storage.efiBoot())
+    if (efiboot)
 	ret = "gpt";
     else if( Storage::arch()=="ia64" )
 	ret = "gpt";
@@ -978,7 +978,7 @@ Disk::defaultLabel(const Storage& storage, unsigned long long size_k)
 	ret = "amiga";
     if( size_k>2*TB )
 	ret = "gpt";
-    y2mil("efiboot:" << storage.efiBoot() << " size_k:" << size_k << " ret:" << ret);
+    y2mil("efiboot:" << efiboot << " size_k:" << size_k << " ret:" << ret);
     return ret;
 }
 
