@@ -2124,7 +2124,7 @@ namespace storage
     /**
      * Initializes default logging.
      */
-    void initDefaultLogger ();
+    void initDefaultLogger();
 
 
     /**
@@ -2132,7 +2132,8 @@ namespace storage
      */
     struct Environment
     {
-	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true), instsys(false) {}
+	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true),
+	    instsys(false) {}
 
 	bool readonly;
 	bool testmode;
@@ -2162,7 +2163,7 @@ namespace storage
     /**
      * Destroy a StorageInterface object.
      */
-    void destroyStorageInterface (StorageInterface*);
+    void destroyStorageInterface(StorageInterface*);
 
 }
 
