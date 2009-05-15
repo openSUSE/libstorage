@@ -3,11 +3,13 @@
 import LibStorage
 
 
-c = LibStorage.createStorageInterface (1, 0, 1)
+env = LibStorage.Environment(1)
+
+c = LibStorage.createStorageInterface(env)
 
 
-containers = LibStorage.dequecontainerinfo ()
-c.getContainers (containers)
+containers = LibStorage.dequecontainerinfo()
+c.getContainers(containers)
 
 for container in containers:
 
@@ -15,12 +17,12 @@ for container in containers:
 
     if container.type == LibStorage.DISK:
 
-        diskinfo = LibStorage.DiskInfo ()
-        c.getDiskInfo (container.name, diskinfo)
+        diskinfo = LibStorage.DiskInfo()
+        c.getDiskInfo(container.name, diskinfo)
         print "  ", diskinfo.sizeK
 
-        partitioninfos = LibStorage.dequepartitioninfo ()
-        c.getPartitionInfo (container.name, partitioninfos)
+        partitioninfos = LibStorage.dequepartitioninfo()
+        c.getPartitionInfo(container.name, partitioninfos)
 
         for partitioninfo in partitioninfos:
             print "  ", partitioninfo.v.device, partitioninfo.v.sizeK, \
@@ -28,20 +30,20 @@ for container in containers:
 
     if container.type == LibStorage.LVM:
 
-        lvmvginfo = LibStorage.LvmVgInfo ()
-        c.getLvmVgInfo (container.name, lvmvginfo)
+        lvmvginfo = LibStorage.LvmVgInfo()
+        c.getLvmVgInfo(container.name, lvmvginfo)
         print "  ", lvmvginfo.sizeK
 
-        lvmlvinfos = LibStorage.dequelvmlvinfo ()
-        c.getLvmLvInfo (container.name, lvmlvinfos)
+        lvmlvinfos = LibStorage.dequelvmlvinfo()
+        c.getLvmLvInfo(container.name, lvmlvinfos)
 
         for lvmlvinfo in lvmlvinfos:
             print "  ", lvmlvinfo.v.device, lvmlvinfo.v.sizeK
 
 
-fscapabilities = LibStorage.FsCapabilities ()
-c.getFsCapabilities (LibStorage.REISERFS, fscapabilities)
-print fscapabilities.isExtendable,fscapabilities.minimalFsSizeK
+fscapabilities = LibStorage.FsCapabilities()
+c.getFsCapabilities(LibStorage.REISERFS, fscapabilities)
+print fscapabilities.isExtendable, fscapabilities.minimalFsSizeK
 
 
-LibStorage.destroyStorageInterface (c)
+LibStorage.destroyStorageInterface(c)
