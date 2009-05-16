@@ -29,5 +29,6 @@ using namespace storage;
 %template(dequestring) deque<string>;
 %template(dequecontainerinfo) deque<ContainerInfo>;
 %template(dequepartitioninfo) deque<PartitionInfo>;
+%template(dequemdinfo) deque<MdInfo>;
 %template(dequelvmlvinfo) deque<LvmLvInfo>;
 
