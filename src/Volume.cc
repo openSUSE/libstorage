@@ -2721,9 +2721,9 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.ignore_fs = ignore_fs;
     info.resize = size_k!=orig_size_k;
     if( info.resize )
-	info.OrigSizeK = orig_size_k;
+	info.origSizeK = orig_size_k;
     else
-	info.OrigSizeK = 0;
+	info.origSizeK = 0;
     tinfo = info;
     }
 

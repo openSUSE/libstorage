@@ -57,6 +57,12 @@ using std::list;
  *
  * Locking may also fail for other reasons, e.g. limited permissions.
  *
+ * \section Nomenclature
+ *
+ * Sizes with postfix K are in kilobytes (1024 bytes).
+ *
+ * The only size in bytes instead of kilobytes is the cylinder size of disks.
+ *
  * \section Example
  *
  * Here is a simple example to demonstrate the usage of libstorage:
@@ -183,7 +189,6 @@ namespace storage
     {
 	ContainerInfo() {}
 	CType type;
-	unsigned volcnt;	// deprecated
 	string device;
 	string name;
 	UsedByType usedByType;
@@ -199,7 +204,7 @@ namespace storage
     {
 	DiskInfo() {}
 	unsigned long long sizeK;
-	unsigned long long cylSizeB;
+	unsigned long long cylSize;
 	unsigned long cyl;
 	unsigned long heads;
 	unsigned long sectors;
@@ -219,7 +224,7 @@ namespace storage
     {
 	LvmVgInfo() {}
 	unsigned long long sizeK;
-	unsigned long long peSize;
+	unsigned long long peSizeK;
 	unsigned long peCount;
 	unsigned long peFree;
 	string uuid;
@@ -286,7 +291,7 @@ namespace storage
 	bool is_mounted;
 	bool resize;
 	bool ignore_fs;
-	unsigned long long OrigSizeK;
+	unsigned long long origSizeK;
     };
 
     struct PartitionAddInfo
@@ -327,8 +332,8 @@ namespace storage
     {
 	LvmLvInfo() {}
 	VolumeInfo v;
-	unsigned stripe;
-	unsigned stripe_size;
+	unsigned stripes;
+	unsigned stripeSizeK;
 	string uuid;
 	string status;
 	string allocation;
@@ -360,7 +365,7 @@ namespace storage
 	unsigned parity;
 	string uuid;
 	string sb_ver;
-	unsigned long chunk;
+	unsigned long chunkSizeK;
 	string devices;
     };
 
@@ -912,7 +917,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartition( const string& disk, PartitionType type,
-				     unsigned long start,
+				     unsigned long startCyl,
 				     unsigned long sizeCyl,
 				     string& device ) = 0;
 
@@ -949,7 +954,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int updatePartitionArea( const string& device,
-	                                 unsigned long start,
+	                                 unsigned long startCyl,
 					 unsigned long sizeCyl ) = 0;
 
 	/**
@@ -986,8 +991,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartitionKb( const string& disk, PartitionType type,
-				       unsigned long long start,
-				       unsigned long long size,
+				       unsigned long long startK,
+				       unsigned long long sizeK,
 				       string& device ) = 0;
 
 	/**
@@ -1001,7 +1006,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartitionAny( const string& disk,
-					unsigned long long size,
+					unsigned long long sizeK,
 					string& device ) = 0;
 
 	/**
@@ -1025,7 +1030,7 @@ namespace storage
 	 * @return number of kilobytes of given cylinders
 	 */
 	virtual unsigned long long cylinderToKb( const string& disk,
-	                                         unsigned long size ) = 0;
+	                                         unsigned long sizeCyl) = 0;
 
 	/**
 	 * Compute number of disk cylinders needed for given space
@@ -1035,7 +1040,7 @@ namespace storage
 	 * @return number of disk cylinders needed
 	 */
 	virtual unsigned long kbToCylinder( const string& disk,
-					    unsigned long long size ) = 0;
+					    unsigned long long sizeK) = 0;
 
 	/**
 	 * Remove a partition
@@ -1109,11 +1114,11 @@ namespace storage
 	 * machine (e.g. msdos for ix86, gpt for ia64, ...) for a disk
 	 * with certain size
 	 *
-	 * @param size_k size of disk in kilobyte
+	 * @param sizeK size of disk in kilobytes
 	 *
 	 * @return default disk label of the disk
 	 */
-	virtual string defaultDiskLabelSize( unsigned long long size_k ) const = 0;
+	virtual string defaultDiskLabelSize(unsigned long long sizeK) const = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.
@@ -1351,19 +1356,19 @@ namespace storage
 	 * Resizes a volume while keeping the data on the filesystem
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param newSizeMb new size desired volume in Megabyte
+	 * @param newSizeK new size desired volume in kilobytes
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int resizeVolume( const string& device, unsigned long long newSizeMb ) = 0;
+	virtual int resizeVolume(const string& device, unsigned long long newSizeK) = 0;
 
 	/**
 	 * Resizes a volume while ignoring the data on the filesystem
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
-	 * @param newSizeMb new size desired volume in Megabyte
+	 * @param newSizeK new size desired volume in kilobytes
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int resizeVolumeNoFs( const string& device, unsigned long long newSizeMb ) = 0;
+	virtual int resizeVolumeNoFs(const string& device, unsigned long long newSizeK) = 0;
 
 	/**
 	 * Forget about possible resize of an volume.
@@ -1538,14 +1543,14 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
-	 * @param sizeM size of logical volume in megabytes
-	 * @param stripe stripe count of logical volume (use 1 unless you know
+	 * @param sizeK size of logical volume in kilobytes
+	 * @param stripes stripe count of logical volume (use 1 unless you know
 	 * exactly what you are doing)
 	 * @param device is set to the device name of the new LV
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLv( const string& vg, const string& name,
-	                         unsigned long long sizeM, unsigned stripe,
+	                         unsigned long long sizeK, unsigned stripes,
 				 string& device ) = 0;
 
 	/**
@@ -1587,7 +1592,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvStripeSize( const string& vg, const string& name,
-	                                unsigned long long stripeSize ) = 0;
+	                                unsigned long long stripeSizeK) = 0;
 
 	/**
 	 * Create a LVM logical volume snapshot
@@ -1704,7 +1709,7 @@ namespace storage
 	 * @param chunk new chunk size of the software raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeMdChunk( const string& name, unsigned long chunk ) = 0;
+	virtual int changeMdChunk(const string& name, unsigned long chunkSizeK) = 0;
 
 	/**
 	 * Change parity of a raid device with raid type raid5.
@@ -2072,9 +2077,9 @@ namespace storage
 	 * @return bool if values could be successfully determined
 	 */
 	virtual bool getFreeInfo( const string& device,
-	                          unsigned long long& resize_free,
-	                          unsigned long long& df_free,
-	                          unsigned long long& used,
+	                          unsigned long long& resize_freeK,
+	                          unsigned long long& df_freeK,
+	                          unsigned long long& usedK,
 				  bool& win, bool& efi, bool use_cache ) = 0;
 
 	/**

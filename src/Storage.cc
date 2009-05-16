@@ -2388,24 +2388,24 @@ Storage::getIgnoreFstab( const string& device, bool& val )
     }
 
 int
-Storage::resizeVolume( const string& device, unsigned long long newSizeMb )
+Storage::resizeVolume(const string& device, unsigned long long newSizeK)
     {
-    return( resizeVolume( device, newSizeMb, false ));
+    return resizeVolume(device, newSizeK, false);
     }
 
 int
-Storage::resizeVolumeNoFs( const string& device, unsigned long long newSizeMb )
+Storage::resizeVolumeNoFs(const string& device, unsigned long long newSizeK)
     {
-    return( resizeVolume( device, newSizeMb, true ));
+    return resizeVolume(device, newSizeK, true);
     }
 
 int
-Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
-                       bool ignoreFs )
+Storage::resizeVolume(const string& device, unsigned long long newSizeK,
+		      bool ignoreFs)
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " newSizeMb:" << newSizeMb << " ignoreFs:" << ignoreFs);
+    y2mil("device:" << device << " newSizeK:" << newSizeK << " ignoreFs:" << ignoreFs);
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -2417,7 +2417,7 @@ Storage::resizeVolume( const string& device, unsigned long long newSizeMb,
 	y2mil( "vol:" << *vol );
 	if( ignoreFs )
 	    vol->setIgnoreFs();
-	ret = cont->resizeVolume( &(*vol), newSizeMb*1024 );
+	ret = cont->resizeVolume(&(*vol), newSizeK);
 	eraseCachedFreeInfo(vol->device());
 	y2mil( "vol:" << *vol );
 	}
@@ -2636,13 +2636,13 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
     }
 
 int
-Storage::createLvmLv( const string& vg, const string& name,
-                      unsigned long long sizeM, unsigned stripe,
-		      string& device )
+Storage::createLvmLv(const string& vg, const string& name,
+		     unsigned long long sizeK, unsigned stripes,
+		     string& device)
     {
     int ret = 0;
     assertInit();
-    y2mil("vg:" << vg << " name:" << name << " sizeM:" << sizeM << " stripe:" << stripe);
+    y2mil("vg:" << vg << " name:" << name << " sizeK:" << sizeK << " stripes:" << stripes);
     LvmVgIterator i = findLvmVg( vg );
     if (readonly())
 	{
@@ -2650,7 +2650,7 @@ Storage::createLvmLv( const string& vg, const string& name,
 	}
     else if( i != lvgEnd() )
 	{
-	ret = i->createLv( name, sizeM*1024, stripe, device );
+	ret = i->createLv(name, sizeK, stripes, device);
 	}
     else
 	{
@@ -5321,7 +5321,8 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	{
 	    VolumeInfo info;
 	    info.create = info.format = info.resize = false;
-	    info.sizeK = info.OrigSizeK = info.minor = info.major = 0;
+	    info.sizeK = info.origSizeK = 0;
+	    info.minor = info.major = 0;
 	    info.device = i->dentry;
 	    info.mount = i->mount;
 	    info.mount_by = MOUNTBY_DEVICE;

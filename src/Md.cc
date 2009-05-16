@@ -586,7 +586,7 @@ void Md::getInfo( MdInfo& tinfo ) const
     info.type = md_type;
     info.uuid = md_uuid;
     info.sb_ver = sb_ver;
-    info.chunk = chunk;
+    info.chunkSizeK = chunk;
     info.parity = md_parity;
     info.devices.clear();
     list<string>::const_iterator i=devs.begin();

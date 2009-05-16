@@ -2585,7 +2585,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.cyl = cylinders();
     info.heads = heads();
     info.sectors = sectors();
-    info.cylSizeB = cylSizeB();
+    info.cylSize = cylSizeB();
     info.disklabel = labelName();
     info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
@@ -2605,7 +2605,7 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
       << " Sect:" << d.sector
       << " Node <" << d.mjr << ":" << d.mnr << ">"
       << " Range:" << d.range
-      << " SizeM:" << d.size_k/1024
+      << " SizeK:" << d.size_k
       << " Label:" << d.label;
     if( d.detected_label!=d.label )
 	s << " DetectedLabel:" << d.detected_label;

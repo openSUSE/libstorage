@@ -353,8 +353,8 @@ class DiskData;
 	int addFstabEntry( const string& device, const string& mount,
 	                   const string& vfs, const string& options,
 			   unsigned freq, unsigned passno );
-	int resizeVolume( const string& device, unsigned long long newSizeMb );
-	int resizeVolumeNoFs( const string& device, unsigned long long newSizeMb );
+	int resizeVolume(const string& device, unsigned long long newSizeK);
+	int resizeVolumeNoFs(const string& device, unsigned long long newSizeK);
 	int forgetResizeVolume( const string& device );
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() const { return recursiveRemove; }
@@ -401,7 +401,7 @@ class DiskData;
 	int extendLvmVg( const string& name, const deque<string>& devs );
 	int shrinkLvmVg( const string& name, const deque<string>& devs );
 	int createLvmLv( const string& vg, const string& name,
-			 unsigned long long sizeM, unsigned stripe,
+			 unsigned long long sizeK, unsigned stripes,
 			 string& device );
 	int removeLvmLvByDevice( const string& device );
 	int removeLvmLv( const string& vg, const string& name );
@@ -1668,8 +1668,8 @@ class DiskData;
 	void detectFsDataTestMode( const string& file,
 	                           const VolIterator& begin,
 				   const VolIterator& end );
-	int resizeVolume( const string& device, unsigned long long newSizeMb,
-	                  bool ignore_fs );
+	int resizeVolume(const string& device, unsigned long long newSizeK,
+			 bool ignore_fs);
 	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignore_fs );
 	static void detectArch();

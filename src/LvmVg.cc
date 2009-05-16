@@ -1558,7 +1558,7 @@ void LvmVg::normalizeDmDevices()
 void LvmVg::getInfo( LvmVgInfo& tinfo ) const
     {
     info.sizeK = sizeK();
-    info.peSize = peSize();
+    info.peSizeK = peSize();
     info.peCount = peCount();
     info.peFree = peFree();
     info.lvm2 = lvm2();

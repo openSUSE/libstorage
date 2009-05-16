@@ -283,11 +283,9 @@ bool Container::findVolume( const string& device, Volume*& vol )
 
 void Container::getInfo(storage::ContainerInfo& tinfo) const
 {
-    Container::ConstVolPair vp = volPair( Volume::notDeleted );
     info.type = type();
     info.name = name();
     info.device = device();
-    info.volcnt = vp.length();
     info.usedByType = uby.type();
     info.usedByName = uby.name();
     info.usedByDevice = uby.device();

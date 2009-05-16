@@ -26,7 +26,7 @@ void print_md_info()
 	cout << p->v.device << ' ';
 	cout << p->nr << ' ';
 	cout << p->type << ' ';
-	cout << p->chunk << ' ';
+	cout << p->chunkSizeK << ' ';
     }
 
 }
