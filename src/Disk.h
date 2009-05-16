@@ -108,7 +108,9 @@ class Disk : public Container
 	static string getPartName( const string& disk, unsigned nr );
 	static string getPartName( const string& disk, const string& nr );
 	static std::pair<string,unsigned> getDiskPartition( const string& dev );
-	static unsigned long long maxSizeLabelK( const string& label );
+
+	static bool getDlabelCapabilities(const string& dlabel,
+					  storage::DlabelCapabilities& dlabelcapabilities);
 
     protected:
 

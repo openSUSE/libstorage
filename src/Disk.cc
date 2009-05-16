@@ -498,22 +498,28 @@ Disk::setLabelData( const string& disklabel )
 	  " logical:" << max_logical);
     }
 
-unsigned long long
-Disk::maxSizeLabelK( const string& label )
+
+bool
+Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapabilities)
+{
+    bool ret = false;
+    int i = 0;
+    while (!labels[i].name.empty() && labels[i].name != dlabel)
     {
-    unsigned long long ret = 0;
-    int i=0;
-    while( !labels[i].name.empty() && labels[i].name!=label )
-	{
 	i++;
-	}
-    if( !labels[i].name.empty() )
-        {
-	ret = labels[i].max_size_k;
-	}
-    y2mil("label:" << label << " ret:" << ret);
-    return( ret );
     }
+    if (!labels[i].name.empty())
+    {
+	ret = true;
+	dlabelcapabilities.maxPrimary = labels[i].primary;
+	dlabelcapabilities.extendedPossible = labels[i].extended;
+	dlabelcapabilities.maxLogical = labels[i].logical;
+	dlabelcapabilities.maxSizeK = labels[i].max_size_k;
+    }
+    y2mil("dlabel:" << dlabel << " ret:" << ret);
+    return ret;
+}
+
 
 int
 Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )

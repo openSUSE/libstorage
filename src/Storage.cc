@@ -1813,12 +1813,6 @@ Storage::defaultDiskLabelSize( unsigned long long size_k ) const
 }
 
 
-unsigned long long 
-Storage::maxSizeLabelK( const string& label ) const
-    {
-    return( Disk::maxSizeLabelK(label) );
-    }
-
 int
 Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {
@@ -4535,6 +4529,13 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 	default:
 	    return false;
     }
+}
+
+
+bool
+Storage::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapabilities) const
+{
+    return Disk::getDlabelCapabilities(dlabel, dlabelcapabilities);
 }
 
 

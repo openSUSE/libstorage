@@ -294,6 +294,9 @@ class DiskData;
 
 	bool getFsCapabilities( storage::FsType fstype,
 	                        storage::FsCapabilities& fscapabilities) const;
+	bool getDlabelCapabilities(const string& dlabel,
+				   storage::DlabelCapabilities& dlabelcapabilities) const;
+
 	list<string> getAllUsedFs() const;
 	void setExtError( const string& txt );
 	int createPartition( const string& disk, storage::PartitionType type,
@@ -323,7 +326,6 @@ class DiskData;
 	int initializeDisk( const string& disk, bool value );
 	string defaultDiskLabel() const;
 	string defaultDiskLabelSize( unsigned long long size_k ) const;
-	unsigned long long maxSizeLabelK( const string& label ) const;
 
 	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );

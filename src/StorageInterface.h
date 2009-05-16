@@ -151,7 +151,7 @@ namespace storage
      */
     struct FsCapabilities
     {
-	FsCapabilities () {}
+	FsCapabilities() {}
 	bool isExtendable;
 	bool isExtendableWhileMounted;
 	bool isReduceable;
@@ -162,6 +162,19 @@ namespace storage
 	unsigned int labelLength;
 	unsigned long long minimalFsSizeK;
     };
+
+    /**
+     * Contains capabilities of a disk label.
+     */
+    struct DlabelCapabilities
+    {
+	DlabelCapabilities() {}
+	int maxPrimary;
+	bool extendedPossible;
+	int maxLogical;
+	unsigned long long maxSizeK;
+    };
+
 
     /**
      * Contains info about a generic container.
@@ -876,6 +889,12 @@ namespace storage
 	virtual bool getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const = 0;
 
 	/**
+	 * Query capabilities of a disk label.
+	 */
+	virtual bool getDlabelCapabilities(const string& dlabel,
+					   DlabelCapabilities& dlabelcapabilities) const = 0;
+
+	/**
 	 * Get list of filesystem types present on any block devices.
 	 */
 	virtual list<string> getAllUsedFs() const = 0;
@@ -1095,13 +1114,6 @@ namespace storage
 	 * @return default disk label of the disk
 	 */
 	virtual string defaultDiskLabelSize( unsigned long long size_k ) const = 0;
-
-	/**
-	 * Query the maximal allowed size the given disk label supports.
-	 *
-	 * @return maximal supported size of disk label
-	 */
-	virtual unsigned long long maxSizeLabelK( const string& label ) const = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.
