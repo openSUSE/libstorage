@@ -31,7 +31,7 @@ void print_num_pvs( const string& vg)
 	for ( deque<PartitionInfo>::iterator p = pinfos.begin();
 	      p != pinfos.end(); p++ )
 	{
-	    if ( p->v.usedByName == vg )
+	    if ( p->v.usedByDevice == "/dev/" + vg )
 		count++;	    
 	}
     }
