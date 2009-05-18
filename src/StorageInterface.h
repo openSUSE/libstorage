@@ -909,7 +909,7 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param start cylinder number of partition start (cylinders are numbered starting with 0)
+	 * @param startCyl cylinder number of partition start (cylinders are numbered starting with 0)
 	 * @param sizeCyl size of partition in disk cylinders
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
@@ -949,7 +949,7 @@ namespace storage
 	 * committed.
 	 *
 	 * @param device device name of partition, e.g. /dev/hda1
-	 * @param start cylinder number of partition start (cylinders are numbered starting with 0)
+	 * @param startCyl cylinder number of partition start (cylinders are numbered starting with 0)
 	 * @param sizeCyl size of partition in disk cylinders
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -983,8 +983,8 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param start offset in kilobytes from start of disk
-	 * @param size  size of partition in kilobytes
+	 * @param startK offset in kilobytes from start of disk
+	 * @param sizeK size of partition in kilobytes
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
@@ -999,7 +999,7 @@ namespace storage
 	 * Create a new partition of any type anywhere on the disk. Units given in Kilobytes.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
-	 * @param size  size of partition in kilobytes
+	 * @param sizeK size of partition in kilobytes
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
@@ -1026,7 +1026,7 @@ namespace storage
 	 * Compute number of kilobytes of a given number of disk cylinders
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
-	 * @param size number of disk cylinders
+	 * @param sizeCyl number of disk cylinders
 	 * @return number of kilobytes of given cylinders
 	 */
 	virtual unsigned long long cylinderToKb( const string& disk,
@@ -1588,7 +1588,7 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume
-	 * @param stripeSize new stripe size of logical volume
+	 * @param stripeSizeK new stripe size of logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvStripeSize( const string& vg, const string& name,
@@ -2073,6 +2073,7 @@ namespace storage
 	 * @param df_freeK free space in kilobytes available in filesystem
 	 * @param usedK used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
+	 * @param efi flag if partition contains a efi boot directory
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
 	 */
