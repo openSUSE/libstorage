@@ -1036,7 +1036,7 @@ namespace storage
 	 * Compute number of disk cylinders needed for given space
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
-	 * @param size number of kilobytes
+	 * @param sizeK number of kilobytes
 	 * @return number of disk cylinders needed
 	 */
 	virtual unsigned long kbToCylinder( const string& disk,
@@ -1706,7 +1706,7 @@ namespace storage
 	 * This can only be done before the raid is created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
-	 * @param chunk new chunk size of the software raid
+	 * @param chunkSizeK new chunk size of the software raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeMdChunk(const string& name, unsigned long chunkSizeK) = 0;
@@ -2069,9 +2069,9 @@ namespace storage
 	 * Detect potentially available free space on a partition
 	 *
 	 * @param device device to check
-	 * @param resize_free free space in kilobytes available for resize
-	 * @param df_free free space in kilobytes available in filesystem
-	 * @param used used space in kilobytes for filesystem
+	 * @param resize_freeK free space in kilobytes available for resize
+	 * @param df_freeK free space in kilobytes available in filesystem
+	 * @param usedK used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
