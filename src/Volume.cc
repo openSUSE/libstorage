@@ -2,6 +2,7 @@
   Textdomain    "storage"
 */
 
+#include <errno.h>
 #include <features.h>
 #include <sys/stat.h>
 #include <sstream>
@@ -203,20 +204,26 @@ bool Volume::operator< ( const Volume& rhs ) const
 	return( !del );
     }
 
-bool Volume::getMajorMinor( const string& device,
-			    unsigned long& Major, unsigned long& Minor )
+
+    bool
+    Volume::getMajorMinor(const string& device, unsigned long& major, unsigned long& minor)
     {
-    bool ret = false;
-    string dev = normalizeDevice( device );
-    struct stat sbuf;
-    if( stat( dev.c_str(), &sbuf )==0 )
+	bool ret = false;
+	string dev = normalizeDevice(device);
+	struct stat sbuf;
+	if (stat(dev.c_str(), &sbuf) == 0)
 	{
-	Minor = gnu_dev_minor( sbuf.st_rdev );
-	Major = gnu_dev_major( sbuf.st_rdev );
-	ret = true;
+	    minor = gnu_dev_minor(sbuf.st_rdev);
+	    major = gnu_dev_major(sbuf.st_rdev);
+	    ret = true;
 	}
-    return( ret );
+	else
+	{
+	    y2err("stat for " << dev << " failed errno:" << errno << " (" << strerror(errno) << ")");
+	}
+	return ret;
     }
+
 
 void Volume::getFsInfo( const Volume* source )
     {
