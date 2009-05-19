@@ -1,5 +1,5 @@
 
-# /usr/lib/YaST2/bin/y2base example.ycp stdio
+# /usr/lib/YaST2/bin/y2base ./example.ycp stdio
 
 {
     import "LibStorage";
@@ -7,6 +7,7 @@
     import "LibStorage::FsCapabilities";
     import "LibStorage::PartitionInfo";
     import "LibStorage::ContainerInfo";
+    import "LibStorage::Environment";
 
 
     any o = nil;
@@ -125,9 +126,11 @@
     }
 
 
-    LibStorage::initDefaultLogger ();
+    LibStorage::initDefaultLogger();
 
-    o = LibStorage::createStorageInterface (true, false, true);
+    any env = LibStorage::Environment::new("LibStorage::Environment", true);
+
+    o = LibStorage::createStorageInterface(env);
 
     test1 ();
     test2 ();
@@ -139,5 +142,5 @@
     test8 ();
     test9 ();
 
-    LibStorage::destroyStorageInterface (o);
+    LibStorage::destroyStorageInterface(o);
 }
