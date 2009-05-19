@@ -72,13 +72,16 @@ plugin_LTLIBRARIES = libpy2StorageCallbacks.la
 libpy2StorageCallbacks_la_SOURCES =					\
 	Y2StorageCallbacksComponent.cc Y2StorageCallbacksComponent.h	\
 	Y2CCStorageCallbacks.cc Y2CCStorageCallbacks.h			\
-	StorageCallbacks.h StorageCallbacks.cc
+	StorageCallbacks.cc StorageCallbacks.h
 
 libpy2StorageCallbacks_la_LDFLAGS = -version-info 2:0
 libpy2StorageCallbacks_la_LIBADD = -L$(libdir) -ly2 -lycp liby2storage.la
 
 pkgincludedir = $(includedir)/y2storage
 
-pkginclude_HEADERS = StorageInterface.h
+pkginclude_HEADERS =			\
+	StorageInterface.h		\
+	HumanString.h			\
+	Graph.h
 
 CLEANFILES = $(BUILT_SOURCES)
