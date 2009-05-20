@@ -287,7 +287,6 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
     info.name = name();
     info.device = device();
     info.usedByType = uby.type();
-    info.usedByName = uby.name();
     info.usedByDevice = uby.device();
     info.readonly = readonly();
     tinfo = info;

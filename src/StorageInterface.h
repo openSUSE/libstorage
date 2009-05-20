@@ -192,7 +192,6 @@ namespace storage
 	string device;
 	string name;
 	UsedByType usedByType;
-	string usedByName;	// deprecated
 	string usedByDevice;
 	bool readonly;
     };
@@ -274,7 +273,6 @@ namespace storage
 	string mount;
 	MountByType mount_by;
 	UsedByType usedByType;
-	string usedByName;	// deprecated
 	string usedByDevice;
 	string fstab_options;
 	string uuid;
