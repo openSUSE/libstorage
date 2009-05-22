@@ -563,12 +563,10 @@ void MdCo::activate( bool val, const string& tmpDir )
 	if( val )
 	    {
 	    string mdconf = tmpDir + "/mdadm.conf";
-	    string cmd = "echo 1 > /sys/module/md_mod/parameters/start_ro";
-	    c.execute( cmd );
-	    cmd = MDADMBIN " --examine --scan --config=partitions >" + mdconf;
-	    c.execute( cmd );
-	    cmd = MDADMBIN " --assemble --scan --config=" + mdconf;
-	    c.execute( cmd );
+	    c.execute("echo 1 > /sys/module/md_mod/parameters/start_ro");
+	    c.execute(MDADMBIN " --examine --scan --config=partitions > " + mdconf);
+	    c.execute(MDADMBIN " --assemble --scan --config=" + mdconf);
+	    unlink(mdconf.c_str());
 	    }
 	else
 	    {
