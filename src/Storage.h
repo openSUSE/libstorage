@@ -222,7 +222,7 @@ class DiskData;
 	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	string prependRoot(const string& mp) const;
-	const string& tmpDir() const;
+	const string& tmpDir() const { return tempdir; }
 	bool efiBoot() const { return efiboot; }
 	static const string& arch() { return( proc_arch ); }
 	static bool isPPCMac() { return( is_ppc_mac ); }

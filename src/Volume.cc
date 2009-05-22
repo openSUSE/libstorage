@@ -1291,7 +1291,6 @@ int Volume::resizeFs()
 		if( needrmdir )
 		    {
 		    rmdir( mpoint.c_str() );
-		    rmdir( cont->getStorage()->tmpDir().c_str() );
 		    }
 		}
 		break;
@@ -1749,7 +1748,6 @@ EncryptType Volume::detectEncryption()
 	}
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
-    rmdir( cont->getStorage()->tmpDir().c_str() );
     y2mil("ret:" << encTypeString(ret));
     return( ret );
     }
@@ -1790,7 +1788,6 @@ int Volume::doLosetup()
 	    if( !fname.empty() )
 		{
 		unlink( fname.c_str() );
-		rmdir( cont->getStorage()->tmpDir().c_str() );
 		}
 	    Storage::waitForDevice(loop_dev);
 	    }
@@ -1913,7 +1910,6 @@ int Volume::doCryptsetup()
 		}
 		}
 	    unlink( fname.c_str() );
-	    rmdir( cont->getStorage()->tmpDir().c_str() );
 	    Storage::waitForDevice(dmcrypt_dev);
 	    }
 	if( ret==0 )

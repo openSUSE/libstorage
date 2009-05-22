@@ -116,7 +116,7 @@ void
 Storage::initialize()
     {
     initialized = true;
-    char tbuf[32] = "/tmp/liby2storageXXXXXX";
+    char tbuf[32] = "/tmp/libstorage-XXXXXX";
     if( mkdtemp( tbuf )==NULL )
 	{
 	y2err("tmpdir creation " << tbuf << " failed. Aborting...");
@@ -125,7 +125,6 @@ Storage::initialize()
     else
 	{
 	tempdir = tbuf;
-	rmdir( tempdir.c_str() );
 	}
     if( access( "/etc/sysconfig/storage", R_OK )==0 )
     {
@@ -273,15 +272,11 @@ Storage::~Storage()
     logContainersAndVolumes(logdir);
     clearPointerList(cont);
     deleteBackups();
-    if( !tempdir.empty() && access( tempdir.c_str(), R_OK )==0 )
-	{
-	SystemCmd c( "rmdir " + tempdir );
-	if( c.retcode()!=0 )
-	    {
-	    y2err("stray tmpfile");
-	    c.execute( "ls -l" + tempdir );
-	    }
-	}
+    if (!tempdir.empty() && rmdir(tempdir.c_str()) != 0)
+    {
+	y2err("stray tmpfile");
+	SystemCmd("ls -l " + quote(tempdir));
+    }
     delete fstab;
     y2mil("destructed Storage");
     }
@@ -293,12 +288,6 @@ void Storage::rescanEverything()
     detectObjects();
     }
 
-const string& Storage::tmpDir() const
-    {
-    if( access( tempdir.c_str(), W_OK )!= 0 )
-	mkdir( tempdir.c_str(), 0700 );
-    return( tempdir );
-    }
 
 void
 Storage::detectArch()
@@ -5484,7 +5473,6 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		{
 		umountDevice( device );
 		rmdir( mp.c_str() );
-		rmdir( tmpDir().c_str() );
 		}
 
 	    if( vol->needCrsetup() && vol->doCrsetup() )
