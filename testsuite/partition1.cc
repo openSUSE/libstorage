@@ -94,7 +94,7 @@ int
 main ()
 {
     system ("mkdir -p tmp");
-    setenv ("YAST2_STORAGE_TDIR", "tmp", 1);
+    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions

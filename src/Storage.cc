@@ -153,7 +153,7 @@ Storage::initialize()
 	}
     if (testmode())
 	{
-	char * tenv = getenv( "YAST2_STORAGE_TDIR" );
+	const char* tenv = getenv("LIBSTORAGE_TESTDIR");
 	if( tenv!=NULL && strlen(tenv)>0 )
 	    {
 	    logdir = testdir = tenv;
@@ -163,7 +163,7 @@ Storage::initialize()
 	    testdir = logdir;
 	    }
 	}
-    y2mil("instsys:" << instsys() << " testdir:" << testdir);
+    y2mil("logdir:" << logdir << " testdir:" << testdir);
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();

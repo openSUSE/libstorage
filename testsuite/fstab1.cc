@@ -146,7 +146,7 @@ int
 main ()
 {
     system ("mkdir -p tmp");
-    setenv ("YAST2_STORAGE_TDIR", "tmp", 1);
+    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     system ("cp data/volume_info tmp");
     system ("cp data/disk_hda tmp");

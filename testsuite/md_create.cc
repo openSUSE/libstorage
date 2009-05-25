@@ -51,7 +51,7 @@ void createMD( MdType type, deque<string> devs )
 int main( int argc_iv, char** argv_ppcv )
 {
     system ("mkdir -p tmp");
-    setenv ("YAST2_STORAGE_TDIR", "tmp", 1);
+    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     system ("rm -rf tmp/*");
     

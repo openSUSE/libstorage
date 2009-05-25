@@ -77,7 +77,7 @@ main (int argc, char* argv[])
     parse_command_line (argc, argv);
 
     system ("mkdir -p tmp");
-    setenv ("YAST2_STORAGE_TDIR", "tmp", 1);
+    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     if (testmode)
     {
