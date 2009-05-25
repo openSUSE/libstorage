@@ -3312,10 +3312,8 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
     int ret = 0;
     assertInit();
     NfsCo co( this );
-    string mdir = tmpDir() + "/tmp_mp";
-    unlink( mdir.c_str() );
-    rmdir( mdir.c_str() );
-    createPath( mdir );
+    string mdir = tmpDir() + "/tmp-nfs-mp";
+    mkdir(mdir.c_str(), 0777);
     ret = co.addNfs( nfsDev, 0, "" );
     if( !opts.empty() )
 	co.vBegin()->setFstabOption( opts );
@@ -3340,9 +3338,10 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
 	sizeK = getDfSize( mdir );
 	ret = co.vBegin()->umount( mdir );
 	}
+    rmdir(mdir.c_str());
     y2mil( "name:" << nfsDev << " opts:" << opts << " ret:" << ret <<
            " sizeK:" << sizeK );
-    return( ret );
+    return ret;
     }
 
 int
