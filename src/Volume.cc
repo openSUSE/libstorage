@@ -1266,7 +1266,7 @@ int Volume::resizeFs()
 		string mpoint = orig_mp;
 		if( !isMounted() )
 		    {
-		    mpoint = cont->getStorage()->tmpDir()+"/mp";
+		    mpoint = cont->getStorage()->tmpDir() + "/tmp-xfs-mp";
 		    mkdir( mpoint.c_str(), 0700 );
 		    ret = mount( mpoint );
 		    needrmdir = true;
@@ -1655,7 +1655,7 @@ EncryptType Volume::detectEncryption()
     static EncryptType try_order[] = { ENC_LUKS, ENC_TWOFISH_OLD,
                                        ENC_TWOFISH256_OLD, ENC_TWOFISH };
     string fname = cont->getStorage()->tmpDir()+"/pwdf";
-    string mpname = cont->getStorage()->tmpDir()+"/mp";
+    string mpname = cont->getStorage()->tmpDir() + "/tmp-enc-mp";
     SystemCmd c;
     y2mil("device:" << dev);
 

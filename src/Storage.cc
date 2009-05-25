@@ -5384,7 +5384,7 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 	    if( !vol->isMounted() )
 		{
 		removeDmTableTo( *vol );
-		string mdir = tmpDir() + "/tmp_mp";
+		string mdir = tmpDir() + "/tmp-free-mp";
 		unlink( mdir.c_str() );
 		rmdir( mdir.c_str() );
 		string save_opt;
