@@ -30,7 +30,7 @@ namespace storage
 
 
     Lock::Lock(bool readonly, bool disable)
-	: disabled(disable || getenv("YAST2_STORAGE_NO_LOCKING") != NULL),
+	: disabled(disable || getenv("LIBSTORAGE_NO_LOCKING") != NULL),
 	  fd(-1)
     {
 	if (disabled)

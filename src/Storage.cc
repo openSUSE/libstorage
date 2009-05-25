@@ -367,7 +367,7 @@ void Storage::detectMds()
 	    addToList( new MdCo( this, file ) );
 	    }
 	}
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_MD") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_MD") == NULL)
 	{
 	MdCo * v = new MdCo( this, true );
 	if( !v->isEmpty() )
@@ -387,7 +387,7 @@ void Storage::detectLoops( ProcPart& ppart )
 	    addToList( new LoopCo( this, file ) );
 	    }
 	}
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_LOOP") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_LOOP") == NULL)
 	{
 	LoopCo * v = new LoopCo( this, true, ppart );
 	if( !v->isEmpty() )
@@ -409,7 +409,7 @@ void Storage::detectLoops( ProcPart& ppart )
 	    addToList( new NfsCo( this, file ) );
 	    }
 	}
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_NFS") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_NFS") == NULL)
 	{
 	NfsCo * v = new NfsCo(this, fstab, mounts);
 	if( !v->isEmpty() )
@@ -432,7 +432,7 @@ Storage::detectLvmVgs()
 	    }
  	globfree (&globbuf);
 	}
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_LVM") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
 	list<string> l;
 	LvmVg::getVgs( l );
@@ -467,7 +467,7 @@ Storage::detectDmraid(ProcPart& ppart)
 	}
  	globfree (&globbuf);
     }
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_DMRAID") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
 	list<string> l;
 	DmraidCo::getRaids(l);
@@ -508,7 +508,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
 	}
  	globfree (&globbuf);
     }
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_DMMULTIPATH") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
 	list<string> l;
 	DmmultipathCo::getMultipaths(l);
@@ -550,7 +550,7 @@ Storage::detectDm( ProcPart& ppart )
 	    }
  	globfree (&globbuf);
 	}
-    else if (autodetect() && getenv("YAST2_STORAGE_NO_DM") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_DM") == NULL)
 	{
 	DmCo * v = new DmCo( this, true, ppart );
 	if( !v->isEmpty() )
