@@ -651,19 +651,21 @@ string EtcFstab::updateLine( const list<string>& ol,
 int EtcFstab::flush()
     {
     int ret = 0;
-    list<Entry>::iterator i = co.begin();
     AsciiFile *fstab = NULL;
     AsciiFile *cryptotab = NULL;
     AsciiFile *cur = NULL;
     AsciiFile crypttab( prefix + "/crypttab", true );
-    int lineno;
-    if( i!=co.end() && !checkDir( prefix ) )
+    if (!co.empty() && !checkDir(prefix))
 	createPath( prefix );
+
+    list<Entry>::iterator i = co.begin();
     while( i!=co.end() && ret==0 )
 	{
 	switch( i->op )
 	    {
 	    case Entry::REMOVE:
+	    {
+		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno>=0 )
 		    {
@@ -675,8 +677,11 @@ int EtcFstab::flush()
 		else
 		    ret = FSTAB_REMOVE_ENTRY_NOT_FOUND;
 		i = co.erase( i );
-		break;
+	    } break;
+
 	    case Entry::UPDATE:
+	    {
+		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno<0 )
 		    cur = findFile( i->nnew, fstab, cryptotab, lineno );
@@ -723,9 +728,11 @@ int EtcFstab::flush()
 		    }
 		else
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;
-		break;
+	    } break;
+
 	    case Entry::ADD:
-		{
+	    {
+		int lineno;
 		cur = findFile( i->nnew, fstab, cryptotab, lineno );
 		string line = createTabLine( i->nnew );
 		string before_dev;
@@ -764,8 +771,8 @@ int EtcFstab::flush()
 		    }
 		i->old = i->nnew;
 		i->op = Entry::NONE;
-		}
-		break;
+	    } break;
+
 	    default:
 		break;
 	    }
