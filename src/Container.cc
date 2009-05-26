@@ -6,10 +6,10 @@
 #include <algorithm>
 #include <list>
 
-#include "y2storage/Container.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/Storage.h"
-#include "y2storage/AppUtil.h"
+#include "storage/Container.h"
+#include "storage/SystemCmd.h"
+#include "storage/Storage.h"
+#include "storage/AppUtil.h"
 
 
 namespace storage

@@ -1,7 +1,7 @@
 #ifndef DASD_H
 #define DASD_H
 
-#include "y2storage/Disk.h"
+#include "storage/Disk.h"
 
 
 namespace storage

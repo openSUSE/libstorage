@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-#include "y2storage/AsciiFile.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage

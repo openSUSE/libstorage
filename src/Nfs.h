@@ -1,7 +1,7 @@
 #ifndef NFS_H
 #define NFS_H
 
-#include "y2storage/Volume.h"
+#include "storage/Volume.h"
 
 namespace storage
 {

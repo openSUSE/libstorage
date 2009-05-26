@@ -3,11 +3,11 @@
   Textdomain    "storage"
 */
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/Regex.h"
-#include "y2storage/EtcRaidtab.h"
-#include "y2storage/AsciiFile.h"
-#include "y2storage/Md.h"
+#include "storage/AppUtil.h"
+#include "storage/Regex.h"
+#include "storage/EtcRaidtab.h"
+#include "storage/AsciiFile.h"
+#include "storage/Md.h"
 
 
 namespace storage

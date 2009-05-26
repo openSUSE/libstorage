@@ -3,9 +3,9 @@
 
 #include <list>
 
-#include "y2storage/Volume.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/StorageTmpl.h"
+#include "storage/Volume.h"
+#include "storage/StorageTypes.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage

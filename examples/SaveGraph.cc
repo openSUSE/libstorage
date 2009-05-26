@@ -1,8 +1,8 @@
 
 #include <stdlib.h>
 
-#include <y2storage/StorageInterface.h>
-#include <y2storage/Graph.h>
+#include <storage/StorageInterface.h>
+#include <storage/Graph.h>
 
 using namespace storage;
 

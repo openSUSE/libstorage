@@ -1,7 +1,7 @@
 
-#include "y2storage/Storage.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/Volume.h"
+#include "storage/Storage.h"
+#include "storage/StorageTypes.h"
+#include "storage/Volume.h"
 
 
 namespace storage

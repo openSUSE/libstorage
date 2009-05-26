@@ -1,7 +1,7 @@
 #ifndef LOOP_H
 #define LOOP_H
 
-#include "y2storage/Volume.h"
+#include "storage/Volume.h"
 
 namespace storage
 {

@@ -7,9 +7,9 @@
 #include <unistd.h>
 #include <fstream>
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/AsciiFile.h"
+#include "storage/AppUtil.h"
+#include "storage/SystemCmd.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage

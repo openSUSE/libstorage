@@ -13,15 +13,15 @@
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
 
-#include "y2storage/Region.h"
-#include "y2storage/Partition.h"
-#include "y2storage/ProcPart.h"
-#include "y2storage/Disk.h"
-#include "y2storage/Storage.h"
-#include "y2storage/AsciiFile.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/Region.h"
+#include "storage/Partition.h"
+#include "storage/ProcPart.h"
+#include "storage/Disk.h"
+#include "storage/Storage.h"
+#include "storage/AsciiFile.h"
+#include "storage/AppUtil.h"
+#include "storage/SystemCmd.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

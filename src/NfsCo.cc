@@ -5,12 +5,12 @@
 #include <ostream>
 #include <sstream>
 
-#include "y2storage/NfsCo.h"
-#include "y2storage/Nfs.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/ProcMounts.h"
-#include "y2storage/Storage.h"
-#include "y2storage/EtcFstab.h"
+#include "storage/NfsCo.h"
+#include "storage/Nfs.h"
+#include "storage/AppUtil.h"
+#include "storage/ProcMounts.h"
+#include "storage/Storage.h"
+#include "storage/EtcFstab.h"
 
 
 namespace storage

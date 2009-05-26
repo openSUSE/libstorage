@@ -4,12 +4,12 @@
 
 #include <sstream>
 
-#include "y2storage/DmPart.h"
-#include "y2storage/DmPartCo.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/ProcPart.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Storage.h"
+#include "storage/DmPart.h"
+#include "storage/DmPartCo.h"
+#include "storage/SystemCmd.h"
+#include "storage/ProcPart.h"
+#include "storage/AppUtil.h"
+#include "storage/Storage.h"
 
 
 namespace storage

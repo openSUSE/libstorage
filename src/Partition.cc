@@ -4,10 +4,10 @@
 
 #include <sstream>
 
-#include "y2storage/Partition.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Disk.h"
-#include "y2storage/Storage.h"
+#include "storage/Partition.h"
+#include "storage/AppUtil.h"
+#include "storage/Disk.h"
+#include "storage/Storage.h"
 
 
 namespace storage

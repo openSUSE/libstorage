@@ -1,8 +1,8 @@
 #ifndef MD_CO_H
 #define MD_CO_H
 
-#include "y2storage/Container.h"
-#include "y2storage/Md.h"
+#include "storage/Container.h"
+#include "storage/Md.h"
 
 namespace storage
 {

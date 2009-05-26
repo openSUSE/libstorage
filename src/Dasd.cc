@@ -9,12 +9,12 @@
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
 
-#include "y2storage/SystemCmd.h"
-#include "y2storage/ProcPart.h"
-#include "y2storage/Storage.h"
-#include "y2storage/OutputProcessor.h"
-#include "y2storage/Dasd.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/SystemCmd.h"
+#include "storage/ProcPart.h"
+#include "storage/Storage.h"
+#include "storage/OutputProcessor.h"
+#include "storage/Dasd.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

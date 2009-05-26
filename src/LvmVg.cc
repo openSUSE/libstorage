@@ -5,12 +5,12 @@
 #include <ostream>
 #include <sstream>
 
-#include "y2storage/LvmVg.h"
-#include "y2storage/LvmLv.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Storage.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/LvmVg.h"
+#include "storage/LvmLv.h"
+#include "storage/SystemCmd.h"
+#include "storage/AppUtil.h"
+#include "storage/Storage.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

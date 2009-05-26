@@ -1,8 +1,8 @@
 
 #include <iostream>
 
-#include <y2storage/Storage.h>
-#include <y2storage/ListListIterator.h>
+#include <storage/Storage.h>
+#include <storage/ListListIterator.h>
 
 using namespace std;
 using namespace storage;

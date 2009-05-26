@@ -3,9 +3,9 @@
 
 #include <list>
 
-#include "y2storage/PeContainer.h"
-#include "y2storage/Disk.h"
-#include "y2storage/DmPart.h"
+#include "storage/PeContainer.h"
+#include "storage/Disk.h"
+#include "storage/DmPart.h"
 
 
 namespace storage

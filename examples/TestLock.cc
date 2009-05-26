@@ -6,8 +6,8 @@
 #include <getopt.h>
 #include <iostream>
 
-#include <y2storage/Lock.h>
-#include <y2storage/Storage.h>
+#include <storage/Lock.h>
+#include <storage/Storage.h>
 
 using namespace std;
 using namespace storage;

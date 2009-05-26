@@ -6,9 +6,9 @@
 #include <sstream>
 #include <utility>
 
-#include "y2storage/PeContainer.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Storage.h"
+#include "storage/PeContainer.h"
+#include "storage/AppUtil.h"
+#include "storage/Storage.h"
 
 
 namespace storage

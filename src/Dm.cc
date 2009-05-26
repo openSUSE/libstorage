@@ -4,13 +4,13 @@
 
 #include <sstream>
 
-#include "y2storage/Dm.h"
-#include "y2storage/PeContainer.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Regex.h"
-#include "y2storage/Storage.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/Dm.h"
+#include "storage/PeContainer.h"
+#include "storage/SystemCmd.h"
+#include "storage/AppUtil.h"
+#include "storage/Regex.h"
+#include "storage/Storage.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

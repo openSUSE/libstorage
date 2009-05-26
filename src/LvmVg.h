@@ -1,8 +1,8 @@
 #ifndef LVM_VG_H
 #define LVM_VG_H
 
-#include "y2storage/PeContainer.h"
-#include "y2storage/LvmLv.h"
+#include "storage/PeContainer.h"
+#include "storage/LvmLv.h"
 
 
 namespace storage

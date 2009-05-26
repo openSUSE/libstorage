@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iterator>
 
-#include <y2storage/StorageInterface.h>
+#include <storage/StorageInterface.h>
 
 #include "common.h"
 

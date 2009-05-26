@@ -3,9 +3,9 @@
 */
 
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/StorageTmpl.h"
-#include "y2storage/OutputProcessor.h"
+#include "storage/AppUtil.h"
+#include "storage/StorageTmpl.h"
+#include "storage/OutputProcessor.h"
 
 
 namespace storage

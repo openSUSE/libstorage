@@ -7,13 +7,13 @@
 #include <fstream>
 #include <algorithm>
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/AsciiFile.h"
-#include "y2storage/Regex.h"
-#include "y2storage/StorageTmpl.h"
-#include "y2storage/Volume.h"
-#include "y2storage/EtcFstab.h"
+#include "storage/AppUtil.h"
+#include "storage/StorageTypes.h"
+#include "storage/AsciiFile.h"
+#include "storage/Regex.h"
+#include "storage/StorageTmpl.h"
+#include "storage/Volume.h"
+#include "storage/EtcFstab.h"
 
 
 namespace storage

@@ -2,7 +2,7 @@
 #define OUTPUT_PROCESSOR_H
 
 
-#include "y2storage/StorageInterface.h"
+#include "storage/StorageInterface.h"
 
 
 namespace storage

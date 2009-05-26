@@ -6,14 +6,14 @@
 
 #include <sys/stat.h>
 
-#include "y2storage/Loop.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/Container.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/ProcPart.h"
-#include "y2storage/Storage.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/Loop.h"
+#include "storage/StorageTypes.h"
+#include "storage/Container.h"
+#include "storage/AppUtil.h"
+#include "storage/ProcPart.h"
+#include "storage/Storage.h"
+#include "storage/SystemCmd.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

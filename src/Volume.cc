@@ -8,20 +8,20 @@
 #include <sstream>
 #include <fstream>
 
-#include "y2storage/Volume.h"
-#include "y2storage/Disk.h"
-#include "y2storage/LoopCo.h"
-#include "y2storage/Storage.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/Container.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/ProcMounts.h"
-#include "y2storage/ProcPart.h"
-#include "y2storage/OutputProcessor.h"
-#include "y2storage/EtcFstab.h"
-#include "y2storage/StorageDefines.h"
-#include "y2storage/HumanString.h"
+#include "storage/Volume.h"
+#include "storage/Disk.h"
+#include "storage/LoopCo.h"
+#include "storage/Storage.h"
+#include "storage/StorageTypes.h"
+#include "storage/Container.h"
+#include "storage/AppUtil.h"
+#include "storage/SystemCmd.h"
+#include "storage/ProcMounts.h"
+#include "storage/ProcPart.h"
+#include "storage/OutputProcessor.h"
+#include "storage/EtcFstab.h"
+#include "storage/StorageDefines.h"
+#include "storage/HumanString.h"
 
 
 namespace storage

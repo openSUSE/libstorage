@@ -1,7 +1,7 @@
 #ifndef LVM_LV_H
 #define LVM_LV_H
 
-#include "y2storage/Dm.h"
+#include "storage/Dm.h"
 
 namespace storage
 {

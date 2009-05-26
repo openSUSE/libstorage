@@ -1,8 +1,8 @@
 #ifndef NFS_CO_H
 #define NFS_CO_H
 
-#include "y2storage/Container.h"
-#include "y2storage/Nfs.h"
+#include "storage/Container.h"
+#include "storage/Nfs.h"
 
 namespace storage
 {

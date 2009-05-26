@@ -6,7 +6,7 @@
 #include <map>
 #include <boost/algorithm/string.hpp>
 
-#include "y2storage/StorageInterface.h"
+#include "storage/StorageInterface.h"
 
 namespace storage
 {

@@ -3,8 +3,8 @@
 
 #include <list>
 
-#include "y2storage/Container.h"
-#include "y2storage/Partition.h"
+#include "storage/Container.h"
+#include "storage/Partition.h"
 
 
 namespace storage

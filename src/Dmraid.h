@@ -1,7 +1,7 @@
 #ifndef DMRAID_H
 #define DMRAID_H
 
-#include "y2storage/DmPart.h"
+#include "storage/DmPart.h"
 
 namespace storage
 {

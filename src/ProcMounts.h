@@ -5,7 +5,7 @@
 #include <list>
 #include <map>
 
-#include "y2storage/EtcFstab.h"
+#include "storage/EtcFstab.h"
 
 namespace storage
 {

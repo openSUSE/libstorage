@@ -1,7 +1,7 @@
 #ifndef DEREF_ITERATOR_H
 #define DEREF_ITERATOR_H
 
-#include "y2storage/AppUtil.h"
+#include "storage/AppUtil.h"
 
 namespace storage
 {

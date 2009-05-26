@@ -18,11 +18,11 @@
 #include <blocxx/Logger.hpp>
 #include <blocxx/LogMessage.hpp>
 
-#include "y2storage/AsciiFile.h"
-#include "y2storage/StorageTmpl.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/StorageTypes.h"
+#include "storage/AsciiFile.h"
+#include "storage/StorageTmpl.h"
+#include "storage/AppUtil.h"
+#include "storage/SystemCmd.h"
+#include "storage/StorageTypes.h"
 
 
 namespace storage

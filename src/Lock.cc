@@ -11,8 +11,8 @@
 #include <sys/types.h>
 #include <stdlib.h>
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/Lock.h"
+#include "storage/AppUtil.h"
+#include "storage/Lock.h"
 
 
 namespace storage

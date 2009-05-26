@@ -14,9 +14,9 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/OutputProcessor.h"
+#include "storage/AppUtil.h"
+#include "storage/SystemCmd.h"
+#include "storage/OutputProcessor.h"
 
 
 namespace storage

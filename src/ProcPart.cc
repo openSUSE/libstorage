@@ -4,10 +4,10 @@
 */
 
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/StorageTmpl.h"
-#include "y2storage/AsciiFile.h"
-#include "y2storage/ProcPart.h"
+#include "storage/AppUtil.h"
+#include "storage/StorageTmpl.h"
+#include "storage/AsciiFile.h"
+#include "storage/ProcPart.h"
 
 
 namespace storage

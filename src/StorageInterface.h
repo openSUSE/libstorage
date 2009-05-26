@@ -69,7 +69,7 @@ using std::list;
  *
  * \code
  *
- * #include <y2storage/StorageInterface.h>
+ * #include <storage/StorageInterface.h>
  *
  * using namespace storage;
  *

@@ -1,7 +1,7 @@
 
 #include <string>
 
-#include <y2storage/StorageInterface.h>
+#include <storage/StorageInterface.h>
 
 
 using std::string;

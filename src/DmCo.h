@@ -1,8 +1,8 @@
 #ifndef DM_CO_H
 #define DM_CO_H
 
-#include "y2storage/PeContainer.h"
-#include "y2storage/Dm.h"
+#include "storage/PeContainer.h"
+#include "storage/Dm.h"
 
 namespace storage
 {

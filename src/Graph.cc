@@ -13,10 +13,10 @@
 #include <boost/algorithm/string.hpp>
 
 #include "config.h"
-#include "y2storage/Graph.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/HumanString.h"
-#include "y2storage/StorageInterface.h"
+#include "storage/Graph.h"
+#include "storage/AppUtil.h"
+#include "storage/HumanString.h"
+#include "storage/StorageInterface.h"
 
 
 namespace storage

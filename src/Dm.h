@@ -3,7 +3,7 @@
 
 #include <map>
 
-#include "y2storage/Volume.h"
+#include "storage/Volume.h"
 
 namespace storage
 {

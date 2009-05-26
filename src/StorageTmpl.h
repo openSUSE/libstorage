@@ -8,10 +8,10 @@
 #include <map>
 #include <deque>
 
-#include "y2storage/IterPair.h"
-#include "y2storage/FilterIterator.h"
-#include "y2storage/DerefIterator.h"
-#include "y2storage/AppUtil.h"
+#include "storage/IterPair.h"
+#include "storage/FilterIterator.h"
+#include "storage/DerefIterator.h"
+#include "storage/AppUtil.h"
 
 namespace storage
 {

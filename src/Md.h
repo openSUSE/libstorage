@@ -1,8 +1,8 @@
 #ifndef MD_H
 #define MD_H
 
-#include "y2storage/StorageInterface.h"
-#include "y2storage/Volume.h"
+#include "storage/StorageInterface.h"
+#include "storage/Volume.h"
 
 namespace storage
 {

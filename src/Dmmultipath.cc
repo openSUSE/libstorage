@@ -4,11 +4,11 @@
 
 #include <sstream>
 
-#include "y2storage/Dmmultipath.h"
-#include "y2storage/DmmultipathCo.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Storage.h"
+#include "storage/Dmmultipath.h"
+#include "storage/DmmultipathCo.h"
+#include "storage/SystemCmd.h"
+#include "storage/AppUtil.h"
+#include "storage/Storage.h"
 
 
 namespace storage

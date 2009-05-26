@@ -1,9 +1,9 @@
 #ifndef VOLUME_H
 #define VOLUME_H
 
-#include "y2storage/StorageInterface.h"
-#include "y2storage/StorageTypes.h"
-#include "y2storage/StorageTmpl.h"
+#include "storage/StorageInterface.h"
+#include "storage/StorageTypes.h"
+#include "storage/StorageTmpl.h"
 
 namespace storage
 {

@@ -3,8 +3,8 @@
 
 #include <list>
 
-#include "y2storage/DmPartCo.h"
-#include "y2storage/Dmraid.h"
+#include "storage/DmPartCo.h"
+#include "storage/Dmraid.h"
 
 namespace storage
 {

@@ -1,7 +1,7 @@
 
 #include <iostream>
 
-#include <y2storage/StorageInterface.h>
+#include <storage/StorageInterface.h>
 
 using namespace storage;
 using namespace std;

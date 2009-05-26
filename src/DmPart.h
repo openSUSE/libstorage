@@ -1,8 +1,8 @@
 #ifndef DM_PART_H
 #define DM_PART_H
 
-#include "y2storage/Dm.h"
-#include "y2storage/Partition.h"
+#include "storage/Dm.h"
+#include "storage/Partition.h"
 
 namespace storage
 {

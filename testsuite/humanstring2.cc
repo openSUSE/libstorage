@@ -2,7 +2,7 @@
 #include <iostream>
 #include <locale>
 
-#include <y2storage/HumanString.h>
+#include <storage/HumanString.h>
 
 using namespace std;
 using namespace storage;

@@ -7,9 +7,9 @@
 #include <ostream>
 #include <boost/algorithm/string.hpp>
 
-#include "y2storage/Regex.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/StorageInterface.h"
+#include "storage/Regex.h"
+#include "storage/AppUtil.h"
+#include "storage/StorageInterface.h"
 
 
 namespace storage

@@ -5,13 +5,13 @@
 #include <ostream>
 #include <fstream>
 
-#include "y2storage/MdCo.h"
-#include "y2storage/Md.h"
-#include "y2storage/SystemCmd.h"
-#include "y2storage/AppUtil.h"
-#include "y2storage/Storage.h"
-#include "y2storage/EtcRaidtab.h"
-#include "y2storage/StorageDefines.h"
+#include "storage/MdCo.h"
+#include "storage/Md.h"
+#include "storage/SystemCmd.h"
+#include "storage/AppUtil.h"
+#include "storage/Storage.h"
+#include "storage/EtcRaidtab.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage

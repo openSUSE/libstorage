@@ -1,8 +1,8 @@
 #ifndef LIST_LIST_ITERATOR_H
 #define LIST_LIST_ITERATOR_H
 
-#include "y2storage/AppUtil.h"
-#include "y2storage/IterPair.h"
+#include "storage/AppUtil.h"
+#include "storage/IterPair.h"
 
 namespace storage
 {
