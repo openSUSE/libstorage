@@ -1,7 +1,10 @@
+
 CXXFLAGS = -MMD -g -I /usr/include/YaST2
+
 LDFLAGS = -ly2storage
 
-PROGRAMS = TestDisk TestDiskLog TestProbing TestLvm TestMd TestLoop
+PROGRAMS = TestDisk TestDiskLog TestProbing TestLvm TestMd TestLoop		\
+	 SaveGraph
 
 all: $(PROGRAMS)
 
@@ -16,6 +19,8 @@ TestLvm: TestLvm.o
 TestMd: TestMd.o
 
 TestLoop: TestLoop.o
+
+SaveGraph: SaveGraph.o
 
 clean:
 	rm -f *.d *.o $(PROGRAMS)
