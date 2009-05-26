@@ -99,7 +99,7 @@ using std::list;
  *
  * If you have installed the latest yast2-storage package you can find more
  * examples in the directory
- * /usr/share/doc/packages/yast2-storage/examples/liby2storage.
+ * /usr/share/doc/packages/yast2-storage/examples/libstorage.
  */
 
 

@@ -4,7 +4,7 @@
 
 INCLUDES = -I$(top_srcdir)/libstorage/src
 
-LDADD = ../src/liby2storage.la
+LDADD = ../src/libstorage.la
 
 noinst_PROGRAMS = lvmcreate1 lvmcreate2 lvmextend1 lvmextend2
 

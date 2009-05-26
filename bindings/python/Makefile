@@ -15,5 +15,5 @@ LibStorage_wrap.cxx: LibStorage.i			\
 	../../src/Graph.h
 	swig -Wall -c++ -python LibStorage.i
 	g++ -c -I/usr/include/python -O2 -fPIC -pipe LibStorage_wrap.cxx
-	g++ -shared LibStorage_wrap.o -o _LibStorage.so -ly2storage
+	g++ -shared LibStorage_wrap.o -o _LibStorage.so -lstorage
 

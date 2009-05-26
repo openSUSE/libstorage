@@ -1,7 +1,7 @@
 
 CXXFLAGS = -MMD -g -I /usr/include/YaST2
 
-LDFLAGS = -ly2storage
+LDADD = -lstorage
 
 PROGRAMS = TestDisk TestDiskLog TestProbing TestLvm TestMd TestLoop		\
 	 SaveGraph

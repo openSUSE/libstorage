@@ -8,7 +8,7 @@ AUTOMAKE_OPTIONS = dejagnu
 
 INCLUDES = -I$(top_srcdir)/libstorage/src
 
-LDADD = ../src/liby2storage.la
+LDADD = ../src/libstorage.la
 
 noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
 	lvm_create.single lvm_extend.single md_create.single			\
