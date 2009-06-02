@@ -1,30 +1,30 @@
 
-CXXFLAGS = -MMD -g -I /usr/include/YaST2
-
-LDADD = -lstorage
-
 PROGRAMS = TestDisk TestDiskLog TestProbing TestLvm TestMd TestLoop		\
 	 SaveGraph
 
 all: $(PROGRAMS)
 
-TestDisk: TestDisk.o
+TestDisk: TestDisk.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-TestDiskLog: TestDiskLog.o
+TestDiskLog: TestDiskLog.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-TestProbing: TestProbing.o
+TestProbing: TestProbing.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-TestLvm: TestLvm.o
+TestLvm: TestLvm.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-TestMd: TestMd.o
+TestMd: TestMd.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-TestLoop: TestLoop.o
+TestLoop: TestLoop.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
-SaveGraph: SaveGraph.o
+SaveGraph: SaveGraph.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
 
 clean:
-	rm -f *.d *.o $(PROGRAMS)
+	rm $(PROGRAMS)
 
-ifneq "$(strip $(wildcard *.d))" ""
-  include $(wildcard *.d)
-endif
