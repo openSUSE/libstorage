@@ -6,7 +6,7 @@ SUBDIRS = lib config libstorage.test single.out data
 PACKAGE = libstorage
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES = -I$(top_srcdir)/libstorage/src
+INCLUDES = -I$(top_srcdir)/src
 
 LDADD = ../src/libstorage.la
 

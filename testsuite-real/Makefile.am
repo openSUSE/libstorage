@@ -2,7 +2,7 @@
 # Makefile.am for libstorage/testsuite-real
 #
 
-INCLUDES = -I$(top_srcdir)/libstorage/src
+INCLUDES = -I$(top_srcdir)/src
 
 LDADD = ../src/libstorage.la
 

@@ -4,7 +4,9 @@
 
 PACKAGE = libstorage
 
-INCLUDES = -I$(top_srcdir)/libstorage/src -I/usr/include/YaST2
+AM_CXXFLAGS = -std=gnu++0x -DHAVE_CXX0X
+
+INCLUDES = -I$(top_srcdir)/src
 
 LDADD = ../src/libstorage.la
 
@@ -29,7 +31,7 @@ TestLock_SOURCES = TestLock.cc
 
 SaveGraph_SOURCES = SaveGraph.cc
 
-exampledir = $(docdir)/examples/libstorage
+exampledir = $(docdir)/examples
 
 example_DATA = TestDisk.cc TestDiskLog.cc TestProbing.cc TestLvm.cc TestMd.cc	\
 	TestLoop.cc SaveGraph.cc
