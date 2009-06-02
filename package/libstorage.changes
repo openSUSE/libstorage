@@ -1,6 +1,6 @@
 -------------------------------------------------------------------
 Tue Jun 02 12:03:43 CEST 2009 - aschnell@suse.de
 
-- split libstroage from yast2-storage
+- split off libstorage from yast2-storage
 - 2.18.13
 
