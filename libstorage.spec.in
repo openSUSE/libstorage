@@ -1,0 +1,90 @@
+#
+# spec file for package libstorage (Version @VERSION@)
+#
+# norootforbuild
+
+Name:		libstorage
+Version:	@VERSION@
+Release:	0
+License:	GPL
+Group:		System/YaST
+BuildRoot:	%{_tmppath}/%{name}-%{version}-build
+Source:		libstorage-%{version}.tar.bz2
+
+prefix:		/usr
+
+BuildRequires:	blocxx-devel boost-devel gcc-c++ libxcrypt-devel openssl-devel
+BuildRequires:	docbook-xsl-stylesheets doxygen libxslt sgml-skel
+
+Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
+
+PreReq:		%fillup_prereq
+Obsoletes:	yast2-storage-lib
+Provides:	yast2-storage-lib
+Summary:	-
+
+%description
+This package is a part of YaST2. It contains the necessary scripts to
+configure disk storage.
+
+%prep
+%setup -n libstorage-%{version}
+
+%build
+
+aclocal
+libtoolize --force --automake --copy
+autoheader
+automake --add-missing --copy
+autoconf
+
+export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
+export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
+
+%{?suse_update_config:%{suse_update_config -f}}
+./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir}
+make %{?jobs:-j%jobs}
+
+%ifarch s390 s390x
+sed -i -e 's/DEVICE_NAMES=".*"/DEVICE_NAMES="path"/' data/sysconfig.storage
+%endif
+
+%check
+make check
+
+%install
+make install DESTDIR="$RPM_BUILD_ROOT"
+
+install -d -m 755 $RPM_BUILD_ROOT/var/lock/libstorage
+
+%clean
+rm -rf "$RPM_BUILD_ROOT"
+
+%files
+%defattr(-,root,root)
+%{_libdir}/libstorage.so.*
+%dir /var/lock/libstorage
+/var/adm/fillup-templates/sysconfig.storage
+
+%post
+/sbin/ldconfig
+%{fillup_only -n storage}
+
+%postun
+/sbin/ldconfig
+
+%package devel
+Requires:	libstorage = %version
+Requires:	blocxx-devel libstdc++-devel
+Summary:	-
+Group:		System/YaST
+
+%description devel
+-
+
+%files devel
+%defattr(-,root,root)
+%{_libdir}/libstorage.la
+%{_libdir}/libstorage.so
+%{prefix}/include/storage
+%doc %{prefix}/share/doc/packages/libstorage

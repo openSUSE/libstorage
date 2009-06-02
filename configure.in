@@ -1,0 +1,36 @@
+
+AC_INIT(src/StorageInterface.h)
+
+VERSION=`cat ./VERSION`
+AC_SUBST(VERSION)
+
+AM_INIT_AUTOMAKE(libstorage, $VERSION)
+AM_CONFIG_HEADER(config.h)
+
+AC_DISABLE_STATIC
+
+AC_PROG_CXX
+AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
+
+AC_PREFIX_DEFAULT(/usr)
+
+docdir=\${prefix}/share/doc/packages/libstorage
+AC_SUBST(docdir)
+
+AC_OUTPUT(
+	Makefile
+	doc/Makefile
+	doc/autodocs/Makefile
+	src/Makefile
+	data/Makefile
+	examples/Makefile
+	testsuite/Makefile
+	testsuite/lib/Makefile
+	testsuite/config/Makefile
+	testsuite/libstorage.test/Makefile
+	testsuite/single.out/Makefile
+	testsuite/data/Makefile
+	testsuite-real/Makefile
+	package/libstorage.spec:libstorage.spec.in
+)
