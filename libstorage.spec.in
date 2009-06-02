@@ -14,7 +14,7 @@ Source:		libstorage-%{version}.tar.bz2
 prefix:		/usr
 
 BuildRequires:	blocxx-devel boost-devel gcc-c++ libxcrypt-devel openssl-devel
-BuildRequires:	doxygen
+BuildRequires:	doxygen dejagnu
 
 Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
 
