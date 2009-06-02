@@ -1,5 +1,5 @@
 #
-# Makefile.cvs for xanalyser
+# Makefile.repo for libstorage
 #
 
 configure: all
@@ -9,7 +9,7 @@ all:
 	aclocal
 	autoconf
 	autoheader
-	automake --add-missing
+	autoreconf --force --install
 
 install: configure
 	make
