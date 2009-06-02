@@ -7,14 +7,14 @@ Name:		libstorage
 Version:	@VERSION@
 Release:	0
 License:	GPL
-Group:		System/YaST
+Group:		System/Libraries
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Source:		libstorage-%{version}.tar.bz2
 
 prefix:		/usr
 
 BuildRequires:	blocxx-devel boost-devel gcc-c++ libxcrypt-devel openssl-devel
-BuildRequires:	docbook-xsl-stylesheets doxygen libxslt sgml-skel
+BuildRequires:	doxygen
 
 Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
 
@@ -77,7 +77,7 @@ rm -rf "$RPM_BUILD_ROOT"
 Requires:	libstorage = %version
 Requires:	blocxx-devel libstdc++-devel
 Summary:	-
-Group:		System/YaST
+Group:		Development/Languages/C and C++
 
 %description devel
 -
