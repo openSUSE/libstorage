@@ -15,6 +15,9 @@ AM_PROG_LIBTOOL
 
 AC_PREFIX_DEFAULT(/usr)
 
+CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes"
+CXXFLAGS="${CXXFLAGS} -std=gnu++0x -DHAVE_CXX0X -Wall -Wformat=2"
+
 docdir=\${prefix}/share/doc/packages/libstorage
 AC_SUBST(docdir)
 

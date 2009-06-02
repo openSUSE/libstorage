@@ -2,10 +2,6 @@
 # Makefile.am for libstorage/examples
 #
 
-PACKAGE = libstorage
-
-AM_CXXFLAGS = -std=gnu++0x -DHAVE_CXX0X
-
 INCLUDES = -I$(top_srcdir)/src
 
 LDADD = ../src/libstorage.la

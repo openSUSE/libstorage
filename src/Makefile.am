@@ -2,10 +2,6 @@
 # Makefile.am for libstorage/src
 #
 
-AM_CXXFLAGS = -std=gnu++0x -DHAVE_CXX0X
-
-INCLUDES = -I$(includedir)
-
 storage:
 	ln -sf . storage
 
