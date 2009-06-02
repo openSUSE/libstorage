@@ -1,6 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
 
 #include <dirent.h>
 #include <glob.h>
@@ -126,6 +123,10 @@ Storage::initialize()
 	{
 	tempdir = tbuf;
 	}
+
+    bindtextdomain("libstorage", "/usr/share/locale");
+    bind_textdomain_codeset("libstorage", "UTF-8");
+
     if( access( "/etc/sysconfig/storage", R_OK )==0 )
     {
 	AsciiFile sc( "/etc/sysconfig/storage" );

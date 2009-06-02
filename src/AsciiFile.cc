@@ -1,7 +1,3 @@
-// Maintainer: fehr@suse.de
-/*
-  Textdomain    "storage"
-*/
 
 #include <assert.h>
 #include <unistd.h>

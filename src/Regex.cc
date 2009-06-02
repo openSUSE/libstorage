@@ -1,8 +1,3 @@
-/*
- *  Author: Arvin Schnell
-  Textdomain    "storage"
- */
-
 
 #include "Regex.h"
 

@@ -1,6 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
 
 #include <sstream>
 

@@ -1,6 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
 
 #include <sstream>
 #include <boost/algorithm/string.hpp>

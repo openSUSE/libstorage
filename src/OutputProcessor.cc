@@ -1,7 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
-
 
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"

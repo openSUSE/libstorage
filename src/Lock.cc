@@ -1,7 +1,3 @@
-/*
- * Author:	Arvin Schnell <aschnell@suse.de>
- */
-
 
 #include <stdio.h>
 #include <unistd.h>

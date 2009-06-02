@@ -1,11 +1,3 @@
-/*
- *  Author:	Arvin Schnell <aschnell@suse.de>
- */
-
-/*
-    Textdomain	"storage"
-*/
-
 
 #include <locale>
 #include <boost/algorithm/string.hpp>

@@ -1,6 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
 
 #include <fcntl.h>
 #include <sys/mount.h>         /* for BLKGETSIZE */

@@ -84,12 +84,12 @@ string sformat(const char* format, ...);
 
 inline const char* _(const char* msgid)
 {
-    return dgettext("storage", msgid);
+    return dgettext("libstorage", msgid);
 }
 
 inline const char* _(const char* msgid, const char* msgid_plural, unsigned long int n)
 {
-    return dngettext("storage", msgid, msgid_plural, n);
+    return dngettext("libstorage", msgid, msgid_plural, n);
 }
 
 

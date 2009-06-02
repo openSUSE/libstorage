@@ -1,6 +1,3 @@
-/*
-  Textdomain    "storage"
-*/
 
 #include <stdio.h>
 #include <string>

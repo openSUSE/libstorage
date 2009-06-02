@@ -1,11 +1,3 @@
-/*
- *  Author:	Arvin Schnell <aschnell@suse.de>
- */
-
-/*
-    Textdomain	"storage"
- */
-
 
 #include <string>
 #include <fstream>

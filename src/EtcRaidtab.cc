@@ -1,7 +1,3 @@
-// Maintainer: fehr@suse.de
-/*
-  Textdomain    "storage"
-*/
 
 #include "storage/AppUtil.h"
 #include "storage/Regex.h"
