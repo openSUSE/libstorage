@@ -5,4 +5,4 @@ SRCFILES=`find .. -type d -name testsuite -prune ,		\
 
 echo $SRCFILES
 
-xgettext -s --no-wrap --add-comments --add-location --keyword=_ --keyword=_:1,2 --foreign-user --copyright-holder="SuSE Linux Products GmbH, Nuernberg" --default-domain=libstorage --output=libstorage.pot $SRCFILES
+xgettext -s --no-wrap --add-comments --add-location --keyword=_ --keyword=_:1,2 --foreign-user --copyright-holder="SUSE Linux Products GmbH, Nuernberg" --default-domain=libstorage --output=libstorage.pot $SRCFILES

@@ -65,6 +65,7 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
 /var/adm/fillup-templates/sysconfig.storage
+%doc AUTHORS COPYING
 
 %post
 /sbin/ldconfig
