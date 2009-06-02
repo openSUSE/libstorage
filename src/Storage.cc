@@ -75,7 +75,7 @@ Storage::Storage(const Environment& env)
 {
     y2mil("constructed Storage with readonly:" << readonly() << " testmode:" << testmode() 
 	  << " autodetect:" << autodetect() << " instsys:" << instsys());
-    y2mil("package string \"" PACKAGE_STRING "\"");
+    y2mil("libstorage version " VERSION);
 
     root_mounted = !instsys();
     efiboot = false;
