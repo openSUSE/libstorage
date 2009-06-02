@@ -2,7 +2,6 @@
 AC_INIT(src/StorageInterface.h)
 
 VERSION=`cat ./VERSION`
-AC_SUBST(VERSION)
 
 AM_INIT_AUTOMAKE(libstorage, $VERSION)
 AM_CONFIG_HEADER(config.h)
@@ -19,7 +18,11 @@ CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes"
 CXXFLAGS="${CXXFLAGS} -std=gnu++0x -DHAVE_CXX0X -Wall -Wformat=2"
 
 docdir=\${prefix}/share/doc/packages/libstorage
+fillupdir=/var/adm/fillup-templates
+
+AC_SUBST(VERSION)
 AC_SUBST(docdir)
+AC_SUBST(fillupdir)
 
 AC_OUTPUT(
 	Makefile
