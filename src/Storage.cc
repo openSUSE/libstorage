@@ -5840,9 +5840,10 @@ std::ostream& operator<<(std::ostream& s, const Storage& v)
     }
 
 
-storage::CallbackProgressBar Storage::progress_bar_cb_ycp;
-storage::CallbackShowInstallInfo Storage::install_info_cb_ycp;
-storage::CallbackInfoPopup Storage::info_popup_cb_ycp;
-storage::CallbackYesNoPopup Storage::yesno_popup_cb_ycp;
+    // workaround for broken YCP bindings
+    CallbackProgressBar progress_bar_cb_ycp;
+    CallbackShowInstallInfo install_info_cb_ycp;
+    CallbackInfoPopup info_popup_cb_ycp;
+    CallbackYesNoPopup yesno_popup_cb_ycp;
 
 }

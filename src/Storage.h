@@ -33,6 +33,13 @@
 
 namespace storage
 {
+    // workaround for broken YCP bindings
+    extern CallbackProgressBar progress_bar_cb_ycp;
+    extern CallbackShowInstallInfo install_info_cb_ycp;
+    extern CallbackInfoPopup info_popup_cb_ycp;
+    extern CallbackYesNoPopup yesno_popup_cb_ycp;
+
+
 template <CType Value>
 class CheckType
     {
@@ -491,23 +498,6 @@ class DiskData;
 	storage::CallbackYesNoPopup getCallbackYesNoPopup() const
 	    { return yesno_popup_cb; }
 	void addInfoPopupText( const string& disk, const string& txt );
-
-	static void setCallbackProgressBarYcp( storage::CallbackProgressBar pfnc )
-	    { progress_bar_cb_ycp=pfnc; }
-	static storage::CallbackProgressBar getCallbackProgressBarYcp()
-	    { return progress_bar_cb_ycp; }
-	static void setCallbackShowInstallInfoYcp( storage::CallbackShowInstallInfo pfnc )
-	    { install_info_cb_ycp=pfnc; }
-	static storage::CallbackShowInstallInfo getCallbackShowInstallInfoYcp()
-	    { return install_info_cb_ycp; }
-	static void setCallbackInfoPopupYcp( storage::CallbackInfoPopup pfnc )
-	    { info_popup_cb_ycp=pfnc; }
-	static storage::CallbackInfoPopup getCallbackInfoPopupYcp()
-	    { return info_popup_cb_ycp; }
-	static void setCallbackYesNoPopupYcp( storage::CallbackYesNoPopup pfnc )
-	    { yesno_popup_cb_ycp=pfnc; }
-	static storage::CallbackYesNoPopup getCallbackYesNoPopupYcp()
-	    { return yesno_popup_cb_ycp; }
 
 	storage::CallbackProgressBar getCallbackProgressBarTheOne() const
 	    { return progress_bar_cb ? progress_bar_cb : progress_bar_cb_ycp; }
@@ -1735,10 +1725,6 @@ class DiskData;
 	storage::CallbackShowInstallInfo install_info_cb;
 	storage::CallbackInfoPopup info_popup_cb;
 	storage::CallbackYesNoPopup yesno_popup_cb;
-	static storage::CallbackProgressBar progress_bar_cb_ycp;
-	static storage::CallbackShowInstallInfo install_info_cb_ycp;
-	static storage::CallbackInfoPopup info_popup_cb_ycp;
-	static storage::CallbackYesNoPopup yesno_popup_cb_ycp;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
 
