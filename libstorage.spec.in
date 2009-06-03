@@ -65,7 +65,6 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
 /var/adm/fillup-templates/sysconfig.storage
-%doc AUTHORS COPYING
 
 %post
 /sbin/ldconfig
@@ -89,3 +88,5 @@ Group:		Development/Languages/C and C++
 %{_libdir}/libstorage.so
 %{prefix}/include/storage
 %doc %{prefix}/share/doc/packages/libstorage
+%doc %{prefix}/share/doc/packages/libstorage/autodocs
+%doc %{prefix}/share/doc/packages/libstorage/examples
