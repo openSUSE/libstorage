@@ -2,12 +2,13 @@
 # Makefile.am for libstorage/doc/autodocs
 #
 
-htmldir = $(docdir)/libstorage/autodocs
+htmldir = $(docdir)/autodocs
 
-#html_DATA = index.html $(wildcard *.html *.png) doxygen.css libstorage.tag
-#CLEANFILES = $(html_DATA) doxygen.log doxygen.conf installdox
+html_DATA = index.html $(wildcard *.html *.png)
 
-#doxygen.css @RPMNAME@.tag: index.html
+index.html: $(srcdir)/../../src/*.h
+	doxygen doxygen.conf
 
-#index.html: $(srcdir)/../../src/*.h
-#	doxygen PROJECT_NAME=libstorage EXCLUDE_SYMLINKS=YES
+CLEANFILES = $(html_DATA) doxygen.log installdox
+
+EXTRA_DIST = doxygen.conf
