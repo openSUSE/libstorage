@@ -6,7 +6,6 @@
 #include <ostream>
 #include <fstream>
 #include <sys/wait.h>
-
 #include <string>
 #include <boost/algorithm/string.hpp>
 

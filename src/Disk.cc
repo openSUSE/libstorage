@@ -2,7 +2,6 @@
 #include <fcntl.h>
 #include <sys/mount.h>         /* for BLKGETSIZE */
 #include <linux/hdreg.h>       /* for HDIO_GETGEO */
-
 #include <string>
 #include <ostream>
 #include <fstream>

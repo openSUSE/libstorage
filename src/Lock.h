@@ -2,11 +2,6 @@
 #define LOCK_H
 
 
-/*
- * Author:	Arvin Schnell <aschnell@suse.de>
- */
-
-
 #include <stdexcept>
 #include <boost/noncopyable.hpp>
 

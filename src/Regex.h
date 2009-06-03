@@ -2,11 +2,6 @@
 #define REGEX_H
 
 
-/*
- *  Author: Arvin Schnell
- */
-
-
 #include <regex.h>
 #include <string>
 #include <boost/noncopyable.hpp>

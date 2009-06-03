@@ -1,7 +1,6 @@
 
-#include <sstream>
-
 #include <sys/stat.h>
+#include <sstream>
 
 #include "storage/Loop.h"
 #include "storage/StorageTypes.h"

@@ -10,7 +10,6 @@
 #include <signal.h>
 #include <sys/utsname.h>
 #include <errno.h>
-
 #include <set>
 #include <array>
 #include <fstream>
