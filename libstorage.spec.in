@@ -46,7 +46,7 @@ export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 make %{?jobs:-j%jobs}
 
 %ifarch s390 s390x
-sed -i -e 's/DEVICE_NAMES=".*"/DEVICE_NAMES="path"/' data/sysconfig.storage
+sed -i -e 's/DEVICE_NAMES=".*"/DEVICE_NAMES="path"/' data/sysconfig.storage-libstorage
 %endif
 
 %check
