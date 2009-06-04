@@ -23,8 +23,8 @@ using std::list;
  *
  * \section Caching
  *
- * All modifying functions of libstorage can either operate on an
- * internal cache or directly on the system.
+ * All modifying functions of libstorage can either operate on an internal
+ * cache or directly on the system.
  *
  * When the caching mode is enabled a call of e.g. \link
  * storage::StorageInterface::createPartition() createPartition() \endlink
@@ -79,20 +79,20 @@ using std::list;
  *     // Environment for StorageInterface with read-write enabled.
  *     Environment env(false);
  *
- *     // First we must create a concrete StorageInterface object.
+ *     // Create a concrete StorageInterface object.
  *     StorageInterface* s = createStorageInterface(env);
  *
  *     int ret;
  *     string name;
  *
- *     // Create a primary partition on /dev/hda.
- *     ret = s->createPartitionKb("/dev/hda", PRIMARY, 0, 100000, name);
+ *     // Create a primary partition on /dev/sdb.
+ *     ret = s->createPartitionKb("/dev/sdb", PRIMARY, 0, 100000, name);
  *
  *     // Commit the change to the system.
  *     ret = s->commit();
  *
  *     // Finally destroy the StorageInterface object.
- *     delete s;
+ *     destroyStorageInterface(s);
  * }
  *
  * \endcode
@@ -123,6 +123,7 @@ namespace storage
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH,
 		 COTYPE_LAST_ENTRY };
+
 
     /**
      * typedef for a pointer to a function that is called on progress bar

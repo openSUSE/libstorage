@@ -127,7 +127,7 @@ proc multi-run { src } {
       set testBase_name [lindex $testFname 0]
       puts "   ... $testBase_name" 
 
-      #generate output directory
+      # generate output directory
 
       exec mkdir -p ./$base_name/out
       set errfile ./$base_name/out/$testBase_name.err
