@@ -1,11 +1,6 @@
 #
-# Makefile.am for libstorage/src
+# Makefile.am for libstorage/storage
 #
-
-storage:
-	ln -sf . storage
-
-BUILT_SOURCES = storage
 
 lib_LTLIBRARIES = libstorage.la
 

@@ -1,5 +1,5 @@
 
-AC_INIT(src/StorageInterface.h)
+AC_INIT(storage/StorageInterface.h)
 
 VERSION=`cat ./VERSION`
 
@@ -28,7 +28,7 @@ AC_OUTPUT(
 	Makefile
 	doc/Makefile
 	doc/autodocs/Makefile
-	src/Makefile
+	storage/Makefile
 	data/Makefile
 	examples/Makefile
 	testsuite/Makefile

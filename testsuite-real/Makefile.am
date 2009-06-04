@@ -2,9 +2,9 @@
 # Makefile.am for libstorage/testsuite-real
 #
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_srcdir)
 
-LDADD = ../src/libstorage.la
+LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = lvmcreate1 lvmcreate2 lvmextend1 lvmextend2
 

@@ -7,3 +7,4 @@ DEVICE_NAMES="id"
 ## Type: string
 # Default filesystem type.
 DEFAULT_FS="ext4"
+

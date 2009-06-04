@@ -64,11 +64,11 @@ rm -rf "$RPM_BUILD_ROOT"
 %defattr(-,root,root)
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
-/var/adm/fillup-templates/sysconfig.storage
+/var/adm/fillup-templates/sysconfig.storage-libstorage
 
 %post
 /sbin/ldconfig
-%{fillup_only -n storage}
+%{fillup_only -an storage}
 
 %postun
 /sbin/ldconfig

@@ -2,9 +2,9 @@
 # Makefile.am for libstorage/examples
 #
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_srcdir)
 
-LDADD = ../src/libstorage.la
+LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm		\
 	TestMd TestLoop TestLock SaveGraph

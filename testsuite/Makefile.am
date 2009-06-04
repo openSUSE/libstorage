@@ -3,12 +3,14 @@
 #
 
 SUBDIRS = lib config libstorage.test single.out data
+
 PACKAGE = libstorage
+
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES = -I$(top_srcdir)/src
+INCLUDES = -I$(top_srcdir)
 
-LDADD = ../src/libstorage.la
+LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
 	lvm_create.single lvm_extend.single md_create.single			\
