@@ -5,9 +5,9 @@
 %module LibStorage
 
 %{
-#include "../../storage/StorageInterface.h"
-#include "../../storage/HumanString.h"
-#include "../../storage/Graph.h"
+#include <storage/StorageInterface.h>
+#include <storage/HumanString.h>
+#include <storage/Graph.h>
 %}
 
 using namespace std;

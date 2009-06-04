@@ -29,6 +29,7 @@ AC_OUTPUT(
 	doc/Makefile
 	doc/autodocs/Makefile
 	storage/Makefile
+	bindings/Makefile
 	data/Makefile
 	examples/Makefile
 	testsuite/Makefile
