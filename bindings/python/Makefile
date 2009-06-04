@@ -10,9 +10,9 @@ LibStorage.pyo: LibStorage_wrap.cxx
 	python -O -c "import LibStorage"
 
 LibStorage_wrap.cxx: LibStorage.i			\
-	../../src/StorageInterface.h			\
-	../../src/HumanString.h				\
-	../../src/Graph.h
+	../../storage/StorageInterface.h		\
+	../../storage/HumanString.h			\
+	../../storage/Graph.h
 	swig -Wall -c++ -python LibStorage.i
 	g++ -c -I/usr/include/python -O2 -fPIC -pipe LibStorage_wrap.cxx
 	g++ -shared LibStorage_wrap.o -o _LibStorage.so -lstorage

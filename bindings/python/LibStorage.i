@@ -5,9 +5,9 @@
 %module LibStorage
 
 %{
-#include "../../src/StorageInterface.h"
-#include "../../src/HumanString.h"
-#include "../../src/Graph.h"
+#include "../../storage/StorageInterface.h"
+#include "../../storage/HumanString.h"
+#include "../../storage/Graph.h"
 %}
 
 using namespace std;
@@ -20,9 +20,9 @@ using namespace std;
     $result = PyString_FromString($1->c_str());
 }
 
-%include "../../src/StorageInterface.h"
-%include "../../src/HumanString.h"
-%include "../../src/Graph.h"
+%include "../../storage/StorageInterface.h"
+%include "../../storage/HumanString.h"
+%include "../../storage/Graph.h"
 
 using namespace storage;
 
