@@ -1,18 +1,5 @@
 
-#include <string>
-
 #include <storage/StorageInterface.h>
-
-
-using std::string;
-
-
-extern bool testmode;
-
-extern string disk;
-
-void
-parse_command_line (int argc, char* argv[]);
 
 
 namespace storage
@@ -22,7 +9,7 @@ namespace storage
     {
 	TestEnvironment() : Environment(false)
 	{
-	    testmode = ::testmode;
+	    testmode = true;
 	    autodetect = false;
 	}
     };

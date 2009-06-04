@@ -19,7 +19,7 @@ StorageInterface* s = 0;
 void
 print_fstab ()
 {
-    ifstream fstab (testmode ? "tmp/fstab" : "/etc/fstab");
+    ifstream fstab ("tmp/fstab");
     string line;
 
     while (getline (fstab, line))
@@ -33,6 +33,8 @@ run1 ()
     cout << "run1\n";
 
     s = createStorageInterface(TestEnvironment());
+
+    string disk = "/dev/hdb";
 
     s->destroyPartitionTable (disk, "msdos");
 
@@ -60,7 +62,8 @@ run2 ()
 
     s = createStorageInterface(TestEnvironment());
 
-    string name = disk + "1";
+    string name = "/dev/hdb1";
+
     cout << name << '\n';
 
     cout << s->changeMountBy (name, MOUNTBY_DEVICE) << '\n';
@@ -74,16 +77,11 @@ run2 ()
 int
 main (int argc, char* argv[])
 {
-    parse_command_line (argc, argv);
-
     system ("mkdir -p tmp");
     setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
-    if (testmode)
-    {
-	system ("rm -f tmp/fstab tmp/volume_info");
-	system ("cp data/disk_hdb tmp/disk_hdb");
-    }
+    system ("rm -f tmp/fstab tmp/volume_info");
+    system ("cp data/disk_hdb tmp/disk_hdb");
 
     run1 ();
     print_fstab ();
