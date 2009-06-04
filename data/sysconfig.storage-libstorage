@@ -4,7 +4,7 @@
 # Default mount-by method.
 DEVICE_NAMES="id"
 
-## Type: string
+## Type: string(ext2,ext3,ext4,reiser,xfs)
 # Default filesystem type.
 DEFAULT_FS="ext4"
 
