@@ -72,6 +72,8 @@ Disk::Disk(Storage * const s, const string& fname)
     if( nm.find("disk_")==0 )
 	nm.erase( 0, 5 );
 
+    logfile_name = nm;
+
     AsciiFile file(fname);
     const vector<string>& lines = file.lines();
     vector<string>::const_iterator it;
