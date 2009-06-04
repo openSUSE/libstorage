@@ -57,6 +57,12 @@ using std::list;
  *
  * Locking may also fail for other reasons, e.g. limited permissions.
  *
+ * \section Configuration File
+ *
+ * During initialisation libstorage reads the default filesystem and default
+ * mount-by method from /etc/sysconfig/storage. Libstorage does not write that
+ * file.
+ *
  * \section Nomenclature
  *
  * Sizes with postfix K are in kilobytes (1024 bytes).
@@ -1429,11 +1435,25 @@ namespace storage
 	virtual void setDefaultMountBy( MountByType val ) = 0;
 
 	/**
-	 * Set default value for mount by.
+	 * Get default value for mount by.
 	 *
 	 * @return default value for mount by
 	 */
 	virtual MountByType getDefaultMountBy() const = 0;
+
+	/**
+	 * Set default filesystem.
+	 *
+	 * @param val new default filesystem.
+	 */
+	virtual void setDefaultFs(FsType val) = 0;
+
+	/**
+	 * Get default filesystem.
+	 *
+	 * @return default filesystem.
+	 */
+	virtual FsType getDefaultFs() const = 0;
 
 	/**
 	 * Set value for EFI boot.

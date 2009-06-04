@@ -3,6 +3,7 @@ Thu Jun 04 11:29:20 CEST 2009 - aschnell@suse.de
 
 - do not report partitions for disks used by BIOS RAID or DM
   Multipath
+- added functions setDefaultFs() and getDefaultFs()
 - 2.18.14
 
 -------------------------------------------------------------------

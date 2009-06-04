@@ -4,6 +4,7 @@
 
 #define SYSFSDIR "/sys/block"
 
+#define SYSCONFIGFILE "/etc/sysconfig/storage"
 
 #define PARTEDBIN "/usr/sbin/parted"
 #define PARTEDCMD PARTEDBIN " -s "	// blank at end !!

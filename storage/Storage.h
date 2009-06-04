@@ -367,8 +367,13 @@ class DiskData;
 	bool getRecursiveRemoval() const { return recursiveRemove; }
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
-	void setDefaultMountBy (MountByType mby = MOUNTBY_DEVICE);
+
+	void setDefaultMountBy(MountByType mby);
 	MountByType getDefaultMountBy() const { return defaultMountBy; }
+
+	void setDefaultFs (FsType fs);
+	FsType getDefaultFs() const { return defaultFs; }
+
 	void setDetectMountedVolumes( bool val=true );
 	bool getDetectMountedVolumes() const { return detectMounted; }
 	void setEfiBoot(bool val);
@@ -1707,6 +1712,7 @@ class DiskData;
 	bool recursiveRemove;
 	bool zeroNewPartitions;
 	MountByType defaultMountBy;
+	FsType defaultFs;
 	bool detectMounted;
 	bool root_mounted;
 	string testdir;

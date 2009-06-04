@@ -95,6 +95,7 @@ Storage::Storage(const Environment& env)
     recursiveRemove = false;
     zeroNewPartitions = false;
     defaultMountBy = MOUNTBY_ID;
+    defaultFs = EXT4;
     detectMounted = true;
 
     logSystemInfo();
@@ -126,14 +127,15 @@ Storage::initialize()
     bindtextdomain("libstorage", "/usr/share/locale");
     bind_textdomain_codeset("libstorage", "UTF-8");
 
-    if( access( "/etc/sysconfig/storage", R_OK )==0 )
+    if (access(SYSCONFIGFILE, R_OK) == 0)
     {
-	AsciiFile sc( "/etc/sysconfig/storage" );
+	AsciiFile sc(SYSCONFIGFILE);
 	const vector<string>& lines = sc.lines();
-	Regex rx('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (find_if(lines, regex_matches(rx)) != lines.end())
+
+	Regex rx1('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
+	if (find_if(lines, regex_matches(rx1)) != lines.end())
 	{
-	    string val = boost::to_lower_copy(rx.cap(2), locale::classic());
+	    string val = boost::to_lower_copy(rx1.cap(2), locale::classic());
 	    if( val == "id" )
 		setDefaultMountBy( MOUNTBY_ID );
 	    else if( val == "path" )
@@ -144,8 +146,29 @@ Storage::initialize()
 		setDefaultMountBy( MOUNTBY_UUID );
 	    else if( val == "label" )
 		setDefaultMountBy( MOUNTBY_LABEL );
+	    else
+		y2war("unknown default mount-by method '" << val << "' in " SYSCONFIGFILE);
+	}
+
+	Regex rx2('^' + Regex::ws + "DEFAULT_FS" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
+	if (find_if(lines, regex_matches(rx2)) != lines.end())
+	{
+	    string val = boost::to_lower_copy(rx2.cap(2), locale::classic());
+	    if (val == "ext2")
+		setDefaultFs(EXT2);
+	    else if (val == "ext3")
+		setDefaultFs(EXT3);
+	    else if (val == "ext4")
+		setDefaultFs(EXT4);
+	    else if (val == "reiser")
+		setDefaultFs(REISERFS);
+	    else if (val == "xfs")
+		setDefaultFs(XFS);
+	    else
+		y2war("unknown default filesystem '" << val << "' in " SYSCONFIGFILE);
 	}
     }
+
     if (autodetect())
 	{
 	detectArch();
@@ -879,6 +902,14 @@ void Storage::setDefaultMountBy(MountByType val)
     y2mil("val:" << Volume::mbyTypeString(val));
     defaultMountBy = val;
 }
+
+
+void Storage::setDefaultFs(FsType val)
+{
+    y2mil("val:" << Volume::fsTypeString(val));
+    defaultFs = val;
+}
+
 
 void Storage::setEfiBoot(bool val)
 {
