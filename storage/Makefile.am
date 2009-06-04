@@ -56,5 +56,3 @@ pkginclude_HEADERS =			\
 	StorageInterface.h		\
 	HumanString.h			\
 	Graph.h
-
-CLEANFILES = $(BUILT_SOURCES)
