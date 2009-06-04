@@ -4152,19 +4152,23 @@ int Storage::getPartitionInfo( const string& disk,
     int ret = 0;
     plist.clear();
     assertInit();
-    DiskIterator i = findDisk( disk );
-    if( i != dEnd() )
+    DiskIterator i = findDisk(disk);
+    if (i != dEnd())
+    {
+	// TODO: those partitions shouldn't be detected at all
+	if (i->getUsedByType() == UB_NONE)
 	{
-	Disk::PartPair p = i->partPair (Disk::notDeleted);
-	for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    Disk::PartPair p = i->partPair(Disk::notDeleted);
+	    for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    {
-	    plist.push_back( PartitionInfo() );
-	    i2->getInfo( plist.back() );
+		plist.push_back(PartitionInfo());
+		i2->getInfo(plist.back());
 	    }
 	}
+    }
     else
 	ret = STORAGE_DISK_NOT_FOUND;
-    return( ret );
+    return ret;
     }
 
 int Storage::getLvmVgInfo( const string& name, LvmVgInfo& info )

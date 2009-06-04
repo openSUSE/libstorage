@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun 04 11:29:20 CEST 2009 - aschnell@suse.de
+
+- do not report partitions for disks used by BIOS RAID or DM
+  Multipath
+- 2.18.14
+
+-------------------------------------------------------------------
 Tue Jun 02 12:03:43 CEST 2009 - aschnell@suse.de
 
 - split off libstorage from yast2-storage
