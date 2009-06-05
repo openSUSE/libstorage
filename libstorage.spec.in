@@ -13,8 +13,7 @@ Source:		libstorage-%{version}.tar.bz2
 
 prefix:		/usr
 
-BuildRequires:	blocxx-devel boost-devel gcc-c++ libxcrypt-devel openssl-devel
-BuildRequires:	doxygen dejagnu
+BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu
 
 Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
 
@@ -31,15 +30,14 @@ configure disk storage.
 %setup -n libstorage-%{version}
 
 %build
+export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
+export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
 aclocal
 libtoolize --force --automake --copy
 autoheader
 automake --add-missing --copy
 autoconf
-
-export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
-export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
 %{?suse_update_config:%{suse_update_config -f}}
 ./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir}
@@ -65,6 +63,9 @@ rm -rf "$RPM_BUILD_ROOT"
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
 /var/adm/fillup-templates/sysconfig.storage-libstorage
+%doc %dir %{prefix}/share/doc/packages/libstorage
+%doc %{prefix}/share/doc/packages/libstorage/AUTHORS
+%doc %{prefix}/share/doc/packages/libstorage/COPYING
 
 %post
 /sbin/ldconfig
@@ -75,7 +76,7 @@ rm -rf "$RPM_BUILD_ROOT"
 
 %package devel
 Requires:	libstorage = %version
-Requires:	blocxx-devel libstdc++-devel
+Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel
 Summary:	-
 Group:		Development/Languages/C and C++
 
@@ -87,6 +88,5 @@ Group:		Development/Languages/C and C++
 %{_libdir}/libstorage.la
 %{_libdir}/libstorage.so
 %{prefix}/include/storage
-%doc %{prefix}/share/doc/packages/libstorage
 %doc %{prefix}/share/doc/packages/libstorage/autodocs
 %doc %{prefix}/share/doc/packages/libstorage/examples

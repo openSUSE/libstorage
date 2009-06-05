@@ -6,7 +6,9 @@ SUBDIRS = storage doc bindings data examples testsuite testsuite-real
 
 AUTOMAKE_OPTIONS = foreign dist-bzip2 no-dist-gzip
 
-EXTRA_DIST = AUTHORS VERSION
+doc_DATA = AUTHORS COPYING
+
+EXTRA_DIST = $(doc_DATA) VERSION
 
 
 libstorage-$(VERSION).tar.bz2: dist-bzip2
