@@ -1,2 +1,8 @@
 *.o
 *.single
+libstorage.log
+libstorage.sum
+single.out
+site.bak
+site.exp
+tmp
