@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Jun 05 14:43:34 CEST 2009 - aschnell@suse.de
+
+- added complete GPL text (bnc #510349)
+- 2.18.15
+
+-------------------------------------------------------------------
 Thu Jun 04 11:29:20 CEST 2009 - aschnell@suse.de
 
 - do not report partitions for disks used by BIOS RAID or DM
