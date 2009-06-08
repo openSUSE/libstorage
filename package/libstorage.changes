@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 08 17:21:55 CEST 2009 - aschnell@suse.de
+
+- added callback for password query
+- 2.18.16
+
+-------------------------------------------------------------------
 Fri Jun 05 14:43:34 CEST 2009 - aschnell@suse.de
 
 - added complete GPL text (bnc #510349)

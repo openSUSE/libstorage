@@ -92,6 +92,8 @@ Storage::Storage(const Environment& env)
     install_info_cb = NULL;
     info_popup_cb = NULL;
     yesno_popup_cb = NULL;
+    password_popup_cb = NULL;
+
     recursiveRemove = false;
     zeroNewPartitions = false;
     defaultMountBy = MOUNTBY_ID;
@@ -4898,46 +4900,59 @@ UsedByType Storage::usedBy( const string& dev )
     return( ub.type() );
     }
 
-void Storage::progressBarCb( const string& id, unsigned cur, unsigned max )
+void Storage::progressBarCb(const string& id, unsigned cur, unsigned max) const
     {
-    y2mil("id:" << id << " cur:" << cur << " max:" << max);
+    y2mil("PROGRESS BAR id:" << id << " cur:" << cur << " max:" << max);
     CallbackProgressBar cb = getCallbackProgressBarTheOne();
     if( cb )
 	(*cb)( id, cur, max );
     }
 
-void Storage::showInfoCb( const string& info )
+void Storage::showInfoCb(const string& info)
     {
-    y2mil("INSTALL INFO:" << info);
+    y2mil("INSTALL INFO info:" << info);
     CallbackShowInstallInfo cb = getCallbackShowInstallInfoTheOne();
     lastAction = info;
     if( cb )
 	(*cb)( info );
     }
 
-void Storage::infoPopupCb( const string& info )
+void Storage::infoPopupCb(const string& info) const
     {
-    y2mil("INFO POPUP:" << info);
+    y2mil("INFO POPUP info:" << info);
     CallbackInfoPopup cb = getCallbackInfoPopupTheOne();
     if( cb )
 	(*cb)( info );
     }
 
-void Storage::addInfoPopupText( const string& disk, const string& txt )
+void Storage::addInfoPopupText(const string& disk, const string& txt)
     {
     y2mil( "d:" << disk << " txt:" << txt );
     infoPopupTxts.push_back( make_pair(disk,txt) );
     }
 
-bool Storage::yesnoPopupCb( const string& info )
+bool Storage::yesnoPopupCb(const string& info) const
     {
-    y2mil("YESNO POPUP:" << info);
+    y2mil("YESNO POPUP info:" << info);
     CallbackYesNoPopup cb = getCallbackYesNoPopupTheOne();
     if( cb )
 	return (*cb)( info );
     else
-	return( true );
+	return true;
     }
+
+
+    bool
+    Storage::passwordPopupCb(const string& device, int attempts, string& password) const
+    {
+	y2mil("PASSWORD POPUP device:" << device << " attempts:" << attempts);
+	CallbackPasswordPopup cb = getCallbackPasswordPopupTheOne();
+	if (cb)
+	    return (*cb)(device, attempts, password);
+	else
+	    return false;
+    }
+
 
 Storage::DiskIterator Storage::findDisk( const string& disk )
     {
@@ -5876,9 +5891,10 @@ std::ostream& operator<<(std::ostream& s, const Storage& v)
 
 
     // workaround for broken YCP bindings
-    CallbackProgressBar progress_bar_cb_ycp;
-    CallbackShowInstallInfo install_info_cb_ycp;
-    CallbackInfoPopup info_popup_cb_ycp;
-    CallbackYesNoPopup yesno_popup_cb_ycp;
+    CallbackProgressBar progress_bar_cb_ycp = NULL;
+    CallbackShowInstallInfo install_info_cb_ycp = NULL;
+    CallbackInfoPopup info_popup_cb_ycp = NULL;
+    CallbackYesNoPopup yesno_popup_cb_ycp = NULL;
+    CallbackPasswordPopup password_popup_cb_ycp = NULL;
 
 }

@@ -38,6 +38,7 @@ namespace storage
     extern CallbackShowInstallInfo install_info_cb_ycp;
     extern CallbackInfoPopup info_popup_cb_ycp;
     extern CallbackYesNoPopup yesno_popup_cb_ycp;
+    extern CallbackPasswordPopup password_popup_cb_ycp;
 
 
 template <CType Value>
@@ -486,37 +487,35 @@ class DiskData;
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
 
-	void setCallbackProgressBar( storage::CallbackProgressBar pfnc )
-	    { progress_bar_cb=pfnc; }
-	storage::CallbackProgressBar getCallbackProgressBar() const
-	    { return progress_bar_cb; }
-	void setCallbackShowInstallInfo( storage::CallbackShowInstallInfo pfnc )
-	    { install_info_cb=pfnc; }
-	storage::CallbackShowInstallInfo getCallbackShowInstallInfo() const
-	    { return install_info_cb; }
-	void setCallbackInfoPopup( storage::CallbackInfoPopup pfnc )
-	    { info_popup_cb=pfnc; }
-	storage::CallbackInfoPopup getCallbackInfoPopup() const
-	    { return info_popup_cb; }
-	void setCallbackYesNoPopup( storage::CallbackYesNoPopup pfnc )
-	    { yesno_popup_cb=pfnc; }
-	storage::CallbackYesNoPopup getCallbackYesNoPopup() const
-	    { return yesno_popup_cb; }
+	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
+	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
+	void setCallbackShowInstallInfo(CallbackShowInstallInfo pfnc) { install_info_cb = pfnc; }
+	CallbackShowInstallInfo getCallbackShowInstallInfo() const { return install_info_cb; }
+	void setCallbackInfoPopup(CallbackInfoPopup pfnc) { info_popup_cb = pfnc; }
+	CallbackInfoPopup getCallbackInfoPopup() const { return info_popup_cb; }
+	void setCallbackYesNoPopup(CallbackYesNoPopup pfnc) { yesno_popup_cb = pfnc; }
+	CallbackYesNoPopup getCallbackYesNoPopup() const { return yesno_popup_cb; }
+	void setCallbackPasswordPopup(CallbackPasswordPopup pfnc) { password_popup_cb = pfnc; }
+	CallbackPasswordPopup getCallbackPasswordPopup() const { return password_popup_cb; }
+
 	void addInfoPopupText( const string& disk, const string& txt );
 
-	storage::CallbackProgressBar getCallbackProgressBarTheOne() const
+	CallbackProgressBar getCallbackProgressBarTheOne() const
 	    { return progress_bar_cb ? progress_bar_cb : progress_bar_cb_ycp; }
-	storage::CallbackShowInstallInfo getCallbackShowInstallInfoTheOne() const
+	CallbackShowInstallInfo getCallbackShowInstallInfoTheOne() const
 	    { return install_info_cb ? install_info_cb : install_info_cb_ycp; }
-	storage::CallbackInfoPopup getCallbackInfoPopupTheOne() const
+	CallbackInfoPopup getCallbackInfoPopupTheOne() const
 	    { return info_popup_cb ? info_popup_cb : info_popup_cb_ycp; }
-	storage::CallbackYesNoPopup getCallbackYesNoPopupTheOne() const
+	CallbackYesNoPopup getCallbackYesNoPopupTheOne() const
 	    { return yesno_popup_cb ? yesno_popup_cb : yesno_popup_cb_ycp; }
+	CallbackPasswordPopup getCallbackPasswordPopupTheOne() const
+	    { return password_popup_cb ? password_popup_cb : password_popup_cb_ycp; }
 
-	void progressBarCb( const string& id, unsigned cur, unsigned max );
-	void showInfoCb( const string& info );
-	void infoPopupCb( const string& info );
-	bool yesnoPopupCb( const string& info );
+	void progressBarCb(const string& id, unsigned cur, unsigned max) const;
+	void showInfoCb(const string& info);
+	void infoPopupCb(const string& info) const;
+	bool yesnoPopupCb(const string& info) const;
+	bool passwordPopupCb(const string& device, int attempts, string& password) const;
 
 // iterators over container
     protected:
@@ -1727,10 +1726,11 @@ class DiskData;
 	CCont cont;
 	EtcFstab *fstab;
 
-	storage::CallbackProgressBar progress_bar_cb;
-	storage::CallbackShowInstallInfo install_info_cb;
-	storage::CallbackInfoPopup info_popup_cb;
-	storage::CallbackYesNoPopup yesno_popup_cb;
+	CallbackProgressBar progress_bar_cb;
+	CallbackShowInstallInfo install_info_cb;
+	CallbackInfoPopup info_popup_cb;
+	CallbackYesNoPopup yesno_popup_cb;
+	CallbackPasswordPopup password_popup_cb;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
 
