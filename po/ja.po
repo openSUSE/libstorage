@@ -1,0 +1,1424 @@
+# Japanese message file for YaST2 (@memory@).
+# Copyright (C) 2005 SUSE Linux Products GmbH.
+# Copyright (C) 2002 SuSE Linux AG.
+# Copyright (C) 2000, 2001 SuSE GmbH.
+# Mike Fabian <mfabian@suse.de>, 2000, 2001.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: YaST (@memory@)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-06-03 15:58+0200\n"
+"PO-Revision-Date: 2001-09-24 20:04+02:00\n"
+"Last-Translator: Mike Fabian <mfabian@suse.de>\n"
+"Language-Team: Japanese <i18n@suse.de>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. text displayed during action
+#: ../src/LvmLv.cc:279 ../src/Partition.cc:511 ../src/Volume.cc:2664
+#: ../src/Dmmultipath.cc:181 ../src/Dmraid.cc:181
+msgid "(progress bar might not move)"
+msgstr "(進捗表示が動作しないかもしれません)"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:812
+#, c-format
+msgid "Add entry for mount point %1$s to %2$s"
+msgstr "マウントポイント %1$s の項目を %2$s に追加"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:805
+#, c-format
+msgid "Adding entry for mount point %1$s to %2$s"
+msgstr "マウントポイント %1$s の項目を %2$s に追加しています"
+
+#. symbol for "bytes" (best keep untranslated)
+#: ../src/HumanString.cc:30
+msgid "B"
+msgstr "B"
+
+#: ../src/Graph.cc:87
+msgid "BIOS RAID"
+msgstr "BIOS RAID"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../src/Volume.cc:1061
+#, c-format
+msgid "Change mount point of %1$s to %2$s"
+msgstr "%1$s のマウントポイントを %2$s に変更"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1983
+#, c-format
+msgid "Clear label on %1$s"
+msgstr "%1$s のラベルを消去"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1969
+#, c-format
+msgid "Clearing label on %1$s"
+msgstr "%1$s のラベルを消去しています"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Container.cc:173 ../src/Volume.cc:2644
+#, c-format
+msgid "Create %1$s"
+msgstr "%1$s の作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Partition.cc:395
+#, c-format
+msgid "Create boot partition %1$s (%2$s) with %3$s"
+msgstr "ブートパーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../src/Loop.cc:297
+#, c-format
+msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr "ファイル %2$s (%3$s) の暗号化ファイルベースデバイス %1$s を %5$s として %4$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/LvmLv.cc:193
+#, c-format
+msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化論理ボリューム %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmmultipath.cc:86
+#, c-format
+msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化マルチパスパーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Partition.cc:416
+#, c-format
+msgid "Create encrypted partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化パーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmraid.cc:86
+#, c-format
+msgid "Create encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化 RAID パーティション %1$s(%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/Md.cc:452
+#, c-format
+msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
+msgstr "%5$s から %4$s 用の暗号化ソフトウエア RAID %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:95
+#, c-format
+msgid "Create extended multipath partition %1$s (%2$s)"
+msgstr "拡張マルチパスパーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:372
+#, c-format
+msgid "Create extended partition %1$s (%2$s)"
+msgstr "拡張パーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:95
+#, c-format
+msgid "Create extended raid partition %1$s (%2$s)"
+msgstr "拡張 RAID パーティション %1$s (%2$s) を作成する"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Loop.cc:307
+#, c-format
+msgid "Create file-based device %1$s of file %2$s (%3$s)"
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を作成"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../src/Loop.cc:286
+#, c-format
+msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %5$s として %4$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:202
+#, c-format
+msgid "Create logical volume %1$s (%2$s)"
+msgstr "論理ボリューム %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/LvmLv.cc:183
+#, c-format
+msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の論理ボリューム %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:102
+#, c-format
+msgid "Create multipath partition %1$s (%2$s)"
+msgstr "マルチパスパーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmmultipath.cc:76
+#, c-format
+msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のマルチパスパーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:433
+#, c-format
+msgid "Create partition %1$s (%2$s)"
+msgstr "パーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Partition.cc:406
+#, c-format
+msgid "Create partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のパーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Partition.cc:426
+#, c-format
+msgid "Create partition %1$s (%2$s) with id=%3$X"
+msgstr "パーティション %1$s (%2$s) を id=%3$X で作成"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:102
+#, c-format
+msgid "Create raid partition %1$s (%2$s)"
+msgstr "RAID パーティション %1$s (%2$s) を作成する"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmraid.cc:76
+#, c-format
+msgid "Create raid partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の RAID パーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Partition.cc:387
+#, c-format
+msgid "Create root partition %1$s (%2$s) with %3$s"
+msgstr "ルートパーティション %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/Md.cc:462
+#, c-format
+msgid "Create software RAID %1$s (%2$s) from %3$s"
+msgstr "%3$s からソフトウエア RAID %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/Md.cc:441
+#, c-format
+msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
+msgstr "%5$s から %4$s 用のソフトウエア RAID %1$s (%2$s) を %3$s で作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:172
+#, c-format
+msgid "Create swap logical volume %1$s (%2$s)"
+msgstr "スワップ論理ボリューム %1$s (%2$s) の作成"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:65
+#, c-format
+msgid "Create swap multipath partition %1$s (%2$s)"
+msgstr "スワップマルチパスパーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:379
+#, c-format
+msgid "Create swap partition %1$s (%2$s)"
+msgstr "スワップパーティション %1$s (%2$s) を作成"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:65
+#, c-format
+msgid "Create swap raid partition %1$s (%2$s)"
+msgstr "スワップ RAID パーティション %1$s(%2$s) の作成"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/LvmVg.cc:1031
+#, c-format
+msgid "Create volume group %1$s from %2$s"
+msgstr "%2$s からボリュームグループ %1$s を作成"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Container.cc:168 ../src/Volume.cc:2639
+#, c-format
+msgid "Creating %1$s"
+msgstr "%1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#: ../src/Loop.cc:270
+#, c-format
+msgid "Creating file-based device %1$s of file %2$s"
+msgstr "ファイル %2$s のファイルベースデバイス %1$s を作成"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#: ../src/LvmLv.cc:164
+#, c-format
+msgid "Creating logical volume %1$s"
+msgstr "論理ボリューム %1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#: ../src/Dmmultipath.cc:57
+#, c-format
+msgid "Creating multipath partition %1$s"
+msgstr "マルチパスパーティション %1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Partition.cc:364
+#, c-format
+msgid "Creating partition %1$s"
+msgstr "パーティション %1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../src/Dmraid.cc:57
+#, c-format
+msgid "Creating raid partition %1$s"
+msgstr "RAID パーティション %1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/Md.cc:427
+#, c-format
+msgid "Creating software RAID %1$s from %2$s"
+msgstr "%2$s からソフトウエア RAID %1$s を作成しています"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../src/LvmVg.cc:1024
+#, c-format
+msgid "Creating volume group %1$s from %2$s"
+msgstr "%2$s からボリュームグループ %1$s を作成しています"
+
+#: ../src/Graph.cc:111
+msgid "DM Device"
+msgstr "DM デバイス"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:343
+#, c-format
+msgid "Delete Windows partition %1$s (%2$s)"
+msgstr "Windows パーティション %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dm.cc:382
+#, c-format
+msgid "Delete device mapper volume %1$s (%2$s)"
+msgstr "デバイスマッパーボリューム %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Loop.cc:256
+#, c-format
+msgid "Delete file-based device %1$s (%2$s)"
+msgstr "ファイルベースデバイス %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:152
+#, c-format
+msgid "Delete logical volume %1$s (%2$s)"
+msgstr "論理ボリューム %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:44
+#, c-format
+msgid "Delete multipath partition %1$s (%2$s)"
+msgstr "マルチパスパーティション %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:350
+#, c-format
+msgid "Delete partition %1$s (%2$s)"
+msgstr "パーティション %1$s (%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:44
+#, c-format
+msgid "Delete raid partition %1$s (%2$s)"
+msgstr "RAID パーティション %1$s(%2$s) を削除"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Md.cc:413
+#, c-format
+msgid "Delete software RAID %1$s (%2$s)"
+msgstr "ソフトウエア RAID %1$s (%2$s) を削除"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+#: ../src/Dm.cc:376
+#, c-format
+msgid "Deleting device mapper volume %1$s"
+msgstr "デバイスマッパーボリューム %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
+#: ../src/Loop.cc:250
+#, c-format
+msgid "Deleting file-based device %1$s"
+msgstr "ファイルベースデバイス %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#: ../src/LvmLv.cc:146
+#, c-format
+msgid "Deleting logical volume %1$s"
+msgstr "論理ボリューム %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#: ../src/Dmmultipath.cc:38
+#, c-format
+msgid "Deleting multipath partition %1$s"
+msgstr "マルチパスパーティション %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Partition.cc:335
+#, c-format
+msgid "Deleting partition %1$s"
+msgstr "パーティション %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../src/Dmraid.cc:38
+#, c-format
+msgid "Deleting raid partition %1$s"
+msgstr "RAID パーティション %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#: ../src/Md.cc:407
+#, c-format
+msgid "Deleting software RAID %1$s"
+msgstr "ソフトウエア RAID %1$s を削除しています"
+
+#. displayed text before action, %1$s is replaced by disk name (e.g. /dev/dasda),
+#: ../src/Dasd.cc:467
+#, c-format
+msgid "Execute dasdfmt on disk %1$s"
+msgstr "ディスク %1$s に dasdfmt を実行"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. dasda),
+#: ../src/Dasd.cc:447
+#, c-format
+msgid "Executing dasdfmt for disk %1$s..."
+msgstr "ディスク %1$s に対して dasdfmt を実行しています..."
+
+#. displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
+#: ../src/Dasd.cc:452
+#, c-format
+msgid "Executing dasdfmt for disks: %1$s..."
+msgstr "次のディスクに対して dasdfmt を実行しています: %1$s..."
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
+#: ../src/Dasd.cc:355
+#, c-format
+msgid "Executing fdasd for disk %1$s..."
+msgstr "ディスク %1$s に対して fdasd を実行しています..."
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Volume.cc:2675
+#, c-format
+msgid "Extend %1$s to %2$s"
+msgstr "%1$s を %2$s まで拡大"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:524
+#, c-format
+msgid "Extend Windows partition %1$s to %2$s"
+msgstr "Windows パーティション %1$s を %2$s まで拡大"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:290
+#, c-format
+msgid "Extend logical volume %1$s to %2$s"
+msgstr "論理ボリューム %1$s を %2$s に拡大"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:192
+#, c-format
+msgid "Extend multipath partition %1$s to %2$s"
+msgstr "マルチパスパーティション %1$s を %2$s まで拡大"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:535
+#, c-format
+msgid "Extend partition %1$s to %2$s"
+msgstr "パーティション %1$s を %2$s まで拡大"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:192
+#, c-format
+msgid "Extend raid partition %1$s to %2$s"
+msgstr "RAID パーティション %1$s を %2$s まで拡大"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../src/LvmVg.cc:1052
+#, c-format
+msgid "Extend volume group %1$s with %2$s"
+msgstr "ボリューム %1$s を %2$s で拡大"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Volume.cc:2662
+#, c-format
+msgid "Extending %1$s to %2$s"
+msgstr "%1$s を %2$s まで拡大しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:277
+#, c-format
+msgid "Extending logical volume %1$s to %2$s"
+msgstr "論理ボリューム %1$s を %2$s に拡大しています"
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:179
+#, c-format
+msgid "Extending multipath partition %1$s to %2$s"
+msgstr "マルチパスパーティション %1$s を %2$s まで拡大しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:509
+#, c-format
+msgid "Extending partition %1$s to %2$s"
+msgstr "パーティション %1$s を %2$s まで拡大しています"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:179
+#, c-format
+msgid "Extending raid partition %1$s to %2$s"
+msgstr "RAIDパーティション %1$s を %2$s まで拡大しています"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../src/LvmVg.cc:1045
+#, c-format
+msgid "Extending volume group %1$s with %2$s"
+msgstr "ボリューム %1$s を %2$s で拡大しています"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Volume.cc:663
+#, c-format
+msgid "Format device %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のデバイス %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Volume.cc:683
+#, c-format
+msgid "Format device %1$s (%2$s) with %3$s"
+msgstr "デバイス %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dm.cc:409
+#, c-format
+msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のデバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dm.cc:429
+#, c-format
+msgid "Format device mapper volume %1$s (%2$s) with %3$s"
+msgstr "デバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Volume.cc:673
+#, c-format
+msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化デバイス %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dm.cc:419
+#, c-format
+msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化デバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../src/Loop.cc:354
+#, c-format
+msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr "ファイル %2$s (%3$s) の暗号化ファイルベースデバイス %1$s を %5$s として %4$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/LvmLv.cc:247
+#, c-format
+msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化論理ボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmmultipath.cc:148
+#, c-format
+msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化マルチパスパーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Partition.cc:479
+#, c-format
+msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化パーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmraid.cc:148
+#, c-format
+msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号 RAID パーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Md.cc:501
+#, c-format
+msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の暗号化ソフトウエア RAID %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../src/Loop.cc:343
+#, c-format
+msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %5$s として %4$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Loop.cc:365
+#, c-format
+msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %4$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/LvmLv.cc:237
+#, c-format
+msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の論理ボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:228
+#, c-format
+msgid "Format logical volume %1$s (%2$s) for swap"
+msgstr "スワップ用の論理ボリューム %1$s (%2$s) のフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/LvmLv.cc:257
+#, c-format
+msgid "Format logical volume %1$s (%2$s) with %3$s"
+msgstr "論理ボリューム %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmmultipath.cc:138
+#, c-format
+msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のマルチパスパーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:129
+#, c-format
+msgid "Format multipath partition %1$s (%2$s) for swap"
+msgstr "マルチパスパーティション %1$s (%2$s) をスワップでフォーマット"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dmmultipath.cc:158
+#, c-format
+msgid "Format multipath partition %1$s (%2$s) with %3$s"
+msgstr "マルチパスパーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Partition.cc:469
+#, c-format
+msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のパーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:460
+#, c-format
+msgid "Format partition %1$s (%2$s) for swap"
+msgstr "スワップ用のパーティション %1$s (%2$s) をフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Partition.cc:489
+#, c-format
+msgid "Format partition %1$s (%2$s) with %3$s"
+msgstr "パーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Dmraid.cc:138
+#, c-format
+msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用の RAID パーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:129
+#, c-format
+msgid "Format raid partition %1$s (%2$s) for swap"
+msgstr "スワップ用の RAID パーティション %1$s (%2$s) をフォーマット"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dmraid.cc:158
+#, c-format
+msgid "Format raid partition %1$s (%2$s) with %3$s"
+msgstr "RAID パーティション %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../src/Md.cc:491
+#, c-format
+msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
+msgstr "%4$s 用のソフトウエア RAID %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Md.cc:511
+#, c-format
+msgid "Format software RAID %1$s (%2$s) with %3$s"
+msgstr "ソフトウエア RAID %1$s (%2$s) を %3$s でフォーマット"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Volume.cc:650
+#, c-format
+msgid "Formatting device %1$s (%2$s) with %3$s "
+msgstr "デバイス %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dm.cc:396
+#, c-format
+msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
+msgstr "デバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Loop.cc:325
+#, c-format
+msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %4$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/LvmLv.cc:217
+#, c-format
+msgid "Formatting logical volume %1$s (%2$s) with %3$s"
+msgstr "論理ボリューム %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dmmultipath.cc:118
+#, c-format
+msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
+msgstr "マルチパスパーティション %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Partition.cc:449
+#, c-format
+msgid "Formatting partition %1$s (%2$s) with %3$s "
+msgstr "パーティション %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Dmraid.cc:118
+#, c-format
+msgid "Formatting raid partition %1$s (%2$s) with %3$s"
+msgstr "RAID パーティション %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../src/Md.cc:478
+#, c-format
+msgid "Formatting software RAID %1$s (%2$s) with %3$s "
+msgstr "ソフトウエア RAID %1$s (%2$s) を %3$s でフォーマットしています"
+
+#. symbol for "giga" (best keep untranslated)
+#: ../src/HumanString.cc:62
+msgid "G"
+msgstr "G"
+
+#. symbol for "giga bytes" (best keep untranslated)
+#: ../src/HumanString.cc:57
+msgid "GB"
+msgstr "GB"
+
+#. symbol for "gibi bytes" (best keep untranslated)
+#: ../src/HumanString.cc:59
+msgid "GiB"
+msgstr "GiB"
+
+#: ../src/Graph.cc:83
+msgid "Hard Disk"
+msgstr "ハードディスク"
+
+#. symbol for "kibi bytes" (best keep untranslated)
+#: ../src/HumanString.cc:39
+msgid "KiB"
+msgstr "KiB"
+
+#: ../src/Graph.cc:107
+msgid "Logical Volume"
+msgstr "論理ボリューム"
+
+#. symbol for "mega" (best keep untranslated)
+#: ../src/HumanString.cc:52
+msgid "M"
+msgstr "M"
+
+#. symbol for "mega bytes" (best keep untranslated)
+#: ../src/HumanString.cc:47
+msgid "MB"
+msgstr "MB"
+
+#. symbol for "mebi bytes" (best keep untranslated)
+#: ../src/HumanString.cc:49
+msgid "MiB"
+msgstr "MiB"
+
+#: ../src/Graph.cc:115
+msgid "Mount Point"
+msgstr "マウントポイント"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../src/Volume.cc:1046
+#, c-format
+msgid "Mounting %1$s to %2$s"
+msgstr "%1$s を %2$s にマウントしています"
+
+#: ../src/Graph.cc:91
+msgid "Multipath"
+msgstr "マルチパス"
+
+#. symbol for "peta" (best keep untranslated)
+#: ../src/HumanString.cc:82
+msgid "P"
+msgstr "P"
+
+#. symbol for "peta bytes" (best keep untranslated)
+#: ../src/HumanString.cc:77
+msgid "PB"
+msgstr "PB"
+
+#: ../src/Graph.cc:95
+msgid "Partition"
+msgstr "パーティション"
+
+#. symbol for "pebi bytes" (best keep untranslated)
+#: ../src/HumanString.cc:79
+msgid "PiB"
+msgstr "PiB"
+
+#: ../src/Graph.cc:99
+msgid "RAID"
+msgstr "RAID"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../src/LvmVg.cc:1073
+#, c-format
+msgid "Reduce volume group %1$s by %2$s"
+msgstr "ボリューム %1$s を %2$s で縮小"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../src/LvmVg.cc:1066
+#, c-format
+msgid "Reducing volume group %1$s by %2$s"
+msgstr "ボリューム %1$s を %2$s で縮小しています"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Container.cc:189 ../src/DmPartCo.cc:911 ../src/Volume.cc:2691
+#, c-format
+msgid "Remove %1$s"
+msgstr "%1$s の削除"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by pathname e.g. /etc/fstab
+#: ../src/Volume.cc:1089
+#, c-format
+msgid "Remove %1$s from %2$s"
+msgstr "%1$s を %2$s から削除"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:854
+#, c-format
+msgid "Remove entry for mount point %1$s from %2$s"
+msgstr "マウントポイント %1$s のエントリを %2$s から削除"
+
+#. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../src/Nfs.cc:45
+#, c-format
+msgid "Remove nfs volume %1$s"
+msgstr "NFS ボリューム %1$s を削除"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../src/DmraidCo.cc:163
+#, c-format
+msgid "Remove raid %1$s"
+msgstr "RAID %1$s の削除"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#: ../src/LvmVg.cc:1011
+#, c-format
+msgid "Remove volume group %1$s"
+msgstr "ボリュームグループ %1$s を削除"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Container.cc:184 ../src/DmPartCo.cc:906 ../src/Volume.cc:2686
+#, c-format
+msgid "Removing %1$s"
+msgstr "%1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:847
+#, c-format
+msgid "Removing entry for mount point %1$s from %2$s"
+msgstr "マウントポイント %1$s の項目を %2$s から削除しています"
+
+#. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../src/Nfs.cc:40
+#, c-format
+msgid "Removing nfs volume %1$s"
+msgstr "NFS ボリューム %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../src/DmraidCo.cc:158
+#, c-format
+msgid "Removing raid %1$s"
+msgstr "RAID %1$s を削除しています"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#: ../src/LvmVg.cc:1006
+#, c-format
+msgid "Removing volume group %1$s"
+msgstr "ボリュームグループ %1$s を削除しています"
+
+#. displayed text before action, %1$s is replaced by name (e.g. pdc_igeeeadj),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmPartCo.cc:894
+#, c-format
+msgid "Set disk label of %1$s to %2$s"
+msgstr "%1$s のディスクラベルを %2$s に設定"
+
+#. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/Disk.cc:1832
+#, c-format
+msgid "Set disk label of disk %1$s to %2$s"
+msgstr "ディスク %1$s のディスクラベルを %2$s に設定"
+
+#. displayed text before action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmmultipathCo.cc:229
+#, c-format
+msgid "Set disk label of multipath disk %1$s to %2$s"
+msgstr "マルチパスディスク %1$s のディスクラベルを %2$s に設定"
+
+#. displayed text before action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmraidCo.cc:184
+#, c-format
+msgid "Set disk label of raid %1$s to %2$s"
+msgstr "RAID %1$s のディスクラベルを %2$s に設定する"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by a name e.g. ROOT
+#: ../src/Volume.cc:1989
+#, c-format
+msgid "Set label on %1$s to %2$s"
+msgstr "%1$s のラベルを %2$s に設定"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../src/Volume.cc:1070
+#, c-format
+msgid "Set mount point of %1$s to %2$s"
+msgstr "%1$s のマウントポイントを %2$s に設定"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Dmmultipath.cc:213
+#, c-format
+msgid "Set type of multipath partition %1$s to %2$X"
+msgstr "マルチパスパーティション %1$s の種類を %2$X に設定"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Partition.cc:280 ../src/DmPart.cc:166
+#, c-format
+msgid "Set type of partition %1$s to %2$X"
+msgstr "パーティション %1$s のタイプを %2$X に設定"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Dmraid.cc:213
+#, c-format
+msgid "Set type of raid partition %1$s to %2$X"
+msgstr "RAIDパーティション %1$s の種類を %2$X に設定"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1378
+#, c-format
+msgid "Set up encrypted dm device on %1$s"
+msgstr "%1$s 上の暗号化 dm デバイスを設定"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1361
+#, c-format
+msgid "Set up encrypted loop device on %1$s"
+msgstr "%1$s 上の暗号化ループデバイスを設定"
+
+#. displayed text during action, %1$s is replaced by name (e.g. pdc_igeeeadj),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmPartCo.cc:887
+#, c-format
+msgid "Setting disk label of %1$s to %2$s"
+msgstr "%1$s のディスクラベルを %2$s に設定しています"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/Disk.cc:1825
+#, c-format
+msgid "Setting disk label of disk %1$s to %2$s"
+msgstr "ディスク %1$s のディスクラベルを %2$s に設定しています"
+
+#. displayed text during action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmmultipathCo.cc:222
+#, c-format
+msgid "Setting disk label of multipath disk %1$s to %2$s"
+msgstr "マルチパスディスク %1$s のディスクラベルを %2$s に設定しています"
+
+#. displayed text during action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../src/DmraidCo.cc:177
+#, c-format
+msgid "Setting disk label of raid %1$s to %2$s"
+msgstr "RAID %1$s のディスクラベルを %2$s に設定しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by a name e.g. ROOT
+#: ../src/Volume.cc:1975
+#, c-format
+msgid "Setting label on %1$s to %2$s"
+msgstr "%1$s のラベルを %2$s に設定しています"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Dmmultipath.cc:206
+#, c-format
+msgid "Setting type of multipath partition %1$s to %2$X"
+msgstr "マルチパスパーティション %1$s の種類を %2$X に設定しています"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Partition.cc:273 ../src/DmPart.cc:159
+#, c-format
+msgid "Setting type of partition %1$s to %2$X"
+msgstr "パーティション %1$s の種類を %2$X に設定しています"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../src/Dmraid.cc:206
+#, c-format
+msgid "Setting type of raid partition %1$s to %2$X"
+msgstr "RAID パーティション %1$s の種類を %2$X に設定しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1373
+#, c-format
+msgid "Setting up encrypted dm device on %1$s"
+msgstr "%1$s 上の暗号化 dm デバイスを設定中"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1356
+#, c-format
+msgid "Setting up encrypted loop device on %1$s"
+msgstr "%1$s 上の暗号化ループデバイスを設定しています"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Volume.cc:2671
+#, c-format
+msgid "Shrink %1$s to %2$s"
+msgstr "%1$s を %2$s まで縮小"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:520
+#, c-format
+msgid "Shrink Windows partition %1$s to %2$s"
+msgstr "Windowsパーティション %1$s を %2$s まで縮小"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:286
+#, c-format
+msgid "Shrink logical volume %1$s to %2$s"
+msgstr "論理ボリューム %1$s を %2$s に縮小"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:188
+#, c-format
+msgid "Shrink multipath partition %1$s to %2$s"
+msgstr "マルチパスパーティション %1$s を %2$s まで縮小"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:531
+#, c-format
+msgid "Shrink partition %1$s to %2$s"
+msgstr "パーティション %1$s を %2$s まで縮小"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:188
+#, c-format
+msgid "Shrink raid partition %1$s to %2$s"
+msgstr "RAID パーティション %1$s を %2$s まで縮小"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Volume.cc:2658
+#, c-format
+msgid "Shrinking %1$s to %2$s"
+msgstr "%1$s を %2$s まで縮小しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/LvmLv.cc:273
+#, c-format
+msgid "Shrinking logical volume %1$s to %2$s"
+msgstr "論理ボリューム %1$s を %2$s に縮小しています"
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmmultipath.cc:175
+#, c-format
+msgid "Shrinking multipath partition %1$s to %2$s"
+msgstr "マルチパスパーティション %1$s を %2$s まで縮小しています"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Partition.cc:505
+#, c-format
+msgid "Shrinking partition %1$s to %2$s"
+msgstr "パーティション %1$s を %2$s まで縮小しています"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../src/Dmraid.cc:175
+#, c-format
+msgid "Shrinking raid partition %1$s to %2$s"
+msgstr "RAID パーティション %1$s を %2$s まで縮小しています"
+
+#. symbol for "tera" (best keep untranslated)
+#: ../src/HumanString.cc:72
+msgid "T"
+msgstr "T"
+
+#. symbol for "tera bytes" (best keep untranslated)
+#: ../src/HumanString.cc:67
+msgid "TB"
+msgstr "TB"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../src/Disk.cc:406
+#, c-format
+msgid ""
+"The partition table type on disk %1$s cannot be handled by\n"
+"this tool.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"ディスク %1$s のパーティションテーブルは、このツールでは処理\n"
+"できません。\n"
+"\n"
+"ディスク %1$s のパーティションは従来通りお使いいただけます。\n"
+"フォーマットやマウントポイントの割り当てなどは行なえますが、\n"
+"このツールを利用したパーティションの追加／編集／サイズ変更／削除などは\n"
+"行なうことができません。"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../src/Dasd.cc:207
+#, c-format
+msgid ""
+"The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool fdasd, which is used to change the\n"
+"partition table.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"ディスク %1$s のパーティション情報をパーティションツール fdasd で\n"
+"読み込むことができませんでした。このツールはパーティション情報の\n"
+"変更に利用されているものです。\n"
+"\n"
+"ディスク %1$s のパーティションは従来通りお使いいただけます。\n"
+"フォーマットやマウントポイントの割り当てなどは行なえますが、\n"
+"このツールを利用したパーティションの追加／編集／サイズ変更／削除などは\n"
+"行なうことができません。"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../src/Disk.cc:808
+#, c-format
+msgid ""
+"The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool parted, which is used to change the\n"
+"partition table.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"ディスク %1$s のパーティション情報をパーティションツール parted\n"
+"で読み込めませんでした。このツールはパーティション情報の\n"
+"変更に利用されているものです。\n"
+"\n"
+"ディスク %1$s のパーティションは従来通りお使いいただけます。\n"
+"フォーマットやマウントポイントの割り当てなどは行なえますが、\n"
+"このツールを利用したパーティションの追加／編集／サイズ変更／削除などは\n"
+"行なうことができません。"
+
+#. symbol for "tebi bytes" (best keep untranslated)
+#: ../src/HumanString.cc:69
+msgid "TiB"
+msgstr "TiB"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../src/Volume.cc:1051
+#, c-format
+msgid "Unmounting %1$s"
+msgstr "%1$s をアンマウントしています"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:833
+#, c-format
+msgid "Update entry for mount point %1$s in %2$s"
+msgstr "%2$s のマウントポイント %1$s の項目を更新"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../src/EtcFstab.cc:826
+#, c-format
+msgid "Updating entry for mount point %1$s in %2$s"
+msgstr "%2$s のマウントポイント %1$s の項目を更新しています"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by "swap"
+#: ../src/Volume.cc:1077
+#, c-format
+msgid "Use %1$s as %2$s"
+msgstr "%1$s を %2$s として使用"
+
+#: ../src/Graph.cc:103
+msgid "Volume Group"
+msgstr "ボリュームグループ"
+
+#. popup text
+#: ../src/Disk.cc:832
+msgid ""
+"You have the following options:\n"
+"  - Repartition your system so that only the maximal allowed number\n"
+"    of partitions is used. To repartition, use your existing operating\n"
+"    system.\n"
+"  - Use LVM since it can provide an arbitrary and flexible\n"
+"    number of block devices partitions. This needs a repartition\n"
+"    as well."
+msgstr ""
+"以下のような選択ができます:\n"
+"  - お使いのシステムでパーティション設定を修正し、パーティション数を許される\n"
+"    範囲内に収めます。パーティション設定を修正するには、既存のオペレーティング\n"
+"    システムをご利用ください。\n"
+"  - 任意のパーティションを設定できて柔軟性のある LVM を使用することもできます。\n"
+"    この場合にもパーティション設定を修正する必要があります。\n"
+"    "
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#. %2$lu and %3$lu are replaced by numbers.
+#: ../src/Disk.cc:825
+#, c-format
+msgid ""
+"Your disk %1$s contains %2$lu partitions. The maximum number\n"
+"of partitions that the kernel driver of the disk can handle is %3$lu.\n"
+"Partitions numbered above %3$lu cannot be accessed."
+msgstr ""
+"お使いのディスク %1$s には %2$lu 個のパーティションがあります。ディスクのカーネル\n"
+"ドライバが扱うことのできる最大パーティション数は %3$lu 個です。\n"
+"%3$lu 個目より大きいパーティションにはアクセスできません。"
+
+#. symbol for "kilo" (best keep untranslated)
+#: ../src/HumanString.cc:42
+msgid "k"
+msgstr "k"
+
+#. symbol for "kilo bytes" (best keep untranslated)
+#: ../src/HumanString.cc:37
+msgid "kB"
+msgstr "kB"

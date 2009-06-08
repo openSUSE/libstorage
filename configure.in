@@ -31,6 +31,7 @@ AC_OUTPUT(
 	storage/Makefile
 	bindings/Makefile
 	data/Makefile
+	po/Makefile
 	examples/Makefile
 	testsuite/Makefile
 	testsuite/lib/Makefile
