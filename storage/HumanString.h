@@ -15,7 +15,7 @@ namespace storage
      * and using B, kB, MB, GB, TB or PB as unit as appropriate.
      *
      * @param size size in bytes
-     * @param classic use classic locale
+     * @param classic use classic locale instead of global C++ locale
      * @param precision number of fraction digits in output
      * @param omit_zeroes if true omit trailing zeroes for exact values
      * @return formatted string
@@ -27,7 +27,7 @@ namespace storage
      * Converts a size description using B, kB, MB, GB, TB or PB into an integer.
      *
      * @param str size string
-     * @param classic use classic locale
+     * @param classic use classic locale instead of global C++ locale
      * @param size size in bytes
      * @return true on successful conversion
      *
