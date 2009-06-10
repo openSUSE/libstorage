@@ -4,6 +4,7 @@
 
 XGETTEXT = xgettext
 MSGFMT = msgfmt
+MSGMERGE = msgmerge
 
 SRCFILES = $(wildcard ../storage/*.cc)
 
@@ -13,25 +14,34 @@ MOFILES = $(POFILES:.po=.mo)
 
 all: $(MOFILES)
 
-libstorage.pot: $(SRCFILES)
+$(PACKAGE).pot: $(SRCFILES)
 	$(XGETTEXT) -s --no-wrap --add-comments --add-location --keyword=_ --keyword=_:1,2 \
 	    --foreign-user --copyright-holder="SUSE Linux Products GmbH, Nuernberg" \
-	    --default-domain=libstorage --output=libstorage.pot $(SRCFILES)
+	    --default-domain=$(PACKAGE) --output=$(PACKAGE).pot $(SRCFILES)
 
 %.mo: %.po
-	$(MSGFMT) --statistics -o $@ $<
+	$(MSGFMT) -c -v --statistics -o $@ $<
+
+merge: $(PACKAGE).pot
+	files='$(POFILES)'; \
+	for file in $$files; do \
+	    base=`basename $$file`; \
+	    echo "$(MSGMERGE) --no-wrap --update $$base $(PACKAGE).pot"; \
+	    $(MSGMERGE) --no-wrap --update $$base $(PACKAGE).pot; \
+	done
 
 install-data-local: $(MOFILES)
 	files='$(MOFILES)'; \
 	for file in $$files; do \
 	    base=`basename $$file`; \
-	    langdir=$(localedir)/`echo $$base | sed 's/\.mo$$//'`/LC_MESSAGES; \
+	    lang=`echo $$base | sed 's/\.mo$$//'`; \
+	    langdir=$(localedir)/$$lang/LC_MESSAGES; \
 	    $(mkinstalldirs) -d $(DESTDIR)$$langdir; \
 	    echo " $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$$langdir/$(PACKAGE).mo"; \
 	    $(INSTALL_DATA) $(srcdir)/$$file $(DESTDIR)$$langdir/$(PACKAGE).mo; \
 	done
 
 clean-local:
-	rm -f libstorage.pot $(MOFILES)
+	rm -f $(PACKAGE).pot $(MOFILES)
 
 EXTRA_DIST = $(POFILES)
