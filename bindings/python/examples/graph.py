@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from LibStorage import Environment, createStorageInterface, saveGraph, destroyStorageInterface
+from libstorage import Environment, createStorageInterface, saveGraph, destroyStorageInterface
 
 
 env = Environment(True)

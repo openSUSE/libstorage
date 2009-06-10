@@ -13,7 +13,7 @@ Source:		libstorage-%{version}.tar.bz2
 
 prefix:		/usr
 
-BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu
+BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig
 
 Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
 
@@ -57,6 +57,8 @@ install -d -m 755 $RPM_BUILD_ROOT/var/lock/libstorage
 
 %{find_lang} libstorage
 
+rm -f $RPM_BUILD_ROOT/%{_libdir}/python%{py_ver}/site-packages/_libstorage.la
+
 %clean
 rm -rf "$RPM_BUILD_ROOT"
 
@@ -92,3 +94,17 @@ Group:		Development/Languages/C and C++
 %{prefix}/include/storage
 %doc %{prefix}/share/doc/packages/libstorage/autodocs
 %doc %{prefix}/share/doc/packages/libstorage/examples
+
+%package python
+Requires:	libstorage = %version
+Requires:	python
+Summary:	-
+Group:		Development/Languages/Python
+
+%description python
+-
+
+%files python
+%defattr(-,root,root)
+%{_libdir}/python%{py_ver}/site-packages/libstorage.py*
+%attr(755,root,root) %{_libdir}/python%{py_ver}/site-packages/_libstorage.so
