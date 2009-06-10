@@ -1,8 +1,0 @@
-#!/bin/bash
-
-SRCFILES=`find .. -type d -name testsuite -prune ,		\
-	-type f -name "*.h" -o -name "*.cc"`
-
-echo $SRCFILES
-
-xgettext -s --no-wrap --add-comments --add-location --keyword=_ --keyword=_:1,2 --foreign-user --copyright-holder="SUSE Linux Products GmbH, Nuernberg" --default-domain=libstorage --output=libstorage.pot $SRCFILES

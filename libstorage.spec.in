@@ -55,10 +55,12 @@ make install DESTDIR="$RPM_BUILD_ROOT"
 
 install -d -m 755 $RPM_BUILD_ROOT/var/lock/libstorage
 
+%{find_lang} libstorage
+
 %clean
 rm -rf "$RPM_BUILD_ROOT"
 
-%files
+%files -f libstorage.lang
 %defattr(-,root,root)
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
