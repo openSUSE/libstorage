@@ -5581,9 +5581,7 @@ Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 void
 Storage::eraseCachedFreeInfo(const string& device)
 {
-    map<string,FreeInfo>::iterator i = freeInfo.find( device );
-    if( i!=freeInfo.end() )
-	freeInfo.erase(i);
+    freeInfo.erase(device);
 }
 
 
