@@ -8,8 +8,8 @@ using namespace std;
 using namespace storage;
 
 
-// Don't bother setting up locale for gettext since we don't have translations
-// during package build.
+// During package build translations are installed into buildroot so are not
+// available during testsuite run.
 
 
 void
