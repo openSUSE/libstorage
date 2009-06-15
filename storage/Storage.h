@@ -245,7 +245,7 @@ class DiskData;
 	bool usedBy( const string& dev, storage::usedBy& ub );
 	bool clearUsedBy(const string& dev);
 	bool setUsedBy(const string& dev, storage::UsedByType ub_type,
-		       const string& ub_name);
+		       const string& ub_device);
 	void fetchDanglingUsedBy(const string& dev, storage::usedBy& uby);
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );

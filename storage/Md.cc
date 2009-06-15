@@ -161,7 +161,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	}
 
     for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
-	getContainer()->getStorage()->setUsedBy(*it, UB_MD, dev.substr(5));
+	getContainer()->getStorage()->setUsedBy(*it, UB_MD, dev);
     }
 
 

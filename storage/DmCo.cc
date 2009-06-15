@@ -191,7 +191,7 @@ DmCo::getDmData( ProcPart& ppart )
 		if( !getStorage()->canUseDevice( it->first, true ))
 		    in_use = true;
 		if( !in_use || multipath )
-		    getStorage()->setUsedBy( it->first, UB_DM, table );
+		    getStorage()->setUsedBy(it->first, UB_DM, "/dev/mapper/" + table);
 		}
 	    string tmp = m->device();
 	    tmp.erase( 5, 7 );

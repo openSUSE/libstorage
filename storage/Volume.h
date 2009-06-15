@@ -55,7 +55,7 @@ class Volume
 	bool fstabAdded() const { return( fstab_added ); }
 
 	void clearUsedBy() { uby.clear(); }
-	void setUsedBy(storage::UsedByType ub_type, const string& ub_name) { uby.set(ub_type, ub_name); }
+	void setUsedBy(storage::UsedByType ub_type, const string& ub_device) { uby.set(ub_type, ub_device); }
 	const storage::usedBy& getUsedBy() const { return uby; }
 	storage::UsedByType getUsedByType() const { return uby.type(); }
 

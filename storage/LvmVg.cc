@@ -156,7 +156,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    if( !getStorage()->isDisk(d))
 		getStorage()->changeFormatVolume( d, false, FSNONE );
 	    }
-	getStorage()->setUsedBy( d, UB_LVM, name() );
+	getStorage()->setUsedBy(d, UB_LVM, device());
 	free_pe += pe;
 	num_pe += pe;
 	++i;
@@ -895,7 +895,7 @@ void LvmVg::addPv( Pv*& p )
     PeContainer::addPv( *p );
     if( !deleted() &&
         find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
-	getStorage()->setUsedBy( p->device, UB_LVM, name() );
+	getStorage()->setUsedBy(p->device, UB_LVM, device());
     delete p;
     p = new Pv;
     }

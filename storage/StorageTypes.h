@@ -137,31 +137,28 @@ struct contOrder
 
 class usedBy
 {
-    // TODO: save device instead of name?
-
 public:
     usedBy() : ub_type(storage::UB_NONE) {}
-    usedBy(storage::UsedByType type, const string& name) : ub_type(type), ub_name(name) {}
+    usedBy(storage::UsedByType type, const string& device) : ub_type(type), ub_device(device) {}
 
-    void clear() { ub_type = storage::UB_NONE; ub_name.erase(); }
-    void set(storage::UsedByType type, const string& name)
-	{ ub_type = type; (ub_type==storage::UB_NONE)?ub_name.erase():ub_name = name; }
+    void clear() { ub_type = storage::UB_NONE; ub_device.erase(); }
+    void set(storage::UsedByType type, const string& device)
+	{ ub_type = type; (ub_type == storage::UB_NONE) ? ub_device.erase() : ub_device = device; }
 
     bool operator==(const usedBy& rhs) const
-	{ return ub_type == rhs.ub_type && ub_name == rhs.ub_name; }
+	{ return ub_type == rhs.ub_type && ub_device == rhs.ub_device; }
     bool operator!=(const usedBy& rhs) const
 	{ return !(*this == rhs); }
 
     storage::UsedByType type() const { return ub_type; }
-    const string& name() const { return ub_name; }
-    const string device() const;
+    string device() const { return ub_device; }
 
     friend std::ostream& operator<<(std::ostream&, const usedBy&);
 
 private:
     operator string() const;
     storage::UsedByType ub_type;
-    string ub_name;
+    string ub_device;
 };
 
 

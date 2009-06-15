@@ -281,7 +281,7 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
-	getStorage()->setUsedBy( d, UB_MD, "md"+decString(num) );
+	getStorage()->setUsedBy(d, UB_MD, "/dev/md" + decString(num));
 	++i;
 	}
     if( ret==0 )
@@ -358,7 +358,7 @@ MdCo::extendMd( unsigned num, const string& dev )
     if( ret==0 )
 	{
 	string d = normalizeDevice( dev );
-	getStorage()->setUsedBy( d, UB_MD, "md"+decString(num) );
+	getStorage()->setUsedBy(d, UB_MD, "/dev/md" + decString(num));
 	}
     y2mil("ret:" << ret);
     return( ret );

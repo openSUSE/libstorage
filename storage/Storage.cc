@@ -4825,7 +4825,7 @@ bool Storage::clearUsedBy(const string& dev)
 }
 
 
-bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_name)
+bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_device)
 {
     bool ret=true;
     VolIterator v;
@@ -4834,21 +4834,21 @@ bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_
 	DiskIterator i = findDisk( dev );
 	if( i != dEnd() )
 	{
-	    i->setUsedBy(ub_type, ub_name);
+	    i->setUsedBy(ub_type, ub_device);
 	}
 	else
 	{
 	    ret = false;
-	    danglingUsedBy[dev] = storage::usedBy(ub_type, ub_name);
-	    y2mil("adding ub_type:" << ub_type << " ub_name:" << ub_name <<
+	    danglingUsedBy[dev] = storage::usedBy(ub_type, ub_device);
+	    y2mil("adding ub_type:" << ub_type << " ub_device:" << ub_device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
     }
     else
     {
-	v->setUsedBy(ub_type, ub_name);
+	v->setUsedBy(ub_type, ub_device);
     }
-    y2mil("dev:" << dev << " ub_type:" << ub_type << " ub_name:" << ub_name << " ret:" << ret);
+    y2mil("dev:" << dev << " ub_type:" << ub_type << " ub_device:" << ub_device << " ret:" << ret);
     return ret;
 }
 
@@ -5230,10 +5230,9 @@ int Storage::removeUsing(const string& device, const storage::usedBy& uby)
 	    ret = removeVolume(uby.device());
 	    break;
 	case UB_LVM:
-	    ret = removeLvmVg(uby.name());
+	    ret = removeLvmVg(uby.device().substr(5));
 	    break;
 	case UB_DMRAID:
-	    //ret = removeDmraidCo( name );
 	    break;
 	case UB_DMMULTIPATH:
 	    break;
