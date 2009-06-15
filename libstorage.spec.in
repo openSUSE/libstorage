@@ -99,7 +99,7 @@ Group:		Development/Languages/C and C++
 %package python
 Requires:	libstorage = %version
 Summary:	-
-Group:		Development/Languages/Python
+Group:		System/Libraries
 
 %description python
 -
