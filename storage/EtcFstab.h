@@ -120,20 +120,23 @@ class EtcFstab
 	    };
 
 	void readFiles();
+
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
 			     AsciiFile*& cryptotab, int& lineno ) const;
 	bool findCrtab( const FstabEntry& e, const AsciiFile& crtab,
 			int& lineno ) const;
 	bool findCrtab( const string& device, const AsciiFile& crtab,
 			int& lineno ) const;
-	void makeStringList( const FstabEntry& e, std::list<string>& ls ) const;
-	void makeCrtabStringList( const FstabEntry& e, std::list<string>& ls ) const;
+
+	list<string> makeStringList(const FstabEntry& e) const;
+	list<string> makeCrStringList(const FstabEntry& e) const;
+
 	string updateLine( const std::list<string>& ol, 
 			   const std::list<string>& nl, const string& line ) const;
 	string createLine( const std::list<string>& ls, unsigned fields, 
 	                   unsigned* flen ) const;
+
 	string createTabLine( const FstabEntry& e ) const;
-	void makeCrStringList( const FstabEntry& e, std::list<string>& ls ) const;
 	string createCrtabLine( const FstabEntry& e ) const;
 
 	static unsigned fstabFields[6];

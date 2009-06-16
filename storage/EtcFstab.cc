@@ -346,7 +346,7 @@ EtcFstab::findIdPath( const std::list<string>& id, const string& path,
 
 int EtcFstab::removeEntry( const FstabEntry& entry )
     {
-    y2mil("dev:" << entry.dentry << " mp:" << entry.mount);
+	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
     list<Entry>::iterator i = co.begin();
     while( i != co.end() &&
            (i->op==Entry::REMOVE || i->nnew.device != entry.device) )
@@ -363,7 +363,7 @@ int EtcFstab::removeEntry( const FstabEntry& entry )
 
 int EtcFstab::updateEntry( const FstabChange& entry )
     {
-    y2mil("dev:" << entry.dentry << " mp:" << entry.mount);
+	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
     list<Entry>::iterator i = co.begin();
     bool found = false;
     while( i != co.end() && !found )
@@ -388,7 +388,7 @@ int EtcFstab::updateEntry( const FstabChange& entry )
 
 int EtcFstab::addEntry( const FstabChange& entry )
     {
-    y2mil("dev:" << entry.dentry << " mp:" << entry.mount);
+	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
     Entry e;
     e.op = Entry::ADD;
     e.nnew = entry;
@@ -400,7 +400,8 @@ int EtcFstab::addEntry( const FstabChange& entry )
 AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
                                AsciiFile*& cryptotab, int& lineno ) const
     {
-    y2mil("device:" << e.dentry << " mp:" << e.mount << "  fstab:" << fstab << " cryptotab:" << cryptotab);
+	y2mil("dentry:" << e.dentry << " mount:" << e.mount << " fstab:" << fstab <<
+	      " cryptotab:" << cryptotab);
     AsciiFile* ret=NULL;
     string reg;
     if( e.crypto )
@@ -425,8 +426,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount ) const
     {
     bool crypto = tab.name().find( "/cryptotab" )>=0;
-    y2mil( "file:" << tab.name() << " mp:" << mount << 
-           " crypto:" << crypto );
+    y2mil("file:" << tab.name() << " mount:" << mount << " crypto:" << crypto);
     string reg = "^[ \t]*[^ \t]+";
     if( crypto )
 	reg += "[ \t]+[^ \t]+";
@@ -463,9 +463,9 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     return( lineno>=0 );
     }
 
-void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls ) const
+    list<string> EtcFstab::makeStringList(const FstabEntry& e) const
     {
-    ls.clear();
+	list<string> ls;
     if( e.crypto )
 	{
 	ls.push_back( e.loop_dev );
@@ -496,6 +496,7 @@ void EtcFstab::makeStringList( const FstabEntry& e, list<string>& ls ) const
 	ls.push_back( decString(e.freq) );
 	ls.push_back( decString(e.passno) );
 	}
+	return ls;
     }
 
 string EtcFstab::createLine( const list<string>& ls, unsigned fields, 
@@ -520,20 +521,17 @@ string EtcFstab::createLine( const list<string>& ls, unsigned fields,
 
 string EtcFstab::createTabLine( const FstabEntry& e ) const
     {
-    y2mil("device:" << e.dentry << " mp:" << e.mount);
-    y2mil( "entry:" << e );
-    list<string> ls;
-    makeStringList( e, ls );
-    y2mil( "list:" << ls );
+	y2mil("dentry:" << e.dentry << " mount:" << e.mount << "device:" << e.device);
+    const list<string> ls = makeStringList(e);
     unsigned max_fields = e.crypto ? lengthof(cryptotabFields)
 			      : lengthof(fstabFields);
     unsigned* fields = e.crypto ? cryptotabFields : fstabFields;
-    return( createLine( ls, max_fields, fields ));
+    return createLine(ls, max_fields, fields);
     }
 
-void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls ) const
+    list<string> EtcFstab::makeCrStringList(const FstabEntry& e) const
     {
-    ls.clear();
+	list<string> ls;
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
     string tmp = e.device;
     ls.push_back( tmp );
@@ -557,14 +555,14 @@ void EtcFstab::makeCrStringList( const FstabEntry& e, list<string>& ls ) const
 	tls.erase(i);
     tmp = boost::join( tls, "," );
     ls.push_back( tmp.empty()?"none":tmp );
+	return ls;
     }
 
 string EtcFstab::createCrtabLine( const FstabEntry& e ) const
     {
-    y2mil("device:" << e.dentry << " mp:" << e.mount << " device:" << e.device);
-    list<string> ls;
-    makeCrStringList( e, ls );
-    return( createLine( ls, lengthof(crypttabFields), crypttabFields ));
+	y2mil("dentry:" << e.dentry << " mount:" << e.mount << " device:" << e.device);
+    const list<string> ls = makeCrStringList(e);
+    return createLine(ls, lengthof(crypttabFields), crypttabFields);
     }
 
 
@@ -693,9 +691,8 @@ int EtcFstab::flush()
 		    else
 			{
 			line = (*cur)[lineno];
-			list<string> ol, nl;
-			makeStringList( i->nnew, nl );
-			makeStringList( i->old, ol );
+			const list<string> nl = makeStringList(i->nnew);
+			const list<string> ol = makeStringList(i->old);
 			line = updateLine( ol, nl, line );
 			(*cur)[lineno] = line;
 			}
@@ -709,9 +706,8 @@ int EtcFstab::flush()
 			    findCrtab( i->nnew, crypttab, lineno ))
 			    {
 			    line = crypttab[lineno];
-			    list<string> ol, nl;
-			    makeCrStringList( i->nnew, nl );
-			    makeCrStringList( i->old, ol );
+			    const list<string> nl = makeCrStringList(i->nnew);
+			    const list<string> ol = makeCrStringList(i->old);
 			    line = updateLine( ol, nl, line );
 			    crypttab[lineno] = line;
 			    }
