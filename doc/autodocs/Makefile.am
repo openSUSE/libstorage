@@ -4,7 +4,7 @@
 
 htmldir = $(docdir)/autodocs
 
-html_DATA = index.html $(wildcard *.html *.png)
+html_DATA = index.html $(filter-out index.html, $(wildcard *.html *.png))
 
 index.html: $(srcdir)/../../storage/*.h
 	doxygen doxygen.conf
