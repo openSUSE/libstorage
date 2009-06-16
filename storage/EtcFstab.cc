@@ -94,7 +94,7 @@ EtcFstab::readFiles()
 	list<string>::const_iterator i = l.begin();
 	Entry *p = new Entry;
 
-	p->old.loop = p->old.crypto = true;
+	p->old.loop = p->old.cryptotab = true;
 	if( i!=l.end() )
 	    p->old.loop_dev = *i++;
 	if( i!=l.end() )
@@ -146,7 +146,7 @@ EtcFstab::readFiles()
 		}
 	    else
 		p = &(*e);
-	    p->old.dmcrypt = p->old.cryptt = true;
+	    p->old.dmcrypt = p->old.crypttab = true;
 	    p->old.noauto = false;
 	    p->old.encr = ENC_LUKS;
 	    p->old.device = *i;
@@ -224,8 +224,8 @@ FstabEntry::calcDependent()
 	mount_by = MOUNTBY_PATH;
 	}
     dmcrypt = encr==ENC_LUKS;
-    crypto = !noauto && encr!=ENC_NONE && !dmcrypt;
-    cryptt = !noauto && dmcrypt;
+    cryptotab = !noauto && encr!=ENC_NONE && !dmcrypt;
+    crypttab = !noauto && dmcrypt;
     }
 
 bool
@@ -404,7 +404,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	      " cryptotab:" << cryptotab);
     AsciiFile* ret=NULL;
     string reg;
-    if( e.crypto )
+    if( e.cryptotab )
 	{
 	if( cryptotab==NULL )
 	    cryptotab = new AsciiFile( prefix + "/cryptotab", true );
@@ -466,7 +466,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     list<string> EtcFstab::makeStringList(const FstabEntry& e) const
     {
 	list<string> ls;
-    if( e.crypto )
+    if( e.cryptotab )
 	{
 	ls.push_back( e.loop_dev );
 	}
@@ -478,7 +478,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
 	{
 	ls.push_back( (e.fs!="ntfs")?e.fs:"ntfs-3g" );
 	}
-    if( e.crypto )
+    if( e.cryptotab )
 	{
 	ls.push_back( Volume::encTypeString(e.encr) );
 	}
@@ -491,7 +491,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
 	else
 	    ls.back() += ",noauto";
 	}
-    if( !e.crypto )
+    if( !e.cryptotab )
 	{
 	ls.push_back( decString(e.freq) );
 	ls.push_back( decString(e.passno) );
@@ -523,9 +523,9 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     {
 	y2mil("dentry:" << e.dentry << " mount:" << e.mount << "device:" << e.device);
     const list<string> ls = makeStringList(e);
-    unsigned max_fields = e.crypto ? lengthof(cryptotabFields)
+    unsigned max_fields = e.cryptotab ? lengthof(cryptotabFields)
 			      : lengthof(fstabFields);
-    unsigned* fields = e.crypto ? cryptotabFields : fstabFields;
+    unsigned* fields = e.cryptotab ? cryptotabFields : fstabFields;
     return createLine(ls, max_fields, fields);
     }
 
@@ -663,7 +663,7 @@ int EtcFstab::flush()
 		if( lineno>=0 )
 		    {
 		    cur->remove( lineno, 1 );
-		    if( cur==fstab && i->old.cryptt && 
+		    if( cur==fstab && i->old.crypttab && 
 		        findCrtab( i->old, crypttab, lineno ))
 			crypttab.remove( lineno, 1 );
 		    }
@@ -681,7 +681,7 @@ int EtcFstab::flush()
 		if( lineno>=0 )
 		    {
 		    string line;
-		    if( i->old.crypto != i->nnew.crypto )
+		    if( i->old.cryptotab != i->nnew.cryptotab )
 			{
 			cur->remove( lineno, 1 );
 			cur = findFile( i->nnew, fstab, cryptotab, lineno );
@@ -696,10 +696,10 @@ int EtcFstab::flush()
 			line = updateLine( ol, nl, line );
 			(*cur)[lineno] = line;
 			}
-		    if( i->old.cryptt > i->nnew.cryptt && 
+		    if( i->old.crypttab > i->nnew.crypttab && 
 		        findCrtab( i->old, crypttab, lineno ))
 			crypttab.remove( lineno, 1 );
-		    if( i->nnew.cryptt )
+		    if( i->nnew.crypttab )
 			{
 			line = createCrtabLine( i->nnew );
 			if( findCrtab( i->old, crypttab, lineno ) ||
@@ -743,7 +743,7 @@ int EtcFstab::flush()
 		    y2war( "replacing line:" << (*cur)[lineno] );
 		    (*cur)[lineno] = line;
 		    }
-		if( i->nnew.cryptt )
+		if( i->nnew.crypttab )
 		    {
 		    line = createCrtabLine( i->nnew );
 		    if( findCrtab( i->nnew, crypttab, lineno ))
@@ -862,10 +862,10 @@ string EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
 	  << " freq:" << v.freq << " passno:" << v.passno;
 	if( v.noauto )
 	    s << " noauto";
-	if( v.crypto )
-	    s << " crypto";
-	if( v.cryptt )
-	    s << " cryptt";
+	if( v.cryptotab )
+	    s << " cryptotab";
+	if( v.crypttab )
+	    s << " crypttab";
 	if( v.tmpcrypt )
 	    s << " tmpcrypt";
 	if( v.loop )

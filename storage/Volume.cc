@@ -2401,7 +2401,7 @@ int Volume::doFstabUpdate()
 	    if( !silent() )
 		{
 		cont->getStorage()->showInfoCb(
-		    fstab->removeText( true, entry.crypto, entry.mount ));
+		    fstab->removeText(true, entry.cryptotab, entry.mount));
 		}
 	    y2mil("before removeEntry");
 	    ret = fstab->removeEntry( entry );

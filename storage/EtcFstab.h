@@ -16,10 +16,12 @@ struct FstabChange;
 
 struct FstabEntry
     {
-    FstabEntry() { freq=passno=0; 
-                   crypto=cryptt=loop=noauto=dmcrypt=tmpcrypt=false;
-                   encr=storage::ENC_NONE; mount_by=storage::MOUNTBY_DEVICE; }
+	FstabEntry() : freq(0), passno(0), loop(false), dmcrypt(false), noauto(false),
+		       cryptotab(false), crypttab(false), tmpcrypt(false), encr(ENC_NONE),
+		       mount_by(MOUNTBY_DEVICE) {}
+
     FstabEntry& operator=( const FstabChange& rhs );
+
     friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
 
     string device;
@@ -32,8 +34,8 @@ struct FstabEntry
     bool loop;
     bool dmcrypt;
     bool noauto;
-    bool crypto;
-    bool cryptt;
+    bool cryptotab;
+    bool crypttab;
     bool tmpcrypt;
     string loop_dev;
     string cr_opts;
@@ -47,8 +49,10 @@ struct FstabEntry
 
 struct FstabChange
     {
-    FstabChange() { freq=passno=0; encr=storage::ENC_NONE; tmpcrypt=false; }
+	FstabChange() : freq(0), passno(0), encr(ENC_NONE), tmpcrypt(false) {}
+
     FstabChange( const FstabEntry& e ) { *this = e; }
+
     FstabChange& operator=( const FstabEntry& rhs )
 	{
 	device = rhs.device;
@@ -58,7 +62,9 @@ struct FstabChange
 	tmpcrypt = rhs.tmpcrypt;
 	return( *this );
 	}
+
     friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
+
     string device;
     string dentry;
     string mount;
@@ -113,7 +119,7 @@ class EtcFstab
 	struct Entry
 	    {
 	    enum operation { NONE, ADD, REMOVE, UPDATE };
-	    Entry() { op=NONE; }
+	    Entry() : op(NONE) {}
 	    operation op;
 	    FstabEntry nnew;
 	    FstabEntry old;
