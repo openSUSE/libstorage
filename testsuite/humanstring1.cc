@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <iostream>
 #include <locale>
 
@@ -6,10 +7,6 @@
 
 using namespace std;
 using namespace storage;
-
-
-// During package build translations are installed into buildroot so are not
-// available during testsuite run.
 
 
 void
@@ -24,6 +21,10 @@ test(const char* loc, unsigned long long size, bool classic,
 int
 main()
 {
+    const char* localedir = getenv("LOCALEDIR");
+    if (localedir)
+	bindtextdomain("libstorage", localedir);
+
     test("en_GB.UTF-8", 1024, true, 2, true);
     test("en_GB.UTF-8", 1024, true, 2, false);
 

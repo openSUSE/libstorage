@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <iostream>
 #include <locale>
 
@@ -29,6 +30,10 @@ test(const char* loc, const char* str, bool classic)
 int
 main()
 {
+    const char* localedir = getenv("LOCALEDIR");
+    if (localedir)
+	bindtextdomain("libstorage", localedir);
+
     test("en_GB.UTF-8", "42", true);			// FAILS: classic=true needs a suffix
     test("en_GB.UTF-8", "42B", true);
     test("en_GB.UTF-8", "42 b", true);
@@ -47,22 +52,22 @@ main()
 
     test("en_GB.UTF-8", "123,456 kB", false);
     test("de_DE.UTF-8", "123.456 kB", false);
-    test("fr_FR.UTF-8", "123 456 kB", false);
+    test("fr_FR.UTF-8", "123 456 ko", false);
 
     test("en_GB.UTF-8", "123,456.789kB", false);
     test("de_DE.UTF-8", "123.456,789kB", false);
-    test("fr_FR.UTF-8", "123 456,789kB", false);
+    test("fr_FR.UTF-8", "123 456,789ko", false);
 
     test("en_GB.UTF-8", "123,456.789 kB", false);
     test("de_DE.UTF-8", "123.456,789 kB", false);
-    test("fr_FR.UTF-8", "123 456,789 kB", false);
+    test("fr_FR.UTF-8", "123 456,789 ko", false);
 
-    test("fr_FR.UTF-8", "5GB", false);
-    test("fr_FR.UTF-8", "5 GB", false);
+    test("fr_FR.UTF-8", "5Go", false);
+    test("fr_FR.UTF-8", "5 Go", false);
 
     test("en_US.UTF-8", "5 G B", false);		// FAILS
     test("de_DE.UTF-8", "12.34 kB", false);		// FAILS
-    test("fr_FR.UTF-8", "12 34 GB", false);		// FAILS
+    test("fr_FR.UTF-8", "12 34 Go", false);		// FAILS
 
     test("en_GB.UTF-8", "3.14 G", false);
     test("en_GB.UTF-8", "3.14 GB", false);

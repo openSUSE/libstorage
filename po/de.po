@@ -1454,4 +1454,4 @@ msgstr "K"
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../src/HumanString.cc:37
 msgid "kB"
-msgstr "KB"
+msgstr "kB"
