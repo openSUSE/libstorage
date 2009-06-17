@@ -428,13 +428,22 @@ string Partition::createText( bool doing ) const
 	    }
 	else
 	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create partition %1$s (%2$s)"),
-			   d.c_str(), sizeString().c_str() );
+	    if (encryption == ENC_NONE)
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create partition %1$s (%2$s)"), d.c_str(), sizeString().c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create encrypted partition %1$s (%2$s)"), d.c_str(),
+			      sizeString().c_str());
+	    }
 	    }
 	}
-    return( txt );
+    return txt;
     }
 
 string Partition::formatText( bool doing ) const
