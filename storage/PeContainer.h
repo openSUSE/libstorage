@@ -38,10 +38,13 @@ class PeContainer : public Container
 	    Pv() : num_pe(0), free_pe(0) {}
 
 	    string device;
+	    string dmcryptDevice;
 	    string uuid;
 	    string status;
 	    unsigned long num_pe;
 	    unsigned long free_pe;
+
+	    string realDevice() const { return dmcryptDevice.empty() ? device : dmcryptDevice; }
 
 	    static bool comp_le( const Pv& a, const Pv& b )
 		{ return( a.free_pe<b.free_pe ); }
@@ -52,10 +55,11 @@ class PeContainer : public Container
 		{ return( device==rhs.device ); }
 	    bool operator== ( const string& dev ) const
 		{ return( device==dev); }
-	    bool equalContent( const Pv& rhs ) const
-		{ return( device==rhs.device && uuid==rhs.uuid &&
-		          status==rhs.status && num_pe==rhs.num_pe &&
-			  free_pe==rhs.free_pe ); }
+	    bool equalContent(const Pv& rhs) const
+	    {
+		return device == rhs.device && dmcryptDevice == rhs.dmcryptDevice && uuid == rhs.uuid &&
+		    status == rhs.status && num_pe == rhs.num_pe && free_pe == rhs.free_pe; 
+	    }
 	    };
 
 	// iterators over Dm volumes

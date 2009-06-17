@@ -152,6 +152,11 @@ LvmVg::extendVg( const list<string>& devs )
 	    pe = (s - 500)/pe_size;
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
+
+	    const Volume* v;
+	    if (getStorage()->findVolume(d, v) && v->dmcrypt())
+		pvn.dmcryptDevice = v->dmcryptDevice();
+
 	    pv_add.push_back( pvn );
 	    if( !getStorage()->isDisk(d))
 		getStorage()->changeFormatVolume( d, false, FSNONE );
@@ -1158,7 +1163,7 @@ LvmVg::doCreateVg()
 	    {
 	    if( !devices.empty() )
 		devices += " ";
-	    devices += quote(p->device);
+	    devices += quote(p->realDevice());
 	    ret = doCreatePv(*p);
 	    ++p;
 	    }
@@ -1243,10 +1248,10 @@ LvmVg::doExtendVg()
 	    {
 	    getStorage()->showInfoCb(extendVgText(true, d->device));
 	    }
-	ret = doCreatePv( *d );
+	ret = doCreatePv(*d);
 	if( ret==0 )
 	    {
-	    string cmd = VGEXTENDBIN " " + instSysString() + quote(name()) + " " + quote(d->device);
+	    string cmd = VGEXTENDBIN " " + instSysString() + quote(name()) + " " + quote(d->realDevice());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1292,7 +1297,7 @@ LvmVg::doReduceVg()
 	    {
 	    getStorage()->showInfoCb(reduceVgText(true, d->device));
 	    }
-	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(d->device);
+	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(d->realDevice());
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1502,17 +1507,17 @@ string LvmVg::instSysString() const
     LvmVg::doCreatePv(const Pv& pv) const
     {
     int ret = 0;
-    y2mil("dev:" << pv.device);
+    y2mil("device:" << pv.device << "realDevice:" << pv.realDevice());
     SystemCmd c;
-    string cmd = MDADMBIN " --zero-superblock " + quote(pv.device);
+    string cmd = MDADMBIN " --zero-superblock " + quote(pv.realDevice());
     c.execute( cmd );
-    getStorage()->removeDmTableTo(pv.device);
-    if (getStorage()->isDisk(pv.device))
+    getStorage()->removeDmTableTo(pv.realDevice());
+    if (getStorage()->isDisk(pv.realDevice()))
 	{
-	cmd = PARTEDCMD + quote(pv.device) + " mklabel msdos";
+	cmd = PARTEDCMD + quote(pv.realDevice()) + " mklabel msdos";
 	c.execute( cmd );
 	}
-    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(pv.device);
+    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(pv.realDevice());
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{
@@ -1522,6 +1527,7 @@ string LvmVg::instSysString() const
     y2mil("ret:" << ret);
     return ret;
     }
+
 
 void LvmVg::normalizeDmDevices()
     {
