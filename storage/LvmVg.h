@@ -129,7 +129,7 @@ class LvmVg : public PeContainer
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );
-	int doCreatePv( const string& device );
+	int doCreatePv(const Pv& pv) const;
 
 	string metaString() const;
 	string instSysString() const;

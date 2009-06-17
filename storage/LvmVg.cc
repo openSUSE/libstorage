@@ -187,7 +187,6 @@ LvmVg::reduceVg( const list<string>& devs )
 
     checkConsistency();
     list<string>::const_iterator i=devs.begin();
-    list<Pv>::iterator p;
     list<Pv> pl = pv;
     list<Pv> pladd = pv_add;
     list<Pv> plrem = pv_remove;
@@ -1154,13 +1153,13 @@ LvmVg::doCreateVg()
 	string devices;
 	if( pv_add.size()+pv.size()-pv_remove.size()<=0 )
 	    ret = LVM_VG_HAS_NONE_PV;
-	list<Pv>::iterator p = pv_add.begin();
+	list<Pv>::const_iterator p = pv_add.begin();
 	while( ret==0 && p!=pv_add.end() )
 	    {
 	    if( !devices.empty() )
 		devices += " ";
 	    devices += quote(p->device);
-	    ret = doCreatePv( p->device );
+	    ret = doCreatePv(*p);
 	    ++p;
 	    }
 	if( ret==0 )
@@ -1233,24 +1232,21 @@ LvmVg::doExtendVg()
     y2mil("Vg:" << name());
     y2mil( "this:" << *this );
     int ret = 0;
-    list<string> devs;
     if( !active )
 	activate(true);
-    list<Pv>::iterator p;
-    for( p=pv_add.begin(); p!=pv_add.end(); ++p )
-	devs.push_back( p->device );
-    list<string>::iterator d = devs.begin();
+    list<Pv> devs = pv_add;
+    list<Pv>::const_iterator d = devs.begin();
     while( ret==0 && d!=devs.end() )
 	{
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( extendVgText(true,*d) );
+	    getStorage()->showInfoCb(extendVgText(true, d->device));
 	    }
 	ret = doCreatePv( *d );
 	if( ret==0 )
 	    {
-	    string cmd = VGEXTENDBIN " " + instSysString() + quote(name()) + " " + quote(*d);
+	    string cmd = VGEXTENDBIN " " + instSysString() + quote(name()) + " " + quote(d->device);
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )
 		{
@@ -1263,7 +1259,7 @@ LvmVg::doExtendVg()
 	    getVgData( name() );
 	    checkConsistency();
 	    }
-	p = find( pv_add.begin(), pv_add.end(), *d );
+	list<Pv>::iterator p = find(pv_add.begin(), pv_add.end(), d->device);
 	if( p!=pv_add.end() )
 	    {
 	    pv_add.erase( p );
@@ -1276,7 +1272,7 @@ LvmVg::doExtendVg()
 	checkCreateConstraints();
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 int
@@ -1287,19 +1283,16 @@ LvmVg::doReduceVg()
     int ret = 0;
     if( !active )
 	activate(true);
-    list<string> devs;
-    list<Pv>::iterator p;
-    for( p=pv_remove.begin(); p!=pv_remove.end(); ++p )
-	devs.push_back( p->device );
-    list<string>::iterator d = devs.begin();
+    list<Pv> devs = pv_remove;
+    list<Pv>::const_iterator d = devs.begin();
     while( ret==0 && d!=devs.end() )
 	{
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( reduceVgText(true,*d) );
+	    getStorage()->showInfoCb(reduceVgText(true, d->device));
 	    }
-	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(*d);
+	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(d->device);
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1311,7 +1304,7 @@ LvmVg::doReduceVg()
 	    getVgData( name() );
 	    checkConsistency();
 	    }
-	p = find( pv_remove.begin(), pv_remove.end(), *d );
+	list<Pv>::iterator p = find(pv_remove.begin(), pv_remove.end(), d->device);
 	if( p!=pv_remove.end() )
 	    pv_remove.erase( p );
 	else if( ret==0 )
@@ -1320,7 +1313,7 @@ LvmVg::doReduceVg()
 	}
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 int
@@ -1505,20 +1498,21 @@ string LvmVg::instSysString() const
     }
 
 
-int LvmVg::doCreatePv( const string& device )
+    int
+    LvmVg::doCreatePv(const Pv& pv) const
     {
     int ret = 0;
-    y2mil("dev:" << device);
+    y2mil("dev:" << pv.device);
     SystemCmd c;
-    string cmd = MDADMBIN " --zero-superblock " + quote(device);
+    string cmd = MDADMBIN " --zero-superblock " + quote(pv.device);
     c.execute( cmd );
-    getStorage()->removeDmTableTo( device );
-    if( getStorage()->isDisk(device) )
+    getStorage()->removeDmTableTo(pv.device);
+    if (getStorage()->isDisk(pv.device))
 	{
-	cmd = PARTEDCMD + quote(device) + " mklabel msdos";
+	cmd = PARTEDCMD + quote(pv.device) + " mklabel msdos";
 	c.execute( cmd );
 	}
-    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(device);
+    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(pv.device);
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{
@@ -1526,7 +1520,7 @@ int LvmVg::doCreatePv( const string& device )
 	setExtError( c );
 	}
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 void LvmVg::normalizeDmDevices()
