@@ -27,12 +27,6 @@ EtcFstab::EtcFstab(const string& pfx, bool rootMounted)
 void
 EtcFstab::readFiles()
     {
-    string file = prefix+"/fstab";
-    ifstream mounts( file.c_str() );
-    classic(mounts);
-    string line;
-    unsigned lineno = 0;
-    getline( mounts, line );
     list<Entry>::iterator i = co.begin();
     while( i!=co.end() )
 	{
@@ -42,6 +36,13 @@ EtcFstab::readFiles()
 	    ++i;
 	}
     y2mil("entries:" << co.size());
+
+    string file = prefix+"/fstab";
+    ifstream mounts( file.c_str() );
+    classic(mounts);
+    string line;
+    unsigned lineno = 0;
+    getline( mounts, line );
     while( mounts.good() )
 	{
 	y2mil( "line:\"" << line << "\"" );
@@ -81,6 +82,7 @@ EtcFstab::readFiles()
 	}
     mounts.close();
     y2mil("file:" << file << " lines:" << lineno);
+
     lineno=0;
     file = prefix+"/cryptotab";
     mounts.clear();
@@ -119,6 +121,7 @@ EtcFstab::readFiles()
 	}
     mounts.close();
     y2mil("file:" << file << " lines:" << lineno);
+
     lineno=0;
     file = prefix+"/crypttab";
     mounts.clear();
@@ -175,6 +178,7 @@ EtcFstab::readFiles()
 	}
     mounts.close();
     y2mil("file:" << file << " lines:" << lineno);
+
     y2mil("entries:" << co.size());
     }
 
