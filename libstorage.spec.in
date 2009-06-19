@@ -20,11 +20,15 @@ Requires:	parted mdadm lvm2 dmraid multipath-tools cryptsetup kpartx
 PreReq:		%fillup_prereq
 Obsoletes:	yast2-storage-lib
 Provides:	yast2-storage-lib
-Summary:	-
+Summary:	Library for storage management
 
 %description
-This package is a part of YaST2. It contains the necessary scripts to
-configure disk storage.
+This package contains libstorage, a library for storage management.
+
+Authors:
+--------
+    Thomas Fehr <fehr@suse.de>
+    Arvin Schnell <aschnell@suse.de>
 
 %prep
 %setup -n libstorage-%{version}
@@ -82,11 +86,17 @@ rm -rf "$RPM_BUILD_ROOT"
 %package devel
 Requires:	libstorage = %version
 Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel
-Summary:	-
+Summary:	Header files and documentation for libstorage
 Group:		Development/Languages/C and C++
 
 %description devel
--
+This package contains header files and documentation for developing with
+libstorage.
+
+Authors:
+--------
+    Thomas Fehr <fehr@suse.de>
+    Arvin Schnell <aschnell@suse.de>
 
 %files devel
 %defattr(-,root,root)
@@ -98,11 +108,15 @@ Group:		Development/Languages/C and C++
 
 %package python
 Requires:	libstorage = %version
-Summary:	-
+Summary:	Python bindings for libstorage
 Group:		System/Libraries
 
 %description python
--
+This package contains Python bindings for libstorage.
+
+Authors:
+--------
+    Arvin Schnell <aschnell@suse.de>
 
 %files python
 %defattr(-,root,root)
