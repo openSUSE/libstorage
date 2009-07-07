@@ -1318,6 +1318,7 @@ int Volume::setEncryption( bool val, EncryptType typ )
 	    {
 	    is_loop = false;
 	    encryption = ENC_NONE;
+	    dmcrypt_dev.clear();
 	    crypt_pwd.erase();
 	    }
 	else
@@ -1326,12 +1327,13 @@ int Volume::setEncryption( bool val, EncryptType typ )
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && cType()==NFSC )
 		ret = VOLUME_CRYPT_NFS_IMPOSSIBLE;
-	    if( ret==0 && (format||loop_active) )
+	    if (ret == 0 && (create || format || loop_active))
 		{
 		encryption = typ;
 		is_loop = cont->type()==LOOP;
+		dmcrypt_dev = getDmcryptName();
 		}
-	    if( ret==0 && !format && !loop_active )
+	    if (ret == 0 && !create && !format && !loop_active)
 		{
 		if( detectEncryption()==ENC_UNKNOWN )
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
@@ -1883,7 +1885,7 @@ int Volume::doCryptsetup()
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();
 	    SystemCmd cmd;
-	    if( format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) )
+	    if( (encryption != orig_encryption) || format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) )
 		{
 		string cmdline = getCryptsetupCmd( encryption, dmcrypt_dev, mp, fname, true,
 						   crypt_pwd.empty() );
@@ -1920,7 +1922,11 @@ int Volume::doCryptsetup()
 		replaceAltName( "/dev/dm-", Dm::dmDeviceName(mnr) );
 		}
 	    else
+	    {
 		getMajorMinor( dmcrypt_dev, dummy, minor );
+		replaceAltName("/dev/dm-", Dm::dmDeviceName(minor));
+	    }
+
 	    ProcPart p;
 	    unsigned long long sz;
 	    if( p.getSize( Dm::dmDeviceName(minor), sz ))

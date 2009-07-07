@@ -768,6 +768,10 @@ void LvmVg::getVgData( const string& name, bool exists )
 			addPv( p );
 			}
 		    p->device = extractNthWord( 2, line );
+
+		    const Volume* v;
+		    if (getStorage()->findVolume(p->device, v))
+			p->device = v->device();
 		    }
 		else if( line.find( "PV UUID" ) == 0 )
 		    {
@@ -1507,7 +1511,7 @@ string LvmVg::instSysString() const
     LvmVg::doCreatePv(const Pv& pv) const
     {
     int ret = 0;
-    y2mil("device:" << pv.device << "realDevice:" << pv.realDevice());
+    y2mil("device:" << pv.device << " realDevice:" << pv.realDevice());
     SystemCmd c;
     string cmd = MDADMBIN " --zero-superblock " + quote(pv.realDevice());
     c.execute( cmd );

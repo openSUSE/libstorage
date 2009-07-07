@@ -181,10 +181,11 @@ class Container
 	virtual int doResize( Volume * v );
 	virtual void logData(const string& Dir) const {}
 	Container& operator=( const Container& );
-	static bool stageDecrease( const Volume& v )
-	    { return( v.deleted()||v.needShrink()); }
-	static bool stageCreate( const Volume& v )
-	    { return( v.created()||v.needExtend()); }
+
+	static bool stageDecrease(const Volume& v);
+	static bool stageIncrease(const Volume& v);
+	static bool stageFormat(const Volume& v);
+	static bool stageMount(const Volume& v);
 
 	static const string type_names[COTYPE_LAST_ENTRY];
 
