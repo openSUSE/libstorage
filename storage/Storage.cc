@@ -664,6 +664,9 @@ Storage::autodetectDisks( ProcPart& ppart )
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
+	    if (strcmp(Entry->d_name, ".") == 0 || strcmp(Entry->d_name, "..") == 0)
+		continue;	
+
 	    int Range=0;
 	    unsigned long long Size = 0;
 	    string SysfsDir = string(SYSFSDIR "/") + Entry->d_name;
