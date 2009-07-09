@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jul 09 15:32:52 CEST 2009 - aschnell@suse.de
+
+- work on full disk encryption (fate #305633)
+- 2.18.17
+
+-------------------------------------------------------------------
 Mon Jul 06 10:16:44 CEST 2009 - aschnell@suse.de
 
 - updated translations
