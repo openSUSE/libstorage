@@ -41,12 +41,10 @@ EtcFstab::readFiles()
     ifstream mounts( file.c_str() );
     classic(mounts);
     string line;
-    unsigned lineno = 0;
     getline( mounts, line );
     while( mounts.good() )
 	{
 	y2mil( "line:\"" << line << "\"" );
-	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
 	if( l.begin()!=l.end() && i->find( '#' )!=0 )
@@ -81,9 +79,7 @@ EtcFstab::readFiles()
 	getline( mounts, line );
 	}
     mounts.close();
-    y2mil("file:" << file << " lines:" << lineno);
 
-    lineno=0;
     file = prefix+"/cryptotab";
     mounts.clear();
     mounts.open( file.c_str() );
@@ -91,7 +87,6 @@ EtcFstab::readFiles()
     while( mounts.good() )
 	{
 	y2mil( "line:\"" << line << "\"" );
-	lineno++;
 	list<string> l = splitString( line );
 	list<string>::const_iterator i = l.begin();
 	Entry *p = new Entry;
@@ -120,9 +115,7 @@ EtcFstab::readFiles()
 	getline( mounts, line );
 	}
     mounts.close();
-    y2mil("file:" << file << " lines:" << lineno);
 
-    lineno=0;
     file = prefix+"/crypttab";
     mounts.clear();
     mounts.open( file.c_str() );
@@ -130,7 +123,6 @@ EtcFstab::readFiles()
     while( mounts.good() )
 	{
 	y2mil( "line:\"" << line << "\"" );
-	lineno++;
 	list<string> l = splitString( line );
 	if( l.size()>=3 )
 	    {
@@ -177,7 +169,6 @@ EtcFstab::readFiles()
 	getline( mounts, line );
 	}
     mounts.close();
-    y2mil("file:" << file << " lines:" << lineno);
 
     y2mil("entries:" << co.size());
     }
