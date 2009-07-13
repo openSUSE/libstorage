@@ -1957,6 +1957,10 @@ int Volume::doCrsetup()
 	if( ret!=0 && losetup_done )
 	    loUnsetup();
 	}
+    if (ret == 0 && encryption != ENC_NONE)
+    {
+	doFstabUpdate();
+    }
     if( ret==0 )
 	updateFsData();
     y2mil("ret:" << ret);
@@ -2397,11 +2401,12 @@ int Volume::doFstabUpdate()
 	{
 	EtcFstab* fstab = cont->getStorage()->getFstab();
 	FstabEntry entry;
-	if( !orig_mp.empty() && (deleted()||mp.empty()) &&
-	    (fstab->findDevice( dev, entry ) ||
-	     fstab->findDevice( alt_names, entry ) ||
-	     (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
-	     (cType()==LOOP && fstab->findMount( mp, entry )) ))
+	if ((!orig_mp.empty() || orig_encryption != ENC_NONE) &&
+	    (deleted() || (mp.empty() && encryption == ENC_NONE)) &&
+	     (fstab->findDevice( dev, entry ) ||
+	      fstab->findDevice( alt_names, entry ) ||
+	      (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
+	      (cType()==LOOP && fstab->findMount( mp, entry )) ))
 	    {
 	    changed = true;
 	    if( !silent() )
@@ -2412,7 +2417,7 @@ int Volume::doFstabUpdate()
 	    y2mil("before removeEntry");
 	    ret = fstab->removeEntry( entry );
 	    }
-	else if( !mp.empty() && !deleted() )
+	else if ((!mp.empty() || encryption != ENC_NONE) && !deleted())
 	    {
 	    string fname;
 	    if( fstab->findDevice( dev, entry ) ||

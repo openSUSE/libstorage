@@ -121,7 +121,11 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 	{
 	case DECREASE:
 	    if( vol->deleted() )
+	    {
+		if (vol->getEncryption() != ENC_NONE)
+		    vol->doFstabUpdate();
 		ret = doRemove( vol );
+	    }
 	    else if( vol->needShrink() )
 		ret = doResize( vol );
 	    break;

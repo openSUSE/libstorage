@@ -138,6 +138,7 @@ EtcFstab::readFiles()
 		{
 		co.push_back( Entry() );
 		p = &(co.back());
+		p->old.dentry = *i;
 		}
 	    else
 		p = &(*e);
@@ -656,14 +657,20 @@ int EtcFstab::flush()
 		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno>=0 )
-		    {
+		{
 		    cur->remove( lineno, 1 );
 		    if( cur==fstab && i->old.crypttab && 
 		        findCrtab( i->old, crypttab, lineno ))
 			crypttab.remove( lineno, 1 );
-		    }
+		}
+		else if (i->old.crypttab && findCrtab(i->old, crypttab, lineno))
+		{
+		    crypttab.remove( lineno, 1 );
+		}
 		else
+		{
 		    ret = FSTAB_REMOVE_ENTRY_NOT_FOUND;
+		}
 		i = co.erase( i );
 	    } break;
 
@@ -728,10 +735,14 @@ int EtcFstab::flush()
 		    if( lineno>=0 )
 			{
 			before_dev = extractNthWord( 0, (*cur)[lineno] );
-			cur->insert( lineno, line );
+			if (!i->nnew.mount.empty())
+			    cur->insert( lineno, line );
 			}
 		    else
-			cur->append( line );
+		    {
+			if (!i->nnew.mount.empty())
+			    cur->append( line );
+		    }
 		    }
 		else
 		    {
