@@ -238,8 +238,9 @@ void Storage::detectObjects()
     detectDmraid(ppart);
     detectDmmultipath(ppart);
     detectMds();
+    detectDm(ppart, true);
     detectLvmVgs();
-    detectDm(ppart);
+    detectDm(ppart, false);
 
     if (!danglingUsedBy.empty())
 	y2err("dangling used-by left after detection: " << danglingUsedBy);
@@ -563,7 +564,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
 
 
 void
-Storage::detectDm( ProcPart& ppart )
+Storage::detectDm(ProcPart& ppart, bool only_crypt)
     {
     if (testmode())
 	{
@@ -577,14 +578,22 @@ Storage::detectDm( ProcPart& ppart )
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_DM") == NULL)
 	{
-	DmCo * v = new DmCo( this, true, ppart );
-	if( !v->isEmpty() )
+	    DmCo* v = NULL;
+	    if (haveDm(v))
 	    {
-	    addToList( v );
-	    v->updateDmMaps();
+		v->second(true, ppart, only_crypt);
 	    }
-	else
-	    delete v;
+	    else
+	    {
+		v = new DmCo(this, true, ppart, only_crypt);
+		if (!v->isEmpty() )
+		{
+		    addToList( v );
+		    v->updateDmMaps();
+		}
+		else
+		    delete v;
+	    }
 	}
     }
 
@@ -3288,6 +3297,21 @@ bool Storage::haveMd( MdCo*& md )
 	md = static_cast<MdCo*>(&(*i));
     return( i != p.end() );
     }
+
+
+    bool
+    Storage::haveDm(DmCo*& dm)
+    {
+	dm = NULL;
+	CPair p = cPair();
+	ContIterator i = p.begin();
+	while (i != p.end() && i->type() != DM)
+	    ++i;
+	if (i != p.end())
+	    dm = static_cast<DmCo*>(&(*i));
+	return i != p.end();
+    }
+
 
 bool Storage::haveNfs( NfsCo*& co )
     {

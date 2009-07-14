@@ -16,14 +16,24 @@ namespace storage
     using namespace std;
 
 
-DmCo::DmCo( Storage * const s, bool detect, ProcPart& ppart ) :
-    PeContainer(s,staticType())
+    DmCo::DmCo(Storage * const s, bool detect, ProcPart& ppart, bool only_crypt)
+	: PeContainer(s, staticType())
     {
-    y2deb("constructing DmCo detect:" << detect);
-    init();
-    if( detect )
-	getDmData( ppart );
+	y2deb("constructing DmCo detect:" << detect);
+	init();
+	if (detect)
+	    getDmData(ppart, only_crypt);
     }
+
+
+    void
+    DmCo::second(bool detect, ProcPart& ppart, bool only_crypt)
+    {
+	y2deb("second DmCo detect:" << detect);
+	if (detect)
+	    getDmData(ppart, only_crypt);
+    }
+
 
 DmCo::DmCo( Storage * const s, const string& file ) :
     PeContainer(s,staticType())
@@ -107,7 +117,7 @@ DmCo::detectEncryption( const string& dev ) const
 
 
 void
-DmCo::getDmData( ProcPart& ppart )
+DmCo::getDmData(ProcPart& ppart, bool only_crypt)
     {
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
@@ -205,9 +215,11 @@ DmCo::getDmData( ProcPart& ppart )
 		skip = true;
 		getStorage()->setDmcryptData( it->first, m->device(), min_num,
 		                              m->sizeK(), detectEncryption (m->device()) );
-		getStorage()->clearUsedBy(it->first);
+		if (getStorage()->usedBy(it->first) == UB_DM)
+		    getStorage()->clearUsedBy(it->first);
 		}
-	    if( !skip && m->sizeK()>0 )
+	    if (!skip && m->sizeK() > 0 && ((only_crypt && m->getTargetName() == "crypt") ||
+					    (!only_crypt && m->getTargetName() != "crypt")))
 		addDm( m );
 	    else
 		delete( m );

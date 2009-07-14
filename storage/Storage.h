@@ -1655,7 +1655,7 @@ class DiskData;
 	void detectLvmVgs();
 	void detectDmraid( ProcPart& ppart );
 	void detectDmmultipath( ProcPart& ppart );
-	void detectDm( ProcPart& ppart );
+	void detectDm(ProcPart& ppart, bool only_crypt);
 	void initDisk( DiskData& data, ProcPart& pp );
 	void detectFsData( const VolIterator& begin, const VolIterator& end,
 	                   ProcMounts& mounts );
@@ -1682,6 +1682,7 @@ class DiskData;
 	bool findContainer( const string& device, ContIterator& c );
 
 	bool haveMd( MdCo*& md );
+	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
 	int removeContainer( Container* val );

@@ -13,9 +13,13 @@ class DmCo : public PeContainer
     friend class Storage;
 
     public:
-	DmCo( Storage * const s, bool detect, ProcPart& ppart );
+	DmCo(Storage * const s, bool detect, ProcPart& ppart, bool only_crypt);
 	DmCo( const DmCo& rhs );
+
+	void second(bool detect, ProcPart& ppart, bool only_crypt);
+
 	virtual ~DmCo();
+
 	static storage::CType staticType() { return storage::DM; }
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
 	bool equalContent( const Container& rhs ) const;
@@ -28,7 +32,7 @@ class DmCo : public PeContainer
     protected:
 	DmCo( Storage * const s, const string& File );
 
-	void getDmData( ProcPart& ppart );
+	void getDmData(ProcPart& ppart, bool only_crypt);
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 
 	bool findDm( const string& dev, DmIter& i );
