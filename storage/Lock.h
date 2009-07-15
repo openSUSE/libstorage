@@ -39,7 +39,7 @@ namespace storage
 
     private:
 
-	bool disabled;
+	const bool disabled;
 	int fd;
 
     };
