@@ -372,7 +372,7 @@ namespace storage
 
 	out << "digraph storage" << endl;
 	out << "{" << endl;
-	out << "    node [shape=rectangle, style=filled, fontname=\"DejaVu Sans\"];" << endl;
+	out << "    node [shape=rectangle, style=filled, fontname=\"Arial\"];" << endl;
 	out << endl;
 
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
