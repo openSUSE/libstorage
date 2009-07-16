@@ -329,6 +329,7 @@ class DiskData;
 	int removePartition( const string& partition );
 	int changePartitionId( const string& partition, unsigned id );
 	int forgetChangePartitionId( const string& partition );
+	string getPartitionName(const string& disk, int partition_no);
 	int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots);
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );

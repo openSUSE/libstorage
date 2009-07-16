@@ -1002,22 +1002,19 @@ Disk::label_info Disk::labels[] = {
 #undef PB
 
 
-string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/" };
+    string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+" };
 
-bool Disk::needP( const string& disk )
+
+    bool
+    Disk::needP(const string& disk)
     {
-    bool need_p = false;
-    unsigned i=0;
-    while( !need_p && i<lengthof(p_disks) )
+	for (unsigned i = 0; i < lengthof(p_disks); ++i)
 	{
-	string::size_type p = disk.find(p_disks[i]);
-	if( p==0 || (p==5 && disk.find( "/dev/" )==0 ))
-	    {
-	    need_p = true;
-	    }
-	i++;
+	    Regex rx("^(/dev/)?" + p_disks[i]);
+	    if (rx.match(disk))
+		return true;
 	}
-    return( need_p );
+	return false;
     }
 
 

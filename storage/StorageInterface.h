@@ -1079,6 +1079,16 @@ namespace storage
 	virtual int forgetChangePartitionId (const string& partition ) = 0;
 
 	/**
+	 * Construct the device name for a partiton from the disk name and
+	 * partiton number.
+	 *
+	 * @param disk name of disk, e.g. /dev/sda
+	 * @param partition_no number of partition, e.g. 1
+	 * @return device name of partition, e.g. /dev/sda1
+	 */
+	virtual string getPartitionName(const string& disk, int partition_no) = 0;
+
+	/**
 	 * Query unused slots on a disk suitable for creating partitions.
 	 *
 	 * This functions ignores size limitations of the partition table type,

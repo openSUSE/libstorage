@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jul 16 10:55:04 CEST 2009 - aschnell@suse.de
+
+- support naming of mmcblk devices (fate #305312)
+- added getPartitionName() to interface
+- 2.18.18
+
+-------------------------------------------------------------------
 Wed Jul 15 15:42:49 CEST 2009 - aschnell@suse.de
 
 - use "Arial" in storage graph (see bnc #508092)
