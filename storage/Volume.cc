@@ -2170,7 +2170,7 @@ int Volume::mount( const string& m, bool ro )
 	}
     else
 	{
-	cmdline = SWAPONBIN " " + quote(mountDevice());
+	cmdline = SWAPONBIN " --fixpgsz " + quote(mountDevice());
 	if( cont->getStorage()->instsys() )
 	    {
 	    ProcMounts mountData( cont->getStorage() );
