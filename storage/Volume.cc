@@ -120,8 +120,6 @@ Volume::defaultMountBy(const string& mp) const
 	mb = MOUNTBY_DEVICE;
     if (cType() == NFSC && mb != MOUNTBY_DEVICE)
 	mb = MOUNTBY_DEVICE;
-    if( mp=="swap" && mb==MOUNTBY_UUID )
-	mb = MOUNTBY_DEVICE;
     y2mil( "path:" << udevPath() << " id:" << udevId() );
     if( (mb==MOUNTBY_PATH && udevPath().empty()) ||
         (mb==MOUNTBY_ID && udevId().empty()) )
@@ -140,8 +138,6 @@ Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
 {
     bool ret = true;
     if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
-	ret = false;
-    if (mp == "swap" && mby == MOUNTBY_UUID)
 	ret = false;
     if (cType() == NFSC && mby != MOUNTBY_DEVICE)
 	ret = false;
@@ -866,14 +862,14 @@ int Volume::doFormat()
 	{
 	format = false;
 	detected_fs = fs;
-	if( fs != SWAP && !cont->getStorage()->testmode() )
+	if (!cont->getStorage()->testmode())
 	    {
 	    FsType old=fs;
 	    updateFsData();
 	    if( fs != old )
 		ret = VOLUME_FORMAT_FS_UNDETECTED;
 	    }
-	else if( fs != SWAP )
+	else
 	    {
 	    uuid = "testmode-0123-4567-6666-98765432"+decString(fcount++);
 	    }
