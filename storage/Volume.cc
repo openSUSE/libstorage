@@ -253,6 +253,12 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    fstabData.setDevice( entry, device() );
 	    }
 	}
+
+    if (!found && !mp.empty())
+    {
+	setIgnoreFstab(true);
+    }
+
     if( !found && !mp.empty() )
 	{
 	found = fstabData.findMount( mp, entry );
