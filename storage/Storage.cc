@@ -4511,6 +4511,9 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     static FsCapabilitiesX ext4Caps (true, true, true, false, true, true,
 				     true, 16, 32*1024);
 
+    static FsCapabilitiesX btrfsCaps (false, false, false, false, true, false,
+				      false, 0, 32*1024);
+
     static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
 				    false, 12, 40*1024);
 
@@ -4551,6 +4554,10 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 
 	case EXT4:
 	    fscapabilities = ext4Caps;
+	    return true;
+
+	case BTRFS:
+	    fscapabilities = btrfsCaps;
 	    return true;
 
 	case XFS:

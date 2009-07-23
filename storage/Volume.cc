@@ -442,6 +442,10 @@ void Volume::getFsData( SystemCmd& blkidData )
 		    {
 		    fs = EXT4;
 		    }
+		else if( i->second == "btrfs" )
+		    {
+		    fs = BTRFS;
+		    }
 		else if( i->second == "vfat" )
 		    {
 		    fs = VFAT;
@@ -753,6 +757,9 @@ int Volume::doFormat()
 		cmd = "/sbin/mke2fs";
 		params = "-t ext4 -v";
 		progressbar = new Mke2fsProgressBar( cb );
+		break;
+	    case BTRFS:
+		cmd = "/usr/bin/mkfs.btrfs";
 		break;
 	    case REISERFS:
 		cmd = "/sbin/mkreiserfs";
@@ -3124,9 +3131,9 @@ bool Volume::isTmpCryptMp( const string& mp )
     return( find( tmp_mount, end, mp )!=end );
     }
 
-string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "vfat",
-                              "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", "nfs",
-			      "none" };
+string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
+			      "vfat", "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", 
+			      "nfs", "none" };
 
 string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 

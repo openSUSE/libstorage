@@ -1,9 +1,15 @@
 -------------------------------------------------------------------
+Thu Jul 23 13:15:07 CEST 2009 - aschnell@suse.de
+
+- added minimal experimental btrfs support, esp. filesystems over
+  multiple devices are not supported (fate #306587)
+- 2.18.19
+
+-------------------------------------------------------------------
 Thu Jul 23 09:38:52 CEST 2009 - aschnell@suse.de
 
 - set ignore_fstab also for non NFS volumes not listed in
   /etc/fstab (fate #305150)
-- 2.18.19
 
 -------------------------------------------------------------------
 Fri Jul 17 12:27:17 CEST 2009 - aschnell@suse.de
