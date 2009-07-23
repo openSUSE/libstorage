@@ -2717,6 +2717,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.mount_by = mount_by;
     info.usedByType = uby.type();
     info.usedByDevice = uby.device();
+    info.ignore_fstab = ignore_fstab;
     info.fstab_options = fstab_opt;
     info.uuid = uuid;
     info.label = label;

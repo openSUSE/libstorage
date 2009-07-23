@@ -287,6 +287,7 @@ namespace storage
 	MountByType mount_by;
 	UsedByType usedByType;
 	string usedByDevice;
+	bool ignore_fstab;
 	string fstab_options;
 	string uuid;
 	string label;
