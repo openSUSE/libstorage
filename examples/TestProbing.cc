@@ -56,6 +56,7 @@ main (int argc, char** argv)
 			case EXT2: cout << "EXT2"; break;
 			case EXT3: cout << "EXT3"; break;
 			case EXT4: cout << "EXT4"; break;
+			case BTRFS: cout << "BTRFS"; break;
 			case VFAT: cout << "VFAT"; break;
 			case XFS: cout << "XFS"; break;
 			case JFS: cout << "JFS"; break;
