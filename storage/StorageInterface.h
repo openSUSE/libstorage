@@ -188,9 +188,9 @@ namespace storage
     struct DlabelCapabilities
     {
 	DlabelCapabilities() {}
-	int maxPrimary;
+	unsigned maxPrimary;
 	bool extendedPossible;
-	int maxLogical;
+	unsigned maxLogical;
 	unsigned long long maxSizeK;
     };
 
@@ -223,8 +223,9 @@ namespace storage
 	string disklabel;
 	string udevPath;
 	string udevId;
-	unsigned maxLogical;
 	unsigned maxPrimary;
+	bool extendedPossible;
+	unsigned maxLogical;
 	bool initDisk;
 	bool iscsi;
     };

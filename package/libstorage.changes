@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Jul 24 16:23:46 CEST 2009 - aschnell@suse.de
+
+- work on extended block devt (fate #305584)
+- added extendedPossible to DiskInfo
+- 2.18.20
+
+-------------------------------------------------------------------
 Thu Jul 23 13:15:07 CEST 2009 - aschnell@suse.de
 
 - added minimal experimental btrfs support, esp. filesystems over

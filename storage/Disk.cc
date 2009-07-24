@@ -523,32 +523,27 @@ Disk::logData(const string& Dir) const
     }
 
 
-void
-Disk::setLabelData( const string& disklabel )
+    void
+    Disk::setLabelData(const string& disklabel)
     {
-    y2mil("disklabel:" << disklabel);
-    int i=0;
-    while( !labels[i].name.empty() && labels[i].name!=disklabel )
+	y2mil("disklabel:" << disklabel);
+	DlabelCapabilities caps;
+	if (getDlabelCapabilities(disklabel, caps))
 	{
-	i++;
+	    max_primary = min(caps.maxPrimary, (unsigned)(range - 1));
+	    ext_possible = caps.extendedPossible;
+	    max_logical = min(caps.maxLogical, (unsigned)(range - 1));
+	    label = disklabel;
 	}
-    if( labels[i].name.empty() )
+	else
 	{
-	y2err("unknown disklabel " << disklabel);
-	ext_possible = false;
-	max_primary = 0;
-	max_logical = 0;
-	label = "unsupported";
+	    max_primary = 0;
+	    ext_possible = false;
+	    max_logical = 0;
+	    label = "unsupported";
 	}
-    else
-        {
-	ext_possible = labels[i].extended;
-	max_primary = min(labels[i].primary,unsigned(range-1));
-	max_logical = min(labels[i].logical,unsigned(range-1));
-	label = labels[i].name;
-	}
-    y2mil("name:" << label << " ext:" << ext_possible << " primary:" << max_logical << 
-	  " logical:" << max_logical);
+	y2mil("label:" << label << " max_primary:" << max_logical << " ext_possible:" <<
+	      ext_possible << " max_logical:" << max_logical);
     }
 
 
@@ -2637,8 +2632,9 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.sectors = sectors();
     info.cylSize = cylSizeB();
     info.disklabel = labelName();
-    info.maxLogical = maxLogical();
     info.maxPrimary = maxPrimary();
+    info.extendedPossible = extendedPossible();
+    info.maxLogical = maxLogical();
     info.initDisk = init_disk;
     info.iscsi = iscsi;
     info.udevPath = udev_path;
