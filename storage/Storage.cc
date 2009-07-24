@@ -672,54 +672,29 @@ Storage::autodetectDisks( ProcPart& ppart )
 	const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
-	    {
-	    if (strcmp(Entry->d_name, ".") == 0 || strcmp(Entry->d_name, "..") == 0)
-		continue;	
-
-	    int Range=0;
-	    unsigned long long Size = 0;
-	    string SysfsDir = string(SYSFSDIR "/") + Entry->d_name;
-	    string SysfsFile = SysfsDir + "/range";
-	    y2mil("autodetectDisks sysfsdir:" << SysfsDir);
-	    y2mil("autodetectDisks Range access:" << access(SysfsFile.c_str(), R_OK));
-	    if( access( SysfsFile.c_str(), R_OK )==0 )
-		{
-		ifstream File( SysfsFile.c_str() );
-		classic(File);
-		File >> Range;
-		}
-	    SysfsFile = SysfsDir+"/size";
-	    if( access( SysfsFile.c_str(), R_OK )==0 )
-		{
-		ifstream File( SysfsFile.c_str() );
-		classic(File);
-		File >> Size;
-		}
+	{
 	    string dn = Entry->d_name;
-	    y2mil( "autodetectDisks Range:" << Range << " Size:" << Size );
-	    if( Range>1 && (Size>0||dn.find( "dasd" )==0) )
+
+	    if (dn == "." || dn == "..")
+		continue;
+
+	    Disk::SysfsInfo sysfsinfo;
+	    if (!Disk::getSysfsInfo(SYSFSDIR "/" + dn, sysfsinfo))
+		continue;
+
+	    if (sysfsinfo.range > 1 && (sysfsinfo.size > 0 || dn.find("dasd") == 0))
+	    {
+		DiskData::DTyp t = (dn.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
+		dl.push_back(DiskData(dn, t, sysfsinfo.size / 2));
+	    }
+	    else if (sysfsinfo.range == 1 && sysfsinfo.size > 0)
+	    {
+		if (sysfsinfo.device.find( "/xen/vbd" ) != string::npos && isdigit(dn[dn.size() - 1]))
 		{
-		DiskData::DTyp t = (dn.find( "dasd" )==0)?DiskData::DASD
-		                                         :DiskData::DISK;
-		dl.push_back( DiskData( dn, t, Size/2 ) );
-		}
-	    else if( Range==1 && Size>0 )
-		{
-		SysfsFile = SysfsDir+"/device";
-		string devname;
-		string lname;
-		if (access(SysfsFile.c_str(), R_OK) == 0 && readlink(SysfsFile, lname))
-		    {
-		    devname.append(lname);
-		    y2mil( "devname:" << devname );
-		    }
-		if( devname.find( "/xen/vbd" )!=string::npos &&
-	            isdigit(dn[dn.size()-1]) )
-		    {
-		    dl.push_back( DiskData( dn, DiskData::XEN, Size/2 ) );
-		    }
+		    dl.push_back(DiskData(dn, DiskData::XEN, sysfsinfo.size / 2));
 		}
 	    }
+	}
 	closedir( Dir );
 	y2mil( "dl: " << dl );
 	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )

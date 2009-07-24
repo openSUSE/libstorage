@@ -254,49 +254,104 @@ bool Disk::detectGeometry()
     return( ret );
     }
 
-bool Disk::getSysfsInfo( const string& SysfsDir )
+
+    bool
+    Disk::getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo)
     {
-    bool ret = true;
-    sysfs_dir = SysfsDir;
-    y2mil("sysfs_dir:" << sysfs_dir);
-    string SysfsFile = sysfs_dir+"/range";
-    if( access( SysfsFile.c_str(), R_OK )==0 )
+	bool ret = true;
+
+	string sysfsfile = sysfsdir + "/dev";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
 	{
-	ifstream File( SysfsFile.c_str() );
-	classic(File);
-	File >> range;
-	if( range<=1 ) ret = false;
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    char c;
+	    file >> sysfsinfo.mjr >> c >> sysfsinfo.mnr;
 	}
-    else
+	else
 	{
-	ret = false;
+	    ret = false;
 	}
-    SysfsFile = sysfs_dir+"/dev";
-    if( access( SysfsFile.c_str(), R_OK )==0 )
+
+	sysfsfile = sysfsdir + "/device";
+	if (!readlink(sysfsfile, sysfsinfo.device))
 	{
-	ifstream File( SysfsFile.c_str() );
-	classic(File);
-	char c;
-	File >> mjr;
-	File >> c;
-	File >> mnr;
+	    ret = false;
 	}
-    else
+
+	sysfsfile = sysfsdir + "/range";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
 	{
-	ret = false;
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    file >> sysfsinfo.range;
 	}
-    SysfsFile = sysfs_dir+"/device";
-    string lname;
-    if (access(SysfsFile.c_str(), R_OK) == 0 && readlink(SysfsFile, lname))
+	else
 	{
-	if( lname.find( "/session" )!=string::npos )
-	    iscsi = true;
-	y2mil("lname:" << lname);
+	    ret = false;
 	}
-    y2mil("Ret:" << ret << " Range:" << range << " Major:" << mjr << " Minor:" << mnr <<
-	  " iSCSI:" << iscsi);
-    return( ret );
+
+	sysfsfile = sysfsdir + "/ext_range";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
+	{
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    file >> sysfsinfo.range;
+	}
+
+	sysfsfile = sysfsdir + "/size";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
+	{
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    file >> sysfsinfo.size;
+	}
+	else
+	{
+	    ret = false;
+	}
+
+	y2mil("sysfsdir:" << sysfsdir << " ret:" << ret);
+
+	if (ret)
+	    y2mil("mjr:" << sysfsinfo.mjr << " mnr:" << sysfsinfo.mnr << " device:" <<
+		  sysfsinfo.device << " range:" << sysfsinfo.range << " size:" << sysfsinfo.size);
+
+	return ret;
     }
+
+
+    bool
+    Disk::getSysfsInfo(const string& SysfsDir)
+    {
+	bool ret = true;
+	sysfs_dir = SysfsDir;
+	y2mil("sysfs_dir:" << sysfs_dir);
+
+	SysfsInfo sysfsinfo;
+	if (getSysfsInfo(sysfs_dir, sysfsinfo))
+	{
+	    range = sysfsinfo.range;
+	    if (range <= 1)
+		ret = false;
+
+	    mjr = sysfsinfo.mjr;
+	    mnr = sysfsinfo.mnr;
+
+	    if (boost::contains(sysfsinfo.device, "/session"))
+		iscsi = true;
+	}
+	else
+	{
+	    ret = false;
+	}
+
+	y2mil("ret:" << ret << " range:" << range << " major:" << mjr << " minor:" << mnr <<
+	      " iscsi:" << iscsi);
+
+	return ret;
+    }
+
 
 void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
                         unsigned& s )

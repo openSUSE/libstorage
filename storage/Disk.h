@@ -112,6 +112,17 @@ class Disk : public Container
 	static bool getDlabelCapabilities(const string& dlabel,
 					  storage::DlabelCapabilities& dlabelcapabilities);
 
+	struct SysfsInfo
+	{
+	    unsigned long mjr;
+	    unsigned long mnr;
+	    string device;
+	    unsigned long range;
+	    unsigned long long size;
+	};
+
+	static bool getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo);
+
     protected:
 
 	// iterators over partitions
