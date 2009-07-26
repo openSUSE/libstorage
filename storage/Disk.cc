@@ -258,8 +258,6 @@ bool Disk::detectGeometry()
     bool
     Disk::getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo)
     {
-	bool ret = true;
-
 	string sysfsfile = sysfsdir + "/dev";
 	if (access(sysfsfile.c_str(), R_OK) == 0)
 	{
@@ -270,13 +268,15 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    ret = false;
+	    y2err("reading " << sysfsfile << " failed");
+	    return false;
 	}
 
 	sysfsfile = sysfsdir + "/device";
 	if (!readlink(sysfsfile, sysfsinfo.device))
 	{
-	    ret = false;
+	    y2err("reading " << sysfsfile << " failed");
+	    return false;
 	}
 
 	sysfsfile = sysfsdir + "/range";
@@ -288,7 +288,8 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    ret = false;
+	    y2err("reading " << sysfsfile << " failed");
+	    return false;
 	}
 
 	sysfsfile = sysfsdir + "/ext_range";
@@ -308,16 +309,15 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    ret = false;
+	    y2err("reading " << sysfsfile << " failed");
+	    return false;
 	}
 
-	y2mil("sysfsdir:" << sysfsdir << " ret:" << ret);
+	y2mil("sysfsdir:" << sysfsdir << " mjr:" << sysfsinfo.mjr << " mnr:" << sysfsinfo.mnr <<
+	      " device:" << sysfsinfo.device << " range:" << sysfsinfo.range << " size:" <<
+	      sysfsinfo.size);
 
-	if (ret)
-	    y2mil("mjr:" << sysfsinfo.mjr << " mnr:" << sysfsinfo.mnr << " device:" <<
-		  sysfsinfo.device << " range:" << sysfsinfo.range << " size:" << sysfsinfo.size);
-
-	return ret;
+	return true;
     }
 
 
