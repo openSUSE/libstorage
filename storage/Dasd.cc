@@ -192,11 +192,7 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 	    }
 	}
     y2mil("nm:" << nm);
-    string reg = nm;
-    if( !reg.empty() && reg.find( '/' )!=string::npos &&
-	isdigit(reg[reg.length()-1]) )
-	reg += "p";
-    reg = "^" + reg + "[0-9]+" "$";
+    string reg = "^" + nm + partNaming(nm) + "[0-9]+" "$";
     list<string> ps = ppart.getMatchingEntries(regex_matches(reg));
     y2mil("regex:\"" << reg << "\" ps:" << ps);
     unsigned long dummy = 0;

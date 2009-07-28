@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 28 10:16:10 CEST 2009 - aschnell@suse.de
+
+- fix for mmcblk devices
+
+-------------------------------------------------------------------
 Fri Jul 24 16:23:46 CEST 2009 - aschnell@suse.de
 
 - work on extended block devt (fate #305584)
