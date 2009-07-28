@@ -903,7 +903,7 @@ int Volume::doFormat()
 
 void Volume::updateFsData()
     {
-    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null " + quote(mountDevice()));
+    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null " + quote(mountDevice()));
     getFsData( Blkid );
     }
 

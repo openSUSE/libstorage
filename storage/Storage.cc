@@ -732,7 +732,7 @@ Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
                        ProcMounts& mounts )
     {
     y2mil("detectFsData begin");
-    SystemCmd Blkid( "BLKID_SKIP_CHECK_MDRAID=1 /sbin/blkid -c /dev/null" );
+    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
