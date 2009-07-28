@@ -2329,7 +2329,7 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( !dmp_slave && call_blockdev )
 	    {
-	    SystemCmd c("/sbin/blockdev --rereadpt " + quote(device()));
+	    SystemCmd c(BLOCKDEVBIN " --rereadpt " + quote(device()));
 	    if( p->type()!=EXTENDED )
 		Storage::waitForDevice(p->device());
 	    }

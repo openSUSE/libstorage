@@ -45,6 +45,7 @@
 #define DDBIN "/bin/dd"
 
 #define BLKIDBIN "/sbin/blkid"
+#define BLOCKDEVBIN "/sbin/blockdev"
 
 #define GREPBIN "/usr/bin/grep"
 
