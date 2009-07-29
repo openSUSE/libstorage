@@ -777,7 +777,11 @@ void LvmVg::getVgData( const string& name, bool exists )
 
 		    const Volume* v;
 		    if (getStorage()->findVolume(p->device, v))
+		    {
 			p->device = v->device();
+			p->dmcryptDevice = v->dmcryptDevice();
+		    }
+		    
 		    }
 		else if( line.find( "PV UUID" ) == 0 )
 		    {
