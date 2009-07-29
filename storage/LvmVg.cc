@@ -183,15 +183,17 @@ LvmVg::reduceVg( const string& dev )
     return( reduceVg( l ) );
     }
 
+
 int
 LvmVg::reduceVg( const list<string>& devs )
     {
     int ret = 0;
-    y2mil( "name:" << name() << " devices:" << devs );
-    y2mil( "this:" << *this );
+    y2mil("name:" << name() << " devices:" << devs);
+    y2mil("this:" << *this);
+    y2mil("add:" << pv_add.size() << " pv:" << pv.size() << " remove:" << pv_remove.size());
 
     checkConsistency();
-    list<string>::const_iterator i=devs.begin();
+
     list<Pv> pl = pv;
     list<Pv> pladd = pv_add;
     list<Pv> plrem = pv_remove;
@@ -200,13 +202,15 @@ LvmVg::reduceVg( const list<string>& devs )
 	{
 	ret = LVM_CHANGE_READONLY;
 	}
+
+    list<string>::const_iterator i = devs.begin();
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
 	ret = tryUnusePe( d, pl, pladd, plrem, rem_pe );
 	++i;
 	}
-    y2mil( "add:" << pv_add.size() << " pv:" << pv.size() << " remove:" << pv_remove.size() );
+
     if( ret==0 && pv_add.size()+pv.size()-devs.size()<=0 )
 	ret = LVM_VG_HAS_NONE_PV;
     if( ret == 0 )
@@ -219,9 +223,11 @@ LvmVg::reduceVg( const list<string>& devs )
 	}
     if( ret==0 )
 	checkConsistency();
-    y2mil( "this:" << *this );
+
+    y2mil("this:" << *this);
+    y2mil("add:" << pv_add.size() << " pv:" << pv.size() << " remove:" << pv_remove.size());
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 

@@ -604,17 +604,20 @@ std::ostream& operator<< (std::ostream& s, const PeContainer& d )
 	s << " pv_remove:";
 	printDevList( s, d.pv_remove );
 	}
-    return( s );
+    return s;
     }
 
-std::ostream& operator<< (std::ostream& s, const PeContainer::Pv& v )
+
+    std::ostream& operator<<(std::ostream& s, const PeContainer::Pv& v)
     {
-    s << "device:" << v.device
-      << " PE:" << v.num_pe
-      << " Free:" << v.free_pe
-      << " Status:" << v.status
-      << " UUID:" << v.uuid;
-    return( s );
+	s << "device:" << v.device;
+	if (!v.dmcryptDevice.empty())
+	    s << " dmcryptDevice:" << v.dmcryptDevice;
+	s << " PE:" << v.num_pe
+	  << " Free:" << v.free_pe
+	  << " Status:" << v.status
+	  << " UUID:" << v.uuid;
+	return s;
     }
 
 
