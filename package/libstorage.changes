@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 29 10:59:46 CEST 2009 - aschnell@suse.de
+
+- fixed removing encrypted pvs from vg
+
+-------------------------------------------------------------------
 Tue Jul 28 10:16:10 CEST 2009 - aschnell@suse.de
 
 - fix for mmcblk devices
