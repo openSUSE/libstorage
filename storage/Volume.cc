@@ -759,7 +759,7 @@ int Volume::doFormat()
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case BTRFS:
-		cmd = "/usr/bin/mkfs.btrfs";
+		cmd = "/sbin/mkfs.btrfs";
 		break;
 	    case REISERFS:
 		cmd = "/sbin/mkreiserfs";
