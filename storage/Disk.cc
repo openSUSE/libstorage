@@ -268,14 +268,14 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    y2err("reading " << sysfsfile << " failed");
+	    y2war("reading " << sysfsfile << " failed");
 	    return false;
 	}
 
 	sysfsfile = sysfsdir + "/device";
 	if (!readlink(sysfsfile, sysfsinfo.device))
 	{
-	    y2err("reading " << sysfsfile << " failed");
+	    y2war("reading " << sysfsfile << " failed");
 	    return false;
 	}
 
@@ -288,7 +288,7 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    y2err("reading " << sysfsfile << " failed");
+	    y2war("reading " << sysfsfile << " failed");
 	    return false;
 	}
 
@@ -309,7 +309,7 @@ bool Disk::detectGeometry()
 	}
 	else
 	{
-	    y2err("reading " << sysfsfile << " failed");
+	    y2war("reading " << sysfsfile << " failed");
 	    return false;
 	}
 
