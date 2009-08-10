@@ -66,8 +66,8 @@ install -d -m 755 $RPM_BUILD_ROOT/var/lock/libstorage
 
 %{find_lang} libstorage
 
-rm -f $RPM_BUILD_ROOT/%{_libdir}/python%{py_ver}/site-packages/_libstorage.a
-rm -f $RPM_BUILD_ROOT/%{_libdir}/python%{py_ver}/site-packages/_libstorage.la
+rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.a  
+rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"
@@ -125,5 +125,5 @@ Authors:
 
 %files python
 %defattr(-,root,root)
-%{_libdir}/python%{py_ver}/site-packages/libstorage.py*
-%attr(755,root,root) %{_libdir}/python%{py_ver}/site-packages/_libstorage.so
+%{python_sitelib}/libstorage.py*
+%attr(755,root,root) %{python_sitearch}/_libstorage.so

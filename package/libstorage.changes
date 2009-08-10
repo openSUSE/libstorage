@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Sun Aug  9 13:04:56 CEST 2009 - coolo@novell.com
+
+- use new python macros
+
+-------------------------------------------------------------------
 Wed Jul 29 10:59:46 CEST 2009 - aschnell@suse.de
 
 - fixed removing encrypted pvs from vg
