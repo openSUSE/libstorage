@@ -47,7 +47,7 @@
 #define BLKIDBIN "/sbin/blkid"
 #define BLOCKDEVBIN "/sbin/blockdev"
 
-#define GREPBIN "/usr/bin/grep"
+#define GREPBIN "/bin/grep"
 
 #define DASDFMTBIN "/sbin/dasdfmt"
 #define DASDVIEWBIN "/sbin/dasdview"
