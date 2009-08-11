@@ -1081,6 +1081,15 @@ namespace storage
 	virtual int forgetChangePartitionId (const string& partition ) = 0;
 
 	/**
+	 * Return the prefix that is inserted between the disk name and the
+	 * partition number.
+	 *
+	 * @param disk name of disk, e.g. /dev/sda
+	 * @return prefix for partitions, e.g. "", "p" or "_part"
+	 */
+	virtual string getPartitionPrefix(const string& disk) = 0;
+
+	/**
 	 * Construct the device name for a partiton from the disk name and
 	 * partiton number.
 	 *

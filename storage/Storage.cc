@@ -1622,6 +1622,13 @@ Storage::forgetChangePartitionId( const string& partition )
 
 
     string
+    Storage::getPartitionPrefix(const string& disk)
+    {
+	return Disk::partNaming(disk);
+    }
+
+
+    string
     Storage::getPartitionName(const string& disk, int partition_no)
     {
 	return disk + Disk::partNaming(disk) + decString(partition_no);

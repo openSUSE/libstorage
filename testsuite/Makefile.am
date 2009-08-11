@@ -14,7 +14,8 @@ LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
 	lvm_create.single lvm_extend.single md_create.single			\
-	humanstring1.single humanstring2.single partitionname.single
+	humanstring1.single humanstring2.single partitionname.single		\
+	partitionprefix.single
 
 partition1_single_SOURCES = partition1.cc common.h
 
@@ -35,6 +36,8 @@ humanstring1_single_SOURCES = humanstring1.cc
 humanstring2_single_SOURCES = humanstring2.cc
 
 partitionname_single_SOURCES = partitionname.cc
+
+partitionprefix_single_SOURCES = partitionprefix.cc
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug 11 13:18:28 CEST 2009 - aschnell@suse.de
+
+- added getPartitionPrefix() to interface
+- 2.18.21
+
+-------------------------------------------------------------------
 Sun Aug  9 13:04:56 CEST 2009 - coolo@novell.com
 
 - use new python macros
