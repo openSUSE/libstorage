@@ -108,6 +108,7 @@ void
 Storage::logSystemInfo() const
 {
     AsciiFile("/proc/version").logContent();
+    SystemCmd(LSBIN " -1 /lib/modules");
 }
 
 
@@ -301,7 +302,7 @@ Storage::~Storage()
     if (!tempdir.empty() && rmdir(tempdir.c_str()) != 0)
     {
 	y2err("stray tmpfile");
-	SystemCmd("ls -l " + quote(tempdir));
+	SystemCmd(LSBIN " -l " + quote(tempdir));
     }
     delete fstab;
     y2mil("destructed Storage");
