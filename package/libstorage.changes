@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Aug 13 10:31:28 CEST 2009 - aschnell@suse.de
+
+- improved handling of special characters in filesystem labels
+  (bnc #414294)
+
+-------------------------------------------------------------------
 Tue Aug 11 13:18:28 CEST 2009 - aschnell@suse.de
 
 - added getPartitionPrefix() to interface

@@ -28,6 +28,9 @@ std::map<string,string> makeMap( const std::list<string>& l,
                                  const string& delim = "=",
 				 const string& removeSur = " \t\n" );
 
+    string udevEncode(const string&);
+    string udevDecode(const string&);
+
     bool readlink(const string& path, string& buf);
 
     map<string, list<string>> getUdevMap(const char* path);

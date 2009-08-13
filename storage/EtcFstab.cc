@@ -174,6 +174,7 @@ EtcFstab::readFiles()
     y2mil("entries:" << co.size());
     }
 
+
 void
 FstabEntry::calcDependent()
     {
@@ -201,28 +202,39 @@ FstabEntry::calcDependent()
 	    encr = Volume::toEncType( i->substr( pos+1 ) );
 	    }
 	}
-    if( device.find( "LABEL=" )==0 )
+
+	if (boost::starts_with(device, "LABEL="))
 	{
-	mount_by = MOUNTBY_LABEL;
-	device.erase();
+	    mount_by = MOUNTBY_LABEL;
+	    device.erase();
 	}
-    else if( device.find( "UUID=" )==0 )
+	else if (boost::starts_with(device, "UUID="))
 	{
-	mount_by = MOUNTBY_UUID;
-	device.erase();
+	    mount_by = MOUNTBY_UUID;
+	    device.erase();
 	}
-    else if( device.substr(0, 16) == "/dev/disk/by-id/" )
+	else if (boost::starts_with(device, "/dev/disk/by-id/"))
         {
-	mount_by = MOUNTBY_ID;
+	    mount_by = MOUNTBY_ID;
 	}
-    else if( device.substr(0, 18) == "/dev/disk/by-path/" )
+	else if (boost::starts_with(device, "/dev/disk/by-path/"))
         {
-	mount_by = MOUNTBY_PATH;
+	    mount_by = MOUNTBY_PATH;
 	}
+	else if (boost::starts_with(device, "/dev/disk/by-label/"))
+	{
+	    mount_by = MOUNTBY_LABEL;
+	}
+	else if (boost::starts_with(device, "/dev/disk/by-uuid/"))
+	{
+	    mount_by = MOUNTBY_UUID;
+	}
+
     dmcrypt = encr==ENC_LUKS;
     cryptotab = !noauto && encr!=ENC_NONE && !dmcrypt;
     crypttab = !noauto && dmcrypt;
     }
+
 
 bool
 EtcFstab::findDevice( const string& dev, FstabEntry& entry ) const
@@ -288,31 +300,47 @@ void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
 	i->nnew.device = i->old.device = device;
     }
 
-bool
-EtcFstab::findUuidLabel( const string& uuid, const string& label,
-                         FstabEntry& entry ) const
+
+    bool
+    EtcFstab::findUuidLabel(const string& uuid, const string& label,
+			    FstabEntry& entry) const
     {
-    y2mil("uuid:" << uuid << " label:" << label);
-    list<Entry>::const_iterator i = co.end();
-    if( !uuid.empty() )
+	y2mil("uuid:" << uuid << " label:" << label);
+	list<Entry>::const_iterator i = co.end();
+	if (!uuid.empty())
 	{
-	string dev = "UUID=" + uuid;
-	i = co.begin();
-	while( i!=co.end() && i->nnew.dentry != dev )
-	    ++i;
+	    string dentry = "UUID=" + uuid;
+	    i = co.begin();
+	    while (i != co.end() && i->nnew.dentry != dentry)
+		++i;
 	}
-    if( i==co.end() && !label.empty() )
+	if (i == co.end() && !uuid.empty())
 	{
-	string dev = "LABEL=" + label;
-	i = co.begin();
-	while( i!=co.end() && i->nnew.dentry != dev )
-	    ++i;
+	    string dentry = "/dev/disk/by-uuid/" + uuid;
+	    i = co.begin();
+	    while (i != co.end() && i->nnew.dentry != dentry)
+		++i;
 	}
-    if( i!=co.end())
-	entry = i->nnew;
-    y2mil("ret:" << (i != co.end()));
-    return( i!=co.end() );
+	if (i == co.end() && !label.empty())
+	{
+	    string dentry = "LABEL=" + label;
+	    i = co.begin();
+	    while (i != co.end() && i->nnew.dentry != dentry)
+		++i;
+	}
+	if (i == co.end() && !label.empty())
+	{
+	    string dentry = "/dev/disk/by-label/" + udevEncode(label);
+	    i = co.begin();
+	    while (i != co.end() && i->nnew.dentry != dentry)
+		++i;
+	}
+	if (i != co.end())
+	    entry = i->nnew;
+	y2mil("ret:" << (i != co.end()));
+	return i != co.end();
     }
+
 
 bool
 EtcFstab::findIdPath( const std::list<string>& id, const string& path,

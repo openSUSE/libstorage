@@ -347,6 +347,54 @@ logStreamClose(LogLevel level, const char* file, unsigned line, const char* func
 }
 
 
+    string
+    udevEncode(const string& s)
+    {
+	string r = s;
+
+	string::size_type pos = 0;
+
+	while (true)
+	{
+	    pos = r.find_first_of(" '\\/", pos);
+	    if (pos == string::npos)
+		break;
+
+	    char tmp[16];
+	    sprintf(tmp, "\\x%02x", r[pos]);
+	    r.replace(pos, 1, tmp);
+
+	    pos += 4;
+	}
+
+	return r;
+    }
+
+
+    string
+    udevDecode(const string& s)
+    {
+	string r = s;
+
+	string::size_type pos = 0;
+
+	while (true)
+	{
+	    pos = r.find("\\x", pos);
+	    if (pos == string::npos || pos > r.size() - 4)
+		break;
+
+	    unsigned int tmp;
+	    if (sscanf(r.substr(pos + 2, 2).c_str(), "%x", &tmp) == 1)
+		r.replace(pos, 4, 1, (char) tmp);
+
+	    pos += 1;
+	}
+
+	return r;
+    }
+
+
 bool
 readlink(const string& path, string& buf)
 {
@@ -379,7 +427,7 @@ getUdevLinks(const char* path)
 	    {
 		string::size_type pos = tmp.find_first_not_of("./");
 		if (pos != string::npos)
-		    links[entry->d_name] = tmp.substr(pos);
+		    links[udevDecode(entry->d_name)] = tmp.substr(pos);
 	    }
 	}
 	closedir(dir);
