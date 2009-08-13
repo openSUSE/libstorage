@@ -2229,28 +2229,37 @@ int Volume::prepareRemove()
     return( ret );
     }
 
-string Volume::getMountByString( MountByType mby, const string& dev,
-				 const string& uuid, const string& label ) const
+
+    string
+    Volume::getMountByString(MountByType mby, const string& dev, const string& uuid,
+			     const string& label) const
     {
     string ret = dev;
-    if( mby==MOUNTBY_UUID )
+
+	switch (mby)
 	{
+	    case MOUNTBY_UUID:
 	ret = "UUID=" + uuid;
-	}
-    else if( mby==MOUNTBY_LABEL )
-	{
+		break;
+
+	    case MOUNTBY_LABEL:
 	ret = "LABEL=" + label;
-	}
-    else if( mby==MOUNTBY_ID )
-	{
+		break;
+
+	    case MOUNTBY_ID:
 	if( !udevId().empty() )
 	    ret = udevId().front();
-	}
-    else if( mby==MOUNTBY_PATH )
-	{
+		break;
+
+	    case MOUNTBY_PATH:
 	ret = udevPath();
+		break;
+
+	    case MOUNTBY_DEVICE:
+		break;
 	}
-    return( ret );
+
+	return ret;
     }
 
 
