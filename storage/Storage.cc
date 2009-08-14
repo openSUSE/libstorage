@@ -4500,7 +4500,7 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
 				     true, 16, 32*1024);
 
     static FsCapabilitiesX btrfsCaps (false, false, false, false, true, false,
-				      false, 0, 32*1024);
+				      false, 0, 256*1024);
 
     static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
 				    false, 12, 40*1024);
