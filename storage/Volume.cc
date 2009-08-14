@@ -12,6 +12,7 @@
 #include "storage/StorageTypes.h"
 #include "storage/Container.h"
 #include "storage/AppUtil.h"
+#include "storage/Blkid.h"
 #include "storage/SystemCmd.h"
 #include "storage/ProcMounts.h"
 #include "storage/ProcPart.h"
@@ -394,111 +395,47 @@ void Volume::getLoopData( SystemCmd& loopData )
 	}
     }
 
-void Volume::getFsData( SystemCmd& blkidData )
+
+    void
+    Volume::getFsData(const Blkid& blkid)
     {
-    bool found = blkidData.select( "^" + mountDevice() + ":" )>0;
-    if( !found && !is_loop )
+	Blkid::Entry entry;
+
+	bool found = blkid.getEntry(mountDevice(), entry);
+	if (!found && !is_loop)
 	{
-	list<string>::const_iterator an = alt_names.begin();
-	while( !found && an!=alt_names.end() )
+	    list<string>::const_iterator an = alt_names.begin();
+	    while (!found && an != alt_names.end())
 	    {
-	    found = blkidData.select( "^" + *an + ":" )>0;
-	    ++an;
+		found = blkid.getEntry(*an, entry);
+		++an;
 	    }
 	}
-    if( found )
+
+	if (found)
 	{
-	list<string> l = splitString( blkidData.getLine( 0, true ), " \t\n",
-	                              true, true, "\"" );
-	std::ostringstream b;
-	classic(b);
-	b << "line[" << device() << "]=" << l;
-	y2mil(b.str());
-	if( !l.empty() )
+	    y2mil("device:" << mountDevice() << " entry:" << entry);
+
+	    detected_fs = fs = entry.fstype;
+
+	    if (!entry.uuid.empty())
 	    {
-	    l.pop_front();
-	    map<string,string> m = makeMap( l, "=", "\"" );
-	    map<string,string>::const_iterator i = m.find( "TYPE" );
-	    b.str("");
-	    if( i !=m.end() )
-		{
-		if( i->second == "reiserfs" )
-		    {
-		    fs = REISERFS;
-		    }
-		else if( i->second == "swap" )
-		    {
-		    fs = SWAP;
-		    }
-		else if( i->second == "ext2" )
-		    {
-		    fs = (m["SEC_TYPE"]=="ext3")?EXT3:EXT2;
-		    }
-		else if( i->second == "ext3" )
-		    {
-		    fs = EXT3;
-		    }
-		else if( i->second == "ext4" )
-		    {
-		    fs = EXT4;
-		    }
-		else if( i->second == "btrfs" )
-		    {
-		    fs = BTRFS;
-		    }
-		else if( i->second == "vfat" )
-		    {
-		    fs = VFAT;
-		    }
-		else if( i->second == "ntfs" )
-		    {
-		    fs = NTFS;
-		    }
-		else if( i->second == "jfs" )
-		    {
-		    fs = JFS;
-		    }
-		else if( i->second == "hfs" )
-		    {
-		    fs = HFS;
-		    }
-		else if( i->second == "hfsplus" )
-		    {
-		    fs = HFSPLUS;
-		    }
-		else if( i->second == "xfs" )
-		    {
-		    fs = XFS;
-		    }
-		else if( i->second == "(null)" )
-		    {
-		    fs = FSNONE;
-		    }
-		detected_fs = fs;
-		b << "fs:" << fs_names[fs];
-		}
-	    i = m.find( "UUID" );
-	    if( i != m.end() )
-		{
-		uuid = i->second;
-		b << " uuid:" << uuid;
+		uuid = entry.uuid;
 		alt_names.remove_if(string_contains("/by-uuid/"));
-		alt_names.push_back( "/dev/disk/by-uuid/" + uuid );
-		}
-	    i = m.find( "LABEL" );
-	    if( i != m.end() )
-		{
+		alt_names.push_back("/dev/disk/by-uuid/" + uuid);
+	    }
+
+	    if (!entry.label.empty())
+	    {
 		// ignore label for hfs since we cannot set it (bnc #447782)
-		if (fs != HFS)
-		    label = orig_label = i->second;
-		b << " label:\"" << label << "\"";
+		if (entry.fstype != HFS)
+		    label = orig_label = entry.label;
 		alt_names.remove_if(string_contains("/by-label/"));
-		alt_names.push_back( "/dev/disk/by-label/" + label );
-		}
-	    y2mil(b.str());
+		alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
 	    }
 	}
     }
+
 
 int Volume::setFormat( bool val, storage::FsType new_fs )
     {
@@ -901,11 +838,14 @@ int Volume::doFormat()
     return( ret );
     }
 
-void Volume::updateFsData()
+
+    void
+    Volume::updateFsData()
     {
-    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null " + quote(mountDevice()));
-    getFsData( Blkid );
+	Blkid blkid(mountDevice());
+	getFsData(blkid);
     }
+
 
 string Volume::sysfsPath() const
     {

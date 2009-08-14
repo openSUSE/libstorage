@@ -30,6 +30,8 @@
 #include "storage/ListListIterator.h"
 #include "storage/IterPair.h"
 #include "storage/Lock.h"
+#include "storage/Blkid.h"
+
 
 namespace storage
 {
@@ -1661,8 +1663,8 @@ class DiskData;
 	void detectDmmultipath( ProcPart& ppart );
 	void detectDm(ProcPart& ppart, bool only_crypt);
 	void initDisk( DiskData& data, ProcPart& pp );
-	void detectFsData( const VolIterator& begin, const VolIterator& end,
-	                   ProcMounts& mounts );
+	void detectFsData(const VolIterator& begin, const VolIterator& end,
+			  const ProcMounts& mounts, const Blkid& blkid);
 	void detectFsDataTestMode( const string& file,
 	                           const VolIterator& begin,
 				   const VolIterator& end );

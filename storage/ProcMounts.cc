@@ -29,7 +29,7 @@ ProcMounts::ProcMounts( Storage * const sto )
 
 	if (boost::contains(dev, "/by-label/"))
 	{
-	    dev = dev.substr( dev.rfind( "/" )+1 );
+	    dev = udevDecode(dev.substr(dev.rfind("/") + 1));
 	    y2mil( "dev:" << dev );
 	    map<string, string>::const_iterator it = by_label.find(dev);
 	    if (it != by_label.end())

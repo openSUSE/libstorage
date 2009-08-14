@@ -16,6 +16,8 @@ class EtcFstab;
 class FstabEntry;
 class Container;
 class Storage;
+    class Blkid;
+    
 
 class Volume
     {
@@ -202,7 +204,7 @@ class Volume
 	int checkDevice(const string& device) const;
 	storage::MountByType defaultMountBy(const string& mp = "") const;
 	bool allowedMountBy(storage::MountByType mby, const string& mp = "") const;
-	void getFsData( SystemCmd& blkidData );
+	void getFsData(const Blkid& blkid);
 	void getLoopData( SystemCmd& loopData );
 	void getMountData( const ProcMounts& mountData, bool swap_only=false );
 	void getFstabData( EtcFstab& fstabData );

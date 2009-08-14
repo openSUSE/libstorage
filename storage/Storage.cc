@@ -30,6 +30,7 @@
 #include "storage/IterPair.h"
 #include "storage/ProcMounts.h"
 #include "storage/ProcPart.h"
+#include "storage/Blkid.h"
 #include "storage/EtcFstab.h"
 #include "storage/AsciiFile.h"
 #include "storage/StorageDefines.h"
@@ -269,9 +270,10 @@ void Storage::detectObjects()
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	detectLoops(ppart);
 	ProcMounts pm( this );
+	Blkid blkid;
 	if( !instsys() )
 	    detectNfs(*fstab, pm);
-	detectFsData( vBegin(), vEnd(), pm );
+	detectFsData(vBegin(), vEnd(), pm, blkid);
 	logContainersAndVolumes(logdir);
 	}
 
@@ -728,19 +730,19 @@ Storage::autodetectDisks( ProcPart& ppart )
 	}
     }
 
-void
-Storage::detectFsData( const VolIterator& begin, const VolIterator& end,
-                       ProcMounts& mounts )
+
+    void
+    Storage::detectFsData(const VolIterator& begin, const VolIterator& end,
+			  const ProcMounts& mounts, const Blkid& blkid)
     {
     y2mil("detectFsData begin");
-    SystemCmd Blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
 	if( i->getUsedByType()==UB_NONE )
 	    {
 	    i->getLoopData( Losetup );
-	    i->getFsData( Blkid );
+	    i->getFsData(blkid);
 	    y2mil( "detect:" << *i );
 	    }
 	}
