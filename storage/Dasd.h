@@ -10,7 +10,8 @@ namespace storage
 
 
 class SystemCmd;
-class ProcPart;
+    class ProcParts;
+
 
 class Dasd : public Disk
     {
@@ -40,9 +41,9 @@ class Dasd : public Disk
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
-	bool detectPartitionsFdasd(ProcPart& ppart);
-	bool detectPartitions( ProcPart& ppart );
-	bool checkFdasdOutput( SystemCmd& Cmd, ProcPart& ppart );
+	bool detectPartitionsFdasd(const ProcParts& parts);
+	bool detectPartitions(const ProcParts& parts);
+	bool checkFdasdOutput(SystemCmd& Cmd, const ProcParts& parts);
 	bool scanFdasdLine( const string& Line, unsigned& nr, 
 	                    unsigned long& start, unsigned long& csize );
 	void getGeometry( SystemCmd& cmd, unsigned long& c,

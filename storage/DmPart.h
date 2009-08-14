@@ -8,7 +8,8 @@ namespace storage
 {
 
 class DmPartCo;
-class ProcPart;
+    class ProcParts;
+
 
 class DmPart : public Dm
     {
@@ -28,7 +29,7 @@ class DmPart : public Dm
 	unsigned id() const { return p?p->id():0; }
 	void updateName();
 	void updateMinor();
-	void updateSize( ProcPart& pp );
+	void updateSize(const ProcParts& parts);
 	void updateSize();
 	void getCommitActions(list<commitAction>& l) const;
 	void addUdevData();

@@ -2,7 +2,7 @@
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"
 #include "storage/AsciiFile.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 
 
 namespace storage
@@ -10,14 +10,14 @@ namespace storage
     using namespace std;
 
 
-    ProcPart::ProcPart()
+    ProcParts::ProcParts()
     {
 	reload();
     }
 
 
     void
-    ProcPart::reload()
+    ProcParts::reload()
     {
 	data.clear();
 
@@ -26,7 +26,7 @@ namespace storage
 
 	for (vector<string>::const_iterator it = parts.lines().begin(); it != parts.lines().end(); ++it)
 	{
-	    string device = extractNthWord(3, *it);
+	    string device = "/dev/" + extractNthWord(3, *it);
 	    unsigned long long sizeK;
 	    extractNthWord(2, *it) >> sizeK;
 	    data[device] = sizeK;
@@ -38,10 +38,13 @@ namespace storage
 
 
     bool
-    ProcPart::getSize(const string& device, unsigned long long& sizeK) const
+    ProcParts::getSize(const string& device, unsigned long long& sizeK) const
     {
+	if (device != normalizeDevice(device))
+	    y2err("unnormalize device " << device);
+
 	bool ret = false;
-	const_iterator i = data.find(undevDevice(device));
+	const_iterator i = data.find(normalizeDevice(device));
 	if (i != data.end())
 	{
 	    sizeK = i->second;
@@ -53,7 +56,7 @@ namespace storage
 
 
     list<string>
-    ProcPart::getEntries() const
+    ProcParts::getEntries() const
     {
 	list<string> ret;
 	for (const_iterator i = data.begin(); i != data.end(); ++i)

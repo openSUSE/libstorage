@@ -7,7 +7,7 @@
 #include <boost/algorithm/string.hpp>
 
 #include "storage/SystemCmd.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/Storage.h"
 #include "storage/OutputProcessor.h"
 #include "storage/Dasd.h"
@@ -32,7 +32,9 @@ Dasd::~Dasd()
     y2deb("destructed dasd " << dev);
     }
 
-bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
+
+    bool
+    Dasd::detectPartitionsFdasd(const ProcParts& parts)
     {
     bool ret = true;
     string cmd_line = FDASDBIN " -p " + quote(device());
@@ -41,12 +43,14 @@ bool Dasd::detectPartitionsFdasd( ProcPart& ppart )
     SystemCmd Cmd( cmd_line );
     y2mil("retcode:" << Cmd.retcode());
     if( Cmd.retcode() == 0 )
-	checkFdasdOutput( Cmd, ppart );
+	checkFdasdOutput(Cmd, parts);
     y2mil("ret:" << ret << " partitons:" << vols.size());
     return( ret );
     }
 
-bool Dasd::detectPartitions( ProcPart& ppart )
+
+    bool
+    Dasd::detectPartitions(const ProcParts& parts)
     {
     bool ret = true;
     string cmd_line = DASDVIEWBIN " -x " + quote(device());
@@ -85,7 +89,7 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 	switch( fmt )
 	    {
 	    case DASDF_CDL:
-		ret = Dasd::detectPartitionsFdasd(ppart);
+		ret = Dasd::detectPartitionsFdasd(parts);
 		break;
 	    case DASDF_LDL:
 		{
@@ -94,7 +98,7 @@ bool Dasd::detectPartitions( ProcPart& ppart )
 		Partition *p = new Partition( *this, 1, s, 0, cyl,
 					      PRIMARY, Partition::ID_LINUX,
 					      false );
-		if( ppart.getSize( p->device(), s ))
+		if (parts.getSize(p->device(), s))
 		    {
 		    p->setSize( s );
 		    }
@@ -151,8 +155,9 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
    return( nr>0 );
    }
 
+
 bool
-Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
+    Dasd::checkFdasdOutput(SystemCmd& cmd, const ProcParts& parts)
     {
     int cnt;
     string line;
@@ -180,7 +185,7 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 		    Partition *p = new Partition( *this, pnr, s,
 						  c_start, c_size, PRIMARY,
 						  Partition::ID_LINUX, false );
-		    if( ppart.getSize( p->device(), s ))
+		    if (parts.getSize(p->device(), s))
 			{
 			p->setSize( s );
 			}
@@ -192,11 +197,11 @@ Dasd::checkFdasdOutput( SystemCmd& cmd, ProcPart& ppart )
 	    }
 	}
     y2mil("nm:" << nm);
-    string reg = "^" + nm + partNaming(nm) + "[0-9]+" "$";
-    list<string> ps = ppart.getMatchingEntries(regex_matches(reg));
+    string reg = "^" "/dev/" + nm + partNaming(nm) + "[0-9]+" "$";
+    list<string> ps = parts.getMatchingEntries(regex_matches(reg));
     y2mil("regex:\"" << reg << "\" ps:" << ps);
     unsigned long dummy = 0;
-    if( !checkPartedValid( ppart, nm, pl, dummy ) )
+    if (!checkPartedValid(parts, nm, pl, dummy))
 	{
 	string txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
@@ -384,7 +389,7 @@ int Dasd::doFdasd()
 	}
     if( ret==0 )
 	{
-	ProcPart ppart;
+	ProcParts parts;
 	p = partPair();
 	i = p.begin();
 	list<Partition*> rem_list;
@@ -400,7 +405,7 @@ int Dasd::doFdasd()
 		unsigned long long s;
 		Storage::waitForDevice(i->device());
 		i->setCreated( false );
-		if( ppart.getSize( i->device(), s ))
+		if (parts.getSize(i->device(), s))
 		    {
 		    i->setSize( s );
 		    }
@@ -550,11 +555,11 @@ int Dasd::doDasdfmt()
 	    }
 	if( ret==0 )
 	    {
-	    ProcPart ppart;
+	    ProcParts parts;
 	    for( list<Disk*>::iterator i = dl.begin(); i!=dl.end(); ++i )
 		{
 		Dasd * ds = static_cast<Dasd *>(*i);
-		ds->detectPartitions( ppart );
+		ds->detectPartitions(parts);
 		ds->resetInitDisk();
 		ds->removeFromMemory();
 		}

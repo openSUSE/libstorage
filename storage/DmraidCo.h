@@ -8,18 +8,18 @@
 
 namespace storage
 {
-
 class Storage;
-class ProcPart;
+    class ProcParts;
+
 
 class DmraidCo : public DmPartCo
     {
     friend class Storage;
 
     public:
-	DmraidCo( Storage * const s, const string& Name, ProcPart& ppart );
+	DmraidCo(Storage * const s, const string& Name, const ProcParts& parts);
 	DmraidCo( Storage * const s, const string& Name, unsigned num, 
-	          unsigned long long Size, ProcPart& ppart );
+		 unsigned long long Size, const ProcParts& parts);
 	DmraidCo( const DmraidCo& rhs );
 	virtual ~DmraidCo();
 

@@ -20,7 +20,7 @@ namespace storage
     {
     public:
 
-	ProcMounts( Storage * const s );
+	ProcMounts();
 
 	string getMount(const string& device) const;
 	string getMount(const list<string>& devices) const;

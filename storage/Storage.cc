@@ -29,7 +29,7 @@
 #include "storage/LvmVg.h"
 #include "storage/IterPair.h"
 #include "storage/ProcMounts.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/Blkid.h"
 #include "storage/EtcFstab.h"
 #include "storage/AsciiFile.h"
@@ -228,21 +228,21 @@ void Storage::detectObjects()
 {
     danglingUsedBy.clear();
 
-    ProcPart ppart;
-    detectDisks(ppart);
+    ProcParts parts;
+    detectDisks(parts);
     if( instsys() )
 	{
 	DmraidCo::activate( true );
 	MdCo::activate( true, tmpDir() );
 	LvmVg::activate( true );
-	ppart.reload();
+	parts.reload();
 	}
-    detectDmraid(ppart);
-    detectDmmultipath(ppart);
+    detectDmraid(parts);
+    detectDmmultipath(parts);
     detectMds();
-    detectDm(ppart, true);
+    detectDm(parts, true);
     detectLvmVgs();
-    detectDm(ppart, false);
+    detectDm(parts, false);
 
     if (!danglingUsedBy.empty())
 	y2err("dangling used-by left after detection: " << danglingUsedBy);
@@ -268,12 +268,12 @@ void Storage::detectObjects()
 	{
 	delete fstab;
 	fstab = new EtcFstab( "/etc", isRootMounted() );
-	detectLoops(ppart);
-	ProcMounts pm( this );
+	detectLoops(parts);
+	ProcMounts mounts;
 	Blkid blkid;
 	if( !instsys() )
-	    detectNfs(*fstab, pm);
-	detectFsData(vBegin(), vEnd(), pm, blkid);
+	    detectNfs(*fstab, mounts);
+	detectFsData(vBegin(), vEnd(), mounts, blkid);
 	logContainersAndVolumes(logdir);
 	}
 
@@ -366,8 +366,9 @@ Storage::detectArch()
     y2mil("Arch:" << proc_arch << " IsPPCMac:" << is_ppc_mac << " IsPPCPegasos:" << is_ppc_pegasos);
     }
 
+
 void
-Storage::detectDisks( ProcPart& ppart )
+    Storage::detectDisks(const ProcParts& parts)
     {
     if (testmode())
 	{
@@ -381,7 +382,7 @@ Storage::detectDisks( ProcPart& ppart )
 	}
     else if (autodetect())
 	{
-	autodetectDisks( ppart );
+	    autodetectDisks(parts);
 	}
     }
 
@@ -406,7 +407,8 @@ void Storage::detectMds()
 	}
     }
 
-void Storage::detectLoops( ProcPart& ppart )
+    void
+    Storage::detectLoops(const ProcParts& parts)
     {
     if (testmode())
 	{
@@ -418,7 +420,7 @@ void Storage::detectLoops( ProcPart& ppart )
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LOOP") == NULL)
 	{
-	LoopCo * v = new LoopCo( this, true, ppart );
+	    LoopCo* v = new LoopCo(this, true, parts);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -485,7 +487,7 @@ Storage::detectLvmVgs()
 
 
 void
-Storage::detectDmraid(ProcPart& ppart)
+    Storage::detectDmraid(const ProcParts& parts)
 {
     if (testmode())
     {
@@ -505,7 +507,7 @@ Storage::detectDmraid(ProcPart& ppart)
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		DmraidCo * v = new DmraidCo( this, *i, ppart );
+		    DmraidCo* v = new DmraidCo(this, *i, parts);
 		if( v->isValid() )
 		{
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
@@ -526,7 +528,7 @@ Storage::detectDmraid(ProcPart& ppart)
 
 
 void
-Storage::detectDmmultipath(ProcPart& ppart)
+    Storage::detectDmmultipath(const ProcParts& parts)
 {
     if (testmode())
     {
@@ -546,7 +548,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		DmmultipathCo * v = new DmmultipathCo( this, *i, ppart );
+		    DmmultipathCo* v = new DmmultipathCo(this, *i, parts);
 		if( v->isValid() )
 		{
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
@@ -567,7 +569,7 @@ Storage::detectDmmultipath(ProcPart& ppart)
 
 
 void
-Storage::detectDm(ProcPart& ppart, bool only_crypt)
+    Storage::detectDm(const ProcParts& parts, bool only_crypt)
     {
     if (testmode())
 	{
@@ -584,11 +586,11 @@ Storage::detectDm(ProcPart& ppart, bool only_crypt)
 	    DmCo* v = NULL;
 	    if (haveDm(v))
 	    {
-		v->second(true, ppart, only_crypt);
+		v->second(true, parts, only_crypt);
 	    }
 	    else
 	    {
-		v = new DmCo(this, true, ppart, only_crypt);
+		v = new DmCo(this, true, parts, only_crypt);
 		if (!v->isEmpty() )
 		{
 		    addToList( v );
@@ -625,7 +627,7 @@ std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
 
 
 void
-Storage::initDisk( DiskData& data, ProcPart& pp )
+    Storage::initDisk( DiskData& data, const ProcParts& parts)
     {
     y2mil( "data:" << data );
     data.dev = boost::replace_all_copy(data.name, "!", "/");
@@ -647,14 +649,14 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
 	    data.dev.erase( p+1 );
 	    if( nr>=0 )
 		{
-		d = new Disk( this, data.dev, (unsigned)nr, data.s, pp );
+		    d = new Disk(this, data.dev, (unsigned) nr, data.s, parts);
 		}
 	    break;
 	    }
 	}
     if( d && 
         (d->getSysfsInfo(SYSFSDIR "/" + data.name)||data.typ==DiskData::XEN) &&
-	(data.typ==DiskData::XEN||d->detect(pp)))
+	    (data.typ == DiskData::XEN || d->detect(parts)))
 	{
 	data.d = d;
 	}
@@ -664,8 +666,9 @@ Storage::initDisk( DiskData& data, ProcPart& pp )
 	}
     }
 
+
 void
-Storage::autodetectDisks( ProcPart& ppart )
+    Storage::autodetectDisks(const ProcParts& parts)
     {
     DIR *Dir;
     struct dirent *Entry;
@@ -702,7 +705,7 @@ Storage::autodetectDisks( ProcPart& ppart )
 	y2mil( "dl: " << dl );
 	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
 	    {
-	    initDisk( *i, ppart );
+		initDisk(*i, parts);
 	    }
 	y2mil( "dl: " << dl );
 	for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
@@ -3420,8 +3423,8 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	y2mil( "have_loop:" << have_loop );
 	if( !have_loop )
 	    {
-	    ProcPart ppart;
-	    loop = new LoopCo( this, false, ppart );
+	    ProcParts parts;
+	    loop = new LoopCo(this, false, parts);
 	    }
 	if( loop==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;
@@ -5300,20 +5303,21 @@ Storage::checkDeviceMounted(const string& device, list<string>& mps)
     assertInit();
     y2mil("device:" << device);
     VolIterator vol;
-    ProcMounts mountData( this );
+	ProcMounts mounts;
     if( findVolume( device, vol ) )
 	{
-	mps = mountData.getAllMounts(vol->mountDevice());
-	mps.splice(mps.end(), mountData.getAllMounts(vol->altNames()));
+	    mps = mounts.getAllMounts(vol->mountDevice());
+	    mps.splice(mps.end(), mounts.getAllMounts(vol->altNames()));
 	}
     else
 	{
-	mps = mountData.getAllMounts(device);
+	    mps = mounts.getAllMounts(device);
 	}
     ret = !mps.empty();
     y2mil("ret:" << ret << " mps:" << mps);
     return ret;
     }
+
 
 bool
 Storage::umountDevice( const string& device )

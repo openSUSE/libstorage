@@ -206,7 +206,7 @@ class Volume
 	bool allowedMountBy(storage::MountByType mby, const string& mp = "") const;
 	void getFsData(const Blkid& blkid);
 	void getLoopData( SystemCmd& loopData );
-	void getMountData( const ProcMounts& mountData, bool swap_only=false );
+	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );
 	void getStartData();
 	void getTestmodeData( const string& data );

@@ -17,10 +17,10 @@ namespace storage
     using namespace std;
 
 
-DmmultipathCo::DmmultipathCo( Storage * const s, const string& Name, ProcPart& ppart ) :
-    DmPartCo(s, "/dev/mapper/"+Name, staticType(), ppart )
+    DmmultipathCo::DmmultipathCo( Storage * const s, const string& Name, const ProcParts& parts)
+	: DmPartCo(s, "/dev/mapper/" + Name, staticType(), parts)
 {
-    DmPartCo::init( ppart );
+	DmPartCo::init(parts);
     getMultipathData( Name );
     y2deb("constructing dmmultipath co " << Name);
 }

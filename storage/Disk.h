@@ -14,7 +14,7 @@ namespace storage
 
 class Storage;
 class SystemCmd;
-class ProcPart;
+class ProcParts;
 class Region;
 
 class Disk : public Container
@@ -34,7 +34,7 @@ class Disk : public Container
     public:
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
 	Disk( Storage * const s, const string& Name, unsigned num, 
-	      unsigned long long Size, ProcPart& ppart );
+	      unsigned long long Size, const ProcParts& parts);
 	Disk( const Disk& rhs );
 	virtual ~Disk();
 
@@ -55,7 +55,7 @@ class Disk : public Container
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;
-	bool detect( ProcPart& ppart );
+	bool detect(const ProcParts& parts);
 	static storage::CType staticType() { return storage::DISK; }
 	friend std::ostream& operator<< (std::ostream&, const Disk& );
 	void triggerUdevUpdate() const;
@@ -177,17 +177,17 @@ class Disk : public Container
     protected:
 	Disk( Storage * const s, const string& File );
 	virtual bool detectGeometry();
-	virtual bool detectPartitions( ProcPart& ppart );
+	virtual bool detectPartitions(const ProcParts& parts);
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	int execCheckFailed( const string& cmd_line );
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line );
-	bool checkPartedOutput( const SystemCmd& cmd, ProcPart& ppart );
+	bool checkPartedOutput(const SystemCmd& cmd, const ProcParts& parts);
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
 			     storage::PartitionType& type, 
 			     unsigned& id, bool& boot ) const;
-	bool checkPartedValid( const ProcPart& pp, const string& diskname,
+	bool checkPartedValid(const ProcParts& parts, const string& diskname,
 	                       std::list<Partition*>& pl, unsigned long& rng ) const;
 	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,

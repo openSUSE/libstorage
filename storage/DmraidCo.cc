@@ -15,10 +15,10 @@ namespace storage
     using namespace std;
 
 
-DmraidCo::DmraidCo(Storage * const s, const string& Name, ProcPart& ppart)
-    : DmPartCo(s, "/dev/mapper/"+Name, staticType(), ppart)
+    DmraidCo::DmraidCo(Storage * const s, const string& Name, const ProcParts& parts)
+	: DmPartCo(s, "/dev/mapper/" + Name, staticType(), parts)
 {
-    DmPartCo::init(ppart);
+	DmPartCo::init(parts);
     getRaidData(Name);
     y2deb("constructing dmraid co " << Name);
 }

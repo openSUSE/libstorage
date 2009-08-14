@@ -4,7 +4,7 @@
 
 #include "storage/DmPartCo.h"
 #include "storage/DmPart.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/Partition.h"
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
@@ -18,8 +18,8 @@ namespace storage
 
 
 DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
-                    ProcPart& ppart ) :
-    PeContainer(s,t)
+		       const ProcParts& parts)
+	: PeContainer(s, t)
     {
     y2deb("constructing DmPart co " << name);
     dev = name;
@@ -27,9 +27,10 @@ DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
     num_part = num_pe = free_pe = 0;
     active = valid = del_ptable = false;
     disk = NULL;
-    init( ppart );
+	init(parts);
     }
 
+    
 DmPartCo::~DmPartCo()
     {
     if( disk )
@@ -254,14 +255,15 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
     return( ret );
     }
 
+
 void 
-DmPartCo::init( ProcPart& ppart )
+    DmPartCo::init(const ProcParts& parts)
     {
     SystemCmd c(DMSETUPBIN " table " + quote(nm));
     if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0][0] ))
 	{
 	mnr = Dm::dmNumber( nm );
-	ppart.getSize( "dm-"+decString(mnr), size_k );
+	parts.getSize("/dev/dm-" + decString(mnr), size_k);
 	y2mil( "mnr:" << mnr << " nm:" << nm );
 	y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
 	if( size_k>0 )
@@ -269,7 +271,7 @@ DmPartCo::init( ProcPart& ppart )
 	else
 	    y2war( "size_k zero for dm minor " << mnr );
 	num_pe = 1;
-	createDisk( ppart );
+	createDisk(parts);
 	if( disk->numPartitions()>0 )
 	    {
 	    string pat = numToName(1);
@@ -278,13 +280,14 @@ DmPartCo::init( ProcPart& ppart )
 	    if( c.numLines()==0 )
 		activate_part(true);
 	    }
-	getVolumes( ppart );
+	getVolumes(parts);
 	active = valid = true;
 	}
     }
 
+
 void
-DmPartCo::createDisk( ProcPart& ppart )
+    DmPartCo::createDisk(const ProcParts& parts)
     {
     if( disk )
 	delete disk;
@@ -292,8 +295,9 @@ DmPartCo::createDisk( ProcPart& ppart )
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
-    disk->detect(ppart);
+    disk->detect(parts);
     }
+
 
 void 
 DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
@@ -302,8 +306,9 @@ DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
     dm = new DmPart( *this, num, p );
     }
 
+
 void
-DmPartCo::getVolumes( ProcPart& ppart )
+    DmPartCo::getVolumes(const ProcParts& parts)
     {
     clearPointerList(vols);
     num_part = 0;
@@ -313,7 +318,7 @@ DmPartCo::getVolumes( ProcPart& ppart )
     while( i!=pp.end() )
 	{
 	newP( p, i->nr(), &(*i) );
-	p->updateSize( ppart );
+	p->updateSize(parts);
 	num_part++;
 	addToList( p );
 	++i;
@@ -764,9 +769,9 @@ DmPartCo::doCreate( Volume* v )
 	    {
 	    activate_part(false);
 	    activate_part(true);
-	    ProcPart pp;
+	    ProcParts parts;
 	    updateMinor();
-	    l->updateSize( pp );
+	    l->updateSize(parts);
 	    }
 	if( p->type()!=EXTENDED )
 	    Storage::waitForDevice(l->device());
@@ -865,9 +870,9 @@ int DmPartCo::doResize( Volume* v )
 	ret = l->resizeFs();
     if( ret==0 )
 	{
-	ProcPart pp;
+	ProcParts parts;
 	updateMinor();
-	l->updateSize( pp );
+	l->updateSize(parts);
 	Storage::waitForDevice(l->device());
 	}
     if( ret==0 && remount )

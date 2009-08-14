@@ -15,7 +15,7 @@
 #include "storage/Blkid.h"
 #include "storage/SystemCmd.h"
 #include "storage/ProcMounts.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/OutputProcessor.h"
 #include "storage/EtcFstab.h"
 #include "storage/StorageDefines.h"
@@ -307,14 +307,14 @@ void Volume::getStartData()
 	}
     }
 
-void Volume::getMountData( const ProcMounts& mountData, bool swap_only )
+void Volume::getMountData( const ProcMounts& mounts, bool swap_only )
     {
     y2mil( "this:" << *this );
     y2mil( "swap_only:" << swap_only << " mountDevice:" << mountDevice() );
-    mp = mountData.getMount( mountDevice() );
+    mp = mounts.getMount(mountDevice());
     if( mp.empty() )
 	{
-	mp = mountData.getMount( alt_names );
+	mp = mounts.getMount(alt_names);
 	}
     if( !mp.empty() )
 	{
@@ -1876,9 +1876,9 @@ int Volume::doCryptsetup()
 		replaceAltName("/dev/dm-", Dm::dmDeviceName(minor));
 	    }
 
-	    ProcPart p;
+	    ProcParts parts;
 	    unsigned long long sz;
-	    if( p.getSize( Dm::dmDeviceName(minor), sz ))
+	    if (parts.getSize( Dm::dmDeviceName(minor), sz))
 		setSize( sz );
 	    }
 	}
@@ -2122,11 +2122,11 @@ int Volume::mount( const string& m, bool ro )
 	cmdline = SWAPONBIN " --fixpgsz " + quote(mountDevice());
 	if( cont->getStorage()->instsys() )
 	    {
-	    ProcMounts mountData( cont->getStorage() );
-	    string m = mountData.getMount( mountDevice() );
+		ProcMounts mounts;
+		string m = mounts.getMount(mountDevice());
 	    if( m.empty() )
 		{
-		m = mountData.getMount( alt_names );
+		    m = mounts.getMount(alt_names);
 		}
 	    if( m == "swap" )
 		cmdline = "echo " + cmdline;

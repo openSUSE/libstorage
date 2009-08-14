@@ -1,5 +1,5 @@
-#ifndef PROC_PART_H
-#define PROC_PART_H
+#ifndef PROC_PARTS_H
+#define PROC_PARTS_H
 
 
 #include <string>
@@ -14,11 +14,11 @@ namespace storage
     using std::map;
 
 
-    class ProcPart
+    class ProcParts
     {
     public:
 
-	ProcPart();
+	ProcParts();
 
 	void reload();
 

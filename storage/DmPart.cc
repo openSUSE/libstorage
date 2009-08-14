@@ -4,7 +4,7 @@
 #include "storage/DmPart.h"
 #include "storage/DmPartCo.h"
 #include "storage/SystemCmd.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 
@@ -86,13 +86,16 @@ void DmPart::updateSize()
 	}
     }
 
-void DmPart::updateSize( ProcPart& pp )
+
+    void
+    DmPart::updateSize(const ProcParts& parts)
     {
     unsigned long long si = 0;
     updateSize();
-    if( mjr>0 && pp.getSize( "dm-"+decString(mnr), si ))
+	if (mjr > 0 && parts.getSize("/dev/dm-" + decString(mnr), si))
 	setSize( si );
     }
+
 
 void DmPart::addUdevData()
     {

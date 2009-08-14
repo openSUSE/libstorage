@@ -1652,17 +1652,17 @@ class DiskData;
 	// protected internal member functions
 	void initialize();
 	void logSystemInfo() const;
-	void detectDisks( ProcPart& ppart );
-	void autodetectDisks( ProcPart& ppart );
+	void detectDisks(const ProcParts& parts);
+	void autodetectDisks(const ProcParts& parts);
 	void detectMultipath();
 	void detectMds();
-	void detectLoops( ProcPart& ppart );
+	void detectLoops(const ProcParts& parts);
 	void detectNfs(const EtcFstab& fstab, const ProcMounts& mounts);
 	void detectLvmVgs();
-	void detectDmraid( ProcPart& ppart );
-	void detectDmmultipath( ProcPart& ppart );
-	void detectDm(ProcPart& ppart, bool only_crypt);
-	void initDisk( DiskData& data, ProcPart& pp );
+	void detectDmraid(const ProcParts& parts);
+	void detectDmmultipath(const ProcParts& parts);
+	void detectDm(const ProcParts& parts, bool only_crypt);
+	void initDisk( DiskData& data, const ProcParts& parts);
 	void detectFsData(const VolIterator& begin, const VolIterator& end,
 			  const ProcMounts& mounts, const Blkid& blkid);
 	void detectFsDataTestMode( const string& file,

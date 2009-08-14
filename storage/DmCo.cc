@@ -5,7 +5,7 @@
 #include "storage/DmCo.h"
 #include "storage/Dm.h"
 #include "storage/SystemCmd.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
@@ -16,22 +16,22 @@ namespace storage
     using namespace std;
 
 
-    DmCo::DmCo(Storage * const s, bool detect, ProcPart& ppart, bool only_crypt)
+    DmCo::DmCo(Storage * const s, bool detect, const ProcParts& parts, bool only_crypt)
 	: PeContainer(s, staticType())
     {
 	y2deb("constructing DmCo detect:" << detect);
 	init();
 	if (detect)
-	    getDmData(ppart, only_crypt);
+	    getDmData(parts, only_crypt);
     }
 
 
     void
-    DmCo::second(bool detect, ProcPart& ppart, bool only_crypt)
+    DmCo::second(bool detect, const ProcParts& parts, bool only_crypt)
     {
 	y2deb("second DmCo detect:" << detect);
 	if (detect)
-	    getDmData(ppart, only_crypt);
+	    getDmData(parts, only_crypt);
     }
 
 
@@ -117,7 +117,7 @@ DmCo::detectEncryption( const string& dev ) const
 
 
 void
-DmCo::getDmData(ProcPart& ppart, bool only_crypt)
+    DmCo::getDmData(const ProcParts& parts, bool only_crypt)
     {
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
@@ -186,7 +186,7 @@ DmCo::getDmData(ProcPart& ppart, bool only_crypt)
 	    y2mil( "new Dm:" << *m  );
 	    unsigned long long s = 0;
 	    string dev = "/dev/dm-" + decString(min_num);
-	    if( ppart.getSize( dev, s ))
+	    if (parts.getSize(dev, s))
 		{
 		y2mil( "new dm size:" << s );
 		m->setSize( s );

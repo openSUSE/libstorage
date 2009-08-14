@@ -13,7 +13,7 @@ namespace storage
     using namespace std;
 
 
-ProcMounts::ProcMounts( Storage * const sto )
+    ProcMounts::ProcMounts()
     {
     const map<string, string> by_label = getRevUdevMap("/dev/disk/by-label");
     const map<string, string> by_uuid = getRevUdevMap("/dev/disk/by-uuid");

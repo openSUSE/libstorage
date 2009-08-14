@@ -35,7 +35,7 @@ libstorage_la_SOURCES =					\
 	OutputProcessor.cc	OutputProcessor.h	\
 	Regex.cc		Regex.h			\
 	AsciiFile.cc		AsciiFile.h		\
-	ProcPart.cc		ProcPart.h		\
+	ProcParts.cc		ProcParts.h		\
 	Blkid.cc		Blkid.h			\
 	EtcRaidtab.cc		EtcRaidtab.h		\
 	ProcMounts.cc		ProcMounts.h		\

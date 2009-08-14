@@ -11,7 +11,7 @@
 
 #include "storage/Region.h"
 #include "storage/Partition.h"
-#include "storage/ProcPart.h"
+#include "storage/ProcParts.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
 #include "storage/AsciiFile.h"
@@ -41,9 +41,10 @@ Disk::Disk( Storage * const s, const string& Name,
     y2deb("constructed disk " << dev);
     }
 
+
 Disk::Disk( Storage * const s, const string& Name,
-            unsigned num, unsigned long long SizeK, ProcPart& ppart ) :
-    Container(s,Name,staticType())
+	       unsigned num, unsigned long long SizeK, const ProcParts& parts) 
+	: Container(s, Name, staticType())
     {
     y2mil("constructed disk " << Name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = Name + decString(num);
@@ -56,7 +57,7 @@ Disk::Disk( Storage * const s, const string& Name,
     byte_cyl = head * sector * 512;
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
-    if( ppart.getSize( p->device(), sz ) && sz>0 )
+    if (parts.getSize(p->device(), sz) && sz > 0)
 	{
 	p->setSize( sz );
 	}
@@ -201,10 +202,13 @@ Disk::kbToCylinder( unsigned long long kb ) const
     return (ret);
     }
 
-bool Disk::detect( ProcPart& ppart )
+
+    bool
+    Disk::detect(const ProcParts& parts)
     {
-    return( detectGeometry() && detectPartitions(ppart) );
+	return detectGeometry() && detectPartitions(parts);
     }
+
 
 bool Disk::detectGeometry()
     {
@@ -406,7 +410,9 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     y2mil("c:" << c << " h:" << h << " s:" << s);
     }
 
-bool Disk::detectPartitions( ProcPart& ppart )
+
+    bool
+    Disk::detectPartitions(const ProcParts& parts)
     {
     bool ret = true;
     string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
@@ -437,7 +443,7 @@ bool Disk::detectPartitions( ProcPart& ppart )
     if( dlabel!="loop" )
 	{
 	setLabelData( dlabel );
-	checkPartedOutput( Cmd, ppart );
+	checkPartedOutput(Cmd, parts);
 	if( dlabel.empty() )
 	    {
 	    Cmd.setCombine();
@@ -809,8 +815,9 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     return( nr>0 );
     }
 
+
 bool
-Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
+    Disk::checkPartedOutput(const SystemCmd& Cmd, const ProcParts& parts)
     {
     int cnt;
     string line;
@@ -840,7 +847,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
 		    Partition *p = new Partition( *this, pnr, s,
 						  c_start, c_size, type,
 						  id, boot );
-		    if( ppart.getSize( p->device(), s ))
+		    if (parts.getSize(p->device(), s))
 			{
 			if( s>0 && p->type() != EXTENDED )
 			    p->setSize( s );
@@ -853,7 +860,7 @@ Disk::checkPartedOutput( const SystemCmd& Cmd, ProcPart& ppart )
 	    }
 	}
     y2mil("nm:" << nm);
-    if( !dmp_slave && !checkPartedValid( ppart, nm, pl, range_exceed ) )
+    if (!dmp_slave && !checkPartedValid(parts, nm, pl, range_exceed))
 	{
 	string txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
@@ -899,7 +906,7 @@ _("You have the following options:\n"
 
 
 bool
-Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
+    Disk::checkPartedValid(const ProcParts& parts, const string& diskname,
 		       list<Partition*>& pl, unsigned long& range_exceed) const
 {
     unsigned ext_nr = 0;
@@ -916,14 +923,14 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
-    string reg = "^" + diskname + partNaming(diskname) + "[0-9]+" "$";
-    list<string> ps = pp.getMatchingEntries(regex_matches(reg));
+    string reg = "^" "/dev/" + diskname + partNaming(diskname) + "[0-9]+" "$";
+    list<string> ps = parts.getMatchingEntries(regex_matches(reg));
     y2mil("regex:\"" << reg << "\" ps:" << ps);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
 	pair<string,unsigned> p = getDiskPartition( *i );
 	if( p.second>0 && p.second!=ext_nr &&
-	    pp.getSize(*i, SizeK))
+	    parts.getSize(*i, SizeK))
 	    {
 	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
@@ -972,7 +979,7 @@ Disk::checkPartedValid(const ProcPart& pp, const string& diskname,
 	    unsigned long cyl;
 	    unsigned long long s;
 	    pair<string,unsigned> pr = getDiskPartition( *i );
-	    if( pp.getSize( *i, s ))
+	    if (parts.getSize(*i, s))
 		{
 		cyl = kbToCylinder(s);
 		if( pr.second!=0 && pr.second < range )
@@ -2071,7 +2078,7 @@ Disk::getPartedValues( Partition *p ) const
 	}
     else
 	{
-	ProcPart ppart;
+	ProcParts parts;
 	std::ostringstream cmd_line;
 	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
@@ -2089,7 +2096,7 @@ Disk::getPartedValues( Partition *p ) const
 	    ret = true;
 	    if( !dmp_slave && p->type() != EXTENDED )
 		{
-		if( !ppart.getSize( p->device(), s ) || s==0 )
+		if (!parts.getSize(p->device(), s) || s == 0)
 		    {
 		    y2err("device " << p->device() << " not found in /proc/partitions");
 		    ret = false;

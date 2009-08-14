@@ -6,14 +6,15 @@
 namespace storage
 {
 class LoopCo;
-class ProcPart;
+    class ProcParts;
+
 
 class Loop : public Volume
     {
     public:
 	Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	      bool dmcrypt, const string& dm_dev,
-	      ProcPart& ppart, SystemCmd& losetup );
+	     const ProcParts& parts, SystemCmd& losetup);
 	Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	      unsigned long long sizeK, bool dmcr );
 	Loop( const LoopCo& d, const Loop& rhs );

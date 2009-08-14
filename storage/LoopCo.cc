@@ -18,13 +18,13 @@ namespace storage
     using namespace std;
 
 
-LoopCo::LoopCo(Storage * const s, bool detect, ProcPart& ppart)
+    LoopCo::LoopCo(Storage * const s, bool detect, const ProcParts& parts)
     : Container(s, "loop", staticType())
 {
     y2deb("constructing LoopCo detect:" << detect);
     init();
     if( detect )
-	getLoopData( ppart );
+	    getLoopData(parts);
 }
 
 
@@ -48,8 +48,9 @@ LoopCo::init()
     mjr = Loop::major();
     }
 
+
 void
-LoopCo::getLoopData( ProcPart& ppart )
+    LoopCo::getLoopData(const ProcParts& parts)
     {
     y2mil("begin");
     list<FstabEntry> l;
@@ -73,7 +74,7 @@ LoopCo::getLoopData( ProcPart& ppart )
 		{
 		Loop *l = new Loop( *this, i->loop_dev, lfile,
 				    i->dmcrypt, !i->noauto?i->dentry:"",
-				    ppart, c );
+				       parts, c);
 		l->setEncryption( i->encr );
 		l->setFs( Volume::toFsType(i->fs) );
 		y2mil( "l:" << *l );
@@ -82,7 +83,7 @@ LoopCo::getLoopData( ProcPart& ppart )
 	    }
 	LoopPair p=loopPair(Loop::notDeleted);
 	LoopIter i=p.begin();
-	std::map<string,string> mp = ProcMounts(getStorage()).allMounts();
+	std::map<string, string> mp = ProcMounts().allMounts();
 	while( i!=p.end() )
 	    {
 	    if( i->dmcrypt() )

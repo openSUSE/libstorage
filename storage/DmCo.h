@@ -6,17 +6,18 @@
 
 namespace storage
 {
-class ProcPart;
+    class ProcParts;
+
 
 class DmCo : public PeContainer
     {
     friend class Storage;
 
     public:
-	DmCo(Storage * const s, bool detect, ProcPart& ppart, bool only_crypt);
+	DmCo(Storage * const s, bool detect, const ProcParts& parts, bool only_crypt);
 	DmCo( const DmCo& rhs );
 
-	void second(bool detect, ProcPart& ppart, bool only_crypt);
+	void second(bool detect, const ProcParts& parts, bool only_crypt);
 
 	virtual ~DmCo();
 
@@ -32,7 +33,7 @@ class DmCo : public PeContainer
     protected:
 	DmCo( Storage * const s, const string& File );
 
-	void getDmData(ProcPart& ppart, bool only_crypt);
+	void getDmData(const ProcParts& parts, bool only_crypt);
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 
 	bool findDm( const string& dev, DmIter& i );

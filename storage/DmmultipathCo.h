@@ -10,16 +10,17 @@ namespace storage
 {
 
 class Storage;
-class ProcPart;
+    class ProcParts;
+
 
 class DmmultipathCo : public DmPartCo
     {
     friend class Storage;
 
     public:
-	DmmultipathCo( Storage * const s, const string& Name, ProcPart& ppart );
+	DmmultipathCo(Storage * const s, const string& Name, const ProcParts& parts);
 	DmmultipathCo( Storage * const s, const string& Name, unsigned num,
-		       unsigned long long Size, ProcPart& ppart );
+		      unsigned long long Size, const ProcParts& parts);
 	DmmultipathCo( const DmmultipathCo& rhs );
 	virtual ~DmmultipathCo();
 
