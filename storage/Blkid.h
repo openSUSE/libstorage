@@ -2,6 +2,7 @@
 #define BLKID_H
 
 #include <string>
+#include <list>
 #include <map>
 
 #include "storage/Storage.h"
@@ -9,10 +10,8 @@
 
 namespace storage
 {
+    using std::list;
     using std::map;
-
-
-    class SystemCmd;
 
 
     class Blkid
@@ -38,7 +37,7 @@ namespace storage
 
     protected:
 
-	void parse(SystemCmd& blkid);
+	void parse(const vector<string>& lines);
 
 	typedef map<string, Entry>::const_iterator const_iterator;
 

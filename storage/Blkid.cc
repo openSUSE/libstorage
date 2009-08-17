@@ -15,25 +15,25 @@ namespace storage
     Blkid::Blkid()
     {
 	SystemCmd blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
-	parse(blkid);
+	parse(blkid.stdout());
     }
 
 
     Blkid::Blkid(const string& device)
     {
 	SystemCmd blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null " + quote(device));
-	parse(blkid);
+	parse(blkid.stdout());
     }
 
 
     void
-    Blkid::parse(SystemCmd& blkid)
+    Blkid::parse(const vector<string>& lines)
     {
 	data.clear();
 
-	for (unsigned int i = 0; i < blkid.numLines(false); ++i)
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    list<string> l = splitString(blkid.getLine(i, false), " \t\n", true, true, "\"");
+	    list<string> l = splitString(*it, " \t\n", true, true, "\"");
 
 	    if (l.empty())
 		continue;
@@ -100,7 +100,6 @@ namespace storage
     Blkid::getEntry(const string& device, Entry& entry) const
     {
 	const_iterator i = data.find(device);
-
 	if (i == data.end())
 	    return false;
 
