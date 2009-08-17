@@ -279,8 +279,8 @@ bool Disk::detectGeometry()
 	sysfsfile = sysfsdir + "/device";
 	if (!readlink(sysfsfile, sysfsinfo.device))
 	{
-	    y2war("reading " << sysfsfile << " failed");
-	    return false;
+	    // not always available so no error
+	    sysfsinfo.device.clear();
 	}
 
 	sysfsfile = sysfsdir + "/range";
