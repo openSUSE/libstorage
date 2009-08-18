@@ -757,7 +757,11 @@ void
 	    i->getFstabData( *fstab );
 	    y2mil( "detect:" << *i );
 	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )
-		i->getStartData();
+		{
+		    Blkid::Entry entry;
+		    if (blkid.getEntry(i->dev, entry) && entry.luks)
+			i->setEncryption(ENC_LUKS);
+		}
 	    }
 	}
     y2mil("detectFsData end");

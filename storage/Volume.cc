@@ -293,19 +293,6 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	}
     }
 
-void Volume::getStartData()
-    {
-    if( fs==FSUNKNOWN && encryption==ENC_NONE )
-	{
-	char buf[10];
-	ifstream file( dev.c_str() );
-	classic(file);
-	file.read( buf, sizeof(buf) );
-	if( file.good() && strncmp( buf, "LUKS", 4 )==0 )
-	    setEncryption( ENC_LUKS );
-	file.close();
-	}
-    }
 
 void Volume::getMountData( const ProcMounts& mounts, bool swap_only )
     {

@@ -208,7 +208,6 @@ class Volume
 	void getLoopData( SystemCmd& loopData );
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );
-	void getStartData();
 	void getTestmodeData( const string& data );
 	void replaceAltName( const string& prefix, const string& newn );
 	string getMountByString( storage::MountByType mby, const string& dev,
