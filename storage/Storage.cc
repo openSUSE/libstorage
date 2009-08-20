@@ -41,9 +41,9 @@ namespace storage
     using namespace std;
 
 
-void
-Storage::initDefaultLogger ()
-{
+    void
+    initDefaultLogger()
+    {
     string path;
     string file;
     if (geteuid ())
@@ -66,8 +66,8 @@ Storage::initDefaultLogger ()
 	file = "y2log";
     }
 
-    storage::createLogger("default", path, file);
-}
+	createLogger("default", path, file);
+    }
 
 
 Storage::Storage(const Environment& env)
@@ -942,11 +942,6 @@ string Storage::proc_arch;
 bool Storage::is_ppc_mac = false;
 bool Storage::is_ppc_pegasos = false;
 
-
-    void initDefaultLogger ()
-    {
-	Storage::initDefaultLogger ();
-    }
 
     StorageInterface* createStorageInterface(const Environment& env)
     {

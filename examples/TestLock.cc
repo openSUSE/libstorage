@@ -95,7 +95,7 @@ main(int argc, char** argv)
 	usage();
     }
 
-    Storage::initDefaultLogger();
+    initDefaultLogger();
 
     cout << "pid is " << getpid() << endl;
 

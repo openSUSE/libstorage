@@ -215,8 +215,6 @@ class DiskData;
 	static bool isDmPart( const Container&d )
 	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
 
-	static void initDefaultLogger ();
-
 	Storage(const Environment& env);
 
 	bool readonly() const { return env.readonly; }
