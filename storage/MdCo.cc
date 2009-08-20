@@ -553,6 +553,9 @@ int MdCo::removeVolume( Volume* v )
 
 void MdCo::activate( bool val, const string& tmpDir )
     {
+	if (getenv("LIBSTORAGE_NO_MDRAID") != NULL)
+	    return;
+
     y2mil("old active:" << active << " val:" << val << " tmp:" << tmpDir);
     if( active!=val )
 	{

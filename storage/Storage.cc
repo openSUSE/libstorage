@@ -226,17 +226,18 @@ void Storage::dumpObjectList()
 
 void Storage::detectObjects()
 {
+	if (instsys())
+	{
+	    DmraidCo::activate(true);
+	    MdCo::activate(true, tmpDir());
+	    LvmVg::activate(true);
+	}
+
     danglingUsedBy.clear();
 
     ProcParts parts;
+
     detectDisks(parts);
-    if( instsys() )
-	{
-	DmraidCo::activate( true );
-	MdCo::activate( true, tmpDir() );
-	LvmVg::activate( true );
-	parts.reload();
-	}
     detectDmraid(parts);
     detectDmmultipath(parts);
     detectMds();
@@ -397,7 +398,7 @@ void Storage::detectMds()
 	    addToList( new MdCo( this, file ) );
 	    }
 	}
-    else if (autodetect() && getenv("LIBSTORAGE_NO_MD") == NULL)
+    else if (autodetect() && getenv("LIBSTORAGE_NO_MDRAID") == NULL)
 	{
 	MdCo * v = new MdCo( this, true );
 	if( !v->isEmpty() )

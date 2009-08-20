@@ -109,6 +109,9 @@ void DmraidCo::addPv( Pv*& p )
 
 void DmraidCo::activate( bool val )
     {
+	if (getenv("LIBSTORAGE_NO_DMRAID") != NULL)
+	    return;
+
     y2mil("old active:" << active << " val:" << val);
     if( active != val )
 	{

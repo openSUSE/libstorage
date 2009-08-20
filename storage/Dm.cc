@@ -436,6 +436,9 @@ string Dm::formatText( bool doing ) const
 
 void Dm::activate( bool val )
     {
+	if (getenv("LIBSTORAGE_NO_DM") != NULL)
+	    return;
+
     y2mil("old active:" << active << " val:" << val);
     if( active!=val )
 	{

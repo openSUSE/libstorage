@@ -483,8 +483,10 @@ class DiskData;
 
         int commit();
 	void handleHald( bool stop );
-	void activateHld( bool val=true );
-	void activateMultipath( bool val=true );
+
+	void activateHld(bool val = true);
+	void activateMultipath(bool val = true);
+
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
 	bool removeDmTable( const string& table );

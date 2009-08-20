@@ -1108,6 +1108,9 @@ LvmVg::init()
 void
 LvmVg::activate(bool val)
 {
+	if (getenv("LIBSTORAGE_NO_LVM") != NULL)
+	    return;
+
     y2mil("old active:" << active << " val:" << val);
 
     if (active != val)

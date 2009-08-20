@@ -55,7 +55,7 @@ class LvmVg : public PeContainer
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& rhs ) const;
 
-	static void activate( bool val=true );
+	static void activate(bool val);
 	static bool isActive() { return active; }
 
 	static void getVgs( std::list<string>& l );

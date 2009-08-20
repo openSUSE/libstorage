@@ -85,7 +85,7 @@ class DmraidCo : public DmPartCo
 	DmraidCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }
-	static void activate( bool val );
+	static void activate(bool val);
 	void getRaidData( const string& name );
 	void addRaid( const string& name );
 	void addPv( Pv*& p );

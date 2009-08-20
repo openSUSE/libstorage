@@ -125,6 +125,9 @@ DmmultipathCo::addPv(Pv*& p)
 void
 DmmultipathCo::activate(bool val)
 {
+	if (getenv("LIBSTORAGE_NO_DMMULTIPATH") != NULL)
+	    return;
+
     y2mil("old active:" << active << " val:" << val);
 
     if (active != val)

@@ -38,7 +38,7 @@ class MdCo : public Container
 	void syncRaidtab();
 	void changeDeviceName( const string& old, const string& nw );
 
-	static void activate( bool val, const string& tmpDir  );
+	static void activate(bool val, const string& tmpDir);
 	int removeVolume( Volume* v );
 	
     protected:
