@@ -2,7 +2,6 @@
 #define BLKID_H
 
 #include <string>
-#include <list>
 #include <map>
 
 #include "storage/Storage.h"
@@ -10,7 +9,6 @@
 
 namespace storage
 {
-    using std::list;
     using std::map;
 
 
