@@ -15,6 +15,15 @@ namespace storage
 
     ProcMounts::ProcMounts()
     {
+	reload();
+    }
+    
+
+    void
+    ProcMounts::reload()
+    {
+	data.clear();
+
     const map<string, string> by_label = getRevUdevMap("/dev/disk/by-label");
     const map<string, string> by_uuid = getRevUdevMap("/dev/disk/by-uuid");
 

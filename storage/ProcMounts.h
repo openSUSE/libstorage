@@ -22,6 +22,8 @@ namespace storage
 
 	ProcMounts();
 
+	void reload();
+
 	string getMount(const string& device) const;
 	string getMount(const list<string>& devices) const;
 
