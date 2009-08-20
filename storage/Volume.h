@@ -215,7 +215,7 @@ class Volume
 				 const string& label ) const;
 	string getFstabDevice() const;
 	string getFstabDentry() const;
-	void getFstabOpts(list<string>& ol) const;
+	list<string> getFstabOpts() const;
 	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
 	string getDmcryptName() const;
@@ -278,10 +278,10 @@ class Volume
 	unsigned long mjr;
 	storage::usedBy uby;
 
-	static string fs_names[storage::FSNONE+1];
-	static string mb_names[storage::MOUNTBY_PATH+1];
-	static string enc_names[storage::ENC_UNKNOWN+1];
-	static string tmp_mount[3];
+	static const string fs_names[storage::FSNONE+1];
+	static const string mb_names[storage::MOUNTBY_PATH+1];
+	static const string enc_names[storage::ENC_UNKNOWN+1];
+	static const string tmp_mount[3];
 
 	static const string empty_string;
 	static const std::list<string> empty_slist;

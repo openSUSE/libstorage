@@ -544,12 +544,13 @@ Volume::changeMountBy(MountByType mby)
 }
 
 
-void Volume::updateFstabOptions()
+    void
+    Volume::updateFstabOptions()
     {
-    list<string> l;
-    getFstabOpts( l );
-    fstab_opt = boost::join( l, "," );
+	list<string> l = getFstabOpts();
+	fstab_opt = boost::join(l, ",");
     }
+
 
 int Volume::changeFstabOptions( const string& options )
     {
@@ -2275,13 +2276,14 @@ string Volume::getFstabDentry() const
     return( ret );
     }
 
-void Volume::getFstabOpts(list<string>& l) const
+
+    list<string>
+    Volume::getFstabOpts() const
     {
+	list<string> l;
+	
     if( fstab_opt.empty() )
-	{
-	l.clear();
 	l.push_back( (is_loop&&!dmcrypt())?"noatime":"defaults" );
-	}
     else
 	l = splitString( fstab_opt, "," );
     list<string>::iterator loop = find( l.begin(), l.end(), "loop" );
@@ -2310,7 +2312,10 @@ void Volume::getFstabOpts(list<string>& l) const
 	l.push_front( lstr );
     if( l.size()>1 && (enc=find( l.begin(), l.end(), "defaults" ))!=l.end() )
 	l.erase(enc);
+
+        return l;
     }
+
 
 bool Volume::getLoopFile( string& fname ) const
     {
@@ -2381,7 +2386,7 @@ int Volume::doFstabUpdate()
 		if( fstab_opt!=orig_fstab_opt )
 		    {
 		    changed = true;
-		    getFstabOpts( che.opts );
+		    che.opts = getFstabOpts();
 		    if( encryption!=ENC_NONE )
 			che.dentry = de;
 		    }
@@ -2451,7 +2456,7 @@ int Volume::doFstabUpdate()
 		    che.loop_dev = fstab_loop_dev;
 		    }
 		che.fs = fs_names[fs];
-		getFstabOpts( che.opts );
+		che.opts = getFstabOpts();
 		che.mount = mp;
 		if( fs != NFS && fs != SWAP && fs != FSUNKNOWN && fs != NTFS &&
 		    fs != VFAT && !is_loop && !dmcrypt() && !optNoauto() )
@@ -3059,24 +3064,27 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
     *this = rhs;
     }
 
-bool Volume::isTmpCryptMp( const string& mp )
+
+    bool
+    Volume::isTmpCryptMp(const string& mp)
     {
-    string *end = tmp_mount + lengthof(tmp_mount);
-    y2mil( "lengthof(tmp_mount):" << lengthof(tmp_mount) );
-    y2mil( "find mp:" << mp << " is:" << (find( tmp_mount, end, mp )!=end) );
-    return( find( tmp_mount, end, mp )!=end );
+	const string* end = tmp_mount + lengthof(tmp_mount);
+	bool ret = find(tmp_mount, end, mp) != end;
+	y2mil("find mp:" << mp << " ret:" << ret);
+	return ret;
     }
 
-string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
-			      "vfat", "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", 
-			      "nfs", "none" };
 
-string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
+    const string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
+					"vfat", "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", 
+					"nfs", "none" };
 
-string Volume::enc_names[] = { "none", "twofish256", "twofish",
-                               "twofishSL92", "luks", "unknown" };
+    const string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 
-string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
+    const string Volume::enc_names[] = { "none", "twofish256", "twofish",
+					 "twofishSL92", "luks", "unknown" };
+
+    const string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
 
 const string Volume::empty_string;
 const list<string> Volume::empty_slist;
