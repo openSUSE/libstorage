@@ -26,7 +26,7 @@ namespace storage
 
 DmraidCo::~DmraidCo()
 {
-    y2deb("destructed raid co " << dev);
+    y2deb("destructed dmraid co " << dev);
 }
 
 
