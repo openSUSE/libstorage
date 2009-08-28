@@ -1497,7 +1497,7 @@ namespace storage
 	 *
 	 * @return value for efi boot
 	 */
-	virtual bool getEfiBoot() const = 0;
+	virtual bool getEfiBoot() = 0;
 
 	/**
 	 * Set value for root prefix.

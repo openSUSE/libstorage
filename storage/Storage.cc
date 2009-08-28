@@ -178,6 +178,7 @@ Storage::initialize()
 	detectArch();
 	efiboot = (arch() == "ia64");
 	}
+
     if (testmode())
 	{
 	const char* tenv = getenv("LIBSTORAGE_TESTDIR");
@@ -190,6 +191,7 @@ Storage::initialize()
 	    testdir = logdir;
 	    }
 	}
+
     y2mil("logdir:" << logdir << " testdir:" << testdir);
     detectObjects();
     setCacheChanges( true );
@@ -911,11 +913,22 @@ void Storage::setDefaultFs(FsType val)
 }
 
 
-void Storage::setEfiBoot(bool val)
-{
-    y2mil("val:" << val);
-    efiboot = val;
-}
+    void
+    Storage::setEfiBoot(bool val)
+    {
+	assertInit();
+	y2mil("val:" << val);
+	efiboot = val;
+    }
+
+
+    bool
+    Storage::getEfiBoot()
+    {
+	assertInit();
+	return efiboot;
+    }
+
 
 void Storage::setRootPrefix(const string& root)
 {
