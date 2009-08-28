@@ -70,11 +70,18 @@ namespace storage
     }
 
 
+    std::ostream& operator<<(std::ostream& s, const Environment& env)
+    {
+	return s << "readonly:" << env.readonly << " testmode:" << env.testmode 
+		 << " autodetect:" << env.autodetect << " instsys:" << env.instsys
+		 << " logdir:" << env.logdir << " testdir:" << env.testdir;
+    }
+
+
 Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), initialized(false), fstab(NULL)
 {
-    y2mil("constructed Storage with readonly:" << readonly() << " testmode:" << testmode() 
-	  << " autodetect:" << autodetect() << " instsys:" << instsys());
+    y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
 
     root_mounted = !instsys();
@@ -86,8 +93,6 @@ Storage::Storage(const Environment& env)
     if( tenv!=0 )
 	string(tenv) >> max_log_num;
     y2mil("max_log_num:" << max_log_num);
-
-    logdir = "/var/log/YaST2";
 
     progress_bar_cb = NULL;
     install_info_cb = NULL;
@@ -179,20 +184,6 @@ Storage::initialize()
 	efiboot = (arch() == "ia64");
 	}
 
-    if (testmode())
-	{
-	const char* tenv = getenv("LIBSTORAGE_TESTDIR");
-	if( tenv!=NULL && strlen(tenv)>0 )
-	    {
-	    logdir = testdir = tenv;
-	    }
-	else
-	    {
-	    testdir = logdir;
-	    }
-	}
-
-    y2mil("logdir:" << logdir << " testdir:" << testdir);
     detectObjects();
     setCacheChanges( true );
     dumpObjectList();
@@ -258,10 +249,10 @@ void Storage::detectObjects()
     if (testmode())
         {
 	SystemCmd::setTestmode();
- 	rootprefix = testdir;
+ 	rootprefix = testdir();
 	delete fstab;
  	fstab = new EtcFstab( rootprefix );
-	string t = testdir+"/volume_info";
+	string t = testdir() + "/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
 	    {
 	    detectFsDataTestMode( t, vBegin(), vEnd() );
@@ -277,7 +268,7 @@ void Storage::detectObjects()
 	if( !instsys() )
 	    detectNfs(*fstab, mounts);
 	detectFsData(vBegin(), vEnd(), mounts, blkid);
-	logContainersAndVolumes(logdir);
+	logContainersAndVolumes(logdir());
 	}
 
     if( instsys() )
@@ -301,7 +292,7 @@ void Storage::deleteBackups()
 
 Storage::~Storage()
     {
-    logContainersAndVolumes(logdir);
+	logContainersAndVolumes(logdir());
     clearPointerList(cont);
     deleteBackups();
     if (!tempdir.empty() && rmdir(tempdir.c_str()) != 0)
@@ -376,7 +367,7 @@ void
     if (testmode())
 	{
 	glob_t globbuf;
-	if( glob( (testdir+"/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new Disk( this, *p ) );
@@ -394,7 +385,7 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	string file = testdir+"/md";
+	    string file = testdir() + "/md";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
 	    addToList( new MdCo( this, file ) );
@@ -415,7 +406,7 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	string file = testdir+"/loop";
+	    string file = testdir() + "/loop";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
 	    addToList( new LoopCo( this, file ) );
@@ -437,7 +428,7 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	string file = testdir+"/nfs";
+	    string file = testdir() + "/nfs";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
 	    addToList( new NfsCo( this, file ) );
@@ -459,7 +450,7 @@ Storage::detectLvmVgs()
     if (testmode())
 	{
 	glob_t globbuf;
-	if( glob( (testdir+"/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList( new LvmVg( this, *p, true ) );
@@ -495,7 +486,7 @@ void
     if (testmode())
     {
 	glob_t globbuf;
-	if( glob( (testdir+"/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -536,7 +527,7 @@ void
     if (testmode())
     {
 	glob_t globbuf;
-	if( glob( (testdir+"/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -577,8 +568,7 @@ void
     if (testmode())
 	{
 	glob_t globbuf;
-	if( glob( (testdir+"/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0,
-	          &globbuf) == 0)
+	if (glob((testdir() + "/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    // TODO: load test data
 	    }

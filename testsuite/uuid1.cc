@@ -78,7 +78,6 @@ int
 main (int argc, char* argv[])
 {
     system ("mkdir -p tmp");
-    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     system ("rm -f tmp/fstab tmp/volume_info");
     system ("cp data/disk_hdb tmp/disk_hdb");

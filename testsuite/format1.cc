@@ -82,7 +82,6 @@ int
 main ()
 {
     system ("mkdir -p tmp");
-    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     system ("cp data/disk_hda tmp/disk_hda");
     system ("rm -f tmp/volume_info");

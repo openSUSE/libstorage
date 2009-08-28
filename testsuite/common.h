@@ -11,6 +11,7 @@ namespace storage
 	{
 	    testmode = true;
 	    autodetect = false;
+	    logdir = testdir = "tmp";
 	}
     };
 

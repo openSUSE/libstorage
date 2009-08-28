@@ -95,7 +95,6 @@ int
 main ()
 {
     system ("mkdir -p tmp");
-    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions

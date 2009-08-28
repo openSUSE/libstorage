@@ -2213,12 +2213,14 @@ namespace storage
     struct Environment
     {
 	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true),
-	    instsys(false) {}
+	    instsys(false), logdir("/var/log/YaST2"), testdir("") {}
 
 	bool readonly;
 	bool testmode;
 	bool autodetect;
 	bool instsys;
+	string logdir;
+	string testdir;
     };
 
 

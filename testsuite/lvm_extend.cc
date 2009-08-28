@@ -65,7 +65,6 @@ void extendVg( const string& vg, deque<string> devs_extend )
 int main( int argc_iv, char** argv_ppcv )
 {
     system ("mkdir -p tmp");
-    setenv("LIBSTORAGE_TESTDIR", "tmp", 1);
 
     system ("rm -rf tmp/*");
 

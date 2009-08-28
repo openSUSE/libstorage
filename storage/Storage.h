@@ -221,13 +221,14 @@ class DiskData;
 	bool testmode() const { return env.testmode; }
 	bool autodetect() const { return env.autodetect; }
 	bool instsys() const { return env.instsys; }
+	string logdir() const { return env.logdir; }
+	string testdir() const { return env.testdir; }
 
 	void setCacheChanges( bool val=true ) { cache = val; }
 	bool isCacheChanges() const { return( cache ); }
 	void assertInit() { if( !initialized ) initialize(); }
 	void rescanEverything();
 	int checkCache();
-	const string& tDir() const { return( testdir ); }
 	const string& root() const { return( rootprefix ); }
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const { return tempdir; }
@@ -1721,10 +1722,8 @@ class DiskData;
 	FsType defaultFs;
 	bool detectMounted;
 	bool root_mounted;
-	string testdir;
 	string tempdir;
 	string rootprefix;
-	string logdir;
 	unsigned hald_pid;
 	bool efiboot;
 	static string proc_arch;
