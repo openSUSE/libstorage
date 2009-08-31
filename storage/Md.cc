@@ -687,10 +687,12 @@ Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
     *this = rhs;
     }
 
-string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
-                          "raid10", "multipath" };
-string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
-                           "right-asymmetric", "right-symmetric" };
+
+    const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
+				    "raid10", "multipath" };
+    const string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
+				     "right-asymmetric", "right-symmetric" };
+
 unsigned Md::md_major = 0;
 
 }
