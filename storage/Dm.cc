@@ -620,7 +620,8 @@ Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
 
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;
-static const char* elem[] = { "crypt" };
-list<string> Dm::known_types( elem, elem+lengthof(elem) );
+
+    static const char* elem[] = { "crypt" };
+    const list<string> Dm::known_types(elem, elem + lengthof(elem));
 
 }

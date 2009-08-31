@@ -79,7 +79,8 @@ class Dm : public Volume
 	std::map<string,unsigned long> pe_map;
 	static bool active;
 	static unsigned dm_major;
-	static std::list<string> known_types;
+
+	static const list<string> known_types;
 
 	mutable storage::DmInfo info; // workaround for broken ycp bindings
     };
