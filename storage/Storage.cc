@@ -312,6 +312,16 @@ void Storage::rescanEverything()
     }
 
 
+    string
+    Storage::bootMount() const
+    {
+	if (efiBoot())
+	    return "/boot/efi";
+	else
+	    return "/boot";
+    }
+
+
 void
 Storage::detectArch()
     {

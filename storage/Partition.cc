@@ -387,7 +387,7 @@ string Partition::createText( bool doing ) const
 	    txt = sformat( _("Create root partition %1$s (%2$s) with %3$s"),
 	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
 	    }
-	else if( mp==bootMount() )
+	else if (mp == getContainer()->getStorage()->bootMount())
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)

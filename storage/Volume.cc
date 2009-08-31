@@ -2562,13 +2562,6 @@ bool Volume::canUseDevice() const
     return( ret );
     }
 
-string Volume::bootMount() const
-    {
-    if( Storage::arch()=="ia64" )
-	return( "/boot/efi" );
-    else
-	return( "/boot" );
-    }
 
 bool Volume::needRemount() const
     {

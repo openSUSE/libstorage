@@ -163,7 +163,6 @@ class Volume
 	string crsetupText( bool doing=true ) const;
 	string fstabUpdateText() const;
 	string sizeString() const;
-	string bootMount() const;
 	bool optNoauto() const;
 	bool inCryptotab() const { return( encryption!=ENC_NONE && 
 	                                   encryption!=ENC_LUKS && 
