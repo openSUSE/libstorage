@@ -30,19 +30,12 @@ Container::~Container()
     y2deb("destructed cont " << dev);
     }
 
-static bool notDeleted( const Volume& v )
-    { return( !v.deleted()); }
 
-unsigned Container::numVolumes() const
+    bool
+    Container::isEmpty() const
     {
-    ConstVolPair p = volPair( notDeleted );
-    return( p.length() );
-    }
-
-bool Container::isEmpty() const
-    {
-    ConstVolPair p = volPair( notDeleted );
-    return( p.empty() );
+	ConstVolPair p = volPair(Volume::notDeleted);
+	return p.empty();
     }
 
 
