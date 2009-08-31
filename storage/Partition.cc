@@ -692,6 +692,6 @@ Partition::Partition( const Disk& d, const Partition& rhs ) : Volume(d)
     *this = rhs;
     }
 
-string Partition::pt_names[] = { "primary", "extended", "logical", "any" };
+    const string Partition::pt_names[] = { "primary", "extended", "logical", "any" };
 
 }
