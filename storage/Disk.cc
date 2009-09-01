@@ -1043,7 +1043,7 @@ Disk::defaultLabel(bool efiboot, unsigned long long size_k)
     return ret;
 }
 
-Disk::label_info Disk::labels[] = {
+const Disk::label_info Disk::labels[] = {
 	{ "msdos", true, 4, 63, 2*TB },
 	{ "gpt", false, 128, 0, 16*PB },
 	{ "bsd", false, 8, 0, 2*TB },
@@ -1059,7 +1059,7 @@ Disk::label_info Disk::labels[] = {
 #undef PB
 
 
-    string Disk::p_disks [] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+" };
+    const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+" };
 
 
     bool

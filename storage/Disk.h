@@ -218,8 +218,9 @@ class Disk : public Container
 	void setLabelData( const string& );
 
 	static string defaultLabel(bool efiboot, unsigned long long size_k);
-	static label_info labels[];
-	static string p_disks[];
+
+	static const label_info labels[];
+	static const string p_disks[];
 
 	unsigned long cyl;
 	unsigned head;
