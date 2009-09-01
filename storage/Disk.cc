@@ -217,11 +217,15 @@ bool Disk::detectGeometry()
     int fd = open( device().c_str(), O_RDONLY );
     if( fd >= 0 )
 	{
+	    int sector_size = 512;
+	    int rcode = ioctl(fd, BLKSSZGET, &sector_size);
+	    y2mil("BLKSSZGET ret:" << rcode << " sector_size:" << sector_size);
+
 	head = 255;
 	sector = 63;
 	cyl = 16;
 	struct hd_geometry geometry;
-	int rcode = ioctl( fd, HDIO_GETGEO, &geometry );
+	rcode = ioctl(fd, HDIO_GETGEO, &geometry);
 	if( rcode==0 )
 	    {
 	    head = geometry.heads>0?geometry.heads:head;
@@ -255,7 +259,7 @@ bool Disk::detectGeometry()
 	}
     byte_cyl = head * sector * 512;
     y2mil("ret:" << ret << " byte_cyl:" << byte_cyl);
-    return( ret );
+    return ret;
     }
 
 
