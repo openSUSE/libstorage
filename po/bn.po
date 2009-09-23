@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-06 10:15+0200\n"
+"POT-Creation-Date: 2009-09-16 14:22+0200\n"
 "PO-Revision-Date: 2004-08-09 10:24+0200\n"
 "Last-Translator: xxx <yyy@example.org>\n"
 "Language-Team: Bengali <i18n@suse.de>\n"
@@ -18,20 +18,20 @@ msgstr ""
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:181 ../storage/Dmraid.cc:181
 #: ../storage/LvmLv.cc:279 ../storage/Partition.cc:531
-#: ../storage/Volume.cc:2670
+#: ../storage/Volume.cc:2618
 msgid "(progress bar might not move)"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:812
+#: ../storage/EtcFstab.cc:842
 #, fuzzy, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr " মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলি থেকে %2$-গুলিতে যুক্ত করুন"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:805
+#: ../storage/EtcFstab.cc:835
 #, fuzzy, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr " মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলি থেকে %2$-গুলিতে যুক্ত করছে "
@@ -49,25 +49,25 @@ msgstr "BIOS"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1061
+#: ../storage/Volume.cc:998
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1$s-এর মাউন্ট পয়েন্ট %2$s-এ পরিবর্তিত করুন"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1989
+#: ../storage/Volume.cc:1930
 #, fuzzy, c-format
 msgid "Clear label on %1$s"
 msgstr " %2$গুলি থেকে %1$গুলিতে লেবেল স্থাপন করুন "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1975
+#: ../storage/Volume.cc:1916
 #, fuzzy, c-format
 msgid "Clearing label on %1$s"
 msgstr "%1$s  থেকে %2$s-এ লেবেল স্থির করছে"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:199 ../storage/Volume.cc:2650
+#: ../storage/Container.cc:190 ../storage/Volume.cc:2598
 #, fuzzy, c-format
 msgid "Create %1$s"
 msgstr "%1$গুলি সৃষ্টি করুন "
@@ -318,13 +318,13 @@ msgstr "সোয়াপ পার্টিশান %1$গুলি (%2$গু�
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1057
+#: ../storage/LvmVg.cc:1049
 #, c-format
 msgid "Create volume group %1$s from %2$s"
 msgstr "%2$s থেকে ভলিউম গ্রুপ %1$s সৃষ্টি করুন"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:194 ../storage/Volume.cc:2645
+#: ../storage/Container.cc:185 ../storage/Volume.cc:2593
 #, fuzzy, c-format
 msgid "Creating %1$s"
 msgstr "%1$গুলি সৃষ্টি করছে"
@@ -369,7 +369,7 @@ msgstr " সফটওয়্যার RAID  %1$গুলি সৃষ্টি �
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1050
+#: ../storage/LvmVg.cc:1042
 #, c-format
 msgid "Creating volume group %1$s from %2$s"
 msgstr "%2$s থেকে ভলিউম গ্রুপ %1$s সৃষ্টি করছে"
@@ -478,32 +478,32 @@ msgid "Deleting software RAID %1$s"
 msgstr " সফটওয়্যার RAID  %1$গুলি মুছে ফেলছে"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:467
+#: ../storage/Dasd.cc:468
 #, fuzzy, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgstr " ডিস্ক  %1$-গুলির জন্য dasdfmt সঞ্চালন করছে "
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda),
-#: ../storage/Dasd.cc:447
+#: ../storage/Dasd.cc:448
 #, fuzzy, c-format
 msgid "Executing dasdfmt for disk %1$s..."
 msgstr " ডিস্ক  %1$-গুলির জন্য dasdfmt সঞ্চালন করছে …"
 
 #. displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
-#: ../storage/Dasd.cc:452
+#: ../storage/Dasd.cc:453
 #, fuzzy, c-format
 msgid "Executing dasdfmt for disks: %1$s..."
 msgstr " ডিস্ক  %1$-গুলির জন্য dasdfmt সঞ্চালন করছে …"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:355
+#: ../storage/Dasd.cc:356
 #, fuzzy, c-format
 msgid "Executing fdasd for disk %1$s..."
 msgstr "ডিস্ক  %1$-গুলির জন্য fdasd সঞ্চালন করছে…"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2681
+#: ../storage/Volume.cc:2629
 #, fuzzy, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%2$গুলিতে %1$গুলি প্রসারিত করুন "
@@ -545,14 +545,14 @@ msgstr "উইন্ডোস-এর পার্টিশান %1$s থেক�
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1078
+#: ../storage/LvmVg.cc:1070
 #, fuzzy, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr " %2$গুলির সঙ্গে ভলিউম গ্রুপ %1$গুলি প্রসারিত করুন "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2668
+#: ../storage/Volume.cc:2616
 #, fuzzy, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "  %2$গুলিতে %1$গুলি প্রসারিত করছে"
@@ -587,7 +587,7 @@ msgstr "পার্টিশান %1$s থেকে %2$s-এ প্রসা�
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1071
+#: ../storage/LvmVg.cc:1063
 #, fuzzy, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr " %2$গুলির সঙ্গে ভলিউম গ্রুপ %1$গুলি প্রসারিত করছে "
@@ -596,7 +596,7 @@ msgstr " %2$গুলির সঙ্গে ভলিউম গ্রুপ %1$�
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:663
+#: ../storage/Volume.cc:594
 #, fuzzy, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "%4$ গুলির জন্য %3$ গুলির সঙ্গে ডিভাইস %1$গুলি (%2$গুলি) ফরম্যাট করুন"
@@ -604,7 +604,7 @@ msgstr "%4$ গুলির জন্য %3$ গুলির সঙ্গে ড
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:683
+#: ../storage/Volume.cc:614
 #, fuzzy, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "%3$ গুলির সঙ্গে ফরম্যাট ডিভাইস %1$গুলি (%2$গুলি)"
@@ -630,7 +630,7 @@ msgstr " ডিভাইস ম্যাপার ভলিউম %1$(%2$গু�
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:673
+#: ../storage/Volume.cc:604
 #, fuzzy, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "%4$ গুলির জন্য %3$ গুলির সঙ্গে এনক্রিপটেড ডিভাইস %1$গুলি (%2$গুলি) ফরম্যাট করুন"
@@ -834,7 +834,7 @@ msgstr "%3$ গুলির সঙ্গে সফটওয়্যার RAID %1$
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:650
+#: ../storage/Volume.cc:581
 #, fuzzy, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s "
 msgstr "%3$ গুলির সঙ্গে ডিভাইস %1$গুলি (%2$গুলি) ফরম্যাট করছে "
@@ -949,7 +949,7 @@ msgstr "মাউন্ট পয়েন্ট"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1046
+#: ../storage/Volume.cc:983
 #, fuzzy, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1$গুলিকে %2$গুলিতে মাউন্টিং করছে"
@@ -987,14 +987,14 @@ msgstr " &RAID… "
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1099
+#: ../storage/LvmVg.cc:1091
 #, fuzzy, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr " %2$গুলির দ্বারা ভলিউম গ্রুপ %1$গুলি হ্রাস করুন "
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1092
+#: ../storage/LvmVg.cc:1084
 #, fuzzy, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr " %2$গুলির দ্বারা ভলিউম গ্রুপ %1$গুলি হ্রাস করছে "
@@ -1002,40 +1002,40 @@ msgstr " %2$গুলির দ্বারা ভলিউম গ্রুপ %
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:215 ../storage/DmPartCo.cc:911
-#: ../storage/Volume.cc:2697
+#: ../storage/Container.cc:206 ../storage/DmPartCo.cc:916
+#: ../storage/Volume.cc:2645
 #, fuzzy, c-format
 msgid "Remove %1$s"
 msgstr "%1$গুলি অপসারণ করুন "
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1089
+#: ../storage/Volume.cc:1026
 #, fuzzy, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%1$গুলিকে %2$গুলি থেকে অপসারণ করুন"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:854
+#: ../storage/EtcFstab.cc:884
 #, fuzzy, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr " %2$-গুলি থেকে মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলিকে অপসারণ করুন "
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:45
+#: ../storage/Nfs.cc:44
 #, c-format
 msgid "Remove nfs volume %1$s"
 msgstr "nfs ভলিউম %1$s অপসারণ করুন"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:163
+#: ../storage/DmraidCo.cc:166
 #, fuzzy, c-format
 msgid "Remove raid %1$s"
 msgstr "%1$গুলি অপসারণ করুন "
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1037
+#: ../storage/LvmVg.cc:1029
 #, fuzzy, c-format
 msgid "Remove volume group %1$s"
 msgstr " ভলিউম গ্রুপ %1$-গুলিকে অপসারণ করুন "
@@ -1043,75 +1043,75 @@ msgstr " ভলিউম গ্রুপ %1$-গুলিকে অপসার�
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:210 ../storage/DmPartCo.cc:906
-#: ../storage/Volume.cc:2692
+#: ../storage/Container.cc:201 ../storage/DmPartCo.cc:911
+#: ../storage/Volume.cc:2640
 #, fuzzy, c-format
 msgid "Removing %1$s"
 msgstr "%1$গুলি অপসারণ করছে"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:847
+#: ../storage/EtcFstab.cc:877
 #, fuzzy, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr " %2$-গুলি থেকে মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলিকে অপসারণ করছে "
 
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:40
+#: ../storage/Nfs.cc:39
 #, c-format
 msgid "Removing nfs volume %1$s"
 msgstr "nfs ভলিউম %1$s অপসারণ করছে"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:158
+#: ../storage/DmraidCo.cc:161
 #, fuzzy, c-format
 msgid "Removing raid %1$s"
 msgstr "%1$গুলি অপসারণ করছে"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1032
+#: ../storage/LvmVg.cc:1024
 #, fuzzy, c-format
 msgid "Removing volume group %1$s"
 msgstr " ভলিউম গ্রুপ %1$-গুলিকে অপসারণ করছে "
 
 #. displayed text before action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:894
+#: ../storage/DmPartCo.cc:899
 #, fuzzy, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr " ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করুন "
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1834
+#: ../storage/Disk.cc:1888
 #, fuzzy, c-format
 msgid "Set disk label of disk %1$s to %2$s"
 msgstr " ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করুন "
 
 #. displayed text before action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:229
+#: ../storage/DmmultipathCo.cc:232
 #, fuzzy, c-format
 msgid "Set disk label of multipath disk %1$s to %2$s"
 msgstr " ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করুন "
 
 #. displayed text before action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:184
+#: ../storage/DmraidCo.cc:187
 #, fuzzy, c-format
 msgid "Set disk label of raid %1$s to %2$s"
 msgstr " ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করুন "
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1995
+#: ../storage/Volume.cc:1936
 #, fuzzy, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr " %2$গুলি থেকে %1$গুলিতে লেবেল স্থাপন করুন "
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1070
+#: ../storage/Volume.cc:1007
 #, fuzzy, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr " %2$গুলিতে %1$গুলির মাউন্ট পয়েন্ট স্থাপন করুন"
@@ -1127,7 +1127,7 @@ msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রক�
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:166 ../storage/Partition.cc:280
+#: ../storage/DmPart.cc:169 ../storage/Partition.cc:280
 #, fuzzy, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রকার নির্দিষ্ট করুন"
@@ -1140,48 +1140,48 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রকার নির্দিষ্ট করুন"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1380
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "%1$s এ এনক্রিপ্টেড ডিএম যন্ত্র স্থাপন করুন"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1363
+#: ../storage/Volume.cc:1300
 #, fuzzy, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "%1$গুলিতে এনক্রিপটেড লুপ ডিভাইস স্থাপন করুন "
 
 #. displayed text during action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:887
+#: ../storage/DmPartCo.cc:892
 #, fuzzy, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করছে"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1827
+#: ../storage/Disk.cc:1881
 #, fuzzy, c-format
 msgid "Setting disk label of disk %1$s to %2$s"
 msgstr "ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করছে"
 
 #. displayed text during action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:222
+#: ../storage/DmmultipathCo.cc:225
 #, fuzzy, c-format
 msgid "Setting disk label of multipath disk %1$s to %2$s"
 msgstr "ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করছে"
 
 #. displayed text during action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:177
+#: ../storage/DmraidCo.cc:180
 #, fuzzy, c-format
 msgid "Setting disk label of raid %1$s to %2$s"
 msgstr "ডিস্ক %1$-গুলির ডিস্ক লেবেল %2$-গুলিতে স্থির করছে"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1981
+#: ../storage/Volume.cc:1922
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%1$s  থেকে %2$s-এ লেবেল স্থির করছে"
@@ -1197,7 +1197,7 @@ msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রক�
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:159 ../storage/Partition.cc:273
+#: ../storage/DmPart.cc:162 ../storage/Partition.cc:273
 #, fuzzy, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রকার নির্দিষ্ট করছে "
@@ -1210,20 +1210,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "%2$X -এ পার্টিশান %1$ গুলির প্রকার নির্দিষ্ট করছে "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1375
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "\"%1$s এ এনক্রিপ্টেড ডিএম যন্ত্র স্থাপন করছে"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1358
+#: ../storage/Volume.cc:1295
 #, fuzzy, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "%1$গুলিতে এনক্রিপটেড লুপ ডিভাইস স্থাপন করছে"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2677
+#: ../storage/Volume.cc:2625
 #, fuzzy, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%2$গুলিতে %1$গুলি সংকোচিত করুন "
@@ -1265,7 +1265,7 @@ msgstr "উইন্ডোস-এর পার্টিশান %1$s থেক�
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2664
+#: ../storage/Volume.cc:2612
 #, fuzzy, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr " %2$গুলিতে %1$গুলি সংকোচিত করছে"
@@ -1310,7 +1310,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:408
+#: ../storage/Disk.cc:473
 #, fuzzy, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1330,7 +1330,7 @@ msgstr ""
 " সাইজ, বা পার্টিশান অপসারণ করতে পারবেন না।"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Dasd.cc:207
+#: ../storage/Dasd.cc:208
 #, fuzzy, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1352,7 +1352,7 @@ msgstr ""
 " পুনরায় সাইজ, বা পার্টিশান অপসারণ করতে পারবেন না। "
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:810
+#: ../storage/Disk.cc:871
 #, fuzzy, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1380,28 +1380,28 @@ msgid "TiB"
 msgstr "TB"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1051
+#: ../storage/Volume.cc:988
 #, fuzzy, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$গুলিকে আনমাউন্টিং করছে"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:833
+#: ../storage/EtcFstab.cc:863
 #, fuzzy, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলিকে %2$-গুলিতে আপডেট করুনে"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:826
+#: ../storage/EtcFstab.cc:856
 #, fuzzy, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "মাউন্ট পয়েন্ট লিপিব্ধকরণ %1$-গুলিকে %2$-গুলিতে আপডেট করছে"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1077
+#: ../storage/Volume.cc:1014
 #, fuzzy, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$গুলিকে %2$গুলি হিসাবে ব্যবহার করুন"
@@ -1411,7 +1411,7 @@ msgid "Volume Group"
 msgstr "ভলিউম গ্রুপ"
 
 #. popup text
-#: ../storage/Disk.cc:834
+#: ../storage/Disk.cc:895
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1424,7 +1424,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:827
+#: ../storage/Disk.cc:888
 #, fuzzy, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

@@ -1,38 +1,41 @@
+# translation of libstorage.po to Chinese Traditional
 # Chinese message file for YaST2 (@memory@). -*- coding: utf-8 -*-
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2002 SuSE Linux AG.
 # Copyright (C) 2001 SuSE GmbH.
 #
+# swyear <swyear@gmail.com>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: YaST (@memory@)\n"
+"Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-06 10:15+0200\n"
-"PO-Revision-Date: 2001-06-05 18:04+02:00\n"
-"Last-Translator: 裴寒牧 <phm@a2e.de>\n"
-"Language-Team: 中華 <nls-zh@suse.de>\n"
+"POT-Creation-Date: 2009-09-16 14:22+0200\n"
+"PO-Revision-Date: 2009-09-20 09:08+0800\n"
+"Last-Translator: swyear <swyear@gmail.com>\n"
+"Language-Team: Chinese Traditional <zh@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:181 ../storage/Dmraid.cc:181
 #: ../storage/LvmLv.cc:279 ../storage/Partition.cc:531
-#: ../storage/Volume.cc:2670
+#: ../storage/Volume.cc:2618
 msgid "(progress bar might not move)"
-msgstr ""
+msgstr "(進度顯示可能不會移動)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:812
+#: ../storage/EtcFstab.cc:842
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "將裝載點 %1$s 的項目新增到 %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:805
+#: ../storage/EtcFstab.cc:835
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "正在將裝載點 %1$s 的項目新增到 %2$s"
@@ -43,31 +46,30 @@ msgid "B"
 msgstr "B"
 
 #: ../storage/Graph.cc:87
-#, fuzzy
 msgid "BIOS RAID"
-msgstr "BIOS ID"
+msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1061
+#: ../storage/Volume.cc:998
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "將 %1$s 的裝載點變更為 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1989
+#: ../storage/Volume.cc:1930
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "清除 %1$s 上的標籤"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1975
+#: ../storage/Volume.cc:1916
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "正在清除 %1$s 上的標籤"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:199 ../storage/Volume.cc:2650
+#: ../storage/Container.cc:190 ../storage/Volume.cc:2598
 #, c-format
 msgid "Create %1$s"
 msgstr "建立 %1$s"
@@ -104,16 +106,16 @@ msgstr "使用 %3$s 建立用於 %4$s 的加密邏輯卷冊 %1$s (%2$s)"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:86
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 建立用於 %4$s 的加密分割區 %1$s (%2$s)"
+msgstr "使用 %3$s 建立用於 %4$s 的多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:452
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted partition %1$s (%2$s)"
-msgstr "建立延伸分割區 %1$s (%2$s)"
+msgstr "建立加密分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -128,9 +130,9 @@ msgstr "使用 %3$s 建立用於 %4$s 的加密分割區 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:436
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted partition %1$s (%2$s) with id=%3$X"
-msgstr "使用 id=%3$X 建立分割區 %1$s (%2$s)"
+msgstr "使用 id=%3$X 建立加密分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -147,16 +149,16 @@ msgstr "使用 %3$s 建立 %4$s 的加密 raid 分割區 %1$s (%2$s)"
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:452
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "使用 %3$s 建立用於 %4$s 的加密軟體 RAID %1$s (%2$s)"
+msgstr "使用 %3$s 從 %5$s 建立用於 %4$s 的加密軟體 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:95
-#, fuzzy, c-format
+#, c-format
 msgid "Create extended multipath partition %1$s (%2$s)"
-msgstr "建立延伸分割區 %1$s (%2$s)"
+msgstr "建立延伸多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -209,18 +211,18 @@ msgstr "使用 %3$s 建立用於 %4$s 的邏輯卷冊 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:102
-#, fuzzy, c-format
+#, c-format
 msgid "Create multipath partition %1$s (%2$s)"
-msgstr "建立分割區 %1$s (%2$s)"
+msgstr "建立多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:76
-#, fuzzy, c-format
+#, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 建立用於 %4$s 的分割區 %1$s (%2$s)"
+msgstr "使用 %3$s 建立用於 %4$s 的多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -274,9 +276,9 @@ msgstr "使用 %3$s 建立根分割區 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:462
-#, fuzzy, c-format
+#, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
-msgstr "建立軟體 RAID %1$s (%2$s)"
+msgstr "從 %3$s 建立軟體 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -284,9 +286,9 @@ msgstr "建立軟體 RAID %1$s (%2$s)"
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:441
-#, fuzzy, c-format
+#, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "使用 %3$s 建立用於 %4$s 的軟體 RAID %1$s (%2$s)"
+msgstr "使用 %3$s 從 %5$s 建立用於 %4$s 的軟體 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -298,9 +300,9 @@ msgstr "建立交換邏輯卷冊 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:65
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap multipath partition %1$s (%2$s)"
-msgstr "建立交換分割區 %1$s (%2$s)"
+msgstr "建立交換多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -318,13 +320,13 @@ msgstr "建立 swap raid 分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1057
+#: ../storage/LvmVg.cc:1049
 #, c-format
 msgid "Create volume group %1$s from %2$s"
 msgstr "從 %2$s 建立卷冊群組 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:194 ../storage/Volume.cc:2645
+#: ../storage/Container.cc:185 ../storage/Volume.cc:2593
 #, c-format
 msgid "Creating %1$s"
 msgstr "正在建立 %1$s"
@@ -344,9 +346,9 @@ msgstr "正在建立邏輯卷冊 %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:57
-#, fuzzy, c-format
+#, c-format
 msgid "Creating multipath partition %1$s"
-msgstr "正在建立分割區 %1$s"
+msgstr "正在建立多重路徑分割區 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Partition.cc:364
@@ -363,21 +365,20 @@ msgstr "建立 raid 分割區 %1$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:427
-#, fuzzy, c-format
+#, c-format
 msgid "Creating software RAID %1$s from %2$s"
-msgstr "正在建立軟體 RAID %1$s"
+msgstr "正在從 %2$s 建立軟體 RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1050
+#: ../storage/LvmVg.cc:1042
 #, c-format
 msgid "Creating volume group %1$s from %2$s"
 msgstr "從 %2$s 建立卷冊群組 %1$s"
 
 #: ../storage/Graph.cc:111
-#, fuzzy
 msgid "DM Device"
-msgstr "CD-ROM 設備"
+msgstr "DM 裝置"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -410,9 +411,9 @@ msgstr "刪除邏輯卷冊 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:44
-#, fuzzy, c-format
+#, c-format
 msgid "Delete multipath partition %1$s (%2$s)"
-msgstr "刪除分割區 %1$s (%2$s)"
+msgstr "刪除多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -455,9 +456,9 @@ msgstr "正在刪除邏輯卷冊 %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:38
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting multipath partition %1$s"
-msgstr "正在刪除分割區 %1$s"
+msgstr "正在刪除多重路徑分割區 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Partition.cc:335
@@ -478,32 +479,32 @@ msgid "Deleting software RAID %1$s"
 msgstr "正在刪除軟體 RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:467
+#: ../storage/Dasd.cc:468
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgstr "在磁碟 %1$s 上執行 dasdfmt"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda),
-#: ../storage/Dasd.cc:447
+#: ../storage/Dasd.cc:448
 #, c-format
 msgid "Executing dasdfmt for disk %1$s..."
 msgstr "正在執行磁碟 %1$s 的 dasdfmt..."
 
 #. displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
-#: ../storage/Dasd.cc:452
+#: ../storage/Dasd.cc:453
 #, c-format
 msgid "Executing dasdfmt for disks: %1$s..."
 msgstr "正在執行磁碟的 dasdfmt：%1$s..."
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:355
+#: ../storage/Dasd.cc:356
 #, c-format
 msgid "Executing fdasd for disk %1$s..."
 msgstr "正在執行磁碟 %1$s 的 fdasd..."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2681
+#: ../storage/Volume.cc:2629
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "將 %1$s 延伸到 %2$s"
@@ -525,9 +526,9 @@ msgstr "將邏輯卷冊 %1$s 延伸到 %2$s"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:192
-#, fuzzy, c-format
+#, c-format
 msgid "Extend multipath partition %1$s to %2$s"
-msgstr "將分割區 %1$s 延伸到 %2$s"
+msgstr "將多重路徑分割區 %1$s 延伸到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -545,14 +546,14 @@ msgstr "將 raid 分割區 %1$s 延伸到 %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1078
+#: ../storage/LvmVg.cc:1070
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "使用 %2$s 延伸卷冊群組 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2668
+#: ../storage/Volume.cc:2616
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "正在將 %1$s 延伸到 %2$s"
@@ -567,9 +568,9 @@ msgstr "正在將邏輯卷冊 %1$s 延伸到 %2$s"
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:179
-#, fuzzy, c-format
+#, c-format
 msgid "Extending multipath partition %1$s to %2$s"
-msgstr "正在將分割區 %1$s 延伸到 %2$s"
+msgstr "正在將多重路徑分割區 %1$s 延伸到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -587,7 +588,7 @@ msgstr "將 raid 分割區 %1$s 延伸到 %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1071
+#: ../storage/LvmVg.cc:1063
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "正在使用 %2$s 延伸卷冊群組 %1$s"
@@ -596,7 +597,7 @@ msgstr "正在使用 %2$s 延伸卷冊群組 %1$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:663
+#: ../storage/Volume.cc:594
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的設備 %1$s (%2$s)"
@@ -604,7 +605,7 @@ msgstr "使用 %3$s 格式化用於 %4$s 的設備 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:683
+#: ../storage/Volume.cc:614
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 格式化設備 %1$s (%2$s)"
@@ -630,7 +631,7 @@ msgstr "使用 %3$s 格式化設備對應卷冊 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:673
+#: ../storage/Volume.cc:604
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的加密設備 %1$s (%2$s)"
@@ -668,9 +669,9 @@ msgstr "使用 %3$s 格式化用於 %4$s 的加密邏輯卷冊 %1$s (%2$s)"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:148
-#, fuzzy, c-format
+#, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化用於 %4$s 的加密分割區 %1$s (%2$s)"
+msgstr "使用 %3$s 格式化用於 %4$s 的加密多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -747,24 +748,24 @@ msgstr "使用 %3$s 格式化邏輯卷冊 %1$s (%2$s)"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:138
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化用於 %4$s 的分割區 %1$s (%2$s)"
+msgstr "使用 %3$s 格式化用於 %4$s 的多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:129
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) for swap"
-msgstr "格式化用於交換的分割區 %1$s (%2$s)"
+msgstr "格式化用於交換的多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmmultipath.cc:158
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化分割區 %1$s (%2$s)"
+msgstr "使用 %3$s 格式化多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -834,7 +835,7 @@ msgstr "使用 %3$s 格式化軟體 RAID %1$s (%2$s)"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:650
+#: ../storage/Volume.cc:581
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s "
 msgstr "正在使用 %3$s 格式化設備 %1$s (%2$s)"
@@ -868,9 +869,9 @@ msgstr "正在使用 %3$s 格式化邏輯卷冊 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmmultipath.cc:118
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化 raid 分割區 %1$s (%2$s)"
+msgstr "正在使用 %3$s 格式化多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -898,9 +899,8 @@ msgstr "正在使用 %3$s 格式化軟體 RAID %1$s (%2$s)"
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:62
-#, fuzzy
 msgid "G"
-msgstr "GB"
+msgstr ""
 
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:57
@@ -909,9 +909,8 @@ msgstr "GB"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:59
-#, fuzzy
 msgid "GiB"
-msgstr "GB"
+msgstr ""
 
 #: ../storage/Graph.cc:83
 msgid "Hard Disk"
@@ -923,15 +922,13 @@ msgid "KiB"
 msgstr "KiB"
 
 #: ../storage/Graph.cc:107
-#, fuzzy
 msgid "Logical Volume"
 msgstr "邏輯卷冊"
 
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:52
-#, fuzzy
 msgid "M"
-msgstr "MB"
+msgstr ""
 
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:47
@@ -949,27 +946,24 @@ msgstr "裝載點"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1046
+#: ../storage/Volume.cc:983
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "正在將 %1$s 裝載到 %2$s"
 
 #: ../storage/Graph.cc:91
-#, fuzzy
 msgid "Multipath"
-msgstr "多路廣播"
+msgstr "多重路徑"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:82
-#, fuzzy
 msgid "P"
-msgstr "IP"
+msgstr ""
 
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:77
-#, fuzzy
 msgid "PB"
-msgstr "B"
+msgstr ""
 
 #: ../storage/Graph.cc:95
 msgid "Partition"
@@ -977,25 +971,23 @@ msgstr "分割區"
 
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:79
-#, fuzzy
 msgid "PiB"
-msgstr "KiB"
+msgstr ""
 
 #: ../storage/Graph.cc:99
-#, fuzzy
 msgid "RAID"
-msgstr "RAID(&R)..."
+msgstr ""
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1099
+#: ../storage/LvmVg.cc:1091
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "按 %2$s 縮小卷冊群組 %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1092
+#: ../storage/LvmVg.cc:1084
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "正在按 %2$s 縮小卷冊群組 %1$s"
@@ -1003,40 +995,40 @@ msgstr "正在按 %2$s 縮小卷冊群組 %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:215 ../storage/DmPartCo.cc:911
-#: ../storage/Volume.cc:2697
+#: ../storage/Container.cc:206 ../storage/DmPartCo.cc:916
+#: ../storage/Volume.cc:2645
 #, c-format
 msgid "Remove %1$s"
 msgstr "移除 %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1089
+#: ../storage/Volume.cc:1026
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "從 %2$s 移除 %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:854
+#: ../storage/EtcFstab.cc:884
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "從 %2$s 移除用於裝載點 %1$s 的項目"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:45
+#: ../storage/Nfs.cc:44
 #, c-format
 msgid "Remove nfs volume %1$s"
 msgstr "移除 nfs 區塊 %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:163
+#: ../storage/DmraidCo.cc:166
 #, c-format
 msgid "Remove raid %1$s"
 msgstr "移除 RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1037
+#: ../storage/LvmVg.cc:1029
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "移除卷冊群組 %1$s"
@@ -1044,75 +1036,75 @@ msgstr "移除卷冊群組 %1$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:210 ../storage/DmPartCo.cc:906
-#: ../storage/Volume.cc:2692
+#: ../storage/Container.cc:201 ../storage/DmPartCo.cc:911
+#: ../storage/Volume.cc:2640
 #, c-format
 msgid "Removing %1$s"
 msgstr "正在移除 %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:847
+#: ../storage/EtcFstab.cc:877
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "正在從 %2$s 移除用於裝載點 %1$s 的項目"
 
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:40
+#: ../storage/Nfs.cc:39
 #, c-format
 msgid "Removing nfs volume %1$s"
 msgstr "正在移除 nfs 區塊 %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:158
+#: ../storage/DmraidCo.cc:161
 #, c-format
 msgid "Removing raid %1$s"
 msgstr "移除 raid %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1032
+#: ../storage/LvmVg.cc:1024
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "正在移除卷冊群組 %1$s"
 
 #. displayed text before action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:894
+#: ../storage/DmPartCo.cc:899
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1834
+#: ../storage/Disk.cc:1888
 #, c-format
 msgid "Set disk label of disk %1$s to %2$s"
 msgstr "將磁碟 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:229
-#, fuzzy, c-format
+#: ../storage/DmmultipathCo.cc:232
+#, c-format
 msgid "Set disk label of multipath disk %1$s to %2$s"
-msgstr "將磁碟 %1$s 的磁碟標籤設定為 %2$s"
+msgstr "將多重路徑磁碟 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text before action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:184
+#: ../storage/DmraidCo.cc:187
 #, c-format
 msgid "Set disk label of raid %1$s to %2$s"
 msgstr "將 raid %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1995
+#: ../storage/Volume.cc:1936
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "將 %1$s 上的標籤設定為 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1070
+#: ../storage/Volume.cc:1007
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "將 %1$s 的裝載點設定為 %2$s"
@@ -1120,15 +1112,15 @@ msgstr "將 %1$s 的裝載點設定為 %2$s"
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:213
-#, fuzzy, c-format
+#, c-format
 msgid "Set type of multipath partition %1$s to %2$X"
-msgstr "將分割區 %1$s 的類型設定為 %2$X"
+msgstr "將多重路徑分割區 %1$s 的類型設定為 %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:166 ../storage/Partition.cc:280
+#: ../storage/DmPart.cc:169 ../storage/Partition.cc:280
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "將分割區 %1$s 的類型設定為 %2$X"
@@ -1141,48 +1133,48 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "將 raid 分割區 %1$s 的類型設定為 %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1380
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "在 %1$s 上設定加密的 dm 設備"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1363
+#: ../storage/Volume.cc:1300
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "在 %1$s 上設定加密的迴路設備"
 
 #. displayed text during action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:887
+#: ../storage/DmPartCo.cc:892
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1827
+#: ../storage/Disk.cc:1881
 #, c-format
 msgid "Setting disk label of disk %1$s to %2$s"
 msgstr "正在將磁碟 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:222
-#, fuzzy, c-format
+#: ../storage/DmmultipathCo.cc:225
+#, c-format
 msgid "Setting disk label of multipath disk %1$s to %2$s"
-msgstr "正在將磁碟 %1$s 的磁碟標籤設定為 %2$s"
+msgstr "正在將多重路徑磁碟 %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text during action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:177
+#: ../storage/DmraidCo.cc:180
 #, c-format
 msgid "Setting disk label of raid %1$s to %2$s"
 msgstr "將 raid %1$s 的磁碟標籤設定為 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1981
+#: ../storage/Volume.cc:1922
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "正在將 %1$s 上的標籤設定為 %2$s"
@@ -1190,15 +1182,15 @@ msgstr "正在將 %1$s 上的標籤設定為 %2$s"
 #. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:206
-#, fuzzy, c-format
+#, c-format
 msgid "Setting type of multipath partition %1$s to %2$X"
-msgstr "正在將分割區 %1$s 的類型設定為 %2$X"
+msgstr "正在將多重路徑分割區 %1$s 的類型設定為 %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:159 ../storage/Partition.cc:273
+#: ../storage/DmPart.cc:162 ../storage/Partition.cc:273
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "正在將分割區 %1$s 的類型設定為 %2$X"
@@ -1211,20 +1203,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "將 raid 分割區 %1$s 的類型設定為 %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1375
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "正在 %1$s 上設定加密的 dm 設備"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1358
+#: ../storage/Volume.cc:1295
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "正在 %1$s 上設定加密的迴路設備"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2677
+#: ../storage/Volume.cc:2625
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "將 %1$s 縮減到 %2$s"
@@ -1246,9 +1238,9 @@ msgstr "將邏輯卷冊 %1$s 縮減到 %2$s"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:188
-#, fuzzy, c-format
+#, c-format
 msgid "Shrink multipath partition %1$s to %2$s"
-msgstr "將分割區 %1$s 縮減到 %2$s"
+msgstr "將多重路徑分割區 %1$s 縮減到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1266,7 +1258,7 @@ msgstr "將 raid 分割區 %1$s 縮減到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2664
+#: ../storage/Volume.cc:2612
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "正在將 %1$s 縮減到 %2$s"
@@ -1281,9 +1273,9 @@ msgstr "正在將邏輯卷冊 %1$s 縮減到 %2$s"
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:175
-#, fuzzy, c-format
+#, c-format
 msgid "Shrinking multipath partition %1$s to %2$s"
-msgstr "正在將分割區 %1$s 縮減到 %2$s"
+msgstr "正在將多重路徑分割區 %1$s 縮減到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1301,9 +1293,8 @@ msgstr "將 raid 分割區 %1$s 縮減到 %2$s"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:72
-#, fuzzy
 msgid "T"
-msgstr "TB"
+msgstr ""
 
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:67
@@ -1311,7 +1302,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:408
+#: ../storage/Disk.cc:473
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1331,7 +1322,7 @@ msgstr ""
 "磁碟移除分割區。"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Dasd.cc:207
+#: ../storage/Dasd.cc:208
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1353,7 +1344,7 @@ msgstr ""
 "磁碟移除分割區。"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:810
+#: ../storage/Disk.cc:871
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1375,33 +1366,32 @@ msgstr ""
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
-#, fuzzy
 msgid "TiB"
-msgstr "TB"
+msgstr ""
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1051
+#: ../storage/Volume.cc:988
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "正在取消裝載 %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:833
+#: ../storage/EtcFstab.cc:863
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "更新 %2$s 中用於裝載點 %1$s 的項目"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:826
+#: ../storage/EtcFstab.cc:856
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "正在更新 %2$s 中用於裝載點 %1$s 的項目"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1077
+#: ../storage/Volume.cc:1014
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "將 %1$s 用做為 %2$s"
@@ -1411,7 +1401,7 @@ msgid "Volume Group"
 msgstr "磁碟區群組"
 
 #. popup text
-#: ../storage/Disk.cc:834
+#: ../storage/Disk.cc:895
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1421,10 +1411,17 @@ msgid ""
 "    number of block devices partitions. This needs a repartition\n"
 "    as well."
 msgstr ""
+"您有下面這些選項：\n"
+"  - 重新分割您的系統，僅使用允許的最大\n"
+"    分割區數量。重新分割，使用您存在的\n"
+"    作業系統。\n"
+"  - 使用 LVM ，他可以提供任意且靈活的\n"
+"    區塊裝置分割區數量。 這也需要\n"
+"    重新分割。"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:827
+#: ../storage/Disk.cc:888
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1437,9 +1434,8 @@ msgstr ""
 
 #. symbol for "kilo" (best keep untranslated)
 #: ../storage/HumanString.cc:42
-#, fuzzy
 msgid "k"
-msgstr "kB"
+msgstr ""
 
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:37

@@ -1,43 +1,46 @@
+# translation of libstorage.nl.po to Dutch
 # Dutch message file for YaST 2 (@memory@).
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2002 SuSE Linux AG.
 # Copyright (C) 1999, 2000, 2001 SuSE GmbH.
+#
 # A.S. Kerkmeester <ask_murphy@bigfoot.com>, 1999, 2000, 2001.
 # FAX-Translations <all@fax-translations.com>, 2000.
 # Karl Eichwalder <ke@suse.de>, 1999, 2000.
 # Martin Lohner <ml@suse.de>, 2000.
 # peter@sybex.nl, 2000.
-#
+# Freek de Kruijf <freek@opensuse.org>, 2009.
 msgid ""
 msgstr ""
-"Project-Id-Version: YaST (@memory@)\n"
+"Project-Id-Version: libstorage.nl\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-06 10:15+0200\n"
-"PO-Revision-Date: 2002-07-01 14:34+0200\n"
-"Last-Translator: A.S. Kerkmeester <ask_murphy@bigfoot.com>\n"
-"Language-Team: Dutch <i18n@suse.de>\n"
+"POT-Creation-Date: 2009-09-16 14:22+0200\n"
+"PO-Revision-Date: 2009-07-10 15:02+0200\n"
+"Last-Translator: Freek de Kruijf <freek@opensuse.org>\n"
+"Language-Team: Dutch <Yast-nl-l10n@lists.sf.kovoks.nl>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural= n != 1;\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:181 ../storage/Dmraid.cc:181
 #: ../storage/LvmLv.cc:279 ../storage/Partition.cc:531
-#: ../storage/Volume.cc:2670
+#: ../storage/Volume.cc:2618
 msgid "(progress bar might not move)"
-msgstr " (voortgangsbalk beweegt mogelijk niet)"
+msgstr "(voortgangsbalk beweegt mogelijk niet)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:812
+#: ../storage/EtcFstab.cc:842
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Aankoppelpunt toevoegen van %1$s naar %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:805
+#: ../storage/EtcFstab.cc:835
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Aankoppelpunt toevoegen voor %1$s naar %2$s"
@@ -53,26 +56,26 @@ msgstr "BIOS-RAID"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1061
+#: ../storage/Volume.cc:998
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Aankoppelpunt van %1$s naar %2$s wijzigen"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1989
+#: ../storage/Volume.cc:1930
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Label leegmaken op %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1975
+#: ../storage/Volume.cc:1916
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Label leegmaken op %1$s"
 
 # /usr/lib/YaST2/clients/lan_inetd_custom.ycp:768
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:199 ../storage/Volume.cc:2650
+#: ../storage/Container.cc:190 ../storage/Volume.cc:2598
 #, c-format
 msgid "Create %1$s"
 msgstr "%1$s aanmaken"
@@ -116,9 +119,9 @@ msgstr "Versleutelde multipad-partitie %1$s (%2$s) voor %4$s aanmaken met %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:452
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted partition %1$s (%2$s)"
-msgstr "Uitgebreide partitie %1$s (%2$s) aanmaken"
+msgstr "Versleutelde partitie %1$s (%2$s) aanmaken"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -133,9 +136,9 @@ msgstr "Versleutelde partitie %1$s (%2$s) voor %4$s aanmaken met %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:436
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted partition %1$s (%2$s) with id=%3$X"
-msgstr "Partitie %1$s (%2$s) met id=%3$X aanmaken"
+msgstr "Versleutelde partitie %1$s (%2$s) met id=%3$X aanmaken"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -323,13 +326,13 @@ msgstr "Raid-partitie voor wisselgeheugen %1$s (%2$s) aanmaken"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1057
+#: ../storage/LvmVg.cc:1049
 #, c-format
 msgid "Create volume group %1$s from %2$s"
 msgstr "Volumegroep %1$s van %2$s aanmaken"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:194 ../storage/Volume.cc:2645
+#: ../storage/Container.cc:185 ../storage/Volume.cc:2593
 #, c-format
 msgid "Creating %1$s"
 msgstr "%1$s aanmaken"
@@ -374,7 +377,7 @@ msgstr "Software RAID %1$s aanmaken uit %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1050
+#: ../storage/LvmVg.cc:1042
 #, c-format
 msgid "Creating volume group %1$s from %2$s"
 msgstr "Volumegroep %1$s van %2$s aanmaken"
@@ -482,32 +485,32 @@ msgid "Deleting software RAID %1$s"
 msgstr "Software RAID %1$s verwijderen"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:467
+#: ../storage/Dasd.cc:468
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgstr "Uitvoeren van dasdfmt voor schijf %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda),
-#: ../storage/Dasd.cc:447
+#: ../storage/Dasd.cc:448
 #, c-format
 msgid "Executing dasdfmt for disk %1$s..."
 msgstr "Uitvoeren van dasdfmt voor schijf %1$s..."
 
 #. displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
-#: ../storage/Dasd.cc:452
+#: ../storage/Dasd.cc:453
 #, c-format
 msgid "Executing dasdfmt for disks: %1$s..."
 msgstr "Uitvoeren van dasdfmt voor de schijven: %1$s..."
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:355
+#: ../storage/Dasd.cc:356
 #, c-format
 msgid "Executing fdasd for disk %1$s..."
 msgstr "Uitvoeren van fdasd voor schijf %1$s..."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2681
+#: ../storage/Volume.cc:2629
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%1$s uitbreiden tot %2$s"
@@ -549,14 +552,14 @@ msgstr "Raid-partitie %1$s uitbreiden tot %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1078
+#: ../storage/LvmVg.cc:1070
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Volumegroep %1$s uitbreiden met %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2668
+#: ../storage/Volume.cc:2616
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s uitbreiden tot %2$s"
@@ -591,7 +594,7 @@ msgstr "Raid-partitie %1$s uitbreiden tot %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1071
+#: ../storage/LvmVg.cc:1063
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Volumegroep %1$s uitbreiden met %2$s"
@@ -600,7 +603,7 @@ msgstr "Volumegroep %1$s uitbreiden met %2$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:663
+#: ../storage/Volume.cc:594
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Apparaat %1$s (%2$s) voor %4$s formatteren met %3$s"
@@ -608,7 +611,7 @@ msgstr "Apparaat %1$s (%2$s) voor %4$s formatteren met %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:683
+#: ../storage/Volume.cc:614
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Apparaat %1$s (%2$s) formatteren met %3$s"
@@ -634,7 +637,7 @@ msgstr "Device mapper volume %1$s (%2$s) formatteren met %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:673
+#: ../storage/Volume.cc:604
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Versleuteld apparaat %1$s (%2$s) voor %4$s formatteren met %3$s"
@@ -838,7 +841,7 @@ msgstr "Software RAID %1$s (%2$s) formatteren met %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:650
+#: ../storage/Volume.cc:581
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s "
 msgstr "Apparaat %1$s (%2$s) formatteren met %3$s "
@@ -949,7 +952,7 @@ msgstr "Aankoppelpunt"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1046
+#: ../storage/Volume.cc:983
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1$s aankoppelen op %2$s"
@@ -983,14 +986,14 @@ msgstr "RAID"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1099
+#: ../storage/LvmVg.cc:1091
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Volumegroep %1$s inkrimpen met %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1092
+#: ../storage/LvmVg.cc:1084
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Volumegroep %1$s inkrimpen met %2$s"
@@ -999,41 +1002,41 @@ msgstr "Volumegroep %1$s inkrimpen met %2$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:215 ../storage/DmPartCo.cc:911
-#: ../storage/Volume.cc:2697
+#: ../storage/Container.cc:206 ../storage/DmPartCo.cc:916
+#: ../storage/Volume.cc:2645
 #, c-format
 msgid "Remove %1$s"
 msgstr "%1$s verwijderen"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1089
+#: ../storage/Volume.cc:1026
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%1$s uit %2$s verwijderen"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:854
+#: ../storage/EtcFstab.cc:884
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Aankoppelpunt verwijderen van %1$s uit %2$s"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:45
+#: ../storage/Nfs.cc:44
 #, c-format
 msgid "Remove nfs volume %1$s"
 msgstr "NFS-volume %1$s verwijderen"
 
 # /usr/lib/YaST2/clients/lan_inetd_custom.ycp:768
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:163
+#: ../storage/DmraidCo.cc:166
 #, c-format
 msgid "Remove raid %1$s"
 msgstr "Raid %1$s verwijderen"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1037
+#: ../storage/LvmVg.cc:1029
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Volumegroep %1$s verwijderen"
@@ -1041,75 +1044,75 @@ msgstr "Volumegroep %1$s verwijderen"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:210 ../storage/DmPartCo.cc:906
-#: ../storage/Volume.cc:2692
+#: ../storage/Container.cc:201 ../storage/DmPartCo.cc:911
+#: ../storage/Volume.cc:2640
 #, c-format
 msgid "Removing %1$s"
 msgstr "%1$s verwijderen"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:847
+#: ../storage/EtcFstab.cc:877
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Aankoppelpunt verwijderen van %1$s uit %2$s"
 
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:40
+#: ../storage/Nfs.cc:39
 #, c-format
 msgid "Removing nfs volume %1$s"
 msgstr "NFS-volume %1$s verwijderen"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:158
+#: ../storage/DmraidCo.cc:161
 #, c-format
 msgid "Removing raid %1$s"
 msgstr "Raid %1$s verwijderen"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1032
+#: ../storage/LvmVg.cc:1024
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Volumegroep %1$s verwijderen"
 
 #. displayed text before action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:894
+#: ../storage/DmPartCo.cc:899
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Schijflabel van %1$s instellen op %2$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1834
+#: ../storage/Disk.cc:1888
 #, c-format
 msgid "Set disk label of disk %1$s to %2$s"
 msgstr "Schijflabel instellen van %1$s in %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:229
+#: ../storage/DmmultipathCo.cc:232
 #, c-format
 msgid "Set disk label of multipath disk %1$s to %2$s"
 msgstr "Schijflabel instellen van multipad-schijf %1$s op %2$s"
 
 #. displayed text before action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:184
+#: ../storage/DmraidCo.cc:187
 #, c-format
 msgid "Set disk label of raid %1$s to %2$s"
 msgstr "Schijflabel instellen van %1$s op %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1995
+#: ../storage/Volume.cc:1936
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Label van %1$s instellen op %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1070
+#: ../storage/Volume.cc:1007
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Aankoppelpunt van %1$s instellen op %2$s"
@@ -1125,7 +1128,7 @@ msgstr "Type van multipad-partitie %1$s instellen op %2$X"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:166 ../storage/Partition.cc:280
+#: ../storage/DmPart.cc:169 ../storage/Partition.cc:280
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Partitietype van %1$s instellen op %2$X"
@@ -1138,48 +1141,48 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "Type van raid-partitie van %1$s instellen op %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1380
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Versleuteld dm-apparaat instellen op %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1363
+#: ../storage/Volume.cc:1300
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Versleuteld loop-apparaat instellen op %1$s"
 
 #. displayed text during action, %1$s is replaced by name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmPartCo.cc:887
+#: ../storage/DmPartCo.cc:892
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Schijflabel van %1$s instellen op %2$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1827
+#: ../storage/Disk.cc:1881
 #, c-format
 msgid "Setting disk label of disk %1$s to %2$s"
 msgstr "Schijflabel instellen van %1$s in %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmmultipathCo.cc:222
+#: ../storage/DmmultipathCo.cc:225
 #, c-format
 msgid "Setting disk label of multipath disk %1$s to %2$s"
 msgstr "Schijflabel instellen van multipad-schijf %1$s op %2$s"
 
 #. displayed text during action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/DmraidCo.cc:177
+#: ../storage/DmraidCo.cc:180
 #, c-format
 msgid "Setting disk label of raid %1$s to %2$s"
 msgstr "Schijflabel van raid %1$s instellen op %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:1981
+#: ../storage/Volume.cc:1922
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Label op %1$s instellen op %2$s"
@@ -1195,7 +1198,7 @@ msgstr "Type van multipad-partitie %1$s instellen op %2$X"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:159 ../storage/Partition.cc:273
+#: ../storage/DmPart.cc:162 ../storage/Partition.cc:273
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Partitietype van %1$s instellen op %2$X"
@@ -1208,20 +1211,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "Type van raid-partitie %1$s instellen op %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1375
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Versleuteld dm-apparaat wordt ingesteld op %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1358
+#: ../storage/Volume.cc:1295
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Versleuteld loop-apparaat instellen op %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2677
+#: ../storage/Volume.cc:2625
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%1$s inkrimpen tot %2$s"
@@ -1263,7 +1266,7 @@ msgstr "Raid-partitie %1$s inkrimpen tot %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2664
+#: ../storage/Volume.cc:2612
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s inkrimpen tot %2$s"
@@ -1307,7 +1310,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:408
+#: ../storage/Disk.cc:473
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1327,7 +1330,7 @@ msgstr ""
 "verwijderen met dit gereedschap."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Dasd.cc:207
+#: ../storage/Dasd.cc:208
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1349,7 +1352,7 @@ msgstr ""
 "schijf met dit gereedschap."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:810
+#: ../storage/Disk.cc:871
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1376,28 +1379,28 @@ msgid "TiB"
 msgstr "TiB"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1051
+#: ../storage/Volume.cc:988
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$s afkoppelen"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:833
+#: ../storage/EtcFstab.cc:863
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Aankoppelpunt bijwerken van %1$s naar %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:826
+#: ../storage/EtcFstab.cc:856
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Aankoppelpunt bijwerken van %1$s naar %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1077
+#: ../storage/Volume.cc:1014
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$s gebruiken als %2$s"
@@ -1407,7 +1410,7 @@ msgid "Volume Group"
 msgstr "Volumegroep"
 
 #. popup text
-#: ../storage/Disk.cc:834
+#: ../storage/Disk.cc:895
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1427,7 +1430,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:827
+#: ../storage/Disk.cc:888
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
