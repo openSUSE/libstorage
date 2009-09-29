@@ -1241,7 +1241,9 @@ int Volume::resizeFs()
     return( ret );
     }
 
-int Volume::setEncryption( bool val, EncryptType typ )
+
+    int
+    Volume::setEncryption(bool val, EncryptType typ, bool force)
     {
     int ret = 0;
     y2mil("val:" << val << " typ:" << typ);
@@ -1264,14 +1266,14 @@ int Volume::setEncryption( bool val, EncryptType typ )
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && cType()==NFSC )
 		ret = VOLUME_CRYPT_NFS_IMPOSSIBLE;
-	    if (ret == 0 && (create || format || loop_active))
+	    if (ret == 0 && (create || format || loop_active || force))
 		{
 		encryption = typ;
 		is_loop = cont->type()==LOOP;
 		dmcrypt_dev = getDmcryptName();
 		}
-	    if (ret == 0 && !create && !format && !loop_active)
-		{
+	    if (ret == 0 && !create && !format && !loop_active && !force)
+	        {
 		if( detectEncryption()==ENC_UNKNOWN )
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
 		}
@@ -2213,6 +2215,10 @@ Volume::getCommitActions(list<commitAction>& l) const
     else if( format )
 	{
 	l.push_back(commitAction(FORMAT, cont->type(), formatText(false), this, true));
+	}
+    else if (encryption != orig_encryption)
+	{
+	    l.push_back(commitAction(FORMAT, cont->type(), crsetupText(false), this, true));
 	}
     else if( mp != orig_mp || 
              (cont->getStorage()->instsys()&&mp=="swap") )

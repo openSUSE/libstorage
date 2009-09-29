@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep 29 13:38:12 CEST 2009 - aschnell@suse.de
+
+- fixed setting encryption for existing devices (bnc #539104)
+
+-------------------------------------------------------------------
 Fri Aug 28 15:37:10 CEST 2009 - aschnell@suse.de
 
 - fixed handling of efiboot parameter (bnc #490782)
