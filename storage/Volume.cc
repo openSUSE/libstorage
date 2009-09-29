@@ -1266,16 +1266,22 @@ int Volume::resizeFs()
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && cType()==NFSC )
 		ret = VOLUME_CRYPT_NFS_IMPOSSIBLE;
-	    if (ret == 0 && (create || format || loop_active || force))
+	    if (ret == 0 && (create || format || loop_active))
 		{
 		encryption = typ;
 		is_loop = cont->type()==LOOP;
 		dmcrypt_dev = getDmcryptName();
 		}
-	    if (ret == 0 && !create && !format && !loop_active && !force)
+	    if (ret == 0 && !create && !format && !loop_active)
 	        {
-		if( detectEncryption()==ENC_UNKNOWN )
+		if( detectEncryption()==ENC_UNKNOWN && !force)
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
+		else if (force)
+		{
+		    encryption = typ;
+		    is_loop = cont->type()==LOOP;
+		    dmcrypt_dev = getDmcryptName();
+		}
 		}
 	    }
 	}
