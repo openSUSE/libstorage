@@ -21,7 +21,7 @@ namespace storage
 
 	struct Entry
 	{
-	    Entry() : fstype(FSNONE), uuid(), label(), luks(false) {}
+	    Entry() : fstype(FSUNKNOWN), uuid(), label(), luks(false) {}
 
 	    FsType fstype;
 	    string uuid;
