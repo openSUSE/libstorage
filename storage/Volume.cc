@@ -401,7 +401,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 
 	if (found)
 	{
-	    y2mil("device:" << mountDevice() << " entry:" << entry);
+	    y2mil("device:" << device() << " mountDevice:" << mountDevice() << " entry:" << entry);
 
 	    detected_fs = fs = entry.fstype;
 
@@ -1902,14 +1902,16 @@ int Volume::doCrsetup()
 	if( ret!=0 && losetup_done )
 	    loUnsetup();
 	}
+    if (ret == 0)
+    {
+	updateFsData(); 
+    }
     if (ret == 0 && encryption != ENC_NONE)
     {
 	doFstabUpdate();
     }
-    if( ret==0 )
-	updateFsData();
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 string Volume::labelText( bool doing ) const
