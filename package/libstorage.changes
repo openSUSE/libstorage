@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 01 15:22:11 CEST 2009 - aschnell@suse.de
+
+- fixed fstab entries for existing encrypted volumes (bnc #530173)
+- 2.18.22
+
+-------------------------------------------------------------------
 Tue Sep 29 13:38:12 CEST 2009 - aschnell@suse.de
 
 - fixed setting encryption for existing devices (bnc #539104)
