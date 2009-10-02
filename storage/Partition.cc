@@ -82,19 +82,16 @@ const string& Partition::udevPath() const
     return( i==alt_names.end() ? empty_string : *i );
     }
 
-string Partition::sysfsPath() const
+
+    string
+    Partition::sysfsPath() const
     {
-    string ret = disk()->sysfsDir() + "/";
-    string tmp = undevDevice(dev);
-    string::size_type pos = 0;
-    while( (pos=tmp.find( '/', pos ))!=string::npos )
-	{
-	tmp[pos++] = '!';
-	}
-    ret += tmp;
-    y2mil( "ret:" << ret );
-    return( ret );
+	string tmp = undevDevice(dev);
+	string ret = disk()->sysfsDir() + "/"  + boost::replace_all_copy(tmp, "/", "!");
+	y2mil("ret:" << ret);
+	return ret;
     }
+
 
 bool Partition::intersectArea( const Region& r, unsigned fuzz ) const
     {
@@ -122,12 +119,8 @@ void Partition::addAltUdevId( unsigned num )
     {
     alt_names.remove_if(string_contains("/by-id/"));
 
-    list<string>::const_iterator j = disk()->udevId().begin();
-    while( j!=disk()->udevId().end() )
-	{
+    for (list<string>::const_iterator j = disk()->udevId().begin(); j != disk()->udevId().end(); ++j)
 	alt_names.push_back( udevCompleteIdPath( *j, num ));
-	++j;
-	}
     }
 
 
@@ -154,11 +147,10 @@ void Partition::changeNumber( unsigned new_num )
 	    {
 	    orig_num = num;
 	    }
-	addAltUdevId( num );
-	list<string>::iterator i = find_if( alt_names.begin(), alt_names.end(),
-	                                    string_contains( "/by-path/" ));
-	if( i!=alt_names.end() )
-	    *i = udevCompletePathPath( disk()->udevPath(), num );
+
+	addAltUdevId(num);
+	addAltUdevPath(num);
+
 	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
