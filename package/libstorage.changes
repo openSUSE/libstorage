@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Oct 12 12:52:44 CEST 2009 - aschnell@suse.de
+
+- added copyright text to source files (bnc #545744)
+- 2.18.23
+
+-------------------------------------------------------------------
 Thu Oct 01 15:22:11 CEST 2009 - aschnell@suse.de
 
 - fixed fstab entries for existing encrypted volumes (bnc #530173)
