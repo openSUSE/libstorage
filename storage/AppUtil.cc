@@ -528,7 +528,10 @@ string sformat(const char* format, ...)
 	struct utsname buf;
 	if (uname(&buf) != 0)
 	    return string("unknown");
-	return string(buf.nodename) + "." + string(buf.domainname);
+	string hostname(buf.nodename);
+	if (strlen(buf.domainname) > 0)
+	    hostname += "." + string(buf.domainname);
+	return hostname;
     }
 
 
