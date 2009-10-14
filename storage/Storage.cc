@@ -712,6 +712,10 @@ void
 	    if (!Disk::getSysfsInfo(SYSFSDIR "/" + dn, sysfsinfo))
 		continue;
 
+	    // we do not treat mds as disks although they can be partitioned since kernel 2.6.28
+	    if (boost::starts_with(dn, "md"))
+		continue;
+
 	    if (sysfsinfo.range > 1 && (sysfsinfo.size > 0 || dn.find("dasd") == 0))
 	    {
 		DiskData::DTyp t = (dn.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
