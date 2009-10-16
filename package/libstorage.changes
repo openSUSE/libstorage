@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Oct 16 13:02:31 CEST 2009 - aschnell@suse.de
+
+- log mdadm.conf created during scan (bnc #547288)
+
+-------------------------------------------------------------------
 Wed Oct 14 16:55:15 CEST 2009 - aschnell@suse.de
 
 - do not detect MDs as disks (bnc #546912)

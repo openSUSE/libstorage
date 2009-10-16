@@ -586,6 +586,7 @@ void MdCo::activate( bool val, const string& tmpDir )
 	    string mdconf = tmpDir + "/mdadm.conf";
 	    c.execute("echo 1 > /sys/module/md_mod/parameters/start_ro");
 	    c.execute(MDADMBIN " --examine --scan --config=partitions > " + mdconf);
+	    AsciiFile(mdconf).logContent();
 	    c.execute(MDADMBIN " --assemble --scan --config=" + mdconf);
 	    unlink(mdconf.c_str());
 	    }
