@@ -2179,7 +2179,8 @@ namespace storage
 	/**
 	 * Activate or deactivate higher level devices as MD, LVM, DM
 	 *
-	 * Multipath is not activate by this function.
+	 * Multipath is not activate by this function. Only use in instsys
+	 * mode.
 	 *
 	 * @param val flag if devices should be activated or deactivated
 	 * @return bool if values could be successfully determined
@@ -2188,6 +2189,8 @@ namespace storage
 
 	/**
 	 * Activate or deactivate multipath
+	 *
+	 * Only use in instsys mode.
 	 *
 	 * @param val flag if multipath should be activated or deactivated
 	 * @return bool if values could be successfully determined
