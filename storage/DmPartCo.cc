@@ -465,7 +465,7 @@ int DmPartCo::destroyPartitionTable( const string& new_label )
 	    }
 	bool save = getStorage()->getRecursiveRemoval();
 	getStorage()->setRecursiveRemoval(true);
-	if( getUsedByType() != UB_NONE )
+	if (isUsedBy())
 	    {
 	    getStorage()->removeUsing( device(), getUsedBy() );
 	    }

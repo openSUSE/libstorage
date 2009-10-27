@@ -459,7 +459,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
     else
 	{
 	FsCapabilities caps;
-	if( uby.type() != UB_NONE )
+	if (isUsedBy())
 	    {
 	    ret = VOLUME_ALREADY_IN_USE;
 	    }
@@ -503,7 +503,7 @@ Volume::changeMount(const string& m)
 	{
 	ret = VOLUME_MOUNT_POINT_INVALID;
 	}
-    else if( uby.type() != UB_NONE )
+    else if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -531,7 +531,7 @@ Volume::changeMountBy(MountByType mby)
     int ret = 0;
     y2mil("device:" << dev << " mby:" << mbyTypeString(mby));
     y2mil( "vorher:" << *this );
-    if( uby.type() != UB_NONE )
+    if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -577,7 +577,7 @@ int Volume::changeFstabOptions( const string& options )
     {
     int ret = 0;
     y2mil("device:" << dev << " options:" << options << " encr:" << encTypeString(encryption));
-    if( uby.type() != UB_NONE )
+    if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -649,7 +649,7 @@ int Volume::doFormat()
 	{
 	cont->getStorage()->showInfoCb( formatText(true) );
 	}
-    if( uby.type() != UB_NONE )
+    if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1092,7 +1092,7 @@ int Volume::doMount()
 	{
 	createPath( lmount );
 	}
-    if( ret==0 && !mp.empty() && uby.type() != UB_NONE )
+    if (ret == 0 && !mp.empty() && isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1127,7 +1127,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
     {
     int ret=0;
     y2mil("val:" << newSizeK);
-    if( uby.type() != UB_NONE )
+    if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1268,7 +1268,7 @@ int Volume::resizeFs()
     {
     int ret = 0;
     y2mil("val:" << val << " typ:" << typ);
-    if( getUsedByType() != UB_NONE )
+    if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1985,7 +1985,7 @@ int Volume::doSetLabel()
 	{
 	ret = VOLUME_LABEL_TOO_LONG;
 	}
-    if( ret==0 && getUsedByType() != UB_NONE )
+    if (ret == 0 && isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -2068,7 +2068,7 @@ int Volume::setLabel( const string& val )
 	{
 	if( caps.labelLength < val.size() )
 	    ret = VOLUME_LABEL_TOO_LONG;
-	else if( getUsedByType() != UB_NONE )
+	else if (isUsedBy())
 	    ret = VOLUME_ALREADY_IN_USE;
 	else
 	    label = val;
