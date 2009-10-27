@@ -2593,8 +2593,8 @@ string Volume::sizeString() const
 
 bool Volume::canUseDevice() const
     {
-    bool ret = getUsedByType()==UB_NONE && getMount().empty();
-    return( ret );
+    bool ret = !isUsedBy() && getMount().empty();
+    return ret;
     }
 
 

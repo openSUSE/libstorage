@@ -770,7 +770,7 @@ void
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
-	if( i->getUsedByType()==UB_NONE )
+	if (!i->isUsedBy())
 	    {
 	    i->getLoopData( Losetup );
 	    i->getFsData(blkid);
@@ -779,7 +779,7 @@ void
 	}
     for( VolIterator i=begin; i!=end; ++i )
 	{
-	if( i->getUsedByType()==UB_NONE )
+	if (!i->isUsedBy())
 	    {
 	    i->getMountData( mounts, !detectMounted );
 	    i->getFstabData( *fstab );
@@ -5182,8 +5182,7 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
 	if( disks_allowed )
 	    {
 	    DiskIterator i = findDisk( dev );
-	    ret = i!=dEnd() && i->getUsedByType()==UB_NONE &&
-	          i->numPartitions()==0;
+	    ret = i != dEnd() && !i->isUsedBy() && i->numPartitions() == 0;
 	    }
 	else
 	    ret = false;
@@ -5490,7 +5489,7 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 					   used, win, efi, ret))
 	    {
 	    }
-	else if (vol->getUsedByType() != UB_NONE)
+	else if (vol->isUsedBy())
 	{
 	    ret = false;
 	}
