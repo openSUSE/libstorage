@@ -168,7 +168,7 @@ namespace storage
 
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
-	for (deque<ContainerInfo>::iterator i1 = containers.begin(); i1 != containers.end(); ++i1)
+	for (deque<ContainerInfo>::const_iterator i1 = containers.begin(); i1 != containers.end(); ++i1)
 	{
 	    switch (i1->type)
 	    {
@@ -187,7 +187,7 @@ namespace storage
 
 		    deque<PartitionInfo> partitions;
 		    s->getPartitionInfo(i1->name, partitions);
-		    for (deque<PartitionInfo>::iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    for (deque<PartitionInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
 		    {
 			if (i2->partitionType == EXTENDED)
 			    continue;
@@ -223,7 +223,7 @@ namespace storage
 
 		    deque<LvmLvInfo> lvs;
 		    s->getLvmLvInfo(i1->name, lvs);
-		    for (deque<LvmLvInfo>::iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
+		    for (deque<LvmLvInfo>::const_iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
 		    {
 			Node lv_node(NODE_LVMLV, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(lv_node);
@@ -246,7 +246,7 @@ namespace storage
 		    deque<MdInfo> mds;
 		    s->getMdInfo(mds);
 
-		    for (deque<MdInfo>::iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
+		    for (deque<MdInfo>::const_iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
 		    {
 			Node md_node(NODE_MDRAID, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(md_node);
@@ -272,7 +272,7 @@ namespace storage
 		    deque<DmInfo> dms;
 		    s->getDmInfo(dms);
 
-		    for (deque<DmInfo>::iterator i2 = dms.begin(); i2 != dms.end(); ++i2)
+		    for (deque<DmInfo>::const_iterator i2 = dms.begin(); i2 != dms.end(); ++i2)
 		    {
 			Node dm_node(NODE_DM, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(dm_node);
@@ -308,7 +308,7 @@ namespace storage
 
 		    deque<DmraidInfo> partitions;
 		    s->getDmraidInfo(i1->name, partitions);
-		    for (deque<DmraidInfo>::iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    for (deque<DmraidInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
 		    {
 			if (i2->p.p.partitionType == EXTENDED)
 			    continue;
@@ -349,7 +349,7 @@ namespace storage
 
 		    deque<DmmultipathInfo> partitions;
 		    s->getDmmultipathInfo(i1->name, partitions);
-		    for (deque<DmmultipathInfo>::iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    for (deque<DmmultipathInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
 		    {
 			if (i2->p.p.partitionType == EXTENDED)
 			    continue;
