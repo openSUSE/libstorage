@@ -28,6 +28,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/Storage.h"
 #include "storage/AppUtil.h"
+#include "storage/Device.h"
 
 
 namespace storage
@@ -35,12 +36,10 @@ namespace storage
     using namespace std;
 
 
-Container::Container( Storage * const s, const string& Name, CType t ) :
-    sto(s), nm(Name)
+    Container::Container(Storage * const s, const string& Name, CType t) 
+	: Device(Name, "/dev/" + Name), sto(s)
     {
     del = silent = ronly = create = false;
-    dev = "/dev/" + nm;
-    size_k = mnr = mjr = 0;
     typ = t;
     y2deb("constructed cont " << nm);
     }
@@ -432,18 +431,16 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 Container& Container::operator= ( const Container& rhs )
     {
     y2deb("operator= from " << rhs.nm);
+
+    Device::operator=(rhs);
+
     typ = rhs.typ;
-    nm = rhs.nm;
-    dev = rhs.dev;
     del = rhs.del;
-    mjr = rhs.mjr;
-    mnr = rhs.mnr;
-    size_k = rhs.size_k;
     create = rhs.create;
     ronly = rhs.ronly;
     silent = rhs.silent;
-    uby = rhs.uby;
-    return( *this );
+
+    return *this;
     }
 
 Container::Container( const Container& rhs ) : sto(rhs.sto)

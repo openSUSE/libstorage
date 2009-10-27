@@ -309,7 +309,7 @@ DmCo::removeDm( const string& tname )
 	if( !findDm( tname, i ))
 	    ret = DM_UNKNOWN_TABLE;
 	}
-    if( ret==0 && i->getUsedByType() != UB_NONE )
+    if (ret == 0 && i->isUsedBy())
 	{
 	ret = DM_REMOVE_USED_BY;
 	}

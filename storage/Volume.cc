@@ -3045,14 +3045,12 @@ bool Volume::equalContent( const Volume& rhs ) const
 Volume& Volume::operator= ( const Volume& rhs )
     {
     y2deb("operator= from " << rhs.dev);
-    dev = rhs.dev;
+
+    Device::operator=(rhs);
+
     numeric = rhs.numeric;
     num = rhs.num;
-    nm = rhs.nm;
-    size_k = rhs.size_k;
     orig_size_k = rhs.orig_size_k;
-    mnr = rhs.mnr;
-    mjr = rhs.mjr;
     ronly = rhs.ronly;
     create = rhs.create;
     del = rhs.del;
@@ -3081,9 +3079,9 @@ Volume& Volume::operator= ( const Volume& rhs )
     loop_dev = rhs.loop_dev;
     fstab_loop_dev = rhs.fstab_loop_dev;
     crypt_pwd = rhs.crypt_pwd;
-    uby = rhs.uby;
     alt_names = rhs.alt_names;
-    return( *this );
+
+    return *this;
     }
 
 Volume::Volume( const Volume& rhs ) : cont(rhs.cont)

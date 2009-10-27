@@ -268,7 +268,7 @@ LoopCo::removeLoop( const string& file, bool removeFile )
 	if( !findLoop( file, i ) && !findLoopDev( file, i ) )
 	    ret = LOOP_UNKNOWN_FILE;
 	}
-    if( ret==0 && i->getUsedByType() != UB_NONE )
+    if (ret == 0 && i->isUsedBy())
 	{
 	ret = LOOP_REMOVE_USED_BY;
 	}

@@ -1023,7 +1023,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	if( i != dEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1037,7 +1037,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1076,7 +1076,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	if( i != dEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1097,7 +1097,7 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1138,7 +1138,7 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 	if( i != dEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1153,7 +1153,7 @@ Storage::createPartitionAny( const string& disk, unsigned long long sizeK,
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1220,7 +1220,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	if( i != dEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
@@ -1234,7 +1234,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
-	    if( i->getUsedByType() != UB_NONE )
+	    if (i->isUsedBy())
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{

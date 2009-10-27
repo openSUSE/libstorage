@@ -35,7 +35,7 @@ namespace storage
     using std::list;
 
 
-class Container
+    class Container : public Device
     {
     friend class Storage;
     protected:
@@ -156,8 +156,6 @@ class Container
 	Container( const Container& );
 	Storage * getStorage() const { return sto; }
 	virtual ~Container();
-	const string& name() const { return nm; }
-	const string& device() const { return dev; }
 	storage::CType type() const { return typ; }
 	bool deleted() const { return del; }
 	bool created() const { return create; }
@@ -165,15 +163,8 @@ class Container
 	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
 
-	void clearUsedBy() { uby.clear(); }
-	void setUsedBy(storage::UsedByType ub_type, const string& ub_device) { uby.set(ub_type, ub_device); }
-	const storage::usedBy& getUsedBy() const { return uby; }
-	storage::UsedByType getUsedByType() const { return uby.type(); }
-
 	bool readonly() const { return ronly; }
-	unsigned long minorNr() const { return mnr; }
-	unsigned long majorNr() const { return mjr; }
-	unsigned long long sizeK() const { return size_k; }
+
 	virtual string removeText(bool doing=true) const;
 	virtual string createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
@@ -212,16 +203,11 @@ class Container
 
 	Storage * const sto;
 	storage::CType typ;
-	string nm;
-	string dev;
 	bool del;
 	bool create;
 	bool silent;
 	bool ronly;
-	storage::usedBy uby;
-	unsigned long long size_k;
-	unsigned long mnr;
-	unsigned long mjr;
+
 	VCont vols;
 
 	mutable storage::ContainerInfo info; // workaround for broken ycp bindings

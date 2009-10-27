@@ -535,7 +535,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	if( !findMd( num, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && i->getUsedByType() != UB_NONE )
+    if (ret == 0 && i->isUsedBy())
 	{
 	ret = MD_REMOVE_USED_BY;
 	}

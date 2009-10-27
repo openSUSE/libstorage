@@ -26,6 +26,8 @@
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
 #include "storage/StorageTmpl.h"
+#include "storage/Device.h"
+
 
 namespace storage
 {
@@ -41,7 +43,7 @@ class Storage;
     class Blkid;
     
 
-class Volume
+    class Volume : public Device
     {
     friend class Storage;
 
@@ -54,7 +56,6 @@ class Volume
 
 	virtual ~Volume();
 
-	const string& device() const { return dev; }
 	const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
@@ -77,11 +78,6 @@ class Volume
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
 	bool sameDevice( const string& device ) const;
 	bool fstabAdded() const { return( fstab_added ); }
-
-	void clearUsedBy() { uby.clear(); }
-	void setUsedBy(storage::UsedByType ub_type, const string& ub_device) { uby.set(ub_type, ub_device); }
-	const storage::usedBy& getUsedBy() const { return uby; }
-	storage::UsedByType getUsedByType() const { return uby.type(); }
 
 	void getFsInfo( const Volume* source );
 
@@ -133,14 +129,8 @@ class Volume
 	int setDescText( const string& val ) { dtxt=val; return 0; }
 	const std::list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
-	unsigned long long sizeK() const { return size_k; }
 	unsigned long long origSizeK() const { return orig_size_k; }
-	const string& name() const { return nm; }
-	unsigned long minorNr() const { return mnr; }
-	unsigned long majorNr() const { return mjr; }
 	bool isNumeric() const { return numeric; }
-	void setMajorMinor( unsigned long Major, unsigned long Minor )
-	    { mjr=Major; mnr=Minor; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
 	void setDmcryptDev( const string& dm, bool active );
@@ -289,16 +279,10 @@ class Volume
 	string dmcrypt_dev;
 	string fstab_loop_dev;
 	string crypt_pwd;
-	string nm;
 	std::list<string> alt_names;
 	unsigned num;
-	unsigned long long size_k;
 	unsigned long long orig_size_k;
-	string dev;
 	string dtxt;
-	unsigned long mnr;
-	unsigned long mjr;
-	storage::usedBy uby;
 
 	static const string fs_names[storage::FSNONE+1];
 	static const string mb_names[storage::MOUNTBY_PATH+1];

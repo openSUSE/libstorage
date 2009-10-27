@@ -7,6 +7,7 @@ lib_LTLIBRARIES = libstorage.la
 libstorage_la_SOURCES =					\
 	StorageInterface.h				\
 	Storage.cc		Storage.h		\
+	Device.cc		Device.h		\
 	Container.cc		Container.h		\
 	  Disk.cc		Disk.h			\
 	    Dasd.cc		Dasd.h			\

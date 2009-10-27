@@ -1638,7 +1638,7 @@ int Disk::removePartition( unsigned nr )
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    else if( i->getUsedByType() != UB_NONE )
+    else if (i->isUsedBy())
 	{
 	ret = DISK_REMOVE_USED_BY;
 	}
