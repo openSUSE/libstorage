@@ -212,8 +212,7 @@ Storage::initialize()
     for (list<std::pair<string, string>>::const_iterator i = infoPopupTxts.begin(); 
 	 i != infoPopupTxts.end(); ++i)
 	{
-	storage::usedBy ub;
-	usedBy( i->first, ub );
+	storage::usedBy ub = getUsedBy(i->first);
 	y2mil( "device:" << i->first << " used By:" << ub );
 	if( ub.type()==UB_NONE )
 	    infoPopupCb( i->second );
@@ -1321,9 +1320,9 @@ Storage::removePartition( const string& partition )
 	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		if( vol->getUsedByType() == UB_NONE || recursiveRemove )
+		if (!vol->isUsedBy() || recursiveRemove)
 		    {
-		    if( vol->getUsedByType() != UB_NONE )
+		    if (vol->isUsedBy())
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
 		    if( ret==0 )
 			ret = disk->removePartition( vol->nr() );
@@ -1341,9 +1340,9 @@ Storage::removePartition( const string& partition )
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		if( vol->getUsedByType() == UB_NONE || recursiveRemove )
+		if (!vol->isUsedBy() || recursiveRemove)
 		    {
-		    if( vol->getUsedByType() != UB_NONE )
+		    if (vol->isUsedBy())
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
 		    if( ret==0 )
 			ret = disk->removePartition( vol->nr() );
@@ -2543,10 +2542,10 @@ Storage::removeVolume( const string& device )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	if( vol->getUsedByType() == UB_NONE || recursiveRemove )
+	if (!vol->isUsedBy() || recursiveRemove)
 	    {
 	    string vdev = vol->device();
-	    if( vol->getUsedByType() != UB_NONE )
+	    if (vol->isUsedBy())
 		ret = removeUsing( vdev, vol->getUsedBy() );
 	    if( ret==0 )
 		ret = cont->removeVolume( &(*vol) );
@@ -4249,7 +4248,7 @@ int Storage::getPartitionInfo( const string& disk,
     if (i != dEnd())
     {
 	// TODO: those partitions shouldn't be detected at all
-	if (i->getUsedByType() == UB_NONE)
+	if (!i->isUsedBy())
 	{
 	    Disk::PartPair p = i->partPair(Disk::notDeleted);
 	    for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
@@ -4937,35 +4936,25 @@ Storage::fetchDanglingUsedBy(const string& dev, storage::usedBy& uby)
 }
 
 
-bool Storage::usedBy( const string& dev, storage::usedBy& ub )
+    storage::usedBy
+    Storage::getUsedBy(const string& dev)
     {
-    ub.clear();
-    bool ret=false;
-    VolIterator v;
-    if( !findVolume( dev, v ) )
+	storage::usedBy ret;
+	VolIterator v;
+	if (!findVolume(dev, v))
 	{
-	DiskIterator i = findDisk( dev );
-	if( i != dEnd() )
-	    {
-	    ub = i->getUsedBy();
-	    ret = true;
-	    }
+	    DiskIterator i = findDisk(dev);
+	    if (i != dEnd())
+		ret = i->getUsedBy();
 	}
-    else
+	else
 	{
-	ub = v->getUsedBy();
-	ret = true;
+	    ret = v->getUsedBy();
 	}
-    y2mil( "dev:" << dev << " ret:" << ret << " ub:" << ub );
-    return( ret );
+	y2mil("dev:" << dev << " ret:" << ret);
+	return ret;
     }
 
-UsedByType Storage::usedBy( const string& dev )
-    {
-    storage::usedBy ub;
-    usedBy( dev, ub );
-    return( ub.type() );
-    }
 
 void Storage::progressBarCb(const string& id, unsigned cur, unsigned max) const
     {

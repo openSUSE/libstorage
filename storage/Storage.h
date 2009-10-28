@@ -265,12 +265,15 @@ class DiskData;
 	void printInfo(std::ostream& str) const;
 	void logCo(const Container* c) const;
 	void logProcData(const string& str = "") const;
-	storage::UsedByType usedBy( const string& dev );
-	bool usedBy( const string& dev, storage::usedBy& ub );
+
 	bool clearUsedBy(const string& dev);
 	bool setUsedBy(const string& dev, storage::UsedByType ub_type,
 		       const string& ub_device);
+	storage::usedBy getUsedBy(const string& dev);
+	bool isUsedBy(const string& dev) { return getUsedBy(dev).type() != UB_NONE; }
+
 	void fetchDanglingUsedBy(const string& dev, storage::usedBy& uby);
+
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	bool setDmcryptData( const string& dev, const string& dm, 

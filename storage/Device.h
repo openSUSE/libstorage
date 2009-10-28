@@ -52,8 +52,7 @@ namespace storage
 	void clearUsedBy() { uby.clear(); }
 	void setUsedBy(storage::UsedByType ub_type, const string& ub_device) { uby.set(ub_type, ub_device); }
 	const storage::usedBy& getUsedBy() const { return uby; }
-	storage::UsedByType getUsedByType() const { return uby.type(); }
-	bool isUsedBy() const { return uby.type() != UB_NONE; }
+	bool isUsedBy() const { return getUsedBy().type() != UB_NONE; }
 
     protected:
 

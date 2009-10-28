@@ -2335,7 +2335,7 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( ret==0 && p->type()!=EXTENDED )
 	    {
-	    bool used_as_pv = p->getUsedByType() == UB_LVM;
+	    bool used_as_pv = p->getUsedBy().type() == UB_LVM;
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
