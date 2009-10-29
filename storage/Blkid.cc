@@ -66,50 +66,101 @@ namespace storage
 
 	    Entry entry;
 
-	    map<string, string> m = makeMap(l, "=", "\"");
+	    const map<string, string> m = makeMap(l, "=", "\"");
 
 	    map<string, string>::const_iterator i = m.find("TYPE");
 	    if (i != m.end())
 	    {
 		if (i->second == "reiserfs")
-		    entry.fstype = REISERFS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = REISERFS;
+		}
 		else if (i->second == "swap")
-		    entry.fstype = SWAP;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = SWAP;
+		}
 		else if (i->second == "ext2")
-		    entry.fstype = (m["SEC_TYPE"] == "ext3") ? EXT3 : EXT2;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = EXT2;
+		}
 		else if (i->second == "ext3")
-		    entry.fstype = EXT3;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = EXT3;
+		}
 		else if (i->second == "ext4")
-		    entry.fstype = EXT4;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = EXT4;
+		}
 		else if (i->second == "btrfs")
-		    entry.fstype = BTRFS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = BTRFS;
+		}
 		else if (i->second == "vfat")
-		    entry.fstype = VFAT;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = VFAT;
+		}
 		else if (i->second == "ntfs")
-		    entry.fstype = NTFS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = NTFS;
+		}
 		else if (i->second == "jfs")
-		    entry.fstype = JFS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = JFS;
+		}
 		else if (i->second == "hfs")
-		    entry.fstype = HFS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = HFS;
+		}
 		else if (i->second == "hfsplus")
-		    entry.fstype = HFSPLUS;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = HFSPLUS;
+		}
 		else if (i->second == "xfs")
-		    entry.fstype = XFS;
-		else if (i->second == "(null)")
-		    entry.fstype = FSNONE;
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = XFS;
+		}
+		else if (i->second == "LVM2_member")
+		{
+		    entry.is_lvm = true;
+		}
 		else if (i->second == "crypto_LUKS")
-		    entry.luks = true;
+		{
+		    entry.is_luks = true;
+		}
 	    }
 
-	    i = m.find("UUID");
-	    if (i != m.end())
-		entry.uuid = i->second;
+	    if (entry.is_fs)
+	    {
+		i = m.find("UUID");
+		if (i != m.end())
+		    entry.fs_uuid = i->second;
 
-	    i = m.find("LABEL");
-	    if (i != m.end())
-		entry.label = i->second;
+		i = m.find("LABEL");
+		if (i != m.end())
+		    entry.fs_label = i->second;
+	    }
 
-	    data[device] = entry;
+	    if (entry.is_luks)
+	    {
+		i = m.find("UUID");
+		if (i != m.end())
+		    entry.luks_uuid = i->second;
+	    }
+
+	    if (entry.is_fs || entry.is_lvm || entry.is_luks)
+		data[device] = entry;
 	}
 
 	for (const_iterator it = data.begin(); it != data.end(); ++it)
@@ -131,13 +182,28 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Blkid::Entry& entry)
     {
-	s << "fstype:" << Volume::fsTypeString(entry.fstype);
-	if (!entry.uuid.empty())
-	    s << " uuid:" << entry.uuid;
-	if (!entry.label.empty())
-	    s << " label:" << entry.label;
-	if (entry.luks)
-	    s << " luks:" << entry.luks;
+	if (entry.is_fs)
+	{
+	    s << "is_fs:" << entry.is_fs;
+	    s << " fs_type:" << Volume::fsTypeString(entry.fs_type);
+	    if (!entry.fs_uuid.empty())
+		s << " fs_uuid:" << entry.fs_uuid;
+	    if (!entry.fs_label.empty())
+		s << " fs_label:" << entry.fs_label;
+	}
+
+	if (entry.is_lvm)
+	{
+	    s << "is_lvm:" << entry.is_lvm;
+	}
+
+	if (entry.is_luks)
+	{
+	    s << "is_luks:" << entry.is_luks;
+	    if (!entry.luks_uuid.empty())
+		s << " luks_uuid:" << entry.luks_uuid;
+	}
+
 	return s;
     }
 

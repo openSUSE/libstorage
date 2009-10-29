@@ -424,22 +424,29 @@ void Volume::getLoopData( SystemCmd& loopData )
 	{
 	    y2mil("device:" << device() << " mountDevice:" << mountDevice() << " entry:" << entry);
 
-	    detected_fs = fs = entry.fstype;
-
-	    if (!entry.uuid.empty())
+	    if (entry.is_fs)
 	    {
-		uuid = entry.uuid;
-		alt_names.remove_if(string_contains("/by-uuid/"));
-		alt_names.push_back("/dev/disk/by-uuid/" + uuid);
+		detected_fs = fs = entry.fs_type;
+
+		if (!entry.fs_uuid.empty())
+		{
+		    uuid = entry.fs_uuid;
+		    alt_names.remove_if(string_contains("/by-uuid/"));
+		    alt_names.push_back("/dev/disk/by-uuid/" + uuid);
+		}
+
+		if (!entry.fs_label.empty())
+		{
+		    // ignore label for hfs since we cannot set it (bnc #447782)
+		    if (entry.fs_type != HFS)
+			label = orig_label = entry.fs_label;
+		    alt_names.remove_if(string_contains("/by-label/"));
+		    alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
+		}
 	    }
-
-	    if (!entry.label.empty())
+	    else
 	    {
-		// ignore label for hfs since we cannot set it (bnc #447782)
-		if (entry.fstype != HFS)
-		    label = orig_label = entry.label;
-		alt_names.remove_if(string_contains("/by-label/"));
-		alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
+		detected_fs = fs = FSUNKNOWN;
 	    }
 	}
     }

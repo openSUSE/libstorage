@@ -43,12 +43,18 @@ namespace storage
 
 	struct Entry
 	{
-	    Entry() : fstype(FSUNKNOWN), uuid(), label(), luks(false) {}
+	    Entry() : is_fs(false), fs_type(FSUNKNOWN), fs_uuid(), fs_label(),
+		      is_lvm(false), is_luks(false), luks_uuid() {}
 
-	    FsType fstype;
-	    string uuid;
-	    string label;
-	    bool luks;
+	    bool is_fs;
+	    FsType fs_type;
+	    string fs_uuid;
+	    string fs_label;
+
+	    bool is_lvm;
+
+	    bool is_luks;
+	    string luks_uuid;
 	};
 
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);

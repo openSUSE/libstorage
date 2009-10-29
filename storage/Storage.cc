@@ -784,7 +784,7 @@ void
 	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )
 		{
 		    Blkid::Entry entry;
-		    if (blkid.getEntry(i->dev, entry) && entry.luks)
+		    if (blkid.getEntry(i->dev, entry) && entry.is_luks)
 			i->setEncryption(ENC_LUKS);
 		}
 	    }
