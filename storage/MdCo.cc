@@ -636,7 +636,7 @@ MdCo::doCreate( Volume* v )
 	    Storage::waitForDevice(m->device());
 	    getMdData( m->nr() );
 	    updateEntry( m );
-	    bool used_as_pv = m->getUsedBy().type() == UB_LVM;
+	    bool used_as_pv = m->isUsedBy(UB_LVM);
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{

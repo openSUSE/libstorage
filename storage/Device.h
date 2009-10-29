@@ -46,13 +46,16 @@ namespace storage
 
 	unsigned long long sizeK() const { return size_k; }
 
-	unsigned long minorNr() const { return mnr; }
 	unsigned long majorNr() const { return mjr; }
+	unsigned long minorNr() const { return mnr; }
 
 	void clearUsedBy() { uby.clear(); }
-	void setUsedBy(storage::UsedByType ub_type, const string& ub_device) { uby.set(ub_type, ub_device); }
-	const storage::usedBy& getUsedBy() const { return uby; }
-	bool isUsedBy() const { return getUsedBy().type() != UB_NONE; }
+	void setUsedBy(UsedByType type, const string& device);
+	void addUsedBy(UsedByType type, const string& device);
+	void removeUsedBy(UsedByType type, const string& device);
+	bool isUsedBy() const { return !uby.empty(); }
+	bool isUsedBy(UsedByType type) const;
+	const list<UsedBy>& getUsedBy() const { return uby; }
 
     protected:
 
@@ -66,7 +69,7 @@ namespace storage
 	unsigned long mjr;
 	unsigned long mnr;
 
-	storage::usedBy uby;
+	list<UsedBy> uby;
 
     };
 

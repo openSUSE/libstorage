@@ -180,9 +180,9 @@ namespace storage
 		    Node disk_node(NODE_DISK, "device:" + i1->device, i1->device, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
 
-		    if (!i1->usedByDevice.empty())
+		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, disk_node.id, "device:" + i1->usedByDevice));
+			edges.push_back(Edge(EDGE_USED, disk_node.id, "device:" + i2->device));
 		    }
 
 		    deque<PartitionInfo> partitions;
@@ -197,9 +197,9 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id, partition_node.id));
 
-			if (!i2->v.usedByDevice.empty())
+			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->v.usedByDevice));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
@@ -251,9 +251,9 @@ namespace storage
 			Node md_node(NODE_MDRAID, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(md_node);
 
-			if (!i2->v.usedByDevice.empty())
+			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, md_node.id, "device:" + i2->v.usedByDevice));
+			    edges.push_back(Edge(EDGE_USED, md_node.id, "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
@@ -277,9 +277,9 @@ namespace storage
 			Node dm_node(NODE_DM, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
 			nodes.push_back(dm_node);
 
-			if (!i2->v.usedByDevice.empty())
+			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, dm_node.id, "device:" + i2->v.usedByDevice));
+			    edges.push_back(Edge(EDGE_USED, dm_node.id, "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
@@ -301,9 +301,9 @@ namespace storage
 		    Node dmraid_node(NODE_DMRAID, "device:" + i1->device, i1->device, dmraidcoinfo.p.d.sizeK);
 		    nodes.push_back(dmraid_node);
 
-		    if (!i1->usedByDevice.empty())
+		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, dmraid_node.id, "device:" + i1->usedByDevice));
+			edges.push_back(Edge(EDGE_USED, dmraid_node.id, "device:" + i2->device));
 		    }
 
 		    deque<DmraidInfo> partitions;
@@ -318,9 +318,9 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id, partition_node.id));
 
-			if (!i2->p.v.usedByDevice.empty())
+			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
 			}
 
 			if (!i2->p.v.mount.empty())
@@ -342,9 +342,9 @@ namespace storage
 		    Node dmmultipath_node(NODE_DMMULTIPATH, "device:" + i1->device, i1->device, dmmultipathcoinfo.p.d.sizeK);
 		    nodes.push_back(dmmultipath_node);
 
-		    if (!i1->usedByDevice.empty())
+		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id, "device:" + i1->usedByDevice));
+			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id, "device:" + i2->device));
 		    }
 
 		    deque<DmmultipathInfo> partitions;
@@ -359,9 +359,9 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id, partition_node.id));
 
-			if (!i2->p.v.usedByDevice.empty())
+			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i2->p.v.usedByDevice));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
 			}
 
 			if (!i2->p.v.mount.empty())

@@ -123,7 +123,7 @@ void DmraidCo::addPv( Pv*& p )
     {
     PeContainer::addPv( *p );
     if( !deleted() )
-	getStorage()->setUsedBy(p->device, UB_DMRAID, "/dev/mapper/" + name());
+	getStorage()->addUsedBy(p->device, UB_DMRAID, "/dev/mapper/" + name());
     delete p;
     p = new Pv;
     }

@@ -54,4 +54,34 @@ namespace storage
 	return *this;
     }
 
+
+    void
+    Device::setUsedBy(UsedByType type, const string& device)
+    {
+	uby.clear();
+	uby.push_back(UsedBy(type, device));
+    }
+
+    void
+    Device::addUsedBy(UsedByType type, const string& device)
+    {
+	uby.push_back(UsedBy(type, device));
+    }
+
+    void
+    Device::removeUsedBy(UsedByType type, const string& device)
+    {
+	uby.remove(UsedBy(type, device));
+    }
+
+    bool
+    Device::isUsedBy(UsedByType type) const
+    {
+	for (list<UsedBy>::const_iterator it = uby.begin(); it != uby.end(); ++it)
+	    if (it->type() == type)
+		return true;
+
+	return false;
+    }
+
 }

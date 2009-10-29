@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 28 23:13:51 CET 2009 - aschnell@suse.de
+
+- converted usedby information to list (bnc #472812)
+- 2.19.0
+
+-------------------------------------------------------------------
 Fri Oct 16 13:02:31 CEST 2009 - aschnell@suse.de
 
 - log mdadm.conf created during scan (bnc #547288)

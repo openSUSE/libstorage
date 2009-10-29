@@ -236,7 +236,7 @@ void
 		skip = true;
 		getStorage()->setDmcryptData( it->first, m->device(), min_num,
 		                              m->sizeK(), detectEncryption (m->device()) );
-		if (getStorage()->getUsedBy(it->first).type() == UB_DM)
+		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
 		}
 	    if (!skip && m->sizeK() > 0 && ((only_crypt && m->getTargetName() == "crypt") ||

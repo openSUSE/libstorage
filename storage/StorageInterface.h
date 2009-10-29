@@ -217,6 +217,14 @@ namespace storage
     };
 
 
+    struct UsedByInfo
+    {
+	UsedByInfo(UsedByType type, const string& device) : type(type), device(device) {}
+	UsedByType type;
+	string device;
+    };
+
+
     /**
      * Contains info about a generic container.
      */
@@ -226,8 +234,9 @@ namespace storage
 	CType type;
 	string device;
 	string name;
-	UsedByType usedByType;
-	string usedByDevice;
+	list<UsedByInfo> usedBy;
+	UsedByType usedByType;	// deprecated
+	string usedByDevice;	// deprecated
 	bool readonly;
     };
 
@@ -308,8 +317,9 @@ namespace storage
 	string device;
 	string mount;
 	MountByType mount_by;
-	UsedByType usedByType;
-	string usedByDevice;
+	list<UsedByInfo> usedBy;
+	UsedByType usedByType;	// deprecated
+	string usedByDevice;	// deprecated
 	bool ignore_fstab;
 	string fstab_options;
 	string uuid;

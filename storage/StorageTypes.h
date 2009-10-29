@@ -157,31 +157,31 @@ struct contOrder
     };
 
 
-class usedBy
-{
-public:
-    usedBy() : ub_type(storage::UB_NONE) {}
-    usedBy(storage::UsedByType type, const string& device) : ub_type(type), ub_device(device) {}
+    class UsedBy
+    {
 
-    void clear() { ub_type = storage::UB_NONE; ub_device.erase(); }
-    void set(storage::UsedByType type, const string& device)
-	{ ub_type = type; (ub_type == storage::UB_NONE) ? ub_device.erase() : ub_device = device; }
+    public:
 
-    bool operator==(const usedBy& rhs) const
-	{ return ub_type == rhs.ub_type && ub_device == rhs.ub_device; }
-    bool operator!=(const usedBy& rhs) const
-	{ return !(*this == rhs); }
+	UsedBy(UsedByType type, const string& device) : ub_type(type), ub_device(device) {}
 
-    storage::UsedByType type() const { return ub_type; }
-    string device() const { return ub_device; }
+	bool operator==(const UsedBy& rhs) const
+	    { return ub_type == rhs.ub_type && ub_device == rhs.ub_device; }
+	bool operator!=(const UsedBy& rhs) const
+	    { return !(*this == rhs); }
 
-    friend std::ostream& operator<<(std::ostream&, const usedBy&);
+	UsedByType type() const { return ub_type; }
+	string device() const { return ub_device; }
 
-private:
-    operator string() const;
-    storage::UsedByType ub_type;
-    string ub_device;
-};
+	friend std::ostream& operator<<(std::ostream&, const UsedBy&);
+
+	operator UsedByInfo() const { return UsedByInfo(ub_type, ub_device); }
+
+    private:
+
+	UsedByType ub_type;
+	string ub_device;
+
+    };
 
 
     struct regex_matches

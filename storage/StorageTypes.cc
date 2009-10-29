@@ -92,42 +92,29 @@ bool commitAction::operator<( const commitAction& rhs ) const
     };
 
 
-    usedBy::operator string() const
+    std::ostream& operator<<(std::ostream& s, const UsedBy& usedby)
     {
-	string st;
-	if (type() != storage::UB_NONE)
+	switch (usedby.type())
 	{
-	    switch (type())
-	    {
-		case storage::UB_LVM:
-		    st = "lvm";
-		    break;
-		case storage::UB_MD:
-		    st = "md";
-		    break;
-		case storage::UB_DM:
-		    st = "dm";
-		    break;
-		case storage::UB_DMRAID:
-		    st = "dmraid";
-		    break;
-		case UB_DMMULTIPATH:
-		    st = "dmmultipath";
-		    break;
-		default:
-		    st = "UNKNOWN";
-		    break;
-	    }
-	    st += "[" + device() + "]";
+	    case UB_LVM:
+		s << "lvm[" << usedby.device() << "]";
+		break;
+	    case UB_MD:
+		s << "md[" << usedby.device() << "]";
+		break;
+	    case UB_DM:
+		s << "dm[" << usedby.device() << "]";
+		break;
+	    case UB_DMRAID:
+		s << "dmraid[" << usedby.device() << "]";
+		break;
+	    case UB_DMMULTIPATH:
+		s << "dmmultipath[" << usedby.device() << "]";
+		break;
+	    case UB_NONE:
+		break;
 	}
-	return st;
-    }
 
-
-    std::ostream& operator<<(std::ostream& s, const usedBy& d)
-    {
-	if (d.type() != storage::UB_NONE)
-	    s << string(d);
 	return s;
     }
 

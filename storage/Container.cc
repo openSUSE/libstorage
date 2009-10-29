@@ -320,8 +320,20 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
     info.type = type();
     info.name = name();
     info.device = device();
-    info.usedByType = uby.type();
-    info.usedByDevice = uby.device();
+
+    info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
+
+    if (uby.empty())
+    {
+	info.usedByType = UB_NONE;
+	info.usedByDevice = "";
+    }
+    else
+    {
+	info.usedByType = uby.front().type();
+	info.usedByDevice = uby.front().device();
+    }
+
     info.readonly = readonly();
     tinfo = info;
 }

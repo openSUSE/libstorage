@@ -2691,8 +2691,20 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.device = dev;
     info.mount = mp;
     info.mount_by = mount_by;
-    info.usedByType = uby.type();
-    info.usedByDevice = uby.device();
+
+    info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
+
+    if (uby.empty())
+    {
+	info.usedByType = UB_NONE;
+	info.usedByDevice = "";
+    }
+    else
+    {
+	info.usedByType = uby.front().type();
+	info.usedByDevice = uby.front().device();
+    }
+
     info.ignore_fstab = ignore_fstab;
     info.fstab_options = fstab_opt;
     info.uuid = uuid;

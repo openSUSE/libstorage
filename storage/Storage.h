@@ -266,13 +266,14 @@ class DiskData;
 	void logCo(const Container* c) const;
 	void logProcData(const string& str = "") const;
 
-	bool clearUsedBy(const string& dev);
-	bool setUsedBy(const string& dev, storage::UsedByType ub_type,
-		       const string& ub_device);
-	storage::usedBy getUsedBy(const string& dev);
-	bool isUsedBy(const string& dev) { return getUsedBy(dev).type() != UB_NONE; }
+	void clearUsedBy(const string& dev);
+	void setUsedBy(const string& dev, UsedByType type, const string& device);
+	void addUsedBy(const string& dev, UsedByType type, const string& device);
+	void removeUsedBy(const string& dev, UsedByType type, const string& device);
+	bool isUsedBy(const string& dev);
+	bool isUsedBy(const string& dev, UsedByType type);
 
-	void fetchDanglingUsedBy(const string& dev, storage::usedBy& uby);
+	void fetchDanglingUsedBy(const string& dev, list<UsedBy>& uby);
 
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
@@ -413,7 +414,7 @@ class DiskData;
 	void setRootPrefix( const string& root );
 	string getRootPrefix() const { return rootprefix; }
 	int removeVolume( const string& device );
-	int removeUsing( const string& device, const storage::usedBy& uby );
+	int removeUsing(const string& device, const list<UsedBy>& uby);
 	bool checkDeviceMounted(const string& device, list<string>& mps);
 	bool umountDevice( const string& device );
 	bool mountDev( const string& device, const string& mp, bool ro=true,
@@ -1714,6 +1715,8 @@ class DiskData;
 	                 bool also_del=false );
 	bool findContainer( const string& device, ContIterator& c );
 
+	Device* findDevice(const string& dev);
+
 	bool haveMd( MdCo*& md );
 	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
@@ -1766,7 +1769,7 @@ class DiskData;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
 
-	map<string, storage::usedBy> danglingUsedBy;
+	map<string, list<UsedBy>> danglingUsedBy;
 
 	unsigned max_log_num;
 	string lastAction;

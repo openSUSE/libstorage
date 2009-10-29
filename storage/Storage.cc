@@ -212,9 +212,7 @@ Storage::initialize()
     for (list<std::pair<string, string>>::const_iterator i = infoPopupTxts.begin(); 
 	 i != infoPopupTxts.end(); ++i)
 	{
-	storage::usedBy ub = getUsedBy(i->first);
-	y2mil( "device:" << i->first << " used By:" << ub );
-	if( ub.type()==UB_NONE )
+	if (!isUsedBy(i->first))
 	    infoPopupCb( i->second );
 	else
 	    y2mil( "suppressing cb:" << i->second );
@@ -4885,74 +4883,136 @@ string Storage::findNormalDevice( const string& device )
     }
 
 
-bool Storage::clearUsedBy(const string& dev)
-{
-    return setUsedBy(dev, UB_NONE, "");
-}
-
-
-bool Storage::setUsedBy(const string& dev, UsedByType ub_type, const string& ub_device)
-{
-    bool ret=true;
-    VolIterator v;
-    if( !findVolume( dev, v ) )
+    Device*
+    Storage::findDevice(const string& dev)
     {
-	DiskIterator i = findDisk( dev );
-	if( i != dEnd() )
+	VolIterator v;
+	if (findVolume(dev, v))
+	    return &*v;
+
+	DiskIterator i = findDisk(dev);
+	if (i != dEnd())
+	    return &*i;
+
+	return NULL;
+    }
+
+
+    void
+    Storage::clearUsedBy(const string& dev)
+    {
+	Device* tmp = findDevice(dev);
+	if (tmp)
 	{
-	    i->setUsedBy(ub_type, ub_device);
+	    tmp->clearUsedBy();
+	    y2mil("dev:" << dev);
 	}
 	else
 	{
-	    ret = false;
-	    danglingUsedBy[dev] = storage::usedBy(ub_type, ub_device);
-	    y2mil("adding ub_type:" << ub_type << " ub_device:" << ub_device <<
+	    y2mil("dev:" << dev << " failed");
+	}
+    }
+
+
+    void
+    Storage::setUsedBy(const string& dev, UsedByType type, const string& device)
+    {
+	Device* tmp = findDevice(dev);
+	if (tmp)
+	{
+	    tmp->setUsedBy(type, device);
+	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
+	}
+	else
+	{
+	    danglingUsedBy[dev].clear();
+	    danglingUsedBy[dev].push_back(UsedBy(type, device));
+	    y2mil("setting type:" << type << " device:" << device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
     }
-    else
-    {
-	v->setUsedBy(ub_type, ub_device);
-    }
-    y2mil("dev:" << dev << " ub_type:" << ub_type << " ub_device:" << ub_device << " ret:" << ret);
-    return ret;
-}
 
 
-void
-Storage::fetchDanglingUsedBy(const string& dev, storage::usedBy& uby)
-{
-    map<string, storage::usedBy>::iterator pos = danglingUsedBy.find(dev);
-    if (pos != danglingUsedBy.end())
+    void
+    Storage::addUsedBy(const string& dev, UsedByType type, const string& device)
     {
-	uby = pos->second;
-	danglingUsedBy.erase(pos);
-	y2mil("dev:" << dev << " usedby:" << uby);
-    }
-    else
-    {
-	y2mil("dev:" << dev << " not found");
-    }
-}
-
-
-    storage::usedBy
-    Storage::getUsedBy(const string& dev)
-    {
-	storage::usedBy ret;
-	VolIterator v;
-	if (!findVolume(dev, v))
+	Device* tmp = findDevice(dev);
+	if (tmp)
 	{
-	    DiskIterator i = findDisk(dev);
-	    if (i != dEnd())
-		ret = i->getUsedBy();
+	    tmp->addUsedBy(type, device);
+	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
 	}
 	else
 	{
-	    ret = v->getUsedBy();
+	    danglingUsedBy[dev].push_back(UsedBy(type, device));
+	    y2mil("adding type:" << type << " device:" << device <<
+		  " for dev:" << dev << " to dangling usedby");
 	}
+    }
+
+
+    void
+    Storage::removeUsedBy(const string& dev, UsedByType type, const string& device)
+    {
+	Device* tmp = findDevice(dev);
+	if (tmp)
+	{
+	    tmp->removeUsedBy(type, device); 
+	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
+	}
+	else
+	{
+	    y2mil("dev:" << dev << " type:" << type << " device:" << device << " failed");
+	}
+    }
+
+
+    bool
+    Storage::isUsedBy(const string& dev)
+    {
+	bool ret = false;
+
+	Device* tmp = findDevice(dev);
+	if (tmp)
+	{
+	    ret = tmp->isUsedBy();
+	}
+
 	y2mil("dev:" << dev << " ret:" << ret);
 	return ret;
+    }
+
+
+    bool
+    Storage::isUsedBy(const string& dev, UsedByType type)
+    {
+	bool ret = false;
+
+	Device* tmp = findDevice(dev);
+	if (tmp)
+	{
+	    ret = tmp->isUsedBy(type);
+	}
+
+	y2mil("dev:" << dev << " type:" << type << " ret:" << ret);
+	return ret;
+    }
+
+
+    void
+    Storage::fetchDanglingUsedBy(const string& dev, list<UsedBy>& uby)
+    {
+	map<string, list<UsedBy>>::iterator pos = danglingUsedBy.find(dev);
+	if (pos != danglingUsedBy.end())
+	{
+	    uby.splice(uby.end(), pos->second);
+	    danglingUsedBy.erase(pos);
+	    y2mil("dev:" << dev << " usedby:" << uby);
+	}
+	else
+	{
+	    y2mil("dev:" << dev << " not found");
+	}
     }
 
 
@@ -5272,35 +5332,42 @@ int Storage::removeContainer( Container* val )
     }
 
 
-int Storage::removeUsing(const string& device, const storage::usedBy& uby)
-{
-    y2mil("device:" << device << " uby:" << uby);
-    int ret=0;
-    switch( uby.type() )
+    int
+    Storage::removeUsing(const string& device, const list<UsedBy>& usedby)
+    {
+	y2mil("device:" << device << " usedby:" << usedby);
+
+	int ret = 0;
+
+	for (list<UsedBy>::const_iterator it = usedby.begin(); it != usedby.end(); ++it)
 	{
-	case UB_MD:
-	    ret = removeVolume(uby.device());
-	    break;
-	case UB_DM:
-	    ret = removeVolume(uby.device());
-	    break;
-	case UB_LVM:
-	    ret = removeLvmVg(uby.device().substr(5));
-	    break;
-	case UB_DMRAID:
-	    break;
-	case UB_DMMULTIPATH:
-	    break;
-	case UB_NONE:
-	    y2war(device << " used by none");
-	    break;
-	default:
-	    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;
-	    break;
+	    switch (it->type())
+	    {
+		case UB_MD:
+		    ret = removeVolume(it->device());
+		    break;
+		case UB_DM:
+		    ret = removeVolume(it->device());
+		    break;
+		case UB_LVM:
+		    ret = removeLvmVg(it->device().substr(5));
+		    break;
+		case UB_DMRAID:
+		    break;
+		case UB_DMMULTIPATH:
+		    break;
+		default:
+		    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;
+		    break;
+	    }
+
+	    if (ret != 0)
+		break;
 	}
-    y2mil("ret:" << ret);
-    return ret;
-}
+
+	y2mil("ret:" << ret);
+	return ret;
+    }
 
 
 void Storage::rootMounted()
