@@ -14,7 +14,7 @@ using namespace std;
 
 StorageInterface *s = 0;
 
-void print_num_pvs( const string& vg)
+void print_num_pvs(const string& vg)
 {
     deque<string> disks;
     disks.push_back( "/dev/hda" );
@@ -23,17 +23,18 @@ void print_num_pvs( const string& vg)
     disks.push_back( "/dev/sdb" );
 
     int count = 0;
-    for ( deque<string>::iterator i = disks.begin();
-	  i != disks.end(); i++ )
+    for (deque<string>::iterator i = disks.begin(); i != disks.end(); i++)
     {
 	deque<PartitionInfo> pinfos;
-	cout << s->getPartitionInfo( *i, pinfos )<< endl;
+	cout << s->getPartitionInfo(*i, pinfos) << endl;
 
-	for ( deque<PartitionInfo>::iterator p = pinfos.begin();
-	      p != pinfos.end(); p++ )
+	for (deque<PartitionInfo>::iterator p = pinfos.begin(); p != pinfos.end(); ++p)
 	{
-	    if ( p->v.usedByDevice == "/dev/" + vg )
-		count++;	    
+	    for (list<UsedByInfo>::const_iterator u = p->v.usedBy.begin(); u != p->v.usedBy.end(); ++u)
+	    {
+		if (u->device == "/dev/" + vg)
+		    count++;
+	    }
 	}
     }
     cout << count << endl;
