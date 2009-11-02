@@ -207,7 +207,6 @@ Storage::initialize()
 
     detectObjects();
     setCacheChanges( true );
-    dumpObjectList();
 
     for (list<std::pair<string, string>>::const_iterator i = infoPopupTxts.begin(); 
 	 i != infoPopupTxts.end(); ++i)
@@ -288,6 +287,8 @@ void Storage::detectObjects()
 	detectFsData(vBegin(), vEnd(), mounts, blkid);
 	logContainersAndVolumes(logdir());
 	}
+
+    dumpObjectList();
 
     if( instsys() )
 	{
