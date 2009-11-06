@@ -2936,9 +2936,9 @@ Volume::logDifference( const Volume& rhs ) const
     if( orig_size_k!=rhs.orig_size_k )
 	ret += " orig_SizeK:" + decString(orig_size_k) + "-->" + decString(rhs.size_k);
     if( mjr!=rhs.mjr )
-	ret += " SizeK:" + decString(mjr) + "-->" + decString(rhs.mjr);
+	ret += " Mjr:" + decString(mjr) + "-->" + decString(rhs.mjr);
     if( mnr!=rhs.mnr )
-	ret += " SizeK:" + decString(mnr) + "-->" + decString(rhs.mnr);
+	ret += " Mnr:" + decString(mnr) + "-->" + decString(rhs.mnr);
     if( del!=rhs.del )
 	{
 	if( rhs.del )
