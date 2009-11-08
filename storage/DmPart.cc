@@ -123,39 +123,29 @@ void DmPart::addUdevData()
     addAltUdevId( num );
     }
 
-static string udevCompleteIdPath( const string& s, unsigned nr )
+
+    void
+    DmPart::addAltUdevId(unsigned num)
     {
-    return( "/dev/disk/by-id/" + s + "-part" + decString(nr) );
+	alt_names.remove_if(string_contains("/by-id/"));
+
+	const list<string> tmp = co()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + udevAppendPart(*i, num));
+
+	mount_by = orig_mount_by = defaultMountBy();
     }
 
 
-void
-DmPart::addAltUdevId( unsigned num )
-{
-    alt_names.remove_if(string_contains("/by-id/"));
-
-    list<string>::const_iterator j = co()->udevId().begin();
-    while( j!=co()->udevId().end() )
-	{
-	alt_names.push_back( udevCompleteIdPath( *j, num ));
-	++j;
-	}
-    mount_by = orig_mount_by = defaultMountBy();
-}
-
-
-const std::list<string>
-DmPart::udevId() const
-{
-    list<string> ret;
-    for (list<string>::const_iterator i = alt_names.begin(); 
-	 i != alt_names.end(); i++)
+    list<string>
+    DmPart::udevId() const
     {
-	if (i->find("/by-id/") != string::npos)
-	    ret.push_back(*i);
+	list<string> ret;
+	const list<string> tmp = co()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    ret.push_back(udevAppendPart(*i, num));
+	return ret;
     }
-    return ret;
-}
 
 
 void

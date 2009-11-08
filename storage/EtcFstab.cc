@@ -363,31 +363,43 @@ void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
     }
 
 
-bool
-EtcFstab::findIdPath( const std::list<string>& id, const string& path,
-		      FstabEntry& entry ) const
+    bool
+    EtcFstab::findIdPath(const list<string>& id, const string& path, FstabEntry& entry ) const
     {
-    y2mil( "id:" << id << " path:" << path );
-    list<Entry>::const_iterator i = co.begin();
-    if( !id.empty() )
+	y2mil("id:" << id << " path:" << path);
+	list<Entry>::const_iterator i = co.end();
+
+	if (!id.empty())
 	{
-	while( i!=co.end() && 
-	       find( id.begin(), id.end(), i->nnew.dentry )==id.end() )
-	    ++i;
+	    for (list<string>::const_iterator j = id.begin(); j != id.end(); ++j)
+	    {
+		const string full = "/dev/disk/by-id/" + *j;
+
+		i = co.begin();
+		while(i != co.end() && i->nnew.dentry != full)
+		    ++i;
+
+		if (i != co.end())
+		    break;
+	    }
 	}
-    else 
-	i = co.end();
-    if( i==co.end() && !path.empty() )
+
+	if (i == co.end() && !path.empty())
 	{
-	i = co.begin();
-	while( i!=co.end() && i->nnew.dentry != path )
-	    ++i;
+	    const string full = "/dev/disk/by-path/" + path;
+
+	    i = co.begin();
+	    while(i != co.end() && i->nnew.dentry != full)
+		++i;
 	}
-    if( i!=co.end())
-	entry = i->nnew;
-    y2mil("ret:" << (i != co.end()));
-    return( i!=co.end() );
+
+	bool ret = i != co.end();
+	if (ret)
+	    entry = i->nnew;
+	y2mil("ret:" << ret);
+	return ret;
     }
+
 
 int EtcFstab::removeEntry( const FstabEntry& entry )
     {

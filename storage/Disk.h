@@ -69,8 +69,8 @@ class Disk : public Container
 	bool extendedPossible() const { return ext_possible; }
 	unsigned maxLogical() const { return max_logical; }
 	const string& labelName() const { return label; }
-	const string& udevPath() const { return udev_path; }
-	const std::list<string>& udevId() const { return udev_id; }
+	virtual string udevPath() const { return udev_path; }
+	virtual list<string> udevId() const { return udev_id; }
 	void setSlave( bool val=true ) { dmp_slave=val; }
 	void setNumMinor( unsigned long val ) { range=val; }
 	const string& sysfsDir() const { return sysfs_dir; }
@@ -252,7 +252,7 @@ class Disk : public Container
 	unsigned new_sector;
 	string label;
 	string udev_path;
-	std::list<string> udev_id;
+	list<string> udev_id;
 	string detected_label;
 	string system_stderr;
 	string logfile_name;

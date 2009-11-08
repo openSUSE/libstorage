@@ -2213,12 +2213,12 @@ int Volume::prepareRemove()
 		break;
 
 	    case MOUNTBY_ID:
-	if( !udevId().empty() )
-	    ret = udevId().front();
+		if (!udevId().empty())
+		    ret = "/dev/disk/by-id/" + udevId().front();
 		break;
 
 	    case MOUNTBY_PATH:
-	ret = udevPath();
+		ret = "/dev/disk/by-path/" + udevPath();
 		break;
 
 	    case MOUNTBY_DEVICE:
@@ -2487,7 +2487,7 @@ int Volume::doFstabUpdate()
 		FstabChange che;
 		che.device = getFstabDevice();
 		if( !udevId().empty() )
-		    che.device = udevId().front();
+		    che.device = "/dev/disk/by-id/" + udevId().front();
 		che.dentry = getFstabDentry();
 		che.encr = encryption;
 		if( dmcrypt() && isTmpCryptMp(mp) && crypt_pwd.empty() )
@@ -3131,9 +3131,5 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
 					 "twofishSL92", "luks", "unknown" };
 
     const string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
-
-const string Volume::empty_string;
-const list<string> Volume::empty_slist;
-
 
 }

@@ -49,6 +49,10 @@ namespace storage
 	unsigned long majorNr() const { return mjr; }
 	unsigned long minorNr() const { return mnr; }
 
+	// udev path and ids (without leading "/dev/disk/by-*/")
+	virtual string udevPath() const;
+	virtual list<string> udevId() const;
+
 	void clearUsedBy() { uby.clear(); }
 	void setUsedBy(UsedByType type, const string& device);
 	void addUsedBy(UsedByType type, const string& device);

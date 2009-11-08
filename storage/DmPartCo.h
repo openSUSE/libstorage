@@ -53,8 +53,8 @@ class DmPartCo : public PeContainer
 	unsigned long long sizeK() const { return size_k; }
 	unsigned isValid() const { return valid; }
 	const string& labelName() const { return disk->labelName(); }
-	const string& udevPath() const { return udev_path; }
-	const std::list<string>& udevId() const { return udev_id; }
+	virtual list<string> udevId() const { return udev_id; }
+	virtual string udevPath() const { return udev_path; }
 	unsigned numPartitions() const { return disk->numPartitions(); }
 	static storage::CType staticType() { return storage::DMRAID; }
 	friend std::ostream& operator<< (std::ostream&, const DmPartCo& );

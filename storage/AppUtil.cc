@@ -369,6 +369,13 @@ logStreamClose(LogLevel level, const char* file, unsigned line, const char* func
 
 
     string
+    udevAppendPart(const string& s, unsigned num)
+    {
+	return s + "-part" + decString(num);
+    }
+
+
+    string
     udevEncode(const string& s)
     {
 	string r = s;
