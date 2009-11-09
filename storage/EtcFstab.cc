@@ -83,8 +83,6 @@ EtcFstab::readFiles()
 		    p->old.dmcrypt = true;
 		    p->old.encr = ENC_LUKS;
 		    }
-		else if( p->old.fs=="ntfs-3g" )
-		    p->old.fs=="ntfs";
 		}
 	    if( i!=l.end() )
 		p->old.opts = splitString( *i++, "," );
@@ -122,8 +120,6 @@ EtcFstab::readFiles()
 	if( i!=l.end() )
 	    {
 	    p->old.fs = *i++;
-	    if( p->old.fs=="ntfs-3g" )
-		p->old.fs=="ntfs";
 	    }
 	if( i!=l.end() )
 	    p->old.encr = Volume::toEncType( *i++ );

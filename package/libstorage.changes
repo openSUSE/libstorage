@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Nov 09 17:34:41 CET 2009 - aschnell@suse.de
+
+- always use ntfs-3g for NTFS volumes since ntfs is not supported
+  by the kernel anymore
+
+-------------------------------------------------------------------
 Wed Oct 28 23:13:51 CET 2009 - aschnell@suse.de
 
 - converted usedby information to list (bnc #472812)

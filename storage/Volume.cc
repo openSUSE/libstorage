@@ -1113,8 +1113,6 @@ int Volume::doMount()
 	if( ret==0 )
 	    {
 	    ret = mount( lmount );
-	    if( ret!=0 && cont->getStorage()->instsys() && fs==NTFS )
-		ret = mount( lmount, true );
 	    }
 	}
     if( ret==0 )
@@ -2099,8 +2097,7 @@ int Volume::mount( const string& m, bool ro )
 	switch( fs )
 	    {
 	    case NTFS:
-		if( !ro )
-		    fsn = "ntfs-3g";
+		fsn = "ntfs-3g";
 		break;
 	    case FSUNKNOWN:
 		fsn = "auto";
@@ -3122,7 +3119,7 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
 
 
     const string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
-					"vfat", "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", 
+					"vfat", "xfs", "jfs", "hfs", "ntfs-3g", "swap", "hfsplus", 
 					"nfs", "none" };
 
     const string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
