@@ -2846,7 +2846,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
 	}
-    if( v.mp.length()>0 )
+    if (!v.mp.empty())
 	{
 	s << " mount:" << v.mp;
 	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
@@ -2860,11 +2860,11 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.mount_by != v.orig_mount_by )
 	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
 	}
-    if( v.uuid.length()>0 )
+    if (!v.uuid.empty())
 	{
 	s << " uuid:" << v.uuid;
 	}
-    if( v.label.length()>0 )
+    if (!v.label.empty())
 	{
 	s << " label:" << v.label;
 	}
@@ -2876,15 +2876,15 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
 	    s << " orig_fstopt:" << v.orig_fstab_opt;
 	}
-    if( v.mkfs_opt.length()>0 )
+    if (!v.mkfs_opt.empty())
 	{
 	s << " mkfsopt:" << v.mkfs_opt;
 	} 
-    if( v.tunefs_opt.length()>0 )
+    if (!v.tunefs_opt.empty())
 	{
 	s << " tunefsopt:" << v.tunefs_opt;
 	}
-    if( v.dtxt.length()>0 )
+    if (!v.dtxt.empty())
 	{
 	s << " dtxt:" << v.dtxt;
 	}
