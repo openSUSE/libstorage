@@ -106,7 +106,7 @@ namespace storage
 		    entry.is_fs = true;
 		    entry.fs_type = VFAT;
 		}
-		else if (i->second == "ntfs")
+		else if (i->second == "ntfs" || i->second == "ntfs-3g")
 		{
 		    entry.is_fs = true;
 		    entry.fs_type = NTFS;

@@ -33,16 +33,6 @@ namespace storage
     using namespace std;
 
 
-static string udevCompleteIdPath( const string& s, unsigned nr )
-    {
-    return( "/dev/disk/by-id/" + s + "-part" + decString(nr) );
-    }
-
-static string udevCompletePathPath( const string& s, unsigned nr )
-    {
-    return( "/dev/disk/by-path/" + s + "-part" + decString(nr) );
-    }
-
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,
 		      PartitionType Type, unsigned Id, bool Boot )
@@ -83,24 +73,25 @@ Partition::Partition( const Disk& d, const string& Data ) :
     y2deb("constructed partition " << dev << " on disk " << cont->name());
     }
 
-const list<string> Partition::udevId() const 
+
+    list<string>
+    Partition::udevId() const 
     { 
-    list<string> ret;
-    list<string>::const_iterator i = alt_names.begin();
-    while( i != alt_names.end() )
-	{
-	if( i->find( "/by-id/" ) != string::npos )
-	    ret.push_back( *i );
-	++i;
-	}
-    return( ret );
+	list<string> ret;
+	const list<string> tmp = disk()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    ret.push_back(udevAppendPart(*i, num));
+	return ret;
     }
 
-const string& Partition::udevPath() const 
-    { 
-    list<string>::const_iterator i = 
-	find_if( alt_names.begin(), alt_names.end(), string_contains( "/by-path/" ));
-    return( i==alt_names.end() ? empty_string : *i );
+
+    string
+    Partition::udevPath() const 
+    {
+	const string tmp = disk()->udevPath();
+	if (!tmp.empty())
+	    return udevAppendPart(tmp, num);
+	return "";
     }
 
 
@@ -140,8 +131,9 @@ void Partition::addAltUdevId( unsigned num )
     {
     alt_names.remove_if(string_contains("/by-id/"));
 
-    for (list<string>::const_iterator j = disk()->udevId().begin(); j != disk()->udevId().end(); ++j)
-	alt_names.push_back( udevCompleteIdPath( *j, num ));
+    const list<string> tmp = disk()->udevId();
+    for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	alt_names.push_back("/dev/disk/by-id/" + udevAppendPart(*i, num));
     }
 
 
@@ -149,8 +141,9 @@ void Partition::addAltUdevPath( unsigned num )
     {
     alt_names.remove_if(string_contains("/by-path/"));
 
-    if( !disk()->udevPath().empty() )
-	alt_names.push_back( udevCompletePathPath( disk()->udevPath(), num ));
+    const string tmp = disk()->udevPath();
+    if (!tmp.empty() )
+	alt_names.push_back("/dev/disk/by-path/" + udevAppendPart(tmp, num));
     }
 
 
@@ -602,12 +595,8 @@ Partition::getInfo( PartitionAddInfo& tinfo ) const
     tinfo.nr = num;
     tinfo.id = idt;
     tinfo.boot = bootflag;
-    string tmp = udevPath();
-    tinfo.udevPath = tmp.substr( tmp.find_last_of('/')+1 );
-    list<string> l = udevId();
-    for( list<string>::iterator i=l.begin(); i!=l.end(); ++i )
-	i->erase( 0, i->find_last_of('/')+1 );
-    tinfo.udevId = boost::join(l, " ");
+    tinfo.udevPath = udevPath();
+    tinfo.udevId = boost::join(udevId(), " ");
     }
 
 void

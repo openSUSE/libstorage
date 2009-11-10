@@ -93,13 +93,7 @@ void MdCo::updateEntry( const Md* m )
     {
     initTab();
     if( tab )
-	{
-	list<string> lines;
-	list<string> devices;
-	m->raidtabLines(lines);
-	m->getDevs( devices );
-	tab->updateEntry( m->nr(), lines, m->mdadmLine(), devices );
-	}
+	tab->updateEntry(m->nr(), m->mdadmLine());
     }
 
 void

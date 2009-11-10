@@ -120,8 +120,7 @@ class EtcFstab
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findUuidLabel( const string& uuid, const string& label,
 			    FstabEntry& entry ) const;
-	bool findIdPath( const std::list<string>& id, const string& path,
-			 FstabEntry& entry ) const;
+	bool findIdPath(const list<string>& id, const string& path, FstabEntry& entry) const;
 	void setDevice( const FstabEntry& entry, const string& device );
 	int updateEntry( const string& dev, const string& mount,
 	                 const string& fs, const string& opts="defaults" );

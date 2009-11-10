@@ -364,58 +364,9 @@ Md::createCmd() const
 
 string Md::mdadmLine() const
     {
-    string line = "ARRAY " + device() + " level=" + pName();
-    line += " UUID=" + md_uuid;
+    string line = "ARRAY " + device() + " level=" + pName() + " UUID=" + md_uuid;
     y2mil("line:" << line);
-    return( line );
-    }
-
-void Md::raidtabLines( list<string>& lines ) const
-    {
-    lines.clear();
-    lines.push_back( "raiddev " + device() );
-    string tmp = "   raid-level            ";
-    switch( md_type )
-	{
-	case RAID1:
-	    tmp += "1";
-	    break;
-	case RAID5:
-	    tmp += "5";
-	    break;
-	case RAID6:
-	    tmp += "6";
-	    break;
-	case RAID10:
-	    tmp += "10";
-	    break;
-	case MULTIPATH:
-	    tmp += "multipath";
-	    break;
-	default:
-	    tmp += "0";
-	    break;
-	}
-    lines.push_back( tmp );
-    lines.push_back( "   nr-raid-disks         " + decString(devs.size()));
-    lines.push_back( "   nr-spare-disks        " + decString(spare.size()));
-    lines.push_back( "   persistent-superblock 1" );
-    if( md_parity!=PAR_NONE )
-	lines.push_back( "   parity-algorithm      " + ptName());
-    if( chunk>0 )
-	lines.push_back( "   chunk-size            " + decString(chunk));
-    unsigned cnt = 0;
-    for( list<string>::const_iterator i=devs.begin(); i!=devs.end(); ++i )
-	{
-	lines.push_back( "   device                " + *i);
-	lines.push_back( "   raid-disk             " + decString(cnt++));
-	}
-    cnt = 0;
-    for( list<string>::const_iterator i=spare.begin(); i!=spare.end(); ++i )
-	{
-	lines.push_back( "   device                " + *i);
-	lines.push_back( "   spare-disk            " + decString(cnt++));
-	}
+    return line;
     }
 
 

@@ -37,8 +37,7 @@ class EtcRaidtab
     public:
 	EtcRaidtab( const string& prefix="" );
 	~EtcRaidtab();
-	void updateEntry( unsigned num, const std::list<string>& entries,
-	                  const string&, const std::list<string>& devs );
+	void updateEntry(unsigned num, const string&);
 	void removeEntry( unsigned num );
     protected:
 	struct entry
@@ -53,10 +52,11 @@ class EtcRaidtab
 	void buildMdadmMap();
 
 	int mdadm_dev_line;
-	std::map<unsigned,entry> mtab;
+	map<unsigned, entry> mtab;
 	AsciiFile mdadm;
     };
 
 }
+
 
 #endif

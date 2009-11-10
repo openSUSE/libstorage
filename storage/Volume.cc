@@ -1115,8 +1115,6 @@ int Volume::doMount()
 	if( ret==0 )
 	    {
 	    ret = mount( lmount );
-	    if( ret!=0 && cont->getStorage()->instsys() && fs==NTFS )
-		ret = mount( lmount, true );
 	    }
 	}
     if( ret==0 )
@@ -2101,8 +2099,7 @@ int Volume::mount( const string& m, bool ro )
 	switch( fs )
 	    {
 	    case NTFS:
-		if( !ro )
-		    fsn = "ntfs-3g";
+		fsn = "ntfs-3g";
 		break;
 	    case FSUNKNOWN:
 		fsn = "auto";
@@ -2215,12 +2212,12 @@ int Volume::prepareRemove()
 		break;
 
 	    case MOUNTBY_ID:
-	if( !udevId().empty() )
-	    ret = udevId().front();
+		if (!udevId().empty())
+		    ret = "/dev/disk/by-id/" + udevId().front();
 		break;
 
 	    case MOUNTBY_PATH:
-	ret = udevPath();
+		ret = "/dev/disk/by-path/" + udevPath();
 		break;
 
 	    case MOUNTBY_DEVICE:
@@ -2489,7 +2486,7 @@ int Volume::doFstabUpdate()
 		FstabChange che;
 		che.device = getFstabDevice();
 		if( !udevId().empty() )
-		    che.device = udevId().front();
+		    che.device = "/dev/disk/by-id/" + udevId().front();
 		che.dentry = getFstabDentry();
 		che.encr = encryption;
 		if( dmcrypt() && isTmpCryptMp(mp) && crypt_pwd.empty() )
@@ -2848,7 +2845,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
 	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
 	}
-    if( v.mp.length()>0 )
+    if (!v.mp.empty())
 	{
 	s << " mount:" << v.mp;
 	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
@@ -2862,11 +2859,11 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.mount_by != v.orig_mount_by )
 	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
 	}
-    if( v.uuid.length()>0 )
+    if (!v.uuid.empty())
 	{
 	s << " uuid:" << v.uuid;
 	}
-    if( v.label.length()>0 )
+    if (!v.label.empty())
 	{
 	s << " label:" << v.label;
 	}
@@ -2878,15 +2875,15 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
 	    s << " orig_fstopt:" << v.orig_fstab_opt;
 	}
-    if( v.mkfs_opt.length()>0 )
+    if (!v.mkfs_opt.empty())
 	{
 	s << " mkfsopt:" << v.mkfs_opt;
 	} 
-    if( v.tunefs_opt.length()>0 )
+    if (!v.tunefs_opt.empty())
 	{
 	s << " tunefsopt:" << v.tunefs_opt;
 	}
-    if( v.dtxt.length()>0 )
+    if (!v.dtxt.empty())
 	{
 	s << " dtxt:" << v.dtxt;
 	}
@@ -2938,9 +2935,9 @@ Volume::logDifference( const Volume& rhs ) const
     if( orig_size_k!=rhs.orig_size_k )
 	ret += " orig_SizeK:" + decString(orig_size_k) + "-->" + decString(rhs.size_k);
     if( mjr!=rhs.mjr )
-	ret += " SizeK:" + decString(mjr) + "-->" + decString(rhs.mjr);
+	ret += " Mjr:" + decString(mjr) + "-->" + decString(rhs.mjr);
     if( mnr!=rhs.mnr )
-	ret += " SizeK:" + decString(mnr) + "-->" + decString(rhs.mnr);
+	ret += " Mnr:" + decString(mnr) + "-->" + decString(rhs.mnr);
     if( del!=rhs.del )
 	{
 	if( rhs.del )
@@ -3124,7 +3121,7 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
 
 
     const string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
-					"vfat", "xfs", "jfs", "hfs", "ntfs", "swap", "hfsplus", 
+					"vfat", "xfs", "jfs", "hfs", "ntfs-3g", "swap", "hfsplus", 
 					"nfs", "none" };
 
     const string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
@@ -3133,9 +3130,5 @@ Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
 					 "twofishSL92", "luks", "unknown" };
 
     const string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
-
-const string Volume::empty_string;
-const list<string> Volume::empty_slist;
-
 
 }

@@ -55,6 +55,19 @@ namespace storage
     }
 
 
+    string
+    Device::udevPath() const
+    {
+	return string();
+    }
+
+    list<string>
+    Device::udevId() const
+    {
+	return list<string>();
+    }
+
+
     void
     Device::setUsedBy(UsedByType type, const string& device)
     {
