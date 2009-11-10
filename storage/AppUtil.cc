@@ -22,6 +22,7 @@
 
 #include <stdarg.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -434,35 +435,52 @@ readlink(const string& path, string& buf)
 }
 
 
-map<string, string>
-getUdevLinks(const char* path)
-{
-    map<string, string> links;
-
-    DIR* dir;
-    if ((dir = opendir(path)) != NULL)
+    bool
+    readlinkat(int fd, const string& path, string& buf)
     {
-	struct dirent* entry;
-	while ((entry = readdir(dir)) != NULL)
-	{
-	    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-		continue;
-
-	    string full = string(path) + "/" + entry->d_name;
-
-	    string tmp;
-	    if (readlink(full, tmp))
-	    {
-		string::size_type pos = tmp.find_first_not_of("./");
-		if (pos != string::npos)
-		    links[udevDecode(entry->d_name)] = tmp.substr(pos);
-	    }
-	}
-	closedir(dir);
+        char tmp[1024];
+        int count = ::readlinkat(fd, path.c_str(), tmp, sizeof(tmp));
+        if (count >= 0)
+            buf = string(tmp, count);
+        return count != -1;
     }
 
-    return links;
-}
+
+    map<string, string>
+    getUdevLinks(const char* path)
+    {
+	map<string, string> links;
+
+	int fd = open(path, O_RDONLY);
+	if (fd >= 0)
+	{
+	    DIR* dir;
+	    if ((dir = fdopendir(fd)) != NULL)
+	    {
+		struct dirent* entry;
+		while ((entry = readdir(dir)) != NULL)
+		{
+		    if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+			continue;
+
+		    string tmp;
+		    if (!readlinkat(fd, entry->d_name, tmp))
+			continue;
+
+		    string::size_type pos = tmp.find_first_not_of("./");
+		    if (pos != string::npos)
+			links[udevDecode(entry->d_name)] = tmp.substr(pos);
+		}
+		closedir(dir);
+	    }
+	    else
+	    {
+		close(fd);
+	    }
+	}
+
+	return links;
+    }
 
 
 map<string, list<string>>
