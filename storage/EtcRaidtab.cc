@@ -46,12 +46,11 @@ EtcRaidtab::~EtcRaidtab()
 
 
 void 
-EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
-                         const string& mline, const list<string>& devs )
+EtcRaidtab::updateEntry(unsigned num, const string& mline)
     {
     y2mil("num:" << num);
     string dline;
-    map<unsigned,entry>::iterator i = mtab.find( num );
+    map<unsigned, entry>::const_iterator i = mtab.find( num );
     if( i != mtab.end() )
 	{
 	mdadm.replace( i->second.first, i->second.last-i->second.first+1, mline );
@@ -77,7 +76,7 @@ EtcRaidtab::updateEntry( unsigned num, const list<string>& entries,
 void
 EtcRaidtab::removeEntry( unsigned num )
     {
-    map<unsigned,entry>::iterator i = mtab.find( num );
+    map<unsigned, entry>::const_iterator i = mtab.find( num );
     if( i != mtab.end() )
 	{
 	mdadm.remove( i->second.first, i->second.last-i->second.first+1 );
