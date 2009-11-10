@@ -117,7 +117,9 @@ class DmraidCo : public DmPartCo
 
 	static string undevName( const string& name );
 
-	static void getRaids( std::list<string>& l );
+	static bool isActivated(const string& name);
+	static list<string> getRaids();
+
 	static bool raidNotDeleted( const Dmraid&d ) { return( !d.deleted() ); }
 
 	int doRemove();

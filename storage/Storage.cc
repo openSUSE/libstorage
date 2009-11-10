@@ -523,27 +523,17 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
-	list<string> l;
-	DmraidCo::getRaids(l);
+	const list<string> l = DmraidCo::getRaids();
 	if (!l.empty())
 	{
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmraidCo* v = new DmraidCo(this, *i, parts);
-		if( v->isValid() )
-		{
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
 		    if (it != by_id.end())
 			v->setUdevData(it->second);
 		    addToList( v );
-		}
-		else
-		{
-		    y2mil("inactive DMRAID " << *i);
-		    v->unuseDev();
-		    delete( v );
-		}
 	    }
 	}
     }
@@ -564,27 +554,17 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
-	list<string> l;
-	DmmultipathCo::getMultipaths(l);
+	const list<string> l = DmmultipathCo::getMultipaths();
 	if (!l.empty())
 	{
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmmultipathCo* v = new DmmultipathCo(this, *i, parts);
-		if( v->isValid() )
-		{
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
 		    if (it != by_id.end())
 			v->setUdevData(it->second);
 		    addToList( v );
-		}
-		else
-		{
-		    y2mil("inactive DMMULTIPATH " << *i);
-		    v->unuseDev();
-		    delete v;
-		}
 	    }
 	}
     }

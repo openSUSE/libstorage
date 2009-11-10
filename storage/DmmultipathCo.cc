@@ -180,10 +180,18 @@ DmmultipathCo::activate(bool val)
 }
 
 
-void
-DmmultipathCo::getMultipaths(list<string>& l)
+    bool
+    DmmultipathCo::isActivated(const string& name)
+    {
+	SystemCmd c(DMSETUPBIN " table " + quote(name));
+	return c.retcode() == 0 && c.numLines() >= 1 && isdigit(c.stdout()[0][0]);
+    }
+
+
+list<string>
+DmmultipathCo::getMultipaths()
 {
-    l.clear();
+    list<string> l;
 
     SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
     if (c.numLines() > 0)
@@ -221,9 +229,17 @@ DmmultipathCo::getMultipaths(list<string>& l)
 		    line = c.getLine(i);
 	    }
 	    y2mil( "mp_list:" << mp_list );
+
 	    if (mp_list.size() >= 1)
 	    {
-		l.push_back(unit);
+		if (isActivated(unit))
+		{
+		    l.push_back(unit);
+		}
+		else
+		{
+		    y2mil("ignoring inactive dmmultipath " << unit);
+		}
 	    }
 	}
 
@@ -232,6 +248,7 @@ DmmultipathCo::getMultipaths(list<string>& l)
     }
 
     y2mil("detected multipaths " << l);
+    return l;
 }
 
 

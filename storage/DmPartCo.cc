@@ -46,7 +46,7 @@ DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
     dev = name;
     nm = undevName(name);
     num_part = num_pe = free_pe = 0;
-    active = valid = del_ptable = false;
+    active = del_ptable = false;
     disk = NULL;
 	init(parts);
     }
@@ -302,7 +302,7 @@ void
 		activate_part(true);
 	    }
 	getVolumes(parts);
-	active = valid = true;
+	active = true;
 	}
     }
 
@@ -982,8 +982,6 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
       s << " delPT";
     if( !d.active )
       s << " inactive";
-    if( !d.valid )
-      s << " invalid";
     return( s );
     }
 
@@ -1007,13 +1005,6 @@ string DmPartCo::getDiffString( const Container& d ) const
 		log += " -->active";
 	    else
 		log += " active-->";
-	    }
-	if( valid!=p->valid )
-	    {
-	    if( p->valid )
-		log += " -->valid";
-	    else
-		log += " valid-->";
 	    }
 	}
     return( log );
@@ -1059,7 +1050,7 @@ void DmPartCo::logDifference( const DmPartCo& d ) const
 bool DmPartCo::equalContent( const DmPartCo& rhs ) const
     {
     bool ret = PeContainer::equalContent(rhs,false) &&
-	       active==rhs.active && valid==rhs.valid && 
+	       active==rhs.active &&
 	       del_ptable==rhs.del_ptable;
     if( ret )
 	{
@@ -1082,7 +1073,6 @@ DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
     {
     y2deb("constructed DmPartCo by copy constructor from " << rhs.nm);
     active = rhs.active;
-    valid = rhs.valid;
     del_ptable = rhs.del_ptable;
     disk = NULL;
     if( rhs.disk )

@@ -152,26 +152,49 @@ void DmraidCo::activate( bool val )
     Storage::waitForDevice();
     }
 
-void DmraidCo::getRaids( list<string>& l )
+
+    bool
+    DmraidCo::isActivated(const string& name)
     {
-    l.clear();
-    SystemCmd c(DMRAIDBIN " -s -c -c -c");
-    for( unsigned i=0; i<c.numLines(); ++i )
-	{
-	list<string> sl = splitString( c.getLine(i), ":" );
-	if( sl.size()>=3 )
-	    {
-	    list<string>::const_iterator ci = sl.begin();
-	    if( !ci->empty()
-		&& ci->find( "/dev/" )==string::npos
-		&& find( l.begin(), l.end(), *ci )==l.end())
-		{
-		l.push_back( *ci );
-		}
-	    }
-	}
-    y2mil( "detected Raids " << l );
+        SystemCmd c(DMSETUPBIN " table " + quote(name));
+        return c.retcode() == 0 && c.numLines() >= 1 && isdigit(c.stdout()[0][0]);
     }
+
+
+    list<string>
+    DmraidCo::getRaids()
+    {
+        list<string> l;
+
+        SystemCmd c(DMRAIDBIN " -s -c -c -c");
+
+	const vector<string>& lines = c.stdout();
+	for (vector<string>::const_iterator i = lines.begin(); i != lines.end(); ++i)
+        {
+            const list<string> sl = splitString(*i, ":");
+            if( sl.size()>=3 )
+            {
+                list<string>::const_iterator ci = sl.begin();
+                if( !ci->empty()
+                    && ci->find( "/dev/" )==string::npos
+                    && find( l.begin(), l.end(), *ci )==l.end())
+                {
+                    if (isActivated(*ci))
+                    {
+                        l.push_back( *ci );
+                    }
+                    else
+                    {
+                        y2mil("ignoring inactive dmraid " << *ci);
+                    }
+                }
+            }
+        }
+
+        y2mil("detected dmraids " << l);
+        return l;
+    }
+
 
 string DmraidCo::removeText( bool doing ) const
     {

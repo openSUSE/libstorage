@@ -51,7 +51,6 @@ class DmPartCo : public PeContainer
 	virtual ~DmPartCo();
 
 	unsigned long long sizeK() const { return size_k; }
-	unsigned isValid() const { return valid; }
 	const string& labelName() const { return disk->labelName(); }
 	virtual list<string> udevId() const { return udev_id; }
 	virtual string udevPath() const { return udev_path; }
@@ -197,7 +196,6 @@ class DmPartCo : public PeContainer
 
 	Disk* disk;
 	bool active;
-	bool valid;
 	bool del_ptable;
 	unsigned num_part;
 
