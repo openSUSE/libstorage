@@ -462,6 +462,8 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	fs = detected_fs;
 	mkfs_opt = "";
 	tunefs_opt = "";
+	if( label.empty() && !orig_label.empty() )
+	    label = orig_label;
 	}
     else
 	{

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Nov  9 18:34:22 CET 2009 - fehr@suse.de
+
+- preserve label when unsetting format flag (#537064)
+
+-------------------------------------------------------------------
 Wed Oct 28 23:13:51 CET 2009 - aschnell@suse.de
 
 - converted usedby information to list (bnc #472812)
