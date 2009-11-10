@@ -230,6 +230,11 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id, lv_node.id));
 
+			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
+			{
+			    edges.push_back(Edge(EDGE_USED, lv_node.id, "device:" + i3->device));
+			}
+
 			if (!i2->v.mount.empty())
 			{
 			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
