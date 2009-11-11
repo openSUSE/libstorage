@@ -207,7 +207,7 @@ bool Dm::removeTable()
 
 string Dm::getDevice( const string& majmin )
     {
-    string ret = cont->getStorage()->deviceByNumber( majmin );
+    string ret = getStorage()->deviceByNumber(majmin);
     if( ret.empty() )
 	{
 	unsigned mj = 0;
@@ -235,7 +235,7 @@ string Dm::getDevice( const string& majmin )
 		if( c.retcode()==0 && c.numLines()>0 )
 		    {
 		    string tmp = "/dev/" + c.getLine(0);
-		    if( cont->getStorage()->knownDevice( tmp, true ) )
+		    if (getStorage()->knownDevice(tmp, true))
 			{
 			ret = tmp;
 			}
@@ -245,7 +245,7 @@ string Dm::getDevice( const string& majmin )
 			if( c.retcode()==0 && c.numLines()>0 )
 			    {
 			    pair = extractNthWord( 3, c.getLine(0) );
-			    ret = cont->getStorage()->deviceByNumber( pair );
+			    ret = getStorage()->deviceByNumber(pair);
 			    }
 			}
 		    }

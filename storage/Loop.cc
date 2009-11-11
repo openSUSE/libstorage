@@ -218,7 +218,7 @@ Loop::createFile()
 string
 Loop::lfileRealPath() const
     {
-    return( cont->getStorage()->root() + lfile );
+    return getStorage()->root() + lfile;
     }
 
 unsigned Loop::major()
