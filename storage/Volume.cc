@@ -86,6 +86,13 @@ Volume::~Volume()
 }
 
 
+    Storage*
+    Volume::getStorage() const
+    {
+	return cont->getStorage(); 
+    }
+
+
 void Volume::setNameDev()
     {
     std::ostringstream Buf_Ci;
@@ -1616,7 +1623,7 @@ EncryptType Volume::detectEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
 
-    if (getContainer()->getStorage()->testmode())
+    if (getStorage()->testmode())
 	{
 	ret = encryption = orig_encryption = ENC_TWOFISH;
 	y2mil("ret:" << encTypeString(ret));

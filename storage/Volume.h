@@ -59,7 +59,10 @@ class Storage;
 	const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
+
 	const Container* getContainer() const { return cont; }
+	Storage* getStorage() const;
+
 	storage::CType cType() const;
 	bool deleted() const { return del; }
 	bool created() const { return create; }

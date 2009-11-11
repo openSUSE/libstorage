@@ -65,7 +65,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
-	getContainer()->getStorage()->fetchDanglingUsedBy(dev, uby);
+	getStorage()->fetchDanglingUsedBy(dev, uby);
 	}
     SystemCmd c(MDADMBIN " --detail " + quote(device()));
     c.select( "UUID : " );
@@ -182,7 +182,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	}
 
     for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
-	getContainer()->getStorage()->setUsedBy(*it, UB_MD, dev);
+	getStorage()->setUsedBy(*it, UB_MD, dev);
     }
 
 
@@ -312,7 +312,7 @@ void
 Md::computeSize()
 {
     unsigned long long size_k;
-    getContainer()->getStorage()->computeMdSize(md_type, devs, size_k);
+    getStorage()->computeMdSize(md_type, devs, size_k);
     setSize(size_k);
 }
 

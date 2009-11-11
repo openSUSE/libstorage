@@ -58,9 +58,9 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     init();
     getTableInfo();
 
-    getContainer()->getStorage()->fetchDanglingUsedBy(dev, uby);
+    getStorage()->fetchDanglingUsedBy(dev, uby);
     for (list<string>::const_iterator it = alt_names.begin(); it != alt_names.end(); ++it)
-	getContainer()->getStorage()->fetchDanglingUsedBy(*it, uby);
+	getStorage()->fetchDanglingUsedBy(*it, uby);
     }
 
 
@@ -202,7 +202,7 @@ Dm::getTableInfo()
 
 bool Dm::removeTable()
     {
-    return( getContainer()->getStorage()->removeDmTable( tname ));
+    return getStorage()->removeDmTable(tname);
     }
 
 string Dm::getDevice( const string& majmin )
