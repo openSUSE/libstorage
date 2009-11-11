@@ -4040,9 +4040,9 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
     }
 
 int 
-Storage::getContVolInfo( const string& device, ContVolInfo& info)
+Storage::getContVolInfo(const string& device, ContVolInfo& info)
     {
-    int ret = 0;
+    int ret = STORAGE_VOLUME_NOT_FOUND;
     string dev = device;
     ContIterator c;
     VolIterator v;
@@ -4050,6 +4050,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
     assertInit();
     if( findVolume( dev, c, v ))
 	{
+	ret = 0;
 	info.type = c->type();
 	info.cname = c->device();
 	info.vname = v->name();
@@ -4067,6 +4068,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	std::pair<string,unsigned> p = Disk::getDiskPartition( dev );
 	if( p.first=="/dev/md" )
 	    {
+	    ret = 0;
 	    info.cname = p.first;
 	    info.vname = undevDevice(device);
 	    info.type = MD;
@@ -4075,6 +4077,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( p.first=="/dev/loop" )
 	    {
+	    ret = 0;
 	    info.cname = p.first;
 	    info.vname = undevDevice(device);
 	    info.type = LOOP;
@@ -4083,6 +4086,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( p.first=="/dev/dm-" )
 	    {
+	    ret = 0;
 	    info.cname = p.first;
 	    info.vname = undevDevice(device);
 	    info.type = DM;
@@ -4091,6 +4095,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( (d=findDisk(p.first))!=dEnd() )
 	    {
+	    ret = 0;
 	    info.cname = d->device();
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.type = DISK;
@@ -4099,6 +4104,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( (r=findDmraidCo(p.first))!=dmrCoEnd() )
 	    {
+	    ret = 0;
 	    info.cname = r->device();
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.type = DMRAID;
@@ -4107,6 +4113,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( (m=findDmmultipathCo(p.first))!=dmmCoEnd() )
 	    {
+	    ret = 0;
 	    info.cname = m->device();
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.type = DMMULTIPATH;
@@ -4125,6 +4132,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 		}
 	    if( findVolume(dev, v) )
 		{
+		ret = 0;
 		info.type = v->cType();
 		info.numeric = v->isNumeric();
 		if( info.numeric )
@@ -4138,6 +4146,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 		 (dev.find("/dev/disk/by-path/")==0 &&
 		  (d=findDiskPath(p.first))!=dEnd()) )
 	    {
+	    ret = 0;
 	    info.type = DISK;
 	    info.numeric = true;
 	    info.nr = p.second;
@@ -4151,6 +4160,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else if( splitString( dev, "/" ).size()==3 && !Disk::needP( dev ) )
 	    {
+	    ret = 0;
 	    info.type = LVM;
 	    info.numeric = false;
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
@@ -4158,6 +4168,7 @@ Storage::getContVolInfo( const string& device, ContVolInfo& info)
 	    }
 	else
 	    {
+	    ret = 0;
 	    info.cname = p.first;
 	    info.vname = dev.substr( dev.find_last_of('/')+1 );
 	    info.numeric = true;

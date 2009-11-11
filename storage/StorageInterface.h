@@ -493,7 +493,7 @@ namespace storage
      */
     struct ContVolInfo
     {
-	ContVolInfo() { numeric=false; nr=0; type=CUNKNOWN; }
+	ContVolInfo() : type(CUNKNOWN), numeric(false), nr(0) {}
 	CType type;
 	string cname;
 	string vname;
@@ -2231,7 +2231,7 @@ namespace storage
 	 * @param info record that get filled with split data
 	 * @return zero if all is ok, negative number to indicate an error
 	 */
-	virtual int getContVolInfo( const string& dev, ContVolInfo& info) = 0;
+	virtual int getContVolInfo(const string& dev, ContVolInfo& info) = 0;
 
     };
 

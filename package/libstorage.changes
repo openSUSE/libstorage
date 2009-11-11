@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov 11 10:34:34 CET 2009 - aschnell@suse.de
+
+- fixed return value of function getContVolInfo 
+
+-------------------------------------------------------------------
 Mon Nov  9 18:34:22 CET 2009 - fehr@suse.de
 
 - preserve label when unsetting format flag (#537064)
