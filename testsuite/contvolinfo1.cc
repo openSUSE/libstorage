@@ -32,7 +32,8 @@ test(const string& device)
 	cout << "cname:" << info.cname << endl;
 	cout << "vname:" << info.vname << endl;
 	cout << "numeric:" << info.numeric << endl;
-	cout << "nr:" << info.nr << endl;
+	if (info.numeric)
+	    cout << "nr:" << info.nr << endl;
     }
 }
 
