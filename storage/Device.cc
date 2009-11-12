@@ -40,6 +40,11 @@ namespace storage
     }
 
 
+    Device::~Device()
+    {
+    }
+
+
     Device& Device::operator=(const Device& rhs)
     {
 	y2deb("operator= from " << rhs.nm);
