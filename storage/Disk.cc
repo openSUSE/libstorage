@@ -948,7 +948,7 @@ bool
 	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
-    string reg = "^" "/dev/" + diskname + partNaming(diskname) + "[0-9]+" "$";
+    string reg = "^" + device() + partNaming(diskname) + "[0-9]+" "$";
     list<string> ps = parts.getMatchingEntries(regex_matches(reg));
     y2mil("regex:\"" << reg << "\" ps:" << ps);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
