@@ -93,7 +93,7 @@ const LvmVg* LvmLv::vg() const
 void LvmLv::init( const string& name )
     {
     nm = name;
-    dev = normalizeDevice( cont->name() + "/" + name );
+    dev = cont->device() + "/" + name;
     Dm::init();
     }
 

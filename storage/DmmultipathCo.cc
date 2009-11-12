@@ -137,7 +137,7 @@ DmmultipathCo::addPv(Pv*& p)
 {
     PeContainer::addPv(*p);
     if (!deleted())
-	getStorage()->setUsedBy(p->device, UB_DMMULTIPATH, "/dev/mapper/" + name());
+	getStorage()->setUsedBy(p->device, UB_DMMULTIPATH, device());
     delete p;
     p = new Pv;
 }

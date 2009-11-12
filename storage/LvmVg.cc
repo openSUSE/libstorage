@@ -1207,11 +1207,10 @@ LvmVg::doCreateVg()
 	    }
 	if( ret==0 )
 	    {
-	    string ddir = "/dev/" + name();
-	    if( access( ddir.c_str(), R_OK )==0 )
+	    if (access(device().c_str(), R_OK) == 0)
 		{
-		SystemCmd c( "find " + ddir + " -type l | xargs -r rm" );
-		rmdir( ddir.c_str() );
+		SystemCmd c("find " + device() + " -type l | xargs -r rm");
+		rmdir(device().c_str());
 		}
 	    string cmd = VGCREATEBIN " " + instSysString() + metaString() +
 		"-s " + decString(pe_size) + "k " + quote(name()) + " " + devices;
