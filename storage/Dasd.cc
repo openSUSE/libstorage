@@ -218,9 +218,6 @@ bool
 	    }
 	}
     y2mil("nm:" << nm);
-    string reg = "^" "/dev/" + nm + partNaming(nm) + "[0-9]+" "$";
-    list<string> ps = parts.getMatchingEntries(regex_matches(reg));
-    y2mil("regex:\"" << reg << "\" ps:" << ps);
     unsigned long dummy = 0;
     if (!checkPartedValid(parts, nm, pl, dummy))
 	{
