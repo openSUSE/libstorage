@@ -40,7 +40,7 @@ namespace storage
 
 	Device();
 	Device(const string& nm, const string& dev);
-	~Device();
+	virtual ~Device();
 
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }

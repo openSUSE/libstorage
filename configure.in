@@ -16,7 +16,7 @@ AM_PATH_PYTHON
 AC_PREFIX_DEFAULT(/usr)
 
 CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes"
-CXXFLAGS="${CXXFLAGS} -std=gnu++0x -DHAVE_CXX0X -Wall -Wformat=2"
+CXXFLAGS="${CXXFLAGS} -std=gnu++0x -DHAVE_CXX0X -Wall -Wformat=2 -Wnon-virtual-dtor"
 
 docdir=\${prefix}/share/doc/packages/libstorage
 fillupdir=/var/adm/fillup-templates
