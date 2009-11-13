@@ -442,7 +442,6 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     bool ret = true;
     string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
     string dlabel;
-    system_stderr.erase();
     y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     checkSystemError( cmd_line, Cmd );
@@ -608,22 +607,12 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
         {
 	y2err("cmd:" << cmd_line);
 	y2err("err:" << tmp);
-	if( !system_stderr.empty() )
-	    {
-	    system_stderr += "\n";
-	    }
-	system_stderr += tmp;
         }
     tmp = boost::join(cmd.stdout(), "\n");
     if (!tmp.empty())
         {
 	y2mil("cmd:" << cmd_line);
 	y2mil("out:" << tmp);
-	if( !system_stderr.empty() )
-	    {
-	    system_stderr += "\n";
-	    }
-	system_stderr += tmp;
         }
     int ret = cmd.retcode();
     if( ret!=0 && cmd_line.find( device()+" set" )!=string::npos &&
@@ -1923,7 +1912,6 @@ int Disk::doCreateLabel()
     if( !dmp_slave )
 	getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
-    system_stderr.erase();
     std::ostringstream cmd_line;
     classic(cmd_line);
     cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
@@ -2021,7 +2009,6 @@ int Disk::doSetType( Volume* v )
 	    }
 	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
 	    p->eraseLabel();
-	system_stderr.erase();
 	std::ostringstream cmd_line;
 	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " set " << p->nr() << " ";
@@ -2200,7 +2187,6 @@ int Disk::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->createText(true) );
 	    }
-	system_stderr.erase();
 	y2mil("doCreate container " << name() << " name " << p->name());
 	y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
 	y2mil("doCreate detected_label:" << detected_label << " label:" << label);
@@ -2384,7 +2370,6 @@ int Disk::doRemove( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
-	system_stderr.erase();
 	y2mil("doRemove container " << name() << " name " << p->name());
 	if( !dmp_slave )
 	    {
@@ -2562,7 +2547,6 @@ int Disk::doResize( Volume* v )
 	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
-	    system_stderr.erase();
 	    y2mil("doResize container " << name() << " name " << p->name());
 	    std::ostringstream cmd_line;
 	    classic(cmd_line);

@@ -254,7 +254,6 @@ class Disk : public Container
 	string udev_path;
 	list<string> udev_id;
 	string detected_label;
-	string system_stderr;
 	string logfile_name;
 	string sysfs_dir;
 	unsigned max_primary;

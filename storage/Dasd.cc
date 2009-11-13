@@ -59,7 +59,6 @@ Dasd::~Dasd()
     {
     bool ret = true;
     string cmd_line = FDASDBIN " -p " + quote(device());
-    system_stderr.erase();
     y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     y2mil("retcode:" << Cmd.retcode());
@@ -75,7 +74,6 @@ Dasd::~Dasd()
     {
     bool ret = true;
     string cmd_line = DASDVIEWBIN " -x " + quote(device());
-    system_stderr.erase();
     detected_label = "dasd";
     setLabelData( "dasd" );
     y2mil("executing cmd:" << cmd_line);
