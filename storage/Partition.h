@@ -114,7 +114,6 @@ class Partition : public Volume
 	storage::PartitionType typ;
 	unsigned idt;
 	unsigned orig_id;
-	string parted_start;
 	unsigned orig_num;
 
 	void addAltUdevId( unsigned num );
