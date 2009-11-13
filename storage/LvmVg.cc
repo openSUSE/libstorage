@@ -666,7 +666,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
     unsigned cnt = c.numLines();
     unsigned i = 0;
-    num_lv = 0;
+    unsigned num_lv = 0;
     string line;
     string tmp;
     string::size_type pos;
@@ -910,7 +910,6 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	y2mil("addLv exists deleted " << (i!=p.end()));
 	if( i==p.end() )
 	    {
-	    num_lv++;
 	    LvmLv *n = new LvmLv( *this, name, origin, le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
@@ -1121,7 +1120,6 @@ LvmVg::init()
     PeContainer::init();
     dev = nm;
     normalizeDevice(dev);
-    num_lv = 0;
     inactiv = lvm1 = false;
     }
 
@@ -1639,8 +1637,7 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
       s << " lvm1";
     if( d.inactiv )
       s << " inactive";
-    s << " UUID:" << d.uuid
-      << " lv:" << d.num_lv;
+    s << " UUID:" << d.uuid;
     return( s );
     }
 
@@ -1708,7 +1705,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
     if( ret && p )
 	ret = PeContainer::equalContent(*p,false) &&
 	      status==p->status && uuid==p->uuid && lvm1==p->lvm1 &&
-	      inactiv==p->inactiv && num_lv==p->num_lv;
+	    inactiv==p->inactiv;
     if( ret && p )
 	{
 	ConstLvmLvPair pp = lvmLvPair();
@@ -1733,7 +1730,6 @@ LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
     uuid = rhs.uuid;
     lvm1 = rhs.lvm1;
     inactiv = rhs.inactiv;
-    num_lv = rhs.num_lv;
     ConstLvmLvPair p = rhs.lvmLvPair();
     for( ConstLvmLvIter i = p.begin(); i!=p.end(); ++i )
 	{
