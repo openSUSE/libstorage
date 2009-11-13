@@ -42,11 +42,13 @@ namespace storage
 
     struct Node
     {
-	Node(NodeType type, const string& id, const string& label, unsigned long long sizeK)
-	    : type(type), id(id), label(label), sizeK(sizeK) {}
+	Node(NodeType type, const string& device, const string& label, unsigned long long sizeK)
+	    : type(type), device(device), label(label), sizeK(sizeK) {}
+
+	string id() const { return (type == NODE_MOUNTPOINT ? "mountpoint:" : "device:") + device; }
 
 	NodeType type;
-	string id;
+	string device;
 	string label;
 	unsigned long long sizeK;
     };
@@ -96,40 +98,40 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Node& node)
     {
-	s << dotQuote(node.id) << " [label=" << dotQuote(node.label);
+	s << dotQuote(node.id()) << " [label=" << dotQuote(node.label);
 	switch (node.type)
 	{
 	    case NODE_DISK:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("Hard Disk"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Hard Disk"), node.device, node.sizeK);
 		break;
 	    case NODE_DMRAID:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("BIOS RAID"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("BIOS RAID"), node.device, node.sizeK);
 		break;
 	    case NODE_DMMULTIPATH:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << makeTooltip(_("Multipath"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Multipath"), node.device, node.sizeK);
 		break;
 	    case NODE_PARTITION:
 		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\""
-		  << ", tooltip=" << makeTooltip(_("Partition"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Partition"), node.device, node.sizeK);
 		break;
 	    case NODE_MDRAID:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\""
-		  << ", tooltip=" << makeTooltip(_("RAID"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("RAID"), node.device, node.sizeK);
 		break;
 	    case NODE_LVMVG:
 		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\""
-		  << ", tooltip=" << makeTooltip(_("Volume Group"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Volume Group"), node.device, node.sizeK);
 		break;
 	    case NODE_LVMLV:
 		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\""
-		  << ", tooltip=" << makeTooltip(_("Logical Volume"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("Logical Volume"), node.device, node.sizeK);
 		break;
 	    case NODE_DM:
 		s << ", color=\"#885511\", fillcolor=\"#ddbb99\""
-		  << ", tooltip=" << makeTooltip(_("DM Device"), node.label, node.sizeK);
+		  << ", tooltip=" << makeTooltip(_("DM Device"), node.device, node.sizeK);
 		break;
 	    case NODE_MOUNTPOINT:
 		s << ", color=\"#008800\", fillcolor=\"#99ee99\""
@@ -177,12 +179,12 @@ namespace storage
 		    DiskInfo diskinfo;
 		    s->getDiskInfo(i1->device, diskinfo);
 
-		    Node disk_node(NODE_DISK, "device:" + i1->device, i1->device, diskinfo.sizeK);
+		    Node disk_node(NODE_DISK, i1->device, i1->name, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
 
 		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, disk_node.id, "device:" + i2->device));
+			edges.push_back(Edge(EDGE_USED, disk_node.id(), "device:" + i2->device));
 		    }
 
 		    deque<PartitionInfo> partitions;
@@ -192,22 +194,22 @@ namespace storage
 			if (i2->partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
+			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id, partition_node.id));
+			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id(), partition_node.id()));
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -218,29 +220,29 @@ namespace storage
 		    LvmVgInfo lvmvginfo;
 		    s->getLvmVgInfo(i1->name, lvmvginfo);
 
-		    Node vg_node(NODE_LVMVG, "device:" + i1->device, i1->device, lvmvginfo.sizeK);
+		    Node vg_node(NODE_LVMVG, i1->device, i1->name, lvmvginfo.sizeK);
 		    nodes.push_back(vg_node);
 
 		    deque<LvmLvInfo> lvs;
 		    s->getLvmLvInfo(i1->name, lvs);
 		    for (deque<LvmLvInfo>::const_iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
 		    {
-			Node lv_node(NODE_LVMLV, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
+			Node lv_node(NODE_LVMLV, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(lv_node);
 
-			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id, lv_node.id));
+			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id(), lv_node.id()));
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, lv_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, lv_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, lv_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, lv_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -253,20 +255,20 @@ namespace storage
 
 		    for (deque<MdInfo>::const_iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
 		    {
-			Node md_node(NODE_MDRAID, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
+			Node md_node(NODE_MDRAID, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(md_node);
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, md_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, md_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, md_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, md_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -279,20 +281,20 @@ namespace storage
 
 		    for (deque<DmInfo>::const_iterator i2 = dms.begin(); i2 != dms.end(); ++i2)
 		    {
-			Node dm_node(NODE_DM, "device:" + i2->v.device, i2->v.device, i2->v.sizeK);
+			Node dm_node(NODE_DM, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(dm_node);
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, dm_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, dm_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->v.device, i2->v.mount, i2->v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, dm_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, dm_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -303,12 +305,12 @@ namespace storage
 		    DmraidCoInfo dmraidcoinfo;
 		    s->getDmraidCoInfo(i1->device, dmraidcoinfo);
 
-		    Node dmraid_node(NODE_DMRAID, "device:" + i1->device, i1->device, dmraidcoinfo.p.d.sizeK);
+		    Node dmraid_node(NODE_DMRAID, i1->device, i1->name, dmraidcoinfo.p.d.sizeK);
 		    nodes.push_back(dmraid_node);
 
 		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, dmraid_node.id, "device:" + i2->device));
+			edges.push_back(Edge(EDGE_USED, dmraid_node.id(), "device:" + i2->device));
 		    }
 
 		    deque<DmraidInfo> partitions;
@@ -318,22 +320,22 @@ namespace storage
 			if (i2->p.p.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device, i2->p.v.sizeK);
+			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id, partition_node.id));
+			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id(), partition_node.id()));
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->p.v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -344,12 +346,12 @@ namespace storage
 		    DmmultipathCoInfo dmmultipathcoinfo;
 		    s->getDmmultipathCoInfo(i1->device, dmmultipathcoinfo);
 
-		    Node dmmultipath_node(NODE_DMMULTIPATH, "device:" + i1->device, i1->device, dmmultipathcoinfo.p.d.sizeK);
+		    Node dmmultipath_node(NODE_DMMULTIPATH, i1->device, i1->name, dmmultipathcoinfo.p.d.sizeK);
 		    nodes.push_back(dmmultipath_node);
 
 		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
 		    {
-			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id, "device:" + i2->device));
+			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id(), "device:" + i2->device));
 		    }
 
 		    deque<DmmultipathInfo> partitions;
@@ -359,22 +361,22 @@ namespace storage
 			if (i2->p.p.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, "device:" + i2->p.v.device, i2->p.v.device, i2->p.v.sizeK);
+			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
 
-			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id, partition_node.id));
+			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id(), partition_node.id()));
 
 			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
 			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id, "device:" + i3->device));
+			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
 			}
 
 			if (!i2->p.v.mount.empty())
 			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, "mountpoint:" + i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
+			    Node mountpoint_node(NODE_MOUNTPOINT, i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
 			    nodes.push_back(mountpoint_node);
 
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id, mountpoint_node.id));
+			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
 			}
 		    }
 
@@ -411,7 +413,7 @@ namespace storage
 	    list<string> ids;
 	    for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
 		if (node->type == rank->type)
-		    ids.push_back(dotQuote(node->id));
+		    ids.push_back(dotQuote(node->id()));
 
 	    if (!ids.empty())
 		out << "    { rank=" << rank->name << "; " << boost::join(ids, " ") << " };" << endl;
