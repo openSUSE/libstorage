@@ -161,6 +161,29 @@ namespace storage
     }
 
 
+    void
+    processUsedby(list<Edge>& edges, const Node& node, const list<UsedByInfo>& usedBy)
+    {
+	for (list<UsedByInfo>::const_iterator i = usedBy.begin(); i != usedBy.end(); ++i)
+	{
+	    edges.push_back(Edge(EDGE_USED, node.id(), "device:" + i->device));
+	}
+    }
+
+
+    void
+    processMount(list<Node>& nodes, list<Edge>& edges, const Node& node, const VolumeInfo& volume)
+    {
+	if (!volume.mount.empty())
+	{
+	    Node mountpoint_node(NODE_MOUNTPOINT, volume.device, volume.mount, volume.sizeK);
+	    nodes.push_back(mountpoint_node);
+
+	    edges.push_back(Edge(EDGE_MOUNT, node.id(), mountpoint_node.id()));
+	}
+    }
+
+
     bool
     saveGraph(StorageInterface* s, const string& filename)
     {
@@ -182,10 +205,7 @@ namespace storage
 		    Node disk_node(NODE_DISK, i1->device, i1->name, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
 
-		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
-		    {
-			edges.push_back(Edge(EDGE_USED, disk_node.id(), "device:" + i2->device));
-		    }
+		    processUsedby(edges, disk_node, i1->usedBy);
 
 		    deque<PartitionInfo> partitions;
 		    s->getPartitionInfo(i1->name, partitions);
@@ -199,18 +219,8 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id(), partition_node.id()));
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, partition_node, i2->v.usedBy);
+			processMount(nodes, edges, partition_node, i2->v);
 		    }
 
 		} break;
@@ -223,6 +233,8 @@ namespace storage
 		    Node vg_node(NODE_LVMVG, i1->device, i1->name, lvmvginfo.sizeK);
 		    nodes.push_back(vg_node);
 
+		    processUsedby(edges, vg_node, i1->usedBy);
+
 		    deque<LvmLvInfo> lvs;
 		    s->getLvmLvInfo(i1->name, lvs);
 		    for (deque<LvmLvInfo>::const_iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
@@ -232,18 +244,8 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id(), lv_node.id()));
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, lv_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, lv_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, lv_node, i2->v.usedBy);
+			processMount(nodes, edges, lv_node, i2->v);
 		    }
 
 		} break;
@@ -258,18 +260,8 @@ namespace storage
 			Node md_node(NODE_MDRAID, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(md_node);
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, md_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, md_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, md_node, i2->v.usedBy);
+			processMount(nodes, edges, md_node, i2->v);
 		    }
 
 		} break;
@@ -284,18 +276,8 @@ namespace storage
 			Node dm_node(NODE_DM, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(dm_node);
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->v.usedBy.begin(); i3 != i2->v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, dm_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->v.device, i2->v.mount, i2->v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, dm_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, dm_node, i2->v.usedBy);
+			processMount(nodes, edges, dm_node, i2->v);
 		    }
 
 		} break;
@@ -308,10 +290,7 @@ namespace storage
 		    Node dmraid_node(NODE_DMRAID, i1->device, i1->name, dmraidcoinfo.p.d.sizeK);
 		    nodes.push_back(dmraid_node);
 
-		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
-		    {
-			edges.push_back(Edge(EDGE_USED, dmraid_node.id(), "device:" + i2->device));
-		    }
+		    processUsedby(edges, dmraid_node, i1->usedBy);
 
 		    deque<DmraidInfo> partitions;
 		    s->getDmraidInfo(i1->name, partitions);
@@ -325,18 +304,8 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id(), partition_node.id()));
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->p.v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, partition_node, i2->p.v.usedBy);
+			processMount(nodes, edges, partition_node, i2->p.v);
 		    }
 
 		} break;
@@ -349,10 +318,7 @@ namespace storage
 		    Node dmmultipath_node(NODE_DMMULTIPATH, i1->device, i1->name, dmmultipathcoinfo.p.d.sizeK);
 		    nodes.push_back(dmmultipath_node);
 
-		    for (list<UsedByInfo>::const_iterator i2 = i1->usedBy.begin(); i2 != i1->usedBy.end(); ++i2)
-		    {
-			edges.push_back(Edge(EDGE_USED, dmmultipath_node.id(), "device:" + i2->device));
-		    }
+		    processUsedby(edges, dmmultipath_node, i1->usedBy);
 
 		    deque<DmmultipathInfo> partitions;
 		    s->getDmmultipathInfo(i1->name, partitions);
@@ -366,18 +332,8 @@ namespace storage
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id(), partition_node.id()));
 
-			for (list<UsedByInfo>::const_iterator i3 = i2->p.v.usedBy.begin(); i3 != i2->p.v.usedBy.end(); ++i3)
-			{
-			    edges.push_back(Edge(EDGE_USED, partition_node.id(), "device:" + i3->device));
-			}
-
-			if (!i2->p.v.mount.empty())
-			{
-			    Node mountpoint_node(NODE_MOUNTPOINT, i2->p.v.device, i2->p.v.mount, i2->p.v.sizeK);
-			    nodes.push_back(mountpoint_node);
-
-			    edges.push_back(Edge(EDGE_MOUNT, partition_node.id(), mountpoint_node.id()));
-			}
+			processUsedby(edges, partition_node, i2->p.v.usedBy);
+			processMount(nodes, edges, partition_node, i2->p.v);
 		    }
 
 		} break;
