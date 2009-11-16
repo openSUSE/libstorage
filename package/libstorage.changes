@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Nov 16 11:28:41 CET 2009 - aschnell@suse.de
+
+- use name instead of device as label in nodes of graph
+
+-------------------------------------------------------------------
 Wed Nov 11 10:34:34 CET 2009 - aschnell@suse.de
 
 - fixed return value of function getContVolInfo 
