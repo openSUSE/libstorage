@@ -41,14 +41,12 @@ namespace storage
 Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	       bool dmcrypt, const string& dm_dev, const ProcParts& parts,
 	   SystemCmd& losetup)
-    : Volume(d, 0, 0)
+    : Volume(d, 0, 0), lfile(LoopFile), reuseFile(false), delFile(false)
 {
     y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
 	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
-    init();
-    lfile = LoopFile;
     loop_dev = fstab_loop_dev = LoopDev;
     if( loop_dev.empty() )
 	getLoopData( losetup );
@@ -98,15 +96,12 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 
 Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 	   unsigned long long sizeK, bool dmcr)
-    : Volume(d, 0, 0)
+    : Volume(d, 0, 0), lfile(file), reuseFile(reuseExisting), delFile(false)
 {
     y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
 	  " sizek:" << sizeK << " dmcrypt:" << dmcr);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
-    init();
-    reuseFile = reuseExisting;
-    lfile = file;
     getFreeLoop();
     is_loop = true;
     if( !dmcr )
@@ -145,12 +140,6 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 	y2deb("destructed Loop " << dev);
     }
 
-
-void
-Loop::init()
-    {
-    reuseFile = delFile = false;
-    }
 
 void
 Loop::setDmcryptDev( const string& dm_dev, bool active )

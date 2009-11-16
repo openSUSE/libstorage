@@ -70,7 +70,7 @@ class Loop : public Volume
 	static bool notDeleted( const Loop& l ) { return( !l.deleted() ); }
 
     protected:
-	void init();
+
 	void checkReuse();
 	static void getLoopMajor();
 
