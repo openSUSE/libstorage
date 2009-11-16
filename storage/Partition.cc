@@ -43,7 +43,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     typ = Type;
     orig_num = num;
     addUdevData();
-    y2deb("constructed partition " << dev << " on disk " << cont->name());
+    y2deb("constructed Partition " << dev << " on " << cont->device());
     }
 
 Partition::Partition( const Disk& d, const string& Data ) :
@@ -70,7 +70,21 @@ Partition::Partition( const Disk& d, const string& Data ) :
     else
 	bootflag = false;
     addUdevData();
-    y2deb("constructed partition " << dev << " on disk " << cont->name());
+    y2deb("constructed Partition " << dev << " on " << cont->device());
+    }
+
+
+    Partition::Partition(const Disk& c, const Partition& v)
+	: Volume(c, v), reg(v.reg), bootflag(v.bootflag), typ(v.typ),
+	  idt(v.idt), orig_id(v.orig_id), orig_num(v.orig_num)
+    {
+	y2deb("copy-constructed Partition from " << v.dev);
+    }
+
+
+    Partition::~Partition()
+    {
+	y2deb("destructed Partition " << dev);
     }
 
 
@@ -581,11 +595,6 @@ Partition::getCommitActions(list<commitAction>& l) const
     }
 
 
-Partition::~Partition()
-    {
-    y2deb("destructed partition " << dev);
-    }
-
 void
 Partition::getInfo( PartitionAddInfo& tinfo ) const
     {
@@ -675,24 +684,6 @@ bool Partition::equalContent( const Partition& rhs ) const
             idt==rhs.idt );
     }
 
-Partition& Partition::operator= ( const Partition& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    reg = rhs.reg;
-    bootflag = rhs.bootflag;
-    typ = rhs.typ;
-    idt = rhs.idt;
-    orig_id = rhs.orig_id;
-    orig_num = rhs.orig_num;
-    return( *this );
-    }
-
-Partition::Partition( const Disk& d, const Partition& rhs ) : Volume(d)
-    {
-    y2deb("constructed partition by copy constructor from " << rhs.dev);
-    *this = rhs;
-    }
 
     const string Partition::pt_names[] = { "primary", "extended", "logical", "any" };
 

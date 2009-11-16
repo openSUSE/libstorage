@@ -79,10 +79,26 @@ LvmVg::LvmVg(Storage * const s, const string& file, int)
 }
 
 
-LvmVg::~LvmVg()
+    LvmVg::LvmVg(const LvmVg& c)
+	: PeContainer(c), status(c.status), uuid(c.uuid), lvm1(c.lvm1),
+	  inactiv(c.inactiv)
     {
-    y2deb("destructed lvm vg " << dev);
+	y2deb("copy-constructed LvmVg from " << c.dev);
+
+	ConstLvmLvPair p = c.lvmLvPair();
+	for (ConstLvmLvIter i = p.begin(); i != p.end(); ++i)
+	{
+	    LvmLv* p = new LvmLv(*this, *i);
+	    vols.push_back(p);
+	}
     }
+
+
+    LvmVg::~LvmVg()
+    {
+	y2deb("destructed LvmVg " << dev);
+    }
+
 
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
 static bool lvCreated( const LvmLv& l ) { return( l.created() ); }
@@ -1721,21 +1737,6 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
-    }
-
-LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
-    {
-    y2deb("constructed LvmVg by copy constructor from " << rhs.nm);
-    status = rhs.status;
-    uuid = rhs.uuid;
-    lvm1 = rhs.lvm1;
-    inactiv = rhs.inactiv;
-    ConstLvmLvPair p = rhs.lvmLvPair();
-    for( ConstLvmLvIter i = p.begin(); i!=p.end(); ++i )
-	{
-	LvmLv * p = new LvmLv( *this, *i );
-	vols.push_back( p );
-	}
     }
 
 

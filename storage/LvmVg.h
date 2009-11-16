@@ -38,10 +38,12 @@ class LvmVg : public PeContainer
     friend class LvmLv;
 
     public:
+
 	LvmVg( Storage * const s, const string& Name );
 	LvmVg( Storage * const s, const string& Name, bool lvm1 );
-	LvmVg( const LvmVg& c );
+	LvmVg(const LvmVg& c);
 	virtual ~LvmVg();
+
 	unsigned numLv() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
 	bool inactive() const { return( inactiv ); }
@@ -170,6 +172,11 @@ class LvmVg : public PeContainer
 	static bool active;
 
 	mutable storage::LvmVgInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	LvmVg& operator=(const LvmVg&);	// disallow
+
     };
 
 }

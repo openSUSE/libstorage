@@ -58,10 +58,26 @@ NfsCo::NfsCo( Storage * const s, const string& file ) :
     init();
     }
 
-NfsCo::~NfsCo()
+
+    NfsCo::NfsCo(const NfsCo& c)
+	: Container(c)
     {
-    y2deb("destructed NfsCo");
+	y2deb("copy-constructed NfsCo from " << c.dev);
+
+	ConstNfsPair p = c.nfsPair();
+	for (ConstNfsIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Nfs* p = new Nfs(*this, *i);
+	    vols.push_back(p);
+	}
     }
+
+
+    NfsCo::~NfsCo()
+    {
+	y2deb("destructed NfsCo " << dev);
+    }
+
 
 void
 NfsCo::init()
@@ -289,18 +305,6 @@ bool NfsCo::equalContent( const Container& rhs ) const
 	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
-    }
-
-NfsCo::NfsCo( const NfsCo& rhs ) : Container(rhs)
-    {
-    y2deb("constructed NfsCo by copy constructor from " << rhs.nm);
-    *this = rhs;
-    ConstNfsPair p = rhs.nfsPair();
-    for( ConstNfsIter i=p.begin(); i!=p.end(); ++i )
-         {
-         Nfs * p = new Nfs( *this, *i );
-         vols.push_back( p );
-         }
     }
 
 }

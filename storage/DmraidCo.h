@@ -42,7 +42,7 @@ class DmraidCo : public DmPartCo
 	DmraidCo(Storage * const s, const string& Name, const ProcParts& parts);
 	DmraidCo( Storage * const s, const string& Name, unsigned num, 
 		 unsigned long long Size, const ProcParts& parts);
-	DmraidCo( const DmraidCo& rhs );
+	DmraidCo(const DmraidCo& c);
 	virtual ~DmraidCo();
 
 	static storage::CType staticType() { return storage::DMRAID; }
@@ -52,7 +52,6 @@ class DmraidCo : public DmPartCo
 
 	bool equalContent( const Container& rhs ) const;
 	string getDiffString( const Container& d ) const;
-	DmraidCo& operator= ( const DmraidCo& rhs );
 
     protected:
 
@@ -129,7 +128,12 @@ class DmraidCo : public DmPartCo
 	string raidtype;
 	string controller;
 
-	static bool active;
+	static bool active; 
+
+    private:
+
+	DmraidCo& operator=(const DmraidCo&); // disallow
+
     };
 
 }

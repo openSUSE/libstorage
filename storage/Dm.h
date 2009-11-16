@@ -37,10 +37,9 @@ class Dm : public Volume
     public:
 	Dm( const PeContainer& d, const string& tn );
 	Dm( const PeContainer& d, const string& tn, unsigned mnum );
-	Dm( const PeContainer& d, const Dm& rhs );
-	Dm& operator=( const Dm& );
-
+	Dm(const PeContainer& c, const Dm& v);
 	virtual ~Dm();
+
 	const string& getTableName() const { return( tname ); }
 	const string& getTargetName() const { return( target ); }
 	void setTableName( const string& name ) { tname=name; }
@@ -105,6 +104,12 @@ class Dm : public Volume
 	static const list<string> known_types;
 
 	mutable storage::DmInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Dm(const Dm&);		  // disallow
+	Dm& operator=(const Dm&); // disallow
+
     };
 
 }

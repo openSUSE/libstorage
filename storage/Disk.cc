@@ -171,10 +171,33 @@ Disk::Disk(Storage * const s, const string& fname)
 }
 
 
-Disk::~Disk()
-{
-    y2deb("destructed disk " << dev);
-}
+    Disk::Disk(const Disk& c)
+	: Container(c), cyl(c.cyl), head(c.head), sector(c.sector),
+	  new_cyl(c.new_cyl), new_head(c.new_head),
+	  new_sector(c.new_sector), label(c.label),
+	  udev_path(c.udev_path), udev_id(c.udev_id),
+	  detected_label(c.detected_label), logfile_name(c.logfile_name),
+	  sysfs_dir(c.sysfs_dir), max_primary(c.max_primary),
+	  ext_possible(c.ext_possible), max_logical(c.max_logical),
+	  init_disk(c.init_disk), iscsi(c.iscsi),
+	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
+	  byte_cyl(c.byte_cyl), range(c.range)
+    {
+	y2deb("copy-constructed Disk from " << c.dev);
+
+	ConstPartPair p = c.partPair();
+	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Partition* p = new Partition(*this, *i);
+	    vols.push_back(p);
+	}
+    }
+
+
+    Disk::~Disk()
+    {
+	y2deb("destructed Disk " << dev);
+    }
 
 
 void
@@ -2773,6 +2796,7 @@ void Disk::logDifference( const Container& d ) const
 	y2mil(log);
     }
 
+
 bool Disk::equalContent( const Container& rhs ) const
     {
     const Disk * p = NULL;
@@ -2802,45 +2826,6 @@ bool Disk::equalContent( const Container& rhs ) const
 	ret = ret && i==pp.end() && j==pc.end();
 	}
     return( ret );
-    }
-
-Disk& Disk::operator= ( const Disk& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    cyl = rhs.cyl;
-    head = rhs.head;
-    sector = rhs.sector;
-    new_cyl = rhs.new_cyl;
-    new_head = rhs.new_head;
-    new_sector = rhs.new_sector;
-    label = rhs.label;
-    detected_label = rhs.detected_label;
-    range = rhs.range;
-    byte_cyl = rhs.byte_cyl;
-    max_primary = rhs.max_primary;
-    ext_possible = rhs.ext_possible;
-    max_logical = rhs.max_logical;
-    init_disk = rhs.init_disk;
-    iscsi = rhs.iscsi;
-    udev_path = rhs.udev_path;
-    udev_id = rhs.udev_id;
-    logfile_name = rhs.logfile_name;
-    sysfs_dir = rhs.sysfs_dir;
-    dmp_slave = rhs.dmp_slave;
-    gpt_enlarge = rhs.gpt_enlarge;
-    return( *this );
-    }
-
-Disk::Disk( const Disk& rhs ) : Container(rhs)
-    {
-    y2deb("constructed disk by copy constructor from " << rhs.nm);
-    *this = rhs;
-    ConstPartPair p = rhs.partPair();
-    for( ConstPartIter i = p.begin(); i!=p.end(); ++i )
-	{
-	Partition * p = new Partition( *this, *i );
-	vols.push_back( p );
-	}
     }
 
 }

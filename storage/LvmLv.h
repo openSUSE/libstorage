@@ -33,12 +33,12 @@ class LvmVg;
 class LvmLv : public Dm
     {
     public:
+
 	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
 	      const string& uuid, const string& status, const string& alloc);
 	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
 	      unsigned stripe);
-	LvmLv(const LvmVg& d, const LvmLv& l);
-
+	LvmLv(const LvmVg& c, const LvmLv& v);
 	virtual ~LvmLv();
 
 	const LvmVg* vg() const;
@@ -70,7 +70,6 @@ class LvmLv : public Dm
 	static string makeDmTableName(const string& vg_name, const string& lv_name);
 	void init( const string& name );
 	virtual const string shortPrintedName() const { return "Lv"; }
-	LvmLv& operator=( const LvmLv& );
 
 	string origin;		// only for snapshots, empty otherwise
 
@@ -79,6 +78,12 @@ class LvmLv : public Dm
 	string allocation;
 
 	mutable storage::LvmLvInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	LvmLv(const LvmLv&);		// disallow
+	LvmLv& operator=(const LvmLv&); // disallow
+
     };
 
 }

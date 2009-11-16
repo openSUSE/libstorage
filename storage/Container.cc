@@ -36,18 +36,26 @@ namespace storage
     using namespace std;
 
 
-    Container::Container(Storage * const s, const string& Name, CType t) 
-	: Device(Name, "/dev/" + Name), sto(s)
+    Container::Container(Storage* s, const string& name, CType t)
+	: Device(name, "/dev/" + name), sto(s), typ(t), del(false),
+	  create(false), silent(false), ronly(false)
     {
-    del = silent = ronly = create = false;
-    typ = t;
-    y2deb("constructed cont " << nm);
+	y2deb("constructed Container " << dev);
     }
 
-Container::~Container()
+
+    Container::Container(const Container& c)
+	: Device(c), sto(c.sto), typ(c.typ), del(c.del), create(c.create),
+	  silent(c.silent), ronly(c.ronly)
     {
-    clearPointerList(vols);
-    y2deb("destructed cont " << dev);
+	y2deb("copy-constructed Container from " << c.dev);
+    }
+
+
+    Container::~Container()
+    {
+	clearPointerList(vols);
+	y2deb("destructed Container " << dev);
     }
 
 
@@ -440,27 +448,6 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
     return( ret );
     }
 
-
-Container& Container::operator= ( const Container& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-
-    Device::operator=(rhs);
-
-    typ = rhs.typ;
-    del = rhs.del;
-    create = rhs.create;
-    ronly = rhs.ronly;
-    silent = rhs.silent;
-
-    return *this;
-    }
-
-Container::Container( const Container& rhs ) : sto(rhs.sto)
-    {
-    y2deb("constructed cont by copy constructor from " << rhs.nm);
-    *this = rhs;
-    }
 
 const string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", 
 					 "DM", "DMRAID", "NFS", "DMMULTIPATH" };

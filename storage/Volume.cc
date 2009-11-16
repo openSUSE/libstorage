@@ -48,42 +48,66 @@ namespace storage
     using namespace std;
 
 
-Volume::Volume(const Container& d, unsigned PNr, unsigned long long SizeK)
-    : cont(&d)
-{
-    numeric = true;
-    num = PNr;
-    size_k = orig_size_k = SizeK;
-    init();
-    y2deb("constructed volume " << ((num>0)?dev:"") << " on disk " << cont->name());
-}
+    Volume::Volume(const Container& c, unsigned PNr, unsigned long long SizeK)
+	: cont(&c), numeric(true)
+    {
+	num = PNr;
+	size_k = orig_size_k = SizeK;
+	init();
+	y2deb("constructed Volume " << ((num>0)?dev:"") << " on " << cont->device());
+    }
 
 
-Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
-    : cont(&c)
-{
-    numeric = false;
-    nm = Name;
-    size_k = orig_size_k = SizeK;
-    init();
-    y2deb("constructed volume " << dev << " on disk " << cont->name());
-}
+    Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
+	: cont(&c), numeric(false)
+    {
+	nm = Name;
+	size_k = orig_size_k = SizeK;
+	init();
+	y2deb("constructed Volume " << dev << " on " << cont->device());
+    }
 
 
-Volume::Volume(const Container& c)
-    : cont(&c)
-{
-    numeric = false;
-    size_k = orig_size_k = 0;
-    init();
-    y2deb("constructed late init volume");
-}
+    Volume::Volume(const Container& c)
+	: cont(&c)
+    {
+	numeric = false;
+	size_k = orig_size_k = 0;
+	init();
+	y2deb("constructed late init volume");
+    }
 
 
-Volume::~Volume()
-{
-    y2deb("destructed volume " << dev);
-}
+    /* This is our copy-constructor for Volumes. Every class derived from
+       Volume needs an equivalent one. It takes a Container as extra argument
+       since the newly created Volume can belong to a different Container than
+       the original Volume. */
+    Volume::Volume(const Container&c, const Volume&v)
+	: Device(v), cont(&c), numeric(v.numeric), create(v.create),
+	  del(v.del), format(v.format), silnt(v.silnt),
+	  fstab_added(v.fstab_added), fs(v.fs), detected_fs(v.detected_fs),
+	  mount_by(v.mount_by), orig_mount_by(v.orig_mount_by), uuid(v.uuid),
+	  label(v.label), orig_label(v.orig_label), mp(v.mp),
+	  orig_mp(v.orig_mp), fstab_opt(v.fstab_opt),
+	  orig_fstab_opt(v.orig_fstab_opt), mkfs_opt(v.mkfs_opt),
+	  tunefs_opt(v.tunefs_opt), is_loop(v.is_loop),
+	  is_mounted(v.is_mounted), ignore_fstab(v.ignore_fstab),
+	  ignore_fs(v.ignore_fs), loop_active(v.loop_active),
+	  dmcrypt_active(v.dmcrypt_active), ronly(v.ronly),
+	  encryption(v.encryption), orig_encryption(v.orig_encryption),
+	  loop_dev(v.loop_dev), dmcrypt_dev(v.dmcrypt_dev),
+	  fstab_loop_dev(v.fstab_loop_dev), crypt_pwd(v.crypt_pwd),
+	  alt_names(v.alt_names), num(v.num), orig_size_k(v.orig_size_k),
+	  dtxt(v.dtxt)
+    {
+	y2deb("copy-constructed Volume from " << v.dev);
+    }
+
+
+    Volume::~Volume()
+    {
+	y2deb("destructed Volume " << dev);
+    }
 
 
     Storage*
@@ -3060,54 +3084,6 @@ bool Volume::equalContent( const Volume& rhs ) const
 	    is_mounted==rhs.is_mounted && encryption==rhs.encryption &&
 	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev &&
 	    uby==rhs.uby );
-    }
-
-Volume& Volume::operator= ( const Volume& rhs )
-    {
-    y2deb("operator= from " << rhs.dev);
-
-    Device::operator=(rhs);
-
-    numeric = rhs.numeric;
-    num = rhs.num;
-    orig_size_k = rhs.orig_size_k;
-    ronly = rhs.ronly;
-    create = rhs.create;
-    del = rhs.del;
-    silnt = rhs.silnt;
-    format = rhs.format;
-    fstab_added = rhs.fstab_added;
-    fs = rhs.fs;
-    detected_fs = rhs.detected_fs;
-    mount_by = rhs.mount_by;
-    orig_mount_by = rhs.orig_mount_by;
-    uuid = rhs.uuid;
-    label = rhs.label;
-    orig_label = rhs.orig_label;
-    mp = rhs.mp;
-    orig_mp = rhs.orig_mp;
-    fstab_opt = rhs.fstab_opt;
-    orig_fstab_opt = rhs.orig_fstab_opt;
-    mkfs_opt = rhs.mkfs_opt;
-    tunefs_opt = rhs.tunefs_opt;
-    dtxt = rhs.dtxt;
-    is_loop = rhs.is_loop;
-    loop_active = rhs.loop_active;
-    is_mounted = rhs.is_mounted;
-    encryption = rhs.encryption;
-    orig_encryption = rhs.orig_encryption;
-    loop_dev = rhs.loop_dev;
-    fstab_loop_dev = rhs.fstab_loop_dev;
-    crypt_pwd = rhs.crypt_pwd;
-    alt_names = rhs.alt_names;
-
-    return *this;
-    }
-
-Volume::Volume( const Volume& rhs ) : cont(rhs.cont)
-    {
-    y2deb("constructed vol by copy constructor from " << rhs.dev);
-    *this = rhs;
     }
 
 

@@ -132,10 +132,18 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 }
 
 
-Loop::~Loop()
-{
-    y2deb("destructed loop " << dev);
-}
+    Loop::Loop(const LoopCo& c, const Loop& v)
+	: Volume(c, v), lfile(v.lfile), reuseFile(v.reuseFile),
+	  delFile(v.delFile)
+    {
+	y2deb("copy-constructed Loop from " << v.dev);
+    }
+
+
+    Loop::~Loop()
+    {
+	y2deb("destructed Loop " << dev);
+    }
 
 
 void
@@ -441,25 +449,6 @@ void Loop::logDifference( const Loop& rhs ) const
 	}
     y2mil(log);
     }
-
-
-Loop& Loop::operator=(const Loop& rhs)
-{
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    lfile = rhs.lfile;
-    reuseFile = rhs.reuseFile;
-    delFile = rhs.delFile;
-    return *this;
-}
-
-
-Loop::Loop(const LoopCo& d, const Loop& rhs)
-    : Volume(d)
-{
-    y2deb("constructed loop by copy constructor from " << rhs.nm);
-    *this = rhs;
-}
 
 
 unsigned Loop::loop_major = 0;

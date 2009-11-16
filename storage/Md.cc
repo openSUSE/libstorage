@@ -42,7 +42,7 @@ namespace storage
 Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
     : Volume( d, PNr, 0 )
     {
-    y2deb("constructed md " << dev << " on container " << cont->name());
+	y2deb("constructed Md " << dev << " on " << cont->device());
     if( d.type() != MD )
 	y2err("constructed md with wrong container");
     init();
@@ -186,10 +186,20 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     }
 
 
-Md::~Md()
+    Md::Md(const MdCo& c, const Md& v)
+	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
+	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
+	  destrSb(v.destrSb), devs(v.devs), spare(v.spare)
     {
-    y2deb("destructed md " << dev);
+	y2deb("copy-constructed Md from " << v.dev);
     }
+
+
+    Md::~Md()
+    {
+	y2deb("destructed Md " << dev);
+    }
+
 
 void
 Md::init()
@@ -636,27 +646,6 @@ void Md::logDifference( const Md& rhs ) const
 	log += b.str();
 	}
     y2mil(log);
-    }
-
-Md& Md::operator= ( const Md& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    md_type = rhs.md_type;
-    md_parity = rhs.md_parity;
-    chunk = rhs.chunk;
-    md_uuid = rhs.md_uuid;
-    sb_ver = rhs.sb_ver;
-    destrSb = rhs.destrSb;
-    devs = rhs.devs;
-    spare = rhs.spare;
-    return( *this );
-    }
-
-Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
-    {
-    y2deb("constructed md by copy constructor from " << rhs.dev);
-    *this = rhs;
     }
 
 

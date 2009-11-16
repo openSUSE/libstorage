@@ -35,9 +35,9 @@ class Dmmultipath : public DmPart
     {
     public:
 	Dmmultipath( const DmmultipathCo& d, unsigned nr, Partition* p=NULL );
-	Dmmultipath( const DmmultipathCo& d, const Dmmultipath& rd );
-
+	Dmmultipath(const DmmultipathCo& c, const Dmmultipath& v);
 	virtual ~Dmmultipath();
+
 	void getInfo( storage::DmmultipathInfo& info ) const;
 	friend std::ostream& operator<< (std::ostream& s, const Dmmultipath &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
@@ -52,7 +52,12 @@ class Dmmultipath : public DmPart
 
     protected:
 	virtual const string shortPrintedName() const { return( "Dmmultipath" ); }
-	Dmmultipath& operator=( const Dmmultipath& );
+
+    private:
+
+	Dmmultipath(const Dmmultipath&); // disallow
+	Dmmultipath& operator=(const Dmmultipath&); // disallow
+
     };
 
 }

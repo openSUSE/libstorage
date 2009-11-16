@@ -59,7 +59,7 @@ DmPartCo::~DmPartCo()
 	delete disk;
 	disk = NULL;
 	}
-    y2deb("destructed DmPart co " << dev);
+    y2deb("destructed DmPartCo " << dev);
     }
 
 
@@ -1069,23 +1069,28 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
     return( ret );
     }
 
-DmPartCo::DmPartCo( const DmPartCo& rhs ) : PeContainer(rhs)
+
+    DmPartCo::DmPartCo(const DmPartCo& c)
+	: PeContainer(c), udev_path(c.udev_path), udev_id(c.udev_id), active(c.active),
+	  del_ptable(c.del_ptable)
     {
-    y2deb("constructed DmPartCo by copy constructor from " << rhs.nm);
-    active = rhs.active;
-    del_ptable = rhs.del_ptable;
-    disk = NULL;
-    if( rhs.disk )
-	disk = new Disk( *rhs.disk );
-    Storage::waitForDevice();
-    ConstDmPartPair p = rhs.dmpartPair();
-    for( ConstDmPartIter i = p.begin(); i!=p.end(); ++i )
+	y2deb("copy-constructed DmPartCo from " << c.dev);
+
+	disk = NULL;
+	if (c.disk)
+	    disk = new Disk(*c.disk);
+
+	Storage::waitForDevice();
+	ConstDmPartPair p = c.dmpartPair();
+	for (ConstDmPartIter i = p.begin(); i != p.end(); ++i)
 	{
-	DmPart * p = new DmPart( *this, *i );
-	vols.push_back( p );
+	    DmPart* p = new DmPart(*this, *i);
+	    vols.push_back(p);
 	}
-    updatePointers(true);
+
+	updatePointers(true);
     }
+
 
 void
 DmPartCo::logData(const string& Dir) const

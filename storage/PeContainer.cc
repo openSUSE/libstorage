@@ -41,10 +41,21 @@ PeContainer::PeContainer( Storage * const s, CType t ) :
     init();
     }
 
-PeContainer::~PeContainer()
+
+    PeContainer::PeContainer(const PeContainer& c)
+	: Container(c), pe_size(c.pe_size), num_pe(c.num_pe),
+	  free_pe(c.free_pe), pv(c.pv), pv_add(c.pv_add),
+	  pv_remove(c.pv_remove)
     {
-    y2deb("destructed pe container " <<  dev);
+	y2deb("copy-constructed PeContainer from " << c.dev);
     }
+
+
+    PeContainer::~PeContainer()
+    {
+	y2deb("destructed PeContainer " << dev);
+    }
+
 
 void PeContainer::unuseDev()
     {
@@ -759,23 +770,6 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	ret = ret && i==rhs.end() && j==end();
 	}
     return( ret );
-    }
-
-PeContainer& PeContainer::operator=( const PeContainer& rhs )
-    {
-    pe_size = rhs.pe_size;
-    num_pe = rhs.num_pe;
-    free_pe = rhs.free_pe;
-    pv = rhs.pv;
-    pv_add = rhs.pv_add;
-    pv_remove = rhs.pv_remove;
-    return( *this );
-    }
-
-PeContainer::PeContainer( const PeContainer& rhs ) : Container(rhs)
-    {
-    y2deb("constructed PeContainer by copy constructor from " << rhs.nm);
-    *this = rhs;
     }
 
 }

@@ -64,10 +64,18 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
     }
 
 
-Dm::~Dm()
-{
-    y2deb("destructed dm dev " << dev);
-}
+    Dm::Dm(const PeContainer& c, const Dm& v)
+	: Volume(c, v), tname(v.tname), num_le(v.num_le), stripe(v.stripe),
+	  stripe_size(v.stripe_size), inactiv(v.inactiv), pe_map(v.pe_map)
+    {
+	y2deb("copy-constructed Dm from " << v.dev);
+    }
+
+
+    Dm::~Dm()
+    {
+	y2deb("destructed Dm dev " << dev);
+    }
 
 
 unsigned Dm::dmMajor()
@@ -620,24 +628,6 @@ string Dm::stringDifference( const Dm& rhs ) const
     return( ret );
     }
 
-Dm& Dm::operator= ( const Dm& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    num_le = rhs.num_le;
-    stripe = rhs.stripe;
-    stripe_size = rhs.stripe_size;
-    inactiv = rhs.inactiv;
-    tname = rhs.tname;
-    pe_map = rhs.pe_map;
-    return( *this );
-    }
-
-Dm::Dm( const PeContainer& d, const Dm& rhs ) : Volume(d)
-    {
-    y2deb("constructed dm by copy constructor from " << rhs.dev);
-    *this = rhs;
-    }
 
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;

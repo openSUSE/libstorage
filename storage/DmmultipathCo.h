@@ -43,7 +43,7 @@ class DmmultipathCo : public DmPartCo
 	DmmultipathCo(Storage * const s, const string& Name, const ProcParts& parts);
 	DmmultipathCo( Storage * const s, const string& Name, unsigned num,
 		      unsigned long long Size, const ProcParts& parts);
-	DmmultipathCo( const DmmultipathCo& rhs );
+	DmmultipathCo(const DmmultipathCo& c);
 	virtual ~DmmultipathCo();
 
 	static storage::CType staticType() { return storage::DMMULTIPATH; }
@@ -53,7 +53,6 @@ class DmmultipathCo : public DmPartCo
 
 	bool equalContent( const Container& rhs ) const;
 	string getDiffString( const Container& d ) const;
-	DmmultipathCo& operator= ( const DmmultipathCo& rhs );
 
     protected:
 
@@ -130,6 +129,11 @@ class DmmultipathCo : public DmPartCo
 	string model;
 
 	static bool active;
+
+    private:
+
+	DmmultipathCo& operator=(const DmmultipathCo&); // disallow
+
     };
 
 }

@@ -41,14 +41,21 @@ namespace storage
 {
 	DmPartCo::init(parts);
     getRaidData(Name);
-    y2deb("constructing dmraid co " << Name);
+    y2deb("constructing DmraidCo " << Name);
 }
 
 
-DmraidCo::~DmraidCo()
-{
-    y2deb("destructed dmraid co " << dev);
-}
+    DmraidCo::DmraidCo(const DmraidCo& c)
+	: DmPartCo(c), raidtype(c.raidtype), controller(c.controller)
+    {
+	y2deb("copy-constructed DmraidCo from " << c.dev);
+    }
+
+
+    DmraidCo::~DmraidCo()
+    {
+	y2deb("destructed DmraidCo " << dev);
+    }
 
 
 void DmraidCo::getRaidData( const string& name )
@@ -309,12 +316,6 @@ bool DmraidCo::equalContent( const Container& rhs ) const
               controller==p->controller && raidtype==p->raidtype;
 	}
     return( ret );
-    }
-
-DmraidCo::DmraidCo( const DmraidCo& rhs ) : DmPartCo(rhs)
-    {
-    raidtype = rhs.raidtype;
-    controller = rhs.controller;
     }
 
 

@@ -34,13 +34,15 @@ class LoopCo;
 class Loop : public Volume
     {
     public:
+
 	Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	      bool dmcrypt, const string& dm_dev,
 	     const ProcParts& parts, SystemCmd& losetup);
 	Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	      unsigned long long sizeK, bool dmcr );
-	Loop( const LoopCo& d, const Loop& rhs );
+	Loop(const LoopCo& c, const Loop& v);
 	virtual ~Loop();
+
 	const string& loopFile() const { return lfile; }
 	void setLoopFile( const string& file );
 	bool getReuse() { return( reuseFile ); }
@@ -71,7 +73,6 @@ class Loop : public Volume
 	void init();
 	void checkReuse();
 	static void getLoopMajor();
-	Loop& operator=( const Loop& );
 
 	string lfile;
 	bool reuseFile;
@@ -80,6 +81,12 @@ class Loop : public Volume
 	static unsigned loop_major;
 
 	mutable storage::LoopInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Loop(const Loop&);	      // disallow
+	Loop& operator=(const Loop&); // disallow
+
     };
 
 }

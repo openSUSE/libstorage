@@ -70,10 +70,18 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 }
 
 
-LvmLv::~LvmLv()
-{
-    y2deb("destructed lvm lv dev:" << dev);
-}
+    LvmLv::LvmLv(const LvmVg& c, const LvmLv& v)
+	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status),
+	  allocation(v.allocation)
+    {
+	y2deb("copy-constructed LvmLv from " << v.dev);
+    }
+
+
+    LvmLv::~LvmLv()
+    {
+	y2deb("destructed LvmLv " << dev);
+    }
 
 
 const LvmVg* LvmLv::vg() const
@@ -362,22 +370,6 @@ void LvmLv::logDifference( const LvmLv& rhs ) const
     if( allocation!=rhs.allocation )
 	log += " Alloc:" + allocation + "-->" + rhs.allocation;
     y2mil(log);
-    }
-
-LvmLv& LvmLv::operator= ( const LvmLv& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Dm*)this) = rhs;
-    vol_uuid = rhs.vol_uuid;
-    status = rhs.status;
-    allocation = rhs.allocation;
-    return( *this );
-    }
-
-LvmLv::LvmLv( const LvmVg& d, const LvmLv& rhs ) : Dm(d,rhs)
-    {
-    y2deb("constructed lvm lv by copy constructor from " << rhs.dev);
-    *this = rhs;
     }
 
 }

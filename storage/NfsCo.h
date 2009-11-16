@@ -35,9 +35,9 @@ class NfsCo : public Container
     public:
 	NfsCo(Storage * const s, const EtcFstab& fstab, const ProcMounts& mounts);
 	NfsCo( Storage * const s );
-	NfsCo( const NfsCo& rhs );
-
+	NfsCo(const NfsCo& c);
 	virtual ~NfsCo();
+
 	static storage::CType staticType() { return storage::NFSC; }
 	friend std::ostream& operator<< ( std::ostream&, const NfsCo& );
 	int addNfs( const string& nfsDev, unsigned long long sizeK,
@@ -111,6 +111,11 @@ class NfsCo : public Container
 	virtual Container* getCopy() const { return( new NfsCo( *this ) ); }
 
 	void logData(const string& Dir) const;
+
+    private:
+
+	NfsCo& operator=(const NfsCo&); // disallow
+
     };
 
 }

@@ -34,9 +34,9 @@ class PeContainer : public Container
     friend class Storage;
 
     public:
-	PeContainer( Storage * const s, storage::CType t );
-	PeContainer( const PeContainer& c );
-	PeContainer& operator= ( const PeContainer& rhs );
+
+	PeContainer(Storage * const s, CType t);
+	PeContainer(const PeContainer& c);
 	virtual ~PeContainer();
 
 	unsigned long long peSize() const { return pe_size; }
@@ -160,6 +160,11 @@ class PeContainer : public Container
 	std::list<Pv> pv;
 	std::list<Pv> pv_add;
 	std::list<Pv> pv_remove;
+
+    private:
+
+	PeContainer& operator=(const PeContainer&); // disallow
+
     };
 
 }

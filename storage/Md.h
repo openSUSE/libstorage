@@ -37,9 +37,9 @@ class Md : public Volume
 	Md( const MdCo& d, unsigned Pnr, storage::MdType Type, 
 	    const std::list<string>& devs );
 	Md( const MdCo& d, const string& line, const string& line2 );
-	Md( const MdCo& d, const Md& m );
-
+	Md(const MdCo& c, const Md& v);
 	virtual ~Md();
+
 	storage::MdType personality() const { return md_type; }
 	void setPersonality( storage::MdType val ); 
 	storage::MdParity parity() const { return md_parity; }
@@ -80,7 +80,6 @@ class Md : public Volume
     protected:
 	void init();
 	void computeSize();
-	Md& operator=( const Md& );
 
 	static void getMdMajor();
 	static storage::MdType toMdType( const string& val );
@@ -101,6 +100,12 @@ class Md : public Volume
 	static unsigned md_major;
 
 	mutable storage::MdInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Md(const Md&);		      // disallow
+	Md& operator=(const Md&);     // disallow
+
     };
 
 }

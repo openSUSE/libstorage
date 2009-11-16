@@ -35,9 +35,9 @@ class Dmraid : public DmPart
     {
     public:
 	Dmraid( const DmraidCo& d, unsigned nr, Partition* p=NULL );
-	Dmraid( const DmraidCo& d, const Dmraid& rd );
-
+	Dmraid(const DmraidCo& c, const Dmraid& v);
 	virtual ~Dmraid();
+
 	void getInfo( storage::DmraidInfo& info ) const;
 	friend std::ostream& operator<< (std::ostream& s, const Dmraid &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
@@ -52,7 +52,12 @@ class Dmraid : public DmPart
 
     protected:
 	virtual const string shortPrintedName() const { return( "Dmraid" ); }
-	Dmraid& operator=( const Dmraid& );
+
+    private:
+
+	Dmraid(const Dmraid&);	// disallow
+	Dmraid& operator=(const Dmraid&); // disallow
+
     };
 
 }

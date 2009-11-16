@@ -47,10 +47,17 @@ namespace storage
 }
 
 
-DmmultipathCo::~DmmultipathCo()
-{
-    y2deb("destructed multipath co " << dev);
-}
+    DmmultipathCo::DmmultipathCo(const DmmultipathCo& c)
+	: DmPartCo(c), vendor(c.vendor), model(c.model)
+    {
+	y2deb("copy-constructed DmmultipathCo from " << c.dev);
+    }
+
+
+    DmmultipathCo::~DmmultipathCo()
+    {
+	y2deb("destructed DmMultipathCo " << dev);
+    }
 
 
 void
@@ -315,12 +322,6 @@ bool DmmultipathCo::equalContent( const Container& rhs ) const
 	    vendor == p->vendor && model == p->model;
     }
     return ret;
-}
-
-DmmultipathCo::DmmultipathCo( const DmmultipathCo& rhs ) : DmPartCo(rhs)
-{
-    vendor = rhs.vendor;
-    model = rhs.model;
 }
 
 

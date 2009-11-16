@@ -40,17 +40,23 @@ namespace storage
     using namespace std;
 
 
-Dasd::Dasd( Storage * const s, const string& Name,
-            unsigned long long SizeK ) : 
-    Disk(s,Name,SizeK)
+    Dasd::Dasd(Storage * const s, const string& Name, unsigned long long SizeK)
+	: Disk(s, Name, SizeK), fmt(DASDF_NONE)
     {
-    fmt = DASDF_NONE;
-    y2deb("constructed dasd " << dev);
+	y2deb("constructed Dasd " << dev);
     }
 
-Dasd::~Dasd()
+
+    Dasd::Dasd(const Dasd& c)
+	: Disk(c), fmt(c.fmt)
     {
-    y2deb("destructed dasd " << dev);
+	y2deb("copy-constructed Dasd from " << c.dev);
+    }
+
+
+    Dasd::~Dasd()
+    {
+	y2deb("destructed Dasd " << dev);
     }
 
 
@@ -630,20 +636,6 @@ int Dasd::initializeDisk( bool value )
 	    }
 	}
     return( ret );
-    }
-
-Dasd& Dasd::operator= ( const Dasd& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Disk*)this) = rhs;
-    fmt = rhs.fmt;
-    return( *this );
-    }
-
-Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
-    {
-    fmt = DASDF_NONE;
-    y2deb("constructed dasd by copy constructor from " << rhs.nm);
     }
 
 

@@ -45,14 +45,21 @@ DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
     p = pa;
     if( pa )
 	setSize( pa->sizeK() );
-    y2mil("constructed DmPart " << dev << " on co " << cont->name());
+    y2mil("constructed DmPart " << dev << " on " << cont->device());
 }
 
 
-DmPart::~DmPart()
-{
-    y2deb("destructed DmPart " << dev);
-}
+    DmPart::DmPart(const DmPartCo& c, const DmPart& v)
+	: Dm(c, v)
+    {
+	y2deb("copy-constructed DmPart from " << v.dev);
+    }
+
+
+    DmPart::~DmPart()
+    {
+	y2deb("destructed DmPart " << dev);
+    }
 
 
 void DmPart::init( const string& name )
@@ -211,22 +218,6 @@ void DmPart::logDifference( const DmPart& rhs ) const
 {
     string log = stringDifference(rhs);
     y2mil(log);
-}
-
-
-DmPart& DmPart::operator=(const DmPart& rhs)
-{
-    y2deb("operator= from " << rhs.nm);
-    *((Dm*)this) = rhs;
-    return *this;
-}
-
-
-DmPart::DmPart(const DmPartCo& d, const DmPart& rhs)
-    : Dm(d, rhs)
-{
-    y2deb("constructed dmraid by copy constructor from " << rhs.dev);
-    *this = rhs;
 }
 
 }

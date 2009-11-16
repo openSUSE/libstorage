@@ -57,10 +57,24 @@ LoopCo::LoopCo(Storage * const s, const string& file)
 }
 
 
-LoopCo::~LoopCo()
-{
-    y2deb("destructed LoopCo");
-}
+    LoopCo::LoopCo(const LoopCo& c)
+	: Container(c)
+    {
+	y2deb("copy-constructed LoopCo from " << c.dev);
+
+	ConstLoopPair p = c.loopPair();
+	for (ConstLoopIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Loop* p = new Loop(*this, *i);
+	    vols.push_back(p);
+	}
+    }
+
+
+    LoopCo::~LoopCo()
+    {
+	y2deb("destructed LoopCo " << dev);
+    }
 
 
 void
@@ -435,18 +449,5 @@ bool LoopCo::equalContent( const Container& rhs ) const
     return( ret );
     }
 
-
-LoopCo::LoopCo(const LoopCo& rhs)
-    : Container(rhs)
-{
-    y2deb("constructed LoopCo by copy constructor from " << rhs.nm);
-    *this = rhs;
-    ConstLoopPair p = rhs.loopPair();
-    for( ConstLoopIter i=p.begin(); i!=p.end(); ++i )
-    {
-	Loop * p = new Loop( *this, *i );
-	vols.push_back( p );
-    }
-}
 
 }

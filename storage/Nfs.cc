@@ -34,11 +34,11 @@ namespace storage
     using namespace std;
 
 
-Nfs::Nfs( const NfsCo& d, const string& NfsDev ) :
-    Volume( d, 0, 0 )
+    Nfs::Nfs(const NfsCo& c, const string& NfsDev)
+	: Volume(c, 0, 0)
     {
-    y2deb("constructed nfs dev:" << NfsDev);
-    if( d.type() != NFSC )
+    y2deb("constructed Nfs dev:" << NfsDev);
+    if( c.type() != NFSC )
 	y2err("constructed nfs with wrong container");
     dev = canonicalName(NfsDev);
     if( dev != NfsDev )
@@ -46,10 +46,19 @@ Nfs::Nfs( const NfsCo& d, const string& NfsDev ) :
     init();
     }
 
-Nfs::~Nfs()
+
+    Nfs::Nfs(const NfsCo& c, const Nfs& v)
+	: Volume(c, v)
     {
-    y2deb("destructed nfs " << dev);
+	y2deb("copy-constructed Nfs from " << v.dev);
     }
+
+
+    Nfs::~Nfs()
+    {
+	y2deb("destructed Nfs " << dev);
+    }
+
 
 string Nfs::removeText( bool doing ) const
     {
@@ -112,18 +121,5 @@ void Nfs::logDifference( const Nfs& rhs ) const
     string log = Volume::logDifference(rhs);
     y2mil(log);
 }
-
-Nfs& Nfs::operator= ( const Nfs& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    return( *this );
-    }
-
-Nfs::Nfs( const NfsCo& d, const Nfs& rhs ) : Volume(d)
-    {
-    y2deb("constructed nfs by copy constructor from " << rhs.nm);
-    *this = rhs;
-    }
 
 }
