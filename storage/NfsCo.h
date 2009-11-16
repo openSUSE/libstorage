@@ -105,7 +105,6 @@ class NfsCo : public Container
 
 	static list<string> filterOpts(const list<string>& opts);
 	void getNfsData(const EtcFstab& fstab, const ProcMounts& mounts);
-	void init();
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new NfsCo( *this ) ); }

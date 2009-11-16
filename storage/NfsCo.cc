@@ -40,7 +40,6 @@ namespace storage
 	: Container(s, "nfs", staticType())
     {
     y2deb("constructing NfsCo detect");
-    init();
     getNfsData(fstab, mounts);
     }
 
@@ -48,14 +47,12 @@ NfsCo::NfsCo( Storage * const s ) :
     Container(s,"nfs",staticType())
     {
     y2deb("constructing NfsCo");
-    init();
     }
 
 NfsCo::NfsCo( Storage * const s, const string& file ) :
     Container(s,"nfs",staticType())
     {
     y2deb("constructing NfsCo file:" << file);
-    init();
     }
 
 
@@ -76,12 +73,6 @@ NfsCo::NfsCo( Storage * const s, const string& file ) :
     NfsCo::~NfsCo()
     {
 	y2deb("destructed NfsCo " << dev);
-    }
-
-
-void
-NfsCo::init()
-    {
     }
 
 
