@@ -78,7 +78,7 @@ class Md : public Volume
 	void getState(MdStateInfo& info) const;
 
     protected:
-	void init();
+
 	void computeSize();
 
 	static void getMdMajor();

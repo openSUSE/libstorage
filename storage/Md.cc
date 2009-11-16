@@ -40,13 +40,12 @@ namespace storage
 
 
 Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
-    : Volume( d, PNr, 0 )
+	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_NONE), chunk(0),
+  	  sb_ver("01.00.00"), destrSb(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
     if( d.type() != MD )
-	y2err("constructed md with wrong container");
-    init();
-    md_type = Type;
+	    y2err("constructed Md with wrong container");
     for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
 	devs.push_back( normalizeDevice( *i ) );
     computeSize();
@@ -54,12 +53,12 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 
 
 Md::Md( const MdCo& d, const string& line1, const string& line2 )
-    : Volume( d, 0, 0 )
+	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_NONE), chunk(0),
+	  sb_ver("01.00.00"), destrSb(false)
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
     if( d.type() != MD )
 	y2err("constructed md with wrong container");
-    init();
     if( mdStringNum( extractNthWord( 0, line1 ), num ))
 	{
 	nm.clear();
@@ -200,16 +199,6 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	y2deb("destructed Md " << dev);
     }
 
-
-void
-Md::init()
-    {
-    destrSb = false;
-    md_parity = PAR_NONE;
-    chunk = 0;
-    sb_ver = "01.00.00";
-    md_type = RAID_UNK;
-    }
 
 void
 Md::getDevs( list<string>& devices, bool all, bool spares ) const
