@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov 17 11:24:08 CET 2009 - aschnell@suse.de
+
+- improved XEN VBD detection (bnc #365688)
+
+-------------------------------------------------------------------
 Mon Nov 16 11:28:41 CET 2009 - aschnell@suse.de
 
 - use name instead of device as label in nodes of graph

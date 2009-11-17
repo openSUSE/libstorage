@@ -331,6 +331,21 @@ bool Disk::detectGeometry()
 	    sysfsinfo.device.clear();
 	}
 
+	sysfsfile = sysfsdir + "/device/devtype";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
+	{
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    string tmp;
+	    file >> tmp;
+	    sysfsinfo.vbd = tmp == "vbd";
+	}
+	else
+	{
+	    // not always available so no error
+	    sysfsinfo.vbd = false;
+	}
+
 	sysfsfile = sysfsdir + "/range";
 	if (access(sysfsfile.c_str(), R_OK) == 0)
 	{

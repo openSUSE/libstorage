@@ -140,6 +140,7 @@ class Disk : public Container
 	    string device;
 	    unsigned long range;
 	    unsigned long long size;
+	    bool vbd;
 	};
 
 	static bool getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo);
