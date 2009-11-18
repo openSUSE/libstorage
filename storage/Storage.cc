@@ -523,13 +523,14 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
-	const list<string> l = DmraidCo::getRaids();
+	const CmdDmraid cmddmraid;
+	const list<string> l = DmraidCo::getRaids(cmddmraid);
 	if (!l.empty())
 	{
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		    DmraidCo* v = new DmraidCo(this, *i, parts);
+		    DmraidCo* v = new DmraidCo(this, *i, cmddmraid, parts);
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
 		    if (it != by_id.end())
 			v->setUdevData(it->second);

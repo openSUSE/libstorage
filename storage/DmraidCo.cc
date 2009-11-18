@@ -36,13 +36,80 @@ namespace storage
     using namespace std;
 
 
-    DmraidCo::DmraidCo(Storage * const s, const string& Name, const ProcParts& parts)
-	: DmPartCo(s, "/dev/mapper/" + Name, staticType(), parts)
-{
+    CmdDmraid::CmdDmraid()
+    {
+	SystemCmd c(DMRAIDBIN " -s -c -c -c");
+	if (c.retcode() != 0 || c.stdout().empty())
+	    return;
+
+	const vector<string>& lines = c.stdout();
+	vector<string>::const_iterator it = lines.begin();
+	while (it != lines.end())
+	{
+	    const list<string> sl = splitString(*it++, ":");
+	    if (sl.size() >= 4)
+	    {
+		Entry entry;
+
+		list<string>::const_iterator ci = sl.begin();
+		string name = *ci;
+		advance(ci, 3);
+		entry.raidtype = *ci;
+
+		while (it != lines.end() && boost::starts_with(*it, "/dev/"))
+		{
+		    const list<string> sl = splitString(*it, ":");
+		    if (sl.size() >= 4)
+		    {
+			list<string>::const_iterator ci = sl.begin();
+			entry.devices.push_back(*ci);
+			advance(ci, 1);
+			entry.controller = *ci;
+		    }
+
+		    ++it;
+		}
+
+		data[name] = entry;
+	    }
+	}
+
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
+	    y2mil("data[" << it->first << "] -> controller:" << it->second.controller <<
+		  " raidtype:" << it->second.raidtype << " devices:" << it->second.devices);
+    }
+
+
+    list<string>
+    CmdDmraid::getEntries() const
+    {
+	list<string> ret;
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
+	    ret.push_back(it->first);
+	return ret;
+    }
+
+
+    bool
+    CmdDmraid::getEntry(const string& name, Entry& entry) const
+    {
+	const_iterator it = data.find(name);
+	if (it == data.end())
+	    return false;
+
+	entry = it->second;
+	return true;
+    }
+
+
+    DmraidCo::DmraidCo(Storage * const s, const string& name, const CmdDmraid& cmddmraid,
+		       const ProcParts& parts)
+	: DmPartCo(s, "/dev/mapper/" + name, staticType(), parts)
+    {
 	DmPartCo::init(parts);
-    getRaidData(Name);
-    y2deb("constructing DmraidCo " << Name);
-}
+	getRaidData(name, cmddmraid);
+	y2deb("constructing DmraidCo " << name);
+    }
 
 
     DmraidCo::DmraidCo(const DmraidCo& c)
@@ -58,46 +125,24 @@ namespace storage
     }
 
 
-void DmraidCo::getRaidData( const string& name )
+    void
+    DmraidCo::getRaidData(const string& name, const CmdDmraid& cmddmraid)
     {
-    y2mil("name:" << name);
-    SystemCmd c(DMRAIDBIN " -s -c -c -c " + quote(name));
-    list<string>::const_iterator ci;
-    list<string> sl;
-    if( c.numLines()>0 )
-	sl = splitString( c.getLine(0), ":" );
-    Pv *pve = new Pv;
-    if( sl.size()>=4 )
+	y2mil("name:" << name);
+
+	CmdDmraid::Entry entry;
+	if (cmddmraid.getEntry(name, entry))
 	{
-	ci = sl.begin();
-	++ci; ++ci; ++ci;
-	raidtype = *ci;
-	}
-    unsigned num = 1;
-    while( num<c.numLines() )
-	{
-	sl = splitString( c.getLine(num), ":" );
-	y2mil( "sl:" << sl );
-	if( sl.size()>=3 )
+	    controller = entry.controller;
+	    raidtype = entry.raidtype;
+
+	    for (list<string>::const_iterator it = entry.devices.begin(); it != entry.devices.end(); ++it)
 	    {
-	    ci = sl.begin();
-	    ++ci; ++ci;
-	    if( *ci == name )
-		{
-		--ci;
-		if( controller.empty() && !ci->empty() )
-		    controller = *ci;
-		--ci;
-		if( ci->find( "/dev/" )==0 )
-		    {
-		    pve->device = *ci;
-		    addPv( pve );
-		    }
-		}
+		Pv pv;
+		pv.device = *it;
+		addPv(pv);
 	    }
-	++num;
 	}
-    delete( pve );
     }
 
 
@@ -126,14 +171,15 @@ DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
     dm = new Dmraid( *this, num, p );
     }
 
-void DmraidCo::addPv( Pv*& p )
+
+    void
+    DmraidCo::addPv(const Pv& pv)
     {
-    PeContainer::addPv( *p );
-    if( !deleted() )
-	getStorage()->addUsedBy(p->device, UB_DMRAID, device());
-    delete p;
-    p = new Pv;
+	PeContainer::addPv(pv);
+	if (!deleted())
+	    getStorage()->addUsedBy(pv.device, UB_DMRAID, device());
     }
+
 
 void DmraidCo::activate( bool val )
     {
@@ -169,33 +215,17 @@ void DmraidCo::activate( bool val )
 
 
     list<string>
-    DmraidCo::getRaids()
+    DmraidCo::getRaids(const CmdDmraid& cmddmraid)
     {
         list<string> l;
 
-        SystemCmd c(DMRAIDBIN " -s -c -c -c");
-
-	const vector<string>& lines = c.stdout();
-	for (vector<string>::const_iterator i = lines.begin(); i != lines.end(); ++i)
+	list<string> entries = cmddmraid.getEntries();
+	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
         {
-            const list<string> sl = splitString(*i, ":");
-            if( sl.size()>=3 )
-            {
-                list<string>::const_iterator ci = sl.begin();
-                if( !ci->empty()
-                    && ci->find( "/dev/" )==string::npos
-                    && find( l.begin(), l.end(), *ci )==l.end())
-                {
-                    if (isActivated(*ci))
-                    {
-                        l.push_back( *ci );
-                    }
-                    else
-                    {
-                        y2mil("ignoring inactive dmraid " << *ci);
-                    }
-                }
-            }
+	    if (isActivated(*it))
+		l.push_back(*it);
+	    else
+		y2mil("ignoring inactive dmraid " << *it);
         }
 
         y2mil("detected dmraids " << l);

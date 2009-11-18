@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov 18 16:36:02 CET 2009 - aschnell@suse.de
+
+- run dmraid only once during detection
+
+-------------------------------------------------------------------
 Tue Nov 17 11:24:08 CET 2009 - aschnell@suse.de
 
 - improved XEN VBD detection (bnc #365688)
