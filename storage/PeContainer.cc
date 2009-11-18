@@ -736,39 +736,19 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	       pv_remove==rhs.pv_remove;
     if( ret )
 	{
-	list<Pv>::const_iterator i = rhs.pv.begin();
-	list<Pv>::const_iterator j = pv.begin();
-	while( ret && i!=rhs.pv.end() )
-	    {
-	    ret = ret && i->equalContent(*j);
-	    ++i;
-	    ++j;
-	    }
-	i = rhs.pv_add.begin();
-	j = pv_add.begin();
-	while( ret && i!=rhs.pv_add.end() )
-	    {
-	    ret = ret && i->equalContent(*j);
-	    ++i;
-	    ++j;
-	    }
-	i = rhs.pv_remove.begin();
-	j = pv_remove.begin();
-	while( ret && i!=rhs.pv_remove.end() )
-	    {
-	    ret = ret && i->equalContent(*j);
-	    ++i;
-	    ++j;
-	    }
+	ret = ret && storage::equalContent(pv.begin(), pv.end(),
+					   rhs.pv.begin(), rhs.pv.end());
+	ret = ret && storage::equalContent(pv_add.begin(), pv_add.end(),
+					   rhs.pv_add.begin(), rhs.pv_add.end());
+	ret = ret && storage::equalContent(pv_remove.begin(), pv_remove.end(),
+					   rhs.pv_remove.begin(), rhs.pv_remove.end());
 	}
     if( ret && comp_vol )
 	{
-	CVIter i = rhs.begin();
-	CVIter j = begin();
-	while( ret && i!=rhs.end() && j!=end() )
-	    ret = ret && ((Dm*)(&(*j)))->equalContent( *(Dm*)(&(*i)));
-	ret = ret && i==rhs.end() && j==end();
-	}
+	ConstDmPair pp = dmPair();
+	ConstDmPair pc = rhs.dmPair();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+       	}
     return( ret );
     }
 
