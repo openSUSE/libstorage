@@ -85,11 +85,13 @@ namespace storage
 		    // release. In that case we don't get the pid (and it is
 		    // still 0).
 		    fcntl(fd, F_GETLK, &lock);
+		    close(fd);
 		    y2err("locked by process " << lock.l_pid);
 		    throw LockException(lock.l_pid);
 
 		default:
 		    // Some other error.
+		    close(fd);
 		    y2err("getting lock failed: " << strerror(errno));
 		    throw LockException(0);
 	    }
