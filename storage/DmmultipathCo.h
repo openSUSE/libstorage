@@ -35,14 +35,41 @@ class Storage;
     class ProcParts;
 
 
+    class CmdMultipath
+    {
+
+    public:
+
+	CmdMultipath();
+
+	struct Entry
+	{
+	    string vendor;
+	    string model;
+	    list<string> devices;
+	};
+
+	list<string> getEntries() const;
+
+	bool getEntry(const string& name, Entry& entry) const;
+
+    private:
+
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	map<string, Entry> data;
+
+    };
+
+
 class DmmultipathCo : public DmPartCo
     {
     friend class Storage;
 
     public:
-	DmmultipathCo(Storage * const s, const string& Name, const ProcParts& parts);
-	DmmultipathCo( Storage * const s, const string& Name, unsigned num,
-		      unsigned long long Size, const ProcParts& parts);
+
+	DmmultipathCo(Storage * const s, const string& Name, const CmdMultipath& cmdmultipath,
+		      const ProcParts& parts);
 	DmmultipathCo(const DmmultipathCo& c);
 	virtual ~DmmultipathCo();
 
@@ -107,9 +134,9 @@ class DmmultipathCo : public DmPartCo
 	DmmultipathCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }
-	void getMultipathData( const string& name );
+	void getMultipathData(const string& name, const CmdMultipath& cmdmultipath);
 	void addMultipath( const string& name );
-	void addPv( Pv*& p );
+	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
 	string setDiskLabelText( bool doing ) const;
 
@@ -119,7 +146,7 @@ class DmmultipathCo : public DmPartCo
 	static bool isActive() { return active; }
 
 	static bool isActivated(const string& name);
-	static list<string> getMultipaths();
+	static list<string> getMultipaths(const CmdMultipath& cmdmultipath);
 
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
 
