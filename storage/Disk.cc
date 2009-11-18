@@ -2830,15 +2830,7 @@ bool Disk::equalContent( const Container& rhs ) const
 	{
 	ConstPartPair pp = partPair();
 	ConstPartPair pc = p->partPair();
-	ConstPartIter i = pp.begin();
-	ConstPartIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() )
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
     }

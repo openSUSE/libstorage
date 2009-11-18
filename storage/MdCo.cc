@@ -780,15 +780,7 @@ bool MdCo::equalContent( const Container& rhs ) const
 	{
 	ConstMdPair pp = mdPair();
 	ConstMdPair pc = p->mdPair();
-	ConstMdIter i = pp.begin();
-	ConstMdIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() ) 
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
     }
