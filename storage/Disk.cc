@@ -936,7 +936,7 @@ _("The partitioning on disk %1$s is not readable by\n"
 _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."),
-                              (char*)dev.c_str(), range_exceed, range-1 );
+                              dev.c_str(), range_exceed, range-1 );
 	txt += "\n";
 	txt += 
 	// popup text
