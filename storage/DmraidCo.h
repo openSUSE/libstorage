@@ -34,15 +34,42 @@ class Storage;
     class ProcParts;
 
 
+    class CmdDmraid
+    {
+
+    public:
+
+	CmdDmraid();
+
+	struct Entry
+	{
+	    string raidtype;
+	    string controller;
+	    list<string> devices;
+	};
+
+	list<string> getEntries() const;
+
+	bool getEntry(const string& name, Entry& entry) const;
+
+    private:
+
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	map<string, Entry> data;
+
+    };
+
+
 class DmraidCo : public DmPartCo
     {
     friend class Storage;
 
     public:
-	DmraidCo(Storage * const s, const string& Name, const ProcParts& parts);
-	DmraidCo( Storage * const s, const string& Name, unsigned num, 
-		 unsigned long long Size, const ProcParts& parts);
-	DmraidCo( const DmraidCo& rhs );
+
+	DmraidCo(Storage * const s, const string& name, const CmdDmraid& cmddmraid,
+		 const ProcParts& parts);
+	DmraidCo(const DmraidCo& c);
 	virtual ~DmraidCo();
 
 	static storage::CType staticType() { return storage::DMRAID; }
@@ -52,7 +79,6 @@ class DmraidCo : public DmPartCo
 
 	bool equalContent( const Container& rhs ) const;
 	string getDiffString( const Container& d ) const;
-	DmraidCo& operator= ( const DmraidCo& rhs );
 
     protected:
 
@@ -108,9 +134,9 @@ class DmraidCo : public DmPartCo
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }
 	static void activate(bool val);
-	void getRaidData( const string& name );
+	void getRaidData(const string& name, const CmdDmraid& cmddmraid);
 	void addRaid( const string& name );
-	void addPv( Pv*& p );
+	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
 	string removeText( bool doing ) const;
 	string setDiskLabelText( bool doing ) const;
@@ -118,7 +144,7 @@ class DmraidCo : public DmPartCo
 	static string undevName( const string& name );
 
 	static bool isActivated(const string& name);
-	static list<string> getRaids();
+	static list<string> getRaids(const CmdDmraid& cmddmraid);
 
 	static bool raidNotDeleted( const Dmraid&d ) { return( !d.deleted() ); }
 
@@ -129,7 +155,12 @@ class DmraidCo : public DmPartCo
 	string raidtype;
 	string controller;
 
-	static bool active;
+	static bool active; 
+
+    private:
+
+	DmraidCo& operator=(const DmraidCo&); // disallow
+
     };
 
 }

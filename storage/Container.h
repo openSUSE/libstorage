@@ -152,11 +152,14 @@ namespace storage
 	    }
 
     public:
-	Container( Storage * const, const string& Name, storage::CType typ );
-	Container( const Container& );
-	Storage * getStorage() const { return sto; }
+
+	Container(Storage* s, const string& name, CType typ);
+	Container(const Container& c);
 	virtual ~Container();
-	storage::CType type() const { return typ; }
+
+	Storage* getStorage() const { return sto; }
+	CType type() const { return typ; }
+
 	bool deleted() const { return del; }
 	bool created() const { return create; }
 	void setDeleted( bool val=true ) { del=val; }
@@ -192,7 +195,6 @@ namespace storage
 	virtual int doRemove( Volume * v );
 	virtual int doResize( Volume * v );
 	virtual void logData(const string& Dir) const {}
-	Container& operator=( const Container& );
 
 	static bool stageDecrease(const Volume& v);
 	static bool stageIncrease(const Volume& v);
@@ -201,8 +203,8 @@ namespace storage
 
 	static const string type_names[COTYPE_LAST_ENTRY];
 
-	Storage * const sto;
-	storage::CType typ;
+	Storage* const sto;
+	const CType typ;
 	bool del;
 	bool create;
 	bool silent;
@@ -211,6 +213,11 @@ namespace storage
 	VCont vols;
 
 	mutable storage::ContainerInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Container& operator=(const Container&); // disallow
+
     };
 
 }

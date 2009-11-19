@@ -40,18 +40,16 @@ namespace storage
     }
 
 
-    Device& Device::operator=(const Device& rhs)
+    Device::Device(const Device& d)
+	: nm(d.nm), dev(d.dev), size_k(d.size_k), mjr(d.mjr), mnr(d.mnr), uby(d.uby)
     {
-	y2deb("operator= from " << rhs.nm);
+	y2deb("copy-constructed Device from " << d.dev);
+    }
 
-	nm = rhs.nm;
-	dev = rhs.dev;
-	size_k = rhs.size_k;
-	mjr = rhs.mjr;
-	mnr = rhs.mnr;
-	uby = rhs.uby;
 
-	return *this;
+    Device::~Device()
+    {
+	y2deb("destructed Device " << dev);
     }
 
 

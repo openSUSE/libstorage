@@ -37,11 +37,10 @@ class DmCo : public PeContainer
 
     public:
 	DmCo(Storage * const s, bool detect, const ProcParts& parts, bool only_crypt);
-	DmCo( const DmCo& rhs );
+	DmCo(const DmCo& c);
+	virtual ~DmCo();
 
 	void second(bool detect, const ProcParts& parts, bool only_crypt);
-
-	virtual ~DmCo();
 
 	static storage::CType staticType() { return storage::DM; }
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
@@ -74,6 +73,11 @@ class DmCo : public PeContainer
 	int doRemove( Volume* v );
 
 	void logData(const string& Dir) const;
+
+    private:
+
+	DmCo& operator=(const DmCo&);	// disallow
+
     };
 
 }

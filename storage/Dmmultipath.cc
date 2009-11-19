@@ -34,17 +34,24 @@ namespace storage
     using namespace std;
 
 
-Dmmultipath::Dmmultipath(const DmmultipathCo& d, unsigned nr, Partition* p)
-    : DmPart(d, nr, p)
-{
-    y2mil("constructed dmmultipath " << dev << " on co " << cont->name());
-}
+    Dmmultipath::Dmmultipath(const DmmultipathCo& c, unsigned nr, Partition* p)
+	: DmPart(c, nr, p)
+    {
+	y2mil("constructed Dmmultipath " << dev << " on " << cont->device());
+    }
 
 
-Dmmultipath::~Dmmultipath()
-{
-    y2deb("destructed dmmultipath " << dev);
-}
+    Dmmultipath::Dmmultipath(const DmmultipathCo& c, const Dmmultipath& v)
+	: DmPart(c, v)
+    {
+	y2deb("copy-constructed Dmmultipath from " << v.dev);
+    }
+
+
+    Dmmultipath::~Dmmultipath()
+    {
+	y2deb("destructed Dmmultipath " << dev);
+    }
 
 
 string Dmmultipath::removeText( bool doing ) const
@@ -260,13 +267,5 @@ void Dmmultipath::logDifference( const Dmmultipath& rhs ) const
     {
     DmPart::logDifference(rhs);
     }
-
-
-Dmmultipath& Dmmultipath::operator=(const Dmmultipath& rhs)
-{
-    y2deb("operator= from " << rhs.nm);
-    *((DmPart*)this) = rhs;
-    return *this;
-}
 
 }

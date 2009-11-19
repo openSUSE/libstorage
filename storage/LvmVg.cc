@@ -79,10 +79,26 @@ LvmVg::LvmVg(Storage * const s, const string& file, int)
 }
 
 
-LvmVg::~LvmVg()
+    LvmVg::LvmVg(const LvmVg& c)
+	: PeContainer(c), status(c.status), uuid(c.uuid), lvm1(c.lvm1),
+	  inactiv(c.inactiv)
     {
-    y2deb("destructed lvm vg " << dev);
+	y2deb("copy-constructed LvmVg from " << c.dev);
+
+	ConstLvmLvPair p = c.lvmLvPair();
+	for (ConstLvmLvIter i = p.begin(); i != p.end(); ++i)
+	{
+	    LvmLv* p = new LvmLv(*this, *i);
+	    vols.push_back(p);
+	}
     }
+
+
+    LvmVg::~LvmVg()
+    {
+	y2deb("destructed LvmVg " << dev);
+    }
+
 
 static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
 static bool lvCreated( const LvmLv& l ) { return( l.created() ); }
@@ -666,7 +682,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
     unsigned cnt = c.numLines();
     unsigned i = 0;
-    num_lv = 0;
+    unsigned num_lv = 0;
     string line;
     string tmp;
     string::size_type pos;
@@ -910,7 +926,6 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	y2mil("addLv exists deleted " << (i!=p.end()));
 	if( i==p.end() )
 	    {
-	    num_lv++;
 	    LvmLv *n = new LvmLv( *this, name, origin, le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
@@ -1121,7 +1136,6 @@ LvmVg::init()
     PeContainer::init();
     dev = nm;
     normalizeDevice(dev);
-    num_lv = 0;
     inactiv = lvm1 = false;
     }
 
@@ -1207,11 +1221,10 @@ LvmVg::doCreateVg()
 	    }
 	if( ret==0 )
 	    {
-	    string ddir = "/dev/" + name();
-	    if( access( ddir.c_str(), R_OK )==0 )
+	    if (access(device().c_str(), R_OK) == 0)
 		{
-		SystemCmd c( "find " + ddir + " -type l | xargs -r rm" );
-		rmdir( ddir.c_str() );
+		SystemCmd c("find " + device() + " -type l | xargs -r rm");
+		rmdir(device().c_str());
 		}
 	    string cmd = VGCREATEBIN " " + instSysString() + metaString() +
 		"-s " + decString(pe_size) + "k " + quote(name()) + " " + devices;
@@ -1640,8 +1653,7 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
       s << " lvm1";
     if( d.inactiv )
       s << " inactive";
-    s << " UUID:" << d.uuid
-      << " lv:" << d.num_lv;
+    s << " UUID:" << d.uuid;
     return( s );
     }
 
@@ -1709,38 +1721,14 @@ bool LvmVg::equalContent( const Container& rhs ) const
     if( ret && p )
 	ret = PeContainer::equalContent(*p,false) &&
 	      status==p->status && uuid==p->uuid && lvm1==p->lvm1 &&
-	      inactiv==p->inactiv && num_lv==p->num_lv;
+	    inactiv==p->inactiv;
     if( ret && p )
 	{
 	ConstLvmLvPair pp = lvmLvPair();
 	ConstLvmLvPair pc = p->lvmLvPair();
-	ConstLvmLvIter i = pp.begin();
-	ConstLvmLvIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() )
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
-    }
-
-LvmVg::LvmVg( const LvmVg& rhs ) : PeContainer(rhs)
-    {
-    y2deb("constructed LvmVg by copy constructor from " << rhs.nm);
-    status = rhs.status;
-    uuid = rhs.uuid;
-    lvm1 = rhs.lvm1;
-    inactiv = rhs.inactiv;
-    num_lv = rhs.num_lv;
-    ConstLvmLvPair p = rhs.lvmLvPair();
-    for( ConstLvmLvIter i = p.begin(); i!=p.end(); ++i )
-	{
-	LvmLv * p = new LvmLv( *this, *i );
-	vols.push_back( p );
-	}
     }
 
 

@@ -171,10 +171,33 @@ Disk::Disk(Storage * const s, const string& fname)
 }
 
 
-Disk::~Disk()
-{
-    y2deb("destructed disk " << dev);
-}
+    Disk::Disk(const Disk& c)
+	: Container(c), cyl(c.cyl), head(c.head), sector(c.sector),
+	  new_cyl(c.new_cyl), new_head(c.new_head),
+	  new_sector(c.new_sector), label(c.label),
+	  udev_path(c.udev_path), udev_id(c.udev_id),
+	  detected_label(c.detected_label), logfile_name(c.logfile_name),
+	  sysfs_dir(c.sysfs_dir), max_primary(c.max_primary),
+	  ext_possible(c.ext_possible), max_logical(c.max_logical),
+	  init_disk(c.init_disk), iscsi(c.iscsi),
+	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
+	  byte_cyl(c.byte_cyl), range(c.range)
+    {
+	y2deb("copy-constructed Disk from " << c.dev);
+
+	ConstPartPair p = c.partPair();
+	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Partition* p = new Partition(*this, *i);
+	    vols.push_back(p);
+	}
+    }
+
+
+    Disk::~Disk()
+    {
+	y2deb("destructed Disk " << dev);
+    }
 
 
 void
@@ -306,6 +329,21 @@ bool Disk::detectGeometry()
 	{
 	    // not always available so no error
 	    sysfsinfo.device.clear();
+	}
+
+	sysfsfile = sysfsdir + "/device/devtype";
+	if (access(sysfsfile.c_str(), R_OK) == 0)
+	{
+	    ifstream file(sysfsfile.c_str());
+	    classic(file);
+	    string tmp;
+	    file >> tmp;
+	    sysfsinfo.vbd = tmp == "vbd";
+	}
+	else
+	{
+	    // not always available so no error
+	    sysfsinfo.vbd = false;
 	}
 
 	sysfsfile = sysfsdir + "/range";
@@ -442,7 +480,6 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     bool ret = true;
     string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
     string dlabel;
-    system_stderr.erase();
     y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     checkSystemError( cmd_line, Cmd );
@@ -608,22 +645,12 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
         {
 	y2err("cmd:" << cmd_line);
 	y2err("err:" << tmp);
-	if( !system_stderr.empty() )
-	    {
-	    system_stderr += "\n";
-	    }
-	system_stderr += tmp;
         }
     tmp = boost::join(cmd.stdout(), "\n");
     if (!tmp.empty())
         {
 	y2mil("cmd:" << cmd_line);
 	y2mil("out:" << tmp);
-	if( !system_stderr.empty() )
-	    {
-	    system_stderr += "\n";
-	    }
-	system_stderr += tmp;
         }
     int ret = cmd.retcode();
     if( ret!=0 && cmd_line.find( device()+" set" )!=string::npos &&
@@ -909,7 +936,7 @@ _("The partitioning on disk %1$s is not readable by\n"
 _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."),
-                              (char*)dev.c_str(), range_exceed, range-1 );
+                              dev.c_str(), range_exceed, range-1 );
 	txt += "\n";
 	txt += 
 	// popup text
@@ -948,7 +975,7 @@ bool
 	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
-    string reg = "^" "/dev/" + diskname + partNaming(diskname) + "[0-9]+" "$";
+    string reg = "^" + device() + partNaming(diskname) + "[0-9]+" "$";
     list<string> ps = parts.getMatchingEntries(regex_matches(reg));
     y2mil("regex:\"" << reg << "\" ps:" << ps);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
@@ -1923,7 +1950,6 @@ int Disk::doCreateLabel()
     if( !dmp_slave )
 	getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
-    system_stderr.erase();
     std::ostringstream cmd_line;
     classic(cmd_line);
     cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
@@ -2021,7 +2047,6 @@ int Disk::doSetType( Volume* v )
 	    }
 	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
 	    p->eraseLabel();
-	system_stderr.erase();
 	std::ostringstream cmd_line;
 	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " set " << p->nr() << " ";
@@ -2200,7 +2225,6 @@ int Disk::doCreate( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->createText(true) );
 	    }
-	system_stderr.erase();
 	y2mil("doCreate container " << name() << " name " << p->name());
 	y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
 	y2mil("doCreate detected_label:" << detected_label << " label:" << label);
@@ -2384,7 +2408,6 @@ int Disk::doRemove( Volume* v )
 	    {
 	    getStorage()->showInfoCb( p->removeText(true) );
 	    }
-	system_stderr.erase();
 	y2mil("doRemove container " << name() << " name " << p->name());
 	if( !dmp_slave )
 	    {
@@ -2576,7 +2599,6 @@ int Disk::doResize( Volume* v )
 	    ret = p->resizeFs();
 	if( ret==0 )
 	    {
-	    system_stderr.erase();
 	    y2mil("doResize container " << name() << " name " << p->name());
 	    std::ostringstream cmd_line;
 	    classic(cmd_line);
@@ -2803,6 +2825,7 @@ void Disk::logDifference( const Container& d ) const
 	y2mil(log);
     }
 
+
 bool Disk::equalContent( const Container& rhs ) const
     {
     const Disk * p = NULL;
@@ -2821,56 +2844,9 @@ bool Disk::equalContent( const Container& rhs ) const
 	{
 	ConstPartPair pp = partPair();
 	ConstPartPair pc = p->partPair();
-	ConstPartIter i = pp.begin();
-	ConstPartIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() )
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
-    }
-
-Disk& Disk::operator= ( const Disk& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    cyl = rhs.cyl;
-    head = rhs.head;
-    sector = rhs.sector;
-    new_cyl = rhs.new_cyl;
-    new_head = rhs.new_head;
-    new_sector = rhs.new_sector;
-    label = rhs.label;
-    detected_label = rhs.detected_label;
-    range = rhs.range;
-    byte_cyl = rhs.byte_cyl;
-    max_primary = rhs.max_primary;
-    ext_possible = rhs.ext_possible;
-    max_logical = rhs.max_logical;
-    init_disk = rhs.init_disk;
-    iscsi = rhs.iscsi;
-    udev_path = rhs.udev_path;
-    udev_id = rhs.udev_id;
-    logfile_name = rhs.logfile_name;
-    sysfs_dir = rhs.sysfs_dir;
-    dmp_slave = rhs.dmp_slave;
-    gpt_enlarge = rhs.gpt_enlarge;
-    return( *this );
-    }
-
-Disk::Disk( const Disk& rhs ) : Container(rhs)
-    {
-    y2deb("constructed disk by copy constructor from " << rhs.nm);
-    *this = rhs;
-    ConstPartPair p = rhs.partPair();
-    for( ConstPartIter i = p.begin(); i!=p.end(); ++i )
-	{
-	Partition * p = new Partition( *this, *i );
-	vols.push_back( p );
-	}
     }
 
 }

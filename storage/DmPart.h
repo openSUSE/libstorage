@@ -37,10 +37,9 @@ class DmPart : public Dm
     {
     public:
 	DmPart( const DmPartCo& d, unsigned nr, Partition* p=NULL );
-	DmPart( const DmPartCo& d, const DmPart& rd );
-	DmPart& operator=( const DmPart& );
-
+	DmPart(const DmPartCo& c, const DmPart& v);
 	virtual ~DmPart();
+
 	friend std::ostream& operator<< (std::ostream& s, const DmPart &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	void getInfo( storage::DmPartInfo& info ) const;
@@ -68,6 +67,12 @@ class DmPart : public Dm
 	Partition* p;
 
 	mutable storage::DmPartInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	DmPart(const DmPart&);		  // disallow
+	DmPart& operator=(const DmPart&); // disallow
+
     };
 
 }

@@ -48,7 +48,7 @@ class Partition : public Volume
 		   storage::PartitionType Type, 
 		   unsigned id=ID_LINUX, bool Boot=false );
 	Partition( const Disk& d, const string& Data );
-	Partition( const Disk& d, const Partition& p );
+	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();
 
 	unsigned long cylStart() const { return reg.start(); }
@@ -91,6 +91,7 @@ class Partition : public Volume
 
 	void getInfo( storage::PartitionInfo& info ) const;
 	void getInfo( storage::PartitionAddInfo& info ) const;
+
 	bool equalContent( const Partition& rhs ) const;
 	void logDifference( const Partition& d ) const;
 	void addUdevData();
@@ -107,14 +108,12 @@ class Partition : public Volume
 	    { return( !(*this<=rhs) ); }
 
     protected:
-	Partition& operator=( const Partition& );
 
 	Region reg;
 	bool bootflag;
 	storage::PartitionType typ;
 	unsigned idt;
 	unsigned orig_id;
-	string parted_start;
 	unsigned orig_num;
 
 	void addAltUdevId( unsigned num );
@@ -123,6 +122,12 @@ class Partition : public Volume
 	static const string pt_names[storage::PTYPE_ANY + 1];
 
 	mutable storage::PartitionInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Partition(const Partition&); // disallow
+	Partition& operator=(const Partition&); // disallow
+
     };
 
 }

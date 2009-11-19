@@ -34,17 +34,24 @@ namespace storage
     using namespace std;
 
 
-Dmraid::Dmraid(const DmraidCo& d, unsigned nr, Partition* p)
-    : DmPart(d, nr, p)
-{
-    y2mil("constructed dmraid " << dev << " on co " << cont->name());
-}
+    Dmraid::Dmraid(const DmraidCo& c, unsigned nr, Partition* p)
+	: DmPart(c, nr, p)
+    {
+	y2mil("constructed Dmraid " << dev << " on " << cont->device());
+    }
 
 
-Dmraid::~Dmraid()
-{
-    y2deb("destructed dmraid " << dev);
-}
+    Dmraid::Dmraid(const DmraidCo& c, const Dmraid& v)
+	: DmPart(c, v)
+    {
+	y2deb("copy-constructed Dmraid from " << v.dev);
+    }
+
+
+    Dmraid::~Dmraid()
+    {
+	y2deb("destructed Dmraid " << dev);
+    }
 
 
 string Dmraid::removeText( bool doing ) const
@@ -260,13 +267,5 @@ void Dmraid::logDifference( const Dmraid& rhs ) const
     {
     DmPart::logDifference(rhs);
     }
-
-
-Dmraid& Dmraid::operator=(const Dmraid& rhs)
-{
-    y2deb("operator= from " << rhs.nm);
-    *((DmPart*)this) = rhs;
-    return *this;
-}
 
 }

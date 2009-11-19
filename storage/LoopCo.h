@@ -36,10 +36,11 @@ class LoopCo : public Container
     friend class Storage;
 
     public:
-	LoopCo(Storage * const s, bool detect, const ProcParts& parts);
-	LoopCo( const LoopCo& rhs );
 
+	LoopCo(Storage * const s, bool detect, const ProcParts& parts);
+	LoopCo(const LoopCo& c);
 	virtual ~LoopCo();
+
 	static storage::CType staticType() { return storage::LOOP; }
 	friend std::ostream& operator<< (std::ostream&, const LoopCo& );
 
@@ -123,6 +124,11 @@ class LoopCo : public Container
 	int doRemove( Volume* v );
 
 	void logData(const string& Dir) const;
+
+    private:
+
+	LoopCo& operator=(const LoopCo&); // disallow
+	
     };
 
 }

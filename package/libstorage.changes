@@ -3,6 +3,20 @@ Thu Nov 19 13:38:54 CET 2009 - fehr@suse.de
 
 - fixed freeCylindersAfterPartition when start of next partition
   is on same cylinder than end of current (#465370)
+-------------------------------------------------------------------
+Wed Nov 18 16:36:02 CET 2009 - aschnell@suse.de
+
+- run dmraid and multipath only once during detection
+
+-------------------------------------------------------------------
+Tue Nov 17 11:24:08 CET 2009 - aschnell@suse.de
+
+- improved XEN VBD detection (bnc #365688)
+
+-------------------------------------------------------------------
+Mon Nov 16 11:28:41 CET 2009 - aschnell@suse.de
+
+- use name instead of device as label in nodes of graph
 
 -------------------------------------------------------------------
 Wed Nov 11 10:34:34 CET 2009 - aschnell@suse.de

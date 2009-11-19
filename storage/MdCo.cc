@@ -53,11 +53,27 @@ MdCo::MdCo( Storage * const s, const string& file ) :
     init();
     }
 
-MdCo::~MdCo()
+
+    MdCo::MdCo(const MdCo& c)
+	: Container(c), tab(NULL)
     {
-    y2deb("destructed MdCo");
-    delete tab;
+	y2deb("copy-constructed MdCo from " << c.dev);
+
+	ConstMdPair p = c.mdPair();
+	for (ConstMdIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Md* p = new Md(*this, *i);
+	    vols.push_back(p);
+	}
     }
+
+
+    MdCo::~MdCo()
+    {
+	y2deb("destructed MdCo " << dev);
+	delete tab;
+    }
+
 
 void
 MdCo::init()
@@ -753,6 +769,7 @@ void MdCo::logDifference( const Container& d ) const
 	}
     }
 
+
 bool MdCo::equalContent( const Container& rhs ) const
     {
     const MdCo * p = NULL;
@@ -763,30 +780,9 @@ bool MdCo::equalContent( const Container& rhs ) const
 	{
 	ConstMdPair pp = mdPair();
 	ConstMdPair pc = p->mdPair();
-	ConstMdIter i = pp.begin();
-	ConstMdIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() ) 
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
-    }
-
-MdCo::MdCo( const MdCo& rhs ) : Container(rhs)
-    {
-    y2deb("constructed MdCo by copy constructor from " << rhs.nm);
-    *this = rhs;
-    this->tab = NULL;
-    ConstMdPair p = rhs.mdPair();
-    for( ConstMdIter i=p.begin(); i!=p.end(); ++i )
-	 {
-	 Md * p = new Md( *this, *i );
-	 vols.push_back( p );
-	 }
     }
 
 

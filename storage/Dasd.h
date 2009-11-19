@@ -40,8 +40,9 @@ class Dasd : public Disk
     friend class Storage;
     public:
 	Dasd( Storage * const s, const string& Name, unsigned long long Size );
-	Dasd( const Dasd& rhs );
+	Dasd(const Dasd& c);
 	virtual ~Dasd();
+
         int createPartition( storage::PartitionType type, long unsigned start,
 	                     long unsigned len, string& device,
 			     bool checkRelaxed=false );
@@ -78,10 +79,14 @@ class Dasd : public Disk
         int doSetType( Volume* v ) { return 0; }
         int doCreateLabel() { return 0; }
 	int doDasdfmt();
+
 	DasdFormat fmt;
 
-	Dasd& operator= ( const Dasd& rhs );
 	friend std::ostream& operator<< (std::ostream&, const Dasd& );
+
+    private:
+
+	Dasd& operator=(const Dasd&); // disallow
 
     };
 

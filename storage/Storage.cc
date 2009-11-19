@@ -523,13 +523,14 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
-	const list<string> l = DmraidCo::getRaids();
+	const CmdDmraid cmddmraid;
+	const list<string> l = DmraidCo::getRaids(cmddmraid);
 	if (!l.empty())
 	{
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		    DmraidCo* v = new DmraidCo(this, *i, parts);
+		    DmraidCo* v = new DmraidCo(this, *i, cmddmraid, parts);
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
 		    if (it != by_id.end())
 			v->setUdevData(it->second);
@@ -554,13 +555,14 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
-	const list<string> l = DmmultipathCo::getMultipaths();
+	const CmdMultipath cmdmultipath;
+	const list<string> l = DmmultipathCo::getMultipaths(cmdmultipath);
 	if (!l.empty())
 	{
 	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		    DmmultipathCo* v = new DmmultipathCo(this, *i, parts);
+		    DmmultipathCo* v = new DmmultipathCo(this, *i, cmdmultipath, parts);
 		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
 		    if (it != by_id.end())
 			v->setUdevData(it->second);
@@ -701,7 +703,7 @@ void
 	    }
 	    else if (sysfsinfo.range == 1 && sysfsinfo.size > 0)
 	    {
-		if (sysfsinfo.device.find( "/xen/vbd" ) != string::npos && isdigit(dn[dn.size() - 1]))
+		if (sysfsinfo.vbd)
 		{
 		    dl.push_back(DiskData(dn, DiskData::XEN, sysfsinfo.size / 2));
 		}

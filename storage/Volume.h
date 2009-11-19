@@ -48,18 +48,20 @@ class Storage;
     friend class Storage;
 
     public:
-	Volume( const Container& d, unsigned Pnr, unsigned long long SizeK );
-	Volume( const Container& d, const string& PName, unsigned long long SizeK );
-	Volume( const Container& d );
-	Volume( const Volume& );
-	Volume& operator=( const Volume& );
 
+	Volume(const Container& c, unsigned Pnr, unsigned long long SizeK);
+	Volume(const Container& c, const string& PName, unsigned long long SizeK);
+	Volume(const Container& c);
+	Volume(const Container& c, const Volume& v);
 	virtual ~Volume();
 
 	const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
+
 	const Container* getContainer() const { return cont; }
+	Storage* getStorage() const;
+
 	storage::CType cType() const;
 	bool deleted() const { return del; }
 	bool created() const { return create; }
@@ -288,6 +290,12 @@ class Storage;
 	static const string tmp_mount[3];
 
 	mutable storage::VolumeInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Volume(const Volume&);		  // disallow
+	Volume& operator=(const Volume&); // disallow
+
     };
 
 }

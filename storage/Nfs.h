@@ -33,8 +33,9 @@ class Nfs : public Volume
     {
     public:
 	Nfs( const NfsCo& d, const string& NfsDev );
-	Nfs( const NfsCo& d, const Nfs& rhs );
+	Nfs(const NfsCo& c, const Nfs& v);
 	virtual ~Nfs();
+
 	friend std::ostream& operator<< (std::ostream& s, const Nfs& l );
 
 	static string canonicalName( const string& dev );
@@ -50,9 +51,14 @@ class Nfs : public Volume
 
     protected:
 	void init();
-	Nfs& operator=( const Nfs& );
 
 	mutable storage::NfsInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Nfs(const Nfs&);	    // disallow
+	Nfs& operator=(const Nfs&); // disallow
+
     };
 
 }

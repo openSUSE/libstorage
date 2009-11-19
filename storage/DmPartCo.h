@@ -47,7 +47,7 @@ class DmPartCo : public PeContainer
     public:
 	DmPartCo( Storage * const s, const string& Name, storage::CType t,
 		 const ProcParts& parts);
-	DmPartCo( const DmPartCo& rhs );
+	DmPartCo(const DmPartCo& c);
 	virtual ~DmPartCo();
 
 	unsigned long long sizeK() const { return size_k; }
@@ -107,7 +107,7 @@ class DmPartCo : public PeContainer
 	bool equalContent( const DmPartCo& rhs ) const;
 	virtual string getDiffString( const Container& d ) const;
 	void logDifference( const DmPartCo& d ) const;
-	DmPartCo& operator= ( const DmPartCo& rhs );
+
 	static string undevName( const string& name );
 	string numToName( unsigned num ) const;
 
@@ -190,16 +190,20 @@ class DmPartCo : public PeContainer
 	virtual string setDiskLabelText( bool doing ) const;
 
 	void logData(const string& Dir) const;
-	string udev_path;
-	std::list<string> udev_id;
-	string logfile_name;
 
+	string udev_path;
+	list<string> udev_id;
 	Disk* disk;
 	bool active;
 	bool del_ptable;
 	unsigned num_part;
 
 	mutable storage::DmPartCoInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	DmPartCo& operator=(const DmPartCo&); // disallow
+
     };
 
 }

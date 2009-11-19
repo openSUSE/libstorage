@@ -40,17 +40,23 @@ namespace storage
     using namespace std;
 
 
-Dasd::Dasd( Storage * const s, const string& Name,
-            unsigned long long SizeK ) : 
-    Disk(s,Name,SizeK)
+    Dasd::Dasd(Storage * const s, const string& Name, unsigned long long SizeK)
+	: Disk(s, Name, SizeK), fmt(DASDF_NONE)
     {
-    fmt = DASDF_NONE;
-    y2deb("constructed dasd " << dev);
+	y2deb("constructed Dasd " << dev);
     }
 
-Dasd::~Dasd()
+
+    Dasd::Dasd(const Dasd& c)
+	: Disk(c), fmt(c.fmt)
     {
-    y2deb("destructed dasd " << dev);
+	y2deb("copy-constructed Dasd from " << c.dev);
+    }
+
+
+    Dasd::~Dasd()
+    {
+	y2deb("destructed Dasd " << dev);
     }
 
 
@@ -59,7 +65,6 @@ Dasd::~Dasd()
     {
     bool ret = true;
     string cmd_line = FDASDBIN " -p " + quote(device());
-    system_stderr.erase();
     y2mil("executing cmd:" << cmd_line);
     SystemCmd Cmd( cmd_line );
     y2mil("retcode:" << Cmd.retcode());
@@ -75,7 +80,6 @@ Dasd::~Dasd()
     {
     bool ret = true;
     string cmd_line = DASDVIEWBIN " -x " + quote(device());
-    system_stderr.erase();
     detected_label = "dasd";
     setLabelData( "dasd" );
     y2mil("executing cmd:" << cmd_line);
@@ -218,9 +222,6 @@ bool
 	    }
 	}
     y2mil("nm:" << nm);
-    string reg = "^" "/dev/" + nm + partNaming(nm) + "[0-9]+" "$";
-    list<string> ps = parts.getMatchingEntries(regex_matches(reg));
-    y2mil("regex:\"" << reg << "\" ps:" << ps);
     unsigned long dummy = 0;
     if (!checkPartedValid(parts, nm, pl, dummy))
 	{
@@ -635,20 +636,6 @@ int Dasd::initializeDisk( bool value )
 	    }
 	}
     return( ret );
-    }
-
-Dasd& Dasd::operator= ( const Dasd& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Disk*)this) = rhs;
-    fmt = rhs.fmt;
-    return( *this );
-    }
-
-Dasd::Dasd( const Dasd& rhs ) : Disk(rhs)
-    {
-    fmt = DASDF_NONE;
-    y2deb("constructed dasd by copy constructor from " << rhs.nm);
     }
 
 

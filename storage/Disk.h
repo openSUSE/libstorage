@@ -57,7 +57,7 @@ class Disk : public Container
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
 	Disk( Storage * const s, const string& Name, unsigned num, 
 	      unsigned long long Size, const ProcParts& parts);
-	Disk( const Disk& rhs );
+	Disk(const Disk& c);
 	virtual ~Disk();
 
 	unsigned long cylinders() const { return cyl; }
@@ -124,7 +124,6 @@ class Disk : public Container
 	void getInfo( storage::DiskInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;
-	Disk& operator= ( const Disk& rhs );
 	bool FakeDisk() const { return(range==1); }
 
 	static string getPartName( const string& disk, unsigned nr );
@@ -141,6 +140,7 @@ class Disk : public Container
 	    string device;
 	    unsigned long range;
 	    unsigned long long size;
+	    bool vbd;
 	};
 
 	static bool getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo);
@@ -254,7 +254,6 @@ class Disk : public Container
 	string udev_path;
 	list<string> udev_id;
 	string detected_label;
-	string system_stderr;
 	string logfile_name;
 	string sysfs_dir;
 	unsigned max_primary;
@@ -268,6 +267,11 @@ class Disk : public Container
 	unsigned long range;
 
 	mutable storage::DiskInfo info; // workaround for broken ycp bindings
+
+    private:
+
+	Disk& operator=(const Disk&); // disallow
+
     };
 
 }

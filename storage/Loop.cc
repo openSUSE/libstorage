@@ -41,14 +41,12 @@ namespace storage
 Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	       bool dmcrypt, const string& dm_dev, const ProcParts& parts,
 	   SystemCmd& losetup)
-    : Volume(d, 0, 0)
+    : Volume(d, 0, 0), lfile(LoopFile), reuseFile(false), delFile(false)
 {
     y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
 	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
-    init();
-    lfile = LoopFile;
     loop_dev = fstab_loop_dev = LoopDev;
     if( loop_dev.empty() )
 	getLoopData( losetup );
@@ -98,15 +96,12 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 
 Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 	   unsigned long long sizeK, bool dmcr)
-    : Volume(d, 0, 0)
+    : Volume(d, 0, 0), lfile(file), reuseFile(reuseExisting), delFile(false)
 {
     y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
 	  " sizek:" << sizeK << " dmcrypt:" << dmcr);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
-    init();
-    reuseFile = reuseExisting;
-    lfile = file;
     getFreeLoop();
     is_loop = true;
     if( !dmcr )
@@ -132,17 +127,19 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 }
 
 
-Loop::~Loop()
-{
-    y2deb("destructed loop " << dev);
-}
-
-
-void
-Loop::init()
+    Loop::Loop(const LoopCo& c, const Loop& v)
+	: Volume(c, v), lfile(v.lfile), reuseFile(v.reuseFile),
+	  delFile(v.delFile)
     {
-    reuseFile = delFile = false;
+	y2deb("copy-constructed Loop from " << v.dev);
     }
+
+
+    Loop::~Loop()
+    {
+	y2deb("destructed Loop " << dev);
+    }
+
 
 void
 Loop::setDmcryptDev( const string& dm_dev, bool active )
@@ -218,7 +215,7 @@ Loop::createFile()
 string
 Loop::lfileRealPath() const
     {
-    return( cont->getStorage()->root() + lfile );
+    return getStorage()->root() + lfile;
     }
 
 unsigned Loop::major()
@@ -441,25 +438,6 @@ void Loop::logDifference( const Loop& rhs ) const
 	}
     y2mil(log);
     }
-
-
-Loop& Loop::operator=(const Loop& rhs)
-{
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    lfile = rhs.lfile;
-    reuseFile = rhs.reuseFile;
-    delFile = rhs.delFile;
-    return *this;
-}
-
-
-Loop::Loop(const LoopCo& d, const Loop& rhs)
-    : Volume(d)
-{
-    y2deb("constructed loop by copy constructor from " << rhs.nm);
-    *this = rhs;
-}
 
 
 unsigned Loop::loop_major = 0;

@@ -37,9 +37,9 @@ class MdCo : public Container
 
     public:
 	MdCo( Storage * const s, bool detect );
-	MdCo( const MdCo& rhs );
-
+	MdCo(const MdCo& c);
 	virtual ~MdCo();
+
 	static storage::CType staticType() { return storage::MD; }
 	friend std::ostream& operator<< (std::ostream&, const MdCo& );
 
@@ -138,7 +138,12 @@ class MdCo : public Container
 
 	EtcRaidtab *tab;
 
-	static bool active;
+	static bool active;  
+
+    private:
+
+	MdCo& operator=(const MdCo&); // disallow
+
     };
 
 }

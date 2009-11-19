@@ -40,13 +40,12 @@ namespace storage
 
 
 Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
-    : Volume( d, PNr, 0 )
+	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_NONE), chunk(0),
+  	  sb_ver("01.00.00"), destrSb(false)
     {
-    y2deb("constructed md " << dev << " on container " << cont->name());
+	y2deb("constructed Md " << dev << " on " << cont->device());
     if( d.type() != MD )
-	y2err("constructed md with wrong container");
-    init();
-    md_type = Type;
+	    y2err("constructed Md with wrong container");
     for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
 	devs.push_back( normalizeDevice( *i ) );
     computeSize();
@@ -54,18 +53,18 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 
 
 Md::Md( const MdCo& d, const string& line1, const string& line2 )
-    : Volume( d, 0, 0 )
+	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_NONE), chunk(0),
+	  sb_ver("01.00.00"), destrSb(false)
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
     if( d.type() != MD )
 	y2err("constructed md with wrong container");
-    init();
     if( mdStringNum( extractNthWord( 0, line1 ), num ))
 	{
 	nm.clear();
 	setNameDev();
 	getMajorMinor( dev, mjr, mnr );
-	getContainer()->getStorage()->fetchDanglingUsedBy(dev, uby);
+	getStorage()->fetchDanglingUsedBy(dev, uby);
 	}
     SystemCmd c(MDADMBIN " --detail " + quote(device()));
     c.select( "UUID : " );
@@ -182,24 +181,24 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	}
 
     for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
-	getContainer()->getStorage()->setUsedBy(*it, UB_MD, dev);
+	getStorage()->setUsedBy(*it, UB_MD, dev);
     }
 
 
-Md::~Md()
+    Md::Md(const MdCo& c, const Md& v)
+	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
+	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
+	  destrSb(v.destrSb), devs(v.devs), spare(v.spare)
     {
-    y2deb("destructed md " << dev);
+	y2deb("copy-constructed Md from " << v.dev);
     }
 
-void
-Md::init()
+
+    Md::~Md()
     {
-    destrSb = false;
-    md_parity = PAR_NONE;
-    chunk = 0;
-    sb_ver = "01.00.00";
-    md_type = RAID_UNK;
+	y2deb("destructed Md " << dev);
     }
+
 
 void
 Md::getDevs( list<string>& devices, bool all, bool spares ) const
@@ -312,7 +311,7 @@ void
 Md::computeSize()
 {
     unsigned long long size_k;
-    getContainer()->getStorage()->computeMdSize(md_type, devs, size_k);
+    getStorage()->computeMdSize(md_type, devs, size_k);
     setSize(size_k);
 }
 
@@ -636,27 +635,6 @@ void Md::logDifference( const Md& rhs ) const
 	log += b.str();
 	}
     y2mil(log);
-    }
-
-Md& Md::operator= ( const Md& rhs )
-    {
-    y2deb("operator= from " << rhs.nm);
-    *((Volume*)this) = rhs;
-    md_type = rhs.md_type;
-    md_parity = rhs.md_parity;
-    chunk = rhs.chunk;
-    md_uuid = rhs.md_uuid;
-    sb_ver = rhs.sb_ver;
-    destrSb = rhs.destrSb;
-    devs = rhs.devs;
-    spare = rhs.spare;
-    return( *this );
-    }
-
-Md::Md( const MdCo& d, const Md& rhs ) : Volume(d)
-    {
-    y2deb("constructed md by copy constructor from " << rhs.dev);
-    *this = rhs;
     }
 
 

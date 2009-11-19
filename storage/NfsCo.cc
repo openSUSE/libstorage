@@ -40,7 +40,6 @@ namespace storage
 	: Container(s, "nfs", staticType())
     {
     y2deb("constructing NfsCo detect");
-    init();
     getNfsData(fstab, mounts);
     }
 
@@ -48,24 +47,32 @@ NfsCo::NfsCo( Storage * const s ) :
     Container(s,"nfs",staticType())
     {
     y2deb("constructing NfsCo");
-    init();
     }
 
 NfsCo::NfsCo( Storage * const s, const string& file ) :
     Container(s,"nfs",staticType())
     {
     y2deb("constructing NfsCo file:" << file);
-    init();
     }
 
-NfsCo::~NfsCo()
+
+    NfsCo::NfsCo(const NfsCo& c)
+	: Container(c)
     {
-    y2deb("destructed NfsCo");
+	y2deb("copy-constructed NfsCo from " << c.dev);
+
+	ConstNfsPair p = c.nfsPair();
+	for (ConstNfsIter i = p.begin(); i != p.end(); ++i)
+	{
+	    Nfs* p = new Nfs(*this, *i);
+	    vols.push_back(p);
+	}
     }
 
-void
-NfsCo::init()
+
+    NfsCo::~NfsCo()
     {
+	y2deb("destructed NfsCo " << dev);
     }
 
 
@@ -278,29 +285,9 @@ bool NfsCo::equalContent( const Container& rhs ) const
 	{
 	ConstNfsPair pp = nfsPair();
 	ConstNfsPair pc = p->nfsPair();
-	ConstNfsIter i = pp.begin();
-	ConstNfsIter j = pc.begin();
-	while( ret && i!=pp.end() && j!=pc.end() )
-	    {
-	    ret = ret && i->equalContent( *j );
-	    ++i;
-	    ++j;
-	    }
-	ret = ret && i==pp.end() && j==pc.end();
+	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     return( ret );
-    }
-
-NfsCo::NfsCo( const NfsCo& rhs ) : Container(rhs)
-    {
-    y2deb("constructed NfsCo by copy constructor from " << rhs.nm);
-    *this = rhs;
-    ConstNfsPair p = rhs.nfsPair();
-    for( ConstNfsIter i=p.begin(); i!=p.end(); ++i )
-         {
-         Nfs * p = new Nfs( *this, *i );
-         vols.push_back( p );
-         }
     }
 
 }
