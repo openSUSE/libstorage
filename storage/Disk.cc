@@ -2438,14 +2438,28 @@ Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) c
     }
     ConstPartPair pp = partPair(notDeleted);
     ConstPartIter i = pp.begin();
-    while (i != pp.end())
-    {
-	if( (i->type()==p->type()||
-	     (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
-	    i->cylStart()>=start && i->cylStart()<end )
-	    end = i->cylStart();
+    y2mil( "p:" << *p );
+    y2mil( "end:" << end );
+    while( i != pp.end() && (i->type()!=p->type() || i->region()!=p->region()))
+           ++i;
+    if( i != pp.end() )
+	{
+	y2mil( "i:" << *i );
 	++i;
-    }
+	}
+    if( i != pp.end() )
+	y2mil( "i:" << *i );
+    if( i != pp.end() && 
+        (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)))
+	{
+	if( i->cylStart()>=start && i->cylStart()<end )
+	    {
+	    end = i->cylStart();
+	    y2mil( "end:" << end );
+	    }
+	else
+	    end = 0;
+	}
     if (end > start)
 	freeCyls = end-start;
     y2mil("ret:" << ret << " freeCyls:" << freeCyls);

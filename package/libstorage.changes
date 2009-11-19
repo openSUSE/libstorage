@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov 19 13:38:54 CET 2009 - fehr@suse.de
+
+- fixed freeCylindersAfterPartition when start of next partition
+  is on same cylinder than end of current (#465370)
+
+-------------------------------------------------------------------
 Wed Nov 11 10:34:34 CET 2009 - aschnell@suse.de
 
 - fixed return value of function getContVolInfo 
