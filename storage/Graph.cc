@@ -39,9 +39,8 @@ namespace storage
 
     class Graph
     {
-    public:
 
-	Graph(StorageInterface* s);
+    public:
 
 	bool save(const string& filename) const;
 
@@ -77,29 +76,69 @@ namespace storage
 
 	struct Rank
 	{
-	    Rank(NodeType type, const char* name)
-		: type(type), name(name) {}
+	    Rank(const string& name)
+		: name(name) {}
 
-	    NodeType type;
 	    string name;
+	    list<string> ids;
 	};
-
-	static string dotQuote(const string& str);
-	static string makeTooltip(const char* text, const string& label, unsigned long long sizeK);
 
 	friend ostream& operator<<(ostream& s, const Node& node);
 	friend ostream& operator<<(ostream& s, const Edge& edge);
-
-	void processUsedby(const Node& node, const list<UsedByInfo>& usedBy);
-	void processMount(const Node& node, const VolumeInfo& volume);
+	friend ostream& operator<<(ostream& s, const Rank& rank);
 
 	list<Node> nodes;
 	list<Edge> edges;
+	list<Rank> ranks;
+
+    private:
+
+	static string quote(const string& str);
+	static string makeTooltip(const string& text, const string& label, unsigned long long sizeK);
 
     };
 
 
-    Graph::Graph(StorageInterface* s)
+    class DeviceGraph : public Graph
+    {
+
+    public:
+
+	DeviceGraph(StorageInterface* s);
+
+    private:
+
+	Rank disks;
+	Rank mounts;
+
+	void processUsedby(const Node& node, const list<UsedByInfo>& usedBy);
+	void processMount(const Node& node, const VolumeInfo& volume);
+
+    };
+
+
+    class MountGraph : public Graph
+    {
+
+    public:
+
+	MountGraph(StorageInterface* s);
+
+    private:
+
+	Rank root;
+
+	typedef map<string, string> Entries;
+
+	Entries entries;
+
+	Entries::const_iterator findParent(const Entries::const_iterator& child) const;
+
+    };
+
+
+    DeviceGraph::DeviceGraph(StorageInterface* s)
+	: disks("source"), mounts("sink")
     {
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
@@ -114,8 +153,11 @@ namespace storage
 
 		    Node disk_node(NODE_DISK, i1->device, i1->name, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
+		    disks.ids.push_back(disk_node.id());
 
 		    processUsedby(disk_node, i1->usedBy);
+
+		    Rank rank("same");
 
 		    deque<PartitionInfo> partitions;
 		    s->getPartitionInfo(i1->name, partitions);
@@ -126,12 +168,16 @@ namespace storage
 
 			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(partition_node);
+			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id(), partition_node.id()));
 
 			processUsedby(partition_node, i2->v.usedBy);
 			processMount(partition_node, i2->v);
 		    }
+
+		    if (!rank.ids.empty())
+			ranks.push_back(rank);
 
 		} break;
 
@@ -145,18 +191,24 @@ namespace storage
 
 		    processUsedby(vg_node, i1->usedBy);
 
+		    Rank rank("same");
+
 		    deque<LvmLvInfo> lvs;
 		    s->getLvmLvInfo(i1->name, lvs);
 		    for (deque<LvmLvInfo>::const_iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
 		    {
 			Node lv_node(NODE_LVMLV, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(lv_node);
+			rank.ids.push_back(lv_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id(), lv_node.id()));
 
 			processUsedby(lv_node, i2->v.usedBy);
 			processMount(lv_node, i2->v);
 		    }
+
+		    if (!rank.ids.empty())
+			ranks.push_back(rank);
 
 		} break;
 
@@ -202,6 +254,8 @@ namespace storage
 
 		    processUsedby(dmraid_node, i1->usedBy);
 
+		    Rank rank("same");
+
 		    deque<DmraidInfo> partitions;
 		    s->getDmraidInfo(i1->name, partitions);
 		    for (deque<DmraidInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
@@ -211,12 +265,16 @@ namespace storage
 
 			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
+			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id(), partition_node.id()));
 
 			processUsedby(partition_node, i2->p.v.usedBy);
 			processMount(partition_node, i2->p.v);
 		    }
+
+		    if (!rank.ids.empty())
+			ranks.push_back(rank);
 
 		} break;
 
@@ -230,6 +288,8 @@ namespace storage
 
 		    processUsedby(dmmultipath_node, i1->usedBy);
 
+		    Rank rank("rank");
+
 		    deque<DmmultipathInfo> partitions;
 		    s->getDmmultipathInfo(i1->name, partitions);
 		    for (deque<DmmultipathInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
@@ -239,12 +299,16 @@ namespace storage
 
 			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
 			nodes.push_back(partition_node);
+			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id(), partition_node.id()));
 
 			processUsedby(partition_node, i2->p.v.usedBy);
 			processMount(partition_node, i2->p.v);
 		    }
+
+		    if (!rank.ids.empty())
+			ranks.push_back(rank);
 
 		} break;
 
@@ -255,64 +319,148 @@ namespace storage
 		    break;
 	    }
 	}
+
+	if (!disks.ids.empty())
+	    ranks.push_back(disks);
+
+	if (!mounts.ids.empty())
+	    ranks.push_back(mounts);
+    }
+
+
+    void
+    DeviceGraph::processUsedby(const Node& node, const list<UsedByInfo>& usedBy)
+    {
+	for (list<UsedByInfo>::const_iterator i = usedBy.begin(); i != usedBy.end(); ++i)
+	{
+	    edges.push_back(Edge(EDGE_USED, node.id(), "device:" + i->device));
+	}
+    }
+
+
+    void
+    DeviceGraph::processMount(const Node& node, const VolumeInfo& volume)
+    {
+	if (!volume.mount.empty())
+	{
+	    Node mountpoint_node(NODE_MOUNTPOINT, volume.device, volume.mount, volume.sizeK);
+	    nodes.push_back(mountpoint_node);
+	    mounts.ids.push_back(mountpoint_node.id());
+
+	    edges.push_back(Edge(EDGE_MOUNT, node.id(), mountpoint_node.id()));
+	}
+    }
+
+
+    MountGraph::MountGraph(StorageInterface* s)
+	: root("source")
+    {
+	deque<VolumeInfo> volumes;
+	s->getVolumes(volumes);
+	for (deque<VolumeInfo>::const_iterator i1 = volumes.begin(); i1 != volumes.end(); ++i1)
+	{
+	    if (!i1->mount.empty() && i1->mount != "swap")
+	    {
+		Node mountpoint_node(NODE_MOUNTPOINT, i1->device, i1->mount, i1->sizeK);
+		nodes.push_back(mountpoint_node);
+
+		if (i1->mount == "/")
+		    root.ids.push_back(mountpoint_node.id());
+
+		entries[i1->mount] = i1->device;
+	    }
+	}
+
+	if (!root.ids.empty())
+	    ranks.push_back(root);
+
+	for (Entries::const_iterator i1 = entries.begin(); i1 != entries.end(); ++i1)
+	{
+	    Entries::const_iterator i2 = findParent(i1);
+	    if (i2 != entries.end())
+		edges.push_back(Edge(EDGE_MOUNT, "mountpoint:" + i2->second, "mountpoint:" + i1->second));
+	}
+    }
+
+
+    MountGraph::Entries::const_iterator
+    MountGraph::findParent(const Entries::const_iterator& child) const
+    {
+	string mount = child->first;
+
+	while (mount != "/")
+	{
+	    string::size_type pos = mount.rfind("/");
+	    if (pos == string::npos)
+		return entries.end();
+
+	    mount.erase(pos);
+	    if (mount.empty())
+		mount = "/";
+
+	    Entries::const_iterator i1 = entries.find(mount);
+	    if (i1 != entries.end())
+		return i1;
+	}
+
+	return entries.end();
     }
 
 
     string
-    Graph::dotQuote(const string& str)
+    Graph::quote(const string& str)
     {
 	return '"' + boost::replace_all_copy(str, "\"", "\\\"") + '"';
     }
 
 
     string
-    Graph::makeTooltip(const char* text, const string& label, unsigned long long sizeK)
+    Graph::makeTooltip(const string& text, const string& label, unsigned long long sizeK)
     {
-	string str = string(text) + "\\n" + label + "\\n" + byteToHumanString(1024 * sizeK, false, 2, false);
-	return dotQuote(str);
+	return quote(text + "\\n" + label + "\\n" + byteToHumanString(1024 * sizeK, false, 2, false));
     }
 
 
     ostream& operator<<(ostream& s, const Graph::Node& node)
     {
-	s << Graph::dotQuote(node.id()) << " [label=" << Graph::dotQuote(node.label);
+	s << Graph::quote(node.id()) << " [label=" << Graph::quote(node.label);
 	switch (node.type)
 	{
 	    case Graph::NODE_DISK:
-		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Hard Disk"), node.device, node.sizeK);
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Hard Disk"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_DMRAID:
-		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << Graph::makeTooltip(_("BIOS RAID"), node.device, node.sizeK);
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"" << ", tooltip="
+		  << Graph::makeTooltip(_("BIOS RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_DMMULTIPATH:
-		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Multipath"), node.device, node.sizeK);
+		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Multipath"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_PARTITION:
-		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Partition"), node.device, node.sizeK);
+		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Partition"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_MDRAID:
-		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\""
-		  << ", tooltip=" << Graph::makeTooltip(_("RAID"), node.device, node.sizeK);
+		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
+		  << Graph::makeTooltip(_("RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_LVMVG:
-		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Volume Group"), node.device, node.sizeK);
+		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Volume Group"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_LVMLV:
-		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Logical Volume"), node.device, node.sizeK);
+		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Logical Volume"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_DM:
-		s << ", color=\"#885511\", fillcolor=\"#ddbb99\""
-		  << ", tooltip=" << Graph::makeTooltip(_("DM Device"), node.device, node.sizeK);
+		s << ", color=\"#885511\", fillcolor=\"#ddbb99\"" << ", tooltip="
+		  << Graph::makeTooltip(_("DM Device"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_MOUNTPOINT:
-		s << ", color=\"#008800\", fillcolor=\"#99ee99\""
-		  << ", tooltip=" << Graph::makeTooltip(_("Mount Point"), node.label, node.sizeK);
+		s << ", color=\"#008800\", fillcolor=\"#99ee99\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Mount Point"), node.device, node.sizeK);
 		break;
 	}
 	return s << "];";
@@ -321,7 +469,7 @@ namespace storage
 
     ostream& operator<<(ostream& s, const Graph::Edge& edge)
     {
-	s << Graph::dotQuote(edge.id1) << " -> " << Graph::dotQuote(edge.id2);
+	s << Graph::quote(edge.id1) << " -> " << Graph::quote(edge.id2);
 	switch (edge.type)
 	{
 	    case Graph::EDGE_SUBDEVICE:
@@ -338,26 +486,12 @@ namespace storage
     }
 
 
-    void
-    Graph::processUsedby(const Node& node, const list<UsedByInfo>& usedBy)
+    ostream& operator<<(ostream& s, const Graph::Rank& rank)
     {
-	for (list<UsedByInfo>::const_iterator i = usedBy.begin(); i != usedBy.end(); ++i)
-	{
-	    edges.push_back(Edge(EDGE_USED, node.id(), "device:" + i->device));
-	}
-    }
-
-
-    void
-    Graph::processMount(const Node& node, const VolumeInfo& volume)
-    {
-	if (!volume.mount.empty())
-	{
-	    Node mountpoint_node(NODE_MOUNTPOINT, volume.device, volume.mount, volume.sizeK);
-	    nodes.push_back(mountpoint_node);
-
-	    edges.push_back(Edge(EDGE_MOUNT, node.id(), mountpoint_node.id()));
-	}
+	s << "{ rank=" << rank.name << "; ";
+	for (list<string>::const_iterator id = rank.ids.begin(); id != rank.ids.end(); ++id)
+	    s << Graph::quote(*id) << " ";
+	return s << "};";
     }
 
 
@@ -381,21 +515,9 @@ namespace storage
 
 	out << endl;
 
-	typedef array<Rank, 5> Ranks;
-	const Ranks ranks = { { Rank(NODE_DISK, "source"), Rank(NODE_PARTITION, "same"),
-				Rank(NODE_LVMVG, "same"), Rank(NODE_LVMLV, "same"),
-				Rank(NODE_MOUNTPOINT, "sink") } };
+	for (list<Rank>::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
+	    out << "    " << (*rank) << endl;
 
-	for (Ranks::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
-	{
-	    list<string> ids;
-	    for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-		if (node->type == rank->type)
-		    ids.push_back(dotQuote(node->id()));
-
-	    if (!ids.empty())
-		out << "    { rank=" << rank->name << "; " << boost::join(ids, " ") << " };" << endl;
-	}
 	out << endl;
 
 	for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
@@ -409,9 +531,16 @@ namespace storage
     }
 
 
-    bool saveGraph(StorageInterface* s, const string& filename)
+    bool
+    saveDeviceGraph(StorageInterface* s, const string& filename)
     {
-	return Graph(s).save(filename);
+	return DeviceGraph(s).save(filename);
     }
 
+
+    bool
+    saveMountGraph(StorageInterface* s, const string& filename)
+    {
+	return MountGraph(s).save(filename);
+    }
 }

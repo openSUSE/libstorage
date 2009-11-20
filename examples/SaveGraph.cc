@@ -15,11 +15,13 @@ main (int argc, char** argv)
 
     StorageInterface* s = createStorageInterface(Environment(true));
 
-    saveGraph(s, "storage.gv");
+    saveDeviceGraph(s, "device.gv");
+    saveMountGraph(s, "mount.gv");
 
     destroyStorageInterface(s);
 
-    cout << "run \"dot -T png -o storage.png storage.gv\" to generate a png" << endl;
+    cout << "run \"dot -T png -o device.png device.gv\" and "
+	"\"dot -T png -o mount.png mount.gv\" to generate pngs" << endl;
 
     exit(EXIT_SUCCESS);
 }

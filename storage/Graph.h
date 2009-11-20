@@ -41,7 +41,17 @@ namespace storage
      * @param filename filename of graph
      * @return true on successful writing of graph
      */
-    bool saveGraph(StorageInterface* s, const string& filename);
+    bool saveDeviceGraph(StorageInterface* s, const string& filename);
+
+
+    /**
+     * Saves a graph of the mount points as a DOT file for graphviz.
+     *
+     * @param s StorageInterface
+     * @param filename filename of graph
+     * @return true on successful writing of graph
+     */
+    bool saveMountGraph(StorageInterface* s, const string& filename);
 
 }
 

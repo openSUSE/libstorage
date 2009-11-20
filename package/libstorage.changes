@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri Nov 20 18:02:05 CET 2009 - aschnell@suse.de
+
+- added mount graph
+- 2.19.1
+
+-------------------------------------------------------------------
 Thu Nov 19 13:38:54 CET 2009 - fehr@suse.de
 
 - fixed freeCylindersAfterPartition when start of next partition
