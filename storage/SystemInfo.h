@@ -26,16 +26,16 @@
 
 #include <boost/noncopyable.hpp>
 
+#include "storage/ProcParts.h"
+#include "storage/ProcMounts.h"
+#include "storage/Blkid.h"
+#include "storage/DmCo.h"
+#include "storage/DmraidCo.h"
+#include "storage/DmmultipathCo.h"
+
 
 namespace storage
 {
-    class ProcParts;
-    class ProcMounts;
-    class Blkid;
-    class CmdDmsetup;
-    class CmdDmraid;
-    class CmdMultipath;
-
 
     class SystemInfo : boost::noncopyable
     {
@@ -45,21 +45,37 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
-	const ProcParts& getProcParts();
-	const ProcMounts& getProcMounts();
-	const Blkid& getBlkid();
-	const CmdDmsetup& getCmdDmsetup();
-	const CmdDmraid& getCmdDmraid();
-	const CmdMultipath& getCmdMultipath();
+	const ProcParts& getProcParts() { return *procparts; }
+	const ProcMounts& getProcMounts() { return *procmounts; }
+	const Blkid& getBlkid() { return *blkid; }
+	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
+	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
+	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
 
     private:
 
-	ProcParts* procparts;
-	ProcMounts* procmounts;
-	Blkid* blkid;
-	CmdDmsetup* cmddmsetup;
-	CmdDmraid* cmddmraid;
-	CmdMultipath* cmdmultipath;
+	template <class Type>
+	class LazyObject : boost::noncopyable
+	{
+	public:
+
+	    LazyObject() : ptr(NULL) {}
+	    ~LazyObject() { delete ptr; }
+
+	    const Type& operator*() { if (!ptr) ptr = new Type(); return *ptr; }
+
+	private:
+
+	    Type* ptr;
+
+	};
+
+	LazyObject<ProcParts> procparts;
+	LazyObject<ProcMounts> procmounts;
+	LazyObject<Blkid> blkid;
+	LazyObject<CmdDmsetup> cmddmsetup;
+	LazyObject<CmdDmraid> cmddmraid;
+	LazyObject<CmdMultipath> cmdmultipath;
 
     };
 

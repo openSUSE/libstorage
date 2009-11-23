@@ -33,8 +33,6 @@ namespace storage
 {
 
     SystemInfo::SystemInfo()
-	: procparts(NULL), procmounts(NULL), blkid(NULL), cmddmsetup(NULL), cmddmraid(NULL),
-	  cmdmultipath(NULL)
     {
 	y2deb("constructed SystemInfo");
     }
@@ -42,68 +40,7 @@ namespace storage
 
     SystemInfo::~SystemInfo()
     {
-	delete procparts;
-	delete procmounts;
-	delete blkid;
-	delete cmddmsetup;
-	delete cmddmraid;
-	delete cmdmultipath;
-
 	y2deb("destructed SystemInfo");
-    }
-
-
-    const ProcParts&
-    SystemInfo::getProcParts()
-    {
-	if (!procparts)
-	    procparts = new ProcParts();
-	return *procparts;
-    }
-
-
-    const ProcMounts&
-    SystemInfo::getProcMounts()
-    {
-	if (!procmounts)
-	    procmounts = new ProcMounts();
-	return *procmounts;
-    }
-
-
-    const Blkid&
-    SystemInfo::getBlkid()
-    {
-	if (!blkid)
-	    blkid = new Blkid();
-	return *blkid;
-    }
-
-
-    const CmdDmsetup&
-    SystemInfo::getCmdDmsetup()
-    {
-	if (!cmddmsetup)
-	    cmddmsetup = new CmdDmsetup();
-	return *cmddmsetup;
-    }
-
-
-    const CmdDmraid&
-    SystemInfo::getCmdDmraid()
-    {
-	if (!cmddmraid)
-	    cmddmraid = new CmdDmraid();
-	return *cmddmraid;
-    }
-
-
-    const CmdMultipath&
-    SystemInfo::getCmdMultipath()
-    {
-	if (!cmdmultipath)
-	    cmdmultipath = new CmdMultipath();
-	return *cmdmultipath;
     }
 
 }
