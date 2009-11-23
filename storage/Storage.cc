@@ -442,7 +442,7 @@ void Storage::detectMds()
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LOOP") == NULL)
 	{
-	    LoopCo* v = new LoopCo(this, true, systeminfo.getProcParts());
+	    LoopCo* v = new LoopCo(this, true, systeminfo);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -3437,8 +3437,8 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	y2mil( "have_loop:" << have_loop );
 	if( !have_loop )
 	    {
-	    ProcParts parts;
-	    loop = new LoopCo(this, false, parts);
+	    SystemInfo systeminfo;
+	    loop = new LoopCo(this, false, systeminfo);
 	    }
 	if( loop==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;

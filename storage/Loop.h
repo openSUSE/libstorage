@@ -28,7 +28,7 @@
 namespace storage
 {
 class LoopCo;
-    class ProcParts;
+    class SystemInfo;
 
 
 class Loop : public Volume
@@ -37,7 +37,7 @@ class Loop : public Volume
 
 	Loop( const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	      bool dmcrypt, const string& dm_dev,
-	     const ProcParts& parts, SystemCmd& losetup);
+	     SystemInfo& systeminfo, SystemCmd& losetup);
 	Loop( const LoopCo& d, const string& file, bool reuseExisting,
 	      unsigned long long sizeK, bool dmcr );
 	Loop(const LoopCo& c, const Loop& v);

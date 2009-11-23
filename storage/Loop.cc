@@ -27,7 +27,7 @@
 #include "storage/StorageTypes.h"
 #include "storage/Container.h"
 #include "storage/AppUtil.h"
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo.h"
 #include "storage/Storage.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
@@ -39,7 +39,7 @@ namespace storage
 
 
 Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
-	       bool dmcrypt, const string& dm_dev, const ProcParts& parts,
+	       bool dmcrypt, const string& dm_dev, SystemInfo& systeminfo,
 	   SystemCmd& losetup)
     : Volume(d, 0, 0), lfile(LoopFile), reuseFile(false), delFile(false)
 {
@@ -80,7 +80,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
     is_loop = true;
     unsigned long long s = 0;
     if( !proc_dev.empty() )
-	    parts.getSize(proc_dev, s);
+	    systeminfo.getProcParts().getSize(proc_dev, s);
     if( s>0 )
 	{
 	setSize( s );

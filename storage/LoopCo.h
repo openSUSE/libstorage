@@ -26,9 +26,10 @@
 #include "storage/Container.h"
 #include "storage/Loop.h"
 
+
 namespace storage
 {
-    class ProcParts;
+    class SystemInfo;
 
 
 class LoopCo : public Container
@@ -37,7 +38,7 @@ class LoopCo : public Container
 
     public:
 
-	LoopCo(Storage * const s, bool detect, const ProcParts& parts);
+	LoopCo(Storage * const s, bool detect, SystemInfo& systeminfo);
 	LoopCo(const LoopCo& c);
 	virtual ~LoopCo();
 
@@ -106,7 +107,7 @@ class LoopCo : public Container
 
 	LoopCo( Storage * const s, const string& File );
 
-	void getLoopData(const ProcParts& parts);
+	void getLoopData(SystemInfo& systeminfo);
 	bool findLoop( unsigned num, LoopIter& i );
 	bool findLoop( unsigned num ); 
 	bool findLoop( const string& file, LoopIter& i );

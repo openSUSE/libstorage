@@ -27,6 +27,7 @@
 #include "storage/Loop.h"
 #include "storage/SystemCmd.h"
 #include "storage/Dm.h"
+#include "storage/SystemInfo.h"
 #include "storage/ProcMounts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
@@ -39,13 +40,13 @@ namespace storage
     using namespace std;
 
 
-    LoopCo::LoopCo(Storage * const s, bool detect, const ProcParts& parts)
+    LoopCo::LoopCo(Storage * const s, bool detect, SystemInfo& systeminfo)
     : Container(s, "loop", staticType())
 {
     y2deb("constructing LoopCo detect:" << detect);
     init();
     if( detect )
-	    getLoopData(parts);
+	    getLoopData(systeminfo);
 }
 
 
@@ -85,7 +86,7 @@ LoopCo::init()
 
 
 void
-    LoopCo::getLoopData(const ProcParts& parts)
+    LoopCo::getLoopData(SystemInfo& systeminfo)
     {
     y2mil("begin");
     list<FstabEntry> l;
@@ -109,7 +110,7 @@ void
 		{
 		Loop *l = new Loop( *this, i->loop_dev, lfile,
 				    i->dmcrypt, !i->noauto?i->dentry:"",
-				       parts, c);
+				    systeminfo, c);
 		l->setEncryption( i->encr );
 		l->setFs( Volume::toFsType(i->fs) );
 		y2mil( "l:" << *l );
@@ -118,7 +119,7 @@ void
 	    }
 	LoopPair p=loopPair(Loop::notDeleted);
 	LoopIter i=p.begin();
-	std::map<string, string> mp = ProcMounts().allMounts();
+	map<string, string> mp = systeminfo.getProcMounts().allMounts();
 	while( i!=p.end() )
 	    {
 	    if( i->dmcrypt() )
