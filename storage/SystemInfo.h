@@ -32,6 +32,7 @@ namespace storage
     class ProcParts;
     class ProcMounts;
     class Blkid;
+    class CmdDmsetup;
     class CmdDmraid;
     class CmdMultipath;
 
@@ -47,6 +48,7 @@ namespace storage
 	const ProcParts& getProcParts();
 	const ProcMounts& getProcMounts();
 	const Blkid& getBlkid();
+	const CmdDmsetup& getCmdDmsetup();
 	const CmdDmraid& getCmdDmraid();
 	const CmdMultipath& getCmdMultipath();
 
@@ -55,6 +57,7 @@ namespace storage
 	ProcParts* procparts;
 	ProcMounts* procmounts;
 	Blkid* blkid;
+	CmdDmsetup* cmddmsetup;
 	CmdDmraid* cmddmraid;
 	CmdMultipath* cmdmultipath;
 

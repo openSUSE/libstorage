@@ -142,7 +142,6 @@ class DmraidCo : public DmPartCo
 
 	static string undevName( const string& name );
 
-	static bool isActivated(const string& name);
 	static list<string> getRaids(SystemInfo& systeminfo);
 
 	static bool raidNotDeleted( const Dmraid&d ) { return( !d.deleted() ); }

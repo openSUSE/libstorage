@@ -28,7 +28,45 @@
 
 namespace storage
 {
-    class ProcParts;
+    class SystemInfo;
+
+
+    class CmdDmsetup
+    {
+
+    public:
+
+	CmdDmsetup();
+
+	struct Entry
+	{
+	    string name;
+	    unsigned long major;
+	    unsigned long minor;
+	    unsigned segments;
+	};
+
+	bool getEntry(const string& name, Entry& entry) const;
+
+	list<string> getEntries() const;
+
+	template<class Pred>
+	list<string> getMatchingEntries(Pred pred) const
+	{
+	    list<string> ret;
+	    for (const_iterator i = data.begin(); i != data.end(); ++i)
+		if (pred(i->first))
+		    ret.push_back(i->first);
+	    return ret;
+	}
+
+    private:
+
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	map<string, Entry> data;
+
+    };
 
 
 class DmCo : public PeContainer
@@ -36,11 +74,11 @@ class DmCo : public PeContainer
     friend class Storage;
 
     public:
-	DmCo(Storage * const s, bool detect, const ProcParts& parts, bool only_crypt);
+	DmCo(Storage * const s, bool detect, SystemInfo& systeminfo, bool only_crypt);
 	DmCo(const DmCo& c);
 	virtual ~DmCo();
 
-	void second(bool detect, const ProcParts& parts, bool only_crypt);
+	void second(bool detect, SystemInfo& systeminfo, bool only_crypt);
 
 	static storage::CType staticType() { return storage::DM; }
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
@@ -54,7 +92,7 @@ class DmCo : public PeContainer
     protected:
 	DmCo( Storage * const s, const string& File );
 
-	void getDmData(const ProcParts& parts, bool only_crypt);
+	void getDmData(SystemInfo& systeminfo, bool only_crypt);
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 
 	bool findDm( const string& dev, DmIter& i );

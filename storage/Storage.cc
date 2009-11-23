@@ -587,11 +587,11 @@ void
 	    DmCo* v = NULL;
 	    if (haveDm(v))
 	    {
-		v->second(true, systeminfo.getProcParts(), only_crypt);
+		v->second(true, systeminfo, only_crypt);
 	    }
 	    else
 	    {
-		v = new DmCo(this, true, systeminfo.getProcParts(), only_crypt);
+		v = new DmCo(this, true, systeminfo, only_crypt);
 		if (!v->isEmpty() )
 		{
 		    addToList( v );

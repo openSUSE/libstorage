@@ -144,7 +144,6 @@ class DmmultipathCo : public DmPartCo
 	static void activate(bool val);
 	static bool isActive() { return active; }
 
-	static bool isActivated(const string& name);
 	static list<string> getMultipaths(SystemInfo& systeminfo);
 
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }

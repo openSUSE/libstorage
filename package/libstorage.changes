@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Nov 23 15:09:19 CET 2009 - aschnell@suse.de
+
+- improved parsing of dmsetup output
+
+-------------------------------------------------------------------
 Fri Nov 20 18:02:05 CET 2009 - aschnell@suse.de
 
 - added mount graph

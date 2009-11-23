@@ -206,14 +206,6 @@ void DmraidCo::activate( bool val )
     }
 
 
-    bool
-    DmraidCo::isActivated(const string& name)
-    {
-        SystemCmd c(DMSETUPBIN " table " + quote(name));
-        return c.retcode() == 0 && c.numLines() >= 1 && isdigit(c.stdout()[0][0]);
-    }
-
-
     list<string>
     DmraidCo::getRaids(SystemInfo& systeminfo)
     {
@@ -222,8 +214,9 @@ void DmraidCo::activate( bool val )
 	list<string> entries = systeminfo.getCmdDmraid().getEntries();
 	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
         {
-	    if (isActivated(*it))
-		l.push_back(*it);
+	    CmdDmsetup::Entry entry;
+	    if (systeminfo.getCmdDmsetup().getEntry(*it, entry) && entry.segments > 0)
+      		l.push_back(*it);
 	    else
 		y2mil("ignoring inactive dmraid " << *it);
         }

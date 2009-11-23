@@ -24,6 +24,7 @@
 #include "storage/ProcParts.h"
 #include "storage/ProcMounts.h"
 #include "storage/Blkid.h"
+#include "storage/DmCo.h"
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
 
@@ -32,7 +33,8 @@ namespace storage
 {
 
     SystemInfo::SystemInfo()
-	: procparts(NULL), procmounts(NULL), blkid(NULL), cmddmraid(NULL), cmdmultipath(NULL)
+	: procparts(NULL), procmounts(NULL), blkid(NULL), cmddmsetup(NULL), cmddmraid(NULL),
+	  cmdmultipath(NULL)
     {
 	y2deb("constructed SystemInfo");
     }
@@ -43,6 +45,7 @@ namespace storage
 	delete procparts;
 	delete procmounts;
 	delete blkid;
+	delete cmddmsetup;
 	delete cmddmraid;
 	delete cmdmultipath;
 
@@ -74,6 +77,15 @@ namespace storage
 	if (!blkid)
 	    blkid = new Blkid();
 	return *blkid;
+    }
+
+
+    const CmdDmsetup&
+    SystemInfo::getCmdDmsetup()
+    {
+	if (!cmddmsetup)
+	    cmddmsetup = new CmdDmsetup();
+	return *cmddmsetup;
     }
 
 

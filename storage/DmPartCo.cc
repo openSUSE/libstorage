@@ -280,25 +280,25 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void 
     DmPartCo::init(SystemInfo& systeminfo)
     {
-    SystemCmd c(DMSETUPBIN " table " + quote(nm));
-    if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0][0] ))
+	CmdDmsetup::Entry entry;
+	if (systeminfo.getCmdDmsetup().getEntry(nm, entry) && entry.segments > 0)
 	{
-	mnr = Dm::dmNumber( nm );
-	systeminfo.getProcParts().getSize("/dev/dm-" + decString(mnr), size_k);
-	y2mil( "mnr:" << mnr << " nm:" << nm );
+	systeminfo.getProcParts().getSize("/dev/dm-" + decString(entry.minor), size_k);
+	y2mil( "minor:" << entry.minor << " nm:" << nm );
 	y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
 	if( size_k>0 )
 	    pe_size = size_k;
 	else
-	    y2war( "size_k zero for dm minor " << mnr );
+	    y2war( "size_k zero for dm minor " << entry.minor );
 	num_pe = 1;
 	createDisk(systeminfo.getProcParts());
 	if( disk->numPartitions()>0 )
 	    {
 	    string pat = numToName(1);
 	    pat.erase( pat.length()-1, 1 );
-	    c.execute(DMSETUPBIN " ls | grep -w ^" + pat + "[0-9]\\\\+" );
-	    if( c.numLines()==0 )
+	    string reg = "^" + pat + "[0-9]+" "$";
+	    list<string> tmp = systeminfo.getCmdDmsetup().getMatchingEntries(regex_matches(reg));
+	    if (tmp.empty())
 		activate_part(true);
 	    }
 	getVolumes(systeminfo.getProcParts());

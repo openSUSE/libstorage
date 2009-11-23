@@ -26,6 +26,7 @@
 #include "storage/DmCo.h"
 #include "storage/Dm.h"
 #include "storage/SystemCmd.h"
+#include "storage/SystemInfo.h"
 #include "storage/ProcParts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
@@ -37,22 +38,73 @@ namespace storage
     using namespace std;
 
 
-    DmCo::DmCo(Storage * const s, bool detect, const ProcParts& parts, bool only_crypt)
+    CmdDmsetup::CmdDmsetup()
+    {
+	SystemCmd c(DMSETUPBIN " --columns --noheadings -o name,major,minor,segments info");
+	if (c.retcode() != 0 || c.numLines() == 0)
+	    return;
+
+	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
+	{
+	    list<string> sl = splitString(*it, ":");
+	    if (sl.size() >= 4)
+	    {
+		Entry entry;
+
+		list<string>::const_iterator ci = sl.begin();
+		string name = *ci++;
+		*ci++ >> entry.major;
+		*ci++ >> entry.minor;
+		*ci++ >> entry.segments;
+
+		data[name] = entry;
+	    }
+	}
+
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
+	    y2mil("data[" << it->first << "] -> major:" << it->second.major << " minor:" <<
+		  it->second.minor << " segments:" << it->second.segments);
+    }
+
+
+    bool
+    CmdDmsetup::getEntry(const string& name, Entry& entry) const
+    {
+	const_iterator it = data.find(name);
+	if (it == data.end())
+	    return false;
+
+	entry = it->second;
+	return true;
+    }
+
+
+    list<string>
+    CmdDmsetup::getEntries() const
+    {
+	list<string> ret;
+	for (const_iterator i = data.begin(); i != data.end(); ++i)
+	    ret.push_back(i->first);
+	return ret;
+    }
+
+
+    DmCo::DmCo(Storage * const s, bool detect, SystemInfo& systeminfo, bool only_crypt)
 	: PeContainer(s, staticType())
     {
 	y2deb("constructing DmCo detect:" << detect);
 	init();
 	if (detect)
-	    getDmData(parts, only_crypt);
+	    getDmData(systeminfo, only_crypt);
     }
 
 
     void
-    DmCo::second(bool detect, const ProcParts& parts, bool only_crypt)
+    DmCo::second(bool detect, SystemInfo& systeminfo, bool only_crypt)
     {
 	y2deb("second DmCo detect:" << detect);
 	if (detect)
-	    getDmData(parts, only_crypt);
+	    getDmData(systeminfo, only_crypt);
     }
 
 
@@ -138,26 +190,28 @@ DmCo::detectEncryption( const string& dev ) const
 
 
 void
-    DmCo::getDmData(const ProcParts& parts, bool only_crypt)
+    DmCo::getDmData(SystemInfo& systeminfo, bool only_crypt)
     {
     Storage::ConstLvmLvPair lv = getStorage()->lvmLvPair();
     Storage::ConstDmraidCoPair dmrco = getStorage()->dmraidCoPair();
     Storage::ConstDmraidPair dmr = getStorage()->dmrPair();
     Storage::ConstDmmultipathCoPair dmmco = getStorage()->dmmultipathCoPair();
     Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
-    y2mil("begin");
-    SystemCmd c(DMSETUPBIN " ls | grep \"(.*)\"" );
-    for( unsigned i=0; i<c.numLines(); ++i )
-	{
-	string line = c.getLine(i);
-	string table = extractNthWord( 0, line );
+
+    list<string> tables = systeminfo.getCmdDmsetup().getEntries();
+    for (list<string>::const_iterator it = tables.begin(); it != tables.end(); ++it)
+    {
+	string table = *it;
 	bool found=false;
-	Storage::ConstLvmLvIterator i=lv.begin();
-	while( !found && i!=lv.end() )
+	if (!found)
+	{
+	    Storage::ConstLvmLvIterator i=lv.begin();
+	    while( !found && i!=lv.end() )
 	    {
-	    found = i->getTableName()==table;
-	    ++i;
+		found = i->getTableName()==table;
+		++i;
 	    }
+	}
 	if( !found )
 	    {
 	    Storage::ConstDmraidCoIterator i=dmrco.begin();
@@ -196,18 +250,13 @@ void
 	    }
 	if( !found )
 	    {
-	    string minor = extractNthWord( 2, line );
-	    unsigned min_num;
-	    string::size_type pos;
-	    if( (pos=minor.find( ")" ))!=string::npos )
-		minor.erase( pos );
-	    minor >> min_num;
-	    y2mil( "minor:\"" << minor << "\" minor:" << min_num );
-	    Dm * m = new Dm( *this, table, min_num );
-	    y2mil( "new Dm:" << *m  );
+	    CmdDmsetup::Entry entry;
+	    systeminfo.getCmdDmsetup().getEntry(table, entry);
+	    Dm* m = new Dm(*this, table, entry.minor);
+	    y2mil("new Dm:" << *m);
 	    unsigned long long s = 0;
-	    string dev = "/dev/dm-" + decString(min_num);
-	    if (parts.getSize(dev, s))
+	    string dev = "/dev/dm-" + decString(entry.minor);
+	    if (systeminfo.getProcParts().getSize(dev, s))
 		{
 		y2mil( "new dm size:" << s );
 		m->setSize( s );
@@ -234,7 +283,7 @@ void
 		getStorage()->knownDevice( it->first ))
 		{
 		skip = true;
-		getStorage()->setDmcryptData( it->first, m->device(), min_num,
+		getStorage()->setDmcryptData( it->first, m->device(), entry.minor,
 		                              m->sizeK(), detectEncryption (m->device()) );
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
