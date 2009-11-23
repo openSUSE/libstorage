@@ -49,7 +49,7 @@ namespace storage
 	delete cmddmraid;
 	delete cmdmultipath;
 
-	y2deb(" destructed SystemInfo");
+	y2deb("destructed SystemInfo");
     }
 
 
