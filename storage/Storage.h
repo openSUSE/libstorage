@@ -52,7 +52,6 @@
 #include "storage/ListListIterator.h"
 #include "storage/IterPair.h"
 #include "storage/Lock.h"
-#include "storage/Blkid.h"
 
 
 namespace storage
@@ -1680,19 +1679,17 @@ class DiskData;
 	// protected internal member functions
 	void initialize();
 	void logSystemInfo() const;
-	void detectDisks(const ProcParts& parts);
-	void autodetectDisks(const ProcParts& parts);
-	void detectMultipath();
+	void detectDisks(SystemInfo& systeminfo);
+	void autodetectDisks(SystemInfo& systeminfo);
 	void detectMds();
-	void detectLoops(const ProcParts& parts);
-	void detectNfs(const EtcFstab& fstab, const ProcMounts& mounts);
+	void detectLoops(SystemInfo& systeminfo);
+	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
 	void detectLvmVgs();
-	void detectDmraid(const ProcParts& parts);
-	void detectDmmultipath(const ProcParts& parts);
-	void detectDm(const ProcParts& parts, bool only_crypt);
-	void initDisk( DiskData& data, const ProcParts& parts);
-	void detectFsData(const VolIterator& begin, const VolIterator& end,
-			  const ProcMounts& mounts, const Blkid& blkid);
+	void detectDmraid(SystemInfo& systeminfo);
+	void detectDmmultipath(SystemInfo& systeminfo);
+	void detectDm(SystemInfo& systeminfo, bool only_crypt);
+	void initDisk(DiskData& data, SystemInfo& systeminfo);
+	void detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo);
 	void detectFsDataTestMode( const string& file,
 	                           const VolIterator& begin,
 				   const VolIterator& end );

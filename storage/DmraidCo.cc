@@ -29,6 +29,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -102,12 +103,11 @@ namespace storage
     }
 
 
-    DmraidCo::DmraidCo(Storage * const s, const string& name, const CmdDmraid& cmddmraid,
-		       const ProcParts& parts)
-	: DmPartCo(s, "/dev/mapper/" + name, staticType(), parts)
+    DmraidCo::DmraidCo(Storage * const s, const string& name, SystemInfo& systeminfo)
+	: DmPartCo(s, "/dev/mapper/" + name, staticType(), systeminfo)
     {
-	DmPartCo::init(parts);
-	getRaidData(name, cmddmraid);
+	DmPartCo::init(systeminfo);
+	getRaidData(name, systeminfo);
 	y2deb("constructing DmraidCo " << name);
     }
 
@@ -126,12 +126,12 @@ namespace storage
 
 
     void
-    DmraidCo::getRaidData(const string& name, const CmdDmraid& cmddmraid)
+    DmraidCo::getRaidData(const string& name, SystemInfo& systeminfo)
     {
 	y2mil("name:" << name);
 
 	CmdDmraid::Entry entry;
-	if (cmddmraid.getEntry(name, entry))
+	if (systeminfo.getCmdDmraid().getEntry(name, entry))
 	{
 	    controller = entry.controller;
 	    raidtype = entry.raidtype;
@@ -215,11 +215,11 @@ void DmraidCo::activate( bool val )
 
 
     list<string>
-    DmraidCo::getRaids(const CmdDmraid& cmddmraid)
+    DmraidCo::getRaids(SystemInfo& systeminfo)
     {
         list<string> l;
 
-	list<string> entries = cmddmraid.getEntries();
+	list<string> entries = systeminfo.getCmdDmraid().getEntries();
 	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
         {
 	    if (isActivated(*it))

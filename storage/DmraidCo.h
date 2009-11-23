@@ -31,7 +31,7 @@
 namespace storage
 {
 class Storage;
-    class ProcParts;
+    class SystemInfo;
 
 
     class CmdDmraid
@@ -67,8 +67,7 @@ class DmraidCo : public DmPartCo
 
     public:
 
-	DmraidCo(Storage * const s, const string& name, const CmdDmraid& cmddmraid,
-		 const ProcParts& parts);
+	DmraidCo(Storage * const s, const string& name, SystemInfo& systeminfo);
 	DmraidCo(const DmraidCo& c);
 	virtual ~DmraidCo();
 
@@ -134,7 +133,7 @@ class DmraidCo : public DmPartCo
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }
 	static void activate(bool val);
-	void getRaidData(const string& name, const CmdDmraid& cmddmraid);
+	void getRaidData(const string& name, SystemInfo& systeminfo);
 	void addRaid( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
@@ -144,7 +143,7 @@ class DmraidCo : public DmPartCo
 	static string undevName( const string& name );
 
 	static bool isActivated(const string& name);
-	static list<string> getRaids(const CmdDmraid& cmddmraid);
+	static list<string> getRaids(SystemInfo& systeminfo);
 
 	static bool raidNotDeleted( const Dmraid&d ) { return( !d.deleted() ); }
 

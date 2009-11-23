@@ -31,6 +31,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -38,8 +39,7 @@ namespace storage
     using namespace std;
 
 
-DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
-		       const ProcParts& parts)
+    DmPartCo::DmPartCo(Storage * const s, const string& name, CType t, SystemInfo& systeminfo)
 	: PeContainer(s, t)
     {
     y2deb("constructing DmPart co " << name);
@@ -48,7 +48,7 @@ DmPartCo::DmPartCo( Storage * const s, const string& name, storage::CType t,
     num_part = num_pe = free_pe = 0;
     active = del_ptable = false;
     disk = NULL;
-	init(parts);
+	init(systeminfo);
     }
 
     
@@ -278,13 +278,13 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 
 
 void 
-    DmPartCo::init(const ProcParts& parts)
+    DmPartCo::init(SystemInfo& systeminfo)
     {
     SystemCmd c(DMSETUPBIN " table " + quote(nm));
     if( c.retcode()==0 && c.numLines()>=1 && isdigit( c.stdout()[0][0] ))
 	{
 	mnr = Dm::dmNumber( nm );
-	parts.getSize("/dev/dm-" + decString(mnr), size_k);
+	systeminfo.getProcParts().getSize("/dev/dm-" + decString(mnr), size_k);
 	y2mil( "mnr:" << mnr << " nm:" << nm );
 	y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
 	if( size_k>0 )
@@ -292,7 +292,7 @@ void
 	else
 	    y2war( "size_k zero for dm minor " << mnr );
 	num_pe = 1;
-	createDisk(parts);
+	createDisk(systeminfo.getProcParts());
 	if( disk->numPartitions()>0 )
 	    {
 	    string pat = numToName(1);
@@ -301,7 +301,7 @@ void
 	    if( c.numLines()==0 )
 		activate_part(true);
 	    }
-	getVolumes(parts);
+	getVolumes(systeminfo.getProcParts());
 	active = true;
 	}
     }

@@ -32,7 +32,7 @@ namespace storage
 {
 
 class Storage;
-    class ProcParts;
+    class SystemInfo;
 
 
     class CmdMultipath
@@ -68,8 +68,7 @@ class DmmultipathCo : public DmPartCo
 
     public:
 
-	DmmultipathCo(Storage * const s, const string& Name, const CmdMultipath& cmdmultipath,
-		      const ProcParts& parts);
+	DmmultipathCo(Storage * const s, const string& Name, SystemInfo& systeminfo);
 	DmmultipathCo(const DmmultipathCo& c);
 	virtual ~DmmultipathCo();
 
@@ -134,7 +133,7 @@ class DmmultipathCo : public DmPartCo
 	DmmultipathCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }
-	void getMultipathData(const string& name, const CmdMultipath& cmdmultipath);
+	void getMultipathData(const string& name, SystemInfo& systeminfo);
 	void addMultipath( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
@@ -146,7 +145,7 @@ class DmmultipathCo : public DmPartCo
 	static bool isActive() { return active; }
 
 	static bool isActivated(const string& name);
-	static list<string> getMultipaths(const CmdMultipath& cmdmultipath);
+	static list<string> getMultipaths(SystemInfo& systeminfo);
 
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
 

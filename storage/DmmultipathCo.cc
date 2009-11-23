@@ -31,6 +31,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -124,12 +125,11 @@ namespace storage
     }
 
 
-    DmmultipathCo::DmmultipathCo(Storage * const s, const string& name, const CmdMultipath& cmdmultipath,
-				 const ProcParts& parts)
-	: DmPartCo(s, "/dev/mapper/" + name, staticType(), parts)
+    DmmultipathCo::DmmultipathCo(Storage * const s, const string& name, SystemInfo& systeminfo)
+	: DmPartCo(s, "/dev/mapper/" + name, staticType(), systeminfo)
     {
-	DmPartCo::init(parts);
-	getMultipathData(name, cmdmultipath);
+	DmPartCo::init(systeminfo);
+	getMultipathData(name, systeminfo);
 	y2deb("constructing DmmultipathCo " << name);
     }
 
@@ -148,10 +148,10 @@ namespace storage
 
 
     void
-    DmmultipathCo::getMultipathData(const string& name, const CmdMultipath& cmdmultipath)
+    DmmultipathCo::getMultipathData(const string& name, SystemInfo& systeminfo)
     {
 	CmdMultipath::Entry entry;
-	if (cmdmultipath.getEntry(name, entry))
+	if (systeminfo.getCmdMultipath().getEntry(name, entry))
 	{
 	    vendor = entry.vendor;
 	    model = entry.model;
@@ -247,11 +247,11 @@ DmmultipathCo::activate(bool val)
 
 
     list<string>
-    DmmultipathCo::getMultipaths(const CmdMultipath& cmdmultipath)
+    DmmultipathCo::getMultipaths(SystemInfo& systeminfo)
     {
 	list<string> l;
 
-	list<string> entries = cmdmultipath.getEntries();
+	list<string> entries = systeminfo.getCmdMultipath().getEntries();
 	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
         {
 	    if (isActivated(*it))

@@ -36,7 +36,7 @@ namespace storage
 
 
 class Storage;
-    class ProcParts;
+    class SystemInfo;
 class Region;
 
 
@@ -45,8 +45,7 @@ class DmPartCo : public PeContainer
     friend class Storage;
 
     public:
-	DmPartCo( Storage * const s, const string& Name, storage::CType t,
-		 const ProcParts& parts);
+	DmPartCo(Storage * const s, const string& Name, CType t, SystemInfo& systeminfo);
 	DmPartCo(const DmPartCo& c);
 	virtual ~DmPartCo();
 
@@ -164,7 +163,7 @@ class DmPartCo : public PeContainer
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmPartCo( *this ) ); }
 	void activate_part( bool val );
-	void init(const ProcParts& parts);
+	void init(SystemInfo& systeminfo);
 	void createDisk(const ProcParts& parts);
 	void getVolumes(const ProcParts& parts);
 	void updatePointers( bool invalid=false );
