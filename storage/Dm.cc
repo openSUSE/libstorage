@@ -502,15 +502,6 @@ string Dm::devToTable( const string& dev )
     return( ret );
     }
 
-string Dm::dmName( const string& table )
-    {
-    string ret = "";
-    int num = Dm::dmNumber( table );
-    if( num>=0 )
-	ret = "dm-" + decString(num);
-    y2mil( "table:" << table << " ret:" << ret );
-    return( ret );
-    }
 
 string Dm::dmDeviceName( unsigned long num )
     {

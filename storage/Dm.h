@@ -76,7 +76,6 @@ class Dm : public Volume
 	static bool isActive() { return active; }
 
 	static string devToTable( const string& dev );
-	static string dmName( const string& table );
 	static int dmNumber( const string& table );
 	bool equalContent( const Dm& rhs ) const;
 	void logDifference( const Dm& d ) const;
