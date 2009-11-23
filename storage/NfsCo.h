@@ -28,12 +28,15 @@
 
 namespace storage
 {
+    class SystemInfo;
+
+
 class NfsCo : public Container
     {
     friend class Storage;
 
     public:
-	NfsCo(Storage * const s, const EtcFstab& fstab, const ProcMounts& mounts);
+	NfsCo(Storage * const s, const EtcFstab& fstab, SystemInfo& systeminfo);
 	NfsCo( Storage * const s );
 	NfsCo(const NfsCo& c);
 	virtual ~NfsCo();
@@ -104,7 +107,7 @@ class NfsCo : public Container
 	bool findNfs( const string& dev );
 
 	static list<string> filterOpts(const list<string>& opts);
-	void getNfsData(const EtcFstab& fstab, const ProcMounts& mounts);
+	void getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo);
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new NfsCo( *this ) ); }

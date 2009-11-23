@@ -26,7 +26,7 @@
 #include "storage/NfsCo.h"
 #include "storage/Nfs.h"
 #include "storage/AppUtil.h"
-#include "storage/ProcMounts.h"
+#include "storage/SystemInfo.h"
 #include "storage/Storage.h"
 #include "storage/EtcFstab.h"
 
@@ -36,11 +36,11 @@ namespace storage
     using namespace std;
 
 
-    NfsCo::NfsCo(Storage * const s, const EtcFstab& fstab, const ProcMounts& mounts)
+    NfsCo::NfsCo(Storage * const s, const EtcFstab& fstab, SystemInfo& systeminfo)
 	: Container(s, "nfs", staticType())
     {
     y2deb("constructing NfsCo detect");
-    getNfsData(fstab, mounts);
+    getNfsData(fstab, systeminfo);
     }
 
 NfsCo::NfsCo( Storage * const s ) :
@@ -163,7 +163,7 @@ NfsCo::addNfs( const string& nfsDev, unsigned long long sizeK,
 
 
 void
-NfsCo::getNfsData(const EtcFstab& fstab, const ProcMounts& mounts)
+NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
     const list<FstabEntry> l1 = fstab.getEntries();
     for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
@@ -179,7 +179,7 @@ NfsCo::getNfsData(const EtcFstab& fstab, const ProcMounts& mounts)
 	    }
 	}
 
-    const list<FstabEntry> l2 = mounts.getEntries();
+    const list<FstabEntry> l2 = systeminfo.getProcMounts().getEntries();
     for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
 	{
 	if( i->fs == "nfs" )

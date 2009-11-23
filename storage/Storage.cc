@@ -464,7 +464,7 @@ void Storage::detectMds()
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_NFS") == NULL)
 	{
-	NfsCo * v = new NfsCo(this, fstab, systeminfo.getProcMounts());
+	NfsCo* v = new NfsCo(this, fstab, systeminfo);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
