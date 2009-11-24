@@ -487,8 +487,7 @@ Storage::detectLvmVgs()
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
-	list<string> l;
-	LvmVg::getVgs( l );
+	const list<string> l = LvmVg::getVgs();
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    LvmVg * v = new LvmVg( this, *i );

@@ -1168,31 +1168,23 @@ LvmVg::activate(bool val)
 }
 
 
-void
-LvmVg::getVgs(list<string>& l)
-{
-    l.clear();
-
-    SystemCmd cmd(VGDISPLAYBIN " -s");
-    if (!cmd.stdout().empty())
+    list<string>
+    LvmVg::getVgs()
     {
-	active = true;
+	list<string> l;
 
-	for (vector<string>::const_iterator it = cmd.stdout().begin(); it != cmd.stdout().end(); ++it)
+	SystemCmd c(VGSBIN " --noheadings -o vg_name");
+	if (c.retcode() == 0 && !c.stdout().empty())
 	{
-	    string vgname = *it;
-	    string::size_type pos=vgname.find_first_not_of( app_ws+"\"" );
-	    if( pos>0 )
-		vgname.erase( 0, pos );
-	    pos=vgname.find_first_of( app_ws+"\"" );
-	    if( pos>0 )
-		vgname.erase( pos );
-	    l.push_back(vgname);
-	}
-    }
+	    active = true;
 
-    y2mil("detected vgs " << l);
-}
+	    for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
+		l.push_back(boost::trim_copy(*it, locale::classic()));
+	}
+
+	y2mil("detected vgs " << l);
+	return l;
+    }
 
 
 int
