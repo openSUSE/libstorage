@@ -472,7 +472,8 @@ void Volume::getLoopData( SystemCmd& loopData )
 		    if (entry.fs_type != HFS)
 			label = orig_label = entry.fs_label;
 		    alt_names.remove_if(string_contains("/by-label/"));
-		    alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
+		    if (!label.empty())
+			alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
 		}
 	    }
 	    else
