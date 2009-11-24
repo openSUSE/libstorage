@@ -2449,35 +2449,38 @@ int Disk::doRemove( Volume* v )
 
 int
 Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const
-{
+    {
     int ret = 0;
     freeCyls = 0;
     unsigned long start = p->cylEnd() + 1;
     unsigned long end = cylinders();
     if (p->type() == LOGICAL && hasExtended())
-    {
+	{
 	ConstPartPair pp = partPair(notDeletedExt);
 	end = pp.begin()->cylEnd() + 1;
-    }
+	}
     ConstPartPair pp = partPair(notDeleted);
     ConstPartIter i = pp.begin();
+    ConstPartIter next = pp.end();
     y2mil( "p:" << *p );
     y2mil( "end:" << end );
-    while( i != pp.end() && (i->type()!=p->type() || i->region()!=p->region()))
-           ++i;
-    if( i != pp.end() )
+    while( i != pp.end() )
 	{
 	y2mil( "i:" << *i );
-	++i;
-	}
-    if( i != pp.end() )
-	y2mil( "i:" << *i );
-    if( i != pp.end() && 
-        (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)))
-	{
-	if( i->cylStart()>=start && i->cylStart()<end )
+	if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
+	    i->cylStart()>=p->cylStart() && i->nr()!=p->nr() &&
+	    (next==pp.end() || next->cylStart()>i->cylStart()) )
 	    {
-	    end = i->cylStart();
+	    next = i;
+	    }
+        ++i;
+	}
+    if( next != pp.end() )
+	{
+	y2mil( "next:" << *next );
+	if( next->cylStart()>start )
+	    {
+	    end = next->cylStart();
 	    y2mil( "end:" << end );
 	    }
 	else
@@ -2487,7 +2490,7 @@ Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) c
 	freeCyls = end-start;
     y2mil("ret:" << ret << " freeCyls:" << freeCyls);
     return ret;
-}
+    }
 
 
 int
