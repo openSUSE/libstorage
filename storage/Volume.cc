@@ -2797,7 +2797,7 @@ void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
 
 ostream& Volume::logVolume( ostream& file ) const
     {
-    file << dev << " fs=" << fs_names[fs];
+    file << dev << " fs=" << fs_names[fs] << " size=" << sizeK();
     if( !uuid.empty() )
 	file << " uuid=" << uuid;
     if( !label.empty() )

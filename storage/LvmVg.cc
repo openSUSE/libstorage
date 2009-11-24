@@ -1168,31 +1168,23 @@ LvmVg::activate(bool val)
 }
 
 
-void
-LvmVg::getVgs(list<string>& l)
-{
-    l.clear();
-
-    SystemCmd cmd(VGDISPLAYBIN " -s");
-    if (!cmd.stdout().empty())
+    list<string>
+    LvmVg::getVgs()
     {
-	active = true;
+	list<string> l;
 
-	for (vector<string>::const_iterator it = cmd.stdout().begin(); it != cmd.stdout().end(); ++it)
+	SystemCmd c(VGSBIN " --noheadings -o vg_name");
+	if (c.retcode() == 0 && !c.stdout().empty())
 	{
-	    string vgname = *it;
-	    string::size_type pos=vgname.find_first_not_of( app_ws+"\"" );
-	    if( pos>0 )
-		vgname.erase( 0, pos );
-	    pos=vgname.find_first_of( app_ws+"\"" );
-	    if( pos>0 )
-		vgname.erase( pos );
-	    l.push_back(vgname);
-	}
-    }
+	    active = true;
 
-    y2mil("detected vgs " << l);
-}
+	    for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
+		l.push_back(boost::trim_copy(*it, locale::classic()));
+	}
+
+	y2mil("detected vgs " << l);
+	return l;
+    }
 
 
 int
@@ -1732,10 +1724,37 @@ bool LvmVg::equalContent( const Container& rhs ) const
     }
 
 
-void
-LvmVg::logData(const string& Dir) const
-{
-}
+    void
+    LvmVg::logData(const string& Dir) const
+    {
+	string fname(Dir + "/lvmvg_" + name() + ".tmp");
+	ofstream file(fname.c_str());
+	classic(file);
+
+	file << "Device: " << dev << endl;
+	file << "SizeK: " << sizeK() << endl;
+	file << "PeSizeK:" << peSize() << endl;
+	file << "PeCount:" << peCount() << endl;
+	file << "PeFree:" << peFree() << endl;
+
+	ConstLvmLvPair pp = lvmLvPair();
+	for (ConstLvmLvIter p = pp.begin(); p != pp.end(); ++p)
+	{
+	    file << "Logical Volume: ";
+	    p->logData(file);
+	    file << endl;
+	}
+
+	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	{
+	    file << "Physical Volume: ";
+	    it->logData(file);
+	    file << endl;
+	}
+
+	file.close();
+	getStorage()->handleLogFile( fname );
+    }
 
 
 bool LvmVg::active = false;

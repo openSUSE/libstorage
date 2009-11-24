@@ -82,7 +82,7 @@ class LvmVg : public PeContainer
 	static void activate(bool val);
 	static bool isActive() { return active; }
 
-	static void getVgs( std::list<string>& l );
+	static list<string> getVgs();
 	static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
 
     protected:

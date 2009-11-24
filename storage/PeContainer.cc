@@ -752,4 +752,12 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     return( ret );
     }
 
+
+    ostream&
+    PeContainer::Pv::logData(std::ostream& file) const
+    {
+	file << device << " " << num_pe << " " << free_pe;
+	return file;
+    }
+
 }

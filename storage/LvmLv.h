@@ -23,7 +23,10 @@
 #ifndef LVM_LV_H
 #define LVM_LV_H
 
+#include <fstream>
+
 #include "storage/Dm.h"
+
 
 namespace storage
 {
@@ -65,6 +68,7 @@ class LvmLv : public Dm
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
 	void logDifference( const LvmLv& d ) const;
+	std::ostream& logData(std::ostream& file) const;
 
     protected:
 	static string makeDmTableName(const string& vg_name, const string& lv_name);
