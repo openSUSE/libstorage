@@ -163,14 +163,10 @@ EtcFstab::readFiles()
 	    p->old.noauto = false;
 	    p->old.encr = ENC_LUKS;
 	    p->old.device = *i;
-	    list<string>::iterator li =  p->old.opts.begin();
-	    while( li != p->old.opts.end() )
-		{
-		if( *li == "noauto" )
-		    li = p->old.opts.erase(li);
-		else
-		    ++li;
-		}
+	    list<string>::iterator li =  
+		find( p->old.opts.begin(), p->old.opts.end(), "noauto" );
+	    if( li != p->old.opts.end() )
+		li = p->old.opts.erase(li);
 	    ++i;
 	    if( *i != "none" )
 		p->old.cr_key = *i;
@@ -179,6 +175,11 @@ EtcFstab::readFiles()
 		{
 		if( *i != "none" )
 		    p->old.cr_opts = *i;
+		list<string> tls = splitString( *i, "," );
+		p->old.noauto = 
+		    find( tls.begin(), tls.end(), "noauto" ) != tls.end();
+		if( p->old.noauto )
+		    p->old.opts.push_back("noauto");
 		++i;
 		}
 	    p->nnew = p->old;
@@ -248,8 +249,8 @@ FstabEntry::calcDependent()
 	}
 
     dmcrypt = encr==ENC_LUKS;
-    cryptotab = !noauto && encr!=ENC_NONE && !dmcrypt;
-    crypttab = !noauto && dmcrypt;
+    cryptotab = encr!=ENC_NONE && !dmcrypt;
+    crypttab = dmcrypt;
     }
 
 
@@ -516,9 +517,9 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     return( lineno>=0 );
     }
 
-    list<string> EtcFstab::makeStringList(const FstabEntry& e) const
+list<string> EtcFstab::makeStringList(const FstabEntry& e) const
     {
-	list<string> ls;
+    list<string> ls;
     if( e.cryptotab )
 	{
 	ls.push_back( e.loop_dev );
@@ -549,7 +550,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
 	ls.push_back( decString(e.freq) );
 	ls.push_back( decString(e.passno) );
 	}
-	return ls;
+    return ls;
     }
 
 string EtcFstab::createLine( const list<string>& ls, unsigned fields, 
@@ -582,9 +583,9 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     return createLine(ls, max_fields, fields);
     }
 
-    list<string> EtcFstab::makeCrStringList(const FstabEntry& e) const
+list<string> EtcFstab::makeCrStringList(const FstabEntry& e) const
     {
-	list<string> ls;
+    list<string> ls;
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
     string tmp = e.device;
     ls.push_back( tmp );
@@ -606,9 +607,13 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
 	tls.push_back("tmp");
     else if( !need_tmp && (i=find( tls.begin(), tls.end(), "tmp" ))!=tls.end() )
 	tls.erase(i);
+    if( !e.noauto && (i=find( tls.begin(), tls.end(), "noauto" ))!=tls.end() )
+	tls.erase(i);
+    else if( e.noauto && (i=find( tls.begin(), tls.end(), "noauto" ))==tls.end() )
+	tls.push_back("noauto");
     tmp = boost::join( tls, "," );
     ls.push_back( tmp.empty()?"none":tmp );
-	return ls;
+    return ls;
     }
 
 string EtcFstab::createCrtabLine( const FstabEntry& e ) const

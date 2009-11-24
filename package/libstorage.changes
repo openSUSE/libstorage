@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov 24 14:59:54 CET 2009 - fehr@suse.de
+
+- enabled to set "noauto" option for LUKS-encrypted volumes
+
+-------------------------------------------------------------------
 Mon Nov 23 15:09:19 CET 2009 - aschnell@suse.de
 
 - improved parsing of dmsetup output

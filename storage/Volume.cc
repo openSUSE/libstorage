@@ -956,18 +956,42 @@ int Volume::umount( const string& mp )
 	cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(dev);
 	ret = cmd.execute( cmdline );
 	}
+    list<string> mps;
     if( ret!=0 && !mp.empty() && mp!="swap" )
 	{
+	mps.push_back(mp);
 	cmdline = UMOUNTBIN " " + quote(mp);
 	ret = cmd.execute( cmdline );
 	}
     if( ret!=0 && !orig_mp.empty() && orig_mp!="swap" )
 	{
+	mps.push_back(orig_mp);
 	cmdline = UMOUNTBIN " " + quote(orig_mp);
 	ret = cmd.execute( cmdline );
 	}
     if( ret != 0 )
+	{
 	ret = VOLUME_UMOUNT_FAILED;
+	ProcMounts mounts;
+	list<string> devs;
+	devs.push_back( mountDevice() );
+	devs.push_back( dev );
+	if( mounts.getMount(devs).empty() )
+	    {
+	    ret = VOLUME_UMOUNT_NOT_MOUNTED;
+	    if( !mps.empty() )
+		{
+		map<string, string> mp = mounts.allMounts();
+		for( list<string>::iterator i=mps.begin(); i!=mps.end(); ++i )
+		    {
+		    if( !mp[*i].empty() )
+			ret = VOLUME_UMOUNT_FAILED;
+		    }
+		}
+	    }
+	if( ret==VOLUME_UMOUNT_NOT_MOUNTED )
+	    is_mounted = false;
+	}
     else
 	is_mounted = false;
     y2mil("ret:" << ret);
@@ -2314,7 +2338,7 @@ string Volume::getFstabDevice() const
     const Loop* l = NULL;
     if (cType() == LOOP)
 	l = static_cast<const Loop*>(this);
-    if( l && dmcrypt() && !optNoauto() )
+    if( l && dmcrypt() )
 	ret = l->loopFile();
     y2mil( "ret:" << ret );
     return( ret );
@@ -2329,13 +2353,13 @@ string Volume::getFstabDentry() const
     if (cType() != LOOP)
 	{
 	if( dmcrypt() )
-	    ret = (inCryptotab()||optNoauto())?dev:dmcrypt_dev;
+	    ret = inCryptotab()?dev:dmcrypt_dev;
 	else
 	    ret = getMountByString( mount_by, dev, uuid, label );
 	}
     else
 	{
-	if( dmcrypt() && !optNoauto() )
+	if( dmcrypt() )
 	    ret = dmcrypt_dev;
 	else
 	    ret = l->loopFile();
@@ -2344,10 +2368,10 @@ string Volume::getFstabDentry() const
     }
 
 
-    list<string>
-    Volume::getFstabOpts() const
+list<string>
+Volume::getFstabOpts() const
     {
-	list<string> l;
+    list<string> l;
 	
     if( fstab_opt.empty() )
 	l.push_back( (is_loop&&!dmcrypt())?"noatime":"defaults" );
@@ -2359,15 +2383,14 @@ string Volume::getFstabDentry() const
     list<string>::iterator enc =
 	find_if( l.begin(), l.end(), string_starts_with( "encryption=" ) );
     string lstr;
-    if( optNoauto() &&
-        ((encryption!=ENC_NONE && !dmcrypt()) || cType() == LOOP ))
+    if( (encryption!=ENC_NONE && !dmcrypt()) || cType() == LOOP )
 	{
 	lstr = "loop";
 	if(  !fstab_loop_dev.empty() && !dmcrypt() )
 	    lstr += "="+fstab_loop_dev;
 	}
     string estr;
-    if( optNoauto() && encryption!=ENC_NONE && !dmcrypt() )
+    if( encryption!=ENC_NONE && !dmcrypt() )
 	estr = "encryption=" + Volume::encTypeString(encryption);
     if( loop!=l.end() )
 	l.erase( loop );
@@ -2380,7 +2403,7 @@ string Volume::getFstabDentry() const
     if( l.size()>1 && (enc=find( l.begin(), l.end(), "defaults" ))!=l.end() )
 	l.erase(enc);
 
-        return l;
+    return l;
     }
 
 
@@ -2551,9 +2574,13 @@ int Volume::doFstabUpdate()
 	SystemCmd c;
 	y2mil( "fstab_opt:" << fstab_opt << " fstab_opt_orig:" << orig_fstab_opt );
 	y2mil( "remount:" << *this );
-	int r = umount( mp );
-	y2mil( "remount umount:" << r );
-	if( r==0 )
+	int r = 0;
+	if( isMounted() )
+	    {
+	    r = umount( mp );
+	    y2mil( "remount umount:" << r );
+	    }
+	if( r==0 || r==VOLUME_UMOUNT_NOT_MOUNTED )
 	    {
 	    ret = mount(getStorage()->prependRoot(mp));
 	    y2mil( "remount mount:" << ret );
