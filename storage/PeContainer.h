@@ -73,6 +73,8 @@ class PeContainer : public Container
 	    static bool no_free( const Pv& a )
 		{ return( a.free_pe==0 ); }
 
+	    std::ostream& logData(std::ostream& file) const;
+
 	    bool operator== ( const Pv& rhs ) const
 		{ return( device==rhs.device ); }
 	    bool operator== ( const string& dev ) const

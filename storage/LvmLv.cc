@@ -353,6 +353,15 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     }
 
 
+    ostream&
+    LvmLv::logData(ostream& file) const
+    {
+	file << dev << " " << size_k << " " <<  mjr << " " << mnr << " " << stripe << " "
+	     << stripe_size;
+	return file;
+    }
+
+
 bool LvmLv::equalContent( const LvmLv& rhs ) const
     {
     return( Dm::equalContent(rhs) &&
