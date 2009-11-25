@@ -46,7 +46,7 @@ udevdecode_single_SOURCES = udevdecode.cc
 
 backupstate1_single_SOURCES = backupstate1.cc common.h
 
-contvolinfo1_single_SOURCES = contvolinfo1.cc common.h
+contvolinfo1_single_SOURCES = contvolinfo1.cc common.cc
 
 lvm_create2_single_SOURCES = lvm_create2.cc common.cc
 

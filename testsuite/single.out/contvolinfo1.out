@@ -5,6 +5,12 @@ cname:/dev/sda
 vname:sda2
 numeric:1
 nr:2
+device:/dev/system/swap
+ret:0
+type:4
+cname:/dev/system
+vname:swap
+numeric:0
 device:/dev/disk/by-label/BOOT
 ret:0
 type:1
@@ -26,5 +32,11 @@ cname:sda
 vname:sda1
 numeric:1
 nr:1
+device:/dev/disk/by-uuid/31e381c9-5b35-4045-8d01-9274a30e1298
+ret:0
+type:4
+cname:system
+vname:root
+numeric:0
 device:/dev/disk/by-uuid/unknown
 ret:-2001
