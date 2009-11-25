@@ -96,6 +96,7 @@ class Storage;
 	const string& getLabel() const { return label; }
 	int setLabel( const string& val );
 	int eraseLabel() { label.erase(); orig_label.erase(); return 0; }
+	int eraseUuid() { uuid.erase(); orig_uuid.erase(); return 0; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_LUKS )
@@ -113,7 +114,7 @@ class Storage;
 	long long extendSize() const { return size_k-orig_size_k; }
 	storage::FsType getFs() const { return fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
-	void setUuid( const string& id ) { uuid=id; }
+	void initUuid( const string& id ) { uuid=orig_uuid=id; }
 	void initLabel( const string& lbl ) { label=orig_label=lbl; }
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
@@ -258,6 +259,7 @@ class Storage;
 	storage::MountByType mount_by;
 	storage::MountByType orig_mount_by;
 	string uuid;
+	string orig_uuid;
 	string label;
 	string orig_label;
 	string mp;
