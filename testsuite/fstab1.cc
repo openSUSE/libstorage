@@ -143,7 +143,7 @@ combined1 ()
 
 
 int
-main ()
+main()
 {
     system ("mkdir -p tmp");
 

@@ -75,7 +75,7 @@ run2 ()
 
 
 int
-main (int argc, char* argv[])
+main()
 {
     system ("mkdir -p tmp");
 

@@ -92,7 +92,7 @@ gpt (const string& disk, int n)
 
 
 int
-main ()
+main()
 {
     system ("mkdir -p tmp");
 

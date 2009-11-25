@@ -8,7 +8,7 @@ using namespace storage;
 
 
 int
-main(int argc, char* argv[])
+main()
 {
     cout << udevEncode("nothing") << endl;
 

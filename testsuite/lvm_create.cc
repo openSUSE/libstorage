@@ -112,7 +112,8 @@ void createExtendedLv( const string& vg, const string& dev )
 }
 
 
-int main( int argc_iv, char** argv_ppcv )
+int
+main()
 {
     system ("mkdir -p tmp");
 

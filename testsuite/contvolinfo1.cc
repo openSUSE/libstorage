@@ -39,7 +39,7 @@ test(const string& device)
 
 
 int
-main(int argc, char* argv[])
+main()
 {
     system("mkdir -p tmp");
 

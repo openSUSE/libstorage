@@ -79,7 +79,7 @@ test ()
 
 
 int
-main ()
+main()
 {
     system ("mkdir -p tmp");
 
