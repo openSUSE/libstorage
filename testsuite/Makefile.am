@@ -44,7 +44,7 @@ udevencode_single_SOURCES = udevencode.cc
 
 udevdecode_single_SOURCES = udevdecode.cc
 
-backupstate1_single_SOURCES = backupstate1.cc common.h
+backupstate1_single_SOURCES = backupstate1.cc common.cc
 
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.cc
 
