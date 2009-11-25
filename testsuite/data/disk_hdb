@@ -1,3 +1,4 @@
+Name: hdb
 Device: /dev/hdb
 Major: 3
 Minor: 64

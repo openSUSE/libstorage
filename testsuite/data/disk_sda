@@ -1,3 +1,4 @@
+Name: sda
 Device: /dev/sda
 Major: 8
 Minor: 0

@@ -1,3 +1,4 @@
+Name: sdb
 Device: /dev/sdb
 Major: 8
 Minor: 16

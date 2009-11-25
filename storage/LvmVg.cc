@@ -1731,6 +1731,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	ofstream file(fname.c_str());
 	classic(file);
 
+	file << "Name: " << nm << endl;
 	file << "Device: " << dev << endl;
 	file << "SizeK: " << sizeK() << endl;
 	file << "PeSizeK:" << peSize() << endl;

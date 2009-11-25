@@ -553,6 +553,8 @@ Disk::logData(const string& Dir) const
     string fname( Dir + "/disk_" + logfile_name + ".tmp" );
     ofstream file( fname.c_str() );
     classic(file);
+
+    file << "Name: " << nm << endl;
     file << "Device: " << dev << endl;
     if( !udev_path.empty() )
 	file << "UdevPath: " << udev_path << endl;
@@ -586,6 +588,7 @@ Disk::logData(const string& Dir) const
 	p->logData(file);
 	file << endl;
 	}
+
     file.close();
     getStorage()->handleLogFile( fname );
     }

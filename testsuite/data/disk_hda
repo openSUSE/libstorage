@@ -1,3 +1,4 @@
+Name: hda
 Device: /dev/hda
 Major: 3
 Minor: 0
