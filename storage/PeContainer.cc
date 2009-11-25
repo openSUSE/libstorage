@@ -60,8 +60,26 @@ namespace storage
 	{
 	    if (string_starts_with("Physical Extent:")(*it))
 	    {
-		Pv t(extractNthWord(2, *it, true));
-		pv.push_back(t);
+		Pv tmp(extractNthWord(2, *it, true));
+		pv.push_back(tmp);
+
+		switch (t)
+		{
+		    case LVM:
+			s->addUsedBy(tmp.device, UB_LVM, dev);
+			break;
+		    case DM:
+			s->addUsedBy(tmp.device, UB_DM, dev);
+			break;
+		    case DMRAID:
+			s->addUsedBy(tmp.device, UB_DMRAID, dev);
+			break;
+		    case DMMULTIPATH:
+			s->addUsedBy(tmp.device, UB_DMMULTIPATH, dev);
+			break;
+		    default:
+			break;
+		}
 	    }
 	}
 
