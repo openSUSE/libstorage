@@ -41,6 +41,7 @@ class LvmVg : public PeContainer
 
 	LvmVg( Storage * const s, const string& Name );
 	LvmVg( Storage * const s, const string& Name, bool lvm1 );
+	LvmVg(Storage * const s, const AsciiFile& File);
 	LvmVg(const LvmVg& c);
 	virtual ~LvmVg();
 
@@ -133,8 +134,6 @@ class LvmVg : public PeContainer
 	    IterPair<LvmLvCInter> p( (LvmLvCInter(begin())), (LvmLvCInter(end())) );
 	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check, true )) );
 	    }
-
-	LvmVg( Storage * const s, const string& File, int );
 
 	void getVgData( const string& name, bool exists=true );
 	void init();

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov 25 14:21:37 CET 2009 - aschnell@suse.de
+
+- read testmode file for LVM VGs
+
+-------------------------------------------------------------------
 Tue Nov 24 14:59:54 CET 2009 - fehr@suse.de
 
 - enabled to set "noauto" option for LUKS-encrypted volumes

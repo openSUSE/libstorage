@@ -1,0 +1,9 @@
+/dev/sda1 fs=ext3 size=1044225 uuid=14875716-b8e3-4c83-ac86-48c20682b63a label=BOOT mount=/boot fstopt=acl,user_xattr mountby=id
+/dev/sdb1 fs=ext3 size=5253223 uuid=69fc7099-4a05-436f-b55a-fa7fd30a1f7c mountby=id
+/dev/sdb5 fs=ext3 size=20972826 uuid=686b8c9a-14ec-43ca-ad3e-7800a2581680 mountby=id
+/dev/sdb6 fs=ext3 size=20972826 uuid=8c6da4fd-03d3-43cd-b4c7-bb15338c89ce mountby=id
+/dev/system/abuild fs=btrfs size=8388608 uuid=a25f1b5f-27d1-48c1-ba02-bb083cb4c862 label=ABUILD mount=/abuild fstopt=noatime,acl,user_xattr mountby=uuid
+/dev/system/arvin fs=ext3 size=50331648 uuid=d4c2b968-3d62-44d7-a0c2-d85d8562a25d mount=/ARVIN fstopt=noatime,acl,user_xattr
+/dev/system/root fs=ext3 size=16777216 uuid=31e381c9-5b35-4045-8d01-9274a30e1298 mount=/ fstopt=noatime,acl,user_xattr
+/dev/system/swap fs=swap size=2097152 uuid=fd39c3f9-2990-435d-8eed-e56b6dc2e592 label=SWAP mount=swap fstopt=defaults mountby=label
+/dev/system/virtualbox fs=ext2 size=78643200 uuid=1f8091b0-ac6d-498e-8667-61efce3008e2 mount=/ARVIN/virtualbox fstopt=noatime,acl,user_xattr

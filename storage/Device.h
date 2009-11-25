@@ -34,12 +34,16 @@ namespace storage
     using std::string;
 
 
+    class AsciiFile;
+
+
     class Device
     {
     public:
 
 	Device();
 	Device(const string& nm, const string& dev);
+	Device(const AsciiFile& file);
 	Device(const Device&);
 	virtual ~Device();
 

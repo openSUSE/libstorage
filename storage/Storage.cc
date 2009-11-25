@@ -395,10 +395,10 @@ void
     if (testmode())
 	{
 	glob_t globbuf;
-	if (glob((testdir() + "/disk_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/disk_*[!-][!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList( new Disk( this, *p ) );
+		addToList(new Disk(this, AsciiFile(*p)));
 	    }
  	globfree (&globbuf);
 	}
@@ -478,10 +478,10 @@ Storage::detectLvmVgs()
     if (testmode())
 	{
 	glob_t globbuf;
-	if (glob((testdir() + "/lvm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/lvmvg_*[!-][!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList( new LvmVg( this, *p, true ) );
+		addToList(new LvmVg(this, AsciiFile(*p)));
 	    }
  	globfree (&globbuf);
 	}

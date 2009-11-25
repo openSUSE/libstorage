@@ -27,6 +27,7 @@
 #include "storage/PeContainer.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -34,11 +35,37 @@ namespace storage
     using namespace std;
 
 
-PeContainer::PeContainer( Storage * const s, CType t ) :
-    Container(s,"",t)
+    PeContainer::PeContainer(Storage * const s, CType t)
+	: Container(s, "", t), pe_size(0), num_pe(0), free_pe(0)
     {
-    y2deb("constructing pe container type " << t);
-    init();
+	y2deb("constructing PeContainer type " << t);
+	init();
+    }
+
+
+    PeContainer::PeContainer(Storage * const s, CType t, const AsciiFile& file)
+	: Container(s, t, file), pe_size(0), num_pe(0), free_pe(0)
+    {
+	const vector<string>& lines = file.lines();
+	vector<string>::const_iterator it;
+
+	if ((it = find_if(lines, string_starts_with("PeSizeK:"))) != lines.end())
+	    extractNthWord(1, *it) >> pe_size;
+	if ((it = find_if(lines, string_starts_with("PeCount:"))) != lines.end())
+	    extractNthWord(1, *it) >> num_pe;
+	if ((it = find_if(lines, string_starts_with("PeFree:"))) != lines.end())
+	    extractNthWord(1, *it) >> free_pe;
+
+	for (it = lines.begin(); it != lines.end(); ++it)
+	{
+	    if (string_starts_with("Physical Extent:")(*it))
+	    {
+		Pv t(extractNthWord(2, *it, true));
+		pv.push_back(t);
+	    }
+	}
+
+	y2deb("constructed PeContainer " << dev << " from file " << file.name());
     }
 
 
@@ -750,6 +777,33 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
        	}
     return( ret );
+    }
+
+
+    std::ostream&
+    PeContainer::logData(std::ostream& file) const
+    {
+	file << "PeSizeK: " << peSize() << endl;
+	file << "PeCount: " << peCount() << endl;
+	file << "PeFree: " << peFree() << endl;
+
+	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	{
+	    file << "Physical Extent: ";
+	    it->logData(file);
+	    file << endl;
+	}
+
+	return file;
+    }
+
+
+    PeContainer::Pv::Pv(const string& data)
+	: num_pe(0), free_pe(0)
+    {
+	istringstream i(data);
+	classic(i);
+	i >> device >> num_pe >> free_pe;
     }
 
 

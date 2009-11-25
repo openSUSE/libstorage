@@ -70,6 +70,22 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 }
 
 
+    LvmLv::LvmLv(const LvmVg& c, const string& data)
+	: Dm(c, "")
+    {
+	istringstream i(data);
+	classic(i);
+	i >> dev >> size_k >> mjr >> mnr >> stripe >> stripe_size;
+
+	string::size_type pos = dev.rfind("/");
+	nm = dev.substr(pos + 1);
+
+	orig_size_k = size_k;
+
+	y2deb("constructed LvmLv " << dev << " on " << cont->device());
+    }
+
+
     LvmLv::LvmLv(const LvmVg& c, const LvmLv& v)
 	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status),
 	  allocation(v.allocation)

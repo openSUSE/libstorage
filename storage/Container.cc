@@ -29,6 +29,7 @@
 #include "storage/Storage.h"
 #include "storage/AppUtil.h"
 #include "storage/Device.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -41,6 +42,20 @@ namespace storage
 	  create(false), silent(false), ronly(false)
     {
 	y2deb("constructed Container " << dev);
+    }
+
+
+    Container::Container(Storage* s, CType t, const AsciiFile& file)
+	: Device(file), sto(s), typ(t), del(false), create(false), silent(false),
+	  ronly(false)
+    {
+	const vector<string>& lines = file.lines();
+	vector<string>::const_iterator it;
+
+	if ((it = find_if(lines, string_starts_with("Readonly:"))) != lines.end())
+	    extractNthWord(1, *it) >> ronly;
+
+	y2deb("constructed Container " << dev << " from file " << file.name());
     }
 
 

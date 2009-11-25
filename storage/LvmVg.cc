@@ -28,6 +28,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
+#include "storage/AsciiFile.h"
 #include "storage/StorageDefines.h"
 
 
@@ -72,11 +73,25 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     }
 
 
-LvmVg::LvmVg(Storage * const s, const string& file, int) 
-    : PeContainer(s, staticType())
-{
-    y2deb("constructing lvm vg " << dev << " from file " << file);
-}
+    LvmVg::LvmVg(Storage * const s, const AsciiFile& file)
+	: PeContainer(s, staticType(), file)
+    {
+	inactiv = lvm1 = false;
+
+	const vector<string>& lines = file.lines();
+	vector<string>::const_iterator it;
+
+	for (it = lines.begin(); it != lines.end(); ++it)
+	{
+	    if (string_starts_with("Logical Volume:")(*it))
+	    {
+		LvmLv* p = new LvmLv(*this, extractNthWord(2, *it, true));
+		addToList(p);
+	    }
+	}
+
+	y2deb("constructed LvmVg " << dev << " from file " << file.name());
+    }
 
 
     LvmVg::LvmVg(const LvmVg& c)
@@ -1734,9 +1749,6 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	file << "Name: " << nm << endl;
 	file << "Device: " << dev << endl;
 	file << "SizeK: " << sizeK() << endl;
-	file << "PeSizeK:" << peSize() << endl;
-	file << "PeCount:" << peCount() << endl;
-	file << "PeFree:" << peFree() << endl;
 
 	ConstLvmLvPair pp = lvmLvPair();
 	for (ConstLvmLvIter p = pp.begin(); p != pp.end(); ++p)
@@ -1746,12 +1758,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	    file << endl;
 	}
 
-	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	{
-	    file << "Physical Volume: ";
-	    it->logData(file);
-	    file << endl;
-	}
+	PeContainer::logData(file);
 
 	file.close();
 	getStorage()->handleLogFile( fname );

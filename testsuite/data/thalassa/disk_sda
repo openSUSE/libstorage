@@ -1,0 +1,17 @@
+Name: sda
+Device: /dev/sda
+UdevPath: pci-0000:00:1f.2-scsi-0:0:0:0
+UdevId: <ata-ST3320620AS_6QF4HR0L scsi-SATA_ST3320620AS_6QF4HR0L>
+Major: 8
+Minor: 0
+Range: 256
+Cylinder: 38913
+Head: 255
+Sector: 63
+Label: msdos
+MaxPrimary: 4
+ExtPossible: 1
+MaxLogical: 63
+SizeK: 312571224
+Partition: 1 /dev/sda1 1044225 8 1 1 130 83 primary boot
+Partition: 2 /dev/sda2 157284382 8 2 131 19581 8e primary

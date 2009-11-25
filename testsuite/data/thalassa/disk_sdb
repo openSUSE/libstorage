@@ -1,0 +1,19 @@
+Name: sdb
+Device: /dev/sdb
+UdevPath: pci-0000:00:1f.2-scsi-4:0:0:0
+UdevId: <ata-Hitachi_HDS721680PLA380_PVB100Z1RX2WHF scsi-SATA_Hitachi_HDS7216_PVB100Z1RX2WHF>
+Major: 8
+Minor: 16
+Range: 256
+Cylinder: 10011
+Head: 255
+Sector: 63
+Label: msdos
+MaxPrimary: 4
+ExtPossible: 1
+MaxLogical: 63
+SizeK: 80418240
+Partition: 1 /dev/sdb1 5253223 8 17 0 654 83 primary
+Partition: 2 /dev/sdb2 75160102 8 18 654 9357 f extended
+Partition: 5 /dev/sdb5 20972826 8 21 654 2611 83 logical
+Partition: 6 /dev/sdb6 20972826 8 22 3265 2611 83 logical

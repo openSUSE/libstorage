@@ -16,7 +16,7 @@ noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
 	lvm_create.single lvm_extend.single md_create.single			\
 	humanstring1.single humanstring2.single partitionname.single		\
 	partitionprefix.single udevencode.single udevdecode.single		\
-	backupstate1.single contvolinfo1.single
+	backupstate1.single contvolinfo1.single lvm_create2.single
 
 partition1_single_SOURCES = partition1.cc common.h
 
@@ -47,6 +47,8 @@ udevdecode_single_SOURCES = udevdecode.cc
 backupstate1_single_SOURCES = backupstate1.cc common.h
 
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h
+
+lvm_create2_single_SOURCES = lvm_create2.cc common.cc
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak

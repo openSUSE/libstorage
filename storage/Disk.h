@@ -39,6 +39,7 @@ class SystemCmd;
 class ProcParts;
 class Region;
 
+
 class Disk : public Container
     {
     friend class Storage;
@@ -57,6 +58,7 @@ class Disk : public Container
 	Disk( Storage * const s, const string& Name, unsigned long long Size );
 	Disk( Storage * const s, const string& Name, unsigned num, 
 	      unsigned long long Size, const ProcParts& parts);
+	Disk(Storage * const s, const AsciiFile& file);
 	Disk(const Disk& c);
 	virtual ~Disk();
 
@@ -197,7 +199,7 @@ class Disk : public Container
 	    }
 
     protected:
-	Disk( Storage * const s, const string& File );
+
 	virtual bool detectGeometry();
 	virtual bool detectPartitions(const ProcParts& parts);
 	bool getSysfsInfo( const string& SysFsDir );

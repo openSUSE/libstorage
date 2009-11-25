@@ -36,6 +36,7 @@ class PeContainer : public Container
     public:
 
 	PeContainer(Storage * const s, CType t);
+	PeContainer(Storage * const s, CType t, const AsciiFile& File);
 	PeContainer(const PeContainer& c);
 	virtual ~PeContainer();
 
@@ -53,11 +54,12 @@ class PeContainer : public Container
 	void changeDeviceName( const string& old, const string& nw );
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
 	virtual string getDiffString( const Container& d ) const;
-	
+
     protected:
 	struct Pv
 	    {
 	    Pv() : num_pe(0), free_pe(0) {}
+	    Pv(const string& data);
 
 	    string device;
 	    string dmcryptDevice;
@@ -136,6 +138,8 @@ class PeContainer : public Container
 
 	friend std::ostream& operator<< (std::ostream&, const Pv& );
 	friend void printDevList (std::ostream&, const std::list<Pv>& );
+
+	std::ostream& logData(std::ostream& file) const;
 
 	void init();
 	string addList() const;

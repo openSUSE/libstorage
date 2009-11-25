@@ -15,5 +15,7 @@ namespace storage
 	}
     };
 
-}
 
+    void setup_system(const string& name);
+
+}

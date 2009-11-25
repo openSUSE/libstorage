@@ -39,8 +39,8 @@ namespace storage
     {
     public:
 
-	AsciiFile(const char* name, bool remove_empty = false);
-	AsciiFile(const string& name, bool remove_empty = false);
+	explicit AsciiFile(const char* name, bool remove_empty = false);
+	explicit AsciiFile(const string& name, bool remove_empty = false);
 	~AsciiFile();
 
 	string name() const { return Name_C; }

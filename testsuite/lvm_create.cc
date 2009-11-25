@@ -117,8 +117,6 @@ main()
 {
     system ("mkdir -p tmp");
 
-    system ("rm -rf tmp/*");
-
     deque<string> disks;
 
     /*
@@ -127,6 +125,7 @@ main()
      */
     disks.push_back( "/dev/hda" );
     disks.push_back( "/dev/hdb" );
+    system ("rm -rf tmp/*");
     system ("cp data/disk_hda tmp");
     system ("cp data/disk_hdb tmp");
     createLvs( "system", 50, disks );
@@ -138,6 +137,7 @@ main()
      */
     disks.push_back( "/dev/sda" );
     disks.push_back( "/dev/sdb" );
+    system ("rm -rf tmp/*");
     system ("cp data/disk_sda tmp");
     system ("cp data/disk_sdb tmp");
     createLvs( "system", 50, disks );
@@ -151,6 +151,7 @@ main()
     disks.push_back( "/dev/sdb" );
     disks.push_back( "/dev/hda" );
     disks.push_back( "/dev/hdb" );
+    system ("rm -rf tmp/*");
     system ("cp data/disk_sda tmp");
     system ("cp data/disk_sdb tmp");
     system ("cp data/disk_hda tmp");
@@ -162,6 +163,7 @@ main()
      * Check that we _cannot_ create a volume group out of an extended
      * partition
      */
+    system ("rm -rf tmp/*");
     system ("cp data/disk_hda tmp");
     createExtendedLv("system", "/dev/hda4");
 }

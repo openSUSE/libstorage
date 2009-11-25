@@ -86,28 +86,15 @@ Disk::Disk( Storage * const s, const string& Name,
     }
 
 
-Disk::Disk(Storage * const s, const string& fname)
-    : Container(s, "", staticType())
+Disk::Disk(Storage * const s, const AsciiFile& file)
+    : Container(s, staticType(), file)
 {
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
-    nm = fname.substr( fname.find_last_of( '/' )+1);
-    if( nm.find("disk_")==0 )
-	nm.erase( 0, 5 );
 
     logfile_name = nm;
 
-    AsciiFile file(fname);
     const vector<string>& lines = file.lines();
     vector<string>::const_iterator it;
-
-    if ((it = find_if(lines, string_starts_with("Device:"))) != lines.end())
-	dev = extractNthWord(1, *it);
-
-    mnr = mjr = 0;
-    if ((it = find_if(lines, string_starts_with("Major:"))) != lines.end())
-	extractNthWord(1, *it) >> mjr;
-    if ((it = find_if(lines, string_starts_with("Minor:"))) != lines.end())
-	extractNthWord(1, *it) >> mnr;
 
     range = 4;
     if ((it = find_if(lines, string_starts_with("Range:"))) != lines.end())
@@ -137,19 +124,11 @@ Disk::Disk(Storage * const s, const string& fname)
     if ((it = find_if(lines, string_starts_with("MaxLogical:"))) != lines.end())
 	extractNthWord(1, *it) >> max_logical;
 
-    ronly = false;
-    if ((it = find_if(lines, string_starts_with("Readonly:"))) != lines.end())
-	extractNthWord(1, *it) >> ronly;
-
     if( FakeDisk() && isdigit( nm[nm.size()-1] ))
     {
 	string::size_type p = nm.find_last_not_of( "0123456789" );
 	nm.erase( p+1 );
     }
-
-    size_k = 0;
-    if ((it = find_if(lines, string_starts_with("SizeK:"))) != lines.end())
-	extractNthWord(1, *it) >> size_k;
 
     udev_path.clear();
     if ((it = find_if(lines, string_starts_with("UdevPath:"))) != lines.end())
@@ -167,7 +146,7 @@ Disk::Disk(Storage * const s, const string& fname)
 	}
     }
 
-    y2deb("constructed disk " << dev << " from file " << fname);
+    y2deb("constructed Disk " << dev << " from file " << file.name());
 }
 
 

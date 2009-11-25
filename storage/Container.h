@@ -154,6 +154,7 @@ namespace storage
     public:
 
 	Container(Storage* s, const string& name, CType typ);
+	Container(Storage* s, CType typ, const AsciiFile& file);
 	Container(const Container& c);
 	virtual ~Container();
 
@@ -194,6 +195,7 @@ namespace storage
 	virtual int doCreate( Volume * v );
 	virtual int doRemove( Volume * v );
 	virtual int doResize( Volume * v );
+
 	virtual void logData(const string& Dir) const {}
 
 	static bool stageDecrease(const Volume& v);

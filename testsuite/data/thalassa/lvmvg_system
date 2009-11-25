@@ -1,0 +1,12 @@
+Name: system
+Device: /dev/system
+SizeK: 157282304
+Logical Volume: /dev/system/abuild 8388608 253 0 1 0
+Logical Volume: /dev/system/arvin 50331648 253 1 1 0
+Logical Volume: /dev/system/root 16777216 253 2 1 0
+Logical Volume: /dev/system/swap 2097152 253 3 1 0
+Logical Volume: /dev/system/virtualbox 78643200 253 4 1 0
+PeSizeK: 4096
+PeCount: 38399
+PeFree: 255
+Physical Extent: /dev/sda2 38399 255

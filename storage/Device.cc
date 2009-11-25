@@ -21,6 +21,9 @@
 
 
 #include "storage/Device.h"
+#include "storage/AsciiFile.h"
+#include "storage/AppUtil.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage
@@ -37,6 +40,29 @@ namespace storage
     Device::Device(const string& nm, const string& dev)
 	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
     {
+    }
+
+
+    Device::Device(const AsciiFile& file)
+	: size_k(0), mjr(0), mnr(0)
+    {
+	const vector<string>& lines = file.lines();
+	vector<string>::const_iterator it;
+
+	if ((it = find_if(lines, string_starts_with("Name:"))) != lines.end())
+	    nm = extractNthWord(1, *it);
+	if ((it = find_if(lines, string_starts_with("Device:"))) != lines.end())
+	    dev = extractNthWord(1, *it);
+
+	if ((it = find_if(lines, string_starts_with("SizeK:"))) != lines.end())
+	    extractNthWord(1, *it) >> size_k;
+
+	if ((it = find_if(lines, string_starts_with("Major:"))) != lines.end())
+	    extractNthWord(1, *it) >> mjr;
+	if ((it = find_if(lines, string_starts_with("Minor:"))) != lines.end())
+	    extractNthWord(1, *it) >> mnr;
+
+	y2deb("constructed Device " << dev << " from file " << file.name());
     }
 
 
