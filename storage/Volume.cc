@@ -87,6 +87,7 @@ namespace storage
 	  del(v.del), format(v.format), silnt(v.silnt),
 	  fstab_added(v.fstab_added), fs(v.fs), detected_fs(v.detected_fs),
 	  mount_by(v.mount_by), orig_mount_by(v.orig_mount_by), uuid(v.uuid),
+	  orig_uuid(v.orig_uuid),
 	  label(v.label), orig_label(v.orig_label), mp(v.mp),
 	  orig_mp(v.orig_mp), fstab_opt(v.fstab_opt),
 	  orig_fstab_opt(v.orig_fstab_opt), mkfs_opt(v.mkfs_opt),
@@ -275,7 +276,7 @@ void Volume::getFsInfo( const Volume* source )
     {
     setFs( source->getFs() );
     setFormat( source->getFormat(), source->getFs() );
-    setUuid( source->getUuid() );
+    initUuid( source->getUuid() );
     initLabel( source->getLabel() );
     }
 
@@ -496,6 +497,8 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	tunefs_opt = "";
 	if( label.empty() && !orig_label.empty() )
 	    label = orig_label;
+	if( uuid.empty() && !orig_uuid.empty() )
+	    uuid = orig_uuid;
 	}
     else
 	{
@@ -1751,7 +1754,7 @@ EncryptType Volume::detectEncryption()
 		    {
 		    detected_fs = fs = FSUNKNOWN;
 		    eraseLabel();
-		    uuid.erase();
+		    eraseUuid();
 		    }
 		}
 	    }
@@ -2832,13 +2835,13 @@ void Volume::getTestmodeData( const string& data )
 	fs = detected_fs = toFsType(i->second);
     i = m.find( "uuid" );
     if( i!=m.end() )
-	uuid = i->second;
+	initUuid( i->second );
     i = m.find( "label" );
     if( i!=m.end() )
-	label = orig_label = i->second;
+	initLabel( i->second );
     i = m.find( "mount" );
     if( i!=m.end() )
-	mp = orig_mp = i->second;
+	setMount( i->second );
     i = m.find( "mountby" );
     if( i!=m.end() )
 	mount_by = orig_mount_by = toMountByType(i->second);
