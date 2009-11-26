@@ -58,7 +58,7 @@ namespace storage
 
 	for (it = lines.begin(); it != lines.end(); ++it)
 	{
-	    if (string_starts_with("Physical Extent:")(*it))
+	    if (boost::starts_with(*it, "Physical Extent:"))
 	    {
 		Pv tmp(extractNthWord(2, *it, true));
 		pv.push_back(tmp);

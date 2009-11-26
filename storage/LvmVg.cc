@@ -83,7 +83,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 
 	for (it = lines.begin(); it != lines.end(); ++it)
 	{
-	    if (string_starts_with("Logical Volume:")(*it))
+	    if (boost::starts_with(*it, "Logical Volume:"))
 	    {
 		LvmLv* p = new LvmLv(*this, extractNthWord(2, *it, true));
 		addToList(p);
