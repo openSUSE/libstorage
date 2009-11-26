@@ -35,15 +35,17 @@ namespace storage
 
     Blkid::Blkid()
     {
-	SystemCmd blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
-	parse(blkid.stdout());
+	SystemCmd cmd("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
     }
 
 
     Blkid::Blkid(const string& device)
     {
-	SystemCmd blkid("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null " + quote(device));
-	parse(blkid.stdout());
+	SystemCmd cmd("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null " + quote(device));
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
     }
 
 
