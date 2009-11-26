@@ -1,7 +1,8 @@
 Name: sdb
 Device: /dev/sdb
 UdevPath: pci-0000:00:1f.2-scsi-4:0:0:0
-UdevId: <ata-Hitachi_HDS721680PLA380_PVB100Z1RX2WHF scsi-SATA_Hitachi_HDS7216_PVB100Z1RX2WHF>
+UdevId: ata-Hitachi_HDS721680PLA380_PVB100Z1RX2WHF
+UdevId: scsi-SATA_Hitachi_HDS7216_PVB100Z1RX2WHF
 Major: 8
 Minor: 16
 Range: 256

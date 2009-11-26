@@ -1,7 +1,8 @@
 Name: sda
 Device: /dev/sda
 UdevPath: pci-0000:00:1f.2-scsi-0:0:0:0
-UdevId: <ata-ST3320620AS_6QF4HR0L scsi-SATA_ST3320620AS_6QF4HR0L>
+UdevId: ata-ST3320620AS_6QF4HR0L
+UdevId: scsi-SATA_ST3320620AS_6QF4HR0L
 Major: 8
 Minor: 0
 Range: 256

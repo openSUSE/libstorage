@@ -87,16 +87,15 @@ Disk::Disk( Storage * const s, const string& Name,
 
 
 Disk::Disk(Storage * const s, const AsciiFile& file)
-    : Container(s, staticType(), file)
+    : Container(s, staticType(), file), udev_path(), udev_id(), max_primary(0),
+      ext_possible(false), max_logical(0), init_disk(false), iscsi(false), dmp_slave(false),
+      gpt_enlarge(false), range(4)
 {
-    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
-
     logfile_name = nm;
 
     const vector<string>& lines = file.lines();
     vector<string>::const_iterator it;
 
-    range = 4;
     if ((it = find_if(lines, string_starts_with("Range:"))) != lines.end())
 	extractNthWord(1, *it) >> range;
 
@@ -114,13 +113,10 @@ Disk::Disk(Storage * const s, const AsciiFile& file)
     if ((it = find_if(lines, string_starts_with("Label:"))) != lines.end())
 	label = extractNthWord(1, *it);
 
-    max_primary = 0;
     if ((it = find_if(lines, string_starts_with("MaxPrimary:"))) != lines.end())
 	extractNthWord(1, *it) >> max_primary;
-    ext_possible = false;
     if ((it = find_if(lines, string_starts_with("ExtPossible:"))) != lines.end())
 	extractNthWord(1, *it) >> ext_possible;
-    max_logical = 0;
     if ((it = find_if(lines, string_starts_with("MaxLogical:"))) != lines.end())
 	extractNthWord(1, *it) >> max_logical;
 
@@ -130,16 +126,15 @@ Disk::Disk(Storage * const s, const AsciiFile& file)
 	nm.erase( p+1 );
     }
 
-    udev_path.clear();
-    if ((it = find_if(lines, string_starts_with("UdevPath:"))) != lines.end())
-	udev_path = extractNthWord(1, *it);
-    udev_id.clear();
-    if ((it = find_if(lines, string_starts_with("UdevId:"))) != lines.end())
-	udev_id.push_back(extractNthWord(1, *it));
-
     for (it = lines.begin(); it != lines.end(); ++it)
     {
-	if (string_starts_with("Partition:")(*it))
+	if (boost::starts_with(*it, "UdevPath:"))
+	    udev_path = extractNthWord(1, *it);
+
+	if (boost::starts_with(*it, "UdevId:"))
+	    udev_id.push_back(extractNthWord(1, *it));
+
+	if (boost::starts_with(*it, "Partition:"))
 	{
 	    Partition* p = new Partition(*this, extractNthWord(1, *it, true));
 	    addToList( p );
@@ -538,7 +533,8 @@ Disk::logData(const string& Dir) const
     if( !udev_path.empty() )
 	file << "UdevPath: " << udev_path << endl;
     if( !udev_id.empty() )
-	file << "UdevId: " << udev_id << endl;
+	for (list<string>::const_iterator it = udev_id.begin(); it != udev_id.end(); ++it)
+	    file << "UdevId: " << *it << endl;
     file << "Major: " << mjr << endl;
     file << "Minor: " << mnr << endl;
     file << "Range: " << range << endl;
