@@ -1,10 +1,6 @@
 
-#include <stdlib.h>
 #include <iostream>
 #include <fstream>
-#include <iterator>
-
-#include <storage/StorageInterface.h>
 
 #include "common.h"
 
@@ -77,9 +73,8 @@ run2 ()
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
-    system ("rm -f tmp/fstab tmp/volume_info");
     system ("cp data/disk_hdb tmp/disk_hdb");
 
     run1 ();

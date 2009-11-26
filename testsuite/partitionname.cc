@@ -1,8 +1,5 @@
 
-#include <stdlib.h>
 #include <iostream>
-
-#include <storage/StorageInterface.h>
 
 #include "common.h"
 
@@ -11,13 +8,10 @@ using namespace std;
 using namespace storage;
 
 
-StorageInterface* s = 0;
-
-
 int
 main()
 { 
-    s = createStorageInterface(TestEnvironment());
+    StorageInterface* s = createStorageInterface(TestEnvironment());
 
     cout << s->getPartitionName("/dev/sda", 1) << endl;
     cout << s->getPartitionName("/dev/cciss/c0d1", 2) << endl;

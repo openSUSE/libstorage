@@ -1,8 +1,5 @@
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
 #include <sstream>
 
 #include "common.h"
@@ -115,7 +112,7 @@ void createExtendedLv( const string& vg, const string& dev )
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
     deque<string> disks;
 

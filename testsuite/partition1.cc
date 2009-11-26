@@ -1,10 +1,5 @@
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
-
-#include <storage/StorageInterface.h>
 
 #include "common.h"
 
@@ -94,7 +89,7 @@ gpt (const string& disk, int n)
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
     /*
      * Check that we can create 3 primary, 1 extended and 59 logical partitions

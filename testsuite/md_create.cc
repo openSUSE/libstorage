@@ -1,7 +1,5 @@
 
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
 
 #include "common.h"
 
@@ -51,9 +49,7 @@ void createMD( MdType type, deque<string> devs )
 int
 main()
 {
-    system ("mkdir -p tmp");
-
-    system ("rm -rf tmp/*");
+    setup_system();
     
     deque<string> devs;
 

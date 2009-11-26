@@ -1,10 +1,5 @@
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
-
-#include <storage/StorageInterface.h>
 
 #include "common.h"
 
@@ -81,7 +76,7 @@ test ()
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
     system ("cp data/disk_hda tmp/disk_hda");
     system ("rm -f tmp/volume_info");

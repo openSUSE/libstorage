@@ -1,7 +1,5 @@
 
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
 
 #include "common.h"
 
@@ -145,7 +143,7 @@ combined1 ()
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
     system ("cp data/volume_info tmp");
     system ("cp data/disk_hda tmp");

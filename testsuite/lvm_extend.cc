@@ -1,9 +1,5 @@
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <iostream>
-#include <iterator>
-#include <sstream>
 
 #include "common.h"
 
@@ -66,7 +62,7 @@ void extendVg( const string& vg, deque<string> devs_extend )
 int
 main()
 {
-    system ("mkdir -p tmp");
+    setup_system();
 
     deque<string> devs;
 
