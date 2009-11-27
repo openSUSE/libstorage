@@ -40,9 +40,11 @@ namespace storage
 
 	struct Entry
 	{
+	    Entry() : name(), mjr(0), mnr(0), segments(0), uuid() {}
+
 	    string name;
-	    unsigned long major;
-	    unsigned long minor;
+	    unsigned long mjr;
+	    unsigned long mnr;
 	    unsigned segments;
 	    string uuid;
 	};

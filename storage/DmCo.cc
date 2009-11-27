@@ -53,8 +53,8 @@ namespace storage
 
 		list<string>::const_iterator ci = sl.begin();
 		string name = *ci++;
-		*ci++ >> entry.major;
-		*ci++ >> entry.minor;
+		*ci++ >> entry.mjr;
+		*ci++ >> entry.mnr;
 		*ci++ >> entry.segments;
 		entry.uuid = *ci++;
 
@@ -63,8 +63,8 @@ namespace storage
 	}
 
 	for (const_iterator it = data.begin(); it != data.end(); ++it)
-	    y2mil("data[" << it->first << "] -> major:" << it->second.major << " minor:" <<
-		  it->second.minor << " segments:" << it->second.segments << " uuid:" <<
+	    y2mil("data[" << it->first << "] -> mjr:" << it->second.mjr << " mnr:" <<
+		  it->second.mnr << " segments:" << it->second.segments << " uuid:" <<
 		  it->second.uuid);
     }
 
@@ -254,10 +254,10 @@ void
 	    {
 	    CmdDmsetup::Entry entry;
 	    systeminfo.getCmdDmsetup().getEntry(table, entry);
-	    Dm* m = new Dm(*this, table, entry.minor);
+	    Dm* m = new Dm(*this, table, entry.mnr);
 	    y2mil("new Dm:" << *m);
 	    unsigned long long s = 0;
-	    string dev = "/dev/dm-" + decString(entry.minor);
+	    string dev = "/dev/dm-" + decString(entry.mnr);
 	    if (systeminfo.getProcParts().getSize(dev, s))
 		{
 		y2mil( "new dm size:" << s );
@@ -285,7 +285,7 @@ void
 		getStorage()->knownDevice( it->first ))
 		{
 		skip = true;
-		getStorage()->setDmcryptData( it->first, m->device(), entry.minor,
+		getStorage()->setDmcryptData( it->first, m->device(), entry.mnr,
 		                              m->sizeK(), detectEncryption (m->device()) );
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
