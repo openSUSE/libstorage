@@ -50,7 +50,7 @@ class PeContainer : public Container
 	unsigned long sizeToLe( unsigned long long sizeK ) const;
 
 	int setPeSize( long long unsigned, bool lvm1 );
-	void unuseDev();
+	void unuseDev() const;
 	void changeDeviceName( const string& old, const string& nw );
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
 	virtual string getDiffString( const Container& d ) const;

@@ -102,7 +102,7 @@ namespace storage
     }
 
 
-void PeContainer::unuseDev()
+void PeContainer::unuseDev() const
     {
     for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
 	getStorage()->clearUsedBy(s->device);

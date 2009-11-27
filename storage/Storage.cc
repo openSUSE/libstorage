@@ -5328,7 +5328,10 @@ int Storage::removeContainer( Container* val )
 
 	int ret = 0;
 
-	for (list<UsedBy>::const_iterator it = usedby.begin(); it != usedby.end(); ++it)
+	// iterators of usedby are invalidated during remove
+	const list<UsedBy> tmp(usedby);
+
+	for (list<UsedBy>::const_iterator it = tmp.begin(); it != tmp.end(); ++it)
 	{
 	    switch (it->type())
 	    {
