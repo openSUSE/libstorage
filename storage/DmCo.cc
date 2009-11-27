@@ -40,7 +40,7 @@ namespace storage
 
     CmdDmsetup::CmdDmsetup()
     {
-	SystemCmd c(DMSETUPBIN " --columns --noheadings -o name,major,minor,segments info");
+	SystemCmd c(DMSETUPBIN " --columns --noheadings -o name,major,minor,segments,uuid info");
 	if (c.retcode() != 0 || c.numLines() == 0)
 	    return;
 
@@ -56,6 +56,7 @@ namespace storage
 		*ci++ >> entry.major;
 		*ci++ >> entry.minor;
 		*ci++ >> entry.segments;
+		entry.uuid = *ci++;
 
 		data[name] = entry;
 	    }
@@ -63,7 +64,8 @@ namespace storage
 
 	for (const_iterator it = data.begin(); it != data.end(); ++it)
 	    y2mil("data[" << it->first << "] -> major:" << it->second.major << " minor:" <<
-		  it->second.minor << " segments:" << it->second.segments);
+		  it->second.minor << " segments:" << it->second.segments << " uuid:" <<
+		  it->second.uuid);
     }
 
 

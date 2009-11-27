@@ -44,6 +44,7 @@ namespace storage
 	    unsigned long major;
 	    unsigned long minor;
 	    unsigned segments;
+	    string uuid;
 	};
 
 	bool getEntry(const string& name, Entry& entry) const;
