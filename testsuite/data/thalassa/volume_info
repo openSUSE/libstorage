@@ -2,6 +2,11 @@
 /dev/sdb1 fs=ext3 size=5253223 uuid=69fc7099-4a05-436f-b55a-fa7fd30a1f7c mountby=id
 /dev/sdb5 fs=ext3 size=20972826 uuid=686b8c9a-14ec-43ca-ad3e-7800a2581680 mountby=id
 /dev/sdb6 fs=ext3 size=20972826 uuid=8c6da4fd-03d3-43cd-b4c7-bb15338c89ce mountby=id
+/dev/sdc1 fs=ext2 size=5253223 uuid=fa39d2fd-cd05-47f9-933e-1511e89879ab mountby=id
+/dev/sdc2 fs=ext3 size=10482412 uuid=85b755d4-e980-49bb-9ebd-3f4416b54ff9 mountby=id
+/dev/sdc3 fs=ext4 size=15727635 uuid=3c465f82-9f9e-45a3-b789-9831ffd2ade6 mountby=id
+/dev/sdc5 fs=btrfs size=20972826 uuid=92f5be30-e4f6-4512-954b-8c13af0cbc15 mountby=id
+/dev/sdc6 fs=btrfs size=20972826 uuid=8a5e979d-fabe-432a-b588-c303c5ceba08 mountby=id
 /dev/system/abuild fs=btrfs size=8388608 uuid=a25f1b5f-27d1-48c1-ba02-bb083cb4c862 label=ABUILD mount=/abuild fstopt=noatime,acl,user_xattr mountby=uuid
 /dev/system/arvin fs=ext3 size=50331648 uuid=d4c2b968-3d62-44d7-a0c2-d85d8562a25d mount=/ARVIN fstopt=noatime,acl,user_xattr
 /dev/system/root fs=ext3 size=16777216 uuid=31e381c9-5b35-4045-8d01-9274a30e1298 mount=/ fstopt=noatime,acl,user_xattr

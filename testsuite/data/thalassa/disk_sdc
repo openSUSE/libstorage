@@ -1,0 +1,22 @@
+Name: sdc
+Device: /dev/sdc
+UdevPath: pci-0000:00:1f.2-scsi-5:0:0:0
+UdevId: ata-INTEL_SSDSA2MH080G1GC_CVEM924200GV080DGN
+UdevId: scsi-SATA_INTEL_SSDSA2MH0CVEM924200GV080DGN
+Major: 8
+Minor: 32
+Range: 256
+Cylinder: 9729
+Head: 255
+Sector: 63
+Label: msdos
+MaxPrimary: 4
+ExtPossible: 1
+MaxLogical: 63
+SizeK: 78150744
+Partition: 1 /dev/sdc1 5253223 8 33 0 654 83 primary
+Partition: 2 /dev/sdc2 10482412 8 34 654 1305 83 primary
+Partition: 3 /dev/sdc3 15727635 8 35 1959 1958 83 primary
+Partition: 4 /dev/sdc4 46684890 8 36 3917 5812 f extended
+Partition: 5 /dev/sdc5 20972826 8 37 3917 2611 83 logical
+Partition: 6 /dev/sdc6 20972826 8 38 6528 2611 83 logical
