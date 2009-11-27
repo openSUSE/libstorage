@@ -44,54 +44,48 @@ namespace storage
 	SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
 	if (c.retcode() != 0 || c.numLines() == 0)
 	    return;
-	
-	Entry entry;
 
-	string line;
-	unsigned i = 0;
+	const vector<string>& lines = c.stdout();
+	vector<string>::const_iterator it1 = lines.begin();
 
-	if( i<c.numLines() )
-	    line = c.getLine(i);
-
-	while( i<c.numLines() )
+	while (it1 != lines.end())
 	{
-	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
-		if( ++i<c.numLines() )
-		    line = c.getLine(i);
-		
-	    y2mil("mp line:" << line);
+	    Entry entry;
 
-	    string name = extractNthWord(0, line);
+	    y2mil("mp line:" << *it1);
+
+	    string name = extractNthWord(0, *it1);
 	    y2mil("mp name:" << name);
 
-	    list<string> tmp = splitString(extractNthWord(2, line, true), ",");
+	    list<string> tmp = splitString(extractNthWord(2, *it1, true), ",");
 	    if (tmp.size() >= 2)
 	    {
-		list<string>::const_iterator it = tmp.begin();
-		entry.vendor = boost::trim_copy(*it++, locale::classic());
-		entry.model = boost::trim_copy(*it++, locale::classic());
+		list<string>::const_iterator it2 = tmp.begin();
+		entry.vendor = boost::trim_copy(*it2++, locale::classic());
+		entry.model = boost::trim_copy(*it2++, locale::classic());
 	    }
-	    else
-	    {
-		entry.vendor.clear();
-		entry.model.clear();
-	    }
-		
-	    entry.devices.clear();
 
-	    if( ++i<c.numLines() )
-		line = c.getLine(i);
-	    while( i<c.numLines() && (line.empty() || !isalnum(line[0])))
+	    ++it1;
+
+	    if (it1 != lines.end())
+		++it1;
+
+	    while (it1 != lines.end())
 	    {
-		if (boost::starts_with(line, " \\_"))
+		if (it1->empty() || isalnum((*it1)[0]))
+		    break;
+
+		if (boost::starts_with(*it1, "| `-") || boost::starts_with(*it1, "  `-") ||
+		    boost::starts_with(*it1, "  |-"))
 		{
-		    y2mil("mp element:" << line);
-		    string dev = "/dev/" + extractNthWord(2, line);
+		    string tmp = it1->substr(5);
+		    y2mil("mp element:" << tmp);
+		    string dev = "/dev/" + extractNthWord(1, tmp);
 		    if (find(entry.devices.begin(), entry.devices.end(), dev) == entry.devices.end())
 			entry.devices.push_back(dev);
 		}
-		if( ++i<c.numLines() )
-		    line = c.getLine(i);
+
+		++it1;
 	    }
 
 	    data[name] = entry;

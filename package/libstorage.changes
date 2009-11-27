@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Nov 27 14:53:29 CET 2009 - aschnell@suse.de
+
+- adapted parser for multipath output
+
+-------------------------------------------------------------------
 Wed Nov 25 14:21:37 CET 2009 - aschnell@suse.de
 
 - read testmode file for LVM VGs
