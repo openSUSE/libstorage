@@ -200,10 +200,10 @@ void
     Storage::ConstDmmultipathCoPair dmmco = getStorage()->dmmultipathCoPair();
     Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
 
-    list<string> tables = systeminfo.getCmdDmsetup().getEntries();
-    for (list<string>::const_iterator it = tables.begin(); it != tables.end(); ++it)
+    const CmdDmsetup& cmddmsetup = systeminfo.getCmdDmsetup();
+    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
     {
-	string table = *it;
+	string table = it1->first;
 	bool found=false;
 	if (!found)
 	{
@@ -252,8 +252,8 @@ void
 	    }
 	if( !found )
 	    {
-	    CmdDmsetup::Entry entry;
-	    systeminfo.getCmdDmsetup().getEntry(table, entry);
+	    const CmdDmsetup::Entry& entry = it1->second;
+
 	    Dm* m = new Dm(*this, table, entry.mnr);
 	    y2mil("new Dm:" << *m);
 	    unsigned long long s = 0;
