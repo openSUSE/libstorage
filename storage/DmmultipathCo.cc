@@ -149,8 +149,8 @@ namespace storage
 	{
 	    vendor = entry.vendor;
 	    model = entry.model;
-	    
-	    for (list<string>::const_iterator it = entry.devices.begin(); it != entry.devices.end(); it++)
+
+	    for (list<string>::const_iterator it = entry.devices.begin(); it != entry.devices.end(); ++it)
 	    {
 		Pv pv;
 		pv.device = *it;
