@@ -55,20 +55,20 @@ print_partitions (const string& disk)
 
 
 void
-test ()
+test()
 {
-    printf ("test\n");
+    printf("test\n");
 
     s = createStorageInterface(TestEnvironment());
 
-    cout << s->changeFormatVolume ("/dev/hda1", true, REISERFS) << '\n';
-    cout << s->changeFormatVolume ("/dev/hda2", true, EXT2) << '\n';
-    cout << s->changeFormatVolume ("/dev/hda3", true, EXT3) << '\n';
-    cout << s->changeFormatVolume ("/dev/hda4", true, REISERFS) << '\n'; // FAILS
-    cout << s->changeFormatVolume ("/dev/hda5", true, EXT2) << '\n';
-    cout << s->changeFormatVolume ("/dev/hda6", true, EXT3) << '\n';
+    cout << s->changeFormatVolume("/dev/sdc1", true, REISERFS) << '\n';
+    cout << s->changeFormatVolume("/dev/sdc2", true, EXT2) << '\n';
+    cout << s->changeFormatVolume("/dev/sdc3", true, EXT3) << '\n';
+    cout << s->changeFormatVolume("/dev/sdc4", true, REISERFS) << '\n'; // FAILS
+    cout << s->changeFormatVolume("/dev/sdc5", true, EXT2) << '\n';
+    cout << s->changeFormatVolume("/dev/sdc6", true, EXT3) << '\n';
 
-    print_partitions ("/dev/hda");
+    print_partitions("/dev/sdc");
 
     delete s;
 }
@@ -77,9 +77,7 @@ test ()
 int
 main()
 {
-    setup_system();
+    setup_system("thalassa");
 
-    system ("cp data/disk_hda tmp/disk_hda");
-    system ("rm -f tmp/volume_info");
-    test ();
+    test();
 }
