@@ -86,7 +86,6 @@ class Dm : public Volume
 	void init();
 	const PeContainer* pec() const;
 	virtual const string shortPrintedName() const { return( "Dm" ); }
-	string getDevice( const string& majmin );
 	static void getDmMajor();
 
 	string tname;

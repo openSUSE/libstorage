@@ -118,7 +118,7 @@ Dm::getTableInfo()
 	    le += pesize-1;
 	    le /= pesize;
 	    majmin = extractNthWord( 3, line );
-	    dev = getDevice( majmin );
+	    dev = pec()->getDeviceByNumber( majmin );
 	    if( !dev.empty() )
 		{
 		if( (mit=pe_map.find( dev ))==pe_map.end() )
@@ -155,7 +155,7 @@ Dm::getTableInfo()
 		for( unsigned j=0; j<str; j++ )
 		    {
 		    majmin = extractNthWord( 5+j*2, line );
-		    dev = getDevice( majmin );
+		    dev = pec()->getDeviceByNumber( majmin );
 		    if( !dev.empty() )
 			{
 			if( (mit=pe_map.find( dev ))==pe_map.end() )
@@ -192,7 +192,7 @@ Dm::getTableInfo()
 		if( devspec.match( *i ))
 		    {
 		    y2mil( "match \"" << *i << "\"" );
-		    dev = getDevice( *i );
+		    dev = pec()->getDeviceByNumber( *i );
 		    if( !dev.empty() )
 			{
 			if( (mit=pe_map.find( dev ))==pe_map.end() )
@@ -211,57 +211,6 @@ Dm::getTableInfo()
 bool Dm::removeTable()
     {
     return getStorage()->removeDmTable(tname);
-    }
-
-string Dm::getDevice( const string& majmin )
-    {
-    string ret = getStorage()->deviceByNumber(majmin);
-    if( ret.empty() )
-	{
-	unsigned mj = 0;
-	unsigned mi = 0;
-	string pair( majmin );
-	SystemCmd c;
-	do
-	    {
-	    mj = mi = 0;
-	    string::size_type pos = pair.find( ':' );
-	    if( pos != string::npos )
-		pair[pos] = ' ';
-	    istringstream i( pair );
-	    classic(i);
-	    i >> mj >> mi;
-	    list<string> ls = splitString(pair);
-	    if( cont->majorNr()>0 && mj==cont->majorNr() && mi==cont->minorNr())
-		ret = cont->device();
-	    if( mj==Loop::major() )
-		ret = Loop::loopDeviceName(mi);
-	    if( ret.empty() && mj==dmMajor() && ls.size()>=2 )
-		{
-		c.execute(DMSETUPBIN " info -c --noheadings -j " + *ls.begin() +
-			  " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
-		if( c.retcode()==0 && c.numLines()>0 )
-		    {
-		    string tmp = "/dev/" + c.getLine(0);
-		    if (getStorage()->knownDevice(tmp, true))
-			{
-			ret = tmp;
-			}
-		    else
-			{
-			c.execute(DMSETUPBIN " table " + quote(c.getLine(0)));
-			if( c.retcode()==0 && c.numLines()>0 )
-			    {
-			    pair = extractNthWord( 3, c.getLine(0) );
-			    ret = getStorage()->deviceByNumber(pair);
-			    }
-			}
-		    }
-		}
-	    }
-	while( ret.empty() && mj==dm_major && c.retcode()==0 );
-	}
-    return( ret );
     }
 
 unsigned long long

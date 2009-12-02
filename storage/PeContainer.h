@@ -54,6 +54,7 @@ class PeContainer : public Container
 	void changeDeviceName( const string& old, const string& nw );
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
 	virtual string getDiffString( const Container& d ) const;
+	string getDeviceByNumber( const string& majmin ) const;
 
     protected:
 	struct Pv

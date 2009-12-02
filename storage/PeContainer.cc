@@ -28,6 +28,8 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/AsciiFile.h"
+#include "storage/SystemCmd.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage
@@ -645,6 +647,57 @@ void PeContainer::changeDeviceName( const string& old, const string& nw )
 	}
     }
 
+string PeContainer::getDeviceByNumber( const string& majmin ) const
+    {
+    string ret = getStorage()->deviceByNumber(majmin);
+    if( ret.empty() )
+	{
+	unsigned mj = 0;
+	unsigned mi = 0;
+	string pair( majmin );
+	SystemCmd c;
+	do
+	    {
+	    mj = mi = 0;
+	    string::size_type pos = pair.find( ':' );
+	    if( pos != string::npos )
+		pair[pos] = ' ';
+	    istringstream i( pair );
+	    classic(i);
+	    i >> mj >> mi;
+	    list<string> ls = splitString(pair);
+	    if( majorNr()>0 && mj==majorNr() && mi==minorNr())
+		ret = device();
+	    if( mj==Loop::major() )
+		ret = Loop::loopDeviceName(mi);
+	    if( ret.empty() && mj==Dm::dmMajor() && ls.size()>=2 )
+		{
+		c.execute(DMSETUPBIN " info -c --noheadings -j " + *ls.begin() +
+			  " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
+		if( c.retcode()==0 && c.numLines()>0 )
+		    {
+		    string tmp = "/dev/" + c.getLine(0);
+		    if (getStorage()->knownDevice(tmp, true))
+			{
+			ret = tmp;
+			}
+		    else
+			{
+			c.execute(DMSETUPBIN " table " + quote(c.getLine(0)));
+			if( c.retcode()==0 && c.numLines()>0 )
+			    {
+			    pair = extractNthWord( 3, c.getLine(0) );
+			    ret = getStorage()->deviceByNumber(pair);
+			    }
+			}
+		    }
+		}
+	    }
+	while( ret.empty() && mj==Dm::dmMajor() && c.retcode()==0 );
+	}
+    y2mil( "majmin " << majmin << " ret:" << ret );
+    return( ret );
+    }
 
 void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
     {

@@ -1589,16 +1589,15 @@ string LvmVg::instSysString() const
 
 void LvmVg::normalizeDmDevices()
     {
+    y2mil( "normalizeDmDevices:" << name() );
     string dm = decString(Dm::dmMajor());
-    SystemCmd c;
     for( list<Pv>::iterator i=pv.begin(); i!=pv.end(); ++i )
 	{
 	if( i->device.find( "/dev/dm-" )==0 )
 	    {
-	    c.execute( "devmap_name "+dm+":"+i->device.substr( 8 ) );
-	    if( c.retcode()==0 )
+	    string dev = getDeviceByNumber( dm+":"+i->device.substr( 8 ) );
+	    if( !dev.empty() )
 		{
-		string dev = "/dev/" + c.getLine( 0 );
 		y2mil( "dev:" << i->device << " normal dev:" << dev );
 		if( getStorage()->knownDevice( dev ) )
 		    {
