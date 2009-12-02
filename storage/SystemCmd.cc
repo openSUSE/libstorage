@@ -339,14 +339,14 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	{
 	    Ret_ir = WEXITSTATUS(Status_ii);
 	    if (Ret_ir == 126)
-		y2err("command not executable");
+		y2err("command \"" << lastCmd << "\" not executable");
 	    else if (Ret_ir == 127)
-		y2err("command not found");
+		y2err("command \"" << lastCmd << "\" not found");
 	}
 	else
 	{
 	    Ret_ir = -127;
-	    y2err("command failed");
+	    y2err("command \"" << lastCmd << "\" failed");
 	}
 	if( output_proc )
 	    {
