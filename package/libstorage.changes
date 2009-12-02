@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec 02 11:17:46 CET 2009 - aschnell@suse.de
+
+- removed call to devmap_mknod.sh (which has disappeared)
+
+-------------------------------------------------------------------
 Fri Nov 27 14:53:29 CET 2009 - aschnell@suse.de
 
 - adapted parser for multipath output
