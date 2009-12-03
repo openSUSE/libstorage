@@ -3593,10 +3593,13 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 	{
 	    CommitInfo info;
 	    info.destructive = i->destructive;
+	    info.native = i->description.native;
 	    info.text = i->description.text;
 	    const Volume* v = i->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
+		info.native += ". ";
+		info.native += v->getDescText();
 		info.text += ". ";
 		info.text += v->getDescText();
 	    }

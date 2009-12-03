@@ -524,6 +524,7 @@ namespace storage
     {
 	CommitInfo() {}
 	bool destructive;
+	string native;
 	string text;
     };
 
