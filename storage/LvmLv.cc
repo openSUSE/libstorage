@@ -182,9 +182,9 @@ LvmLv::getState(LvmLvSnapshotStateInfo& info)
 }
 
 
-string LvmLv::removeText( bool doing ) const
+Text LvmLv::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
@@ -200,9 +200,9 @@ string LvmLv::removeText( bool doing ) const
     return( txt );
     }
 
-string LvmLv::createText( bool doing ) const
+Text LvmLv::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
@@ -251,9 +251,9 @@ string LvmLv::createText( bool doing ) const
     return( txt );
     }
 
-string LvmLv::formatText( bool doing ) const
+Text LvmLv::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
@@ -307,9 +307,9 @@ string LvmLv::formatText( bool doing ) const
     return( txt );
     }
 
-string LvmLv::resizeText( bool doing ) const
+Text LvmLv::resizeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
 	if( needShrink() )
@@ -320,8 +320,9 @@ string LvmLv::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending logical volume %1$s to %2$s"), dev.c_str(), sizeString().c_str() );
+	txt += Text("\n", "\n");
 	// text displayed during action
-	txt += string(" ") + _("(progress bar might not move)");
+	txt += _("(progress bar might not move)");
         }
     else
         {

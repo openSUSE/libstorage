@@ -54,9 +54,9 @@ namespace storage
     }
 
 
-string Dmraid::removeText( bool doing ) const
+Text Dmraid::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( p && p->OrigNr()!=p->nr() )
 	d = co()->numToName(p->OrigNr());
@@ -75,9 +75,9 @@ string Dmraid::removeText( bool doing ) const
     return( txt );
     }
 
-string Dmraid::createText( bool doing ) const
+Text Dmraid::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
 	{
@@ -134,9 +134,9 @@ string Dmraid::createText( bool doing ) const
     return( txt );
     }
 
-string Dmraid::formatText( bool doing ) const
+Text Dmraid::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
 	{
@@ -191,9 +191,9 @@ string Dmraid::formatText( bool doing ) const
     return( txt );
     }
 
-string Dmraid::resizeText( bool doing ) const
+Text Dmraid::resizeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
         {
@@ -205,8 +205,9 @@ string Dmraid::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending raid partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	txt += Text("\n", "\n");
 	// text displayed during action
-	txt += string(" ") + _("(progress bar might not move)");
+	txt += _("(progress bar might not move)");
         }
     else
         {
@@ -223,9 +224,9 @@ string Dmraid::resizeText( bool doing ) const
     return( txt );
     }
 
-string Dmraid::setTypeText( bool doing ) const
+Text Dmraid::setTypeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
         {

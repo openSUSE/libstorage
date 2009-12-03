@@ -50,9 +50,9 @@ class Dasd : public Disk
         int changePartitionId( unsigned nr, unsigned id ) { return 0; }
         int resizePartition( Partition* p, unsigned long newCyl );
 	int initializeDisk( bool value );
-	string fdasdText() const;
-	string dasdfmtText( bool doing ) const;
-	static string dasdfmtTexts( bool single, const string& devs );
+	Text fdasdText() const;
+	Text dasdfmtText( bool doing ) const;
+	static Text dasdfmtTexts( bool single, const string& devs );
 	void getCommitActions(list<commitAction>& l) const;
 	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 			 list<const Volume*>& vol) const;

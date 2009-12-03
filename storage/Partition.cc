@@ -282,9 +282,9 @@ ostream& Partition::logData( ostream& file ) const
     return( file );
     }
 
-string Partition::setTypeText( bool doing ) const
+Text Partition::setTypeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -341,9 +341,9 @@ bool Partition::isWindows() const
 	    idt==ID_NTFS || idt==0x17 );
     }
 
-string Partition::removeText( bool doing ) const
+Text Partition::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( orig_num!=num )
 	{
@@ -374,9 +374,9 @@ string Partition::removeText( bool doing ) const
     return( txt );
     }
 
-string Partition::createText( bool doing ) const
+Text Partition::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{
@@ -477,9 +477,9 @@ string Partition::createText( bool doing ) const
     return txt;
     }
 
-string Partition::formatText( bool doing ) const
+Text Partition::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{
@@ -533,9 +533,9 @@ string Partition::formatText( bool doing ) const
     return( txt );
     }
 
-string Partition::resizeText( bool doing ) const
+Text Partition::resizeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -547,8 +547,9 @@ string Partition::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	txt += Text("\n", "\n");
 	// text displayed during action
-	txt += string(" ") + _("(progress bar might not move)");
+	txt += _("(progress bar might not move)");
 	}
     else
         {

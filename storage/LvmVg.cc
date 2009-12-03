@@ -1065,10 +1065,10 @@ LvmVg::getCommitActions(list<commitAction>& l) const
     }
 
 
-string
+Text
 LvmVg::removeVgText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
@@ -1082,10 +1082,10 @@ LvmVg::removeVgText( bool doing ) const
     return( txt );
     }
 
-string
+Text
 LvmVg::createVgText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
@@ -1103,10 +1103,10 @@ LvmVg::createVgText( bool doing ) const
     return( txt );
     }
 
-string
+Text
 LvmVg::extendVgText( bool doing, const string& dev ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),
@@ -1124,10 +1124,11 @@ LvmVg::extendVgText( bool doing, const string& dev ) const
     return( txt );
     }
 
-string
+
+Text
 LvmVg::reduceVgText( bool doing, const string& dev ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. system),

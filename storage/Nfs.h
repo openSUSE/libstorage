@@ -47,7 +47,7 @@ class Nfs : public Volume
 	bool equalContent( const Nfs& rhs ) const;
 	void logDifference( const Nfs& d ) const;
 
-	string removeText( bool doing=true ) const;
+	Text removeText( bool doing=true ) const;
 
     protected:
 	void init();

@@ -225,7 +225,7 @@ bool
     unsigned long dummy = 0;
     if (!checkPartedValid(parts, nm, pl, dummy))
 	{
-	string txt = sformat(
+	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partitioning on disk %1$s is not readable by\n"
 "the partitioning tool fdasd, which is used to change the\n"
@@ -371,9 +371,9 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
     return( ret );
     }
 
-string Dasd::fdasdText() const
+Text Dasd::fdasdText() const
     {
-    string txt;
+    Text txt;
     // displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
     txt = sformat( _("Executing fdasd for disk %1$s..."), dev.c_str() );
     return( txt );
@@ -461,9 +461,9 @@ Dasd::getCommitActions(list<commitAction>& l) const
     }
 
 
-string Dasd::dasdfmtTexts( bool single, const string& devs )
+Text Dasd::dasdfmtTexts( bool single, const string& devs )
     {
-    string txt;
+    Text txt;
     if( single )
 	{
         // displayed text during action, %1$s is replaced by disk name (e.g. dasda),
@@ -477,9 +477,9 @@ string Dasd::dasdfmtTexts( bool single, const string& devs )
     return( txt );
     }
 
-string Dasd::dasdfmtText( bool doing ) const
+Text Dasd::dasdfmtText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
 	txt = dasdfmtTexts( true, dev );
@@ -557,7 +557,7 @@ int Dasd::doDasdfmt()
 	y2mil("devs:" << devs);
 	if( !silent ) 
 	    {
-	    string txt = dasdfmtTexts( dl.size()==1, boost::join(devs, " ") );
+	    Text txt = dasdfmtTexts( dl.size()==1, boost::join(devs, " ") );
 	    getStorage()->showInfoCb( txt );
 	    }
 	for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )

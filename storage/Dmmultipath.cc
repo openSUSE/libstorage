@@ -54,9 +54,9 @@ namespace storage
     }
 
 
-string Dmmultipath::removeText( bool doing ) const
+Text Dmmultipath::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( p && p->OrigNr()!=p->nr() )
 	d = co()->numToName(p->OrigNr());
@@ -75,9 +75,9 @@ string Dmmultipath::removeText( bool doing ) const
     return( txt );
     }
 
-string Dmmultipath::createText( bool doing ) const
+Text Dmmultipath::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
 	{
@@ -134,9 +134,9 @@ string Dmmultipath::createText( bool doing ) const
     return( txt );
     }
 
-string Dmmultipath::formatText( bool doing ) const
+Text Dmmultipath::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
 	{
@@ -191,9 +191,9 @@ string Dmmultipath::formatText( bool doing ) const
     return( txt );
     }
 
-string Dmmultipath::resizeText( bool doing ) const
+Text Dmmultipath::resizeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
         {
@@ -205,8 +205,9 @@ string Dmmultipath::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	txt += Text("\n", "\n");
 	// text displayed during action
-	txt += string(" ") + _("(progress bar might not move)");
+	txt += _("(progress bar might not move)");
         }
     else
         {
@@ -223,9 +224,9 @@ string Dmmultipath::resizeText( bool doing ) const
     return( txt );
     }
 
-string Dmmultipath::setTypeText( bool doing ) const
+Text Dmmultipath::setTypeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev.substr(12);
     if( doing )
         {

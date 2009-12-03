@@ -66,9 +66,9 @@ class Md : public Volume
 	static bool mdStringNum( const string& name, unsigned& num ); 
 	friend std::ostream& operator<< (std::ostream& s, const Md& m );
 	virtual void print( std::ostream& s ) const { s << *this; }
-	string removeText( bool doing ) const;
-	string createText( bool doing ) const;
-	string formatText( bool doing ) const;
+	Text removeText( bool doing ) const;
+	Text createText( bool doing ) const;
+	Text formatText( bool doing ) const;
 	static bool notDeleted( const Md& l ) { return( !l.deleted() ); }
 	void changeDeviceName( const string& old, const string& nw );
 

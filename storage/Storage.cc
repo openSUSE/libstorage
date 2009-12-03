@@ -209,13 +209,13 @@ Storage::initialize()
     detectObjects();
     setCacheChanges( true );
 
-    for (list<std::pair<string, string>>::const_iterator i = infoPopupTxts.begin(); 
+    for (list<std::pair<string, Text>>::const_iterator i = infoPopupTxts.begin(); 
 	 i != infoPopupTxts.end(); ++i)
 	{
 	if (!isUsedBy(i->first))
 	    infoPopupCb( i->second );
 	else
-	    y2mil( "suppressing cb:" << i->second );
+	    y2mil( "suppressing cb:" << i->second.native );
 	}
     logProcData();
     }
@@ -3593,7 +3593,7 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 	{
 	    CommitInfo info;
 	    info.destructive = i->destructive;
-	    info.text = i->description;
+	    info.text = i->description.text;
 	    const Volume* v = i->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
@@ -5013,35 +5013,35 @@ void Storage::progressBarCb(const string& id, unsigned cur, unsigned max) const
 	(*cb)( id, cur, max );
     }
 
-void Storage::showInfoCb(const string& info)
+void Storage::showInfoCb(const Text& info)
     {
-    y2mil("INSTALL INFO info:" << info);
+    y2mil("INSTALL INFO info:" << info.native);
     CallbackShowInstallInfo cb = getCallbackShowInstallInfoTheOne();
     lastAction = info;
     if( cb )
-	(*cb)( info );
+	(*cb)( info.text );
     }
 
-void Storage::infoPopupCb(const string& info) const
+void Storage::infoPopupCb(const Text& info) const
     {
-    y2mil("INFO POPUP info:" << info);
+    y2mil("INFO POPUP info:" << info.native);
     CallbackInfoPopup cb = getCallbackInfoPopupTheOne();
     if( cb )
-	(*cb)( info );
+	(*cb)( info.text );
     }
 
-void Storage::addInfoPopupText(const string& disk, const string& txt)
+void Storage::addInfoPopupText(const string& disk, const Text& txt)
     {
-    y2mil( "d:" << disk << " txt:" << txt );
+    y2mil( "d:" << disk << " txt:" << txt.native );
     infoPopupTxts.push_back( make_pair(disk,txt) );
     }
 
-bool Storage::yesnoPopupCb(const string& info) const
+bool Storage::yesnoPopupCb(const Text& info) const
     {
-    y2mil("YESNO POPUP info:" << info);
+    y2mil("YESNO POPUP info:" << info.native);
     CallbackYesNoPopup cb = getCallbackYesNoPopupTheOne();
     if( cb )
-	return (*cb)( info );
+	return (*cb)( info.text );
     else
 	return true;
     }

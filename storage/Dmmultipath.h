@@ -41,11 +41,11 @@ class Dmmultipath : public DmPart
 	void getInfo( storage::DmmultipathInfo& info ) const;
 	friend std::ostream& operator<< (std::ostream& s, const Dmmultipath &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
-	string removeText( bool doing ) const;
-	string createText( bool doing ) const;
-	string formatText( bool doing ) const;
-	string resizeText( bool doing ) const;
-	string setTypeText( bool doing=true ) const;
+	Text removeText( bool doing ) const;
+	Text createText( bool doing ) const;
+	Text formatText( bool doing ) const;
+	Text resizeText( bool doing ) const;
+	Text setTypeText( bool doing=true ) const;
 	bool equalContent( const Dmmultipath& rhs ) const;
 	void logDifference( const Dmmultipath& d ) const;
 	static bool notDeleted( const Dmmultipath& l ) { return( !l.deleted() ); }

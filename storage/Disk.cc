@@ -500,7 +500,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 
     if (label == "unsupported")
 	{
-	string txt = sformat(
+	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partition table type on disk %1$s cannot be handled by\n"
 "this tool.\n"
@@ -509,7 +509,7 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 "You can format them and assign mount points to them, but you\n"
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."), dev.c_str() );
-	y2war( "unsupported disk label on " << dev << " txt:" << txt );
+	y2war( "unsupported disk label on " << dev << " txt:" << txt.native );
 
 	detected_label = label;
 	ronly = true;
@@ -892,7 +892,7 @@ bool
     y2mil("nm:" << nm);
     if (!dmp_slave && !checkPartedValid(parts, nm, pl, range_exceed))
 	{
-	string txt = sformat(
+	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 _("The partitioning on disk %1$s is not readable by\n"
 "the partitioning tool parted, which is used to change the\n"
@@ -908,14 +908,14 @@ _("The partitioning on disk %1$s is not readable by\n"
 	}
     if( range_exceed>0 )
 	{
-	string txt = sformat(
+	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
 	//            %2$lu and %3$lu are replaced by numbers.
 _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."),
                               dev.c_str(), range_exceed, range-1 );
-	txt += "\n";
+	txt += Text("\n", "\n");
 	txt += 
 	// popup text
 _("You have the following options:\n"
@@ -1896,9 +1896,9 @@ Disk::getCommitActions(list<commitAction>& l) const
     }
 
 
-string Disk::setDiskLabelText( bool doing ) const
+Text Disk::setDiskLabelText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {

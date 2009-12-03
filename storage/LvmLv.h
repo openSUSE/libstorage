@@ -62,10 +62,10 @@ class LvmLv : public Dm
 	void setAlloc( const string& a ) { allocation=a; }
 	friend std::ostream& operator<< (std::ostream& s, const LvmLv &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
-	string removeText( bool doing ) const;
-	string createText( bool doing ) const;
-	string formatText( bool doing ) const;
-	string resizeText( bool doing ) const;
+	Text removeText( bool doing ) const;
+	Text createText( bool doing ) const;
+	Text formatText( bool doing ) const;
+	Text resizeText( bool doing ) const;
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
 	void logDifference( const LvmLv& d ) const;

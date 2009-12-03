@@ -65,8 +65,8 @@ class Dm : public Volume
 	virtual list<string> udevId() const { return Volume::udevId(); }
 	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
-	virtual string removeText( bool doing ) const;
-	virtual string formatText( bool doing ) const;
+	virtual Text removeText( bool doing ) const;
+	virtual Text formatText( bool doing ) const;
 	void getInfo( storage::DmInfo& info ) const;
 	void changeDeviceName( const string& old, const string& nw );
 

@@ -71,12 +71,12 @@ class Partition : public Volume
 	int changeId(unsigned id);
 	void changeIdDone();
 	void unChangeId();
-	string removeText( bool doing=true ) const;
-	string createText( bool doing=true ) const;
-	string formatText(bool doing=true) const;
-	string resizeText(bool doing=true) const;
+	Text removeText( bool doing=true ) const;
+	Text createText( bool doing=true ) const;
+	Text formatText(bool doing=true) const;
+	Text resizeText(bool doing=true) const;
 	void getCommitActions(list<commitAction>& l) const;
-	string setTypeText( bool doing=true ) const;
+	Text setTypeText( bool doing=true ) const;
 	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
 	int changeMount( const string& val );
 	const Disk* disk() const;

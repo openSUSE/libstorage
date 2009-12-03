@@ -185,8 +185,8 @@ class DmPartCo : public PeContainer
 	int doSetType( DmPart* v );
 	int doCreateLabel();
 	virtual int doRemove();
-	virtual string removeText( bool doing ) const;
-	virtual string setDiskLabelText( bool doing ) const;
+	virtual Text removeText( bool doing ) const;
+	virtual Text setDiskLabelText( bool doing ) const;
 
 	void logData(const string& Dir) const;
 

@@ -369,9 +369,9 @@ string Md::mdadmLine() const
     }
 
 
-string Md::removeText( bool doing ) const
+Text Md::removeText( bool doing ) const
 {
-    string txt;
+    Text txt;
     if( doing )
     {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
@@ -388,9 +388,9 @@ string Md::removeText( bool doing ) const
 }
 
 
-string Md::createText( bool doing ) const
+Text Md::createText( bool doing ) const
 {
-    string txt;
+    Text txt;
     if( doing )
     {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
@@ -438,9 +438,9 @@ string Md::createText( bool doing ) const
 }
 
 
-string Md::formatText( bool doing ) const
+Text Md::formatText( bool doing ) const
 {
-    string txt;
+    Text txt;
     if( doing )
     {
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0

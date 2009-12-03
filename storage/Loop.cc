@@ -258,9 +258,9 @@ int Loop::setEncryption( bool val, storage::EncryptType typ )
     return(ret);
     }
 
-string Loop::removeText( bool doing ) const
+Text Loop::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{
@@ -277,9 +277,9 @@ string Loop::removeText( bool doing ) const
     return( txt );
     }
 
-string Loop::createText( bool doing ) const
+Text Loop::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{
@@ -330,9 +330,9 @@ string Loop::createText( bool doing ) const
     }
 
 
-string Loop::formatText( bool doing ) const
+Text Loop::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{

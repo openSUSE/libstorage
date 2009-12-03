@@ -169,9 +169,9 @@ DmPart::getCommitActions(list<commitAction>& l) const
     }
 
 
-string DmPart::setTypeText( bool doing ) const
+Text DmPart::setTypeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {

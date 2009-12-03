@@ -255,9 +255,9 @@ DmmultipathCo::activate(bool val)
     }
 
 
-string DmmultipathCo::setDiskLabelText( bool doing ) const
+Text DmmultipathCo::setDiskLabelText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by multipath name (e.g. 3600508b400105f590000900000300000),

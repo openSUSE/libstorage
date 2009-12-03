@@ -226,9 +226,9 @@ void DmraidCo::activate( bool val )
     }
 
 
-string DmraidCo::removeText( bool doing ) const
+Text DmraidCo::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
@@ -243,9 +243,9 @@ string DmraidCo::removeText( bool doing ) const
     }
 
 
-string DmraidCo::setDiskLabelText( bool doing ) const
+Text DmraidCo::setDiskLabelText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by raid name (e.g. pdc_igeeeadj),

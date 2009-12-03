@@ -60,9 +60,9 @@ namespace storage
     }
 
 
-string Nfs::removeText( bool doing ) const
+Text Nfs::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work

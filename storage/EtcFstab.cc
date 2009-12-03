@@ -858,10 +858,10 @@ int EtcFstab::flush()
     return( ret );
     }
 
-string EtcFstab::addText( bool doing, bool crypto, const string& mp ) const
+Text EtcFstab::addText( bool doing, bool crypto, const string& mp ) const
     {
     const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home
@@ -879,10 +879,10 @@ string EtcFstab::addText( bool doing, bool crypto, const string& mp ) const
     return( txt );
     }
 
-string EtcFstab::updateText( bool doing, bool crypto, const string& mp ) const
+Text EtcFstab::updateText( bool doing, bool crypto, const string& mp ) const
     {
     const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home
@@ -900,10 +900,10 @@ string EtcFstab::updateText( bool doing, bool crypto, const string& mp ) const
     return( txt );
     }
 
-string EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
+Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
     {
     const char* file = crypto?"/etc/cryptotab":"/etc/fstab";
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by mount point e.g. /home

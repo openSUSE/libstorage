@@ -345,9 +345,9 @@ void Dm::changeDeviceName( const string& old, const string& nw )
 	}
     }
 
-string Dm::removeText( bool doing ) const
+Text Dm::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
@@ -363,9 +363,9 @@ string Dm::removeText( bool doing ) const
     return( txt );
     }
 
-string Dm::formatText( bool doing ) const
+Text Dm::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system

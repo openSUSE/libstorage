@@ -94,7 +94,7 @@ namespace storage
     private:
 
 	static string quote(const string& str);
-	static string makeTooltip(const string& text, const string& label, unsigned long long sizeK);
+	static string makeTooltip(const Text& text, const string& label, unsigned long long sizeK);
 
     };
 
@@ -415,9 +415,9 @@ namespace storage
 
 
     string
-    Graph::makeTooltip(const string& text, const string& label, unsigned long long sizeK)
+    Graph::makeTooltip(const Text& text, const string& label, unsigned long long sizeK)
     {
-	return quote(text + "\\n" + label + "\\n" + byteToHumanString(1024 * sizeK, false, 2, false));
+	return quote(text.text + "\\n" + label + "\\n" + byteToHumanString(1024 * sizeK, false, 2, false));
     }
 
 

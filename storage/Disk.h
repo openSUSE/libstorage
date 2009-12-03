@@ -119,7 +119,7 @@ class Disk : public Container
 	unsigned int numPrimary() const;
 	bool hasExtended() const;
 	unsigned int numLogical() const;
-	string setDiskLabelText( bool doing=true ) const;
+	Text setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
 	string getPartName( unsigned nr ) const;

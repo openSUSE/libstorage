@@ -103,21 +103,36 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
     } while (0)
 
 
-string sformat(const char* format, ...);
-
     string hostname();
     string datetime();
 
 
-inline const char* _(const char* msgid)
-{
-    return dgettext("libstorage", msgid);
-}
+    struct Text
+    {
+	Text() {}
+	Text(const string& native, const string& text) : native(native), text(text) {}
 
-inline const char* _(const char* msgid, const char* msgid_plural, unsigned long int n)
-{
-    return dngettext("libstorage", msgid, msgid_plural, n);
-}
+	void clear();
+
+	const Text& operator+=(const Text& a);
+
+	string native;
+	string text;
+    };
+
+
+    Text sformat(const Text& format, ...);
+
+
+    inline Text _(const char* msgid)
+    {
+	return Text(msgid, dgettext("libstorage", msgid));
+    }
+
+    inline Text _(const char* msgid, const char* msgid_plural, unsigned long int n)
+    {
+	return Text(n == 1 ? msgid : msgid_plural, dngettext("libstorage", msgid, msgid_plural, n));
+    }
 
 
 extern const string app_ws;

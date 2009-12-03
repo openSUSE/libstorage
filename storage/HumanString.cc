@@ -39,68 +39,68 @@ namespace storage
     }
 
 
-    list<string>
-    getSuffix(int i, bool classic, bool sloppy = false)
+    list<Text>
+    getSuffix(int i, bool sloppy = false)
     {
-	list<string> ret;
+	list<Text> ret;
 
 	switch (i)
 	{
 	    case 0:
 		/* symbol for "bytes" (best keep untranslated) */
-		ret.push_back(classic ? "B" : _("B"));
+		ret.push_back(_("B"));
 		if (sloppy)
-		    ret.push_back("");
+		    ret.push_back(Text("", ""));
 		break;
 
 	    case 1:
 		/* symbol for "kilo bytes" (best keep untranslated) */
-		ret.push_back(classic ? "kB" : _("kB"));
+		ret.push_back(_("kB"));
 		/* symbol for "kibi bytes" (best keep untranslated) */
-		ret.push_back(classic ? "KiB" : _("KiB"));
+		ret.push_back(_("KiB"));
 		if (sloppy)
 		    /* symbol for "kilo" (best keep untranslated) */
-		    ret.push_back(classic ? "k" : _("k"));
+		    ret.push_back(_("k"));
 		break;
 
 	    case 2:
 		/* symbol for "mega bytes" (best keep untranslated) */
-		ret.push_back(classic ? "MB" : _("MB"));
+		ret.push_back(_("MB"));
 		/* symbol for "mebi bytes" (best keep untranslated) */
-		ret.push_back(classic ? "MiB" : _("MiB"));
+		ret.push_back(_("MiB"));
 		if (sloppy)
 		    /* symbol for "mega" (best keep untranslated) */
-		    ret.push_back(classic ? "M" : _("M"));
+		    ret.push_back(_("M"));
 		break;
 
 	    case 3:
 		/* symbol for "giga bytes" (best keep untranslated) */
-		ret.push_back(classic ? "GB" : _("GB"));
+		ret.push_back(_("GB"));
 		/* symbol for "gibi bytes" (best keep untranslated) */
-		ret.push_back(classic ? "GiB" : _("GiB"));
+		ret.push_back(_("GiB"));
 		if (sloppy)
 		    /* symbol for "giga" (best keep untranslated) */
-		    ret.push_back(classic ? "G" : _("G"));
+		    ret.push_back(_("G"));
 		break;
 
 	    case 4:
 		/* symbol for "tera bytes" (best keep untranslated) */
-		ret.push_back(classic ? "TB" : _("TB"));
+		ret.push_back(_("TB"));
 		/* symbol for "tebi bytes" (best keep untranslated) */
-		ret.push_back(classic ? "TiB" : _("TiB"));
+		ret.push_back(_("TiB"));
 		if (sloppy)
 		    /* symbol for "tera" (best keep untranslated) */
-		    ret.push_back(classic ? "T" : _("T"));
+		    ret.push_back(_("T"));
 		break;
 
 	    case 5:
 		/* symbol for "peta bytes" (best keep untranslated) */
-		ret.push_back(classic ? "PB" : _("PB"));
+		ret.push_back(_("PB"));
 		/* symbol for "pebi bytes" (best keep untranslated) */
-		ret.push_back(classic ? "PiB" : _("PiB"));
+		ret.push_back(_("PiB"));
 		if (sloppy)
 		    /* symbol for "peta" (best keep untranslated) */
-		    ret.push_back(classic ? "P" : _("P"));
+		    ret.push_back(_("P"));
 		break;
 	}
 
@@ -132,7 +132,10 @@ namespace storage
 	s.setf(ios::fixed);
 	s.precision(precision);
 
-	s << f << ' ' << getSuffix(i, classic).front();
+	if (classic)
+	    s << f << ' ' << getSuffix(i).front().native;
+	else
+	    s << f << ' ' << getSuffix(i).front().text;
 
 	return s.str();
     }
@@ -149,13 +152,15 @@ namespace storage
 
 	for (int i = 0; i < numSuffixes(); i++)
 	{
-	    list<string> suffix = getSuffix(i, classic, !classic);
+	    list<Text> suffix = getSuffix(i, !classic);
 
-	    for (list<string>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
+	    for (list<Text>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
 	    {
-		if (boost::iends_with(str_trimmed, *j, loc))
+		const string& tmp = classic ? j->native : j->text;
+
+		if (boost::iends_with(str_trimmed, tmp, loc))
 		{
-		    string number = str_trimmed.substr(0, str_trimmed.size() - j->size());
+		    string number = str_trimmed.substr(0, str_trimmed.size() - tmp.size());
 
 		    istringstream s(boost::trim_copy(number, loc));
 		    s.imbue(loc);

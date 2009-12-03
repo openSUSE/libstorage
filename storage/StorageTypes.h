@@ -95,31 +95,31 @@ struct contOrder
 
     struct commitAction
     {
-	commitAction(CommitStage s, CType t, const string& d, const Volume* v,
+	commitAction(CommitStage s, CType t, const Text& d, const Volume* v,
 		     bool destr = false)
 	    : stage(s), type(t), description(d), destructive(destr), container(false), u(v)
 	{
 	}
 
-	commitAction(CommitStage s, CType t, const string& d, const Container* c,
+	commitAction(CommitStage s, CType t, const Text& d, const Container* c,
 		     bool destr = false)
 	    : stage(s), type(t), description(d), destructive(destr), container(true), u(c)
 	{
 	}
 
 	commitAction(CommitStage s, CType t, const Volume* v)
-	    : stage(s), type(t), destructive(false), container(false), u(v)
+	    : stage(s), type(t), description(), destructive(false), container(false), u(v)
 	{
 	}
 
 	commitAction(CommitStage s, CType t, const Container* c)
-	    : stage(s), type(t), destructive(false), container(true), u(c)
+	    : stage(s), type(t), description(), destructive(false), container(true), u(c)
 	{
 	}
 
 	const CommitStage stage;
 	const CType type;
-	const string description;
+	const Text description;
 	const bool destructive;
 	const bool container;
 

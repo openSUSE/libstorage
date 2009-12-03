@@ -632,9 +632,9 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
-string Volume::formatText( bool doing ) const
+Text Volume::formatText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
 	{
@@ -1057,9 +1057,9 @@ int Volume::crUnsetup( bool force )
     return( ret );
     }
 
-string Volume::mountText( bool doing ) const
+Text Volume::mountText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -1378,9 +1378,9 @@ int Volume::resizeFs()
     return( ret );
     }
 
-string Volume::losetupText( bool doing ) const
+Text Volume::losetupText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -1395,9 +1395,9 @@ string Volume::losetupText( bool doing ) const
     return( txt );
     }
 
-string Volume::crsetupText( bool doing ) const
+Text Volume::crsetupText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -1999,9 +1999,9 @@ int Volume::doCrsetup()
     return ret;
     }
 
-string Volume::labelText( bool doing ) const
+Text Volume::labelText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
     {
@@ -2325,9 +2325,9 @@ Volume::getCommitActions(list<commitAction>& l) const
     }
 
 
-string Volume::fstabUpdateText() const
+Text Volume::fstabUpdateText() const
     {
-    string txt;
+    Text txt;
     const EtcFstab* fstab = getStorage()->getFstab();
     if( !orig_mp.empty() && mp.empty() )
 	txt = fstab->removeText( false, inCryptotab(), orig_mp );
@@ -2681,9 +2681,9 @@ void Volume::setExtError( const SystemCmd& cmd, bool serr )
     cont->setExtError( cmd, serr );
     }
 
-string Volume::createText( bool doing ) const
+Text Volume::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
@@ -2697,9 +2697,9 @@ string Volume::createText( bool doing ) const
     return( txt );
     }
 
-string Volume::resizeText( bool doing ) const
+Text Volume::resizeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -2711,8 +2711,9 @@ string Volume::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	txt += Text(" ", " ");
 	// text displayed during action
-	txt += string(" ") + _("(progress bar might not move)");
+	txt += _("(progress bar might not move)");
         }
     else
         {
@@ -2728,9 +2729,9 @@ string Volume::resizeText( bool doing ) const
     return( txt );
     }
 
-string Volume::removeText( bool doing ) const
+Text Volume::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1

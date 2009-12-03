@@ -492,7 +492,7 @@ class DiskData;
 	int removeDmraid( const string& name );
 
 	void getCommitInfos(list<CommitInfo>& infos) const;
-	const string& getLastAction() const { return lastAction; }
+	const string& getLastAction() const { return lastAction.text; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
 	void eraseCachedFreeInfo(const string& device);
 
@@ -531,7 +531,7 @@ class DiskData;
 	void setCallbackPasswordPopup(CallbackPasswordPopup pfnc) { password_popup_cb = pfnc; }
 	CallbackPasswordPopup getCallbackPasswordPopup() const { return password_popup_cb; }
 
-	void addInfoPopupText( const string& disk, const string& txt );
+	void addInfoPopupText( const string& disk, const Text& txt );
 
 	CallbackProgressBar getCallbackProgressBarTheOne() const
 	    { return progress_bar_cb ? progress_bar_cb : progress_bar_cb_ycp; }
@@ -545,9 +545,9 @@ class DiskData;
 	    { return password_popup_cb ? password_popup_cb : password_popup_cb_ycp; }
 
 	void progressBarCb(const string& id, unsigned cur, unsigned max) const;
-	void showInfoCb(const string& info);
-	void infoPopupCb(const string& info) const;
-	bool yesnoPopupCb(const string& info) const;
+	void showInfoCb(const Text& info);
+	void infoPopupCb(const Text& info) const;
+	bool yesnoPopupCb(const Text& info) const;
 	bool passwordPopupCb(const string& device, int attempts, string& password) const;
 
 // iterators over container
@@ -1769,11 +1769,11 @@ class DiskData;
 	map<string, list<UsedBy>> danglingUsedBy;
 
 	unsigned max_log_num;
-	string lastAction;
+	Text lastAction;
 	string extendedError;
 	std::map<string,CCont> backups;
 	std::map<string,FreeInfo> freeInfo;
-	std::list<std::pair<string,string> > infoPopupTxts;
+	std::list<std::pair<string, Text>> infoPopupTxts;
     };
 
 }

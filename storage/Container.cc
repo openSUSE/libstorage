@@ -219,9 +219,9 @@ Container::getCommitActions(list<commitAction>& l) const
     }
 
 
-string Container::createText( bool doing ) const
+Text Container::createText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
@@ -235,9 +235,9 @@ string Container::createText( bool doing ) const
     return( txt );
     }
 
-string Container::removeText( bool doing ) const
+Text Container::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1

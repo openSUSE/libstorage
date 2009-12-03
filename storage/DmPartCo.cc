@@ -753,7 +753,7 @@ DmPartCo::getCommitActions(list<commitAction>& l) const
     if( deleted() || del_ptable )
 	{
 	l.remove_if(stage_is(DECREASE));
-	string txt = deleted() ? removeText(false) : setDiskLabelText(false);
+	Text txt = deleted() ? removeText(false) : setDiskLabelText(false);
 	l.push_front(commitAction(DECREASE, staticType(), txt, this, true));
 	}
     y2mil( "l:" << l );
@@ -902,9 +902,9 @@ int DmPartCo::doResize( Volume* v )
     return( ret );
     }
 
-string DmPartCo::setDiskLabelText( bool doing ) const
+Text DmPartCo::setDiskLabelText( bool doing ) const
     {
-    string txt;
+    Text txt;
     string d = dev;
     if( doing )
         {
@@ -923,9 +923,9 @@ string DmPartCo::setDiskLabelText( bool doing ) const
     return( txt );
     }
 
-string DmPartCo::removeText( bool doing ) const
+Text DmPartCo::removeText( bool doing ) const
     {
-    string txt;
+    Text txt;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),

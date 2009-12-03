@@ -169,8 +169,8 @@ namespace storage
 
 	bool readonly() const { return ronly; }
 
-	virtual string removeText(bool doing=true) const;
-	virtual string createText(bool doing=true) const;
+	virtual Text removeText(bool doing=true) const;
+	virtual Text createText(bool doing=true) const;
 	virtual int resizeVolume( Volume* v, unsigned long long newSize );
 	virtual int removeVolume( Volume* v );
 	static storage::CType staticType() { return storage::CUNKNOWN; }

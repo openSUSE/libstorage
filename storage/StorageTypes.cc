@@ -86,8 +86,8 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	    s << " name:" << a.co()->name();
 	if (a.vol())
 	    s << " name:" << a.vol()->name();
-	if (!a.description.empty())
-	    s << " desc:" << a.description;
+	if (!a.description.native.empty())
+	    s << " desc:" << a.description.native;
 	return s;
     };
 

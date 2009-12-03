@@ -57,9 +57,9 @@ class Loop : public Volume
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual int setEncryption( bool val, storage::EncryptType typ=storage::ENC_LUKS );
 
-	string removeText( bool doing ) const;
-	string createText( bool doing ) const;
-	string formatText( bool doing ) const;
+	Text removeText( bool doing ) const;
+	Text createText( bool doing ) const;
+	Text formatText( bool doing ) const;
 
 	void getInfo( storage::LoopInfo& info ) const;
 	bool equalContent( const Loop& rhs ) const;
