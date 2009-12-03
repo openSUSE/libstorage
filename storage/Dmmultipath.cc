@@ -205,7 +205,7 @@ Text Dmmultipath::resizeText( bool doing ) const
 	    // displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    txt = sformat( _("Extending multipath partition %1$s to %2$s"), d.c_str(), sizeString().c_str() );
-	txt += Text("\n", "\n");
+	txt += Text(" ", " ");
 	// text displayed during action
 	txt += _("(progress bar might not move)");
         }
