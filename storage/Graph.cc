@@ -108,8 +108,9 @@ namespace storage
 
     private:
 
-	Rank disks;
-	Rank mounts;
+	Rank disks_rank;
+	Rank partitions_rank;
+	Rank mounts_rank;
 
 	void processUsedby(const Node& node, const list<UsedByInfo>& usedBy);
 	void processMount(const Node& node, const VolumeInfo& volume);
@@ -138,7 +139,7 @@ namespace storage
 
 
     DeviceGraph::DeviceGraph(StorageInterface* s)
-	: disks("source"), mounts("sink")
+	: disks_rank("source"), partitions_rank("same"), mounts_rank("sink")
     {
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
@@ -153,11 +154,9 @@ namespace storage
 
 		    Node disk_node(NODE_DISK, i1->device, i1->name, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
-		    disks.ids.push_back(disk_node.id());
+		    disks_rank.ids.push_back(disk_node.id());
 
 		    processUsedby(disk_node, i1->usedBy);
-
-		    Rank rank("same");
 
 		    deque<PartitionInfo> partitions;
 		    s->getPartitionInfo(i1->name, partitions);
@@ -168,16 +167,13 @@ namespace storage
 
 			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(partition_node);
-			rank.ids.push_back(partition_node.id());
+			partitions_rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id(), partition_node.id()));
 
 			processUsedby(partition_node, i2->v.usedBy);
 			processMount(partition_node, i2->v);
 		    }
-
-		    if (!rank.ids.empty())
-			ranks.push_back(rank);
 
 		} break;
 
@@ -320,11 +316,14 @@ namespace storage
 	    }
 	}
 
-	if (!disks.ids.empty())
-	    ranks.push_back(disks);
+	if (!disks_rank.ids.empty())
+	    ranks.push_back(disks_rank);
 
-	if (!mounts.ids.empty())
-	    ranks.push_back(mounts);
+	if (!partitions_rank.ids.empty())
+	    ranks.push_back(partitions_rank);
+
+	if (!mounts_rank.ids.empty())
+	    ranks.push_back(mounts_rank);
     }
 
 
@@ -345,7 +344,7 @@ namespace storage
 	{
 	    Node mountpoint_node(NODE_MOUNTPOINT, volume.device, volume.mount, volume.sizeK);
 	    nodes.push_back(mountpoint_node);
-	    mounts.ids.push_back(mountpoint_node.id());
+	    mounts_rank.ids.push_back(mountpoint_node.id());
 
 	    edges.push_back(Edge(EDGE_MOUNT, node.id(), mountpoint_node.id()));
 	}
