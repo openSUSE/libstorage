@@ -5,6 +5,12 @@ Thu Dec 03 14:54:16 CET 2009 - aschnell@suse.de
 - 2.19.2
 
 -------------------------------------------------------------------
+Thu Dec 03 10:38:39 CET 2009 - fehr@suse.de
+
+- avoid data loss on encrypted partitions using non-LUKS encryption
+  when integrating them into system (#557607)
+
+-------------------------------------------------------------------
 Wed Dec 02 11:17:46 CET 2009 - aschnell@suse.de
 
 - removed call to devmap_mknod.sh (which has disappeared)
