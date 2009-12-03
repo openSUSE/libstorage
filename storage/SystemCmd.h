@@ -29,6 +29,8 @@
 #include <string>
 #include <vector>
 #include <list>
+#include <boost/noncopyable.hpp>
+
 
 namespace storage
 {
@@ -37,7 +39,7 @@ namespace storage
 
 class OutputProcessor;
 
-class SystemCmd
+class SystemCmd : boost::noncopyable
     {
     public:
 
@@ -85,7 +87,7 @@ class SystemCmd
     protected:
 
 	void invalidate();
-	void closeOpenFds();
+	void closeOpenFds() const;
 	int doExecute(const string& Cmd_Cv);
 	bool doWait(bool Hang_bv, int& Ret_ir);
         void checkOutput();

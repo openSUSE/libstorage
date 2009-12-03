@@ -74,7 +74,7 @@ SystemCmd::~SystemCmd()
 
 
 void
-SystemCmd::closeOpenFds()
+SystemCmd::closeOpenFds() const
     {
     int max_fd = getdtablesize();
     for( int fd = 3; fd < max_fd; fd++ )
