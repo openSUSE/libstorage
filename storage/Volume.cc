@@ -1327,11 +1327,11 @@ int Volume::resizeFs()
     }
 
 
-    int
-    Volume::setEncryption(bool val, EncryptType typ, bool force)
+int
+Volume::setEncryption(bool val, EncryptType typ )
     {
     int ret = 0;
-    y2mil("val:" << val << " typ:" << typ);
+    y2mil("val:" << val << " typ:" << typ );
     if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -1351,22 +1351,16 @@ int Volume::resizeFs()
 		ret = VOLUME_CRYPT_NO_PWD;
 	    if( ret == 0 && cType()==NFSC )
 		ret = VOLUME_CRYPT_NFS_IMPOSSIBLE;
-	    if (ret == 0 && (create || format || loop_active))
+	    if (ret == 0 && (create || format || loop_active || mp.empty()))
 		{
 		encryption = typ;
 		is_loop = cType() == LOOP;
 		dmcrypt_dev = getDmcryptName();
 		}
-	    if (ret == 0 && !create && !format && !loop_active)
+	    if (ret == 0 && !create && !format && !loop_active && !mp.empty() )
 	        {
-		if( detectEncryption()==ENC_UNKNOWN && !force)
+		if( detectEncryption()==ENC_UNKNOWN )
 		    ret = VOLUME_CRYPT_NOT_DETECTED;
-		else if (force)
-		{
-		    encryption = typ;
-		    is_loop = cType() == LOOP;
-		    dmcrypt_dev = getDmcryptName();
-		}
 		}
 	    }
 	}
@@ -1887,7 +1881,8 @@ void Volume::replaceAltName( const string& prefix, const string& newn )
 int Volume::doCryptsetup()
     {
     int ret = 0;
-    y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << " active:" << dmcrypt_active);
+    y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << 
+          " active:" << dmcrypt_active << " format:" << format );
     if( !silent() && dmcrypt() )
 	{
 	getStorage()->showInfoCb( crsetupText(true) );
@@ -1915,7 +1910,8 @@ int Volume::doCryptsetup()
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();
 	    SystemCmd cmd;
-	    if( (encryption != orig_encryption) || format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) )
+	    if( format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) ||
+	        (encryption!=ENC_NONE&&mp.empty()) )
 		{
 		string cmdline = getCryptsetupCmd( encryption, dmcrypt_dev, mp, fname, true,
 						   crypt_pwd.empty() );
@@ -1923,10 +1919,10 @@ int Volume::doCryptsetup()
 		    {
 		    cmd.execute( cmdline );
 		    if( cmd.retcode()!=0 )
-		    ret = VOLUME_CRYPTFORMAT_FAILED;
-		if( ret==0 && mp=="swap" )
-		    cmd.execute("/sbin/mkswap " + quote(dmcrypt_dev));
-		}
+			ret = VOLUME_CRYPTFORMAT_FAILED;
+		    if( ret==0 && mp=="swap" )
+			cmd.execute("/sbin/mkswap " + quote(dmcrypt_dev));
+		    }
 		}
 	    if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
 		{
@@ -1935,8 +1931,8 @@ int Volume::doCryptsetup()
 		    {
 		    cmd.execute( cmdline );
 		    if( cmd.retcode()!=0 )
-		    ret = VOLUME_CRYPTSETUP_FAILED;
-		}
+			ret = VOLUME_CRYPTSETUP_FAILED;
+		    }
 		}
 	    unlink( fname.c_str() );
 	    Storage::waitForDevice(dmcrypt_dev);
@@ -1952,10 +1948,10 @@ int Volume::doCryptsetup()
 		replaceAltName( "/dev/dm-", Dm::dmDeviceName(mnr) );
 		}
 	    else
-	    {
+		{
 		getMajorMinor( dmcrypt_dev, dummy, minor );
 		replaceAltName("/dev/dm-", Dm::dmDeviceName(minor));
-	    }
+		}
 
 	    ProcParts parts;
 	    unsigned long long sz;
@@ -2306,9 +2302,10 @@ Volume::getCommitActions(list<commitAction>& l) const
 	{
 	l.push_back(commitAction(FORMAT, cType(), formatText(false), this, true));
 	}
-    else if (encryption != orig_encryption)
+    else if( encryption != ENC_NONE )
 	{
-	    l.push_back(commitAction(FORMAT, cType(), crsetupText(false), this, true));
+	l.push_back(commitAction(mp.empty()?INCREASE:FORMAT, cType(), 
+	                         crsetupText(false), this, mp.empty()));
 	}
     else if (mp != orig_mp || (getStorage()->instsys() && mp=="swap"))
 	{

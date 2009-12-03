@@ -2260,7 +2260,7 @@ Storage::setCryptType( const string& device, bool val, EncryptType typ )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	ret = vol->setEncryption(val, typ, true);
+	ret = vol->setEncryption( val, typ );
 	}
     else
 	{

@@ -101,8 +101,7 @@ class Storage;
 	storage::EncryptType getEncryption() const { return encryption; }
 	void setEncryption( storage::EncryptType val=storage::ENC_LUKS )
 	    { encryption=orig_encryption=val; }
-	virtual int setEncryption(bool val, storage::EncryptType typ = storage::ENC_LUKS,
-				  bool force = false);
+	virtual int setEncryption(bool val, storage::EncryptType typ = storage::ENC_LUKS );
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val );
 	void clearCryptPwd() { crypt_pwd.erase(); }
