@@ -3572,42 +3572,59 @@ int Storage::checkCache()
     }
 
 
+list<commitAction>
+Storage::getCommitActions() const
+{
+    ConstContPair p = contPair();
+    list<commitAction> ca;
+    for (ConstContIterator it = p.begin(); it != p.end(); ++it)
+    {
+	list<commitAction> l;
+	it->getCommitActions(l);
+	ca.splice(ca.end(), l);
+    }
+    ca.sort();
+    return ca;
+}
+
+
 void
 Storage::getCommitInfos(list<CommitInfo>& infos) const
 {
     static list<CommitInfo> s_infos; // workaround for broken ycp bindings
     s_infos.clear();
-    ConstContPair p = contPair();
-    y2mil("empty:" << p.empty());
-    if( !p.empty() )
-    {
-	list<commitAction> ac;
-	for( ConstContIterator i = p.begin(); i != p.end(); ++i )
-	{
-	    list<commitAction> l;
-	    i->getCommitActions( l );
-	    ac.splice( ac.end(), l );
-	}
-	ac.sort();
-	for (list<commitAction>::const_iterator i = ac.begin(); i != ac.end(); ++i)
+
+        const list<commitAction> ca = getCommitActions();
+	for (list<commitAction>::const_iterator i = ca.begin(); i != ca.end(); ++i)
 	{
 	    CommitInfo info;
 	    info.destructive = i->destructive;
-	    info.native = i->description.native;
 	    info.text = i->description.text;
 	    const Volume* v = i->vol();
 	    if( v && !v->getDescText().empty() )
 	    {
-		info.native += ". ";
-		info.native += v->getDescText();
 		info.text += ". ";
 		info.text += v->getDescText();
 	    }
 	    s_infos.push_back(info);
 	}
-    }
+
     infos = s_infos;
     y2mil("infos.size:" << infos.size());
+}
+
+
+void
+Storage::dumpCommitInfos() const
+{
+    const list<commitAction> ca = getCommitActions();
+    for (list<commitAction>::const_iterator it = ca.begin(); it != ca.end(); ++it)
+    {
+	string text = it->description.native;
+	if (it->destructive)
+	    text += " [destructive]";
+	y2mil("ChangeText " << text);
+    }
 }
 
 
@@ -3786,6 +3803,7 @@ int Storage::commit()
     assertInit();
     lastAction.clear();
     extendedError.clear();
+    dumpCommitInfos();
     CPair p = cPair( notLoop );
     int ret = 0;
     y2mil("empty:" << p.empty());

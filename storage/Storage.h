@@ -519,6 +519,7 @@ class DiskData;
 	bool checkDmMapsTo( const string& dev );
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
+	void dumpCommitInfos() const;
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
@@ -1736,6 +1737,8 @@ class DiskData;
 			       unsigned long long& resize_free,
 			       unsigned long long& used, bool& win, bool& efi,
 			       bool& resize_ok) const;
+
+	list<commitAction> getCommitActions() const;
 
 	// protected internal member variables
 	const Environment env;

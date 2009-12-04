@@ -524,7 +524,6 @@ namespace storage
     {
 	CommitInfo() {}
 	bool destructive;
-	string native;
 	string text;
     };
 
@@ -2223,6 +2222,11 @@ namespace storage
 	 * Dump list of all objects to log file.
 	 */
 	virtual void dumpObjectList() = 0;
+
+	/**
+	 * Dump list of commit actions to log file.
+	 */
+	virtual void dumpCommitInfos() const = 0;
 
 	/**
 	 * Split volume device name up into container name and a volume
