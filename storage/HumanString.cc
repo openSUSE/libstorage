@@ -132,10 +132,7 @@ namespace storage
 	s.setf(ios::fixed);
 	s.precision(precision);
 
-	if (classic)
-	    s << f << ' ' << getSuffix(i).front().native;
-	else
-	    s << f << ' ' << getSuffix(i).front().text;
+	s << f << ' ' << (classic ? getSuffix(i).front().native : getSuffix(i).front().text);
 
 	return s.str();
     }
