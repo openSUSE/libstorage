@@ -477,10 +477,6 @@ void Volume::getLoopData( SystemCmd& loopData )
 			alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
 		}
 	    }
-	    else
-	    {
-		detected_fs = fs = FSUNKNOWN;
-	    }
 	}
     }
 
@@ -1027,6 +1023,8 @@ int Volume::loUnsetup( bool force )
 int Volume::cryptUnsetup( bool force )
     {
     int ret=0;
+    y2mil( "force:" << force << " active:" << dmcrypt_active << 
+           " table:" << dmcrypt_dev );
     if( dmcrypt_active || force )
 	{
 	string table = dmcrypt_dev;
@@ -1342,7 +1340,6 @@ Volume::setEncryption(bool val, EncryptType typ )
 	    {
 	    is_loop = false;
 	    encryption = ENC_NONE;
-	    dmcrypt_dev.clear();
 	    crypt_pwd.erase();
 	    }
 	else
@@ -1642,11 +1639,9 @@ bool Volume::needLosetup() const
 
 bool Volume::needCryptsetup() const
     {
-    if (dmcrypt() && encryption != orig_encryption)
-	return true;
-
     return( dmcrypt()!=dmcrypt_active &&
-            (encryption==ENC_NONE || !crypt_pwd.empty() || isTmpCryptMp(mp)));
+            (encryption==ENC_NONE || encryption!=orig_encryption || 
+	     !crypt_pwd.empty() || isTmpCryptMp(mp)));
     }
 
 bool Volume::needCrsetup() const
@@ -2302,7 +2297,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	{
 	l.push_back(commitAction(FORMAT, cType(), formatText(false), this, true));
 	}
-    else if( encryption != ENC_NONE )
+    else if( needCrsetup() )
 	{
 	l.push_back(commitAction(mp.empty()?INCREASE:FORMAT, cType(), 
 	                         crsetupText(false), this, mp.empty()));

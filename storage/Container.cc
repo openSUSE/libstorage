@@ -176,6 +176,8 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 	    break;
 
 	case FORMAT:
+            //if( vol->needCrsetup() )
+	//	ret = vol->doCrsetup();
 	    if( ret==0 && vol->getFormat() )
 		ret = vol->doFormat();
 	    if( ret==0 && vol->needLabel() )
