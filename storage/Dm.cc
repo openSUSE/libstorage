@@ -283,7 +283,8 @@ void Dm::init()
     else if( dmn != dev )
 	alt_names.push_back( dmn );
     //alt_names.push_back( "/dev/"+tname );
-    updateMajorMinor();
+    if (!getStorage()->testmode())
+	updateMajorMinor();
     }
 
 void Dm::updateMajorMinor()

@@ -217,7 +217,8 @@ void Volume::init()
     if( numeric||!nm.empty() )
 	{
 	setNameDev();
-	getMajorMinor( dev, mjr, mnr );
+	if (!getStorage()->testmode())
+	    getMajorMinor( dev, mjr, mnr );
 	}
     if( !numeric )
 	num = 0;
