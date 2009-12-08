@@ -2254,7 +2254,7 @@ namespace storage
     struct Environment
     {
 	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true),
-	    instsys(false), logdir("/var/log/YaST2"), testdir("") {}
+	    instsys(false), logdir("/var/log/YaST2"), testdir("tmp") {}
 
 	bool readonly;
 	bool testmode;
