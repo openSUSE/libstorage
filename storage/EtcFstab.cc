@@ -91,6 +91,8 @@ EtcFstab::readFiles()
 	    if( i!=l.end() )
 		*i++ >> p->old.passno;
 	    p->old.calcDependent();
+	    if( checkNormalFile(p->old.device) )
+		p->old.loop = true;
 	    p->nnew = p->old;
 	    co.push_back( *p );
 	    delete p;

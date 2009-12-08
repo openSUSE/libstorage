@@ -1630,11 +1630,14 @@ Volume::setCryptPwd( const string& val )
     return( ret );
     }
 
-bool Volume::needLosetup() const
+bool Volume::needLosetup( bool urgent ) const
     {
-    return( (is_loop!=loop_active) &&
-            (encryption==ENC_NONE || !crypt_pwd.empty() ||
-	     (dmcrypt() && cType() == LOOP)) );
+    bool ret = (is_loop!=loop_active) &&
+		(encryption==ENC_NONE || !crypt_pwd.empty() ||
+		(dmcrypt() && cType() == LOOP));
+    if( !urgent && loop_dev.empty() )
+	ret = false;
+    return( ret );
     }
 
 bool Volume::needCryptsetup() const
@@ -1644,9 +1647,9 @@ bool Volume::needCryptsetup() const
 	     !crypt_pwd.empty() || isTmpCryptMp(mp)));
     }
 
-bool Volume::needCrsetup() const
+bool Volume::needCrsetup( bool urgent ) const
     {
-    return( needLosetup()||needCryptsetup() );
+    return( needLosetup(urgent)||needCryptsetup() );
     }
 
 bool Volume::needFstabUpdate() const
@@ -1967,7 +1970,7 @@ int Volume::doCrsetup()
     {
     int ret = 0;
     bool losetup_done = false;
-    if( needLosetup() )
+    if( needLosetup(true) )
 	{
 	ret = doLosetup();
 	losetup_done = ret==0;
@@ -2297,7 +2300,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	{
 	l.push_back(commitAction(FORMAT, cType(), formatText(false), this, true));
 	}
-    else if( needCrsetup() )
+    else if( needCrsetup(false) )
 	{
 	l.push_back(commitAction(mp.empty()?INCREASE:FORMAT, cType(), 
 	                         crsetupText(false), this, mp.empty()));
@@ -2482,7 +2485,7 @@ int Volume::doFstabUpdate()
 		    changed = true;
 		    che.dentry = de;
 		    }
-		if( fs != detected_fs )
+		if( fs != detected_fs || che.fs!=fs_names[fs] )
 		    {
 		    changed = true;
 		    che.fs = fs_names[fs];
