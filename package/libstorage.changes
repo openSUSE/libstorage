@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 08 16:39:14 CET 2009 - aschnell@suse.de
+
+- added check for home partitions in getFreeInfo
+- 2.19.3
+
+-------------------------------------------------------------------
 Tue Dec  8 13:26:47 CET 2009 - fehr@suse.de
 
 - fix handling of inactive swap file entry in fstab (#504497)

@@ -2169,6 +2169,7 @@ namespace storage
 	 * @param usedK used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
 	 * @param efi flag if partition contains a efi boot directory
+	 * @param home flag if partition looks like a home partition
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
 	 */
@@ -2176,7 +2177,8 @@ namespace storage
 	                          unsigned long long& resize_freeK,
 	                          unsigned long long& df_freeK,
 	                          unsigned long long& usedK,
-				  bool& win, bool& efi, bool use_cache ) = 0;
+				  bool& win, bool& efi, bool& home,
+				  bool use_cache ) = 0;
 
 	/**
 	 * Read fstab and cryptotab, if existent, from a specified directory and

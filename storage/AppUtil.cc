@@ -23,6 +23,7 @@
 #include <stdarg.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <glob.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
@@ -77,6 +78,23 @@ checkNormalFile(const string& Path_Cv)
   return (stat(Path_Cv.c_str(), &Stat_ri) >= 0 &&
 	  S_ISREG(Stat_ri.st_mode));
 }
+
+
+    list<string>
+    glob(const string& path, int flags)
+    {
+	list<string> ret;
+
+	glob_t globbuf;
+	if (glob(path.c_str(), flags, 0, &globbuf) == 0)
+	{
+	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+		ret.push_back(*p);
+	}
+	globfree (&globbuf);
+
+	return ret;
+    }
 
 
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi)

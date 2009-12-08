@@ -5542,9 +5542,56 @@ Storage::getDfSize(const string& mp)
 
 
 bool
+Storage::isHome(const string& mp) const
+{
+    const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
+			    ".gnome2" };
+
+    list<string> dirs = glob((mp + "/*").c_str(), GLOB_NOSORT | GLOB_ONLYDIR);
+    for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
+    {
+	if (*dir != "root" && checkDir(*dir))
+	{
+	    for (unsigned int i = 0; i < lengthof(files); ++i)
+	    {
+		string file = *dir + "/" + files[i];
+		if (access(file.c_str(), R_OK) == 0)
+		{
+		    y2mil("found home file " << quote(file));
+		    return true;
+		}
+	    }
+	}
+    }
+
+    return false;
+}
+
+
+bool
+Storage::isWindows(const string& mp) const
+{
+    const char* files[] = { "boot.ini", "msdos.sys", "io.sys", "config.sys", "MSDOS.SYS",
+			    "IO.SYS", "bootmgr", "$Boot" };
+
+    for (unsigned int i = 0; i < lengthof(files); ++i)
+    {
+	string file = mp + "/" + files[i];
+	if (access(file.c_str(), R_OK) == 0)
+	{
+	    y2mil("found windows file " << quote(file));
+	    return true;
+	}
+    }
+
+    return false;
+}
+
+
+bool
 Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		     unsigned long long& df_free,
-		     unsigned long long& used, bool& win, bool& efi,
+		     unsigned long long& used, bool& win, bool& efi, bool& home,
 		     bool use_cache)
     {
     bool ret = false;
@@ -5555,7 +5602,7 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
     if( findVolume( device, vol ) )
 	{
 	if (use_cache && getCachedFreeInfo(vol->device(), df_free, resize_free,
-					   used, win, efi, ret))
+					   used, win, efi, home, ret))
 	    {
 	    }
 	else if (vol->isUsedBy())
@@ -5634,24 +5681,11 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		    else
 			ret = false;
 		    }
-		win = false;
-		const char * files[] = { "boot.ini", "msdos.sys", "io.sys",
-				         "config.sys", "MSDOS.SYS", "IO.SYS",
-					 "bootmgr", "$Boot" };
-		unsigned i=0;
-		while( !win && i<lengthof(files) )
-		{
-		    string f = mp + "/" + files[i];
-		    if (access(f.c_str(), R_OK) == 0)
-		    {
-			y2mil("found windows file " << quote(f));
-			win = true;
-		    }
-		    i++;
-		}
+		win = isWindows(mp);
 		efi = vol->getFs()==VFAT && checkDir( mp + "/efi" );
 		if( efi )
 		    win = false;
+		home = isHome(mp);
 		}
 	    if( needUmount )
 		{
@@ -5665,7 +5699,7 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->crUnsetup();
 		}
-	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, ret);
+	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, home, ret);
 	    }
 	}
     if( ret )
@@ -5677,21 +5711,20 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 
 void
 Storage::setCachedFreeInfo(const string& device, unsigned long long df_free,
-			   unsigned long long resize_free,
-			   unsigned long long used, bool win, bool efi,
-			   bool resize_ok)
+			   unsigned long long resize_free, unsigned long long used, bool win,
+			   bool efi, bool home, bool resize_ok)
 {
     y2mil("device:" << device << " df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	  " win:" << win << " efi:" << efi);
+	  " win:" << win << " efi:" << efi << " home:" << home);
 
-    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, resize_ok));
+    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, home, resize_ok));
 }
 
 
 bool
 Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 			   unsigned long long& resize_free,
-			   unsigned long long& used, bool& win, bool& efi,
+			   unsigned long long& used, bool& win, bool& efi, bool& home,
 			   bool& resize_ok) const
 {
     map<string, FreeInfo>::const_iterator i = freeInfo.find(device);
@@ -5703,12 +5736,13 @@ Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 	used = i->second.used;
 	win = i->second.win;
 	efi = i->second.efi;
+	home = i->second.home;
 	resize_ok = i->second.rok;
 	}
     y2mil("device:" << device << " ret:" << ret);
     if( ret )
 	y2mil("df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	      " win:" << win << " efi:" << efi << " resize_ok:" << resize_ok);
+	      " win:" << win << " efi:" << efi << " home:" << home << " resize_ok:" << resize_ok);
     return ret;
 }
 

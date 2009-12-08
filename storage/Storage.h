@@ -222,13 +222,13 @@ class DiskData;
 	    unsigned long long used;
 	    bool win;
 	    bool efi;
+	    bool home;
 	    bool rok;
-	    FreeInfo( unsigned long long df,
-		      unsigned long long resize,
-		      unsigned long long usd, bool w=false, bool e=false,
-		      bool r=true )
-		      { resize_free=resize; df_free=df; used=usd; win=w; 
-		        efi=e, rok=r; }
+	    FreeInfo(unsigned long long df, unsigned long long resize,
+		     unsigned long long usd, bool w = false, bool e = false,
+		     bool h = false, bool r = true)
+		: resize_free(resize), df_free(df), used(usd), win(w), efi(e),
+		  home(h), rok(r) {}
 	    };
 
     public:
@@ -429,7 +429,7 @@ class DiskData;
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
 	                  unsigned long long& df_free,
-	                  unsigned long long& used, bool& win, bool& efi,
+	                  unsigned long long& used, bool& win, bool& efi, bool& home,
 			  bool use_cache );
 	static unsigned long long getDfSize(const string& mp);
 	int createBackupState( const string& name );
@@ -1715,6 +1715,9 @@ class DiskData;
 
 	Device* findDevice(const string& dev);
 
+	bool isHome(const string& mp) const;
+	bool isWindows(const string& mp) const;
+
 	bool haveMd( MdCo*& md );
 	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
@@ -1731,11 +1734,11 @@ class DiskData;
 	void deleteBackups();
 	void setCachedFreeInfo(const string& device, unsigned long long df_free,
 			       unsigned long long resize_free,
-			       unsigned long long used, bool win, bool efi,
+			       unsigned long long used, bool win, bool efi, bool home,
 			       bool resize_ok);
 	bool getCachedFreeInfo(const string& device, unsigned long long& df_free,
 			       unsigned long long& resize_free,
-			       unsigned long long& used, bool& win, bool& efi,
+			       unsigned long long& used, bool& win, bool& efi, bool& home,
 			       bool& resize_ok) const;
 
 	list<commitAction> getCommitActions() const;
