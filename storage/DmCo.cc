@@ -176,7 +176,7 @@ DmCo::detectEncryption( const string& dev ) const
 		keysize = extractNthWord( 1, line );
 	}
 
-	if( cipher == "aes-cbc-essiv:sha256" )
+	if( cipher == "aes-cbc-essiv:sha256" || cipher == "aes-cbc-plain")
 	    ret = ENC_LUKS;
 	else if( cipher == "twofish-cbc-plain" )
 	    ret = ENC_TWOFISH;
