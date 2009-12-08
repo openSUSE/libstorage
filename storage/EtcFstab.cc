@@ -91,6 +91,8 @@ EtcFstab::readFiles()
 	    if( i!=l.end() )
 		*i++ >> p->old.passno;
 	    p->old.calcDependent();
+	    if( checkNormalFile(p->old.device) )
+		p->old.loop = true;
 	    p->nnew = p->old;
 	    co.push_back( *p );
 	    delete p;
@@ -780,6 +782,15 @@ int EtcFstab::flush()
 			}
 		    i->old = i->nnew;
 		    i->op = Entry::NONE;
+		    }
+		else if( findCrtab( i->nnew, crypttab, lineno ))
+		    {
+		    string line = createTabLine( i->nnew );
+		    if (!i->nnew.mount.empty())
+			fstab->append( line );
+		    if( i->old.crypttab > i->nnew.crypttab && 
+		        findCrtab( i->old, crypttab, lineno ))
+			crypttab.remove( lineno, 1 );
 		    }
 		else
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;

@@ -91,7 +91,7 @@ class Storage;
 	bool dmcrypt() const { return encryption != ENC_NONE && encryption != ENC_UNKNOWN; }
 	bool loopActive() const { return( is_loop&&loop_active ); }
 	bool dmcryptActive() const { return( dmcrypt()&&dmcrypt_active ); }
-	bool needCrsetup() const; 
+	bool needCrsetup( bool urgent=true ) const; 
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
 	int setLabel( const string& val );
@@ -231,7 +231,7 @@ class Storage;
 	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
 	string getDmcryptName() const;
-	bool needLosetup() const; 
+	bool needLosetup( bool urgent ) const; 
 	bool needCryptsetup() const; 
 	int doLosetup();
 	int doCryptsetup();

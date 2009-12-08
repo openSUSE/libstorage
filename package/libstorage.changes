@@ -1,4 +1,15 @@
 -------------------------------------------------------------------
+Tue Dec  8 13:26:47 CET 2009 - fehr@suse.de
+
+- fix handling of inactive swap file entry in fstab (#504497)
+
+-------------------------------------------------------------------
+Tue Dec  8 10:36:26 CET 2009 - fehr@suse.de
+
+- fix detection of encrypted swap and temp filesystems (#435337)
+- fix various bugs handling encrypted devices
+
+-------------------------------------------------------------------
 Thu Dec 03 14:54:16 CET 2009 - aschnell@suse.de
 
 - log untranslated messages
