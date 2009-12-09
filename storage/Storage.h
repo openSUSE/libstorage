@@ -217,8 +217,8 @@ class DiskData;
 
 	struct FreeInfo
 	    {
-	    unsigned long long resize_free;
 	    unsigned long long df_free;
+	    unsigned long long resize_free;
 	    unsigned long long used;
 	    bool win;
 	    bool efi;
@@ -227,7 +227,7 @@ class DiskData;
 	    FreeInfo(unsigned long long df, unsigned long long resize,
 		     unsigned long long usd, bool w = false, bool e = false,
 		     bool h = false, bool r = true)
-		: resize_free(resize), df_free(df), used(usd), win(w), efi(e),
+		: df_free(df), resize_free(resize), used(usd), win(w), efi(e),
 		  home(h), rok(r) {}
 	    };
 
@@ -1732,6 +1732,7 @@ class DiskData;
 	string backupStates() const;
 	void detectObjects();
 	void deleteBackups();
+
 	void setCachedFreeInfo(const string& device, unsigned long long df_free,
 			       unsigned long long resize_free,
 			       unsigned long long used, bool win, bool efi, bool home,
@@ -1740,6 +1741,8 @@ class DiskData;
 			       unsigned long long& resize_free,
 			       unsigned long long& used, bool& win, bool& efi, bool& home,
 			       bool& resize_ok) const;
+	void logFreeInfo(const string& Dir) const;
+	void readFreeInfo(const string& file);
 
 	list<commitAction> getCommitActions() const;
 

@@ -270,11 +270,14 @@ void Storage::detectObjects()
  	rootprefix = testdir();
 	delete fstab;
  	fstab = new EtcFstab( rootprefix );
+
 	string t = testdir() + "/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
-	    {
 	    detectFsDataTestMode( t, vBegin(), vEnd() );
-	    }
+
+	t = testdir() + "/free_info";
+	if( access( t.c_str(), R_OK )==0 )
+	    readFreeInfo(t);
 	}
     else
 	{
@@ -818,6 +821,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 		(*i)->logData(Dir);
 
 	    logVolumes(Dir);
+	    logFreeInfo(Dir);
 	}
     }
 
@@ -5597,6 +5601,11 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
     bool ret = false;
     assertInit();
     resize_free = df_free = used = 0;
+    win = efi = home = false;
+    
+    if (testmode())
+	use_cache = true;
+
     y2mil("device:" << device << " use_cache:" << use_cache);
     VolIterator vol;
     if( findVolume( device, vol ) )
@@ -5606,6 +5615,10 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 	    {
 	    }
 	else if (vol->isUsedBy())
+	{
+	    ret = false;
+	}
+	else if (testmode())
 	{
 	    ret = false;
 	}
@@ -5752,6 +5765,84 @@ Storage::eraseCachedFreeInfo(const string& device)
 {
     freeInfo.erase(device);
 }
+
+
+    void
+    Storage::logFreeInfo(const string& Dir) const
+    {
+	string fname(Dir + "/free_info.tmp");
+	ofstream file(fname.c_str());
+	classic(file);
+
+	for (map<string, FreeInfo>::const_iterator it = freeInfo.begin(); it != freeInfo.end(); ++it)
+	{
+	    file << it->first << " df_free=" << it->second.df_free << " resize_free="
+		 << it->second.resize_free << " used=" << it->second.used << " windows="
+		 << it->second.win << " efi=" << it->second.efi << " home=" << it->second.home
+		 << " resize_ok=" << it->second.rok << endl;
+	}
+
+	file.close();
+	handleLogFile(fname);
+    }
+
+
+    void
+    Storage::readFreeInfo(const string& file)
+    {
+	AsciiFile f(file);
+	const vector<string>& lines = f.lines();
+	for (vector<string>::const_iterator line = lines.begin(); line != lines.end(); ++line)
+	{
+	    list<string> l = splitString(*line);
+
+	    if (l.size() >= 2)
+	    {
+		string device = l.front();
+		l.erase(l.begin());
+
+		const map<string, string> m = makeMap(l);
+		map<string, string>::const_iterator i;
+
+		unsigned long long df_free = 0;
+		unsigned long long resize_free = 0;
+		unsigned long long used = 0;
+
+		bool windows = false;
+		bool efi = false;
+		bool home = false;
+
+		bool rok = false;
+
+		i = m.find("df_free");
+		if (i != m.end())
+		    i->second >> df_free;
+		i = m.find("resize_free");
+		if (i != m.end())
+		    i->second >> resize_free;
+		i = m.find("used");
+		if (i != m.end())
+		    i->second >> used;
+
+		i = m.find("windows");
+		if (i != m.end())
+		    i->second >> windows;
+		i = m.find("efi");
+		if (i != m.end())
+		    i->second >> efi;
+		i = m.find("home");
+		if (i != m.end())
+		    i->second >> home;
+
+		i = m.find("resize_ok");
+		if (i != m.end())
+		    i->second >> rok;
+
+		mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used,
+							      windows, efi, home, rok));
+	    }
+	}
+    }
 
 
 int

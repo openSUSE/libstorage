@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec 09 12:39:59 CET 2009 - aschnell@suse.de
+
+- added saving and loading of freeinfo
+
+-------------------------------------------------------------------
 Tue Dec 08 16:39:14 CET 2009 - aschnell@suse.de
 
 - added check for home partitions in getFreeInfo
