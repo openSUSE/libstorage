@@ -1172,7 +1172,7 @@ namespace storage
 	 *
 	 * @return default disk label of the architecture
 	 */
-	virtual string defaultDiskLabel() const = 0;
+	virtual string defaultDiskLabel() = 0;
 
 	/**
 	 * Query the default disk label of the architecture of the
@@ -1183,7 +1183,7 @@ namespace storage
 	 *
 	 * @return default disk label of the disk
 	 */
-	virtual string defaultDiskLabelSize(unsigned long long sizeK) const = 0;
+	virtual string defaultDiskLabelSize(unsigned long long sizeK) = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.

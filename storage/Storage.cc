@@ -203,11 +203,18 @@ Storage::initialize()
 	}
     }
 
-    if (autodetect())
-	{
+    if (testmode())
+    {
+	string t = testdir() + "/arch_info";
+	if (access(t.c_str(), R_OK) == 0)
+	    readArchInfo(t);
+	efiboot = (arch() == "ia64");
+    }
+    else if (autodetect())
+    {
 	detectArch();
 	efiboot = (arch() == "ia64");
-	}
+    }
 
     detectObjects();
     setCacheChanges( true );
@@ -825,6 +832,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 
 	    logVolumes(Dir);
 	    logFreeInfo(Dir);
+	    logArchInfo(Dir);
 	}
     }
 
@@ -1850,14 +1858,16 @@ Storage::initializeDisk( const string& disk, bool value )
 
 
 string
-Storage::defaultDiskLabel() const
+Storage::defaultDiskLabel()
 {
+    assertInit();
     return Disk::defaultLabel(efiBoot(), 0);
 }
 
 string
-Storage::defaultDiskLabelSize( unsigned long long size_k ) const
+Storage::defaultDiskLabelSize(unsigned long long size_k)
 {
+    assertInit();
     return Disk::defaultLabel(efiBoot(), size_k);
 }
 
@@ -5848,6 +5858,32 @@ Storage::eraseCachedFreeInfo(const string& device)
 							      windows, efi, home, rok));
 	    }
 	}
+    }
+
+
+    void
+    Storage::logArchInfo(const string& Dir) const
+    {
+	string fname(Dir + "/arch_info.tmp");
+	ofstream file(fname.c_str());
+	classic(file);
+
+	file << "Arch: " << arch() << endl;
+
+	file.close();
+	handleLogFile(fname);
+    }
+
+
+    void
+    Storage::readArchInfo(const string& file)
+    {
+	AsciiFile f(file);
+	const vector<string>& lines = f.lines();
+	vector<string>::const_iterator it;
+
+	if ((it = find_if(lines, string_starts_with("Arch:"))) != lines.end())
+	    proc_arch = extractNthWord(1, *it);
     }
 
 

@@ -363,8 +363,8 @@ class DiskData;
 	int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots);
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );
-	string defaultDiskLabel() const;
-	string defaultDiskLabelSize( unsigned long long size_k ) const;
+	string defaultDiskLabel();
+	string defaultDiskLabelSize(unsigned long long size_k);
 
 	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );
@@ -1743,6 +1743,9 @@ class DiskData;
 			       bool& resize_ok) const;
 	void logFreeInfo(const string& Dir) const;
 	void readFreeInfo(const string& file);
+
+	void logArchInfo(const string& Dir) const;
+	void readArchInfo(const string& file);
 
 	list<commitAction> getCommitActions() const;
 
