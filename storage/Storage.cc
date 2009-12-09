@@ -135,8 +135,11 @@ Storage::Storage(const Environment& env)
 void
 Storage::logSystemInfo() const
 {
+    if (!testmode())
+    {
     AsciiFile("/proc/version").logContent();
     SystemCmd(LSBIN " -1 /lib/modules");
+    }
 }
 
 
@@ -4717,10 +4720,13 @@ Storage::logCo(const Container* c) const
     {
 	y2mil("begin:" << str);
 
+	if (!testmode())
+	{
 	AsciiFile("/proc/partitions").logContent();
 	AsciiFile("/proc/mdstat").logContent();
 	AsciiFile("/proc/mounts").logContent();
 	AsciiFile("/proc/swaps").logContent();
+	}
 
 	y2mil("end" << str);
     }
