@@ -955,7 +955,7 @@ void Storage::setDetectMountedVolumes(bool val)
 }
 
 
-string Storage::proc_arch;
+string Storage::proc_arch = "i386";
 bool Storage::is_ppc_mac = false;
 bool Storage::is_ppc_pegasos = false;
 
