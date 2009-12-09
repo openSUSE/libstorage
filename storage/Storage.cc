@@ -364,6 +364,10 @@ Storage::detectArch()
 	    {
 	    proc_arch = "ppc";
 	    }
+	else if( strncmp( buf.machine, "x86_64", 5 )==0 )
+	    {
+	    proc_arch = "x86_64";
+	    }
 	else if( strncmp( buf.machine, "ia64", 4 )==0 )
 	    {
 	    proc_arch = "ia64";
