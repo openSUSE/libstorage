@@ -5547,7 +5547,7 @@ Storage::isHome(const string& mp) const
     const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
 			    ".gnome2" };
 
-    list<string> dirs = glob((mp + "/*").c_str(), GLOB_NOSORT | GLOB_ONLYDIR);
+    list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
     for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
     {
 	if (*dir != "root" && checkDir(*dir))
