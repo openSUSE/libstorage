@@ -68,6 +68,7 @@ struct FstabEntry
     storage::MountByType mount_by;
 
     void calcDependent();
+    bool optUser() const;
     };
 
 

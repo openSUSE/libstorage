@@ -255,6 +255,11 @@ FstabEntry::calcDependent()
     crypttab = dmcrypt;
     }
 
+bool
+FstabEntry::optUser() const
+    {
+    return find( opts.begin(), opts.end(), "user" ) != opts.end();
+    }
 
 bool
 EtcFstab::findDevice( const string& dev, FstabEntry& entry ) const
@@ -526,14 +531,15 @@ list<string> EtcFstab::makeStringList(const FstabEntry& e) const
 	{
 	ls.push_back( e.loop_dev );
 	}
-    ls.push_back( e.dentry );
+    if( e.dmcrypt && e.optUser() )
+	ls.push_back( e.device );
+    else
+	ls.push_back( e.dentry );
     ls.push_back( e.mount );
-    if( e.dmcrypt && e.noauto )
+    if( e.dmcrypt && e.optUser() )
 	ls.push_back( "crypt" );
     else
-	{
 	ls.push_back( (e.fs!="ntfs")?e.fs:"ntfs-3g" );
-	}
     if( e.cryptotab )
 	{
 	ls.push_back( Volume::encTypeString(e.encr) );
@@ -577,7 +583,7 @@ string EtcFstab::createLine( const list<string>& ls, unsigned fields,
 
 string EtcFstab::createTabLine( const FstabEntry& e ) const
     {
-	y2mil("dentry:" << e.dentry << " mount:" << e.mount << "device:" << e.device);
+    y2mil("dentry:" << e.dentry << " mount:" << e.mount << " device:" << e.device);
     const list<string> ls = makeStringList(e);
     unsigned max_fields = e.cryptotab ? lengthof(cryptotabFields)
 			      : lengthof(fstabFields);
