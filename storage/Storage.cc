@@ -135,8 +135,11 @@ Storage::Storage(const Environment& env)
 void
 Storage::logSystemInfo() const
 {
+    if (!testmode())
+    {
     AsciiFile("/proc/version").logContent();
     SystemCmd(LSBIN " -1 /lib/modules");
+    }
 }
 
 
@@ -200,11 +203,18 @@ Storage::initialize()
 	}
     }
 
-    if (autodetect())
-	{
+    if (testmode())
+    {
+	string t = testdir() + "/arch_info";
+	if (access(t.c_str(), R_OK) == 0)
+	    readArchInfo(t);
+	efiboot = (arch() == "ia64");
+    }
+    else if (autodetect())
+    {
 	detectArch();
 	efiboot = (arch() == "ia64");
-	}
+    }
 
     detectObjects();
     setCacheChanges( true );
@@ -270,11 +280,14 @@ void Storage::detectObjects()
  	rootprefix = testdir();
 	delete fstab;
  	fstab = new EtcFstab( rootprefix );
+
 	string t = testdir() + "/volume_info";
 	if( access( t.c_str(), R_OK )==0 )
-	    {
 	    detectFsDataTestMode( t, vBegin(), vEnd() );
-	    }
+
+	t = testdir() + "/free_info";
+	if( access( t.c_str(), R_OK )==0 )
+	    readFreeInfo(t);
 	}
     else
 	{
@@ -350,6 +363,10 @@ Storage::detectArch()
 	if( strncmp( buf.machine, "ppc", 3 )==0 )
 	    {
 	    proc_arch = "ppc";
+	    }
+	else if( strncmp( buf.machine, "x86_64", 5 )==0 )
+	    {
+	    proc_arch = "x86_64";
 	    }
 	else if( strncmp( buf.machine, "ia64", 4 )==0 )
 	    {
@@ -818,6 +835,8 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 		(*i)->logData(Dir);
 
 	    logVolumes(Dir);
+	    logFreeInfo(Dir);
+	    logArchInfo(Dir);
 	}
     }
 
@@ -951,7 +970,7 @@ void Storage::setDetectMountedVolumes(bool val)
 }
 
 
-string Storage::proc_arch;
+string Storage::proc_arch = "i386";
 bool Storage::is_ppc_mac = false;
 bool Storage::is_ppc_pegasos = false;
 
@@ -1847,14 +1866,16 @@ Storage::initializeDisk( const string& disk, bool value )
 
 
 string
-Storage::defaultDiskLabel() const
+Storage::defaultDiskLabel()
 {
+    assertInit();
     return Disk::defaultLabel(efiBoot(), 0);
 }
 
 string
-Storage::defaultDiskLabelSize( unsigned long long size_k ) const
+Storage::defaultDiskLabelSize(unsigned long long size_k)
 {
+    assertInit();
     return Disk::defaultLabel(efiBoot(), size_k);
 }
 
@@ -4778,10 +4799,13 @@ Storage::logCo(const Container* c) const
     {
 	y2mil("begin:" << str);
 
+	if (!testmode())
+	{
 	AsciiFile("/proc/partitions").logContent();
 	AsciiFile("/proc/mdstat").logContent();
 	AsciiFile("/proc/mounts").logContent();
 	AsciiFile("/proc/swaps").logContent();
+	}
 
 	y2mil("end" << str);
     }
@@ -5607,23 +5631,79 @@ Storage::getDfSize(const string& mp)
 
 
 bool
+Storage::isHome(const string& mp) const
+{
+    const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
+			    ".gnome2" };
+
+    list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
+    for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
+    {
+	if (*dir != "root" && checkDir(*dir))
+	{
+	    for (unsigned int i = 0; i < lengthof(files); ++i)
+	    {
+		string file = *dir + "/" + files[i];
+		if (access(file.c_str(), R_OK) == 0)
+		{
+		    y2mil("found home file " << quote(file));
+		    return true;
+		}
+	    }
+	}
+    }
+
+    return false;
+}
+
+
+bool
+Storage::isWindows(const string& mp) const
+{
+    const char* files[] = { "boot.ini", "msdos.sys", "io.sys", "config.sys", "MSDOS.SYS",
+			    "IO.SYS", "bootmgr", "$Boot" };
+
+    for (unsigned int i = 0; i < lengthof(files); ++i)
+    {
+	string file = mp + "/" + files[i];
+	if (access(file.c_str(), R_OK) == 0)
+	{
+	    y2mil("found windows file " << quote(file));
+	    return true;
+	}
+    }
+
+    return false;
+}
+
+
+bool
 Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		     unsigned long long& df_free,
-		     unsigned long long& used, bool& win, bool& efi,
+		     unsigned long long& used, bool& win, bool& efi, bool& home,
 		     bool use_cache)
     {
     bool ret = false;
     assertInit();
     resize_free = df_free = used = 0;
+    win = efi = home = false;
+    
+    if (testmode())
+	use_cache = true;
+
     y2mil("device:" << device << " use_cache:" << use_cache);
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
 	if (use_cache && getCachedFreeInfo(vol->device(), df_free, resize_free,
-					   used, win, efi, ret))
+					   used, win, efi, home, ret))
 	    {
 	    }
 	else if (vol->isUsedBy())
+	{
+	    ret = false;
+	}
+	else if (testmode())
 	{
 	    ret = false;
 	}
@@ -5699,24 +5779,11 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		    else
 			ret = false;
 		    }
-		win = false;
-		const char * files[] = { "boot.ini", "msdos.sys", "io.sys",
-				         "config.sys", "MSDOS.SYS", "IO.SYS",
-					 "bootmgr", "$Boot" };
-		unsigned i=0;
-		while( !win && i<lengthof(files) )
-		{
-		    string f = mp + "/" + files[i];
-		    if (access(f.c_str(), R_OK) == 0)
-		    {
-			y2mil("found windows file " << quote(f));
-			win = true;
-		    }
-		    i++;
-		}
+		win = isWindows(mp);
 		efi = vol->getFs()==VFAT && checkDir( mp + "/efi" );
 		if( efi )
 		    win = false;
+		home = isHome(mp);
 		}
 	    if( needUmount )
 		{
@@ -5730,7 +5797,7 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->crUnsetup();
 		}
-	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, ret);
+	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, home, ret);
 	    }
 	}
     if( ret )
@@ -5742,21 +5809,20 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 
 void
 Storage::setCachedFreeInfo(const string& device, unsigned long long df_free,
-			   unsigned long long resize_free,
-			   unsigned long long used, bool win, bool efi,
-			   bool resize_ok)
+			   unsigned long long resize_free, unsigned long long used, bool win,
+			   bool efi, bool home, bool resize_ok)
 {
     y2mil("device:" << device << " df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	  " win:" << win << " efi:" << efi);
+	  " win:" << win << " efi:" << efi << " home:" << home);
 
-    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, resize_ok));
+    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, home, resize_ok));
 }
 
 
 bool
 Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 			   unsigned long long& resize_free,
-			   unsigned long long& used, bool& win, bool& efi,
+			   unsigned long long& used, bool& win, bool& efi, bool& home,
 			   bool& resize_ok) const
 {
     map<string, FreeInfo>::const_iterator i = freeInfo.find(device);
@@ -5768,12 +5834,13 @@ Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 	used = i->second.used;
 	win = i->second.win;
 	efi = i->second.efi;
+	home = i->second.home;
 	resize_ok = i->second.rok;
 	}
     y2mil("device:" << device << " ret:" << ret);
     if( ret )
 	y2mil("df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	      " win:" << win << " efi:" << efi << " resize_ok:" << resize_ok);
+	      " win:" << win << " efi:" << efi << " home:" << home << " resize_ok:" << resize_ok);
     return ret;
 }
 
@@ -5798,6 +5865,110 @@ void Storage::checkPwdBuf( const string& device )
 	    }
 	}
     }
+
+    void
+    Storage::logFreeInfo(const string& Dir) const
+    {
+	string fname(Dir + "/free_info.tmp");
+	ofstream file(fname.c_str());
+	classic(file);
+
+	for (map<string, FreeInfo>::const_iterator it = freeInfo.begin(); it != freeInfo.end(); ++it)
+	{
+	    file << it->first << " df_free=" << it->second.df_free << " resize_free="
+		 << it->second.resize_free << " used=" << it->second.used << " windows="
+		 << it->second.win << " efi=" << it->second.efi << " home=" << it->second.home
+		 << " resize_ok=" << it->second.rok << endl;
+	}
+
+	file.close();
+	handleLogFile(fname);
+    }
+
+
+    void
+    Storage::readFreeInfo(const string& file)
+    {
+	AsciiFile f(file);
+	const vector<string>& lines = f.lines();
+	for (vector<string>::const_iterator line = lines.begin(); line != lines.end(); ++line)
+	{
+	    list<string> l = splitString(*line);
+
+	    if (l.size() >= 2)
+	    {
+		string device = l.front();
+		l.erase(l.begin());
+
+		const map<string, string> m = makeMap(l);
+		map<string, string>::const_iterator i;
+
+		unsigned long long df_free = 0;
+		unsigned long long resize_free = 0;
+		unsigned long long used = 0;
+
+		bool windows = false;
+		bool efi = false;
+		bool home = false;
+
+		bool rok = false;
+
+		i = m.find("df_free");
+		if (i != m.end())
+		    i->second >> df_free;
+		i = m.find("resize_free");
+		if (i != m.end())
+		    i->second >> resize_free;
+		i = m.find("used");
+		if (i != m.end())
+		    i->second >> used;
+
+		i = m.find("windows");
+		if (i != m.end())
+		    i->second >> windows;
+		i = m.find("efi");
+		if (i != m.end())
+		    i->second >> efi;
+		i = m.find("home");
+		if (i != m.end())
+		    i->second >> home;
+
+		i = m.find("resize_ok");
+		if (i != m.end())
+		    i->second >> rok;
+
+		mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used,
+							      windows, efi, home, rok));
+	    }
+	}
+    }
+
+
+    void
+    Storage::logArchInfo(const string& Dir) const
+    {
+	string fname(Dir + "/arch_info.tmp");
+	ofstream file(fname.c_str());
+	classic(file);
+
+	file << "Arch: " << arch() << endl;
+
+	file.close();
+	handleLogFile(fname);
+    }
+
+
+    void
+    Storage::readArchInfo(const string& file)
+    {
+	AsciiFile f(file);
+	const vector<string>& lines = f.lines();
+	vector<string>::const_iterator it;
+
+	if ((it = find_if(lines, string_starts_with("Arch:"))) != lines.end())
+	    proc_arch = extractNthWord(1, *it);
+    }
+
 
 int
 Storage::createBackupState( const string& name )

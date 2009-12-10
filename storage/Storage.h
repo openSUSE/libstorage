@@ -217,18 +217,18 @@ class DiskData;
 
 	struct FreeInfo
 	    {
-	    unsigned long long resize_free;
 	    unsigned long long df_free;
+	    unsigned long long resize_free;
 	    unsigned long long used;
 	    bool win;
 	    bool efi;
+	    bool home;
 	    bool rok;
-	    FreeInfo( unsigned long long df,
-		      unsigned long long resize,
-		      unsigned long long usd, bool w=false, bool e=false,
-		      bool r=true )
-		      { resize_free=resize; df_free=df; used=usd; win=w; 
-		        efi=e, rok=r; }
+	    FreeInfo(unsigned long long df, unsigned long long resize,
+		     unsigned long long usd, bool w = false, bool e = false,
+		     bool h = false, bool r = true)
+		: df_free(df), resize_free(resize), used(usd), win(w), efi(e),
+		  home(h), rok(r) {}
 	    };
 
     public:
@@ -363,8 +363,8 @@ class DiskData;
 	int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots);
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );
-	string defaultDiskLabel() const;
-	string defaultDiskLabelSize( unsigned long long size_k ) const;
+	string defaultDiskLabel();
+	string defaultDiskLabelSize(unsigned long long size_k);
 
 	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );
@@ -431,7 +431,7 @@ class DiskData;
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 	bool getFreeInfo( const string& device, unsigned long long& resize_free,
 	                  unsigned long long& df_free,
-	                  unsigned long long& used, bool& win, bool& efi,
+	                  unsigned long long& used, bool& win, bool& efi, bool& home,
 			  bool use_cache );
 	static unsigned long long getDfSize(const string& mp);
 	int createBackupState( const string& name );
@@ -1718,6 +1718,9 @@ class DiskData;
 	Device* findDevice(const string& dev);
 
 	void checkPwdBuf( const string& device );
+	bool isHome(const string& mp) const;
+	bool isWindows(const string& mp) const;
+
 	bool haveMd( MdCo*& md );
 	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
@@ -1732,14 +1735,20 @@ class DiskData;
 	string backupStates() const;
 	void detectObjects();
 	void deleteBackups();
+
 	void setCachedFreeInfo(const string& device, unsigned long long df_free,
 			       unsigned long long resize_free,
-			       unsigned long long used, bool win, bool efi,
+			       unsigned long long used, bool win, bool efi, bool home,
 			       bool resize_ok);
 	bool getCachedFreeInfo(const string& device, unsigned long long& df_free,
 			       unsigned long long& resize_free,
-			       unsigned long long& used, bool& win, bool& efi,
+			       unsigned long long& used, bool& win, bool& efi, bool& home,
 			       bool& resize_ok) const;
+	void logFreeInfo(const string& Dir) const;
+	void readFreeInfo(const string& file);
+
+	void logArchInfo(const string& Dir) const;
+	void readArchInfo(const string& file);
 
 	list<commitAction> getCommitActions() const;
 

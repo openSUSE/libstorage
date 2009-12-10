@@ -42,6 +42,7 @@ AC_OUTPUT(
 	testsuite/single.out/Makefile
 	testsuite/data/Makefile
 	testsuite/data/thalassa/Makefile
+	testsuite/data/scandium/Makefile
 	testsuite-real/Makefile
 	package/libstorage.spec:libstorage.spec.in
 )

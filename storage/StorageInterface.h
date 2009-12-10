@@ -1172,7 +1172,7 @@ namespace storage
 	 *
 	 * @return default disk label of the architecture
 	 */
-	virtual string defaultDiskLabel() const = 0;
+	virtual string defaultDiskLabel() = 0;
 
 	/**
 	 * Query the default disk label of the architecture of the
@@ -1183,7 +1183,7 @@ namespace storage
 	 *
 	 * @return default disk label of the disk
 	 */
-	virtual string defaultDiskLabelSize(unsigned long long sizeK) const = 0;
+	virtual string defaultDiskLabelSize(unsigned long long sizeK) = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.
@@ -2185,6 +2185,7 @@ namespace storage
 	 * @param usedK used space in kilobytes for filesystem
 	 * @param win flag if partition contains a windows installation
 	 * @param efi flag if partition contains a efi boot directory
+	 * @param home flag if partition looks like a home partition
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
 	 */
@@ -2192,7 +2193,8 @@ namespace storage
 	                          unsigned long long& resize_freeK,
 	                          unsigned long long& df_freeK,
 	                          unsigned long long& usedK,
-				  bool& win, bool& efi, bool use_cache ) = 0;
+				  bool& win, bool& efi, bool& home,
+				  bool use_cache ) = 0;
 
 	/**
 	 * Read fstab and cryptotab, if existent, from a specified directory and
@@ -2270,7 +2272,7 @@ namespace storage
     struct Environment
     {
 	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true),
-	    instsys(false), logdir("/var/log/YaST2"), testdir("") {}
+	    instsys(false), logdir("/var/log/YaST2"), testdir("tmp") {}
 
 	bool readonly;
 	bool testmode;

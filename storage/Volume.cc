@@ -218,7 +218,8 @@ void Volume::init()
     if( numeric||!nm.empty() )
 	{
 	setNameDev();
-	getMajorMinor( dev, mjr, mnr );
+	if (!getStorage()->testmode())
+	    getMajorMinor( dev, mjr, mnr );
 	}
     if( !numeric )
 	num = 0;
@@ -2857,7 +2858,7 @@ void Volume::getTestmodeData( const string& data )
     list<string> l = splitString( data );
     if( l.begin()!=l.end() )
 	l.erase( l.begin() );
-    map<string,string> m = makeMap( l );
+    const map<string,string> m = makeMap( l );
     map<string,string>::const_iterator i = m.find( "fs" );
     if( i!=m.end() )
 	fs = detected_fs = toFsType(i->second);

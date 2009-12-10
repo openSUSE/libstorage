@@ -17,7 +17,7 @@ noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
 	humanstring1.single humanstring2.single partitionname.single		\
 	partitionprefix.single udevencode.single udevdecode.single		\
 	backupstate1.single contvolinfo1.single lvm_create2.single		\
-	usedby1.single recursive1.single
+	usedby1.single recursive1.single freeinfo1.single disklabel1.single
 
 partition1_single_SOURCES = partition1.cc common.h common.cc
 
@@ -54,6 +54,10 @@ lvm_create2_single_SOURCES = lvm_create2.cc common.h common.cc
 usedby1_single_SOURCES = usedby1.cc common.h common.cc
 
 recursive1_single_SOURCES = recursive1.cc common.h common.cc
+
+freeinfo1_single_SOURCES = freeinfo1.cc common.h common.cc
+
+disklabel1_single_SOURCES = disklabel1.cc common.h common.cc
 
 clean-local:
 	rm -f tmp.err.* tmp.out.* site.exp site.bak

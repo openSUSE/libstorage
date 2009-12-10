@@ -5,6 +5,18 @@ Thu Dec 10 12:31:18 CET 2009 - fehr@suse.de
 - use "crypt" fstab entry when "user" not when "noauto" set
 
 -------------------------------------------------------------------
+Wed Dec 09 12:39:59 CET 2009 - aschnell@suse.de
+
+- added saving and loading of freeinfo and arch
+
+-------------------------------------------------------------------
+Tue Dec 08 16:39:14 CET 2009 - aschnell@suse.de
+
+- added check for home partitions in getFreeInfo
+- 2.19.3
+>>>>>>> 9e14c290b5c018447b641fc3e21d500fbb26270a
+
+-------------------------------------------------------------------
 Tue Dec  8 13:26:47 CET 2009 - fehr@suse.de
 
 - fix handling of inactive swap file entry in fstab (#504497)
