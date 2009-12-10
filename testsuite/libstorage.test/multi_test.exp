@@ -1,8 +1,8 @@
 #
 # multi_test.exp
-# 'main' file for all limal tests
 #
 # Runs all tests with the extention "multi" for several times.
+#
 # Each testprogram <programname>.multi has an own subdirectory
 # <programmname> in which several testcases are defined for this program
 # Each testcase has 3 files:
@@ -17,12 +17,11 @@
 # The testcase is successful if the program returns 0 AND the outputs
 # are identically equal to the files "<programname>.out" and 
 # "<programname>.err".
+#
 
-
-if { [catch {  set filenames [glob $srcdir/*.multi] } ] } {
+if { [catch { set filenames [lsort [glob $srcdir/*.multi] ] } ] } {
     puts "No .multi files found"
 } else {
     # foreach file, call multi-run (from testsuite/lib)
-
     foreach file $filenames { multi-run $file }
 }
