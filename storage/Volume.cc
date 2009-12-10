@@ -97,7 +97,8 @@ namespace storage
 	  dmcrypt_active(v.dmcrypt_active), ronly(v.ronly),
 	  encryption(v.encryption), orig_encryption(v.orig_encryption),
 	  loop_dev(v.loop_dev), dmcrypt_dev(v.dmcrypt_dev),
-	  fstab_loop_dev(v.fstab_loop_dev), crypt_pwd(v.crypt_pwd),
+	  fstab_loop_dev(v.fstab_loop_dev), 
+	  crypt_pwd(v.crypt_pwd), orig_crypt_pwd(v.orig_crypt_pwd),
 	  alt_names(v.alt_names), num(v.num), orig_size_k(v.orig_size_k),
 	  dtxt(v.dtxt)
     {
@@ -1341,6 +1342,7 @@ Volume::setEncryption(bool val, EncryptType typ )
 	    is_loop = false;
 	    encryption = ENC_NONE;
 	    crypt_pwd.erase();
+	    orig_crypt_pwd.erase();
 	    }
 	else
 	    {
@@ -1622,10 +1624,23 @@ Volume::setCryptPwd( const string& val )
 	}
     else
 	{
-	crypt_pwd=val;
+	orig_crypt_pwd = crypt_pwd;
+	crypt_pwd = val;
 	if( encryption==ENC_UNKNOWN )
 	    detectEncryption();
 	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+bool
+Volume::needCryptPwd() const
+    {
+    bool ret = encryption!=ENC_NONE && crypt_pwd.empty();
+    if( ret && is_loop )
+	ret = ret && !loop_active;
+    if( ret && dmcrypt() )
+	ret = ret && !dmcrypt_active;
     y2mil("ret:" << ret);
     return( ret );
     }
@@ -1637,14 +1652,21 @@ bool Volume::needLosetup( bool urgent ) const
 		(dmcrypt() && cType() == LOOP));
     if( !urgent && loop_dev.empty() )
 	ret = false;
+    if( is_loop && encryption!=ENC_NONE &&
+        !crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd )
+	ret = true;
     return( ret );
     }
 
 bool Volume::needCryptsetup() const
     {
-    return( dmcrypt()!=dmcrypt_active &&
-            (encryption==ENC_NONE || encryption!=orig_encryption || 
-	     !crypt_pwd.empty() || isTmpCryptMp(mp)));
+    bool ret = (dmcrypt()!=dmcrypt_active) &&
+	       (encryption==ENC_NONE || encryption!=orig_encryption || 
+	        !crypt_pwd.empty() || isTmpCryptMp(mp));
+    if( dmcrypt() && encryption!=ENC_NONE &&
+        !crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd )
+	ret = true;
+    return( ret );
     }
 
 bool Volume::needCrsetup( bool urgent ) const
@@ -1759,12 +1781,15 @@ EncryptType Volume::detectEncryption()
 	{
 	is_loop = cType() == LOOP;
 	ret = encryption = orig_encryption = try_order[pos];
+	orig_crypt_pwd = crypt_pwd;
 	}
     else
 	{
 	is_loop = false;
 	dmcrypt_dev.erase();
 	loop_dev.erase();
+	crypt_pwd.erase();
+	orig_crypt_pwd.erase();
 	ret = encryption = orig_encryption = ENC_UNKNOWN;
 	}
     unlink( fname.c_str() );
@@ -1806,6 +1831,8 @@ int Volume::doLosetup()
 	    SystemCmd c( getLosetupCmd( encryption, fname ));
 	    if( c.retcode()!=0 )
 		ret = VOLUME_LOSETUP_FAILED;
+	    else
+		orig_crypt_pwd = crypt_pwd;
 	    if( !fname.empty() )
 		{
 		unlink( fname.c_str() );
@@ -1932,6 +1959,8 @@ int Volume::doCryptsetup()
 			ret = VOLUME_CRYPTSETUP_FAILED;
 		    }
 		}
+	    if( ret==0 )
+		orig_crypt_pwd = crypt_pwd;
 	    unlink( fname.c_str() );
 	    Storage::waitForDevice(dmcrypt_dev);
 	    }
@@ -2815,6 +2844,9 @@ ostream& Volume::logVolume( ostream& file ) const
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
     if( is_loop && encryption!=ENC_NONE && !crypt_pwd.empty() )
 	file << " pwd:" << crypt_pwd;
+    if( is_loop && encryption!=ENC_NONE && !orig_crypt_pwd.empty() && 
+        orig_crypt_pwd!=crypt_pwd )
+	file << " orig_pwd:" << orig_crypt_pwd;
 #endif
     file << endl;
     return( file );
@@ -2856,7 +2888,7 @@ void Volume::getTestmodeData( const string& data )
 	encryption = orig_encryption = toEncType(i->second);
     i = m.find( "pwd" );
     if( i!=m.end() )
-	crypt_pwd = i->second;
+	orig_crypt_pwd = crypt_pwd = i->second;
     }
 
 
@@ -2952,6 +2984,8 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
+	if( v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
+	    s << " orig_pwd:" << v.orig_crypt_pwd;
 #endif
 	}
     if( !v.dmcrypt_dev.empty() )

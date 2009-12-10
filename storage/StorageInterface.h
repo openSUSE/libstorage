@@ -1332,6 +1332,22 @@ namespace storage
 	virtual int getCryptPassword( const string& device, string& pwd ) = 0;
 
 	/**
+	 * Verify password of a volume
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @param pwd crypt password for this volume
+	 * @return zero if password is ok, a negative number to indicate an error
+	 */
+	virtual int verifyCryptPassword( const string& device, const string& pwd ) = 0;
+	/**
+	 * Check if crypt password is required
+	 *
+	 * @param device name of volume, e.g. /dev/hda1
+	 * @return true if password is required, false otherwise
+	 */
+	virtual bool needCryptPassword( const string& device ) = 0;
+
+	/**
 	 * Set encryption state of a volume
 	 *
 	 * @param device name of volume, e.g. /dev/hda1

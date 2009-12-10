@@ -104,7 +104,8 @@ class Storage;
 	virtual int setEncryption(bool val, storage::EncryptType typ = storage::ENC_LUKS );
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val );
-	void clearCryptPwd() { crypt_pwd.erase(); }
+	void clearCryptPwd() { crypt_pwd.erase(); orig_crypt_pwd.erase(); }
+	bool needCryptPwd() const; 
 	const string& getMount() const { return mp; }
 	bool hasOrigMount() const { return !orig_mp.empty(); }
 	bool needRemount() const;
@@ -280,6 +281,7 @@ class Storage;
 	string dmcrypt_dev;
 	string fstab_loop_dev;
 	string crypt_pwd;
+	string orig_crypt_pwd;
 	std::list<string> alt_names;
 	unsigned num;
 	unsigned long long orig_size_k;

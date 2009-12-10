@@ -527,6 +527,13 @@ bool Md::mdStringNum( const string& name, unsigned& num )
     return( ret );
     }
 
+string Md::mdDevice( unsigned num )
+    {
+    string dev( "/dev/md" );
+    dev += decString(num);
+    return( dev );
+    }
+
 void Md::setPersonality( MdType val )
     {
     md_type=val;

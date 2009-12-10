@@ -64,6 +64,8 @@ class Md : public Volume
 
 	static const string& pName( storage::MdType t ) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
+	static string mdDevice( unsigned num );
+
 	friend std::ostream& operator<< (std::ostream& s, const Md& m );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	Text removeText( bool doing ) const;
