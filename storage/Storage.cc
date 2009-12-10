@@ -5751,25 +5751,19 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		string mdir = tmpDir() + "/tmp-free-mp";
 		unlink( mdir.c_str() );
 		rmdir( mdir.c_str() );
-		string save_opt;
-		string cur_opt;
+		string opts = vol->getFstabOption();
 		if( vol->getFs()==NTFS )
 		    {
-		    save_opt = vol->getFstabOption();
-		    cur_opt = save_opt;
-		    if( !cur_opt.empty() )
-			cur_opt += ",";
-		    cur_opt += "show_sys_files";
-		    vol->changeFstabOptions( cur_opt );
+		    if( !opts.empty() )
+			opts += ",";
+		    opts += "show_sys_files";
 		    }
 		if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
-		    mountDev( device, mdir ) )
+		    mountDev( device, mdir, true, opts ) )
 		    {
 		    needUmount = true;
 		    mp = mdir;
 		    }
-		if( vol->getFs()==NTFS )
-		    vol->changeFstabOptions( save_opt );
 		}
 	    else
 		mp = vol->getMount();
