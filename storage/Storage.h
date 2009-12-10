@@ -383,6 +383,7 @@ class DiskData;
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
 	int verifyCryptPassword( const string& device, const string& pwd );
+	int verifyCryptFilePassword( const string& file, const string& pwd );
 	bool needCryptPassword( const string& device );
 	int forgetCryptPassword( const string& device );
 	int getCryptPassword( const string& device, string& pwd );

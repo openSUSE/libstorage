@@ -1,8 +1,14 @@
 -------------------------------------------------------------------
+Thu Dec 10 18:39:07 CET 2009 - fehr@suse.de
+
+- add capability to verify passwords of file based loop devices
+
+-------------------------------------------------------------------
 Thu Dec 10 12:31:18 CET 2009 - fehr@suse.de
 
 - do some changes in handling of encrypted passwords
-- use "crypt" fstab entry when "user" not when "noauto" set
+- use "crypt" fstab entry when "user" is set, not any more when 
+  "noauto" set
 
 -------------------------------------------------------------------
 Wed Dec 09 12:39:59 CET 2009 - aschnell@suse.de

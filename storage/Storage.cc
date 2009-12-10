@@ -2345,7 +2345,41 @@ Storage::verifyCryptPassword( const string& device, const string& pwd )
 	}
     else
 	{
-	ret = STORAGE_VOLUME_NOT_FOUND;
+	ret = verifyCryptFilePassword( device, pwd );
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int
+Storage::verifyCryptFilePassword( const string& file, const string& pwd )
+    {
+    int ret = VOLUME_CRYPT_NOT_DETECTED;
+    assertInit();
+    y2mil("file:" << file << " l:" << pwd.length());
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2mil("password:" << pwd);
+#endif
+
+    VolIterator vol;
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else
+	{
+	SystemInfo systeminfo;
+	LoopCo* co = new LoopCo(this, false, systeminfo);
+	if( co )
+	    {
+	    Loop* loop = new Loop( *co, file, true, 0, true );
+	    if( loop && loop->setCryptPwd( pwd )==0 && 
+		loop->detectEncryption()!=ENC_UNKNOWN )
+		ret = 0;
+	    if( loop )
+		delete loop;
+	    delete co;
+	    }
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -2427,7 +2461,7 @@ Storage::needCryptPassword( const string& device )
 	}
     else
 	{
-	ret = pwdBuf.find( device )!=pwdBuf.end();
+	ret = pwdBuf.find( device )==pwdBuf.end();
 	}
     y2mil("ret:" << ret);
     return( ret );

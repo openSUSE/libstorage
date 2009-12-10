@@ -238,6 +238,7 @@ class Storage;
 	int doCryptsetup();
 	int loUnsetup( bool force=false );
 	int cryptUnsetup( bool force=false );
+	bool pwdLengthOk( storage::EncryptType typ, const string& val ) const;
 
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
