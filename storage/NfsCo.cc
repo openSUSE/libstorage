@@ -29,6 +29,7 @@
 #include "storage/SystemInfo.h"
 #include "storage/Storage.h"
 #include "storage/EtcFstab.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -49,10 +50,11 @@ NfsCo::NfsCo( Storage * const s ) :
     y2deb("constructing NfsCo");
     }
 
-NfsCo::NfsCo( Storage * const s, const string& file ) :
-    Container(s,"nfs",staticType())
+
+    NfsCo::NfsCo(Storage * const s, const AsciiFile& file)
+	: Container(s, "nfs", staticType())
     {
-    y2deb("constructing NfsCo file:" << file);
+	y2deb("constructing NfsCo from file " << file.name());
     }
 
 

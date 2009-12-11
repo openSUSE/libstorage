@@ -33,6 +33,7 @@
 #include "storage/Storage.h"
 #include "storage/EtcFstab.h"
 #include "storage/StorageDefines.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -50,10 +51,10 @@ namespace storage
 }
 
 
-LoopCo::LoopCo(Storage * const s, const string& file)
-    : Container(s, "loop", staticType())
+    LoopCo::LoopCo(Storage * const s, const AsciiFile& file)
+	: Container(s, "loop", staticType())
 {
-    y2deb("constructing LoopCo file:" << file);
+    y2deb("constructing LoopCo from file " << file.name());
     init();
 }
 

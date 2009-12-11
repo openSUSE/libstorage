@@ -411,15 +411,11 @@ void
     {
     if (testmode())
 	{
-	glob_t globbuf;
-	if (glob((testdir() + "/disk_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	    {
-	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList(new Disk(this, AsciiFile(*p)));
-	    }
- 	globfree (&globbuf);
+	    const list<string> l = glob(testdir() + "/disk_*.info", GLOB_NOSORT);
+	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
+		addToList(new Disk(this, AsciiFile(*i)));
 	}
-    else if (autodetect())
+    else if (autodetect() && getenv("LIBSTORAGE_NO_DISK") == NULL)
 	{
 	    autodetectDisks(systeminfo);
 	}
@@ -430,10 +426,10 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	    string file = testdir() + "/md";
+	    string file = testdir() + "/md.info";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
-	    addToList( new MdCo( this, file ) );
+	    addToList(new MdCo(this, AsciiFile(file)));
 	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_MDRAID") == NULL)
@@ -451,10 +447,10 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	    string file = testdir() + "/loop";
+	    string file = testdir() + "/loop.info";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
-	    addToList( new LoopCo( this, file ) );
+	    addToList(new LoopCo(this, AsciiFile(file)));
 	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LOOP") == NULL)
@@ -473,10 +469,10 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	    string file = testdir() + "/nfs";
+	    string file = testdir() + "/nfs.info";
 	if( access( file.c_str(), R_OK )==0 )
 	    {
-	    addToList( new NfsCo( this, file ) );
+	    addToList(new NfsCo(this, AsciiFile(file)));
 	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_NFS") == NULL)
@@ -494,13 +490,9 @@ Storage::detectLvmVgs()
     {
     if (testmode())
 	{
-	glob_t globbuf;
-	if (glob((testdir() + "/lvmvg_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	    {
-	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
-		addToList(new LvmVg(this, AsciiFile(*p)));
-	    }
- 	globfree (&globbuf);
+	    const list<string> l = glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT);
+	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
+		addToList(new LvmVg(this, AsciiFile(*i)));
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
@@ -529,12 +521,7 @@ void
 {
     if (testmode())
     {
-	glob_t globbuf;
-	if (glob((testdir() + "/dmraid_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	{
 	    // TODO: load test data
-	}
- 	globfree (&globbuf);
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
@@ -560,12 +547,7 @@ void
 {
     if (testmode())
     {
-	glob_t globbuf;
-	if (glob((testdir() + "/dmmultipath_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	{
 	    // TODO: load test data
-	}
- 	globfree (&globbuf);
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
@@ -591,12 +573,7 @@ void
     {
     if (testmode())
 	{
-	glob_t globbuf;
-	if (glob((testdir() + "/dm_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
-	    {
 	    // TODO: load test data
-	    }
- 	globfree (&globbuf);
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_DM") == NULL)
 	{
@@ -5670,7 +5647,7 @@ Storage::isHome(const string& mp) const
     const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
 			    ".gnome2" };
 
-    list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
+    const list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
     for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
     {
 	if (*dir != "root" && checkDir(*dir))

@@ -37,7 +37,8 @@ class MdCo : public Container
 
     public:
 	MdCo( Storage * const s, bool detect );
-	MdCo(const MdCo& c);
+	MdCo(const MdCo& c);	
+	MdCo(Storage * const s, const AsciiFile& file);
 	virtual ~MdCo();
 
 	static storage::CType staticType() { return storage::MD; }
@@ -111,8 +112,6 @@ class MdCo : public Container
 	    IterPair<MdCInter> p( (MdCInter(begin())), (MdCInter(end())) );
 	    return( ConstMdIter( MdCPIterator( p, Check, true )) );
 	    }
-
-	MdCo( Storage * const s, const string& File );
 
 	void getMdData();
 	void getMdData( unsigned num );

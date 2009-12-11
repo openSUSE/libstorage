@@ -46,10 +46,11 @@ MdCo::MdCo( Storage * const s, bool detect ) :
 	getMdData();
     }
 
-MdCo::MdCo( Storage * const s, const string& file ) :
-    Container(s,"md",staticType())
+
+    MdCo::MdCo(Storage * const s, const AsciiFile& file)
+	: Container(s, "md", staticType())
     {
-    y2deb("constructing MdCo file:" << file);
+	y2deb("constructing MdCo from file " << file.name());
     init();
     }
 

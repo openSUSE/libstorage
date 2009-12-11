@@ -40,6 +40,7 @@ class LoopCo : public Container
 
 	LoopCo(Storage * const s, bool detect, SystemInfo& systeminfo);
 	LoopCo(const LoopCo& c);
+	LoopCo(Storage * const s, const AsciiFile& file);
 	virtual ~LoopCo();
 
 	static storage::CType staticType() { return storage::LOOP; }
@@ -104,8 +105,6 @@ class LoopCo : public Container
 	    IterPair<LoopCInter> p( (LoopCInter(begin())), (LoopCInter(end())) );
 	    return( ConstLoopIter( LoopCPIterator( p, Check, true )) );
 	    }
-
-	LoopCo( Storage * const s, const string& File );
 
 	void getLoopData(SystemInfo& systeminfo);
 	bool findLoop( unsigned num, LoopIter& i );

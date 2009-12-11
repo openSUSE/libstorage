@@ -38,6 +38,7 @@ class NfsCo : public Container
     public:
 	NfsCo(Storage * const s, const EtcFstab& fstab, SystemInfo& systeminfo);
 	NfsCo( Storage * const s );
+	NfsCo(Storage * const s, const AsciiFile& file);
 	NfsCo(const NfsCo& c);
 	virtual ~NfsCo();
 
@@ -100,8 +101,6 @@ class NfsCo : public Container
 	    IterPair<NfsCInter> p( (NfsCInter(begin())), (NfsCInter(end())) );
 	    return( ConstNfsIter( NfsCPIterator( p, Check, true )) );
 	    }
-
-	NfsCo( Storage * const s, const string& File );
 
 	bool findNfs( const string& dev, NfsIter& i );
 	bool findNfs( const string& dev );
