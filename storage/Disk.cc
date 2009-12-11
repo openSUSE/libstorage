@@ -524,7 +524,7 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 void
 Disk::logData(const string& Dir) const
     {
-    string fname( Dir + "/disk_" + logfile_name + ".tmp" );
+    string fname( Dir + "/disk_" + logfile_name + ".info.tmp" );
     ofstream file( fname.c_str() );
     classic(file);
 

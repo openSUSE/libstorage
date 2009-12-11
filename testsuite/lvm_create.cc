@@ -124,8 +124,8 @@ main()
     disks.push_back( "/dev/hda" );
     disks.push_back( "/dev/hdb" );
     system ("rm -rf tmp/*");
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
     createLvs( "system", 50, disks );
     disks.clear();
 
@@ -136,8 +136,8 @@ main()
     disks.push_back( "/dev/sda" );
     disks.push_back( "/dev/sdb" );
     system ("rm -rf tmp/*");
-    system ("cp data/disk_sda tmp");
-    system ("cp data/disk_sdb tmp");
+    system ("cp data/disk_sda.info tmp");
+    system ("cp data/disk_sdb.info tmp");
     createLvs( "system", 50, disks );
     disks.clear();
 
@@ -150,10 +150,10 @@ main()
     disks.push_back( "/dev/hda" );
     disks.push_back( "/dev/hdb" );
     system ("rm -rf tmp/*");
-    system ("cp data/disk_sda tmp");
-    system ("cp data/disk_sdb tmp");
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
+    system ("cp data/disk_sda.info tmp");
+    system ("cp data/disk_sdb.info tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
     createLvs( "system", 50, disks );
     disks.clear();
 
@@ -162,6 +162,6 @@ main()
      * partition
      */
     system ("rm -rf tmp/*");
-    system ("cp data/disk_hda tmp");
+    system ("cp data/disk_hda.info tmp");
     createExtendedLv("system", "/dev/hda4");
 }

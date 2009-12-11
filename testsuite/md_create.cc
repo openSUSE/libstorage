@@ -54,9 +54,9 @@ main()
     
     deque<string> devs;
 
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
-    system ("cp data/disk_sda tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
+    system ("cp data/disk_sda.info tmp");
 
     /*
      * Check that we _cannot_ create software raid devices with just one

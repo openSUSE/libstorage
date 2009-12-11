@@ -96,27 +96,27 @@ main()
      * Check that we can create 3 primary, 1 extended and 59 logical partitions
      * on a ide disk with msdos partition table.
      */
-    system ("cp data/disk_hda tmp/disk_hda");
+    system ("cp data/disk_hda.info tmp");
     msdos ("/dev/hda", 59);
 
     /*
      * Check that we can create 3 primary, 1 extended and 11 logical partitions
      * on a scsi disk with msdos partition table.
      */
-    system ("cp data/disk_sda tmp/disk_sda");
+    system ("cp data/disk_sda.info tmp");
     msdos ("/dev/sda", 11);
 
     /*
      * Check that we can create 63 primary partitions on a ide disk with gpt
      * partition table.
      */
-    system ("cp data/disk_hda tmp/disk_hda");
+    system ("cp data/disk_hda.info tmp");
     gpt ("/dev/hda", 63);
 
     /*
      * Check that we can create 15 primary partitions on a scsi disk with gpt
      * partition table.
      */
-    system ("cp data/disk_sda tmp/disk_sda");
+    system ("cp data/disk_sda.info tmp");
     gpt ("/dev/sda", 15);
 }

@@ -76,7 +76,7 @@ main()
 {
     setup_system();
 
-    system ("cp data/disk_hdb tmp/disk_hdb");
+    system ("cp data/disk_hdb.info tmp");
 
     run1 ();
     print_fstab ();

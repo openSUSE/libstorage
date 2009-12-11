@@ -1742,7 +1742,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
     void
     LvmVg::logData(const string& Dir) const
     {
-	string fname(Dir + "/lvmvg_" + name() + ".tmp");
+	string fname(Dir + "/lvmvg_" + name() + ".info.tmp");
 	ofstream file(fname.c_str());
 	classic(file);
 

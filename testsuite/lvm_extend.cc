@@ -72,10 +72,10 @@ main()
      * /dev/hda1 ) by some partitions on the same ide disk
      */
     system ("rm -rf tmp/*");
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
-    system ("cp data/disk_sda tmp");
-    system ("cp data/disk_sdb tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
+    system ("cp data/disk_sda.info tmp");
+    system ("cp data/disk_sdb.info tmp");
     devs.push_back("/dev/hda2");
     devs.push_back("/dev/hda5");
     extendVg( "system", devs );
@@ -86,10 +86,10 @@ main()
      * /dev/hda1 ) by some partitions on the another ide disk
      */
     system ("rm -rf tmp/*");
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
-    system ("cp data/disk_sda tmp");
-    system ("cp data/disk_sdb tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
+    system ("cp data/disk_sda.info tmp");
+    system ("cp data/disk_sdb.info tmp");
     devs.push_back("/dev/hdb1");
     devs.push_back("/dev/hdb2");
     extendVg( "system", devs );
@@ -100,10 +100,10 @@ main()
      * /dev/hda1 ) by some partitions on the another scsi disk
      */
     system ("rm -rf tmp/*");
-    system ("cp data/disk_hda tmp");
-    system ("cp data/disk_hdb tmp");
-    system ("cp data/disk_sda tmp");
-    system ("cp data/disk_sdb tmp");
+    system ("cp data/disk_hda.info tmp");
+    system ("cp data/disk_hdb.info tmp");
+    system ("cp data/disk_sda.info tmp");
+    system ("cp data/disk_sdb.info tmp");
     devs.push_back("/dev/sda1");
     devs.push_back("/dev/sdb1");
     extendVg( "system", devs );

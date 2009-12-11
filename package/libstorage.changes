@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Dec 11 11:01:35 CET 2009 - aschnell@suse.de
+
+- give all info files the extension .info
+
+-------------------------------------------------------------------
 Thu Dec 10 18:39:07 CET 2009 - fehr@suse.de
 
 - add capability to verify passwords of file based loop devices
@@ -20,7 +25,6 @@ Tue Dec 08 16:39:14 CET 2009 - aschnell@suse.de
 
 - added check for home partitions in getFreeInfo
 - 2.19.3
->>>>>>> 9e14c290b5c018447b641fc3e21d500fbb26270a
 
 -------------------------------------------------------------------
 Tue Dec  8 13:26:47 CET 2009 - fehr@suse.de

@@ -4,5 +4,5 @@
 
 SUBDIRS = thalassa scandium
 
-EXTRA_DIST = disk_hda disk_hdb disk_sda disk_sdb volume_info
+EXTRA_DIST = disk_hda.info disk_hdb.info disk_sda.info disk_sdb.info volume.info
 

@@ -21,7 +21,7 @@ namespace storage
     {
 	setup_system();
 
-	string cmd = "cp " + string("data/" + name + "/*") + " tmp/";
+	string cmd = "cp " + string("data/" + name + "/*.info") + " tmp";
 	system(cmd.c_str());
     }
 

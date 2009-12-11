@@ -205,7 +205,7 @@ Storage::initialize()
 
     if (testmode())
     {
-	string t = testdir() + "/arch_info";
+	string t = testdir() + "/arch.info";
 	if (access(t.c_str(), R_OK) == 0)
 	    readArchInfo(t);
 	efiboot = (arch() == "ia64");
@@ -281,11 +281,11 @@ void Storage::detectObjects()
 	delete fstab;
  	fstab = new EtcFstab( rootprefix );
 
-	string t = testdir() + "/volume_info";
+	string t = testdir() + "/volume.info";
 	if( access( t.c_str(), R_OK )==0 )
 	    detectFsDataTestMode( t, vBegin(), vEnd() );
 
-	t = testdir() + "/free_info";
+	t = testdir() + "/free.info";
 	if( access( t.c_str(), R_OK )==0 )
 	    readFreeInfo(t);
 	}
@@ -412,7 +412,7 @@ void
     if (testmode())
 	{
 	glob_t globbuf;
-	if (glob((testdir() + "/disk_*[!-][!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/disk_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList(new Disk(this, AsciiFile(*p)));
@@ -495,7 +495,7 @@ Storage::detectLvmVgs()
     if (testmode())
 	{
 	glob_t globbuf;
-	if (glob((testdir() + "/lvmvg_*[!-][!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/lvmvg_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
 		addToList(new LvmVg(this, AsciiFile(*p)));
@@ -530,7 +530,7 @@ void
     if (testmode())
     {
 	glob_t globbuf;
-	if (glob((testdir() + "/dmraid_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/dmraid_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -561,7 +561,7 @@ void
     if (testmode())
     {
 	glob_t globbuf;
-	if (glob((testdir() + "/dmmultipath_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/dmmultipath_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	{
 	    // TODO: load test data
 	}
@@ -592,7 +592,7 @@ void
     if (testmode())
 	{
 	glob_t globbuf;
-	if (glob((testdir() + "/dm_*[!~0-9]").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
+	if (glob((testdir() + "/dm_*.info").c_str(), GLOB_NOSORT, 0, &globbuf) == 0)
 	    {
 	    // TODO: load test data
 	    }
@@ -844,7 +844,7 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 void
 Storage::logVolumes(const string& Dir) const
     {
-    string fname( Dir + "/volume_info.tmp" );
+    string fname(Dir + "/volume.info.tmp");
     ofstream file( fname.c_str() );
     classic(file);
     ConstVolPair p = volPair();
@@ -5897,7 +5897,7 @@ void Storage::checkPwdBuf( const string& device )
     void
     Storage::logFreeInfo(const string& Dir) const
     {
-	string fname(Dir + "/free_info.tmp");
+	string fname(Dir + "/free.info.tmp");
 	ofstream file(fname.c_str());
 	classic(file);
 
@@ -5975,7 +5975,7 @@ void Storage::checkPwdBuf( const string& device )
     void
     Storage::logArchInfo(const string& Dir) const
     {
-	string fname(Dir + "/arch_info.tmp");
+	string fname(Dir + "/arch.info.tmp");
 	ofstream file(fname.c_str());
 	classic(file);
 
