@@ -1351,7 +1351,7 @@ Volume::setEncryption(bool val, EncryptType typ )
 		{
 		if( !loop_active && crypt_pwd.empty() )
 		    ret = VOLUME_CRYPT_NO_PWD;
-		if( ret==0 && !pwdLengthOk(typ,crypt_pwd) )
+		if( ret==0 && !pwdLengthOk(typ,crypt_pwd,format) )
 		    {
 		    ret = VOLUME_CRYPT_PWD_TOO_SHORT;
 		    clearCryptPwd();
@@ -1614,15 +1614,23 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
     return( cmd );
     }
 
-bool Volume::pwdLengthOk( storage::EncryptType typ, const string& val ) const
+bool Volume::pwdLengthOk( storage::EncryptType typ, const string& val,
+                          bool fmt ) const
     {
     bool ret = true;
-    if( typ==ENC_TWOFISH_OLD )
-	ret = val.size()>=5;
-    else if( typ==ENC_TWOFISH || typ==ENC_TWOFISH256_OLD ) 
+    if( fmt )
+	{
 	ret = val.size()>=8;
-    else if( typ==ENC_LUKS )
-	ret = val.size()>=1;
+	}
+    else
+	{
+	if( typ==ENC_TWOFISH_OLD )
+	    ret = val.size()>=5;
+	else if( typ==ENC_TWOFISH || typ==ENC_TWOFISH256_OLD ) 
+	    ret = val.size()>=8;
+	else 
+	    ret = val.size()>=1;
+	}
     return( ret );
     }
 
@@ -1634,7 +1642,7 @@ Volume::setCryptPwd( const string& val )
 #endif
     int ret = 0;
 
-    if( !pwdLengthOk(encryption,val) && !isTmpCryptMp(mp) )
+    if( !pwdLengthOk(encryption,val,format) && !isTmpCryptMp(mp) )
 	ret = VOLUME_CRYPT_PWD_TOO_SHORT;
     else
 	{

@@ -104,10 +104,15 @@ crypt1()
 
     bool val = false;
 
+    cout << s->changeFormatVolume("/dev/sda1", true, EXT3 ) << '\n';
     cout << s->setCryptPassword("/dev/sda1", "test") << '\n';	// FAILS
-
     cout << s->setCrypt("/dev/sda1", true) << '\n'; // FAILS
 
+    cout << s->changeFormatVolume("/dev/sda1", false, EXT3 ) << '\n';
+    cout << s->setCryptPassword("/dev/sda1", "test") << '\n';
+    cout << s->setCrypt("/dev/sda1", true) << '\n';
+
+    cout << s->changeFormatVolume("/dev/sda1", true, EXT3 ) << '\n';
     cout << s->setCryptPassword("/dev/sda1", "hello-world") << '\n';
 
     cout << s->setCrypt("/dev/sda1", true) << '\n';
