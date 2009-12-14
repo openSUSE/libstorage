@@ -22,7 +22,6 @@
 
 #include <string>
 #include <fstream>
-#include <array>
 #include <boost/algorithm/string.hpp>
 
 #include "config.h"
@@ -284,7 +283,7 @@ namespace storage
 
 		    processUsedby(dmmultipath_node, i1->usedBy);
 
-		    Rank rank("rank");
+		    Rank rank("same");
 
 		    deque<DmmultipathInfo> partitions;
 		    s->getDmmultipathInfo(i1->name, partitions);
