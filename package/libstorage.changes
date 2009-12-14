@@ -12,6 +12,7 @@ Thu Dec 10 18:39:07 CET 2009 - fehr@suse.de
 Thu Dec 10 12:31:18 CET 2009 - fehr@suse.de
 
 - do some changes in handling of encrypted passwords
+  (fixing bug 466196)
 - use "crypt" fstab entry when "user" is set, not any more when 
   "noauto" set
 
