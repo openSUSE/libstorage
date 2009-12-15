@@ -267,7 +267,13 @@ void Storage::detectObjects()
     detectLvmVgs();
     detectDm(systeminfo, false);
     delete fstab;
-    fstab = new EtcFstab( "/etc", isRootMounted() );
+    if (testmode())
+	{
+ 	rootprefix = testdir();
+ 	fstab = new EtcFstab( rootprefix );
+	}
+    else
+	fstab = new EtcFstab( "/etc", isRootMounted() );
     detectLoops(systeminfo);
     if( !instsys() )
 	detectNfs(*fstab, systeminfo);
@@ -282,9 +288,6 @@ void Storage::detectObjects()
 
     if (testmode())
         {
- 	rootprefix = testdir();
-	delete fstab;
- 	fstab = new EtcFstab( rootprefix );
 
 	string t = testdir() + "/volume.info";
 	if( access( t.c_str(), R_OK )==0 )
