@@ -99,7 +99,7 @@ class Storage;
 	int eraseUuid() { uuid.erase(); orig_uuid.erase(); return 0; }
 	bool needLabel() const { return( label!=orig_label ); }
 	storage::EncryptType getEncryption() const { return encryption; }
-	void setEncryption( storage::EncryptType val=storage::ENC_LUKS )
+	void initEncryption( storage::EncryptType val=storage::ENC_LUKS )
 	    { encryption=orig_encryption=val; }
 	virtual int setEncryption(bool val, storage::EncryptType typ = storage::ENC_LUKS );
 	const string& getCryptPwd() const { return crypt_pwd; }

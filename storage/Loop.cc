@@ -41,7 +41,7 @@ namespace storage
 Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	       bool dmcrypt, const string& dm_dev, SystemInfo& systeminfo,
 	   SystemCmd& losetup)
-    : Volume(d, 0, 0), lfile(LoopFile), reuseFile(false), delFile(false)
+    : Volume(d, 0, 0), lfile(LoopFile), reuseFile(true), delFile(false)
 {
     y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
 	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
@@ -70,7 +70,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
     else
 	{
 	numeric = false;
-	setEncryption( ENC_LUKS );
+	initEncryption( ENC_LUKS );
 	if( !dm_dev.empty() )
 	    {
 	    setDmcryptDev( dm_dev );
@@ -116,7 +116,7 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
     else
 	{
 	numeric = false;
-	setEncryption( ENC_LUKS );
+	initEncryption( ENC_LUKS );
 	if( dmcrypt_dev.empty() )
 	    dmcrypt_dev = getDmcryptName();
 	setDmcryptDev( dmcrypt_dev, false );
@@ -145,6 +145,7 @@ void
 Loop::setDmcryptDev( const string& dm_dev, bool active )
     {
     dev = dm_dev;
+    y2mil( "dm_dev:" << dm_dev << " active:" << active );
     nm = dm_dev.substr( dm_dev.find_last_of( '/' )+1);
     if( active )
 	{

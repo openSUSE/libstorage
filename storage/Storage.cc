@@ -209,6 +209,7 @@ Storage::initialize()
 	if (access(t.c_str(), R_OK) == 0)
 	    readArchInfo(t);
 	efiboot = (arch() == "ia64");
+	SystemCmd::setTestmode();
     }
     else if (autodetect())
     {
@@ -265,6 +266,11 @@ void Storage::detectObjects()
     detectDm(systeminfo, true);
     detectLvmVgs();
     detectDm(systeminfo, false);
+    delete fstab;
+    fstab = new EtcFstab( "/etc", isRootMounted() );
+    detectLoops(systeminfo);
+    if( !instsys() )
+	detectNfs(*fstab, systeminfo);
 
     if (!danglingUsedBy.empty())
 	y2err("dangling used-by left after detection: " << danglingUsedBy);
@@ -276,7 +282,6 @@ void Storage::detectObjects()
 
     if (testmode())
         {
-	SystemCmd::setTestmode();
  	rootprefix = testdir();
 	delete fstab;
  	fstab = new EtcFstab( rootprefix );
@@ -291,11 +296,6 @@ void Storage::detectObjects()
 	}
     else
 	{
-	delete fstab;
-	fstab = new EtcFstab( "/etc", isRootMounted() );
-	detectLoops(systeminfo);
-	if( !instsys() )
-	    detectNfs(*fstab, systeminfo);
 	detectFsData(vBegin(), vEnd(), systeminfo);
 	logContainersAndVolumes(logdir());
 	}
@@ -757,7 +757,7 @@ void
 		{
 		    Blkid::Entry entry;
 		    if (systeminfo.getBlkid().getEntry(i->dev, entry) && entry.is_luks)
-			i->setEncryption(ENC_LUKS);
+			i->initEncryption(ENC_LUKS);
 		}
 	    }
 	}
@@ -2428,15 +2428,29 @@ bool
 Storage::needCryptPassword( const string& device )
     {
     bool ret = true;
+    bool volFound = false;
     assertInit();
     y2mil("device:" << device);
 
     VolIterator vol;
-    if( findVolume( device, vol ) )
+    if( checkNormalFile(device) )
+	{
+	ConstLoopPair p = loopPair(Loop::notDeleted);
+	ConstLoopIterator i = p.begin(); 
+	while( i != p.end() && i->loopFile()!=device )
+	    ++i;
+	if( i != p.end() )
+	    {
+	    ret = i->needCryptPwd();
+	    volFound = true;
+	    }
+	}
+    else if( findVolume( device, vol ) )
 	{
 	ret = vol->needCryptPwd();
+	volFound = true;
 	}
-    else
+    if( !volFound )
 	{
 	ret = pwdBuf.find( device )==pwdBuf.end();
 	}

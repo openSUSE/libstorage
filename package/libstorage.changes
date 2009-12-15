@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 15 13:04:31 CET 2009 - fehr@suse.de
+
+- fix detection of existing file based loop devices
+- fix edit mode for existing file based loop devices (#480736)
+
+-------------------------------------------------------------------
 Fri Dec 11 11:01:35 CET 2009 - aschnell@suse.de
 
 - give all info files the extension .info

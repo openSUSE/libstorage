@@ -1349,9 +1349,10 @@ Volume::setEncryption(bool val, EncryptType typ )
 	    {
 	    if( !isTmpCryptMp(mp) )
 		{
-		if( !loop_active && crypt_pwd.empty() )
+		if( !dmcrypt_active && crypt_pwd.empty() )
 		    ret = VOLUME_CRYPT_NO_PWD;
-		if( ret==0 && !pwdLengthOk(typ,crypt_pwd,format) )
+		if( ret==0 && !dmcrypt_active && 
+		    !pwdLengthOk(typ,crypt_pwd,format) )
 		    {
 		    ret = VOLUME_CRYPT_PWD_TOO_SHORT;
 		    clearCryptPwd();
