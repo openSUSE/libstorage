@@ -170,19 +170,19 @@ storage::MountByType
 Volume::defaultMountBy(const string& mp) const
 {
     MountByType mb = getStorage()->getDefaultMountBy();
-    y2mil( "mby:" << mb_names[mb] << " type:" << cType() );
     if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
 	mb = MOUNTBY_DEVICE;
     if (cType() == NFSC && mb != MOUNTBY_DEVICE)
 	mb = MOUNTBY_DEVICE;
-    y2mil( "path:" << udevPath() << " id:" << udevId() );
+    if( !udevPath().empty() || !udevId().empty() )
+	y2mil( "path:" << udevPath() << " id:" << udevId() );
     if( (mb==MOUNTBY_PATH && udevPath().empty()) ||
         (mb==MOUNTBY_ID && udevId().empty()) )
 	mb = MOUNTBY_DEVICE;
     if( encryption != ENC_NONE &&
 	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
 	mb = MOUNTBY_DEVICE;
-    y2mil( "dev:" << dev << " mp:" << mp << " mby:" << mb_names[mb] );
+    y2mil( "dev:" << dev << " mp:" << mp << " type:" << cType() << " mby:" << mb_names[mb] );
     return mb;
 }
 
