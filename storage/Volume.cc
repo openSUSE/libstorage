@@ -1659,7 +1659,7 @@ Volume::setCryptPwd( const string& val )
 bool
 Volume::needCryptPwd() const
     {
-    bool ret = encryption!=ENC_NONE && crypt_pwd.empty();
+    bool ret = crypt_pwd.empty();
     if( ret && is_loop )
 	ret = ret && !loop_active;
     if( ret && dmcrypt() )
