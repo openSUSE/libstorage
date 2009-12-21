@@ -128,6 +128,8 @@ Storage::Storage(const Environment& env)
     defaultFs = EXT4;
     detectMounted = true;
 
+    SystemCmd::setTestmode(testmode());
+
     logSystemInfo();
 }
 
@@ -209,7 +211,6 @@ Storage::initialize()
 	if (access(t.c_str(), R_OK) == 0)
 	    readArchInfo(t);
 	efiboot = (arch() == "ia64");
-	SystemCmd::setTestmode();
     }
     else if (autodetect())
     {
