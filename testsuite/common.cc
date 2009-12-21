@@ -4,9 +4,25 @@
 
 #include "common.h"
 
+#include "storage/AppUtil.h"
+
+
+extern char *program_invocation_short_name;
+
 
 namespace storage
 {
+
+    void
+    setup_logger()
+    {
+	string name = program_invocation_short_name;
+	string::size_type pos = name.rfind(".");
+	if (pos != string::npos)
+	    createLogger("default", name.substr(pos + 1) + ".out/out",
+			 name.substr(0, pos) + ".log");
+    }
+
 
     void
     setup_system()

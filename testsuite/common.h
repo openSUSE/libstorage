@@ -16,6 +16,8 @@ namespace storage
     };
 
 
+    void setup_logger();
+
     void setup_system();
     void setup_system(const string& name);
 

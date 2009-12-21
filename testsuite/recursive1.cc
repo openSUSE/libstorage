@@ -13,6 +13,8 @@ main()
 {
     cout.setf(std::ios::boolalpha);
 
+    setup_logger();
+
     setup_system("thalassa");
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
