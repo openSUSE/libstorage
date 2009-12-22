@@ -10,10 +10,6 @@ using namespace std;
 using namespace storage;
 
 
-// During package build translations are installed into buildroot so are not
-// available during testsuite run.
-
-
 void
 test(const char* loc, const char* str, bool classic)
 {
