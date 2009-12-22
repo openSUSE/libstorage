@@ -2,7 +2,7 @@
 Tue Dec 15 13:04:31 CET 2009 - fehr@suse.de
 
 - fix detection of existing file based loop devices
-- fix edit mode for existing file based loop devices (#480736)
+- fix edit mode for existing file based loop devices (bnc #480736)
 
 -------------------------------------------------------------------
 Fri Dec 11 11:01:35 CET 2009 - aschnell@suse.de
@@ -17,9 +17,9 @@ Thu Dec 10 18:39:07 CET 2009 - fehr@suse.de
 -------------------------------------------------------------------
 Thu Dec 10 12:31:18 CET 2009 - fehr@suse.de
 
-- do some changes in handling of encrypted passwords
-  (fixing bugs 466196, 480739)
-- use "crypt" fstab entry when "user" is set, not any more when 
+- do some changes in handling of encrypted passwords (fixing bnc
+  #466196 and #480739)
+- use "crypt" fstab entry when "user" is set, not any more when
   "noauto" set
 
 -------------------------------------------------------------------
@@ -36,12 +36,13 @@ Tue Dec 08 16:39:14 CET 2009 - aschnell@suse.de
 -------------------------------------------------------------------
 Tue Dec  8 13:26:47 CET 2009 - fehr@suse.de
 
-- fix handling of inactive swap file entry in fstab (#504497)
+- fix handling of inactive swap file entry in fstab (bnc #504497)
 
 -------------------------------------------------------------------
 Tue Dec  8 10:36:26 CET 2009 - fehr@suse.de
 
-- fix detection of encrypted swap and temp filesystems (#435337)
+- fix detection of encrypted swap and temp filesystems (bnc
+  #435337)
 - fix various bugs handling encrypted devices
 
 -------------------------------------------------------------------
@@ -54,7 +55,7 @@ Thu Dec 03 14:54:16 CET 2009 - aschnell@suse.de
 Thu Dec 03 10:38:39 CET 2009 - fehr@suse.de
 
 - avoid data loss on encrypted partitions using non-LUKS encryption
-  when integrating them into system (#557607)
+  when integrating them into system (bnc #557607)
 
 -------------------------------------------------------------------
 Wed Dec 02 11:17:46 CET 2009 - aschnell@suse.de
@@ -91,7 +92,7 @@ Fri Nov 20 18:02:05 CET 2009 - aschnell@suse.de
 Thu Nov 19 13:38:54 CET 2009 - fehr@suse.de
 
 - fixed freeCylindersAfterPartition when start of next partition
-  is on same cylinder than end of current (#465370)
+  is on same cylinder than end of current (bnc #465370)
 
 -------------------------------------------------------------------
 Wed Nov 18 16:36:02 CET 2009 - aschnell@suse.de
@@ -111,12 +112,12 @@ Mon Nov 16 11:28:41 CET 2009 - aschnell@suse.de
 -------------------------------------------------------------------
 Wed Nov 11 10:34:34 CET 2009 - aschnell@suse.de
 
-- fixed return value of function getContVolInfo 
+- fixed return value of function getContVolInfo
 
 -------------------------------------------------------------------
 Mon Nov  9 18:34:22 CET 2009 - fehr@suse.de
 
-- preserve label when unsetting format flag (#537064)
+- preserve label when unsetting format flag (bnc #537064)
 
 -------------------------------------------------------------------
 Mon Nov 09 17:34:41 CET 2009 - aschnell@suse.de
