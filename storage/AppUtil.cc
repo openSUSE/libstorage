@@ -598,6 +598,17 @@ getMajorDevices(const char* driver)
     }
 
 
+    Text _(const char* msgid)
+    {
+	return Text(msgid, dgettext("libstorage", msgid));
+    }
+
+    Text _(const char* msgid, const char* msgid_plural, unsigned long int n)
+    {
+	return Text(n == 1 ? msgid : msgid_plural, dngettext("libstorage", msgid, msgid_plural, n));
+    }
+
+
     string
     hostname()
     {

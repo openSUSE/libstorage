@@ -111,7 +111,7 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
 
     struct Text
     {
-	Text() {}
+	Text() : native(), text() {}
 	Text(const string& native, const string& text) : native(native), text(text) {}
 
 	void clear();
@@ -126,15 +126,8 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
     Text sformat(const Text& format, ...);
 
 
-    inline Text _(const char* msgid)
-    {
-	return Text(msgid, dgettext("libstorage", msgid));
-    }
-
-    inline Text _(const char* msgid, const char* msgid_plural, unsigned long int n)
-    {
-	return Text(n == 1 ? msgid : msgid_plural, dngettext("libstorage", msgid, msgid_plural, n));
-    }
+    Text _(const char* msgid);
+    Text _(const char* msgid, const char* msgid_plural, unsigned long int n);
 
 
 extern const string app_ws;
