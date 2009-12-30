@@ -102,6 +102,9 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	    case UB_MD:
 		s << "md[" << usedby.device() << "]";
 		break;
+	    case UB_MDPART:
+		s << "mdpart[" << usedby.device() << "]";
+		break;
 	    case UB_DM:
 		s << "dm[" << usedby.device() << "]";
 		break;

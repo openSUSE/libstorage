@@ -1091,6 +1091,11 @@ const Disk::label_info Disk::labels[] = {
     bool
     Disk::needP(const string& disk)
     {
+	static Regex mdpart( "md[0123456789]+$" );
+	if ( mdpart.match( disk ) == true )
+	{
+	    return true;
+	}
 	for (unsigned i = 0; i < lengthof(p_disks); ++i)
 	{
 	    Regex rx("^(/dev/)?" + p_disks[i]);

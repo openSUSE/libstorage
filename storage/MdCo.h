@@ -123,7 +123,6 @@ class MdCo : public Container
 	void addMd( Md* m );
 	void checkMd( Md* m );
 	void updateEntry( const Md* m );
-	void initTab();
 
 	void init();
 
@@ -135,7 +134,13 @@ class MdCo : public Container
 
 	void logData(const string& Dir) const;
 
-	EtcRaidtab *tab;
+	/* Return true if given device is alredy handled by MdPartCo. */
+	bool isHandledByMdPart(const string& name);
+
+	/* Return true if md device found in /proc/mdstat given by 'name'
+	 * can be handled by Md classes.
+	 * The line2 is a line following device name in mdstat. */
+	bool canHandleDev(const string& name, const string& line2);
 
 	static bool active;  
 

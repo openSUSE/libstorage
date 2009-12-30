@@ -31,6 +31,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/Regex.h"
 #include "storage/Container.h"
+#include "storage/EtcRaidtab.h"
 #include "storage/StorageDefines.h"
 
 
@@ -76,9 +77,35 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	    md_uuid.erase( 0, pos+7 );
 	md_uuid = extractNthWord( 0, md_uuid );
 	}
-    c.select( "Version : " );
-    if( c.retcode()==0 && c.numLines(true)>0 )
-	sb_ver = extractNthWord( 2, c.getLine(0,true) );
+    // "Container" raid: IMSM, DDF
+    // "Version" with persistent block
+    has_container=false;
+    if( c.retcode()==0 )
+    {
+	if( c.select( "Version : " ) )
+        {
+	    sb_ver = extractNthWord( 2, c.getLine(0,true) );
+        }
+	else if ( c.select( "Container : " ) )
+        {
+	    string tmpLine = c.getLine(0,true);
+	    string::size_type tmpPos;
+	    // Line like: Container : /dev/md/imsm0, member 0
+	    sb_ver = extractNthWord( 2, tmpLine );
+	    //remove ',' after word.
+	    tmpPos = sb_ver.find(",");
+	    sb_ver.erase(tmpPos,tmpPos+1);
+	    // get Member number
+	    string member = extractNthWord( 4, tmpLine );
+            y2mil("Md " << nm << " has container. Member " << member);
+	    member >> md_member;
+	    has_container = true;
+        }
+	else
+        {
+	    y2war("Did not found neither Version nor Container line!");
+        }
+    }
     if (c.retcode()==0 && c.numLines(true)>0 )
     {
 	y2mil( "line:\"" << c.getLine(0,true) << "\"" );
@@ -179,6 +206,14 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 		break;
 	    }
 	}
+
+    if( has_container )
+      {
+      getParent();
+      }
+    // Get md_name. It's important.
+    string tmpUuid;
+    MdPartCo::getUuidName(nm,tmpUuid,md_name);
 
     for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
 	getStorage()->setUsedBy(*it, UB_MD, dev);
@@ -643,6 +678,85 @@ void Md::logDifference( const Md& rhs ) const
 	}
     y2mil(log);
     }
+
+
+void Md::getParent()
+{
+  //in this case sb_ver will contain something like /dev/md/imsm0
+  string tmp;
+  string::size_type pos;
+  SystemCmd c(MDADMBIN " --detail " + quote(sb_ver) + " --export");
+  if( c.retcode() != 0 )
+    {
+    return;
+    }
+  parent_container = sb_ver;
+  if( c.select( "MD_METADATA" ) > 0 )
+    {
+    md_metadata = sb_ver;
+    tmp = c.getLine(0,true);
+    pos = tmp.find("=");
+    tmp.erase(0,pos+1);
+    parent_metadata = sb_ver = tmp;
+    }
+  if(c.select( "MD_UUID" ) > 0)
+    {
+    tmp = c.getLine(0,true);
+    pos = tmp.find("=");
+    tmp.erase(0,pos+1);
+    parent_uuid = tmp;
+    }
+  if( c.select( "MD_DEVNAME" ) > 0)
+    {
+    tmp = c.getLine(0,true);
+    pos = tmp.find("=");
+    tmp.erase(0,pos+1);
+    parent_md_name = tmp;
+    }
+  y2mil("parent_container="<<parent_container<<", sb_ver="<<sb_ver<<", parent_uuid="<<parent_uuid
+      <<", parent_md_name="<<parent_md_name<<", member="<<md_member);
+}
+
+
+int Md::updateEntry(EtcRaidtab* tab)
+{
+  if( !tab )
+    {
+    return -1;
+    }
+  EtcRaidtab::mdconf_info info;
+  if( !md_name.empty() )
+    {
+    //Raid name is preferred.
+    info.fs_name = "/dev/md/" + md_name;
+    }
+  else
+    {
+    info.fs_name = dev;
+    }
+  info.md_uuid = md_uuid;
+  if( has_container )
+    {
+    stringstream ss;
+    info.container_present = true;
+    info.container_info.md_uuid = parent_uuid;
+    info.container_info.metadata = parent_metadata;
+    ss << md_member;
+    info.member = ss.str();
+    }
+  else
+    {
+    info.container_present = false;
+    }
+  if( tab->updateEntry( info ) )
+    {
+    return 0;
+    }
+  else
+    {
+    return -1;
+    }
+}
 
 
     const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",

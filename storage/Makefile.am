@@ -18,6 +18,7 @@ libstorage_la_SOURCES =					\
 	      DmmultipathCo.cc	DmmultipathCo.h		\
 	    DmCo.cc		DmCo.h			\
 	  MdCo.cc		MdCo.h			\
+	  MdPartCo.cc		MdPartCo.h		\
 	  LoopCo.cc		LoopCo.h		\
 	  NfsCo.cc		NfsCo.h			\
 	Volume.cc		Volume.h		\
@@ -28,6 +29,7 @@ libstorage_la_SOURCES =					\
 	      Dmraid.cc		Dmraid.h		\
 	      Dmmultipath.cc	Dmmultipath.h		\
 	  Md.cc			Md.h			\
+	  MdPart.cc		MdPart.h		\
 	  Loop.cc		Loop.h			\
 	  Nfs.cc		Nfs.h			\
 	HumanString.cc		HumanString.h		\

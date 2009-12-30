@@ -45,7 +45,7 @@ namespace storage
 
     protected:
 
-	enum NodeType { NODE_DISK, NODE_DMMULTIPATH, NODE_DMRAID, NODE_PARTITION, NODE_MDRAID,
+	enum NodeType { NODE_DISK, NODE_DMMULTIPATH, NODE_DMRAID, NODE_PARTITION, NODE_MD, NODE_MDPART,
 			NODE_LVMVG, NODE_LVMLV, NODE_DM, NODE_MOUNTPOINT };
 
 	struct Node
@@ -214,12 +214,46 @@ namespace storage
 
 		    for (deque<MdInfo>::const_iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
 		    {
-			Node md_node(NODE_MDRAID, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node md_node(NODE_MD, i2->v.device, i2->v.name, i2->v.sizeK);
 			nodes.push_back(md_node);
 
 			processUsedby(md_node, i2->v.usedBy);
 			processMount(md_node, i2->v);
 		    }
+
+		} break;
+
+		case MDPART: {
+
+		    MdPartCoInfo mdpartcoinfo;
+		    s->getMdPartCoInfo(i1->device, mdpartcoinfo);
+
+		    Node mdpart_node(NODE_MDPART, i1->device, i1->name, mdpartcoinfo.d.sizeK);
+		    nodes.push_back(mdpart_node);
+
+		    processUsedby(mdpart_node, i1->usedBy);
+
+		    Rank rank("same");
+
+		    deque<MdPartInfo> partitions;
+		    s->getMdPartInfo(i1->name, partitions);
+		    for (deque<MdPartInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    {
+			if (i2->p.partitionType == EXTENDED)
+			    continue;
+
+			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
+			nodes.push_back(partition_node);
+			rank.ids.push_back(partition_node.id());
+
+			edges.push_back(Edge(EDGE_SUBDEVICE, mdpart_node.id(), partition_node.id()));
+
+			processUsedby(partition_node, i2->v.usedBy);
+			processMount(partition_node, i2->v);
+		    }
+
+		    if (!rank.ids.empty())
+			ranks.push_back(rank);
 
 		} break;
 
@@ -440,9 +474,13 @@ namespace storage
 		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\"" << ", tooltip="
 		  << Graph::makeTooltip(_("Partition"), node.device, node.sizeK);
 		break;
-	    case Graph::NODE_MDRAID:
+	    case Graph::NODE_MD:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
 		  << Graph::makeTooltip(_("RAID"), node.device, node.sizeK);
+		break;  
+	    case Graph::NODE_MDPART:
+		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Partitioned RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_LVMVG:
 		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\"" << ", tooltip="

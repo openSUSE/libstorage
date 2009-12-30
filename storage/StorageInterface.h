@@ -147,9 +147,12 @@ namespace storage
     enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
 
-    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
+    enum MdArrayState { UNKNOWN, CLEAR, INACTIVE, SUSPENDED, READONLY, READ_AUTO,
+			CLEAN, ACTIVE, WRITE_PENDING, ACTIVE_IDLE };
+ 
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_MDPART, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH,
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART,
 		 COTYPE_LAST_ENTRY };
 
 
@@ -422,6 +425,47 @@ namespace storage
 	MdStateInfo() {}
 	bool active;
 	bool degraded;
+	enum MdArrayState state;
+    };
+
+    /**
+     * Contains info about a software raid device which is a container
+     * for partitions.
+     */
+    struct MdPartCoInfo
+    {
+        MdPartCoInfo() {}
+        DiskInfo d;
+        string devices;
+        string spares;        // Spare disks
+        unsigned long minor;
+
+        unsigned level;       // RAID level
+        unsigned nr;          // MD device number
+        unsigned parity;      // Parity (not for all RAID level)
+        string   uuid;        // MD Device UUID
+        string   sb_ver;      // Metadata version
+        unsigned long chunk;  // Chunksize (strip size)
+        string   md_name;     // MD Device name (link in /dev/md/)
+    };
+
+    struct MdPartCoStateInfo
+    {
+        MdPartCoStateInfo() {}
+        bool active;
+        bool degraded;
+        enum MdArrayState state;  // Few states at one?
+    };
+
+    /**
+     * Contains info about a partition on SW RAID device.
+     */
+    struct MdPartInfo
+    {
+        MdPartInfo() {}
+        VolumeInfo v;
+        PartitionAddInfo p;
+        bool part;
     };
 
     /**
@@ -593,6 +637,7 @@ namespace storage
 	STORAGE_DMMULTIPATH_CO_NOT_FOUND = -2030,
 	STORAGE_ZERO_DEVICE_FAILED = -2031,
 	STORAGE_INVALID_BACKUP_STATE_NAME = -2032,
+	STORAGE_MDPART_CO_NOT_FOUND = -2033,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -696,6 +741,15 @@ namespace storage
 	MD_NO_CHANGE_ON_DISK = -6017,
 	MD_NO_CREATE_UNKNOWN = -6018,
 	MD_STATE_NOT_ON_DISK = -6019,
+	MD_PARTITION_NOT_FOUND = -6020,
+
+	MDPART_CHANGE_READONLY = -6100,
+	MDPART_INTERNAL_ERR = -6101,
+	MDPART_INVALID_VOLUME = -6012,
+	MDPART_PARTITION_NOT_FOUND = -6103,
+	MDPART_REMOVE_PARTITION_LIST_ERASE = -6104,
+	MDPART_COMMIT_NOTHING_TODO = -6105,
+	MDPART_NO_REMOVE = -6106,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
@@ -847,6 +901,43 @@ namespace storage
 					      DmmultipathCoInfo& info) = 0;
 
 	/**
+	 * Query container info for a MDPART container
+	 *
+	 * @param name name of container, e.g. md126
+	 * @param info record that gets filled with MDPART Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMdPartCoInfo( const string& name, MdPartCoInfo& info) = 0;
+
+
+	/**
+	 * Query container info for a MDPART container
+	 *
+	 * @param name name of container, e.g. md126
+	 * @param cinfo record that gets filled with container general data
+	 * @param info record that gets filled with MDPART Container special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
+                                         MdPartCoInfo& info) = 0;
+
+        /**
+         * Checks if Md and MdPart are used for IMSM/ISW SW RAIDs.
+         *
+         * In 'normal mode' it will become true after first MdPart class is
+         * created and it will true until such class exist.
+         * In 'install mode' it will be true:
+         * a) if clean or partitioned IMSM RAIDs were detected and no YesOrNo
+         *    callback was registered.
+         * b) if clean or partitioned IMSM RAIDs were detected and user chose
+         *    'yes' when asked to use Md classes for IMSM/ISW RAIDs.
+         *
+         * @return true if IMSM/ISW SW RAIDa are handled by Md/MdPart classes.
+         *         False otherwise.
+         */
+	virtual bool useMdForImsm() = 0;
+
+	/**
 	 * Query all volumes found in system
 	 *
 	 * @param infos list of records that get filled with volume info
@@ -889,6 +980,16 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMdInfo( deque<MdInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for partitions on raid device in system
+	 *
+	 * @param device device name of the parent MdPartCo, e.g. /dev/md125
+	 * @param plist list of records that get filled with MdPart specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getMdPartInfo( const string& device,
+	                           deque<MdPartInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for nfs devices in system
@@ -1834,6 +1935,18 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMdStateInfo(const string& name, MdStateInfo& info) = 0;
+
+        /**
+         * Get state of a MD software raid device.
+         *
+         * @pre This can only be done after the raid has been created on disk.
+         *
+         * @param name name of software raid device (e.g. /dev/md125)
+         * @param info record that gets filled with raid special data
+         * @return zero if all is ok, a negative number to indicate an error
+         */
+	virtual int getMdPartCoStateInfo(const string& name,
+                                         MdPartCoStateInfo& info) = 0;
 
 	/**
 	 * Compute the size of a raid device.

@@ -393,7 +393,8 @@ Container::logDifference( const Container& c ) const
 {
     y2mil(getDiffString(c));
 }
-    
+
+
 string
 Container::getDiffString( const Container& c ) const
     {
@@ -471,6 +472,6 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 
 
 const string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", 
-					 "DM", "DMRAID", "NFS", "DMMULTIPATH" };
+					 "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART" };
 
 }

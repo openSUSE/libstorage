@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 29 15:47:49 CET 2009 - aschnell@suse.de
+
+- ported MdPart code from SLE11 SP1
+- 2.19.4
+
+-------------------------------------------------------------------
 Tue Dec 15 13:04:31 CET 2009 - fehr@suse.de
 
 - fix detection of existing file based loop devices

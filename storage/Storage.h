@@ -42,6 +42,8 @@
 #include "storage/Dmmultipath.h"
 #include "storage/MdCo.h"
 #include "storage/Md.h"
+#include "storage/MdPartCo.h"
+#include "storage/MdPart.h"
 #include "storage/DmCo.h"
 #include "storage/LoopCo.h"
 #include "storage/Loop.h"
@@ -196,6 +198,7 @@ class CastCheckFncIterator : public CheckByFnc<FncP>,
  */
 
 class EtcFstab;
+class EtcRaidtab;
 class DiskData;
 
     class Storage : public storage::StorageInterface, boost::noncopyable
@@ -235,6 +238,8 @@ class DiskData;
 	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
 	static bool isDmPart( const Container&d )
 	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
+	static bool isMdPart( const Container&d )
+	    { return d.type() == storage::MDPART; }
 
 	Storage(const Environment& env);
 
@@ -259,6 +264,7 @@ class DiskData;
 	static bool isPPCMac() { return( is_ppc_mac ); }
 	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
 	EtcFstab* getFstab() { return fstab; }
+	EtcRaidtab* getRaidtab() { return raidtab; }
 	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo(std::ostream& str) const;
@@ -318,6 +324,7 @@ class DiskData;
 	int getLvmLvInfo( const string& name,
 			  deque<storage::LvmLvInfo>& plist );
 	int getMdInfo( deque<storage::MdInfo>& plist );
+	int getMdPartInfo( const string& device, deque<storage::MdPartInfo>& plist );
 	int getDmInfo( deque<storage::DmInfo>& plist );
 	int getNfsInfo( deque<storage::NfsInfo>& plist );
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
@@ -479,6 +486,12 @@ class DiskData;
 	int getMdStateInfo(const string& name, MdStateInfo& info);
 	int computeMdSize(MdType md_type, list<string> devices,
 			  unsigned long long& sizeK);
+
+	int getMdPartCoInfo( const string& name, MdPartCoInfo& info);
+	int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
+	                                         MdPartCoInfo& info);
+        int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
+        bool useMdForImsm() { return MdPartCo::isHandlingDev(); }
 
 	int addNfsDevice( const string& nfsDev, const string& opts,
 	                  unsigned long long sizeK, const string& mp );
@@ -1038,6 +1051,90 @@ class DiskData;
 	    }
 
 
+// iterators over MdPart container
+    protected:
+	// protected typedefs for iterators over DmPart container
+	typedef CastCheckFncIterator<CCIter, isMdPart, const MdPartCo *> ContainerCMdPartIter;
+	template< class Pred >
+	struct ConstMdPartCoPI { typedef ContainerIter<Pred, ContainerCMdPartIter> type; };
+	typedef CastCheckFncIterator<CIter, isMdPart, MdPartCo *> ContainerMdPartIter;
+	template< class Pred >
+	struct MdPartCoPI { typedef ContainerIter<Pred, ContainerMdPartIter> type; };
+	template< class Pred >
+	struct MdPartCoI { typedef ContainerDerIter<Pred, typename MdPartCoPI<Pred>::type, MdPartCo> type; };
+	typedef CheckFnc<const MdPartCo> CheckFncMdPartCo;
+	typedef CheckerIterator< CheckFncMdPartCo, ConstMdPartCoPI<CheckFncMdPartCo>::type,
+	ContainerCMdPartIter, MdPartCo > ConstMdPartCoPIterator;
+	typedef CheckerIterator< CheckFncMdPartCo, MdPartCoPI<CheckFncMdPartCo>::type,
+	ContainerMdPartIter, MdPartCo > MdPartCoPIterator;
+	typedef DerefIterator<MdPartCoPIterator,MdPartCo> MdPartCoIterator;
+	typedef IterPair<MdPartCoIterator> MdPartCoPair;
+
+    public:
+	// public typedefs for iterators over MdPart container
+	typedef DerefIterator<ConstMdPartCoPIterator,const MdPartCo> ConstMdPartCoIterator;
+	template< class Pred >
+	struct ConstMdPartCoI
+	{ typedef ContainerDerIter<Pred, typename ConstMdPartCoPI<Pred>::type,
+	  const MdPartCo> type; };
+	template< class Pred >
+	struct MdPartCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstMdPartCoI<Pred>::type> type; };
+	typedef IterPair<ConstMdPartCoIterator> ConstMdPartCoPair;
+
+	// public member functions for iterators over MdPart container
+	ConstMdPartCoPair mdpartCoPair( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
+	{
+	  return( ConstMdPartCoPair( mdpartCoBegin( CheckFnc ), mdpartCoEnd( CheckFnc ) ));
+	}
+	ConstMdPartCoIterator mdpartCoBegin( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
+	{
+	  IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
+	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	  return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc )) );
+	}
+	ConstMdPartCoIterator mdpartCoEnd( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
+	{
+	  IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
+	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	  return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc, true )) );
+	}
+	template< class Pred > typename MdPartCoCondIPair<Pred>::type mdPartCoCondPair( const Pred& p ) const
+	{
+	  return( typename MdPartCoCondIPair<Pred>::type( mdpartCoCondBegin( p ), mdpartCoCondEnd( p ) ) );
+	}
+	template< class Pred > typename ConstMdPartCoI<Pred>::type mdpartCoCondBegin( const Pred& p ) const
+	{
+	  IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
+	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	  return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p )) );
+	}
+	template< class Pred > typename ConstMdPartCoI<Pred>::type mdpartCoCondEnd( const Pred& p ) const
+	{
+	  IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
+	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	  return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p, true )) );
+	}
+    protected:
+	// protected member functions for iterators over MdPart container
+	MdPartCoPair mdpCoPair( bool (* CheckFnc)( const MdPartCo& )=NULL )
+	{
+	  return( MdPartCoPair( mdpCoBegin( CheckFnc ), mdpCoEnd( CheckFnc ) ));
+	}
+	MdPartCoIterator mdpCoBegin( bool (* CheckFnc)( const MdPartCo& )=NULL )
+	{
+	  IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
+	      ContainerMdPartIter( cont.begin(), cont.end(), true ));
+	  return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc )) );
+	}
+	MdPartCoIterator mdpCoEnd( bool (* CheckFnc)( const MdPartCo& )=NULL )
+	{
+	  IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
+	      ContainerMdPartIter( cont.begin(), cont.end(), true ));
+	  return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc, true )) );
+	}
+
+
+
 // iterators over volumes
     protected:
 	// protected typedefs for iterators over volumes
@@ -1352,6 +1449,72 @@ class DiskData;
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p, true )) );
 	    }
+
+///////// iterators over software raid devices - Partitions
+    protected:
+	// protected typedefs for iterators over software raid devices
+	typedef CastIterator<ConstVolInter, MdPart *> ConstMdPartInter;
+	template< class Pred >
+	struct ConstMdPartPI { typedef ContainerIter<Pred,
+	  ConstMdPartInter> type; };
+	typedef CheckFnc<const MdPart> CheckFncMdPart;
+	typedef CheckerIterator< CheckFncMdPart, ConstMdPartPI<CheckFncMdPart>::type,
+	ConstMdPartInter, MdPart > ConstMdPartPIterator;
+    public:
+	// public typedefs for iterators over software raid devices
+	template< class Pred >
+	struct ConstMdPartI
+	{ typedef ContainerDerIter<Pred, typename ConstMdPartPI<Pred>::type,
+	  const MdPart> type; };
+	template< class Pred >
+	struct MdPartCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstMdPartI<Pred>::type> type;};
+	typedef DerefIterator<ConstMdPartPIterator, const MdPart> ConstMdPartIterator;
+	typedef IterPair<ConstMdPartIterator> ConstMdPartPair;
+
+
+	// public member functions for iterators over software raid devices
+	ConstMdPartPair mdPartPair( bool (* CheckMdPart)( const MdPart& )=NULL ) const
+	{
+	  return( ConstMdPartPair( mdPartBegin( CheckMdPart ), mdPartEnd( CheckMdPart ) ));
+	}
+
+	ConstMdPartIterator mdPartBegin( bool (* CheckMdPart)( const MdPart& )=NULL ) const
+	{
+	  ConstVolInter b( contPair( isMdPart ) );
+	  ConstVolInter e( contPair( isMdPart ), true );
+	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart )));
+	}
+	ConstMdPartIterator mdPartEnd( bool (* CheckMdPart)( const MdPart& )=NULL ) const
+	{
+	  ConstVolInter b( contPair( isMdPart ) );
+	  ConstVolInter e( contPair( isMdPart ), true );
+	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart, true )));
+	}
+	template< class Pred > typename MdPartCondIPair<Pred>::type mdPartCondPair( const Pred& p ) const
+	{
+	  return( typename MdPartCondIPair<Pred>::type( mdPartCondBegin( p ), mdPartCondEnd( p ) ) );
+	}
+	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondBegin( const Pred& p ) const
+	{
+	  ConstVolInter b( contPair( isMdPart ) );
+	  ConstVolInter e( contPair( isMdPart ), true );
+	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p) ) );
+	}
+	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondEnd( const Pred& p ) const
+	{
+	  ConstVolInter b( contPair( isMdPart ) );
+	  ConstVolInter e( contPair( isMdPart ), true );
+	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p, true )) );
+	}
+
+
+
+
 
 // iterators over file based loop devices
     protected:
@@ -1686,6 +1849,8 @@ class DiskData;
 	void detectDisks(SystemInfo& systeminfo);
 	void autodetectDisks(SystemInfo& systeminfo);
 	void detectMds();
+	void detectMdParts(SystemInfo& systeminfo);
+	bool discoverMdPVols();
 	void detectLoops(SystemInfo& systeminfo);
 	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
 	void detectLvmVgs();
@@ -1710,6 +1875,9 @@ class DiskData;
 	DmraidCoIterator findDmraidCo( const string& name );
 	DmmultipathCoIterator findDmmultipathCo( const string& name );
 	DmPartCoIterator findDmPartCo( const string& name );
+
+	MdPartCoIterator findMdPartCo( const string& name );
+
 	bool findVolume( const string& device, ContIterator& c,
 	                 VolIterator& v  );
 	bool findVolume( const string& device, VolIterator& v,
@@ -1773,6 +1941,7 @@ class DiskData;
 	static bool is_ppc_pegasos;
 	CCont cont;
 	EtcFstab *fstab;
+	EtcRaidtab *raidtab;
 
 	CallbackProgressBar progress_bar_cb;
 	CallbackShowInstallInfo install_info_cb;
