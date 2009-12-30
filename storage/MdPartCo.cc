@@ -55,14 +55,11 @@ namespace storage
     MdPartCo::MdPartCo(Storage * const s, const string& name, SystemInfo& systeminfo)
 	: Container(s, "", staticType()), disk(NULL), del_ptable(false)
     {
-	y2mil("constructing MdPartCo : " << name);
-	makeDevName(name);
+	y2mil("constructing MdPartCo " << name);
 	nm = undevName(name);
+	dev = "/dev/" + nm;
 
 	getMajorMinor();
-
-	del_ptable = false;
-	disk = NULL;
 
 	/* First Initialize RAID properties. */
 	initMd();
@@ -109,14 +106,16 @@ MdPartCo::~MdPartCo()
     y2deb("destructed MdPartCo : " << dev);
     }
 
-bool MdPartCo::isMdPart(const string& name)
+
+bool MdPartCo::isMdPart(const string& name) const
 {
   string n = undevName(name);
   static Regex mdpart( "^md[0123456789]+p[0123456789]+$" );
   return (mdpart.match(n));
 }
 
-void MdPartCo::getPartNum(const string& device, unsigned& num)
+
+void MdPartCo::getPartNum(const string& device, unsigned& num) const
 {
   string dev = device;
   string::size_type pos;
@@ -505,14 +504,6 @@ string MdPartCo::numToName( unsigned mdNum ) const
         }
     return( ret );
     }
-
-int MdPartCo::nr(const string& name)
-{
-  string tmp = name;
-  int n;
-  tmp.erase(0,2) >> n;
-  return n;
-}
 
 
 //
@@ -1741,7 +1732,6 @@ bool MdPartCo::getUuidName(const string dev,string& uuid, string& mdName)
 
 void MdPartCo::initMd()
 {
-  /* Name is 'nm' read all props. */
   getMdProps();
 }
 
@@ -1844,18 +1834,6 @@ void MdPartCo::getMajorMinor()
     file.clear();
   }
 
-}
-
-void MdPartCo::makeDevName(const string& name )
-{
-  if( name.find("/dev/") != string::npos )
-    {
-    dev = name;
-    }
-  else
-    {
-    dev = "/dev/" + name;
-    }
 }
 
 
@@ -2164,19 +2142,19 @@ list<string> MdPartCo::filterMdPartCo(list<string>& raidList,
   return mdpList;
 }
 
-string MdPartCo::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
+const string MdPartCo::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
                           "raid10", "multipath" };
-string MdPartCo::par_names[] = { "none", "left-asymmetric", "left-symmetric",
+const string MdPartCo::par_names[] = { "none", "left-asymmetric", "left-symmetric",
                            "right-asymmetric", "right-symmetric" };
 
-string MdPartCo::md_states[] = {"clear", "inactive", "suspended", "readonly",
+const string MdPartCo::md_states[] = {"clear", "inactive", "suspended", "readonly",
                           "read-auto", "clean", "active", "write-pending",
                           "active-idle"};
 
-string MdPartCo::md_props[] = {"metadata_version", "component_size", "chunk_size",
+const string MdPartCo::md_props[] = {"metadata_version", "component_size", "chunk_size",
                        "array_state", "level", "layout" };
 
-string MdPartCo::sysfs_path = "/sys/devices/virtual/block/";
+const string MdPartCo::sysfs_path = "/sys/devices/virtual/block/";
 
 unsigned MdPartCo::md_major = 0;
 
@@ -2184,7 +2162,7 @@ bool MdPartCo::active = false;
 
 bool MdPartCo::handlingMd = false;
 
-void MdPartCo::logData( const string& Dir ) {}
+void MdPartCo::logData(const string& Dir) const {}
 
 
 }

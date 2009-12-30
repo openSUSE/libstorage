@@ -119,7 +119,6 @@ class MdPartCo : public Container
 
     void syncRaidtab();
 
-    int nr(const string& name);
     /* RAID Related functionality */
     unsigned long chunkSize() const { return chunk_size; }
 
@@ -266,24 +265,23 @@ class MdPartCo : public Container
 
     void getMajorMinor();
 
-    /* Makes sure that dev=/dev/name is name doesn't contains this prefix*/
-    void makeDevName(const string& name );
     /* Initialize the MD part of object.*/
     void initMd();
 
     void setSize(unsigned long long size );
-    /* */
+
     static bool isMdName(const string& name);
 
-    bool isMdPart(const string& name);
+    bool isMdPart(const string& name) const;
 
-    void getPartNum(const string& device, unsigned& num);
+    void getPartNum(const string& device, unsigned& num) const;
 
     void getMdProps();
 
     void setSpares();
 
-    void logData( const string& Dir );
+    void logData(const string& Dir) const;
+
     string udev_path;
     list<string> udev_id;
     string logfile_name;
@@ -306,7 +304,7 @@ class MdPartCo : public Container
     void getSlaves(const string name, std::list<string>& devs_list );
 
     /* fields in 'map' file */
-    enum mdMap { MAP_DEV=0, MAP_META, MAP_UUID, MAP_NAME, };
+    enum mdMap { MAP_DEV=0, MAP_META, MAP_UUID, MAP_NAME };
     static bool findMdMap(std::ifstream& file);
 
 
@@ -320,8 +318,6 @@ class MdPartCo : public Container
     static storage::MdType toMdType( const string& val );
     static storage::MdParity toMdParity( const string& val );
     static storage::MdArrayState toMdArrayState( const string& val );
-
-
 
     unsigned long chunk_size;
     storage::MdType md_type;
@@ -340,15 +336,16 @@ class MdPartCo : public Container
     bool destrSb;
     std::list<string> devs;
     std::list<string> spare;
-    static string md_names[storage::MULTIPATH+1];
-    static string par_names[storage::RIGHT_SYMMETRIC+1];
-    static string md_states[storage::ACTIVE_IDLE+1];
+
+    static const string md_names[storage::MULTIPATH+1];
+    static const string par_names[storage::RIGHT_SYMMETRIC+1];
+    static const string md_states[storage::ACTIVE_IDLE+1];
     static unsigned md_major;
 
     /* Name that is present in /dev/md directory.*/
     string md_name;
 
-    static string sysfs_path;
+    static const string sysfs_path;
 
     enum MdProperty
     {
@@ -361,7 +358,8 @@ class MdPartCo : public Container
       /* ... */
       MDPROP_LAST,
     };
-    static string md_props[MDPROP_LAST];
+
+    static const string md_props[MDPROP_LAST];
 
     bool readProp(enum MdProperty prop, string& val) const;
 
