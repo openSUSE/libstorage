@@ -36,6 +36,7 @@
 
 #include "storage/MdPartCo.h"
 #include "storage/MdPart.h"
+#include "storage/SystemInfo.h"
 #include "storage/ProcParts.h"
 #include "storage/Partition.h"
 #include "storage/SystemCmd.h"
@@ -51,7 +52,7 @@ namespace storage
     using namespace std;
 
 
-    MdPartCo::MdPartCo(Storage * const s, const string& name, const ProcParts* ppart)
+    MdPartCo::MdPartCo(Storage * const s, const string& name, SystemInfo& systeminfo)
 	: Container(s, "", staticType()), disk(NULL), del_ptable(false)
     {
 	y2mil("constructing MdPartCo : " << name);
@@ -66,7 +67,7 @@ namespace storage
 	/* First Initialize RAID properties. */
 	initMd();
 	/* Initialize 'disk' part, partitions.*/
-	init( ppart );
+	init(systeminfo.getProcParts());
 
 	y2mil("MdPartCo (nm=" << nm << ", dev=" << dev << ", level=" << md_type << ", disks=" << devs << ") ready.");
     }
@@ -95,7 +96,6 @@ namespace storage
 	    vols.push_back(p);
         }
 	updatePointers(true);
-	num_part = c.num_part;
     }
 
 
@@ -364,20 +364,16 @@ MdPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 
 
 void
-MdPartCo::init(const ProcParts* ppart)
+MdPartCo::init(const ProcParts& ppart)
 {
-  const string tmpS(nm);
-  if( ppart )
-    {
-    ppart->getSize( nm, size_k );
-    }
+    ppart.getSize(nm, size_k);
   y2mil( " nm: " << nm << " size_k: " << size_k);
   createDisk( ppart );
   getVolumes( ppart );
 }
 
 void
-MdPartCo::createDisk(const ProcParts* ppart)
+MdPartCo::createDisk(const ProcParts& ppart)
     {
     if( disk )
         delete disk;
@@ -385,10 +381,7 @@ MdPartCo::createDisk(const ProcParts* ppart)
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
-    if( ppart )
-      {
-      disk->detect( *ppart );
-      }
+      disk->detect(ppart);
     }
 
 // Creates new partition.
@@ -400,19 +393,16 @@ MdPartCo::newP( MdPart*& dm, unsigned num, Partition* p )
 
 //This seems to detect partitions from ppart and adds them to Container.
 void
-MdPartCo::getVolumes(const ProcParts* ppart)
+MdPartCo::getVolumes(const ProcParts& ppart)
     {
     vols.clear();
-    num_part = 0;
     Disk::PartPair pp = disk->partPair();
     Disk::PartIter i = pp.begin();
     MdPart * p = NULL;
     while( i!=pp.end() )
         {
         newP( p, i->nr(), &(*i) );
-        if( ppart )
-          p->updateSize( *ppart );
-        num_part++;
+	p->updateSize(ppart);
         addToList( p );
         ++i;
         }
@@ -1104,8 +1094,7 @@ std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     {
     s << *((Container*)&d);
     s << " Name:" << d.md_name
-      << " MdNr:" << d.mnr
-      << " PNum:" << d.num_part;
+      << " MdNr:" << d.mnr;
     if( !d.udev_id.empty() )
         s << " UdevId:" << d.udev_id;
     if( d.del_ptable )
@@ -1445,7 +1434,9 @@ void MdPartCo::getMdProps()
     y2mil("Done");
 }
 
-bool MdPartCo::readProp(enum MdProperty prop, string& val)
+
+bool
+MdPartCo::readProp(enum MdProperty prop, string& val) const
 {
   string path = sysfs_path + nm + "/md/" + md_props[prop];
 
@@ -1819,7 +1810,7 @@ MdPartCo::toMdArrayState( const string& val )
 }
 
 
-void MdPartCo::getMdPartCoState(storage::MdPartCoStateInfo& info)
+void MdPartCo::getMdPartCoState(storage::MdPartCoStateInfo& info) const
 {
   string prop;
 

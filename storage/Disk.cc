@@ -32,6 +32,7 @@
 
 #include "storage/Region.h"
 #include "storage/Partition.h"
+#include "storage/SystemInfo.h"
 #include "storage/ProcParts.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
@@ -64,7 +65,7 @@ Disk::Disk( Storage * const s, const string& Name,
 
 
 Disk::Disk( Storage * const s, const string& Name,
-	       unsigned num, unsigned long long SizeK, const ProcParts& parts) 
+	       unsigned num, unsigned long long SizeK, SystemInfo& systeminfo) 
 	: Container(s, Name, staticType())
     {
     y2mil("constructed disk " << Name << " nr " << num << " sizeK:" << SizeK);
@@ -78,7 +79,7 @@ Disk::Disk( Storage * const s, const string& Name,
     byte_cyl = head * sector * 512;
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
-    if (parts.getSize(p->device(), sz) && sz > 0)
+    if (systeminfo.getProcParts().getSize(p->device(), sz) && sz > 0)
 	{
 	p->setSize( sz );
 	}

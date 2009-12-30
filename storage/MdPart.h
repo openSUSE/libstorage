@@ -24,7 +24,7 @@
 #ifndef MD_PART_H
 #define MD_PART_H
 
-#include "storage/Md.h"
+
 #include "storage/Partition.h"
 
 
@@ -71,8 +71,9 @@ class MdPart : public Volume
         mutable storage::MdPartInfo info;
 
     private:
+
 	MdPart(const MdPart&);		  // disallow
-        MdPart& operator=(const MdPart&); // disallow
+	MdPart& operator=(const MdPart&); // disallow
 
     };
 

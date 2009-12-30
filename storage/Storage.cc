@@ -530,7 +530,7 @@ Storage::detectMdParts(SystemInfo& systeminfo)
     map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
     for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
       {
-	  MdPartCo* v = new MdPartCo(this, *i, &systeminfo.getProcParts());
+	  MdPartCo* v = new MdPartCo(this, *i, systeminfo);
       list<string> nm = by_id[v->name()];
       if( !nm.empty() )
         {
@@ -762,7 +762,7 @@ void
 	    data.dev.erase( p+1 );
 	    if( nr>=0 )
 		{
-		    d = new Disk(this, data.dev, (unsigned) nr, data.s, systeminfo.getProcParts());
+		    d = new Disk(this, data.dev, (unsigned) nr, data.s, systeminfo);
 		}
 	    break;
 	    }
@@ -3697,7 +3697,7 @@ int Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
     if( i->type()==MDPART )
       {
       MdPartCo* mdp = static_cast<MdPartCo*>(&(*i));
-      if( mdp->matchMdName(name) )
+      if( mdp->name() == name )
         {
          mdp->getMdPartCoState(info);
          break;

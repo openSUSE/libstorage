@@ -32,12 +32,10 @@
 
 namespace storage
 {
+    class Storage;
+    class SystemInfo;
+    class Region;
 
-class Storage;
-class SystemCmd;
-class ProcParts;
-class Region;
-class EtcRaidtab;
 
 /**
  * Class: MdPartCo
@@ -50,12 +48,8 @@ class MdPartCo : public Container
     friend class Storage;
 
     public:
-    MdPartCo( Storage * const s,
-              const string& Name,
-              const ProcParts* ppart = NULL);
-
-    MdPartCo( const MdPartCo& rhs );
-
+    MdPartCo(Storage * const s, const string& Name, SystemInfo& systeminfo);
+    MdPartCo(const MdPartCo& c);
     virtual ~MdPartCo();
 
     unsigned long long sizeK() const { return size_k; }
@@ -67,10 +61,7 @@ class MdPartCo : public Container
     friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
     void setUdevData(const list<string>& id);
 
-    /* Checks if name fits with MD name*/
-    bool matchMdName(const string& name ) { return (name==nm); }
-
-    void getMdPartCoState(storage::MdPartCoStateInfo& info);
+    void getMdPartCoState(MdPartCoStateInfo& info) const;
 
     int createPartition( storage::PartitionType type, long unsigned start,
         long unsigned len, string& device,
@@ -158,7 +149,7 @@ class MdPartCo : public Container
 
     static void activate( bool val, const string& tmpDir  );
 
-    static bool isActive( void  ) { return active; }
+    static bool isActive() { return active; }
 
     /* Return true if on RAID Volume is partition table */
     static bool hasPartitionTable(const string& name );
@@ -243,9 +234,9 @@ class MdPartCo : public Container
     virtual void print( std::ostream& s ) const { s << *this; }
     virtual Container* getCopy() const { return( new MdPartCo( *this ) ); }
     void activate_part( bool val );
-    void init(const ProcParts* ppart);
-    void createDisk(const ProcParts* ppart);
-    void getVolumes(const ProcParts* ppart);
+    void init(const ProcParts& ppart);
+    void createDisk(const ProcParts& ppart);
+    void getVolumes(const ProcParts& ppart);
     void updatePointers( bool invalid=false );
     void updateMinor();
     virtual void newP( MdPart*& dm, unsigned num, Partition* p );
@@ -273,12 +264,12 @@ class MdPartCo : public Container
     virtual Text removeText( bool doing ) const;
     virtual Text setDiskLabelText( bool doing ) const;
 
-    void getMajorMinor(void);
+    void getMajorMinor();
 
     /* Makes sure that dev=/dev/name is name doesn't contains this prefix*/
     void makeDevName(const string& name );
     /* Initialize the MD part of object.*/
-    void initMd(void);
+    void initMd();
 
     void setSize(unsigned long long size );
     /* */
@@ -288,9 +279,9 @@ class MdPartCo : public Container
 
     void getPartNum(const string& device, unsigned& num);
 
-    void getMdProps(void);
+    void getMdProps();
 
-    void setSpares(void);
+    void setSpares();
 
     void logData( const string& Dir );
     string udev_path;
@@ -299,7 +290,6 @@ class MdPartCo : public Container
 
     Disk* disk;
     bool del_ptable;
-    unsigned num_part;
 
     /* RAID Related */
 
@@ -373,7 +363,7 @@ class MdPartCo : public Container
     };
     static string md_props[MDPROP_LAST];
 
-    bool readProp(enum MdProperty prop, string& val);
+    bool readProp(enum MdProperty prop, string& val) const;
 
     /* For that RAID type parity means something */
     bool hasParity() const
