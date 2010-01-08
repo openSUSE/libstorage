@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -6137,74 +6137,28 @@ Storage::getDfSize(const string& mp)
 
 
 bool
-Storage::isHome(const string& mp) const
-{
-    const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
-			    ".gnome2" };
-
-    const list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
-    for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
-    {
-	if (*dir != "root" && checkDir(*dir))
-	{
-	    for (unsigned int i = 0; i < lengthof(files); ++i)
-	    {
-		string file = *dir + "/" + files[i];
-		if (access(file.c_str(), R_OK) == 0)
-		{
-		    y2mil("found home file " << quote(file));
-		    return true;
-		}
-	    }
-	}
-    }
-
-    return false;
-}
-
-
-bool
-Storage::isWindows(const string& mp) const
-{
-    const char* files[] = { "boot.ini", "msdos.sys", "io.sys", "config.sys", "MSDOS.SYS",
-			    "IO.SYS", "bootmgr", "$Boot" };
-
-    for (unsigned int i = 0; i < lengthof(files); ++i)
-    {
-	string file = mp + "/" + files[i];
-	if (access(file.c_str(), R_OK) == 0)
-	{
-	    y2mil("found windows file " << quote(file));
-	    return true;
-	}
-    }
-
-    return false;
-}
-
-
-bool
-Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
-		     unsigned long long& df_free,
-		     unsigned long long& used, bool& win, bool& efi, bool& home,
-		     bool use_cache)
+Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,
+		     bool get_content, ContentInfo& content_info, bool use_cache)
     {
     bool ret = false;
     assertInit();
-    resize_free = df_free = used = 0;
-    win = efi = home = false;
-    
+
+    resize_info = ResizeInfo();
+    content_info = ContentInfo();
+
     if (testmode())
 	use_cache = true;
 
     y2mil("device:" << device << " use_cache:" << use_cache);
+
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if (use_cache && getCachedFreeInfo(vol->device(), df_free, resize_free,
-					   used, win, efi, home, ret))
-	    {
-	    }
+	if (use_cache && getCachedFreeInfo(vol->device(), get_resize, resize_info,
+					   get_content, content_info))
+	{
+	    ret = true;
+	}
 	else if (vol->isUsedBy())
 	{
 	    ret = false;
@@ -6241,49 +6195,25 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		mp = vol->getMount();
 	    if( !mp.empty() )
 		{
-		struct statvfs64 fsbuf;
-		ret = statvfs64( mp.c_str(), &fsbuf )==0;
-		if( ret )
-		    {
-		    df_free = fsbuf.f_bfree;
-		    df_free *= fsbuf.f_bsize;
-		    df_free /= 1024;
-		    resize_free = df_free;
-		    used = fsbuf.f_blocks-fsbuf.f_bfree;
-		    used *= fsbuf.f_bsize;
-		    used /= 1024;
-		    y2mil("blocks:" << fsbuf.f_blocks << " free:" << fsbuf.f_bfree <<
-			  " bsize:" << fsbuf.f_bsize);
-		    y2mil("free:" << df_free << " used:" << used);
-		    }
-		if( ret && vol->getFs()==NTFS )
-		    {
-		    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(device));
-		    string fstr = " might resize at ";
-		    string::size_type pos;
-		    string stdout = boost::join(c.stdout(), "\n");
-		    if (c.retcode()==0 && (pos=stdout.find(fstr))!=string::npos)
-			{
-			y2mil("pos:" << pos);
-			pos = stdout.find_first_not_of(" \t\n", pos + fstr.size());
-			y2mil("pos:" << pos);
-			string number = stdout.substr(pos, stdout.find_first_not_of("0123456789", pos));
-			y2mil("number:\"" << number << "\"");
-			unsigned long long t;
-			number >> t;
-			y2mil("number:" << t);
-			if( t-vol->sizeK()<resize_free )
-			    resize_free = t-vol->sizeK();
-			y2mil("resize_free:" << t);
-			}
-		    else
-			ret = false;
-		    }
-		win = isWindows(mp);
-		efi = vol->getFs()==VFAT && checkDir( mp + "/efi" );
-		if( efi )
-		    win = false;
-		home = isHome(mp);
+		ret = true;
+
+		bool resize_cached = false;
+		bool content_cached = false;
+
+		if (get_resize || vol->getFs() != NTFS)
+		{
+		    resize_cached = true;
+		    resize_info = FreeInfo::detectResizeInfo(mp, *vol);
+		}
+
+		if (get_content || true)
+		{
+		    content_cached = true;
+		    content_info = FreeInfo::detectContentInfo(mp, *vol);
+		}
+
+		setCachedFreeInfo(vol->device(), resize_cached, resize_info, content_cached,
+				  content_info);
 		}
 	    if( needUmount )
 		{
@@ -6297,50 +6227,61 @@ Storage::getFreeInfo(const string& device, unsigned long long& resize_free,
 		if( !ret )
 		    vol->crUnsetup();
 		}
-	    setCachedFreeInfo(vol->device(), df_free, resize_free, used, win, efi, home, ret);
 	    }
 	}
-    if( ret )
-	y2mil("resize_free:" << resize_free << " df_free:" << df_free << " used:" << used);
-    y2mil("ret:" << ret << " win:" << win);
-    return( ret );
+
+    y2mil("device:" << device << " ret:" << ret);
+    if (ret && get_resize)
+	y2mil("resize_info " << resize_info);
+    if (ret && get_content)
+	y2mil("content_info " << content_info);
+
+    return ret;
     }
 
 
 void
-Storage::setCachedFreeInfo(const string& device, unsigned long long df_free,
-			   unsigned long long resize_free, unsigned long long used, bool win,
-			   bool efi, bool home, bool resize_ok)
+Storage::setCachedFreeInfo(const string& device, bool resize_cached, const ResizeInfo& resize_info,
+			   bool content_cached, const ContentInfo& content_info)
 {
-    y2mil("device:" << device << " df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	  " win:" << win << " efi:" << efi << " home:" << home);
-
-    mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used, win, efi, home, resize_ok));
+    map<string, FreeInfo>::iterator it = free_infos.find(device);
+    if (it != free_infos.end())
+	it->second.update(resize_cached, resize_info, content_cached, content_info);
+    else
+	free_infos.insert(it, make_pair(device, FreeInfo(resize_cached, resize_info,
+							 content_cached, content_info)));
 }
 
 
 bool
-Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
-			   unsigned long long& resize_free,
-			   unsigned long long& used, bool& win, bool& efi, bool& home,
-			   bool& resize_ok) const
+Storage::getCachedFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,
+			   bool get_content, ContentInfo& content_info) const
 {
-    map<string, FreeInfo>::const_iterator i = freeInfo.find(device);
-    bool ret = i!=freeInfo.end();
-    if( ret )
+    bool ret = false;
+
+    map<string, FreeInfo>::const_iterator it = free_infos.find(device);
+    if (it != free_infos.end())
+    {
+	ret = true;
+
+	if (get_resize)
 	{
-	df_free = i->second.df_free;
-	resize_free = i->second.resize_free;
-	used = i->second.used;
-	win = i->second.win;
-	efi = i->second.efi;
-	home = i->second.home;
-	resize_ok = i->second.rok;
+	    if (it->second.resize_cached)
+		resize_info = it->second.resize_info;
+	    else
+		ret = false;
 	}
+
+	if (get_content)
+	{
+	    if (it->second.content_cached)
+		content_info = it->second.content_info;
+	    else
+		ret = false;
+	}
+    }
+
     y2mil("device:" << device << " ret:" << ret);
-    if( ret )
-	y2mil("df_free:" << df_free << " resize_free:" << resize_free << " used:" << used <<
-	      " win:" << win << " efi:" << efi << " home:" << home << " resize_ok:" << resize_ok);
     return ret;
 }
 
@@ -6348,8 +6289,9 @@ Storage::getCachedFreeInfo(const string& device, unsigned long long& df_free,
 void
 Storage::eraseCachedFreeInfo(const string& device)
 {
-    freeInfo.erase(device);
+    free_infos.erase(device);
 }
+
 
 void Storage::checkPwdBuf( const string& device )
     {
@@ -6373,12 +6315,22 @@ void Storage::checkPwdBuf( const string& device )
 	ofstream file(fname.c_str());
 	classic(file);
 
-	for (map<string, FreeInfo>::const_iterator it = freeInfo.begin(); it != freeInfo.end(); ++it)
+	for (map<string, FreeInfo>::const_iterator it = free_infos.begin(); it != free_infos.end(); ++it)
 	{
-	    file << it->first << " df_free=" << it->second.df_free << " resize_free="
-		 << it->second.resize_free << " used=" << it->second.used << " windows="
-		 << it->second.win << " efi=" << it->second.efi << " home=" << it->second.home
-		 << " resize_ok=" << it->second.rok << endl;
+	    file << it->first;
+
+	    file << " resize_cached=" << it->second.resize_cached;
+	    if (it->second.resize_cached)
+		file << " df_free=" << it->second.resize_info.df_freeK << " resize_free="
+		     << it->second.resize_info.resize_freeK << " used=" << it->second.resize_info.usedK
+		     << " resize_ok=" << it->second.resize_info.resize_ok;
+
+	    file << " content_cached=" << it->second.content_cached;
+	    if (it->second.content_cached)
+		file << " windows=" << it->second.content_info.windows << " efi=" << it->second.content_info.efi
+		     << " home=" << it->second.content_info.home;
+
+	    file << endl;
 	}
 
 	file.close();
@@ -6403,42 +6355,42 @@ void Storage::checkPwdBuf( const string& device )
 		const map<string, string> m = makeMap(l);
 		map<string, string>::const_iterator i;
 
-		unsigned long long df_free = 0;
-		unsigned long long resize_free = 0;
-		unsigned long long used = 0;
+		bool resize_cached = false;
+		ResizeInfo resize_info;
 
-		bool windows = false;
-		bool efi = false;
-		bool home = false;
+		bool content_cached = false;
+		ContentInfo content_info;
 
-		bool rok = false;
-
+		i = m.find("resize_cached");
+		if (i != m.end())
+		    i->second >> resize_cached;
 		i = m.find("df_free");
 		if (i != m.end())
-		    i->second >> df_free;
+		    i->second >> resize_info.df_freeK;
 		i = m.find("resize_free");
 		if (i != m.end())
-		    i->second >> resize_free;
+		    i->second >> resize_info.resize_freeK;
 		i = m.find("used");
 		if (i != m.end())
-		    i->second >> used;
-
-		i = m.find("windows");
-		if (i != m.end())
-		    i->second >> windows;
-		i = m.find("efi");
-		if (i != m.end())
-		    i->second >> efi;
-		i = m.find("home");
-		if (i != m.end())
-		    i->second >> home;
-
+		    i->second >> resize_info.usedK;
 		i = m.find("resize_ok");
 		if (i != m.end())
-		    i->second >> rok;
+		    i->second >> resize_info.resize_ok;
 
-		mapInsertOrReplace(freeInfo, device, FreeInfo(df_free, resize_free, used,
-							      windows, efi, home, rok));
+		i = m.find("content_cached");
+		if (i != m.end())
+		    i->second >> content_cached;
+		i = m.find("windows");
+		if (i != m.end())
+		    i->second >> content_info.windows;
+		i = m.find("efi");
+		if (i != m.end())
+		    i->second >> content_info.efi;
+		i = m.find("home");
+		if (i != m.end())
+		    i->second >> content_info.home;
+
+		mapInsertOrReplace(free_infos, device, FreeInfo(resize_cached, resize_info, content_cached, content_info));
 	    }
 	}
     }

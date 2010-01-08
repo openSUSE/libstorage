@@ -14,18 +14,16 @@ StorageInterface* s = NULL;
 void
 test(const string& device)
 {
-    unsigned long long resize_freeK;
-    unsigned long long df_freeK;
-    unsigned long long usedK;
-    bool windows;
-    bool efi;
-    bool home;
+    ResizeInfo resize_info;
+    ContentInfo content_info;
 
-    if (s->getFreeInfo(device, resize_freeK, df_freeK, usedK, windows, efi, home, true))
+    if (s->getFreeInfo(device, true, resize_info, true, content_info, true))
     {
 	cout << device << " true" << endl;
-	cout << "    " << resize_freeK << " " << df_freeK << " " << usedK << endl;
-	cout << "    " << windows << " " << efi << " " << home << endl;
+	cout << "    " << resize_info.resize_freeK << " " << resize_info.df_freeK << " "
+	     << resize_info.usedK << " " << resize_info.resize_ok << endl;
+	cout << "    " << content_info.windows << " " << content_info.efi << " "
+	     << content_info.home << endl;
     }
     else
     {
@@ -38,6 +36,8 @@ int
 main()
 {
     cout.setf(std::ios::boolalpha);
+
+    setup_logger();
 
     setup_system("thalassa");
 

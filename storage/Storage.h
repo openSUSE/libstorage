@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -54,6 +54,7 @@
 #include "storage/ListListIterator.h"
 #include "storage/IterPair.h"
 #include "storage/Lock.h"
+#include "storage/FreeInfo.h"
 
 
 namespace storage
@@ -201,6 +202,7 @@ class EtcFstab;
 class EtcRaidtab;
 class DiskData;
 
+
     class Storage : public storage::StorageInterface, boost::noncopyable
     {
     protected:
@@ -217,22 +219,6 @@ class DiskData;
 	    { return( d.type()==storage::NFSC ); }
 	static bool isDm( const Container&d )
 	    { return( d.type()==storage::DM ); }
-
-	struct FreeInfo
-	    {
-	    unsigned long long df_free;
-	    unsigned long long resize_free;
-	    unsigned long long used;
-	    bool win;
-	    bool efi;
-	    bool home;
-	    bool rok;
-	    FreeInfo(unsigned long long df, unsigned long long resize,
-		     unsigned long long usd, bool w = false, bool e = false,
-		     bool h = false, bool r = true)
-		: df_free(df), resize_free(resize), used(usd), win(w), efi(e),
-		  home(h), rok(r) {}
-	    };
 
     public:
 	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
@@ -437,10 +423,10 @@ class DiskData;
 	                    const string& opts )
 	    { return( mountDev( device, mp, true, opts )); }
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
-	bool getFreeInfo( const string& device, unsigned long long& resize_free,
-	                  unsigned long long& df_free,
-	                  unsigned long long& used, bool& win, bool& efi, bool& home,
-			  bool use_cache );
+
+	bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info, 
+			 bool get_content, ContentInfo& content_info, bool use_cache);
+
 	static unsigned long long getDfSize(const string& mp);
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
@@ -1887,8 +1873,6 @@ class DiskData;
 	Device* findDevice(const string& dev);
 
 	void checkPwdBuf( const string& device );
-	bool isHome(const string& mp) const;
-	bool isWindows(const string& mp) const;
 
 	bool haveMd( MdCo*& md );
 	bool haveDm(DmCo*& dm);
@@ -1905,14 +1889,10 @@ class DiskData;
 	void detectObjects();
 	void deleteBackups();
 
-	void setCachedFreeInfo(const string& device, unsigned long long df_free,
-			       unsigned long long resize_free,
-			       unsigned long long used, bool win, bool efi, bool home,
-			       bool resize_ok);
-	bool getCachedFreeInfo(const string& device, unsigned long long& df_free,
-			       unsigned long long& resize_free,
-			       unsigned long long& used, bool& win, bool& efi, bool& home,
-			       bool& resize_ok) const;
+	void setCachedFreeInfo(const string& device, bool resize_cached, const ResizeInfo& resize_info,
+			       bool content_cached, const ContentInfo& content_info);
+	bool getCachedFreeInfo(	const string& device, bool get_resize, ResizeInfo& resize_info,
+				bool get_content, ContentInfo& content_info) const;
 	void logFreeInfo(const string& Dir) const;
 	void readFreeInfo(const string& file);
 
@@ -1957,7 +1937,7 @@ class DiskData;
 	Text lastAction;
 	string extendedError;
 	std::map<string,CCont> backups;
-	std::map<string,FreeInfo> freeInfo;
+	map<string, FreeInfo> free_infos;
 	std::map<string,string> pwdBuf;
 	std::list<std::pair<string, Text>> infoPopupTxts;
     };

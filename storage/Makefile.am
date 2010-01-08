@@ -37,6 +37,7 @@ libstorage_la_SOURCES =					\
 	SystemCmd.cc		SystemCmd.h		\
 	OutputProcessor.cc	OutputProcessor.h	\
 	Regex.cc		Regex.h			\
+	FreeInfo.cc		FreeInfo.h		\
 	AsciiFile.cc		AsciiFile.h		\
 	SystemInfo.cc		SystemInfo.h		\
 	ProcParts.cc		ProcParts.h		\

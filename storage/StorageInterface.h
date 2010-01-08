@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -149,7 +149,7 @@ namespace storage
 
     enum MdArrayState { UNKNOWN, CLEAR, INACTIVE, SUSPENDED, READONLY, READ_AUTO,
 			CLEAN, ACTIVE, WRITE_PENDING, ACTIVE_IDLE };
- 
+
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_MDPART, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
 
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART,
@@ -225,6 +225,25 @@ namespace storage
 	UsedByInfo(UsedByType type, const string& device) : type(type), device(device) {}
 	UsedByType type;
 	string device;
+    };
+
+
+    struct ResizeInfo
+    {
+	ResizeInfo() : df_freeK(0), resize_freeK(0), usedK(0), resize_ok(false) {}
+	unsigned long long df_freeK;
+	unsigned long long resize_freeK;
+	unsigned long long usedK;
+	bool resize_ok;
+    };
+
+
+    struct ContentInfo
+    {
+	ContentInfo() : windows(false), efi(false), home(false) {}
+	bool windows;
+	bool efi;
+	bool home;
     };
 
 
@@ -2293,21 +2312,13 @@ namespace storage
 	 * Detect potentially available free space on a partition
 	 *
 	 * @param device device to check
-	 * @param resize_freeK free space in kilobytes available for resize
-	 * @param df_freeK free space in kilobytes available in filesystem
-	 * @param usedK used space in kilobytes for filesystem
-	 * @param win flag if partition contains a windows installation
-	 * @param efi flag if partition contains a efi boot directory
-	 * @param home flag if partition looks like a home partition
+	 * @param resize_info struct that gets filled with resize info
+	 * @param content_info struct that gets filled with content info
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
 	 */
-	virtual bool getFreeInfo( const string& device,
-	                          unsigned long long& resize_freeK,
-	                          unsigned long long& df_freeK,
-	                          unsigned long long& usedK,
-				  bool& win, bool& efi, bool& home,
-				  bool use_cache ) = 0;
+	virtual bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,
+				 bool get_content, ContentInfo& content_info, bool use_cache) = 0;
 
 	/**
 	 * Read fstab and cryptotab, if existent, from a specified directory and
