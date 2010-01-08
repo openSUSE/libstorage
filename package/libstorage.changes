@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jan 08 15:28:03 CET 2010 - aschnell@suse.de
+
+- fixed numbering of RAIDs (bnc #567662)
+
+-------------------------------------------------------------------
 Fri Jan 08 14:34:17 CET 2010 - aschnell@suse.de
 
 - improved getFreeInfo to allow only querying of certain data

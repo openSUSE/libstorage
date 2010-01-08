@@ -3360,13 +3360,86 @@ Storage::nextFreeMd(int &nr, string &device)
     int ret = 0;
     assertInit();
     MdCo *md = NULL;
-    nr = 0;
+    list<int> mdNums;
+    list<int> mdPartNums;
+
+    nr = -1;
+    mdNums.clear();
+    mdPartNums.clear();
     if (haveMd(md))
-	nr = md->unusedNumber();
-    device = "/dev/md" + decString(nr);
-    y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+	md->usedNumbers(mdNums);
+
+    getMdPartMdNums(mdPartNums);
+
+    mdPartNums.merge(mdNums);
+    mdPartNums.sort();
+    mdPartNums.unique();
+
+    if (mdPartNums.size() > 0)
+    {
+	bool found;
+	//FIXME: magic number
+	for (int i = 0; i < 1000; ++i)
+	{
+	    found = false;
+	    for (list<int>::const_iterator it = mdPartNums.begin(); it != mdPartNums.end(); ++it)
+	    {
+		if (i == *it )
+		    found = true;
+	    }
+	    if (!found)
+	    {
+		// Number not found on the list.
+		nr = i;
+		break;
+	    }
+	}
+    }
+    else
+    {
+	nr = 0;
+    }
+    if( nr != -1 )
+    {
+	device = "/dev/md" + decString(nr);
+	y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+    }
+    else
+	ret = MD_UNKNOWN_NUMBER;
     return ret;
 }
+
+
+bool Storage::checkMdNumber(int num)
+{
+    assertInit();
+    MdCo *md = NULL;
+    list<int> mdNums;
+    list<int> mdPartNums;
+
+    mdNums.clear();
+    mdPartNums.clear();
+    if (haveMd(md))
+	md->usedNumbers(mdNums);
+
+    getMdPartMdNums(mdPartNums);
+
+    mdPartNums.merge(mdNums);
+    mdPartNums.sort();
+    mdPartNums.unique();
+
+    if (mdPartNums.size() == 0)
+	return false;
+
+    for (list<int>::const_iterator it=mdPartNums.begin(); it!=mdPartNums.end(); ++it)
+    {
+        if (num == *it )
+	    return true;
+    }
+
+    return false;
+}
+
 
 int
 Storage::createMd( const string& name, MdType rtype,
@@ -3385,6 +3458,10 @@ Storage::createMd( const string& name, MdType rtype,
 	{
 	ret = STORAGE_MD_INVALID_NAME;
 	}
+    if( ret==0 && checkMdNumber(num)==true )
+        {
+        ret = MD_DUPLICATE_NUMBER;
+        }
     MdCo *md = NULL;
     bool have_md = true;
     if( ret==0 )
@@ -3428,16 +3505,22 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	}
     MdCo *md = NULL;
     bool have_md = true;
+    int mdNum=0;
     unsigned num = 0;
+    string tmpStr;
     if( ret==0 )
 	{
 	have_md = haveMd(md);
 	if( !have_md )
 	    md = new MdCo( this, false );
-	else
-	    num = md->unusedNumber();
 	if( md==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;
+	if( ret == 0 )
+	  {
+	  ret = nextFreeMd(mdNum,tmpStr);
+	  if( ret == 0 )
+	      num = (unsigned)mdNum;
+	  }
 	}
     if( ret==0 )
 	{
@@ -3794,6 +3877,21 @@ bool Storage::haveMd( MdCo*& md )
     return( i != p.end() );
     }
 
+int Storage::getMdPartMdNums(list<int>& mdPartNums)
+    {
+    mdPartNums.clear();
+    CPair p = cPair();
+    ContIterator i;
+    for(i=p.begin(); i!=p.end(); i++ )
+       {
+        if( i->type()==MDPART )
+          {
+          MdPartCo *mdpart = static_cast<MdPartCo*>(&(*i));
+          mdPartNums.push_back(mdpart->nr());
+          }
+         }
+    return 0;
+    }
 
     bool
     Storage::haveDm(DmCo*& dm)

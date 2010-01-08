@@ -57,13 +57,15 @@ class MdCo : public Container
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;
 
-	unsigned unusedNumber();
 	void syncRaidtab();
 	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate(bool val, const string& tmpDir);
 	int removeVolume( Volume* v );
 	
+	/* returns in 'nums' numbers that are used by Md */
+	int usedNumbers(list<int>& nums);
+
     protected:
 	// iterators over MD volumes
 	// protected typedefs for iterators over MD volumes

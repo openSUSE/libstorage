@@ -458,6 +458,7 @@ class DiskData;
 				      LvmLvSnapshotStateInfo& info);
 
 	int nextFreeMd(int &nr, string &device);
+	bool checkMdNumber(int num);
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
 	int createMdAny( storage::MdType rtype, const deque<string>& devs,
@@ -1875,6 +1876,7 @@ class DiskData;
 	void checkPwdBuf( const string& device );
 
 	bool haveMd( MdCo*& md );
+	int  getMdPartMdNums(list<int>& mdPartNums);
 	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
