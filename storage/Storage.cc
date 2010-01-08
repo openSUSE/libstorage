@@ -4042,7 +4042,11 @@ int Storage::removeDmraid( const string& name )
     int ret = 0;
     assertInit();
     DmraidCoIterator i = findDmraidCo( name );
-    if( i != dmrCoEnd() )
+    if (readonly())
+    {
+	ret = STORAGE_CHANGE_READONLY;
+    }
+    else if( i != dmrCoEnd() )
 	{
 	ret = i->removeDmPart();
 	}
