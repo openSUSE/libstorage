@@ -657,6 +657,7 @@ namespace storage
 	STORAGE_ZERO_DEVICE_FAILED = -2031,
 	STORAGE_INVALID_BACKUP_STATE_NAME = -2032,
 	STORAGE_MDPART_CO_NOT_FOUND = -2033,
+	STORAGE_DEVICE_NOT_FOUND = -2034,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -1601,6 +1602,16 @@ namespace storage
 	 * @return value of the flag for recursive removal
 	 */
 	virtual bool getRecursiveRemoval() const = 0;
+
+	/**
+	 * Recursively get all devices using device. Volumes of containers are
+	 * also considered as using the devices.
+	 *
+	 * @param device name of device, e.g. /dev/sda
+	 * @param devices name of devices using device, e.g. /dev/sda1 /dev/sda2
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getRecursiveUsing(const string& device, list<string>& devices) = 0;
 
 	/**
 	 * Set handling of newly created partitions. With this flag

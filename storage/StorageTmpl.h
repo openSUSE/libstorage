@@ -246,6 +246,19 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 	return pos;
     }
 
+    template<typename List, typename Value>
+    typename List::const_iterator addIfNotThere(List& l, const Value& v)
+	{
+	typename List::const_iterator pos = find( l.begin(), l.end(), v );
+	if (pos == l.end() )
+	    {
+	    l.push_back( v );
+	    pos = l.end();
+	    pos--;
+	    }
+	return pos;
+	}
+
 
     template <class InputIterator1, class InputIterator2>
     bool equalContent(InputIterator1 first1, InputIterator1 last1,

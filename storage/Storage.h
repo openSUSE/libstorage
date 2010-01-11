@@ -393,6 +393,10 @@ class DiskData;
 	int forgetResizeVolume( const string& device );
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() const { return recursiveRemove; }
+
+	int getRecursiveUsing(const string& device, list<string>& devices);
+	int getRecursiveUsingHelper(const string& device, list<string>& devices);
+
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
 

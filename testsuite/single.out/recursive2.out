@@ -1,0 +1,5 @@
+/dev/sda /dev/sda1 /dev/sda2 /dev/system /dev/system/abuild /dev/system/arvin /dev/system/root /dev/system/swap /dev/system/virtualbox
+/dev/sda1 
+/dev/sda2 /dev/system /dev/system/abuild /dev/system/arvin /dev/system/root /dev/system/swap /dev/system/virtualbox
+/dev/system /dev/system/abuild /dev/system/arvin /dev/system/root /dev/system/swap /dev/system/virtualbox
+/dev/sdxyz -2034

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jan 11 14:56:49 CET 2010 - fehr@suse.de
+
+- added function getRecursiveUsing to determine transitive closure
+  of volumes affected by removal
+
+-------------------------------------------------------------------
 Fri Jan 08 15:28:03 CET 2010 - aschnell@suse.de
 
 - fixed numbering of RAIDs (bnc #567662)

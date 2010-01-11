@@ -1008,6 +1008,137 @@ void Storage::setRecursiveRemoval(bool val)
     recursiveRemove = val;
 }
 
+
+int
+Storage::getRecursiveUsing(const string& device, list<string>& devices)
+{
+    y2mil("device:" << device);
+    assertInit();
+    devices.clear();
+    int ret = getRecursiveUsingHelper(device, devices);
+    y2mil("ret:" << ret << " devices:" << devices);
+    return ret;
+}
+
+
+int
+Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
+    {
+    int ret = 0;
+    ContIterator cont;
+    VolIterator vol;
+
+    if (findContainer(device, cont))
+	{
+	Container::VolPair p = cont->volPair(Volume::notDeleted); 
+	for( Container::VolIterator it = p.begin(); it != p.end(); ++it )
+	    {
+	    addIfNotThere( devices, it->device() );
+	    getRecursiveUsingHelper(it->device(), devices);
+	    }
+
+	if (cont->isUsedBy())
+	    {
+	    const list<UsedBy> usedBy = cont->getUsedBy();
+	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
+	         it != usedBy.end(); ++it)
+		{
+		addIfNotThere( devices, it->device() );
+		getRecursiveUsingHelper(it->device(), devices);
+		}
+	    }
+	}
+    else if (findVolume(device, vol))
+	{
+	if (vol->isUsedBy())
+	    {
+	    const list<UsedBy> usedBy = vol->getUsedBy();
+	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
+	         it != usedBy.end(); ++it)
+		{
+		addIfNotThere( devices, it->device() );
+		getRecursiveUsingHelper(it->device(), devices);
+		}
+	    }
+	CType typ = vol->cType();
+	list<string> dl;
+	switch( typ )
+	    {
+	    default:
+		break;
+	    case DISK:
+		{
+		Partition* p = dynamic_cast<Partition *>(&(*vol));
+		if( p!=NULL && p->type()==EXTENDED )
+		    {
+		    const Disk* d = p->disk();
+		    Disk::ConstPartPair pp = d->partPair(Partition::notDeleted);
+		    for( Disk::ConstPartIter i=pp.begin(); i!=pp.end(); ++i )
+			{
+			if( i->type()==LOGICAL )
+			    dl.push_back(i->device());
+			}
+		    }
+		}
+		break;
+	    case DMRAID:
+	    case DMMULTIPATH:
+		{
+		DmPart* dp = dynamic_cast<DmPart *>(&(*vol));
+		Partition *p = dp!=NULL ? dp->getPtr() : NULL;
+		if( p!=NULL && p->type()==EXTENDED )
+		    {
+		    const Container* co = vol->getContainer();
+		    const DmPartCo* d = dynamic_cast<const DmPartCo *>(co);
+		    if( d!=NULL )
+			{
+			DmPartCo::ConstDmPartPair pp = d->dmpartPair(DmPart::notDeleted);
+			for( DmPartCo::ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
+			    {
+			    p = i->getPtr();
+			    if( p!=NULL && p->type()==LOGICAL )
+				dl.push_back(i->device());
+			    }
+			}
+		    }
+		}
+		break;
+	    case MDPART:
+		{
+		MdPart* dp = dynamic_cast<MdPart *>(&(*vol));
+		Partition *p = dp!=NULL ? dp->getPtr() : NULL;
+		if( p!=NULL && p->type()==EXTENDED )
+		    {
+		    const Container* co = vol->getContainer();
+		    const MdPartCo* d = dynamic_cast<const MdPartCo *>(co);
+		    if( d!=NULL )
+			{
+			MdPartCo::ConstMdPartPair pp = d->mdpartPair(MdPart::notDeleted);
+			for( MdPartCo::ConstMdPartIter i=pp.begin(); i!=pp.end(); ++i )
+			    {
+			    p = i->getPtr();
+			    if( p!=NULL && p->type()==LOGICAL )
+				dl.push_back(i->device());
+			    }
+			}
+		    }
+		}
+		break;
+	    }
+	for( list<string>::const_iterator i = dl.begin(); i != dl.end(); ++i )
+	    {
+	    addIfNotThere( devices, *i );
+	    getRecursiveUsingHelper(*i, devices);
+	    }
+	}
+    else
+	{
+	ret = STORAGE_DEVICE_NOT_FOUND;
+	}
+    return ret;
+    }
+
+
 void Storage::setZeroNewPartitions(bool val)
 {
     y2mil("val:" << val);
