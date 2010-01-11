@@ -41,6 +41,9 @@ main()
     test("/dev/sda");
     test("/dev/sda1");
     test("/dev/sda2");
+    test("/dev/sdb");
+    test("/dev/sdb1");
+    test("/dev/sdb2");
 
     test("/dev/system");
 
