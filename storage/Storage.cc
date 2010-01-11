@@ -6252,14 +6252,18 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if (use_cache && getCachedFreeInfo(vol->device(), get_resize, resize_info,
-					   get_content, content_info))
+	if (vol->getFs() == FSUNKNOWN || vol->getFs() == FSNONE || vol->getFs() == SWAP)
 	{
-	    ret = true;
+	    ret = false;
 	}
 	else if (vol->isUsedBy())
 	{
 	    ret = false;
+	}
+	else if (use_cache && getCachedFreeInfo(vol->device(), get_resize, resize_info,
+						get_content, content_info))
+	{
+	    ret = true;
 	}
 	else if (testmode())
 	{
@@ -6291,6 +6295,7 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 		}
 	    else
 		mp = vol->getMount();
+
 	    if( !mp.empty() )
 		{
 		ret = true;
@@ -6313,6 +6318,7 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 		setCachedFreeInfo(vol->device(), resize_cached, resize_info, content_cached,
 				  content_info);
 		}
+
 	    if( needUmount )
 		{
 		umountDevice( device );
