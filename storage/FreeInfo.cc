@@ -181,10 +181,10 @@ namespace storage
     {
 	ContentInfo content_info;
 
-	content_info.windows = isWindows(mp);
 	content_info.efi = vol.getFs() == VFAT && checkDir(mp + "/efi");
-	if (content_info.efi)
-	    content_info.windows = false;
+
+	if (!content_info.efi && (vol.getFs() == VFAT || vol.getFs() == NTFS))
+	    content_info.windows = isWindows(mp);
 
 	content_info.home = isHome(mp);
 
