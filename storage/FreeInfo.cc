@@ -21,7 +21,6 @@
 
 
 #include <glob.h>
-#include <sys/statvfs.h>
 
 #include "storage/FreeInfo.h"
 #include "storage/Volume.h"
@@ -129,21 +128,14 @@ namespace storage
     {
 	ResizeInfo resize_info;
 
-	struct statvfs64 fsbuf;
-	bool ret = statvfs64( mp.c_str(), &fsbuf )==0;
+	StatVfs vfsbuf;
+	bool ret = getStatVfs(mp, vfsbuf);
 	if (ret)
 	{
-	    resize_info.df_freeK = fsbuf.f_bfree;
-	    resize_info.df_freeK *= fsbuf.f_bsize;
-	    resize_info.df_freeK /= 1024;
+	    resize_info.df_freeK = vfsbuf.freeK;
+	    resize_info.usedK = vfsbuf.sizeK - vfsbuf.freeK;
 	    resize_info.resize_freeK = resize_info.df_freeK;
-	    resize_info.usedK = fsbuf.f_blocks-fsbuf.f_bfree;
-	    resize_info.usedK *= fsbuf.f_bsize;
-	    resize_info.usedK /= 1024;
 	    resize_info.resize_ok = true;
-
-	    y2mil("blocks:" << fsbuf.f_blocks << " free:" << fsbuf.f_bfree << " bsize:"
-		  << fsbuf.f_bsize);
 	}
 
 	if (ret && vol.getFs() == NTFS)

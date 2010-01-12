@@ -200,7 +200,10 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
 		n->setFstabOption(opt);
 		addToList( n );
 		}
-	    n->setSize(Storage::getDfSize(i->mount));
+
+	    StatVfs vfsbuf;
+	    getStatVfs(i->mount, vfsbuf);
+	    n->setSize(vfsbuf.sizeK);
 	    }
 	}
     }

@@ -431,7 +431,6 @@ class DiskData;
 	bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info, 
 			 bool get_content, ContentInfo& content_info, bool use_cache);
 
-	static unsigned long long getDfSize(const string& mp);
 	int createBackupState( const string& name );
 	int removeBackupState( const string& name );
 	int restoreBackupState( const string& name );

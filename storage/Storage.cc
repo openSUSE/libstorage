@@ -26,7 +26,6 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <sys/statvfs.h>
 #include <pwd.h>
 #include <signal.h>
 #include <sys/utsname.h>
@@ -4120,7 +4119,9 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
 	}
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
 	{
-	sizeK = getDfSize( mdir );
+	StatVfs vfsbuf;
+	getStatVfs(mdir, vfsbuf);
+	sizeK = vfsbuf.sizeK;
 	ret = co.vBegin()->umount( mdir );
 	}
     rmdir(mdir.c_str());
@@ -6339,28 +6340,6 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     infos = s_infos;
     ret = !infos.empty();
     y2mil("ret:" << ret);
-    return ret;
-}
-
-
-unsigned long long
-Storage::getDfSize(const string& mp)
-{
-    unsigned long long ret = 0;
-    struct statvfs64 fsbuf;
-    if( statvfs64( mp.c_str(), &fsbuf )==0 )
-	{
-	ret = fsbuf.f_blocks;
-	ret *= fsbuf.f_bsize;
-	ret /= 1024;
-	y2mil("blocks:" << fsbuf.f_blocks << " free:" << fsbuf.f_bfree <<
-	      " bsize:" << fsbuf.f_bsize);
-	}
-    else
-	{
-	y2war( "errno:" << errno << " " << strerror(errno));
-	}
-    y2mil( "mp:" << mp << " ret:" << ret );
     return ret;
 }
 

@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <glob.h>
 #include <sys/stat.h>
+#include <sys/statvfs.h>
 #include <sys/types.h>
 #include <sys/utsname.h>
 #include <dirent.h>
@@ -94,6 +95,33 @@ checkNormalFile(const string& Path_Cv)
 	globfree (&globbuf);
 
 	return ret;
+    }
+
+
+    bool
+    getStatVfs(const string& path, StatVfs& buf)
+    {
+	struct statvfs64 fsbuf;
+	if (statvfs64(path.c_str(), &fsbuf) != 0)
+	{
+	    buf.sizeK = buf.freeK = 0;
+
+	    y2err("errno:" << errno << " " << strerror(errno));
+	    return false;
+	}
+
+	buf.sizeK = fsbuf.f_blocks;
+	buf.sizeK *= fsbuf.f_bsize;
+	buf.sizeK /= 1024;
+
+	buf.freeK = fsbuf.f_bfree;
+	buf.freeK *= fsbuf.f_bsize;
+	buf.freeK /= 1024;
+
+	y2mil("blocks:" << fsbuf.f_blocks << " bfree:" << fsbuf.f_bfree <<
+	      " bsize:" << fsbuf.f_bsize << " sizeK:" << buf.sizeK <<
+	      " freeK:" << buf.freeK);
+	return true;
     }
 
 

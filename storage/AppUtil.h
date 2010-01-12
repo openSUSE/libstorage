@@ -44,6 +44,15 @@ bool checkDir(const string& Path_Cv);
 
     list<string> glob(const string& path, int flags);
 
+    struct StatVfs
+    {
+	unsigned long long sizeK;
+	unsigned long long freeK;
+    };
+
+    bool getStatVfs(const string& path, StatVfs&);
+
+
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi = false);
 std::list<string> splitString( const string& s, const string& delChars=" \t\n",
                           bool multipleDelim=true, bool skipEmpty=true,
