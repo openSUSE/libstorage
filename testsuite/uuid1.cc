@@ -74,6 +74,10 @@ run2 ()
 int
 main()
 {
+    cout.setf(std::ios::boolalpha);
+
+    setup_logger();
+
     setup_system();
 
     system ("cp data/disk_hdb.info tmp");
