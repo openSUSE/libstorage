@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -75,7 +75,7 @@ namespace storage
 
 	struct Rank
 	{
-	    Rank(const string& name)
+	    Rank(const string& name = "same")
 		: name(name) {}
 
 	    string name;
@@ -126,7 +126,7 @@ namespace storage
 
     private:
 
-	Rank root;
+	map<int, Rank> mount_ranks;
 
 	typedef map<string, string> Entries;
 
@@ -138,7 +138,7 @@ namespace storage
 
 
     DeviceGraph::DeviceGraph(StorageInterface* s)
-	: disks_rank("source"), partitions_rank("same"), mounts_rank("sink")
+	: disks_rank("source"), partitions_rank(), mounts_rank("sink")
     {
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
@@ -186,7 +186,7 @@ namespace storage
 
 		    processUsedby(vg_node, i1->usedBy);
 
-		    Rank rank("same");
+		    Rank rank;
 
 		    deque<LvmLvInfo> lvs;
 		    s->getLvmLvInfo(i1->name, lvs);
@@ -233,7 +233,7 @@ namespace storage
 
 		    processUsedby(mdpart_node, i1->usedBy);
 
-		    Rank rank("same");
+		    Rank rank;
 
 		    deque<MdPartInfo> partitions;
 		    s->getMdPartInfo(i1->name, partitions);
@@ -283,7 +283,7 @@ namespace storage
 
 		    processUsedby(dmraid_node, i1->usedBy);
 
-		    Rank rank("same");
+		    Rank rank;
 
 		    deque<DmraidInfo> partitions;
 		    s->getDmraidInfo(i1->name, partitions);
@@ -317,7 +317,7 @@ namespace storage
 
 		    processUsedby(dmmultipath_node, i1->usedBy);
 
-		    Rank rank("same");
+		    Rank rank;
 
 		    deque<DmmultipathInfo> partitions;
 		    s->getDmmultipathInfo(i1->name, partitions);
@@ -385,8 +385,9 @@ namespace storage
 
 
     MountGraph::MountGraph(StorageInterface* s)
-	: root("source")
     {
+	mount_ranks[0].name = "source";
+
 	deque<VolumeInfo> volumes;
 	s->getVolumes(volumes);
 	for (deque<VolumeInfo>::const_iterator i1 = volumes.begin(); i1 != volumes.end(); ++i1)
@@ -396,15 +397,16 @@ namespace storage
 		Node mountpoint_node(NODE_MOUNTPOINT, i1->device, i1->mount, i1->sizeK);
 		nodes.push_back(mountpoint_node);
 
-		if (i1->mount == "/")
-		    root.ids.push_back(mountpoint_node.id());
+		int r = i1->mount == "/" ? 0 : count(i1->mount.begin(), i1->mount.end(), '/');
+		mount_ranks[r].ids.push_back(mountpoint_node.id());
 
 		entries[i1->mount] = i1->device;
 	    }
 	}
 
-	if (!root.ids.empty())
-	    ranks.push_back(root);
+	for (map<int, Rank>::const_iterator i1 = mount_ranks.begin(); i1 != mount_ranks.end(); ++i1)
+	    if (!i1->second.ids.empty())
+		ranks.push_back(i1->second);
 
 	for (Entries::const_iterator i1 = entries.begin(); i1 != entries.end(); ++i1)
 	{
@@ -477,7 +479,7 @@ namespace storage
 	    case Graph::NODE_MD:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
 		  << Graph::makeTooltip(_("RAID"), node.device, node.sizeK);
-		break;  
+		break;
 	    case Graph::NODE_MDPART:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
 		  << Graph::makeTooltip(_("Partitioned RAID"), node.device, node.sizeK);
