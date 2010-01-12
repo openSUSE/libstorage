@@ -365,7 +365,7 @@ MdPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void
 MdPartCo::init(const ProcParts& ppart)
 {
-    ppart.getSize(nm, size_k);
+    ppart.getSize(dev, size_k);
   y2mil( " nm: " << nm << " size_k: " << size_k);
   createDisk( ppart );
   getVolumes( ppart );

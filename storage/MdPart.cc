@@ -122,7 +122,7 @@ void MdPart::updateSize( const ProcParts& pp )
     //In case of extended partition /proc/partition contains size 1.
     if( p && p->type() != storage::EXTENDED )
       {
-      if( mjr>0 && pp.getSize( nm, si ))
+      if( mjr>0 && pp.getSize( dev, si ))
         {
           setSize( si );
         }
