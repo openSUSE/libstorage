@@ -60,7 +60,6 @@ class DmPart : public Dm
 
     protected:
 	void init( const string& name );
-	void dataFromPart( const Partition* p );
 	virtual const string shortPrintedName() const { return( "DmPart" ); }
 	const DmPartCo* co() const; 
 	void addAltUdevId( unsigned num );

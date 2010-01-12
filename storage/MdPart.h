@@ -62,7 +62,6 @@ class MdPart : public Volume
 
     protected:
         void init( const string& name );
-        void dataFromPart( const Partition* p );
         virtual const string shortPrintedName() const { return( "MdPart" ); }
         const MdPartCo* co() const;
         void addAltUdevId( unsigned num );
