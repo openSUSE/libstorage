@@ -6522,6 +6522,7 @@ void Storage::checkPwdBuf( const string& device )
 	}
     }
 
+
     void
     Storage::logFreeInfo(const string& Dir) const
     {
@@ -6535,14 +6536,19 @@ void Storage::checkPwdBuf( const string& device )
 
 	    file << " resize_cached=" << it->second.resize_cached;
 	    if (it->second.resize_cached)
-		file << " df_free=" << it->second.resize_info.df_freeK << " resize_free="
-		     << it->second.resize_info.resize_freeK << " used=" << it->second.resize_info.usedK
-		     << " resize_ok=" << it->second.resize_info.resize_ok;
+	    {
+		const ResizeInfo& resize_info = it->second.resize_info;
+		file << " df_free=" << resize_info.df_freeK << " resize_free=" << resize_info.resize_freeK
+		     << " used=" << resize_info.usedK << " resize_ok=" << resize_info.resize_ok;
+	    }
 
 	    file << " content_cached=" << it->second.content_cached;
 	    if (it->second.content_cached)
-		file << " windows=" << it->second.content_info.windows << " efi=" << it->second.content_info.efi
-		     << " home=" << it->second.content_info.home;
+	    {
+		const ContentInfo& content_info = it->second.content_info;
+		file << " windows=" << content_info.windows << " efi=" << content_info.efi << " home="
+		     << content_info.home;
+	    }
 
 	    file << endl;
 	}
@@ -6604,7 +6610,8 @@ void Storage::checkPwdBuf( const string& device )
 		if (i != m.end())
 		    i->second >> content_info.home;
 
-		mapInsertOrReplace(free_infos, device, FreeInfo(resize_cached, resize_info, content_cached, content_info));
+		mapInsertOrReplace(free_infos, device, FreeInfo(resize_cached, resize_info,
+								content_cached, content_info));
 	    }
 	}
     }
