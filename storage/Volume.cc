@@ -2822,6 +2822,7 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.encryption = encryption;
     info.crypt_pwd = crypt_pwd;
     info.fs = fs;
+    info.detected_fs = detected_fs;
     info.format = format;
     info.create = create;
     info.mkfs_options = mkfs_opt;

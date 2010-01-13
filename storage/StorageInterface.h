@@ -353,6 +353,7 @@ namespace storage
 	EncryptType encryption;
 	string crypt_pwd;
 	FsType fs;
+	FsType detected_fs;
 	bool format;
 	bool create;
 	bool is_mounted;
