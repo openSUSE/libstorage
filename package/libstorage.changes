@@ -1,7 +1,9 @@
 -------------------------------------------------------------------
 Wed Jan 13 14:57:06 CET 2010 - fehr@suse.de
 
-- add detected fs to volume data provided for YCP interface (bnc #457100)
+- add detected fs to volume data provided for YCP interface (bnc
+  #457100)
+- 2.19.5
 
 -------------------------------------------------------------------
 Mon Jan 11 14:56:49 CET 2010 - fehr@suse.de
