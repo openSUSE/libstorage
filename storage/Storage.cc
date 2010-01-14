@@ -6396,7 +6396,7 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 			opts += ",";
 		    opts += "show_sys_files";
 		    }
-		if( vol->getFs()!=FSUNKNOWN && mkdir( mdir.c_str(), 0700 )==0 &&
+		if( mkdir( mdir.c_str(), 0700 )==0 &&
 		    mountDev( device, mdir, true, opts ) )
 		    {
 		    needUmount = true;
