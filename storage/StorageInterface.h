@@ -183,7 +183,7 @@ namespace storage
     typedef bool (*CallbackYesNoPopup)(const string& text);
 
     /**
-     * typedef for a pointer to a function that ask for the password of the
+     * typedef for a pointer to a function that asks for the password of the
      * given device. If the user does not want to decrypt the device false is
      * returned, true otherwise.
      */
