@@ -2324,7 +2324,9 @@ namespace storage
 	 * Detect potentially available free space on a partition
 	 *
 	 * @param device device to check
+	 * @param get_resize flag to indicate that resize_info should be queried
 	 * @param resize_info struct that gets filled with resize info
+	 * @param get_content flag to indicate that content_info should be queried
 	 * @param content_info struct that gets filled with content info
 	 * @param use_cache function should return cached data if available
 	 * @return bool if values could be successfully determined
