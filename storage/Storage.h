@@ -64,6 +64,7 @@ namespace storage
     extern CallbackShowInstallInfo install_info_cb_ycp;
     extern CallbackInfoPopup info_popup_cb_ycp;
     extern CallbackYesNoPopup yesno_popup_cb_ycp;
+    extern CallbackCommitErrorPopup commit_error_popup_cb_ycp;
     extern CallbackPasswordPopup password_popup_cb_ycp;
 
 
@@ -535,6 +536,8 @@ class DiskData;
 	CallbackInfoPopup getCallbackInfoPopup() const { return info_popup_cb; }
 	void setCallbackYesNoPopup(CallbackYesNoPopup pfnc) { yesno_popup_cb = pfnc; }
 	CallbackYesNoPopup getCallbackYesNoPopup() const { return yesno_popup_cb; }
+	void setCallbackCommitErrorPopup(CallbackCommitErrorPopup pfnc) { commit_error_popup_cb = pfnc; }
+	CallbackCommitErrorPopup getCallbackCommitErrorPopup() const { return commit_error_popup_cb; }
 	void setCallbackPasswordPopup(CallbackPasswordPopup pfnc) { password_popup_cb = pfnc; }
 	CallbackPasswordPopup getCallbackPasswordPopup() const { return password_popup_cb; }
 
@@ -548,6 +551,8 @@ class DiskData;
 	    { return info_popup_cb ? info_popup_cb : info_popup_cb_ycp; }
 	CallbackYesNoPopup getCallbackYesNoPopupTheOne() const
 	    { return yesno_popup_cb ? yesno_popup_cb : yesno_popup_cb_ycp; }
+	CallbackCommitErrorPopup getCallbackCommitErrorPopupTheOne() const
+	    { return commit_error_popup_cb ? commit_error_popup_cb : commit_error_popup_cb_ycp; }
 	CallbackPasswordPopup getCallbackPasswordPopupTheOne() const
 	    { return password_popup_cb ? password_popup_cb : password_popup_cb_ycp; }
 
@@ -555,6 +560,7 @@ class DiskData;
 	void showInfoCb(const Text& info);
 	void infoPopupCb(const Text& info) const;
 	bool yesnoPopupCb(const Text& info) const;
+	bool commitErrorPopupCb(int error, const Text& last_action, const string& extended_message) const;
 	bool passwordPopupCb(const string& device, int attempts, string& password) const;
 
 // iterators over container
@@ -1889,7 +1895,7 @@ class DiskData;
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,
 			     list<const Volume*>& vl, list<commitAction>& todo) const;
-	bool ignoreError(list<commitAction>::const_iterator i, const list<commitAction>& al) const;
+	bool ignoreError(int error, list<commitAction>::const_iterator ca) const;
 	string backupStates() const;
 	void detectObjects();
 	void deleteBackups();
@@ -1932,6 +1938,7 @@ class DiskData;
 	CallbackShowInstallInfo install_info_cb;
 	CallbackInfoPopup info_popup_cb;
 	CallbackYesNoPopup yesno_popup_cb;
+	CallbackCommitErrorPopup commit_error_popup_cb;
 	CallbackPasswordPopup password_popup_cb;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);

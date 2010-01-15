@@ -121,6 +121,7 @@ Storage::Storage(const Environment& env)
     install_info_cb = NULL;
     info_popup_cb = NULL;
     yesno_popup_cb = NULL;
+    commit_error_popup_cb = NULL;
     password_popup_cb = NULL;
 
     recursiveRemove = false;
@@ -4548,23 +4549,18 @@ int Storage::commit()
     return( ret );
     }
 
+
 bool
-Storage::ignoreError(list<commitAction>::const_iterator i, const list<commitAction>& al) const
-    {
-    bool ret = false;
-    if( !i->container && i->type==DISK && i->stage==DECREASE )
-	{
-	++i;
-	while( ret==false && i!=al.end() )
-	    {
-	    y2mil( "it:" << *i );
-	    ret = i->container && i->type==DISK && i->stage==DECREASE;
-	    ++i;
-	    }
-	}
-    y2mil( "ret:" << ret );
-    return( ret );
-    }
+Storage::ignoreError(int error, list<commitAction>::const_iterator ca) const
+{
+    bool ret = commitErrorPopupCb(error, lastAction, extendedError);
+
+    if (ret)
+	y2mil("user decided to continue after commit error");
+
+    return ret;
+}
+
 
 int
 Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
@@ -4614,7 +4610,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    if( ret!=0 )
 		{
 		y2mil("err at " << *ac);
-		if( ignoreError( ac, todo ))
+		if (ignoreError(ret, ac))
 		    ret = 0;
 		}
 	    ++ac;
@@ -5858,6 +5854,19 @@ bool Storage::yesnoPopupCb(const Text& info) const
 
 
     bool
+    Storage::commitErrorPopupCb(int error, const Text& last_action, const string& extended_message) const
+    {
+	y2mil("COMMIT ERROR POPUP error:" << error << " last_action:" << last_action.native <<
+	      " extended_message:" << extended_message);
+	CallbackCommitErrorPopup cb = getCallbackCommitErrorPopupTheOne();
+	if (cb)
+	    return (*cb)(error, last_action.text, extended_message);
+	else
+	    return false;
+    }
+
+
+    bool
     Storage::passwordPopupCb(const string& device, int attempts, string& password) const
     {
 	y2mil("PASSWORD POPUP device:" << device << " attempts:" << attempts);
@@ -6959,6 +6968,7 @@ std::ostream& operator<<(std::ostream& s, const Storage& v)
     CallbackShowInstallInfo install_info_cb_ycp = NULL;
     CallbackInfoPopup info_popup_cb_ycp = NULL;
     CallbackYesNoPopup yesno_popup_cb_ycp = NULL;
+    CallbackCommitErrorPopup commit_error_popup_cb_ycp = NULL;
     CallbackPasswordPopup password_popup_cb_ycp = NULL;
 
 }

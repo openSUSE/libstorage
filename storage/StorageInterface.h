@@ -183,6 +183,14 @@ namespace storage
     typedef bool (*CallbackYesNoPopup)(const string& text);
 
     /**
+     * typedef for a pointer to a function that asks whether to continue after
+     * an commit error. If true is returned the commit error is ignored and
+     * the commit continues.
+     */
+    typedef bool (*CallbackCommitErrorPopup)(int error, const string& last_action,
+					     const string& extended_message);
+
+    /**
      * typedef for a pointer to a function that asks for the password of the
      * given device. If the user does not want to decrypt the device false is
      * returned, true otherwise.
@@ -2164,6 +2172,21 @@ namespace storage
 	 * @return pointer to function currently called for progress bar events
 	 */
 	virtual CallbackYesNoPopup getCallbackYesNoPopup() const = 0;
+
+
+	/**
+	 * Sets the callback function called for errors during commit.
+	 *
+	 * @param pfnc pointer to function
+	 */
+	virtual void setCallbackCommitErrorPopup(CallbackCommitErrorPopup pfnc) = 0;
+
+	/**
+	 * Query the callback function called for errors during commit.
+	 *
+	 * @return pointer to function currently called for progress bar events
+	 */
+	virtual CallbackCommitErrorPopup getCallbackCommitErrorPopup() const = 0;
 
 
 	/**
