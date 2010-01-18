@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan 18 11:54:40 CET 2010 - aschnell@suse.de
+
+- added getErrorString function (bnc #546012)
+
+-------------------------------------------------------------------
 Fri Jan 15 11:41:37 CET 2010 - aschnell@suse.de
 
 - allow to ignore failures during commit (fate #304500)

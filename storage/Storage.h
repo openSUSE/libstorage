@@ -514,6 +514,9 @@ class DiskData;
 	void changeDeviceName( const string& old, const string& nw );
 
         int commit();
+
+	string getErrorString(int error) const;
+
 	void handleHald( bool stop );
 
 	void activateHld(bool val = true);

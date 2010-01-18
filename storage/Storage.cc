@@ -4550,6 +4550,20 @@ int Storage::commit()
     }
 
 
+string
+Storage::getErrorString(int error) const
+{
+    switch (error)
+    {
+	case VOLUME_UMOUNT_FAILED:
+	    return _("Unmount failed.").text;
+
+	default:
+	    return "";
+    }
+}
+
+
 bool
 Storage::ignoreError(int error, list<commitAction>::const_iterator ca) const
 {

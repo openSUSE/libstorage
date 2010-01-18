@@ -2225,6 +2225,11 @@ namespace storage
 	virtual int commit() = 0;
 
 	/**
+	 * Get a textual message for an error code. Can be empty.
+	 */
+	virtual string getErrorString(int error) const = 0;
+
+	/**
 	 * Create backup of current state of all containers
 	 *
 	 * @param name name under which the backup should be created
