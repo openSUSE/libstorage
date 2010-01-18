@@ -4051,12 +4051,12 @@ bool Storage::haveNfs( NfsCo*& co )
     }
 
 int 
-Storage::addNfsDevice( const string& nfsDev, const string& opts,
-                       unsigned long long sizeK, const string& mp )
+Storage::addNfsDevice(const string& nfsDev, const string& opts, unsigned long long sizeK,
+		      const string& mp, bool nfs4)
     {
     int ret = 0;
     assertInit();
-    y2mil( "name:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp );
+    y2mil("name:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp << " nfs4:" << nfs4);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -4072,8 +4072,8 @@ Storage::addNfsDevice( const string& nfsDev, const string& opts,
     if( ret==0 && co!=NULL )
 	{
 	if( sizeK==0 )
-	    checkNfsDevice( nfsDev, opts, sizeK );
-	ret = co->addNfs( nfsDev, sizeK, mp );
+	    checkNfsDevice(nfsDev, opts, nfs4, sizeK);
+	ret = co->addNfs(nfsDev, sizeK, mp, nfs4);
 	}
     if( !have )
 	{
@@ -4090,16 +4090,16 @@ Storage::addNfsDevice( const string& nfsDev, const string& opts,
     return( ret );
     }
 
-int 
-Storage::checkNfsDevice( const string& nfsDev, const string& opts,
-                         unsigned long long& sizeK )
+
+int
+Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, unsigned long long& sizeK)
     {
     int ret = 0;
     assertInit();
     NfsCo co( this );
     string mdir = tmpDir() + "/tmp-nfs-mp";
     mkdir(mdir.c_str(), 0777);
-    ret = co.addNfs( nfsDev, 0, "" );
+    ret = co.addNfs(nfsDev, 0, "", nfs4);
     if( !opts.empty() )
 	co.vBegin()->setFstabOption( opts );
     if( instsys() )
@@ -4126,7 +4126,7 @@ Storage::checkNfsDevice( const string& nfsDev, const string& opts,
 	ret = co.vBegin()->umount( mdir );
 	}
     rmdir(mdir.c_str());
-    y2mil( "name:" << nfsDev << " opts:" << opts << " ret:" << ret <<
+    y2mil( "name:" << nfsDev << " opts:" << opts << " nfs4:" << nfs4 << " ret:" << ret <<
            " sizeK:" << sizeK );
     return ret;
     }

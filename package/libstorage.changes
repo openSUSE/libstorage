@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan 18 17:48:07 CET 2010 - aschnell@suse.de
+
+- added NFS4 support (fate #305171)
+
+-------------------------------------------------------------------
 Mon Jan 18 11:54:40 CET 2010 - aschnell@suse.de
 
 - added getErrorString function (bnc #546012)

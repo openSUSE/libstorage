@@ -509,7 +509,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
 	    }
-	else if( new_fs == NFS )
+	else if( new_fs == NFS || new_fs == NFS4 )
 	    {
 	    ret = VOLUME_FORMAT_NFS_IMPOSSIBLE;
 	    }
@@ -1164,7 +1164,7 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() && !getStorage()->testmode() )
 	{
-	if( fs!=NFS )
+	if( fs!=NFS && fs!=NFS4 )
 	    {
 	    getStorage()->removeDmTableTo(*this);
 	    ret = checkDevice(mountDevice());
@@ -2541,7 +2541,7 @@ int Volume::doFstabUpdate()
 		    {
 		    changed = true;
 		    che.fs = fs_names[fs];
-		    if( fs==SWAP || fs==NFS || encryption!=ENC_NONE )
+		    if( fs==SWAP || fs==NFS || fs==NFS4 || encryption!=ENC_NONE )
 			che.freq = che.passno = 0;
 		    else
 			{
@@ -2598,7 +2598,7 @@ int Volume::doFstabUpdate()
 		che.fs = fs_names[fs];
 		che.opts = getFstabOpts();
 		che.mount = mp;
-		if( fs != NFS && fs != SWAP && fs != FSUNKNOWN && fs != NTFS &&
+		if( fs != NFS && fs != NFS4 && fs != SWAP && fs != FSUNKNOWN && fs != NTFS &&
 		    fs != VFAT && !is_loop && !dmcrypt() && !optNoauto() )
 		    {
 		    che.freq = 1;
@@ -3184,7 +3184,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 
     const string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
 					"vfat", "xfs", "jfs", "hfs", "ntfs-3g", "swap", "hfsplus", 
-					"nfs", "none" };
+					"nfs", "nfs4", "none" };
 
     const string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
 

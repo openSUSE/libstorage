@@ -133,7 +133,7 @@ using std::list;
 namespace storage
 {
     enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, EXT4, BTRFS, VFAT, XFS, JFS, HFS, NTFS,
-		  SWAP, HFSPLUS, NFS, FSNONE };
+		  SWAP, HFSPLUS, NFS, NFS4, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
@@ -2008,22 +2008,24 @@ namespace storage
 	 * @param sizeK size of the nfs device
 	 * @param opts mount options for nfs mount
 	 * @param mp mount point of the nfs device
+	 * @param nfs4 use NFS4 for device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int addNfsDevice( const string& nfsDev, const string& opts,
-	                          unsigned long long sizeK,
-				  const string& mp ) = 0;
+	virtual int addNfsDevice(const string& nfsDev, const string& opts,
+				 unsigned long long sizeK, const string& mp,
+				 bool nfs4) = 0;
 
 	/**
 	 * Check accessibility and size of nfs device.
 	 *
 	 * @param nfsDev name of nfs device
 	 * @param opts mount options for nfs mount
+	 * @param nfs4 use NFS4 for device
 	 * @param sizeK size of the nfs device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int checkNfsDevice( const string& nfsDev, const string& opts,
-	                            unsigned long long& sizeK ) = 0;
+	virtual int checkNfsDevice(const string& nfsDev, const string& opts,
+				   bool nfs4, unsigned long long& sizeK) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically

@@ -484,10 +484,10 @@ class DiskData;
         int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
         bool useMdForImsm() { return MdPartCo::isHandlingDev(); }
 
-	int addNfsDevice( const string& nfsDev, const string& opts,
-	                  unsigned long long sizeK, const string& mp );
-	int checkNfsDevice( const string& nfsDev, const string& opts,
-	                    unsigned long long& sizeK );
+	int addNfsDevice(const string& nfsDev, const string& opts,
+			 unsigned long long sizeK, const string& mp, bool nfs4);
+	int checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4,
+			   unsigned long long& sizeK);
 
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,

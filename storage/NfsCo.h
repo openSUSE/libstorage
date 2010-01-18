@@ -44,8 +44,7 @@ class NfsCo : public Container
 
 	static storage::CType staticType() { return storage::NFSC; }
 	friend std::ostream& operator<< ( std::ostream&, const NfsCo& );
-	int addNfs( const string& nfsDev, unsigned long long sizeK,
-		    const string& mp );
+	int addNfs(const string& nfsDev, unsigned long long sizeK, const string& mp, bool nfs4);
 
 	int removeVolume( Volume* v );
 	int doRemove( Volume* );

@@ -134,11 +134,10 @@ NfsCo::doRemove( Volume* v )
     }
 
 int 
-NfsCo::addNfs( const string& nfsDev, unsigned long long sizeK,
-               const string& mp )
+NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK, const string& mp, bool nfs4)
     {
-    y2mil( "nfsDev:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp );
-    Nfs *n = new Nfs( *this, nfsDev );
+    y2mil("nfsDev:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp << " nfs4:" << nfs4);
+    Nfs *n = new Nfs(*this, nfsDev, nfs4);
     n->changeMount( mp );
     n->setSize( sizeK );
     addToList( n );
@@ -170,9 +169,9 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     const list<FstabEntry> l1 = fstab.getEntries();
     for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
 	{
-	if( i->fs == "nfs" )
+	if( i->fs == "nfs" || i->fs == "nfs4")
 	    {
-	    Nfs *n = new Nfs( *this, i->device );
+	    Nfs *n = new Nfs(*this, i->device, i->fs == "nfs4");
 	    n->setMount( i->mount );
 	    string opt = boost::join(i->opts, ",");
 	    if (opt != "defaults")
@@ -184,7 +183,7 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     const list<FstabEntry> l2 = systeminfo.getProcMounts().getEntries();
     for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
 	{
-	if( i->fs == "nfs" )
+	if( i->fs == "nfs" || i->fs == "nfs4")
 	    {
 	    Nfs *n = NULL;
 	    NfsIter nfs;
@@ -194,7 +193,7 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
 		}
 	    else
 		{
-		n = new Nfs( *this, i->device );
+		n = new Nfs(*this, i->device, i->fs == "nfs4");
 		n->setIgnoreFstab();
 		string opt = boost::join(filterOpts(i->opts), ",");
 		n->setFstabOption(opt);

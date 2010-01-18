@@ -34,16 +34,16 @@ namespace storage
     using namespace std;
 
 
-    Nfs::Nfs(const NfsCo& c, const string& NfsDev)
+    Nfs::Nfs(const NfsCo& c, const string& NfsDev, bool nfs4)
 	: Volume(c, 0, 0)
     {
-    y2deb("constructed Nfs dev:" << NfsDev);
+	y2mil("constructed Nfs dev:" << NfsDev << " nfs4:" << nfs4);
     if( c.type() != NFSC )
 	y2err("constructed nfs with wrong container");
     dev = canonicalName(NfsDev);
     if( dev != NfsDev )
 	alt_names.push_back( NfsDev );
-    init();
+    init(nfs4);
     }
 
 
@@ -77,11 +77,11 @@ Text Nfs::removeText( bool doing ) const
     }
 
 void
-Nfs::init()
+Nfs::init(bool nfs4)
     {
     numeric = false;
     nm = dev;
-    setFs(NFS);
+    setFs(nfs4 ? NFS4 : NFS);
     }
 
 

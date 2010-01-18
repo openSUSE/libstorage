@@ -32,7 +32,7 @@ class NfsCo;
 class Nfs : public Volume
     {
     public:
-	Nfs( const NfsCo& d, const string& NfsDev );
+	Nfs(const NfsCo& d, const string& NfsDev, bool nfs4);
 	Nfs(const NfsCo& c, const Nfs& v);
 	virtual ~Nfs();
 
@@ -50,7 +50,7 @@ class Nfs : public Volume
 	Text removeText( bool doing=true ) const;
 
     protected:
-	void init();
+	void init(bool nfs4);
 
 	mutable storage::NfsInfo info; // workaround for broken ycp bindings
 
