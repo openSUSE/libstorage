@@ -431,6 +431,7 @@ int Dasd::doFdasd()
 		    {
 		    i->setSize( s );
 		    }
+		ret = i->zeroIfNeeded(); 
 		}
 	    ++i;
 	    }

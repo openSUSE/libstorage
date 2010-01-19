@@ -96,6 +96,8 @@ class Partition : public Volume
 	void logDifference( const Partition& d ) const;
 	void addUdevData();
 
+	int zeroIfNeeded() const;
+
 	bool operator== ( const Partition& rhs ) const;
 	bool operator!= ( const Partition& rhs ) const
 	    { return( !(*this==rhs) ); }

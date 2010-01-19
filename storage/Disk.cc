@@ -2343,13 +2343,8 @@ int Disk::doCreate( Volume* v )
 	    }
 	if( ret==0 && p->type()!=EXTENDED )
 	    {
-	    bool used_as_pv = p->isUsedBy(UB_LVM);
-	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
-	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
-		{
-		ret = Storage::zeroDevice(p->device(), p->sizeK());
-		}
-	    else if( !dmp_slave && !p->getFormat() )
+	    ret = p->zeroIfNeeded();
+	    if( !dmp_slave && !p->getFormat() )
 		{
 		bool lsave = false;
 		string lbl;
