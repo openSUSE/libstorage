@@ -1282,7 +1282,7 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
     {
 	ConstPartPair p = partPair(notDeletedNotLog);
 
-	unsigned long start = 1;
+	unsigned long start = 0;
 	unsigned long end = cylinders();
 
 	list<Region> tmp;
