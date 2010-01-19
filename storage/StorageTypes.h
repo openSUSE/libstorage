@@ -87,6 +87,7 @@ struct contOrder
 	unsigned order;
     };
 
+std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
     enum CommitStage { DECREASE, INCREASE, FORMAT, MOUNT };
 

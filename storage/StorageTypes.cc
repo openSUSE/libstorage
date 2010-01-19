@@ -121,4 +121,13 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	return s;
     }
 
+std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a)
+    {
+    s << "start:" << a.cylStart
+      << " len:" << a.cylSize
+      << " primary:" << a.primarySlot << " poss:" << a.primaryPossible
+      << " extended:" << a.extendedSlot << " poss:" << a.extendedPossible
+      << " logical:" << a.logicalSlot << " poss:" << a.logicalPossible;
+    return s;
+    };
 }
