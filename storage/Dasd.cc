@@ -403,10 +403,10 @@ int Dasd::doFdasd()
 	++i;
 	}
     inpfile.close();
+    SystemCmd cmd( "cat " + inpname );
     string cmd_line = FDASDBIN " -c " + inpname + " " + quote(device());
     if( execCheckFailed( cmd_line ) )
 	{
-	SystemCmd cmd( "cat " + inpname );
 	ret = DASD_FDASD_FAILED;
 	}
     if( ret==0 )
