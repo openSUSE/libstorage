@@ -79,8 +79,7 @@ class CheckType
     };
 
 template< class Iter, CType Value, class CastResult >
-class CastCheckIterator : public CheckType<Value>,
-                          public FilterIterator< CheckType<Value>, Iter >
+class CastCheckIterator : public FilterIterator< CheckType<Value>, Iter >
     {
     typedef FilterIterator<CheckType<Value>, Iter> _bclass;
     public:
@@ -90,9 +89,9 @@ class CastCheckIterator : public CheckType<Value>,
 
 	CastCheckIterator() : _bclass() {}
 	CastCheckIterator( const Iter& b, const Iter& e, bool atend=false) :
-	    _bclass( b, e, *this, atend ) {}
+	    _bclass( b, e, CheckType<Value>(), atend ) {}
 	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) :
-	    _bclass( pair, *this, atend ) {}
+	    _bclass( pair, CheckType<Value>(), atend ) {}
 	CastCheckIterator( const CastCheckIterator& i) { *this=i;}
 	CastResult operator*() const
 	    {
@@ -137,8 +136,7 @@ class CheckByFnc
     };
 
 template< class Iter, bool (* FncP)( const Container& c ), class CastResult >
-class CastCheckFncIterator : public CheckByFnc<FncP>,
-                            public FilterIterator< CheckByFnc<FncP>, Iter >
+class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
     {
     typedef FilterIterator<CheckByFnc<FncP>, Iter> _bclass;
     public:
@@ -148,9 +146,9 @@ class CastCheckFncIterator : public CheckByFnc<FncP>,
 
 	CastCheckFncIterator() : _bclass() {}
 	CastCheckFncIterator( const Iter& b, const Iter& e, bool atend=false) :
-	    _bclass( b, e, *this, atend ) {}
+	    _bclass( b, e, CheckByFnc<FncP>(), atend ) {}
 	CastCheckFncIterator( const IterPair<Iter>& pair, bool atend=false) :
-	    _bclass( pair, *this, atend ) {}
+	    _bclass( pair, CheckByFnc<FncP>(), atend ) {}
 	CastCheckFncIterator( const CastCheckFncIterator& i) { *this=i;}
 	CastResult operator*() const
 	    {
