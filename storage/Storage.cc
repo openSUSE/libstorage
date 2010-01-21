@@ -327,7 +327,7 @@ void Storage::detectObjects()
 
     if( instsys() )
 	{
-	SystemCmd c(GREPBIN "^md.*dm- /proc/mdstat");
+	SystemCmd c(GREPBIN " ^md.*dm- /proc/mdstat");
 	SystemCmd rm;
 	for( unsigned i=0; i<c.numLines(); i++ )
 	    {
