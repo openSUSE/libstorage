@@ -65,6 +65,7 @@ main (int argc, char** argv)
 			case NTFS: cout << "NTFS"; break;
 			case SWAP: cout << "SWAP"; break;
 			case NFS: cout << "NFS"; break;
+			case NFS4: cout << "NFS4"; break;
 			case FSNONE: cout << "NONE"; break;
 		    }
 		    cout << '\n';
