@@ -119,24 +119,21 @@ class CastIterator : public Iter
     };
 
 template < class Checker, class ContIter, class Iter, class Value >
-class CheckerIterator : public Checker, public ContIter
+class CheckerIterator : public ContIter
     {
     public:
 	CheckerIterator() {};
 	CheckerIterator( const Iter& b, const Iter& e,
 			 bool (* CheckFnc)( const Value& )=NULL,
 			 bool atend=false ) :
-	    Checker( CheckFnc ),
-	    ContIter( b, e, *this, atend ) {}
+	    ContIter( b, e, Checker( CheckFnc ), atend ) {}
 	CheckerIterator( const IterPair<Iter>& p, 
 			 bool (* CheckFnc)( const Value& )=NULL,
 			 bool atend=false ) :
-	    Checker( CheckFnc ),
-	    ContIter( p, *this, atend ) {}
+	    ContIter( p, Checker( CheckFnc ), atend ) {}
 	template<class It>
 	CheckerIterator( const It& i ) :
-	    Checker( i.pred() ),
-	    ContIter( i.begin(), i.end(), *this, false )
+	    ContIter( i.begin(), i.end(), Checker(i.pred()), false )
 	    { this->m_cur=i.cur(); }
     };
 
