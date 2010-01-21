@@ -29,6 +29,7 @@
 #include <list>
 #include <map>
 #include <deque>
+#include <iostream>
 
 #include "storage/IterPair.h"
 #include "storage/FilterIterator.h"
@@ -132,7 +133,11 @@ class CheckerIterator : public Checker, public ContIter
 			 bool atend=false ) :
 	    Checker( CheckFnc ),
 	    ContIter( p, *this, atend ) {}
-	CheckerIterator( const CheckerIterator& i ) { *this=i; }
+	template<class It>
+	CheckerIterator( const It& i ) :
+	    Checker( i.pred() ),
+	    ContIter( i.begin(), i.end(), *this, false )
+	    { this->m_cur=i.cur(); }
     };
 
 
@@ -277,6 +282,12 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }
+
+template <class Type>
+void printtype(Type type)
+    {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    }
 
 }
 

@@ -40,7 +40,8 @@ class DerefIterator : public Iter
 
         DerefIterator() {}
 
-	DerefIterator( const Iter& i ) : Iter(i) {}
+	template< class It >
+	DerefIterator( const It& i ) : Iter(i) {}
 
 	DerefIterator& operator++() { Iter::operator++(); return(*this); }
 	DerefIterator operator++(int) 

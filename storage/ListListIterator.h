@@ -53,9 +53,13 @@ class ListListIterator : public PIter
 	    initialize( p.begin(), p.end(), setend );
 	    }
 
-	ListListIterator( const ListListIterator& x ) 
+	template< class It >
+	ListListIterator( const It& x )
 	    {
-	    copyMembers( x );
+	    m_begin = x.begin();
+	    m_end = x.end();
+	    m_lcur = x.cur();
+	    m_pcur = x.pcur();
 	    }
 
 	ListListIterator& operator=(const ListListIterator& x)
@@ -99,11 +103,13 @@ class ListListIterator : public PIter
 	    {
 	    return( &(*m_pcur) );
 	    }
-	bool operator==(const ListListIterator& x) const
+	template< class It >
+	bool operator==(const It& x) const
 	    {
 	    return( m_pcur == x.pcur() );
 	    }
-	bool operator!=(const ListListIterator& x) const
+	template< class It >
+	bool operator!=(const It& x) const
 	    {
 	    return( m_pcur != x.pcur() );
 	    }

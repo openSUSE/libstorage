@@ -42,7 +42,8 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 
         FilterIterator() { }
 
-	FilterIterator( const Iter& begin, const Iter& end, Pred f, bool setend=false ) : 
+	template<class It>
+	FilterIterator( const It& begin, const It& end, Pred f, bool setend=false ) : 
 	    m_begin(begin), m_end(end), m_cur(begin), m_f(f)
 	    {
 	    initialize( setend );
@@ -103,11 +104,13 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    {
 	    return( &(*m_cur) );
 	    }
-	bool operator==(const FilterIterator& x) const
+	template <class Other>
+	bool operator==(const Other& x) const
 	    {
 	    return( m_cur == x.cur() );
 	    }
-	bool operator!=(const FilterIterator& x) const
+	template <class Other>
+	bool operator!=(const Other& x) const
 	    {
 	    return( m_cur != x.cur() );
 	    }
@@ -117,7 +120,7 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	Iter cur() const {return m_cur;}
 	Iter begin() const {return m_begin;}
 
-    private:
+    protected:
 	Iter m_begin;
 	Iter m_end;
 	Iter m_cur;
@@ -138,7 +141,6 @@ class FilterIterator : public std::iterator<std::bidirectional_iterator_tag,
 	    m_cur = x.cur();
 	    m_f = x.pred();
 	    }
-
 
 	void assertPred( bool forward=true ) 
 	    {
