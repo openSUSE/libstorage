@@ -72,7 +72,8 @@ class DmPartCo : public PeContainer
 	int nextFreePartition(storage::PartitionType type, unsigned& nr,
 			      string& device) const;
 	int destroyPartitionTable( const string& new_label );
-	int freeCylindersAfterPartition(const DmPart* p, unsigned long& freeCyls) const;
+	int freeCylindersAroundPartition(const DmPart* p, unsigned long& freeCylsBefore,
+					 unsigned long& freeCylsAfter) const;
 	int resizePartition( DmPart* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );

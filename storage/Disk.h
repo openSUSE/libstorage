@@ -112,7 +112,8 @@ class Disk : public Container
 				 list<const Volume*>& vol) const;
 	virtual int commitChanges( storage::CommitStage stage );
 	int commitChanges( storage::CommitStage stage, Volume* vol );
-	int freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const;
+	int freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBefore,
+					 unsigned long& freeCylsAfter) const;
 	virtual int resizePartition( Partition* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );

@@ -1134,13 +1134,15 @@ namespace storage
 					 unsigned long sizeCyl ) = 0;
 
 	/**
-	 * Return the number of free cylinders after a partition.
+	 * Return the number of free cylinders before and after a partition.
 	 *
 	 * @param device device name of partition, e.g. /dev/sda1
-	 * @param freeCyls is set to the number of free cylinders
+	 * @param freeCylsBefore is set to the number of free cylinders before the partition
+	 * @param freeCylsAfter is set to the number of free cylinders after the partition
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int freeCylindersAfterPartition(const string& device, unsigned long& freeCyls) = 0;
+	virtual int freeCylindersAroundPartition(const string& device, unsigned long& freeCylsBefore,
+						 unsigned long& freeCylsAfter) = 0;
 
 	/**
 	 * Determine the device name of the next created partition

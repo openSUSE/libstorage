@@ -1781,22 +1781,23 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 
 
 int
-Storage::freeCylindersAfterPartition(const string& partition, unsigned long& freeCyls)
+Storage::freeCylindersAroundPartition(const string& partition, unsigned long& freeCylsBefore,
+				      unsigned long& freeCylsAfter)
 {
     int ret = 0;
     assertInit();
     y2mil("partition:" << partition);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( partition, cont, vol ) )
     {
 	if( cont->type()==DISK )
 	{
-	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
-	    Partition* p = dynamic_cast<Partition *>(&(*vol));
+	    const Disk* disk = dynamic_cast<const Disk*>(&(*cont));
+	    const Partition* p = dynamic_cast<const Partition*>(&(*vol));
 	    if( disk!=NULL && p!=NULL )
 	    {
-		ret = disk->freeCylindersAfterPartition(p, freeCyls);
+		ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
 	    }
 	    else
 	    {
@@ -1805,11 +1806,11 @@ Storage::freeCylindersAfterPartition(const string& partition, unsigned long& fre
 	}
 	else if( cont->type()==DMRAID || cont->type()==DMMULTIPATH )
 	{
-	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
-	    DmPart* p = dynamic_cast<DmPart *>(&(*vol));
+	    const DmPartCo* disk = dynamic_cast<const DmPartCo*>(&(*cont));
+	    const DmPart* p = dynamic_cast<const DmPart*>(&(*vol));
 	    if( disk!=NULL && p!=NULL )
 	    {
-		ret = disk->freeCylindersAfterPartition(p, freeCyls);
+		ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
 	    }
 	    else
 	    {
@@ -1818,11 +1819,11 @@ Storage::freeCylindersAfterPartition(const string& partition, unsigned long& fre
 	}
 	else if ( cont->type() == MDPART )
 	  {
-          MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
-          MdPart* p = dynamic_cast<MdPart *>(&(*vol));
+          const MdPartCo* disk = dynamic_cast<const MdPartCo*>(&(*cont));
+          const MdPart* p = dynamic_cast<const MdPart*>(&(*vol));
           if( disk!=NULL && p!=NULL )
           {
-              ret = disk->freeCylindersAfterPartition(p, freeCyls);
+              ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
           }
           else
           {
