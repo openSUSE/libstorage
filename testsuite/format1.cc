@@ -45,6 +45,7 @@ print_partitions (const string& disk)
 	    case HFSPLUS: cout << "HFSPLUS"; break;
 	    case SWAP: cout << "SWAP"; break;
 	    case NFS: cout << "NFS"; break;
+	    case NFS4: cout << "NFS4"; break;
 	    case FSNONE: cout << "NONE"; break;
 	}
 	cout << '\n';
