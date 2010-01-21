@@ -219,13 +219,14 @@ DmPartCo::removeVolume( Volume* v )
 
 
 int
-DmPartCo::freeCylindersAfterPartition(const DmPart* dm, unsigned long& freeCyls) const
+DmPartCo::freeCylindersAroundPartition(const DmPart* dm, unsigned long& freeCylsBefore,
+				       unsigned long& freeCylsAfter) const
 {
     const Partition* p = dm->getPtr();
     int ret = p ? 0 : DMPART_PARTITION_NOT_FOUND;
     if (ret == 0)
     {
-	ret = disk->freeCylindersAfterPartition(p, freeCyls);
+	ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
     }
     y2mil("ret:" << ret);
     return ret;

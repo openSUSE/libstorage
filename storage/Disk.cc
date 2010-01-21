@@ -2427,47 +2427,83 @@ int Disk::doRemove( Volume* v )
 
 
 int
-Disk::freeCylindersAfterPartition(const Partition* p, unsigned long& freeCyls) const
+Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBefore,
+				   unsigned long& freeCylsAfter) const
     {
     int ret = 0;
-    freeCyls = 0;
-    unsigned long start = p->cylEnd() + 1;
-    unsigned long end = cylinders();
+
+    freeCylsBefore = freeCylsAfter = 0;
+
+    unsigned long startBefore = 0;
+    const unsigned long endBefore = p->cylStart() - 1;
+    const unsigned long startAfter = p->cylEnd() + 1;
+    unsigned long endAfter = cylinders();
     if (p->type() == LOGICAL && hasExtended())
 	{
 	ConstPartPair pp = partPair(notDeletedExt);
-	end = pp.begin()->cylEnd() + 1;
+	startBefore = pp.begin()->cylStart() - 1;
+	endAfter = pp.begin()->cylEnd() + 1;
 	}
+
+    y2mil("startBefore:" << startBefore << " endBefore:" << endBefore);
+    y2mil("startAfter:" << startAfter << " endAfter:" << endAfter);
+
     ConstPartPair pp = partPair(notDeleted);
-    ConstPartIter i = pp.begin();
+    ConstPartIter previous = pp.end();
     ConstPartIter next = pp.end();
+
     y2mil( "p:" << *p );
-    y2mil( "end:" << end );
-    while( i != pp.end() )
+
+    for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
 	{
 	y2mil( "i:" << *i );
+
+	if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
+	    i->cylEnd()<=p->cylEnd() && i->nr()!=p->nr() &&
+	    (previous==pp.end() || previous->cylEnd()<i->cylEnd()) )
+	    {
+	    previous = i;
+	    }
+
 	if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
 	    i->cylStart()>=p->cylStart() && i->nr()!=p->nr() &&
 	    (next==pp.end() || next->cylStart()>i->cylStart()) )
 	    {
 	    next = i;
 	    }
-        ++i;
 	}
+
+    if( previous != pp.end() )
+	{
+	y2mil( "previous:" << *previous );
+	if( previous->cylEnd()<endBefore )
+	    {
+	    startBefore = previous->cylEnd();
+	    y2mil( "startBefore:" << startBefore );
+	    }
+	else
+	    startBefore = cylinders();
+	}
+
     if( next != pp.end() )
 	{
 	y2mil( "next:" << *next );
-	if( next->cylStart()>start )
+	if( next->cylStart()>startAfter )
 	    {
-	    end = next->cylStart();
-	    y2mil( "end:" << end );
+	    endAfter = next->cylStart();
+	    y2mil( "endAfter:" << endAfter );
 	    }
 	else
-	    end = 0;
+	    endAfter = 0;
 	}
-    if (end > start)
-	freeCyls = end-start;
-    y2mil("ret:" << ret << " freeCyls:" << freeCyls);
+
+    if (endBefore > startBefore)
+	freeCylsBefore = endBefore - startBefore;
+
+    if (endAfter > startAfter)
+	freeCylsAfter = endAfter - startAfter;
+
+    y2mil("ret:" << ret << " freeCylsBefore:" << freeCylsBefore << " freeCylsAfter:" << freeCylsAfter);
     return ret;
     }
 
@@ -2496,12 +2532,13 @@ Disk::resizePartition(Partition* p, unsigned long newCyl)
 	y2mil("newCyl:" << newCyl << " p->cylSize():" << p->cylSize());
 	if( ret==0 && newCyl>p->cylSize() )
 	{
-	    unsigned long free_cyls = 0;
-	    ret = freeCylindersAfterPartition(p, free_cyls);
+	    unsigned long free_cyls_before = 0;
+	    unsigned long free_cyls_after = 0;
+	    ret = freeCylindersAroundPartition(p, free_cyls_before, free_cyls_after);
 	    if (ret == 0)
 	    {
 		unsigned long increase = newCyl - p->cylSize();
-		if (free_cyls < increase)
+		if (free_cyls_after < increase)
 		{
 		    ret = DISK_RESIZE_NO_SPACE;
 		}
