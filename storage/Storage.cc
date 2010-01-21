@@ -5520,6 +5520,19 @@ Storage::logCo(const Container* c) const
 	y2mil("end" << str);
     }
 
+bool Storage::findVolume( const string& device, ConstContIterator& c,
+                          ConstVolIterator& v )
+    {
+    ContIterator ct;
+    VolIterator vt;
+    bool ret = findVolume( device, ct, vt );
+    if( ret )
+	{
+	c = ct;
+	v = vt;
+	}
+    return( ret );
+    }
 
 bool Storage::findVolume( const string& device, ContIterator& c,
                           VolIterator& v )
@@ -5598,6 +5611,15 @@ bool Storage::removeDm( const string& device )
     return( dm!=0 );
     }
 
+bool Storage::findContainer( const string& device, ConstContIterator& c )
+    {
+    ContIterator tmp;
+    bool ret = findContainer( device, tmp );
+    if( ret )
+	c = tmp;
+    return( ret );
+    }
+
 bool Storage::findContainer( const string& device, ContIterator& c )
     {
     CPair cp = cPair();
@@ -5605,6 +5627,15 @@ bool Storage::findContainer( const string& device, ContIterator& c )
     while( c!=cp.end() && c->device()!=device )
 	++c;
     return( c!=cp.end() );
+    }
+
+bool Storage::findVolume( const string& device, ConstVolIterator& v, bool also_del )
+    {
+    VolIterator tmp;
+    bool ret = findVolume( device, tmp, also_del );
+    if( ret )
+	v = tmp;
+    return( ret );
     }
 
 bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )

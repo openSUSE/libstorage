@@ -1879,9 +1879,14 @@ class DiskData;
 
 	bool findVolume( const string& device, ContIterator& c,
 	                 VolIterator& v  );
+	bool findVolume( const string& device, ConstContIterator& c,
+	                 ConstVolIterator& v  );
 	bool findVolume( const string& device, VolIterator& v,
 	                 bool also_del=false );
+	bool findVolume( const string& device, ConstVolIterator& v,
+	                 bool also_del=false );
 	bool findContainer( const string& device, ContIterator& c );
+	bool findContainer( const string& device, ConstContIterator& c );
 
 	Device* findDevice(const string& dev);
 
