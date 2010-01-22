@@ -482,6 +482,7 @@ class DiskData;
 	                                         MdPartCoInfo& info);
         int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
         bool useMdForImsm() { return MdPartCo::isHandlingDev(); }
+        int removeMdPartCo(const string& devName, bool destroySb);
 
 	int addNfsDevice(const string& nfsDev, const string& opts,
 			 unsigned long long sizeK, const string& mp, bool nfs4);

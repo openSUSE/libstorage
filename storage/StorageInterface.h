@@ -779,6 +779,7 @@ namespace storage
 	MDPART_REMOVE_PARTITION_LIST_ERASE = -6104,
 	MDPART_COMMIT_NOTHING_TODO = -6105,
 	MDPART_NO_REMOVE = -6106,
+	MDPART_DEVICE_NOT_FOUND = -6107,
 
 	LOOP_CHANGE_READONLY = -7000,
 	LOOP_DUPLICATE_FILE = -7001,
@@ -2002,6 +2003,18 @@ namespace storage
 	 */
 	virtual int computeMdSize(MdType md_type, list<string> devices,
 				  unsigned long long& sizeK) = 0;
+
+        /**
+         * Remove a Partitionable Software raid device.
+         *
+         * Only RAID with persistent superblock can be removed. IMSM and DDF
+         * RAIDs cannot be removed.
+         * @param name name of software raid device to remove (e.g. /dev/md0)
+         * @param destroySb flag if the MD superblocks on the physical devices
+         *        should be destroyed after md device is deleted
+         * @return zero if all is ok, a negative number to indicate an error
+         */
+	virtual int removeMdPartCo(const string& name, bool destroySb ) = 0;
 
 	/**
 	 * Add knowledge about existence of nfs device.

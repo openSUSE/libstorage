@@ -673,31 +673,61 @@ MdPartCo::removeMdPart()
     y2mil("begin");
     if( readonly() )
         {
+        y2war("Read-Only RAID.");
         ret = MDPART_CHANGE_READONLY;
         }
     if( ret==0 && !created() )
         {
+        //Remove partitions
         MdPartPair p=mdpartPair(MdPart::notDeleted);
         for( MdPartIter i=p.begin(); i!=p.end(); ++i )
             {
             if( i->nr()>0 )
+              {
                 ret = removePartition( i->nr() );
+                if( ret != 0 )
+                  {
+                  // Error. Break.
+                  break;
+                  }
+
+              }
             }
+        //Remove 'whole device' it was created when last partition was deleted.
         p=mdpartPair(MdPart::notDeleted);
         if( p.begin()!=p.end() && p.begin()->nr()==0 )
             {
             if( !removeFromList( &(*p.begin()) ))
+              {
                 y2err( "not found:" << *p.begin() );
+                ret = MDPART_PARTITION_NOT_FOUND;
+              }
             }
-        setDeleted( true );
         }
     if( ret==0 )
-        {
-        //unuseDev(); - In PeContainer.
-        }
+      {
+      unuseDevs();
+      setDeleted( true );
+      destrSb = true;
+      del_ptable = true;
+      }
     y2mil("ret:" << ret);
     return( ret );
     }
+
+int MdPartCo::unuseDevs(void)
+{
+  list<string> rdevs;
+  getDevs( rdevs );
+  for( list<string>::const_iterator s=rdevs.begin();
+      s!=rdevs.end(); s++ )
+    {
+    getStorage()->clearUsedBy(*s);
+    }
+  return 0;
+}
+
+
 
 void MdPartCo::removePresentPartitions()
     {
@@ -869,16 +899,82 @@ MdPartCo::doCreate( Volume* v )
     return( ret );
     }
 
+//Remove MDPART unless:
+//1. It's IMSM or DDF SW RAID
+//2. It contains partitions.
 int MdPartCo::doRemove()
     {
-    return( MDPART_NO_REMOVE );
+    y2mil("begin");
+    // 1. Check Metadata.
+    if( sb_ver == "imsm" || sb_ver == "ddf" )
+      {
+      y2err("Cannot remove IMSM or DDF SW RAIDs.");
+      return (MDPART_NO_REMOVE);
+      }
+    // 2. Check for partitions.
+    if( disk!=NULL && disk->numPartitions()>0 )
+      {
+      int permitRemove=1;
+      //handleWholeDevice: partition 0.
+      if( disk->numPartitions() == 1 )
+        {
+        //Find partition '0' if it exists then this 'whole device'
+        MdPartIter i;
+        if( findMdPart( 0, i ) == true)
+          {
+          //Single case when removal is allowed.
+          permitRemove = 0;
+          }
+        }
+      if( permitRemove == 1 )
+        {
+        y2err("Cannot remove RAID with partitions.");
+        return (MDPART_NO_REMOVE);
+        }
+      }
+    /* Try to remove this. */
+    y2mil("Raid:" << name() << " is going to be removed permanently");
+    int ret = 0;
+    if( deleted() )
+      {
+      string cmd = MDADMBIN " --stop " + quote(device());
+      SystemCmd c( cmd );
+      if( c.retcode()!=0 )
+        {
+        ret = MD_REMOVE_FAILED;
+        setExtError( c );
+        }
+      if( !silent )
+        {
+        getStorage()->showInfoCb( removeText(true) );
+        }
+      if( ret==0 && destrSb )
+        {
+        SystemCmd c;
+        list<string> d;
+        getDevs( d );
+        for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
+          {
+          c.execute(MDADMBIN " --zero-superblock " + quote(*i));
+          }
+        }
+      if( ret==0 )
+        {
+        EtcRaidtab* tab = getStorage()->getRaidtab();
+        if( tab!=NULL )
+          {
+          tab->removeEntry( nr() );
+          }
+        }
+      }
+    y2mil("Done, ret:" << ret);
+    return( ret );
     }
 
 int MdPartCo::doRemove( Volume* v )
     {
     y2mil("name:" << name() << " v->name:" << v->name());
     MdPart * l = dynamic_cast<MdPart *>(v);
-    bool save_act = false;
     int ret = disk ? 0 : MDPART_INTERNAL_ERR;
     if( ret==0 && l == NULL )
         ret = MDPART_INVALID_VOLUME;
@@ -892,28 +988,28 @@ int MdPartCo::doRemove( Volume* v )
         }
     if( ret==0 )
         {
-        save_act = active;
-        if( active )
-            activate_part(false);
         Partition *p = l->getPtr();
         if( p==NULL )
+          {
+            y2err("Partition not found");
             ret = MDPART_PARTITION_NOT_FOUND;
-        else if( !deleted() )
-            ret = disk->doRemove( p );
+          }
+        else
+          {
+          ret = disk->doRemove( p );
+          }
         }
     if( ret==0 )
         {
         if( !removeFromList( l ) )
+          {
+            y2war("Couldn't remove parititon from list.");
             ret = MDPART_REMOVE_PARTITION_LIST_ERASE;
-        }
-    if( save_act && !deleted() )
-        {
-        activate_part(true);
-        updateMinor();
+          }
         }
     if( ret==0 )
         getStorage()->waitForDevice();
-    y2mil("ret:" << ret);
+    y2mil("Done, ret:" << ret);
     return( ret );
     }
 
@@ -1009,8 +1105,6 @@ MdPartCo::removeText( bool doing ) const
         }
     return txt;
     }
-
-
 void
 MdPartCo::setUdevData(const list<string>& id)
 {

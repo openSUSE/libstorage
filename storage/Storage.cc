@@ -3996,6 +3996,35 @@ Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long&
     return ret;
 }
 
+//
+// Removes Software RAIDs that are not IMSM RAIDs.
+//
+int Storage::removeMdPartCo(const string& devName, bool destroySb)
+{
+  y2mil("Called");
+  int ret;
+  MdPartCoIterator mdp = findMdPartCo(devName);
+  if( mdp == mdpCoEnd()  )
+    {
+	y2war("Not found device: " << devName);
+     return MDPART_DEVICE_NOT_FOUND;
+    }
+  MdPartCoInfo mdpInfo;
+  mdp->getInfo(mdpInfo);
+  if( mdpInfo.sb_ver == "imsm" || mdpInfo.sb_ver == "ddf" )
+    {
+     y2war("IMSM or DDF RAID cannot be removed");
+     return MDPART_NO_REMOVE;
+    }
+  //Remove all: Md Partitions and RAID itself.
+  ret = mdp->removeMdPart();
+  if( ret==0 )
+    {
+    ret = checkCache();
+    }
+  y2mil("ret:" << ret);
+  return ret;
+}
 
 bool Storage::haveMd( MdCo*& md )
     {
@@ -4609,7 +4638,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	                           const_cast<Container*>(ac->vol()->getContainer());
 	    if( cont )
 		{
-		bool cont_removed = co->deleted() && type==LVM;
+		bool cont_removed = co->deleted() && (type == LVM || type == MDPART);
 		ret = co->commitChanges(*stage);
 		cont_removed = cont_removed && ret==0;
 		if( cont_removed )
@@ -6225,6 +6254,7 @@ int Storage::removeContainer( Container* val )
 		case UB_DMMULTIPATH:
 		    break;
 		case UB_MDPART:
+		    ret = removeMdPartCo(it->device(), true);
 		    break;
 		default:
 		    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;

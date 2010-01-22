@@ -283,6 +283,8 @@ class MdPartCo : public Container
 
     void setSpares();
 
+	int unuseDevs();
+
     void logData(const string& Dir) const;
 
     string udev_path;
