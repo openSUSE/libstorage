@@ -3,6 +3,7 @@ Thu Jan 21 17:26:10 CET 2010 - aschnell@suse.de
 
 - replaced function freeCylindersAfterPartition by
   freeCylindersAroundPartition
+- 2.19.6
 
 -------------------------------------------------------------------
 Tue Jan 19 17:49:33 CET 2010 - aschnell@suse.de
