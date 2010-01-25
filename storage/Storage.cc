@@ -1025,13 +1025,13 @@ int
 Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
     {
     int ret = 0;
-    ContIterator cont;
-    VolIterator vol;
+    ConstContIterator cont;
+    ConstVolIterator vol;
 
     if (findContainer(device, cont))
 	{
-	Container::VolPair p = cont->volPair(Volume::notDeleted); 
-	for( Container::VolIterator it = p.begin(); it != p.end(); ++it )
+	Container::ConstVolPair p = cont->volPair(Volume::notDeleted); 
+	for( Container::ConstVolIterator it = p.begin(); it != p.end(); ++it )
 	    {
 	    addIfNotThere( devices, it->device() );
 	    getRecursiveUsingHelper(it->device(), devices);
@@ -1068,7 +1068,7 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
 		break;
 	    case DISK:
 		{
-		Partition* p = dynamic_cast<Partition *>(&(*vol));
+		const Partition* p = dynamic_cast<const Partition*>(&(*vol));
 		if( p!=NULL && p->type()==EXTENDED )
 		    {
 		    const Disk* d = p->disk();
@@ -1084,8 +1084,8 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
 	    case DMRAID:
 	    case DMMULTIPATH:
 		{
-		DmPart* dp = dynamic_cast<DmPart *>(&(*vol));
-		Partition *p = dp!=NULL ? dp->getPtr() : NULL;
+		const DmPart* dp = dynamic_cast<const DmPart*>(&(*vol));
+		const Partition* p = dp!=NULL ? dp->getPtr() : NULL;
 		if( p!=NULL && p->type()==EXTENDED )
 		    {
 		    const Container* co = vol->getContainer();
@@ -1105,8 +1105,8 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
 		break;
 	    case MDPART:
 		{
-		MdPart* dp = dynamic_cast<MdPart *>(&(*vol));
-		Partition *p = dp!=NULL ? dp->getPtr() : NULL;
+		const MdPart* dp = dynamic_cast<const MdPart*>(&(*vol));
+		const Partition* p = dp!=NULL ? dp->getPtr() : NULL;
 		if( p!=NULL && p->type()==EXTENDED )
 		    {
 		    const Container* co = vol->getContainer();
@@ -2544,8 +2544,8 @@ Storage::getMountPoint( const string& device, string& mount )
     int ret = 0;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( device, cont, vol ) )
 	{
 	mount = vol->getMount();
@@ -2592,8 +2592,8 @@ Storage::getMountBy( const string& device, MountByType& mby )
     int ret = 0;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( device, cont, vol ) )
 	{
 	mby = vol->getMountBy();
@@ -2647,8 +2647,8 @@ Storage::getFstabOptions( const string& device, string& options )
     int ret = 0;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( device, cont, vol ) )
     {
 	options = vol->getFstabOption();
@@ -2773,8 +2773,8 @@ Storage::getCrypt( const string& device, bool& val )
     int ret = 0;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( device, cont, vol ) )
 	{
 	val = vol->getEncryption();
@@ -2921,7 +2921,7 @@ Storage::needCryptPassword( const string& device )
     assertInit();
     y2mil("device:" << device);
 
-    VolIterator vol;
+    ConstVolIterator vol;
     if( checkNormalFile(device) )
 	{
 	ConstLoopPair p = loopPair(Loop::notDeleted);
@@ -2955,7 +2955,7 @@ Storage::getCryptPassword( const string& device, string& pwd )
     y2mil("device:" << device);
 
     pwd.clear();
-    VolIterator vol;
+    ConstVolIterator vol;
     if( findVolume( device, vol ) )
 	{
 	pwd = vol->getCryptPwd();
@@ -3009,8 +3009,8 @@ Storage::getIgnoreFstab( const string& device, bool& val )
     int ret = 0;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
-    ContIterator cont;
+    ConstVolIterator vol;
+    ConstContIterator cont;
     if( findVolume( device, cont, vol ) )
 	{
 	val = vol->ignoreFstab();
@@ -4750,10 +4750,10 @@ bool Storage::checkDmMapsTo( const string& dev )
     bool ret = false;
     y2mil("dev:" << dev);
     VPair vp = vPair( isDmContainer );
-    VolIterator v=vp.begin(); 
+    ConstVolIterator v=vp.begin(); 
     while( !ret && v!=vp.end() )
 	{
-	Dm * dm = dynamic_cast<Dm *>(&(*v));
+	const Dm* dm = dynamic_cast<const Dm*>(&(*v));
 	if( dm!=NULL )
 	    ret = ret && dm->mapsTo( dev );
 	++v;
@@ -4824,8 +4824,8 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
     {
     int ret = STORAGE_VOLUME_NOT_FOUND;
     string dev = device;
-    ContIterator c;
-    VolIterator v;
+    ConstContIterator c;
+    ConstVolIterator v;
     info.type = CUNKNOWN;
     assertInit();
     if( findVolume( dev, c, v ))
@@ -4975,7 +4975,7 @@ int
 Storage::getVolume( const string& device, VolumeInfo& info )
     {
     int ret = 0;
-    VolIterator v;
+    ConstVolIterator v;
     if( findVolume( device, v ))
 	{
 	v->getInfo( info );
@@ -5730,7 +5730,7 @@ bool Storage::findVolume( const string& device, Volume const * &vol )
     {
     bool ret = false;
     vol = NULL;
-    VolIterator v;
+    ConstVolIterator v;
     if( findVolume( device, v ))
 	{
 	vol = &(*v);
@@ -5745,7 +5745,7 @@ bool Storage::findVolume( const string& device, Volume const * &vol )
 string Storage::findNormalDevice( const string& device )
     {
     string ret;
-    VolIterator v;
+    ConstVolIterator v;
     if( findVolume( device, v ))
 	ret = v->device();
     y2mil( "device:" << device << " ret:" << ret );
@@ -6055,7 +6055,7 @@ Storage::MdPartCoIterator Storage::findMdPartCo( const string& name )
 bool Storage::knownDevice( const string& dev, bool disks_allowed )
     {
     bool ret=true;
-    VolIterator v;
+    ConstVolIterator v;
     if( !findVolume( dev, v ) )
 	{
 	ret = disks_allowed && findDisk( dev )!=dEnd();
@@ -6107,7 +6107,7 @@ const Volume*
 Storage::getVolume( const string& dev )
     {
     const Volume* ret=NULL;
-    VolIterator v;
+    ConstVolIterator v;
     if( findVolume( dev, v ) )
 	{
 	ret = &(*v);
@@ -6119,7 +6119,7 @@ Storage::getVolume( const string& dev )
 bool Storage::canUseDevice( const string& dev, bool disks_allowed )
     {
     bool ret=true;
-    VolIterator v;
+    ConstVolIterator v;
     if( !findVolume( dev, v ) )
 	{
 	if( disks_allowed )
@@ -6184,7 +6184,7 @@ Storage::deviceByNumber(const string& majmin) const
 unsigned long long Storage::deviceSize( const string& dev )
     {
     unsigned long long ret=0;
-    VolIterator v;
+    ConstVolIterator v;
     if( !findVolume( dev, v ) )
 	{
 	DiskIterator i = findDisk( dev );
@@ -6318,7 +6318,7 @@ Storage::checkDeviceMounted(const string& device, list<string>& mps)
     bool ret = false;
     assertInit();
     y2mil("device:" << device);
-    VolIterator vol;
+    ConstVolIterator vol;
 	ProcMounts mounts;
     if( findVolume( device, vol ) )
 	{
@@ -6392,7 +6392,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     static Regex disk_part( "^/dev/[sh]d[a-z]+[0-9]+$" );
     s_infos.clear();
     bool ret = false;
-    VolIterator vol;
+    ConstVolIterator vol;
     assertInit();
     y2mil("dir:" << dir);
     EtcFstab fstab(dir, true);
