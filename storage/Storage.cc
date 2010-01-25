@@ -308,7 +308,6 @@ void Storage::detectObjects()
 
     if (testmode())
         {
-
 	string t = testdir() + "/volume.info";
 	if( access( t.c_str(), R_OK )==0 )
 	    detectFsDataTestMode( t, vBegin(), vEnd() );
