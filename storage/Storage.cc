@@ -2827,7 +2827,6 @@ Storage::verifyCryptFilePassword( const string& file, const string& pwd )
     y2mil("password:" << pwd);
 #endif
 
-    VolIterator vol;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
