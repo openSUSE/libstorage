@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jan 25 17:30:26 CET 2010 - aschnell@suse.de
+
+- fixed default mount-by for multipath (bnc #572209)
+
+-------------------------------------------------------------------
 Thu Jan 21 17:26:10 CET 2010 - aschnell@suse.de
 
 - replaced function freeCylindersAfterPartition by
