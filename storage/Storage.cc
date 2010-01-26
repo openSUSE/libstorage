@@ -1280,6 +1280,8 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
             else
                 {
                 ret = i->createPartition( type, start, size, device, true );
+		if( ret==0 )
+		    checkPwdBuf( device );
                 }
             }
         }
