@@ -2603,9 +2603,9 @@ Storage::getMountBy( const string& device, MountByType& mby )
 	pair<string,unsigned> dp = Disk::getDiskPartition(device);
 	y2mil( "dp:" << dp );
 
-	DiskIterator i1 = findDisk(dp.first);
-	DmPartCoIterator i2 = findDmPartCo(dp.first);
-	MdPartCoIterator i3 = findMdPartCo(dp.first);
+	ConstDiskIterator i1 = findDisk(dp.first);
+	ConstDmPartCoIterator i2 = findDmPartCo(dp.first);
+	ConstMdPartCoIterator i3 = findMdPartCo(dp.first);
 	if (i1 != dEnd())
 	{ 
 	    if ((mby == MOUNTBY_ID && i1->udevId().empty()) ||

@@ -92,7 +92,9 @@ class CastCheckIterator : public FilterIterator< CheckType<Value>, Iter >
 	    _bclass( b, e, CheckType<Value>(), atend ) {}
 	CastCheckIterator( const IterPair<Iter>& pair, bool atend=false) :
 	    _bclass( pair, CheckType<Value>(), atend ) {}
-	CastCheckIterator( const CastCheckIterator& i) { *this=i;}
+	template< class It >
+	CastCheckIterator( const It& i) : _bclass( i.begin(), i.end(), CheckType<Value>() )
+	    { this->m_cur=i.cur();}
 	CastResult operator*() const
 	    {
 	    return( static_cast<CastResult>(_bclass::operator*()) );
@@ -149,7 +151,9 @@ class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
 	    _bclass( b, e, CheckByFnc<FncP>(), atend ) {}
 	CastCheckFncIterator( const IterPair<Iter>& pair, bool atend=false) :
 	    _bclass( pair, CheckByFnc<FncP>(), atend ) {}
-	CastCheckFncIterator( const CastCheckFncIterator& i) { *this=i;}
+	template< class It >
+	CastCheckFncIterator( const It& i) : _bclass( i.begin(), i.end(), i.pred() )
+	    { this->m_cur=i.cur();}
 	CastResult operator*() const
 	    {
 	    return( static_cast<CastResult>(_bclass::operator*()) );

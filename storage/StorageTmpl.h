@@ -62,7 +62,9 @@ class ContainerIter : public FilterIterator< Pred, Iter >
 	ContainerIter( const IterPair<Iter>& pair, const Pred& p,
 		       bool atend=false ) :
 	    _bclass(pair, p, atend ) {}
-	ContainerIter( const ContainerIter& i) { *this=i;}
+	template< class It >
+	ContainerIter( const It& i) : _bclass( i.begin(), i.end(), i.pred() )
+	    { this->m_cur=i.cur(); }
     };
 
 template< class Pred, class Iter, class Value >
@@ -72,7 +74,9 @@ class ContainerDerIter : public DerefIterator<Iter,Value>
     public:
 	ContainerDerIter() : _bclass() {}
 	ContainerDerIter( const _bclass& i ) : _bclass(i) {}
-	ContainerDerIter( const ContainerDerIter& i) { *this=i;}
+	template< class It >
+	ContainerDerIter( const It& i) : _bclass( i )
+	    { this->m_cur=i.cur(); }
     };
 
 template< class Iter, class CastResult >
@@ -85,7 +89,8 @@ class CastIterator : public Iter
 
 	CastIterator() : Iter() {}
 	CastIterator( const Iter& i ) : Iter( i ) {}
-	CastIterator( const CastIterator& i ) { *this=i; }
+	template< class It >
+	CastIterator( const It& i ) : Iter( i ) {}
 	CastResult operator*() const
 	    {
 	    return( static_cast<CastResult>(Iter::operator*()) );
