@@ -1071,7 +1071,7 @@ Disk::defaultLabel(bool efiboot, unsigned long long size_k)
 }
 
 const Disk::label_info Disk::labels[] = {
-	{ "msdos", true, 4, 63, 2*TB },
+	{ "msdos", true, 4, 256, 2*TB }, // actually unlimited number of logical partitions
 	{ "gpt", false, 128, 0, 16*PB },
 	{ "bsd", false, 8, 0, 2*TB },
 	{ "sun", false, 8, 0, 2*TB },
