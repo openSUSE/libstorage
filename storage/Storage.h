@@ -481,11 +481,13 @@ class DiskData;
 	int computeMdSize(MdType md_type, list<string> devices,
 			  unsigned long long& sizeK);
 
+	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }
+	ImsmDriver getImsmDriver() const { return imsm_driver; }
+
 	int getMdPartCoInfo( const string& name, MdPartCoInfo& info);
 	int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
 	                                         MdPartCoInfo& info);
         int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
-        bool useMdForImsm() { return MdPartCo::isHandlingDev(); }
         int removeMdPartCo(const string& devName, bool destroySb);
 
 	int addNfsDevice(const string& nfsDev, const string& opts,
@@ -1945,6 +1947,8 @@ class DiskData;
 	CCont cont;
 	EtcFstab *fstab;
 	EtcRaidtab *raidtab;
+
+	ImsmDriver imsm_driver;
 
 	CallbackProgressBar progress_bar_cb;
 	CallbackShowInstallInfo install_info_cb;

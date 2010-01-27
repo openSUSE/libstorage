@@ -158,10 +158,6 @@ class MdPartCo : public Container
     /* Return true if there is no Filesystem on device (it can contain partition table). */
     static bool hasFileSystem(const string& name);
 
-
-    static void setHandlingDev(bool val) { handlingMd = val; }
-    static bool isHandlingDev() { return handlingMd; }
-
     static bool isImsmPlatform();
 
     static bool matchRegex( const string& dev );
@@ -375,7 +371,7 @@ class MdPartCo : public Container
     mutable storage::MdPartCoInfo info;
 
     static bool active;
-    static bool handlingMd;
+
     };
 }
 

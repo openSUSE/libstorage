@@ -2260,8 +2260,6 @@ unsigned MdPartCo::md_major = 0;
 
 bool MdPartCo::active = false;
 
-bool MdPartCo::handlingMd = false;
-
 void MdPartCo::logData(const string& Dir) const {}
 
 
