@@ -635,7 +635,7 @@ Partition::getInfo( PartitionAddInfo& tinfo ) const
 void
 Partition::getInfo( PartitionInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     PartitionAddInfo tmp;
     getInfo( tmp );
     info = tmp;

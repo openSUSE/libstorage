@@ -485,7 +485,7 @@ void Dm::getDmMajor()
 
 void Dm::getInfo( DmInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     info.nr = num;
     info.table = tname;
     info.target = target;

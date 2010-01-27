@@ -99,7 +99,7 @@ Nfs::init(bool nfs4)
 
 void Nfs::getInfo( NfsInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     tinfo = info;
     }
 

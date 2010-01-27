@@ -192,7 +192,7 @@ Text DmPart::setTypeText( bool doing ) const
 
 void DmPart::getInfo( DmPartInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     if( p )
 	p->getInfo( info.p );
     info.part = p!=NULL;

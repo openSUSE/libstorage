@@ -391,7 +391,7 @@ Text Loop::formatText( bool doing ) const
 
 void Loop::getInfo( LoopInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     info.nr = num;
     info.file = lfile;
     info.reuseFile = reuseFile;

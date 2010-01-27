@@ -341,7 +341,7 @@ Text LvmLv::resizeText( bool doing ) const
 
 void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     info.stripes = stripe;
     info.stripeSizeK = stripe_size;
     info.uuid = vol_uuid;

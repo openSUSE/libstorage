@@ -5040,7 +5040,7 @@ int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo,
     DiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
-	((const Container*)&(*i))->getInfo( cinfo );
+	i->Container::getInfo(cinfo);
 	i->getInfo( info );
 	}
     else
@@ -5095,7 +5095,7 @@ int Storage::getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
     LvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
-	((const Container*)&(*i))->getInfo( cinfo );
+	i->Container::getInfo(cinfo);
 	i->getInfo( info );
 	}
     else
@@ -5147,7 +5147,7 @@ int Storage::getContDmraidCoInfo( const string& name, ContainerInfo& cinfo,
     DmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
-	((const Container*)&(*i))->getInfo( cinfo );
+	i->Container::getInfo(cinfo);
 	i->getInfo( info );
 	}
     else
@@ -5180,7 +5180,7 @@ Storage::getContDmmultipathCoInfo( const string& name, ContainerInfo& cinfo,
     DmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
-	((const Container*)&(*i))->getInfo( cinfo );
+	i->Container::getInfo(cinfo);
 	i->getInfo( info );
     }
     else
@@ -5225,7 +5225,7 @@ int Storage::getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
   MdPartCoIterator i = findMdPartCo( name );
   if( i != mdpCoEnd() )
       {
-      ((const Container*)&(*i))->getInfo( cinfo );
+      i->Container::getInfo(cinfo);
       i->getInfo( info );
       }
   else

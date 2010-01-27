@@ -208,7 +208,7 @@ MdPart::setTypeText(bool doing) const
 
 void MdPart::getInfo( MdPartInfo& tinfo ) const
     {
-    ((Volume*)this)->getInfo( info.v );
+    Volume::getInfo(info.v);
     if( p )
         p->getInfo( info.p );
     info.part = p!=NULL;
@@ -237,7 +237,7 @@ void MdPart::logDifference( const MdPart& rhs ) const
 
 void MdPart::getPartitionInfo(storage::PartitionInfo& pinfo)
 {
-  ((Volume*)this)->getInfo( pinfo.v );
+    Volume::getInfo(pinfo.v);
   if( p )
     {
       PartitionAddInfo info;
