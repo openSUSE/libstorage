@@ -132,6 +132,8 @@ Storage::Storage(const Environment& env)
 
     SystemCmd::setTestmode(testmode());
 
+    imsm_driver = IMSM_UNDECIDED;
+
     logSystemInfo();
 }
 
@@ -368,6 +370,8 @@ Storage::discoverMdPVols()
       y2mil(" md raids:" + mdDevs);
       if( !mdDevs.empty())
         {
+	if (getImsmDriver() == IMSM_UNDECIDED)
+	{
         Text txt = sformat(
             // popup text %1$s is replaced by disk name e.g. /dev/hda
             _("You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
@@ -383,12 +387,18 @@ Storage::discoverMdPVols()
         if( yesnoPopupCb(txt) )
           {
           ret = true;
-          MdPartCo::setHandlingDev(true);
+          setImsmDriver(IMSM_MDADM);
           }
         else
           {
           ret = false;
+	  setImsmDriver(IMSM_DMRAID);
           }
+	}
+	else
+	{
+	    ret = getImsmDriver() == IMSM_MDADM;
+	}
         }
       else
         {
@@ -6913,7 +6923,7 @@ Storage::activateHld(bool val)
     y2mil("val:" << val);
     if (val)
     {
-        if( MdPartCo::isHandlingDev() == true)
+        if (getImsmDriver() == IMSM_MDADM)
           {
           MdPartCo::activate(val, tmpDir());
           Dm::activate(val);

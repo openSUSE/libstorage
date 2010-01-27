@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jan 27 15:09:27 CET 2010 - aschnell@suse.de
+
+- allow to set driver for IMSM without callback (bnc #574270)
+
+-------------------------------------------------------------------
 Mon Jan 25 17:30:26 CET 2010 - aschnell@suse.de
 
 - fixed default mount-by for multipath (bnc #572209)

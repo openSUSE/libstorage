@@ -156,6 +156,9 @@ namespace storage
 		 COTYPE_LAST_ENTRY };
 
 
+    enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
+
+
     /**
      * typedef for a pointer to a function that is called on progress bar
      * events.
@@ -951,21 +954,19 @@ namespace storage
 	virtual int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
                                          MdPartCoInfo& info) = 0;
 
+	/**
+	 * Set which driver should be used for IMSM Software RAIDs.
+	 *
+	 * @param driver driver to use for IMSM Software RAIDs.
+	 */
+	virtual void setImsmDriver(ImsmDriver driver) = 0;
+
         /**
-         * Checks if Md and MdPart are used for IMSM/ISW SW RAIDs.
+	 * Query which driver is used for IMSM Software RAIDs.
          *
-         * In 'normal mode' it will become true after first MdPart class is
-         * created and it will true until such class exist.
-         * In 'install mode' it will be true:
-         * a) if clean or partitioned IMSM RAIDs were detected and no YesOrNo
-         *    callback was registered.
-         * b) if clean or partitioned IMSM RAIDs were detected and user chose
-         *    'yes' when asked to use Md classes for IMSM/ISW RAIDs.
-         *
-         * @return true if IMSM/ISW SW RAIDa are handled by Md/MdPart classes.
-         *         False otherwise.
+         * @return driver used for IMSM Software RAIDs.
          */
-	virtual bool useMdForImsm() = 0;
+	virtual ImsmDriver getImsmDriver() const = 0;
 
 	/**
 	 * Query all volumes found in system
