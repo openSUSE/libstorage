@@ -169,6 +169,9 @@ EtcFstab::readFiles()
 		find( p->old.opts.begin(), p->old.opts.end(), "noauto" );
 	    if( li != p->old.opts.end() )
 		li = p->old.opts.erase(li);
+	    li =  find( p->old.opts.begin(), p->old.opts.end(), "nofail" );
+	    if( li != p->old.opts.end() )
+		li = p->old.opts.erase(li);
 	    ++i;
 	    if( *i != "none" )
 		p->old.cr_key = *i;
@@ -545,13 +548,19 @@ list<string> EtcFstab::makeStringList(const FstabEntry& e) const
 	ls.push_back( Volume::encTypeString(e.encr) );
 	}
     ls.push_back( boost::join( e.opts, "," ) );
-    if( (e.dmcrypt&&e.mount!="swap") &&
-        find( e.opts.begin(), e.opts.end(), "noauto" )==e.opts.end() )
+    if( e.dmcrypt && e.mount!="swap" )
 	{
-	if( ls.back() == "defaults" )
-	    ls.back() = "noauto";
-	else
-	    ls.back() += ",noauto";
+	if( find( e.opts.begin(), e.opts.end(), "noauto" )==e.opts.end() )
+	    {
+	    if( ls.back() == "defaults" )
+		ls.back() = "noauto";
+	    else
+		ls.back() += ",noauto";
+	    }
+	if( find( e.opts.begin(), e.opts.end(), "nofail" )==e.opts.end() )
+	    {
+	    ls.back() += ",nofail";
+	    }
 	}
     if( !e.cryptotab )
 	{

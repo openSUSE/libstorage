@@ -119,6 +119,8 @@ class Storage;
 	storage::MountByType getMountBy() const { return mount_by; }
 	const string& getFstabOption() const { return fstab_opt; }
 	void setFstabOption( const string& val ) { orig_fstab_opt=fstab_opt=val; }
+	unsigned fstabFreq() const;
+	unsigned fstabPassno() const;
 	void setMount( const string& val ) { orig_mp=mp=val; }
 	void updateFstabOptions();
 	bool needFstabUpdate() const;
@@ -240,6 +242,7 @@ class Storage;
 	int cryptUnsetup( bool force=false );
 	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
 	                  bool format ) const;
+	bool noFreqPassno() const;
 
 	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;

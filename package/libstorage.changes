@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jan 27 16:03:55 CET 2010 - fehr@suse.de
+
+- add "nofail" to dm-encrypted fstab entries and do not set passno 
+  to zero any more (bnc #569895)
+
+-------------------------------------------------------------------
 Mon Jan 25 17:30:26 CET 2010 - aschnell@suse.de
 
 - fixed default mount-by for multipath (bnc #572209)

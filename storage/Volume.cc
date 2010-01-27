@@ -2483,6 +2483,30 @@ static bool haveQuota( const string& fstopt )
     return( ret );
     }
 
+bool Volume::noFreqPassno() const
+    {
+    return( fs==SWAP || fs==NFS || fs==NFS4 || fs==VFAT || fs==NTFS || 
+            fs==UNKNOWN || is_loop || optNoauto() );
+    }
+
+unsigned Volume::fstabFreq() const
+    {
+    unsigned ret = 1;
+    if( noFreqPassno() || encryption!=ENC_NONE )
+	ret = 0;
+    return ret;
+    }
+
+unsigned Volume::fstabPassno() const
+    {
+    unsigned ret = 2;
+    if( noFreqPassno() || (encryption!=ENC_NONE&&!dmcrypt()) )
+	ret = 0;
+    else if( mp=="/" )
+	ret = 1;
+    return( ret );
+    }
+
 int Volume::doFstabUpdate()
     {
     int ret = 0;
@@ -2541,13 +2565,8 @@ int Volume::doFstabUpdate()
 		    {
 		    changed = true;
 		    che.fs = fs_names[fs];
-		    if( fs==SWAP || fs==NFS || fs==NFS4 || encryption!=ENC_NONE )
-			che.freq = che.passno = 0;
-		    else
-			{
-			che.freq = 1;
-			che.passno = (mp=="/") ? 1 : 2;
-			}
+		    che.freq = fstabFreq();
+		    che.passno = fstabPassno();
 		    }
 		if( encryption != orig_encryption )
 		    {
@@ -2559,13 +2578,8 @@ int Volume::doFstabUpdate()
 			che.loop_dev = fstab_loop_dev;
 			}
 		    che.dentry = de;
-		    if( encryption!=ENC_NONE )
-			che.freq = che.passno = 0;
-		    else
-			{
-			che.freq = 1;
-			che.passno = (mp=="/") ? 1 : 2;
-			}
+		    che.freq = fstabFreq();
+		    che.passno = fstabPassno();
 		    }
 		if( changed )
 		    {
@@ -2598,12 +2612,8 @@ int Volume::doFstabUpdate()
 		che.fs = fs_names[fs];
 		che.opts = getFstabOpts();
 		che.mount = mp;
-		if( fs != NFS && fs != NFS4 && fs != SWAP && fs != FSUNKNOWN && fs != NTFS &&
-		    fs != VFAT && !is_loop && !dmcrypt() && !optNoauto() )
-		    {
-		    che.freq = 1;
-		    che.passno = (mp=="/") ? 1 : 2;
-		    }
+		che.freq = fstabFreq();
+		che.passno = fstabPassno();
 		if( !silent() )
 		    {
 		    getStorage()->showInfoCb(
