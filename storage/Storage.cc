@@ -3174,7 +3174,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
     assertInit();
     y2mil( "name:" << name << " peSizeK:" << peSizeK << " lvm1:" << lvm1 <<
 	   " devices:" << devs );
-    LvmVgIterator i = findLvmVg( name );
+    ConstLvmVgIterator i = findLvmVg( name );
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -4073,12 +4073,11 @@ int Storage::getMdPartMdNums(list<int>& mdPartNums)
     {
     mdPartNums.clear();
     CPair p = cPair();
-    ContIterator i;
-    for(i=p.begin(); i!=p.end(); i++ )
+    for (ConstContIterator i = p.begin(); i != p.end(); ++i)
        {
         if( i->type()==MDPART )
           {
-          MdPartCo *mdpart = static_cast<MdPartCo*>(&(*i));
+          const MdPartCo* mdpart = static_cast<const MdPartCo*>(&(*i));
           mdPartNums.push_back(mdpart->nr());
           }
          }
@@ -5022,7 +5021,7 @@ int Storage::getDiskInfo( const string& disk, DiskInfo& info )
     {
     int ret = 0;
     assertInit();
-    DiskIterator i = findDisk( disk );
+    ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
 	i->getInfo( info );
@@ -5037,7 +5036,7 @@ int Storage::getContDiskInfo( const string& disk, ContainerInfo& cinfo,
     {
     int ret = 0;
     assertInit();
-    DiskIterator i = findDisk( disk );
+    ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
 	i->Container::getInfo(cinfo);
@@ -5054,14 +5053,14 @@ int Storage::getPartitionInfo( const string& disk,
     int ret = 0;
     plist.clear();
     assertInit();
-    DiskIterator i = findDisk(disk);
+    ConstDiskIterator i = findDisk(disk);
     if (i != dEnd())
     {
 	// TODO: those partitions shouldn't be detected at all
 	if (!i->isUsedBy())
 	{
-	    Disk::PartPair p = i->partPair(Disk::notDeleted);
-	    for (Disk::PartIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    Disk::ConstPartPair p = i->partPair(Disk::notDeleted);
+	    for (Disk::ConstPartIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    {
 		plist.push_back(PartitionInfo());
 		i2->getInfo(plist.back());
@@ -5077,7 +5076,7 @@ int Storage::getLvmVgInfo( const string& name, LvmVgInfo& info )
     {
     int ret = 0;
     assertInit();
-    LvmVgIterator i = findLvmVg( name );
+    ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
 	i->getInfo( info );
@@ -5092,7 +5091,7 @@ int Storage::getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
     {
     int ret = 0;
     assertInit();
-    LvmVgIterator i = findLvmVg( name );
+    ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
 	i->Container::getInfo(cinfo);
@@ -5109,11 +5108,11 @@ int Storage::getLvmLvInfo( const string& name,
     int ret = 0;
     plist.clear();
     assertInit();
-    LvmVgIterator i = findLvmVg( name );
+    ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
-	LvmVg::LvmLvPair p = i->lvmLvPair(LvmVg::lvNotDeleted);
-	for( LvmVg::LvmLvIter i2 = p.begin(); i2 != p.end(); ++i2)
+	LvmVg::ConstLvmLvPair p = i->lvmLvPair(LvmVg::lvNotDeleted);
+	for( LvmVg::ConstLvmLvIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    {
 	    plist.push_back( LvmLvInfo() );
 	    i2->getInfo( plist.back() );
@@ -5129,7 +5128,7 @@ int Storage::getDmraidCoInfo( const string& name, DmraidCoInfo& info )
     {
     int ret = 0;
     assertInit();
-    DmraidCoIterator i = findDmraidCo( name );
+    ConstDmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
 	i->getInfo( info );
@@ -5144,7 +5143,7 @@ int Storage::getContDmraidCoInfo( const string& name, ContainerInfo& cinfo,
     {
     int ret = 0;
     assertInit();
-    DmraidCoIterator i = findDmraidCo( name );
+    ConstDmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
 	i->Container::getInfo(cinfo);
@@ -5161,7 +5160,7 @@ Storage::getDmmultipathCoInfo( const string& name, DmmultipathCoInfo& info )
 {
     int ret = 0;
     assertInit();
-    DmmultipathCoIterator i = findDmmultipathCo( name );
+    ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
 	i->getInfo( info );
@@ -5177,7 +5176,7 @@ Storage::getContDmmultipathCoInfo( const string& name, ContainerInfo& cinfo,
 {
     int ret = 0;
     assertInit();
-    DmmultipathCoIterator i = findDmmultipathCo( name );
+    ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
 	i->Container::getInfo(cinfo);
@@ -5207,7 +5206,7 @@ int Storage::getMdPartCoInfo( const string& name, MdPartCoInfo& info)
 {
   int ret = 0;
   assertInit();
-  MdPartCoIterator i = findMdPartCo( name );
+  ConstMdPartCoIterator i = findMdPartCo( name );
   if( i != mdpCoEnd() )
       {
       i->getInfo( info );
@@ -5222,7 +5221,7 @@ int Storage::getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
 {
   int ret = 0;
   assertInit();
-  MdPartCoIterator i = findMdPartCo( name );
+  ConstMdPartCoIterator i = findMdPartCo( name );
   if( i != mdpCoEnd() )
       {
       i->Container::getInfo(cinfo);
@@ -5329,11 +5328,11 @@ Storage::getDmmultipathInfo( const string& name,
     int ret = 0;
     plist.clear();
     assertInit();
-    DmmultipathCoIterator i = findDmmultipathCo( name );
+    ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
-	DmmultipathCo::DmmultipathPair p = i->dmmultipathPair(DmmultipathCo::multipathNotDeleted);
-	for( DmmultipathCo::DmmultipathIter i2 = p.begin(); i2 != p.end(); ++i2 )
+	DmmultipathCo::ConstDmmultipathPair p = i->dmmultipathPair(DmmultipathCo::multipathNotDeleted);
+	for( DmmultipathCo::ConstDmmultipathIter i2 = p.begin(); i2 != p.end(); ++i2 )
 	{
 	    plist.push_back( DmmultipathInfo() );
 	    i2->getInfo( plist.back() );

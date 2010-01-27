@@ -121,7 +121,7 @@ class MdPartCo : public Container
     void syncRaidtab();
 
     /* Returns Md number. */
-    int nr();
+    int nr() const;
     /* RAID Related functionality */
     unsigned long chunkSize() const { return chunk_size; }
 

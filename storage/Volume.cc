@@ -984,7 +984,7 @@ int Volume::umount( const string& mp )
 	    if( !mps.empty() )
 		{
 		map<string, string> mp = mounts.allMounts();
-		for( list<string>::iterator i=mps.begin(); i!=mps.end(); ++i )
+		for( list<string>::const_iterator i=mps.begin(); i!=mps.end(); ++i )
 		    {
 		    if( !mp[*i].empty() )
 			ret = VOLUME_UMOUNT_FAILED;

@@ -506,7 +506,7 @@ string MdPartCo::numToName( unsigned mdNum ) const
     return( ret );
     }
 
-int MdPartCo::nr()
+int MdPartCo::nr() const
 {
   return mnr;
 }
