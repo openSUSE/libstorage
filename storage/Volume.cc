@@ -2486,7 +2486,7 @@ static bool haveQuota( const string& fstopt )
 bool Volume::noFreqPassno() const
     {
     return( fs==SWAP || fs==NFS || fs==NFS4 || fs==VFAT || fs==NTFS || 
-            fs==UNKNOWN || is_loop || optNoauto() );
+            fs==FSUNKNOWN || is_loop || optNoauto() );
     }
 
 unsigned Volume::fstabFreq() const
