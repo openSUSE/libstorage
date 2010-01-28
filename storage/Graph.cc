@@ -73,12 +73,14 @@ namespace storage
 	    string id2;
 	};
 
+	enum RankType { RANK_SOURCE, RANK_SAME, RANK_SINK };
+
 	struct Rank
 	{
-	    Rank(const string& name = "same")
-		: name(name) {}
+	    Rank(RankType type = RANK_SAME)
+		: type(type) {}
 
-	    string name;
+	    RankType type;
 	    list<string> ids;
 	};
 
@@ -138,7 +140,7 @@ namespace storage
 
 
     DeviceGraph::DeviceGraph(StorageInterface* s)
-	: disks_rank("source"), partitions_rank(), mounts_rank("sink")
+	: disks_rank(RANK_SOURCE), partitions_rank(), mounts_rank(RANK_SINK)
     {
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
@@ -386,7 +388,7 @@ namespace storage
 
     MountGraph::MountGraph(StorageInterface* s)
     {
-	mount_ranks[0].name = "source";
+	mount_ranks[0].type = RANK_SOURCE;
 
 	deque<VolumeInfo> volumes;
 	s->getVolumes(volumes);
@@ -526,7 +528,9 @@ namespace storage
 
     ostream& operator<<(ostream& s, const Graph::Rank& rank)
     {
-	s << "{ rank=" << rank.name << "; ";
+	static const char* names[] = { "source", "same", "sink" };
+
+	s << "{ rank=" << names[rank.type] << "; ";
 	for (list<string>::const_iterator id = rank.ids.begin(); id != rank.ids.end(); ++id)
 	    s << Graph::quote(*id) << " ";
 	return s << "};";
