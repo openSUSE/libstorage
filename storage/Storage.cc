@@ -4740,8 +4740,8 @@ bool Storage::removeDmMapsTo( const string& dev )
 	else
 	    y2war("not a Dm descendant " << v->device());
 	}
-    VolIterator v;
-    DiskIterator d;
+    ConstVolIterator v;
+    ConstDiskIterator d;
     if( findVolume( dev, v ))
 	{
 	v->triggerUdevUpdate();
