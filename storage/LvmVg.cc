@@ -1654,7 +1654,7 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     {
-    s << *((PeContainer*)&d);
+    s << dynamic_cast<const PeContainer&>(d);
     s << " status:" << d.status;
     if( d.lvm1 )
       s << " lvm1";

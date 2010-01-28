@@ -974,7 +974,7 @@ void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     {
-    s << *((PeContainer*)&d);
+    s << dynamic_cast<const PeContainer&>(d);
     s << " DmNr:" << d.mnr
       << " PNum:" << d.num_part;
     if( !d.udev_id.empty() )

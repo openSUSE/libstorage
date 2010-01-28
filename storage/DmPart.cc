@@ -204,7 +204,7 @@ void DmPart::getInfo( DmPartInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const DmPart &p )
     {
-    s << *(Dm*)&p;
+    s << dynamic_cast<const Dm&>(p);
     return( s );
     }
 

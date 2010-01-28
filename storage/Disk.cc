@@ -2728,7 +2728,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
-    s << *((Container*)&d);
+    s << dynamic_cast<const Container&>(d);
     s << " Cyl:" << d.cyl
       << " Head:" << d.head
       << " Sect:" << d.sector

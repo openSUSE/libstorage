@@ -308,7 +308,7 @@ void DmraidCo::getInfo( DmraidCoInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
     {
-    s << *((DmPartCo*)&d);
+    s << dynamic_cast<const DmPartCo&>(d);
     s << " Cont:" << d.controller
       << " RType:" << d.raidtype;
     return( s );

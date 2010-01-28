@@ -613,7 +613,7 @@ void Md::getInfo( MdInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Md& m )
     {
-    s << "Md " << *(Volume*)&m
+    s << "Md " << dynamic_cast<const Volume&>(m)
       << " Personality:" << m.pName();
     if( m.chunk>0 )
 	s << " Chunk:" << m.chunk;

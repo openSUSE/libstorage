@@ -254,7 +254,7 @@ void Dmmultipath::getInfo( DmmultipathInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Dmmultipath &p )
     {
-    s << *(DmPart*)&p;
+    s << dynamic_cast<const DmPart&>(p);
     return( s );
     }
 

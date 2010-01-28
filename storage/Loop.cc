@@ -401,7 +401,7 @@ void Loop::getInfo( LoopInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Loop& l )
     {
-    s << "Loop " << *(Volume*)&l
+    s << "Loop " << dynamic_cast<const Volume&>(l)
       << " LoopFile:" << l.lfile;
     if( l.reuseFile )
       s << " reuse";

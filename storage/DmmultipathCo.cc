@@ -287,7 +287,7 @@ void DmmultipathCo::getInfo( DmmultipathCoInfo& tinfo ) const
 
 std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
 {
-    s << *((DmPartCo*)&d);
+    s << dynamic_cast<const DmPartCo&>(d);
     s << " Vendor:" << d.vendor
       << " Model:" << d.model;
     return s;

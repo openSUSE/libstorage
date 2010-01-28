@@ -106,7 +106,7 @@ void Nfs::getInfo( NfsInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Nfs& l )
     {
-    s << "Nfs " << *(Volume*)&l;
+    s << "Nfs " << dynamic_cast<const Volume&>(l);
     return( s );
     }
 

@@ -496,7 +496,7 @@ void Dm::getInfo( DmInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
     s << p.shortPrintedName() << " ";
-    s << *(Volume*)&p;
+    s << dynamic_cast<const Volume&>(p);
     if( p.num_le>0 )
 	s << " LE:" << p.num_le;
     s << " Table:" << p.tname;

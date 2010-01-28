@@ -642,7 +642,7 @@ int Dasd::initializeDisk( bool value )
 
 std::ostream& operator<< (std::ostream& s, const Dasd& d )
     {
-    s << *((Disk*)&d);
+    s << dynamic_cast<const Disk&>(d);
     s << " fmt:" << d.fmt;
     return( s );
     }

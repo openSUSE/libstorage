@@ -359,7 +359,7 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     {
-    s << *(Dm*)&p;
+    s << dynamic_cast<const Dm&>(p);
     if( !p.vol_uuid.empty() )
       s << " UUID:" << p.vol_uuid;
     if( !p.status.empty() )

@@ -254,7 +254,7 @@ void Dmraid::getInfo( DmraidInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const Dmraid &p )
     {
-    s << *(DmPart*)&p;
+    s << dynamic_cast<const DmPart&>(p);
     return( s );
     }
 

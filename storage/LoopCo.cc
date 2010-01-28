@@ -383,7 +383,7 @@ LoopCo::logData(const string& Dir) const
 
     std::ostream& operator<<(std::ostream& s, const LoopCo& d)
     {
-    s << *((Container*)&d);
+    s << dynamic_cast<const Container&>(d);
     return( s );
     }
 

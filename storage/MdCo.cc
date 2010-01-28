@@ -719,7 +719,7 @@ void MdCo::changeDeviceName( const string& old, const string& nw )
 
 std::ostream& operator<< (std::ostream& s, const MdCo& d )
     {
-    s << *((Container*)&d);
+    s << dynamic_cast<const Container&>(d);
     return( s );
     }
 

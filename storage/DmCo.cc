@@ -437,7 +437,7 @@ DmCo::doRemove( Volume* v )
 
     std::ostream& operator<<(std::ostream& s, const DmCo& d)
     {
-    s << *((Container*)&d);
+    s << dynamic_cast<const Container&>(d);
     return( s );
     }
 

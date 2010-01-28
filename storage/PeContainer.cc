@@ -714,7 +714,7 @@ void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
 
 std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
-    s << *((Container*)&d);
+    s << dynamic_cast<const Container&>(d);
     s << " SizeK:" << d.sizeK()
       << " PeSize:" << d.pe_size
       << " NumPE:" << d.num_pe
