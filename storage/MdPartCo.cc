@@ -2160,7 +2160,7 @@ int MdPartCo::scanForRaid(list<string>& raidNames)
 storage::CType
 MdPartCo::envSelection(const string& name)
 {
-    string str = "YAST_STORAGE_" + boost::to_upper_copy(name, locale::classic());
+    string str = "LIBSTORAGE_" + boost::to_upper_copy(name, locale::classic());
     const char* tenv = getenv(str.c_str());
   if( tenv == NULL )
     {
