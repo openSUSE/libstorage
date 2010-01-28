@@ -220,15 +220,15 @@ SystemCmd::doExecute( const string& Cmd )
 	    case 0:
 		setenv( "LC_ALL", "C", 1 );
 		setenv( "LANGUAGE", "C", 1 );
-		if( dup2( sout[1], 1 )<0 )
+		if( dup2( sout[1], STDOUT_FILENO )<0 )
 		    {
 		    y2err("dup2 stdout child failed errno:" << errno << " (" << strerror(errno) << ")");
 		    }
-		if( !Combine_b && dup2( serr[1], 2 )<0 )
+		if( !Combine_b && dup2( serr[1], STDERR_FILENO )<0 )
 		    {
 		    y2err("dup2 stderr child failed errno:" << errno << " (" << strerror(errno) << ")");
 		    }
-		if( Combine_b && dup2( 1, 2 )<0 )
+		if( Combine_b && dup2( STDOUT_FILENO, STDERR_FILENO )<0 )
 		    {
 		    y2err("dup2 stderr child failed errno:" << errno << " (" << strerror(errno) << ")");
 		    }
