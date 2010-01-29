@@ -3932,26 +3932,25 @@ int Storage::getMdStateInfo(const string& name, MdStateInfo& info)
     return ret;
 }
 
-// Find container 'name' and return its state.
-int Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
-{
-  CPair p = cPair();
-  ContIterator i = p.begin();
 
-  for( i=p.begin(); i!=p.end(); i++)
-    {
-    if( i->type()==MDPART )
-      {
-      MdPartCo* mdp = static_cast<MdPartCo*>(&(*i));
-      if( mdp->name() == name )
-        {
-         mdp->getMdPartCoState(info);
-         break;
-        }
-      }
+int
+Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
+{
+    int ret = 0;
+
+    ConstMdPartCoIterator i = findMdPartCo(name);
+    if (i != mdpCoEnd())
+    { 
+	i->getMdPartCoState(info);
     }
-  return( i != p.end() );
+    else
+    {
+	ret = STORAGE_MDPART_CO_NOT_FOUND;
+    }
+
+    return ret;
 }
+
 
 int
 Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long& sizeK)
