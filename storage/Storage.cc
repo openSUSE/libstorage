@@ -1465,7 +1465,7 @@ Storage::nextFreePartition( const string& disk, PartitionType type,
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " type:" << type);
-    DiskIterator i = findDisk( disk );
+    ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
 	done = true;
@@ -1473,7 +1473,7 @@ Storage::nextFreePartition( const string& disk, PartitionType type,
 	}
     if( !done )
 	{
-	DmPartCoIterator i = findDmPartCo( disk );
+	ConstDmPartCoIterator i = findDmPartCo( disk );
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
@@ -1482,7 +1482,7 @@ Storage::nextFreePartition( const string& disk, PartitionType type,
 	}
     if( !done )
         {
-        MdPartCoIterator i = findMdPartCo( disk );
+        ConstMdPartCoIterator i = findMdPartCo( disk );
         if( i != mdpCoEnd() )
             {
             done = true;
@@ -1567,7 +1567,7 @@ Storage::cylinderToKb( const string& disk, unsigned long size )
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " size:" << size);
-    DiskIterator i = findDisk( disk );
+    ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
 	done = true;
@@ -1575,7 +1575,7 @@ Storage::cylinderToKb( const string& disk, unsigned long size )
 	}
     if( !done )
 	{
-	DmPartCoIterator i = findDmPartCo( disk );
+	ConstDmPartCoIterator i = findDmPartCo( disk );
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
@@ -1584,7 +1584,7 @@ Storage::cylinderToKb( const string& disk, unsigned long size )
 	}
     if( !done )
     {
-        MdPartCoIterator i = findMdPartCo( disk );
+        ConstMdPartCoIterator i = findMdPartCo( disk );
         if( i != mdpCoEnd() )
 	{
             done = true;
@@ -1602,7 +1602,7 @@ Storage::kbToCylinder( const string& disk, unsigned long long sizeK )
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " sizeK:" << sizeK);
-    DiskIterator i = findDisk( disk );
+    ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
 	done = true;
@@ -1610,7 +1610,7 @@ Storage::kbToCylinder( const string& disk, unsigned long long sizeK )
 	}
     if( !done )
 	{
-	DmPartCoIterator i = findDmPartCo( disk );
+	ConstDmPartCoIterator i = findDmPartCo( disk );
 	if( i != dmpCoEnd() )
 	    {
 	    done = true;
@@ -1619,7 +1619,7 @@ Storage::kbToCylinder( const string& disk, unsigned long long sizeK )
 	}
     if( !done )
     {
-        MdPartCoIterator i = findMdPartCo( disk );
+        ConstMdPartCoIterator i = findMdPartCo( disk );
         if( i != mdpCoEnd() )
 	{
             done = true;
@@ -2104,9 +2104,9 @@ Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& sl
 
     // TODO: don't have code below twice
 
-    DiskIterator i1 = findDisk( disk );
-    DmPartCoIterator i2 = findDmPartCo( disk );
-    MdPartCoIterator i3 = findMdPartCo( disk );
+    ConstDiskIterator i1 = findDisk( disk );
+    ConstDmPartCoIterator i2 = findDmPartCo( disk );
+    ConstMdPartCoIterator i3 = findMdPartCo( disk );
 
     if (i1 != dEnd())
     {
