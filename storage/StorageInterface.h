@@ -456,7 +456,7 @@ namespace storage
 	MdStateInfo() {}
 	bool active;
 	bool degraded;
-	enum MdArrayState state;
+	MdArrayState state;
     };
 
     /**
@@ -485,7 +485,7 @@ namespace storage
         MdPartCoStateInfo() {}
         bool active;
         bool degraded;
-        enum MdArrayState state;  // Few states at one?
+        MdArrayState state;	// Few states at one?
     };
 
     /**
