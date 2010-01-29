@@ -153,10 +153,8 @@ class MdPartCo : public Container
 
     static bool isActive() { return active; }
 
-    /* Return true if on RAID Volume is partition table */
-    static bool hasPartitionTable(const string& name );
-    /* Return true if there is no Filesystem on device (it can contain partition table). */
-    static bool hasFileSystem(const string& name);
+	static bool hasPartitionTable(const string& name, SystemInfo& systeminfo);
+	static bool hasFileSystem(const string& name, SystemInfo& systeminfo);
 
     static bool isImsmPlatform();
 
@@ -172,7 +170,7 @@ class MdPartCo : public Container
      * those which can be handled by MdPartCo.
      */
     static list<string> filterMdPartCo(list<string>& raidList,
-                                       const ProcParts& ppart,
+				       SystemInfo& systeminfo,
                                        bool isInst);
 
     /* Returns uuid and possibly mdName for given MD Device.
@@ -312,8 +310,8 @@ class MdPartCo : public Container
     int getContMember();
 
     //Input: 'mdXXX' device.
-    static storage::CType envSelection(const string& name);
-    static bool havePartsInProc(const string& name, const ProcParts& ppart);
+    static CType envSelection(const string& name);
+    static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
 
     static void getMdMajor();
     static storage::MdType toMdType( const string& val );

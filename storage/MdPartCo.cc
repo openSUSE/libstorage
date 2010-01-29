@@ -1965,7 +1965,7 @@ bool MdPartCo::isImsmPlatform()
  *
  * Ad 2. Clean newly created device or FS on device.
  */
-bool MdPartCo::hasPartitionTable(const string& name )
+bool MdPartCo::hasPartitionTable(const string& name, SystemInfo& systeminfo)
 {
   //bool ret = false;
   SystemCmd c;
@@ -1998,26 +1998,25 @@ bool MdPartCo::hasPartitionTable(const string& name )
         ret = false;
         }
       }
-    }
-return ret;
+    }  
+    y2mil("name:" << name << " ret:" << ret);
+    return ret;
 }
 
 
-/* Return true if there is no partition table and no FS */
-bool MdPartCo::hasFileSystem(const string& name)
+bool
+MdPartCo::hasFileSystem(const string& name, SystemInfo& systeminfo)
 {
-  //bool ret = false;
-  SystemCmd c;
-  string cmd = BLKIDBIN " -c /dev/null " + quote("/dev/" + name);
+    bool ret = false;
 
-  c.execute(cmd);
-  // IF filesystem was bit found then it will return no output end error core 2.
-  if( c.retcode() != 0 )
+    Blkid::Entry entry;
+    if (systeminfo.getBlkid().getEntry("/dev/" + name, entry))
     {
-    return false;
+	ret = entry.is_fs || entry.is_lvm || entry.is_luks;
     }
-  // if FS is on device then it will be in TYPE="fsType" pair.
-  return true;
+
+    y2mil("name:" << name << " ret:" << ret);
+    return ret;
 }
 
 
@@ -2157,7 +2156,8 @@ int MdPartCo::scanForRaid(list<string>& raidNames)
   return ret;
 }
 
-storage::CType
+
+CType
 MdPartCo::envSelection(const string& name)
 {
     string str = "LIBSTORAGE_" + boost::to_upper_copy(name, locale::classic());
@@ -2178,27 +2178,27 @@ MdPartCo::envSelection(const string& name)
   return CUNKNOWN;
 }
 
-bool MdPartCo::havePartsInProc(const string& name, const ProcParts& ppart)
+
+bool
+MdPartCo::havePartsInProc(const string& name, SystemInfo& systeminfo)
 {
-  // Search /proc/partitions for partitions.
-  string reg = name + "p[1-9]+";
-  list <string> parts = ppart.getMatchingEntries(regex_matches(reg));
-  if( !parts.empty() )
-    {
-    return true;
-    }
-  return false;
+    string reg = "^" "/dev/" + name + "p[1-9]+" "$";
+    list <string> parts = systeminfo.getProcParts().getMatchingEntries(regex_matches(reg));
+    bool ret = !parts.empty();
+    y2mil("name:" << name << " ret:" << ret);
+    return ret;
 }
 
-list<string> MdPartCo::filterMdPartCo(list<string>& raidList,
-                                      const ProcParts& ppart,
-                                      bool isInst)
+
+list<string>
+MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool isInst)
 {
-  y2mil(" called ");
   list<string> mdpList;
 
   for( list<string>::const_iterator i=raidList.begin(); i!=raidList.end(); ++i )
     {
+	y2mil("name:" << *i);
+
     storage::CType ct = MdPartCo::envSelection(*i);
     if( ct == MD )
       {
@@ -2210,17 +2210,19 @@ list<string> MdPartCo::filterMdPartCo(list<string>& raidList,
       mdpList.push_back(*i);
       continue;
       }
-    if( MdPartCo::havePartsInProc(*i,ppart) )
+
+    if( MdPartCo::havePartsInProc(*i, systeminfo) )
       {
       mdpList.push_back(*i);
       continue;
       }
+
     if( isInst )
       {
       // 1. With Partition Table
       // 2. Without Partition Table and without FS on it.
       // 3. this gives: No FS.
-      if (!MdPartCo::hasFileSystem(*i))
+	  if (!MdPartCo::hasFileSystem(*i, systeminfo))
         {
         mdpList.push_back(*i);
         }
@@ -2229,12 +2231,12 @@ list<string> MdPartCo::filterMdPartCo(list<string>& raidList,
       {
       // In 'normal' mode ONLY volume with Partition Table.
       // Partitions should be visible already so check it.
-      if( MdPartCo::hasPartitionTable(*i))
+	  if( MdPartCo::hasPartitionTable(*i, systeminfo))
         {
         mdpList.push_back(*i);
         }
       }
-    } // for
+    }
   y2mil("List of partitionable devs: " << mdpList);
   return mdpList;
 }

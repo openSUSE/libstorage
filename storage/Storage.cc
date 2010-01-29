@@ -528,27 +528,28 @@ void
 void
 Storage::detectMdParts(SystemInfo& systeminfo)
 {
-  if( testmode() )
+    if( testmode() )
     {
     }
-  else
+    else if (autodetect() && getenv("LIBSTORAGE_NO_MDPARTRAID") == NULL)
     {
-    list<string> l = MdPartCo::getMdRaids();
-    list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo.getProcParts(), instsys());
-
-    map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
-    for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
-      {
-	  MdPartCo* v = new MdPartCo(this, *i, systeminfo);
-      list<string> nm = by_id[v->name()];
-      if( !nm.empty() )
-        {
-        v->setUdevData(nm);
-        }
-      addToList( v );
-      }
+	list<string> l = MdPartCo::getMdRaids();
+	list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo, instsys());
+	
+	const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
+	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
+	{
+	    MdPartCo* v = new MdPartCo(this, *i, systeminfo);
+	    
+	    map<string, list<string>>::const_iterator it = by_id.find(v->name());
+	    if (it != by_id.end())
+		v->setUdevData(it->second);
+	    
+	    addToList( v );
+	}
     }
 }
+
 
 void Storage::detectMds()
     {
