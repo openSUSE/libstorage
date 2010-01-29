@@ -13,7 +13,7 @@ using namespace std;
 StorageInterface *s = 0;
 
 
-void print_num_lvs(const string& disk, const string& vg)
+void print_num_lvs(const string& vg)
 {
     deque<LvmLvInfo> plist;
     s->getLvmLvInfo( vg, plist );
@@ -86,8 +86,8 @@ void createLvs( const string& vg, int n, deque<string>& disks )
     for ( deque<string>::iterator i = disks.begin();
 	  i != disks.end(); i++ )
     {
-	print_num_lvs( *i, vg);
-	print_num_lvs( *i, vg);
+	print_num_lvs(vg);
+	print_num_lvs(vg);
     }
 
     delete s;
