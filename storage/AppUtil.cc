@@ -529,7 +529,7 @@ readlink(const string& path, string& buf)
     }
 
 
-map<string, list<string>>
+UdevMap
 getUdevMap(const char* path)
 {
     y2mil("path: " << path);
@@ -545,7 +545,7 @@ getUdevMap(const char* path)
 }
 
 
-map<string, string>
+RevUdevMap
 getRevUdevMap(const char* path)
 {
     y2mil("path: " << path);

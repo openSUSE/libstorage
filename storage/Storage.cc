@@ -536,7 +536,7 @@ Storage::detectMdParts(SystemInfo& systeminfo)
 	list<string> l = MdPartCo::getMdRaids();
 	list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo, instsys());
 	
-	const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
+	const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
 	{
 	    MdPartCo* v = new MdPartCo(this, *i, systeminfo);
@@ -657,7 +657,7 @@ void
 	const list<string> l = DmraidCo::getRaids(systeminfo);
 	if (!l.empty())
 	{
-	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
+	    const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmraidCo* v = new DmraidCo(this, *i, systeminfo);
@@ -683,7 +683,7 @@ void
 	const list<string> l = DmmultipathCo::getMultipaths(systeminfo);
 	if (!l.empty())
 	{
-	    const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
+	    const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmmultipathCo* v = new DmmultipathCo(this, *i, systeminfo);
@@ -797,8 +797,8 @@ void
     struct dirent *Entry;
     if( (Dir=opendir(SYSFSDIR))!=NULL )
     {
-	const map<string, list<string>> by_path = getUdevMap("/dev/disk/by-path");
-	const map<string, list<string>> by_id = getUdevMap("/dev/disk/by-id");
+	const UdevMap by_path = getUdevMap("/dev/disk/by-path");
+	const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	{

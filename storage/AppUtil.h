@@ -68,8 +68,12 @@ std::map<string,string> makeMap( const std::list<string>& l,
 
     bool readlink(const string& path, string& buf);
 
-    map<string, list<string>> getUdevMap(const char* path);
-    map<string, string> getRevUdevMap(const char* path);
+
+    typedef map<string, list<string>> UdevMap;
+    typedef map<string, string> RevUdevMap;
+
+    UdevMap getUdevMap(const char* path);
+    RevUdevMap getRevUdevMap(const char* path);
 
 string normalizeDevice( const string& dev );
 void normalizeDevice( string& dev );

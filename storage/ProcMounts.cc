@@ -45,8 +45,8 @@ namespace storage
     {
 	data.clear();
 
-    const map<string, string> by_label = getRevUdevMap("/dev/disk/by-label");
-    const map<string, string> by_uuid = getRevUdevMap("/dev/disk/by-uuid");
+    const RevUdevMap by_label = getRevUdevMap("/dev/disk/by-label");
+    const RevUdevMap by_uuid = getRevUdevMap("/dev/disk/by-uuid");
 
     SystemCmd mt(MOUNTBIN);
 
