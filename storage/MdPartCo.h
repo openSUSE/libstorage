@@ -245,8 +245,6 @@ class MdPartCo : public Container
 
     void updateEntry();
     string mdadmLine() const;
-    void raidtabLines( list<string>& lines ) const;
-
 
     static bool partNotDeleted( const MdPart&d ) { return( !d.deleted() ); }
 
