@@ -489,7 +489,7 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 
 int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount ) const
     {
-    bool crypto = tab.name().find( "/cryptotab" )>=0;
+    bool crypto = tab.name().find( "/cryptotab" )!=string::npos;
     y2mil("file:" << tab.name() << " mount:" << mount << " crypto:" << crypto);
     string reg = "^[ \t]*[^ \t]+";
     if( crypto )
