@@ -140,8 +140,6 @@ class MdPartCo : public Container
 
     void getSpareDevs(std::list<string>& devices );
 
-    /* Is MD device? */
-    static bool matchMdRegex( const string& dev );
     /* MD Device major number. */
     static unsigned mdMajor();
 
@@ -263,8 +261,6 @@ class MdPartCo : public Container
     void initMd();
 
     void setSize(unsigned long long size );
-
-    static bool isMdName(const string& name);
 
     bool isMdPart(const string& name) const;
 

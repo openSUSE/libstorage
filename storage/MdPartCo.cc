@@ -1339,11 +1339,6 @@ bool MdPartCo::equalContent( const Container& rhs ) const
     }
 
 
-bool MdPartCo::isMdName(const string& name)
-{
-  static Regex md("^md[0123456789]+");
-  return (md.match(name));
-}
 // Get list of active MD RAID's
 // cat /proc/mdstat
 // If we're looking for Volume then
@@ -1374,7 +1369,7 @@ MdPartCo::getMdRaids()
   while( file.good() )
   {
     string dev_name = extractNthWord( 0, line );
-    if( isMdName(dev_name) )
+    if (matchRegex(dev_name))
       {
       string line2;
       getline(file,line2);
@@ -1411,13 +1406,6 @@ void MdPartCo::getSpareDevs(std::list<string>& devices )
 {
   devices = spare;
 }
-
-
-bool MdPartCo::matchMdRegex( const string& dev )
-    {
-    static Regex md( "^md[0123456789]+$" );
-    return( md.match(dev));
-    }
 
 
 unsigned MdPartCo::mdMajor()
