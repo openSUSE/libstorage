@@ -66,6 +66,11 @@ namespace storage
 	/* Initialize 'disk' part, partitions.*/
 	init(systeminfo.getProcParts());
 
+	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+	UdevMap::const_iterator it = by_id.find(nm);
+	if (it != by_id.end())
+	    setUdevData(it->second);
+
 	y2mil("MdPartCo (nm=" << nm << ", dev=" << dev << ", level=" << md_type << ", disks=" << devs << ") ready.");
     }
 

@@ -124,6 +124,12 @@ namespace storage
     {
 	DmPartCo::init(systeminfo);
 	getMultipathData(name, systeminfo);
+
+	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+	UdevMap::const_iterator it = by_id.find("dm-" + decString(minorNr()));
+	if (it != by_id.end())
+	    setUdevData(it->second);
+
 	y2deb("constructing DmmultipathCo " << name);
     }
 
