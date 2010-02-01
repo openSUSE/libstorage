@@ -54,7 +54,6 @@ class MdPartCo : public Container
 
     unsigned long long sizeK() const { return size_k; }
     const string& labelName() const { return disk->labelName(); }
-    string udevPath() const { return udev_path; }
     list<string> udevId() const { return udev_id; }
     unsigned numPartitions() const { return disk->numPartitions(); }
     static storage::CType staticType() { return storage::MDPART; }
@@ -281,8 +280,8 @@ class MdPartCo : public Container
 
     void logData(const string& Dir) const;
 
-    string udev_path;
     list<string> udev_id;
+
     string logfile_name;
 
     Disk* disk;

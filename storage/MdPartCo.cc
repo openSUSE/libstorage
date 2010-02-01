@@ -71,7 +71,7 @@ namespace storage
 
 
     MdPartCo::MdPartCo(const MdPartCo& c)
-	: Container(c), udev_path(c.udev_path), udev_id(c.udev_id),
+	: Container(c), udev_id(c.udev_id),
 	  del_ptable(c.del_ptable), chunk_size(c.chunk_size),
 	  md_type(c.md_type), md_parity(c.md_parity), md_state(c.md_state),
 	  has_container(c.has_container),
@@ -2227,6 +2227,7 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
 
 const string MdPartCo::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
                           "raid10", "multipath" };
+
 const string MdPartCo::par_names[] = { "none", "left-asymmetric", "left-symmetric",
                            "right-asymmetric", "right-symmetric" };
 
