@@ -446,6 +446,7 @@ namespace storage
 	string sb_ver;
 	unsigned long chunkSizeK;
 	string devices;
+	string spares;
     };
 
     /**
@@ -467,17 +468,14 @@ namespace storage
     {
         MdPartCoInfo() {}
         DiskInfo d;
-        string devices;
-        string spares;        // Spare disks
-        unsigned long minor;
-
-        unsigned level;       // RAID level
+	unsigned type;        // RAID level
         unsigned nr;          // MD device number
         unsigned parity;      // Parity (not for all RAID level)
         string   uuid;        // MD Device UUID
         string   sb_ver;      // Metadata version
-        unsigned long chunk;  // Chunksize (strip size)
-        string   md_name;     // MD Device name (link in /dev/md/)
+	unsigned long chunkSizeK;  // Chunksize (strip size)
+	string devices;
+	string spares;
     };
 
     struct MdPartCoStateInfo

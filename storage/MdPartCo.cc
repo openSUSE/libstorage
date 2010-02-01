@@ -66,12 +66,17 @@ namespace storage
 	/* Initialize 'disk' part, partitions.*/
 	init(systeminfo.getProcParts());
 
+	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+	UdevMap::const_iterator it = by_id.find(nm);
+	if (it != by_id.end())
+	    setUdevData(it->second);
+
 	y2mil("MdPartCo (nm=" << nm << ", dev=" << dev << ", level=" << md_type << ", disks=" << devs << ") ready.");
     }
 
 
     MdPartCo::MdPartCo(const MdPartCo& c)
-	: Container(c), udev_path(c.udev_path), udev_id(c.udev_id),
+	: Container(c), udev_id(c.udev_id),
 	  del_ptable(c.del_ptable), chunk_size(c.chunk_size),
 	  md_type(c.md_type), md_parity(c.md_parity), md_state(c.md_state),
 	  has_container(c.has_container),
@@ -1132,32 +1137,16 @@ void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
         {
         disk->getInfo( info.d );
         }
-    info.minor = mnr;
 
-    info.devices.clear();
-    for(list<string>::const_iterator i=devs.begin();
-        i != devs.end();
-        i++)
-      {
-      info.devices += *i;
-      info.devices += " ";
-      }
-
-    info.spares.clear();
-    for(list<string>::const_iterator i=spare.begin();
-        i != spare.end();
-        i++)
-      {
-      info.spares += *i;
-      info.spares += " ";
-      }
-    info.level = md_type;
+    info.type = md_type;
     info.nr = mnr;
     info.parity = md_parity;
     info.uuid = md_uuid;
     info.sb_ver = sb_ver;
-    info.chunk = chunk_size;
-    info.md_name = md_name;
+    info.chunkSizeK = chunk_size;
+
+    info.devices = boost::join(devs, " ");
+    info.spares = boost::join(spare, " ");
 
     tinfo = info;
     }
@@ -2243,6 +2232,7 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
 
 const string MdPartCo::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
                           "raid10", "multipath" };
+
 const string MdPartCo::par_names[] = { "none", "left-asymmetric", "left-symmetric",
                            "right-asymmetric", "right-symmetric" };
 

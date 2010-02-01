@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -45,6 +45,7 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
+	const UdevMap& getUdevMap(const string& path);
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
 	const Blkid& getBlkid() { return *blkid; }
@@ -69,6 +70,8 @@ namespace storage
 	    Type* ptr;
 
 	};
+
+	map<string, UdevMap> udevmaps;
 
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;

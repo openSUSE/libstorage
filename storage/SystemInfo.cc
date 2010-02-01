@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -41,6 +41,20 @@ namespace storage
     SystemInfo::~SystemInfo()
     {
 	y2deb("destructed SystemInfo");
+    }
+
+
+    const UdevMap&
+    SystemInfo::getUdevMap(const string& path)
+    {
+	map<string, UdevMap>::iterator pos = udevmaps.lower_bound(path);
+	if (pos == udevmaps.end() || map<string, UdevMap>::key_compare()(path, pos->first))
+	{
+	    UdevMap udevmap = storage::getUdevMap(path.c_str());
+	    pos = udevmaps.insert(pos, map<string, UdevMap>::value_type(path, udevmap));
+	}
+
+	return pos->second;
     }
 
 }

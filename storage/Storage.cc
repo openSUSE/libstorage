@@ -536,15 +536,9 @@ Storage::detectMdParts(SystemInfo& systeminfo)
 	list<string> l = MdPartCo::getMdRaids();
 	list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo, instsys());
 	
-	const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
 	{
 	    MdPartCo* v = new MdPartCo(this, *i, systeminfo);
-	    
-	    map<string, list<string>>::const_iterator it = by_id.find(v->name());
-	    if (it != by_id.end())
-		v->setUdevData(it->second);
-	    
 	    addToList( v );
 	}
     }
@@ -655,20 +649,13 @@ void
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
 	const list<string> l = DmraidCo::getRaids(systeminfo);
-	if (!l.empty())
-	{
-	    const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmraidCo* v = new DmraidCo(this, *i, systeminfo);
-		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
-		    if (it != by_id.end())
-			v->setUdevData(it->second);
 		    addToList( v );
 	    }
 	}
     }
-}
 
 
 void
@@ -681,20 +668,13 @@ void
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
 	const list<string> l = DmmultipathCo::getMultipaths(systeminfo);
-	if (!l.empty())
-	{
-	    const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		    DmmultipathCo* v = new DmmultipathCo(this, *i, systeminfo);
-		    map<string, list<string>>::const_iterator it = by_id.find("dm-" + decString(v->minorNr()));
-		    if (it != by_id.end())
-			v->setUdevData(it->second);
 		    addToList( v );
 	    }
 	}
     }
-}
 
 
 void
@@ -797,8 +777,6 @@ void
     struct dirent *Entry;
     if( (Dir=opendir(SYSFSDIR))!=NULL )
     {
-	const UdevMap by_path = getUdevMap("/dev/disk/by-path");
-	const UdevMap by_id = getUdevMap("/dev/disk/by-id");
 	list<DiskData> dl;
 	while( (Entry=readdir( Dir ))!=NULL )
 	{
@@ -835,6 +813,8 @@ void
 		initDisk(*i, systeminfo);
 	    }
 	y2mil( "dl: " << dl );
+	const UdevMap& by_path = systeminfo.getUdevMap("/dev/disk/by-path");
+	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
 	for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
 	    {
 	    if( i->d )
