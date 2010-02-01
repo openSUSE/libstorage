@@ -598,15 +598,10 @@ void Md::getInfo( MdInfo& tinfo ) const
     info.sb_ver = sb_ver;
     info.chunkSizeK = chunk;
     info.parity = md_parity;
-    info.devices.clear();
-    list<string>::const_iterator i=devs.begin();
-    while( i!=devs.end() )
-	{
-	if( !info.devices.empty() )
-	    info.devices += ' ';
-	info.devices += *i;
-	++i;
-	}
+
+    info.devices = boost::join(devs, " ");
+    info.spares = boost::join(spare, " ");
+
     tinfo = info;
     }
 
