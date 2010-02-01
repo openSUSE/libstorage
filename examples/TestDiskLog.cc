@@ -16,13 +16,14 @@ main( int argc_iv, char** argv_ppcv )
     string dev;
     ret = s->destroyPartitionTable( "/dev/hdb", s->defaultDiskLabel() );
     if( ret ) cerr << "retcode:" << ret << endl;
-    ret = s->createPartitionKb( "/dev/hdb", EXTENDED, 5000*1024, 10000*1024, dev );
+    ret = s->createPartitionKb( "/dev/hdb", EXTENDED, 5000*1024, 15000*1024, dev );
     cout << dev << endl;
     if( ret ) cerr << "retcode:" << ret << endl;
+    unsigned kb = s->cylinderToKb( "/dev/hdb", 40 );
     int i=0;
     while( i<40 && ret==0 )
 	{
-	ret = s->createPartitionKb( "/dev/hdb", LOGICAL, (5000+i*300)*1024, 300*1024, 
+	ret = s->createPartitionKb( "/dev/hdb", LOGICAL, 5000*1024+i*kb, kb, 
 	                            dev );
 	if(ret==0) cout << dev << endl;
 	i++;
