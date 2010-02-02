@@ -98,7 +98,7 @@ bool EtcRaidtab::updateEntry(const mdconf_info& info)
     updateContainer(info);
     }
   //after container.
-  map<string,entry>::iterator i = uuidtab.find( info.md_uuid );
+  map<string, entry>::const_iterator i = uuidtab.find(info.md_uuid);
   if( i != uuidtab.end() )
     {
     mdadm.replace( i->second.first,
@@ -117,8 +117,8 @@ bool EtcRaidtab::updateContainer(const mdconf_info& info)
 {
   while( true )
   {
-  map<string,entry>::iterator i =  uuidtab.find( info.md_uuid );
-  map<string,entry>::iterator i2 = uuidtab.find(info.container_info.md_uuid);
+  map<string,entry>::const_iterator i =  uuidtab.find(info.md_uuid);
+  map<string,entry>::const_iterator i2 = uuidtab.find(info.container_info.md_uuid);
 
   if( i == uuidtab.end() )
     {
@@ -176,6 +176,8 @@ string EtcRaidtab::ContLine(const mdconf_info& info)
   string s = "ARRAY metadata=" + info.container_info.metadata + " UUID=" + info.container_info.md_uuid;
   return s;
 }
+
+
 string EtcRaidtab::ArrayLine(const mdconf_info& info)
 {
   string line = "ARRAY " + info.fs_name;
@@ -193,7 +195,7 @@ string EtcRaidtab::ArrayLine(const mdconf_info& info)
 //No check if container is used by other Volume.
 bool EtcRaidtab::removeEntry(const mdconf_info& info)
 {
-  map<string,entry>::iterator i;
+  map<string, entry>::const_iterator i;
   if( info.md_uuid.empty() )
     {
     if( info.container_present == false)
@@ -305,12 +307,8 @@ EtcRaidtab::buildMdadmMap2()
 }
 
 string
-EtcRaidtab::getUUID(const string& line)
+EtcRaidtab::getUUID(const string& line) const
 {
-  if( line.empty() )
-    {
-    return "";
-    }
   string::size_type pos = line.find("UUID=");
   if( pos != string::npos )
     {
@@ -326,7 +324,7 @@ EtcRaidtab::getUUID(const string& line)
 }
 
 EtcRaidtab::lineType
-EtcRaidtab::getLineType(const string& line)
+EtcRaidtab::getLineType(const string& line) const
 {
   if( line.empty() )
     {

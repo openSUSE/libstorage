@@ -75,7 +75,8 @@ class EtcRaidtab
 	void buildMdadmMap2();
 
 	/* Extracts UUID=uuidNumber from line. */
-	string getUUID(const string& line);
+	string getUUID(const string& line) const;
+
         enum lineType
         {
           DEVICE=0,
@@ -89,7 +90,8 @@ class EtcRaidtab
           EMPTY,
           UNKNOWN
         };
-	lineType getLineType(const string& line);
+
+	lineType getLineType(const string& line) const;
 
 	//Gets full array line, possibly consisted of several lines.
 	//line - will be updated and will point to first line that does not
