@@ -76,7 +76,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
     LvmVg::LvmVg(Storage * const s, const AsciiFile& file)
 	: PeContainer(s, staticType(), file)
     {
-	inactiv = lvm1 = false;
+	lvm1 = false;
 
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
@@ -95,8 +95,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 
 
     LvmVg::LvmVg(const LvmVg& c)
-	: PeContainer(c), status(c.status), uuid(c.uuid), lvm1(c.lvm1),
-	  inactiv(c.inactiv)
+	: PeContainer(c), status(c.status), uuid(c.uuid), lvm1(c.lvm1)
     {
 	y2deb("copy-constructed LvmVg from " << c.dev);
 
@@ -697,7 +696,6 @@ void LvmVg::getVgData( const string& name, bool exists )
     SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
     unsigned cnt = c.numLines();
     unsigned i = 0;
-    unsigned num_lv = 0;
     string line;
     string tmp;
     string::size_type pos;
@@ -868,7 +866,6 @@ void LvmVg::getVgData( const string& name, bool exists )
     p=lvmLvPair(lvCreated);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
-	num_lv++;
 	//cout << "Created:" << *i << endl;
 	map<string,unsigned long> pe_map;
 	if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
@@ -894,11 +891,6 @@ void LvmVg::getVgData( const string& name, bool exists )
 		i->setPeMap( pe_map );
 	    }
 	free_pe -= size_diff;
-	}
-    if( num_lv>0 && lvmLvPair().empty() )
-	{
-	y2mil("inactive VG " << nm << " num_lv:" << num_lv);
-	inactiv = true;
 	}
     }
 
@@ -1152,7 +1144,7 @@ LvmVg::init()
     PeContainer::init();
     dev = nm;
     normalizeDevice(dev);
-    inactiv = lvm1 = false;
+    lvm1 = false;
     }
 
 
@@ -1658,8 +1650,6 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     s << " status:" << d.status;
     if( d.lvm1 )
       s << " lvm1";
-    if( d.inactiv )
-      s << " inactive";
     s << " UUID:" << d.uuid;
     return( s );
     }
@@ -1727,8 +1717,7 @@ bool LvmVg::equalContent( const Container& rhs ) const
 	p = dynamic_cast<const LvmVg*>(&rhs);
     if( ret && p )
 	ret = PeContainer::equalContent(*p,false) &&
-	      status==p->status && uuid==p->uuid && lvm1==p->lvm1 &&
-	    inactiv==p->inactiv;
+	    status==p->status && uuid==p->uuid && lvm1==p->lvm1;
     if( ret && p )
 	{
 	ConstLvmLvPair pp = lvmLvPair();

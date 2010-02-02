@@ -623,17 +623,8 @@ Storage::detectLvmVgs()
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 	    LvmVg * v = new LvmVg( this, *i );
-	    if( !v->inactive() )
-		{
 		addToList( v );
 		v->checkConsistency();
-		}
-	    else
-		{
-		y2mil("inactive VG " << *i);
-		v->unuseDev();
-		delete( v );
-		}
 	    }
 	}
     }

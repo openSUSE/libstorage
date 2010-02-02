@@ -47,7 +47,6 @@ class LvmVg : public PeContainer
 
 	unsigned numLv() const { return vols.size(); }
 	bool lvm2() const { return( !lvm1 ); }
-	bool inactive() const { return( inactiv ); }
 	static storage::CType staticType() { return storage::LVM; }
 	friend std::ostream& operator<< (std::ostream&, const LvmVg& );
 
@@ -166,7 +165,6 @@ class LvmVg : public PeContainer
 	string status;
 	string uuid;
 	bool lvm1;
-	bool inactiv;
 
 	static bool active;
 
