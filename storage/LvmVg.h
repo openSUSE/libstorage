@@ -45,7 +45,7 @@ class LvmVg : public PeContainer
 	LvmVg(const LvmVg& c);
 	virtual ~LvmVg();
 
-	unsigned numLv() const { return vols.size(); }
+	unsigned numLv() const;
 	bool lvm2() const { return( !lvm1 ); }
 	static storage::CType staticType() { return storage::LVM; }
 	friend std::ostream& operator<< (std::ostream&, const LvmVg& );

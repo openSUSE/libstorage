@@ -118,6 +118,14 @@ static bool lvDeleted( const LvmLv& l ) { return( l.deleted() ); }
 static bool lvCreated( const LvmLv& l ) { return( l.created() ); }
 static bool lvResized( const LvmLv& l ) { return( l.extendSize()!=0 ); }
 
+
+unsigned
+LvmVg::numLv() const
+{
+    return lvmLvPair(lvNotDeleted).length();
+}
+
+
 int
 LvmVg::removeVg()
     {
