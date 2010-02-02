@@ -536,13 +536,26 @@ Md::toMdType( const string& val )
 MdParity
 Md::toMdParity( const string& val )
     {
-    enum MdParity ret = RIGHT_SYMMETRIC;
+    MdParity ret = RIGHT_SYMMETRIC;
     while( ret!=PAR_NONE && val!=par_names[ret] )
 	{
 	ret = MdParity(ret-1);
 	}
     return( ret );
     }
+
+
+MdArrayState
+Md::toMdArrayState(const string& val)
+{
+    MdArrayState ret = ACTIVE_IDLE;
+    while( ret != UNKNOWN && val != md_states[ret] )
+        {
+        ret = MdArrayState(ret-1);
+        }
+    return( ret );
+}
+
 
 bool Md::matchRegex( const string& dev )
     {
@@ -756,8 +769,14 @@ int Md::updateEntry(EtcRaidtab* tab)
 
     const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
 				    "raid10", "multipath" };
+
     const string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
 				     "right-asymmetric", "right-symmetric" };
+
+    const string Md::md_states[] = { "clear", "inactive", "suspended", "readonly",
+				     "read-auto", "clean", "active", "write-pending",
+				     "active-idle" };
+
 
 unsigned Md::md_major = 0;
 

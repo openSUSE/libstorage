@@ -1214,11 +1214,11 @@ void MdPartCo::logDifference( const MdPartCo& d ) const
     string log = getDiffString( d );
 
     if( md_type!=d.md_type )
-        log += " Personality:" + md_names[md_type] + "-->" +
-               md_names[d.md_type];
+        log += " Personality:" + Md::md_names[md_type] + "-->" +
+	    Md::md_names[d.md_type];
     if( md_parity!=d.md_parity )
-        log += " Parity:" + par_names[md_parity] + "-->" +
-               par_names[d.md_parity];
+        log += " Parity:" + Md::par_names[md_parity] + "-->" +
+	    Md::par_names[d.md_parity];
     if( chunk_size!=d.chunk_size )
         log += " Chunk:" + decString(chunk_size) + "-->" + decString(d.chunk_size);
     if( sb_ver!=d.sb_ver )
@@ -1474,7 +1474,7 @@ void MdPartCo::getMdProps()
        {
          //setReadonly();
        }
-     md_state = toMdArrayState(property);
+     md_state = Md::toMdArrayState(property);
      }
 
     if( !readProp(LEVEL, property) )
@@ -1484,7 +1484,7 @@ void MdPartCo::getMdProps()
       }
     else
       {
-      md_type = toMdType(property);
+	  md_type = Md::toMdType(property);
       }
 
     //
@@ -1841,49 +1841,13 @@ bool MdPartCo::mdStringNum( const string& name, unsigned& num )
     }
 
 
-MdType
-MdPartCo::toMdType( const string& val )
-    {
-    enum MdType ret = MULTIPATH;
-    while( ret!=RAID_UNK && val!=md_names[ret] )
-        {
-        ret = MdType(ret-1);
-        }
-    return( ret );
-    }
-
-MdParity
-MdPartCo::toMdParity( const string& val )
-    {
-    enum MdParity ret = RIGHT_SYMMETRIC;
-    while( ret!=PAR_NONE && val!=par_names[ret] )
-        {
-        ret = MdParity(ret-1);
-        }
-    return( ret );
-    }
-
-
-
-storage::MdArrayState
-MdPartCo::toMdArrayState( const string& val )
-{
-    enum storage::MdArrayState ret = storage::ACTIVE_IDLE;
-    while( ret!=storage::UNKNOWN && val!=md_states[ret] )
-        {
-        ret = storage::MdArrayState(ret-1);
-        }
-    return( ret );
-}
-
-
 void MdPartCo::getMdPartCoState(storage::MdPartCoStateInfo& info) const
 {
   string prop;
 
   readProp(ARRAY_STATE,prop);
 
-  info.state = toMdArrayState(prop);
+  info.state = Md::toMdArrayState(prop);
 
   info.active = true; //?
   info.degraded = false; //?
@@ -2171,15 +2135,6 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
   return mdpList;
 }
 
-const string MdPartCo::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
-                          "raid10", "multipath" };
-
-const string MdPartCo::par_names[] = { "none", "left-asymmetric", "left-symmetric",
-                           "right-asymmetric", "right-symmetric" };
-
-const string MdPartCo::md_states[] = {"clear", "inactive", "suspended", "readonly",
-                          "read-auto", "clean", "active", "write-pending",
-                          "active-idle"};
 
 const string MdPartCo::md_props[] = {"metadata_version", "component_size", "chunk_size",
                        "array_state", "level", "layout" };

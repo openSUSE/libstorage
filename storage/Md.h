@@ -33,6 +33,8 @@ class MdCo;
 
 class Md : public Volume
     {
+	friend class MdPartCo;
+
     public:
 	Md( const MdCo& d, unsigned Pnr, storage::MdType Type, 
 	    const std::list<string>& devs );
@@ -62,7 +64,7 @@ class Md : public Volume
 	static bool matchRegex( const string& dev );
 	static unsigned mdMajor();
 
-	static const string& pName( storage::MdType t ) { return md_names[t]; }
+	static const string& pName(MdType t) { return md_names[t]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
 	static string mdDevice( unsigned num );
 
@@ -86,8 +88,10 @@ class Md : public Volume
 	void computeSize();
 
 	static void getMdMajor();
-	static storage::MdType toMdType( const string& val );
-	static storage::MdParity toMdParity( const string& val );
+
+	static MdType toMdType(const string& val);
+	static MdParity toMdParity(const string& val);
+	static MdArrayState toMdArrayState(const string& val);
 
 	void getParent();
 	void setMetadata();
@@ -112,8 +116,9 @@ class Md : public Volume
 	string parent_metadata;
 	int    md_member;
 
-	static const string md_names[storage::MULTIPATH + 1];
-	static const string par_names[storage::RIGHT_SYMMETRIC + 1];
+	static const string md_names[MULTIPATH + 1];
+	static const string par_names[RIGHT_SYMMETRIC + 1];
+	static const string md_states[ACTIVE_IDLE + 1];
 
 	static unsigned md_major;
 

@@ -28,6 +28,7 @@
 
 #include "storage/Container.h"
 #include "storage/Disk.h"
+#include "storage/Md.h"
 #include "storage/MdPart.h"
 
 namespace storage
@@ -131,9 +132,10 @@ class MdPartCo : public Container
     void getMdUuid( string&val ) { val=md_uuid; }
 
     /* Raid Level of the RAID as string. */
-    const string& pName() const { return md_names[md_type]; }
+	const string& pName() const { return Md::md_names[md_type]; }
     /* Parity for some of RAID's. */
-    const string& ptName() const { return par_names[md_parity]; }
+	const string& ptName() const { return Md::par_names[md_parity]; }
+
     /* Devices from which RAID is composed. */
     void getDevs( std::list<string>& devices, bool all=true, bool spare=false ) const;
 
@@ -142,9 +144,6 @@ class MdPartCo : public Container
 
     /* MD Device major number. */
     static unsigned mdMajor();
-
-    /* Raid Level as string for given type. */
-    static const string& pName( storage::MdType t ) { return md_names[t]; }
 
     static void activate( bool val, const string& tmpDir  );
 
@@ -307,9 +306,6 @@ class MdPartCo : public Container
     static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
 
     static void getMdMajor();
-    static storage::MdType toMdType( const string& val );
-    static storage::MdParity toMdParity( const string& val );
-    static storage::MdArrayState toMdArrayState( const string& val );
 
     unsigned long chunk_size;
     storage::MdType md_type;
@@ -329,9 +325,6 @@ class MdPartCo : public Container
     std::list<string> devs;
     std::list<string> spare;
 
-    static const string md_names[storage::MULTIPATH+1];
-    static const string par_names[storage::RIGHT_SYMMETRIC+1];
-    static const string md_states[storage::ACTIVE_IDLE+1];
     static unsigned md_major;
 
     /* Name that is present in /dev/md directory.*/
