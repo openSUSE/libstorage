@@ -223,10 +223,10 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
 	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
 	  destrSb(v.destrSb), devs(v.devs), spare(v.spare),
-	  has_container(has_container), md_metadata(md_metadata),
-	  parent_container(parent_container), parent_uuid(parent_uuid),
-	  parent_md_name(parent_md_name), parent_metadata(parent_metadata),
-	  md_member(md_member)
+	  has_container(v.has_container), md_metadata(v.md_metadata),
+	  parent_container(v.parent_container), parent_uuid(v.parent_uuid),
+	  parent_md_name(v.parent_md_name), parent_metadata(v.parent_metadata),
+	  md_member(v.md_member)
     {
 	y2deb("copy-constructed Md from " << v.dev);
     }
