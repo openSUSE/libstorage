@@ -1110,24 +1110,24 @@ MdPartCo::removeText( bool doing ) const
         }
     return txt;
     }
+
+
 void
 MdPartCo::setUdevData(const list<string>& id)
 {
-  y2mil("disk:" << nm << " id:" << id);
-  udev_id = id;
-  //this strange line will actually remove anything that doesn't start with "md-uuid-" string.
-  udev_id.erase(remove_if(udev_id.begin(), udev_id.end(), string_starts_with("md-uuid-")), udev_id.end());
-  udev_id.sort();
-  y2mil("id:" << udev_id);
+    y2mil("disk:" << nm << " id:" << id);
+    udev_id = id;
+    partition(udev_id.begin(), udev_id.end(), string_starts_with("md-uuid-"));
+    y2mil("id:" << udev_id);
     if (disk)
     {
-        disk->setUdevData("", id);
+        disk->setUdevData("", udev_id);
     }
     MdPartPair pp = mdpartPair();
     for( MdPartIter p=pp.begin(); p!=pp.end(); ++p )
-      {
-      p->addUdevData();
-      }
+    {
+	p->addUdevData();
+    }
 }
 
 
