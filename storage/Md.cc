@@ -42,7 +42,7 @@ namespace storage
 
 Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_NONE), chunk(0),
-  	  sb_ver("01.00.00"), destrSb(false)
+  	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
     if( d.type() != MD )
@@ -55,7 +55,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 
 Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_NONE), chunk(0),
-	  sb_ver("01.00.00"), destrSb(false)
+	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
     if( d.type() != MD )
@@ -79,7 +79,6 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	}
     // "Container" raid: IMSM, DDF
     // "Version" with persistent block
-    has_container=false;
     if( c.retcode()==0 )
     {
 	if( c.select( "Version : " ) )
@@ -223,7 +222,11 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     Md::Md(const MdCo& c, const Md& v)
 	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
 	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
-	  destrSb(v.destrSb), devs(v.devs), spare(v.spare)
+	  destrSb(v.destrSb), devs(v.devs), spare(v.spare),
+	  has_container(has_container), md_metadata(md_metadata),
+	  parent_container(parent_container), parent_uuid(parent_uuid),
+	  parent_md_name(parent_md_name), parent_metadata(parent_metadata),
+	  md_member(md_member)
     {
 	y2deb("copy-constructed Md from " << v.dev);
     }
@@ -745,10 +748,10 @@ int Md::updateEntry(EtcRaidtab* tab)
   info.md_uuid = md_uuid;
   if( has_container )
     {
-    stringstream ss;
     info.container_present = true;
     info.container_info.md_uuid = parent_uuid;
     info.container_info.metadata = parent_metadata;
+    stringstream ss;
     ss << md_member;
     info.member = ss.str();
     }

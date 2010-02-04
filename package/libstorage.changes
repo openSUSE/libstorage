@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 04 11:59:56 CET 2010 - aschnell@suse.de
+
+- fixed writing of mdadm.conf (bnc #565207)
+
+-------------------------------------------------------------------
 Wed Jan 27 16:03:55 CET 2010 - fehr@suse.de
 
 - add "nofail" to dm-encrypted fstab entries and do not set passno 
