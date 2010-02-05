@@ -2,6 +2,7 @@
 Thu Feb 04 11:59:56 CET 2010 - aschnell@suse.de
 
 - fixed writing of mdadm.conf (bnc #565207)
+- 2.19.7
 
 -------------------------------------------------------------------
 Wed Jan 27 16:03:55 CET 2010 - fehr@suse.de
