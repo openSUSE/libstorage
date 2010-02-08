@@ -1156,7 +1156,7 @@ pair<string,unsigned> Disk::getDiskPartition( const string& dev )
 	disk = dev.substr( 0, pos );
 	}
     y2mil( "dev:" << dev << " disk:" << disk << " nr:" << nr );
-    return( make_pair<string,unsigned>(disk,nr) );
+    return make_pair(disk, nr);
     }
 
 
