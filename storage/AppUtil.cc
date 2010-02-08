@@ -89,7 +89,7 @@ checkNormalFile(const string& Path_Cv)
 	glob_t globbuf;
 	if (glob(path.c_str(), flags, 0, &globbuf) == 0)
 	{
-	    for (char** p = globbuf.gl_pathv; *p != 0; *p++)
+	    for (char** p = globbuf.gl_pathv; *p != 0; p++)
 		ret.push_back(*p);
 	}
 	globfree (&globbuf);
