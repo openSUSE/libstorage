@@ -49,7 +49,7 @@ automake --add-missing --copy
 autoconf
 
 %{?suse_update_config:%{suse_update_config -f}}
-./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir}
+./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir} --disable-silent-rules
 make %{?jobs:-j%jobs}
 
 %ifarch s390 s390x
