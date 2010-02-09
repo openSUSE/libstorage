@@ -64,7 +64,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	{
 	nm.clear();
 	setNameDev();
-	getMajorMinor( dev, mjr, mnr );
+	getMajorMinor();
 	getStorage()->fetchDanglingUsedBy(dev, uby);
 	}
     SystemCmd c(MDADMBIN " --detail " + quote(device()));

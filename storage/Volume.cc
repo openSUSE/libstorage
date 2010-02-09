@@ -219,7 +219,7 @@ void Volume::init()
 	{
 	setNameDev();
 	if (!getStorage()->testmode() && cType()!=NFSC)
-	    getMajorMinor( dev, mjr, mnr );
+	    getMajorMinor();
 	}
     if( !numeric )
 	num = 0;
@@ -251,26 +251,6 @@ bool Volume::operator< ( const Volume& rhs ) const
 	}
     else
 	return( !del );
-    }
-
-
-    bool
-    Volume::getMajorMinor(const string& device, unsigned long& major, unsigned long& minor)
-    {
-	bool ret = false;
-	string dev = normalizeDevice(device);
-	struct stat sbuf;
-	if (stat(dev.c_str(), &sbuf) == 0)
-	{
-	    minor = gnu_dev_minor(sbuf.st_rdev);
-	    major = gnu_dev_major(sbuf.st_rdev);
-	    ret = true;
-	}
-	else
-	{
-	    y2err("stat for " << dev << " failed errno:" << errno << " (" << strerror(errno) << ")");
-	}
-	return ret;
     }
 
 
@@ -1993,13 +1973,13 @@ int Volume::doCryptsetup()
 	    unsigned long dummy, minor;
 	    if (cType() == LOOP)
 		{
-		getMajorMinor( dev, mjr, mnr );
+		getMajorMinor();
 		minor = mnr;
 		replaceAltName( "/dev/dm-", Dm::dmDeviceName(mnr) );
 		}
 	    else
 		{
-		getMajorMinor( dmcrypt_dev, dummy, minor );
+		storage::getMajorMinor( dmcrypt_dev, dummy, minor );
 		replaceAltName("/dev/dm-", Dm::dmDeviceName(minor));
 		}
 

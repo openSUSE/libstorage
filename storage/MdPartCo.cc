@@ -1854,30 +1854,6 @@ void MdPartCo::getMdPartCoState(storage::MdPartCoStateInfo& info) const
 }
 
 
-void MdPartCo::getMajorMinor()
-{
-  string path = sysfs_path + nm + "/dev";
-
-  if( access( path.c_str(), R_OK )==0 )
-  {
-    string val;
-    unsigned pos;
-
-    std::ifstream file( path.c_str() );
-    classic(file);
-    file >> val;
-
-    pos = val.find(":");
-    val.substr(0,pos) >> mjr;
-    val.substr(pos+1) >> mnr;
-
-    file.close();
-    file.clear();
-  }
-
-}
-
-
 bool MdPartCo::isImsmPlatform()
 {
   bool ret = false;

@@ -52,6 +52,7 @@ namespace storage
 
 	unsigned long long sizeK() const { return size_k; }
 
+	bool getMajorMinor();
 	unsigned long majorNr() const { return mjr; }
 	unsigned long minorNr() const { return mnr; }
 

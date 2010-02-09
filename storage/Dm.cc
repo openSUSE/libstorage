@@ -289,7 +289,7 @@ void Dm::init()
 
 void Dm::updateMajorMinor()
     {
-    getMajorMinor( dev, mjr, mnr );
+    getMajorMinor();
     if( majorNr()==Dm::dmMajor() )
 	{
 	string d = "/dev/dm-" + decString(minorNr());

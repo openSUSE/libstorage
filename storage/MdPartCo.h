@@ -254,8 +254,6 @@ class MdPartCo : public Container
     virtual Text removeText( bool doing ) const;
     virtual Text setDiskLabelText( bool doing ) const;
 
-    void getMajorMinor();
-
     /* Initialize the MD part of object.*/
     void initMd();
 

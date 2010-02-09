@@ -79,6 +79,13 @@ namespace storage
     }
 
 
+    bool
+    Device::getMajorMinor()
+    {
+	return storage::getMajorMinor(dev, mjr, mnr);
+    }
+    
+
     string
     Device::udevPath() const
     {

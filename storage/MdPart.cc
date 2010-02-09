@@ -96,14 +96,7 @@ void MdPart::updateName()
 
 void MdPart::updateMinor()
     {
-    unsigned long mj=mjr;
-    unsigned long mi=mnr;
-    getMajorMinor( dev, mj, mi );
-    if( mi!=mnr || mj!=mjr )
-        {
-        mnr = mi;
-        mjr = mj;
-        }
+    getMajorMinor();
     }
 
 void MdPart::updateSize()

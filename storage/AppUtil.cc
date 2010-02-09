@@ -125,6 +125,26 @@ checkNormalFile(const string& Path_Cv)
     }
 
 
+    bool
+    getMajorMinor(const string& device, unsigned long& major, unsigned long& minor)
+    {
+	bool ret = false;
+	string dev = normalizeDevice(device);
+	struct stat sbuf;
+	if (stat(device.c_str(), &sbuf) == 0)
+	{
+	    major = gnu_dev_major(sbuf.st_rdev);
+	    minor = gnu_dev_minor(sbuf.st_rdev);
+	    ret = true;
+	}
+	else
+	{
+	    y2err("stat for " << device << " failed errno:" << errno << " (" << strerror(errno) << ")");
+	}
+	return ret;
+    }
+
+
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi)
   {
   string::size_type pos;

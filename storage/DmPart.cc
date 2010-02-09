@@ -95,7 +95,7 @@ void DmPart::updateMinor()
     {
     unsigned long mj=mjr;
     unsigned long mi=mnr;
-    getMajorMinor( dev, mj, mi );
+    getMajorMinor();
     if( mi!=mnr || mj!=mjr )
 	{
 	mnr = mi;

@@ -63,7 +63,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	if( loopStringNum( loop_dev, num ))
 	    {
 	    setNameDev();
-	    getMajorMinor( dev, mjr, mnr );
+	    getMajorMinor();
 	    }
 	proc_dev = loop_dev;
 	}
@@ -110,7 +110,7 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 	if( loopStringNum( dev, num ))
 	    {
 	    setNameDev();
-	    getMajorMinor( dev, mjr, mnr );
+	    getMajorMinor();
 	    }
 	}
     else
@@ -149,7 +149,7 @@ Loop::setDmcryptDev( const string& dm_dev, bool active )
     nm = dm_dev.substr( dm_dev.find_last_of( '/' )+1);
     if( active )
 	{
-	getMajorMinor( dev, mjr, mnr );
+	getMajorMinor();
 	replaceAltName( "/dev/dm-", "/dev/dm-"+decString(mnr) );
 	}
     Volume::setDmcryptDev( dm_dev, active );

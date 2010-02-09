@@ -181,7 +181,7 @@ void Partition::changeNumber( unsigned new_num )
 
 	nm.clear();
 	setNameDev();
-	getMajorMinor( dev, mjr, mnr );
+	getMajorMinor();
 	getStorage()->changeDeviceName(old, dev);
 	}
     }
