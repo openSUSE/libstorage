@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Feb  9 13:10:58 CET 2010 - fehr@suse.de
+
+- adaptions for new parted 2.1
+  if ioctl BLKRRPART from parted fails, call addpart/delpart to 
+  still allow repartitioning of disks where partitions are busy
+- 2.19.8
+
+-------------------------------------------------------------------
 Mon Feb 08 12:55:23 CET 2010 - aschnell@suse.de
 
 - fixes for g++ 4.5

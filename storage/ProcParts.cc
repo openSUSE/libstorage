@@ -59,13 +59,16 @@ namespace storage
 
 
     bool
+    ProcParts::findDevice(const string& device) const
+    {
+    return( findEntry(device)!=data.end() );
+    }
+
+    bool
     ProcParts::getSize(const string& device, unsigned long long& sizeK) const
     {
-	if (device != normalizeDevice(device))
-	    y2err("unnormalize device " << device);
-
 	bool ret = false;
-	const_iterator i = data.find(normalizeDevice(device));
+	const_iterator i = findEntry(device);
 	if (i != data.end())
 	{
 	    sizeK = i->second;
@@ -83,6 +86,14 @@ namespace storage
 	for (const_iterator i = data.begin(); i != data.end(); ++i)
 	    ret.push_back(i->first);
 	return ret;
+    }
+
+    ProcParts::const_iterator
+    ProcParts::findEntry(const string& device) const
+    {
+	if (device != normalizeDevice(device))
+	    y2err("unnormalize device " << device);
+	return( data.find(normalizeDevice(device)) );
     }
 
 }

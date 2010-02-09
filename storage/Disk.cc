@@ -632,10 +632,9 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
 	y2mil("out:" << tmp);
         }
     int ret = cmd.retcode();
-    if( ret!=0 && cmd_line.find( device()+" set" )!=string::npos &&
-        tmp.find( "kernel was unable to re-read" )!=string::npos )
+    if( ret!=0 && tmp.find( "kernel failed to re-read" )!=string::npos )
 	{
-	y2mil( "resetting retcode set cmd " << ret << " of:" << cmd_line );
+	y2mil( "resetting retcode cmd " << ret << " of:" << cmd_line );
 	ret = 0;
 	}
     if( ret != 0 )
@@ -652,24 +651,43 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
     }
 
 int
-Disk::execCheckFailed( const string& cmd_line )
+Disk::execCheckFailed( const string& cmd_line, bool stop_hald )
     {
     static SystemCmd cmd;
-    return( execCheckFailed( cmd, cmd_line ) );
+    return( execCheckFailed( cmd, cmd_line, stop_hald ) );
     }
 
-int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
+int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line, 
+                           bool stop_hald )
     {
-    getStorage()->handleHald(true);
+    if( stop_hald )
+	getStorage()->handleHald(true);
     cmd.execute( cmd_line );
     int ret = checkSystemError( cmd_line, cmd );
     if( ret!=0 )
 	setExtError( cmd );
-    getStorage()->handleHald(false);
+    if( stop_hald )
+	getStorage()->handleHald(false);
     return( ret );
     }
 
 
+
+bool
+Disk::scanPartedSectors( const string& Line, unsigned& nr, 
+                         unsigned long long& start, 
+			 unsigned long long& ssize ) const
+    {
+    std::istringstream Data( Line );
+    classic(Data);
+
+    nr=0;
+    string skip;
+    char c;
+    Data >> nr >> start >> c >> skip >> ssize;
+    y2mil( "nr:" << nr << " st:" << start << " sz:" << ssize << " c:" << c );
+    return( nr>0 );
+    }
 
 bool
 Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
@@ -2101,9 +2119,26 @@ int Disk::doSetType( Volume* v )
     return( ret );
     }
 
+int 
+Disk::callDelpart( unsigned nr ) const
+    {
+    SystemCmd c( DELPARTBIN " " + device() + ' ' + decString(nr) );
+    return( c.retcode() );
+    }
+
+int 
+Disk::callAddpart( unsigned nr, unsigned long long sstart, 
+                   unsigned long long ssize ) const
+    {
+    SystemCmd c( ADDPARTBIN " " + device() + ' ' + decString(nr) + ' ' +
+		 decString(sstart) + ' ' + decString(ssize) );
+    return( c.retcode() );
+    }
+
 bool
 Disk::getPartedValues( Partition *p ) const
     {
+    y2mil( "nr:" << p->nr() );
     bool ret = false;
     if (getStorage()->testmode())
 	{
@@ -2112,18 +2147,64 @@ Disk::getPartedValues( Partition *p ) const
 	}
     else
 	{
-	ProcParts parts;
 	std::ostringstream cmd_line;
 	classic(cmd_line);
-	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print | grep -w \"^[ \t]*\"" << p->nr();
+	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print unit s print";
+	std::string cmd_str = cmd_line.str();
+	cmd_line << "| grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	unsigned nr, id;
 	unsigned long start, csize;
+	unsigned long long sstart, ssize;
 	PartitionType type;
 	bool boot;
+	if( cmd.numLines()>1 && 
+	    scanPartedSectors( cmd.getLine(1), nr, sstart, ssize ))
+	    {
+	    unsigned long long sysfs_start = 0;
+	    unsigned long long sysfs_size = 0;
+	    string tmp = getPartName(p->nr());
+	    string start_p = sysfsDir();
+	    start_p += tmp.substr(tmp.find_last_of('/'));
+	    string size_p = start_p;
+	    start_p += "/start";
+	    size_p += "/size";
+	    y2mil( "p1:" << start_p << " p2:" << size_p );
+	    std::ifstream fl;
+	    classic(fl);
+	    fl.open( start_p );
+	    fl >> sysfs_start;
+	    fl.close();
+	    fl.open( size_p );
+	    fl >> sysfs_size;
+	    fl.close();
+	    if( p->type()==EXTENDED )
+		ssize=2;
+	    y2mil( "sectors nr:" << nr << " sysfs  start:" << sysfs_start << 
+	           " size:" << sysfs_size );
+	    y2mil( "sectors nr:" << nr << " parted start:" << sstart << 
+	           " size:" << ssize );
+	    if( nr == p->nr() && (true || // always only for testing
+	        (sysfs_start!=sstart || sysfs_size!=ssize)) )
+		{
+		callDelpart( nr );
+		callAddpart( nr, sstart, ssize );
+		fl.open( start_p );
+		fl >> sysfs_start;
+		fl.close();
+		fl.open( size_p );
+		fl >> sysfs_size;
+		fl.close();
+		if( sysfs_start!=sstart || sysfs_size!=ssize )
+		    y2err( "addpart failed sectors parted:" << sstart << ' ' <<
+		           ssize << " sysfs:" << sysfs_start << ' ' << 
+			   sysfs_size );
+		}
+	    }
 	if( cmd.numLines()>0 &&
 	    scanPartedLine( cmd.getLine(0), nr, start, csize, type, id, boot ))
 	    {
+	    ProcParts parts;
 	    y2mil("really created at cyl:" << start << " csize:" << csize);
 	    p->changeRegion( start, csize, cylinderToKb(csize) );
 	    unsigned long long s=0;
@@ -2139,9 +2220,7 @@ Disk::getPartedValues( Partition *p ) const
 		    p->setSize( s );
 		}
 	    }
-	cmd_line.str("");
-	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print";
-	cmd.execute( cmd_line.str() );
+	cmd.execute( cmd_str );
 	}
     return( ret );
     }
@@ -2267,6 +2346,7 @@ int Disk::doCreate( Volume* v )
 		cmd_line << "ext2 ";
 		}
 	    }
+	getStorage()->handleHald(true);
 	if( ret==0 )
 	    {
 	    unsigned long start = p->cylStart();
@@ -2312,34 +2392,35 @@ int Disk::doCreate( Volume* v )
 	    cmd_line << start << " ";
 	    string save = cmd_line.str();
 	    y2mil( "end:" << end << " cylinders:" << cylinders() );
-	    if( execCheckFailed( save + decString(end) ) && 
+	    if( execCheckFailed( save + decString(end), false ) && 
 	        end==cylinders() &&
-	        execCheckFailed( save + decString(end-1) ) )
+	        execCheckFailed( save + decString(end-1), false ) )
 		{
 		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 		}
 	    }
 	if( ret==0 )
 	    {
-	    if( !dmp_slave )
-		{
-		if( p->type()!=EXTENDED )
-		    Storage::waitForDevice(p->device());
-		else
-		    Storage::waitForDevice();
-		if( p->type()==LOGICAL && getStorage()->instsys() )
-		    {
-		    // kludge to make the extended partition visible in
-		    // /proc/partitions otherwise grub refuses to install if root
-		    // filesystem is a logical partition
-		    PartPair lc = partPair(logicalCreated);
-		    call_blockdev = lc.length()<=1;
-		    y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
-		    }
-		}
 	    p->setCreated( false );
 	    if( !getPartedValues( p ))
 		ret = DISK_PARTITION_NOT_FOUND;
+	    }
+	getStorage()->handleHald(false);
+	if( ret==0 && !dmp_slave )
+	    {
+	    if( p->type()!=EXTENDED )
+		Storage::waitForDevice(p->device());
+	    else
+		Storage::waitForDevice();
+	    if( p->type()==LOGICAL && getStorage()->instsys() )
+		{
+		// kludge to make the extended partition visible in
+		// /proc/partitions otherwise grub refuses to install if root
+		// filesystem is a logical partition
+		PartPair lc = partPair(logicalCreated);
+		call_blockdev = lc.length()<=1;
+		y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
+		}
 	    }
 	if( ret==0 && p->type()!=EXTENDED )
 	    {
@@ -2398,10 +2479,15 @@ int Disk::doRemove( Volume* v )
 	    std::ostringstream cmd_line;
 	    classic(cmd_line);
 	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
-	    if( execCheckFailed( cmd_line.str() ) )
+	    getStorage()->handleHald(true);
+	    if( execCheckFailed( cmd_line.str(), false ) )
 		{
 		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
 		}
+	    ProcParts parts;
+	    if( parts.findDevice(getPartName(device(), p->OrigNr())) )
+		callDelpart( p->OrigNr() );
+	    getStorage()->handleHald(false);
 	    }
 	if( ret==0 )
 	    {
@@ -2655,17 +2741,19 @@ int Disk::doResize( Volume* v )
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << quote(device())
 	             << " unit s resize " << p->nr() << " "
 	             << start_sect << " " << end_sect;
-	    if( execCheckFailed( cmd_line.str() ) )
+	    getStorage()->handleHald(true);
+	    if( execCheckFailed( cmd_line.str(), false ) )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
-	    if( ret==0 && !dmp_slave )
-		Storage::waitForDevice(p->device());
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )
 		    ret = DISK_PARTITION_NOT_FOUND;
 		}
+	    getStorage()->handleHald(false);
+	    if( ret==0 && !dmp_slave )
+		Storage::waitForDevice(p->device());
 	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
 	    }
 	if( needExtend && !dmp_slave && 

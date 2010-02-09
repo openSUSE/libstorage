@@ -207,15 +207,22 @@ class Disk : public Container
 	virtual bool detectPartitions(const ProcParts& parts);
 	bool getSysfsInfo( const string& SysFsDir );
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
-	int execCheckFailed( const string& cmd_line );
-	int execCheckFailed( SystemCmd& cmd, const string& cmd_line );
+	int execCheckFailed( const string& cmd_line, bool stop_hald=true );
+	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
+	                     bool stop_hald=true );
 	bool checkPartedOutput(const SystemCmd& cmd, const ProcParts& parts);
 	bool scanPartedLine( const string& Line, unsigned& nr,
 	                     unsigned long& start, unsigned long& csize,
 			     storage::PartitionType& type, 
 			     unsigned& id, bool& boot ) const;
+	bool scanPartedSectors( const string& Line, unsigned& nr,
+				unsigned long long& start, 
+				unsigned long long& ssize ) const;
 	bool checkPartedValid(const ProcParts& parts, const string& diskname,
 	                       std::list<Partition*>& pl, unsigned long& rng ) const;
+	int callDelpart( unsigned nr ) const;
+	int callAddpart( unsigned nr, unsigned long long sstart, 
+		         unsigned long long ssize ) const;
 	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
 	                       unsigned long long& end ) const;

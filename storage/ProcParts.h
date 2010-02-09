@@ -45,6 +45,7 @@ namespace storage
 	void reload();
 
 	bool getSize(const string& device, unsigned long long& sizeK) const;
+	bool findDevice(const string& device) const;
 
 	list<string> getEntries() const;
 
@@ -61,6 +62,8 @@ namespace storage
     protected:
 
 	typedef map<string, unsigned long long>::const_iterator const_iterator;
+
+	const_iterator findEntry(const string& device) const;
 
 	map<string, unsigned long long> data;
 
