@@ -591,17 +591,15 @@ void Md::setPersonality( MdType val )
     computeSize();
     }
 
+
 unsigned Md::mdMajor()
     {
     if( md_major==0 )
-	getMdMajor();
-    return( md_major );
-    }
-
-void Md::getMdMajor()
     {
-    md_major = getMajorDevices( "md" );
-    y2mil("md_major:" << md_major);
+	md_major = getMajorDevices("md");
+	y2mil("md_major:" << md_major);
+    }
+    return( md_major );
     }
 
 

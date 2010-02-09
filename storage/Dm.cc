@@ -81,15 +81,17 @@ Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
 unsigned Dm::dmMajor()
     {
     if( dm_major==0 )
-	getDmMajor();
+    {
+	dm_major = getMajorDevices("device-mapper");
+	y2mil("dm_major:" << dm_major);
+    }
     return( dm_major );
     }
+
 
 void
 Dm::getTableInfo()
     {
-    if( dm_major==0 )
-	getDmMajor();
     SystemCmd c(DMSETUPBIN " table " + quote(tname));
     inactiv = c.retcode()!=0;
     y2mil("table:" << tname << " retcode:" << c.retcode() << " numLines:" << c.numLines() <<
@@ -477,11 +479,6 @@ string Dm::sysfsPath() const
     return( ret );
     }
 
-void Dm::getDmMajor()
-    {
-    dm_major = getMajorDevices( "device-mapper" );
-    y2mil("dm_major:" << dm_major);
-    }
 
 void Dm::getInfo( DmInfo& tinfo ) const
     {

@@ -668,7 +668,7 @@ string PeContainer::getDeviceByNumber( const string& majmin ) const
 	    list<string> ls = splitString(pair);
 	    if( majorNr()>0 && mj==majorNr() && mi==minorNr())
 		ret = device();
-	    if( mj==Loop::major() )
+	    if( mj==Loop::loopMajor() )
 		ret = Loop::loopDeviceName(mi);
 	    if( ret.empty() && mj==Dm::dmMajor() && ls.size()>=2 )
 		{

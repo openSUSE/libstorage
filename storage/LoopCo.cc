@@ -82,7 +82,7 @@ namespace storage
 void
 LoopCo::init()
     {
-    mjr = Loop::major();
+    mjr = Loop::loopMajor();
     }
 
 

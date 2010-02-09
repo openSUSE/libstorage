@@ -219,18 +219,17 @@ Loop::lfileRealPath() const
     return getStorage()->root() + lfile;
     }
 
-unsigned Loop::major()
+
+unsigned Loop::loopMajor()
     {
     if( loop_major==0 )
-	getLoopMajor();
+    {
+	loop_major = getMajorDevices("loop");
+	y2mil("loop_major:" << loop_major);
+    }
     return( loop_major );
     }
 
-void Loop::getLoopMajor()
-    {
-    loop_major = getMajorDevices( "loop" );
-    y2mil("loop_major:" << loop_major);
-    }
 
 string Loop::loopDeviceName( unsigned num )
     {

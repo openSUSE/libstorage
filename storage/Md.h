@@ -87,8 +87,6 @@ class Md : public Volume
 
 	void computeSize();
 
-	static void getMdMajor();
-
 	static MdType toMdType(const string& val);
 	static MdParity toMdParity(const string& val);
 	static MdArrayState toMdArrayState(const string& val);

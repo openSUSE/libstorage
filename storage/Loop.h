@@ -64,7 +64,7 @@ class Loop : public Volume
 	void getInfo( storage::LoopInfo& info ) const;
 	bool equalContent( const Loop& rhs ) const;
 	void logDifference( const Loop& d ) const;
-	static unsigned major();
+	static unsigned loopMajor();
 	static string loopDeviceName( unsigned num );
 
 	static bool notDeleted( const Loop& l ) { return( !l.deleted() ); }
@@ -72,7 +72,6 @@ class Loop : public Volume
     protected:
 
 	void checkReuse();
-	static void getLoopMajor();
 
 	string lfile;
 	bool reuseFile;
