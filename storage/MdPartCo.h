@@ -318,8 +318,6 @@ class MdPartCo : public Container
     std::list<string> devs;
     std::list<string> spare;
 
-    static unsigned md_major;
-
     /* Name that is present in /dev/md directory.*/
     string md_name;
 

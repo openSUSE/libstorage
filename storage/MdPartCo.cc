@@ -2105,8 +2105,6 @@ const string MdPartCo::md_props[] = {"metadata_version", "component_size", "chun
 
 const string MdPartCo::sysfs_path = "/sys/devices/virtual/block/";
 
-unsigned MdPartCo::md_major = 0;
-
 bool MdPartCo::active = false;
 
 void MdPartCo::logData(const string& Dir) const {}
