@@ -140,8 +140,6 @@ class Disk : public Container
 
 	struct SysfsInfo
 	{
-	    unsigned long mjr;
-	    unsigned long mnr;
 	    string device;
 	    unsigned long range;
 	    unsigned long long size;

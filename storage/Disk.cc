@@ -59,6 +59,7 @@ Disk::Disk( Storage * const s, const string& Name,
 	dev = Name;
     else 
 	dev = "/dev/" + Name;
+    getMajorMinor();
     size_k = SizeK;
     y2deb("constructed disk " << dev);
     }
@@ -77,6 +78,7 @@ Disk::Disk( Storage * const s, const string& Name,
     sector = new_sector = 32;
     cyl = new_cyl = std::max( size_k*2 / head / sector, 1ULL );
     byte_cyl = head * sector * 512;
+    getMajorMinor();
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
     if (systeminfo.getProcParts().getSize(p->device(), sz) && sz > 0)
@@ -285,21 +287,7 @@ bool Disk::detectGeometry()
     bool
     Disk::getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo)
     {
-	string sysfsfile = sysfsdir + "/dev";
-	if (access(sysfsfile.c_str(), R_OK) == 0)
-	{
-	    ifstream file(sysfsfile.c_str());
-	    classic(file);
-	    char c;
-	    file >> sysfsinfo.mjr >> c >> sysfsinfo.mnr;
-	}
-	else
-	{
-	    y2war("reading " << sysfsfile << " failed");
-	    return false;
-	}
-
-	sysfsfile = sysfsdir + "/device";
+	string sysfsfile = sysfsdir + "/device";
 	if (!readlink(sysfsfile, sysfsinfo.device))
 	{
 	    // not always available so no error
@@ -355,9 +343,8 @@ bool Disk::detectGeometry()
 	    return false;
 	}
 
-	y2mil("sysfsdir:" << sysfsdir << " mjr:" << sysfsinfo.mjr << " mnr:" << sysfsinfo.mnr <<
-	      " device:" << sysfsinfo.device << " range:" << sysfsinfo.range << " size:" <<
-	      sysfsinfo.size);
+	y2mil("sysfsdir:" << sysfsdir << " device:" << sysfsinfo.device << " range:" <<
+	      sysfsinfo.range << " size:" << sysfsinfo.size);
 
 	return true;
     }
@@ -376,9 +363,6 @@ bool Disk::detectGeometry()
 	    range = sysfsinfo.range;
 	    if (range <= 1)
 		ret = false;
-
-	    mjr = sysfsinfo.mjr;
-	    mnr = sysfsinfo.mnr;
 
 	    if (boost::contains(sysfsinfo.device, "/session"))
 		iscsi = true;
