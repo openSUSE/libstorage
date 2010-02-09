@@ -218,7 +218,7 @@ void Volume::init()
     if( numeric||!nm.empty() )
 	{
 	setNameDev();
-	if (!getStorage()->testmode())
+	if (!getStorage()->testmode() && cType()!=NFSC)
 	    getMajorMinor( dev, mjr, mnr );
 	}
     if( !numeric )
