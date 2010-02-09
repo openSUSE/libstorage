@@ -1408,18 +1408,6 @@ void MdPartCo::getSpareDevs(std::list<string>& devices )
 }
 
 
-unsigned MdPartCo::mdMajor()
-    {
-    if( md_major==0 )
-        getMdMajor();
-    return( md_major );
-    }
-
-void MdPartCo::getMdMajor()
-    {
-    md_major = getMajorDevices( "md" );
-    }
-
 void MdPartCo::setSize(unsigned long long size )
 {
   size_k = size;

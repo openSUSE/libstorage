@@ -142,9 +142,6 @@ class MdPartCo : public Container
 
     void getSpareDevs(std::list<string>& devices );
 
-    /* MD Device major number. */
-    static unsigned mdMajor();
-
     static void activate( bool val, const string& tmpDir  );
 
     static bool isActive() { return active; }
@@ -302,8 +299,6 @@ class MdPartCo : public Container
     //Input: 'mdXXX' device.
     static CType envSelection(const string& name);
     static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
-
-    static void getMdMajor();
 
     unsigned long chunk_size;
     storage::MdType md_type;
