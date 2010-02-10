@@ -1975,10 +1975,10 @@ void MdPartCo::updateEntry()
       }
     }
 
+
 string MdPartCo::mdadmLine() const
     {
-    string line = "ARRAY " + device() + " level=" + pName();
-    line += " UUID=" + md_uuid;
+    string line = "ARRAY " + device() + " level=" + pName() + " UUID=" + md_uuid;
     y2mil("line:" << line);
     return( line );
     }
