@@ -154,7 +154,7 @@ class MdPartCo : public Container
     static bool matchRegex( const string& dev );
     static bool mdStringNum( const string& name, unsigned& num );
 
-    // This function will scann for MD RAIDs and will return
+    // This function will scan for MD RAIDs and will return
     // list with detected RAID names.
     static int scanForRaid(list<string>& raidNames);
 
