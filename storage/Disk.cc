@@ -2156,10 +2156,10 @@ Disk::getPartedValues( Partition *p ) const
 	    y2mil( "p1:" << start_p << " p2:" << size_p );
 	    std::ifstream fl;
 	    classic(fl);
-	    fl.open( start_p );
+	    fl.open( start_p.c_str() );
 	    fl >> sysfs_start;
 	    fl.close();
-	    fl.open( size_p );
+	    fl.open( size_p.c_str() );
 	    fl >> sysfs_size;
 	    fl.close();
 	    if( p->type()==EXTENDED )
@@ -2173,10 +2173,10 @@ Disk::getPartedValues( Partition *p ) const
 		{
 		callDelpart( nr );
 		callAddpart( nr, sstart, ssize );
-		fl.open( start_p );
+		fl.open( start_p.c_str() );
 		fl >> sysfs_start;
 		fl.close();
-		fl.open( size_p );
+		fl.open( size_p.c_str() );
 		fl >> sysfs_size;
 		fl.close();
 		if( sysfs_start!=sstart || sysfs_size!=ssize )
