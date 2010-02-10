@@ -349,6 +349,7 @@ namespace storage
 	string name;
 	string device;
 	string mount;
+	string crypt_device;
 	MountByType mount_by;
 	list<UsedByInfo> usedBy;
 	UsedByType usedByType;	// deprecated

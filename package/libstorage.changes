@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Feb 10 11:59:30 CET 2010 - fehr@suse.de
+
+- provide name of encrypted dm device in VolumeInfo (#577127)
+- 2.19.9
+
+-------------------------------------------------------------------
 Tue Feb  9 13:10:58 CET 2010 - fehr@suse.de
 
 - adaptions for new parted 2.1

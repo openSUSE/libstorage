@@ -2789,6 +2789,8 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.minor = mnr;
     info.name = nm;
     info.device = dev;
+    if( dmcrypt() )
+	info.crypt_device = dmcrypt_dev;
     info.mount = mp;
     info.mount_by = mount_by;
 
