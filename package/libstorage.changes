@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Wed Feb 10 11:59:30 CET 2010 - fehr@suse.de
 
-- provide name of encrypted dm device in VolumeInfo (#577127)
+- provide name of encrypted dm device in VolumeInfo (bnc #577127)
 - 2.19.9
 
 -------------------------------------------------------------------
