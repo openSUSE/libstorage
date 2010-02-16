@@ -89,10 +89,10 @@ Nfs::init(bool nfs4)
     Nfs::canonicalName(const string& d)
     {
 	string dev = boost::replace_all_copy(d, "//", "/");
-	if (!dev.empty() && *dev.rbegin() == '/')
+	if (dev.size() > 2 && dev[dev.size() - 2] != ':' && dev[dev.size() - 1] == '/')
 	    dev.erase(dev.size() - 1);
 	if (dev != d)
-	    y2mil("dev:" << dev << " d:" << d);
+	    y2mil("old:" << d << " new:" << dev);
 	return dev;
     }
 
