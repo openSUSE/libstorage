@@ -50,6 +50,13 @@ AsciiFile::AsciiFile(const string& Name_Cv, bool remove_empty)
 }
 
 
+AsciiFile::AsciiFile()
+    : Name_C(),
+      remove_empty(false)
+{
+}
+
+
 AsciiFile::~AsciiFile()
 {
 }
@@ -58,6 +65,12 @@ AsciiFile::~AsciiFile()
 bool
 AsciiFile::reload()
 {
+    if (Name_C.empty())
+    {
+	y2err("trying to load nameless AsciiFile");
+	return false;
+    }
+
     y2mil("loading file " << Name_C);
     clear();
 
@@ -80,6 +93,12 @@ AsciiFile::reload()
 bool
 AsciiFile::save()
 {
+    if (Name_C.empty())
+    {
+	y2err("trying to save nameless AsciiFile");
+	return false;
+    }
+
     if (remove_empty && Lines_C.empty())
     {
 	y2mil("deleting file " << Name_C);
@@ -109,7 +128,7 @@ AsciiFile::save()
     void
     AsciiFile::logContent() const
     {
-	y2mil("content of " << Name_C);
+	y2mil("content of " << (Name_C.empty() ? "<nameless>" : Name_C));
 	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
 	    y2mil(*it);
     }
@@ -224,6 +243,15 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     assert( Idx_iv < Lines_C.size( ) );
     return Lines_C[Idx_iv];
     }
+
+
+AsciiFile
+AsciiFile::subfile(vector<string>::const_iterator& line) const
+{
+    AsciiFile tmp;
+    tmp.append(*line);
+    return tmp;
+}
 
 
 void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const

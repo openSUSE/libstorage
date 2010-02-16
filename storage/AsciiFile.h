@@ -41,6 +41,7 @@ namespace storage
 
 	explicit AsciiFile(const char* name, bool remove_empty = false);
 	explicit AsciiFile(const string& name, bool remove_empty = false);
+	explicit AsciiFile();
 	~AsciiFile();
 
 	string name() const { return Name_C; }
@@ -75,6 +76,8 @@ namespace storage
 	unsigned numLines() const { return Lines_C.size(); }
 
 	const vector<string>& lines() const { return Lines_C; }
+
+	AsciiFile subfile(vector<string>::const_iterator& line) const;
 
     protected:
 
