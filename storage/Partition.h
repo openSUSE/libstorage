@@ -47,7 +47,7 @@ class Partition : public Volume
 	           unsigned long Start, unsigned long CSize,
 		   storage::PartitionType Type, 
 		   unsigned id=ID_LINUX, bool Boot=false );
-	Partition( const Disk& d, const string& Data );
+	Partition(const Disk& c, const AsciiFile& file);
 	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();
 

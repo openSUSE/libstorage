@@ -85,7 +85,7 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 	{
 	    if (boost::starts_with(*it, "Logical Volume:"))
 	    {
-		LvmLv* p = new LvmLv(*this, extractNthWord(2, *it, true));
+		LvmLv* p = new LvmLv(*this, file.subfile(it));
 		addToList(p);
 	    }
 	}

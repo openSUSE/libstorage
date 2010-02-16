@@ -41,7 +41,7 @@ class LvmLv : public Dm
 	      const string& uuid, const string& status, const string& alloc);
 	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
 	      unsigned stripe);
-	LvmLv(const LvmVg& c, const string& data);
+	LvmLv(const LvmVg& c, const AsciiFile& file);
 	LvmLv(const LvmVg& c, const LvmLv& v);
 	virtual ~LvmLv();
 

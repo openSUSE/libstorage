@@ -139,7 +139,7 @@ Disk::Disk(Storage * const s, const AsciiFile& file)
 
 	if (boost::starts_with(*it, "Partition:"))
 	{
-	    Partition* p = new Partition(*this, extractNthWord(1, *it, true));
+	    Partition* p = new Partition(*this, file.subfile(it));
 	    addToList( p );
 	}
     }

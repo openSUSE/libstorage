@@ -29,6 +29,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -70,9 +71,11 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 }
 
 
-    LvmLv::LvmLv(const LvmVg& c, const string& data)
+    LvmLv::LvmLv(const LvmVg& c, const AsciiFile& file)
 	: Dm(c, "")
     {
+	string data = extractNthWord(2, *(file.lines().begin()), true);
+
 	istringstream i(data);
 	classic(i);
 	i >> dev >> size_k >> mjr >> mnr >> stripe >> stripe_size;

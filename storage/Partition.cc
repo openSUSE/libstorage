@@ -26,6 +26,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
+#include "storage/AsciiFile.h"
 
 
 namespace storage
@@ -46,11 +47,14 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     y2deb("constructed Partition " << dev << " on " << cont->device());
     }
 
-Partition::Partition( const Disk& d, const string& Data ) :
-        Volume( d, 0, 0 )
+
+    Partition::Partition(const Disk& c, const AsciiFile& file)
+	: Volume(c, 0, 0)
     {
+	string data = extractNthWord(1, *(file.lines().begin()), true);
+
     string ts, rs;
-    istringstream i( Data );
+    istringstream i(data);
     classic(i);
     i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
 	 hex >> idt >> dec >> ts >> rs;
