@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Feb 16 10:52:00 CET 2010 - aschnell@suse.de
+
+- fixed seg. fault during installation with MD RAIDs
+
+-------------------------------------------------------------------
 Wed Feb 10 11:59:30 CET 2010 - fehr@suse.de
 
 - provide name of encrypted dm device in VolumeInfo (bnc #577127)

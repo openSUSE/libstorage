@@ -966,7 +966,7 @@ int MdPartCo::doRemove()
       if( ret==0 )
         {
         EtcRaidtab* tab = getStorage()->getRaidtab();
-        if( tab!=NULL )
+        if (tab)
           {
           tab->removeEntry( nr() );
           }
@@ -1944,6 +1944,8 @@ int MdPartCo::getContMember()
     }
   return -1;
 }
+
+
 void MdPartCo::updateEntry()
     {
     EtcRaidtab* tab = getStorage()->getRaidtab();

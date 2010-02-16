@@ -83,21 +83,31 @@ MdCo::init()
     }
 
 
-void
-MdCo::syncRaidtab()
+    void
+    MdCo::syncRaidtab()
     {
-    MdPair p=mdPair(Md::notDeleted);
-    for( MdIter i=p.begin(); i!=p.end(); ++i )
+	EtcRaidtab* tab = getStorage()->getRaidtab();
+	if (tab)
 	{
-	    i->updateEntry(getStorage()->getRaidtab());
+	    MdPair p = mdPair(Md::notDeleted);
+	    for (MdIter i = p.begin(); i!=p.end(); ++i)
+	    {
+		i->updateEntry(tab);
+	    }
 	}
     }
 
-void MdCo::updateEntry( const Md* m )
+
+    void
+    MdCo::updateEntry(const Md* m)
     {
 	EtcRaidtab* tab = getStorage()->getRaidtab();
-	tab->updateEntry(m->nr(), m->mdadmLine());
+	if (tab)
+	{
+	    tab->updateEntry(m->nr(), m->mdadmLine());
+	}
     }
+
 
 void
 MdCo::getMdData()
@@ -693,7 +703,7 @@ MdCo::doRemove( Volume* v )
 	if( ret==0 )
 	    {
 	    EtcRaidtab* tab = getStorage()->getRaidtab();
-	    if( tab!=NULL )
+	    if (tab)
 		{
 		tab->removeEntry( m->nr() );
 		}
