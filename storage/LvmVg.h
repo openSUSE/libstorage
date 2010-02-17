@@ -39,8 +39,8 @@ class LvmVg : public PeContainer
 
     public:
 
-	LvmVg( Storage * const s, const string& Name );
-	LvmVg( Storage * const s, const string& Name, bool lvm1 );
+	LvmVg(Storage * const s, const string& Name, bool lvm1);
+	LvmVg(Storage * const s, const string& Name, SystemInfo& systeminfo);
 	LvmVg(Storage * const s, const AsciiFile& File);
 	LvmVg(const LvmVg& c);
 	virtual ~LvmVg();

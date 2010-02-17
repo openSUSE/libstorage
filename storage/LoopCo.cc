@@ -41,22 +41,21 @@ namespace storage
     using namespace std;
 
 
-    LoopCo::LoopCo(Storage * const s, bool detect, SystemInfo& systeminfo)
-    : Container(s, "loop", staticType())
-{
-    y2deb("constructing LoopCo detect:" << detect);
-    init();
-    if( detect )
-	    getLoopData(systeminfo);
-}
-
-
-    LoopCo::LoopCo(Storage * const s, const AsciiFile& file)
+    LoopCo::LoopCo(Storage * const s)
 	: Container(s, "loop", staticType())
-{
-    y2deb("constructing LoopCo from file " << file.name());
-    init();
-}
+    {
+	y2deb("constructing LoopCo");
+	init();
+    }
+
+
+    LoopCo::LoopCo(Storage * const s, SystemInfo& systeminfo)
+	: Container(s, "loop", staticType(), systeminfo)
+    {
+	y2deb("constructing LoopCo");
+	init();
+	getLoopData(systeminfo);
+    }
 
 
     LoopCo::LoopCo(const LoopCo& c)

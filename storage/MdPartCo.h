@@ -223,8 +223,8 @@ class MdPartCo : public Container
     virtual void print( std::ostream& s ) const { s << *this; }
     virtual Container* getCopy() const { return( new MdPartCo( *this ) ); }
     void activate_part( bool val );
-    void init(const ProcParts& ppart);
-    void createDisk(const ProcParts& ppart);
+    void init(SystemInfo& systeminfo);
+    void createDisk(SystemInfo& systeminfo);
     void getVolumes(const ProcParts& ppart);
     void updatePointers( bool invalid=false );
     void updateMinor();

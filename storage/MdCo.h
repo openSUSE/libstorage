@@ -36,9 +36,10 @@ class MdCo : public Container
     friend class Storage;
 
     public:
-	MdCo( Storage * const s, bool detect );
+
+	MdCo(Storage * const s);
+	MdCo(Storage * const s, SystemInfo& systeminfo);
 	MdCo(const MdCo& c);	
-	MdCo(Storage * const s, const AsciiFile& file);
 	virtual ~MdCo();
 
 	static storage::CType staticType() { return storage::MD; }

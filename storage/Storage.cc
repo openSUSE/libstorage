@@ -278,9 +278,9 @@ void Storage::detectObjects()
     detectDmraid(systeminfo);
     detectDmmultipath(systeminfo);
     detectMdParts(systeminfo);
-    detectMds();
+    detectMds(systeminfo);
     detectDm(systeminfo, true);
-    detectLvmVgs();
+    detectLvmVgs(systeminfo);
     detectDm(systeminfo, false);
     delete fstab;
     if (testmode())
@@ -545,19 +545,14 @@ Storage::detectMdParts(SystemInfo& systeminfo)
 }
 
 
-void Storage::detectMds()
+void Storage::detectMds(SystemInfo& systeminfo)
     {
     if (testmode())
 	{
-	    string file = testdir() + "/md.info";
-	if( access( file.c_str(), R_OK )==0 )
-	    {
-	    addToList(new MdCo(this, AsciiFile(file)));
-	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_MDRAID") == NULL)
 	{
-	MdCo * v = new MdCo( this, true );
+	MdCo* v = new MdCo(this, systeminfo);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -570,15 +565,10 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	    string file = testdir() + "/loop.info";
-	if( access( file.c_str(), R_OK )==0 )
-	    {
-	    addToList(new LoopCo(this, AsciiFile(file)));
-	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LOOP") == NULL)
 	{
-	    LoopCo* v = new LoopCo(this, true, systeminfo);
+	    LoopCo* v = new LoopCo(this, systeminfo);
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -592,11 +582,6 @@ void Storage::detectMds()
     {
     if (testmode())
 	{
-	    string file = testdir() + "/nfs.info";
-	if( access( file.c_str(), R_OK )==0 )
-	    {
-	    addToList(new NfsCo(this, AsciiFile(file)));
-	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_NFS") == NULL)
 	{
@@ -609,7 +594,7 @@ void Storage::detectMds()
     }
 
 void
-Storage::detectLvmVgs()
+Storage::detectLvmVgs(SystemInfo& systeminfo)
     {
     if (testmode())
 	{
@@ -622,7 +607,7 @@ Storage::detectLvmVgs()
 	const list<string> l = LvmVg::getVgs();
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-	    LvmVg * v = new LvmVg( this, *i );
+		LvmVg* v = new LvmVg(this, *i, systeminfo);
 		addToList( v );
 		v->checkConsistency();
 	    }
@@ -635,7 +620,6 @@ void
 {
     if (testmode())
     {
-	    // TODO: load test data
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
@@ -654,7 +638,6 @@ void
 {
     if (testmode())
     {
-	    // TODO: load test data
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
@@ -673,18 +656,17 @@ void
     {
     if (testmode())
 	{
-	    // TODO: load test data
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_DM") == NULL)
 	{
 	    DmCo* v = NULL;
 	    if (haveDm(v))
 	    {
-		v->second(true, systeminfo, only_crypt);
+		v->second(systeminfo, only_crypt);
 	    }
 	    else
 	    {
-		v = new DmCo(this, true, systeminfo, only_crypt);
+		v = new DmCo(this, systeminfo, only_crypt);
 		if (!v->isEmpty() )
 		{
 		    addToList( v );
@@ -721,7 +703,7 @@ std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
 
 
 void
-    Storage::initDisk( DiskData& data, SystemInfo& systeminfo)
+    Storage::initDisk(DiskData& data, SystemInfo& systeminfo)
     {
     y2mil( "data:" << data );
     data.dev = boost::replace_all_copy(data.name, "!", "/");
@@ -730,10 +712,10 @@ void
     switch( data.typ )
 	{
 	case DiskData::DISK:
-	    d = new Disk( this, data.dev, data.s );
+	    d = new Disk(this, data.dev, data.s, systeminfo);
 	    break;
 	case DiskData::DASD:
-	    d = new Dasd( this, data.dev, data.s );
+	    d = new Dasd(this, data.dev, data.s, systeminfo);
 	    break;
 	case DiskData::XEN:
 	    {
@@ -2837,8 +2819,7 @@ Storage::verifyCryptFilePassword( const string& file, const string& pwd )
 	}
     else
 	{
-	SystemInfo systeminfo;
-	LoopCo* co = new LoopCo(this, false, systeminfo);
+	LoopCo* co = new LoopCo(this);
 	if( co )
 	    {
 	    Loop* loop = new Loop( *co, file, true, 0, true );
@@ -3159,7 +3140,6 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
     else if( i == lvgEnd() )
 	{
 	LvmVg *v = new LvmVg( this, name, lvm1 );
-	v->setCreated();
 	ret = v->setPeSize( peSizeK );
 	if( ret==0 && !devs.empty() )
 	    {
@@ -3603,7 +3583,7 @@ Storage::createMd( const string& name, MdType rtype,
 	{
 	have_md = haveMd(md);
 	if( !have_md )
-	    md = new MdCo( this, false );
+	    md = new MdCo(this);
 	}
     if( ret==0 && md!=NULL )
 	{
@@ -3647,7 +3627,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	{
 	have_md = haveMd(md);
 	if( !have_md )
-	    md = new MdCo( this, false );
+	    md = new MdCo(this);
 	if( md==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;
 	if( ret == 0 )
@@ -4186,8 +4166,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
 	y2mil( "have_loop:" << have_loop );
 	if( !have_loop )
 	    {
-	    SystemInfo systeminfo;
-	    loop = new LoopCo(this, false, systeminfo);
+	    loop = new LoopCo(this);
 	    }
 	if( loop==NULL )
 	    ret = STORAGE_MEMORY_EXHAUSTED;

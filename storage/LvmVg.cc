@@ -40,11 +40,12 @@ namespace storage
 static bool lvNotCreated( const LvmLv& l ) { return( !l.created() ); }
 static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.deleted() ); }
 
-LvmVg::LvmVg( Storage * const s, const string& Name ) :
-    PeContainer(s,staticType())
+
+    LvmVg::LvmVg(Storage * const s, const string& Name, SystemInfo& systeminfo)
+	: PeContainer(s, staticType(), systeminfo), lvm1(false)
     {
     nm = Name;
-    y2deb("constructing lvm vg " << Name);
+    y2deb("constructing LvmVg " << Name);
     init();
     if( !Name.empty() )
 	{
@@ -59,13 +60,14 @@ LvmVg::LvmVg( Storage * const s, const string& Name ) :
 	}
     }
 
-LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
-    PeContainer(s,staticType())
+
+    LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 )
+	: PeContainer(s, staticType()), lvm1(lv1)
     {
     nm = Name;
-    y2deb("constructing lvm vg " << Name << " lvm1:" << lv1);
+    y2deb("constructing LvmVg " << Name << " lvm1:" << lv1);
     init();
-    lvm1 = lv1;
+    setCreated(true);
     if( Name.empty() )
 	{
 	y2err("empty name in constructor");
@@ -74,10 +76,8 @@ LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 ) :
 
 
     LvmVg::LvmVg(Storage * const s, const AsciiFile& file)
-	: PeContainer(s, staticType(), file)
+	: PeContainer(s, staticType(), file), lvm1(false)
     {
-	lvm1 = false;
-
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
 
@@ -1152,7 +1152,6 @@ LvmVg::init()
     PeContainer::init();
     dev = nm;
     normalizeDevice(dev);
-    lvm1 = false;
     }
 
 

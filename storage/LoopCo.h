@@ -38,9 +38,9 @@ class LoopCo : public Container
 
     public:
 
-	LoopCo(Storage * const s, bool detect, SystemInfo& systeminfo);
+	LoopCo(Storage * const s);
+	LoopCo(Storage * const s, SystemInfo& systeminfo);
 	LoopCo(const LoopCo& c);
-	LoopCo(Storage * const s, const AsciiFile& file);
 	virtual ~LoopCo();
 
 	static storage::CType staticType() { return storage::LOOP; }

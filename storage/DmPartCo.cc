@@ -40,7 +40,7 @@ namespace storage
 
 
     DmPartCo::DmPartCo(Storage * const s, const string& name, CType t, SystemInfo& systeminfo)
-	: PeContainer(s, t)
+	: PeContainer(s, t, systeminfo)
     {
     y2deb("constructing DmPart co " << name);
     dev = name;
@@ -292,7 +292,7 @@ void
 	else
 	    y2war("size_k zero for dm minor " << entry.mnr);
 	num_pe = 1;
-	createDisk(systeminfo.getProcParts());
+	createDisk(systeminfo);
 	if( disk->numPartitions()>0 )
 	    {
 	    string pat = numToName(1);
@@ -309,15 +309,15 @@ void
 
 
 void
-    DmPartCo::createDisk(const ProcParts& parts)
+    DmPartCo::createDisk(SystemInfo& systeminfo)
     {
     if( disk )
 	delete disk;
-    disk = new Disk( getStorage(), dev, size_k );
+    disk = new Disk(getStorage(), dev, size_k, systeminfo);
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
-    disk->detect(parts);
+    disk->detect(systeminfo.getProcParts());
     }
 
 

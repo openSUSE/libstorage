@@ -80,11 +80,13 @@ class DmCo : public PeContainer
     friend class Storage;
 
     public:
-	DmCo(Storage * const s, bool detect, SystemInfo& systeminfo, bool only_crypt);
+
+	DmCo(Storage * const s);
+	DmCo(Storage * const s, SystemInfo& systeminfo, bool only_crypt);
 	DmCo(const DmCo& c);
 	virtual ~DmCo();
 
-	void second(bool detect, SystemInfo& systeminfo, bool only_crypt);
+	void second(SystemInfo& systeminfo, bool only_crypt);
 
 	static storage::CType staticType() { return storage::DM; }
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
@@ -96,7 +98,6 @@ class DmCo : public PeContainer
 	int removeVolume( Volume* v );
 	
     protected:
-	DmCo( Storage * const s, const string& File );
 
 	void getDmData(SystemInfo& systeminfo, bool only_crypt);
 	bool findDm( unsigned num, DmIter& i );

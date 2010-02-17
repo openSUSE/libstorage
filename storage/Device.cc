@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -38,6 +38,12 @@ namespace storage
 
 
     Device::Device(const string& nm, const string& dev)
+	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
+    {
+    }
+
+
+    Device::Device(const string& nm, const string& dev, SystemInfo& systeminfo)
 	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
     {
     }

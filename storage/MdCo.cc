@@ -38,21 +38,20 @@ namespace storage
     using namespace std;
 
 
-MdCo::MdCo( Storage * const s, bool detect ) :
-    Container(s,"md",staticType())
+    MdCo::MdCo(Storage * const s)
+	: Container(s, "md", staticType())
     {
-    y2deb("constructing MdCo detect:" << detect);
-    init();
-    if( detect )
-	getMdData();
+	y2deb("constructing MdCo");
+	init();
     }
 
 
-    MdCo::MdCo(Storage * const s, const AsciiFile& file)
-	: Container(s, "md", staticType())
+    MdCo::MdCo(Storage * const s, SystemInfo& systeminfo)
+	: Container(s, "md", staticType(), systeminfo)
     {
-	y2deb("constructing MdCo from file " << file.name());
-    init();
+	y2deb("constructing MdCo");
+	init();
+	getMdData();
     }
 
 

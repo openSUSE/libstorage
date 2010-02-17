@@ -45,6 +45,14 @@ namespace storage
     }
 
 
+    PeContainer::PeContainer(Storage * const s, CType t, SystemInfo& systeminfo)
+	: Container(s, "", t, systeminfo), pe_size(0), num_pe(0), free_pe(0)
+    {
+	y2deb("constructing PeContainer type " << t);
+	init();
+    }
+
+
     PeContainer::PeContainer(Storage * const s, CType t, const AsciiFile& file)
 	: Container(s, t, file), pe_size(0), num_pe(0), free_pe(0)
     {

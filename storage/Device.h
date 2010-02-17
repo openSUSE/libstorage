@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -34,6 +34,7 @@ namespace storage
     using std::string;
 
 
+    class SystemInfo;
     class AsciiFile;
 
 
@@ -43,6 +44,7 @@ namespace storage
 
 	Device();
 	Device(const string& nm, const string& dev);
+	Device(const string& nm, const string& dev, SystemInfo& systeminfo);
 	Device(const AsciiFile& file);
 	Device(const Device&);
 	virtual ~Device();

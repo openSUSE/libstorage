@@ -91,36 +91,36 @@ namespace storage
     }
 
 
-    DmCo::DmCo(Storage * const s, bool detect, SystemInfo& systeminfo, bool only_crypt)
+    DmCo::DmCo(Storage * const s)
 	: PeContainer(s, staticType())
     {
-	y2deb("constructing DmCo detect:" << detect);
+	y2deb("constructing DmCo");
 	init();
-	if (detect)
-	    getDmData(systeminfo, only_crypt);
+    }
+
+
+    DmCo::DmCo(Storage * const s, SystemInfo& systeminfo, bool only_crypt)
+	: PeContainer(s, staticType(), systeminfo)
+    {
+	y2deb("constructing DmCo");
+	init();
+	getDmData(systeminfo, only_crypt);
     }
 
 
     void
-    DmCo::second(bool detect, SystemInfo& systeminfo, bool only_crypt)
+    DmCo::second(SystemInfo& systeminfo, bool only_crypt)
     {
-	y2deb("second DmCo detect:" << detect);
-	if (detect)
-	    getDmData(systeminfo, only_crypt);
+	y2deb("second DmCo");
+	getDmData(systeminfo, only_crypt);
     }
 
 
-DmCo::DmCo( Storage * const s, const string& file ) :
-    PeContainer(s,staticType())
-    {
-    y2deb("constructing DmCo file:" << file);
-    init();
-    }
-
-DmCo::~DmCo()
+    DmCo::~DmCo()
     {
     y2deb("destructed DmCo");
     }
+
 
 void DmCo::updateDmMaps()
     {

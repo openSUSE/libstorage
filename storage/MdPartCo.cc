@@ -64,7 +64,7 @@ namespace storage
 	/* First Initialize RAID properties. */
 	initMd();
 	/* Initialize 'disk' part, partitions.*/
-	init(systeminfo.getProcParts());
+	init(systeminfo);
 
 	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
 	UdevMap::const_iterator it = by_id.find(nm);
@@ -369,24 +369,25 @@ MdPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 
 
 void
-MdPartCo::init(const ProcParts& ppart)
+MdPartCo::init(SystemInfo& systeminfo)
 {
-    ppart.getSize(dev, size_k);
-  y2mil( " nm: " << nm << " size_k: " << size_k);
-  createDisk( ppart );
-  getVolumes( ppart );
+    systeminfo.getProcParts().getSize(dev, size_k);
+    y2mil("nm:" << nm << " size_k:" << size_k);
+    createDisk(systeminfo);
+    getVolumes(systeminfo.getProcParts());
 }
 
+
 void
-MdPartCo::createDisk(const ProcParts& ppart)
+MdPartCo::createDisk(SystemInfo& systeminfo)
     {
     if( disk )
         delete disk;
-    disk = new Disk( getStorage(), dev, size_k );
+    disk = new Disk(getStorage(), dev, size_k, systeminfo);
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
-      disk->detect(ppart);
+    disk->detect(systeminfo.getProcParts());
     }
 
 // Creates new partition.

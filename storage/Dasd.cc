@@ -40,8 +40,9 @@ namespace storage
     using namespace std;
 
 
-    Dasd::Dasd(Storage * const s, const string& Name, unsigned long long SizeK)
-	: Disk(s, Name, SizeK), fmt(DASDF_NONE)
+    Dasd::Dasd(Storage * const s, const string& Name, unsigned long long SizeK,
+	       SystemInfo& systeminfo)
+	: Disk(s, Name, SizeK, systeminfo), fmt(DASDF_NONE)
     {
 	y2deb("constructed Dasd " << dev);
     }

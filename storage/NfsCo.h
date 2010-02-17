@@ -36,9 +36,9 @@ class NfsCo : public Container
     friend class Storage;
 
     public:
+
+	NfsCo(Storage * const s);
 	NfsCo(Storage * const s, const EtcFstab& fstab, SystemInfo& systeminfo);
-	NfsCo( Storage * const s );
-	NfsCo(Storage * const s, const AsciiFile& file);
 	NfsCo(const NfsCo& c);
 	virtual ~NfsCo();
 

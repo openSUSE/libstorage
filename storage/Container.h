@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -154,6 +154,7 @@ namespace storage
     public:
 
 	Container(Storage* s, const string& name, CType typ);
+	Container(Storage* s, const string& name, CType typ, SystemInfo& systemInfo);
 	Container(Storage* s, CType typ, const AsciiFile& file);
 	Container(const Container& c);
 	virtual ~Container();

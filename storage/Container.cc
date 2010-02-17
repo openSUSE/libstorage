@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,14 +37,33 @@ namespace storage
     using namespace std;
 
 
+    /* This is our constructor for Container used for containers created via
+       the storage interface. This is recognisable by the fact that it does
+       not have a parameter of type SystemInfo or AsciiFile. */
     Container::Container(Storage* s, const string& name, CType t)
-	: Device(name, "/dev/" + name), sto(s), typ(t), del(false),
-	  create(false), silent(false), ronly(false)
+	: Device(name, "/dev/" + name), sto(s), typ(t), del(false), create(false),
+	  silent(false), ronly(false)
     {
 	y2deb("constructed Container " << dev);
     }
 
 
+    /* This is our constructor for Container used during detection. This is
+       recognisable by the fact that it has an parameter of type
+       SystemInfo. */
+    Container::Container(Storage* s, const string& name, CType t, SystemInfo& systeminfo)
+	: Device(name, "/dev/" + name, systeminfo), sto(s), typ(t), del(false),
+	  create(false), silent(false), ronly(false)
+    {
+	y2deb("constructed Container " << dev);
+
+	assert(!s->testmode());
+    }
+
+
+    /* This is our constructor for Container used during fake detection in
+       testmode. This is recognisable by the fact that it has an parameter of
+       type AsciiFile. */
     Container::Container(Storage* s, CType t, const AsciiFile& file)
 	: Device(file), sto(s), typ(t), del(false), create(false), silent(false),
 	  ronly(false)
@@ -56,9 +75,13 @@ namespace storage
 	    extractNthWord(1, *it) >> ronly;
 
 	y2deb("constructed Container " << dev << " from file " << file.name());
+
+	assert(s->testmode());
     }
 
 
+    /* This is our copy-constructor for Container. Every class derived from
+       Container needs an equivalent one. */
     Container::Container(const Container& c)
 	: Device(c), sto(c.sto), typ(c.typ), del(c.del), create(c.create),
 	  silent(c.silent), ronly(c.ronly)

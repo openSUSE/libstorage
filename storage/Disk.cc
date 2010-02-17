@@ -47,9 +47,9 @@ namespace storage
     using namespace std;
 
 
-Disk::Disk( Storage * const s, const string& Name,
-            unsigned long long SizeK ) :
-    Container(s,"",staticType())
+    Disk::Disk(Storage * const s, const string& Name, unsigned long long SizeK,
+	       SystemInfo& systeminfo) 
+	: Container(s, "", staticType(), systeminfo)
     {
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     nm = Name;
@@ -65,9 +65,9 @@ Disk::Disk( Storage * const s, const string& Name,
     }
 
 
-Disk::Disk( Storage * const s, const string& Name,
-	       unsigned num, unsigned long long SizeK, SystemInfo& systeminfo) 
-	: Container(s, Name, staticType())
+    Disk::Disk(Storage * const s, const string& Name, unsigned num,
+	       unsigned long long SizeK, SystemInfo& systeminfo) 
+	: Container(s, Name, staticType(), systeminfo)
     {
     y2mil("constructed disk " << Name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = Name + decString(num);

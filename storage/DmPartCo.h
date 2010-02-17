@@ -165,7 +165,7 @@ class DmPartCo : public PeContainer
 	virtual Container* getCopy() const { return( new DmPartCo( *this ) ); }
 	void activate_part( bool val );
 	void init(SystemInfo& systeminfo);
-	void createDisk(const ProcParts& parts);
+	void createDisk(SystemInfo& systeminfo);
 	void getVolumes(const ProcParts& parts);
 	void updatePointers( bool invalid=false );
 	void updateMinor();
