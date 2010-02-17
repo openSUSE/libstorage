@@ -50,9 +50,6 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     if( !Name.empty() )
 	{
 	getVgData( Name, false );
-	LvmLvPair p=lvmLvPair(lvNotCreated);
-	if( !p.empty() )
-	    Storage::waitForDevice(p.begin()->device());
 	}
     else
 	{
