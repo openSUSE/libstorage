@@ -31,12 +31,6 @@ namespace storage
     using namespace std;
 
 
-    Device::Device()
-	: size_k(0), mjr(0), mnr(0)
-    {
-    }
-
-
     Device::Device(const string& nm, const string& dev)
 	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
     {

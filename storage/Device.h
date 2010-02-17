@@ -42,7 +42,6 @@ namespace storage
     {
     public:
 
-	Device();
 	Device(const string& nm, const string& dev);
 	Device(const string& nm, const string& dev, SystemInfo& systeminfo);
 	Device(const AsciiFile& file);

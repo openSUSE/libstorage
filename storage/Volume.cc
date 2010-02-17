@@ -49,7 +49,7 @@ namespace storage
 
 
     Volume::Volume(const Container& c, unsigned PNr, unsigned long long SizeK)
-	: cont(&c), numeric(true)
+	: Device("", ""), cont(&c), numeric(true)
     {
 	num = PNr;
 	size_k = orig_size_k = SizeK;
@@ -59,7 +59,7 @@ namespace storage
 
 
     Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
-	: cont(&c), numeric(false)
+	: Device(Name, ""), cont(&c), numeric(false)
     {
 	nm = Name;
 	size_k = orig_size_k = SizeK;
@@ -69,7 +69,7 @@ namespace storage
 
 
     Volume::Volume(const Container& c)
-	: cont(&c)
+	: Device("", ""), cont(&c)
     {
 	numeric = false;
 	size_k = orig_size_k = 0;
