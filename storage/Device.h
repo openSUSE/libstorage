@@ -84,6 +84,9 @@ namespace storage
 	string nm;
 	string dev;
 
+	bool create;
+	bool del;
+
 	unsigned long long size_k;
 
 	unsigned long mjr;
