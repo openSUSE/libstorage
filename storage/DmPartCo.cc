@@ -45,7 +45,7 @@ namespace storage
     y2deb("constructing DmPart co " << name);
     dev = name;
     nm = undevName(name);
-    num_part = num_pe = free_pe = 0;
+    num_pe = free_pe = 0;
     active = del_ptable = false;
     disk = NULL;
 	init(systeminfo);
@@ -333,7 +333,6 @@ void
     DmPartCo::getVolumes(const ProcParts& parts)
     {
     clearPointerList(vols);
-    num_part = 0;
     Disk::PartPair pp = disk->partPair();
     Disk::PartIter i = pp.begin();
     DmPart * p = NULL;
@@ -341,7 +340,6 @@ void
 	{
 	newP( p, i->nr(), &(*i) );
 	p->updateSize(parts);
-	num_part++;
 	addToList( p );
 	++i;
 	}
@@ -975,8 +973,7 @@ void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     {
     s << dynamic_cast<const PeContainer&>(d);
-    s << " DmNr:" << d.mnr
-      << " PNum:" << d.num_part;
+    s << " Node <" << d.mjr << ":" << d.mnr << ">";
     if( !d.udev_id.empty() )
 	s << " UdevId:" << d.udev_id;
     if( d.del_ptable )

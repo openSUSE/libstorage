@@ -196,7 +196,6 @@ class DmPartCo : public PeContainer
 	Disk* disk;
 	bool active;
 	bool del_ptable;
-	unsigned num_part;
 
 	mutable storage::DmPartCoInfo info; // workaround for broken ycp bindings
 
