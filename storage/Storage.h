@@ -279,12 +279,15 @@ class DiskData;
 	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );
 	string deviceByNumber(const string& majmin) const;
+	const Device* deviceByNumber( unsigned long maj, unsigned long min ) const;
 	void rootMounted();
 	bool isRootMounted() const { return( root_mounted ); }
 	string findNormalDevice( const string& device );
 	bool findVolume( const string& device, Volume const* &vol );
 	bool findDm( const string& device, const Dm*& dm );
 	bool findDmUsing( const string& device, const Dm*& dm );
+	bool findDevice( const string& dev, const Device* &vol,
+	                 bool search_by_minor=false );
 	bool removeDm( const string& device );
 
 	virtual ~Storage();

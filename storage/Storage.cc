@@ -5733,6 +5733,19 @@ string Storage::findNormalDevice( const string& device )
     }
 
 
+bool
+Storage::findDevice( const string& dev, const Device* &vol, 
+                     bool search_by_minor )
+    {
+    vol = findDevice(dev);
+    unsigned long mj = 0, mi = 0;
+    if( vol==NULL && search_by_minor && getMajorMinor( dev, mj, mi ) && mi!=0 )
+	{
+	vol = deviceByNumber( mj, mi );
+	}
+    return( vol!=NULL );
+    }
+
     Device*
     Storage::findDevice(const string& dev)
     {
@@ -5740,9 +5753,9 @@ string Storage::findNormalDevice( const string& device )
 	if (findVolume(dev, v))
 	    return &*v;
 
-	DiskIterator i = findDisk(dev);
-	if (i != dEnd())
-	    return &*i;
+	ContIterator c;
+	if (findContainer(dev, c))
+	    return &*c;
 
 	return NULL;
     }
@@ -6118,10 +6131,35 @@ bool Storage::canUseDevice( const string& dev, bool disks_allowed )
     return( ret );
     }
 
+const Device*
+Storage::deviceByNumber( unsigned long maj, unsigned long min ) const
+    {
+    const Device* ret=NULL;
+    ConstVolPair p = volPair( Volume::notDeleted );
+    ConstVolIterator v = p.begin();
+    while( v!=p.end() && (maj!=v->majorNr() || min!=v->minorNr()))
+       {
+       ++v;
+       }
+    if( v!=p.end() )
+	ret = &*v;
+    if( !ret )
+	{
+	ConstContPair c = contPair(Container::DeviceUsable);
+	ConstContIterator ci = c.begin();
+	while( ci!=c.end() && (maj!=ci->majorNr() || min!=ci->minorNr()))
+	    ++ci;
+	if( ci!=c.end() )
+	    ret = &*ci;
+	}
+    y2mil( "maj:" << maj << " min:" << min << 
+	   " ret:" << ret?ret->device():"NULL" );
+    return ret;
+    }
 
 string
 Storage::deviceByNumber(const string& majmin) const
-{
+    {
     string ret="";
     string::size_type pos = majmin.find( ":" );
     if( pos!=string::npos )
@@ -6129,37 +6167,13 @@ Storage::deviceByNumber(const string& majmin) const
 	unsigned ma, mi;
 	majmin.substr( 0, pos ) >> ma;
 	majmin.substr( pos+1 ) >> mi;
-	ConstVolPair p = volPair( Volume::notDeleted );
-	ConstVolIterator v = p.begin();
-	while( v!=p.end() && (ma!=v->majorNr() || mi!=v->minorNr()))
-	   {
-	   ++v;
-	   }
-	if( v!=p.end() )
-	    ret = v->device();
-	if( ret.empty() )
-	    {
-	    ConstDiskPair d = diskPair();
-	    ConstDiskIterator di = d.begin();
-	    while( di!=d.end() && (ma!=di->majorNr() || mi!=di->minorNr()))
-		++di;
-	    if( di!=d.end() )
-		ret = di->device();
-	    }
-	if( ret.empty() && ma==Dm::dmMajor())
-	    {
-	    ConstDmraidCoPair d = dmraidCoPair();
-	    ConstDmraidCoIterator di = d.begin();
-	    while( di!=d.end() && mi!=di->minorNr() )
-		++di;
-	    if( di!=d.end() )
-		ret = di->device();
-	    }
+	const Device* dev = deviceByNumber( ma, mi );
+	if( dev )
+	    ret = dev->device();
 	}
     y2mil("majmin:" << majmin << " ret:" << ret);
     return ret;
-}
-
+    }
 
 unsigned long long Storage::deviceSize( const string& dev )
     {

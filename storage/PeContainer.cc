@@ -496,8 +496,8 @@ PeContainer::findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_itera
     bool ret = !pl.empty();
     if( ret )
 	{
-	const Volume *vol;
-	if( getStorage()->findVolume( dev, vol ))
+	const Device *vol;
+	if( getStorage()->findDevice( dev, vol, true ) )
 	    {
 	    i = pl.begin();
 	    while( i!=pl.end() && !vol->sameDevice( i->device ))
@@ -521,8 +521,8 @@ PeContainer::findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) cons
     bool ret = !pl.empty();
     if( ret )
 	{
-	const Volume *vol;
-	if( getStorage()->findVolume( dev, vol ))
+	const Device *vol;
+	if( getStorage()->findDevice( dev, vol, true ) )
 	    {
 	    i = pl.begin();
 	    while( i!=pl.end() && !vol->sameDevice( i->device ))
