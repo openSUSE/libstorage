@@ -83,8 +83,7 @@ namespace storage
        since the newly created Volume can belong to a different Container than
        the original Volume. */
     Volume::Volume(const Container&c, const Volume&v)
-	: Device(v), cont(&c), numeric(v.numeric), create(v.create),
-	  del(v.del), format(v.format), silnt(v.silnt),
+	: Device(v), cont(&c), numeric(v.numeric), format(v.format), silnt(v.silnt),
 	  fstab_added(v.fstab_added), fs(v.fs), detected_fs(v.detected_fs),
 	  mount_by(v.mount_by), orig_mount_by(v.orig_mount_by), uuid(v.uuid),
 	  orig_uuid(v.orig_uuid),

@@ -63,12 +63,8 @@ class Storage;
 	Storage* getStorage() const;
 
 	storage::CType cType() const;
-	bool deleted() const { return del; }
-	bool created() const { return create; }
 	bool silent() const { return silnt; }
 	virtual string sysfsPath() const; 
-	void setDeleted( bool val=true ) { del=val; }
-	void setCreated( bool val=true ) { create=val; }
 	void setReadonly( bool val=true ) { ronly=val; }
 	void setSilent( bool val=true ) { silnt=val; }
 	bool ignoreFstab() const { return( ignore_fstab ); }
@@ -250,8 +246,6 @@ class Storage;
 
 	const Container* const cont;
 	bool numeric;
-	bool create;
-	bool del;
 	bool format;
 	bool silnt;
 	bool fstab_added;

@@ -169,10 +169,6 @@ namespace storage
 	static bool DeviceUsable( const Container&d ) 
 	    { return( d.isDeviceUsable() ); }
 
-	bool deleted() const { return del; }
-	bool created() const { return create; }
-	void setDeleted( bool val=true ) { del=val; }
-	void setCreated( bool val=true ) { create=val; }
 	void setSilent( bool val=true ) { silent=val; }
 
 	bool readonly() const { return ronly; }
@@ -215,8 +211,6 @@ namespace storage
 
 	Storage* const sto;
 	const CType typ;
-	bool del;
-	bool create;
 	bool silent;
 	bool ronly;
 

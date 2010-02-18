@@ -53,6 +53,11 @@ namespace storage
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
 
+	bool created() const { return create; }
+	bool deleted() const { return del; }
+	void setCreated(bool val = true) { create = val; }
+	void setDeleted(bool val = true) { del = val; }
+
 	unsigned long long sizeK() const { return size_k; }
 
 	bool getMajorMinor();

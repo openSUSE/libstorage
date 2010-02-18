@@ -32,19 +32,19 @@ namespace storage
 
 
     Device::Device(const string& nm, const string& dev)
-	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
+	: nm(nm), dev(dev), create(false), del(false), size_k(0), mjr(0), mnr(0)
     {
     }
 
 
     Device::Device(const string& nm, const string& dev, SystemInfo& systeminfo)
-	: nm(nm), dev(dev), size_k(0), mjr(0), mnr(0)
+	: nm(nm), dev(dev), create(false), del(false), size_k(0), mjr(0), mnr(0)
     {
     }
 
 
     Device::Device(const AsciiFile& file)
-	: size_k(0), mjr(0), mnr(0)
+	: nm(), dev(), create(false), del(false), size_k(0), mjr(0), mnr(0)
     {
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
@@ -67,7 +67,8 @@ namespace storage
 
 
     Device::Device(const Device& d)
-	: nm(d.nm), dev(d.dev), size_k(d.size_k), mjr(d.mjr), mnr(d.mnr), uby(d.uby), alt_names(d.alt_names)
+	: nm(d.nm), dev(d.dev), create(d.create), del(d.del), size_k(d.size_k), mjr(d.mjr),
+	  mnr(d.mnr), uby(d.uby), alt_names(d.alt_names)
     {
 	y2deb("copy-constructed Device from " << d.dev);
     }
