@@ -67,7 +67,7 @@ namespace storage
 
 
     Device::Device(const Device& d)
-	: nm(d.nm), dev(d.dev), size_k(d.size_k), mjr(d.mjr), mnr(d.mnr), uby(d.uby)
+	: nm(d.nm), dev(d.dev), size_k(d.size_k), mjr(d.mjr), mnr(d.mnr), uby(d.uby), alt_names(d.alt_names)
     {
 	y2deb("copy-constructed Device from " << d.dev);
     }
@@ -126,6 +126,13 @@ namespace storage
 		return true;
 
 	return false;
+    }
+
+bool Device::sameDevice( const string& device ) const
+    {
+    string d = normalizeDevice(device);
+    return( d==dev ||
+	    find( alt_names.begin(), alt_names.end(), d )!=alt_names.end() );
     }
 
 }

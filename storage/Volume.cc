@@ -99,8 +99,7 @@ namespace storage
 	  loop_dev(v.loop_dev), dmcrypt_dev(v.dmcrypt_dev),
 	  fstab_loop_dev(v.fstab_loop_dev), 
 	  crypt_pwd(v.crypt_pwd), orig_crypt_pwd(v.orig_crypt_pwd),
-	  alt_names(v.alt_names), num(v.num), orig_size_k(v.orig_size_k),
-	  dtxt(v.dtxt)
+	  num(v.num), orig_size_k(v.orig_size_k), dtxt(v.dtxt)
     {
 	y2deb("copy-constructed Volume from " << v.dev);
     }
@@ -148,13 +147,6 @@ void Volume::setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool 
     encryption = orig_encryption = typ;
     dmcrypt_active = active;
     y2mil( "this:" << *this );
-    }
-
-bool Volume::sameDevice( const string& device ) const
-    {
-    string d = normalizeDevice(device);
-    return( d==dev ||
-            find( alt_names.begin(), alt_names.end(), d )!=alt_names.end() );
     }
 
 const string& Volume::mountDevice() const

@@ -76,7 +76,6 @@ class Storage;
 	bool ignoreFs() const { return( ignore_fs ); }
 	void setIgnoreFs( bool val=true ) { ignore_fs=val; }
 	void setFstabAdded( bool val=true ) { fstab_added=val; }
-	bool sameDevice( const string& device ) const;
 	bool fstabAdded() const { return( fstab_added ); }
 
 	void getFsInfo( const Volume* source );
@@ -130,7 +129,6 @@ class Storage;
 	int setTunefsOption( const string& val ) { tunefs_opt=val; return 0; }
 	const string& getDescText() const { return dtxt; }
 	int setDescText( const string& val ) { dtxt=val; return 0; }
-	const std::list<string>& altNames() const { return( alt_names ); }
 	unsigned nr() const { return num; }
 	unsigned long long origSizeK() const { return orig_size_k; }
 	bool isNumeric() const { return numeric; }
@@ -285,7 +283,6 @@ class Storage;
 	string fstab_loop_dev;
 	string crypt_pwd;
 	string orig_crypt_pwd;
-	std::list<string> alt_names;
 	unsigned num;
 	unsigned long long orig_size_k;
 	string dtxt;

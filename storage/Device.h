@@ -25,6 +25,7 @@
 
 
 #include <string>
+#include <list>
 
 #include "storage/StorageTypes.h"
 
@@ -32,6 +33,7 @@
 namespace storage
 {
     using std::string;
+    using std::list;
 
 
     class SystemInfo;
@@ -57,6 +59,9 @@ namespace storage
 	unsigned long majorNr() const { return mjr; }
 	unsigned long minorNr() const { return mnr; }
 
+	const std::list<string>& altNames() const { return( alt_names ); }
+	bool sameDevice( const string& device ) const;
+
 	// udev path and ids (without leading "/dev/disk/by-*/")
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
@@ -80,6 +85,7 @@ namespace storage
 	unsigned long mnr;
 
 	list<UsedBy> uby;
+	list<string> alt_names;
 
     private:
 
