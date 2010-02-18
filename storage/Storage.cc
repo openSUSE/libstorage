@@ -6152,8 +6152,7 @@ Storage::deviceByNumber( unsigned long maj, unsigned long min ) const
 	if( ci!=c.end() )
 	    ret = &*ci;
 	}
-    y2mil( "maj:" << maj << " min:" << min << 
-	   " ret:" << ret?ret->device():"NULL" );
+    y2mil( "maj:" << maj << " min:" << min << " ret:" << (ret?ret->device():"NULL") );
     return ret;
     }
 
