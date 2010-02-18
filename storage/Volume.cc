@@ -83,7 +83,7 @@ namespace storage
        since the newly created Volume can belong to a different Container than
        the original Volume. */
     Volume::Volume(const Container&c, const Volume&v)
-	: Device(v), cont(&c), numeric(v.numeric), format(v.format), silnt(v.silnt),
+	: Device(v), cont(&c), numeric(v.numeric), format(v.format),
 	  fstab_added(v.fstab_added), fs(v.fs), detected_fs(v.detected_fs),
 	  mount_by(v.mount_by), orig_mount_by(v.orig_mount_by), uuid(v.uuid),
 	  orig_uuid(v.orig_uuid),
@@ -200,7 +200,7 @@ Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
 
 void Volume::init()
     {
-    del = create = format = is_loop = loop_active = silnt = false;
+    del = create = format = is_loop = loop_active = false;
     is_mounted = ronly = fstab_added = ignore_fstab = ignore_fs = false;
     dmcrypt_active = false;
     detected_fs = fs = FSUNKNOWN;
@@ -656,7 +656,7 @@ int Volume::doFormat()
     int ret = 0;
     bool needMount = false;
     y2mil("device:" << dev);
-    if( !silent() )
+    if( !silent )
 	{
 	getStorage()->showInfoCb( formatText(true) );
 	}
@@ -1114,7 +1114,7 @@ int Volume::doMount()
     if( mp!="/" )
 	lmount += mp;
     y2mil("device:" << dev << " mp:" << mp << " old mp:" << orig_mp);
-    if( !silent() )
+    if( !silent )
 	{
 	getStorage()->showInfoCb( mountText(true) );
 	}
@@ -1796,7 +1796,7 @@ int Volume::doLosetup()
     {
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " is_loop:" << is_loop << " loop_active:" << loop_active);
-    if( !silent() && is_loop && !dmcrypt() )
+    if( !silent && is_loop && !dmcrypt() )
 	{
 	getStorage()->showInfoCb( losetupText(true) );
 	}
@@ -1902,7 +1902,7 @@ int Volume::doCryptsetup()
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << 
           " active:" << dmcrypt_active << " format:" << format );
-    if( !silent() && dmcrypt() )
+    if( !silent && dmcrypt() )
 	{
 	getStorage()->showInfoCb( crsetupText(true) );
 	}
@@ -2057,7 +2057,7 @@ int Volume::doSetLabel()
     bool remount = false;
     FsCapabilities caps;
     y2mil("device:" << dev << " mp:" << mp << " label:" << label);
-    if( !silent() )
+    if( !silent )
 	{
 	getStorage()->showInfoCb( labelText(true) );
 	}
@@ -2495,7 +2495,7 @@ int Volume::doFstabUpdate()
 	      (cType()==LOOP && fstab->findMount( mp, entry )) ))
 	    {
 	    changed = true;
-	    if( !silent() )
+	    if( !silent )
 		{
 		getStorage()->showInfoCb(fstab->removeText(true, entry.cryptotab, entry.mount));
 		}
@@ -2554,7 +2554,7 @@ int Volume::doFstabUpdate()
 		    }
 		if( changed )
 		    {
-		    if( !silent() && !fstab_added )
+		    if( !silent && !fstab_added )
 			{
 			getStorage()->showInfoCb(
 			    fstab->updateText( true, inCryptotab(),
@@ -2585,7 +2585,7 @@ int Volume::doFstabUpdate()
 		che.mount = mp;
 		che.freq = fstabFreq();
 		che.passno = fstabPassno();
-		if( !silent() )
+		if( !silent )
 		    {
 		    getStorage()->showInfoCb(
 			fstab->addText( true, inCryptotab(), che.mount ));
@@ -2922,7 +2922,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " created";
     if( v.format )
 	s << " format";
-    if( v.silnt )
+    if( v.silent )
 	s << " silent";
     if( v.ignore_fstab )
 	s << " ignoreFstab";
@@ -3142,7 +3142,7 @@ bool Volume::equalContent( const Volume& rhs ) const
             ((numeric&&num==rhs.num)||(!numeric&&nm==rhs.nm)) &&
 	    size_k==rhs.size_k && mnr==rhs.mnr && mjr==rhs.mjr &&
 	    ronly==rhs.ronly && create==rhs.create && del==rhs.del &&
-	    silnt==rhs.silnt && format==rhs.format &&
+	    silent==rhs.silent && format==rhs.format &&
 	    fstab_added==rhs.fstab_added &&
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&

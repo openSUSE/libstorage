@@ -41,7 +41,7 @@ namespace storage
        the storage interface. This is recognisable by the fact that it does
        not have a parameter of type SystemInfo or AsciiFile. */
     Container::Container(Storage* s, const string& name, CType t)
-	: Device(name, "/dev/" + name), sto(s), typ(t), silent(false), ronly(false)
+	: Device(name, "/dev/" + name), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
     }
@@ -51,8 +51,7 @@ namespace storage
        recognisable by the fact that it has an parameter of type
        SystemInfo. */
     Container::Container(Storage* s, const string& name, CType t, SystemInfo& systeminfo)
-	: Device(name, "/dev/" + name, systeminfo), sto(s), typ(t), silent(false),
-	  ronly(false)
+	: Device(name, "/dev/" + name, systeminfo), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
 
@@ -64,7 +63,7 @@ namespace storage
        testmode. This is recognisable by the fact that it has an parameter of
        type AsciiFile. */
     Container::Container(Storage* s, CType t, const AsciiFile& file)
-	: Device(file), sto(s), typ(t), silent(false), ronly(false)
+	: Device(file), sto(s), typ(t), ronly(false)
     {
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
@@ -81,7 +80,7 @@ namespace storage
     /* This is our copy-constructor for Container. Every class derived from
        Container needs an equivalent one. */
     Container::Container(const Container& c)
-	: Device(c), sto(c.sto), typ(c.typ), silent(c.silent), ronly(c.ronly)
+	: Device(c), sto(c.sto), typ(c.typ), ronly(c.ronly)
     {
 	y2deb("copy-constructed Container from " << c.dev);
     }
@@ -249,7 +248,7 @@ Container::getCommitActions(list<commitAction>& l) const
     {
     ConstVolPair p = volPair();
     for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-	if( !i->silent() )
+	if( !i->isSilent() )
 	    i->getCommitActions( l );
     }
 

@@ -169,8 +169,6 @@ namespace storage
 	static bool DeviceUsable( const Container&d ) 
 	    { return( d.isDeviceUsable() ); }
 
-	void setSilent( bool val=true ) { silent=val; }
-
 	bool readonly() const { return ronly; }
 
 	virtual Text removeText(bool doing=true) const;
@@ -211,7 +209,6 @@ namespace storage
 
 	Storage* const sto;
 	const CType typ;
-	bool silent;
 	bool ronly;
 
 	VCont vols;

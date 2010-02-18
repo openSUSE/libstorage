@@ -58,6 +58,9 @@ namespace storage
 	void setCreated(bool val = true) { create = val; }
 	void setDeleted(bool val = true) { del = val; }
 
+	bool isSilent() const { return silent; }
+	void setSilent(bool val = true) { silent = val; }
+
 	unsigned long long sizeK() const { return size_k; }
 
 	bool getMajorMinor();
@@ -86,6 +89,8 @@ namespace storage
 
 	bool create;
 	bool del;
+
+	bool silent;
 
 	unsigned long long size_k;
 

@@ -63,10 +63,8 @@ class Storage;
 	Storage* getStorage() const;
 
 	storage::CType cType() const;
-	bool silent() const { return silnt; }
 	virtual string sysfsPath() const; 
 	void setReadonly( bool val=true ) { ronly=val; }
-	void setSilent( bool val=true ) { silnt=val; }
 	bool ignoreFstab() const { return( ignore_fstab ); }
 	void setIgnoreFstab( bool val=true ) { ignore_fstab=val; }
 	bool ignoreFs() const { return( ignore_fs ); }
@@ -247,7 +245,6 @@ class Storage;
 	const Container* const cont;
 	bool numeric;
 	bool format;
-	bool silnt;
 	bool fstab_added;
 	storage::FsType fs;
 	storage::FsType detected_fs;
