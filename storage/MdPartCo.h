@@ -293,8 +293,7 @@ class MdPartCo : public Container
     enum mdMap { MAP_DEV=0, MAP_META, MAP_UUID, MAP_NAME };
     static bool findMdMap(std::ifstream& file);
 
-
-    int getContMember();
+	string getContMember() const;
 
     //Input: 'mdXXX' device.
     static CType envSelection(const string& name);
