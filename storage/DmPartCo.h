@@ -160,7 +160,6 @@ class DmPartCo : public PeContainer
             return( ConstDmPartIter( DmPartCPIterator( p, CheckDmPart, true )) );
 	    }
 
-	DmPartCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmPartCo( *this ) ); }
 	void activate_part( bool val );

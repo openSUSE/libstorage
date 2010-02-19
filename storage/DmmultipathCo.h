@@ -130,7 +130,6 @@ class DmmultipathCo : public DmPartCo
             return( ConstDmmultipathIter( DmmultipathCPIterator( p, CheckDmmultipath, true )) );
 	    }
 
-	DmmultipathCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }
 	void getMultipathData(const string& name, SystemInfo& systeminfo);

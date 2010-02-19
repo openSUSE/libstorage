@@ -129,7 +129,6 @@ class DmraidCo : public DmPartCo
             return( ConstDmraidIter( DmraidCPIterator( p, CheckDmraid, true )) );
 	    }
 
-	DmraidCo( Storage * const s, const string& File );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }
 	static void activate(bool val);

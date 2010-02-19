@@ -219,7 +219,6 @@ class MdPartCo : public Container
         return( ConstMdPartIter( MdPartCPIterator( p, CheckMdPart, true )) );
         }
 
-    MdPartCo( Storage * const s, const string& File );
     virtual void print( std::ostream& s ) const { s << *this; }
     virtual Container* getCopy() const { return( new MdPartCo( *this ) ); }
     void activate_part( bool val );
