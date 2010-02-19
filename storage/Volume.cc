@@ -2901,29 +2901,18 @@ void Volume::getTestmodeData( const string& data )
 
 std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
-    s << "Device:" << v.dev;
+    s << dynamic_cast<const Device&>(v);
     if( v.numeric )
 	{
 	if( v.num>0 )
 	    s << " Nr:" << v.num;
 	}
-    else if( v.nm!=v.dev )
-	s << " Name:" << v.nm;
-    s << " SizeK:" << v.size_k;
     if( v.size_k != v.orig_size_k )
 	s << " orig_SizeK:" << v.orig_size_k;
-    if( v.mjr!=0 || v.mnr!=0 )
-	s << " Node <" << v.mjr << ":" << v.mnr << ">";
     if( v.ronly )
 	s << " readonly";
-    if( v.del )
-	s << " deleted";
-    if( v.create )
-	s << " created";
     if( v.format )
 	s << " format";
-    if( v.silent )
-	s << " silent";
     if( v.ignore_fstab )
 	s << " ignoreFstab";
     if( v.ignore_fs )

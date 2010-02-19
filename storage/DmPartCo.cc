@@ -973,7 +973,6 @@ void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     {
     s << dynamic_cast<const PeContainer&>(d);
-    s << " Node <" << d.mjr << ":" << d.mnr << ">";
     if( !d.udev_id.empty() )
 	s << " UdevId:" << d.udev_id;
     if( d.del_ptable )

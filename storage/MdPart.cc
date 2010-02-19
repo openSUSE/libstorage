@@ -211,7 +211,7 @@ void MdPart::getInfo( MdPartInfo& tinfo ) const
 
 std::ostream& operator<< (std::ostream& s, const MdPart &p )
     {
-    s << "MdPart: ";
+    s << "MdPart ";
     s << dynamic_cast<const Volume&>(p);
     return( s );
     }

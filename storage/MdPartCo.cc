@@ -1174,8 +1174,7 @@ int MdPartCo::getPartitionInfo(deque<storage::PartitionInfo>& plist)
 std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     {
     s << dynamic_cast<const Container&>(d);
-    s << " Name:" << d.md_name
-      << " Node <" << d.mjr << ":" << d.mnr << ">";
+    s << " MdName:" << d.md_name;
     if( !d.udev_id.empty() )
         s << " UdevId:" << d.udev_id;
     if( d.del_ptable )

@@ -398,18 +398,10 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
 
 std::ostream& operator<< ( std::ostream& s, const Container &c )
     {
-    s << "Type:" << Container::type_names[c.typ]
-        << " Name:" << c.nm
-        << " Device:" << c.dev
-        << " Vcnt:" << c.vols.size();
-    if( c.del )
-        s << " deleted";
-    if( c.create )
-        s << " created";
+    s << "CType:" << Container::type_names[c.typ]
+      << " " << dynamic_cast<const Device&>(c);
     if( c.ronly )
       s << " readonly";
-    if( c.silent )
-      s << " silent";
     if (!c.uby.empty())
 	s << " usedby:" << c.uby;
     return s;

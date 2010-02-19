@@ -85,7 +85,7 @@ namespace storage
     {
 	return storage::getMajorMinor(dev, mjr, mnr);
     }
-    
+
 
     string
     Device::udevPath() const
@@ -129,11 +129,28 @@ namespace storage
 	return false;
     }
 
+
 bool Device::sameDevice( const string& device ) const
     {
     string d = normalizeDevice(device);
     return( d==dev ||
 	    find( alt_names.begin(), alt_names.end(), d )!=alt_names.end() );
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Device& d)
+    {
+	s << "Name:" << d.nm << " Device:" << d.dev;
+	s << " SizeK:" << d.size_k;
+	if (d.mjr != 0 || d.mnr != 0)
+	    s << " Node:<" << d.mjr << ":" << d.mnr << ">";
+	if (d.create)
+	    s << " created";
+	if (d.del)
+	    s << " deleted";
+	if (d.silent)
+	    s << " silent";
+	return s;
     }
 
 }

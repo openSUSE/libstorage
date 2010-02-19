@@ -82,6 +82,8 @@ namespace storage
 	bool isUsedBy(UsedByType type) const;
 	const list<UsedBy>& getUsedBy() const { return uby; }
 
+	friend std::ostream& operator<<(std::ostream& s, const Device& d);
+
     protected:
 
 	string nm;

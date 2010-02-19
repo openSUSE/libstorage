@@ -2804,7 +2804,6 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
     s << " Cyl:" << d.cyl
       << " Head:" << d.head
       << " Sect:" << d.sector
-      << " Node <" << d.mjr << ":" << d.mnr << ">"
       << " Range:" << d.range
       << " SizeK:" << d.size_k
       << " Label:" << d.label;
