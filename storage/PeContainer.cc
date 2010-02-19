@@ -38,7 +38,7 @@ namespace storage
 
 
     PeContainer::PeContainer(Storage * const s, CType t)
-	: Container(s, "", t), pe_size(0), num_pe(0), free_pe(0)
+	: Container(s, "", t), pe_size(1), num_pe(0), free_pe(0)
     {
 	y2deb("constructing PeContainer type " << t);
 	init();
@@ -46,7 +46,7 @@ namespace storage
 
 
     PeContainer::PeContainer(Storage * const s, CType t, SystemInfo& systeminfo)
-	: Container(s, "", t, systeminfo), pe_size(0), num_pe(0), free_pe(0)
+	: Container(s, "", t, systeminfo), pe_size(1), num_pe(0), free_pe(0)
     {
 	y2deb("constructing PeContainer type " << t);
 	init();
@@ -54,7 +54,7 @@ namespace storage
 
 
     PeContainer::PeContainer(Storage * const s, CType t, const AsciiFile& file)
-	: Container(s, t, file), pe_size(0), num_pe(0), free_pe(0)
+	: Container(s, t, file), pe_size(1), num_pe(0), free_pe(0)
     {
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
@@ -576,8 +576,6 @@ PeContainer::init()
     {
     y2mil( "init:" << nm );
     mjr = Dm::dmMajor();
-    num_pe = free_pe = 0;
-    pe_size = 1;
     }
 
 static bool isDeleted( const Dm& l ) { return( l.deleted() ); }
