@@ -27,6 +27,8 @@ main()
 {
     cout.setf(std::ios::boolalpha);
 
+    setup_logger();
+
     test("thalassa");
     test("scandium");
 }

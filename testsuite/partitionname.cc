@@ -11,6 +11,8 @@ using namespace storage;
 int
 main()
 { 
+    setup_logger();
+
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
     cout << s->getPartitionName("/dev/sda", 1) << endl;

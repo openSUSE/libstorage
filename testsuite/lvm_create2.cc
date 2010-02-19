@@ -11,6 +11,8 @@ using namespace std;
 int
 main()
 {
+    setup_logger();
+
     setup_system("thalassa");
 
     StorageInterface* s = createStorageInterface(TestEnvironment());

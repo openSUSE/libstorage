@@ -149,6 +149,8 @@ combined1()
 int
 main()
 {
+    setup_logger();
+
     setup_system("thalassa");
 
     mountpoint1();

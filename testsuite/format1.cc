@@ -78,6 +78,8 @@ test()
 int
 main()
 {
+    setup_logger();
+
     setup_system("thalassa");
 
     test();

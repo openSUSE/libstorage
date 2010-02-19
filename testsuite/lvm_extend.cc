@@ -63,6 +63,8 @@ void extendVg( const string& vg, deque<string> devs_extend )
 int
 main()
 {
+    setup_logger();
+
     setup_system();
 
     deque<string> devs;

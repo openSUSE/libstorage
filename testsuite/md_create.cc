@@ -50,6 +50,8 @@ void createMD( MdType type, deque<string> devs )
 int
 main()
 {
+    setup_logger();
+
     setup_system();
     
     deque<string> devs;

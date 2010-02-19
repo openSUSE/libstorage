@@ -90,6 +90,8 @@ gpt (const string& disk, int n)
 int
 main()
 {
+    setup_logger();
+
     setup_system();
 
     /*

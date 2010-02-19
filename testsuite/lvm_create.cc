@@ -113,6 +113,8 @@ void createExtendedLv( const string& vg, const string& dev )
 int
 main()
 {
+    setup_logger();
+
     setup_system();
 
     deque<string> disks;

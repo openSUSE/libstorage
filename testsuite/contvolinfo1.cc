@@ -36,6 +36,8 @@ test(const string& device)
 int
 main()
 {
+    setup_logger();
+
     setup_system("thalassa");
 
     s = createStorageInterface(TestEnvironment());

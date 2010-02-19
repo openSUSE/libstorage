@@ -38,9 +38,9 @@ humanstring1_single_SOURCES = humanstring1.cc
 
 humanstring2_single_SOURCES = humanstring2.cc
 
-partitionname_single_SOURCES = partitionname.cc
+partitionname_single_SOURCES = partitionname.cc common.cc
 
-partitionprefix_single_SOURCES = partitionprefix.cc
+partitionprefix_single_SOURCES = partitionprefix.cc common.cc
 
 udevencode_single_SOURCES = udevencode.cc
 
