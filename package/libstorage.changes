@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 19 13:52:42 CET 2010 - aschnell@suse.de
+
+- allow setting of imsm_driver via env.var. (bnc #574270)
+
+-------------------------------------------------------------------
 Tue Feb 16 10:52:00 CET 2010 - aschnell@suse.de
 
 - fixed seg. fault during installation with MD RAIDs
