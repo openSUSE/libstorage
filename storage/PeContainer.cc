@@ -37,18 +37,19 @@ namespace storage
     using namespace std;
 
 
-    PeContainer::PeContainer(Storage * const s, CType t)
-	: Container(s, "", t), pe_size(1), num_pe(0), free_pe(0)
+    PeContainer::PeContainer(Storage * const s, const string& name, CType t)
+	: Container(s, name, t), pe_size(1), num_pe(0), free_pe(0)
     {
-	y2deb("constructing PeContainer type " << t);
+	y2deb("constructing PeContainer name:" << name << " type:" << t);
 	init();
     }
 
 
-    PeContainer::PeContainer(Storage * const s, CType t, SystemInfo& systeminfo)
-	: Container(s, "", t, systeminfo), pe_size(1), num_pe(0), free_pe(0)
+    PeContainer::PeContainer(Storage * const s, const string& name, CType t,
+			     SystemInfo& systeminfo)
+	: Container(s, name, t, systeminfo), pe_size(1), num_pe(0), free_pe(0)
     {
-	y2deb("constructing PeContainer type " << t);
+	y2deb("constructing PeContainer name:" << name << " type:" << t);
 	init();
     }
 

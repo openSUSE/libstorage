@@ -40,9 +40,9 @@ namespace storage
 
 
     DmPartCo::DmPartCo(Storage * const s, const string& name, CType t, SystemInfo& systeminfo)
-	: PeContainer(s, t, systeminfo)
+	: PeContainer(s, name, t, systeminfo)
     {
-    y2deb("constructing DmPart co " << name);
+    y2deb("constructing DmPartCo name:" << name);
     dev = name;
     nm = undevName(name);
     num_pe = free_pe = 0;

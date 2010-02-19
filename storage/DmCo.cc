@@ -92,7 +92,7 @@ namespace storage
 
 
     DmCo::DmCo(Storage * const s)
-	: PeContainer(s, staticType())
+	: PeContainer(s, "dm", staticType())
     {
 	y2deb("constructing DmCo");
 	init();
@@ -100,7 +100,7 @@ namespace storage
 
 
     DmCo::DmCo(Storage * const s, SystemInfo& systeminfo, bool only_crypt)
-	: PeContainer(s, staticType(), systeminfo)
+	: PeContainer(s, "dm", staticType(), systeminfo)
     {
 	y2deb("constructing DmCo");
 	init();

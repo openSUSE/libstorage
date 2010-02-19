@@ -42,7 +42,7 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 
 
     LvmVg::LvmVg(Storage * const s, const string& Name, SystemInfo& systeminfo)
-	: PeContainer(s, staticType(), systeminfo), lvm1(false)
+	: PeContainer(s, Name, staticType(), systeminfo), lvm1(false)
     {
     nm = Name;
     y2deb("constructing LvmVg " << Name);
@@ -59,7 +59,7 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 
 
     LvmVg::LvmVg( Storage * const s, const string& Name, bool lv1 )
-	: PeContainer(s, staticType()), lvm1(lv1)
+	: PeContainer(s, Name, staticType()), lvm1(lv1)
     {
     nm = Name;
     y2deb("constructing LvmVg " << Name << " lvm1:" << lv1);
