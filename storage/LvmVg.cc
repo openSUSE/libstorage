@@ -1133,7 +1133,6 @@ LvmVg::reduceVgText( bool doing, const string& dev ) const
 void
 LvmVg::init()
     {
-    PeContainer::init();
     }
 
 
