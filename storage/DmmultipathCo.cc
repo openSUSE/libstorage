@@ -123,7 +123,6 @@ namespace storage
 				 SystemInfo& systeminfo)
 	: DmPartCo(s, name, device, staticType(), systeminfo)
     {
-	DmPartCo::init(systeminfo);
 	getMultipathData(name, systeminfo);
 
 	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");

@@ -106,7 +106,6 @@ namespace storage
     DmraidCo::DmraidCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo)
 	: DmPartCo(s, name, device, staticType(), systeminfo)
     {
-	DmPartCo::init(systeminfo);
 	getRaidData(name, systeminfo);
 
 	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
