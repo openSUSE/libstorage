@@ -740,7 +740,7 @@ void
 	}
     if( d && 
         (d->getSysfsInfo(SYSFSDIR "/" + data.name)||data.typ==DiskData::XEN) &&
-	(data.typ == DiskData::XEN || d->detect(systeminfo.getProcParts())))
+	(data.typ == DiskData::XEN || d->detect(systeminfo)))
 	{
 	data.d = d;
 	}

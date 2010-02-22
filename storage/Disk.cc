@@ -220,9 +220,9 @@ Disk::kbToCylinder( unsigned long long kb ) const
 
 
     bool
-    Disk::detect(const ProcParts& parts)
+    Disk::detect(SystemInfo& systeminfo)
     {
-	return detectGeometry() && detectPartitions(parts);
+	return detectGeometry() && detectPartitions(systeminfo.getProcParts());
     }
 
 

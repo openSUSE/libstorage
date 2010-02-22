@@ -317,7 +317,7 @@ void
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
-    disk->detect(systeminfo.getProcParts());
+    disk->detect(systeminfo);
     }
 
 
