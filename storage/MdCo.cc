@@ -38,16 +38,16 @@ namespace storage
     using namespace std;
 
 
-    MdCo::MdCo(Storage * const s)
-	: Container(s, "md", staticType())
+    MdCo::MdCo(Storage* s)
+	: Container(s, "md", "/dev/md", staticType())
     {
 	y2deb("constructing MdCo");
 	init();
     }
 
 
-    MdCo::MdCo(Storage * const s, SystemInfo& systeminfo)
-	: Container(s, "md", staticType(), systeminfo)
+    MdCo::MdCo(Storage* s, SystemInfo& systeminfo)
+	: Container(s, "md", "/dev/md", staticType(), systeminfo)
     {
 	y2deb("constructing MdCo");
 	init();

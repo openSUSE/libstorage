@@ -103,8 +103,8 @@ namespace storage
     }
 
 
-    DmraidCo::DmraidCo(Storage * const s, const string& name, SystemInfo& systeminfo)
-	: DmPartCo(s, "/dev/mapper/" + name, staticType(), systeminfo)
+    DmraidCo::DmraidCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo)
+	: DmPartCo(s, name, device, staticType(), systeminfo)
     {
 	DmPartCo::init(systeminfo);
 	getRaidData(name, systeminfo);

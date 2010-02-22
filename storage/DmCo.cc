@@ -91,16 +91,16 @@ namespace storage
     }
 
 
-    DmCo::DmCo(Storage * const s)
-	: PeContainer(s, "dm", staticType())
+    DmCo::DmCo(Storage* s)
+	: PeContainer(s, "mapper", "/dev/mapper", staticType()) // TODO
     {
 	y2deb("constructing DmCo");
 	init();
     }
 
 
-    DmCo::DmCo(Storage * const s, SystemInfo& systeminfo, bool only_crypt)
-	: PeContainer(s, "dm", staticType(), systeminfo)
+    DmCo::DmCo(Storage* s, SystemInfo& systeminfo, bool only_crypt)
+	: PeContainer(s, "mapper", "/dev/mapper", staticType(), systeminfo) // TODO
     {
 	y2deb("constructing DmCo");
 	init();
@@ -149,8 +149,6 @@ void DmCo::updateDmMaps()
 void
 DmCo::init()
     {
-    nm = "dm";
-    dev = "/dev/mapper";
     }
 
 

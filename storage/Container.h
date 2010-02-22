@@ -153,8 +153,9 @@ namespace storage
 
     public:
 
-	Container(Storage* s, const string& name, CType typ);
-	Container(Storage* s, const string& name, CType typ, SystemInfo& systemInfo);
+	Container(Storage* s, const string& name, const string& device, CType typ);
+	Container(Storage* s, const string& name, const string& device, CType typ,
+		  SystemInfo& systemInfo);
 	Container(Storage* s, CType typ, const AsciiFile& file);
 	Container(const Container& c);
 	virtual ~Container();

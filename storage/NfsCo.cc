@@ -37,15 +37,15 @@ namespace storage
     using namespace std;
 
 
-    NfsCo::NfsCo(Storage * const s)
-	: Container(s, "nfs", staticType())
+    NfsCo::NfsCo(Storage* s)
+	: Container(s, "nfs", "/dev/nfs", staticType())
     {
 	y2deb("constructing NfsCo");
     }
 
 
-    NfsCo::NfsCo(Storage * const s, const EtcFstab& fstab, SystemInfo& systeminfo)
-	: Container(s, "nfs", staticType(), systeminfo)
+    NfsCo::NfsCo(Storage* s, const EtcFstab& fstab, SystemInfo& systeminfo)
+	: Container(s, "nfs", "/dev/nfs", staticType(), systeminfo)
     {
 	y2deb("constructing NfsCo detect");
 	getNfsData(fstab, systeminfo);

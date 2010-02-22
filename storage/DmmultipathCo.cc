@@ -119,8 +119,9 @@ namespace storage
     }
 
 
-    DmmultipathCo::DmmultipathCo(Storage * const s, const string& name, SystemInfo& systeminfo)
-	: DmPartCo(s, "/dev/mapper/" + name, staticType(), systeminfo)
+    DmmultipathCo::DmmultipathCo(Storage* s, const string& name, const string& device,
+				 SystemInfo& systeminfo)
+	: DmPartCo(s, name, device, staticType(), systeminfo)
     {
 	DmPartCo::init(systeminfo);
 	getMultipathData(name, systeminfo);

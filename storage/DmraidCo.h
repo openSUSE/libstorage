@@ -67,7 +67,7 @@ class DmraidCo : public DmPartCo
 
     public:
 
-	DmraidCo(Storage * const s, const string& name, SystemInfo& systeminfo);
+	DmraidCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo);
 	DmraidCo(const DmraidCo& c);
 	virtual ~DmraidCo();
 

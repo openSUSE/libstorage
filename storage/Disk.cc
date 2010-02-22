@@ -47,30 +47,24 @@ namespace storage
     using namespace std;
 
 
-    Disk::Disk(Storage * const s, const string& Name, unsigned long long SizeK,
-	       SystemInfo& systeminfo) 
-	: Container(s, "", staticType(), systeminfo)
+    Disk::Disk(Storage* s, const string& name, const string& device,
+	       unsigned long long SizeK, SystemInfo& systeminfo)
+	: Container(s, name, device, staticType(), systeminfo)
     {
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
-    nm = Name;
-    undevDevice(nm);
     logfile_name = boost::replace_all_copy(nm, "/", "_");
-    if( Name.find( "/dev/" )==0 )
-	dev = Name;
-    else 
-	dev = "/dev/" + Name;
     getMajorMinor();
     size_k = SizeK;
-    y2deb("constructed disk " << dev);
+    y2deb("constructed Disk name:" << name);
     }
 
 
-    Disk::Disk(Storage * const s, const string& Name, unsigned num,
-	       unsigned long long SizeK, SystemInfo& systeminfo) 
-	: Container(s, Name, staticType(), systeminfo)
+    Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
+	       unsigned long long SizeK, SystemInfo& systeminfo)
+	: Container(s, name, device, staticType(), systeminfo)
     {
-    y2mil("constructed disk " << Name << " nr " << num << " sizeK:" << SizeK);
-    logfile_name = Name + decString(num);
+    y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
+    logfile_name = name + decString(num);
     init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     ronly = true;
     size_k = SizeK;
@@ -89,7 +83,7 @@ namespace storage
     }
 
 
-Disk::Disk(Storage * const s, const AsciiFile& file)
+    Disk::Disk(Storage* s, const AsciiFile& file)
     : Container(s, staticType(), file), udev_path(), udev_id(), max_primary(0),
       ext_possible(false), max_logical(0), init_disk(false), iscsi(false), dmp_slave(false),
       gpt_enlarge(false), range(4)

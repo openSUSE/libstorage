@@ -546,7 +546,7 @@ Storage::detectMdParts(SystemInfo& systeminfo)
 	
 	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
 	{
-	    MdPartCo* v = new MdPartCo(this, *i, systeminfo);
+	    MdPartCo* v = new MdPartCo(this, *i, "/dev/" + *i, systeminfo);
 	    addToList( v );
 	}
     }
@@ -615,7 +615,7 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
 	const list<string> l = LvmVg::getVgs();
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		LvmVg* v = new LvmVg(this, *i, systeminfo);
+		LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
 		addToList( v );
 		v->checkConsistency();
 	    }
@@ -634,7 +634,7 @@ void
 	const list<string> l = DmraidCo::getRaids(systeminfo);
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		    DmraidCo* v = new DmraidCo(this, *i, systeminfo);
+		    DmraidCo* v = new DmraidCo(this, *i, "/dev/mapper/" + *i, systeminfo);
 		    addToList( v );
 	    }
 	}
@@ -652,7 +652,7 @@ void
 	const list<string> l = DmmultipathCo::getMultipaths(systeminfo);
 	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
-		    DmmultipathCo* v = new DmmultipathCo(this, *i, systeminfo);
+		    DmmultipathCo* v = new DmmultipathCo(this, *i, "/dev/mapper/" + *i, systeminfo);
 		    addToList( v );
 	    }
 	}
@@ -720,10 +720,10 @@ void
     switch( data.typ )
 	{
 	case DiskData::DISK:
-	    d = new Disk(this, data.dev, data.s, systeminfo);
+	    d = new Disk(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
 	    break;
 	case DiskData::DASD:
-	    d = new Dasd(this, data.dev, data.s, systeminfo);
+	    d = new Dasd(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
 	    break;
 	case DiskData::XEN:
 	    {
@@ -733,7 +733,7 @@ void
 	    data.dev.erase( p+1 );
 	    if( nr>=0 )
 		{
-		    d = new Disk(this, data.dev, (unsigned) nr, data.s, systeminfo);
+		    d = new Disk(this, data.dev, "/dev/" + data.dev, (unsigned) nr, data.s, systeminfo);
 		}
 	    break;
 	    }
@@ -3147,7 +3147,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	}
     else if( i == lvgEnd() )
 	{
-	LvmVg *v = new LvmVg( this, name, lvm1 );
+	LvmVg* v = new LvmVg(this, name, "/dev/" + name, lvm1);
 	ret = v->setPeSize( peSizeK );
 	if( ret==0 && !devs.empty() )
 	    {

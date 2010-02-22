@@ -41,16 +41,16 @@ namespace storage
     using namespace std;
 
 
-    LoopCo::LoopCo(Storage * const s)
-	: Container(s, "loop", staticType())
+    LoopCo::LoopCo(Storage* s)
+	: Container(s, "loop", "/dev/loop", staticType())
     {
 	y2deb("constructing LoopCo");
 	init();
     }
 
 
-    LoopCo::LoopCo(Storage * const s, SystemInfo& systeminfo)
-	: Container(s, "loop", staticType(), systeminfo)
+    LoopCo::LoopCo(Storage* s, SystemInfo& systeminfo)
+	: Container(s, "loop", "/dev/loop", staticType(), systeminfo)
     {
 	y2deb("constructing LoopCo");
 	init();

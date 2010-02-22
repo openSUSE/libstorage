@@ -45,7 +45,9 @@ class DmPartCo : public PeContainer
     friend class Storage;
 
     public:
-	DmPartCo(Storage * const s, const string& Name, CType t, SystemInfo& systeminfo);
+
+	DmPartCo(Storage* s, const string& name, const string& device, CType t,
+		 SystemInfo& systeminfo);
 	DmPartCo(const DmPartCo& c);
 	virtual ~DmPartCo();
 

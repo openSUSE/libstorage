@@ -40,20 +40,23 @@ namespace storage
     /* This is our constructor for Container used for containers created via
        the storage interface. This is recognisable by the fact that it does
        not have a parameter of type SystemInfo or AsciiFile. */
-    Container::Container(Storage* s, const string& name, CType t)
-	: Device(name, "/dev/" + name), sto(s), typ(t), ronly(false)
+    Container::Container(Storage* s, const string& name, const string& device, CType t)
+	: Device(name, device), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
+	assert(!nm.empty() && !dev.empty());
     }
 
 
     /* This is our constructor for Container used during detection. This is
        recognisable by the fact that it has an parameter of type
        SystemInfo. */
-    Container::Container(Storage* s, const string& name, CType t, SystemInfo& systeminfo)
-	: Device(name, "/dev/" + name, systeminfo), sto(s), typ(t), ronly(false)
+    Container::Container(Storage* s, const string& name, const string& device, CType t,
+			 SystemInfo& systeminfo)
+	: Device(name, device, systeminfo), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
+	assert(!nm.empty() && !dev.empty());
 
 	assert(!s->testmode());
     }
@@ -65,6 +68,7 @@ namespace storage
     Container::Container(Storage* s, CType t, const AsciiFile& file)
 	: Device(file), sto(s), typ(t), ronly(false)
     {
+	assert(!nm.empty() && !dev.empty());
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
 

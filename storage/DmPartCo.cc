@@ -39,12 +39,11 @@ namespace storage
     using namespace std;
 
 
-    DmPartCo::DmPartCo(Storage * const s, const string& name, CType t, SystemInfo& systeminfo)
-	: PeContainer(s, name, t, systeminfo)
+    DmPartCo::DmPartCo(Storage* s, const string& name, const string& device, CType t,
+		       SystemInfo& systeminfo)
+	: PeContainer(s, name, device, t, systeminfo)
     {
     y2deb("constructing DmPartCo name:" << name);
-    dev = name;
-    nm = undevName(name);
     num_pe = free_pe = 0;
     active = del_ptable = false;
     disk = NULL;
@@ -313,7 +312,7 @@ void
     {
     if( disk )
 	delete disk;
-    disk = new Disk(getStorage(), dev, size_k, systeminfo);
+    disk = new Disk(getStorage(), nm, dev, size_k, systeminfo);
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();

@@ -35,9 +35,10 @@ class PeContainer : public Container
 
     public:
 
-	PeContainer(Storage * const s, const string& name, CType t);
-	PeContainer(Storage * const s, const string& name, CType t, SystemInfo& systeminfo);
-	PeContainer(Storage * const s, CType t, const AsciiFile& File);
+	PeContainer(Storage* s, const string& name, const string& device, CType t);
+	PeContainer(Storage* s, const string& name, const string& device, CType t,
+		    SystemInfo& systeminfo);
+	PeContainer(Storage* s, CType t, const AsciiFile& File);
 	PeContainer(const PeContainer& c);
 	virtual ~PeContainer();
 

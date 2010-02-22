@@ -49,7 +49,8 @@ class MdPartCo : public Container
     friend class Storage;
 
     public:
-    MdPartCo(Storage * const s, const string& Name, SystemInfo& systeminfo);
+
+	MdPartCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo);
     MdPartCo(const MdPartCo& c);
     virtual ~MdPartCo();
 

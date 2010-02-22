@@ -57,11 +57,12 @@ class Disk : public Container
 	};
 
     public:
-	Disk(Storage * const s, const string& Name, unsigned long long Size,
+
+	Disk(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
-	Disk(Storage * const s, const string& Name, unsigned num, 
+	Disk(Storage* s, const string& name, const string& device, unsigned num, 
 	     unsigned long long Size, SystemInfo& systeminfo);
-	Disk(Storage * const s, const AsciiFile& file);
+	Disk(Storage* s, const AsciiFile& file);
 	Disk(const Disk& c);
 	virtual ~Disk();
 

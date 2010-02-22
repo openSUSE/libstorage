@@ -52,12 +52,10 @@ namespace storage
     using namespace std;
 
 
-    MdPartCo::MdPartCo(Storage * const s, const string& name, SystemInfo& systeminfo)
-	: Container(s, "", staticType()), disk(NULL), del_ptable(false)
+    MdPartCo::MdPartCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo)
+	: Container(s, name, device, staticType()), disk(NULL), del_ptable(false)
     {
 	y2mil("constructing MdPartCo " << name);
-	nm = undevName(name);
-	dev = "/dev/" + nm;
 
 	getMajorMinor();
 
@@ -383,7 +381,7 @@ MdPartCo::createDisk(SystemInfo& systeminfo)
     {
     if( disk )
         delete disk;
-    disk = new Disk(getStorage(), dev, size_k, systeminfo);
+    disk = new Disk(getStorage(), nm, dev, size_k, systeminfo);
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();

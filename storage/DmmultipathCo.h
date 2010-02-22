@@ -68,7 +68,7 @@ class DmmultipathCo : public DmPartCo
 
     public:
 
-	DmmultipathCo(Storage * const s, const string& Name, SystemInfo& systeminfo);
+	DmmultipathCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo);
 	DmmultipathCo(const DmmultipathCo& c);
 	virtual ~DmmultipathCo();
 

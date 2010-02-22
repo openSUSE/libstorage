@@ -39,7 +39,8 @@ class Dasd : public Disk
     {
     friend class Storage;
     public:
-	Dasd(Storage * const s, const string& Name, unsigned long long Size,
+
+	Dasd(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
 	Dasd(const Dasd& c);
 	virtual ~Dasd();
