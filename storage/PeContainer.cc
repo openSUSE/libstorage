@@ -576,7 +576,6 @@ void
 PeContainer::init()
     {
     y2mil( "init:" << nm );
-    mjr = Dm::dmMajor();
     }
 
 static bool isDeleted( const Dm& l ) { return( l.deleted() ); }

@@ -78,7 +78,6 @@ namespace storage
 void
 MdCo::init()
     {
-    mjr = Md::mdMajor();
     }
 
 

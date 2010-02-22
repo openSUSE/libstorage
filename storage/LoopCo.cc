@@ -81,7 +81,6 @@ namespace storage
 void
 LoopCo::init()
     {
-    mjr = Loop::loopMajor();
     }
 
 
