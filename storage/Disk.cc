@@ -46,6 +46,7 @@ namespace storage
 {
     using namespace std;
 
+    const unsigned int fuzz_cyl = 2;
 
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
@@ -1484,7 +1485,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
                         unsigned long len, bool checkRelaxed ) const
     {
     y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
-    unsigned fuzz = checkRelaxed ? 2 : 0;
+    unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
     int ret = 0;
     Region r( start, len );
     ConstPartPair ext = partPair(notDeletedExt);
@@ -1552,7 +1553,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
     y2mil("begin nr " << nr << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     int ret = 0;
     Region r( start, len );
-    unsigned fuzz = checkRelaxed ? 2 : 0;
+    unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
     if( readonly() )
 	{
 	ret = DISK_CHANGE_READONLY;
@@ -2344,7 +2345,7 @@ int Disk::doCreate( Volume* v )
 		{
 		y2mil( "i " << *i );
 		if( i->cylStart()<maxc && i->cylStart()<end &&
-		    i->cylEnd()>p->cylStart() )
+		    i->cylEnd()-fuzz_cyl>p->cylStart() )
 		    {
 		    maxc=i->cylStart();
 		    y2mil( "new maxc " << maxc );

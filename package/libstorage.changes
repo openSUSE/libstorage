@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Feb 22 12:27:25 CET 2010 - fehr@suse.de
+
+- prevent mis-detection of end of gap when creating partitions
+
+-------------------------------------------------------------------
 Fri Feb 19 13:52:42 CET 2010 - aschnell@suse.de
 
 - allow setting of imsm_driver via env.var. (bnc #574270)
