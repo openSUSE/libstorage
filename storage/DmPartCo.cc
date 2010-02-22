@@ -41,17 +41,15 @@ namespace storage
 
     DmPartCo::DmPartCo(Storage* s, const string& name, const string& device, CType t,
 		       SystemInfo& systeminfo)
-	: PeContainer(s, name, device, t, systeminfo)
+	: PeContainer(s, name, device, t, systeminfo), disk(NULL), active(false),
+	  del_ptable(false)
     {
     y2deb("constructing DmPartCo name:" << name);
 	getMajorMinor();
-    num_pe = free_pe = 0;
-    active = del_ptable = false;
-    disk = NULL;
 	init(systeminfo);
     }
 
-    
+
 DmPartCo::~DmPartCo()
     {
     if( disk )

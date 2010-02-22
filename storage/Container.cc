@@ -44,6 +44,7 @@ namespace storage
 	: Device(name, device), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
+
 	assert(!nm.empty() && !dev.empty());
     }
 
@@ -56,8 +57,8 @@ namespace storage
 	: Device(name, device, systeminfo), sto(s), typ(t), ronly(false)
     {
 	y2deb("constructed Container " << dev);
-	assert(!nm.empty() && !dev.empty());
 
+	assert(!nm.empty() && !dev.empty());
 	assert(!s->testmode());
     }
 
@@ -68,7 +69,6 @@ namespace storage
     Container::Container(Storage* s, CType t, const AsciiFile& file)
 	: Device(file), sto(s), typ(t), ronly(false)
     {
-	assert(!nm.empty() && !dev.empty());
 	const vector<string>& lines = file.lines();
 	vector<string>::const_iterator it;
 
@@ -77,6 +77,7 @@ namespace storage
 
 	y2deb("constructed Container " << dev << " from file " << file.name());
 
+	assert(!nm.empty() && !dev.empty());
 	assert(s->testmode());
     }
 

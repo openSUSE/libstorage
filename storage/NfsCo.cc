@@ -47,7 +47,7 @@ namespace storage
     NfsCo::NfsCo(Storage* s, const EtcFstab& fstab, SystemInfo& systeminfo)
 	: Container(s, "nfs", "/dev/nfs", staticType(), systeminfo)
     {
-	y2deb("constructing NfsCo detect");
+	y2deb("constructing NfsCo");
 	getNfsData(fstab, systeminfo);
     }
 
