@@ -44,6 +44,7 @@ namespace storage
 	: PeContainer(s, name, device, t, systeminfo)
     {
     y2deb("constructing DmPartCo name:" << name);
+	getMajorMinor();
     num_pe = free_pe = 0;
     active = del_ptable = false;
     disk = NULL;
