@@ -148,6 +148,7 @@ class Storage;
 	friend std::ostream& operator<< (std::ostream& s, const Volume &v );
 
 	int prepareRemove();
+	int unaccessVol();
 	int umount( const string& mp="" );
 	int crUnsetup( bool force=false );
 	int mount( const string& mp="", bool ro=false );
@@ -175,8 +176,8 @@ class Storage;
 	bool inCryptotab() const { return( encryption!=ENC_NONE && 
 	                                   encryption!=ENC_LUKS && 
 					   !optNoauto() ); }
+	bool inCrypttab() const { return( encryption==ENC_LUKS ); }
 	bool pvEncryption() const;
-	bool inCrypttab() const { return( encryption==ENC_LUKS && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
 	int getFreeLoop( SystemCmd& loopData );

@@ -289,6 +289,7 @@ class DiskData;
 	bool findDevice( const string& dev, const Device* &vol,
 	                 bool search_by_minor=false );
 	bool removeDm( const string& device );
+	int unaccessDev( const string& device );
 
 	virtual ~Storage();
 

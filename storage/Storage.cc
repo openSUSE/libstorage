@@ -5640,6 +5640,22 @@ bool Storage::removeDm( const string& device )
     return( dm!=0 );
     }
 
+int Storage::unaccessDev( const string& device )
+    {
+    int ret = 0;
+    VolIterator v;
+    if( findVolume(device, v) )
+	{
+	v->setSilent(true);
+	ret = v->unaccessVol();
+	v->setSilent(false);
+	}
+    else
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    y2mil( "device:" << device << " ret:" << ret );
+    return( ret );
+    }
+
 bool Storage::findContainer( const string& device, ConstContIterator& c )
     {
     ContIterator tmp;

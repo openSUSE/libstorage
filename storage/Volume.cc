@@ -2240,10 +2240,9 @@ int Volume::mount( const string& m, bool ro )
     return( ret );
     }
 
-int Volume::prepareRemove()
+int Volume::unaccessVol()
     {
     int ret = 0;
-    y2mil("device:" << dev);
     if( !orig_mp.empty() )
 	{
 	if( isMounted() )
@@ -2255,6 +2254,13 @@ int Volume::prepareRemove()
 	    ret = doFstabUpdate();
 	    }
 	}
+    return( ret );
+    }
+
+int Volume::prepareRemove()
+    {
+    y2mil("device:" << dev);
+    int ret = unaccessVol();
     if( loop_active || dmcrypt_active )
 	{
 	crUnsetup();
@@ -2932,11 +2938,11 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if (!v.mp.empty())
 	{
 	s << " mount:" << v.mp;
-	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
-	    s << " orig_mount:" << v.orig_mp;
 	if( !v.is_mounted )
 	    s << " not_mounted";
 	}
+    if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
+	s << " orig_mount:" << v.orig_mp;
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
 	s << " mount_by:" << Volume::mb_names[v.mount_by];

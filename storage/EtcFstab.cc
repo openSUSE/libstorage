@@ -550,16 +550,12 @@ list<string> EtcFstab::makeStringList(const FstabEntry& e) const
     ls.push_back( boost::join( e.opts, "," ) );
     if( e.dmcrypt && e.mount!="swap" )
 	{
-	if( find( e.opts.begin(), e.opts.end(), "noauto" )==e.opts.end() )
-	    {
-	    if( ls.back() == "defaults" )
-		ls.back() = "noauto";
-	    else
-		ls.back() += ",noauto";
-	    }
 	if( find( e.opts.begin(), e.opts.end(), "nofail" )==e.opts.end() )
 	    {
-	    ls.back() += ",nofail";
+	    if( ls.back() == "defaults" )
+		ls.back() = "nofail";
+	    else
+		ls.back() += ",nofail";
 	    }
 	}
     if( !e.cryptotab )

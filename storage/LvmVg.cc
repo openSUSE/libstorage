@@ -1543,10 +1543,11 @@ string LvmVg::instSysString() const
 
 
     int
-    LvmVg::doCreatePv(const Pv& pv) const
+    LvmVg::doCreatePv(const Pv& pv)
     {
     int ret = 0;
     y2mil("device:" << pv.device << " realDevice:" << pv.realDevice());
+    getStorage()->unaccessDev(pv.device);
     SystemCmd c;
     string cmd = MDADMBIN " --zero-superblock " + quote(pv.realDevice());
     c.execute( cmd );
