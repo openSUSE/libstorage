@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Feb 23 16:54:19 CET 2010 - fehr@suse.de
+
+- fix wrong handling of fstab entry when removing mount point of 
+  encrypted device
+- make conversion of mounted volume into a LVM PV work
+
+-------------------------------------------------------------------
 Tue Feb 23 15:53:14 CET 2010 - aschnell@suse.de
 
 - deactivate and reactivate storage systems before rescan devices

@@ -632,6 +632,7 @@ MdCo::doCreate( Volume* v )
 	    for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
 		{
 		getStorage()->removeDmTableTo( *i );
+		getStorage()->unaccessDev(*i);
 		}
 	    }
 	if( ret==0 )

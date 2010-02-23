@@ -2241,10 +2241,9 @@ int Volume::mount( const string& m, bool ro )
     return( ret );
     }
 
-int Volume::prepareRemove()
+int Volume::unaccessVol()
     {
     int ret = 0;
-    y2mil("device:" << dev);
     if( !orig_mp.empty() )
 	{
 	if( isMounted() )
@@ -2256,6 +2255,13 @@ int Volume::prepareRemove()
 	    ret = doFstabUpdate();
 	    }
 	}
+    return( ret );
+    }
+
+int Volume::prepareRemove()
+    {
+    y2mil("device:" << dev);
+    int ret = unaccessVol();
     if( loop_active || dmcrypt_active )
 	{
 	crUnsetup();

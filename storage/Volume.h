@@ -148,6 +148,7 @@ class Storage;
 	friend std::ostream& operator<< (std::ostream& s, const Volume &v );
 
 	int prepareRemove();
+	int unaccessVol();
 	int umount( const string& mp="" );
 	int crUnsetup( bool force=false );
 	int mount( const string& mp="", bool ro=false );
