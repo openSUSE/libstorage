@@ -176,8 +176,8 @@ class Storage;
 	bool inCryptotab() const { return( encryption!=ENC_NONE && 
 	                                   encryption!=ENC_LUKS && 
 					   !optNoauto() ); }
+	bool inCrypttab() const { return( encryption==ENC_LUKS ); }
 	bool pvEncryption() const;
-	bool inCrypttab() const { return( encryption==ENC_LUKS && !optNoauto() ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	int getFreeLoop();
 	int getFreeLoop( SystemCmd& loopData );
