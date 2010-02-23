@@ -200,12 +200,11 @@ Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
 
 void Volume::init()
     {
-    del = create = format = is_loop = loop_active = false;
+    format = is_loop = loop_active = false;
     is_mounted = ronly = fstab_added = ignore_fstab = ignore_fs = false;
     dmcrypt_active = false;
     detected_fs = fs = FSUNKNOWN;
     encryption = orig_encryption = ENC_NONE;
-    mjr = mnr = 0;
     if( numeric||!nm.empty() )
 	{
 	setNameDev();
