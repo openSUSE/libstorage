@@ -769,13 +769,17 @@ int EtcFstab::flush()
 			line = createTabLine( i->nnew );
 			cur->append( line );
 			}
-		    else
+		    else if( !i->nnew.mount.empty() )
 			{
 			line = (*cur)[lineno];
 			const list<string> nl = makeStringList(i->nnew);
 			const list<string> ol = makeStringList(i->old);
 			line = updateLine( ol, nl, line );
 			(*cur)[lineno] = line;
+			}
+		    else
+			{
+			cur->remove(lineno,1);
 			}
 		    if( i->old.crypttab > i->nnew.crypttab && 
 		        findCrtab( i->old, crypttab, lineno ))
