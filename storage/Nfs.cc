@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -35,11 +35,12 @@ namespace storage
 
 
     Nfs::Nfs(const NfsCo& c, const string& NfsDev, bool nfs4)
-	: Volume(c, 0, 0)
+	: Volume(c, canonicalName(NfsDev), 0)
     {
 	y2mil("constructed Nfs dev:" << NfsDev << " nfs4:" << nfs4);
-    if( c.type() != NFSC )
-	y2err("constructed nfs with wrong container");
+
+	assert(c.type() == NFSC);
+
     dev = canonicalName(NfsDev);
     if( dev != NfsDev )
 	alt_names.push_back( NfsDev );
@@ -79,8 +80,6 @@ Text Nfs::removeText( bool doing ) const
 void
 Nfs::init(bool nfs4)
     {
-    numeric = false;
-    nm = dev;
     setFs(nfs4 ? NFS4 : NFS);
     }
 
