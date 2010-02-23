@@ -36,18 +36,20 @@ namespace storage
     using namespace std;
 
 
+    // this ctr is used for volumes of LvmVg and DmPart
     Dm::Dm(const PeContainer& c, const string& tn)
-	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
+	: Volume(c, "", 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
     {
+	y2mil("constructed Dm tname:" << tn);
     inactiv = true;
-    y2deb("constructed dm dev");
     }
 
 
+    // this ctr is used for volumes of DmCo
     Dm::Dm(const PeContainer& c, const string& tn, unsigned mnum)
 	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
     {
-    y2mil("constructed dm dev table \"" << tn << "\" " << mnum);
+	y2mil("constructed Dm tname:" << tn);
     inactiv = true;
     init();
     getTableInfo();
