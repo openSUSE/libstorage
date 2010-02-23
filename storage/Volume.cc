@@ -2939,11 +2939,11 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if (!v.mp.empty())
 	{
 	s << " mount:" << v.mp;
-	if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
-	    s << " orig_mount:" << v.orig_mp;
 	if( !v.is_mounted )
 	    s << " not_mounted";
 	}
+    if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
+	s << " orig_mount:" << v.orig_mp;
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
 	s << " mount_by:" << Volume::mb_names[v.mount_by];
