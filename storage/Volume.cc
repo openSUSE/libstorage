@@ -61,20 +61,9 @@ namespace storage
     Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
 	: Device(Name, ""), cont(&c), numeric(false)
     {
-	nm = Name;
 	size_k = orig_size_k = SizeK;
 	init();
 	y2deb("constructed Volume " << dev << " on " << cont->device());
-    }
-
-
-    Volume::Volume(const Container& c)
-	: Device("", ""), cont(&c)
-    {
-	numeric = false;
-	size_k = orig_size_k = 0;
-	init();
-	y2deb("constructed late init volume");
     }
 
 

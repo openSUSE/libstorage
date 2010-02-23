@@ -36,25 +36,19 @@ namespace storage
     using namespace std;
 
 
-Dm::Dm( const PeContainer& d, const string& tn ) :
-	Volume( d ), tname(tn)
+    Dm::Dm(const PeContainer& c, const string& tn)
+	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
     {
-    num_le = 0;
-    stripe = 1;
-    stripe_size = 0;
     inactiv = true;
     y2deb("constructed dm dev");
     }
 
-Dm::Dm( const PeContainer& d, const string& tn, unsigned mnum ) :
-	Volume( d ), tname(tn)
+
+    Dm::Dm(const PeContainer& c, const string& tn, unsigned mnum)
+	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
     {
     y2mil("constructed dm dev table \"" << tn << "\" " << mnum);
-    num_le = 0;
-    stripe = 1;
-    stripe_size = 0;
     inactiv = true;
-    nm = tn;
     init();
     getTableInfo();
 
