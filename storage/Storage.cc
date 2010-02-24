@@ -452,12 +452,19 @@ void Storage::rescanEverything()
 
     if (instsys())
     {
+	bool dmmultipath_active = DmmultipathCo::isActive();
+
 	LvmVg::activate(false);
 	MdCo::activate(false, tmpDir());
 	MdPartCo::activate(false, tmpDir());
 	DmraidCo::activate(false);
 	DmmultipathCo::activate(false);
 	Dm::activate(false);
+
+	if (dmmultipath_active)
+	{
+	    DmmultipathCo::activate(true);
+	}
     }
 
     clearPointerList(cont);
