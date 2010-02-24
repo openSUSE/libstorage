@@ -54,7 +54,7 @@ class Dasd : public Disk
 	int initializeDisk( bool value );
 	Text fdasdText() const;
 	Text dasdfmtText( bool doing ) const;
-	static Text dasdfmtTexts( bool single, const string& devs );
+	static Text dasdfmtTexts(bool doing, const list<string>& devs);
 	void getCommitActions(list<commitAction>& l) const;
 	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 			 list<const Volume*>& vol) const;

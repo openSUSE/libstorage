@@ -376,7 +376,7 @@ Text Dasd::fdasdText() const
     {
     Text txt;
     // displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-    txt = sformat( _("Executing fdasd for disk %1$s..."), dev.c_str() );
+    txt = sformat( _("Executing fdasd for disk %1$s"), dev.c_str() );
     return( txt );
     }
 
@@ -463,35 +463,34 @@ Dasd::getCommitActions(list<commitAction>& l) const
     }
 
 
-Text Dasd::dasdfmtTexts( bool single, const string& devs )
+    Text
+    Dasd::dasdfmtTexts(bool doing, const list<string>& devs)
     {
-    Text txt;
-    if( single )
+	Text txt;
+	if (doing)
 	{
-        // displayed text during action, %1$s is replaced by disk name (e.g. dasda),
-        txt = sformat( _("Executing dasdfmt for disk %1$s..."), devs.c_str() );
+	    // displayed text during action, %1$s is replaced by disk name (e.g. dasda)
+	    txt = sformat(_("Executing dasdfmt for disk %1$s",
+			    "Executing dasdfmt for disks %1$s", devs.size()),
+			  boost::join(devs, " ").c_str());
 	}
-    else
+	else
 	{
-        // displayed text during action, %1$s is replaced by list of disk names (e.g. dasda dasdb dasdc),
-        txt = sformat( _("Executing dasdfmt for disks: %1$s..."), devs.c_str() );
+	    // displayed text during action, %1$s is replaced by disk name (e.g. dasda)
+	    txt = sformat(_("Execute dasdfmt on disk %1$s",
+			    "Execute dasdfmt on disks %1$s", devs.size()),
+			  boost::join(devs, " ").c_str());
 	}
-    return( txt );
+	return txt;
     }
 
-Text Dasd::dasdfmtText( bool doing ) const
+
+    Text
+    Dasd::dasdfmtText(bool doing) const
     {
-    Text txt;
-    if( doing )
-        {
-	txt = dasdfmtTexts( true, dev );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by disk name (e.g. /dev/dasda),
-        txt = sformat( _("Execute dasdfmt on disk %1$s"), dev.c_str() );
-        }
-    return( txt );
+	list<string> tmp;
+	tmp.push_back(dev);
+	return dasdfmtTexts(doing, tmp);
     }
 
 
@@ -559,7 +558,7 @@ int Dasd::doDasdfmt()
 	y2mil("devs:" << devs);
 	if( !silent ) 
 	    {
-	    Text txt = dasdfmtTexts( dl.size()==1, boost::join(devs, " ") );
+	    Text txt = dasdfmtTexts(true, devs);
 	    getStorage()->showInfoCb( txt );
 	    }
 	for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
