@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -49,9 +49,8 @@ namespace storage
 
 
     Volume::Volume(const Container& c, unsigned PNr, unsigned long long SizeK)
-	: Device("", ""), cont(&c), numeric(true)
+	: Device("", ""), cont(&c), numeric(true), num(PNr)
     {
-	num = PNr;
 	size_k = orig_size_k = SizeK;
 	init();
 	y2deb("constructed Volume " << ((num>0)?dev:"") << " on " << cont->device());
@@ -59,11 +58,26 @@ namespace storage
 
 
     Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
-	: Device(Name, ""), cont(&c), numeric(false)
+	: Device(Name, ""), cont(&c), numeric(false), num(0)
     {
 	size_k = orig_size_k = SizeK;
 	init();
 	y2deb("constructed Volume " << dev << " on " << cont->device());
+    }
+
+
+    Volume::Volume(const Container& c, const AsciiFile& file)
+	: Device(file), cont(&c), numeric(false), format(false),
+	  fstab_added(false), fs(FSUNKNOWN), detected_fs(FSUNKNOWN),
+	  mount_by(MOUNTBY_DEVICE), orig_mount_by(MOUNTBY_DEVICE),
+	  is_loop(false), is_mounted(false), ignore_fstab(false),
+	  ignore_fs(false), loop_active(false), dmcrypt_active(false),
+	  ronly(false), encryption(ENC_NONE), orig_encryption(ENC_NONE),
+	  num(0), orig_size_k(0)
+    {
+	y2deb("constructed Volume " << dev);
+
+	assert(c.getStorage()->testmode());
     }
 
 
@@ -200,8 +214,6 @@ void Volume::init()
 	if (!getStorage()->testmode() && cType()!=NFSC)
 	    getMajorMinor();
 	}
-    if( !numeric )
-	num = 0;
     mount_by = orig_mount_by = defaultMountBy();
     }
 

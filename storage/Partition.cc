@@ -49,8 +49,10 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
 
 
     Partition::Partition(const Disk& c, const AsciiFile& file)
-	: Volume(c, 0, 0)
+	: Volume(c, file)
     {
+	numeric = true;
+
 	string data = extractNthWord(1, *(file.lines().begin()), true);
 
     string ts, rs;

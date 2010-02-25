@@ -63,9 +63,7 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 	: PeContainer(s, staticType(), file), lvm1(false)
     {
 	const vector<string>& lines = file.lines();
-	vector<string>::const_iterator it;
-
-	for (it = lines.begin(); it != lines.end(); ++it)
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 	    if (boost::starts_with(*it, "Logical Volume:"))
 	    {

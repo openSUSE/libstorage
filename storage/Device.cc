@@ -47,20 +47,31 @@ namespace storage
 	: nm(), dev(), create(false), del(false), silent(false), size_k(0), mjr(0), mnr(0)
     {
 	const vector<string>& lines = file.lines();
-	vector<string>::const_iterator it;
 
-	if ((it = find_if(lines, string_starts_with("Name:"))) != lines.end())
-	    nm = extractNthWord(1, *it);
-	if ((it = find_if(lines, string_starts_with("Device:"))) != lines.end())
-	    dev = extractNthWord(1, *it);
+	if (lines.size() > 1)
+	{
+	    // Container
 
-	if ((it = find_if(lines, string_starts_with("SizeK:"))) != lines.end())
-	    extractNthWord(1, *it) >> size_k;
+	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	    {
+		if (boost::starts_with(*it, "Name:"))
+		    nm = extractNthWord(1, *it);
+		if (boost::starts_with(*it,  "Device:"))
+		    dev = extractNthWord(1, *it);
 
-	if ((it = find_if(lines, string_starts_with("Major:"))) != lines.end())
-	    extractNthWord(1, *it) >> mjr;
-	if ((it = find_if(lines, string_starts_with("Minor:"))) != lines.end())
-	    extractNthWord(1, *it) >> mnr;
+		if (boost::starts_with(*it, "SizeK:"))
+		    extractNthWord(1, *it) >> size_k;
+
+		if (boost::starts_with(*it, "Major:"))
+		    extractNthWord(1, *it) >> mjr;
+		if (boost::starts_with(*it, "Minor:"))
+		    extractNthWord(1, *it) >> mnr;
+	    }
+	}
+	else
+	{
+	    // Volume
+	}
 
 	y2deb("constructed Device " << dev << " from file " << file.name());
     }

@@ -51,6 +51,7 @@ class Storage;
 
 	Volume(const Container& c, unsigned Pnr, unsigned long long SizeK);
 	Volume(const Container& c, const string& PName, unsigned long long SizeK);
+	Volume(const Container& c, const AsciiFile& file);
 	Volume(const Container& c, const Volume& v);
 	virtual ~Volume();
 

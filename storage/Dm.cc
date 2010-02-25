@@ -38,25 +38,30 @@ namespace storage
 
     // this ctr is used for volumes of LvmVg and DmPart
     Dm::Dm(const PeContainer& c, const string& tn)
-	: Volume(c, "", 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
+	: Volume(c, "", 0), tname(tn), num_le(0), stripe(1), stripe_size(0), inactiv(true)
     {
 	y2mil("constructed Dm tname:" << tn);
-    inactiv = true;
     }
 
 
     // this ctr is used for volumes of DmCo
     Dm::Dm(const PeContainer& c, const string& tn, unsigned mnum)
-	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0)
+	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0), inactiv(true)
     {
 	y2mil("constructed Dm tname:" << tn);
-    inactiv = true;
     init();
     getTableInfo();
 
     getStorage()->fetchDanglingUsedBy(dev, uby);
     for (list<string>::const_iterator it = alt_names.begin(); it != alt_names.end(); ++it)
 	getStorage()->fetchDanglingUsedBy(*it, uby);
+    }
+
+
+    Dm::Dm(const PeContainer& c, const AsciiFile& file)
+	: Volume(c, file), tname(), num_le(0), stripe(1), stripe_size(0), inactiv(true)
+    {
+	y2deb("constructed Dm " << dev << " on " << cont->device());
     }
 
 

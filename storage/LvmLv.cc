@@ -72,8 +72,10 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 
 
     LvmLv::LvmLv(const LvmVg& c, const AsciiFile& file)
-	: Dm(c, "")
+	: Dm(c, file)
     {
+	numeric = false;
+
 	string data = extractNthWord(2, *(file.lines().begin()), true);
 
 	istringstream i(data);
