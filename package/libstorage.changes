@@ -5,6 +5,7 @@ Tue Feb 23 16:54:19 CET 2010 - fehr@suse.de
   encrypted device
 - make conversion of mounted volume into a LVM PV work
 - do not add "noauto" to encrypted fstab entries any more (bnc #581339)
+- 2.19.10
 
 -------------------------------------------------------------------
 Tue Feb 23 15:53:14 CET 2010 - aschnell@suse.de
