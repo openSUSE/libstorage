@@ -50,13 +50,6 @@ AsciiFile::AsciiFile(const string& Name_Cv, bool remove_empty)
 }
 
 
-AsciiFile::AsciiFile()
-    : Name_C(),
-      remove_empty(false)
-{
-}
-
-
 AsciiFile::~AsciiFile()
 {
 }
@@ -243,15 +236,6 @@ string& AsciiFile::operator [] ( unsigned int Idx_iv )
     assert( Idx_iv < Lines_C.size( ) );
     return Lines_C[Idx_iv];
     }
-
-
-AsciiFile
-AsciiFile::subfile(vector<string>::const_iterator& line) const
-{
-    AsciiFile tmp;
-    tmp.append(*line);
-    return tmp;
-}
 
 
 void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
