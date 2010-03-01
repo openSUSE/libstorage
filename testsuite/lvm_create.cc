@@ -10,68 +10,18 @@ using namespace storage;
 using namespace std;
 
 
-StorageInterface *s = 0;
-
-
-void print_num_lvs(const string& vg)
-{
-    deque<LvmLvInfo> plist;
-    s->getLvmLvInfo( vg, plist );
-
-    cout << plist.size() << endl;
-}
-
-/* 
- * get all partitions on disks disks which could be added to a
- * logical volume group ( AFAIK --> PRIMARY, LOGICAL )
- */
-deque<string> getDevs( deque<string> disks )
-{
-    StorageInterface *siface = createStorageInterface(TestEnvironment());
-
-    deque<string> devs;
-    deque<PartitionInfo> pInfos;
-    
-    for ( deque<string>::iterator i = disks.begin();
-	  i != disks.end(); i++)
-    {
-	cout << siface->getPartitionInfo( *i, pInfos ) << endl;
-
-	for (deque<PartitionInfo>::iterator f = pInfos.begin ();
-	     f != pInfos.end(); f++)
-	{
-	    switch (f->partitionType)
-	    {
-	    case PRIMARY:
-		devs.push_back(f->v.name);
-		break;
-	    case LOGICAL:
-		devs.push_back(f->v.name);
-		break;
-	    default:
-		break;
-	    }
-	}
-	
-    }
-    
-    delete siface;
-
-    return devs;
-}
-
-void createLvs( const string& vg, int n, deque<string>& disks )
+void createLvs(const string& vg, int n, const deque<string>& pvs)
 {
     printf("createLvs\n");
 
-    s = createStorageInterface(TestEnvironment());
+    StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    /* create volume group with the above disks */
-    cout << s->createLvmVg( vg, 4, false, getDevs(disks) ) << endl;
+    /* create volume group with the above pvs */
+    cout << s->createLvmVg( vg, 4, false, pvs ) << endl;
 
     /* create n logical volumes */
     int ret = 0;
-    for ( int i = 0; i < n; i++ ) 
+    for ( int i = 0; i < n; i++ )
     {
 	ostringstream name;
 	name << "volume";
@@ -81,28 +31,24 @@ void createLvs( const string& vg, int n, deque<string>& disks )
 	ret = s->createLvmLv( vg, name.str(), 100, 1, dev );
     }
     cout << ret << endl;
+
+    deque<LvmLvInfo> plist;
+    s->getLvmLvInfo( vg, plist );
+    cout << plist.size() << endl;
     
-
-    for ( deque<string>::iterator i = disks.begin();
-	  i != disks.end(); i++ )
-    {
-	print_num_lvs(vg);
-	print_num_lvs(vg);
-    }
-
     delete s;
 }
 
 
-void createExtendedLv( const string& vg, const string& dev )
+void createExtendedLv(const string& vg, const string& dev)
 {
     printf("createExtendedLv\n");
 
-    s = createStorageInterface(TestEnvironment());
+    StorageInterface* s = createStorageInterface(TestEnvironment());
 
     deque<string> devs;
     devs.push_back(dev); // add extended partition
-    
+
     /* create volume group with the extended partition */
     cout << s->createLvmVg( vg, 4, false, devs ) << endl; // FAILS
 
@@ -115,55 +61,24 @@ main()
 {
     setup_logger();
 
-    setup_system();
+    /*
+     * Check that we can create a volume group from primary and logical
+     * partitons and 50 logical volumes.
+     */
+    setup_system("thalassa");
 
-    deque<string> disks;
+    deque<string> pvs;
+    pvs.push_back("/dev/sdc1");
+    pvs.push_back("/dev/sdc2");
+    pvs.push_back("/dev/sdc5");
+    pvs.push_back("/dev/sdc6");
+    createLvs("test", 50, pvs);
 
     /*
-     * Check that we can create a volume group and 50 logical volumes on
-     * ide disks.
+     * Check that we cannot create a volume group out of an extended
+     * partition.
      */
-    disks.push_back( "/dev/hda" );
-    disks.push_back( "/dev/hdb" );
-    system ("rm -rf tmp/*");
-    system ("cp data/disk_hda.info tmp");
-    system ("cp data/disk_hdb.info tmp");
-    createLvs( "system", 50, disks );
-    disks.clear();
+    setup_system("thalassa");
 
-    /*
-     * Check that we can create a volume group and 50 logical volumes on
-     * scsi disks.
-     */
-    disks.push_back( "/dev/sda" );
-    disks.push_back( "/dev/sdb" );
-    system ("rm -rf tmp/*");
-    system ("cp data/disk_sda.info tmp");
-    system ("cp data/disk_sdb.info tmp");
-    createLvs( "system", 50, disks );
-    disks.clear();
-
-    /*
-     * Check that we can create a volume group and 100 logical volumes on
-     * ide and scsi disks.
-     */
-    disks.push_back( "/dev/sda" );
-    disks.push_back( "/dev/sdb" );
-    disks.push_back( "/dev/hda" );
-    disks.push_back( "/dev/hdb" );
-    system ("rm -rf tmp/*");
-    system ("cp data/disk_sda.info tmp");
-    system ("cp data/disk_sdb.info tmp");
-    system ("cp data/disk_hda.info tmp");
-    system ("cp data/disk_hdb.info tmp");
-    createLvs( "system", 50, disks );
-    disks.clear();
-
-    /*
-     * Check that we _cannot_ create a volume group out of an extended
-     * partition
-     */
-    system ("rm -rf tmp/*");
-    system ("cp data/disk_hda.info tmp");
-    createExtendedLv("system", "/dev/hda4");
+    createExtendedLv("test", "/dev/sdc4");
 }
