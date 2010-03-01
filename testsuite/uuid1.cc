@@ -10,43 +10,44 @@ using namespace std;
 using namespace storage;
 
 
-StorageInterface* s = 0;
-
-
 void
 print_fstab ()
 {
     ifstream fstab("tmp/etc/fstab");
     string line;
 
+    cout << "begin of fstab" << endl;
+
     while (getline (fstab, line))
-	cout << line << '\n';
+	cout << line << endl;
+
+    cout << "end of fstab" << endl;
 }
 
 
 void
 run1 ()
 {
-    cout << "run1\n";
+    cout << "run1" << endl;
 
-    s = createStorageInterface(TestEnvironment());
+    StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    string disk = "/dev/hdb";
+    string disk = "/dev/sdb";
 
     s->destroyPartitionTable (disk, "msdos");
 
     long int S = 4 * 1000000;
 
     string name;
-    cout << s->createPartitionKb (disk, PRIMARY, 0, S, name) << '\n';
+    cout << s->createPartitionKb(disk, PRIMARY, 0, S, name) << endl;
 
-    cout << name << '\n';
+    cout << name << endl;
 
-    cout << s->changeFormatVolume (name, true, REISERFS) << '\n';
-    cout << s->changeMountPoint (name, "/tmp/mnt") << '\n';
-    cout << s->changeMountBy (name, MOUNTBY_UUID) << '\n';
+    cout << s->changeFormatVolume(name, true, REISERFS) << endl;
+    cout << s->changeMountPoint(name, "/tmp/mnt") << endl;
+    cout << s->changeMountBy(name, MOUNTBY_UUID) << endl;
 
-    cout << s->commit () << '\n';
+    cout << s->commit() << endl;
 
     delete s;
 }
@@ -55,17 +56,17 @@ run1 ()
 void
 run2 ()
 {
-    cout << "run2\n";
+    cout << "run2" << endl;
 
-    s = createStorageInterface(TestEnvironment());
+    StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    string name = "/dev/hdb1";
+    string name = "/dev/sdb1";
 
-    cout << name << '\n';
+    cout << name << endl;
 
-    cout << s->changeMountBy (name, MOUNTBY_DEVICE) << '\n';
+    cout << s->changeMountBy(name, MOUNTBY_DEVICE) << endl;
 
-    cout << s->commit () << '\n';
+    cout << s->commit() << endl;
 
     delete s;
 }
@@ -78,9 +79,7 @@ main()
 
     setup_logger();
 
-    setup_system();
-
-    system ("cp data/disk_hdb.info tmp");
+    setup_system("thalassa");
 
     run1 ();
     print_fstab ();
