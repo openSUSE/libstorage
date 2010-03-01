@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -32,6 +32,7 @@
 #include "storage/Regex.h"
 #include "storage/AppUtil.h"
 #include "storage/StorageInterface.h"
+#include "storage/XmlFile.h"
 
 
 namespace storage
@@ -175,6 +176,8 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 	string device() const { return ub_device; }
 
 	friend std::ostream& operator<<(std::ostream&, const UsedBy&);
+
+	friend void setChildValue(xmlNode* node, const char* name, const UsedBy& value);
 
 	operator UsedByInfo() const { return UsedByInfo(ub_type, ub_device); }
 

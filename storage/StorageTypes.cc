@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -120,6 +120,27 @@ bool commitAction::operator<( const commitAction& rhs ) const
 
 	return s;
     }
+
+
+    void
+    setChildValue(xmlNode* node, const char* name, const UsedBy& value)
+    {
+	xmlNode* tmp = xmlNewChild(node, name);
+
+	switch (value.ub_type)
+	{
+	    case UB_LVM: setChildValue(tmp, "type", "lvm"); break;
+	    case UB_MD: setChildValue(tmp, "type", "md"); break;
+	    case UB_MDPART: setChildValue(tmp, "type", "mdpart"); break;
+	    case UB_DM: setChildValue(tmp, "type", "dm"); break;
+	    case UB_DMRAID: setChildValue(tmp, "type", "dmraid"); break;
+	    case UB_DMMULTIPATH: setChildValue(tmp, "type", "lvm"); break;
+	    case UB_NONE: break;
+	}
+
+	setChildValue(tmp, "device", value.ub_device);
+    }
+
 
 std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a)
     {

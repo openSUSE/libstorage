@@ -83,6 +83,9 @@ namespace storage
 	setChildValue(node, "size_k", size_k);
 	setChildValue(node, "major", mjr);
 	setChildValue(node, "minor", mnr);
+
+	if (!uby.empty())
+	    setChildValue(node, "used_by", uby);
     }
 
 

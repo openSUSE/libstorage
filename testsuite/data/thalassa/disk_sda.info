@@ -35,6 +35,10 @@
     <size_k>157284382</size_k>
     <major>8</major>
     <minor>2</minor>
+    <used_by>
+      <type>lvm</type>
+      <device>/dev/system</device>
+    </used_by>
     <numeric>true</numeric>
     <number>2</number>
     <region>
