@@ -28,18 +28,10 @@ namespace storage
 
 
     void
-    setup_system()
+    setup_system(const string& name)
     {
 	system("mkdir -p tmp");
 	system("rm -rf tmp/*");
-    }
-
-
-    void
-    setup_system(const string& name)
-    {
-	setup_system();
-
 	system(string("cp data/" + name + "/*.info tmp").c_str());
     }
 
