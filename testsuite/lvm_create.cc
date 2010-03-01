@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <iostream>
 #include <sstream>
 
@@ -12,7 +11,7 @@ using namespace std;
 
 void createLvs(const string& vg, int n, const deque<string>& pvs)
 {
-    printf("createLvs\n");
+    cout << "createLvs" << endl;
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
@@ -42,7 +41,7 @@ void createLvs(const string& vg, int n, const deque<string>& pvs)
 
 void createExtendedLv(const string& vg, const string& dev)
 {
-    printf("createExtendedLv\n");
+    cout << "createExtendedLv" << endl;
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 

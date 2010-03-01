@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <iostream>
 
 #include "common.h"
@@ -12,7 +11,7 @@ using namespace std;
 void
 extendVg(const string& vg, const deque<string>& pvs)
 {
-    printf("extendVg\n");
+    cout << "extendVg" << endl;
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 

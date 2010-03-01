@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <iostream>
 
 #include "common.h"
@@ -58,7 +57,7 @@ print_partitions (const string& disk)
 void
 test()
 {
-    printf("test\n");
+    cout << "test" << endl;
 
     s = createStorageInterface(TestEnvironment());
 
