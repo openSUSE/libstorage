@@ -29,6 +29,25 @@
 namespace storage
 {
 
+    XmlFile::XmlFile()
+	: doc(xmlNewDoc((const xmlChar*) "1.0"))
+    {
+    }
+
+
+    XmlFile::XmlFile(const string& filename)
+	: doc(xmlReadFile(filename.c_str(), NULL, XML_PARSE_NOBLANKS | XML_PARSE_NONET))
+    {
+    }
+
+
+    XmlFile::~XmlFile()
+    {
+	if (doc)
+	    xmlFreeDoc(doc);
+    }
+
+
     xmlNode*
     xmlNewNode(const char* name)
     {

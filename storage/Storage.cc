@@ -6619,91 +6619,38 @@ void Storage::checkPwdBuf( const string& device )
     Storage::logFreeInfo(const string& Dir) const
     {
 	string fname(Dir + "/free.info.tmp");
-	ofstream file(fname.c_str());
-	classic(file);
+
+	XmlFile xml;
+	xmlNode* node = xmlNewNode("free");
+	xml.setRootElement(node);
 
 	for (map<string, FreeInfo>::const_iterator it = free_infos.begin(); it != free_infos.end(); ++it)
 	{
-	    file << it->first;
-
-	    file << " resize_cached=" << it->second.resize_cached;
-	    if (it->second.resize_cached)
-	    {
-		const ResizeInfo& resize_info = it->second.resize_info;
-		file << " df_free=" << resize_info.df_freeK << " resize_free=" << resize_info.resize_freeK
-		     << " used=" << resize_info.usedK << " resize_ok=" << resize_info.resize_ok;
-	    }
-
-	    file << " content_cached=" << it->second.content_cached;
-	    if (it->second.content_cached)
-	    {
-		const ContentInfo& content_info = it->second.content_info;
-		file << " windows=" << content_info.windows << " efi=" << content_info.efi << " home="
-		     << content_info.home;
-	    }
-
-	    file << endl;
+	    xmlNode* tmp = xmlNewChild(node, "free");
+	    setChildValue(tmp, "device", it->first);
+	    it->second.saveData(tmp);
 	}
 
-	file.close();
+	xml.save(fname);
+
 	handleLogFile(fname);
     }
 
 
     void
-    Storage::readFreeInfo(const string& file)
+    Storage::readFreeInfo(const string& fname)
     {
-	AsciiFile f(file);
-	const vector<string>& lines = f.lines();
-	for (vector<string>::const_iterator line = lines.begin(); line != lines.end(); ++line)
+	XmlFile file(fname);
+	const xmlNode* root = file.getRootElement();
+	const xmlNode* free = getChildNode(root, "free");
+	if (free)
 	{
-	    list<string> l = splitString(*line);
-
-	    if (l.size() >= 2)
+	    const list<const xmlNode*> frees = getChildNodes(free, "free");
+	    for(list<const xmlNode*>::const_iterator it = frees.begin(); it != frees.end(); ++it)
 	    {
-		string device = l.front();
-		l.erase(l.begin());
-
-		const map<string, string> m = makeMap(l);
-		map<string, string>::const_iterator i;
-
-		bool resize_cached = false;
-		ResizeInfo resize_info;
-
-		bool content_cached = false;
-		ContentInfo content_info;
-
-		i = m.find("resize_cached");
-		if (i != m.end())
-		    i->second >> resize_cached;
-		i = m.find("df_free");
-		if (i != m.end())
-		    i->second >> resize_info.df_freeK;
-		i = m.find("resize_free");
-		if (i != m.end())
-		    i->second >> resize_info.resize_freeK;
-		i = m.find("used");
-		if (i != m.end())
-		    i->second >> resize_info.usedK;
-		i = m.find("resize_ok");
-		if (i != m.end())
-		    i->second >> resize_info.resize_ok;
-
-		i = m.find("content_cached");
-		if (i != m.end())
-		    i->second >> content_cached;
-		i = m.find("windows");
-		if (i != m.end())
-		    i->second >> content_info.windows;
-		i = m.find("efi");
-		if (i != m.end())
-		    i->second >> content_info.efi;
-		i = m.find("home");
-		if (i != m.end())
-		    i->second >> content_info.home;
-
-		mapInsertOrReplace(free_infos, device, FreeInfo(resize_cached, resize_info,
-								content_cached, content_info));
+		string device;
+		getChildValue(*it, "device", device);
+		mapInsertOrReplace(free_infos, device, FreeInfo(*it));
 	    }
 	}
     }

@@ -41,14 +41,10 @@ namespace storage
 
     public:
 
-	XmlFile() : doc(xmlNewDoc((const xmlChar*) "1.0"))
-	    {}
+	XmlFile();
+	XmlFile(const string& filename);
 
-	XmlFile(const string& filename) : doc(xmlReadFile(filename.c_str(), NULL, 0))
-	    {}
-
-	~XmlFile()
-	    { if (doc) xmlFreeDoc(doc); }
+	~XmlFile();
 
 	bool save(const string& filename)
 	    { return xmlSaveFormatFile(filename.c_str(), doc, 1); }

@@ -1,1 +1,15 @@
-/dev/system/arvin resize_cached=1 df_free=23338740 resize_free=23338740 used=26203196 resize_ok=1 content_cached=1 windows=0 efi=0 home=0
+<?xml version="1.0"?>
+<free>
+  <free>
+    <device>/dev/system/arvin</device>
+    <resize_cached>true</resize_cached>
+    <df_free_k>23338740</df_free_k>
+    <resize_free_k>23338740</resize_free_k>
+    <used_k>26203196</used_k>
+    <resize_ok>true</resize_ok>
+    <content_cached>true</content_cached>
+    <windows>false</windows>
+    <efi>false</efi>
+    <home>false</home>
+  </free>
+</free>

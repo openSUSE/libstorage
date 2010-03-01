@@ -30,6 +30,50 @@
 namespace storage
 {
 
+    FreeInfo::FreeInfo(const xmlNode* node)
+	: resize_cached(false), content_cached(false)
+    {
+	if (getChildValue(node, "resize_cached", resize_cached) && resize_cached)
+	{
+	    getChildValue(node, "df_free_k", resize_info.df_freeK);
+	    getChildValue(node, "resize_free_k", resize_info.resize_freeK);
+	    getChildValue(node, "used_k", resize_info.usedK);
+	    getChildValue(node, "resize_ok", resize_info.resize_ok);
+	}
+
+	if (getChildValue(node, "content_cached", content_cached) && content_cached)
+	{
+	    getChildValue(node, "windows", content_info.windows);
+	    getChildValue(node, "efi", content_info.efi);
+	    getChildValue(node, "home", content_info.home);
+	}
+    }
+
+
+    void
+    FreeInfo::saveData(xmlNode* node) const
+    {
+	if (resize_cached)
+	{
+	    setChildValue(node, "resize_cached", resize_cached);
+
+	    setChildValue(node, "df_free_k", resize_info.df_freeK);
+	    setChildValue(node, "resize_free_k", resize_info.resize_freeK);
+	    setChildValue(node, "used_k", resize_info.usedK);
+	    setChildValue(node, "resize_ok", resize_info.resize_ok);
+	}
+
+	if (content_cached)
+	{
+	    setChildValue(node, "content_cached", content_cached);
+
+	    setChildValue(node, "windows", content_info.windows);
+	    setChildValue(node, "efi", content_info.efi);
+	    setChildValue(node, "home", content_info.home);
+	}
+    }
+
+
     void
     FreeInfo::update(bool new_resize_cached, const ResizeInfo& new_resize_info,
 		     bool new_content_cached, const ContentInfo& new_content_info)

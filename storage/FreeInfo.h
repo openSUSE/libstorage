@@ -26,6 +26,7 @@
 #include <ostream>
 
 #include "storage/StorageInterface.h"
+#include "storage/XmlFile.h"
 
 
 namespace storage
@@ -42,6 +43,10 @@ namespace storage
 		 bool content_cached, const ContentInfo& content_info)
 	    : resize_cached(resize_cached), resize_info(resize_info),
 	      content_cached(content_cached), content_info(content_info) {}
+
+	FreeInfo(const xmlNode* node);
+
+	void saveData(xmlNode* node) const;
 
 	bool resize_cached;
 	ResizeInfo resize_info;
