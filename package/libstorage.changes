@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 01 10:23:05 CET 2010 - aschnell@suse.de
+
+- changed format of info file to XML
+
+-------------------------------------------------------------------
 Tue Feb 23 16:54:19 CET 2010 - fehr@suse.de
 
 - fix wrong handling of fstab entry when removing mount point of 

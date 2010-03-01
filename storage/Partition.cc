@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,9 +37,8 @@ namespace storage
 Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
                       unsigned long Start, unsigned long CSize,
 		      PartitionType Type, unsigned Id, bool Boot )
-    : Volume( d, PNr, SizeK ), reg( Start, CSize )
+    : Volume( d, PNr, SizeK ), reg( Start, CSize ), bootflag(Boot)
     {
-    bootflag = Boot;
     idt = orig_id = Id;
     typ = Type;
     orig_num = num;
@@ -48,35 +47,26 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     }
 
 
-    Partition::Partition(const Disk& c, const AsciiFile& file)
-	: Volume(c, file)
+    Partition::Partition(const Disk& c, const xmlNode* node)
+	: Volume(c, node), reg(0, 0), bootflag(false)
     {
-	numeric = true;
+	assert(numeric);
+	assert(num > 0);
 
-	string data = extractNthWord(1, *(file.lines().begin()), true);
+	getChildValue(node, "region", reg);
 
-    string ts, rs;
-    istringstream i(data);
-    classic(i);
-    i >> num >> dev >> size_k >> mjr >> mnr >> reg >>
-	 hex >> idt >> dec >> ts >> rs;
-    orig_size_k = size_k;
-    orig_num = num;
-    orig_id = idt;
-    nm = dev;
-    undevDevice(nm);	// strip "/dev/"
-    if( ts == "extended" )
-	typ = EXTENDED;
-    else if( ts == "logical" )
-	typ = LOGICAL;
-    else
-	typ = PRIMARY;
-    if( rs == "boot" )
-	bootflag = true;
-    else
-	bootflag = false;
-    addUdevData();
-    y2deb("constructed Partition " << dev << " on " << cont->device());
+	string t;
+	getChildValue(node, "partition_type", t);
+	typ = toPartitionType(t);
+
+	getChildValue(node, "partition_id", idt);
+
+	getChildValue(node, "boot_flag", bootflag);
+
+	orig_num = num;
+	orig_id = idt;
+
+	y2deb("constructed Partition " << dev);
     }
 
 
@@ -84,13 +74,28 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
 	: Volume(c, v), reg(v.reg), bootflag(v.bootflag), typ(v.typ),
 	  idt(v.idt), orig_id(v.orig_id), orig_num(v.orig_num)
     {
-	y2deb("copy-constructed Partition from " << v.dev);
+	y2deb("copy-constructed Partition " << dev);
     }
 
 
     Partition::~Partition()
     {
 	y2deb("destructed Partition " << dev);
+    }
+
+
+    void
+    Partition::saveData(xmlNode* node) const
+    {
+	Volume::saveData(node);
+
+	setChildValue(node, "region", reg);
+
+	setChildValue(node, "partition_type", partitionTypeString(typ));
+	setChildValue(node, "partition_id", idt);
+
+	if (bootflag)
+	    setChildValue(node, "boot_flag", true);
     }
 
 
@@ -273,23 +278,6 @@ bool Partition::operator< ( const Partition& rhs ) const
         return( !del );
     }
 
-ostream& Partition::logData( ostream& file ) const
-    {
-    file << num << " " << dev << " " << size_k << " " <<  mjr << " "
-         << mnr << " ";
-    file << reg.start() << " " << reg.len() << " " << hex << idt << dec;
-    if( typ == LOGICAL )
-	file << " logical";
-    else if( typ == EXTENDED )
-	file << " extended";
-    else
-	file << " primary";
-    if( bootflag )
-	file << " boot";
-    if( orig_num!=num )
-	file << " OrigNr:" << orig_num;
-    return( file );
-    }
 
 Text Partition::setTypeText( bool doing ) const
     {
@@ -646,6 +634,18 @@ Partition::getInfo( PartitionInfo& tinfo ) const
     getInfo( tmp );
     info = tmp;
     tinfo = info;
+    }
+
+
+    PartitionType
+    Partition::toPartitionType(const string& val)
+    {
+	PartitionType ret = LOGICAL;
+	while (ret != PRIMARY && val != pt_names[ret])
+	{
+	    ret = PartitionType(ret - 1);
+	}
+	return ret;
     }
 
 

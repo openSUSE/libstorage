@@ -266,8 +266,6 @@ class MdPartCo : public Container
 
 	int unuseDevs();
 
-    void logData(const string& Dir) const;
-
     list<string> udev_id;
 
     string logfile_name;

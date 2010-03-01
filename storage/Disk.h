@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -62,9 +62,11 @@ class Disk : public Container
 	     SystemInfo& systeminfo);
 	Disk(Storage* s, const string& name, const string& device, unsigned num, 
 	     unsigned long long Size, SystemInfo& systeminfo);
-	Disk(Storage* s, const AsciiFile& file);
+	Disk(Storage* s, const xmlNode* node);
 	Disk(const Disk& c);
 	virtual ~Disk();
+
+	void saveData(xmlNode* node) const;
 
 	unsigned long cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
@@ -248,7 +250,8 @@ class Disk : public Container
 	virtual int doSetType( Volume* v );
 	virtual int doCreateLabel();
 
-	void logData(const string& Dir) const;
+	virtual void logData(const string& Dir) const;
+
 	void setLabelData( const string& );
 
 	static string defaultLabel(bool efiboot, unsigned long long size_k);

@@ -54,24 +54,17 @@ namespace storage
     }
 
 
-    PeContainer::PeContainer(Storage* s, CType t, const AsciiFile& file)
-	: Container(s, t, file), pe_size(1), num_pe(0), free_pe(0)
+    PeContainer::PeContainer(Storage* s, CType t, const xmlNode* node)
+	: Container(s, t, node), pe_size(1), num_pe(0), free_pe(0)
     {
-	const vector<string>& lines = file.lines();
-	vector<string>::const_iterator it;
+	getChildValue(node, "pe_size_k", pe_size);
+	getChildValue(node, "pe_count", num_pe);
+	getChildValue(node, "pe_free", free_pe);
 
-	if ((it = find_if(lines, string_starts_with("PeSizeK:"))) != lines.end())
-	    extractNthWord(1, *it) >> pe_size;
-	if ((it = find_if(lines, string_starts_with("PeCount:"))) != lines.end())
-	    extractNthWord(1, *it) >> num_pe;
-	if ((it = find_if(lines, string_starts_with("PeFree:"))) != lines.end())
-	    extractNthWord(1, *it) >> free_pe;
-
-	for (it = lines.begin(); it != lines.end(); ++it)
+	const list<const xmlNode*> l = getChildNodes(node, "physical_extent");
+	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
 	{
-	    if (boost::starts_with(*it, "Physical Extent:"))
-	    {
-		Pv tmp(extractNthWord(2, *it, true));
+		Pv tmp = Pv(*it);
 		pv.push_back(tmp);
 
 		switch (t)
@@ -91,10 +84,9 @@ namespace storage
 		    default:
 			break;
 		}
-	    }
 	}
 
-	y2deb("constructed PeContainer " << dev << " from file " << file.name());
+	y2deb("constructed PeContainer " << dev);
     }
 
 
@@ -103,13 +95,27 @@ namespace storage
 	  free_pe(c.free_pe), pv(c.pv), pv_add(c.pv_add),
 	  pv_remove(c.pv_remove)
     {
-	y2deb("copy-constructed PeContainer from " << c.dev);
+	y2deb("copy-constructed PeContainer " << dev);
     }
 
 
     PeContainer::~PeContainer()
     {
 	y2deb("destructed PeContainer " << dev);
+    }
+
+
+    void
+    PeContainer::saveData(xmlNode* node) const
+    {
+	Container::saveData(node);
+
+	setChildValue(node, "pe_size_k", peSize());
+	setChildValue(node, "pe_count", peCount());
+	setChildValue(node, "pe_free", peFree());
+
+	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	    it->saveData(xmlNewChild(node, "physical_extent"));
     }
 
 
@@ -857,38 +863,25 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     }
 
 
-    std::ostream&
-    PeContainer::logData(std::ostream& file) const
+    PeContainer::Pv::Pv(const xmlNode* node)
+	: device(), num_pe(0), free_pe(0)
     {
-	file << "PeSizeK: " << peSize() << endl;
-	file << "PeCount: " << peCount() << endl;
-	file << "PeFree: " << peFree() << endl;
+	getChildValue(node, "device", device);
+	getChildValue(node, "pe_count", num_pe);
+	getChildValue(node, "pe_free", free_pe);
 
-	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	{
-	    file << "Physical Extent: ";
-	    it->logData(file);
-	    file << endl;
-	}
+	y2deb("constructed Pv");
 
-	return file;
+	assert(!device.empty());
     }
 
 
-    PeContainer::Pv::Pv(const string& data)
-	: num_pe(0), free_pe(0)
+    void
+    PeContainer::Pv::saveData(xmlNode* node) const
     {
-	istringstream i(data);
-	classic(i);
-	i >> device >> num_pe >> free_pe;
-    }
-
-
-    ostream&
-    PeContainer::Pv::logData(std::ostream& file) const
-    {
-	file << device << " " << num_pe << " " << free_pe;
-	return file;
+	setChildValue(node, "device", device);
+	setChildValue(node, "pe_count", num_pe);
+	setChildValue(node, "pe_free", free_pe);
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -58,10 +58,18 @@ namespace storage
     }
 
 
-    Dm::Dm(const PeContainer& c, const AsciiFile& file)
-	: Volume(c, file), tname(), num_le(0), stripe(1), stripe_size(0), inactiv(true)
+    Dm::Dm(const PeContainer& c, const xmlNode* node)
+	: Volume(c, node), tname(), num_le(0), stripe(1), stripe_size(0), inactiv(true)
     {
-	y2deb("constructed Dm " << dev << " on " << cont->device());
+	getChildValue(node, "table_name", tname);
+
+	getChildValue(node, "stripes", stripe);
+	getChildValue(node, "stripe_size_k", stripe_size);
+
+	y2deb("constructed Dm " << dev);
+
+	assert(!tname.empty());
+	assert(stripe == 1 || stripe_size > 0);
     }
 
 
@@ -69,13 +77,26 @@ namespace storage
 	: Volume(c, v), tname(v.tname), num_le(v.num_le), stripe(v.stripe),
 	  stripe_size(v.stripe_size), inactiv(v.inactiv), pe_map(v.pe_map)
     {
-	y2deb("copy-constructed Dm from " << v.dev);
+	y2deb("copy-constructed Dm " << dev);
     }
 
 
     Dm::~Dm()
     {
 	y2deb("destructed Dm dev " << dev);
+    }
+
+
+    void
+    Dm::saveData(xmlNode* node) const
+    {
+	Volume::saveData(node);
+
+	setChildValue(node, "table_name", tname);
+
+	setChildValue(node, "stripes", stripe);
+	if (stripe > 1)
+	    setChildValue(node, "stripe_size_k", stripe_size);
     }
 
 

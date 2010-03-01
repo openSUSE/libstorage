@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -59,27 +59,21 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     }
 
 
-    LvmVg::LvmVg(Storage* s, const AsciiFile& file)
-	: PeContainer(s, staticType(), file), lvm1(false)
+    LvmVg::LvmVg(Storage* s, const xmlNode* node)
+	: PeContainer(s, staticType(), node), lvm1(false)
     {
-	const vector<string>& lines = file.lines();
-	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
-	{
-	    if (boost::starts_with(*it, "Logical Volume:"))
-	    {
-		LvmLv* p = new LvmLv(*this, file.subfile(it));
-		addToList(p);
-	    }
-	}
+	const list<const xmlNode*> l = getChildNodes(node, "logical_volume");
+	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
+	    addToList(new LvmLv(*this, *it));
 
-	y2deb("constructed LvmVg " << dev << " from file " << file.name());
+	y2deb("constructed LvmVg " << dev);
     }
 
 
     LvmVg::LvmVg(const LvmVg& c)
 	: PeContainer(c), status(c.status), uuid(c.uuid), lvm1(c.lvm1)
     {
-	y2deb("copy-constructed LvmVg from " << c.dev);
+	y2deb("copy-constructed LvmVg " << dev);
 
 	ConstLvmLvPair p = c.lvmLvPair();
 	for (ConstLvmLvIter i = p.begin(); i != p.end(); ++i)
@@ -93,6 +87,17 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     LvmVg::~LvmVg()
     {
 	y2deb("destructed LvmVg " << dev);
+    }
+
+
+    void
+    LvmVg::saveData(xmlNode* node) const
+    {
+	PeContainer::saveData(node);
+
+	ConstLvmLvPair vp = lvmLvPair();
+	for (ConstLvmLvIter v = vp.begin(); v != vp.end(); ++v)
+	    v->saveData(xmlNewChild(node, "logical_volume"));
     }
 
 
@@ -1719,24 +1724,13 @@ bool LvmVg::equalContent( const Container& rhs ) const
     LvmVg::logData(const string& Dir) const
     {
 	string fname(Dir + "/lvmvg_" + name() + ".info.tmp");
-	ofstream file(fname.c_str());
-	classic(file);
 
-	file << "Name: " << nm << endl;
-	file << "Device: " << dev << endl;
-	file << "SizeK: " << sizeK() << endl;
+	XmlFile xml;
+	xmlNode* node = xmlNewNode("volume_group");
+	xml.setRootElement(node);
+	saveData(node);
+	xml.save(fname);
 
-	ConstLvmLvPair pp = lvmLvPair();
-	for (ConstLvmLvIter p = pp.begin(); p != pp.end(); ++p)
-	{
-	    file << "Logical Volume: ";
-	    p->logData(file);
-	    file << endl;
-	}
-
-	PeContainer::logData(file);
-
-	file.close();
 	getStorage()->handleLogFile( fname );
     }
 

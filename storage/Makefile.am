@@ -39,6 +39,7 @@ libstorage_la_SOURCES =					\
 	Regex.cc		Regex.h			\
 	FreeInfo.cc		FreeInfo.h		\
 	AsciiFile.cc		AsciiFile.h		\
+	XmlFile.cc		XmlFile.h		\
 	SystemInfo.cc		SystemInfo.h		\
 	ProcParts.cc		ProcParts.h		\
 	Blkid.cc		Blkid.h			\
@@ -50,11 +51,11 @@ libstorage_la_SOURCES =					\
 	StorageTypes.cc		StorageTypes.h		\
 	FilterIterator.h	ListListIterator.h	\
 	DerefIterator.h		IterPair.h		\
-	Region.h		StorageTmpl.h		\
-	StorageDefines.h
+	Region.cc		Region.h		\
+	StorageTmpl.h		StorageDefines.h
 
 libstorage_la_LDFLAGS = -version-info 2:0
-libstorage_la_LIBADD = -lblocxx
+libstorage_la_LIBADD = -lblocxx -lxml2
 
 pkgincludedir = $(includedir)/storage
 

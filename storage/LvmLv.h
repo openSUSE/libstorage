@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -41,9 +41,11 @@ class LvmLv : public Dm
 	      const string& uuid, const string& status, const string& alloc);
 	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
 	      unsigned stripe);
-	LvmLv(const LvmVg& c, const AsciiFile& file);
+	LvmLv(const LvmVg& c, const xmlNode* node);
 	LvmLv(const LvmVg& c, const LvmLv& v);
 	virtual ~LvmLv();
+
+	void saveData(xmlNode* node) const;
 
 	const LvmVg* vg() const;
 
@@ -69,7 +71,6 @@ class LvmLv : public Dm
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
 	void logDifference( const LvmLv& d ) const;
-	std::ostream& logData(std::ostream& file) const;
 
     protected:
 	static string makeDmTableName(const string& vg_name, const string& lv_name);

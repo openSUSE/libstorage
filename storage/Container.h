@@ -156,9 +156,11 @@ namespace storage
 	Container(Storage* s, const string& name, const string& device, CType typ);
 	Container(Storage* s, const string& name, const string& device, CType typ,
 		  SystemInfo& systemInfo);
-	Container(Storage* s, CType typ, const AsciiFile& file);
+	Container(Storage* s, CType typ, const xmlNode* node);
 	Container(const Container& c);
 	virtual ~Container();
+
+	void saveData(xmlNode* node) const;
 
 	Storage* getStorage() const { return sto; }
 	const Storage* getStorageConst() const { return sto; }

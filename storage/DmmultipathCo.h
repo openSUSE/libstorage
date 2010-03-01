@@ -147,8 +147,6 @@ class DmmultipathCo : public DmPartCo
 
 	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
 
-	void logData(const string& Dir) const;
-
 	string vendor;
 	string model;
 

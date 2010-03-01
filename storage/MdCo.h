@@ -135,8 +135,6 @@ class MdCo : public Container
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 
-	void logData(const string& Dir) const;
-
 	/* Return true if given device is alredy handled by MdPartCo. */
 	bool isHandledByMdPart(const string& name);
 

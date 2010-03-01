@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -51,9 +51,11 @@ class Storage;
 
 	Volume(const Container& c, unsigned Pnr, unsigned long long SizeK);
 	Volume(const Container& c, const string& PName, unsigned long long SizeK);
-	Volume(const Container& c, const AsciiFile& file);
+	Volume(const Container& c, const xmlNode* node);
 	Volume(const Container& c, const Volume& v);
 	virtual ~Volume();
+
+	void saveData(xmlNode* node) const;
 
 	const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }

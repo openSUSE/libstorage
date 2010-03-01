@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -71,23 +71,13 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 }
 
 
-    LvmLv::LvmLv(const LvmVg& c, const AsciiFile& file)
-	: Dm(c, file)
+    LvmLv::LvmLv(const LvmVg& c, const xmlNode* node)
+	: Dm(c, node)
     {
-	numeric = false;
+	assert(!numeric);
+	assert(num == 0);
 
-	string data = extractNthWord(2, *(file.lines().begin()), true);
-
-	istringstream i(data);
-	classic(i);
-	i >> dev >> size_k >> mjr >> mnr >> stripe >> stripe_size;
-
-	string::size_type pos = dev.rfind("/");
-	nm = dev.substr(pos + 1);
-
-	orig_size_k = size_k;
-
-	y2deb("constructed LvmLv " << dev << " on " << cont->device());
+	y2deb("constructed LvmLv " << dev);
     }
 
 
@@ -95,13 +85,20 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status),
 	  allocation(v.allocation)
     {
-	y2deb("copy-constructed LvmLv from " << v.dev);
+	y2deb("copy-constructed LvmLv " << dev);
     }
 
 
     LvmLv::~LvmLv()
     {
 	y2deb("destructed LvmLv " << dev);
+    }
+
+
+    void
+    LvmLv::saveData(xmlNode* node) const
+    {
+	Dm::saveData(node);
     }
 
 
@@ -372,15 +369,6 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     if( !p.allocation.empty() )
       s << " " << p.allocation;
     return( s );
-    }
-
-
-    ostream&
-    LvmLv::logData(ostream& file) const
-    {
-	file << dev << " " << size_k << " " <<  mjr << " " << mnr << " " << stripe << " "
-	     << stripe_size;
-	return file;
     }
 
 

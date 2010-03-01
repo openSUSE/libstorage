@@ -38,9 +38,11 @@ class PeContainer : public Container
 	PeContainer(Storage* s, const string& name, const string& device, CType t);
 	PeContainer(Storage* s, const string& name, const string& device, CType t,
 		    SystemInfo& systeminfo);
-	PeContainer(Storage* s, CType t, const AsciiFile& File);
+	PeContainer(Storage* s, CType t, const xmlNode* node);
 	PeContainer(const PeContainer& c);
 	virtual ~PeContainer();
+
+	void saveData(xmlNode* node) const;
 
 	unsigned long long peSize() const { return pe_size; }
 	unsigned long long sizeK() const { return pe_size*num_pe; }
@@ -62,7 +64,9 @@ class PeContainer : public Container
 	struct Pv
 	    {
 	    Pv() : num_pe(0), free_pe(0) {}
-	    Pv(const string& data);
+	    Pv(const xmlNode* node);
+
+	    void saveData(xmlNode* node) const;
 
 	    string device;
 	    string dmcryptDevice;
@@ -77,8 +81,6 @@ class PeContainer : public Container
 		{ return( a.free_pe<b.free_pe ); }
 	    static bool no_free( const Pv& a )
 		{ return( a.free_pe==0 ); }
-
-	    std::ostream& logData(std::ostream& file) const;
 
 	    bool operator== ( const Pv& rhs ) const
 		{ return( device==rhs.device ); }
@@ -141,8 +143,6 @@ class PeContainer : public Container
 
 	friend std::ostream& operator<< (std::ostream&, const Pv& );
 	friend void printDevList (std::ostream&, const std::list<Pv>& );
-
-	std::ostream& logData(std::ostream& file) const;
 
 	void init();
 	string addList() const;

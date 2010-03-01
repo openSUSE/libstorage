@@ -327,12 +327,6 @@ bool DmmultipathCo::equalContent( const Container& rhs ) const
 }
 
 
-void
-DmmultipathCo::logData(const string& Dir) const
-{
-}
-
-
 bool DmmultipathCo::active = false;
 
 }

@@ -220,12 +220,6 @@ NfsCo::findNfs( const string& dev )
     }
 
 
-void
-NfsCo::logData(const string& Dir) const
-{
-}
-
-
     std::ostream& operator<<(std::ostream& s, const NfsCo& d)
     {
     s << dynamic_cast<const Container&>(d);

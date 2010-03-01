@@ -39,7 +39,7 @@ namespace storage
 
     /* This is our constructor for Container used for containers created via
        the storage interface. This is recognisable by the fact that it does
-       not have a parameter of type SystemInfo or AsciiFile. */
+       not have a parameter of type SystemInfo or xmlNode. */
     Container::Container(Storage* s, const string& name, const string& device, CType t)
 	: Device(name, device), sto(s), typ(t), ronly(false)
     {
@@ -65,19 +65,14 @@ namespace storage
 
     /* This is our constructor for Container used during fake detection in
        testmode. This is recognisable by the fact that it has an parameter of
-       type AsciiFile. */
-    Container::Container(Storage* s, CType t, const AsciiFile& file)
-	: Device(file), sto(s), typ(t), ronly(false)
+       type xmlNode. */
+    Container::Container(Storage* s, CType t, const xmlNode* node)
+	: Device(node), sto(s), typ(t), ronly(false)
     {
-	const vector<string>& lines = file.lines();
-	vector<string>::const_iterator it;
+	getChildValue(node, "readonly", ronly);
 
-	if ((it = find_if(lines, string_starts_with("Readonly:"))) != lines.end())
-	    extractNthWord(1, *it) >> ronly;
+	y2deb("constructed Container " << dev);
 
-	y2deb("constructed Container " << dev << " from file " << file.name());
-
-	assert(!nm.empty() && !dev.empty());
 	assert(s->testmode());
     }
 
@@ -87,7 +82,7 @@ namespace storage
     Container::Container(const Container& c)
 	: Device(c), sto(c.sto), typ(c.typ), ronly(c.ronly)
     {
-	y2deb("copy-constructed Container from " << c.dev);
+	y2deb("copy-constructed Container " << dev);
     }
 
 
@@ -95,6 +90,16 @@ namespace storage
     {
 	clearPointerList(vols);
 	y2deb("destructed Container " << dev);
+    }
+
+
+    void
+    Container::saveData(xmlNode* node) const
+    {
+	Device::saveData(node);
+
+	if (ronly)
+	    setChildValue(node, "readonly", ronly);
     }
 
 

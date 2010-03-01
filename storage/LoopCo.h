@@ -123,8 +123,6 @@ class LoopCo : public Container
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 
-	void logData(const string& Dir) const;
-
     private:
 
 	LoopCo& operator=(const LoopCo&); // disallow

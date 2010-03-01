@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -84,63 +84,33 @@ namespace storage
     }
 
 
-    Disk::Disk(Storage* s, const AsciiFile& file)
-    : Container(s, staticType(), file), udev_path(), udev_id(), max_primary(0),
-      ext_possible(false), max_logical(0), init_disk(false), iscsi(false), dmp_slave(false),
-      gpt_enlarge(false), range(4)
-{
-    logfile_name = nm;
-
-    const vector<string>& lines = file.lines();
-    vector<string>::const_iterator it;
-
-    if ((it = find_if(lines, string_starts_with("Range:"))) != lines.end())
-	extractNthWord(1, *it) >> range;
-
-    cyl = 1024;
-    if ((it = find_if(lines, string_starts_with("Cylinder:"))) != lines.end())
-	extractNthWord(1, *it) >> cyl;
-    head = 1024;
-    if ((it = find_if(lines, string_starts_with("Head:"))) != lines.end())
-	extractNthWord(1, *it) >> head;
-    sector = 32;
-    if ((it = find_if(lines, string_starts_with("Sector:"))) != lines.end())
-	extractNthWord(1, *it) >> sector;
-    byte_cyl = head * sector * 512;
-
-    if ((it = find_if(lines, string_starts_with("Label:"))) != lines.end())
-	label = extractNthWord(1, *it);
-
-    if ((it = find_if(lines, string_starts_with("MaxPrimary:"))) != lines.end())
-	extractNthWord(1, *it) >> max_primary;
-    if ((it = find_if(lines, string_starts_with("ExtPossible:"))) != lines.end())
-	extractNthWord(1, *it) >> ext_possible;
-    if ((it = find_if(lines, string_starts_with("MaxLogical:"))) != lines.end())
-	extractNthWord(1, *it) >> max_logical;
-
-    if( FakeDisk() && isdigit( nm[nm.size()-1] ))
+    Disk::Disk(Storage* s, const xmlNode* node)
+	: Container(s, staticType(), node), cyl(0), head(0), sector(0),
+	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
+	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
+	  init_disk(false), iscsi(false), dmp_slave(false),
+	  gpt_enlarge(false), byte_cyl(0), range(4)
     {
-	string::size_type p = nm.find_last_not_of( "0123456789" );
-	nm.erase( p+1 );
+	logfile_name = nm;
+
+	getChildValue(node, "range", range);
+
+	getChildValue(node, "cylinder", cyl);
+	getChildValue(node, "head", head);
+	getChildValue(node, "sector", sector);
+	byte_cyl = head * sector * 512;
+
+	getChildValue(node, "label", label);
+	getChildValue(node, "max_primary", max_primary);
+	getChildValue(node, "ext_possible", ext_possible);
+	getChildValue(node, "max_logical", max_logical);
+
+	const list<const xmlNode*> l = getChildNodes(node, "partition");
+	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
+	    addToList(new Partition(*this, *it));
+
+	y2deb("constructed Disk " << dev);
     }
-
-    for (it = lines.begin(); it != lines.end(); ++it)
-    {
-	if (boost::starts_with(*it, "UdevPath:"))
-	    udev_path = extractNthWord(1, *it);
-
-	if (boost::starts_with(*it, "UdevId:"))
-	    udev_id.push_back(extractNthWord(1, *it));
-
-	if (boost::starts_with(*it, "Partition:"))
-	{
-	    Partition* p = new Partition(*this, file.subfile(it));
-	    addToList( p );
-	}
-    }
-
-    y2deb("constructed Disk " << dev << " from file " << file.name());
-}
 
 
     Disk::Disk(const Disk& c)
@@ -155,7 +125,7 @@ namespace storage
 	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
 	  byte_cyl(c.byte_cyl), range(c.range)
     {
-	y2deb("copy-constructed Disk from " << c.dev);
+	y2deb("copy-constructed Disk " << dev);
 
 	ConstPartPair p = c.partPair();
 	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
@@ -169,6 +139,36 @@ namespace storage
     Disk::~Disk()
     {
 	y2deb("destructed Disk " << dev);
+    }
+
+
+    void
+    Disk::saveData(xmlNode* node) const
+    {
+	Container::saveData(node);
+
+	setChildValue(node, "range", range);
+
+	setChildValue(node, "cylinder", cyl);
+	setChildValue(node, "head", head);
+	setChildValue(node, "sector", sector);
+
+	setChildValue(node, "label", label);
+	setChildValue(node, "max_primary", max_primary);
+	if (ext_possible)
+	{
+	    setChildValue(node, "ext_possible", ext_possible);
+	    setChildValue(node, "max_logical", max_logical);
+	}
+
+	if (!udev_path.empty())
+	    setChildValue(node, "udev_path", udev_path);
+	if (!udev_id.empty())
+	    setChildValue(node, "udev_id", udev_id);
+
+	ConstPartPair vp = partPair();
+	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)
+	    v->saveData(xmlNewChild(node, "partition"));
     }
 
 
@@ -504,47 +504,14 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 void
 Disk::logData(const string& Dir) const
     {
-    string fname( Dir + "/disk_" + logfile_name + ".info.tmp" );
-    ofstream file( fname.c_str() );
-    classic(file);
+    string fname(Dir + "/disk_" + logfile_name + ".info.tmp");
 
-    file << "Name: " << nm << endl;
-    file << "Device: " << dev << endl;
-    if( !udev_path.empty() )
-	file << "UdevPath: " << udev_path << endl;
-    if( !udev_id.empty() )
-	for (list<string>::const_iterator it = udev_id.begin(); it != udev_id.end(); ++it)
-	    file << "UdevId: " << *it << endl;
-    file << "Major: " << mjr << endl;
-    file << "Minor: " << mnr << endl;
-    file << "Range: " << range << endl;
+    XmlFile xml;
+    xmlNode* node = xmlNewNode("disk");
+    xml.setRootElement(node);
+    saveData(node);
+    xml.save(fname);
 
-    file << "Cylinder: " << cyl << endl;
-    file << "Head: " << head << endl;
-    file << "Sector: " << sector << endl;
-
-    file << "Label: " << label << endl;
-    file << "MaxPrimary: " << max_primary << endl;
-    if( ext_possible )
-	{
-	file << "ExtPossible: " << ext_possible << endl;
-	file << "MaxLogical: " << max_logical << endl;
-	}
-    if( ronly )
-	{
-	file << "Readonly: " << ronly << endl;
-	}
-    file << "SizeK: " << size_k << endl;
-
-    ConstPartPair pp = partPair();
-    for (ConstPartIter p = pp.begin(); p != pp.end(); ++p)
-	{
-	file << "Partition: ";
-	p->logData(file);
-	file << endl;
-	}
-
-    file.close();
     getStorage()->handleLogFile( fname );
     }
 

@@ -2108,7 +2108,4 @@ const string MdPartCo::sysfs_path = "/sys/devices/virtual/block/";
 
 bool MdPartCo::active = false;
 
-void MdPartCo::logData(const string& Dir) const {}
-
-
 }

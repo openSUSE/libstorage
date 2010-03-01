@@ -790,12 +790,6 @@ bool MdCo::equalContent( const Container& rhs ) const
     }
 
 
-void
-MdCo::logData(const string& Dir) const
-{
-}
-
-
 // Not a class member. Just check function.
 static bool showMdPartContainers(const Container& c )
     {

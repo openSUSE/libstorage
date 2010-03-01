@@ -37,9 +37,11 @@ class Dm : public Volume
     public:
 	Dm( const PeContainer& d, const string& tn );
 	Dm( const PeContainer& d, const string& tn, unsigned mnum );
-	Dm(const PeContainer& c, const AsciiFile& file);
+	Dm(const PeContainer& c, const xmlNode* node);
 	Dm(const PeContainer& c, const Dm& v);
 	virtual ~Dm();
+
+	void saveData(xmlNode* node) const;
 
 	const string& getTableName() const { return( tname ); }
 	const string& getTargetName() const { return( target ); }

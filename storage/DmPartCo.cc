@@ -1078,10 +1078,4 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 	updatePointers(true);
     }
 
-
-void
-DmPartCo::logData(const string& Dir) const
-{
-}
-
 }

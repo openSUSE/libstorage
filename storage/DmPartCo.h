@@ -190,8 +190,6 @@ class DmPartCo : public PeContainer
 	virtual Text removeText( bool doing ) const;
 	virtual Text setDiskLabelText( bool doing ) const;
 
-	void logData(const string& Dir) const;
-
 	string udev_path;
 	list<string> udev_id;
 	Disk* disk;

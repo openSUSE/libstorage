@@ -14,7 +14,7 @@ Source1:	libstorage-rpmlintrc
 
 prefix:		/usr
 
-BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig
+BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel
 
 Requires:	parted mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
 Requires:	coreutils udev util-linux >= 2.16 grep

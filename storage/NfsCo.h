@@ -110,8 +110,6 @@ class NfsCo : public Container
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new NfsCo( *this ) ); }
 
-	void logData(const string& Dir) const;
-
     private:
 
 	NfsCo& operator=(const NfsCo&); // disallow

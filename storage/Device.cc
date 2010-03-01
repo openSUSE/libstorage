@@ -21,7 +21,6 @@
 
 
 #include "storage/Device.h"
-#include "storage/AsciiFile.h"
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"
 
@@ -34,46 +33,31 @@ namespace storage
     Device::Device(const string& nm, const string& dev)
 	: nm(nm), dev(dev), create(false), del(false), silent(false), size_k(0), mjr(0), mnr(0)
     {
+	y2deb("constructed Device " << dev);
     }
 
 
     Device::Device(const string& nm, const string& dev, SystemInfo& systeminfo)
 	: nm(nm), dev(dev), create(false), del(false), silent(false), size_k(0), mjr(0), mnr(0)
     {
+	y2deb("constructed Device " << dev);
     }
 
 
-    Device::Device(const AsciiFile& file)
+    Device::Device(const xmlNode* node)
 	: nm(), dev(), create(false), del(false), silent(false), size_k(0), mjr(0), mnr(0)
     {
-	const vector<string>& lines = file.lines();
+	getChildValue(node, "name", nm);
+	getChildValue(node, "device", dev);
 
-	if (lines.size() > 1)
-	{
-	    // Container
+	getChildValue(node, "size_k", size_k);
 
-	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
-	    {
-		if (boost::starts_with(*it, "Name:"))
-		    nm = extractNthWord(1, *it);
-		if (boost::starts_with(*it,  "Device:"))
-		    dev = extractNthWord(1, *it);
+	getChildValue(node, "major", mjr);
+	getChildValue(node, "minor", mnr);
 
-		if (boost::starts_with(*it, "SizeK:"))
-		    extractNthWord(1, *it) >> size_k;
+	y2deb("constructed Device " << dev);
 
-		if (boost::starts_with(*it, "Major:"))
-		    extractNthWord(1, *it) >> mjr;
-		if (boost::starts_with(*it, "Minor:"))
-		    extractNthWord(1, *it) >> mnr;
-	    }
-	}
-	else
-	{
-	    // Volume
-	}
-
-	y2deb("constructed Device " << dev << " from file " << file.name());
+	assert(!nm.empty() && !dev.empty());
     }
 
 
@@ -81,13 +65,24 @@ namespace storage
 	: nm(d.nm), dev(d.dev), create(d.create), del(d.del), silent(d.silent), size_k(d.size_k),
 	  mjr(d.mjr), mnr(d.mnr), uby(d.uby), alt_names(d.alt_names)
     {
-	y2deb("copy-constructed Device from " << d.dev);
+	y2deb("copy-constructed Device " << dev);
     }
 
 
     Device::~Device()
     {
 	y2deb("destructed Device " << dev);
+    }
+
+
+    void
+    Device::saveData(xmlNode* node) const
+    {
+	setChildValue(node, "name", nm);
+	setChildValue(node, "device", dev);
+	setChildValue(node, "size_k", size_k);
+	setChildValue(node, "major", mjr);
+	setChildValue(node, "minor", mnr);
     }
 
 

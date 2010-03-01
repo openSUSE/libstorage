@@ -66,8 +66,11 @@ namespace storage
     }
 
 
-    Volume::Volume(const Container& c, const AsciiFile& file)
-	: Device(file), cont(&c), numeric(false), format(false),
+    /* This is our constructor for Volume used during fake detection in
+       testmode. This is recognisable by the fact that it has an parameter of
+       type xmlNode. */
+    Volume::Volume(const Container& c, const xmlNode* node)
+	: Device(node), cont(&c), numeric(false), format(false),
 	  fstab_added(false), fs(FSUNKNOWN), detected_fs(FSUNKNOWN),
 	  mount_by(MOUNTBY_DEVICE), orig_mount_by(MOUNTBY_DEVICE),
 	  is_loop(false), is_mounted(false), ignore_fstab(false),
@@ -75,6 +78,11 @@ namespace storage
 	  ronly(false), encryption(ENC_NONE), orig_encryption(ENC_NONE),
 	  num(0), orig_size_k(0)
     {
+	getChildValue(node, "numeric", numeric);
+	getChildValue(node, "number", num);
+
+	orig_size_k = size_k;
+
 	y2deb("constructed Volume " << dev);
 
 	assert(c.getStorage()->testmode());
@@ -103,13 +111,24 @@ namespace storage
 	  crypt_pwd(v.crypt_pwd), orig_crypt_pwd(v.orig_crypt_pwd),
 	  num(v.num), orig_size_k(v.orig_size_k), dtxt(v.dtxt)
     {
-	y2deb("copy-constructed Volume from " << v.dev);
+	y2deb("copy-constructed Volume " << dev);
     }
 
 
     Volume::~Volume()
     {
 	y2deb("destructed Volume " << dev);
+    }
+
+
+    void
+    Volume::saveData(xmlNode* node) const
+    {
+	Device::saveData(node);
+
+	setChildValue(node, "numeric", numeric);
+	if (numeric)
+	    setChildValue(node, "number", num);
     }
 
 

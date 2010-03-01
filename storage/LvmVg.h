@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -41,9 +41,11 @@ class LvmVg : public PeContainer
 
 	LvmVg(Storage* s, const string& name, const string& device, bool lvm1);
 	LvmVg(Storage* s, const string& name, const string& device, SystemInfo& systeminfo);
-	LvmVg(Storage* s, const AsciiFile& File);
+	LvmVg(Storage* s, const xmlNode* node);
 	LvmVg(const LvmVg& c);
 	virtual ~LvmVg();
+
+	void saveData(xmlNode* node) const;
 
 	unsigned numLv() const;
 	bool lvm2() const { return( !lvm1 ); }
@@ -156,7 +158,7 @@ class LvmVg : public PeContainer
 	string metaString() const;
 	string instSysString() const;
 
-	void logData(const string& Dir) const;
+	virtual void logData(const string& Dir) const;
 
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		   string& status, string& alloc, bool& ro);

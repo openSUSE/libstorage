@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -24,6 +24,9 @@
 #define REGION_H
 
 #include <algorithm>
+
+#include "storage/XmlFile.h"
+
 
 namespace storage
 {
@@ -65,24 +68,14 @@ class Region
 	unsigned long len() const { return( l ); }
 
 	friend std::ostream& operator<<(std::ostream& s, const Region& p);
-	friend std::istream& operator>>(std::istream& s, Region& p);
+
+	friend bool getChildValue(const xmlNode* node, const char* name, Region& value);
+	friend void setChildValue(xmlNode* node, const char* name, const Region& value);
 
     protected:
 	unsigned long s;
 	unsigned long l;
     };
-
-
-    inline std::ostream& operator<<(std::ostream& s, const Region& p)
-    {
-	return s << "[" << p.s << "," << p.l << "]";
-    }
-
-
-    inline std::istream& operator>>(std::istream& s, Region& p)
-    {
-	return s >> p.s >> p.l;
-    }
 
 }
 

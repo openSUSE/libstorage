@@ -542,7 +542,13 @@ void
 	{
 	    const list<string> l = glob(testdir() + "/disk_*.info", GLOB_NOSORT);
 	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
-		addToList(new Disk(this, AsciiFile(*i)));
+	    {
+		XmlFile file(*i);
+		const xmlNode* root = file.getRootElement();
+		const xmlNode* disk = getChildNode(root, "disk");
+		if (disk)
+		    addToList(new Disk(this, disk));
+	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_DISK") == NULL)
 	{
@@ -626,7 +632,13 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
 	{
 	    const list<string> l = glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT);
 	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
-		addToList(new LvmVg(this, AsciiFile(*i)));
+	    {
+		XmlFile file(*i);
+		const xmlNode* root = file.getRootElement();
+		const xmlNode* volume_group = getChildNode(root, "volume_group");
+		if (volume_group)
+		    addToList(new LvmVg(this, volume_group));
+	    }
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{

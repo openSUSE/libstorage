@@ -506,11 +506,4 @@ DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
         }
     }
 
-
-void
-DmCo::logData(const string& Dir) const
-{
-}
-
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -47,9 +47,11 @@ class Partition : public Volume
 	           unsigned long Start, unsigned long CSize,
 		   storage::PartitionType Type, 
 		   unsigned id=ID_LINUX, bool Boot=false );
-	Partition(const Disk& c, const AsciiFile& file);
+	Partition(const Disk& c, const xmlNode* node);
 	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();
+
+	void saveData(xmlNode* node) const;
 
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
@@ -64,7 +66,7 @@ class Partition : public Volume
 	bool boot() const { return bootflag; }
 	unsigned id() const { return idt; }
 	storage::PartitionType type() const { return typ; }
-	std::ostream& logData( std::ostream& file ) const;
+
 	void changeRegion( unsigned long Start, unsigned long CSize,
 	                   unsigned long long SizeK );
 	void changeNumber( unsigned new_num );
@@ -88,6 +90,9 @@ class Partition : public Volume
 	void setResizedSize( unsigned long long SizeK );
 	void forgetResize(); 
 	bool canUseDevice() const;
+
+	static PartitionType toPartitionType(const string& val);
+	static const string& partitionTypeString(PartitionType val) { return pt_names[val]; }
 
 	void getInfo( storage::PartitionInfo& info ) const;
 	void getInfo( storage::PartitionAddInfo& info ) const;

@@ -28,6 +28,7 @@
 #include <list>
 
 #include "storage/StorageTypes.h"
+#include "storage/XmlFile.h"
 
 
 namespace storage
@@ -37,7 +38,6 @@ namespace storage
 
 
     class SystemInfo;
-    class AsciiFile;
 
 
     class Device
@@ -46,9 +46,11 @@ namespace storage
 
 	Device(const string& nm, const string& dev);
 	Device(const string& nm, const string& dev, SystemInfo& systeminfo);
-	Device(const AsciiFile& file);
+	Device(const xmlNode* node);
 	Device(const Device&);
 	virtual ~Device();
+
+	void saveData(xmlNode* node) const;
 
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
