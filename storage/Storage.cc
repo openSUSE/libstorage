@@ -6713,25 +6713,25 @@ void Storage::checkPwdBuf( const string& device )
     Storage::logArchInfo(const string& Dir) const
     {
 	string fname(Dir + "/arch.info.tmp");
-	ofstream file(fname.c_str());
-	classic(file);
 
-	file << "Arch: " << arch() << endl;
+	XmlFile xml;
+	xmlNode* node = xmlNewNode("arch");
+	xml.setRootElement(node);
+	setChildValue(node, "arch", proc_arch);
+	xml.save(fname);
 
-	file.close();
 	handleLogFile(fname);
     }
 
 
     void
-    Storage::readArchInfo(const string& file)
+    Storage::readArchInfo(const string& fname)
     {
-	AsciiFile f(file);
-	const vector<string>& lines = f.lines();
-	vector<string>::const_iterator it;
-
-	if ((it = find_if(lines, string_starts_with("Arch:"))) != lines.end())
-	    proc_arch = extractNthWord(1, *it);
+	XmlFile file(fname);
+	const xmlNode* root = file.getRootElement();
+	const xmlNode* arch = getChildNode(root, "arch");
+	if (arch)
+	    getChildValue(arch, "arch", proc_arch);
     }
 
 

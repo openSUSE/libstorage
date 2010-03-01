@@ -1,1 +1,4 @@
-Arch: ia64
+<?xml version="1.0"?>
+<arch>
+  <arch>ia64</arch>
+</arch>
