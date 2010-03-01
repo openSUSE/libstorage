@@ -84,9 +84,9 @@ namespace storage
 	if (!getChildValue(node, name, tmp))
 	    return false;
 
-	std::istringstream ostr(tmp);
-	classic(ostr);
-	ostr >> value;
+	std::istringstream istr(tmp);
+	classic(istr);
+	istr >> value;
 	return true;
     }
 
@@ -98,10 +98,10 @@ namespace storage
     template<typename Type>
     void setChildValue(xmlNode* node, const char* name, const Type& value)
     {
-	std::ostringstream istr;
-	classic(istr);
-	istr << value;
-	setChildValue(node, name, istr.str());
+	std::ostringstream ostr;
+	classic(ostr);
+	ostr << value;
+	setChildValue(node, name, ostr.str());
     }
 
     template<typename Type>
