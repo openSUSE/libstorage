@@ -2679,7 +2679,7 @@ FsType Volume::toFsType( const string& val )
 
 MountByType Volume::toMountByType( const string& val )
     {
-    MountByType ret = MOUNTBY_LABEL;
+    MountByType ret = MOUNTBY_PATH;
     while( ret!=MOUNTBY_DEVICE && val!=mb_names[ret] )
 	{
 	ret = MountByType(ret-1);
