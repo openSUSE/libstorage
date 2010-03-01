@@ -294,7 +294,7 @@ void Storage::detectObjects()
     if (testmode())
 	{
  	rootprefix = testdir();
- 	fstab = new EtcFstab( rootprefix );
+ 	fstab = new EtcFstab( rootprefix + "/etc" );
 	raidtab = new EtcRaidtab(rootprefix);
 	}
     else

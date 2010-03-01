@@ -16,7 +16,7 @@ StorageInterface* s = 0;
 void
 print_fstab ()
 {
-    ifstream fstab ("tmp/fstab");
+    ifstream fstab("tmp/etc/fstab");
     string line;
 
     while (getline (fstab, line))
