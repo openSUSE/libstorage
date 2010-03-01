@@ -34,24 +34,20 @@ namespace storage
 class Region 
     {
     public:
-	Region() : s(0), l(0) {}
+
 	Region( unsigned long start, unsigned long len ) : s(start), l(len) {}
-	Region( const Region& x ) 
-	    { *this = x; }
-	Region& operator=(const Region& r)
-	    { s = r.start(); l = r.len(); return( *this ); }
+
 	bool doIntersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
 	Region intersect( const Region& r ) const
 	    {
-	    Region ret;
 	    if (doIntersect(r))
 		{
 		unsigned long s = std::max( r.start(), start() );
 		unsigned long e = std::min( r.end(), end() );
-		ret = Region( s, e-s+1 );
+		return Region(s, e - s + 1);
 		}
-	    return( ret );
+	    return Region(0, 0);
 	    }
 	bool inside( const Region& r ) const
 	    { return( start()>=r.start() && end() <= r.end() ); }
