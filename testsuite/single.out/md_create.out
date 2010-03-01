@@ -26,10 +26,3 @@ createMD: 0 md0 /dev/md0 0 3 0
 createMD: 0 md0 /dev/md0 0 4 0 
 createMD: 0 md0 /dev/md0 0 5 0 
 createMD: 0 md0 /dev/md0 0 6 0 
-Devices: 6 ----------------------
-createMD: 0 md0 /dev/md0 0 1 0 
-createMD: 0 md0 /dev/md0 0 2 0 
-createMD: 0 md0 /dev/md0 0 3 0 
-createMD: 0 md0 /dev/md0 0 4 0 
-createMD: 0 md0 /dev/md0 0 5 0 
-createMD: 0 md0 /dev/md0 0 6 0 
