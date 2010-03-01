@@ -318,11 +318,10 @@ void Storage::detectObjects()
 
     if (testmode())
         {
-	string t = testdir() + "/volume.info";
-	if( access( t.c_str(), R_OK )==0 )
-	    detectFsDataTestMode( t, vBegin(), vEnd() );
+	for (VolIterator i = vBegin(); i != vEnd(); ++i)
+	    i->getFstabData(*fstab);
 
-	t = testdir() + "/free.info";
+	string t = testdir() + "/free.info";
 	if( access( t.c_str(), R_OK )==0 )
 	    readFreeInfo(t);
 	}
@@ -904,25 +903,6 @@ Storage::printInfo(ostream& str) const
 }
 
 
-void
-Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
-			       const VolIterator& end )
-{
-    AsciiFile vd( file );
-    const vector<string>& lines = vd.lines();
-
-    for( VolIterator i=begin; i!=end; ++i )
-    {
-	vector<string>::const_iterator pos = find_if(lines, string_starts_with(i->device() + " "));
-	if (pos != lines.end())
-	{
-	    i->getTestmodeData(*pos);
-	}
-	i->getFstabData( *fstab );
-    }
-}
-
-
     void
     Storage::logContainersAndVolumes(const string& Dir) const
     {
@@ -931,29 +911,9 @@ Storage::detectFsDataTestMode( const string& file, const VolIterator& begin,
 	    for (CCIter i = cont.begin(); i != cont.end(); ++i)
 		(*i)->logData(Dir);
 
-	    logVolumes(Dir);
 	    logFreeInfo(Dir);
 	    logArchInfo(Dir);
 	}
-    }
-
-
-void
-Storage::logVolumes(const string& Dir) const
-    {
-    string fname(Dir + "/volume.info.tmp");
-    ofstream file( fname.c_str() );
-    classic(file);
-    ConstVolPair p = volPair();
-    for (ConstVolIterator i = p.begin(); i != p.end(); ++i)
-	{
-	if( i->getFs()!=FSUNKNOWN )
-	    {
-	    i->logVolume( file );
-	    }
-	}
-    file.close();
-    handleLogFile( fname );
     }
 
 

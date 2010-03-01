@@ -1868,9 +1868,6 @@ class DiskData;
 	void detectDm(SystemInfo& systeminfo, bool only_crypt);
 	void initDisk(DiskData& data, SystemInfo& systeminfo);
 	void detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo);
-	void detectFsDataTestMode( const string& file,
-	                           const VolIterator& begin,
-				   const VolIterator& end );
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs);
 	int resizePartition( const string& device, unsigned long sizeCyl,

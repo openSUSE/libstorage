@@ -20,6 +20,12 @@
     <major>253</major>
     <minor>0</minor>
     <numeric>false</numeric>
+    <fs_type>btrfs</fs_type>
+    <fs_uuid>a25f1b5f-27d1-48c1-ba02-bb083cb4c862</fs_uuid>
+    <fs_label>ABUILD</fs_label>
+    <mount>/abuild</mount>
+    <mount_by>uuid</mount_by>
+    <fstopt>noatime,acl,user_xattr</fstopt>
     <table_name>system-abuild</table_name>
     <stripes>1</stripes>
   </logical_volume>
@@ -30,6 +36,10 @@
     <major>253</major>
     <minor>1</minor>
     <numeric>false</numeric>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>d4c2b968-3d62-44d7-a0c2-d85d8562a25d</fs_uuid>
+    <mount>/ARVIN</mount>
+    <fstopt>noatime,acl,user_xattr</fstopt>
     <table_name>system-arvin</table_name>
     <stripes>1</stripes>
   </logical_volume>
@@ -40,6 +50,10 @@
     <major>253</major>
     <minor>2</minor>
     <numeric>false</numeric>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>31e381c9-5b35-4045-8d01-9274a30e1298</fs_uuid>
+    <mount>/</mount>
+    <fstopt>noatime,acl,user_xattr</fstopt>
     <table_name>system-root</table_name>
     <stripes>1</stripes>
   </logical_volume>
@@ -50,6 +64,12 @@
     <major>253</major>
     <minor>3</minor>
     <numeric>false</numeric>
+    <fs_type>swap</fs_type>
+    <fs_uuid>fd39c3f9-2990-435d-8eed-e56b6dc2e592</fs_uuid>
+    <fs_label>SWAP</fs_label>
+    <mount>swap</mount>
+    <mount_by>label</mount_by>
+    <fstopt>defaults</fstopt>
     <table_name>system-swap</table_name>
     <stripes>1</stripes>
   </logical_volume>
@@ -60,6 +80,10 @@
     <major>253</major>
     <minor>4</minor>
     <numeric>false</numeric>
+    <fs_type>ext2</fs_type>
+    <fs_uuid>1f8091b0-ac6d-498e-8667-61efce3008e2</fs_uuid>
+    <mount>/ARVIN/virtualbox</mount>
+    <fstopt>noatime,acl,user_xattr</fstopt>
     <table_name>system-virtualbox</table_name>
     <stripes>1</stripes>
   </logical_volume>

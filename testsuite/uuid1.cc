@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <iostream>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
 
 #include "common.h"
 
@@ -19,7 +20,8 @@ print_fstab ()
     cout << "begin of fstab" << endl;
 
     while (getline (fstab, line))
-	cout << line << endl;
+	if (boost::contains(line, "/tmp/mnt"))
+	    cout << line << endl;
 
     cout << "end of fstab" << endl;
 }

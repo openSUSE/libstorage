@@ -217,7 +217,6 @@ class Storage;
 	void getLoopData( SystemCmd& loopData );
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );
-	void getTestmodeData( const string& data );
 	void replaceAltName( const string& prefix, const string& newn );
 	string getMountByString( storage::MountByType mby, const string& dev,
 	                         const string& uuid, 
@@ -238,7 +237,6 @@ class Storage;
 	                  bool format ) const;
 	bool noFreqPassno() const;
 
-	std::ostream& logVolume( std::ostream& file ) const;
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
 	string getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 				 const string& mp, const string& pwdfile, bool format,

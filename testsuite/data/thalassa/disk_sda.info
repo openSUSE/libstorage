@@ -21,6 +21,12 @@
     <minor>1</minor>
     <numeric>true</numeric>
     <number>1</number>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>14875716-b8e3-4c83-ac86-48c20682b63a</fs_uuid>
+    <fs_label>BOOT</fs_label>
+    <mount>/boot</mount>
+    <mount_by>id</mount_by>
+    <fstopt>acl,user_xattr</fstopt>
     <region>
       <start>1</start>
       <length>130</length>

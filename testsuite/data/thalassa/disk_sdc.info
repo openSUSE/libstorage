@@ -21,6 +21,9 @@
     <minor>33</minor>
     <numeric>true</numeric>
     <number>1</number>
+    <fs_type>ext2</fs_type>
+    <fs_uuid>fa39d2fd-cd05-47f9-933e-1511e89879ab</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>0</start>
       <length>654</length>
@@ -36,6 +39,9 @@
     <minor>34</minor>
     <numeric>true</numeric>
     <number>2</number>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>85b755d4-e980-49bb-9ebd-3f4416b54ff9</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>654</start>
       <length>1305</length>
@@ -51,6 +57,9 @@
     <minor>35</minor>
     <numeric>true</numeric>
     <number>3</number>
+    <fs_type>ext4</fs_type>
+    <fs_uuid>3c465f82-9f9e-45a3-b789-9831ffd2ade6</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>1959</start>
       <length>1958</length>
@@ -81,6 +90,9 @@
     <minor>37</minor>
     <numeric>true</numeric>
     <number>5</number>
+    <fs_type>btrfs</fs_type>
+    <fs_uuid>92f5be30-e4f6-4512-954b-8c13af0cbc15</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>3917</start>
       <length>2611</length>
@@ -96,6 +108,9 @@
     <minor>38</minor>
     <numeric>true</numeric>
     <number>6</number>
+    <fs_type>btrfs</fs_type>
+    <fs_uuid>8a5e979d-fabe-432a-b588-c303c5ceba08</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>6528</start>
       <length>2611</length>

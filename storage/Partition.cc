@@ -50,15 +50,15 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     Partition::Partition(const Disk& c, const xmlNode* node)
 	: Volume(c, node), reg(0, 0), bootflag(false)
     {
+	string tmp;
+
 	assert(numeric);
 	assert(num > 0);
 
 	getChildValue(node, "region", reg);
 
-	string t;
-	getChildValue(node, "partition_type", t);
-	typ = toPartitionType(t);
-
+	if (getChildValue(node, "partition_type", tmp))
+	    typ = toPartitionType(tmp);
 	getChildValue(node, "partition_id", idt);
 
 	getChildValue(node, "boot_flag", bootflag);

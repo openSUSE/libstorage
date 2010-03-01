@@ -78,8 +78,28 @@ namespace storage
 	  ronly(false), encryption(ENC_NONE), orig_encryption(ENC_NONE),
 	  num(0), orig_size_k(0)
     {
+	string tmp;
+
 	getChildValue(node, "numeric", numeric);
 	getChildValue(node, "number", num);
+
+	if (getChildValue(node, "fs_type", tmp))
+	    fs = detected_fs = toFsType(tmp);
+	if (getChildValue(node, "fs_uuid", uuid))
+	    orig_uuid = uuid;
+	if (getChildValue(node, "fs_label", label))
+	    orig_label = label;
+	if (getChildValue(node, "mount", mp))
+	    orig_mp = mp;
+	if (getChildValue(node, "mount_by", tmp))
+	    mount_by = orig_mount_by = toMountByType(tmp);
+	if (getChildValue(node, "fstopt", fstab_opt))
+	    orig_fstab_opt = fstab_opt;
+
+	if (getChildValue(node, "encryption", tmp))
+	    encryption = orig_encryption = toEncType(tmp);
+	if (getChildValue(node, "password", crypt_pwd))
+	    orig_crypt_pwd = crypt_pwd;
 
 	orig_size_k = size_k;
 
@@ -129,6 +149,28 @@ namespace storage
 	setChildValue(node, "numeric", numeric);
 	if (numeric)
 	    setChildValue(node, "number", num);
+
+	if (fs != FSUNKNOWN)
+	{
+	    setChildValue(node, "fs_type", fs_names[fs]);
+	    if (!uuid.empty())
+		setChildValue(node, "fs_uuid", uuid);
+	    if (!label.empty())
+		setChildValue(node, "fs_label", label);
+	    if (!mp.empty())
+		setChildValue(node, "mount", mp);
+	    if (mount_by != MOUNTBY_DEVICE)
+		setChildValue(node, "mount_by", mb_names[mount_by]);
+	    if (!fstab_opt.empty())
+		setChildValue(node, "fstopt", fstab_opt);
+	}
+
+	if (encryption != ENC_NONE)
+	    setChildValue(node, "encryption", enc_names[encryption]);
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+	if (encryption != ENC_NONE && !crypt_pwd.empty())
+	    setChildValue(node, "password", crypt_pwd);
+#endif
     }
 
 
@@ -2859,73 +2901,6 @@ void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
     info.fstab_options = boost::join( fste.opts, "," );
     info.encryption = fste.encr;
     tinfo = info;
-    }
-
-ostream& Volume::logVolume( ostream& file ) const
-    {
-    file << dev << " fs=" << fs_names[fs] << " size=" << sizeK();
-    if( !uuid.empty() )
-	file << " uuid=" << uuid;
-    if( !label.empty() )
-	file << " label=" << label;
-    if( !mp.empty() )
-	file << " mount=" << mp;
-    if( !fstab_opt.empty() )
-	file << " fstopt=" << fstab_opt;
-    if( mount_by != MOUNTBY_DEVICE )
-	file << " mountby=" << mb_names[mount_by];
-    if( is_loop && !fstab_loop_dev.empty() )
-	file << " loop=" << fstab_loop_dev;
-    if( is_loop && encryption!=ENC_NONE )
-	file << " encr=" << enc_names[encryption];
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    if( is_loop && encryption!=ENC_NONE && !crypt_pwd.empty() )
-	file << " pwd:" << crypt_pwd;
-    if( is_loop && encryption!=ENC_NONE && !orig_crypt_pwd.empty() && 
-        orig_crypt_pwd!=crypt_pwd )
-	file << " orig_pwd:" << orig_crypt_pwd;
-#endif
-    file << endl;
-    return( file );
-    }
-
-void Volume::getTestmodeData( const string& data )
-    {
-    list<string> l = splitString( data );
-    if( l.begin()!=l.end() )
-	l.erase( l.begin() );
-    const map<string,string> m = makeMap( l );
-    map<string,string>::const_iterator i = m.find( "fs" );
-    if( i!=m.end() )
-	fs = detected_fs = toFsType(i->second);
-    i = m.find( "uuid" );
-    if( i!=m.end() )
-	initUuid( i->second );
-    i = m.find( "label" );
-    if( i!=m.end() )
-	initLabel( i->second );
-    i = m.find( "mount" );
-    if( i!=m.end() )
-	setMount( i->second );
-    i = m.find( "mountby" );
-    if( i!=m.end() )
-	mount_by = orig_mount_by = toMountByType(i->second);
-    i = m.find( "fstopt" );
-    if( i!=m.end() )
-	fstab_opt = orig_fstab_opt = i->second;
-    i = m.find( "loop" );
-    if( i!=m.end() )
-	{
-	loop_dev = fstab_loop_dev = i->second;
-	is_loop = true;
-	loop_active = true;
-	}
-    i = m.find( "encr" );
-    if( i!=m.end() )
-	encryption = orig_encryption = toEncType(i->second);
-    i = m.find( "pwd" );
-    if( i!=m.end() )
-	orig_crypt_pwd = crypt_pwd = i->second;
     }
 
 

@@ -21,6 +21,9 @@
     <minor>17</minor>
     <numeric>true</numeric>
     <number>1</number>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>69fc7099-4a05-436f-b55a-fa7fd30a1f7c</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>0</start>
       <length>654</length>
@@ -51,6 +54,9 @@
     <minor>21</minor>
     <numeric>true</numeric>
     <number>5</number>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>686b8c9a-14ec-43ca-ad3e-7800a2581680</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>654</start>
       <length>2611</length>
@@ -66,6 +72,9 @@
     <minor>22</minor>
     <numeric>true</numeric>
     <number>6</number>
+    <fs_type>ext3</fs_type>
+    <fs_uuid>8c6da4fd-03d3-43cd-b4c7-bb15338c89ce</fs_uuid>
+    <mount_by>id</mount_by>
     <region>
       <start>3265</start>
       <length>2611</length>
