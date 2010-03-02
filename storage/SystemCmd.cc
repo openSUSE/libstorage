@@ -41,6 +41,7 @@ namespace storage
 
 
 SystemCmd::SystemCmd( const string& Command_Cv )
+	: Combine_b(false), output_proc(NULL)
 {
     y2mil("constructor SystemCmd:\"" << Command_Cv << "\"");
     init();
@@ -49,6 +50,7 @@ SystemCmd::SystemCmd( const string& Command_Cv )
 
 
 SystemCmd::SystemCmd()
+	: Combine_b(false), output_proc(NULL)
 {
     y2mil("constructor SystemCmd");
     init();
@@ -57,8 +59,6 @@ SystemCmd::SystemCmd()
 
 void SystemCmd::init()
     {
-    Combine_b = false;
-    output_proc = NULL;
     File_aC[0] = File_aC[1] = NULL;
     pfds[0].events = pfds[1].events = POLLIN;
     }

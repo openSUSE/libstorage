@@ -48,11 +48,12 @@ namespace storage
 
     const unsigned int fuzz_cyl = 2;
 
+
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo)
+	: Container(s, name, device, staticType(), systeminfo),
+	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false)
     {
-    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     logfile_name = boost::replace_all_copy(nm, "/", "_");
     getMajorMinor();
     size_k = SizeK;
@@ -62,11 +63,11 @@ namespace storage
 
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo)
+	: Container(s, name, device, staticType(), systeminfo),
+	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false)
     {
     y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = name + decString(num);
-    init_disk = dmp_slave = iscsi = gpt_enlarge = false;
     ronly = true;
     size_k = SizeK;
     head = new_head = 16;
