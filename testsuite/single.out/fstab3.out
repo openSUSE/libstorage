@@ -1,0 +1,13 @@
+0
+/dev/sda1
+0
+0
+0
+0
+0
+begin of fstab
+/dev/mapper/cr_sda1  /secret              ext4       nofail                0 0
+end of fstab
+begin of crypttab
+cr_sda1         /dev/sda1            none       none
+end of crypttab

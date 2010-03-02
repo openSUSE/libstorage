@@ -1,0 +1,10 @@
+0
+/dev/sda1
+0
+0
+0-4017
+begin of fstab
+end of fstab
+begin of crypttab
+cr_sda1         /dev/sda1            none       none
+end of crypttab
