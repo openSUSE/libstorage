@@ -12,17 +12,14 @@ using namespace storage;
 
 
 void
-print_fstab ()
+print_fstab()
 {
     ifstream fstab("tmp/etc/fstab");
-    string line;
 
     cout << "begin of fstab" << endl;
-
+    string line;
     while (getline (fstab, line))
-	if (boost::contains(line, "/tmp/mnt"))
-	    cout << line << endl;
-
+	cout << line << endl;
     cout << "end of fstab" << endl;
 }
 
@@ -34,7 +31,7 @@ run1 ()
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    string disk = "/dev/sdb";
+    string disk = "/dev/sda";
 
     s->destroyPartitionTable (disk, "msdos");
 
@@ -62,7 +59,7 @@ run2 ()
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    string name = "/dev/sdb1";
+    string name = "/dev/sda1";
 
     cout << name << endl;
 
@@ -81,7 +78,7 @@ main()
 
     setup_logger();
 
-    setup_system("thalassa");
+    setup_system("empty");
 
     run1 ();
     print_fstab ();

@@ -1,6 +1,6 @@
 run1
 0
-/dev/sdb1
+/dev/sda1
 0
 0
 0
@@ -9,9 +9,9 @@ begin of fstab
 UUID=testmode-0123-4567-6666-987654321000 /tmp/mnt             reiserfs   defaults              1 2
 end of fstab
 run2
-/dev/sdb1
+/dev/sda1
 0
 0
 begin of fstab
-/dev/sdb1                                 /tmp/mnt             reiserfs   defaults              1 2
+/dev/sda1                                 /tmp/mnt             reiserfs   defaults              1 2
 end of fstab
