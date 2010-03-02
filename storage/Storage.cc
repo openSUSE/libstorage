@@ -6971,13 +6971,13 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
     string cmd;
 
     startK = min(startK, sizeK);
-    cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK);
+    cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK) + " conv=nocreat";
     if (c.execute(cmd) != 0)
 	ret = STORAGE_ZERO_DEVICE_FAILED;
 
     endK = min(endK, sizeK);
     cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
-	" bs=1k count=" + decString(endK);
+	" bs=1k count=" + decString(endK) + " conv=nocreat";
     if (c.execute(cmd) != 0)
 	ret = STORAGE_ZERO_DEVICE_FAILED;
 
