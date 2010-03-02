@@ -20,7 +20,6 @@
  */
 
 
-#include <errno.h>
 #include <features.h>
 #include <sys/stat.h>
 #include <sstream>
