@@ -2544,7 +2544,7 @@ unsigned Volume::fstabFreq() const
 unsigned Volume::fstabPassno() const
     {
     unsigned ret = 2;
-    if( noFreqPassno() || (encryption!=ENC_NONE&&!dmcrypt()) )
+    if( noFreqPassno() || (encryption!=ENC_NONE) )
 	ret = 0;
     else if( mp=="/" )
 	ret = 1;
