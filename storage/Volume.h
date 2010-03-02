@@ -159,7 +159,7 @@ class Storage;
 	int doFormat();
 	int doCrsetup();
 	int doSetLabel();
-	int doFstabUpdate();
+	int doFstabUpdate(bool force=false);
 	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }

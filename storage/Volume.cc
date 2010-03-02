@@ -1719,7 +1719,8 @@ bool Volume::needCryptsetup() const
 	       (encryption==ENC_NONE || encryption!=orig_encryption || 
 	        !crypt_pwd.empty() || isTmpCryptMp(mp));
     if( dmcrypt() && encryption!=ENC_NONE &&
-        !crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd )
+        ((!crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd) ||
+	 (crypt_pwd.empty() && isTmpCryptMp(mp) && format)) )
 	ret = true;
     return( ret );
     }
@@ -2000,7 +2001,7 @@ int Volume::doCryptsetup()
 		    cmd.execute( cmdline );
 		    if( cmd.retcode()!=0 )
 			ret = VOLUME_CRYPTFORMAT_FAILED;
-		    if( ret==0 && mp=="swap" )
+		    if( ret==0 && mp=="swap" && crypt_pwd.empty() && !format )
 			cmd.execute("/sbin/mkswap " + quote(dmcrypt_dev));
 		    }
 		}
@@ -2053,6 +2054,7 @@ int Volume::doCryptsetup()
 int Volume::doCrsetup()
     {
     int ret = 0;
+    bool force_fstab_rewrite = false;
     bool losetup_done = false;
     if( needLosetup(true) )
 	{
@@ -2061,6 +2063,10 @@ int Volume::doCrsetup()
 	}
     if( ret==0 && needCryptsetup() )
 	{
+	force_fstab_rewrite = 
+	    encryption != ENC_NONE &&
+	    ((!crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd) ||
+	     (crypt_pwd.empty() && isTmpCryptMp(mp) && format));
 	ret = doCryptsetup();
 	if( ret!=0 && losetup_done )
 	    loUnsetup();
@@ -2071,7 +2077,7 @@ int Volume::doCrsetup()
     }
     if (ret == 0 && encryption != ENC_NONE)
     {
-	doFstabUpdate();
+	doFstabUpdate(force_fstab_rewrite);
     }
     y2mil("ret:" << ret);
     return ret;
@@ -2550,21 +2556,22 @@ bool Volume::pvEncryption() const
     return( encryption==ENC_LUKS && isUsedBy(UB_LVM) );
     }
 
-int Volume::doFstabUpdate()
+int Volume::doFstabUpdate( bool force_rewrite )
     {
     int ret = 0;
     bool changed = false;
+    y2mil( "force_rewrite:" << force_rewrite );
     y2mil( "dev:" << *this );
     if( !ignore_fstab )
 	{
 	EtcFstab* fstab = getStorage()->getFstab();
 	FstabEntry entry;
-	if ((!orig_mp.empty() || orig_encryption != ENC_NONE) &&
+	if( (!orig_mp.empty() || orig_encryption != ENC_NONE) &&
 	    (deleted() || (mp.empty() && !pvEncryption())) &&
-	     (fstab->findDevice( dev, entry ) ||
-	      fstab->findDevice( alt_names, entry ) ||
-	      (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
-	      (cType()==LOOP && fstab->findMount( mp, entry )) ))
+	    (fstab->findDevice( dev, entry ) ||
+	     fstab->findDevice( alt_names, entry ) ||
+	     (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
+	     (cType()==LOOP && fstab->findMount( mp, entry ))) )
 	    {
 	    changed = true;
 	    if( !silent )
@@ -2583,6 +2590,7 @@ int Volume::doFstabUpdate()
 		     fstab->findDevice( fname, entry )))
 		{
 		y2mil( "changed:" << entry );    
+		changed = force_rewrite;
 		FstabChange che( entry );
 		string de = getFstabDentry();
 		if( orig_mp!=mp )
@@ -2624,6 +2632,8 @@ int Volume::doFstabUpdate()
 		    che.freq = fstabFreq();
 		    che.passno = fstabPassno();
 		    }
+		che.tmpcrypt = dmcrypt() && isTmpCryptMp(mp) && 
+		               crypt_pwd.empty();
 		if( changed )
 		    {
 		    if( !silent && !fstab_added )

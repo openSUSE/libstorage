@@ -166,15 +166,13 @@ EtcFstab::readFiles()
 	    p->old.encr = ENC_LUKS;
 	    p->old.device = *i;
 	    list<string>::iterator li =  
-		find( p->old.opts.begin(), p->old.opts.end(), "noauto" );
-	    if( li != p->old.opts.end() )
-		li = p->old.opts.erase(li);
-	    li =  find( p->old.opts.begin(), p->old.opts.end(), "nofail" );
+		find( p->old.opts.begin(), p->old.opts.end(), "nofail" );
 	    if( li != p->old.opts.end() )
 		li = p->old.opts.erase(li);
 	    ++i;
 	    if( *i != "none" )
 		p->old.cr_key = *i;
+	    p->old.tmpcrypt = p->old.cr_key == "/dev/urandom";
 	    ++i;
 	    if( i!=l.end() )
 		{
@@ -527,7 +525,7 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     return( lineno>=0 );
     }
 
-list<string> EtcFstab::makeStringList(const FstabEntry& e) const
+static list<string> makeStringList(const FstabEntry& e)
     {
     list<string> ls;
     if( e.cryptotab )
@@ -596,7 +594,7 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     return createLine(ls, max_fields, fields);
     }
 
-list<string> EtcFstab::makeCrStringList(const FstabEntry& e) const
+static list<string> makeCrStringList(const FstabEntry& e)
     {
     list<string> ls;
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
@@ -605,14 +603,16 @@ list<string> EtcFstab::makeCrStringList(const FstabEntry& e) const
     tmp = e.cr_key;
     if( e.tmpcrypt )
 	tmp = "/dev/urandom";
+    if( !e.tmpcrypt && tmp=="/dev/urandom" )
+	tmp.clear();
     ls.push_back( tmp.empty()?"none":tmp );
     tmp = e.cr_opts;
     list<string>::iterator i;
     list<string> tls = splitString( tmp );
-    if( e.mount=="swap" && 
+    if( e.mount=="swap" && e.tmpcrypt &&
 	find( tls.begin(), tls.end(), "swap" )==tls.end() )
 	tls.push_back("swap");
-    else if( e.mount!="swap" && 
+    else if( (e.mount!="swap"||!e.tmpcrypt) && 
 	     (i=find( tls.begin(), tls.end(), "swap" ))!=tls.end() )
 	tls.erase(i);
     bool need_tmp = e.tmpcrypt && e.mount!="swap";
@@ -711,6 +711,16 @@ string EtcFstab::updateLine( const list<string>& ol,
     return( line );
     }
 
+void EtcFstab::updateTabLine( list<string>(*fnc)(const FstabEntry&), 
+                              const FstabEntry& old, const FstabEntry& nnew, 
+                              string& line ) const
+    {
+    const list<string> nl = (*fnc)(nnew);
+    const list<string> ol = (*fnc)(old);
+    y2mil( "old line:" << line );
+    line = updateLine( ol, nl, line );
+    y2mil( "new line:" << line );
+    }
 
 int EtcFstab::flush()
     {
@@ -729,6 +739,7 @@ int EtcFstab::flush()
 	    {
 	    case Entry::REMOVE:
 	    {
+		y2mil( "REMOVE:" << i->old.device );
 		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno>=0 )
@@ -751,6 +762,7 @@ int EtcFstab::flush()
 
 	    case Entry::UPDATE:
 	    {
+		y2mil( "UPDATE:" << i->nnew.device );
 		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno<0 )
@@ -767,11 +779,9 @@ int EtcFstab::flush()
 			}
 		    else if( !i->nnew.mount.empty() )
 			{
-			line = (*cur)[lineno];
-			const list<string> nl = makeStringList(i->nnew);
-			const list<string> ol = makeStringList(i->old);
-			line = updateLine( ol, nl, line );
-			(*cur)[lineno] = line;
+			y2mil( "lineno:" << lineno );
+			updateTabLine( makeStringList,
+				       i->old, i->nnew, (*cur)[lineno] );
 			}
 		    else
 			{
@@ -786,11 +796,9 @@ int EtcFstab::flush()
 			if( findCrtab( i->old, crypttab, lineno ) ||
 			    findCrtab( i->nnew, crypttab, lineno ))
 			    {
-			    line = crypttab[lineno];
-			    const list<string> nl = makeCrStringList(i->nnew);
-			    const list<string> ol = makeCrStringList(i->old);
-			    line = updateLine( ol, nl, line );
-			    crypttab[lineno] = line;
+			    y2mil( "lineno:" << lineno );
+			    updateTabLine( makeCrStringList,
+			                   i->old, i->nnew, crypttab[lineno] );
 			    }
 			else
 			    crypttab.append( line );
@@ -800,12 +808,18 @@ int EtcFstab::flush()
 		    }
 		else if( findCrtab( i->nnew, crypttab, lineno ))
 		    {
+		    int oldln; 
 		    string line = createTabLine( i->nnew );
 		    if (!i->nnew.mount.empty())
 			fstab->append( line );
 		    if( i->old.crypttab > i->nnew.crypttab && 
-		        findCrtab( i->old, crypttab, lineno ))
-			crypttab.remove( lineno, 1 );
+		        findCrtab( i->old, crypttab, oldln ))
+			crypttab.remove( oldln, 1 );
+		    else if( i->nnew.crypttab )
+			{
+			updateTabLine( makeCrStringList,
+				       i->old, i->nnew, crypttab[oldln] );
+			}
 		    }
 		else
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;
@@ -814,6 +828,7 @@ int EtcFstab::flush()
 	    case Entry::ADD:
 	    {
 		int lineno;
+		y2mil( "ADD:" << i->nnew.device );
 		cur = findFile( i->nnew, fstab, cryptotab, lineno );
 		string line = createTabLine( i->nnew );
 		string before_dev;

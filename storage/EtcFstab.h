@@ -158,9 +158,6 @@ class EtcFstab
 	bool findCrtab( const string& device, const AsciiFile& crtab,
 			int& lineno ) const;
 
-	list<string> makeStringList(const FstabEntry& e) const;
-	list<string> makeCrStringList(const FstabEntry& e) const;
-
 	string updateLine( const std::list<string>& ol, 
 			   const std::list<string>& nl, const string& line ) const;
 	string createLine( const std::list<string>& ls, unsigned fields, 
@@ -168,6 +165,9 @@ class EtcFstab
 
 	string createTabLine( const FstabEntry& e ) const;
 	string createCrtabLine( const FstabEntry& e ) const;
+	void updateTabLine( list<string>(*fnc)(const FstabEntry& e),
+	                    const FstabEntry& old, const FstabEntry& nnew, 
+	                    string& line ) const;
 
 	static unsigned fstabFields[6];
 	static unsigned cryptotabFields[6];
