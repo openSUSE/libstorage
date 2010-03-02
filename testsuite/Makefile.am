@@ -13,7 +13,7 @@ INCLUDES = -I$(top_srcdir)
 LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = partition1.single format1.single uuid1.single fstab1.single	\
-	lvm_create.single lvm_extend.single md_create.single			\
+	fstab2.single lvm_create.single lvm_extend.single md_create.single	\
 	humanstring1.single humanstring2.single partitionname.single		\
 	partitionprefix.single udevencode.single udevdecode.single		\
 	backupstate1.single contvolinfo1.single lvm_create2.single		\
@@ -27,6 +27,8 @@ format1_single_SOURCES = format1.cc common.h common.cc
 uuid1_single_SOURCES = uuid1.cc common.h common.cc
 
 fstab1_single_SOURCES = fstab1.cc common.h common.cc
+
+fstab2_single_SOURCES = fstab2.cc common.h common.cc
 
 lvm_create_single_SOURCES = lvm_create.cc common.h common.cc
 

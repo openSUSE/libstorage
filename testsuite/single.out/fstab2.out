@@ -1,0 +1,17 @@
+0
+/dev/sda1
+0
+/dev/sda2
+0
+0
+0
+0
+0
+0
+0
+0
+0
+begin of fstab
+LABEL=second         /usr                 ext4       defaults              1 2
+LABEL=first          /usr/local           ext4       defaults              1 2
+end of fstab

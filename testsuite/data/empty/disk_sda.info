@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<disk>
+  <name>sda</name>
+  <device>/dev/sda</device>
+  <size_k>976762584</size_k>
+  <major>8</major>
+  <minor>32</minor>
+  <range>256</range>
+  <cylinder>121601</cylinder>
+  <head>255</head>
+  <sector>63</sector>
+  <label>msdos</label>
+  <max_primary>4</max_primary>
+  <ext_possible>true</ext_possible>
+  <max_logical>255</max_logical>
+  <udev_path>pci-0000:00:1f.2-scsi-2:0:0:0</udev_path>
+  <udev_id>ata-WDC_WD10EADS-00M2B0_WD-WCAV52321683</udev_id>
+  <udev_id>scsi-SATA_WDC_WD10EADS-00_WD-WCAV52321683</udev_id>
+</disk>
