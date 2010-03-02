@@ -141,6 +141,7 @@ Storage::Storage(const Environment& env)
 	else if (boost::iequals(tenv, "MDADM", locale::classic()))
 	    imsm_driver = IMSM_MDADM;
     }
+    y2mil("imsm_driver:" << imsm_driver);
 
     logSystemInfo();
 }
