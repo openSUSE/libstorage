@@ -1,7 +1,6 @@
 
 #include <stdlib.h>
 #include <iostream>
-#include <fstream>
 #include <boost/algorithm/string.hpp>
 
 #include "common.h"
@@ -9,19 +8,6 @@
 
 using namespace std;
 using namespace storage;
-
-
-void
-print_fstab()
-{
-    ifstream fstab("tmp/etc/fstab");
-
-    cout << "begin of fstab" << endl;
-    string line;
-    while (getline(fstab, line))
-	cout << line << endl;
-    cout << "end of fstab" << endl;
-}
 
 
 void
