@@ -6963,6 +6963,8 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
     y2mil("device:" << device << " sizeK:" << sizeK << " random:" << random <<
 	  " startK:" << startK << " endK:" << endK);
 
+    waitForDevice(device);
+
     int ret = 0;
 
     const string source = (random ? "/dev/urandom" : "/dev/zero");
