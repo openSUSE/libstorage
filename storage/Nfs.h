@@ -50,7 +50,6 @@ class Nfs : public Volume
 	Text removeText( bool doing=true ) const;
 
     protected:
-	void init(bool nfs4);
 
 	mutable storage::NfsInfo info; // workaround for broken ycp bindings
 

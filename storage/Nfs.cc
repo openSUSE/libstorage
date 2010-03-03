@@ -44,7 +44,8 @@ namespace storage
     dev = canonicalName(NfsDev);
     if( dev != NfsDev )
 	alt_names.push_back( NfsDev );
-    init(nfs4);
+
+	setFs(nfs4 ? NFS4 : NFS);
     }
 
 
@@ -75,12 +76,6 @@ Text Nfs::removeText( bool doing ) const
 	txt = sformat( _("Remove nfs volume %1$s"), dev.c_str() );
 	}
     return( txt );
-    }
-
-void
-Nfs::init(bool nfs4)
-    {
-    setFs(nfs4 ? NFS4 : NFS);
     }
 
 
