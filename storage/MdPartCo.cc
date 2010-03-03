@@ -1482,8 +1482,8 @@ void MdPartCo::getMdProps()
     if( has_container )
       {
       MdPartCo::getUuidName(parent_container,parent_uuid,parent_md_name);
-      y2mil("md_name="<<md_name<<", parent_container="<<parent_container
-          <<", parent_uuid="<<parent_uuid<<", parent_md_name"<<parent_md_name);
+	y2mil("md_name:" << md_name << " parent_container:" << parent_container <<
+	      " parent_uuid:" << parent_uuid << " parent_md_name:" << parent_md_name);
       }
     y2mil("Done");
 }
