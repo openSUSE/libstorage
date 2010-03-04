@@ -54,16 +54,19 @@ main()
     cout << "-- 5 --" << endl;
     test("en_GB.UTF-8", "123,456 kB", false);
     test("de_DE.UTF-8", "123.456 kB", false);
+    test("de_CH.UTF-8", "123'456 kB", false);
     test("fr_FR.UTF-8", "123 456 ko", false);
 
     cout << "-- 6 --" << endl;
     test("en_GB.UTF-8", "123,456.789kB", false);
     test("de_DE.UTF-8", "123.456,789kB", false);
+    test("de_CH.UTF-8", "123'456.789kB", false);
     test("fr_FR.UTF-8", "123 456,789ko", false);
 
     cout << "-- 7 --" << endl;
     test("en_GB.UTF-8", "123,456.789 kB", false);
     test("de_DE.UTF-8", "123.456,789 kB", false);
+    test("de_CH.UTF-8", "123'456.789 kB", false);
     test("fr_FR.UTF-8", "123 456,789 ko", false);
 
     cout << "-- 8 --" << endl;
@@ -73,6 +76,7 @@ main()
     cout << "-- 9 --" << endl;
     test("en_US.UTF-8", "5 G B", false);		// FAILS
     test("de_DE.UTF-8", "12.34 kB", false);		// FAILS
+    test("de_DE.UTF-8", "12'34 kB", false);		// FAILS
     test("fr_FR.UTF-8", "12 34 Go", false);		// FAILS
 
     cout << "-- 10 --" << endl;
@@ -83,5 +87,6 @@ main()
     cout << "-- 11 --" << endl;
     test("en_GB.UTF-8", "12345 GB", false);
     test("de_DE.UTF-8", "12345 GB", false);
+    test("de_CH.UTF-8", "12345 GB", false);
     test("fr_FR.UTF-8", "12345 GB", false);
 }
