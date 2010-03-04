@@ -79,4 +79,9 @@ main()
     test("en_GB.UTF-8", "3.14 G", false);
     test("en_GB.UTF-8", "3.14 GB", false);
     test("en_GB.UTF-8", "3.14 GiB", false);
+
+    cout << "-- 11 --" << endl;
+    test("en_GB.UTF-8", "12345 GB", false);
+    test("de_DE.UTF-8", "12345 GB", false);
+    test("fr_FR.UTF-8", "12345 GB", false);
 }
