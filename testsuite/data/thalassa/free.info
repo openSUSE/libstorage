@@ -10,6 +10,6 @@
     <content_cached>true</content_cached>
     <windows>false</windows>
     <efi>false</efi>
-    <home>false</home>
+    <homes>2</homes>
   </free>
 </free>

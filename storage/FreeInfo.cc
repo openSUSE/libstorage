@@ -45,7 +45,7 @@ namespace storage
 	{
 	    getChildValue(node, "windows", content_info.windows);
 	    getChildValue(node, "efi", content_info.efi);
-	    getChildValue(node, "home", content_info.home);
+	    getChildValue(node, "homes", content_info.homes);
 	}
     }
 
@@ -69,7 +69,7 @@ namespace storage
 
 	    setChildValue(node, "windows", content_info.windows);
 	    setChildValue(node, "efi", content_info.efi);
-	    setChildValue(node, "home", content_info.home);
+	    setChildValue(node, "homes", content_info.homes);
 	}
     }
 
@@ -112,11 +112,13 @@ namespace storage
     }
 
 
-    bool
-    FreeInfo::isHome(const string& mp)
+    unsigned
+    FreeInfo::numHomes(const string& mp)
     {
 	const char* files[] = { ".profile", ".bashrc", ".ssh", ".kde", ".kde4", ".gnome",
 				".gnome2" };
+
+	unsigned num = 0;
 
 	const list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
 	for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
@@ -129,13 +131,14 @@ namespace storage
 		    if (access(file.c_str(), R_OK) == 0)
 		    {
 			y2mil("found home file " << quote(file));
-			return true;
+			if (++num == 2)
+			    return num;
 		    }
 		}
 	    }
 	}
 
-	return false;
+	return num;
     }
 
 
@@ -149,7 +152,7 @@ namespace storage
     std::ostream& operator<<(std::ostream& s, const ContentInfo& content_info)
     {
 	return s << "windows:" << content_info.windows << " efi:" << content_info.efi
-		 << " home:" << content_info.home;
+		 << " homes:" << content_info.homes;
     }
 
 
@@ -222,7 +225,7 @@ namespace storage
 	if (!content_info.efi && (vol.getFs() == VFAT || vol.getFs() == NTFS))
 	    content_info.windows = isWindows(mp);
 
-	content_info.home = isHome(mp);
+	content_info.homes = numHomes(mp);
 
 	y2mil("device:" << vol.device() << " " << content_info);
 	return content_info;

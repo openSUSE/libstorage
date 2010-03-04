@@ -251,10 +251,10 @@ namespace storage
 
     struct ContentInfo
     {
-	ContentInfo() : windows(false), efi(false), home(false) {}
+	ContentInfo() : windows(false), efi(false), homes(0) {}
 	bool windows;
 	bool efi;
-	bool home;
+	unsigned homes;
     };
 
 

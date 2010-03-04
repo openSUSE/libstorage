@@ -23,7 +23,7 @@ test(const string& device)
 	cout << "    " << resize_info.resize_freeK << " " << resize_info.df_freeK << " "
 	     << resize_info.usedK << " " << resize_info.resize_ok << endl;
 	cout << "    " << content_info.windows << " " << content_info.efi << " "
-	     << content_info.home << endl;
+	     << content_info.homes << endl;
     }
     else
     {

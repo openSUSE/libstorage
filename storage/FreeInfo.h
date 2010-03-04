@@ -63,7 +63,7 @@ namespace storage
     protected:
 
 	static bool isWindows(const string& mp);
-	static bool isHome(const string& mp);
+	static unsigned numHomes(const string& mp);
 
     };
 
