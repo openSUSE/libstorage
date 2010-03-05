@@ -28,9 +28,9 @@ run()
 
     deque<string> pvs;
     pvs.push_back(name);
-    cout << s->createLvmVg("test", 1024, false, pvs);
-    
-    cout << s->commit() << endl;
+    cout << s->createLvmVg("test", 1024, false, pvs) << endl;
+
+    cout << s->commit() << endl;	// TODO: fails, but acceptable for testcase
 
     delete s;
 }
