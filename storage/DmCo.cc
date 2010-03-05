@@ -252,7 +252,7 @@ void
 	    {
 	    const CmdDmsetup::Entry& entry = it1->second;
 
-	    Dm* m = new Dm(*this, table, entry.mnr);
+	    Dm* m = new Dm(*this, table, "/dev/mapper/" + table, table, systeminfo);
 	    y2mil("new Dm:" << *m);
 	    unsigned long long s = 0;
 	    string dev = "/dev/dm-" + decString(entry.mnr);

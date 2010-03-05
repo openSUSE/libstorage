@@ -45,11 +45,19 @@ namespace storage
 
 
     // this ctr is used for volumes of DmCo
-    Dm::Dm(const PeContainer& c, const string& tn, unsigned mnum)
-	: Volume(c, tn, 0), tname(tn), num_le(0), stripe(1), stripe_size(0), inactiv(true)
+    Dm::Dm(const PeContainer& c, const string& name, const string& device, const string& tname,
+	   SystemInfo& systeminfo)
+	: Volume(c, name, device, systeminfo), tname(tname), num_le(0), stripe(1), stripe_size(0),
+	  inactiv(true)
     {
-	y2mil("constructed Dm tname:" << tn);
-    init();
+	y2mil("constructed Dm dev:" << dev << " tname:" << tname);
+
+	string dmn = "/dev/mapper/" + tname;
+	if (dmn != dev)
+	    alt_names.push_back(dmn);
+
+	updateMajorMinor();
+
     getTableInfo();
 
     getStorage()->fetchDanglingUsedBy(dev, uby);
