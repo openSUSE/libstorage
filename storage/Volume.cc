@@ -2916,11 +2916,7 @@ void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
 std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
     s << dynamic_cast<const Device&>(v);
-    if( v.numeric )
-	{
-	if( v.num>0 )
-	    s << " Nr:" << v.num;
-	}
+    s << " Nr:" << v.num;
     if( v.size_k != v.orig_size_k )
 	s << " orig_SizeK:" << v.orig_size_k;
     if( v.ronly )
@@ -3022,7 +3018,7 @@ Volume::logDifference( const Volume& rhs ) const
     string ret = "Device:" + dev;
     if( dev!=rhs.dev )
 	ret += "-->"+rhs.dev;
-    if( numeric && num!=rhs.num )
+    if( num!=rhs.num )
 	ret += " Nr:" + decString(num) + "-->" + decString(rhs.num);
     if( !numeric && nm!=rhs.nm )
 	ret += " Name:" + nm + "-->" + rhs.nm;
