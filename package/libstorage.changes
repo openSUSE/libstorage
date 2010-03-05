@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 05 16:32:25 CET 2010 - aschnell@suse.de
+
+- fixed member entry in mdadm.conf for IMSM (bnc #576498)
+
+-------------------------------------------------------------------
 Wed Mar 03 11:28:56 CET 2010 - aschnell@suse.de
 
 - wait for device before zeroing it (bnc #584683)
