@@ -27,6 +27,7 @@
 #include <libxml/tree.h>
 #include <string>
 #include <list>
+#include <boost/noncopyable.hpp>
 
 #include "storage/AppUtil.h"
 
@@ -36,7 +37,7 @@ namespace storage
     using namespace std;
 
 
-    class XmlFile
+    class XmlFile : boost::noncopyable
     {
 
     public:
