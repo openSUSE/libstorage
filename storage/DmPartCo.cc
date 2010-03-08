@@ -524,8 +524,14 @@ int DmPartCo::forgetChangePartitionId( unsigned nr )
 int
 DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
 {
-    int ret = disk->nextFreePartition( type, nr, device );
-    if( ret==0 )
+    int ret = 0;
+    device = "";
+    nr = disk->availablePartNumber( type );
+    if (nr == 0)
+	{
+	ret = DISK_PARTITION_NO_FREE_NUMBER;
+	}
+    else
 	{
 	device = getPartDevice(nr);
 	}

@@ -601,11 +601,17 @@ int MdPartCo::forgetChangePartitionId( unsigned nr )
 int
 MdPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
 {
-    int ret = disk->nextFreePartition( type, nr, device );
-    if( ret==0 )
-        {
-        device = getPartDevice(nr);
-        }
+    int ret = 0;
+    device = "";
+    nr = disk->availablePartNumber( type );
+    if (nr == 0)
+	{
+	ret = DISK_PARTITION_NO_FREE_NUMBER;
+	}
+    else
+	{
+	device = getPartDevice(nr);
+	}
     y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
     return ret;
 }

@@ -1372,18 +1372,14 @@ Disk::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
 {
     int ret = 0;
     device = "";
-    nr = 0;
-    unsigned number = availablePartNumber( type );
-    if( number==0 )
+    nr = availablePartNumber( type );
+    if (nr == 0)
 	{
 	ret = DISK_PARTITION_NO_FREE_NUMBER;
 	}
     else
 	{
-	Partition * p = new Partition( *this, number, 0, 0, 1, type );
-	device = p->device();
-	nr = p->nr();
-	delete( p );
+	device = getPartDevice(nr);
 	}
     y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
     return ret;
