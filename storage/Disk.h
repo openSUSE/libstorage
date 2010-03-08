@@ -136,7 +136,6 @@ class Disk : public Container
 	bool FakeDisk() const { return(range==1); }
 
 	static string getPartName( const string& disk, unsigned nr );
-	static string getPartName( const string& disk, const string& nr );
 	static std::pair<string,unsigned> getDiskPartition( const string& dev );
 
 	static bool getDlabelCapabilities(const string& dlabel,

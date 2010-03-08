@@ -1090,10 +1090,6 @@ string Disk::getPartName( const string& disk, unsigned nr )
     return( disk + (Disk::needP(disk)?"p":"") + decString(nr) );
     }
 
-string Disk::getPartName( const string& disk, const string& nr )
-    {
-    return( disk + "/" + nr );
-    }
 
 string Disk::getPartName( unsigned nr ) const
     {
