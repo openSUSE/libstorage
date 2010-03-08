@@ -2085,14 +2085,8 @@ Disk::getPartedValues( Partition *p ) const
 	    y2mil("start_p:" << start_p << " size_p:" << size_p);
 	    unsigned long long sysfs_start = 0;
 	    unsigned long long sysfs_size = 0;
-	    std::ifstream fl;
-	    classic(fl);
-	    fl.open( start_p.c_str() );
-	    fl >> sysfs_start;
-	    fl.close();
-	    fl.open( size_p.c_str() );
-	    fl >> sysfs_size;
-	    fl.close();
+	    read_sysfs_property(start_p, sysfs_start);
+	    read_sysfs_property(size_p, sysfs_size);
 	    if( p->type()==EXTENDED )
 		ssize=2;
 	    y2mil( "sectors nr:" << nr << " sysfs  start:" << sysfs_start << 
@@ -2104,12 +2098,8 @@ Disk::getPartedValues( Partition *p ) const
 		{
 		callDelpart( nr );
 		callAddpart( nr, sstart, ssize );
-		fl.open( start_p.c_str() );
-		fl >> sysfs_start;
-		fl.close();
-		fl.open( size_p.c_str() );
-		fl >> sysfs_size;
-		fl.close();
+		read_sysfs_property(start_p, sysfs_start);
+		read_sysfs_property(size_p, sysfs_size);
 		if( sysfs_start!=sstart || sysfs_size!=ssize )
 		    y2err( "addpart failed sectors parted:" << sstart << ' ' <<
 		           ssize << " sysfs:" << sysfs_start << ' ' << 
