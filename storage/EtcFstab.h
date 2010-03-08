@@ -44,7 +44,9 @@ struct FstabEntry
 		       cryptotab(false), crypttab(false), tmpcrypt(false), encr(ENC_NONE),
 		       mount_by(MOUNTBY_DEVICE) {}
 
-    FstabEntry& operator=( const FstabChange& rhs );
+	explicit FstabEntry(const FstabChange& change) { *this = change; }
+
+	FstabEntry& operator=(const FstabChange& rhs);
 
     friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
 
@@ -76,17 +78,9 @@ struct FstabChange
     {
 	FstabChange() : freq(0), passno(0), encr(ENC_NONE), tmpcrypt(false) {}
 
-    FstabChange( const FstabEntry& e ) { *this = e; }
+	explicit FstabChange(const FstabEntry& entry) { *this = entry; }
 
-    FstabChange& operator=( const FstabEntry& rhs )
-	{
-	device = rhs.device;
-	dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
-	opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
-	loop_dev = rhs.loop_dev; encr = rhs.encr; 
-	tmpcrypt = rhs.tmpcrypt;
-	return( *this );
-	}
+	FstabChange& operator=(const FstabEntry& rhs);
 
     friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
 
@@ -101,17 +95,6 @@ struct FstabChange
     storage::EncryptType encr;
     bool tmpcrypt;
     };
-
-inline FstabEntry& FstabEntry::operator=( const FstabChange& rhs )
-    {
-    device = rhs.device;
-    dentry = rhs.dentry; mount = rhs.mount; fs = rhs.fs;
-    opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
-    loop_dev = rhs.loop_dev; encr = rhs.encr;
-    tmpcrypt = rhs.tmpcrypt;
-    calcDependent();
-    return( *this );
-    }
 
 
 class EtcFstab

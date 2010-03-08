@@ -963,6 +963,25 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
     }
 
 
+    FstabEntry& FstabEntry::operator=(const FstabChange& rhs)
+    {
+	device = rhs.device; dentry = rhs.dentry; mount = rhs.mount;
+	fs = rhs.fs; opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
+	loop_dev = rhs.loop_dev; encr = rhs.encr; tmpcrypt = rhs.tmpcrypt;
+	calcDependent();
+	return *this;
+    }
+
+
+    FstabChange& FstabChange::operator=(const FstabEntry& rhs)
+    {
+	device = rhs.device; dentry = rhs.dentry; mount = rhs.mount;
+	fs = rhs.fs; opts = rhs.opts; freq = rhs.freq; passno = rhs.passno;
+	loop_dev = rhs.loop_dev; encr = rhs.encr; tmpcrypt = rhs.tmpcrypt;
+	return *this;
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const FstabEntry& v)
     {
 	s << "device:" << v.device
