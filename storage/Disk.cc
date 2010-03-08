@@ -1067,10 +1067,19 @@ string Disk::getPartName( const string& disk, unsigned nr )
     }
 
 
-string Disk::getPartName( unsigned nr ) const
+    string
+    Disk::getPartName(unsigned nr) const
     {
-    return( getPartName( dev, nr ) );
+	return getPartName(nm, nr);
     }
+
+
+    string
+    Disk::getPartDevice(unsigned nr) const
+    {
+	return getPartName(dev, nr);
+    }
+
 
 pair<string,unsigned> Disk::getDiskPartition( const string& dev )
     {
@@ -2376,7 +2385,7 @@ int Disk::doRemove( Volume* v )
 	y2mil("doRemove container " << name() << " name " << p->name());
 	if( !dmp_slave )
 	    {
-	    getStorage()->removeDmMapsTo( getPartName(p->OrigNr()) );
+	    getStorage()->removeDmMapsTo( getPartDevice(p->OrigNr()) );
 	    ret = v->prepareRemove();
 	    }
 	if( ret==0 && !p->created() )

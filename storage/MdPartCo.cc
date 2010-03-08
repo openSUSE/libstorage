@@ -150,7 +150,7 @@ MdPartCo::addNewDev(string& device)
         unsigned number;
         const string tmpS(device);
         getPartNum(tmpS,number);
-        device = "/dev/" + numToName(number);
+        device = getPartDevice(number);
         Partition *p = getPartition( number, false );
         if( p==NULL )
           {
@@ -499,8 +499,9 @@ void MdPartCo::updateMinor()
         }
     }
 
-// Makes complete partition name (like md125p5)
-string MdPartCo::numToName( unsigned mdNum ) const
+
+string
+MdPartCo::getPartName( unsigned mdNum ) const
     {
     string ret = nm;
     if( mdNum>0 )
@@ -511,10 +512,18 @@ string MdPartCo::numToName( unsigned mdNum ) const
     return( ret );
     }
 
-int MdPartCo::nr() const
-{
-  return mnr;
-}
+
+string
+MdPartCo::getPartDevice( unsigned mdNum ) const
+    {
+    string ret = dev;
+    if( mdNum>0 )
+        {
+        ret += "p";
+        ret += decString(mdNum);
+        }
+    return( ret );
+    }
 
 
 //
@@ -595,7 +604,7 @@ MdPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) co
     int ret = disk->nextFreePartition( type, nr, device );
     if( ret==0 )
         {
-        device = "/dev/" + numToName(nr);
+        device = getPartDevice(nr);
         }
     y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
     return ret;

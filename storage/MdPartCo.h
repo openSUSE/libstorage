@@ -100,7 +100,9 @@ class MdPartCo : public Container
     { return disk->cylinderToKb( val ); }
     unsigned long kbToCylinder( unsigned long long val ) const
     { return disk->kbToCylinder( val ); }
-    string getPartName( unsigned nr ) const;
+
+	string getPartName(unsigned nr) const;
+	string getPartDevice(unsigned nr) const;
 
     virtual void getCommitActions(list<commitAction>& l) const;
     virtual int getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol);
@@ -115,14 +117,14 @@ class MdPartCo : public Container
     void logDifference( const MdPartCo& d ) const;
     MdPartCo& operator= ( const MdPartCo& rhs );
     static string undevName( const string& name );
-    string numToName( unsigned mdNum ) const;
 
     static list<string> getMdRaids();
 
     void syncRaidtab();
 
     /* Returns Md number. */
-    int nr() const;
+    unsigned nr() const { return mnr; }
+
     /* RAID Related functionality */
     unsigned long chunkSize() const { return chunk_size; }
 

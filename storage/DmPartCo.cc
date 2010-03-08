@@ -74,7 +74,7 @@ DmPartCo::addNewDev(string& device)
 	unsigned number;
 	device.substr(pos + 5) >> number;
 	y2mil("num:" << number);
-	device = "/dev/mapper/" + numToName(number);
+	device = getPartDevice(number);
 	Partition *p = getPartition( number, false );
 	if( p==NULL )
 	    ret = DMPART_PARTITION_NOT_FOUND;
@@ -293,7 +293,7 @@ void
 	createDisk(systeminfo);
 	if( disk->numPartitions()>0 )
 	    {
-	    string pat = numToName(1);
+	    string pat = getPartName(1);
 	    pat.erase( pat.length()-1, 1 );
 	    string reg = "^" + pat + "[0-9]+" "$";
 	    list<string> tmp = systeminfo.getCmdDmsetup().getMatchingEntries(regex_matches(reg));
@@ -421,7 +421,9 @@ void DmPartCo::updateMinor()
 	}
     }
 
-string DmPartCo::numToName( unsigned num ) const
+
+    string
+    DmPartCo::getPartName(unsigned num) const
     {
     string ret = nm;
     if( num>0 )
@@ -432,6 +434,21 @@ string DmPartCo::numToName( unsigned num ) const
     y2mil( "num:" << num << " ret:" << ret );
     return( ret );
     }
+
+
+    string
+    DmPartCo::getPartDevice(unsigned num) const
+    {
+    string ret = dev;
+    if( num>0 )
+	{
+	ret += "_part";
+	ret += decString(num);
+	}
+    y2mil( "num:" << num << " ret:" << ret );
+    return( ret );
+    }
+
 
 string DmPartCo::undevName( const string& name )
     {
@@ -510,7 +527,7 @@ DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) co
     int ret = disk->nextFreePartition( type, nr, device );
     if( ret==0 )
 	{
-	device = "/dev/mapper/" + numToName(nr);
+	device = getPartDevice(nr);
 	}
     y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
     return ret;

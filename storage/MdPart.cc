@@ -39,7 +39,7 @@ namespace storage
 MdPart::MdPart(const MdPartCo& d, unsigned nr, Partition* pa)
     : Volume( d, nr, 0 )
 {
-    init( d.numToName(nr) );
+    init( d.getPartName(nr) );
     numeric = true;
     num = nr;
     p = pa;
@@ -89,8 +89,8 @@ void MdPart::updateName()
     if( p && p->nr() != num )
         {
         num = p->nr();
-        nm = co()->numToName(num);
-        dev = "/dev/" + nm;
+        nm = co()->getPartName(num);
+        dev = co()->getPartDevice(num);
         }
     }
 

@@ -363,7 +363,7 @@ Text Partition::removeText( bool doing ) const
     string d = dev;
     if( orig_num!=num )
 	{
-	d = disk()->getPartName( orig_num );
+	d = disk()->getPartDevice( orig_num );
 	}
     if( doing )
 	{

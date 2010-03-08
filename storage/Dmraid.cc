@@ -59,7 +59,7 @@ Text Dmraid::removeText( bool doing ) const
     Text txt;
     string d = dev.substr(12);
     if( p && p->OrigNr()!=p->nr() )
-	d = co()->numToName(p->OrigNr());
+	d = co()->getPartName(p->OrigNr());
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1

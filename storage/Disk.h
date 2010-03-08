@@ -129,7 +129,10 @@ class Disk : public Container
 	Text setDiskLabelText( bool doing=true ) const;
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
-	string getPartName( unsigned nr ) const;
+
+	string getPartName(unsigned nr) const;
+	string getPartDevice(unsigned nr) const;
+
 	void getInfo( storage::DiskInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;

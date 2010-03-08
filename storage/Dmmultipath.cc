@@ -59,7 +59,7 @@ Text Dmmultipath::removeText( bool doing ) const
     Text txt;
     string d = dev.substr(12);
     if( p && p->OrigNr()!=p->nr() )
-	d = co()->numToName(p->OrigNr());
+	d = co()->getPartName(p->OrigNr());
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1

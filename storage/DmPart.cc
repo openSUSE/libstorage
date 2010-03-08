@@ -38,7 +38,7 @@ namespace storage
 DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
     : Dm(d, "")
 {
-    init( d.numToName(nr) );
+    init( d.getPartName(nr) );
     numeric = true;
     num = nr;
     getTableInfo();
@@ -86,8 +86,8 @@ void DmPart::updateName()
     if( p && p->nr() != num )
 	{
 	num = p->nr();
-	nm = co()->numToName(num);
-	dev = "/dev/mapper/" + nm;
+	nm = co()->getPartName(num);
+	dev = co()->getPartDevice(num);
 	}
     }
 

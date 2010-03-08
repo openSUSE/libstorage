@@ -96,7 +96,9 @@ class DmPartCo : public PeContainer
 	    { return disk->cylinderToKb( val ); }
 	unsigned long kbToCylinder( unsigned long long val ) const
 	    { return disk->kbToCylinder( val ); }
-	string getPartName( unsigned nr ) const;
+
+	string getPartName(unsigned nr) const;
+	string getPartDevice(unsigned nr) const;
 
 	virtual void getCommitActions(list<commitAction>& l) const;
 	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
@@ -111,7 +113,6 @@ class DmPartCo : public PeContainer
 	void logDifference( const DmPartCo& d ) const;
 
 	static string undevName( const string& name );
-	string numToName( unsigned num ) const;
 
     protected:
 	// iterators over partitions
