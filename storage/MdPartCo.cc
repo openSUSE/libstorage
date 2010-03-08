@@ -1495,23 +1495,8 @@ bool
 MdPartCo::readProp(enum MdProperty prop, string& val) const
 {
   string path = sysfs_path + nm + "/md/" + md_props[prop];
-
-  if( access( path.c_str(), R_OK )==0 )
-  {
-    std::ifstream file( path.c_str() );
-    classic(file);
-    file >> val;
-    file.close();
-    file.clear();
-  }
-  else
-  {
-    y2war("File: " << sysfs_path << md_props[prop] << " = FAILED");
-     return false;
-  }
-  return true;
+    return read_sysfs_property(path, val);
 }
-
 
 
 void MdPartCo::getSlaves(const string name, std::list<string>& devs_list )

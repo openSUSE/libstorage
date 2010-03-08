@@ -305,39 +305,15 @@ bool Disk::detectGeometry()
 	    sysfsinfo.vbd = false;
 	}
 
-	sysfsfile = sysfsdir + "/range";
-	if (access(sysfsfile.c_str(), R_OK) == 0)
-	{
-	    ifstream file(sysfsfile.c_str());
-	    classic(file);
-	    file >> sysfsinfo.range;
-	}
-	else
-	{
-	    y2war("reading " << sysfsfile << " failed");
+	if (!read_sysfs_property(sysfsdir + "/range", sysfsinfo.range))
 	    return false;
-	}
 
-	sysfsfile = sysfsdir + "/ext_range";
-	if (access(sysfsfile.c_str(), R_OK) == 0)
-	{
-	    ifstream file(sysfsfile.c_str());
-	    classic(file);
-	    file >> sysfsinfo.range;
-	}
+	unsigned long ext_range;
+	if (read_sysfs_property(sysfsdir + "/ext_range", ext_range))
+	    sysfsinfo.range = ext_range;
 
-	sysfsfile = sysfsdir + "/size";
-	if (access(sysfsfile.c_str(), R_OK) == 0)
-	{
-	    ifstream file(sysfsfile.c_str());
-	    classic(file);
-	    file >> sysfsinfo.size;
-	}
-	else
-	{
-	    y2war("reading " << sysfsfile << " failed");
+	if (!read_sysfs_property(sysfsdir + "/size", sysfsinfo.size))
 	    return false;
-	}
 
 	y2mil("sysfsdir:" << sysfsdir << " device:" << sysfsinfo.device << " range:" <<
 	      sysfsinfo.range << " size:" << sysfsinfo.size);

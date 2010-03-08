@@ -25,6 +25,7 @@
 
 #include <functional>
 #include <ostream>
+#include <fstream>
 #include <sstream>
 #include <list>
 #include <map>
@@ -209,6 +210,25 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 	}
     s << ">";
     return( s );
+    }
+
+
+    template<class Type>
+    bool
+    read_sysfs_property(const string& path, Type& value)
+    {
+	std::ifstream file(path.c_str());
+	classic(file);
+	file >> value;
+	file.close();
+
+	if (file.fail())
+	{
+	    y2err("reading " << path << " failed");
+	    return false;
+	}
+
+	return true;
     }
 
 
