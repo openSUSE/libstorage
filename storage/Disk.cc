@@ -2104,15 +2104,11 @@ Disk::getPartedValues( Partition *p ) const
 	if( cmd.numLines()>1 && 
 	    scanPartedSectors( cmd.getLine(1), nr, sstart, ssize ))
 	    {
+	    string start_p = p->sysfsPath() + "/start";
+	    string size_p = p->sysfsPath() + "/size";
+	    y2mil("start_p:" << start_p << " size_p:" << size_p);
 	    unsigned long long sysfs_start = 0;
 	    unsigned long long sysfs_size = 0;
-	    string tmp = getPartName(p->nr());
-	    string start_p = sysfsDir();
-	    start_p += tmp.substr(tmp.find_last_of('/'));
-	    string size_p = start_p;
-	    start_p += "/start";
-	    size_p += "/size";
-	    y2mil( "p1:" << start_p << " p2:" << size_p );
 	    std::ifstream fl;
 	    classic(fl);
 	    fl.open( start_p.c_str() );
