@@ -63,7 +63,7 @@ class Dm : public Volume
 	unsigned setStripes( unsigned long val ) { return stripe=val; }
 	unsigned long long stripeSize() const { return stripe_size; }
 	void setStripeSize( unsigned long long val ) { stripe_size=val; }
-	string sysfsPath() const;
+	virtual string sysfsPath() const;
 	void updateMajorMinor();
 
 	virtual list<string> udevId() const { return Volume::udevId(); }

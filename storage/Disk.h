@@ -81,7 +81,7 @@ class Disk : public Container
 	virtual list<string> udevId() const { return udev_id; }
 	void setSlave( bool val=true ) { dmp_slave=val; }
 	void setNumMinor( unsigned long val ) { range=val; }
-	const string& sysfsDir() const { return sysfs_dir; }
+	const string& sysfsPath() const { return sysfs_dir; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isLogical( unsigned nr ) const;

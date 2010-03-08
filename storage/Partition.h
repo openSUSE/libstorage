@@ -59,7 +59,7 @@ class Partition : public Volume
 	const Region& region() const { return reg; }
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
-	string sysfsPath() const;
+	virtual string sysfsPath() const;
 	bool intersectArea( const Region& r, unsigned fuzz=0 ) const;
 	bool contains( const Region& r, unsigned fuzz=0 ) const;
 	unsigned OrigNr() const { return( orig_num ); }

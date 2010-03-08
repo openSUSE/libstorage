@@ -123,8 +123,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     string
     Partition::sysfsPath() const
     {
-	string tmp = undevDevice(dev);
-	string ret = disk()->sysfsDir() + "/"  + boost::replace_all_copy(tmp, "/", "!");
+	string ret = disk()->sysfsPath() + "/" + boost::replace_all_copy(nm, "/", "!");
 	y2mil("ret:" << ret);
 	return ret;
     }
