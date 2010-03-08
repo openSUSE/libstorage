@@ -128,9 +128,9 @@ class MdPartCo : public Container
 
     storage::MdType personality() const { return md_type; }
 
-    storage::MdArrayState getArrayState() { return md_state; };
+	MdArrayState getArrayState() const { return md_state; }
 
-    void getMdUuid( string&val ) { val=md_uuid; }
+	const string& getMdUuid() const { return md_uuid; }
 
     /* Raid Level of the RAID as string. */
 	const string& pName() const { return Md::md_names[md_type]; }
