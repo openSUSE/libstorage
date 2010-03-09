@@ -295,13 +295,13 @@ void Storage::detectObjects()
 	{
  	rootprefix = testdir();
  	fstab = new EtcFstab( rootprefix + "/etc" );
-	raidtab = new EtcRaidtab(rootprefix);
+	raidtab = new EtcRaidtab(this, rootprefix);
 	}
     else
     {
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	if (!instsys())
-	    raidtab = new EtcRaidtab(root());
+	    raidtab = new EtcRaidtab(this, root());
     }
     
     detectLoops(systeminfo);
@@ -1134,6 +1134,24 @@ void Storage::setDefaultFs(FsType val)
     {
 	assertInit();
 	return efiboot;
+    }
+
+
+    bool
+    Storage::hasIScsiDisks() const
+    {
+	bool ret = false;
+
+	ConstDiskPair dp = diskPair();
+	for (ConstDiskIterator i = dp.begin(); i != dp.end(); ++i)
+	{
+	    if (i->isIScsi())
+		ret = true;
+	    break;
+	}
+
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 
@@ -6299,7 +6317,7 @@ void Storage::rootMounted()
 	if (have_mds)
 	{
 	    delete raidtab;
-	    raidtab = new EtcRaidtab(root());
+	    raidtab = new EtcRaidtab(this, root());
 
 	    if (haveMd(md))
 		md->syncRaidtab();

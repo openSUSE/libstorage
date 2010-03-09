@@ -248,6 +248,7 @@ class DiskData;
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const { return tempdir; }
 	bool efiBoot() const { return efiboot; }
+	bool hasIScsiDisks() const;
 	string bootMount() const;
 	static const string& arch() { return( proc_arch ); }
 	static bool isPPCMac() { return( is_ppc_mac ); }

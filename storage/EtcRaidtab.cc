@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -33,13 +33,13 @@ namespace storage
     using namespace std;
 
 
-EtcRaidtab::EtcRaidtab(const string& prefix)
-    : mdadm(prefix + "/etc/mdadm.conf")
-{
-    mdadm_dev_line = -1;
-    buildMdadmMap();
-    buildMdadmMap2();
-}
+    EtcRaidtab::EtcRaidtab(const Storage* sto, const string& prefix)
+	: sto(sto), mdadm_device_line(-1), mdadm_auto_line(-1),
+	  mdadm(prefix + "/etc/mdadm.conf")
+    {
+	buildMdadmMap();
+	buildMdadmMap2();
+    }
 
 
 EtcRaidtab::~EtcRaidtab()
@@ -61,19 +61,15 @@ EtcRaidtab::updateEntry(unsigned num, const string& mline)
 	{
 	mdadm.append( mline );
 	}
-    if( mdadm_dev_line<0 )
-	{
-	dline = "DEVICE partitions";
-	mdadm_dev_line = mdadm.numLines();
-	mdadm.insert( 0, dline );
-	}
-    else
-	{
-	dline = "DEVICE partitions";
-	mdadm[mdadm_dev_line] = dline;
-	}
+
+    setDeviceLine("DEVICE partitions");
+
+    if (sto->hasIScsiDisks())
+       setAutoLine("AUTO -all");
+
     updateMdadmFile();
     }
+
 
 bool EtcRaidtab::updateEntry(const mdconf_info& info)
 {
@@ -112,6 +108,37 @@ bool EtcRaidtab::updateEntry(const mdconf_info& info)
   updateMdadmFile();
   return true;
 }
+
+
+void
+EtcRaidtab::setDeviceLine(const string& line)
+{
+    if (mdadm_device_line < 0)
+    {
+	mdadm_device_line = mdadm.numLines();
+	mdadm.insert(0, line);
+    }
+    else
+    {
+	mdadm[mdadm_device_line] = line;
+    }
+}
+
+
+void
+EtcRaidtab::setAutoLine(const string& line)
+{
+    if (mdadm_auto_line < 0)
+    {
+	mdadm_auto_line = mdadm.numLines();
+	mdadm.insert(0, line);
+    }
+    else
+    {
+	mdadm[mdadm_auto_line] = line;
+    }
+}
+
 
 bool EtcRaidtab::updateContainer(const mdconf_info& info)
 {
@@ -246,20 +273,23 @@ EtcRaidtab::buildMdadmMap()
     {
     unsigned lineno = 0;
     unsigned mdnum;
-    mdadm_dev_line = -1;
+    mdadm_device_line = -1;
+    mdadm_auto_line = -1;
     entry e;
     while (lineno < mdadm.numLines())
 	{
 	string key = extractNthWord( 0, mdadm[lineno] );
-	if( mdadm_dev_line<0 && key == "DEVICE"  )
-	    mdadm_dev_line = lineno;
+	if (mdadm_device_line < 0 && key == "DEVICE")
+	    mdadm_device_line = lineno;
+	else if (mdadm_auto_line < 0 && key == "AUTO")
+	    mdadm_auto_line = lineno;
 	else if( key == "ARRAY" &&
 		 Md::mdStringNum( extractNthWord( 1, mdadm[lineno] ), mdnum ))
 	    {
 	    e.first = lineno++;
 	    while( lineno < mdadm.numLines() && 
 	           (key = extractNthWord( 0, mdadm[lineno] ))!="ARRAY" &&
-		   key != "DEVICE" )
+		   key != "DEVICE" && key != "AUTO")
 		{
 		key = extractNthWord( 0, mdadm[lineno++] );
 		}

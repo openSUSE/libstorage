@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -27,6 +27,7 @@
 #include <map>
 
 #include "storage/AsciiFile.h"
+#include "storage/Storage.h"
 
 
 namespace storage
@@ -38,8 +39,10 @@ namespace storage
 class EtcRaidtab
     {
     public:
-	EtcRaidtab( const string& prefix="" );
+
+	EtcRaidtab(const Storage* sto, const string& prefix = "");
 	~EtcRaidtab();
+
 	void updateEntry(unsigned num, const string&);
 	void removeEntry( unsigned num );
 
@@ -102,7 +105,14 @@ class EtcRaidtab
 	string ArrayLine(const mdconf_info& info);
 	bool updateContainer(const mdconf_info& info);
 
-	int mdadm_dev_line;
+	void setDeviceLine(const string& line);
+	void setAutoLine(const string& line);
+
+	const Storage* sto;
+
+	int mdadm_device_line;
+	int mdadm_auto_line;
+
 	map<unsigned, entry> mtab;
 	map<string, entry> uuidtab; // search by uuid, only for ARRAY lines.
 	AsciiFile mdadm;

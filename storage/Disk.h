@@ -84,6 +84,7 @@ class Disk : public Container
 	const string& sysfsPath() const { return sysfs_dir; }
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
+	bool isIScsi() const { return iscsi; }
 	bool isLogical( unsigned nr ) const;
 	bool detect(SystemInfo& systeminfo);
 	static storage::CType staticType() { return storage::DISK; }

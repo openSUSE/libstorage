@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 09 12:03:46 CET 2010 - aschnell@suse.de
+
+- add AUTO line in mdadm.conf for iSCSI systems (fate #307478)
+
+-------------------------------------------------------------------
 Fri Mar 05 16:32:25 CET 2010 - aschnell@suse.de
 
 - fixed member entry in mdadm.conf for IMSM (bnc #576498)
