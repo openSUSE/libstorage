@@ -270,8 +270,6 @@ class MdPartCo : public Container
 
     list<string> udev_id;
 
-    string logfile_name;
-
     Disk* disk;
     bool del_ptable;
 
