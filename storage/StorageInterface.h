@@ -155,7 +155,6 @@ namespace storage
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART,
 		 COTYPE_LAST_ENTRY };
 
-
     enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
 
 
@@ -456,8 +455,6 @@ namespace storage
     struct MdStateInfo
     {
 	MdStateInfo() {}
-	bool active;
-	bool degraded;
 	MdArrayState state;
     };
 
@@ -482,9 +479,7 @@ namespace storage
     struct MdPartCoStateInfo
     {
         MdPartCoStateInfo() {}
-        bool active;
-        bool degraded;
-        MdArrayState state;	// Few states at one?
+        MdArrayState state;
     };
 
     /**

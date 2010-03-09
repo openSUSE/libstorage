@@ -5,7 +5,7 @@
  * Volume) like md126 which is a Container for partitions.
  *
  * Copyright (c) 2009, Intel Corporation.
- * Copyright (c) 2009 Novell, Inc.
+ * Copyright (c) [2009-2010] Novell, Inc.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -76,7 +76,7 @@ namespace storage
     MdPartCo::MdPartCo(const MdPartCo& c)
 	: Container(c), udev_id(c.udev_id),
 	  del_ptable(c.del_ptable), chunk_size(c.chunk_size),
-	  md_type(c.md_type), md_parity(c.md_parity), md_state(c.md_state),
+	  md_type(c.md_type), md_parity(c.md_parity),
 	  has_container(c.has_container),
 	  parent_container(c.parent_container), parent_uuid(c.parent_uuid),
 	  parent_metadata(c.parent_metadata),
@@ -1324,7 +1324,6 @@ bool MdPartCo::equalContent( const Container& rhs ) const
           (chunk_size == mdp->chunk_size &&
               md_type == mdp->md_type &&
               md_parity == mdp->md_parity &&
-              md_state == mdp->md_state &&
               sb_ver == mdp->sb_ver &&
               devs == mdp->devs &&
               spare == mdp->spare &&
@@ -1462,21 +1461,6 @@ void MdPartCo::getMdProps()
      property >> chunk_size;
      /* From 'B' in file to 'Kb' here. */
      chunk_size /= 1024;
-     }
-
-   property.clear();
-   if( !readProp(ARRAY_STATE, property) )
-     {
-     md_state = storage::UNKNOWN;
-     y2war("array state unknown ");
-     }
-   else
-     {
-     if( property == "readonly" )
-       {
-         //setReadonly();
-       }
-     md_state = Md::toMdArrayState(property);
      }
 
     if( !readProp(LEVEL, property) )
@@ -1828,16 +1812,17 @@ bool MdPartCo::mdStringNum( const string& name, unsigned& num )
     }
 
 
-void MdPartCo::getMdPartCoState(storage::MdPartCoStateInfo& info) const
+void
+MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
 {
-  string prop;
+    info.state = UNKNOWN;
 
-  readProp(ARRAY_STATE,prop);
-
-  info.state = Md::toMdArrayState(prop);
-
-  info.active = true; //?
-  info.degraded = false; //?
+    string value;
+    string path = sysfs_path + "/" + nm + "/md/array_state";
+    if (read_sysfs_property(path, value))
+    {
+	info.state = Md::toMdArrayState(value);
+    }
 }
 
 

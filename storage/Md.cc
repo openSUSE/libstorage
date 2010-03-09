@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -316,34 +316,20 @@ Md::checkDevices()
     return( ret );
     }
 
+
 void
 Md::getState(MdStateInfo& info) const
 {
-    SystemCmd c(MDADMBIN " --detail " + quote(device()));
+    info.state = UNKNOWN;
 
-    c.select("State : ");
-    if( c.retcode()==0 && c.numLines(true)>0 )
+    string value;
+    string path = MdPartCo::sysfs_path + "/" + nm + "/md/array_state";
+    if (read_sysfs_property(path, value))
     {
-	string state = c.getLine(0,true);
-	string::size_type pos;
-	if( (pos=state.find( "State : " ))!=string::npos )
-	    state.erase( 0, pos+8 );
-
-	typedef boost::tokenizer<boost::char_separator<char>> char_tokenizer;
-	char_tokenizer toker(state, boost::char_separator<char>(","));
-
-	info.active = false;
-	info.degraded = false;
-	for (char_tokenizer::const_iterator it = toker.begin(); it != toker.end(); it++)
-	{
-	    string s = boost::trim_copy(*it, locale::classic());
-	    if (s == "active")
-		info.active = true;
-	    else if (s == "degraded")
-		info.degraded = true;
-	}
+	info.state = Md::toMdArrayState(value);
     }
 }
+
 
 void
 Md::computeSize()
@@ -774,9 +760,9 @@ int Md::updateEntry(EtcRaidtab* tab)
     const string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
 				     "right-asymmetric", "right-symmetric" };
 
-    const string Md::md_states[] = { "clear", "inactive", "suspended", "readonly",
-				     "read-auto", "clean", "active", "write-pending",
-				     "active-idle" };
+    const string Md::md_states[] = { "unknown", "clear", "inactive", "suspended",
+				     "readonly", "read-auto", "clean", "active",
+				     "write-pending", "active-idle" };
 
 
 unsigned Md::md_major = 0;

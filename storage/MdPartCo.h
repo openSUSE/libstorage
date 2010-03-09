@@ -5,7 +5,7 @@
  * Volume) like md126 which is a Container for partitions.
  *
  * Copyright (c) 2009, Intel Corporation.
- * Copyright (c) 2009 Novell, Inc.
+ * Copyright (c) [2009-2010] Novell, Inc.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -47,6 +47,7 @@ namespace storage
 class MdPartCo : public Container
     {
     friend class Storage;
+	friend class Md;
 
     public:
 
@@ -129,8 +130,6 @@ class MdPartCo : public Container
     unsigned long chunkSize() const { return chunk_size; }
 
     storage::MdType personality() const { return md_type; }
-
-	MdArrayState getArrayState() const { return md_state; }
 
 	const string& getMdUuid() const { return md_uuid; }
 
@@ -300,7 +299,6 @@ class MdPartCo : public Container
     unsigned long chunk_size;
     storage::MdType md_type;
     storage::MdParity md_parity;
-    storage::MdArrayState md_state;
 
     /* Md Container - */
     bool   has_container;
