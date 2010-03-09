@@ -26,6 +26,7 @@
 #include "storage/AsciiFile.h"
 #include "storage/Md.h"
 #include "storage/MdPartCo.h"
+#include "storage/StorageTypes.h"
 
 
 namespace storage
@@ -34,8 +35,7 @@ namespace storage
 
 
     EtcRaidtab::EtcRaidtab(const Storage* sto, const string& prefix)
-	: sto(sto), mdadm_device_line(-1), mdadm_auto_line(-1),
-	  mdadm(prefix + "/etc/mdadm.conf")
+	: sto(sto), mdadm(prefix + "/etc/mdadm.conf")
     {
 	buildMdadmMap();
 	buildMdadmMap2();
@@ -110,34 +110,28 @@ bool EtcRaidtab::updateEntry(const mdconf_info& info)
 }
 
 
-void
-EtcRaidtab::setDeviceLine(const string& line)
-{
-    if (mdadm_device_line < 0)
+    void
+    EtcRaidtab::setDeviceLine(const string& line)
     {
-	mdadm_device_line = mdadm.numLines();
-	mdadm.insert(0, line);
+	const vector<string>& lines = mdadm.lines();
+	vector<string>::const_iterator i = find_if(lines, string_starts_with("DEVICE"));
+	if (i == lines.end())
+	    mdadm.insert(0, line);
+	else
+	    mdadm.replace(distance(lines.begin(), i), 1, line);
     }
-    else
-    {
-	mdadm[mdadm_device_line] = line;
-    }
-}
 
 
-void
-EtcRaidtab::setAutoLine(const string& line)
-{
-    if (mdadm_auto_line < 0)
+    void
+    EtcRaidtab::setAutoLine(const string& line)
     {
-	mdadm_auto_line = mdadm.numLines();
-	mdadm.insert(0, line);
+	const vector<string>& lines = mdadm.lines();
+	vector<string>::const_iterator i = find_if(lines, string_starts_with("AUTO"));
+	if (i == lines.end())
+	    mdadm.insert(0, line);
+	else
+	    mdadm.replace(distance(lines.begin(), i), 1, line);
     }
-    else
-    {
-	mdadm[mdadm_auto_line] = line;
-    }
-}
 
 
 bool EtcRaidtab::updateContainer(const mdconf_info& info)
@@ -273,17 +267,11 @@ EtcRaidtab::buildMdadmMap()
     {
     unsigned lineno = 0;
     unsigned mdnum;
-    mdadm_device_line = -1;
-    mdadm_auto_line = -1;
     entry e;
     while (lineno < mdadm.numLines())
 	{
 	string key = extractNthWord( 0, mdadm[lineno] );
-	if (mdadm_device_line < 0 && key == "DEVICE")
-	    mdadm_device_line = lineno;
-	else if (mdadm_auto_line < 0 && key == "AUTO")
-	    mdadm_auto_line = lineno;
-	else if( key == "ARRAY" &&
+	if( key == "ARRAY" &&
 		 Md::mdStringNum( extractNthWord( 1, mdadm[lineno] ), mdnum ))
 	    {
 	    e.first = lineno++;

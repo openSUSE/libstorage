@@ -110,9 +110,6 @@ class EtcRaidtab
 
 	const Storage* sto;
 
-	int mdadm_device_line;
-	int mdadm_auto_line;
-
 	map<unsigned, entry> mtab;
 	map<string, entry> uuidtab; // search by uuid, only for ARRAY lines.
 	AsciiFile mdadm;
