@@ -1387,7 +1387,7 @@ MdPartCo::getMdRaids()
       string line2;
       getline(file,line2);
       if( line2.find("external:imsm") == string::npos &&
-          line2.find("external:imsm") == string::npos)
+          line2.find("external:ddf") == string::npos)
         {
           // external:imsm or ddf not found. Assume that this is a Volume.
         l.push_back(dev_name);
