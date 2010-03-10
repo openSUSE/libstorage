@@ -120,7 +120,7 @@ namespace storage
 	  new_sector(c.new_sector), label(c.label),
 	  udev_path(c.udev_path), udev_id(c.udev_id),
 	  detected_label(c.detected_label), logfile_name(c.logfile_name),
-	  sysfs_dir(c.sysfs_dir), max_primary(c.max_primary),
+	  max_primary(c.max_primary),
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
 	  init_disk(c.init_disk), iscsi(c.iscsi),
 	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
@@ -170,6 +170,13 @@ namespace storage
 	ConstPartPair vp = partPair();
 	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)
 	    v->saveData(xmlNewChild(node, "partition"));
+    }
+
+
+    string
+    Disk::sysfsPath() const
+    {
+	return SYSFSDIR "/" + boost::replace_all_copy(nm, "/", "!");
     }
 
 
@@ -323,14 +330,12 @@ bool Disk::detectGeometry()
 
 
     bool
-    Disk::getSysfsInfo(const string& SysfsDir)
+    Disk::getSysfsInfo()
     {
 	bool ret = true;
-	sysfs_dir = SysfsDir;
-	y2mil("sysfs_dir:" << sysfs_dir);
 
 	SysfsInfo sysfsinfo;
-	if (getSysfsInfo(sysfs_dir, sysfsinfo))
+	if (getSysfsInfo(sysfsPath(), sysfsinfo))
 	{
 	    range = sysfsinfo.range;
 	    if (range <= 1)
@@ -2735,7 +2740,6 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
       << " Label:" << d.label;
     if( d.detected_label!=d.label )
 	s << " DetectedLabel:" << d.detected_label;
-    s << " SysfsDir:" << d.sysfs_dir;
     if( !d.udev_path.empty() )
 	s << " UdevPath:" << d.udev_path;
     if( !d.udev_id.empty() )
@@ -2777,8 +2781,6 @@ void Disk::logDifference( const Container& d ) const
 	    log += " SizeK:" + decString(size_k) + "-->" + decString(p->size_k);
 	if( label!=p->label )
 	    log += " Label:" + label + "-->" + p->label;
-	if( sysfs_dir!=p->sysfs_dir )
-	    log += " SysfsDir:" + sysfs_dir + "-->" + p->sysfs_dir;
 	if( max_primary!=p->max_primary )
 	    log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(p->max_primary);
 	if( ext_possible!=p->ext_possible )
@@ -2854,7 +2856,7 @@ bool Disk::equalContent( const Container& rhs ) const
 	      size_k==p->size_k && max_primary==p->max_primary &&
 	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
 	      init_disk==p->init_disk && label==p->label && 
-	      iscsi==p->iscsi && sysfs_dir==p->sysfs_dir && 
+	      iscsi==p->iscsi &&
 	      dmp_slave==p->dmp_slave && gpt_enlarge==p->gpt_enlarge;
     if( ret && p )
 	{

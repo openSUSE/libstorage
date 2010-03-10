@@ -946,15 +946,6 @@ int Volume::doFormat()
     }
 
 
-string Volume::sysfsPath() const
-    {
-    string ret = SYSFSDIR "/";
-    string::size_type pos = dev.rfind( '/' ) + 1;
-    ret += dev.substr( pos );
-    y2mil( "ret:" << ret );
-    return( ret );
-    }
-
 string Volume::getFilesysSysfsPath() const
     {
     string ret;

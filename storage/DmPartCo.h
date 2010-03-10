@@ -60,6 +60,8 @@ class DmPartCo : public PeContainer
 	friend std::ostream& operator<< (std::ostream&, const DmPartCo& );
 	void setUdevData(const list<string>& id);
 
+	virtual string sysfsPath() const;
+
 	int createPartition( storage::PartitionType type, long unsigned start,
 			     long unsigned len, string& device,
 			     bool checkRelaxed=false );

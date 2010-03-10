@@ -323,8 +323,7 @@ Md::getState(MdStateInfo& info) const
     info.state = UNKNOWN;
 
     string value;
-    string path = MdPartCo::sysfs_path + "/" + nm + "/md/array_state";
-    if (read_sysfs_property(path, value))
+    if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
     {
 	info.state = Md::toMdArrayState(value);
     }
@@ -586,6 +585,13 @@ unsigned Md::mdMajor()
 	y2mil("md_major:" << md_major);
     }
     return( md_major );
+    }
+
+
+    string
+    Md::sysfsPath() const
+    {
+	return SYSFSDIR "/" "md" + decString(num);
     }
 
 

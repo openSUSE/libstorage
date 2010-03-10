@@ -81,7 +81,7 @@ class Disk : public Container
 	virtual list<string> udevId() const { return udev_id; }
 	void setSlave( bool val=true ) { dmp_slave=val; }
 	void setNumMinor( unsigned long val ) { range=val; }
-	const string& sysfsPath() const { return sysfs_dir; }
+	virtual string sysfsPath() const;
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isIScsi() const { return iscsi; }
@@ -210,7 +210,7 @@ class Disk : public Container
 
 	virtual bool detectGeometry();
 	virtual bool detectPartitions(const ProcParts& parts);
-	bool getSysfsInfo( const string& SysFsDir );
+	bool getSysfsInfo();
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
 	int execCheckFailed( const string& cmd_line, bool stop_hald=true );
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
@@ -273,7 +273,6 @@ class Disk : public Container
 	list<string> udev_id;
 	string detected_label;
 	string logfile_name;
-	string sysfs_dir;
 	unsigned max_primary;
 	bool ext_possible;
 	unsigned max_logical;

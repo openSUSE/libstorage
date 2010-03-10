@@ -76,6 +76,8 @@ namespace storage
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
 
+	virtual string sysfsPath() const { return ""; }
+
 	void clearUsedBy() { uby.clear(); }
 	void setUsedBy(UsedByType type, const string& device);
 	void addUsedBy(UsedByType type, const string& device);

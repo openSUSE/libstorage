@@ -111,6 +111,13 @@ MdPartCo::~MdPartCo()
     }
 
 
+    string
+    MdPartCo::sysfsPath() const
+    {
+	return SYSFSDIR "/" + name();
+    }
+
+
 bool MdPartCo::isMdPart(const string& name) const
 {
   string n = undevName(name);
@@ -1493,14 +1500,13 @@ void MdPartCo::getMdProps()
 bool
 MdPartCo::readProp(enum MdProperty prop, string& val) const
 {
-  string path = sysfs_path + nm + "/md/" + md_props[prop];
-    return read_sysfs_property(path, val);
+    return read_sysfs_property(sysfsPath() + "/md/" + md_props[prop], val);
 }
 
 
 void MdPartCo::getSlaves(const string name, std::list<string>& devs_list )
 {
-  string path = sysfs_path + name + "/slaves";
+    string path = sysfsPath() + "/slaves";
   DIR* dir;
 
   devs_list.clear();
@@ -1596,7 +1602,7 @@ void MdPartCo::setMetaData()
     return;
     }
 
-  string path = sysfs_path + parent_container + "/md/" + md_props[METADATA];
+  string path = SYSFSDIR + parent_container + "/md/" + md_props[METADATA];
   if( access( path.c_str(), R_OK )==0 )
     {
     std::ifstream file( path.c_str() );
@@ -1818,8 +1824,7 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
     info.state = UNKNOWN;
 
     string value;
-    string path = sysfs_path + "/" + nm + "/md/array_state";
-    if (read_sysfs_property(path, value))
+    if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
     {
 	info.state = Md::toMdArrayState(value);
     }
@@ -2089,8 +2094,6 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
 
 const string MdPartCo::md_props[] = {"metadata_version", "component_size", "chunk_size",
                        "array_state", "level", "layout" };
-
-const string MdPartCo::sysfs_path = "/sys/devices/virtual/block/";
 
 bool MdPartCo::active = false;
 

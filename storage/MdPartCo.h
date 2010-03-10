@@ -63,6 +63,8 @@ class MdPartCo : public Container
     friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
     void setUdevData(const list<string>& id);
 
+	virtual string sysfsPath() const;
+
     void getMdPartCoState(MdPartCoStateInfo& info) const;
 
     int createPartition( storage::PartitionType type, long unsigned start,
@@ -315,8 +317,6 @@ class MdPartCo : public Container
 
     /* Name that is present in /dev/md directory.*/
     string md_name;
-
-    static const string sysfs_path;
 
     enum MdProperty
     {

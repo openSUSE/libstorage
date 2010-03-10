@@ -61,6 +61,13 @@ DmPartCo::~DmPartCo()
     }
 
 
+    string
+    DmPartCo::sysfsPath() const
+    {
+	return SYSFSDIR "/" "dm-" + decString(mnr);
+    }
+
+
 int
 DmPartCo::addNewDev(string& device)
 {

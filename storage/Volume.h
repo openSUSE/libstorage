@@ -67,7 +67,6 @@ class Storage;
 	Storage* getStorage() const;
 
 	storage::CType cType() const;
-	virtual string sysfsPath() const; 
 	void setReadonly( bool val=true ) { ronly=val; }
 	bool ignoreFstab() const { return( ignore_fstab ); }
 	void setIgnoreFstab( bool val=true ) { ignore_fstab=val; }

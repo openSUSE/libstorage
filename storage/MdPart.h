@@ -60,6 +60,8 @@ class MdPart : public Volume
         virtual Text setTypeText(bool doing = true) const;
         static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
 
+	virtual string sysfsPath() const;
+
     protected:
         void init( const string& name );
         const MdPartCo* co() const;

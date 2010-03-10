@@ -29,6 +29,7 @@
 #include "storage/ProcParts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
+#include "storage/StorageDefines.h"
 
 
 namespace storage
@@ -83,6 +84,14 @@ const MdPartCo* MdPart::co() const
     {
     return(dynamic_cast<const storage::MdPartCo*>(cont));
     }
+
+
+    string
+    MdPart::sysfsPath() const
+    {
+	return SYSFSDIR "/" + co()->name() + "/" + name();
+    }
+
 
 void MdPart::updateName()
     {

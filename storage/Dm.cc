@@ -491,22 +491,10 @@ string Dm::dmDeviceName( unsigned long num )
     }
 
 
-string Dm::sysfsPath() const
+    string
+    Dm::sysfsPath() const
     {
-    string ret = SYSFSDIR "/";
-    list<string>::const_iterator i = 
-	find_if( alt_names.begin(), alt_names.end(), string_starts_with( "/dev/dm-" ) );
-    if( i != alt_names.end() )
-	{
-	string::size_type pos = i->rfind( '/' ) + 1;
-	ret += i->substr( pos );
-	}
-    else
-	{
-	y2mil( "no dm device found " << *this );
-	}
-    y2mil( "ret:" << ret );
-    return( ret );
+	return SYSFSDIR "/" "dm-" + decString(mnr);
     }
 
 
