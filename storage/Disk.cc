@@ -316,7 +316,7 @@ bool Disk::detectGeometry()
 	    return false;
 
 	unsigned long ext_range;
-	if (read_sysfs_property(sysfsdir + "/ext_range", ext_range))
+	if (read_sysfs_property(sysfsdir + "/ext_range", ext_range, false))
 	    sysfsinfo.range = ext_range;
 
 	if (!read_sysfs_property(sysfsdir + "/size", sysfsinfo.size))
@@ -2080,7 +2080,7 @@ Disk::getPartedValues( Partition *p ) const
 	classic(cmd_line);
 	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print unit s print";
 	std::string cmd_str = cmd_line.str();
-	cmd_line << "| grep -w \"^[ \t]*\"" << p->nr();
+	cmd_line << " | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
 	unsigned nr, id;
 	unsigned long start, csize;
@@ -2095,8 +2095,8 @@ Disk::getPartedValues( Partition *p ) const
 	    y2mil("start_p:" << start_p << " size_p:" << size_p);
 	    unsigned long long sysfs_start = 0;
 	    unsigned long long sysfs_size = 0;
-	    read_sysfs_property(start_p, sysfs_start);
-	    read_sysfs_property(size_p, sysfs_size);
+	    read_sysfs_property(start_p, sysfs_start, false);
+	    read_sysfs_property(size_p, sysfs_size, false);
 	    if( p->type()==EXTENDED )
 		ssize=2;
 	    y2mil( "sectors nr:" << nr << " sysfs  start:" << sysfs_start << 

@@ -215,7 +215,7 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
     template<class Type>
     bool
-    read_sysfs_property(const string& path, Type& value)
+    read_sysfs_property(const string& path, Type& value, bool log_error = true)
     {
 	std::ifstream file(path.c_str());
 	classic(file);
@@ -224,7 +224,8 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
 	if (file.fail())
 	{
-	    y2err("reading " << path << " failed");
+	    if (log_error)
+		y2err("reading " << path << " failed");
 	    return false;
 	}
 
