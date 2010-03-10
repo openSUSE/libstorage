@@ -352,7 +352,6 @@ Storage::discoverMdPVols()
     {
     return false;
     }
-  string mdDevs = "";
   bool ret = MdPartCo::isImsmPlatform();
   if( ret == true )
     {
@@ -369,14 +368,8 @@ Storage::discoverMdPVols()
     if (!l.empty())
       {
       // At least ONE Volume must be detected
-      mdDevs.clear();
-      for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
-        {
-        mdDevs += " " + *i;
-        }
-      y2mil(" md raids:" + mdDevs);
-      if( !mdDevs.empty())
-        {
+	  y2mil("md raids:" << l);
+
 	if (getImsmDriver() == IMSM_UNDECIDED)
 	{
         Text txt = sformat(
@@ -389,7 +382,7 @@ Storage::discoverMdPVols()
                 "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
                 "will be able to install system on it and boot from such RAID.\n"
                 "Do you want MD Partitionable RAID subsystem to manage those partitions?"
-            ), mdDevs.c_str() );
+            ), boost::join(l, " ").c_str() );
 
         if( yesnoPopupCb(txt) )
           {
@@ -406,12 +399,6 @@ Storage::discoverMdPVols()
 	{
 	    ret = getImsmDriver() == IMSM_MDADM;
 	}
-        }
-      else
-        {
-        /* No mdDevs */
-        ret = false;
-        }
       }
     else
       {
