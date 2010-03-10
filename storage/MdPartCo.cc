@@ -1979,12 +1979,11 @@ string MdPartCo::mdadmLine() const
 int MdPartCo::scanForRaid(list<string>& raidNames)
 {
   int ret = -1;
-  SystemCmd c(MDADMBIN " -Es ");
   raidNames.clear();
 
+  SystemCmd c(MDADMBIN " --examine --scan");
   if( c.retcode() == 0 )
     {
-    raidNames.clear();
     for(unsigned i = 0; i < c.numLines(false); i++ )
       {
       //Example:
