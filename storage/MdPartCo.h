@@ -160,7 +160,7 @@ class MdPartCo : public Container
 
     // This function will scan for MD RAIDs and will return
     // list with detected RAID names.
-    static int scanForRaid(list<string>& raidNames);
+    static bool scanForRaid(list<string>& raidNames);
 
     /* filterMdPartCo
      * Get list of detected MD RAIDs and filters them for

@@ -1976,9 +1976,10 @@ string MdPartCo::mdadmLine() const
     }
 
 
-int MdPartCo::scanForRaid(list<string>& raidNames)
+bool
+MdPartCo::scanForRaid(list<string>& raidNames)
 {
-  int ret = -1;
+    bool ret = false;
   raidNames.clear();
 
   SystemCmd c(MDADMBIN " --examine --scan");
@@ -1999,7 +2000,7 @@ int MdPartCo::scanForRaid(list<string>& raidNames)
         raidNames.push_back(dev_name);
         }
       }
-    ret = 0;
+    ret = true;
     }
   y2mil(" Detected list of MD RAIDs : " << raidNames);
   return ret;

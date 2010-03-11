@@ -352,22 +352,15 @@ Storage::discoverMdPVols()
     {
     return false;
     }
-  bool ret = MdPartCo::isImsmPlatform();
-  if( ret == true )
+
+  bool ret = false;
+  if (MdPartCo::isImsmPlatform())
     {
     y2mil("Intel SW RAID Platform detected.");
 
     list <string> l;
-    if( MdPartCo::scanForRaid(l) != 0 )
+    if (MdPartCo::scanForRaid(l) && !l.empty())
       {
-      MdPartCo::activate( true, tmpDir() );
-      waitForDevice();
-      l = MdPartCo::getMdRaids();
-      MdPartCo::activate( false, "" );
-      }
-    if (!l.empty())
-      {
-      // At least ONE Volume must be detected
 	  y2mil("md raids:" << l);
 
 	if (getImsmDriver() == IMSM_UNDECIDED)
@@ -399,11 +392,6 @@ Storage::discoverMdPVols()
 	{
 	    ret = getImsmDriver() == IMSM_MDADM;
 	}
-      }
-    else
-      {
-      /* No RAIDs at all */
-      ret = false;
       }
     }
   y2mil(" Exiting with status: " << ret);
