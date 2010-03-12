@@ -272,7 +272,6 @@ class MdPartCo : public Container
     list<string> udev_id;
 
     Disk* disk;
-    bool del_ptable;
 
     /* RAID Related */
 

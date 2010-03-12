@@ -52,7 +52,8 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo),
-	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false)
+	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
+	  del_ptable(false)
     {
     logfile_name = boost::replace_all_copy(nm, "/", "_");
     getMajorMinor();
@@ -64,7 +65,8 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo),
-	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false)
+	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
+	  del_ptable(false)
     {
     y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = name + decString(num);
@@ -90,7 +92,7 @@ namespace storage
 	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
 	  init_disk(false), iscsi(false), dmp_slave(false),
-	  gpt_enlarge(false), byte_cyl(0), range(4)
+	  gpt_enlarge(false), byte_cyl(0), range(4), del_ptable(false)
     {
 	logfile_name = nm;
 
@@ -124,7 +126,7 @@ namespace storage
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
 	  init_disk(c.init_disk), iscsi(c.iscsi),
 	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
-	  byte_cyl(c.byte_cyl), range(c.range)
+	  byte_cyl(c.byte_cyl), range(c.range), del_ptable(c.del_ptable)
     {
 	y2deb("copy-constructed Disk " << dev);
 
@@ -1724,7 +1726,7 @@ int Disk::destroyPartitionTable( const string& new_label )
 	    ++i;
 	    }
 	getStorage()->setRecursiveRemoval(save);
-	setDeleted();
+	del_ptable = true;
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -1799,6 +1801,8 @@ Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vol
 	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
 		vol.push_back( &(*i) );
 	}
+    if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
+	col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
 	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
     }
@@ -1826,7 +1830,7 @@ int Disk::commitChanges( CommitStage stage )
     {
     y2mil("name:" << name() << " stage:" << stage);
     int ret = 0;
-    if( stage==DECREASE && deleted() )
+    if( stage==DECREASE && del_ptable )
 	{
 	ret = doCreateLabel();
 	}
@@ -1841,7 +1845,7 @@ void
 Disk::getCommitActions(list<commitAction>& l) const
     {
     Container::getCommitActions( l );
-    if( deleted() )
+    if( del_ptable )
 	{
 	l.remove_if(stage_is(DECREASE));
 	l.push_front(commitAction(DECREASE, staticType(), setDiskLabelText(false), this, true));
@@ -1890,7 +1894,7 @@ int Disk::doCreateLabel()
 	}
     else
 	{
-	setDeleted(false);
+	del_ptable = false;
 	removeFromMemory();
 	}
     if( ret==0 )
@@ -2755,6 +2759,8 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " DmpSlave";
     if( d.gpt_enlarge )
 	s << " GptEnlarge";
+    if (d.del_ptable)
+	s << " delPT";
     return( s );
     }
 
@@ -2805,6 +2811,13 @@ void Disk::logDifference( const Container& d ) const
 		log += " -->iSCSI";
 	    else
 		log += " iSCSI-->";
+	    }
+	if (del_ptable != p->del_ptable)
+	    {
+	    if (p->del_ptable)
+		log += " -->delPT";
+	    else
+		log += " delPT-->";
 	    }
 	y2mil(log);
 	ConstPartPair pp=partPair();
@@ -2857,7 +2870,8 @@ bool Disk::equalContent( const Container& rhs ) const
 	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
 	      init_disk==p->init_disk && label==p->label && 
 	      iscsi==p->iscsi &&
-	      dmp_slave==p->dmp_slave && gpt_enlarge==p->gpt_enlarge;
+	      dmp_slave==p->dmp_slave && gpt_enlarge==p->gpt_enlarge &&
+	      del_ptable == p->del_ptable;
     if( ret && p )
 	{
 	ConstPartPair pp = partPair();

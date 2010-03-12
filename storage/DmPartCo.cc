@@ -41,8 +41,7 @@ namespace storage
 
     DmPartCo::DmPartCo(Storage* s, const string& name, const string& device, CType t,
 		       SystemInfo& systeminfo)
-	: PeContainer(s, name, device, t, systeminfo), disk(NULL), active(false),
-	  del_ptable(false)
+	: PeContainer(s, name, device, t, systeminfo), disk(NULL), active(false)
     {
     y2deb("constructing DmPartCo name:" << name);
 	getMajorMinor();
@@ -499,7 +498,6 @@ int DmPartCo::destroyPartitionTable( const string& new_label )
 	    ++i;
 	    }
 	getStorage()->setRecursiveRemoval(save);
-	del_ptable = true;
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -623,7 +621,6 @@ int DmPartCo::doCreateLabel()
     ret = disk->doCreateLabel();
     if( ret==0 )
 	{
-	del_ptable = false;
 	removeFromMemory();
 	handleWholeDevice();
 	Storage::waitForDevice();
@@ -725,7 +722,7 @@ DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const
 	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
 		vol.push_back( &(*i) );
 	}
-    if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
+    if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
 	col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
 	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
@@ -760,7 +757,7 @@ int DmPartCo::commitChanges( CommitStage stage )
 	{
 	ret = doRemove();
 	}
-    else if( stage==DECREASE && del_ptable )
+    else if( stage==DECREASE && disk->del_ptable )
 	{
 	ret = doCreateLabel();
 	}
@@ -777,7 +774,7 @@ DmPartCo::getCommitActions(list<commitAction>& l) const
     y2mil( "l:" << l );
     Container::getCommitActions( l );
     y2mil( "l:" << l );
-    if( deleted() || del_ptable )
+    if( deleted() || disk->del_ptable )
 	{
 	l.remove_if(stage_is(DECREASE));
 	Text txt = deleted() ? removeText(false) : setDiskLabelText(false);
@@ -1003,8 +1000,6 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     s << dynamic_cast<const PeContainer&>(d);
     if( !d.udev_id.empty() )
 	s << " UdevId:" << d.udev_id;
-    if( d.del_ptable )
-      s << " delPT";
     if( !d.active )
       s << " inactive";
     return( s );
@@ -1017,13 +1012,6 @@ string DmPartCo::getDiffString( const Container& d ) const
     const DmPartCo* p = dynamic_cast<const DmPartCo*>(&d);
     if( p )
 	{
-	if( del_ptable!=p->del_ptable )
-	    {
-	    if( p->del_ptable )
-		log += " -->delPT";
-	    else
-		log += " delPT-->";
-	    }
 	if( active!=p->active )
 	    {
 	    if( p->active )
@@ -1075,8 +1063,7 @@ void DmPartCo::logDifference( const DmPartCo& d ) const
 bool DmPartCo::equalContent( const DmPartCo& rhs ) const
     {
     bool ret = PeContainer::equalContent(rhs,false) &&
-	       active==rhs.active &&
-	       del_ptable==rhs.del_ptable;
+	active==rhs.active;
     if( ret )
 	{
 	ConstDmPartPair pp = dmpartPair();
@@ -1088,8 +1075,7 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 
 
     DmPartCo::DmPartCo(const DmPartCo& c)
-	: PeContainer(c), udev_path(c.udev_path), udev_id(c.udev_id), active(c.active),
-	  del_ptable(c.del_ptable)
+	: PeContainer(c), udev_path(c.udev_path), udev_id(c.udev_id), active(c.active)
     {
 	y2deb("copy-constructed DmPartCo from " << c.dev);
 

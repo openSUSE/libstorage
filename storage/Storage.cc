@@ -4760,15 +4760,13 @@ Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
 	}
     }
 
-static bool showContainers( const Container& c )
-    { return( !c.deleted()||c.type()==DISK ); }
 
 void
 Storage::getContainers( deque<ContainerInfo>& infos )
     {
-    infos.clear ();
+    infos.clear();
     assertInit();
-    ConstContPair p = contPair( showContainers );
+    ConstContPair p = contPair(Container::notDeleted);
     for( ConstContIterator i = p.begin(); i != p.end(); ++i)
 	{
 	y2mil( "co:" << *i );

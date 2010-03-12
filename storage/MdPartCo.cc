@@ -53,7 +53,7 @@ namespace storage
 
 
     MdPartCo::MdPartCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType()), disk(NULL), del_ptable(false)
+	: Container(s, name, device, staticType()), disk(NULL)
     {
 	y2mil("constructing MdPartCo " << name);
 
@@ -75,7 +75,7 @@ namespace storage
 
     MdPartCo::MdPartCo(const MdPartCo& c)
 	: Container(c), udev_id(c.udev_id),
-	  del_ptable(c.del_ptable), chunk_size(c.chunk_size),
+	  chunk_size(c.chunk_size),
 	  md_type(c.md_type), md_parity(c.md_parity),
 	  has_container(c.has_container),
 	  parent_container(c.parent_container), parent_uuid(c.parent_uuid),
@@ -576,7 +576,6 @@ int MdPartCo::destroyPartitionTable( const string& new_label )
             ++i;
             }
         getStorage()->setRecursiveRemoval(save);
-        del_ptable = true;
         }
     y2mil("ret:" << ret);
     return( ret );
@@ -684,7 +683,6 @@ int MdPartCo::doCreateLabel()
     ret = disk->doCreateLabel();
     if( ret==0 )
         {
-        del_ptable = false;
         removeFromMemory();
         handleWholeDevice();
         getStorage()->waitForDevice();
@@ -736,7 +734,6 @@ MdPartCo::removeMdPart()
       unuseDevs();
       setDeleted( true );
       destrSb = true;
-      del_ptable = true;
       }
     y2mil("ret:" << ret);
     return( ret );
@@ -815,7 +812,7 @@ int MdPartCo::getToCommit( CommitStage stage, list<const Container*>& col,
             if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
                 vol.push_back( &(*i) );
         }
-    if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
+    if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
         col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
         y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
@@ -851,7 +848,7 @@ int MdPartCo::commitChanges( CommitStage stage )
         {
         ret = doRemove();
         }
-    else if( stage==DECREASE && del_ptable )
+    else if( stage==DECREASE && disk->del_ptable )
         {
         ret = doCreateLabel();
         }
@@ -867,7 +864,7 @@ MdPartCo::getCommitActions(list<commitAction>& l ) const
     y2mil( "l:" << l );
     Container::getCommitActions( l );
     y2mil( "l:" << l );
-    if( deleted() || del_ptable )
+    if( deleted() || disk->del_ptable )
         {
         list<commitAction>::iterator i = l.begin();
         while (i != l.end())
@@ -1198,8 +1195,6 @@ std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     s << " MdName:" << d.md_name;
     if( !d.udev_id.empty() )
         s << " UdevId:" << d.udev_id;
-    if( d.del_ptable )
-      s << " delPT";
     if( !d.active )
       s << " inactive";
     return( s );
@@ -1212,13 +1207,6 @@ string MdPartCo::getDiffString( const Container& d ) const
     const MdPartCo* p = dynamic_cast<const MdPartCo*>(&d);
     if( p )
         {
-        if( del_ptable!=p->del_ptable )
-            {
-            if( p->del_ptable )
-                log += " -->delPT";
-            else
-                log += " delPT-->";
-            }
         if( active!=p->active )
             {
             if( p->active )
@@ -1325,8 +1313,7 @@ bool MdPartCo::equalContent( const Container& rhs ) const
         return false;
         }
       ret = ret &&
-          active==mdp->active &&
-          del_ptable==mdp->del_ptable;
+          active==mdp->active;
       ret = ret &&
           (chunk_size == mdp->chunk_size &&
               md_type == mdp->md_type &&

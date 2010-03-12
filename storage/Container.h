@@ -83,6 +83,8 @@ namespace storage
 	void getInfo( storage::ContainerInfo& info ) const;
 	bool findVolume( const string& device, Volume*& vol );
 
+	static bool notDeleted(const Container& c) { return !c.deleted(); }
+
 // iterators over volumes of a container
     protected:
 	// protected typedefs for iterators over volumes
