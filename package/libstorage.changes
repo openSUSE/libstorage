@@ -2,6 +2,7 @@
 Tue Mar 09 12:03:46 CET 2010 - aschnell@suse.de
 
 - add AUTO line in mdadm.conf for iSCSI systems (fate #307478)
+- 2.19.11
 
 -------------------------------------------------------------------
 Fri Mar 05 16:32:25 CET 2010 - aschnell@suse.de
