@@ -2987,10 +2987,8 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	{
 	s << " dtxt:" << v.dtxt;
 	}
-    if( v.alt_names.begin() != v.alt_names.end() )
-	{
+    if (!v.alt_names.empty())
 	s << " alt_names:" << v.alt_names;
-	}
     if( v.encryption != storage::ENC_NONE ||
         v.orig_encryption != storage::ENC_NONE )
 	{

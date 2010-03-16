@@ -414,6 +414,8 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
       s << " readonly";
     if (!c.uby.empty())
 	s << " usedby:" << c.uby;
+    if (!c.alt_names.empty())
+	s << " alt_names:" << c.alt_names;
     return s;
     }
 
