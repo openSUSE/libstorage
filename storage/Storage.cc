@@ -4788,156 +4788,35 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 	}
     }
 
-int 
+int
 Storage::getContVolInfo(const string& device, ContVolInfo& info)
     {
     int ret = STORAGE_VOLUME_NOT_FOUND;
-    string dev = device;
     ConstContIterator c;
     ConstVolIterator v;
-    info.type = CUNKNOWN;
+    info.type = CUNKNOWN; 
     assertInit();
-    if( findVolume( dev, c, v ))
+    if (findVolume(device, c, v))
 	{
 	ret = 0;
 	info.type = c->type();
-	info.cname = c->device();
+	info.cname = c->name();
+	info.cdevice = c->device();
 	info.vname = v->name();
-	info.numeric = v->isNumeric();
-	if( info.numeric )
-	    info.nr = v->nr();
-	else
-	    info.nr = 0;
+	info.vdevice = v->device();
 	}
-    else 
-	{
-	DiskIterator d;
-	DmraidCoIterator r;
-	DmmultipathCoIterator m;
-	MdPartCoIterator md;
-	std::pair<string,unsigned> p = Disk::getDiskPartition( dev );
-	if( p.first=="/dev/md" )
-	    {
-	    ret = 0;
-	    info.cname = p.first;
-	    info.vname = undevDevice(device);
-	    info.type = MD;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	else if( p.first=="/dev/loop" )
-	    {
-	    ret = 0;
-	    info.cname = p.first;
-	    info.vname = undevDevice(device);
-	    info.type = LOOP;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	else if( p.first=="/dev/dm-" )
-	    {
-	    ret = 0;
-	    info.cname = p.first;
-	    info.vname = undevDevice(device);
-	    info.type = DM;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	else if( (d=findDisk(p.first))!=dEnd() )
-	    {
-	    ret = 0;
-	    info.cname = d->device();
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.type = DISK;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	else if( (r=findDmraidCo(p.first))!=dmrCoEnd() )
-	    {
-	    ret = 0;
-	    info.cname = r->device();
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.type = DMRAID;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-        else if( (md=findMdPartCo(p.first))!=mdpCoEnd() )
-            {
-            info.cname = md->device();
-            info.vname = dev.substr( dev.find_last_of('/')+1 );
-            info.type = MDPART;
-            info.numeric = true;
-            info.nr = p.second;
-            }
-	else if( (m=findDmmultipathCo(p.first))!=dmmCoEnd() )
-	    {
-	    ret = 0;
-	    info.cname = m->device();
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.type = DMMULTIPATH;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	else if( dev.find("/dev/disk/by-uuid/")==0 ||
-	         dev.find("/dev/disk/by-label/")==0 ||
-	         dev.find("UUID=")==0 || dev.find("LABEL=")==0 )
-	    {
-	    if( dev[0] == '/' )
-		{
-		bool uuid = dev.find( "/by-uuid/" )!=string::npos;
-		dev.erase( 0, dev.find_last_of('/')+1 );
-		dev = (uuid?"UUID=":"LABEL=")+dev;
-		}
-	    if( findVolume(dev, v) )
-		{
-		ret = 0;
-		info.type = v->cType();
-		info.numeric = v->isNumeric();
-		if( info.numeric )
-		    info.nr = v->nr();
-		info.vname = v->name();
-		info.cname = v->getContainer()->name();
-		}
-	    }
-	else if( (dev.find("/dev/disk/by-id/")==0 &&
-	          (d=findDiskId(p.first))!=dEnd()) ||
-		 (dev.find("/dev/disk/by-path/")==0 &&
-		  (d=findDiskPath(p.first))!=dEnd()) )
-	    {
-	    ret = 0;
-	    info.type = DISK;
-	    info.numeric = true;
-	    info.nr = p.second;
-	    info.cname = d->device();
-	    if( p.second>0 )
-		info.vname = Disk::getPartName( d->name(), p.second );
-	    else
-		info.vname = d->name();
-	    if( info.vname.find('/')!=string::npos )
-		info.vname.erase( 0, info.vname.find_last_of('/')+1 );
-	    }
-	else if( splitString( dev, "/" ).size()==3 && !Disk::needP( dev ) )
-	    {
-	    ret = 0;
-	    info.type = LVM;
-	    info.numeric = false;
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.cname = dev.substr( 0, dev.find_last_of('/') );
-	    }
-	else
-	    {
-	    ret = 0;
-	    info.cname = p.first;
-	    info.vname = dev.substr( dev.find_last_of('/')+1 );
-	    info.numeric = true;
-	    info.nr = p.second;
-	    }
-	}
-    y2mil( "dev:" << dev << " ret:" << ret << " cn:" << info.cname << 
-           " vn:" << info.vname );
-    if( info.numeric )
-	y2mil( "nr:" << info.nr );
-    return( ret );
+    else if (findContainer(device, c))
+    {
+	ret = 0;
+	info.type = c->type();
+	info.cname = c->name();
+	info.cdevice = c->device();
+	info.vname = "";
+	info.vdevice = "";
+    }
+    y2mil("device:" << device << " ret:" << ret << " cname:" << info.cname <<
+	  " vname:" << info.vname);
+    return ret;
     }
 
 int

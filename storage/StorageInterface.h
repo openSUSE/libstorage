@@ -558,16 +558,16 @@ namespace storage
     };
 
     /**
-     * Contains info about a DM volume.
+     * Contains info about container and volume.
      */
     struct ContVolInfo
     {
-	ContVolInfo() : type(CUNKNOWN), numeric(false), nr(0) {}
+	ContVolInfo() : type(CUNKNOWN) {}
 	CType type;
 	string cname;
+	string cdevice;
 	string vname;
-	bool numeric;
-	unsigned nr;
+	string vdevice;
     };
 
     /**
