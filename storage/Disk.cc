@@ -178,7 +178,7 @@ namespace storage
     string
     Disk::sysfsPath() const
     {
-	return SYSFSDIR "/" + boost::replace_all_copy(nm, "/", "!");
+	return SYSFSDIR "/" + boost::replace_all_copy(procName(), "/", "!");
     }
 
 

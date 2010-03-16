@@ -494,7 +494,7 @@ string Dm::dmDeviceName( unsigned long num )
     string
     Dm::sysfsPath() const
     {
-	return SYSFSDIR "/" "dm-" + decString(mnr);
+	return SYSFSDIR "/" + procName();
     }
 
 

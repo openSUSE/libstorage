@@ -63,7 +63,7 @@ DmPartCo::~DmPartCo()
     string
     DmPartCo::sysfsPath() const
     {
-	return SYSFSDIR "/" "dm-" + decString(mnr);
+	return SYSFSDIR "/" + procName();
     }
 
 

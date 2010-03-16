@@ -591,7 +591,7 @@ unsigned Md::mdMajor()
     string
     Md::sysfsPath() const
     {
-	return SYSFSDIR "/" "md" + decString(num);
+	return SYSFSDIR "/" + procName();
     }
 
 

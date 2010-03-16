@@ -89,7 +89,7 @@ const MdPartCo* MdPart::co() const
     string
     MdPart::sysfsPath() const
     {
-	return SYSFSDIR "/" + co()->name() + "/" + name();
+	return co()->sysfsPath() + "/" + procName();
     }
 
 

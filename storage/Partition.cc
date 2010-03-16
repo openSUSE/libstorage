@@ -123,7 +123,7 @@ Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
     string
     Partition::sysfsPath() const
     {
-	return disk()->sysfsPath() + "/" + boost::replace_all_copy(nm, "/", "!");
+	return disk()->sysfsPath() + "/" + boost::replace_all_copy(procName(), "/", "!");
     }
 
 

@@ -76,6 +76,10 @@ namespace storage
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
 
+	// name for device in /proc/partitions
+	virtual string procName() const { return ""; }
+
+	// full path for device in /sys/block
 	virtual string sysfsPath() const { return ""; }
 
 	void clearUsedBy() { uby.clear(); }

@@ -114,7 +114,7 @@ MdPartCo::~MdPartCo()
     string
     MdPartCo::sysfsPath() const
     {
-	return SYSFSDIR "/" + name();
+	return SYSFSDIR "/" + procName();
     }
 
 

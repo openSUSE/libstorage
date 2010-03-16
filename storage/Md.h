@@ -64,6 +64,7 @@ class Md : public Volume
 	static bool matchRegex( const string& dev );
 	static unsigned mdMajor();
 
+	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 
 	static const string& pName(MdType t) { return md_names[t]; }

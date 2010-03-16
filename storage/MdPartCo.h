@@ -63,6 +63,7 @@ class MdPartCo : public Container
     friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
     void setUdevData(const list<string>& id);
 
+	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 
     void getMdPartCoState(MdPartCoStateInfo& info) const;
