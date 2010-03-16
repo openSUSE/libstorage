@@ -23,7 +23,7 @@ test(const string& device)
 
     if (ret == 0)
     {
-	cout << "type:" << info.type << endl;
+	cout << "ctype:" << info.ctype << endl;
 	cout << "cname:" << info.cname << endl;
 	cout << "vname:" << info.vname << endl;
     }

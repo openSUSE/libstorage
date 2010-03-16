@@ -4794,12 +4794,12 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
     int ret = STORAGE_VOLUME_NOT_FOUND;
     ConstContIterator c;
     ConstVolIterator v;
-    info.type = CUNKNOWN; 
+    info.ctype = CUNKNOWN;
     assertInit();
     if (findVolume(device, c, v))
 	{
 	ret = 0;
-	info.type = c->type();
+	info.ctype = c->type();
 	info.cname = c->name();
 	info.cdevice = c->device();
 	info.vname = v->name();
@@ -4808,7 +4808,7 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
     else if (findContainer(device, c))
     {
 	ret = 0;
-	info.type = c->type();
+	info.ctype = c->type();
 	info.cname = c->name();
 	info.cdevice = c->device();
 	info.vname = "";

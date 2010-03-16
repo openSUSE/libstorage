@@ -562,8 +562,8 @@ namespace storage
      */
     struct ContVolInfo
     {
-	ContVolInfo() : type(CUNKNOWN) {}
-	CType type;
+	ContVolInfo() : ctype(CUNKNOWN) {}
+	CType ctype;
 	string cname;
 	string cdevice;
 	string vname;

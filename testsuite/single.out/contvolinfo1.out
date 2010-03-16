@@ -1,24 +1,24 @@
 device:/dev/sda
 ret:0
-type:1
+ctype:1
 cname:sda
 vname:
 
 device:/dev/sda1
 ret:0
-type:1
+ctype:1
 cname:sda
 vname:sda1
 
 device:/dev/system
 ret:0
-type:4
+ctype:4
 cname:system
 vname:
 
 device:/dev/system/swap
 ret:0
-type:4
+ctype:4
 cname:system
 vname:swap
 
