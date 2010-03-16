@@ -90,7 +90,7 @@ rm -rf "$RPM_BUILD_ROOT"
 
 %package devel
 Requires:	libstorage = %version
-Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel
+Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel libxml2-devel
 Summary:	Header files and documentation for libstorage
 Group:		Development/Languages/C and C++
 
