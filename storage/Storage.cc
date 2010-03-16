@@ -5639,7 +5639,7 @@ bool Storage::findContainer( const string& device, ContIterator& c )
     {
     CPair cp = cPair();
     c = cp.begin();
-    while( c!=cp.end() && c->device()!=device )
+    while (c != cp.end() && !c->sameDevice(device))
 	++c;
     return( c!=cp.end() );
     }

@@ -204,6 +204,14 @@ Disk::setUdevData(const string& path, const list<string>& id)
     partition(udev_id.begin(), udev_id.end(), string_starts_with("ata-"));
     y2mil("id:" << udev_id);
 
+    alt_names.remove_if(string_contains("/by-path/"));
+    if (!udev_path.empty())
+	alt_names.push_back("/dev/disk/by-path/" + udev_path);
+
+    alt_names.remove_if(string_contains("/by-id/"));
+    for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
+	alt_names.push_back("/dev/disk/by-id/" + *i);
+
     PartPair pp = partPair();
     for( PartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
