@@ -141,10 +141,10 @@ class LvmVg : public PeContainer
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new LvmVg( *this ) ); }
 
-	Text createVgText( bool doing ) const;
-	Text removeVgText( bool doing ) const;
-	Text extendVgText( bool doing, const string& dev ) const;
-	Text reduceVgText( bool doing, const string& dev ) const;
+	Text createText(bool doing) const;
+	Text removeText(bool doing) const;
+	Text extendText(bool doing, const string& dev) const;
+	Text reduceText(bool doing, const string& dev) const;
 
 	int doCreateVg();
 	int doRemoveVg();

@@ -1030,11 +1030,11 @@ LvmVg::getCommitActions(list<commitAction>& l) const
     y2mil( "Container::getCommitActions:" << l );
     if( deleted() )
 	{
-	l.push_back(commitAction(DECREASE, staticType(), removeVgText(false), this, true));
+	l.push_back(commitAction(DECREASE, staticType(), removeText(false), this, true));
 	}
     else if( created() )
 	{
-	l.push_front(commitAction( INCREASE, staticType(), createVgText(false), this, true));
+	l.push_front(commitAction(INCREASE, staticType(), createText(false), this, true));
 	}
     else
 	{
@@ -1042,18 +1042,18 @@ LvmVg::getCommitActions(list<commitAction>& l) const
 	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end();
 	         ++i )
 		l.push_back(commitAction(INCREASE, staticType(),
-					 extendVgText(false, i->device), this, true));
+					 extendText(false, i->device), this, true));
 	if( !pv_remove.empty() )
 	    for( list<Pv>::const_iterator i=pv_remove.begin();
 	         i!=pv_remove.end(); ++i )
 		l.push_back(commitAction(DECREASE, staticType(),
-					 reduceVgText(false, i->device), this, false ));
+					 reduceText(false, i->device), this, false));
 	}
     }
 
 
 Text
-LvmVg::removeVgText( bool doing ) const
+LvmVg::removeText(bool doing) const
     {
     Text txt;
     if( doing )
@@ -1070,7 +1070,7 @@ LvmVg::removeVgText( bool doing ) const
     }
 
 Text
-LvmVg::createVgText( bool doing ) const
+LvmVg::createText(bool doing) const
     {
     Text txt;
     if( doing )
@@ -1091,7 +1091,7 @@ LvmVg::createVgText( bool doing ) const
     }
 
 Text
-LvmVg::extendVgText( bool doing, const string& dev ) const
+LvmVg::extendText(bool doing, const string& dev) const
     {
     Text txt;
     if( doing )
@@ -1113,7 +1113,7 @@ LvmVg::extendVgText( bool doing, const string& dev ) const
 
 
 Text
-LvmVg::reduceVgText( bool doing, const string& dev ) const
+LvmVg::reduceText(bool doing, const string& dev) const
     {
     Text txt;
     if( doing )
@@ -1196,7 +1196,7 @@ LvmVg::doCreateVg()
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( createVgText(true) );
+	    getStorage()->showInfoCb(createText(true));
 	    }
 	string devices;
 	if( pv_add.size()+pv.size()-pv_remove.size()<=0 )
@@ -1254,7 +1254,7 @@ LvmVg::doRemoveVg()
 	    activate(true);
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb( removeVgText(true) );
+	    getStorage()->showInfoCb(removeText(true));
 	    }
 	checkConsistency();
 	string cmd = VGREMOVEBIN " " + quote(name());
@@ -1288,7 +1288,7 @@ LvmVg::doExtendVg()
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb(extendVgText(true, d->device));
+	    getStorage()->showInfoCb(extendText(true, d->device));
 	    }
 	ret = doCreatePv(*d);
 	if( ret==0 )
@@ -1337,7 +1337,7 @@ LvmVg::doReduceVg()
 	checkConsistency();
 	if( !silent )
 	    {
-	    getStorage()->showInfoCb(reduceVgText(true, d->device));
+	    getStorage()->showInfoCb(reduceText(true, d->device));
 	    }
 	string cmd = VGREDUCEBIN " " + instSysString() + quote(name()) + " " + quote(d->realDevice());
 	SystemCmd c( cmd );
