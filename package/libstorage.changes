@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 17 18:12:23 CET 2010 - aschnell@suse.de
+
+- improved commit messages for partitioned MDs
+
+-------------------------------------------------------------------
 Wed Mar 17 11:58:07 CET 2010 - fehr@suse.de
 
 - do no fsck after successful luksOpen, its unnecessary (bnc #588698)
