@@ -60,6 +60,8 @@ class MdPart : public Volume
         virtual Text setTypeText(bool doing = true) const;
         static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
 
+	virtual Text createText(bool doing) const;
+
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 

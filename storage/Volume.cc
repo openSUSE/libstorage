@@ -683,14 +683,13 @@ int Volume::changeFstabOptions( const string& options )
 Text Volume::formatText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	// %2$s is replaced by size (e.g. 623.5 MB)
 	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting device %1$s (%2$s) with %3$s "),
-		       d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	txt = sformat(_("Formatting device %1$s (%2$s) with %3$s"), dev.c_str(),
+		      sizeString().c_str(), fsTypeString().c_str());
 	}
     else
 	{
@@ -702,9 +701,9 @@ Text Volume::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format device %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
+		txt = sformat(_("Format device %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
 		}
 	    else
 		{
@@ -712,9 +711,9 @@ Text Volume::formatText( bool doing ) const
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
 		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format encrypted device %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
+		txt = sformat(_("Format encrypted device %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
 		}
 	    }
 	else
@@ -722,8 +721,8 @@ Text Volume::formatText( bool doing ) const
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
 	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format device %1$s (%2$s) with %3$s"),
-			   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	    txt = sformat(_("Format device %1$s (%2$s) with %3$s"),
+			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
 	    }
 	}
     return( txt );
@@ -1101,19 +1100,18 @@ int Volume::crUnsetup( bool force )
 Text Volume::mountText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
         {
 	if( !mp.empty() )
 	    {
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by mount point e.g. /home
-	    txt = sformat( _("Mounting %1$s to %2$s"), d.c_str(), mp.c_str() );
+	    txt = sformat(_("Mounting %1$s to %2$s"), dev.c_str(), mp.c_str());
 	    }
 	else
 	    {
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Unmounting %1$s"), d.c_str() );
+	    txt = sformat(_("Unmounting %1$s"), dev.c_str());
 	    }
         }
     else
@@ -1123,8 +1121,8 @@ Text Volume::mountText( bool doing ) const
 	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by mount point e.g. /home
-	    txt = sformat( _("Change mount point of %1$s to %2$s"), d.c_str(),
-	                   mp.c_str() );
+	    txt = sformat(_("Change mount point of %1$s to %2$s"), dev.c_str(),
+			  mp.c_str());
 	    }
 	else if( !mp.empty() )
 	    {
@@ -1132,14 +1130,14 @@ Text Volume::mountText( bool doing ) const
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by mount point e.g. /home
-		txt = sformat( _("Set mount point of %1$s to %2$s"), d.c_str(),
-			       mp.c_str() );
+		txt = sformat(_("Set mount point of %1$s to %2$s"), dev.c_str(),
+			      mp.c_str());
 		}
 	    else
 		{
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by "swap"
-		txt = sformat( _("Use %1$s as %2$s"), d.c_str(), mp.c_str() );
+		txt = sformat(_("Use %1$s as %2$s"), dev.c_str(), mp.c_str());
 		}
 	    }
 	else if( !orig_mp.empty() )
@@ -1151,7 +1149,7 @@ Text Volume::mountText( bool doing ) const
 		fn = "/etc/cryptotab";
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by pathname e.g. /etc/fstab
-	    txt = sformat( _("Remove %1$s from %2$s"), d.c_str(), fn.c_str() );
+	    txt = sformat(_("Remove %1$s from %2$s"), dev.c_str(), fn.c_str());
 	    }
         }
     return( txt );
@@ -1425,16 +1423,15 @@ Volume::setEncryption(bool val, EncryptType typ )
 Text Volume::losetupText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Setting up encrypted loop device on %1$s"), d.c_str() );
+        txt = sformat(_("Setting up encrypted loop device on %1$s"), dev.c_str());
         }
     else
         {
 	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Set up encrypted loop device on %1$s"), d.c_str() );
+        txt = sformat(_("Set up encrypted loop device on %1$s"), dev.c_str());
         }
     return( txt );
     }
@@ -1442,16 +1439,15 @@ Text Volume::losetupText( bool doing ) const
 Text Volume::crsetupText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Setting up encrypted dm device on %1$s"), d.c_str() );
+        txt = sformat(_("Setting up encrypted dm device on %1$s"), dev.c_str());
         }
     else
         {
 	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Set up encrypted dm device on %1$s"), d.c_str() );
+        txt = sformat(_("Set up encrypted dm device on %1$s"), dev.c_str());
         }
     return( txt );
     }
@@ -2095,19 +2091,18 @@ int Volume::doCrsetup()
 Text Volume::labelText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
     {
 	if( label.empty() )
 	{
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Clearing label on %1$s"), d.c_str() );
+	    txt = sformat(_("Clearing label on %1$s"), dev.c_str());
 	}
 	else
 	{
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by a name e.g. ROOT
-	    txt = sformat( _("Setting label on %1$s to %2$s"), d.c_str(), label.c_str() );
+	    txt = sformat(_("Setting label on %1$s to %2$s"), dev.c_str(), label.c_str());
 	}
     }
     else
@@ -2115,13 +2110,13 @@ Text Volume::labelText( bool doing ) const
 	if( label.empty() )
 	{
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Clear label on %1$s"), d.c_str() );
+	    txt = sformat(_("Clear label on %1$s"), dev.c_str());
 	}
 	else
 	{  
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by a name e.g. ROOT
-	    txt = sformat( _("Set label on %1$s to %2$s"), d.c_str(), label.c_str() );
+	    txt = sformat(_("Set label on %1$s to %2$s"), dev.c_str(), label.c_str());
 	}
     }
     return( txt );
@@ -2800,36 +2795,98 @@ void Volume::setExtError( const SystemCmd& cmd, bool serr )
     cont->setExtError( cmd, serr );
     }
 
-Text Volume::createText( bool doing ) const
-    {
+
+Text
+Volume::createText(bool doing) const
+{
     Text txt;
-    if( doing )
-        {
-        // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Creating %1$s"), dev.c_str() );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Create %1$s"), dev.c_str() );
-        }
-    return( txt );
+    if (doing)
+    {
+	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	txt = sformat(_("Creating volume %1$s"), dev.c_str());
     }
+    else
+    {
+	if (mp == "swap")
+	{
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat(_("Create swap volume %1$s (%2$s)"), dev.c_str(),
+			  sizeString().c_str());
+	}
+	else if (mp == "/")
+	{
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by file system type (e.g. reiserfs)
+	    txt = sformat(_("Create root volume %1$s (%2$s) with %3$s"),
+			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	}
+	else if (mp == getStorage()->bootMount())
+	{
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by file system type (e.g. reiserfs)
+	    txt = sformat(_("Create boot volume %1$s (%2$s) with %3$s"),
+			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	}
+	else if (!mp.empty())
+	{
+	    if (encryption == ENC_NONE)
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Create volume %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		// %4$s is replaced by mount point (e.g. /usr)
+		txt = sformat(_("Create encrypted volume %1$s (%2$s) for %4$s with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+			      mp.c_str());
+	    }
+	}
+	else
+	{
+	    if (encryption == ENC_NONE)
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create volume %1$s (%2$s)"), dev.c_str(), sizeString().c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create encrypted volume %1$s (%2$s)"), dev.c_str(),
+			      sizeString().c_str());
+	    }
+	}
+    }
+    return txt;
+}
+
 
 Text Volume::resizeText( bool doing ) const
     {
     Text txt;
-    string d = dev;
     if( doing )
         {
 	if( needShrink() )
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrinking %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    txt = sformat(_("Shrinking %1$s to %2$s"), dev.c_str(), sizeString().c_str());
 	else
 	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extending %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    txt = sformat(_("Extending %1$s to %2$s"), dev.c_str(), sizeString().c_str());
 	txt += Text(" ", " ");
 	// text displayed during action
 	txt += _("(progress bar might not move)");
@@ -2839,13 +2896,13 @@ Text Volume::resizeText( bool doing ) const
 	if( needShrink() )
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Shrink %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    txt = sformat(_("Shrink %1$s to %2$s"), dev.c_str(), sizeString().c_str());
 	else
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Extend %1$s to %2$s"), d.c_str(), sizeString().c_str() );
+	    txt = sformat(_("Extend %1$s to %2$s"), dev.c_str(), sizeString().c_str());
         }
-    return( txt );
+    return txt;
     }
 
 Text Volume::removeText( bool doing ) const
@@ -2854,12 +2911,12 @@ Text Volume::removeText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Removing %1$s"), dev.c_str() );
+        txt = sformat( _("Removing volume %1$s"), dev.c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-        txt = sformat( _("Remove %1$s"), dev.c_str() );
+        txt = sformat( _("Remove volume %1$s"), dev.c_str() );
         }
     return( txt );
     }

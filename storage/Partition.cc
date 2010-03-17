@@ -388,108 +388,32 @@ Text Partition::removeText( bool doing ) const
     return( txt );
     }
 
-Text Partition::createText( bool doing ) const
-    {
+
+Text
+Partition::createText(bool doing) const
+{
     Text txt;
-    string d = dev;
-    if( doing )
-	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	txt = sformat( _("Creating partition %1$s"), d.c_str() );
-	}
+    if (doing)
+    {
+	txt = Volume::createText(doing);
+    }
     else
+    {
+	if (typ == EXTENDED)
 	{
-	if( typ==EXTENDED )
-	    {
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create extended partition %1$s (%2$s)"),
-	                   d.c_str(), sizeString().c_str() );
-	    }
-	else if( mp=="swap" )
-	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create swap partition %1$s (%2$s)"),
-	                   d.c_str(), sizeString().c_str() );
-	    }
-	else if( mp=="/" )
-	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Create root partition %1$s (%2$s) with %3$s"),
-	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
-	    }
-	else if (mp == getStorage()->bootMount())
-	    {
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Create boot partition %1$s (%2$s) with %3$s"),
-	                   d.c_str(), sizeString().c_str(), fsTypeString().c_str() );
-	    }
-	else if( !mp.empty() )
-	    {
-	    if( encryption==ENC_NONE )
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create partition %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
-		}
-	    else
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create encrypted partition %1$s (%2$s) for %4$s with %3$s"),
-			       d.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
-		}
-	    }
-	else if( idt != ID_SWAP && idt != ID_LINUX && idt<256 )
-	{
-	    if (encryption == ENC_NONE)
-	    {
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by hexadecimal number (e.g. 8E)
-		txt = sformat(_("Create partition %1$s (%2$s) with id=%3$X"), d.c_str(),
-			      sizeString().c_str(), idt);
-	    }
-	    else
-	    {   
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by hexadecimal number (e.g. 8E)
-		txt = sformat(_("Create encrypted partition %1$s (%2$s) with id=%3$X"), d.c_str(),
-			      sizeString().c_str(), idt);
-	    }
+	    txt = sformat(_("Create extended partition %1$s (%2$s)"), dev.c_str(),
+			  sizeString().c_str());
 	}
 	else
 	{
-	    if (encryption == ENC_NONE)
-	    {
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		txt = sformat(_("Create partition %1$s (%2$s)"), d.c_str(), sizeString().c_str());
-	    }
-	    else
-	    {
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		txt = sformat(_("Create encrypted partition %1$s (%2$s)"), d.c_str(),
-			      sizeString().c_str());
-	    }
+	    txt = Volume::createText(doing);
 	}
-	}
-    return txt;
     }
+    return txt;
+}
+
 
 Text Partition::formatText( bool doing ) const
     {

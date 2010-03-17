@@ -184,6 +184,14 @@ MdPart::getCommitActions(list<commitAction>& l) const
         }
     }
 
+
+    Text
+    MdPart::createText(bool doing) const
+    {
+	return p->createText(doing);
+    }
+
+
 Text
 MdPart::setTypeText(bool doing) const
     {
