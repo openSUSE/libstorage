@@ -79,7 +79,7 @@ namespace storage
     getMajorMinor();
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
-    if (systeminfo.getProcParts().getSize(p->device(), sz) && sz > 0)
+    if (systeminfo.getProcParts().getSize(p->procName(), sz) && sz > 0)
 	{
 	p->setSize( sz );
 	}
@@ -834,7 +834,7 @@ bool
 		    Partition *p = new Partition( *this, pnr, s,
 						  c_start, c_size, type,
 						  id, boot );
-		    if (parts.getSize(p->device(), s))
+		    if (parts.getSize(p->procName(), s))
 			{
 			if( s>0 && p->type() != EXTENDED )
 			    p->setSize( s );
@@ -2138,7 +2138,7 @@ Disk::getPartedValues( Partition *p ) const
 	    ret = true;
 	    if( !dmp_slave && p->type() != EXTENDED )
 		{
-		if (!parts.getSize(p->device(), s) || s == 0)
+		if (!parts.getSize(p->procName(), s) || s == 0)
 		    {
 		    y2err("device " << p->device() << " not found in /proc/partitions");
 		    ret = false;

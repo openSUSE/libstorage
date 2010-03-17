@@ -119,12 +119,12 @@ void MdPart::updateSize()
 
 void MdPart::updateSize( const ProcParts& pp )
     {
-    unsigned long long si = 0;
     updateSize();
     //In case of extended partition /proc/partition contains size 1.
     if( p && p->type() != storage::EXTENDED )
       {
-      if( mjr>0 && pp.getSize( dev, si ))
+	unsigned long long si = 0;
+	if( mjr>0 && pp.getSize(procName(), si))
         {
           setSize( si );
         }

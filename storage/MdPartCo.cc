@@ -377,7 +377,7 @@ MdPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void
 MdPartCo::init(SystemInfo& systeminfo)
 {
-    systeminfo.getProcParts().getSize(dev, size_k);
+    systeminfo.getProcParts().getSize(procName(), size_k);
     y2mil("nm:" << nm << " size_k:" << size_k);
     createDisk(systeminfo);
     getVolumes(systeminfo.getProcParts());
