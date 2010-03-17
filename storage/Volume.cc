@@ -1795,7 +1795,7 @@ EncryptType Volume::detectEncryption()
 	    {
 	    Storage::waitForDevice(use_dev);
 	    updateFsData();
-	    if( detected_fs!=FSUNKNOWN )
+	    if( detected_fs!=FSUNKNOWN && try_order[pos]!=ENC_LUKS )
 		{
 		string cmd;
 		switch( detected_fs )

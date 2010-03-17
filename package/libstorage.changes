@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 17 11:58:07 CET 2010 - fehr@suse.de
+
+- do no fsck after successful luksOpen, its unnecessary (bnc #588698)
+
+-------------------------------------------------------------------
 Tue Mar 09 12:03:46 CET 2010 - aschnell@suse.de
 
 - add AUTO line in mdadm.conf for iSCSI systems (fate #307478)
