@@ -164,12 +164,9 @@ list<string>
 MdPart::udevId() const
 {
     list<string> ret;
-    for (list<string>::const_iterator i = alt_names.begin();
-         i != alt_names.end(); i++)
-    {
-        if (i->find("/by-id/") != string::npos)
-            ret.push_back(*i);
-    }
+    const list<string> tmp = co()->udevId();
+    for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	ret.push_back(udevAppendPart(*i, num));
     return ret;
 }
 
