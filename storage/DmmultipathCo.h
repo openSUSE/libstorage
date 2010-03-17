@@ -136,7 +136,6 @@ class DmmultipathCo : public DmPartCo
 	void addMultipath( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
-	Text setDiskLabelText( bool doing ) const;
 
 	static string undevName( const string& name );
 

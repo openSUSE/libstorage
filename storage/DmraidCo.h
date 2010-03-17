@@ -136,8 +136,8 @@ class DmraidCo : public DmPartCo
 	void addRaid( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
+
 	Text removeText( bool doing ) const;
-	Text setDiskLabelText( bool doing ) const;
 
 	static string undevName( const string& name );
 

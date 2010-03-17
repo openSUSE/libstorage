@@ -1094,22 +1094,7 @@ int MdPartCo::doResize( Volume* v )
 Text
 MdPartCo::setDiskLabelText(bool doing) const
     {
-    Text txt;
-    if( doing )
-        {
-        // displayed text during action, %1$s is replaced by name (e.g. pdc_igeeeadj),
-        // %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Setting disk label of %1$s to %2$s"),
-                       dev.c_str(), labelName().c_str() );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by name (e.g. pdc_igeeeadj),
-        // %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Set disk label of %1$s to %2$s"),
-                      dev.c_str(), labelName().c_str() );
-        }
-    return txt;
+	return disk->setDiskLabelText(doing);
     }
 
 
