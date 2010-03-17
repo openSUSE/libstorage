@@ -1861,26 +1861,27 @@ Disk::getCommitActions(list<commitAction>& l) const
     }
 
 
-Text Disk::setDiskLabelText( bool doing ) const
+    Text
+    Disk::setDiskLabelText(bool doing) const
     {
     Text txt;
-    string d = dev;
     if( doing )
         {
         // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Setting disk label of disk %1$s to %2$s"),
-		       d.c_str(), label.c_str() );
+        txt = sformat(_("Setting disk label of disk %1$s to %2$s"),
+		      dev.c_str(), boost::to_upper_copy(label).c_str());
         }
     else
         {
         // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat( _("Set disk label of disk %1$s to %2$s"),
-		      d.c_str(), label.c_str() );
+        txt = sformat(_("Set disk label of disk %1$s to %2$s"),
+		      dev.c_str(), boost::to_upper_copy(label).c_str());
         }
-    return( txt );
+    return txt;
     }
+
 
 int Disk::doCreateLabel()
     {
