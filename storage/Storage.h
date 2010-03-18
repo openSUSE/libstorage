@@ -243,6 +243,7 @@ class DiskData;
 	bool isCacheChanges() const { return( cache ); }
 	void assertInit() { if( !initialized ) initialize(); }
 	void rescanEverything();
+	bool rescanCryptedObjects();
 	int checkCache();
 	const string& root() const { return( rootprefix ); }
 	string prependRoot(const string& mp) const;
@@ -384,7 +385,8 @@ class DiskData;
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
-	int verifyCryptPassword( const string& device, const string& pwd );
+	int verifyCryptPassword( const string& device, const string& pwd, 
+	                         bool erase );
 	int verifyCryptFilePassword( const string& file, const string& pwd );
 	bool needCryptPassword( const string& device );
 	int forgetCryptPassword( const string& device );
@@ -435,6 +437,7 @@ class DiskData;
 	bool mountDeviceRo( const string& device, const string& mp, 
 	                    const string& opts )
 	    { return( mountDev( device, mp, true, opts )); }
+	int activateEncryption( const string& device, bool on );
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 
 	bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info, 
@@ -535,6 +538,7 @@ class DiskData;
 
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
+	void removeDmTableTo( unsigned long mjr, unsigned long mnr );
 	bool removeDmTable( const string& table );
 	bool removeDmMapsTo( const string& dev );
 	bool checkDmMapsTo( const string& dev );

@@ -1676,7 +1676,7 @@ int
 Volume::setCryptPwd( const string& val )
     {
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2mil("password:" << val);
+    y2mil("pwd:" << val << " orig_pwd:" << orig_crypt_pwd );
 #endif
     int ret = 0;
 
@@ -1689,6 +1689,9 @@ Volume::setCryptPwd( const string& val )
 	if( encryption==ENC_UNKNOWN )
 	    detectEncryption();
 	}
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
+#endif
     y2mil("ret:" << ret);
     return( ret );
     }
@@ -1766,6 +1769,7 @@ EncryptType Volume::detectEncryption()
     mkdir( mpname.c_str(), 0700 );
     getFreeLoop();
     detected_fs = fs = FSUNKNOWN;
+    bool luks_ok = false;
     do
 	{
 	ofstream pwdfile( fname.c_str() );
@@ -1787,11 +1791,16 @@ EncryptType Volume::detectEncryption()
 	c.execute(MODPROBEBIN " dm-crypt");
 	c.execute( cmd );
         string use_dev = dmcrypt_dev;
+	luks_ok = try_order[pos]==ENC_LUKS && c.retcode()==0;
 	if( c.retcode()==0 )
 	    {
 	    Storage::waitForDevice(use_dev);
 	    updateFsData();
-	    if( detected_fs!=FSUNKNOWN && try_order[pos]!=ENC_LUKS )
+	    unsigned long mj = 0;
+	    unsigned long mn;
+	    if( storage::getMajorMinor( use_dev, mj, mn ) && mj>0 )
+		getStorage()->removeDmTableTo( mj, mn );
+	    if( detected_fs!=FSUNKNOWN && !luks_ok )
 		{
 		string cmd;
 		switch( detected_fs )
@@ -1833,12 +1842,14 @@ EncryptType Volume::detectEncryption()
 		    }
 		}
 	    }
-	if( fs==FSUNKNOWN )
+	if( fs==FSUNKNOWN && !luks_ok )
 	    pos++;
+	y2mil( "pos:" << pos << " luks_ok:" << luks_ok <<
+	       " fs:" << Volume::fs_names[fs] );
 	}
-    while( detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
+    while( !luks_ok && detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
     crUnsetup( true );
-    if( detected_fs!=FSUNKNOWN )
+    if( detected_fs!=FSUNKNOWN || luks_ok )
 	{
 	is_loop = cType() == LOOP;
 	ret = encryption = orig_encryption = try_order[pos];
@@ -1855,6 +1866,9 @@ EncryptType Volume::detectEncryption()
 	}
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
+#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+    y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
+#endif
     y2mil("ret:" << encTypeString(ret));
     return( ret );
     }
@@ -1997,7 +2011,7 @@ int Volume::doCryptsetup()
 	    pwdfile.close();
 	    SystemCmd cmd;
 	    if( format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) ||
-	        (encryption!=ENC_NONE&&mp.empty()) )
+	        (encryption!=ENC_NONE&&orig_crypt_pwd!=crypt_pwd) )
 		{
 		string cmdline = getCryptsetupCmd( encryption, dmcrypt_dev, mp, fname, true,
 						   crypt_pwd.empty() );

@@ -445,6 +445,30 @@ void Storage::rescanEverything()
     detectObjects();
     }
 
+bool Storage::rescanCryptedObjects()
+    {
+    bool ret = false;
+    LvmVg::activate(false);
+    LvmVg::activate(true);
+    const list<string> l = LvmVg::getVgs();
+    SystemInfo *si = NULL;
+    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	{
+	if( findLvmVg( *i ) == lvgEnd() )
+	    {
+	    if( !si )
+		si = new SystemInfo;
+	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, *si);
+	    addToList( v );
+	    v->checkConsistency();
+	    ret = true;
+	    }
+	}
+    if( si )
+	delete si;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
     string
     Storage::bootMount() const
@@ -2765,13 +2789,14 @@ Storage::getCrypt( const string& device, bool& val )
     }
 
 int
-Storage::verifyCryptPassword( const string& device, const string& pwd )
+Storage::verifyCryptPassword( const string& device, const string& pwd,
+                              bool erase )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " l:" << pwd.length());
+    y2mil("device:" << device << " l:" << pwd.length() << " erase:" << erase );
 #ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2mil("password:" << pwd);
+    y2mil("pwd:" << pwd);
 #endif
 
     VolIterator vol;
@@ -2784,7 +2809,8 @@ Storage::verifyCryptPassword( const string& device, const string& pwd )
 	ret = vol->setCryptPwd( pwd );
 	if( ret==0 && vol->detectEncryption()==ENC_UNKNOWN )
 	    ret = VOLUME_CRYPT_NOT_DETECTED;
-	vol->clearCryptPwd();
+	if( erase || ret != 0 )
+	    vol->clearCryptPwd();
 	}
     else
 	{
@@ -5311,6 +5337,21 @@ Storage::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelc
     return Disk::getDlabelCapabilities(dlabel, dlabelcapabilities);
 }
 
+void Storage::removeDmTableTo( unsigned long mjr, unsigned long mnr )
+    {
+    y2mil( "mjr:" << mjr << " mnr:" << mnr );
+    string cmd = DMSETUPBIN " table | grep -w ";
+    cmd += decString(mjr) + ":" + decString(mnr);
+    cmd += " | sed s/:.*// | uniq";
+    SystemCmd c( cmd );
+    unsigned line=0;
+    while( line<c.numLines() )
+	{
+	removeDmTable( c.getLine(line) );
+	line++;
+	}
+    }
+
 
 void Storage::removeDmTableTo( const Volume& vol )
     {
@@ -5324,17 +5365,8 @@ void Storage::removeDmTableTo( const Volume& vol )
 	    removeDmMapsTo( vol.getContainer()->device() );
 	    if( vol.getContainer()->majorNr()>0 )
 		{
-		string cmd = DMSETUPBIN " table | grep -w ";
-		cmd += decString(vol.getContainer()->majorNr()) + ":" +
-		       decString(vol.getContainer()->minorNr());
-		cmd += " | sed s/:.*// | uniq";
-		SystemCmd c( cmd );
-		unsigned line=0;
-		while( line<c.numLines() )
-		    {
-		    removeDmTable( c.getLine(line) );
-		    line++;
-		    }
+		removeDmTableTo( vol.getContainer()->majorNr(),
+		                 vol.getContainer()->minorNr() );
 		}
 	    }
 	}
@@ -6257,6 +6289,33 @@ Storage::mountDev( const string& device, const string& mp, bool ro,
 	}
     else
 	ret = false;
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int
+Storage::activateEncryption( const string& device, bool on )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("device:" << device << " on:" << on );
+    VolIterator vol;
+    if( !readonly() && findVolume( device, vol ) )
+	{
+	bool slnt = vol->isSilent();
+	vol->setSilent(true);
+	if( on && vol->needCrsetup() )
+	    {
+	    ret = vol->doCrsetup();
+	    }
+	else if( !on )
+	    {
+	    ret = vol->crUnsetup(true);
+	    }
+	vol->setSilent(slnt);
+	}
+    else
+	ret = STORAGE_VOLUME_NOT_FOUND;
     y2mil("ret:" << ret);
     return( ret );
     }

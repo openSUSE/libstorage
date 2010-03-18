@@ -1464,9 +1464,12 @@ namespace storage
 	 *
 	 * @param device name of volume, e.g. /dev/hda1
 	 * @param pwd crypt password for this volume
+	 * @param erase if true remove password even after successful verification
 	 * @return zero if password is ok, a negative number to indicate an error
 	 */
-	virtual int verifyCryptPassword( const string& device, const string& pwd ) = 0;
+	virtual int verifyCryptPassword( const string& device, 
+	                                 const string& pwd, bool erase ) = 0;
+
 	/**
 	 * Check if crypt password is required
 	 *
@@ -2318,6 +2321,18 @@ namespace storage
 	virtual bool mountDevice( const string& device, const string& mp ) = 0;
 
 	/**
+	 * Mount the given device and do what is necessary to access
+	 * volume (e.g. do losetup if loop is set up)
+	 *
+	 * The function mounts at once, /etc/fstab is unaffected
+	 *
+	 * @param device device name 
+	 * @param on if true activate access to encrypted data, otherwise deactivate it
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int activateEncryption( const string& device, bool on ) = 0;
+
+	/**
 	 * Mount the given device with given options and do what is necessary
 	 * to access volume (e.g. do losetup if loop is set up)
 	 *
@@ -2413,6 +2428,16 @@ namespace storage
 	 * Any changes already cached are lost.
 	 */
 	virtual void rescanEverything() = 0;
+
+	/**
+	 * Rescan after unlocked encrypted volume.
+	 * Rescan for objects that might be newly found after at least one
+	 * encrypted volume has been unlocked. Currently the only supported
+	 * containers on an decrypted volume is a LVM Volume Group.
+	 *
+	 * @return true if at least on encrypted container has been found
+	 */
+	virtual bool rescanCryptedObjects() = 0;
 
 	/**
 	 * Dump list of all objects to log file.

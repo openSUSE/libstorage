@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 18 18:54:31 CET 2010 - fehr@suse.de
+
+- make update and detection of encrypted LVM VGs possible
+
+-------------------------------------------------------------------
 Wed Mar 17 18:12:23 CET 2010 - aschnell@suse.de
 
 - improved commit messages for partitioned MDs

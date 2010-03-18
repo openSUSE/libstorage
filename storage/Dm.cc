@@ -470,7 +470,17 @@ void Dm::activate( bool val )
 	    }
 	else
 	    {
-	    c.execute(DMSETUPBIN " remove_all");
+	    c.execute(DMSETUPBIN " info -c -o name,subsystem");
+	    SystemCmd rm;
+	    for( unsigned i=0; i<c.numLines(); i++ )
+		{
+		if( extractNthWord(1, c.getLine(i)) != "CRYPT" )
+		    {
+		    string cmd = DMSETUPBIN " remove ";
+		    cmd += extractNthWord(0, c.getLine(i));
+		    rm.execute( cmd  );
+		    }
+		}
 	    }
 	active = val;
 	}
