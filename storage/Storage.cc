@@ -1145,8 +1145,10 @@ void Storage::setDefaultFs(FsType val)
 	for (ConstDiskIterator i = dp.begin(); i != dp.end(); ++i)
 	{
 	    if (i->isIScsi())
+	    {
 		ret = true;
-	    break;
+		break;
+	    }
 	}
 
 	y2mil("ret:" << ret);
