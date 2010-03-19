@@ -300,21 +300,10 @@ bool Disk::detectGeometry()
     bool
     Disk::getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo)
     {
-	string sysfsfile = sysfsdir + "/device";
-	if (!readlink(sysfsfile, sysfsinfo.device))
+	string devtype;
+	if (read_sysfs_property(sysfsdir + "/device/devtype", devtype))
 	{
-	    // not always available so no error
-	    sysfsinfo.device.clear();
-	}
-
-	sysfsfile = sysfsdir + "/device/devtype";
-	if (access(sysfsfile.c_str(), R_OK) == 0)
-	{
-	    ifstream file(sysfsfile.c_str());
-	    classic(file);
-	    string tmp;
-	    file >> tmp;
-	    sysfsinfo.vbd = tmp == "vbd";
+	    sysfsinfo.vbd = devtype == "vbd";
 	}
 	else
 	{
@@ -332,8 +321,8 @@ bool Disk::detectGeometry()
 	if (!read_sysfs_property(sysfsdir + "/size", sysfsinfo.size))
 	    return false;
 
-	y2mil("sysfsdir:" << sysfsdir << " device:" << sysfsinfo.device << " range:" <<
-	      sysfsinfo.range << " size:" << sysfsinfo.size);
+	y2mil("sysfsdir:" << sysfsdir << " devtype:" << devtype << " range:" << sysfsinfo.range <<
+	      " size:" << sysfsinfo.size);
 
 	return true;
     }

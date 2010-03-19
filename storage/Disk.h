@@ -150,7 +150,6 @@ class Disk : public Container
 
 	struct SysfsInfo
 	{
-	    string device;
 	    unsigned long range;
 	    unsigned long long size;
 	    bool vbd;
