@@ -468,11 +468,11 @@ namespace storage
 		break;
 	    case Graph::NODE_DMRAID:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"" << ", tooltip="
-		  << Graph::makeTooltip(_("BIOS RAID"), node.device, node.sizeK);
+		  << Graph::makeTooltip(_("DM RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_DMMULTIPATH:
 		s << ", color=\"#ff0000\", fillcolor=\"#ffaaaa\"" << ", tooltip="
-		  << Graph::makeTooltip(_("Multipath"), node.device, node.sizeK);
+		  << Graph::makeTooltip(_("DM Multipath"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_PARTITION:
 		s << ", color=\"#cc33cc\", fillcolor=\"#eeaaee\"" << ", tooltip="
@@ -480,11 +480,11 @@ namespace storage
 		break;
 	    case Graph::NODE_MD:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
-		  << Graph::makeTooltip(_("RAID"), node.device, node.sizeK);
+		  << Graph::makeTooltip(_("MD RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_MDPART:
 		s << ", color=\"#aaaa00\", fillcolor=\"#ffffaa\"" << ", tooltip="
-		  << Graph::makeTooltip(_("Partitioned RAID"), node.device, node.sizeK);
+		  << Graph::makeTooltip(_("MD RAID"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_LVMVG:
 		s << ", color=\"#0000ff\", fillcolor=\"#aaaaff\"" << ", tooltip="
