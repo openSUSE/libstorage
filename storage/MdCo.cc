@@ -133,44 +133,6 @@ MdCo::getMdData()
         }
 	}
     file.close();
-    file.clear();
-    file.open( (getStorage()->root()+"/etc/raidtab").c_str() );
-    MdIter i;
-    getline( file, line );
-    while( file.good() )
-	{
-	y2mil( "raidtab line:" << line );
-	if( extractNthWord( 0, line )=="raiddev" )
-	    {
-	    string md = extractNthWord( 1, line );
-	    getline( file, line );
-	    y2mil( "raidtab line:" << line );
-	    if( findMd( md, i ))
-		{
-		string key;
-		string device;
-		while( file.good() && 
-		       (key=extractNthWord( 0, line ))!="raiddev" )
-		    {
-		    if( key=="device" )
-			device = extractNthWord( 1, line );
-		    else if( key=="spare-disk" )
-			{
-			if( !device.empty() )
-			    {
-			    normalizeDevice(device);
-			    i->addSpareDevice( device );
-			    device.clear();
-			    }
-			}
-		    getline( file, line );
-		    }
-		}
-	    else
-		y2war("raid " << md << " from /etc/raidtab not found");
-	    }
-	getline( file, line );
-	}
     }
 
 void
