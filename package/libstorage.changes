@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 22 17:15:01 CET 2010 - aschnell@suse.de
+
+- fixed DEVICE line in mdadm.conf (bnc #590237)
+
+-------------------------------------------------------------------
 Thu Mar 18 18:54:31 CET 2010 - fehr@suse.de
 
 - make update and detection of encrypted LVM VGs possible

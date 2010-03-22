@@ -62,7 +62,7 @@ EtcRaidtab::updateEntry(unsigned num, const string& mline)
 	mdadm.append( mline );
 	}
 
-    setDeviceLine("DEVICE partitions");
+    setDeviceLine("DEVICE containers partitions");
 
     if (sto->hasIScsiDisks())
        setAutoLine("AUTO -all");
@@ -105,6 +105,12 @@ bool EtcRaidtab::updateEntry(const mdconf_info& info)
     {
     mdadm.append(ArrayLine(info));
     }
+
+    setDeviceLine("DEVICE containers partitions");
+
+    if (sto->hasIScsiDisks())
+       setAutoLine("AUTO -all");
+
   updateMdadmFile();
   return true;
 }
