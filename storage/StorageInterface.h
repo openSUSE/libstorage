@@ -1693,7 +1693,7 @@ namespace storage
 	 * Set value for root prefix.
 	 *
 	 * This value is appended to all mount points of volumes, when
-	 * changes are commited. Config files fstab, cryptotab, raidtab and
+	 * changes are commited. Config files fstab, crypttab and
 	 * mdadm.conf are also created relative to this prefix.
 	 * This variable must be set before first call to commit.
 	 *
