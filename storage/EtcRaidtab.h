@@ -101,8 +101,10 @@ class EtcRaidtab
 	//       belong to initial array line.
 	//uuid - will be filled if found.
 	bool getArrayLine(unsigned& line, string& uuid);
-	string ContLine(const mdconf_info& info);
-	string ArrayLine(const mdconf_info& info);
+
+	string ContLine(const mdconf_info& info) const;
+	string ArrayLine(const mdconf_info& info) const;
+
 	bool updateContainer(const mdconf_info& info);
 
 	void setDeviceLine(const string& line);

@@ -192,25 +192,30 @@ bool EtcRaidtab::updateContainer(const mdconf_info& info)
   }
 }
 
-string EtcRaidtab::ContLine(const mdconf_info& info)
-{
-  string s = "ARRAY metadata=" + info.container_info.metadata + " UUID=" + info.container_info.md_uuid;
-  return s;
-}
 
-
-string EtcRaidtab::ArrayLine(const mdconf_info& info)
-{
-  string line = "ARRAY " + info.fs_name;
-
-  if( info.container_present )
+    string
+    EtcRaidtab::ContLine(const mdconf_info& info) const
     {
-    line = line + " container=" + info.container_info.md_uuid;
-    line = line + " member=" + info.member;
+	string line = "ARRAY";
+	line += " metadata=" + info.container_info.metadata;
+	line += " UUID=" + info.container_info.md_uuid;
+	return line;
     }
-  line = line + " UUID=" + info.md_uuid;
-  return line;
-}
+
+
+    string
+    EtcRaidtab::ArrayLine(const mdconf_info& info) const
+    {
+	string line = "ARRAY " + info.fs_name;
+	if (info.container_present)
+	{
+	    line += " container=" + info.container_info.md_uuid;
+	    line += " member=" + info.member;
+	}
+	line += " UUID=" + info.md_uuid;
+	return line;
+    }
+
 
 //2 cases: remove volume or container
 //No check if container is used by other Volume.
