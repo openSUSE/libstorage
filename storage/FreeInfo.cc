@@ -131,11 +131,14 @@ namespace storage
 		    if (access(file.c_str(), R_OK) == 0)
 		    {
 			y2mil("found home file " << quote(file));
-			if (++num == 2)
-			    return num;
+			++num;
+			break;
 		    }
 		}
 	    }
+
+	    if (num >= 2)
+		return num;
 	}
 
 	return num;
