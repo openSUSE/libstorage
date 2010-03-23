@@ -80,6 +80,12 @@ namespace storage
     {
 	y2mil("uuid:" << uuid);
 
+	if (uuid.empty())
+	{
+	    y2err("empty UUID");
+	    return false;
+	}
+
 	const vector<string>& lines = mdadm.lines();
 	vector<string>::const_iterator it = findArray(uuid);
 	if (it == lines.end())
@@ -160,13 +166,6 @@ namespace storage
     EtcMdadm::findArray(const string& uuid) const
     {
 	const vector<string>& lines = mdadm.lines();
-
-	if (uuid.empty())
-	{
-	    y2err("empty UUID");
-	    return lines.end();
-	}
-
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 	    if (boost::starts_with(*it, "ARRAY"))
@@ -185,16 +184,12 @@ namespace storage
     EtcMdadm::getUuid(const string& line) const
     {
 	string::size_type pos1 = line.find("UUID=");
-	if (pos1 != string::npos)
-	{
-	    pos1 += 5;
-	    string::size_type pos2 = line.find_first_not_of("0123456789abcdefABCDEF:", pos1);
-	    return line.substr(pos1, pos2 - pos1);
-	}
-	else
-	{
+	if (pos1 == string::npos)
 	    return "";
-	}
+
+	pos1 += 5;
+	string::size_type pos2 = line.find_first_not_of("0123456789abcdefABCDEF:", pos1);
+	return line.substr(pos1, pos2 - pos1);
     }
 
 }
