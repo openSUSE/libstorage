@@ -57,10 +57,10 @@ class MdPart : public Volume
         void getCommitActions(list<commitAction>& l) const;
         void addUdevData();
         virtual list<string> udevId() const;
-        virtual Text setTypeText(bool doing = true) const;
-        static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
 
-	virtual Text createText(bool doing) const;
+        virtual Text setTypeText(bool doing) const;
+
+        static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
 
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
