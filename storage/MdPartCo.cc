@@ -1507,11 +1507,10 @@ void MdPartCo::setMdDevs()
 {
   getSlaves(nm,devs);
 
-  for( list<string>::iterator s=devs.begin(); s!=devs.end(); ++s )
-  {
-    //It will be set always to last RAID that was detected.
-    getStorage()->setUsedBy(*s, UB_MDPART, dev);
-  }
+    for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+    {
+	getStorage()->addUsedBy(*it, UB_MDPART, dev);
+    }
 }
 
 
