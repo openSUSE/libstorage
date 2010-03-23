@@ -1806,8 +1806,12 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
 bool MdPartCo::isImsmPlatform()
 {
   bool ret = false;
-  SystemCmd c;
 
+    const char* tenv = getenv("LIBSTORAGE_IMSM_PLATFORM");
+    if (tenv)
+	ret = true;
+
+  SystemCmd c;
   c.execute(MDADMBIN " --detail-platform");
   c.select( "Platform : " );
   //c.retcode()==0 && - mdadm returns 1.
