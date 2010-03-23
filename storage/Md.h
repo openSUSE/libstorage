@@ -28,8 +28,9 @@
 
 namespace storage
 {
-    class EtcRaidtab;
-class MdCo;
+    class MdCo;
+    class EtcMdadm;
+
 
 class Md : public Volume
     {
@@ -83,7 +84,7 @@ class Md : public Volume
 	void logDifference( const Md& d ) const;
 	void getState(MdStateInfo& info) const;
 
-	bool updateEntry(EtcRaidtab* raidtab);
+	bool updateEntry(EtcMdadm* mdadm);
 
     protected:
 

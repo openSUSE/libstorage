@@ -21,7 +21,7 @@
 
 
 #include "storage/AppUtil.h"
-#include "storage/EtcRaidtab.h"
+#include "storage/EtcMdadm.h"
 #include "storage/AsciiFile.h"
 #include "storage/StorageTypes.h"
 
@@ -31,19 +31,19 @@ namespace storage
     using namespace std;
 
 
-    EtcRaidtab::EtcRaidtab(const Storage* sto, const string& prefix)
+    EtcMdadm::EtcMdadm(const Storage* sto, const string& prefix)
 	: sto(sto), mdadm(prefix + "/etc/mdadm.conf")
     {
     }
 
 
-    EtcRaidtab::~EtcRaidtab()
+    EtcMdadm::~EtcMdadm()
     {
     }
 
 
     bool
-    EtcRaidtab::updateEntry(const mdconf_info& info)
+    EtcMdadm::updateEntry(const mdconf_info& info)
     {
 	y2mil("uuid:" << info.uuid << " device:" << info.device);
 
@@ -76,7 +76,7 @@ namespace storage
 
 
     bool
-    EtcRaidtab::removeEntry(const string& uuid)
+    EtcMdadm::removeEntry(const string& uuid)
     {
 	y2mil("uuid:" << uuid);
 
@@ -97,7 +97,7 @@ namespace storage
 
 
     void
-    EtcRaidtab::setDeviceLine(const string& line)
+    EtcMdadm::setDeviceLine(const string& line)
     {
 	const vector<string>& lines = mdadm.lines();
 	vector<string>::const_iterator it = find_if(lines, string_starts_with("DEVICE"));
@@ -109,7 +109,7 @@ namespace storage
 
 
     void
-    EtcRaidtab::setAutoLine(const string& line)
+    EtcMdadm::setAutoLine(const string& line)
     {
 	const vector<string>& lines = mdadm.lines();
 	vector<string>::const_iterator it = find_if(lines, string_starts_with("AUTO"));
@@ -121,7 +121,7 @@ namespace storage
 
 
     void
-    EtcRaidtab::setArrayLine(const string& line, const string& uuid)
+    EtcMdadm::setArrayLine(const string& line, const string& uuid)
     {
 	const vector<string>& lines = mdadm.lines();
 	vector<string>::const_iterator it = findArray(uuid);
@@ -133,7 +133,7 @@ namespace storage
 
 
     string
-    EtcRaidtab::ContLine(const mdconf_info& info) const
+    EtcMdadm::ContLine(const mdconf_info& info) const
     {
 	string line = "ARRAY";
 	line += " metadata=" + info.container_metadata;
@@ -143,7 +143,7 @@ namespace storage
 
 
     string
-    EtcRaidtab::ArrayLine(const mdconf_info& info) const
+    EtcMdadm::ArrayLine(const mdconf_info& info) const
     {
 	string line = "ARRAY " + info.device;
 	if (info.container_present)
@@ -157,7 +157,7 @@ namespace storage
 
 
     vector<string>::const_iterator
-    EtcRaidtab::findArray(const string& uuid) const
+    EtcMdadm::findArray(const string& uuid) const
     {
 	const vector<string>& lines = mdadm.lines();
 
@@ -182,7 +182,7 @@ namespace storage
 
 
     string
-    EtcRaidtab::getUuid(const string& line) const
+    EtcMdadm::getUuid(const string& line) const
     {
 	string::size_type pos1 = line.find("UUID=");
 	if (pos1 != string::npos)

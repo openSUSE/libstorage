@@ -44,7 +44,7 @@
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
 #include "storage/Regex.h"
-#include "storage/EtcRaidtab.h"
+#include "storage/EtcMdadm.h"
 
 
 namespace storage
@@ -984,9 +984,9 @@ int MdPartCo::doRemove()
         }
       if( ret==0 )
         {
-	EtcRaidtab* raidtab = getStorage()->getRaidtab();
-	if (raidtab)
-	    raidtab->removeEntry(getMdUuid());
+	EtcMdadm* mdadm = getStorage()->getMdadm();
+	if (mdadm)
+	    mdadm->removeEntry(getMdUuid());
         }
       }
     y2mil("Done, ret:" << ret);
@@ -1889,11 +1889,11 @@ MdPartCo::hasFileSystem(const string& name, SystemInfo& systeminfo)
 
 
 void
-MdPartCo::syncRaidtab()
+MdPartCo::syncMdadm()
 {
-    EtcRaidtab* raidtab = getStorage()->getRaidtab();
-    if (raidtab)
-	updateEntry(raidtab);
+    EtcMdadm* mdadm = getStorage()->getMdadm();
+    if (mdadm)
+	updateEntry(mdadm);
 }
 
 
@@ -1913,9 +1913,9 @@ MdPartCo::getContMember() const
 
 
     bool
-    MdPartCo::updateEntry(EtcRaidtab* raidtab)
+    MdPartCo::updateEntry(EtcMdadm* mdadm)
     {
-      EtcRaidtab::mdconf_info info;
+      EtcMdadm::mdconf_info info;
       if( !md_name.empty() )
         {
         //Raid name is preferred.
@@ -1938,7 +1938,7 @@ MdPartCo::getContMember() const
         info.container_present = false;
         }
 
-      return raidtab->updateEntry( info );
+      return mdadm->updateEntry( info );
     }
 
 

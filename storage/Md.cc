@@ -31,7 +31,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/Regex.h"
 #include "storage/Container.h"
-#include "storage/EtcRaidtab.h"
+#include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
 
 
@@ -712,9 +712,9 @@ void Md::getParent()
 
 
     bool
-    Md::updateEntry(EtcRaidtab* raidtab)
+    Md::updateEntry(EtcMdadm* mdadm)
     {
-  EtcRaidtab::mdconf_info info;
+  EtcMdadm::mdconf_info info;
   if( !md_name.empty() )
     {
     //Raid name is preferred.
@@ -737,7 +737,7 @@ void Md::getParent()
     info.container_present = false;
     }
 
-	return raidtab->updateEntry(info);
+	return mdadm->updateEntry(info);
     }
 
 

@@ -202,7 +202,7 @@ class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
  */
 
 class EtcFstab;
-class EtcRaidtab;
+    class EtcMdadm;
 class DiskData;
 
 
@@ -255,7 +255,7 @@ class DiskData;
 	static bool isPPCMac() { return( is_ppc_mac ); }
 	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
 	EtcFstab* getFstab() { return fstab; }
-	EtcRaidtab* getRaidtab() { return raidtab; }
+	EtcMdadm* getMdadm() { return mdadm; }
 	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo(std::ostream& str) const;
@@ -1952,7 +1952,7 @@ class DiskData;
 	static bool is_ppc_pegasos;
 	CCont cont;
 	EtcFstab *fstab;
-	EtcRaidtab *raidtab;
+	EtcMdadm* mdadm;
 
 	ImsmDriver imsm_driver;
 

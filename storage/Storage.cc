@@ -53,7 +53,7 @@
 #include "storage/ProcParts.h"
 #include "storage/Blkid.h"
 #include "storage/EtcFstab.h"
-#include "storage/EtcRaidtab.h"
+#include "storage/EtcMdadm.h"
 #include "storage/AsciiFile.h"
 #include "storage/StorageDefines.h"
 
@@ -101,7 +101,7 @@ namespace storage
 
 
 Storage::Storage(const Environment& env)
-    : env(env), lock(readonly(), testmode()), initialized(false), fstab(NULL), raidtab(NULL),
+    : env(env), lock(readonly(), testmode()), initialized(false), fstab(NULL), mdadm(NULL),
       imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
@@ -295,13 +295,13 @@ void Storage::detectObjects()
 	{
  	rootprefix = testdir();
  	fstab = new EtcFstab( rootprefix + "/etc" );
-	raidtab = new EtcRaidtab(this, rootprefix);
+	mdadm = new EtcMdadm(this, rootprefix);
 	}
     else
     {
 	fstab = new EtcFstab( "/etc", isRootMounted() );
 	if (!instsys())
-	    raidtab = new EtcRaidtab(this, root());
+	    mdadm = new EtcMdadm(this, root());
     }
     
     detectLoops(systeminfo);
@@ -6202,14 +6202,14 @@ void Storage::rootMounted()
 
 	if (have_mds)
 	{
-	    delete raidtab;
-	    raidtab = new EtcRaidtab(this, root());
+	    delete mdadm;
+	    mdadm = new EtcMdadm(this, root());
 
 	    if (haveMd(md))
-		md->syncRaidtab();
+		md->syncMdadm();
 
 	    for (MdPartCoIterator it = p.begin(); it != p.end(); ++it)
-		it->syncRaidtab();
+		it->syncMdadm();
 	}
 
 	if( instsys() )

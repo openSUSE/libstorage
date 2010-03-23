@@ -28,7 +28,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
-#include "storage/EtcRaidtab.h"
+#include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
 #include "storage/AsciiFile.h"
 
@@ -82,15 +82,15 @@ MdCo::init()
 
 
     void
-    MdCo::syncRaidtab()
+    MdCo::syncMdadm()
     {
-	EtcRaidtab* raidtab = getStorage()->getRaidtab();
-	if (raidtab)
+	EtcMdadm* mdadm = getStorage()->getMdadm();
+	if (mdadm)
 	{
 	    MdPair p = mdPair(Md::notDeleted);
 	    for (MdIter i = p.begin(); i!=p.end(); ++i)
 	    {
-		i->updateEntry(raidtab);
+		i->updateEntry(mdadm);
 	    }
 	}
     }
@@ -600,9 +600,9 @@ MdCo::doCreate( Volume* v )
 	    {
 	    Storage::waitForDevice(m->device());
 	    getMdData( m->nr() );
-	    EtcRaidtab* raidtab = getStorage()->getRaidtab();
-	    if (raidtab)
-		m->updateEntry(raidtab);
+	    EtcMdadm* mdadm = getStorage()->getMdadm();
+	    if (mdadm)
+		m->updateEntry(mdadm);
 	    bool used_as_pv = m->isUsedBy(UB_LVM);
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
@@ -654,9 +654,9 @@ MdCo::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    EtcRaidtab* raidtab = getStorage()->getRaidtab();
-	    if (raidtab)
-		raidtab->removeEntry(m->getMdUuid());
+	    EtcMdadm* mdadm = getStorage()->getMdadm();
+	    if (mdadm)
+		mdadm->removeEntry(m->getMdUuid());
 	    if( !removeFromList( m ) )
 		ret = MD_NOT_IN_LIST;
 	    }

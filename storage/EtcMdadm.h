@@ -20,8 +20,8 @@
  */
 
 
-#ifndef ETC_RAIDTAB_H
-#define ETC_RAIDTAB_H
+#ifndef ETC_MDADM_H
+#define ETC_MDADM_H
 
 #include <string>
 #include <map>
@@ -33,12 +33,13 @@
 namespace storage
 {
 
-    class EtcRaidtab
+    class EtcMdadm
     {
+
     public:
 
-	EtcRaidtab(const Storage* sto, const string& prefix = "");
-	~EtcRaidtab();
+	EtcMdadm(const Storage* sto, const string& prefix = "");
+	~EtcMdadm();
 
 	// From this structure line 'ARRAY' will be build in config file.
 	// Not all fields are mandatory

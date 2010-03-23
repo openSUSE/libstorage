@@ -124,7 +124,7 @@ class MdPartCo : public Container
 
     static list<string> getMdRaids();
 
-    void syncRaidtab();
+    void syncMdadm();
 
     /* Returns Md number. */
     unsigned nr() const { return mnr; }
@@ -241,7 +241,7 @@ class MdPartCo : public Container
     bool validPartition( const Partition* p );
     bool findMdPart( unsigned nr, MdPartIter& i );
 
-	bool updateEntry(EtcRaidtab* raidtab);
+	bool updateEntry(EtcMdadm* mdadm);
 
     static bool partNotDeleted( const MdPart&d ) { return( !d.deleted() ); }
 

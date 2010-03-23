@@ -29,7 +29,7 @@
 namespace storage
 {
 
-class EtcRaidtab;
+    class EtcMdadm;
 
 class MdCo : public Container
     {
@@ -58,7 +58,7 @@ class MdCo : public Container
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;
 
-	void syncRaidtab();
+	void syncMdadm();
 	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate(bool val, const string& tmpDir);
