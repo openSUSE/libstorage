@@ -384,14 +384,6 @@ Md::createCmd() const
 }
 
 
-string Md::mdadmLine() const
-    {
-    string line = "ARRAY " + device() + " level=" + pName() + " UUID=" + md_uuid;
-    y2mil("line:" << line);
-    return line;
-    }
-
-
 Text Md::removeText( bool doing ) const
 {
     Text txt;
@@ -719,45 +711,34 @@ void Md::getParent()
 }
 
 
-int Md::updateEntry(EtcRaidtab* tab)
-{
-  if( !tab )
+    bool
+    Md::updateEntry(EtcRaidtab* raidtab)
     {
-    return -1;
-    }
   EtcRaidtab::mdconf_info info;
   if( !md_name.empty() )
     {
     //Raid name is preferred.
-    info.fs_name = "/dev/md/" + md_name;
+    info.device = "/dev/md/" + md_name;
     }
   else
     {
-    info.fs_name = dev;
+    info.device = dev;
     }
-  info.md_uuid = md_uuid;
+  info.uuid = md_uuid;
   if( has_container )
     {
     info.container_present = true;
-    info.container_info.md_uuid = parent_uuid;
-    info.container_info.metadata = parent_metadata;
-    stringstream ss;
-    ss << md_member;
-    info.member = ss.str();
+    info.container_uuid = parent_uuid;
+    info.container_metadata = parent_metadata;
+    info.container_member = decString(md_member);
     }
   else
     {
     info.container_present = false;
     }
-  if( tab->updateEntry( info ) )
-    {
-    return 0;
+
+	return raidtab->updateEntry(info);
     }
-  else
-    {
-    return -1;
-    }
-}
 
 
     const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",

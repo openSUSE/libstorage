@@ -125,7 +125,6 @@ class MdCo : public Container
 	int checkUse( const string& dev );
 	void addMd( Md* m );
 	void checkMd( Md* m );
-	void updateEntry( const Md* m );
 
 	void init();
 

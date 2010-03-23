@@ -241,8 +241,7 @@ class MdPartCo : public Container
     bool validPartition( const Partition* p );
     bool findMdPart( unsigned nr, MdPartIter& i );
 
-    void updateEntry();
-    string mdadmLine() const;
+	bool updateEntry(EtcRaidtab* raidtab);
 
     static bool partNotDeleted( const MdPart&d ) { return( !d.deleted() ); }
 

@@ -32,19 +32,13 @@
 
 namespace storage
 {
-    class Md;
-    class MdPartCo;
 
-
-class EtcRaidtab
+    class EtcRaidtab
     {
     public:
 
 	EtcRaidtab(const Storage* sto, const string& prefix = "");
 	~EtcRaidtab();
-
-	void updateEntry(unsigned num, const string&);
-	void removeEntry( unsigned num );
 
 	// From this structure line 'ARRAY' will be build in config file.
 	// Not all fields are mandatory
@@ -52,69 +46,39 @@ class EtcRaidtab
 	// before volume line.
 	struct mdconf_info
 	{
-	  bool container_present; // container present
-	  struct {
-	    string metadata;  // metadata
-	    string md_uuid;    // md uuid
-	  } container_info;
-	  string fs_name;     // word after 'ARRAY'.
-	  string md_uuid;     // md uuid
-	  string member;      // member of container (if container is present)
+	    string device;
+	    string uuid;
+
+	    bool container_present;
+
+	    /* following members only valid if container_present is true */
+	    string container_member;
+	    string container_metadata;
+	    string container_uuid;
 	};
+
+
 	bool updateEntry(const mdconf_info& info);
-	bool removeEntry(const mdconf_info& into);
+
+	bool removeEntry(const string& uuid);
 
     protected:
-	struct entry
-	    {
-	    entry() : first(0), last(0) {}
-	    entry(unsigned f, unsigned l) : first(f), last(l) {}
-	    unsigned first;
-	    unsigned last;
-	    };
 
-	void updateMdadmFile();
-	void buildMdadmMap();
-	void buildMdadmMap2();
-
-	/* Extracts UUID=uuidNumber from line. */
-	string getUUID(const string& line) const;
-
-        enum lineType
-        {
-          DEVICE=0,
-          ARRAY,
-          MAILFROM,
-          PROGRAM,
-          CREATE,
-          HOMEHOST,
-          AUTO,
-          COMMENT,
-          EMPTY,
-          UNKNOWN
-        };
-
-	lineType getLineType(const string& line) const;
-
-	//Gets full array line, possibly consisted of several lines.
-	//line - will be updated and will point to first line that does not
-	//       belong to initial array line.
-	//uuid - will be filled if found.
-	bool getArrayLine(unsigned& line, string& uuid);
+	void setDeviceLine(const string& line);
+	void setAutoLine(const string& line);
+	void setArrayLine(const string& line, const string& uuid);
 
 	string ContLine(const mdconf_info& info) const;
 	string ArrayLine(const mdconf_info& info) const;
 
-	bool updateContainer(const mdconf_info& info);
+	vector<string>::const_iterator findArray(const string& uuid) const;
 
-	void setDeviceLine(const string& line);
-	void setAutoLine(const string& line);
+	string getUuid(const string& line) const;
 
 	const Storage* sto;
 
-	map<unsigned, entry> mtab;
-	map<string, entry> uuidtab; // search by uuid, only for ARRAY lines.
 	AsciiFile mdadm;
+
     };
 
 }

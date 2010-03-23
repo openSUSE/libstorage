@@ -59,7 +59,6 @@ class Md : public Volume
 	int checkDevices();
 	int addDevice( const string& dev, bool spare=false );
 	int removeDevice( const string& dev );
-	string mdadmLine() const; 
 	string createCmd() const;
 	static bool matchRegex( const string& dev );
 	static unsigned mdMajor();
@@ -84,7 +83,7 @@ class Md : public Volume
 	void logDifference( const Md& d ) const;
 	void getState(MdStateInfo& info) const;
 
-	int updateEntry(EtcRaidtab* tab);
+	bool updateEntry(EtcRaidtab* raidtab);
 
     protected:
 

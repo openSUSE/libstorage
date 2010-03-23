@@ -21,11 +21,8 @@
 
 
 #include "storage/AppUtil.h"
-#include "storage/Regex.h"
 #include "storage/EtcRaidtab.h"
 #include "storage/AsciiFile.h"
-#include "storage/Md.h"
-#include "storage/MdPartCo.h"
 #include "storage/StorageTypes.h"
 
 
@@ -37,94 +34,77 @@ namespace storage
     EtcRaidtab::EtcRaidtab(const Storage* sto, const string& prefix)
 	: sto(sto), mdadm(prefix + "/etc/mdadm.conf")
     {
-	buildMdadmMap();
-	buildMdadmMap2();
     }
 
 
-EtcRaidtab::~EtcRaidtab()
-{
-}
-
-
-void 
-EtcRaidtab::updateEntry(unsigned num, const string& mline)
+    EtcRaidtab::~EtcRaidtab()
     {
-    y2mil("num:" << num);
-    string dline;
-    map<unsigned, entry>::const_iterator i = mtab.find( num );
-    if( i != mtab.end() )
+    }
+
+
+    bool
+    EtcRaidtab::updateEntry(const mdconf_info& info)
+    {
+	y2mil("uuid:" << info.uuid << " device:" << info.device);
+
+	if (info.uuid.empty())
 	{
-	mdadm.replace( i->second.first, i->second.last-i->second.first+1, mline );
-	}
-    else
-	{
-	mdadm.append( mline );
+	    y2err("empty UUID");
+	    return false;
 	}
 
-    setDeviceLine("DEVICE containers partitions");
+	if (info.container_present && info.container_uuid.empty())
+	{
+	    y2err("empty UUID for container");
+	    return false;
+	}
 
-    if (sto->hasIScsiDisks())
-       setAutoLine("AUTO -all");
+	if (info.container_present)
+	    setArrayLine(ContLine(info), info.container_uuid);
 
-    updateMdadmFile();
+	setArrayLine(ArrayLine(info), info.uuid);
+
+	setDeviceLine("DEVICE containers partitions");
+
+	if (sto->hasIScsiDisks())
+	    setAutoLine("AUTO -all");
+
+	mdadm.save();
+
+	return true;
     }
 
 
-bool EtcRaidtab::updateEntry(const mdconf_info& info)
-{
-  y2mil("Called. UUID="<<info.md_uuid<<", fs_name="<<info.fs_name);
-
-  if( info.md_uuid.empty() )
+    bool
+    EtcRaidtab::removeEntry(const string& uuid)
     {
-    y2mil("Empty Md UUID!");
-    return false;
-    }
-  if( info.container_present )
-    {
-    if( info.container_info.md_uuid.empty() )
-      {
-      y2mil("Empty Md UUID for Container");
-      return false;
-      }
-    }
+	y2mil("uuid:" << uuid);
 
-  if( info.container_present )
-    {
-    updateContainer(info);
-    }
-  //after container.
-  map<string, entry>::const_iterator i = uuidtab.find(info.md_uuid);
-  if( i != uuidtab.end() )
-    {
-    mdadm.replace( i->second.first,
-                    i->second.last - i->second.first + 1,
-                    ArrayLine(info) );
-    }
-  else
-    {
-    mdadm.append(ArrayLine(info));
-    }
+	const vector<string>& lines = mdadm.lines();
+	vector<string>::const_iterator it = findArray(uuid);
+	if (it == lines.end())
+	{
+	    y2war("line not found");
+	    return false;
+	}
 
-    setDeviceLine("DEVICE containers partitions");
+	mdadm.remove(distance(lines.begin(), it), 1);
 
-    if (sto->hasIScsiDisks())
-       setAutoLine("AUTO -all");
+	mdadm.save();
 
-  updateMdadmFile();
-  return true;
-}
+	return true;
+    }
 
 
     void
     EtcRaidtab::setDeviceLine(const string& line)
     {
 	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator i = find_if(lines, string_starts_with("DEVICE"));
-	if (i == lines.end())
+	vector<string>::const_iterator it = find_if(lines, string_starts_with("DEVICE"));
+	if (it == lines.end())
 	    mdadm.insert(0, line);
 	else
-	    mdadm.replace(distance(lines.begin(), i), 1, line);
+	    mdadm.replace(distance(lines.begin(), it), 1, line);
     }
 
 
@@ -132,79 +112,32 @@ bool EtcRaidtab::updateEntry(const mdconf_info& info)
     EtcRaidtab::setAutoLine(const string& line)
     {
 	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator i = find_if(lines, string_starts_with("AUTO"));
-	if (i == lines.end())
+	vector<string>::const_iterator it = find_if(lines, string_starts_with("AUTO"));
+	if (it == lines.end())
 	    mdadm.insert(0, line);
 	else
-	    mdadm.replace(distance(lines.begin(), i), 1, line);
+	    mdadm.replace(distance(lines.begin(), it), 1, line);
     }
 
 
-bool EtcRaidtab::updateContainer(const mdconf_info& info)
-{
-  while( true )
-  {
-  map<string,entry>::const_iterator i =  uuidtab.find(info.md_uuid);
-  map<string,entry>::const_iterator i2 = uuidtab.find(info.container_info.md_uuid);
-
-  if( i == uuidtab.end() )
+    void
+    EtcRaidtab::setArrayLine(const string& line, const string& uuid)
     {
-    // No volume yet.
-    if(i2 == uuidtab.end())
-      {
-      // No container yet.
-      mdadm.append(ContLine(info));
-      updateMdadmFile();
-      return true;
-      }
-    // No Volume, but there is already Container.
-    mdadm.replace( i2->second.first,
-                    i2->second.last - i2->second.first + 1,
-                    ContLine(info) );
-    updateMdadmFile();
-    return true;
+	const vector<string>& lines = mdadm.lines();
+	vector<string>::const_iterator it = findArray(uuid);
+	if (it == lines.end())
+	    mdadm.append(line);
+	else
+	    mdadm.replace(distance(lines.begin(), it), 1, line);
     }
-  //There is Volume line.
-  if(i2 == uuidtab.end())
-    {
-    //There is Volume line while no Container line.
-    //Insert line and make another iteration.
-    mdadm.insert(i->second.first,ContLine(info));
-    updateMdadmFile();
-    continue;
-    }
-  else
-    {
-    //there is a line for container and for volume.
-    if( i2->second.first >= i->second.first )
-      {
-      // error. Container must be first
-      mdadm.remove(i2->second.first,
-                    i2->second.last- i2->second.first + 1);
-      // and make another iteration.
-      updateMdadmFile();
-      continue;
-      }
-    else
-      {
-      //Ok, container is before volume
-      mdadm.replace( i2->second.first,
-                      i2->second.last - i2->second.first + 1,
-                      ContLine(info) );
-      updateMdadmFile();
-      return true;
-      }
-    }
-  }
-}
 
 
     string
     EtcRaidtab::ContLine(const mdconf_info& info) const
     {
 	string line = "ARRAY";
-	line += " metadata=" + info.container_info.metadata;
-	line += " UUID=" + info.container_info.md_uuid;
+	line += " metadata=" + info.container_metadata;
+	line += " UUID=" + info.container_uuid;
 	return line;
     }
 
@@ -212,235 +145,56 @@ bool EtcRaidtab::updateContainer(const mdconf_info& info)
     string
     EtcRaidtab::ArrayLine(const mdconf_info& info) const
     {
-	string line = "ARRAY " + info.fs_name;
+	string line = "ARRAY " + info.device;
 	if (info.container_present)
 	{
-	    line += " container=" + info.container_info.md_uuid;
-	    line += " member=" + info.member;
+	    line += " container=" + info.container_uuid;
+	    line += " member=" + info.container_member;
 	}
-	line += " UUID=" + info.md_uuid;
+	line += " UUID=" + info.uuid;
 	return line;
     }
 
 
-//2 cases: remove volume or container
-//No check if container is used by other Volume.
-bool EtcRaidtab::removeEntry(const mdconf_info& info)
-{
-  map<string, entry>::const_iterator i;
-  if( info.md_uuid.empty() )
+    vector<string>::const_iterator
+    EtcRaidtab::findArray(const string& uuid) const
     {
-    if( info.container_present == false)
-      {
-      return false;
-      }
-    if( info.container_info.md_uuid.empty() )
-      {
-      return false;
-      }
-    i = uuidtab.find( info.container_info.md_uuid );
-    }
-  else
-    {
-     i = uuidtab.find( info.md_uuid );
-    }
-  if( i != uuidtab.end() )
-    {
-    mdadm.remove( i->second.first, i->second.last-i->second.first+1 );
-    updateMdadmFile();
-    }
-  return true;
-}
+	const vector<string>& lines = mdadm.lines();
 
-void
-EtcRaidtab::removeEntry( unsigned num )
-    {
-    map<unsigned, entry>::const_iterator i = mtab.find( num );
-    if( i != mtab.end() )
+	if (uuid.empty())
 	{
-	mdadm.remove( i->second.first, i->second.last-i->second.first+1 );
-	updateMdadmFile();
+	    y2err("empty UUID");
+	    return lines.end();
 	}
-    }
 
-void
-EtcRaidtab::updateMdadmFile()
-    {
-    mtab.clear();
-    uuidtab.clear();
-    mdadm.save();
-    buildMdadmMap();
-    buildMdadmMap2();
-    }
-
-void
-EtcRaidtab::buildMdadmMap()
-    {
-    unsigned lineno = 0;
-    unsigned mdnum;
-    entry e;
-    while (lineno < mdadm.numLines())
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	string key = extractNthWord( 0, mdadm[lineno] );
-	if( key == "ARRAY" &&
-		 Md::mdStringNum( extractNthWord( 1, mdadm[lineno] ), mdnum ))
+	    if (boost::starts_with(*it, "ARRAY"))
 	    {
-	    e.first = lineno++;
-	    while( lineno < mdadm.numLines() && 
-	           (key = extractNthWord( 0, mdadm[lineno] ))!="ARRAY" &&
-		   key != "DEVICE" && key != "AUTO")
-		{
-		key = extractNthWord( 0, mdadm[lineno++] );
-		}
-	    e.last = lineno-1;
-	    mtab[mdnum] = e;
+		string tmp = getUuid(*it);
+		if (!tmp.empty() && tmp == uuid)
+		    return it;
 	    }
+	}
+
+	return lines.end();
+    }
+
+
+    string
+    EtcRaidtab::getUuid(const string& line) const
+    {
+	string::size_type pos1 = line.find("UUID=");
+	if (pos1 != string::npos)
+	{
+	    pos1 += 5;
+	    string::size_type pos2 = line.find_first_not_of("0123456789abcdefABCDEF:", pos1);
+	    return line.substr(pos1, pos2 - pos1);
+	}
 	else
-	    lineno++;
+	{
+	    return "";
 	}
     }
-
-void
-EtcRaidtab::buildMdadmMap2()
-{
-  unsigned lineno = 0;
-  entry e;
-  for(lineno=0; lineno < mdadm.numLines(); lineno++ )
-    {
-    if( getLineType(mdadm[lineno]) == EtcRaidtab::ARRAY )
-      {
-      unsigned endl = lineno;
-      string uuid;
-      if( getArrayLine(endl,uuid) )
-        {
-        if(uuid.empty() )
-          {
-          // no UUID
-          continue;
-          }
-        e.first = lineno;
-        e.last = endl-1;
-        uuidtab[uuid] = e;
-        lineno = endl-1;
-        }
-      else
-        {
-        //
-        }
-      }
-    else
-      {
-      //
-      }
-    }
-}
-
-string
-EtcRaidtab::getUUID(const string& line) const
-{
-  string::size_type pos = line.find("UUID=");
-  if( pos != string::npos )
-    {
-    //switch 'uuid='
-    pos += 5;
-    // 128bit - represented as 32 hex digits + 3 x ':'.
-    return line.substr(pos,pos+35);
-    }
-  else
-    {
-    return "";
-    }
-}
-
-EtcRaidtab::lineType
-EtcRaidtab::getLineType(const string& line) const
-{
-  if( line.empty() )
-    {
-    return EtcRaidtab::EMPTY;
-    }
-  string type = extractNthWord(0,line);
-  if( type == "DEVICE")
-    {
-    return EtcRaidtab::DEVICE;
-    }
-  if( type == "ARRAY")
-    {
-    return EtcRaidtab::ARRAY;
-    }
-  if( type == "MAILFROM")
-    {
-    return EtcRaidtab::MAILFROM;
-    }
-  if( type == "PROGRAM")
-    {
-    return EtcRaidtab::PROGRAM;
-    }
-  if( type == "CREATE")
-    {
-    return EtcRaidtab::CREATE;
-    }
-  if( type == "HOMEHOST")
-    {
-    return EtcRaidtab::HOMEHOST;
-    }
-  if( type == "AUTO")
-    {
-    return EtcRaidtab::AUTO;
-    }
-  if( type.find("#") == 0 )
-    {
-    return EtcRaidtab::COMMENT;
-    }
-  return EtcRaidtab::UNKNOWN;
-}
-
-bool EtcRaidtab::getArrayLine(unsigned& line, string& uuid)
-{
-  if( getLineType(mdadm[line]) != EtcRaidtab::ARRAY )
-    {
-    return false;
-    }
-  uuid = getUUID(mdadm[line]);
-  while( true )
-    {
-    line++;
-    if( line >= mdadm.numLines() )
-      {
-      if( uuid.empty() )
-        return false;
-      else
-        return true;
-      }
-    EtcRaidtab::lineType lt = getLineType(mdadm[line]);
-    if( lt == EtcRaidtab::ARRAY    || lt == EtcRaidtab::DEVICE   ||
-        lt == EtcRaidtab::AUTO     || lt == EtcRaidtab::CREATE   ||
-        lt == EtcRaidtab::HOMEHOST || lt == EtcRaidtab::MAILFROM ||
-        lt == EtcRaidtab::PROGRAM)
-      {
-      return true;
-      }
-    if( lt == EtcRaidtab::COMMENT ||
-        lt == EtcRaidtab::EMPTY )
-      {
-      continue;
-      }
-    if( lt == EtcRaidtab::UNKNOWN )
-      {
-      // possibly following line. Check for x=y pair.
-      if( (mdadm[line]).find("=") == string::npos )
-        {
-        //kind of error.
-        return false;
-        }
-      //Check for UUID
-      if( uuid.empty() )
-        {
-        uuid = getUUID(mdadm[line]);
-        }
-      continue;
-      }
-    }
-}
 
 }

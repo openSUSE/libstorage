@@ -984,11 +984,9 @@ int MdPartCo::doRemove()
         }
       if( ret==0 )
         {
-        EtcRaidtab* tab = getStorage()->getRaidtab();
-        if (tab)
-          {
-          tab->removeEntry( nr() );
-          }
+	EtcRaidtab* raidtab = getStorage()->getRaidtab();
+	if (raidtab)
+	    raidtab->removeEntry(getMdUuid());
         }
       }
     y2mil("Done, ret:" << ret);
@@ -1893,7 +1891,9 @@ MdPartCo::hasFileSystem(const string& name, SystemInfo& systeminfo)
 void
 MdPartCo::syncRaidtab()
 {
-    updateEntry();
+    EtcRaidtab* raidtab = getStorage()->getRaidtab();
+    if (raidtab)
+	updateEntry(raidtab);
 }
 
 
@@ -1912,43 +1912,33 @@ MdPartCo::getContMember() const
 }
 
 
-void MdPartCo::updateEntry()
+    bool
+    MdPartCo::updateEntry(EtcRaidtab* raidtab)
     {
-    EtcRaidtab* tab = getStorage()->getRaidtab();
-    if( tab )
-      {
       EtcRaidtab::mdconf_info info;
       if( !md_name.empty() )
         {
         //Raid name is preferred.
-        info.fs_name = "/dev/md/" + md_name;
+        info.device = "/dev/md/" + md_name;
         }
       else
         {
-        info.fs_name = dev;
+        info.device = dev;
         }
-      info.md_uuid = md_uuid;
+      info.uuid = md_uuid;
       if( has_container )
         {
         info.container_present = true;
-        info.container_info.md_uuid = parent_uuid;
-        info.container_info.metadata = parent_metadata;
-        info.member = getContMember();
+        info.container_uuid = parent_uuid;
+        info.container_metadata = parent_metadata;
+        info.container_member = getContMember();
         }
       else
         {
         info.container_present = false;
         }
-      tab->updateEntry( info );
-      }
-    }
 
-
-string MdPartCo::mdadmLine() const
-    {
-    string line = "ARRAY " + device() + " level=" + pName() + " UUID=" + md_uuid;
-    y2mil("line:" << line);
-    return( line );
+      return raidtab->updateEntry( info );
     }
 
 

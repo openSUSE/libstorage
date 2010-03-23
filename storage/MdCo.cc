@@ -84,25 +84,14 @@ MdCo::init()
     void
     MdCo::syncRaidtab()
     {
-	EtcRaidtab* tab = getStorage()->getRaidtab();
-	if (tab)
+	EtcRaidtab* raidtab = getStorage()->getRaidtab();
+	if (raidtab)
 	{
 	    MdPair p = mdPair(Md::notDeleted);
 	    for (MdIter i = p.begin(); i!=p.end(); ++i)
 	    {
-		i->updateEntry(tab);
+		i->updateEntry(raidtab);
 	    }
-	}
-    }
-
-
-    void
-    MdCo::updateEntry(const Md* m)
-    {
-	EtcRaidtab* tab = getStorage()->getRaidtab();
-	if (tab)
-	{
-	    tab->updateEntry(m->nr(), m->mdadmLine());
 	}
     }
 
@@ -611,7 +600,9 @@ MdCo::doCreate( Volume* v )
 	    {
 	    Storage::waitForDevice(m->device());
 	    getMdData( m->nr() );
-	    updateEntry( m );
+	    EtcRaidtab* raidtab = getStorage()->getRaidtab();
+	    if (raidtab)
+		m->updateEntry(raidtab);
 	    bool used_as_pv = m->isUsedBy(UB_LVM);
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
@@ -663,11 +654,9 @@ MdCo::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    EtcRaidtab* tab = getStorage()->getRaidtab();
-	    if (tab)
-		{
-		tab->removeEntry( m->nr() );
-		}
+	    EtcRaidtab* raidtab = getStorage()->getRaidtab();
+	    if (raidtab)
+		raidtab->removeEntry(m->getMdUuid());
 	    if( !removeFromList( m ) )
 		ret = MD_NOT_IN_LIST;
 	    }
