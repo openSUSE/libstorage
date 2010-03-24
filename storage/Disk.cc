@@ -36,7 +36,6 @@
 #include "storage/ProcParts.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
-#include "storage/AsciiFile.h"
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"

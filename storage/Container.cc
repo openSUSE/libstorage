@@ -29,7 +29,6 @@
 #include "storage/Storage.h"
 #include "storage/AppUtil.h"
 #include "storage/Device.h"
-#include "storage/AsciiFile.h"
 
 
 namespace storage
