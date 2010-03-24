@@ -86,15 +86,15 @@ namespace storage
 	    return false;
 	}
 
-	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator it = findArray(uuid);
+	vector<string>& lines = mdadm.lines();
+	vector<string>::iterator it = findArray(uuid);
 	if (it == lines.end())
 	{
 	    y2war("line not found");
 	    return false;
 	}
 
-	mdadm.remove(distance(lines.begin(), it), 1);
+	lines.erase(it);
 
 	mdadm.save();
 
@@ -105,36 +105,36 @@ namespace storage
     void
     EtcMdadm::setDeviceLine(const string& line)
     {
-	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator it = find_if(lines, string_starts_with("DEVICE"));
+	vector<string>& lines = mdadm.lines();
+	vector<string>::iterator it = find_if(lines, string_starts_with("DEVICE"));
 	if (it == lines.end())
-	    mdadm.insert(0, line);
+	    lines.insert(lines.begin(), line);
 	else
-	    mdadm.replace(distance(lines.begin(), it), 1, line);
+	    *it = line;
     }
 
 
     void
     EtcMdadm::setAutoLine(const string& line)
     {
-	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator it = find_if(lines, string_starts_with("AUTO"));
+	vector<string>& lines = mdadm.lines();
+	vector<string>::iterator it = find_if(lines, string_starts_with("AUTO"));
 	if (it == lines.end())
-	    mdadm.insert(0, line);
+	    lines.insert(lines.begin(), line);
 	else
-	    mdadm.replace(distance(lines.begin(), it), 1, line);
+	    *it = line;
     }
 
 
     void
     EtcMdadm::setArrayLine(const string& line, const string& uuid)
     {
-	const vector<string>& lines = mdadm.lines();
-	vector<string>::const_iterator it = findArray(uuid);
+	vector<string>& lines = mdadm.lines();
+	vector<string>::iterator it = findArray(uuid);
 	if (it == lines.end())
-	    mdadm.append(line);
+	    lines.push_back(line);
 	else
-	    mdadm.replace(distance(lines.begin(), it), 1, line);
+	    *it = line;
     }
 
 
@@ -162,11 +162,11 @@ namespace storage
     }
 
 
-    vector<string>::const_iterator
-    EtcMdadm::findArray(const string& uuid) const
+    vector<string>::iterator
+    EtcMdadm::findArray(const string& uuid)
     {
-	const vector<string>& lines = mdadm.lines();
-	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	vector<string>& lines = mdadm.lines();
+	for (vector<string>::iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 	    if (boost::starts_with(*it, "ARRAY"))
 	    {

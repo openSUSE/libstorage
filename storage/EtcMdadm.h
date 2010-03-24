@@ -74,7 +74,7 @@ namespace storage
 	string ContLine(const mdconf_info& info) const;
 	string ArrayLine(const mdconf_info& info) const;
 
-	vector<string>::const_iterator findArray(const string& uuid) const;
+	vector<string>::iterator findArray(const string& uuid);
 
 	string getUuid(const string& line) const;
 

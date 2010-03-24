@@ -212,6 +212,13 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
 
     template <class Pred>
+    vector<string>::iterator
+    find_if(vector<string>& lines, Pred pred)
+    {
+	return std::find_if(lines.begin(), lines.end(), pred);
+    }
+
+    template <class Pred>
     vector<string>::const_iterator
     find_if(const vector<string>& lines, Pred pred)
     {

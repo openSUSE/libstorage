@@ -74,6 +74,7 @@ namespace storage
 
 	unsigned numLines() const { return Lines_C.size(); }
 
+	vector<string>& lines() { return Lines_C; }
 	const vector<string>& lines() const { return Lines_C; }
 
     protected:
