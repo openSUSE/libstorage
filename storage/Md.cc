@@ -210,12 +210,13 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
       {
       getParent();
       }
+
     // Get md_name. It's important.
     string tmpUuid;
     MdPartCo::getUuidName(nm,tmpUuid,md_name);
 
     for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
-	getStorage()->setUsedBy(*it, UB_MD, dev);
+	getStorage()->addUsedBy(*it, UB_MD, dev);
     }
 
 
