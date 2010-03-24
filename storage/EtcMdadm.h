@@ -47,6 +47,8 @@ namespace storage
 	// before volume line.
 	struct mdconf_info
 	{
+	    mdconf_info() : container_present(false) {}
+
 	    string device;
 	    string uuid;
 
