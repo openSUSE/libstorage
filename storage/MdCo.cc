@@ -82,17 +82,11 @@ MdCo::init()
 
 
     void
-    MdCo::syncMdadm()
+    MdCo::syncMdadm(EtcMdadm* mdadm) const
     {
-	EtcMdadm* mdadm = getStorage()->getMdadm();
-	if (mdadm)
-	{
-	    MdPair p = mdPair(Md::notDeleted);
-	    for (MdIter i = p.begin(); i!=p.end(); ++i)
-	    {
-		i->updateEntry(mdadm);
-	    }
-	}
+	ConstMdPair p = mdPair(Md::notDeleted);
+	for (ConstMdIter it = p.begin(); it != p.end(); ++it)
+	    it->updateEntry(mdadm);
     }
 
 

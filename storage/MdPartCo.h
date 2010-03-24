@@ -124,7 +124,7 @@ class MdPartCo : public Container
 
     static list<string> getMdRaids();
 
-    void syncMdadm();
+	void syncMdadm(EtcMdadm* mdadm) const;
 
     /* Returns Md number. */
     unsigned nr() const { return mnr; }
@@ -143,9 +143,6 @@ class MdPartCo : public Container
 
     /* Devices from which RAID is composed. */
     void getDevs( std::list<string>& devices, bool all=true, bool spare=false ) const;
-
-
-    void getSpareDevs(std::list<string>& devices );
 
     static void activate( bool val, const string& tmpDir  );
 
@@ -241,7 +238,7 @@ class MdPartCo : public Container
     bool validPartition( const Partition* p );
     bool findMdPart( unsigned nr, MdPartIter& i );
 
-	bool updateEntry(EtcMdadm* mdadm);
+	bool updateEntry(EtcMdadm* mdadm) const;
 
     static bool partNotDeleted( const MdPart&d ) { return( !d.deleted() ); }
 

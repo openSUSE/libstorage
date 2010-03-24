@@ -84,7 +84,7 @@ class Md : public Volume
 	void logDifference( const Md& d ) const;
 	void getState(MdStateInfo& info) const;
 
-	bool updateEntry(EtcMdadm* mdadm);
+	bool updateEntry(EtcMdadm* mdadm) const;
 
     protected:
 
@@ -115,7 +115,7 @@ class Md : public Volume
 	string parent_uuid;
 	string parent_md_name;
 	string parent_metadata;
-	int    md_member;
+	string md_member;
 
 	static const string md_names[MULTIPATH + 1];
 	static const string par_names[RIGHT_SYMMETRIC + 1];

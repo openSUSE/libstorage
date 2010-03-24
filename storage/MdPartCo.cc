@@ -1392,12 +1392,6 @@ MdPartCo::getDevs( list<string>& devices, bool all, bool spares ) const
     }
 
 
-void MdPartCo::getSpareDevs(std::list<string>& devices )
-{
-  devices = spare;
-}
-
-
 void MdPartCo::setSize(unsigned long long size )
 {
   size_k = size;
@@ -1888,11 +1882,9 @@ MdPartCo::hasFileSystem(const string& name, SystemInfo& systeminfo)
 
 
 void
-MdPartCo::syncMdadm()
+MdPartCo::syncMdadm(EtcMdadm* mdadm) const
 {
-    EtcMdadm* mdadm = getStorage()->getMdadm();
-    if (mdadm)
-	updateEntry(mdadm);
+    updateEntry(mdadm);
 }
 
 
@@ -1912,7 +1904,7 @@ MdPartCo::getContMember() const
 
 
     bool
-    MdPartCo::updateEntry(EtcMdadm* mdadm)
+    MdPartCo::updateEntry(EtcMdadm* mdadm) const
     {
       EtcMdadm::mdconf_info info;
       if( !md_name.empty() )
@@ -1937,7 +1929,7 @@ MdPartCo::getContMember() const
         info.container_present = false;
         }
 
-      return mdadm->updateEntry( info );
+	return mdadm->updateEntry(info);
     }
 
 

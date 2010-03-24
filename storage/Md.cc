@@ -95,9 +95,8 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
 	    tmpPos = sb_ver.find(",");
 	    sb_ver.erase(tmpPos,tmpPos+1);
 	    // get Member number
-	    string member = extractNthWord( 4, tmpLine );
-            y2mil("Md " << nm << " has container. Member " << member);
-	    member >> md_member;
+	    md_member = extractNthWord( 4, tmpLine );
+            y2mil("Md " << nm << " has container. Member " << md_member);
 	    has_container = true;
         }
 	else
@@ -713,7 +712,7 @@ void Md::getParent()
 
 
     bool
-    Md::updateEntry(EtcMdadm* mdadm)
+    Md::updateEntry(EtcMdadm* mdadm) const
     {
   EtcMdadm::mdconf_info info;
   if( !md_name.empty() )
@@ -731,7 +730,7 @@ void Md::getParent()
     info.container_present = true;
     info.container_uuid = parent_uuid;
     info.container_metadata = parent_metadata;
-    info.container_member = decString(md_member);
+    info.container_member = md_member;
     }
   else
     {

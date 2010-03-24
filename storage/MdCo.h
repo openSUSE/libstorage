@@ -58,7 +58,8 @@ class MdCo : public Container
 	bool equalContent( const Container& rhs ) const;
 	void logDifference( const Container& d ) const;
 
-	void syncMdadm();
+	void syncMdadm(EtcMdadm* mdadm) const;
+
 	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate(bool val, const string& tmpDir);

@@ -6206,10 +6206,10 @@ void Storage::rootMounted()
 	    mdadm = new EtcMdadm(this, root());
 
 	    if (haveMd(md))
-		md->syncMdadm();
+		md->syncMdadm(mdadm);
 
 	    for (MdPartCoIterator it = p.begin(); it != p.end(); ++it)
-		it->syncMdadm();
+		it->syncMdadm(mdadm);
 	}
 
 	if( instsys() )
