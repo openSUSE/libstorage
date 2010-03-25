@@ -25,13 +25,15 @@
 
 #include <string>
 #include <map>
+#include <vector>
 
-#include "storage/Storage.h"
+#include "storage/StorageInterface.h"
 
 
 namespace storage
 {
     using std::map;
+    using std::vector;
 
 
     class Blkid

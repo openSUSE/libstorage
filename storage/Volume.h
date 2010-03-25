@@ -23,6 +23,7 @@
 #ifndef VOLUME_H
 #define VOLUME_H
 
+#include "storage/Blkid.h"
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
 #include "storage/StorageTmpl.h"
@@ -40,7 +41,6 @@ class EtcFstab;
 class FstabEntry;
 class Container;
 class Storage;
-    class Blkid;
     
 
     class Volume : public Device
@@ -214,7 +214,8 @@ class Storage;
 	int checkDevice(const string& device) const;
 	storage::MountByType defaultMountBy(const string& mp = "") const;
 	bool allowedMountBy(storage::MountByType mby, const string& mp = "") const;
-	void getFsData(const Blkid& blkid);
+	bool findBlkid( const Blkid& blkid, Blkid::Entry& entry );
+	void getFsData(const Blkid& blkid );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );

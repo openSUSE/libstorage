@@ -460,12 +460,17 @@ bool Storage::rescanCryptedObjects()
 		si = new SystemInfo;
 	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, *si);
 	    addToList( v );
+	    v->normalizeDmDevices();
 	    v->checkConsistency();
+	    for( LvmVg::LvmLvIter i=v->lvmLvBegin(); i!=v->lvmLvEnd(); ++i )
+		i->updateFsData();
 	    ret = true;
 	    }
 	}
     if( si )
 	delete si;
+    if( ret )
+	dumpObjectList();
     y2mil( "ret:" << ret );
     return( ret );
     }
@@ -873,9 +878,9 @@ void
 	    y2mil( "detect:" << *i );
 	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )
 		{
-		    Blkid::Entry entry;
-		    if (systeminfo.getBlkid().getEntry(i->dev, entry) && entry.is_luks)
-			i->initEncryption(ENC_LUKS);
+		Blkid::Entry e;
+		if( i->findBlkid( systeminfo.getBlkid(), e ) && e.is_luks)
+		    i->initEncryption(ENC_LUKS);
 		}
 	    }
 	}

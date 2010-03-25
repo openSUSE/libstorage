@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 25 18:24:35 CET 2010 - fehr@suse.de
+
+- fix problems with detection of data on newly unlocked encrypted
+  volumes (bnc #581341)
+  
+-------------------------------------------------------------------
 Mon Mar 22 17:15:01 CET 2010 - aschnell@suse.de
 
 - fixed DEVICE line in mdadm.conf (bnc #590237)

@@ -29,6 +29,7 @@
 #include "storage/Storage.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
+#include "storage/Regex.h"
 
 
 namespace storage
@@ -694,11 +695,19 @@ string PeContainer::getDeviceByNumber( const string& majmin ) const
 			}
 		    else
 			{
+			Regex devspec( "^[0123456789]+:[0123456789]+$" );
 			c.execute(DMSETUPBIN " table " + quote(c.getLine(0)));
 			if( c.retcode()==0 && c.numLines()>0 )
 			    {
-			    pair = extractNthWord( 3, c.getLine(0) );
-			    ret = getStorage()->deviceByNumber(pair);
+			    unsigned count = 3;
+			    pair = extractNthWord( count++, c.getLine(0) );
+			    while( !pair.empty() )
+				{
+				if( devspec.match( pair ))
+				    ret = getStorage()->deviceByNumber(pair);
+				pair = extractNthWord( count++, c.getLine(0) );
+				}
+
 			    }
 			}
 		    }

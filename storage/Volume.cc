@@ -488,23 +488,29 @@ void Volume::getLoopData( SystemCmd& loopData )
     }
 
 
+bool 
+Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
+    {
+    bool found = blkid.getEntry(mountDevice(), entry);
+    if (!found && !is_loop)
+	{
+	list<string>::const_iterator an = alt_names.begin();
+	while (!found && an != alt_names.end())
+	    {
+	    found = blkid.getEntry(*an, entry);
+	    ++an;
+	    }
+	}
+    return( found );
+    }
+
+
     void
     Volume::getFsData(const Blkid& blkid)
     {
 	Blkid::Entry entry;
 
-	bool found = blkid.getEntry(mountDevice(), entry);
-	if (!found && !is_loop)
-	{
-	    list<string>::const_iterator an = alt_names.begin();
-	    while (!found && an != alt_names.end())
-	    {
-		found = blkid.getEntry(*an, entry);
-		++an;
-	    }
-	}
-
-	if (found)
+	if( findBlkid( blkid, entry ))
 	{
 	    y2mil("device:" << device() << " mountDevice:" << mountDevice() << " entry:" << entry);
 
@@ -942,6 +948,12 @@ int Volume::doFormat()
     {
 	Blkid blkid(mountDevice());
 	getFsData(blkid);
+	if( getFs()==FSUNKNOWN && getEncryption()==ENC_NONE )
+	    {
+	    Blkid::Entry e;
+	    if( findBlkid( blkid, e ) && e.is_luks)
+		initEncryption(ENC_LUKS);
+	    }
     }
 
 
@@ -1750,6 +1762,8 @@ bool Volume::needFstabUpdate() const
 EncryptType Volume::detectEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
+    EncryptType save_enc = encryption;
+    EncryptType save_orig = orig_encryption;
 
     if (getStorage()->testmode())
 	{
@@ -1767,7 +1781,8 @@ EncryptType Volume::detectEncryption()
     y2mil("device:" << dev);
 
     mkdir( mpname.c_str(), 0700 );
-    getFreeLoop();
+    if( is_loop )
+	getFreeLoop();
     detected_fs = fs = FSUNKNOWN;
     bool luks_ok = false;
     do
@@ -1862,7 +1877,9 @@ EncryptType Volume::detectEncryption()
 	loop_dev.erase();
 	crypt_pwd.erase();
 	orig_crypt_pwd.erase();
-	ret = encryption = orig_encryption = ENC_UNKNOWN;
+	ret = ENC_UNKNOWN;
+	encryption = save_enc;
+	orig_encryption = save_orig;
 	}
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
