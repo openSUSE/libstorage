@@ -515,22 +515,22 @@ Storage::detectArch()
 	}
     if( proc_arch == "ppc" )
 	{
-	AsciiFile cpu( "/proc/cpuinfo" );
-	int l = cpu.find_if_idx(string_starts_with("machine\t"));
-	y2mil("line:" << l);
-	if( l >= 0 )
+	AsciiFile cpuinfo("/proc/cpuinfo");
+	vector<string>::const_iterator it = find_if(cpuinfo.lines(), string_starts_with("machine\t"));
+	if (it != cpuinfo.lines().end())
 	    {
-	    string line = cpu[l];
-	    line = extractNthWord( 2, line );
-	    y2mil("line:" << line);
-	    is_ppc_mac = line.find( "PowerMac" )==0 || line.find( "PowerBook" )==0;
-	    is_ppc_pegasos = line.find( "EFIKA5K2" )==0;
-	    if( is_ppc_mac == 0 && is_ppc_pegasos == 0 )
+	    y2mil("line:" << *it);
+
+	    string tmp1 = extractNthWord(2, *it);
+	    y2mil("tmp1:" << tmp1);
+	    is_ppc_mac = boost::starts_with(tmp1, "PowerMac") || boost::starts_with(tmp1, "PowerBook");
+	    is_ppc_pegasos = boost::starts_with(tmp1, "EFIKA5K2");
+
+	    if (!is_ppc_mac && !is_ppc_pegasos)
 		{
-		line = cpu[l];
-		line = extractNthWord( 3, line );
-		y2mil("line:" << line);
-		is_ppc_pegasos = line.find( "Pegasos" )==0;
+		string tmp2 = extractNthWord(3, *it);
+		y2mil("tmp2:" << tmp2);
+		is_ppc_pegasos = boost::starts_with(tmp2, "Pegasos");
 		}
 	    }
 	}
