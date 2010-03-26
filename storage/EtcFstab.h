@@ -25,7 +25,6 @@
 
 #include <string>
 #include <list>
-#include <map>
 #include <boost/algorithm/string.hpp>
 
 #include "storage/StorageInterface.h"
@@ -34,6 +33,9 @@
 
 namespace storage
 {
+    using std::string;
+    using std::list;
+
 
 class AsciiFile;
 struct FstabChange;
@@ -120,7 +122,6 @@ class EtcFstab
 	Text updateText( bool doing, bool crypto, const string& mp ) const;
 	Text removeText( bool doing, bool crypto, const string& mp ) const;
 	int flush();
-	int findPrefix( const AsciiFile& tab, const string& mount ) const;
 
     protected:
 	struct Entry
@@ -134,8 +135,11 @@ class EtcFstab
 
 	void readFiles();
 
+	int findPrefix( const AsciiFile& tab, const string& mount ) const;
+
 	AsciiFile* findFile( const FstabEntry& e, AsciiFile*& fstab,
 			     AsciiFile*& cryptotab, int& lineno ) const;
+
 	bool findCrtab( const FstabEntry& e, const AsciiFile& crtab,
 			int& lineno ) const;
 	bool findCrtab( const string& device, const AsciiFile& crtab,
