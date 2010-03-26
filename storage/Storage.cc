@@ -2802,7 +2802,7 @@ Storage::verifyCryptPassword( const string& device, const string& pwd,
     int ret = 0;
     assertInit();
     y2mil("device:" << device << " l:" << pwd.length() << " erase:" << erase );
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << pwd);
 #endif
 
@@ -2833,8 +2833,8 @@ Storage::verifyCryptFilePassword( const string& file, const string& pwd )
     int ret = VOLUME_CRYPT_NOT_DETECTED;
     assertInit();
     y2mil("file:" << file << " l:" << pwd.length());
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2mil("password:" << pwd);
+#ifdef DEBUG_CRYPT_PASSWORD
+    y2mil("pwd:" << pwd);
 #endif
 
     if (readonly())
@@ -2865,8 +2865,8 @@ Storage::setCryptPassword( const string& device, const string& pwd )
     int ret = 0;
     assertInit();
     y2mil("device:" << device << " l:" << pwd.length());
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2mil("password:" << pwd);
+#ifdef DEBUG_CRYPT_PASSWORD
+    y2mil("pwd:" << pwd);
 #endif
 
     VolIterator vol;
@@ -2976,8 +2976,8 @@ Storage::getCryptPassword( const string& device, string& pwd )
 	else
 	    ret = STORAGE_VOLUME_NOT_FOUND;
 	}
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
-    y2mil("password:" << pwd);
+#ifdef DEBUG_CRYPT_PASSWORD
+    y2mil("pwd:" << pwd);
 #endif
     y2mil("ret:" << ret);
     return( ret );
@@ -4174,7 +4174,7 @@ Storage::createFileLoop( const string& lname, bool reuseExisting,
     int ret = 0;
     assertInit();
     y2mil("lname:" << lname << " reuseExisting:" << reuseExisting << " sizeK:" << sizeK << " mp:" << mp);
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << pwd);
 #endif
     if (readonly())

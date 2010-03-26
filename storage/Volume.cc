@@ -185,7 +185,7 @@ namespace storage
 
 	if (encryption != ENC_NONE)
 	    setChildValue(node, "encryption", enc_names[encryption]);
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
 	if (encryption != ENC_NONE && !crypt_pwd.empty())
 	    setChildValue(node, "password", crypt_pwd);
 #endif
@@ -1687,7 +1687,7 @@ bool Volume::pwdLengthOk( storage::EncryptType typ, const string& val,
 int
 Volume::setCryptPwd( const string& val )
     {
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << val << " orig_pwd:" << orig_crypt_pwd );
 #endif
     int ret = 0;
@@ -1701,7 +1701,7 @@ Volume::setCryptPwd( const string& val )
 	if( encryption==ENC_UNKNOWN )
 	    detectEncryption();
 	}
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
 #endif
     y2mil("ret:" << ret);
@@ -1883,7 +1883,7 @@ EncryptType Volume::detectEncryption()
 	}
     unlink( fname.c_str() );
     rmdir( mpname.c_str() );
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
 #endif
     y2mil("ret:" << encTypeString(ret));
@@ -3084,7 +3084,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.encryption != v.orig_encryption &&
 	    v.orig_encryption!=storage::ENC_NONE )
 	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
 	if( v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
 	    s << " orig_pwd:" << v.orig_crypt_pwd;
@@ -3223,7 +3223,7 @@ Volume::logDifference( const Volume& rhs ) const
     if( orig_encryption!=rhs.orig_encryption )
 	ret += " orig_encr:" + Volume::enc_names[orig_encryption] + "-->" +
 	       Volume::enc_names[rhs.orig_encryption];
-#ifdef DEBUG_LOOP_CRYPT_PASSWORD
+#ifdef DEBUG_CRYPT_PASSWORD
     if( crypt_pwd!=rhs.crypt_pwd )
 	ret += " pwd:" + crypt_pwd + "-->" + rhs.crypt_pwd;
 #endif
