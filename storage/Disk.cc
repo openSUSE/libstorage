@@ -1400,7 +1400,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
     getStorage()->logCo( this );
     int ret = createChecks( type, start, len, checkRelaxed );
-    int number = 0;
+    unsigned number = 0;
     if( ret==0 )
 	{
 	number = availablePartNumber( type );
@@ -1424,6 +1424,20 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    y2mil( "deleted at same start:" << *i );
 	    p->getFsInfo( &(*i) );
 	    }
+
+	// see bnc #591075
+	if (getStorage()->instsys())
+	{
+	    for (i = pp.begin(); i != pp.end(); ++i)
+	    {
+		if (i->deleted() && i->nr() == number && !i->getCryptPwd().empty())
+		{
+		    y2mil("harvesting old password");
+		    p->setCryptPwd(i->getCryptPwd());
+		}
+	    }
+	}
+
 	p->setCreated();
 	device = p->device();
 	addToList( p );

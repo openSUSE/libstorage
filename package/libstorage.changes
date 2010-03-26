@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Mar 26 12:02:43 CET 2010 - aschnell@suse.de
+
+- fixed setting password for encrypted LVM proposal (bnc #591075)
+
+-------------------------------------------------------------------
 Thu Mar 25 18:24:35 CET 2010 - fehr@suse.de
 
 - fix problems with detection of data on newly unlocked encrypted
