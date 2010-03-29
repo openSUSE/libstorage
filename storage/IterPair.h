@@ -38,6 +38,10 @@ class IterPair
 	    {
 	    *this = x;
 	    }
+
+	template <class Ip>
+	IterPair(const Ip& x) : m_begin(x.begin()), m_end(x.end()) {}
+
 	template< class Ip >
 	IterPair& operator=(const Ip& x) 
 	    { 
