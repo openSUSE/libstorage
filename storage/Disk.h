@@ -264,6 +264,8 @@ class Disk : public Container
 	static const label_info labels[];
 	static const string p_disks[];
 
+	unsigned logical_sector_size;
+
 	unsigned long cyl;
 	unsigned head;
 	unsigned sector;

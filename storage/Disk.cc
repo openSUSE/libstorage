@@ -50,7 +50,7 @@ namespace storage
 
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo),
+	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
 	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
 	  del_ptable(false)
     {
@@ -63,7 +63,7 @@ namespace storage
 
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo),
+	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
 	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
 	  del_ptable(false)
     {
@@ -74,7 +74,7 @@ namespace storage
     head = new_head = 16;
     sector = new_sector = 32;
     cyl = new_cyl = std::max( size_k*2 / head / sector, 1ULL );
-    byte_cyl = head * sector * 512;
+    byte_cyl = head * sector * logical_sector_size;
     getMajorMinor();
     unsigned long long sz = size_k;
     Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
@@ -87,7 +87,8 @@ namespace storage
 
 
     Disk::Disk(Storage* s, const xmlNode* node)
-	: Container(s, staticType(), node), cyl(0), head(0), sector(0),
+	: Container(s, staticType(), node), logical_sector_size(512), cyl(0),
+	  head(0), sector(0),
 	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
 	  init_disk(false), iscsi(false), dmp_slave(false),
@@ -97,10 +98,12 @@ namespace storage
 
 	getChildValue(node, "range", range);
 
+	getChildValue(node, "logical_sector_size", logical_sector_size);
+
 	getChildValue(node, "cylinder", cyl);
 	getChildValue(node, "head", head);
 	getChildValue(node, "sector", sector);
-	byte_cyl = head * sector * 512;
+	byte_cyl = head * sector * logical_sector_size;
 
 	getChildValue(node, "label", label);
 	getChildValue(node, "max_primary", max_primary);
@@ -116,7 +119,8 @@ namespace storage
 
 
     Disk::Disk(const Disk& c)
-	: Container(c), cyl(c.cyl), head(c.head), sector(c.sector),
+	: Container(c), logical_sector_size(c.logical_sector_size), cyl(c.cyl),
+	  head(c.head), sector(c.sector),
 	  new_cyl(c.new_cyl), new_head(c.new_head),
 	  new_sector(c.new_sector), label(c.label),
 	  udev_path(c.udev_path), udev_id(c.udev_id),
@@ -150,6 +154,9 @@ namespace storage
 	Container::saveData(node);
 
 	setChildValue(node, "range", range);
+
+	if (logical_sector_size != 512)
+	    setChildValue(node, "logical_sector_size", logical_sector_size);
 
 	setChildValue(node, "cylinder", cyl);
 	setChildValue(node, "head", head);
@@ -247,12 +254,12 @@ bool Disk::detectGeometry()
     {
     y2mil("disk:" << device());
     bool ret = false;
+
     int fd = open( device().c_str(), O_RDONLY );
     if( fd >= 0 )
 	{
-	    int sector_size = 512;
-	    int rcode = ioctl(fd, BLKSSZGET, &sector_size);
-	    y2mil("BLKSSZGET ret:" << rcode << " sector_size:" << sector_size);
+	int rcode = ioctl(fd, BLKSSZGET, &logical_sector_size);
+	y2mil("BLKSSZGET ret:" << rcode << " sector_size:" << logical_sector_size);
 
 	head = 255;
 	sector = 63;
@@ -272,7 +279,7 @@ bool Disk::detectGeometry()
 	y2mil("BLKGETSIZE64 Ret:" << rcode << " Bytes:" << sect);
 	if( rcode==0 && sect!=0 )
 	    {
-	    sect /= 512;
+	    sect /= logical_sector_size;
 	    cyl = (unsigned)(sect / (__uint64_t)(head*sector));
 	    ret = true;
 	    }
@@ -290,7 +297,7 @@ bool Disk::detectGeometry()
 	y2mil("After getsize Cylinder:" << cyl);
 	close( fd );
 	}
-    byte_cyl = head * sector * 512;
+    byte_cyl = head * sector * logical_sector_size;
     y2mil("ret:" << ret << " byte_cyl:" << byte_cyl);
     return ret;
     }
@@ -435,7 +442,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 	new_head = head;
 	new_sector = sector;
 	y2mil("After parted Head:" << head << " Sector:" << sector << " Cylinder:" << cyl);
-	byte_cyl = head * sector * 512;
+	byte_cyl = head * sector * logical_sector_size;
 	y2mil("byte_cyl:" << byte_cyl);
 	}
     gpt_enlarge = Cmd.select( "fix the GPT to use all" )>0;
@@ -2667,7 +2674,7 @@ int Disk::doResize( Volume* v )
 		}
 	    y2mil( "max_end:" << max_end << " end_sect:" << end_sect );
 	    if( max_end<end_sect ||
-		max_end-end_sect < byte_cyl/512*2 )
+		max_end-end_sect < byte_cyl/logical_sector_size*2 )
 		{
 		end_sect = max_end;
 		y2mil( "new end_sect:" << end_sect );
