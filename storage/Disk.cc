@@ -300,7 +300,7 @@ bool Disk::detectGeometry()
     Disk::getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo)
     {
 	string devtype;
-	if (read_sysfs_property(sysfsdir + "/device/devtype", devtype))
+	if (read_sysfs_property(sysfsdir + "/device/devtype", devtype, false))
 	{
 	    sysfsinfo.vbd = devtype == "vbd";
 	}
