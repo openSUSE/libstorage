@@ -288,8 +288,7 @@ void
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
 		}
-	    if (!skip && m->sizeK() > 0 && ((only_crypt && m->getTargetName() == "crypt") ||
-					    (!only_crypt && m->getTargetName() != "crypt")))
+	    if (!skip && m->sizeK()>0 && !only_crypt )
 		addDm( m );
 	    else
 		delete( m );

@@ -668,52 +668,18 @@ string PeContainer::getDeviceByNumber( const string& majmin ) const
 	unsigned mi = 0;
 	string pair( majmin );
 	SystemCmd c;
-	do
-	    {
-	    mj = mi = 0;
-	    string::size_type pos = pair.find( ':' );
-	    if( pos != string::npos )
-		pair[pos] = ' ';
-	    istringstream i( pair );
-	    classic(i);
-	    i >> mj >> mi;
-	    list<string> ls = splitString(pair);
-	    if( majorNr()>0 && mj==majorNr() && mi==minorNr())
-		ret = device();
-	    if( mj==Loop::loopMajor() )
-		ret = Loop::loopDeviceName(mi);
-	    if( ret.empty() && mj==Dm::dmMajor() && ls.size()>=2 )
-		{
-		c.execute(DMSETUPBIN " info -c --noheadings -j " + *ls.begin() +
-			  " -m " + *(++ls.begin()) + " | sed -e \"s/:.*//\"" );
-		if( c.retcode()==0 && c.numLines()>0 )
-		    {
-		    string tmp = "/dev/" + c.getLine(0);
-		    if (getStorage()->knownDevice(tmp, true))
-			{
-			ret = tmp;
-			}
-		    else
-			{
-			Regex devspec( "^[0123456789]+:[0123456789]+$" );
-			c.execute(DMSETUPBIN " table " + quote(c.getLine(0)));
-			if( c.retcode()==0 && c.numLines()>0 )
-			    {
-			    unsigned count = 3;
-			    pair = extractNthWord( count++, c.getLine(0) );
-			    while( !pair.empty() )
-				{
-				if( devspec.match( pair ))
-				    ret = getStorage()->deviceByNumber(pair);
-				pair = extractNthWord( count++, c.getLine(0) );
-				}
-
-			    }
-			}
-		    }
-		}
-	    }
-	while( ret.empty() && mj==Dm::dmMajor() && c.retcode()==0 );
+	mj = mi = 0;
+	string::size_type pos = pair.find( ':' );
+	if( pos != string::npos )
+	    pair[pos] = ' ';
+	istringstream i( pair );
+	classic(i);
+	i >> mj >> mi;
+	list<string> ls = splitString(pair);
+	if( majorNr()>0 && mj==majorNr() && mi==minorNr())
+	    ret = device();
+	if( mj==Loop::loopMajor() )
+	    ret = Loop::loopDeviceName(mi);
 	}
     y2mil( "majmin " << majmin << " ret:" << ret );
     return( ret );
