@@ -1415,8 +1415,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	    start=1;
 	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
 	                               len, type );
-	PartPair pp = partPair();
-	PartIter i=pp.begin();
+	ConstPartPair pp = partPair();
+	ConstPartIter i = pp.begin();
 	while( i!=pp.end() && !(i->deleted() && i->cylStart()==start) )
 	    ++i;
 	if( i!=pp.end() )
