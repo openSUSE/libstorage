@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 29 15:28:28 CEST 2010 - aschnell@suse.de
+
+- handle logical sector sizes unequal 512 bytes
+
+-------------------------------------------------------------------
 Fri Mar 26 12:02:43 CET 2010 - aschnell@suse.de
 
 - fixed setting password for encrypted LVM proposal (bnc #591075)
@@ -8,7 +13,7 @@ Thu Mar 25 18:24:35 CET 2010 - fehr@suse.de
 
 - fix problems with detection of data on newly unlocked encrypted
   volumes (bnc #581341)
-  
+
 -------------------------------------------------------------------
 Mon Mar 22 17:15:01 CET 2010 - aschnell@suse.de
 
@@ -28,7 +33,7 @@ Wed Mar 17 18:12:23 CET 2010 - aschnell@suse.de
 -------------------------------------------------------------------
 Wed Mar 17 11:58:07 CET 2010 - fehr@suse.de
 
-- do no fsck after successful luksOpen, its unnecessary (bnc #588698)
+- do no fsck after successful luksOpen, it's unnecessary (bnc #588698)
 
 -------------------------------------------------------------------
 Tue Mar 09 12:03:46 CET 2010 - aschnell@suse.de
