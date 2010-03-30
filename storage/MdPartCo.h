@@ -109,7 +109,8 @@ class MdPartCo : public Container
 	string getPartDevice(unsigned nr) const;
 
     virtual void getCommitActions(list<commitAction>& l) const;
-    virtual int getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol);
+    virtual void getToCommit(CommitStage stage, list<const Container*>& col,
+			     list<const Volume*>& vol) const;
     virtual int commitChanges( storage::CommitStage stage );
     int commitChanges( storage::CommitStage stage, Volume* vol );
 

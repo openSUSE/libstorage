@@ -796,27 +796,25 @@ static bool toChangeId( const MdPart&d )
     return( p!=NULL && !d.deleted() && Partition::toChangeId(*p) );
     }
 
-int MdPartCo::getToCommit( CommitStage stage, list<const Container*>& col,
-                           list<const Volume*>& vol )
+void MdPartCo::getToCommit(CommitStage stage, list<const Container*>& col,
+                           list<const Volume*>& vol) const
     {
-    int ret = 0;
-    y2mil("ret:" << ret << " col:" << col.size() << " << vol:" << vol.size());
+    y2mil("col:" << col.size() << " << vol:" << vol.size());
     getStorage()->logCo( this );
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
         {
-        MdPartPair p = mdpartPair( toChangeId );
-        for( MdPartIter i=p.begin(); i!=p.end(); ++i )
+        ConstMdPartPair p = mdpartPair( toChangeId );
+        for( ConstMdPartIter i=p.begin(); i!=p.end(); ++i )
             if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
                 vol.push_back( &(*i) );
         }
     if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
         col.push_back( this );
     if( col.size()!=oco || vol.size()!=ovo )
-        y2mil("ret:" << ret << " col:" << col.size() << " vol:" << vol.size());
-    return( ret );
+        y2mil("col:" << col.size() << " vol:" << vol.size());
     }
 
 
