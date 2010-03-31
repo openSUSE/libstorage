@@ -44,7 +44,7 @@ class MdPart : public Volume
         friend std::ostream& operator<< (std::ostream& s, const MdPart &p );
         virtual void print( std::ostream& s ) const { s << *this; }
         void getInfo( storage::MdPartInfo& info ) const;
-        void getPartitionInfo(storage::PartitionInfo& pinfo);
+
         bool equalContent( const MdPart& rhs ) const;
         void logDifference( const MdPart& d ) const;
         void setPtr( Partition* pa ) { p=pa; };

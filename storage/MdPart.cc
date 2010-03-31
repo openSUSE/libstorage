@@ -235,17 +235,4 @@ void MdPart::logDifference( const MdPart& rhs ) const
 }
 
 
-void MdPart::getPartitionInfo(storage::PartitionInfo& pinfo)
-{
-    Volume::getInfo(pinfo.v);
-  if( p )
-    {
-      PartitionAddInfo info;
-      p->getInfo( info );
-      pinfo = info;
-    }
-
-}
-
-
 }

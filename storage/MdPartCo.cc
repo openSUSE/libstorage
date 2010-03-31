@@ -1152,24 +1152,6 @@ void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
     }
 
 
-int MdPartCo::getPartitionInfo(deque<storage::PartitionInfo>& plist)
-{
-  int ret = 0;
-  if( !disk )
-    {
-    ret = MDPART_INTERNAL_ERR;
-    return ret;
-    }
-  Disk::PartPair p = disk->partPair (Disk::notDeleted);
-  for (Disk::PartIter i = p.begin(); i != p.end(); ++i)
-      {
-      plist.push_back( PartitionInfo() );
-      i->getInfo( plist.back() );
-      }
-  return ret;
-}
-
-
 std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     {
     s << dynamic_cast<const Container&>(d);

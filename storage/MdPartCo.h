@@ -115,7 +115,7 @@ class MdPartCo : public Container
     int commitChanges( storage::CommitStage stage, Volume* vol );
 
     Partition* getPartition( unsigned nr, bool del );
-    int getPartitionInfo(deque<storage::PartitionInfo>& plist);
+
     void getInfo( storage::MdPartCoInfo& info ) const;
     bool equalContent( const Container& rhs ) const;
     virtual string getDiffString( const Container& d ) const;
