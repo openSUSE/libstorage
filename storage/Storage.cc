@@ -263,17 +263,19 @@ void Storage::detectObjects()
 {
 	if (instsys())
 	{
-	    if( discoverMdPVols() == true )
-	    {
-		// if 'yes' then activate md prior to dm
-		MdPartCo::activate( true, tmpDir() );
-		waitForDevice();
-	    }
-	    //Note:
-	    //dmraid will not activate devices that were activated by
-	    //mdadm. So this is safe.
+	    discoverMdPVols();
 
-	    DmraidCo::activate(true);
+	    if (getImsmDriver() == IMSM_MDADM)
+	    {
+		MdPartCo::activate(true, tmpDir());
+		DmraidCo::activate(true);
+	    }
+	    else
+	    {
+		DmraidCo::activate(true);
+		MdPartCo::activate(true, tmpDir());
+	    }
+
 	    MdCo::activate(true, tmpDir());
 	    LvmVg::activate(true);
 	}
