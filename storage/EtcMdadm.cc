@@ -37,11 +37,6 @@ namespace storage
     }
 
 
-    EtcMdadm::~EtcMdadm()
-    {
-    }
-
-
     bool
     EtcMdadm::updateEntry(const mdconf_info& info)
     {

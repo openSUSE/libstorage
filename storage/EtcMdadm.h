@@ -39,7 +39,6 @@ namespace storage
     public:
 
 	EtcMdadm(const Storage* sto, const string& prefix = "");
-	~EtcMdadm();
 
 	// From this structure line 'ARRAY' will be build in config file.
 	// Not all fields are mandatory
