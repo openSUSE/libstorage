@@ -1590,43 +1590,31 @@ void MdPartCo::setMdParity()
 /* Spares: any disk that is in container and not in RAID. */
 void MdPartCo::setSpares()
 {
-  std::list<string> parent_devs;
-  std::list<string> diff_devs;
-
-  parent_devs.clear();
-  diff_devs.clear();
-  int found;
-
-  list<string>::const_iterator it1;
-  list<string>::const_iterator it2;
+    spare.clear();
 
   getParent();
   if( has_container == false )
-    {
-    spare.clear();
     return;
-    }
+
+  std::list<string> parent_devs;
   getSlaves(parent_container,parent_devs);
 
-  for( it1 = parent_devs.begin(); it1 != parent_devs.end(); it1++ )
+  for (list<string>::const_iterator it1 = parent_devs.begin(); it1 != parent_devs.end(); ++it1)
     {
-      found = 0;
-      for(it2 = devs.begin(); it2 != devs.end(); it2++ )
+      bool found = false;
+      for (list<string>::const_iterator it2 = devs.begin(); it2 != devs.end(); ++it2)
         {
           if( *it1 == *it2 )
             {
-              found++;
+	      found = true;
               break;
             }
         }
-      if( found == 0 )
-        {
-          diff_devs.push_back(*it1);
-        }
+      if (!found)
+	    spare.push_back(*it1);
     }
-    spare = diff_devs;
 
-    for( list<string>::iterator s=spare.begin(); s!=spare.end(); ++s )
+    for (list<string>::const_iterator s = spare.begin(); s != spare.end(); ++s)
     {
       //It will be set always to last RAID that was detected.
       getStorage()->setUsedBy( *s, UB_MDPART, nm );
