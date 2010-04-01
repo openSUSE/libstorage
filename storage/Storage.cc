@@ -416,6 +416,7 @@ Storage::~Storage()
 	SystemCmd(LSBIN " -l " + quote(tempdir));
     }
     delete fstab;
+    delete mdadm;
     y2mil("destructed Storage");
     }
 
