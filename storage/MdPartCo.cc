@@ -739,16 +739,15 @@ MdPartCo::removeMdPart()
     return( ret );
     }
 
-int MdPartCo::unuseDevs(void)
+
+void MdPartCo::unuseDevs() const
 {
   list<string> rdevs;
   getDevs( rdevs );
-  for( list<string>::const_iterator s=rdevs.begin();
-      s!=rdevs.end(); s++ )
+  for (list<string>::const_iterator s = rdevs.begin(); s != rdevs.end(); ++s)
     {
     getStorage()->clearUsedBy(*s);
     }
-  return 0;
 }
 
 

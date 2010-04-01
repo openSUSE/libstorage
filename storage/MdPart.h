@@ -71,7 +71,7 @@ class MdPart : public Volume
         void addAltUdevId( unsigned num );
         Partition* p;
 
-        mutable storage::MdPartInfo info;
+        mutable storage::MdPartInfo info; // workaround for broken ycp bindings
 
     private:
 
