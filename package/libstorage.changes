@@ -2,6 +2,7 @@
 Mon Mar 29 15:28:28 CEST 2010 - aschnell@suse.de
 
 - handle logical sector sizes unequal 512 bytes
+- 2.19.13
 
 -------------------------------------------------------------------
 Fri Mar 26 12:02:43 CET 2010 - aschnell@suse.de
