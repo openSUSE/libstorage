@@ -174,7 +174,6 @@ class Storage;
 	Text losetupText( bool doing=true ) const;
 	Text crsetupText( bool doing=true ) const;
 	Text fstabUpdateText() const;
-	string sizeString() const;
 	bool optNoauto() const;
 	bool inCryptotab() const { return( encryption!=ENC_NONE && 
 	                                   encryption!=ENC_LUKS && 

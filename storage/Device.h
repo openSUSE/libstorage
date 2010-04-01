@@ -64,6 +64,7 @@ namespace storage
 	void setSilent(bool val = true) { silent = val; }
 
 	unsigned long long sizeK() const { return size_k; }
+	string sizeString() const;
 
 	bool getMajorMinor();
 	unsigned long majorNr() const { return mjr; }

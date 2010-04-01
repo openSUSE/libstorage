@@ -23,6 +23,7 @@
 #include "storage/Device.h"
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"
+#include "storage/HumanString.h"
 
 
 namespace storage
@@ -86,6 +87,13 @@ namespace storage
 
 	if (!uby.empty())
 	    setChildValue(node, "used_by", uby);
+    }
+
+
+    string
+    Device::sizeString() const
+    {
+	return byteToHumanString(1024 * sizeK(), false, 2, false);
     }
 
 

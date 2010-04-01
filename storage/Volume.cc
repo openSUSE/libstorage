@@ -39,7 +39,6 @@
 #include "storage/OutputProcessor.h"
 #include "storage/EtcFstab.h"
 #include "storage/StorageDefines.h"
-#include "storage/HumanString.h"
 
 
 namespace storage
@@ -2793,10 +2792,6 @@ MountByType Volume::toMountByType( const string& val )
     return( ret );
     }
 
-string Volume::sizeString() const
-{
-    return byteToHumanString(1024 * size_k, false, 2, false);
-}
 
 bool Volume::canUseDevice() const
     {
