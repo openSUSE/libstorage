@@ -1079,17 +1079,21 @@ LvmVg::createText(bool doing) const
     Text txt;
     if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. system),
-	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-        txt = sformat( _("Creating volume group %1$s from %2$s"), name().c_str(),
-	               addList().c_str() );
+	// displayed text during action
+	// %1$s is replaced by a name (e.g. system)
+	// %2$s is replaced by size (e.g. 623.5 MB)
+	// %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+	txt = sformat(_("Creating volume group %1$s (%2$s) from %3$s"), name().c_str(),
+		      sizeString().c_str(), addList().c_str());
         }
     else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. system),
-	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-        txt = sformat( _("Create volume group %1$s from %2$s"), name().c_str(),
-	               addList().c_str() );
+	// displayed text before action
+	// %1$s is replaced by a name (e.g. system)
+	// %2$s is replaced by size (e.g. 623.5 MB)
+	// %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+	txt = sformat(_("Create volume group %1$s (%2$s) from %3$s"), name().c_str(),
+		      sizeString().c_str(), addList().c_str());
         }
     return( txt );
     }
