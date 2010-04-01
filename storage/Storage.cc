@@ -101,8 +101,9 @@ namespace storage
 
 
 Storage::Storage(const Environment& env)
-    : env(env), lock(readonly(), testmode()), initialized(false), fstab(NULL), mdadm(NULL),
-      imsm_driver(IMSM_UNDECIDED)
+    : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
+      recursiveRemove(false), zeroNewPartitions(false), detectMounted(true),
+      fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -124,11 +125,8 @@ Storage::Storage(const Environment& env)
     commit_error_popup_cb = NULL;
     password_popup_cb = NULL;
 
-    recursiveRemove = false;
-    zeroNewPartitions = false;
     defaultMountBy = MOUNTBY_ID;
     defaultFs = EXT4;
-    detectMounted = true;
 
     SystemCmd::setTestmode(testmode());
 
@@ -231,7 +229,6 @@ Storage::initialize()
     }
 
     detectObjects();
-    setCacheChanges( true );
 
     for (list<std::pair<string, Text>>::const_iterator i = infoPopupTxts.begin(); 
 	 i != infoPopupTxts.end(); ++i)
