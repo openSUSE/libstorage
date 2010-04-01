@@ -209,6 +209,7 @@ LvmVg::extendVg( const list<string>& devs )
 	getStorage()->setUsedBy(d, UB_LVM, device());
 	free_pe += pe;
 	num_pe += pe;
+	calcSize();
 	++i;
 	}
     if( ret==0 && pv_add.size()+pv.size()-pv_remove.size()<=0 )
@@ -265,6 +266,7 @@ LvmVg::reduceVg( const list<string>& devs )
 	pv_remove = plrem;
 	free_pe -= rem_pe;
 	num_pe -= rem_pe;
+	calcSize();
 	}
     if( ret==0 )
 	checkConsistency();
@@ -722,10 +724,12 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    if( exists && pes != pe_size )
 			y2war("inconsistent pe_size my:" << pe_size << " lvm:" << pes);
 		    pe_size = pes;
+		    calcSize();
 		    }
 		else if( line.find( "Total PE" ) == 0 )
 		    {
 		    extractNthWord( 2, line ) >> num_pe;
+		    calcSize();
 		    }
 		else if( line.find( "Free  PE" ) == 0 )
 		    {
@@ -839,6 +843,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    extractNthWord( 5, line ) >> p->num_pe;
 		    extractNthWord( 7, line ) >> p->free_pe;
+		    calcSize();
 		    }
 		line = c.getLine( i++ );
 		}

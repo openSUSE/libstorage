@@ -45,7 +45,6 @@ class PeContainer : public Container
 	void saveData(xmlNode* node) const;
 
 	unsigned long long peSize() const { return pe_size; }
-	unsigned long long sizeK() const { return pe_size*num_pe; }
 	unsigned long peCount() const { return num_pe; }
 	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
@@ -54,6 +53,7 @@ class PeContainer : public Container
 	unsigned long sizeToLe( unsigned long long sizeK ) const;
 
 	int setPeSize( long long unsigned, bool lvm1 );
+	void calcSize() { size_k = pe_size * num_pe; }
 	void unuseDev() const;
 	void changeDeviceName( const string& old, const string& nw );
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;

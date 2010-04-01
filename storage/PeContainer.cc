@@ -170,6 +170,7 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
 		}
 	    pe_size = peSizeK;
 	    }
+	calcSize();
 	}
     y2mil("ret:" << ret);
     return( ret );
