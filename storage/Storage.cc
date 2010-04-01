@@ -935,9 +935,7 @@ Storage::testFilesEqual(const string& n1, const string& n2)
 void
 Storage::handleLogFile(const string& name) const
     {
-    string bname( name );
-    string::size_type pos = bname.rfind( '.' );
-    bname.erase( pos );
+    string bname(name, 0, name.rfind('.'));
     y2mil("name:" << name << " bname:" << bname);
     if( access( bname.c_str(), R_OK )==0 )
 	{
@@ -3167,9 +3165,7 @@ Storage::createLvmVg( const string& name, unsigned long long peSizeK,
 	ret = v->setPeSize( peSizeK );
 	if( ret==0 && !devs.empty() )
 	    {
-	    list<string> d;
-	    back_insert_iterator<list<string> > inserter(d);
-	    copy( devs.begin(), devs.end(), inserter );
+	    list<string> d(devs.begin(), devs.end());
 	    ret = v->extendVg( d );
 	    }
 	if( ret==0 )
@@ -3231,9 +3227,7 @@ Storage::extendLvmVg( const string& name, const deque<string>& devs )
 	}
     else if( i != lvgEnd() )
 	{
-	list<string> d;
-	back_insert_iterator<list<string> > inserter(d);
-	copy( devs.begin(), devs.end(), inserter );
+	list<string> d(devs.begin(), devs.end());
 	ret = i->extendVg( d );
 	}
     else
@@ -3261,9 +3255,7 @@ Storage::shrinkLvmVg( const string& name, const deque<string>& devs )
 	}
     else if( i != lvgEnd() )
 	{
-	list<string> d;
-	back_insert_iterator<list<string> > inserter(d);
-	copy( devs.begin(), devs.end(), inserter );
+	list<string> d(devs.begin(), devs.end());
 	ret = i->reduceVg( d );
 	}
     else
