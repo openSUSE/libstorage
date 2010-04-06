@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr 01 18:44:59 CEST 2010 - aschnell@suse.de
+
+- show size in create text for volume group
+
+-------------------------------------------------------------------
 Mon Mar 29 15:28:28 CEST 2010 - aschnell@suse.de
 
 - handle logical sector sizes unequal 512 bytes
