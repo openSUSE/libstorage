@@ -55,7 +55,6 @@ class MdPartCo : public Container
     MdPartCo(const MdPartCo& c);
     virtual ~MdPartCo();
 
-    unsigned long long sizeK() const { return size_k; }
     const string& labelName() const { return disk->labelName(); }
     list<string> udevId() const { return udev_id; }
     unsigned numPartitions() const { return disk->numPartitions(); }
