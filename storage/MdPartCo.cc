@@ -1765,14 +1765,9 @@ bool MdPartCo::isImsmPlatform()
 {
   bool ret = false;
 
-    const char* tenv = getenv("LIBSTORAGE_IMSM_PLATFORM");
-    if (tenv)
-	ret = true;
-
   SystemCmd c;
   c.execute(MDADMBIN " --detail-platform");
   c.select( "Platform : " );
-  //c.retcode()==0 && - mdadm returns 1.
   if(  c.numLines(true)>0 )
     {
     const string line = c.getLine(0,true);
@@ -1781,6 +1776,8 @@ bool MdPartCo::isImsmPlatform()
       ret = true;
       }
     }
+
+  y2mil("ret:" << ret);
   return ret;
 }
 
