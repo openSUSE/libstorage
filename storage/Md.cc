@@ -333,7 +333,7 @@ Md::getState(MdStateInfo& info) const
 void
 Md::computeSize()
 {
-    unsigned long long size_k;
+    unsigned long long size_k = 0;
     getStorage()->computeMdSize(md_type, devs, size_k);
     setSize(size_k);
 }
