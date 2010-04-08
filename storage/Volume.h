@@ -219,9 +219,7 @@ class Storage;
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );
 	void replaceAltName( const string& prefix, const string& newn );
-	string getMountByString( storage::MountByType mby, const string& dev,
-	                         const string& uuid, 
-				 const string& label ) const;
+	string getMountByString() const;
 	string getFstabDevice() const;
 	string getFstabDentry() const;
 	list<string> getFstabOpts() const;

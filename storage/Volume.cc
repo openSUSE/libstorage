@@ -2377,12 +2377,11 @@ int Volume::prepareRemove()
 
 
     string
-    Volume::getMountByString(MountByType mby, const string& dev, const string& uuid,
-			     const string& label) const
+    Volume::getMountByString() const
     {
     string ret = dev;
 
-	switch (mby)
+	switch (mount_by)
 	{
 	    case MOUNTBY_UUID:
 	ret = "UUID=" + uuid;
@@ -2486,7 +2485,7 @@ string Volume::getFstabDentry() const
 	if( dmcrypt() )
 	    ret = inCryptotab()?dev:dmcrypt_dev;
 	else
-	    ret = getMountByString( mount_by, dev, uuid, label );
+	    ret = getMountByString();
 	}
     else
 	{
