@@ -56,7 +56,7 @@ class MdPartCo : public Container
     virtual ~MdPartCo();
 
     const string& labelName() const { return disk->labelName(); }
-    list<string> udevId() const { return udev_id; }
+	virtual list<string> udevId() const { return udev_id; }
     unsigned numPartitions() const { return disk->numPartitions(); }
     static storage::CType staticType() { return storage::MDPART; }
     friend std::ostream& operator<< (std::ostream&, const MdPartCo& );

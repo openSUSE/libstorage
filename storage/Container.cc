@@ -387,6 +387,9 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
     info.name = name();
     info.device = device();
 
+    info.udevPath = udevPath();
+    info.udevId = boost::join(udevId(), " ");
+
     info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
 
     if (uby.empty())

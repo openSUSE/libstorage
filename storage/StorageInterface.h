@@ -266,6 +266,8 @@ namespace storage
 	CType type;
 	string device;
 	string name;
+	string udevPath;
+	string udevId;
 	list<UsedByInfo> usedBy;
 	UsedByType usedByType;	// deprecated
 	string usedByDevice;	// deprecated
@@ -284,8 +286,6 @@ namespace storage
 	unsigned long heads;
 	unsigned long sectors;
 	string disklabel;
-	string udevPath;
-	string udevId;
 	unsigned maxPrimary;
 	bool extendedPossible;
 	unsigned maxLogical;
@@ -350,6 +350,8 @@ namespace storage
 	string mount;
 	string crypt_device;
 	MountByType mount_by;
+	string udevPath;
+	string udevId;
 	list<UsedByInfo> usedBy;
 	UsedByType usedByType;	// deprecated
 	string usedByDevice;	// deprecated
@@ -382,8 +384,6 @@ namespace storage
 	PartitionType partitionType;
 	unsigned id;
 	bool boot;
-	string udevPath;
-	string udevId;
     };
 
     /**
@@ -400,8 +400,6 @@ namespace storage
 	PartitionType partitionType;
 	unsigned id;
 	bool boot;
-	string udevPath;
-	string udevId;
     };
 
     /**

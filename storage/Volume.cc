@@ -2959,6 +2959,9 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
     info.mount = mp;
     info.mount_by = mount_by;
 
+    info.udevPath = udevPath();
+    info.udevId = boost::join(udevId(), " ");
+
     info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
 
     if (uby.empty())

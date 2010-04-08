@@ -542,8 +542,6 @@ Partition::getInfo( PartitionAddInfo& tinfo ) const
     tinfo.nr = num;
     tinfo.id = idt;
     tinfo.boot = bootflag;
-    tinfo.udevPath = udevPath();
-    tinfo.udevId = boost::join(udevId(), " ");
     }
 
 void
@@ -577,8 +575,6 @@ PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
     partitionType = rhs.partitionType;
     id = rhs.id;
     boot = rhs.boot;
-    udevPath = rhs.udevPath;
-    udevId = rhs.udevId;
     return( *this );
     }
 

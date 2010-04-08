@@ -2749,8 +2749,6 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.maxLogical = maxLogical();
     info.initDisk = init_disk;
     info.iscsi = iscsi;
-    info.udevPath = udev_path;
-    info.udevId = boost::join(udev_id, " ");
     tinfo = info;
     }
 
