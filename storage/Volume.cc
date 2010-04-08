@@ -242,7 +242,8 @@ MountByType
 Volume::defaultMountBy() const
 {
     MountByType mb = getStorage()->getDefaultMountBy();
-    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
+    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
+	&& (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
 	mb = MOUNTBY_DEVICE;
     if (cType() == NFSC && mb != MOUNTBY_DEVICE)
 	mb = MOUNTBY_DEVICE;
@@ -264,7 +265,8 @@ bool
 Volume::allowedMountBy(MountByType mby) const
 {
     bool ret = true;
-    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
+    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
+	&& (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
 	ret = false;
     if (cType() == NFSC && mby != MOUNTBY_DEVICE)
 	ret = false;
@@ -647,7 +649,7 @@ Volume::changeMountBy(MountByType mby)
 	else if( mby == MOUNTBY_ID || mby == MOUNTBY_PATH )
 	    {
 	    // TODO: why not use allowedMountBy()?
-	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH)
+	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME;
 	    }
 	if( ret==0 )

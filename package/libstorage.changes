@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 08 17:41:16 CEST 2010 - aschnell@suse.de
+
+- fixed mount-by id for partitioned MDs (bnc #594347)
+
+-------------------------------------------------------------------
 Tue Apr 01 18:44:59 CEST 2010 - aschnell@suse.de
 
 - show size in create text for volume group
