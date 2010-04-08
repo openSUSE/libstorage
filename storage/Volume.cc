@@ -238,8 +238,8 @@ const string& Volume::mountDevice() const
     }
 
 
-storage::MountByType
-Volume::defaultMountBy(const string& mp) const
+MountByType
+Volume::defaultMountBy() const
 {
     MountByType mb = getStorage()->getDefaultMountBy();
     if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
@@ -254,14 +254,14 @@ Volume::defaultMountBy(const string& mp) const
     if( encryption != ENC_NONE &&
 	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
 	mb = MOUNTBY_DEVICE;
-    y2mil( "dev:" << dev << " mp:" << mp << " type:" << cType() << " mby:" << mb_names[mb] );
+    y2mil("dev:" << dev << " type:" << cType() << " ret:" << mb_names[mb]);
     return mb;
 }
 
 
 // TODO: allowedMountBy is never used
 bool 
-Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
+Volume::allowedMountBy(MountByType mby) const
 {
     bool ret = true;
     if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH) && (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
@@ -274,7 +274,7 @@ Volume::allowedMountBy(storage::MountByType mby, const string& mp) const
     if( ret && encryption != ENC_NONE &&
         (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL) )
 	ret = false;
-    y2mil( "mby:" << mb_names[mby] << " mp:" << mp << " ret:" << ret );
+    y2mil("dev:" << dev << " type:" << cType() << " mby:" << mb_names[mby] << " ret:" << ret);
     return ret;
 }
 
@@ -608,7 +608,7 @@ Volume::changeMount(const string& m)
 	if( m.empty() )
 	    {
 	    orig_fstab_opt = fstab_opt = "";
-	    orig_mount_by = mount_by = defaultMountBy(m);
+	    orig_mount_by = mount_by = defaultMountBy();
 	    }
 	/*
 	else
