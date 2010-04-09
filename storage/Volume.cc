@@ -2384,20 +2384,31 @@ int Volume::prepareRemove()
 	switch (mount_by)
 	{
 	    case MOUNTBY_UUID:
-	ret = "UUID=" + uuid;
+		if (!uuid.empty())
+		    ret = "UUID=" + uuid;
+		else
+		    y2err("no uuid defined");
 		break;
 
 	    case MOUNTBY_LABEL:
-	ret = "LABEL=" + label;
+		if (!label.empty())
+		    ret = "LABEL=" + label;
+		else
+		    y2err("no label defined");
 		break;
 
 	    case MOUNTBY_ID:
 		if (!udevId().empty())
 		    ret = "/dev/disk/by-id/" + udevId().front();
+		else
+		    y2err("no udev-id defined");
 		break;
 
 	    case MOUNTBY_PATH:
-		ret = "/dev/disk/by-path/" + udevPath();
+		if (!udevPath().empty())
+		    ret = "/dev/disk/by-path/" + udevPath();
+		else
+		    y2err("no udev-path defined");
 		break;
 
 	    case MOUNTBY_DEVICE:
