@@ -571,23 +571,6 @@ bool DmPartCo::findDm( unsigned nr, DmPartIter& i )
 
 void DmPartCo::activate_part( bool val )
     {
-// should be obsolete since parted generates correct nodes now, see bnc #471440
-/*
-    y2mil("old active:" << active << " val:" << val);
-    if( active != val )
-	{
-	SystemCmd c;
-	if( val )
-	    {
-	    Dm::activate(true);
-	    c.execute(KPARTXBIN " -a -p _part " + quote(dev));
-	    }
-	else
-	    {
-	    c.execute(KPARTXBIN " -d -p _part " + quote(dev));
-	    }
-	}
-*/
 	active = val;
     }
 
