@@ -2,6 +2,7 @@
 Fri Apr 09 14:57:25 CEST 2010 - aschnell@suse.de
 
 - allow mount-by id for unpartitioned MDs
+- 2.19.14
 
 -------------------------------------------------------------------
 Thu Apr 08 17:41:16 CEST 2010 - aschnell@suse.de
