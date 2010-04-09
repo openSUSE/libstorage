@@ -31,7 +31,6 @@
 
 #include <sstream>
 #include <algorithm>
-#include <cctype>
 #include <string>
 
 #include "storage/MdPartCo.h"
