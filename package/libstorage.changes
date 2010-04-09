@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 09 14:57:25 CEST 2010 - aschnell@suse.de
+
+- allow mount-by id for unpartitioned MDs
+
+-------------------------------------------------------------------
 Thu Apr 08 17:41:16 CEST 2010 - aschnell@suse.de
 
 - fixed mount-by id for partitioned MDs (bnc #594347)

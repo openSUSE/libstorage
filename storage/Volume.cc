@@ -241,41 +241,49 @@ const string& Volume::mountDevice() const
 MountByType
 Volume::defaultMountBy() const
 {
-    MountByType mb = getStorage()->getDefaultMountBy();
-    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
-	&& (mb == MOUNTBY_ID || mb == MOUNTBY_PATH))
-	mb = MOUNTBY_DEVICE;
-    if (cType() == NFSC && mb != MOUNTBY_DEVICE)
-	mb = MOUNTBY_DEVICE;
-    if( !udevPath().empty() || !udevId().empty() )
-	y2mil( "path:" << udevPath() << " id:" << udevId() );
-    if( (mb==MOUNTBY_PATH && udevPath().empty()) ||
-        (mb==MOUNTBY_ID && udevId().empty()) )
-	mb = MOUNTBY_DEVICE;
-    if( encryption != ENC_NONE &&
-	(mb==MOUNTBY_UUID || mb==MOUNTBY_LABEL) )
-	mb = MOUNTBY_DEVICE;
-    y2mil("dev:" << dev << " type:" << cType() << " ret:" << mb_names[mb]);
-    return mb;
+    MountByType mby = getStorage()->getDefaultMountBy();
+
+    if (!allowedMountBy(mby))
+	mby = MOUNTBY_DEVICE;
+
+    y2mil("dev:" << dev << " type:" << cType() << " ret:" << mb_names[mby]);
+    return mby;
 }
 
 
-// TODO: allowedMountBy is never used
 bool 
 Volume::allowedMountBy(MountByType mby) const
 {
     bool ret = true;
-    if ((cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
-	&& (mby == MOUNTBY_ID || mby == MOUNTBY_PATH))
-	ret = false;
-    if (cType() == NFSC && mby != MOUNTBY_DEVICE)
-	ret = false;
-    if( (mby==MOUNTBY_PATH && udevPath().empty()) ||
-	(mby==MOUNTBY_ID && udevId().empty()) )
-	ret = false;
-    if( ret && encryption != ENC_NONE &&
-        (mby==MOUNTBY_UUID || mby==MOUNTBY_LABEL) )
-	ret = false;
+
+    switch (mby)
+    {
+	case MOUNTBY_PATH:
+	    if (cType() != DISK)
+		ret = false;
+	    if (udevPath().empty())
+		ret = false;
+	    break;
+
+	case MOUNTBY_ID:
+	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MD && cType() != MDPART)
+		ret = false;
+	    if (udevId().empty() && cType() != MD)
+		ret = false;
+	    break;
+
+	case MOUNTBY_UUID:
+	case MOUNTBY_LABEL:
+	    if (cType() == NFSC)
+		ret = false;
+	    if (encryption != ENC_NONE)
+		ret = false;
+	    break;
+
+	case MOUNTBY_DEVICE:
+	    break;
+    }
+
     y2mil("dev:" << dev << " type:" << cType() << " mby:" << mb_names[mby] << " ret:" << ret);
     return ret;
 }
@@ -646,10 +654,8 @@ Volume::changeMountBy(MountByType mby)
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
 		}
 	    }
-	else if( mby == MOUNTBY_ID || mby == MOUNTBY_PATH )
+	else if (!allowedMountBy(mby))
 	    {
-	    // TODO: why not use allowedMountBy()?
-	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MDPART)
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_VOLUME;
 	    }
 	if( ret==0 )
