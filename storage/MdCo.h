@@ -117,8 +117,8 @@ class MdCo : public Container
 	    return( ConstMdIter( MdCPIterator( p, Check, true )) );
 	    }
 
-	void getMdData();
-	void getMdData( unsigned num );
+	void getMdData(SystemInfo& systeminfo);
+	void getMdData(SystemInfo& systeminfo, unsigned num);
 	bool findMd( unsigned num, MdIter& i );
 	bool findMd( unsigned num ); 
 	bool findMd( const string& dev, MdIter& i );

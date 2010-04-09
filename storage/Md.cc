@@ -33,6 +33,7 @@
 #include "storage/Container.h"
 #include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -53,7 +54,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
     }
 
 
-Md::Md( const MdCo& d, const string& line1, const string& line2 )
+    Md::Md(const MdCo& d, const string& line1, const string& line2, SystemInfo& systeminfo)
 	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_NONE), chunk(0),
 	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
@@ -210,6 +211,8 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
       getParent();
       }
 
+	setUdevData(systeminfo);
+
     // Get md_name. It's important.
     string tmpUuid;
     MdPartCo::getUuidName(nm,tmpUuid,md_name);
@@ -222,7 +225,7 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     Md::Md(const MdCo& c, const Md& v)
 	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
 	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
-	  destrSb(v.destrSb), devs(v.devs), spare(v.spare),
+	  destrSb(v.destrSb), devs(v.devs), spare(v.spare), udev_id(udev_id),
 	  has_container(v.has_container), md_metadata(v.md_metadata),
 	  parent_container(v.parent_container), parent_uuid(v.parent_uuid),
 	  parent_md_name(v.parent_md_name), parent_metadata(v.parent_metadata),
@@ -235,6 +238,25 @@ Md::Md( const MdCo& d, const string& line1, const string& line2 )
     Md::~Md()
     {
 	y2deb("destructed Md " << dev);
+    }
+
+
+    void
+    Md::setUdevData(SystemInfo& systeminfo)
+    {
+	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+	UdevMap::const_iterator it = by_id.find(nm);
+	if (it != by_id.end())
+	{
+	    udev_id = it->second;
+	    partition(udev_id.begin(), udev_id.end(), string_starts_with("md-uuid-"));
+	}
+	else
+	{
+	    udev_id.clear();
+	}
+
+	y2mil("dev:" << dev << " udev_id:" << udev_id);
     }
 
 

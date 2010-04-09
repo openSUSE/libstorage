@@ -39,7 +39,7 @@ class Md : public Volume
     public:
 	Md( const MdCo& d, unsigned Pnr, storage::MdType Type, 
 	    const std::list<string>& devs );
-	Md( const MdCo& d, const string& line, const string& line2 );
+	Md(const MdCo& d, const string& line, const string& line2, SystemInfo& systeminfo);
 	Md(const MdCo& c, const Md& v);
 	virtual ~Md();
 
@@ -63,6 +63,10 @@ class Md : public Volume
 	string createCmd() const;
 	static bool matchRegex( const string& dev );
 	static unsigned mdMajor();
+
+	void setUdevData(SystemInfo& systeminfo);
+
+	virtual list<string> udevId() const { return udev_id; }
 
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
@@ -105,6 +109,8 @@ class Md : public Volume
 	bool destrSb;
 	std::list<string> devs;
 	std::list<string> spare;
+
+	list<string> udev_id;
 
 	string md_name; // line in /dev/md/*
 

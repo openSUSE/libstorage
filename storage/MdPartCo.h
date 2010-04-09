@@ -60,7 +60,8 @@ class MdPartCo : public Container
     unsigned numPartitions() const { return disk->numPartitions(); }
     static storage::CType staticType() { return storage::MDPART; }
     friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
-    void setUdevData(const list<string>& id);
+
+	void setUdevData(SystemInfo& systeminfo);
 
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;

@@ -31,6 +31,7 @@
 #include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
 #include "storage/AsciiFile.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -51,7 +52,7 @@ namespace storage
     {
 	y2deb("constructing MdCo");
 	init();
-	getMdData();
+	getMdData(systeminfo);
     }
 
 
@@ -91,7 +92,7 @@ MdCo::init()
 
 
 void
-MdCo::getMdData()
+MdCo::getMdData(SystemInfo& systeminfo)
     {
     y2mil("begin");
     string line;
@@ -106,7 +107,7 @@ MdCo::getMdData()
 
       if( canHandleDev(mdDev,line2) )
         {
-        Md* m = new Md( *this, line, line2 );
+	Md* m = new Md(*this, line, line2, systeminfo);
         addMd( m );
         getline(file,line);
         }
@@ -119,7 +120,7 @@ MdCo::getMdData()
     }
 
 void
-MdCo::getMdData( unsigned num )
+MdCo::getMdData(SystemInfo& systeminfo, unsigned num)
     {
     y2mil("num:" << num);
     string line;
@@ -135,7 +136,7 @@ MdCo::getMdData( unsigned num )
 	    string line2;
 	    getline( file, line2 );
 	    y2mil( "mdstat line2:" << line );
-	    Md* m = new Md( *this, line, line2 );
+	    Md* m = new Md(*this, line, line2, systeminfo);
 	    checkMd( m );
 	    }
 	getline( file, line );
@@ -593,7 +594,9 @@ MdCo::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    Storage::waitForDevice(m->device());
-	    getMdData( m->nr() );
+	    SystemInfo systeminfo;
+	    getMdData(systeminfo, m->nr());
+	    m->setUdevData(systeminfo);
 	    EtcMdadm* mdadm = getStorage()->getMdadm();
 	    if (mdadm)
 		m->updateEntry(mdadm);

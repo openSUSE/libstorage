@@ -64,10 +64,7 @@ namespace storage
 	/* Initialize 'disk' part, partitions.*/
 	init(systeminfo);
 
-	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
-	UdevMap::const_iterator it = by_id.find(nm);
-	if (it != by_id.end())
-	    setUdevData(it->second);
+	setUdevData(systeminfo);
 
 	y2mil("MdPartCo (nm=" << nm << ", dev=" << dev << ", level=" << md_type << ", disks=" << devs << ") ready.");
     }
@@ -1112,12 +1109,22 @@ MdPartCo::removeText( bool doing ) const
 
 
 void
-MdPartCo::setUdevData(const list<string>& id)
+MdPartCo::setUdevData(SystemInfo& systeminfo)
 {
-    y2mil("disk:" << nm << " id:" << id);
-    udev_id = id;
-    partition(udev_id.begin(), udev_id.end(), string_starts_with("md-uuid-"));
-    y2mil("id:" << udev_id);
+    const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+    UdevMap::const_iterator it = by_id.find(nm);
+    if (it != by_id.end())
+    {
+	udev_id = it->second;
+	partition(udev_id.begin(), udev_id.end(), string_starts_with("md-uuid-"));
+    }
+    else
+    {
+	udev_id.clear();
+    }
+
+    y2mil("dev:" << dev << " udev_id:" << udev_id);
+
     if (disk)
     {
         disk->setUdevData("", udev_id);
