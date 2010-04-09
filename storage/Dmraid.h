@@ -45,7 +45,7 @@ class Dmraid : public DmPart
 	Text createText( bool doing ) const;
 	Text formatText( bool doing ) const;
 	Text resizeText( bool doing ) const;
-	Text setTypeText( bool doing=true ) const;
+	Text setTypeText(bool doing) const;
 	bool equalContent( const Dmraid& rhs ) const;
 	void logDifference( const Dmraid& d ) const;
 	static bool notDeleted( const Dmraid& l ) { return( !l.deleted() ); }

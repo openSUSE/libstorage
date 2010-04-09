@@ -45,7 +45,7 @@ class Dmmultipath : public DmPart
 	Text createText( bool doing ) const;
 	Text formatText( bool doing ) const;
 	Text resizeText( bool doing ) const;
-	Text setTypeText( bool doing=true ) const;
+	Text setTypeText(bool doing) const;
 	bool equalContent( const Dmmultipath& rhs ) const;
 	void logDifference( const Dmmultipath& d ) const;
 	static bool notDeleted( const Dmmultipath& l ) { return( !l.deleted() ); }

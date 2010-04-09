@@ -164,15 +164,15 @@ class Storage;
 	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }
-	virtual Text removeText(bool doing=true) const;
-	virtual Text createText(bool doing=true) const;
-	virtual Text resizeText(bool doing=true) const;
-	virtual Text formatText(bool doing=true) const;
+	virtual Text removeText(bool doing) const;
+	virtual Text createText(bool doing) const;
+	virtual Text resizeText(bool doing) const;
+	virtual Text formatText(bool doing) const;
 	virtual void getCommitActions(list<commitAction>& l) const;
-	Text mountText( bool doing=true ) const;
-	Text labelText( bool doing=true ) const;
-	Text losetupText( bool doing=true ) const;
-	Text crsetupText( bool doing=true ) const;
+	Text mountText(bool doing) const;
+	Text labelText(bool doing) const;
+	Text losetupText(bool doing) const;
+	Text crsetupText(bool doing) const;
 	Text fstabUpdateText() const;
 	bool optNoauto() const;
 	bool inCryptotab() const { return( encryption!=ENC_NONE && 

@@ -55,7 +55,7 @@ class DmPart : public Dm
 	void getCommitActions(list<commitAction>& l) const;
 	void addUdevData();
 	virtual list<string> udevId() const;
-	virtual Text setTypeText( bool doing=true ) const;
+	virtual Text setTypeText(bool doing) const;
 	static bool notDeleted( const DmPart& l ) { return( !l.deleted() ); }
 
     protected:
