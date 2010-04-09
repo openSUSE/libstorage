@@ -1059,7 +1059,7 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 
 
     DmPartCo::DmPartCo(const DmPartCo& c)
-	: PeContainer(c), udev_path(c.udev_path), udev_id(c.udev_id), active(c.active)
+	: PeContainer(c), udev_id(c.udev_id), active(c.active)
     {
 	y2deb("copy-constructed DmPartCo from " << c.dev);
 

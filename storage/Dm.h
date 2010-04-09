@@ -69,7 +69,6 @@ class Dm : public Volume
 
 	void updateMajorMinor();
 
-	virtual list<string> udevId() const { return Volume::udevId(); }
 	friend std::ostream& operator<< (std::ostream& s, const Dm &p );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Text removeText( bool doing ) const;

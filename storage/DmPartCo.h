@@ -54,7 +54,6 @@ class DmPartCo : public PeContainer
 	unsigned long long sizeK() const { return size_k; }
 	const string& labelName() const { return disk->labelName(); }
 	virtual list<string> udevId() const { return udev_id; }
-	virtual string udevPath() const { return udev_path; }
 	unsigned numPartitions() const { return disk->numPartitions(); }
 	static storage::CType staticType() { return storage::DMRAID; }
 	friend std::ostream& operator<< (std::ostream&, const DmPartCo& );
@@ -194,7 +193,6 @@ class DmPartCo : public PeContainer
 	virtual Text removeText( bool doing ) const;
 	virtual Text setDiskLabelText( bool doing ) const;
 
-	string udev_path;
 	list<string> udev_id;
 	Disk* disk;
 	bool active;
