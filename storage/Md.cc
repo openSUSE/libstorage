@@ -257,6 +257,10 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 	}
 
 	y2mil("dev:" << dev << " udev_id:" << udev_id);
+
+	alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
+	for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + *i);
     }
 
 

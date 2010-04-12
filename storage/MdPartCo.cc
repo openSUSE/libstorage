@@ -1124,6 +1124,10 @@ MdPartCo::setUdevData(SystemInfo& systeminfo)
 
     y2mil("dev:" << dev << " udev_id:" << udev_id);
 
+    alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
+    for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
+	alt_names.push_back("/dev/disk/by-id/" + *i);
+
     if (disk)
     {
         disk->setUdevData("", udev_id);
