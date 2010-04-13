@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -25,7 +25,6 @@
 #include "storage/AsciiFile.h"
 #include "storage/ProcMounts.h"
 #include "storage/StorageTmpl.h"
-#include "storage/Storage.h"
 #include "storage/StorageDefines.h"
 
 
@@ -38,15 +37,12 @@ namespace storage
     {
 	reload();
     }
-    
+
 
     void
     ProcMounts::reload()
     {
 	data.clear();
-
-    const RevUdevMap by_label = getRevUdevMap("/dev/disk/by-label");
-    const RevUdevMap by_uuid = getRevUdevMap("/dev/disk/by-uuid");
 
     SystemCmd mt(MOUNTBIN);
 
@@ -56,31 +52,6 @@ namespace storage
     {
 	string dev = extractNthWord(0, *it);
 	string dir = extractNthWord(1, *it);
-
-	if (boost::contains(dev, "/by-label/"))
-	{
-	    dev = udevDecode(dev.substr(dev.rfind("/") + 1));
-	    y2mil( "dev:" << dev );
-	    map<string, string>::const_iterator it = by_label.find(dev);
-	    if (it != by_label.end())
-	    {
-		dev = it->second;
-		normalizeDevice( dev );
-		y2mil( "dev:" << dev );
-	    }
-	}
-	else if (boost::contains(dev, "/by-uuid/"))
-	{
-	    dev = dev.substr( dev.rfind( "/" )+1 );
-	    y2mil( "dev:" << dev );
-	    map<string, string>::const_iterator it = by_uuid.find(dev);
-	    if (it != by_uuid.end())
-	    {
-		dev = it->second;
-		normalizeDevice( dev );
-		y2mil( "dev:" << dev );
-	    }
-	}
 
 	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
 	{

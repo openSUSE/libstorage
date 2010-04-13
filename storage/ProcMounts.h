@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -35,7 +35,6 @@ namespace storage
     using std::map;
     using std::multimap;
 
-    class Storage;
     class SystemCmd;
 
     class ProcMounts
