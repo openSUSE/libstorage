@@ -97,22 +97,6 @@ namespace storage
 	}
     }
 
-    /*
-    // code seems to be obsolete
-    mt.select( " / " );
-    if( mt.numLines()>0 )
-    {
-	y2mil( "root mount:" << mt.getLine(0,true) );
-	string dev = extractNthWord( 0, mt.getLine(0,true));
-	if( !dev.empty() && dev[0]!='/' )
-	{
-	    dev = sto->findNormalDevice( dev );
-	}
-	co[dev].device = dev;
-	co[dev].mount = "/";
-    }
-    */
-
     AsciiFile swaps("/proc/swaps");
     swaps.remove(0, 1);
 
