@@ -66,7 +66,7 @@ class MdCo : public Container
 	int removeVolume( Volume* v );
 	
 	/* returns in 'nums' numbers that are used by Md */
-	int usedNumbers(list<int>& nums);
+	list<unsigned> usedNumbers() const;
 
     protected:
 	// iterators over MD volumes

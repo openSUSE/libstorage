@@ -216,18 +216,18 @@ MdCo::findMd( const string& dev )
     }
 
 
-int
-MdCo::usedNumbers(list<int>& nums)
-{
-  MdPair p=mdPair(Md::notDeleted);
-  MdIter i;
-  nums.clear();
-  for(i=p.begin(); i!=p.end(); i++ )
+    list<unsigned>
+    MdCo::usedNumbers() const
     {
-      nums.push_back(i->nr());
+	list<unsigned> nums;
+
+	ConstMdPair p = mdPair(Md::notDeleted);
+	for (ConstMdIter i = p.begin(); i != p.end(); ++i)
+	    nums.push_back(i->nr());
+
+	return nums;
     }
-  return 0;
-}
+
 
 int 
 MdCo::createMd( unsigned num, MdType type, const list<string>& devs )

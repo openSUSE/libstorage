@@ -3491,31 +3491,26 @@ Storage::nextFreeMd(int &nr, string &device)
     int ret = 0;
     assertInit();
     MdCo *md = NULL;
-    list<int> mdNums;
-    list<int> mdPartNums;
+
+    list<unsigned> nums;
 
     nr = -1;
-    mdNums.clear();
-    mdPartNums.clear();
+
     if (haveMd(md))
-	md->usedNumbers(mdNums);
+	nums = md->usedNumbers();
 
-    getMdPartMdNums(mdPartNums);
+    nums.merge(getMdPartMdNums());
 
-    mdPartNums.merge(mdNums);
-    mdPartNums.sort();
-    mdPartNums.unique();
-
-    if (mdPartNums.size() > 0)
+    if (nums.size() > 0)
     {
 	bool found;
 	//FIXME: magic number
-	for (int i = 0; i < 1000; ++i)
+	for (unsigned i = 0; i < 1000; ++i)
 	{
 	    found = false;
-	    for (list<int>::const_iterator it = mdPartNums.begin(); it != mdPartNums.end(); ++it)
+	    for (list<unsigned>::const_iterator it = nums.begin(); it != nums.end(); ++it)
 	    {
-		if (i == *it )
+		if (i == *it)
 		    found = true;
 	    }
 	    if (!found)
@@ -3530,6 +3525,7 @@ Storage::nextFreeMd(int &nr, string &device)
     {
 	nr = 0;
     }
+
     if( nr != -1 )
     {
 	device = "/dev/md" + decString(nr);
@@ -3541,30 +3537,22 @@ Storage::nextFreeMd(int &nr, string &device)
 }
 
 
-bool Storage::checkMdNumber(int num)
+bool
+Storage::checkMdNumber(unsigned num)
 {
     assertInit();
     MdCo *md = NULL;
-    list<int> mdNums;
-    list<int> mdPartNums;
 
-    mdNums.clear();
-    mdPartNums.clear();
+    list<unsigned> nums;
+
     if (haveMd(md))
-	md->usedNumbers(mdNums);
+	nums = md->usedNumbers();
 
-    getMdPartMdNums(mdPartNums);
+    nums.merge(getMdPartMdNums());
 
-    mdPartNums.merge(mdNums);
-    mdPartNums.sort();
-    mdPartNums.unique();
-
-    if (mdPartNums.size() == 0)
-	return false;
-
-    for (list<int>::const_iterator it=mdPartNums.begin(); it!=mdPartNums.end(); ++it)
+    for (list<unsigned>::const_iterator it = nums.begin(); it != nums.end(); ++it)
     {
-        if (num == *it )
+        if (num == *it)
 	    return true;
     }
 
@@ -4036,20 +4024,19 @@ bool Storage::haveMd( MdCo*& md )
     return( i != p.end() );
     }
 
-int Storage::getMdPartMdNums(list<int>& mdPartNums)
+
+    list<unsigned>
+    Storage::getMdPartMdNums() const
     {
-    mdPartNums.clear();
-    CPair p = cPair();
-    for (ConstContIterator i = p.begin(); i != p.end(); ++i)
-       {
-        if( i->type()==MDPART )
-          {
-          const MdPartCo* mdpart = static_cast<const MdPartCo*>(&(*i));
-          mdPartNums.push_back(mdpart->nr());
-          }
-         }
-    return 0;
+	list<unsigned> nums;
+
+	ConstMdPartCoPair p = mdpartCoPair();
+	for (ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
+	    nums.push_back(i->nr());
+
+	return nums;
     }
+
 
     bool
     Storage::haveDm(DmCo*& dm)
