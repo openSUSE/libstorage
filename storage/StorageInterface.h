@@ -1871,7 +1871,7 @@ namespace storage
          * @param device is set to the device name of the next created software raid device
          * @return zero if all is ok, a negative number to indicate an error
          */
-	virtual int nextFreeMd(int &nr, string &device) = 0;
+	virtual int nextFreeMd(unsigned& nr, string &device) = 0;
 
 	/**
 	 * Create a Software raid device by name

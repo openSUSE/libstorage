@@ -3486,7 +3486,7 @@ Storage::getLvmLvSnapshotStateInfo(const string& vg, const string& name,
 
 
 int
-Storage::nextFreeMd(int &nr, string &device)
+Storage::nextFreeMd(unsigned& nr, string &device)
 {
     int ret = 0;
     assertInit();
@@ -3494,45 +3494,33 @@ Storage::nextFreeMd(int &nr, string &device)
 
     list<unsigned> nums;
 
-    nr = -1;
-
     if (haveMd(md))
 	nums = md->usedNumbers();
 
-    nums.merge(getMdPartMdNums());
+    nums.splice(nums.end(), getMdPartMdNums());
 
-    if (nums.size() > 0)
-    {
-	bool found;
+	bool found_free = false;
+
 	//FIXME: magic number
 	for (unsigned i = 0; i < 1000; ++i)
 	{
-	    found = false;
-	    for (list<unsigned>::const_iterator it = nums.begin(); it != nums.end(); ++it)
+	    if (find(nums.begin(), nums.end(), i) == nums.end())
 	    {
-		if (i == *it)
-		    found = true;
-	    }
-	    if (!found)
-	    {
-		// Number not found on the list.
+		found_free = true;
 		nr = i;
 		break;
 	    }
 	}
-    }
-    else
-    {
-	nr = 0;
-    }
 
-    if( nr != -1 )
+    if (found_free)
     {
 	device = "/dev/md" + decString(nr);
-	y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+	y2mil("nr:" << nr << " device:" << device);
     }
     else
 	ret = MD_UNKNOWN_NUMBER;
+
+    y2mil("ret:" << ret);
     return ret;
 }
 
@@ -3548,15 +3536,9 @@ Storage::checkMdNumber(unsigned num)
     if (haveMd(md))
 	nums = md->usedNumbers();
 
-    nums.merge(getMdPartMdNums());
+    nums.splice(nums.end(), getMdPartMdNums());
 
-    for (list<unsigned>::const_iterator it = nums.begin(); it != nums.end(); ++it)
-    {
-        if (num == *it)
-	    return true;
-    }
-
-    return false;
+    return find(nums.begin(), nums.end(), num) == nums.end();
 }
 
 
@@ -3577,7 +3559,7 @@ Storage::createMd( const string& name, MdType rtype,
 	{
 	ret = STORAGE_MD_INVALID_NAME;
 	}
-    if( ret==0 && checkMdNumber(num)==true )
+    if( ret==0 && !checkMdNumber(num) )
         {
         ret = MD_DUPLICATE_NUMBER;
         }
@@ -3591,8 +3573,7 @@ Storage::createMd( const string& name, MdType rtype,
 	}
     if( ret==0 && md!=NULL )
 	{
-	list<string> d;
-	d.insert( d.end(), devs.begin(), devs.end() );
+	list<string> d(devs.begin(), devs.end());
 	ret = md->createMd( num, rtype, d );
 	if( ret==0 )
 	    checkPwdBuf( Md::mdDevice(num) );
@@ -3624,9 +3605,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	}
     MdCo *md = NULL;
     bool have_md = true;
-    int mdNum=0;
     unsigned num = 0;
-    string tmpStr;
     if( ret==0 )
 	{
 	have_md = haveMd(md);
@@ -3636,15 +3615,12 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	    ret = STORAGE_MEMORY_EXHAUSTED;
 	if( ret == 0 )
 	  {
-	  ret = nextFreeMd(mdNum,tmpStr);
-	  if( ret == 0 )
-	      num = (unsigned)mdNum;
+	  ret = nextFreeMd(num, device);
 	  }
 	}
     if( ret==0 )
 	{
-	list<string> d;
-	d.insert( d.end(), devs.begin(), devs.end() );
+	list<string> d(devs.begin(), devs.end());
 	ret = md->createMd( num, rtype, d );
 	if( ret==0 )
 	    checkPwdBuf( Md::mdDevice(num) );
@@ -3657,10 +3633,6 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	    }
 	else if( md!=NULL )
 	    delete md;
-	}
-    if( ret==0 )
-	{
-	device = "/dev/md" + decString(num);
 	}
     if( ret==0 )
 	{

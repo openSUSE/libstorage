@@ -472,7 +472,7 @@ class DiskData;
 	int getLvmLvSnapshotStateInfo(const string& vg, const string& name, 
 				      LvmLvSnapshotStateInfo& info);
 
-	int nextFreeMd(int &nr, string &device);
+	int nextFreeMd(unsigned& nr, string &device);
 	bool checkMdNumber(unsigned num);
 	int createMd( const string& name, storage::MdType rtype,
 		      const deque<string>& devs );
