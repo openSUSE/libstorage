@@ -133,13 +133,10 @@ class DmraidCo : public DmPartCo
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }
 	static void activate(bool val);
 	void getRaidData(const string& name, SystemInfo& systeminfo);
-	void addRaid( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
 
 	Text removeText( bool doing ) const;
-
-	static string undevName( const string& name );
 
 	static list<string> getRaids(SystemInfo& systeminfo);
 

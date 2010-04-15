@@ -133,11 +133,8 @@ class DmmultipathCo : public DmPartCo
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }
 	void getMultipathData(const string& name, SystemInfo& systeminfo);
-	void addMultipath( const string& name );
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
-
-	static string undevName( const string& name );
 
 	static void activate(bool val);
 	static bool isActive() { return active; }
