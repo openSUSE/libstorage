@@ -77,6 +77,7 @@ class Dm : public Volume
 	void changeDeviceName( const string& old, const string& nw );
 
 	static bool notDeleted( const Dm& l ) { return( !l.deleted() ); }
+	static bool isDeleted(const Dm& l) { return l.deleted(); }
 
 	static void activate(bool val);
 	static bool isActive() { return active; }

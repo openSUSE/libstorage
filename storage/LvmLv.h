@@ -23,8 +23,6 @@
 #ifndef LVM_LV_H
 #define LVM_LV_H
 
-#include <fstream>
-
 #include "storage/Dm.h"
 
 
@@ -71,6 +69,8 @@ class LvmLv : public Dm
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
 	void logDifference( const LvmLv& d ) const;
+
+	static bool notDeleted(const LvmLv& l) { return !l.deleted(); }
 
     protected:
 	static string makeDmTableName(const string& vg_name, const string& lv_name);

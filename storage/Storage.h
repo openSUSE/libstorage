@@ -224,7 +224,7 @@ class DiskData;
 	    { return( d.type()==storage::DM ); }
 
     public:
-	static bool notDeleted( const Container&d ) { return( !d.deleted() ); };
+
 	static bool isDmPart( const Container&d )
 	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
 	static bool isMdPart( const Container&d )

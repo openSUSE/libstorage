@@ -108,7 +108,7 @@ static bool lvResized( const LvmLv& l ) { return( l.extendSize()!=0 ); }
 unsigned
 LvmVg::numLv() const
 {
-    return lvmLvPair(lvNotDeleted).length();
+    return lvmLvPair(LvmLv::notDeleted).length();
 }
 
 
@@ -123,7 +123,7 @@ LvmVg::removeVg()
 	}
     if( ret==0 && !created() )
 	{
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	    ret = removeLv( i->name() );
 	setDeleted();
@@ -319,7 +319,7 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	}
     if( ret==0 )
 	{
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	LvmLvIter i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
@@ -442,7 +442,7 @@ LvmVg::removeLv( const string& name )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
@@ -491,7 +491,7 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
@@ -543,7 +543,7 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
@@ -586,7 +586,7 @@ LvmVg::createLvSnapshot(const string& origin, const string& name,
     int stripe = 1;
     if (ret == 0)
     {
-	LvmLvPair p = lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	LvmLvIter i = p.begin();
 	while (i != p.end() && i->name() != origin)
 	    ++i;
@@ -597,7 +597,7 @@ LvmVg::createLvSnapshot(const string& origin, const string& name,
     }
     if (ret == 0)
     {
-	LvmLvPair p = lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	LvmLvIter i = p.begin();
 	while (i != p.end() && i->name() != name)
 	    ++i;
@@ -637,7 +637,7 @@ LvmVg::removeLvSnapshot(const string& name)
     y2mil("name:" << name);
     if( ret==0 )
     {
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	LvmLvIter i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
@@ -664,7 +664,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
     checkConsistency();
     if (ret == 0)
     {
-	LvmLvPair p=lvmLvPair(lvNotDeleted);
+	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	i=p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;

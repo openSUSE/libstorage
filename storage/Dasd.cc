@@ -325,7 +325,7 @@ int Dasd::removePartition( unsigned nr )
     int ret = Disk::removePartition( nr );
     if( ret==0 )
 	{
-	PartPair p = partPair( notDeleted );
+	PartPair p = partPair(Partition::notDeleted);
 	changeNumbers( p.begin(), p.end(), nr, -1 );
 	}
     y2mil("ret:" << ret);
@@ -348,7 +348,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
 	    }
 	else
 	    {
-	    PartPair p = partPair( notDeleted );
+	    PartPair p = partPair(Partition::notDeleted);
 	    number = 1;
 	    PartIter i = p.begin();
 	    while( i!=p.end() && i->cylStart()<start )
@@ -390,7 +390,7 @@ int Dasd::doFdasd()
     string inpname = getStorage()->tmpDir()+"/fdasd_inp";
     ofstream inpfile( inpname.c_str() );
     classic(inpfile);
-    PartPair p = partPair( notDeleted );
+    PartPair p = partPair(Partition::notDeleted);
     PartIter i = p.begin();
     while( i!=p.end() )
 	{

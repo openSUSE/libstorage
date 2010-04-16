@@ -1157,7 +1157,7 @@ Disk::availablePartNumber(PartitionType type) const
 {
     y2mil("begin name:" << name() << " type:" << type);
     unsigned ret = 0;
-    ConstPartPair p = partPair( notDeleted );
+    ConstPartPair p = partPair(Partition::notDeleted);
     if( !ext_possible && type==LOGICAL )
 	{
 	ret = 0;
@@ -1489,7 +1489,7 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	}
     if( ret==0 )
 	{
-	ConstPartPair p = (type != LOGICAL) ? partPair(notDeleted) : partPair(notDeletedLog);
+	ConstPartPair p = (type != LOGICAL) ? partPair(Partition::notDeleted) : partPair(notDeletedLog);
 	ConstPartIter i = p.begin();
 	while( i!=p.end() && !i->intersectArea( r, fuzz ))
 	    {
@@ -1531,7 +1531,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    PartPair p = partPair( notDeleted );
+    PartPair p = partPair(Partition::notDeleted);
     PartIter part = p.begin();
     while( ret==0 && part!=p.end() && part->nr()!=nr)
 	{
@@ -1605,7 +1605,7 @@ int Disk::removePartition( unsigned nr )
     y2mil("begin nr " << nr);
     getStorage()->logCo( this );
     int ret = 0;
-    PartPair p = partPair( notDeleted );
+    PartPair p = partPair(Partition::notDeleted);
     PartIter i = p.begin();
     while( i!=p.end() && i->nr()!=nr)
 	{
@@ -1630,7 +1630,7 @@ int Disk::removePartition( unsigned nr )
 	    {
 	    if( !removeFromList( &(*i) ))
 		ret = DISK_REMOVE_PARTITION_CREATE_NOT_FOUND;
-	    p = partPair( notDeleted );
+	    p = partPair(Partition::notDeleted);
 	    }
 	else
 	    i->setDeleted();
@@ -1759,7 +1759,7 @@ Disk::changePartitionId(unsigned nr, unsigned id)
 {
     y2mil("begin nr:" << nr << " id:" << hex << id);
     int ret = 0;
-    PartPair p = partPair( notDeleted );
+    PartPair p = partPair(Partition::notDeleted);
     PartIter i = p.begin();
     while( i!=p.end() && i->nr()!=nr)
 	{
@@ -1786,7 +1786,7 @@ int Disk::forgetChangePartitionId( unsigned nr )
     {
     y2mil("begin nr:" << nr);
     int ret = 0;
-    PartPair p = partPair( notDeleted );
+    PartPair p = partPair(Partition::notDeleted);
     PartIter i = p.begin();
     while( i!=p.end() && i->nr()!=nr)
 	{
@@ -2475,7 +2475,7 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
     y2mil("startBefore:" << startBefore << " endBefore:" << endBefore);
     y2mil("startAfter:" << startAfter << " endAfter:" << endAfter);
 
-    ConstPartPair pp = partPair(notDeleted);
+    ConstPartPair pp = partPair(Partition::notDeleted);
     ConstPartIter previous = pp.end();
     ConstPartIter next = pp.end();
 
@@ -2716,7 +2716,7 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
     {
     const Partition* ret = NULL;
     y2mil( "p:" << *p );
-    ConstPartPair pp = partPair((p->type() == LOGICAL) ? notDeleted : notDeletedLog);
+    ConstPartPair pp = partPair((p->type() == LOGICAL) ? Partition::notDeleted : notDeletedLog);
     for (ConstPartIter pi = pp.begin(); pi != pp.end(); ++pi)
 	{
 	if( !pi->created() &&
@@ -2733,7 +2733,7 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
 
 unsigned Disk::numPartitions() const
     {
-    return(partPair( notDeleted ).length());
+    return partPair(Partition::notDeleted).length();
     }
 
 void Disk::getInfo( DiskInfo& tinfo ) const

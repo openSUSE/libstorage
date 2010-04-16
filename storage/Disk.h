@@ -247,8 +247,6 @@ class Disk : public Container
 	void removeFromMemory();
 	void enlargeGpt();
 
-	static bool notDeleted( const Partition&d ) { return( !d.deleted() ); }
-
 	virtual int doCreate( Volume* v );
 	virtual int doRemove( Volume* v );
 	virtual int doResize( Volume* v );

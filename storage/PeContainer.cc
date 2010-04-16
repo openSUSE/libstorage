@@ -585,13 +585,12 @@ PeContainer::init()
     y2mil( "init:" << nm );
     }
 
-static bool isDeleted( const Dm& l ) { return( l.deleted() ); }
 
 unsigned long
 PeContainer::leByLvRemove() const
     {
     unsigned long ret=0;
-    ConstDmPair p=dmPair(isDeleted);
+    ConstDmPair p = dmPair(Dm::isDeleted);
     for( ConstDmIter i=p.begin(); i!=p.end(); ++i )
 	ret += i->getLe();
     y2mil("ret:" << ret);

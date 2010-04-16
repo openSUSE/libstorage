@@ -241,8 +241,6 @@ class MdPartCo : public Container
 
 	bool updateEntry(EtcMdadm* mdadm) const;
 
-    static bool partNotDeleted( const MdPart&d ) { return( !d.deleted() ); }
-
     int doCreate( Volume* v );
     int doRemove( Volume* v );
     int doResize( Volume* v );

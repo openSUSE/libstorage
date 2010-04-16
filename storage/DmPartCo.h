@@ -182,8 +182,6 @@ class DmPartCo : public PeContainer
 	bool validPartition( const Partition* p );
 	bool findDm( unsigned nr, DmPartIter& i );
 
-	static bool partNotDeleted( const DmPart&d ) { return( !d.deleted() ); }
-
 	int doCreate( Volume* v );
 	int doRemove( Volume* v );
 	int doResize( Volume* v );

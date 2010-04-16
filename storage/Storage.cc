@@ -4861,7 +4861,7 @@ int Storage::getPartitionInfo( const string& disk,
 	// TODO: those partitions shouldn't be detected at all
 	if (!i->isUsedBy())
 	{
-	    Disk::ConstPartPair p = i->partPair(Disk::notDeleted);
+	    Disk::ConstPartPair p = i->partPair(Partition::notDeleted);
 	    for (Disk::ConstPartIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    {
 		plist.push_back(PartitionInfo());
@@ -4913,7 +4913,7 @@ int Storage::getLvmLvInfo( const string& name,
     ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
-	LvmVg::ConstLvmLvPair p = i->lvmLvPair(LvmVg::lvNotDeleted);
+	LvmVg::ConstLvmLvPair p = i->lvmLvPair(LvmLv::notDeleted);
 	for( LvmVg::ConstLvmLvIter i2 = p.begin(); i2 != p.end(); ++i2)
 	    {
 	    plist.push_back( LvmLvInfo() );
@@ -5110,7 +5110,7 @@ int Storage::getDmraidInfo( const string& name,
     DmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
-	DmraidCo::DmraidPair p = i->dmraidPair(DmraidCo::raidNotDeleted);
+	DmraidCo::DmraidPair p = i->dmraidPair(Dmraid::notDeleted);
 	for( DmraidCo::DmraidIter i2 = p.begin(); i2 != p.end(); ++i2 )
 	    {
 	    plist.push_back( DmraidInfo() );
@@ -5133,7 +5133,7 @@ Storage::getDmmultipathInfo( const string& name,
     ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
-	DmmultipathCo::ConstDmmultipathPair p = i->dmmultipathPair(DmmultipathCo::multipathNotDeleted);
+	DmmultipathCo::ConstDmmultipathPair p = i->dmmultipathPair(Dmmultipath::notDeleted);
 	for( DmmultipathCo::ConstDmmultipathIter i2 = p.begin(); i2 != p.end(); ++i2 )
 	{
 	    plist.push_back( DmmultipathInfo() );

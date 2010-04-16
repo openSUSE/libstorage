@@ -131,7 +131,7 @@ void LvmLv::calcSize()
     }
     else
     {
-	LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmVg::lvNotDeleted);
+	LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmLv::notDeleted);
 	LvmVg::ConstLvmLvIter i = p.begin();
 	while( i!=p.end() && i->name()!=origin )
 	    ++i;
@@ -151,7 +151,7 @@ void LvmLv::calcSize()
 bool
 LvmLv::hasSnapshots() const
 {
-    LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmVg::lvNotDeleted);
+    LvmVg::ConstLvmLvPair p = vg()->LvmVg::lvmLvPair(LvmLv::notDeleted);
     LvmVg::ConstLvmLvIter i = p.begin();
     while( i!=p.end() && i->getOrigin()!=name() )
 	++i;

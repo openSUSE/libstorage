@@ -85,7 +85,6 @@ class LvmVg : public PeContainer
 	static bool isActive() { return active; }
 
 	static list<string> getVgs();
-	static bool lvNotDeleted( const LvmLv& l ) { return( !l.deleted() ); }
 
     protected:
 	// iterators over LVM LVs

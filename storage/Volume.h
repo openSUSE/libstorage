@@ -192,6 +192,7 @@ class Storage;
 
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
 	static bool isDeleted( const Volume&d ) { return( d.deleted() ); }
+
 	static bool loopStringNum( const string& name, unsigned& num );
 	static storage::EncryptType toEncType( const string& val );
 	static storage::FsType toFsType( const string& val );

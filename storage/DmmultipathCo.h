@@ -141,8 +141,6 @@ class DmmultipathCo : public DmPartCo
 
 	static list<string> getMultipaths(SystemInfo& systeminfo);
 
-	static bool multipathNotDeleted( const Dmmultipath&d ) { return( !d.deleted() ); }
-
 	string vendor;
 	string model;
 

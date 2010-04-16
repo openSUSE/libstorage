@@ -113,7 +113,7 @@ main( int argc_iv, char** argv_ppcv )
 	{
 	cout << *i << endl;
 	}
-    p = Sto.contPair( Storage::notDeleted );
+    p = Sto.contPair( Container::notDeleted );
     cout << "not deleted empty:" << p.empty() << " length:" << p.length() << endl;
     for( Storage::ConstContIterator i=p.begin(); i!=p.end(); ++i )
 	{
@@ -169,11 +169,11 @@ main( int argc_iv, char** argv_ppcv )
 	--i;
 	cout << *i << endl;
 	}
-    p = Sto.volPair( Storage::notDeleted );
+    p = Sto.volPair( Container::notDeleted );
     PrintPair<Storage::ConstVolPair>( cout, p, "All Volumes on undel disks\n" );
     p = Sto.volPair( tmp::TestIsEven );
     PrintPair<Storage::ConstVolPair>( cout, p, "All Volumes with even numbers\n" );
-    p = Sto.volPair( tmp::TestIsEven, Storage::notDeleted );
+    p = Sto.volPair( tmp::TestIsEven, Container::notDeleted );
     PrintPair<Storage::ConstVolPair>( cout, p, "All Volumes with even numbers on undel disks\n" );
     cout << "Inverted order" << endl;
     for( Storage::ConstVolIterator i=p.end(); i!=p.begin(); )
