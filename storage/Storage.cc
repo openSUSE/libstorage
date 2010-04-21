@@ -3992,7 +3992,7 @@ bool Storage::haveMd( MdCo*& md )
     {
 	list<unsigned> nums;
 
-	ConstMdPartCoPair p = mdpartCoPair();
+	ConstMdPartCoPair p = mdpartCoPair(MdPartCo::notDeleted);
 	for (ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
 	    nums.push_back(i->nr());
 

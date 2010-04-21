@@ -66,6 +66,8 @@ class MdPartCo : public Container
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 
+	static bool notDeleted(const MdPartCo& c) { return !c.deleted(); }
+
     void getMdPartCoState(MdPartCoStateInfo& info) const;
 
     int createPartition( storage::PartitionType type, long unsigned start,
