@@ -1911,7 +1911,7 @@ class DiskData;
 	bool haveLoop( LoopCo*& loop );
 	int removeContainer( Container* val );
 	void logContainersAndVolumes(const string& Dir) const;
-	void logVolumes(const string& Dir) const;
+
 	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,
 			     list<const Volume*>& vl, list<commitAction>& todo) const;
