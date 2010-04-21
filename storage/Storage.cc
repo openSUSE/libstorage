@@ -1142,18 +1142,8 @@ void Storage::setDefaultFs(FsType val)
     bool
     Storage::hasIScsiDisks() const
     {
-	bool ret = false;
-
-	ConstDiskPair dp = diskPair();
-	for (ConstDiskIterator i = dp.begin(); i != dp.end(); ++i)
-	{
-	    if (i->isIScsi())
-	    {
-		ret = true;
-		break;
-	    }
-	}
-
+	ConstDiskPair dp = diskPair(Disk::isIScsi);
+	bool ret = !dp.empty();
 	y2mil("ret:" << ret);
 	return ret;
     }
@@ -6645,10 +6635,8 @@ Storage::restoreBackupState( const string& name )
 bool
 Storage::checkBackupState( const string& name ) const
     {
-    bool ret = false;
-    y2mil("name:" << name);
-    ret = backups.find(name) != backups.end();
-    y2mil("ret:" << ret);
+    bool ret = backups.find(name) != backups.end();
+    y2mil("name:" << name << " ret:" << ret);
     return ret;
     }
 
