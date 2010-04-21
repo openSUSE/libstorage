@@ -317,12 +317,9 @@ bool Disk::detectGeometry()
 	    sysfsinfo.vbd = false;
 	}
 
-	if (!read_sysfs_property(sysfsdir + "/range", sysfsinfo.range))
-	    return false;
-
-	unsigned long ext_range;
-	if (read_sysfs_property(sysfsdir + "/ext_range", ext_range, false))
-	    sysfsinfo.range = ext_range;
+	if (!read_sysfs_property(sysfsdir + "/ext_range", sysfsinfo.range, false))
+	    if (!read_sysfs_property(sysfsdir + "/range", sysfsinfo.range))
+		return false;
 
 	if (!read_sysfs_property(sysfsdir + "/size", sysfsinfo.size))
 	    return false;
