@@ -136,12 +136,12 @@ class MdCo : public Container
 	int doRemove( Volume* v );
 
 	/* Return true if given device is alredy handled by MdPartCo. */
-	bool isHandledByMdPart(const string& name);
+	bool isHandledByMdPart(const string& name) const;
 
 	/* Return true if md device found in /proc/mdstat given by 'name'
 	 * can be handled by Md classes.
 	 * The line2 is a line following device name in mdstat. */
-	bool canHandleDev(const string& name, const string& line2);
+	bool canHandleDev(const string& name, const string& line2) const;
 
 	static bool active;  
 

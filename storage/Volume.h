@@ -188,7 +188,7 @@ class Storage;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
 	void updateFsData();
 	void triggerUdevUpdate() const;
-	static bool loopInUse( Storage* sto, const string& loopdev );
+	static bool loopInUse(const Storage* sto, const string& loopdev);
 
 	static bool notDeleted( const Volume&d ) { return( !d.deleted() ); }
 	static bool isDeleted( const Volume&d ) { return( d.deleted() ); }

@@ -1486,7 +1486,7 @@ bool Volume::loopStringNum( const string& name, unsigned& num )
 
 bool hasLoopDevice( const Volume& v ) { return( !v.loopDevice().empty() ); }
 
-bool Volume::loopInUse( Storage* sto, const string& loopdev )
+bool Volume::loopInUse(const Storage* sto, const string& loopdev)
     {
     bool ret = false;
 

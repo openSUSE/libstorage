@@ -745,11 +745,11 @@ static bool showMdPartContainers(const Container& c )
     }
 
 // No '/dev/' please.
-bool MdCo::isHandledByMdPart(const string& name)
+bool MdCo::isHandledByMdPart(const string& name) const
 {
-  if( sto )
+  if (getStorage())
     {
-    Storage::ConstContPair p = sto->contPair( showMdPartContainers );
+    Storage::ConstContPair p = getStorage()->contPair(showMdPartContainers);
     for( Storage::ConstContIterator i = p.begin(); i != p.end(); ++i)
       {
       if( i->name() == name )
@@ -761,7 +761,7 @@ bool MdCo::isHandledByMdPart(const string& name)
   return false;
 }
 
-bool MdCo::canHandleDev(const string& name, const string& line2)
+bool MdCo::canHandleDev(const string& name, const string& line2) const
 {
   unsigned dummy;
   //If this is a valid MD name.
