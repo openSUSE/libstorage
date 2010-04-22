@@ -3871,7 +3871,7 @@ Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
 
 
 int
-Storage::computeMdSize(MdType md_type, list<string> devices, unsigned long long& sizeK)
+Storage::computeMdSize(MdType md_type, const list<string>& devices, unsigned long long& sizeK)
 {
     int ret = 0;
 

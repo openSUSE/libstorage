@@ -486,7 +486,7 @@ class DiskData;
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
 	int getMdStateInfo(const string& name, MdStateInfo& info);
-	int computeMdSize(MdType md_type, list<string> devices,
+	int computeMdSize(MdType md_type, const list<string>& devices,
 			  unsigned long long& sizeK);
 
 	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }

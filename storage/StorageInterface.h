@@ -1997,7 +1997,7 @@ namespace storage
 	 * @param sizeK will contain the computed size in kilobytes
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int computeMdSize(MdType md_type, list<string> devices,
+	virtual int computeMdSize(MdType md_type, const list<string>& devices,
 				  unsigned long long& sizeK) = 0;
 
         /**
