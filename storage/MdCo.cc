@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -738,28 +738,18 @@ bool MdCo::equalContent( const Container& rhs ) const
     }
 
 
-// Not a class member. Just check function.
-static bool showMdPartContainers(const Container& c )
-    {
-    return( c.deleted()==false && c.type()==MDPART);
-    }
-
-// No '/dev/' please.
 bool MdCo::isHandledByMdPart(const string& name) const
 {
-  if (getStorage())
+    Storage::ConstMdPartCoPair p = getStorage()->mdpartCoPair(MdPartCo::notDeleted);
+    for (Storage::ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
     {
-    Storage::ConstContPair p = getStorage()->contPair(showMdPartContainers);
-    for( Storage::ConstContIterator i = p.begin(); i != p.end(); ++i)
-      {
-      if( i->name() == name )
-        {
-        return true;
-        }
-      }
+	if (i->name() == name)
+	    return true;
     }
-  return false;
+
+    return false;
 }
+
 
 bool MdCo::canHandleDev(const string& name, const string& line2) const
 {

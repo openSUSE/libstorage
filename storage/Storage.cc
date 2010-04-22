@@ -3974,13 +3974,12 @@ int Storage::removeMdPartCo(const string& devName, bool destroySb)
   return ret;
 }
 
+
 bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;
-    CPair p = cPair();
+    CPair p = cPair(isMd);
     ContIterator i = p.begin();
-    while( i != p.end() && i->type()!=MD )
-	++i;
     if( i != p.end() )
 	md = static_cast<MdCo*>(&(*i));
     return( i != p.end() );
@@ -4004,10 +4003,8 @@ bool Storage::haveMd( MdCo*& md )
     Storage::haveDm(DmCo*& dm)
     {
 	dm = NULL;
-	CPair p = cPair();
+	CPair p = cPair(isDm);
 	ContIterator i = p.begin();
-	while (i != p.end() && i->type() != DM)
-	    ++i;
 	if (i != p.end())
 	    dm = static_cast<DmCo*>(&(*i));
 	return i != p.end();
@@ -4017,10 +4014,8 @@ bool Storage::haveMd( MdCo*& md )
 bool Storage::haveNfs( NfsCo*& co )
     {
     co = NULL;
-    CPair p = cPair();
+    CPair p = cPair(isNfs);
     ContIterator i = p.begin();
-    while( i != p.end() && i->type()!=NFSC )
-	++i;
     if( i != p.end() )
 	co = static_cast<NfsCo*>(&(*i));
     return( i != p.end() );
@@ -4234,10 +4229,8 @@ Storage::removeFileLoop( const string& lname, bool removeFile )
 bool Storage::haveLoop( LoopCo*& loop )
     {
     loop = NULL;
-    CPair p = cPair();
+    CPair p = cPair(isLoop);
     ContIterator i = p.begin();
-    while( i != p.end() && i->type()!=LOOP )
-	++i;
     if( i != p.end() )
 	loop = static_cast<LoopCo*>(&(*i));
     return( i != p.end() );
