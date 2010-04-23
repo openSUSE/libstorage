@@ -1955,7 +1955,7 @@ int Volume::doLosetup()
 	}
     else
 	{
-	if( loop_dev.size()>0 )
+	if (!loop_dev.empty())
 	    {
 	    SystemCmd c(LOSETUPBIN " -d " + quote(loop_dev));
 	    loop_dev.erase();

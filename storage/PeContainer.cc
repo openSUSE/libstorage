@@ -430,9 +430,9 @@ bool PeContainer::checkCreateConstraints()
     list< tpair > li;
     DmPair lp=dmPair();
     DmIter i=lp.begin();
-    if( pv_add.size()>0 )
+    if (!pv_add.empty())
 	y2war( "should not happen pv_add:" << pv_add );
-    if( pv_remove.size()>0 )
+    if (!pv_remove.empty())
 	y2war( "should not happen pv_rem:" << pv_remove );
     while( i!=lp.end() )
 	{

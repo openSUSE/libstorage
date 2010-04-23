@@ -1323,7 +1323,7 @@ LvmVg::doExtendVg()
 	    }
 	++d;
 	}
-    if( devs.size()>0 )
+    if (!devs.empty())
 	checkCreateConstraints();
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
