@@ -513,13 +513,13 @@ namespace storage
 	switch (edge.type)
 	{
 	    case Graph::EDGE_SUBDEVICE:
-		s << " [color=\"#444444\", style=solid]";
+		s << " [style=solid]";
 		break;
 	    case Graph::EDGE_MOUNT:
-		s << " [color=\"#444444\", style=dashed]";
+		s << " [style=dashed]";
 		break;
 	    case Graph::EDGE_USED:
-		s << " [color=\"#444444\", style=dotted]";
+		s << " [style=dotted]";
 		break;
 	}
 	return s << ";";
@@ -550,6 +550,7 @@ namespace storage
 	out << "digraph storage" << endl;
 	out << "{" << endl;
 	out << "    node [shape=rectangle, style=filled, fontname=\"Arial\"];" << endl;
+	out << "    edge [color=\"#444444\"];" << endl;
 	out << endl;
 
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
