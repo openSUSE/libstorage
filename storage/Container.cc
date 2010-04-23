@@ -355,11 +355,9 @@ void Container::setExtError( const string& txt ) const
 
 void Container::setExtError( const SystemCmd& cmd, bool serr ) const
     {
-    const string& s = boost::join(serr ? cmd.stderr() : cmd.stdout(), "\n");
-    if( s.size()>0 )
-	{
+    string s = boost::join(serr ? cmd.stderr() : cmd.stdout(), "\n");
+    if (!s.empty())
 	sto->setExtError( cmd.cmd() + ":\n" + s );
-	}
     else
 	y2war("called with empty " << (serr?"stderr":"stdout") << " cmd:" << cmd.cmd());
     }
