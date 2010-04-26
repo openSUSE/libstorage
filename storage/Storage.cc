@@ -102,8 +102,9 @@ namespace storage
 
 Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
-      recursiveRemove(false), zeroNewPartitions(false), detectMounted(true),
-      fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
+      recursiveRemove(false), zeroNewPartitions(false), 
+      partAlignment(ALIGN_OPTIMAL), detectMounted(true), fstab(NULL), 
+      mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -212,6 +213,17 @@ Storage::initialize()
 		setDefaultFs(XFS);
 	    else
 		y2war("unknown default filesystem '" << val << "' in " SYSCONFIGFILE);
+	}
+	Regex rx3('^' + Regex::ws + "PARTITION_ALIGN" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
+	if (find_if(lines, regex_matches(rx3)) != lines.end())
+	{
+	    string val = boost::to_lower_copy(rx3.cap(2), locale::classic());
+	    if (val == "cylinder")
+		setPartitionAlignment(ALIGN_CYLINDER);
+	    else if(val == "optimal")
+		setPartitionAlignment(ALIGN_OPTIMAL);
+	    else
+		y2war("unknown partition alignment '" << val << "' in " SYSCONFIGFILE);
 	}
     }
 
@@ -1107,6 +1119,12 @@ void Storage::setZeroNewPartitions(bool val)
     y2mil("val:" << val);
     zeroNewPartitions = val;
 }
+
+void Storage::setPartitionAlignment( PartAlign val )
+    {
+    y2mil("val:" << val);
+    partAlignment = val;
+    }
 
 void Storage::setDefaultMountBy(MountByType val)
 {

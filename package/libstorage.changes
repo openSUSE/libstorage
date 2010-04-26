@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Apr 26 16:53:38 CEST 2010 - fehr@suse.de
+
+- make alignment of created partitions configurable (optimal,cylinder)
+  to be able to work around problems like in bnc #597723
+
+-------------------------------------------------------------------
 Fri Apr 09 14:57:25 CEST 2010 - aschnell@suse.de
 
 - allow mount-by id for unpartitioned MDs

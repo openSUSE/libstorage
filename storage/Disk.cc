@@ -2243,7 +2243,12 @@ int Disk::doCreate( Volume* v )
 	classic(cmd_line);
 	if( ret==0 )
 	    {
-	    cmd_line << PARTEDCMD << quote(device()) << " unit cyl mkpart ";
+	    cmd_line << PARTEDCMD;
+	    if( getStorage()->getPartitionAlignment()==ALIGN_CYLINDER )
+		cmd_line << "--align=cylinder ";
+	    else
+		cmd_line << "--align=optimal ";
+	    cmd_line << quote(device()) << " unit cyl mkpart ";
 	    if( label != "sun" )
 		{
 		switch( p->type() )
@@ -2327,14 +2332,20 @@ int Disk::doCreate( Volume* v )
 		}
 	    if( start==0 && (label == "mac" || label == "amiga") )
 		start = 1;
-	    cmd_line << start << " ";
 	    string save = cmd_line.str();
 	    y2mil( "end:" << end << " cylinders:" << cylinders() );
-	    if( execCheckFailed( save + decString(end), false ) && 
-	        end==cylinders() &&
-	        execCheckFailed( save + decString(end-1), false ) )
+	    string tmp = save + decString(start) + ' ' + decString(end);
+	    if( execCheckFailed( tmp, false ) )
 		{
-		ret = DISK_CREATE_PARTITION_PARTED_FAILED;
+		tmp = save + decString(start+1) + ' ' + decString(end+1);
+		if( execCheckFailed( tmp, false ))
+		    {
+		    tmp = save + decString(start) + ' ' + decString(end-1);
+		    if( execCheckFailed( tmp, false ) )
+			{
+			ret = DISK_CREATE_PARTITION_PARTED_FAILED;
+			}
+		    }
 		}
 	    }
 	if( ret==0 )

@@ -411,6 +411,9 @@ class DiskData;
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
 
+	void setPartitionAlignment( PartAlign val );
+	PartAlign getPartitionAlignment() const { return partAlignment; }
+
 	void setDefaultMountBy(MountByType mby);
 	MountByType getDefaultMountBy() const { return defaultMountBy; }
 
@@ -1939,6 +1942,7 @@ class DiskData;
 	bool initialized;
 	bool recursiveRemove;
 	bool zeroNewPartitions;
+	PartAlign partAlignment;
 	MountByType defaultMountBy;
 	FsType defaultFs;
 	bool detectMounted;

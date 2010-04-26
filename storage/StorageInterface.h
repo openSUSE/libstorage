@@ -157,6 +157,8 @@ namespace storage
 
     enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
 
+    enum PartAlign { ALIGN_OPTIMAL, ALIGN_CYLINDER };
+
 
     /**
      * typedef for a pointer to a function that is called on progress bar
@@ -1642,6 +1644,26 @@ namespace storage
 	 * @return value of the flag for zeroing newly created partitions
 	 */
 	virtual bool getZeroNewPartitions() const = 0;
+
+	/**
+	 * Set alignment of newly created partitions.
+	 * PartAlign has value ALIGN_OPTIMAL or ALIGN_CYLINDER.
+	 * ALIGN_CYLINDER aligns partiton start to cylinder boundaries like
+	 *     it was traditionally for a long time.
+	 * ALIGN_OPTIMAL aligns according to values provided by kernel.
+	 *     Default alignment is to multiples of 2048 sectors which is
+	 *     compatible to partition layout of Windows Vista and Windows 7.
+	 *
+	 * @param val value of new alignment type
+	 */
+	virtual void setPartitionAlignment( PartAlign val ) = 0;
+
+	/**
+	 * Get value for the alignment of newly created partitions
+	 *
+	 * @return value for the alignment
+	 */
+	virtual PartAlign getPartitionAlignment() const = 0;
 
 	/**
 	 * Set default value for mount by.
