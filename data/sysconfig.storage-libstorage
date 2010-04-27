@@ -8,7 +8,7 @@ DEVICE_NAMES="id"
 # Default filesystem type.
 DEFAULT_FS="ext4"
 
-## Type: string
-# Value for partition alignment 
-# Allowed values are: optimal cylinder 
+## Type: string(optimal,cylinder)
+# Value for partition alignment
 PARTITION_ALIGN="optimal"
+
