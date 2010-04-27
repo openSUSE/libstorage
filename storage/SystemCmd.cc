@@ -184,6 +184,8 @@ SystemCmd::doExecute( const string& Cmd )
 	}
     y2deb("Cmd:" << Cmd);
 
+    StopWatch stopwatch;
+
     File_aC[IDX_STDERR] = File_aC[IDX_STDOUT] = NULL;
     invalidate();
     int sout[2];
@@ -274,6 +276,7 @@ SystemCmd::doExecute( const string& Cmd )
 		if( !Background_b )
 		    {
 		    doWait( true, Ret_i );
+		    y2mil("stopwatch " << stopwatch << " for \"" << cmd() << "\"");
 		    }
 		break;
 	    }

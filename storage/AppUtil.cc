@@ -683,6 +683,24 @@ getMajorDevices(const char* driver)
     }
 
 
+    StopWatch::StopWatch()
+    {
+	gettimeofday(&start_tv, NULL);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const StopWatch& sw)
+    {
+	struct timeval stop_tv;
+	gettimeofday(&stop_tv, NULL);
+
+	struct timeval tv;
+	timersub(&stop_tv, &sw.start_tv, &tv);
+
+	return s << fixed << double(tv.tv_sec) + (double)(tv.tv_usec) / 1000000.0 << "s";
+    }
+
+
 const string app_ws = " \t\n";
 
 }

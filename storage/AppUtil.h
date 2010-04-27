@@ -24,6 +24,7 @@
 #define APP_UTIL_H
 
 #include <libintl.h>
+#include <sys/time.h>
 #include <sstream>
 #include <locale>
 #include <string>
@@ -122,6 +123,21 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
 
     string hostname();
     string datetime();
+
+
+    class StopWatch
+    {
+    public:
+
+	StopWatch();
+
+	friend std::ostream& operator<<(std::ostream& s, const StopWatch& sw);
+
+    protected:
+
+	struct timeval start_tv;
+
+    };
 
 
     struct Text
