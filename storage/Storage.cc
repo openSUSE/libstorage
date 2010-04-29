@@ -756,43 +756,55 @@ std::ostream& operator<< ( std::ostream& s, const storage::DiskData& d )
 
 
 void
-    Storage::initDisk(DiskData& data, SystemInfo& systeminfo)
+Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
     {
-    y2mil( "data:" << data );
-    data.dev = boost::replace_all_copy(data.name, "!", "/");
-    y2mil("name sysfs:" << data.name << " parted:" << data.dev);
-    Disk * d = NULL;
-    switch( data.typ )
+    y2mil( "dl: " << dl );
+    for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
 	{
-	case DiskData::DISK:
-	    d = new Disk(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
-	    break;
-	case DiskData::DASD:
-	    d = new Dasd(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
-	    break;
-	case DiskData::XEN:
+	DiskData& data( *i );
+	data.dev = boost::replace_all_copy(data.name, "!", "/");
+	y2mil("name sysfs:" << data.name << " parted:" << data.dev);
+	Disk * d = NULL;
+	switch( data.typ )
 	    {
-	    string::size_type p = data.dev.find_last_not_of( "0123456789" );
-	    int nr = -1;
-	    data.dev.substr( p+1 ) >> nr;
-	    data.dev.erase( p+1 );
-	    if( nr>=0 )
+	    case DiskData::DISK:
+		d = new Disk(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
+		break;
+	    case DiskData::DASD:
+		d = new Dasd(this, data.dev, "/dev/" + data.dev, data.s, systeminfo);
+		break;
+	    case DiskData::XEN:
 		{
-		    d = new Disk(this, data.dev, "/dev/" + data.dev, (unsigned) nr, data.s, systeminfo);
+		string::size_type p = data.dev.find_last_not_of( "0123456789" );
+		int nr = -1;
+		data.dev.substr( p+1 ) >> nr;
+		data.dev.erase( p+1 );
+		y2mil( "data dev:" << data.dev << " nr:" << nr );
+		if( nr>=0 )
+		    {
+		    list<DiskData>::iterator j = dl.begin();
+		    while( j!=dl.end() && j->dev!=data.dev )
+			++j;
+		    if( j!=dl.end() && j->d )
+			j->d->addPartition( (unsigned)nr, data.s, systeminfo );
+		    else
+			d = new Disk(this, data.dev, "/dev/" + data.dev, (unsigned) nr, data.s, systeminfo);
+		    }
+		break;
 		}
-	    break;
+	    }
+	if( d && 
+	    (d->getSysfsInfo()||data.typ==DiskData::XEN) &&
+	    (data.typ == DiskData::XEN || d->detect(systeminfo)))
+	    {
+	    data.d = d;
+	    }
+	else
+	    {
+	    delete d;
 	    }
 	}
-    if( d && 
-        (d->getSysfsInfo()||data.typ==DiskData::XEN) &&
-	(data.typ == DiskData::XEN || d->detect(systeminfo)))
-	{
-	data.d = d;
-	}
-    else
-	{
-	delete d;
-	}
+    y2mil( "dl: " << dl );
     }
 
 
@@ -833,12 +845,7 @@ void
 	    }
 	}
 	closedir( Dir );
-	y2mil( "dl: " << dl );
-	for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
-	    {
-		initDisk(*i, systeminfo);
-	    }
-	y2mil( "dl: " << dl );
+	initDisk(dl, systeminfo);
 	const UdevMap& by_path = systeminfo.getUdevMap("/dev/disk/by-path");
 	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
 	for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )

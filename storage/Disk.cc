@@ -73,16 +73,9 @@ namespace storage
     size_k = SizeK;
     head = new_head = 16;
     sector = new_sector = 32;
-    cyl = new_cyl = std::max( size_k*2 / head / sector, 1ULL );
+    cyl = new_cyl = 0;
     byte_cyl = head * sector * logical_sector_size;
-    getMajorMinor();
-    unsigned long long sz = size_k;
-    Partition *p = new Partition( *this, num, sz, 0, cyl, PRIMARY );
-    if (systeminfo.getProcParts().getSize(p->procName(), sz) && sz > 0)
-	{
-	p->setSize( sz );
-	}
-    addToList( p );
+    addPartition( num, size_k, systeminfo );
     }
 
 
@@ -2737,6 +2730,20 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
     else
 	y2mil( "ret:" << *ret );
     return ret;
+    }
+
+void Disk::addPartition( unsigned num, unsigned long long sz,
+		         SystemInfo& systeminfo )
+    {
+    unsigned long cyl_inc = std::max( size_k*2 / head / sector, 1ULL );
+    Partition *p = new Partition( *this, num, sz, cyl, cyl_inc, PRIMARY );
+    cyl += cyl_inc;
+    new_cyl = cyl;
+    if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )
+	{
+	p->setSize( sz );
+	}
+    addToList( p );
     }
 
 unsigned Disk::numPartitions() const

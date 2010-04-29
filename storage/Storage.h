@@ -1874,7 +1874,7 @@ class DiskData;
 	void detectDmraid(SystemInfo& systeminfo);
 	void detectDmmultipath(SystemInfo& systeminfo);
 	void detectDm(SystemInfo& systeminfo, bool only_crypt);
-	void initDisk(DiskData& data, SystemInfo& systeminfo);
+	void initDisk( list<DiskData>& dl, SystemInfo& systeminfo);
 	void detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo);
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs);
