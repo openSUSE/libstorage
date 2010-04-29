@@ -1761,15 +1761,17 @@ Disk::changePartitionId(unsigned nr, unsigned id)
 	}
     if( readonly() )
 	{
-	ret = DISK_CHANGE_READONLY;
+	y2war( "trying to chang partition id on readonly disk - ignoring" );
+	i->changeIdDone();
+	ret = 0;
 	}
-    if( ret==0 )
+    else
 	{
 	ret = i->changeId( id );
 	}
     y2mil("ret:" << ret);
     return ret;
-}
+    }
 
 
 int Disk::forgetChangePartitionId( unsigned nr )

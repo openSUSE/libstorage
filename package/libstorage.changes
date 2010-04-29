@@ -3,6 +3,7 @@ Thu Apr 29 15:26:05 CEST 2010 - fehr@suse.de
 
 - fix handling of multiple xbd devices with same basename
   (e.g. xvda1,xvda2) bnc #587658
+- ignore changes of partition id on readonly disks 
 
 -------------------------------------------------------------------
 Mon Apr 26 16:53:38 CEST 2010 - fehr@suse.de
