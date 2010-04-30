@@ -102,15 +102,15 @@ namespace storage
 
 Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
-      recursiveRemove(false), zeroNewPartitions(false), 
-      partAlignment(ALIGN_OPTIMAL), detectMounted(true), rootprefix(),
-      fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
+      recursiveRemove(false), zeroNewPartitions(false),
+      partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
+      defaultFs(EXT4), detectMounted(true), root_mounted(!instsys()),
+      rootprefix(), efiboot(false), fstab(NULL), mdadm(NULL),
+      imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
 
-    root_mounted = !instsys();
-    efiboot = false;
     hald_pid = 0;
 
     max_log_num = 5;
@@ -125,9 +125,6 @@ Storage::Storage(const Environment& env)
     yesno_popup_cb = NULL;
     commit_error_popup_cb = NULL;
     password_popup_cb = NULL;
-
-    defaultMountBy = MOUNTBY_ID;
-    defaultFs = EXT4;
 
     SystemCmd::setTestmode(testmode());
 
