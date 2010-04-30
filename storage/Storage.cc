@@ -103,8 +103,8 @@ namespace storage
 Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
       recursiveRemove(false), zeroNewPartitions(false), 
-      partAlignment(ALIGN_OPTIMAL), detectMounted(true), fstab(NULL), 
-      mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
+      partAlignment(ALIGN_OPTIMAL), detectMounted(true), rootprefix(),
+      fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -1182,10 +1182,13 @@ void Storage::setRootPrefix(const string& root)
 
 string Storage::prependRoot(const string& mp) const
 {
-    string ret = mp;
-    if (mp != "swap")
-	ret.insert(0, rootprefix);
-    return ret;
+    if (mp == "swap")
+	return mp;
+
+    if (rootprefix != "" && mp == "/")
+	return rootprefix;
+    else
+	return rootprefix + mp;
 }
 
 void Storage::setDetectMountedVolumes(bool val)
@@ -6794,7 +6797,7 @@ int Storage::addFstabEntry( const string& device, const string& mount,
 	fstab->addEntry( c );
 	if( isRootMounted() )
 	    {
-	    string dir = root() + mount;
+	    string dir = prependRoot(mount);
 	    if( access( dir.c_str(), R_OK )!=0 )
 		createPath( dir );
 	    ret = fstab->flush();

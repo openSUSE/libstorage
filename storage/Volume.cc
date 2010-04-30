@@ -1195,23 +1195,16 @@ int Volume::checkDevice(const string& device) const
 int Volume::doMount()
     {
     int ret = 0;
-    string lmount;
-    if( mp != "swap" )
-	lmount += getStorage()->root();
-    if( mp!="/" )
-	lmount += mp;
-    y2mil("device:" << dev << " mp:" << mp << " old mp:" << orig_mp);
+    y2mil("device:" << dev << " mp:" << mp << " orig_mp:" << orig_mp);
     if( !silent )
 	{
 	getStorage()->showInfoCb( mountText(true) );
 	}
     if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
-	string um = orig_mp;
-	if( um != "swap" )
-	    um = getStorage()->root() + um;
-	ret = umount( um );
+	ret = umount(getStorage()->prependRoot(orig_mp));
 	}
+    string lmount = getStorage()->prependRoot(mp);
     if( ret==0 && lmount!="swap" && access( lmount.c_str(), R_OK )!=0 )
 	{
 	createPath( lmount );
@@ -2180,7 +2173,7 @@ int Volume::doSetLabel()
 	}
     if( ret==0 && is_mounted && !caps.labelWhileMounted )
 	{
-	ret = umount(getStorage()->root() + orig_mp);
+	ret = umount(getStorage()->prependRoot(orig_mp));
 	if( ret!=0 )
 	    ret = VOLUME_LABEL_WHILE_MOUNTED;
 	else
@@ -2233,7 +2226,7 @@ int Volume::doSetLabel()
 	}
     if( remount )
 	{
-	ret = mount(getStorage()->root() + orig_mp);
+	ret = mount(getStorage()->prependRoot(orig_mp));
 	}
     if( ret==0 )
 	{
