@@ -4729,11 +4729,9 @@ void Storage::changeDeviceName( const string& old, const string& nw )
     {
     y2mil( "old:" << old << " new:" << nw );
     CPair p = cPair();
-    ContIterator ci = p.begin();
-    while( ci!=p.end() )
+    for (ContIterator ci = p.begin(); ci != p.end(); ++ci)
 	{
 	ci->changeDeviceName( old, nw );
-	++ci;
 	}
     }
 
@@ -4743,12 +4741,10 @@ Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
     {
     dl.clear();
     DiskPair dp = dPair( CheckFnc );
-    DiskIterator i = dp.begin();
-    while( i!=dp.end() )
+    for (DiskIterator i = dp.begin(); i != dp.end(); ++i)
 	{
 	y2mil( "disk:" << i->device() );
 	dl.push_back( &(*i) );
-	++i;
 	}
     }
 
