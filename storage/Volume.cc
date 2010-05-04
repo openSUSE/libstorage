@@ -833,6 +833,7 @@ int Volume::doFormat()
 		break;
 	    case SWAP:
 		cmd = "/sbin/mkswap";
+		params = "-f";
 		break;
 	    default:
 		ret = VOLUME_FORMAT_UNKNOWN_FS;

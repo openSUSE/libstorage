@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue May  4 12:53:03 CEST 2010 - fehr@suse.de
+
+- call mkswap with option -f otherwise it sometime refuses to create 
+  swap signature
+
+-------------------------------------------------------------------
 Thu Apr 29 15:26:05 CEST 2010 - fehr@suse.de
 
 - fix handling of multiple xbd devices with same basename
