@@ -1833,6 +1833,12 @@ EncryptType Volume::detectEncryption()
 		    case REISERFS:
 			cmd = "reiserfsck --yes --check -q " + quote(use_dev);
 			break;
+		    case XFS:
+			cmd = "xfs_check " + use_dev;
+			break;
+		    case JFS:
+			cmd = "fsck.jfs -n " + use_dev;
+			break;
 		    default:
 			cmd = "fsck -n -t " + fsTypeString(detected_fs) + " " + quote(use_dev);
 			break;

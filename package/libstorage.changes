@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed May  5 16:38:01 CEST 2010 - fehr@suse.de
+
+- call xfs_check instead of fsck -n -t xfs since /sbin/fsck is
+  missing in installation environment (bnc #601531)
+
+-------------------------------------------------------------------
 Tue May  4 12:53:03 CEST 2010 - fehr@suse.de
 
 - call mkswap with option -f otherwise it sometime refuses to create 
