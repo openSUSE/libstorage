@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu May  6 16:18:51 CEST 2010 - fehr@suse.de
+
+- remove enforcement to call addpart 
+
+-------------------------------------------------------------------
 Wed May  5 16:38:01 CEST 2010 - fehr@suse.de
 
 - call xfs_check instead of fsck -n -t xfs since /sbin/fsck is

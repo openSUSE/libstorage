@@ -2121,8 +2121,8 @@ Disk::getPartedValues( Partition *p ) const
 	           " size:" << sysfs_size );
 	    y2mil( "sectors nr:" << nr << " parted start:" << sstart << 
 	           " size:" << ssize );
-	    if( nr == p->nr() && (true || // always only for testing
-	        (sysfs_start!=sstart || sysfs_size!=ssize)) )
+	    if( nr == p->nr() && 
+	        (sysfs_start!=sstart || sysfs_size!=ssize) )
 		{
 		callDelpart( nr );
 		callAddpart( nr, sstart, ssize );
