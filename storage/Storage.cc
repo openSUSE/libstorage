@@ -6492,8 +6492,6 @@ Storage::eraseCachedFreeInfo(const string& device)
 
 void Storage::checkPwdBuf( const string& device )
     {
-    if( !pwdBuf.empty() )
-	{
 	map<string,string>::iterator i=pwdBuf.find(device);
 	if( i!=pwdBuf.end() )
 	    {
@@ -6502,7 +6500,6 @@ void Storage::checkPwdBuf( const string& device )
 		vol->setCryptPwd( i->second );
 	    pwdBuf.erase(i);
 	    }
-	}
     }
 
 
