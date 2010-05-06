@@ -279,11 +279,7 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 	{
 	typename List::const_iterator pos = find( l.begin(), l.end(), v );
 	if (pos == l.end() )
-	    {
-	    l.push_back( v );
-	    pos = l.end();
-	    pos--;
-	    }
+	    pos = l.insert(l.end(), v);
 	return pos;
 	}
 
