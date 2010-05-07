@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -40,7 +40,7 @@ namespace storage
 
 
     list<Text>
-    getSuffix(int i, bool sloppy = false)
+    getAllSuffixes(int i, bool sloppy = false)
     {
 	list<Text> ret;
 
@@ -109,6 +109,13 @@ namespace storage
 
 
     string
+    getSuffix(int i, bool classic)
+    {
+	return classic ? getAllSuffixes(i).front().native : getAllSuffixes(i).front().text;
+    }
+
+
+    string
     byteToHumanString(unsigned long long size, bool classic, int precision, bool omit_zeroes)
     {
 	const locale loc = classic ? locale::classic() : locale();
@@ -132,7 +139,7 @@ namespace storage
 	s.setf(ios::fixed);
 	s.precision(precision);
 
-	s << f << ' ' << (classic ? getSuffix(i).front().native : getSuffix(i).front().text);
+	s << f << ' ' << getSuffix(i, classic);
 
 	return s.str();
     }
@@ -149,7 +156,7 @@ namespace storage
 
 	for (int i = 0; i < numSuffixes(); i++)
 	{
-	    list<Text> suffix = getSuffix(i, !classic);
+	    list<Text> suffix = getAllSuffixes(i, !classic);
 
 	    for (list<Text>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
 	    {

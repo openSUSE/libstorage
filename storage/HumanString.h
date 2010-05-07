@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -31,6 +31,23 @@ using std::string;
 
 namespace storage
 {
+
+    /**
+     * Return number of suffixes.
+     *
+     * @return number of suffixes
+     */
+    int numSuffixes();
+
+    /**
+     * Return a suffix.
+     *
+     * @param i index of suffix
+     * @param classic use classic locale instead of global C++ locale
+     * @return suffix
+     */
+    string getSuffix(int i, bool classic);
+
 
     /**
      * Return a pretty description of a size with required precision

@@ -15,16 +15,18 @@ main(int argc, char** argv)
 	return 1;
     }
 
+    locale::global(locale(""));
+
     unsigned long long bytes = 0;
-    if (!humanStringToByte(argv[1], true, bytes))
+    if (!humanStringToByte(argv[1], false, bytes))
     {
 	cerr << "parsing value failed" << endl;
 	return 1;
     }
 
-    cout << bytes << " B" << endl;
+    cout << bytes << " " << getSuffix(0, false) << endl;
 
-    cout << byteToHumanString(bytes, true, 2, true) << endl;
+    cout << byteToHumanString(bytes, false, 2, true) << endl;
 
     return 0;
 }
