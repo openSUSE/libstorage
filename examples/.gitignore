@@ -1,5 +1,7 @@
 SaveGraph.o
 SaveGraph
+ShowBytes.o
+ShowBytes
 TestDiskLog.o
 TestDiskLog
 TestDisk.o

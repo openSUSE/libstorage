@@ -7,7 +7,7 @@ INCLUDES = -I$(top_srcdir)
 LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm		\
-	TestMd TestLoop TestLock SaveGraph
+	TestMd TestLoop TestLock SaveGraph ShowBytes
 
 TestDisk_SOURCES = TestDisk.cc
 
@@ -27,10 +27,12 @@ TestLock_SOURCES = TestLock.cc
 
 SaveGraph_SOURCES = SaveGraph.cc
 
+ShowBytes_SOURCES = ShowBytes.cc
+
 exampledir = $(docdir)/examples
 
 example_DATA = TestDisk.cc TestDiskLog.cc TestProbing.cc TestLvm.cc TestMd.cc	\
-	TestLoop.cc SaveGraph.cc
+	TestLoop.cc SaveGraph.cc ShowBytes.cc
 
 EXTRA_DIST = $(example_DATA) Makefile.example
 

@@ -1,6 +1,6 @@
 
 PROGRAMS = TestDisk TestDiskLog TestProbing TestLvm TestMd TestLoop		\
-	 SaveGraph
+	 SaveGraph ShowBytes
 
 all: $(PROGRAMS)
 
@@ -23,6 +23,9 @@ TestLoop: TestLoop.cc
 	g++ $< -o $@ -Wall -O2 -lstorage
 
 SaveGraph: SaveGraph.cc
+	g++ $< -o $@ -Wall -O2 -lstorage
+
+ShowBytes: ShowBytes.cc
 	g++ $< -o $@ -Wall -O2 -lstorage
 
 clean:
