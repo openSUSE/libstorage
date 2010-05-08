@@ -2069,7 +2069,7 @@ int Disk::doSetType( Volume* v )
 int 
 Disk::callDelpart( unsigned nr ) const
     {
-    SystemCmd c( DELPARTBIN " " + device() + ' ' + decString(nr) );
+    SystemCmd c( DELPARTBIN " " + quote(device()) + ' ' + decString(nr) );
     return( c.retcode() );
     }
 
@@ -2077,7 +2077,7 @@ int
 Disk::callAddpart( unsigned nr, unsigned long long sstart, 
                    unsigned long long ssize ) const
     {
-    SystemCmd c( ADDPARTBIN " " + device() + ' ' + decString(nr) + ' ' +
+    SystemCmd c( ADDPARTBIN " " + quote(device()) + ' ' + decString(nr) + ' ' +
 		 decString(sstart) + ' ' + decString(ssize) );
     return( c.retcode() );
     }
