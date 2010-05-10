@@ -1342,7 +1342,7 @@ int Disk::createPartition( PartitionType type, string& device )
     if( !free.empty() )
 	{
 	free.sort( regions_sort_size );
-	list<Region>::iterator i = free.begin();
+	list<Region>::const_iterator i = free.begin();
 	PartPair ext = partPair(notDeletedExt);
 	PartitionType t = type;
 	bool usable = false;
