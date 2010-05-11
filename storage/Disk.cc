@@ -1297,7 +1297,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     if( !free.empty() )
 	{
 	free.sort( regions_sort_size );
-	list<Region>::iterator i = free.begin();
+	list<Region>::const_iterator i = free.begin();
 	while( i!=free.end() && i->len()>=cylLen )
 	    ++i;
 	--i;
