@@ -40,7 +40,7 @@ namespace storage
 
 
     list<Text>
-    getAllSuffixes(int i, bool sloppy = false)
+    getAllSuffixes(int i, bool all = false, bool sloppy = false)
     {
 	list<Text> ret;
 
@@ -56,8 +56,9 @@ namespace storage
 	    case 1:
 		/* symbol for "kilo bytes" (best keep untranslated) */
 		ret.push_back(_("kB"));
-		/* symbol for "kibi bytes" (best keep untranslated) */
-		ret.push_back(_("KiB"));
+		if (all)
+		    /* symbol for "kibi bytes" (best keep untranslated) */
+		    ret.push_back(_("KiB"));
 		if (sloppy)
 		    /* symbol for "kilo" (best keep untranslated) */
 		    ret.push_back(_("k"));
@@ -66,8 +67,9 @@ namespace storage
 	    case 2:
 		/* symbol for "mega bytes" (best keep untranslated) */
 		ret.push_back(_("MB"));
-		/* symbol for "mebi bytes" (best keep untranslated) */
-		ret.push_back(_("MiB"));
+		if (all)
+		    /* symbol for "mebi bytes" (best keep untranslated) */
+		    ret.push_back(_("MiB"));
 		if (sloppy)
 		    /* symbol for "mega" (best keep untranslated) */
 		    ret.push_back(_("M"));
@@ -76,8 +78,9 @@ namespace storage
 	    case 3:
 		/* symbol for "giga bytes" (best keep untranslated) */
 		ret.push_back(_("GB"));
-		/* symbol for "gibi bytes" (best keep untranslated) */
-		ret.push_back(_("GiB"));
+		if (all)
+		    /* symbol for "gibi bytes" (best keep untranslated) */
+		    ret.push_back(_("GiB"));
 		if (sloppy)
 		    /* symbol for "giga" (best keep untranslated) */
 		    ret.push_back(_("G"));
@@ -86,8 +89,9 @@ namespace storage
 	    case 4:
 		/* symbol for "tera bytes" (best keep untranslated) */
 		ret.push_back(_("TB"));
-		/* symbol for "tebi bytes" (best keep untranslated) */
-		ret.push_back(_("TiB"));
+		if (all)
+		    /* symbol for "tebi bytes" (best keep untranslated) */
+		    ret.push_back(_("TiB"));
 		if (sloppy)
 		    /* symbol for "tera" (best keep untranslated) */
 		    ret.push_back(_("T"));
@@ -96,8 +100,9 @@ namespace storage
 	    case 5:
 		/* symbol for "peta bytes" (best keep untranslated) */
 		ret.push_back(_("PB"));
-		/* symbol for "pebi bytes" (best keep untranslated) */
-		ret.push_back(_("PiB"));
+		if (all)
+		    /* symbol for "pebi bytes" (best keep untranslated) */
+		    ret.push_back(_("PiB"));
 		if (sloppy)
 		    /* symbol for "peta" (best keep untranslated) */
 		    ret.push_back(_("P"));
@@ -154,9 +159,9 @@ namespace storage
 
 	double f = 1.0;
 
-	for (int i = 0; i < numSuffixes(); i++)
+	for (int i = 0; i < numSuffixes(); ++i)
 	{
-	    list<Text> suffix = getAllSuffixes(i, !classic);
+	    list<Text> suffix = getAllSuffixes(i, true, !classic);
 
 	    for (list<Text>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
 	    {
