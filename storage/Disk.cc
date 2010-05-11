@@ -621,15 +621,14 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
                       unsigned long& csize, PartitionType& type, unsigned& id,
 		      bool& boot ) const
     {
-    unsigned long StartM, EndM;
-    string PartitionType, TInfo;
-
     y2deb("Line:" << Line);
     std::istringstream Data( Line );
     classic(Data);
 
     nr=0;
-    StartM = EndM = 0;
+    unsigned long StartM = 0;
+    unsigned long EndM = 0;
+    string PartitionType;
     type = PRIMARY;
     string skip;
     if( label == "msdos" )
@@ -646,7 +645,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	nr = 0;
 	}
     char c;
-    TInfo = ",";
+    string TInfo = ",";
     Data.unsetf(ifstream::skipws);
     Data >> c;
     char last_char = ',';

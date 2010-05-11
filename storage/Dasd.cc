@@ -153,15 +153,13 @@ bool
 Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
                      unsigned long& csize )
     {
-    unsigned long StartM, EndM;
-    string PartitionType, TInfo;
-
     y2deb("Line:" << Line);
     std::istringstream Data( Line );
     classic(Data);
 
     nr=0;
-    StartM = EndM = 0;
+    unsigned long StartM = 0;
+    unsigned long EndM = 0;
     string devname;
     Data >> devname >> StartM >> EndM;
     devname.erase(0,device().size());
