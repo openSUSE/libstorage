@@ -1352,10 +1352,10 @@ int Disk::createPartition( PartitionType type, string& device )
 		t = LOGICAL;
 	    usable = t==type || type==PTYPE_ANY || (t==PRIMARY&&type==EXTENDED);
 	    usable = usable && availablePartNumber(t)>0;
-	    if( !usable && i!=free.begin() )
-		--i;
+	    if( !usable && i!=free.end() )
+		++i;
 	    }
-	while( i!=free.begin() && !usable );
+	while( i!=free.end() && !usable );
 	usable = availablePartNumber(t)>0;
 	if( usable )
 	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(),
