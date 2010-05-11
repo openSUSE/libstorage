@@ -1302,7 +1302,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	--i;
 	if( i->len()>=cylLen )
 	    {
-	    PartPair ext = partPair(notDeletedExt);
+	    ConstPartPair ext = partPair(notDeletedExt);
 	    PartitionType t = PRIMARY;
 	    bool usable = false;
 	    do
@@ -1342,7 +1342,7 @@ int Disk::createPartition( PartitionType type, string& device )
 	{
 	free.sort( regions_sort_size );
 	list<Region>::const_iterator i = free.begin();
-	PartPair ext = partPair(notDeletedExt);
+	ConstPartPair ext = partPair(notDeletedExt);
 	PartitionType t = type;
 	bool usable = false;
 	do
@@ -1541,9 +1541,9 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	}
     if( ret==0 && part->type()==LOGICAL )
 	{
-	PartPair ext = partPair(notDeletedExt);
+	ConstPartPair ext = partPair(notDeletedExt);
 	p = partPair( notDeletedLog );
-	PartIter i = p.begin();
+	ConstPartIter i = p.begin();
 	while( i!=p.end() && (i==part||!i->intersectArea( r, fuzz )) )
 	    {
 	    ++i;
@@ -1563,7 +1563,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	}
     if( ret==0 && part->type()!=LOGICAL )
 	{
-	PartIter i = p.begin();
+	ConstPartIter i = p.begin();
 	while( i!=p.end() &&
 	       (i==part || i->nr()>max_primary || !i->intersectArea( r, fuzz )))
 	    {
@@ -2288,18 +2288,18 @@ int Disk::doCreate( Volume* v )
 	    {
 	    unsigned long start = p->cylStart();
 	    unsigned long end = p->cylStart()+p->cylSize();
-	    PartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
-					       : partPair( existingLog );
+	    ConstPartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
+						    : partPair( existingLog );
 	    unsigned long maxc = cylinders();
 	    if( p->type()==LOGICAL )
 		{
-		PartPair ext = partPair(notDeletedExt);
+		ConstPartPair ext = partPair(notDeletedExt);
 		if( !ext.empty() )
 		    maxc = ext.begin()->cylEnd();
 		}
 	    y2mil("max " << maxc << " end:" << end);
 	    y2mil("pp " << *p);
-	    for( PartIter i=pp.begin(); i!=pp.end(); ++i )
+	    for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
 		{
 		y2mil( "i " << *i );
 		if( i->cylStart()<maxc && i->cylStart()<end &&
@@ -2360,7 +2360,7 @@ int Disk::doCreate( Volume* v )
 		// kludge to make the extended partition visible in
 		// /proc/partitions otherwise grub refuses to install if root
 		// filesystem is a logical partition
-		PartPair lc = partPair(logicalCreated);
+		ConstPartPair lc = partPair(logicalCreated);
 		call_blockdev = lc.length()<=1;
 		y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
 		}
@@ -2439,7 +2439,7 @@ int Disk::doRemove( Volume* v )
 	    }
 	if( ret==0 )
 	    {
-	    PartPair p = partPair( notCreatedPrimary );
+	    ConstPartPair p = partPair( notCreatedPrimary );
 	    if( p.empty() )
 		redetectGeometry();
 	    }
@@ -2666,7 +2666,7 @@ int Disk::doResize( Volume* v )
 		}
 	    else if( p->type()==LOGICAL )
 		{
-		PartPair ext = partPair(notDeletedExt);
+		ConstPartPair ext = partPair(notDeletedExt);
 		if( !ext.empty() )
 		    {
 		    unsigned long long start_ext, end_ext;

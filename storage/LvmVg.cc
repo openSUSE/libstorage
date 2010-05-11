@@ -319,8 +319,8 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	}
     if( ret==0 )
 	{
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	LvmLvIter i=p.begin();
+	ConstLvmLvPair p = lvmLvPair(LvmLv::notDeleted);
+	ConstLvmLvIter i = p.begin();
 	while( i!=p.end() && i->name()!=name )
 	    ++i;
 	if( i!=p.end() )

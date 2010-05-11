@@ -469,8 +469,8 @@ bool
 MdPartCo::validPartition( const Partition* p )
     {
     bool ret = false;
-    Disk::PartPair pp = disk->partPair();
-    Disk::PartIter i = pp.begin();
+    Disk::ConstPartPair pp = disk->partPair();
+    Disk::ConstPartIter i = pp.begin();
     while( i!=pp.end() && p != &(*i) )
         ++i;
     ret = i!=pp.end();
