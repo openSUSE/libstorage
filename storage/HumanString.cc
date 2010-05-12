@@ -35,7 +35,7 @@ namespace storage
     int
     numSuffixes()
     {
-	return 6;
+	return 7;
     }
 
 
@@ -106,6 +106,17 @@ namespace storage
 		if (sloppy)
 		    /* symbol for "peta" (best keep untranslated) */
 		    ret.push_back(_("P"));
+		break;
+
+	    case 6:
+		/* symbol for "exa bytes" (best keep untranslated) */
+		ret.push_back(_("EB"));
+		if (all)
+		    /* symbol for "exbi bytes" (best keep untranslated) */
+		    ret.push_back(_("EiB"));
+		if (sloppy)
+		    /* symbol for "exa" (best keep untranslated) */
+		    ret.push_back(_("E"));
 		break;
 	}
 
