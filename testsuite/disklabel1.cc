@@ -15,8 +15,7 @@ test(const string& name)
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
-    cout << s->defaultDiskLabel() << " "
-	 << s->defaultDiskLabelSize(5ULL * 1024*1024*1024) << endl;
+    cout << s->defaultDiskLabel("/dev/sda") << endl;
 
     delete s;
 }

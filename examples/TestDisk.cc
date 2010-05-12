@@ -14,7 +14,7 @@ main( int argc_iv, char** argv_ppcv )
     StorageInterface* s = createStorageInterface(Environment(false));
     string disk = "/dev/hdb";
     string dev;
-    ret = s->destroyPartitionTable( disk, s->defaultDiskLabel() );
+    ret = s->destroyPartitionTable(disk, s->defaultDiskLabel(disk));
     if( ret ) cerr << "retcode:" << ret << endl;
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;

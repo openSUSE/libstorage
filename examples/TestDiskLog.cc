@@ -14,7 +14,7 @@ main( int argc_iv, char** argv_ppcv )
     initDefaultLogger();
     StorageInterface* s = createStorageInterface(Environment(false));
     string dev;
-    ret = s->destroyPartitionTable( "/dev/hdb", s->defaultDiskLabel() );
+    ret = s->destroyPartitionTable("/dev/hdb", s->defaultDiskLabel("/dev/hdb"));
     if( ret ) cerr << "retcode:" << ret << endl;
     ret = s->createPartitionKb( "/dev/hdb", EXTENDED, 5000*1024, 15000*1024, dev );
     cout << dev << endl;

@@ -14,7 +14,7 @@ doit ()
     StorageInterface* s = createStorageInterface(Environment(false));
 
 
-    cout << s->destroyPartitionTable ("sdb", s->defaultDiskLabel ()) << '\n';
+    cout << s->destroyPartitionTable("sdb", s->defaultDiskLabel("hdb")) << '\n';
 
 
     string name = "xxx1";

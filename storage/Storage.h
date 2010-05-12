@@ -366,8 +366,7 @@ class DiskData;
 	int getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& slots);
 	int destroyPartitionTable( const string& disk, const string& label );
 	int initializeDisk( const string& disk, bool value );
-	string defaultDiskLabel();
-	string defaultDiskLabelSize(unsigned long long size_k);
+	string defaultDiskLabel(const string& device);
 
 	int changeFormatVolume( const string& device, bool format,
 	                        storage::FsType fs );

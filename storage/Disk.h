@@ -53,7 +53,7 @@ class Disk : public Container
 	bool extended;
 	unsigned primary;
 	unsigned logical;
-	unsigned long long max_size_k;
+	unsigned long long max_sectors;
 	};
 
     public:
@@ -135,8 +135,12 @@ class Disk : public Container
 	bool hasExtended() const;
 	unsigned int numLogical() const;
 	Text setDiskLabelText(bool doing) const;
+
 	unsigned long long cylinderToKb( unsigned long ) const;
 	unsigned long kbToCylinder( unsigned long long ) const;
+
+	unsigned long long sectorToKb(unsigned long long sector) const;
+	unsigned long long kbToSector(unsigned long long kb) const;
 
 	string getPartName(unsigned nr) const;
 	string getPartDevice(unsigned nr) const;
@@ -263,7 +267,7 @@ class Disk : public Container
 
 	void setLabelData( const string& );
 
-	static string defaultLabel(bool efiboot, unsigned long long size_k);
+	static string defaultLabel(bool efiboot, unsigned long long num_sectors);
 
 	static const label_info labels[];
 	static const string p_disks[];

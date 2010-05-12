@@ -228,7 +228,7 @@ namespace storage
 	unsigned maxPrimary;
 	bool extendedPossible;
 	unsigned maxLogical;
-	unsigned long long maxSizeK;
+	unsigned long long maxSectors;
     };
 
 
@@ -1294,22 +1294,13 @@ namespace storage
 
 	/**
 	 * Query the default disk label of the architecture of the
-	 * machine (e.g. msdos for ix86, gpt for ia64, ...)
-	 *
-	 * @return default disk label of the architecture
-	 */
-	virtual string defaultDiskLabel() = 0;
-
-	/**
-	 * Query the default disk label of the architecture of the
 	 * machine (e.g. msdos for ix86, gpt for ia64, ...) for a disk
-	 * with certain size
 	 *
-	 * @param sizeK size of disk in kilobytes
+	 * @param device device of disk
 	 *
 	 * @return default disk label of the disk
 	 */
-	virtual string defaultDiskLabelSize(unsigned long long sizeK) = 0;
+	virtual string defaultDiskLabel(const string& device) = 0;
 
 	/**
 	 * Sets or unsets the format flag for the given volume.

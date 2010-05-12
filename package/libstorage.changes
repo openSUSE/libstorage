@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed May 12 16:52:24 CEST 2010 - aschnell@suse.de
+
+- make defaultDiskLabel depend on logical sector size
+
+-------------------------------------------------------------------
 Wed May 12 11:17:08 CEST 2010 - aschnell@suse.de
 
 - respect partition table limitations in getUnusedPartitionSlots

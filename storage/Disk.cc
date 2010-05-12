@@ -236,6 +236,22 @@ Disk::kbToCylinder( unsigned long long kb ) const
     }
 
 
+    unsigned long long
+    Disk::sectorToKb(unsigned long long sector) const
+    {
+	// TODO use 128 arithmetic
+	return sector * logical_sector_size / 1024;
+    }
+
+
+    unsigned long long
+    Disk::kbToSector(unsigned long long kb) const
+    {
+	// TODO use 128 arithmetic
+	return kb * 1024 / logical_sector_size;
+    }
+
+
     bool
     Disk::detect(SystemInfo& systeminfo)
     {
@@ -456,7 +472,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     if( detected_label.empty() )
 	detected_label = dlabel;
     if( dlabel.empty() )
-	dlabel = defaultLabel(getStorage()->efiBoot(), size_k);
+	dlabel = defaultLabel(getStorage()->efiBoot(), kbToSector(size_k));
     setLabelData( dlabel );
 
     if (label == "unsupported")
@@ -536,7 +552,7 @@ Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapa
 	dlabelcapabilities.maxPrimary = labels[i].primary;
 	dlabelcapabilities.extendedPossible = labels[i].extended;
 	dlabelcapabilities.maxLogical = labels[i].logical;
-	dlabelcapabilities.maxSizeK = labels[i].max_size_k;
+	dlabelcapabilities.maxSectors = labels[i].max_sectors;
     }
     y2mil("dlabel:" << dlabel << " ret:" << ret);
     return ret;
@@ -990,15 +1006,13 @@ bool
 }
 
 
-// note: factors are in the context of kilo
-#define TB (1024ULL * 1024ULL * 1024ULL)
-#define PB (1024ULL * 1024ULL * 1024ULL * 1024ULL)
-
 string
-Disk::defaultLabel(bool efiboot, unsigned long long size_k)
+Disk::defaultLabel(bool efiboot, unsigned long long num_sectors)
 {
     string ret = "msdos";
     if (efiboot)
+	ret = "gpt";
+    else if (num_sectors > (1ULL << 32) - 1)
 	ret = "gpt";
     else if( Storage::arch()=="ia64" )
 	ret = "gpt";
@@ -1008,37 +1022,32 @@ Disk::defaultLabel(bool efiboot, unsigned long long size_k)
 	ret = "mac";
     else if( Storage::arch()=="ppc" && Storage::isPPCPegasos() )
 	ret = "amiga";
-    if( size_k>2*TB )
-	ret = "gpt";
-    y2mil("efiboot:" << efiboot << " size_k:" << size_k << " ret:" << ret);
+    y2mil("efiboot:" << efiboot << " num_sectors:" << num_sectors << " ret:" << ret);
     return ret;
 }
 
-const Disk::label_info Disk::labels[] = {
-	{ "msdos", true, 4, 256, 2*TB }, // actually unlimited number of logical partitions
-	{ "gpt", false, 128, 0, 16*PB },
-	{ "bsd", false, 8, 0, 2*TB },
-	{ "sun", false, 8, 0, 2*TB },
-	{ "mac", false, 64, 0, 2*TB },
-	{ "dasd", false, 3, 0, 2*TB },
-	{ "aix", false, 0, 0, 2*TB },
-	{ "amiga", false, 63, 0, 2*TB },
+
+    const Disk::label_info Disk::labels[] = {
+	{ "msdos", true, 4, 256, (1ULL << 32) - 1 },	// actually unlimited number of logical partitions
+	{ "gpt", false, 128, 0, (1ULL << 50) - 1 },	// actually 64 bit but we cannot calculate with that
+	{ "bsd", false, 8, 0, (1ULL << 32) - 1 },
+	{ "sun", false, 8, 0, (1ULL << 32) - 1 },
+	{ "mac", false, 64, 0, (1ULL << 32) - 1 },
+	{ "dasd", false, 3, 0, (1ULL << 32) - 1 },
+	{ "aix", false, 0, 0, (1ULL << 32) - 1 },
+	{ "amiga", false, 63, 0, (1ULL << 32) - 1 },
 	{ "", false, 0, 0, 0 }
     };
 
 
 Region Disk::usableCylRegion() const
 {
-    unsigned long long maxSizeK = 2*TB;
+    unsigned long long maxSectors = (1ULL << 32) - 1;
     DlabelCapabilities caps;
     if (getDlabelCapabilities(label, caps))
-	maxSizeK = caps.maxSizeK;
-    return Region(0, min(cylinders(), kbToCylinder(maxSizeK)));
+	maxSectors = caps.maxSectors;
+    return Region(0, min(cylinders(), kbToCylinder(sectorToKb(maxSectors))));
 }
-
-
-#undef TB
-#undef PB
 
 
     const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+" };

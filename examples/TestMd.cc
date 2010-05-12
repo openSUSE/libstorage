@@ -54,7 +54,7 @@ main( int argc_iv, char** argv_ppcv )
     string device;
     if( ret==0 )
 	{
-	ret = s->destroyPartitionTable( disk, s->defaultDiskLabel() );
+	ret = s->destroyPartitionTable(disk, s->defaultDiskLabel(disk));
 	if( ret ) cerr << "retcode:" << ret << endl;
 	}
     if( ret==0 )
