@@ -1,7 +1,13 @@
 -------------------------------------------------------------------
+Wed May 12 11:17:08 CEST 2010 - aschnell@suse.de
+
+- respect partition table limitations in getUnusedPartitionSlots
+  and freeCylindersAroundPartition
+
+-------------------------------------------------------------------
 Thu May  6 16:18:51 CEST 2010 - fehr@suse.de
 
-- remove enforcement to call addpart 
+- remove enforcement to call addpart
 
 -------------------------------------------------------------------
 Wed May  5 16:38:01 CEST 2010 - fehr@suse.de
@@ -12,7 +18,7 @@ Wed May  5 16:38:01 CEST 2010 - fehr@suse.de
 -------------------------------------------------------------------
 Tue May  4 12:53:03 CEST 2010 - fehr@suse.de
 
-- call mkswap with option -f otherwise it sometime refuses to create 
+- call mkswap with option -f otherwise it sometime refuses to create
   swap signature
 
 -------------------------------------------------------------------
@@ -20,7 +26,7 @@ Thu Apr 29 15:26:05 CEST 2010 - fehr@suse.de
 
 - fix handling of multiple xbd devices with same basename
   (e.g. xvda1,xvda2) bnc #587658
-- ignore changes of partition id on readonly disks 
+- ignore changes of partition id on readonly disks
 
 -------------------------------------------------------------------
 Mon Apr 26 16:53:38 CEST 2010 - fehr@suse.de
@@ -106,7 +112,7 @@ Mon Mar 01 10:23:05 CET 2010 - aschnell@suse.de
 -------------------------------------------------------------------
 Tue Feb 23 16:54:19 CET 2010 - fehr@suse.de
 
-- fix wrong handling of fstab entry when removing mount point of 
+- fix wrong handling of fstab entry when removing mount point of
   encrypted device
 - make conversion of mounted volume into a LVM PV work
 - do not add "noauto" to encrypted fstab entries any more (bnc #581339)
@@ -143,7 +149,7 @@ Wed Feb 10 11:59:30 CET 2010 - fehr@suse.de
 Tue Feb  9 13:10:58 CET 2010 - fehr@suse.de
 
 - adaptions for new parted 2.1
-  if ioctl BLKRRPART from parted fails, call addpart/delpart to 
+  if ioctl BLKRRPART from parted fails, call addpart/delpart to
   still allow repartitioning of disks where partitions are busy
 - 2.19.8
 
@@ -161,7 +167,7 @@ Thu Feb 04 11:59:56 CET 2010 - aschnell@suse.de
 -------------------------------------------------------------------
 Wed Jan 27 16:03:55 CET 2010 - fehr@suse.de
 
-- add "nofail" to dm-encrypted fstab entries and do not set passno 
+- add "nofail" to dm-encrypted fstab entries and do not set passno
   to zero any more (bnc #569895)
 
 -------------------------------------------------------------------

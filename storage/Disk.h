@@ -71,6 +71,9 @@ class Disk : public Container
 	unsigned long cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
 	unsigned sectors() const { return sector; }
+
+	Region usableCylRegion() const;
+
 	unsigned long numMinor() const { return range; }
 	unsigned long cylSizeB() const { return byte_cyl; }
 	unsigned maxPrimary() const { return max_primary; }

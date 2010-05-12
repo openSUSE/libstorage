@@ -1026,6 +1026,17 @@ const Disk::label_info Disk::labels[] = {
 	{ "", false, 0, 0, 0 }
     };
 
+
+Region Disk::usableCylRegion() const
+{
+    unsigned long long maxSizeK = 2*TB;
+    DlabelCapabilities caps;
+    if (getDlabelCapabilities(label, caps))
+	maxSizeK = caps.maxSizeK;
+    return Region(0, min(cylinders(), kbToCylinder(maxSizeK)));
+}
+
+
 #undef TB
 #undef PB
 
@@ -1272,6 +1283,24 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
 	    }
 	    if (end > start)
 		free.push_back(Region(start, end - start));
+	}
+    }
+
+    y2deb("free:" << free);
+
+    Region usable_region = usableCylRegion();
+
+    list<Region>::iterator i = free.begin();
+    while (i != free.end())
+    {
+	if (usable_region.doIntersect(*i))
+	{
+	    *i = usable_region.intersect(*i);
+	    ++i;
+	}
+	else
+	{
+	    i = free.erase(i);
 	}
     }
 
@@ -2461,8 +2490,6 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
     {
     int ret = 0;
 
-    freeCylsBefore = freeCylsAfter = 0;
-
     unsigned long startBefore = 0;
     const unsigned long endBefore = p->cylStart() - 1;
     const unsigned long startAfter = p->cylEnd() + 1;
@@ -2526,11 +2553,29 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
 	    endAfter = 0;
 	}
 
+    freeCylsBefore = freeCylsAfter = 0;
     if (endBefore > startBefore)
 	freeCylsBefore = endBefore - startBefore;
-
     if (endAfter > startAfter)
 	freeCylsAfter = endAfter - startAfter;
+
+    Region around(p->cylStart() - freeCylsBefore, p->cylEnd() + freeCylsAfter - 1);
+    Region usable_region = usableCylRegion();
+
+    if (usable_region.doIntersect(around))
+    {
+	around = around.intersect(usableCylRegion());
+
+	freeCylsBefore = freeCylsAfter = 0;
+	if (around.start() < p->cylStart())
+	    freeCylsBefore = p->cylStart() - around.start();
+	if (around.end() > p->cylEnd())
+	    freeCylsAfter = around.end() - p->cylEnd();
+    }
+    else
+    {
+	freeCylsBefore = freeCylsAfter = 0;
+    }
 
     y2mil("ret:" << ret << " freeCylsBefore:" << freeCylsBefore << " freeCylsAfter:" << freeCylsAfter);
     return ret;

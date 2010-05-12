@@ -1263,9 +1263,6 @@ namespace storage
 	/**
 	 * Query unused slots on a disk suitable for creating partitions.
 	 *
-	 * This functions ignores size limitations of the partition table type,
-	 * e.g. on MSDOS labels partitions cannot exceed 2TB.
-	 *
 	 * @param disk name of disk, e.g. /dev/hda1
 	 * @param slots list of records that get filled with partition slot specific info
 	 * @return zero if all is ok, a negative number to indicate an error
