@@ -2803,6 +2803,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.cyl = cylinders();
     info.heads = heads();
     info.sectors = sectors();
+    info.sectorSize = logical_sector_size;
     info.cylSize = cylSizeB();
     info.disklabel = labelName();
     info.maxPrimary = maxPrimary();

@@ -287,6 +287,7 @@ namespace storage
 	unsigned long cyl;
 	unsigned long heads;
 	unsigned long sectors;
+	unsigned int sectorSize;
 	string disklabel;
 	unsigned maxPrimary;
 	bool extendedPossible;
