@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri May 14 10:14:01 CEST 2010 - aschnell@suse.de
+
+- updated translations
+
+-------------------------------------------------------------------
 Wed May 12 16:52:24 CEST 2010 - aschnell@suse.de
 
 - make defaultDiskLabel depend on logical sector size
