@@ -51,8 +51,8 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
-	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
-	  del_ptable(false)
+	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
+	  gpt_enlarge(false), del_ptable(false)
     {
     logfile_name = boost::replace_all_copy(nm, "/", "_");
     getMajorMinor();
@@ -64,8 +64,8 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
-	  init_disk(false), iscsi(false), dmp_slave(false), gpt_enlarge(false),
-	  del_ptable(false)
+	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
+	  gpt_enlarge(false), del_ptable(false)
     {
     y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = name + decString(num);
@@ -84,7 +84,7 @@ namespace storage
 	  head(0), sector(0),
 	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
-	  init_disk(false), iscsi(false), dmp_slave(false),
+	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), byte_cyl(0), range(4), del_ptable(false)
     {
 	logfile_name = nm;
@@ -121,8 +121,9 @@ namespace storage
 	  max_primary(c.max_primary),
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
 	  init_disk(c.init_disk), iscsi(c.iscsi),
-	  dmp_slave(c.dmp_slave), gpt_enlarge(c.gpt_enlarge),
-	  byte_cyl(c.byte_cyl), range(c.range), del_ptable(c.del_ptable)
+	  dmp_slave(c.dmp_slave), no_addpart(c.no_addpart), 
+	  gpt_enlarge(c.gpt_enlarge), byte_cyl(c.byte_cyl), range(c.range), 
+	  del_ptable(c.del_ptable)
     {
 	y2deb("copy-constructed Disk " << dev);
 
@@ -2158,7 +2159,7 @@ Disk::getPartedValues( Partition *p ) const
 	           " size:" << sysfs_size );
 	    y2mil( "sectors nr:" << nr << " parted start:" << sstart << 
 	           " size:" << ssize );
-	    if( nr == p->nr() && 
+	    if( nr == p->nr() && !no_addpart &&
 	        (sysfs_start!=sstart || sysfs_size!=ssize) )
 		{
 		callDelpart( nr );
@@ -2848,6 +2849,8 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " iSCSI";
     if( d.dmp_slave )
 	s << " DmpSlave";
+    if( d.no_addpart )
+	s << " NoAddpart";
     if( d.gpt_enlarge )
 	s << " GptEnlarge";
     if (d.del_ptable)
@@ -2961,8 +2964,8 @@ bool Disk::equalContent( const Container& rhs ) const
 	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
 	      init_disk==p->init_disk && label==p->label && 
 	      iscsi==p->iscsi &&
-	      dmp_slave==p->dmp_slave && gpt_enlarge==p->gpt_enlarge &&
-	      del_ptable == p->del_ptable;
+	      dmp_slave==p->dmp_slave && no_addpart==p->no_addpart &&
+	      gpt_enlarge==p->gpt_enlarge && del_ptable == p->del_ptable;
     if( ret && p )
 	{
 	ConstPartPair pp = partPair();

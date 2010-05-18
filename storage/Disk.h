@@ -83,6 +83,7 @@ class Disk : public Container
 	virtual string udevPath() const { return udev_path; }
 	virtual list<string> udevId() const { return udev_id; }
 	void setSlave( bool val=true ) { dmp_slave=val; }
+	void setAddpart( bool val=true ) { no_addpart=!val; }
 	void setNumMinor( unsigned long val ) { range=val; }
 
 	virtual string procName() const { return nm; }
@@ -291,6 +292,7 @@ class Disk : public Container
 	bool init_disk;
 	bool iscsi;
 	bool dmp_slave;
+	bool no_addpart;
 	bool gpt_enlarge;
 	unsigned long byte_cyl;
 	unsigned long range;

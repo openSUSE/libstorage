@@ -321,6 +321,7 @@ void
     disk->setNumMinor( 64 );
     disk->setSilent();
     disk->setSlave();
+    disk->setAddpart(false);
     disk->detect(systeminfo);
     }
 
