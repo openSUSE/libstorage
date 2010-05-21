@@ -1030,7 +1030,8 @@ Disk::defaultLabel(bool efiboot, unsigned long long num_sectors)
 
     const Disk::label_info Disk::labels[] = {
 	{ "msdos", true, 4, 256, (1ULL << 32) - 1 },	// actually unlimited number of logical partitions
-	{ "gpt", false, 128, 0, (1ULL << 50) - 1 },	// actually 64 bit but we cannot calculate with that
+	{ "gpt", false, 128, 0, (1ULL << 48) - 1 },	// actually 64 bit but we cannot calculate with that,
+							// 48 bit looks nice since it matches LBA48
 	{ "bsd", false, 8, 0, (1ULL << 32) - 1 },
 	{ "sun", false, 8, 0, (1ULL << 32) - 1 },
 	{ "mac", false, 64, 0, (1ULL << 32) - 1 },
