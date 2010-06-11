@@ -9,15 +9,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2010-04-10 21:29+0300\n"
-"Last-Translator: Jyri Palokangas <jmp@opensuse.org>\n"
-"Language-Team: TRANSLATIONS <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-06-03 05:15+0300\n"
+"Last-Translator: Jyri Palokangas <jyri.palokangas@opensuse.org>\n"
+"Language-Team: suomi <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: KBabel 1.11.4\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:210 ../storage/Dmraid.cc:210
@@ -473,19 +473,17 @@ msgstr "Poistetaan ohjelmistopohjainen RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "t"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "GiB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
@@ -997,7 +995,7 @@ msgstr "Vähennetään taltioryhmästä %1$s laite %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Poista %1$s"
@@ -1048,7 +1046,7 @@ msgstr "Poista taltioryhmä %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Poistetaan %1$s"
@@ -1092,7 +1090,7 @@ msgstr "Poistetaan taltioryhmä %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Aseta levyn %1$s nimeksi %2$s"
@@ -1149,7 +1147,7 @@ msgstr "Aseta salattu silmukkalaite %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Asetetaan levyn %1$s nimeksi %2$s"
@@ -1285,7 +1283,7 @@ msgid "TB"
 msgstr "Tt"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1326,7 +1324,7 @@ msgstr ""
 "tältä levyltä tällä työkalulla."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1409,7 +1407,7 @@ msgstr ""
 "Haluatko MD osioivan RAID alijärjestelmän hallitsevan noita osioita?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1428,7 +1426,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1448,49 +1446,3 @@ msgstr "k"
 #: ../storage/HumanString.cc:58
 msgid "kB"
 msgstr "kt"
-
-#~ msgid "BIOS RAID"
-#~ msgstr "BIOS RAID"
-
-#~ msgid "Create encrypted partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Luo salattu osio %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$s"
-
-#~ msgid "Create encrypted partition %1$s (%2$s) with id=%3$X"
-#~ msgstr "Luo salattu osio %1$s (%2$s) tunnisteella id=%3$X"
-
-#~ msgid "Create partition %1$s (%2$s)"
-#~ msgstr "Luo osio %1$s (%2$s)"
-
-#~ msgid "Create partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Luo osio %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$s"
-
-#~ msgid "Create partition %1$s (%2$s) with id=%3$X"
-#~ msgstr "Luo osio %1$s (%2$s) tunnisteella (id=) %3$X"
-
-#~ msgid "Create swap partition %1$s (%2$s)"
-#~ msgstr "Luo swap-osio %1$s (%2$s)"
-
-#~ msgid "Creating partition %1$s"
-#~ msgstr "Luodaan osio %1$s"
-
-#~| msgid "Partition"
-#~ msgid "Partitioned RAID"
-#~ msgstr "Osioitu RAID"
-
-#~ msgid "Set disk label of disk %1$s to %2$s"
-#~ msgstr "Aseta levyn %1$s osiotaulun tyypiksi %2$s"
-
-#~ msgid "Set disk label of multipath disk %1$s to %2$s"
-#~ msgstr "Aseta multipath-levyn %1$s levyn nimeksi %2$s"
-
-#~ msgid "Set disk label of raid %1$s to %2$s"
-#~ msgstr "Aseta raid-levyn %1$s nimeksi %2$s"
-
-#~ msgid "Setting disk label of disk %1$s to %2$s"
-#~ msgstr "Asetetaan levyn %1$s osiotaulun tyypiksi %2$s"
-
-#~ msgid "Setting disk label of multipath disk %1$s to %2$s"
-#~ msgstr "Asetetaan multipath-levyn %1$s nimeksi %2$s"
-
-#~ msgid "Setting disk label of raid %1$s to %2$s"
-#~ msgstr "Asetetaan raid-levyn %1$s nimeksi %2$s"

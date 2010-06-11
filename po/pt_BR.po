@@ -2,21 +2,23 @@
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2002 SuSE Linux AG.
 # Copyright (C) 1999-2000, 2001 SuSE GmbH.
+#
 # Karl Eichwalder <ke@suse.de>, 1999.
 # Ralf Lanz <rlanz@genix.com.br>, 1999.
-#
+# Isis Binder <isis.binder@gmail.com>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-12 17:32+0200\n"
-"PO-Revision-Date: 2010-05-05 18:36-0300\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-05-22 22:25-0300\n"
 "Last-Translator: Isis Binder <isis.binder@gmail.com>\n"
-"Language-Team: Brazilian Portuguese <i18n@suse.de>\n"
+"Language-Team: Brazilian Portuguese <opensuse-pt@opensuse.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n>1;\n"
+"X-Generator: Lokalize 0.2\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:210 ../storage/Dmraid.cc:210
@@ -84,11 +86,8 @@ msgstr "Criar volume de inicialização %1$s (%2$s) com %3$s"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:315
 #, c-format
-msgid ""
-"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr ""
-"Criar o dispositivo baseado em arquivo criptografado %1$s do arquivo %2$s (%3"
-"$s) como %5$s com %4$s"
+msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr "Criar o dispositivo baseado em arquivo criptografado %1$s do arquivo %2$s (%3$s) como %5$s com %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -106,9 +105,7 @@ msgstr "Criar o volume lógico criptografado %1$s (%2$s) de %4$s com %3$s"
 #: ../storage/Dmmultipath.cc:114
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr ""
-"Criar a partição de caminhos múltiplos criptografada %1$s (%2$s) de %4$s com "
-"%3$s"
+msgstr "Criar a partição de caminhos múltiplos criptografada %1$s (%2$s) de %4$s com %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -127,8 +124,7 @@ msgstr "Criar a partição raid criptografada %1$s (%2$s) para %4$s com %3$s"
 #: ../storage/Md.cc:464
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr ""
-"Criar RAID de software criptografado %1$s (%2$s) de %5$s para %4$s com %3$s"
+msgstr "Criar RAID de software criptografado %1$s (%2$s) de %5$s para %4$s com %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -183,9 +179,7 @@ msgstr "Criar o dispositivo baseado em arquivo %1$s do arquivo %2$s (%3$s)"
 #: ../storage/Loop.cc:304
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr ""
-"Criar o dispositivo baseado em arquivo %1$s do arquivo %2$s (%3$s) como %5$s "
-"com %4$s"
+msgstr "Criar o dispositivo baseado em arquivo %1$s do arquivo %2$s (%3$s) como %5$s com %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -480,17 +474,17 @@ msgstr "Removendo o RAID de software %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
 msgid "EB"
-msgstr ""
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
 msgid "EiB"
-msgstr ""
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
@@ -655,9 +649,7 @@ msgstr "Formatar o dispositivo criptografado %1$s (%2$s) de %4$s com %3$s"
 #: ../storage/Dm.cc:430
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr ""
-"Formatar o volume mapeador de dispositivo criptografado %1$s (%2$s) de %4$s "
-"com %3$s"
+msgstr "Formatar o volume mapeador de dispositivo criptografado %1$s (%2$s) de %4$s com %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -666,11 +658,8 @@ msgstr ""
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:372
 #, c-format
-msgid ""
-"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr ""
-"Formatar o dispositivo baseado em arquivo criptografado %1$s de %2$s (%3$s) "
-"como %5$s com %4$s"
+msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr "Formatar o dispositivo baseado em arquivo criptografado %1$s de %2$s (%3$s) como %5$s com %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -688,9 +677,7 @@ msgstr "Formatar o volume lógico criptografado %1$s (%2$s) de %4$s com %3$s"
 #: ../storage/Dmmultipath.cc:176
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr ""
-"Formatar a partição de caminhos múltiplos criptografada %1$s (%2$s) de %4$s "
-"com %3$s"
+msgstr "Formatar a partição de caminhos múltiplos criptografada %1$s (%2$s) de %4$s com %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -727,9 +714,7 @@ msgstr "Formatar RAID de software criptografado %1$s (%2$s) de %4$s com %3$s"
 #: ../storage/Loop.cc:361
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr ""
-"Formatar o dispositivo baseado em arquivo %1$s de %2$s (%3$s) como %5$s com %"
-"4$s"
+msgstr "Formatar o dispositivo baseado em arquivo %1$s de %2$s (%3$s) como %5$s com %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -876,8 +861,7 @@ msgstr "Formatando o volume mapeador de dispositivo %1$s (%2$s) com %3$s "
 #: ../storage/Loop.cc:343
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr ""
-"Formatando o dispositivo baseado em arquivo %1$s de %2$s (%3$s) com %4$s "
+msgstr "Formatando o dispositivo baseado em arquivo %1$s de %2$s (%3$s) com %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1012,7 +996,7 @@ msgstr "Reduzindo o grupo de volume %1$s em %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Remover %1$s"
@@ -1063,7 +1047,7 @@ msgstr "Remover o grupo de volume %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Removendo %1$s"
@@ -1107,7 +1091,7 @@ msgstr "Removendo o grupo de volume %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Definir o rótulo de disco de %1$s para %2$s"
@@ -1164,7 +1148,7 @@ msgstr "Configurar o dispositivo de loop criptografado em %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Definindo o rótulo de disco de %1$s para %2$s"
@@ -1300,7 +1284,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1342,7 +1326,7 @@ msgstr ""
 "disco com esta ferramenta."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1412,24 +1396,21 @@ msgid ""
 "Following MD compatible RAID devices were detected:\n"
 "%1$s\n"
 "If they are clean devices or contain partitions then you can choose to use\n"
-"MD Partitionable RAID sysbsystem to handle them. In case of clean device "
-"you\n"
+"MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
 "will be able to install system on it and boot from such RAID.\n"
 "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 msgstr ""
-"Você está em uma plataforma compatível com Matrix Storage Manager da Intel"
-"(R).\n"
+"Você está em uma plataforma compatível com Matrix Storage Manager da Intel(R).\n"
 "\n"
 "Os seguintes dispositivos RAID compatíveis com MD foram detectados:\n"
 "%1$s\n"
 "Se eles estão vazios ou contêm partições, então você pode utilizar\n"
-" um subsistema RAID MD particionável para manipulá-los. No caso de um "
-"dispositivo vazio, você\n"
+" um subsistema RAID MD particionável para manipulá-los. No caso de um dispositivo vazio, você\n"
 "poderá instalar um sistema e iniciar a partir desse RAID.\n"
 "Você deseja que o substistema RAID MD particionável gerencie essas partições?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1441,8 +1422,7 @@ msgid ""
 msgstr ""
 "Você tem as seguintes opções:\n"
 "  - Reparticione seu sistema de maneira que somente o número máximo\n"
-"    permitido de partições seja utilizado. Para reparticionar, use seu "
-"sistema\n"
+"    permitido de partições seja utilizado. Para reparticionar, use seu sistema\n"
 "    operacional existente.\n"
 "  - Use LVM/EVMS posto que providenciam um número arbitrário e flexível\n"
 "    de partições de blocos de dispositivo. Isto necessita de uma repartição\n"
@@ -1450,7 +1430,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

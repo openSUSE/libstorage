@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2010-04-14 13:50+0200\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-06-03 10:29+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <opensuse-translation@opensuse.org>\n"
 "MIME-Version: 1.0\n"
@@ -474,19 +474,17 @@ msgstr "Sletter software-RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "B"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "GiB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
@@ -999,7 +997,7 @@ msgstr "Formindsker diskområdegruppe %1$s med %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Fjern %1$s"
@@ -1050,7 +1048,7 @@ msgstr "Fjern diskområdegruppe %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Fjerner %1$s"
@@ -1094,7 +1092,7 @@ msgstr "Fjerner diskområdegruppe %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Sæt diskmærkat for %1$s til %2$s"
@@ -1151,7 +1149,7 @@ msgstr "Sæt krypteret løkkeenhed op på %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Sætter diskmærkat for %1$s til %2$s"
@@ -1287,7 +1285,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1329,7 +1327,7 @@ msgstr ""
 "fra denne disk med dette værktøj."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1413,7 +1411,7 @@ msgstr ""
 "Vil du have MD Partitionable RAID-subsystem til at håndtere de partitioner?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1431,7 +1429,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

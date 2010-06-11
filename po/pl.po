@@ -2,18 +2,20 @@
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2003 SuSE Linux AG.
 #
+# Mariusz Fik <fisiu@opensuse.org>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2010-05-03 12:14+0100\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-05-25 09:41+0100\n"
 "Last-Translator: Mirek Rogoziński <miroslaw.rogozinski@opensuse.biz>\n"
-"Language-Team: Polish <i18n@suse.de>\n"
+"Language-Team: Polish <opensuse-pl@opensuse.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 1.0\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:210 ../storage/Dmraid.cc:210
@@ -238,7 +240,7 @@ msgstr "Wolumin root %1$s (%2$s) zostanie utworzony z systemem plików %3$s"
 #: ../storage/Md.cc:474
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
-msgstr "Utwórz rrogramowy RAID %1$s (%2$s) z %3$s"
+msgstr "Utwórz programowy RAID %1$s (%2$s) z %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -469,19 +471,17 @@ msgstr "Usuwanie programowego RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "B"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "GB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
@@ -995,7 +995,7 @@ msgstr "Zmniejszanie grupy woluminów %1$s o %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Partycja %1$s zostanie usunięta"
@@ -1046,7 +1046,7 @@ msgstr "Grupa woluminów %1$s zostanie usunięta"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Usuwanie %1$s"
@@ -1090,7 +1090,7 @@ msgstr "Usuwanie grupy woluminów %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Etykieta woluminu %1$s zostanie ustawiona na %2$s"
@@ -1147,7 +1147,7 @@ msgstr "Zaszyfrowane urządzenie loop zostanie skonfigurowane na %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Ustawianie etykiety woluminu dla dysku %1$s na %2$s"
@@ -1283,7 +1283,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1324,7 +1324,7 @@ msgstr ""
 "przy użyciu tego narzędzia."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1408,7 +1408,7 @@ msgstr ""
 "Czy chcesz by podsystem partycjonowania RAID zarządzał tymi partycjami?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1420,15 +1420,15 @@ msgid ""
 msgstr ""
 "Dostępne są następujące opcje:\n"
 "  - Naprawa systemu w taki sposób, że tylko maksymalna dozwolona liczba partycji\n"
-"    zostanie użyta. Do repartycjonowania użyty zostanie istneijący system\n"
+"    zostanie użyta. Do re-partycjonowania użyty zostanie istniejący system\n"
 "    operacyjny.\n"
 "  - Użycie LVM jako że zapewnia on wiele elastycznych\n"
 "    partycji bloku urządzeń. W tym wypadku także konieczne jest \n"
-"    repartycjonowanie."
+"    re-partycjonowanie."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

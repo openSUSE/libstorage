@@ -2,21 +2,23 @@
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2002 SuSE Linux AG.
 # Copyright (C) 1999-2001 SuSE GmbH.
+#
 # Petr Pavlik <pp@suse.cz>, 1999, 2000, 2001.
 # Jaromír Červenka <cervajz@cervajz.com>, 2009.
-#
+# Vojtěch Zeisek <Vojtech.Zeisek@opensuse.org>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2009-09-19 08:46+0100\n"
-"Last-Translator: Jaromir Cervenka <cervajz@cervajz.com>\n"
-"Language-Team: Czech <dokument@suse.cz>\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-06-05 20:33+0200\n"
+"Last-Translator: Vojtěch Zeisek <Vojtech.Zeisek@opensuse.org>\n"
+"Language-Team: Czech <opensuse-translation@opensuse.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 1.0\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:210 ../storage/Dmraid.cc:210
@@ -73,9 +75,9 @@ msgstr "Vytvořit %1$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:2874
-#, fuzzy, c-format
+#, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
-msgstr "Vytvořit startovací oddíl %1$s (%2$s) pomocí %3$s"
+msgstr "Vytvořit startovací oddíl %1$s (%2$s) s %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -127,7 +129,7 @@ msgstr "Vytvořit šifrovaný softwarový RAID %1$s (%2$s) z %5$s pro %4$s pomoc
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2912
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Vytvořit šifrovaný oddíl %1$s (%2$s)"
 
@@ -136,9 +138,9 @@ msgstr "Vytvořit šifrovaný oddíl %1$s (%2$s)"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:2895
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Vytvořit šifrovaný logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
+msgstr "Vytvořit šifrovaný logický svazek %1$s (%2$s) pro %4$s s %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -231,9 +233,9 @@ msgstr "Vytvořit RAID oddíl %1$s (%2$s) pro %4$s pomocí %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:2866
-#, fuzzy, c-format
+#, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
-msgstr "Vytvořit kořenový oddíl %1$s (%2$s) pomocí %3$s"
+msgstr "Vytvořit kořenový oddíl %1$s (%2$s) s %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -277,34 +279,34 @@ msgstr "Vytvořit odkládací RAID oddíl %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2858
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap volume %1$s (%2$s)"
-msgstr "Vytvořit odkládací logický svazek %1$s (%2$s)"
+msgstr "Vytvořit odkládací svazek %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2906
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s)"
-msgstr "Vytvořit logický svazek %1$s (%2$s)"
+msgstr "Vytvořit svazek %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:2885
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Vytvořit logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
+msgstr "Vytvořit svazek %1$s (%2$s) pro %4$s s %3$s"
 
 #. displayed text before action
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1095
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Vytvořit skupinu svazků %1$s z %2$s"
+msgstr "Vytvořit skupinu svazků %1$s (%2$s) z %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:271
@@ -346,32 +348,30 @@ msgstr "Vytváří se softwarový RAID %1$s z %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2850
-#, fuzzy, c-format
+#, c-format
 msgid "Creating volume %1$s"
-msgstr "Vytváří se logický svazek %1$s"
+msgstr "Vytváří se svazek %1$s"
 
 #. displayed text during action
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1086
-#, fuzzy, c-format
+#, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Vytváří se skupina svazků %1$s z %2$s"
+msgstr "Vytváří se skupina svazků %1$s (%2$s) z %3$s"
 
 #: ../storage/Graph.cc:499
 msgid "DM Device"
 msgstr "DM zařízení"
 
 #: ../storage/Graph.cc:475
-#, fuzzy
 msgid "DM Multipath"
-msgstr "Multipath"
+msgstr "DM Multipath"
 
 #: ../storage/Graph.cc:471
-#, fuzzy
 msgid "DM RAID"
-msgstr "RAID"
+msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -474,43 +474,41 @@ msgstr "Odstraňuje se softwarový RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "B"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "GiB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
-#, fuzzy, c-format
+#, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
 msgstr[0] "Spustit dasdfmt na disku %1$s"
 msgstr[1] "Spustit dasdfmt na disku %1$s"
-msgstr[2] "Spustit dasdfmt na disku %1$s"
+msgstr[2] "Spustit dasdfmt na disku %1$s "
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:471
-#, fuzzy, c-format
+#, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
-msgstr[0] "Spouštění dasdfmt pro disk %1$s..."
-msgstr[1] "Spouštění dasdfmt pro disk %1$s..."
-msgstr[2] "Spouštění dasdfmt pro disk %1$s..."
+msgstr[0] "Spouštění dasdfmt pro disk %1$s"
+msgstr[1] "Spouštění dasdfmt pro disky %1$s"
+msgstr[2] "Spouštění dasdfmt pro disky %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
 #: ../storage/Dasd.cc:377
-#, fuzzy, c-format
+#, c-format
 msgid "Executing fdasd for disk %1$s"
-msgstr "Spouštění fdasd pro disk %1$s..."
+msgstr "Spouštění fdasd pro disk %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -846,9 +844,9 @@ msgstr "Formátovat softwarový RAID %1$s (%2$s) pomocí %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:704
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Formátuje se zařízení %1$s (%2$s) pomocí %3$s "
+msgstr "Formátuje se zařízení %1$s (%2$s) s %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -946,9 +944,8 @@ msgid "MB"
 msgstr "MB"
 
 #: ../storage/Graph.cc:483 ../storage/Graph.cc:487
-#, fuzzy
 msgid "MD RAID"
-msgstr "RAID"
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
@@ -1002,7 +999,7 @@ msgstr "Zmenšuje se skupina svazků %1$s o %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Odstranit %1$s"
@@ -1035,15 +1032,15 @@ msgstr "Odstranit RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1104
-#, fuzzy, c-format
+#, c-format
 msgid "Remove software RAID %1$s"
-msgstr "Odstraňuje se softwarový RAID %1$s"
+msgstr "Odstranit softwarový RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2963
-#, fuzzy, c-format
+#, c-format
 msgid "Remove volume %1$s"
-msgstr "Odstranit nfs svazek %1$s"
+msgstr "Odstranit svazek %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1071
@@ -1053,7 +1050,7 @@ msgstr "Odstranit skupinu svazků %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Odstraňuje se %1$s"
@@ -1079,15 +1076,15 @@ msgstr "Odstraňuje se RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1099
-#, fuzzy, c-format
+#, c-format
 msgid "Removing software RAID %1$s"
-msgstr "Odstraňuje se softwarový RAID %1$s"
+msgstr "Odstranit softwarový RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2958
-#, fuzzy, c-format
+#, c-format
 msgid "Removing volume %1$s"
-msgstr "Odstraňuje se nfs svazek %1$s"
+msgstr "Odstranit svazek %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1066
@@ -1097,7 +1094,7 @@ msgstr "Odstraňuje se skupina svazků %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Nastavit popisek disku %1$s na %2$s"
@@ -1154,7 +1151,7 @@ msgstr "Nastavit šifrované loop zařízení na %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Nastavuje se popisek disku %1$s na %2$s"
@@ -1290,7 +1287,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1328,7 +1325,7 @@ msgstr ""
 "nástrojem upravovat, přidávat, odstraňovat ani měnit jejich velikost."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1353,9 +1350,8 @@ msgid "TiB"
 msgstr "TiB"
 
 #: ../storage/Storage.cc:4560
-#, fuzzy
 msgid "Unmount failed."
-msgstr "selhalo."
+msgstr "Odpojení selhalo."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1134
@@ -1401,10 +1397,17 @@ msgid ""
 "will be able to install system on it and boot from such RAID.\n"
 "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 msgstr ""
+"Provozujete platformu kompatibilní s Intel(R) Matrix Storage Manager.\n"
+"\n"
+"Následující MD kompatibilní zařízení RAID byly detekovány:\n"
+"%1$s\n"
+"Pokud jde o čistá zařízení nebi zařízení obsahující oddíly, můžete použít\n"
+"k manipulaci použít MD rozdělitelný RAID subsystém. V případě čistého\n"
+"zařízení na něj budeme moci nainstalovat systém a bootovat z takového RAIDu.\n"
+"Chcete, aby byl ke správě těchto oddílů použit MD rozdělitelný RAID subsystém?"
 
 #. popup text
-#: ../storage/Disk.cc:882
-#, fuzzy
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1414,20 +1417,15 @@ msgid ""
 "    number of block devices partitions. This needs a repartition\n"
 "    as well."
 msgstr ""
-"openSUSE přepíná do nových ovladačů IDE za použití libata\n"
-"modulů. Ty podporují pouze oddíly do s maximálně 15 oddíly.\n"
-"S openSUSE 10.3 máte následující možnosti:\n"
-"  - použít staré ovladače IDE, znovu nabootovat a přidat\n"
-"    'hwprobe=-modules.pata' jako argument jádra\n"
-"  - změnit rozdělení disků vašeho systému tak, aby bylo použito maximálně 15 oddílů.\n"
-"    Pro změnu rozdělení disků použijte váš stávající operační systém.\n"
-"  - Použijte LVM/EVMS neboť mohou poskytnout libovolný a proměnný\n"
-"    počet bloků oddílů zařízení. Také to vyžaduje změnu \n"
-"rozdělení disku."
+"Máte následující možnosti:\n"
+"  - Opravu vašeho systému tak, že je použit pouze maximální povolený\n"
+"    počet oddílů. K opravě použijte stávající existující operační systém.\n"
+"  - Použijte LVM neboť umožňuje pevně daný a flexibilní počet blokových\n"
+"    zařízeních. Toto také vyžaduje opravu."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

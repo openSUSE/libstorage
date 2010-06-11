@@ -6,20 +6,20 @@
 #
 # Dimitar Boin <cyclonetc@mail.bulgaria.com>, 2000.
 # Y Gonch <gonch@mail.bulgaria.com>, 2000.
-# Borislav Mitev <morbid_viper@tkzs.org>, 2004, 2005, 2006, 2009.
+# Borislav Mitev <morbid_viper@tkzs.org>, 2004, 2005, 2006, 2009, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2009-10-06 00:36+0300\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-06-10 00:16+0300\n"
 "Last-Translator: Borislav Mitev <morbid_viper@tkzs.org>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: KBabel 1.11.4\n"
+"X-Generator: Lokalize 1.0\n"
 
 #. text displayed during action
 #: ../storage/Dmmultipath.cc:210 ../storage/Dmraid.cc:210
@@ -76,7 +76,7 @@ msgstr "Създаване на %1$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:2874
-#, fuzzy, c-format
+#, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Създаване на зареждащ дял %1$s (%2$s) с %3$s"
 
@@ -86,9 +86,9 @@ msgstr "Създаване на зареждащ дял %1$s (%2$s) с %3$s"
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:315
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Създаване на криптиран файл-базиран loop %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "Създаване на криптиран файлово-базирано устройство  %1$s в %2$s (%3$s) като %5$s с %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -104,9 +104,9 @@ msgstr "Създаване на криптиран логически дял %1$
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:114
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "Създаване на криптиран многопътен дял %1$s (%2$s) с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -123,32 +123,32 @@ msgstr "Създаване на криптиран raid дял %1$s (%2$s) с %3
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:464
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Създаване на криптиран софтуерен RAID %1$s (%2$s) с %3$s за %4$s"
+msgstr "Създаване на криптиран софтуерен RAID %1$s (%2$s) от %5$s с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2912
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
-msgstr "Създаване на разширен дял %1$s (%2$s)"
+msgstr "Създаване на криптиран дял %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:2895
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран логически дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "Създаване на криптиран дял %1$s (%2$s) с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:123
-#, fuzzy, c-format
+#, c-format
 msgid "Create extended multipath partition %1$s (%2$s)"
-msgstr "Създаване на разширен дял %1$s (%2$s)"
+msgstr "Създаване на разширен многопътен дял %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -168,9 +168,9 @@ msgstr "Създаване на разширен raid дял %1$s (%2$s)"
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Loop.cc:325
-#, fuzzy, c-format
+#, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s)"
-msgstr "Създаване на файл-базиран loop %1$s в %2$s (%3$s)"
+msgstr "Създаване на файлово-базирано устройство %1$s в %2$s (%3$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -178,9 +178,9 @@ msgstr "Създаване на файл-базиран loop %1$s в %2$s (%3$s)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:304
-#, fuzzy, c-format
+#, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Създаване на файл-базиран loop %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "Създаване на файлово-базирано устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -201,18 +201,18 @@ msgstr "Създаване на логически дял %1$s (%2$s) с %3$s з
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:130
-#, fuzzy, c-format
+#, c-format
 msgid "Create multipath partition %1$s (%2$s)"
-msgstr "Създаване на дял %1$s (%2$s)"
+msgstr "Създаване на многопътен дял %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:104
-#, fuzzy, c-format
+#, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "Създаване на многопътен дял %1$s (%2$s) с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -234,17 +234,17 @@ msgstr "Създаване на raid дял %1$s (%2$s) с %3$s за %4$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:2866
-#, fuzzy, c-format
+#, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
-msgstr "Създаване на коренен дял %1$s (%2$s) с %3$s"
+msgstr "Създаване на коренен масив %1$s (%2$s) с %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:474
-#, fuzzy, c-format
+#, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
-msgstr "Създаване на софтуерен RAID %1$s (%2$s)"
+msgstr "Създаване на софтуерен RAID %1$s (%2$s) от %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -252,23 +252,23 @@ msgstr "Създаване на софтуерен RAID %1$s (%2$s)"
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:453
-#, fuzzy, c-format
+#, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Създаване на софтуерен RAID %1$s (%2$s) с %3$s за %4$s"
+msgstr "Създаване на софтуерен RAID %1$s (%2$s) от %5$s с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:218
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
-msgstr "Създаване на swap логически дял %1$s (%2$s)"
+msgstr "Създаване на swap логически масив %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:93
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap multipath partition %1$s (%2$s)"
-msgstr "Създаване на swap дял %1$s (%2$s)"
+msgstr "Създаване на многопътен swap дял %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -280,34 +280,34 @@ msgstr "Създаване на swap raid дял %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2858
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap volume %1$s (%2$s)"
-msgstr "Създаване на swap логически дял %1$s (%2$s)"
+msgstr "Създаване на swap масив %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:2906
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s)"
-msgstr "Създаване на логически дял %1$s (%2$s)"
+msgstr "Създаване на масив %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:2885
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на логически дял %1$s (%2$s) с %3$s за %4$s "
+msgstr "Създаване на масив %1$s (%2$s) с %3$s за %4$s "
 
 #. displayed text before action
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1095
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Създаване на група от масиви %1$s от %2$s"
+msgstr "Създаване на група от масиви %1$s (%2$s) от %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:271
@@ -318,9 +318,9 @@ msgstr "Създаване на %1$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #: ../storage/Loop.cc:288
-#, fuzzy, c-format
+#, c-format
 msgid "Creating file-based device %1$s of file %2$s"
-msgstr "Създаване на файл-базиран loop %1$s във файл %2$s"
+msgstr "Създаване на файлово-базирано устройство %1$s в %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:210
@@ -330,9 +330,9 @@ msgstr "Създаване на логически дял %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:85
-#, fuzzy, c-format
+#, c-format
 msgid "Creating multipath partition %1$s"
-msgstr "Създаване на дял %1$s"
+msgstr "Създаване на многопътен дял %1$s"
 
 #. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #: ../storage/Dmraid.cc:85
@@ -343,39 +343,36 @@ msgstr "Създаване на raid дял %1$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:439
-#, fuzzy, c-format
+#, c-format
 msgid "Creating software RAID %1$s from %2$s"
-msgstr "Създаване на софтуерен RAID %1$s"
+msgstr "Създаване на софтуерен RAID %1$s от %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2850
-#, fuzzy, c-format
+#, c-format
 msgid "Creating volume %1$s"
-msgstr "Създаване на логически дял %1$s"
+msgstr "Създаване на масив %1$s"
 
 #. displayed text during action
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1086
-#, fuzzy, c-format
+#, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Създаване на група от масиви %1$s от %2$s"
+msgstr "Създаване на група от масиви %1$s (%2$s) от %3$s"
 
 #: ../storage/Graph.cc:499
-#, fuzzy
 msgid "DM Device"
-msgstr "DSL устройства"
+msgstr "DM – Устройство"
 
 #: ../storage/Graph.cc:475
-#, fuzzy
 msgid "DM Multipath"
-msgstr "Множество монитори"
+msgstr "DM – Многопът"
 
 #: ../storage/Graph.cc:471
-#, fuzzy
 msgid "DM RAID"
-msgstr "&RAID"
+msgstr "DM – RAID"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -389,14 +386,14 @@ msgstr "Изтриване на Windows дял %1$s (%2$s)"
 #: ../storage/Dm.cc:393
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
-msgstr "Изтриване на том на пренасочването на устройства %1$s (%2$s)"
+msgstr "Изтриване на масив на пренасочването на устройства %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Loop.cc:274
-#, fuzzy, c-format
+#, c-format
 msgid "Delete file-based device %1$s (%2$s)"
-msgstr "Изтриване на файл-базирания loop %1$s (%2$s)"
+msgstr "Изтриване на файлово-базираното устройство %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -408,9 +405,9 @@ msgstr "Изтриване на логически дял %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:72
-#, fuzzy, c-format
+#, c-format
 msgid "Delete multipath partition %1$s (%2$s)"
-msgstr "Изтриване на дял %1$s (%2$s)"
+msgstr "Изтриване на многопътия дял %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -437,13 +434,13 @@ msgstr "Изтриване на софтуерен RAID %1$s (%2$s)"
 #: ../storage/Dm.cc:387
 #, c-format
 msgid "Deleting device mapper volume %1$s"
-msgstr "Изтриване на том на пренасочването на устройства: %1$s"
+msgstr "Изтриване на масив на пренасочването на устройства: %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #: ../storage/Loop.cc:268
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting file-based device %1$s"
-msgstr "Изтриване на файл-базирания loop %1$s"
+msgstr "Изтриване на файлово-базираното устройство %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:192
@@ -453,9 +450,9 @@ msgstr "Изтриване на логически дял %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:66
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting multipath partition %1$s"
-msgstr "Изтриване на дял %1$s"
+msgstr "Изтриване на многопътия дял %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Partition.cc:368
@@ -478,41 +475,39 @@ msgstr "Изтриване на софтуерен RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "B"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "GB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
-#, fuzzy, c-format
+#, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
 msgstr[0] "Изпълняване на dasdfmt за диск %1$s"
-msgstr[1] "Изпълняване на dasdfmt за диск %1$s"
+msgstr[1] "Изпълняване на dasdfmt за дискове %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:471
-#, fuzzy, c-format
+#, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
-msgstr[0] "Изпълняване на dasdfmt за диск %1$s..."
-msgstr[1] "Изпълняване на dasdfmt за диск %1$s..."
+msgstr[0] "Изпълняване на dasdfmt за диск %1$s"
+msgstr[1] "Изпълняване на dasdfmt за дискове %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
 #: ../storage/Dasd.cc:377
-#, fuzzy, c-format
+#, c-format
 msgid "Executing fdasd for disk %1$s"
-msgstr "Изпълняване на fdasd за диск %1$s..."
+msgstr "Изпълняване на fdasd за диск %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -538,9 +533,9 @@ msgstr "Увеличаване на логически дял %1$s на %2$s"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:221
-#, fuzzy, c-format
+#, c-format
 msgid "Extend multipath partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "Увеличаване на многопътия дял %1$s на %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -575,14 +570,14 @@ msgstr "Увеличаване %1$s на %2$s"
 #: ../storage/LvmLv.cc:323
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
-msgstr "Увеличаване на логически дял %1$s на %2$s"
+msgstr "Увеличаване на логически масив %1$s на %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:207
-#, fuzzy, c-format
+#, c-format
 msgid "Extending multipath partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "Увеличаване на многопътия дял %1$s на %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -629,7 +624,7 @@ msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
 #: ../storage/Dm.cc:420
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на том на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
+msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -637,7 +632,7 @@ msgstr "Форматиране на том на пренасочването н�
 #: ../storage/Dm.cc:440
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
-msgstr "Форматиране на том на пренасочването на устройства %1$s (%2$s) с %3$s"
+msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -655,7 +650,7 @@ msgstr "Форматиране на криптирано устройство %1
 #: ../storage/Dm.cc:430
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран том на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
+msgstr "Форматиране на криптиран масив на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -663,9 +658,9 @@ msgstr "Форматиране на криптиран том на пренас�
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:372
-#, fuzzy, c-format
+#, c-format
 msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Форматиране на криптиран файл-базиран loop %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "Форматиране на криптиран файлово-базираното устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -681,9 +676,9 @@ msgstr "Форматиране на криптиран логически дял
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:176
-#, fuzzy, c-format
+#, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "Форматиране на криптиран многопътен дял %1$s (%2$s) с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -718,18 +713,18 @@ msgstr "Форматиране на криптиран софтуерен RAID %
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:361
-#, fuzzy, c-format
+#, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Форматиране на файл-базиран loop %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Loop.cc:383
-#, fuzzy, c-format
+#, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Форматиране на файл-базиран loop %1$s в %2$s (%3$s) с %4$s"
+msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) с %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -760,24 +755,24 @@ msgstr "Форматиране на логически дял %1$s (%2$s) с %3$
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmmultipath.cc:166
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "Форматиране на  многопътния дял %1$s (%2$s) с %3$s за %4$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:157
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) for swap"
-msgstr "Форматиране на %1$s (%2$s) за swap"
+msgstr "Форматиране на многопътния дял %1$s (%2$s) за swap"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmmultipath.cc:186
-#, fuzzy, c-format
+#, c-format
 msgid "Format multipath partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
+msgstr "Форматиране на многопътния дял %1$s (%2$s) с %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -848,7 +843,7 @@ msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:704
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
 
@@ -858,16 +853,16 @@ msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
 #: ../storage/Dm.cc:407
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "Форматиране на том на пренасочването на устройства %1$s (%2$s) с %3$s "
+msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Loop.cc:343
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Форматиране на файл-базиран loop %1$s в %2$s (%3$s) с %4$s"
+msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) с %4$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -881,9 +876,9 @@ msgstr "Форматиране на логически дял %1$s (%2$s) с %3$
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmmultipath.cc:146
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на raid дял %1$s (%2$s) с %3$s"
+msgstr "Форматиране на многопътния дял %1$s (%2$s) с %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -911,9 +906,8 @@ msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s"
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
-#, fuzzy
 msgid "G"
-msgstr "GB"
+msgstr "G"
 
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
@@ -922,9 +916,8 @@ msgstr "GB"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
-#, fuzzy
 msgid "GiB"
-msgstr "GB"
+msgstr "GiB"
 
 #: ../storage/Graph.cc:467
 msgid "Hard Disk"
@@ -936,15 +929,13 @@ msgid "KiB"
 msgstr "КВ"
 
 #: ../storage/Graph.cc:495
-#, fuzzy
 msgid "Logical Volume"
-msgstr "Логически дялове"
+msgstr "Логически масив"
 
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:75
-#, fuzzy
 msgid "M"
-msgstr "МБ"
+msgstr "M"
 
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
@@ -952,9 +943,8 @@ msgid "MB"
 msgstr "МБ"
 
 #: ../storage/Graph.cc:483 ../storage/Graph.cc:487
-#, fuzzy
 msgid "MD RAID"
-msgstr "&RAID"
+msgstr "MD – RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
@@ -974,9 +964,8 @@ msgstr "Монтиране на %1$s в %2$s"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
-#, fuzzy
 msgid "P"
-msgstr "IP"
+msgstr "P"
 
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:102
@@ -989,9 +978,8 @@ msgstr "Дял"
 
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
-#, fuzzy
 msgid "PiB"
-msgstr "КВ"
+msgstr "PiB"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
@@ -1009,7 +997,7 @@ msgstr "Намаляване на групата от масиви %1$s с %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "Премахване на %1$s"
@@ -1030,9 +1018,9 @@ msgstr "Премахване пътя за монтиране на %1$s от %2$
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:76
-#, fuzzy, c-format
+#, c-format
 msgid "Remove nfs volume %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "Изтриване nfs масив %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:245
@@ -1042,15 +1030,15 @@ msgstr "Премахване на raid %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1104
-#, fuzzy, c-format
+#, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Изтриване на софтуерен RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2963
-#, fuzzy, c-format
+#, c-format
 msgid "Remove volume %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "Изтриване на масив %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1071
@@ -1060,7 +1048,7 @@ msgstr "Изтриване на група от масиви %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "Премахване на %1$s"
@@ -1074,9 +1062,9 @@ msgstr "Премахване пътя за монтиране на %1$s от %2$
 
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:71
-#, fuzzy, c-format
+#, c-format
 msgid "Removing nfs volume %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "Изтриване на nfs масив %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:240
@@ -1086,15 +1074,15 @@ msgstr "Премахване на raid %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1099
-#, fuzzy, c-format
+#, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Изтриване на софтуерен RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2958
-#, fuzzy, c-format
+#, c-format
 msgid "Removing volume %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "Изтриване на масив %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1066
@@ -1104,7 +1092,7 @@ msgstr "Изтриване на група от масиви %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Задаване етикета на диск %1$s да е %2$s"
@@ -1126,9 +1114,9 @@ msgstr "Задаване пътя за монтиране на %1$s да е %2$s
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:242
-#, fuzzy, c-format
+#, c-format
 msgid "Set type of multipath partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "Задаване типа на многопътния дял %1$s на %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
@@ -1149,9 +1137,9 @@ msgstr "Задаване типа на raid дяла %1$s на %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1463
-#, fuzzy, c-format
+#, c-format
 msgid "Set up encrypted dm device on %1$s"
-msgstr "Задаване на криптирано loop устройство на %1$s"
+msgstr "Задаване на криптирано dm устройство на %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1447
@@ -1161,7 +1149,7 @@ msgstr "Задаване на криптирано loop устройство н�
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Задаване етикета на диск %1$s да е %2$s"
@@ -1176,9 +1164,9 @@ msgstr "Задаване етикета на %1$s да е %2$s"
 #. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:235
-#, fuzzy, c-format
+#, c-format
 msgid "Setting type of multipath partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "Задаване типа на многопътния дял %1$s на %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
@@ -1199,9 +1187,9 @@ msgstr "Задаване типа на raid дяла %1$s на %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1458
-#, fuzzy, c-format
+#, c-format
 msgid "Setting up encrypted dm device on %1$s"
-msgstr "Задаване на криптирано loop устройство на %1$s"
+msgstr "Задаване на криптирано dm устройство на %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1442
@@ -1233,9 +1221,9 @@ msgstr "Смаляване на логически дял %1$s на %2$s"
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:217
-#, fuzzy, c-format
+#, c-format
 msgid "Shrink multipath partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "Намаляване на многопътния дял %1$s на %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1268,9 +1256,9 @@ msgstr "Смаляване на логически дял %1$s на %2$s"
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:203
-#, fuzzy, c-format
+#, c-format
 msgid "Shrinking multipath partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "Намаляване на многопътния дял %1$s на %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1288,9 +1276,8 @@ msgstr "Намаляване на raid дял %1$s на %2$s"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:97
-#, fuzzy
 msgid "T"
-msgstr "TB"
+msgstr "T"
 
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:91
@@ -1298,7 +1285,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1340,7 +1327,7 @@ msgstr ""
 "редактирате или да променяте размера им с този инструмент."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1363,14 +1350,12 @@ msgstr ""
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:94
-#, fuzzy
 msgid "TiB"
-msgstr "TB"
+msgstr "TiB"
 
 #: ../storage/Storage.cc:4560
-#, fuzzy
 msgid "Unmount failed."
-msgstr "пропадна."
+msgstr "Демонтирането пропадна."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1134
@@ -1416,9 +1401,18 @@ msgid ""
 "will be able to install system on it and boot from such RAID.\n"
 "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 msgstr ""
+"Имате система, която поддържа Intel(R) Matrix Storage Manager.\n"
+"\n"
+"Следните MD съвместими RAID устройства бяха открити:\n"
+"%1$s\n"
+"Ако са неизползвани устройства или пък съдържат дялове, то можете\n"
+"да използвате подсистемата MD RAID подсистема за да ги управлявате. В случай на\n"
+"неразделено устройство ще можете да инсталирате система и да \n"
+"заредите от такъв RAID. \n"
+"Желаете ли подсистемата MD RAID да управлява тези дялове?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1428,10 +1422,16 @@ msgid ""
 "    number of block devices partitions. This needs a repartition\n"
 "    as well."
 msgstr ""
+"Имате следните възможности:\n"
+"– Направете наново дяловете така, че да се използва само максимално\n"
+"разрешения брой дялове. За да направите това използвайте съществуващата\n"
+"операционна система.\n"
+"– Използвайте LVM, тъй като то предоставя произволен и гъвкав брой дялове\n"
+"с блокови устройства. Това също изисква пренаправянето на дяловете."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1444,9 +1444,8 @@ msgstr ""
 
 #. symbol for "kilo" (best keep untranslated)
 #: ../storage/HumanString.cc:64
-#, fuzzy
 msgid "k"
-msgstr "kB"
+msgstr "k"
 
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:58

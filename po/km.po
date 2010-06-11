@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.km\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-14 10:09+0200\n"
-"PO-Revision-Date: 2010-04-19 11:39+0700\n"
+"POT-Creation-Date: 2010-06-10 18:02+0200\n"
+"PO-Revision-Date: 2010-06-03 08:19+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
 "MIME-Version: 1.0\n"
@@ -474,19 +474,17 @@ msgstr "កំពុង​លុប​កម្មវិធី RAID %1$s"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EB"
-msgstr "បៃ"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EiB"
-msgstr "ជីកាបៃ"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:478
@@ -996,7 +994,7 @@ msgstr "កំពុង​បន្ថយ​ក្រុម​ភាគថាស
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:928
+#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:929
 #, c-format
 msgid "Remove %1$s"
 msgstr "យក %1$s ចេញ"
@@ -1047,7 +1045,7 @@ msgstr "យក​ក្រុម​ភាគថាស %1$s ចេញ"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:923
+#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:924
 #, c-format
 msgid "Removing %1$s"
 msgstr "កំពុង​យក %1$s ចេញ"
@@ -1091,7 +1089,7 @@ msgstr "កំពុង​យក​ក្រុម​ភាគថាស %1$s ច
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1921
+#: ../storage/Disk.cc:1923
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "កំណត់​ស្លាក​ថាស​របស់ %1$s ទៅ %2$s"
@@ -1148,7 +1146,7 @@ msgstr "រៀបចំ​ឧបករណ៍​រង្វិល​ជុំ​
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1914
+#: ../storage/Disk.cc:1916
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "កំណត់​ស្លាក​ថាស​របស់ %1$s ទៅ​ជា %2$s"
@@ -1284,7 +1282,7 @@ msgid "TB"
 msgstr "តេរ៉ាបៃ"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:482
+#: ../storage/Disk.cc:483
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1326,7 +1324,7 @@ msgstr ""
 "ជាមួយ​ឧបករណ៍​នេះ ។"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:858
+#: ../storage/Disk.cc:859
 #, c-format
 msgid ""
 "The partitioning on disk %1$s is not readable by\n"
@@ -1367,14 +1365,14 @@ msgstr "កំពុង​អាន់ម៉ោន %1$s"
 #: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
-msgstr "ធ្វើ​ឲ្យ​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s ទាន់សម័យ"
+msgstr "ធ្វើ​បច្ចុប្បន្នភាព​​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
-msgstr "កំពុង​ធ្វើ​ឲ្យ​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s ទាន់សម័យ"
+msgstr "កំពុង​ធ្វើ​បច្ចុប្បន្នភាព​​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
@@ -1410,7 +1408,7 @@ msgstr ""
 "តើ​អ្នក​ចង់​ឲ្យ​ប្រព័ន្ធ​រង RAID ដែល​អាចចែកជា​ភាគ​បាន​របស់ MD គ្រប់គ្រង​ភាគ​ថាស​ទាំង​នោះ​ដែរឬទេ ?"
 
 #. popup text
-#: ../storage/Disk.cc:882
+#: ../storage/Disk.cc:883
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1430,7 +1428,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:875
+#: ../storage/Disk.cc:876
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
