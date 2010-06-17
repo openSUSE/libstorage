@@ -1,12 +1,13 @@
 #!/usr/bin/python
 
-from libstorage import Environment, createStorageInterface, saveGraph, destroyStorageInterface
+from libstorage import Environment, createStorageInterface, saveDeviceGraph, saveMountGraph, destroyStorageInterface
 
 
 env = Environment(True)
 
 c = createStorageInterface(env)
 
-saveGraph(c, "storage.gv")
+saveDeviceGraph(c, "device.gv")
+saveMountGraph(c, "mount.gv")
 
 destroyStorageInterface(c)
