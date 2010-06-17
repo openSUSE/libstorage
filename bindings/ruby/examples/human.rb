@@ -3,8 +3,9 @@
 require 'storage'
 
 
-print Storage.numSuffixes, "\n"
-
-print Storage.getSuffix(3, false), "\n"
+Storage.numSuffixes().times do |i|
+    print Storage.getSuffix(i, false), " "
+end
+puts
 
 print Storage.byteToHumanString(123456, false, 2, false), "\n"
