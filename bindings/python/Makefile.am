@@ -28,7 +28,7 @@ _libstorage_la_DEPENDENCIES =				\
 	$(DEPENDENCIES)					\
 	${top_builddir}/storage/libstorage.la
 
-nodist__libstorage_la_SOURCES  = libstorage_wrap.cxx
+nodist__libstorage_la_SOURCES = libstorage_wrap.cxx
 
 libstorage.py libstorage_wrap.cxx: libstorage.i $(DEPENDENCIES)
 	swig -o libstorage_wrap.cxx -c++ -python ${INCLUDES} libstorage.i
