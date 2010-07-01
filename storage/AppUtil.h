@@ -25,6 +25,7 @@
 
 #include <libintl.h>
 #include <sys/time.h>
+#include <sys/types.h>
 #include <sstream>
 #include <locale>
 #include <string>
@@ -42,6 +43,8 @@ namespace storage
 void createPath(const string& Path_Cv);
 bool checkNormalFile(const string& Path_Cv);
 bool checkDir(const string& Path_Cv);
+bool getStatMode(const string& Path_Cv, mode_t& val );
+bool setStatMode(const string& Path_Cv, mode_t val );
 
     list<string> glob(const string& path, int flags);
 

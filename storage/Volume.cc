@@ -1216,14 +1216,30 @@ int Volume::doMount()
 	}
     if( ret==0 && !mp.empty() && !getStorage()->testmode() )
 	{
+	bool do_chmod = isTmpCryptMp(mp) && mp!="swap";
+	mode_t mode, omode;
+
 	if( fs!=NFS && fs!=NFS4 )
 	    {
 	    getStorage()->removeDmTableTo(*this);
 	    ret = checkDevice(mountDevice());
 	    }
+	if( ret==0 && do_chmod )
+	    {
+	    if( !getStatMode( lmount, mode ) )
+		do_chmod=false;
+	    else
+		y2mil( "Mode of " << lmount << " is " << oct << mode << dec);
+	    }
 	if( ret==0 )
 	    {
 	    ret = mount( lmount );
+	    }
+	if( ret==0 && do_chmod && getStatMode( lmount, omode ) && mode!=omode )
+	    {
+	    bool ok = setStatMode( lmount, mode );
+	    y2mil( "setting mode for " << lmount << " from:" << oct << omode <<
+	           " to:" << mode << dec << " ok:" << ok );
 	    }
 	}
     if( ret==0 )
