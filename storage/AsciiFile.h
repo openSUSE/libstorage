@@ -41,7 +41,6 @@ namespace storage
 
 	explicit AsciiFile(const char* name, bool remove_empty = false);
 	explicit AsciiFile(const string& name, bool remove_empty = false);
-	~AsciiFile();
 
 	string name() const { return Name_C; }
 
@@ -85,6 +84,17 @@ namespace storage
 	const bool remove_empty;
 
 	vector<string> Lines_C;
+
+    };
+
+
+    class SysconfigFile : protected AsciiFile
+    {
+    public:
+
+	SysconfigFile(const char* name) : AsciiFile(name) {}
+
+	bool getValue(const string& key, string& value) const;
 
     };
 

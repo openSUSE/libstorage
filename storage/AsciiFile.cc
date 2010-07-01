@@ -26,6 +26,7 @@
 
 #include "storage/AppUtil.h"
 #include "storage/AsciiFile.h"
+#include "storage/StorageTypes.h"
 
 
 namespace storage
@@ -46,11 +47,6 @@ AsciiFile::AsciiFile(const string& Name_Cv, bool remove_empty)
       remove_empty(remove_empty)
 {
     reload();
-}
-
-
-AsciiFile::~AsciiFile()
-{
 }
 
 
@@ -242,5 +238,19 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
     if (Text_Cr.length() > 0 && Text_Cr[Text_Cr.length() - 1] == Char_cv)
 	Text_Cr.erase(Text_Cr.length() - 1);
 }
+
+
+    bool
+    SysconfigFile::getValue(const string& key, string& value) const
+    {
+	Regex rx('^' + Regex::ws + key + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
+
+	if (!(find_if(lines(), regex_matches(rx)) != lines().end()))
+	    return false;
+
+	value = rx.cap(2);
+	y2mil("key:" << key << " value:" << value);
+	return true;
+    }
 
 }

@@ -173,13 +173,12 @@ Storage::initialize()
 
     if (access(SYSCONFIGFILE, R_OK) == 0)
     {
-	AsciiFile sc(SYSCONFIGFILE);
-	const vector<string>& lines = sc.lines();
+	SysconfigFile sc(SYSCONFIGFILE);
 
-	Regex rx1('^' + Regex::ws + "DEVICE_NAMES" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (find_if(lines, regex_matches(rx1)) != lines.end())
+	string val;
+	if (sc.getValue("DEVICE_NAMES", val))
 	{
-	    string val = boost::to_lower_copy(rx1.cap(2), locale::classic());
+	    boost::to_lower(val, locale::classic());
 	    if( val == "id" )
 		setDefaultMountBy( MOUNTBY_ID );
 	    else if( val == "path" )
@@ -194,10 +193,9 @@ Storage::initialize()
 		y2war("unknown default mount-by method '" << val << "' in " SYSCONFIGFILE);
 	}
 
-	Regex rx2('^' + Regex::ws + "DEFAULT_FS" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (find_if(lines, regex_matches(rx2)) != lines.end())
+	if (sc.getValue("DEFAULT_FS", val))
 	{
-	    string val = boost::to_lower_copy(rx2.cap(2), locale::classic());
+	    boost::to_lower(val, locale::classic());
 	    if (val == "ext2")
 		setDefaultFs(EXT2);
 	    else if (val == "ext3")
@@ -211,10 +209,10 @@ Storage::initialize()
 	    else
 		y2war("unknown default filesystem '" << val << "' in " SYSCONFIGFILE);
 	}
-	Regex rx3('^' + Regex::ws + "PARTITION_ALIGN" + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
-	if (find_if(lines, regex_matches(rx3)) != lines.end())
+
+	if (sc.getValue("PARTITION_ALIGN", val))
 	{
-	    string val = boost::to_lower_copy(rx3.cap(2), locale::classic());
+	    boost::to_lower(val, locale::classic());
 	    if (val == "cylinder")
 		setPartitionAlignment(ALIGN_CYLINDER);
 	    else if(val == "optimal")
