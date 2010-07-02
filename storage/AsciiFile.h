@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -93,6 +93,17 @@ namespace storage
     public:
 
 	SysconfigFile(const char* name) : AsciiFile(name) {}
+
+	bool getValue(const string& key, string& value) const;
+
+    };
+
+
+    class InstallInfFile : protected AsciiFile
+    {
+    public:
+
+	InstallInfFile(const char* name) : AsciiFile(name) {}
 
 	bool getValue(const string& key, string& value) const;
 

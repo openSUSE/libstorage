@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -249,6 +249,20 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
 	    return false;
 
 	value = rx.cap(2);
+	y2mil("key:" << key << " value:" << value);
+	return true;
+    }
+
+
+    bool
+    InstallInfFile::getValue(const string& key, string& value) const
+    {
+	Regex rx('^' + key + ":" + Regex::ws + "([^ ]*)" + '$');
+
+	if (!(find_if(lines(), regex_matches(rx)) != lines().end()))
+	    return false;
+
+	value = rx.cap(1);
 	y2mil("key:" << key << " value:" << value);
 	return true;
     }
