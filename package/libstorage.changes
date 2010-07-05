@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jul 05 15:13:18 CEST 2010 - aschnell@suse.de
+
+- moved EFI detection from YCP to C++ (bnc #612867)
+
+-------------------------------------------------------------------
 Thu Jul  1 15:10:23 CEST 2010 - fehr@suse.de
 
 - check mode of /tmp and /var/tmp after mounting (bnc #591704)

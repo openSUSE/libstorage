@@ -227,13 +227,36 @@ Storage::initialize()
 	string t = testdir() + "/arch.info";
 	if (access(t.c_str(), R_OK) == 0)
 	    readArchInfo(t);
+
 	efiboot = (arch() == "ia64");
     }
     else if (autodetect())
     {
 	detectArch();
-	efiboot = (arch() == "ia64");
+
+	if (arch() == "ia64")
+	{
+	    efiboot = true;
+	}
+	else
+	{
+	    string val;
+	    if (instsys())
+	    {
+		InstallInfFile ii("/etc/install.inf");
+		if (ii.getValue("EFI", val))
+		    efiboot = val == "1";
+	    }
+	    else
+	    {
+		SysconfigFile sc("/etc/sysconfig/bootloader");
+		if (sc.getValue("LOADER_TYPE", val))
+		    efiboot = val == "elilo";
+	    }
+	}
     }
+
+    y2mil("efiboot:" << efiboot);
 
     detectObjects();
 
@@ -1140,15 +1163,6 @@ void Storage::setDefaultFs(FsType val)
     y2mil("val:" << Volume::fsTypeString(val));
     defaultFs = val;
 }
-
-
-    void
-    Storage::setEfiBoot(bool val)
-    {
-	assertInit();
-	y2mil("val:" << val);
-	efiboot = val;
-    }
 
 
     bool

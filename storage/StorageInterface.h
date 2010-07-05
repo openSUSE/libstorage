@@ -1683,15 +1683,6 @@ namespace storage
 	virtual FsType getDefaultFs() const = 0;
 
 	/**
-	 * Set value for EFI boot.
-	 *
-	 * Currently this value affects the default disk label.
-	 *
-	 * @param val new efi boot value
-	 */
-	virtual void setEfiBoot(bool val) = 0;
-
-	/**
 	 * Get value for EFI boot.
 	 *
 	 * @return value for efi boot
