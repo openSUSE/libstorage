@@ -2,7 +2,7 @@
 Thu Jul  1 15:10:23 CEST 2010 - fehr@suse.de
 
 - check mode of /tmp and /var/tmp after mounting (bnc #591704)
-- 2.19.17
+- 2.20.0
 
 -------------------------------------------------------------------
 Fri Jun 11 12:36:35 CEST 2010 - aschnell@suse.de
