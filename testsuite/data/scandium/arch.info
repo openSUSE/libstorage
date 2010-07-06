@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
 <arch>
   <arch>ia64</arch>
+  <efiboot>true</efiboot>
 </arch>

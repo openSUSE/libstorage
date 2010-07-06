@@ -206,6 +206,21 @@ class EtcFstab;
 class DiskData;
 
 
+    class ArchInfo
+    {
+    public:
+
+	ArchInfo() : arch("i386"), is_ppc_mac(false), is_ppc_pegasos(false), is_efiboot(false) {}
+
+	void detect(bool instsys);
+
+	string arch;
+	bool is_ppc_mac;
+	bool is_ppc_pegasos;
+	bool is_efiboot;
+    };
+
+
     class Storage : public storage::StorageInterface, boost::noncopyable
     {
     protected:
@@ -248,12 +263,11 @@ class DiskData;
 	const string& root() const { return( rootprefix ); }
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const { return tempdir; }
-	bool efiBoot() const { return efiboot; }
 	bool hasIScsiDisks() const;
 	string bootMount() const;
-	static const string& arch() { return( proc_arch ); }
-	static bool isPPCMac() { return( is_ppc_mac ); }
-	static bool isPPCPegasos() { return( is_ppc_pegasos ); }
+
+	const ArchInfo& getArchInfo() const { return archinfo; }
+
 	EtcFstab* getFstab() { return fstab; }
 	EtcMdadm* getMdadm() { return mdadm; }
 	void handleLogFile(const string& name) const;
@@ -1878,7 +1892,6 @@ class DiskData;
 			 bool ignore_fs);
 	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignore_fs );
-	static void detectArch();
 	void addToList(Container* e);
 	DiskIterator findDisk( const string& disk );
 	DiskIterator findDiskId( const string& id );
@@ -1948,10 +1961,9 @@ class DiskData;
 	string tempdir;
 	string rootprefix;
 	unsigned hald_pid;
-	bool efiboot;
-	static string proc_arch;
-	static bool is_ppc_mac;
-	static bool is_ppc_pegasos;
+
+	ArchInfo archinfo;
+
 	CCont cont;
 	EtcFstab *fstab;
 	EtcMdadm* mdadm;

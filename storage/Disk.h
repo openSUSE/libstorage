@@ -37,6 +37,7 @@ namespace storage
 class Storage;
 class SystemCmd;
     class SystemInfo;
+    class ArchInfo;
 class ProcParts;
 class Region;
 
@@ -268,7 +269,7 @@ class Disk : public Container
 
 	void setLabelData( const string& );
 
-	static string defaultLabel(bool efiboot, unsigned long long num_sectors);
+	static string defaultLabel(const ArchInfo& archinfo, unsigned long long num_sectors);
 
 	static const label_info labels[];
 	static const string p_disks[];

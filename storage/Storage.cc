@@ -105,8 +105,7 @@ Storage::Storage(const Environment& env)
       recursiveRemove(false), zeroNewPartitions(false),
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(EXT4), detectMounted(true), root_mounted(!instsys()),
-      rootprefix(), efiboot(false), fstab(NULL), mdadm(NULL),
-      imsm_driver(IMSM_UNDECIDED)
+      rootprefix(), fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -227,36 +226,11 @@ Storage::initialize()
 	string t = testdir() + "/arch.info";
 	if (access(t.c_str(), R_OK) == 0)
 	    readArchInfo(t);
-
-	efiboot = (arch() == "ia64");
     }
     else if (autodetect())
     {
-	detectArch();
-
-	if (arch() == "ia64")
-	{
-	    efiboot = true;
-	}
-	else
-	{
-	    string val;
-	    if (instsys())
-	    {
-		InstallInfFile ii("/etc/install.inf");
-		if (ii.getValue("EFI", val))
-		    efiboot = val == "1";
-	    }
-	    else
-	    {
-		SysconfigFile sc("/etc/sysconfig/bootloader");
-		if (sc.getValue("LOADER_TYPE", val))
-		    efiboot = val == "elilo";
-	    }
-	}
+	archinfo.detect(instsys());
     }
-
-    y2mil("efiboot:" << efiboot);
 
     detectObjects();
 
@@ -508,7 +482,7 @@ bool Storage::rescanCryptedObjects()
     string
     Storage::bootMount() const
     {
-	if (efiBoot())
+	if (archinfo.is_efiboot)
 	    return "/boot/efi";
 	else
 	    return "/boot";
@@ -516,34 +490,35 @@ bool Storage::rescanCryptedObjects()
 
 
 void
-Storage::detectArch()
+ArchInfo::detect(bool instsys)
     {
     struct utsname buf;
-    proc_arch = "i386";
+    arch = "i386";
     if( uname( &buf ) == 0 )
 	{
 	if( strncmp( buf.machine, "ppc", 3 )==0 )
 	    {
-	    proc_arch = "ppc";
+	    arch = "ppc";
 	    }
 	else if( strncmp( buf.machine, "x86_64", 5 )==0 )
 	    {
-	    proc_arch = "x86_64";
+	    arch = "x86_64";
 	    }
 	else if( strncmp( buf.machine, "ia64", 4 )==0 )
 	    {
-	    proc_arch = "ia64";
+	    arch = "ia64";
 	    }
 	else if( strncmp( buf.machine, "s390", 4 )==0 )
 	    {
-	    proc_arch = "s390";
+	    arch = "s390";
 	    }
 	else if( strncmp( buf.machine, "sparc", 5 )==0 )
 	    {
-	    proc_arch = "sparc";
+	    arch = "sparc";
 	    }
 	}
-    if( proc_arch == "ppc" )
+
+    if( arch == "ppc" )
 	{
 	AsciiFile cpuinfo("/proc/cpuinfo");
 	vector<string>::const_iterator it = find_if(cpuinfo.lines(), string_starts_with("machine\t"));
@@ -564,7 +539,30 @@ Storage::detectArch()
 		}
 	    }
 	}
-    y2mil("Arch:" << proc_arch << " IsPPCMac:" << is_ppc_mac << " IsPPCPegasos:" << is_ppc_pegasos);
+
+    if (arch == "ia64")
+    {
+	is_efiboot = true;
+    }
+    else
+    {
+	string val;
+	if (instsys)
+	{
+	    InstallInfFile ii("/etc/install.inf");
+	    if (ii.getValue("EFI", val))
+		is_efiboot = val == "1";
+	}
+	else
+	{
+	    SysconfigFile sc("/etc/sysconfig/bootloader");
+	    if (sc.getValue("LOADER_TYPE", val))
+		is_efiboot = val == "elilo";
+	}
+    }
+
+    y2mil("arch:" << arch << " is_ppc_mac:" << is_ppc_mac << " is_ppc_pegasos:" << is_ppc_pegasos <<
+	  " is_efiboot:" << is_efiboot);
     }
 
 
@@ -1169,7 +1167,7 @@ void Storage::setDefaultFs(FsType val)
     Storage::getEfiBoot()
     {
 	assertInit();
-	return efiboot;
+	return archinfo.is_efiboot;
     }
 
 
@@ -1205,11 +1203,6 @@ void Storage::setDetectMountedVolumes(bool val)
     y2mil("val:" << val);
     detectMounted = val;
 }
-
-
-string Storage::proc_arch = "i386";
-bool Storage::is_ppc_mac = false;
-bool Storage::is_ppc_pegasos = false;
 
 
     StorageInterface* createStorageInterface(const Environment& env)
@@ -2362,7 +2355,7 @@ Storage::defaultDiskLabel(const string& device)
     if (i3 != mdpCoEnd())
 	num_sectors = i3->disk->kbToSector(i3->size_k);
 
-    return Disk::defaultLabel(efiBoot(), num_sectors);
+    return Disk::defaultLabel(archinfo, num_sectors);
 }
 
 
@@ -6572,7 +6565,8 @@ void Storage::checkPwdBuf( const string& device )
 	XmlFile xml;
 	xmlNode* node = xmlNewNode("arch");
 	xml.setRootElement(node);
-	setChildValue(node, "arch", proc_arch);
+	setChildValue(node, "arch", archinfo.arch);
+	setChildValue(node, "efiboot", archinfo.is_efiboot);
 	xml.save(fname);
 
 	handleLogFile(fname);
@@ -6584,9 +6578,12 @@ void Storage::checkPwdBuf( const string& device )
     {
 	XmlFile file(fname);
 	const xmlNode* root = file.getRootElement();
-	const xmlNode* arch = getChildNode(root, "arch");
-	if (arch)
-	    getChildValue(arch, "arch", proc_arch);
+	const xmlNode* node = getChildNode(root, "arch");
+	if (node)
+	{
+	    getChildValue(node, "arch", archinfo.arch);
+	    getChildValue(node, "efiboot", archinfo.is_efiboot);
+	}
     }
 
 

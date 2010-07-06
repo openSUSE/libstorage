@@ -473,7 +473,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     if( detected_label.empty() )
 	detected_label = dlabel;
     if( dlabel.empty() )
-	dlabel = defaultLabel(getStorage()->efiBoot(), kbToSector(size_k));
+	dlabel = defaultLabel(getStorage()->getArchInfo(), kbToSector(size_k));
     setLabelData( dlabel );
 
     if (label == "unsupported")
@@ -1008,22 +1008,22 @@ bool
 
 
 string
-Disk::defaultLabel(bool efiboot, unsigned long long num_sectors)
+Disk::defaultLabel(const ArchInfo& archinfo, unsigned long long num_sectors)
 {
     string ret = "msdos";
-    if (efiboot)
+    if (archinfo.is_efiboot)
 	ret = "gpt";
     else if (num_sectors > (1ULL << 32) - 1)
 	ret = "gpt";
-    else if( Storage::arch()=="ia64" )
+    else if (archinfo.arch == "ia64")
 	ret = "gpt";
-    else if( Storage::arch()=="sparc" )
+    else if (archinfo.arch == "sparc")
 	ret = "sun";
-    else if( Storage::arch()=="ppc" && Storage::isPPCMac() )
+    else if (archinfo.arch == "ppc" && archinfo.is_ppc_mac)
 	ret = "mac";
-    else if( Storage::arch()=="ppc" && Storage::isPPCPegasos() )
+    else if (archinfo.arch == "ppc" && archinfo.is_ppc_pegasos)
 	ret = "amiga";
-    y2mil("efiboot:" << efiboot << " num_sectors:" << num_sectors << " ret:" << ret);
+    y2mil("num_sectors:" << num_sectors << " ret:" << ret);
     return ret;
 }
 
