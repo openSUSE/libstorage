@@ -28,7 +28,6 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <signal.h>
-#include <sys/utsname.h>
 #include <set>
 #include <array>
 #include <fstream>
@@ -230,6 +229,7 @@ Storage::initialize()
     else if (autodetect())
     {
 	archinfo.detect(instsys());
+	y2mil(archinfo);
     }
 
     detectObjects();
@@ -486,83 +486,6 @@ bool Storage::rescanCryptedObjects()
 	    return "/boot/efi";
 	else
 	    return "/boot";
-    }
-
-
-void
-ArchInfo::detect(bool instsys)
-    {
-    struct utsname buf;
-    arch = "i386";
-    if( uname( &buf ) == 0 )
-	{
-	if( strncmp( buf.machine, "ppc", 3 )==0 )
-	    {
-	    arch = "ppc";
-	    }
-	else if( strncmp( buf.machine, "x86_64", 5 )==0 )
-	    {
-	    arch = "x86_64";
-	    }
-	else if( strncmp( buf.machine, "ia64", 4 )==0 )
-	    {
-	    arch = "ia64";
-	    }
-	else if( strncmp( buf.machine, "s390", 4 )==0 )
-	    {
-	    arch = "s390";
-	    }
-	else if( strncmp( buf.machine, "sparc", 5 )==0 )
-	    {
-	    arch = "sparc";
-	    }
-	}
-
-    if( arch == "ppc" )
-	{
-	AsciiFile cpuinfo("/proc/cpuinfo");
-	vector<string>::const_iterator it = find_if(cpuinfo.lines(), string_starts_with("machine\t"));
-	if (it != cpuinfo.lines().end())
-	    {
-	    y2mil("line:" << *it);
-
-	    string tmp1 = extractNthWord(2, *it);
-	    y2mil("tmp1:" << tmp1);
-	    is_ppc_mac = boost::starts_with(tmp1, "PowerMac") || boost::starts_with(tmp1, "PowerBook");
-	    is_ppc_pegasos = boost::starts_with(tmp1, "EFIKA5K2");
-
-	    if (!is_ppc_mac && !is_ppc_pegasos)
-		{
-		string tmp2 = extractNthWord(3, *it);
-		y2mil("tmp2:" << tmp2);
-		is_ppc_pegasos = boost::starts_with(tmp2, "Pegasos");
-		}
-	    }
-	}
-
-    if (arch == "ia64")
-    {
-	is_efiboot = true;
-    }
-    else
-    {
-	string val;
-	if (instsys)
-	{
-	    InstallInfFile ii("/etc/install.inf");
-	    if (ii.getValue("EFI", val))
-		is_efiboot = val == "1";
-	}
-	else
-	{
-	    SysconfigFile sc("/etc/sysconfig/bootloader");
-	    if (sc.getValue("LOADER_TYPE", val))
-		is_efiboot = val == "elilo";
-	}
-    }
-
-    y2mil("arch:" << arch << " is_ppc_mac:" << is_ppc_mac << " is_ppc_pegasos:" << is_ppc_pegasos <<
-	  " is_efiboot:" << is_efiboot);
     }
 
 
@@ -6565,8 +6488,7 @@ void Storage::checkPwdBuf( const string& device )
 	XmlFile xml;
 	xmlNode* node = xmlNewNode("arch");
 	xml.setRootElement(node);
-	setChildValue(node, "arch", archinfo.arch);
-	setChildValue(node, "efiboot", archinfo.is_efiboot);
+	archinfo.saveData(node);
 	xml.save(fname);
 
 	handleLogFile(fname);
@@ -6580,10 +6502,7 @@ void Storage::checkPwdBuf( const string& device )
 	const xmlNode* root = file.getRootElement();
 	const xmlNode* node = getChildNode(root, "arch");
 	if (node)
-	{
-	    getChildValue(node, "arch", archinfo.arch);
-	    getChildValue(node, "efiboot", archinfo.is_efiboot);
-	}
+	    archinfo.readData(node);
     }
 
 

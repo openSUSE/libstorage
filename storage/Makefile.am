@@ -38,6 +38,7 @@ libstorage_la_SOURCES =					\
 	OutputProcessor.cc	OutputProcessor.h	\
 	Regex.cc		Regex.h			\
 	FreeInfo.cc		FreeInfo.h		\
+	ArchInfo.cc		ArchInfo.h		\
 	AsciiFile.cc		AsciiFile.h		\
 	XmlFile.cc		XmlFile.h		\
 	SystemInfo.cc		SystemInfo.h		\

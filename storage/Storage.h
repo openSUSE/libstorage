@@ -55,6 +55,7 @@
 #include "storage/IterPair.h"
 #include "storage/Lock.h"
 #include "storage/FreeInfo.h"
+#include "storage/ArchInfo.h"
 
 
 namespace storage
@@ -190,21 +191,6 @@ class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
 class EtcFstab;
     class EtcMdadm;
 class DiskData;
-
-
-    class ArchInfo
-    {
-    public:
-
-	ArchInfo() : arch("i386"), is_ppc_mac(false), is_ppc_pegasos(false), is_efiboot(false) {}
-
-	void detect(bool instsys);
-
-	string arch;
-	bool is_ppc_mac;
-	bool is_ppc_pegasos;
-	bool is_efiboot;
-    };
 
 
     /**
