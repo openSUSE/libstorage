@@ -144,8 +144,13 @@ namespace storage
 
     enum MdType { RAID_UNK, RAID0, RAID1, RAID5, RAID6, RAID10, MULTIPATH };
 
-    enum MdParity { PAR_NONE, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
-		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC };
+    enum MdParity { PAR_DEFAULT, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
+		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC, PAR_FIRST, PAR_LAST,
+		    LEFT_ASYMMETRIC_6, LEFT_SYMMETRIC_6, RIGHT_ASYMMETRIC_6, 
+		    RIGHT_SYMMETRIC_6, PAR_FIRST_6,
+		    PAR_NEAR_2, PAR_OFFSET_2, PAR_FAR_2,
+		    PAR_NEAR_3, PAR_OFFSET_3, PAR_FAR_3,
+		    PAR_LAST_ENTRY };
 
     enum MdArrayState { UNKNOWN, CLEAR, INACTIVE, SUSPENDED, READONLY, READ_AUTO,
 			CLEAN, ACTIVE, WRITE_PENDING, ACTIVE_IDLE };
@@ -769,6 +774,7 @@ namespace storage
 	MD_NO_CREATE_UNKNOWN = -6018,
 	MD_STATE_NOT_ON_DISK = -6019,
 	MD_PARTITION_NOT_FOUND = -6020,
+	MD_INVALID_PARITY = -6021,
 
 	MDPART_CHANGE_READONLY = -6100,
 	MDPART_INTERNAL_ERR = -6101,
@@ -1948,7 +1954,7 @@ namespace storage
 	virtual int changeMdChunk(const string& name, unsigned long chunkSizeK) = 0;
 
 	/**
-	 * Change parity of a raid device with raid type raid5.
+	 * Change parity of a raid device with raid type raid5, raid6 or raid10.
 	 * This can only be done before the raid is created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
@@ -2001,6 +2007,15 @@ namespace storage
 	 */
 	virtual int computeMdSize(MdType md_type, const list<string>& devices,
 				  unsigned long long& sizeK) = 0;
+
+	/**
+	 * Determine allowed parity types for raid type.
+	 *
+	 * @param md_type raid type of the software raid
+	 * @param devnr number of physical devices for the software raid
+	 * @return list of allowed parity typed for this raid
+	 */
+	virtual list<int> getMdAllowedParity(MdType md_type, unsigned devnr )=0;
 
         /**
          * Remove a Partitionable Software raid device.

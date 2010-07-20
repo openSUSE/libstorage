@@ -488,7 +488,7 @@ class DiskData;
 	int getMdStateInfo(const string& name, MdStateInfo& info);
 	int computeMdSize(MdType md_type, const list<string>& devices,
 			  unsigned long long& sizeK);
-
+	list<int> getMdAllowedParity(MdType md_type, unsigned devices );
 	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }
 	ImsmDriver getImsmDriver() const { return imsm_driver; }
 

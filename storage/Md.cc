@@ -42,7 +42,7 @@ namespace storage
 
 
 Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
-	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_NONE), chunk(0),
+	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk(0),
   	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
@@ -55,7 +55,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 
 
     Md::Md(const MdCo& d, const string& line1, const string& line2, SystemInfo& systeminfo)
-	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_NONE), chunk(0),
+	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_DEFAULT), chunk(0),
 	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
@@ -178,7 +178,7 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 	pos = line2.find_last_of( app_ws, pos );
 	line2.substr( pos+1 ) >> chunk;
 	}
-    md_parity = PAR_NONE;
+    md_parity = PAR_DEFAULT;
     pos = line2.find( "algorithm" );
     if( pos != string::npos )
 	{
@@ -200,10 +200,49 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 	    case 3:
 		md_parity = RIGHT_SYMMETRIC;
 		break;
+	    case 4:
+		md_parity = PAR_FIRST;
+		break;
+	    case 5:
+		md_parity = PAR_LAST;
+		break;
+	    case 16:
+		md_parity = LEFT_ASYMMETRIC_6;
+		break;
+	    case 17:
+		md_parity = RIGHT_ASYMMETRIC_6;
+		break;
+	    case 18:
+		md_parity = LEFT_SYMMETRIC_6;
+		break;
+	    case 19:
+		md_parity = RIGHT_SYMMETRIC_6;
+		break;
+	    case 20:
+		md_parity = PAR_FIRST_6;
+		break;
 	    default:
 		y2war("unknown parity " << line2.substr(pos));
 		break;
 	    }
+	}
+    pos = line2.find( "-copies" );
+    if( pos != string::npos )
+	{
+	unsigned num = 0;
+	string where;
+	pos = line2.find_last_of( app_ws, pos );
+	line2.substr( pos ) >> where;
+	pos = line2.find_last_not_of( app_ws, pos );
+	pos = line2.find_last_of( app_ws, pos );
+	line2.substr( pos ) >> num;
+	y2mil( "where:" << where << " num:" << num );
+	if( where=="near-copies" )
+	    md_parity = (num==3)?PAR_NEAR_3:PAR_NEAR_2;
+	else if( where=="far-copies" )
+	    md_parity = (num==3)?PAR_FAR_3:PAR_FAR_2;
+	else if( where=="offset-copies" )
+	    md_parity = (num==3)?PAR_OFFSET_3:PAR_OFFSET_2;
 	}
 
     if( has_container )
@@ -399,7 +438,7 @@ Md::createCmd() const
 	cmd += " -b internal";
     if (chunk > 0)
 	cmd += " --chunk=" + decString(chunk);
-    if (md_parity != PAR_NONE)
+    if (md_parity != PAR_DEFAULT)
 	cmd += " --parity=" + ptName();
     cmd += " --raid-devices=" + decString(devs.size());
     if (!spare.empty())
@@ -542,8 +581,8 @@ Md::toMdType( const string& val )
 MdParity
 Md::toMdParity( const string& val )
     {
-    MdParity ret = RIGHT_SYMMETRIC;
-    while( ret!=PAR_NONE && val!=par_names[ret] )
+    MdParity ret = MdParity(PAR_LAST_ENTRY-1);
+    while( ret!=PAR_DEFAULT && val!=par_names[ret] )
 	{
 	ret = MdParity(ret-1);
 	}
@@ -594,6 +633,16 @@ void Md::setPersonality( MdType val )
     computeSize();
     }
 
+int Md::setParity( MdParity val )
+    {
+    int ret = 0;
+    list<int> pars = getStorage()->getMdAllowedParity( md_type, devs.size() );
+    if( find( pars.begin(), pars.end(), val )!=pars.end() )
+	md_parity=val;
+    else
+	ret = MD_INVALID_PARITY;
+    return( ret );
+    }
 
 unsigned Md::mdMajor()
     {
@@ -636,7 +685,7 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
       << " Personality:" << m.pName();
     if( m.chunk>0 )
 	s << " Chunk:" << m.chunk;
-    if( m.md_parity!=storage::PAR_NONE )
+    if( m.md_parity!=storage::PAR_DEFAULT )
 	s << " Parity:" << m.ptName();
     if( !m.sb_ver.empty() )
 	s << " SbVer:" << m.sb_ver;
@@ -770,8 +819,13 @@ void Md::getParent()
     const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
 				    "raid10", "multipath" };
 
-    const string Md::par_names[] = { "none", "left-asymmetric", "left-symmetric",
-				     "right-asymmetric", "right-symmetric" };
+    const string Md::par_names[] = { "default", "left-asymmetric", "left-symmetric",
+				     "right-asymmetric", "right-symmetric", 
+				     "parity-first", "parity-last", 
+				     "left-asymmetric-6", "left-symmetric-6",
+				     "right-asymmetric-6", "right-symmetric-6", 
+				     "parity-first-6", 
+				     "n2", "o2", "f2", "n3", "o3", "f3" };
 
     const string Md::md_states[] = { "unknown", "clear", "inactive", "suspended",
 				     "readonly", "read-auto", "clean", "active",

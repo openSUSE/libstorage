@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jul 20 11:26:30 CEST 2010 - fehr@suse.de
+
+- add support for additional parity values for raid5, raid6, raid10
+- add new interface function getMdAllowedParity
+
+-------------------------------------------------------------------
 Mon Jul 05 15:13:18 CEST 2010 - aschnell@suse.de
 
 - moved EFI detection from YCP to C++ (bnc #612867)

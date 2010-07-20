@@ -3905,6 +3905,46 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, unsigned lon
     return ret;
 }
 
+list<int>
+Storage::getMdAllowedParity( MdType md_type, unsigned devices )
+    {
+    list<int> ret;
+    if( md_type==RAID5 || md_type==RAID6 )
+	{
+	ret.push_back(PAR_DEFAULT);
+	ret.push_back(LEFT_ASYMMETRIC);
+	ret.push_back(LEFT_SYMMETRIC);
+	ret.push_back(RIGHT_ASYMMETRIC);
+	ret.push_back(RIGHT_SYMMETRIC);
+	ret.push_back(PAR_FIRST);
+	ret.push_back(PAR_LAST);
+	if( md_type==RAID6 )
+	    {
+	    ret.push_back(LEFT_ASYMMETRIC_6);
+	    ret.push_back(LEFT_SYMMETRIC_6);
+	    ret.push_back(RIGHT_ASYMMETRIC_6);
+	    ret.push_back(RIGHT_SYMMETRIC_6);
+	    ret.push_back(PAR_FIRST_6);
+	    }
+	}
+    else if( md_type==RAID10 )
+	{
+	ret.push_back(PAR_DEFAULT);
+	ret.push_back(PAR_NEAR_2);
+	ret.push_back(PAR_OFFSET_2);
+	ret.push_back(PAR_FAR_2);
+	if( devices>2 )
+	    {
+	    ret.push_back(PAR_NEAR_3);
+	    ret.push_back(PAR_OFFSET_3);
+	    ret.push_back(PAR_FAR_3);
+	    }
+	}
+
+    y2mil("type:" << md_type << " ret:" << ret );
+    return ret;
+    }
+
 //
 // Removes Software RAIDs that are not IMSM RAIDs.
 //

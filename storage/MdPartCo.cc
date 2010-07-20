@@ -1577,23 +1577,7 @@ void MdPartCo::setMetaData()
 
 void MdPartCo::setMdParity()
 {
-  md_parity = PAR_NONE;
-  //Level 5 & 6 - left-symmetric
-  //Level 10 - n2 layout (0x102)
-  if( hasParity() )
-    {
-    switch( md_type )
-    {
-    case RAID5:
-    case RAID6:
-      md_parity = LEFT_ASYMMETRIC;
-    case RAID10:
-      /* Parity 'n2' */
-      //md_parity = PARITY_N2;
-    default:
-      return;
-    }
-    }
+  md_parity = PAR_DEFAULT;
 }
 
 

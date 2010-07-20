@@ -46,7 +46,7 @@ class Md : public Volume
 	storage::MdType personality() const { return md_type; }
 	void setPersonality( storage::MdType val ); 
 	storage::MdParity parity() const { return md_parity; }
-	void setParity( storage::MdParity val ) { md_parity=val; }
+	int setParity( storage::MdParity val ); 
 	unsigned long chunkSize() const { return chunk; }
 	void setChunkSize( unsigned long val ) { chunk=val; }
 	void setMdUuid( const string&val ) { md_uuid=val; }
@@ -124,7 +124,7 @@ class Md : public Volume
 	string md_member;
 
 	static const string md_names[MULTIPATH + 1];
-	static const string par_names[RIGHT_SYMMETRIC + 1];
+	static const string par_names[PAR_LAST_ENTRY];
 	static const string md_states[ACTIVE_IDLE + 1];
 
 	static unsigned md_major;

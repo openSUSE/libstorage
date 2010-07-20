@@ -166,7 +166,7 @@ MdCo::checkMd( Md* m )
 	i->setCreated( false );
 	if( m->personality()!=i->personality() )
 	    y2war("inconsistent raid type my:" << i->pName() << " kernel:" << m->pName());
-	if( i->parity()!=storage::PAR_NONE && m->parity()!=i->parity() )
+	if( i->parity()!=storage::PAR_DEFAULT && m->parity()!=i->parity() )
 	    y2war("inconsistent parity my:" << i->ptName() << " kernel:" << m->ptName());
 	if( i->chunkSize()>0 && m->chunkSize()!=i->chunkSize() )
 	    y2war("inconsistent chunk size my:" << i->chunkSize() << " kernel:" << m->chunkSize());
@@ -451,7 +451,7 @@ MdCo::changeMdParity( unsigned num, MdParity ptype )
 	}
     if( ret==0 )
 	{
-	i->setParity( ptype );
+	ret = i->setParity( ptype );
 	}
     y2mil("ret:" << ret);
     return( ret );
