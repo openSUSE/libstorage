@@ -431,6 +431,12 @@ void Storage::rescanEverything()
     if (instsys())
     {
 	bool dmmultipath_active = DmmultipathCo::isActive();
+	if (!dmmultipath_active)
+	{
+	    SystemInfo systeminfo;
+	    DmmultipathCo::getMultipaths(systeminfo);
+	    dmmultipath_active = DmmultipathCo::isActive();
+	}
 
 	LvmVg::activate(false);
 	MdCo::activate(false, tmpDir());
