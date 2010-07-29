@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jul 29 12:40:44 CEST 2010 - fehr@suse.de
+
+- improve volume search when reading fstab
+
+-------------------------------------------------------------------
 Wed Jul 21 16:12:52 CEST 2010 - aschnell@suse.de
 
 - recheck activation of multipath before rescan
