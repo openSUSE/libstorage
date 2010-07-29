@@ -6319,7 +6319,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info.fstab_options = boost::join( i->opts, "," );
 	    s_infos.push_back(info);
 	}
-	else if( findVolume( i->dentry, vol ) )
+	else if( findVolume( i->dentry, vol )||findVolume( i->device, vol ) )
 	{
 	    VolumeInfo info;
 	    vol->getInfo( info );
