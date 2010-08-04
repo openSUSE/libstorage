@@ -56,21 +56,21 @@ namespace storage
 
 	    Entry entry;
 
-	    if (boost::starts_with("sbp:", transport))
+	    if (boost::starts_with(transport, "sbp:"))
 		entry.transport = SBP;
-	    else if (boost::starts_with("ata:", transport))
+	    else if (boost::starts_with(transport, "ata:"))
 		entry.transport = ATA;
-	    else if (boost::starts_with("fc:", transport))
+	    else if (boost::starts_with(transport, "fc:"))
 		entry.transport = FC;
-	    else if (boost::starts_with("iscsi:", transport))
+	    else if (boost::starts_with(transport, "iscsi:"))
 		entry.transport = ISCSI;
-	    else if (boost::starts_with("sas:", transport))
+	    else if (boost::starts_with(transport, "sas:"))
 		entry.transport = SAS;
-	    else if (boost::starts_with("sata:", transport))
+	    else if (boost::starts_with(transport, "sata:"))
 		entry.transport = SATA;
-	    else if (boost::starts_with("spi:", transport))
+	    else if (boost::starts_with(transport, "spi:"))
 		entry.transport = SPI;
-	    else if (boost::starts_with("usb:", transport))
+	    else if (boost::starts_with(transport, "usb:"))
 		entry.transport = USB;
 
 	    data[device] = entry;
