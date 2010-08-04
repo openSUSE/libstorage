@@ -62,7 +62,7 @@ namespace storage
 		entry.transport = ATA;
 	    else if (boost::starts_with(transport, "fc:"))
 		entry.transport = FC;
-	    else if (boost::starts_with(transport, "iscsi:"))
+	    else if (boost::starts_with(transport, "iqn"))
 		entry.transport = ISCSI;
 	    else if (boost::starts_with(transport, "sas:"))
 		entry.transport = SAS;
