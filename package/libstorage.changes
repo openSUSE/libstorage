@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 04 12:33:15 CEST 2010 - aschnell@suse.de
+
+- added transport type from lsscsi to hard disks
+
+-------------------------------------------------------------------
 Thu Jul 29 12:40:44 CEST 2010 - fehr@suse.de
 
 - improve volume search when reading fstab

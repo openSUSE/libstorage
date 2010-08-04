@@ -160,6 +160,8 @@ namespace storage
     enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART,
 		 COTYPE_LAST_ENTRY };
 
+    enum Transport { TUNKNOWN, SBP, ATA, FC, ISCSI, SAS, SATA, SPI, USB };
+
     enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
 
     enum PartAlign { ALIGN_OPTIMAL, ALIGN_CYLINDER };
@@ -298,7 +300,8 @@ namespace storage
 	bool extendedPossible;
 	unsigned maxLogical;
 	bool initDisk;
-	bool iscsi;
+	Transport transport;
+	bool iscsi;		// deprecated
     };
 
     /**

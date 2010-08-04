@@ -51,11 +51,16 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
-	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
+	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), del_ptable(false)
     {
     logfile_name = boost::replace_all_copy(nm, "/", "_");
     getMajorMinor();
+
+    Lsscsi::Entry entry;
+    if (systeminfo.getLsscsi().getEntry(device, entry))
+	transport = entry.transport;
+
     size_k = SizeK;
     y2deb("constructed Disk name:" << name);
     }
@@ -64,7 +69,7 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
-	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
+	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), del_ptable(false)
     {
     y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
@@ -84,7 +89,7 @@ namespace storage
 	  head(0), sector(0),
 	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
-	  init_disk(false), iscsi(false), dmp_slave(false), no_addpart(false),
+	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), byte_cyl(0), range(4), del_ptable(false)
     {
 	logfile_name = nm;
@@ -120,7 +125,7 @@ namespace storage
 	  detected_label(c.detected_label), logfile_name(c.logfile_name),
 	  max_primary(c.max_primary),
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
-	  init_disk(c.init_disk), iscsi(c.iscsi),
+	  init_disk(c.init_disk), transport(c.transport),
 	  dmp_slave(c.dmp_slave), no_addpart(c.no_addpart), 
 	  gpt_enlarge(c.gpt_enlarge), byte_cyl(c.byte_cyl), range(c.range), 
 	  del_ptable(c.del_ptable)
@@ -168,6 +173,9 @@ namespace storage
 	    setChildValue(node, "udev_path", udev_path);
 	if (!udev_id.empty())
 	    setChildValue(node, "udev_id", udev_id);
+
+	if (transport != TUNKNOWN)
+	    setChildValue(node, "transport", Lsscsi::transport_names[transport]);
 
 	ConstPartPair vp = partPair();
 	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)
@@ -352,13 +360,6 @@ bool Disk::detectGeometry()
 	    range = sysfsinfo.range;
 	    if (range <= 1)
 		ret = false;
-
-	    string link;
-	    if (readlink(sysfsPath(), link))
-	    {
-		y2mil("link:" << link);
-		iscsi = boost::contains(link, "/session");
-	    }
 	}
 	else
 	{
@@ -366,7 +367,7 @@ bool Disk::detectGeometry()
 	}
 
 	y2mil("dev:" << dev << " ret:" << ret << " range:" << range << " major:" << mjr <<
-	      " minor:" << mnr << " iscsi:" << iscsi);
+	      " minor:" << mnr);
 
 	return ret;
     }
@@ -2821,7 +2822,8 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.extendedPossible = extendedPossible();
     info.maxLogical = maxLogical();
     info.initDisk = init_disk;
-    info.iscsi = iscsi;
+    info.iscsi = transport == ISCSI;
+    info.transport = transport;
     tinfo = info;
     }
 
@@ -2846,8 +2848,7 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
     if( d.init_disk )
 	s << " InitDisk";
-    if( d.iscsi )
-	s << " iSCSI";
+    s << " transport:" << Lsscsi::transport_names[d.transport];
     if( d.dmp_slave )
 	s << " DmpSlave";
     if( d.no_addpart )
@@ -2900,12 +2901,10 @@ void Disk::logDifference( const Container& d ) const
 	    else
 		log += " InitDisk-->";
 	    }
-	if( iscsi!=p->iscsi )
+	if (transport != p->transport)
 	    {
-	    if( p->iscsi )
-		log += " -->iSCSI";
-	    else
-		log += " iSCSI-->";
+	    log += " transport:" + Lsscsi::transport_names[transport] + "-->" +
+		Lsscsi::transport_names[p->transport];
 	    }
 	if (del_ptable != p->del_ptable)
 	    {
@@ -2964,7 +2963,7 @@ bool Disk::equalContent( const Container& rhs ) const
 	      size_k==p->size_k && max_primary==p->max_primary &&
 	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
 	      init_disk==p->init_disk && label==p->label && 
-	      iscsi==p->iscsi &&
+	      transport == p->transport &&
 	      dmp_slave==p->dmp_slave && no_addpart==p->no_addpart &&
 	      gpt_enlarge==p->gpt_enlarge && del_ptable == p->del_ptable;
     if( ret && p )

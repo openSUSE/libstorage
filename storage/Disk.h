@@ -92,7 +92,7 @@ class Disk : public Container
 
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
-	bool isIScsi() const { return iscsi; }
+	bool isIScsi() const { return transport == ISCSI; }
 	static bool isIScsi(const Disk& d) { return d.isIScsi(); }
 	bool isLogical( unsigned nr ) const;
 	bool detect(SystemInfo& systeminfo);
@@ -291,7 +291,7 @@ class Disk : public Container
 	bool ext_possible;
 	unsigned max_logical;
 	bool init_disk;
-	bool iscsi;
+	Transport transport;
 	bool dmp_slave;
 	bool no_addpart;
 	bool gpt_enlarge;

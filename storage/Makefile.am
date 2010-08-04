@@ -44,6 +44,7 @@ libstorage_la_SOURCES =					\
 	SystemInfo.cc		SystemInfo.h		\
 	ProcParts.cc		ProcParts.h		\
 	Blkid.cc		Blkid.h			\
+	Lsscsi.cc		Lsscsi.h		\
 	ProcMounts.cc		ProcMounts.h		\
 	EtcFstab.cc		EtcFstab.h		\
 	EtcMdadm.cc		EtcMdadm.h		\

@@ -70,6 +70,7 @@
 
 #define BLKIDBIN "/sbin/blkid"
 #define BLOCKDEVBIN "/sbin/blockdev"
+#define LSSCSIBIN "/usr/bin/lsscsi"
 
 #define LSBIN "/bin/ls"
 

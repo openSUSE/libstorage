@@ -29,6 +29,7 @@
 #include "storage/ProcParts.h"
 #include "storage/ProcMounts.h"
 #include "storage/Blkid.h"
+#include "storage/Lsscsi.h"
 #include "storage/DmCo.h"
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
@@ -49,6 +50,7 @@ namespace storage
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
 	const Blkid& getBlkid() { return *blkid; }
+	const Lsscsi& getLsscsi() { return *lsscsi; }
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
 	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
@@ -76,6 +78,7 @@ namespace storage
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<Blkid> blkid;
+	LazyObject<Lsscsi> lsscsi;
 	LazyObject<CmdDmsetup> cmddmsetup;
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;
