@@ -51,7 +51,7 @@ namespace storage
 	    string transport = extractNthWord(2, *it);
 	    string device = extractNthWord(3, *it);
 
-	    if (device.empty())
+	    if (device.empty() || device == "-")
 		continue;
 
 	    Entry entry;
