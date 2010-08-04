@@ -22,7 +22,6 @@
 
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
-#include "storage/StorageTmpl.h"
 #include "storage/StorageDefines.h"
 #include "storage/Blkid.h"
 #include "storage/Volume.h"

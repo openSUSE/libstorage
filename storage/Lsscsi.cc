@@ -20,12 +20,12 @@
  */
 
 
+#include <boost/algorithm/string.hpp>
+
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
-#include "storage/StorageTmpl.h"
 #include "storage/StorageDefines.h"
 #include "storage/Lsscsi.h"
-#include "storage/Volume.h"
 
 
 namespace storage
