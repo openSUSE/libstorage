@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -297,15 +297,6 @@ void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
     y2mil("c:" << c << " h:" << h << " s:" << s);
     }
 
-bool Dasd::detectGeometry()
-    {
-    Disk::detectGeometry();
-    sector *= 8;
-    byte_cyl *= 8;
-    cyl /= 8;
-    y2mil("cyl:" << cyl << " sector:" << sector << " byte_cyl:" << byte_cyl);
-    return( true );
-    }
 
 int Dasd::doResize( Volume* v ) 
     { 

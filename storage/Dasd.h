@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -59,7 +59,6 @@ class Dasd : public Disk
 	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
 			 list<const Volume*>& vol) const;
 	int commitChanges( storage::CommitStage stage );
-	bool detectGeometry();
 
     protected:
 	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
