@@ -269,7 +269,7 @@ class Disk : public Container
 
 	void setLabelData( const string& );
 
-	static string defaultLabel(const ArchInfo& archinfo, unsigned long long num_sectors);
+	string defaultLabel() const;
 
 	static const label_info labels[];
 	static const string p_disks[];
