@@ -2270,21 +2270,19 @@ Storage::defaultDiskLabel(const string& device)
 {
     assertInit();
 
-    unsigned long long num_sectors = 0;
-
     ConstDiskIterator i1 = findDisk(device);
     if (i1 != dEnd())
-	num_sectors = i1->kbToSector(i1->size_k);
+	return i1->defaultLabel();
 
     ConstDmPartCoIterator i2 = findDmPartCo(device);
     if (i2 != dmpCoEnd())
-	num_sectors = i2->disk->kbToSector(i2->size_k);
+	return i2->disk->defaultLabel();
 
     ConstMdPartCoIterator i3 = findMdPartCo(device);
     if (i3 != mdpCoEnd())
-	num_sectors = i3->disk->kbToSector(i3->size_k);
+	return i3->disk->defaultLabel();
 
-    return Disk::defaultLabel(archinfo, num_sectors);
+    return "";			// FIXME
 }
 
 

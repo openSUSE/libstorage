@@ -474,7 +474,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
     if( detected_label.empty() )
 	detected_label = dlabel;
     if( dlabel.empty() )
-	dlabel = defaultLabel(getStorage()->getArchInfo(), kbToSector(size_k));
+	dlabel = defaultLabel();
     setLabelData( dlabel );
 
     if (label == "unsupported")
@@ -1009,22 +1009,36 @@ bool
 
 
 string
-Disk::defaultLabel(const ArchInfo& archinfo, unsigned long long num_sectors)
+Disk::defaultLabel() const
 {
     string ret = "msdos";
-    if (archinfo.is_efiboot)
-	ret = "gpt";
-    else if (num_sectors > (1ULL << 32) - 1)
-	ret = "gpt";
-    else if (archinfo.arch == "ia64")
-	ret = "gpt";
-    else if (archinfo.arch == "sparc")
-	ret = "sun";
-    else if (archinfo.arch == "ppc" && archinfo.is_ppc_mac)
-	ret = "mac";
-    else if (archinfo.arch == "ppc" && archinfo.is_ppc_pegasos)
-	ret = "amiga";
-    y2mil("num_sectors:" << num_sectors << " ret:" << ret);
+
+    if (isDasd())
+    {
+	ret = "dasd";
+    }
+    else
+    {
+	const ArchInfo& archinfo = getStorage()->getArchInfo();
+	unsigned long long num_sectors = kbToSector(size_k);
+	y2mil("num_sectors:" << num_sectors);
+
+	ret = "msdos";
+	if (archinfo.is_efiboot)
+	    ret = "gpt";
+	else if (num_sectors > (1ULL << 32) - 1)
+	    ret = "gpt";
+	else if (archinfo.arch == "ia64")
+	    ret = "gpt";
+	else if (archinfo.arch == "sparc")
+	    ret = "sun";
+	else if (archinfo.arch == "ppc" && archinfo.is_ppc_mac)
+	    ret = "mac";
+	else if (archinfo.arch == "ppc" && archinfo.is_ppc_pegasos)
+	    ret = "amiga";
+    }
+
+    y2mil("ret:" << ret);
     return ret;
 }
 
