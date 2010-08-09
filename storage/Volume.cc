@@ -741,6 +741,45 @@ Text Volume::formatText( bool doing ) const
     return( txt );
     }
 
+static string handle_O_Features( const string& opts )
+    {
+    string ret = opts;
+    const string ofb = "-O ";
+    const string of = "-O";
+    string::size_type pos;
+    if( (pos=ret.find( ofb ))!=string::npos && 
+        ret.find( ofb, pos+ofb.size())!=string::npos )
+	{
+	list<string> ls = splitString( ret, " " );
+	list<string>::iterator li = find( ls.begin(), ls.end(), of );
+	if( li != ls.end() )
+	    li++;
+	list<string>::iterator ofi = li;
+	while( li != ls.end() )
+	    {
+	    if( *li == of )
+		{
+		li = ls.erase( li );
+		if( li != ls.end() )
+		    {
+		    *ofi += ',';
+		    *ofi += *li;
+		    li = ls.erase( li );
+		    }
+		}
+	    else
+		++li;
+	    }
+	ret = boost::join( ls, " " );
+	}
+    if( ret!=opts )
+	{
+	y2mil( "org:" << opts );
+	y2mil( "ret:" << ret );
+	}
+    return( ret );
+    }
+
 int Volume::doFormat()
     {
     static int fcount=1000;
@@ -844,7 +883,7 @@ int Volume::doFormat()
 	    cmd += " ";
 	    if( !mkfs_opt.empty() )
 		{
-		cmd += mkfs_opt + " ";
+		cmd += handle_O_Features(mkfs_opt) + " ";
 		}
 	    if( !params.empty() )
 		{
