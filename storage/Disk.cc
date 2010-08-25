@@ -417,7 +417,7 @@ void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
 	}
     if( !cyl_changed && sect_head_changed )
 	{
-	c = sizeK()*2/(s*h);
+	c = kbToSector(sizeK())/(s*h);
 	if( c<=0 )
 	    c=1;
 	y2mil("new c:" << c);
@@ -2723,10 +2723,10 @@ int Disk::doResize( Volume* v )
 	    classic(cmd_line);
 	    unsigned long long start_sect, end_sect;
 	    getPartedSectors( p, start_sect, end_sect );
-	    end_sect = start_sect + p->sizeK()*2 - 1;
+	    end_sect = start_sect + kbToSector(p->sizeK()) - 1;
 	    y2mil("end_sect " << end_sect);
 	    const Partition * after = getPartitionAfter( p );
-	    unsigned long max_end = sizeK()*2-1;
+	    unsigned long max_end = kbToSector(sizeK()) - 1;
 	    if( after!=NULL )
 		{
 		unsigned long long start_after, end_after;
@@ -2807,7 +2807,7 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
 void Disk::addPartition( unsigned num, unsigned long long sz,
 		         SystemInfo& systeminfo )
     {
-    unsigned long cyl_inc = std::max( size_k*2 / head / sector, 1ULL );
+    unsigned long cyl_inc = std::max(kbToSector(size_k) / head / sector, 1ULL);
     Partition *p = new Partition( *this, num, sz, cyl, cyl_inc, PRIMARY );
     cyl += cyl_inc;
     new_cyl = cyl;
