@@ -245,7 +245,7 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
     {
 	Regex rx('^' + Regex::ws + key + '=' + "(['\"]?)([^'\"]*)\\1" + Regex::ws + '$');
 
-	if (!(find_if(lines(), regex_matches(rx)) != lines().end()))
+	if (find_if(lines(), regex_matches(rx)) == lines().end())
 	    return false;
 
 	value = rx.cap(2);
@@ -259,7 +259,7 @@ void AsciiFile::removeLastIf (string& Text_Cr, char Char_cv) const
     {
 	Regex rx('^' + key + ":" + Regex::ws + "([^ ]*)" + '$');
 
-	if (!(find_if(lines(), regex_matches(rx)) != lines().end()))
+	if (find_if(lines(), regex_matches(rx)) == lines().end())
 	    return false;
 
 	value = rx.cap(1);
