@@ -110,8 +110,6 @@ class EtcFstab
 			    FstabEntry& entry ) const;
 	bool findIdPath(const list<string>& id, const string& path, FstabEntry& entry) const;
 	void setDevice( const FstabEntry& entry, const string& device );
-	int updateEntry( const string& dev, const string& mount,
-	                 const string& fs, const string& opts="defaults" );
 	int updateEntry( const FstabChange& entry );
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
