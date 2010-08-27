@@ -2341,16 +2341,13 @@ int Volume::mount( const string& m, bool ro )
 		fsn = "auto";
 		break;
 	    default:
-		cmdline = MODPROBEBIN " " + fsn;
-		cmd.execute( cmdline );
+		cmd.execute(MODPROBEBIN " " + fsn);
 		break;
 	    }
 	if( fs == VFAT )
 	    {
-	    cmdline = MODPROBEBIN " nls_cp437";
-	    cmd.execute( cmdline );
-	    cmdline = MODPROBEBIN " nls_iso8859-1";
-	    cmd.execute( cmdline );
+	    cmd.execute(MODPROBEBIN " nls_cp437");
+	    cmd.execute(MODPROBEBIN " nls_iso8859-1");
 	    }
 	cmdline = MOUNTBIN " ";
 	if( ro )
