@@ -2355,6 +2355,8 @@ int Volume::mount( const string& m, bool ro )
 	cmdline = MOUNTBIN " ";
 	if( ro )
 	    cmdline += "-r ";
+	cmdline += "-t " + fsn + " ";
+
 	const char * ign_opt[] = { "defaults", "" };
 	const char * ign_beg[] = { "loop", "encryption=", "phash=",
 	                           "itercountk=", "" };
@@ -2369,14 +2371,10 @@ int Volume::mount( const string& m, bool ro )
 	for( unsigned i=0; i<lengthof(ign_beg) && *ign_beg[i]!=0; i++ )
 	    l.remove_if(string_starts_with(ign_beg[i]));
 	y2mil( "l  after:" << l );
-	string opts = " ";
 	if( !l.empty() )
-	    {
-	    opts += "-o";
-	    opts += boost::join( l, "," );
-	    opts += " ";
-	    }
-	cmdline += "-t " + fsn + opts + quote(mountDevice()) + " " + quote(lmount);
+	    cmdline += "-o " + boost::join(l, ",") + " ";
+
+	cmdline += quote(mountDevice()) + " " + quote(lmount);
 	}
     else
 	{
