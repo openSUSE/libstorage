@@ -134,7 +134,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	    case UB_MDPART: setChildValue(tmp, "type", "mdpart"); break;
 	    case UB_DM: setChildValue(tmp, "type", "dm"); break;
 	    case UB_DMRAID: setChildValue(tmp, "type", "dmraid"); break;
-	    case UB_DMMULTIPATH: setChildValue(tmp, "type", "lvm"); break;
+	    case UB_DMMULTIPATH: setChildValue(tmp, "type", "dmmultipath"); break;
 	    case UB_NONE: break;
 	}
 
