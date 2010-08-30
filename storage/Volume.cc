@@ -2621,7 +2621,7 @@ static bool haveQuota( const string& fstopt )
     list<string>::const_iterator i = opt.begin();
     while( !ret && i!=opt.end() )
 	{
-	ret = (*i=="usrquota") || (*i=="usrquota") ||
+	ret = (*i=="usrquota") || (*i=="grpquota") ||
 	      i->find("usrjquota=")==0 || i->find("grpjquota=")==0;
 	++i;
 	}
