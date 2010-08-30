@@ -165,10 +165,7 @@ EtcFstab::readFiles()
 	    p->old.noauto = false;
 	    p->old.encr = ENC_LUKS;
 	    p->old.device = *i;
-	    list<string>::iterator li =  
-		find( p->old.opts.begin(), p->old.opts.end(), "nofail" );
-	    if( li != p->old.opts.end() )
-		li = p->old.opts.erase(li);
+	    p->old.opts.remove("nofail");
 	    ++i;
 	    if( *i != "none" )
 		p->old.cr_key = *i;
