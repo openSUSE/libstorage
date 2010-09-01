@@ -106,7 +106,7 @@ class DmCo : public PeContainer
 	bool findDm( const string& dev ); 
 	void addDm( Dm* m );
 	void checkDm( Dm* m );
-	void updateEntry( const Dm* m );
+
 	virtual Container* getCopy() const { return( new DmCo( *this ) ); }
 
 	void init();

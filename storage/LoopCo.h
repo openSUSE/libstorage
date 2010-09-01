@@ -113,7 +113,6 @@ class LoopCo : public Container
 	bool findLoop( const string& file ); 
 	bool findLoopDev( const string& dev, LoopIter& i );
 	void addLoop( Loop* m );
-	void updateEntry( const Loop* m );
 
 	void init();
 
