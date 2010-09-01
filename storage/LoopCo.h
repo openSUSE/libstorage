@@ -51,7 +51,8 @@ class LoopCo : public Container
 	int updateLoop( const string& device, const string& file, 
 	                bool reuseExisting, unsigned long long sizeK );
 	int removeLoop( const string& file, bool removeFile = false );
-	void loopIds( std::list<unsigned>& l ) const;
+
+	list<unsigned> usedNumbers() const;
 
 	int removeVolume( Volume* v );
 	bool equalContent( const Container& rhs ) const;

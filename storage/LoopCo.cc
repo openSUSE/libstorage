@@ -151,17 +151,19 @@ void
 	}
     }
 
-void LoopCo::loopIds( std::list<unsigned>& l ) const
+
+    list<unsigned>
+    LoopCo::usedNumbers() const
     {
-    l.clear();
-    ConstLoopPair p=loopPair(Loop::notDeleted);
-    ConstLoopIter i=p.begin();
-    while( i!=p.end() )
-	{
-	l.push_back( i->nr() );
-	++i;
-	}
+	list<unsigned> nums;
+
+	ConstLoopPair p = loopPair(Loop::notDeleted);
+	for (ConstLoopIter i = p.begin(); i != p.end(); ++i)
+	    nums.push_back(i->nr());
+
+	return nums;
     }
+
 
 bool
 LoopCo::findLoop( unsigned num, LoopIter& i )

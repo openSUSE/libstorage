@@ -1595,10 +1595,7 @@ int Volume::getFreeLoop( SystemCmd& loopData )
     {
     int ret = 0;
     if( loop_dev.empty() )
-	{
-	list<unsigned> ids;
-	ret = getFreeLoop( loopData, ids );
-	}
+	ret = getFreeLoop(loopData, list<unsigned>());
     y2mil("ret:" << ret);
     return( ret );
     }

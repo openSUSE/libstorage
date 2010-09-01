@@ -51,11 +51,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
     if( loop_dev.empty() )
 	getLoopData( losetup );
     if( loop_dev.empty() )
-	{
-	list<unsigned> l;
-	d.loopIds( l );
-	getFreeLoop( losetup, l );
-	}
+	getFreeLoop(losetup, d.usedNumbers());
     string proc_dev;
     if( !dmcrypt )
 	{
