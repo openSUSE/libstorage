@@ -45,7 +45,7 @@ class Loop : public Volume
 
 	const string& loopFile() const { return lfile; }
 	void setLoopFile( const string& file );
-	bool getReuse() { return( reuseFile ); }
+	bool getReuse() const { return reuseFile; }
 	void setReuse( bool reuseExisting );
 	void setDelFile( bool val=true ) { delFile=val; }
 	bool removeFile();
