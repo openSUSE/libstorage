@@ -460,15 +460,13 @@ bool Storage::rescanCryptedObjects()
     bool ret = false;
     LvmVg::activate(false);
     LvmVg::activate(true);
+    SystemInfo systeminfo;
     const list<string> l = LvmVg::getVgs();
-    SystemInfo *si = NULL;
     for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
 	if( findLvmVg( *i ) == lvgEnd() )
 	    {
-	    if( !si )
-		si = new SystemInfo;
-	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, *si);
+	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
 	    addToList( v );
 	    v->normalizeDmDevices();
 	    v->checkConsistency();
@@ -477,8 +475,6 @@ bool Storage::rescanCryptedObjects()
 	    ret = true;
 	    }
 	}
-    if( si )
-	delete si;
     if( ret )
 	dumpObjectList();
     y2mil( "ret:" << ret );
@@ -3853,7 +3849,7 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, unsigned lon
 	}
 
 	sumK += v->sizeK();
-	if (smallestK == 0)
+	if (i == devices.begin())
 	    smallestK = v->sizeK();
 	else
 	    smallestK = min(smallestK, v->sizeK());

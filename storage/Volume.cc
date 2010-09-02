@@ -3102,7 +3102,7 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( !v.is_mounted )
 	    s << " not_mounted";
 	}
-    if( v.mp != v.orig_mp && v.orig_mp.length()>0 )
+    if( v.mp != v.orig_mp && !v.orig_mp.empty() )
 	s << " orig_mount:" << v.orig_mp;
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
@@ -3118,12 +3118,12 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	{
 	s << " label:" << v.label;
 	}
-    if( v.label != v.orig_label && v.orig_label.length()>0 )
+    if( v.label != v.orig_label && !v.orig_label.empty() )
 	s << " orig_label:" << v.orig_label;
-    if( v.fstab_opt.length()>0 )
+    if( !v.fstab_opt.empty() )
 	{
 	s << " fstopt:" << v.fstab_opt;
-	if( v.fstab_opt != v.orig_fstab_opt && v.orig_fstab_opt.length()>0 )
+	if( v.fstab_opt != v.orig_fstab_opt && !v.orig_fstab_opt.empty() )
 	    s << " orig_fstopt:" << v.orig_fstab_opt;
 	}
     if (!v.mkfs_opt.empty())
