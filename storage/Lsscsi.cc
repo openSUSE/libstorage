@@ -48,8 +48,10 @@ namespace storage
 
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    string transport = extractNthWord(2, *it);
-	    string device = extractNthWord(3, *it);
+	    string line = boost::replace_all_copy(*it, " usb: ", " usb:");
+
+	    string transport = extractNthWord(2, line);
+	    string device = extractNthWord(3, line);
 
 	    if (!boost::starts_with(device, "/dev/"))
 		continue;
