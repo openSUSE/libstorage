@@ -57,7 +57,9 @@ namespace storage
 	    string name = extractNthWord(0, *it1);
 	    y2mil("mp name:" << name);
 
-	    list<string> tmp = splitString(extractNthWord(2, *it1, true), ",");
+	    bool has_alias = boost::starts_with(extractNthWord(1, *it1), "(");
+
+	    list<string> tmp = splitString(extractNthWord(has_alias ? 3 : 2, *it1, true), ",");
 	    if (tmp.size() >= 2)
 	    {
 		list<string>::const_iterator it2 = tmp.begin();
