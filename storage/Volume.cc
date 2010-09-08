@@ -1919,7 +1919,7 @@ EncryptType Volume::detectEncryption()
 	if( fs==FSUNKNOWN && !luks_ok )
 	    pos++;
 	y2mil( "pos:" << pos << " luks_ok:" << luks_ok <<
-	       " fs:" << Volume::fs_names[fs] );
+	       " fs:" << fs_names[fs] );
 	}
     while( !luks_ok && detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
     crUnsetup( true );
@@ -3225,10 +3225,9 @@ Volume::logDifference( const Volume& rhs ) const
 	ret += b.str();
 	}
     if( fs!=rhs.fs )
-	ret += " fs:" + Volume::fs_names[fs] + "-->" + Volume::fs_names[rhs.fs];
+	ret += " fs:" + fs_names[fs] + "-->" + fs_names[rhs.fs];
     if( detected_fs!=rhs.detected_fs )
-	ret += " det_fs:" + Volume::fs_names[detected_fs] + "-->" +
-	       Volume::fs_names[rhs.detected_fs];
+	ret += " det_fs:" + fs_names[detected_fs] + "-->" + fs_names[rhs.detected_fs];
     if( mp!=rhs.mp )
 	ret += " mount:" + mp + "-->" + rhs.mp;
     if( orig_mp!=rhs.orig_mp )
@@ -3241,11 +3240,9 @@ Volume::logDifference( const Volume& rhs ) const
 	    ret += " mounted-->";
 	}
     if( mount_by!=rhs.mount_by )
-	ret += " mount_by:" + Volume::mb_names[mount_by] + "-->" +
-	       Volume::mb_names[rhs.mount_by];
+	ret += " mount_by:" + mb_names[mount_by] + "-->" + mb_names[rhs.mount_by];
     if( orig_mount_by!=rhs.orig_mount_by )
-	ret += " orig_mount_by:" + Volume::mb_names[orig_mount_by] + "-->" +
-	       Volume::mb_names[rhs.orig_mount_by];
+	ret += " orig_mount_by:" + mb_names[orig_mount_by] + "-->" + mb_names[rhs.orig_mount_by];
     if( uuid!=rhs.uuid )
 	ret += " uuid:" + uuid + "-->" + rhs.uuid;
     if( label!=rhs.label )
@@ -3281,11 +3278,9 @@ Volume::logDifference( const Volume& rhs ) const
     if( fstab_loop_dev!=rhs.fstab_loop_dev )
 	ret += " fstab_loop:" + fstab_loop_dev + "-->" + rhs.fstab_loop_dev;
     if( encryption!=rhs.encryption )
-	ret += " encr:" + Volume::enc_names[encryption] + "-->" +
-	       Volume::enc_names[rhs.encryption];
+	ret += " encr:" + enc_names[encryption] + "-->" + enc_names[rhs.encryption];
     if( orig_encryption!=rhs.orig_encryption )
-	ret += " orig_encr:" + Volume::enc_names[orig_encryption] + "-->" +
-	       Volume::enc_names[rhs.orig_encryption];
+	ret += " orig_encr:" + enc_names[orig_encryption] + "-->" + enc_names[rhs.orig_encryption];
 #ifdef DEBUG_CRYPT_PASSWORD
     if( crypt_pwd!=rhs.crypt_pwd )
 	ret += " pwd:" + crypt_pwd + "-->" + rhs.crypt_pwd;
