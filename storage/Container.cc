@@ -434,8 +434,7 @@ Container::getDiffString( const Container& c ) const
     if( nm!=c.nm )
 	ret += "-->"+c.nm;
     if( typ!=c.typ )
-	ret += " Type:" + Container::type_names[typ] + "-->" +
-	       Container::type_names[c.typ];
+	ret += " Type:" + type_names[typ] + "-->" + type_names[c.typ];
     if( dev!=c.dev )
 	ret += " Device:" + dev + "-->" + c.dev;
     if( del!=c.del )
