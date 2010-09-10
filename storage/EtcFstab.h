@@ -146,7 +146,7 @@ class EtcFstab
 	string updateLine( const std::list<string>& ol, 
 			   const std::list<string>& nl, const string& line ) const;
 	string createLine( const std::list<string>& ls, unsigned fields, 
-	                   unsigned* flen ) const;
+	                   const unsigned* flen ) const;
 
 	string createTabLine( const FstabEntry& e ) const;
 	string createCrtabLine( const FstabEntry& e ) const;
@@ -154,9 +154,9 @@ class EtcFstab
 	                    const FstabEntry& old, const FstabEntry& nnew, 
 	                    string& line ) const;
 
-	static unsigned fstabFields[6];
-	static unsigned cryptotabFields[6];
-	static unsigned crypttabFields[6];
+	static const unsigned fstabFields[6];
+	static const unsigned cryptotabFields[6];
+	static const unsigned crypttabFields[6];
 
 	string prefix;
 	std::list<Entry> co;

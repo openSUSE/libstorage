@@ -562,7 +562,7 @@ static list<string> makeStringList(const FstabEntry& e)
     }
 
 string EtcFstab::createLine( const list<string>& ls, unsigned fields, 
-                             unsigned* flen ) const
+                             const unsigned* flen ) const
     {
     string ret;
     unsigned count=0;
@@ -587,7 +587,7 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     const list<string> ls = makeStringList(e);
     unsigned max_fields = e.cryptotab ? lengthof(cryptotabFields)
 			      : lengthof(fstabFields);
-    unsigned* fields = e.cryptotab ? cryptotabFields : fstabFields;
+    const unsigned* fields = e.cryptotab ? cryptotabFields : fstabFields;
     return createLine(ls, max_fields, fields);
     }
 
@@ -1025,8 +1025,8 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
     }
 
 
-unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
-unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
-unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };
+    const unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
+    const unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
+    const unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };
 
 }
