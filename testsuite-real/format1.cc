@@ -1,4 +1,7 @@
 
+/* Creates a partition on provided disks and formats it with different
+   filesystems. */
+
 #include <iostream>
 
 #include "common.h"
