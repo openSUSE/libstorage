@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Sep 15 12:03:08 CEST 2010 - aschnell@suse.de
+
+- added subpackage libstorage-testsuite
+- 2.20.2
+
+-------------------------------------------------------------------
 Mon Aug 09 15:48:24 CEST 2010 - fehr@suse.de
 
 - add handling of multiple -O options for ext3/ext4 (bnc#629363)

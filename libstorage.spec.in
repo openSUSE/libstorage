@@ -127,3 +127,19 @@ Authors:
 %defattr(-,root,root)
 %{python_sitelib}/libstorage.py*
 %attr(755,root,root) %{python_sitearch}/_libstorage.so
+
+%package testsuite
+Requires:	libstorage = %version
+Summary:	testsuite for libstorage
+Group:		Development/Tools/Other
+
+%description testsuite
+This package contains testsuite programs for libstorage.
+
+Authors:
+--------
+    Arvin Schnell <aschnell@suse.de>
+
+%files testsuite
+%defattr(-,root,root)
+/usr/lib/libstorage/testsuite-real

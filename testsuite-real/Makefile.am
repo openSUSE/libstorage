@@ -6,6 +6,12 @@ INCLUDES = -I$(top_srcdir)
 
 LDADD = ../storage/libstorage.la
 
+testsuite_realdir = /usr/lib/libstorage/testsuite-real
+
+testsuite_real_PROGRAMS = format1
+
+format1_SOURCES = format1.cc common.h common.cc
+
 noinst_PROGRAMS = lvmcreate1 lvmcreate2 lvmextend1 lvmextend2 create1 create2
 
 lvmcreate1_SOURCES = lvmcreate1.cc

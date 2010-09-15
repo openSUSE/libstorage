@@ -1,12 +1,8 @@
-lvmcreate1.o
+*.o
+format1
 lvmcreate1
-lvmcreate2.o
 lvmcreate2
-lvmextend1.o
 lvmextend1
-lvmextend2.o
 lvmextend2
-create1.o
 create1
-create2.o
 create2
