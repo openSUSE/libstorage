@@ -142,4 +142,5 @@ Authors:
 
 %files testsuite
 %defattr(-,root,root)
+%dir /usr/lib/libstorage
 /usr/lib/libstorage/testsuite-real
