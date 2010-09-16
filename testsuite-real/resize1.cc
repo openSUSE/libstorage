@@ -22,50 +22,50 @@ doit(const string& disk)
     const list<FsType> fstypes(elem, elem + lengthof(elem));
     for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
-	check(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)) == 0);
+	check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
 
 	string volume;
-	check(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, volume) == 0);
+	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, volume));
 	cout << "volume:" << volume << endl;
 
 	print_commitinfos(s);
-	check(s->commit() == 0);
+	check_zero(s->commit());
 
 	FsCapabilities fscaps;
-	check(s->getFsCapabilities(*it, fscaps) == true);
+	check_true(s->getFsCapabilities(*it, fscaps));
 
-	check(s->changeFormatVolume(volume, true, *it) == 0);
+	check_zero(s->changeFormatVolume(volume, true, *it));
 
 	print_commitinfos(s);
-	check(s->commit() == 0);
+	check_zero(s->commit());
 
 	if (fscaps.isExtendable)
 	{
-	    check(s->resizeVolume(volume, 2*1024*1024) == 0);
+	    check_zero(s->resizeVolume(volume, 2*1024*1024));
 
 	    print_commitinfos(s);
-	    check(s->commit() == 0);
+	    check_zero(s->commit());
 	}
 
 	if (fscaps.isReduceable)
 	{
-	    check(s->resizeVolume(volume, 1024*1024) == 0);
+	    check_zero(s->resizeVolume(volume, 1024*1024));
 
 	    print_commitinfos(s);
-	    check(s->commit() == 0);
+	    check_zero(s->commit());
 	}
 
 	if (fscaps.isExtendableWhileMounted)
 	{
-	    check(s->changeMountPoint(volume, "/test") == 0);
+	    check_zero(s->changeMountPoint(volume, "/test"));
 
 	    print_commitinfos(s);
-	    check(s->commit() == 0);
+	    check_zero(s->commit());
 
-	    check(s->resizeVolume(volume, 3*1024*1024) == 0);
+	    check_zero(s->resizeVolume(volume, 3*1024*1024));
 
 	    print_commitinfos(s);
-	    check(s->commit() == 0);
+	    check_zero(s->commit());
 	}
     }
 

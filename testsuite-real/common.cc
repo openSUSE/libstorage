@@ -11,16 +11,6 @@ namespace storage
 
 
     void
-    check_failure(const char* str, const char* file, int line, const char* func)
-    {
-	cerr << "failure in \"" << func << "\" line " << line << endl;
-	cerr << "check \"" << str << "\"" << endl;
-
-	exit(EXIT_FAILURE);
-    }
-
-
-    void
     print_commitinfos(const StorageInterface* s)
     {
 	list<CommitInfo> infos;

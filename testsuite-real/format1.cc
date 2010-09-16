@@ -18,29 +18,29 @@ doit(const string& disk)
 
     cout << "disk:" << disk << endl;
 
-    check(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)) == 0);
+    check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
 
     string volume;
-    check(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, volume) == 0);
+    check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, volume));
     cout << "volume:" << volume << endl;
 
     print_commitinfos(s);
-    check(s->commit() == 0);
+    check_zero(s->commit());
 
     static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, BTRFS, XFS, JFS, VFAT, SWAP };
     const list<FsType> fstypes(elem, elem + lengthof(elem));
     for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
 	FsCapabilities fscaps;
-	check(s->getFsCapabilities(*it, fscaps) == true);
+	check_true(s->getFsCapabilities(*it, fscaps));
 
-	check(s->changeFormatVolume(volume, true, *it) == 0);
+	check_zero(s->changeFormatVolume(volume, true, *it));
 
 	if (fscaps.supportsLabel)
-	    check(s->changeLabelVolume(volume, "test") == 0);
+	    check_zero(s->changeLabelVolume(volume, "test"));
 
 	print_commitinfos(s);
-	check(s->commit() == 0);
+	check_zero(s->commit());
     }
 
     delete s;
