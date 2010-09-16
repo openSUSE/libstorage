@@ -1,5 +1,6 @@
 *.o
 format1
+resize1
 lvmcreate1
 lvmcreate2
 lvmextend1
