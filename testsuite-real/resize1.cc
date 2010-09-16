@@ -1,5 +1,5 @@
 
-/* Creates a partition on provided disks and formats it with different
+/* Creates a partition on the provided disks and formats it with different
    filesystems and does resizing. */
 
 #include <stdlib.h>
@@ -24,9 +24,9 @@ doit(const string& disk)
     {
 	check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
 
-	string volume;
-	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, volume));
-	cout << "volume:" << volume << endl;
+	string part;
+	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
+	cout << "part:" << part << endl;
 
 	print_commitinfos(s);
 	check_zero(s->commit());
@@ -34,14 +34,14 @@ doit(const string& disk)
 	FsCapabilities fscaps;
 	check_true(s->getFsCapabilities(*it, fscaps));
 
-	check_zero(s->changeFormatVolume(volume, true, *it));
+	check_zero(s->changeFormatVolume(part, true, *it));
 
 	print_commitinfos(s);
 	check_zero(s->commit());
 
 	if (fscaps.isExtendable)
 	{
-	    check_zero(s->resizeVolume(volume, 2*1024*1024));
+	    check_zero(s->resizeVolume(part, 2*1024*1024));
 
 	    print_commitinfos(s);
 	    check_zero(s->commit());
@@ -49,7 +49,7 @@ doit(const string& disk)
 
 	if (fscaps.isReduceable)
 	{
-	    check_zero(s->resizeVolume(volume, 1024*1024));
+	    check_zero(s->resizeVolume(part, 1024*1024));
 
 	    print_commitinfos(s);
 	    check_zero(s->commit());
@@ -57,12 +57,12 @@ doit(const string& disk)
 
 	if (fscaps.isExtendableWhileMounted)
 	{
-	    check_zero(s->changeMountPoint(volume, "/test"));
+	    check_zero(s->changeMountPoint(part, "/test"));
 
 	    print_commitinfos(s);
 	    check_zero(s->commit());
 
-	    check_zero(s->resizeVolume(volume, 3*1024*1024));
+	    check_zero(s->resizeVolume(part, 3*1024*1024));
 
 	    print_commitinfos(s);
 	    check_zero(s->commit());

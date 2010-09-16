@@ -1,9 +1,9 @@
 *.o
+align1
+align2
 format1
 resize1
 lvmcreate1
 lvmcreate2
 lvmextend1
 lvmextend2
-create1
-create2
