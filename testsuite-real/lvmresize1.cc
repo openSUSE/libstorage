@@ -1,4 +1,7 @@
 
+/* Creates several partitions on the provided disks and creates, extends and
+   shrinks a lvm vg the partitions. */
+
 #include <stdlib.h>
 #include <iostream>
 
@@ -16,6 +19,7 @@ doit(const string& disk)
     cout << "disk:" << disk << endl;
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
+    s->removeLvmVg("test");
 
     deque<string> parts;
 

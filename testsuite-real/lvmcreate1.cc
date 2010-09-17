@@ -1,4 +1,7 @@
 
+/* Creates a partition on the provided disks and creates a lvm vg with a lv
+   from the partition. */
+
 #include <stdlib.h>
 #include <iostream>
 
@@ -16,6 +19,7 @@ doit(const string& disk)
     cout << "disk:" << disk << endl;
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
+    s->removeLvmVg("test");
 
     string part;
     check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
