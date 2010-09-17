@@ -17,23 +17,35 @@ doit(const string& disk)
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
 
-    string part;
-    check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
-    cout << "part:" << part << endl;
+    deque<string> parts;
+
+    int size = 1024*1024;
+
+    for (int i = 0; i < 4; ++i)
+    {
+	string part;
+	check_zero(s->createPartitionKb(disk, PRIMARY, i*size, size, part));
+	cout << "part[" << i << "]:" << part << endl;
+	parts.push_back(part);
+    }
 
     print_commitinfos(s);
     check_zero(s->commit());
 
-    deque<string> pvs;
-    pvs.push_back(part);
-    check_zero(s->createLvmVg("test", 4, false, pvs));
+    deque<string> pvs1(parts.begin(), parts.begin() + 2);
+    check_zero(s->createLvmVg("test", 4, false, pvs1));
 
-    string lv;
-    check_zero(s->createLvmLv("test", "a", 500*1024, 1, lv));
-    cout << "lv:" << lv << endl;
+    print_commitinfos(s);
+    check_zero(s->commit());
 
-    check_zero(s->changeFormatVolume(lv, true, EXT4));
-    check_zero(s->changeMountPoint(lv, "/test1"));
+    deque<string> pvs2(parts.begin() + 2, parts.begin() + 4);
+    check_zero(s->extendLvmVg("test", pvs2));
+
+    print_commitinfos(s);
+    check_zero(s->commit());
+
+    deque<string> pvs3(parts.begin() + 1, parts.begin() + 3);
+    check_zero(s->shrinkLvmVg("test", pvs3));
 
     print_commitinfos(s);
     check_zero(s->commit());
