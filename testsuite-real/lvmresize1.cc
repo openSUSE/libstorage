@@ -20,6 +20,8 @@ doit(const string& disk)
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
     s->removeLvmVg("test");
+    print_commitinfos(s);
+    check_zero(s->commit());
 
     deque<string> parts;
 

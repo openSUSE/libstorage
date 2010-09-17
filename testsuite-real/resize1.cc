@@ -18,12 +18,14 @@ doit(const string& disk)
 
     cout << "disk:" << disk << endl;
 
+    check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
+    print_commitinfos(s);
+    check_zero(s->commit());
+
     static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, XFS, VFAT };
     const list<FsType> fstypes(elem, elem + lengthof(elem));
     for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
-	check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
-
 	string part;
 	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
 	cout << "part:" << part << endl;
@@ -67,6 +69,10 @@ doit(const string& disk)
 	    print_commitinfos(s);
 	    check_zero(s->commit());
 	}
+
+	check_zero(s->removePartition(part));
+	print_commitinfos(s);
+	check_zero(s->commit());
     }
 
     delete s;

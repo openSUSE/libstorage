@@ -18,6 +18,8 @@ doit(const string& disk)
     cout << "disk:" << disk << endl;
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
+    print_commitinfos(s);
+    check_zero(s->commit());
 
     s->setPartitionAlignment(ALIGN_CYLINDER);
 

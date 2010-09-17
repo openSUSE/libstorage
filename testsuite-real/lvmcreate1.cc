@@ -20,6 +20,8 @@ doit(const string& disk)
 
     check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
     s->removeLvmVg("test");
+    print_commitinfos(s);
+    check_zero(s->commit());
 
     string part;
     check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
