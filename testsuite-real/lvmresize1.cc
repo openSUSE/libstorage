@@ -39,7 +39,7 @@ doit(const string& disk)
     check_zero(s->commit());
 
     deque<string> pvs1(parts.begin(), parts.begin() + 2);
-    check_zero(s->createLvmVg("test", 4, false, pvs1));
+    check_zero(s->createLvmVg("test", 1024, false, pvs1));
 
     print_commitinfos(s);
     check_zero(s->commit());

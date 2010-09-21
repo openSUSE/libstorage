@@ -32,7 +32,7 @@ doit(const string& disk)
 
     deque<string> pvs;
     pvs.push_back(part);
-    check_zero(s->createLvmVg("test", 4, false, pvs));
+    check_zero(s->createLvmVg("test", 1024, false, pvs));
 
     string lv;
     check_zero(s->createLvmLv("test", "a", 500*1024, 1, lv));
