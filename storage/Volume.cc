@@ -2039,7 +2039,7 @@ string Volume::getDmcryptName() const
 
 void Volume::replaceAltName( const string& prefix, const string& newn )
     {
-    y2mil( "prefix:" << prefix << " new:" << newn );
+    y2mil("device:" << dev << " prefix:" << prefix << " new:" << newn);
     list<string>::iterator i =
 	find_if( alt_names.begin(), alt_names.end(), string_starts_with( prefix ) );
     if( i!=alt_names.end() )
