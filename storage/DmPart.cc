@@ -93,14 +93,12 @@ void DmPart::updateName()
 
 void DmPart::updateMinor()
     {
-    unsigned long mj=mjr;
-    unsigned long mi=mnr;
+    unsigned long old_mjr = mjr;
+    unsigned long old_mnr = mnr;
     getMajorMinor();
-    if( mi!=mnr || mj!=mjr )
+    if (mjr != old_mjr || mnr != old_mnr)
 	{
-	mnr = mi;
-	mjr = mj;
-	replaceAltName( "/dev/dm-", "/dev/dm-"+decString(mnr) );
+	replaceAltName("/dev/dm-", "/dev/dm-" + decString(mnr));
 	getTableInfo();
 	}
     }
