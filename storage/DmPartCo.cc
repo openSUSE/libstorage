@@ -420,12 +420,8 @@ void DmPartCo::updatePointers( bool invalid )
 void DmPartCo::updateMinor()
     {
     DmPartPair p=dmpartPair();
-    DmPartIter i=p.begin();
-    while( i!=p.end() )
-	{
+    for (DmPartIter i = p.begin(); i != p.end(); ++i)
 	i->updateMinor();
-	++i;
-	}
     }
 
 

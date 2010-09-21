@@ -494,12 +494,8 @@ void MdPartCo::updatePointers( bool invalid )
 void MdPartCo::updateMinor()
     {
     MdPartPair p=mdpartPair();
-    MdPartIter i=p.begin();
-    while( i!=p.end() )
-        {
+    for (MdPartIter i = p.begin(); i != p.end(); ++i)
         i->updateMinor();
-        ++i;
-        }
     }
 
 
