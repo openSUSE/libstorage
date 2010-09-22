@@ -137,27 +137,17 @@ void MdPart::addUdevData()
     }
 
 
-void
-MdPart::addAltUdevId( unsigned num )
-{
-/*
-    list<string>::iterator i = alt_names.begin();
-    while( i!=alt_names.end() )
-        {
-        if( i->find( "/by-id/" ) != string::npos )
-            i = alt_names.erase( i );
-        else
-            ++i;
-        }
-    list<string>::const_iterator j = co()->udevId().begin();
-    while( j!=co()->udevId().end() )
-        {
-	alt_names.push_back(udevAppendPart("/dev/disk/by-id/", num));
-        ++j;
-        }
-*/
-    mount_by = orig_mount_by = defaultMountBy();
-}
+    void
+    MdPart::addAltUdevId(unsigned num)
+    {
+	alt_names.remove_if(string_contains("/by-id/"));
+
+	const list<string> tmp = co()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + udevAppendPart(*i, num));
+
+	mount_by = orig_mount_by = defaultMountBy();
+    }
 
 
 list<string>
