@@ -91,6 +91,7 @@ DmPartCo::addNewDev(string& device)
 	    newP( dm, p->nr(), p );
 	    dm->getFsInfo( p );
 	    dm->setCreated();
+	    dm->addUdevData();
 	    addToList( dm );
 	}
 	handleWholeDevice();

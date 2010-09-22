@@ -165,6 +165,7 @@ MdPartCo::addNewDev(string& device)
             newP( md, p->nr(), p );
             md->getFsInfo( p );
             md->setCreated();
+	    md->addUdevData();
             addToList( md );
             y2mil("device:" << device << " was added to MdPartCo : " << dev);
 
