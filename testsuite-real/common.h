@@ -38,6 +38,9 @@ namespace storage
     } while (0)
 
 
+    void print_fstab();
+    void print_crypttab();
+
     void print_commitinfos(const StorageInterface* s);
 
 }
