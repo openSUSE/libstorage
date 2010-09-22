@@ -2660,7 +2660,7 @@ int Volume::doFstabUpdate( bool force_rewrite )
     int ret = 0;
     bool changed = false;
     y2mil( "force_rewrite:" << force_rewrite );
-    y2mil( "dev:" << *this );
+    y2mil(*this);
     if( !ignore_fstab )
 	{
 	EtcFstab* fstab = getStorage()->getFstab();
