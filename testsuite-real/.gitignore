@@ -5,3 +5,5 @@ format1
 resize1
 lvmcreate1
 lvmresize1
+format2
+resize2

@@ -35,7 +35,7 @@ doit(const string& disk)
     check_zero(s->createLvmVg("test", 1024, false, pvs));
 
     string lv;
-    check_zero(s->createLvmLv("test", "a", 500*1024, 1, lv));
+    check_zero(s->createLvmLv("test", "a", 1024*1024, 1, lv));
     cout << "lv:" << lv << endl;
 
     check_zero(s->changeFormatVolume(lv, true, EXT4));
