@@ -7,3 +7,4 @@ lvmcreate1
 lvmresize1
 format2
 resize2
+mdcreate1
