@@ -577,7 +577,7 @@ SystemCmd::extractNewline(const string& Buf_ti, int Cnt_iv, bool& NewLine_br,
 void
 SystemCmd::addLine(const string& Text_Cv, vector<string>& Lines_Cr)
 {
-    if (Lines_Cr.size() < 100)
+    if (Lines_Cr.size() < line_limit)
     {
 	y2mil("Adding Line " << Lines_Cr.size() + 1 << " \"" << Text_Cv << "\"");
     }
@@ -593,10 +593,35 @@ SystemCmd::addLine(const string& Text_Cv, vector<string>& Lines_Cr)
 void
 SystemCmd::logOutput() const
 {
-    for (unsigned i = 0; i < numLines(false, IDX_STDERR); ++i)
-	y2mil("stderr:" << getLine(i, false, IDX_STDERR));
-    for (unsigned i = 0; i < numLines(false, IDX_STDOUT); ++i)
-	y2mil("stdout:" << getLine(i, false, IDX_STDOUT));
+    unsigned lines = numLines(false, IDX_STDERR);
+    if (lines <= line_limit)
+    {
+	for (unsigned i = 0; i < lines; ++i)
+	    y2mil("stderr:" << getLine(i, false, IDX_STDERR));
+    }
+    else
+    {
+	for (unsigned i = 0; i < line_limit / 2; ++i)
+	    y2mil("stderr:" << getLine(i, false, IDX_STDERR));
+	y2mil("stderr omitting lines");
+	for (unsigned i = lines - line_limit / 2; i < lines; ++i)
+	    y2mil("stderr:" << getLine(i, false, IDX_STDERR));
+    }
+
+    lines = numLines(false, IDX_STDOUT);
+    if (lines <= line_limit)
+    {
+	for (unsigned i = 0; i < lines; ++i)
+	    y2mil("stdout:" << getLine(i, false, IDX_STDOUT));
+    }
+    else
+    {
+	for (unsigned i = 0; i < line_limit / 2; ++i)
+	    y2mil("stdout:" << getLine(i, false, IDX_STDOUT));
+	y2mil("stdout omitting lines");
+	for (unsigned i = lines - line_limit / 2; i < lines; ++i)
+	    y2mil("stdout:" << getLine(i, false, IDX_STDOUT));
+    }
 }
 
 

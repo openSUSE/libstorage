@@ -58,8 +58,6 @@ class SystemCmd : boost::noncopyable
 
 	void setOutputProcessor(OutputProcessor* proc) { output_proc = proc; }
 
-	void logOutput() const;
-
 	const vector<string>& stdout() const { return Lines_aC[IDX_STDOUT]; }
 	const vector<string>& stderr() const { return Lines_aC[IDX_STDERR]; }
 
@@ -98,6 +96,8 @@ class SystemCmd : boost::noncopyable
 	void addLine(const string& Text_Cv, std::vector<string>& Lines_Cr);
 	void init();
 
+	void logOutput() const;
+
 	FILE* File_aC[2];
 	std::vector<string> Lines_aC[2];
 	std::vector<string*> SelLines_aC[2];
@@ -112,6 +112,7 @@ class SystemCmd : boost::noncopyable
 
 	static bool testmode;
 
+	static const unsigned line_limit = 50;
     };
 
 
