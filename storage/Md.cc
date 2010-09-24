@@ -402,18 +402,6 @@ Md::computeSize()
     setSize(size_k);
 }
 
-void
-Md::addSpareDevice( const string& dev )
-    {
-    string d = normalizeDevice(dev);
-    if( find( spare.begin(), spare.end(), d )!=spare.end() ||
-        find( devs.begin(), devs.end(), d )!=devs.end() )
-	{
-	y2war("spare " << dev << " already present");
-	}
-    else
-	spare.push_back(d);
-    }
 
 void Md::changeDeviceName( const string& old, const string& nw )
     {
