@@ -262,9 +262,13 @@ class DiskData;
 	void logProcData(const string& str = "") const;
 
 	void clearUsedBy(const string& dev);
+	void clearUsedBy(const list<string>& devs);
 	void setUsedBy(const string& dev, UsedByType type, const string& device);
+	void setUsedBy(const list<string>& devs, UsedByType type, const string& device);
 	void addUsedBy(const string& dev, UsedByType type, const string& device);
+	void addUsedBy(const list<string>& devs, UsedByType type, const string& device);
 	void removeUsedBy(const string& dev, UsedByType type, const string& device);
+	void removeUsedBy(const list<string>& devs, UsedByType type, const string& device);
 	bool isUsedBy(const string& dev);
 	bool isUsedBy(const string& dev, UsedByType type);
 

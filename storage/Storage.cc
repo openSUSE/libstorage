@@ -5632,6 +5632,14 @@ Storage::findDevice( const string& dev, const Device* &vol,
 
 
     void
+    Storage::clearUsedBy(const list<string>& devs)
+    {
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    clearUsedBy(*it);
+    }
+
+
+    void
     Storage::setUsedBy(const string& dev, UsedByType type, const string& device)
     {
 	Device* tmp = findDevice(dev);
@@ -5647,6 +5655,14 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	    y2mil("setting type:" << type << " device:" << device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
+    }
+
+
+    void
+    Storage::setUsedBy(const list<string>& devs, UsedByType type, const string& device)
+    {
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    setUsedBy(*it, type, device);
     }
 
 
@@ -5669,6 +5685,14 @@ Storage::findDevice( const string& dev, const Device* &vol,
 
 
     void
+    Storage::addUsedBy(const list<string>& devs, UsedByType type, const string& device)
+    {
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    addUsedBy(*it, type, device);
+    }
+
+
+    void
     Storage::removeUsedBy(const string& dev, UsedByType type, const string& device)
     {
 	Device* tmp = findDevice(dev);
@@ -5681,6 +5705,14 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	{
 	    y2mil("dev:" << dev << " type:" << type << " device:" << device << " failed");
 	}
+    }
+
+
+    void
+    Storage::removeUsedBy(const list<string>& devs, UsedByType type, const string& device)
+    {
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    removeUsedBy(*it, type, device);
     }
 
 

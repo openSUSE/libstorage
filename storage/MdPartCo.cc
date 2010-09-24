@@ -1605,11 +1605,7 @@ void MdPartCo::setSpares()
 	    spare.push_back(*it1);
     }
 
-    for (list<string>::const_iterator s = spare.begin(); s != spare.end(); ++s)
-    {
-      //It will be set always to last RAID that was detected.
-      getStorage()->setUsedBy( *s, UB_MDPART, nm );
-    }
+      getStorage()->addUsedBy(spare, UB_MDPART, nm);
 }
 
 bool MdPartCo::findMdMap(std::ifstream& file)

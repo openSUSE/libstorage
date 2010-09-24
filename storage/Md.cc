@@ -255,8 +255,8 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
     string tmpUuid;
     MdPartCo::getUuidName(nm,tmpUuid,md_name);
 
-    for (list<string>::iterator it = devs.begin(); it != devs.end(); ++it)
-	getStorage()->addUsedBy(*it, UB_MD, dev);
+    getStorage()->addUsedBy(devs, UB_MD, dev);
+    getStorage()->addUsedBy(spare, UB_MD, dev);
     }
 
 
