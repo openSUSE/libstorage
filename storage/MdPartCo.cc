@@ -735,14 +735,8 @@ MdPartCo::removeMdPart()
 
 void MdPartCo::unuseDevs() const
 {
-  list<string> rdevs;
-  getDevs( rdevs );
-  for (list<string>::const_iterator s = rdevs.begin(); s != rdevs.end(); ++s)
-    {
-    getStorage()->clearUsedBy(*s);
-    }
+    getStorage()->clearUsedBy(getDevs());
 }
-
 
 
 void MdPartCo::removePresentPartitions()
@@ -965,8 +959,7 @@ int MdPartCo::doRemove()
       if( ret==0 && destrSb )
         {
         SystemCmd c;
-        list<string> d;
-        getDevs( d );
+        list<string> d = getDevs();
         for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
           {
           c.execute(MDADMBIN " --zero-superblock " + quote(*i));
@@ -1365,16 +1358,21 @@ MdPartCo::getMdRaids()
     return l;
 }
 
-void
-MdPartCo::getDevs( list<string>& devices, bool all, bool spares ) const
+
+    list<string>
+    MdPartCo::getDevs(bool all, bool spares) const
     {
-    if( !all )
-        devices = spares ? spare : devs;
-    else
+	list<string> ret;
+	if (!all)
+	{
+	    ret = spares ? spare : devs;
+	}
+	else
         {
-        devices = devs;
-        devices.insert( devices.end(), spare.begin(), spare.end() );
+	    ret = devs;
+	    ret.insert(ret.end(), spare.begin(), spare.end());
         }
+	return ret;
     }
 
 

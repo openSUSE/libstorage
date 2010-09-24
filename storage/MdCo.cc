@@ -500,10 +500,8 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	}
     if( ret==0 )
 	{
-	list<string> devs;
-	i->getDevs( devs );
-	for( list<string>::const_iterator s=devs.begin(); s!=devs.end(); ++s )
-	    getStorage()->clearUsedBy(*s);
+	getStorage()->clearUsedBy(i->getDevs());
+
 	if( i->created() )
 	    {
 	    if( !removeFromList( &(*i) ))
@@ -573,8 +571,7 @@ MdCo::doCreate( Volume* v )
 	ret =  m->checkDevices();
 	if( ret==0 )
 	    {
-	    list<string> devs;
-	    m->getDevs( devs );
+	    list<string> devs = m->getDevs();
 	    for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
 		{
 		getStorage()->removeDmTableTo( *i );
@@ -642,8 +639,7 @@ MdCo::doRemove( Volume* v )
 	if( ret==0 && m->destroySb() )
 	    {
 	    SystemCmd c;
-	    list<string> d;
-	    m->getDevs( d );
+	    list<string> d = m->getDevs();
 	    for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
 		{
 		c.execute(MDADMBIN " --zero-superblock " + quote(*i));

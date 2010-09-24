@@ -302,17 +302,22 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
     }
 
 
-void
-Md::getDevs( list<string>& devices, bool all, bool spares ) const
+    list<string>
+    Md::getDevs(bool all, bool spares) const
     {
-    if( !all )
-	devices = spares ? spare : devs;
-    else
+	list<string> ret;
+	if (!all)
 	{
-	devices = devs;
-	devices.insert( devices.end(), spare.begin(), spare.end() );
+	    ret = spares ? spare : devs;
 	}
+	else
+	{
+	    ret = devs;
+	    ret.insert(ret.end(), spare.begin(), spare.end());
+	}
+	return ret;
     }
+
 
 int
 Md::addDevice( const string& dev, bool to_spare )

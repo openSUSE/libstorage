@@ -55,7 +55,7 @@ class Md : public Volume
 	const string& getMdUuid() const { return(md_uuid); }
 	const string& pName() const { return md_names[md_type]; }
 	const string& ptName() const { return par_names[md_parity]; }
-	void getDevs( std::list<string>& devices, bool all=true, bool spare=false ) const; 
+	list<string> getDevs(bool all = true, bool spare = false) const;
 	int checkDevices();
 	int addDevice( const string& dev, bool spare=false );
 	int removeDevice( const string& dev );

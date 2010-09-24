@@ -145,7 +145,7 @@ class MdPartCo : public Container
 	const string& ptName() const { return Md::par_names[md_parity]; }
 
     /* Devices from which RAID is composed. */
-    void getDevs( std::list<string>& devices, bool all=true, bool spare=false ) const;
+	list<string> getDevs(bool all = true, bool spare = false) const;
 
     static void activate( bool val, const string& tmpDir  );
 
