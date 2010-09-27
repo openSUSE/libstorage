@@ -4,6 +4,7 @@ Mon Sep 27 09:33:52 CEST 2010 - aschnell@suse.de
 - fixed detection of spare devices for MD RAID
 - extended interface to allow creation of MD RAIDs with spare
   devices, corresponding functions need additional parameter
+- 2.20.3
 
 -------------------------------------------------------------------
 Wed Sep 15 12:03:08 CEST 2010 - aschnell@suse.de
