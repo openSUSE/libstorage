@@ -40,16 +40,19 @@ namespace storage
     using namespace std;
 
 
-Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
-	: Volume(d, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk(0),
-  	  sb_ver("01.00.00"), destrSb(false), has_container(false)
+    Md::Md(const MdCo& c, unsigned PNr, MdType Type, const list<string>& devices,
+	   const list<string>& spares)
+	: Volume(c, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk(0), sb_ver("01.00.00"),
+	  destrSb(false), devs(devices), spare(spares), has_container(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
-    if( d.type() != MD )
-	    y2err("constructed Md with wrong container");
-    for( list<string>::const_iterator i=devices.begin(); i!=devices.end(); ++i )
-	devs.push_back( normalizeDevice( *i ) );
-    computeSize();
+
+	assert(c.type() == MD);
+
+	getStorage()->addUsedBy(devs, UB_MD, "/dev/md" + decString(num));
+	getStorage()->addUsedBy(spares, UB_MD, "/dev/md" + decString(num));
+
+	computeSize();
     }
 
 
@@ -58,8 +61,9 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
 	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
     y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
-    if( d.type() != MD )
-	y2err("constructed md with wrong container");
+
+	assert(d.type() == MD);
+
     if( mdStringNum( extractNthWord( 0, line1 ), num ))
 	{
 	nm.clear();
@@ -154,14 +158,20 @@ Md::Md( const MdCo& d, unsigned PNr, MdType Type, const list<string>& devices )
     while( (pos=line.find_first_not_of( app_ws ))==0 )
 	{
 	tmp = extractNthWord( 0, line );
+
+	string d;
 	string::size_type bracket = tmp.find( '[' );
 	if( bracket!=string::npos )
-	    devs.push_back( normalizeDevice(tmp.substr( 0, bracket )));
+	    d = normalizeDevice(tmp.substr(0, bracket));
 	else
-	    {
-	    normalizeDevice(tmp);
-	    devs.push_back( tmp );
-	    }
+	    d = normalizeDevice(tmp);
+
+	bool is_spare = boost::ends_with(tmp, "(S)");
+	if (!is_spare)
+	    devs.push_back(d);
+	else
+	    spare.push_back(d);
+
 	line.erase( 0, tmp.length() );
 	if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
 	    line.erase( 0, pos );
@@ -323,7 +333,6 @@ int
 Md::addDevice( const string& dev, bool to_spare )
     {
     int ret = 0;
-    string d = normalizeDevice( dev );
     if( find( devs.begin(), devs.end(), dev )!=devs.end() ||
         find( spare.begin(), spare.end(), dev )!=spare.end() )
 	{
@@ -331,17 +340,14 @@ Md::addDevice( const string& dev, bool to_spare )
 	}
     if( ret==0 )
 	{
-	if( to_spare )
-	    {
-	    spare.push_back(d);
-	    }
+	if (!to_spare)
+	    devs.push_back(dev);
 	else
-	    {
-	    devs.push_back(d);
-	    computeSize();
-	    }
+	    spare.push_back(dev);
+	getStorage()->addUsedBy(dev, UB_MD, "/dev/md" + decString(num));
+	computeSize();
 	}
-    y2mil("dev:" << dev << " spare:" << to_spare << " ret:" << ret);
+    y2mil("dev:" << dev << " to_spare:" << to_spare << " ret:" << ret);
     return( ret );
     }
 
@@ -349,15 +355,19 @@ int
 Md::removeDevice( const string& dev )
     {
     int ret = 0;
-    string d = normalizeDevice( dev );
     list<string>::iterator i;
     if( (i=find( devs.begin(), devs.end(), dev ))!=devs.end() )
 	{
 	devs.erase(i);
+	getStorage()->clearUsedBy(dev);
 	computeSize();
 	}
     else if( (i=find( spare.begin(), spare.end(), dev ))!=spare.end() )
+        {
 	spare.erase(i);
+	getStorage()->clearUsedBy(dev);
+	computeSize();
+	}
     else
 	ret = MD_REMOVE_NONEXISTENT;
     y2mil("dev:" << dev << " ret:" << ret);
@@ -380,6 +390,10 @@ Md::checkDevices()
 	    break;
 	}
     int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
+
+    if (ret == 0 && md_type == RAID0 && !spare.empty())
+	ret = MD_TOO_MANY_SPARES;
+
     y2mil("type:" << md_type << " min:" << nmin << " size:" << devs.size() <<
 	  " ret:" << ret);
     return( ret );
@@ -403,7 +417,7 @@ void
 Md::computeSize()
 {
     unsigned long long size_k = 0;
-    getStorage()->computeMdSize(md_type, devs, size_k);
+    getStorage()->computeMdSize(md_type, devs, spare, size_k);
     setSize(size_k);
 }
 

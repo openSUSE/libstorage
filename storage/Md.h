@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,8 +37,7 @@ class Md : public Volume
 	friend class MdPartCo;
 
     public:
-	Md( const MdCo& d, unsigned Pnr, storage::MdType Type, 
-	    const std::list<string>& devs );
+	Md(const MdCo& c, unsigned Pnr, MdType Type, const list<string>& devs, const list<string>& spares);
 	Md(const MdCo& d, const string& line, const string& line2, SystemInfo& systeminfo);
 	Md(const MdCo& c, const Md& v);
 	virtual ~Md();

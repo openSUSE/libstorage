@@ -778,6 +778,7 @@ namespace storage
 	MD_STATE_NOT_ON_DISK = -6019,
 	MD_PARTITION_NOT_FOUND = -6020,
 	MD_INVALID_PARITY = -6021,
+	MD_TOO_MANY_SPARES = -6022,
 
 	MDPART_CHANGE_READONLY = -6100,
 	MDPART_INTERNAL_ERR = -6101,
@@ -1888,23 +1889,25 @@ namespace storage
 	 * Create a Software raid device by name
 	 *
 	 * @param name name of software raid device to create (e.g. /dev/md0)
-	 * @param rtype raid personality of the new software raid
-	 * @param devs list with physical devices for the new software raid
+	 * @param md_type raid personality of the new software raid
+	 * @param devices list with physical devices for the new software raid
+	 * @param spares list with spare physical devices for the new software raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createMd( const string& name, MdType rtype,
-			      const deque<string>& devs ) = 0;
+	virtual int createMd(const string& name, MdType md_type, const list<string>& devices,
+			     const list<string>& spares) = 0;
 
 	/**
 	 * Create a Software raid device. Name determined by library.
 	 *
-	 * @param rtype raid personality of the new software raid
-	 * @param devs list with physical devices for the new software raid
+	 * @param md_type raid personality of the new software raid
+	 * @param devices list with physical devices for the new software raid
+	 * @param spares list with spare physical devices for the new software raid
 	 * @param device device name of created software raid device
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createMdAny( MdType rtype, const deque<string>& devs,
-				 string& device ) = 0;
+	virtual int createMdAny(MdType md_type, const list<string>& devices,
+				const list<string>& spares, string& device) = 0;
 
 	/**
 	 * Remove a Software raid device.
@@ -1921,30 +1924,34 @@ namespace storage
 	 * This can only be done before the raid is created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
-	 * @param dev partition to add to that raid
+	 * @param devices list with physical devices to add to the raid
+	 * @param spares list with spare physical devices to add to the raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int extendMd( const string& name, const string& dev ) = 0;
+	virtual int extendMd(const string& name, const list<string>& devices,
+			     const list<string>& spares) = 0;
 
 	/**
 	 * Remove a partition from a raid device.
 	 * This can only be done before the raid is created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
-	 * @param dev partition to remove from that raid
+	 * @param devices list of physical devices to remove from the raid
+	 * @param spares list of spare physical devices to remove from the raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int shrinkMd( const string& name, const string& dev ) = 0;
+	virtual int shrinkMd(const string& name, const list<string>& devices,
+			     const list<string>& spares) = 0;
 
 	/**
 	 * Change raid type of a raid device.
 	 * This can only be done before the raid is created on disk.
 	 *
 	 * @param name name of software raid device (e.g. /dev/md0)
-	 * @param rtype new raid personality of the software raid
+	 * @param md_type new raid personality of the software raid
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeMdType( const string& name, MdType rtype ) = 0;
+	virtual int changeMdType(const string& name, MdType md_type) = 0;
 
 	/**
 	 * Change chunk size of a raid device.
@@ -2005,11 +2012,12 @@ namespace storage
 	 *
 	 * @param md_type raid type of the software raid
 	 * @param devices list with physical devices for the software raid
+	 * @param spares list with spare physical devices for the software raid
 	 * @param sizeK will contain the computed size in kilobytes
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int computeMdSize(MdType md_type, const list<string>& devices,
-				  unsigned long long& sizeK) = 0;
+				  const list<string>& spares, unsigned long long& sizeK) = 0;
 
 	/**
 	 * Determine allowed parity types for raid type.
@@ -2018,7 +2026,7 @@ namespace storage
 	 * @param devnr number of physical devices for the software raid
 	 * @return list of allowed parity typed for this raid
 	 */
-	virtual list<int> getMdAllowedParity(MdType md_type, unsigned devnr )=0;
+	virtual list<int> getMdAllowedParity(MdType md_type, unsigned devnr) = 0;
 
         /**
          * Remove a Partitionable Software raid device.

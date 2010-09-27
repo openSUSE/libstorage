@@ -22,7 +22,7 @@ doit(const string& disk)
     print_commitinfos(s);
     check_zero(s->commit());
 
-    deque<string> parts;
+    list<string> parts;
 
     int size = 1024*1024;
 
@@ -42,7 +42,7 @@ doit(const string& disk)
     for (list<MdType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
 	string md;
-	check_zero(s->createMdAny(*it, parts, md));
+	check_zero(s->createMdAny(*it, parts, list<string>(), md));
 
 	check_zero(s->changeFormatVolume(md, true, EXT4));
 	check_zero(s->changeMountPoint(md, "/test1"));

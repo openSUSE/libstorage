@@ -23,7 +23,7 @@
 
 
 #include <unistd.h>
-#include <string>
+#include <glob.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <dirent.h>
@@ -1430,7 +1430,6 @@ void MdPartCo::getMdProps()
 
     setMdParity();
     setMdDevs();
-    setSpares();
     setMetaData();
     MdPartCo::getUuidName(nm,md_uuid,md_name);
 
@@ -1452,44 +1451,31 @@ MdPartCo::readProp(enum MdProperty prop, string& val) const
 }
 
 
-void MdPartCo::getSlaves(const string name, std::list<string>& devs_list )
-{
-    string path = sysfsPath() + "/slaves";
-  DIR* dir;
-
-  devs_list.clear();
-
-  if ((dir = opendir(path.c_str())) != NULL)
+    void
+    MdPartCo::setMdDevs()
     {
-    struct dirent* entry;
-    while ((entry = readdir(dir)) != NULL)
-      {
-      string tmpS(entry->d_name);
-      y2mil("Entry :  " << tmpS);
-      if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-        {
-        continue;
-        }
-      devs_list.push_back( ("/dev/"+tmpS) );
-      }
-    closedir(dir);
-    }
-  else
-    {
-    y2mil("Failed to opend directory");
-    }
-}
+	devs.clear();
+	spare.clear();
 
+	list<string> slaves = glob(sysfsPath() + "/slaves/*", GLOB_NOSORT);
+	for (list<string>::const_iterator it = slaves.begin(); it != slaves.end(); ++it)
+	{
+	    string tmp = string(*it, it->find_last_of("/") + 1);
 
-void MdPartCo::setMdDevs()
-{
-  getSlaves(nm,devs);
+	    bool is_spare = false;
+	    string state;
+	    if (read_sysfs_property(sysfsPath() + "/md/dev-" + tmp + "/state", state) && state == "spare")
+		is_spare = true;
 
-    for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-    {
-	getStorage()->addUsedBy(*it, UB_MDPART, dev);
+	    if (!is_spare)
+		devs.push_back("/dev/" + tmp);
+	    else
+		spare.push_back("/dev/" + tmp);
+	}
+
+	getStorage()->addUsedBy(devs, UB_MDPART, dev);
+	getStorage()->addUsedBy(spare, UB_MDPART, dev);
     }
-}
 
 
 void
@@ -1575,36 +1561,6 @@ void MdPartCo::setMdParity()
   md_parity = PAR_DEFAULT;
 }
 
-
-/* Spares: any disk that is in container and not in RAID. */
-void MdPartCo::setSpares()
-{
-    spare.clear();
-
-  getParent();
-  if( has_container == false )
-    return;
-
-  std::list<string> parent_devs;
-  getSlaves(parent_container,parent_devs);
-
-  for (list<string>::const_iterator it1 = parent_devs.begin(); it1 != parent_devs.end(); ++it1)
-    {
-      bool found = false;
-      for (list<string>::const_iterator it2 = devs.begin(); it2 != devs.end(); ++it2)
-        {
-          if( *it1 == *it2 )
-            {
-	      found = true;
-              break;
-            }
-        }
-      if (!found)
-	    spare.push_back(*it1);
-    }
-
-      getStorage()->addUsedBy(spare, UB_MDPART, nm);
-}
 
 bool MdPartCo::findMdMap(std::ifstream& file)
 {

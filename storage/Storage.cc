@@ -3494,13 +3494,12 @@ Storage::checkMdNumber(unsigned num)
 
 
 int
-Storage::createMd( const string& name, MdType rtype,
-                   const deque<string>& devs )
+Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
+		  const list<string>& spares)
     {
     int ret = 0;
     assertInit();
-    y2mil( "name:" << name << " MdType:" << Md::pName(rtype) <<
-           " devices:" << devs );
+    y2mil("name:" << name << " MdType:" << Md::pName(rtype) << " devices:" << devs << " spares:" << spares);
     unsigned num = 0;
     if (readonly())
 	{
@@ -3524,8 +3523,7 @@ Storage::createMd( const string& name, MdType rtype,
 	}
     if( ret==0 && md!=NULL )
 	{
-	list<string> d(devs.begin(), devs.end());
-	ret = md->createMd( num, rtype, d );
+	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
 	if( ret==0 )
 	    checkPwdBuf( Md::mdDevice(num) );
 	}
@@ -3544,12 +3542,12 @@ Storage::createMd( const string& name, MdType rtype,
     return( ret );
     }
 
-int Storage::createMdAny( MdType rtype, const deque<string>& devs,
-			  string& device )
+int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<string>& spares,
+			 string& device)
     {
     int ret = 0;
     assertInit();
-    y2mil( "MdType:" << Md::pName(rtype) << " devices:" << devs );
+    y2mil("MdType:" << Md::pName(rtype) << " devices:" << devs << " spares:" << spares);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3571,8 +3569,7 @@ int Storage::createMdAny( MdType rtype, const deque<string>& devs,
 	}
     if( ret==0 )
 	{
-	list<string> d(devs.begin(), devs.end());
-	ret = md->createMd( num, rtype, d );
+	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
 	if( ret==0 )
 	    checkPwdBuf( Md::mdDevice(num) );
 	}
@@ -3623,11 +3620,11 @@ int Storage::removeMd( const string& name, bool destroySb )
     return( ret );
     }
 
-int Storage::extendMd( const string& name, const string& dev )
+int Storage::extendMd(const string& name, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
     assertInit();
-    y2mil("name:" << name << " dev:" << dev);
+    y2mil("name:" << name << " devs:" << devs << " spares:" << spares);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3641,7 +3638,7 @@ int Storage::extendMd( const string& name, const string& dev )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->extendMd( num, dev );
+	    ret = md->extendMd(num, normalizeDevices(devs), normalizeDevices(spares));
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -3653,11 +3650,11 @@ int Storage::extendMd( const string& name, const string& dev )
     return( ret );
     }
 
-int Storage::shrinkMd( const string& name, const string& dev )
+int Storage::shrinkMd(const string& name, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
     assertInit();
-    y2mil("name:" << name << " dev:" << dev);
+    y2mil("name:" << name << " devs:" << devs << " spares:" << spares);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3671,7 +3668,7 @@ int Storage::shrinkMd( const string& name, const string& dev )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->shrinkMd( num, dev );
+	    ret = md->shrinkMd(num, normalizeDevices(devs), normalizeDevices(spares));
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -3832,7 +3829,8 @@ Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
 
 
 int
-Storage::computeMdSize(MdType md_type, const list<string>& devices, unsigned long long& sizeK)
+Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<string>& spares,
+		       unsigned long long& sizeK)
 {
     int ret = 0;
 
@@ -3853,6 +3851,18 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, unsigned lon
 	    smallestK = v->sizeK();
 	else
 	    smallestK = min(smallestK, v->sizeK());
+    }
+
+    for (list<string>::const_iterator i = spares.begin(); i != spares.end(); ++i)
+    {
+	const Volume* v = getVolume(*i);
+	if (!v)
+	{
+	    ret = STORAGE_VOLUME_NOT_FOUND;
+	    break;
+	}
+
+	smallestK = min(smallestK, v->sizeK());
     }
 
     if (ret == 0)

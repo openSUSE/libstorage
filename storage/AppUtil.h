@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -81,10 +81,10 @@ std::map<string,string> makeMap( const std::list<string>& l,
     UdevMap getUdevMap(const char* path);
     RevUdevMap getRevUdevMap(const char* path);
 
-string normalizeDevice( const string& dev );
-void normalizeDevice( string& dev );
-string undevDevice( const string& dev );
-void undevDevice( string& dev );
+    string normalizeDevice(const string& dev);
+    list<string> normalizeDevices(const list<string>& devs);
+    string undevDevice(const string& dev);
+
 bool isNfsDev( const string& dev );
 
 unsigned getMajorDevices(const char* driver);

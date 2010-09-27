@@ -478,19 +478,19 @@ class DiskData;
 
 	int nextFreeMd(unsigned& nr, string &device);
 	bool checkMdNumber(unsigned num);
-	int createMd( const string& name, storage::MdType rtype,
-		      const deque<string>& devs );
-	int createMdAny( storage::MdType rtype, const deque<string>& devs,
-			 string& device );
+	int createMd(const string& name, MdType rtype, const list<string>& devs,
+		     const list<string>& spares);
+	int createMdAny(MdType rtype, const list<string>& devs, const list<string>& spares,
+			string& device);
 	int removeMd( const string& name, bool destroySb=true );
-	int extendMd( const string& name, const string& dev );
-	int shrinkMd( const string& name, const string& dev );
+	int extendMd(const string& name, const list<string>& devs, const list<string>& spares);
+	int shrinkMd(const string& name, const list<string>& devs, const list<string>& spares);
 	int changeMdType( const string& name, storage::MdType rtype );
 	int changeMdChunk( const string& name, unsigned long chunk );
 	int changeMdParity( const string& name, storage::MdParity ptype );
 	int checkMd( const string& name );
 	int getMdStateInfo(const string& name, MdStateInfo& info);
-	int computeMdSize(MdType md_type, const list<string>& devices,
+	int computeMdSize(MdType md_type, const list<string>& devices, const list<string>& spares,
 			  unsigned long long& sizeK);
 	list<int> getMdAllowedParity(MdType md_type, unsigned devices );
 	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }

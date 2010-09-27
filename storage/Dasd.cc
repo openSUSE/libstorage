@@ -552,8 +552,7 @@ int Dasd::doDasdfmt()
 	    }
 	for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
 	    {
-	    normalizeDevice(*i);
-	    *i = "-f " + quote(*i);
+	    *i = "-f " + quote(normalizeDevice(*i));
 	    }
 	string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " + boost::join(devs, " ");
 	y2mil("cmdline:" << cmd_line);

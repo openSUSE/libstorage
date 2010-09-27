@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -295,12 +295,22 @@ makeMap( const list<string>& l, const string& delim, const string& removeSur )
     }
 
 
-string normalizeDevice( const string& dev )
+    string normalizeDevice(const string& dev)
     {
-    string ret( dev );
-    normalizeDevice( ret );
-    return( ret );
+	if (!boost::starts_with(dev, "/dev/") && !isNfsDev(dev))
+	    return "/dev/" + dev;
+	return dev;
     }
+
+
+    list<string> normalizeDevices(const list<string>& devs)
+    {
+	list<string> ret;
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    ret.push_back(normalizeDevice(*it));
+	return ret;
+    }
+
 
 bool isNfsDev( const string& dev )
     {
@@ -308,23 +318,12 @@ bool isNfsDev( const string& dev )
             dev.find( ':' )!=string::npos );
     }
 
-void normalizeDevice( string& dev )
-    {
-    if( dev.find( "/dev/" )!=0 && !isNfsDev(dev) )
-	dev = "/dev/" + dev;
-    }
 
-string undevDevice( const string& dev )
+    string undevDevice(const string& dev)
     {
-    string ret( dev );
-    undevDevice( ret );
-    return( ret );
-    }
-
-void undevDevice( string& dev )
-    {
-    if( dev.find( "/dev/" )==0 )
-	dev.erase( 0, 5 );
+	if (boost::starts_with(dev, "/dev/"))
+	    return string(dev, 5);
+	return dev;
     }
 
 

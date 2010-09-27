@@ -230,10 +230,10 @@ MdCo::findMd( const string& dev )
 
 
 int 
-MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
+MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil( "num:" << num << " type:" << Md::pName(type) << " devs:" << devs );
+    y2mil("num:" << num << " type:" << Md::pName(type) << " devs:" << devs << " spares:" << spares);
     if( readonly() )
 	{
 	ret = MD_CHANGE_READONLY;
@@ -251,22 +251,13 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
 	if( findMd( num ))
 	    ret = MD_DUPLICATE_NUMBER;
 	}
-    list<string>::const_iterator i=devs.begin();
-    while( ret==0 && i!=devs.end() )
-	{
-	ret = checkUse( normalizeDevice( *i ) );
-	++i;
-	}
-    i=devs.begin();
-    while( ret==0 && i!=devs.end() )
-	{
-	string d = normalizeDevice( *i );
-	getStorage()->setUsedBy(d, UB_MD, "/dev/md" + decString(num));
-	++i;
-	}
+
+    if (ret == 0)
+	ret = checkUse(devs, spares);
+
     if( ret==0 )
 	{
-	Md* m = new Md( *this, num, type, devs );
+	Md* m = new Md(*this, num, type, devs, spares);
 	m->setCreated( true );
 	addToList( m );
 	}
@@ -274,21 +265,34 @@ MdCo::createMd( unsigned num, MdType type, const list<string>& devs )
     return( ret );
     }
 
-int MdCo::checkUse( const string& dev )
+
+    int
+    MdCo::checkUse(const list<string>& devs, const list<string>& spares) const
     {
-    int ret = 0;
-    const Volume* v = getStorage()->getVolume( dev );
-    if( v==NULL )
+	int ret = 0;
+
+	list<string> all = devs;
+	all.insert(all.end(), spares.begin(), spares.end());
+
+	for (list<string>::const_iterator it = all.begin(); it != all.end(); ++it)
 	{
-	ret = MD_DEVICE_UNKNOWN;
+	    const Volume* v = getStorage()->getVolume(*it);
+	    if (v == NULL)
+	    {
+		ret = MD_DEVICE_UNKNOWN;
+		break;
+	    }
+	    else if (!v->canUseDevice())
+	    {
+		ret = MD_DEVICE_USED;
+		break;
+	    }
 	}
-    else if( !v->canUseDevice() )
-	{
-	ret = MD_DEVICE_USED;
-	}
-    y2mil("dev:" << dev << " ret:" << ret);
-    return( ret );
+
+	y2mil("devs:" << devs << " spares:" << spares << " ret:" << ret);
+	return ret;
     }
+
 
 int 
 MdCo::checkMd( unsigned num )
@@ -305,10 +309,10 @@ MdCo::checkMd( unsigned num )
     }
 
 int 
-MdCo::extendMd( unsigned num, const string& dev )
+MdCo::extendMd(unsigned num, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " dev:" << dev);
+    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
     MdIter i;
     if( readonly() )
 	{
@@ -316,7 +320,7 @@ MdCo::extendMd( unsigned num, const string& dev )
 	}
     if( ret==0 )
 	{
-	ret = checkUse( normalizeDevice( dev ) );
+	ret = checkUse(devs, spares);
 	}
     if( ret==0 )
 	{
@@ -329,26 +333,29 @@ MdCo::extendMd( unsigned num, const string& dev )
 	}
     if( ret==0 )
 	{
-	ret = i->addDevice( dev );
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    if ((ret = i->addDevice(*it)) != 0)
+		break;
+	}
+    if( ret==0 )
+	{
+	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+	    if ((ret = i->addDevice(*it, true)) != 0)
+		break;
 	}
     if( ret==0 && !getStorage()->isDisk(dev) )
 	{
 	getStorage()->changeFormatVolume( dev, false, FSNONE );
-	}
-    if( ret==0 )
-	{
-	string d = normalizeDevice( dev );
-	getStorage()->setUsedBy(d, UB_MD, "/dev/md" + decString(num));
 	}
     y2mil("ret:" << ret);
     return( ret );
     }
 
 int 
-MdCo::shrinkMd( unsigned num, const string& dev )
+MdCo::shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " dev:" << dev);
+    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
     MdIter i;
     if( readonly() )
 	{
@@ -365,12 +372,15 @@ MdCo::shrinkMd( unsigned num, const string& dev )
 	}
     if( ret==0 )
 	{
-	ret = i->removeDevice( dev );
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    if ((ret = i->removeDevice(*it)) != 0)
+		break;
 	}
     if( ret==0 )
 	{
-	string d = normalizeDevice( dev );
-	getStorage()->clearUsedBy(d);
+	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+	    if ((ret = i->removeDevice(*it)) != 0)
+		break;
 	}
     y2mil("ret:" << ret);
     return( ret );

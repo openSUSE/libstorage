@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -45,11 +45,10 @@ class MdCo : public Container
 	static storage::CType staticType() { return storage::MD; }
 	friend std::ostream& operator<< (std::ostream&, const MdCo& );
 
-	int createMd( unsigned num, storage::MdType type, 
-	              const std::list<string>& devs );
+	int createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares);
 	int removeMd( unsigned num, bool destroySb=true );
-	int extendMd( unsigned num, const string& dev );
-	int shrinkMd( unsigned num, const string& dev );
+	int extendMd(unsigned num, const list<string>& devs, const list<string>& spares);
+	int shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares);
 	int changeMdType( unsigned num, storage::MdType ptype );
 	int changeMdChunk( unsigned num, unsigned long chunk );
 	int changeMdParity( unsigned num, storage::MdParity ptype );
@@ -123,7 +122,7 @@ class MdCo : public Container
 	bool findMd( unsigned num ); 
 	bool findMd( const string& dev, MdIter& i );
 	bool findMd( const string& dev ); 
-	int checkUse( const string& dev );
+	int checkUse(const list<string>& dev, const list<string>& spares) const;
 	void addMd( Md* m );
 	void checkMd( Md* m );
 

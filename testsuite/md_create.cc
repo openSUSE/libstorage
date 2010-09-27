@@ -27,14 +27,13 @@ void print_md_info()
 	cout << p->type << ' ';
 	cout << p->chunkSizeK << ' ';
     }
-
 }
 
-void createMD( MdType type, deque<string> devs )
+void createMD(MdType type, list<string> devs)
 {
     s = createStorageInterface(TestEnvironment());
 
-    int ret = s->createMd( "/dev/md0", type, devs );
+    int ret = s->createMd("/dev/md0", type, devs, list<string>());
     if( ret==0 )
 	ret = s->checkMd( "/dev/md0" );
 
@@ -54,7 +53,7 @@ main()
 
     setup_system("thalassa");
     
-    deque<string> devs;
+    list<string> devs;
 
     /*
      * Check that we _cannot_ create software raid devices with just one
