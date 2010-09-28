@@ -34,11 +34,12 @@ namespace storage
 
 class Md : public Volume
     {
+	friend class ProcMdstat;
 	friend class MdPartCo;
 
     public:
 	Md(const MdCo& c, unsigned Pnr, MdType Type, const list<string>& devs, const list<string>& spares);
-	Md(const MdCo& d, const string& line, const string& line2, SystemInfo& systeminfo);
+	Md(const MdCo& c, const string& line, SystemInfo& systeminfo);
 	Md(const MdCo& c, const Md& v);
 	virtual ~Md();
 
@@ -70,6 +71,7 @@ class Md : public Volume
 	virtual string sysfsPath() const;
 
 	static const string& pName(MdType t) { return md_names[t]; }
+	static const string& ptName(MdParity p) { return par_names[p]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
 	static string mdDevice( unsigned num );
 

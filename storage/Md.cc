@@ -56,11 +56,11 @@ namespace storage
     }
 
 
-    Md::Md(const MdCo& d, const string& line1, const string& line2, SystemInfo& systeminfo)
+    Md::Md(const MdCo& d, const string& line1, SystemInfo& systeminfo)
 	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_DEFAULT), chunk(0),
 	  sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
-    y2mil("constructed md line1:\"" << line1 << "\" line2:\"" << line2 << "\"");
+	y2mil("constructed md line1:\"" << line1 << "\"");
 
 	assert(d.type() == MD);
 
@@ -71,6 +71,7 @@ namespace storage
 	getMajorMinor();
 	getStorage()->fetchDanglingUsedBy(dev, uby);
 	}
+
     SystemCmd c(MDADMBIN " --detail " + quote(device()));
     c.select( "UUID : " );
     string::size_type pos;
@@ -116,143 +117,23 @@ namespace storage
 	y2mil( "word1:\"" << extractNthWord( 1, c.getLine(0,true)) << "\"" );
 	y2mil( "word2:\"" << extractNthWord( 2, c.getLine(0,true)) << "\"" );
     }
-    string tmp;
-    string line = line1;
-    if( (pos=line.find( ':' ))!=string::npos )
-	line.erase( 0, pos+1 );
-    boost::trim_left(line, locale::classic());
-    if( (pos=line.find_first_of( app_ws ))!=string::npos )
-    {
-	if (line.substr(0, pos) == "active")
-	    line.erase(0, pos);
-    }
-    boost::trim_left(line, locale::classic());
-    if( (pos=line.find_first_of( app_ws ))!=string::npos )
-	{
-	tmp = line.substr( 0, pos );
-	if( tmp=="(read-only)" || tmp=="(auto-read-only)" || tmp=="inactive" )
-	    {
+
+
+	ProcMdstat::Entry entry;
+	systeminfo.getProcMdstat().getEntry(nm, entry);
+
+	md_type = entry.md_type;
+	md_parity = entry.md_parity;
+
+	setSize(entry.sizeK);
+	chunk = entry.chunkK;
+
+	devs = entry.devices;
+	spare = entry.spares;
+
+	if (entry.readonly)
 	    setReadonly();
-	    y2war("readonly or inactive md device " << nr());
-	    line.erase( 0, pos );
-	    boost::trim_left(line, locale::classic());
-	    }
-	}
-    boost::trim_left(line, locale::classic());
-    if( (pos=line.find_first_of( app_ws ))!=string::npos )
-	{
-	if( line.substr( 0, pos ).find( "active" )!=string::npos )
-	    line.erase( 0, pos );
-	}
-    boost::trim_left(line, locale::classic());
-    tmp = extractNthWord( 0, line );
-    md_type = toMdType( tmp );
-    if( md_type == RAID_UNK )
-	{
-	y2war("unknown raid type " << tmp);
-	}
-    if( (pos=line.find_first_of( app_ws ))!=string::npos )
-	line.erase( 0, pos );
-    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	line.erase( 0, pos );
-    while( (pos=line.find_first_not_of( app_ws ))==0 )
-	{
-	tmp = extractNthWord( 0, line );
 
-	string d;
-	string::size_type bracket = tmp.find( '[' );
-	if( bracket!=string::npos )
-	    d = normalizeDevice(tmp.substr(0, bracket));
-	else
-	    d = normalizeDevice(tmp);
-
-	bool is_spare = boost::ends_with(tmp, "(S)");
-	if (!is_spare)
-	    devs.push_back(d);
-	else
-	    spare.push_back(d);
-
-	line.erase( 0, tmp.length() );
-	if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	    line.erase( 0, pos );
-	}
-    unsigned long long longnum;
-    extractNthWord( 0, line2 ) >> longnum;
-    setSize( longnum );
-    chunk = 0;
-    pos = line2.find( "chunk" );
-    if( pos != string::npos )
-	{
-	pos = line2.find_last_not_of( app_ws, pos-1 );
-	pos = line2.find_last_of( app_ws, pos );
-	line2.substr( pos+1 ) >> chunk;
-	}
-    md_parity = PAR_DEFAULT;
-    pos = line2.find( "algorithm" );
-    if( pos != string::npos )
-	{
-	unsigned alg = 999;
-	pos = line2.find_first_of( app_ws, pos );
-	pos = line2.find_first_not_of( app_ws, pos );
-	line2.substr( pos ) >> alg;
-	switch( alg )
-	    {
-	    case 0:
-		md_parity = LEFT_ASYMMETRIC;
-		break;
-	    case 1:
-		md_parity = RIGHT_ASYMMETRIC;
-		break;
-	    case 2:
-		md_parity = LEFT_SYMMETRIC;
-		break;
-	    case 3:
-		md_parity = RIGHT_SYMMETRIC;
-		break;
-	    case 4:
-		md_parity = PAR_FIRST;
-		break;
-	    case 5:
-		md_parity = PAR_LAST;
-		break;
-	    case 16:
-		md_parity = LEFT_ASYMMETRIC_6;
-		break;
-	    case 17:
-		md_parity = RIGHT_ASYMMETRIC_6;
-		break;
-	    case 18:
-		md_parity = LEFT_SYMMETRIC_6;
-		break;
-	    case 19:
-		md_parity = RIGHT_SYMMETRIC_6;
-		break;
-	    case 20:
-		md_parity = PAR_FIRST_6;
-		break;
-	    default:
-		y2war("unknown parity " << line2.substr(pos));
-		break;
-	    }
-	}
-    pos = line2.find( "-copies" );
-    if( pos != string::npos )
-	{
-	unsigned num = 0;
-	string where;
-	pos = line2.find_last_of( app_ws, pos );
-	line2.substr( pos ) >> where;
-	pos = line2.find_last_not_of( app_ws, pos );
-	pos = line2.find_last_of( app_ws, pos );
-	line2.substr( pos ) >> num;
-	y2mil( "where:" << where << " num:" << num );
-	if( where=="near-copies" )
-	    md_parity = (num==3)?PAR_NEAR_3:PAR_NEAR_2;
-	else if( where=="far-copies" )
-	    md_parity = (num==3)?PAR_FAR_3:PAR_FAR_2;
-	else if( where=="offset-copies" )
-	    md_parity = (num==3)?PAR_OFFSET_3:PAR_OFFSET_2;
-	}
 
     if( has_container )
       {

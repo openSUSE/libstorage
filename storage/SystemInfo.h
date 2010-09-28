@@ -28,6 +28,7 @@
 
 #include "storage/ProcParts.h"
 #include "storage/ProcMounts.h"
+#include "storage/ProcMdstat.h"
 #include "storage/Blkid.h"
 #include "storage/Lsscsi.h"
 #include "storage/DmCo.h"
@@ -49,6 +50,7 @@ namespace storage
 	const UdevMap& getUdevMap(const string& path);
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
+	const ProcMdstat& getProcMdstat() { return *procmdstat; }
 	const Blkid& getBlkid() { return *blkid; }
 	const Lsscsi& getLsscsi() { return *lsscsi; }
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
@@ -77,6 +79,7 @@ namespace storage
 
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
+	LazyObject<ProcMdstat> procmdstat;
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
 	LazyObject<CmdDmsetup> cmddmsetup;

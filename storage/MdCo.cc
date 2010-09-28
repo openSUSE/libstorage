@@ -107,7 +107,7 @@ MdCo::getMdData(SystemInfo& systeminfo)
 
       if( canHandleDev(mdDev,line2) )
         {
-	Md* m = new Md(*this, line, line2, systeminfo);
+	Md* m = new Md(*this, line, systeminfo);
         addMd( m );
         getline(file,line);
         }
@@ -133,10 +133,7 @@ MdCo::getMdData(SystemInfo& systeminfo, unsigned num)
 	y2mil( "mdstat line:" << line );
 	if( extractNthWord( 0, line ) == md ) 
 	    {
-	    string line2;
-	    getline( file, line2 );
-	    y2mil( "mdstat line2:" << line );
-	    Md* m = new Md(*this, line, line2, systeminfo);
+	    Md* m = new Md(*this, line, systeminfo);
 	    checkMd( m );
 	    }
 	getline( file, line );
