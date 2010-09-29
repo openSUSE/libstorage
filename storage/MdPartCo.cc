@@ -1551,28 +1551,23 @@ bool MdPartCo::getUuidName(const string dev,string& uuid, string& mdName)
   }
   else
     {
-    string tmp;
-    string::size_type pos;
-    //No file, employ mdadm -D name --export
-    SystemCmd c(MDADMBIN " --detail " + quote(dev) + " --export");
-    if( c.retcode() != 0 )
-      {
-      return false;
-      }
-    if(c.select( "MD_UUID" ) > 0)
-      {
-      tmp = c.getLine(0,true);
-      pos = tmp.find("=");
-      tmp.erase(0,pos+1);
-      uuid = tmp;
-      }
-    if( c.select( "MD_DEVNAME" ) > 0)
-      {
-      tmp = c.getLine(0,true);
-      pos = tmp.find("=");
-      tmp.erase(0,pos+1);
-      mdName = tmp;
-      }
+	SystemCmd c(MDADMBIN " --detail " + quote("/dev/" + dev) + " --export");
+	if (c.retcode() != 0)
+	    return false;
+
+	if (c.select("MD_UUID") > 0)
+	{
+	    string line = c.getLine(0, true);
+	    string::size_type pos = line.find("=");
+	    uuid = string(line, pos + 1);
+	}
+	if (c.select("MD_NAME") > 0)
+	{
+	    string line = c.getLine(0, true);
+	    string::size_type pos = line.find("=");
+	    mdName = string(line, pos + 1);
+	}
+
     if( !mdName.empty() && !uuid.empty() )
       {
       return true;
