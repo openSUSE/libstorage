@@ -91,16 +91,22 @@ namespace storage
 		line.erase( 0, pos );
 	}
 	boost::trim_left(line, locale::classic());
+
 	tmp = extractNthWord( 0, line );
-	entry.md_type = Md::toMdType( tmp );
-	if( entry.md_type == RAID_UNK )
+	if (boost::starts_with(tmp, "raid"))
 	{
-	    y2war("unknown raid type " << tmp);
+	    // raid level not present for IMSM containers
+
+	    entry.md_type = Md::toMdType(tmp);
+	    if (entry.md_type == RAID_UNK)
+		y2war("unknown raid type " << tmp);
+
+	    if( (pos=line.find_first_of( app_ws ))!=string::npos )
+		line.erase( 0, pos );
+	    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
+		line.erase( 0, pos );
 	}
-	if( (pos=line.find_first_of( app_ws ))!=string::npos )
-	    line.erase( 0, pos );
-	if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
-	    line.erase( 0, pos );
+
 	while( (pos=line.find_first_not_of( app_ws ))==0 )
 	{
 	    tmp = extractNthWord( 0, line );
