@@ -73,15 +73,6 @@ namespace storage
 	}
 
     SystemCmd c(MDADMBIN " --detail " + quote(device()));
-    c.select( "UUID : " );
-    string::size_type pos;
-    if( c.retcode()==0 && c.numLines(true)>0 )
-	{
-	md_uuid = c.getLine(0,true);
-	if( (pos=md_uuid.find( "UUID : " ))!=string::npos )
-	    md_uuid.erase( 0, pos+7 );
-	md_uuid = extractNthWord( 0, md_uuid );
-	}
     // "Container" raid: IMSM, DDF
     // "Version" with persistent block
     if( c.retcode()==0 )
@@ -142,9 +133,7 @@ namespace storage
 
 	setUdevData(systeminfo);
 
-    // Get md_name. It's important.
-    string tmpUuid;
-    MdPartCo::getUuidName(nm,tmpUuid,md_name);
+	MdPartCo::getUuidName(nm, md_uuid, md_name);
 
     getStorage()->addUsedBy(devs, UB_MD, dev);
     getStorage()->addUsedBy(spare, UB_MD, dev);
