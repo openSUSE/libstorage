@@ -52,7 +52,16 @@ namespace storage
     {
 	y2deb("constructing MdCo");
 	init();
-	getMdData(systeminfo);
+
+	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
+	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
+	{
+	    if (canHandleDev(it->first, it->second.super))
+	    {
+		Md* m = new Md(*this, it->first, "/dev/" + it->first, systeminfo);
+		addMd(m);
+	    }
+	}
     }
 
 
@@ -88,35 +97,6 @@ MdCo::init()
 	ConstMdPair p = mdPair(Md::notDeleted);
 	for (ConstMdIter it = p.begin(); it != p.end(); ++it)
 	    it->updateEntry(mdadm);
-    }
-
-
-void
-MdCo::getMdData(SystemInfo& systeminfo)
-    {
-    y2mil("begin");
-    string line;
-    std::ifstream file( "/proc/mdstat" );
-    classic(file);
-    getline( file, line );
-    while( file.good() )
-	{
-      string mdDev = extractNthWord( 0, line );
-      string line2;
-      getline(file,line2);
-
-      if( canHandleDev(mdDev,line2) )
-        {
-	Md* m = new Md(*this, line, systeminfo);
-        addMd( m );
-        getline(file,line);
-        }
-      else
-        {
-        line = line2;
-        }
-	}
-    file.close();
     }
 
 
@@ -712,26 +692,15 @@ bool MdCo::isHandledByMdPart(const string& name) const
 }
 
 
-bool MdCo::canHandleDev(const string& name, const string& line2) const
-{
-  unsigned dummy;
-  //If this is a valid MD name.
-  if( Md::mdStringNum(name,dummy) )
+    bool
+    MdCo::canHandleDev(const string& name, const string& super) const
     {
-    // if it's not used by Md Part
-    if (!isHandledByMdPart(name))
-       {
-      //Exclude 'container'
-       if( line2.find("external:imsm") == string::npos &&
-           line2.find("external:ddf") == string::npos )
-         {
-         y2mil("Device : " << name << " can be handled by Md.");
-         return true;
-         }
-       }
+	if (super == "external:imsm" || super == "external:ddf")
+	    return false;
+
+	return !isHandledByMdPart(name);
     }
-  return false;
-}
+
 
 bool MdCo::active = false;
 

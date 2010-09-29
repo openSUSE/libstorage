@@ -39,7 +39,7 @@ class Md : public Volume
 
     public:
 	Md(const MdCo& c, unsigned Pnr, MdType Type, const list<string>& devs, const list<string>& spares);
-	Md(const MdCo& c, const string& line, SystemInfo& systeminfo);
+	Md(const MdCo& c, const string& name, const string& device, SystemInfo& systeminfo);
 	Md(const MdCo& c, const Md& v);
 	virtual ~Md();
 

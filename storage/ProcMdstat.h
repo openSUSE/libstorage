@@ -58,11 +58,14 @@ namespace storage
 
 	bool getEntry(const string& name, Entry& entry) const;
 
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
     private:
 
 	Entry parse(const string& line1, const string& line2);
-
-	typedef map<string, Entry>::const_iterator const_iterator;
 
 	map<string, Entry> data;
 

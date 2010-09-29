@@ -116,7 +116,6 @@ class MdCo : public Container
 	    return( ConstMdIter( MdCPIterator( p, Check, true )) );
 	    }
 
-	void getMdData(SystemInfo& systeminfo);
 	bool findMd( unsigned num, MdIter& i );
 	bool findMd( unsigned num ); 
 	bool findMd( const string& dev, MdIter& i );
@@ -135,10 +134,7 @@ class MdCo : public Container
 	/* Return true if given device is alredy handled by MdPartCo. */
 	bool isHandledByMdPart(const string& name) const;
 
-	/* Return true if md device found in /proc/mdstat given by 'name'
-	 * can be handled by Md classes.
-	 * The line2 is a line following device name in mdstat. */
-	bool canHandleDev(const string& name, const string& line2) const;
+	bool canHandleDev(const string& name, const string& super) const;
 
 	static bool active;  
 

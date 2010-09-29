@@ -56,23 +56,21 @@ namespace storage
     }
 
 
-    Md::Md(const MdCo& d, const string& line1, SystemInfo& systeminfo)
-	: Volume(d, 0, 0), md_type(RAID_UNK), md_parity(PAR_DEFAULT), chunk(0),
-	  sb_ver("01.00.00"), destrSb(false), has_container(false)
+    Md::Md(const MdCo& d, const string& name, const string& device, SystemInfo& systeminfo)
+	: Volume(d, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
+	  chunk(0), sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
-	y2mil("constructed md line1:\"" << line1 << "\"");
+	y2deb("constructed Md " << device << " on " << cont->device());
 
 	assert(d.type() == MD);
 
-    if( mdStringNum( extractNthWord( 0, line1 ), num ))
-	{
-	nm.clear();
-	setNameDev();
+	numeric = true;
+	mdStringNum(name, num);
+
 	getMajorMinor();
 	getStorage()->fetchDanglingUsedBy(dev, uby);
-	}
 
-    SystemCmd c(MDADMBIN " --detail " + quote(device()));
+    SystemCmd c(MDADMBIN " --detail " + quote(dev));
     // "Container" raid: IMSM, DDF
     // "Version" with persistent block
     if( c.retcode()==0 )

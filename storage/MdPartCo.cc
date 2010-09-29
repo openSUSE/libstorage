@@ -71,8 +71,7 @@ namespace storage
 
     MdPartCo::MdPartCo(const MdPartCo& c)
 	: Container(c), udev_id(c.udev_id),
-	  chunk_size(c.chunk_size),
-	  md_type(c.md_type), md_parity(c.md_parity),
+	  md_type(c.md_type), md_parity(c.md_parity), chunkK(c.chunkK),
 	  has_container(c.has_container),
 	  parent_container(c.parent_container), parent_uuid(c.parent_uuid),
 	  parent_metadata(c.parent_metadata),
@@ -1142,7 +1141,7 @@ void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
     info.parity = md_parity;
     info.uuid = md_uuid;
     info.sb_ver = sb_ver;
-    info.chunkSizeK = chunk_size;
+    info.chunkSizeK = chunkK;
 
     info.devices = boost::join(devs, " ");
     info.spares = boost::join(spare, " ");
@@ -1190,8 +1189,8 @@ void MdPartCo::logDifference( const MdPartCo& d ) const
     if( md_parity!=d.md_parity )
         log += " Parity:" + Md::par_names[md_parity] + "-->" +
 	    Md::par_names[d.md_parity];
-    if( chunk_size!=d.chunk_size )
-        log += " Chunk:" + decString(chunk_size) + "-->" + decString(d.chunk_size);
+    if( chunkK!=d.chunkK )
+        log += " Chunk:" + decString(chunkK) + "-->" + decString(d.chunkK);
     if( sb_ver!=d.sb_ver )
         log += " SbVer:" + sb_ver + "-->" + d.sb_ver;
     if( md_uuid!=d.md_uuid )
@@ -1277,7 +1276,7 @@ bool MdPartCo::equalContent( const Container& rhs ) const
       ret = ret &&
           active==mdp->active;
       ret = ret &&
-          (chunk_size == mdp->chunk_size &&
+          (chunkK == mdp->chunkK &&
               md_type == mdp->md_type &&
               md_parity == mdp->md_parity &&
               sb_ver == mdp->sb_ver &&
@@ -1325,38 +1324,20 @@ bool MdPartCo::equalContent( const Container& rhs ) const
 //unused devices: <none>
 
 
-list<string>
-MdPartCo::getMdRaids()
-{
-  y2mil( " called " );
-  list<string> l;
-  string line;
-  string dev_name;
-  std::ifstream file( "/proc/mdstat" );
-  classic(file);
-  getline( file, line );
-  while( file.good() )
-  {
-    string dev_name = extractNthWord( 0, line );
-    if (matchRegex(dev_name))
-      {
-      string line2;
-      getline(file,line2);
-      if( line2.find("external:imsm") == string::npos &&
-          line2.find("external:ddf") == string::npos)
-        {
-          // external:imsm or ddf not found. Assume that this is a Volume.
-        l.push_back(dev_name);
-        }
-      }
-    getline( file, line );
-    }
-    file.close();
-    file.clear();
+    list<string>
+    MdPartCo::getMdRaids(SystemInfo& systeminfo)
+    {
+	list<string> ret;
 
-    y2mil("detected md devs : " << l);
-    return l;
-}
+	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
+	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
+	{
+	    if (it->second.super != "external:imsm" && it->second.super != "external:ddf")
+		ret.push_back(it->first);
+	}
+
+	return ret;
+    }
 
 
     list<string>
@@ -1381,8 +1362,10 @@ void MdPartCo::setSize(unsigned long long size )
   size_k = size;
 }
 
-void MdPartCo::getMdProps(SystemInfo& systeminfo)
-{
+
+    void
+    MdPartCo::initMd(SystemInfo& systeminfo)
+    {
     y2mil("Called dev:" << dev);
 
   string property;
@@ -1392,44 +1375,22 @@ void MdPartCo::getMdProps(SystemInfo& systeminfo)
       y2war("Failed to read metadata");
     }
 
-   property.clear();
-   if( !readProp(COMPONENT_SIZE, property) )
-     {
-       y2war("Failed to read component_size");
-       setSize(0);
-     }
-   else
-     {
-     unsigned long long tmpSize;
-     property >> tmpSize;
-     setSize(tmpSize);
-     }
+	ProcMdstat::Entry entry;
+	if (systeminfo.getProcMdstat().getEntry(nm, entry))
+	{
+	    md_type = entry.md_type;
+	    md_parity = entry.md_parity;
 
-   property.clear();
-   if( !readProp(CHUNK_SIZE, property) )
-     {
-       y2war("Failed to read chunk_size");
-       chunk_size = 0;
-     }
-   else
-     {
-     property >> chunk_size;
-     /* From 'B' in file to 'Kb' here. */
-     chunk_size /= 1024;
-     }
+	    setSize(entry.sizeK);
+	    chunkK = entry.chunkK;
 
-    if( !readProp(LEVEL, property) )
-      {
-      y2war("RAID type unknown");
-      md_type = storage::RAID_UNK;
-      }
-    else
-      {
-	  md_type = Md::toMdType(property);
-      }
+	    devs = entry.devices;
+	    spare = entry.spares;
+	}
 
-    setMdParity();
-    setMdDevs(systeminfo);
+	getStorage()->addUsedBy(devs, UB_MDPART, dev);
+	getStorage()->addUsedBy(spare, UB_MDPART, dev);
+
     setMetaData();
     MdPartCo::getUuidName(nm,md_uuid,md_name);
 
@@ -1440,8 +1401,7 @@ void MdPartCo::getMdProps(SystemInfo& systeminfo)
 	y2mil("md_name:" << md_name << " parent_container:" << parent_container <<
 	      " parent_uuid:" << parent_uuid << " parent_md_name:" << parent_md_name);
       }
-    y2mil("Done");
-}
+    }
 
 
 bool
@@ -1449,21 +1409,6 @@ MdPartCo::readProp(enum MdProperty prop, string& val) const
 {
     return read_sysfs_property(sysfsPath() + "/md/" + md_props[prop], val);
 }
-
-
-    void
-    MdPartCo::setMdDevs(SystemInfo& systeminfo)
-    {
-	ProcMdstat::Entry entry;
-	if (systeminfo.getProcMdstat().getEntry(nm, entry))
-	{
-	    devs = entry.devices;
-	    spare = entry.spares;
-	}
-
-	getStorage()->addUsedBy(devs, UB_MDPART, dev);
-	getStorage()->addUsedBy(spare, UB_MDPART, dev);
-    }
 
 
 void
@@ -1541,12 +1486,6 @@ void MdPartCo::setMetaData()
       parent_metadata = sb_ver;
       }
     }
-}
-
-
-void MdPartCo::setMdParity()
-{
-  md_parity = PAR_DEFAULT;
 }
 
 
@@ -1640,12 +1579,6 @@ bool MdPartCo::getUuidName(const string dev,string& uuid, string& mdName)
       }
     }
   return false;
-}
-
-
-void MdPartCo::initMd(SystemInfo& systeminfo)
-{
-    getMdProps(systeminfo);
 }
 
 

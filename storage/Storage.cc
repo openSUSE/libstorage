@@ -521,7 +521,7 @@ Storage::detectMdParts(SystemInfo& systeminfo)
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_MDPARTRAID") == NULL)
     {
-	list<string> l = MdPartCo::getMdRaids();
+	list<string> l = MdPartCo::getMdRaids(systeminfo);
 	list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo, instsys());
 	
 	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)

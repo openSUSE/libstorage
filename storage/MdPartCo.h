@@ -125,15 +125,14 @@ class MdPartCo : public Container
     MdPartCo& operator= ( const MdPartCo& rhs );
     static string undevName( const string& name );
 
-    static list<string> getMdRaids();
+	static list<string> getMdRaids(SystemInfo& systeminfo);
 
 	void syncMdadm(EtcMdadm* mdadm) const;
 
     /* Returns Md number. */
     unsigned nr() const { return mnr; }
 
-    /* RAID Related functionality */
-    unsigned long chunkSize() const { return chunk_size; }
+	unsigned long chunkSizeK() const { return chunkK; }
 
     storage::MdType personality() const { return md_type; }
 
@@ -261,8 +260,6 @@ class MdPartCo : public Container
 
     void getPartNum(const string& device, unsigned& num) const;
 
-	void getMdProps(SystemInfo& systeminfo);
-
 	void unuseDevs() const;
 
     list<string> udev_id;
@@ -276,10 +273,6 @@ class MdPartCo : public Container
 
     void setMetaData();
 
-	void setMdDevs(SystemInfo& systeminfo);
-
-    void setMdParity();
-
     /* fields in 'map' file */
     enum mdMap { MAP_DEV=0, MAP_META, MAP_UUID, MAP_NAME };
     static bool findMdMap(std::ifstream& file);
@@ -290,9 +283,10 @@ class MdPartCo : public Container
     static CType envSelection(const string& name);
     static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
 
-    unsigned long chunk_size;
-    storage::MdType md_type;
-    storage::MdParity md_parity;
+	MdType md_type;
+	MdParity md_parity;
+
+	unsigned long chunkK;
 
     /* Md Container - */
     bool   has_container;
