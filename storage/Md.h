@@ -63,6 +63,7 @@ class Md : public Volume
 	static bool matchRegex( const string& dev );
 	static unsigned mdMajor();
 
+	void updateData(SystemInfo& systeminfo);
 	void setUdevData(SystemInfo& systeminfo);
 
 	virtual list<string> udevId() const { return udev_id; }

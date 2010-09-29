@@ -117,14 +117,12 @@ class MdCo : public Container
 	    }
 
 	void getMdData(SystemInfo& systeminfo);
-	void getMdData(SystemInfo& systeminfo, unsigned num);
 	bool findMd( unsigned num, MdIter& i );
 	bool findMd( unsigned num ); 
 	bool findMd( const string& dev, MdIter& i );
 	bool findMd( const string& dev ); 
 	int checkUse(const list<string>& dev, const list<string>& spares) const;
 	void addMd( Md* m );
-	void checkMd( Md* m );
 
 	void init();
 

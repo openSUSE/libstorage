@@ -171,6 +171,36 @@ namespace storage
 
 
     void
+    Md::updateData(SystemInfo& systeminfo)
+    {
+	ProcMdstat::Entry entry;
+	if (systeminfo.getProcMdstat().getEntry(nm, entry))
+	{
+	    if (md_type != entry.md_type)
+		y2war("inconsistent md_type my:" << pName() << " kernel:" << pName(entry.md_type));
+	    if (md_parity != PAR_DEFAULT && md_parity != entry.md_parity)
+		y2war("inconsistent md_parity my:" << ptName() << " kernel:" << ptName(entry.md_parity));
+	    if (chunk > 0 && chunk != entry.chunkK)
+		y2war("inconsistent chunk my:" << chunk << " kernel:" << entry.chunkK);
+
+	    md_type = entry.md_type;
+	    md_parity = entry.md_parity;
+
+	    setSize(entry.sizeK);
+	    chunk = entry.chunkK;
+	}
+	else
+	{
+	    y2err("md " << nm << " not found in /proc/mdstat");
+	}
+
+	string tmp_uuid, tmp_name;
+	MdPartCo::getUuidName(nm, tmp_uuid, tmp_name);
+	setMdUuid(tmp_uuid);
+    }
+
+
+    void
     Md::setUdevData(SystemInfo& systeminfo)
     {
 	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");

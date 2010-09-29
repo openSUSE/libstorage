@@ -119,26 +119,6 @@ MdCo::getMdData(SystemInfo& systeminfo)
     file.close();
     }
 
-void
-MdCo::getMdData(SystemInfo& systeminfo, unsigned num)
-    {
-    y2mil("num:" << num);
-    string line;
-    std::ifstream file( "/proc/mdstat" );
-    classic(file);
-    string md = "md" + decString(num);
-    getline( file, line );
-    while( file.good() )
-	{
-	y2mil( "mdstat line:" << line );
-	if( extractNthWord( 0, line ) == md ) 
-	    {
-	    Md* m = new Md(*this, line, systeminfo);
-	    checkMd( m );
-	    }
-	getline( file, line );
-	}
-    }
 
 void
 MdCo::addMd( Md* m )
@@ -150,29 +130,6 @@ MdCo::addMd( Md* m )
 	y2war("addMd already exists " << m->nr()); 
 	delete m;
 	}
-    }
-
-void
-MdCo::checkMd( Md* m )
-    {
-    MdIter i;
-    if( findMd( m->nr(), i ))
-	{
-	i->setSize( m->sizeK() );
-	i->setMdUuid( m->getMdUuid() );
-	i->setCreated( false );
-	if( m->personality()!=i->personality() )
-	    y2war("inconsistent raid type my:" << i->pName() << " kernel:" << m->pName());
-	if( i->parity()!=storage::PAR_DEFAULT && m->parity()!=i->parity() )
-	    y2war("inconsistent parity my:" << i->ptName() << " kernel:" << m->ptName());
-	if( i->chunkSize()>0 && m->chunkSize()!=i->chunkSize() )
-	    y2war("inconsistent chunk size my:" << i->chunkSize() << " kernel:" << m->chunkSize());
-	}
-    else
-	{
-	y2war("checkMd does not exist " << m->nr());
-	}
-    delete m;
     }
 
 
@@ -597,9 +554,10 @@ MdCo::doCreate( Volume* v )
 	    }
 	if( ret==0 )
 	    {
+	    m->setCreated(false);
 	    Storage::waitForDevice(m->device());
 	    SystemInfo systeminfo;
-	    getMdData(systeminfo, m->nr());
+	    m->updateData(systeminfo);
 	    m->setUdevData(systeminfo);
 	    EtcMdadm* mdadm = getStorage()->getMdadm();
 	    if (mdadm)
