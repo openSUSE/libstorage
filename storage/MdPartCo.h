@@ -253,7 +253,7 @@ class MdPartCo : public Container
     virtual Text setDiskLabelText( bool doing ) const;
 
     /* Initialize the MD part of object.*/
-    void initMd();
+	void initMd(SystemInfo& systeminfo);
 
     void setSize(unsigned long long size );
 
@@ -261,7 +261,7 @@ class MdPartCo : public Container
 
     void getPartNum(const string& device, unsigned& num) const;
 
-    void getMdProps();
+	void getMdProps(SystemInfo& systeminfo);
 
 	void unuseDevs() const;
 
@@ -276,7 +276,7 @@ class MdPartCo : public Container
 
     void setMetaData();
 
-    void setMdDevs();
+	void setMdDevs(SystemInfo& systeminfo);
 
     void setMdParity();
 

@@ -59,7 +59,7 @@ namespace storage
 	getMajorMinor();
 
 	/* First Initialize RAID properties. */
-	initMd();
+	initMd(systeminfo);
 	/* Initialize 'disk' part, partitions.*/
 	init(systeminfo);
 
@@ -1381,7 +1381,7 @@ void MdPartCo::setSize(unsigned long long size )
   size_k = size;
 }
 
-void MdPartCo::getMdProps()
+void MdPartCo::getMdProps(SystemInfo& systeminfo)
 {
     y2mil("Called dev:" << dev);
 
@@ -1429,7 +1429,7 @@ void MdPartCo::getMdProps()
       }
 
     setMdParity();
-    setMdDevs();
+    setMdDevs(systeminfo);
     setMetaData();
     MdPartCo::getUuidName(nm,md_uuid,md_name);
 
@@ -1452,25 +1452,13 @@ MdPartCo::readProp(enum MdProperty prop, string& val) const
 
 
     void
-    MdPartCo::setMdDevs()
+    MdPartCo::setMdDevs(SystemInfo& systeminfo)
     {
-	devs.clear();
-	spare.clear();
-
-	list<string> slaves = glob(sysfsPath() + "/slaves/*", GLOB_NOSORT);
-	for (list<string>::const_iterator it = slaves.begin(); it != slaves.end(); ++it)
+	ProcMdstat::Entry entry;
+	if (systeminfo.getProcMdstat().getEntry(nm, entry))
 	{
-	    string tmp = string(*it, it->find_last_of("/") + 1);
-
-	    bool is_spare = false;
-	    string state;
-	    if (read_sysfs_property(sysfsPath() + "/md/dev-" + tmp + "/state", state) && state == "spare")
-		is_spare = true;
-
-	    if (!is_spare)
-		devs.push_back("/dev/" + tmp);
-	    else
-		spare.push_back("/dev/" + tmp);
+	    devs = entry.devices;
+	    spare = entry.spares;
 	}
 
 	getStorage()->addUsedBy(devs, UB_MDPART, dev);
@@ -1655,9 +1643,9 @@ bool MdPartCo::getUuidName(const string dev,string& uuid, string& mdName)
 }
 
 
-void MdPartCo::initMd()
+void MdPartCo::initMd(SystemInfo& systeminfo)
 {
-  getMdProps();
+    getMdProps(systeminfo);
 }
 
 
