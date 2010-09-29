@@ -36,7 +36,7 @@ namespace storage
 	struct Entry
 	{
 	    Entry() : md_type(RAID_UNK), md_parity(PAR_DEFAULT), sizeK(0), chunkK(0),
-		      readonly(false) {}
+		      readonly(false), is_container(false), has_container(false) {}
 
 	    MdType md_type;
 	    MdParity md_parity;
@@ -50,6 +50,12 @@ namespace storage
 
 	    list<string> devices;
 	    list<string> spares;
+
+	    bool is_container;
+
+	    bool has_container;
+	    string container_name;
+	    string container_member;
 	};
 
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);

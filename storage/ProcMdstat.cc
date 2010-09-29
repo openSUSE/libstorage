@@ -95,8 +95,6 @@ namespace storage
 	tmp = extractNthWord( 0, line );
 	if (boost::starts_with(tmp, "raid"))
 	{
-	    // raid level not present for IMSM containers
-
 	    entry.md_type = Md::toMdType(tmp);
 	    if (entry.md_type == RAID_UNK)
 		y2war("unknown raid type " << tmp);
@@ -105,6 +103,10 @@ namespace storage
 		line.erase( 0, pos );
 	    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
 		line.erase( 0, pos );
+	}
+	else
+	{
+	    entry.is_container = true;
 	}
 
 	while( (pos=line.find_first_not_of( app_ws ))==0 )
@@ -146,6 +148,19 @@ namespace storage
 	    pos1 = line2.find_first_not_of(app_ws, pos1);
 	    string::size_type pos2 = line2.find_first_of(app_ws, pos1);
 	    entry.super = string(line2, pos1, pos2 - pos1);
+
+	    if (!entry.is_container && boost::starts_with(entry.super, "external:"))
+	    {
+		string::size_type pos1 = entry.super.find_first_of("/");
+		string::size_type pos2 = entry.super.find_last_of("/");
+
+		if (pos1 != string::npos && pos2 != string::npos && pos1 != pos2)
+		{
+		    entry.has_container = true;
+		    entry.container_name = string(entry.super, pos1 + 1, pos2 - pos1 - 1);
+		    entry.container_member = string(entry.super, pos2 + 1);
+		}
+	    }
 	}
 
 	entry.md_parity = PAR_DEFAULT;
@@ -262,6 +277,13 @@ namespace storage
 	s << " devices:" << entry.devices;
 	if (!entry.spares.empty())
 	    s << " spares:" << entry.spares;
+
+	if (entry.is_container)
+	    s << " is_container";
+
+	if (entry.has_container)
+	    s << " has_container container_name:" << entry.container_name << " container_member:"
+	      << entry.container_member;
 
 	return s;
     }
