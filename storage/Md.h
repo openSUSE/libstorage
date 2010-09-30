@@ -100,7 +100,6 @@ class Md : public Volume
 	static MdArrayState toMdArrayState(const string& val);
 
 	void getParent();
-	void setMetadata();
 
 	storage::MdType md_type;
 	storage::MdParity md_parity;
