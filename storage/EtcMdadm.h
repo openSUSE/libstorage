@@ -57,8 +57,9 @@ namespace storage
 	    string container_member;
 	    string container_metadata;
 	    string container_uuid;
-	};
 
+	    friend std::ostream& operator<<(std::ostream& s, const mdconf_info& info);
+	};
 
 	bool updateEntry(const mdconf_info& info);
 

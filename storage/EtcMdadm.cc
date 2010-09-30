@@ -44,13 +44,13 @@ namespace storage
 
 	if (info.uuid.empty())
 	{
-	    y2err("empty UUID");
+	    y2err("empty UUID " << info);
 	    return false;
 	}
 
 	if (info.container_present && info.container_uuid.empty())
 	{
-	    y2err("empty UUID for container");
+	    y2err("empty UUID for container " << info);
 	    return false;
 	}
 
@@ -187,4 +187,17 @@ namespace storage
 	return line.substr(pos1, pos2 - pos1);
     }
 
+
+    std::ostream& operator<<(std::ostream& s, const EtcMdadm::mdconf_info& info)
+    {
+	s << "device:" << info.device << " uuid:" << info.uuid;
+
+	if (info.container_present)
+	{
+	    s << " container_present container_uuid:" << info.container_uuid << " container_member:"
+	      << info.container_member << " container_metadata:" << info.container_metadata;
+	}
+
+	return s;
+    }
 }
