@@ -132,7 +132,7 @@ class MdPartCo : public Container
     /* Returns Md number. */
     unsigned nr() const { return mnr; }
 
-	unsigned long chunkSizeK() const { return chunkK; }
+	unsigned long chunkSizeK() const { return chunk_k; }
 
     storage::MdType personality() const { return md_type; }
 
@@ -167,10 +167,6 @@ class MdPartCo : public Container
     static list<string> filterMdPartCo(list<string>& raidList,
 				       SystemInfo& systeminfo,
                                        bool isInst);
-
-    /* Returns uuid and possibly mdName for given MD Device.
-     * Input parameter: dev name - like md1 */
-    static bool getUuidName(const string dev,string& uuid, string& mdName);
 
     protected:
     // iterators over partitions
@@ -260,22 +256,7 @@ class MdPartCo : public Container
 
 	void unuseDevs() const;
 
-    list<string> udev_id;
-
     Disk* disk;
-
-    /* RAID Related */
-
-    /* Returns container */
-    void getParent();
-
-    void setMetaData();
-
-    /* fields in 'map' file */
-    enum mdMap { MAP_DEV=0, MAP_META, MAP_UUID, MAP_NAME };
-    static bool findMdMap(std::ifstream& file);
-
-	string getContMember() const;
 
     //Input: 'mdXXX' device.
     static CType envSelection(const string& name);
@@ -283,40 +264,23 @@ class MdPartCo : public Container
 
 	MdType md_type;
 	MdParity md_parity;
+	unsigned long chunk_k;
+	string md_uuid;
+	string md_name;		// line in /dev/md/*
+	string sb_ver;
+	bool destrSb;
+	list<string> devs;
+	list<string> spare;
 
-	unsigned long chunkK;
+	list<string> udev_id;
 
-    /* Md Container - */
-    bool   has_container;
-    string parent_container;
-    string parent_uuid;
-    string parent_metadata;
-    string parent_md_name;
-    string md_metadata;
-    string md_uuid;
-    string sb_ver;
-    bool destrSb;
-    std::list<string> devs;
-    std::list<string> spare;
-
-    /* Name that is present in /dev/md directory.*/
-    string md_name;
-
-    enum MdProperty
-    {
-      METADATA=0,
-      COMPONENT_SIZE,
-      CHUNK_SIZE,
-      ARRAY_STATE,
-      LEVEL,
-      LAYOUT,
-      /* ... */
-      MDPROP_LAST,
-    };
-
-    static const string md_props[MDPROP_LAST];
-
-    bool readProp(enum MdProperty prop, string& val) const;
+	// In case of IMSM and DDF raids there is 'container'.
+	bool has_container;
+	string parent_container;
+	string parent_uuid;
+	string parent_md_name;
+	string parent_metadata;
+	string parent_member;
 
     /* For that RAID type parity means something */
     bool hasParity() const

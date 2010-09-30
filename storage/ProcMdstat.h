@@ -35,7 +35,7 @@ namespace storage
 
 	struct Entry
 	{
-	    Entry() : md_type(RAID_UNK), md_parity(PAR_DEFAULT), sizeK(0), chunkK(0),
+	    Entry() : md_type(RAID_UNK), md_parity(PAR_DEFAULT), size_k(0), chunk_k(0),
 		      readonly(false), is_container(false), has_container(false) {}
 
 	    MdType md_type;
@@ -43,8 +43,8 @@ namespace storage
 
 	    string super;
 
-	    unsigned long long sizeK;
-	    unsigned long chunkK;
+	    unsigned long long size_k;
+	    unsigned long chunk_k;
 
 	    bool readonly;
 

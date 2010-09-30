@@ -40,6 +40,8 @@ namespace storage
     ProcMdstat::ProcMdstat()
     {
 	AsciiFile mdstat("/proc/mdstat");
+	mdstat.logContent();
+
 	for (vector<string>::const_iterator it1 = mdstat.lines().begin(); it1 != mdstat.lines().end(); ++it1)
 	{
 	    if (extractNthWord(1, *it1) == ":")
@@ -58,9 +60,6 @@ namespace storage
     ProcMdstat::Entry
     ProcMdstat::parse(const string& line1, const string& line2)
     {
-	y2mil("line1:" << line1);
-	y2mil("line2:" << line2);
-
 	ProcMdstat::Entry entry;
 
 	string::size_type pos;
@@ -133,14 +132,14 @@ namespace storage
 		line.erase( 0, pos );
 	}
 
-	extractNthWord(0, line2) >> entry.sizeK;
+	extractNthWord(0, line2) >> entry.size_k;
 
 	pos = line2.find( "chunk" );
 	if( pos != string::npos )
 	{
 	    pos = line2.find_last_not_of( app_ws, pos-1 );
 	    pos = line2.find_last_of( app_ws, pos );
-	    line2.substr( pos+1 ) >> entry.chunkK;
+	    line2.substr( pos+1 ) >> entry.chunk_k;
 	}
 
 	pos = line2.find("super");
@@ -268,10 +267,10 @@ namespace storage
 	if (!entry.super.empty())
 	    s << " super:" + entry.super;
 
-	if (entry.chunkK != 0)
-	    s << " chunkK:" << entry.chunkK;
+	if (entry.chunk_k != 0)
+	    s << " chunk_k:" << entry.chunk_k;
 
-	s << " sizeK:" << entry.sizeK;
+	s << " size_k:" << entry.size_k;
 
 	if (entry.readonly)
 	    s << " readonly";
@@ -301,25 +300,15 @@ namespace storage
 	    return false;
 	}
 
-	if (cmd.select("MD_UUID") > 0)
+	const vector<string>& lines = cmd.stdout();
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    string line = cmd.getLine(0, true);
-	    string::size_type pos = line.find("=");
-	    detail.uuid = string(line, pos + 1);
-	}
-
-	if (cmd.select("MD_DEVNAME") > 0)
-	{
-	    string line = cmd.getLine(0, true);
-	    string::size_type pos = line.find("=");
-	    detail.devname = string(line, pos + 1);
-	}
-
-	if (cmd.select("MD_METADATA") > 0)
-	{
-	    string line = cmd.getLine(0, true);
-	    string::size_type pos = line.find("=");
-	    detail.metadata = string(line, pos + 1);
+	    if (boost::starts_with(*it, "MD_UUID="))
+		detail.uuid = string(*it, 8);
+	    else if (boost::starts_with(*it, "MD_DEVNAME="))
+		detail.devname = string(*it, 11);
+	    else if (boost::starts_with(*it, "MD_METADATA="))
+		detail.metadata = string(*it, 12);
 	}
 
 	y2mil("dev:" << dev << " uuid:" << detail.uuid << " devname:" << detail.devname <<
@@ -334,6 +323,7 @@ namespace storage
 	bool ret = false;
 
 	SystemCmd cmd(MDADMBIN " --detail-platform");
+
 	cmd.select("Platform : ");
 	if (cmd.numLines(true) > 0)
 	{

@@ -368,7 +368,7 @@ MdCo::changeMdChunk( unsigned num, unsigned long chunk )
 	}
     if( ret==0 )
 	{
-	i->setChunkSize( chunk );
+	i->setChunkSizeK(chunk);
 	}
     y2mil("ret:" << ret);
     return( ret );

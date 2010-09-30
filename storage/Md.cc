@@ -42,7 +42,7 @@ namespace storage
 
     Md::Md(const MdCo& c, unsigned PNr, MdType Type, const list<string>& devices,
 	   const list<string>& spares)
-	: Volume(c, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk(0), sb_ver("01.00.00"),
+	: Volume(c, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk_k(0), sb_ver("01.00.00"),
 	  destrSb(false), devs(devices), spare(spares), has_container(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
@@ -58,7 +58,7 @@ namespace storage
 
     Md::Md(const MdCo& d, const string& name, const string& device, SystemInfo& systeminfo)
 	: Volume(d, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
-	  chunk(0), sb_ver("01.00.00"), destrSb(false), has_container(false)
+	  chunk_k(0), sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
 	y2deb("constructed Md " << device << " on " << cont->device());
 
@@ -70,52 +70,15 @@ namespace storage
 	getMajorMinor();
 	getStorage()->fetchDanglingUsedBy(dev, uby);
 
-    SystemCmd c(MDADMBIN " --detail " + quote(dev));
-    // "Container" raid: IMSM, DDF
-    // "Version" with persistent block
-    if( c.retcode()==0 )
-    {
-	if( c.select( "Version : " ) )
-        {
-	    sb_ver = extractNthWord( 2, c.getLine(0,true) );
-        }
-	else if ( c.select( "Container : " ) )
-        {
-	    string tmpLine = c.getLine(0,true);
-	    string::size_type tmpPos;
-	    // Line like: Container : /dev/md/imsm0, member 0
-	    sb_ver = extractNthWord( 2, tmpLine );
-	    //remove ',' after word.
-	    tmpPos = sb_ver.find(",");
-	    sb_ver.erase(tmpPos,tmpPos+1);
-	    // get Member number
-	    md_member = extractNthWord( 4, tmpLine );
-            y2mil("Md " << nm << " has container. Member " << md_member);
-	    has_container = true;
-        }
-	else
-        {
-	    y2war("Did not found neither Version nor Container line!");
-        }
-    }
-    if (c.retcode()==0 && c.numLines(true)>0 )
-    {
-	y2mil( "line:\"" << c.getLine(0,true) << "\"" );
-	y2mil( "sb_ver:\"" << sb_ver << "\"" );
-	y2mil( "word0:\"" << extractNthWord( 0, c.getLine(0,true)) << "\"" );
-	y2mil( "word1:\"" << extractNthWord( 1, c.getLine(0,true)) << "\"" );
-	y2mil( "word2:\"" << extractNthWord( 2, c.getLine(0,true)) << "\"" );
-    }
-
-
 	ProcMdstat::Entry entry;
-	systeminfo.getProcMdstat().getEntry(nm, entry);
+	if (!systeminfo.getProcMdstat().getEntry(nm, entry))
+	    y2err("not found in mdstat nm:" << nm);
 
 	md_type = entry.md_type;
 	md_parity = entry.md_parity;
 
-	setSize(entry.sizeK);
-	chunk = entry.chunkK;
+	setSize(entry.size_k);
+	chunk_k = entry.chunk_k;
 
 	devs = entry.devices;
 	spare = entry.spares;
@@ -123,29 +86,50 @@ namespace storage
 	if (entry.readonly)
 	    setReadonly();
 
+	if (entry.has_container)
+	{
+	    has_container = true;
+	    parent_container = entry.container_name;
 
-    if( has_container )
-      {
-      getParent();
-      }
+	    MdadmDetails details;
+	    if (getMdadmDetails("/dev/" + entry.container_name, details))
+	    {
+		parent_uuid = details.uuid;
+		parent_md_name = details.devname;
+		parent_metadata = details.metadata;
+	    }
+
+	    parent_member = entry.container_member;
+
+	    sb_ver = parent_metadata;
+	}
+	else
+	{
+	    sb_ver = entry.super;
+	}
 
 	setUdevData(systeminfo);
 
-	MdPartCo::getUuidName(nm, md_uuid, md_name);
+	MdadmDetails details;
+	if (getMdadmDetails(dev, details))
+	{
+	    md_uuid = details.uuid;
+	    md_name = details.devname;
+	}
 
-    getStorage()->addUsedBy(devs, UB_MD, dev);
-    getStorage()->addUsedBy(spare, UB_MD, dev);
+	getStorage()->addUsedBy(devs, UB_MD, dev);
+	getStorage()->addUsedBy(spare, UB_MD, dev);
     }
 
 
     Md::Md(const MdCo& c, const Md& v)
 	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
-	  chunk(v.chunk), md_uuid(v.md_uuid), sb_ver(v.sb_ver),
-	  destrSb(v.destrSb), devs(v.devs), spare(v.spare), udev_id(udev_id),
-	  has_container(v.has_container), md_metadata(v.md_metadata),
-	  parent_container(v.parent_container), parent_uuid(v.parent_uuid),
-	  parent_md_name(v.parent_md_name), parent_metadata(v.parent_metadata),
-	  md_member(v.md_member)
+	  chunk_k(v.chunk_k), md_uuid(v.md_uuid), md_name(v.md_name),
+	  sb_ver(v.sb_ver), destrSb(v.destrSb), devs(v.devs), spare(v.spare),
+	  udev_id(udev_id),
+	  has_container(v.has_container), parent_container(v.parent_container),
+	  parent_uuid(v.parent_uuid), parent_md_name(v.parent_md_name),
+	  parent_metadata(v.parent_metadata), parent_member(v.parent_member)
     {
 	y2deb("copy-constructed Md from " << v.dev);
     }
@@ -167,23 +151,25 @@ namespace storage
 		y2war("inconsistent md_type my:" << pName() << " kernel:" << pName(entry.md_type));
 	    if (md_parity != PAR_DEFAULT && md_parity != entry.md_parity)
 		y2war("inconsistent md_parity my:" << ptName() << " kernel:" << ptName(entry.md_parity));
-	    if (chunk > 0 && chunk != entry.chunkK)
-		y2war("inconsistent chunk my:" << chunk << " kernel:" << entry.chunkK);
+	    if (chunk_k > 0 && chunk_k != entry.chunk_k)
+		y2war("inconsistent chunk my:" << chunk_k << " kernel:" << entry.chunk_k);
 
 	    md_type = entry.md_type;
 	    md_parity = entry.md_parity;
 
-	    setSize(entry.sizeK);
-	    chunk = entry.chunkK;
+	    setSize(entry.size_k);
+	    chunk_k = entry.chunk_k;
 	}
 	else
 	{
-	    y2err("md " << nm << " not found in /proc/mdstat");
+	    y2err("not found in mdstat nm:" << nm);
 	}
 
-	string tmp_uuid, tmp_name;
-	MdPartCo::getUuidName(nm, tmp_uuid, tmp_name);
-	setMdUuid(tmp_uuid);
+	MdadmDetails details;
+	if (getMdadmDetails("/dev/" + nm, details))
+	{
+	    setMdUuid(details.uuid);
+	}
     }
 
 
@@ -340,8 +326,8 @@ Md::createCmd() const
     if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
         pName() == "raid10")
 	cmd += " -b internal";
-    if (chunk > 0)
-	cmd += " --chunk=" + decString(chunk);
+    if (chunk_k > 0)
+	cmd += " --chunk=" + decString(chunk_k);
     if (md_parity != PAR_DEFAULT)
 	cmd += " --parity=" + ptName();
     cmd += " --raid-devices=" + decString(devs.size());
@@ -573,7 +559,7 @@ void Md::getInfo( MdInfo& tinfo ) const
     info.type = md_type;
     info.uuid = md_uuid;
     info.sb_ver = sb_ver;
-    info.chunkSizeK = chunk;
+    info.chunkSizeK = chunk_k;
     info.parity = md_parity;
 
     info.devices = boost::join(devs, " ");
@@ -587,20 +573,22 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
     {
     s << "Md " << dynamic_cast<const Volume&>(m)
       << " Personality:" << m.pName();
-    if( m.chunk>0 )
-	s << " Chunk:" << m.chunk;
-    if( m.md_parity!=storage::PAR_DEFAULT )
+    if (m.chunk_k > 0)
+	s << " ChunkK:" << m.chunk_k;
+    if (m.md_parity != PAR_DEFAULT)
 	s << " Parity:" << m.ptName();
     if( !m.sb_ver.empty() )
 	s << " SbVer:" << m.sb_ver;
-    if( !m.md_uuid.empty() )
-	s << " MD UUID:" << m.md_uuid;
+    if (!m.md_uuid.empty())
+	s << " md_uuid:" << m.md_uuid; 
+    if (!m.md_name.empty())
+	s << " md_name:" << m.md_name;
     if( m.destrSb )
 	s << " destroySb";
     s << " Devices:" << m.devs;
     if( !m.spare.empty() )
 	s << " Spares:" << m.spare;
-    return( s );
+    return s;
     }
 
 
@@ -608,7 +596,7 @@ bool Md::equalContent( const Md& rhs ) const
     {
     return( Volume::equalContent(rhs) &&
             md_type==rhs.md_type && md_parity==rhs.md_parity &&
-	    chunk==rhs.chunk && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
+	    chunk_k==rhs.chunk_k && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
 	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare );
     }
 
@@ -621,8 +609,8 @@ void Md::logDifference( const Md& rhs ) const
     if( md_parity!=rhs.md_parity )
 	log += " Parity:" + par_names[md_parity] + "-->" +
 	       par_names[rhs.md_parity];
-    if( chunk!=rhs.chunk )
-	log += " Chunk:" + decString(chunk) + "-->" + decString(rhs.chunk);
+    if (chunk_k != rhs.chunk_k)
+	log += " ChunkK:" + decString(chunk_k) + "-->" + decString(rhs.chunk_k);
     if( sb_ver!=rhs.sb_ver )
 	log += " SbVer:" + sb_ver + "-->" + rhs.sb_ver;
     if( md_uuid!=rhs.md_uuid )
@@ -652,69 +640,25 @@ void Md::logDifference( const Md& rhs ) const
     }
 
 
-void Md::getParent()
-{
-  //in this case sb_ver will contain something like /dev/md/imsm0
-  string tmp;
-  string::size_type pos;
-  SystemCmd c(MDADMBIN " --detail " + quote(sb_ver) + " --export");
-  if( c.retcode() != 0 )
-    {
-    return;
-    }
-  parent_container = sb_ver;
-  if( c.select( "MD_METADATA" ) > 0 )
-    {
-    md_metadata = sb_ver;
-    tmp = c.getLine(0,true);
-    pos = tmp.find("=");
-    tmp.erase(0,pos+1);
-    parent_metadata = sb_ver = tmp;
-    }
-  if(c.select( "MD_UUID" ) > 0)
-    {
-    tmp = c.getLine(0,true);
-    pos = tmp.find("=");
-    tmp.erase(0,pos+1);
-    parent_uuid = tmp;
-    }
-  if( c.select( "MD_DEVNAME" ) > 0)
-    {
-    tmp = c.getLine(0,true);
-    pos = tmp.find("=");
-    tmp.erase(0,pos+1);
-    parent_md_name = tmp;
-    }
-  y2mil("parent_container="<<parent_container<<", sb_ver="<<sb_ver<<", parent_uuid="<<parent_uuid
-      <<", parent_md_name="<<parent_md_name<<", member="<<md_member);
-}
-
-
     bool
     Md::updateEntry(EtcMdadm* mdadm) const
     {
-  EtcMdadm::mdconf_info info;
-  if( !md_name.empty() )
-    {
-    //Raid name is preferred.
-    info.device = "/dev/md/" + md_name;
-    }
-  else
-    {
-    info.device = dev;
-    }
-  info.uuid = md_uuid;
-  if( has_container )
-    {
-    info.container_present = true;
-    info.container_uuid = parent_uuid;
-    info.container_metadata = parent_metadata;
-    info.container_member = md_member;
-    }
-  else
-    {
-    info.container_present = false;
-    }
+	EtcMdadm::mdconf_info info;
+
+	if (!md_name.empty())
+	    info.device = "/dev/md/" + md_name;
+	else
+	    info.device = dev;
+
+	info.uuid = md_uuid;
+
+	if (has_container)
+	{
+	    info.container_present = true;
+	    info.container_uuid = parent_uuid;
+	    info.container_metadata = parent_metadata;
+	    info.container_member = parent_member;
+	}
 
 	return mdadm->updateEntry(info);
     }

@@ -47,8 +47,8 @@ class Md : public Volume
 	void setPersonality( storage::MdType val ); 
 	storage::MdParity parity() const { return md_parity; }
 	int setParity( storage::MdParity val ); 
-	unsigned long chunkSize() const { return chunk; }
-	void setChunkSize( unsigned long val ) { chunk=val; }
+	unsigned long chunkSizeK() const { return chunk_k; }
+	void setChunkSizeK(unsigned long val) { chunk_k = val; }
 	void setMdUuid( const string&val ) { md_uuid=val; }
 	bool destroySb() const { return( destrSb ); }
 	void setDestroySb( bool val=true ) { destrSb=val; }
@@ -99,29 +99,25 @@ class Md : public Volume
 	static MdParity toMdParity(const string& val);
 	static MdArrayState toMdArrayState(const string& val);
 
-	void getParent();
-
-	storage::MdType md_type;
-	storage::MdParity md_parity;
-	unsigned long chunk;
+	MdType md_type;
+	MdParity md_parity;
+	unsigned long chunk_k;
 	string md_uuid;
+	string md_name;		// line in /dev/md/*
 	string sb_ver;
 	bool destrSb;
-	std::list<string> devs;
-	std::list<string> spare;
+	list<string> devs;
+	list<string> spare;
 
 	list<string> udev_id;
 
-	string md_name; // line in /dev/md/*
-
-	//in case of IMSM and DDF raids there is 'container'.
-	bool   has_container;
-	string md_metadata;
+	// In case of IMSM and DDF raids there is 'container'.
+	bool has_container;
 	string parent_container;
 	string parent_uuid;
 	string parent_md_name;
 	string parent_metadata;
-	string md_member;
+	string parent_member;
 
 	static const string md_names[MULTIPATH + 1];
 	static const string par_names[PAR_LAST_ENTRY];
