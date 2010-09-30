@@ -77,6 +77,19 @@ namespace storage
 
     };
 
+
+    struct MdadmDetails
+    {
+	string uuid;
+	string devname;
+	string metadata;
+    };
+
+    bool getMdadmDetails(const string& dev, MdadmDetails& details);
+
+
+    bool isImsmPlatform();
+
 }
 
 

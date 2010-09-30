@@ -357,7 +357,7 @@ Storage::discoverMdPVols()
     }
 
   bool ret = false;
-  if (MdPartCo::isImsmPlatform())
+  if (isImsmPlatform())
     {
     y2mil("Intel SW RAID Platform detected.");
 

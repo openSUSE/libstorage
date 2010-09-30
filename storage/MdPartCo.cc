@@ -1618,26 +1618,6 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
 }
 
 
-bool MdPartCo::isImsmPlatform()
-{
-  bool ret = false;
-
-  SystemCmd c;
-  c.execute(MDADMBIN " --detail-platform");
-  c.select( "Platform : " );
-  if(  c.numLines(true)>0 )
-    {
-    const string line = c.getLine(0,true);
-    if( line.find("Intel(R) Matrix Storage Manager") != string::npos )
-      {
-      ret = true;
-      }
-    }
-
-  y2mil("ret:" << ret);
-  return ret;
-}
-
 /*
  * Return true if on RAID Volume has a partition table
  *

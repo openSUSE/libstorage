@@ -153,8 +153,6 @@ class MdPartCo : public Container
 	static bool hasPartitionTable(const string& name, SystemInfo& systeminfo);
 	static bool hasFileSystem(const string& name, SystemInfo& systeminfo);
 
-    static bool isImsmPlatform();
-
     static bool matchRegex( const string& dev );
     static bool mdStringNum( const string& name, unsigned& num );
 

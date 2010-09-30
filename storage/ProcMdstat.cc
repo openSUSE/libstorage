@@ -28,6 +28,8 @@
 #include "storage/StorageInterface.h"
 #include "storage/ProcMdstat.h"
 #include "storage/Md.h"
+#include "storage/StorageDefines.h"
+#include "storage/SystemCmd.h"
 
 
 namespace storage
@@ -286,6 +288,64 @@ namespace storage
 	      << entry.container_member;
 
 	return s;
+    }
+
+
+    bool
+    getMdadmDetails(const string& dev, MdadmDetails& detail)
+    {
+	SystemCmd cmd(MDADMBIN " --detail " + quote(dev) + " --export");
+	if (cmd.retcode() != 0)
+	{
+	    y2err("running mdadm failed");
+	    return false;
+	}
+
+	if (cmd.select("MD_UUID") > 0)
+	{
+	    string line = cmd.getLine(0, true);
+	    string::size_type pos = line.find("=");
+	    detail.uuid = string(line, pos + 1);
+	}
+
+	if (cmd.select("MD_DEVNAME") > 0)
+	{
+	    string line = cmd.getLine(0, true);
+	    string::size_type pos = line.find("=");
+	    detail.devname = string(line, pos + 1);
+	}
+
+	if (cmd.select("MD_METADATA") > 0)
+	{
+	    string line = cmd.getLine(0, true);
+	    string::size_type pos = line.find("=");
+	    detail.metadata = string(line, pos + 1);
+	}
+
+	y2mil("dev:" << dev << " uuid:" << detail.uuid << " devname:" << detail.devname <<
+	      " metadata:" << detail.metadata);
+	return true;
+    }
+
+
+    bool
+    isImsmPlatform()
+    {
+	bool ret = false;
+
+	SystemCmd cmd(MDADMBIN " --detail-platform");
+	cmd.select("Platform : ");
+	if (cmd.numLines(true) > 0)
+	{
+	    string line = cmd.getLine(0, true);
+	    if (boost::contains(line, "Intel(R) Matrix Storage Manager"))
+	    {
+		ret = true;
+	    }
+	}
+
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 }
