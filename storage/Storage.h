@@ -285,8 +285,11 @@ class DiskData;
 	unsigned long long deviceSize( const string& dev );
 	string deviceByNumber(const string& majmin) const;
 	const Device* deviceByNumber( unsigned long maj, unsigned long min ) const;
+
+	void syncMdadm();
 	void rootMounted();
 	bool isRootMounted() const { return( root_mounted ); }
+
 	string findNormalDevice( const string& device );
 	bool findVolume( const string& device, Volume const* &vol );
 	bool findDm( const string& device, const Dm*& dm );

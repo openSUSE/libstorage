@@ -6159,15 +6159,9 @@ int Storage::removeContainer( Container* val )
     }
 
 
-void Storage::rootMounted()
+    void
+    Storage::syncMdadm()
     {
-    root_mounted = true;
-    if( !root().empty() )
-	{
-	string d = root() + "/etc";
-	if (!checkDir(d))
-	    createPath(d);
-
 	bool have_mds = false;
 
 	MdCo* md;
@@ -6189,6 +6183,19 @@ void Storage::rootMounted()
 	    for (MdPartCoIterator it = p.begin(); it != p.end(); ++it)
 		it->syncMdadm(mdadm);
 	}
+    }
+
+
+void Storage::rootMounted()
+    {
+    root_mounted = true;
+    if( !root().empty() )
+	{
+	string d = root() + "/etc";
+	if (!checkDir(d))
+	    createPath(d);
+
+	syncMdadm();
 
 	if( instsys() )
 	    {
@@ -6200,6 +6207,7 @@ void Storage::rootMounted()
 	    y2err("changeRootPrefix returns " << ret);
 	}
     }
+
 
 bool
 Storage::checkDeviceMounted(const string& device, list<string>& mps)
