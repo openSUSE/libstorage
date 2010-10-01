@@ -323,8 +323,7 @@ Md::createCmd() const
     string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
     cmd += MODPROBEBIN " " + pName() + "; " MDADMBIN " --create " + quote(device()) +
 	" --run --level=" + pName() + " -e 1.0";
-    if (pName() == "raid1" || pName() == "raid5" || pName() == "raid6" ||
-        pName() == "raid10")
+    if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
 	cmd += " -b internal";
     if (chunk_k > 0)
 	cmd += " --chunk=" + decString(chunk_k);
