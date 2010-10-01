@@ -282,10 +282,6 @@ class MdPartCo : public Container
 	string parent_metadata;
 	string parent_member;
 
-    /* For that RAID type parity means something */
-    bool hasParity() const
-    { return md_type == RAID5 || md_type == RAID6 || md_type == RAID10; }
-
     mutable storage::MdPartCoInfo info; // workaround for broken ycp bindings
 
     static bool active;
