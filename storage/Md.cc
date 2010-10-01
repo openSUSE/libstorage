@@ -49,8 +49,8 @@ namespace storage
 
 	assert(c.type() == MD);
 
-	getStorage()->addUsedBy(devs, UB_MD, "/dev/md" + decString(num));
-	getStorage()->addUsedBy(spares, UB_MD, "/dev/md" + decString(num));
+	getStorage()->addUsedBy(devs, UB_MD, dev);
+	getStorage()->addUsedBy(spares, UB_MD, dev);
 
 	computeSize();
     }
@@ -228,7 +228,7 @@ Md::addDevice( const string& dev, bool to_spare )
 	    devs.push_back(dev);
 	else
 	    spare.push_back(dev);
-	getStorage()->addUsedBy(dev, UB_MD, "/dev/md" + decString(num));
+	getStorage()->addUsedBy(dev, UB_MD, dev);
 	computeSize();
 	}
     y2mil("dev:" << dev << " to_spare:" << to_spare << " ret:" << ret);
