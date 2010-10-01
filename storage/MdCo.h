@@ -134,8 +134,6 @@ class MdCo : public Container
 	/* Return true if given device is alredy handled by MdPartCo. */
 	bool isHandledByMdPart(const string& name) const;
 
-	bool canHandleDev(const string& name, const string& super) const;
-
 	static bool active;  
 
     private:

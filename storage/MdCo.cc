@@ -56,7 +56,7 @@ namespace storage
 	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
 	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
 	{
-	    if (canHandleDev(it->first, it->second.super))
+	    if (!it->second.is_container && !isHandledByMdPart(it->first))
 	    {
 		Md* m = new Md(*this, it->first, "/dev/" + it->first, systeminfo);
 		addMd(m);
@@ -690,16 +690,6 @@ bool MdCo::isHandledByMdPart(const string& name) const
 
     return false;
 }
-
-
-    bool
-    MdCo::canHandleDev(const string& name, const string& super) const
-    {
-	if (super == "external:imsm" || super == "external:ddf")
-	    return false;
-
-	return !isHandledByMdPart(name);
-    }
 
 
 bool MdCo::active = false;

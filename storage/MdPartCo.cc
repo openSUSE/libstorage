@@ -1343,7 +1343,7 @@ bool MdPartCo::equalContent( const Container& rhs ) const
 	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
 	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
 	{
-	    if (it->second.super != "external:imsm" && it->second.super != "external:ddf")
+	    if (!it->second.is_container)
 		ret.push_back(it->first);
 	}
 
