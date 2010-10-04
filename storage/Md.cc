@@ -214,26 +214,27 @@ namespace storage
 
 
 int
-Md::addDevice( const string& dev, bool to_spare )
+Md::addDevice(const string& new_dev, bool to_spare)
     {
     int ret = 0;
-    if( find( devs.begin(), devs.end(), dev )!=devs.end() ||
-        find( spare.begin(), spare.end(), dev )!=spare.end() )
+    if (find(devs.begin(), devs.end(), new_dev) != devs.end() ||
+        find(spare.begin(), spare.end(), new_dev) != spare.end())
 	{
 	ret = MD_ADD_DUPLICATE;
 	}
     if( ret==0 )
 	{
 	if (!to_spare)
-	    devs.push_back(dev);
+	    devs.push_back(new_dev);
 	else
-	    spare.push_back(dev);
-	getStorage()->addUsedBy(dev, UB_MD, dev);
+	    spare.push_back(new_dev);
+	getStorage()->addUsedBy(new_dev, UB_MD, dev);
 	computeSize();
 	}
-    y2mil("dev:" << dev << " to_spare:" << to_spare << " ret:" << ret);
-    return( ret );
+    y2mil("new_dev:" << new_dev << " to_spare:" << to_spare << " ret:" << ret);
+    return ret;
     }
+
 
 int
 Md::removeDevice( const string& dev )
