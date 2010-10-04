@@ -145,7 +145,7 @@ namespace storage
 	    i++;
 	}
 
-	if (omit_zeroes && (f == (unsigned long long)(f)))
+	if ((i == 0) || (omit_zeroes && (f == (unsigned long long)(f))))
 	{
 	    precision = 0;
 	}

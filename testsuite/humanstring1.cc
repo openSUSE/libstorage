@@ -27,6 +27,8 @@ main()
 	bindtextdomain("libstorage", localedir);
 
     cout << "-- 1 --" << endl;
+    test("en_GB.UTF-8", 0, false, 2, true);
+    test("en_GB.UTF-8", 0, false, 2, false);
     test("en_GB.UTF-8", 1024, true, 2, true);
     test("en_GB.UTF-8", 1024, true, 2, false);
 
