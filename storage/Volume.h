@@ -51,6 +51,7 @@ class Storage;
 
 	Volume(const Container& c, unsigned Pnr, unsigned long long SizeK);
 	Volume(const Container& c, const string& PName, unsigned long long SizeK);
+	Volume(const Container& c, const string& name, const string& device);
 	Volume(const Container& c, const string& name, const string& device,
 	       SystemInfo& systeminfo);
 	Volume(const Container& c, const xmlNode* node);

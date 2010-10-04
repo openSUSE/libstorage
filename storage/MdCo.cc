@@ -191,7 +191,8 @@ MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<s
 
     if( ret==0 )
 	{
-	Md* m = new Md(*this, num, type, devs, spares);
+	string name = "md" + decString(num);
+	Md* m = new Md(*this, name, "/dev/" + name, type, devs, spares);
 	m->setCreated( true );
 	addToList( m );
 	}

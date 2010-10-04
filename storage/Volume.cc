@@ -64,6 +64,23 @@ namespace storage
     }
 
 
+    Volume::Volume(const Container& c, const string& name, const string& device)
+	: Device(name, device), cont(&c), numeric(false), format(false),
+	  fstab_added(false), fs(FSUNKNOWN), detected_fs(FSUNKNOWN),
+	  mount_by(MOUNTBY_DEVICE), orig_mount_by(MOUNTBY_DEVICE),
+	  is_loop(false), is_mounted(false), ignore_fstab(false),
+	  ignore_fs(false), loop_active(false), dmcrypt_active(false),
+	  ronly(false), encryption(ENC_NONE), orig_encryption(ENC_NONE),
+	  num(0), orig_size_k(0)
+    {
+	y2deb("constructed Volume " << dev << " on " << cont->device());
+
+	mount_by = orig_mount_by = defaultMountBy();
+
+	assert(!nm.empty() && !dev.empty());
+    }
+
+
     Volume::Volume(const Container& c, const string& name, const string& device,
 		   SystemInfo& systeminfo)
 	: Device(name, device, systeminfo), cont(&c), numeric(false),

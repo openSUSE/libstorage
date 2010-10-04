@@ -40,14 +40,17 @@ namespace storage
     using namespace std;
 
 
-    Md::Md(const MdCo& c, unsigned PNr, MdType Type, const list<string>& devices,
-	   const list<string>& spares)
-	: Volume(c, PNr, 0), md_type(Type), md_parity(PAR_DEFAULT), chunk_k(0), sb_ver("01.00.00"),
-	  destrSb(false), devs(devices), spare(spares), has_container(false)
+    Md::Md(const MdCo& c, const string& name, const string& device, MdType Type,
+	   const list<string>& devices, const list<string>& spares)
+	: Volume(c, name, device), md_type(Type), md_parity(PAR_DEFAULT), chunk_k(0),
+	  sb_ver("01.00.00"), destrSb(false), devs(devices), spare(spares), has_container(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
 
 	assert(c.type() == MD);
+
+	numeric = true;
+	mdStringNum(name, num);
 
 	getStorage()->addUsedBy(devs, UB_MD, dev);
 	getStorage()->addUsedBy(spares, UB_MD, dev);
@@ -56,13 +59,13 @@ namespace storage
     }
 
 
-    Md::Md(const MdCo& d, const string& name, const string& device, SystemInfo& systeminfo)
-	: Volume(d, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
+    Md::Md(const MdCo& c, const string& name, const string& device, SystemInfo& systeminfo)
+	: Volume(c, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
 	  chunk_k(0), sb_ver("01.00.00"), destrSb(false), has_container(false)
     {
 	y2deb("constructed Md " << device << " on " << cont->device());
 
-	assert(d.type() == MD);
+	assert(c.type() == MD);
 
 	numeric = true;
 	mdStringNum(name, num);
