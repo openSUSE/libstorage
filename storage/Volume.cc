@@ -834,8 +834,7 @@ int Volume::doFormat()
     if( ret==0 && mountDevice().find( "/dev/md" )!=0 &&
         mountDevice().find( "/dev/loop" )!=0 )
 	{
-	SystemCmd c;
-	c.execute(MDADMBIN " --zero-superblock " + quote(mountDevice()));
+	SystemCmd(MDADMBIN " --zero-superblock " + quote(mountDevice()));
 	}
     if( ret==0 )
 	{
