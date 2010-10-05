@@ -12,29 +12,6 @@ StorageInterface* s = 0;
 
 
 void
-print_partitions (const string& disk)
-{
-    deque<PartitionInfo> partitioninfos;
-    s->getPartitionInfo (disk, partitioninfos);
-    for (deque<PartitionInfo>::iterator i = partitioninfos.begin();
-	 i != partitioninfos.end(); ++i)
-    {
-	cout << i->v.name << ' ';
-	switch (i->partitionType)
-	{
-	    case PRIMARY: cout << "PRIMARY "; break;
-	    case EXTENDED: cout << "EXTENDED "; break;
-	    case LOGICAL: cout << "LOGICAL "; break;
-	    case PTYPE_ANY: cout << "ANY "; break;
-	}
-	cout << i->cylStart << ' ' << i->cylSize << endl;
-    }
-
-    cout << endl;
-}
-
-
-void
 msdos (const string& disk, int n)
 {
     cout << "msdos " << disk << " " << n << endl;
@@ -55,7 +32,7 @@ msdos (const string& disk, int n)
     for (int i = 0; i < n; ++i)
 	cout << s->createPartitionKb(disk, LOGICAL, (3+i)*S, S, name) << endl;
 
-    print_partitions(disk);
+    print_partitions(s, disk);
 
     delete s;
 }
@@ -76,7 +53,7 @@ gpt (const string& disk, int n)
     for (int i = 0; i < n; ++i)
 	cout << s->createPartitionKb(disk, PRIMARY, i*S, S, name) << endl;
 
-    print_partitions(disk);
+    print_partitions(s, disk);
 
     delete s;
 }
