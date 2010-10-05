@@ -37,10 +37,11 @@ namespace storage
 
 
     // this ctr is used for volumes of LvmVg and DmPart
-    Dm::Dm(const PeContainer& c, const string& tn)
-	: Volume(c, "", 0), tname(tn), num_le(0), stripe(1), stripe_size(0), inactiv(true)
+    Dm::Dm(const PeContainer& c, const string& name, const string& device, const string& tname)
+	: Volume(c, name, device), tname(tname), num_le(0), stripe(1), stripe_size(0),
+	  inactiv(true)
     {
-	y2mil("constructed Dm tname:" << tn);
+	y2mil("constructed Dm tname:" << tname);
     }
 
 
@@ -307,12 +308,7 @@ Dm::setLe( unsigned long long le )
 void Dm::init()
     {
     string dmn = "/dev/mapper/" + tname;
-    if( dev.empty() )
-	{
-	dev = dmn;
-	nm = tname;
-	}
-    else if( dmn != dev )
+    if( dmn != dev )
 	alt_names.push_back( dmn );
     //alt_names.push_back( "/dev/"+tname );
     if (!getStorage()->testmode())

@@ -35,14 +35,15 @@ namespace storage
     using namespace std;
 
 
-DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
-    : Dm(d, "")
-{
-    init( d.getPartName(nr) );
+    DmPart::DmPart(const DmPartCo& c, const string& name, const string& device, unsigned nr,
+		   Partition* pa)
+	: Dm(c, name, device, name), p(pa)
+    {
+	Dm::init();
+
     numeric = true;
     num = nr;
     getTableInfo();
-    p = pa;
     if( pa )
 	setSize( pa->sizeK() );
     y2mil("constructed DmPart " << dev << " on " << cont->device());
@@ -61,20 +62,6 @@ DmPart::DmPart(const DmPartCo& d, unsigned nr, Partition* pa)
 	y2deb("destructed DmPart " << dev);
     }
 
-
-void DmPart::init( const string& name )
-    {
-    p = NULL;
-    nm = name;
-    dev = "/dev/mapper/" + name;
-    string::size_type pos =  name.find_last_of( "/" );
-    if( pos!=string::npos )
-	nm = name.substr( pos+1 );
-    else
-	nm = name;
-    tname = nm;
-    Dm::init();
-    }
 
 const DmPartCo* DmPart::co() const
     {

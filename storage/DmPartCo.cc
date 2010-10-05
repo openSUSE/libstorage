@@ -331,7 +331,7 @@ void
 DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
     y2mil( "num:" << num );
-    dm = new DmPart( *this, num, p );
+    dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
 

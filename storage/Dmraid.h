@@ -34,7 +34,9 @@ class Partition;
 class Dmraid : public DmPart
     {
     public:
-	Dmraid( const DmraidCo& d, unsigned nr, Partition* p=NULL );
+
+	Dmraid(const DmraidCo& c, const string& name, const string& device, unsigned nr,
+	       Partition* p);
 	Dmraid(const DmraidCo& c, const Dmraid& v);
 	virtual ~Dmraid();
 

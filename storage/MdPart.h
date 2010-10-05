@@ -37,8 +37,10 @@ class ProcParts;
 class MdPart : public Volume
     {
     public:
-        MdPart( const MdPartCo& d, unsigned nr, Partition* p=NULL );
-        MdPart( const MdPartCo& d, const MdPart& rd );
+
+        MdPart(const MdPartCo& c, const string& name, const string& device, unsigned nr,
+	       Partition* p);
+        MdPart(const MdPartCo& c, const MdPart& v);
         virtual ~MdPart();
 
         friend std::ostream& operator<< (std::ostream& s, const MdPart &p );
@@ -66,7 +68,7 @@ class MdPart : public Volume
 	virtual string sysfsPath() const;
 
     protected:
-        void init( const string& name );
+
         const MdPartCo* co() const;
         void addAltUdevId( unsigned num );
         Partition* p;

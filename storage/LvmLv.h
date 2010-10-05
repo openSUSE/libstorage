@@ -35,10 +35,10 @@ class LvmLv : public Dm
     {
     public:
 
-	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
-	      const string& uuid, const string& status, const string& alloc);
-	LvmLv(const LvmVg& d, const string& name, const string& origin, unsigned long le, 
-	      unsigned stripe);
+	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
+	      unsigned long le, const string& uuid, const string& status, const string& alloc);
+	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
+	      unsigned long le, unsigned stripe);
 	LvmLv(const LvmVg& c, const xmlNode* node);
 	LvmLv(const LvmVg& c, const LvmLv& v);
 	virtual ~LvmLv();
@@ -74,7 +74,7 @@ class LvmLv : public Dm
 
     protected:
 	static string makeDmTableName(const string& vg_name, const string& lv_name);
-	void init( const string& name );
+
 	virtual const string shortPrintedName() const { return "Lv"; }
 
 	string origin;		// only for snapshots, empty otherwise

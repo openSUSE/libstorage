@@ -396,7 +396,7 @@ MdPartCo::createDisk(SystemInfo& systeminfo)
 void
 MdPartCo::newP( MdPart*& dm, unsigned num, Partition* p )
     {
-    dm = new MdPart( *this, num, p );
+    dm = new MdPart(*this, getPartName(num), getPartDevice(num), num, p);
     }
 
 //This seems to detect partitions from ppart and adds them to Container.

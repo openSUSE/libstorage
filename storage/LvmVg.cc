@@ -336,7 +336,7 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	ret = addLvPeDistribution( num_le, stripe, pv, pv_add, pe_map );
     if( ret==0 )
 	{
-	LvmLv* l = new LvmLv( *this, name, "", num_le, stripe );
+	LvmLv* l = new LvmLv( *this, name, dev + "/" + name, "", num_le, stripe );
 	l->setCreated( true );
 	l->setPeMap( pe_map );
 	device = l->device();
@@ -614,7 +614,7 @@ LvmVg::createLvSnapshot(const string& origin, const string& name,
 	ret = addLvPeDistribution(num_le, stripe, pv, pv_add, pe_map);
     if (ret == 0)
     {
-	LvmLv* l = new LvmLv(*this, name, origin, num_le, stripe);
+	LvmLv* l = new LvmLv(*this, name, dev + "/" + name, origin, num_le, stripe);
 	l->setCreated(true);
 	l->setPeMap(pe_map);
 	device = l->device();
@@ -930,7 +930,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	y2mil("addLv exists deleted " << (i!=p.end()));
 	if( i==p.end() )
 	    {
-	    LvmLv *n = new LvmLv( *this, name, origin, le, uuid, status, alloc );
+	    LvmLv *n = new LvmLv( *this, name, dev + "/" + name, origin, le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
 	    if( !n->inactive() )

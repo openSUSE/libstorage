@@ -34,8 +34,9 @@ namespace storage
     using namespace std;
 
 
-    Dmraid::Dmraid(const DmraidCo& c, unsigned nr, Partition* p)
-	: DmPart(c, nr, p)
+    Dmraid::Dmraid(const DmraidCo& c, const string& name, const string& device, unsigned nr,
+		   Partition* p)
+	: DmPart(c, name, device, nr, p)
     {
 	y2mil("constructed Dmraid " << dev << " on " << cont->device());
     }

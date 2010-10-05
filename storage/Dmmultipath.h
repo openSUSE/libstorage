@@ -34,7 +34,9 @@ class Partition;
 class Dmmultipath : public DmPart
     {
     public:
-	Dmmultipath( const DmmultipathCo& d, unsigned nr, Partition* p=NULL );
+
+	Dmmultipath(const DmmultipathCo& c, const string& name, const string& device, unsigned nr,
+		    Partition* p);
 	Dmmultipath(const DmmultipathCo& c, const Dmmultipath& v);
 	virtual ~Dmmultipath();
 

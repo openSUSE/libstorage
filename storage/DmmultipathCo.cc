@@ -190,7 +190,7 @@ void
 DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
     y2mil( "num:" << num );
-    dm = new Dmmultipath( *this, num, p );
+    dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
 

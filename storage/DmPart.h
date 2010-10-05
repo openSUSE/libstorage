@@ -36,7 +36,9 @@ class DmPartCo;
 class DmPart : public Dm
     {
     public:
-	DmPart( const DmPartCo& d, unsigned nr, Partition* p=NULL );
+
+	DmPart(const DmPartCo& c, const string& name, const string& device, unsigned nr,
+	       Partition* p);
 	DmPart(const DmPartCo& c, const DmPart& v);
 	virtual ~DmPart();
 
@@ -59,7 +61,7 @@ class DmPart : public Dm
 	static bool notDeleted( const DmPart& l ) { return( !l.deleted() ); }
 
     protected:
-	void init( const string& name );
+
 	virtual const string shortPrintedName() const { return( "DmPart" ); }
 	const DmPartCo* co() const; 
 	void addAltUdevId( unsigned num );

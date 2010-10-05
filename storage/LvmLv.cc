@@ -36,13 +36,11 @@ namespace storage
     using namespace std;
 
 
-LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
-	     unsigned long le, const string& uuid, const string& stat, 
-	     const string& alloc)
-    : Dm(d, makeDmTableName(d.name(), name)),
-      origin(origi)
+    LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
+		 unsigned long le, const string& uuid, const string& stat, const string& alloc)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi)
 {
-    init( name );
+	Dm::init();
     setUuid( uuid );
     setStatus( stat );
     setAlloc( alloc );
@@ -54,12 +52,11 @@ LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi,
 }
 
 
-LvmLv::LvmLv(const LvmVg& d, const string& name, const string& origi, 
-	     unsigned long le, unsigned str)
-    : Dm(d, makeDmTableName(d.name(), name)),
-      origin(origi)
+    LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
+		 unsigned long le, unsigned str)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi)
 {
-    init( name );
+	Dm::init();
     setLe( le );
     calcSize();
     stripe = str;
@@ -112,14 +109,6 @@ const LvmVg* LvmLv::vg() const
     {
 	return boost::replace_all_copy(vg_name, "-", "--") + "-" +
 	    boost::replace_all_copy(lv_name, "-", "--");
-    }
-
-
-void LvmLv::init( const string& name )
-    {
-    nm = name;
-    dev = cont->device() + "/" + name;
-    Dm::init();
     }
 
 

@@ -35,7 +35,8 @@ class PeContainer;
 class Dm : public Volume
     {
     public:
-	Dm( const PeContainer& d, const string& tn );
+
+	Dm(const PeContainer& c, const string& name, const string& device, const string& tname);
 	Dm(const PeContainer& c, const string& name, const string& device, const string& tname,
 	   SystemInfo& systeminfo);
 	Dm(const PeContainer& c, const xmlNode* node);

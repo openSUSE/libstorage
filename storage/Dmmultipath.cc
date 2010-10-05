@@ -34,8 +34,9 @@ namespace storage
     using namespace std;
 
 
-    Dmmultipath::Dmmultipath(const DmmultipathCo& c, unsigned nr, Partition* p)
-	: DmPart(c, nr, p)
+    Dmmultipath::Dmmultipath(const DmmultipathCo& c, const string& name, const string& device,
+			     unsigned nr, Partition* p)
+	: DmPart(c, name, device, nr, p)
     {
 	y2mil("constructed Dmmultipath " << dev << " on " << cont->device());
     }

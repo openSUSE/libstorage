@@ -37,13 +37,12 @@ namespace storage
     using namespace std;
 
 
-MdPart::MdPart(const MdPartCo& d, unsigned nr, Partition* pa)
-    : Volume( d, nr, 0 )
+    MdPart::MdPart(const MdPartCo& c, const string& name, const string& device, unsigned nr,
+		   Partition* pa)
+	: Volume(c, name, device), p(pa)
 {
-    init( d.getPartName(nr) );
     numeric = true;
     num = nr;
-    p = pa;
     if( pa )
       {
         setSize( pa->sizeK() );
@@ -64,21 +63,6 @@ MdPart::MdPart(const MdPartCo& d, unsigned nr, Partition* pa)
 	y2deb("destructed MdPart " << dev);
     }
 
-
-void MdPart::init( const string& name )
-    {
-    p = NULL;
-    dev = "/dev/" + name;
-    string::size_type pos =  name.find_last_of( "/" );
-    if( pos!=string::npos )
-      {
-        nm = name.substr( pos+1 );
-      }
-    else
-      {
-        nm = name;
-      }
-    }
 
 const MdPartCo* MdPart::co() const
     {

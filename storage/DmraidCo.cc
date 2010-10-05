@@ -173,7 +173,7 @@ void
 DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
     y2mil( "num:" << num );
-    dm = new Dmraid( *this, num, p );
+    dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
 
