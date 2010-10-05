@@ -300,6 +300,8 @@ namespace storage
 	    return false;
 	}
 
+	detail.uuid = detail.devname = detail.metadata = "";
+
 	const vector<string>& lines = cmd.stdout();
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
