@@ -90,6 +90,14 @@ namespace storage
     }
 
 
+    void
+    Device::setNameDevice(const string& name, const string& device)
+    {
+	nm = name;
+	dev = device;
+    }
+
+
     string
     Device::sizeString() const
     {

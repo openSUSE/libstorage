@@ -186,8 +186,8 @@ void Partition::changeNumber( unsigned new_num )
 	addAltUdevId(num);
 	addAltUdevPath(num);
 
-	nm.clear();
-	setNameDev();
+	setNameDevice(disk()->getPartName(num), disk()->getPartDevice(num));
+
 	getMajorMinor();
 	getStorage()->changeDeviceName(old, dev);
 	}

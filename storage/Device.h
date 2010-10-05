@@ -54,6 +54,7 @@ namespace storage
 
 	const string& name() const { return nm; }
 	const string& device() const { return dev; }
+	void setNameDevice(const string& nm, const string& dev);
 
 	bool created() const { return create; }
 	bool deleted() const { return del; }

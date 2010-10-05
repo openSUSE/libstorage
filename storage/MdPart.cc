@@ -82,8 +82,7 @@ void MdPart::updateName()
     if( p && p->nr() != num )
         {
         num = p->nr();
-        nm = co()->getPartName(num);
-        dev = co()->getPartDevice(num);
+        setNameDevice(co()->getPartName(num), co()->getPartDevice(num));
         }
     }
 
