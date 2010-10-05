@@ -44,7 +44,6 @@ namespace storage
 	: Container(s, "loop", "/dev/loop", staticType())
     {
 	y2deb("constructing LoopCo");
-	init();
     }
 
 
@@ -52,7 +51,6 @@ namespace storage
 	: Container(s, "loop", "/dev/loop", staticType(), systeminfo)
     {
 	y2deb("constructing LoopCo");
-	init();
 	getLoopData(systeminfo);
     }
 
@@ -74,12 +72,6 @@ namespace storage
     LoopCo::~LoopCo()
     {
 	y2deb("destructed LoopCo " << dev);
-    }
-
-
-void
-LoopCo::init()
-    {
     }
 
 

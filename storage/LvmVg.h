@@ -136,7 +136,7 @@ class LvmVg : public PeContainer
 	    }
 
 	void getVgData( const string& name, bool exists=true );
-	void init();
+
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new LvmVg( *this ) ); }
 

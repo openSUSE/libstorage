@@ -44,7 +44,6 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 	: PeContainer(s, name, device, staticType()), lvm1(lvm1)
     {
 	y2deb("constructing LvmVg name:" << name << " lvm1:" << lvm1);
-	init();
 	setCreated(true);
     }
 
@@ -53,7 +52,6 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 	: PeContainer(s, name, device, staticType(), systeminfo), lvm1(false)
     {
 	y2deb("constructing LvmVg name:" << name);
-	init();
 	getVgData(name, false);
     }
 
@@ -1139,11 +1137,6 @@ LvmVg::reduceText(bool doing, const string& dev) const
 	               dev.c_str() );
         }
     return( txt );
-    }
-
-void
-LvmVg::init()
-    {
     }
 
 

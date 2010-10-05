@@ -115,8 +115,6 @@ class LoopCo : public Container
 	bool findLoopDev( const string& dev, LoopIter& i );
 	void addLoop( Loop* m );
 
-	void init();
-
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new LoopCo( *this ) ); }
 

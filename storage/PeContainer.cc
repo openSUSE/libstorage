@@ -41,7 +41,6 @@ namespace storage
 	: Container(s, name, device, t), pe_size(1), num_pe(0), free_pe(0)
     {
 	y2deb("constructing PeContainer name:" << name << " type:" << t);
-	init();
     }
 
 
@@ -50,7 +49,6 @@ namespace storage
 	: Container(s, name, device, t, systeminfo), pe_size(1), num_pe(0), free_pe(0)
     {
 	y2deb("constructing PeContainer name:" << name << " type:" << t);
-	init();
     }
 
 
@@ -577,12 +575,6 @@ string PeContainer::addList() const
 	++i;
 	}
     return( ret );
-    }
-
-void
-PeContainer::init()
-    {
-    y2mil( "init:" << nm );
     }
 
 

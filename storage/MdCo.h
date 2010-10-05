@@ -123,8 +123,6 @@ class MdCo : public Container
 	int checkUse(const list<string>& dev, const list<string>& spares) const;
 	void addMd( Md* m );
 
-	void init();
-
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new MdCo( *this ) ); }
 

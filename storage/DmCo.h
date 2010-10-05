@@ -109,8 +109,6 @@ class DmCo : public PeContainer
 
 	virtual Container* getCopy() const { return( new DmCo( *this ) ); }
 
-	void init();
-
 	storage::EncryptType detectEncryption( const string& device ) const;
 
 	virtual void print( std::ostream& s ) const { s << *this; }

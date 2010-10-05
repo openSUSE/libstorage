@@ -95,7 +95,6 @@ namespace storage
 	: PeContainer(s, "mapper", "/dev/mapper", staticType())
     {
 	y2deb("constructing DmCo");
-	init();
     }
 
 
@@ -103,7 +102,6 @@ namespace storage
 	: PeContainer(s, "mapper", "/dev/mapper", staticType(), systeminfo)
     {
 	y2deb("constructing DmCo");
-	init();
 	getDmData(systeminfo, only_crypt);
     }
 
@@ -144,11 +142,6 @@ void DmCo::updateDmMaps()
 	    }
 	}
     while( success );
-    }
-
-void
-DmCo::init()
-    {
     }
 
 

@@ -43,7 +43,6 @@ namespace storage
 	: Container(s, "md", "/dev/md", staticType())
     {
 	y2deb("constructing MdCo");
-	init();
     }
 
 
@@ -51,7 +50,6 @@ namespace storage
 	: Container(s, "md", "/dev/md", staticType(), systeminfo)
     {
 	y2deb("constructing MdCo");
-	init();
 
 	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
 	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
@@ -82,12 +80,6 @@ namespace storage
     MdCo::~MdCo()
     {
 	y2deb("destructed MdCo " << dev);
-    }
-
-
-void
-MdCo::init()
-    {
     }
 
 
