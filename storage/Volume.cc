@@ -27,7 +27,6 @@
 
 #include "storage/Volume.h"
 #include "storage/Disk.h"
-#include "storage/LoopCo.h"
 #include "storage/Storage.h"
 #include "storage/StorageTypes.h"
 #include "storage/Container.h"
