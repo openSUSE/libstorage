@@ -23,4 +23,6 @@ namespace storage
     void print_fstab();
     void print_crypttab();
 
+    void print_partitions(StorageInterface* s, const string& disk);
+
 }
