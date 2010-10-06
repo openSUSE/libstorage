@@ -43,6 +43,10 @@ namespace storage
 {
     numeric = true;
     num = nr;
+
+	if (!getStorage()->testmode())
+	    getMajorMinor();
+
     if( pa )
       {
         setSize( pa->sizeK() );
