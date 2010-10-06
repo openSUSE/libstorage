@@ -1065,17 +1065,13 @@ Region Disk::usableCylRegion() const
 }
 
 
-    const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+" };
+    const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+",
+				     "md[0-9]+" };
 
 
     bool
     Disk::needP(const string& disk)
     {
-	static Regex mdpart( "md[0123456789]+$" );
-	if ( mdpart.match( disk ) == true )
-	{
-	    return true;
-	}
 	for (unsigned i = 0; i < lengthof(p_disks); ++i)
 	{
 	    Regex rx("^(/dev/)?" + p_disks[i]);
