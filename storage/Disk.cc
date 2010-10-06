@@ -837,9 +837,8 @@ bool
 		if( pnr<range )
 		    {
 		    unsigned long long s = cylinderToKb(c_size);
-		    Partition *p = new Partition( *this, pnr, s,
-						  c_start, c_size, type,
-						  id, boot );
+		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
+						 s, c_start, c_size, type, id, boot);
 		    if (parts.getSize(p->procName(), s))
 			{
 			if( s>0 && p->type() != EXTENDED )
@@ -991,9 +990,8 @@ bool
 			    type = LOGICAL;
 			    }
 			}
-		    Partition *p =
-			new Partition( *this, pr.second, s, cyl_start, cyl,
-			               type, id, false );
+		    Partition *p = new Partition(*this, getPartName(pr.second), getPartDevice(pr.second),
+						 pr.second, s, cyl_start, cyl, type, id, false);
 		    pl.push_back( p );
 		    }
 		else if( pr.second>0 )
@@ -1458,8 +1456,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	{
 	if( label=="sun" && start==0 )
 	    start=1;
-	Partition * p = new Partition( *this, number, cylinderToKb(len), start,
-	                               len, type );
+	Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
+				      cylinderToKb(len), start, len, type);
 	ConstPartPair pp = partPair();
 	ConstPartIter i = pp.begin();
 	while( i!=pp.end() && !(i->deleted() && i->cylStart()==start) )
@@ -2802,7 +2800,8 @@ void Disk::addPartition( unsigned num, unsigned long long sz,
 		         SystemInfo& systeminfo )
     {
     unsigned long cyl_inc = std::max(kbToSector(size_k) / head / sector, 1ULL);
-    Partition *p = new Partition( *this, num, sz, cyl, cyl_inc, PRIMARY );
+    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, sz, cyl, cyl_inc,
+				 PRIMARY);
     cyl += cyl_inc;
     new_cyl = cyl;
     if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )

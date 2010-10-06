@@ -43,10 +43,9 @@ class Partition : public Volume
 		       ID_GPT_BOOT=0x103, ID_GPT_SERVICE=0x104,
 		       ID_GPT_MSFTRES=0x105, ID_APPLE_UFS=0x106 } IdNum;
 
-	Partition( const Disk& d, unsigned Pnr, unsigned long long SizeK,
-	           unsigned long Start, unsigned long CSize,
-		   storage::PartitionType Type, 
-		   unsigned id=ID_LINUX, bool Boot=false );
+	Partition(const Disk& c, const string& name, const string& device, unsigned Pnr,
+		  unsigned long long SizeK, unsigned long Start, unsigned long CSize,
+		  PartitionType Type, unsigned id = ID_LINUX, bool Boot = false);
 	Partition(const Disk& c, const xmlNode* node);
 	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();

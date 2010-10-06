@@ -33,14 +33,19 @@ namespace storage
     using namespace std;
 
 
-Partition::Partition( const Disk& d, unsigned PNr, unsigned long long SizeK,
-                      unsigned long Start, unsigned long CSize,
-		      PartitionType Type, unsigned Id, bool Boot )
-    : Volume( d, PNr, SizeK ), reg( Start, CSize ), bootflag(Boot)
+    Partition::Partition(const Disk& c, const string& name, const string& device, unsigned PNr,
+			 unsigned long long SizeK, unsigned long Start, unsigned long CSize,
+			 PartitionType Type, unsigned Id, bool Boot)
+	: Volume(c, name, device /*PNr, SizeK*/), reg(Start, CSize), bootflag(Boot), typ(Type), idt(Id),
+	  orig_id(Id)
     {
-    idt = orig_id = Id;
-    typ = Type;
-    orig_num = num;
+	numeric = true;
+	num = orig_num = PNr;
+	size_k = orig_size_k = SizeK;
+
+	if (!getStorage()->testmode())
+	    getMajorMinor();
+
     addUdevData();
     y2deb("constructed Partition " << dev << " on " << cont->device());
     }
