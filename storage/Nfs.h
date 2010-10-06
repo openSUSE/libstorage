@@ -32,7 +32,8 @@ class NfsCo;
 class Nfs : public Volume
     {
     public:
-	Nfs(const NfsCo& d, const string& NfsDev, bool nfs4);
+
+	Nfs(const NfsCo& c, const string& NfsDev, bool nfs4);
 	Nfs(const NfsCo& c, const Nfs& v);
 	virtual ~Nfs();
 

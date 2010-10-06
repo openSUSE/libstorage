@@ -54,15 +54,6 @@ namespace storage
     }
 
 
-    Volume::Volume(const Container& c, const string& Name, unsigned long long SizeK)
-	: Device(Name, ""), cont(&c), numeric(false), num(0)
-    {
-	size_k = orig_size_k = SizeK;
-	init();
-	y2deb("constructed Volume " << dev << " on " << cont->device());
-    }
-
-
     Volume::Volume(const Container& c, const string& name, const string& device)
 	: Device(name, device), cont(&c), numeric(false), format(false),
 	  fstab_added(false), fs(FSUNKNOWN), detected_fs(FSUNKNOWN),

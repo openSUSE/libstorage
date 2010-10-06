@@ -35,17 +35,16 @@ namespace storage
 
 
     Nfs::Nfs(const NfsCo& c, const string& NfsDev, bool nfs4)
-	: Volume(c, canonicalName(NfsDev), 0)
+	: Volume(c, canonicalName(NfsDev), canonicalName(NfsDev))
     {
-	y2mil("constructed Nfs dev:" << NfsDev << " nfs4:" << nfs4);
-
 	assert(c.type() == NFSC);
 
-    dev = canonicalName(NfsDev);
-    if( dev != NfsDev )
-	alt_names.push_back( NfsDev );
+	if (dev != NfsDev)
+	    alt_names.push_back(NfsDev);
 
 	setFs(nfs4 ? NFS4 : NFS);
+
+	y2deb("constructed Nfs " << dev << " nfs4:" << nfs4);
     }
 
 

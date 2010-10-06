@@ -50,7 +50,6 @@ class Storage;
     public:
 
 	Volume(const Container& c, unsigned Pnr, unsigned long long SizeK);
-	Volume(const Container& c, const string& PName, unsigned long long SizeK);
 	Volume(const Container& c, const string& name, const string& device);
 	Volume(const Container& c, const string& name, const string& device,
 	       SystemInfo& systeminfo);
@@ -206,7 +205,6 @@ class Storage;
 	static const string& mbyTypeString( const storage::MountByType type )
 	    { return mb_names[type]; }
 	static bool isTmpCryptMp( const string& mp );
-
 
     protected:
 	void init();
