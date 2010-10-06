@@ -152,7 +152,6 @@ class Disk : public Container
 	void logDifference( const Container& d ) const;
 	bool FakeDisk() const { return(range==1); }
 
-	static string getPartName( const string& disk, unsigned nr );
 	static std::pair<string,unsigned> getDiskPartition( const string& dev );
 
 	static bool getDlabelCapabilities(const string& dlabel,

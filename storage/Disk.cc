@@ -1101,23 +1101,17 @@ Disk::partNaming(const string& disk)
 }
 
 
-string Disk::getPartName( const string& disk, unsigned nr )
-    {
-    return( disk + (Disk::needP(disk)?"p":"") + decString(nr) );
-    }
-
-
     string
     Disk::getPartName(unsigned nr) const
     {
-	return getPartName(nm, nr);
+	return nm + partNaming(dev) + decString(nr);
     }
 
 
     string
     Disk::getPartDevice(unsigned nr) const
     {
-	return getPartName(dev, nr);
+	return dev + partNaming(dev) + decString(nr);
     }
 
 
@@ -2483,7 +2477,7 @@ int Disk::doRemove( Volume* v )
 		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
 		}
 	    ProcParts parts;
-	    if( parts.findDevice(getPartName(device(), p->OrigNr())) )
+	    if( parts.findDevice(getPartName(p->OrigNr())) )
 		callDelpart( p->OrigNr() );
 	    getStorage()->handleHald(false);
 	    }
