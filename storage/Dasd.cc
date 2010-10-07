@@ -121,8 +121,8 @@ namespace storage
 		{
 		max_primary = 1;
 		unsigned long long s = cylinderToKb(cyl);
-		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1, s, 0, cyl,
-					     PRIMARY, Partition::ID_LINUX, false);
+		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1, s,
+					     Region(0, cyl), PRIMARY);
 		if (parts.getSize(p->device(), s))
 		    {
 		    p->setSize( s );
@@ -206,8 +206,7 @@ bool
 		    {
 		    unsigned long long s = cylinderToKb(c_size);
 		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
-						 s, c_start, c_size, PRIMARY, Partition::ID_LINUX,
-						 false);
+						 s, Region(c_start, c_size), PRIMARY);
 		    if (parts.getSize(p->device(), s))
 			{
 			p->setSize( s );
@@ -351,7 +350,7 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
     if( ret==0 )
 	{
 	Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
-				      cylinderToKb(len), start, len, type);
+				      cylinderToKb(len), Region(start, len), type);
 	p->setCreated();
 	device = p->device();
 	addToList( p );

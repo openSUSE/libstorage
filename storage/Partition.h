@@ -43,8 +43,8 @@ class Partition : public Volume
 		     ID_APPLE_UFS=0x106 };
 
 	Partition(const Disk& c, const string& name, const string& device, unsigned Pnr,
-		  unsigned long long SizeK, unsigned long Start, unsigned long CSize,
-		  PartitionType Type, unsigned id = ID_LINUX, bool Boot = false);
+		  unsigned long long SizeK, const Region& cylRegion, PartitionType Type,
+		  unsigned id = ID_LINUX, bool Boot = false);
 	Partition(const Disk& c, const xmlNode* node);
 	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();
@@ -55,6 +55,7 @@ class Partition : public Volume
 	unsigned long cylSize() const { return reg.len(); }
 	unsigned long cylEnd() const { return reg.end(); }
 	const Region& region() const { return reg; }
+
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
 
@@ -68,8 +69,7 @@ class Partition : public Volume
 	unsigned id() const { return idt; }
 	storage::PartitionType type() const { return typ; }
 
-	void changeRegion( unsigned long Start, unsigned long CSize,
-	                   unsigned long long SizeK );
+	void changeRegion(const Region& cylRegion, unsigned long long SizeK);
 	void changeNumber( unsigned new_num );
 	int changeId(unsigned id);
 	void changeIdDone();

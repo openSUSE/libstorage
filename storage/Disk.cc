@@ -838,7 +838,7 @@ bool
 		    {
 		    unsigned long long s = cylinderToKb(c_size);
 		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
-						 s, c_start, c_size, type, id, boot);
+						 s, Region(c_start, c_size), type, id, boot);
 		    if (parts.getSize(p->procName(), s))
 			{
 			if( s>0 && p->type() != EXTENDED )
@@ -991,7 +991,7 @@ bool
 			    }
 			}
 		    Partition *p = new Partition(*this, getPartName(pr.second), getPartDevice(pr.second),
-						 pr.second, s, cyl_start, cyl, type, id, false);
+						 pr.second, s, Region(cyl_start, cyl), type, id);
 		    pl.push_back( p );
 		    }
 		else if( pr.second>0 )
@@ -1453,7 +1453,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	if( label=="sun" && start==0 )
 	    start=1;
 	Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
-				      cylinderToKb(len), start, len, type);
+				      cylinderToKb(len), Region(start, len), type);
 	ConstPartPair pp = partPair();
 	ConstPartIter i = pp.begin();
 	while( i!=pp.end() && !(i->deleted() && i->cylStart()==start) )
@@ -1621,7 +1621,7 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	}
     if( ret==0 )
 	{
-	part->changeRegion( start, len, cylinderToKb(len) );
+	part->changeRegion(Region(start, len), cylinderToKb(len));
 	}
     y2mil("ret:" << ret);
     return( ret );
@@ -2181,7 +2181,7 @@ Disk::getPartedValues( Partition *p ) const
 	    {
 	    ProcParts parts;
 	    y2mil("really created at cyl:" << start << " csize:" << csize);
-	    p->changeRegion( start, csize, cylinderToKb(csize) );
+	    p->changeRegion(Region(start, csize), cylinderToKb(csize));
 	    unsigned long long s=0;
 	    ret = true;
 	    if( !dmp_slave && p->type() != EXTENDED )
@@ -2613,7 +2613,7 @@ Disk::resizePartition(Partition* p, unsigned long newCyl)
 	if( ret==0 && newCyl<p->cylSize() )
 	{
 	    if( p->created() )
-		p->changeRegion( p->cylStart(), newCyl, newSize );
+		p->changeRegion(Region(p->cylStart(), newCyl), newSize);
 	    else
 		p->setResizedSize( newSize );
 	}
@@ -2633,7 +2633,7 @@ Disk::resizePartition(Partition* p, unsigned long newCyl)
 		else
 		{
 		    if( p->created() )
-			p->changeRegion( p->cylStart(), newCyl, newSize );
+			p->changeRegion(Region(p->cylStart(), newCyl), newSize);
 		    else
 			p->setResizedSize( newSize );
 		}
@@ -2796,8 +2796,8 @@ void Disk::addPartition( unsigned num, unsigned long long sz,
 		         SystemInfo& systeminfo )
     {
     unsigned long cyl_inc = std::max(kbToSector(size_k) / head / sector, 1ULL);
-    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, sz, cyl, cyl_inc,
-				 PRIMARY);
+    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, sz,
+				 Region(cyl, cyl_inc), PRIMARY);
     cyl += cyl_inc;
     new_cyl = cyl;
     if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )

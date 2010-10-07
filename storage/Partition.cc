@@ -34,10 +34,9 @@ namespace storage
 
 
     Partition::Partition(const Disk& c, const string& name, const string& device, unsigned PNr,
-			 unsigned long long SizeK, unsigned long Start, unsigned long CSize,
-			 PartitionType Type, unsigned Id, bool Boot)
-	: Volume(c, name, device /*PNr, SizeK*/), reg(Start, CSize), bootflag(Boot), typ(Type), idt(Id),
-	  orig_id(Id)
+			 unsigned long long SizeK, const Region& cylRegion, PartitionType Type,
+			 unsigned Id, bool Boot)
+	: Volume(c, name, device), reg(cylRegion), bootflag(Boot), typ(Type), idt(Id), orig_id(Id)
     {
 	numeric = true;
 	num = orig_num = PNr;
@@ -234,12 +233,14 @@ void Partition::unChangeId()
     idt = orig_id;
     }
 
-void Partition::changeRegion( unsigned long Start, unsigned long CSize,
-			      unsigned long long SizeK )
+
+    void
+    Partition::changeRegion(const Region& cylRegion, unsigned long long SizeK)
     {
-    reg = Region( Start, CSize );
-    size_k = orig_size_k = SizeK;
+	reg = cylRegion;
+	size_k = orig_size_k = SizeK;
     }
+
 
 bool Partition::canUseDevice() const
     {
