@@ -714,7 +714,7 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 	    }
 	else if( TInfo.find( ",fat" )!=string::npos )
 	    {
-	    id = Partition::ID_DOS;
+	    id = Partition::ID_DOS32;
 	    }
 	else if( TInfo.find( ",ntfs," )!=string::npos )
 	    {
@@ -2313,7 +2313,7 @@ int Disk::doCreate( Volume* v )
 		}
 	    else if( p->id()==Partition::ID_GPT_BOOT ||
 		     p->id()==Partition::ID_DOS16 ||
-	             p->id()==Partition::ID_DOS )
+	             p->id()==Partition::ID_DOS32 )
 	        {
 		cmd_line << "fat32 ";
 		}

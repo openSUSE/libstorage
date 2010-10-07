@@ -333,10 +333,12 @@ int Partition::changeMount( const string& val )
     return( ret );
     }
 
-bool Partition::isWindows() const
+
+    bool
+    Partition::isWindows() const
     {
-    return( idt==6 || idt==0xb || idt==ID_DOS || idt==0xe || idt==1 || idt==4 ||
-	    idt==ID_NTFS || idt==0x17 );
+	return idt==ID_DOS16 || idt==0x0b || idt==ID_DOS32 || idt==0x0e || idt==ID_DOS12 || idt==0x04 ||
+	    idt==ID_NTFS || idt==0x17;
     }
 
 
