@@ -129,10 +129,8 @@ Storage::Storage(const Environment& env)
     tenv = getenv("LIBSTORAGE_IMSM_DRIVER");
     if (tenv)
     {
-	if (boost::iequals(tenv, "DMRAID", locale::classic()))
-	    imsm_driver = IMSM_DMRAID;
-	else if (boost::iequals(tenv, "MDADM", locale::classic()))
-	    imsm_driver = IMSM_MDADM;
+	if (!toValue(tenv, imsm_driver, false))
+	    y2war("unknown IMSM driver '" << tenv << "' in environment");
     }
     y2mil("imsm_driver:" << toString(imsm_driver));
 
@@ -177,46 +175,35 @@ Storage::initialize()
 	if (sc.getValue("DEVICE_NAMES", val))
 	{
 	    boost::to_lower(val, locale::classic());
-	    if( val == "id" )
-		setDefaultMountBy( MOUNTBY_ID );
-	    else if( val == "path" )
-		setDefaultMountBy( MOUNTBY_PATH );
-	    else if( val == "device" )
-		setDefaultMountBy( MOUNTBY_DEVICE );
-	    else if( val == "uuid" )
-		setDefaultMountBy( MOUNTBY_UUID );
-	    else if( val == "label" )
-		setDefaultMountBy( MOUNTBY_LABEL );
-	    else
+	    MountByType mount_by_type;
+	    if (!toValue(val, mount_by_type, false))
 		y2war("unknown default mount-by method '" << val << "' in " SYSCONFIGFILE);
+	    else
+		setDefaultMountBy(mount_by_type);
 	}
 
 	if (sc.getValue("DEFAULT_FS", val))
 	{
 	    boost::to_lower(val, locale::classic());
-	    if (val == "ext2")
-		setDefaultFs(EXT2);
-	    else if (val == "ext3")
-		setDefaultFs(EXT3);
-	    else if (val == "ext4")
-		setDefaultFs(EXT4);
-	    else if (val == "reiser")
-		setDefaultFs(REISERFS);
-	    else if (val == "xfs")
-		setDefaultFs(XFS);
-	    else
+	    if (val == "reiser") val = "reiserfs";
+	    FsType fs_type;
+	    if (!toValue(val, fs_type, false))
 		y2war("unknown default filesystem '" << val << "' in " SYSCONFIGFILE);
+	    else if (fs_type != EXT2 && fs_type != EXT3 && fs_type != EXT4 &&
+		     fs_type != REISERFS && fs_type != XFS)
+		y2war("unallowed default filesystem '" << val << "' in " SYSCONFIGFILE);
+	    else
+		setDefaultFs(fs_type);
 	}
 
 	if (sc.getValue("PARTITION_ALIGN", val))
 	{
 	    boost::to_lower(val, locale::classic());
-	    if (val == "cylinder")
-		setPartitionAlignment(ALIGN_CYLINDER);
-	    else if(val == "optimal")
-		setPartitionAlignment(ALIGN_OPTIMAL);
-	    else
+	    PartAlign part_align;
+	    if (!toValue(val, part_align, false))
 		y2war("unknown partition alignment '" << val << "' in " SYSCONFIGFILE);
+	    else
+		setPartitionAlignment(part_align);
 	}
     }
 
