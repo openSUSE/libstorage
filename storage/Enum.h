@@ -58,8 +58,13 @@ namespace storage
     const string& toString(EnumType value)
     {
 	static_assert(std::is_enum<EnumType>::value, "not enum");
+
 	const vector<string>& names = EnumInfo<EnumType>::names;
-	assert(value >= 0 && value < (EnumType)(names.size()));
+
+	// Comparisons must not be done with type of enum since the enum may
+	// define comparison operators.
+	assert((size_t)(value) < names.size());
+
 	return names[value];
     }
 
@@ -68,10 +73,14 @@ namespace storage
     EnumType toValue(const string& str, EnumType fallback)
     {
 	static_assert(std::is_enum<EnumType>::value, "not enum");
+
 	const vector<string>& names = EnumInfo<EnumType>::names;
+
 	vector<string>::const_iterator it = find(names.begin(), names.end(), str);
+
 	if (it == names.end())
 	    return fallback;
+
 	return EnumType(it - names.begin());
     }
 
