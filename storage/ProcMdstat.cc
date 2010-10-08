@@ -97,7 +97,7 @@ namespace storage
 	tmp = extractNthWord( 0, line );
 	if (boost::starts_with(tmp, "raid"))
 	{
-	    entry.md_type = toValue(tmp, RAID_UNK);
+	    entry.md_type = toValueWithFallback(tmp, RAID_UNK);
 	    if (entry.md_type == RAID_UNK)
 		y2war("unknown raid type " << tmp);
 

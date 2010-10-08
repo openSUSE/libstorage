@@ -61,7 +61,7 @@ namespace storage
 	getChildValue(node, "region", reg);
 
 	if (getChildValue(node, "partition_type", tmp))
-	    typ = toValue(tmp, PRIMARY);
+	    typ = toValueWithFallback(tmp, PRIMARY);
 	getChildValue(node, "partition_id", idt);
 
 	getChildValue(node, "boot_flag", bootflag);

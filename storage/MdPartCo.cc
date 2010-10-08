@@ -1457,7 +1457,7 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
     string value;
     if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
     {
-	info.state = toValue(value, UNKNOWN);
+	info.state = toValueWithFallback(value, UNKNOWN);
     }
 }
 

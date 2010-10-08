@@ -30,6 +30,7 @@
 #include <algorithm>
 
 #include "storage/StorageInterface.h"
+#include "storage/AppUtil.h"
 
 
 namespace storage
@@ -49,8 +50,8 @@ namespace storage
     template <> struct EnumInfo<MdArrayState> { static const vector<string> names; };
     template <> struct EnumInfo<UsedByType> { static const vector<string> names; };
     template <> struct EnumInfo<CType> { static const vector<string> names; };
-    template <> struct EnumInfo<Transport> { static const vector<string> names; }; 
-    template <> struct EnumInfo<ImsmDriver> { static const vector<string> names; }; 
+    template <> struct EnumInfo<Transport> { static const vector<string> names; };
+    template <> struct EnumInfo<ImsmDriver> { static const vector<string> names; };
     template <> struct EnumInfo<PartAlign> { static const vector<string> names; };
 
 
@@ -70,7 +71,7 @@ namespace storage
 
 
     template <typename EnumType>
-    EnumType toValue(const string& str, EnumType fallback)
+    bool toValue(const string& str, EnumType& value, bool log_error = true)
     {
 	static_assert(std::is_enum<EnumType>::value, "not enum");
 
@@ -79,9 +80,26 @@ namespace storage
 	vector<string>::const_iterator it = find(names.begin(), names.end(), str);
 
 	if (it == names.end())
-	    return fallback;
+	{
+	    if (log_error)
+		y2err("converting '" << str << "' to enum failed");
+	    return false;
+	}
 
-	return EnumType(it - names.begin());
+	value = EnumType(it - names.begin());
+	return true;
+    }
+
+
+    template <typename EnumType>
+    EnumType toValueWithFallback(const string& str, EnumType fallback, bool log_error = true)
+    {
+	EnumType value;
+
+	if (toValue(str, value, log_error))
+	    return value;
+
+	return fallback;
     }
 
 }

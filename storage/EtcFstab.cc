@@ -124,7 +124,7 @@ EtcFstab::readFiles()
 	    p->old.fs = *i++;
 	    }
 	if( i!=l.end() )
-	    p->old.encr = toValue(*i++, ENC_UNKNOWN);
+	    p->old.encr = toValueWithFallback(*i++, ENC_UNKNOWN);
 	if( i!=l.end() )
 	    p->old.opts = splitString( *i++, "," );
 	p->nnew = p->old;
@@ -217,7 +217,7 @@ FstabEntry::calcDependent()
 	string::size_type pos = i->find("=");
 	if( pos!=string::npos )
 	    {
-	    encr = toValue(i->substr(pos + 1), ENC_UNKNOWN);
+	    encr = toValueWithFallback(i->substr(pos + 1), ENC_UNKNOWN);
 	    }
 	}
 

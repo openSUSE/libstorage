@@ -108,7 +108,7 @@ namespace storage
 	getChildValue(node, "number", num);
 
 	if (getChildValue(node, "fs_type", tmp))
-	    fs = detected_fs = toValue(tmp, FSUNKNOWN);
+	    fs = detected_fs = toValueWithFallback(tmp, FSUNKNOWN);
 	if (getChildValue(node, "fs_uuid", uuid))
 	    orig_uuid = uuid;
 	if (getChildValue(node, "fs_label", label))
@@ -116,12 +116,12 @@ namespace storage
 	if (getChildValue(node, "mount", mp))
 	    orig_mp = mp;
 	if (getChildValue(node, "mount_by", tmp))
-	    mount_by = orig_mount_by = toValue(tmp, MOUNTBY_DEVICE);
+	    mount_by = orig_mount_by = toValueWithFallback(tmp, MOUNTBY_DEVICE);
 	if (getChildValue(node, "fstopt", fstab_opt))
 	    orig_fstab_opt = fstab_opt;
 
 	if (getChildValue(node, "encryption", tmp))
-	    encryption = orig_encryption = toValue(tmp, ENC_UNKNOWN);
+	    encryption = orig_encryption = toValueWithFallback(tmp, ENC_UNKNOWN);
 	if (getChildValue(node, "password", crypt_pwd))
 	    orig_crypt_pwd = crypt_pwd;
 

@@ -6336,7 +6336,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info.device = i->dentry;
 	    info.mount = i->mount;
 	    info.mount_by = MOUNTBY_DEVICE;
-	    info.fs = toValue(i->fs, FSUNKNOWN);
+	    info.fs = toValueWithFallback(i->fs, FSUNKNOWN);
 	    info.fstab_options = boost::join( i->opts, "," );
 	    s_infos.push_back(info);
 	}
