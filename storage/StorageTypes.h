@@ -43,7 +43,7 @@ namespace storage
 
 inline bool operator<(CType a, CType b)
 {
-    static const int order[COTYPE_LAST_ENTRY] = {
+    static const int order[] = {
 	0, // CUNKNOWN
 	1, // DISK
 	5, // MD

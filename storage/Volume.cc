@@ -108,7 +108,7 @@ namespace storage
 	getChildValue(node, "number", num);
 
 	if (getChildValue(node, "fs_type", tmp))
-	    fs = detected_fs = toFsType(tmp);
+	    fs = detected_fs = toValue(tmp, FSUNKNOWN);
 	if (getChildValue(node, "fs_uuid", uuid))
 	    orig_uuid = uuid;
 	if (getChildValue(node, "fs_label", label))
@@ -116,12 +116,12 @@ namespace storage
 	if (getChildValue(node, "mount", mp))
 	    orig_mp = mp;
 	if (getChildValue(node, "mount_by", tmp))
-	    mount_by = orig_mount_by = toMountByType(tmp);
+	    mount_by = orig_mount_by = toValue(tmp, MOUNTBY_DEVICE);
 	if (getChildValue(node, "fstopt", fstab_opt))
 	    orig_fstab_opt = fstab_opt;
 
 	if (getChildValue(node, "encryption", tmp))
-	    encryption = orig_encryption = toEncType(tmp);
+	    encryption = orig_encryption = toValue(tmp, ENC_UNKNOWN);
 	if (getChildValue(node, "password", crypt_pwd))
 	    orig_crypt_pwd = crypt_pwd;
 
@@ -176,7 +176,7 @@ namespace storage
 
 	if (fs != FSUNKNOWN)
 	{
-	    setChildValue(node, "fs_type", fs_names[fs]);
+	    setChildValue(node, "fs_type", toString(fs));
 	    if (!uuid.empty())
 		setChildValue(node, "fs_uuid", uuid);
 	    if (!label.empty())
@@ -184,13 +184,13 @@ namespace storage
 	    if (!mp.empty())
 		setChildValue(node, "mount", mp);
 	    if (mount_by != MOUNTBY_DEVICE)
-		setChildValue(node, "mount_by", mb_names[mount_by]);
+		setChildValue(node, "mount_by", toString(mount_by));
 	    if (!fstab_opt.empty())
 		setChildValue(node, "fstopt", fstab_opt);
 	}
 
 	if (encryption != ENC_NONE)
-	    setChildValue(node, "encryption", enc_names[encryption]);
+	    setChildValue(node, "encryption", toString(encryption));
 #ifdef DEBUG_CRYPT_PASSWORD
 	if (encryption != ENC_NONE && !crypt_pwd.empty())
 	    setChildValue(node, "password", crypt_pwd);
@@ -229,7 +229,7 @@ void Volume::setDmcryptDev( const string& dm, bool active )
 
 void Volume::setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active )
     {
-    y2mil( "dev:" << dev << " dm:" << dm << " type:" << typ << " active:" << active );
+    y2mil("dev:" << dev << " dm:" << dm << " enc_type:" << toString(typ) << " active:" << active);
     dmcrypt_dev = dm;
     encryption = orig_encryption = typ;
     dmcrypt_active = active;
@@ -253,7 +253,7 @@ Volume::defaultMountBy() const
     if (!allowedMountBy(mby))
 	mby = MOUNTBY_DEVICE;
 
-    y2mil("dev:" << dev << " type:" << cType() << " ret:" << mb_names[mby]);
+    y2mil("dev:" << dev << " ctype:" << toString(cType()) << " ret:" << toString(mby));
     return mby;
 }
 
@@ -291,7 +291,8 @@ Volume::allowedMountBy(MountByType mby) const
 	    break;
     }
 
-    y2mil("dev:" << dev << " type:" << cType() << " mby:" << mb_names[mby] << " ret:" << ret);
+    y2mil("dev:" << dev << " ctype:" << toString(cType()) << " mby:" << toString(mby) <<
+	  " ret:" << ret);
     return ret;
 }
 
@@ -399,7 +400,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	mount_by = orig_mount_by = entry.mount_by;
 	if( mount_by != MOUNTBY_DEVICE )
 	    {
-	    b << " mountby:" << mb_names[mount_by];
+	    b << " mountby:" << toString(mount_by);
 	    }
 	fstab_opt = orig_fstab_opt = boost::join( entry.opts, "," );
 	b << " fstopt:" << fstab_opt;
@@ -408,7 +409,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    is_loop = true;
 	    orig_encryption = encryption = entry.encr;
 	    loop_dev = fstab_loop_dev = entry.loop_dev;
-	    b << " loop_dev:" << loop_dev << " encr:" << enc_names[encryption];
+	    b << " loop_dev:" << loop_dev << " encr:" << toString(encryption);
 	    }
 	y2mil(b.str());
 	}
@@ -558,7 +559,7 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 int Volume::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
-    y2mil("device:" << dev << " val:" << val << " fs:" << fs_names[new_fs]);
+    y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
     format = val;
     if( !format )
 	{
@@ -641,7 +642,7 @@ int
 Volume::changeMountBy(MountByType mby)
 {
     int ret = 0;
-    y2mil("device:" << dev << " mby:" << mbyTypeString(mby));
+    y2mil("device:" << dev << " mby:" << toString(mby));
     y2mil( "vorher:" << *this );
     if (isUsedBy())
 	{
@@ -686,7 +687,7 @@ Volume::changeMountBy(MountByType mby)
 int Volume::changeFstabOptions( const string& options )
     {
     int ret = 0;
-    y2mil("device:" << dev << " options:" << options << " encr:" << encTypeString(encryption));
+    y2mil("device:" << dev << " options:" << options << " encr:" << toString(encryption));
     if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -1632,7 +1633,7 @@ string Volume::getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 				 bool format, bool empty_pwd ) const
     {
     string table = dmdev;
-    y2mil( "enctype:" << e << " dmdev:" << dmdev << " mount:" << mount <<
+    y2mil( "enctype:" << toString(e) << " dmdev:" << dmdev << " mount:" << mount <<
 	   " format:" << format << " pwempty:" << empty_pwd );
     if( table.find( '/' )!=string::npos )
 	table.erase( 0, table.find_last_of( '/' )+1 );
@@ -1827,7 +1828,7 @@ EncryptType Volume::detectEncryption()
     if (getStorage()->testmode())
 	{
 	ret = encryption = orig_encryption = ENC_TWOFISH;
-	y2mil("ret:" << encTypeString(ret));
+	y2mil("ret:" << toString(ret));
 	return( ret );
 	}
 
@@ -1898,7 +1899,7 @@ EncryptType Volume::detectEncryption()
 			cmd = "fsck.jfs -n " + quote(use_dev);
 			break;
 		    default:
-			cmd = "fsck -n -t " + fsTypeString(detected_fs) + " " + quote(use_dev);
+			cmd = "fsck -n -t " + toString(detected_fs) + " " + quote(use_dev);
 			break;
 		    }
 		bool excTime, excLines;
@@ -1908,8 +1909,8 @@ EncryptType Volume::detectEncryption()
 		      " excLines:" << excLines);
 		if( ok )
 		    {
-		    c.execute(MODPROBEBIN " " + fs_names[detected_fs]);
-		    c.execute(MOUNTBIN " -oro -t " + fsTypeString(detected_fs) + " " +
+		    c.execute(MODPROBEBIN " " + toString(detected_fs));
+		    c.execute(MOUNTBIN " -oro -t " + toString(detected_fs) + " " +
 			      quote(use_dev) + " " + quote(mpname));
 		    ok = c.retcode()==0;
 		    c.execute(UMOUNTBIN " " + quote(mpname));
@@ -1924,8 +1925,7 @@ EncryptType Volume::detectEncryption()
 	    }
 	if( fs==FSUNKNOWN && !luks_ok )
 	    pos++;
-	y2mil( "pos:" << pos << " luks_ok:" << luks_ok <<
-	       " fs:" << fs_names[fs] );
+	y2mil("pos:" << pos << " luks_ok:" << luks_ok << " fs:" << toString(fs));
 	}
     while( !luks_ok && detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
     crUnsetup( true );
@@ -1951,7 +1951,7 @@ EncryptType Volume::detectEncryption()
 #ifdef DEBUG_CRYPT_PASSWORD
     y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
 #endif
-    y2mil("ret:" << encTypeString(ret));
+    y2mil("ret:" << toString(ret));
     return( ret );
     }
 
@@ -2334,7 +2334,7 @@ int Volume::mount( const string& m, bool ro )
 	{
 	string lmount = (!m.empty())?m:mp;
 	y2mil("device:" << dev << " mp:" << lmount);
-	string fsn = fs_names[fs];
+	string fsn = toString(fs);
 	switch( fs )
 	    {
 	    case NTFS:
@@ -2591,7 +2591,7 @@ Volume::getFstabOpts() const
 	}
     string estr;
     if( encryption!=ENC_NONE && !dmcrypt() )
-	estr = "encryption=" + Volume::encTypeString(encryption);
+	estr = "encryption=" + toString(encryption);
     if( loop!=l.end() )
 	l.erase( loop );
     if( enc!=l.end() )
@@ -2717,10 +2717,10 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		    changed = true;
 		    che.dentry = de;
 		    }
-		if( fs != detected_fs || che.fs!=fs_names[fs] )
+		if( fs != detected_fs || che.fs!=toString(fs) )
 		    {
 		    changed = true;
-		    che.fs = fs_names[fs];
+		    che.fs = toString(fs);
 		    che.freq = fstabFreq();
 		    che.passno = fstabPassno();
 		    }
@@ -2767,7 +2767,7 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		    getFreeLoop();
 		    che.loop_dev = fstab_loop_dev;
 		    }
-		che.fs = fs_names[fs];
+		che.fs = toString(fs);
 		che.opts = getFstabOpts();
 		che.mount = mp;
 		che.freq = fstabFreq();
@@ -2827,40 +2827,6 @@ void Volume::fstabUpdateDone()
     orig_fstab_opt = fstab_opt;
     orig_mount_by = mount_by;
     orig_encryption = encryption;
-    }
-
-EncryptType Volume::toEncType( const string& val )
-    {
-    EncryptType ret = ENC_UNKNOWN;
-    if( val=="none" || val.empty() )
-        ret = ENC_NONE;
-    else if( val=="twofish" )
-        ret = ENC_TWOFISH_OLD;
-    else if( val=="twofishSL92" )
-        ret = ENC_TWOFISH256_OLD;
-    else if( val=="twofish256" )
-        ret = ENC_TWOFISH;
-    return( ret );
-    }
-
-FsType Volume::toFsType( const string& val )
-    {
-    FsType ret = FSNONE;
-    while( ret!=FSUNKNOWN && val!=fs_names[ret] )
-	{
-	ret = FsType(ret-1);
-	}
-    return( ret );
-    }
-
-MountByType Volume::toMountByType( const string& val )
-    {
-    MountByType ret = MOUNTBY_PATH;
-    while( ret!=MOUNTBY_DEVICE && val!=mb_names[ret] )
-	{
-	ret = MountByType(ret-1);
-	}
-    return( ret );
     }
 
 
@@ -3098,9 +3064,9 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " usedby:" << v.uby;
     if( v.fs != storage::FSUNKNOWN )
 	{
-	s << " fs:" << Volume::fs_names[v.fs];
+	s << " fs:" << toString(v.fs);
 	if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
-	    s << " det_fs:" << Volume::fs_names[v.detected_fs];
+	    s << " det_fs:" << toString(v.detected_fs);
 	}
     if (!v.mp.empty())
 	{
@@ -3112,9 +3078,9 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	s << " orig_mount:" << v.orig_mp;
     if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
-	s << " mount_by:" << Volume::mb_names[v.mount_by];
+	s << " mount_by:" << toString(v.mount_by);
 	if( v.mount_by != v.orig_mount_by )
-	    s << " orig_mount_by:" << Volume::mb_names[v.orig_mount_by];
+	    s << " orig_mount_by:" << toString(v.orig_mount_by);
 	}
     if (!v.uuid.empty())
 	{
@@ -3149,10 +3115,10 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if( v.encryption != storage::ENC_NONE ||
         v.orig_encryption != storage::ENC_NONE )
 	{
-	s << " encr:" << v.enc_names[v.encryption];
+	s << " encr:" << toString(v.encryption);
 	if( v.encryption != v.orig_encryption &&
 	    v.orig_encryption!=storage::ENC_NONE )
-	    s << " orig_encr:" << v.enc_names[v.orig_encryption];
+	    s << " orig_encr:" << toString(v.orig_encryption);
 #ifdef DEBUG_CRYPT_PASSWORD
 	s << " pwd:" << v.crypt_pwd;
 	if( v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
@@ -3231,9 +3197,9 @@ Volume::logDifference( const Volume& rhs ) const
 	ret += b.str();
 	}
     if( fs!=rhs.fs )
-	ret += " fs:" + fs_names[fs] + "-->" + fs_names[rhs.fs];
+	ret += " fs:" + toString(fs) + "-->" + toString(rhs.fs);
     if( detected_fs!=rhs.detected_fs )
-	ret += " det_fs:" + fs_names[detected_fs] + "-->" + fs_names[rhs.detected_fs];
+	ret += " det_fs:" + toString(detected_fs) + "-->" + toString(rhs.detected_fs);
     if( mp!=rhs.mp )
 	ret += " mount:" + mp + "-->" + rhs.mp;
     if( orig_mp!=rhs.orig_mp )
@@ -3246,9 +3212,9 @@ Volume::logDifference( const Volume& rhs ) const
 	    ret += " mounted-->";
 	}
     if( mount_by!=rhs.mount_by )
-	ret += " mount_by:" + mb_names[mount_by] + "-->" + mb_names[rhs.mount_by];
+	ret += " mount_by:" + toString(mount_by) + "-->" + toString(rhs.mount_by);
     if( orig_mount_by!=rhs.orig_mount_by )
-	ret += " orig_mount_by:" + mb_names[orig_mount_by] + "-->" + mb_names[rhs.orig_mount_by];
+	ret += " orig_mount_by:" + toString(orig_mount_by) + "-->" + toString(rhs.orig_mount_by);
     if( uuid!=rhs.uuid )
 	ret += " uuid:" + uuid + "-->" + rhs.uuid;
     if( label!=rhs.label )
@@ -3284,9 +3250,9 @@ Volume::logDifference( const Volume& rhs ) const
     if( fstab_loop_dev!=rhs.fstab_loop_dev )
 	ret += " fstab_loop:" + fstab_loop_dev + "-->" + rhs.fstab_loop_dev;
     if( encryption!=rhs.encryption )
-	ret += " encr:" + enc_names[encryption] + "-->" + enc_names[rhs.encryption];
+	ret += " encr:" + toString(encryption) + "-->" + toString(rhs.encryption);
     if( orig_encryption!=rhs.orig_encryption )
-	ret += " orig_encr:" + enc_names[orig_encryption] + "-->" + enc_names[rhs.orig_encryption];
+	ret += " orig_encr:" + toString(orig_encryption) + "-->" + toString(rhs.orig_encryption);
 #ifdef DEBUG_CRYPT_PASSWORD
     if( crypt_pwd!=rhs.crypt_pwd )
 	ret += " pwd:" + crypt_pwd + "-->" + rhs.crypt_pwd;
@@ -3323,15 +3289,6 @@ bool Volume::equalContent( const Volume& rhs ) const
 	return ret;
     }
 
-
-    const string Volume::fs_names[] = { "unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs",
-					"vfat", "xfs", "jfs", "hfs", "ntfs-3g", "swap", "hfsplus", 
-					"nfs", "nfs4", "none" };
-
-    const string Volume::mb_names[] = { "device", "uuid", "label", "id", "path" };
-
-    const string Volume::enc_names[] = { "none", "twofish256", "twofish",
-					 "twofishSL92", "luks", "unknown" };
 
     const string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
 

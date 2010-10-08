@@ -186,7 +186,8 @@ MdPartCo::createPartition( storage::PartitionType type,
                            string& device,
                            bool checkRelaxed )
     {
-    y2mil("begin type:" << type << " start:" << start << " len:" << len << " relaxed:" << checkRelaxed);
+	y2mil("begin type:" << toString(type) << " start:" << start << " len:" << len <<
+	      " relaxed:" << checkRelaxed);
     int ret = disk ? 0 : MDPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
         ret = MDPART_CHANGE_READONLY;
@@ -220,7 +221,7 @@ MdPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed 
 int
 MdPartCo::createPartition( storage::PartitionType type, string& device )
     {
-    y2mil("type:" << type);
+	y2mil("type:" << toString(type));
     int ret = disk ? 0 : MDPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
         ret = MDPART_CHANGE_READONLY;
@@ -1153,11 +1154,11 @@ void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     {
     s << dynamic_cast<const Container&>(d)
-      << " Personality:" << d.pName();
+      << " Personality:" << toString(d.md_type);
     if (d.chunk_k > 0)
 	s << " ChunkK:" << d.chunk_k;
     if (d.md_parity != PAR_DEFAULT)
-	s << " Parity:" << d.ptName();
+	s << " Parity:" << toString(d.md_parity);
     if (!d.sb_ver.empty() )
 	s << " SbVer:" << d.sb_ver;
     if (!d.md_uuid.empty())
@@ -1195,11 +1196,9 @@ void MdPartCo::logDifference( const MdPartCo& d ) const
     string log = getDiffString( d );
 
     if( md_type!=d.md_type )
-        log += " Personality:" + Md::md_names[md_type] + "-->" +
-	    Md::md_names[d.md_type];
+        log += " Personality:" + toString(md_type) + "-->" + toString(d.md_type);
     if( md_parity!=d.md_parity )
-        log += " Parity:" + Md::par_names[md_parity] + "-->" +
-	    Md::par_names[d.md_parity];
+        log += " Parity:" + toString(md_parity) + "-->" + toString(d.md_parity);
     if( chunk_k!=d.chunk_k )
         log += " ChunkK:" + decString(chunk_k) + "-->" + decString(d.chunk_k);
     if( sb_ver!=d.sb_ver )
@@ -1460,7 +1459,7 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
     string value;
     if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
     {
-	info.state = Md::toMdArrayState(value);
+	info.state = toValue(value, UNKNOWN);
     }
 }
 

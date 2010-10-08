@@ -92,9 +92,6 @@ class Partition : public Volume
 	void forgetResize(); 
 	bool canUseDevice() const;
 
-	static PartitionType toPartitionType(const string& val);
-	static const string& partitionTypeString(PartitionType val) { return pt_names[val]; }
-
 	void getInfo( storage::PartitionInfo& info ) const;
 	void getInfo( storage::PartitionAddInfo& info ) const;
 
@@ -126,8 +123,6 @@ class Partition : public Volume
 
 	void addAltUdevId( unsigned num );
 	void addAltUdevPath( unsigned num );
-
-	static const string pt_names[storage::PTYPE_ANY + 1];
 
 	mutable storage::PartitionInfo info; // workaround for broken ycp bindings
 

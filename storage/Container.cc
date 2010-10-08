@@ -296,25 +296,25 @@ Text Container::removeText( bool doing ) const
 
 int Container::doCreate( Volume * v )
 {
-    y2war("invalid container:" << type_names[typ] << " name:" << name());
+    y2war("invalid container:" << toString(typ) << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
 }
 
 int Container::doRemove( Volume * v )
 {
-    y2war("invalid container:" << type_names[typ] << " name:" << name());
+    y2war("invalid container:" << toString(typ) << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
 }
 
 int Container::doResize( Volume * v )
 {
-    y2war("invalid container:" << type_names[typ] << " name:" << name());
+    y2war("invalid container:" << toString(typ) << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
 }
 
 int Container::removeVolume( Volume * v )
 {
-    y2war("invalid container:" << type_names[typ] << " name:" << name());
+    y2war("invalid container:" << toString(typ) << " name:" << name());
     return( CONTAINER_INVALID_VIRTUAL_CALL );
 }
 
@@ -408,7 +408,7 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
 
 std::ostream& operator<< ( std::ostream& s, const Container &c )
     {
-    s << "CType:" << Container::type_names[c.typ]
+    s << "CType:" << toString(c.typ)
       << " " << dynamic_cast<const Device&>(c);
     if( c.ronly )
       s << " readonly";
@@ -434,7 +434,7 @@ Container::getDiffString( const Container& c ) const
     if( nm!=c.nm )
 	ret += "-->"+c.nm;
     if( typ!=c.typ )
-	ret += " Type:" + type_names[typ] + "-->" + type_names[c.typ];
+	ret += " Type:" + toString(typ) + "-->" + toString(c.typ);
     if( dev!=c.dev )
 	ret += " Device:" + dev + "-->" + c.dev;
     if( del!=c.del )
@@ -495,14 +495,10 @@ bool Container::compareContainer( const Container* c, bool verbose ) const
 	ret = equalContent( *c );
 	if( !ret && verbose )
 	    logDifference( *c );
-	if( typ==COTYPE_LAST_ENTRY || typ==CUNKNOWN )
+	if (typ == CUNKNOWN)
 	    y2err( "Unknown Container:" << *c ); 
 	}
     return( ret );
     }
-
-
-const string Container::type_names[] = { "UNKNOWN", "DISK", "MD", "LOOP", "LVM", 
-					 "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART" };
 
 }

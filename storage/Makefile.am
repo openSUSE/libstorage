@@ -50,6 +50,7 @@ libstorage_la_SOURCES =					\
 	EtcFstab.cc		EtcFstab.h		\
 	EtcMdadm.cc		EtcMdadm.h		\
 	AppUtil.cc		AppUtil.h		\
+	Enum.cc			Enum.h			\
 	Lock.cc			Lock.h			\
 	StorageTypes.cc		StorageTypes.h		\
 	FilterIterator.h	ListListIterator.h	\

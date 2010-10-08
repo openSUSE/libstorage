@@ -28,6 +28,7 @@
 #include "storage/StorageTypes.h"
 #include "storage/StorageTmpl.h"
 #include "storage/Device.h"
+#include "storage/Enum.h"
 
 
 namespace storage
@@ -194,16 +195,9 @@ class Storage;
 	static bool isDeleted( const Volume&d ) { return( d.deleted() ); }
 
 	static bool loopStringNum( const string& name, unsigned& num );
-	static storage::EncryptType toEncType( const string& val );
-	static storage::FsType toFsType( const string& val );
-	static storage::MountByType toMountByType( const string& val );
-	const string& fsTypeString() const { return fs_names[fs]; }
-	static const string& fsTypeString( const storage::FsType type )
-	    { return fs_names[type]; }
-	static const string& encTypeString( const storage::EncryptType type )
-	    { return enc_names[type]; }
-	static const string& mbyTypeString( const storage::MountByType type )
-	    { return mb_names[type]; }
+
+	const string& fsTypeString() const { return toString(fs); }
+
 	static bool isTmpCryptMp( const string& mp );
 
     protected:
@@ -279,9 +273,6 @@ class Storage;
 	unsigned long long orig_size_k;
 	string dtxt;
 
-	static const string fs_names[storage::FSNONE+1];
-	static const string mb_names[storage::MOUNTBY_PATH+1];
-	static const string enc_names[storage::ENC_UNKNOWN+1];
 	static const string tmp_mount[3];
 
 	mutable storage::VolumeInfo info; // workaround for broken ycp bindings

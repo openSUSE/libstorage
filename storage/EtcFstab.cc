@@ -124,7 +124,7 @@ EtcFstab::readFiles()
 	    p->old.fs = *i++;
 	    }
 	if( i!=l.end() )
-	    p->old.encr = Volume::toEncType( *i++ );
+	    p->old.encr = toValue(*i++, ENC_UNKNOWN);
 	if( i!=l.end() )
 	    p->old.opts = splitString( *i++, "," );
 	p->nnew = p->old;
@@ -217,7 +217,7 @@ FstabEntry::calcDependent()
 	string::size_type pos = i->find("=");
 	if( pos!=string::npos )
 	    {
-	    encr = Volume::toEncType( i->substr( pos+1 ) );
+	    encr = toValue(i->substr(pos + 1), ENC_UNKNOWN);
 	    }
 	}
 
@@ -540,7 +540,7 @@ static list<string> makeStringList(const FstabEntry& e)
 	ls.push_back( (e.fs!="ntfs")?e.fs:"ntfs-3g" );
     if( e.cryptotab )
 	{
-	ls.push_back( Volume::encTypeString(e.encr) );
+	ls.push_back(toString(e.encr));
 	}
     ls.push_back( boost::join( e.opts, "," ) );
     if( e.dmcrypt && e.mount!="swap" )

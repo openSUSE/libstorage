@@ -53,8 +53,6 @@ namespace storage
 
 	bool getEntry(const string& device, Entry& entry) const;
 
-	static const string transport_names[storage::USB + 1];
-
     protected:
 
 	void parse(const vector<string>& lines);

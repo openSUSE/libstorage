@@ -175,7 +175,7 @@ namespace storage
 	    setChildValue(node, "udev_id", udev_id);
 
 	if (transport != TUNKNOWN)
-	    setChildValue(node, "transport", Lsscsi::transport_names[transport]);
+	    setChildValue(node, "transport", toString(transport));
 
 	ConstPartPair vp = partPair();
 	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)
@@ -2281,10 +2281,7 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    cmd_line << PARTEDCMD;
-	    if( getStorage()->getPartitionAlignment()==ALIGN_CYLINDER )
-		cmd_line << "--align=cylinder ";
-	    else
-		cmd_line << "--align=optimal ";
+	    cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
 	    cmd_line << quote(device()) << " unit cyl mkpart ";
 	    if( label != "sun" )
 		{
@@ -2851,7 +2848,7 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 	s << " ExtPossible MaxLogical:" << d.max_logical;
     if( d.init_disk )
 	s << " InitDisk";
-    s << " transport:" << Lsscsi::transport_names[d.transport];
+    s << " transport:" << toString(d.transport);
     if( d.dmp_slave )
 	s << " DmpSlave";
     if( d.no_addpart )
@@ -2906,8 +2903,7 @@ void Disk::logDifference( const Container& d ) const
 	    }
 	if (transport != p->transport)
 	    {
-	    log += " transport:" + Lsscsi::transport_names[transport] + "-->" +
-		Lsscsi::transport_names[p->transport];
+	    log += " transport:" + toString(transport) + "-->" + toString(p->transport);
 	    }
 	if (del_ptable != p->del_ptable)
 	    {

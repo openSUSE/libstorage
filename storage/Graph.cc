@@ -346,7 +346,6 @@ namespace storage
 		case LOOP:
 		case NFSC:
 		case CUNKNOWN:
-		case COTYPE_LAST_ENTRY:
 		    break;
 	    }
 	}

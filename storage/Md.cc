@@ -151,9 +151,9 @@ namespace storage
 	if (systeminfo.getProcMdstat().getEntry(nm, entry))
 	{
 	    if (md_type != entry.md_type)
-		y2war("inconsistent md_type my:" << pName() << " kernel:" << pName(entry.md_type));
+		y2war("inconsistent md_type my:" << toString(md_type) << " kernel:" << toString(entry.md_type));
 	    if (md_parity != PAR_DEFAULT && md_parity != entry.md_parity)
-		y2war("inconsistent md_parity my:" << ptName() << " kernel:" << ptName(entry.md_parity));
+		y2war("inconsistent md_parity my:" << toString(md_parity) << " kernel:" << toString(entry.md_parity));
 	    if (chunk_k > 0 && chunk_k != entry.chunk_k)
 		y2war("inconsistent chunk my:" << chunk_k << " kernel:" << entry.chunk_k);
 
@@ -282,7 +282,7 @@ Md::checkDevices()
     if (ret == 0 && md_type == RAID0 && !spare.empty())
 	ret = MD_TOO_MANY_SPARES;
 
-    y2mil("type:" << md_type << " min:" << nmin << " size:" << devs.size() <<
+    y2mil("type:" << toString(md_type) << " min:" << nmin << " size:" << devs.size() <<
 	  " ret:" << ret);
     return( ret );
     }
@@ -296,7 +296,7 @@ Md::getState(MdStateInfo& info) const
     string value;
     if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
     {
-	info.state = Md::toMdArrayState(value);
+	info.state = toValue(value, UNKNOWN);
     }
 }
 
@@ -325,14 +325,14 @@ string
 Md::createCmd() const
 {
     string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
-    cmd += MODPROBEBIN " " + pName() + "; " MDADMBIN " --create " + quote(device()) +
-	" --run --level=" + pName() + " -e 1.0";
+    cmd += MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
+	" --run --level=" + toString(md_type) + " -e 1.0";
     if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
 	cmd += " -b internal";
     if (chunk_k > 0)
 	cmd += " --chunk=" + decString(chunk_k);
     if (md_parity != PAR_DEFAULT)
-	cmd += " --parity=" + ptName();
+	cmd += " --parity=" + toString(md_parity);
     cmd += " --raid-devices=" + decString(devs.size());
     if (!spare.empty())
 	cmd += " --spare-devices=" + decString(spare.size());
@@ -460,41 +460,6 @@ Text Md::formatText( bool doing ) const
 }
 
 
-MdType
-Md::toMdType( const string& val )
-    {
-    MdType ret = MULTIPATH;
-    while( ret!=RAID_UNK && val!=md_names[ret] )
-	{
-	ret = MdType(ret-1);
-	}
-    return( ret );
-    }
-
-MdParity
-Md::toMdParity( const string& val )
-    {
-    MdParity ret = MdParity(PAR_LAST_ENTRY-1);
-    while( ret!=PAR_DEFAULT && val!=par_names[ret] )
-	{
-	ret = MdParity(ret-1);
-	}
-    return( ret );
-    }
-
-
-MdArrayState
-Md::toMdArrayState(const string& val)
-{
-    MdArrayState ret = ACTIVE_IDLE;
-    while( ret != UNKNOWN && val != md_states[ret] )
-        {
-        ret = MdArrayState(ret-1);
-        }
-    return( ret );
-}
-
-
 bool Md::matchRegex( const string& dev )
     {
     static Regex md( "^md[0123456789]+$" );
@@ -575,11 +540,11 @@ void Md::getInfo( MdInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const Md& m )
     {
     s << "Md " << dynamic_cast<const Volume&>(m)
-      << " Personality:" << m.pName();
+      << " Personality:" << toString(m.md_type);
     if (m.chunk_k > 0)
 	s << " ChunkK:" << m.chunk_k;
     if (m.md_parity != PAR_DEFAULT)
-	s << " Parity:" << m.ptName();
+	s << " Parity:" << toString(m.md_parity);
     if( !m.sb_ver.empty() )
 	s << " SbVer:" << m.sb_ver;
     if (!m.md_uuid.empty())
@@ -607,11 +572,9 @@ void Md::logDifference( const Md& rhs ) const
     {
     string log = Volume::logDifference( rhs );
     if( md_type!=rhs.md_type )
-	log += " Personality:" + md_names[md_type] + "-->" +
-	       md_names[rhs.md_type];
+	log += " Personality:" + toString(md_type) + "-->" + toString(rhs.md_type);
     if( md_parity!=rhs.md_parity )
-	log += " Parity:" + par_names[md_parity] + "-->" +
-	       par_names[rhs.md_parity];
+	log += " Parity:" + toString(md_parity) + "-->" + toString(rhs.md_parity);
     if (chunk_k != rhs.chunk_k)
 	log += " ChunkK:" + decString(chunk_k) + "-->" + decString(rhs.chunk_k);
     if( sb_ver!=rhs.sb_ver )
@@ -665,22 +628,6 @@ void Md::logDifference( const Md& rhs ) const
 
 	return mdadm->updateEntry(info);
     }
-
-
-    const string Md::md_names[] = { "unknown", "raid0", "raid1", "raid5", "raid6",
-				    "raid10", "multipath" };
-
-    const string Md::par_names[] = { "default", "left-asymmetric", "left-symmetric",
-				     "right-asymmetric", "right-symmetric", 
-				     "parity-first", "parity-last", 
-				     "left-asymmetric-6", "left-symmetric-6",
-				     "right-asymmetric-6", "right-symmetric-6", 
-				     "parity-first-6", 
-				     "n2", "o2", "f2", "n3", "o3", "f3" };
-
-    const string Md::md_states[] = { "unknown", "clear", "inactive", "suspended",
-				     "readonly", "read-auto", "clean", "active",
-				     "write-pending", "active-idle" };
 
 
 unsigned Md::md_major = 0;

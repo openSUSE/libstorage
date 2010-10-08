@@ -210,8 +210,6 @@ namespace storage
 	static bool stageFormat(const Volume& v);
 	static bool stageMount(const Volume& v);
 
-	static const string type_names[COTYPE_LAST_ENTRY];
-
 	Storage* const sto;
 	const CType typ;
 	bool ronly;

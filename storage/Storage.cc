@@ -134,7 +134,7 @@ Storage::Storage(const Environment& env)
 	else if (boost::iequals(tenv, "MDADM", locale::classic()))
 	    imsm_driver = IMSM_MDADM;
     }
-    y2mil("imsm_driver:" << imsm_driver);
+    y2mil("imsm_driver:" << toString(imsm_driver));
 
     logSystemInfo();
 }
@@ -1070,20 +1070,20 @@ void Storage::setZeroNewPartitions(bool val)
 
 void Storage::setPartitionAlignment( PartAlign val )
     {
-    y2mil("val:" << val);
+    y2mil("val:" << toString(val));
     partAlignment = val;
     }
 
 void Storage::setDefaultMountBy(MountByType val)
 {
-    y2mil("val:" << Volume::mbyTypeString(val));
+    y2mil("val:" << toString(val));
     defaultMountBy = val;
 }
 
 
 void Storage::setDefaultFs(FsType val)
 {
-    y2mil("val:" << Volume::fsTypeString(val));
+    y2mil("val:" << toString(val));
     defaultFs = val;
 }
 
@@ -2287,7 +2287,7 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " format:" << format << " type:" << Volume::fsTypeString(fs));
+    y2mil("device:" << device << " format:" << format << " type:" << toString(fs));
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -2499,7 +2499,7 @@ Storage::changeMountBy( const string& device, MountByType mby )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " mby:" << Volume::mbyTypeString(mby));
+    y2mil("device:" << device << " mby:" << toString(mby));
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -2566,7 +2566,7 @@ Storage::getMountBy( const string& device, MountByType& mby )
 	    ret = STORAGE_VOLUME_NOT_FOUND;
 	}
 	}
-    y2mil("ret:" << ret << " mby:" << Volume::mbyTypeString(mby));
+    y2mil("ret:" << ret << " mby:" << toString(mby));
     return( ret );
     }
 
@@ -2699,7 +2699,7 @@ Storage::setCryptType( const string& device, bool val, EncryptType typ )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " val:" << val << " type:" << typ);
+    y2mil("device:" << device << " val:" << val << " type:" << toString(typ));
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -3499,7 +3499,7 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
     {
     int ret = 0;
     assertInit();
-    y2mil("name:" << name << " MdType:" << Md::pName(rtype) << " devices:" << devs << " spares:" << spares);
+    y2mil("name:" << name << " MdType:" << toString(rtype) << " devices:" << devs << " spares:" << spares);
     unsigned num = 0;
     if (readonly())
 	{
@@ -3547,7 +3547,7 @@ int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<stri
     {
     int ret = 0;
     assertInit();
-    y2mil("MdType:" << Md::pName(rtype) << " devices:" << devs << " spares:" << spares);
+    y2mil("MdType:" << toString(rtype) << " devices:" << devs << " spares:" << spares);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3684,7 +3684,7 @@ int Storage::changeMdType( const string& name, MdType rtype )
     {
     int ret = 0;
     assertInit();
-    y2mil("name:" << name << " rtype:" << rtype);
+    y2mil("name:" << name << " rtype:" << toString(rtype));
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3744,7 +3744,7 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
     {
     int ret = 0;
     assertInit();
-    y2mil("name:" << name << " parity:" << ptype);
+    y2mil("name:" << name << " parity:" << toString(ptype));
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -3910,7 +3910,8 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<s
 	}
     }
 
-    y2mil("type:" << md_type << " smallest:" << smallestK << " sum:" << sumK << " size:" << sizeK);
+    y2mil("type:" << toString(md_type) << " smallest:" << smallestK << " sum:" << sumK <<
+	  " size:" << sizeK);
 
     return ret;
 }
@@ -3951,7 +3952,7 @@ Storage::getMdAllowedParity( MdType md_type, unsigned devices )
 	    }
 	}
 
-    y2mil("type:" << md_type << " ret:" << ret );
+    y2mil("type:" << toString(md_type) << " ret:" << ret );
     return ret;
     }
 
@@ -5149,7 +5150,7 @@ list<string> Storage::getAllUsedFs() const
     list<string> ret;
     for( set<FsType>::const_iterator i=fs.begin(); i!=fs.end(); ++i )
     {
-	ret.push_back(Volume::fsTypeString(*i));
+	ret.push_back(toString(*i));
     }
     y2mil( "ret:" << ret );
     return ret;
@@ -5656,13 +5657,13 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	if (tmp)
 	{
 	    tmp->setUsedBy(type, device);
-	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
+	    y2mil("dev:" << dev << " type:" << toString(type) << " device:" << device);
 	}
 	else
 	{
 	    danglingUsedBy[dev].clear();
 	    danglingUsedBy[dev].push_back(UsedBy(type, device));
-	    y2mil("setting type:" << type << " device:" << device <<
+	    y2mil("setting type:" << toString(type) << " device:" << device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
     }
@@ -5683,12 +5684,12 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	if (tmp)
 	{
 	    tmp->addUsedBy(type, device);
-	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
+	    y2mil("dev:" << dev << " type:" << toString(type) << " device:" << device);
 	}
 	else
 	{
 	    danglingUsedBy[dev].push_back(UsedBy(type, device));
-	    y2mil("adding type:" << type << " device:" << device <<
+	    y2mil("adding type:" << toString(type) << " device:" << device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
     }
@@ -5709,11 +5710,12 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	if (tmp)
 	{
 	    tmp->removeUsedBy(type, device); 
-	    y2mil("dev:" << dev << " type:" << type << " device:" << device);
+	    y2mil("dev:" << dev << " type:" << toString(type) << " device:" << device);
 	}
 	else
 	{
-	    y2mil("dev:" << dev << " type:" << type << " device:" << device << " failed");
+	    y2mil("dev:" << dev << " type:" << toString(type) << " device:" << device <<
+		  " failed");
 	}
     }
 
@@ -5753,7 +5755,7 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	    ret = tmp->isUsedBy(type);
 	}
 
-	y2mil("dev:" << dev << " type:" << type << " ret:" << ret);
+	y2mil("dev:" << dev << " type:" << toString(type) << " ret:" << ret);
 	return ret;
     }
 
@@ -6333,7 +6335,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info.device = i->dentry;
 	    info.mount = i->mount;
 	    info.mount_by = MOUNTBY_DEVICE;
-	    info.fs = Volume::toFsType( i->fs );
+	    info.fs = toValue(i->fs, FSUNKNOWN);
 	    info.fstab_options = boost::join( i->opts, "," );
 	    s_infos.push_back(info);
 	}

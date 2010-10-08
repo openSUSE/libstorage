@@ -138,11 +138,6 @@ class MdPartCo : public Container
 
 	const string& getMdUuid() const { return md_uuid; }
 
-    /* Raid Level of the RAID as string. */
-	const string& pName() const { return Md::md_names[md_type]; }
-    /* Parity for some of RAID's. */
-	const string& ptName() const { return Md::par_names[md_parity]; }
-
     /* Devices from which RAID is composed. */
 	list<string> getDevs(bool all = true, bool spare = false) const;
 

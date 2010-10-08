@@ -27,9 +27,10 @@
 #include "storage/AsciiFile.h"
 #include "storage/StorageInterface.h"
 #include "storage/ProcMdstat.h"
-#include "storage/Md.h"
+#include "storage/Enum.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemCmd.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage
@@ -96,7 +97,7 @@ namespace storage
 	tmp = extractNthWord( 0, line );
 	if (boost::starts_with(tmp, "raid"))
 	{
-	    entry.md_type = Md::toMdType(tmp);
+	    entry.md_type = toValue(tmp, RAID_UNK);
 	    if (entry.md_type == RAID_UNK)
 		y2war("unknown raid type " << tmp);
 
@@ -259,10 +260,10 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const ProcMdstat::Entry& entry)
     {
-	s << "md_type:" << Md::pName(entry.md_type);
+	s << "md_type:" << toString(entry.md_type);
 
 	if (entry.md_parity != PAR_DEFAULT)
-	    s << " md_parity:" + Md::ptName(entry.md_parity);
+	    s << " md_parity:" + toString(entry.md_parity);
 
 	if (!entry.super.empty())
 	    s << " super:" + entry.super;

@@ -186,7 +186,7 @@ namespace storage
 	if (entry.is_fs)
 	{
 	    s << "is_fs:" << entry.is_fs;
-	    s << " fs_type:" << Volume::fsTypeString(entry.fs_type);
+	    s << " fs_type:" << toString(entry.fs_type);
 	    if (!entry.fs_uuid.empty())
 		s << " fs_uuid:" << entry.fs_uuid;
 	    if (!entry.fs_label.empty())

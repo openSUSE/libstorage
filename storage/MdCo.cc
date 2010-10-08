@@ -159,7 +159,7 @@ int
 MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " type:" << Md::pName(type) << " devs:" << devs << " spares:" << spares);
+    y2mil("num:" << num << " type:" << toString(type) << " devs:" << devs << " spares:" << spares);
     if( readonly() )
 	{
 	ret = MD_CHANGE_READONLY;
@@ -317,7 +317,7 @@ int
 MdCo::changeMdType( unsigned num, MdType ptype )
     {
     int ret = 0;
-    y2mil("num:" << num << " md_type:" << ptype);
+    y2mil("num:" << num << " md_type:" << toString(ptype));
     MdIter i;
     if( readonly() )
 	{
@@ -371,7 +371,7 @@ int
 MdCo::changeMdParity( unsigned num, MdParity ptype )
     {
     int ret = 0;
-    y2mil("num:" << num << " parity:" << ptype);
+    y2mil("num:" << num << " parity:" << toString(ptype));
     MdIter i;
     if( readonly() )
 	{

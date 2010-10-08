@@ -26,6 +26,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
 #include "storage/Lsscsi.h"
+#include "storage/Enum.h"
 
 
 namespace storage
@@ -97,13 +98,7 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Lsscsi::Entry& entry)
     {
-	s << "transport:" << Lsscsi::transport_names[entry.transport];
-
-	return s;
+	return s << "transport:" << toString(entry.transport);
     }
-
-
-    const string Lsscsi::transport_names[] = { "UNKNOWN", "SBP", "ATA", "FC", "iSCSI", "SAS",
-					       "SATA", "SPI", "USB" };
 
 }

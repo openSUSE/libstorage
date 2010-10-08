@@ -34,7 +34,6 @@ namespace storage
 
 class Md : public Volume
     {
-	friend class ProcMdstat;
 	friend class MdPartCo;
 
     public:
@@ -54,8 +53,6 @@ class Md : public Volume
 	bool destroySb() const { return( destrSb ); }
 	void setDestroySb( bool val=true ) { destrSb=val; }
 	const string& getMdUuid() const { return(md_uuid); }
-	const string& pName() const { return md_names[md_type]; }
-	const string& ptName() const { return par_names[md_parity]; }
 	list<string> getDevs(bool all = true, bool spare = false) const;
 	int checkDevices();
 	int addDevice( const string& dev, bool spare=false );
@@ -72,8 +69,6 @@ class Md : public Volume
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 
-	static const string& pName(MdType t) { return md_names[t]; }
-	static const string& ptName(MdParity p) { return par_names[p]; }
 	static bool mdStringNum( const string& name, unsigned& num ); 
 	static string mdDevice( unsigned num );
 
@@ -96,10 +91,6 @@ class Md : public Volume
 
 	void computeSize();
 
-	static MdType toMdType(const string& val);
-	static MdParity toMdParity(const string& val);
-	static MdArrayState toMdArrayState(const string& val);
-
 	MdType md_type;
 	MdParity md_parity;
 	unsigned long chunk_k;
@@ -119,10 +110,6 @@ class Md : public Volume
 	string parent_md_name;
 	string parent_metadata;
 	string parent_member;
-
-	static const string md_names[MULTIPATH + 1];
-	static const string par_names[PAR_LAST_ENTRY];
-	static const string md_states[ACTIVE_IDLE + 1];
 
 	static unsigned md_major;
 

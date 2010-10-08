@@ -102,7 +102,7 @@ void
 				    i->dmcrypt, !i->noauto?i->dentry:"",
 				    systeminfo, c);
 		l->setEncryption( i->encr );
-		l->setFs( Volume::toFsType(i->fs) );
+		l->setFs(toValue(i->fs, FSUNKNOWN));
 		y2mil( "l:" << *l );
 		addToList( l );
 		}

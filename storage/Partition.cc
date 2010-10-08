@@ -61,7 +61,7 @@ namespace storage
 	getChildValue(node, "region", reg);
 
 	if (getChildValue(node, "partition_type", tmp))
-	    typ = toPartitionType(tmp);
+	    typ = toValue(tmp, PRIMARY);
 	getChildValue(node, "partition_id", idt);
 
 	getChildValue(node, "boot_flag", bootflag);
@@ -94,7 +94,7 @@ namespace storage
 
 	setChildValue(node, "region", reg);
 
-	setChildValue(node, "partition_type", partitionTypeString(typ));
+	setChildValue(node, "partition_type", toString(typ));
 	setChildValue(node, "partition_id", idt);
 
 	if (bootflag)
@@ -144,11 +144,9 @@ void Partition::addUdevData()
     {
     addAltUdevPath( num );
     addAltUdevId( num );
-    y2mil( "dev:" << dev << " mby:" << mbyTypeString(mount_by) << 
-           " orig:" << mbyTypeString(orig_mount_by) );
+    y2mil("dev:" << dev << " mby:" << toString(mount_by) << " orig:" << toString(orig_mount_by));
     mount_by = orig_mount_by = defaultMountBy();
-    y2mil( "dev:" << dev << " mby:" << mbyTypeString(mount_by) << 
-           " orig:" << mbyTypeString(orig_mount_by) );
+    y2mil("dev:" << dev << " mby:" << toString(mount_by) << " orig:" << toString(orig_mount_by));
     }
 
 
@@ -310,7 +308,7 @@ const Disk* Partition::disk() const
 int Partition::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
-    y2mil("device:" << dev << " val:" << val << " fs:" << fs_names[new_fs]);
+    y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
     if( typ==EXTENDED )
 	{
 	if( val )
@@ -563,18 +561,6 @@ Partition::getInfo( PartitionInfo& tinfo ) const
     }
 
 
-    PartitionType
-    Partition::toPartitionType(const string& val)
-    {
-	PartitionType ret = LOGICAL;
-	while (ret != PRIMARY && val != pt_names[ret])
-	{
-	    ret = PartitionType(ret - 1);
-	}
-	return ret;
-    }
-
-
 PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
     {
     nr = rhs.nr;
@@ -593,7 +579,7 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
       << " CylNum:" << p.reg.len()
       << " Id:" << std::hex << p.idt << std::dec;
     if( p.typ!=storage::PRIMARY )
-      s << " " << Partition::pt_names[p.typ];
+	s << " " << toString(p.typ);
     if( p.orig_num!=p.num )
       s << " OrigNr:" << p.orig_num;
     if( p.orig_id!=p.idt )
@@ -614,7 +600,7 @@ void Partition::logDifference( const Partition& rhs ) const
 	log += " CylNum:" + decString(reg.len()) + "-->" + 
 	       decString(rhs.reg.len());
     if( typ!=rhs.typ )
-	log += " Typ:" + pt_names[typ] + "-->" + pt_names[rhs.typ];
+	log += " Typ:" + toString(typ) + "-->" + toString(rhs.typ);
     if( idt!=rhs.idt )
 	log += " Id:" + hexString(idt) + "-->" + hexString(rhs.idt);
     if( orig_id!=rhs.orig_id )
@@ -637,8 +623,5 @@ bool Partition::equalContent( const Partition& rhs ) const
             reg==rhs.reg && bootflag==rhs.bootflag && typ==rhs.typ && 
             idt==rhs.idt );
     }
-
-
-    const string Partition::pt_names[] = { "primary", "extended", "logical", "any" };
 
 }
