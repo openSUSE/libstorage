@@ -288,16 +288,15 @@ Md::checkDevices()
     }
 
 
-void
+int
 Md::getState(MdStateInfo& info) const
 {
-    info.state = UNKNOWN;
-
     string value;
     if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
-    {
-	info.state = toValueWithFallback(value, UNKNOWN);
-    }
+	if (toValue(value, info.state))
+	    return STORAGE_NO_ERROR;
+
+    return MD_GET_STATE_FAILED;
 }
 
 

@@ -3805,7 +3805,7 @@ Storage::getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info)
     ConstMdPartCoIterator i = findMdPartCo(name);
     if (i != mdpCoEnd())
     { 
-	i->getMdPartCoState(info);
+	ret = i->getMdPartCoState(info);
     }
     else
     {

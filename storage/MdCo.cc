@@ -410,7 +410,7 @@ MdCo::getMdState(unsigned num, MdStateInfo& info)
     }
     if( ret==0 )
     {
-	i->getState(info);
+	ret = i->getState(info);
     }
     y2mil("ret:" << ret);
     return ret;

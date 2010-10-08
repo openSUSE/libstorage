@@ -83,7 +83,7 @@ class Md : public Volume
 	void getInfo( storage::MdInfo& info ) const;
 	bool equalContent( const Md& rhs ) const;
 	void logDifference( const Md& d ) const;
-	void getState(MdStateInfo& info) const;
+	int getState(MdStateInfo& info) const;
 
 	bool updateEntry(EtcMdadm* mdadm) const;
 
