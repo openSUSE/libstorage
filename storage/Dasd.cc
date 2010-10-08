@@ -323,7 +323,8 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2mil("begin type:" << type << " start:" << start << " len:" << len << " relaxed:" << checkRelaxed);
+    y2mil("begin type:" << toString(type) << " start:" << start << " len:" << len << " relaxed:"
+	  << checkRelaxed);
     int ret = createChecks( type, start, len, checkRelaxed );
     int number = 0;
     if( ret==0 )

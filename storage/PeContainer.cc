@@ -40,7 +40,7 @@ namespace storage
     PeContainer::PeContainer(Storage* s, const string& name, const string& device, CType t)
 	: Container(s, name, device, t), pe_size(1), num_pe(0), free_pe(0)
     {
-	y2deb("constructing PeContainer name:" << name << " type:" << t);
+	y2deb("constructing PeContainer name:" << name << " ctype:" << toString(t));
     }
 
 
@@ -48,7 +48,7 @@ namespace storage
 			     SystemInfo& systeminfo)
 	: Container(s, name, device, t, systeminfo), pe_size(1), num_pe(0), free_pe(0)
     {
-	y2deb("constructing PeContainer name:" << name << " type:" << t);
+	y2deb("constructing PeContainer name:" << name << " ctype:" << toString(t));
     }
 
 

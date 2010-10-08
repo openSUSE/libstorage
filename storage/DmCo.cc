@@ -177,7 +177,7 @@ DmCo::detectEncryption( const string& dev ) const
 	    ret = ENC_TWOFISH256_OLD;
     }
 
-    y2mil("ret:" << ret);
+    y2mil("ret:" << toString(ret));
     return ret;
 }
 

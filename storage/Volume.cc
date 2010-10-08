@@ -498,7 +498,7 @@ void Volume::getLoopData( SystemCmd& loopData )
 			orig_encryption = encryption = ENC_UNKNOWN;
 		    }
 		}
-	    b << " encr:" << encryption;
+	    b << " encr:" << toString(encryption);
 	    y2mil(b.str());
 	    }
 	}
@@ -1131,8 +1131,7 @@ int Volume::loUnsetup( bool force )
 int Volume::cryptUnsetup( bool force )
     {
     int ret=0;
-    y2mil( "force:" << force << " active:" << dmcrypt_active << 
-           " table:" << dmcrypt_dev );
+    y2mil("force:" << force << " active:" << dmcrypt_active << " table:" << dmcrypt_dev);
     if( dmcrypt_active || force )
 	{
 	string table = dmcrypt_dev;
@@ -1445,7 +1444,7 @@ int
 Volume::setEncryption(bool val, EncryptType typ )
     {
     int ret = 0;
-    y2mil("val:" << val << " typ:" << typ );
+    y2mil("val:" << val << " typ:" << toString(typ));
     if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;

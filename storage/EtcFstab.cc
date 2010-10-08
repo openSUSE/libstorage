@@ -1004,7 +1004,7 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
 	if( !v.cr_opts.empty() )
 	    s << " cr_opts:" << v.cr_opts;
 	if( v.encr != storage::ENC_NONE )
-	    s << " encr:" << v.encr;
+	    s << " encr:" << toString(v.encr);
 	return s;
     }
 
@@ -1018,7 +1018,7 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
 	if( !v.loop_dev.empty() )
 	    s << " loop_dev:" << v.loop_dev;
 	if( v.encr != storage::ENC_NONE )
-	    s << " encr:" << v.encr;
+	    s << " encr:" << toString(v.encr);
 	if( v.tmpcrypt )
 	    s << " tmpcrypt";
 	return s;

@@ -687,7 +687,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
     TInfo += ",";
     if( nr>0 )
 	{
-	y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM << " Type:" << type);
+	y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM << " Type:" <<
+	      toString(type));
 	y2mil("TInfo:" << TInfo);
 	start = StartM;
 	csize = EndM-StartM+1;
@@ -802,8 +803,8 @@ Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
 		id = Partition::ID_APPLE_HFS;
 		}
 	    }
-	y2mil("Fields Num:" << nr << " Id:" << id << " Ptype:" << type << " Start:" << start <<
-	      " Size:" << csize);
+	y2mil("Fields Num:" << nr << " Id:" << id << " Ptype:" << toString(type) << " Start:" <<
+	      start << " Size:" << csize);
 	}
     return( nr>0 );
     }
@@ -1169,7 +1170,7 @@ unsigned int Disk::numLogical() const
 unsigned
 Disk::availablePartNumber(PartitionType type) const
 {
-    y2mil("begin name:" << name() << " type:" << type);
+    y2mil("begin name:" << name() << " type:" << toString(type));
     unsigned ret = 0;
     ConstPartPair p = partPair(Partition::notDeleted);
     if( !ext_possible && type==LOGICAL )
@@ -1377,7 +1378,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 
 int Disk::createPartition( PartitionType type, string& device )
     {
-    y2mil("type " << type);
+    y2mil("type " << toString(type));
     int ret = 0;
     list<Region> free;
     getUnusedSpace( free, type==PTYPE_ANY, type==LOGICAL );
@@ -1436,7 +1437,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
                            unsigned long len, string& device,
 			   bool checkRelaxed )
     {
-    y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
+    y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
+	  checkRelaxed);
     getStorage()->logCo( this );
     int ret = createChecks( type, start, len, checkRelaxed );
     unsigned number = 0;
@@ -1489,7 +1491,8 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 int Disk::createChecks( PartitionType& type, unsigned long start,
                         unsigned long len, bool checkRelaxed ) const
     {
-    y2mil("begin type " << type << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
+    y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
+	  checkRelaxed);
     unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
     int ret = 0;
     Region r( start, len );

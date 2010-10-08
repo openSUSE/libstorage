@@ -33,6 +33,7 @@
 #include "storage/AppUtil.h"
 #include "storage/StorageInterface.h"
 #include "storage/XmlFile.h"
+#include "storage/Enum.h"
 
 
 namespace storage
@@ -57,7 +58,8 @@ inline bool operator<(CType a, CType b)
     };
 
     bool ret = order[a] < order[b];
-    y2mil("a:" << a << " o(a):" << order[a] << " b:" << b << " o(b):" << order[b] << " ret:" << ret);
+    y2mil("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
+	  order[b] << " ret:" << ret);
     return ret;
 }
 

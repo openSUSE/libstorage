@@ -56,8 +56,6 @@ namespace storage
 	  md_parity(PAR_DEFAULT), chunk_k(0), sb_ver("01.00.00"), destrSb(false),
 	  has_container(false)
     {
-	y2mil("constructing MdPartCo " << name);
-
 	getMajorMinor();
 
 	/* First Initialize RAID properties. */
@@ -67,7 +65,7 @@ namespace storage
 
 	setUdevData(systeminfo);
 
-	y2mil("MdPartCo (nm=" << nm << ", dev=" << dev << ", level=" << md_type << ", disks=" << devs << ") ready.");
+	y2deb("constructed MdPartCo " << dev);
     }
 
 

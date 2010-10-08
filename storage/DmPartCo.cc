@@ -105,7 +105,8 @@ int
 DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
 			   long unsigned len, string& device, bool checkRelaxed )
     {
-    y2mil("begin type:" << type << " start:" << start << " len:" << len << " relaxed:" << checkRelaxed);
+    y2mil("begin type:" << toString(type) << " start:" << start << " len:" << len <<
+	  " relaxed:" << checkRelaxed);
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
 	ret = DMPART_CHANGE_READONLY;
@@ -135,7 +136,7 @@ DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed 
 int 
 DmPartCo::createPartition( storage::PartitionType type, string& device )
     {
-    y2mil("type:" << type);
+    y2mil("type:" << toString(type));
     int ret = disk ? 0 : DMPART_INTERNAL_ERR;
     if( ret==0 && readonly() )
 	ret = DMPART_CHANGE_READONLY;

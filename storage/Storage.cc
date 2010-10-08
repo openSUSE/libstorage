@@ -1161,7 +1161,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << type << " start:" << start << " size:" << size);
+    y2mil("disk:" << disk << " type:" << toString(type) << " start:" << start << " size:" << size);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1234,7 +1234,8 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << type << " start:" << start << " sizeK:" << sizeK);
+    y2mil("disk:" << disk << " type:" << toString(type) << " start:" << start << " sizeK:" <<
+	  sizeK);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1382,7 +1383,7 @@ Storage::nextFreePartition( const string& disk, PartitionType type,
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << type);
+    y2mil("disk:" << disk << " type:" << toString(type));
     ConstDiskIterator i = findDisk( disk );
     if( i != dEnd() )
 	{
@@ -1422,7 +1423,7 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << type);
+    y2mil("disk:" << disk << " type:" << toString(type));
     DiskIterator i = findDisk( disk );
     if (readonly())
 	{
@@ -2287,7 +2288,7 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " format:" << format << " type:" << toString(fs));
+    y2mil("device:" << device << " format:" << format << " fs_type:" << toString(fs));
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -2699,7 +2700,7 @@ Storage::setCryptType( const string& device, bool val, EncryptType typ )
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " val:" << val << " type:" << toString(typ));
+    y2mil("device:" << device << " val:" << val << " enc_type:" << toString(typ));
     VolIterator vol;
     ContIterator cont;
     if (readonly())

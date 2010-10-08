@@ -79,7 +79,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
     std::ostream& operator<<(std::ostream& s, const commitAction& a)
     {
 	s << "stage:" << a.stage
-	  << " type:" << a.type
+	  << " type:" << toString(a.type)
 	  << " cont:" << a.container
 	  << " dest:" << a.destructive;
 	if (a.co())

@@ -234,7 +234,7 @@ string Loop::loopDeviceName( unsigned num )
 
 int Loop::setEncryption( bool val, storage::EncryptType typ )
     {
-    y2mil( "val:" << val << " type:" << typ );
+    y2mil("val:" << val << " enc_type:" << toString(typ));
     int ret = Volume::setEncryption( val, typ );
     if( ret==0 && encryption!=orig_encryption )
 	{
