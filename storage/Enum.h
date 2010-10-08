@@ -59,7 +59,7 @@ namespace storage
     {
 	static_assert(std::is_enum<EnumType>::value, "not enum");
 	const vector<string>& names = EnumInfo<EnumType>::names;
-	assert(value >= 0 && value < names.size());
+	assert(value >= 0 && value < (EnumType)(names.size()));
 	return names[value];
     }
 
