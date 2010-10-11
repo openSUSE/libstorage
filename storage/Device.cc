@@ -42,6 +42,8 @@ namespace storage
 	: nm(nm), dev(dev), create(false), del(false), silent(false), size_k(0), mjr(0), mnr(0)
     {
 	y2deb("constructed Device " << dev);
+
+	assert(!nm.empty() && !dev.empty());
     }
 
 
