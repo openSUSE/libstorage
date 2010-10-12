@@ -159,9 +159,8 @@ class MdPartCo : public Container
      * Get list of detected MD RAIDs and filters them for
      * those which can be handled by MdPartCo.
      */
-    static list<string> filterMdPartCo(list<string>& raidList,
-				       SystemInfo& systeminfo,
-                                       bool isInst);
+	static list<string> filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo,
+					   bool instsys);
 
     protected:
     // iterators over partitions

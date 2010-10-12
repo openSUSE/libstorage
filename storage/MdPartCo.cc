@@ -1621,7 +1621,7 @@ MdPartCo::havePartsInProc(const string& name, SystemInfo& systeminfo)
 
 
 list<string>
-MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool isInst)
+MdPartCo::filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo, bool instsys)
 {
   list<string> mdpList;
 
@@ -1629,30 +1629,30 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
     {
 	y2mil("name:" << *i);
 
-    storage::CType ct = MdPartCo::envSelection(*i);
-    if( ct == MD )
+	CType ctype = envSelection(*i);
+	if (ctype == MD)
       {
       // skip
       continue;
       }
-    if (ct == MDPART )
+    if (ctype == MDPART)
       {
       mdpList.push_back(*i);
       continue;
       }
 
-    if( MdPartCo::havePartsInProc(*i, systeminfo) )
+    if (havePartsInProc(*i, systeminfo))
       {
       mdpList.push_back(*i);
       continue;
       }
 
-    if( isInst )
+    if (instsys)
       {
       // 1. With Partition Table
       // 2. Without Partition Table and without FS on it.
       // 3. this gives: No FS.
-	  if (!MdPartCo::hasFileSystem(*i, systeminfo))
+	  if (!hasFileSystem(*i, systeminfo))
         {
         mdpList.push_back(*i);
         }
@@ -1661,7 +1661,7 @@ MdPartCo::filterMdPartCo(list<string>& raidList, SystemInfo& systeminfo, bool is
       {
       // In 'normal' mode ONLY volume with Partition Table.
       // Partitions should be visible already so check it.
-	  if( MdPartCo::hasPartitionTable(*i, systeminfo))
+	  if (hasPartitionTable(*i, systeminfo))
         {
         mdpList.push_back(*i);
         }
