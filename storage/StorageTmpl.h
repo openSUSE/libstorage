@@ -267,6 +267,20 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     }
 
 
+    template <typename ListType, typename Type>
+    bool contains(const ListType& l, const Type& value)
+    {
+	return find(l.begin(), l.end(), value) != l.end();
+    }
+
+
+    template <typename ListType, typename Predicate>
+    bool contains_if(const ListType& l, Predicate pred)
+    {
+	return find_if(l.begin(), l.end(), pred) != l.end();
+    }
+
+
     template<typename Map, typename Key, typename Value>
     typename Map::iterator mapInsertOrReplace(Map& m, const Key& k, const Value& v)
     {
