@@ -247,8 +247,7 @@ class Disk : public Container
 	                   SystemInfo& ppart );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
-	void getGeometry( const string& line, unsigned long& c, 
-			  unsigned& h, unsigned& s );
+	void getGeometry(const string& line, unsigned long& c, unsigned& h, unsigned& s) const;
 	virtual void redetectGeometry();
 	void changeNumbers( const PartIter& b, const PartIter& e, 
 	                    unsigned start, int incr );

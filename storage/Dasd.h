@@ -70,8 +70,7 @@ class Dasd : public Disk
 	bool checkFdasdOutput(SystemCmd& Cmd, const ProcParts& parts);
 	bool scanFdasdLine( const string& Line, unsigned& nr, 
 	                    unsigned long& start, unsigned long& csize );
-	void getGeometry( SystemCmd& cmd, unsigned long& c,
-			  unsigned& h, unsigned& s );
+	void getGeometry(SystemCmd& cmd, unsigned long& c, unsigned& h, unsigned& s) const;
 	void redetectGeometry() {};
         int doCreate( Volume* v ) { return(doFdasd()); }
         int doRemove( Volume* v ) { return(init_disk?0:doFdasd()); }

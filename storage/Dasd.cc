@@ -243,8 +243,9 @@ _("The partitioning on disk %1$s is not readable by\n"
     return( true );
     }
 
-void Dasd::getGeometry( SystemCmd& cmd, unsigned long& c,
-                        unsigned& h, unsigned& s )
+
+    void
+    Dasd::getGeometry(SystemCmd& cmd, unsigned long& c, unsigned& h, unsigned& s) const
     {
     string tmp;
     unsigned long val;

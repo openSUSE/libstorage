@@ -373,8 +373,8 @@ bool Disk::detectGeometry()
     }
 
 
-void Disk::getGeometry( const string& line, unsigned long& c, unsigned& h,
-                        unsigned& s )
+    void
+    Disk::getGeometry(const string& line, unsigned long& c, unsigned& h, unsigned& s) const
     {
     string tmp( line );
     tmp.erase( 0, tmp.find(':')+1 );
