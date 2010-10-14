@@ -137,20 +137,21 @@ namespace storage
 
 	if (label != "loop")
 	{
-	    int els = 0;
+	    int n = 0;
 
 	    const vector<string>& lines = cmd.stdout();
 	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	    {
-		if (it->empty())
-		    els++;
+		if (boost::starts_with(*it, "Number"))
+		    n++;
 
 		string tmp = extractNthWord(0, *it);
 		if (!tmp.empty() && isdigit(tmp[0]))
 		{
-		    if (els <= 2)
+		    assert(n == 1 || n == 2);
+		    if (n == 1)
 			scanCylEntryLine(*it);
-		    else
+		    else if (n == 2)
 			scanSecEntryLine(*it);
 		}
 	    }
