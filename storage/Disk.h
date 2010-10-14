@@ -220,20 +220,17 @@ class Disk : public Container
     protected:
 
 	virtual bool detectGeometry();
-	virtual bool detectPartitions(const ProcParts& parts);
+	virtual bool detectPartitions(SystemInfo& systeminfo);
 	bool getSysfsInfo();
-	int checkSystemError( const string& cmd_line, const SystemCmd& cmd );
+	int checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const;
 	int execCheckFailed( const string& cmd_line, bool stop_hald=true );
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
 	                     bool stop_hald=true );
-	bool checkPartedOutput(const SystemCmd& cmd, const ProcParts& parts);
-	bool scanPartedLine( const string& Line, unsigned& nr,
-	                     unsigned long& start, unsigned long& csize,
-			     storage::PartitionType& type, 
-			     unsigned& id, bool& boot ) const;
-	bool scanPartedSectors( const string& Line, unsigned& nr,
-				unsigned long long& start, 
-				unsigned long long& ssize ) const;
+	bool checkPartedOutput(SystemInfo& systeminfo);
+	bool scanPartedCylinders(const string& Line, unsigned& nr, unsigned long& start,
+				 unsigned long& ssize) const;
+	bool scanPartedSectors(const string& Line, unsigned& nr, unsigned long long& start,
+			       unsigned long long& ssize) const;
 	bool checkPartedValid(const ProcParts& parts, const string& diskname,
 	                       std::list<Partition*>& pl, unsigned long& rng ) const;
 	int callDelpart( unsigned nr ) const;

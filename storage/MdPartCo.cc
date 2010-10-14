@@ -1472,38 +1472,9 @@ MdPartCo::getMdPartCoState(MdPartCoStateInfo& info) const
  */
 bool MdPartCo::hasPartitionTable(const string& name, SystemInfo& systeminfo)
 {
-  //bool ret = false;
-  SystemCmd c;
-  bool ret = false;
-
-  string cmd = PARTEDCMD " " + quote("/dev/" + name) + " print";
-
-  c.execute(cmd);
-
-  //For clear md125 (just created)
-  //Error: /dev/md125: unrecognised disk label
-  //so $? contains 1.
-  //If dev has partition table then $? contains 0
-  if( c.retcode() == 0 )
-    {
-    ret = true;
-    //Still - it can contain:
-    //    del: Unknown (unknown)
-    //    Disk /dev/md125: 133GB
-    //    Sector size (logical/physical): 512B/512B
-    //    Partition Table: loop
-
-    c.select("Partition Table:");
-    if(  c.numLines(true) > 0 )
-      {
-      string loop = c.getLine(0,true);
-      if( loop.find("loop") != string::npos )
-        {
-        // It has 'loop' partition table so it's actually a volume.
-        ret = false;
-        }
-      }
-    }  
+    const Parted& parted = systeminfo.getParted("/dev/" + name);
+    string dlabel = parted.getLabel();
+    bool ret = !dlabel.empty() && dlabel != "loop";
     y2mil("name:" << name << " ret:" << ret);
     return ret;
 }

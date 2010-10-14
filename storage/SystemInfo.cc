@@ -57,4 +57,18 @@ namespace storage
 	return pos->second;
     }
 
+
+    const Parted&
+    SystemInfo::getParted(const string& device)
+    {
+	map<string, Parted>::iterator pos = parteds.lower_bound(device);
+	if (pos == parteds.end() || map<string, Parted>::key_compare()(device, pos->first))
+	{
+	    Parted parted(device);
+	    pos = parteds.insert(pos, map<string, Parted>::value_type(device, parted));
+	}
+
+	return pos->second;
+    }
+
 }

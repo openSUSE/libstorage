@@ -33,6 +33,7 @@
 #include "storage/OutputProcessor.h"
 #include "storage/Dasd.h"
 #include "storage/StorageDefines.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -77,8 +78,10 @@ namespace storage
 
 
     bool
-    Dasd::detectPartitions(const ProcParts& parts)
+    Dasd::detectPartitions(SystemInfo& systeminfo)
     {
+    const ProcParts& parts = systeminfo.getProcParts();
+
     bool ret = true;
     string cmd_line = DASDVIEWBIN " -x " + quote(device());
     detected_label = "dasd";
@@ -566,11 +569,11 @@ int Dasd::doDasdfmt()
 	    }
 	if( ret==0 )
 	    {
-	    ProcParts parts;
+	    SystemInfo systeminfo;
 	    for( list<Disk*>::iterator i = dl.begin(); i!=dl.end(); ++i )
 		{
 		Dasd * ds = static_cast<Dasd *>(*i);
-		ds->detectPartitions(parts);
+		ds->detectPartitions(systeminfo);
 		ds->resetInitDisk();
 		ds->removeFromMemory();
 		}

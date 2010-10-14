@@ -20,9 +20,6 @@
  */
 
 
-#include <fcntl.h>
-#include <sys/mount.h>         /* for BLKGETSIZE */
-#include <linux/hdreg.h>       /* for HDIO_GETGEO */
 #include <string>
 #include <ostream>
 #include <fstream>
@@ -39,6 +36,7 @@
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
+#include "storage/Parted.h"
 
 
 namespace storage
@@ -264,60 +262,22 @@ Disk::kbToCylinder( unsigned long long kb ) const
     bool
     Disk::detect(SystemInfo& systeminfo)
     {
-	return detectGeometry() && detectPartitions(systeminfo.getProcParts());
+	return detectGeometry() && detectPartitions(systeminfo);
     }
 
 
 bool Disk::detectGeometry()
     {
-    y2mil("disk:" << device());
-    bool ret = false;
+	Geometry geometry;
+	if (!storage::detectGeometry(dev, geometry))
+	    return false;
 
-    int fd = open( device().c_str(), O_RDONLY );
-    if( fd >= 0 )
-	{
-	int rcode = ioctl(fd, BLKSSZGET, &logical_sector_size);
-	y2mil("BLKSSZGET ret:" << rcode << " sector_size:" << logical_sector_size);
+	cyl = geometry.cylinders;
+	head = geometry.heads;
+	sector = geometry.sectors;
+	logical_sector_size = geometry.logical_sector_size;
 
-	head = 255;
-	sector = 63;
-	cyl = 16;
-	struct hd_geometry geometry;
-	rcode = ioctl(fd, HDIO_GETGEO, &geometry);
-	if( rcode==0 )
-	    {
-	    head = geometry.heads>0?geometry.heads:head;
-	    sector = geometry.sectors>0?geometry.sectors:sector;
-	    cyl = geometry.cylinders>0?geometry.cylinders:cyl;
-	    }
-	y2mil("After HDIO_GETGEO ret " << rcode << " Head:" << head << " Sector:" << sector <<
-	      " Cylinder:" << cyl);
-	__uint64_t sect = 0;
-	rcode = ioctl( fd, BLKGETSIZE64, &sect);
-	y2mil("BLKGETSIZE64 Ret:" << rcode << " Bytes:" << sect);
-	if( rcode==0 && sect!=0 )
-	    {
-	    sect /= logical_sector_size;
-	    cyl = (unsigned)(sect / (__uint64_t)(head*sector));
-	    ret = true;
-	    }
-	else
-	    {
-	    unsigned long lsect;
-	    rcode = ioctl( fd, BLKGETSIZE, &lsect );
-	    y2mil("BLKGETSIZE Ret:" << rcode << " Sect:" << lsect);
-	    if( rcode==0 && lsect!=0 )
-		{
-		cyl = lsect / (unsigned long)(head*sector);
-		ret = true;
-		}
-	    }
-	y2mil("After getsize Cylinder:" << cyl);
-	close( fd );
-	}
-    byte_cyl = head * sector * logical_sector_size;
-    y2mil("ret:" << ret << " byte_cyl:" << byte_cyl);
-    return ret;
+	return true;
     }
 
 
@@ -428,46 +388,30 @@ bool Disk::detectGeometry()
 
 
     bool
-    Disk::detectPartitions(const ProcParts& parts)
+    Disk::detectPartitions(SystemInfo& systeminfo)
     {
-    bool ret = true;
-    string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print | sort -n";
-    string dlabel;
-    y2mil("executing cmd:" << cmd_line);
-    SystemCmd Cmd( cmd_line );
-    checkSystemError( cmd_line, Cmd );
-    if( Cmd.select( "Partition Table:" )>0 )
-	{
-	string tmp = Cmd.getLine(0, true);
-	y2mil("Label line:" << tmp);
-	dlabel = extractNthWord( 2, tmp );
-	}
-    if( Cmd.select( "BIOS cylinder" )>0 )
-	{
-	string tmp = Cmd.getLine(0, true);
-	getGeometry( tmp, cyl, head, sector );
-	new_cyl = cyl;
-	new_head = head;
-	new_sector = sector;
-	y2mil("After parted Head:" << head << " Sector:" << sector << " Cylinder:" << cyl);
-	byte_cyl = head * sector * logical_sector_size;
-	y2mil("byte_cyl:" << byte_cyl);
-	}
-    gpt_enlarge = Cmd.select( "fix the GPT to use all" )>0;
-    y2mil("Label:" << dlabel << " gpt_enlarge:" << gpt_enlarge);
+	bool ret = true;
+
+	const Parted& parted = systeminfo.getParted(dev);
+
+	string dlabel = parted.getLabel();
+
+	Geometry geo = parted.getGeometry();
+	new_cyl = cyl = geo.cylinders;
+	new_head = head = geo.heads;
+	new_sector = sector = geo.sectors;
+	byte_cyl = geo.heads * geo.sectors * logical_sector_size;
+
+	gpt_enlarge = parted.getGptEnlarge();
+
+	y2mil("dlabel:" << dlabel << " gpt_enlarge:" << gpt_enlarge);
+	y2mil("cyl:" << cyl << " head:" << head << " sector:" << sector <<
+	      " logical_sector_size:" << logical_sector_size);
+
     if( dlabel!="loop" )
 	{
 	setLabelData( dlabel );
-	checkPartedOutput(Cmd, parts);
-	if( dlabel.empty() )
-	    {
-	    Cmd.setCombine();
-	    Cmd.execute(FDISKBIN " -l " + quote(device()));
-	    if( Cmd.select( "AIX label" )>0 )
-		{
-		detected_label = "aix";
-		}
-	    }
+	checkPartedOutput(systeminfo);
 	}
     else
 	dlabel.erase();
@@ -562,7 +506,7 @@ Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapa
 
 
 int
-Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd )
+Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const
     {
     string tmp = boost::join(cmd.stderr(), "\n");
     if (!tmp.empty())
@@ -617,11 +561,9 @@ int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line,
     }
 
 
-
 bool
-Disk::scanPartedSectors( const string& Line, unsigned& nr, 
-                         unsigned long long& start, 
-			 unsigned long long& ssize ) const
+Disk::scanPartedCylinders(const string& Line, unsigned& nr, unsigned long& start,
+			  unsigned long& ssize) const
     {
     std::istringstream Data( Line );
     classic(Data);
@@ -634,223 +576,51 @@ Disk::scanPartedSectors( const string& Line, unsigned& nr,
     return( nr>0 );
     }
 
+
 bool
-Disk::scanPartedLine( const string& Line, unsigned& nr, unsigned long& start,
-                      unsigned long& csize, PartitionType& type, unsigned& id,
-		      bool& boot ) const
+Disk::scanPartedSectors(const string& Line, unsigned& nr, unsigned long long& start,
+			unsigned long long& ssize) const
     {
-    y2deb("Line:" << Line);
     std::istringstream Data( Line );
     classic(Data);
 
     nr=0;
-    unsigned long StartM = 0;
-    unsigned long EndM = 0;
-    string PartitionType;
-    type = PRIMARY;
     string skip;
-    if( label == "msdos" )
-	{
-	Data >> nr >> StartM >> skip >> EndM >> skip >> skip >> PartitionType;
-	}
-    else
-	{
-	Data >> nr >> StartM >> skip >> EndM >> skip >> skip;
-	}
-    if (Data.fail())
-	{
-	y2mil( "invalid line:" << Line );
-	nr = 0;
-	}
-
     char c;
-    string TInfo;
-    Data.unsetf(ifstream::skipws);
-    Data >> c;
-    char last_char = ',';
-    while( Data.good() && !Data.eof() )
-	{
-	if( !isspace(c) )
-	    {
-	    TInfo += c;
-	    last_char = c;
-	    }
-	else
-	    {
-	    if( last_char != ',' )
-		{
-		TInfo += ",";
-		last_char = ',';
-		}
-	    }
-	Data >> c;
-	}
-
-    if( nr>0 )
-	{
-	y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM << " Type:" <<
-	      toString(type));
-	start = StartM;
-	csize = EndM-StartM+1;
-	if( start+csize > cylinders() )
-	    {
-	    csize = cylinders()-start;
-	    y2mil("new csize:" << csize);
-	    }
-
-	boost::to_lower(TInfo, locale::classic());
-	list<string> flags = splitString(TInfo, ",");
-	y2mil("TInfo:" << TInfo << " flags:" << flags);
-
-	boot = contains(flags, "boot");
-
-	id = Partition::ID_LINUX;
-
-	if( ext_possible )
-	    {
-	    if( PartitionType == "extended" )
-		{
-		type = EXTENDED;
-		id = Partition::ID_EXTENDED;
-		}
-	    else if( nr>=5 )
-		{
-		type = LOGICAL;
-		}
-	    }
-	else if (contains_if(flags, string_starts_with("fat")))
-	    {
-	    id = Partition::ID_DOS32;
-	    }
-	else if (contains(flags, "ntfs"))
-	    {
-	    id = Partition::ID_NTFS;
-	    }
-	else if (contains_if(flags, string_contains("swap")))
-	    {
-	    id = Partition::ID_SWAP;
-	    }
-	else if (contains(flags, "raid"))
-	    {
-	    id = Partition::ID_RAID;
-	    }
-	else if (contains(flags, "lvm"))
-	    {
-	    id = Partition::ID_LVM;
-	    }
-
-	list<string>::const_iterator it1 = find_if(flags.begin(), flags.end(),
-						   string_starts_with("type="));
-	if (it1 != flags.end())
-	    {
-	    string val = string(*it1, 5);
-
-	    if( label != "mac" )
-		{
-		int tmp_id = 0;
-		std::istringstream Data2(val);
-		classic(Data2);
-		Data2 >> std::hex >> tmp_id;
-		if( tmp_id>0 )
-		    {
-		    id = tmp_id;
-		    }
-		}
-	    else
-		{
-		if( id == Partition::ID_LINUX )
-		    {
-		    if( val.find( "apple_hfs" ) != string::npos ||
-			val.find( "apple_bootstrap" ) != string::npos )
-			{
-			id = Partition::ID_APPLE_HFS;
-			}
-		    else if( val.find( "apple_partition" ) != string::npos ||
-			val.find( "apple_driver" ) != string::npos ||
-			val.find( "apple_loader" ) != string::npos ||
-			val.find( "apple_boot" ) != string::npos ||
-			val.find( "apple_prodos" ) != string::npos ||
-			val.find( "apple_fwdriver" ) != string::npos ||
-			val.find( "apple_patches" ) != string::npos )
-			{
-			id = Partition::ID_APPLE_OTHER;
-			}
-		    else if( val.find( "apple_ufs" ) != string::npos )
-			{
-			id = Partition::ID_APPLE_UFS;
-			}
-		    }
-		}
-	    }
-
-	if( label == "gpt" )
-	    {
-	    if (contains(flags, "boot") && contains_if(flags, string_starts_with("fat")))
-		{
-		id = Partition::ID_GPT_BOOT;
-		}
-	    if (contains(flags, "hp-service"))
-		{
-		id = Partition::ID_GPT_SERVICE;
-		}
-	    if (contains(flags, "msftres"))
-		{
-		id = Partition::ID_GPT_MSFTRES;
-		}
-	    if (contains(flags, "hfs+") || contains(flags, "hfs"))
-		{
-		id = Partition::ID_APPLE_HFS;
-		}
-	    }
-	y2mil("Fields Num:" << nr << " Id:" << id << " Ptype:" << toString(type) << " Start:" <<
-	      start << " Size:" << csize);
-	}
+    Data >> nr >> start >> c >> skip >> ssize;
+    y2mil( "nr:" << nr << " st:" << start << " sz:" << ssize << " c:" << c );
     return( nr>0 );
     }
 
 
 bool
-    Disk::checkPartedOutput(const SystemCmd& Cmd, const ProcParts& parts)
+    Disk::checkPartedOutput(SystemInfo& systeminfo)
     {
-    int cnt;
-    string line;
-    string tmp;
-    unsigned long range_exceed = 0;
-    list<Partition *> pl;
+	const ProcParts& parts = systeminfo.getProcParts();
+	const Parted& parted = systeminfo.getParted(dev);
 
-    cnt = Cmd.numLines();
-    for( int i=0; i<cnt; i++ )
+	unsigned long range_exceed = 0;
+	list<Partition *> pl;
+
+	for (Parted::const_iterator it = parted.getEntries().begin();
+	     it != parted.getEntries().end(); ++it)
 	{
-	unsigned pnr;
-	unsigned long c_start;
-	unsigned long c_size;
-	PartitionType type;
-	unsigned id;
-	bool boot;
-
-	line = Cmd.getLine(i);
-	tmp = extractNthWord( 0, line );
-	if( tmp.length()>0 && isdigit(tmp[0]) )
+	    if (it->num < range)
 	    {
-	    if( scanPartedLine( line, pnr, c_start, c_size, type, id, boot ))
+		unsigned long long s = cylinderToKb(it->cylRegion.len());
+		Partition* p = new Partition(*this, getPartName(it->num), getPartDevice(it->num),
+					     it->num, s, it->cylRegion, it->type, it->id, it->boot);
+		if (parts.getSize(p->procName(), s))
 		{
-		if( pnr<range )
-		    {
-		    unsigned long long s = cylinderToKb(c_size);
-		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
-						 s, Region(c_start, c_size), type, id, boot);
-		    if (parts.getSize(p->procName(), s))
-			{
-			if( s>0 && p->type() != EXTENDED )
-			    p->setSize( s );
-			}
-		    pl.push_back( p );
-		    }
-		else
-		    range_exceed = max( range_exceed, (unsigned long)pnr );
+		    if( s>0 && p->type() != EXTENDED )
+			p->setSize( s );
 		}
+		pl.push_back( p );
 	    }
+	    else
+		range_exceed = max(range_exceed, (unsigned long) it->num);
 	}
+
     y2mil("nm:" << nm);
     if (!dmp_slave && !checkPartedValid(parts, nm, pl, range_exceed))
 	{
@@ -2144,11 +1914,9 @@ Disk::getPartedValues( Partition *p ) const
 	std::string cmd_str = cmd_line.str();
 	cmd_line << " | grep -w \"^[ \t]*\"" << p->nr();
 	SystemCmd cmd( cmd_line.str() );
-	unsigned nr, id;
+	unsigned nr;
 	unsigned long start, csize;
 	unsigned long long sstart, ssize;
-	PartitionType type;
-	bool boot;
 	if( cmd.numLines()>1 && 
 	    scanPartedSectors( cmd.getLine(1), nr, sstart, ssize ))
 	    {
@@ -2179,15 +1947,15 @@ Disk::getPartedValues( Partition *p ) const
 		}
 	    }
 	if( cmd.numLines()>0 &&
-	    scanPartedLine( cmd.getLine(0), nr, start, csize, type, id, boot ))
+	    scanPartedCylinders( cmd.getLine(0), nr, start, csize ))
 	    {
 	    ProcParts parts;
 	    y2mil("really created at cyl:" << start << " csize:" << csize);
 	    p->changeRegion(Region(start, csize), cylinderToKb(csize));
-	    unsigned long long s=0;
 	    ret = true;
 	    if( !dmp_slave && p->type() != EXTENDED )
 		{
+		unsigned long long s = 0;
 		if (!parts.getSize(p->procName(), s) || s == 0)
 		    {
 		    y2err("device " << p->device() << " not found in /proc/partitions");
