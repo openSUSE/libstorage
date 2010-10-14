@@ -57,10 +57,12 @@ namespace storage
 
 	struct Entry
 	{
-	    Entry() : num(0), cylRegion(0, 0), type(PRIMARY), id(0), boot(false) {}
+	    Entry() : num(0), cylRegion(0, 0), secRegion(0, 0), type(PRIMARY), id(0),
+		      boot(false) {}
 
 	    unsigned num;
 	    Region cylRegion;
+	    Region secRegion;
 	    PartitionType type;
 	    unsigned id;
 	    bool boot;
@@ -76,6 +78,8 @@ namespace storage
 
 	const vector<Entry>& getEntries() const { return entries; }
 
+	bool getEntry(unsigned num, Entry& entry) const;
+
     private:
 
 	typedef vector<Entry>::iterator iterator;
@@ -88,6 +92,7 @@ namespace storage
 	void scanSectorSizeLine(const string& line);
 	void scanGeometryLine(const string& line);
 	void scanCylEntryLine(const string& line);
+	void scanSecEntryLine(const string& line);
 
     };
 

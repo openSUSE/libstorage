@@ -31,11 +31,11 @@
 namespace storage
 {
 
-class Region 
+    class Region
     {
     public:
 
-	Region( unsigned long start, unsigned long len ) : s(start), l(len) {}
+	Region(unsigned long long start, unsigned long long len) : s(start), l(len) {}
 
 	bool doIntersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
@@ -43,8 +43,8 @@ class Region
 	    {
 	    if (doIntersect(r))
 		{
-		unsigned long s = std::max( r.start(), start() );
-		unsigned long e = std::min( r.end(), end() );
+		unsigned long long s = std::max(r.start(), start());
+		unsigned long long e = std::min(r.end(), end());
 		return Region(s, e - s + 1);
 		}
 	    return Region(0, 0);
@@ -59,9 +59,13 @@ class Region
 	    { return( s < r.start() ); }
 	bool operator>(const Region& r) const
 	    { return( s > r.start() ); }
-	unsigned long start() const { return( s ); }
-	unsigned long end() const { return( s+l-1 ); }
-	unsigned long len() const { return( l ); }
+
+	unsigned long long start() const { return s; }
+	unsigned long long len() const { return l; }
+	unsigned long long end() const { return s + l - 1; }
+
+	void setStart(unsigned long long start) { s = start; }
+	void setLen(unsigned long long len) { l = len; }
 
 	friend std::ostream& operator<<(std::ostream& s, const Region& p);
 
@@ -69,8 +73,10 @@ class Region
 	friend void setChildValue(xmlNode* node, const char* name, const Region& value);
 
     protected:
-	unsigned long s;
-	unsigned long l;
+
+	unsigned long long s;
+	unsigned long long l;
+
     };
 
 }

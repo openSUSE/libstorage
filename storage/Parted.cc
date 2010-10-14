@@ -114,7 +114,7 @@ namespace storage
     Parted::Parted(const string& device)
 	: gpt_enlarge(false)
     {
-	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print");
+	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print unit s print");
 
 	if (cmd.select("Partition Table:") > 0)
 	    label = extractNthWord(2, cmd.getLine(0, true));
@@ -137,13 +137,21 @@ namespace storage
 
 	if (label != "loop")
 	{
+	    int els = 0;
+
 	    const vector<string>& lines = cmd.stdout();
 	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	    {
+		if (it->empty())
+		    els++;
+
 		string tmp = extractNthWord(0, *it);
 		if (!tmp.empty() && isdigit(tmp[0]))
 		{
-		    scanCylEntryLine(*it);
+		    if (els <= 2)
+			scanCylEntryLine(*it);
+		    else
+			scanSecEntryLine(*it);
 		}
 	    }
 	}
@@ -158,10 +166,26 @@ namespace storage
     }
 
 
+    bool
+    Parted::getEntry(unsigned num, Entry& entry) const
+    {
+	for (const_iterator it = entries.begin(); it != entries.end(); ++it)
+	{
+	    if (it->num == num)
+	    {
+		entry = *it;
+		return true;
+	    }
+	}
+
+	return false;
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const Parted::Entry& e)
     {
-	s << "num:" << e.num << " cylRegion:" << e.cylRegion << " type:" << toString(e.type)
-	  << " id:" << e.id;
+	s << "num:" << e.num << " cylRegion:" << e.cylRegion << " secRegion:" << e.secRegion
+	  << " type:" << toString(e.type) << " id:" << e.id;
 
 	if (e.boot)
 	    s << " boot";
@@ -236,6 +260,8 @@ namespace storage
 	{
 	    Data >> entry.num >> StartM >> skip >> EndM >> skip >> SizeM >> skip;
 	}
+
+	assert(entry.num != 0);
 
 	if (Data.fail() || entry.num == 0)
 	{
@@ -384,6 +410,36 @@ namespace storage
 	y2mil("num:" << entry.num << " id:" << entry.id << " type:" << toString(entry.type));
 
 	entries.push_back(entry);
+    }
+
+
+    void
+    Parted::scanSecEntryLine(const string& line)
+    {
+	std::istringstream Data(line);
+	classic(Data);
+
+	unsigned num;
+	unsigned long long startSec = 0;
+	unsigned long long endSec = 0;
+	unsigned long long sizeSec = 0;
+	string skip;
+
+	Data >> num >> startSec >> skip >> endSec >> skip >> sizeSec >> skip;
+
+	assert(num != 0);
+
+	if (Data.fail() || num == 0)
+	    return;
+
+	for (iterator it = entries.begin(); it != entries.end(); ++it)
+	{
+	    if (it->num == num)
+	    {
+		it->secRegion = Region(startSec, sizeSec);
+		return;
+	    }
+	}
     }
 
 }
