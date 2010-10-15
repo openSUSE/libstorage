@@ -65,6 +65,8 @@ namespace storage
 	unsigned long long len() const { return l; }
 	unsigned long long end() const { return s + l - 1; }
 
+	bool empty() const { return l == 0; }
+
 	void setStart(unsigned long long start) { s = start; }
 	void setLen(unsigned long long len) { l = len; }
 

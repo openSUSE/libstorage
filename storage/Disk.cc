@@ -1119,7 +1119,7 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
 	  checkRelaxed);
     getStorage()->logCo( this );
-    int ret = createChecks( type, start, len, checkRelaxed );
+    int ret = createChecks(type, Region(start, len), checkRelaxed);
     unsigned number = 0;
     if( ret==0 )
 	{
@@ -1167,18 +1167,18 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     return( ret );
     }
 
-int Disk::createChecks( PartitionType& type, unsigned long start,
-                        unsigned long len, bool checkRelaxed ) const
+
+    int
+    Disk::createChecks(PartitionType& type, const Region& cylRegion, bool checkRelaxed) const
     {
-    y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
+    y2mil("type:" << toString(type) << " cylRegion:" << cylRegion << " relaxed:" <<
 	  checkRelaxed);
     unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
     int ret = 0;
-    Region r( start, len );
     ConstPartPair ext = partPair(notDeletedExt);
     if( type==PTYPE_ANY )
 	{
-	if( ext.empty() || !ext.begin()->contains( Region(start,1) ))
+	if( ext.empty() || !ext.begin()->contains( Region(cylRegion.start(), 1) ))
 	    type = PRIMARY;
 	else
 	    type = LOGICAL;
@@ -1188,12 +1188,12 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	{
 	ret = DISK_CHANGE_READONLY;
 	}
-    if( ret==0 && (r.end() > cylinders()+fuzz) )
+    if( ret==0 && (cylRegion.end() > cylinders()+fuzz) )
 	{
 	y2mil("too large for disk cylinders " << cylinders());
 	ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
-    if( ret==0 && len==0 )
+    if( ret==0 && cylRegion.empty() )
 	{
 	ret = DISK_PARTITION_ZERO_SIZE;
 	}
@@ -1205,21 +1205,21 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	{
 	ConstPartPair p = (type != LOGICAL) ? partPair(Partition::notDeleted) : partPair(notDeletedLog);
 	ConstPartIter i = p.begin();
-	while( i!=p.end() && !i->intersectArea( r, fuzz ))
+	while( i!=p.end() && !i->intersectArea( cylRegion, fuzz ))
 	    {
 	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(r) );
+	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(cylRegion) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
-    if( ret==0 && type==LOGICAL && !ext.begin()->contains( r, fuzz ))
+    if( ret==0 && type==LOGICAL && !ext.begin()->contains( cylRegion, fuzz ))
 	{
-	y2war("outside ext r:" <<  r << " ext:" << ext.begin()->cylRegion() <<
-	      "inter:" << ext.begin()->cylRegion().intersect(r) );
+	y2war("outside ext r:" << cylRegion << " ext:" << ext.begin()->cylRegion() <<
+	      "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
 	ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
     if( ret==0 && type==EXTENDED )

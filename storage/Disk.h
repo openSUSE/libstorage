@@ -244,8 +244,7 @@ class Disk : public Container
 	virtual void redetectGeometry();
 	void changeNumbers( const PartIter& b, const PartIter& e, 
 	                    unsigned start, int incr );
-	int createChecks( storage::PartitionType& type, unsigned long start,
-	                  unsigned long len, bool checkRelaxed ) const;
+	int createChecks(PartitionType& type, const Region& cylRegion, bool checkRelaxed) const;
 	void removePresentPartitions();
 	void removeFromMemory();
 	void enlargeGpt();
