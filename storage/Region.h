@@ -35,6 +35,7 @@ namespace storage
     {
     public:
 
+	Region() : s(0), l(0) {}
 	Region(unsigned long long start, unsigned long long len) : s(start), l(len) {}
 
 	bool doIntersect( const Region& r ) const
