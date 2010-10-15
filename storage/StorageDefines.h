@@ -33,8 +33,6 @@
 #define ADDPARTBIN "/usr/sbin/addpart"
 #define DELPARTBIN "/usr/sbin/delpart"
 
-#define FDISKBIN "/sbin/fdisk"
-
 #define MDADMBIN "/sbin/mdadm"
 
 #define PVCREATEBIN "/sbin/pvcreate"
