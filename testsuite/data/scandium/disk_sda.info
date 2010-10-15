@@ -6,9 +6,11 @@
   <major>8</major>
   <minor>0</minor>
   <range>16</range>
-  <cylinder>17849</cylinder>
-  <head>255</head>
-  <sector>63</sector>
+  <geometry>
+    <cylinders>17849</cylinders>
+    <heads>255</heads>
+    <sectors>63</sectors>
+  </geometry>
   <label>gpt</label>
   <max_primary>15</max_primary>
   <udev_path>pci-0001:00:01.0-sas-phy0:1-0x5000c5000001ecdd:0-lun0</udev_path>

@@ -94,11 +94,12 @@ namespace storage
 
 	getChildValue(node, "range", range);
 
-	getChildValue(node, "logical_sector_size", logical_sector_size);
-
-	getChildValue(node, "cylinder", cyl);
-	getChildValue(node, "head", head);
-	getChildValue(node, "sector", sector);
+	Geometry geometry;
+	getChildValue(node, "geometry", geometry);
+	cyl = geometry.cylinders;
+	head = geometry.heads;
+	sector = geometry.sectors;
+	logical_sector_size = geometry.logical_sector_size;
 	byte_cyl = head * sector * logical_sector_size;
 
 	getChildValue(node, "label", label);
@@ -152,12 +153,7 @@ namespace storage
 
 	setChildValue(node, "range", range);
 
-	if (logical_sector_size != 512)
-	    setChildValue(node, "logical_sector_size", logical_sector_size);
-
-	setChildValue(node, "cylinder", cyl);
-	setChildValue(node, "head", head);
-	setChildValue(node, "sector", sector);
+	setChildValue(node, "geometry", getGeometry());
 
 	setChildValue(node, "label", label);
 	setChildValue(node, "max_primary", max_primary);

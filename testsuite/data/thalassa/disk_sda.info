@@ -6,9 +6,11 @@
   <major>8</major>
   <minor>0</minor>
   <range>256</range>
-  <cylinder>38913</cylinder>
-  <head>255</head>
-  <sector>63</sector>
+  <geometry>
+    <cylinders>38913</cylinders>
+    <heads>255</heads>
+    <sectors>63</sectors>
+  </geometry>
   <label>msdos</label>
   <max_primary>4</max_primary>
   <ext_possible>true</ext_possible>

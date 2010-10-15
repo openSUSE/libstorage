@@ -27,6 +27,7 @@
 
 #include "storage/Container.h"
 #include "storage/Partition.h"
+#include "storage/Geometry.h"
 
 
 namespace storage
@@ -72,6 +73,7 @@ class Disk : public Container
 	unsigned long cylinders() const { return cyl; }
 	unsigned heads() const { return head; }
 	unsigned sectors() const { return sector; }
+	Geometry getGeometry() const { return Geometry(cyl, head, sector, logical_sector_size); }
 
 	Region usableCylRegion() const;
 

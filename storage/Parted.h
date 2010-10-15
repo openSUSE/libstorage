@@ -24,29 +24,12 @@
 #define PARTED_H
 
 #include "storage/StorageInterface.h"
+#include "storage/Geometry.h"
 #include "storage/Region.h"
 
 
 namespace storage
 {
-
-    struct Geometry
-    {
-	Geometry();
-
-	unsigned long cylinders;
-	unsigned int heads;
-	unsigned int sectors;
-	unsigned int logical_sector_size;
-
-	unsigned long cylinderSize() const { return heads * sectors * logical_sector_size; }
-
-	friend std::ostream& operator<<(std::ostream& s, const Geometry& geo);
-    };
-
-
-    bool detectGeometry(const string& device, Geometry& geometry);
-
 
     class Parted
     {

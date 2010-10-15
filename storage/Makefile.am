@@ -50,6 +50,7 @@ libstorage_la_SOURCES =					\
 	ProcMdstat.cc		ProcMdstat.h		\
 	EtcFstab.cc		EtcFstab.h		\
 	EtcMdadm.cc		EtcMdadm.h		\
+	Geometry.cc		Geometry.h		\
 	AppUtil.cc		AppUtil.h		\
 	Enum.cc			Enum.h			\
 	Lock.cc			Lock.h			\
