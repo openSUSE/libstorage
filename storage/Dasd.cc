@@ -151,9 +151,9 @@ namespace storage
     return( ret );
     }
 
-bool
-Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
-                     unsigned long& csize )
+
+    bool
+    Dasd::scanFdasdLine(const string& Line, unsigned& nr, Region& cylRegion) const
     {
     y2deb("Line:" << Line);
     std::istringstream Data( Line );
@@ -169,14 +169,15 @@ Dasd::scanFdasdLine( const string& Line, unsigned& nr, unsigned long& start,
     y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM);
     if( nr>0 )
       {
-      start = StartM/head;
-      csize = EndM/head-start+1;
+      unsigned long start = StartM/head;
+      unsigned long csize = EndM/head-start+1;
       if( start+csize > cylinders() )
 	  {
 	  csize = cylinders()-start;
 	  y2mil("new csize:" << csize);
 	  }
-      y2mil("Fields Num:" << nr << " Start:" << start << " Size:" << csize);
+      cylRegion = Region(start, csize);
+      y2mil("Fields Num:" << nr << " cylRegion:" << cylRegion);
       }
    return( nr>0 );
    }
@@ -196,20 +197,19 @@ bool
     for( int i=0; i<cnt; i++)
 	{
 	unsigned pnr;
-	unsigned long c_start;
-	unsigned long c_size;
+	Region cylRegion;
 
 	line = cmd.getLine(i);
 	tmp = extractNthWord( 0, line );
 	if( part.match(tmp) )
 	    {
-	    if( scanFdasdLine( line, pnr, c_start, c_size ))
+	    if( scanFdasdLine( line, pnr, cylRegion ))
 		{
 		if( pnr<range )
 		    {
-		    unsigned long long s = cylinderToKb(c_size);
+		    unsigned long long s = cylinderToKb(cylRegion.len());
 		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
-						 s, Region(c_start, c_size), PRIMARY);
+						 s, cylRegion, PRIMARY);
 		    if (parts.getSize(p->device(), s))
 			{
 			p->setSize( s );
@@ -221,6 +221,7 @@ bool
 		}
 	    }
 	}
+
     y2mil("nm:" << nm);
     unsigned long dummy = 0;
     if (!checkPartedValid(parts, nm, pl, dummy))

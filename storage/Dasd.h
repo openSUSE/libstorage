@@ -68,8 +68,7 @@ class Dasd : public Disk
 	bool detectPartitionsFdasd(const ProcParts& parts);
 	bool detectPartitions(SystemInfo& systeminfo);
 	bool checkFdasdOutput(SystemCmd& Cmd, const ProcParts& parts);
-	bool scanFdasdLine( const string& Line, unsigned& nr, 
-	                    unsigned long& start, unsigned long& csize );
+	bool scanFdasdLine(const string& line, unsigned& nr, Region& cylRegion) const;
 	void getGeometry(SystemCmd& cmd, unsigned long& c, unsigned& h, unsigned& s) const;
 	void redetectGeometry() {};
         int doCreate( Volume* v ) { return(doFdasd()); }
