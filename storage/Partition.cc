@@ -539,6 +539,21 @@ Partition::getCommitActions(list<commitAction>& l) const
     }
 
 
+    Region
+    Partition::detectSysfsSecRegion(bool log_error) const
+    {
+	string start_p = sysfsPath() + "/start";
+	string size_p = sysfsPath() + "/size";
+
+	unsigned long long start = 0;
+	unsigned long long len = 0;
+	read_sysfs_property(start_p, start, log_error);
+	read_sysfs_property(size_p, len, log_error);
+
+	return Region(start, len);
+    }
+
+
 void
 Partition::getInfo( PartitionAddInfo& tinfo ) const
     {

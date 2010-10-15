@@ -54,7 +54,7 @@ class Partition : public Volume
 	unsigned long cylStart() const { return reg.start(); }
 	unsigned long cylSize() const { return reg.len(); }
 	unsigned long cylEnd() const { return reg.end(); }
-	const Region& region() const { return reg; }
+	const Region& cylRegion() const { return reg; }
 
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
@@ -91,6 +91,8 @@ class Partition : public Volume
 	void setResizedSize( unsigned long long SizeK );
 	void forgetResize(); 
 	bool canUseDevice() const;
+
+	Region detectSysfsSecRegion(bool log_error = true) const;
 
 	void getInfo( storage::PartitionInfo& info ) const;
 	void getInfo( storage::PartitionAddInfo& info ) const;

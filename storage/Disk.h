@@ -227,15 +227,10 @@ class Disk : public Container
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
 	                     bool stop_hald=true );
 	bool checkPartedOutput(SystemInfo& systeminfo);
-	bool scanPartedCylinders(const string& Line, unsigned& nr, unsigned long& start,
-				 unsigned long& ssize) const;
-	bool scanPartedSectors(const string& Line, unsigned& nr, unsigned long long& start,
-			       unsigned long long& ssize) const;
 	bool checkPartedValid(const ProcParts& parts, const string& diskname,
 	                       std::list<Partition*>& pl, unsigned long& rng ) const;
-	int callDelpart( unsigned nr ) const;
-	int callAddpart( unsigned nr, unsigned long long sstart, 
-		         unsigned long long ssize ) const;
+	bool callDelpart(unsigned nr) const;
+	bool callAddpart(unsigned nr, const Region& secRegion) const;
 	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
 	                       unsigned long long& end ) const;
@@ -244,7 +239,6 @@ class Disk : public Container
 	                   SystemInfo& ppart );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
-	void getGeometry(const string& line, unsigned long& c, unsigned& h, unsigned& s) const;
 	virtual void redetectGeometry();
 	void changeNumbers( const PartIter& b, const PartIter& e, 
 	                    unsigned start, int incr );

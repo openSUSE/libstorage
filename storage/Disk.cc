@@ -333,60 +333,6 @@ bool Disk::detectGeometry()
     }
 
 
-    void
-    Disk::getGeometry(const string& line, unsigned long& c, unsigned& h, unsigned& s) const
-    {
-    string tmp( line );
-    tmp.erase( 0, tmp.find(':')+1 );
-    tmp = extractNthWord( 0, tmp );
-    list<string> geo = splitString( extractNthWord( 0, tmp ), "," );
-    list<string>::const_iterator i = geo.begin();
-    unsigned long val = 0;
-    bool sect_head_changed = false;
-    bool cyl_changed = false;
-    if( i!=geo.end() )
-	{
-	*i >> val;
-	if( val>0 )
-	    {
-	    c = val;
-	    cyl_changed = true;
-	    }
-	}
-    ++i;
-    val = 0;
-    if( i!=geo.end() )
-	{
-	*i >> val;
-	if( val>0 )
-	    {
-	    h = (unsigned)val;
-	    sect_head_changed = true;
-	    }
-	}
-    ++i;
-    val = 0;
-    if( i!=geo.end() )
-	{
-	*i >> val;
-	if( val>0 )
-	    {
-	    s = (unsigned)val;
-	    sect_head_changed = true;
-	    }
-	}
-    if( !cyl_changed && sect_head_changed )
-	{
-	c = kbToSector(sizeK())/(s*h);
-	if( c<=0 )
-	    c=1;
-	y2mil("new c:" << c);
-	}
-    y2mil("line:" << line);
-    y2mil("c:" << c << " h:" << h << " s:" << s);
-    }
-
-
     bool
     Disk::detectPartitions(SystemInfo& systeminfo)
     {
@@ -558,38 +504,6 @@ int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line,
     if( stop_hald )
 	getStorage()->handleHald(false);
     return( ret );
-    }
-
-
-bool
-Disk::scanPartedCylinders(const string& Line, unsigned& nr, unsigned long& start,
-			  unsigned long& ssize) const
-    {
-    std::istringstream Data( Line );
-    classic(Data);
-
-    nr=0;
-    string skip;
-    char c;
-    Data >> nr >> start >> c >> skip >> ssize;
-    y2mil( "nr:" << nr << " st:" << start << " sz:" << ssize << " c:" << c );
-    return( nr>0 );
-    }
-
-
-bool
-Disk::scanPartedSectors(const string& Line, unsigned& nr, unsigned long long& start,
-			unsigned long long& ssize) const
-    {
-    std::istringstream Data( Line );
-    classic(Data);
-
-    nr=0;
-    string skip;
-    char c;
-    Data >> nr >> start >> c >> skip >> ssize;
-    y2mil( "nr:" << nr << " st:" << start << " sz:" << ssize << " c:" << c );
-    return( nr>0 );
     }
 
 
@@ -1031,7 +945,7 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
 
 	list<Region> tmp;
 	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
-	    tmp.push_back(i->region());
+	    tmp.push_back(i->cylRegion());
 	tmp.sort();
 
 	for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
@@ -1056,7 +970,7 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
 
 	    list<Region> tmp;
 	    for (ConstPartIter i = p.begin(); i != p.end(); ++i)
-		tmp.push_back(i->region());
+		tmp.push_back(i->cylRegion());
 	    tmp.sort();
 
 	    for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
@@ -1301,15 +1215,15 @@ int Disk::createChecks( PartitionType& type, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() <<
-	           " inter:" << i->region().intersect(r) );
+	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
     if( ret==0 && type==LOGICAL && !ext.begin()->contains( r, fuzz ))
 	{
-	y2war( "outside ext r:" <<  r << " ext:" << ext.begin()->region() <<
-	       "inter:" << ext.begin()->region().intersect(r) );
+	y2war("outside ext r:" <<  r << " ext:" << ext.begin()->cylRegion() <<
+	      "inter:" << ext.begin()->cylRegion().intersect(r) );
 	ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	}
     if( ret==0 && type==EXTENDED )
@@ -1365,14 +1279,14 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() <<
-	           " inter:" << i->region().intersect(r) );
+	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	if( ret==0 && !ext.begin()->contains( r, fuzz ))
 	    {
-	    y2war( "outside ext r:" <<  r << " ext:" << ext.begin()->region() <<
-		   "inter:" << ext.begin()->region().intersect(r) );
+	    y2war("outside ext r:" <<  r << " ext:" << ext.begin()->cylRegion() <<
+		  "inter:" << ext.begin()->cylRegion().intersect(r) );
 	    ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	    }
 	}
@@ -1386,8 +1300,8 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war( "overlaps r:" << r << " p:" << i->region() <<
-	           " inter:" << i->region().intersect(r) );
+	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(r) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
@@ -1774,28 +1688,22 @@ void Disk::removeFromMemory()
 	}
     }
 
-void Disk::redetectGeometry()
+
+    void
+    Disk::redetectGeometry()
     {
-    string cmd_line = PARTEDCMD + quote(device()) + " unit cyl print";
-    y2mil("executing cmd:" << cmd_line);
-    SystemCmd Cmd( cmd_line );
-    if( Cmd.select( "BIOS cylinder" )>0 )
+	Parted parted(device());
+	Geometry geo = parted.getGeometry();
+	if (geo.cylinders != cyl)
 	{
-	unsigned long c;
-	unsigned h;
-	unsigned s;
-	string tmp = Cmd.getLine(0, true);
-	getGeometry( tmp, c, h, s );
-	if( c!=0 && c!=cyl )
-	    {
-	    new_cyl = c;
-	    new_head = h;
-	    new_sector = s;
-	    y2mil("new parted geometry Head:" << new_head << " Sector:" << new_sector <<
-		  " Cylinder:" << new_cyl);
-	    }
+	    new_cyl = geo.cylinders;
+	    new_head = geo.heads;
+	    new_sector = geo.sectors;
+
+	    y2mil("new parted geometry " << geo);
 	}
     }
+
 
 int Disk::doSetType( Volume* v )
     {
@@ -1880,21 +1788,23 @@ int Disk::doSetType( Volume* v )
     return( ret );
     }
 
-int 
-Disk::callDelpart( unsigned nr ) const
+
+    bool
+    Disk::callDelpart(unsigned nr) const
     {
-    SystemCmd c( DELPARTBIN " " + quote(device()) + ' ' + decString(nr) );
-    return( c.retcode() );
+	SystemCmd c(DELPARTBIN " " + quote(device()) + ' ' + decString(nr));
+	return c.retcode() == 0;
     }
 
-int 
-Disk::callAddpart( unsigned nr, unsigned long long sstart, 
-                   unsigned long long ssize ) const
+
+    bool
+    Disk::callAddpart(unsigned nr, const Region& secRegion) const
     {
-    SystemCmd c( ADDPARTBIN " " + quote(device()) + ' ' + decString(nr) + ' ' +
-		 decString(sstart) + ' ' + decString(ssize) );
-    return( c.retcode() );
+	SystemCmd c(ADDPARTBIN " " + quote(device()) + ' ' + decString(nr) + ' ' +
+		    decString(secRegion.start()) + ' ' + decString(secRegion.len()));
+	return c.retcode() == 0;
     }
+
 
 bool
 Disk::getPartedValues( Partition *p ) const
@@ -1908,53 +1818,39 @@ Disk::getPartedValues( Partition *p ) const
 	}
     else
 	{
-	std::ostringstream cmd_line;
-	classic(cmd_line);
-	cmd_line << PARTEDCMD << quote(device()) << " unit cyl print unit s print";
-	std::string cmd_str = cmd_line.str();
-	cmd_line << " | grep -w \"^[ \t]*\"" << p->nr();
-	SystemCmd cmd( cmd_line.str() );
-	unsigned nr;
-	unsigned long start, csize;
-	unsigned long long sstart, ssize;
-	if( cmd.numLines()>1 && 
-	    scanPartedSectors( cmd.getLine(1), nr, sstart, ssize ))
+	Parted parted(device());
+	Parted::Entry entry;
+	if (parted.getEntry(p->nr(), entry))
+	{
+	    Region partedSecRegion = entry.secRegion;
+	    y2mil("partedSecRegion:" << partedSecRegion);
+
+	    if (p->type() == EXTENDED)
+		partedSecRegion.setLen(2);
+
+	    Region sysfsSecRegion = p->detectSysfsSecRegion(false);
+	    y2mil("sysfsSecRegion:" << sysfsSecRegion);
+
+	    if (!no_addpart && partedSecRegion != sysfsSecRegion)
 	    {
-	    string start_p = p->sysfsPath() + "/start";
-	    string size_p = p->sysfsPath() + "/size";
-	    y2mil("start_p:" << start_p << " size_p:" << size_p);
-	    unsigned long long sysfs_start = 0;
-	    unsigned long long sysfs_size = 0;
-	    read_sysfs_property(start_p, sysfs_start, false);
-	    read_sysfs_property(size_p, sysfs_size, false);
-	    if( p->type()==EXTENDED )
-		ssize=2;
-	    y2mil( "sectors nr:" << nr << " sysfs  start:" << sysfs_start << 
-	           " size:" << sysfs_size );
-	    y2mil( "sectors nr:" << nr << " parted start:" << sstart << 
-	           " size:" << ssize );
-	    if( nr == p->nr() && !no_addpart &&
-	        (sysfs_start!=sstart || sysfs_size!=ssize) )
-		{
-		callDelpart( nr );
-		callAddpart( nr, sstart, ssize );
-		read_sysfs_property(start_p, sysfs_start);
-		read_sysfs_property(size_p, sysfs_size);
-		if( sysfs_start!=sstart || sysfs_size!=ssize )
-		    y2err( "addpart failed sectors parted:" << sstart << ' ' <<
-		           ssize << " sysfs:" << sysfs_start << ' ' << 
-			   sysfs_size );
-		}
+		callDelpart(p->nr());
+		callAddpart(p->nr(), partedSecRegion);
+
+		sysfsSecRegion = p->detectSysfsSecRegion();
+
+		if (partedSecRegion != sysfsSecRegion)
+		    y2err("addpart failed sysfsSecRegion:" << sysfsSecRegion);
 	    }
-	if( cmd.numLines()>0 &&
-	    scanPartedCylinders( cmd.getLine(0), nr, start, csize ))
-	    {
-	    ProcParts parts;
-	    y2mil("really created at cyl:" << start << " csize:" << csize);
-	    p->changeRegion(Region(start, csize), cylinderToKb(csize));
+
+	    const Region& partedCylRegion = entry.cylRegion;
+	    y2mil("partedCylRegion:" << partedSecRegion);
+	    p->changeRegion(partedCylRegion, cylinderToKb(partedCylRegion.len()));
+
 	    ret = true;
+
 	    if( !dmp_slave && p->type() != EXTENDED )
 		{
+		ProcParts parts;
 		unsigned long long s = 0;
 		if (!parts.getSize(p->procName(), s) || s == 0)
 		    {
@@ -1965,7 +1861,6 @@ Disk::getPartedValues( Partition *p ) const
 		    p->setSize( s );
 		}
 	    }
-	cmd.execute( cmd_str );
 	}
     return( ret );
     }
@@ -1983,26 +1878,18 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
 	}
     else
 	{
-	std::ostringstream cmd_line;
-	classic(cmd_line);
-	cmd_line << PARTEDCMD << quote(device()) << " unit s print | grep -w \"^[ \t]*\"" << p->nr();
-	SystemCmd cmd( cmd_line.str() );
-	if( cmd.numLines()>0 )
-	    {
-	    string dummy, s1, s2;
-	    std::istringstream data( cmd.getLine(0) );
-	    classic(data);
-	    data >> dummy >> s1 >> s2;
-	    y2mil("dummy:\"" << dummy << "\" s1:\"" << s1 << "\" s2:\"" << s2 << "\"");
-	    start = end = 0;
-	    s1 >> start;
-	    s2 >> end;
-	    y2mil("start:" << start << " end:" << end);
-	    ret = end>0;
-	    }
+	Parted parted(device());
+	Parted::Entry entry;
+	if (parted.getEntry(p->nr(), entry))
+	{
+	    start = entry.secRegion.start();
+	    end = entry.secRegion.end();
+	    ret = true;
+	}
 	}
     return( ret );
     }
+
 
 void Disk::enlargeGpt()
     {
