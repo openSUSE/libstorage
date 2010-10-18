@@ -79,8 +79,7 @@ class MdPartCo : public Container
     int removePartition( unsigned nr );
     int changePartitionId( unsigned nr, unsigned id );
     int forgetChangePartitionId( unsigned nr );
-    int changePartitionArea( unsigned nr, unsigned long start,
-        unsigned long size, bool checkRelaxed=false );
+	int changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed = false);
     int nextFreePartition(storage::PartitionType type, unsigned& nr,
         string& device) const;
     int destroyPartitionTable( const string& new_label );

@@ -1234,12 +1234,12 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     return ret;
     }
 
-int Disk::changePartitionArea( unsigned nr, unsigned long start,
-			       unsigned long len, bool checkRelaxed )
+
+    int
+    Disk::changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed)
     {
-    y2mil("begin nr " << nr << " at " << start << " len " << len << " relaxed:" << checkRelaxed);
+    y2mil("begin nr:" << nr << " cylRegion:" << cylRegion << " relaxed:" << checkRelaxed);
     int ret = 0;
-    Region r( start, len );
     unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
     if( readonly() )
 	{
@@ -1255,12 +1255,12 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	{
 	ret = DISK_PARTITION_NOT_FOUND;
 	}
-    if( ret==0 && r.end() > cylinders()+fuzz )
+    if( ret==0 && cylRegion.end() > cylinders()+fuzz )
 	{
 	y2mil("too large for disk cylinders " << cylinders());
 	ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
-    if( ret==0 && len==0 )
+    if( ret==0 && cylRegion.empty() )
 	{
 	ret = DISK_PARTITION_ZERO_SIZE;
 	}
@@ -1269,20 +1269,20 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	ConstPartPair ext = partPair(notDeletedExt);
 	p = partPair( notDeletedLog );
 	ConstPartIter i = p.begin();
-	while( i!=p.end() && (i==part||!i->intersectArea( r, fuzz )) )
+	while( i!=p.end() && (i==part||!i->intersectArea( cylRegion, fuzz )) )
 	    {
 	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(r) );
+	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(cylRegion) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
-	if( ret==0 && !ext.begin()->contains( r, fuzz ))
+	if( ret==0 && !ext.begin()->contains( cylRegion, fuzz ))
 	    {
-	    y2war("outside ext r:" <<  r << " ext:" << ext.begin()->cylRegion() <<
-		  "inter:" << ext.begin()->cylRegion().intersect(r) );
+	    y2war("outside ext r:" <<  cylRegion << " ext:" << ext.begin()->cylRegion() <<
+		  "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
 	    ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	    }
 	}
@@ -1290,20 +1290,20 @@ int Disk::changePartitionArea( unsigned nr, unsigned long start,
 	{
 	ConstPartIter i = p.begin();
 	while( i!=p.end() &&
-	       (i==part || i->nr()>max_primary || !i->intersectArea( r, fuzz )))
+	       (i==part || i->nr()>max_primary || !i->intersectArea( cylRegion, fuzz )))
 	    {
 	    ++i;
 	    }
 	if( i!=p.end() )
 	    {
-	    y2war("overlaps r:" << r << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(r) );
+	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		  " inter:" << i->cylRegion().intersect(cylRegion) );
 	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
     if( ret==0 )
 	{
-	part->changeRegion(Region(start, len), cylinderToKb(len));
+	part->changeRegion(cylRegion, cylinderToKb(cylRegion.len()));
 	}
     y2mil("ret:" << ret);
     return( ret );

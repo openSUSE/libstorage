@@ -1649,7 +1649,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		ret = disk->changePartitionArea( vol->nr(), start, size );
+		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
 		}
 	    else
 		{
@@ -1661,7 +1661,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		ret = disk->changePartitionArea( vol->nr(), start, size );
+		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
 		}
 	    else
 		{
@@ -1673,7 +1673,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	  MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
 	  if( disk!=NULL )
 	    {
-	    ret = disk->changePartitionArea( vol->nr(), start, size );
+	    ret = disk->changePartitionArea(vol->nr(), Region(start, size));
 	    }
 	  else
 	    {

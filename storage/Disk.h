@@ -117,8 +117,7 @@ class Disk : public Container
 	bool initializeDisk() const { return init_disk; }
 	void resetInitDisk() { init_disk=false; }
 	int forgetChangePartitionId( unsigned nr );
-	int changePartitionArea( unsigned nr, unsigned long start, 
-	                         unsigned long size, bool checkRelaxed=false );
+	int changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed = false);
 	int nextFreePartition(storage::PartitionType type, unsigned& nr,
 			      string& device) const;
 	int destroyPartitionTable( const string& new_label );

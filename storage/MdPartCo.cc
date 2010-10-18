@@ -614,13 +614,13 @@ MdPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) co
 }
 
 
-int MdPartCo::changePartitionArea( unsigned nr, unsigned long start,
-                                   unsigned long len, bool checkRelaxed )
+    int
+    MdPartCo::changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed)
     {
     int ret = nr>0?0:MDPART_PARTITION_NOT_FOUND;
     if( ret==0 )
         {
-        ret = disk->changePartitionArea( nr, start, len, checkRelaxed );
+	ret = disk->changePartitionArea(nr, cylRegion, checkRelaxed);
         MdPartIter i;
         if( findMdPart( nr, i ))
             i->updateSize();

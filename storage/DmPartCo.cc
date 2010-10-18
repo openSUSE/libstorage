@@ -544,13 +544,13 @@ DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) co
 }
 
 
-int DmPartCo::changePartitionArea( unsigned nr, unsigned long start,
-				   unsigned long len, bool checkRelaxed )
+    int
+    DmPartCo::changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed)
     {
     int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
     if( ret==0 )
 	{
-	ret = disk->changePartitionArea( nr, start, len, checkRelaxed );
+	ret = disk->changePartitionArea(nr, cylRegion, checkRelaxed);
 	DmPartIter i;
 	if( findDm( nr, i ))
 	    i->updateSize();
