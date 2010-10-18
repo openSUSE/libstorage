@@ -251,13 +251,13 @@ bool Partition::canUseDevice() const
 void Partition::setResizedSize( unsigned long long SizeK ) 
     {
     Volume::setResizedSize(SizeK);
-    reg = Region( cylStart(), disk()->kbToCylinder(SizeK) );
+    reg.setLen(disk()->kbToCylinder(SizeK));
     }
 
 void Partition::forgetResize() 
     { 
     Volume::forgetResize();
-    reg = Region( cylStart(), disk()->kbToCylinder(size_k) );
+    reg.setLen(disk()->kbToCylinder(size_k));
     }
 
 bool Partition::operator== ( const Partition& rhs ) const
