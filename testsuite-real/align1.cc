@@ -17,17 +17,23 @@ doit(const string& disk)
 
     cout << "disk:" << disk << endl;
 
-    check_zero(s->destroyPartitionTable(disk, s->defaultDiskLabel(disk)));
-    print_commitinfos(s);
-    check_zero(s->commit());
+    list<string> labels;
+    labels.push_back("msdos");
+    labels.push_back("gpt");
+    for (list<string>::const_iterator label = labels.begin(); label != labels.end(); ++label)
+    {
+	check_zero(s->destroyPartitionTable(disk, *label));
+	print_commitinfos(s);
+	check_zero(s->commit());
 
-    string part;
-    check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1000000, part));
-    check_zero(s->createPartitionKb(disk, PRIMARY, 1000000, 3000000, part));
-    check_zero(s->createPartitionKb(disk, PRIMARY, 4000000, 500000, part));
+	string part;
+	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1000000, part));
+	check_zero(s->createPartitionKb(disk, PRIMARY, 1000000, 3000000, part));
+	check_zero(s->createPartitionKb(disk, PRIMARY, 4000000, 500000, part));
 
-    print_commitinfos(s);
-    check_zero(s->commit());
+	print_commitinfos(s);
+	check_zero(s->commit());
+    }
 
     delete s;
 }
