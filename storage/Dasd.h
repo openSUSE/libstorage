@@ -65,9 +65,9 @@ class Dasd : public Disk
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
-	bool detectPartitionsFdasd(const ProcParts& parts);
+	bool detectPartitionsFdasd(SystemInfo& systeminfo);
 	bool detectPartitions(SystemInfo& systeminfo);
-	bool checkFdasdOutput(SystemCmd& Cmd, const ProcParts& parts);
+	bool checkFdasdOutput(SystemCmd& Cmd, SystemInfo& systeminfo);
 	bool scanFdasdLine(const string& line, unsigned& nr, Region& cylRegion) const;
 	void getGeometry(SystemCmd& cmd, unsigned long& c, unsigned& h, unsigned& s) const;
 	void redetectGeometry() {};

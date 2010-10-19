@@ -532,7 +532,7 @@ bool
 	}
 
     y2mil("nm:" << nm);
-    if (!dmp_slave && !checkPartedValid(parts, pl, range_exceed))
+    if (!dmp_slave && !checkPartedValid(systeminfo, pl, range_exceed))
 	{
 	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
@@ -590,67 +590,39 @@ _("You have the following options:\n"
 
 
 bool
-    Disk::checkPartedValid(const ProcParts& parts, list<Partition*>& pl,
+Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			   unsigned long& range_exceed) const
 {
-    unsigned ext_nr = 0;
-    bool ret=true;
+    const ProcParts& parts = systeminfo.getProcParts();
+    const Parted& parted = systeminfo.getParted(dev);
 
-    map<unsigned,unsigned long> parted_l;
-    for( list<Partition*>::const_iterator i=pl.begin(); i!=pl.end(); i++ )
+    bool ret = true;
+
+    // It's allowed that the kernel sees more partitions than parted. This is
+    // the case with BSD slices.
+
+    for (list<Partition*>::const_iterator i = pl.begin(); i != pl.end(); ++i)
+    {
+	const Partition& p = **i;
+
+	if (p.type() != EXTENDED)
 	{
-	if( (*i)->type()==EXTENDED )
-	    ext_nr = (*i)->nr();
-	else
+	    Parted::Entry entry;
+	    if (parted.getEntry(p.nr(), entry))
 	    {
-	    parted_l[(*i)->nr()] = (*i)->cylSize();
-	    }
-	}
+		const Region& sec_parted = entry.secRegion;
+		Region sec_kernel = p.detectSysfsSecRegion();
 
-    map<unsigned,unsigned long> proc_l;
-    list<string> ps = partitionsKernelKnowns(parts);
-    for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
-	{
-	unsigned long long SizeK;
-	pair<string,unsigned> p = getDiskPartition( *i );
-	if( p.second>0 && p.second!=ext_nr &&
-	    parts.getSize(*i, SizeK))
-	    {
-	    proc_l[p.second] = kbToCylinder( SizeK );
-	    }
-	}
-
-    y2mil("parted:" << parted_l);
-    y2mil("proc:" << proc_l);
-
-    if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
-	{
-	map<unsigned,unsigned long>::const_iterator i, j;
-	for( i=proc_l.begin(); i!=proc_l.end(); i++ )
-	    {
-	    j=parted_l.find(i->first);
-	    if( j!=parted_l.end() )
+		if (sec_parted != sec_kernel)
 		{
-		ret = ret && (abs((long)i->second-(long)j->second)<=2 ||
-		              abs((long)i->second-(long)j->second)<(long)j->second/100);
-		}
-	    }
-	for( i=parted_l.begin(); i!=parted_l.end(); i++ )
-	    {
-	    j=proc_l.find(i->first);
-	    if( j==proc_l.end() )
-		ret = false;
-	    else
-		{
-		ret = ret && (abs((long)i->second-(long)j->second)<=2 ||
-		              abs((long)i->second-(long)j->second)<(long)j->second/100);
+		    y2err("sector mismatch dev:" << dev << " nr:" << p.nr() << " sec_parted:" <<
+			  sec_parted << " sec_kernel:" << sec_kernel);
+		    ret = false;
 		}
 	    }
 	}
-    else
-	{
-	ret = parted_l.empty() && proc_l.empty();
-	}
+    }
+
     if( !ret || label=="unsupported" )
 	{
 	range_exceed = 0;
@@ -660,6 +632,7 @@ bool
 	    }
 	pl.clear();
 	unsigned cyl_start = 1;
+	list<string> ps = partitionsKernelKnowns(parts);
 	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	    {
 	    unsigned long cyl;
@@ -694,7 +667,7 @@ bool
 		}
 	    }
 	}
-    y2mil("pr.size:" << proc_l.size() << " pa.size:" << parted_l.size());
+
     y2mil("ret:" << ret);
     return ret;
 }

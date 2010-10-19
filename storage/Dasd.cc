@@ -63,7 +63,7 @@ namespace storage
 
 
     bool
-    Dasd::detectPartitionsFdasd(const ProcParts& parts)
+    Dasd::detectPartitionsFdasd(SystemInfo& systeminfo)
     {
     bool ret = true;
     string cmd_line = FDASDBIN " -p " + quote(device());
@@ -71,7 +71,7 @@ namespace storage
     SystemCmd Cmd( cmd_line );
     y2mil("retcode:" << Cmd.retcode());
     if( Cmd.retcode() == 0 )
-	checkFdasdOutput(Cmd, parts);
+	checkFdasdOutput(Cmd, systeminfo);
     y2mil("ret:" << ret << " partitons:" << vols.size());
     return( ret );
     }
@@ -118,7 +118,7 @@ namespace storage
 	switch( fmt )
 	    {
 	    case DASDF_CDL:
-		ret = Dasd::detectPartitionsFdasd(parts);
+		ret = Dasd::detectPartitionsFdasd(systeminfo);
 		break;
 	    case DASDF_LDL:
 		{
@@ -184,8 +184,10 @@ namespace storage
 
 
 bool
-    Dasd::checkFdasdOutput(SystemCmd& cmd, const ProcParts& parts)
+    Dasd::checkFdasdOutput(SystemCmd& cmd, SystemInfo& systeminfo)
     {
+	const ProcParts& parts = systeminfo.getProcParts();
+
     int cnt;
     string line;
     string tmp;
@@ -224,7 +226,7 @@ bool
 
     y2mil("nm:" << nm);
     unsigned long dummy = 0;
-    if (!checkPartedValid(parts, pl, dummy))
+    if (!checkPartedValid(systeminfo, pl, dummy))
 	{
 	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda

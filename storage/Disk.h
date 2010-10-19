@@ -229,7 +229,7 @@ class Disk : public Container
 	                     bool stop_hald=true );
 	bool checkPartedOutput(SystemInfo& systeminfo);
 	list<string> partitionsKernelKnowns(const ProcParts& parts) const;
-	bool checkPartedValid(const ProcParts& parts, list<Partition*>& pl,
+	bool checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			      unsigned long& rng) const;
 	bool callDelpart(unsigned nr) const;
 	bool callAddpart(unsigned nr, const Region& secRegion) const;
