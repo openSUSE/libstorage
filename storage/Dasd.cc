@@ -224,7 +224,7 @@ bool
 
     y2mil("nm:" << nm);
     unsigned long dummy = 0;
-    if (!checkPartedValid(parts, nm, pl, dummy))
+    if (!checkPartedValid(parts, pl, dummy))
 	{
 	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda

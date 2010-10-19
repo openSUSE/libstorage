@@ -532,7 +532,7 @@ bool
 	}
 
     y2mil("nm:" << nm);
-    if (!dmp_slave && !checkPartedValid(parts, nm, pl, range_exceed))
+    if (!dmp_slave && !checkPartedValid(parts, pl, range_exceed))
 	{
 	Text txt = sformat(
 	// popup text %1$s is replaced by disk name e.g. /dev/hda
@@ -577,14 +577,25 @@ _("You have the following options:\n"
     }
 
 
+    list<string>
+    Disk::partitionsKernelKnowns(const ProcParts& parts) const
+    {
+	// does not work for device-mapper based disks
+
+	string reg = "^" + dev + partNaming(dev) + "[0-9]+" "$";
+	list<string> ps = parts.getMatchingEntries(regex_matches(reg));
+	y2mil("dev:" << dev << " reg:\"" << reg << "\" ps:" << ps);
+	return ps;
+    }
+
+
 bool
-    Disk::checkPartedValid(const ProcParts& parts, const string& diskname,
-		       list<Partition*>& pl, unsigned long& range_exceed) const
+    Disk::checkPartedValid(const ProcParts& parts, list<Partition*>& pl,
+			   unsigned long& range_exceed) const
 {
     unsigned ext_nr = 0;
     bool ret=true;
-    unsigned long long SizeK;
-    map<unsigned,unsigned long> proc_l;
+
     map<unsigned,unsigned long> parted_l;
     for( list<Partition*>::const_iterator i=pl.begin(); i!=pl.end(); i++ )
 	{
@@ -595,11 +606,12 @@ bool
 	    parted_l[(*i)->nr()] = (*i)->cylSize();
 	    }
 	}
-    string reg = "^" + device() + partNaming(diskname) + "[0-9]+" "$";
-    list<string> ps = parts.getMatchingEntries(regex_matches(reg));
-    y2mil("regex:\"" << reg << "\" ps:" << ps);
+
+    map<unsigned,unsigned long> proc_l;
+    list<string> ps = partitionsKernelKnowns(parts);
     for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	{
+	unsigned long long SizeK;
 	pair<string,unsigned> p = getDiskPartition( *i );
 	if( p.second>0 && p.second!=ext_nr &&
 	    parts.getSize(*i, SizeK))
@@ -607,8 +619,10 @@ bool
 	    proc_l[p.second] = kbToCylinder( SizeK );
 	    }
 	}
-    y2mil("proc  :" << proc_l);
+
     y2mil("parted:" << parted_l);
+    y2mil("proc:" << proc_l);
+
     if( proc_l.size()>=parted_l.size() && !parted_l.empty() )
 	{
 	map<unsigned,unsigned long>::const_iterator i, j;

@@ -228,8 +228,9 @@ class Disk : public Container
 	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
 	                     bool stop_hald=true );
 	bool checkPartedOutput(SystemInfo& systeminfo);
-	bool checkPartedValid(const ProcParts& parts, const string& diskname,
-	                       std::list<Partition*>& pl, unsigned long& rng ) const;
+	list<string> partitionsKernelKnowns(const ProcParts& parts) const;
+	bool checkPartedValid(const ProcParts& parts, list<Partition*>& pl,
+			      unsigned long& rng) const;
 	bool callDelpart(unsigned nr) const;
 	bool callAddpart(unsigned nr, const Region& secRegion) const;
 	bool getPartedValues( Partition *p ) const;
