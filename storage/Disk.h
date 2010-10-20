@@ -231,8 +231,10 @@ class Disk : public Container
 	list<string> partitionsKernelKnowns(const ProcParts& parts) const;
 	bool checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			      unsigned long& rng) const;
+
 	bool callDelpart(unsigned nr) const;
-	bool callAddpart(unsigned nr, const Region& secRegion) const;
+	bool callAddpart(unsigned nr, const Region& blkRegion) const;
+
 	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
 	                       unsigned long long& end ) const;
@@ -248,6 +250,9 @@ class Disk : public Container
 	void removePresentPartitions();
 	void removeFromMemory();
 	void enlargeGpt();
+
+	/* size of extended partition in proc and sysfs in 512 byte blocks */
+	unsigned long long procExtendedBlks() const;
 
 	virtual int doCreate( Volume* v );
 	virtual int doRemove( Volume* v );

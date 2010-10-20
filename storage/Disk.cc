@@ -610,13 +610,13 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 	    Parted::Entry entry;
 	    if (parted.getEntry(p.nr(), entry))
 	    {
-		const Region& sec_parted = entry.secRegion;
-		Region sec_kernel = p.detectSysfsSecRegion();
+		Region blk_parted = logical_sector_size / 512 * entry.secRegion;
+		Region blk_kernel = p.detectSysfsBlkRegion();
 
-		if (sec_parted != sec_kernel)
+		if (blk_parted != blk_kernel)
 		{
-		    y2err("sector mismatch dev:" << dev << " nr:" << p.nr() << " sec_parted:" <<
-			  sec_parted << " sec_kernel:" << sec_kernel);
+		    y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " blk_parted:" <<
+			  blk_parted << " blk_kernel:" << blk_kernel);
 		    ret = false;
 		}
 	    }
@@ -647,7 +647,7 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 		    PartitionType type = PRIMARY;
 		    if( ext_possible )
 			{
-			if( s==1 )
+			if (2 * s == procExtendedBlks())
 			    {
 			    type = EXTENDED;
 			    id = Partition::ID_EXTENDED;
@@ -1781,12 +1781,19 @@ int Disk::doSetType( Volume* v )
 
 
     bool
-    Disk::callAddpart(unsigned nr, const Region& secRegion) const
+    Disk::callAddpart(unsigned nr, const Region& blkRegion) const
     {
 	SystemCmd c(ADDPARTBIN " " + quote(device()) + ' ' + decString(nr) + ' ' +
-		    decString(secRegion.start()) + ' ' + decString(secRegion.len()));
+		    decString(blkRegion.start()) + ' ' + decString(blkRegion.len()));
 	return c.retcode() == 0;
     }
+
+
+unsigned long long
+Disk::procExtendedBlks() const
+{
+    return std::max(2U, logical_sector_size / 512);
+}
 
 
 bool
@@ -1805,28 +1812,28 @@ Disk::getPartedValues( Partition *p ) const
 	Parted::Entry entry;
 	if (parted.getEntry(p->nr(), entry))
 	{
-	    Region partedSecRegion = entry.secRegion;
-	    y2mil("partedSecRegion:" << partedSecRegion);
+	    Region partedBlkRegion = logical_sector_size / 512 * entry.secRegion;
+	    y2mil("partedBlkRegion:" << partedBlkRegion);
 
 	    if (p->type() == EXTENDED)
-		partedSecRegion.setLen(2);
+		partedBlkRegion.setLen(procExtendedBlks());
 
-	    Region sysfsSecRegion = p->detectSysfsSecRegion(false);
-	    y2mil("sysfsSecRegion:" << sysfsSecRegion);
+	    Region sysfsBlkRegion = p->detectSysfsBlkRegion(false);
+	    y2mil("sysfsBlkRegion:" << sysfsBlkRegion);
 
-	    if (!no_addpart && partedSecRegion != sysfsSecRegion)
+	    if (!no_addpart && partedBlkRegion != sysfsBlkRegion)
 	    {
 		callDelpart(p->nr());
-		callAddpart(p->nr(), partedSecRegion);
+		callAddpart(p->nr(), partedBlkRegion);
 
-		sysfsSecRegion = p->detectSysfsSecRegion();
+		sysfsBlkRegion = p->detectSysfsBlkRegion();
 
-		if (partedSecRegion != sysfsSecRegion)
-		    y2err("addpart failed sysfsSecRegion:" << sysfsSecRegion);
+		if (partedBlkRegion != sysfsBlkRegion)
+		    y2err("addpart failed sysfsBlkRegion:" << sysfsBlkRegion);
 	    }
 
 	    const Region& partedCylRegion = entry.cylRegion;
-	    y2mil("partedCylRegion:" << partedSecRegion);
+	    y2mil("partedCylRegion:" << partedCylRegion);
 	    p->changeRegion(partedCylRegion, cylinderToKb(partedCylRegion.len()));
 
 	    ret = true;

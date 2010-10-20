@@ -70,6 +70,13 @@ namespace storage
 	void setStart(unsigned long long start) { s = start; }
 	void setLen(unsigned long long len) { l = len; }
 
+	template <typename Type> friend
+	Region operator*(Type i, const Region& r)
+	{
+	    static_assert(std::is_integral<Type>::value, "not integral");
+	    return Region(i * r.s, i * r.l);
+	}
+
 	friend std::ostream& operator<<(std::ostream& s, const Region& p);
 
 	friend bool getChildValue(const xmlNode* node, const char* name, Region& value);

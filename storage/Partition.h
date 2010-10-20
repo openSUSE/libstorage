@@ -92,7 +92,8 @@ class Partition : public Volume
 	void forgetResize(); 
 	bool canUseDevice() const;
 
-	Region detectSysfsSecRegion(bool log_error = true) const;
+	/* partition region from sysfs in 512 byte blocks */
+	Region detectSysfsBlkRegion(bool log_error = true) const;
 
 	void getInfo( storage::PartitionInfo& info ) const;
 	void getInfo( storage::PartitionAddInfo& info ) const;

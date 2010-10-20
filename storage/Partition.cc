@@ -540,7 +540,7 @@ Partition::getCommitActions(list<commitAction>& l) const
 
 
     Region
-    Partition::detectSysfsSecRegion(bool log_error) const
+    Partition::detectSysfsBlkRegion(bool log_error) const
     {
 	string start_p = sysfsPath() + "/start";
 	string size_p = sysfsPath() + "/size";
