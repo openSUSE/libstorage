@@ -380,7 +380,7 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 	ronly = true;
 	}
 
-    y2mil("ret:" << ret << " partitons:" << vols.size() << " detected label:" << detected_label <<
+    y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << detected_label <<
 	  " label:" << label);
     return( ret );
     }
