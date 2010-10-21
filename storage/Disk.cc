@@ -593,7 +593,6 @@ bool
 Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			   unsigned long& range_exceed) const
 {
-    const ProcParts& parts = systeminfo.getProcParts();
     const Parted& parted = systeminfo.getParted(dev);
 
     bool ret = true;
@@ -631,7 +630,8 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 	    delete *i;
 	    }
 	pl.clear();
-	unsigned cyl_start = 1;
+	unsigned long cyl_start = 1;
+	const ProcParts& parts = systeminfo.getProcParts();
 	list<string> ps = partitionsKernelKnowns(parts);
 	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	    {
