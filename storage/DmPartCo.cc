@@ -968,6 +968,7 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
 	s << " UdevId:" << d.udev_id;
     if( !d.active )
       s << " inactive";
+    s << " geometry:" << d.disk->getGeometry();
     return( s );
     }
 

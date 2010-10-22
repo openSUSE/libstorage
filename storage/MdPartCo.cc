@@ -1168,6 +1168,7 @@ std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     s << " Devices:" << d.devs;
     if( !d.spare.empty() )
 	s << " Spares:" << d.spare;
+    s << " geometry:" << d.disk->getGeometry();
     return s;
     }
 
