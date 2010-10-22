@@ -124,8 +124,8 @@ namespace storage
 		{
 		max_primary = 1;
 		unsigned long long s = cylinderToKb(cyl);
-		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1, s,
-					     Region(0, cyl), PRIMARY);
+		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1,
+					     systeminfo, s, Region(0, cyl), PRIMARY);
 		if (parts.getSize(p->device(), s))
 		    {
 		    p->setSize( s );
@@ -210,8 +210,8 @@ bool
 		if( pnr<range )
 		    {
 		    unsigned long long s = cylinderToKb(cylRegion.len());
-		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr), pnr,
-						 s, cylRegion, PRIMARY);
+		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr),
+						 pnr, systeminfo, s, cylRegion, PRIMARY);
 		    if (parts.getSize(p->device(), s))
 			{
 			p->setSize( s );

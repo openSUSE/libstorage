@@ -45,6 +45,9 @@ class Partition : public Volume
 	Partition(const Disk& c, const string& name, const string& device, unsigned Pnr,
 		  unsigned long long SizeK, const Region& cylRegion, PartitionType Type,
 		  unsigned id = ID_LINUX, bool Boot = false);
+	Partition(const Disk& c, const string& name, const string& device, unsigned Pnr,
+		  SystemInfo& systeminfo, unsigned long long SizeK, const Region& cylRegion,
+		  PartitionType Type, unsigned id = ID_LINUX, bool Boot = false);
 	Partition(const Disk& c, const xmlNode* node);
 	Partition(const Disk& c, const Partition& v);
 	virtual ~Partition();

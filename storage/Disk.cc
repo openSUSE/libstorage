@@ -519,7 +519,8 @@ bool
 	    {
 		unsigned long long s = cylinderToKb(it->cylRegion.len());
 		Partition* p = new Partition(*this, getPartName(it->num), getPartDevice(it->num),
-					     it->num, s, it->cylRegion, it->type, it->id, it->boot);
+					     it->num, systeminfo, s, it->cylRegion, it->type,
+					     it->id, it->boot);
 		if (parts.getSize(p->procName(), s))
 		{
 		    if( s>0 && p->type() != EXTENDED )
@@ -658,7 +659,8 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			    }
 			}
 		    Partition *p = new Partition(*this, getPartName(pr.second), getPartDevice(pr.second),
-						 pr.second, s, Region(cyl_start, cyl), type, id);
+						 pr.second, systeminfo, s, Region(cyl_start, cyl), type,
+						 id);
 		    pl.push_back( p );
 		    }
 		else if( pr.second>0 )
@@ -2440,7 +2442,7 @@ void Disk::addPartition( unsigned num, unsigned long long sz,
 		         SystemInfo& systeminfo )
     {
     unsigned long cyl_inc = std::max(kbToSector(size_k) / head / sector, 1ULL);
-    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, sz,
+    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, systeminfo, sz,
 				 Region(cyl, cyl_inc), PRIMARY);
     cyl += cyl_inc;
     new_cyl = cyl;

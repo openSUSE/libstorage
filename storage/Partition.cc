@@ -42,11 +42,25 @@ namespace storage
 	num = orig_num = PNr;
 	size_k = orig_size_k = SizeK;
 
-	if (!getStorage()->testmode())
-	    getMajorMinor();
-
     addUdevData();
     y2deb("constructed Partition " << dev << " on " << cont->device());
+    }
+
+
+    Partition::Partition(const Disk& c, const string& name, const string& device, unsigned PNr,
+			 SystemInfo& systeminfo, unsigned long long SizeK, const Region& cylRegion,
+			 PartitionType Type, unsigned Id, bool Boot)
+	: Volume(c, name, device, systeminfo), reg(cylRegion), bootflag(Boot), typ(Type), idt(Id),
+	  orig_id(Id)
+    {
+	numeric = true;
+	num = orig_num = PNr;
+	size_k = orig_size_k = SizeK;
+
+	getMajorMinor();
+
+	addUdevData();
+	y2deb("constructed Partition " << dev << " on " << cont->device());
     }
 
 
