@@ -53,6 +53,28 @@ namespace storage
     }
 
 
+    unsigned long
+    Geometry::cylinderSize() const
+    {
+	return heads * sectors * logical_sector_size;
+    }
+
+
+    unsigned long long
+    Geometry::sizeK() const
+    {
+	return (unsigned long long)(cylinders) * cylinderSize() / 1024;
+    }
+
+
+    bool
+    Geometry::operator==(const Geometry& rhs) const
+    {
+	return cylinders == rhs.cylinders && heads == rhs.heads && sectors == rhs.sectors &&
+	    logical_sector_size == rhs.logical_sector_size;
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const Geometry& geo)
     {
 	return s << "cylinders:" << geo.cylinders << " heads:" << geo.heads << " sectors:"

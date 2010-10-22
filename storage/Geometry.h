@@ -40,7 +40,11 @@ namespace storage
 	unsigned int sectors;
 	unsigned int logical_sector_size;
 
-	unsigned long cylinderSize() const { return heads * sectors * logical_sector_size; }
+	unsigned long cylinderSize() const;
+
+	unsigned long long sizeK() const;
+
+	bool operator==(const Geometry& rhs) const;
 
 	friend std::ostream& operator<<(std::ostream& s, const Geometry& geo);
 
