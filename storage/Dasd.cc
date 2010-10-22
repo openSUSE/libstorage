@@ -102,16 +102,12 @@ namespace storage
 	    else if( tmp == "ldl" )
 		fmt = DASDF_LDL;
 	    }
-	getGeometry( Cmd, cyl, head, sector );
-	new_cyl = cyl;
-	new_head = head;
-	new_sector = sector;
-	y2mil("After dasdview head:" << head << " sector:" << sector << " cylinder:" << cyl << " sizeK:" << size_k);
-	byte_cyl = head * sector * 512;
-	y2mil("byte_cyl:" << byte_cyl);
+	getGeometry(Cmd, geometry);
+	new_geometry = geometry;
+	y2mil("After dasdview geometry:" << geometry << " sizeK:" << size_k);
 	if( size_k==0 )
 	    {
-	    size_k = (head*sector*cyl)/2;
+	    size_k = geometry.sizeK();
 	    y2mil("New SizeK:" << size_k);
 	    }
 	y2mil("fmt:" << fmt);
@@ -123,9 +119,9 @@ namespace storage
 	    case DASDF_LDL:
 		{
 		max_primary = 1;
-		unsigned long long s = cylinderToKb(cyl);
+		unsigned long long s = cylinderToKb(cylinders());
 		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1,
-					     systeminfo, s, Region(0, cyl), PRIMARY);
+					     systeminfo, s, Region(0, cylinders()), PRIMARY);
 		if (parts.getSize(p->device(), s))
 		    {
 		    p->setSize( s );
@@ -140,11 +136,9 @@ namespace storage
 	}
     else
 	{
-	new_sector = sector = 96;
-	y2mil("new sector:" << sector);
+	new_geometry.sectors = geometry.sectors = 12;
+	y2mil("new sectors:" << geometry.sectors);
 	}
-    byte_cyl = head * sector * 512;
-    y2mil("byte_cyl:" << byte_cyl);
     y2mil("ret:" << ret << " partitons:" << vols.size() << " detected label:" << label);
     ronly = fmt!=DASDF_CDL;
     y2mil("fmt:" << fmt << " readonly:" << ronly);
@@ -169,8 +163,8 @@ namespace storage
     y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM);
     if( nr>0 )
       {
-      unsigned long start = StartM/head;
-      unsigned long csize = EndM/head-start+1;
+      unsigned long start = StartM / geometry.heads;
+      unsigned long csize = EndM / geometry.heads - start + 1;
       if( start+csize > cylinders() )
 	  {
 	  csize = cylinders()-start;
@@ -251,55 +245,41 @@ _("The partitioning on disk %1$s is not readable by\n"
 
 
     void
-    Dasd::getGeometry(SystemCmd& cmd, unsigned long& c, unsigned& h, unsigned& s) const
+    Dasd::getGeometry(SystemCmd& cmd, Geometry& geometry) const
     {
-    string tmp;
-    unsigned long val;
     if( cmd.select( "cylinders" )>0 )
 	{
-	val = 0;
-	tmp = cmd.getLine(0, true);
+	string tmp = cmd.getLine(0, true);
 	y2mil("Cylinder line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
-	tmp >> val;
-	y2mil("val:" << val);
-	c=val;
+	tmp >> geometry.cylinders;
 	}
     if( cmd.select( "tracks per" )>0 )
 	{
-	val = 0;
-	tmp = cmd.getLine(0, true);
+	string tmp = cmd.getLine(0, true);
 	y2mil("Tracks line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
-	tmp >> val;
-	y2mil("val:" << val);
-	h=val;
+	tmp >> geometry.heads;
 	}
     if( cmd.select( "blocks per" )>0 )
 	{
-	val = 0;
-	tmp = cmd.getLine(0, true);
+	string tmp = cmd.getLine(0, true);
 	y2mil("Blocks line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
-	tmp >> val;
-	y2mil("val:" << val);
-	s=val;
+	tmp >> geometry.sectors;
 	}
     if( cmd.select( "blocksize" )>0 )
 	{
-	val = 0;
-	tmp = cmd.getLine(0, true);
+	string tmp = cmd.getLine(0, true);
 	y2mil("Bytes line:" << tmp);
 	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
 	tmp = extractNthWord( 3, tmp );
-	tmp >> val;
-	y2mil("val:" << val);
-	s*=val/512;
+	tmp >> geometry.sector_size;
 	}
-    y2mil("c:" << c << " h:" << h << " s:" << s);
+    y2mil("geometry:" << geometry);
     }
 
 
@@ -389,8 +369,8 @@ int Dasd::doFdasd()
     PartIter i = p.begin();
     while( i!=p.end() )
 	{
-	string start = decString(i->cylStart()*new_head);
-	string end  = decString((i->cylEnd()+1)*new_head-1);
+	string start = decString(i->cylStart() * new_geometry.heads);
+	string end  = decString((i->cylEnd() + 1) * new_geometry.heads - 1);
 	if( i->cylStart()==0 )
 	    start = "first";
 	if( i->cylEnd()>=cylinders()-1 )
@@ -595,13 +575,11 @@ int Dasd::initializeDisk( bool value )
 	init_disk = value;
 	if( init_disk )
 	    {
-	    new_sector = sector = 96;
-	    new_head = head = 15;
-	    y2mil("new sector:" << sector << " head:" << head);
-	    size_k = (head*sector*cyl)/2;
+	    new_geometry.heads = geometry.heads = 15;
+	    new_geometry.sectors = geometry.sectors = 12;
+	    y2mil("new geometry:" << geometry);
+	    size_k = geometry.sizeK();
 	    y2mil("new SizeK:" << size_k);
-	    byte_cyl = head * sector * 512;
-	    y2mil("new byte_cyl:" << byte_cyl);
 	    ret = destroyPartitionTable( "dasd" );
 	    }
 	else

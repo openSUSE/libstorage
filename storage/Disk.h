@@ -70,15 +70,15 @@ class Disk : public Container
 
 	void saveData(xmlNode* node) const;
 
-	unsigned long cylinders() const { return cyl; }
-	unsigned heads() const { return head; }
-	unsigned sectors() const { return sector; }
-	Geometry getGeometry() const { return Geometry(cyl, head, sector, logical_sector_size); }
+	unsigned long cylinders() const { return geometry.cylinders; }
+	unsigned heads() const { return geometry.heads; }
+	unsigned sectors() const { return geometry.sectors; }
+	unsigned sectorSize() const { return geometry.sector_size; }
+	const Geometry& getGeometry() const { return geometry; }
 
 	Region usableCylRegion() const;
 
 	unsigned long numMinor() const { return range; }
-	unsigned long cylSizeB() const { return byte_cyl; }
 	unsigned maxPrimary() const { return max_primary; }
 	bool extendedPossible() const { return ext_possible; }
 	unsigned maxLogical() const { return max_logical; }
@@ -139,11 +139,15 @@ class Disk : public Container
 	unsigned int numLogical() const;
 	Text setDiskLabelText(bool doing) const;
 
-	unsigned long long cylinderToKb( unsigned long ) const;
-	unsigned long kbToCylinder( unsigned long long ) const;
+	unsigned long long cylinderToKb(unsigned long cylinder) const
+	    { return geometry.cylinderToKb(cylinder); }
+	unsigned long kbToCylinder(unsigned long long kb) const
+	    { return geometry.kbToCylinder(kb); }
 
-	unsigned long long sectorToKb(unsigned long long sector) const;
-	unsigned long long kbToSector(unsigned long long kb) const;
+	unsigned long long sectorToKb(unsigned long long sector) const
+	    { return geometry.sectorToKb(sector); }
+	unsigned long long kbToSector(unsigned long long kb) const
+	    { return geometry.kbToSector(kb); }
 
 	string getPartName(unsigned nr) const;
 	string getPartDevice(unsigned nr) const;
@@ -269,14 +273,9 @@ class Disk : public Container
 	static const label_info labels[];
 	static const string p_disks[];
 
-	unsigned int logical_sector_size;
+	Geometry geometry;
+	Geometry new_geometry;
 
-	unsigned long cyl;
-	unsigned head;
-	unsigned sector;
-	unsigned long new_cyl;
-	unsigned new_head;
-	unsigned new_sector;
 	string label;
 	string udev_path;
 	list<string> udev_id;
@@ -290,7 +289,6 @@ class Disk : public Container
 	bool dmp_slave;
 	bool no_addpart;
 	bool gpt_enlarge;
-	unsigned long byte_cyl;
 	unsigned long range;
 	bool del_ptable;
 

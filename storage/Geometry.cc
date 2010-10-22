@@ -40,15 +40,7 @@ namespace storage
 
 
     Geometry::Geometry()
-	: cylinders(0), heads(0), sectors(0), logical_sector_size(512)
-    {
-    }
-
-
-    Geometry::Geometry(unsigned long cylinders, unsigned int heads, unsigned int sectors,
-		       unsigned int logical_sector_size)
-	: cylinders(cylinders), heads(heads), sectors(sectors),
-	  logical_sector_size(logical_sector_size)
+	: cylinders(0), heads(32), sectors(16), sector_size(512)
     {
     }
 
@@ -56,7 +48,7 @@ namespace storage
     unsigned long
     Geometry::cylinderSize() const
     {
-	return heads * sectors * logical_sector_size;
+	return heads * sectors * sector_size;
     }
 
 
@@ -67,18 +59,54 @@ namespace storage
     }
 
 
+    unsigned long long
+    Geometry::cylinderToKb(unsigned long cylinder) const
+    {
+	const unsigned long long cyl_size = cylinderSize();
+
+	return cyl_size * cylinder / 1024;
+    }
+
+
+    unsigned long
+    Geometry::kbToCylinder(unsigned long long kb) const
+    {
+	const unsigned long long cyl_size = cylinderSize();
+
+	unsigned long long bytes = kb * 1024;
+	bytes += cyl_size - 1;
+	return bytes / cyl_size;
+    }
+
+
+    unsigned long long
+    Geometry::sectorToKb(unsigned long long sector) const
+    {
+	// TODO use 128 arithmetic
+	return sector * sector_size / 1024;
+    }
+
+
+    unsigned long long
+    Geometry::kbToSector(unsigned long long kb) const
+    {
+	// TODO use 128 arithmetic
+	return kb * 1024 / sector_size;
+    }
+
+
     bool
     Geometry::operator==(const Geometry& rhs) const
     {
 	return cylinders == rhs.cylinders && heads == rhs.heads && sectors == rhs.sectors &&
-	    logical_sector_size == rhs.logical_sector_size;
+	    sector_size == rhs.sector_size;
     }
 
 
     std::ostream& operator<<(std::ostream& s, const Geometry& geo)
     {
-	return s << "cylinders:" << geo.cylinders << " heads:" << geo.heads << " sectors:"
-		 << geo.sectors << " logical_sector_size:" << geo.logical_sector_size;
+	return s << "[" << geo.cylinders << "," << geo.heads << "," << geo.sectors << ","
+		 << geo.sector_size << "]";
     }
 
 
@@ -93,8 +121,8 @@ namespace storage
 	getChildValue(tmp, "heads", value.heads);
 	getChildValue(tmp, "sectors", value.sectors);
 
-	if (!getChildValue(tmp, "logical_sector_size", value.logical_sector_size))
-	    value.logical_sector_size = 512;
+	if (!getChildValue(tmp, "sector_size", value.sector_size))
+	    value.sector_size = 512;
 
 	return true;
     }
@@ -109,8 +137,8 @@ namespace storage
 	setChildValue(tmp, "heads", value.heads);
 	setChildValue(tmp, "sectors", value.sectors);
 
-	if (value.logical_sector_size != 512)
-	    setChildValue(tmp, "logical_sector_size", value.logical_sector_size);
+	if (value.sector_size != 512)
+	    setChildValue(tmp, "sector_size", value.sector_size);
     }
 
 
@@ -124,8 +152,8 @@ namespace storage
 	int fd = open(device.c_str(), O_RDONLY);
 	if (fd >= 0)
 	{
-	    int rcode = ioctl(fd, BLKSSZGET, &geo.logical_sector_size);
-	    y2mil("BLKSSZGET rcode:" << rcode << " logical_sector_size:" << geo.logical_sector_size);
+	    int rcode = ioctl(fd, BLKSSZGET, &geo.sector_size);
+	    y2mil("BLKSSZGET rcode:" << rcode << " sector_size:" << geo.sector_size);
 
 	    geo.cylinders = 16;
 	    geo.heads = 255;
@@ -167,7 +195,7 @@ namespace storage
 	    close(fd);
 	}
 
-	y2mil("device:" << device << " ret:" << ret << " " << geo);
+	y2mil("device:" << device << " ret:" << ret << " geo:" << geo);
 	return ret;
     }
 

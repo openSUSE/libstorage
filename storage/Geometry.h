@@ -32,19 +32,24 @@ namespace storage
     struct Geometry
     {
 	Geometry();
-	Geometry(unsigned long cylinders, unsigned int heads, unsigned int sectors,
-		 unsigned int logical_sector_size);
 
 	unsigned long cylinders;
 	unsigned int heads;
 	unsigned int sectors;
-	unsigned int logical_sector_size;
+	unsigned int sector_size;
 
 	unsigned long cylinderSize() const;
 
 	unsigned long long sizeK() const;
 
+	unsigned long long cylinderToKb(unsigned long cylinder) const;
+	unsigned long kbToCylinder(unsigned long long kb) const;
+
+	unsigned long long sectorToKb(unsigned long long sector) const;
+	unsigned long long kbToSector(unsigned long long kb) const;
+
 	bool operator==(const Geometry& rhs) const;
+	bool operator!=(const Geometry& rhs) const { return !(*this == rhs); }
 
 	friend std::ostream& operator<<(std::ostream& s, const Geometry& geo);
 

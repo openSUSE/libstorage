@@ -81,10 +81,8 @@ namespace storage
 	    }
 	}
 
-	y2mil("device:" << device << " label:" << label);
-	y2mil(geometry);
-	if (gpt_enlarge)
-	    y2mil("gpt_enlarge");
+	y2mil("device:" << device << " label:" << label << " geometry:" << geometry <<
+	      " gpt_enlarge:" << gpt_enlarge);
 
 	for (const_iterator it = entries.begin(); it != entries.end(); ++it)
 	    y2mil(*it);
@@ -154,7 +152,7 @@ namespace storage
 	if (l.size() == 2)
 	{
 	    list<string>::const_iterator i = l.begin();
-	    *i >> geometry.logical_sector_size;
+	    *i >> geometry.sector_size;
 	}
 	else
 	{

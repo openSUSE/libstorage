@@ -48,7 +48,7 @@ namespace storage
 
     Disk::Disk(Storage* s, const string& name, const string& device,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
+	: Container(s, name, device, staticType(), systeminfo),
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), del_ptable(false)
     {
@@ -66,7 +66,7 @@ namespace storage
 
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
-	: Container(s, name, device, staticType(), systeminfo), logical_sector_size(512),
+	: Container(s, name, device, staticType(), systeminfo),
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), del_ptable(false)
     {
@@ -74,33 +74,21 @@ namespace storage
     logfile_name = name + decString(num);
     ronly = true;
     size_k = SizeK;
-    head = new_head = 16;
-    sector = new_sector = 32;
-    cyl = new_cyl = 0;
-    byte_cyl = head * sector * logical_sector_size;
     addPartition( num, size_k, systeminfo );
     }
 
 
     Disk::Disk(Storage* s, const xmlNode* node)
-	: Container(s, staticType(), node), logical_sector_size(512), cyl(0),
-	  head(0), sector(0),
-	  new_cyl(0), new_head(0), new_sector(0), label(), udev_path(),
+	: Container(s, staticType(), node), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
-	  gpt_enlarge(false), byte_cyl(0), range(4), del_ptable(false)
+	  gpt_enlarge(false), range(4), del_ptable(false)
     {
 	logfile_name = nm;
 
 	getChildValue(node, "range", range);
 
-	Geometry geometry;
 	getChildValue(node, "geometry", geometry);
-	cyl = geometry.cylinders;
-	head = geometry.heads;
-	sector = geometry.sectors;
-	logical_sector_size = geometry.logical_sector_size;
-	byte_cyl = head * sector * logical_sector_size;
 
 	getChildValue(node, "label", label);
 	getChildValue(node, "max_primary", max_primary);
@@ -116,17 +104,14 @@ namespace storage
 
 
     Disk::Disk(const Disk& c)
-	: Container(c), logical_sector_size(c.logical_sector_size), cyl(c.cyl),
-	  head(c.head), sector(c.sector),
-	  new_cyl(c.new_cyl), new_head(c.new_head),
-	  new_sector(c.new_sector), label(c.label),
-	  udev_path(c.udev_path), udev_id(c.udev_id),
+	: Container(c), geometry(c.geometry), new_geometry(c.new_geometry),
+	  label(c.label), udev_path(c.udev_path), udev_id(c.udev_id),
 	  detected_label(c.detected_label), logfile_name(c.logfile_name),
 	  max_primary(c.max_primary),
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
 	  init_disk(c.init_disk), transport(c.transport),
 	  dmp_slave(c.dmp_slave), no_addpart(c.no_addpart), 
-	  gpt_enlarge(c.gpt_enlarge), byte_cyl(c.byte_cyl), range(c.range), 
+	  gpt_enlarge(c.gpt_enlarge), range(c.range),
 	  del_ptable(c.del_ptable)
     {
 	y2deb("copy-constructed Disk " << dev);
@@ -153,7 +138,7 @@ namespace storage
 
 	setChildValue(node, "range", range);
 
-	setChildValue(node, "geometry", getGeometry());
+	setChildValue(node, "geometry", geometry);
 
 	setChildValue(node, "label", label);
 	setChildValue(node, "max_primary", max_primary);
@@ -222,39 +207,6 @@ Disk::setUdevData(const string& path, const list<string>& id)
 }
 
 
-unsigned long long
-Disk::cylinderToKb( unsigned long cylinder ) const
-    {
-    return (unsigned long long)byte_cyl * cylinder / 1024;
-    }
-
-unsigned long
-Disk::kbToCylinder( unsigned long long kb ) const
-    {
-    unsigned long long bytes = kb * 1024;
-    bytes += byte_cyl - 1;
-    unsigned long ret = bytes/byte_cyl;
-    y2mil("KB:" << kb << " ret:" << ret << " byte_cyl:" << byte_cyl);
-    return (ret);
-    }
-
-
-    unsigned long long
-    Disk::sectorToKb(unsigned long long sector) const
-    {
-	// TODO use 128 arithmetic
-	return sector * logical_sector_size / 1024;
-    }
-
-
-    unsigned long long
-    Disk::kbToSector(unsigned long long kb) const
-    {
-	// TODO use 128 arithmetic
-	return kb * 1024 / logical_sector_size;
-    }
-
-
     bool
     Disk::detect(SystemInfo& systeminfo)
     {
@@ -264,16 +216,7 @@ Disk::kbToCylinder( unsigned long long kb ) const
 
 bool Disk::detectGeometry()
     {
-	Geometry geometry;
-	if (!storage::detectGeometry(dev, geometry))
-	    return false;
-
-	cyl = geometry.cylinders;
-	head = geometry.heads;
-	sector = geometry.sectors;
-	logical_sector_size = geometry.logical_sector_size;
-
-	return true;
+	return storage::detectGeometry(dev, geometry);
     }
 
 
@@ -338,17 +281,11 @@ bool Disk::detectGeometry()
 
 	string dlabel = parted.getLabel();
 
-	Geometry geo = parted.getGeometry();
-	new_cyl = cyl = geo.cylinders;
-	new_head = head = geo.heads;
-	new_sector = sector = geo.sectors;
-	byte_cyl = geo.heads * geo.sectors * logical_sector_size;
+	new_geometry = geometry = parted.getGeometry();
 
 	gpt_enlarge = parted.getGptEnlarge();
 
-	y2mil("dlabel:" << dlabel << " gpt_enlarge:" << gpt_enlarge);
-	y2mil("cyl:" << cyl << " head:" << head << " sector:" << sector <<
-	      " logical_sector_size:" << logical_sector_size);
+	y2mil("dlabel:" << dlabel << " geometry:" << geometry << " gpt_enlarge:" << gpt_enlarge);
 
     if( dlabel!="loop" )
 	{
@@ -610,7 +547,7 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 	    Parted::Entry entry;
 	    if (parted.getEntry(p.nr(), entry))
 	    {
-		Region blk_parted = logical_sector_size / 512 * entry.secRegion;
+		Region blk_parted = sectorSize() / 512 * entry.secRegion;
 		Region blk_kernel = p.detectSysfsBlkRegion();
 
 		if (blk_parted != blk_kernel)
@@ -1678,14 +1615,11 @@ void Disk::removeFromMemory()
     Disk::redetectGeometry()
     {
 	Parted parted(device());
-	Geometry geo = parted.getGeometry();
-	if (geo.cylinders != cyl)
+	Geometry tmp_geometry = parted.getGeometry();
+	if (tmp_geometry != geometry)
 	{
-	    new_cyl = geo.cylinders;
-	    new_head = geo.heads;
-	    new_sector = geo.sectors;
-
-	    y2mil("new parted geometry " << geo);
+	    new_geometry = tmp_geometry;
+	    y2mil("new parted geometry " << new_geometry);
 	}
     }
 
@@ -1794,7 +1728,7 @@ int Disk::doSetType( Volume* v )
 unsigned long long
 Disk::procExtendedBlks() const
 {
-    return std::max(2U, logical_sector_size / 512);
+    return std::max(2U, sectorSize() / 512);
 }
 
 
@@ -1814,7 +1748,7 @@ Disk::getPartedValues( Partition *p ) const
 	Parted::Entry entry;
 	if (parted.getEntry(p->nr(), entry))
 	{
-	    Region partedBlkRegion = logical_sector_size / 512 * entry.secRegion;
+	    Region partedBlkRegion = sectorSize() / 512 * entry.secRegion;
 	    y2mil("partedBlkRegion:" << partedBlkRegion);
 
 	    if (p->type() == EXTENDED)
@@ -1865,8 +1799,8 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     if (getStorage()->testmode())
 	{
 	ret = true;
-	start = p->cylStart()*new_head*new_sector;
-	end = (p->cylEnd()+1)*new_head*new_sector-1;
+	start = p->cylStart() * new_geometry.heads * new_geometry.sectors;
+	end = (p->cylEnd() + 1) * new_geometry.heads * new_geometry.sectors - 1;
 	}
     else
 	{
@@ -1999,13 +1933,13 @@ int Disk::doCreate( Volume* v )
 		    }
 		}
 	    y2mil("max " << maxc);
-	    if( new_cyl!=cyl )
+	    if( new_geometry != geometry )
 		{
-		y2mil("parted geometry changed old c:" << cyl << " h:" << head << " s:" << sector);
-		y2mil("parted geometry changed new c:" << new_cyl << " h:" << new_head << " s:" << new_sector);
+		y2mil("parted geometry changed old geometry:" << geometry);
+		y2mil("parted geometry changed new geometry:" << new_geometry);
 		y2mil("old start:" << start << " end:" << end);
-		start = start * new_cyl / cyl;
-		end = end * new_cyl / cyl;
+		start = start * new_geometry.cylinders / geometry.cylinders;
+		end = end * new_geometry.cylinders / geometry.cylinders;
 		y2mil("new start:" << start << " end:" << end);
 		}
 	    if( end>maxc && maxc<=cylinders() )
@@ -2381,7 +2315,7 @@ int Disk::doResize( Volume* v )
 		}
 	    y2mil( "max_end:" << max_end << " end_sect:" << end_sect );
 	    if( max_end<end_sect ||
-		max_end-end_sect < byte_cyl/logical_sector_size*2 )
+		max_end-end_sect < geometry.cylinderSize() / sectorSize() * 2 )
 		{
 		end_sect = max_end;
 		y2mil( "new end_sect:" << end_sect );
@@ -2441,11 +2375,11 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
 void Disk::addPartition( unsigned num, unsigned long long sz,
 		         SystemInfo& systeminfo )
     {
-    unsigned long cyl_inc = std::max(kbToSector(size_k) / head / sector, 1ULL);
+    unsigned long cyl_inc = std::max(kbToSector(size_k) / geometry.heads / geometry.sectors, 1ULL);
     Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, systeminfo, sz,
-				 Region(cyl, cyl_inc), PRIMARY);
-    cyl += cyl_inc;
-    new_cyl = cyl;
+				 Region(geometry.cylinders, cyl_inc), PRIMARY);
+    geometry.cylinders += cyl_inc;
+    new_geometry.cylinders = geometry.cylinders;
     if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )
 	{
 	p->setSize( sz );
@@ -2464,8 +2398,8 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.cyl = cylinders();
     info.heads = heads();
     info.sectors = sectors();
-    info.sectorSize = logical_sector_size;
-    info.cylSize = cylSizeB();
+    info.sectorSize = sectorSize();
+    info.cylSize = geometry.cylinderSize();
     info.disklabel = labelName();
     info.maxPrimary = maxPrimary();
     info.extendedPossible = extendedPossible();
@@ -2480,9 +2414,7 @@ void Disk::getInfo( DiskInfo& tinfo ) const
 std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
     s << dynamic_cast<const Container&>(d);
-    s << " Cyl:" << d.cyl
-      << " Head:" << d.head
-      << " Sect:" << d.sector
+    s << " geometry:" << d.geometry
       << " Range:" << d.range
       << " SizeK:" << d.size_k
       << " Label:" << d.label;
@@ -2516,12 +2448,12 @@ void Disk::logDifference( const Container& d ) const
     const Disk * p = dynamic_cast<const Disk*>(&d);
     if( p != NULL )
 	{
-	if( cyl!=p->cyl )
-	    log += " Cyl:" + decString(cyl) + "-->" + decString(p->cyl);
-	if( head!=p->head )
-	    log += " Head:" + decString(head) + "-->" + decString(p->head);
-	if( sector!=p->sector )
-	    log += " Sect:" + decString(sector) + "-->" + decString(p->sector);
+	if (geometry.cylinders != p->geometry.cylinders)
+	    log += " cylinders:" + decString(geometry.cylinders) + "-->" + decString(p->geometry.cylinders);
+	if (geometry.heads != p->geometry.heads)
+	    log += " heads:" + decString(geometry.heads) + "-->" + decString(p->geometry.heads);
+	if (geometry.sectors != p->geometry.sectors)
+	    log += " sectors:" + decString(geometry.sectors) + "-->" + decString(p->geometry.sectors);
 	if( mjr!=p->mjr )
 	    log += " Mjr:" + decString(mjr) + "-->" + decString(p->mjr);
 	if( mnr!=p->mnr )
@@ -2606,7 +2538,7 @@ bool Disk::equalContent( const Container& rhs ) const
     if( ret )
 	p = dynamic_cast<const Disk*>(&rhs);
     if( ret && p )
-	ret = cyl==p->cyl && head==p->head && sector==p->sector &&
+	ret = geometry == p->geometry &&
 	      mjr==p->mjr && mnr==p->mnr && range==p->range &&
 	      size_k==p->size_k && max_primary==p->max_primary &&
 	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
