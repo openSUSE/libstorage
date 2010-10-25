@@ -72,7 +72,7 @@ namespace storage
     y2mil("retcode:" << Cmd.retcode());
     if( Cmd.retcode() == 0 )
 	checkFdasdOutput(Cmd, systeminfo);
-    y2mil("ret:" << ret << " partitons:" << vols.size());
+    y2mil("ret:" << ret << " partitions:" << vols.size());
     return( ret );
     }
 
