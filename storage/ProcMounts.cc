@@ -50,7 +50,7 @@ namespace storage
 
     for (vector<string>::const_iterator it = mounts.lines().begin(); it != mounts.lines().end(); ++it)
     {
-	string dev = extractNthWord(0, *it);
+	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
 	string dir = extractNthWord(1, *it);
 
 	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
@@ -73,8 +73,8 @@ namespace storage
 
     for (vector<string>::const_iterator it = swaps.lines().begin(); it != swaps.lines().end(); ++it)
     {
-	string dev = extractNthWord(0, *it);
-	string::size_type pos = dev.find("\\040(deleted)");
+	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
+	string::size_type pos = dev.find(" (deleted)");
 	if (pos != string::npos)
 	    dev.erase(pos);
 
