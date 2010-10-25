@@ -55,15 +55,12 @@ namespace storage
 
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    list<string> l = splitString(*it, " \t\n", true, true, "\"");
-
-	    if (l.empty())
+	    string::size_type pos = it->find(":");
+	    if (pos == string::npos)
 		continue;
 
-	    string device = l.front();
-	    device.erase(device.size() - 1);
-
-	    l.pop_front();
+	    string device = string(*it, 0, pos);
+	    list<string> l = splitString(string(*it, pos + 1), " \t\n", true, true, "\"");
 
 	    Entry entry;
 
