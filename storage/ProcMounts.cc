@@ -51,7 +51,7 @@ namespace storage
     for (vector<string>::const_iterator it = mounts.lines().begin(); it != mounts.lines().end(); ++it)
     {
 	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
-	string dir = extractNthWord(1, *it);
+	string dir = boost::replace_all_copy(extractNthWord(1, *it), "\\040", " ");
 
 	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
 	{
