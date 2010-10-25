@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Oct 25 14:24:17 CEST 2010 - aschnell@suse.de
+
+- fixed handling of device name with spaces in /etc/fstab
+  (bnc #648878)
+
+-------------------------------------------------------------------
 Mon Sep 27 09:33:52 CEST 2010 - aschnell@suse.de
 
 - fixed detection of spare devices for MD RAID

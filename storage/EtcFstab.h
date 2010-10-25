@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -153,6 +153,9 @@ class EtcFstab
 	void updateTabLine( list<string>(*fnc)(const FstabEntry& e),
 	                    const FstabEntry& old, const FstabEntry& nnew, 
 	                    string& line ) const;
+
+	static string fstabEncode(const string&);
+	static string fstabDecode(const string&);
 
 	static const unsigned fstabFields[6];
 	static const unsigned cryptotabFields[6];

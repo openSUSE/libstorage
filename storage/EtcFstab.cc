@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2010] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -72,9 +72,9 @@ EtcFstab::readFiles()
 	    {
 	    Entry *p = new Entry;
 	    if( i!=l.end() )
-		p->old.device = p->old.dentry = *i++;
+		p->old.device = p->old.dentry = fstabDecode(*i++);
 	    if( i!=l.end() )
-		p->old.mount = *i++;
+		p->old.mount = fstabDecode(*i++);
 	    if( i!=l.end() )
 		{
 		p->old.fs = *i++;
@@ -468,14 +468,14 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	if( cryptotab==NULL )
 	    cryptotab = new AsciiFile( prefix + "/cryptotab", true );
 	ret = cryptotab;
-	reg = "[ \t]" + e.dentry + "[ \t]";
+	reg = "[ \t]" + boost::replace_all_copy(fstabEncode(e.dentry), "\\", "\\\\") + "[ \t]";
 	}
     else
 	{
 	if( fstab==NULL )
 	    fstab = new AsciiFile( prefix + "/fstab" );
 	ret = fstab;
-	reg = "^[ \t]*" + e.dentry + "[ \t]";
+	reg = "^[ \t]*" + boost::replace_all_copy(fstabEncode(e.dentry), "\\", "\\\\") + "[ \t]";
 	}
     lineno = ret->find_if_idx(regex_matches(reg));
     y2mil("fstab:" << fstab << " cryptotab:" << cryptotab << " lineno:" << lineno);
@@ -570,7 +570,7 @@ string EtcFstab::createLine( const list<string>& ls, unsigned fields,
 	{
 	if( i != ls.begin() )
 	    ret += " ";
-	ret += *i;
+	ret += fstabEncode(*i);
 	if( count<fields && i->size()<flen[count] )
 	    {
 	    ret.replace( ret.size(), 0, flen[count]-i->size(), ' ' );
@@ -1022,6 +1022,20 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
 	if( v.tmpcrypt )
 	    s << " tmpcrypt";
 	return s;
+    }
+
+
+    string
+    EtcFstab::fstabEncode(const string& s)
+    {
+	return boost::replace_all_copy(s, " ", "\\040");
+    }
+
+
+    string
+    EtcFstab::fstabDecode(const string& s)
+    {
+	return boost::replace_all_copy(s, "\\040", " ");
     }
 
 
