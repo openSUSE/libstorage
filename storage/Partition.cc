@@ -604,8 +604,7 @@ PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
 std::ostream& operator<< (std::ostream& s, const Partition &p )
     {
     s << "Partition " << dynamic_cast<const Volume&>(p)
-      << " Start:" << p.reg.start()
-      << " CylNum:" << p.reg.len()
+      << " cylRegion:" << p.reg
       << " Id:" << std::hex << p.idt << std::dec;
     if( p.typ!=storage::PRIMARY )
 	s << " " << toString(p.typ);
