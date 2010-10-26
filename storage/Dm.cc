@@ -455,11 +455,7 @@ void Dm::activate( bool val )
 	    c.execute(DMSETUPBIN " version");
 	    if( c.retcode()!=0 )
 		{
-		c.execute(GREPBIN " \"^dm[-_]mod[ \t]\" /proc/modules");
-		if( c.numLines()<=0 )
 		    c.execute(MODPROBEBIN " dm-mod");
-		c.execute(GREPBIN " \"^dm[-_]snapshot[ \t]\" /proc/modules");
-		if( c.numLines()<=0 )
 		    c.execute(MODPROBEBIN " dm-snapshot");
 		c.execute(DMSETUPBIN " version");
 		}
