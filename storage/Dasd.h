@@ -67,6 +67,7 @@ class Dasd : public Disk
 	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
 	bool detectPartitionsFdasd(SystemInfo& systeminfo);
 	bool detectPartitions(SystemInfo& systeminfo);
+	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
 	bool checkFdasdOutput(SystemCmd& Cmd, SystemInfo& systeminfo);
 	bool scanFdasdLine(const string& line, unsigned& nr, Region& cylRegion) const;
 	void getGeometry(SystemCmd& cmd, Geometry& geometry) const;

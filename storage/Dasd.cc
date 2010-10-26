@@ -176,6 +176,15 @@ namespace storage
    }
 
 
+    bool
+    Dasd::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
+    {
+	// TODO
+
+	return true;
+    }
+
+
 bool
     Dasd::checkFdasdOutput(SystemCmd& cmd, SystemInfo& systeminfo)
     {

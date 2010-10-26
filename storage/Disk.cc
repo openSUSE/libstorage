@@ -528,8 +528,7 @@ _("You have the following options:\n"
 
 
 bool
-Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
-			   unsigned long& range_exceed) const
+Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
 {
     const Parted& parted = systeminfo.getParted(dev);
 
@@ -559,6 +558,17 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 	    }
 	}
     }
+
+    y2mil("ret:" << ret);
+    return ret;
+}
+
+
+bool
+Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
+			   unsigned long& range_exceed) const
+{
+    bool ret = checkPartitionsValid(systeminfo, pl);
 
     if( !ret || label=="unsupported" )
 	{

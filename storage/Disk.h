@@ -235,6 +235,7 @@ class Disk : public Container
 	list<string> partitionsKernelKnowns(const ProcParts& parts) const;
 	bool checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			      unsigned long& rng) const;
+	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
 
 	bool callDelpart(unsigned nr) const;
 	bool callAddpart(unsigned nr, const Region& blkRegion) const;
