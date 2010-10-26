@@ -80,8 +80,6 @@ namespace storage
     bool
     Dasd::detectPartitions(SystemInfo& systeminfo)
     {
-    const ProcParts& parts = systeminfo.getProcParts();
-
     bool ret = true;
     string cmd_line = DASDVIEWBIN " -x " + quote(device());
     detected_label = "dasd";
@@ -122,6 +120,7 @@ namespace storage
 		unsigned long long s = cylinderToKb(cylinders());
 		Partition *p = new Partition(*this, getPartName(1), getPartDevice(1), 1,
 					     systeminfo, s, Region(0, cylinders()), PRIMARY);
+		const ProcParts& parts = systeminfo.getProcParts();
 		if (parts.getSize(p->device(), s))
 		    {
 		    p->setSize( s );
@@ -182,14 +181,13 @@ bool
     {
 	const ProcParts& parts = systeminfo.getProcParts();
 
-    int cnt;
     string line;
     string tmp;
     list<Partition *> pl;
     Regex part( "^"+device()+"[0123456789]+$" );
 
     cmd.select( device() );
-    cnt = cmd.numLines();
+    int cnt = cmd.numLines();
     for( int i=0; i<cnt; i++)
 	{
 	unsigned pnr;
