@@ -41,7 +41,9 @@ namespace storage
     ArchInfo::readData(const xmlNode* node)
     {
 	getChildValue(node, "arch", arch);
-	getChildValue(node, "efiboot", is_efiboot);
+
+	if (!getChildValue(node, "efiboot", is_efiboot))
+	    is_efiboot = false;
     }
 
 
@@ -49,7 +51,9 @@ namespace storage
     ArchInfo::saveData(xmlNode* node) const
     {
 	setChildValue(node, "arch", arch);
-	setChildValue(node, "efiboot", is_efiboot);
+
+	if (is_efiboot)
+	    setChildValue(node, "efiboot", is_efiboot);
     }
 
 
