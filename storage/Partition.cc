@@ -621,12 +621,13 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
 void Partition::logDifference( const Partition& rhs ) const
     {
     string log = Volume::logDifference( rhs );
-    if( reg.start()!=rhs.reg.start() )
-	log += " Start:" + decString(reg.start()) + "-->" + 
-	       decString(rhs.reg.start());
-    if( reg.len()!=rhs.reg.len() )
-	log += " CylNum:" + decString(reg.len()) + "-->" + 
-	       decString(rhs.reg.len());
+    if (reg != rhs.reg)
+    {
+	std::ostringstream b;
+	prepareLogStream(b);
+	b << " reg:" << reg << "-->" << rhs.reg;
+	log += b.str();
+    }
     if( typ!=rhs.typ )
 	log += " Typ:" + toString(typ) + "-->" + toString(rhs.typ);
     if( idt!=rhs.idt )

@@ -401,15 +401,20 @@ testLogLevel(LogLevel level)
 }
 
 
+void
+prepareLogStream(ostringstream& stream)
+{
+    stream.imbue(std::locale::classic());
+    stream.setf(std::ios::boolalpha);
+    stream.setf(std::ios::showbase);
+}
+
+
 ostringstream*
 logStreamOpen()
 {
     std::ostringstream* stream = new ostringstream;
-
-    stream->imbue(std::locale::classic());
-    stream->setf(std::ios::boolalpha);
-    stream->setf(std::ios::showbase);
-
+    prepareLogStream(*stream);
     return stream;
 }
 

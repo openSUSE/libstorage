@@ -2458,12 +2458,13 @@ void Disk::logDifference( const Container& d ) const
     const Disk * p = dynamic_cast<const Disk*>(&d);
     if( p != NULL )
 	{
-	if (geometry.cylinders != p->geometry.cylinders)
-	    log += " cylinders:" + decString(geometry.cylinders) + "-->" + decString(p->geometry.cylinders);
-	if (geometry.heads != p->geometry.heads)
-	    log += " heads:" + decString(geometry.heads) + "-->" + decString(p->geometry.heads);
-	if (geometry.sectors != p->geometry.sectors)
-	    log += " sectors:" + decString(geometry.sectors) + "-->" + decString(p->geometry.sectors);
+	if (geometry != p->geometry)
+	{
+	    std::ostringstream b;
+	    prepareLogStream(b);
+	    b << " geometry:" << geometry << "-->" << p->geometry;
+	    log += b.str();
+	}
 	if( mjr!=p->mjr )
 	    log += " Mjr:" + decString(mjr) + "-->" + decString(p->mjr);
 	if( mnr!=p->mnr )

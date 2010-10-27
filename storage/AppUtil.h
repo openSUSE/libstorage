@@ -103,6 +103,8 @@ void createLogger(const string& name, const string& logpath, const string& logfi
 
 bool testLogLevel(LogLevel level);
 
+void prepareLogStream(std::ostringstream& stream);
+
 std::ostringstream* logStreamOpen();
 
 void logStreamClose(LogLevel level, const char* file, unsigned line,
