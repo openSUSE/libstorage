@@ -413,26 +413,20 @@ bool Loop::equalContent( const Loop& rhs ) const
 	    delFile==rhs.delFile );
     }
 
-void Loop::logDifference( const Loop& rhs ) const
+
+    void
+    Loop::logDifference(const Loop& rhs) const
     {
-    string log = Volume::logDifference( rhs );
-    if( lfile!=rhs.lfile )
-	log += " LoopFile:" + lfile + "-->" + rhs.lfile;
-    if( reuseFile!=rhs.reuseFile )
-	{
-	if( rhs.reuseFile )
-	    log += " -->reuse";
-	else
-	    log += " reuse-->";
-	}
-    if( delFile!=rhs.delFile )
-	{
-	if( rhs.delFile )
-	    log += " -->delFile";
-	else
-	    log += " delFile-->";
-	}
-    y2mil(log);
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	log << Volume::logDifference(rhs);
+
+	logDiff(log, "loopfile", lfile, rhs.lfile);
+	logDiff(log, "reusefile", reuseFile, rhs.reuseFile);
+	logDiff(log, "delfile", delFile, rhs.delFile);
+
+	y2mil(log.str());
     }
 
 

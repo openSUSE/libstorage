@@ -165,6 +165,19 @@ bool Device::sameDevice( const string& device ) const
     }
 
 
+    void
+    Device::logDifference(std::ostream& log, const Device& rhs) const
+    {
+	log << "nm:" + nm;
+	if (nm != rhs.nm)
+	    log << "-->" << rhs.nm;
+	logDiff(log, "dev", dev, rhs.dev);
+
+	logDiff(log, "deleted", del, rhs.del);
+	logDiff(log, "created", create, rhs.create);
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const Device& d)
     {
 	s << "Name:" << d.nm << " Device:" << d.dev;

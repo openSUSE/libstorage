@@ -618,33 +618,24 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
     }
 
 
-void Partition::logDifference( const Partition& rhs ) const
+    void
+    Partition::logDifference(const Partition& rhs) const
     {
-    string log = Volume::logDifference( rhs );
-    if (reg != rhs.reg)
-    {
-	std::ostringstream b;
-	prepareLogStream(b);
-	b << " reg:" << reg << "-->" << rhs.reg;
-	log += b.str();
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	log << Volume::logDifference(rhs);
+
+	logDiff(log, "reg", reg, rhs.reg);
+	logDiffEnum(log, "type", typ, rhs.typ);
+	logDiffHex(log, "id", idt, rhs.idt);
+	logDiffHex(log, "orig_id", orig_id, rhs.orig_id);
+	logDiff(log, "orig_num", orig_num, rhs.orig_num);
+	logDiff(log, "boot", bootflag, rhs.bootflag);
+
+	y2mil(log.str());
     }
-    if( typ!=rhs.typ )
-	log += " Typ:" + toString(typ) + "-->" + toString(rhs.typ);
-    if( idt!=rhs.idt )
-	log += " Id:" + hexString(idt) + "-->" + hexString(rhs.idt);
-    if( orig_id!=rhs.orig_id )
-	log += " OrigId:" + hexString(orig_id) + "-->" + hexString(rhs.orig_id);
-    if( orig_num!=rhs.orig_num )
-	log += " OrigNr:" + decString(orig_num) + "-->" + decString(rhs.orig_num);
-    if( bootflag!=rhs.bootflag )
-	{
-	if( rhs.bootflag )
-	    log += " -->boot";
-	else
-	    log += " boot-->";
-	}
-    y2mil(log);
-    }
+
 
 bool Partition::equalContent( const Partition& rhs ) const
     {

@@ -217,6 +217,46 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     }
 
 
+    template <typename Type>
+    void logDiff(std::ostream& log, const char* text, const Type& lhs, const Type& rhs)
+    {
+	static_assert(!std::is_enum<Type>::value, "is enum");
+
+	if (lhs != rhs)
+	    log << " " << text << ":" << lhs << "-->" << rhs;
+    }
+
+    template <typename Type>
+    void logDiffHex(std::ostream& log, const char* text, const Type& lhs, const Type& rhs)
+    {
+	static_assert(std::is_integral<Type>::value, "not integral");
+
+	if (lhs != rhs)
+	    log << " " << text << ":" << std::hex << lhs << "-->" << rhs << std::dec;
+    }
+
+    template <typename Type>
+    void logDiffEnum(std::ostream& log, const char* text, const Type& lhs, const Type& rhs)
+    {
+	static_assert(std::is_enum<Type>::value, "not enum");
+
+	if (lhs != rhs)
+	    log << " " << text << ":" << toString(lhs) << "-->" << toString(rhs);
+    }
+
+    inline
+    void logDiff(std::ostream& log, const char* text, bool lhs, bool rhs)
+    {
+	if (lhs != rhs)
+	{
+	    if (rhs)
+		log << " -->" << text;
+	    else
+		log << " " << text << "-->";
+	}
+    }
+
+
     template<class Type>
     bool
     read_sysfs_property(const string& path, Type& value, bool log_error = true)

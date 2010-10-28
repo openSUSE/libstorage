@@ -428,52 +428,23 @@ Container::logDifference( const Container& c ) const
 
 
 string
-Container::getDiffString( const Container& c ) const
+Container::getDiffString(const Container& rhs) const
     {
-    string ret = "Name:" + nm;
-    if( nm!=c.nm )
-	ret += "-->"+c.nm;
-    if( typ!=c.typ )
-	ret += " Type:" + toString(typ) + "-->" + toString(c.typ);
-    if( dev!=c.dev )
-	ret += " Device:" + dev + "-->" + c.dev;
-    if( del!=c.del )
-	{
-	if( c.del )
-	    ret += " -->deleted";
-	else
-	    ret += " deleted-->";
-	}
-    if( create!=c.create )
-	{
-	if( c.create )
-	    ret += " -->created";
-	else
-	    ret += " created-->";
-	}
-    if( ronly!=c.ronly )
-	{
-	if( c.ronly )
-	    ret += " -->readonly";
-	else
-	    ret += " readonly-->";
-	}
-    if( silent!=c.silent )
-	{
-	if( c.silent )
-	    ret += " -->silent";
-	else
-	    ret += " silent-->";
-	}
-    if( uby!=c.uby )
-	{
-	std::ostringstream b;
-	classic(b);
-	b << " usedby:" << uby << "-->" << c.uby;
-	ret += b.str();
-	}
-    return( ret );
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	Device::logDifference(log, rhs);
+
+	logDiffEnum(log, "type", typ, rhs.typ);
+
+	logDiff(log, "readonly", ronly, rhs.ronly);
+	logDiff(log, "silent", silent, rhs.silent);
+
+	logDiff(log, "usedby", uby, rhs.uby);
+
+	return log.str();
     }
+
 
 bool Container::equalContent( const Container& rhs ) const
     {

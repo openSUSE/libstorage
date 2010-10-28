@@ -567,41 +567,25 @@ bool Md::equalContent( const Md& rhs ) const
 	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare );
     }
 
-void Md::logDifference( const Md& rhs ) const
+
+    void
+    Md::logDifference(const Md& rhs) const
     {
-    string log = Volume::logDifference( rhs );
-    if( md_type!=rhs.md_type )
-	log += " Personality:" + toString(md_type) + "-->" + toString(rhs.md_type);
-    if( md_parity!=rhs.md_parity )
-	log += " Parity:" + toString(md_parity) + "-->" + toString(rhs.md_parity);
-    if (chunk_k != rhs.chunk_k)
-	log += " ChunkK:" + decString(chunk_k) + "-->" + decString(rhs.chunk_k);
-    if( sb_ver!=rhs.sb_ver )
-	log += " SbVer:" + sb_ver + "-->" + rhs.sb_ver;
-    if( md_uuid!=rhs.md_uuid )
-	log += " MD-UUID:" + md_uuid + "-->" + rhs.md_uuid;
-    if( destrSb!=rhs.destrSb )
-	{
-	if( rhs.destrSb )
-	    log += " -->destrSb";
-	else
-	    log += " destrSb-->";
-	}
-    if( devs!=rhs.devs )
-	{
-	std::ostringstream b;
-	classic(b);
-	b << " Devices:" << devs << "-->" << rhs.devs;
-	log += b.str();
-	}
-    if( spare!=rhs.spare )
-	{
-	std::ostringstream b;
-	classic(b);
-	b << " Spares:" << spare << "-->" << rhs.spare;
-	log += b.str();
-	}
-    y2mil(log);
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	log << Volume::logDifference(rhs);
+
+	logDiffEnum(log, "md_type", md_type, rhs.md_type);
+	logDiffEnum(log, "md_parity", md_parity, rhs.md_parity);
+	logDiff(log, "chunk_k", chunk_k, rhs.chunk_k);
+	logDiff(log, "sb_ver", sb_ver, rhs.sb_ver);
+	logDiff(log, "md_uuid", md_uuid, rhs.md_uuid);
+	logDiff(log, "destrSb", destrSb, rhs.destrSb);
+	logDiff(log, "devices", devs, rhs.devs);
+	logDiff(log, "spares", spare, rhs.spare);
+
+	y2mil(log.str());
     }
 
 

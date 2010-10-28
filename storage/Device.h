@@ -92,6 +92,8 @@ namespace storage
 	bool isUsedBy(UsedByType type) const;
 	const list<UsedBy>& getUsedBy() const { return uby; }
 
+	void logDifference(std::ostream& log, const Device& rhs) const;
+
 	friend std::ostream& operator<<(std::ostream& s, const Device& d);
 
     protected:

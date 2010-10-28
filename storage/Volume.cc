@@ -3142,121 +3142,62 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     }
 
 
-string
-Volume::logDifference( const Volume& rhs ) const
+    string
+    Volume::logDifference(const Volume& rhs) const
     {
-    string ret = "Device:" + dev;
-    if( dev!=rhs.dev )
-	ret += "-->"+rhs.dev;
-    if( num!=rhs.num )
-	ret += " Nr:" + decString(num) + "-->" + decString(rhs.num);
-    if( !numeric && nm!=rhs.nm )
-	ret += " Name:" + nm + "-->" + rhs.nm;
-    if( size_k!=rhs.size_k )
-	ret += " SizeK:" + decString(size_k) + "-->" + decString(rhs.size_k);
-    if( orig_size_k!=rhs.orig_size_k )
-	ret += " orig_SizeK:" + decString(orig_size_k) + "-->" + decString(rhs.size_k);
-    if( mjr!=rhs.mjr )
-	ret += " Mjr:" + decString(mjr) + "-->" + decString(rhs.mjr);
-    if( mnr!=rhs.mnr )
-	ret += " Mnr:" + decString(mnr) + "-->" + decString(rhs.mnr);
-    if( del!=rhs.del )
-	{
-	if( rhs.del )
-	    ret += " -->deleted";
-	else
-	    ret += " deleted-->";
-	}
-    if( create!=rhs.create )
-	{
-	if( rhs.create )
-	    ret += " -->created";
-	else
-	    ret += " created-->";
-	}
-    if( ronly!=rhs.ronly )
-	{
-	if( rhs.ronly )
-	    ret += " -->readonly";
-	else
-	    ret += " readonly-->";
-	}
-    if( format!=rhs.format )
-	{
-	if( rhs.format )
-	    ret += " -->format";
-	else
-	    ret += " format-->";
-	}
-    if( uby!=rhs.uby )
-	{
-	std::ostringstream b;
-	classic(b);
-	b << " usedby:" << uby << "-->" << rhs.uby;
-	ret += b.str();
-	}
-    if( fs!=rhs.fs )
-	ret += " fs:" + toString(fs) + "-->" + toString(rhs.fs);
-    if( detected_fs!=rhs.detected_fs )
-	ret += " det_fs:" + toString(detected_fs) + "-->" + toString(rhs.detected_fs);
-    if( mp!=rhs.mp )
-	ret += " mount:" + mp + "-->" + rhs.mp;
-    if( orig_mp!=rhs.orig_mp )
-	ret += " orig_mount:" + orig_mp + "-->" + rhs.orig_mp;
-    if( is_mounted!=rhs.is_mounted )
-	{
-	if( rhs.is_mounted )
-	    ret += " -->mounted";
-	else
-	    ret += " mounted-->";
-	}
-    if( mount_by!=rhs.mount_by )
-	ret += " mount_by:" + toString(mount_by) + "-->" + toString(rhs.mount_by);
-    if( orig_mount_by!=rhs.orig_mount_by )
-	ret += " orig_mount_by:" + toString(orig_mount_by) + "-->" + toString(rhs.orig_mount_by);
-    if( uuid!=rhs.uuid )
-	ret += " uuid:" + uuid + "-->" + rhs.uuid;
-    if( label!=rhs.label )
-	ret += " label:" + label + "-->" + rhs.label;
-    if( orig_label!=rhs.orig_label )
-	ret += " orig_label:" + orig_label + "-->" + rhs.orig_label;
-    if( fstab_opt!=rhs.fstab_opt )
-	ret += " fstopt:" + fstab_opt + "-->" + rhs.fstab_opt;
-    if( orig_fstab_opt!=rhs.orig_fstab_opt )
-	ret += " orig_fstopt:" + orig_fstab_opt + "-->" + rhs.orig_fstab_opt;
-    if( mkfs_opt!=rhs.mkfs_opt )
-	ret += " mkfsopt:" + mkfs_opt + "-->" + rhs.mkfs_opt;
-    if( tunefs_opt!=rhs.tunefs_opt )
-	ret += " tunefsopt:" + tunefs_opt + "-->" + rhs.tunefs_opt;
-    if( dtxt!=rhs.dtxt )
-	ret += " dtxt:" + dtxt + "-->" + rhs.dtxt;
-    if( is_loop!=rhs.is_loop )
-	{
-	if( rhs.is_loop )
-	    ret += " -->loop";
-	else
-	    ret += " loop-->";
-	}
-    if( loop_active!=rhs.loop_active )
-	{
-	if( rhs.loop_active )
-	    ret += " -->loop_active";
-	else
-	    ret += " loop_active-->";
-	}
-    if( loop_dev!=rhs.loop_dev )
-	ret += " loop:" + loop_dev + "-->" + rhs.loop_dev;
-    if( fstab_loop_dev!=rhs.fstab_loop_dev )
-	ret += " fstab_loop:" + fstab_loop_dev + "-->" + rhs.fstab_loop_dev;
-    if( encryption!=rhs.encryption )
-	ret += " encr:" + toString(encryption) + "-->" + toString(rhs.encryption);
-    if( orig_encryption!=rhs.orig_encryption )
-	ret += " orig_encr:" + toString(orig_encryption) + "-->" + toString(rhs.orig_encryption);
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	Device::logDifference(log, rhs);
+
+	logDiff(log, "num", num, rhs.num);
+
+	logDiff(log, "size_k", size_k, rhs.size_k);
+	logDiff(log, "orig_size_k", orig_size_k, rhs.orig_size_k);
+
+	logDiff(log, "mjr", mjr, rhs.mjr);
+	logDiff(log, "mnr", mnr, rhs.mnr);
+
+	logDiff(log, "readonly", ronly, rhs.ronly);
+	logDiff(log, "format", format, rhs.format);
+
+	logDiff(log, "usedby", uby, rhs.uby);
+
+	logDiffEnum(log, "fs", fs, rhs.fs);
+	logDiffEnum(log, "det_fs", detected_fs, rhs.detected_fs);
+
+	logDiff(log, "mount", mp, rhs.mp);
+	logDiff(log, "orig_mount", orig_mp, rhs.orig_mp);
+
+	logDiff(log, "is_mounted", is_mounted, rhs.is_mounted);
+
+	logDiffEnum(log, "mount_by", mount_by, rhs.mount_by);
+	logDiffEnum(log, "orig_mount_by", orig_mount_by, rhs.orig_mount_by);
+
+	logDiff(log, "uuid", uuid, rhs.uuid);
+
+	logDiff(log, "label", label, rhs.label);
+	logDiff(log, "orig_label", orig_label, rhs.orig_label);
+
+	logDiff(log, "fstopt", fstab_opt, rhs.fstab_opt);
+	logDiff(log, "orig_fstopt", orig_fstab_opt, rhs.orig_fstab_opt);
+	logDiff(log, "mkfsopt", mkfs_opt, rhs.mkfs_opt);
+	logDiff(log, "tunefsopt", tunefs_opt, rhs.tunefs_opt);
+
+	logDiff(log, "dtxt", dtxt, rhs.dtxt);
+
+	logDiff(log, "is_loop", is_loop, rhs.is_loop);
+	logDiff(log, "loop_active", loop_active, rhs.loop_active);
+	logDiff(log, "loop_dev", loop_dev, rhs.loop_dev);
+	logDiff(log, "fstab_loop_dev", fstab_loop_dev, rhs.fstab_loop_dev);
+
+	logDiffEnum(log, "encr", encryption, rhs.encryption);
+	logDiffEnum(log, "orig_encr", orig_encryption, rhs.orig_encryption);
 #ifdef DEBUG_CRYPT_PASSWORD
-    if( crypt_pwd!=rhs.crypt_pwd )
-	ret += " pwd:" + crypt_pwd + "-->" + rhs.crypt_pwd;
+	logDiff(log, "pwd", crypt_pwd, rhs.crypt_pwd);
 #endif
-    return( ret );
+
+	return log.str();
     }
 
 
