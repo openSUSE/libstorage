@@ -542,30 +542,29 @@ bool Dm::equalContent( const Dm& rhs ) const
             stripe_size==rhs.stripe_size && pe_map==rhs.pe_map );
     }
 
-void Dm::logDifference( const Dm& rhs ) const
-{
-    string log = stringDifference(rhs);
-    y2mil(log);
-}
 
-string Dm::stringDifference( const Dm& rhs ) const
+    void
+    Dm::logDifference(const Dm& rhs) const
     {
-    string ret = Volume::logDifference( rhs );
-    if( num_le!=rhs.num_le )
-	ret += " LE:" + decString(num_le) + "-->" + decString(rhs.num_le);
-    if( stripe!=rhs.stripe )
-	ret += " Stripes:" + decString(stripe) + "-->" + decString(rhs.stripe);
-    if( stripe_size!=rhs.stripe_size )
-	ret += " StripeSize:" + decString(stripe_size) + "-->" + 
-	       decString(rhs.stripe_size);
-    if( pe_map!=rhs.pe_map )
-	{
-	std::ostringstream b;
-	classic(b);
-	b << " pe_map:" << pe_map << "-->" << rhs.pe_map;
-	ret += b.str();
-	}
-    return( ret );
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	logDifference(log, rhs);
+
+	y2mil(log.str());
+    }
+
+
+    void
+    Dm::logDifference(std::ostream& log, const Dm& rhs) const
+    {
+	Volume::logDifference(log, rhs);
+
+	logDiff(log, "num_le", num_le, rhs.num_le);
+	logDiff(log, "stripes", stripe, rhs.stripe);
+	logDiff(log, "stripe_size", stripe_size, rhs.stripe_size);
+
+	logDiff(log, "pe_map", pe_map, rhs.pe_map);
     }
 
 

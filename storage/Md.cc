@@ -574,7 +574,7 @@ bool Md::equalContent( const Md& rhs ) const
 	std::ostringstream log;
 	prepareLogStream(log);
 
-	log << Volume::logDifference(rhs);
+	Volume::logDifference(log, rhs);
 
 	logDiffEnum(log, "md_type", md_type, rhs.md_type);
 	logDiffEnum(log, "md_parity", md_parity, rhs.md_parity);

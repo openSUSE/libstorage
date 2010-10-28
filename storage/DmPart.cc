@@ -198,10 +198,11 @@ bool DmPart::equalContent( const DmPart& rhs ) const
     return( Dm::equalContent(rhs) );
     }
 
-void DmPart::logDifference( const DmPart& rhs ) const
-{
-    string log = stringDifference(rhs);
-    y2mil(log);
-}
+
+    void
+    DmPart::logDifference(const DmPart& rhs) const
+    {
+	Dm::logDifference(rhs);
+    }
 
 }

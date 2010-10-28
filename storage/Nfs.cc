@@ -109,10 +109,11 @@ bool Nfs::equalContent( const Nfs& rhs ) const
     return( Volume::equalContent(rhs) );
     }
 
-void Nfs::logDifference( const Nfs& rhs ) const
-{
-    string log = Volume::logDifference(rhs);
-    y2mil(log);
-}
+
+    void
+    Nfs::logDifference(const Nfs& rhs) const
+    {
+	Volume::logDifference(rhs);
+    }
 
 }

@@ -3142,12 +3142,21 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     }
 
 
-    string
+    void
     Volume::logDifference(const Volume& rhs) const
     {
 	std::ostringstream log;
 	prepareLogStream(log);
 
+	logDifference(log, rhs);
+
+	y2mil(log.str());
+    }
+
+
+    void
+    Volume::logDifference(std::ostream& log, const Volume& rhs) const
+    {
 	Device::logDifference(log, rhs);
 
 	logDiff(log, "num", num, rhs.num);
@@ -3196,8 +3205,6 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 #ifdef DEBUG_CRYPT_PASSWORD
 	logDiff(log, "pwd", crypt_pwd, rhs.crypt_pwd);
 #endif
-
-	return log.str();
     }
 
 

@@ -205,11 +205,11 @@ bool MdPart::equalContent( const MdPart& rhs ) const
     return Volume::equalContent(rhs);
     }
 
-void MdPart::logDifference( const MdPart& rhs ) const
-{
-   string log = Volume::logDifference(rhs);
-   y2mil(log);
-}
 
+    void
+    MdPart::logDifference(const MdPart& rhs) const
+    {
+	Volume::logDifference(rhs);
+    }
 
 }

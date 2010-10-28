@@ -624,7 +624,7 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
 	std::ostringstream log;
 	prepareLogStream(log);
 
-	log << Volume::logDifference(rhs);
+	Volume::logDifference(log, rhs);
 
 	logDiff(log, "reg", reg, rhs.reg);
 	logDiffEnum(log, "type", typ, rhs.typ);

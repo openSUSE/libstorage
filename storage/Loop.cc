@@ -420,7 +420,7 @@ bool Loop::equalContent( const Loop& rhs ) const
 	std::ostringstream log;
 	prepareLogStream(log);
 
-	log << Volume::logDifference(rhs);
+	Volume::logDifference(log, rhs);
 
 	logDiff(log, "loopfile", lfile, rhs.lfile);
 	logDiff(log, "reusefile", reuseFile, rhs.reuseFile);
