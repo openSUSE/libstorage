@@ -175,6 +175,9 @@ bool Device::sameDevice( const string& device ) const
 
 	logDiff(log, "deleted", del, rhs.del);
 	logDiff(log, "created", create, rhs.create);
+
+	logDiff(log, "mjr", mjr, rhs.mjr);
+	logDiff(log, "mnr", mnr, rhs.mnr);
     }
 
 

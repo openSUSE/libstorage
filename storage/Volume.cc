@@ -3164,9 +3164,6 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	logDiff(log, "size_k", size_k, rhs.size_k);
 	logDiff(log, "orig_size_k", orig_size_k, rhs.orig_size_k);
 
-	logDiff(log, "mjr", mjr, rhs.mjr);
-	logDiff(log, "mnr", mnr, rhs.mnr);
-
 	logDiff(log, "readonly", ronly, rhs.ronly);
 	logDiff(log, "format", format, rhs.format);
 

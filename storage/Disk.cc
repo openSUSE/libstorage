@@ -2465,10 +2465,6 @@ void Disk::logDifference( const Container& d ) const
 	    b << " geometry:" << geometry << "-->" << p->geometry;
 	    log += b.str();
 	}
-	if( mjr!=p->mjr )
-	    log += " Mjr:" + decString(mjr) + "-->" + decString(p->mjr);
-	if( mnr!=p->mnr )
-	    log += " Mnr:" + decString(mnr) + "-->" + decString(p->mnr);
 	if( range!=p->range )
 	    log += " Range:" + decString(range) + "-->" + decString(p->range);
 	if( size_k!=p->size_k )
