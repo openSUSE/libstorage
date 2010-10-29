@@ -1192,8 +1192,10 @@ string MdPartCo::getDiffString( const Container& d ) const
 
 
     void
-    MdPartCo::logDifference(const MdPartCo& rhs) const
+    MdPartCo::logDifference(const Container& rhs_c) const
     {
+	const MdPartCo& rhs = dynamic_cast<const MdPartCo&>(rhs_c);
+
 	std::ostringstream log;
 	prepareLogStream(log);
 

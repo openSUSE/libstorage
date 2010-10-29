@@ -992,8 +992,10 @@ string DmPartCo::getDiffString( const Container& d ) const
 
 
     void
-    DmPartCo::logDifference(const DmPartCo& rhs) const
+    DmPartCo::logDifference(const Container& rhs_c) const
     {
+	const DmPartCo& rhs = dynamic_cast<const DmPartCo&>(rhs_c);
+
 	y2mil(getDiffString(rhs));
 
 	ConstDmPartPair pp = dmpartPair();

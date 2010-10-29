@@ -111,7 +111,7 @@ class DmPartCo : public PeContainer
 	void getInfo( storage::DmPartCoInfo& info ) const;
 	bool equalContent( const DmPartCo& rhs ) const;
 	virtual string getDiffString( const Container& d ) const;
-	void logDifference( const DmPartCo& d ) const;
+	virtual void logDifference(const Container& rhs) const;
 
 	static string undevName( const string& name );
 

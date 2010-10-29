@@ -120,7 +120,7 @@ class MdPartCo : public Container
     void getInfo( storage::MdPartCoInfo& info ) const;
     bool equalContent( const Container& rhs ) const;
     virtual string getDiffString( const Container& d ) const;
-    void logDifference( const MdPartCo& d ) const;
+	virtual void logDifference(const Container& rhs) const;
     MdPartCo& operator= ( const MdPartCo& rhs );
     static string undevName( const string& name );
 
