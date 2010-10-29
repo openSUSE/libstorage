@@ -374,7 +374,7 @@ LoopCo::doRemove( Volume* v )
 
 
     void
-    LoopCo::logDifferenceWithVolumes( const Container& d ) const
+    LoopCo::logDifference( const Container& d ) const
     {
     y2mil(getDiffString(d));
 

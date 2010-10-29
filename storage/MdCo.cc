@@ -616,7 +616,7 @@ std::ostream& operator<< (std::ostream& s, const MdCo& d )
 
 
     void
-    MdCo::logDifferenceWithVolumes( const Container& d ) const
+    MdCo::logDifference( const Container& d ) const
     {
     y2mil(getDiffString(d));
 
