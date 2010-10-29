@@ -1216,37 +1216,9 @@ string MdPartCo::getDiffString( const Container& d ) const
 
 	y2mil(log.str());
 
-    ConstMdPartPair pp=mdpartPair();
-    ConstMdPartIter i=pp.begin();
-    while( i!=pp.end() )
-        {
-        ConstMdPartPair pc=rhs.mdpartPair();
-        ConstMdPartIter j = pc.begin();
-        while( j!=pc.end() &&
-               (i->device()!=j->device() || i->created()!=j->created()) )
-            ++j;
-        if( j!=pc.end() )
-            {
-            if( !i->equalContent( *j ) )
-                i->logDifference( *j );
-            }
-        else
-            y2mil( "  -->" << *i );
-        ++i;
-        }
-    pp=rhs.mdpartPair();
-    i=pp.begin();
-    while( i!=pp.end() )
-        {
-        ConstMdPartPair pc=mdpartPair();
-        ConstMdPartIter j = pc.begin();
-        while( j!=pc.end() &&
-               (i->device()!=j->device() || i->created()!=j->created()) )
-            ++j;
-        if( j==pc.end() )
-            y2mil( "  <--" << *i );
-        ++i;
-        }
+	ConstMdPartPair pp = mdpartPair();
+        ConstMdPartPair pc = rhs.mdpartPair();
+	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
     }
 
 bool MdPartCo::equalContent( const Container& rhs ) const

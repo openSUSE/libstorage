@@ -615,43 +615,17 @@ std::ostream& operator<< (std::ostream& s, const MdCo& d )
     }
 
 
-void MdCo::logDifference( const Container& d ) const
+    void
+    MdCo::logDifferenceWithVolumes( const Container& d ) const
     {
     y2mil(getDiffString(d));
+
     const MdCo * p = dynamic_cast<const MdCo*>(&d);
     if( p != NULL )
 	{
-	ConstMdPair pp=mdPair();
-	ConstMdIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstMdPair pc=p->mdPair();
-	    ConstMdIter j = pc.begin();
-	    while( j!=pc.end() && 
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->mdPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstMdPair pc=mdPair();
-	    ConstMdIter j = pc.begin();
-	    while( j!=pc.end() && 
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+	    ConstMdPair pp = mdPair();
+	    ConstMdPair pc = p->mdPair();
+	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     }
 

@@ -2479,37 +2479,9 @@ void Disk::logDifference( const Container& d ) const
 
 	    y2mil(log.str());
 
-	ConstPartPair pp=partPair();
-	ConstPartIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstPartPair pc=p->partPair();
-	    ConstPartIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->partPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstPartPair pc=partPair();
-	    ConstPartIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+	    ConstPartPair pp = partPair();
+	    ConstPartPair pc = p->partPair();
+	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     else
 	y2mil(log.str());

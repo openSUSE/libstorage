@@ -990,42 +990,17 @@ string DmPartCo::getDiffString( const Container& d ) const
     return( log );
     }
 
-void DmPartCo::logDifference( const DmPartCo& d ) const
+
+    void
+    DmPartCo::logDifference(const DmPartCo& rhs) const
     {
-    string log = getDiffString( d );
-    y2mil(log);
-    ConstDmPartPair pp=dmpartPair();
-    ConstDmPartIter i=pp.begin();
-    while( i!=pp.end() )
-	{
-	ConstDmPartPair pc=d.dmpartPair();
-	ConstDmPartIter j = pc.begin();
-	while( j!=pc.end() && 
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j!=pc.end() )
-	    {
-	    if( !i->equalContent( *j ) )
-		i->logDifference( *j );
-	    }
-	else
-	    y2mil( "  -->" << *i );
-	++i;
-	}
-    pp=d.dmpartPair();
-    i=pp.begin();
-    while( i!=pp.end() )
-	{
-	ConstDmPartPair pc=dmpartPair();
-	ConstDmPartIter j = pc.begin();
-	while( j!=pc.end() && 
-	       (i->device()!=j->device() || i->created()!=j->created()) )
-	    ++j;
-	if( j==pc.end() )
-	    y2mil( "  <--" << *i );
-	++i;
-	}
+	y2mil(getDiffString(rhs));
+
+	ConstDmPartPair pp = dmpartPair();
+	ConstDmPartPair pc = rhs.dmpartPair();
+	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool DmPartCo::equalContent( const DmPartCo& rhs ) const
     {

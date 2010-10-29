@@ -373,43 +373,17 @@ LoopCo::doRemove( Volume* v )
     }
 
 
-void LoopCo::logDifference( const Container& d ) const
+    void
+    LoopCo::logDifferenceWithVolumes( const Container& d ) const
     {
     y2mil(getDiffString(d));
+
     const LoopCo * p = dynamic_cast<const LoopCo*>(&d);
     if( p != NULL )
 	{
-	ConstLoopPair pp=loopPair();
-	ConstLoopIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstLoopPair pc=p->loopPair();
-	    ConstLoopIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->loopPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstLoopPair pc=loopPair();
-	    ConstLoopIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+	    ConstLoopPair pp = loopPair();
+	    ConstLoopPair pc = p->loopPair();
+	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     }
 

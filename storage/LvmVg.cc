@@ -1666,37 +1666,10 @@ void LvmVg::logDifference( const Container& d ) const
 	if( uuid!=p->uuid )
 	    log += " UUID:" + uuid + "-->" + p->uuid;
 	y2mil(log);
-	ConstLvmLvPair pp=lvmLvPair();
-	ConstLvmLvIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstLvmLvPair pc=p->lvmLvPair();
-	    ConstLvmLvIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->lvmLvPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstLvmLvPair pc=lvmLvPair();
-	    ConstLvmLvIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+
+	ConstLvmLvPair pp = lvmLvPair();
+	ConstLvmLvPair pc = p->lvmLvPair();
+	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     else
 	y2mil(Container::getDiffString(d));

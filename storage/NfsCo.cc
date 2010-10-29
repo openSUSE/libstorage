@@ -232,37 +232,9 @@ void NfsCo::logDifference( const Container& d ) const
     const NfsCo* p = dynamic_cast<const NfsCo*>(&d);
     if( p != NULL )
 	{
-	ConstNfsPair pp=nfsPair();
-	ConstNfsIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstNfsPair pc=p->nfsPair();
-	    ConstNfsIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->nfsPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstNfsPair pc=nfsPair();
-	    ConstNfsIter j = pc.begin();
-	    while( j!=pc.end() &&
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+	    ConstNfsPair pp = nfsPair();
+	    ConstNfsPair pc = p->nfsPair();
+	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     }
 

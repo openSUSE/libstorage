@@ -438,37 +438,9 @@ void DmCo::logDifference( const Container& d ) const
     const DmCo * p = dynamic_cast<const DmCo*>(&d);
     if( p != NULL )
 	{
-	ConstDmPair pp=dmPair();
-	ConstDmIter i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstDmPair pc=p->dmPair();
-	    ConstDmIter j = pc.begin();
-	    while( j!=pc.end() && 
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j!=pc.end() )
-		{
-		if( !i->equalContent( *j ) )
-		    i->logDifference( *j );
-		}
-	    else
-		y2mil( "  -->" << *i );
-	    ++i;
-	    }
-	pp=p->dmPair();
-	i=pp.begin();
-	while( i!=pp.end() )
-	    {
-	    ConstDmPair pc=dmPair();
-	    ConstDmIter j = pc.begin();
-	    while( j!=pc.end() && 
-		   (i->device()!=j->device() || i->created()!=j->created()) )
-		++j;
-	    if( j==pc.end() )
-		y2mil( "  <--" << *i );
-	    ++i;
-	    }
+	    ConstDmPair pp = dmPair();
+	    ConstDmPair pc = p->dmPair();
+	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
     }
 
