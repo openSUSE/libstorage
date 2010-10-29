@@ -1653,19 +1653,16 @@ void LvmVg::logDifference( const Container& d ) const
     const LvmVg * p = dynamic_cast<const LvmVg*>(&d);
     if( p )
 	{
-	string log = PeContainer::getDiffString( *p );
-	if( status!=p->status )
-	    log += " status:" + status + "-->" + p->status;
-	if( lvm1!=p->lvm1 )
-	    {
-	    if( p->lvm1 )
-		log += " -->lvm1";
-	    else
-		log += " lvm1-->";
-	    }
-	if( uuid!=p->uuid )
-	    log += " UUID:" + uuid + "-->" + p->uuid;
-	y2mil(log);
+	    std::ostringstream log;
+	    prepareLogStream(log);
+
+	    log << PeContainer::getDiffString( *p );
+
+	    logDiff(log, "status", status, p->status);
+	    logDiff(log, "lvm1", lvm1, p->lvm1);
+	    logDiff(log, "uuid", uuid, p->uuid);
+
+	    y2mil(log.str());
 
 	ConstLvmLvPair pp = lvmLvPair();
 	ConstLvmLvPair pc = p->lvmLvPair();
