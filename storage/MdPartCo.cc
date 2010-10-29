@@ -1190,60 +1190,37 @@ string MdPartCo::getDiffString( const Container& d ) const
     return( log );
     }
 
-void MdPartCo::logDifference( const MdPartCo& d ) const
+
+    void
+    MdPartCo::logDifference(const MdPartCo& rhs) const
     {
-    string log = getDiffString( d );
+	std::ostringstream log;
+	prepareLogStream(log);
 
-    if( md_type!=d.md_type )
-        log += " Personality:" + toString(md_type) + "-->" + toString(d.md_type);
-    if( md_parity!=d.md_parity )
-        log += " Parity:" + toString(md_parity) + "-->" + toString(d.md_parity);
-    if( chunk_k!=d.chunk_k )
-        log += " ChunkK:" + decString(chunk_k) + "-->" + decString(d.chunk_k);
-    if( sb_ver!=d.sb_ver )
-        log += " SbVer:" + sb_ver + "-->" + d.sb_ver;
-    if( md_uuid!=d.md_uuid )
-        log += " MD-UUID:" + md_uuid + "-->" + d.md_uuid;
-    if( md_name!=d.md_name )
-      {
-        log += " MDName:" + md_name + "-->" + d.md_name;
-      }
-    if( destrSb!=d.destrSb )
-        {
-        if( d.destrSb )
-            log += " -->destrSb";
-        else
-            log += " destrSb-->";
-        }
-    if( devs!=d.devs )
-        {
-        std::ostringstream b;
-        classic(b);
-        b << " Devices:" << devs << "-->" << d.devs;
-        log += b.str();
-        }
-    if( spare!=d.spare )
-        {
-        std::ostringstream b;
-        classic(b);
-        b << " Spares:" << spare << "-->" << d.spare;
-        log += b.str();
-        }
-    if( parent_container!=d.parent_container )
-        log += " ParentContainer:" + parent_container + "-->" + d.parent_container;
-    if( parent_md_name!=d.parent_md_name )
-        log += " ParentContMdName:" + parent_md_name + "-->" + d.parent_md_name;
-    if( parent_metadata!=d.parent_metadata )
-        log += " ParentContMetadata:" + parent_metadata + "-->" + d.parent_metadata;
-    if( parent_uuid!=d.parent_uuid )
-        log += " ParentContUUID:" + parent_uuid + "-->" + d.parent_uuid;
+	log << getDiffString(rhs);
 
-    y2mil(log);
+	logDiffEnum(log, "md_type", md_type, rhs.md_type);
+	logDiffEnum(log, "md_parity", md_parity, rhs.md_parity);
+	logDiff(log, "chunk_k", chunk_k, rhs.chunk_k);
+	logDiff(log, "sb_ver", sb_ver, rhs.sb_ver);
+	logDiff(log, "md_uuid", md_uuid, rhs.md_uuid);
+	logDiff(log, "md_name", md_name, rhs.md_name);
+	logDiff(log, "destrSb", destrSb, rhs.destrSb);
+	logDiff(log, "devices", devs, rhs.devs);
+	logDiff(log, "spares", spare, rhs.spare);
+
+	logDiff(log, "parent_container",  parent_container, rhs.parent_container);
+	logDiff(log, "parent_md_name", parent_md_name, rhs.parent_md_name);
+	logDiff(log, "parent_metadata", parent_metadata, rhs.parent_metadata);
+	logDiff(log, "parent_uuid", parent_uuid, rhs.parent_uuid);
+
+	y2mil(log.str());
+
     ConstMdPartPair pp=mdpartPair();
     ConstMdPartIter i=pp.begin();
     while( i!=pp.end() )
         {
-        ConstMdPartPair pc=d.mdpartPair();
+        ConstMdPartPair pc=rhs.mdpartPair();
         ConstMdPartIter j = pc.begin();
         while( j!=pc.end() &&
                (i->device()!=j->device() || i->created()!=j->created()) )
@@ -1257,7 +1234,7 @@ void MdPartCo::logDifference( const MdPartCo& d ) const
             y2mil( "  -->" << *i );
         ++i;
         }
-    pp=d.mdpartPair();
+    pp=rhs.mdpartPair();
     i=pp.begin();
     while( i!=pp.end() )
         {
