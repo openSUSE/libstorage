@@ -581,9 +581,15 @@ bool Md::equalContent( const Md& rhs ) const
 	logDiff(log, "chunk_k", chunk_k, rhs.chunk_k);
 	logDiff(log, "sb_ver", sb_ver, rhs.sb_ver);
 	logDiff(log, "md_uuid", md_uuid, rhs.md_uuid);
+	logDiff(log, "md_name", md_name, rhs.md_name);
 	logDiff(log, "destrSb", destrSb, rhs.destrSb);
 	logDiff(log, "devices", devs, rhs.devs);
 	logDiff(log, "spares", spare, rhs.spare);
+
+	logDiff(log, "parent_container",  parent_container, rhs.parent_container);
+	logDiff(log, "parent_md_name", parent_md_name, rhs.parent_md_name);
+	logDiff(log, "parent_metadata", parent_metadata, rhs.parent_metadata);
+	logDiff(log, "parent_uuid", parent_uuid, rhs.parent_uuid);
 
 	y2mil(log.str());
     }
