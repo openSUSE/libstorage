@@ -2454,53 +2454,31 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
 
 void Disk::logDifference( const Container& d ) const
     {
-    string log = getDiffString( d );
+	std::ostringstream log;
+	prepareLogStream(log);
+
+	log << getDiffString( d );
+
     const Disk * p = dynamic_cast<const Disk*>(&d);
     if( p != NULL )
 	{
-	if (geometry != p->geometry)
-	{
-	    std::ostringstream b;
-	    prepareLogStream(b);
-	    b << " geometry:" << geometry << "-->" << p->geometry;
-	    log += b.str();
-	}
-	if( range!=p->range )
-	    log += " Range:" + decString(range) + "-->" + decString(p->range);
-	if( size_k!=p->size_k )
-	    log += " SizeK:" + decString(size_k) + "-->" + decString(p->size_k);
-	if( label!=p->label )
-	    log += " Label:" + label + "-->" + p->label;
-	if( max_primary!=p->max_primary )
-	    log += " MaxPrimary:" + decString(max_primary) + "-->" + decString(p->max_primary);
-	if( ext_possible!=p->ext_possible )
-	    {
-	    if( p->ext_possible )
-		log += " -->ExtPossible";
-	    else
-		log += " ExtPossible-->";
-	    }
-	if( max_logical!=p->max_logical )
-	    log += " MaxLogical:" + decString(max_logical) + "-->" + decString(p->max_logical);
-	if( init_disk!=p->init_disk )
-	    {
-	    if( p->init_disk )
-		log += " -->InitDisk";
-	    else
-		log += " InitDisk-->";
-	    }
-	if (transport != p->transport)
-	    {
-	    log += " transport:" + toString(transport) + "-->" + toString(p->transport);
-	    }
-	if (del_ptable != p->del_ptable)
-	    {
-	    if (p->del_ptable)
-		log += " -->delPT";
-	    else
-		log += " delPT-->";
-	    }
-	y2mil(log);
+	    logDiff(log, "geometry", geometry, p->geometry);
+	    logDiff(log, "size_k", size_k, p->size_k);
+
+	    logDiff(log, "label", label, p->label);
+	    logDiff(log, "range", range, p->range);	    
+	    logDiff(log, "max_primary", max_primary, p->max_primary);
+	    logDiff(log, "ext_possible", ext_possible, p->ext_possible);
+	    logDiff(log, "max_logical", max_logical, p->max_logical);
+
+	    logDiff(log, "init_disk", init_disk, p->init_disk);
+
+	    logDiffEnum(log, "transport", transport, p->transport);
+
+	    logDiff(log, "del_ptable", del_ptable, p->del_ptable);
+
+	    y2mil(log.str());
+
 	ConstPartPair pp=partPair();
 	ConstPartIter i=pp.begin();
 	while( i!=pp.end() )
@@ -2534,7 +2512,7 @@ void Disk::logDifference( const Container& d ) const
 	    }
 	}
     else
-	y2mil(log);
+	y2mil(log.str());
     }
 
 
