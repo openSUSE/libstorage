@@ -49,7 +49,9 @@ class Dmmultipath : public DmPart
 	Text resizeText( bool doing ) const;
 	Text setTypeText(bool doing) const;
 	bool equalContent( const Dmmultipath& rhs ) const;
-	void logDifference( const Dmmultipath& d ) const;
+
+	void logDifference(std::ostream& log, const Dmmultipath& rhs) const;
+
 	static bool notDeleted( const Dmmultipath& l ) { return( !l.deleted() ); }
 
     protected:

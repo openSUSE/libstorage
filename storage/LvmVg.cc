@@ -1648,29 +1648,30 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     }
 
 
-void LvmVg::logDifference( const Container& d ) const
+    void
+    LvmVg::logDifference(std::ostream& log, const LvmVg& rhs) const
     {
-    const LvmVg * p = dynamic_cast<const LvmVg*>(&d);
-    if( p )
-	{
-	    std::ostringstream log;
-	    prepareLogStream(log);
+	PeContainer::logDifference(log, rhs);
 
-	    log << PeContainer::getDiffString( *p );
+	logDiff(log, "status", status, rhs.status);
+	logDiff(log, "lvm1", lvm1, rhs.lvm1);
+	logDiff(log, "uuid", uuid, rhs.uuid);
+    }
 
-	    logDiff(log, "status", status, p->status);
-	    logDiff(log, "lvm1", lvm1, p->lvm1);
-	    logDiff(log, "uuid", uuid, p->uuid);
 
-	    y2mil(log.str());
+    void
+    LvmVg::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
+    {
+	const LvmVg& rhs = dynamic_cast<const LvmVg&>(rhs_c);
+
+	logDifference(log, rhs);
+	log << endl;
 
 	ConstLvmLvPair pp = lvmLvPair();
-	ConstLvmLvPair pc = p->lvmLvPair();
-	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
-    else
-	y2mil(Container::getDiffString(d));
+	ConstLvmLvPair pc = rhs.lvmLvPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool LvmVg::equalContent( const Container& rhs ) const
     {

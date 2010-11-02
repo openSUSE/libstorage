@@ -79,7 +79,9 @@ class LvmVg : public PeContainer
 	int removeVolume( Volume* v );
 	void getInfo( storage::LvmVgInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& rhs ) const;
+
+	void logDifference(std::ostream& log, const LvmVg& rhs) const;
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 
 	static void activate(bool val);
 	static bool isActive() { return active; }

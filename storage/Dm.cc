@@ -544,18 +544,6 @@ bool Dm::equalContent( const Dm& rhs ) const
 
 
     void
-    Dm::logDifference(const Dm& rhs) const
-    {
-	std::ostringstream log;
-	prepareLogStream(log);
-
-	logDifference(log, rhs);
-
-	y2mil(log.str());
-    }
-
-
-    void
     Dm::logDifference(std::ostream& log, const Dm& rhs) const
     {
 	Volume::logDifference(log, rhs);

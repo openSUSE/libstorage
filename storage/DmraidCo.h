@@ -77,7 +77,9 @@ class DmraidCo : public DmPartCo
 	void setUdevData(const list<string>& id);
 
 	bool equalContent( const Container& rhs ) const;
-	string getDiffString( const Container& d ) const;
+
+	void logDifference(std::ostream& log, const DmraidCo& rhs) const;
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 
     protected:
 

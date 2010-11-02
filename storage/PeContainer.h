@@ -56,8 +56,11 @@ class PeContainer : public Container
 	void calcSize() { size_k = pe_size * num_pe; }
 	void unuseDev() const;
 	void changeDeviceName( const string& old, const string& nw );
+
 	bool equalContent( const PeContainer& rhs, bool comp_vol=true ) const;
-	virtual string getDiffString( const Container& d ) const;
+
+	void logDifference(std::ostream& log, const PeContainer& rhs) const;
+
 	string getDeviceByNumber( const string& majmin ) const;
 
     protected:
@@ -146,7 +149,7 @@ class PeContainer : public Container
 
 	string addList() const;
 	virtual void print( std::ostream& s ) const { s << *this; }
-	virtual Container* getCopy() const { return( new PeContainer( *this ) ); }
+	virtual Container* getCopy() const = 0; // { return( new PeContainer( *this ) ); }
 	bool findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_iterator& i) const;
 	bool findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) const;
 	unsigned long leByLvRemove() const;

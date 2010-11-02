@@ -48,7 +48,9 @@ class MdPart : public Volume
         void getInfo( storage::MdPartInfo& info ) const;
 
         bool equalContent( const MdPart& rhs ) const;
-        void logDifference( const MdPart& d ) const;
+
+        void logDifference(std::ostream& log, const MdPart& rhs) const;
+
         void setPtr( Partition* pa ) { p=pa; };
         Partition* getPtr() const { return p; };
         unsigned id() const { return p?p->id():0; }

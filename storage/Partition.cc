@@ -619,11 +619,8 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
 
 
     void
-    Partition::logDifference(const Partition& rhs) const
+    Partition::logDifference(std::ostream& log, const Partition& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
-
 	Volume::logDifference(log, rhs);
 
 	logDiff(log, "reg", reg, rhs.reg);
@@ -632,8 +629,6 @@ std::ostream& operator<< (std::ostream& s, const Partition &p )
 	logDiffHex(log, "orig_id", orig_id, rhs.orig_id);
 	logDiff(log, "orig_num", orig_num, rhs.orig_num);
 	logDiff(log, "boot", bootflag, rhs.bootflag);
-
-	y2mil(log.str());
     }
 
 

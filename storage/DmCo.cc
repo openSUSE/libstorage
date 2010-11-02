@@ -432,17 +432,19 @@ DmCo::doRemove( Volume* v )
     }
 
 
-void DmCo::logDifference( const Container& d ) const
+    void
+    DmCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
     {
-    y2mil(getDiffString(d));
-    const DmCo * p = dynamic_cast<const DmCo*>(&d);
-    if( p != NULL )
-	{
-	    ConstDmPair pp = dmPair();
-	    ConstDmPair pc = p->dmPair();
-	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
+	const DmCo& rhs = dynamic_cast<const DmCo&>(rhs_c);
+
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstDmPair pp = dmPair();
+	ConstDmPair pc = rhs.dmPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool DmCo::equalContent( const Container& rhs ) const
     {

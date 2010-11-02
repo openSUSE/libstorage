@@ -46,7 +46,8 @@ class Nfs : public Volume
 
 	void getInfo( storage::NfsInfo& info ) const;
 	bool equalContent( const Nfs& rhs ) const;
-	void logDifference( const Nfs& d ) const;
+
+	void logDifference(std::ostream& log, const Nfs& rhs) const;
 
 	Text removeText(bool doing) const;
 

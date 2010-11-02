@@ -281,19 +281,29 @@ std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
 }
 
 
-string DmmultipathCo::getDiffString( const Container& d ) const
-{
-    string log = DmPartCo::getDiffString(d);
-    const DmmultipathCo * p = dynamic_cast<const DmmultipathCo*>(&d);
-    if (p)
+    void
+    DmmultipathCo::logDifference(std::ostream& log, const DmmultipathCo& rhs) const
     {
-	if (vendor != p->vendor)
-	    log += " vendor:" + vendor + "-->" + p->vendor;
-	if (model != p->model)
-	    log += " model:" + model + "-->" + p->model;
+	DmPartCo::logDifference(log, rhs);
+
+	logDiff(log, "vendor", vendor, rhs.vendor);
+	logDiff(log, "model", model, rhs.model);
     }
-    return log;
-}
+
+
+    void
+    DmmultipathCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
+    {
+	const DmmultipathCo& rhs = dynamic_cast<const DmmultipathCo&>(rhs_c);
+
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstDmPartPair pp = dmpartPair();
+	ConstDmPartPair pc = rhs.dmpartPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
+    }
+
 
 bool DmmultipathCo::equalContent( const Container& rhs ) const
 {

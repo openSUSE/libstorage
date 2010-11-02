@@ -49,7 +49,9 @@ class Dmraid : public DmPart
 	Text resizeText( bool doing ) const;
 	Text setTypeText(bool doing) const;
 	bool equalContent( const Dmraid& rhs ) const;
-	void logDifference( const Dmraid& d ) const;
+
+	void logDifference(std::ostream& log, const Dmraid& rhs) const;
+
 	static bool notDeleted( const Dmraid& l ) { return( !l.deleted() ); }
 
     protected:

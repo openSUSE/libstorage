@@ -616,17 +616,16 @@ std::ostream& operator<< (std::ostream& s, const MdCo& d )
 
 
     void
-    MdCo::logDifference( const Container& d ) const
+    MdCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
     {
-    y2mil(getDiffString(d));
+	const MdCo& rhs = dynamic_cast<const MdCo&>(rhs_c);
 
-    const MdCo * p = dynamic_cast<const MdCo*>(&d);
-    if( p != NULL )
-	{
-	    ConstMdPair pp = mdPair();
-	    ConstMdPair pc = p->mdPair();
-	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstMdPair pp = mdPair();
+	ConstMdPair pc = rhs.mdPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
 
 

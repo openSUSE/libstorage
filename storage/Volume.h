@@ -149,7 +149,7 @@ class Storage;
             { return( !(*this<=rhs) ); }
 
 	bool equalContent(const Volume& rhs) const;
-	void logDifference(const Volume& rhs) const;
+
 	void logDifference(std::ostream& log, const Volume& rhs) const;
 
 	friend std::ostream& operator<< (std::ostream& s, const Volume &v );

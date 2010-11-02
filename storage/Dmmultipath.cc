@@ -265,9 +265,11 @@ bool Dmmultipath::equalContent( const Dmmultipath& rhs ) const
     return( DmPart::equalContent(rhs) );
     }
 
-void Dmmultipath::logDifference( const Dmmultipath& rhs ) const
+
+    void
+    Dmmultipath::logDifference(std::ostream& log, const Dmmultipath& rhs) const
     {
-    DmPart::logDifference(rhs);
+	DmPart::logDifference(log, rhs);
     }
 
 }

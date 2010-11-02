@@ -6698,7 +6698,7 @@ Storage::equalBackupStates(const string& lhs, const string& rhs,
 	    {
 	    j = find_if(r->begin(), r->end(), bind2nd(deref_equal_to<Container>(), *i));
 	    if( j!=r->end() )
-		ret = (*i)->compareContainer( *j, verbose_log ) && ret;
+		ret = (*i)->compareContainer( **j, verbose_log ) && ret;
 	    else
 		{
 		ret = false;

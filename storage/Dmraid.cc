@@ -265,9 +265,11 @@ bool Dmraid::equalContent( const Dmraid& rhs ) const
     return( DmPart::equalContent(rhs) );
     }
 
-void Dmraid::logDifference( const Dmraid& rhs ) const
+
+    void
+    Dmraid::logDifference(std::ostream& log, const Dmraid& rhs) const
     {
-    DmPart::logDifference(rhs);
+	DmPart::logDifference(log, rhs);
     }
 
 }

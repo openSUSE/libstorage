@@ -102,7 +102,9 @@ class Partition : public Volume
 	void getInfo( storage::PartitionAddInfo& info ) const;
 
 	bool equalContent( const Partition& rhs ) const;
-	void logDifference( const Partition& d ) const;
+
+	void logDifference(std::ostream& log, const Partition& rhs) const;
+
 	void addUdevData();
 
 	int zeroIfNeeded() const;

@@ -111,9 +111,9 @@ bool Nfs::equalContent( const Nfs& rhs ) const
 
 
     void
-    Nfs::logDifference(const Nfs& rhs) const
+    Nfs::logDifference(std::ostream& log, const Nfs& rhs) const
     {
-	Volume::logDifference(rhs);
+	Volume::logDifference(log, rhs);
     }
 
 }

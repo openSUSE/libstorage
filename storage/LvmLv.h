@@ -68,7 +68,8 @@ class LvmLv : public Dm
 	Text resizeText( bool doing ) const;
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
-	void logDifference( const LvmLv& d ) const;
+
+	void logDifference(std::ostream& log, const LvmLv& rhs) const;
 
 	static bool notDeleted(const LvmLv& l) { return !l.deleted(); }
 

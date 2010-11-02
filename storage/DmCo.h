@@ -91,7 +91,9 @@ class DmCo : public PeContainer
 	static storage::CType staticType() { return storage::DM; }
 	friend std::ostream& operator<< (std::ostream&, const DmCo& );
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& d ) const;
+
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
+
 	void updateDmMaps();
 
 	int removeDm( const string& table );

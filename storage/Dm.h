@@ -86,7 +86,7 @@ class Dm : public Volume
 	static string devToTable( const string& dev );
 
 	bool equalContent(const Dm& rhs) const;
-	void logDifference(const Dm& rhs) const;
+
 	void logDifference(std::ostream& log, const Dm& rhs) const;
 
 	static unsigned dmMajor();

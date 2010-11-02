@@ -226,17 +226,20 @@ NfsCo::findNfs( const string& dev )
     }
 
 
-void NfsCo::logDifference( const Container& d ) const
+    void
+    NfsCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
     {
-    y2mil(Container::getDiffString(d));
-    const NfsCo* p = dynamic_cast<const NfsCo*>(&d);
-    if( p != NULL )
-	{
-	    ConstNfsPair pp = nfsPair();
-	    ConstNfsPair pc = p->nfsPair();
-	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
+	const NfsCo& rhs = dynamic_cast<const NfsCo&>(rhs_c);
+
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstNfsPair pp = nfsPair();
+	ConstNfsPair pc = rhs.nfsPair();
+
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool NfsCo::equalContent( const Container& rhs ) const
     {

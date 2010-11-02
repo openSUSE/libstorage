@@ -63,7 +63,9 @@ class Loop : public Volume
 
 	void getInfo( storage::LoopInfo& info ) const;
 	bool equalContent( const Loop& rhs ) const;
-	void logDifference( const Loop& d ) const;
+
+	void logDifference(std::ostream& log, const Loop& rhs) const;
+
 	static unsigned loopMajor();
 	static string loopDeviceName( unsigned num );
 

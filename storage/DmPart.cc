@@ -200,9 +200,9 @@ bool DmPart::equalContent( const DmPart& rhs ) const
 
 
     void
-    DmPart::logDifference(const DmPart& rhs) const
+    DmPart::logDifference(std::ostream& log, const DmPart& rhs) const
     {
-	Dm::logDifference(rhs);
+	Dm::logDifference(log, rhs);
     }
 
 }

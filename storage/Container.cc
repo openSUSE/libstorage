@@ -420,19 +420,9 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
     }
 
 
-void
-Container::logDifference( const Container& c ) const
-{
-    y2mil(getDiffString(c));
-}
-
-
-string
-Container::getDiffString(const Container& rhs) const
+    void
+    Container::logDifference(std::ostream& log, const Container& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
-
 	Device::logDifference(log, rhs);
 
 	logDiffEnum(log, "type", typ, rhs.typ);
@@ -441,8 +431,6 @@ Container::getDiffString(const Container& rhs) const
 	logDiff(log, "silent", silent, rhs.silent);
 
 	logDiff(log, "usedby", uby, rhs.uby);
-
-	return log.str();
     }
 
 
@@ -453,23 +441,34 @@ bool Container::equalContent( const Container& rhs ) const
 	    uby==rhs.uby );
     }
 
-bool Container::compareContainer( const Container* c, bool verbose ) const
+
+    bool
+    Container::compareContainer(const Container& rhs, bool verbose) const
     {
-    bool ret = typ == c->typ;
-    if( !ret )
-	{
-	if( verbose )
-	    y2mil(getDiffString( *c ));
-	}
-    else
-	{
-	ret = equalContent( *c );
-	if( !ret && verbose )
-	    logDifference( *c );
+	assert(typ != CUNKNOWN);
 	if (typ == CUNKNOWN)
-	    y2err( "Unknown Container:" << *c ); 
+	{
+	    y2err("unknown container type lhs:" << *this);
+	    return false;
 	}
-    return( ret );
+
+	assert(typ == rhs.typ);
+	if (typ != rhs.typ)
+	{
+	    y2err("comparing different container types lhs:" << *this << " rhs:" << rhs);
+	    return false;
+	}
+
+	bool ret = equalContent(rhs);
+	if (!ret && verbose)
+	{
+	    std::ostringstream log;
+	    prepareLogStream(log);
+	    logDifferenceWithVolumes(log, rhs);
+	    y2mil(log.str());
+	}
+
+	return ret;
     }
 
 }

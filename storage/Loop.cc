@@ -415,18 +415,13 @@ bool Loop::equalContent( const Loop& rhs ) const
 
 
     void
-    Loop::logDifference(const Loop& rhs) const
+    Loop::logDifference(std::ostream& log, const Loop& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
-
 	Volume::logDifference(log, rhs);
 
 	logDiff(log, "loopfile", lfile, rhs.lfile);
 	logDiff(log, "reusefile", reuseFile, rhs.reuseFile);
 	logDiff(log, "delfile", delFile, rhs.delFile);
-
-	y2mil(log.str());
     }
 
 

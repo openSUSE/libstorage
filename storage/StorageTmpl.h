@@ -358,7 +358,7 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
 
     template <class InputIterator1, class InputIterator2>
-    void logVolumesDifference(InputIterator1 first1, InputIterator1 last1,
+    void logVolumesDifference(std::ostream& log, InputIterator1 first1, InputIterator1 last1,
 			      InputIterator2 first2, InputIterator2 last2)
     {
 	for (InputIterator1 i = first1; i != last1; ++i)
@@ -369,11 +369,14 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 	    if (j != last2)
 	    {
 		if (!i->equalContent(*j))
-		    i->logDifference(*j);
+		{
+		    i->logDifference(log, *j);
+		    log << std::endl;
+		}
 	    }
 	    else
 	    {
-		y2mil("  -->" << *i);
+		log << "  -->" << *i << std::endl;
 	    }
 	}
 
@@ -384,7 +387,7 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 		++j;
 	    if (j == last1)
 	    {
-		y2mil("  <--" << *i);
+		log << "  <--" << *i << std::endl;
 	    }
 	}
     }

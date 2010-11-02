@@ -369,18 +369,13 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
 
 
     void
-    LvmLv::logDifference(const LvmLv& rhs) const
+    LvmLv::logDifference(std::ostream& log, const LvmLv& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
-
 	Dm::logDifference(log, rhs);
 
 	logDiff(log, "vol_uuid", vol_uuid, rhs.vol_uuid);
 	logDiff(log, "status", status, rhs.status);
 	logDiff(log, "alloc", allocation, rhs.allocation);
-
-	y2mil(log.str());
     }
 
 }

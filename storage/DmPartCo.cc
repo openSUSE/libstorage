@@ -973,34 +973,12 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     }
 
 
-string DmPartCo::getDiffString( const Container& d ) const
-    {
-    string log = Container::getDiffString( d );
-    const DmPartCo* p = dynamic_cast<const DmPartCo*>(&d);
-    if( p )
-	{
-	if( active!=p->active )
-	    {
-	    if( p->active )
-		log += " -->active";
-	    else
-		log += " active-->";
-	    }
-	}
-    return( log );
-    }
-
-
     void
-    DmPartCo::logDifference(const Container& rhs_c) const
+    DmPartCo::logDifference(std::ostream& log, const DmPartCo& rhs) const
     {
-	const DmPartCo& rhs = dynamic_cast<const DmPartCo&>(rhs_c);
+	PeContainer::logDifference(log, rhs);
 
-	y2mil(getDiffString(rhs));
-
-	ConstDmPartPair pp = dmpartPair();
-	ConstDmPartPair pc = rhs.dmpartPair();
-	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
+	logDiff(log, "active", active, rhs.active);
     }
 
 

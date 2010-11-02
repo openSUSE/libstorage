@@ -729,53 +729,44 @@ std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     }
 
 
-    string
-    PeContainer::getDiffString(const Container& rhs) const
+    void
+    PeContainer::logDifference(std::ostream& log, const PeContainer& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
+	Container::logDifference(log, rhs);
 
-	log << Container::getDiffString(rhs);
+	logDiff(log, "pe_size", pe_size, rhs.pe_size);
+	logDiff(log, "num_pe", num_pe, rhs.num_pe);
+	logDiff(log, "free_pe", free_pe, rhs.free_pe);
 
-	const PeContainer* p = dynamic_cast<const PeContainer*>(&rhs);
-	if( p )
-	{
-	    logDiff(log, "pe_size", pe_size, p->pe_size);
-	    logDiff(log, "num_pe", num_pe, p->num_pe);
-	    logDiff(log, "free_pe", free_pe, p->free_pe);
+	string tmp;
+	for (list<Pv>::const_iterator i = pv.begin(); i != pv.end(); ++i)
+	    if (!contains(rhs.pv, *i))
+		tmp += i->device + "-->";
+	for (list<Pv>::const_iterator i = rhs.pv.begin(); i != rhs.pv.end(); ++i)
+	    if (!contains(pv, *i))
+		tmp += "<--" + i->device;
+	if (!tmp.empty())
+	    log << " Pv:" << tmp;
 
-	    string tmp;
-	    for (list<Pv>::const_iterator i = pv.begin(); i != pv.end(); ++i)
-		if (!contains(p->pv, *i))
-		    tmp += i->device + "-->";
-	    for (list<Pv>::const_iterator i = p->pv.begin(); i != p->pv.end(); ++i)
-		if (!contains(pv, *i))
-		    tmp += "<--" + i->device;
-	    if (!tmp.empty())
-		log << " Pv:" << tmp;
+	tmp.erase();
+	for (list<Pv>::const_iterator i = pv_add.begin(); i != pv_add.end(); ++i)
+	    if (!contains(rhs.pv_add, *i))
+		tmp += i->device + "-->";
+	for (list<Pv>::const_iterator i = rhs.pv_add.begin(); i != rhs.pv_add.end(); ++i)
+	    if (!contains(pv_add, *i))
+		tmp += "<--" + i->device;
+	if (!tmp.empty())
+	    log << " PvAdd:" << tmp;
 
-	    tmp.erase();
-	    for (list<Pv>::const_iterator i = pv_add.begin(); i != pv_add.end(); ++i)
-		if (!contains(p->pv_add, *i))
-		    tmp += i->device + "-->";
-	    for (list<Pv>::const_iterator i = p->pv_add.begin(); i != p->pv_add.end(); ++i)
-		if (!contains(pv_add, *i))
-		    tmp += "<--" + i->device;
-	    if (!tmp.empty())
-		log << " PvAdd:" << tmp;
-
-	    tmp.erase();
-	    for (list<Pv>::const_iterator i = pv_remove.begin(); i != pv_remove.end(); ++i)
-		if (!contains(p->pv_remove, *i))
-		    tmp += i->device + "-->";
-	    for (list<Pv>::const_iterator i = p->pv_remove.begin(); i != p->pv_remove.end(); ++i)
-		if (!contains(pv_remove, *i))
-		    tmp += "<--" + i->device;
-	    if (!tmp.empty())
-		log << " PvRemove:" << tmp;
-	}
-
-	return log.str();
+	tmp.erase();
+	for (list<Pv>::const_iterator i = pv_remove.begin(); i != pv_remove.end(); ++i)
+	    if (!contains(rhs.pv_remove, *i))
+		tmp += i->device + "-->";
+	for (list<Pv>::const_iterator i = rhs.pv_remove.begin(); i != rhs.pv_remove.end(); ++i)
+	    if (!contains(pv_remove, *i))
+		tmp += "<--" + i->device;
+	if (!tmp.empty())
+	    log << " PvRemove:" << tmp;
     }
 
 

@@ -154,7 +154,10 @@ class Disk : public Container
 
 	void getInfo( storage::DiskInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& d ) const;
+
+	void logDifference(std::ostream& log, const Disk& rhs) const;
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
+
 	bool FakeDisk() const { return(range==1); }
 
 	static std::pair<string,unsigned> getDiskPartition( const string& dev );

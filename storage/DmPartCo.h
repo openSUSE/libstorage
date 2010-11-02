@@ -110,8 +110,8 @@ class DmPartCo : public PeContainer
 	Partition* getPartition( unsigned nr, bool del );
 	void getInfo( storage::DmPartCoInfo& info ) const;
 	bool equalContent( const DmPartCo& rhs ) const;
-	virtual string getDiffString( const Container& d ) const;
-	virtual void logDifference(const Container& rhs) const;
+
+	void logDifference(std::ostream& log, const DmPartCo& rhs) const;
 
 	static string undevName( const string& name );
 
@@ -165,7 +165,7 @@ class DmPartCo : public PeContainer
 	    }
 
 	virtual void print( std::ostream& s ) const { s << *this; }
-	virtual Container* getCopy() const { return( new DmPartCo( *this ) ); }
+	virtual Container* getCopy() const = 0; // { return( new DmPartCo( *this ) ); }
 	void activate_part( bool val );
 	void init(SystemInfo& systeminfo);
 	void createDisk(SystemInfo& systeminfo);

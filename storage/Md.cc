@@ -569,11 +569,8 @@ bool Md::equalContent( const Md& rhs ) const
 
 
     void
-    Md::logDifference(const Md& rhs) const
+    Md::logDifference(std::ostream& log, const Md& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
-
 	Volume::logDifference(log, rhs);
 
 	logDiffEnum(log, "md_type", md_type, rhs.md_type);
@@ -590,8 +587,6 @@ bool Md::equalContent( const Md& rhs ) const
 	logDiff(log, "parent_md_name", parent_md_name, rhs.parent_md_name);
 	logDiff(log, "parent_metadata", parent_metadata, rhs.parent_metadata);
 	logDiff(log, "parent_uuid", parent_uuid, rhs.parent_uuid);
-
-	y2mil(log.str());
     }
 
 

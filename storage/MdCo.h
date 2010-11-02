@@ -55,7 +55,8 @@ class MdCo : public Container
 	int checkMd( unsigned num );
 	int getMdState(unsigned num, MdStateInfo& info);
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& d ) const;
+
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 
 	void syncMdadm(EtcMdadm* mdadm) const;
 

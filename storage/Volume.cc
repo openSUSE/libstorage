@@ -3143,18 +3143,6 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 
 
     void
-    Volume::logDifference(const Volume& rhs) const
-    {
-	std::ostringstream log;
-	prepareLogStream(log);
-
-	logDifference(log, rhs);
-
-	y2mil(log.str());
-    }
-
-
-    void
     Volume::logDifference(std::ostream& log, const Volume& rhs) const
     {
 	Device::logDifference(log, rhs);

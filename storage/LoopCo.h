@@ -56,7 +56,8 @@ class LoopCo : public Container
 
 	int removeVolume( Volume* v );
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& d ) const;
+
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 	
     protected:
 	// iterators over LOOP volumes

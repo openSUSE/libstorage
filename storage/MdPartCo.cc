@@ -1173,33 +1173,12 @@ std::ostream& operator<< (std::ostream& s, const MdPartCo& d )
     }
 
 
-string MdPartCo::getDiffString( const Container& d ) const
-    {
-    string log = Container::getDiffString( d );
-    const MdPartCo* p = dynamic_cast<const MdPartCo*>(&d);
-    if( p )
-        {
-        if( active!=p->active )
-            {
-            if( p->active )
-                log += " -->active";
-            else
-                log += " active-->";
-            }
-        }
-    return( log );
-    }
-
-
     void
-    MdPartCo::logDifference(const Container& rhs_c) const
+    MdPartCo::logDifference(std::ostream& log, const MdPartCo& rhs) const
     {
-	const MdPartCo& rhs = dynamic_cast<const MdPartCo&>(rhs_c);
+	Container::logDifference(log, rhs);
 
-	std::ostringstream log;
-	prepareLogStream(log);
-
-	log << getDiffString(rhs);
+	logDiff(log, "active", active, rhs.active);
 
 	logDiffEnum(log, "md_type", md_type, rhs.md_type);
 	logDiffEnum(log, "md_parity", md_parity, rhs.md_parity);
@@ -1215,13 +1194,22 @@ string MdPartCo::getDiffString( const Container& d ) const
 	logDiff(log, "parent_md_name", parent_md_name, rhs.parent_md_name);
 	logDiff(log, "parent_metadata", parent_metadata, rhs.parent_metadata);
 	logDiff(log, "parent_uuid", parent_uuid, rhs.parent_uuid);
+    }
 
-	y2mil(log.str());
+
+    void
+    MdPartCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
+    {
+	const MdPartCo& rhs = dynamic_cast<const MdPartCo&>(rhs_c);
+
+	logDifference(log, rhs);
+	log << endl;
 
 	ConstMdPartPair pp = mdpartPair();
         ConstMdPartPair pc = rhs.mdpartPair();
-	logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool MdPartCo::equalContent( const Container& rhs ) const
     {

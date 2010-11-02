@@ -207,9 +207,9 @@ bool MdPart::equalContent( const MdPart& rhs ) const
 
 
     void
-    MdPart::logDifference(const MdPart& rhs) const
+    MdPart::logDifference(std::ostream& log, const MdPart& rhs) const
     {
-	Volume::logDifference(rhs);
+	Volume::logDifference(log, rhs);
     }
 
 }

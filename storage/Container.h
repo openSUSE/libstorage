@@ -69,8 +69,9 @@ namespace storage
 	bool operator> ( const Container& rhs ) const
 	    { return( !(*this<=rhs) ); }
 	virtual bool equalContent( const Container& rhs ) const;
-	virtual string getDiffString( const Container& c ) const;
-	virtual void logDifference( const Container& c ) const;
+
+	void logDifference(std::ostream& log, const Container& rhs) const;
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const = 0;
 
 	virtual void getCommitActions(list<commitAction>& l) const;
 	virtual void getToCommit(storage::CommitStage stage, list<const Container*>& col,
@@ -185,7 +186,7 @@ namespace storage
 
 	virtual Container* getCopy() const = 0;	// Container is always derived
 
-	bool compareContainer( const Container* c, bool verbose ) const;
+	bool compareContainer(const Container& rhs, bool verbose) const;
 	void setExtError( const string& txt ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true ) const;
 

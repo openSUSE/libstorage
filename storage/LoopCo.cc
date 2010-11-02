@@ -374,18 +374,18 @@ LoopCo::doRemove( Volume* v )
 
 
     void
-    LoopCo::logDifference( const Container& d ) const
+    LoopCo::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
     {
-    y2mil(getDiffString(d));
+	const LoopCo& rhs = dynamic_cast<const LoopCo&>(rhs_c);
 
-    const LoopCo * p = dynamic_cast<const LoopCo*>(&d);
-    if( p != NULL )
-	{
-	    ConstLoopPair pp = loopPair();
-	    ConstLoopPair pc = p->loopPair();
-	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstLoopPair pp = loopPair();
+	ConstLoopPair pc = rhs.loopPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
+
 
 bool LoopCo::equalContent( const Container& rhs ) const
     {

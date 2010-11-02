@@ -2452,39 +2452,39 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
     }
 
 
-void Disk::logDifference( const Container& d ) const
+    void
+    Disk::logDifference(std::ostream& log, const Disk& rhs) const
     {
-	std::ostringstream log;
-	prepareLogStream(log);
+	Container::logDifference(log, rhs);
 
-	log << getDiffString( d );
+	logDiff(log, "geometry", geometry, rhs.geometry);
+	logDiff(log, "size_k", size_k, rhs.size_k);
 
-    const Disk * p = dynamic_cast<const Disk*>(&d);
-    if( p != NULL )
-	{
-	    logDiff(log, "geometry", geometry, p->geometry);
-	    logDiff(log, "size_k", size_k, p->size_k);
+	logDiff(log, "label", label, rhs.label);
+	logDiff(log, "range", range, rhs.range);
+	logDiff(log, "max_primary", max_primary, rhs.max_primary);
+	logDiff(log, "ext_possible", ext_possible, rhs.ext_possible);
+	logDiff(log, "max_logical", max_logical, rhs.max_logical);
 
-	    logDiff(log, "label", label, p->label);
-	    logDiff(log, "range", range, p->range);	    
-	    logDiff(log, "max_primary", max_primary, p->max_primary);
-	    logDiff(log, "ext_possible", ext_possible, p->ext_possible);
-	    logDiff(log, "max_logical", max_logical, p->max_logical);
+	logDiff(log, "init_disk", init_disk, rhs.init_disk);
 
-	    logDiff(log, "init_disk", init_disk, p->init_disk);
+	logDiffEnum(log, "transport", transport, rhs.transport);
 
-	    logDiffEnum(log, "transport", transport, p->transport);
+	logDiff(log, "del_ptable", del_ptable, rhs.del_ptable);
+    }
 
-	    logDiff(log, "del_ptable", del_ptable, p->del_ptable);
 
-	    y2mil(log.str());
+    void
+    Disk::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
+    {
+	const Disk& rhs = dynamic_cast<const Disk&>(rhs_c);
 
-	    ConstPartPair pp = partPair();
-	    ConstPartPair pc = p->partPair();
-	    logVolumesDifference(pp.begin(), pp.end(), pc.begin(), pc.end());
-	}
-    else
-	y2mil(log.str());
+	logDifference(log, rhs);
+	log << endl;
+
+	ConstPartPair pp = partPair();
+	ConstPartPair pc = rhs.partPair();
+	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
 
 

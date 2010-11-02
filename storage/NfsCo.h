@@ -50,7 +50,8 @@ class NfsCo : public Container
 	int doRemove( Volume* );
 
 	bool equalContent( const Container& rhs ) const;
-	void logDifference( const Container& d ) const;
+
+	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 	
     protected:
 	// iterators over NFS volumes

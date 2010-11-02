@@ -46,7 +46,9 @@ class DmPart : public Dm
 	virtual void print( std::ostream& s ) const { s << *this; }
 	void getInfo( storage::DmPartInfo& info ) const;
 	bool equalContent( const DmPart& rhs ) const;
-	void logDifference( const DmPart& d ) const;
+
+	void logDifference(std::ostream& log, const DmPart& rhs) const;
+
 	void setPtr( Partition* pa ) { p=pa; };
 	Partition* getPtr() const { return p; };
 	unsigned id() const { return p?p->id():0; }
