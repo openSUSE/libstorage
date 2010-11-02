@@ -182,7 +182,9 @@ namespace storage
 	virtual int removeVolume( Volume* v );
 	static storage::CType staticType() { return storage::CUNKNOWN; }
 	friend std::ostream& operator<< (std::ostream& s, const Container &c );
-	virtual Container* getCopy() const { return( new Container( *this ) ); }
+
+	virtual Container* getCopy() const = 0;	// Container is always derived
+
 	bool compareContainer( const Container* c, bool verbose ) const;
 	void setExtError( const string& txt ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true ) const;
