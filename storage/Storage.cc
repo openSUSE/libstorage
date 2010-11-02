@@ -237,12 +237,10 @@ void Storage::dumpObjectList()
 {
     assertInit();
     ostringstream buf;
-    classic(buf);
+    prepareLogStream(buf);
     printInfo(buf);
-    std::list<string> l = splitString( buf.str(), "\n" );
     y2mil("DETECTED OBJECTS BEGIN");
-    for (std::list<string>::const_iterator i = l.begin(); i != l.end(); i++)
-	y2mil(*i);
+    y2mil(buf.str());
     y2mil("DETECTED OBJECTS END");
 }
 

@@ -454,9 +454,24 @@ logStreamClose(LogLevel level, const char* file, unsigned line, const char* func
 
     if (!category.empty())
     {
-	LogAppender::getCurrentLogAppender()->logMessage(LogMessage(component, category,
-								    String(stream->str()),
-								    file, line, func));
+	string tmp = stream->str();
+
+	string::size_type pos1 = 0;
+
+	while (true)
+	{
+	    string::size_type pos2 = tmp.find('\n', pos1);
+
+	    if (pos2 != string::npos || pos1 != tmp.length())
+		LogAppender::getCurrentLogAppender()->logMessage(LogMessage(component, category,
+									    String(tmp.substr(pos1, pos2 - pos1)),
+									    file, line, func));
+
+	    if (pos2 == string::npos)
+		break;
+
+	    pos1 = pos2 + 1;
+	}
     }
 
     delete stream;
