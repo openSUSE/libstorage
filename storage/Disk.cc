@@ -2098,11 +2098,13 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
     const unsigned long endBefore = p->cylStart() - 1;
     const unsigned long startAfter = p->cylEnd() + 1;
     unsigned long endAfter = cylinders();
+    Region usable_region = usableCylRegion();
     if (p->type() == LOGICAL && hasExtended())
 	{
 	ConstPartPair pp = partPair(notDeletedExt);
 	startBefore = pp.begin()->cylStart() - 1;
 	endAfter = pp.begin()->cylEnd() + 1;
+	usable_region = pp.begin()->cylRegion();
 	}
 
     y2mil("startBefore:" << startBefore << " endBefore:" << endBefore);
@@ -2163,12 +2165,12 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
     if (endAfter > startAfter)
 	freeCylsAfter = endAfter - startAfter;
 
-    Region around(p->cylStart() - freeCylsBefore, p->cylEnd() + freeCylsAfter - 1);
-    Region usable_region = usableCylRegion();
-
+    y2mil( "bef:" << freeCylsBefore << " aft:" << freeCylsAfter );
+    Region around(p->cylStart() - freeCylsBefore, p->cylSize() + freeCylsAfter + freeCylsBefore );
+    y2mil( "around:" << around );
     if (usable_region.doIntersect(around))
     {
-	around = around.intersect(usableCylRegion());
+	around = around.intersect(usable_region);
 
 	freeCylsBefore = freeCylsAfter = 0;
 	if (around.start() < p->cylStart())
