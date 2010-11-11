@@ -184,6 +184,7 @@ namespace storage
 	    Data >> entry.num >> StartM >> skip >> EndM >> skip >> SizeM >> skip;
 	}
 
+	assert(!Data.fail());
 	assert(entry.num != 0);
 
 	if (Data.fail() || entry.num == 0)
@@ -350,10 +351,14 @@ namespace storage
 
 	Data >> num >> startSec >> skip >> endSec >> skip >> sizeSec >> skip;
 
+	assert(!Data.fail());
 	assert(num != 0);
 
 	if (Data.fail() || num == 0)
+	{
+	    y2err("invalid line:" << line);
 	    return;
+	}
 
 	for (iterator it = entries.begin(); it != entries.end(); ++it)
 	{
