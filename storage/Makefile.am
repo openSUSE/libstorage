@@ -46,6 +46,7 @@ libstorage_la_SOURCES =					\
 	Blkid.cc		Blkid.h			\
 	Lsscsi.cc		Lsscsi.h		\
 	Parted.cc		Parted.h		\
+	Dasdview.cc		Dasdview.h		\
 	ProcMounts.cc		ProcMounts.h		\
 	ProcMdstat.cc		ProcMdstat.h		\
 	EtcFstab.cc		EtcFstab.h		\

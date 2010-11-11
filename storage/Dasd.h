@@ -38,7 +38,10 @@ class SystemCmd;
 class Dasd : public Disk
     {
     friend class Storage;
+
     public:
+
+	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
 
 	Dasd(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
@@ -61,7 +64,6 @@ class Dasd : public Disk
 	int commitChanges( storage::CommitStage stage );
 
     protected:
-	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
@@ -70,7 +72,6 @@ class Dasd : public Disk
 	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
 	bool checkFdasdOutput(SystemCmd& Cmd, SystemInfo& systeminfo);
 	bool scanFdasdLine(const string& line, unsigned& nr, Region& cylRegion) const;
-	void getGeometry(SystemCmd& cmd, Geometry& geometry) const;
 	void redetectGeometry() {};
         int doCreate( Volume* v ) { return(doFdasd()); }
         int doRemove( Volume* v ) { return(init_disk?0:doFdasd()); }
@@ -89,6 +90,9 @@ class Dasd : public Disk
 	Dasd& operator=(const Dasd&); // disallow
 
     };
+
+
+    template <> struct EnumInfo<Dasd::DasdFormat> { static const vector<string> names; };
 
 }
 

@@ -34,6 +34,7 @@
 #include "storage/Dasd.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemInfo.h"
+#include "storage/Dasdview.h"
 
 
 namespace storage
@@ -81,34 +82,21 @@ namespace storage
     Dasd::detectPartitions(SystemInfo& systeminfo)
     {
     bool ret = true;
-    string cmd_line = DASDVIEWBIN " -x " + quote(device());
+
     detected_label = "dasd";
     setLabelData( "dasd" );
-    y2mil("executing cmd:" << cmd_line);
-    SystemCmd Cmd( cmd_line );
-    y2mil("retcode:" << Cmd.retcode());
-    if( Cmd.retcode() == 0 )
-	{
-	if( Cmd.select( "^format" )>0 )
-	    {
-	    string tmp = Cmd.getLine(0, true);
-	    y2mil("Format line:" << tmp);
-	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = boost::to_lower_copy(extractNthWord(4, tmp), locale::classic());
-	    if( tmp == "cdl" )
-		fmt = DASDF_CDL;
-	    else if( tmp == "ldl" )
-		fmt = DASDF_LDL;
-	    }
-	getGeometry(Cmd, geometry);
-	new_geometry = geometry;
-	y2mil("After dasdview geometry:" << geometry << " sizeK:" << size_k);
+
+	Dasdview dasdview(device());
+	new_geometry = geometry = dasdview.getGeometry();
+	fmt = dasdview.getDasdFormat();
+	ronly = fmt != DASDF_CDL;
+
 	if( size_k==0 )
 	    {
 	    size_k = geometry.sizeK();
 	    y2mil("New SizeK:" << size_k);
 	    }
-	y2mil("fmt:" << fmt);
+
 	switch( fmt )
 	    {
 	    case DASDF_CDL:
@@ -132,16 +120,10 @@ namespace storage
 	    default:
 		break;
 	    }
-	}
-    else
-	{
-	new_geometry.sectors = geometry.sectors = 12;
-	y2mil("new sectors:" << geometry.sectors);
-	}
-    y2mil("ret:" << ret << " partitons:" << vols.size() << " detected label:" << label);
-    ronly = fmt!=DASDF_CDL;
-    y2mil("fmt:" << fmt << " readonly:" << ronly);
-    return( ret );
+
+    y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << label);
+    y2mil("geometry:" << geometry << " fmt:" << toString(fmt) << " readonly:" << ronly);
+    return ret;
     }
 
 
@@ -248,45 +230,6 @@ _("The partitioning on disk %1$s is not readable by\n"
 	addToList( *i );
 	}
     return( true );
-    }
-
-
-    void
-    Dasd::getGeometry(SystemCmd& cmd, Geometry& geometry) const
-    {
-    if( cmd.select( "cylinders" )>0 )
-	{
-	string tmp = cmd.getLine(0, true);
-	y2mil("Cylinder line:" << tmp);
-	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	tmp = extractNthWord( 3, tmp );
-	tmp >> geometry.cylinders;
-	}
-    if( cmd.select( "tracks per" )>0 )
-	{
-	string tmp = cmd.getLine(0, true);
-	y2mil("Tracks line:" << tmp);
-	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	tmp = extractNthWord( 3, tmp );
-	tmp >> geometry.heads;
-	}
-    if( cmd.select( "blocks per" )>0 )
-	{
-	string tmp = cmd.getLine(0, true);
-	y2mil("Blocks line:" << tmp);
-	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	tmp = extractNthWord( 3, tmp );
-	tmp >> geometry.sectors;
-	}
-    if( cmd.select( "blocksize" )>0 )
-	{
-	string tmp = cmd.getLine(0, true);
-	y2mil("Bytes line:" << tmp);
-	tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	tmp = extractNthWord( 3, tmp );
-	tmp >> geometry.sector_size;
-	}
-    y2mil("geometry:" << geometry);
     }
 
 
@@ -622,8 +565,17 @@ int Dasd::initializeDisk( bool value )
 std::ostream& operator<< (std::ostream& s, const Dasd& d )
     {
     s << dynamic_cast<const Disk&>(d);
-    s << " fmt:" << d.fmt;
-    return( s );
+    s << " fmt:" << toString(d.fmt);
+    return s;
     }
+
+
+    static const string dasd_format_names[] = {
+	"NONE", "LDL", "CDL"
+    };
+
+    const vector<string> EnumInfo<Dasd::DasdFormat>::names(dasd_format_names, dasd_format_names +
+							   lengthof(dasd_format_names));
+
 
 }
