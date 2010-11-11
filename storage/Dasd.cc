@@ -67,12 +67,7 @@ namespace storage
     Dasd::detectPartitionsFdasd(SystemInfo& systeminfo)
     {
     bool ret = true;
-    string cmd_line = FDASDBIN " -p " + quote(device());
-    y2mil("executing cmd:" << cmd_line);
-    SystemCmd Cmd( cmd_line );
-    y2mil("retcode:" << Cmd.retcode());
-    if( Cmd.retcode() == 0 )
-	checkFdasdOutput(Cmd, systeminfo);
+	checkFdasdOutput(systeminfo);
     y2mil("ret:" << ret << " partitions:" << vols.size());
     return( ret );
     }
@@ -128,37 +123,6 @@ namespace storage
 
 
     bool
-    Dasd::scanFdasdLine(const string& Line, unsigned& nr, Region& cylRegion) const
-    {
-    y2deb("Line:" << Line);
-    std::istringstream Data( Line );
-    classic(Data);
-
-    nr=0;
-    unsigned long StartM = 0;
-    unsigned long EndM = 0;
-    string devname;
-    Data >> devname >> StartM >> EndM;
-    devname.erase(0,device().size());
-    devname >> nr;
-    y2mil("Fields Num:" << nr << " Start:" << StartM << " End:" << EndM);
-    if( nr>0 )
-      {
-      unsigned long start = StartM / geometry.heads;
-      unsigned long csize = EndM / geometry.heads - start + 1;
-      if( start+csize > cylinders() )
-	  {
-	  csize = cylinders()-start;
-	  y2mil("new csize:" << csize);
-	  }
-      cylRegion = Region(start, csize);
-      y2mil("Fields Num:" << nr << " cylRegion:" << cylRegion);
-      }
-   return( nr>0 );
-   }
-
-
-    bool
     Dasd::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
     {
 	// TODO
@@ -168,33 +132,23 @@ namespace storage
 
 
 bool
-    Dasd::checkFdasdOutput(SystemCmd& cmd, SystemInfo& systeminfo)
+    Dasd::checkFdasdOutput(SystemInfo& systeminfo)
     {
 	const ProcParts& parts = systeminfo.getProcParts();
+	const Fdasd fdasd(device());
 
-    string line;
-    string tmp;
+	assert(geometry == fdasd.getGeometry());
+
     list<Partition *> pl;
-    Regex part( "^"+device()+"[0123456789]+$" );
 
-    cmd.select( device() );
-    int cnt = cmd.numLines();
-    for( int i=0; i<cnt; i++)
+	for (Fdasd::const_iterator it = fdasd.getEntries().begin();
+	     it != fdasd.getEntries().end(); ++it)
 	{
-	unsigned pnr;
-	Region cylRegion;
-
-	line = cmd.getLine(i);
-	tmp = extractNthWord( 0, line );
-	if( part.match(tmp) )
-	    {
-	    if( scanFdasdLine( line, pnr, cylRegion ))
-		{
-		if( pnr<range )
+	    if( it->num < range )
 		    {
-		    unsigned long long s = cylinderToKb(cylRegion.len());
-		    Partition *p = new Partition(*this, getPartName(pnr), getPartDevice(pnr),
-						 pnr, systeminfo, s, cylRegion, PRIMARY);
+		    unsigned long long s = cylinderToKb(it->cylRegion.len());
+		    Partition *p = new Partition(*this, getPartName(it->num), getPartDevice(it->num),
+						 it->num, systeminfo, s, it->cylRegion, PRIMARY);
 		    if (parts.getSize(p->device(), s))
 			{
 			p->setSize( s );
@@ -202,9 +156,7 @@ bool
 		    pl.push_back( p );
 		    }
 		else
-		    y2war("partition nr " << pnr << " outside range " << range);
-		}
-	    }
+		    y2war("partition nr " << it->num << " outside range " << range);
 	}
 
     y2mil("nm:" << nm);

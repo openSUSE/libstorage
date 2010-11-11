@@ -31,7 +31,6 @@ namespace storage
     using std::list;
 
 
-class SystemCmd;
     class ProcParts;
 
 
@@ -70,8 +69,7 @@ class Dasd : public Disk
 	bool detectPartitionsFdasd(SystemInfo& systeminfo);
 	bool detectPartitions(SystemInfo& systeminfo);
 	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
-	bool checkFdasdOutput(SystemCmd& Cmd, SystemInfo& systeminfo);
-	bool scanFdasdLine(const string& line, unsigned& nr, Region& cylRegion) const;
+	bool checkFdasdOutput(SystemInfo& systeminfo);
 	void redetectGeometry() {};
         int doCreate( Volume* v ) { return(doFdasd()); }
         int doRemove( Volume* v ) { return(init_disk?0:doFdasd()); }

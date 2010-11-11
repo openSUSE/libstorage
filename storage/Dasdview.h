@@ -30,6 +30,8 @@
 
 namespace storage
 {
+    class SystemCmd;
+
 
     class Dasdview
     {
@@ -45,6 +47,47 @@ namespace storage
 
 	Geometry geometry;
 	Dasd::DasdFormat dasd_format;
+
+	void scanGeometry(SystemCmd& cmd);
+
+    };
+
+
+    class Fdasd
+    {
+
+    public:
+
+	Fdasd(const string& device);
+
+	struct Entry
+	{
+	    Entry() : num(0) {}
+
+	    unsigned num;
+	    Region cylRegion;
+	    Region headRegion;
+
+	    friend std::ostream& operator<<(std::ostream& s, const Entry& e);
+	};
+
+	const Geometry& getGeometry() const { return geometry; }
+
+	typedef vector<Entry>::const_iterator const_iterator;
+
+	const vector<Entry>& getEntries() const { return entries; }
+
+	bool getEntry(unsigned num, Entry& entry) const;
+
+    private:
+
+	typedef vector<Entry>::iterator iterator;
+
+	Geometry geometry;
+	vector<Entry> entries;
+
+	void scanGeometry(SystemCmd& cmd);
+	void scanEntryLine(const string& line);
 
     };
 
