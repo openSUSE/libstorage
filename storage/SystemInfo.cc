@@ -71,4 +71,18 @@ namespace storage
 	return pos->second;
     }
 
+
+    const Fdasd&
+    SystemInfo::getFdasd(const string& device)
+    {
+	map<string, Fdasd>::iterator pos = fdasds.lower_bound(device);
+	if (pos == fdasds.end() || map<string, Fdasd>::key_compare()(device, pos->first))
+	{
+	    Fdasd fdasd(device);
+	    pos = fdasds.insert(pos, map<string, Fdasd>::value_type(device, fdasd));
+	}
+
+	return pos->second;
+    }
+
 }

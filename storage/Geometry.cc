@@ -45,17 +45,23 @@ namespace storage
     }
 
 
+    unsigned long long
+    Geometry::sizeK() const
+    {
+	return (unsigned long long)(cylinders) * cylinderSize() / 1024;
+    }
+
+
     unsigned long
     Geometry::cylinderSize() const
     {
 	return heads * sectors * sector_size;
     }
 
-
-    unsigned long long
-    Geometry::sizeK() const
+    unsigned long
+    Geometry::headSize() const
     {
-	return (unsigned long long)(cylinders) * cylinderSize() / 1024;
+	return sectors * sector_size;
     }
 
 

@@ -77,6 +77,13 @@ namespace storage
 	    return Region(i * r.s, i * r.l);
 	}
 
+	template <typename Type> friend
+	Region operator/(const Region& r, Type i)
+	{
+	    static_assert(std::is_integral<Type>::value, "not integral");
+	    return Region(r.s / i, r.l / i);
+	}
+
 	friend std::ostream& operator<<(std::ostream& s, const Region& p);
 
 	friend bool getChildValue(const xmlNode* node, const char* name, Region& value);

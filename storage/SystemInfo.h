@@ -32,6 +32,7 @@
 #include "storage/Blkid.h"
 #include "storage/Lsscsi.h"
 #include "storage/Parted.h"
+#include "storage/Dasdview.h"
 #include "storage/DmCo.h"
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
@@ -55,6 +56,7 @@ namespace storage
 	const Blkid& getBlkid() { return *blkid; }
 	const Lsscsi& getLsscsi() { return *lsscsi; }
 	const Parted& getParted(const string& device);
+	const Fdasd& getFdasd(const string& device);
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
 	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
@@ -84,6 +86,7 @@ namespace storage
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
 	map<string, Parted> parteds;
+	map<string, Fdasd> fdasds;
 	LazyObject<CmdDmsetup> cmddmsetup;
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;

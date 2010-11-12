@@ -38,9 +38,10 @@ namespace storage
 	unsigned int sectors;
 	unsigned int sector_size;
 
-	unsigned long cylinderSize() const;
-
 	unsigned long long sizeK() const;
+
+	unsigned long cylinderSize() const;
+	unsigned long headSize() const;
 
 	unsigned long long cylinderToKb(unsigned long cylinder) const;
 	unsigned long kbToCylinder(unsigned long long kb) const;

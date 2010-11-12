@@ -125,7 +125,36 @@ namespace storage
     bool
     Dasd::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
     {
-	// TODO
+	const ProcParts& parts = systeminfo.getProcParts();
+	const Fdasd& fdasd = systeminfo.getFdasd(dev);
+
+	list<string> ps = partitionsKernelKnowns(parts);
+	if (pl.size() != ps.size())
+	{
+	    y2err("number of partitions fdasd and kernel see differs");
+	    return false;
+	}
+
+	for (list<Partition*>::const_iterator i = pl.begin(); i != pl.end(); ++i)
+	{
+	    const Partition& p = **i;
+
+	    Fdasd::Entry entry;
+	    if (fdasd.getEntry(p.nr(), entry))
+	    {
+		// maybe too strict but should be ok
+
+		Region head_fdasd = entry.headRegion;
+		Region head_kernel = p.detectSysfsBlkRegion() / (geometry.headSize() / 512);
+
+		if (head_fdasd != head_kernel)
+		{
+		    y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " head_fdasd:" <<
+			  head_fdasd << " head_kernel:" << head_kernel);
+		    return false;
+		}
+	    }
+	}
 
 	return true;
     }
@@ -135,7 +164,7 @@ bool
     Dasd::checkFdasdOutput(SystemInfo& systeminfo)
     {
 	const ProcParts& parts = systeminfo.getProcParts();
-	const Fdasd fdasd(device());
+	const Fdasd& fdasd = systeminfo.getFdasd(dev);
 
 	assert(geometry == fdasd.getGeometry());
 

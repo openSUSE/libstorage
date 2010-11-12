@@ -133,6 +133,22 @@ namespace storage
     }
 
 
+    bool
+    Fdasd::getEntry(unsigned num, Entry& entry) const
+    {
+	for (const_iterator it = entries.begin(); it != entries.end(); ++it)
+	{
+	    if (it->num == num)
+	    {
+		entry = *it;
+		return true;
+	    }
+	}
+
+	return false;
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const Fdasd::Entry& e)
     {
 	return s << "num:" << e.num << " cylRegion:" << e.cylRegion << " headRegion:"

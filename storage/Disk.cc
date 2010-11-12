@@ -532,8 +532,6 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
 {
     const Parted& parted = systeminfo.getParted(dev);
 
-    bool ret = true;
-
     // It's allowed that the kernel sees more partitions than parted. This is
     // the case with BSD slices.
 
@@ -546,21 +544,20 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
 	    Parted::Entry entry;
 	    if (parted.getEntry(p.nr(), entry))
 	    {
-		Region blk_parted = sectorSize() / 512 * entry.secRegion;
-		Region blk_kernel = p.detectSysfsBlkRegion();
+		Region sec_parted = entry.secRegion;
+		Region sec_kernel = p.detectSysfsBlkRegion() / (sectorSize() / 512);
 
-		if (blk_parted != blk_kernel)
+		if (sec_parted != sec_kernel)
 		{
-		    y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " blk_parted:" <<
-			  blk_parted << " blk_kernel:" << blk_kernel);
-		    ret = false;
+		    y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " sec_parted:" <<
+			  sec_parted << " sec_kernel:" << sec_kernel);
+		    return false;
 		}
 	    }
 	}
     }
 
-    y2mil("ret:" << ret);
-    return ret;
+    return true;
 }
 
 
