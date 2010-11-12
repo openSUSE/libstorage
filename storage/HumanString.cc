@@ -23,8 +23,8 @@
 #include <locale>
 #include <boost/algorithm/string.hpp>
 
-#include "AppUtil.h"
-#include "HumanString.h"
+#include "storage/AppUtil.h"
+#include "storage/HumanString.h"
 
 
 namespace storage
