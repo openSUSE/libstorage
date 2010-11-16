@@ -31,7 +31,7 @@ namespace storage
     Dasdview::Dasdview(const string& device)
 	: dasd_format(Dasd::DASDF_NONE)
     {
-	SystemCmd cmd(DASDVIEWBIN " -x " + quote(device));
+	SystemCmd cmd(DASDVIEWBIN " --extended " + quote(device));
 
 	if (cmd.retcode() == 0)
 	{
@@ -106,7 +106,7 @@ namespace storage
 
     Fdasd::Fdasd(const string& device)
     {
-	SystemCmd cmd(FDASDBIN " -p " + quote(device));
+	SystemCmd cmd(FDASDBIN " --table " + quote(device));
 
 	if (cmd.retcode() == 0)
 	{
@@ -124,6 +124,10 @@ namespace storage
 		    scanEntryLine(line);
 		}
 	    }
+	}
+	else
+	{
+	    y2err("fdasd failed");
 	}
 
 	y2mil("device:" << device << " geometry:" << geometry);
