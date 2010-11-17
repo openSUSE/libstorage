@@ -779,12 +779,12 @@ void
 	    if( i->d )
 	        {
 		string tmp1;
-		map<string, list<string>>::const_iterator it1 = by_path.find(i->dev);
+		UdevMap::const_iterator it1 = by_path.find(i->dev);
 		if (it1 != by_path.end())
 		    tmp1 = it1->second.front();
 
 		list<string> tmp2;
-		map<string, list<string>>::const_iterator it2 = by_id.find(i->dev);			
+		UdevMap::const_iterator it2 = by_id.find(i->dev);
 		if (it2 != by_id.end())
 		    tmp2 = it2->second;
 
