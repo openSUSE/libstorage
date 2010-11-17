@@ -26,6 +26,7 @@
 
 #include <boost/noncopyable.hpp>
 
+#include "storage/AppUtil.h"
 #include "storage/ProcParts.h"
 #include "storage/ProcMounts.h"
 #include "storage/ProcMdstat.h"
@@ -49,14 +50,14 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
-	const UdevMap& getUdevMap(const string& path);
+	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
 	const ProcMdstat& getProcMdstat() { return *procmdstat; }
 	const Blkid& getBlkid() { return *blkid; }
 	const Lsscsi& getLsscsi() { return *lsscsi; }
-	const Parted& getParted(const string& device);
-	const Fdasd& getFdasd(const string& device);
+	const Parted& getParted(const string& device) { return parteds.get(device); }
+	const Fdasd& getFdasd(const string& device) { return fdasds.get(device); }
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
 	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
@@ -79,14 +80,36 @@ namespace storage
 
 	};
 
-	map<string, UdevMap> udevmaps;
+	template <class Type>
+	class LazyObjects : boost::noncopyable
+	{
+	public:
+
+	    const Type& get(const string& s)
+	    {
+		typename map<string, Type>::iterator pos = data.lower_bound(s);
+		if (pos == data.end() || typename map<string, Type>::key_compare()(s, pos->first))
+		{
+		    Type tmp(s);
+		    pos = data.insert(pos, typename map<string, Type>::value_type(s, tmp));
+		}
+		return pos->second;
+	    }
+
+	private:
+
+	    map<string, Type> data;
+
+	};
+
+	LazyObjects<UdevMap> udevmaps;
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<ProcMdstat> procmdstat;
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
-	map<string, Parted> parteds;
-	map<string, Fdasd> fdasds;
+	LazyObjects<Parted> parteds;
+	LazyObjects<Fdasd> fdasds;
 	LazyObject<CmdDmsetup> cmddmsetup;
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;

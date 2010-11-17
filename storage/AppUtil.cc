@@ -592,32 +592,18 @@ readlink(const string& path, string& buf)
     }
 
 
-UdevMap
-getUdevMap(const char* path)
-{
-    y2mil("path: " << path);
+    UdevMap::UdevMap(const string& path)
+    {
+	y2mil("path: " << path);
 
-    const map<string, string> links = getUdevLinks(path);
+	const map<string, string> links = getUdevLinks(path.c_str());
 
-    map<string, list<string>> ret;
-    for (map<string, string>::const_iterator it = links.begin(); it != links.end(); ++it)
-	ret[it->second].push_back(it->first);
+	for (map<string, string>::const_iterator it = links.begin(); it != links.end(); ++it)
+	    data[it->second].push_back(it->first);
 
-    y2mil("map: " << ret);
-    return ret;
-}
-
-
-RevUdevMap
-getRevUdevMap(const char* path)
-{
-    y2mil("path: " << path);
-
-    map<string, string> ret = getUdevLinks(path);
-
-    y2mil("map: " << ret);
-    return ret;
-}
+	for (const_iterator it = begin(); it != end(); ++it)
+	    y2mil("data[" << it->first << "] -> " << it->second);
+    }
 
 
 unsigned

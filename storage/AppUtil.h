@@ -75,11 +75,25 @@ std::map<string,string> makeMap( const std::list<string>& l,
     bool readlink(const string& path, string& buf);
 
 
-    typedef map<string, list<string>> UdevMap;
-    typedef map<string, string> RevUdevMap;
+    class UdevMap
+    {
+    public:
 
-    UdevMap getUdevMap(const char* path);
-    RevUdevMap getRevUdevMap(const char* path);
+	UdevMap(const string& path);
+
+	typedef map<string, list<string>>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
+	const_iterator find(const string& nm) const { return data.find(nm); }
+
+    private:
+
+	map<string, list<string>> data;
+
+    };
+
 
     string normalizeDevice(const string& dev);
     list<string> normalizeDevices(const list<string>& devs);
