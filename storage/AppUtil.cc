@@ -602,7 +602,7 @@ readlink(const string& path, string& buf)
 	    data[it->second].push_back(it->first);
 
 	for (const_iterator it = begin(); it != end(); ++it)
-	    y2mil("data[" << it->first << "] -> " << it->second);
+	    y2mil("data[" << it->first << "] -> " << boost::join(it->second, " "));
     }
 
 
