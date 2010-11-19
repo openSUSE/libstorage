@@ -1,8 +1,9 @@
 -------------------------------------------------------------------
 Wed Nov  3 17:39:22 CET 2010  - fehr@suse.de
 
-- fixed wrong computation of free cylinders after partition 
+- fixed wrong computation of free cylinders after partition
   (bnc #650966)
+- 2.20.5
 
 -------------------------------------------------------------------
 Mon Oct 25 14:24:17 CEST 2010 - aschnell@suse.de
