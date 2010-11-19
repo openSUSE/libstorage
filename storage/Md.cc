@@ -323,8 +323,8 @@ void Md::changeDeviceName( const string& old, const string& nw )
 string
 Md::createCmd() const
 {
-    string cmd = "ls -l --full-time " + quote(devs) + " " + quote(spare) + "; ";
-    cmd += MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
+    string cmd = LSBIN " -l --full-time " + quote(devs) + " " + quote(spare) + "; "
+	MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
 	" --run --level=" + toString(md_type) + " -e 1.0";
     if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
 	cmd += " -b internal";
