@@ -557,6 +557,20 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
 	}
     }
 
+    // But if parted sees no disk the kernel must also see no disks.
+
+    if (pl.empty())
+    {
+	const ProcParts& parts = systeminfo.getProcParts();
+	list<string> ps = partitionsKernelKnowns(parts);
+
+	if (!ps.empty())
+	{
+	    y2err("parted sees no partitions but kernel does");
+	    return false;
+	}
+    }
+
     return true;
 }
 
