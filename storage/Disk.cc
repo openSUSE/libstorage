@@ -1658,61 +1658,35 @@ int Disk::doSetType( Volume* v )
 	    }
 	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
 	    p->eraseLabel();
-	std::ostringstream cmd_line;
-	classic(cmd_line);
-	cmd_line << PARTEDCMD << quote(device()) << " set " << p->nr() << " ";
-	string start_cmd = cmd_line.str();
+
+	std::ostringstream options;
+	classic(options);
+
 	if( ret==0 )
+	{
+	    options << " set " << p->nr() << " lvm " << (p->id()==Partition::ID_LVM ? "on" : "off");
+
+	    if (label != "sun")
+		options << " set " << p->nr() << " raid " << (p->id()==Partition::ID_RAID?"on":"off");
+
+	    if (label == "dvh" || label == "mac")
+		options << " set " << p->nr() << " swap " << (p->id()==Partition::ID_SWAP?"on":"off");
+
+	    options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
+
+	    if (p->id() <= 255 && label == "msdos")
+		options << " set " << p->nr() << " type " << p->id();
+	}
+
+	if (!options.str().empty())
+	{
+	    string cmd_line = PARTEDCMD + quote(device()) + options.str();
+	    if( execCheckFailed( cmd_line ) && !dmp_slave )
 	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "lvm " << (p->id()==Partition::ID_LVM ? "on" : "off");
-	    if( execCheckFailed( cmd_line.str() ) && !dmp_slave )
-		{
 		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
 	    }
-	if( ret==0 && (label!="sun"))
-	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "raid " << (p->id()==Partition::ID_RAID?"on":"off");
-	    if( execCheckFailed( cmd_line.str() ) && !dmp_slave )
-		{
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
-	    }
-	if( ret==0 && (label=="dvh"||label=="mac"))
-	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "swap " << (p->id()==Partition::ID_SWAP?"on":"off");
-	    if( execCheckFailed( cmd_line.str() ) && !dmp_slave )
-		{
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
-	    }
-	if( ret==0 )
-	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "boot " <<
-		     ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
-	    if( execCheckFailed( cmd_line.str() ) && !dmp_slave )
-		{
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
-	    }
-	if( ret==0 && p->id()<=255 && label=="msdos" )
-	    {
-	    cmd_line.str( start_cmd );
-	    cmd_line.seekp(0, ios_base::end );
-	    cmd_line << "type " << p->id();
-	    if( execCheckFailed( cmd_line.str() ) && !dmp_slave )
-		{
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-		}
-	    }
+	}
+
 	if( ret==0 )
 	    {
 	    if( !dmp_slave )

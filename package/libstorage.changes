@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec 07 14:05:37 CET 2010 - aschnell@suse.de
+
+- use single parted command to set partition flags (bnc #657360)
+
+-------------------------------------------------------------------
 Wed Nov  3 17:39:22 CET 2010  - fehr@suse.de
 
 - fixed wrong computation of free cylinders after partition
