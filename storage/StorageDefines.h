@@ -58,6 +58,7 @@
 #define MULTIPATHDBIN "/sbin/multipathd"
 #define DMSETUPBIN "/sbin/dmsetup"
 #define DMRAIDBIN "/sbin/dmraid"
+#define BTRFSBIN "/sbin/btrfs"
 
 #define MOUNTBIN "/bin/mount"
 #define UMOUNTBIN "/bin/umount"

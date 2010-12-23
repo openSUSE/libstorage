@@ -318,6 +318,7 @@ void Storage::detectObjects()
 	detectFsData(vBegin(), vEnd(), systeminfo);
 	logContainersAndVolumes(logdir());
 	}
+    detectBtrfs(systeminfo);
 
     dumpObjectList();
 
@@ -528,6 +529,40 @@ void Storage::detectMds(SystemInfo& systeminfo)
 	MdCo* v = new MdCo(this, systeminfo);
 	if( !v->isEmpty() )
 	    addToList( v );
+	else
+	    delete v;
+	}
+    }
+
+void Storage::detectBtrfs(SystemInfo& systeminfo)
+    {
+    if (testmode())
+	{
+	}
+    else if (autodetect() && getenv("LIBSTORAGE_NO_BTRFS") == NULL)
+	{
+	BtrfsCo* v = new BtrfsCo(this, systeminfo);
+	if( !v->isEmpty() )
+	    {
+	    BtrfsCo::ConstBtrfsPair p(v->btrfsPair());
+	    for( BtrfsCo::ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
+		{
+		const list<string>& devs = i->getDevices();
+		for( list<string>::const_iterator d=devs.begin(); d!=devs.end(); ++d )
+		    {
+		    VolIterator v;
+		    if( findVolume( *d, v ))
+			{
+			v->eraseUuid();
+			v->eraseLabel();
+			v->setMount( "" );
+			v->formattingDone();
+			v->setUsedBy( UB_BTRFS, i->getUuid() );
+			}
+		    }
+		}
+	    addToList( v );
+	    }
 	else
 	    delete v;
 	}
@@ -831,7 +866,6 @@ void
 	}
     y2mil("detectFsData end");
     }
-
 
 void
 Storage::printInfo(ostream& str) const
@@ -6130,6 +6164,8 @@ int Storage::removeContainer( Container* val )
 		    break;
 		case UB_DMMULTIPATH:
 		    break;
+		case UB_BTRFS:
+		    break;
 		case UB_MDPART:
 		    ret = removeMdPartCo(it->device(), true);
 		    break;
@@ -6340,6 +6376,28 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     return ret;
 }
 
+bool Storage::mountTmpRo( const Volume* vol, string& mdir )
+    {
+    bool ret = false;
+    removeDmTableTo( *vol );
+    mdir = tmpDir() + "/tmp-ro-mp";
+    unlink( mdir.c_str() );
+    rmdir( mdir.c_str() );
+    string opts = vol->getFstabOption();
+    if( vol->getFs()==NTFS )
+	{
+	if( !opts.empty() )
+	    opts += ",";
+	opts += "show_sys_files";
+	}
+    if( mkdir( mdir.c_str(), 0700 )==0 &&
+	mountDev( vol->device(), mdir, true, opts ) )
+	ret = true;
+    else
+	mdir.erase();
+    y2mil( "ret:" << ret << " mp:" << mdir );
+    return( ret );
+    }
 
 bool
 Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,
@@ -6380,26 +6438,8 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 	    {
 	    bool needUmount = false;
 	    string mp;
-	    if( !vol->isMounted() )
-		{
-		removeDmTableTo( *vol );
-		string mdir = tmpDir() + "/tmp-free-mp";
-		unlink( mdir.c_str() );
-		rmdir( mdir.c_str() );
-		string opts = vol->getFstabOption();
-		if( vol->getFs()==NTFS )
-		    {
-		    if( !opts.empty() )
-			opts += ",";
-		    opts += "show_sys_files";
-		    }
-		if( mkdir( mdir.c_str(), 0700 )==0 &&
-		    mountDev( device, mdir, true, opts ) )
-		    {
-		    needUmount = true;
-		    mp = mdir;
-		    }
-		}
+	    if( !vol->isMounted() && mountTmpRo( &(*vol), mp ) )
+		needUmount = true;
 	    else
 		mp = vol->getMount();
 

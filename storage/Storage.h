@@ -47,6 +47,8 @@
 #include "storage/DmCo.h"
 #include "storage/LoopCo.h"
 #include "storage/Loop.h"
+#include "storage/BtrfsCo.h"
+#include "storage/Btrfs.h"
 #include "storage/NfsCo.h"
 #include "storage/Nfs.h"
 #include "storage/FilterIterator.h"
@@ -222,6 +224,8 @@ class DiskData;
 	    { return( d.type()==storage::NFSC ); }
 	static bool isDm( const Container&d )
 	    { return( d.type()==storage::DM ); }
+	static bool isBtrfs( const Container&d )
+	    { return( d.type()==storage::BTRFSC ); }
 
     public:
 
@@ -329,6 +333,7 @@ class DiskData;
 	int getDmInfo( deque<storage::DmInfo>& plist );
 	int getNfsInfo( deque<storage::NfsInfo>& plist );
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
+	int getBtrfsInfo( deque<storage::BtrfsInfo>& plist );
 	int getDmraidInfo( const string& name,
 	                   deque<storage::DmraidInfo>& plist );
 	int getDmmultipathInfo( const string& name,
@@ -552,6 +557,7 @@ class DiskData;
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
 	void dumpCommitInfos() const;
+	bool mountTmpRo( const Volume* vol, string& mp );
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
@@ -1534,9 +1540,6 @@ class DiskData;
 	}
 
 
-
-
-
 // iterators over file based loop devices
     protected:
 	// protected typedefs for iterators over file based loop devices
@@ -1595,6 +1598,66 @@ class DiskData;
 	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
+	    }
+
+// iterators over btrfs volumes
+    protected:
+	// protected typedefs for iterators over btrfs volumes
+	typedef CastIterator<ConstVolInter, Btrfs *> ConstBtrfsInter;
+	template< class Pred >
+	    struct ConstBtrfsPI { typedef ContainerIter<Pred,
+	                                             ConstBtrfsInter> type; };
+	typedef CheckFnc<const Btrfs> CheckFncBtrfs;
+	typedef CheckerIterator< CheckFncBtrfs, ConstBtrfsPI<CheckFncBtrfs>::type,
+	                         ConstBtrfsInter, Btrfs > ConstBtrfsPIterator;
+    public:
+	// public typedefs for iterators over btrfs volumes
+	template< class Pred >
+	    struct ConstBtrfsI
+		{ typedef ContainerDerIter<Pred, typename ConstBtrfsPI<Pred>::type,
+		                           const Btrfs> type; };
+	template< class Pred >
+	    struct BtrfsCondIPair
+		{ typedef MakeCondIterPair<Pred, typename ConstBtrfsI<Pred>::type> type;};
+	typedef DerefIterator<ConstBtrfsPIterator, const Btrfs> ConstBtrfsIterator;
+	typedef IterPair<ConstBtrfsIterator> ConstBtrfsPair;
+
+	// public member functions for iterators over btrfs volumes
+	ConstBtrfsPair btrfsPair( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
+	    {
+	    return( ConstBtrfsPair( btrfsBegin( CheckBtrfs ), btrfsEnd( CheckBtrfs ) ));
+	    }
+	ConstBtrfsIterator btrfsBegin( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
+	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
+	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs )));
+	    }
+	ConstBtrfsIterator btrfsEnd( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
+	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
+	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs, true )));
+	    }
+	template< class Pred > typename BtrfsCondIPair<Pred>::type btrfsCondPair( const Pred& p ) const
+	    {
+	    return( typename BtrfsCondIPair<Pred>::type( btrfsCondBegin( p ), btrfsCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondBegin( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
+	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
+	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondEnd( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
+	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
+	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p, true )) );
 	    }
 
 // iterators over nfs devices
@@ -1870,6 +1933,7 @@ class DiskData;
 	void detectDisks(SystemInfo& systeminfo);
 	void autodetectDisks(SystemInfo& systeminfo);
 	void detectMds(SystemInfo& systeminfo);
+	void detectBtrfs(SystemInfo& systeminfo);
 	void detectMdParts(SystemInfo& systeminfo);
 	bool discoverMdPVols();
 	void detectLoops(SystemInfo& systeminfo);
@@ -1915,6 +1979,7 @@ class DiskData;
 	bool haveDm(DmCo*& dm);
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
+	bool haveBtrfs( BtrfsCo*& co );
 	int removeContainer( Container* val );
 	void logContainersAndVolumes(const string& Dir) const;
 

@@ -20,6 +20,10 @@
  */
 
 
+#include "storage/StorageDefines.h"
+
+#include "storage/SystemCmd.h"
+
 #include "storage/SystemInfo.h"
 
 
@@ -35,6 +39,65 @@ namespace storage
     SystemInfo::~SystemInfo()
     {
 	y2deb("destructed SystemInfo");
+    }
+
+CmdBtrfsShow::CmdBtrfsShow()
+    {
+    SystemCmd c(BTRFSBIN " filesystem show");
+    if (c.retcode() != 0 || c.numLines() == 0)
+	return;
+
+    const vector<string>& lines = c.stdout();
+    vector<string>::const_iterator it = lines.begin();
+
+    while( it!=lines.end() )
+	{
+	while( it != lines.end() && !boost::contains( *it, " uuid: " ))
+	    ++it;
+	if( it!=lines.end() )
+	    {
+	    y2mil( "uuid line:" << *it );
+	    string uuid = extractNthWord( 3, *it );
+	    y2mil( "uuid:" << uuid );
+	    Entry e;
+	    ++it;
+	    while( it!=lines.end() && !boost::contains( *it, " uuid: " ) && 
+		   !boost::contains( *it, "devid " ) )
+		++it;
+	    while( it!=lines.end() && boost::contains( *it, "devid " ) )
+		{
+		y2mil( "devs line:" << *it );
+		e.devices.push_back( extractNthWord( 7, *it ));
+		++it;
+		}
+	    y2mil( "devs:" << e.devices );
+	    fs[uuid] = e;
+	    }
+	}
+    }
+
+bool
+CmdBtrfsShow::getEntry( const string& uuid, Entry& entry) const
+    {
+    const_iterator it = fs.find(uuid);
+    if( it!=fs.end() )
+	entry = it->second;
+    return( it!=fs.end() );
+    }
+
+list<string> 
+CmdBtrfsShow::getUuids() const
+    {
+    list<string> ret;
+
+    const_iterator it = fs.begin();
+    while( it != fs.end() )
+	{
+	ret.push_back( it->first );
+	++it;
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
     }
 
 }

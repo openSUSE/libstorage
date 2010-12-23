@@ -114,13 +114,15 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	    case UB_DMMULTIPATH:
 		s << "dmmultipath[" << usedby.device() << "]";
 		break;
+	    case UB_BTRFS:
+		s << "btrfs[" << usedby.device() << "]";
+		break;
 	    case UB_NONE:
 		break;
 	}
 
 	return s;
     }
-
 
     void
     setChildValue(xmlNode* node, const char* name, const UsedBy& value)
@@ -135,11 +137,26 @@ bool commitAction::operator<( const commitAction& rhs ) const
 	    case UB_DM: setChildValue(tmp, "type", "dm"); break;
 	    case UB_DMRAID: setChildValue(tmp, "type", "dmraid"); break;
 	    case UB_DMMULTIPATH: setChildValue(tmp, "type", "dmmultipath"); break;
+	    case UB_BTRFS: setChildValue(tmp, "type", "btrfs"); break;
 	    case UB_NONE: break;
 	}
 
 	setChildValue(tmp, "device", value.ub_device);
     }
+
+    std::ostream& operator<<(std::ostream& s, const Subvolume& sv)
+    {
+	s << sv.path();
+	return s;
+    }
+
+    void
+    setChildValue(xmlNode* node, const char* name, const Subvolume& v)
+    {
+	xmlNode* tmp = xmlNewChild(node, name);
+	setChildValue(tmp, "path", v.path());
+    }
+
 
 
 std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a)

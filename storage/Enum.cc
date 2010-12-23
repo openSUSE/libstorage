@@ -94,7 +94,7 @@ namespace storage
 
 
     static const string used_by_type_names[] = {
-	"NONE", "LVM", "MD", "MDPART", "DM", "DMRAID", "DMMULTIPATH"
+	"NONE", "LVM", "MD", "MDPART", "DM", "DMRAID", "DMMULTIPATH", "BTRFS"
     };
 
     const vector<string> EnumInfo<UsedByType>::names(used_by_type_names, used_by_type_names +
@@ -102,7 +102,7 @@ namespace storage
 
 
     static const string c_type_names[] = {
-	"UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART"
+	"UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART", "BTRFS"
     };
 
     const vector<string> EnumInfo<CType>::names(c_type_names, c_type_names +

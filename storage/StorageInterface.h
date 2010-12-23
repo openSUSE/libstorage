@@ -154,9 +154,9 @@ namespace storage
     enum MdArrayState { UNKNOWN, CLEAR, INACTIVE, SUSPENDED, READONLY, READ_AUTO,
 			CLEAN, ACTIVE, WRITE_PENDING, ACTIVE_IDLE };
 
-    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_MDPART, UB_DM, UB_DMRAID, UB_DMMULTIPATH };
+    enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_MDPART, UB_DM, UB_DMRAID, UB_DMMULTIPATH, UB_BTRFS };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART };
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART, BTRFSC };
 
     enum Transport { TUNKNOWN, SBP, ATA, FC, ISCSI, SAS, SATA, SPI, USB };
 
@@ -242,6 +242,13 @@ namespace storage
 	UsedByInfo(UsedByType type, const string& device) : type(type), device(device) {}
 	UsedByType type;
 	string device;
+    };
+
+
+    struct SubvolInfo
+    {
+	SubvolInfo(const string& path) : path(path) {}
+	string path;
     };
 
 
@@ -519,6 +526,17 @@ namespace storage
 	bool reuseFile;
 	unsigned nr;
 	string file;
+    };
+
+    /**
+     * Contains info about btrfs volume.
+     */
+    struct BtrfsInfo
+    {
+	BtrfsInfo() {}
+	VolumeInfo v;
+	list<string> devices;
+	list<SubvolInfo> subvol;
     };
 
     /**

@@ -38,9 +38,27 @@
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
 
-
 namespace storage
 {
+    using std::map;
+    using std::list;
+
+    class CmdBtrfsShow
+    {
+    public:
+	CmdBtrfsShow();
+	struct Entry
+	    {
+	    list<string> devices;
+	    };
+	bool getEntry(const string& uuid, Entry& entry) const;
+	list<string> getUuids() const;
+
+    private:
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	map< string, Entry > fs;
+    };
 
     class SystemInfo : boost::noncopyable
     {
@@ -61,6 +79,7 @@ namespace storage
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
 	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
+	const CmdBtrfsShow& getCmdBtrfsShow() { return *cmdbtrfsshow; }
 
     private:
 
@@ -113,6 +132,7 @@ namespace storage
 	LazyObject<CmdDmsetup> cmddmsetup;
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;
+	LazyObject<CmdBtrfsShow> cmdbtrfsshow;
 
     };
 

@@ -344,6 +344,7 @@ namespace storage
 		} break;
 
 		case LOOP:
+		case BTRFSC:
 		case NFSC:
 		case CUNKNOWN:
 		    break;

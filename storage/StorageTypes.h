@@ -190,6 +190,35 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
     };
 
+    class Subvolume
+    {
+
+    public:
+
+	Subvolume(const string& path) : p(path) {}
+	Subvolume(const xmlNode* node) : p()
+	    {
+	    getChildValue(node, "path", p);
+	    }
+
+	bool operator==(const Subvolume& rhs) const
+	    { return p == rhs.p; }
+	bool operator!=(const Subvolume& rhs) const
+	    { return !(*this == rhs); }
+
+	string path() const { return p; }
+
+	friend std::ostream& operator<<(std::ostream&, const Subvolume&);
+
+	friend void setChildValue(xmlNode* node, const char* name, const Subvolume& value);
+
+	operator SubvolInfo() const { return SubvolInfo(p); }
+
+    private:
+	string p;
+
+    };
+
 
     struct regex_matches
     {
