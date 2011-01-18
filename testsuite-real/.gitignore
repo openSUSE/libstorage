@@ -4,7 +4,12 @@ align2
 format1
 resize1
 lvmcreate1
+lvmcreate2
 lvmresize1
+lvmextend1
+lvmextend2
 format2
 resize2
 mdcreate1
+create1
+create2
