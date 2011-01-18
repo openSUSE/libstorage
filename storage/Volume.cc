@@ -2484,7 +2484,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	{
 	l.push_back(commitAction(DECREASE, cType(), removeText(false), this, true));
 	}
-    else if( needShrink() )
+    else if( needShrink() && !format )
 	{
 	l.push_back(commitAction(DECREASE, cType(), resizeText(false), this, true));
 	}
@@ -2492,7 +2492,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	{
 	l.push_back(commitAction(INCREASE, cType(), createText(false), this, false));
 	}
-    else if( needExtend() )
+    else if( needExtend() && !format )
 	{
 	l.push_back(commitAction(INCREASE, cType(), resizeText(false), this, true));
 	}
