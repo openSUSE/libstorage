@@ -127,12 +127,15 @@ NfsCo::doRemove( Volume* v )
     }
 
 int 
-NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK, const string& mp, bool nfs4)
+NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK, 
+              const string& opts, const string& mp, bool nfs4)
     {
-    y2mil("nfsDev:" << nfsDev << " sizeK:" << sizeK << " mp:" << mp << " nfs4:" << nfs4);
+    y2mil("nfsDev:" << nfsDev << " sizeK:" << sizeK << "opts:" << opts <<
+          " mp:" << mp << " nfs4:" << nfs4);
     Nfs *n = new Nfs(*this, nfsDev, nfs4);
     n->changeMount( mp );
     n->setSize( sizeK );
+    n->setFstabOption( opts );
     addToList( n );
     return( 0 );
     }

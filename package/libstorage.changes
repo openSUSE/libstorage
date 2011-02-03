@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb  3 15:54:24 CET 2011 - fehr@suse.de
+
+- add options provided in addNfs call to volume automatically
+
+-------------------------------------------------------------------
 Tue Jan 18 11:07:19 CET 2011 - fehr@suse.de
 
 - display text about formatting also if partition is resized 

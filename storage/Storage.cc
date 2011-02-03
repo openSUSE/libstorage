@@ -4076,7 +4076,7 @@ Storage::addNfsDevice(const string& nfsDev, const string& opts, unsigned long lo
 	{
 	if( sizeK==0 )
 	    checkNfsDevice(nfsDev, opts, nfs4, sizeK);
-	ret = co->addNfs(nfsDev, sizeK, mp, nfs4);
+	ret = co->addNfs(nfsDev, sizeK, opts, mp, nfs4);
 	}
     if( !have )
 	{
@@ -4102,9 +4102,7 @@ Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, uns
     NfsCo co( this );
     string mdir = tmpDir() + "/tmp-nfs-mp";
     mkdir(mdir.c_str(), 0777);
-    ret = co.addNfs(nfsDev, 0, "", nfs4);
-    if( !opts.empty() )
-	co.vBegin()->setFstabOption( opts );
+    ret = co.addNfs(nfsDev, 0, opts, "", nfs4);
     if( instsys() )
 	{
 	SystemCmd c;
