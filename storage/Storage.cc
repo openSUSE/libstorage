@@ -6932,6 +6932,13 @@ std::ostream& operator<<(std::ostream& s, const Storage& v)
     return(s);
     }
 
+std::ostream& operator<<(std::ostream& s, Storage& v)
+    {
+    v.assertInit();
+    v.printInfo(s);
+    return(s);
+    }
+
 
     // workaround for broken YCP bindings
     CallbackProgressBar progress_bar_cb_ycp = NULL;

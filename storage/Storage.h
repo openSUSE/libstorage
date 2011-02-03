@@ -2035,6 +2035,7 @@ class DiskData;
 	CallbackPasswordPopup password_popup_cb;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
+	friend std::ostream& operator<<(std::ostream& s, Storage& v);
 
 	map<string, list<UsedBy>> danglingUsedBy;
 
