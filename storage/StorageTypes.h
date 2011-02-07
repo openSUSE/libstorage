@@ -92,7 +92,7 @@ struct contOrder
 
 std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
-    enum CommitStage { DECREASE, INCREASE, FORMAT, MOUNT };
+    enum CommitStage { DECREASE, INCREASE, FORMAT, MOUNT, SUBVOL };
 
 
     class Volume;
@@ -195,18 +195,22 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
     public:
 
-	Subvolume(const string& path) : p(path) {}
+	Subvolume(const string& path) : p(path), del(false), create(false) {}
 	Subvolume(const xmlNode* node) : p()
 	    {
 	    getChildValue(node, "path", p);
 	    }
 
 	bool operator==(const Subvolume& rhs) const
-	    { return p == rhs.p; }
+	    { return p == rhs.p && del == rhs.del; }
 	bool operator!=(const Subvolume& rhs) const
 	    { return !(*this == rhs); }
 
 	string path() const { return p; }
+	bool deleted() const { return del; }
+	void setDeleted( bool val=true ) { del=val; }
+	bool created() const { return create; }
+	void setCreated( bool val=true ) { create=val; }
 
 	friend std::ostream& operator<<(std::ostream&, const Subvolume&);
 
@@ -216,6 +220,8 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 
     private:
 	string p;
+	bool del;
+	bool create;
 
     };
 

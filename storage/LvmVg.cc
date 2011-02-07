@@ -451,7 +451,8 @@ LvmVg::removeLv( const string& name )
 	}
     if (ret == 0 && i->isUsedBy())
 	{
-	if( getStorage()->getRecursiveRemoval() )
+	if( getStorage()->getRecursiveRemoval() || 
+	    getStorage()->isUsedBySingleBtrfs(*i) )
 	    ret = getStorage()->removeUsing( i->device(), i->getUsedBy() );
 	else
 	    ret = LVM_LV_REMOVE_USED_BY;

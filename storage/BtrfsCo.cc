@@ -86,6 +86,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	    {
 	    Volume const* cv = NULL;
 	    unsigned long long sum_size = 0;
+	    list<string> an;
 	    for( list<string>::const_iterator d=e.devices.begin(); d!=e.devices.end(); ++d )
 		{
 		Volume const* v;
@@ -96,11 +97,15 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 			(!cv->getFormat() && v->getFormat() ))
 			cv = v;
 		    sum_size += v->sizeK();
+		    list<string> li = v->altNames();
+		    an.splice( an.end(), li );
 		    }
 		else
 		    y2war( "device " << *d << " not found" );
 		}
 	    Btrfs* b = new Btrfs( *this, *cv, sum_size, e.devices );
+	    y2mil( "alt_names:" << an );
+	    b->setAltNames( an );
 	    vols.push_back(b);
 	    }
 	else
@@ -133,11 +138,56 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	    }
 	if( mounted )
 	    {
-	    getStorage()->umountDevice( i->device() );
+	    getStorage()->umountDev( i->device() );
 	    rmdir( mp.c_str() );
 	    }
 	}
     y2mil("end");
+    }
+
+void
+BtrfsCo::addFromVolume( const Volume& v )
+    {
+    Btrfs* b = new Btrfs( *this, v );
+    vols.push_back(b);
+    }
+
+int BtrfsCo::createSubvolume( const string& device, const string& name )
+    {
+    int ret = 0;
+    y2mil( "device:" << device << " name:" << name );
+    BtrfsIter i;
+    if( findBtrfs( device, i ))
+	ret = i->createSubvolume( name );
+    else
+	ret = BTRFS_VOLUME_NOT_FOUND;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int BtrfsCo::removeSubvolume( const string& device, const string& name )
+    {
+    int ret = 0;
+    y2mil( "device:" << device << " name:" << name );
+    BtrfsIter i;
+    if( findBtrfs( device, i ))
+	ret = i->deleteSubvolume( name );
+    else
+	ret = BTRFS_VOLUME_NOT_FOUND;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+
+void
+BtrfsCo::eraseVolume( Volume* v )
+    {
+    BtrfsPair p=btrfsPair(Btrfs::notDeleted);
+    BtrfsIter i = p.begin();
+    while( i!=p.end() && i->device()!=v->device() )
+	++i;
+    if( i!=p.end() )
+	removeFromList( v );
     }
 
 bool
@@ -147,14 +197,112 @@ BtrfsCo::findBtrfs( const string& id, BtrfsIter& i )
     i=p.begin();
     while( i!=p.end() && i->getUuid()!=id )
 	++i;
+    if( i==p.end() && !p.empty() )
+	{
+	i=p.begin();
+	while( i!=p.end() && i->device()!=id )
+	    {
+	    const list<string>& al( i->altNames() );
+	    if( find( al.begin(), al.end(), id )==al.end() )
+		++i;
+	    }
+	}
     return( i!=p.end() );
+    }
+
+bool BtrfsCo::deviceToUuid( const string& device, string& uuid )
+    {
+    bool ret = false;
+    y2mil( "device:" << device );
+    const Volume* v = getStorage()->getVolume( device );
+    list<UsedBy>::const_iterator ul = v->getUsedBy().begin();
+    uuid.clear();
+    while( v && ul != v->getUsedBy().end() )
+	{
+	if( ul->type()==UB_BTRFS )
+	    {
+	    uuid = v->getUsedBy().front().device();
+	    ret = true;
+	    }
+	++ul;
+	}
+    y2mil( "ret:" << ret << " uuid:" << (ret?uuid:"") );
+    return( ret );
+    }
+
+int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
+    {
+    y2mil("name:" << name() << " stage:" << stage);
+    int ret = Container::commitChanges( stage, vol );
+    if( ret==0 && stage==SUBVOL )
+	{
+	Btrfs * b = dynamic_cast<Btrfs *>(vol);
+	if( b!=NULL )
+	    {
+	    if( Btrfs::needDeleteSubvol( *b ) )
+		ret = b->doDeleteSubvol();
+	    else if( Btrfs::needCreateSubvol( *b ) )
+		ret = b->doCreateSubvol();
+	    }
+	else
+	    ret = BTRFS_COMMIT_INVALID_VOLUME;
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+void BtrfsCo::getToCommit( storage::CommitStage stage, list<const Container*>& col,
+                           list<const Volume*>& vol ) const
+    {
+    unsigned long oco = col.size();
+    unsigned long ovo = vol.size();
+    Container::getToCommit( stage, col, vol );
+    if( stage==SUBVOL )
+	{
+	ConstBtrfsPair p = btrfsPair( Btrfs::needDeleteSubvol );
+	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
+	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		vol.push_back( &(*i) );
+	p = btrfsPair( Btrfs::needCreateSubvol );
+	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
+	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		vol.push_back( &(*i) );
+	}
+    if( col.size()!=oco || vol.size()!=ovo )
+	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
+    }
+
+
+int BtrfsCo::removeUuid( const string& uuid )
+    {
+    int ret = 0;
+    y2mil( "uuid:" << uuid );
+    BtrfsIter b;
+    if( findBtrfs( uuid, b ) )
+	ret = removeVolume( &(*b) );
+    else
+	ret = BTRFS_REMOVE_NOT_FOUND;
+    y2mil( "ret:" << ret );
+    return( ret );
     }
 
 int BtrfsCo::removeVolume( Volume* v )
     {
     int ret = 0;
     y2mil("name:" << v->name());
-    //ret = removeBtrfs( v->getUuid() );
+    v->setDeleted();
+    v->setSilent();
+    getStorage()->clearUsedBy(v->device());
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int
+BtrfsCo::doRemove( Volume* v )
+    {
+    int ret = 0;
+    if( !removeFromList(v) )
+	ret = BTRFS_REMOVE_NO_BTRFS;
     y2mil("ret:" << ret);
     return( ret );
     }

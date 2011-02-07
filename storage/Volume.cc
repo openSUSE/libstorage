@@ -976,6 +976,8 @@ int Volume::doFormat()
 	    updateFsData();
 	    if( fs != old )
 		ret = VOLUME_FORMAT_FS_UNDETECTED;
+	    else if( fs==BTRFS )
+		getStorage()->setUsedByBtrfs( dev, uuid );
 	    }
 	else
 	    {
@@ -1002,7 +1004,8 @@ int Volume::doFormat()
     {
 	Blkid blkid(mountDevice());
 	getFsData(blkid);
-	if( getFs()==FSUNKNOWN && getEncryption()==ENC_NONE )
+	if( getFs()==FSUNKNOWN && getEncryption()==ENC_NONE &&
+	    orig_encryption==ENC_NONE )
 	    {
 	    Blkid::Entry e;
 	    if( findBlkid( blkid, e ) && e.is_luks)
@@ -1010,6 +1013,14 @@ int Volume::doFormat()
 	    }
     }
 
+void Volume::setUsedByUuid( UsedByType ubt, const string& uuid )
+    {
+    eraseUuid();
+    eraseLabel();
+    setMount( "" );
+    formattingDone();
+    setUsedBy( ubt, uuid );
+    }
 
 string Volume::getFilesysSysfsPath() const
     {
@@ -1304,7 +1315,7 @@ int Volume::canResize( unsigned long long newSizeK ) const
     {
     int ret=0;
     y2mil("val:" << newSizeK);
-    if (isUsedBy())
+    if (isUsedBy() && !getStorage()->isUsedBySingleBtrfs(*this))
 	{
 	ret = VOLUME_ALREADY_IN_USE;
 	}
@@ -1796,7 +1807,8 @@ bool Volume::needCryptsetup() const
     {
     bool ret = (dmcrypt()!=dmcrypt_active) &&
 	       (encryption==ENC_NONE || encryption!=orig_encryption || 
-	        !crypt_pwd.empty() || isTmpCryptMp(mp));
+	        !crypt_pwd.empty() || isTmpCryptMp(mp) ||
+		(encryption==ENC_LUKS&&!isTmpCryptMp(mp)) );
     if( dmcrypt() && encryption!=ENC_NONE &&
         ((!crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd) ||
 	 (crypt_pwd.empty() && isTmpCryptMp(mp) && format)) )
@@ -2082,6 +2094,11 @@ int Volume::doCryptsetup()
 	if( ret==0 )
 	    {
 	    ret = cryptUnsetup();
+	    }
+	if( ret==0 && encryption==ENC_LUKS && !isTmpCryptMp(mp) &&
+	    crypt_pwd.empty() )
+	    {
+	    ret = VOLUME_CRYPT_NO_PWD;
 	    }
 	if( ret==0 )
 	    {

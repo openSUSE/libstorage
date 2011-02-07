@@ -72,6 +72,7 @@ namespace storage
 	unsigned long minorNr() const { return mnr; }
 
 	const std::list<string>& altNames() const { return( alt_names ); }
+	void setAltNames( std::list<string>& li ) { alt_names=li; }
 	bool sameDevice( const string& device ) const;
 
 	// udev path and ids (without leading "/dev/disk/by-*/")

@@ -142,7 +142,7 @@ bool Container::isDeviceUsable() const
 
 void
 Container::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
-{
+    {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     switch( stage )
@@ -178,6 +178,8 @@ Container::getToCommit(CommitStage stage, list<const Container*>& col, list<cons
 	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 		vol.push_back( &(*i) );
 	    }
+	    break;
+	case SUBVOL:
 	    break;
 	}
     if( col.size()!=oco || vol.size()!=ovo )
@@ -234,6 +236,8 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 		if( ret==0 )
 		    vol->fstabUpdateDone();
 		}
+	    break;
+	case SUBVOL:
 	    break;
 
 	default:

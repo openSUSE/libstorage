@@ -553,11 +553,7 @@ void Storage::detectBtrfs(SystemInfo& systeminfo)
 		    VolIterator v;
 		    if( findVolume( *d, v ))
 			{
-			v->eraseUuid();
-			v->eraseLabel();
-			v->setMount( "" );
-			v->formattingDone();
-			v->setUsedBy( UB_BTRFS, i->getUuid() );
+			v->setUsedByUuid( UB_BTRFS, i->getUuid() );
 			}
 		    }
 		}
@@ -1580,14 +1576,14 @@ Storage::removePartition( const string& partition )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( partition, cont, vol ) )
+    else if( findVolume( partition, cont, vol, true ) )
 	{
 	if( cont->type()==DISK )
 	    {
 	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		if (!vol->isUsedBy() || recursiveRemove)
+		if( canRemove( *vol ) )
 		    {
 		    if (vol->isUsedBy())
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
@@ -1607,7 +1603,7 @@ Storage::removePartition( const string& partition )
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		if (!vol->isUsedBy() || recursiveRemove)
+		if( canRemove( *vol ) )
 		    {
 		    if (vol->isUsedBy())
 			ret = removeUsing( vol->device(), vol->getUsedBy() );
@@ -1627,7 +1623,7 @@ Storage::removePartition( const string& partition )
 	  MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
 	  if( disk != NULL)
 	    {
-	    if (!vol->isUsedBy() || recursiveRemove)
+	    if( canRemove( *vol ) )
 	      {
 		  if( vol->isUsedBy())
 	        ret = removeUsing( vol->device(), vol->getUsedBy() );
@@ -2309,14 +2305,56 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
     assertInit();
     y2mil("device:" << device << " format:" << format << " fs_type:" << toString(fs));
     VolIterator vol;
-    ContIterator cont;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol ) )
+    else if( findVolume( device, vol ) )
 	{
-	ret = vol->setFormat( format, fs );
+	BtrfsCo *co = NULL;
+	FsType tmpfs = format?fs:vol->detectedFs();
+	y2mil( "tmpfs:" << tmpfs << " fs:" << fs << " det:" << vol->detectedFs() );
+	y2mil( "ctype:" << vol->cType() << " BTRFS:" << BTRFSC );
+
+	if( (tmpfs==BTRFS && vol->cType()==BTRFSC) ||
+	    (tmpfs!=BTRFS && vol->cType()!=BTRFSC) )
+	    ret = vol->setFormat( format, fs );
+	else if( tmpfs==BTRFS )
+	    {
+	    // put volume to format into BTRFS-Container and set used by on plain volume
+	    bool have_co = haveBtrfs(co);
+	    if( !have_co )
+		co = new BtrfsCo(this);
+	    if( co==NULL )
+		ret = STORAGE_MEMORY_EXHAUSTED;
+	    if( ret==0 )
+		{
+		ret = vol->setFormat( format, fs );
+		if( ret==0 )
+		    {
+		    co->addFromVolume( *vol );
+		    vol->setUsedByUuid( UB_BTRFS, "12345" );
+		    }
+		}
+	    }
+	else if( tmpfs!=BTRFS )
+	    {
+	    // remove volume from BTRFS-Container and unset used by on plain volume
+	    if(haveBtrfs(co))
+		{
+		string mp = vol->getMount();
+		co->eraseVolume( &(*vol) );
+		if( findVolume( device, vol ) && vol->cType()!=BTRFSC )
+		    {
+		    vol->updateFsData();
+		    vol->changeMount( mp );
+		    vol->clearUsedBy();
+		    ret = vol->setFormat( format, fs );
+		    }
+		else
+		    y2war( "base volume for " << device << " not found" );
+		}
+	    }
 	}
     else
 	{
@@ -3087,9 +3125,9 @@ Storage::removeVolume( const string& device )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol ) )
+    else if( findVolume( device, cont, vol, true ) )
 	{
-	if (!vol->isUsedBy() || recursiveRemove)
+	if( canRemove( *vol ) )
 	    {
 	    string vdev = vol->device();
 	    if (vol->isUsedBy())
@@ -4266,6 +4304,16 @@ bool Storage::haveLoop( LoopCo*& loop )
     return( i != p.end() );
     }
 
+bool Storage::haveBtrfs( BtrfsCo*& co )
+    {
+    co = NULL;
+    CPair p = cPair(isBtrfs);
+    ContIterator i = p.begin();
+    if( i != p.end() )
+	co = static_cast<BtrfsCo*>(&(*i));
+    return( i != p.end() );
+    }
+
 int Storage::removeDmraid( const string& name )
     {
     int ret = 0;
@@ -4281,6 +4329,58 @@ int Storage::removeDmraid( const string& name )
 	}
     else
 	ret = STORAGE_DMRAID_CO_NOT_FOUND;
+    return( ret );
+    }
+
+int Storage::createSubvolume( const string& device, const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("device:" << device << " name:" << name);
+    BtrfsCo* co;
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( haveBtrfs(co) )
+	{
+	ret = co->createSubvolume( device, name );
+	}
+    else
+	{
+	ret = STORAGE_BTRFS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int Storage::removeSubvolume( const string& device, const string& name )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("device:" << device << " name:" << name);
+    BtrfsCo* co;
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( haveBtrfs(co) )
+	{
+	ret = co->removeSubvolume( device, name );
+	}
+    else
+	{
+	ret = STORAGE_BTRFS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
     return( ret );
     }
 
@@ -4580,8 +4680,8 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     int ret = 0;
     y2mil("p.length:" << p.length());
 
-    typedef array<CommitStage, 4> Stages;
-    const Stages stages = { { DECREASE, INCREASE, FORMAT, MOUNT } };
+    typedef array<CommitStage, 5> Stages;
+    const Stages stages = { { DECREASE, INCREASE, FORMAT, MOUNT, SUBVOL } };
 
     for (Stages::const_iterator stage = stages.begin(); stage != stages.end(); ++stage)
     {
@@ -5412,10 +5512,10 @@ bool Storage::findVolume( const string& device, ConstContIterator& c,
     }
 
 bool Storage::findVolume( const string& device, ContIterator& c,
-                          VolIterator& v )
+                          VolIterator& v, bool no_btrfs )
     {
     bool ret = false;
-    if( findVolume( device, v ))
+    if( findVolume( device, v, false, no_btrfs ))
 	{
 	const Container *co = v->getContainer();
 	CPair cp = cPair();
@@ -5522,16 +5622,17 @@ bool Storage::findContainer( const string& device, ContIterator& c )
     return( c!=cp.end() );
     }
 
-bool Storage::findVolume( const string& device, ConstVolIterator& v, bool also_del )
+bool Storage::findVolume( const string& device, ConstVolIterator& v, bool also_del, bool no_btrfsc )
     {
     VolIterator tmp;
-    bool ret = findVolume( device, tmp, also_del );
+    bool ret = findVolume( device, tmp, also_del, no_btrfsc );
     if( ret )
 	v = tmp;
     return( ret );
     }
 
-bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
+bool Storage::findVolume( const string& device, VolIterator& v, bool also_del, 
+                          bool no_btrfsc )
     {
     assertInit();
     string label;
@@ -5545,56 +5646,68 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del )
 	d = normalizeDevice( device );
     if( !label.empty() || !uuid.empty() )
 	y2mil("label:" << label << " uuid:" << uuid);
-    VPair p = vPair( also_del?NULL:Volume::notDeleted );
-    v = p.begin();
-    if( label.empty() && uuid.empty() )
+    bool found = false;
+    list<VPair> pl;
+    if( !no_btrfsc )
+	pl.push_back( vPair( also_del?NULL:Volume::notDeleted, isBtrfs ));
+    pl.push_back( vPair( also_del?NULL:Volume::notDeleted, isNotBtrfs ));
+    list<VPair>::iterator li = pl.begin();
+    while( li != pl.end() && !found )
 	{
-	while( v!=p.end() && v->device()!=d )
+	v = li->begin();
+	if( label.empty() && uuid.empty() )
 	    {
-	    const list<string>& al( v->altNames() );
-	    if( find( al.begin(), al.end(), d )!=al.end() )
-		break;
-	    ++v;
+	    while( v!=li->end() && v->device()!=d )
+		{
+		const list<string>& al( v->altNames() );
+		if( find( al.begin(), al.end(), d )!=al.end() )
+		    break;
+		++v;
+		}
+	    if( !li->empty() && v==li->end() && d.find("/dev/loop")==0 )
+		{
+		v = li->begin();
+		while( v!=li->end() && v->loopDevice()!=d )
+		    ++v;
+		}
+	    if( !li->empty() && v==li->end() && d.find("/dev/mapper/cr_")==0 )
+		{
+		v = li->begin();
+		while( v!=li->end() && v->dmcryptDevice()!=d )
+		    ++v;
+		}
+	    if( !li->empty() && v==li->end() )
+		{
+		string tmp(d);
+		tmp.replace( 0, 5, "/dev/mapper/" );
+		v = li->begin();
+		while( v!=li->end() && v->device()!=tmp )
+		    ++v;
+		}
 	    }
-	if( !p.empty() && v==p.end() && d.find("/dev/loop")==0 )
+	else if( !label.empty() )
 	    {
-	    v = p.begin();
-	    while( v!=p.end() && v->loopDevice()!=d )
+	    while( v!=li->end() && v->getLabel()!=label )
 		++v;
 	    }
-	if( !p.empty() && v==p.end() && d.find("/dev/mapper/cr_")==0 )
+	else if( !uuid.empty() )
 	    {
-	    v = p.begin();
-	    while( v!=p.end() && v->dmcryptDevice()!=d )
+	    while( v!=li->end() && v->getUuid()!=uuid )
 		++v;
 	    }
-	if( !p.empty() && v==p.end() )
-	    {
-	    d.replace( 0, 5, "/dev/mapper/" );
-	    v = p.begin();
-	    while( v!=p.end() && v->device()!=d )
-		++v;
-	    }
+	found = v!=li->end();
+	++li;
 	}
-    else if( !label.empty() )
-	{
-	while( v!=p.end() && v->getLabel()!=label )
-	    ++v;
-	}
-    else if( !uuid.empty() )
-	{
-	while( v!=p.end() && v->getUuid()!=uuid )
-	    ++v;
-	}
-    return( v!=p.end() );
+    return( found );
     }
 
-bool Storage::findVolume( const string& device, Volume const * &vol )
+bool Storage::findVolume( const string& device, Volume const * &vol, 
+                          bool no_btrfsc )
     {
     bool ret = false;
     vol = NULL;
     ConstVolIterator v;
-    if( findVolume( device, v ))
+    if( findVolume( device, v, false, true ))
 	{
 	vol = &(*v);
 	ret = true;
@@ -5630,10 +5743,10 @@ Storage::findDevice( const string& dev, const Device* &vol,
     }
 
     Device*
-    Storage::findDevice(const string& dev)
+    Storage::findDevice(const string& dev, bool no_btrfsc)
     {
 	VolIterator v;
-	if (findVolume(dev, v))
+	if (findVolume(dev, v, false, no_btrfsc))
 	    return &*v;
 
 	ContIterator c;
@@ -5647,7 +5760,7 @@ Storage::findDevice( const string& dev, const Device* &vol,
     void
     Storage::clearUsedBy(const string& dev)
     {
-	Device* tmp = findDevice(dev);
+	Device* tmp = findDevice(dev,true);
 	if (tmp)
 	{
 	    tmp->clearUsedBy();
@@ -5684,6 +5797,41 @@ Storage::findDevice( const string& dev, const Device* &vol,
 	    y2mil("setting type:" << toString(type) << " device:" << device <<
 		  " for dev:" << dev << " to dangling usedby");
 	}
+    }
+
+void
+Storage::setUsedByBtrfs(const string& dev, const string& uuid)
+    {
+    y2mil( "dev:" << dev << " uuid:" << uuid );
+    Device* tmp = findDevice(dev,true);
+    if (tmp)
+	{
+	tmp->setUsedBy(UB_BTRFS, uuid);
+	}
+    }
+
+bool 
+Storage::canRemove( const Volume& vol ) const
+    {
+    return( recursiveRemove || !vol.isUsedBy() || 
+            isUsedBySingleBtrfs( vol ) );
+    }
+
+bool 
+Storage::isUsedBySingleBtrfs( const Volume& vol ) const
+    {
+    const list<UsedBy>& ub = vol.getUsedBy();
+    bool ret = ub.size()==1 && ub.front().type()==UB_BTRFS;
+    if( ret )
+	{
+	ConstBtrfsPair p = btrfsPair(Btrfs::notDeleted);
+	ConstBtrfsIterator i = p.begin();
+	while( i!=p.end() && i->getUuid()!=ub.front().device() )
+	    ++i;
+	ret = i!=p.end() && i->getDevices().size()<=1;
+	}
+    y2mil( "dev:" << vol.device() << " ret:" << ret );
+    return( ret );
     }
 
 
@@ -6163,6 +6311,13 @@ int Storage::removeContainer( Container* val )
 		case UB_DMMULTIPATH:
 		    break;
 		case UB_BTRFS:
+		    {
+		    BtrfsCo* co;
+		    if( haveBtrfs(co) )
+			ret = co->removeUuid(it->device());
+		    else
+			ret = STORAGE_BTRFS_CO_NOT_FOUND;
+		    }
 		    break;
 		case UB_MDPART:
 		    ret = removeMdPartCo(it->device(), true);
@@ -6255,17 +6410,18 @@ Storage::checkDeviceMounted(const string& device, list<string>& mps)
 
 
 bool
-Storage::umountDevice( const string& device )
+Storage::umountDev( const string& device, bool unsetup )
     {
     bool ret = false;
     assertInit();
-    y2mil("device:" << device);
+    y2mil("device:" << device << " unsetup:" << unsetup );
     VolIterator vol;
     if( !readonly() && findVolume( device, vol ) )
 	{
 	if( vol->umount()==0 )
 	    {
-	    vol->crUnsetup();
+	    if( unsetup )
+		vol->crUnsetup();
 	    ret = true;
 	    }
 	}
@@ -6374,11 +6530,12 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     return ret;
 }
 
-bool Storage::mountTmpRo( const Volume* vol, string& mdir )
+bool Storage::mountTmp( const Volume* vol, string& mdir, bool ro )
     {
     bool ret = false;
     removeDmTableTo( *vol );
-    mdir = tmpDir() + "/tmp-ro-mp";
+    mdir = tmpDir() + "/tmp-" + (ro?"ro-mp":"mp");
+    y2mil( "mdir:" << mdir << " ro:" << ro );
     unlink( mdir.c_str() );
     rmdir( mdir.c_str() );
     string opts = vol->getFstabOption();
@@ -6389,7 +6546,7 @@ bool Storage::mountTmpRo( const Volume* vol, string& mdir )
 	opts += "show_sys_files";
 	}
     if( mkdir( mdir.c_str(), 0700 )==0 &&
-	mountDev( vol->device(), mdir, true, opts ) )
+	mountDev( vol->device(), mdir, ro, opts ) )
 	ret = true;
     else
 	mdir.erase();
@@ -6419,7 +6576,7 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 	{
 	    ret = false;
 	}
-	else if (vol->isUsedBy())
+	else if (vol->isUsedBy()&&!isUsedBySingleBtrfs(*vol))
 	{
 	    ret = false;
 	}

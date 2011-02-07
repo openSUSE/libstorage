@@ -37,6 +37,7 @@ class Btrfs : public Volume
 
 	Btrfs( const BtrfsCo& d, const Volume& v, unsigned long long sz, 
 	       const list<string>& devices );
+	Btrfs( const BtrfsCo& d, const Volume& v );
 	Btrfs( const BtrfsCo& d, const xmlNode* node );
 	Btrfs( const BtrfsCo& c, const Btrfs& v);
 	virtual ~Btrfs();
@@ -47,6 +48,16 @@ class Btrfs : public Volume
 	void getDevices( list<string>& devs ) const { devs=devices; }
 	void getSubvolumes( list<Subvolume>& sv ) const { sv = subvol; }
 
+	int createSubvolume( const string& name );
+	int deleteSubvolume( const string& name );
+
+	void getCommitActions(list<commitAction>& l) const;
+	int doDeleteSubvol();
+	int doCreateSubvol();
+	Text createSubvolText(bool doing) const;
+	Text deleteSubvolText(bool doing) const;
+	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
+
 	void saveData(xmlNode* node) const;
 	friend std::ostream& operator<< (std::ostream& s, const Btrfs& l );
 	virtual void print( std::ostream& s ) const { s << *this; }
@@ -55,8 +66,11 @@ class Btrfs : public Volume
 	void logDifference(std::ostream& log, const Btrfs& rhs) const;
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
+	static bool needCreateSubvol( const Btrfs& v );
+	static bool needDeleteSubvol( const Btrfs& v );
 
     protected:
+	string subvolNames( bool added ) const; 
 	list<string> devices;
 	list<Subvolume> subvol;
 

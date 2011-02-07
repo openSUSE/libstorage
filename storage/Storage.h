@@ -226,6 +226,8 @@ class DiskData;
 	    { return( d.type()==storage::DM ); }
 	static bool isBtrfs( const Container&d )
 	    { return( d.type()==storage::BTRFSC ); }
+	static bool isNotBtrfs( const Container&d )
+	    { return( d.type()!=storage::BTRFSC ); }
 
     public:
 
@@ -269,12 +271,15 @@ class DiskData;
 	void clearUsedBy(const list<string>& devs);
 	void setUsedBy(const string& dev, UsedByType type, const string& device);
 	void setUsedBy(const list<string>& devs, UsedByType type, const string& device);
+	void setUsedByBtrfs( const string& dev, const string& uuid );
 	void addUsedBy(const string& dev, UsedByType type, const string& device);
 	void addUsedBy(const list<string>& devs, UsedByType type, const string& device);
 	void removeUsedBy(const string& dev, UsedByType type, const string& device);
 	void removeUsedBy(const list<string>& devs, UsedByType type, const string& device);
 	bool isUsedBy(const string& dev);
 	bool isUsedBy(const string& dev, UsedByType type);
+	bool isUsedBySingleBtrfs( const Volume& vol ) const;
+	bool canRemove( const Volume& vol ) const;
 
 	void fetchDanglingUsedBy(const string& dev, list<UsedBy>& uby);
 
@@ -295,7 +300,8 @@ class DiskData;
 	bool isRootMounted() const { return( root_mounted ); }
 
 	string findNormalDevice( const string& device );
-	bool findVolume( const string& device, Volume const* &vol );
+	bool findVolume( const string& device, Volume const* &vol, 
+	                 bool no_btrfsc=false );
 	bool findDm( const string& device, const Dm*& dm );
 	bool findDmUsing( const string& device, const Dm*& dm );
 	bool findDevice( const string& dev, const Device* &vol,
@@ -438,7 +444,9 @@ class DiskData;
 	int removeVolume( const string& device );
 	int removeUsing(const string& device, const list<UsedBy>& uby);
 	bool checkDeviceMounted(const string& device, list<string>& mps);
-	bool umountDevice( const string& device );
+	bool umountDevice( const string& device )
+	    { return( umountDev( device, true )); }
+	bool umountDev( const string& device, bool dounsetup=false );
 	bool mountDev( const string& device, const string& mp, bool ro=true,
 	               const string& opts="" );
 	bool mountDevice( const string& device, const string& mp )
@@ -524,6 +532,10 @@ class DiskData;
 
 	int removeDmraid( const string& name );
 
+	int createSubvolume( const string& device, const string& name );
+	int removeSubvolume( const string& device, const string& name );
+	int newBtrfs( const string& device );
+
 	void getCommitInfos(list<CommitInfo>& infos) const;
 	const string& getLastAction() const { return lastAction.text; }
 	const string& getExtendedErrorMessage() const { return extendedError; }
@@ -557,7 +569,9 @@ class DiskData;
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
 	void dumpCommitInfos() const;
-	bool mountTmpRo( const Volume* vol, string& mp );
+	bool mountTmpRo( const Volume* vol, string& mp )
+	    { return mountTmp( vol, mp, true ); }
+	bool mountTmp( const Volume* vol, string& mp, bool ro=false );
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
@@ -1960,17 +1974,17 @@ class DiskData;
 	MdPartCoIterator findMdPartCo( const string& name );
 
 	bool findVolume( const string& device, ContIterator& c,
-	                 VolIterator& v  );
+	                 VolIterator& v, bool no_btrfs=false  );
 	bool findVolume( const string& device, ConstContIterator& c,
 	                 ConstVolIterator& v  );
 	bool findVolume( const string& device, VolIterator& v,
-	                 bool also_del=false );
+	                 bool also_del=false, bool no_btrfs=false );
 	bool findVolume( const string& device, ConstVolIterator& v,
-	                 bool also_del=false );
+	                 bool also_del=false, bool no_btrfs=false );
 	bool findContainer( const string& device, ContIterator& c );
 	bool findContainer( const string& device, ConstContIterator& c );
 
-	Device* findDevice(const string& dev);
+	Device* findDevice(const string& dev, bool no_btrfs=false);
 
 	void checkPwdBuf( const string& device );
 

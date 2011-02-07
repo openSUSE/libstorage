@@ -691,6 +691,7 @@ namespace storage
 	STORAGE_INVALID_BACKUP_STATE_NAME = -2032,
 	STORAGE_MDPART_CO_NOT_FOUND = -2033,
 	STORAGE_DEVICE_NOT_FOUND = -2034,
+	STORAGE_BTRFS_CO_NOT_FOUND = -2035,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -855,6 +856,17 @@ namespace storage
 	NFS_REMOVE_VOLUME_CREATE_NOT_FOUND = -14003,
 	NFS_REMOVE_VOLUME_LIST_ERASE = -14004,
 	NFS_REMOVE_INVALID_VOLUME = -14005,
+
+	BTRFS_COMMIT_INVALID_VOLUME = -15001,
+	BTRFS_CANNOT_TMP_MOUNT = -15002,
+	BTRFS_CANNOT_TMP_UMOUNT = -15003,
+	BTRFS_DELETE_SUBVOL_FAIL = -15004,
+	BTRFS_CREATE_SUBVOL_FAIL = -15005,
+	BTRFS_VOLUME_NOT_FOUND = -15006,
+	BTRFS_SUBVOL_EXISTS = -15007,
+	BTRFS_SUBVOL_NON_EXISTS = -15008,
+	BTRFS_REMOVE_NOT_FOUND = -15009,
+	BTRFS_REMOVE_NO_BTRFS = -15010,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -2144,6 +2156,24 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeDmraid( const string& name ) = 0;
+
+	/**
+	 * Create a BTRFS subvolume
+	 *
+	 * @param device of the main BTRFS volume
+	 * @param name of subvolume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int createSubvolume( const string& device, const string& name ) = 0;
+
+	/**
+	 * Remove a BTRFS subvolume
+	 *
+	 * @param device of the main BTRFS volume
+	 * @param name of subvolume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeSubvolume( const string& device, const string& name ) = 0;
 
 	/**
 	 * Gets info about actions to be executed after next call to commit().

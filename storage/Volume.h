@@ -79,7 +79,7 @@ class Storage;
 	void getFsInfo( const Volume* source );
 
 	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
-	void formattingDone() { format=false; detected_fs=fs; }
+	void formattingDone() { format=false; fs=detected_fs; }
 	bool getFormat() const { return format; }
 	int changeFstabOptions( const string& options );
 	int changeMountBy( storage::MountByType mby );
@@ -110,6 +110,7 @@ class Storage;
 	bool needExtend() const { return !del && size_k>orig_size_k; }
 	long long extendSize() const { return size_k-orig_size_k; }
 	storage::FsType getFs() const { return fs; }
+	storage::FsType detectedFs() const { return detected_fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
 	void initUuid( const string& id ) { uuid=orig_uuid=id; }
 	void initLabel( const string& lbl ) { label=orig_label=lbl; }
@@ -132,6 +133,7 @@ class Storage;
 	bool isNumeric() const { return numeric; }
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
+	void setUsedByUuid( UsedByType type, const string& uuid );
 	void setDmcryptDev( const string& dm, bool active );
 	void setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active );
 	virtual void forgetResize() { size_k=orig_size_k; }

@@ -45,6 +45,13 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v, unsigned long long sz,
     setSize( sz );
     }
 
+Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
+    {
+    y2mil("constructed btrfs vol from:" << v );
+    y2mil( "fs:" << fs << " det:" << detected_fs );
+    devices.push_back(v.device());
+    }
+
 Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node ) : Volume(d, node)
     {
     list<const xmlNode*> l = getChildNodes(node, "devices");
@@ -81,17 +88,268 @@ void Btrfs::addSubvol( const string& path )
     if( !contains( subvol, v ))
 	subvol.push_back( v );
     else
-	y2war( "subvolume " << v << " already extsist!" );
+	y2war( "subvolume " << v << " already exists!" );
+    }
+
+int Btrfs::doDeleteSubvol()
+    {
+    int ret = 0;
+    bool needUmount = false;
+    Storage* st = NULL;
+    string m = getMount();
+    if( !isMounted() )
+	{
+	st = getContainer()->getStorage();
+	if( st->mountTmp( this, m ) )
+	    needUmount = true;
+	else
+	    ret = BTRFS_CANNOT_TMP_MOUNT;
+	}
+    if( ret==0 )
+	{
+	SystemCmd c;
+	string cmd = BTRFSBIN " subvolume delete " + m + '/';
+	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
+	    {
+	    if( i->deleted() )
+		{
+		c.execute( cmd + i->path() );
+		if( c.retcode()==0 )
+		    i->setDeleted(false);
+		else
+		    ret = BTRFS_DELETE_SUBVOL_FAIL;
+		}
+	    }
+	}
+    if( needUmount )
+	{
+	if( !st->umountDev( device() ) && ret==0 )
+	    {
+	    ret = BTRFS_CANNOT_TMP_UMOUNT;
+	    }
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int Btrfs::doCreateSubvol()
+    {
+    int ret = 0;
+    bool needUmount = false;
+    Storage* st = NULL;
+    string m = getMount();
+    if( !isMounted() )
+	{
+	st = getContainer()->getStorage();
+	if( st->mountTmp( this, m ) )
+	    needUmount = true;
+	else
+	    ret = BTRFS_CANNOT_TMP_MOUNT;
+	}
+    if( ret==0 )
+	{
+	SystemCmd c;
+	string cmd = BTRFSBIN " subvolume create " + m + '/';
+	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
+	    {
+	    if( i->created() )
+		{
+		c.execute( cmd + i->path() );
+		if( c.retcode()==0 )
+		    i->setCreated(false);
+		else
+		    ret = BTRFS_CREATE_SUBVOL_FAIL;
+		}
+	    }
+	}
+    if( needUmount )
+	{
+	if( !st->umountDev( device() ) && ret==0 )
+	    {
+	    ret = BTRFS_CANNOT_TMP_UMOUNT;
+	    }
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+void
+Btrfs::countSubvolAddDel( unsigned& add, unsigned& del ) const
+    {
+    add = del = 0;
+    for( list<Subvolume>::const_iterator i=subvol.begin();
+	 i!=subvol.end(); ++i )
+	{
+	if( i->deleted() )
+	    del++;
+	if( i->created() )
+	    add++;
+	}
+    if( add>0 || del>0 )
+	y2mil( "add:" << add << " del:" << del );
+    }
+
+string
+Btrfs::subvolNames( bool added ) const
+    {
+    string ret;
+    for( list<Subvolume>::const_iterator i=subvol.begin();
+	 i!=subvol.end(); ++i )
+	{
+	if( (added && i->created()) ||
+	    (!added && i->deleted()))
+	    {
+	    if( !ret.empty() )
+		ret += ' ';
+	    ret += i->path();
+	    }
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int
+Btrfs::createSubvolume( const string& name )
+    {
+    int ret=0;
+    y2mil( "name:" << name );
+    list<Subvolume>::iterator i=subvol.begin();
+    while( i!=subvol.end() && !i->deleted() && i->path()!=name )
+	++i;
+    if( i==subvol.end() )
+	{
+	Subvolume v( name );
+	v.setCreated();
+	subvol.push_back( v );
+	}
+    else
+	ret = BTRFS_SUBVOL_EXISTS;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int
+Btrfs::deleteSubvolume( const string& name )
+    {
+    int ret=0;
+    y2mil( "name:" << name );
+    list<Subvolume>::iterator i=subvol.begin();
+    while( i!=subvol.end() && i->path()!=name )
+	++i;
+    if( i!=subvol.end() )
+	{
+	if( i->created() )
+	    subvol.erase(i);
+	else
+	    i->setDeleted();
+	}
+    else
+	ret = BTRFS_SUBVOL_NON_EXISTS;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+void
+Btrfs::getCommitActions(list<commitAction>& l) const
+    {
+    Volume::getCommitActions( l );
+    unsigned rem, add;
+    countSubvolAddDel( add, rem );
+    if( rem>0 )
+	{
+	l.push_back(commitAction(SUBVOL, cont->staticType(),
+				 deleteSubvolText(false), this, true));
+	}
+    if( add>0 )
+	{
+	l.push_back(commitAction(SUBVOL, cont->staticType(),
+				 createSubvolText(false), this, true));
+	}
+    }
+
+Text Btrfs::createSubvolText(bool doing) const
+    {
+    Text txt;
+    unsigned cnt, dummy;
+    countSubvolAddDel( cnt, dummy );
+    string vols = subvolNames( true );
+    if( doing )
+	{
+	if( cnt<=1 )
+	    // displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Creating subvolume %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by subvolume names e.g. "tmp var/tmp var/log"
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Creating subvolumes %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	}
+    else
+	{
+	if( cnt<=1 )
+	    // displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Create subvolume %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	else
+	    // displayed text before action, %1$s is replaced by subvolume names e.g. "tmp var/tmp var/log"
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Create subvolumes %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	}
+    return( txt );
+    }
+
+Text Btrfs::deleteSubvolText(bool doing) const
+    {
+    Text txt;
+    unsigned cnt, dummy;
+    countSubvolAddDel( dummy, cnt );
+    string vols = subvolNames( true );
+    if( doing )
+	{
+	if( cnt<=1 )
+	    // displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Removing subvolume %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	else
+	    // displayed text during action, %1$s is replaced by subvolume names e.g. "tmp var/tmp var/log"
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Removing subvolumes %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	}
+    else
+	{
+	if( cnt<=1 )
+	    // displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Remove subvolume %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	else
+	    // displayed text before action, %1$s is replaced by subvolume names e.g. "tmp var/tmp var/log"
+	    // %2$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Remove subvolumes %1$s on device %2$s"), 
+	                   vols.c_str(), dev.c_str() );
+	}
+    return( txt );
     }
 
 void Btrfs::getInfo( BtrfsInfo& tinfo ) const
     {
     Volume::getInfo(info.v);
     info.devices = devices;
-    info.subvol = list<SubvolInfo>(subvol.begin(), subvol.end());
+
+    for( list<Subvolume>::const_iterator i=subvol.begin(); 
+	 i!=subvol.end(); ++i )
+	 {
+	 if( !i->deleted() )
+	    info.subvol.push_back( *i );
+	 }
     tinfo = info;
     }
-
 
 std::ostream& operator<< (std::ostream& s, const Btrfs& v )
     {
@@ -121,6 +379,20 @@ void Btrfs::saveData(xmlNode* node) const
     setChildValue(node, "devices", devices);
     if (!subvol.empty())
 	setChildValue(node, "subvolume", subvol);
+    }
+
+bool Btrfs::needCreateSubvol( const Btrfs& v )
+    {
+    unsigned dummy, cnt;
+    v.countSubvolAddDel( cnt, dummy );
+    return( cnt>0 );
+    }
+
+bool Btrfs::needDeleteSubvol( const Btrfs& v )
+    {
+    unsigned dummy, cnt;
+    v.countSubvolAddDel( dummy, cnt );
+    return( cnt>0 );
     }
 
 }

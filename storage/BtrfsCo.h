@@ -43,10 +43,25 @@ class BtrfsCo : public Container
 	BtrfsCo(const BtrfsCo& c);
 	virtual ~BtrfsCo();
 
+	void addFromVolume( const Volume& v );
+	void eraseVolume( Volume* v );
+
+	int createSubvolume( const string& device, const string& name );
+	int removeSubvolume( const string& device, const string& name );
+	bool deviceToUuid( const string& device, string& uuid );
+
+	int doRemove( Volume* v );
+
 	static storage::CType staticType() { return storage::BTRFSC; }
 	friend std::ostream& operator<< (std::ostream&, const BtrfsCo& );
 
+	int commitChanges( CommitStage stage, Volume* vol );
+	void getToCommit( storage::CommitStage stage, list<const Container*>& col,
+			  list<const Volume*>& vo ) const;
+
+
 	int removeVolume( Volume* v );
+	int removeUuid( const string& uuid );
 	bool equalContent( const Container& rhs ) const;
 	void saveData(xmlNode* node) const;
 
