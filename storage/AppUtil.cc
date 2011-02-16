@@ -533,6 +533,22 @@ logStreamClose(LogLevel level, const char* file, unsigned line, const char* func
     }
 
 
+    bool
+    mkdtemp(string& path)
+    {
+	char* tmp = strdup(path.c_str());
+	if (!::mkdtemp(tmp))
+	{
+	    free(tmp);
+	    return false;
+	}
+
+	path = tmp;
+	free(tmp);
+	return true;
+    }
+
+
 bool
 readlink(const string& path, string& buf)
 {

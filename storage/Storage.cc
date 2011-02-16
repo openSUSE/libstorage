@@ -153,15 +153,12 @@ void
 Storage::initialize()
     {
     initialized = true;
-    char tbuf[32] = "/tmp/libstorage-XXXXXX";
-    if( mkdtemp( tbuf )==NULL )
+
+    tempdir = "/tmp/libstorage-XXXXXX";
+    if (!mkdtemp(tempdir))
 	{
-	y2err("tmpdir creation " << tbuf << " failed. Aborting...");
+	y2err("tmpdir creation " << tempdir << " failed. Aborting...");
 	exit(EXIT_FAILURE);
-	}
-    else
-	{
-	tempdir = tbuf;
 	}
 
     bindtextdomain("libstorage", "/usr/share/locale");
@@ -6530,26 +6527,35 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     return ret;
 }
 
+
 bool Storage::mountTmp( const Volume* vol, string& mdir, bool ro )
     {
     bool ret = false;
     removeDmTableTo( *vol );
-    mdir = tmpDir() + "/tmp-" + (ro?"ro-mp":"mp");
-    y2mil( "mdir:" << mdir << " ro:" << ro );
-    unlink( mdir.c_str() );
-    rmdir( mdir.c_str() );
-    string opts = vol->getFstabOption();
-    if( vol->getFs()==NTFS )
+    mdir = tmpDir() + "/tmp-" + (ro?"ro-mp":"mp") + "-XXXXXX";
+    if (mkdtemp(mdir))
+    {
+	y2mil( "mdir:" << mdir << " ro:" << ro );
+
+	string opts = vol->getFstabOption();
+	if( vol->getFs()==NTFS )
 	{
-	if( !opts.empty() )
-	    opts += ",";
-	opts += "show_sys_files";
+	    if( !opts.empty() )
+		opts += ",";
+	    opts += "show_sys_files";
 	}
-    if( mkdir( mdir.c_str(), 0700 )==0 &&
-	mountDev( vol->device(), mdir, ro, opts ) )
-	ret = true;
-    else
-	mdir.erase();
+
+	if( mountDev( vol->device(), mdir, ro, opts ) )
+	{
+	    ret = true;
+	}
+	else
+	{
+	    rmdir(mdir.c_str());
+	    mdir.erase();
+	}
+    }
+
     y2mil( "ret:" << ret << " mp:" << mdir );
     return( ret );
     }

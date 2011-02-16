@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Feb 16 11:12:02 CET 2011 - aschnell@suse.de
+
+- make temporary mounts more robust (see bnc #672118)
+
+-------------------------------------------------------------------
 Thu Feb  3 15:54:24 CET 2011 - fehr@suse.de
 
 - add options provided in addNfs call to volume automatically
