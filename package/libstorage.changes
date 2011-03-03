@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar  3 19:31:43 CET 2011 - fehr@suse.de
+
+- bugfixes and improvements in BTRFS handling
+
+-------------------------------------------------------------------
 Wed Feb 16 11:12:02 CET 2011 - aschnell@suse.de
 
 - make temporary mounts more robust (see bnc #672118)
