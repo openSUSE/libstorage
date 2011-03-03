@@ -1808,7 +1808,7 @@ bool Volume::needCryptsetup() const
     bool ret = (dmcrypt()!=dmcrypt_active) &&
 	       (encryption==ENC_NONE || encryption!=orig_encryption || 
 	        !crypt_pwd.empty() || isTmpCryptMp(mp) ||
-		(encryption==ENC_LUKS&&!isTmpCryptMp(mp)) );
+		(encryption==ENC_LUKS&&!isTmpCryptMp(mp)&&isUsedBy(UB_LVM)) );
     if( dmcrypt() && encryption!=ENC_NONE &&
         ((!crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd) ||
 	 (crypt_pwd.empty() && isTmpCryptMp(mp) && format)) )
