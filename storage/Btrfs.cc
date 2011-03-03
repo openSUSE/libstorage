@@ -97,6 +97,8 @@ int Btrfs::doDeleteSubvol()
     bool needUmount = false;
     Storage* st = NULL;
     string m = getMount();
+    if( !silent )
+	getStorage()->showInfoCb( deleteSubvolText(true) );
     if( !isMounted() )
 	{
 	st = getContainer()->getStorage();
@@ -138,6 +140,8 @@ int Btrfs::doCreateSubvol()
     bool needUmount = false;
     Storage* st = NULL;
     string m = getMount();
+    if( !silent )
+	getStorage()->showInfoCb( createSubvolText(true) );
     if( !isMounted() )
 	{
 	st = getContainer()->getStorage();
@@ -307,7 +311,7 @@ Text Btrfs::deleteSubvolText(bool doing) const
     Text txt;
     unsigned cnt, dummy;
     countSubvolAddDel( dummy, cnt );
-    string vols = subvolNames( true );
+    string vols = subvolNames(false);
     if( doing )
 	{
 	if( cnt<=1 )
@@ -340,13 +344,16 @@ Text Btrfs::deleteSubvolText(bool doing) const
 void Btrfs::getInfo( BtrfsInfo& tinfo ) const
     {
     Volume::getInfo(info.v);
-    info.devices = devices;
+    info.devices = boost::join( devices, "\n" );
+    info.subvol.erase();
 
     for( list<Subvolume>::const_iterator i=subvol.begin(); 
 	 i!=subvol.end(); ++i )
 	 {
+	 if( !info.subvol.empty() )
+	    info.subvol += '\n';
 	 if( !i->deleted() )
-	    info.subvol.push_back( *i );
+	    info.subvol += i->path();
 	 }
     tinfo = info;
     }

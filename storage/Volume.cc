@@ -896,7 +896,18 @@ int Volume::doFormat()
 		{
 		cmd += params + " ";
 		}
-	    cmd += quote(mountDevice());
+	    if( fs==BTRFS && cType()==BTRFSC && getEncryption()==ENC_NONE )
+		{
+		const Btrfs* l = static_cast<const Btrfs*>(this);
+		list<string> li = l->getDevices();
+		for( list<string>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		    {
+		    cmd += ' ';
+		    cmd += quote(*i );
+		    }
+		}
+	    else
+		cmd += quote(mountDevice());
 	    SystemCmd c;
 	    c.setOutputProcessor(progressbar);
 	    c.execute( cmd );

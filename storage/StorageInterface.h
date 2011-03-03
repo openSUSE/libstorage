@@ -535,8 +535,8 @@ namespace storage
     {
 	BtrfsInfo() {}
 	VolumeInfo v;
-	list<string> devices;
-	list<SubvolInfo> subvol;
+	string devices;
+	string subvol;
     };
 
     /**
@@ -1081,6 +1081,14 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getDmInfo( deque<DmInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for btrfs devices in system
+	 *
+	 * @param plist list of records that get filled with btrfs specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getBtrfsInfo( deque<BtrfsInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for dmraid devices in system

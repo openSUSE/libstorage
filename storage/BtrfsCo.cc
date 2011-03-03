@@ -41,14 +41,14 @@ namespace storage
 
 
     BtrfsCo::BtrfsCo(Storage* s)
-	: Container(s, "btrfs", "/dev/", staticType())
+	: Container(s, "btrfs", "/dev/btrfs", staticType())
     {
 	y2deb("constructing BtrfsCo");
     }
 
 
     BtrfsCo::BtrfsCo(Storage* s, SystemInfo& systeminfo)
-	: Container(s, "btrfs", "/dev/", staticType(), systeminfo)
+	: Container(s, "btrfs", "/dev/btrfs", staticType(), systeminfo)
     {
 	y2deb("constructing BtrfsCo");
 	getBtrfsData(systeminfo);
@@ -103,7 +103,16 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		else
 		    y2war( "device " << *d << " not found" );
 		}
-	    Btrfs* b = new Btrfs( *this, *cv, sum_size, e.devices );
+	    list<string> devs;
+	    for( list<string>::const_iterator i=e.devices.begin(); i!=e.devices.end(); ++i )
+		{
+		const Device* v;
+		if( getStorage()->findDevice( *i, v ) )
+		    devs.push_back( v->device() );
+		else
+		    devs.push_back( *i );
+		}
+	    Btrfs* b = new Btrfs( *this, *cv, sum_size, devs );
 	    y2mil( "alt_names:" << an );
 	    b->setAltNames( an );
 	    vols.push_back(b);
@@ -194,8 +203,11 @@ bool
 BtrfsCo::findBtrfs( const string& id, BtrfsIter& i )
     {
     BtrfsPair p=btrfsPair(Btrfs::notDeleted);
+    string uuid( id );
+    if( boost::starts_with( uuid, "UUID=" ))
+	uuid = uuid.substr( 5 );
     i=p.begin();
-    while( i!=p.end() && i->getUuid()!=id )
+    while( i!=p.end() && i->getUuid()!=uuid )
 	++i;
     if( i==p.end() && !p.empty() )
 	{

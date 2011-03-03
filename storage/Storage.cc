@@ -5251,6 +5251,19 @@ Storage::getDmmultipathInfo( const string& name,
     return( ret );
 }
 
+int Storage::getBtrfsInfo( deque<storage::BtrfsInfo>& plist )
+    {
+    int ret = 0;
+    plist.clear();
+    assertInit();
+    ConstBtrfsPair p = btrfsPair(Btrfs::notDeleted);
+    for( ConstBtrfsIterator i = p.begin(); i != p.end(); ++i )
+	{
+	plist.push_back( BtrfsInfo() );
+	i->getInfo( plist.back() );
+	}
+    return( ret );
+    }
 
 list<string> Storage::getAllUsedFs() const 
 {
