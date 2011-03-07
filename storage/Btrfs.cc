@@ -253,6 +253,46 @@ Btrfs::deleteSubvolume( const string& name )
     return( ret );
     }
 
+void Btrfs::unuseDev() const
+    {
+    for( list<string>::const_iterator s=devices.begin(); s!=devices.end(); ++s )
+	getContainer()->getStorage()->clearUsedBy(*s);
+    for( list<string>::const_iterator s=dev_add.begin(); s!=dev_add.end(); ++s )
+	getContainer()->getStorage()->clearUsedBy(*s);
+    }
+
+int Btrfs::clearSignature()
+    {
+    int ret = 0;
+    // no need to actually remove signature from single volume btrfs filesystems
+    if( devices.size()>1 )
+	{
+	for( list<string>::const_iterator s=devices.begin(); s!=devices.end(); ++s )
+	    getContainer()->getStorage()->zeroDevice(*s,0);
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+Text Btrfs::removeText(bool doing) const
+    {
+    Text txt;
+    string d = boost::join( devices, " " );
+    if( doing )
+	{
+	// displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+	txt = sformat( _("Deleting Btrfs volume on devices %1$s"), d.c_str() );
+	}
+    else
+	{
+	// displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+										        // %2$s is replaced by size (e.g. 623.5 MB)
+											txt = sformat( _("Delete Btrfs volume on devices %1$s (%2$s)"), 
+		       d.c_str(), sizeString().c_str() );
+	}
+    return( txt );
+    }
+
 void
 Btrfs::getCommitActions(list<commitAction>& l) const
     {

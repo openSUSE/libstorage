@@ -59,8 +59,8 @@ class BtrfsCo : public Container
 	void getToCommit( storage::CommitStage stage, list<const Container*>& col,
 			  list<const Volume*>& vo ) const;
 
-
 	int removeVolume( Volume* v );
+	int removeVolume( Volume* v, bool quiet );
 	int removeUuid( const string& uuid );
 	bool equalContent( const Container& rhs ) const;
 	void saveData(xmlNode* node) const;

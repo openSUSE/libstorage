@@ -57,6 +57,7 @@ class Btrfs : public Volume
 	Text createSubvolText(bool doing) const;
 	Text deleteSubvolText(bool doing) const;
 	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
+	Text removeText( bool doing ) const;
 
 	void saveData(xmlNode* node) const;
 	friend std::ostream& operator<< (std::ostream& s, const Btrfs& l );
@@ -64,6 +65,9 @@ class Btrfs : public Volume
 	void getInfo( storage::BtrfsInfo& info ) const;
 	bool equalContent( const Btrfs& rhs ) const;
 	void logDifference(std::ostream& log, const Btrfs& rhs) const;
+	void unuseDev() const;
+	int clearSignature();
+
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
 	static bool needCreateSubvol( const Btrfs& v );
@@ -72,6 +76,7 @@ class Btrfs : public Volume
     protected:
 	string subvolNames( bool added ) const; 
 	list<string> devices;
+	list<string> dev_add;
 	list<Subvolume> subvol;
 
 	mutable storage::BtrfsInfo info; // workaround for broken ycp bindings

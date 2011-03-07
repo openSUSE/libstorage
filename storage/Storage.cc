@@ -3122,7 +3122,7 @@ Storage::removeVolume( const string& device )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol, true ) )
+    else if( findVolume( device, cont, vol, false ) )
 	{
 	if( canRemove( *vol ) )
 	    {
@@ -7086,17 +7086,20 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
     SystemCmd c;
     string cmd;
 
-    startK = min(startK, sizeK);
+    if( sizeK>0 )
+	startK = min(startK, sizeK);
     cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK) + " conv=nocreat";
     if (c.execute(cmd) != 0)
 	ret = STORAGE_ZERO_DEVICE_FAILED;
 
-    endK = min(endK, sizeK);
-    cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
-	" bs=1k count=" + decString(endK) + " conv=nocreat";
-    if (c.execute(cmd) != 0)
-	ret = STORAGE_ZERO_DEVICE_FAILED;
-
+    if( sizeK>0 )
+	{
+	endK = min(endK, sizeK);
+	cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
+	    " bs=1k count=" + decString(endK) + " conv=nocreat";
+	if (c.execute(cmd) != 0)
+	    ret = STORAGE_ZERO_DEVICE_FAILED;
+	}
     y2mil("ret:" << ret);
     return ret;
 }

@@ -291,30 +291,52 @@ int BtrfsCo::removeUuid( const string& uuid )
     y2mil( "uuid:" << uuid );
     BtrfsIter b;
     if( findBtrfs( uuid, b ) )
-	ret = removeVolume( &(*b) );
+	ret = removeVolume( &(*b), true );
     else
 	ret = BTRFS_REMOVE_NOT_FOUND;
     y2mil( "ret:" << ret );
     return( ret );
     }
 
-int BtrfsCo::removeVolume( Volume* v )
+int BtrfsCo::removeVolume( Volume* v, bool quiet )
     {
     int ret = 0;
-    y2mil("name:" << v->name());
+    y2mil("qiet:" << quiet);
+    y2mil("vol:" << *v);
     v->setDeleted();
-    v->setSilent();
-    getStorage()->clearUsedBy(v->device());
+    if( quiet )
+	v->setSilent();
+    Btrfs * b = dynamic_cast<Btrfs *>(v);
+    if( b )
+	b->unuseDev();
+    else
+	y2err( "no btrfs volume:" << *v );
     y2mil("ret:" << ret);
     return( ret );
+    }
+
+int BtrfsCo::removeVolume( Volume* v )
+    {
+    return( removeVolume( v, false ));
     }
 
 int
 BtrfsCo::doRemove( Volume* v )
     {
     int ret = 0;
-    if( !removeFromList(v) )
-	ret = BTRFS_REMOVE_NO_BTRFS;
+    Btrfs *b = dynamic_cast<Btrfs *>(v);
+    if( b != NULL )
+	{
+	if( !silent )
+	    {
+	    getStorage()->showInfoCb( b->removeText(true) );
+	    }
+	ret = b->clearSignature();
+	if( ret==0 && !removeFromList(v) )
+	    ret = BTRFS_REMOVE_NO_BTRFS;
+	}
+    else
+	ret = BTRFS_REMOVE_INVALID_VOLUME;
     y2mil("ret:" << ret);
     return( ret );
     }
