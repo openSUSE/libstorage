@@ -156,7 +156,7 @@ MdPart::getCommitActions(list<commitAction>& l) const
     if( p )
         {
         if( s==l.size() && Partition::toChangeId( *p ) )
-            l.push_back(commitAction(INCREASE, cont->staticType(),
+            l.push_back(commitAction(INCREASE, cont->type(),
 				     setTypeText(false), this, false));
         }
     }

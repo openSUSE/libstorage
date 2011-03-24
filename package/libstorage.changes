@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 24 17:28:53 CET 2011 - fehr@suse.de
+
+- add code to add/remove volumes to/from BTRFS volume
+
+-------------------------------------------------------------------
 Thu Mar  3 19:31:43 CET 2011 - fehr@suse.de
 
 - bugfixes and improvements in BTRFS handling

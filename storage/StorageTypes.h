@@ -54,7 +54,8 @@ inline bool operator<(CType a, CType b)
 	2, // DMRAID
 	9, // NFSC
 	3, // DMMULTIPATH
-	4  // MDPART
+	4, // MDPART
+       10, // BTRFSC
     };
 
     bool ret = order[a] < order[b];

@@ -534,6 +534,10 @@ class DiskData;
 
 	int createSubvolume( const string& device, const string& name );
 	int removeSubvolume( const string& device, const string& name );
+	int extendBtrfsVolume( const string& device, const string& dev );
+	int extendBtrfsVolume( const string& device, const deque<string>& devs );
+	int shrinkBtrfsVolume( const string& device, const string& dev );
+	int shrinkBtrfsVolume( const string& device, const deque<string>& devs );
 	int newBtrfs( const string& device );
 
 	void getCommitInfos(list<CommitInfo>& infos) const;

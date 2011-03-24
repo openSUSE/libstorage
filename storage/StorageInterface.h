@@ -536,6 +536,8 @@ namespace storage
 	BtrfsInfo() {}
 	VolumeInfo v;
 	string devices;
+	string devices_add;
+	string devices_rem;
 	string subvol;
     };
 
@@ -768,6 +770,7 @@ namespace storage
 	LVM_LV_NOT_SNAPSHOT = -4030,
 	LVM_LV_HAS_SNAPSHOTS = -4031,
 	LVM_LV_IS_SNAPSHOT = -4032,
+	LVM_LIST_EMPTY = -4033,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -868,6 +871,15 @@ namespace storage
 	BTRFS_REMOVE_NOT_FOUND = -15009,
 	BTRFS_REMOVE_NO_BTRFS = -15010,
 	BTRFS_REMOVE_INVALID_VOLUME = -15011,
+	BTRFS_CHANGE_READONLY = -15012,
+	BTRFS_DEV_ALREADY_CONTAINED = -15013,
+	BTRFS_DEVICE_UNKNOWN = -15014,
+	BTRFS_DEVICE_USED = -15015,
+	BTRFS_HAS_NONE_DEV = -15016,
+	BTRFS_DEV_NOT_FOUND = -15017,
+	BTRFS_EXTEND_FAIL = -15018,
+	BTRFS_REDUCE_FAIL = -15019,
+	BTRFS_LIST_EMPTY = -15020,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -2183,6 +2195,28 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeSubvolume( const string& device, const string& name ) = 0;
+
+	/**
+	 * Extend a BTRFS volume with additional devices
+	 *
+	 * @param name name of BTRFS volume (this can contain a device name
+	 *    or be specified as "UUID=<uuid>")
+	 * @param devs list with devices to add to that BTRFS volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int extendBtrfsVolume( const string& name,
+				       const deque<string>& devs ) = 0;
+
+	/**
+	 * Shrink a BTRFS volume by some devices
+	 *
+	 * @param name name of BTRFS volume (this can contain a device name
+	 *    or be specified as "UUID=<uuid>")
+	 * @param devs list with devices to remove from that BTRFS volume
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int shrinkBtrfsVolume( const string& name,
+				       const deque<string>& devs ) = 0;
 
 	/**
 	 * Gets info about actions to be executed after next call to commit().

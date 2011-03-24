@@ -50,14 +50,24 @@ class Btrfs : public Volume
 
 	int createSubvolume( const string& name );
 	int deleteSubvolume( const string& name );
+	int extendVolume( const string& dev );
+	int extendVolume( const list<string>& devs );
+	int shrinkVolume( const string& dev );
+	int shrinkVolume( const list<string>& devs );
 
 	void getCommitActions(list<commitAction>& l) const;
 	int doDeleteSubvol();
 	int doCreateSubvol();
-	Text createSubvolText(bool doing) const;
-	Text deleteSubvolText(bool doing) const;
-	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
+	int doReduce();
+	int doExtend();
+	Text createSubvolText(bool doing, const string& name) const;
+	Text deleteSubvolText(bool doing, const string& name) const;
+	Text extendText(bool doing, const string& device) const;
+	Text reduceText(bool doing, const string& device) const;
 	Text removeText( bool doing ) const;
+
+	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
+	list<string> getSubvolAddDel( bool ) const;
 
 	void saveData(xmlNode* node) const;
 	friend std::ostream& operator<< (std::ostream& s, const Btrfs& l );
@@ -72,11 +82,14 @@ class Btrfs : public Volume
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
 	static bool needCreateSubvol( const Btrfs& v );
 	static bool needDeleteSubvol( const Btrfs& v );
+	static bool needReduce( const Btrfs& v );
+	static bool needExtend( const Btrfs& v );
 
     protected:
 	string subvolNames( bool added ) const; 
 	list<string> devices;
 	list<string> dev_add;
+	list<string> dev_rem;
 	list<Subvolume> subvol;
 
 	mutable storage::BtrfsInfo info; // workaround for broken ycp bindings

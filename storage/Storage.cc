@@ -4381,6 +4381,82 @@ int Storage::removeSubvolume( const string& device, const string& name )
     return( ret );
     }
 
+int Storage::extendBtrfsVolume( const string& device, const string& dev )
+    {
+    deque<string> d;
+    d.push_back(dev);
+    return( extendBtrfsVolume(device,d));
+    }
+
+int Storage::extendBtrfsVolume( const string& device, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("device:" << device << "devices:" << devs );
+    BtrfsCo* co;
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( devs.empty() )
+	{
+	ret = BTRFS_LIST_EMPTY;
+	}
+    else if( haveBtrfs(co) )
+	{
+	list<string> d(devs.begin(), devs.end());
+	ret = co->extendVolume( device, d );
+	}
+    else
+	{
+	ret = STORAGE_BTRFS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int Storage::shrinkBtrfsVolume( const string& device, const string& dev )
+    {
+    deque<string> d;
+    d.push_back(dev);
+    return( shrinkBtrfsVolume(device,d));
+    }
+
+int Storage::shrinkBtrfsVolume( const string& device, const deque<string>& devs )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("device:" << device << "devices:" << devs );
+    BtrfsCo* co;
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( devs.empty() )
+	{
+	ret = BTRFS_LIST_EMPTY;
+	}
+    else if( haveBtrfs(co) )
+	{
+	list<string> d(devs.begin(), devs.end());
+	ret = co->shrinkVolume( device, d );
+	}
+    else
+	{
+	ret = STORAGE_BTRFS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
 int Storage::checkCache()
     {
     int ret=0;

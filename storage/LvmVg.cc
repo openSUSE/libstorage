@@ -156,6 +156,10 @@ LvmVg::extendVg( const list<string>& devs )
 	{
 	ret = LVM_CHANGE_READONLY;
 	}
+    else if( devs.empty() )
+	{
+	ret = LVM_LIST_EMPTY;
+	}
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
@@ -245,6 +249,10 @@ LvmVg::reduceVg( const list<string>& devs )
     if( readonly() )
 	{
 	ret = LVM_CHANGE_READONLY;
+	}
+    else if( devs.empty() )
+	{
+	ret = LVM_LIST_EMPTY;
 	}
 
     list<string>::const_iterator i = devs.begin();
@@ -1632,8 +1640,11 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 	info.devices_rem += i->device;
 	++i;
 	}
-    y2mil( "device:" << info.devices << " devices_add:" << info.devices_add <<
-           " devices_rem:" << info.devices_rem );
+    y2mil( "device:" << info.devices );
+    if( !info.devices_add.empty() )
+	y2mil( " devices_add:" << info.devices_add );
+    if( !info.devices_rem.empty() )
+        y2mil( " devices_rem:" << info.devices_rem );
     tinfo = info;
     }
 

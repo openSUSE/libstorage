@@ -48,6 +48,10 @@ class BtrfsCo : public Container
 
 	int createSubvolume( const string& device, const string& name );
 	int removeSubvolume( const string& device, const string& name );
+	int extendVolume( const string& device, const string& dev );
+	int extendVolume( const string& device, const list<string>& devs );
+	int shrinkVolume( const string& device, const string& dev );
+	int shrinkVolume( const string& device, const list<string>& devs );
 	bool deviceToUuid( const string& device, string& uuid );
 
 	int doRemove( Volume* v );

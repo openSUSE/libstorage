@@ -166,7 +166,9 @@ int BtrfsCo::createSubvolume( const string& device, const string& name )
     int ret = 0;
     y2mil( "device:" << device << " name:" << name );
     BtrfsIter i;
-    if( findBtrfs( device, i ))
+    if( readonly() )
+	ret = BTRFS_CHANGE_READONLY;
+    else if( findBtrfs( device, i ))
 	ret = i->createSubvolume( name );
     else
 	ret = BTRFS_VOLUME_NOT_FOUND;
@@ -179,7 +181,9 @@ int BtrfsCo::removeSubvolume( const string& device, const string& name )
     int ret = 0;
     y2mil( "device:" << device << " name:" << name );
     BtrfsIter i;
-    if( findBtrfs( device, i ))
+    if( readonly() )
+	ret = BTRFS_CHANGE_READONLY;
+    else if( findBtrfs( device, i ))
 	ret = i->deleteSubvolume( name );
     else
 	ret = BTRFS_VOLUME_NOT_FOUND;
@@ -187,6 +191,49 @@ int BtrfsCo::removeSubvolume( const string& device, const string& name )
     return( ret );
     }
 
+int BtrfsCo::extendVolume( const string& device, const string& dev )
+    {
+    list<string> d;
+    d.push_back(dev);
+    return( extendVolume(device,d));
+    }
+
+int BtrfsCo::extendVolume( const string& device, const list<string>& devs )
+    {
+    int ret = 0;
+    y2mil( "device:" << device << " devices:" << devs );
+    BtrfsIter i;
+    if( readonly() )
+	ret = BTRFS_CHANGE_READONLY;
+    else if( findBtrfs( device, i ))
+	ret = i->extendVolume( devs );
+    else
+	ret = BTRFS_VOLUME_NOT_FOUND;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int BtrfsCo::shrinkVolume( const string& device, const string& dev )
+    {
+    list<string> d;
+    d.push_back(dev);
+    return( shrinkVolume(device,d));
+    }
+
+int BtrfsCo::shrinkVolume( const string& device, const list<string>& devs )
+    {
+    int ret = 0;
+    y2mil( "device:" << device << " devs:" << devs );
+    BtrfsIter i;
+    if( readonly() )
+	ret = BTRFS_CHANGE_READONLY;
+    else if( findBtrfs( device, i ))
+	ret = i->shrinkVolume( devs );
+    else
+	ret = BTRFS_VOLUME_NOT_FOUND;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
 void
 BtrfsCo::eraseVolume( Volume* v )
@@ -212,13 +259,20 @@ BtrfsCo::findBtrfs( const string& id, BtrfsIter& i )
     if( i==p.end() && !p.empty() )
 	{
 	i=p.begin();
-	while( i!=p.end() && i->device()!=id )
+	bool found = false;
+	while( i!=p.end() && !found )
 	    {
-	    const list<string>& al( i->altNames() );
-	    if( find( al.begin(), al.end(), id )==al.end() )
+	    found = i->device()==id;
+	    if( !found )
+		{
+		const list<string>& al( i->altNames() );
+		found = find( al.begin(), al.end(), id )!=al.end();
+		}
+	    if( !found )
 		++i;
 	    }
 	}
+    y2mil( "id:" << id << " ret:" << (i!=p.end()) );
     return( i!=p.end() );
     }
 
@@ -246,7 +300,23 @@ int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
     {
     y2mil("name:" << name() << " stage:" << stage);
     int ret = Container::commitChanges( stage, vol );
-    if( ret==0 && stage==SUBVOL )
+    if( ret==0 && stage==DECREASE )
+	{
+	Btrfs * b = dynamic_cast<Btrfs *>(vol);
+	if( b!=NULL )
+	    ret = b->doReduce();
+	else
+	    ret = BTRFS_COMMIT_INVALID_VOLUME;
+	}
+    else if( ret==0 && stage==INCREASE )
+	{
+	Btrfs * b = dynamic_cast<Btrfs *>(vol);
+	if( b!=NULL )
+	    ret = b->doExtend();
+	else
+	    ret = BTRFS_COMMIT_INVALID_VOLUME;
+	}
+    else if( ret==0 && stage==SUBVOL )
 	{
 	Btrfs * b = dynamic_cast<Btrfs *>(vol);
 	if( b!=NULL )
@@ -269,7 +339,21 @@ void BtrfsCo::getToCommit( storage::CommitStage stage, list<const Container*>& c
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
-    if( stage==SUBVOL )
+    if( stage==DECREASE )
+	{
+	ConstBtrfsPair p = btrfsPair( Btrfs::needReduce );
+	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
+	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		vol.push_back( &(*i) );
+	}
+    else if( stage==INCREASE )
+	{
+	ConstBtrfsPair p = btrfsPair( Btrfs::needExtend );
+	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
+	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		vol.push_back( &(*i) );
+	}
+    else if( stage==SUBVOL )
 	{
 	ConstBtrfsPair p = btrfsPair( Btrfs::needDeleteSubvol );
 	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
