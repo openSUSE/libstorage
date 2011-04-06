@@ -42,6 +42,7 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v, unsigned long long sz,
     {
     y2mil("constructed btrfs vol size:" << sz << " devs:" << devs );
     y2mil("constructed btrfs vol from:" << v );
+    changeMountBy(MOUNTBY_UUID);
     setSize( sz );
     }
 
@@ -49,6 +50,7 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
     {
     y2mil("constructed btrfs vol from:" << v );
     y2mil( "fs:" << fs << " det:" << detected_fs );
+    changeMountBy(MOUNTBY_UUID);
     devices.push_back(v.device());
     }
 
