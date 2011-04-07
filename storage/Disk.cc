@@ -1572,6 +1572,9 @@ int Disk::doCreateLabel()
     removePresentPartitions();
     std::ostringstream cmd_line;
     classic(cmd_line);
+    cmd_line << MDADMBIN " --zero-superblock --force " << quote(device());
+    execCheckFailed( cmd_line.str() );
+    cmd_line.str("");
     cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
     if( execCheckFailed( cmd_line.str() ) )
 	{
