@@ -49,6 +49,8 @@
 #include "storage/Loop.h"
 #include "storage/BtrfsCo.h"
 #include "storage/Btrfs.h"
+#include "storage/TmpfsCo.h"
+#include "storage/Tmpfs.h"
 #include "storage/NfsCo.h"
 #include "storage/Nfs.h"
 #include "storage/FilterIterator.h"
@@ -228,6 +230,8 @@ class DiskData;
 	    { return( d.type()==storage::BTRFSC ); }
 	static bool isNotBtrfs( const Container&d )
 	    { return( d.type()!=storage::BTRFSC ); }
+	static bool isTmpfs( const Container&d )
+	    { return( d.type()==storage::TMPFSC ); }
 
     public:
 
@@ -340,6 +344,7 @@ class DiskData;
 	int getNfsInfo( deque<storage::NfsInfo>& plist );
 	int getLoopInfo( deque<storage::LoopInfo>& plist );
 	int getBtrfsInfo( deque<storage::BtrfsInfo>& plist );
+	int getTmpfsInfo( deque<storage::TmpfsInfo>& plist );
 	int getDmraidInfo( const string& name,
 	                   deque<storage::DmraidInfo>& plist );
 	int getDmmultipathInfo( const string& name,
@@ -539,6 +544,9 @@ class DiskData;
 	int shrinkBtrfsVolume( const string& device, const string& dev );
 	int shrinkBtrfsVolume( const string& device, const deque<string>& devs );
 	int newBtrfs( const string& device );
+
+	int addTmpfsMount( const string& mp, const string& opts );
+	int removeTmpfsMount( const string& mp );
 
 	void getCommitInfos(list<CommitInfo>& infos) const;
 	const string& getLastAction() const { return lastAction.text; }
@@ -1678,6 +1686,66 @@ class DiskData;
 	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p, true )) );
 	    }
 
+// iterators over tmpfs volumes
+    protected:
+	// protected typedefs for iterators over tmpfs volumes
+	typedef CastIterator<ConstVolInter, Tmpfs *> ConstTmpfsInter;
+	template< class Pred >
+	    struct ConstTmpfsPI { typedef ContainerIter<Pred,
+	                                             ConstTmpfsInter> type; };
+	typedef CheckFnc<const Tmpfs> CheckFncTmpfs;
+	typedef CheckerIterator< CheckFncTmpfs, ConstTmpfsPI<CheckFncTmpfs>::type,
+	                         ConstTmpfsInter, Tmpfs > ConstTmpfsPIterator;
+    public:
+	// public typedefs for iterators over tmpfs volumes
+	template< class Pred >
+	    struct ConstTmpfsI
+		{ typedef ContainerDerIter<Pred, typename ConstTmpfsPI<Pred>::type,
+		                           const Tmpfs> type; };
+	template< class Pred >
+	    struct TmpfsCondIPair
+		{ typedef MakeCondIterPair<Pred, typename ConstTmpfsI<Pred>::type> type;};
+	typedef DerefIterator<ConstTmpfsPIterator, const Tmpfs> ConstTmpfsIterator;
+	typedef IterPair<ConstTmpfsIterator> ConstTmpfsPair;
+
+	// public member functions for iterators over tmpfs volumes
+	ConstTmpfsPair tmpfsPair( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
+	    {
+	    return( ConstTmpfsPair( tmpfsBegin( CheckTmpfs ), tmpfsEnd( CheckTmpfs ) ));
+	    }
+	ConstTmpfsIterator tmpfsBegin( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
+	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
+	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs )));
+	    }
+	ConstTmpfsIterator tmpfsEnd( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
+	    {
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
+	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
+	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs, true )));
+	    }
+	template< class Pred > typename TmpfsCondIPair<Pred>::type tmpfsCondPair( const Pred& p ) const
+	    {
+	    return( typename TmpfsCondIPair<Pred>::type( tmpfsCondBegin( p ), tmpfsCondEnd( p ) ) );
+	    }
+	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondBegin( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
+	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
+	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p) ) );
+	    }
+	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondEnd( const Pred& p ) const
+	    {
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
+	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
+	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p, true )) );
+	    }
+
 // iterators over nfs devices
     protected:
 	// protected typedefs for iterators over nfs devices
@@ -1956,6 +2024,7 @@ class DiskData;
 	bool discoverMdPVols();
 	void detectLoops(SystemInfo& systeminfo);
 	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
+	void detectTmpfs(const EtcFstab& fstab, SystemInfo& systeminfo);
 	void detectLvmVgs(SystemInfo& systeminfo);
 	void detectDmraid(SystemInfo& systeminfo);
 	void detectDmmultipath(SystemInfo& systeminfo);
@@ -1998,6 +2067,7 @@ class DiskData;
 	bool haveNfs( NfsCo*& co );
 	bool haveLoop( LoopCo*& loop );
 	bool haveBtrfs( BtrfsCo*& co );
+	bool haveTmpfs( TmpfsCo*& co );
 	int removeContainer( Container* val );
 	void logContainersAndVolumes(const string& Dir) const;
 

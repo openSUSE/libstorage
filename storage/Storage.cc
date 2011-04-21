@@ -291,7 +291,10 @@ void Storage::detectObjects()
     
     detectLoops(systeminfo);
     if( !instsys() )
+	{
 	detectNfs(*fstab, systeminfo);
+	detectTmpfs(*fstab, systeminfo);
+	}
 
     if (!danglingUsedBy.empty())
 	y2err("dangling used-by left after detection: " << danglingUsedBy);
@@ -587,6 +590,23 @@ void Storage::detectBtrfs(SystemInfo& systeminfo)
     else if (autodetect() && getenv("LIBSTORAGE_NO_NFS") == NULL)
 	{
 	NfsCo* v = new NfsCo(this, fstab, systeminfo);
+	if( !v->isEmpty() )
+	    addToList( v );
+	else
+	    delete v;
+	}
+    }
+
+void
+Storage::detectTmpfs(const EtcFstab& fstab, SystemInfo& systeminfo)
+    {
+    if (testmode())
+	{
+	}
+    else if (autodetect() && getenv("LIBSTORAGE_NO_TMPFS") == NULL)
+	{
+	TmpfsCo* v = new TmpfsCo(this, fstab, systeminfo);
+	logCo( v );
 	if( !v->isEmpty() )
 	    addToList( v );
 	else
@@ -4311,6 +4331,16 @@ bool Storage::haveBtrfs( BtrfsCo*& co )
     return( i != p.end() );
     }
 
+bool Storage::haveTmpfs( TmpfsCo*& co )
+    {
+    co = NULL;
+    CPair p = cPair(isTmpfs);
+    ContIterator i = p.begin();
+    if( i != p.end() )
+	co = static_cast<TmpfsCo*>(&(*i));
+    return( i != p.end() );
+    }
+
 int Storage::removeDmraid( const string& name )
     {
     int ret = 0;
@@ -4448,6 +4478,73 @@ int Storage::shrinkBtrfsVolume( const string& device, const deque<string>& devs 
     else
 	{
 	ret = STORAGE_BTRFS_CO_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int Storage::addTmpfsMount( const string& mp, const string& opts )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("mount:" << mp << " opts:" << opts );
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    TmpfsCo *co = NULL;
+    bool have = true;
+    if( ret==0 )
+	{
+	have = haveTmpfs(co);
+	if( !have )
+	    co = new TmpfsCo( this );
+	}
+    if( ret==0 && co!=NULL )
+	{
+	ret = co->addTmpfs(mp, opts);
+	}
+    if( !have )
+	{
+	if( ret==0 )
+	    addToList( co );
+	else if( co!=NULL )
+	    delete co;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int Storage::removeTmpfsMount( const string& mp )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("mount:" << mp );
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    TmpfsCo *co = NULL;
+    bool have = true;
+    if( ret==0 )
+	{
+	have = haveTmpfs(co);
+	}
+    if( ret==0 && co!=NULL )
+	{
+	ret = co->removeTmpfs(mp);
+	}
+    else if( ret==0 )
+	{
+	ret = STORAGE_TMPFS_CO_NOT_FOUND;
 	}
     if( ret==0 )
 	{
@@ -5336,6 +5433,20 @@ int Storage::getBtrfsInfo( deque<storage::BtrfsInfo>& plist )
     for( ConstBtrfsIterator i = p.begin(); i != p.end(); ++i )
 	{
 	plist.push_back( BtrfsInfo() );
+	i->getInfo( plist.back() );
+	}
+    return( ret );
+    }
+
+int Storage::getTmpfsInfo( deque<storage::TmpfsInfo>& plist )
+    {
+    int ret = 0;
+    plist.clear();
+    assertInit();
+    ConstTmpfsPair p = tmpfsPair(Tmpfs::notDeleted);
+    for( ConstTmpfsIterator i = p.begin(); i != p.end(); ++i )
+	{
+	plist.push_back( TmpfsInfo() );
 	i->getInfo( plist.back() );
 	}
     return( ret );

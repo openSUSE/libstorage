@@ -30,7 +30,7 @@ namespace storage
     // strings must match /etc/fstab
     static const string fs_type_names[] = {
 	"unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs", "vfat", "xfs", "jfs", "hfs",
-	"ntfs-3g", "swap", "hfsplus", "nfs", "nfs4", "none"
+	"ntfs-3g", "swap", "hfsplus", "nfs", "nfs4", "tmpfs", "none"
     };
 
     const vector<string> EnumInfo<FsType>::names(fs_type_names, fs_type_names +
@@ -102,7 +102,7 @@ namespace storage
 
 
     static const string c_type_names[] = {
-	"UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART", "BTRFS"
+	"UNKNOWN", "DISK", "MD", "LOOP", "LVM", "DM", "DMRAID", "NFS", "DMMULTIPATH", "MDPART", "BTRFS", "TMPFS"
     };
 
     const vector<string> EnumInfo<CType>::names(c_type_names, c_type_names +

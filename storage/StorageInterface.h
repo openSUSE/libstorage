@@ -133,7 +133,7 @@ using std::list;
 namespace storage
 {
     enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, EXT4, BTRFS, VFAT, XFS, JFS, HFS, NTFS,
-		  SWAP, HFSPLUS, NFS, NFS4, FSNONE };
+		  SWAP, HFSPLUS, NFS, NFS4, TMPFS, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
@@ -156,7 +156,7 @@ namespace storage
 
     enum UsedByType { UB_NONE, UB_LVM, UB_MD, UB_MDPART, UB_DM, UB_DMRAID, UB_DMMULTIPATH, UB_BTRFS };
 
-    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART, BTRFSC };
+    enum CType { CUNKNOWN, DISK, MD, LOOP, LVM, DM, DMRAID, NFSC, DMMULTIPATH, MDPART, BTRFSC, TMPFSC };
 
     enum Transport { TUNKNOWN, SBP, ATA, FC, ISCSI, SAS, SATA, SPI, USB };
 
@@ -542,6 +542,15 @@ namespace storage
     };
 
     /**
+     * Contains info about tmpfs volume.
+     */
+    struct TmpfsInfo
+    {
+	TmpfsInfo() {}
+	VolumeInfo v;
+    };
+
+    /**
      * Contains info about a DM volume.
      */
     struct DmInfo
@@ -694,6 +703,7 @@ namespace storage
 	STORAGE_MDPART_CO_NOT_FOUND = -2033,
 	STORAGE_DEVICE_NOT_FOUND = -2034,
 	STORAGE_BTRFS_CO_NOT_FOUND = -2035,
+	STORAGE_TMPFS_CO_NOT_FOUND = -2036,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -731,7 +741,7 @@ namespace storage
 	VOLUME_CRYPTSETUP_FAILED = -3034,
 	VOLUME_CRYPTUNSETUP_FAILED = -3035,
 	VOLUME_FORMAT_NOT_IMPLEMENTED = -3036,
-	VOLUME_FORMAT_NFS_IMPOSSIBLE = -3037,
+	VOLUME_FORMAT_IMPOSSIBLE = -3037,
 	VOLUME_CRYPT_NFS_IMPOSSIBLE = -3038,
 	VOLUME_REMOUNT_FAILED = -3039,
 	VOLUME_TUNEREISERFS_FAILED = -3040,
@@ -880,6 +890,10 @@ namespace storage
 	BTRFS_EXTEND_FAIL = -15018,
 	BTRFS_REDUCE_FAIL = -15019,
 	BTRFS_LIST_EMPTY = -15020,
+
+	TMPFS_REMOVE_INVALID_VOLUME = -16001,
+	TMPFS_REMOVE_NO_TMPFS = -16002,
+	TMPFS_REMOVE_NOT_FOUND = -16003,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -1102,6 +1116,14 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getBtrfsInfo( deque<BtrfsInfo>& plist ) = 0;
+
+	/**
+	 * Query infos for tmpfs devices in system
+	 *
+	 * @param plist list of records that get filled with tmpfs specific info
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getTmpfsInfo( deque<TmpfsInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for dmraid devices in system
@@ -2217,6 +2239,23 @@ namespace storage
 	 */
 	virtual int shrinkBtrfsVolume( const string& name,
 				       const deque<string>& devs ) = 0;
+
+	/**
+	 * Add new tmpfs filesystem 
+	 *
+	 * @param mp mount point for the tmpfs
+	 * @param opts mount options for tmpfs mount
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int addTmpfsMount( const string& mp, const string& opts ) = 0;
+
+	/**
+	 * Remove tmpfs filesystem 
+	 *
+	 * @param mp mount point for the tmpfs
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int removeTmpfsMount( const string& mp ) = 0;
 
 	/**
 	 * Gets info about actions to be executed after next call to commit().

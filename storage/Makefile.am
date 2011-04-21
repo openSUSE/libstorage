@@ -19,6 +19,7 @@ libstorage_la_SOURCES =					\
 	    DmCo.cc		DmCo.h			\
 	  MdCo.cc		MdCo.h			\
 	  BtrfsCo.cc		BtrfsCo.h		\
+	  TmpfsCo.cc		TmpfsCo.h		\
 	  MdPartCo.cc		MdPartCo.h		\
 	  LoopCo.cc		LoopCo.h		\
 	  NfsCo.cc		NfsCo.h			\
@@ -31,6 +32,7 @@ libstorage_la_SOURCES =					\
 	      Dmmultipath.cc	Dmmultipath.h		\
 	  Md.cc			Md.h			\
 	  Btrfs.cc		Btrfs.h			\
+	  Tmpfs.cc		Tmpfs.h			\
 	  MdPart.cc		MdPart.h		\
 	  Loop.cc		Loop.h			\
 	  Nfs.cc		Nfs.h			\

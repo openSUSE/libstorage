@@ -175,7 +175,7 @@ class Storage;
 	virtual Text resizeText(bool doing) const;
 	virtual Text formatText(bool doing) const;
 	virtual void getCommitActions(list<commitAction>& l) const;
-	Text mountText(bool doing) const;
+	virtual Text mountText(bool doing) const;
 	Text labelText(bool doing) const;
 	Text losetupText(bool doing) const;
 	Text crsetupText(bool doing) const;

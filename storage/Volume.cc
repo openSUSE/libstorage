@@ -377,14 +377,13 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	    }
 	}
 
-    if (!found && !mp.empty())
-    {
-	setIgnoreFstab(true);
-    }
-
     if( !found && !mp.empty() )
 	{
 	found = fstabData.findMount( mp, entry );
+	}
+    if (!found && !mp.empty())
+	{
+	setIgnoreFstab(true);
 	}
     if( found )
 	{
@@ -415,28 +414,30 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	}
     }
 
-
 void Volume::getMountData( const ProcMounts& mounts, bool swap_only )
     {
-    y2mil( "this:" << *this );
-    y2mil( "swap_only:" << swap_only << " mountDevice:" << mountDevice() );
-    mp = mounts.getMount(mountDevice());
-    if( mp.empty() )
+    if( fs != TMPFS )
 	{
-	mp = mounts.getMount(alt_names);
-	}
-    if( !mp.empty() )
-	{
-	is_mounted = true;
-	if( swap_only && mp!="swap" )
+	y2mil( "this:" << *this );
+	y2mil( "swap_only:" << swap_only << " mountDevice:" << mountDevice() );
+	mp = mounts.getMount(mountDevice());
+	if( mp.empty() )
 	    {
-	    is_mounted = false;
-	    mp.clear();
+	    mp = mounts.getMount(alt_names);
 	    }
-	if( is_mounted )
-	    y2mil(device() << " mounted on " << mp);
+	if( !mp.empty() )
+	    {
+	    is_mounted = true;
+	    if( swap_only && mp!="swap" )
+		{
+		is_mounted = false;
+		mp.clear();
+		}
+	    if( is_mounted )
+		y2mil(device() << " mounted on " << mp);
+	    }
+	orig_mp = mp;
 	}
-    orig_mp = mp;
     }
 
 void Volume::getLoopData( SystemCmd& loopData )
@@ -582,9 +583,9 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	    {
 	    ret = VOLUME_FORMAT_FS_TOO_SMALL;
 	    }
-	else if( new_fs == NFS || new_fs == NFS4 )
+	else if( new_fs == NFS || new_fs == NFS4 || new_fs == TMPFS )
 	    {
-	    ret = VOLUME_FORMAT_NFS_IMPOSSIBLE;
+	    ret = VOLUME_FORMAT_IMPOSSIBLE;
 	    }
 	else
 	    {
@@ -1080,11 +1081,15 @@ int Volume::umount( const string& mp )
     else if( loop_active )
 	d = loop_dev;
     string cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(d);
-    int ret = cmd.execute( cmdline );
-    if( ret != 0 && mountDevice()!=dev )
+    int ret = -1;
+    if( fs!=TMPFS )
 	{
-	cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(dev);
-	ret = cmd.execute( cmdline );
+	int ret = cmd.execute( cmdline );
+	if( ret != 0 && mountDevice()!=dev )
+	    {
+	    cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(dev);
+	    ret = cmd.execute( cmdline );
+	    }
 	}
     list<string> mps;
     if( ret!=0 && !mp.empty() && mp!="swap" )
@@ -1286,7 +1291,7 @@ int Volume::doMount()
 	bool do_chmod = isTmpCryptMp(mp) && mp!="swap";
 	mode_t mode, omode;
 
-	if( fs!=NFS && fs!=NFS4 )
+	if( fs!=NFS && fs!=NFS4 && fs!=TMPFS )
 	    {
 	    getStorage()->removeDmTableTo(*this);
 	    ret = checkDevice(mountDevice());
@@ -2562,11 +2567,14 @@ Text Volume::fstabUpdateText() const
 string Volume::getFstabDevice() const
     {
     string ret = dev;
-    const Loop* l = NULL;
-    if (cType() == LOOP)
-	l = static_cast<const Loop*>(this);
-    if( l && dmcrypt() )
-	ret = l->loopFile();
+    if( cType() == TMPFSC )
+	ret = "tmpfs";
+    else if (cType() == LOOP)
+	{
+	const Loop* l = static_cast<const Loop*>(this);
+	if( l && dmcrypt() )
+	    ret = l->loopFile();
+	}
     y2mil( "ret:" << ret );
     return( ret );
     }
@@ -2574,21 +2582,21 @@ string Volume::getFstabDevice() const
 string Volume::getFstabDentry() const
     {
     string ret;
-    const Loop* l = NULL;
-    if (cType() == LOOP)
-	l = static_cast<const Loop*>(this);
     if (cType() != LOOP)
 	{
 	if( dmcrypt() )
 	    ret = inCryptotab()?dev:dmcrypt_dev;
+	else if( cType() == TMPFSC )
+	    ret = "tmpfs";
 	else
 	    ret = getMountByString();
 	}
     else
 	{
+	const Loop* l = static_cast<const Loop*>(this);
 	if( dmcrypt() )
 	    ret = dmcrypt_dev;
-	else
+	else if( l )
 	    ret = l->loopFile();
 	}
     return( ret );
@@ -2662,7 +2670,7 @@ static bool haveQuota( const string& fstopt )
 bool Volume::noFreqPassno() const
     {
     return( fs==SWAP || fs==NFS || fs==NFS4 || fs==VFAT || fs==NTFS || 
-            fs==FSUNKNOWN || is_loop || optNoauto() );
+            fs==FSUNKNOWN || fs==TMPFS || is_loop || optNoauto() );
     }
 
 unsigned Volume::fstabFreq() const
@@ -2702,8 +2710,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	    (deleted() || (mp.empty() && !pvEncryption())) &&
 	    (fstab->findDevice( dev, entry ) ||
 	     fstab->findDevice( alt_names, entry ) ||
-	     (cType()==LOOP && fstab->findMount( orig_mp, entry )) ||
-	     (cType()==LOOP && fstab->findMount( mp, entry ))) )
+	     ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( orig_mp, entry )) ||
+	     ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( mp, entry ))) )
 	    {
 	    changed = true;
 	    if( !silent )
@@ -2719,7 +2727,9 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	    if( fstab->findDevice( dev, entry ) ||
 		fstab->findDevice( alt_names, entry ) ||
 		(cType() == LOOP && getLoopFile(fname) &&
-		     fstab->findDevice( fname, entry )))
+		     fstab->findDevice( fname, entry )) ||
+		(cType() == TMPFSC && !mp.empty() &&
+		     fstab->findMount( mp, entry )))
 		{
 		y2mil( "changed:" << entry );    
 		changed = force_rewrite;

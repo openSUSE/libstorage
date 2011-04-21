@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Apr 21 11:16:43 CEST 2011 - fehr@suse.de
+
+- add suport for tmpfs (fate#303810)
+
+-------------------------------------------------------------------
 Thu Mar 24 17:28:53 CET 2011 - fehr@suse.de
 
 - add code to add/remove volumes to/from BTRFS volume

@@ -106,6 +106,8 @@ class EtcFstab
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
 	bool findDevice( const std::list<string>& dl, FstabEntry& entry ) const;
 	bool findMount( const string& mount, FstabEntry& entry ) const;
+	bool findMount( const string& mount ) const
+	    { FstabEntry e; return( findMount( mount,e )); }
 	bool findUuidLabel( const string& uuid, const string& label,
 			    FstabEntry& entry ) const;
 	bool findIdPath(const list<string>& id, const string& path, FstabEntry& entry) const;
