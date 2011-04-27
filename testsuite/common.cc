@@ -100,6 +100,7 @@ namespace storage
 		case SWAP: cout << "SWAP"; break;
 		case NFS: cout << "NFS"; break;
 		case NFS4: cout << "NFS4"; break;
+		case TMPFS: cout << "TMPFS"; break;
 		case FSNONE: cout << "NONE"; break;
 	    }
 	    cout << endl;
