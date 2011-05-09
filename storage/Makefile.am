@@ -65,7 +65,7 @@ libstorage_la_SOURCES =					\
 	Region.cc		Region.h		\
 	StorageTmpl.h		StorageDefines.h
 
-libstorage_la_LDFLAGS = -version-info 2:0
+libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
 libstorage_la_LIBADD = -lblocxx -lxml2
 
 pkgincludedir = $(includedir)/storage

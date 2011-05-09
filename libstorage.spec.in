@@ -10,30 +10,15 @@ License:	GPL
 Group:		System/Libraries
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Source:		libstorage-%{version}.tar.bz2
-Source1:	libstorage-rpmlintrc
 
 prefix:		/usr
 
 BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel
 
-Requires:	parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
-Requires:	coreutils udev util-linux >= 2.16 grep lsscsi
-%ifarch s390 s390x
-Requires:	s390-tools
-%endif
-
-PreReq:		%fillup_prereq
-Obsoletes:	yast2-storage-lib
-Provides:	yast2-storage-lib
-Summary:	Library for storage management
+Summary:	-
 
 %description
-This package contains libstorage, a library for storage management.
-
-Authors:
---------
-    Thomas Fehr <fehr@suse.de>
-    Arvin Schnell <aschnell@suse.de>
+-
 
 %prep
 %setup -n libstorage-%{version}
@@ -72,7 +57,28 @@ rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
 %clean
 rm -rf "$RPM_BUILD_ROOT"
 
-%files -f libstorage.lang
+%package -n libstorage@LIBVERSION_MAJOR@
+
+Requires:	parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
+Requires:	coreutils udev util-linux >= 2.16 grep lsscsi
+%ifarch s390 s390x
+Requires:	s390-tools
+%endif
+
+PreReq:		%fillup_prereq
+Obsoletes:	yast2-storage-lib
+Provides:	yast2-storage-lib
+Summary:	Library for storage management
+
+%description -n libstorage@LIBVERSION_MAJOR@
+This package contains libstorage, a library for storage management.
+
+Authors:
+--------
+    Thomas Fehr <fehr@suse.de>
+    Arvin Schnell <aschnell@suse.de>
+
+%files -n libstorage@LIBVERSION_MAJOR@ -f libstorage.lang
 %defattr(-,root,root)
 %{_libdir}/libstorage.so.*
 %dir /var/lock/libstorage
@@ -81,20 +87,20 @@ rm -rf "$RPM_BUILD_ROOT"
 %doc %{prefix}/share/doc/packages/libstorage/AUTHORS
 %doc %{prefix}/share/doc/packages/libstorage/COPYING
 
-%post
+%post -n libstorage@LIBVERSION_MAJOR@
 /sbin/ldconfig
 %{fillup_only -an storage}
 
-%postun
+%postun -n libstorage@LIBVERSION_MAJOR@
 /sbin/ldconfig
 
-%package devel
-Requires:	libstorage = %version
+%package -n libstorage-devel
+Requires:	libstorage@LIBVERSION_MAJOR@ = %version
 Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel libxml2-devel
 Summary:	Header files and documentation for libstorage
 Group:		Development/Languages/C and C++
 
-%description devel
+%description -n libstorage-devel
 This package contains header files and documentation for developing with
 libstorage.
 
@@ -103,7 +109,7 @@ Authors:
     Thomas Fehr <fehr@suse.de>
     Arvin Schnell <aschnell@suse.de>
 
-%files devel
+%files -n libstorage-devel
 %defattr(-,root,root)
 %{_libdir}/libstorage.la
 %{_libdir}/libstorage.so
@@ -111,8 +117,8 @@ Authors:
 %doc %{prefix}/share/doc/packages/libstorage/autodocs
 %doc %{prefix}/share/doc/packages/libstorage/examples
 
-%package python
-Requires:	libstorage = %version
+%package -n libstorage-python
+Requires:	libstorage@LIBVERSION_MAJOR@ = %version
 Summary:	Python bindings for libstorage
 Group:		System/Libraries
 
@@ -123,17 +129,17 @@ Authors:
 --------
     Arvin Schnell <aschnell@suse.de>
 
-%files python
+%files -n libstorage-python
 %defattr(-,root,root)
 %{python_sitelib}/libstorage.py*
 %attr(755,root,root) %{python_sitearch}/_libstorage.so
 
-%package testsuite
-Requires:	libstorage = %version
-Summary:	testsuite for libstorage
+%package -n libstorage-testsuite
+Requires:	libstorage@LIBVERSION_MAJOR@ = %version
+Summary:	Testsuite for libstorage
 Group:		Development/Tools/Other
 
-%description testsuite
+%description -n libstorage-testsuite
 This package contains testsuite programs for libstorage.
 
 Authors:
