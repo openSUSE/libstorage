@@ -46,7 +46,7 @@ namespace storage
     protected:
 
 	enum NodeType { NODE_DISK, NODE_DMMULTIPATH, NODE_DMRAID, NODE_PARTITION, NODE_MD, NODE_MDPART,
-			NODE_LVMVG, NODE_LVMLV, NODE_DM, NODE_MOUNTPOINT };
+			NODE_LVMVG, NODE_LVMLV, NODE_DM, NODE_BTRFS, NODE_MOUNTPOINT };
 
 	struct Node
 	{
@@ -343,8 +343,23 @@ namespace storage
 
 		} break;
 
+		case BTRFSC: {
+
+		    deque<BtrfsInfo> btrfss;
+		    s->getBtrfsInfo(btrfss);
+
+		    for (deque<BtrfsInfo>::const_iterator i2 = btrfss.begin(); i2 != btrfss.end(); ++i2)
+		    {
+			Node btrfs_node(NODE_BTRFS, i2->v.uuid, i2->v.name, i2->v.sizeK);
+			nodes.push_back(btrfs_node);
+
+			processUsedby(btrfs_node, i2->v.usedBy);
+			processMount(btrfs_node, i2->v);
+		    }
+
+		} break;
+
 		case LOOP:
-		case BTRFSC:
 		case NFSC:
 		case TMPFSC:
 		case CUNKNOWN:
@@ -494,6 +509,10 @@ namespace storage
 	    case Graph::NODE_LVMLV:
 		s << ", color=\"#6622dd\", fillcolor=\"#bb99ff\"" << ", tooltip="
 		  << Graph::makeTooltip(_("Logical Volume"), node.device, node.sizeK);
+		break;
+	    case Graph::NODE_BTRFS:
+		s << ", color=\"#17534f\", fillcolor=\"#28e3d8\"" << ", tooltip="
+		  << Graph::makeTooltip(_("Btrfs Volume"), node.device, node.sizeK);
 		break;
 	    case Graph::NODE_DM:
 		s << ", color=\"#885511\", fillcolor=\"#ddbb99\"" << ", tooltip="
