@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu May 12 13:31:16 CEST 2011 - fehr@suse.de
+
+- fix missing crypttab entry in installed system (bnc#693325)
+- 2.21.1
+
+-------------------------------------------------------------------
 Thu Apr 21 11:16:43 CEST 2011 - fehr@suse.de
 
 - add support for tmpfs (fate#303810)

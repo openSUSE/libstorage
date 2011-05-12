@@ -553,6 +553,11 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 			alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
 		}
 	    }
+	    if (entry.is_lvm)
+	    {
+		setUsedBy(UB_LVM,"");
+
+	    }
 	}
     }
 
