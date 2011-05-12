@@ -192,7 +192,7 @@ class Storage;
 	int getFreeLoop( SystemCmd& loopData, const std::list<unsigned>& ids );
 	void getInfo( storage::VolumeInfo& info ) const;
 	void mergeFstabInfo( storage::VolumeInfo& tinfo, const FstabEntry& fste ) const;
-	void updateFsData();
+	void updateFsData( bool setUsedByLvm=false );
 	void triggerUdevUpdate() const;
 	static bool loopInUse(const Storage* sto, const string& loopdev);
 
@@ -213,7 +213,7 @@ class Storage;
 	MountByType defaultMountBy() const;
 	bool allowedMountBy(MountByType mby) const;
 	bool findBlkid( const Blkid& blkid, Blkid::Entry& entry );
-	void getFsData(const Blkid& blkid );
+	void getFsData(const Blkid& blkid, bool setUsedByLvm=false );
 	void getLoopData( SystemCmd& loopData );
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );

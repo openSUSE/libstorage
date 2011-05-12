@@ -524,7 +524,7 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 
 
     void
-    Volume::getFsData(const Blkid& blkid)
+    Volume::getFsData(const Blkid& blkid, bool setUsedByLvm )
     {
 	Blkid::Entry entry;
 
@@ -553,7 +553,7 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 			alt_names.push_back("/dev/disk/by-label/" + udevEncode(label));
 		}
 	    }
-	    if (entry.is_lvm)
+	    if (setUsedByLvm && entry.is_lvm)
 	    {
 		setUsedBy(UB_LVM,"");
 
@@ -1017,10 +1017,10 @@ int Volume::doFormat()
 
 
     void
-    Volume::updateFsData()
+    Volume::updateFsData( bool setUsedByLvm )
     {
 	Blkid blkid(mountDevice());
-	getFsData(blkid);
+	getFsData(blkid,setUsedByLvm);
 	if( getFs()==FSUNKNOWN && getEncryption()==ENC_NONE &&
 	    orig_encryption==ENC_NONE )
 	    {
@@ -2194,6 +2194,7 @@ int Volume::doCrsetup()
     int ret = 0;
     bool force_fstab_rewrite = false;
     bool losetup_done = false;
+    bool did_cryptsetup = false;
     if( needLosetup(true) )
 	{
 	ret = doLosetup();
@@ -2208,10 +2209,11 @@ int Volume::doCrsetup()
 	ret = doCryptsetup();
 	if( ret!=0 && losetup_done )
 	    loUnsetup();
+	did_cryptsetup = true;
 	}
     if (ret == 0)
     {
-	updateFsData(); 
+	updateFsData(did_cryptsetup); 
     }
     if (ret == 0 && encryption != ENC_NONE)
     {
