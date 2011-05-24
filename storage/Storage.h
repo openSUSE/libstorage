@@ -543,8 +543,6 @@ class DiskData;
 	int extendBtrfsVolume( const string& device, const deque<string>& devs );
 	int shrinkBtrfsVolume( const string& device, const string& dev );
 	int shrinkBtrfsVolume( const string& device, const deque<string>& devs );
-	int newBtrfs( const string& device );
-
 	int addTmpfsMount( const string& mp, const string& opts );
 	int removeTmpfsMount( const string& mp );
 

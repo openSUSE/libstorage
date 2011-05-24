@@ -2520,42 +2520,54 @@ int Volume::prepareRemove()
 void
 Volume::getCommitActions(list<commitAction>& l) const
     {
+    Volume const * p=this;
+    if( getStorage()->isUsedBySingleBtrfs(*this))
+	{
+	Volume const * n=NULL;
+	string id = "UUID="+getUsedBy().front().device();
+	y2mil( "usedBy:" << id );
+	if( getStorage()->findVolume( id, n ))
+	    {
+	    p = n;
+	    y2mil( "found:" << *p );
+	    }
+	}
     if( deleted() )
 	{
-	l.push_back(commitAction(DECREASE, cType(), removeText(false), this, true));
+	l.push_back(commitAction(DECREASE, cType(), p->removeText(false), this, true));
 	}
     else if( needShrink() && !format )
 	{
-	l.push_back(commitAction(DECREASE, cType(), resizeText(false), this, true));
+	l.push_back(commitAction(DECREASE, cType(), p->resizeText(false), this, true));
 	}
     else if( created() )
 	{
-	l.push_back(commitAction(INCREASE, cType(), createText(false), this, false));
+	l.push_back(commitAction(INCREASE, cType(), p->createText(false), this, false));
 	}
     else if( needExtend() && !format )
 	{
-	l.push_back(commitAction(INCREASE, cType(), resizeText(false), this, true));
+	l.push_back(commitAction(INCREASE, cType(), p->resizeText(false), this, true));
 	}
     else if( format )
 	{
-	l.push_back(commitAction(FORMAT, cType(), formatText(false), this, true));
+	l.push_back(commitAction(FORMAT, cType(), p->formatText(false), this, true));
 	}
     else if( needCrsetup(false) )
 	{
 	l.push_back(commitAction(mp.empty()?INCREASE:FORMAT, cType(), 
-	                         crsetupText(false), this, mp.empty()));
+	                         p->crsetupText(false), this, mp.empty()));
 	}
     else if (mp != orig_mp || (getStorage()->instsys() && mp=="swap"))
 	{
-	l.push_back(commitAction(MOUNT, cType(), mountText(false), this, false));
+	l.push_back(commitAction(MOUNT, cType(), p->mountText(false), this, false));
 	}
     else if( label != orig_label )
 	{
-	l.push_back(commitAction(MOUNT, cType(), labelText(false), this, false));
+	l.push_back(commitAction(MOUNT, cType(), p->labelText(false), this, false));
 	}
     else if( needFstabUpdate() )
 	{
-	l.push_back(commitAction(MOUNT, cType(), fstabUpdateText(), this, false));
+	l.push_back(commitAction(MOUNT, cType(), p->fstabUpdateText(), this, false));
 	}
     }
 

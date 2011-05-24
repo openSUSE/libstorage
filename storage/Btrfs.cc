@@ -50,8 +50,10 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
     {
     y2mil("constructed btrfs vol from:" << v );
     y2mil( "fs:" << fs << " det:" << detected_fs );
+    setCreated(false);
     changeMountBy(MOUNTBY_UUID);
     devices.push_back(v.device());
+    y2mil("constructed btrfs vol:" << *this );
     }
 
 Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node ) : Volume(d, node)
@@ -529,6 +531,20 @@ void
 Btrfs::getCommitActions(list<commitAction>& l) const
     {
     Volume::getCommitActions( l );
+    if( !l.empty() && l.back().stage==FORMAT )
+	{
+	Volume const *v = NULL;
+	if( getStorage()->findVolume( l.back().vol()->device(), v, true ) &&
+	    getStorage()->isUsedBySingleBtrfs(*v) )
+	    {
+	    y2mil( "found:" << *v );
+	    if( v->created() )
+		{
+		y2mil( "removing:" << l.back() );
+		l.pop_back();
+		}
+	    }
+	}
     unsigned rem, add;
     list<string>::const_iterator i;
     if( !dev_add.empty() )
@@ -552,7 +568,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	list<string> sl = getSubvolAddDel( true );
 	for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
 	    l.push_back(commitAction(SUBVOL, cont->type(),
-				     createSubvolText(false,*i), this, true));
+				     createSubvolText(false,*i), this, false));
 	}
     }
 

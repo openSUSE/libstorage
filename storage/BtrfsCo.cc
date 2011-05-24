@@ -155,9 +155,15 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
     }
 
 void
-BtrfsCo::addFromVolume( const Volume& v )
+BtrfsCo::addFromVolume( const Volume& v, string &uuid )
     {
     Btrfs* b = new Btrfs( *this, v );
+    unsigned long long uid = 12345;
+    BtrfsIter i;
+    while( findBtrfs(decString(uid),i) )
+	++uid;
+    uuid = decString(uid);
+    b->initUuid( uuid );
     vols.push_back(b);
     }
 

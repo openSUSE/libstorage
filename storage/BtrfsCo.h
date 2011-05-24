@@ -43,7 +43,7 @@ class BtrfsCo : public Container
 	BtrfsCo(const BtrfsCo& c);
 	virtual ~BtrfsCo();
 
-	void addFromVolume( const Volume& v );
+	void addFromVolume( const Volume& v, string& uuid );
 	void eraseVolume( Volume* v );
 
 	int createSubvolume( const string& device, const string& name );

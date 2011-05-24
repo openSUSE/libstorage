@@ -2344,13 +2344,16 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 		co = new BtrfsCo(this);
 	    if( co==NULL )
 		ret = STORAGE_MEMORY_EXHAUSTED;
+	    else if( !have_co )
+		addToList( co );
 	    if( ret==0 )
 		{
 		ret = vol->setFormat( format, fs );
 		if( ret==0 )
 		    {
-		    co->addFromVolume( *vol );
-		    vol->setUsedByUuid( UB_BTRFS, "12345" );
+		    string uuid;
+		    co->addFromVolume( *vol, uuid );
+		    vol->setUsedByUuid( UB_BTRFS, uuid );
 		    }
 		}
 	    }
@@ -5904,7 +5907,7 @@ bool Storage::findVolume( const string& device, Volume const * &vol,
     bool ret = false;
     vol = NULL;
     ConstVolIterator v;
-    if( findVolume( device, v, false, true ))
+    if( findVolume( device, v, false, no_btrfsc ))
 	{
 	vol = &(*v);
 	ret = true;
