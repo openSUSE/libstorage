@@ -398,7 +398,7 @@ int Btrfs::doCreateSubvol()
     int ret = 0;
     bool needUmount = false;
     Storage* st = NULL;
-    string m = getMount();
+    string m = getStorage()->prependRoot(getMount());
     if( !isMounted() )
 	{
 	st = getContainer()->getStorage();
@@ -410,14 +410,23 @@ int Btrfs::doCreateSubvol()
     if( ret==0 )
 	{
 	SystemCmd c;
-	string cmd = BTRFSBIN " subvolume create " + m + '/';
+	string cmd = BTRFSBIN " subvolume create ";
 	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
 	    {
 	    if( i->created() )
 		{
 		if( !silent )
 		    getStorage()->showInfoCb( createSubvolText(true,i->path()));
-		c.execute( cmd + i->path() );
+		y2mil( "dir:" << m << " path:" << i->path() );
+		string path = m + "/" + i->path();
+		string dir = path.substr( 0, path.find_last_of( "/" ) );
+		y2mil( "path:" << path << " dir:" << dir );
+		if( !checkDir( dir ) )
+		    {
+		    y2mil( "create path:" << dir );
+		    createPath( dir );
+		    }
+		c.execute( cmd + path );
 		if( c.retcode()==0 )
 		    i->setCreated(false);
 		else
