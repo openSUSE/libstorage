@@ -41,7 +41,11 @@ namespace storage
 	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print unit s print");
 
 	if (cmd.select("Partition Table:") > 0)
+	{
 	    label = extractNthWord(2, cmd.getLine(0, true));
+	    if (label == "unknown")
+		label.clear();
+	}
 	else
 	    y2war("could not find partition table");
 
