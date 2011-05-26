@@ -11,12 +11,14 @@ Group:		System/Libraries
 BuildRoot:	%{_tmppath}/%{name}-%{version}-build
 Source:		libstorage-%{version}.tar.bz2
 
+prefix:		/usr
+
 BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel
 
-Summary:	Dummy.
+Summary:	Library for storage management
 
 %description
-Dummy.
+This package contains libstorage, a library for storage management.
 
 %prep
 %setup -n libstorage-%{version}
