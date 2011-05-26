@@ -536,6 +536,53 @@ Text Btrfs::removeText(bool doing) const
     return( txt );
     }
 
+Text Btrfs::formatText(bool doing) const
+    {
+    Text txt;
+    bool done = false;
+    if( devices.size()+dev_add.size()==1 )
+	{
+	Volume const *v = NULL;
+	if( getStorage()->findVolume( devices.front(), v, true ))
+	    {
+	    y2mil( "found:" << *v );
+	    txt = v->formatText(doing);
+	    done = true;
+	    }
+	}
+    if( !done )
+	{
+	list<string> tl = devices;
+	tl.insert( tl.end(), dev_add.begin(), dev_add.end() );
+	string d = boost::join( tl, " " );
+	if( doing )
+	    {
+	    // displayed text during action,
+	    // %1$s is replaced by size (e.g. 623.5 MB)
+	    // %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+	    txt = sformat( _("Formatting Btrfs volume of size %1$s (used devices:%2$s)"),
+	                   sizeString().c_str(), d.c_str() );
+	    }
+	else
+	    {
+	    if( !mp.empty() )
+	    // displayed text before action, 
+	    // %1$s is replaced by size (e.g. 623.5 MB)
+	    // %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+	    // %3$s is replaced by mount point (e.g. /usr) 
+		txt = sformat( _("Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"), 
+			       sizeString().c_str(), d.c_str(), mp.c_str() );
+	    else 
+	    // displayed text before action,
+	    // %1$s is replaced by size (e.g. 623.5 MB)
+	    // %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+		txt = sformat( _("Format Btrfs volume of size %1$s (used devices:%2$s)"), 
+			       sizeString().c_str(), d.c_str() );
+	    }
+	}
+    return( txt );
+    }
+
 void
 Btrfs::getCommitActions(list<commitAction>& l) const
     {

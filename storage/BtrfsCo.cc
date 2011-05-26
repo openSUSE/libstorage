@@ -305,20 +305,28 @@ bool BtrfsCo::deviceToUuid( const string& device, string& uuid )
 int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
     {
     y2mil("name:" << name() << " stage:" << stage);
-    int ret = Container::commitChanges( stage, vol );
-    if( ret==0 && stage==DECREASE )
+    int ret = 0;
+    if( stage==DECREASE )
 	{
 	Btrfs * b = dynamic_cast<Btrfs *>(vol);
 	if( b!=NULL )
-	    ret = b->doReduce();
+	    {
+	    if( Btrfs::needReduce(*b) )
+		ret = b->doReduce();
+	    }
 	else
 	    ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}
-    else if( ret==0 && stage==INCREASE )
+    if( ret==0 )
+	ret = Container::commitChanges( stage, vol );
+    if( ret==0 && stage==INCREASE )
 	{
 	Btrfs * b = dynamic_cast<Btrfs *>(vol);
 	if( b!=NULL )
-	    ret = b->doExtend();
+	    {
+	    if( Btrfs::needExtend(*b) )
+		ret = b->doExtend();
+	    }
 	else
 	    ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}

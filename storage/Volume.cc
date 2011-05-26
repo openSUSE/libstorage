@@ -1089,7 +1089,7 @@ int Volume::umount( const string& mp )
     int ret = -1;
     if( fs!=TMPFS )
 	{
-	int ret = cmd.execute( cmdline );
+	ret = cmd.execute( cmdline );
 	if( ret != 0 && mountDevice()!=dev )
 	    {
 	    cmdline = ((detected_fs != SWAP)?UMOUNTBIN " ":SWAPOFFBIN " ") + quote(dev);

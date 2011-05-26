@@ -3145,7 +3145,7 @@ Storage::removeVolume( const string& device )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol, false ) )
+    else if( findVolume( device, cont, vol, true ) )
 	{
 	if( canRemove( *vol ) )
 	    {

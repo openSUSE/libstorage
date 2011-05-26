@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu May 26 16:07:46 CEST 2011 - fehr@suse.de
+
+- more btrfs related bugfixes
+
+-------------------------------------------------------------------
 Thu May 26 11:51:55 CEST 2011 - aschnell@suse.de
 
 - adapted to parted 2.4

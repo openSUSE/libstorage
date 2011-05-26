@@ -65,6 +65,7 @@ class Btrfs : public Volume
 	Text extendText(bool doing, const string& device) const;
 	Text reduceText(bool doing, const string& device) const;
 	Text removeText( bool doing ) const;
+	Text formatText( bool doing ) const;
 
 	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
 	list<string> getSubvolAddDel( bool ) const;
