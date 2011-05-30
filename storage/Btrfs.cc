@@ -117,7 +117,7 @@ Btrfs::createSubvolume( const string& name )
     list<Subvolume>::iterator i=subvol.begin();
     while( i!=subvol.end() && !i->deleted() && i->path()!=name )
 	++i;
-    if( i==subvol.end() )
+    if( i==subvol.end() || getFormat() )
 	{
 	Subvolume v( name );
 	v.setCreated();
