@@ -68,6 +68,8 @@ Requires:	s390-tools
 PreReq:		%fillup_prereq
 Obsoletes:	yast2-storage-lib
 Provides:	yast2-storage-lib
+Obsoletes:	libstorage < 2.21.2
+Provides:	libstorage = %{version}
 Summary:	Library for storage management
 
 %description -n libstorage@LIBVERSION_MAJOR@
