@@ -707,6 +707,30 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
+int Volume::prepareTmpMount( string& m, bool& needUmount )
+    {
+    int ret = 0;
+    needUmount=false;
+    m = getMount();
+    if( !isMounted() )
+	{
+	if( getStorage()->mountTmp( this, m ) )
+	    needUmount = true;
+	else
+	    ret = VOLUME_CANNOT_TMP_MOUNT;
+	}
+    y2mil( "ret:" << " mp:" << m << " needUmount:" << needUmount ); 
+    return( ret );
+    }
+
+int Volume::umountTmpMount( int ret )
+    {
+    int r = ret;
+    if( !getStorage()->umountDev( mountDevice() ) && r==0 )
+	r = VOLUME_CANNOT_TMP_UMOUNT;
+    return( r );
+    }
+
 Text Volume::formatText( bool doing ) const
     {
     Text txt;
@@ -794,6 +818,48 @@ static string handle_O_Features( const string& opts )
     return( ret );
     }
 
+int Volume::doFormatBtrfs()
+    {
+    int ret = 0;
+    SystemCmd c;
+    string cmd = "/sbin/mkfs.btrfs " + quote(mountDevice());
+    c.execute( cmd );
+    if( c.retcode()!=0 )
+	{
+	ret = VOLUME_FORMAT_FAILED;
+	setExtError( c );
+	}
+    if( ret==0 && cType()==BTRFSC && getEncryption()==ENC_NONE )
+	{
+	const Btrfs* l = static_cast<const Btrfs*>(this);
+	list<string> li = l->getDevices();
+	y2mil( "devices:" << li );
+	if( li.size()>1 )
+	    {
+	    cmd = BTRFSBIN " device add ";
+	    bool needUmount;
+	    string m;
+	    ret = prepareTmpMount( m, needUmount );
+	    if( ret==0 )
+		{
+		for( list<string>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		    {
+		    if( *i!=device() && *i!=mountDevice() )
+			{
+			c.execute( cmd + quote(*i) + " " + m );
+			if( c.retcode()!=0 )
+			    ret = VOLUME_BTRFS_ADD_FAILED;
+			}
+		    }
+		}
+	    if( needUmount )
+		ret = umountTmpMount( ret );
+	    }
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 int Volume::doFormat()
     {
     static int fcount=1000;
@@ -858,9 +924,6 @@ int Volume::doFormat()
 		params = "-t ext4 -v";
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
-	    case BTRFS:
-		cmd = "/sbin/mkfs.btrfs";
-		break;
 	    case REISERFS:
 		cmd = "/sbin/mkreiserfs";
 		params = "-f -f";
@@ -891,7 +954,9 @@ int Volume::doFormat()
 		ret = VOLUME_FORMAT_UNKNOWN_FS;
 		break;
 	    }
-	if( ret==0 )
+	if( ret==VOLUME_FORMAT_UNKNOWN_FS && fs==BTRFS )
+	    ret = doFormatBtrfs();
+	if( ret==0 && fs!=BTRFS )
 	    {
 	    cmd += " ";
 	    if( !mkfs_opt.empty() )
@@ -902,18 +967,7 @@ int Volume::doFormat()
 		{
 		cmd += params + " ";
 		}
-	    if( fs==BTRFS && cType()==BTRFSC && getEncryption()==ENC_NONE )
-		{
-		const Btrfs* l = static_cast<const Btrfs*>(this);
-		list<string> li = l->getDevices();
-		for( list<string>::const_iterator i=li.begin(); i!=li.end(); ++i )
-		    {
-		    cmd += ' ';
-		    cmd += quote(*i );
-		    }
-		}
-	    else
-		cmd += quote(mountDevice());
+	    cmd += quote(mountDevice());
 	    SystemCmd c;
 	    c.setOutputProcessor(progressbar);
 	    c.execute( cmd );

@@ -234,6 +234,9 @@ class Storage;
 	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
 	                  bool format ) const;
 	bool noFreqPassno() const;
+	int prepareTmpMount( string& m, bool& needUmount );
+	int umountTmpMount( int ret );
+	int doFormatBtrfs();
 
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
 	string getCryptsetupCmd( storage::EncryptType e, const string& dmdev,

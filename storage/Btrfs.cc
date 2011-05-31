@@ -263,18 +263,9 @@ int Btrfs::shrinkVolume( const list<string>& devs )
 int Btrfs::doExtend()
     {
     y2mil( "this:" << *this );
-    int ret = 0;
-    bool needUmount = false;
-    Storage* st = NULL;
-    string m = getMount();
-    if( !isMounted() )
-	{
-	st = getContainer()->getStorage();
-	if( st->mountTmp( this, m ) )
-	    needUmount = true;
-	else
-	    ret = BTRFS_CANNOT_TMP_MOUNT;
-	}
+    bool needUmount;
+    string m;
+    int ret = prepareTmpMount( m, needUmount );
     list<string> devs = dev_add;
     list<string>::const_iterator d = devs.begin();
     SystemCmd c;
@@ -294,12 +285,7 @@ int Btrfs::doExtend()
 	++d;
 	}
     if( needUmount )
-	{
-	if( !st->umountDev( device() ) && ret==0 )
-	    {
-	    ret = BTRFS_CANNOT_TMP_UMOUNT;
-	    }
-	}
+	ret = umountTmpMount( ret );
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -308,18 +294,9 @@ int Btrfs::doExtend()
 int Btrfs::doReduce()
     {
     y2mil( "this:" << *this );
-    int ret = 0;
-    bool needUmount = false;
-    Storage* st = NULL;
-    string m = getMount();
-    if( !isMounted() )
-	{
-	st = getContainer()->getStorage();
-	if( st->mountTmp( this, m ) )
-	    needUmount = true;
-	else
-	    ret = BTRFS_CANNOT_TMP_MOUNT;
-	}
+    bool needUmount;
+    string m;
+    int ret = prepareTmpMount( m, needUmount );
     list<string> devs = dev_rem;
     list<string>::const_iterator d = devs.begin();
     SystemCmd c;
@@ -339,12 +316,7 @@ int Btrfs::doReduce()
 	++d;
 	}
     if( needUmount )
-	{
-	if( !st->umountDev( device() ) && ret==0 )
-	    {
-	    ret = BTRFS_CANNOT_TMP_UMOUNT;
-	    }
-	}
+	ret = umountTmpMount( ret );
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -352,18 +324,9 @@ int Btrfs::doReduce()
 
 int Btrfs::doDeleteSubvol()
     {
-    int ret = 0;
-    bool needUmount = false;
-    Storage* st = NULL;
-    string m = getMount();
-    if( !isMounted() )
-	{
-	st = getContainer()->getStorage();
-	if( st->mountTmp( this, m ) )
-	    needUmount = true;
-	else
-	    ret = BTRFS_CANNOT_TMP_MOUNT;
-	}
+    bool needUmount;
+    string m;
+    int ret = prepareTmpMount( m, needUmount );
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -383,30 +346,16 @@ int Btrfs::doDeleteSubvol()
 	    }
 	}
     if( needUmount )
-	{
-	if( !st->umountDev( device() ) && ret==0 )
-	    {
-	    ret = BTRFS_CANNOT_TMP_UMOUNT;
-	    }
-	}
+	ret = umountTmpMount( ret );
     y2mil( "ret:" << ret );
     return( ret );
     }
 
 int Btrfs::doCreateSubvol()
     {
-    int ret = 0;
-    bool needUmount = false;
-    Storage* st = NULL;
-    string m = getStorage()->prependRoot(getMount());
-    if( !isMounted() )
-	{
-	st = getContainer()->getStorage();
-	if( st->mountTmp( this, m ) )
-	    needUmount = true;
-	else
-	    ret = BTRFS_CANNOT_TMP_MOUNT;
-	}
+    bool needUmount;
+    string m;
+    int ret = prepareTmpMount( m, needUmount );
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -435,12 +384,7 @@ int Btrfs::doCreateSubvol()
 	    }
 	}
     if( needUmount )
-	{
-	if( !st->umountDev( device() ) && ret==0 )
-	    {
-	    ret = BTRFS_CANNOT_TMP_UMOUNT;
-	    }
-	}
+	ret = umountTmpMount( ret );
     y2mil( "ret:" << ret );
     return( ret );
     }
