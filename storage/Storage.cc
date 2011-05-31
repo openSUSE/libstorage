@@ -1146,10 +1146,10 @@ void Storage::setRootPrefix(const string& root)
 
 string Storage::prependRoot(const string& mp) const
 {
-    if (mp == "swap")
+    if (mp == "swap" || rootprefix.empty() )
 	return mp;
 
-    if (rootprefix != "" && mp == "/")
+    if (mp == "/")
 	return rootprefix;
     else
 	return rootprefix + mp;

@@ -711,7 +711,7 @@ int Volume::prepareTmpMount( string& m, bool& needUmount )
     {
     int ret = 0;
     needUmount=false;
-    m = getMount();
+    m = getStorage()->prependRoot(getMount());
     if( !isMounted() )
 	{
 	if( getStorage()->mountTmp( this, m ) )
