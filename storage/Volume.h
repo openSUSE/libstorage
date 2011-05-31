@@ -235,7 +235,7 @@ class Storage;
 	                  bool format ) const;
 	bool noFreqPassno() const;
 	int prepareTmpMount( string& m, bool& needUmount );
-	int umountTmpMount( int ret );
+	int umountTmpMount( const string& m, int ret );
 	int doFormatBtrfs();
 
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;

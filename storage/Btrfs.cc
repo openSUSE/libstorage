@@ -285,7 +285,7 @@ int Btrfs::doExtend()
 	++d;
 	}
     if( needUmount )
-	ret = umountTmpMount( ret );
+	ret = umountTmpMount( m, ret );
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -316,7 +316,7 @@ int Btrfs::doReduce()
 	++d;
 	}
     if( needUmount )
-	ret = umountTmpMount( ret );
+	ret = umountTmpMount( m, ret );
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -346,7 +346,7 @@ int Btrfs::doDeleteSubvol()
 	    }
 	}
     if( needUmount )
-	ret = umountTmpMount( ret );
+	ret = umountTmpMount( m, ret );
     y2mil( "ret:" << ret );
     return( ret );
     }
@@ -384,7 +384,7 @@ int Btrfs::doCreateSubvol()
 	    }
 	}
     if( needUmount )
-	ret = umountTmpMount( ret );
+	ret = umountTmpMount( m, ret );
     y2mil( "ret:" << ret );
     return( ret );
     }

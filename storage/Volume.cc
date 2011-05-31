@@ -723,11 +723,13 @@ int Volume::prepareTmpMount( string& m, bool& needUmount )
     return( ret );
     }
 
-int Volume::umountTmpMount( int ret )
+int Volume::umountTmpMount( const string& m, int ret )
     {
     int r = ret;
     if( !getStorage()->umountDev( mountDevice() ) && r==0 )
 	r = VOLUME_CANNOT_TMP_UMOUNT;
+    if( m.substr( 0, 16 )== "/tmp/libstorage-" )
+	rmdir( m.c_str() );
     return( r );
     }
 
@@ -853,7 +855,7 @@ int Volume::doFormatBtrfs()
 		    }
 		}
 	    if( needUmount )
-		ret = umountTmpMount( ret );
+		ret = umountTmpMount( m, ret );
 	    }
 	}
     y2mil( "ret:" << ret );
