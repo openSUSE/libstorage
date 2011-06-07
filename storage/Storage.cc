@@ -1456,7 +1456,6 @@ Storage::createPartitionMax( const string& disk, PartitionType type,
     bool done = false;
     assertInit();
     y2mil("disk:" << disk << " type:" << toString(type));
-    DiskIterator i = findDisk( disk );
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -4536,10 +4535,9 @@ int Storage::removeTmpfsMount( const string& mp )
 	ret = STORAGE_CHANGE_READONLY;
 	}
     TmpfsCo *co = NULL;
-    bool have = true;
     if( ret==0 )
 	{
-	have = haveTmpfs(co);
+	haveTmpfs(co);
 	}
     if( ret==0 && co!=NULL )
 	{
