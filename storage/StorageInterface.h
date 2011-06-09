@@ -749,6 +749,8 @@ namespace storage
 	VOLUME_BTRFS_ADD_FAILED = -3042,
 	VOLUME_CANNOT_TMP_MOUNT = -3043,
 	VOLUME_CANNOT_TMP_UMOUNT = -3044,
+	VOLUME_BTRFS_SUBVOL_INIT_FAILED = -3045,
+	VOLUME_BTRFS_SUBVOL_DETDEFAULT = -3046,
 
 	LVM_CREATE_PV_FAILED = -4000,
 	LVM_PV_ALREADY_CONTAINED = -4001,
@@ -1768,6 +1770,20 @@ namespace storage
 	 * @return default filesystem.
 	 */
 	virtual FsType getDefaultFs() const = 0;
+
+	/**
+	 * Set default subvolume name.
+	 *
+	 * @param val new default subvolume name.
+	 */
+	virtual void setDefaultSubvolName( const string& val) = 0;
+
+	/**
+	 * Get default filesystem.
+	 *
+	 * @return default filesystem.
+	 */
+	virtual string getDefaultSubvolName() const = 0;
 
 	/**
 	 * Get value for EFI boot.

@@ -441,6 +441,9 @@ class DiskData;
 	void setDefaultFs (FsType fs);
 	FsType getDefaultFs() const { return defaultFs; }
 
+	void setDefaultSubvolName( const string& val);
+	string getDefaultSubvolName() const { return defaultSubvolName; }
+
 	void setDetectMountedVolumes( bool val=true );
 	bool getDetectMountedVolumes() const { return detectMounted; }
 	bool getEfiBoot();
@@ -579,9 +582,8 @@ class DiskData;
 	void updateDmEmptyPeMap();
 	void dumpObjectList();
 	void dumpCommitInfos() const;
-	bool mountTmpRo( const Volume* vol, string& mp )
-	    { return mountTmp( vol, mp, true ); }
-	bool mountTmp( const Volume* vol, string& mp, bool ro=false );
+	bool mountTmpRo( const Volume* vol, string& mp, const string& opts="" );
+	bool mountTmp( const Volume* vol, string& mp, const string& opts="" );
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
@@ -2099,6 +2101,7 @@ class DiskData;
 	PartAlign partAlignment;
 	MountByType defaultMountBy;
 	FsType defaultFs;
+	string defaultSubvolName;
 	bool detectMounted;
 	bool root_mounted;
 	string tempdir;

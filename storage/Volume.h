@@ -234,7 +234,8 @@ class Storage;
 	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
 	                  bool format ) const;
 	bool noFreqPassno() const;
-	int prepareTmpMount( string& m, bool& needUmount );
+	int prepareTmpMount( string& m, bool& needUmount, bool useMounted=true,
+	                     const string& options="" );
 	int umountTmpMount( const string& m, int ret );
 	int doFormatBtrfs();
 
@@ -282,6 +283,8 @@ class Storage;
 	string dtxt;
 
 	static const string tmp_mount[3];
+	static const string ignore_opt[1];
+	static const string ignore_beg[4];
 
 	mutable storage::VolumeInfo info; // workaround for broken ycp bindings
 

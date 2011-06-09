@@ -67,6 +67,10 @@ class Btrfs : public Volume
 	Text removeText( bool doing ) const;
 	Text formatText( bool doing ) const;
 
+	virtual string udevPath() const;
+	virtual list<string> udevId() const;
+	virtual string sysfsPath() const;
+
 	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
 	list<string> getSubvolAddDel( bool ) const;
 
@@ -92,6 +96,7 @@ class Btrfs : public Volume
 	list<string> dev_add;
 	list<string> dev_rem;
 	list<Subvolume> subvol;
+	Volume const * findRealVolume() const;
 
 	mutable storage::BtrfsInfo info; // workaround for broken ycp bindings
 

@@ -326,7 +326,7 @@ int Btrfs::doDeleteSubvol()
     {
     bool needUmount;
     string m;
-    int ret = prepareTmpMount( m, needUmount );
+    int ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -355,7 +355,7 @@ int Btrfs::doCreateSubvol()
     {
     bool needUmount;
     string m;
-    int ret = prepareTmpMount( m, needUmount );
+    int ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -480,15 +480,52 @@ Text Btrfs::removeText(bool doing) const
     return( txt );
     }
 
+
+string Btrfs::udevPath() const
+    {
+    Volume const *v = findRealVolume();
+    if( v )
+	return( v->udevPath() );
+    else
+	return( Device::udevPath() );
+    }
+
+list<string> Btrfs::udevId() const
+    {
+    Volume const *v = findRealVolume();
+    if( v )
+	return( v->udevId() );
+    else
+	return( Device::udevId() );
+    }
+
+string Btrfs::sysfsPath() const
+    {
+    string ret;
+    Volume const *v = findRealVolume();
+    if( v )
+	ret = v->sysfsPath();
+    return( ret );
+    }
+
+Volume const * Btrfs::findRealVolume() const
+    {
+    Volume const *v = NULL;
+    if( !getStorage()->findVolume( devices.front(), v, true ))
+	v = NULL;
+    return( v );
+    }
+
 Text Btrfs::formatText(bool doing) const
     {
     Text txt;
     bool done = false;
     if( devices.size()+dev_add.size()==1 )
 	{
-	Volume const *v = NULL;
-	if( getStorage()->findVolume( devices.front(), v, true ))
+	Volume const *v = findRealVolume();
+	if( v!=NULL )
 	    {
+	    y2mil( "this: " << *this );
 	    y2mil( "found:" << *v );
 	    txt = v->formatText(doing);
 	    done = true;

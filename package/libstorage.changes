@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Jun  9 14:56:02 CEST 2011 - fehr@suse.de
+
+- add functionality to have everything in a default btrfs subvol
+  (additions to fate#306587)
+- version 2.21.3
+
+-------------------------------------------------------------------
 Fri May 27 18:21:44 UTC 2011 - coolo@novell.com
 
 - fix package rename

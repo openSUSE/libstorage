@@ -435,9 +435,14 @@ SystemCmd::select( const string& Pat_Cv, OutputStream Idx_iv )
 	}
     string Search_Ci( Pat_Cv );
     bool BeginOfLine_bi = Search_Ci.length()>0 && Search_Ci[0]=='^';
+    bool EndOfLine_bi = Search_Ci.length()>0 && Search_Ci[Search_Ci.length()-1]=='$';
     if( BeginOfLine_bi )
 	{
 	Search_Ci.erase( 0, 1 );
+	}
+    if( EndOfLine_bi )
+	{
+	Search_Ci.erase( Search_Ci.length()-1, 1 );
 	}
     SelLines_aC[Idx_iv].resize(0);
     int Size_ii = 0;
@@ -446,6 +451,11 @@ SystemCmd::select( const string& Pat_Cv, OutputStream Idx_iv )
 	{
 	string::size_type Pos_ii = Lines_aC[Idx_iv][I_ii].find( Search_Ci );
 	if( Pos_ii>0 && BeginOfLine_bi )
+	    {
+	    Pos_ii = string::npos;
+	    }
+	if( EndOfLine_bi && 
+	    Pos_ii!=(Lines_aC[Idx_iv][I_ii].length()-Search_Ci.length()) )
 	    {
 	    Pos_ii = string::npos;
 	    }

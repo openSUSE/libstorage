@@ -707,14 +707,16 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
-int Volume::prepareTmpMount( string& m, bool& needUmount )
+int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const string& options )
     {
+    y2mil( "useMounted:" << useMounted << " opts:" << options ); 
     int ret = 0;
     needUmount=false;
     m = getStorage()->prependRoot(getMount());
-    if( !isMounted() )
+    if( !isMounted() || !useMounted )
 	{
-	if( getStorage()->mountTmp( this, m ) )
+	m.clear();
+	if( getStorage()->mountTmp( this, m, options ) )
 	    needUmount = true;
 	else
 	    ret = VOLUME_CANNOT_TMP_MOUNT;
@@ -824,6 +826,7 @@ int Volume::doFormatBtrfs()
     {
     int ret = 0;
     SystemCmd c;
+    string defvol = getStorage()->getDefaultSubvolName();
     string cmd = "/sbin/mkfs.btrfs " + quote(mountDevice());
     c.execute( cmd );
     if( c.retcode()!=0 )
@@ -831,6 +834,8 @@ int Volume::doFormatBtrfs()
 	ret = VOLUME_FORMAT_FAILED;
 	setExtError( c );
 	}
+    bool needUmount;
+    string m;
     if( ret==0 && cType()==BTRFSC && getEncryption()==ENC_NONE )
 	{
 	const Btrfs* l = static_cast<const Btrfs*>(this);
@@ -839,8 +844,6 @@ int Volume::doFormatBtrfs()
 	if( li.size()>1 )
 	    {
 	    cmd = BTRFSBIN " device add ";
-	    bool needUmount;
-	    string m;
 	    ret = prepareTmpMount( m, needUmount );
 	    if( ret==0 )
 		{
@@ -850,13 +853,59 @@ int Volume::doFormatBtrfs()
 			{
 			c.execute( cmd + quote(*i) + " " + m );
 			if( c.retcode()!=0 )
+			    {
 			    ret = VOLUME_BTRFS_ADD_FAILED;
+			    setExtError( c );
+			    }
 			}
 		    }
 		}
 	    if( needUmount )
 		ret = umountTmpMount( m, ret );
 	    }
+	}
+    if( ret==0 && !defvol.empty() )
+	{
+	ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
+	cmd = BTRFSBIN " subvolume create " + m + "/" + defvol;
+	c.execute( cmd );
+	if( ret==0 && c.retcode()!=0 )
+	    {
+	    ret = VOLUME_BTRFS_SUBVOL_INIT_FAILED;
+	    setExtError( c );
+	    }
+	if( ret==0 )
+	    {
+	    cmd = BTRFSBIN " subvolume list " + m;
+	    c.execute( cmd );
+	    int id = -1; 
+	    if( c.retcode()==0 )
+		{
+		c.select( " path "+defvol+"$" );
+		list<string> sl = splitString(c.getLine( 0, true )," ");
+		y2mil( "sl:" << sl );
+		list<string>::const_iterator i = sl.begin();
+		if( i!=sl.end() )
+		    ++i;
+		if( i!=sl.end() )
+		    {
+		    *i >> id;
+		    y2mil( "val:" << *i << " id:" << id );
+		    }
+		if( id>=0 )
+		    {
+		    cmd = BTRFSBIN " subvolume set-default " + decString(id) + " " + m;
+		    c.execute( cmd );
+		    if( c.retcode()!=0 )
+			{
+			ret = VOLUME_BTRFS_SUBVOL_DETDEFAULT;
+			setExtError( c );
+			}
+		    }
+		}
+	    }
+	if( needUmount )
+	    ret = umountTmpMount( m, ret );
 	}
     y2mil( "ret:" << ret );
     return( ret );
@@ -1091,7 +1140,8 @@ void Volume::setUsedByUuid( UsedByType ubt, const string& uuid )
     eraseUuid();
     eraseLabel();
     setMount( "" );
-    formattingDone();
+    format = false;
+    detected_fs = fs;
     setUsedBy( ubt, uuid );
     }
 
@@ -2452,19 +2502,22 @@ int Volume::mount( const string& m, bool ro )
 	    cmdline += "-r ";
 	cmdline += "-t " + fsn + " ";
 
-	const char * ign_opt[] = { "defaults", "" };
-	const char * ign_beg[] = { "loop", "encryption=", "phash=",
-	                           "itercountk=", "" };
+	list<string> ign_opt( ignore_opt, ignore_opt+lengthof(ignore_opt));
+	list<string> ign_beg( ignore_beg, ignore_beg+lengthof(ignore_beg));
+
 	if (getStorage()->instsys())
-	    ign_opt[lengthof(ign_opt)-1] = "ro";
+	    ign_opt.push_back("ro");
 	if( fsn=="ntfs" )
-	    ign_beg[lengthof(ign_beg)-1] = "locale=";
+	    ign_beg.push_back("locale=");
+	if( fs==BTRFS )
+	    ign_opt.push_back("subvol="+getStorage()->getDefaultSubvolName());
 	list<string> l = splitString( fstab_opt, "," );
 	y2mil( "l before:" << l );
-	for( unsigned i=0; i<lengthof(ign_opt) && *ign_opt[i]!=0; i++ )
-	    l.remove(ign_opt[i]);
-	for( unsigned i=0; i<lengthof(ign_beg) && *ign_beg[i]!=0; i++ )
-	    l.remove_if(string_starts_with(ign_beg[i]));
+	list<string>::const_iterator i;
+	for( i=ign_opt.begin(); i!=ign_opt.end(); i++ )
+	    l.remove(*i);
+	for( i=ign_beg.begin(); i!=ign_beg.end(); i++ )
+	    l.remove_if(string_starts_with(*i));
 	y2mil( "l  after:" << l );
 	if( !l.empty() )
 	    cmdline += "-o " + boost::join(l, ",") + " ";
@@ -3336,5 +3389,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 
 
     const string Volume::tmp_mount[] = { "swap", "/tmp", "/var/tmp" };
+    const string Volume::ignore_opt[] = { "defaults" };
+    const string Volume::ignore_beg[] = { "loop", "encryption=", "phash=", "itercountk=" };
 
 }

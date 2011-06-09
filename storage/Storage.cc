@@ -103,8 +103,9 @@ Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
       recursiveRemove(false), zeroNewPartitions(false),
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
-      defaultFs(EXT4), detectMounted(true), root_mounted(!instsys()),
-      rootprefix(), fstab(NULL), mdadm(NULL), imsm_driver(IMSM_UNDECIDED)
+      defaultFs(EXT4), defaultSubvolName(""), detectMounted(true), 
+      root_mounted(!instsys()), rootprefix(), fstab(NULL), mdadm(NULL), 
+      imsm_driver(IMSM_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -1117,6 +1118,12 @@ void Storage::setDefaultFs(FsType val)
 {
     y2mil("val:" << toString(val));
     defaultFs = val;
+}
+
+void Storage::setDefaultSubvolName( const string& val )
+{
+    y2mil("old:\"" << defaultSubvolName << "\" val:\"" << val << "\"" );
+    defaultSubvolName = val;
 }
 
 
@@ -2352,7 +2359,9 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 		    {
 		    string uuid;
 		    co->addFromVolume( *vol, uuid );
+		    y2mil( "vol before:" << *vol );
 		    vol->setUsedByUuid( UB_BTRFS, uuid );
+		    y2mil( "vol after :" << *vol );
 		    }
 		}
 	    }
@@ -6728,17 +6737,39 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     return ret;
 }
 
-
-bool Storage::mountTmp( const Volume* vol, string& mdir, bool ro )
+bool Storage::mountTmpRo( const Volume* vol, string& mp, const string& opts )
     {
+    string opt(opts);
+    if( opt.empty() )
+	opt="ro";
+    else
+	opt += ",ro";
+    return( mountTmp( vol, mp, opt ));
+    }
+
+bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
+    {
+    y2mil( "device:" << vol->device() << " opts:" << opt );
     bool ret = false;
     removeDmTableTo( *vol );
-    mdir = tmpDir() + "/tmp-" + (ro?"ro-mp":"mp") + "-XXXXXX";
+    mdir = tmpDir() + "/tmp-mp-XXXXXX";
     if (mkdtemp(mdir))
     {
-	y2mil( "mdir:" << mdir << " ro:" << ro );
-
-	string opts = vol->getFstabOption();
+	string opts = opt;
+	list<string> ls = splitString( vol->getFstabOption(), "," );
+	y2mil( "ls=" << ls );
+	y2mil( "format:" << vol->getFormat() );
+	if( opt.find( "subvolid=0" )!=string::npos || vol->getFormat() )
+	    {
+	    ls.remove_if( string_starts_with("subvol=") );
+	    y2mil( "ls=" << ls );
+	    }
+	if( !ls.empty() )
+	    {
+	    if( !opts.empty() )
+		opts += ",";
+	    opts += boost::join(ls, ",");
+	    }
 	if( vol->getFs()==NTFS )
 	{
 	    if( !opts.empty() )
@@ -6746,7 +6777,7 @@ bool Storage::mountTmp( const Volume* vol, string& mdir, bool ro )
 	    opts += "show_sys_files";
 	}
 
-	if( mountDev( vol->device(), mdir, ro, opts ) )
+	if( mountDev( vol->device(), mdir, false, opts ) )
 	{
 	    ret = true;
 	}
