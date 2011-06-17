@@ -6,38 +6,39 @@
 #
 # Jonas Gocentas <jonasgocentas@florida.usa.com>, 2001.
 # Linas Spraunius <lsprauni@radio.lt>, 2000.
-# Mindaugas Baranauskas <embar@users.berlios.de>, 2009, 2010.
+# Mindaugas Baranauskas <embar@users.berlios.de>, 2009, 2010, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 10:04+0100\n"
-"PO-Revision-Date: 2010-10-20 15:20+0300\n"
+"POT-Creation-Date: 2011-06-17 10:58+0200\n"
+"PO-Revision-Date: 2011-05-26 20:33+0300\n"
 "Last-Translator: Mindaugas Baranauskas <embar@users.berlios.de>\n"
-"Language-Team: Lithuanian <>\n"
+"Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 ? 0 : n%10==1 && n%100!=11 ? 1 : n%10>=2 && (n%100<10 || n%100>=20) ? 2 : 3);\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 1.2\n"
 
 #. text displayed during action
-#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
-#: ../storage/Volume.cc:2954
+#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
+#: ../storage/Volume.cc:3120
 msgid "(progress bar might not move)"
 msgstr "(eigos juosta gali nejudėti)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:914
+#: ../storage/EtcFstab.cc:920
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Pridėti naują prijungimo vietos %1$s įrašą prie %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:907
+#: ../storage/EtcFstab.cc:913
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Pridedamas naujas prijungimo vietos %1$s įrašas prie %2$s"
@@ -47,27 +48,37 @@ msgstr "Pridedamas naujas prijungimo vietos %1$s įrašas prie %2$s"
 msgid "B"
 msgstr "B"
 
+#: ../storage/Graph.cc:515
+msgid "Btrfs Volume"
+msgstr "Btrfs tomas"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1189
+#: ../storage/Volume.cc:1327
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Keisti %1$s prijungimo vietą į %2$s"
 
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:104
+#, c-format
+msgid "Change mount point of tmpfs to %1$s"
+msgstr "Keisti tmpfs prijungimo vietą į %1$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2208
+#: ../storage/Volume.cc:2354
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Ištrinti %1$s žymę"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2194
+#: ../storage/Volume.cc:2340
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Ištrinama %1$s žymė"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:276
+#: ../storage/Container.cc:280
 #, c-format
 msgid "Create %1$s"
 msgstr "Sukurti %1$s"
@@ -75,10 +86,10 @@ msgstr "Sukurti %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2892
+#: ../storage/Volume.cc:3058
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
-msgstr "Sukurti įkrovos tomą %1$s (%2$s) kaip %3$s"
+msgstr "Sukurti operacinės sistemos paleidimo tomą %1$s (%2$s) kaip %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -129,7 +140,7 @@ msgstr "Sukurti šifruotą programinį RAID %1$s (%2$s) iš %5$s, jungiamą prie
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2930
+#: ../storage/Volume.cc:3096
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Sukurti užšifruotą tomą %1$s (%2$s)"
@@ -138,7 +149,7 @@ msgstr "Sukurti užšifruotą tomą %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2913
+#: ../storage/Volume.cc:3079
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Sukurti šifruotą tomą %1$s (%2$s) jungiamą prie %4$s kaip %3$s"
@@ -233,7 +244,7 @@ msgstr "Sukurti raid skaidinį %1$s (%2$s) %4$s kaip %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2884
+#: ../storage/Volume.cc:3050
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Sukurti šakninį tomą %1$s (%2$s) kaip %3$s"
@@ -255,6 +266,13 @@ msgstr "Sukurti programinį RAID %1$s (%2$s) iš %3$s"
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "Sukurti programinį RAID %1$s (%2$s) iš %5$s, jungiamą prie %4$s kaip %3$s"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:668
+#, c-format
+msgid "Create subvolume %1$s on device %2$s"
+msgstr "Sukurti potomį %1$s įrenginyje %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -279,14 +297,14 @@ msgstr "Sukurti sukeitimų (swap) raid skaidinį %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2876
+#: ../storage/Volume.cc:3042
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Sukurti sukeitimų (swap) tomą %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2924
+#: ../storage/Volume.cc:3090
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Sukurti tomą %1$s (%2$s)"
@@ -295,7 +313,7 @@ msgstr "Sukurti tomą %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2903
+#: ../storage/Volume.cc:3069
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Sukurti tomą %1$s (%2$s) jungiamą prie %4$s kaip %3$s"
@@ -304,13 +322,13 @@ msgstr "Sukurti tomą %1$s (%2$s) jungiamą prie %4$s kaip %3$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1093
+#: ../storage/LvmVg.cc:1102
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Sukurti tomų grupę %1$s (%2$s) iš %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:271
+#: ../storage/Container.cc:275
 #, c-format
 msgid "Creating %1$s"
 msgstr "Kuriamas %1$s"
@@ -347,8 +365,15 @@ msgstr "Kuriamas raid skaidinys %1$s"
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "Sukuriamas programinis RAID %1$s iš  %2$s"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:661
+#, c-format
+msgid "Creating subvolume %1$s on device %2$s"
+msgstr "Kuriamas potomis %1$s įrenginyje %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2868
+#: ../storage/Volume.cc:3034
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Kuriamas tomas %1$s"
@@ -357,22 +382,29 @@ msgstr "Kuriamas tomas %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1084
+#: ../storage/LvmVg.cc:1093
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Kuriama tomų grupė %1$s (%2$s) iš %3$s"
 
-#: ../storage/Graph.cc:498
+#: ../storage/Graph.cc:519
 msgid "DM Device"
 msgstr ""
 
-#: ../storage/Graph.cc:474
+#: ../storage/Graph.cc:491
 msgid "DM Multipath"
 msgstr ""
 
-#: ../storage/Graph.cc:470
+#: ../storage/Graph.cc:487
 msgid "DM RAID"
 msgstr ""
+
+#. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Btrfs.cc:477
+#, c-format
+msgid "Delete Btrfs volume on devices %1$s (%2$s)"
+msgstr "Šalinti Btrfs tomą įrenginyje %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -429,6 +461,12 @@ msgstr "Šalinti raid skaidinį %1$s (%2$s)"
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Šalinti programinį RAID %1$s (%2$s)"
+
+#. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:471
+#, c-format
+msgid "Deleting Btrfs volume on devices %1$s"
+msgstr "Šalinamas Btrfs tomą įrenginyje %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #: ../storage/Dm.cc:383
@@ -515,10 +553,17 @@ msgstr "Vykdomas fdasd diskui %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2965
+#: ../storage/Volume.cc:3131
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Išplėsti %1$s iki %2$s"
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:627
+#, c-format
+msgid "Extend BTRFS volume %1$s by %2$s"
+msgstr "Išplėsti BTRFS tomą %1$s iki %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -557,17 +602,24 @@ msgstr "Išplėsti raid skaidinį %1$s iki %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1114
+#: ../storage/LvmVg.cc:1123
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Išplėsti tomų grupę %1$s su %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2951
+#: ../storage/Volume.cc:3117
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s išplečiamas iki %2$s"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:620
+#, c-format
+msgid "Extending BTRFS volume %1$s by %2$s"
+msgstr "Išplečiamas BTRFS tomas %1$s iki %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -599,16 +651,33 @@ msgstr "Išplečiamas raid skaidinys %1$s iki %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1107
+#: ../storage/LvmVg.cc:1116
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Išplečiama tomų grupė %1$s su %2$s"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:560
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Šalinti Btrfs tomą įrenginyje %1$s (%2$s)"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#. %3$s is replaced by mount point (e.g. /usr)
+#: ../storage/Btrfs.cc:554
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
+msgstr "Šalinti Btrfs tomą įrenginyje %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:725
+#: ../storage/Volume.cc:759
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Suženklinti įrenginį %1$s (%2$s), jungiamą prie %4$s kaip %3$s"
@@ -616,7 +685,7 @@ msgstr "Suženklinti įrenginį %1$s (%2$s), jungiamą prie %4$s kaip %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:745
+#: ../storage/Volume.cc:779
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Suženklinti įrenginį %1$s (%2$s) kaip %3$s"
@@ -642,7 +711,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:735
+#: ../storage/Volume.cc:769
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Suženklinti šifruotą įrenginį %1$s (%2$s), jungiamą prie %4$s kaip %3$s"
@@ -843,10 +912,18 @@ msgstr "Suženklinti programinį RAID %1$s (%2$s), jungiamą prie %4$s, kaip %3$
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "Suženklinti programinį RAID %1$s (%2$s) kaip %3$s"
 
+#. displayed text during action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:544
+#, fuzzy, c-format
+msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Kuriamas potomis %1$s įrenginyje %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:712
+#: ../storage/Volume.cc:746
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Suženklinamas įrenginys %1$s (%2$s) kaip %3$s "
@@ -923,7 +1000,7 @@ msgstr "GB"
 msgid "GiB"
 msgstr "GiB"
 
-#: ../storage/Graph.cc:466
+#: ../storage/Graph.cc:483
 msgid "Hard Disk"
 msgstr "Standusis diskas"
 
@@ -932,7 +1009,7 @@ msgstr "Standusis diskas"
 msgid "KiB"
 msgstr "KiB"
 
-#: ../storage/Graph.cc:494
+#: ../storage/Graph.cc:511
 msgid "Logical Volume"
 msgstr "Loginis tomas"
 
@@ -946,7 +1023,7 @@ msgstr "M"
 msgid "MB"
 msgstr "MB"
 
-#: ../storage/Graph.cc:482 ../storage/Graph.cc:486
+#: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
 msgstr "MD RAID"
 
@@ -955,16 +1032,22 @@ msgstr "MD RAID"
 msgid "MiB"
 msgstr "MiB"
 
-#: ../storage/Graph.cc:502
+#: ../storage/Graph.cc:523
 msgid "Mount Point"
 msgstr "Prijungimo vieta"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1174
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1$s prijungiamas prie %2$s"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:90
+#, c-format
+msgid "Mounting tmpfs to %1$s"
+msgstr "Tmpfs prijungiamas prie %1$s"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
@@ -976,7 +1059,7 @@ msgstr "P"
 msgid "PB"
 msgstr "PB"
 
-#: ../storage/Graph.cc:478
+#: ../storage/Graph.cc:495
 msgid "Partition"
 msgstr "Skaidinys"
 
@@ -985,37 +1068,57 @@ msgstr "Skaidinys"
 msgid "PiB"
 msgstr "PiB"
 
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:648
+#, c-format
+msgid "Reduce BTRFS volume %1$s by %2$s"
+msgstr "Sumažinti BTRFS tomą %1$s iki %2$s"
+
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1136
+#: ../storage/LvmVg.cc:1145
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
-msgstr "Sumažinti tomų grupę %1$s iš %2$s"
+msgstr "Sumažinti tomų grupę %1$s iki %2$s"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:641
+#, c-format
+msgid "Reducing BTRFS volume %1$s by %2$s"
+msgstr "Sumažinamas BTRFS tomas %1$s iki %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1129
+#: ../storage/LvmVg.cc:1138
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
-msgstr "Sumažinama tomų grupė %1$s iš %2$s"
+msgstr "Sumažinama tomų grupė %1$s iki %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:927
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:927
 #, c-format
 msgid "Remove %1$s"
 msgstr "Pašalinti %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1217
+#: ../storage/Volume.cc:1355
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Pašalinti %1$s iš %2$s"
 
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, c-format
+msgid "Remove Tmpfs volume from mount point %1$s"
+msgstr "Pašalinti Tmpfs tomą iš prijungimo vietos %1$s"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:956
+#: ../storage/EtcFstab.cc:962
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Pašalinti prijungimo vietos %1$s įrašą iš %2$s"
@@ -1038,28 +1141,47 @@ msgstr "Pašalinti raid %1$s"
 msgid "Remove software RAID %1$s"
 msgstr "Pašalinti programinį RAID %1$s"
 
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:688
+#, c-format
+msgid "Remove subvolume %1$s on device %2$s"
+msgstr "Šalinti potomį %1$s įrenginyje %2$s"
+
+#. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Tmpfs.cc:119
+#, c-format
+msgid "Remove tmpfs from %1$s"
+msgstr "Pašalinti tmpfs iš %1$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2981
+#: ../storage/Volume.cc:3147
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Šalinti tomą %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1069
+#: ../storage/LvmVg.cc:1078
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Pašalinti tomų grupę %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:922
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:922
 #, c-format
 msgid "Removing %1$s"
 msgstr "Šalinamas %1$s"
 
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, c-format
+msgid "Removing Tmpfs volume from mount point %1$s"
+msgstr "Šalinamas Tmpfs tomas iš prijungimo vietos %1$s"
+
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:949
+#: ../storage/EtcFstab.cc:955
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Šalinamas prijungimo vietos %1$s įrašas iš %2$s"
@@ -1082,38 +1204,51 @@ msgstr "Šalinamas raid %1$s"
 msgid "Removing software RAID %1$s"
 msgstr "Pašalinamas programinis RAID %1$s"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:681
+#, c-format
+msgid "Removing subvolume %1$s on device %2$s"
+msgstr "Šalinamas potomį %1$s įrenginyje %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2976
+#: ../storage/Volume.cc:3142
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Šalinamas tomas %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1064
+#: ../storage/LvmVg.cc:1073
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Šalinama tomų grupė %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1541
+#: ../storage/Disk.cc:1555
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Nustatyti disko %1$s žymę į %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2214
+#: ../storage/Volume.cc:2360
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Nustatyti %1$s žymę į %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1198
+#: ../storage/Volume.cc:1336
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Nustatyti %1$s prijungimo vietą %2$s"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:109
+#, c-format
+msgid "Set mount point of tmpfs to %1$s"
+msgstr "Nustatyti tmpfs prijungimo vietą %1$s"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
@@ -1126,8 +1261,10 @@ msgstr "Keisti multipath skaidinio %1$s tipą į %2$X"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:171 ../storage/MdPart.cc:180
-#: ../storage/Partition.cc:311
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:171
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Keisti skaidinio %1$s tipą į %2$X"
@@ -1140,27 +1277,27 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "Keisti raid skaidinio %1$s tipą į %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1524
+#: ../storage/Volume.cc:1662
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1508
+#: ../storage/Volume.cc:1646
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr ""
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1534
+#: ../storage/Disk.cc:1548
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Nustatoma disko %1$s žymė į %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2200
+#: ../storage/Volume.cc:2346
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Nustatoma %1$s žymė į %2$s"
@@ -1176,8 +1313,10 @@ msgstr "Keičiamas multipath skaidinio %1$s tipą į %2$X"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:164 ../storage/MdPart.cc:173
-#: ../storage/Partition.cc:304
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:164
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Keičiamas skaidinio %1$s tipas į %2$X"
@@ -1190,20 +1329,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "Keičiamas raid skaidinio %1$s tipas į %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1519
+#: ../storage/Volume.cc:1657
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr ""
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1503
+#: ../storage/Volume.cc:1641
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2961
+#: ../storage/Volume.cc:3127
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Sumažinti %1$s iki %2$s"
@@ -1245,7 +1384,7 @@ msgstr "Sumažinti raid skaidinį %1$s iki %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2947
+#: ../storage/Volume.cc:3113
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s sumažinamas iki %2$s"
@@ -1357,43 +1496,48 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4525
+#: ../storage/Storage.cc:4837
 msgid "Unmount failed."
 msgstr "Nepavyko atjungti."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1179
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Atjungiamas %1$s"
 
+#. displayed text during action
+#: ../storage/Tmpfs.cc:95
+msgid "Unmounting tmpfs"
+msgstr "Atjungiamas tmpfs"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:935
+#: ../storage/EtcFstab.cc:941
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Atnaujinti prijungimo vietos %1$s įrašą rinkmenoje %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:928
+#: ../storage/EtcFstab.cc:934
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Atnaujinamas prijungimo vietos %1$s įrašas rinkmenoje %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1205
+#: ../storage/Volume.cc:1343
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Naudoti %1$s kaip %2$s"
 
-#: ../storage/Graph.cc:490
+#: ../storage/Graph.cc:507
 msgid "Volume Group"
 msgstr "Tomų grupė"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:358
+#: ../storage/Storage.cc:360
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
@@ -1427,6 +1571,9 @@ msgid ""
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."
 msgstr ""
+"Jūsų diskas %1$s turi %2$lu skaidinius. Tačiau šiam diskui skirta\n"
+"branduolio tvarkyklė gali apdoroti ne daugiau kaip %3$lu skaidinius.\n"
+"Tad nebus pasiekiami skaidiniai, kurių numeris didesnis kaip %3$lu."
 
 #. symbol for "kilo" (best keep untranslated)
 #: ../storage/HumanString.cc:64

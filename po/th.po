@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 10:04+0100\n"
+"POT-Creation-Date: 2011-06-17 10:58+0200\n"
 "PO-Revision-Date: 2010-07-09 21:56+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <i18n@suse.de>\n"
+"Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17,22 +18,22 @@ msgstr ""
 "X-Generator: Lokalize 1.1\n"
 
 #. text displayed during action
-#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
-#: ../storage/Volume.cc:2954
+#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
+#: ../storage/Volume.cc:3120
 msgid "(progress bar might not move)"
 msgstr "(จะต้องไม่เลื่อนแถบแสดงการดำเนินการ)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:914
+#: ../storage/EtcFstab.cc:920
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "เพิ่มรายการของจุดเมานท์ %1$s ไว้ในแฟ้ม %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:907
+#: ../storage/EtcFstab.cc:913
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "ทำการเพิ่มรายการของจุดเมานท์ %1$s ไว้ในแฟ้ม %2$s"
@@ -42,27 +43,38 @@ msgstr "ทำการเพิ่มรายการของจุดเม
 msgid "B"
 msgstr "ไบต์"
 
+#: ../storage/Graph.cc:515
+#, fuzzy
+msgid "Btrfs Volume"
+msgstr "จัดเก็บระดับเสียง"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1189
+#: ../storage/Volume.cc:1327
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "เปลี่ยนจุดเมานท์ของ %1$s เป็นตำแหน่ง %2$s"
 
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:104
+#, fuzzy, c-format
+msgid "Change mount point of tmpfs to %1$s"
+msgstr "เปลี่ยนจุดเมานท์ของ %1$s เป็นตำแหน่ง %2$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2208
+#: ../storage/Volume.cc:2354
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "ล้างป้ายชื่อบน %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2194
+#: ../storage/Volume.cc:2340
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "ทำการล้างป้ายชื่อบน %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:276
+#: ../storage/Container.cc:280
 #, c-format
 msgid "Create %1$s"
 msgstr "สร้าง %1$s"
@@ -70,7 +82,7 @@ msgstr "สร้าง %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2892
+#: ../storage/Volume.cc:3058
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "สร้างโวลุมการบูต %1$s (ขนาด %2$s) ด้วยระบบแฟ้ม %3$s"
@@ -124,7 +136,7 @@ msgstr "สร้าง RAID แบบซอฟต์แวร์ที่มี
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2930
+#: ../storage/Volume.cc:3096
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "สร้างโวลุมที่มีการเข้ารหัสข้อมูล %1$s (ขนาด %2$s)"
@@ -133,7 +145,7 @@ msgstr "สร้างโวลุมที่มีการเข้ารห
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2913
+#: ../storage/Volume.cc:3079
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "สร้างโวลุมที่มีการเข้ารหัสข้อมูล %1$s (ขนาด %2$s) สำหรับเมานท์ที่ %4$s ด้วยระบบแฟ้ม %3$s"
@@ -228,7 +240,7 @@ msgstr "สร้างพาร์ทิชัน raid %1$s (ขนาด %2$s)
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2884
+#: ../storage/Volume.cc:3050
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "สร้างโวลุมราก %1$s (ขนาด %2$s) ด้วยระบบแฟ้ม %3$s"
@@ -250,6 +262,13 @@ msgstr "สร้าง RAID แบบซอฟต์แวร์ %1$s (ขน�
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "สร้าง RAID แบบซอฟต์แวร์ %1$s (ขนาด %2$s) จาก %5$s สำหรับเมานท์ที่ %4$s ด้วยระบบแฟ้ม %3$s"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:668
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s"
+msgstr "สร้างโวลุม %1$s (ขนาด %2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -274,14 +293,14 @@ msgstr "สร้างพาร์ทิชัน raid %1$s (ขนาด %2$s)
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2876
+#: ../storage/Volume.cc:3042
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "สร้างโวลุม swap %1$s (ขนาด %2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2924
+#: ../storage/Volume.cc:3090
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "สร้างโวลุม %1$s (ขนาด %2$s)"
@@ -290,7 +309,7 @@ msgstr "สร้างโวลุม %1$s (ขนาด %2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2903
+#: ../storage/Volume.cc:3069
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "สร้างโวลุม %1$s (ขนาด %2$s) สำหรับเมานท์ที่ %4$s ด้วยระบบแฟ้ม %3$s"
@@ -299,13 +318,13 @@ msgstr "สร้างโวลุม %1$s (ขนาด %2$s) สำหรั�
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1093
+#: ../storage/LvmVg.cc:1102
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "สร้างกลุ่มโวลุม %1$s (ขนาด %2$s) จาก %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:271
+#: ../storage/Container.cc:275
 #, c-format
 msgid "Creating %1$s"
 msgstr "ทำการสร้าง %1$s"
@@ -342,8 +361,15 @@ msgstr "ทำการสร้างพาร์ทิชัน raid %1$s"
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "ทำการสร้าง RAID แบบซอฟต์แวร์ %1$s จาก %2$s"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:661
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s"
+msgstr "กำลังสร้างลบกลุ่มโวลุม %1$s จาก %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2868
+#: ../storage/Volume.cc:3034
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "ทำการสร้างโวลุม %1$s"
@@ -352,24 +378,31 @@ msgstr "ทำการสร้างโวลุม %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1084
+#: ../storage/LvmVg.cc:1093
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "ทำการสร้างกลุ่มโวลุม %1$s (ขนาด %2$s) จาก %3$s"
 
-#: ../storage/Graph.cc:498
+#: ../storage/Graph.cc:519
 msgid "DM Device"
 msgstr "อุปกรณ์ DM"
 
-#: ../storage/Graph.cc:474
+#: ../storage/Graph.cc:491
 #, fuzzy
 msgid "DM Multipath"
 msgstr "สื่อประสม"
 
-#: ../storage/Graph.cc:470
+#: ../storage/Graph.cc:487
 #, fuzzy
 msgid "DM RAID"
 msgstr "ดิสก์อาร์เรย์ (RAID)"
+
+#. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Btrfs.cc:477
+#, fuzzy, c-format
+msgid "Delete Btrfs volume on devices %1$s (%2$s)"
+msgstr "ลบอุปกรณ์บนพื้นฐานแฟ้ม %1$s (ขนาด %2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -426,6 +459,12 @@ msgstr "ลบพาร์ทิชัน raid %1$s (ขนาด %2$s)"
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "ลบ RAID แบบซอฟต์แวร์ %1$s (ขนาด %2$s)"
+
+#. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:471
+#, fuzzy, c-format
+msgid "Deleting Btrfs volume on devices %1$s"
+msgstr "ทำการลบอุปกรณ์บนพื้นฐานแฟ้ม %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #: ../storage/Dm.cc:383
@@ -507,10 +546,17 @@ msgstr "ทำการประมวลผลคำสั่ง fdasd สำ�
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2965
+#: ../storage/Volume.cc:3131
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "ขยายขนาด %1$s เป็นขนาด %2$s"
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:627
+#, fuzzy, c-format
+msgid "Extend BTRFS volume %1$s by %2$s"
+msgstr "ขยายขนาดโวลุม EVMS %1$s เป็นขนาด %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -549,17 +595,24 @@ msgstr "ขยายขนาดพาร์ทิชัน raid %1$s เป็�
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1114
+#: ../storage/LvmVg.cc:1123
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "ขยายขนาดกลุ่มโวลุม %1$s ด้วย %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2951
+#: ../storage/Volume.cc:3117
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "ทำการขยายขนาด %1$s เป็นขนาด %2$s"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:620
+#, fuzzy, c-format
+msgid "Extending BTRFS volume %1$s by %2$s"
+msgstr "กำลังขยายขนาดโวลุม EVMS %1$s เป็นขนาด %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -591,16 +644,33 @@ msgstr "ทำการขยายขนาดพาร์ทิชัน raid 
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1107
+#: ../storage/LvmVg.cc:1116
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "ทำการขยายขนาดกลุ่มโวลุม %1$s ด้วย %2$s"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:560
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "ลบอุปกรณ์บนพื้นฐานแฟ้ม %1$s (ขนาด %2$s)"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#. %3$s is replaced by mount point (e.g. /usr)
+#: ../storage/Btrfs.cc:554
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
+msgstr "ลบอุปกรณ์บนพื้นฐานแฟ้ม %1$s (ขนาด %2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:725
+#: ../storage/Volume.cc:759
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "ฟอร์แมตอุปกรณ์ %1$s (ขนาด %2$s) สำหรับเมานท์ที่ %4$s ด้วยระบบแฟ้ม %3$s"
@@ -608,7 +678,7 @@ msgstr "ฟอร์แมตอุปกรณ์ %1$s (ขนาด %2$s) ส�
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:745
+#: ../storage/Volume.cc:779
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "ฟอร์แมตอุปกรณ์ %1$s (ขนาด %2$s) ด้วยระบบแฟ้ม %3$s"
@@ -634,7 +704,7 @@ msgstr "ฟอร์แมตอุปกรณ์จับคู่โวลุ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:735
+#: ../storage/Volume.cc:769
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "ฟอร์แมตอุปกรณ์ที่มีการเข้ารหัส %1$s (ขนาด %2$s) สำหรับเมานท์ที่ %4$s ด้วยระบบแฟ้ม %3$s"
@@ -835,10 +905,18 @@ msgstr "ฟอร์แมต RAID แบบซอฟต์แวร์ %1$s (�
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "ฟอร์แมต RAID แบบซอฟต์แวร์ %1$s (ขนาด %2$s) ด้วยระบบแฟ้ม %3$s"
 
+#. displayed text during action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:544
+#, fuzzy, c-format
+msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "กำลังสร้างลบกลุ่มโวลุม %1$s จาก %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:712
+#: ../storage/Volume.cc:746
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "ทำการฟอร์แมตอุปกรณ์ %1$s (ขนาด %2$s) ด้วยระบบแฟ้ม %3$s"
@@ -916,7 +994,7 @@ msgstr "กิกะไบต์"
 msgid "GiB"
 msgstr "กิกะไบต์"
 
-#: ../storage/Graph.cc:466
+#: ../storage/Graph.cc:483
 msgid "Hard Disk"
 msgstr "ฮาร์ดดิสก์"
 
@@ -925,7 +1003,7 @@ msgstr "ฮาร์ดดิสก์"
 msgid "KiB"
 msgstr "กิบิไบต์"
 
-#: ../storage/Graph.cc:494
+#: ../storage/Graph.cc:511
 msgid "Logical Volume"
 msgstr "โวลุมลอจิคัล"
 
@@ -939,7 +1017,7 @@ msgstr "เมก"
 msgid "MB"
 msgstr "เมกะไบต์"
 
-#: ../storage/Graph.cc:482 ../storage/Graph.cc:486
+#: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 #, fuzzy
 msgid "MD RAID"
 msgstr "ดิสก์อาร์เรย์ (RAID)"
@@ -949,15 +1027,21 @@ msgstr "ดิสก์อาร์เรย์ (RAID)"
 msgid "MiB"
 msgstr "เมบิไบต์"
 
-#: ../storage/Graph.cc:502
+#: ../storage/Graph.cc:523
 msgid "Mount Point"
 msgstr "จุดเมานท์"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1174
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Mounting %1$s to %2$s"
+msgstr "ทำการเมานท์ %1$s ไปยังตำแหน่ง %2$s"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:90
+#, fuzzy, c-format
+msgid "Mounting tmpfs to %1$s"
 msgstr "ทำการเมานท์ %1$s ไปยังตำแหน่ง %2$s"
 
 #. symbol for "peta" (best keep untranslated)
@@ -970,7 +1054,7 @@ msgstr "เพต"
 msgid "PB"
 msgstr "เพตะไบต์"
 
-#: ../storage/Graph.cc:478
+#: ../storage/Graph.cc:495
 msgid "Partition"
 msgstr "พาร์ทิชัน"
 
@@ -980,37 +1064,57 @@ msgstr "พาร์ทิชัน"
 msgid "PiB"
 msgstr "เพตะไบต์"
 
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:648
+#, fuzzy, c-format
+msgid "Reduce BTRFS volume %1$s by %2$s"
+msgstr "ลดขนาดกลุ่มโวลุม %1$s โดย %2$s"
+
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1136
+#: ../storage/LvmVg.cc:1145
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "ลดขนาดกลุ่มโวลุม %1$s โดย %2$s"
 
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:641
+#, fuzzy, c-format
+msgid "Reducing BTRFS volume %1$s by %2$s"
+msgstr "ทำการลดขนาดกลุ่มโวลุม %1$s โดย %2$s"
+
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1129
+#: ../storage/LvmVg.cc:1138
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "ทำการลดขนาดกลุ่มโวลุม %1$s โดย %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:927
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:927
 #, c-format
 msgid "Remove %1$s"
 msgstr "ลบ %1$s ออก"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1217
+#: ../storage/Volume.cc:1355
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "ลบ %1$s ออกจาก %2$s"
 
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, fuzzy, c-format
+msgid "Remove Tmpfs volume from mount point %1$s"
+msgstr "ลบกลุ่มโวลุม %1$s ออก"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:956
+#: ../storage/EtcFstab.cc:962
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "ลบรายการของจุดเมานท์ %1$s ออกจากแฟ้ม %2$s"
@@ -1033,28 +1137,47 @@ msgstr "ลบ raid %1$s ออก"
 msgid "Remove software RAID %1$s"
 msgstr "ทำการลบ RAID แบบซอฟต์แวร์ %1$s"
 
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:688
+#, fuzzy, c-format
+msgid "Remove subvolume %1$s on device %2$s"
+msgstr "ลบโวลุม %1$s ออก"
+
+#. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Tmpfs.cc:119
+#, fuzzy, c-format
+msgid "Remove tmpfs from %1$s"
+msgstr "ลบ %1$s ออกจาก %2$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2981
+#: ../storage/Volume.cc:3147
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "ลบโวลุม %1$s ออก"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1069
+#: ../storage/LvmVg.cc:1078
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "ลบกลุ่มโวลุม %1$s ออก"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:922
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:922
 #, c-format
 msgid "Removing %1$s"
 msgstr "ทำการลบ %1$s ออก"
 
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, fuzzy, c-format
+msgid "Removing Tmpfs volume from mount point %1$s"
+msgstr "ทำการลบกลุ่มโวลุม %1$s ออก"
+
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:949
+#: ../storage/EtcFstab.cc:955
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "ทำการลบรายการของจุดเมานท์ %1$s ออกจากแฟ้ม %2$s"
@@ -1077,37 +1200,50 @@ msgstr "ทำการลบ raid %1$s ออก"
 msgid "Removing software RAID %1$s"
 msgstr "ทำการลบ RAID แบบซอฟต์แวร์ %1$s ออก"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:681
+#, fuzzy, c-format
+msgid "Removing subvolume %1$s on device %2$s"
+msgstr "ทำการลบโวลุม %1$s ออก"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2976
+#: ../storage/Volume.cc:3142
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "ทำการลบโวลุม %1$s ออก"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1064
+#: ../storage/LvmVg.cc:1073
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "ทำการลบกลุ่มโวลุม %1$s ออก"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1541
+#: ../storage/Disk.cc:1555
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "ตั้งค่าป้ายชื่อดิสก์ของ %1$s เป็นชื่อ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2214
+#: ../storage/Volume.cc:2360
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "ตั้งป้ายชื่อบน %1$s เป็นชื่อ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1198
+#: ../storage/Volume.cc:1336
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
+msgstr "ตั้งค่าจุดเมานท์ของ %1$s เป็นตำแหน่ง %2$s"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:109
+#, fuzzy, c-format
+msgid "Set mount point of tmpfs to %1$s"
 msgstr "ตั้งค่าจุดเมานท์ของ %1$s เป็นตำแหน่ง %2$s"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
@@ -1121,8 +1257,10 @@ msgstr "ตั้งค่าชนิดของพาร์ทิชัน %1
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:171 ../storage/MdPart.cc:180
-#: ../storage/Partition.cc:311
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:171
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "ตั้งค่าชนิดของพาร์ทิชัน %1$s เป็น %2$X"
@@ -1135,27 +1273,27 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "ตั้งค่าชนิดของพาร์ทิชัน raid %1$s เป็น %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1524
+#: ../storage/Volume.cc:1662
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "ตั้งค่าอุปกรณ์ dm ที่มีการเข้ารหัส บน %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1508
+#: ../storage/Volume.cc:1646
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "ตั้งค่าอุปกรณ์ loop ที่มีการเข้ารหัส บน %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1534
+#: ../storage/Disk.cc:1548
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "ทำการตั้งค่าป้ายชื่อดิสก์ของ %1$s เป็นชื่อ %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2200
+#: ../storage/Volume.cc:2346
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "ทำการตั้งป้ายชื่อบน %1$s เป็นชื่อ %2$s"
@@ -1171,8 +1309,10 @@ msgstr "ทำการตั้งค่าชนิดของพาร์ท
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:164 ../storage/MdPart.cc:173
-#: ../storage/Partition.cc:304
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:164
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "ทำการตั้งค่าชนิดของพาร์ทิชัน %1$s เป็น %2$X"
@@ -1185,20 +1325,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "ทำการตั้งค่าชนิดของพาร์ทิชัน raid %1$s เป็น %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1519
+#: ../storage/Volume.cc:1657
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "ทำการตั้งค่าอุปกรณ์ dm ที่มีการเข้ารหัส บน %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1503
+#: ../storage/Volume.cc:1641
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "ทำการตั้งค่าอุปกรณ์ loop ที่มีการเข้ารหัส บน %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2961
+#: ../storage/Volume.cc:3127
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "ลดขนาด %1$s เป็นขนาด %2$s"
@@ -1240,7 +1380,7 @@ msgstr "ย่อขนาดพาร์ทิชัน raid %1$s เป็น�
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2947
+#: ../storage/Volume.cc:3113
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "ทำการลดขนาด %1$s เป็นขนาด %2$s"
@@ -1353,43 +1493,49 @@ msgstr ""
 msgid "TiB"
 msgstr "เทราไบต์"
 
-#: ../storage/Storage.cc:4525
+#: ../storage/Storage.cc:4837
 msgid "Unmount failed."
 msgstr "ล้มเหลวในการยกเลิกการเมานท์"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1179
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "ทำการยกเลิกการเมานท์ %1$s"
 
+#. displayed text during action
+#: ../storage/Tmpfs.cc:95
+#, fuzzy
+msgid "Unmounting tmpfs"
+msgstr "ทำการยกเลิกการเมานท์ %1$s"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:935
+#: ../storage/EtcFstab.cc:941
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "ปรับปรุงรายการของจุดเมานท์ %1$s ไว้ในแฟ้ม %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:928
+#: ../storage/EtcFstab.cc:934
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "ทำการปรับปรุงรายการของจุดเมานท์ %1$s ไว้ในแฟ้ม %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1205
+#: ../storage/Volume.cc:1343
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "ใช้ %1$s สำหรับเป็น %2$s"
 
-#: ../storage/Graph.cc:490
+#: ../storage/Graph.cc:507
 msgid "Volume Group"
 msgstr "กลุ่มโวลุม"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:358
+#: ../storage/Storage.cc:360
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"

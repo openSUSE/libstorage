@@ -6,32 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 10:04+0100\n"
+"POT-Creation-Date: 2011-06-17 10:58+0200\n"
 "PO-Revision-Date: 2003-08-14 10:47+0200\n"
 "Last-Translator: xxx <yyy@example.org>\n"
 "Language-Team: Tamil <i18n@suse.de>\n"
+"Language: ta\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. text displayed during action
-#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
-#: ../storage/Volume.cc:2954
+#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
+#: ../storage/Volume.cc:3120
 msgid "(progress bar might not move)"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:914
+#: ../storage/EtcFstab.cc:920
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "ஏற்ற நிலை %1$sலிருந்து %2$sக்கு உள்ளிடுதலை சேர்க்கவும்"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:907
+#: ../storage/EtcFstab.cc:913
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "ஏற்ற நிலை %1$sலிருந்து %2$sக்கு உள்ளிடுதல் சேர்க்கப்படுகிறது"
@@ -42,27 +43,37 @@ msgstr "ஏற்ற நிலை %1$sலிருந்து %2$sக்கு 
 msgid "B"
 msgstr "கேபி"
 
+#: ../storage/Graph.cc:515
+msgid "Btrfs Volume"
+msgstr ""
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1189
+#: ../storage/Volume.cc:1327
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1$sன் ஏற்ற நிலையை %2$sக்கு மாற்றவும்"
 
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:104
+#, fuzzy, c-format
+msgid "Change mount point of tmpfs to %1$s"
+msgstr "%1$sன் ஏற்ற நிலையை %2$sக்கு மாற்றவும்"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2208
+#: ../storage/Volume.cc:2354
 #, fuzzy, c-format
 msgid "Clear label on %1$s"
 msgstr "%2$sக்கு %1$s மீது விளக்கச்சீட்டு அமைக்கவும்"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2194
+#: ../storage/Volume.cc:2340
 #, fuzzy, c-format
 msgid "Clearing label on %1$s"
 msgstr "%2$sக்கு %1$s மீது விளக்கச்சீட்டு அமைக்கப்படுகிறது"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:276
+#: ../storage/Container.cc:280
 #, fuzzy, c-format
 msgid "Create %1$s"
 msgstr "%$sஐ உருவாக்கவும்"
@@ -70,7 +81,7 @@ msgstr "%$sஐ உருவாக்கவும்"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2892
+#: ../storage/Volume.cc:3058
 #, fuzzy, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "துவக்க பகுதி பிரிப்பு %1$sஐ (%2$s)%3$s உடன் உருவாக்கவும்"
@@ -124,7 +135,7 @@ msgstr "மறைக்கப்பட்ட மென்பொருள் RAID
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2930
+#: ../storage/Volume.cc:3096
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "விரிவாக்கப்பட்ட பகுதி பிரிப்பு %1$sஐ (%2$s) உருவாக்கவும்"
@@ -133,7 +144,7 @@ msgstr "விரிவாக்கப்பட்ட பகுதி பிர�
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2913
+#: ../storage/Volume.cc:3079
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "மறைக்கப்பட்ட தருக்கரீதியான அளவு %1$sஐ (%2$s) %3$s உடன் %4$sகாக உருவாக்கவும்"
@@ -228,7 +239,7 @@ msgstr "பகுதி பிரிப்பு %1$sஐ (%2$s)%3$s உடன்
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2884
+#: ../storage/Volume.cc:3050
 #, fuzzy, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "ஆதார பகுதி பிரிப்பு %1$sஐ (%2$s)%3$s உடன் உருவாக்கவும்"
@@ -250,6 +261,13 @@ msgstr "மென்பொருள் RAID %1$sஐ (%2$s) உருவாக்
 #, fuzzy, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "மென்பொருள் RAID %1$sஐ (%2$s) %3$s உடன் %4$sகாக உருவாக்கவும்"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:668
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s"
+msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) உருவாக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -274,14 +292,14 @@ msgstr "பரிமாற்ற பகுதி பிரிப்பு %1$s�
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2876
+#: ../storage/Volume.cc:3042
 #, fuzzy, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "பரிமாற்ற தருக்கரீதியான அளவு %1$sஐ (%2$s) உருவாக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2924
+#: ../storage/Volume.cc:3090
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) உருவாக்கவும்"
@@ -290,7 +308,7 @@ msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) உ�
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2903
+#: ../storage/Volume.cc:3069
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) %3$s உடன் %4$sகாக உருவாக்கவும்"
@@ -299,13 +317,13 @@ msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) %3$s
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1093
+#: ../storage/LvmVg.cc:1102
 #, fuzzy, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "%2$sலிருந்து அளவு குழு %1$sஐ உருவாக்கவும்"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:271
+#: ../storage/Container.cc:275
 #, fuzzy, c-format
 msgid "Creating %1$s"
 msgstr "%$s உருவாக்கப்படுகிறது"
@@ -342,8 +360,15 @@ msgstr "பகுதி பிரிப்பு %1$s உருவாக்க�
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "மென்பொருள் RAID %1$s உருவாக்கப்படுகிறது"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:661
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s"
+msgstr "தருக்கரீதியான அளவு %1$sஐ (%2$s) உருவாக்கவும்"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2868
+#: ../storage/Volume.cc:3034
 #, fuzzy, c-format
 msgid "Creating volume %1$s"
 msgstr "தருக்கரீதியான அளவு %1$s உருவாக்கப்படுகிறது"
@@ -352,25 +377,32 @@ msgstr "தருக்கரீதியான அளவு %1$s உருவ�
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1084
+#: ../storage/LvmVg.cc:1093
 #, fuzzy, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "%2$sலிருந்து அளவு குழு %1$s உருவாக்கப்படுகிறது"
 
-#: ../storage/Graph.cc:498
+#: ../storage/Graph.cc:519
 #, fuzzy
 msgid "DM Device"
 msgstr " டிஎஸ்எல் கருவிகள்"
 
-#: ../storage/Graph.cc:474
+#: ../storage/Graph.cc:491
 #, fuzzy
 msgid "DM Multipath"
 msgstr "மல்டிமீடியா"
 
-#: ../storage/Graph.cc:470
+#: ../storage/Graph.cc:487
 #, fuzzy
 msgid "DM RAID"
 msgstr " &RAID... "
+
+#. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Btrfs.cc:477
+#, fuzzy, c-format
+msgid "Delete Btrfs volume on devices %1$s (%2$s)"
+msgstr "கோப்பு அடிப்படையிலான சாதனம் %1$sஐ (%2$s)நீக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -427,6 +459,12 @@ msgstr "பகுதி பிரிப்பு %1$sஐ (%2$s) நீக்க�
 #, fuzzy, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "மென்பொருள் RAID %1$sஐ நீக்கவும்"
+
+#. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:471
+#, fuzzy, c-format
+msgid "Deleting Btrfs volume on devices %1$s"
+msgstr "கோப்பு அடிப்படையிலான சாதனம் %1$s நீக்கப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #: ../storage/Dm.cc:383
@@ -511,10 +549,17 @@ msgstr "%1$s வட்டிற்கு fdasd நிறைவேற்றப்
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2965
+#: ../storage/Volume.cc:3131
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%1$sஐ %2$sக்கு விரிவாக்கவும்"
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:627
+#, fuzzy, c-format
+msgid "Extend BTRFS volume %1$s by %2$s"
+msgstr "தருக்கரீதியான அளவை %1$sலிருந்து %2$sக்கு விருவுபடுத்தவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -553,17 +598,24 @@ msgstr "பகுதி பிரிப்பு %1$sஐ %2$sக்கு வி
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1114
+#: ../storage/LvmVg.cc:1123
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "%2$s உடன் அளவு குழு %1$sஐ விரிவாக்கவும்"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2951
+#: ../storage/Volume.cc:3117
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s %2$sக்கு விரிவாக்கப்படுகிறது"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:620
+#, fuzzy, c-format
+msgid "Extending BTRFS volume %1$s by %2$s"
+msgstr "தருக்கரீதியான அளவு %1$sலிருந்து %2$sக்கு விரிவுபடுத்தப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -595,16 +647,33 @@ msgstr "பகுதி பிரிப்பு %1$s %2$sக்கு விர
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1107
+#: ../storage/LvmVg.cc:1116
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "%2$s உடன் அளவு குழு %1$s விரிவாக்கப்படுகிறது"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:560
+#, c-format
+msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr ""
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#. %3$s is replaced by mount point (e.g. /usr)
+#: ../storage/Btrfs.cc:554
+#, c-format
+msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
+msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:725
+#: ../storage/Volume.cc:759
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "சாதனம் %1$sஐ (%2$s)%3$s உடன் %4$sகாக வடிவமைக்கவும்"
@@ -612,7 +681,7 @@ msgstr "சாதனம் %1$sஐ (%2$s)%3$s உடன் %4$sகாக வட�
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:745
+#: ../storage/Volume.cc:779
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "சாதனம் %1$sஐ (%2$s)%3$s உடன் வடிவமைக்கவும்"
@@ -638,7 +707,7 @@ msgstr "சாதன வரைவாளர் அளவு %1$sஐ (%2$s)%3$s �
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:735
+#: ../storage/Volume.cc:769
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "மறைக்கப்பட்ட்ட சாதனம் %1$sஐ (%2$s)%3$s உடன் %4$sகாக வடிவமைக்கவும்"
@@ -839,10 +908,18 @@ msgstr "மென்பொருள் RAID %1$sஐ (%2$s) %3$s உடன் %4$
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "மென்பொருள் RAID %1$sஐ (%2$s) %3$s உடன் வடிவமைக்கவும்"
 
+#. displayed text during action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:544
+#, fuzzy, c-format
+msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "தருக்கரீதியான அளவு %1$s (%2$s) %3$s உடன் வடிவமைக்கப்படுகிறது"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:712
+#: ../storage/Volume.cc:746
 #, fuzzy, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "சாதனம் %1$s (%2$s)%3$sஉடன் வடிவமைக்கப்படுகிறது"
@@ -921,7 +998,7 @@ msgstr "ஜிபி"
 msgid "GiB"
 msgstr "ஜிபி"
 
-#: ../storage/Graph.cc:466
+#: ../storage/Graph.cc:483
 msgid "Hard Disk"
 msgstr "ஹார்டு டிஸ்க்"
 
@@ -930,7 +1007,7 @@ msgstr "ஹார்டு டிஸ்க்"
 msgid "KiB"
 msgstr " கேஐபி"
 
-#: ../storage/Graph.cc:494
+#: ../storage/Graph.cc:511
 #, fuzzy
 msgid "Logical Volume"
 msgstr "தருக்கரீதியான அளவுகள்"
@@ -946,7 +1023,7 @@ msgstr "எம்பி"
 msgid "MB"
 msgstr "எம்பி"
 
-#: ../storage/Graph.cc:482 ../storage/Graph.cc:486
+#: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 #, fuzzy
 msgid "MD RAID"
 msgstr " &RAID... "
@@ -956,15 +1033,21 @@ msgstr " &RAID... "
 msgid "MiB"
 msgstr "எம்ஐபி"
 
-#: ../storage/Graph.cc:502
+#: ../storage/Graph.cc:523
 msgid "Mount Point"
 msgstr "ஏற்றப்புள்ளி"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1174
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Mounting %1$s to %2$s"
+msgstr "%2$sல் %1$s ஏற்றப்படுகிறது"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:90
+#, fuzzy, c-format
+msgid "Mounting tmpfs to %1$s"
 msgstr "%2$sல் %1$s ஏற்றப்படுகிறது"
 
 #. symbol for "peta" (best keep untranslated)
@@ -978,7 +1061,7 @@ msgstr "PC"
 msgid "PB"
 msgstr ""
 
-#: ../storage/Graph.cc:478
+#: ../storage/Graph.cc:495
 msgid "Partition"
 msgstr "தடுப்பு"
 
@@ -988,37 +1071,57 @@ msgstr "தடுப்பு"
 msgid "PiB"
 msgstr " கேஐபி"
 
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:648
+#, fuzzy, c-format
+msgid "Reduce BTRFS volume %1$s by %2$s"
+msgstr "%2$sக்கு அளவு குழு %1$sஐ குறைக்கவும்"
+
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1136
+#: ../storage/LvmVg.cc:1145
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "%2$sக்கு அளவு குழு %1$sஐ குறைக்கவும்"
 
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:641
+#, fuzzy, c-format
+msgid "Reducing BTRFS volume %1$s by %2$s"
+msgstr "%2$sக்கு அளவு குழு %1$s குறைக்கப்படுகிறது"
+
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1129
+#: ../storage/LvmVg.cc:1138
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "%2$sக்கு அளவு குழு %1$s குறைக்கப்படுகிறது"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:927
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:927
 #, fuzzy, c-format
 msgid "Remove %1$s"
 msgstr "%$sஐ நீக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1217
+#: ../storage/Volume.cc:1355
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%2$sலிருந்து %1$sஐ நீக்கவும்"
 
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, fuzzy, c-format
+msgid "Remove Tmpfs volume from mount point %1$s"
+msgstr "அளவு குழு %1$sஐ நீக்கவும்"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:956
+#: ../storage/EtcFstab.cc:962
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "%2$sலிருந்து ஏற்ற நிலை %1$sக்கான உள்ளிடுதலை நீக்கவும்"
@@ -1041,28 +1144,47 @@ msgstr "%$sஐ நீக்கவும்"
 msgid "Remove software RAID %1$s"
 msgstr "மென்பொருள் RAID %1$s நீக்கப்படுகிறது"
 
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:688
+#, fuzzy, c-format
+msgid "Remove subvolume %1$s on device %2$s"
+msgstr "nfs ஒலியளவு %1$sஐ நீக்கவும்"
+
+#. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Tmpfs.cc:119
+#, fuzzy, c-format
+msgid "Remove tmpfs from %1$s"
+msgstr "%2$sலிருந்து %1$sஐ நீக்கவும்"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2981
+#: ../storage/Volume.cc:3147
 #, fuzzy, c-format
 msgid "Remove volume %1$s"
 msgstr "nfs ஒலியளவு %1$sஐ நீக்கவும்"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1069
+#: ../storage/LvmVg.cc:1078
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "அளவு குழு %1$sஐ நீக்கவும்"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:922
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:922
 #, fuzzy, c-format
 msgid "Removing %1$s"
 msgstr "%$s நீக்கப்படுகிறது"
 
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, fuzzy, c-format
+msgid "Removing Tmpfs volume from mount point %1$s"
+msgstr "அளவு குழு %1$s நீக்கப்படுகிறது"
+
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:949
+#: ../storage/EtcFstab.cc:955
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "%2$sலிருந்து ஏற்ற நிலை %1$sக்கான உள்ளிடுதல் நீக்கப்படுகிறது"
@@ -1085,37 +1207,50 @@ msgstr "%$s நீக்கப்படுகிறது"
 msgid "Removing software RAID %1$s"
 msgstr "மென்பொருள் RAID %1$s நீக்கப்படுகிறது"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:681
+#, fuzzy, c-format
+msgid "Removing subvolume %1$s on device %2$s"
+msgstr "nfs ஒலியளவு %1$s நீக்கப்படுகிறது"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2976
+#: ../storage/Volume.cc:3142
 #, fuzzy, c-format
 msgid "Removing volume %1$s"
 msgstr "nfs ஒலியளவு %1$s நீக்கப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1064
+#: ../storage/LvmVg.cc:1073
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "அளவு குழு %1$s நீக்கப்படுகிறது"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1541
+#: ../storage/Disk.cc:1555
 #, fuzzy, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "வட்டு %1$sன் வட்டு விளக்கச்சீட்டை %2$sஆக அமைக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2214
+#: ../storage/Volume.cc:2360
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "%2$sக்கு %1$s மீது விளக்கச்சீட்டு அமைக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1198
+#: ../storage/Volume.cc:1336
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
+msgstr "%1$sன் ஏற்ற நிலையை %2$sஆக அமைக்கவும்"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:109
+#, fuzzy, c-format
+msgid "Set mount point of tmpfs to %1$s"
 msgstr "%1$sன் ஏற்ற நிலையை %2$sஆக அமைக்கவும்"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
@@ -1129,8 +1264,10 @@ msgstr "பகுதி பிரிப்பு வகை %1$sஐ %2$Xக்க
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:171 ../storage/MdPart.cc:180
-#: ../storage/Partition.cc:311
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:171
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "பகுதி பிரிப்பு வகை %1$sஐ %2$Xக்கு அமைக்கவும்"
@@ -1143,27 +1280,27 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "பகுதி பிரிப்பு வகை %1$sஐ %2$Xக்கு அமைக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1524
+#: ../storage/Volume.cc:1662
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "%1$s மீது மறைக்கப்பட்ட dm சாதனத்தை அமைக்கவும்"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1508
+#: ../storage/Volume.cc:1646
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "%1$s மீது மறைக்கப்பட்ட லூப் சாதனத்தை அமைக்கவும்"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1534
+#: ../storage/Disk.cc:1548
 #, fuzzy, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "வட்டு %1$sன் வட்டு விளக்கச்சீட்டு %2$sஆக அமைக்கப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2200
+#: ../storage/Volume.cc:2346
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%2$sக்கு %1$s மீது விளக்கச்சீட்டு அமைக்கப்படுகிறது"
@@ -1179,8 +1316,10 @@ msgstr "பகுதி பிரிப்பு வகை %1$s %2$Xக்கு
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:164 ../storage/MdPart.cc:173
-#: ../storage/Partition.cc:304
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:164
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "பகுதி பிரிப்பு வகை %1$s %2$Xக்கு அமைக்கப்படுகிறது"
@@ -1193,20 +1332,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "பகுதி பிரிப்பு வகை %1$s %2$Xக்கு அமைக்கப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1519
+#: ../storage/Volume.cc:1657
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "%1$s மீது மறைக்கப்பட்ட dm சாதனம் அமைக்கப்படுகிறது"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1503
+#: ../storage/Volume.cc:1641
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "%1$s மீது மறைக்கப்பட்ட லூப் சாதனம் அமைக்கப்படுகிறது"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2961
+#: ../storage/Volume.cc:3127
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%1$sஐ %2$sக்கு சுருக்கவும்"
@@ -1248,7 +1387,7 @@ msgstr "பகுதி பிரிப்பு %1$sஐ %2$sக்கு சு
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2947
+#: ../storage/Volume.cc:3113
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s %2$sக்கு சுருக்கப்படுகிறது"
@@ -1362,44 +1501,50 @@ msgstr ""
 msgid "TiB"
 msgstr "டிபி"
 
-#: ../storage/Storage.cc:4525
+#: ../storage/Storage.cc:4837
 #, fuzzy
 msgid "Unmount failed."
 msgstr "தோல்வியுற்றது."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1179
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$s இறக்கப்படுகிறது"
 
+#. displayed text during action
+#: ../storage/Tmpfs.cc:95
+#, fuzzy
+msgid "Unmounting tmpfs"
+msgstr "%1$s இறக்கப்படுகிறது"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:935
+#: ../storage/EtcFstab.cc:941
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "ஏற்ற நிலை %1$sக்கு %2$sல் உள்ளிடுதலை புதுப்பிக்கவும்"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:928
+#: ../storage/EtcFstab.cc:934
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "ஏற்ற நிலை %1$sக்கு %2$sல் உள்ளிடுதல் புதுப்பிக்கப்படுகிறது"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1205
+#: ../storage/Volume.cc:1343
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$sஐ %2$sஆக பயன்படுத்தவும்"
 
-#: ../storage/Graph.cc:490
+#: ../storage/Graph.cc:507
 msgid "Volume Group"
 msgstr "தொகுதி கூட்டு"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:358
+#: ../storage/Storage.cc:360
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"

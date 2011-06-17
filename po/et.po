@@ -6,32 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: autoinst.fi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-17 10:04+0100\n"
+"POT-Creation-Date: 2011-06-17 10:58+0200\n"
 "PO-Revision-Date: 2003-09-22 13:26+0200\n"
 "Last-Translator: Ain Vagula <avagula@gmail.com>\n"
 "Language-Team: Estonian <et@li.org>\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. text displayed during action
-#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
-#: ../storage/Volume.cc:2954
+#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
+#: ../storage/Volume.cc:3120
 msgid "(progress bar might not move)"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:914
+#: ../storage/EtcFstab.cc:920
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Ühenduskoha %1$s kirje lisamine faili %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:907
+#: ../storage/EtcFstab.cc:913
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Ühenduskoha %1$s kirje lisamine faili %2$s"
@@ -42,27 +43,37 @@ msgstr "Ühenduskoha %1$s kirje lisamine faili %2$s"
 msgid "B"
 msgstr "kB"
 
+#: ../storage/Graph.cc:515
+msgid "Btrfs Volume"
+msgstr ""
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1189
+#: ../storage/Volume.cc:1327
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1$s ühenduskoha muutmine %2$s-ks"
 
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:104
+#, fuzzy, c-format
+msgid "Change mount point of tmpfs to %1$s"
+msgstr "%1$s ühenduskoha muutmine %2$s-ks"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2208
+#: ../storage/Volume.cc:2354
 #, fuzzy, c-format
 msgid "Clear label on %1$s"
 msgstr "%1$s-le nime %2$s määramine"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2194
+#: ../storage/Volume.cc:2340
 #, fuzzy, c-format
 msgid "Clearing label on %1$s"
 msgstr "%1$s-le nime %2$s määramine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:276
+#: ../storage/Container.cc:280
 #, c-format
 msgid "Create %1$s"
 msgstr "Luuakse %1$s"
@@ -70,7 +81,7 @@ msgstr "Luuakse %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2892
+#: ../storage/Volume.cc:3058
 #, fuzzy, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Alglaadimispartitsiooni %1$s (%2$s) loomine %3$s-le"
@@ -124,7 +135,7 @@ msgstr "Tarkvaralise krüptitud RAID-i %1$s (%2$s) kohas %4$s loomine %3$s-le"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2930
+#: ../storage/Volume.cc:3096
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Laiendatud partitsiooni %1$s (%2$s) loomine"
@@ -133,7 +144,7 @@ msgstr "Laiendatud partitsiooni %1$s (%2$s) loomine"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2913
+#: ../storage/Volume.cc:3079
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Krüptitud loogilise andmeruumi %1$s (%2$s) kohas %4$s loomine %3$s-le"
@@ -228,7 +239,7 @@ msgstr "RAID-i partitsiooni %1$s (%2$s) loomine kohas %4$s failisüsteemiga %3$s
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:2884
+#: ../storage/Volume.cc:3050
 #, fuzzy, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Juurpartitsiooni %1$s (%2$s) loomine %3$s-le"
@@ -250,6 +261,13 @@ msgstr "Tarkvaralise RAID-i %1$s (%2$s) loomine"
 #, fuzzy, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "Tarkvaralise RAID-i %1$s (%2$s) kohas %4$s loomine %3$s-le"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:668
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s"
+msgstr "Loogilise andmeruumi %1$s (%2$s) loomine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -274,14 +292,14 @@ msgstr "RAID-i saalepartitsiooni %1$s (%2$s) loomine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2876
+#: ../storage/Volume.cc:3042
 #, fuzzy, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Saale loogilise andmeruumi %1$s (%2$s) loomine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2924
+#: ../storage/Volume.cc:3090
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Loogilise andmeruumi %1$s (%2$s) loomine"
@@ -290,7 +308,7 @@ msgstr "Loogilise andmeruumi %1$s (%2$s) loomine"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:2903
+#: ../storage/Volume.cc:3069
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Loogilise andmeruumi %1$s (%2$s) kohas %4$s loomine %3$s-le"
@@ -299,13 +317,13 @@ msgstr "Loogilise andmeruumi %1$s (%2$s) kohas %4$s loomine %3$s-le"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1093
+#: ../storage/LvmVg.cc:1102
 #, fuzzy, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Andmeruumirühma %1$s loomine seadmetest %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:271
+#: ../storage/Container.cc:275
 #, c-format
 msgid "Creating %1$s"
 msgstr "%1$s loomine"
@@ -342,8 +360,15 @@ msgstr "RAID-i partitsiooni %1$s loomine"
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "Tarkvaralise RAID-i %1$s loomine"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:661
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s"
+msgstr "Loogilise andmeruumi %1$s (%2$s) loomine"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2868
+#: ../storage/Volume.cc:3034
 #, fuzzy, c-format
 msgid "Creating volume %1$s"
 msgstr "Loogilise andmeruumi %1$s loomine"
@@ -352,25 +377,32 @@ msgstr "Loogilise andmeruumi %1$s loomine"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1084
+#: ../storage/LvmVg.cc:1093
 #, fuzzy, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Andmeruumirühma %1$s loomine seadmetest %2$s"
 
-#: ../storage/Graph.cc:498
+#: ../storage/Graph.cc:519
 #, fuzzy
 msgid "DM Device"
 msgstr "DSL-seadmed"
 
-#: ../storage/Graph.cc:474
+#: ../storage/Graph.cc:491
 #, fuzzy
 msgid "DM Multipath"
 msgstr "Multicast"
 
-#: ../storage/Graph.cc:470
+#: ../storage/Graph.cc:487
 #, fuzzy
 msgid "DM RAID"
 msgstr "&RAID..."
+
+#. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Btrfs.cc:477
+#, fuzzy, c-format
+msgid "Delete Btrfs volume on devices %1$s (%2$s)"
+msgstr "Loogilise andmeruumi %1$s (%2$s) kustutamine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -427,6 +459,12 @@ msgstr "RAID-i partitsiooni %1$s (%2$s) kustutamine"
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Tarkvaralise RAID-i %1$s (%2$s) kustutamine"
+
+#. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:471
+#, fuzzy, c-format
+msgid "Deleting Btrfs volume on devices %1$s"
+msgstr "Seadme kustutamine: %1"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #: ../storage/Dm.cc:383
@@ -511,10 +549,17 @@ msgstr "fdasd käivitamine ketta %1$s jaoks..."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2965
+#: ../storage/Volume.cc:3131
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%1$s suurendamine %2$s-ni"
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:627
+#, fuzzy, c-format
+msgid "Extend BTRFS volume %1$s by %2$s"
+msgstr "Loogilise andmeruumi %1$s suurendamine %2$s-ni"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -553,17 +598,24 @@ msgstr "RAID-i partitsiooni %1$s suurendamine %2$s-ni"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1114
+#: ../storage/LvmVg.cc:1123
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Andmeruumirühma %1$s laiendamine %2$s-le"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2951
+#: ../storage/Volume.cc:3117
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s suurendamine %2$s-ni"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:620
+#, fuzzy, c-format
+msgid "Extending BTRFS volume %1$s by %2$s"
+msgstr "Loogilise andmeruumi %1$s suurendamine %2$s-ni"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -595,16 +647,33 @@ msgstr "RAID-i partitsiooni %1$s suurendamine %2$s-ni"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1107
+#: ../storage/LvmVg.cc:1116
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Andmeruumirühma %1$s laiendamine %2$s-le"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:560
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Loogilise andmeruumi %1$s (%2$s) kustutamine"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#. %3$s is replaced by mount point (e.g. /usr)
+#: ../storage/Btrfs.cc:554
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
+msgstr "Loogilise andmeruumi %1$s (%2$s) kustutamine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:725
+#: ../storage/Volume.cc:759
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Seadme %1$s (%2$s) kohas %4$s vormindamine %3$s-ga"
@@ -612,7 +681,7 @@ msgstr "Seadme %1$s (%2$s) kohas %4$s vormindamine %3$s-ga"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:745
+#: ../storage/Volume.cc:779
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Seadme %1$s (%2$s) vormindamine %3$s-ga"
@@ -638,7 +707,7 @@ msgstr "Seadmevastendaja andmeruumi %1$s (%2$s) vormindamine %3$s-ga"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:735
+#: ../storage/Volume.cc:769
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Krüptitud seadme %1$s (%2$s) kohas %4$s vormindamine %3$s-ga"
@@ -839,10 +908,18 @@ msgstr "Tarkvaralise RAID-i %1$s (%2$s) kohas %4$s vormindamine %3$s-ga"
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "Tarkvaralise RAID-i %1$s (%2$s) vormindamine %3$s-ga"
 
+#. displayed text during action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:544
+#, fuzzy, c-format
+msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Loogilise andmeruumi %1$s (%2$s) loomine"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:712
+#: ../storage/Volume.cc:746
 #, fuzzy, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Seadme %1$s (%2$s) vormindamine %3$s-ga "
@@ -921,7 +998,7 @@ msgstr "GB"
 msgid "GiB"
 msgstr "GB"
 
-#: ../storage/Graph.cc:466
+#: ../storage/Graph.cc:483
 msgid "Hard Disk"
 msgstr "Kõvaketas"
 
@@ -930,7 +1007,7 @@ msgstr "Kõvaketas"
 msgid "KiB"
 msgstr "KiB"
 
-#: ../storage/Graph.cc:494
+#: ../storage/Graph.cc:511
 #, fuzzy
 msgid "Logical Volume"
 msgstr "Loogilised andmeruumid"
@@ -946,7 +1023,7 @@ msgstr "MB"
 msgid "MB"
 msgstr "MB"
 
-#: ../storage/Graph.cc:482 ../storage/Graph.cc:486
+#: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 #, fuzzy
 msgid "MD RAID"
 msgstr "&RAID..."
@@ -956,15 +1033,21 @@ msgstr "&RAID..."
 msgid "MiB"
 msgstr "MiB"
 
-#: ../storage/Graph.cc:502
+#: ../storage/Graph.cc:523
 msgid "Mount Point"
 msgstr "Ühenduskoht"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1174
+#: ../storage/Volume.cc:1312
 #, c-format
 msgid "Mounting %1$s to %2$s"
+msgstr "%1$s ühendamine kohta %2$s"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:90
+#, fuzzy, c-format
+msgid "Mounting tmpfs to %1$s"
 msgstr "%1$s ühendamine kohta %2$s"
 
 #. symbol for "peta" (best keep untranslated)
@@ -978,7 +1061,7 @@ msgstr "IP"
 msgid "PB"
 msgstr ""
 
-#: ../storage/Graph.cc:478
+#: ../storage/Graph.cc:495
 msgid "Partition"
 msgstr "Partitsioon"
 
@@ -988,37 +1071,57 @@ msgstr "Partitsioon"
 msgid "PiB"
 msgstr "KiB"
 
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:648
+#, fuzzy, c-format
+msgid "Reduce BTRFS volume %1$s by %2$s"
+msgstr "Andmeruumirühma %1$s kitsendamine %2$s võrra"
+
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1136
+#: ../storage/LvmVg.cc:1145
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Andmeruumirühma %1$s kitsendamine %2$s võrra"
 
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:641
+#, fuzzy, c-format
+msgid "Reducing BTRFS volume %1$s by %2$s"
+msgstr "Andmeruumirühma %1$s kitsendamine %2$s võrra"
+
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1129
+#: ../storage/LvmVg.cc:1138
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Andmeruumirühma %1$s kitsendamine %2$s võrra"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:292 ../storage/DmPartCo.cc:927
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:927
 #, c-format
 msgid "Remove %1$s"
 msgstr "Eemaldatakse %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1217
+#: ../storage/Volume.cc:1355
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%1$s eemaldamine failist %2$s"
 
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, fuzzy, c-format
+msgid "Remove Tmpfs volume from mount point %1$s"
+msgstr "Andmeruumirühma %1$s eemaldamine"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:956
+#: ../storage/EtcFstab.cc:962
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Ühenduskoha %1$s kirje eemaldamine failist %2$s"
@@ -1041,28 +1144,47 @@ msgstr "RAID-i %1$s eemaldamine"
 msgid "Remove software RAID %1$s"
 msgstr "Tarkvaralise RAID-i %1$s kustutamine"
 
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:688
+#, fuzzy, c-format
+msgid "Remove subvolume %1$s on device %2$s"
+msgstr "Andmeruumirühma %1$s eemaldamine"
+
+#. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Tmpfs.cc:119
+#, fuzzy, c-format
+msgid "Remove tmpfs from %1$s"
+msgstr "%1$s eemaldamine failist %2$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2981
+#: ../storage/Volume.cc:3147
 #, fuzzy, c-format
 msgid "Remove volume %1$s"
 msgstr "Andmeruumirühma %1$s eemaldamine"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1069
+#: ../storage/LvmVg.cc:1078
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Andmeruumirühma %1$s eemaldamine"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:287 ../storage/DmPartCo.cc:922
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:922
 #, c-format
 msgid "Removing %1$s"
 msgstr "%1$s eemaldamine"
 
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, fuzzy, c-format
+msgid "Removing Tmpfs volume from mount point %1$s"
+msgstr "Andmeruumirühma %1$s eemaldamine"
+
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:949
+#: ../storage/EtcFstab.cc:955
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Ühenduskoha %1$s kirje eemaldamine failist %2$s"
@@ -1085,37 +1207,50 @@ msgstr "RAID-i %1$s eemaldamine"
 msgid "Removing software RAID %1$s"
 msgstr "Tarkvaralise RAID-i %1$s kustutamine"
 
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:681
+#, fuzzy, c-format
+msgid "Removing subvolume %1$s on device %2$s"
+msgstr "Andmeruumirühma %1$s eemaldamine"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2976
+#: ../storage/Volume.cc:3142
 #, fuzzy, c-format
 msgid "Removing volume %1$s"
 msgstr "Andmeruumirühma %1$s eemaldamine"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1064
+#: ../storage/LvmVg.cc:1073
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Andmeruumirühma %1$s eemaldamine"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1541
+#: ../storage/Disk.cc:1555
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Kettale %1$s nime %2$s määramine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2214
+#: ../storage/Volume.cc:2360
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "%1$s-le nime %2$s määramine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1198
+#: ../storage/Volume.cc:1336
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
+msgstr "%1$s ühenduskoha määramine %2$s-ks"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:109
+#, fuzzy, c-format
+msgid "Set mount point of tmpfs to %1$s"
 msgstr "%1$s ühenduskoha määramine %2$s-ks"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
@@ -1129,8 +1264,10 @@ msgstr "Partitsioonile %1$s tüübi %2$X määramine"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:171 ../storage/MdPart.cc:180
-#: ../storage/Partition.cc:311
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:171
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Partitsioonile %1$s tüübi %2$X määramine"
@@ -1143,27 +1280,27 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "RAID-i partitsioonile %1$s tüübi %2$X määramine"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1524
+#: ../storage/Volume.cc:1662
 #, fuzzy, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Valitud disketiseade %1"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1508
+#: ../storage/Volume.cc:1646
 #, fuzzy, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Valitud disketiseade %1"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1534
+#: ../storage/Disk.cc:1548
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Kettale %1$s nime %2$s määramine"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2200
+#: ../storage/Volume.cc:2346
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%1$s-le nime %2$s määramine"
@@ -1179,8 +1316,10 @@ msgstr "Partitsioonile %1$s tüübi %2$X määramine"
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/DmPart.cc:164 ../storage/MdPart.cc:173
-#: ../storage/Partition.cc:304
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:164
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Partitsioonile %1$s tüübi %2$X määramine"
@@ -1193,20 +1332,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "RAID-i partitsioonile %1$s tüübi %2$X määramine"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1519
+#: ../storage/Volume.cc:1657
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr ""
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1503
+#: ../storage/Volume.cc:1641
 #, fuzzy, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Valitud disketiseade %1"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2961
+#: ../storage/Volume.cc:3127
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%1$s vähendamine %2$s-ni"
@@ -1248,7 +1387,7 @@ msgstr "RAID-i partitsiooni %1$s kahandamine %2$s-ni"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:2947
+#: ../storage/Volume.cc:3113
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s vähendamine %2$s-ni"
@@ -1339,44 +1478,50 @@ msgstr ""
 msgid "TiB"
 msgstr "TB"
 
-#: ../storage/Storage.cc:4525
+#: ../storage/Storage.cc:4837
 #, fuzzy
 msgid "Unmount failed."
 msgstr "nurjus."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1179
+#: ../storage/Volume.cc:1317
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$s lahutamine"
 
+#. displayed text during action
+#: ../storage/Tmpfs.cc:95
+#, fuzzy
+msgid "Unmounting tmpfs"
+msgstr "%1$s lahutamine"
+
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:935
+#: ../storage/EtcFstab.cc:941
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Ühenduskoha %1$s kirje uuendamine failis %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:928
+#: ../storage/EtcFstab.cc:934
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Ühenduskoha %1$s kirje uuendamine failis %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1205
+#: ../storage/Volume.cc:1343
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$s kasutamine kui %2$s"
 
-#: ../storage/Graph.cc:490
+#: ../storage/Graph.cc:507
 msgid "Volume Group"
 msgstr "Andmeruumirühm"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:358
+#: ../storage/Storage.cc:360
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
