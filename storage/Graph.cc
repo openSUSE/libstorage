@@ -410,7 +410,7 @@ namespace storage
 	s->getVolumes(volumes);
 	for (deque<VolumeInfo>::const_iterator i1 = volumes.begin(); i1 != volumes.end(); ++i1)
 	{
-	    if (!i1->mount.empty() && i1->mount != "swap")
+	    if ((!i1->mount.empty() && i1->mount != "swap") && (i1->fs != TMPFS))
 	    {
 		Node mountpoint_node(NODE_MOUNTPOINT, i1->device, i1->mount, i1->sizeK);
 		nodes.push_back(mountpoint_node);
