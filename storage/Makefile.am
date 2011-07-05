@@ -71,6 +71,7 @@ libstorage_la_LIBADD = -lblocxx -lxml2
 pkgincludedir = $(includedir)/storage
 
 pkginclude_HEADERS =			\
+	StorageVersion.h		\
 	StorageInterface.h		\
 	HumanString.h			\
 	Graph.h

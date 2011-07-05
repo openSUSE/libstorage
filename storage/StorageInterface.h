@@ -33,6 +33,9 @@ using std::deque;
 using std::list;
 
 
+#include "storage/StorageVersion.h"
+
+
 /*!
  * \mainpage libstorage Documentation
  *

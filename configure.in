@@ -36,7 +36,10 @@ docdir=\${prefix}/share/doc/packages/libstorage
 fillupdir=/var/adm/fillup-templates
 
 AC_SUBST(VERSION)
+AC_SUBST(LIBVERSION)
 AC_SUBST(LIBVERSION_MAJOR)
+AC_SUBST(LIBVERSION_MINOR)
+AC_SUBST(LIBVERSION_PATCHLEVEL)
 AC_SUBST(LIBVERSION_INFO)
 AC_SUBST(docdir)
 AC_SUBST(fillupdir)
@@ -46,6 +49,7 @@ AC_OUTPUT(
 	doc/Makefile
 	doc/autodocs/Makefile
 	storage/Makefile
+	storage/StorageVersion.h:storage/StorageVersion.h.in
 	bindings/Makefile
 	bindings/python/Makefile
 	data/Makefile
