@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jul  6 19:04:10 CEST 2011 - fehr@suse.de
+
+- fix bug when setting mount point and changing fstype from
+  non-btrfs to btrfs and vice versa
+  
+-------------------------------------------------------------------
 Tue Jul 05 14:53:34 CEST 2011 - aschnell@suse.de
 
 - provide defines with version info
