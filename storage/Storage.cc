@@ -188,7 +188,7 @@ Storage::initialize()
 	    if (!toValue(val, fs_type, false))
 		y2war("unknown default filesystem '" << val << "' in " SYSCONFIGFILE);
 	    else if (fs_type != EXT2 && fs_type != EXT3 && fs_type != EXT4 &&
-		     fs_type != REISERFS && fs_type != XFS)
+		     fs_type != REISERFS && fs_type != XFS && fs_type != BTRFS)
 		y2war("unallowed default filesystem '" << val << "' in " SYSCONFIGFILE);
 	    else
 		setDefaultFs(fs_type);
