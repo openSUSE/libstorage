@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 19 17:17:10 CEST 2011 - aschnell@suse.de
+
+- fixed size calculation for very small partitions (bnc#705566)
+
+-------------------------------------------------------------------
 Tue Jul 19 15:17:48 CEST 2011 - fehr@suse.de
 
 - fix failing testsuite if program without setup_system is first

@@ -1833,6 +1833,13 @@ static bool logicalCreated( const Partition& p )
     { return( p.type()==LOGICAL && p.created() ); }
 
 
+inline unsigned long
+sub_sat(unsigned long a, unsigned long b)
+{
+    return a - min(a, b);
+}
+
+
 int Disk::doCreate( Volume* v )
     {
     Partition * p = dynamic_cast<Partition *>(v);
@@ -1924,7 +1931,7 @@ int Disk::doCreate( Volume* v )
 		{
 		y2mil( "i " << *i );
 		if( i->cylStart()<maxc && i->cylStart()<end &&
-		    i->cylEnd()-fuzz_cyl>p->cylStart() )
+		    sub_sat(i->cylEnd(), fuzz_cyl) > p->cylStart() )
 		    {
 		    maxc=i->cylStart();
 		    y2mil( "new maxc " << maxc );
