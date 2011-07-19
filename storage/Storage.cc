@@ -903,7 +903,7 @@ Storage::printInfo(ostream& str) const
     void
     Storage::logContainersAndVolumes(const string& Dir) const
     {
-	if (max_log_num > 0)
+	if (max_log_num > 0 && checkDir(Dir))
 	{
 	    for (CCIter i = cont.begin(); i != cont.end(); ++i)
 		(*i)->logData(Dir);

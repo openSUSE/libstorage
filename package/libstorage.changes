@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 19 15:17:48 CEST 2011 - fehr@suse.de
+
+- fix failing testsuite if program without setup_system is first
+
+-------------------------------------------------------------------
 Wed Jul  6 19:04:10 CEST 2011 - fehr@suse.de
 
 - fix bug when setting mount point and changing fstype from
