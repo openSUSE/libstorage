@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 26 12:21:56 CEST 2011 - aschnell@suse.de
+
+- fixed commit action calculation for DASDs (bnc#706911)
+
+-------------------------------------------------------------------
 Tue Jul 19 17:17:10 CEST 2011 - aschnell@suse.de
 
 - fixed size calculation for very small partitions (bnc#705566)

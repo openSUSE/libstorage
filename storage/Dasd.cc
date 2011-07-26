@@ -349,6 +349,7 @@ int Dasd::doFdasd()
 		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
 	    ++pr;
 	    }
+	del_ptable = false;
 	}
     unlink( inpname.c_str() );
     y2mil("ret:" << ret);
