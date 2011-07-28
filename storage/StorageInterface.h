@@ -304,6 +304,7 @@ namespace storage
 	unsigned long sectors;
 	unsigned int sectorSize;
 	string disklabel;
+	string orig_disklabel;
 	unsigned maxPrimary;
 	bool extendedPossible;
 	unsigned maxLogical;
