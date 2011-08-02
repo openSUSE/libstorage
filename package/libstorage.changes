@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Aug  2 14:03:30 CEST 2011 - fehr@suse.de
+
+- call waitForDevice in checkDevice to work around possible
+  temporary device node removal by udev (bnc#709464)
+  
+-------------------------------------------------------------------
 Thu Jul 28 12:36:14 CEST 2011 - fehr@suse.de
 
 - changes needed to fix bnc#707472

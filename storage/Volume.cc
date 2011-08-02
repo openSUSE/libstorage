@@ -1367,11 +1367,14 @@ int Volume::checkDevice() const
 int Volume::checkDevice(const string& device) const
     {
     struct stat sbuf;
-    int ret = 0;
-    if( stat(device.c_str(), &sbuf)<0 )
-	ret = VOLUME_DEVICE_NOT_PRESENT;
-    else if( !S_ISBLK(sbuf.st_mode) )
-	ret = VOLUME_DEVICE_NOT_BLOCK;
+    int ret = getStorage()->waitForDevice(device);
+    if( ret!=0 )
+	{
+	if( stat(device.c_str(), &sbuf)<0 )
+	    ret = VOLUME_DEVICE_NOT_PRESENT;
+	else if( !S_ISBLK(sbuf.st_mode) )
+	    ret = VOLUME_DEVICE_NOT_BLOCK;
+	}
     y2mil("checkDevice:" << device << " ret:" << ret);
     return( ret );
     }
