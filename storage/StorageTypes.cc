@@ -168,4 +168,14 @@ std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a)
       << " logical:" << a.logicalSlot << " poss:" << a.logicalPossible;
     return s;
     };
+
+std::ostream& operator<<(std::ostream& s, const FsCapabilities& a)
+    {
+    s << "ext:" << a.isExtendable << " extm:" << a.isExtendableWhileMounted
+      << " red:" << a.isReduceable << " redm:" << a.isReduceableWhileMounted
+      << " uuid:" << a.supportsUuid << " label:" << a.supportsLabel
+      << " lwm:" << a.labelWhileMounted << " ll:" << a.labelLength
+      << " minfsk:" << a.minimalFsSizeK;
+    return s;
+    };
 }

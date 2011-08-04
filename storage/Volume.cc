@@ -665,6 +665,7 @@ Volume::changeMountBy(MountByType mby)
 	             (mby==MOUNTBY_LABEL && !caps.supportsLabel) ||
 	             (mby==MOUNTBY_UUID && !caps.supportsUuid))
 		{
+		y2mil( "fs:" << toString(fs) << " caps:" << caps );
 		ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
 		}
 	    }
