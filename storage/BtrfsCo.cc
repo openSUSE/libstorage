@@ -112,10 +112,14 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		else
 		    devs.push_back( *i );
 		}
-	    Btrfs* b = new Btrfs( *this, *cv, sum_size, devs );
-	    y2mil( "alt_names:" << an );
-	    b->setAltNames( an );
-	    vols.push_back(b);
+	    y2mil( "cv:" << cv << " sum:" << sum_size << " devs:" << devs );
+	    if( cv!=NULL )
+		{
+		Btrfs* b = new Btrfs( *this, *cv, sum_size, devs );
+		y2mil( "alt_names:" << an );
+		b->setAltNames( an );
+		vols.push_back(b);
+		}
 	    }
 	else
 	    y2war( "uuid " << *i << " not found" );
