@@ -48,7 +48,8 @@ LOCALEDIR=$RPM_BUILD_ROOT/usr/share/locale make check
 %install
 make install DESTDIR="$RPM_BUILD_ROOT"
 
-install -d -m 755 $RPM_BUILD_ROOT/var/lock/libstorage
+install -d -m 755 $RPM_BUILD_ROOT/var/run/libstorage
+touch $RPM_BUILD_ROOT/var/run/libstorage/lock
 
 %{find_lang} libstorage
 
@@ -84,7 +85,7 @@ Authors:
 %files -n libstorage@LIBVERSION_MAJOR@ -f libstorage.lang
 %defattr(-,root,root)
 %{_libdir}/libstorage.so.*
-%dir /var/lock/libstorage
+%ghost /var/run/libstorage
 /var/adm/fillup-templates/sysconfig.storage-libstorage
 %doc %dir %{prefix}/share/doc/packages/libstorage
 %doc %{prefix}/share/doc/packages/libstorage/AUTHORS
