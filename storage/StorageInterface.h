@@ -543,6 +543,8 @@ namespace storage
 	string devices_add;
 	string devices_rem;
 	string subvol;
+	string subvol_add;
+	string subvol_rem;
     };
 
     /**
@@ -2222,6 +2224,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeDmraid( const string& name ) = 0;
+
+	/**
+	 * Check for existence of a BTRFS subvolume
+	 *
+	 * @param device of the main BTRFS volume
+	 * @param name of subvolume
+	 * @return true if subvolume exists, false otherwise
+	 */
+	virtual bool existSubvolume( const string& device, const string& name ) = 0;
 
 	/**
 	 * Create a BTRFS subvolume

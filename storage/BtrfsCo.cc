@@ -171,6 +171,17 @@ BtrfsCo::addFromVolume( const Volume& v, string &uuid )
     vols.push_back(b);
     }
 
+bool BtrfsCo::existSubvolume( const string& device, const string& name )
+    {
+    bool ret = false;
+    y2mil( "device:" << device << " name:" << name );
+    BtrfsIter i;
+    if( findBtrfs( device, i ))
+	ret = i->existSubvolume( name );
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 int BtrfsCo::createSubvolume( const string& device, const string& name )
     {
     int ret = 0;

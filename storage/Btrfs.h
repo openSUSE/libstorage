@@ -48,6 +48,7 @@ class Btrfs : public Volume
 	void getDevices( list<string>& devs ) const { devs=devices; }
 	void getSubvolumes( list<Subvolume>& sv ) const { sv = subvol; }
 
+	bool existSubvolume( const string& name );
 	int createSubvolume( const string& name );
 	int deleteSubvolume( const string& name );
 	int extendVolume( const string& dev );

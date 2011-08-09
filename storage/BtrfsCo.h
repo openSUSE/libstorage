@@ -46,6 +46,7 @@ class BtrfsCo : public Container
 	void addFromVolume( const Volume& v, string& uuid );
 	void eraseVolume( Volume* v );
 
+	bool existSubvolume( const string& device, const string& name );
 	int createSubvolume( const string& device, const string& name );
 	int removeSubvolume( const string& device, const string& name );
 	int extendVolume( const string& device, const string& dev );

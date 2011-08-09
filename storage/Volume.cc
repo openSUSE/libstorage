@@ -726,7 +726,7 @@ int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const
 	else
 	    ret = VOLUME_CANNOT_TMP_MOUNT;
 	}
-    y2mil( "ret:" << " mp:" << m << " needUmount:" << needUmount ); 
+    y2mil( "ret:" << ret << " mp:" << m << " needUmount:" << needUmount ); 
     return( ret );
     }
 

@@ -4370,6 +4370,20 @@ int Storage::removeDmraid( const string& name )
     return( ret );
     }
 
+bool Storage::existSubvolume( const string& device, const string& name )
+    {
+    int ret = false;
+    assertInit();
+    y2mil("device:" << device << " name:" << name);
+    BtrfsCo* co;
+    if( haveBtrfs(co) )
+	{
+	ret = co->existSubvolume( device, name );
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
 int Storage::createSubvolume( const string& device, const string& name )
     {
     int ret = 0;

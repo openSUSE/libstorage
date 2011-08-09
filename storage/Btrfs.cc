@@ -110,6 +110,22 @@ void Btrfs::addSubvol( const string& path )
 	y2war( "subvolume " << v << " already exists!" );
     }
 
+bool
+Btrfs::existSubvolume( const string& name )
+    {
+    bool ret=false;
+    y2mil( "name:" << name );
+    list<Subvolume>::iterator i=subvol.begin();
+    while( i!=subvol.end() && !ret )
+	{
+	ret = !i->deleted() && i->path()==name && (!getFormat()||i->created());
+	if( !ret )
+	    ++i;
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 int
 Btrfs::createSubvolume( const string& name )
     {
@@ -118,11 +134,15 @@ Btrfs::createSubvolume( const string& name )
     list<Subvolume>::iterator i=subvol.begin();
     while( i!=subvol.end() && !i->deleted() && i->path()!=name )
 	++i;
-    if( i==subvol.end() || getFormat() )
+    if( i==subvol.end() )
 	{
 	Subvolume v( name );
 	v.setCreated();
 	subvol.push_back( v );
+	}
+    else if( getFormat() )
+	{
+	i->setCreated();
 	}
     else
 	ret = BTRFS_SUBVOL_EXISTS;
@@ -699,14 +719,30 @@ void Btrfs::getInfo( BtrfsInfo& tinfo ) const
     info.devices_add = boost::join( dev_add, "\n" );
     info.devices_rem = boost::join( dev_rem, "\n" );
     info.subvol.erase();
+    info.subvol_add.erase();
+    info.subvol_rem.erase();
 
     for( list<Subvolume>::const_iterator i=subvol.begin(); 
 	 i!=subvol.end(); ++i )
 	 {
-	 if( !info.subvol.empty() )
-	    info.subvol += '\n';
-	 if( !i->deleted() )
-	    info.subvol += i->path();
+	 if( i->deleted() )
+	     {
+	     if( !info.subvol_rem.empty() )
+		 info.subvol_rem += '\n';
+	     info.subvol_rem += i->path();
+	     }
+	 else if( i->created() )
+	     {
+	     if( !info.subvol_add.empty() )
+		 info.subvol_add += '\n';
+	     info.subvol_add += i->path();
+	     }
+	 else
+	     {
+	     if( !info.subvol.empty() )
+		 info.subvol += '\n';
+	     info.subvol += i->path();
+	     }
 	 }
     tinfo = info;
     }

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug  9 16:29:08 CEST 2011 - fehr@suse.de
+
+- fix bugs in subvolume handling during install
+
+-------------------------------------------------------------------
 Fri Aug 05 12:06:28 CEST 2011 - aschnell@suse.de
 
 - moved lock from to /var/run/libstorage (bnc#710356)

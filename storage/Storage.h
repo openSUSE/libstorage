@@ -540,6 +540,7 @@ class DiskData;
 
 	int removeDmraid( const string& name );
 
+	bool existSubvolume( const string& device, const string& name );
 	int createSubvolume( const string& device, const string& name );
 	int removeSubvolume( const string& device, const string& name );
 	int extendBtrfsVolume( const string& device, const string& dev );
