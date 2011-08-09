@@ -561,6 +561,10 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 	}
     }
 
+int Volume::setFormat( bool format )
+    {
+    return setFormat( format, getStorage()->getDefaultFs() );
+    }
 
 int Volume::setFormat( bool val, storage::FsType new_fs )
     {

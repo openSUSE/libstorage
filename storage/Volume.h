@@ -78,7 +78,8 @@ class Storage;
 
 	void getFsInfo( const Volume* source );
 
-	virtual int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	int setFormat( bool format=true );
+	virtual int setFormat( bool format, storage::FsType fs );
 	void formattingDone() { format=false; fs=detected_fs; }
 	bool getFormat() const { return format; }
 	int changeFstabOptions( const string& options );

@@ -83,7 +83,7 @@ class Partition : public Volume
 	Text resizeText(bool doing) const;
 	void getCommitActions(list<commitAction>& l) const;
 	Text setTypeText(bool doing) const;
-	int setFormat( bool format=true, storage::FsType fs=storage::REISERFS );
+	int setFormat( bool format, storage::FsType fs );
 	int changeMount( const string& val );
 	const Disk* disk() const;
 	bool isWindows() const;
