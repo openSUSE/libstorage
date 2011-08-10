@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug 10 16:39:19 CEST 2011 - fehr@suse.de
+
+- support label on btrfs 
+
+-------------------------------------------------------------------
 Tue Aug  9 16:29:08 CEST 2011 - fehr@suse.de
 
 - fix bugs in subvolume handling during install
