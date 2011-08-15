@@ -87,11 +87,20 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	    Volume const* cv = NULL;
 	    unsigned long long sum_size = 0;
 	    list<string> an;
+	    bool forbidden = false;
 	    for( list<string>::const_iterator d=e.devices.begin(); d!=e.devices.end(); ++d )
 		{
 		Volume const* v;
 		if( getStorage()->findVolume( *d, v ))
 		    {
+		    list<UsedBy> ub = v->getUsedBy();
+		    for( list<UsedBy>::const_iterator i=ub.begin(); 
+		         i!=ub.end(); ++i )
+			{
+			forbidden = i->type()!=UB_BTRFS;
+			}
+		    if( !ub.empty() )
+			y2mil( "used_by:" << ub );
 		    if( cv==NULL || 
 			(cv->getMount().empty() && !v->getMount().empty()) ||
 			(!cv->getFormat() && v->getFormat() ))
@@ -104,15 +113,22 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		    y2war( "device " << *d << " not found" );
 		}
 	    list<string> devs;
-	    for( list<string>::const_iterator i=e.devices.begin(); i!=e.devices.end(); ++i )
+	    if( forbidden )
+		cv = NULL;
+	    else
 		{
-		const Device* v;
-		if( getStorage()->findDevice( *i, v ) )
-		    devs.push_back( v->device() );
-		else
-		    devs.push_back( *i );
+		for( list<string>::const_iterator i=e.devices.begin(); 
+		     i!=e.devices.end(); ++i )
+		    {
+		    const Device* v;
+		    if( getStorage()->findDevice( *i, v ) )
+			devs.push_back( v->device() );
+		    else
+			devs.push_back( *i );
+		    }
 		}
-	    y2mil( "cv:" << cv << " sum:" << sum_size << " devs:" << devs );
+	    y2mil( "forbidden:" << forbidden << " cv:" << cv << 
+	           " sum:" << sum_size << " devs:" << devs );
 	    if( cv!=NULL )
 		{
 		Btrfs* b = new Btrfs( *this, *cv, sum_size, devs );
