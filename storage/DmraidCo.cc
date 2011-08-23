@@ -203,7 +203,7 @@ void DmraidCo::activate( bool val )
 	    }
 	else
 	    {
-	    c.execute(DMRAIDBIN " -an");
+	    c.execute(DMRAIDBIN " -an -P _part");
 	    }
 	active = val;
 	}

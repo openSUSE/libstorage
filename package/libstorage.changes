@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug 23 12:13:48 CEST 2011 - fehr@suse.de
+
+- add option "-P _part" to make dmraid decativate raid (bnc#712671)
+
+-------------------------------------------------------------------
 Wed Aug 10 16:39:19 CEST 2011 - fehr@suse.de
 
 - support label on btrfs 
