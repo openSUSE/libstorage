@@ -2775,7 +2775,8 @@ Volume::getFstabOpts() const
 	l.push_front( lstr );
     if( l.size()>1 && (enc=find( l.begin(), l.end(), "defaults" ))!=l.end() )
 	l.erase(enc);
-
+    // FIXME: temporary code that circumvents currently failing subvol=... option
+    l.remove_if( string_starts_with("subvol=") );
     return l;
     }
 
