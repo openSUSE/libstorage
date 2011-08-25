@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug 24 16:55:01 CEST 2011 - fehr@suse.de
+
+- use new "gpt_sync_mbr" only on non-EFI systems, on EFI systems
+  plain "gpt" is used (bnc#710402)
+  
+-------------------------------------------------------------------
 Tue Aug 23 12:13:48 CEST 2011 - fehr@suse.de
 
 - add option "-P _part" to make dmraid decativate raid (bnc#712671)

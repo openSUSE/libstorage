@@ -1574,7 +1574,17 @@ int Disk::doCreateLabel()
     cmd_line << MDADMBIN " --zero-superblock --force " << quote(device());
     execCheckFailed( cmd_line.str() );
     cmd_line.str("");
-    cmd_line << PARTEDCMD << quote(device()) << " mklabel " << label;
+    string lab(label);
+    if( lab=="gpt" )
+	{
+	const ArchInfo& ai = getStorage()->getArchInfo();
+	if( !ai.is_efiboot && (ai.arch=="i386" || ai.arch=="x86_64"))
+	    {
+	    y2mil( "efi:" << ai.is_efiboot << " arch:" << ai.arch );
+	    lab = LABEL_GPT_SYNC_MBR;
+	    }
+	}
+    cmd_line << PARTEDCMD << quote(device()) << " mklabel " << lab;
     if( execCheckFailed( cmd_line.str() ) )
 	{
 	ret = DISK_SET_LABEL_PARTED_FAILED;
