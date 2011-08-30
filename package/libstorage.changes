@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug 30 11:09:46 CEST 2011 - aschnell@suse.de
+
+- fixed setting of size for partitions on MD RAID (bnc#714397)
+
+-------------------------------------------------------------------
 Wed Aug 24 16:55:01 CEST 2011 - fehr@suse.de
 
 - use new "gpt_sync_mbr" only on non-EFI systems, on EFI systems
