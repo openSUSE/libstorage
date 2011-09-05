@@ -494,9 +494,9 @@ Text Btrfs::removeText(bool doing) const
     else
 	{
 	// displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-										        // %2$s is replaced by size (e.g. 623.5 MB)
-											txt = sformat( _("Delete Btrfs volume on devices %1$s (%2$s)"), 
-		       d.c_str(), sizeString().c_str() );
+	// %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Delete Btrfs volume on devices %1$s (%2$s)"),
+			   d.c_str(), sizeString().c_str() );
 	}
     return( txt );
     }
