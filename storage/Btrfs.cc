@@ -43,7 +43,8 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v, unsigned long long sz,
     y2mil("constructed btrfs vol size:" << sz << " devs:" << devs );
     y2mil("constructed btrfs vol from:" << v );
     setFs(BTRFS);
-    changeMountBy(MOUNTBY_UUID);
+    if( getMountBy()!=MOUNTBY_LABEL )
+	changeMountBy(MOUNTBY_UUID);
     setSize( sz );
     }
 

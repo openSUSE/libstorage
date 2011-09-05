@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Mon Sep  5 16:01:05 CEST 2011 - fehr@suse.de
 
+- fix detection of mount by label on btrfs
 - use "btrfs filesystem label" to handle label on btrfs
 
 -------------------------------------------------------------------
