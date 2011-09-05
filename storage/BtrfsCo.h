@@ -57,6 +57,8 @@ class BtrfsCo : public Container
 
 	int doRemove( Volume* v );
 
+	void changeDeviceName( const string& old, const string& nw );
+
 	static storage::CType staticType() { return storage::BTRFSC; }
 	friend std::ostream& operator<< (std::ostream&, const BtrfsCo& );
 

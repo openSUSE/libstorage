@@ -84,6 +84,7 @@ class Btrfs : public Volume
 	void unuseDev() const;
 	int clearSignature();
 
+	void changeDeviceName( const string& old, const string& nw );
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
 	static bool needCreateSubvol( const Btrfs& v );

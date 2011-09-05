@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Sep 05 14:17:29 CEST 2011 - aschnell@suse.de
+
+- handle device name change in btrfs (bnc#715652)
+
+-------------------------------------------------------------------
 Tue Aug 30 11:09:46 CEST 2011 - aschnell@suse.de
 
 - fixed setting of size for partitions on MD RAID (bnc#714397)

@@ -470,6 +470,18 @@ BtrfsCo::doRemove( Volume* v )
     return( ret );
     }
 
+
+    void
+    BtrfsCo::changeDeviceName( const string& old, const string& nw )
+    {
+	BtrfsPair p = btrfsPair();
+	for (BtrfsIter i = p.begin(); i != p.end(); ++i)
+	{
+	    i->changeDeviceName( old, nw );
+	}
+    }
+
+
 void
 BtrfsCo::logData(const string& Dir) const
     {

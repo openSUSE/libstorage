@@ -482,6 +482,25 @@ int Btrfs::clearSignature()
     return( ret );
     }
 
+
+    void
+    Btrfs::changeDeviceName( const string& old, const string& nw )
+    {
+	if (dev == old)
+	{
+	    Volume const* v;
+	    if (getStorage()->findVolume(old, v))
+		setNameDevice(v->name(), nw);
+	    else
+		y2err("device " << old << " not fount");
+	}
+
+	list<string>::iterator i = find(dev_add.begin(), dev_add.end(), old);
+	if (i != dev_add.end())
+	    *i = nw;
+    }
+
+
 Text Btrfs::removeText(bool doing) const
     {
     Text txt;
