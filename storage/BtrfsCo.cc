@@ -151,7 +151,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	if( !mp.empty() )
 	    {
 	    i->clearSubvol();
-	    SystemCmd cmd( "btrfs subvolume list " + mp );
+	    SystemCmd cmd( BTRFSBIN " subvolume list " + mp );
 	    for( vector<string>::const_iterator s=cmd.stdout().begin(); 
 		 s!=cmd.stdout().end(); ++s )
 		{
