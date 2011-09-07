@@ -98,6 +98,16 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		         i!=ub.end(); ++i )
 			{
 			forbidden = i->type()!=UB_BTRFS;
+			if( forbidden )
+			    y2mil( "forbidden:" << v->device() << 
+				   " used by non-btrfs:" << v->getUsedBy() );
+			}
+		    if( !forbidden )
+			{
+			forbidden = v->getFs()!=BTRFS;
+			if( forbidden )
+			    y2mil( "forbidden:" << v->device() << 
+				   " non-btrfs:" << v->fsTypeString() );
 			}
 		    if( !ub.empty() )
 			y2mil( "used_by:" << ub );

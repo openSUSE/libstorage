@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Wed Sep  7 16:47:34 CEST 2011 - fehr@suse.de
 
+- ignore btrfs fs when blockid does not see also btrfs (bnc#716058)
 - call zeroDevice always before formatting to prevent multiple
   signatures being present (bnc#716058)
 - use wipefs to remove any existing signatures in zeroDevice
