@@ -558,8 +558,9 @@ class DiskData;
 	static void waitForDevice();
 	static int waitForDevice(const string& device);
 
-	static int zeroDevice(const string& device, unsigned long long sizeK, bool random = false,
+	static int zeroDevice(const string& device, bool random = false,
 			      unsigned long long beginK = 200, unsigned long long endK = 10);
+	static unsigned long long sizeK( const string& device );
 
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );

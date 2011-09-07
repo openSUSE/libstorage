@@ -539,7 +539,7 @@ MdCo::doCreate( Volume* v )
 	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
 	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
 		{
-		ret = Storage::zeroDevice(m->device(), m->sizeK());
+		ret = Storage::zeroDevice(m->device());
 		}
 	    }
 	}

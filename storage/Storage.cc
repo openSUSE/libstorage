@@ -26,6 +26,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/mount.h>
 #include <pwd.h>
 #include <signal.h>
 #include <set>
@@ -7302,12 +7303,36 @@ Storage::waitForDevice(const string& device)
     return ret;
 }
 
+unsigned long long Storage::sizeK( const string& device )
+    {
+    unsigned long long ret = 0;
+    int fd = open(device.c_str(), O_RDONLY);
+    if (fd >= 0)
+	{
+	uint64_t bytes = 0;
+        int rcode = ioctl(fd, BLKGETSIZE64, &bytes);
+	y2mil("BLKGETSIZE64 rcode:" << rcode << " bytes:" << bytes);
+	if (rcode == 0 && bytes != 0)
+            ret = bytes / 1024;
+	else
+            {
+	    unsigned long blocks;
+	    rcode = ioctl(fd, BLKGETSIZE, &blocks);
+	    y2mil("BLKGETSIZE rcode:" << rcode << " blocks:" << blocks);
+	    if (rcode == 0 && blocks != 0)
+                ret = blocks*2;
+            }
+	close(fd);
+	}
+    y2mil("device:" << device << " ret:" << ret );
+    return( ret );
+    }
 
 int
-Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
+Storage::zeroDevice(const string& device, bool random,
 		    unsigned long long startK, unsigned long long endK)
 {
-    y2mil("device:" << device << " sizeK:" << sizeK << " random:" << random <<
+    y2mil("device:" << device << " random:" << random <<
 	  " startK:" << startK << " endK:" << endK);
 
     waitForDevice(device);
@@ -7319,20 +7344,16 @@ Storage::zeroDevice(const string& device, unsigned long long sizeK, bool random,
     SystemCmd c;
     string cmd;
 
-    if( sizeK>0 )
-	startK = min(startK, sizeK);
+    cmd = WIPEFSBIN " -a " + quote(device);
+    c.execute(cmd);
+
+    unsigned long long sz = sizeK(device);
+    if( sz>0 )
+	startK = min(startK, sz);
     cmd = DDBIN " if=" + source + " of=" + quote(device) + " bs=1k count=" + decString(startK) + " conv=nocreat";
     if (c.execute(cmd) != 0)
 	ret = STORAGE_ZERO_DEVICE_FAILED;
 
-    if( sizeK>0 )
-	{
-	endK = min(endK, sizeK);
-	cmd = DDBIN " if=" + source + " of=" + quote(device) + " seek=" + decString(sizeK - endK) +
-	    " bs=1k count=" + decString(endK) + " conv=nocreat";
-	if (c.execute(cmd) != 0)
-	    ret = STORAGE_ZERO_DEVICE_FAILED;
-	}
     y2mil("ret:" << ret);
     return ret;
 }

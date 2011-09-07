@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Sep  7 16:47:34 CEST 2011 - fehr@suse.de
+
+- call zeroDevice always before formatting to prevent multiple
+  signatures being present (bnc#716058)
+- use wipefs to remove any existing signatures in zeroDevice
+
+-------------------------------------------------------------------
 Mon Sep  5 16:01:05 CEST 2011 - fehr@suse.de
 
 - fix detection of mount by label on btrfs

@@ -60,6 +60,7 @@
 #define DMSETUPBIN "/sbin/dmsetup"
 #define DMRAIDBIN "/sbin/dmraid"
 #define BTRFSBIN "/sbin/btrfs"
+#define WIPEFSBIN "/sbin/wipefs"
 
 #define MOUNTBIN "/bin/mount"
 #define UMOUNTBIN "/bin/umount"

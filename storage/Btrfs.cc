@@ -477,7 +477,7 @@ int Btrfs::clearSignature()
     if( devices.size()>1 )
 	{
 	for( list<string>::const_iterator s=devices.begin(); s!=devices.end(); ++s )
-	    getContainer()->getStorage()->zeroDevice(*s,0);
+	    getContainer()->getStorage()->zeroDevice(*s);
 	}
     y2mil( "ret:" << ret );
     return( ret );

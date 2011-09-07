@@ -367,7 +367,7 @@ Partition::zeroIfNeeded() const
 
     if (zero_new || used_as_pv)
     {
-       ret = getContainer()->getStorage()->zeroDevice(device(), sizeK());
+       ret = getContainer()->getStorage()->zeroDevice(device());
     }
 
     return ret;

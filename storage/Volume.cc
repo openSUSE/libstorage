@@ -943,18 +943,13 @@ int Volume::doFormat()
 	{
 	getStorage()->removeDmTableTo( *this );
 	}
-    if( ret==0 && encryption!=ENC_NONE )
-	{
-	ret = Storage::zeroDevice(mountDevice(), size_k, true);
-	}
     if( ret==0 && mountDevice()!=dev && !getStorage()->testmode() )
 	{
 	ret = checkDevice(mountDevice());
 	}
-    if( ret==0 && mountDevice().find( "/dev/md" )!=0 &&
-        mountDevice().find( "/dev/loop" )!=0 )
+    if( ret==0 )
 	{
-	SystemCmd(MDADMBIN " --zero-superblock " + quote(mountDevice()));
+	ret = Storage::zeroDevice(mountDevice(), encryption!=ENC_NONE);
 	}
     if( ret==0 )
 	{
