@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
-Tue Sep 13 13:01:18 CEST 2011 - fehr@suse.de
+Tue Sep 13 18:42:17 CEST 2011 - fehr@suse.de
 
+- add ruby bindings to libstorage
 - make functions returning data via non-const references usable 
   in python (bnc#717323)
 
