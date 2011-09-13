@@ -13,7 +13,8 @@ INCLUDES = -I. -I${top_srcdir} -I/usr/include/$(PYLIBVER)
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
 	${top_srcdir}/storage/HumanString.h		\
-	${top_srcdir}/storage/Graph.h
+	${top_srcdir}/storage/Graph.h                   \
+	./enum_ref.i
 
 LIBS = $(top_builddir)/storage/libstorage.la
 
