@@ -35,6 +35,16 @@ using std::list;
 
 #include "storage/StorageVersion.h"
 
+#ifndef SWIG
+#define SWIG_OUTPUT( var_name ) var_name
+#else
+#ifdef SWIGPYTHON
+#define SWIG_OUTPUT( var_name ) OUTPUT
+#else
+#define SWIG_OUTPUT( var_name ) REFERENCE
+#endif
+#endif
+
 
 /*!
  * \mainpage libstorage Documentation
@@ -1187,7 +1197,7 @@ namespace storage
 	virtual int createPartition( const string& disk, PartitionType type,
 				     unsigned long startCyl,
 				     unsigned long sizeCyl,
-				     string& device ) = 0;
+				     string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Resize an existing disk partition. Units given in disk cylinders.
@@ -1246,7 +1256,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int nextFreePartition( const string& disk, PartitionType type,
-	                               unsigned &nr, string& device ) = 0;
+	                               unsigned & SWIG_OUTPUT(nr), 
+	                               string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a new partition. Units given in Kilobytes.
@@ -1263,7 +1274,7 @@ namespace storage
 	virtual int createPartitionKb( const string& disk, PartitionType type,
 				       unsigned long long startK,
 				       unsigned long long sizeK,
-				       string& device ) = 0;
+				       string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a new partition of any type anywhere on the disk. Units given in Kilobytes.
@@ -1277,7 +1288,7 @@ namespace storage
 	 */
 	virtual int createPartitionAny( const string& disk,
 					unsigned long long sizeK,
-					string& device ) = 0;
+					string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a new partition of given type as large as possible.
@@ -1290,7 +1301,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createPartitionMax( const string& disk, PartitionType type,
-					string& device ) = 0;
+					string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Compute number of kilobytes of a given number of disk cylinders
@@ -1451,7 +1462,8 @@ namespace storage
 	 * @param mount will be set to the mount point of the volume (e.g. /home).
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getMountPoint( const string& device, string& mount ) = 0;
+	virtual int getMountPoint( const string& device,
+				   string& SWIG_OUTPUT(mount) ) = 0;
 
 	/**
 	 * Changes mount by value in fstab of a volume
@@ -1469,11 +1481,8 @@ namespace storage
 	 * @param mby will be set to the mount by value of the volume.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-#ifndef SWIG
-	virtual int getMountBy( const string& device, MountByType& mby ) = 0;
-#else
-	virtual int getMountBy( const string& device, MountByType& REFERENCE ) = 0;
-#endif
+	virtual int getMountBy( const string& device, 
+	                        MountByType& SWIG_OUTPUT(mby) ) = 0;
 
 	/**
 	 * Changes the fstab options of a volume
@@ -1494,7 +1503,9 @@ namespace storage
 	 *    Multiple options are separated by ",".
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getFstabOptions( const string& device, string& options ) = 0;
+	virtual int getFstabOptions( const string& device,
+				     string& SWIG_OUTPUT(options) ) = 0;
+
 
 	/**
 	 * Add to the fstab options of a volume
@@ -1541,7 +1552,8 @@ namespace storage
 	 * @param pwd crypt password for this volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getCryptPassword( const string& device, string& pwd ) = 0;
+	virtual int getCryptPassword( const string& device,
+				      string& SWIG_OUTPUT(pwd) ) = 0;
 
 	/**
 	 * Verify password of a volume
@@ -1588,11 +1600,7 @@ namespace storage
 	 * @param val will be set if encryption is activated
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-#ifndef SWIG
-	virtual int getCrypt( const string& device, bool& val ) = 0;
-#else
-	virtual int getCrypt( const string& device, bool& REFERENCE ) = 0;
-#endif
+	virtual int getCrypt( const string& device, bool& SWIG_OUTPUT(val) ) = 0;
 
 	/**
 	 * Set fstab handling state of a volume. This way one can make
@@ -1612,11 +1620,7 @@ namespace storage
 	 * @param val will be set if fstab should be ignored for this volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-#ifndef SWIG
-	virtual int getIgnoreFstab( const string& device, bool& val ) = 0;
-#else
-	virtual int getIgnoreFstab( const string& device, bool& REFERENCE ) = 0;
-#endif
+	virtual int getIgnoreFstab( const string& device, bool& SWIG_OUTPUT(val) ) = 0;
 
 	/**
 	 * Sets the value of description text.
@@ -1896,7 +1900,7 @@ namespace storage
 	 */
 	virtual int createLvmLv( const string& vg, const string& name,
 	                         unsigned long long sizeK, unsigned stripes,
-				 string& device ) = 0;
+				 string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Remove a LVM logical volume
@@ -1951,7 +1955,7 @@ namespace storage
 	 */
 	virtual int createLvmLvSnapshot(const string& vg, const string& origin,
 					const string& name, unsigned long long cowSizeK,
-					string& device) = 0;
+					string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Remove a LVM logical volume snapshot
@@ -1982,7 +1986,8 @@ namespace storage
          * @param device is set to the device name of the next created software raid device
          * @return zero if all is ok, a negative number to indicate an error
          */
-	virtual int nextFreeMd(unsigned& nr, string &device) = 0;
+	virtual int nextFreeMd(unsigned& SWIG_OUTPUT(nr),
+			       string& SWIG_OUTPUT(device)) = 0;
 
 	/**
 	 * Create a Software raid device by name
@@ -2006,7 +2011,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createMdAny(MdType md_type, const list<string>& devices,
-				const list<string>& spares, string& device) = 0;
+				const list<string>& spares, 
+				string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Remove a Software raid device.
@@ -2184,7 +2190,7 @@ namespace storage
 	virtual int createFileLoop( const string& lname, bool reuseExisting,
 	                            unsigned long long sizeK,
 				    const string& mp, const string& pwd,
-				    string& device ) = 0;
+				    string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Modify size and pathname of a file based loop device.

@@ -8,7 +8,7 @@ AM_CXXFLAGS = -fPIC -DPIC
 
 PYLIBVER ?= python$(PYTHON_VERSION)
 
-INCLUDES = -I${top_srcdir} -I/usr/include/$(PYLIBVER)
+INCLUDES = -I. -I${top_srcdir} -I/usr/include/$(PYLIBVER)
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
