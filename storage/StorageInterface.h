@@ -38,7 +38,7 @@ using std::list;
 #ifndef SWIG
 #define SWIG_OUTPUT( var_name ) var_name
 #else
-#ifdef SWIGPYTHON
+#if defined(SWIGPYTHON) || defined(SWIGRUBY)
 #define SWIG_OUTPUT( var_name ) OUTPUT
 #else
 #define SWIG_OUTPUT( var_name ) REFERENCE

@@ -13,7 +13,7 @@ Source:		libstorage-%{version}.tar.bz2
 
 prefix:		/usr
 
-BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel
+BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel ruby-devel
 
 Summary:	Library for storage management
 Url:		http://en.opensuse.org/Portal:Libstorage
@@ -137,6 +137,22 @@ Authors:
 %defattr(-,root,root)
 %{python_sitelib}/libstorage.py*
 %attr(755,root,root) %{python_sitearch}/_libstorage.so
+
+%package -n libstorage-ruby
+Requires:	libstorage@LIBVERSION_MAJOR@ = %version
+Summary:	Ruby bindings for libstorage
+Group:		System/Libraries
+
+%description ruby
+This package contains Ruby bindings for libstorage.
+
+Authors:
+--------
+    Arvin Schnell <aschnell@suse.de>
+
+%files -n libstorage-ruby
+%defattr(-,root,root)
+%attr(755,root,root) %{ruby_sitearch}/storage.*
 
 %package -n libstorage-testsuite
 Requires:	libstorage@LIBVERSION_MAJOR@ = %version

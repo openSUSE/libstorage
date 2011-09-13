@@ -1,0 +1,38 @@
+#
+# Makefile.am for libstorage/bindings/ruby
+#
+
+EXTRA_DIST = storage.i
+
+rubylibdir = $(RUBY_EXTENSION_DIR)
+
+MAINTAINERCLEANFILES = storage_wrap.cxx
+
+BUILT_SOURCES = storage_wrap.cxx
+
+rubyextensiondirdir = $(RUBY_EXTENSION_DIR)
+
+AM_CXXFLAGS = -fPIC -DPIC
+
+INCLUDES = -I${top_srcdir} -I$(RUBY_INCLUDE_DIR)
+
+DEPENDENCIES =						\
+	${top_srcdir}/storage/StorageInterface.h	\
+	${top_srcdir}/storage/HumanString.h		\
+	${top_srcdir}/storage/Graph.h                   \
+	./enum_ref.i
+
+# Build Ruby module as shared library
+rubyextensiondir_LTLIBRARIES = storage.la
+storage_la_SOURCES = storage_wrap.cxx
+storage_la_LIBADD =  $(top_builddir)/storage/libstorage.la -l$(RUBY_SO_NAME)
+storage_la_LDFLAGS = -no-undefined  -module -avoid-version -L$(RUBY_EXTENSION_DIR)
+
+storage_la_DEPENDENCIES =				\
+	$(DEPENDENCIES)					\
+	${top_builddir}/storage/libstorage.la
+
+storage_wrap.cxx: storage.i $(DEPENDENCIES)
+	swig -o storage_wrap.cxx -c++ -ruby ${INCLUDES} storage.i
+
+CLEANFILES = storage.rb storage_wrap.cxx

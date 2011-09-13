@@ -1,2 +1,4 @@
 storage_wrap.*
 storage.so
+storage.la
+storage_la*.lo

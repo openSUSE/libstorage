@@ -2,4 +2,4 @@
 # Makefile.am for libstorage/bindings
 #
 
-SUBDIRS = python
+SUBDIRS = python ruby

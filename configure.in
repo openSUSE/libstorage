@@ -44,6 +44,26 @@ AC_SUBST(LIBVERSION_INFO)
 AC_SUBST(docdir)
 AC_SUBST(fillupdir)
 
+AC_PATH_PROG(RUBY, ruby)
+if test -z "$RUBY" ; then
+    AC_MSG_ERROR(ruby is missing; please install ruby)
+fi
+
+RUBY_VERSION=`$RUBY -e "puts RUBY_VERSION"`
+AC_SUBST(RUBY_VERSION)
+RUBY_BIN_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["bindir"]]'`
+AC_SUBST(RUBY_BIN_DIR)
+RUBY_INCLUDE_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["archdir"]]'`
+AC_SUBST(RUBY_INCLUDE_DIR)
+RUBY_LIB_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["libdir"]]'`
+AC_SUBST(RUBY_EXTENSION_DIR)
+RUBY_EXTENSION_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["sitearchdir"]]'`
+AC_SUBST(RUBY_EXTENSION_DIR)
+RUBY_SO_NAME=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["RUBY_SO_NAME"]]'`
+AC_SUBST(RUBY_SO_NAME)
+RUBY_SHARED_LIB=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["LIBRUBY"]]'`
+AC_SUBST(RUBY_SHARED_LIB)
+
 AC_OUTPUT(
 	Makefile
 	doc/Makefile
@@ -52,6 +72,7 @@ AC_OUTPUT(
 	storage/StorageVersion.h:storage/StorageVersion.h.in
 	bindings/Makefile
 	bindings/python/Makefile
+	bindings/ruby/Makefile
 	data/Makefile
 	po/Makefile
 	examples/Makefile

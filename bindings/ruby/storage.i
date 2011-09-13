@@ -15,6 +15,9 @@ using namespace std;
 %include "std_string.i"
 %include "std_deque.i"
 %include "std_list.i"
+%include "enum_ref.i"
+
+OUTPUT_TYPEMAP(storage::MountByType, UINT2NUM, (unsigned int));
 
 %include "../../storage/StorageInterface.h"
 %include "../../storage/HumanString.h"
