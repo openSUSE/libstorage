@@ -2,6 +2,8 @@
 # Makefile.am for libstorage/bindings/python
 #
 
+SUBDIRS = examples
+
 EXTRA_DIST = libstorage.i enum_ref.i
 
 AM_CXXFLAGS = -fPIC -DPIC

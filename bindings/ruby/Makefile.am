@@ -2,6 +2,7 @@
 # Makefile.am for libstorage/bindings/ruby
 #
 
+SUBDIRS = examples
 
 EXTRA_DIST = storage.i enum_ref.i
 
@@ -25,7 +26,7 @@ DEPENDENCIES =						\
 rubyextensiondir_LTLIBRARIES = storage.la
 storage_la_SOURCES = storage_wrap.cxx
 storage_la_LIBADD =  $(top_builddir)/storage/libstorage.la -l$(RUBY_SO_NAME)
-storage_la_LDFLAGS = -no-undefined  -module -avoid-version -L$(RUBY_EXTENSION_DIR)
+storage_la_LDFLAGS = -no-undefined -module -avoid-version -L$(RUBY_EXTENSION_DIR)
 
 storage_la_DEPENDENCIES =				\
 	$(DEPENDENCIES)					\
@@ -34,4 +35,4 @@ storage_la_DEPENDENCIES =				\
 storage_wrap.cxx: storage.i $(DEPENDENCIES)
 	swig -o storage_wrap.cxx -c++ -ruby ${INCLUDES} storage.i
 
-CLEANFILES = storage.rb storage_wrap.cxx
+CLEANFILES = storage.so storage_wrap.cxx

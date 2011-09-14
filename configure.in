@@ -72,7 +72,9 @@ AC_OUTPUT(
 	storage/StorageVersion.h:storage/StorageVersion.h.in
 	bindings/Makefile
 	bindings/python/Makefile
+	bindings/python/examples/Makefile
 	bindings/ruby/Makefile
+	bindings/ruby/examples/Makefile
 	data/Makefile
 	po/Makefile
 	examples/Makefile
