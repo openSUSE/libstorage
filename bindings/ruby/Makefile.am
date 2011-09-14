@@ -2,9 +2,8 @@
 # Makefile.am for libstorage/bindings/ruby
 #
 
-EXTRA_DIST = storage.i
 
-rubylibdir = $(RUBY_EXTENSION_DIR)
+EXTRA_DIST = storage.i enum_ref.i
 
 MAINTAINERCLEANFILES = storage_wrap.cxx
 

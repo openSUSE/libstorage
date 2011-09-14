@@ -57,7 +57,7 @@ RUBY_INCLUDE_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["archdir"]]'`
 AC_SUBST(RUBY_INCLUDE_DIR)
 RUBY_LIB_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["libdir"]]'`
 AC_SUBST(RUBY_EXTENSION_DIR)
-RUBY_EXTENSION_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["sitearchdir"]]'`
+RUBY_EXTENSION_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["vendorarchdir"]]'`
 AC_SUBST(RUBY_EXTENSION_DIR)
 RUBY_SO_NAME=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["RUBY_SO_NAME"]]'`
 AC_SUBST(RUBY_SO_NAME)

@@ -2,7 +2,7 @@
 # Makefile.am for libstorage/bindings/python
 #
 
-EXTRA_DIST = libstorage.i
+EXTRA_DIST = libstorage.i enum_ref.i
 
 AM_CXXFLAGS = -fPIC -DPIC
 

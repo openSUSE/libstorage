@@ -55,6 +55,14 @@ touch $RPM_BUILD_ROOT/var/run/libstorage/lock
 
 rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.a  
 rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
+%if 0%{?suse_version}
+rm $RPM_BUILD_ROOT/%{rb_vendorarch}/storage.la
+%endif
+%if 0%{?mandriva_version}
+rm $RPM_BUILD_ROOT/%{ruby_sitearchdir}/storage.la
+%endif
+
+rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"
@@ -148,11 +156,17 @@ This package contains Ruby bindings for libstorage.
 
 Authors:
 --------
+    Thomas Fehr <fehr@suse.de>
     Arvin Schnell <aschnell@suse.de>
 
 %files -n libstorage-ruby
 %defattr(-,root,root)
-%attr(755,root,root) %{ruby_sitearch}/storage.*
+%if 0%{?suse_version}
+%{rb_vendorarch}/storage.so
+%endif
+%if 0%{?mandriva_version}
+%{ruby_sitearchdir}/storage.so
+%endif
 
 %package -n libstorage-testsuite
 Requires:	libstorage@LIBVERSION_MAJOR@ = %version
