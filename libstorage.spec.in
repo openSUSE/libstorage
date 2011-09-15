@@ -1,22 +1,37 @@
 #
-# spec file for package libstorage (Version @VERSION@)
+# spec file for package libstorage
 #
+# Copyright (c) 2011 SUSE LINUX Products GmbH, Nuernberg, Germany.
+#
+# All modifications and additions to the file contributed by third parties
+# remain the property of their copyright owners, unless otherwise agreed
+# upon. The license for this file, and modifications and additions to the
+# file, is the same license as for the pristine package itself (unless the
+# license for the pristine package is not an Open Source License, in which
+# case the license is the MIT License). An "Open Source License" is a
+# license that conforms to the Open Source Definition (Version 1.9)
+# published by the Open Source Initiative.
+
+# Please submit bugfixes or comments via http://bugs.opensuse.org/
+#
+
 # norootforbuild
 
-Name:		libstorage
-Version:	@VERSION@
-Release:	0
-License:	GPL
-Group:		System/Libraries
-BuildRoot:	%{_tmppath}/%{name}-%{version}-build
-Source:		libstorage-%{version}.tar.bz2
 
-prefix:		/usr
+Name:           libstorage
+Version:        @VERSION@
+Release:        0
+License:        GPL
+Group:          System/Libraries
+BuildRoot:      %{_tmppath}/%{name}-%{version}-build
+Source:         libstorage-%{version}.tar.bz2
 
-BuildRequires:	gcc-c++ boost-devel blocxx-devel doxygen dejagnu python-devel swig libxml2-devel ruby-devel
+Prefix:         /usr
 
-Summary:	Library for storage management
-Url:		http://en.opensuse.org/Portal:Libstorage
+BuildRequires:	blocxx-devel boost-devel dejagnu doxygen gcc-c++ libxml2-devel python-devel ruby-devel swig
+
+Summary:        Library for storage management
+Url:            http://en.opensuse.org/Portal:Libstorage
 
 %description
 This package contains libstorage, a library for storage management.
@@ -62,25 +77,25 @@ rm $RPM_BUILD_ROOT/%{rb_vendorarch}/storage.la
 rm $RPM_BUILD_ROOT/%{ruby_sitearchdir}/storage.la
 %endif
 
-rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
-
 %clean
 rm -rf "$RPM_BUILD_ROOT"
 
 %package -n libstorage@LIBVERSION_MAJOR@
 
-Requires:	parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
-Requires:	coreutils udev util-linux >= 2.16 grep lsscsi
+
+Requires:       parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
+Requires:       coreutils udev util-linux >= 2.16 grep lsscsi
 %ifarch s390 s390x
-Requires:	s390-tools
+Requires:       s390-tools
 %endif
 
-PreReq:		%fillup_prereq
-Obsoletes:	yast2-storage-lib
-Provides:	yast2-storage-lib
-Obsoletes:	libstorage < 2.21.2
-Provides:	libstorage = %{version}
-Summary:	Library for storage management
+PreReq:         %fillup_prereq
+Obsoletes:      yast2-storage-lib
+Provides:       yast2-storage-lib
+Obsoletes:      libstorage < 2.21.2
+Provides:       libstorage = %{version}
+Summary:        Library for storage management
+Group:          System/Libraries
 
 %description -n libstorage@LIBVERSION_MAJOR@
 This package contains libstorage, a library for storage management.
@@ -107,10 +122,11 @@ Authors:
 /sbin/ldconfig
 
 %package -n libstorage-devel
-Requires:	libstorage@LIBVERSION_MAJOR@ = %version
-Requires:	gcc-c++ libstdc++-devel boost-devel blocxx-devel libxml2-devel
-Summary:	Header files and documentation for libstorage
-Group:		Development/Languages/C and C++
+
+Requires:       libstorage@LIBVERSION_MAJOR@ = %version
+Requires:       gcc-c++ libstdc++-devel boost-devel blocxx-devel libxml2-devel
+Summary:        Header files and documentation for libstorage
+Group:          Development/Languages/C and C++
 
 %description -n libstorage-devel
 This package contains header files and documentation for developing with
@@ -130,9 +146,10 @@ Authors:
 %doc %{prefix}/share/doc/packages/libstorage/examples
 
 %package -n libstorage-python
-Requires:	libstorage@LIBVERSION_MAJOR@ = %version
-Summary:	Python bindings for libstorage
-Group:		System/Libraries
+
+Requires:       libstorage@LIBVERSION_MAJOR@ = %version
+Summary:        Python bindings for libstorage
+Group:          System/Libraries
 
 %description python
 This package contains Python bindings for libstorage.
@@ -147,9 +164,10 @@ Authors:
 %attr(755,root,root) %{python_sitearch}/_libstorage.so
 
 %package -n libstorage-ruby
-Requires:	libstorage@LIBVERSION_MAJOR@ = %version
-Summary:	Ruby bindings for libstorage
-Group:		System/Libraries
+
+Requires:       libstorage@LIBVERSION_MAJOR@ = %version
+Summary:        Ruby bindings for libstorage
+Group:          System/Libraries
 
 %description ruby
 This package contains Ruby bindings for libstorage.
@@ -169,9 +187,10 @@ Authors:
 %endif
 
 %package -n libstorage-testsuite
-Requires:	libstorage@LIBVERSION_MAJOR@ = %version
-Summary:	Testsuite for libstorage
-Group:		Development/Tools/Other
+
+Requires:       libstorage@LIBVERSION_MAJOR@ = %version
+Summary:        Testsuite for libstorage
+Group:          Development/Tools/Other
 
 %description -n libstorage-testsuite
 This package contains testsuite programs for libstorage.
@@ -184,3 +203,5 @@ Authors:
 %defattr(-,root,root)
 %dir /usr/lib/libstorage
 /usr/lib/libstorage/testsuite-real
+
+%changelog
