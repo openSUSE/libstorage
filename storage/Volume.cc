@@ -266,14 +266,15 @@ Volume::allowedMountBy(MountByType mby) const
     switch (mby)
     {
 	case MOUNTBY_PATH:
-	    if (cType() != DISK)
+	    if (cType() != DISK && cType() != BTRFSC )
 		ret = false;
 	    if (udevPath().empty())
 		ret = false;
 	    break;
 
 	case MOUNTBY_ID:
-	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && cType() != MD && cType() != MDPART)
+	    if (cType() != DISK && cType() != DMRAID && cType() != DMMULTIPATH && 
+	        cType() != MD && cType() != MDPART && cType() != BTRFSC )
 		ret = false;
 	    if (udevId().empty() && cType() != MD)
 		ret = false;
