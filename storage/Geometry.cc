@@ -200,6 +200,9 @@ namespace storage
 
 	    close(fd);
 	}
+    else
+	    y2err( "failure opening disk:" << device << " errno:" << errno <<
+	           " (" << strerror(errno) << ")" );
 
 	y2mil("device:" << device << " ret:" << ret << " geo:" << geo);
 	return ret;
