@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Mon Sep 19 12:18:31 CEST 2011 - fehr@suse.de
 
+- version 2.21.8
 - fix bug that prevent mounting by-id and by-path for BTRFS volumes
   (bnc#718717)
 
