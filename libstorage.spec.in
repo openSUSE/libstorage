@@ -28,7 +28,7 @@ Source:         libstorage-%{version}.tar.bz2
 
 Prefix:         /usr
 
-BuildRequires:	blocxx-devel boost-devel dejagnu doxygen gcc-c++ libxml2-devel python-devel ruby-devel swig
+BuildRequires:  blocxx-devel boost-devel dejagnu doxygen gcc-c++ libxml2-devel python-devel ruby-devel swig
 
 Summary:        Library for storage management
 Url:            http://en.opensuse.org/Portal:Libstorage
@@ -81,7 +81,6 @@ rm $RPM_BUILD_ROOT/%{ruby_sitearchdir}/storage.la
 rm -rf "$RPM_BUILD_ROOT"
 
 %package -n libstorage@LIBVERSION_MAJOR@
-
 
 Requires:       parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
 Requires:       coreutils udev util-linux >= 2.16 grep lsscsi
