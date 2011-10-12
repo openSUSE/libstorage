@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-17 10:58+0200\n"
-"PO-Revision-Date: 2011-03-01 10:00+0100\n"
+"POT-Creation-Date: 2011-10-12 14:38+0200\n"
+"PO-Revision-Date: 2011-06-28 14:47+0200\n"
 "Last-Translator: Guillaume GARDET <guillaume.gardet@opensuse.org>\n"
 "Language-Team: French <opensuse-fr@opensuse.org>\n"
 "Language: fr\n"
@@ -25,7 +25,7 @@ msgstr ""
 #. text displayed during action
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
 #: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
-#: ../storage/Volume.cc:3120
+#: ../storage/Volume.cc:3129
 msgid "(progress bar might not move)"
 msgstr " (la barre de progression pourrait ne pas bouger)"
 
@@ -53,12 +53,12 @@ msgstr "o"
 
 #: ../storage/Graph.cc:515
 msgid "Btrfs Volume"
-msgstr ""
+msgstr "Volume Btrfs"
 
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1327
+#: ../storage/Volume.cc:1328
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Modification du point de montage de %1$s à %2$s"
@@ -66,20 +66,20 @@ msgstr "Modification du point de montage de %1$s à %2$s"
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:104
-#, fuzzy, c-format
+#, c-format
 msgid "Change mount point of tmpfs to %1$s"
-msgstr "Modification du point de montage de %1$s à %2$s"
+msgstr "Modification du point de montage de tmpfs sur %1$s"
 
 # TLABEL storage_2002_08_07_0216__32
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2354
+#: ../storage/Volume.cc:2358
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Supprimer le label de %1$s"
 
 # TLABEL storage_2002_08_07_0216__32
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2340
+#: ../storage/Volume.cc:2344
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Suppression du label de %1$s"
@@ -95,7 +95,7 @@ msgstr "Créer %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3058
+#: ../storage/Volume.cc:3067
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Créer la partition de démarrage %1$s (%2$s) avec %3$s"
@@ -152,7 +152,7 @@ msgstr "Créer le RAID logiciel crypté %1$s (%2$s) à partir de %5$s pour %4$s 
 # TLABEL partitioning_2002_01_04_0147__422
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3096
+#: ../storage/Volume.cc:3105
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Créer la partition cryptée %1$s (%2$s)"
@@ -162,7 +162,7 @@ msgstr "Créer la partition cryptée %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3079
+#: ../storage/Volume.cc:3088
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Créer le volume crypté %1$s (%2$s) pour %4$s avec %3$s"
@@ -264,7 +264,7 @@ msgstr "Créer la partition raid %1$s (%2$s) pour %4$s avec %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3050
+#: ../storage/Volume.cc:3059
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Créer le volume racine %1$s (%2$s) avec %3$s"
@@ -291,10 +291,10 @@ msgstr "Créer le RAID logiciel %1$s (%2$s) à partir de %5$s pour %4$s avec %3$
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:668
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:709
+#, c-format
 msgid "Create subvolume %1$s on device %2$s"
-msgstr "Créer le volume %1$s (%2$s)"
+msgstr "Créer le sous-volume %1$s sur le périphérique %2$s"
 
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
@@ -322,7 +322,7 @@ msgstr "Créer la partition d'échange raid %1$s (%2$s)"
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3042
+#: ../storage/Volume.cc:3051
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Créer le volume swap %1$s (%2$s)"
@@ -330,7 +330,7 @@ msgstr "Créer le volume swap %1$s (%2$s)"
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3090
+#: ../storage/Volume.cc:3099
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Créer le volume %1$s (%2$s)"
@@ -340,7 +340,7 @@ msgstr "Créer le volume %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3069
+#: ../storage/Volume.cc:3078
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Créer le volume %1$s (%2$s) pour %4$s avec %3$s"
@@ -398,14 +398,14 @@ msgstr "Création du RAID logiciel %1$s à partir de %2$s"
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:661
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:702
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s"
-msgstr "Créer le volume %1$s (%2$s)"
+msgstr "Creation du sous-volume %1$s sur le périphérique %2$s"
 
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3034
+#: ../storage/Volume.cc:3043
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Création du volume %1$s"
@@ -438,10 +438,10 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:477
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:518
+#, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
-msgstr "Effacer le périphérique basé sur fichier %1$s (%2$s)"
+msgstr "Effacer le volume Btrfs sur les périphériques %1$s (%2$s)"
 
 # TLABEL partitioning_2002_01_04_0147__422
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
@@ -504,10 +504,10 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Effacer le RAID logiciel %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:471
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:512
+#, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
-msgstr "Effacement du périphérique %1$s basé sur fichier"
+msgstr "Effacement du volume Btrfs sur les périphériques %1$s"
 
 # TLABEL packages_2002_01_04_0147__198
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
@@ -572,7 +572,7 @@ msgstr "EiB"
 
 # TLABEL storage_2002_08_07_0216__51
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:386
+#: ../storage/Dasd.cc:387
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
@@ -581,7 +581,7 @@ msgstr[1] "Exécuter dasdfmt sur les disques %1$s"
 
 # TLABEL storage_2002_08_07_0216__51
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:379
+#: ../storage/Dasd.cc:380
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
@@ -597,7 +597,7 @@ msgstr "Exécution de fdasd pour le disque %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3131
+#: ../storage/Volume.cc:3140
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Étendre %1$s à %2$s"
@@ -605,10 +605,10 @@ msgstr "Étendre %1$s à %2$s"
 # TLABEL partitioning_2002_01_04_0147__162
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:627
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:668
+#, c-format
 msgid "Extend BTRFS volume %1$s by %2$s"
-msgstr "Étendre le volume logique %1$s à %2$s"
+msgstr "Étendre le volume BTRFS %1$s à %2$s"
 
 # TLABEL partitioning_2002_01_04_0147__425
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
@@ -659,7 +659,7 @@ msgstr "Étendre le groupe de volumes %1$s de %2$s"
 # TLABEL partitioning_2002_01_04_0147__78
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3117
+#: ../storage/Volume.cc:3126
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Extension de %1$s à %2$s"
@@ -667,10 +667,10 @@ msgstr "Extension de %1$s à %2$s"
 # TLABEL partitioning_2002_03_14_2340__25
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:620
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:661
+#, c-format
 msgid "Extending BTRFS volume %1$s by %2$s"
-msgstr "Extension du volume logique %1$s à %2$s"
+msgstr "Extension du volume BTRFS %1$s à %2$s"
 
 # TLABEL partitioning_2002_03_14_2340__25
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
@@ -713,26 +713,26 @@ msgstr "Extension du groupe de volumes %1$s de %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:560
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:601
+#, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Effacer le périphérique basé sur fichier %1$s (%2$s)"
+msgstr "Formater le volume Btrfs de %1$s (périphériques utilisés : %2$s)"
 
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:554
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:595
+#, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "Effacer le périphérique basé sur fichier %1$s (%2$s)"
+msgstr "Formater le volume Btrfs de %1$s pour %3$s (périphériques utilisés : %2$s)"
 
 # TLABEL partitioning_2002_03_14_2340__121
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:759
+#: ../storage/Volume.cc:765
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formater le périphérique %1$s (%2$s) pour %4$s avec %3$s"
@@ -740,7 +740,7 @@ msgstr "Formater le périphérique %1$s (%2$s) pour %4$s avec %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:779
+#: ../storage/Volume.cc:785
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Formater le périphérique %1$s (%2$s) avec %3$s"
@@ -766,7 +766,7 @@ msgstr "Formater le volume d'assignation de périphérique %1$s (%2$s) avec %3$s
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:769
+#: ../storage/Volume.cc:775
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formater le périphérique crypté %1$s (%2$s) pour %4$s avec %3$s"
@@ -977,15 +977,15 @@ msgstr "Formater le RAID logiciel %1$s (%2$s) avec %3$s"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:544
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:585
+#, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Créer le volume %1$s (%2$s)"
+msgstr "Formatage du volume Btrfs de %1$s (périphériques utilisés : %2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:746
+#: ../storage/Volume.cc:752
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Formatage du périphérique %1$s (%2$s) avec %3$s"
@@ -1113,7 +1113,7 @@ msgstr "Point de montage"
 # TLABEL partitioning_2002_01_04_0147__425
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1312
+#: ../storage/Volume.cc:1313
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Montage de %1$s sur %2$s"
@@ -1121,9 +1121,9 @@ msgstr "Montage de %1$s sur %2$s"
 # TLABEL partitioning_2002_01_04_0147__425
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:90
-#, fuzzy, c-format
+#, c-format
 msgid "Mounting tmpfs to %1$s"
-msgstr "Montage de %1$s sur %2$s"
+msgstr "Montage de tmpfs sur %1$s"
 
 # TLABEL backup_2002_03_14_2340__147
 #. symbol for "peta" (best keep untranslated)
@@ -1150,10 +1150,10 @@ msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:648
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:689
+#, c-format
 msgid "Reduce BTRFS volume %1$s by %2$s"
-msgstr "Réduire le groupe de volumes %1$s de %2$s"
+msgstr "Réduire le volume BTRFS %1$s de %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
@@ -1164,10 +1164,10 @@ msgstr "Réduire le groupe de volumes %1$s de %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:641
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:682
+#, c-format
 msgid "Reducing BTRFS volume %1$s by %2$s"
-msgstr "Réduction du groupe de volumes %1$s de %2$s"
+msgstr "Réduction du volume BTRFS %1$s de %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
@@ -1187,7 +1187,7 @@ msgstr "Supprimer %1$s"
 # TLABEL storage_2002_08_07_0216__34
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1355
+#: ../storage/Volume.cc:1356
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Suppression de %1$s de %2$s"
@@ -1195,9 +1195,9 @@ msgstr "Suppression de %1$s de %2$s"
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text before action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:77
-#, fuzzy, c-format
+#, c-format
 msgid "Remove Tmpfs volume from mount point %1$s"
-msgstr "Supprimer le groupe de volumes %1$s"
+msgstr "Supprimer le volume tmpfs du point de montage %1$s"
 
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
@@ -1229,21 +1229,21 @@ msgstr "Supprimer le RAID logiciel %1$s"
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:688
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:729
+#, c-format
 msgid "Remove subvolume %1$s on device %2$s"
-msgstr "Supprimer le volume %1$s"
+msgstr "Supprimer le sous-volume %1$s sur le périphérique %2$s"
 
 # TLABEL storage_2002_08_07_0216__34
 #. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
 #: ../storage/Tmpfs.cc:119
-#, fuzzy, c-format
+#, c-format
 msgid "Remove tmpfs from %1$s"
-msgstr "Suppression de %1$s de %2$s"
+msgstr "Supprimer tmpfs de %1$s"
 
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3147
+#: ../storage/Volume.cc:3156
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Supprimer le volume %1$s"
@@ -1266,9 +1266,9 @@ msgstr "Suppression de %1$s"
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text during action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:72
-#, fuzzy, c-format
+#, c-format
 msgid "Removing Tmpfs volume from mount point %1$s"
-msgstr "Suppression du groupe de volumes %1$s"
+msgstr "Suppression du volume tmpfs du point de montage %1$s"
 
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
@@ -1300,14 +1300,14 @@ msgstr "Suppression du RAID logiciel %1$s"
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:681
-#, fuzzy, c-format
+#: ../storage/Btrfs.cc:722
+#, c-format
 msgid "Removing subvolume %1$s on device %2$s"
-msgstr "Suppression du volume %1$s"
+msgstr "Suppression du sous-volume %1$s sur le périphérique %2$s"
 
 # TLABEL partitioning_2002_01_04_0147__92
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3142
+#: ../storage/Volume.cc:3151
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Suppression du volume %1$s"
@@ -1321,7 +1321,7 @@ msgstr "Suppression du groupe de volumes %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1555
+#: ../storage/Disk.cc:1554
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Configurer l'étiquette de disque de %1$s à %2$s"
@@ -1329,7 +1329,7 @@ msgstr "Configurer l'étiquette de disque de %1$s à %2$s"
 # TLABEL storage_2002_08_07_0216__32
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2360
+#: ../storage/Volume.cc:2364
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Configurer le label de %1$s sur %2$s"
@@ -1337,7 +1337,7 @@ msgstr "Configurer le label de %1$s sur %2$s"
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1336
+#: ../storage/Volume.cc:1337
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Définition du point de montage de %1$s à %2$s"
@@ -1345,9 +1345,9 @@ msgstr "Définition du point de montage de %1$s à %2$s"
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:109
-#, fuzzy, c-format
+#, c-format
 msgid "Set mount point of tmpfs to %1$s"
-msgstr "Définition du point de montage de %1$s à %2$s"
+msgstr "Définition du point de montage de tmpfs sur %1$s"
 
 # TLABEL partitioning_2002_01_04_0147__425
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
@@ -1358,14 +1358,12 @@ msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Définir le type de partition multipath %1$s sur %2$X"
 
 # TLABEL partitioning_2002_01_04_0147__425
-#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
-#: ../storage/DmPart.cc:171
+#: ../storage/Partition.cc:311 ../storage/DmPart.cc:171
+#: ../storage/MdPart.cc:180
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Définir le type de partition %1$s sur %2$X"
@@ -1379,21 +1377,21 @@ msgstr "Définir le type de partition raid %1$s vers %2$X"
 
 # TLABEL wizard_2002_01_04_0147__19
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1662
+#: ../storage/Volume.cc:1666
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Configurer le périphérique dm crypté sur %1$s"
 
 # TLABEL wizard_2002_01_04_0147__19
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1646
+#: ../storage/Volume.cc:1650
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Configurer le périphérique de boucle crypté sur %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1548
+#: ../storage/Disk.cc:1547
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Configuration de l'étiquette de disque de %1$s à %2$s"
@@ -1401,7 +1399,7 @@ msgstr "Configuration de l'étiquette de disque de %1$s à %2$s"
 # TLABEL storage_2002_08_07_0216__32
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2346
+#: ../storage/Volume.cc:2350
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Configuration du label de %1$s sur %2$s"
@@ -1415,14 +1413,12 @@ msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Définition du type de partition multipath %1$s en %2$X"
 
 # TLABEL partitioning_2002_01_04_0147__425
-#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
-#: ../storage/DmPart.cc:164
+#: ../storage/Partition.cc:304 ../storage/DmPart.cc:164
+#: ../storage/MdPart.cc:173
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Définition du type de partition %1$s sur %2$X"
@@ -1436,21 +1432,21 @@ msgstr "Définition du type de partition raid %1$s vers %2$X"
 
 # TLABEL wizard_2002_01_04_0147__19
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1657
+#: ../storage/Volume.cc:1661
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Configuration du périphérique dm crypté sur %1$s"
 
 # TLABEL wizard_2002_01_04_0147__19
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1641
+#: ../storage/Volume.cc:1645
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Configuration du périphérique de boucle crypté sur %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3127
+#: ../storage/Volume.cc:3136
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Comprimer %1$s de %2$s"
@@ -1497,7 +1493,7 @@ msgstr "Comprimer la partition raid %1$s vers %2$s"
 # TLABEL partitioning_2002_01_04_0147__78
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3113
+#: ../storage/Volume.cc:3122
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Compression de %1$s à %2$s"
@@ -1611,21 +1607,20 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4837
+#: ../storage/Storage.cc:4852
 msgid "Unmount failed."
 msgstr "Echec du démontage."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1317
+#: ../storage/Volume.cc:1318
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Démontage de %1$s"
 
 #. displayed text during action
 #: ../storage/Tmpfs.cc:95
-#, fuzzy
 msgid "Unmounting tmpfs"
-msgstr "Démontage de %1$s"
+msgstr "Démontage de tmpfs"
 
 # TLABEL storage_2002_08_07_0216__33
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
@@ -1645,7 +1640,7 @@ msgstr "Mise à jour d'une entrée pour point de montage %1$s dans %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1343
+#: ../storage/Volume.cc:1344
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Utilisation de %1$s en tant que %2$s"
@@ -1656,7 +1651,7 @@ msgid "Volume Group"
 msgstr "Groupe de volumes"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:360
+#: ../storage/Storage.cc:361
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"

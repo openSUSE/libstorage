@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.uk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-06-17 10:58+0200\n"
+"POT-Creation-Date: 2011-10-12 14:38+0200\n"
 "PO-Revision-Date: 2009-08-02 18:39-0700\n"
 "Last-Translator: Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>\n"
 "Language-Team: Ukrainian <translation@linux.org.ua>\n"
@@ -23,7 +23,7 @@ msgstr ""
 #. text displayed during action
 #: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
 #: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
-#: ../storage/Volume.cc:3120
+#: ../storage/Volume.cc:3129
 msgid "(progress bar might not move)"
 msgstr " (смужка поступу може не рухатись)"
 
@@ -52,7 +52,7 @@ msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1327
+#: ../storage/Volume.cc:1328
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Змінити точку монтування %1$s до %2$s"
@@ -64,13 +64,13 @@ msgid "Change mount point of tmpfs to %1$s"
 msgstr "Змінити точку монтування %1$s до %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2354
+#: ../storage/Volume.cc:2358
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Очистити надпис на %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2340
+#: ../storage/Volume.cc:2344
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Очищення надпису на %1$s"
@@ -84,7 +84,7 @@ msgstr "Створити %1$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3058
+#: ../storage/Volume.cc:3067
 #, fuzzy, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Створити завантажувальний розділ %1$s (%2$s) з %3$s"
@@ -138,7 +138,7 @@ msgstr "Створити зашифрований програмний RAID %1$s
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3096
+#: ../storage/Volume.cc:3105
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Створити зашифрований розділ %1$s (%2$s)"
@@ -147,7 +147,7 @@ msgstr "Створити зашифрований розділ %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3079
+#: ../storage/Volume.cc:3088
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Створити зашифрований логічний том %1$s (%2$s) для %4$s з %3$s"
@@ -242,7 +242,7 @@ msgstr "Створити розділ raid %1$s (%2$s) для %4$s з %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3050
+#: ../storage/Volume.cc:3059
 #, fuzzy, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Створити кореневий розділ %1$s (%2$s) з %3$s"
@@ -267,7 +267,7 @@ msgstr "Створити програмний RAID %1$s (%2$s) від %5$s дл�
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:668
+#: ../storage/Btrfs.cc:709
 #, fuzzy, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "Створити логічний том %1$s (%2$s)"
@@ -295,14 +295,14 @@ msgstr "Створити розділ свопінгу raid %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3042
+#: ../storage/Volume.cc:3051
 #, fuzzy, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Створити логічний том свопінгу %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3090
+#: ../storage/Volume.cc:3099
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Створити логічний том %1$s (%2$s)"
@@ -311,7 +311,7 @@ msgstr "Створити логічний том %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3069
+#: ../storage/Volume.cc:3078
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Створити логічний том %1$s (%2$s) для %4$s з %3$s"
@@ -365,13 +365,13 @@ msgstr "Створення програмного RAID %1$s від %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:661
+#: ../storage/Btrfs.cc:702
 #, fuzzy, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Створити логічний том %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3034
+#: ../storage/Volume.cc:3043
 #, fuzzy, c-format
 msgid "Creating volume %1$s"
 msgstr "Створення логічного тому %1$s"
@@ -401,7 +401,7 @@ msgstr "RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:477
+#: ../storage/Btrfs.cc:518
 #, fuzzy, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Вилучити файловий пристрій %1$s (%2$s)"
@@ -463,7 +463,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Вилучити програмний RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:471
+#: ../storage/Btrfs.cc:512
 #, fuzzy, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Вилучення файлового пристрою %1$s"
@@ -528,7 +528,7 @@ msgid "EiB"
 msgstr "ГіБ"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:386
+#: ../storage/Dasd.cc:387
 #, fuzzy, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
@@ -537,7 +537,7 @@ msgstr[1] "Запустити dasdfmt для диска %1$s"
 msgstr[2] "Запустити dasdfmt для диска %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:379
+#: ../storage/Dasd.cc:380
 #, fuzzy, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
@@ -553,14 +553,14 @@ msgstr "Запуск fdasd для диска %1$s..."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3131
+#: ../storage/Volume.cc:3140
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Розширити %1$s до %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:627
+#: ../storage/Btrfs.cc:668
 #, fuzzy, c-format
 msgid "Extend BTRFS volume %1$s by %2$s"
 msgstr "Збільшити логічний том %1$s до %2$s"
@@ -609,14 +609,14 @@ msgstr "Розширити групу томів %1$s з %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3117
+#: ../storage/Volume.cc:3126
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Розширення %1$s до %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:620
+#: ../storage/Btrfs.cc:661
 #, fuzzy, c-format
 msgid "Extending BTRFS volume %1$s by %2$s"
 msgstr "Розширення логічного тому %1$s до %2$s"
@@ -659,7 +659,7 @@ msgstr "Розширення групи томів %1$s з %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:560
+#: ../storage/Btrfs.cc:601
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Вилучити файловий пристрій %1$s (%2$s)"
@@ -668,7 +668,7 @@ msgstr "Вилучити файловий пристрій %1$s (%2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:554
+#: ../storage/Btrfs.cc:595
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "Вилучити файловий пристрій %1$s (%2$s)"
@@ -677,7 +677,7 @@ msgstr "Вилучити файловий пристрій %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:759
+#: ../storage/Volume.cc:765
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Форматувати пристрій %1$s (%2$s) для %4$s з %3$s"
@@ -685,7 +685,7 @@ msgstr "Форматувати пристрій %1$s (%2$s) для %4$s з %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:779
+#: ../storage/Volume.cc:785
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Форматувати пристрій %1$s (%2$s) з %3$s"
@@ -711,7 +711,7 @@ msgstr "Форматувати том приписування пристрою 
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:769
+#: ../storage/Volume.cc:775
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Форматувати зашифрований пристрій %1$s (%2$s) для %4$s з %3$s"
@@ -915,7 +915,7 @@ msgstr "Форматувати програмний RAID %1$s (%2$s) з %3$s"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:544
+#: ../storage/Btrfs.cc:585
 #, fuzzy, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Створити логічний том %1$s (%2$s)"
@@ -923,7 +923,7 @@ msgstr "Створити логічний том %1$s (%2$s)"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:746
+#: ../storage/Volume.cc:752
 #, fuzzy, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Форматувати пристрій %1$s (%2$s) з %3$s "
@@ -1039,7 +1039,7 @@ msgstr "Точка підключення"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1312
+#: ../storage/Volume.cc:1313
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Монтування %1$s до %2$s"
@@ -1071,7 +1071,7 @@ msgstr "ПіБ"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:648
+#: ../storage/Btrfs.cc:689
 #, fuzzy, c-format
 msgid "Reduce BTRFS volume %1$s by %2$s"
 msgstr "Зменшення групи томів %1$s на %2$s"
@@ -1085,7 +1085,7 @@ msgstr "Зменшення групи томів %1$s на %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:682
 #, fuzzy, c-format
 msgid "Reducing BTRFS volume %1$s by %2$s"
 msgstr "Зменшення групи томів %1$s на %2$s"
@@ -1106,7 +1106,7 @@ msgstr "Вилучити %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1355
+#: ../storage/Volume.cc:1356
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Вилучити %1$s з %2$s"
@@ -1144,7 +1144,7 @@ msgstr "Вилучення програмного RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:688
+#: ../storage/Btrfs.cc:729
 #, fuzzy, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Вилучити том nfs %1$s"
@@ -1156,7 +1156,7 @@ msgid "Remove tmpfs from %1$s"
 msgstr "Вилучити %1$s з %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3147
+#: ../storage/Volume.cc:3156
 #, fuzzy, c-format
 msgid "Remove volume %1$s"
 msgstr "Вилучити том nfs %1$s"
@@ -1207,13 +1207,13 @@ msgstr "Вилучення програмного RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:681
+#: ../storage/Btrfs.cc:722
 #, fuzzy, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Вилучення тому nfs %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3142
+#: ../storage/Volume.cc:3151
 #, fuzzy, c-format
 msgid "Removing volume %1$s"
 msgstr "Вилучення тому nfs %1$s"
@@ -1226,21 +1226,21 @@ msgstr "Вилучення групи томів %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1555
+#: ../storage/Disk.cc:1554
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Наставити надпис диска %1$s до %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2360
+#: ../storage/Volume.cc:2364
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Встановити надпис на %1$s до %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1336
+#: ../storage/Volume.cc:1337
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Наставити точку монтування %1$s до %2$s"
@@ -1258,14 +1258,12 @@ msgstr "Наставити точку монтування %1$s до %2$s"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Наставити тип багатошляхового розділу %1$s до %2$X"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
-#: ../storage/DmPart.cc:171
+#: ../storage/Partition.cc:311 ../storage/DmPart.cc:171
+#: ../storage/MdPart.cc:180
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Наставити тип розділу %1$s до %2$X"
@@ -1278,27 +1276,27 @@ msgid "Set type of raid partition %1$s to %2$X"
 msgstr "Встановити тип розділу raid %1$s до %2$X"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1662
+#: ../storage/Volume.cc:1666
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Налаштувати зашифрований пристрій dm на %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1646
+#: ../storage/Volume.cc:1650
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Налаштувати зашифрований петльовий пристрій на %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1548
+#: ../storage/Disk.cc:1547
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Зміна надпису диска %1$s до %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2346
+#: ../storage/Volume.cc:2350
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Встановлення надпису на %1$s до %2$s"
@@ -1310,14 +1308,12 @@ msgstr "Встановлення надпису на %1$s до %2$s"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Перемикання типу багатошляхового розділу %1$s до %2$X"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
-#: ../storage/DmPart.cc:164
+#: ../storage/Partition.cc:304 ../storage/DmPart.cc:164
+#: ../storage/MdPart.cc:173
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Перемикання типу розділу %1$s до %2$X"
@@ -1330,20 +1326,20 @@ msgid "Setting type of raid partition %1$s to %2$X"
 msgstr "Встановлення типу розділу raid %1$s до %2$X"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1657
+#: ../storage/Volume.cc:1661
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Налаштування зашифрованого петльового пристрою dm на %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1641
+#: ../storage/Volume.cc:1645
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Налаштування зашифрованого петльового пристрою %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3127
+#: ../storage/Volume.cc:3136
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Зменшити %1$s до %2$s"
@@ -1385,7 +1381,7 @@ msgstr "Зменшити розділ raid %1$s до %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3113
+#: ../storage/Volume.cc:3122
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Зменшення %1$s до %2$s"
@@ -1497,13 +1493,13 @@ msgstr ""
 msgid "TiB"
 msgstr "ТіБ"
 
-#: ../storage/Storage.cc:4837
+#: ../storage/Storage.cc:4852
 #, fuzzy
 msgid "Unmount failed."
 msgstr "зазнав невдачі."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1317
+#: ../storage/Volume.cc:1318
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Демонтування %1$s"
@@ -1530,7 +1526,7 @@ msgstr "Оновлення запису для точки монтування %
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1343
+#: ../storage/Volume.cc:1344
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Вживати %1$s як %2$s"
@@ -1540,7 +1536,7 @@ msgid "Volume Group"
 msgstr "Група томів"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:360
+#: ../storage/Storage.cc:361
 #, c-format
 msgid ""
 "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
