@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Oct 18 11:25:59 CEST 2011 - fehr@suse.de
+
+- prevent missing swap entry in fstab when swap already active at
+  start of installation (bnc#724785)
+
+-------------------------------------------------------------------
 Wed Oct 12 14:40:23 CEST 2011 - aschnell@suse.de
 
 - updated translations

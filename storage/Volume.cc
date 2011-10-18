@@ -382,7 +382,7 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	{
 	found = fstabData.findMount( mp, entry );
 	}
-    if (!found && !mp.empty())
+    if (!found && !mp.empty() && (mp!="swap"||!getStorage()->instsys()) )
 	{
 	setIgnoreFstab(true);
 	}
