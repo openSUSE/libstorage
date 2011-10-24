@@ -91,6 +91,7 @@ class Disk : public Container
 
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
+	static string sysfsPath( const string& device );
 
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }

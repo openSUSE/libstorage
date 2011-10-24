@@ -162,10 +162,20 @@ namespace storage
     }
 
 
+string
+Disk::sysfsPath( const string& device )
+    {
+    string dev(device);
+    if( boost::starts_with(dev, "/dev/"))
+	dev.erase( 0, 5 );
+    return SYSFSDIR "/" + boost::replace_all_copy(dev, "/", "!");
+    }
+
+
     string
     Disk::sysfsPath() const
     {
-	return SYSFSDIR "/" + boost::replace_all_copy(procName(), "/", "!");
+    return( Disk::sysfsPath( procName() ));
     }
 
 

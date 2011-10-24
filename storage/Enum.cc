@@ -110,7 +110,7 @@ namespace storage
 
 
     static const string transport_names[] = {
-	"UNKNOWN", "SBP", "ATA", "FC", "iSCSI", "SAS", "SATA", "SPI", "USB"
+	"UNKNOWN", "SBP", "ATA", "FC", "iSCSI", "SAS", "SATA", "SPI", "USB", "FCOE"
     };
 
     const vector<string> EnumInfo<Transport>::names(transport_names, transport_names +

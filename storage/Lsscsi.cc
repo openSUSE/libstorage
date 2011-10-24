@@ -25,7 +25,9 @@
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
+#include "storage/StorageTmpl.h"
 #include "storage/Lsscsi.h"
+#include "storage/Disk.h"
 #include "storage/Enum.h"
 
 
@@ -75,6 +77,32 @@ namespace storage
 		entry.transport = SPI;
 	    else if (boost::starts_with(transport, "usb:"))
 		entry.transport = USB;
+
+	    if( entry.transport == FC )
+		{
+		string link;
+		if( readlink( Disk::sysfsPath(device)+"/device", link))
+		    {
+		    y2mil( "sysfs:" << Disk::sysfsPath(device) << 
+			   " link:" << link );
+		    string::size_type pos = link.rfind( '/' ) + 1;
+		    string nums = link.substr( pos, link.find_first_not_of( "0123456789", pos ));
+		    unsigned num = 0;
+		    nums >> num;
+		    y2mil( "nums:" << nums << " num:" << num );
+		    string symname = "/sys/class/fc_host/host" + 
+		                     decString(num) + "/symbolic_name";
+		    ifstream tmpf( symname.c_str() );
+		    string line;
+		    getline( tmpf, line );
+		    y2mil( "line:" << line );
+		    if( line.find( "over eth" )!=string::npos )
+			{
+			entry.transport = FCOE;
+			y2mil( "FCoE device: " << device );
+			}
+		    }
+		}
 
 	    data[device] = entry;
 	}
