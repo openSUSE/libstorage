@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 25 16:08:52 CEST 2011 - fehr@suse.de
+
+- changes to support new function IsDeviceOnNetwork in ycp
+
+-------------------------------------------------------------------
 Mon Oct 24 14:11:58 CEST 2011 - fehr@suse.de
 
 - detect new transport type FcoE (bnc#726057)

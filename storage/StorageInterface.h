@@ -614,12 +614,13 @@ namespace storage
      */
     struct ContVolInfo
     {
-	ContVolInfo() : ctype(CUNKNOWN) {}
+	ContVolInfo() : ctype(CUNKNOWN), num(-1) {}
 	CType ctype;
 	string cname;
 	string cdevice;
 	string vname;
 	string vdevice;
+	int num;
     };
 
     /**

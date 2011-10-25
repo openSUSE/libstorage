@@ -2051,7 +2051,7 @@ class DiskData;
 	bool findVolume( const string& device, ContIterator& c,
 	                 VolIterator& v, bool no_btrfs=false  );
 	bool findVolume( const string& device, ConstContIterator& c,
-	                 ConstVolIterator& v  );
+	                 ConstVolIterator& v, bool no_btrfs=false );
 	bool findVolume( const string& device, VolIterator& v,
 	                 bool also_del=false, bool no_btrfs=false );
 	bool findVolume( const string& device, ConstVolIterator& v,

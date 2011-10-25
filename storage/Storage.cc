@@ -5087,11 +5087,21 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
     if (findVolume(device, c, v))
 	{
 	ret = 0;
+	if( c->type()==BTRFSC )
+	    {
+	    const Btrfs * b = dynamic_cast<const Btrfs *>(&(*v));
+	    if( b!=NULL && b->getDevices().size()==1 )
+		{
+		findVolume(b->device(), c, v, true);
+		}
+	    }
 	info.ctype = c->type();
 	info.cname = c->name();
 	info.cdevice = c->device();
 	info.vname = v->name();
 	info.vdevice = v->device();
+	if( v->isNumeric() )
+	    info.num = v->nr();
 	}
     else if (findContainer(device, c))
     {
@@ -5720,11 +5730,11 @@ Storage::logCo(const Container* c) const
     }
 
 bool Storage::findVolume( const string& device, ConstContIterator& c,
-                          ConstVolIterator& v )
+                          ConstVolIterator& v, bool no_btrfs )
     {
     ContIterator ct;
     VolIterator vt;
-    bool ret = findVolume( device, ct, vt );
+    bool ret = findVolume( device, ct, vt, no_btrfs );
     if( ret )
 	{
 	c = ct;
