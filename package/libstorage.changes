@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Wed Oct 26 13:17:43 CEST 2011 - fehr@suse.de
 
-- make /dev/md/ names known to libstorage of present (bnc#726319)
+- make /dev/md/ names known to libstorage if present (bnc#726319)
 
 -------------------------------------------------------------------
 Tue Oct 25 16:08:52 CEST 2011 - fehr@suse.de
