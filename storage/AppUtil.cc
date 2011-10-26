@@ -607,6 +607,11 @@ readlink(const string& path, string& buf)
 	return links;
     }
 
+map<string, string> getDirLinks(const string& dir)
+    {
+    return( getUdevLinks(dir.c_str()) );
+    }
+
 
     UdevMap::UdevMap(const string& path)
     {
