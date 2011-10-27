@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Wed Oct 26 13:17:43 CEST 2011 - fehr@suse.de
 
+- 2.21.12
 - make /dev/md/ names known to libstorage if present (bnc#726319)
 - do not set fsck flag to zero for encrypted volumes (bnc#726414)
 
