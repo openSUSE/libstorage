@@ -123,7 +123,7 @@ namespace storage
 	const list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
 	for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
 	{
-	    if (*dir != "root" && checkDir(*dir))
+	    if ( !boost::ends_with(*dir,"/root") && checkDir(*dir))
 	    {
 		for (unsigned int i = 0; i < lengthof(files); ++i)
 		{
@@ -236,6 +236,21 @@ namespace storage
 	    y2mil( "label:" << vol.getLabel() << " lab:" << lab );
 	    if( boost::starts_with( lab, "home" ))
 		content_info.homes = 1;
+	    }
+	if( content_info.homes==0 && 
+	    (vol.getFs()==EXT2 || vol.getFs()==EXT3 || vol.getFs()==EXT4 ))
+	    {
+	    SystemCmd c( "/sbin/tune2fs -l " + vol.mountDevice() + " | grep '^Last mounted on:'" );
+	    if( c.retcode()==0 && c.numLines()>0 )
+		{
+		string line = c.getLine(0);
+		line = line.substr( line.find( ':' )+1 );
+		y2mil( "line:" << c.getLine(0) << " lin:" << line );
+		line = extractNthWord( 0, line );
+		y2mil( "dir:" << line );
+		if( line == "/home" )
+		    content_info.homes = 1;
+		}
 	    }
 	y2mil("device:" << vol.device() << " " << content_info);
 	return content_info;
