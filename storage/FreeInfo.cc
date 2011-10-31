@@ -230,6 +230,13 @@ namespace storage
 
 	content_info.homes = numHomes(mp);
 
+	if( content_info.homes==0 && !vol.getLabel().empty() )
+	    {
+	    string lab = boost::to_lower_copy(vol.getLabel());
+	    y2mil( "label:" << vol.getLabel() << " lab:" << lab );
+	    if( boost::starts_with( lab, "home" ))
+		content_info.homes = 1;
+	    }
 	y2mil("device:" << vol.device() << " " << content_info);
 	return content_info;
     }
