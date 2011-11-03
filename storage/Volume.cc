@@ -539,9 +539,7 @@ Volume::findBlkid( const Blkid& blkid, Blkid::Entry& entry )
 
 		if (!entry.fs_uuid.empty())
 		{
-		    uuid = entry.fs_uuid;
-		    alt_names.remove_if(string_contains("/by-uuid/"));
-		    alt_names.push_back("/dev/disk/by-uuid/" + uuid);
+		    updateUuid(entry.fs_uuid);
 		}
 
 		if (!entry.fs_label.empty())
@@ -917,6 +915,13 @@ int Volume::doFormatBtrfs()
     return( ret );
     }
 
+void Volume::updateUuid( const string& new_uuid )
+    {
+    uuid = new_uuid;
+    alt_names.remove_if(string_contains("/by-uuid/"));
+    alt_names.push_back("/dev/disk/by-uuid/" + uuid);
+    }
+
 int Volume::doFormat()
     {
     static int fcount=1000;
@@ -1084,6 +1089,10 @@ int Volume::doFormat()
     if( ret==0 )
 	{
 	triggerUdevUpdate();
+	Blkid blkid(mountDevice());
+	Blkid::Entry entry;
+	if( findBlkid( blkid, entry ) && entry.is_fs && !entry.fs_uuid.empty())
+	    updateUuid( entry.fs_uuid );
 	}
     if( ret==0 && !orig_mp.empty() )
 	{
@@ -2735,6 +2744,7 @@ string Volume::getFstabDentry() const
 	else if( l )
 	    ret = l->loopFile();
 	}
+    y2mil( "dev:" << dev << " ret:" << ret );
     return( ret );
     }
 

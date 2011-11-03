@@ -218,6 +218,7 @@ class Storage;
 	void getLoopData( SystemCmd& loopData );
 	void getMountData(const ProcMounts& mounts, bool swap_only = false);
 	void getFstabData( EtcFstab& fstabData );
+	void updateUuid( const string& new_uuid );
 	void replaceAltName( const string& prefix, const string& newn );
 	string getMountByString() const;
 	string getFstabDevice() const;

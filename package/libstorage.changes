@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Thu Nov  3 10:55:36 CET 2011  - fehr@suse.de
 
+- fix fstab handling when mount-by-uuid is reformatted (bnc#728000)
 - add local static struct to getContVolInfo to prevent strings 
   from being freed while perl interface might still access them 
 
