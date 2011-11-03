@@ -5079,10 +5079,11 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 int
 Storage::getContVolInfo(const string& device, ContVolInfo& info)
     {
+    static ContVolInfo s_info; // workaround for broken ycp bindings
     int ret = STORAGE_VOLUME_NOT_FOUND;
     ConstContIterator c;
     ConstVolIterator v;
-    info.ctype = CUNKNOWN;
+    s_info.ctype = CUNKNOWN;
     assertInit();
     if (findVolume(device, c, v))
 	{
@@ -5095,23 +5096,24 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
 		findVolume(b->device(), c, v, true);
 		}
 	    }
-	info.ctype = c->type();
-	info.cname = c->name();
-	info.cdevice = c->device();
-	info.vname = v->name();
-	info.vdevice = v->device();
+	s_info.ctype = c->type();
+	s_info.cname = c->name();
+	s_info.cdevice = c->device();
+	s_info.vname = v->name();
+	s_info.vdevice = v->device();
 	if( v->isNumeric() )
-	    info.num = v->nr();
+	    s_info.num = v->nr();
 	}
     else if (findContainer(device, c))
     {
 	ret = 0;
-	info.ctype = c->type();
-	info.cname = c->name();
-	info.cdevice = c->device();
-	info.vname = "";
-	info.vdevice = "";
+	s_info.ctype = c->type();
+	s_info.cname = c->name();
+	s_info.cdevice = c->device();
+	s_info.vname = "";
+	s_info.vdevice = "";
     }
+    info = s_info;
     y2mil("device:" << device << " ret:" << ret << " cname:" << info.cname <<
 	  " vname:" << info.vname);
     return ret;

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Nov  3 10:55:36 CET 2011  - fehr@suse.de
+
+- add local static struct to getContVolInfo to prevent strings 
+  from being freed while perl interface might still access them 
+
+-------------------------------------------------------------------
 Mon Oct 31 18:38:21 CET 2011  - fehr@suse.de
 
 - 2.21.13
