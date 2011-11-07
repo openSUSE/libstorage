@@ -985,27 +985,7 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
     ConstContIterator cont;
     ConstVolIterator vol;
 
-    if (findContainer(device, cont))
-	{
-	Container::ConstVolPair p = cont->volPair(Volume::notDeleted); 
-	for( Container::ConstVolIterator it = p.begin(); it != p.end(); ++it )
-	    {
-	    addIfNotThere( devices, it->device() );
-	    getRecursiveUsingHelper(it->device(), devices);
-	    }
-
-	if (cont->isUsedBy())
-	    {
-	    const list<UsedBy> usedBy = cont->getUsedBy();
-	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
-	         it != usedBy.end(); ++it)
-		{
-		addIfNotThere( devices, it->device() );
-		getRecursiveUsingHelper(it->device(), devices);
-		}
-	    }
-	}
-    else if (findVolume(device, vol))
+    if (findVolume(device, vol))
 	{
 	if (vol->isUsedBy())
 	    {
@@ -1086,6 +1066,26 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
 	    {
 	    addIfNotThere( devices, *i );
 	    getRecursiveUsingHelper(*i, devices);
+	    }
+	}
+    else if (findContainer(device, cont))
+	{
+	Container::ConstVolPair p = cont->volPair(Volume::notDeleted); 
+	for( Container::ConstVolIterator it = p.begin(); it != p.end(); ++it )
+	    {
+	    addIfNotThere( devices, it->device() );
+	    getRecursiveUsingHelper(it->device(), devices);
+	    }
+
+	if (cont->isUsedBy())
+	    {
+	    const list<UsedBy> usedBy = cont->getUsedBy();
+	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
+	         it != usedBy.end(); ++it)
+		{
+		addIfNotThere( devices, it->device() );
+		getRecursiveUsingHelper(it->device(), devices);
+		}
 	    }
 	}
     else
