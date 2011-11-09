@@ -320,7 +320,11 @@ void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
     while( i!=co.end() && i->old.dentry != entry.dentry )
 	++i;
     if( i!=co.end() )
+	{
+	y2mil( "entry old:" << i->nnew );
 	i->nnew.device = i->old.device = device;
+	y2mil( "entry new:" << i->nnew );
+	}
     }
 
 

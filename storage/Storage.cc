@@ -857,7 +857,8 @@ void
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
-	if (!i->isUsedBy())
+	if( !i->isUsedBy() &&
+	    (i->getContainer()==NULL||!i->getContainer()->isUsedBy()))
 	    {
 	    i->getLoopData( Losetup );
 	    i->getFsData(systeminfo.getBlkid());
@@ -866,7 +867,8 @@ void
 	}
     for( VolIterator i=begin; i!=end; ++i )
 	{
-	if (!i->isUsedBy())
+	if( !i->isUsedBy() && 
+	    (i->getContainer()==NULL||!i->getContainer()->isUsedBy()))
 	    {
 	    i->getMountData(systeminfo.getProcMounts(), !detectMounted);
 	    i->getFstabData( *fstab );

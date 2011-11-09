@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Wed Nov 09 12:29:53 CET 2011 - aschnell@suse.de
 
+- avoid detection on volumes on disk used by other stuff (bnc#729155)
 - fixed NFS detection (bnc#729155)
 - 2.22.0
 

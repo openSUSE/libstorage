@@ -369,12 +369,14 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	if( !found && !(uuid.empty()&&label.empty()) )
 	    {
 	    found = fstabData.findUuidLabel( uuid, label, entry );
-	    fstabData.setDevice( entry, device() );
+	    if(found)
+		fstabData.setDevice( entry, device() );
 	    }
 	if( !found && !(udevId().empty()&&udevPath().empty()) )
 	    {
 	    found = fstabData.findIdPath( udevId(), udevPath(), entry );
-	    fstabData.setDevice( entry, device() );
+	    if(found)
+		fstabData.setDevice( entry, device() );
 	    }
 	}
 
