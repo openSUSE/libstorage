@@ -183,9 +183,17 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
 	    {
 	    Nfs *n = NULL;
 	    NfsIter nfs;
-	    if( findNfs( i->device, nfs ))
+
+	    if( findNfs( Nfs::canonicalName(i->device), nfs ))
 		{
 		n = &(*nfs);
+
+		list<string> tmp = n->altNames();
+		if (!contains(tmp, i->device))
+		{
+		    tmp.push_back(i->device);
+		    n->setAltNames(tmp);
+		}
 		}
 	    else
 		{
@@ -209,7 +217,7 @@ NfsCo::findNfs( const string& dev, NfsIter& i )
     {
     NfsPair p=nfsPair();
     i=p.begin();
-    while( i!=p.end() && i->device()!=dev )
+    while( i!=p.end() && !i->sameDevice(dev) )
 	++i;
     return( i!=p.end() );
     }
