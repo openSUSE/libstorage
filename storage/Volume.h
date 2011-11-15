@@ -205,6 +205,7 @@ class Storage;
 	const string& fsTypeString() const { return toString(fs); }
 
 	static bool isTmpCryptMp( const string& mp );
+	static bool umountDir( const string& mp );
 
     protected:
 	void init();

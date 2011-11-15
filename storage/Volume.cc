@@ -734,8 +734,11 @@ int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const
 int Volume::umountTmpMount( const string& m, int ret )
     {
     int r = ret;
-    if( !getStorage()->umountDev( mountDevice() ) && r==0 )
-	r = VOLUME_CANNOT_TMP_UMOUNT;
+    if( mp.empty() || !umountDir(m) )
+	{
+        if( !getStorage()->umountDev( mountDevice() ) && r==0 )
+	    r = VOLUME_CANNOT_TMP_UMOUNT;
+	}
     if( m.substr( 0, 16 )== "/tmp/libstorage-" )
 	rmdir( m.c_str() );
     return( r );
@@ -1192,6 +1195,18 @@ void Volume::triggerUdevUpdate() const
 	}
     else
 	y2mil( "no access to " << path );
+    }
+
+bool Volume::umountDir( const string& mp )
+    {
+    bool ret = false;
+    y2mil("mp:" << mp);
+    if( !mp.empty() )
+	{
+	SystemCmd cmd( UMOUNTBIN " " + quote(mp) );
+	ret = cmd.retcode()==0;
+	}
+    return( ret );
     }
 
 int Volume::umount( const string& mp )
