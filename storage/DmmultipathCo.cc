@@ -45,6 +45,8 @@ namespace storage
 	if (c.retcode() != 0 || c.numLines() == 0)
 	    return;
 
+	Regex lun("[[:digit:]]+:[[:digit:]]+:[[:digit:]]+:[[:digit:]]+");
+
 	const vector<string>& lines = c.stdout();
 	vector<string>::const_iterator it1 = lines.begin();
 
@@ -77,8 +79,7 @@ namespace storage
 		if (it1->empty() || isalnum((*it1)[0]))
 		    break;
 
-		if (boost::starts_with(*it1, "| `-") || boost::starts_with(*it1, "  `-") ||
-		    boost::starts_with(*it1, "  |-"))
+		if (lun.match(*it1))
 		{
 		    string tmp = it1->substr(5);
 		    y2mil("mp element:" << tmp);
