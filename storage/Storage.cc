@@ -6839,7 +6839,9 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
     VolIterator vol;
     if( findVolume( device, vol ) )
 	{
-	if (vol->getFs() == FSUNKNOWN || vol->getFs() == FSNONE || vol->getFs() == SWAP)
+	if( (vol->getEncryption()!=ENC_NONE && vol->needCryptPwd()) || 
+	    (vol->getEncryption()==ENC_NONE && 
+	     (vol->getFs() == FSUNKNOWN || vol->getFs() == FSNONE || vol->getFs() == SWAP)))
 	{
 	    ret = false;
 	}
