@@ -4878,7 +4878,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     y2mil("p.length:" << p.length());
 
     typedef array<CommitStage, 5> Stages;
-    const Stages stages = { { DECREASE, INCREASE, FORMAT, MOUNT, SUBVOL } };
+    const Stages stages = { { DECREASE, INCREASE, FORMAT, SUBVOL, MOUNT } };
 
     for (Stages::const_iterator stage = stages.begin(); stage != stages.end(); ++stage)
     {

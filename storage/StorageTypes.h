@@ -94,7 +94,7 @@ struct contOrder
 std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
 std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 
-    enum CommitStage { DECREASE, INCREASE, FORMAT, MOUNT, SUBVOL };
+    enum CommitStage { DECREASE, INCREASE, FORMAT, SUBVOL, MOUNT };
 
 
     class Volume;

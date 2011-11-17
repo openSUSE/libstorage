@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov 17 15:44:52 CET 2011 - fehr@suse.de
+   
+- create btrfs subvolumes before mounting (bnc#731059)
+     
+-------------------------------------------------------------------
 Tue Nov 15 17:12:34 CET 2011 - fehr@suse.de
 
 - try umount in mountTmpMount by dir first to handle cases where 
