@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Nov 18 15:01:39 CET 2011 - aschnell@suse.de
+
+- merged proofread texts
+
+-------------------------------------------------------------------
 Thu Nov 17 15:44:52 CET 2011 - fehr@suse.de
    
 - create btrfs subvolumes before mounting (bnc#731059)

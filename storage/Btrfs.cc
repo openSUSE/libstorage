@@ -658,14 +658,14 @@ Btrfs::extendText(bool doing, const string& dev) const
         {
         // displayed text during action, 
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-        txt = sformat( _("Extending BTRFS volume %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extending Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, 
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-        txt = sformat( _("Extend BTRFS volume %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Extend Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );
@@ -679,14 +679,14 @@ Btrfs::reduceText(bool doing, const string& dev) const
         {
         // displayed text during action, 
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-        txt = sformat( _("Reducing BTRFS volume %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reducing Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
         // displayed text before action, 
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-        txt = sformat( _("Reduce BTRFS volume %1$s by %2$s"), name().c_str(),
+        txt = sformat( _("Reduce Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     return( txt );

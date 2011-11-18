@@ -365,8 +365,8 @@ Storage::discoverMdPVols()
                 "If they are clean devices or contain partitions then you can choose to use\n"
                 "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
                 "will be able to install system on it and boot from such RAID.\n"
-                "Do you want MD Partitionable RAID subsystem to manage those partitions?"
-            ), boost::join(l, " ").c_str() );
+                "Do you want MD Partitionable RAID subsystem to manage those partitions?"),
+	    boost::join(l, " ").c_str());
 
         if( yesnoPopupCb(txt) )
           {

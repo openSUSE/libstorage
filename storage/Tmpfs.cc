@@ -69,12 +69,12 @@ Text Tmpfs::removeText(bool doing) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by path name e.g /var/run 
-	txt = sformat( _("Removing Tmpfs volume from mount point %1$s"), orig_mp.c_str() );
+	txt = sformat( _("Removing tmpfs volume from mount point %1$s"), orig_mp.c_str() );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by path name e.g /var/run
-	txt = sformat( _("Remove Tmpfs volume from mount point %1$s"), orig_mp.c_str() );
+	txt = sformat( _("Remove tmpfs volume from mount point %1$s"), orig_mp.c_str() );
 	}
     return( txt );
     }

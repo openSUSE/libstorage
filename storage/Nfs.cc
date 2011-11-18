@@ -67,12 +67,12 @@ Text Nfs::removeText( bool doing ) const
     if( doing )
 	{
 	// displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-	txt = sformat( _("Removing nfs volume %1$s"), dev.c_str() );
+	txt = sformat( _("Removing NFS volume %1$s"), dev.c_str() );
 	}
     else
 	{
 	// displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-	txt = sformat( _("Remove nfs volume %1$s"), dev.c_str() );
+	txt = sformat( _("Remove NFS volume %1$s"), dev.c_str() );
 	}
     return( txt );
     }

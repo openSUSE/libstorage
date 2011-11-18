@@ -237,12 +237,12 @@ Text DmraidCo::removeText( bool doing ) const
     if( doing )
         {
         // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Removing raid %1$s"), name().c_str() );
+        txt = sformat( _("Removing RAID %1$s"), name().c_str() );
         }
     else
         {
         // displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Remove raid %1$s"), name().c_str() );
+        txt = sformat( _("Remove RAID %1$s"), name().c_str() );
         }
     return( txt );
     }
