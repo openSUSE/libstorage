@@ -1354,6 +1354,9 @@ void MdPartCo::setSize(unsigned long long size )
 	{
 	    md_uuid = details.uuid;
 	    md_name = details.devname;
+
+	    alt_names.remove_if(string_starts_with("/dev/md/"));
+	    alt_names.push_back("/dev/md/" + md_name);
 	}
 
 	getStorage()->addUsedBy(devs, UB_MDPART, dev);

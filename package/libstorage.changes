@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Nov 23 15:25:59 CET 2011 - aschnell@suse.de
+
+- add name in /dev/md/ to alt-names of partitioned RAID
+  (bnc#726319)
+
+-------------------------------------------------------------------
 Tue Nov 22 10:20:02 UTC 2011 - coolo@suse.com
 
 - add libtool as buildrequire to avoid implicit dependency
