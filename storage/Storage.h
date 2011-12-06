@@ -426,10 +426,10 @@ class DiskData;
 	void setRecursiveRemoval( bool val=true );
 	bool getRecursiveRemoval() const { return recursiveRemove; }
 
-	int getRecursiveUsing(const string& device, list<string>& devices);
-	int getRecursiveUsingHelper(const string& device, list<string>& devices);
+	int getRecursiveUsing(const list<string>& devices, bool itself, list<string>& using_devices);
+	int getRecursiveUsingHelper(const string& device, bool itself, list<string>& using_devices);
 
-	int getRecursiveUsedBy(const list<string>& device, bool itself, list<string>& usedby_devices);
+	int getRecursiveUsedBy(const list<string>& devices, bool itself, list<string>& usedby_devices);
 	int getRecursiveUsedByHelper(const string& device, bool itself, list<string>& usedby_devices);
 
 	void setZeroNewPartitions( bool val=true );

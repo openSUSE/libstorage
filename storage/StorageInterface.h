@@ -1703,14 +1703,16 @@ namespace storage
 	virtual bool getRecursiveRemoval() const = 0;
 
 	/**
-	 * Recursively get all devices using device. Volumes of containers are
+	 * Recursively get all devices using devices. Volumes of containers are
 	 * also considered as using the devices.
 	 *
-	 * @param device name of device, e.g. /dev/sda
-	 * @param devices name of devices using device, e.g. /dev/sda1 /dev/sda2
+	 * @param devices name of device, e.g. /dev/sda
+	 * @param itself whether the device itself is included in the result
+	 * @param using_devices name of devices using device, e.g. /dev/sda1 /dev/sda2
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getRecursiveUsing(const string& device, list<string>& devices) = 0;
+	virtual int getRecursiveUsing(const list<string>& devices, bool itself,
+				      list<string>& using_devices) = 0;
 
 	/**
 	 * Recursively get all devices used by devices. Containers of volumes are

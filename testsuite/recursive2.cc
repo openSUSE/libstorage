@@ -16,11 +16,14 @@ void
 test(const string& device)
 {
     list<string> devices;
-    int ret = s->getRecursiveUsing(device, devices);
+    devices.push_back(device);
 
-    cout << device << " ";
+    list<string> using_devices;
+    int ret = s->getRecursiveUsing(devices, false, using_devices);
+
+    cout << device << ": ";
     if (ret == 0)
-	cout << boost::join(devices, " ");
+	cout << boost::join(using_devices, " ");
     else
 	cout << ret;
     cout << endl;

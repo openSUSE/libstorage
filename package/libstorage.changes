@@ -2,6 +2,7 @@
 Tue Dec 06 14:08:41 CET 2011 - aschnell@suse.de
 
 - add function getResursiveUsedBy (for bnc#734786)
+- make getResursiveUsing also take a list as input
 
 -------------------------------------------------------------------
 Wed Nov 23 15:25:59 CET 2011 - aschnell@suse.de
