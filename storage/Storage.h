@@ -429,6 +429,9 @@ class DiskData;
 	int getRecursiveUsing(const string& device, list<string>& devices);
 	int getRecursiveUsingHelper(const string& device, list<string>& devices);
 
+	int getRecursiveUsedBy(const list<string>& device, bool itself, list<string>& usedby_devices);
+	int getRecursiveUsedByHelper(const string& device, bool itself, list<string>& usedby_devices);
+
 	void setZeroNewPartitions( bool val=true );
 	bool getZeroNewPartitions() const { return zeroNewPartitions; }
 

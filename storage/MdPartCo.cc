@@ -1586,6 +1586,15 @@ MdPartCo::filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo, b
 }
 
 
+    list<string>
+    MdPartCo::getUsing() const
+    {
+	list<string> ret = devs;
+	ret.insert(ret.end(), spare.begin(), spare.end());
+	return ret;
+    }
+
+
 bool MdPartCo::active = false;
 
 }

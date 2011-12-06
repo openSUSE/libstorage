@@ -63,6 +63,8 @@ class PeContainer : public Container
 
 	string getDeviceByNumber( const string& majmin ) const;
 
+	virtual list<string> getUsing() const;
+
     protected:
 	struct Pv
 	    {

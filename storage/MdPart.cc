@@ -183,6 +183,16 @@ MdPart::setTypeText(bool doing) const
     return txt;
     }
 
+
+    list<string>
+    MdPart::getUsing() const
+    {
+	list<string> ret;
+	ret.push_back(cont->device());
+	return ret;
+    }
+
+
 void MdPart::getInfo( MdPartInfo& tinfo ) const
     {
     Volume::getInfo(info.v);

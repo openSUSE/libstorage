@@ -89,6 +89,8 @@ class Md : public Volume
 
 	bool updateEntry(EtcMdadm* mdadm) const;
 
+	virtual list<string> getUsing() const;
+
     protected:
 
 	void computeSize();

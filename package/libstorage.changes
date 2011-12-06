@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec 06 14:08:41 CET 2011 - aschnell@suse.de
+
+- add function getResursiveUsedBy (for bnc#734786)
+
+-------------------------------------------------------------------
 Wed Nov 23 15:25:59 CET 2011 - aschnell@suse.de
 
 - add name in /dev/md/ to alt-names of partitioned RAID

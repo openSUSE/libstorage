@@ -1098,6 +1098,56 @@ Storage::getRecursiveUsingHelper(const string& device, list<string>& devices)
     }
 
 
+int
+Storage::getRecursiveUsedBy(const list<string>& devices, bool itself, list<string>& usedby_devices)
+{
+    y2mil("devices:" << devices);
+    assertInit();
+    int ret = 0;
+    usedby_devices.clear();
+    for (list<string>::const_iterator it = devices.begin(); it != devices.end(); ++it)
+    {
+	ret = getRecursiveUsedByHelper(*it, itself, usedby_devices);
+	if (ret != 0)
+	    break;
+    }
+
+    y2mil("ret:" << ret << " usedby_devices:" << usedby_devices);
+    return ret;
+}
+
+
+int
+Storage::getRecursiveUsedByHelper(const string& device, bool itself, list<string>& usedby_devices)
+{
+    int ret = 0;
+
+    const Device* p = findDevice(device, true);
+    if (p)
+    {
+	if (itself && find(usedby_devices.begin(), usedby_devices.end(),
+			   p->device()) == usedby_devices.end())
+	    usedby_devices.push_back(p->device());
+
+	list<string> tmp = p->getUsing();
+	for (list<string>::const_iterator it = tmp.begin(); it != tmp.end(); ++it)
+	{
+	    if (find(usedby_devices.begin(), usedby_devices.end(), *it) == usedby_devices.end())
+	    {
+		usedby_devices.push_back(*it);
+		getRecursiveUsedByHelper(*it, itself, usedby_devices);
+	    }
+	}
+    }
+    else
+    {
+	ret = STORAGE_DEVICE_NOT_FOUND;
+    }
+
+    return ret;
+}
+
+
 void Storage::setZeroNewPartitions(bool val)
 {
     y2mil("val:" << val);

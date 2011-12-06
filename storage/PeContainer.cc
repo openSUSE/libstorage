@@ -816,4 +816,18 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	setChildValue(node, "pe_free", free_pe);
     }
 
+
+    list<string>
+    PeContainer::getUsing() const
+    {
+	list<string> ret;
+	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	      ret.push_back(it->device);
+	for (list<Pv>::const_iterator it = pv_add.begin(); it != pv_add.end(); ++it)
+	      ret.push_back(it->device);
+	for (list<Pv>::const_iterator it = pv_remove.begin(); it != pv_remove.end(); ++it)
+	      ret.remove(it->device);
+	return ret;
+    }
+
 }

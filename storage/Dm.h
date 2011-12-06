@@ -85,6 +85,8 @@ class Dm : public Volume
 
 	static string devToTable( const string& dev );
 
+	virtual list<string> getUsing() const;
+
 	bool equalContent(const Dm& rhs) const;
 
 	void logDifference(std::ostream& log, const Dm& rhs) const;

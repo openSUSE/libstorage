@@ -1713,6 +1713,18 @@ namespace storage
 	virtual int getRecursiveUsing(const string& device, list<string>& devices) = 0;
 
 	/**
+	 * Recursively get all devices used by devices. Containers of volumes are
+	 * also considered as used by the devices.
+	 *
+	 * @param devices list of name of devices, e.g. /dev/sda1
+	 * @param itself whether the device itself is included in the result
+	 * @param usedby_devices name of devices used by devices, e.g. /dev/sda
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int getRecursiveUsedBy(const list<string>& devices, bool itself,
+				       list<string>& usedby_devices) = 0;
+
+	/**
 	 * Set handling of newly created partitions. With this flag
 	 * once can make the library overwrite start and end of newly
 	 * created partitions with zeroes. This prevents that obsolete

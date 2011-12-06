@@ -568,6 +568,15 @@ Partition::getCommitActions(list<commitAction>& l) const
     }
 
 
+    list<string>
+    Partition::getUsing() const
+    {
+	list<string> ret;
+	ret.push_back(cont->device());
+	return ret;
+    }
+
+
 void
 Partition::getInfo( PartitionAddInfo& tinfo ) const
     {

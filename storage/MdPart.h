@@ -69,6 +69,8 @@ class MdPart : public Volume
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
 
+	virtual list<string> getUsing() const;
+
     protected:
 
         const MdPartCo* co() const;

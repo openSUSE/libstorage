@@ -120,6 +120,8 @@ class Partition : public Volume
 	bool operator> ( const Partition& rhs ) const
 	    { return( !(*this<=rhs) ); }
 
+	virtual list<string> getUsing() const;
+
     protected:
 
 	Region reg;

@@ -500,6 +500,15 @@ string Dm::dmDeviceName( unsigned long num )
     }
 
 
+    list<string>
+    Dm::getUsing() const
+    {
+	list<string> ret;
+	ret.push_back(cont->device());
+	return ret;
+    }
+
+
 void Dm::getInfo( DmInfo& tinfo ) const
     {
     Volume::getInfo(info.v);

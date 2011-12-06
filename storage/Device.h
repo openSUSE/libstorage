@@ -93,6 +93,8 @@ namespace storage
 	bool isUsedBy(UsedByType type) const;
 	const list<UsedBy>& getUsedBy() const { return uby; }
 
+	virtual list<string> getUsing() const { return list<string>(); }
+
 	void logDifference(std::ostream& log, const Device& rhs) const;
 
 	friend std::ostream& operator<<(std::ostream& s, const Device& d);

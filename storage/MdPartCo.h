@@ -117,6 +117,8 @@ class MdPartCo : public Container
 
     Partition* getPartition( unsigned nr, bool del );
 
+	virtual list<string> getUsing() const;
+
     void getInfo( storage::MdPartCoInfo& info ) const;
     bool equalContent( const Container& rhs ) const;
 
