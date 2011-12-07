@@ -2026,7 +2026,7 @@ class DiskData;
 	void detectMds(SystemInfo& systeminfo);
 	void detectBtrfs(SystemInfo& systeminfo);
 	void detectMdParts(SystemInfo& systeminfo);
-	bool discoverMdPVols();
+	void decideImsm();
 	void detectLoops(SystemInfo& systeminfo);
 	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
 	void detectTmpfs(const EtcFstab& fstab, SystemInfo& systeminfo);

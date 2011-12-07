@@ -218,6 +218,11 @@ Storage::initialize()
 	y2mil(archinfo);
     }
 
+    if (instsys())
+    {
+	decideImsm();
+    }
+
     detectObjects();
 
     for (list<std::pair<string, Text>>::const_iterator i = infoPopupTxts.begin(); 
@@ -248,8 +253,6 @@ void Storage::detectObjects()
 {
 	if (instsys())
 	{
-	    discoverMdPVols();
-
 	    if (getImsmDriver() == IMSM_MDADM)
 	    {
 		MdPartCo::activate(true, tmpDir());
@@ -336,57 +339,35 @@ void Storage::detectObjects()
     }
 
 
-bool
-Storage::discoverMdPVols()
+void
+Storage::decideImsm()
 {
-  if( !instsys() )
+    if (imsm_driver == IMSM_UNDECIDED && isImsmPlatform())
     {
-    return false;
+	y2mil("IMSM platform detected");
+
+	list<string> l;
+	if (MdPartCo::scanForRaid(l) && !l.empty())
+	{
+	    y2mil("md raids:" << l);
+
+	    Text txt = sformat(
+		// popup text %1$s is replaced by disk name e.g. /dev/hda
+		_("You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+		  "\n"
+		  "Following MD compatible RAID devices were detected:\n"
+		  "%1$s\n"
+		  "If they are clean devices or contain partitions then you can choose to use\n"
+		  "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+		  "will be able to install system on it and boot from such RAID.\n"
+		  "Do you want MD Partitionable RAID subsystem to manage those partitions?"),
+		boost::join(l, " ").c_str());
+
+	    imsm_driver = yesnoPopupCb(txt) ? IMSM_MDADM : IMSM_DMRAID;
+	}
     }
 
-  bool ret = false;
-  if (isImsmPlatform())
-    {
-    y2mil("Intel SW RAID Platform detected.");
-
-    list <string> l;
-    if (MdPartCo::scanForRaid(l) && !l.empty())
-      {
-	  y2mil("md raids:" << l);
-
-	if (getImsmDriver() == IMSM_UNDECIDED)
-	{
-        Text txt = sformat(
-            // popup text %1$s is replaced by disk name e.g. /dev/hda
-            _("You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
-                "\n"
-                "Following MD compatible RAID devices were detected:\n"
-                "%1$s\n"
-                "If they are clean devices or contain partitions then you can choose to use\n"
-                "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
-                "will be able to install system on it and boot from such RAID.\n"
-                "Do you want MD Partitionable RAID subsystem to manage those partitions?"),
-	    boost::join(l, " ").c_str());
-
-        if( yesnoPopupCb(txt) )
-          {
-          ret = true;
-          setImsmDriver(IMSM_MDADM);
-          }
-        else
-          {
-          ret = false;
-	  setImsmDriver(IMSM_DMRAID);
-          }
-	}
-	else
-	{
-	    ret = getImsmDriver() == IMSM_MDADM;
-	}
-      }
-    }
-  y2mil(" Exiting with status: " << ret);
-  return ret;
+    y2mil("imsm_driver:" << toString(imsm_driver));
 }
 
 
