@@ -40,7 +40,7 @@ class Storage;
 
     public:
 
-	CmdMultipath();
+	CmdMultipath(bool test = false);
 
 	struct Entry
 	{
@@ -52,6 +52,8 @@ class Storage;
 	list<string> getEntries() const;
 
 	bool getEntry(const string& name, Entry& entry) const;
+
+	bool looksLikeRealMultipath() const;
 
     private:
 

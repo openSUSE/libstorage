@@ -220,6 +220,9 @@ Storage::initialize()
 
     if (instsys())
     {
+	if (decideMultipath())
+	    DmmultipathCo::activate(true);
+
 	decideImsm();
     }
 
@@ -336,6 +339,31 @@ void Storage::detectObjects()
 	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, c.getLine(i))));
 	    }
 	}
+    }
+
+
+    bool
+    Storage::decideMultipath()
+    {
+	y2mil("decideMultipath");
+
+	if (getenv("LIBSTORAGE_NO_DMMULTIPATH") != NULL)
+	    return false;
+
+	SystemCmd c(MODPROBEBIN " dm-multipath");
+
+	CmdMultipath cmdmultipath(true);
+	if (cmdmultipath.looksLikeRealMultipath())
+	{
+	    // popup text
+	    Text txt = _("The system seems to have multipath hardware.\n"
+			 "Do you want to activate multipath?");
+
+	    if (yesnoPopupCb(txt))
+		return true;
+	}
+
+	return false;
     }
 
 

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Dec 20 15:05:13 CET 2011 - aschnell@suse.de
+
+- ask user to activate multipath if setup appears to be multipath
+  (see bnc#727428 and bnc#735038)
+
+-------------------------------------------------------------------
 Tue Dec 06 14:08:41 CET 2011 - aschnell@suse.de
 
 - add function getResursiveUsedBy (for bnc#734786)

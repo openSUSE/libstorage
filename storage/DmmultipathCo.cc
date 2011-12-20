@@ -39,9 +39,13 @@ namespace storage
     using namespace std;
 
 
-    CmdMultipath::CmdMultipath()
+    CmdMultipath::CmdMultipath(bool test)
     {
-	SystemCmd c(MULTIPATHBIN " -d -v 2+ -ll");
+	string cmd = MULTIPATHBIN " -d -v 2+";
+	if (!test)
+	    cmd += " -ll";
+
+	SystemCmd c(cmd);
 	if (c.retcode() != 0 || c.numLines() == 0)
 	    return;
 
@@ -54,14 +58,18 @@ namespace storage
 	{
 	    Entry entry;
 
-	    y2mil("mp line:" << *it1);
+	    string line = *it1;
+	    y2mil("mp line:" << line);
 
-	    string name = extractNthWord(0, *it1);
+	    if (boost::starts_with(line, "create:"))
+		line = extractNthWord(1, line, true);
+
+	    string name = extractNthWord(0, line);
 	    y2mil("mp name:" << name);
 
-	    bool has_alias = boost::starts_with(extractNthWord(1, *it1), "(");
+	    bool has_alias = boost::starts_with(extractNthWord(1, line), "(");
 
-	    list<string> tmp = splitString(extractNthWord(has_alias ? 3 : 2, *it1, true), ",");
+	    list<string> tmp = splitString(extractNthWord(has_alias ? 3 : 2, line, true), ",");
 	    if (tmp.size() >= 2)
 	    {
 		list<string>::const_iterator it2 = tmp.begin();
@@ -119,6 +127,17 @@ namespace storage
 
 	entry = it->second;
 	return true;
+    }
+
+
+    bool
+    CmdMultipath::looksLikeRealMultipath() const
+    {
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
+	    if (it->second.devices.size() > 1)
+		return true;
+
+	return false;
     }
 
 
