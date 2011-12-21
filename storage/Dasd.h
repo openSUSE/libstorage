@@ -41,6 +41,7 @@ class Dasd : public Disk
     public:
 
 	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
+	enum DasdType { DASDTYPE_NONE, DASDTYPE_ECKD, DASDTYPE_FBA };
 
 	Dasd(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
@@ -54,6 +55,7 @@ class Dasd : public Disk
         int changePartitionId( unsigned nr, unsigned id ) { return 0; }
         int resizePartition( Partition* p, unsigned long newCyl );
 	int initializeDisk( bool value );
+	virtual string defaultLabel() const;
 	Text fdasdText() const;
 	Text dasdfmtText( bool doing ) const;
 	static Text dasdfmtTexts(bool doing, const list<string>& devs);

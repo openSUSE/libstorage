@@ -81,7 +81,7 @@ namespace storage
     detected_label = "dasd";
     setLabelData( "dasd" );
 
-	Dasdview dasdview(device());
+	const Dasdview& dasdview = systeminfo.getDasdview(device());
 	new_geometry = geometry = dasdview.getGeometry();
 	fmt = dasdview.getDasdFormat();
 	ronly = fmt != DASDF_CDL;
@@ -541,6 +541,15 @@ int Dasd::initializeDisk( bool value )
 	    }
 	}
     return( ret );
+    }
+
+
+    string
+    Dasd::defaultLabel() const
+    {
+	string ret = "dasd";
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 

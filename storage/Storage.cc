@@ -819,6 +819,14 @@ void
 	    if (sysfsinfo.range > 1 && (sysfsinfo.size > 0 || dn.find("dasd") == 0))
 	    {
 		DiskData::DTyp t = (dn.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
+
+		if (t == DiskData::DASD)
+		{
+		    const Dasdview& dasdview = systeminfo.getDasdview("/dev/" + dn);
+		    if (dasdview.getDasdType() == Dasd::DASDTYPE_FBA)
+			t = DiskData::DISK;
+		}
+
 		dl.push_back(DiskData(dn, t, sysfsinfo.size / 2));
 	    }
 	    else if (sysfsinfo.range == 1 && sysfsinfo.size > 0)

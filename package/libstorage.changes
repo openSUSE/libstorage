@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Dec 21 12:04:31 CET 2011 - aschnell@suse.de
+
+- handle FBA DASD with parted instead of fdasd (bnc#584703)
+
+-------------------------------------------------------------------
 Tue Dec 20 15:05:13 CET 2011 - aschnell@suse.de
 
 - ask user to activate multipath if setup appears to be multipath

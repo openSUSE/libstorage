@@ -273,7 +273,7 @@ class Disk : public Container
 
 	void setLabelData( const string& );
 
-	string defaultLabel() const;
+	virtual string defaultLabel() const;
 
 	static const label_info labels[];
 	static const string p_disks[];

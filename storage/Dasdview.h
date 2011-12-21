@@ -42,11 +42,13 @@ namespace storage
 
 	const Geometry& getGeometry() const { return geometry; }
 	Dasd::DasdFormat getDasdFormat() const { return dasd_format; }
+	Dasd::DasdType getDasdType() const { return dasd_type; }
 
     private:
 
 	Geometry geometry;
 	Dasd::DasdFormat dasd_format;
+	Dasd::DasdType dasd_type;
 
 	void scanGeometry(SystemCmd& cmd);
 

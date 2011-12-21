@@ -648,12 +648,6 @@ Disk::defaultLabel() const
 {
     string ret = "msdos";
 
-    if (isDasd())
-    {
-	ret = "dasd";
-    }
-    else
-    {
 	const ArchInfo& archinfo = getStorage()->getArchInfo();
 	unsigned long long num_sectors = kbToSector(size_k);
 	y2mil("num_sectors:" << num_sectors);
@@ -671,7 +665,6 @@ Disk::defaultLabel() const
 	    ret = "mac";
 	else if (archinfo.arch == "ppc" && archinfo.is_ppc_pegasos)
 	    ret = "amiga";
-    }
 
     y2mil("ret:" << ret);
     return ret;

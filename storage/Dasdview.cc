@@ -29,7 +29,7 @@ namespace storage
 {
 
     Dasdview::Dasdview(const string& device)
-	: dasd_format(Dasd::DASDF_NONE)
+	: dasd_format(Dasd::DASDF_NONE), dasd_type(Dasd::DASDTYPE_NONE)
     {
 	SystemCmd cmd(DASDVIEWBIN " --extended " + quote(device));
 
@@ -45,6 +45,18 @@ namespace storage
 		    dasd_format = Dasd::DASDF_CDL;
 		else if( tmp == "ldl" )
 		    dasd_format = Dasd::DASDF_LDL;
+	    }
+
+	    if (cmd.select("^type") > 0)
+            {
+                string tmp = cmd.getLine(0, true);
+                y2mil("Type line:" << tmp);
+                tmp = tmp.erase(0, tmp.find(':') + 1);
+                tmp = extractNthWord(0, tmp);
+                if (tmp == "ECKD")
+		    dasd_type = Dasd::DASDTYPE_ECKD;
+                else if (tmp == "FBA")
+                    dasd_type = Dasd::DASDTYPE_FBA;
 	    }
 
 	    scanGeometry(cmd);
