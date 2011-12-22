@@ -504,7 +504,9 @@ string Dm::dmDeviceName( unsigned long num )
     Dm::getUsing() const
     {
 	list<string> ret;
-	ret.push_back(cont->device());
+	for (map<string, unsigned long>::const_iterator it = pe_map.begin(); it != pe_map.end(); ++it)
+	    if (it->second > 0)
+		ret.push_back(it->first);
 	return ret;
     }
 

@@ -174,6 +174,16 @@ Text DmPart::setTypeText( bool doing ) const
     return( txt );
     }
 
+
+    list<string>
+    DmPart::getUsing() const
+    {
+	list<string> ret;
+	ret.push_back(cont->device());
+	return ret;
+    }
+
+
 void DmPart::getInfo( DmPartInfo& tinfo ) const
     {
     Volume::getInfo(info.v);

@@ -172,6 +172,15 @@ LvmLv::getState(LvmLvSnapshotStateInfo& info)
 }
 
 
+    list<string>
+    LvmLv::getUsing() const
+    {
+	list<string> ret;
+	ret.push_back(cont->device());
+	return ret;
+    }
+
+
 Text LvmLv::removeText( bool doing ) const
     {
     Text txt;
