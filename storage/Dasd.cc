@@ -561,12 +561,18 @@ std::ostream& operator<< (std::ostream& s, const Dasd& d )
     }
 
 
+    static const string dasd_type_names[] = {
+	"NONE", "ECKD", "FBA"
+    };
+
+    const vector<string> EnumInfo<Dasd::DasdType>::names(dasd_type_names, dasd_type_names +
+							 lengthof(dasd_type_names));
+
     static const string dasd_format_names[] = {
 	"NONE", "LDL", "CDL"
     };
 
     const vector<string> EnumInfo<Dasd::DasdFormat>::names(dasd_format_names, dasd_format_names +
 							   lengthof(dasd_format_names));
-
 
 }

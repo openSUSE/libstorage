@@ -92,6 +92,7 @@ class Dasd : public Disk
     };
 
 
+    template <> struct EnumInfo<Dasd::DasdType> { static const vector<string> names; };
     template <> struct EnumInfo<Dasd::DasdFormat> { static const vector<string> names; };
 
 }
