@@ -107,6 +107,31 @@ BtrfsCo* Btrfs::co()
     return(dynamic_cast<storage::BtrfsCo*>(con));
     }
 
+list<string> 
+Btrfs::getDevices( bool add_del ) const
+    {
+    list<string> ret;
+    getDevices( ret, add_del );
+    return( ret );
+    }
+
+void 
+Btrfs::getDevices( list<string>& devs, bool add_del ) const
+    {
+    y2mil( "add_del:" << add_del );
+    devs = devices;
+    if( add_del )
+	{
+	if( !dev_add.empty() )
+	    devs.insert( devs.end(), dev_add.begin(), dev_add.end() );
+	if( !dev_rem.empty() )
+	    for( list<string>::const_iterator s=dev_rem.begin(); s!=dev_rem.end(); ++s )
+		devs.remove( *s );
+	}
+    y2mil( "devs:" << devs );
+    }
+
+
 void Btrfs::addSubvol( const string& path )
     {
     y2mil( "path:\"" << path << "\"" );

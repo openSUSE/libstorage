@@ -558,20 +558,26 @@ void Storage::detectBtrfs(SystemInfo& systeminfo)
 	    BtrfsCo::ConstBtrfsPair p(v->btrfsPair());
 	    for( BtrfsCo::ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
 		{
-		const list<string>& devs = i->getDevices();
-		for( list<string>::const_iterator d=devs.begin(); d!=devs.end(); ++d )
-		    {
-		    VolIterator v;
-		    if( findVolume( *d, v ))
-			{
-			v->setUsedByUuid( UB_BTRFS, i->getUuid() );
-			}
-		    }
+		setBtrfsUsedBy( &(*i) );
 		}
 	    addToList( v );
 	    }
 	else
 	    delete v;
+	}
+    }
+
+void Storage::setBtrfsUsedBy( const Btrfs* bt )
+    {
+    const list<string>& devs = bt->getDevices(true);
+    y2mil( "devs:" << devs << " to uuid:" << bt->getUuid() );
+    for( list<string>::const_iterator d=devs.begin(); d!=devs.end(); ++d )
+	{
+	VolIterator v;
+	if( findVolume( *d, v, false, true ))
+	    {
+	    v->setUsedByUuid( UB_BTRFS, bt->getUuid() );
+	    }
 	}
     }
 
@@ -4534,7 +4540,7 @@ int Storage::extendBtrfsVolume( const string& device, const deque<string>& devs 
     {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << "devices:" << devs );
+    y2mil("device:" << device << " devices:" << devs );
     BtrfsCo* co;
     if (readonly())
 	{
@@ -5177,7 +5183,7 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
 	if( c->type()==BTRFSC )
 	    {
 	    const Btrfs * b = dynamic_cast<const Btrfs *>(&(*v));
-	    if( b!=NULL && b->getDevices().size()==1 )
+	    if( b!=NULL && b->getDevices(true).size()==1 )
 		{
 		findVolume(b->device(), c, v, true);
 		}
@@ -6148,7 +6154,7 @@ Storage::isUsedBySingleBtrfs( const Volume& vol ) const
 	ConstBtrfsIterator i = p.begin();
 	while( i!=p.end() && i->getUuid()!=ub.front().device() )
 	    ++i;
-	ret = i!=p.end() && i->getDevices().size()<=1;
+	ret = i!=p.end() && i->getDevices(true).size()<=1;
 	}
     y2mil( "dev:" << vol.device() << " ret:" << ret );
     return( ret );
