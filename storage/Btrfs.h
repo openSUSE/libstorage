@@ -67,6 +67,7 @@ class Btrfs : public Volume
 	Text reduceText(bool doing, const string& device) const;
 	Text removeText( bool doing ) const;
 	Text formatText( bool doing ) const;
+	int setFormat( bool format, storage::FsType fs );
 
 	virtual string udevPath() const;
 	virtual list<string> udevId() const;
@@ -93,6 +94,7 @@ class Btrfs : public Volume
 	static bool needExtend( const Btrfs& v );
 
     protected:
+        BtrfsCo* co();
 	string subvolNames( bool added ) const; 
 	list<string> devices;
 	list<string> dev_add;

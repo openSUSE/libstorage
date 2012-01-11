@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jan 11 16:10:33 CET 2012 - fehr@suse.de
+
+- fix bug when resizing a btrfs fs that had format set (bnc#732988)
+
+-------------------------------------------------------------------
 Wed Dec 21 12:04:31 CET 2011 - aschnell@suse.de
 
 - handle FBA DASD with parted instead of fdasd (bnc#584703)

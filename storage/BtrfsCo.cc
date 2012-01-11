@@ -184,16 +184,23 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
     y2mil("end");
     }
 
+string BtrfsCo::fakeUuid()
+    {
+    string ret;
+    unsigned long long uuid = 12345;
+    BtrfsIter i;
+    while( findBtrfs(decString(uuid),i) )
+	++uuid;
+    ret = decString(uuid);
+    y2mil( "ret:" << ret );
+    return(ret);
+    }
+
 void
 BtrfsCo::addFromVolume( const Volume& v, string &uuid )
     {
     Btrfs* b = new Btrfs( *this, v );
-    unsigned long long uid = 12345;
-    BtrfsIter i;
-    while( findBtrfs(decString(uid),i) )
-	++uid;
-    uuid = decString(uid);
-    b->initUuid( uuid );
+    b->initUuid( fakeUuid() );
     vols.push_back(b);
     }
 

@@ -101,6 +101,12 @@ Btrfs::~Btrfs()
     y2deb("destructed Btrfs " << dev);
     }
 
+BtrfsCo* Btrfs::co()
+    {
+    Container* con = const_cast<Container*>(cont);
+    return(dynamic_cast<storage::BtrfsCo*>(con));
+    }
+
 void Btrfs::addSubvol( const string& path )
     {
     y2mil( "path:\"" << path << "\"" );
@@ -219,11 +225,14 @@ int Btrfs::extendVolume( const list<string>& devs )
 	    }
 	else
 	    {
-	    dev_add.push_back( d );
+	    if( format )
+		devices.push_back( d );
+	    else
+		dev_add.push_back( d );
 	    if( !getStorage()->isDisk(d))
 		getStorage()->changeFormatVolume( d, false, FSNONE );
 	    }
-	getStorage()->setUsedBy(d, UB_BTRFS, device());
+	getStorage()->setUsedByBtrfs(d, getUuid());
 	setSize( size_k+getStorage()->deviceSize( d ) );
 	++i;
 	}
@@ -264,6 +273,11 @@ int Btrfs::shrinkVolume( const list<string>& devs )
 	string d = normalizeDevice( *i );
 	if( (p=find( dev_add.begin(), dev_add.end(), d ))!=dev_add.end())
 	    dev_add.erase(p);
+	else if( format )
+	    {
+	    if( (p=find( devices.begin(), devices.end(), d ))!=devices.end())
+		devices.erase(p);
+	    }
 	else
 	    dev_rem.push_back(d);
 	getStorage()->clearUsedBy(d);
@@ -459,6 +473,24 @@ Btrfs::subvolNames( bool added ) const
 	    }
 	}
     y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int Btrfs::setFormat( bool val, storage::FsType new_fs )
+    {
+    int ret = 0;
+    y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
+    ret = Volume::setFormat( val, new_fs );
+    if( ret==0 )
+	{
+	if( val )
+	    {
+	    orig_uuid = uuid;
+	    uuid = co()->fakeUuid();
+	    }
+	getStorage()->setBtrfsUsedBy( this );
+	}
+    y2mil("ret:" << ret);
     return( ret );
     }
 

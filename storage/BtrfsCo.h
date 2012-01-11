@@ -71,6 +71,7 @@ class BtrfsCo : public Container
 	int removeUuid( const string& uuid );
 	bool equalContent( const Container& rhs ) const;
 	void saveData(xmlNode* node) const;
+	string fakeUuid();
 
 	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 	virtual void logData(const string& Dir) const;
