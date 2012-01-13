@@ -21,7 +21,7 @@
 Name:           libstorage
 Version:        @VERSION@
 Release:        0
-License:        GPL
+License:        GPL-2.0
 Group:          System/Libraries
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
 Source:         libstorage-%{version}.tar.bz2
