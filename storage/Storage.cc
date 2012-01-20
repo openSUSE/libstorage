@@ -6896,7 +6896,10 @@ bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
 	    opts += "show_sys_files";
 	}
 
-	if( mountDev( vol->device(), mdir, false, opts ) )
+	list<string> opt_l = splitString(opt, ",");
+	bool ro = find(opt_l.begin(), opt_l.end(), "ro") != opt_l.end();
+
+	if( mountDev( vol->device(), mdir, ro, opts ) )
 	{
 	    ret = true;
 	}
