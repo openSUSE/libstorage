@@ -106,7 +106,7 @@ Storage::Storage(const Environment& env)
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(EXT4), defaultSubvolName(""), detectMounted(true), 
       root_mounted(!instsys()), rootprefix(), fstab(NULL), mdadm(NULL), 
-      imsm_driver(IMSM_UNDECIDED)
+      imsm_driver(IMSM_UNDECIDED), multipath_autostart(MPAS_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -135,6 +135,14 @@ Storage::Storage(const Environment& env)
 	    y2war("unknown IMSM driver '" << tenv << "' in environment");
     }
     y2mil("imsm_driver:" << toString(imsm_driver));
+
+    tenv = getenv("LIBSTORAGE_MULTIPATH_AUTOSTART");
+    if (tenv)
+    {
+	if (!toValue(tenv, multipath_autostart, false))
+	    y2war("unknown multipath autostart '" << tenv << "' in environment");
+    }
+    y2mil("multipath_autostart:" << toString(multipath_autostart));
 
     logSystemInfo();
 }
@@ -220,7 +228,9 @@ Storage::initialize()
 
     if (instsys())
     {
-	if (decideMultipath())
+	decideMultipath();
+
+	if (multipath_autostart == MPAS_ON)
 	    DmmultipathCo::activate(true);
 
 	decideImsm();
@@ -342,28 +352,28 @@ void Storage::detectObjects()
     }
 
 
-    bool
+    void
     Storage::decideMultipath()
     {
 	y2mil("decideMultipath");
 
 	if (getenv("LIBSTORAGE_NO_DMMULTIPATH") != NULL)
-	    return false;
+	    return;
 
-	SystemCmd c(MODPROBEBIN " dm-multipath");
-
-	CmdMultipath cmdmultipath(true);
-	if (cmdmultipath.looksLikeRealMultipath())
+	if (multipath_autostart == MPAS_UNDECIDED)
 	{
-	    // popup text
-	    Text txt = _("The system seems to have multipath hardware.\n"
-			 "Do you want to activate multipath?");
+	    SystemCmd c(MODPROBEBIN " dm-multipath");
 
-	    if (yesnoPopupCb(txt))
-		return true;
+	    CmdMultipath cmdmultipath(true);
+	    if (cmdmultipath.looksLikeRealMultipath())
+	    {
+		// popup text
+		Text txt = _("The system seems to have multipath hardware.\n"
+			     "Do you want to activate multipath?");
+
+		multipath_autostart = yesnoPopupCb(txt) ? MPAS_ON : MPAS_OFF;
+	    }
 	}
-
-	return false;
     }
 
 

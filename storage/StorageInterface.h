@@ -175,6 +175,8 @@ namespace storage
 
     enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
 
+    enum MultipathAutostart { MPAS_UNDECIDED, MPAS_ON, MPAS_OFF };
+
     enum PartAlign { ALIGN_OPTIMAL, ALIGN_CYLINDER };
 
 
@@ -1052,6 +1054,20 @@ namespace storage
          * @return driver used for IMSM Software RAIDs.
          */
 	virtual ImsmDriver getImsmDriver() const = 0;
+
+	/**
+	 * Set whether multipath should be started automatically if detected.
+	 *
+	 * @param multipath_autostart value for automatically start of multipath.
+	 */
+	virtual void setMultipathAutostart(MultipathAutostart multipath_autostart) = 0;
+
+        /**
+	 * Query whether multipath should be started automatically if detected.
+         *
+         * @return value for automatically start of multipath.
+         */
+	virtual MultipathAutostart getMultipathAutostart() const = 0;
 
 	/**
 	 * Query all volumes found in system

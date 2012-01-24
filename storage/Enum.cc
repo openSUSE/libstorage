@@ -125,6 +125,14 @@ namespace storage
 						     lengthof(imsm_driver_names));
 
 
+    static const string multipath_autostart_names[] = {
+	"UNDECIDED", "ON", "OFF"
+    };
+
+    const vector<string> EnumInfo<MultipathAutostart>::names(multipath_autostart_names, multipath_autostart_names +
+							     lengthof(multipath_autostart_names));
+
+
     // strings must match "parted --align" option
     static const string part_align_names[] = {
 	"optimal", "cylinder"

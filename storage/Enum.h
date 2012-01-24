@@ -52,6 +52,7 @@ namespace storage
     template <> struct EnumInfo<CType> { static const vector<string> names; };
     template <> struct EnumInfo<Transport> { static const vector<string> names; };
     template <> struct EnumInfo<ImsmDriver> { static const vector<string> names; };
+    template <> struct EnumInfo<MultipathAutostart> { static const vector<string> names; };
     template <> struct EnumInfo<PartAlign> { static const vector<string> names; };
 
 

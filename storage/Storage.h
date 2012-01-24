@@ -522,6 +522,8 @@ class DiskData;
 	list<int> getMdAllowedParity(MdType md_type, unsigned devices );
 	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }
 	ImsmDriver getImsmDriver() const { return imsm_driver; }
+	void setMultipathAutostart(MultipathAutostart val) { multipath_autostart = val; }
+	MultipathAutostart getMultipathAutostart() const { return multipath_autostart; }
 
 	int getMdPartCoInfo( const string& name, MdPartCoInfo& info);
 	int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
@@ -2028,7 +2030,7 @@ class DiskData;
 	void detectMds(SystemInfo& systeminfo);
 	void detectBtrfs(SystemInfo& systeminfo);
 	void detectMdParts(SystemInfo& systeminfo);
-	bool decideMultipath();
+	void decideMultipath();
 	void decideImsm();
 	void detectLoops(SystemInfo& systeminfo);
 	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
@@ -2123,6 +2125,7 @@ class DiskData;
 	EtcMdadm* mdadm;
 
 	ImsmDriver imsm_driver;
+	MultipathAutostart multipath_autostart;
 
 	CallbackProgressBar progress_bar_cb;
 	CallbackShowInstallInfo install_info_cb;
