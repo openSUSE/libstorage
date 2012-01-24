@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 24 13:28:45 CET 2012 - fehr@suse.de
+
+- complete renaming of devs in Btrfs class (bnc#742491)
+
+-------------------------------------------------------------------
 Fri Jan 20 10:49:38 CET 2012 - aschnell@suse.de
 
 - fixed read-only mount of volumes for resize information detection
@@ -7,8 +12,8 @@ Fri Jan 20 10:49:38 CET 2012 - aschnell@suse.de
 -------------------------------------------------------------------
 Wed Jan 11 16:10:33 CET 2012 - fehr@suse.de
 
-- fix bug when resizing a btrfs fs that had format set (bnc#732988)
-- fix problem handling used by for btrfs during resize
+- fix bug when extending a btrfs fs that had format set (bnc#732988)
+- fix problem handling used by for btrfs during extend
 
 -------------------------------------------------------------------
 Wed Dec 21 12:04:31 CET 2011 - aschnell@suse.de

@@ -553,8 +553,14 @@ int Btrfs::clearSignature()
 		y2err("device " << old << " not fount");
 	}
 
-	list<string>::iterator i = find(dev_add.begin(), dev_add.end(), old);
+	list<string>::iterator i = find(devices.begin(), devices.end(), old);
+	if (i != devices.end())
+	    *i = nw;
+	i = find(dev_add.begin(), dev_add.end(), old);
 	if (i != dev_add.end())
+	    *i = nw;
+	i = find(dev_rem.begin(), dev_rem.end(), old);
+	if (i != dev_rem.end())
 	    *i = nw;
     }
 
