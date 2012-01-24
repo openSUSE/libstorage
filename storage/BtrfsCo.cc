@@ -200,7 +200,8 @@ void
 BtrfsCo::addFromVolume( const Volume& v, string &uuid )
     {
     Btrfs* b = new Btrfs( *this, v );
-    b->initUuid( fakeUuid() );
+    uuid = fakeUuid();
+    b->initUuid( uuid );
     vols.push_back(b);
     }
 

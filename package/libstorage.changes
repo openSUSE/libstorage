@@ -2,6 +2,7 @@
 Tue Jan 24 13:28:45 CET 2012 - fehr@suse.de
 
 - complete renaming of devs in Btrfs class (bnc#742491)
+- fix bug in btrfs uuid handling introduced in 2.17.124
 
 -------------------------------------------------------------------
 Fri Jan 20 10:49:38 CET 2012 - aschnell@suse.de
