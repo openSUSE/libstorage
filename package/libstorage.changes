@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 24 17:55:44 CET 2012 - fehr@suse.de
+
+- remove btrfs volumes when partition table gets destroyed (bnc#742491)
+
+-------------------------------------------------------------------
 Tue Jan 24 14:15:29 CET 2012 - aschnell@suse.de
 
 - added interface to control autostarting of multipath (bnc#742913)

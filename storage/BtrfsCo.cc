@@ -474,7 +474,7 @@ BtrfsCo::doRemove( Volume* v )
     Btrfs *b = dynamic_cast<Btrfs *>(v);
     if( b != NULL )
 	{
-	if( !silent )
+	if( !b->isSilent() )
 	    {
 	    getStorage()->showInfoCb( b->removeText(true) );
 	    }
