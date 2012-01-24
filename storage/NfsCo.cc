@@ -106,10 +106,7 @@ NfsCo::doRemove( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( p->removeText(true) );
-	    }
+	getStorage()->showInfoCb( p->removeText(true), silent );
 	y2mil("doRemove container: " << name() << " name:" << p->name());
 	ret = v->prepareRemove();
 	if( ret==0 )

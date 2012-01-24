@@ -1567,10 +1567,7 @@ int Disk::doCreateLabel()
     {
     y2mil("label:" << label);
     int ret = 0;
-    if( !silent )
-	{
-	getStorage()->showInfoCb( setDiskLabelText(true) );
-	}
+    getStorage()->showInfoCb( setDiskLabelText(true), silent );
     if( !dmp_slave )
 	getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
@@ -1672,10 +1669,7 @@ int Disk::doSetType( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( p->setTypeText(true) );
-	    }
+	getStorage()->showInfoCb( p->setTypeText(true), silent );
 	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
 	    p->eraseLabel();
 
@@ -1864,10 +1858,7 @@ int Disk::doCreate( Volume* v )
     if( p != NULL )
 	{
 	bool call_blockdev = false;
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( p->createText(true) );
-	    }
+	getStorage()->showInfoCb( p->createText(true), silent );
 	y2mil("doCreate container " << name() << " name " << p->name());
 	y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
 	y2mil("doCreate detected_label:" << detected_label << " label:" << label);
@@ -2050,10 +2041,7 @@ int Disk::doRemove( Volume* v )
     int ret = 0;
     if( p != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( p->removeText(true) );
-	    }
+	getStorage()->showInfoCb( p->removeText(true), silent );
 	y2mil("doRemove container " << name() << " name " << p->name());
 	if( !dmp_slave )
 	    {
@@ -2292,10 +2280,7 @@ int Disk::doResize( Volume* v )
 	{
 	bool remount = false;
 	bool needExtend = !p->needShrink();
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( p->resizeText(true) );
-	    }
+	getStorage()->showInfoCb( p->resizeText(true), silent );
 	if( !dmp_slave && p->isMounted() )
 	    {
 	    ret = p->umount();

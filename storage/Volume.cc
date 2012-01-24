@@ -933,10 +933,7 @@ int Volume::doFormat()
     int ret = 0;
     bool needMount = false;
     y2mil("device:" << dev);
-    if( !silent )
-	{
-	getStorage()->showInfoCb( formatText(true) );
-	}
+    getStorage()->showInfoCb( formatText(true), silent );
     if (isUsedBy())
 	{
 	ret = VOLUME_ALREADY_IN_USE;
@@ -1411,10 +1408,7 @@ int Volume::doMount()
     {
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " orig_mp:" << orig_mp);
-    if( !silent )
-	{
-	getStorage()->showInfoCb( mountText(true) );
-	}
+    getStorage()->showInfoCb( mountText(true), silent );
     if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
 	ret = umount(getStorage()->prependRoot(orig_mp));
@@ -2128,9 +2122,9 @@ int Volume::doLosetup()
     {
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " is_loop:" << is_loop << " loop_active:" << loop_active);
-    if( !silent && is_loop && !dmcrypt() )
+    if( is_loop && !dmcrypt() )
 	{
-	getStorage()->showInfoCb( losetupText(true) );
+	getStorage()->showInfoCb( losetupText(true), silent );
 	}
     if( is_mounted )
 	{
@@ -2234,9 +2228,9 @@ int Volume::doCryptsetup()
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << 
           " active:" << dmcrypt_active << " format:" << format );
-    if( !silent && dmcrypt() )
+    if( dmcrypt() )
 	{
-	getStorage()->showInfoCb( crsetupText(true) );
+	getStorage()->showInfoCb( crsetupText(true), silent );
 	}
     if( is_mounted )
 	{
@@ -2400,10 +2394,7 @@ int Volume::doSetLabel()
     bool remount = false;
     FsCapabilities caps;
     y2mil("device:" << dev << " mp:" << mp << " label:" << label);
-    if( !silent )
-	{
-	getStorage()->showInfoCb( labelText(true) );
-	}
+    getStorage()->showInfoCb( labelText(true), silent );
     if (!getStorage()->getFsCapabilities(fs, caps) || !caps.supportsLabel)
 	{
 	ret = VOLUME_LABEL_TOO_LONG;
@@ -2879,10 +2870,7 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	     ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( mp, entry ))) )
 	    {
 	    changed = true;
-	    if( !silent )
-		{
-		getStorage()->showInfoCb(fstab->removeText(true, entry.cryptotab, entry.mount));
-		}
+	    getStorage()->showInfoCb(fstab->removeText(true, entry.cryptotab, entry.mount), silent);
 	    y2mil("before removeEntry");
 	    ret = fstab->removeEntry( entry );
 	    }
@@ -2943,11 +2931,11 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		               crypt_pwd.empty();
 		if( changed )
 		    {
-		    if( !silent && !fstab_added )
+		    if( !fstab_added )
 			{
 			getStorage()->showInfoCb(
 			    fstab->updateText( true, inCryptotab(),
-			                       che.mount ));
+			                       che.mount ), silent);
 			}
 		    y2mil( "update fstab: " << che );
 		    ret = fstab->updateEntry( che );
@@ -2974,11 +2962,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		che.mount = mp;
 		che.freq = fstabFreq();
 		che.passno = fstabPassno();
-		if( !silent )
-		    {
-		    getStorage()->showInfoCb(
-			fstab->addText( true, inCryptotab(), che.mount ));
-		    }
+		getStorage()->showInfoCb(
+		    fstab->addText( true, inCryptotab(), che.mount ),silent);
 		ret = fstab->addEntry( che );
 		fstab_added = true;
 		}

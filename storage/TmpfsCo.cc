@@ -143,10 +143,7 @@ TmpfsCo::doRemove( Volume* v )
     Tmpfs *b = dynamic_cast<Tmpfs *>(v);
     if( b != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( b->removeText(true) );
-	    }
+	getStorage()->showInfoCb( b->removeText(true), silent );
 	ret = v->prepareRemove();
 	if( ret==0 && !removeFromList(v) )
 	    ret = TMPFS_REMOVE_NO_TMPFS;

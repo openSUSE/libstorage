@@ -6287,12 +6287,13 @@ void Storage::progressBarCb(const string& id, unsigned cur, unsigned max) const
 	(*cb)( id, cur, max );
     }
 
-void Storage::showInfoCb(const Text& info)
+void Storage::showInfoCb(const Text& info, bool quiet )
     {
     y2mil("INSTALL INFO info:" << info.native);
+    y2mil("quiet:" << quiet);
     CallbackShowInstallInfo cb = getCallbackShowInstallInfoTheOne();
     lastAction = info;
-    if( cb )
+    if( cb && !quiet )
 	(*cb)( info.text );
     }
 

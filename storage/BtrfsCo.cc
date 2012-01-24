@@ -474,10 +474,7 @@ BtrfsCo::doRemove( Volume* v )
     Btrfs *b = dynamic_cast<Btrfs *>(v);
     if( b != NULL )
 	{
-	if( !b->isSilent() )
-	    {
-	    getStorage()->showInfoCb( b->removeText(true) );
-	    }
+	getStorage()->showInfoCb( b->removeText(true), b->isSilent() );
 	ret = b->clearSignature();
 	if( ret==0 && !removeFromList(v) )
 	    ret = BTRFS_REMOVE_NO_BTRFS;

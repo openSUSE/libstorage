@@ -396,10 +396,7 @@ DmCo::doRemove( Volume* v )
     int ret = 0;
     if( m != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( m->removeText(true) );
-	    }
+	getStorage()->showInfoCb( m->removeText(true), silent );
 	ret = m->prepareRemove();
 	if( ret==0 )
 	    {

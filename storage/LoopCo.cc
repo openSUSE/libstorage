@@ -317,10 +317,7 @@ LoopCo::doCreate( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( l->createText(true) );
-	    }
+	getStorage()->showInfoCb( l->createText(true), silent );
 	if( !l->createFile() )
 	    ret = LOOP_FILE_CREATE_FAILED;
 	if( ret==0 )
@@ -346,10 +343,7 @@ LoopCo::doRemove( Volume* v )
     int ret = 0;
     if( l != NULL )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( l->removeText(true) );
-	    }
+	getStorage()->showInfoCb( l->removeText(true), silent );
 	ret = l->prepareRemove();
 	if( ret==0 )
 	    {

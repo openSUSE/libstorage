@@ -580,10 +580,7 @@ int DmPartCo::doSetType( DmPart* dm )
     int ret = p?0:DMPART_PARTITION_NOT_FOUND;
     if( ret==0 )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( dm->setTypeText(true) );
-	    }
+	getStorage()->showInfoCb( dm->setTypeText(true), silent );
 	ret = disk->doSetType( p );
 	}
     y2mil("ret:" << ret);
@@ -594,10 +591,7 @@ int DmPartCo::doCreateLabel()
     {
     y2mil("label:" << labelName());
     int ret = 0;
-    if( !silent )
-	{
-	getStorage()->showInfoCb( setDiskLabelText(true) );
-	}
+    getStorage()->showInfoCb( setDiskLabelText(true), silent );
     getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
     ret = disk->doCreateLabel();
@@ -777,10 +771,7 @@ DmPartCo::doCreate( Volume* v )
     Partition *p = NULL;
     if( ret==0 )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( l->createText(true) );
-	    }
+	getStorage()->showInfoCb( l->createText(true), silent );
 	p = l->getPtr();
 	if( p==NULL )
 	    ret = DMPART_PARTITION_NOT_FOUND;
@@ -822,10 +813,7 @@ int DmPartCo::doRemove( Volume* v )
 	ret = DMPART_INVALID_VOLUME;
     if( ret==0 )
 	{
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( l->removeText(true) );
-	    }
+	getStorage()->showInfoCb( l->removeText(true), silent );
 	ret = v->prepareRemove();
 	}
     if( ret==0 )
@@ -867,10 +855,7 @@ int DmPartCo::doResize( Volume* v )
     if( ret==0 )
 	{
 	needExtend = !l->needShrink();
-	if( !silent )
-	    {
-	    getStorage()->showInfoCb( l->resizeText(true) );
-	    }
+	getStorage()->showInfoCb( l->resizeText(true), silent );
 	if( l->isMounted() )
 	    {
 	    ret = l->umount();

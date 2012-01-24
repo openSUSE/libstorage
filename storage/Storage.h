@@ -623,7 +623,7 @@ class DiskData;
 	    { return password_popup_cb ? password_popup_cb : password_popup_cb_ycp; }
 
 	void progressBarCb(const string& id, unsigned cur, unsigned max) const;
-	void showInfoCb(const Text& info);
+	void showInfoCb(const Text& info, bool quiet);
 	void infoPopupCb(const Text& info) const;
 	bool yesnoPopupCb(const Text& info) const;
 	bool commitErrorPopupCb(int error, const Text& last_action, const string& extended_message) const;

@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Tue Jan 24 17:55:44 CET 2012 - fehr@suse.de
 
+- make sure error popup contains always valid info
 - remove btrfs volumes when partition table gets destroyed (bnc#742491)
 
 -------------------------------------------------------------------
