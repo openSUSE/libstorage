@@ -1787,16 +1787,24 @@ int
 Storage::updatePartitionArea( const string& partition, unsigned long start,
                               unsigned long size )
     {
+    return( updatePartitionArea( partition, start, size, false ));
+    }
+
+int
+Storage::updatePartitionArea( const string& partition, unsigned long start,
+                              unsigned long size, bool noBtrfs )
+    {
     int ret = 0;
     assertInit();
-    y2mil("partition:" << partition << " start:" << start << " size:" << size);
+    y2mil("partition:" << partition << " start:" << start << " size:" << size << 
+          " noBtrfs:" << noBtrfs);
     VolIterator vol;
     ContIterator cont;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( partition, cont, vol ) )
+    else if( findVolume( partition, cont, vol, noBtrfs ) )
 	{
 	if( cont->type()==DISK )
 	    {
@@ -1823,17 +1831,42 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 		}
 	    }
 	else if( cont->type() == MDPART )
-	  {
-	  MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
-	  if( disk!=NULL )
 	    {
-	    ret = disk->changePartitionArea(vol->nr(), Region(start, size));
+	    MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
+	    if( disk!=NULL )
+		{
+		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
+		}
+	    else
+		{
+		ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
+		}
 	    }
-	  else
+	else if( cont->type()==BTRFSC )
 	    {
-	    ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
+	    BtrfsCo* bco = dynamic_cast<BtrfsCo *>(&(*cont));
+	    Btrfs* b = dynamic_cast<Btrfs *>(&(*vol));
+	    if( bco!=NULL && b!=NULL )
+		{
+		list<string> devs = b->getDevices();
+		if( devs.size()==1 )
+		    {
+		    ret = updatePartitionArea( devs.front(), start, size, true );
+		    if( ret==0 && findVolume( devs.front(), vol, false, true ) )
+			{
+			b->setSize( vol->sizeK() );
+			y2mil( "vol:" << *vol );
+			y2mil( "b:" << *b );
+			}
+		    }
+		else 
+		    ret = VOLUME_ALREADY_IN_USE;
+		}
+	    else
+		{
+		ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
+		}
 	    }
-	  }
 	else
 	    {
 	    ret = STORAGE_CHANGE_AREA_INVALID_CONTAINER;
@@ -1861,7 +1894,7 @@ Storage::freeCylindersAroundPartition(const string& partition, unsigned long& fr
     y2mil("partition:" << partition);
     ConstVolIterator vol;
     ConstContIterator cont;
-    if( findVolume( partition, cont, vol ) )
+    if( findVolume( partition, cont, vol, true ) )
     {
 	if( cont->type()==DISK )
 	{
@@ -1999,16 +2032,24 @@ int
 Storage::resizePartition( const string& partition, unsigned long sizeCyl,
                           bool ignoreFs )
     {
+    return( resizePartition( partition, sizeCyl, ignoreFs, false ));
+    }
+
+int
+Storage::resizePartition( const string& partition, unsigned long sizeCyl,
+			  bool ignoreFs, bool noBtrfs )
+    {
     int ret = 0;
     assertInit();
-    y2mil("partition:" << partition << " newCyl:" << sizeCyl << " ignoreFs:" << ignoreFs);
+    y2mil("partition:" << partition << " newCyl:" << sizeCyl << " ignoreFs:" << ignoreFs <<
+          "noBtrfs:" << noBtrfs );
     VolIterator vol;
     ContIterator cont;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( partition, cont, vol ) )
+    else if( findVolume( partition, cont, vol, noBtrfs ) )
 	{
 	if( cont->type()==DISK )
 	    {
@@ -2040,21 +2081,46 @@ Storage::resizePartition( const string& partition, unsigned long sizeCyl,
 		ret = STORAGE_RESIZE_INVALID_CONTAINER;
 		}
 	    }
-	else if( cont->type()== MDPART )
-	  {
-          MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
-          MdPart* p = dynamic_cast<MdPart *>(&(*vol));
-          if( disk!=NULL && p!=NULL )
-              {
-              if( ignoreFs )
-                  p->setIgnoreFs();
-              ret = disk->resizePartition( p, sizeCyl );
-              }
-          else
-              {
-              ret = STORAGE_RESIZE_INVALID_CONTAINER;
-              }
-	  }
+	else if( cont->type()==MDPART )
+	    {
+	    MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
+	    MdPart* p = dynamic_cast<MdPart *>(&(*vol));
+	    if( disk!=NULL && p!=NULL )
+		{
+		if( ignoreFs )
+		    p->setIgnoreFs();
+		ret = disk->resizePartition( p, sizeCyl );
+		}
+	    else
+		{
+		ret = STORAGE_RESIZE_INVALID_CONTAINER;
+		}
+	    }
+	else if( cont->type()==BTRFSC )
+	    {
+	    BtrfsCo* bco = dynamic_cast<BtrfsCo *>(&(*cont));
+	    Btrfs* b = dynamic_cast<Btrfs *>(&(*vol));
+	    if( bco!=NULL && b!=NULL )
+		{
+		list<string> devs = b->getDevices();
+		if( devs.size()==1 )
+		    {
+		    ret = resizePartition( devs.front(), sizeCyl, ignoreFs, true );
+		    if( ret==0 && findVolume( devs.front(), vol, false, true ) )
+			{
+			b->setSize( vol->sizeK() );
+			y2mil( "vol:" << *vol );
+			y2mil( "b:" << *b );
+			}
+		    }
+		else 
+		    ret = VOLUME_ALREADY_IN_USE;
+		}
+	    else
+		{
+		ret = STORAGE_RESIZE_INVALID_CONTAINER;
+		}
+	    }
 	else
 	    {
 	    ret = STORAGE_RESIZE_INVALID_CONTAINER;
@@ -3185,23 +3251,59 @@ int
 Storage::resizeVolume(const string& device, unsigned long long newSizeK,
 		      bool ignoreFs)
     {
+    return( resizeVolume( device, newSizeK, ignoreFs, false ));
+    }
+
+int
+Storage::resizeVolume(const string& device, unsigned long long newSizeK,
+		      bool ignoreFs, bool noBtrfs )
+    {
     int ret = 0;
     assertInit();
-    y2mil("device:" << device << " newSizeK:" << newSizeK << " ignoreFs:" << ignoreFs);
+    y2mil("device:" << device << " newSizeK:" << newSizeK << 
+          " ignoreFs:" << ignoreFs << " noBtrfs:" << noBtrfs );
     VolIterator vol;
     ContIterator cont;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    else if( findVolume( device, cont, vol ) )
+    else if( findVolume( device, cont, vol, noBtrfs ) )
 	{
-	y2mil( "vol:" << *vol );
-	if( ignoreFs )
-	    vol->setIgnoreFs();
-	ret = cont->resizeVolume(&(*vol), newSizeK);
-	eraseCachedFreeInfo(vol->device());
-	y2mil( "vol:" << *vol );
+	if( cont->type()!=BTRFSC )
+	    {
+	    y2mil( "vol:" << *vol );
+	    if( ignoreFs )
+		vol->setIgnoreFs();
+	    ret = cont->resizeVolume(&(*vol), newSizeK);
+	    eraseCachedFreeInfo(vol->device());
+	    y2mil( "vol:" << *vol );
+	    }
+	else
+	    {
+	    BtrfsCo* bco = dynamic_cast<BtrfsCo *>(&(*cont));
+	    Btrfs* b = dynamic_cast<Btrfs *>(&(*vol));
+	    if( bco!=NULL && b!=NULL )
+		{
+		list<string> devs = b->getDevices();
+		if( devs.size()==1 )
+		    {
+		    ret = resizeVolume( devs.front(), newSizeK, ignoreFs, true );
+		    if( ret==0 && findVolume( devs.front(), vol, false, true ) )
+			{
+			b->setSize( vol->sizeK() );
+			y2mil( "vol:" << *vol );
+			y2mil( "b:" << *b );
+			}
+		    }
+		else 
+		    ret = VOLUME_ALREADY_IN_USE;
+		}
+	    else
+		{
+		ret = STORAGE_RESIZE_INVALID_CONTAINER;
+		}
+	    }
 	}
     else
 	{
@@ -6156,6 +6258,12 @@ Storage::canRemove( const Volume& vol ) const
 bool 
 Storage::isUsedBySingleBtrfs( const Volume& vol ) const
     {
+    return( isUsedBySingleBtrfs( vol, NULL ));
+    }
+
+bool 
+Storage::isUsedBySingleBtrfs( const Volume& vol, const Volume** btrfs ) const
+    {
     const list<UsedBy>& ub = vol.getUsedBy();
     bool ret = ub.size()==1 && ub.front().type()==UB_BTRFS;
     if( ret )
@@ -6165,6 +6273,8 @@ Storage::isUsedBySingleBtrfs( const Volume& vol ) const
 	while( i!=p.end() && i->getUuid()!=ub.front().device() )
 	    ++i;
 	ret = i!=p.end() && i->getDevices(true).size()<=1;
+	if( btrfs!=NULL )
+	    *btrfs = &(*i);
 	}
     y2mil( "dev:" << vol.device() << " ret:" << ret );
     return( ret );

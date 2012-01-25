@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jan 25 12:20:53 CET 2012 - fehr@suse.de
+
+- allow resize and move of simple btrfs volumes if they are
+  formatted anyway (bnc#742491)
+
+-------------------------------------------------------------------
 Tue Jan 24 17:55:44 CET 2012 - fehr@suse.de
 
 - fix bug introduced with second to last commit 

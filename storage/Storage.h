@@ -283,6 +283,7 @@ class DiskData;
 	bool isUsedBy(const string& dev);
 	bool isUsedBy(const string& dev, UsedByType type);
 	bool isUsedBySingleBtrfs( const Volume& vol ) const;
+	bool isUsedBySingleBtrfs( const Volume& vol, const Volume** btrfs ) const;
 	bool canRemove( const Volume& vol ) const;
 
 	void fetchDanglingUsedBy(const string& dev, list<UsedBy>& uby);
@@ -2040,11 +2041,18 @@ class DiskData;
 	void detectDmmultipath(SystemInfo& systeminfo);
 	void detectDm(SystemInfo& systeminfo, bool only_crypt);
 	void initDisk( list<DiskData>& dl, SystemInfo& systeminfo);
-	void detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo);
+	void detectFsData(const VolIterator& begin, const VolIterator& end, 
+	                  SystemInfo& systeminfo);
+	int updatePartitionArea(const string& device, unsigned long start,
+				unsigned long size, bool noBtrfs );
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs);
+	int resizeVolume(const string& device, unsigned long long newSizeK,
+			 bool ignore_fs, bool noBtrfs );
 	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignore_fs );
+	int resizePartition( const string& device, unsigned long sizeCyl, 
+	                     bool ignoreFs, bool noBtrfs );
 	void addToList(Container* e);
 	DiskIterator findDisk( const string& disk );
 	DiskIterator findDiskId( const string& id );
