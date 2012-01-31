@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 31 14:47:10 CET 2012 - aschnell@suse.de
+
+- add by-id names to alt-names of DmPartCo (bnc#744194)
+
+-------------------------------------------------------------------
 Wed Jan 25 12:20:53 CET 2012 - fehr@suse.de
 
 - allow resize and move of simple btrfs volumes if they are

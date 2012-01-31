@@ -917,7 +917,11 @@ Text DmPartCo::removeText( bool doing ) const
 
 void
 DmPartCo::setUdevData(const list<string>& id)
-{  
+{
+    alt_names.remove_if(string_contains("/by-id/"));
+    for (list<string>::const_iterator i = id.begin(); i != id.end(); ++i)
+	alt_names.push_back("/dev/disk/by-id/" + *i);
+
     if (disk)
     {
 	disk->setUdevData("", id);
