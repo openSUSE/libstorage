@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar  6 13:00:11 CET 2012 - fehr@suse.de
+
+- do not detect loop device with range>1 as disks 
+
+-------------------------------------------------------------------
 Tue Jan 31 14:47:10 CET 2012 - aschnell@suse.de
 
 - add by-id names to alt-names of DmPartCo (bnc#744194)

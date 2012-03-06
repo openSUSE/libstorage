@@ -825,7 +825,7 @@ void
 		continue;
 
 	    // we do not treat mds as disks although they can be partitioned since kernel 2.6.28
-	    if (boost::starts_with(dn, "md"))
+	    if (boost::starts_with(dn, "md")||boost::starts_with(dn, "loop"))
 		continue;
 
 	    Disk::SysfsInfo sysfsinfo;
