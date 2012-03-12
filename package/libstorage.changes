@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Mar 12 17:07:54 CET 2012 - fehr@suse.de
+
+- tell in resize text that it may potentially need very long to 
+  complete and that one must not abort while resize is running
+  (bnc#749946)
+
+-------------------------------------------------------------------
 Mon Mar 12 16:42:36 CET 2012 - aschnell@suse.de
 
 - removed deactivation of MD RAIDs using DM during installation

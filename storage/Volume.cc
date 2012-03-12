@@ -3146,7 +3146,7 @@ Text Volume::resizeText( bool doing ) const
 	    txt = sformat(_("Extending %1$s to %2$s"), dev.c_str(), sizeString().c_str());
 	txt += Text(" ", " ");
 	// text displayed during action
-	txt += _("(progress bar might not move)");
+	txt += _("(Progress bar will not move. May take very long. DO NOT ABORT!)");
         }
     else
         {
