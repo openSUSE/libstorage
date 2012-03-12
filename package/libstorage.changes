@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar 12 16:42:36 CET 2012 - aschnell@suse.de
+
+- removed deactivation of MD RAIDs using DM during installation
+  (bnc#751780)
+
+-------------------------------------------------------------------
 Tue Mar  6 13:00:11 CET 2012 - fehr@suse.de
 
 - do not detect loop device with range>1 as disks 

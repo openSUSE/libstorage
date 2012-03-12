@@ -339,16 +339,6 @@ void Storage::detectObjects()
     detectBtrfs(systeminfo);
 
     dumpObjectList();
-
-    if( instsys() )
-	{
-	SystemCmd c(GREPBIN " ^md.*dm- /proc/mdstat");
-	SystemCmd rm;
-	for( unsigned i=0; i<c.numLines(); i++ )
-	    {
-	    rm.execute(MDADMBIN " --stop " + quote("/dev/" + extractNthWord(0, c.getLine(i))));
-	    }
-	}
     }
 
 

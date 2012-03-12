@@ -75,8 +75,6 @@
 
 #define LSBIN "/bin/ls"
 
-#define GREPBIN "/bin/grep"
-
 #define DASDFMTBIN "/sbin/dasdfmt"
 #define DASDVIEWBIN "/sbin/dasdview"
 #define FDASDBIN "/sbin/fdasd"
