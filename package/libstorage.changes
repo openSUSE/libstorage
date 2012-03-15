@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 15 17:12:34 CET 2012 - aschnell@suse.de
+
+- fixes for gcc 4.7
+- 2.22.1
+
+-------------------------------------------------------------------
 Mon Mar 12 17:07:54 CET 2012 - fehr@suse.de
 
 - tell in resize text that it may potentially need very long to 

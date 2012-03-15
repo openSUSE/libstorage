@@ -1943,8 +1943,8 @@ class DiskData;
 	    }
 	template< class Pred > typename ConstDmraidI<Pred>::type dmrCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ConstDmraidInter2> pair( (ConstDmraidInter( dmrCoPair())),
-					      (ConstDmraidInter( dmrCoPair(), true )));
+	    IterPair<ConstDmraidInter2> pair( (ConstDmraidInter( dmraidCoPair())),
+					      (ConstDmraidInter( dmraidCoPair(), true )));
 	    return( typename ConstDmraidI<Pred>::type( typename ConstDmraidPI<Pred>::type(pair, p, true )) );
 	    }
 
@@ -2016,8 +2016,8 @@ class DiskData;
 	    }
 	template< class Pred > typename ConstDmmultipathI<Pred>::type dmmCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmCoPair())),
-					      (ConstDmmultipathInter( dmmCoPair(), true )));
+	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmultipathCoPair())),
+					      (ConstDmmultipathInter( dmmultipathCoPair(), true )));
 	    return( typename ConstDmmultipathI<Pred>::type( typename ConstDmmultipathPI<Pred>::type(pair, p, true )) );
 	    }
 
