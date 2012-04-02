@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2012] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -67,12 +67,14 @@ namespace storage
     Disk::Disk(Storage* s, const string& name, const string& device, unsigned num,
 	       unsigned long long SizeK, SystemInfo& systeminfo)
 	: Container(s, name, device, staticType(), systeminfo),
+	  max_primary(0), ext_possible(false), max_logical(0),
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
-	  gpt_enlarge(false), del_ptable(false)
+	  gpt_enlarge(false), range(255), del_ptable(false)
     {
     y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
     logfile_name = name + decString(num);
     ronly = true;
+    label = "xenxvd";		// artificial
     size_k = SizeK;
     addPartition( num, size_k, systeminfo );
     }
@@ -681,6 +683,7 @@ Disk::defaultLabel() const
 	{ "dasd", false, 3, 0, (1ULL << 32) - 1 },
 	{ "aix", false, 0, 0, (1ULL << 32) - 1 },
 	{ "amiga", false, 63, 0, (1ULL << 32) - 1 },
+	{ "xenxvd", false, 256, 0, (1ULL << 32) - 1 },	// artificial
 	{ "", false, 0, 0, 0 }
     };
 
@@ -2390,6 +2393,7 @@ void Disk::addPartition( unsigned num, unsigned long long sz,
 	p->setSize( sz );
 	}
     addToList( p );
+    max_primary = max(max_primary, num);
     }
 
 unsigned Disk::numPartitions() const
