@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Apr  5 11:59:15 CEST 2012 - fehr@suse.de
+
+- fix order of LV removals in removeVg when snapshots are present
+  (bnc#755021)
+
+-------------------------------------------------------------------
 Mon Apr 02 16:11:03 CEST 2012 - aschnell@suse.de
 
 - calculate max_primary for artificial XEN disks (bnc#754649)

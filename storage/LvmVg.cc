@@ -123,7 +123,15 @@ LvmVg::removeVg()
 	{
 	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
-	    ret = removeLv( i->name() );
+            {
+            if( i->isSnapshot() )
+                ret = removeLv( i->name() );
+            }
+	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+            {
+            if( !i->isSnapshot() )
+                ret = removeLv( i->name() );
+            }
 	setDeleted();
 	}
     if( ret==0 )
