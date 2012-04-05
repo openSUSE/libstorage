@@ -281,6 +281,23 @@ void
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
 		}
+	    if( !skip && (boost::ends_with(table,"-real")||
+                          boost::ends_with(table,"-cow")))
+		{
+                static Regex delim( "[^-]-[^-]" );
+                string on = table;
+                if( boost::ends_with(on,"-real"))
+                    on.erase( on.size()-5 );
+                if( boost::ends_with(tmp,"-cow"))
+                    on.erase( on.size()-4 );
+                if( delim.match( on ) )
+                    {
+                    string devname = "/dev/" + on.substr( 0, delim.so(0)+1 ) +
+                                     "/" + on.substr( delim.eo(0)-1 );
+                    skip = getStorage()->knownDevice( devname );
+                    y2mil( "devname:" << devname << " skip:" << skip );
+                    }
+		}
 	    if (!skip && m->sizeK()>0 && !only_crypt )
 		addDm( m );
 	    else

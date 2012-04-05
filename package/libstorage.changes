@@ -1,6 +1,8 @@
 -------------------------------------------------------------------
 Thu Apr  5 11:59:15 CEST 2012 - fehr@suse.de
 
+- suppress dm maps for "-real" and "-cow" of LVM snapshots in
+  general Dm container
 - fix order of LV removals in removeVg when snapshots are present
   (bnc#755021)
 
