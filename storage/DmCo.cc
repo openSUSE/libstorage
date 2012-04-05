@@ -292,10 +292,11 @@ void
                     on.erase( on.size()-4 );
                 if( delim.match( on ) )
                     {
-                    string devname = "/dev/" + on.substr( 0, delim.so(0)+1 ) +
-                                     "/" + on.substr( delim.eo(0)-1 );
-                    skip = getStorage()->knownDevice( devname );
-                    y2mil( "devname:" << devname << " skip:" << skip );
+                    on[delim.so(0)+1] = '/';
+                    boost::replace_all(on,"--","-");
+                    on = "/dev/" + on;
+                    skip = getStorage()->knownDevice( on );
+                    y2mil( "devname:" << on << " skip:" << skip );
                     }
 		}
 	    if (!skip && m->sizeK()>0 && !only_crypt )
