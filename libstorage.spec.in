@@ -1,7 +1,7 @@
 #
 # spec file for package libstorage
 #
-# Copyright (c) 2011 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2012 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -15,8 +15,6 @@
 # Please submit bugfixes or comments via http://bugs.opensuse.org/
 #
 
-# norootforbuild
-
 
 Name:           libstorage
 Version:        @VERSION@
@@ -28,13 +26,25 @@ Source:         libstorage-%{version}.tar.bz2
 
 Prefix:         /usr
 
-BuildRequires:  blocxx-devel boost-devel dejagnu doxygen gcc-c++ libtool libxml2-devel python-devel ruby-devel swig
+BuildRequires:  blocxx-devel boost-devel dejagnu doxygen gcc-c++ libtool libxml2-devel python-devel swig
+BuildRequires:	ruby ruby-devel
 
 Summary:        Library for storage management
 Url:            http://en.opensuse.org/Portal:Libstorage
 
 %description
 This package contains libstorage, a library for storage management.
+
+%{!?python_sitelib: %global python_sitelib %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
+%{!?python_sitearch: %global python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?py_requires: %global py_requires Requires: python}
+
+%if 0%{?ruby_sitelib} == 0
+%if 0%{?fedora_version} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?fedora} || 0%{?rhel}
+%{!?ruby_sitelib: %global ruby_sitelib %(ruby -r rbconfig -e 'vd = Config::CONFIG["vendorlibdir"]; print(vd ? vd : Config::CONFIG["sitelibdir"])')}
+%{!?ruby_sitearch: %global ruby_sitearch %(ruby -r rbconfig -e 'vad = Config::CONFIG["vendorarchdir"]; print(vad ? vad : Config::CONFIG["sitearchdir"])')}
+%endif
+%endif
 
 %prep
 %setup -n libstorage-%{version}
@@ -50,6 +60,14 @@ automake --add-missing --copy
 autoconf
 
 %{?suse_update_config:%{suse_update_config -f}}
+%if 0%{?fedora_version} || 0%{?centos_version}
+CXXFLAGS="-I/usr/include/libxml2" \
+%else
+%if 0%{?rhel_version} >= 500 && 0%{?rhel_version} < 600
+CXXFLAGS="-I/usr/include/libxml2 -I/usr/include/c++/4.1.1/tr1" \
+%endif
+%endif
+
 ./configure --libdir=%{_libdir} --prefix=%{prefix} --mandir=%{_mandir} --disable-silent-rules
 make %{?jobs:-j%jobs}
 
@@ -76,6 +94,9 @@ rm $RPM_BUILD_ROOT/%{rb_vendorarch}/storage.la
 %if 0%{?mandriva_version}
 rm $RPM_BUILD_ROOT/%{ruby_sitearchdir}/storage.la
 %endif
+%if 0%{?fedora_version} || 0%{?rhel_version} || 0%{?centos_version}
+rm $RPM_BUILD_ROOT/%{ruby_sitearch}/storage.la
+%endif
 
 %clean
 rm -rf "$RPM_BUILD_ROOT"
@@ -88,7 +109,9 @@ Requires:       coreutils udev util-linux >= 2.16 grep lsscsi
 Requires:       s390-tools
 %endif
 
+%if 0%{?suse_version}
 PreReq:         %fillup_prereq
+%endif
 Obsoletes:      yast2-storage-lib
 Provides:       yast2-storage-lib
 Obsoletes:      libstorage < 2.21.2
@@ -115,7 +138,9 @@ Authors:
 
 %post -n libstorage@LIBVERSION_MAJOR@
 /sbin/ldconfig
+%if 0%{?suse_version}
 %{fillup_only -an storage}
+%endif
 
 %postun -n libstorage@LIBVERSION_MAJOR@
 /sbin/ldconfig
@@ -147,6 +172,7 @@ Authors:
 %package -n libstorage-python
 
 Requires:       libstorage@LIBVERSION_MAJOR@ = %version
+%{py_requires}
 Summary:        Python bindings for libstorage
 Group:          System/Libraries
 
@@ -183,6 +209,9 @@ Authors:
 %endif
 %if 0%{?mandriva_version}
 %{ruby_sitearchdir}/storage.so
+%endif
+%if 0%{?fedora_version} || 0%{?rhel_version} || 0%{?centos_version}
+%{ruby_sitearch}/storage.so
 %endif
 
 %package -n libstorage-testsuite
