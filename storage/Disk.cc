@@ -2138,12 +2138,10 @@ Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBe
 	{
 	y2mil( "previous:" << *previous );
 	if( previous->cylEnd()<endBefore )
-	    {
 	    startBefore = previous->cylEnd();
-	    y2mil( "startBefore:" << startBefore );
-	    }
 	else
 	    startBefore = cylinders();
+        y2mil( "startBefore:" << startBefore );
 	}
 
     if( next != pp.end() )
