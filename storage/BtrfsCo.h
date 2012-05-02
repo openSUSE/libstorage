@@ -66,6 +66,8 @@ class BtrfsCo : public Container
 	void getToCommit( storage::CommitStage stage, list<const Container*>& col,
 			  list<const Volume*>& vo ) const;
 
+	int resizeVolume( Volume* v, Container* r_co, Volume* r_v,
+	                  unsigned long long newSize );
 	int removeVolume( Volume* v );
 	int removeVolume( Volume* v, bool quiet );
 	int removeUuid( const string& uuid );

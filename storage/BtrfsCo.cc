@@ -496,6 +496,38 @@ BtrfsCo::doRemove( Volume* v )
 	}
     }
 
+int BtrfsCo::resizeVolume( Volume* v, Container* r_co,
+                           Volume* r_v, unsigned long long newSize )
+    {
+    int ret = 0;
+    Btrfs *b = dynamic_cast<Btrfs *>(v);
+    if( b != NULL )
+	{
+	long long size_diff = newSize - b->sizeK();
+	y2mil( "size_diff:" << size_diff );
+	if( b->getDevices().size()==1 || size_diff>0 )
+	    {
+	    y2mil( "r_v:" << *r_v );
+	    ret = r_co->resizeVolume( r_v, r_v->sizeK()+size_diff );
+	    y2mil( "r_v:" << *r_v );
+	    }
+	else if( size_diff<0 )
+	    {
+	    ret = BTRFS_MULTIDEV_SHRINK_UNSUPPORTED;
+	    }
+	y2mil( "ret:" << ret << " size_diff:" << size_diff );
+	if( ret==0 )
+	    {
+	    v->setSilent();
+	    v->setResizedSize( v->sizeK()+size_diff );
+	    }
+	y2mil( "size_diff:" << size_diff );
+	y2mil( "this:" << *this );
+	}
+    else
+	ret = BTRFS_RESIZE_INVALID_VOLUME;
+    return( ret );
+    }
 
 void
 BtrfsCo::logData(const string& Dir) const

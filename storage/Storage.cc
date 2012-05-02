@@ -3260,40 +3260,33 @@ Storage::resizeVolume(const string& device, unsigned long long newSizeK,
 	}
     else if( findVolume( device, cont, vol, noBtrfs ) )
 	{
+	y2mil( "vol:" << *vol );
+	if( ignoreFs )
+	    vol->setIgnoreFs();
 	if( cont->type()!=BTRFSC )
-	    {
-	    y2mil( "vol:" << *vol );
-	    if( ignoreFs )
-		vol->setIgnoreFs();
 	    ret = cont->resizeVolume(&(*vol), newSizeK);
-	    eraseCachedFreeInfo(vol->device());
-	    y2mil( "vol:" << *vol );
-	    }
 	else
 	    {
-	    BtrfsCo* bco = dynamic_cast<BtrfsCo *>(&(*cont));
-	    Btrfs* b = dynamic_cast<Btrfs *>(&(*vol));
-	    if( bco!=NULL && b!=NULL )
+	    VolIterator r_vol;
+	    ContIterator r_cont;
+	    BtrfsCo* co=NULL;
+	    if( findVolume( device, r_cont, r_vol, true ) )
 		{
-		list<string> devs = b->getDevices();
-		if( devs.size()==1 )
+		if( haveBtrfs(co) )
 		    {
-		    ret = resizeVolume( devs.front(), newSizeK, ignoreFs, true );
-		    if( ret==0 && findVolume( devs.front(), vol, false, true ) )
-			{
-			b->setSize( vol->sizeK() );
-			y2mil( "vol:" << *vol );
-			y2mil( "b:" << *b );
-			}
+		    ret = co->resizeVolume( &(*vol), &(*r_cont), &(*r_vol),
+		                            newSizeK );
+		    y2mil( "vol:" << *vol );
+		    y2mil( "rvo:" << *r_vol );
 		    }
-		else 
-		    ret = VOLUME_ALREADY_IN_USE;
+		else
+		    ret = STORAGE_BTRFS_CO_NOT_FOUND;
 		}
 	    else
-		{
-		ret = STORAGE_RESIZE_INVALID_CONTAINER;
-		}
+		ret = STORAGE_VOLUME_NOT_FOUND;
 	    }
+	eraseCachedFreeInfo(vol->device());
+	y2mil( "vol:" << *vol );
 	}
     else
 	{
@@ -5739,8 +5732,8 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     static FsCapabilitiesX ext4Caps (true, true, true, false, true, true,
 				     true, 16, 32*1024);
 
-    static FsCapabilitiesX btrfsCaps (false, false, false, false, true, true,
-				      false, 16, 256*1024);
+    static FsCapabilitiesX btrfsCaps (true, true, true, true, true, true,
+				      false, 256, 256*1024);
 
     static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
 				    false, 12, 40*1024);
@@ -6141,6 +6134,22 @@ bool Storage::findVolume( const string& device, Volume const * &vol,
 	ret = true;
 	}
     y2mil( "device:" << device << " ret:" << ret );
+    if( vol )
+	y2mil( "vol:" << *vol );
+    return( ret );
+    }
+
+bool Storage::findUuid( const string& uuid, Volume const * &vol )
+    {
+    bool ret = false;
+    vol = NULL;
+    ConstVolIterator v;
+    if( findVolume( "UUID="+uuid, v, false, false ))
+	{
+	vol = &(*v);
+	ret = true;
+	}
+    y2mil( "uuid:" << uuid << " ret:" << ret );
     if( vol )
 	y2mil( "vol:" << *vol );
     return( ret );

@@ -713,7 +713,7 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
-int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const string& options )
+int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const string& options ) const
     {
     y2mil( "useMounted:" << useMounted << " opts:" << options ); 
     int ret = 0;
@@ -731,7 +731,7 @@ int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const
     return( ret );
     }
 
-int Volume::umountTmpMount( const string& m, int ret )
+int Volume::umountTmpMount( const string& m, int ret ) const
     {
     int r = ret;
     if( mp.empty() || !umountDir(m) )
@@ -1154,6 +1154,7 @@ void Volume::setUsedByUuid( UsedByType ubt, const string& uuid )
     eraseLabel();
     setMount( "" );
     format = false;
+    is_mounted = false;
     detected_fs = fs;
     setUsedBy( ubt, uuid );
     }
@@ -1594,6 +1595,34 @@ int Volume::resizeFs()
 		    {
 		    rmdir( mpoint.c_str() );
 		    }
+		}
+		break;
+	    case BTRFS:
+		{
+		bool needumount = false;
+		string mp;
+                const Volume* v = this;
+                if( isUsedBy(UB_BTRFS) )
+                    getStorage()->findUuid( getUsedBy().front().device(), v );
+		ret = v->prepareTmpMount( mp, needumount );
+		if( ret==0 )
+		    {
+		    cmd = BTRFSBIN " filesystem resize ";
+		    if( needShrink() )
+			cmd += " -" + decString(orig_size_k-size_k) + "K";
+		    else
+			cmd += " max";
+		    cmd += " ";
+		    cmd += mp;
+		    c.execute( cmd );
+		    if( c.retcode()!=0 )
+			{
+			ret = VOLUME_RESIZE_FAILED;
+			setExtError( c );
+			}
+		    }
+		if( needumount )
+		    ret = v->umountTmpMount( mp, ret );
 		}
 		break;
 	    default:
@@ -2663,7 +2692,7 @@ void
 Volume::getCommitActions(list<commitAction>& l) const
     {
     Volume const * p=this;
-    if( getStorage()->isUsedBySingleBtrfs(*this))
+    if( getStorage()->isUsedBySingleBtrfs(*this) )
 	{
 	Volume const * n=NULL;
 	string id = "UUID="+getUsedBy().front().device();
@@ -2680,7 +2709,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	}
     else if( needShrink() && !format )
 	{
-	l.push_back(commitAction(DECREASE, cType(), p->resizeText(false), this, true));
+	l.push_back(commitAction(DECREASE, cType(), this->resizeText(false), this, true));
 	}
     else if( created() )
 	{
@@ -2688,7 +2717,7 @@ Volume::getCommitActions(list<commitAction>& l) const
 	}
     else if( needExtend() && !format )
 	{
-	l.push_back(commitAction(INCREASE, cType(), p->resizeText(false), this, true));
+	l.push_back(commitAction(INCREASE, cType(), this->resizeText(false), this, true));
 	}
     else if( format )
 	{

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed May  2 18:08:06 CEST 2012 - fehr@suse.de
+
+- add code to support resizing of a btrfs volume (bnc#731753)
+
+-------------------------------------------------------------------
 Thu Apr  5 11:59:15 CEST 2012 - fehr@suse.de
 
 - suppress dm maps for "-real" and "-cow" of LVM snapshots in

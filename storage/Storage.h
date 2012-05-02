@@ -307,6 +307,7 @@ class DiskData;
 	string findNormalDevice( const string& device );
 	bool findVolume( const string& device, Volume const* &vol, 
 	                 bool no_btrfsc=false );
+	bool findUuid( const string& uuid, Volume const* &vol );
 	bool findDm( const string& device, const Dm*& dm );
 	bool findDmUsing( const string& device, const Dm*& dm );
 	bool findDevice( const string& dev, const Device* &vol,

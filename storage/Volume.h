@@ -107,8 +107,8 @@ class Storage;
 	const string& getMount() const { return mp; }
 	bool hasOrigMount() const { return !orig_mp.empty(); }
 	bool needRemount() const;
-	bool needShrink() const { return !del && size_k<orig_size_k; }
-	bool needExtend() const { return !del && size_k>orig_size_k; }
+	bool needShrink() const { return cType()!=BTRFSC && !del && size_k<orig_size_k; }
+	bool needExtend() const { return cType()!=BTRFSC && !del && size_k>orig_size_k; }
 	long long extendSize() const { return size_k-orig_size_k; }
 	storage::FsType getFs() const { return fs; }
 	storage::FsType detectedFs() const { return detected_fs; }
@@ -238,8 +238,8 @@ class Storage;
 	                  bool format ) const;
 	bool noFreqPassno() const;
 	int prepareTmpMount( string& m, bool& needUmount, bool useMounted=true,
-	                     const string& options="" );
-	int umountTmpMount( const string& m, int ret );
+	                     const string& options="" ) const;
+	int umountTmpMount( const string& m, int ret ) const;
 	int doFormatBtrfs();
 
 	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
