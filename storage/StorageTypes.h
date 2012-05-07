@@ -34,6 +34,7 @@
 #include "storage/StorageInterface.h"
 #include "storage/XmlFile.h"
 #include "storage/Enum.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage
@@ -58,6 +59,12 @@ inline bool operator<(CType a, CType b)
        10, // BTRFSC
     };
 
+    if( a>=lengthof(order)||b>=lengthof(order) )
+        {
+        y2err( "CType outside array a:" << toString(a) << " " << a << " b:" << toString(b) << " " << b );
+        a = (CType)min(lengthof(order)-1,(unsigned)a);
+        b = (CType)min(lengthof(order)-1,(unsigned)b);
+        }
     bool ret = order[a] < order[b];
     y2mil("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
 	  order[b] << " ret:" << ret);
