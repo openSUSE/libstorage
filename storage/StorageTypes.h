@@ -67,7 +67,7 @@ inline bool operator<(CType a, CType b)
         b = (CType)min(lengthof(order)-1,(unsigned)b);
         }
     bool ret = order[a] < order[b];
-    y2mil("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
+    y2deb("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
 	  order[b] << " ret:" << ret);
     return ret;
 }
