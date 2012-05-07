@@ -57,6 +57,7 @@ inline bool operator<(CType a, CType b)
 	3, // DMMULTIPATH
 	4, // MDPART
        10, // BTRFSC
+       11, // TMPFSC
     };
 
     if( a>=lengthof(order)||b>=lengthof(order) )
