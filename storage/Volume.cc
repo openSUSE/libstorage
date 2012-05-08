@@ -2015,6 +2015,13 @@ bool Volume::needFstabUpdate() const
 	       ((getStorage()->instsys()&&mp=="swap"&&mp==orig_mp) ||
 	        fstab_opt!=orig_fstab_opt || mount_by!=orig_mount_by ||
 		encryption!=orig_encryption);
+    if( ret )
+        {
+        y2mil( "opt:" << fstab_opt << " oopt:" << orig_fstab_opt <<
+               " mby:" << mount_by << " omby:" << orig_mount_by <<
+               " enc:" << encryption << " oenc:" << orig_encryption );
+        y2mil( "dev:" << device() << " ret:" << ret );
+        }
     return( ret );
     }
 
