@@ -2530,13 +2530,25 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 	    if(haveBtrfs(co))
 		{
 		string mp = vol->getMount();
+		bool mounted = vol->isMounted();
+                bool mby_uuid = vol->getMountBy()==MOUNTBY_UUID;
+                y2mil( "mounted btrfs:" <<  mounted );
 		co->eraseVolume( &(*vol) );
 		if( findVolume( device, vol ) && vol->cType()!=BTRFSC )
 		    {
 		    vol->updateFsData();
 		    vol->clearUsedBy();
 		    vol->changeMount( mp );
+                    if( !mp.empty() )
+                        {
+                        vol->setMount(mp);
+                        if( mounted )
+                            vol->setMounted();
+                        }
+                    if( mby_uuid )
+                        vol->changeMountBy( vol->defaultMountBy() );
 		    ret = vol->setFormat( format, fs );
+                    y2mil( "mounted plain:" <<  vol->isMounted() );
 		    }
 		else
 		    y2war( "base volume for " << device << " not found" );

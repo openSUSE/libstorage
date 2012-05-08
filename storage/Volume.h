@@ -171,6 +171,7 @@ class Storage;
 	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }
+        void setMounted( bool mtd=true ) { is_mounted=mtd; }
 	virtual Text removeText(bool doing) const;
 	virtual Text createText(bool doing) const;
 	virtual Text resizeText(bool doing) const;

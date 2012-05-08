@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue May  8 13:53:07 CEST 2012 - fehr@suse.de
+
+- fix bug formatting a mounted btrfs volume as non-btrfs (bnc#755704)
+
+-------------------------------------------------------------------
 Wed May  2 18:08:06 CEST 2012 - fehr@suse.de
 
 - 2.22.2
