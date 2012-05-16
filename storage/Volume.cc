@@ -2236,7 +2236,10 @@ string Volume::getDmcryptName() const
     string nm;
     if( cType() != LOOP )
 	{
-	nm = dev;
+        if( !udevId().empty() )
+            nm = udevId().front();
+        else
+            nm = dev;
 	}
     else
 	{

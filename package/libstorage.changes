@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed May 16 17:26:59 CEST 2012 - fehr@suse.de
+
+- use udev_id for base name of encrypted dm map instead of device
+  name (bnc#760213)
+
+-------------------------------------------------------------------
 Tue May  8 13:53:07 CEST 2012 - fehr@suse.de
 
 - fix bug formatting a mounted btrfs volume as non-btrfs (bnc#755704)
