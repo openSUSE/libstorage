@@ -89,7 +89,7 @@ touch $RPM_BUILD_ROOT/var/run/libstorage/lock
 rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.a  
 rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
 %if 0%{?suse_version}
-rm $RPM_BUILD_ROOT/%{rb_vendorarch}/storage.la
+rm $RPM_BUILD_ROOT/%{rb_vendorarchdir}/storage.la
 %endif
 %if 0%{?mandriva_version}
 rm $RPM_BUILD_ROOT/%{ruby_sitearchdir}/storage.la
@@ -205,7 +205,7 @@ Authors:
 %files -n libstorage-ruby
 %defattr(-,root,root)
 %if 0%{?suse_version}
-%{rb_vendorarch}/storage.so
+%{rb_vendorarchdir}/storage.so
 %endif
 %if 0%{?mandriva_version}
 %{ruby_sitearchdir}/storage.so
