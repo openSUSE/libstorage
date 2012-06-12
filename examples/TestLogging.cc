@@ -4,7 +4,7 @@
  *  the disk_* and volume_* files in /var/log/YaST2/ will be generated.
  */
 
-#include <stdlib.h>
+#include <unistd.h>
 #include <iostream>
 #include <fstream>
 
