@@ -26,7 +26,7 @@ Source:         libstorage-%{version}.tar.bz2
 
 Prefix:         /usr
 
-BuildRequires:  blocxx-devel boost-devel dejagnu doxygen gcc-c++ libtool libxml2-devel python-devel swig
+BuildRequires:  boost-devel dejagnu doxygen gcc-c++ libtool libxml2-devel python-devel swig
 BuildRequires:	ruby ruby-devel
 
 Summary:        Library for storage management
@@ -148,7 +148,7 @@ Authors:
 %package -n libstorage-devel
 
 Requires:       libstorage@LIBVERSION_MAJOR@ = %version
-Requires:       gcc-c++ libstdc++-devel boost-devel blocxx-devel libxml2-devel
+Requires:       gcc-c++ libstdc++-devel boost-devel libxml2-devel
 Summary:        Header files and documentation for libstorage
 Group:          Development/Languages/C and C++
 
