@@ -10,7 +10,6 @@ int
 main( int argc_iv, char** argv_ppcv )
     {
     int ret;
-    initDefaultLogger();
     StorageInterface* s = createStorageInterface(Environment(false));
     string disk = "/dev/hdb";
     string dev;

@@ -15,8 +15,6 @@ using namespace std;
 int
 main (int argc, char** argv)
 {
-    initDefaultLogger();
-
     StorageInterface* s = createStorageInterface(Environment(true));
 
     deque<ContainerInfo> containers;

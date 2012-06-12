@@ -95,8 +95,6 @@ main(int argc, char** argv)
 	usage();
     }
 
-    initDefaultLogger();
-
     cout << "pid is " << getpid() << endl;
 
     Lock* lock = NULL;

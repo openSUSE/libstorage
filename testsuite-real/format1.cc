@@ -54,8 +54,6 @@ doit(const string& disk)
 int
 main(int argc, char** argv)
 {
-    initDefaultLogger();
-
     list<string> disks(argv + 1, argv + argc);
 
     if (disks.empty())

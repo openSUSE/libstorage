@@ -11,7 +11,6 @@ int
 main( int argc_iv, char** argv_ppcv )
     {
     int ret;
-    initDefaultLogger();
     StorageInterface* s = createStorageInterface(Environment(false));
     string dev;
     ret = s->destroyPartitionTable("/dev/hdb", s->defaultDiskLabel("/dev/hdb"));

@@ -52,7 +52,6 @@ void PrintPair( ostream& s, const pair& p, const string& txt )
 int
 main( int argc_iv, char** argv_ppcv )
 {
-    initDefaultLogger();
     Storage Sto(Environment(true));
     Sto.assertInit();
     for( Storage::ConstContIterator i=Sto.contBegin(); i!=Sto.contEnd(); ++i )
