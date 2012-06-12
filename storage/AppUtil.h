@@ -115,11 +115,14 @@ void classic(StreamType& stream)
 }
 
 
-enum LogLevel { DEBUG, MILESTONE, WARNING, ERROR };
+enum LogLevel { DEBUG=0, MILESTONE=1, WARNING=2, ERROR=3 };
 
-void createLogger(const string& name, const string& logpath, const string& logfile);
+void createLogger(const string& logpath, const string& logfile);
 
-bool testLogLevel(LogLevel level);
+bool queryLog( LogLevel level );
+bool defaultLogQuery( int level, const char* component );
+void defaultLogDo( int level, const char* component, const char* file,
+                   int line, const char* function, const string& content );
 
 void prepareLogStream(std::ostringstream& stream);
 
@@ -135,7 +138,7 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
 
 #define y2log_op(level, file, line, func, op)				\
     do {								\
-	if (storage::testLogLevel(level))				\
+	if (storage::queryLog(level))                       		\
 	{								\
 	    std::ostringstream* __buf = storage::logStreamOpen();	\
 	    *__buf << op;						\
@@ -145,7 +148,7 @@ void logStreamClose(LogLevel level, const char* file, unsigned line,
 
 
     string hostname();
-    string datetime();
+    string datetime( time_t t1, bool utc=false, bool classic=true );
 
 
     class StopWatch

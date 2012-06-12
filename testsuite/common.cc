@@ -26,7 +26,7 @@ namespace storage
 	    string path = name.substr(pos + 1) + ".out/out";
 	    string file = name.substr(0, pos) + ".log";
 	    system(string("rm -f " + path + "/" + file).c_str());
-	    createLogger("default", path, file);
+	    createLogger(path, file);
 	}
     }
 

@@ -33,12 +33,8 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
-#include <blocxx/AppenderLogger.hpp>
-#include <blocxx/FileAppender.hpp>
-#include <blocxx/Logger.hpp>
-#include <blocxx/LogMessage.hpp>
-
 #include "storage/AsciiFile.h"
+#include "storage/Storage.h"
 #include "storage/StorageTmpl.h"
 #include "storage/AppUtil.h"
 #include "storage/StorageTypes.h"
@@ -47,7 +43,6 @@
 namespace storage
 {
     using namespace std;
-
 
 void createPath(const string& Path_Cv)
 {
@@ -326,156 +321,78 @@ bool isNfsDev( const string& dev )
 	return dev;
     }
 
+static const char* component = "libstorage";
+static string filename;
 
-static const blocxx::String component = "libstorage";
-
-
-void createLogger(const string& name, const string& logpath, const string& logfile)
-{
-    using namespace blocxx;
-
-    if (logpath != "NULL" && logfile != "NULL")
+void createLogger( const string& logpath, const string& logfile )
     {
-	String nm = name.c_str();
-	LoggerConfigMap configItems;
-	LogAppenderRef logApp;
-	if (logpath != "STDERR" && logfile != "STDERR" &&
-	    logpath != "SYSLOG" && logfile != "SYSLOG")
-	{
-	    String StrKey;
-	    String StrPath;
-	    StrKey.format("log.%s.location", name.c_str());
-	    StrPath = (logpath + "/" + logfile).c_str();
-	    configItems[StrKey] = StrPath;
-	    logApp =
-		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
-					       LogAppender::ALL_CATEGORIES,
-					       "%d %-5p %c(%P) %F(%M):%L - %m",
-					       LogAppender::TYPE_FILE,
-					       configItems);
-	}
-	else if (logpath == "STDERR" && logfile == "STDERR")
-	{
-	    logApp =
-		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
-					       LogAppender::ALL_CATEGORIES,
-					       "%d %-5p %c(%P) %F(%M):%L - %m",
-					       LogAppender::TYPE_STDERR,
-					       configItems);
-	}
-	else
-	{
-	    logApp =
-		LogAppender::createLogAppender(nm, LogAppender::ALL_COMPONENTS,
-					       LogAppender::ALL_CATEGORIES,
-					       "%d %-5p %c(%P) %F(%M):%L - %m",
-					       LogAppender::TYPE_SYSLOG,
-					       configItems);
-	}
-
-	LogAppender::setDefaultLogAppender(logApp);
+    filename = logpath + "/" + logfile;
     }
-}
 
-
-bool
-testLogLevel(LogLevel level)
-{
-    using namespace blocxx;
-
-    ELogLevel curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
-
-    switch (level)
+bool queryLog( LogLevel level )
     {
-	case DEBUG:
-	    return curLevel >= ::blocxx::E_DEBUG_LEVEL;
-	case MILESTONE:
-	    return curLevel >= ::blocxx::E_INFO_LEVEL;
-	case WARNING:
-	    return curLevel >= ::blocxx::E_WARNING_LEVEL;
-	case ERROR:
-	    return curLevel >= ::blocxx::E_ERROR_LEVEL;
-	default:
-	    return curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL;
+    CallbackLogQuery pfc = storage::getLogQueryCallback();
+    return( pfc!=NULL && pfc( level, component ));
     }
-}
 
+bool defaultLogQuery( int level, const char* component )
+    {
+    return( level != DEBUG );
+    }
 
 void
 prepareLogStream(ostringstream& stream)
-{
+    {
     stream.imbue(std::locale::classic());
     stream.setf(std::ios::boolalpha);
     stream.setf(std::ios::showbase);
-}
+    }
 
 
 ostringstream*
 logStreamOpen()
-{
+    {
     std::ostringstream* stream = new ostringstream;
     prepareLogStream(*stream);
     return stream;
-}
+    }
 
 
 void
-logStreamClose(LogLevel level, const char* file, unsigned line, const char* func,
-	       ostringstream* stream)
-{
-    using namespace blocxx;
-
-    ELogLevel curLevel = LogAppender::getCurrentLogAppender()->getLogLevel();
-    String category;
-
-    switch (level)
+logStreamClose( LogLevel level, const char* file, unsigned line, 
+                const char* func, ostringstream* stream )
     {
-	case DEBUG:
-	    if (curLevel >= ::blocxx::E_DEBUG_LEVEL)
-	    	category = Logger::STR_DEBUG_CATEGORY;
-	    break;
-	case MILESTONE:
-	    if (curLevel >= ::blocxx::E_INFO_LEVEL)
-	    	category = Logger::STR_INFO_CATEGORY;
-	    break;
-	case WARNING:
-	    if (curLevel >= ::blocxx::E_WARNING_LEVEL)
-		category = Logger::STR_WARNING_CATEGORY;
-	    break;
-	case ERROR:
-	    if (curLevel >= ::blocxx::E_ERROR_LEVEL)
-		category = Logger::STR_ERROR_CATEGORY;
-	    break;
-	default:
-	    if (curLevel >= ::blocxx::E_FATAL_ERROR_LEVEL)
-		category = Logger::STR_FATAL_CATEGORY;
-	    break;
-    }
-
-    if (!category.empty())
-    {
-	string tmp = stream->str();
-
-	string::size_type pos1 = 0;
-
-	while (true)
-	{
-	    string::size_type pos2 = tmp.find('\n', pos1);
-
-	    if (pos2 != string::npos || pos1 != tmp.length())
-		LogAppender::getCurrentLogAppender()->logMessage(LogMessage(component, category,
-									    String(tmp.substr(pos1, pos2 - pos1)),
-									    file, line, func));
-
-	    if (pos2 == string::npos)
-		break;
-
-	    pos1 = pos2 + 1;
-	}
-    }
-
+    CallbackLogDo pfc = storage::getLogDoCallback();
+    if( pfc!=NULL )
+        pfc( level, component, file, line, func, stream->str() );
     delete stream;
-}
+    }
+    
+void defaultLogDo( int level, const char* comp, const char* file,
+                   int line, const char* fct, const string& content )
+    {
+    ostringstream pfx;
+    pfx << datetime(time(0), false, true) << " <" << level << "> "
+        << comp << "(" << getpid() << ")" << " " << file 
+        << "(" << fct << "):" << line;
+    string prefix = pfx.str();
+
+    FILE* f = fopen(filename.c_str(), "a");
+
+    string::size_type pos1 = 0;
+
+    while (true)
+        {
+        string::size_type pos2 = content.find('\n', pos1);;
+        if (pos2 != string::npos || pos1 != content.length())
+            fprintf(f, "%s - %s\n", prefix.c_str(), 
+                    content.substr(pos1, pos2 - pos1).c_str());
+        if (pos2 == string::npos)
+            break;
+        pos1 = pos2 + 1;
+        }
+    fclose(f);
+    }
 
 
     string
@@ -721,13 +638,12 @@ getMajorDevices(const char* driver)
 
 
     string
-    datetime()
+    datetime( time_t t1, bool utc, bool classic )
     {
-	time_t t1 = time(NULL);
 	struct tm t2;
-	gmtime_r(&t1, &t2);
+	utc ? gmtime_r(&t1, &t2) : localtime_r(&t1, &t2);
 	char buf[64 + 1];
-	if (strftime(buf, sizeof(buf), "%F %T %Z", &t2) == 0)
+	if (strftime(buf, sizeof(buf), classic ? "%F %T" : "%c", &t2) == 0)
 	    return string("unknown");
 	return string(buf);
     }

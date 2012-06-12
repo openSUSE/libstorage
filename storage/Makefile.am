@@ -66,7 +66,7 @@ libstorage_la_SOURCES =					\
 	StorageTmpl.h		StorageDefines.h
 
 libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
-libstorage_la_LIBADD = -lblocxx -lxml2
+libstorage_la_LIBADD = -lxml2
 
 pkgincludedir = $(includedir)/storage
 

@@ -2698,14 +2698,54 @@ namespace storage
      */
     void initDefaultLogger();
 
+    /**
+     * Initializes default logging with explicit log dir.
+     */
+    void initDefaultLogger( const string& logdir );
+
+    /**
+     * typedef for a pointer to a function that gets called for every logged 
+     * entry. Called function should be able to split content at newlines
+     */
+    typedef void (*CallbackLogDo)( int level, const char* component, const char* file, 
+                                   int line, const char* function, const string& content );
+
+    /**
+     * typedef for a pointer to a function that returns if specified level
+     * should be logged
+     */
+    typedef bool (*CallbackLogQuery)( int level, const char* component );
+
+    /**
+     * Set logging callback function
+     */
+    void setLogDoCallback( CallbackLogDo pfc );
+
+    /**
+     * Get logging callback function
+     */
+    CallbackLogDo getLogDoCallback();
+
+    /**
+     * Set logging query callback function
+     */
+    void setLogQueryCallback( CallbackLogQuery pfc );
+
+    /**
+     * Get logging callback function
+     */
+    CallbackLogQuery getLogQueryCallback();
 
     /**
      * Contains basic environment settings controlling the behaviour of libstorage.
      */
     struct Environment
     {
-	Environment(bool readonly) : readonly(readonly), testmode(false), autodetect(true),
-	    instsys(false), logdir("/var/log/YaST2"), testdir("tmp") {}
+	Environment(bool readonly, string logdr="/var/log/YaST2") : readonly(readonly), testmode(false), autodetect(true),
+	    instsys(false), logdir(logdr), testdir("tmp") 
+            {
+            storage::initDefaultLogger( logdir );
+            }
 
 	bool readonly;
 	bool testmode;

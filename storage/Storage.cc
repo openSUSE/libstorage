@@ -62,35 +62,29 @@ namespace storage
 {
     using namespace std;
 
-
-    void
-    initDefaultLogger()
+void
+initDefaultLogger()
     {
-    string path;
-    string file;
+    /* initentionally left empty for backward compatibility         */
+    /* logdir initialisation is in constructor of class Environment */
+    }
+
+void
+initDefaultLogger( const string& logdir )
+    {
+    string path(logdir);
+    string file("libstorage");
     if (geteuid ())
-    {
-	struct passwd* pw = getpwuid (geteuid ());
+        {
+	struct passwd* pw = getpwuid (geteuid());
 	if (pw)
-	{
+            {
 	    path = pw->pw_dir;
-	    file = ".y2log";
-	}
-	else
-	{
-	    path = "/";
-	    file = "y2log";
-	}
+	    file = ".libstorage";
+            }
+        }
+    createLogger(path, file);
     }
-    else
-    {
-	path = "/var/log/YaST2";
-	file = "y2log";
-    }
-
-	createLogger("default", path, file);
-    }
-
 
     std::ostream& operator<<(std::ostream& s, const Environment& env)
     {
@@ -7613,6 +7607,14 @@ std::ostream& operator<<(std::ostream& s, Storage& v)
     v.printInfo(s);
     return(s);
     }
+
+CallbackLogDo logger_do_fnc = defaultLogDo;
+CallbackLogQuery logger_query_fnc = defaultLogQuery;
+
+void setLogDoCallback(CallbackLogDo pfnc) { logger_do_fnc = pfnc; }
+CallbackLogDo getLogDoCallback() { return logger_do_fnc; }
+void setLogQueryCallback( CallbackLogQuery pfnc) { logger_query_fnc = pfnc; }
+CallbackLogQuery getLogQueryCallback() { return logger_query_fnc; }
 
 
     // workaround for broken YCP bindings
