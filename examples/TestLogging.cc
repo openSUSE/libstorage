@@ -16,7 +16,7 @@ using namespace std;
 ofstream logstream;
 unsigned pid;
 
-void logDo( int level, const char* component, const char* file,
+void logDo( int level, const string& component, const char* file,
             int line, const char* function, const string& content )
     {
     logstream << "<" << level << "> " << component << "(" << pid << ") " 
@@ -24,7 +24,7 @@ void logDo( int level, const char* component, const char* file,
               << content << endl;
     }
 
-bool logQuery( int level, const char* component )
+bool logQuery( int level, const string& component )
     {
     return( level>=0 );
     }

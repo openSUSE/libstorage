@@ -321,7 +321,7 @@ bool isNfsDev( const string& dev )
 	return dev;
     }
 
-static const char* component = "libstorage";
+static const string& component = "libstorage";
 static string filename;
 
 void createLogger( const string& logpath, const string& logfile )
@@ -335,7 +335,7 @@ bool queryLog( LogLevel level )
     return( pfc!=NULL && pfc( level, component ));
     }
 
-bool defaultLogQuery( int level, const char* component )
+bool defaultLogQuery( int level, const string& component )
     {
     return( level != DEBUG );
     }
@@ -368,7 +368,7 @@ logStreamClose( LogLevel level, const char* file, unsigned line,
     delete stream;
     }
     
-void defaultLogDo( int level, const char* comp, const char* file,
+void defaultLogDo( int level, const string& comp, const char* file,
                    int line, const char* fct, const string& content )
     {
     ostringstream pfx;

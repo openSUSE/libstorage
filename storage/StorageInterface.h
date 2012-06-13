@@ -2707,14 +2707,14 @@ namespace storage
      * typedef for a pointer to a function that gets called for every logged 
      * entry. Called function should be able to split content at newlines
      */
-    typedef void (*CallbackLogDo)( int level, const char* component, const char* file, 
+    typedef void (*CallbackLogDo)( int level, const string& component, const char* file, 
                                    int line, const char* function, const string& content );
 
     /**
      * typedef for a pointer to a function that returns if specified level
      * should be logged
      */
-    typedef bool (*CallbackLogQuery)( int level, const char* component );
+    typedef bool (*CallbackLogQuery)( int level, const string& component );
 
     /**
      * Set logging callback function
