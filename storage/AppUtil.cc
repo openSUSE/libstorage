@@ -381,7 +381,7 @@ void defaultLogDo( int level, const string& comp, const char* file,
 
     string::size_type pos1 = 0;
 
-    while (true)
+    while( true && f )
         {
         string::size_type pos2 = content.find('\n', pos1);;
         if (pos2 != string::npos || pos1 != content.length())
@@ -391,7 +391,8 @@ void defaultLogDo( int level, const string& comp, const char* file,
             break;
         pos1 = pos2 + 1;
         }
-    fclose(f);
+    if(f)
+        fclose(f);
     }
 
 
