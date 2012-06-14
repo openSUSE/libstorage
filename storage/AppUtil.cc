@@ -367,6 +367,17 @@ logStreamClose( LogLevel level, const char* file, unsigned line,
         pfc( level, component, file, line, func, stream->str() );
     delete stream;
     }
+
+static FILE* logf = NULL;
+
+static void close_logf()
+    {
+    if( logf )
+        {
+        fclose(logf);
+        logf=NULL;
+        }
+    }
     
 void defaultLogDo( int level, const string& comp, const char* file,
                    int line, const char* fct, const string& content )
@@ -377,22 +388,25 @@ void defaultLogDo( int level, const string& comp, const char* file,
         << "(" << fct << "):" << line;
     string prefix = pfx.str();
 
-    FILE* f = fopen(filename.c_str(), "a");
+    if( !logf )
+        {
+        logf = fopen(filename.c_str(), "a");
+        setlinebuf(logf);
+        atexit( close_logf );
+        }
 
     string::size_type pos1 = 0;
 
-    while( true && f )
+    while( true && logf )
         {
         string::size_type pos2 = content.find('\n', pos1);;
         if (pos2 != string::npos || pos1 != content.length())
-            fprintf(f, "%s - %s\n", prefix.c_str(), 
+            fprintf(logf, "%s - %s\n", prefix.c_str(), 
                     content.substr(pos1, pos2 - pos1).c_str());
         if (pos2 == string::npos)
             break;
         pos1 = pos2 + 1;
         }
-    if(f)
-        fclose(f);
     }
 
 
