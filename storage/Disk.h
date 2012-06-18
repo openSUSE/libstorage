@@ -232,9 +232,8 @@ class Disk : public Container
 	virtual bool detectPartitions(SystemInfo& systeminfo);
 	bool getSysfsInfo();
 	int checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const;
-	int execCheckFailed( const string& cmd_line, bool stop_hald=true );
-	int execCheckFailed( SystemCmd& cmd, const string& cmd_line,
-	                     bool stop_hald=true );
+	int execCheckFailed( const string& cmd_line );
+	int execCheckFailed( SystemCmd& cmd, const string& cmd_line );
 	bool checkPartedOutput(SystemInfo& systeminfo);
 	list<string> partitionsKernelKnowns(const ProcParts& parts) const;
 	bool checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,

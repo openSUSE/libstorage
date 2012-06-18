@@ -579,8 +579,6 @@ class DiskData;
 
 	string getErrorString(int error) const;
 
-	void handleHald( bool stop );
-
 	void activateHld(bool val = true);
 	void activateMultipath(bool val = true);
 
@@ -2125,7 +2123,6 @@ class DiskData;
 	bool root_mounted;
 	string tempdir;
 	string rootprefix;
-	unsigned hald_pid;
 
 	ArchInfo archinfo;
 

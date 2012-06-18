@@ -431,23 +431,18 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const
     }
 
 int
-Disk::execCheckFailed( const string& cmd_line, bool stop_hald )
+Disk::execCheckFailed( const string& cmd_line )
     {
     static SystemCmd cmd;
-    return( execCheckFailed( cmd, cmd_line, stop_hald ) );
+    return( execCheckFailed( cmd, cmd_line ) );
     }
 
-int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line, 
-                           bool stop_hald )
+int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
     {
-    if( stop_hald )
-	getStorage()->handleHald(true);
     cmd.execute( cmd_line );
     int ret = checkSystemError( cmd_line, cmd );
     if( ret!=0 )
 	setExtError( cmd );
-    if( stop_hald )
-	getStorage()->handleHald(false);
     return( ret );
     }
 
@@ -1918,7 +1913,6 @@ int Disk::doCreate( Volume* v )
 		cmd_line << "ext2 ";
 		}
 	    }
-	getStorage()->handleHald(true);
 	if( ret==0 )
 	    {
 	    unsigned long start = p->cylStart();
@@ -1964,13 +1958,13 @@ int Disk::doCreate( Volume* v )
 	    string save = cmd_line.str();
 	    y2mil( "end:" << end << " cylinders:" << cylinders() );
 	    string tmp = save + decString(start) + ' ' + decString(end);
-	    if( execCheckFailed( tmp, false ) )
+	    if( execCheckFailed( tmp ) )
 		{
 		tmp = save + decString(start+1) + ' ' + decString(end+1);
-		if( execCheckFailed( tmp, false ))
+		if( execCheckFailed( tmp ))
 		    {
 		    tmp = save + decString(start) + ' ' + decString(end-1);
-		    if( execCheckFailed( tmp, false ) )
+		    if( execCheckFailed( tmp ) )
 			{
 			ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 			}
@@ -1983,7 +1977,6 @@ int Disk::doCreate( Volume* v )
 	    if( !getPartedValues( p ))
 		ret = DISK_PARTITION_NOT_FOUND;
 	    }
-	getStorage()->handleHald(false);
 	if( ret==0 && !dmp_slave )
 	    {
 	    if( p->type()!=EXTENDED )
@@ -2054,15 +2047,13 @@ int Disk::doRemove( Volume* v )
 	    std::ostringstream cmd_line;
 	    classic(cmd_line);
 	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
-	    getStorage()->handleHald(true);
-	    if( execCheckFailed( cmd_line.str(), false ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
 		}
 	    ProcParts parts;
 	    if( parts.findDevice(getPartName(p->OrigNr())) )
 		callDelpart( p->OrigNr() );
-	    getStorage()->handleHald(false);
 	    }
 	if( ret==0 )
 	    {
@@ -2329,8 +2320,7 @@ int Disk::doResize( Volume* v )
 	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << quote(device())
 	             << " unit s resize " << p->nr() << " "
 	             << start_sect << " " << end_sect;
-	    getStorage()->handleHald(true);
-	    if( execCheckFailed( cmd_line.str(), false ) )
+	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
@@ -2339,7 +2329,6 @@ int Disk::doResize( Volume* v )
 		if( ret==0 )
 		    ret = DISK_PARTITION_NOT_FOUND;
 		}
-	    getStorage()->handleHald(false);
 	    if( ret==0 && !dmp_slave )
 		Storage::waitForDevice(p->device());
 	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));

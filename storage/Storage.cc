@@ -105,8 +105,6 @@ Storage::Storage(const Environment& env)
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
 
-    hald_pid = 0;
-
     max_log_num = 5;
     const char* tenv = getenv("Y2MAXLOGNUM");
     if (tenv)
@@ -4978,33 +4976,6 @@ Storage::sortCommitLists(CommitStage stage, list<const Container*>& co,
     b << "> ";
     y2mil(b.str());
     }
-
-void Storage::handleHald( bool stop )
-    {
-    y2mil( "stop:" << stop );
-    int ret;
-    if( stop )
-	{
-	hald_pid = 0;
-	SystemCmd c( PSBIN " ax | " GREPBIN " -w /usr/sbin/hald | " GREPBIN " -v grep" );
-	if( c.numLines()>0 )
-	    {
-	    extractNthWord( 0, c.getLine(0) ) >> hald_pid;
-	    y2mil( "hald_pid:" << hald_pid );
-	    }
-	if( hald_pid>0 )
-	    {
-	    ret = kill( hald_pid, SIGSTOP );
-	    y2mil( "ret kill:" << ret << " pid:" << hald_pid );
-	    }
-	}
-    else if( !stop && hald_pid>0 )
-	{
-	ret = kill( hald_pid, SIGCONT );
-	y2mil( "ret kill:" << ret << " pid:" << hald_pid );
-	}
-    }
-
 
 static bool notLoop( const Container& c ) { return( c.type()!=LOOP ); }
 static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
