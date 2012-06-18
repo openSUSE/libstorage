@@ -220,6 +220,8 @@ Storage::initialize()
 	y2mil(archinfo);
     }
 
+    checkBinPaths( archinfo.arch );
+
     if (instsys())
     {
 	decideMultipath();
@@ -4366,14 +4368,14 @@ Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, uns
     if( instsys() )
 	{
 	SystemCmd c;
-	string prog_name = "/sbin/rpcbind";
+	string prog_name = RPCBINDBIN;
 
 	//We don't have rpcbind (#423026, #427428) ...
 	if ( !checkNormalFile(prog_name) )
 	{
 	    //... so let's try portmap instead
 	    y2mil("No rpcbind found, trying portmap instead ...");
-	    prog_name = "/sbin/portmap";
+	    prog_name = PORTMAPBIN;
 	}
 
 	c.execute( prog_name );
@@ -4984,7 +4986,7 @@ void Storage::handleHald( bool stop )
     if( stop )
 	{
 	hald_pid = 0;
-	SystemCmd c( "ps ax | grep -w /usr/sbin/hald | grep -v grep" );
+	SystemCmd c( PSBIN " ax | " GREPBIN " -w /usr/sbin/hald | " GREPBIN " -v grep" );
 	if( c.numLines()>0 )
 	    {
 	    extractNthWord( 0, c.getLine(0) ) >> hald_pid;
@@ -5834,7 +5836,7 @@ Storage::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelc
 void Storage::removeDmTableTo( unsigned long mjr, unsigned long mnr )
     {
     y2mil( "mjr:" << mjr << " mnr:" << mnr );
-    string cmd = DMSETUPBIN " table | grep -w ";
+    string cmd = DMSETUPBIN " table | " GREPBIN " -w ";
     cmd += decString(mjr) + ":" + decString(mnr);
     cmd += " | sed s/:.*// | uniq";
     SystemCmd c( cmd );
@@ -5884,7 +5886,7 @@ bool Storage::removeDmTable( const string& table )
 	c.execute(DMSETUPBIN " remove " + quote(table));
 	waitForDevice();
 	ret = c.retcode()==0;
-	c.execute(DMSETUPBIN " table | grep " + quote(table));
+	c.execute(DMSETUPBIN " table | " GREPBIN " " + quote(table));
 	logProcData();
 	}
     y2mil("ret:" << ret);
@@ -7508,7 +7510,7 @@ void Storage::setExtError( const string& txt )
 void
 Storage::waitForDevice()
 { 
-    string cmd(UDEVADM " settle --timeout=20");
+    string cmd(UDEVADMBIN " settle --timeout=20");
     y2mil("calling prog:" << cmd);
     SystemCmd c(cmd);
     y2mil("returned prog:" << cmd << " retcode:" << c.retcode());

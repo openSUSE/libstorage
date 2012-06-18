@@ -23,6 +23,7 @@
 #include <glob.h>
 
 #include "storage/FreeInfo.h"
+#include "storage/StorageDefines.h"
 #include "storage/Volume.h"
 #include "storage/SystemCmd.h"
 
@@ -190,7 +191,7 @@ namespace storage
 
 	if (ret && vol.getFs() == NTFS)
 	{
-	    SystemCmd c("/usr/sbin/ntfsresize -f -i " + quote(vol.device()));
+	    SystemCmd c( NTFSRESIZEBIN " -f -i " + quote(vol.device()));
 	    string fstr = " might resize at ";
 	    string::size_type pos;
 	    string stdout = boost::join(c.stdout(), "\n");
@@ -240,7 +241,7 @@ namespace storage
 	if( content_info.homes==0 && 
 	    (vol.getFs()==EXT2 || vol.getFs()==EXT3 || vol.getFs()==EXT4 ))
 	    {
-	    SystemCmd c( "/sbin/tune2fs -l " + vol.mountDevice() + " | grep '^Last mounted on:'" );
+	    SystemCmd c( TUNE2FSBIN " -l " + vol.mountDevice() + " | " GREPBIN " '^Last mounted on:'" );
 	    if( c.retcode()==0 && c.numLines()>0 )
 		{
 		string line = c.getLine(0);

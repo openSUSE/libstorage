@@ -836,7 +836,7 @@ int Volume::doFormatBtrfs()
     int ret = 0;
     SystemCmd c;
     string defvol = getStorage()->getDefaultSubvolName();
-    string cmd = "/sbin/mkfs.btrfs " + quote(mountDevice());
+    string cmd = MKFSBTRFSBIN " " + quote(mountDevice());
     c.execute( cmd );
     if( c.retcode()!=0 )
 	{
@@ -969,44 +969,44 @@ int Volume::doFormat()
 	switch( fs )
 	    {
 	    case EXT2:	
-		cmd = "/sbin/mke2fs";
+		cmd = MKFSEXT2BIN;
 		params = "-t ext2 -v";
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case EXT3:
-		cmd = "/sbin/mke2fs";
+		cmd = MKFSEXT2BIN;
 		params = "-t ext3 -v";
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case EXT4:
-		cmd = "/sbin/mke2fs";
+		cmd = MKFSEXT2BIN;
 		params = "-t ext4 -v";
 		progressbar = new Mke2fsProgressBar( cb );
 		break;
 	    case REISERFS:
-		cmd = "/sbin/mkreiserfs";
+		cmd = MKFSREISERBIN;
 		params = "-f -f";
 		progressbar = new ReiserProgressBar( cb );
 		break;
 	    case VFAT:
-		cmd = "/sbin/mkdosfs";
+		cmd = MKFSFATBIN;
 		break;
 	    case JFS:
-		cmd = "/sbin/mkfs.jfs";
+		cmd = MKFSJFSBIN;
 		params = "-q";
 		break;
 	    case HFS:
-		cmd = "/usr/bin/hformat";
+		cmd = HFORMATBIN;
 		break;
 	    case HFSPLUS:
 		ret = VOLUME_FORMAT_NOT_IMPLEMENTED;
 		break;
 	    case XFS:
-		cmd = "/sbin/mkfs.xfs";
+		cmd = MKFSXFSBIN;
 		params = "-q -f";
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap";
+		cmd = MKSWAPBIN;
 		params = "-f";
 		break;
 	    default:
@@ -1048,7 +1048,7 @@ int Volume::doFormat()
 	    {
 		if (!tunefs_opt.empty())
 		{
-		    string cmd = "/sbin/tune2fs " + tunefs_opt + " " + quote(mountDevice());
+		    string cmd = TUNE2FSBIN " " + tunefs_opt + " " + quote(mountDevice());
 		    SystemCmd c( cmd );
 		    if( c.retcode()!=0 )
 			ret = VOLUME_TUNE2FS_FAILED;
@@ -1058,7 +1058,7 @@ int Volume::doFormat()
 		    (fstab_opt.find( "data=writeback" )!=string::npos ||
 		     fstab_opt.find( "data=journal" )!=string::npos) )
 		{
-		    string cmd = "/sbin/tune2fs -o ";
+		    string cmd = TUNE2FSBIN " -o ";
 		    if( fstab_opt.find( "data=writeback" )!=string::npos )
 			cmd += "journal_data_writeback ";
 		    else
@@ -1075,7 +1075,7 @@ int Volume::doFormat()
 	    {
 		if (!tunefs_opt.empty())
 		{
-		    string cmd = "/sbin/reiserfstune " + tunefs_opt + " " + quote(mountDevice());
+		    string cmd = TUNEREISERBIN " " + tunefs_opt + " " + quote(mountDevice());
 		    SystemCmd c( cmd );
 		    if( c.retcode()!=0 )
 			ret = VOLUME_TUNEREISERFS_FAILED;
@@ -1510,7 +1510,7 @@ int Volume::resizeFs()
 	switch( fs )
 	    {
 	    case SWAP:
-		cmd = "/sbin/mkswap";
+		cmd = MKSWAPBIN;
 		if (!label.empty())
 		    cmd += " -L " + quote(label);
 		if (!uuid.empty())
@@ -1521,7 +1521,7 @@ int Volume::resizeFs()
 		    ret = VOLUME_RESIZE_FAILED;
 		break;
 	    case REISERFS:
-		cmd = "/sbin/resize_reiserfs -f ";
+		cmd = REISERRESBIN " -f ";
 		if( needShrink() )
 		    {
 		    cmd = "echo y | " + cmd;
@@ -1536,7 +1536,7 @@ int Volume::resizeFs()
 		    }
 		break;
 	    case NTFS:
-		cmd = "echo y | /usr/sbin/ntfsresize -f ";
+		cmd = "echo y | " NTFSRESIZEBIN " -f ";
 		if( needShrink() )
 		    cmd += "-s " + decString(size_k) + "k ";
 		cmd += quote(mountDevice());
@@ -1552,7 +1552,7 @@ int Volume::resizeFs()
 	    case EXT2:
 	    case EXT3:
 	    case EXT4:
-		cmd = "/sbin/resize2fs -f " + quote(mountDevice());
+		cmd = EXT2RESIZEBIN " -f " + quote(mountDevice());
 		if( needShrink() )
 		    cmd += " " + decString(size_k) + "K";
 		c.execute( cmd );
@@ -1578,7 +1578,7 @@ int Volume::resizeFs()
 		    }
 		if( ret==0 )
 		    {
-		    cmd = "/usr/sbin/xfs_growfs " + quote(mpoint);
+		    cmd = XFSGROWFSBIN " " + quote(mpoint);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
@@ -2087,25 +2087,25 @@ EncryptType Volume::detectEncryption()
 		switch( detected_fs )
 		    {
 		    case EXT2:
-			cmd = "/sbin/fsck.ext2 -n -f " + quote(use_dev);
+			cmd = FSCKEXT2BIN " -n -f " + quote(use_dev);
 			break;
 		    case EXT3:
-			cmd = "/sbin/fsck.ext3 -n -f " + quote(use_dev);
+			cmd = FSCKEXT3BIN " -n -f " + quote(use_dev);
 			break;
 		    case EXT4:
-			cmd = "/sbin/fsck.ext4 -n -f " + quote(use_dev);
+			cmd = FSCKEXT4BIN " -n -f " + quote(use_dev);
 			break;
 		    case REISERFS:
-			cmd = "reiserfsck --yes --check -q " + quote(use_dev);
+			cmd = FSCKREISERBIN " --yes --check -q " + quote(use_dev);
 			break;
 		    case XFS:
-			cmd = "xfs_check " + quote(use_dev);
+			cmd = FSCKXFSBIN " " + quote(use_dev);
 			break;
 		    case JFS:
-			cmd = "fsck.jfs -n " + quote(use_dev);
+			cmd = FSCKJFSBIN " -n " + quote(use_dev);
 			break;
 		    default:
-			cmd = "fsck -n -t " + toString(detected_fs) + " " + quote(use_dev);
+			cmd = FSCKBIN " -n -t " + toString(detected_fs) + " " + quote(use_dev);
 			break;
 		    }
 		bool excTime, excLines;
@@ -2317,7 +2317,7 @@ int Volume::doCryptsetup()
 		    if( cmd.retcode()!=0 )
 			ret = VOLUME_CRYPTFORMAT_FAILED;
 		    if( ret==0 && mp=="swap" && crypt_pwd.empty() && !format )
-			cmd.execute("/sbin/mkswap " + quote(dmcrypt_dev));
+			cmd.execute( MKSWAPBIN " " + quote(dmcrypt_dev));
 		    }
 		}
 	    if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
@@ -2465,24 +2465,24 @@ int Volume::doSetLabel()
 	    case EXT2:
 	    case EXT3:
 	    case EXT4:
-		cmd = "/sbin/tune2fs -L " + quote(label) + " " + quote(mountDevice());
+		cmd = TUNE2FSBIN " -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case REISERFS:
-		cmd = "/sbin/reiserfstune -l " + quote(label) + " " + quote(mountDevice());
+		cmd = TUNEREISERBIN " -l " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case JFS:
-		cmd = "/sbin/jfs_tune -L " + quote(label) + " " + quote(mountDevice());
+		cmd = TUNEJFSBIN " -L " + quote(label) + " " + quote(mountDevice());
 		break;
 	    case XFS:
 		{
 		string tlabel = label;
 		if( label.empty() )
 		    tlabel = "--";
-		cmd = "/usr/sbin/xfs_admin -L " + quote(tlabel) + " " + quote(mountDevice());
+		cmd = XFSADMINBIN " -L " + quote(tlabel) + " " + quote(mountDevice());
 		}
 		break;
 	    case SWAP:
-		cmd = "/sbin/mkswap -L " + quote(label);
+		cmd = MKSWAPBIN " -L " + quote(label);
 		if (!uuid.empty())
 		    cmd += " -U " + quote(uuid);
 		cmd += " " + quote(mountDevice());

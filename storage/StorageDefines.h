@@ -79,9 +79,39 @@
 #define DASDVIEWBIN "/sbin/dasdview"
 #define FDASDBIN "/sbin/fdasd"
 
-#define UDEVADM "/sbin/udevadm"
+#define UDEVADMBIN "/sbin/udevadm"
 
 #define MODPROBEBIN "/sbin/modprobe"
+#define PSBIN          "/bin/ps"
+#define GREPBIN        "/usr/bin/grep"
+#define PORTMAPBIN     "/sbin/portmap"
+#define RPCBINDBIN     "/sbin/rpcbind"
 
+#define NTFSRESIZEBIN "/usr/sbin/ntfsresize"
+#define XFSGROWFSBIN  "/usr/sbin/xfs_growfs"
+#define REISERRESBIN  "/sbin/resize_reiserfs"
+#define EXT2RESIZEBIN "/sbin/resize2fs"
+
+#define TUNE2FSBIN     "/sbin/tune2fs"
+#define TUNEREISERBIN  "/sbin/reiserfstune"
+#define TUNEJFSBIN     "/sbin/jfs_tune"
+#define XFSADMINBIN    "/usr/sbin/xfs_admin"
+
+#define FSCKBIN        "/sbin/fsck"
+#define FSCKEXT2BIN    "/sbin/fsck.ext2"
+#define FSCKEXT3BIN    "/sbin/fsck.ext3"
+#define FSCKEXT4BIN    "/sbin/fsck.ext4"
+#define FSCKJFSBIN     "/sbin/fsck.jfs"
+#define FSCKXFSBIN     "/usr/sbin/xfs_check"
+#define FSCKREISERBIN  "/sbin/reiserfsck"
+
+#define MKSWAPBIN      "/sbin/mkswap"
+#define HFORMATBIN     "/usr/bin/hformat"
+#define MKFSXFSBIN     "/sbin/mkfs.xfs"
+#define MKFSFATBIN     "/sbin/mkdosfs"
+#define MKFSJFSBIN     "/sbin/mkfs.jfs"
+#define MKFSREISERBIN  "/sbin/mkreiserfs"
+#define MKFSEXT2BIN    "/sbin/mke2fs"
+#define MKFSBTRFSBIN   "/sbin/mkfs.btrfs"
 
 #endif

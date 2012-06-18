@@ -68,6 +68,11 @@ libstorage_la_SOURCES =					\
 libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
 libstorage_la_LIBADD = -lxml2
 
+$(srcdir)/gen_pathlist.cc: StorageDefines.h
+	grep BIN $< | sed -e "/PARTEDCMD/d" -e "s/^[^ ]*[ ]\+//" -e "s/ .*/,/" >$@
+
+BUILT_SOURCES = gen_pathlist.cc
+
 pkgincludedir = $(includedir)/storage
 
 pkginclude_HEADERS =			\

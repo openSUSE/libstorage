@@ -36,6 +36,7 @@
 #include "storage/AsciiFile.h"
 #include "storage/Storage.h"
 #include "storage/StorageTmpl.h"
+#include "storage/StorageDefines.h"
 #include "storage/AppUtil.h"
 #include "storage/StorageTypes.h"
 
@@ -679,6 +680,32 @@ getMajorDevices(const char* driver)
 	timersub(&stop_tv, &sw.start_tv, &tv);
 
 	return s << fixed << double(tv.tv_sec) + (double)(tv.tv_usec) / 1000000.0 << "s";
+    }
+
+void checkBinPaths( const string& arch )
+    {
+    y2mil( "Arch:" << arch );
+    list<string> ign;
+    list<string> s390;
+    const char* pathes[] = { 
+#include "./gen_pathlist.cc"
+                           };
+    ign.push_back( PORTMAPBIN );
+    if( !boost::starts_with(arch,"s390") )
+        {
+        ign.push_back( FDASDBIN );
+        ign.push_back( DASDVIEWBIN );
+        ign.push_back( DASDFMTBIN );
+        }
+    y2mil( "ign:" << ign );
+    for( unsigned i=0; i<lengthof(pathes); i++ )
+        {
+        if( !contains( ign, pathes[i] ))
+            {
+            if( access( pathes[i], X_OK )!=0 )
+                y2err( "error accessing:" << pathes[i] );
+            }
+        }
     }
 
 

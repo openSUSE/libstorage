@@ -1,3 +1,4 @@
 StorageVersion.h
+gen_pathlist.cc
 *.lo
 *.la
