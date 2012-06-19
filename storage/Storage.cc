@@ -218,7 +218,8 @@ Storage::initialize()
 	y2mil(archinfo);
     }
 
-    checkBinPaths( archinfo.arch );
+    if( !testmode() )
+        checkBinPaths( archinfo.arch, instsys() );
 
     if (instsys())
     {

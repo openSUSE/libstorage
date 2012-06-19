@@ -682,9 +682,9 @@ getMajorDevices(const char* driver)
 	return s << fixed << double(tv.tv_sec) + (double)(tv.tv_usec) / 1000000.0 << "s";
     }
 
-void checkBinPaths( const string& arch )
+void checkBinPaths( const string& arch, bool instsys )
     {
-    y2mil( "Arch:" << arch );
+    y2mil( "Arch:" << arch << " Instsys:" << instsys );
     list<string> ign;
     list<string> s390;
     const char* pathes[] = { 
@@ -698,12 +698,14 @@ void checkBinPaths( const string& arch )
         ign.push_back( DASDFMTBIN );
         }
     y2mil( "ign:" << ign );
+    LogLevel level = instsys?storage::ERROR:storage::MILESTONE;
     for( unsigned i=0; i<lengthof(pathes); i++ )
         {
         if( !contains( ign, pathes[i] ))
             {
             if( access( pathes[i], X_OK )!=0 )
-                y2err( "error accessing:" << pathes[i] );
+                y2log_op( level, __FILE__, __LINE__, __FUNCTION__,
+                          "error accessing:" << pathes[i] );
             }
         }
     }
