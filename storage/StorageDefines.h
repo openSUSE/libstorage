@@ -82,7 +82,6 @@
 #define UDEVADMBIN "/sbin/udevadm"
 
 #define MODPROBEBIN "/sbin/modprobe"
-#define PSBIN          "/bin/ps"
 #define GREPBIN        "/usr/bin/grep"
 #define PORTMAPBIN     "/sbin/portmap"
 #define RPCBINDBIN     "/sbin/rpcbind"
