@@ -694,6 +694,7 @@ void checkBinPaths( const string& arch, bool instsys )
 #include "./gen_pathlist.cc"
                            };
     ign.push_back( PORTMAPBIN );
+    ign.push_back( HFORMATBIN );
     if( !boost::starts_with(arch,"s390") )
         {
         ign.push_back( FDASDBIN );
