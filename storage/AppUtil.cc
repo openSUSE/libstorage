@@ -392,8 +392,11 @@ void defaultLogDo( int level, const string& comp, const char* file,
     if( !logf )
         {
         logf = fopen(filename.c_str(), "a");
-        setlinebuf(logf);
-        atexit( close_logf );
+        if( logf )
+            {
+            setlinebuf(logf);
+            atexit( close_logf );
+            }
         }
 
     string::size_type pos1 = 0;
