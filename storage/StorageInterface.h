@@ -2741,7 +2741,7 @@ namespace storage
      */
     struct Environment
     {
-	Environment(bool readonly, string logdr="/var/log/YaST2") : readonly(readonly), testmode(false), autodetect(true),
+	Environment(bool readonly, const string& logdr="/var/log/YaST2") : readonly(readonly), testmode(false), autodetect(true),
 	    instsys(false), logdir(logdr), testdir("tmp") 
             {
             storage::initDefaultLogger( logdir );
