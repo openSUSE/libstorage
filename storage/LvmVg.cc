@@ -772,16 +772,18 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    unsigned long num_le = 0;
 	    unsigned long num_cow_le = 0;
 	    bool readOnly = false;
+            bool pool = false;
 	    while( line.find( "Physical volume" )==string::npos && i<cnt )
 		{
 		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "LV Name" ) == 0 )
 		    {
-		    if( !vname.empty() )
+		    if( !vname.empty() && !pool )
 		    {
 			addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation,
 			      readOnly);
 		    }
+                    pool = false;
 		    vname = extractNthWord( 2, line );
 		    if( (pos=vname.rfind( "/" ))!=string::npos )
 			vname.erase( 0, pos+1 );
@@ -820,9 +822,13 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    uuid = extractNthWord( 2, line );
 		    }
+		else if( line.find( "LV Pool metadata" ) == 0 )
+		    {
+		    pool = true;
+		    }
 		line = c.getLine( i++ );
 		}
-	    if( !vname.empty() )
+	    if( !vname.empty() && !pool )
 	    {
 		addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation, readOnly);
 	    }

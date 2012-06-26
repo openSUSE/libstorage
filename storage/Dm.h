@@ -84,6 +84,7 @@ class Dm : public Volume
 	static bool isActive() { return active; }
 
 	static string devToTable( const string& dev );
+	static string lvmTableToDev( const string& table );
 
 	virtual list<string> getUsing() const;
 

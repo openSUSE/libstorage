@@ -192,6 +192,26 @@ void
     Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
 
     const CmdDmsetup& cmddmsetup = systeminfo.getCmdDmsetup();
+    list<string> lvm_pools;
+    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+        {
+        if( boost::ends_with(it1->first,"-tpool") )
+            {
+            string name = it1->first.substr( 0, it1->first.size()-6 );
+            if( find( lvm_pools.begin(), lvm_pools.end(), name )==lvm_pools.end() )
+                {
+                string tb = it1->first;
+                Dm* m = new Dm(*this, tb, "/dev/mapper/" + tb, tb, systeminfo);
+                if( m && m->getTargetName()=="thin-pool" )
+                    {
+                    lvm_pools.push_back( name );
+                    }
+                if(m)
+                    delete(m);
+                }
+            }
+        }
+    y2mil( "lvm_pools:" << lvm_pools );
     for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
     {
 	string table = it1->first;
@@ -281,23 +301,39 @@ void
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
 		}
+            static Regex raid1( "_rimage_[0-9]+$" );
+            static Regex raid2( "_rmeta_[0-9]+$" );
+	    if( !skip && (raid1.match(table)||raid2.match(table)))
+		{
+                string::size_type off = std::max( raid1.so(0), raid2.so(0) );
+                string nm = Dm::lvmTableToDev( table.substr( 0, off ) );
+                skip = getStorage()->knownDevice( nm );
+                y2mil( "raid table:" << table << " name:" << nm << " skip:" << skip );
+                }
+	    if( !skip && (boost::ends_with(table,"-tpool")||
+                          boost::ends_with(table,"_tdata")||
+                          boost::ends_with(table,"_tmeta")))
+		{
+                string nm = table.substr( 0, table.size()-6 );
+                skip = find( lvm_pools.begin(), lvm_pools.end(), nm )!=lvm_pools.end();
+                y2mil( "pool table:" << table << " name:" << nm << " skip:" << skip );
+                }
+	    if( !skip )
+		{
+                skip = find( lvm_pools.begin(), lvm_pools.end(), table )!=lvm_pools.end();
+                y2mil( "pool table:" << table << " skip:" << skip );
+                }
 	    if( !skip && (boost::ends_with(table,"-real")||
                           boost::ends_with(table,"-cow")))
 		{
-                static Regex delim( "[^-]-[^-]" );
                 string on = table;
                 if( boost::ends_with(on,"-real"))
                     on.erase( on.size()-5 );
                 if( boost::ends_with(tmp,"-cow"))
                     on.erase( on.size()-4 );
-                if( delim.match( on ) )
-                    {
-                    on[delim.so(0)+1] = '/';
-                    boost::replace_all(on,"--","-");
-                    on = "/dev/" + on;
-                    skip = getStorage()->knownDevice( on );
-                    y2mil( "devname:" << on << " skip:" << skip );
-                    }
+                on = Dm::lvmTableToDev( on );
+                skip = getStorage()->knownDevice( on );
+                y2mil( "snap devname:" << on << " skip:" << skip );
 		}
 	    if (!skip && m->sizeK()>0 && !only_crypt )
 		addDm( m );

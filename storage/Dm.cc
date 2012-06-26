@@ -486,6 +486,21 @@ string Dm::devToTable( const string& dev )
     return( ret );
     }
 
+string Dm::lvmTableToDev( const string& tab )
+    {
+    static Regex delim( "[^-]-[^-]" );
+    string ret( tab );
+    if( delim.match( ret ) )
+        {
+        ret[delim.so(0)+1] = '/';
+        boost::replace_all(ret,"--","-");
+        ret = "/dev/" + ret;
+        }
+    return( ret );
+    }
+
+
+
 
 string Dm::dmDeviceName( unsigned long num )
     {
