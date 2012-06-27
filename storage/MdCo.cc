@@ -279,6 +279,56 @@ MdCo::extendMd(unsigned num, const list<string>& devs, const list<string>& spare
     }
 
 int 
+MdCo::updateMd(unsigned num, const list<string>& devs, const list<string>& spares)
+    {
+    int ret = 0;
+    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
+    MdIter i;
+    if( readonly() )
+	{
+	ret = MD_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+	if( !findMd( num, i ))
+	    ret = MD_UNKNOWN_NUMBER;
+	}
+    if( ret==0 && !i->created() )
+	{
+	ret = MD_NO_RESIZE_ON_DISK;
+	}
+    if( ret==0 )
+	{
+        list<string> ls = i->getDevs();
+        for( list<string>::const_iterator it=ls.begin(); it!=ls.end(); ++it )
+	    if ((ret = i->removeDevice(*it)) != 0)
+		break;
+        }
+    if( ret==0 )
+	{
+        ret = checkUse(devs, spares);
+        }
+    if( ret==0 )
+	{
+	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+	    if ((ret = i->addDevice(*it)) != 0)
+		break;
+	}
+    if( ret==0 )
+	{
+	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+	    if ((ret = i->addDevice(*it, true)) != 0)
+		break;
+	}
+    if( ret==0 && !getStorage()->isDisk(dev) )
+	{
+	getStorage()->changeFormatVolume( dev, false, FSNONE );
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int 
 MdCo::shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;

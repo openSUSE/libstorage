@@ -48,6 +48,7 @@ class MdCo : public Container
 	int createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares);
 	int removeMd( unsigned num, bool destroySb=true );
 	int extendMd(unsigned num, const list<string>& devs, const list<string>& spares);
+	int updateMd(unsigned num, const list<string>& devs, const list<string>& spares);
 	int shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares);
 	int changeMdType( unsigned num, storage::MdType ptype );
 	int changeMdChunk( unsigned num, unsigned long chunk );

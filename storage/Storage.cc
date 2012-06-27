@@ -3931,6 +3931,36 @@ int Storage::extendMd(const string& name, const list<string>& devs, const list<s
     return( ret );
     }
 
+int Storage::updateMd(const string& name, const list<string>& devs, const list<string>& spares)
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("name:" << name << " devs:" << devs << " spares:" << spares);
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    unsigned num = 0;
+    if( ret==0 && !Md::mdStringNum( name, num ))
+	{
+	ret = STORAGE_MD_INVALID_NAME;
+	}
+    if( ret==0 )
+	{
+	MdCo *md = NULL;
+	if( haveMd(md) )
+	    ret = md->updateMd(num, normalizeDevices(devs), normalizeDevices(spares));
+	else
+	    ret = STORAGE_MD_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
 int Storage::shrinkMd(const string& name, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;

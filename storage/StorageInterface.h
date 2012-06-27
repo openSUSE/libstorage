@@ -2070,6 +2070,18 @@ namespace storage
 			     const list<string>& spares) = 0;
 
 	/**
+	 * Update all partitions of a raid device.
+	 * This can only be done before the raid is created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md0)
+	 * @param devices list with physical devices to create the raid with
+	 * @param spares list with spare physical devices to create the raid with
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int updateMd(const string& name, const list<string>& devices,
+			     const list<string>& spares) = 0;
+
+	/**
 	 * Remove a partition from a raid device.
 	 * This can only be done before the raid is created on disk.
 	 *

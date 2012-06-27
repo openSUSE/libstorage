@@ -513,6 +513,7 @@ class DiskData;
 			string& device);
 	int removeMd( const string& name, bool destroySb=true );
 	int extendMd(const string& name, const list<string>& devs, const list<string>& spares);
+	int updateMd(const string& name, const list<string>& devs, const list<string>& spares);
 	int shrinkMd(const string& name, const list<string>& devs, const list<string>& spares);
 	int changeMdType( const string& name, storage::MdType rtype );
 	int changeMdChunk( const string& name, unsigned long chunk );

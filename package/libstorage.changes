@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 27 15:13:23 CEST 2012 - fehr@suse.de
+
+- add function to replace complete list of md component devices
+
+-------------------------------------------------------------------
 Tue Jun 26 19:05:26 CEST 2012 - fehr@suse.de
 
 - suppress helper dm maps for lvm pool and lvm raid volumes
