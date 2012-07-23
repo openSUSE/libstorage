@@ -579,7 +579,7 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 	tunefs_opt = "";
 	if( label.empty() && !orig_label.empty() )
 	    label = orig_label;
-	if( uuid.empty() && !orig_uuid.empty() )
+	if( !orig_uuid.empty() )
 	    uuid = orig_uuid;
 	}
     else
@@ -609,9 +609,12 @@ int Volume::setFormat( bool val, storage::FsType new_fs )
 		{
 		label.erase( caps.labelLength );
 		}
+            if( orig_uuid.empty() )
+                orig_uuid = uuid;
 	    uuid.erase();
 	    }
 	}
+    y2mil("device:" << *this );
     y2mil("ret:" << ret);
     return( ret );
     }
@@ -923,6 +926,7 @@ int Volume::doFormatBtrfs()
 void Volume::updateUuid( const string& new_uuid )
     {
     uuid = new_uuid;
+    orig_uuid.erase();
     alt_names.remove_if(string_contains("/by-uuid/"));
     alt_names.push_back("/dev/disk/by-uuid/" + uuid);
     }

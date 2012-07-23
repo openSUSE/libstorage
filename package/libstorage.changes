@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jul 23 17:22:34 CEST 2012 - fehr@suse.de
+
+- fix uuid handling when changing format false->true->false for
+  btrfs filesystems (bnc#772112)
+
+-------------------------------------------------------------------
 Mon Jul 16 15:19:41 CEST 2012 - aschnell@suse.de
 
 - 2.22.8

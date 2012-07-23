@@ -504,11 +504,8 @@ int Btrfs::setFormat( bool val, storage::FsType new_fs )
     ret = Volume::setFormat( val, new_fs );
     if( ret==0 )
 	{
-	if( val )
-	    {
-	    orig_uuid = uuid;
-	    uuid = co()->fakeUuid();
-	    }
+        if( val )
+            uuid = co()->fakeUuid();
 	getStorage()->setBtrfsUsedBy( this );
 	}
     y2mil("ret:" << ret);
