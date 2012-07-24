@@ -152,35 +152,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	}
     BtrfsPair p( btrfsPair() );
     for( BtrfsIter i=p.begin(); i!=p.end(); ++i )
-	{
-	y2mil( "dev:" << i->device() );
-	bool mounted = false;
-	string mp = i->getMount();
-	if( !i->isMounted() && getStorage()->mountTmpRo( &(*i), mp ) )
-	    mounted = true;
-	if( !mp.empty() )
-	    {
-	    i->clearSubvol();
-	    SystemCmd cmd( BTRFSBIN " subvolume list " + mp );
-	    for( vector<string>::const_iterator s=cmd.stdout().begin(); 
-		 s!=cmd.stdout().end(); ++s )
-		{
-		string subvol;
-		string::size_type pos = s->find( " path " );
-		if( pos!=string::npos )
-		    pos = s->find_first_not_of( app_ws, pos+5 );
-		if( pos!=string::npos )
-		    subvol = s->substr( pos, s->find_last_not_of( app_ws ) );
-		if( !subvol.empty() )
-		    i->addSubvol( subvol );
-		}
-	    }
-	if( mounted )
-	    {
-	    getStorage()->umountDev( i->device() );
-	    rmdir( mp.c_str() );
-	    }
-	}
+        i->detectSubvol();
     y2mil("end");
     }
 

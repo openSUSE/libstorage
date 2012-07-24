@@ -44,6 +44,7 @@ class Btrfs : public Volume
 
 	void clearSubvol() { subvol.clear(); }
 	void addSubvol( const string& path );
+        void detectSubvol();
 	list<string> getDevices( bool add_del=false ) const;
 	void getDevices( list<string>& devs, bool add_del=false ) const;
 	void getSubvolumes( list<Subvolume>& sv ) const { sv = subvol; }

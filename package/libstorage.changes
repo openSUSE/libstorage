@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 24 18:35:04 CEST 2012 - fehr@suse.de
+
+- improve handling of btrfs on non-formatted root fs  
+
+-------------------------------------------------------------------
 Mon Jul 23 17:22:34 CEST 2012 - fehr@suse.de
 
 - fix uuid handling when changing format false->true->false for

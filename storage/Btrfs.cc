@@ -131,6 +131,43 @@ Btrfs::getDevices( list<string>& devs, bool add_del ) const
     y2mil( "devs:" << devs );
     }
 
+void Btrfs::detectSubvol()
+    {
+    y2mil( "dev:" << device() );
+    if( getFormat() )
+        clearSubvol();
+    else
+        {
+        bool mounted = false;
+        string mp = getMount();
+        if( !isMounted() && getStorage()->mountTmpRo( this, mp ) )
+            mounted = true;
+        if( !mp.empty() )
+            {
+            clearSubvol();
+            SystemCmd cmd( BTRFSBIN " subvolume list " + mp );
+            for( vector<string>::const_iterator s=cmd.stdout().begin(); 
+                 s!=cmd.stdout().end(); ++s )
+                {
+                string subvol;
+                string::size_type pos = s->find( " path " );
+                if( pos!=string::npos )
+                    pos = s->find_first_not_of( app_ws, pos+5 );
+                if( pos!=string::npos )
+                    subvol = s->substr( pos, s->find_last_not_of( app_ws ) );
+                if( !subvol.empty() )
+                    addSubvol( subvol );
+                }
+            }
+        if( mounted )
+            {
+            getStorage()->umountDev( device() );
+            if( mp!=getMount() )
+                rmdir( mp.c_str() );
+            }
+        }
+    y2mil( "ret dev:" << device() << " subvol:" << subvol );
+    }
 
 void Btrfs::addSubvol( const string& path )
     {
@@ -506,8 +543,10 @@ int Btrfs::setFormat( bool val, storage::FsType new_fs )
 	{
         if( val )
             uuid = co()->fakeUuid();
+        detectSubvol();
 	getStorage()->setBtrfsUsedBy( this );
 	}
+    y2mil("device:" << *this );
     y2mil("ret:" << ret);
     return( ret );
     }
