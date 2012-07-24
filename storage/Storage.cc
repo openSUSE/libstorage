@@ -252,7 +252,23 @@ void Storage::dumpObjectList()
     prepareLogStream(buf);
     printInfo(buf);
     y2mil("DETECTED OBJECTS BEGIN");
-    y2mil(buf.str());
+    string s(buf.str());
+    const char* pos1 = s.c_str();
+    const char* pos2;
+    while( pos1!=NULL && *pos1!=0 )
+        {
+        pos2 = strchr( pos1, '\n' );
+        if( pos2 )
+            {
+            y2mil( string(pos1,pos2-pos1) );
+            pos1=pos2+1;
+            }
+        else
+            {
+            y2mil( string(pos1) );
+            pos1=pos2;
+            }
+        }
     y2mil("DETECTED OBJECTS END");
 }
 
