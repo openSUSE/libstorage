@@ -124,9 +124,9 @@ namespace storage
 
 	    bool is_spare = boost::ends_with(tmp, "(S)");
 	    if (!is_spare)
-		entry.devices.push_back(d);
+		entry.devices.push_front(d);
 	    else
-		entry.spares.push_back(d);
+		entry.spares.push_front(d);
 
 	    line.erase( 0, tmp.length() );
 	    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
