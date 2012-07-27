@@ -107,8 +107,9 @@ rm -rf "$RPM_BUILD_ROOT"
 
 %package -n libstorage@LIBVERSION_MAJOR@
 
-Requires:       parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
-Requires:       coreutils udev util-linux >= 2.16 grep lsscsi
+Requires:       parted >= 2.2 device-mapper
+Recommends:     lvm2 dmraid mdadm multipath-tools cryptsetup lsscsi
+Requires:       coreutils udev util-linux >= 2.16 grep
 %ifarch s390 s390x
 Requires:       s390-tools
 %endif
