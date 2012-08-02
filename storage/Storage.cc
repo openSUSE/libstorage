@@ -472,8 +472,11 @@ bool Storage::rescanCryptedObjects()
     const list<string> l = LvmVg::getVgs();
     for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
-	if( findLvmVg( *i ) == lvgEnd() )
+        LvmVgIterator vg = findLvmVg( *i );
+	if( vg==lvgEnd() || vg->hasUnkownPv() )
 	    {
+            if( vg!=lvgEnd() )
+                removeContainer( &(*vg) );
 	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
 	    addToList( v );
 	    v->normalizeDmDevices();
@@ -6776,7 +6779,10 @@ int Storage::removeContainer( Container* val )
 		    ret = removeVolume(it->device());
 		    break;
 		case UB_LVM:
-		    ret = removeLvmVg(it->device().substr(5));
+                    if( it->device().size()>5 )
+                        ret = removeLvmVg(it->device().substr(5));
+                    else
+                        y2err("strange UsedbyLvm:\"" << it->device() << "\"");
 		    break;
 		case UB_DMRAID:
 		    break;

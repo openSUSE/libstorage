@@ -974,7 +974,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 void LvmVg::addPv( Pv*& p )
     {
     PeContainer::addPv( *p );
-    if( !deleted() &&
+    if( !deleted() && p->device!=UNKNOWN_PV_DEVICE &&
         find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
 	getStorage()->setUsedBy(p->device, UB_LVM, device());
     delete p;

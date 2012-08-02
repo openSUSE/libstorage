@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug  2 13:11:39 CEST 2012 - fehr@suse.de
+
+- fix handling of LVMs with mix of encrypted and unencrypted PVs
+
+-------------------------------------------------------------------
 Tue Jul 24 18:35:04 CEST 2012 - fehr@suse.de
 
 - improve handling of btrfs on non-formatted root fs  

@@ -830,4 +830,12 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
 	return ret;
     }
 
+bool PeContainer::hasUnkownPv() const
+    {
+    bool ret = find( pv.begin(), pv.end(), UNKNOWN_PV_DEVICE )!=pv.end();
+    if( ret )
+        y2mil( "name:" << nm << " ret:" << ret );
+    return( ret );
+    }
+
 }

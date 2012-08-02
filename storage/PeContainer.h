@@ -26,6 +26,8 @@
 #include "storage/Container.h"
 #include "storage/Dm.h"
 
+#define UNKNOWN_PV_DEVICE "unknown"
+
 namespace storage
 {
 
@@ -48,6 +50,7 @@ class PeContainer : public Container
 	unsigned long peCount() const { return num_pe; }
 	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
+        bool hasUnkownPv() const;
 	friend std::ostream& operator<< (std::ostream&, const PeContainer& );
 	bool addedPv( const string& dev ) const;
 	unsigned long sizeToLe( unsigned long long sizeK ) const;
