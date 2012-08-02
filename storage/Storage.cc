@@ -6120,7 +6120,7 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
 		while( v!=li->end() && v->loopDevice()!=d )
 		    ++v;
 		}
-	    if( !li->empty() && v==li->end() && d.find("/dev/mapper/cr_")==0 )
+	    if( !li->empty() && v==li->end() && d.find("/dev/mapper/")==0 )
 		{
 		v = li->begin();
 		while( v!=li->end() && v->dmcryptDevice()!=d )
