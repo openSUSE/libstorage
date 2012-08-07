@@ -5241,6 +5241,22 @@ bool Storage::checkDmMapsTo( const string& dev )
     return( ret );
     }
 
+bool Storage::usedDmName( const string& nm ) const
+    {
+    bool ret = false;
+    y2mil("nm:" << nm);
+    ConstVolPair vp = volPair();
+    ConstVolIterator v=vp.begin(); 
+    while( !ret && v!=vp.end() )
+	{
+        ret = v->dmcryptDevice()==nm || (v->cType()==DM&&v->device()==nm);
+        if( !ret )
+            ++v;
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
 void Storage::changeDeviceName( const string& old, const string& nw )
     {
     y2mil( "old:" << old << " new:" << nw );

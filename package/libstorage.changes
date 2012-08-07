@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Aug  7 19:18:21 CEST 2012 - fehr@suse.de
+
+- use mount point as base for dm name if available (bnc#768572)
+
+-------------------------------------------------------------------
 Thu Aug  2 13:11:39 CEST 2012 - fehr@suse.de
 
 - fix handling of LVMs with mix of encrypted and unencrypted PVs

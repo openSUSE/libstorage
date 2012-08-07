@@ -24,6 +24,7 @@
 #include <sys/stat.h>
 #include <sstream>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
 
 #include "storage/Volume.h"
 #include "storage/Disk.h"
@@ -2238,7 +2239,14 @@ int Volume::doLosetup()
 string Volume::getDmcryptName() const
     {
     string nm;
-    if( cType() != LOOP )
+    if( !mp.empty() )
+        {
+        string m = mp.substr(mp.find_first_not_of( "/" ));
+        if( m.empty() )
+            m = "ROOT";
+        nm = boost::replace_all_copy( m, "/", "_" );
+        }
+    else if( cType() != LOOP )
 	{
         if( !udevId().empty() )
             nm = udevId().front();
@@ -2252,8 +2260,12 @@ string Volume::getDmcryptName() const
 	}
     if( nm.find( '/' )!=string::npos )
 	nm.erase( 0, nm.find_last_of( '/' )+1 );
-    nm = "/dev/mapper/cr_" + nm;
-    return( nm );
+    string ret = "/dev/mapper/cr_" + nm;
+    unsigned cnt=1;
+    while( getStorage()->usedDmName(ret))
+        ret = "/dev/mapper/cr_" + nm + "_" + decString(cnt++);
+    y2mil( "nm:" << ret );
+    return( ret );
     }
 
 void Volume::replaceAltName( const string& prefix, const string& newn )
@@ -2942,6 +2954,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		    {
 		    changed = true;
 		    che.mount = mp;
+                    if( encryption!=ENC_NONE )
+			che.dentry = getDmcryptName();
 		    }
 		if( fstab_opt!=orig_fstab_opt )
 		    {
