@@ -723,6 +723,8 @@ namespace storage
 	STORAGE_DEVICE_NOT_FOUND = -2034,
 	STORAGE_BTRFS_CO_NOT_FOUND = -2035,
 	STORAGE_TMPFS_CO_NOT_FOUND = -2036,
+	STORAGE_VOLUME_NOT_ENCRYPTED = -2037,
+	STORAGE_DM_RENAME_FAILED = -2038,
 
 	VOLUME_COMMIT_UNKNOWN_STAGE = -3000,
 	VOLUME_FSTAB_EMPTY_MOUNT = -3001,
@@ -2616,6 +2618,17 @@ namespace storage
 	 * @param device device name for which dm maps should be removed
 	 */
 	virtual void removeDmTableTo( const string& device ) = 0;
+
+	/**
+	 * If device has an encrypted dm map, rename it en device
+	 *
+	 * @param device device name for which dm map should be renamed
+	 * @param new_name new dm name used for the device
+	 *
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
+	virtual int renameCryptDm( const string& device, 
+                                   const string& new_name ) = 0;
 
 	/**
 	 * Detect potentially available free space on a partition

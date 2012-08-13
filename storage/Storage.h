@@ -587,6 +587,7 @@ class DiskData;
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
 	void removeDmTableTo( unsigned long mjr, unsigned long mnr );
+        int renameCryptDm( const string& device, const string& new_name );
 	bool removeDmTable( const string& table );
 	bool removeDmMapsTo( const string& dev );
 	bool checkDmMapsTo( const string& dev );

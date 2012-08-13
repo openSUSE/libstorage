@@ -5930,6 +5930,48 @@ bool Storage::removeDmTable( const string& table )
     return( ret );
     }
 
+int Storage::renameCryptDm( const string& device, const string& new_name )
+    {
+    y2mil( "device:" << device << " new_name:" << new_name );
+    int ret = 0;
+    VolIterator vol;
+    if( findVolume( device, vol ))
+	{
+        y2mil( "vol:" << *vol );
+        if( vol->dmcrypt() )
+            {
+            string dmnew =  new_name;
+            string::size_type pos = dmnew.find_last_of("/");
+            if( pos!=string::npos )
+                dmnew.erase( 0, pos+1 );
+            string dmold =  vol->dmcryptDevice();
+            pos = dmold.find_last_of("/");
+            if( pos!=string::npos )
+                dmold.erase( 0, pos+1 );
+            y2mil( "dmold:" << dmold << " dmnew:" << dmnew );
+            if( dmnew!=dmold )
+                {
+                if( vol->dmcryptActive() )
+                    {
+                    SystemCmd c(DMSETUPBIN " rename " + dmold + " " + dmnew );
+                    if( c.retcode()!=0 )
+                        ret = STORAGE_DM_RENAME_FAILED;
+                    }
+                if( ret==0 )
+                    vol->setDmcryptDev( "/dev/mapper/"+dmnew, vol->dmcryptActive() );
+                }
+            else
+                y2mil( "dmnames already equal" );
+            }
+        else
+            ret = STORAGE_VOLUME_NOT_ENCRYPTED;
+	}
+    else
+	ret = STORAGE_VOLUME_NOT_FOUND;
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
 
 void
 Storage::logCo(const Container* c) const
