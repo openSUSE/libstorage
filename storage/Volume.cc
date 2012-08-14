@@ -2508,7 +2508,7 @@ int Volume::doSetLabel()
 		cmd += " " + quote(label);
 		break;
 	    case NTFS:
-		cmd = NTFSLABEL " " + quote(mountDevice()) + " " + quote(label);
+		cmd = NTFSLABELBIN " " + quote(mountDevice()) + " " + quote(label);
 		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
