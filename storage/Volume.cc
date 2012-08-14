@@ -2507,6 +2507,9 @@ int Volume::doSetLabel()
 		cmd = BTRFSBIN " filesystem label " + quote(mountDevice());
 		cmd += " " + quote(label);
 		break;
+	    case NTFS:
+		cmd = NTFSLABEL " " + quote(mountDevice()) + " " + quote(label);
+		break;
 	    default:
 		ret = VOLUME_MKLABEL_FS_UNABLE;
 		break;
