@@ -7,7 +7,8 @@ INCLUDES = -I$(top_srcdir)
 LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm		\
-	TestMd TestLoop TestLock SaveGraph ShowBytes TestLogging
+	TestMd TestLoop TestLock SaveGraph ShowBytes TestLogging TestLvmSnap \
+        TestLvmStripe TestLvmThin
 
 TestDisk_SOURCES = TestDisk.cc
 
@@ -18,6 +19,12 @@ TestStorage_SOURCES = TestStorage.cc
 TestProbing_SOURCES = TestProbing.cc
 
 TestLvm_SOURCES = TestLvm.cc
+
+TestLvmSnap_SOURCES = TestLvmSnap.cc
+
+TestLvmThin_SOURCES = TestLvmThin.cc
+
+TestLvmStripe_SOURCES = TestLvmStripe.cc
 
 TestMd_SOURCES = TestMd.cc
 

@@ -6,6 +6,9 @@ TestDisk
 TestLock
 TestLoop
 TestLvm
+TestLvmStripe
+TestLvmSnap
+TestLvmThin
 TestMd
 TestProbing
 TestStorage
