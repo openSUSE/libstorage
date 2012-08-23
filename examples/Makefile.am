@@ -41,7 +41,8 @@ ShowBytes_SOURCES = ShowBytes.cc
 exampledir = $(docdir)/examples
 
 example_DATA = TestDisk.cc TestDiskLog.cc TestProbing.cc TestLvm.cc TestMd.cc	\
-	TestLoop.cc SaveGraph.cc ShowBytes.cc TestLogging.cc
+	TestLoop.cc SaveGraph.cc ShowBytes.cc TestLogging.cc \
+        TestLvmStripe.cc TestLvmSnap.cc TestLvmThin.cc
 
 EXTRA_DIST = $(example_DATA) Makefile.example
 
