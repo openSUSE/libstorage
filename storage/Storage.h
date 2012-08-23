@@ -504,6 +504,13 @@ class DiskData;
 	int removeLvmLvSnapshot(const string& vg, const string& name);
 	int getLvmLvSnapshotStateInfo(const string& vg, const string& name, 
 				      LvmLvSnapshotStateInfo& info);
+        int createLvmLvPool( const string& vg, const string& name,
+                             unsigned long long sizeK, string& device );
+        int createLvmLvThin( const string& vg, const string& name,
+                             unsigned long long sizeK, const string& pool,
+                             string& device );
+        int changeLvPoolChunkSize( const string& vg, const string& name,
+                                   unsigned long long chunkSizeK );
 
 	int nextFreeMd(unsigned& nr, string &device);
 	bool checkMdNumber(unsigned num);

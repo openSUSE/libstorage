@@ -3735,6 +3735,44 @@ Storage::getLvmLvSnapshotStateInfo(const string& vg, const string& name,
     return ret;
 }
 
+int 
+Storage::createLvmLvPool( const string& vg, const string& name,
+                          unsigned long long sizeK, string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("vg:" << vg << " name:" << name);
+
+    y2mil("ret:" << ret);
+    return ret;
+    }
+
+
+int 
+Storage::createLvmLvThin( const string& vg, const string& name,
+                          unsigned long long sizeK, const string& pool,
+                          string& device )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("vg:" << vg << " name:" << name);
+
+    y2mil("ret:" << ret);
+    return ret;
+    }
+
+
+int 
+Storage::changeLvPoolChunkSize( const string& vg, const string& name,
+                                unsigned long long chunkSizeK )
+    {
+    int ret = 0;
+    assertInit();
+    y2mil("vg:" << vg << " name:" << name);
+
+    y2mil("ret:" << ret);
+    return ret;
+    }
 
 int
 Storage::nextFreeMd(unsigned& nr, string &device)
