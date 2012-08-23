@@ -72,6 +72,7 @@ namespace storage
     {
 	assert(!numeric);
 	assert(num == 0);
+        thin = pool = false;
         getChildValue(node, "pool", pool);
         getChildValue(node, "thin", thin);
         getChildValue(node, "used_pool", used_pool);
