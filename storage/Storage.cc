@@ -4930,16 +4930,7 @@ static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
 
 static bool sort_vol_create( const Volume* rhs, const Volume* lhs )
     {
-    if( rhs->cType()==lhs->cType() )
-	{
-	if( rhs->cType()==LVM )
-	    return( static_cast<const Dm*>(rhs)->stripes() >
-	            static_cast<const Dm*>(lhs)->stripes() );
-	else
-	    return( *rhs < *lhs );
-	}
-    else
-	return( *rhs < *lhs );
+    return( *rhs < *lhs );
     }
 
 static bool sort_vol_mount( const Volume* rhs, const Volume* lhs )

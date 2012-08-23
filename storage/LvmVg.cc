@@ -129,7 +129,12 @@ LvmVg::removeVg()
             }
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
             {
-            if( !i->isSnapshot() )
+            if( !i->isSnapshot() && !i->isPool() )
+                ret = removeLv( i->name() );
+            }
+	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+            {
+            if( !i->isSnapshot() && i->isPool() )
                 ret = removeLv( i->name() );
             }
 	setDeleted();
@@ -769,21 +774,22 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    string uuid;
 	    string status;
 	    string allocation;
+	    string used_pool;
 	    unsigned long num_le = 0;
 	    unsigned long num_cow_le = 0;
 	    bool readOnly = false;
             bool pool = false;
+            bool thin = false;
 	    while( line.find( "Physical volume" )==string::npos && i<cnt )
 		{
 		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "LV Name" ) == 0 )
 		    {
-		    if( !vname.empty() && !pool )
-		    {
+		    if( !vname.empty() )
+                        {
 			addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation,
-			      readOnly);
-		    }
-                    pool = false;
+			      readOnly, pool, thin, used_pool);
+                        }
 		    vname = extractNthWord( 2, line );
 		    if( (pos=vname.rfind( "/" ))!=string::npos )
 			vname.erase( 0, pos+1 );
@@ -793,15 +799,15 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    readOnly = extractNthWord( 3, line, true ).find( "only" ) != string::npos;
 		    }
 		else if (line.find("LV snapshot status") == 0)
-		{
+                    {
 		    if (line.find("destination for") != string::npos)
-		    {
+                        {
 			origin = extractNthWord(6, line, true);
 			string::size_type pos = origin.find("/", 5);
 			if (pos != string::npos)
 			    origin.erase(0, pos + 1);
-		    }
-		}
+                        }
+                    }
 		else if( line.find( "LV Status" ) == 0 )
 		    {
 		    status = extractNthWord( 2, line, true );
@@ -811,9 +817,9 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    extractNthWord( 2, line ) >> num_le;
 		    }
 		else if (line.find( "COW-table LE" ) == 0)
-		{
+                    {
 		    extractNthWord( 2, line ) >> num_cow_le;
-		}
+                    }
 		else if( line.find( "Allocation" ) == 0 )
 		    {
 		    allocation = extractNthWord( 1, line );
@@ -826,12 +832,17 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    pool = true;
 		    }
+		else if( line.find( "LV Pool name" ) == 0 )
+		    {
+		    thin = true;
+		    used_pool = extractNthWord( 3, line );
+		    }
 		line = c.getLine( i++ );
 		}
-	    if( !vname.empty() && !pool )
-	    {
-		addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation, readOnly);
-	    }
+	    if( !vname.empty() )
+                {
+		addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation, readOnly, pool, thin, used_pool);
+                }
 	    Pv *p = new Pv;
 	    while( i<cnt )
 		{
@@ -915,7 +926,8 @@ void LvmVg::getVgData( const string& name, bool exists )
     }
 
 void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
-		  string& status, string& alloc, bool& ro)
+		  string& status, string& alloc, bool& ro, bool& pool, 
+                  bool& thin, string& used_pool )
     {
     y2mil("addLv:" << name);
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
@@ -941,6 +953,10 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	i->getTableInfo();
 	i->updateMajorMinor();
 	i->setReadonly(ro);
+	i->setPool(pool);
+	i->setThin(thin);
+        if(thin)
+            i->setUsedPool(used_pool);
 	}
     else
 	{
@@ -956,6 +972,13 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	    LvmLv *n = new LvmLv( *this, name, dev + "/" + name, origin, le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
+	    if( pool )
+		n->setPool();
+	    if( thin )
+                {
+		n->setThin();
+                n->setUsedPool(used_pool);
+                }
 	    if( !n->inactive() )
 		addToList( n );
 	    else
@@ -965,9 +988,9 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		}
 	    }
 	}
-    name = origin = uuid = status = alloc = "";
+    name = origin = uuid = status = alloc = used_pool = "";
     le = 0;
-    ro = false;
+    ro = pool = thin = false;
     }
 
 

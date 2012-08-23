@@ -38,7 +38,7 @@ namespace storage
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
 		 unsigned long le, const string& uuid, const string& stat, const string& alloc)
-	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), pool(false), thin(false)
 {
 	Dm::init();
     setUuid( uuid );
@@ -54,7 +54,7 @@ namespace storage
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
 		 unsigned long le, unsigned str)
-	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), pool(false), thin(false)
 {
 	Dm::init();
     setLe( le );
@@ -72,14 +72,18 @@ namespace storage
     {
 	assert(!numeric);
 	assert(num == 0);
-
+        getChildValue(node, "pool", pool);
+        getChildValue(node, "thin", thin);
+        getChildValue(node, "used_pool", used_pool);
+        getChildValue(node, "origin", origin);
 	y2deb("constructed LvmLv " << dev);
     }
 
 
     LvmLv::LvmLv(const LvmVg& c, const LvmLv& v)
-	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status),
-	  allocation(v.allocation)
+	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status), 
+	  allocation(v.allocation), used_pool(v.used_pool),
+          pool(v.pool), thin(v.thin)
     {
 	y2deb("copy-constructed LvmLv " << dev);
     }
@@ -95,6 +99,12 @@ namespace storage
     LvmLv::saveData(xmlNode* node) const
     {
 	Dm::saveData(node);
+        if( !used_pool.empty() )
+            setChildValue(node, "used_pool", used_pool);
+        if( !origin.empty() )
+            setChildValue(node, "origin", origin);
+        setChildValue(node, "pool", pool);
+        setChildValue(node, "thin", thin);
     }
 
 
@@ -135,7 +145,6 @@ void LvmLv::calcSize()
 	}
     }
 }
-
 
 bool
 LvmLv::hasSnapshots() const
@@ -341,6 +350,7 @@ Text LvmLv::resizeText( bool doing ) const
 void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
     Volume::getInfo(info.v);
+    //info.v.sizeK = thin ? size_k : (num_le * pec()->peSize());
     info.stripes = stripe;
     info.stripeSizeK = stripe_size;
     info.uuid = vol_uuid;
@@ -348,13 +358,26 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     info.allocation = allocation;
     info.dm_table = tname;
     info.dm_target = target;
-
-    info.sizeK = num_le * pec()->peSize();
     info.origin = origin;
-
+    info.used_pool = used_pool;
+    info.pool = pool;
+    info.thin = thin;
     tinfo = info;
     }
 
+bool LvmLv::operator< ( const LvmLv& rhs ) const
+    {
+    if( pool!=rhs.pool )
+        return pool;
+    else if( isSnapshot()!=rhs.isSnapshot() )
+        return !isSnapshot();
+    else if( stripe!=rhs.stripe )
+        return( stripe>rhs.stripe );
+    else if( nm!=rhs.nm )
+        return( nm<rhs.nm );
+    else
+        return( !del );
+    }
 
 std::ostream& operator<< (std::ostream& s, const LvmLv &p )
     {
@@ -365,6 +388,14 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
       s << " " << p.status;
     if( !p.allocation.empty() )
       s << " " << p.allocation;
+    if( !p.origin.empty() )
+      s << " " << p.origin;
+    if( p.thin )
+      s << " thin";
+    if( !p.used_pool.empty() )
+      s << " " << p.used_pool;
+    if( p.pool )
+      s << " pool";
     return( s );
     }
 
@@ -373,6 +404,8 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
     {
     return( Dm::equalContent(rhs) &&
             vol_uuid==rhs.vol_uuid && status==rhs.status && 
+            pool==rhs.pool && thin==rhs.thin && 
+            used_pool==rhs.used_pool && origin==rhs.origin && 
             allocation==rhs.allocation );
     }
 
@@ -385,6 +418,10 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
 	logDiff(log, "vol_uuid", vol_uuid, rhs.vol_uuid);
 	logDiff(log, "status", status, rhs.status);
 	logDiff(log, "alloc", allocation, rhs.allocation);
+	logDiff(log, "origin", origin, rhs.origin);
+	logDiff(log, "pool", pool, rhs.pool);
+	logDiff(log, "thin", thin, rhs.thin);
+	logDiff(log, "used_pool", used_pool, rhs.used_pool);
     }
 
 }

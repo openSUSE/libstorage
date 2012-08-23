@@ -162,7 +162,8 @@ class LvmVg : public PeContainer
 	virtual void logData(const string& Dir) const;
 
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
-		   string& status, string& alloc, bool& ro);
+		   string& status, string& alloc, bool& ro, bool& pool, 
+                   bool& thin, string& used_pool);
 	void addPv( Pv*& p );
 
 	string status;

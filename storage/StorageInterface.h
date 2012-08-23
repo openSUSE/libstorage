@@ -449,7 +449,9 @@ namespace storage
 	string dm_table;
 	string dm_target;
 	string origin;
-	unsigned long long sizeK;
+	string used_pool;
+        bool pool;
+        bool thin;
     };
 
     /**

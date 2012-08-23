@@ -57,10 +57,26 @@ class LvmLv : public Dm
 	bool isSnapshot() const { return !origin.empty(); }
 	bool hasSnapshots() const;	
 
+	bool isPool() const { return pool; }
+	const string& usedPool() const { return used_pool; }
+	bool isThin() const { return thin; }
+
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
 	void setAlloc( const string& a ) { allocation=a; }
+	void setPool( bool p=true ) { pool=p; }
+	void setThin( bool t=true ) { thin=t; }
+	void setUsedPool( const string& val ) { used_pool=val; }
+
 	friend std::ostream& operator<< (std::ostream& s, const LvmLv &p );
+        bool operator< ( const LvmLv& rhs ) const;
+        bool operator<= ( const LvmLv& rhs ) const
+            { return( *this<rhs || *this==rhs ); }
+        bool operator>= ( const LvmLv& rhs ) const
+            { return( !(*this<rhs) ); }
+        bool operator> ( const LvmLv& rhs ) const
+            { return( !(*this<=rhs) ); }
+
 	virtual void print( std::ostream& s ) const { s << *this; }
 	Text removeText( bool doing ) const;
 	Text createText( bool doing ) const;
@@ -83,6 +99,9 @@ class LvmLv : public Dm
 	string vol_uuid;
 	string status;
 	string allocation;
+	string used_pool;       // eonly for thin volumes. empty otherwise
+        bool   pool;
+        bool   thin;
 
 	mutable storage::LvmLvInfo info; // workaround for broken ycp bindings
 
