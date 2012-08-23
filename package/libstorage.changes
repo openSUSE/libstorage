@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug 23 16:53:39 CEST 2012 - fehr@suse.de
+
+- add code for detection and handling of thin provisioning in LVM
+
+-------------------------------------------------------------------
 Tue Aug 14 12:40:44 CEST 2012 - aschnell@suse.de
 
 - 2.22.11
