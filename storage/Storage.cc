@@ -6753,24 +6753,6 @@ Storage::deviceByNumber( unsigned long maj, unsigned long min ) const
     return ret;
     }
 
-string
-Storage::deviceByNumber(const string& majmin) const
-    {
-    string ret="";
-    string::size_type pos = majmin.find( ":" );
-    if( pos!=string::npos )
-	{
-	unsigned ma, mi;
-	majmin.substr( 0, pos ) >> ma;
-	majmin.substr( pos+1 ) >> mi;
-	const Device* dev = deviceByNumber( ma, mi );
-	if( dev )
-	    ret = dev->device();
-	}
-    y2mil("majmin:" << majmin << " ret:" << ret);
-    return ret;
-    }
-
 unsigned long long Storage::deviceSize( const string& dev )
     {
     unsigned long long ret=0;

@@ -101,7 +101,9 @@ class DmCo : public PeContainer
 	
     protected:
 
-	void getDmData(SystemInfo& systeminfo, bool only_crypt);
+	void getDmData(SystemInfo& systeminfo);
+	void getDmDataCrypt(SystemInfo& systeminfo);
+	bool getProcSize(SystemInfo& systeminfo, unsigned nr, unsigned long long& s);
 	bool findDm( unsigned num, DmIter& i );
 	bool findDm( unsigned num ); 
 	bool findDm( const string& dev, DmIter& i );

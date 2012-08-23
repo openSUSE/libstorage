@@ -175,16 +175,16 @@ PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     }
 
 int
-PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
+PeContainer::tryUnusePe( const string& dv, list<Pv>& pl, list<Pv>& pladd,
 		         list<Pv>& plrem, unsigned long& removed_pe )
     {
     int ret = 0;
     int added_pv = false;
     Pv cur_pv;
     list<Pv>::iterator cur;
-    if( !findPe( dev, pl, cur ))
+    if( !findPe( dv, pl, cur ))
 	{
-	if( findPe( dev, pladd, cur ))
+	if( findPe( dv, pladd, cur ))
 	    added_pv = true;
 	else
 	    ret = PEC_PV_NOT_FOUND;
@@ -198,7 +198,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	DmIter i=lp.begin();
 	while( ret==0 && i!=lp.end() )
 	    {
-	    if( i->usingPe( dev )>0 )
+	    if( i->usingPe( dv )>0 )
 		{
 		if( i->created() )
 		    li.push_back( &(*i) );
@@ -250,7 +250,7 @@ PeContainer::tryUnusePe( const string& dev, list<Pv>& pl, list<Pv>& pladd,
 	}
     if( ret==0 )
 	{
-	getStorage()->clearUsedBy(dev);
+	getStorage()->clearUsedBy(dv);
 	removed_pe += cur_pv.num_pe;
 	if( !added_pv )
 	    plrem.push_back( cur_pv );
@@ -410,11 +410,11 @@ unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
     return( sizeK );
     }
 
-bool PeContainer::addedPv( const string& dev ) const
+bool PeContainer::addedPv( const string& dv ) const
     {
     list<Pv>::const_iterator i;
-    bool ret = findPe( dev, pv_add, i );
-    y2mil( "dev:" << dev << " ret:" << ret );
+    bool ret = findPe( dv, pv_add, i );
+    y2mil( "dev:" << dv << " ret:" << ret );
     return( ret );
     }
 
@@ -497,13 +497,13 @@ bool PeContainer::checkCreateConstraints()
 
 
 bool
-PeContainer::findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_iterator& i) const
+PeContainer::findPe(const string& dv, const list<Pv>& pl, list<Pv>::const_iterator& i) const
     {
     bool ret = !pl.empty();
     if( ret )
 	{
 	const Device *vol;
-	if( getStorage()->findDevice( dev, vol, true ) )
+	if( getStorage()->findDevice( dv, vol, true ) )
 	    {
 	    i = pl.begin();
 	    while( i!=pl.end() && !vol->sameDevice( i->device ))
@@ -511,24 +511,24 @@ PeContainer::findPe(const string& dev, const list<Pv>& pl, list<Pv>::const_itera
 	    }
 	else
 	    {
-	    y2war( "unknown volume:" << dev );
-	    i = find( pl.begin(), pl.end(), dev );
+	    y2war( "unknown volume:" << dv );
+	    i = find( pl.begin(), pl.end(), dv );
 	    }
 	ret = i!=pl.end();
 	}
-    y2mil( "dev:" << dev << " ret:" << ret );
+    y2mil( "dev:" << dv << " ret:" << ret );
     return( ret );
     }
 
 
 bool
-PeContainer::findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) const
+PeContainer::findPe(const string& dv, list<Pv>& pl, list<Pv>::iterator& i) const
     {
     bool ret = !pl.empty();
     if( ret )
 	{
 	const Device *vol;
-	if( getStorage()->findDevice( dev, vol, true ) )
+	if( getStorage()->findDevice( dv, vol, true ) )
 	    {
 	    i = pl.begin();
 	    while( i!=pl.end() && !vol->sameDevice( i->device ))
@@ -536,12 +536,12 @@ PeContainer::findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) cons
 	    }
 	else
 	    {
-	    y2war( "unknown volume:" << dev );
-	    i = find( pl.begin(), pl.end(), dev );
+	    y2war( "unknown volume:" << dv );
+	    i = find( pl.begin(), pl.end(), dv );
 	    }
 	ret = i!=pl.end();
 	}
-    y2mil( "dev:" << dev << " ret:" << ret );
+    y2mil( "dev:" << dv << " ret:" << ret );
     return( ret );
     }
 
@@ -599,8 +599,10 @@ PeContainer::checkConsistency() const
     map<string,unsigned long>::iterator mi;
     for( ConstDmIter l = lp.begin(); l!=lp.end(); ++l )
 	{
-	ret = ret && l->checkConsistency();
+        if( l->getTargetName()!="thin" )
+            ret = l->checkConsistency() && ret;
 	map<string,unsigned long> pem = l->getPeMap();
+        y2mil( "name:" << l->name() << " target:" << l->getTargetName() << " map:" << pem );
 	for( map<string,unsigned long>::const_iterator mit=pem.begin();
 	     mit!=pem.end(); ++mit )
 	    {
@@ -651,29 +653,47 @@ void PeContainer::changeDeviceName( const string& old, const string& nw )
 	}
     }
 
+bool PeContainer::splitMajMin( const string& majmin, unsigned long& mj, 
+                               unsigned long & mi )
+    {
+    string pair( majmin );
+    mj = mi = 0;
+    string::size_type pos = pair.find( ':' );
+    if( pos != string::npos )
+        pair[pos] = ' ';
+    istringstream i( pair );
+    classic(i);
+    i >> mj >> mi;
+    bool ret = !i.fail();
+    y2mil( "ret:" << ret << " " << majmin << " mj:" << mj << " mi:" << mi );
+    return( ret );
+    }
+
+
 string PeContainer::getDeviceByNumber( const string& majmin ) const
     {
-    string ret = getStorage()->deviceByNumber(majmin);
+    string ret;
+    unsigned long mj;
+    unsigned long mi;
+    if( splitMajMin( majmin, mj, mi ))
+        ret = getDeviceByNumber( mj, mi );
+    return( ret );
+    }
+
+string PeContainer::getDeviceByNumber( unsigned long mj, unsigned long mi ) const
+    {
+    string ret;
+    const Device* d = getStorage()->deviceByNumber(mj,mi);
+    if( d )
+        ret = d->device();
     if( ret.empty() )
 	{
-	unsigned mj = 0;
-	unsigned mi = 0;
-	string pair( majmin );
-	SystemCmd c;
-	mj = mi = 0;
-	string::size_type pos = pair.find( ':' );
-	if( pos != string::npos )
-	    pair[pos] = ' ';
-	istringstream i( pair );
-	classic(i);
-	i >> mj >> mi;
-	list<string> ls = splitString(pair);
 	if( majorNr()>0 && mj==majorNr() && mi==minorNr())
 	    ret = device();
 	if( mj==Loop::loopMajor() )
 	    ret = Loop::loopDeviceName(mi);
 	}
-    y2mil( "majmin " << majmin << " ret:" << ret );
+    y2mil( "mj:" << mj << " mi:" << mi << " ret:" << ret );
     return( ret );
     }
 

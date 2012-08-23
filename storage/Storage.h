@@ -298,7 +298,6 @@ class DiskData;
 	bool isDisk( const string& dev );
 	const Volume* getVolume( const string& dev );
 	unsigned long long deviceSize( const string& dev );
-	string deviceByNumber(const string& majmin) const;
 	const Device* deviceByNumber( unsigned long maj, unsigned long min ) const;
 
 	void syncMdadm();

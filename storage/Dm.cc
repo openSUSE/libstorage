@@ -134,111 +134,7 @@ Dm::getTableInfo()
 	if( target=="striped" )
 	    extractNthWord( 3, line ) >> stripe;
 	}
-    pe_map.clear();
-    map<string,unsigned long>::iterator mit;
-    unsigned long long pesize = pec()->peSize();
-    y2mil("pesize:" << pesize );
-    for( unsigned i=0; i<c.numLines(); i++ )
-	{
-	unsigned long le;
-	string dev;
-	string majmin;
-	string line = c.getLine(i);
-	if( target=="linear" )
-	    {
-	    extractNthWord( 1, line ) >> le;
-	    le /= 2;
-	    le += pesize-1;
-	    le /= pesize;
-	    majmin = extractNthWord( 3, line );
-	    dev = pec()->getDeviceByNumber( majmin );
-	    if( !dev.empty() )
-		{
-		if( (mit=pe_map.find( dev ))==pe_map.end() )
-		    pe_map[dev] = le;
-		else
-		    mit->second += le;
-		}
-	    else
-		y2war("could not find major/minor pair " << majmin);
-	    }
-	else if (target == "snapshot-origin")
-	{
-	    // AFAIS snapshot-origins do not really use space.
-	}
-	else if (target == "snapshot")
-	{
-	    // AFAIS think snapshots do not really use space.
-	}
-	else if( target=="striped" )
-	    {
-	    unsigned str;
-	    extractNthWord( 1, line ) >> le;
-	    le /= 2;
-	    le += pesize-1;
-	    le /= pesize;
-	    extractNthWord( 4, line ) >> stripe_size;
-	    stripe_size /= 2;
-	    extractNthWord( 3, line ) >> str;
-	    if( str<2 )
-		y2war("invalid stripe count " << str);
-	    else
-		{
-		le = (le+str-1)/str;
-		for( unsigned j=0; j<str; j++ )
-		    {
-		    majmin = extractNthWord( 5+j*2, line );
-		    dev = pec()->getDeviceByNumber( majmin );
-		    if( !dev.empty() )
-			{
-			if( (mit=pe_map.find( dev ))==pe_map.end() )
-			    pe_map[dev] = le;
-			else
-			    mit->second += le;
-			}
-		    else
-			y2war("could not find major/minor pair " << majmin);
-		    }
-		}
-	    }
-	else 
-	    {
-	    if( find( known_types.begin(), known_types.end(), target ) == 
-	        known_types.end() )
-		y2war("unknown target type \"" << target << "\"");
-	    extractNthWord( 1, line ) >> le;
-	    y2mil( "le:" << le );
-	    le /= 2;
-	    y2mil( "le:" << le );
-	    if( pesize>0 )
-		{
-		le += pesize-1;
-		y2mil( "le:" << le );
-		le /= pesize;
-		y2mil( "le:" << le );
-		}
-	    list<string> sl = splitString( extractNthWord( 2, line, true ));
-	    y2mil( "sl:" << sl );
-	    Regex devspec( "^[0123456789]+:[0123456789]+$" );
-	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
-		{
-		if( devspec.match( *i ))
-		    {
-		    y2mil( "match \"" << *i << "\"" );
-		    dev = pec()->getDeviceByNumber( *i );
-		    if( !dev.empty() )
-			{
-			if( (mit=pe_map.find( dev ))==pe_map.end() )
-			    pe_map[dev] = le;
-			else
-			    mit->second += le;
-			}
-		    else
-			y2war("could not find major/minor pair " << majmin);
-		    }
-		}
-	    }
-	}
+    computePe( c, pe_map );
     }
 
 bool Dm::removeTable()
@@ -247,23 +143,23 @@ bool Dm::removeTable()
     }
 
 unsigned long long
-Dm::usingPe( const string& dev ) const
+Dm::usingPe( const string& dv ) const
     {
     unsigned long ret = 0;
-    map<string,unsigned long>::const_iterator mit = pe_map.find( dev );
+    PeMap::const_iterator mit = pe_map.find( dv );
     if( mit!=pe_map.end() )
 	ret = mit->second;
     return( ret );
     }
 
 bool
-Dm::mapsTo( const string& dev ) const
+Dm::mapsTo( const string& dv ) const
     {
     bool ret = false;
-    map<string,unsigned long>::const_iterator mit;
-    if( dev.find_first_of( "[.*^$" ) != string::npos )
+    PeMap::const_iterator mit;
+    if( dv.find_first_of( "[.*^$" ) != string::npos )
 	{
-	Regex r(dev);
+	Regex r(dv);
 	mit = pe_map.begin();
 	while( mit!=pe_map.end() && !r.match( mit->first ) && 
 	       !pec()->addedPv(mit->first) )
@@ -271,7 +167,7 @@ Dm::mapsTo( const string& dev ) const
 	}
     else
 	{
-	mit = pe_map.find( dev );
+	mit = pe_map.find( dv );
 	if( mit != pe_map.end() && pec()->addedPv(mit->first) )
 	    mit = pe_map.end();
 	}
@@ -279,7 +175,7 @@ Dm::mapsTo( const string& dev ) const
     if( ret )
 	{
 	y2mil("map:" << pe_map);
-	y2mil("table:" << tname << " dev:" << dev << " ret:" << ret);
+	y2mil("table:" << tname << " dev:" << dv << " ret:" << ret);
 	}
     return( ret );
     }
@@ -289,11 +185,14 @@ Dm::checkConsistency() const
     {
     bool ret = false;
     unsigned long sum = 0;
-    for( map<string,unsigned long>::const_iterator mit=pe_map.begin();
-         mit!=pe_map.end(); ++mit )
+    for( PeMap::const_iterator mit=pe_map.begin(); mit!=pe_map.end(); ++mit )
 	 sum += mit->second;
-    if( sum != num_le )
+    if( (!pe_larger && sum!=num_le) ||
+        ( pe_larger && sum<num_le) )
+        {
 	y2war("lv:" << dev << " sum:" << sum << " num:" << num_le);
+        y2war("this:" << *this );
+        }
     else
 	ret = true;
     return( ret );
@@ -313,6 +212,7 @@ void Dm::init()
     //alt_names.push_back( "/dev/"+tname );
     if (!getStorage()->testmode())
 	updateMajorMinor();
+    pe_larger = false;
     }
 
 void Dm::updateMajorMinor()
@@ -336,7 +236,7 @@ void Dm::modifyPeSize( unsigned long long old, unsigned long long neww )
     {
     num_le = num_le * old / neww;
     calcSize();
-    for( map<string,unsigned long>::iterator mit=pe_map.begin();
+    for( PeMap::iterator mit=pe_map.begin();
          mit!=pe_map.end(); ++mit )
 	 mit->second = mit->second * old / neww;
     }
@@ -346,14 +246,159 @@ void Dm::calcSize()
     setSize( num_le*pec()->peSize() );
     }
 
+void Dm::computePe( const SystemCmd& c, PeMap& pe )
+    {
+    pe.clear();
+    for( unsigned i=0; i<c.numLines(); i++ )
+	{
+	string line = c.getLine(i);
+	unsigned long le = computeLe(extractNthWord( 1, line ));
+        string tgt = extractNthWord( 2, line );
+	if( tgt=="linear" )
+	    {
+            accumulatePe( extractNthWord( 3, line ), le, pe );
+	    }
+	else if (tgt == "snapshot-origin")
+            {
+            accumulatePe( extractNthWord( 3, line ), le, pe );
+            }
+	else if (tgt == "snapshot")
+            {
+            accumulatePe( extractNthWord( 4, line ), le, pe );
+            }
+	else if (tgt == "thin" )
+            {
+	    // Space for these dm types is currently not tracked
+            }
+	else if( tgt=="striped" )
+	    {
+	    unsigned str;
+	    extractNthWord( 4, line ) >> stripe_size;
+	    stripe_size /= 2;
+	    extractNthWord( 3, line ) >> str;
+	    if( str<2 )
+		y2war("invalid stripe count " << str);
+	    else
+		{
+		le = (le+str-1)/str;
+		for( unsigned j=0; j<str; j++ )
+                    accumulatePe( extractNthWord( 5+j*2, line ), le, pe );
+		}
+	    }
+	else 
+	    {
+	    if( find( known_types.begin(), known_types.end(), tgt ) == 
+	        known_types.end() )
+		y2war("unknown target type \"" << tgt << "\"");
+            if( !pe_larger )
+                pe_larger = (tgt=="thin-pool");
+	    list<string> sl = extractMajMin(line);
+            y2mil( "sl:" << sl );
+	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+                accumulatePe( *i, le, pe );
+	    }
+	}
+    y2mil( "map:" << pe );
+    }
 
-void Dm::setPeMap( const std::map<string,unsigned long>& m )
+unsigned long Dm::computeLe( const string& str )
+    {
+    unsigned long ret = 0;
+    unsigned long pesize = pec()->peSize();
+    str >> ret;
+    ret /= 2;
+    if( pesize>0 )
+        {
+        ret += pesize-1;
+        ret /= pesize;
+        }
+    y2mil( "le:\"" << str << "\" ret:" << ret << " pe:" << pesize );
+    return( ret );
+    }
+
+list<string> Dm::extractMajMin( const string& line )
+    {
+    y2mil( "line:" << line );
+    list<string> ret = splitString( extractNthWord( 2, line, true ));
+    static Regex devspec( "^[0123456789]+:[0123456789]+$" );
+    list<string>::iterator i=ret.begin(); 
+    while( i!=ret.end() )
+        {
+        if( !devspec.match( *i ))
+            i=ret.erase(i);
+        else
+            ++i;
+        }
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+void Dm::accumulatePe( const string& majmin, unsigned long le, PeMap& pe )
+    { 
+    unsigned long mj, mi;
+    if( PeContainer::splitMajMin( majmin, mj, mi ))
+        {
+        PeMap::iterator mit;
+	string dv = pec()->getDeviceByNumber( mj, mi );
+        if( !dv.empty() )
+            {
+            if( (mit=pe.find( dv ))==pe.end() )
+                pe[dv] = le;
+            else
+                mit->second += le;
+            }
+        else if( mj==dm_major )
+            {
+            PeMap tmp;
+            getMapRecursive( mi, tmp );
+            PeMap::const_iterator i=tmp.begin();
+            while( i!=tmp.end() )
+                {
+                if( (mit=pe.find( i->first ))==pe.end() )
+                    pe[i->first] = i->second;
+                else
+                    mit->second += i->second;
+                ++i;
+                }
+            }
+        else
+            y2war("could not find major/minor pair " << majmin);
+        }
+    else
+        y2war("invalid major/minor pair " << majmin);
+    y2mil( "majmin:" << majmin << " le:" << le << " pe:" << pe );
+    }
+
+void Dm::getMapRecursive( unsigned long mi, PeMap& pe )
+    {
+    pe.clear();
+    y2mil( "mi:" << mi );
+    list<unsigned long> done;
+    list<unsigned long> todo;
+    todo.push_back(mi);
+    SystemCmd c;
+    string cmd = DMSETUPBIN " table -j " + decString(dm_major) + " -m ";
+    while( !todo.empty() )
+        {
+        unsigned long m=todo.front();
+        todo.pop_front();
+        done.push_back(m);
+        c.execute( cmd + decString(m) );
+        if( c.retcode()==0 )
+            computePe( c, pe );
+        else
+            y2war("recursive dm minor " << mi << " not found" );
+        }
+    y2mil( "mi:" << mi << " pe:" << pe );
+    }
+
+void Dm::setPeMap( const PeMap& m )
 {
     pe_map = m;
 
     // remove usused entries
     // TODO: do not generate pe_maps with unused entries in the first place
-    for(std::map<string,unsigned long>::iterator i = pe_map.begin(); i != pe_map.end(); ) {
+    for(PeMap::iterator i = pe_map.begin(); i != pe_map.end(); ) {
 	if (i->second == 0)
 	    pe_map.erase(i++);
 	else
@@ -366,7 +411,7 @@ void Dm::setPeMap( const std::map<string,unsigned long>& m )
 
 void Dm::changeDeviceName( const string& old, const string& nw )
     {
-    map<string,unsigned long>::const_iterator mit = pe_map.find( old );
+    PeMap::const_iterator mit = pe_map.find( old );
     if( mit != pe_map.end() )
 	{
         pe_map[nw] = mit->second;
@@ -478,11 +523,11 @@ void Dm::activate( bool val )
 	}
     }
 
-string Dm::devToTable( const string& dev )
+string Dm::devToTable( const string& dv )
     {
-    string ret = boost::replace_all_copy(undevDevice(dev), "/", "|");
-    if( dev!=ret )
-	y2mil("dev:" << dev << " ret:" << ret);
+    string ret = boost::replace_all_copy(undevDevice(dv), "/", "|");
+    if( dv!=ret )
+	y2mil("dev:" << dv << " ret:" << ret);
     return( ret );
     }
 
@@ -519,7 +564,7 @@ string Dm::dmDeviceName( unsigned long num )
     Dm::getUsing() const
     {
 	list<string> ret;
-	for (map<string, unsigned long>::const_iterator it = pe_map.begin(); it != pe_map.end(); ++it)
+	for (PeMap::const_iterator it = pe_map.begin(); it != pe_map.end(); ++it)
 	    if (it->second > 0)
 		ret.push_back(it->first);
 	return ret;
@@ -585,7 +630,7 @@ bool Dm::equalContent( const Dm& rhs ) const
 bool Dm::active = false;
 unsigned Dm::dm_major = 0;
 
-    static const char* elem[] = { "crypt" };
+    static const char* elem[] = { "crypt", "thin-pool" };
     const list<string> Dm::known_types(elem, elem + lengthof(elem));
 
 }

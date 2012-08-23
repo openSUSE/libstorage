@@ -65,7 +65,9 @@ class PeContainer : public Container
 	void logDifference(std::ostream& log, const PeContainer& rhs) const;
 
 	string getDeviceByNumber( const string& majmin ) const;
-
+	string getDeviceByNumber( unsigned long mj, unsigned long mi ) const;
+        static bool splitMajMin( const string& majmin, unsigned long& mj, 
+                                 unsigned long & mi );
 	virtual list<string> getUsing() const;
 
     protected:
