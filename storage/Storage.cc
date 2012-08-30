@@ -3741,8 +3741,26 @@ Storage::createLvmLvPool( const string& vg, const string& name,
     {
     int ret = 0;
     assertInit();
-    y2mil("vg:" << vg << " name:" << name);
-
+    y2mil("vg:" << vg << " name:" << name << " sizeK:" << sizeK);
+    LvmVgIterator i = findLvmVg( vg );
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->createPool(name, sizeK, device);
+	if( ret==0 )
+	    checkPwdBuf( device );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
     y2mil("ret:" << ret);
     return ret;
     }
@@ -3750,26 +3768,61 @@ Storage::createLvmLvPool( const string& vg, const string& name,
 
 int 
 Storage::createLvmLvThin( const string& vg, const string& name,
-                          unsigned long long sizeK, const string& pool,
+                          const string& pool, unsigned long long sizeK,
                           string& device )
     {
     int ret = 0;
     assertInit();
-    y2mil("vg:" << vg << " name:" << name);
-
+    y2mil("vg:" << vg << " name:" << name << " pool:" << pool <<
+          " sizeK:" << sizeK);
+    LvmVgIterator i = findLvmVg( vg );
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->createThin(name, pool, sizeK, device);
+	if( ret==0 )
+	    checkPwdBuf( device );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
     y2mil("ret:" << ret);
     return ret;
     }
 
 
 int 
-Storage::changeLvPoolChunkSize( const string& vg, const string& name,
-                                unsigned long long chunkSizeK )
+Storage::changeLvChunkSize( const string& vg, const string& name,
+                            unsigned long long chunkSizeK )
     {
     int ret = 0;
     assertInit();
-    y2mil("vg:" << vg << " name:" << name);
-
+    y2mil("vg:" << vg << " name:" << name << " chunkSize:" << chunkSizeK);
+    LvmVgIterator i = findLvmVg( vg );
+    if (readonly())
+	{
+	ret = STORAGE_CHANGE_READONLY;
+	}
+    else if( i != lvgEnd() )
+	{
+	ret = i->changeChunkSize( name, chunkSizeK );
+	}
+    else
+	{
+	ret = STORAGE_LVM_VG_NOT_FOUND;
+	}
+    if( ret==0 )
+	{
+	ret = checkCache();
+	}
     y2mil("ret:" << ret);
     return ret;
     }
@@ -7688,6 +7741,22 @@ Storage::zeroDevice(const string& device, bool random,
     y2mil("ret:" << ret);
     return ret;
 }
+
+bool Storage::loadModuleIfNeeded(const string& module )
+    {
+    bool ret = false;
+    y2mil( "module:" << module );
+    string kname = "^" + boost::replace_all_copy(module, "-", "_") + " ";
+    SystemCmd c;
+    c.execute( GREPBIN " " + quote(kname) + " /proc/modules" );
+    if( c.numLines()==0 )
+        {
+        c.execute( MODPROBEBIN " " + module );
+        ret = c.retcode()==0;
+        }
+    return( ret );
+    }
+
 
 
 std::ostream& operator<<(std::ostream& s, const Storage& v)

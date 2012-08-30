@@ -38,7 +38,8 @@ namespace storage
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
 		 unsigned long le, const string& uuid, const string& stat, const string& alloc)
-	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), pool(false), thin(false)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), 
+          chunk_size(0), pool(false)
 {
 	Dm::init();
     setUuid( uuid );
@@ -54,7 +55,8 @@ namespace storage
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
 		 unsigned long le, unsigned str)
-	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), pool(false), thin(false)
+	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi),
+          chunk_size(0), pool(false)
 {
 	Dm::init();
     setLe( le );
@@ -72,11 +74,12 @@ namespace storage
     {
 	assert(!numeric);
 	assert(num == 0);
-        thin = pool = false;
+        chunk_size=0;
+        pool = false;
         getChildValue(node, "pool", pool);
-        getChildValue(node, "thin", thin);
         getChildValue(node, "used_pool", used_pool);
         getChildValue(node, "origin", origin);
+        getChildValue(node, "chunk_size", chunk_size);
 	y2deb("constructed LvmLv " << dev);
     }
 
@@ -84,7 +87,7 @@ namespace storage
     LvmLv::LvmLv(const LvmVg& c, const LvmLv& v)
 	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status), 
 	  allocation(v.allocation), used_pool(v.used_pool),
-          pool(v.pool), thin(v.thin)
+          chunk_size(v.chunk_size), pool(v.pool)
     {
 	y2deb("copy-constructed LvmLv " << dev);
     }
@@ -105,7 +108,7 @@ namespace storage
         if( !origin.empty() )
             setChildValue(node, "origin", origin);
         setChildValue(node, "pool", pool);
-        setChildValue(node, "thin", thin);
+        setChildValue(node, "chunk_size", chunk_size);
     }
 
 
@@ -351,7 +354,7 @@ Text LvmLv::resizeText( bool doing ) const
 void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
     Volume::getInfo(info.v);
-    //info.v.sizeK = thin ? size_k : (num_le * pec()->peSize());
+    //info.v.sizeK = isThin() ? size_k : (num_le * pec()->peSize());
     info.stripes = stripe;
     info.stripeSizeK = stripe_size;
     info.uuid = vol_uuid;
@@ -362,7 +365,6 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     info.origin = origin;
     info.used_pool = used_pool;
     info.pool = pool;
-    info.thin = thin;
     tinfo = info;
     }
 
@@ -391,12 +393,12 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
       s << " " << p.allocation;
     if( !p.origin.empty() )
       s << " " << p.origin;
-    if( p.thin )
-      s << " thin";
     if( !p.used_pool.empty() )
-      s << " " << p.used_pool;
+      s << " pool:" << p.used_pool;
     if( p.pool )
       s << " pool";
+    if( p.chunk_size!=0 )
+      s << " chunk:" << p.chunk_size;
     return( s );
     }
 
@@ -405,7 +407,7 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
     {
     return( Dm::equalContent(rhs) &&
             vol_uuid==rhs.vol_uuid && status==rhs.status && 
-            pool==rhs.pool && thin==rhs.thin && 
+            pool==rhs.pool && chunk_size==rhs.chunk_size && 
             used_pool==rhs.used_pool && origin==rhs.origin && 
             allocation==rhs.allocation );
     }
@@ -421,7 +423,7 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
 	logDiff(log, "alloc", allocation, rhs.allocation);
 	logDiff(log, "origin", origin, rhs.origin);
 	logDiff(log, "pool", pool, rhs.pool);
-	logDiff(log, "thin", thin, rhs.thin);
+	logDiff(log, "chunk_size", chunk_size, rhs.chunk_size);
 	logDiff(log, "used_pool", used_pool, rhs.used_pool);
     }
 

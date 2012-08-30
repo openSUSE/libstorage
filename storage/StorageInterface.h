@@ -451,7 +451,6 @@ namespace storage
 	string origin;
 	string used_pool;
         bool pool;
-        bool thin;
     };
 
     /**
@@ -809,6 +808,10 @@ namespace storage
 	LVM_LV_HAS_SNAPSHOTS = -4031,
 	LVM_LV_IS_SNAPSHOT = -4032,
 	LVM_LIST_EMPTY = -4033,
+	LVM_LV_NO_POOL_OR_SNAP = -4034,
+	LVM_LV_NO_POOL = -4035,
+	LVM_LV_UNKNOWN_POOL = -4036,
+	LVM_LV_INVALID_CHUNK_SIZE = -4037,
 
 	FSTAB_ENTRY_NOT_FOUND = -5000,
 	FSTAB_CHANGE_PREFIX_IMPOSSIBLE = -5001,
@@ -2034,26 +2037,27 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of logical volume 
-	 * @param sizeK virtual size of logical volume in kilobytes
 	 * @param pool name of the pool this logical volume allocates from
+	 * @param sizeK virtual size of logical volume in kilobytes
 	 * @param device is set to the device name of the logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLvThin(const string& vg, const string& name, 
-                                    unsigned long long sizeK, const string& pool,
+                                    const string& pool, 
+                                    unsigned long long sizeK, 
                                     string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
-	 * Change pool chunk size of a LVM pool.
+	 * Change chunk size of a LVM pool or snapshot.
 	 * This can only be before the volume is created on disk.
 	 *
 	 * @param vg name of volume group
-	 * @param name of thin pool 
-	 * @param chunkSizeK new chunk size of the thin pool
+	 * @param name of thin pool or snapshot
+	 * @param chunkSizeK new chunk size 
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int changeLvPoolChunkSize( const string& vg, const string& name,
-                                           unsigned long long chunkSizeK) = 0;
+	virtual int changeLvChunkSize( const string& vg, const string& name,
+                                       unsigned long long chunkSizeK) = 0;
 
 	/**
          * Determine the device name of the next created software raid device

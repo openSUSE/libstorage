@@ -336,13 +336,8 @@ LvmVg::createLv( const string& name, unsigned long long sizeK, unsigned stripe,
 	{
 	ret = LVM_LV_INVALID_NAME;
 	}
-    if( ret==0 )
+    if( ret==0 && findLv(name)!=NULL )
 	{
-	ConstLvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	ConstLvmLvIter i = p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if( i!=p.end() )
 	    ret = LVM_LV_DUPLICATE_NAME;
 	}
     unsigned long num_le = sizeToLe(sizeK);
@@ -379,20 +374,20 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     LvmLv * l = dynamic_cast<LvmLv *>(v);
 
     if (readonly())
-    {
+	{
 	ret = LVM_CHANGE_READONLY;
-    }
+	}
     else if (l->isSnapshot())
-    {
+	{
 	ret = LVM_LV_IS_SNAPSHOT;
-    }
+	}
     else if (l->hasSnapshots())
-    {
+	{
 	ret = LVM_LV_HAS_SNAPSHOTS;
-    }
+	}
 
     if (ret == 0)
-    {
+	{
 	unsigned long new_le = sizeToLe(newSize);
 	if( l->stripes()>1 )
 	    new_le = ((new_le+l->stripes()-1)/l->stripes())*l->stripes();
@@ -443,7 +438,103 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
     return( ret );
     }
 
-int LvmVg::removeVolume( Volume* v )
+int
+LvmVg::createPool( const string& name, unsigned long long sizeK,
+                   string& device )
+    {
+    int ret = 0;
+    y2mil("name:" << name << " sizeK:" << sizeK);
+    ret = createLv( name, sizeK, 1, device );
+    if( ret==0 )
+        {
+        LvmLv* lv=findLv(name);
+        if( lv!=NULL )
+            lv->setPool();
+        else
+            ret = LVM_LV_NOT_IN_LIST;
+        }
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int
+LvmVg::changeChunkSize( const string& name, unsigned long long chunkSizeK )
+    {
+    int ret = 0;
+    y2mil("name:" << name << " sizeK:" << chunkSizeK);
+    LvmLv* i;
+    checkConsistency();
+    if( readonly() )
+	{
+	ret = LVM_CHANGE_READONLY;
+	}
+    if( ret==0 )
+	{
+        i = findLv(name);
+	if( i==NULL )
+	    ret = LVM_LV_UNKNOWN_NAME;
+        else if( !i->isPool() && !i->isSnapshot())
+	    ret = LVM_LV_NO_POOL_OR_SNAP;
+        else if( !i->created() )
+	    ret = LVM_LV_ALREADY_ON_DISK;
+	}
+    if( ret==0 && i->chunkSize()!=chunkSizeK )
+	{
+        if( (i->isPool() && !checkChunk( chunkSizeK, 64, 1048576 )) ||
+            (i->isSnapshot() && !checkChunk( chunkSizeK, 4, 512 )))
+            ret=LVM_LV_INVALID_CHUNK_SIZE;
+        else
+            i->setChunkSize( chunkSizeK );
+	}
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int
+LvmVg::createThin( const string& name, const string& pool,
+                   unsigned long long sizeK, string& device )
+    {
+    int ret = 0;
+    y2mil("name:" << name << " pool:" << pool << " sizeK:" << sizeK);
+    checkConsistency();
+    if( readonly() )
+        {
+        ret = LVM_CHANGE_READONLY;
+        }
+    if( ret==0 && name.find( "\"\' /\n\t:*?" )!=string::npos )
+        {
+        ret = LVM_LV_INVALID_NAME;
+        }
+    if( ret==0 && findLv(name)!=NULL )
+        {
+        ret = LVM_LV_DUPLICATE_NAME;
+        }
+    if( ret==0 )
+        {
+        LvmLv* i=findLv(pool);
+        if( i==NULL )
+            ret = LVM_LV_UNKNOWN_POOL;
+        else if( !i->isPool() )
+            ret = LVM_LV_NO_POOL;
+        }
+    if( ret==0 )
+        {
+        unsigned long num_le = sizeToLe(sizeK);
+        LvmLv* l = new LvmLv( *this, name, dev + "/" + name, "", num_le, 1 );
+        l->setCreated( true );
+        l->setUsedPool( pool );
+	l->setTargetName("thin");
+        device = l->device();
+        addToList( l );
+        }
+    if( ret==0 )
+        checkConsistency();
+    y2mil("ret:" << ret << " device:" << (ret?"":device));
+    return( ret );
+    }
+
+int
+LvmVg::removeVolume( Volume* v )
     {
     return( removeLv( v->name() ));
     }
@@ -453,7 +544,7 @@ LvmVg::removeLv( const string& name )
     {
     int ret = 0;
     y2mil("name:" << name);
-    LvmLvIter i;
+    LvmLv* i;
     checkConsistency();
     if( readonly() )
 	{
@@ -461,11 +552,8 @@ LvmVg::removeLv( const string& name )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	i=p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if( i==p.end() )
+        i = findLv(name);
+        if( i==NULL )
 	    ret = LVM_LV_UNKNOWN_NAME;
 	else if (i->hasSnapshots())
 	    ret = LVM_LV_HAS_SNAPSHOTS;
@@ -503,7 +591,7 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
     {
     int ret = 0;
     y2mil("name:" << name << " stripe:" << stripe);
-    LvmLvIter i;
+    LvmLv* i;
     checkConsistency();
     if( readonly() )
 	{
@@ -511,14 +599,11 @@ LvmVg::changeStripe( const string& name, unsigned long stripe )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	i=p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if( i==p.end() )
+        i = findLv(name);
+        if( i==NULL )
 	    ret = LVM_LV_UNKNOWN_NAME;
 	}
-    if( i->stripes()!=stripe )
+    if( ret==0 && i->stripes()!=stripe )
 	{
 	if( !i->created() )
 	    ret = LVM_LV_ALREADY_ON_DISK;
@@ -555,7 +640,7 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
     {
     int ret = 0;
     y2mil("name:" << name << " stripeSize:" << stripeSize);
-    LvmLvIter i;
+    LvmLv* i;
     checkConsistency();
     if( readonly() )
 	{
@@ -563,11 +648,8 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 	}
     if( ret==0 )
 	{
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	i=p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if( i==p.end() )
+        i = findLv(name);
+        if( i==NULL )
 	    ret = LVM_LV_UNKNOWN_NAME;
 	}
     if( ret==0 && !i->created() )
@@ -580,6 +662,9 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 	}
     if( ret==0 )
 	{
+        if( !checkChunk( stripeSize, 4, peSize() ))
+            ret=LVM_LV_INVALID_CHUNK_SIZE;
+        else 
 	i->setStripeSize( stripeSize );
 	}
     y2mil("ret:" << ret);
@@ -590,120 +675,107 @@ LvmVg::changeStripeSize( const string& name, unsigned long long stripeSize )
 int
 LvmVg::createLvSnapshot(const string& origin, const string& name,
 			unsigned long long cowSizeK, string& device)
-{
+    {
     int ret = 0;
     device.erase();
     y2mil("origin:" << origin << " name:" << name << " cowSizeK:" << cowSizeK );
     checkConsistency();
     if (readonly())
-    {
+	{
 	ret = LVM_CHANGE_READONLY;
-    }
+	}
     if (ret == 0 && name.find("\"\' /\n\t:*?") != string::npos)
-    {
+	{
 	ret = LVM_LV_INVALID_NAME;
-    }
+	}
     int stripe = 1;
+    bool thin = false;
     if (ret == 0)
-    {
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	LvmLvIter i = p.begin();
-	while (i != p.end() && i->name() != origin)
-	    ++i;
-	if (i == p.end())
+	{
+        LvmLv* i = findLv(origin);
+        if (i == NULL)
 	    ret = LVM_LV_UNKNOWN_ORIGIN;
 	else
+	    {
 	    stripe = i->stripes();
-    }
+	    thin = i->isThin();
+	    }
+	}
     if (ret == 0)
-    {
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	LvmLvIter i = p.begin();
-	while (i != p.end() && i->name() != name)
-	    ++i;
-	if (i != p.end())
+	{
+        if( findLv(name)!=NULL )
 	    ret = LVM_LV_DUPLICATE_NAME;
-    }
+	}
     unsigned long num_le = sizeToLe(cowSizeK);
     if( stripe>1 )
 	num_le = ((num_le+stripe-1)/stripe)*stripe;
     if (ret == 0 && free_pe < num_le)
-    {
+	{
 	ret = LVM_LV_NO_SPACE;
-    }
+	}
     map<string, unsigned long> pe_map;
-    if (ret == 0)
+    if (ret == 0 && !thin )
 	ret = addLvPeDistribution(num_le, stripe, pv, pv_add, pe_map);
     if (ret == 0)
-    {
+	{
 	LvmLv* l = new LvmLv(*this, name, dev + "/" + name, origin, num_le, stripe);
 	l->setCreated(true);
 	l->setPeMap(pe_map);
 	device = l->device();
 	free_pe -= num_le;
 	addToList(l);
-    }
+	}
     if (ret == 0)
 	checkConsistency();
     y2mil("ret:" << ret << " device:" << device);
     return ret;
-}
+    }
 
 
 int
 LvmVg::removeLvSnapshot(const string& name)
-{
+    {
     int ret = 0;
     y2mil("name:" << name);
     if( ret==0 )
-    {
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	LvmLvIter i=p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if (i==p.end())
+	{
+        LvmLv* i = findLv(name);
+        if (i==NULL)
 	    ret = LVM_LV_UNKNOWN_NAME;
 	else if (!i->isSnapshot())
 	    ret = LVM_LV_NOT_SNAPSHOT;
-    }
+	}
     if (ret == 0)
-    {
+	{
 	ret = removeLv(name);
-    }
+	}
     y2mil("ret:" << ret);
     return ret;
-}
+    }
 
 
 int
 LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
-{
+    {
     int ret = 0;
     y2mil("name:" << name);
-    LvmLvIter i;
     checkConsistency();
-    if (ret == 0)
-    {
-	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	i=p.begin();
-	while( i!=p.end() && i->name()!=name )
-	    ++i;
-	if (i == p.end())
-	    ret = LVM_LV_UNKNOWN_NAME;
-	else if (!i->isSnapshot())
-	    ret = LVM_LV_NOT_SNAPSHOT;
-    }
+    LvmLv* i = findLv(name);
+    if (i==NULL)
+	ret = LVM_LV_UNKNOWN_NAME;
+    else if (!i->isSnapshot())
+	ret = LVM_LV_NOT_SNAPSHOT;
     if (ret == 0 && i->created())
-    {
+	{
 	ret = LVM_LV_NOT_ON_DISK;
-    }
+	}
     if (ret == 0)
-    {
+	{
 	i->getState(info);
-    }
+	}
     y2mil("ret:" << ret);
     return ret;
-}
+    }
 
 
 void LvmVg::getVgData( const string& name, bool exists )
@@ -774,22 +846,23 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    string uuid;
 	    string status;
 	    string allocation;
-	    string used_pool;
+            string used_pool;
 	    unsigned long num_le = 0;
 	    unsigned long num_cow_le = 0;
+            unsigned long long pool_chunk = 0;
 	    bool readOnly = false;
             bool pool = false;
-            bool thin = false;
 	    while( line.find( "Physical volume" )==string::npos && i<cnt )
 		{
 		line.erase( 0, line.find_first_not_of( app_ws ));
 		if( line.find( "LV Name" ) == 0 )
 		    {
-		    if( !vname.empty() )
-                        {
-			addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation,
-			      readOnly, pool, thin, used_pool);
-                        }
+                    if( !vname.empty() )
+		    {
+                        addLv(origin.empty() ? num_le : num_cow_le, vname, 
+                                origin, uuid, status, allocation,
+                                readOnly, pool, used_pool, pool_chunk);
+		    }
 		    vname = extractNthWord( 2, line );
 		    if( (pos=vname.rfind( "/" ))!=string::npos )
 			vname.erase( 0, pos+1 );
@@ -799,15 +872,15 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    readOnly = extractNthWord( 3, line, true ).find( "only" ) != string::npos;
 		    }
 		else if (line.find("LV snapshot status") == 0)
-                    {
+		    {
 		    if (line.find("destination for") != string::npos)
-                        {
+			{
 			origin = extractNthWord(6, line, true);
 			string::size_type pos = origin.find("/", 5);
 			if (pos != string::npos)
 			    origin.erase(0, pos + 1);
-                        }
-                    }
+			}
+		    }
 		else if( line.find( "LV Status" ) == 0 )
 		    {
 		    status = extractNthWord( 2, line, true );
@@ -817,9 +890,9 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    extractNthWord( 2, line ) >> num_le;
 		    }
 		else if (line.find( "COW-table LE" ) == 0)
-                    {
+		    {
 		    extractNthWord( 2, line ) >> num_cow_le;
-                    }
+		    }
 		else if( line.find( "Allocation" ) == 0 )
 		    {
 		    allocation = extractNthWord( 1, line );
@@ -832,17 +905,22 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
 		    pool = true;
 		    }
-		else if( line.find( "LV Pool name" ) == 0 )
-		    {
-		    thin = true;
-		    used_pool = extractNthWord( 3, line );
-		    }
+                else if( line.find( "LV Pool chunk size" ) == 0 )
+                    {
+                    extractNthWord( 4, line ) >> pool_chunk;
+                    }
+                else if( line.find( "LV Pool name" ) == 0 )
+                    {
+                    used_pool = extractNthWord( 3, line );
+                    }
 		line = c.getLine( i++ );
 		}
-	    if( !vname.empty() )
-                {
-		addLv(origin.empty() ? num_le : num_cow_le, vname, origin, uuid, status, allocation, readOnly, pool, thin, used_pool);
-                }
+            if( !vname.empty() )
+		{
+                addLv(origin.empty() ? num_le : num_cow_le, vname, origin, 
+                      uuid, status, allocation, readOnly, pool, 
+                      used_pool, pool_chunk);
+		}
 	    Pv *p = new Pv;
 	    while( i<cnt )
 		{
@@ -857,11 +935,10 @@ void LvmVg::getVgData( const string& name, bool exists )
 
 		    const Volume* v;
 		    if (getStorage()->findVolume(p->device, v))
-		    {
+			{
 			p->device = v->device();
 			p->dmcryptDevice = v->dmcryptDevice();
-		    }
-		    
+			}
 		    }
 		else if( line.find( "PV UUID" ) == 0 )
 		    {
@@ -898,36 +975,43 @@ void LvmVg::getVgData( const string& name, bool exists )
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
 	//cout << "Created:" << *i << endl;
-	map<string,unsigned long> pe_map;
-	if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
-	                         pe_map ) == 0 )
-	    i->setPeMap( pe_map );
-	free_pe -= i->getLe();
+	if( !i->isThin() )
+	    {
+	    map<string,unsigned long> pe_map;
+	    if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
+				     pe_map ) == 0 )
+		i->setPeMap( pe_map );
+	    free_pe -= i->getLe();
+	    }
 	}
     p=lvmLvPair(lvResized);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
 	//cout << "Resized:" << *i << endl;
-	map<string,unsigned long> pe_map = i->getPeMap();
-	long size_diff = i->getLe() - sizeToLe(i->origSizeK());
-	if( size_diff>0 )
+	if( !i->isThin() )
 	    {
-	    if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add,
-				     pe_map ) == 0 )
-		i->setPeMap( pe_map );
+	    map<string,unsigned long> pe_map = i->getPeMap();
+	    long size_diff = i->getLe() - sizeToLe(i->origSizeK());
+	    if( size_diff>0 )
+		{
+		if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add,
+					 pe_map ) == 0 )
+		    i->setPeMap( pe_map );
+		}
+	    else if( size_diff<0 )
+		{
+		if( remLvPeDistribution( -size_diff, pe_map, pv, pv_add )==0 )
+		    i->setPeMap( pe_map );
+		}
+	    free_pe -= size_diff;
 	    }
-	else if( size_diff<0 )
-	    {
-	    if( remLvPeDistribution( -size_diff, pe_map, pv, pv_add )==0 )
-		i->setPeMap( pe_map );
-	    }
-	free_pe -= size_diff;
 	}
     }
 
-void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
-		  string& status, string& alloc, bool& ro, bool& pool, 
-                  bool& thin, string& used_pool )
+void 
+LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
+	     string& status, string& alloc, bool& ro, bool& pool, 
+	     string& used_pool, unsigned long long& pchunk )
     {
     y2mil("addLv:" << name);
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
@@ -938,7 +1022,7 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	}
     y2mil("addLv exists " << (i!=p.end()));
     if( i!=p.end() )
-    {
+	{
 	if( !lvResized( *i ))
 	    i->setLe( le );
 	if( i->created() )
@@ -953,9 +1037,10 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	i->getTableInfo();
 	i->updateMajorMinor();
 	i->setReadonly(ro);
-	i->setPool(pool);
-	i->setThin(thin);
-        if(thin)
+        i->setPool(pool);
+        if(pool||i->isSnapshot())
+            i->setChunkSize(pchunk);
+        if(!used_pool.empty())
             i->setUsedPool(used_pool);
 	}
     else
@@ -969,16 +1054,16 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	y2mil("addLv exists deleted " << (i!=p.end()));
 	if( i==p.end() )
 	    {
-	    LvmLv *n = new LvmLv( *this, name, dev + "/" + name, origin, le, uuid, status, alloc );
+            LvmLv *n = new LvmLv( *this, name, dev + "/" + name, origin, 
+                    le, uuid, status, alloc );
 	    if( ro )
 		n->setReadonly();
-	    if( pool )
-		n->setPool();
-	    if( thin )
-                {
-		n->setThin();
+            if( pool )
+                n->setPool();
+            if( pool || n->isSnapshot())
+                n->setChunkSize(pchunk);
+            if( !used_pool.empty() )
                 n->setUsedPool(used_pool);
-                }
 	    if( !n->inactive() )
 		addToList( n );
 	    else
@@ -989,8 +1074,8 @@ void LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	    }
 	}
     name = origin = uuid = status = alloc = used_pool = "";
-    le = 0;
-    ro = pool = thin = false;
+    le = pchunk = 0;
+    ro = pool = false;
     }
 
 
@@ -1004,10 +1089,32 @@ void LvmVg::addPv( Pv*& p )
     p = new Pv;
     }
 
+LvmLv* LvmVg::findLv( const string& name )
+    {
+    LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
+    LvmLvIter i=p.begin();
+    while( i!=p.end() && i->name()!=name )
+        ++i;
+    return( (i!=p.end())?&(*i):NULL );
+    }
+
+bool 
+LvmVg::checkChunk( unsigned long long val, unsigned long long mi, 
+		   unsigned long long mx )
+    {
+    y2mil( "val:" << val << " min:" << mi << " max:" << mx );
+    bool ret = mi==0 || val>=mi;
+    ret = ret && (mx==0 || val<=mx);
+    while( val>1 && ret )
+        val /= 2;
+    ret = val==1;
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
 void
 LvmVg::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
-{
+    {
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
@@ -1029,7 +1136,7 @@ LvmVg::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vo
         }
     if( col.size()!=oco || vol.size()!=ovo )
 	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
-}
+    }
 
 
 int LvmVg::commitChanges( CommitStage stage )
@@ -1188,48 +1295,48 @@ LvmVg::reduceText(bool doing, const string& dev) const
 
 void
 LvmVg::activate(bool val)
-{
-	if (getenv("LIBSTORAGE_NO_LVM") != NULL)
-	    return;
+    {
+    if (getenv("LIBSTORAGE_NO_LVM") != NULL)
+	return;
 
     y2mil("old active:" << active << " val:" << val);
 
     if (active != val)
-    {
+	{
 	SystemCmd c;
 	if (val)
-	{
+	    {
 	    Dm::activate(true);
 	    c.execute(VGSCANBIN " --mknodes");
 	    c.execute(VGCHANGEBIN " -a y");
-	}
+	    }
 	else
-	{
+	    {
 	    c.execute(VGCHANGEBIN " -a n");
-	}
+	    }
 	active = val;
-    }
+	}
 
     Storage::waitForDevice();
-}
+    }
 
 
-    list<string>
-    LvmVg::getVgs()
+list<string>
+LvmVg::getVgs()
     {
-	list<string> l;
+    list<string> l;
 
-	SystemCmd c(VGSBIN " --noheadings -o vg_name");
-	if (c.retcode() == 0 && !c.stdout().empty())
+    SystemCmd c(VGSBIN " --noheadings -o vg_name");
+    if (c.retcode() == 0 && !c.stdout().empty())
 	{
-	    active = true;
+	active = true;
 
-	    for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
-		l.push_back(boost::trim_copy(*it, locale::classic()));
+	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
+	    l.push_back(boost::trim_copy(*it, locale::classic()));
 	}
 
-	y2mil("detected vgs " << l);
-	return l;
+    y2mil("detected vgs " << l);
+    return l;
     }
 
 
@@ -1410,24 +1517,51 @@ LvmVg::doCreate( Volume* v )
 	    activate(true);
 	getStorage()->showInfoCb( l->createText(true), silent );
 	checkConsistency();
-	string cmd = LVCREATEBIN " " + instSysString() + " -l " + decString(l->getLe());
-	if (l->getOrigin().empty())
-	{
-	    if( l->stripes()>1 )
+        string cmd = LVCREATEBIN " " + instSysString(); 
+        if( !l->getOrigin().empty() )
 	    {
+            Storage::loadModuleIfNeeded("dm-snapshot");
+            LvmLv* orig = findLv(l->getOrigin());
+            if( !orig || !orig->isThin() )
+                cmd += " -l " + decString(l->getLe());
+            if( l->chunkSize()>0 )
+                cmd += " --chunksize " + l->chunkSize();
+            cmd += " --snapshot";
+            cmd += " --name " + quote(l->name());
+            cmd += " " + quote(name() + "/" + l->getOrigin());
+	    }
+        else if( l->isThin() )
+            {
+            cmd += " -V " + decString(l->sizeK())+"k";
+	    cmd += " --name " + quote(l->name());
+	    cmd += " --thin " + quote(name() + "/" + l->usedPool());
+            }
+        else
+            {
+            if( l->isPool() )
+                Storage::loadModuleIfNeeded("dm-thin-pool");
+	    y2mil( "cmd:" << cmd );
+	    y2mil( "getLe():" << l->getLe() );
+	    y2mil( "dec():" << decString(l->getLe()) );
+            cmd += " -l " + decString(l->getLe());
+	    y2mil( "cmd:" << cmd );
+	    if( l->stripes()>1 )
+		{
 		cmd += " -i " + decString(l->stripes());
 		if( l->stripeSize()>0 )
 		    cmd += " -I " + decString(l->stripeSize());
-	    }
-	    cmd += " --name " + quote(l->name());
+		}
+            if( l->isPool() )
+                {
+                if( l->chunkSize()>0 )
+                    cmd += " --chunksize " + decString(l->chunkSize());
+                cmd += " --thinpool ";
+		}
+	    else
+                cmd += " --name ";
+	    cmd += quote(l->name());
 	    cmd += " " + quote(name());
-	}
-	else
-	{
-	    cmd += " --snapshot";
-	    cmd += " --name " + quote(l->name());
-	    cmd += " " + quote(name() + "/" + l->getOrigin());
-	}
+	    }
 	SystemCmd c( cmd );
 	if( c.retcode()!=0 )
 	    {
@@ -1438,7 +1572,7 @@ LvmVg::doCreate( Volume* v )
 	    {
 	    Storage::waitForDevice(l->device());
 	    l->setCreated(false);
-	    getVgData( name() );
+	    y2mil( "thin:" << l->isThin() );
 	    checkConsistency();
 	    }
 	}
@@ -1574,8 +1708,8 @@ string LvmVg::instSysString() const
     }
 
 
-    int
-    LvmVg::doCreatePv(const Pv& pv)
+int
+LvmVg::doCreatePv(const Pv& pv)
     {
     int ret = 0;
     y2mil("device:" << pv.device << " realDevice:" << pv.realDevice());
@@ -1679,28 +1813,28 @@ std::ostream& operator<< (std::ostream& s, const LvmVg& d )
     }
 
 
-    void
-    LvmVg::logDifference(std::ostream& log, const LvmVg& rhs) const
+void
+LvmVg::logDifference(std::ostream& log, const LvmVg& rhs) const
     {
-	PeContainer::logDifference(log, rhs);
+    PeContainer::logDifference(log, rhs);
 
-	logDiff(log, "status", status, rhs.status);
-	logDiff(log, "lvm1", lvm1, rhs.lvm1);
-	logDiff(log, "uuid", uuid, rhs.uuid);
+    logDiff(log, "status", status, rhs.status);
+    logDiff(log, "lvm1", lvm1, rhs.lvm1);
+    logDiff(log, "uuid", uuid, rhs.uuid);
     }
 
 
-    void
-    LvmVg::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
+void
+LvmVg::logDifferenceWithVolumes(std::ostream& log, const Container& rhs_c) const
     {
-	const LvmVg& rhs = dynamic_cast<const LvmVg&>(rhs_c);
+    const LvmVg& rhs = dynamic_cast<const LvmVg&>(rhs_c);
 
-	logDifference(log, rhs);
-	log << endl;
+    logDifference(log, rhs);
+    log << endl;
 
-	ConstLvmLvPair pp = lvmLvPair();
-	ConstLvmLvPair pc = rhs.lvmLvPair();
-	logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
+    ConstLvmLvPair pp = lvmLvPair();
+    ConstLvmLvPair pc = rhs.lvmLvPair();
+    logVolumesDifference(log, pp.begin(), pp.end(), pc.begin(), pc.end());
     }
 
 
@@ -1723,18 +1857,18 @@ bool LvmVg::equalContent( const Container& rhs ) const
     }
 
 
-    void
-    LvmVg::logData(const string& Dir) const
+void
+LvmVg::logData(const string& Dir) const
     {
-	string fname(Dir + "/lvmvg_" + name() + ".info.tmp");
+    string fname(Dir + "/lvmvg_" + name() + ".info.tmp");
 
-	XmlFile xml;
-	xmlNode* node = xmlNewNode("volume_group");
-	xml.setRootElement(node);
-	saveData(node);
-	xml.save(fname);
+    XmlFile xml;
+    xmlNode* node = xmlNewNode("volume_group");
+    xml.setRootElement(node);
+    saveData(node);
+    xml.save(fname);
 
-	getStorage()->handleLogFile( fname );
+    getStorage()->handleLogFile( fname );
     }
 
 

@@ -63,11 +63,17 @@ class LvmVg : public PeContainer
 	int changeStripe( const string& name, unsigned long stripe );
 	int changeStripeSize( const string& name,
 	                      unsigned long long stripeSize );
+        int changeChunkSize( const string& name, 
+                             unsigned long long chunkSizeK );
 
 	int createLvSnapshot(const string& origin, const string& name,
 			     unsigned long long cowSizeK, string& device);
 	int removeLvSnapshot(const string& name);
 	int getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info);
+	int createPool( const string& name, unsigned long long sizeK,
+                        string& device );
+	int createThin( const string& name, const string& pool,
+                        unsigned long long sizeK, string& device );
 
 	int setPeSize( long long unsigned peSizeK );
 	void normalizeDmDevices();
@@ -163,8 +169,11 @@ class LvmVg : public PeContainer
 
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		   string& status, string& alloc, bool& ro, bool& pool, 
-                   bool& thin, string& used_pool);
+                   string& used_pool, unsigned long long& pchunk );
 	void addPv( Pv*& p );
+        LvmLv* findLv(const string& name);
+        bool checkChunk( unsigned long long val, unsigned long long mi=0, 
+                         unsigned long long mx=0 );
 
 	string status;
 	string uuid;

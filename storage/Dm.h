@@ -48,8 +48,9 @@ class Dm : public Volume
 	void saveData(xmlNode* node) const;
 
 	const string& getTableName() const { return( tname ); }
-	const string& getTargetName() const { return( target ); }
 	void setTableName( const string& name ) { tname=name; }
+	const string& getTargetName() const { return( target ); }
+	void setTargetName( const string& name ) { target=name; }
 	bool inactive() const { return( inactiv ); }
 	unsigned long long getLe() const { return num_le; }
 	void setLe( unsigned long long le );

@@ -507,10 +507,10 @@ class DiskData;
         int createLvmLvPool( const string& vg, const string& name,
                              unsigned long long sizeK, string& device );
         int createLvmLvThin( const string& vg, const string& name,
-                             unsigned long long sizeK, const string& pool,
+                             const string& pool, unsigned long long sizeK, 
                              string& device );
-        int changeLvPoolChunkSize( const string& vg, const string& name,
-                                   unsigned long long chunkSizeK );
+        int changeLvChunkSize( const string& vg, const string& name,
+                               unsigned long long chunkSizeK );
 
 	int nextFreeMd(unsigned& nr, string &device);
 	bool checkMdNumber(unsigned num);
@@ -578,6 +578,7 @@ class DiskData;
 	static int zeroDevice(const string& device, bool random = false,
 			      unsigned long long beginK = 200, unsigned long long endK = 10);
 	static unsigned long long sizeK( const string& device );
+        static bool loadModuleIfNeeded( const string& module );
 
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );

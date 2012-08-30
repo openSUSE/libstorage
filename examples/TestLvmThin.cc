@@ -84,14 +84,19 @@ main( int argc, char** argv )
 	ret = s->createLvmLvPool( "testvg", POOL_NAME, 4*1024*1024, device );
 	if( ret ) cerr << "retcode:" << ret << endl;
 	}
+    if( ret==0 )
+	{
+	ret = s->changeLvChunkSize( "testvg", POOL_NAME, 128 );
+	if( ret ) cerr << "retcode:" << ret << endl;
+	}
     for( int i=0; i<5; ++i )
         {
         if( ret==0 )
             {
             string name = THIN_NAME;
             name += '0'+i+1;
-            ret = s->createLvmLvThin( "testvg", name, 100*1024*1024, 
-                                      POOL_NAME, device );
+            ret = s->createLvmLvThin( "testvg", name, POOL_NAME, 100*1024*1024, 
+                                      device );
             if( ret ) cerr << "retcode:" << ret << endl;
             }
         }
