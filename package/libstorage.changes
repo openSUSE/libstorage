@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Aug 30 17:28:25 CEST 2012 - fehr@suse.de
+
+- first final implementation of thin provisioning in LVM
+
+-------------------------------------------------------------------
 Thu Aug 23 16:53:39 CEST 2012 - fehr@suse.de
 
 - add code for detection and handling of thin provisioning in LVM
