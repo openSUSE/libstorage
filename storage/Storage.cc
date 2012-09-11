@@ -894,11 +894,17 @@ void
     SystemCmd Losetup(LOSETUPBIN " -a");
     for( VolIterator i=begin; i!=end; ++i )
 	{
+	const LvmLv* l;
 	if( !i->isUsedBy() &&
 	    (i->getContainer()==NULL||!i->getContainer()->isUsedBy()))
 	    {
 	    i->getLoopData( Losetup );
 	    i->getFsData(systeminfo.getBlkid());
+	    if( i->cType()==LVM && (l=dynamic_cast<const LvmLv*>(&(*i)))!=NULL )
+		{
+		if( l->isPool() )
+		    i->setFs(FSNONE);
+		}
 	    y2mil( "detect:" << *i );
 	    }
 	}
