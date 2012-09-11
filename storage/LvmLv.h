@@ -83,6 +83,8 @@ class LvmLv : public Dm
 	Text createText( bool doing ) const;
 	Text formatText( bool doing ) const;
 	Text resizeText( bool doing ) const;
+	int setFormat( bool format, storage::FsType fs );
+	int changeMount( const string& val );
 	void getInfo( storage::LvmLvInfo& info ) const;
 	bool equalContent( const LvmLv& rhs ) const;
 	virtual list<string> getUsing() const;

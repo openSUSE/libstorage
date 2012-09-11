@@ -351,6 +351,31 @@ Text LvmLv::resizeText( bool doing ) const
     return( txt );
     }
 
+int LvmLv::setFormat( bool val, storage::FsType new_fs )
+    {
+    int ret = 0;
+    y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
+    if( isPool() && val )
+	ret = LVM_LV_POOL_NO_FORMAT;
+    else
+	ret = Volume::setFormat( val, new_fs );
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+int LvmLv::changeMount( const string& val )
+    {
+    int ret = 0;
+    y2mil("device:" << dev << " val:" << val);
+    if( isPool() && !val.empty() )
+	ret = LVM_LV_POOL_NO_MOUNT;
+    else
+	ret = Volume::changeMount( val );
+    y2mil("ret:" << ret);
+    return( ret );
+    }
+
+
 void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     {
     Volume::getInfo(info.v);

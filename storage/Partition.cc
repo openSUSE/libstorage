@@ -323,11 +323,8 @@ int Partition::setFormat( bool val, storage::FsType new_fs )
     {
     int ret = 0;
     y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
-    if( typ==EXTENDED )
-	{
-	if( val )
-	    ret = VOLUME_FORMAT_EXTENDED_UNSUPPORTED;
-	}
+    if( typ==EXTENDED && val )
+	ret = VOLUME_FORMAT_EXTENDED_UNSUPPORTED;
     else
 	ret = Volume::setFormat( val, new_fs );
     y2mil("ret:" << ret);
@@ -338,7 +335,7 @@ int Partition::changeMount( const string& val )
     {
     int ret = 0;
     y2mil("device:" << dev << " val:" << val);
-    if( typ==EXTENDED )
+    if( typ==EXTENDED && !val.empty() )
 	ret = VOLUME_MOUNT_EXTENDED_UNSUPPORTED;
     else
 	ret = Volume::changeMount( val );
