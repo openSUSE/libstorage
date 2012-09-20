@@ -105,6 +105,8 @@ Storage::Storage(const Environment& env)
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
 
+    atexit( clean_tmpdir );
+
     max_log_num = 5;
     const char* tenv = getenv("Y2MAXLOGNUM");
     if (tenv)
@@ -162,6 +164,7 @@ Storage::initialize()
 	y2err("tmpdir creation " << tempdir << " failed. Aborting...");
 	exit(EXIT_FAILURE);
 	}
+    tmp_dirs.push_back(tempdir);
 
     bindtextdomain("libstorage", "/usr/share/locale");
     bind_textdomain_codeset("libstorage", "UTF-8");
@@ -419,14 +422,21 @@ void Storage::deleteBackups()
 
 Storage::~Storage()
     {
-	logContainersAndVolumes(logdir());
+    logContainersAndVolumes(logdir());
     clearPointerList(cont);
     deleteBackups();
     if (!tempdir.empty() && rmdir(tempdir.c_str()) != 0)
-    {
+	{
 	y2err("stray tmpfile");
 	SystemCmd(LSBIN " -l " + quote(tempdir));
-    }
+	}
+    else
+	{
+	list<string>::iterator i = find( tmp_dirs.begin(), tmp_dirs.end(),
+	                                 tempdir );
+	if( i!=tmp_dirs.end() )
+	    tmp_dirs.erase(i);
+	}
     delete fstab;
     delete mdadm;
     y2mil("destructed Storage");
@@ -7777,6 +7787,19 @@ std::ostream& operator<<(std::ostream& s, Storage& v)
     v.printInfo(s);
     return(s);
     }
+
+list<string> Storage::tmp_dirs;
+
+void Storage::clean_tmpdir()
+     {
+     list<string>::iterator i = tmp_dirs.begin();
+     while( i!=tmp_dirs.end() )
+	{
+	if( access( i->c_str(), W_OK )==0 )
+	    rmdir( i->c_str() );
+	i = tmp_dirs.erase(i);
+	}
+     }
 
 CallbackLogDo logger_do_fnc = defaultLogDo;
 CallbackLogQuery logger_query_fnc = defaultLogQuery;

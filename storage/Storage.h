@@ -579,6 +579,7 @@ class DiskData;
 			      unsigned long long beginK = 200, unsigned long long endK = 10);
 	static unsigned long long sizeK( const string& device );
         static bool loadModuleIfNeeded( const string& module );
+	static void clean_tmpdir();
 
 	void getDiskList( bool (* CheckFnc)( const Disk& ),
 	                  std::list<Disk*>& dl );
@@ -2154,6 +2155,8 @@ class DiskData;
 	friend std::ostream& operator<<(std::ostream& s, Storage& v);
 
 	map<string, list<UsedBy>> danglingUsedBy;
+
+	static list<string> tmp_dirs;
 
 	unsigned max_log_num;
 	Text lastAction;
