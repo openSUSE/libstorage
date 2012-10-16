@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Oct 16 15:00:38 CEST 2012 - fehr@suse.de
+
+- ignore failed partition removal if partition table is later
+  initialized anyway (bnc#785234)
+
+-------------------------------------------------------------------
 Thu Aug 30 17:28:25 CEST 2012 - fehr@suse.de
 
 - 2.23.0

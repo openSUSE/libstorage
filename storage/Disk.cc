@@ -2049,7 +2049,10 @@ int Disk::doRemove( Volume* v )
 	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
-		ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
+		if( !del_ptable )
+		    ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
+		else
+		    y2war( "suppressing failed removal del_ptable:" << del_ptable );
 		}
 	    ProcParts parts;
 	    if( parts.findDevice(getPartName(p->OrigNr())) )
