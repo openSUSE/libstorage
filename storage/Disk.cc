@@ -490,7 +490,10 @@ _("The partitioning on disk %1$s is not readable by\n"
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."), dev.c_str() );
 
-	getStorage()->addInfoPopupText( dev, txt );
+	if( getenv("LIBSTORAGE_NO_PART_CHECK")!=NULL )
+	    y2war( "ignoring failed partition check parted/kernel on disk:" << device() );
+	else
+	    getStorage()->addInfoPopupText( dev, txt );
 	ronly = true;
 	}
     if( range_exceed>0 )
