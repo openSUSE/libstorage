@@ -1687,6 +1687,9 @@ int Disk::doSetType( Volume* v )
 
 	    options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
 
+	    if (label == "gpt")
+		options << " set " << p->nr() << " bios_grub " << (p->id()==Partition::ID_GPT_BIOS?"on":"off");
+
 	    if (p->id() <= 255 && label == "msdos")
 		options << " set " << p->nr() << " type " << p->id();
 	}

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Nov  7 16:14:01 CET 2012  - fehr@suse.de
+
+- support creation of "BIOS grub" partition on GPT (bnc#786870)
+
+-------------------------------------------------------------------
 Mon Nov  5 11:58:12 CET 2012  - fehr@suse.de
 
 - freq and passno should be 0 for BTRFS fs in fstab (bnc#786719)

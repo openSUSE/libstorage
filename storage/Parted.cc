@@ -336,6 +336,10 @@ namespace storage
 	    {
 		entry.id = Partition::ID_APPLE_HFS;
 	    }
+	    if (contains(flags, "bios_grub"))
+	    {
+		entry.id = Partition::ID_GPT_BIOS;
+	    }
 	}
 	y2mil("num:" << entry.num << " id:" << entry.id << " type:" << toString(entry.type));
 
