@@ -152,7 +152,7 @@ Authors:
 %package -n libstorage-devel
 
 Requires:       libstorage@LIBVERSION_MAJOR@ = %version
-Requires:       gcc-c++ libstdc++-devel boost-devel libxml2-devel
+Requires:       gcc-c++ libstdc++-devel libxml2-devel
 Summary:        Header files and documentation for libstorage
 Group:          Development/Languages/C and C++
 
