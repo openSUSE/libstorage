@@ -1598,6 +1598,7 @@ int LvmVg::doRemove( Volume* v )
 	ret = v->prepareRemove();
 	if( ret==0 )
 	    {
+	    Storage::waitForDevice();
 	    string cmd = LVREMOVEBIN " -f " + instSysString() + " " + quote(l->device());
 	    SystemCmd c( cmd );
 	    if( c.retcode()!=0 )

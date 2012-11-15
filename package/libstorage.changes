@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Nov 15 11:46:25 CET 2012 - aschnell@suse.de
+
+- added another udevadm settle call (bnc#781402)
+
+-------------------------------------------------------------------
 Tue Nov 13 16:33:32 CET 2012 - fehr@suse.de
 
 - remove boost-devel from Requires of libstorage-devel
