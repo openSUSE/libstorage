@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Nov 20 15:37:01 CET 2012 - aschnell@suse.de
+
+- updated check for parted errors (bnc#790481)
+
+-------------------------------------------------------------------
 Thu Nov 15 11:46:25 CET 2012 - aschnell@suse.de
 
 - added another udevadm settle call (bnc#781402)

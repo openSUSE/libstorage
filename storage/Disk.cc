@@ -417,6 +417,11 @@ Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const
 	y2mil( "resetting retcode cmd " << ret << " of:" << cmd_line );
 	ret = 0;
 	}
+    if( ret!=0 && tmp.find( "Error informing the kernel about modifications" )!=string::npos )
+	{
+	y2mil( "resetting retcode cmd " << ret << " of:" << cmd_line );
+	ret = 0;
+	}
     if( ret != 0 )
         {
 	if( dmp_slave && tmp.empty() )
