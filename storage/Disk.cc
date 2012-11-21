@@ -1978,6 +1978,9 @@ int Disk::doCreate( Volume* v )
 		    if( execCheckFailed( tmp ) )
 			{
 			ret = DISK_CREATE_PARTITION_PARTED_FAILED;
+
+			// used to analyse parted problems
+			SystemCmd c(PARTEDCMD + quote(device()) + " unit s print");
 			}
 		    }
 		}
