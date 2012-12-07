@@ -2,6 +2,7 @@
 Fri Dec 07 09:49:55 CET 2012 - aschnell@suse.de
 
 - escape meta-characters for regular expressions (bnc#792245)
+- 2.23.2
 
 -------------------------------------------------------------------
 Tue Nov 20 15:37:01 CET 2012 - aschnell@suse.de
