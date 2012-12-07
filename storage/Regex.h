@@ -26,12 +26,20 @@
 
 #include <regex.h>
 #include <string>
+#include <stdexcept>
 #include <boost/noncopyable.hpp>
 
 
 namespace storage
 {
     using std::string;
+
+
+    class regex_error : public std::runtime_error
+    {
+    public:
+	regex_error() : std::runtime_error("regex error") {}
+    };
 
 
 class Regex : boost::noncopyable
@@ -54,6 +62,8 @@ public:
 
     static const string ws;
     static const string number;
+
+    static string escape(const string& str); // only for REG_EXTENDED
 
 private:
 

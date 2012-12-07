@@ -535,7 +535,7 @@ _("You have the following options:\n"
     {
 	// does not work for device-mapper based disks
 
-	string reg = "^" + dev + partNaming(dev) + "[0-9]+" "$";
+	string reg = "^" + Regex::escape(dev) + partNaming(dev) + "[0-9]+" "$";
 	list<string> ps = parts.getMatchingEntries(regex_matches(reg));
 	y2mil("dev:" << dev << " reg:\"" << reg << "\" ps:" << ps);
 	return ps;

@@ -124,7 +124,7 @@ namespace storage
 	{
 	    scanGeometry(cmd);
 
-	    Regex part("^" + device + "[0123456789]+$");
+	    Regex part("^" + Regex::escape(device) + "[0123456789]+$");
 	    cmd.select( device );
 	    int cnt = cmd.numLines();
 	    for (int i = 0; i < cnt; ++i)
