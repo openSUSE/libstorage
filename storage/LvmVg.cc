@@ -1307,8 +1307,8 @@ LvmVg::activate(bool val)
 	if (val)
 	    {
 	    Dm::activate(true);
-	    c.execute(VGSCANBIN " --mknodes");
 	    c.execute(VGCHANGEBIN " -a y");
+	    c.execute(VGSCANBIN " --mknodes");
 	    }
 	else
 	    {

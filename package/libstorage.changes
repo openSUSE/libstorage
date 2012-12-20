@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Dec 19 19:42:20 CET 2012 - fehr@suse.de
+
+- change order of vgchange/vgscan call in LvmVg to work around 
+  udev not creating LVM device nodes any more (bnc#794692)
+
+-------------------------------------------------------------------
 Fri Dec 07 09:49:55 CET 2012 - aschnell@suse.de
 
 - escape meta-characters for regular expressions (bnc#792245)
