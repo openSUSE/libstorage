@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Wed Dec 19 19:42:20 CET 2012 - fehr@suse.de
 
+- version 2.23.3
 - change order of vgchange/vgscan call in LvmVg to work around 
   udev not creating LVM device nodes any more (bnc#794692)
 - add function umountDeviceUns to make YCP able to prevent removal 
