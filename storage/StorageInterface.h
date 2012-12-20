@@ -2590,7 +2590,8 @@ namespace storage
 
 	/**
 	 * Umount the given device and do what is necessary to remove
-	 * underlying volume (e.g. do losetup -d if loop is set up)
+	 * underlying volume (e.g. do losetup -d if loop is set up or
+	 * dmsetup remove if dmcrypt is used)
 	 *
 	 * The function umounts at once, /etc/fstab is unaffected
 	 *
@@ -2598,6 +2599,20 @@ namespace storage
 	 * @return bool if umount succeeded
 	 */
 	virtual bool umountDevice( const string& device ) = 0;
+
+	/**
+	 * Umount the given device and dependent of parameter unsetup
+	 * do what is necessary to remove underlying volume (e.g. do 
+	 * losetup -d if loop is set up or dmsetup remove if dmcrypt 
+	 * is used
+	 *
+	 * The function umounts at once, /etc/fstab is unaffected
+	 *
+	 * @param device device name to umount
+	 * @param unsetup flag if losetup/dmcrypt should be removed
+	 * @return bool if umount succeeded
+	 */
+	virtual bool umountDeviceUns( const string& device, bool unsetup ) = 0;
 
 	/**
 	 * Mount the given device and do what is necessary to access
