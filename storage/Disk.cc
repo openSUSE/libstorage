@@ -2350,7 +2350,7 @@ int Disk::doResize( Volume* v )
 		Storage::waitForDevice(p->device());
 	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
 	    }
-	if( needExtend && !dmp_slave && 
+	if( ret == 0 && needExtend && !dmp_slave &&
 	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
 	    p->getFs()!=FSNONE )
 	    ret = p->resizeFs();
