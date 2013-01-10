@@ -14,7 +14,7 @@ rubyextensiondirdir = $(RUBY_EXTENSION_DIR)
 
 AM_CXXFLAGS = -fPIC -DPIC
 
-INCLUDES = -I${top_srcdir} -I$(RUBY_INCLUDE_DIR) -I$(RUBY_INCLUDE_DIR)/$(RUBY_ARCH_NAME)
+AM_CPPFLAGS = -include $(top_builddir)/config.h -I${top_srcdir} -I$(RUBY_INCLUDE_DIR) -I$(RUBY_INCLUDE_DIR)/$(RUBY_ARCH_NAME)
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
@@ -26,7 +26,7 @@ DEPENDENCIES =						\
 rubyextensiondir_LTLIBRARIES = storage.la
 nodist_storage_la_SOURCES = storage_wrap.cxx
 storage_la_LIBADD =  $(top_builddir)/storage/libstorage.la -l$(RUBY_SO_NAME)
-storage_la_LDFLAGS = -no-undefined -module -avoid-version -L$(RUBY_EXTENSION_DIR)
+storage_la_LDFLAGS = -no-undefined -module -shared -avoid-version -export-dynamic -L$(RUBY_EXTENSION_DIR)
 
 storage_la_DEPENDENCIES =				\
 	$(DEPENDENCIES)					\

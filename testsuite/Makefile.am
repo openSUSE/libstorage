@@ -8,7 +8,7 @@ PACKAGE = libstorage
 
 AUTOMAKE_OPTIONS = dejagnu
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -include $(top_builddir)/config.h -I$(top_srcdir)
 
 LDADD = ../storage/libstorage.la
 

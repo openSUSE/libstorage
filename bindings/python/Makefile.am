@@ -10,7 +10,7 @@ AM_CXXFLAGS = -fPIC -DPIC
 
 PYLIBVER ?= python$(PYTHON_VERSION)
 
-INCLUDES = -I. -I${top_srcdir} -I/usr/include/$(PYLIBVER)
+AM_CPPFLAGS = -include $(top_builddir)/config.h -I. -I${top_srcdir} -I/usr/include/$(PYLIBVER)
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
@@ -24,7 +24,7 @@ python_PYTHON = libstorage.py
 
 pyexec_LTLIBRARIES = _libstorage.la
 
-_libstorage_la_LDFLAGS = -module -avoid-version
+_libstorage_la_LDFLAGS = -module -shared -avoid-version -export-dynamic
 _libstorage_la_HEADERS: $(top_builddir)/config.h
 
 _libstorage_la_DEPENDENCIES =				\

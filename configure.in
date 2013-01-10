@@ -16,11 +16,10 @@ LIBVERSION_INFO=$LIBVERSION_CURRENT:$LIBVERSION_REVISON:$LIBVERSION_AGE
 AM_INIT_AUTOMAKE(libstorage, $VERSION)
 AM_CONFIG_HEADER(config.h)
 
-AC_DISABLE_STATIC
-
 AC_PROG_CXX
-AC_PROG_LIBTOOL
-AM_PROG_LIBTOOL
+AC_USE_SYSTEM_EXTENSIONS
+AC_SYS_LARGEFILE
+LT_INIT([disable-static pic-only])
 AM_PATH_PYTHON
 
 AC_PREFIX_DEFAULT(/usr)
@@ -30,7 +29,7 @@ dnl Disable it by "configure --disable-silent-rules" or "make V=1"
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
 CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes"
-CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X -Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
+CXXFLAGS="${CXXFLAGS} -std=gnu++0x -fvisibility-inlines-hidden  -DHAVE_CXX0X -Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
 
 docdir=\${prefix}/share/doc/packages/libstorage
 fillupdir=/var/adm/fillup-templates

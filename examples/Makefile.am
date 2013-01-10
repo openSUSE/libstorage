@@ -4,6 +4,7 @@
 
 INCLUDES = -I$(top_srcdir)
 
+AM_CPPFLAGS = -include $(top_builddir)/config.h
 LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm		\

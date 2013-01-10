@@ -2,6 +2,7 @@
 # Makefile.am for libstorage/storage
 #
 
+AM_CPPFLAGS = -include $(top_builddir)/config.h
 lib_LTLIBRARIES = libstorage.la
 
 libstorage_la_SOURCES =					\
@@ -65,7 +66,7 @@ libstorage_la_SOURCES =					\
 	Region.cc		Region.h		\
 	StorageTmpl.h		StorageDefines.h
 
-libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
+libstorage_la_LDFLAGS = -no-undefined -version-info @LIBVERSION_INFO@
 libstorage_la_LIBADD = -lxml2
 
 $(srcdir)/gen_pathlist.cc: StorageDefines.h
