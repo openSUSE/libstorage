@@ -391,7 +391,7 @@ void defaultLogDo( int level, const string& comp, const char* file,
 
     if( !logf )
         {
-        logf = fopen(filename.c_str(), "a");
+        logf = fopen(filename.c_str(), "ae");
         if( logf )
             {
             setlinebuf(logf);
@@ -512,7 +512,7 @@ readlink(const string& path, string& buf)
     {
 	map<string, string> links;
 
-	int fd = open(path, O_RDONLY);
+	int fd = open(path, O_RDONLY | O_CLOEXEC);
 	if (fd >= 0)
 	{
 	    DIR* dir;

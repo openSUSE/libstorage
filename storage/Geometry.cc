@@ -156,7 +156,7 @@ namespace storage
 
 	bool ret = false;
 
-	int fd = open(device.c_str(), O_RDONLY);
+	int fd = open(device.c_str(), O_RDONLY | O_CLOEXEC);
 	if (fd >= 0)
 	{
 	    int rcode = ioctl(fd, BLKSSZGET, &geo.sector_size);
