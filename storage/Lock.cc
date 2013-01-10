@@ -58,7 +58,7 @@ namespace storage
 
 	if (mkdir("/var/run/libstorage", 0755) == -1 && errno != EEXIST)
 	{
-	    y2err("creating directory for lock-file failed: " << strerror(errno));
+	    y2err("creating directory for lock-file failed: %m");
 	}
 
 	fd = open("/var/run/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT,
@@ -66,7 +66,7 @@ namespace storage
 	if (fd < 0)
 	{
 	    // Opening lock-file failed.
-	    y2err("opening lock-file failed: " << strerror(errno));
+	    y2err("opening lock-file failed: %m");
 	    throw LockException(0);
 	}
 
@@ -92,7 +92,7 @@ namespace storage
 		default:
 		    // Some other error.
 		    close(fd);
-		    y2err("getting lock failed: " << strerror(errno));
+		    y2err("getting lock failed: %m");
 		    throw LockException(0);
 	    }
 	}

@@ -126,7 +126,7 @@ checkNormalFile(const string& Path_Cv)
 	{
 	    buf.sizeK = buf.freeK = 0;
 
-	    y2err("errno:" << errno << " " << strerror(errno));
+	    y2err("errno:" << errno << " %m");
 	    return false;
 	}
 
@@ -159,7 +159,7 @@ checkNormalFile(const string& Path_Cv)
 	}
 	else
 	{
-	    y2err("stat for " << device << " failed errno:" << errno << " (" << strerror(errno) << ")");
+	    y2err("stat for " << device << " failed errno:" << errno << " (%m)");
 	}
 	return ret;
     }
