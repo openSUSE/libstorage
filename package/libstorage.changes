@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jan 29 10:21:10 CET 2013 - fehr@suse.de
+
+- fixed wrong display of fs type when formatting btrfs (bnc#799897)
+
+-------------------------------------------------------------------
 Fri Jan 04 10:36:36 CET 2013 - aschnell@suse.de
 
 - do not resize filesystem if enlarging partition failed

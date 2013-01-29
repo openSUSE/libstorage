@@ -2010,7 +2010,7 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 && p->type()!=EXTENDED )
 	    {
 	    ret = p->zeroIfNeeded();
-	    if( !dmp_slave && !p->getFormat() )
+	    if( !dmp_slave && !p->getFormat() && !p->isUsedBy(UB_BTRFS))
 		{
 		bool lsave = false;
 		string lbl;
