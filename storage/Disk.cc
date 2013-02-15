@@ -84,7 +84,7 @@ namespace storage
 	: Container(s, staticType(), node), label(), udev_path(),
 	  udev_id(), max_primary(0), ext_possible(false), max_logical(0),
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
-	  gpt_enlarge(false), range(4), del_ptable(false)
+	  gpt_enlarge(false), range(4), del_ptable(false), has_fake_partition(false)
     {
 	logfile_name = nm;
 
