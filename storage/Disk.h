@@ -93,6 +93,9 @@ class Disk : public Container
 	virtual string sysfsPath() const;
 	static string sysfsPath( const string& device );
 
+	/* disk region from sysfs in 512 byte blocks */
+	Region detectSysfsBlkRegion(bool log_error = true) const;
+
 	unsigned numPartitions() const;
 	bool isDasd() const { return( nm.find("dasd")==0 ); }
 	bool isIScsi() const { return transport == ISCSI; }
@@ -239,6 +242,7 @@ class Disk : public Container
 	bool checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			      unsigned long& rng) const;
 	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
+	bool checkFakePartition(SystemInfo& systeminfo, const list<Partition*>& pl) const;
 
 	bool callDelpart(unsigned nr) const;
 	bool callAddpart(unsigned nr, const Region& blkRegion) const;
@@ -295,6 +299,7 @@ class Disk : public Container
 	bool gpt_enlarge;
 	unsigned long range;
 	bool del_ptable;
+	bool has_fake_partition;
 
 	mutable storage::DiskInfo info; // workaround for broken ycp bindings
 
