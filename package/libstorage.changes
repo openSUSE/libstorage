@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Thu Feb  7 16:48:23 CET 2013 - fehr@suse.de
 
+- version 2.23.5
 - create partition type "gpt_sync_mbr" instead of plain gpt also
   on ppc architecture (bnc#797485)
 
