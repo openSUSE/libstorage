@@ -413,6 +413,14 @@ void defaultLogDo( int level, const string& comp, const char* file,
         }
     }
 
+string afterLast(const string& s, const string& pat )
+    {
+    string ret(s);
+    string::size_type pos = s.find_last_of(pat);
+    if( pos!=string::npos )
+	ret.erase( 0, pos+pat.length() );
+    return( ret );
+    }
 
     string
     udevAppendPart(const string& s, unsigned num)

@@ -69,6 +69,7 @@ std::map<string,string> makeMap( const std::list<string>& l,
 				 const string& removeSur = " \t\n" );
 
     string udevAppendPart(const string&, unsigned num);
+    string afterLast(const string& s, const string& pat );
 
     string udevEncode(const string&);
     string udevDecode(const string&);
