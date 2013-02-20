@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Wed Feb 20 18:09:17 CET 2013 - fehr@suse.de
 
+- version 2.23.6
 - recognize /dev/disk-by-id/dm-name-<nm> as alias to 
   /dev/mapper/<dm>
 
