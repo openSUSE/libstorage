@@ -225,16 +225,34 @@ void Volume::setDmcryptDev( const string& dm, bool active )
     y2mil( "dev:" << dev << " dm:" << dm << " active:" << active );
     dmcrypt_dev = dm;
     dmcrypt_active = active;
+    if( active )
+	{
+	unsigned long dummy, minor;
+	storage::getMajorMinor( dmcrypt_dev, dummy, minor );
+	addDmNames(minor);
+	}
+    else
+	removeDmNames();
     y2mil( "this:" << *this );
     }
 
 void Volume::setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active )
     {
-    y2mil("dev:" << dev << " dm:" << dm << " enc_type:" << toString(typ) << " active:" << active);
-    dmcrypt_dev = dm;
-    encryption = orig_encryption = typ;
-    dmcrypt_active = active;
-    y2mil( "this:" << *this );
+    y2mil("enc_type:" << toString(typ));
+    setDmcryptDev(dm,active);
+    }
+
+void Volume::addDmNames( unsigned long minor )
+    {
+    replaceAltName( "/dev/dm-", Dm::dmDeviceName(minor) );
+    replaceAltName( "/dev/disk/by-id/dm-name-", 
+                    "/dev/disk/by-id/dm-name-"+afterLast(dmcrypt_dev,"/"));
+    }
+
+void Volume::removeDmNames()
+    {
+    replaceAltName( "/dev/dm-", "" );
+    replaceAltName( "/dev/disk/by-id/dm-name-", "" );
     }
 
 const string& Volume::mountDevice() const
@@ -1324,6 +1342,7 @@ int Volume::cryptUnsetup( bool force )
 	    ret = VOLUME_CRYPTUNSETUP_FAILED;
 	    dmcrypt_active = false;
 	    }
+	removeDmNames();
 	}
     return( ret );
     }
@@ -2361,17 +2380,9 @@ int Volume::doCryptsetup()
 	    dmcrypt_active = true;
 	    unsigned long dummy, minor;
 	    if (cType() == LOOP)
-		{
 		getMajorMinor();
-		minor = mnr;
-		replaceAltName( "/dev/dm-", Dm::dmDeviceName(mnr) );
-		}
-	    else
-		{
-		storage::getMajorMinor( dmcrypt_dev, dummy, minor );
-		replaceAltName("/dev/dm-", Dm::dmDeviceName(minor));
-		}
-
+	    storage::getMajorMinor( dmcrypt_dev, dummy, minor );
+	    addDmNames(minor);
 	    ProcParts parts;
 	    unsigned long long sz;
 	    if (parts.getSize( Dm::dmDeviceName(minor), sz))

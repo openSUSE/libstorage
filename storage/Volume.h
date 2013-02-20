@@ -229,6 +229,8 @@ class Storage;
 	bool getLoopFile( string& fname ) const;
 	void setExtError( const SystemCmd& cmd, bool serr=true );
 	string getDmcryptName() const;
+	void addDmNames(unsigned long minor);
+	void removeDmNames();
 	bool needLosetup( bool urgent ) const; 
 	bool needCryptsetup() const; 
 	int doLosetup();

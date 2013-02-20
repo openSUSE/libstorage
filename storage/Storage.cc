@@ -6763,7 +6763,7 @@ bool Storage::setDmcryptData( const string& dev, const string& dm,
         findVolume( dev, v ) )
 	{
 	v->setDmcryptDevEnc( dm, typ, siz!=0 );
-	v->replaceAltName( "/dev/dm-", Dm::dmDeviceName(dmnum) );
+	v->addDmNames(dmnum);
 	v->setSize( siz );
 	ret = true;
 	}

@@ -84,7 +84,7 @@ void DmPart::updateMinor()
     getMajorMinor();
     if (mjr != old_mjr || mnr != old_mnr)
 	{
-	replaceAltName("/dev/dm-", "/dev/dm-" + decString(mnr));
+	addDmNames(mnr);
 	getTableInfo();
 	}
     }

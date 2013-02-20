@@ -219,11 +219,7 @@ void Dm::updateMajorMinor()
     {
     getMajorMinor();
     if( majorNr()==Dm::dmMajor() )
-	{
-	string d = "/dev/dm-" + decString(minorNr());
-	if( d!=dev )
-	    replaceAltName( "/dev/dm-", d );
-	}
+	addDmNames(minorNr());
     num = mnr;
     }
 
