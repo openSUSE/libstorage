@@ -415,7 +415,17 @@ Dasd::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vol
 	{
 	ConstVolPair p = volPair(stageIncrease);
 	if( !p.empty() )
-	    vol.push_back( &(*(p.begin())) );
+	    {
+	    ConstVolIterator i = p.begin();
+	    vol.push_back( &(*i) );
+	    ++i;
+	    while( i!=p.end() )
+		{
+		if( i->needExtend()||i->needCrsetup() )
+		    vol.push_back( &(*i) );
+		++i;
+		}
+	    }
 	}
     else
 	Disk::getToCommit( stage, col, vol );
