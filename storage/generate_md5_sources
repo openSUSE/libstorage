@@ -1,0 +1,5 @@
+#/bin/bash
+LIST=$*
+[ -z "$1" ] && LIST=`ls *.cc *.h | grep -v "gen.*.cc"`
+LIST=`echo $LIST | tr " " "\n" | sort`
+cat $LIST | md5sum | sed "s/ .*//"

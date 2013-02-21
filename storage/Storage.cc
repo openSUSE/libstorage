@@ -56,6 +56,7 @@
 #include "storage/EtcMdadm.h"
 #include "storage/AsciiFile.h"
 #include "storage/StorageDefines.h"
+#include "storage/gen_md5sum.h"
 
 
 namespace storage
@@ -104,6 +105,8 @@ Storage::Storage(const Environment& env)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
+    y2mil("libstorage source md5sum:" << GetSourceMd5() );
+    y2mil("libstorage source moddate:" << GetSourceDate() );
 
     atexit( clean_tmpdir );
 

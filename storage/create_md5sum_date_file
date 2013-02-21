@@ -1,0 +1,16 @@
+#/bin/bash
+GEN=gen_md5sum.cc
+MD5_CUR=`./generate_md5_sources`
+MD5_SAV=`grep SOURCES_MD5SUM $GEN 2>/dev/null | sed -e "s/^.*SOURCES_MD5SUM//" -e "s/[ ]\+//"`
+if [ "$MD5_CUR" != "$MD5_SAV" ]
+then
+    echo "#define SOURCES_MD5SUM   \"$MD5_CUR\"" > $GEN
+    echo "#define SOURCES_MD5_DATE \"" `date` "\"" >> $GEN
+    echo "namespace storage" >> $GEN
+    echo "{" >> $GEN
+    echo "const char* GetSourceMd5() { return SOURCES_MD5SUM; }" >> $GEN
+    echo "const char* GetSourceDate() { return SOURCES_MD5_DATE; }" >> $GEN
+    echo "}" >> $GEN
+else
+    touch $GEN
+fi
