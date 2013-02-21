@@ -1,7 +1,8 @@
 -------------------------------------------------------------------
-Thu Feb 21 15:49:38 CET 2013 - fehr@suse.de
+Thu Feb 21 18:51:42 CET 2013 - fehr@suse.de
 
 - version 2.23.7
+- fix bug with creation of encrypted LVM on S390 (bnc#804598)
 - add y2log entries for source md5sum and source modify date 
 
 -------------------------------------------------------------------
