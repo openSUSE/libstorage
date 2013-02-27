@@ -109,6 +109,7 @@ class Md : public Volume
 
 	// In case of IMSM and DDF raids there is 'container'.
 	bool has_container;
+	bool inactive;
 	string parent_container;
 	string parent_uuid;
 	string parent_md_name;

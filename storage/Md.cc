@@ -43,7 +43,7 @@ namespace storage
     Md::Md(const MdCo& c, const string& name, const string& device, MdType Type,
 	   const list<string>& devices, const list<string>& spares)
 	: Volume(c, name, device), md_type(Type), md_parity(PAR_DEFAULT), chunk_k(0),
-	  sb_ver("01.00.00"), destrSb(false), devs(devices), spare(spares), has_container(false)
+	  sb_ver("01.00.00"), destrSb(false), devs(devices), spare(spares), has_container(false), inactive(false)
     {
 	y2deb("constructed Md " << dev << " on " << cont->device());
 
@@ -61,7 +61,7 @@ namespace storage
 
     Md::Md(const MdCo& c, const string& name, const string& device, SystemInfo& systeminfo)
 	: Volume(c, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
-	  chunk_k(0), sb_ver("01.00.00"), destrSb(false), has_container(false)
+	  chunk_k(0), sb_ver("01.00.00"), destrSb(false), has_container(false), inactive(false)
     {
 	y2deb("constructed Md " << device << " on " << cont->device());
 
@@ -85,6 +85,8 @@ namespace storage
 
 	devs = entry.devices;
 	spare = entry.spares;
+
+	inactive = entry.inactive;
 
 	if (entry.readonly)
 	    setReadonly();
@@ -130,7 +132,8 @@ namespace storage
 	  chunk_k(v.chunk_k), md_uuid(v.md_uuid), md_name(v.md_name),
 	  sb_ver(v.sb_ver), destrSb(v.destrSb), devs(v.devs), spare(v.spare),
 	  udev_id(udev_id),
-	  has_container(v.has_container), parent_container(v.parent_container),
+	  has_container(v.has_container), inactive(v.inactive),
+	  parent_container(v.parent_container),
 	  parent_uuid(v.parent_uuid), parent_md_name(v.parent_md_name),
 	  parent_metadata(v.parent_metadata), parent_member(v.parent_member)
     {
@@ -543,6 +546,7 @@ void Md::getInfo( MdInfo& tinfo ) const
     info.sb_ver = sb_ver;
     info.chunkSizeK = chunk_k;
     info.parity = md_parity;
+    info.inactive = inactive;
 
     info.devices = boost::join(devs, " ");
     info.spares = boost::join(spare, " ");
@@ -561,6 +565,8 @@ std::ostream& operator<< (std::ostream& s, const Md& m )
 	s << " Parity:" << toString(m.md_parity);
     if( !m.sb_ver.empty() )
 	s << " SbVer:" << m.sb_ver;
+    if (m.inactive)
+	s << " inactive";
     if (!m.md_uuid.empty())
 	s << " md_uuid:" << m.md_uuid; 
     if (!m.md_name.empty())
@@ -579,7 +585,8 @@ bool Md::equalContent( const Md& rhs ) const
     return( Volume::equalContent(rhs) &&
             md_type==rhs.md_type && md_parity==rhs.md_parity &&
 	    chunk_k==rhs.chunk_k && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
-	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare );
+	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare &&
+	    inactive==rhs.inactive );
     }
 
 
@@ -592,6 +599,7 @@ bool Md::equalContent( const Md& rhs ) const
 	logDiffEnum(log, "md_parity", md_parity, rhs.md_parity);
 	logDiff(log, "chunk_k", chunk_k, rhs.chunk_k);
 	logDiff(log, "sb_ver", sb_ver, rhs.sb_ver);
+	logDiff(log, "inactive", inactive, rhs.inactive);
 	logDiff(log, "md_uuid", md_uuid, rhs.md_uuid);
 	logDiff(log, "md_name", md_name, rhs.md_name);
 	logDiff(log, "destrSb", destrSb, rhs.destrSb);

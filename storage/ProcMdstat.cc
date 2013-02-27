@@ -82,6 +82,7 @@ namespace storage
 	    if( tmp=="(read-only)" || tmp=="(auto-read-only)" || tmp=="inactive" )
 	    {
 		entry.readonly = true;
+		entry.inactive = tmp=="inactive";
 		line.erase( 0, pos );
 		boost::trim_left(line, locale::classic());
 	    }
@@ -106,7 +107,7 @@ namespace storage
 	    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
 		line.erase( 0, pos );
 	}
-	else
+	else if( !entry.inactive )
 	{
 	    entry.is_container = true;
 	}
@@ -275,6 +276,9 @@ namespace storage
 
 	if (entry.readonly)
 	    s << " readonly";
+
+	if (entry.inactive)
+	    s << " inactive";
 
 	s << " devices:" << entry.devices;
 	if (!entry.spares.empty())
