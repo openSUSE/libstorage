@@ -1390,6 +1390,8 @@ int Disk::removePartition( unsigned nr )
 	    list<Volume*>::iterator vi = l.begin();
 	    while( ret==0 && vi!=l.end() )
 		{
+		if ((*vi)->isUsedBy())
+		    getStorage()->removeUsing( (*vi)->device(), (*vi)->getUsedBy() );
 		if( !removeFromList( *vi ))
 		    ret = DISK_PARTITION_NOT_FOUND;
 		++vi;

@@ -119,22 +119,27 @@ LvmVg::removeVg()
 	{
 	ret = LVM_CHANGE_READONLY;
 	}
-    if( ret==0 && !created() )
+    if( ret==0 )
 	{
 	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
             {
-            if( i->isSnapshot() )
+            if( i->isSnapshot() && !created() )
                 ret = removeLv( i->name() );
             }
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
             {
             if( !i->isSnapshot() && !i->isPool() )
-                ret = removeLv( i->name() );
+		{
+	        if (i->isUsedBy())
+		    getStorage()->removeUsing( i->device(), i->getUsedBy() );
+		if( !created() )
+		    ret = removeLv( i->name() );
+		}
             }
 	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
             {
-            if( !i->isSnapshot() && i->isPool() )
+            if( !i->isSnapshot() && i->isPool() && !created())
                 ret = removeLv( i->name() );
             }
 	setDeleted();
