@@ -272,6 +272,15 @@ int Dasd::createPartition( PartitionType type, unsigned long start,
 				      cylinderToKb(len), Region(start, len), type);
 	p->setCreated();
 	device = p->device();
+	PartPair pp = partPair();
+	for( PartIter i = pp.begin(); i != pp.end(); ++i)
+	    {
+	    if (i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		{
+		y2mil("harvesting old password");
+		p->setCryptPwd(i->getCryptPwd());
+		}
+	    }
 	addToList( p );
 	}
     y2mil("ret:" << ret);
