@@ -3389,12 +3389,13 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	if( v.encryption != v.orig_encryption &&
 	    v.orig_encryption!=storage::ENC_NONE )
 	    s << " orig_encr:" << toString(v.orig_encryption);
-#ifdef DEBUG_CRYPT_PASSWORD
-	s << " pwd:" << v.crypt_pwd;
-	if( v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
-	    s << " orig_pwd:" << v.orig_crypt_pwd;
-#endif
 	}
+#ifdef DEBUG_CRYPT_PASSWORD
+    if( !v.crypt_pwd.empty() )
+	s << " pwd:" << v.crypt_pwd;
+    if( !v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
+	s << " orig_pwd:" << v.orig_crypt_pwd;
+#endif
     if( !v.dmcrypt_dev.empty() )
 	s << " dmcrypt:" << v.dmcrypt_dev;
     if( v.dmcrypt_active )

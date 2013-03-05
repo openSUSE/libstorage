@@ -163,6 +163,15 @@ MdPartCo::addNewDev(string& device)
             md->getFsInfo( p );
             md->setCreated();
 	    md->addUdevData();
+	    ConstMdPartPair pp = mdpartPair();
+	    for( ConstMdPartIter i=pp.begin(); i!=pp.end(); ++i )
+		{
+		if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		    {
+		    y2mil("harvesting old password");
+		    md->setCryptPwd(i->getCryptPwd());
+		    }
+		}
             addToList( md );
             y2mil("device:" << device << " was added to MdPartCo : " << dev);
 

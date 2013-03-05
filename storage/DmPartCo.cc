@@ -92,6 +92,15 @@ DmPartCo::addNewDev(string& device)
 	    dm->getFsInfo( p );
 	    dm->setCreated();
 	    dm->addUdevData();
+	    ConstDmPartPair pp = dmpartPair();
+	    for( ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
+		{
+		if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		    {
+		    y2mil("harvesting old password");
+		    dm->setCryptPwd(i->getCryptPwd());
+		    }
+		}
 	    addToList( dm );
 	}
 	handleWholeDevice();
