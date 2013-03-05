@@ -25,6 +25,7 @@
 
 #include "storage/ArchInfo.h"
 #include "storage/AsciiFile.h"
+#include "storage/AppUtil.h"
 #include "storage/StorageTypes.h"
 
 
@@ -114,19 +115,7 @@ namespace storage
 	}
 	else
 	{
-	    string val;
-	    if (instsys)
-	    {
-		InstallInfFile ii("/etc/install.inf");
-		if (ii.getValue("EFI", val))
-		    is_efiboot = val == "1";
-	    }
-	    else
-	    {
-		SysconfigFile sc("/etc/sysconfig/bootloader");
-		if (sc.getValue("LOADER_TYPE", val))
-		    is_efiboot = val == "elilo";
-	    }
+	    is_efiboot = checkDir( "/sys/firmware/efi/vars" );
 	}
     }
 
