@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Tue Mar  5 11:49:34 CET 2013 - fehr@suse.de
 
+- detect is_efiboot by checking for /sys/firmware/efi (bnc#806490)
 - fix handling of encrypted LVM based proposal on partitioned Dm
   and Md devices (bnc#805169)
   
