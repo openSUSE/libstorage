@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar  5 11:49:34 CET 2013 - fehr@suse.de
+
+- fix handling of encrypted LVM based proposal on partitioned Dm
+  and Md devices (bnc#805169)
+  
+-------------------------------------------------------------------
 Mon Mar  4 15:38:19 CET 2013 - fehr@suse.de
 
 - prevent dangling btrfs shadow volumes (bnc#803935)
