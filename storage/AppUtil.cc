@@ -153,9 +153,12 @@ checkNormalFile(const string& Path_Cv)
 	struct stat sbuf;
 	if (stat(device.c_str(), &sbuf) == 0)
 	{
-	    major = gnu_dev_major(sbuf.st_rdev);
-	    minor = gnu_dev_minor(sbuf.st_rdev);
-	    ret = true;
+	    ret = S_ISBLK(sbuf.st_mode)||S_ISLNK(sbuf.st_mode);
+	    if( ret )
+		{
+		major = gnu_dev_major(sbuf.st_rdev);
+		minor = gnu_dev_minor(sbuf.st_rdev);
+		}
 	}
 	else
 	{
