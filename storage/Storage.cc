@@ -6289,7 +6289,6 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
 		}
 	    if( v==li->end() )
 		{
-		y2war( "finding over major/minor" );
 		unsigned long mjr, mnr;
 		mjr = mnr = 0;
 		const Device* dev = NULL;
@@ -6301,7 +6300,7 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
 			++v;
 		    if( v!=li->end() )
 			{
-			y2war( "finding over major/minor:" << d << " is:" << v->device() );
+			y2war( "found over major/minor:" << d << " is:" << v->device() );
 			y2mil( "vol:" << *v );
 			}
 		    }
