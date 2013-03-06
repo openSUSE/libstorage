@@ -169,13 +169,15 @@ class DmPartCo : public PeContainer
 	void activate_part( bool val );
 	void init(SystemInfo& systeminfo);
 	void createDisk(SystemInfo& systeminfo);
-	void getVolumes(const ProcParts& parts);
+	void getVolumes(SystemInfo& si);
 	void updatePointers( bool invalid=false );
 	void updateMinor();
+	virtual void newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si );
 	virtual void newP( DmPart*& dm, unsigned num, Partition* p );
 	int addNewDev( string& device );
 	int updateDelDev();
 	void handleWholeDevice();
+	void handleWholeDevice(SystemInfo& si);
 	void removeFromMemory();
 	void removePresentPartitions();
 	bool validPartition( const Partition* p );

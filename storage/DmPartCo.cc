@@ -317,7 +317,7 @@ void
 	    if (tmp.empty())
 		activate_part(true);
 	    }
-	getVolumes(systeminfo.getProcParts());
+	getVolumes(systeminfo);
 	active = true;
 	}
     }
@@ -344,9 +344,16 @@ DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
     dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
+void 
+DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    {
+    y2mil( "num:" << num );
+    dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p, si );
+    }
+
 
 void
-    DmPartCo::getVolumes(const ProcParts& parts)
+    DmPartCo::getVolumes(SystemInfo& si)
     {
     clearPointerList(vols);
     Disk::PartPair pp = disk->partPair();
@@ -354,12 +361,12 @@ void
     DmPart * p = NULL;
     while( i!=pp.end() )
 	{
-	newP( p, i->nr(), &(*i) );
-	p->updateSize(parts);
+	newP( p, i->nr(), &(*i), si );
+	p->updateSize(si.getProcParts());
 	addToList( p );
 	++i;
 	}
-    handleWholeDevice();
+    handleWholeDevice(si);
     }
 
 void DmPartCo::handleWholeDevice()
@@ -370,6 +377,29 @@ void DmPartCo::handleWholeDevice()
 	{
 	DmPart * p = NULL;
 	newP( p, 0, NULL );
+	p->setSize( size_k );
+	addToList( p );
+	}
+    else
+	{
+	DmPartIter i;
+	if( findDm( 0, i ))
+	    {
+	    DmPart* dm = &(*i);
+	    if( !removeFromList( dm ))
+		y2err( "not found:" << *i );
+	    }
+	}
+    }
+    
+void DmPartCo::handleWholeDevice(SystemInfo& si)
+    {
+    Disk::PartPair pp = disk->partPair( Partition::notDeleted );
+    y2mil("empty:" << pp.empty());
+    if( pp.empty() )
+	{
+	DmPart * p = NULL;
+	newP( p, 0, NULL, si );
 	p->setSize( size_k );
 	addToList( p );
 	}

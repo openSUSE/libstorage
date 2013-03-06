@@ -70,6 +70,7 @@ class Dm : public Volume
 
 	virtual string procName() const { return "dm-" + decString(mnr); }
 	virtual string sysfsPath() const;
+	void setUdevData(SystemInfo& systeminfo);
 
 	void updateMajorMinor();
 

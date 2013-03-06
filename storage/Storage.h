@@ -239,6 +239,8 @@ class DiskData;
 	    { return d.type() == storage::DMRAID || d.type() == storage::DMMULTIPATH; }
 	static bool isMdPart( const Container&d )
 	    { return d.type() == storage::MDPART; }
+	static bool isDmContainer( const Container&d )
+	    { return d.type()==DM || d.type()==LVM || d.type()==DMRAID || d.type()==DMMULTIPATH; }
 
 	Storage(const Environment& env);
 

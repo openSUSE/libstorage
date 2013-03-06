@@ -37,6 +37,8 @@ class Dmmultipath : public DmPart
 
 	Dmmultipath(const DmmultipathCo& c, const string& name, const string& device, unsigned nr,
 		    Partition* p);
+	Dmmultipath(const DmmultipathCo& c, const string& name, const string& device, unsigned nr,
+		    Partition* p, SystemInfo& si);
 	Dmmultipath(const DmmultipathCo& c, const Dmmultipath& v);
 	virtual ~Dmmultipath();
 

@@ -169,7 +169,7 @@ class LvmVg : public PeContainer
 
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		   string& status, string& alloc, bool& ro, bool& pool, 
-                   string& used_pool, unsigned long long& pchunk );
+                   string& used_pool, unsigned long long& pchunk, SystemInfo& si );
 	void addPv( Pv*& p );
         LvmLv* findLv(const string& name);
         bool checkChunk( unsigned long long val, unsigned long long mi=0, 

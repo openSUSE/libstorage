@@ -37,11 +37,13 @@ namespace storage
 
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
-		 unsigned long le, const string& uuid, const string& stat, const string& alloc)
+		 unsigned long le, const string& uuid, const string& stat, const string& alloc,
+		 SystemInfo& si)
 	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), 
           chunk_size(0), pool(false)
 {
-	Dm::init();
+    Dm::init();
+    setUdevData(si);
     setUuid( uuid );
     setStatus( stat );
     setAlloc( alloc );

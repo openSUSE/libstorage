@@ -36,9 +36,10 @@ class LvmLv : public Dm
     public:
 
 	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
-	      unsigned long le, const string& uuid, const string& status, const string& alloc);
+	      unsigned long le, const string& uuid, const string& status, const string& alloc,
+	      SystemInfo& si);
 	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
-	      unsigned long le, unsigned stripe);
+	      unsigned long le, unsigned stripe );
 	LvmLv(const LvmVg& c, const xmlNode* node);
 	LvmLv(const LvmVg& c, const LvmLv& v);
 	virtual ~LvmLv();

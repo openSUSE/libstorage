@@ -229,30 +229,86 @@ void Volume::setDmcryptDev( const string& dm, bool active )
 	{
 	unsigned long dummy, minor;
 	storage::getMajorMinor( dmcrypt_dev, dummy, minor );
-	addDmNames(minor);
+	addDmCryptNames(minor);
 	}
     else
-	removeDmNames();
+	removeDmCryptNames();
     y2mil( "this:" << *this );
     }
 
 void Volume::setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active )
     {
     y2mil("enc_type:" << toString(typ));
+    encryption = orig_encryption = typ;
     setDmcryptDev(dm,active);
     }
 
-void Volume::addDmNames( unsigned long minor )
+void Volume::addDmCryptNames( unsigned long minor )
     {
-    replaceAltName( "/dev/dm-", Dm::dmDeviceName(minor) );
-    replaceAltName( "/dev/disk/by-id/dm-name-", 
-                    "/dev/disk/by-id/dm-name-"+afterLast(dmcrypt_dev,"/"));
+    y2mil( "alt before:" << altNames() );
+    string crname = Dm::dmDeviceName(minor);
+    if( !Storage::isDmContainer(*cont))
+	replaceAltName( "/dev/dm-", crname );
+    else
+	{
+	string my_name = Dm::dmDeviceName(mnr);
+	y2mil( "my_name:" << my_name << " cr_name:" << crname );
+	list<string>::iterator i = alt_names.begin();
+	while( i!=alt_names.end() && boost::starts_with( *i, "/dev/dm-" ) &&
+	       *i!=my_name )
+	    ++i;
+	if( i!=alt_names.end() )
+	    *i = crname;
+	else
+	    alt_names.push_back(crname);
+	}
+    string s = afterLast(dmcrypt_dev,"/");
+    string pre = "/dev/disk/by-id/dm-name-";
+    string my_name;
+    const Dm* dm = dynamic_cast<const Dm*>(this);
+    if( dm!=NULL )
+	my_name = dm->getTableName();
+    if( my_name.empty() )
+	{
+	if( !s.empty() )
+	    replaceAltName( pre, pre+s );
+	else
+	    replaceAltName( pre, "" );
+	}
+    else
+	{
+	y2mil( "my_name:" << my_name << " cr_name:" << s );
+	list<string>::iterator i = alt_names.begin();
+	while( i!=alt_names.end() && boost::starts_with( *i, pre ) &&
+	       *i!=my_name )
+	    ++i;
+	if( i!=alt_names.end() )
+	    *i = pre+s;
+	else
+	    alt_names.push_back(pre+s);
+	}
+    y2mil( "alt  after:" << altNames() );
     }
 
-void Volume::removeDmNames()
+void Volume::removeDmCryptNames()
     {
-    replaceAltName( "/dev/dm-", "" );
-    replaceAltName( "/dev/disk/by-id/dm-name-", "" );
+    if( !Storage::isDmContainer(*cont))
+	replaceAltName( "/dev/dm-", "" );
+    else
+	{
+	string my_name = Dm::dmDeviceName(mnr);
+	list<string>::iterator i = alt_names.begin();
+	while( i!=alt_names.end() )
+	    {
+	    if( boost::starts_with( *i, "/dev/dm-" ) && *i!=my_name )
+		i=alt_names.erase(i);
+	    else 
+		++i;
+	    }
+	}
+    string s = afterLast(dmcrypt_dev,"/");
+    if( !s.empty() )
+	replaceAltName( "/dev/disk/by-id/dm-name-"+s, "" );
     }
 
 const string& Volume::mountDevice() const
@@ -1342,7 +1398,7 @@ int Volume::cryptUnsetup( bool force )
 	    ret = VOLUME_CRYPTUNSETUP_FAILED;
 	    dmcrypt_active = false;
 	    }
-	removeDmNames();
+	removeDmCryptNames();
 	}
     return( ret );
     }
@@ -2382,7 +2438,7 @@ int Volume::doCryptsetup()
 	    if (cType() == LOOP)
 		getMajorMinor();
 	    storage::getMajorMinor( dmcrypt_dev, dummy, minor );
-	    addDmNames(minor);
+	    addDmCryptNames(minor);
 	    ProcParts parts;
 	    unsigned long long sz;
 	    if (parts.getSize( Dm::dmDeviceName(minor), sz))

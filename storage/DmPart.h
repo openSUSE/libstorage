@@ -38,6 +38,8 @@ class DmPart : public Dm
     public:
 
 	DmPart(const DmPartCo& c, const string& name, const string& device, unsigned nr,
+	       Partition* p, SystemInfo& si);
+	DmPart(const DmPartCo& c, const string& name, const string& device, unsigned nr,
 	       Partition* p);
 	DmPart(const DmPartCo& c, const DmPart& v);
 	virtual ~DmPart();

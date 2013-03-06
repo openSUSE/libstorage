@@ -37,6 +37,8 @@ class Dmraid : public DmPart
 
 	Dmraid(const DmraidCo& c, const string& name, const string& device, unsigned nr,
 	       Partition* p);
+	Dmraid(const DmraidCo& c, const string& name, const string& device, unsigned nr,
+	       Partition* p, SystemInfo& si);
 	Dmraid(const DmraidCo& c, const Dmraid& v);
 	virtual ~Dmraid();
 

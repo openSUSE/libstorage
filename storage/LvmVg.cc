@@ -28,6 +28,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
+#include "storage/SystemInfo.h"
 #include "storage/StorageDefines.h"
 
 
@@ -792,6 +793,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     string line;
     string tmp;
     string::size_type pos;
+    SystemInfo si;
     while( i<cnt )
 	{
 	line = c.getLine( i++ );
@@ -866,7 +868,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		    {
                         addLv(origin.empty() ? num_le : num_cow_le, vname, 
                                 origin, uuid, status, allocation,
-                                readOnly, pool, used_pool, pool_chunk);
+                                readOnly, pool, used_pool, pool_chunk, si);
 		    }
 		    vname = extractNthWord( 2, line );
 		    if( (pos=vname.rfind( "/" ))!=string::npos )
@@ -924,7 +926,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 		{
                 addLv(origin.empty() ? num_le : num_cow_le, vname, origin, 
                       uuid, status, allocation, readOnly, pool, 
-                      used_pool, pool_chunk);
+                      used_pool, pool_chunk, si);
 		}
 	    Pv *p = new Pv;
 	    while( i<cnt )
@@ -1016,7 +1018,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 void 
 LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	     string& status, string& alloc, bool& ro, bool& pool, 
-	     string& used_pool, unsigned long long& pchunk )
+	     string& used_pool, unsigned long long& pchunk, SystemInfo& si )
     {
     y2mil("addLv:" << name);
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
@@ -1060,7 +1062,7 @@ LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 	if( i==p.end() )
 	    {
             LvmLv *n = new LvmLv( *this, name, dev + "/" + name, origin, 
-                    le, uuid, status, alloc );
+				  le, uuid, status, alloc, si );
 	    if( ro )
 		n->setReadonly();
             if( pool )

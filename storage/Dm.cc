@@ -25,6 +25,7 @@
 #include "storage/Dm.h"
 #include "storage/PeContainer.h"
 #include "storage/SystemCmd.h"
+#include "storage/SystemInfo.h"
 #include "storage/AppUtil.h"
 #include "storage/Regex.h"
 #include "storage/Storage.h"
@@ -215,11 +216,30 @@ void Dm::init()
     pe_larger = false;
     }
 
+void Dm::setUdevData(SystemInfo& si)
+    {
+    const UdevMap& by_id = si.getUdevMap("/dev/disk/by-id");
+    alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
+    UdevMap::const_iterator it = by_id.find(procName());
+    if (it != by_id.end())
+	{
+	list<string> sl = it->second;
+	partition(sl.begin(), sl.end(), string_starts_with("dm-name-"));
+	y2mil("dev:" << dev << " udev_id:" << sl);
+	for (list<string>::const_iterator i = sl.begin(); i != sl.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + *i);
+	}
+    }
+
 void Dm::updateMajorMinor()
     {
     getMajorMinor();
     if( majorNr()==Dm::dmMajor() )
-	addDmNames(minorNr());
+	{
+	string d = "/dev/dm-" + decString(minorNr());
+	if( d!=dev )
+	    replaceAltName( "/dev/dm-", d );
+	}
     num = mnr;
     }
 

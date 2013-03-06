@@ -213,6 +213,12 @@ DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
     dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
+void
+DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    {
+    y2mil( "num:" << num );
+    dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p, si );
+    }
 
 void
     DmmultipathCo::addPv(const Pv& p)

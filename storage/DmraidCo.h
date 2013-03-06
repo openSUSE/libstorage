@@ -137,6 +137,7 @@ class DmraidCo : public DmPartCo
 	void getRaidData(const string& name, SystemInfo& systeminfo);
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
+	void newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si );
 
 	Text removeText( bool doing ) const;
 

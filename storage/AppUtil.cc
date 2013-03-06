@@ -538,7 +538,12 @@ readlink(const string& path, string& buf)
 
 		    string::size_type pos = tmp.find_first_not_of("./");
 		    if (pos != string::npos)
-			links[udevDecode(entry->d_name)] = tmp.substr(pos);
+			{
+			tmp.erase(0,pos);
+			if( boost::starts_with(tmp, "dev/"))
+			    tmp.erase(0,4);
+			links[udevDecode(entry->d_name)] = tmp;
+			}
 		}
 		closedir(dir);
 	    }

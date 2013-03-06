@@ -176,6 +176,12 @@ DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
     dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
+void
+DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    {
+    y2mil( "num:" << num );
+    dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p, si );
+    }
 
     void
     DmraidCo::addPv(const Pv& pv)

@@ -5259,12 +5259,6 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     }
 
 
-static bool isDmContainer( const Container& co )
-{
-    return co.type()==DM || co.type()==LVM || co.type()==DMRAID || co.type()==DMMULTIPATH;
-}
-
-
 bool Storage::removeDmMapsTo( const string& dev )
     {
     bool ret = false;
@@ -6293,6 +6287,25 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
 		while( v!=li->end() && v->device()!=tmp )
 		    ++v;
 		}
+	    if( v==li->end() )
+		{
+		y2war( "finding over major/minor" );
+		unsigned long mjr, mnr;
+		mjr = mnr = 0;
+		const Device* dev = NULL;
+		if( !testmode() && getMajorMinor( d, mjr, mnr ) &&
+		    (dev=deviceByNumber( mjr, mnr ))!=NULL )
+		    {
+		    v = li->begin();
+		    while( v!=li->end() && v->device()!=dev->device() )
+			++v;
+		    if( v!=li->end() )
+			{
+			y2war( "finding over major/minor:" << d << " is:" << v->device() );
+			y2mil( "vol:" << *v );
+			}
+		    }
+		}
 	    }
 	else if( !label.empty() )
 	    {
@@ -6766,7 +6779,7 @@ bool Storage::setDmcryptData( const string& dev, const string& dm,
         findVolume( dev, v ) )
 	{
 	v->setDmcryptDevEnc( dm, typ, siz!=0 );
-	v->addDmNames(dmnum);
+	v->addDmCryptNames(dmnum);
 	v->setSize( siz );
 	ret = true;
 	}

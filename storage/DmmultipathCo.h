@@ -139,6 +139,7 @@ class DmmultipathCo : public DmPartCo
 	void getMultipathData(const string& name, SystemInfo& systeminfo);
 	void addPv(const Pv& pv);
 	void newP( DmPart*& dm, unsigned num, Partition* p );
+	void newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si );
 
 	static void activate(bool val);
 	static bool isActive() { return active; }
