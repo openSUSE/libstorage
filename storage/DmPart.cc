@@ -128,8 +128,10 @@ void DmPart::addUdevData()
 	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
 	    {
 	    string s = "/dev/disk/by-id/"+udevAppendPart(*i, num);
-	    if( find( alt_names.begin(), alt_names.end(), s )==alt_names.end() )
-		alt_names.push_back(s);
+	    list<string>::iterator e = find( alt_names.begin(), alt_names.end(), s );
+	    if( e!=alt_names.end() )
+		alt_names.erase(e);
+	    alt_names.push_back(s);
 	    }
 	mount_by = orig_mount_by = defaultMountBy();
     }
