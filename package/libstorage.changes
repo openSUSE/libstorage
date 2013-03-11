@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 11 17:53:25 CET 2013 - fehr@suse.de
+
+- fix LVM encryption when btrfs fs is present (bnc#808020)
+
+-------------------------------------------------------------------
 Wed Mar  6 14:43:59 CET 2013 - fehr@suse.de
 
 - improve handling of udev by-id links for dm devices
