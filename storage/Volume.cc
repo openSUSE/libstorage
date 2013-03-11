@@ -1731,7 +1731,9 @@ Volume::setEncryption(bool val, EncryptType typ )
     y2mil("val:" << val << " typ:" << toString(typ));
     if (isUsedBy())
 	{
-	ret = VOLUME_ALREADY_IN_USE;
+	const Volume* btrfs = NULL;
+	if( !getStorage()->isUsedBySingleBtrfs(*this, &btrfs) )
+	    ret = VOLUME_ALREADY_IN_USE;
 	}
     if( ret==0 )
 	{
