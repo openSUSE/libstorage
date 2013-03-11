@@ -110,7 +110,7 @@ namespace storage
     bool
     Device::getMajorMinor()
     {
-	return storage::getMajorMinor(dev, mjr, mnr);
+	return storage::getMajorMinor(dev, mjr, mnr, create);
     }
 
 

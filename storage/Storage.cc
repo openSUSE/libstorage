@@ -6292,7 +6292,7 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
 		unsigned long mjr, mnr;
 		mjr = mnr = 0;
 		const Device* dev = NULL;
-		if( !testmode() && getMajorMinor( d, mjr, mnr ) &&
+		if( !testmode() && getMajorMinor( d, mjr, mnr, true ) &&
 		    (dev=deviceByNumber( mjr, mnr ))!=NULL )
 		    {
 		    v = li->begin();

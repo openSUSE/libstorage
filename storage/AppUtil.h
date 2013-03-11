@@ -57,7 +57,7 @@ bool setStatMode(const string& Path_Cv, mode_t val );
 
     bool getStatVfs(const string& path, StatVfs&);
 
-    bool getMajorMinor(const string& device, unsigned long& major, unsigned long& minor);
+    bool getMajorMinor(const string& device, unsigned long& major, unsigned long& minor, bool may_fail=false);
 
 
 string extractNthWord(int Num_iv, const string& Line_Cv, bool GetRest_bi = false);

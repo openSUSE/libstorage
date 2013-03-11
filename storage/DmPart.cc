@@ -121,19 +121,32 @@ void DmPart::addUdevData()
     }
 
 
-    void
-    DmPart::addAltUdevId(unsigned num)
+void
+DmPart::addAltUdevId(unsigned num)
     {
-	const list<string> tmp = co()->udevId();
-	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+    list<string> by_id;
+    list<string>::iterator e = alt_names.begin();
+    while( e!=alt_names.end() )
+	{
+	if( boost::contains(*e,"/by-id/") )
 	    {
-	    string s = "/dev/disk/by-id/"+udevAppendPart(*i, num);
-	    list<string>::iterator e = find( alt_names.begin(), alt_names.end(), s );
-	    if( e!=alt_names.end() )
-		alt_names.erase(e);
-	    alt_names.push_back(s);
+	    by_id.push_back(*e);
+	    e=alt_names.erase(e);
 	    }
-	mount_by = orig_mount_by = defaultMountBy();
+	else
+	    ++e;
+	}
+    const list<string> tmp = co()->udevId();
+    for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	{
+	string s = "/dev/disk/by-id/"+((num>0)?udevAppendPart(*i, num):*i);
+	e = find( by_id.begin(), by_id.end(), s );
+	if( e!=by_id.end() )
+	    by_id.erase(e);
+	alt_names.push_back(s);
+	}
+    alt_names.splice(alt_names.end(),by_id);
+    mount_by = orig_mount_by = defaultMountBy();
     }
 
 
