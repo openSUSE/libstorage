@@ -7073,9 +7073,12 @@ Storage::mountDev( const string& device, const string& mp, bool ro,
 	{
 	if( vol->needCrsetup() )
 	    {
-	    ret = vol->doCrsetup()==0;
+	    bool slnt = vol->isSilent();
+	    vol->setSilent(true);
+	    ret = vol->doCrsetup(true)==0;
 	    if( ret==0 )
 		didCrsetup = true;
+	    vol->setSilent(slnt);
 	    }
 	if( ret )
 	    {
@@ -7106,7 +7109,7 @@ Storage::activateEncryption( const string& device, bool on )
 	vol->setSilent(true);
 	if( on && vol->needCrsetup() )
 	    {
-	    ret = vol->doCrsetup();
+	    ret = vol->doCrsetup(true);
 	    }
 	else if( !on )
 	    {
@@ -7185,8 +7188,7 @@ bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
     {
 	string opts = opt;
 	list<string> ls = splitString( vol->getFstabOption(), "," );
-	y2mil( "ls=" << ls );
-	y2mil( "format:" << vol->getFormat() );
+	y2mil( "ls=" << ls << " format:" << vol->getFormat() );
 	if( opt.find( "subvolid=0" )!=string::npos || vol->getFormat() )
 	    {
 	    ls.remove_if( string_starts_with("subvol=") );
@@ -7298,7 +7300,7 @@ Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_i
 		rmdir( mp.c_str() );
 		}
 
-	    if( vol->needCrsetup() && vol->doCrsetup() )
+	    if( vol->needCrsetup() && vol->doCrsetup(true) )
 		{
 		ret = vol->mount( mp )==0;
 		if( !ret )

@@ -2365,11 +2365,12 @@ void Volume::replaceAltName( const string& prefix, const string& newn )
     }
 
 
-int Volume::doCryptsetup()
+int Volume::doCryptsetup(bool readonly)
     {
     int ret = 0;
     y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() << 
-          " active:" << dmcrypt_active << " format:" << format );
+          " active:" << dmcrypt_active << " format:" << format <<
+	  " ro:" << readonly );
     if( dmcrypt() )
 	{
 	getStorage()->showInfoCb( crsetupText(true), silent );
@@ -2402,8 +2403,15 @@ int Volume::doCryptsetup()
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();
 	    SystemCmd cmd;
-	    if( format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) ||
-	        (encryption!=ENC_NONE&&orig_crypt_pwd!=crypt_pwd) )
+	    y2mil( "format:" << format << " tmpc:" << isTmpCryptMp(mp) << 
+	           " pwempty:" << crypt_pwd.empty() << " ro:" << readonly <<
+		   " enc!=NONE:" << (encryption!=ENC_NONE) );
+#ifdef DEBUG_CRYPT_PASSWORD
+	    y2mil( "pw:\"" << crypt_pwd << "\" orig:\"" << orig_crypt_pwd << "\"" );
+#endif
+	    if( !readonly &&
+	        (format || (isTmpCryptMp(mp)&&crypt_pwd.empty()) ||
+	         (encryption!=ENC_NONE&&orig_crypt_pwd!=crypt_pwd)) )
 		{
 		string cmdline = getCryptsetupCmd( encryption, dmcrypt_dev, mp, fname, true,
 						   crypt_pwd.empty() );
@@ -2454,9 +2462,10 @@ int Volume::doCryptsetup()
     return( ret );
     }
 
-int Volume::doCrsetup()
+int Volume::doCrsetup(bool readonly)
     {
     int ret = 0;
+    y2mil("ro:" << readonly);
     bool force_fstab_rewrite = false;
     bool losetup_done = false;
     bool did_cryptsetup = false;
@@ -2471,7 +2480,7 @@ int Volume::doCrsetup()
 	    encryption != ENC_NONE &&
 	    ((!crypt_pwd.empty() && crypt_pwd!=orig_crypt_pwd) ||
 	     (crypt_pwd.empty() && isTmpCryptMp(mp) && format));
-	ret = doCryptsetup();
+	ret = doCryptsetup(readonly);
 	if( ret!=0 && losetup_done )
 	    loUnsetup();
 	did_cryptsetup = true;

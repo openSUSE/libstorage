@@ -322,7 +322,7 @@ LoopCo::doCreate( Volume* v )
 	    ret = LOOP_FILE_CREATE_FAILED;
 	if( ret==0 )
 	    {
-	    ret = l->doCrsetup();
+	    ret = l->doCrsetup(false);
 	    }
 	if( ret==0 )
 	    {

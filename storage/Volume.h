@@ -165,7 +165,7 @@ class Storage;
 	int canResize( unsigned long long newSizeK ) const;
 	int doMount();
 	int doFormat();
-	int doCrsetup();
+	int doCrsetup(bool readonly);
 	int doSetLabel();
 	int doFstabUpdate(bool force=false);
 	int resizeFs();
@@ -234,7 +234,7 @@ class Storage;
 	bool needLosetup( bool urgent ) const; 
 	bool needCryptsetup() const; 
 	int doLosetup();
-	int doCryptsetup();
+	int doCryptsetup(bool readonly);
 	int loUnsetup( bool force=false );
 	int cryptUnsetup( bool force=false );
 	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
