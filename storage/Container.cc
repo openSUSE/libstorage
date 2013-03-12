@@ -211,7 +211,7 @@ int Container::commitChanges( CommitStage stage, Volume* vol )
 	    else if( vol->needExtend() )
 		ret = doResize( vol );
 	    if (vol->needCrsetup(false))
-		ret = vol->doCrsetup(!vol->isUsedBy(UB_LVM));
+		ret = vol->doCrsetup(!vol->isUsedBy(UB_LVM)&&!vol->getFormat());
 	    break;
 
 	case FORMAT:
