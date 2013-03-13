@@ -7,6 +7,7 @@ Mon Mar 11 17:53:25 CET 2013 - fehr@suse.de
 Wed Mar  6 14:43:59 CET 2013 - fehr@suse.de
 
 - improve handling of udev by-id links for dm devices
+- fix detect of encrypted volumes (bnc#808487)
 
 -------------------------------------------------------------------
 Tue Mar  5 11:49:34 CET 2013 - fehr@suse.de
