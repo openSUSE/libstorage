@@ -437,7 +437,7 @@ int LvmVg::resizeVolume( Volume* v, unsigned long long newSize )
 	    {
 	    ret = LVM_CHECK_RESIZE_INVALID_VOLUME;
 	    }
-    }
+	}
     if( ret==0 )
 	checkConsistency();
     y2mil("ret:" << ret);
@@ -1662,8 +1662,8 @@ int LvmVg::doResize( Volume* v )
 	    if( ret==0 )
 		remount = true;
 	    }
-	if( ret==0 && old_le>new_le && l->getFs()!=FSNONE )
-	    ret = v->resizeFs();
+	if( ret==0 )
+	    ret = v->resizeBefore();
 	if( ret==0 && old_le>new_le )
 	    {
 	    string cmd = LVREDUCEBIN " -f " + instSysString() +
@@ -1686,8 +1686,8 @@ int LvmVg::doResize( Volume* v )
 		setExtError( c );
 		}
 	    }
-	if( ret==0 && old_le<new_le && l->getFs()!=FSNONE )
-	    ret = v->resizeFs();
+	if( ret==0 )
+	    ret = v->resizeAfter();
 	if( old_le!=new_le )
 	    l->calcSize();
 	if( ret==0 && remount )

@@ -2327,7 +2327,6 @@ int Disk::doResize( Volume* v )
     if( p != NULL )
 	{
 	bool remount = false;
-	bool needExtend = !p->needShrink();
 	getStorage()->showInfoCb( p->resizeText(true), silent );
 	if( !dmp_slave && p->isMounted() )
 	    {
@@ -2335,10 +2334,8 @@ int Disk::doResize( Volume* v )
 	    if( ret==0 )
 		remount = true;
 	    }
-	if( ret==0 && !dmp_slave && !needExtend && 
-	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
-	    p->getFs()!=FSNONE )
-	    ret = p->resizeFs();
+	if( ret==0 && !dmp_slave )
+	    ret = p->resizeBefore();
 	if( ret==0 )
 	    {
 	    y2mil("doResize container " << name() << " name " << p->name());
@@ -2382,6 +2379,8 @@ int Disk::doResize( Volume* v )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
 		}
+	    if( ret==0 && !dmp_slave )
+		ret = p->resizeAfter();
 	    if( !getPartedValues( p ))
 		{
 		if( ret==0 )
@@ -2391,10 +2390,6 @@ int Disk::doResize( Volume* v )
 		Storage::waitForDevice(p->device());
 	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
 	    }
-	if( ret == 0 && needExtend && !dmp_slave &&
-	    p->getFs()!=HFS && p->getFs()!=HFSPLUS && p->getFs()!=VFAT && 
-	    p->getFs()!=FSNONE )
-	    ret = p->resizeFs();
 	if( ret==0 && remount )
 	    ret = p->mount();
 	}

@@ -890,10 +890,8 @@ int DmPartCo::doResize( Volume* v )
     if( ret==0 && l == NULL )
 	ret = DMPART_INVALID_VOLUME;
     bool remount = false;
-    bool needExtend = false;
     if( ret==0 )
 	{
-	needExtend = !l->needShrink();
 	getStorage()->showInfoCb( l->resizeText(true), silent );
 	if( l->isMounted() )
 	    {
@@ -901,8 +899,8 @@ int DmPartCo::doResize( Volume* v )
 	    if( ret==0 )
 		remount = true;
 	    }
-	if( ret==0 && !needExtend && l->getFs()!=VFAT && l->getFs()!=FSNONE )
-	    ret = l->resizeFs();
+	if( ret==0 )
+	    ret = l->resizeBefore();
 	}
     if( ret==0 )
 	{
@@ -917,8 +915,8 @@ int DmPartCo::doResize( Volume* v )
 	activate_part(false);
 	activate_part(true);
 	}
-    if( ret==0 && needExtend && l->getFs()!=VFAT && l->getFs()!=FSNONE )
-	ret = l->resizeFs();
+    if( ret==0 )
+	ret = l->resizeAfter();
     if( ret==0 )
 	{
 	ProcParts parts;

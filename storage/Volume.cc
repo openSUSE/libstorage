@@ -1579,6 +1579,28 @@ int Volume::canResize( unsigned long long newSizeK ) const
     return( ret );
     }
 
+int Volume::resizeBefore()
+    {
+    int ret = 0;
+    FsType fs = getFs();
+    if( (needShrink()&&fs!=SWAP) && 
+        fs!=HFS && fs!=HFSPLUS && fs!=VFAT && fs!=FSNONE )
+	ret = resizeFs();
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
+int Volume::resizeAfter()
+    {
+    int ret = 0;
+    FsType fs = getFs();
+    if( (needExtend()||(needShrink()&&fs==SWAP)) && 
+        fs!=HFS && fs!=HFSPLUS && fs!=VFAT && fs!=FSNONE )
+	ret = resizeFs();
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
+
 int Volume::resizeFs()
     {
     SystemCmd c;

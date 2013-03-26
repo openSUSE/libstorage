@@ -168,6 +168,8 @@ class Storage;
 	int doCrsetup(bool readonly);
 	int doSetLabel();
 	int doFstabUpdate(bool force=false);
+	int resizeBefore();
+	int resizeAfter();
 	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }
