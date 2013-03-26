@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Mar 26 17:25:02 CET 2013 - fehr@suse.de
+
+- fix wrong handling of shrinking swap (bnc#803800)
+- restructured handling of resizing of existing fs
+
+-------------------------------------------------------------------
 Tue Mar 19 18:41:08 CET 2013 - fehr@suse.de
 
 - fix wrong size calculation when deleting thin LVs (bnc#810305)
