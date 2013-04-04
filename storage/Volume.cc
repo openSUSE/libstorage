@@ -1603,6 +1603,7 @@ int Volume::resizeAfter()
 
 int Volume::resizeFs()
     {
+    y2mil( "vol:" << *this );
     SystemCmd c;
     string cmd;
     int ret = 0;
@@ -1612,7 +1613,14 @@ int Volume::resizeFs()
 	cmd += dmcrypt_dev.substr(dmcrypt_dev.rfind( '/' )+1);
 	c.execute( cmd );
 	}
-    if( !format && !ignore_fs )
+    bool needFsResize = !format && !ignore_fs;
+    if( needFsResize && isUsedBy(UB_BTRFS) )
+	{
+	const Volume *bvol=NULL;
+	if( getStorage()->findUuid( getUsedBy().front().device(), bvol ))
+	    needFsResize = !bvol->getFormat() && !bvol->ignoreFs();
+	}
+    if( needFsResize )
 	{
 	switch( fs )
 	    {
@@ -1741,7 +1749,7 @@ int Volume::resizeFs()
 	    }
 	}
     ignore_fs = false;
-    y2mil("ret:" << ret);
+    y2mil( "ret:" << ret << " needFsResize:" << needFsResize );
     return( ret );
     }
 
