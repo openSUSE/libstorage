@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Mar 28 12:38:07 CET 2013 - fehr@suse.de
+
+- fix bug while formatting as btrfs after resizing (bnc#812162)
+
+-------------------------------------------------------------------
 Tue Mar 26 17:25:02 CET 2013 - fehr@suse.de
 
 - fix wrong handling of shrinking swap (bnc#803800)
