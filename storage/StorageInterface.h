@@ -2783,6 +2783,13 @@ namespace storage
 
 
     /**
+     * Lightweight function to get existing disks without full probing
+     *
+     * @return list of device names of present disk devices
+     */
+    list<string> getPresentDisks();
+
+    /**
      * Initializes default logging.
      */
     void initDefaultLogger();

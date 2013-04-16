@@ -780,7 +780,7 @@ Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
     for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
 	{
 	DiskData& data( *i );
-	data.dev = boost::replace_all_copy(data.name, "!", "/");
+	data.dev = Disk::sysfsToDev(data.name);
 	y2mil("name sysfs:" << data.name << " parted:" << data.dev);
 	Disk * d = NULL;
 	switch( data.typ )
@@ -826,21 +826,19 @@ Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
     }
 
 
-void
-    Storage::autodetectDisks(SystemInfo& systeminfo)
+bool Storage::getDiskList( list< pair< string, Disk::SysfsInfo > >& dlist )
     {
+    dlist.clear();
     DIR *Dir;
     struct dirent *Entry;
     if( (Dir=opendir(SYSFSDIR))!=NULL )
-    {
-	list<DiskData> dl;
-	while( (Entry=readdir( Dir ))!=NULL )
 	{
+	while( (Entry=readdir( Dir ))!=NULL )
+	    {
 	    string dn = Entry->d_name;
 
 	    if (dn == "." || dn == "..")
 		continue;
-
 	    // we do not treat mds as disks although they can be partitioned since kernel 2.6.28
 	    if (boost::starts_with(dn, "md")||boost::starts_with(dn, "loop"))
 		continue;
@@ -849,56 +847,86 @@ void
 	    if (!Disk::getSysfsInfo(SYSFSDIR "/" + dn, sysfsinfo))
 		continue;
 
-	    if (sysfsinfo.range > 1 && (sysfsinfo.size > 0 || dn.find("dasd") == 0))
-	    {
-		DiskData::DTyp t = (dn.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
-
-		if (t == DiskData::DASD)
+	    if( (sysfsinfo.range>1 && (sysfsinfo.size>0 || dn.find("dasd")==0)) ||
+	        (sysfsinfo.range==1 && sysfsinfo.size>0 && sysfsinfo.vbd) )
 		{
-		    const Dasdview& dasdview = systeminfo.getDasdview("/dev/" + dn);
-		    if (dasdview.getDasdType() == Dasd::DASDTYPE_FBA)
-			t = DiskData::DISK;
-		}
-
-		dl.push_back(DiskData(dn, t, sysfsinfo.size / 2));
-	    }
-	    else if (sysfsinfo.range == 1 && sysfsinfo.size > 0)
-	    {
-		if (sysfsinfo.vbd)
-		{
-		    dl.push_back(DiskData(dn, DiskData::XEN, sysfsinfo.size / 2));
+		dlist.push_back( make_pair( dn, sysfsinfo ) );
 		}
 	    }
-	}
 	closedir( Dir );
-	initDisk(dl, systeminfo);
-	const UdevMap& by_path = systeminfo.getUdevMap("/dev/disk/by-path");
-	const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
-	for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
-	    {
-	    if( i->d )
-	        {
-		string tmp1;
-		UdevMap::const_iterator it1 = by_path.find(i->dev);
-		if (it1 != by_path.end())
-		    tmp1 = it1->second.front();
-
-		list<string> tmp2;
-		UdevMap::const_iterator it2 = by_id.find(i->dev);
-		if (it2 != by_id.end())
-		    tmp2 = it2->second;
-
-		i->d->setUdevData(tmp1, tmp2);
-		addToList( i->d );
-		}
-	    }
 	}
     else
 	{
 	y2err("Failed to open:" SYSFSDIR);
 	}
+    return( !dlist.empty() );
     }
 
+
+void Storage::autodetectDisks(SystemInfo& systeminfo)
+    {
+    list< pair< string, Disk::SysfsInfo > > dlist;
+    getDiskList( dlist );
+    list< pair< string, Disk::SysfsInfo > >::const_iterator i = dlist.begin();
+    list<DiskData> dl;
+    while( i!=dlist.end() )
+	{
+	if( i->second.range > 1 && (i->second.size > 0 || i->first.find("dasd") == 0))
+	    {
+	    DiskData::DTyp t = (i->first.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
+
+	    if (t == DiskData::DASD)
+		{
+		const Dasdview& dasdview = systeminfo.getDasdview("/dev/" + i->first);
+		if (dasdview.getDasdType() == Dasd::DASDTYPE_FBA)
+		    t = DiskData::DISK;
+		}
+
+	    dl.push_back(DiskData(i->first, t, i->second.size / 2));
+	    }
+	else if( i->second.range == 1 && i->second.size > 0 && i->second.vbd )
+	    {
+	    dl.push_back(DiskData(i->first, DiskData::XEN, i->second.size / 2));
+	    }
+	++i;
+	}
+    initDisk(dl, systeminfo);
+    const UdevMap& by_path = systeminfo.getUdevMap("/dev/disk/by-path");
+    const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
+    for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
+	{
+	if( i->d )
+	    {
+	    string tmp1;
+	    UdevMap::const_iterator it1 = by_path.find(i->dev);
+	    if (it1 != by_path.end())
+		tmp1 = it1->second.front();
+
+	    list<string> tmp2;
+	    UdevMap::const_iterator it2 = by_id.find(i->dev);
+	    if (it2 != by_id.end())
+		tmp2 = it2->second;
+
+	    i->d->setUdevData(tmp1, tmp2);
+	    addToList( i->d );
+	    }
+	}
+    }
+
+list<string> getPresentDisks()
+    {
+    list<string> ret;
+    list< pair< string, Disk::SysfsInfo > > dlist;
+    Storage::getDiskList( dlist );
+    list< pair< string, Disk::SysfsInfo > >::const_iterator i = dlist.begin();
+    while( i!=dlist.end() )
+	{
+	ret.push_back( "/dev/"+Disk::sysfsToDev(i->first) );
+	++i;
+	}
+    y2mil( "ret:" << ret );
+    return( ret );
+    }
 
     void
     Storage::detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo)
