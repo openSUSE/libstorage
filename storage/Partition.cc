@@ -140,7 +140,7 @@ namespace storage
     string
     Partition::sysfsPath() const
     {
-	return disk()->sysfsPath() + "/" + boost::replace_all_copy(procName(), "/", "!");
+	return disk()->sysfsPath() + "/" + Disk::devToSysfs(procName());
     }
 
 

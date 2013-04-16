@@ -177,6 +177,8 @@ class Disk : public Container
 	};
 
 	static bool getSysfsInfo(const string& sysfsdir, SysfsInfo& sysfsinfo);
+	static string devToSysfs(const string& nm);
+	static string sysfsToDev(const string& nm);
 
     protected:
 
