@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr 16 17:05:08 CEST 2013 - fehr@suse.de
+
+- add fast way to detect present disks in system (bnc#810823)
+
+-------------------------------------------------------------------
 Thu Mar 28 12:38:07 CET 2013 - fehr@suse.de
 
 - fix bug while formatting as btrfs after resizing (bnc#812162)
