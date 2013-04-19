@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Apr 19 12:49:10 CEST 2013 ­ fehr@suse.de
+
+- fixed bug with activated encryption on DASDs (bnc#810706)
+
+-------------------------------------------------------------------
 Tue Apr 16 17:05:08 CEST 2013 - fehr@suse.de
 
 - version 2.24.0
