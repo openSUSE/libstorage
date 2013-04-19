@@ -299,11 +299,22 @@ int Dasd::doFdasd()
     {
     int ret = 0;
     getStorage()->showInfoCb( fdasdText(), silent );
+    PartPair p = partPair();
+    PartIter i = p.begin();
+    while( ret==0 && i!=p.end() )
+	{
+	if( i->deleted() )
+	    {
+	    getStorage()->removeDmMapsTo( getPartDevice(i->OrigNr()) );
+	    i->prepareRemove();
+	    }
+	++i;
+	}
     string inpname = getStorage()->tmpDir()+"/fdasd_inp";
     ofstream inpfile( inpname.c_str() );
     classic(inpfile);
-    PartPair p = partPair(Partition::notDeleted);
-    PartIter i = p.begin();
+    p = partPair(Partition::notDeleted);
+    i = p.begin();
     while( i!=p.end() )
 	{
 	string start = decString(i->cylStart() * new_geometry.heads);
@@ -333,7 +344,6 @@ int Dasd::doFdasd()
 	    if( i->deleted() )
 		{
 		rem_list.push_back( &(*i) );
-		i->prepareRemove();
 		}
 	    if( i->created() )
 		{
