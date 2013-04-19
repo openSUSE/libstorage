@@ -1,5 +1,5 @@
 -------------------------------------------------------------------
-Fri Apr 19 12:49:10 CEST 2013 ­ fehr@suse.de
+Fri Apr 19 12:49:10 CEST 2013 - fehr@suse.de
 
 - fixed bug with activated encryption on DASDs (bnc#810706)
 
