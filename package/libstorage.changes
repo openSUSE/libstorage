@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Apr 23 14:34:47 CEST 2013 - aschnell@suse.de
+
+- fixed parser for dmsetup output for device names containing a
+  colon (bnc#816063)
+
+-------------------------------------------------------------------
 Fri Apr 19 12:49:10 CEST 2013 - fehr@suse.de
 
 - fixed bug with activated encryption on DASDs (bnc#810706)

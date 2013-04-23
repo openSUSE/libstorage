@@ -40,13 +40,13 @@ namespace storage
 
     CmdDmsetup::CmdDmsetup()
     {
-	SystemCmd c(DMSETUPBIN " --columns --noheadings -o name,major,minor,segments,uuid info");
+	SystemCmd c(DMSETUPBIN " --columns --separator ' / ' --noheadings -o name,major,minor,segments,uuid info");
 	if (c.retcode() != 0 || c.numLines() == 0)
 	    return;
 
 	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
 	{
-	    list<string> sl = splitString(*it, ":");
+	    list<string> sl = splitString(*it, " / ");
 	    if (sl.size() >= 4)
 	    {
 		Entry entry;
