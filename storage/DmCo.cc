@@ -47,7 +47,7 @@ namespace storage
 	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
 	{
 	    list<string> sl = splitString(*it, "/");
-	    if (sl.size() >= 4)
+	    if (sl.size() >= 5)
 	    {
 		Entry entry;
 
