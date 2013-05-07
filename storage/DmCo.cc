@@ -197,6 +197,7 @@ void DmCo::getDmData(SystemInfo& systeminfo)
 
     const CmdDmsetup& cmddmsetup = systeminfo.getCmdDmsetup();
     list<string> lvm_pools;
+    list<string> lvm_tmeta;
     for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
         {
         if( boost::ends_with(it1->first,"-tpool") )
@@ -214,6 +215,24 @@ void DmCo::getDmData(SystemInfo& systeminfo)
                     delete(m);
                 }
             }
+        if( boost::ends_with(it1->first,"_tmeta") )
+            {
+            string name = it1->first.substr( 0, it1->first.size()-6 );
+	    if( find( lvm_tmeta.begin(), lvm_tmeta.end(), name )==lvm_tmeta.end() )
+		lvm_tmeta.push_back( name );
+	    }
+        }
+    y2mil( "lvm_pools:" << lvm_pools );
+    y2mil( "lvm_tmeta:" << lvm_tmeta );
+    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+        {
+        if( boost::ends_with(it1->first,"_tdata") )
+            {
+            string name = it1->first.substr( 0, it1->first.size()-6 );
+	    if( find( lvm_tmeta.begin(), lvm_tmeta.end(), name )!=lvm_tmeta.end() &&
+	        find( lvm_pools.begin(), lvm_pools.end(), name )==lvm_pools.end() )
+		lvm_pools.push_back( name );
+	    }
         }
     y2mil( "lvm_pools:" << lvm_pools );
     for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
