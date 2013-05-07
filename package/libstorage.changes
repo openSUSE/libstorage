@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Tue May  7 17:13:52 CEST 2013 - fehr@suse.de
 
+- detects lvm pools also when broken (bnc#818780)
 - fixed missing umount of btrfs volume when disk label is removed
   (bnc#818705)
 
