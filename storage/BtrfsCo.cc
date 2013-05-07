@@ -447,7 +447,9 @@ BtrfsCo::doRemove( Volume* v )
     if( b != NULL )
 	{
 	getStorage()->showInfoCb( b->removeText(true), b->isSilent() );
-	ret = b->clearSignature();
+	ret = b->prepareRemove();
+	if( ret==0 )
+	    ret = b->clearSignature();
 	if( ret==0 && !removeFromList(v) )
 	    ret = BTRFS_REMOVE_NO_BTRFS;
 	}
