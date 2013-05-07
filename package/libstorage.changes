@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue May  7 17:13:52 CEST 2013 - fehr@suse.de
+
+- fixed missing umount of btrfs volume when disk label is removed
+  (bnc#818705)
+
+-------------------------------------------------------------------
 Tue Apr 23 14:34:47 CEST 2013 - aschnell@suse.de
 
 - fixed parser for dmsetup output for device names containing a
