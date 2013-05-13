@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon May 13 13:20:37 CEST 2013 - fehr@suse.de
+
+- supported label size for swap is 15, not 16 like other fs have
+  (bnc#818822)
+
+-------------------------------------------------------------------
 Tue May  7 17:13:52 CEST 2013 - fehr@suse.de
 
 - detects lvm pools also when broken (bnc#818780)
