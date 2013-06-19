@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 19 12:20:14 CEST 2013 - fehr@suse.de
+
+- adapt to changed functionality of losetup (bnc#825503)
+
+-------------------------------------------------------------------
 Tue Mar 19 18:41:08 CET 2013 - fehr@suse.de
 
 - fix wrong size calculation when deleting thin LVs (bnc#810305)
