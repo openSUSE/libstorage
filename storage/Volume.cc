@@ -1934,11 +1934,16 @@ int Volume::getFreeLoop()
     return( ret );
     }
 
-string Volume::getLosetupCmd( storage::EncryptType, const string& pwdfile ) const
+string Volume::getLosetupCmd( const string& fpath ) const
     {
-    string cmd = LOSETUPBIN " " + quote(loop_dev) + " ";
-    const Loop* l = static_cast<const Loop*>(this);
-    cmd += quote(l->lfileRealPath());
+    string cmd = LOSETUPBIN " --find --show ";
+    if( fpath.empty() )
+	{
+	const Loop* l = static_cast<const Loop*>(this);
+	cmd += quote(l->lfileRealPath());
+	}
+    else 
+	cmd += quote(fpath);
     y2mil("cmd:" << cmd);
     return( cmd );
     }
@@ -2164,8 +2169,6 @@ EncryptType Volume::detectEncryption()
     y2mil("device:" << dev);
 
     mkdir( mpname.c_str(), 0700 );
-    if( is_loop )
-	getFreeLoop();
     detected_fs = fs = FSUNKNOWN;
     bool luks_ok = false;
     do
@@ -2180,10 +2183,11 @@ EncryptType Volume::detectEncryption()
 	crUnsetup( true );
 	if( is_loop )
 	    {
-	    string lfile;
-	    if( getLoopFile( lfile ))
-		c.execute(LOSETUPBIN " " + quote(loop_dev) + " " +
-			  quote(getStorage()->root() + lfile));
+	    c.execute(getLosetupCmd(""));
+	    y2mil( "loop_dev:" << loop_dev );
+	    if( !c.stdout().empty() )
+		loop_dev = c.stdout().front();
+	    y2mil( "loop_dev:" << loop_dev );
 	    }
 	string cmd = getCryptsetupCmd( try_order[pos], dmcrypt_dev, "", fname, false );
 	c.execute(MODPROBEBIN " dm-crypt");
@@ -2293,32 +2297,31 @@ int Volume::doLosetup()
     if( is_loop )
 	{
 	getStorage()->removeDmTableTo( *this );
-	if( ret==0 && loop_dev.empty() )
+	string fname;
+	if( !dmcrypt() )
 	    {
-	    ret = getFreeLoop();
+	    fname = getStorage()->tmpDir() + "/pwdf";
+	    ofstream pwdfile( fname.c_str() );
+	    classic(pwdfile);
+	    pwdfile << crypt_pwd << endl;
+	    pwdfile.close();
 	    }
-	if( ret==0 )
+	SystemCmd c( getLosetupCmd(""));
+	if( c.retcode()!=0 )
+	    ret = VOLUME_LOSETUP_FAILED;
+	else
 	    {
-	    string fname;
-	    if( !dmcrypt() )
-		{
-		fname = getStorage()->tmpDir() + "/pwdf";
-		ofstream pwdfile( fname.c_str() );
-		classic(pwdfile);
-		pwdfile << crypt_pwd << endl;
-		pwdfile.close();
-		}
-	    SystemCmd c( getLosetupCmd( encryption, fname ));
-	    if( c.retcode()!=0 )
-		ret = VOLUME_LOSETUP_FAILED;
-	    else
-		orig_crypt_pwd = crypt_pwd;
-	    if( !fname.empty() )
-		{
-		unlink( fname.c_str() );
-		}
-	    Storage::waitForDevice(loop_dev);
+	    y2mil( "loop_dev:" << loop_dev );
+	    if( !c.stdout().empty() )
+		loop_dev = c.stdout().front();
+	    y2mil( "loop_dev:" << loop_dev );
+	    orig_crypt_pwd = crypt_pwd;
 	    }
+	if( !fname.empty() )
+	    {
+	    unlink( fname.c_str() );
+	    }
+	Storage::waitForDevice(loop_dev);
 	if( ret==0 )
 	    {
 	    loop_active = true;
@@ -2374,7 +2377,7 @@ string Volume::getDmcryptName() const
 	nm.erase( 0, nm.find_last_of( '/' )+1 );
     string ret = "/dev/mapper/cr_" + nm;
     unsigned cnt=1;
-    while( getStorage()->usedDmName(ret))
+    while( getStorage()->usedDmName(ret,this))
         ret = "/dev/mapper/cr_" + nm + "_" + decString(cnt++);
     y2mil( "nm:" << ret );
     return( ret );
@@ -3100,7 +3103,6 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		    che.encr = encryption;
 		    if( inCryptotab() )
 			{
-			getFreeLoop();
 			che.loop_dev = fstab_loop_dev;
 			}
 		    che.dentry = de;
@@ -3134,7 +3136,6 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		    che.tmpcrypt = true;
 		if( inCryptotab() )
 		    {
-		    getFreeLoop();
 		    che.loop_dev = fstab_loop_dev;
 		    }
 		che.fs = toString(fs);

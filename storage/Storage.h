@@ -261,7 +261,7 @@ class DiskData;
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const { return tempdir; }
 	bool hasIScsiDisks() const;
-        bool usedDmName( const string& nm ) const;
+        bool usedDmName( const string& nm, const Volume* volp ) const;
 	string bootMount() const;
 
 	const ArchInfo& getArchInfo() const { return archinfo; }

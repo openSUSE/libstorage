@@ -5364,7 +5364,7 @@ bool Storage::checkDmMapsTo( const string& dev )
     return( ret );
     }
 
-bool Storage::usedDmName( const string& nm ) const
+bool Storage::usedDmName( const string& nm, const Volume* volp ) const
     {
     bool ret = false;
     y2mil("nm:" << nm);
@@ -5373,6 +5373,7 @@ bool Storage::usedDmName( const string& nm ) const
     while( !ret && v!=vp.end() )
 	{
         ret = v->dmcryptDevice()==nm || (v->cType()==DM&&v->device()==nm);
+	ret = ret && &(*v)!=volp;
         if( !ret )
             ++v;
 	}

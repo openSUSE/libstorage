@@ -42,16 +42,12 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	       bool dmcrypt, const string& dm_dev, SystemInfo& systeminfo,
 	   SystemCmd& losetup)
     : Volume(d, 0, 0), lfile(LoopFile), reuseFile(true), delFile(false)
-{
+    {
     y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
 	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
     loop_dev = fstab_loop_dev = LoopDev;
-    if( loop_dev.empty() )
-	getLoopData( losetup );
-    if( loop_dev.empty() )
-	getFreeLoop(losetup, d.usedNumbers());
     string proc_dev;
     if( !dmcrypt )
 	{
@@ -76,7 +72,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
     is_loop = true;
     unsigned long long s = 0;
     if( !proc_dev.empty() )
-	    systeminfo.getProcParts().getSize(proc_dev, s);
+	systeminfo.getProcParts().getSize(proc_dev, s);
     if( s>0 )
 	{
 	setSize( s );
@@ -87,18 +83,19 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	if( stat( lfile.c_str(), &st )>=0 )
 	    setSize( st.st_size/1024 );
 	}
-}
+    }
 
 
 Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
 	   unsigned long long sizeK, bool dmcr)
     : Volume(d, 0, 0), lfile(file), reuseFile(reuseExisting), delFile(false)
-{
+    {
     y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
 	  " sizek:" << sizeK << " dmcrypt:" << dmcr);
     if( d.type() != LOOP )
 	y2err("constructed loop with wrong container");
-    getFreeLoop();
+    SystemCmd c(LOSETUPBIN " -a");
+    loop_dev = getFreeLoop(c,d.usedNumbers());
     is_loop = true;
     if( !dmcr )
 	{
@@ -120,7 +117,7 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
     checkReuse();
     if( !reuseFile )
 	setSize( sizeK );
-}
+    }
 
 
     Loop::Loop(const LoopCo& c, const Loop& v)
