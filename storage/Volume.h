@@ -245,7 +245,7 @@ class Storage;
 	int umountTmpMount( const string& m, int ret ) const;
 	int doFormatBtrfs();
 
-	string getLosetupCmd( storage::EncryptType, const string& pwdfile ) const;
+	string getLosetupCmd( const string& fname ) const;
 	string getCryptsetupCmd( storage::EncryptType e, const string& dmdev,
 				 const string& mp, const string& pwdfile, bool format,
 				 bool empty_pwd=false ) const;
