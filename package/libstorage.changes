@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jun 19 12:20:14 CEST 2013 - fehr@suse.de
+
+- adapt to changed functionality of losetup (bnc#825503)
+
+-------------------------------------------------------------------
 Mon May 13 13:20:37 CEST 2013 - fehr@suse.de
 
 - supported label size for swap is 15, not 16 like other fs have
