@@ -115,7 +115,8 @@ namespace storage
 	}
 	else
 	{
-	    is_efiboot = checkDir( "/sys/firmware/efi/vars" );
+	    is_efiboot = checkDir( "/sys/firmware/efi/vars" ) ||
+	                 getenv("LIBSTORAGE_ENFORCE_EFI")!=NULL;
 	}
     }
 
