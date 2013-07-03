@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul  3 12:49:31 CEST 2013 - fehr@suse.de
+
+- allow to fake EFI detection with env var LIBSTORAGE_ENFORCE_EFI
+
+-------------------------------------------------------------------
 Wed Jun 19 12:20:14 CEST 2013 - fehr@suse.de
 
 - version 2.24.1
