@@ -706,7 +706,6 @@ void checkBinPaths( const string& arch, bool instsys )
     {
     y2mil( "Arch:" << arch << " Instsys:" << instsys );
     list<string> ign;
-    list<string> s390;
     const char* pathes[] = { 
 #include "./gen_pathlist.cc"
                            };
