@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Jul 23 17:02:29 CEST 2013 - fehr@suse.de
+
+- remove obsolete empty function initDefaultLogger()
+
+-------------------------------------------------------------------
 Wed Jul  3 12:49:31 CEST 2013 - fehr@suse.de
 
 - allow to fake EFI detection with env var LIBSTORAGE_ENFORCE_EFI
