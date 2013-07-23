@@ -64,13 +64,6 @@ namespace storage
     using namespace std;
 
 void
-initDefaultLogger()
-    {
-    /* initentionally left empty for backward compatibility         */
-    /* logdir initialisation is in constructor of class Environment */
-    }
-
-void
 initDefaultLogger( const string& logdir )
     {
     string path(logdir);

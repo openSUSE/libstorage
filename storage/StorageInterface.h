@@ -2790,11 +2790,6 @@ namespace storage
     list<string> getPresentDisks();
 
     /**
-     * Initializes default logging.
-     */
-    void initDefaultLogger();
-
-    /**
      * Initializes default logging with explicit log dir.
      */
     void initDefaultLogger( const string& logdir );

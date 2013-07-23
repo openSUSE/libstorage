@@ -2,7 +2,6 @@
 
 require 'storage'
 
-Storage::initDefaultLogger()
 env = Storage::Environment.new(true)
 storageInterface = Storage::createStorageInterface(env)
 
