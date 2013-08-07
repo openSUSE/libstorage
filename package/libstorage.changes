@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Aug  7 15:59:47 CEST 2013 - fehr@suse.de
+
+- fix progress bar for EXT filesystems
+
+-------------------------------------------------------------------
 Tue Jul 23 17:02:29 CEST 2013 - fehr@suse.de
 
 - remove obsolete empty function initDefaultLogger()
