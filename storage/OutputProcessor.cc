@@ -51,46 +51,46 @@ Mke2fsProgressBar::process(const string& val, bool stderr)
 	{
 	seen += val;
 	string::size_type pos;
-	string::size_type bpos = seen.find( "\b" );
-	y2deb("bpos:" << bpos);
-	if( bpos==0 )
-	    {
-	    seen.erase( 0, seen.find_first_not_of( "\b", bpos ));
-	    }
-	while( first && (pos=seen.find( "\n" )) != string::npos && pos<bpos )
-	    {
+	string::size_type bpos;
+	if( !inode_tab )
+	    inode_tab = seen.find("Writing inode tables")!=string::npos;
+	bpos = (inode_tab?seen.find( "\b" ):string::npos);
+	if( inode_tab )
+	    bpos = seen.find( "\b" );
+	while( !inode_tab && (pos=seen.find( "\n" )) != string::npos )
 	    seen.erase( 0, pos+1 );
-	    }
-	while( bpos != string::npos )
+	y2deb("first:" << first << " inode:" << inode_tab << " bpos:" << bpos);
+	while( inode_tab && bpos != string::npos )
 	    {
 	    pos = seen.find_first_of( "0123456789" );
-	    if( pos != string::npos )
-		seen.erase( 0, pos );
 	    y2deb("seen:" << seen);
-	    string number = seen.substr( 0, bpos );
-	    y2deb("number:" << number);
-	    list<string> l = splitString(number, "/" );
-	    list<string>::const_iterator i = l.begin();
-	    if( i != l.end() )
+	    if( pos != string::npos )
 		{
-		unsigned cval, mx;
-		*i++ >> cval;
-		if( first && i != l.end() )
+		string number = seen.substr( pos, bpos );
+		y2deb("number:" << number);
+		list<string> l = splitString(number, "/" );
+		list<string>::const_iterator i = l.begin();
+		if( i != l.end() )
 		    {
-		    *i >> mx;
-		    setMaxValue( mx+4 );
-		    setCurValue( 0 );
-		    first = false;
-		    }
-		else if( !first )
-		    {
-		    setCurValue( cval );
+		    unsigned cval, mx;
+		    *i++ >> cval;
+		    if( first && i != l.end() )
+			{
+			*i >> mx;
+			setMaxValue( mx+4 );
+			setCurValue( 0 );
+			first = false;
+			}
+		    else if( !first )
+			{
+			setCurValue( cval );
+			}
 		    }
 		}
 	    seen.erase( 0, seen.find_first_not_of( "\b", bpos ));
 	    bpos = seen.find( "\b" );
 	    }
-	if( seen.find( "done" )!=string::npos )
+	if( inode_tab && seen.find( "done" )!=string::npos )
 	    {
 	    setCurValue(getMaxValue() - 4);
 	    done = true;

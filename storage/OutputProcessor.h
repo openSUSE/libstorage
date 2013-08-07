@@ -79,6 +79,7 @@ namespace storage
 	{
 	    setMaxValue(100);
 	    done = false;
+	    inode_tab = false;
 	}
 
 	virtual void process(const string& txt, bool stderr);
@@ -86,6 +87,7 @@ namespace storage
     protected:
 	string seen;
 	bool done;
+	bool inode_tab;
     };
 
 
