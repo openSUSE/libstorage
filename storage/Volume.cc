@@ -1771,8 +1771,7 @@ Volume::setEncryption(bool val, EncryptType typ )
 	    {
 	    is_loop = false;
 	    encryption = ENC_NONE;
-	    crypt_pwd.erase();
-	    orig_crypt_pwd.erase();
+	    clearCryptPwd();
 	    }
 	else
 	    {
@@ -2267,8 +2266,7 @@ EncryptType Volume::detectEncryption()
 	is_loop = false;
 	dmcrypt_dev.erase();
 	loop_dev.erase();
-	crypt_pwd.erase();
-	orig_crypt_pwd.erase();
+	clearCryptPwd();
 	ret = ENC_UNKNOWN;
 	encryption = save_enc;
 	orig_encryption = save_orig;
