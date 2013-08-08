@@ -3955,8 +3955,6 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
     if( ret==0 && md!=NULL )
 	{
 	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
-	if( ret==0 )
-	    checkPwdBuf( Md::mdDevice(num) );
 	}
     if( !have_md )
 	{
@@ -3965,6 +3963,8 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
 	else if( md!=NULL )
 	    delete md;
 	}
+    if( ret==0 )
+	checkPwdBuf( Md::mdDevice(num) );
     if( ret==0 )
 	{
 	ret = checkCache();
@@ -4001,8 +4001,6 @@ int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<stri
     if( ret==0 )
 	{
 	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
-	if( ret==0 )
-	    checkPwdBuf( Md::mdDevice(num) );
 	}
     if( !have_md )
 	{
@@ -4013,6 +4011,8 @@ int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<stri
 	else if( md!=NULL )
 	    delete md;
 	}
+    if( ret==0 )
+	checkPwdBuf( Md::mdDevice(num) );
     if( ret==0 )
 	{
 	ret = checkCache();
@@ -7396,14 +7396,15 @@ Storage::eraseCachedFreeInfo(const string& device)
 
 void Storage::checkPwdBuf( const string& device )
     {
-	map<string,string>::iterator i=pwdBuf.find(device);
-	if( i!=pwdBuf.end() )
-	    {
-	    VolIterator vol;
-	    if( findVolume( device, vol ) )
-		vol->setCryptPwd( i->second );
-	    pwdBuf.erase(i);
-	    }
+    y2mil("device:"<<device);
+    map<string,string>::iterator i=pwdBuf.find(device);
+    if( i!=pwdBuf.end() )
+	{
+	VolIterator vol;
+	if( findVolume( device, vol ) )
+	    vol->setCryptPwd( i->second );
+	pwdBuf.erase(i);
+	}
     }
 
 
