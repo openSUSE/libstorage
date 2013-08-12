@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Aug 12 10:34:38 CEST 2013 - fehr@suse.de
+
+- improvements in ruby bindings for usage in yast2-storage
+
+-------------------------------------------------------------------
 Wed Aug  7 15:59:47 CEST 2013 - fehr@suse.de
 
 - fix progress bar for EXT filesystems
