@@ -7,7 +7,7 @@ env = Storage::Environment.new(true)
 
 c = Storage::createStorageInterface(env)
 
-containers = Storage::Dequecontainerinfo.new()
+containers = Storage::DequeContainerInfo.new()
 c.getContainers(containers)
 
 containers.each do |container|
@@ -21,7 +21,7 @@ containers.each do |container|
         print "  Size: ", Storage::byteToHumanString(1024 * diskinfo.sizeK, true, 2, false), "\n"
         print "  Cylinder Size: ", Storage::byteToHumanString(diskinfo.cylSize, true, 2, false), "\n"
 
-        partitioninfos = Storage::Dequepartitioninfo.new()
+        partitioninfos = Storage::DequePartitionInfo.new()
         c.getPartitionInfo(container.name, partitioninfos)
 
         partitioninfos.each do |partitioninfo|

@@ -19,15 +19,27 @@ using namespace std;
 
 OUTPUT_TYPEMAP(storage::MountByType, UINT2NUM, (unsigned int));
 
+%include "../../storage/StorageSwig.h"
 %include "../../storage/StorageInterface.h"
 %include "../../storage/HumanString.h"
 %include "../../storage/Graph.h"
 
 using namespace storage;
 
-%template(Dequestring) deque<string>;
-%template(Dequecontainerinfo) deque<ContainerInfo>;
-%template(Dequepartitioninfo) deque<PartitionInfo>;
-%template(Dequemdinfo) deque<MdInfo>;
-%template(Dequelvmlvinfo) deque<LvmLvInfo>;
+%template(DequeString) deque<string>;
+%template(ListString) list<string>;
+%template(ListInt) list<int>;
+%template(DequeContainerInfo) deque<ContainerInfo>;
+%template(DequePartitionInfo) deque<PartitionInfo>;
+%template(DequeMdPartInfo) deque<MdPartInfo>;
+%template(DequeDmraidInfo) deque<DmraidInfo>;
+%template(DequeLvmLvInfo) deque<LvmLvInfo>;
+%template(DequeMdInfo) deque<MdInfo>;
+%template(DequeLoopInfo) deque<LoopInfo>;
+%template(DequeDmInfo) deque<DmInfo>;
+%template(DequeNfsInfo) deque<NfsInfo>;
+%template(DequeTmpfsInfo) deque<TmpfsInfo>;
+%template(DequeBtrfsInfo) deque<BtrfsInfo>;
+%template(ListPartitionSlotInfo) list<PartitionSlotInfo>;
+%template(ListCommitInfo) list<CommitInfo>;
 

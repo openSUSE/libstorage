@@ -34,16 +34,7 @@ using std::list;
 
 
 #include "storage/StorageVersion.h"
-
-#ifndef SWIG
-#define SWIG_OUTPUT( var_name ) var_name
-#else
-#if defined(SWIGPYTHON) || defined(SWIGRUBY)
-#define SWIG_OUTPUT( var_name ) OUTPUT
-#else
-#define SWIG_OUTPUT( var_name ) REFERENCE
-#endif
-#endif
+#include "storage/StorageSwig.h"
 
 
 /*!
@@ -1273,8 +1264,9 @@ namespace storage
 	 * @param freeCylsAfter is set to the number of free cylinders after the partition
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int freeCylindersAroundPartition(const string& device, unsigned long& freeCylsBefore,
-						 unsigned long& freeCylsAfter) = 0;
+	virtual int freeCylindersAroundPartition(const string& device, 
+	                                         unsigned long& SWIG_OUTPUT(freeCylsBefore),
+						 unsigned long& SWIG_OUTPUT(freeCylsAfter)) = 0;
 
 	/**
 	 * Determine the device name of the next created partition
@@ -2218,7 +2210,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int computeMdSize(MdType md_type, const list<string>& devices,
-				  const list<string>& spares, unsigned long long& sizeK) = 0;
+				  const list<string>& spares, unsigned long long& SWIG_OUTPUT(sizeK)) = 0;
 
 	/**
 	 * Determine allowed parity types for raid type.
@@ -2265,7 +2257,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int checkNfsDevice(const string& nfsDev, const string& opts,
-				   bool nfs4, unsigned long long& sizeK) = 0;
+				   bool nfs4, unsigned long long& SWIG_OUTPUT(sizeK)) = 0;
 
 	/**
 	 * Create a file based loop device. Encryption is automatically
@@ -2862,7 +2854,7 @@ namespace storage
      * pid of one process holding a conflicting lock. If the pid cannot be
      * determined it is set to 0. The lock holder may run on another system.
      */
-    StorageInterface* createStorageInterfacePid(const Environment& env, int& locker_pid);
+    StorageInterface* createStorageInterfacePid(const Environment& env, int& SWIG_OUTPUT(locker_pid));
 
 
     /**

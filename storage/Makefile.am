@@ -86,5 +86,6 @@ pkgincludedir = $(includedir)/storage
 pkginclude_HEADERS =			\
 	StorageVersion.h		\
 	StorageInterface.h		\
+	StorageSwig.h		        \
 	HumanString.h			\
 	Graph.h

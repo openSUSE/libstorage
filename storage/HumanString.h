@@ -23,6 +23,7 @@
 #ifndef HUMAN_STRING_H
 #define HUMAN_STRING_H
 
+#include "storage/StorageSwig.h"
 
 #include <string>
 
@@ -73,7 +74,7 @@ namespace storage
      * The conversion is always case-insensitive. With classic set to
      * false the conversion is also sloppy concerning omission of 'B'.
      */
-    bool humanStringToByte(const string& str, bool classic, unsigned long long& size);
+    bool humanStringToByte(const string& str, bool classic, unsigned long long& SWIG_OUTPUT(size));
 
 }
 
