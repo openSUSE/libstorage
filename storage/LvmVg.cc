@@ -1769,7 +1769,7 @@ void LvmVg::normalizeDmDevices()
 	}
     }
 
-void LvmVg::getInfo( LvmVgInfo& tinfo ) const
+void LvmVg::getInfo( LvmVgInfo& info ) const
     {
     info.sizeK = sizeK();
     info.peSizeK = peSize();
@@ -1810,7 +1810,6 @@ void LvmVg::getInfo( LvmVgInfo& tinfo ) const
 	y2mil( " devices_add:" << info.devices_add );
     if( !info.devices_rem.empty() )
         y2mil( " devices_rem:" << info.devices_rem );
-    tinfo = info;
     }
 
 

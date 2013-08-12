@@ -118,8 +118,6 @@ class Md : public Volume
 
 	static unsigned md_major;
 
-	mutable storage::MdInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Md(const Md&);		      // disallow

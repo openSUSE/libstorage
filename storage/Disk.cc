@@ -2450,7 +2450,7 @@ unsigned Disk::numPartitions() const
     return partPair(Partition::notDeleted).length();
     }
 
-void Disk::getInfo( DiskInfo& tinfo ) const
+void Disk::getInfo( DiskInfo& info ) const
     {
     info.sizeK = sizeK();
     info.cyl = cylinders();
@@ -2468,7 +2468,6 @@ void Disk::getInfo( DiskInfo& tinfo ) const
     info.iscsi = transport == ISCSI;
     info.transport = transport;
     info.has_fake_partition = has_fake_partition;
-    tinfo = info;
     }
 
 

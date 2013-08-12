@@ -181,8 +181,6 @@ class LvmVg : public PeContainer
 
 	static bool active;
 
-	mutable storage::LvmVgInfo info; // workaround for broken ycp bindings
-
     private:
 
 	LvmVg& operator=(const LvmVg&);	// disallow

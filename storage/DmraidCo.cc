@@ -287,10 +287,9 @@ DmraidCo::doRemove()
     return( ret );
     }
 
-void DmraidCo::getInfo( DmraidCoInfo& tinfo ) const
+void DmraidCo::getInfo( DmraidCoInfo& info ) const
     {
-    DmPartCo::getInfo( info );
-    tinfo.p = info;
+    DmPartCo::getInfo( info.p );
     }
 
 

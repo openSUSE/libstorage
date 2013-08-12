@@ -72,8 +72,6 @@ class DmPart : public Dm
 	void addAltUdevId( unsigned num );
 	Partition* p;
 
-	mutable storage::DmPartInfo info; // workaround for broken ycp bindings
-
     private:
 
 	DmPart(const DmPart&);		  // disallow

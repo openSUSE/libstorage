@@ -81,8 +81,6 @@ class Loop : public Volume
 
 	static unsigned loop_major;
 
-	mutable storage::LoopInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Loop(const Loop&);	      // disallow

@@ -193,13 +193,12 @@ MdPart::setTypeText(bool doing) const
     }
 
 
-void MdPart::getInfo( MdPartInfo& tinfo ) const
+void MdPart::getInfo( MdPartInfo& info ) const
     {
     Volume::getInfo(info.v);
     if( p )
         p->getInfo( info.p );
     info.part = p!=NULL;
-    tinfo = info;
     }
 
 

@@ -134,8 +134,6 @@ class Partition : public Volume
 	void addAltUdevId( unsigned num );
 	void addAltUdevPath( unsigned num );
 
-	mutable storage::PartitionInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Partition(const Partition&); // disallow

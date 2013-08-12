@@ -537,7 +537,7 @@ unsigned Md::mdMajor()
     }
 
 
-void Md::getInfo( MdInfo& tinfo ) const
+void Md::getInfo( MdInfo& info ) const
     {
     Volume::getInfo(info.v);
     info.nr = num;
@@ -550,8 +550,6 @@ void Md::getInfo( MdInfo& tinfo ) const
 
     info.devices = boost::join(devs, " ");
     info.spares = boost::join(spare, " ");
-
-    tinfo = info;
     }
 
 

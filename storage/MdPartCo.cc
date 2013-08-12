@@ -1117,7 +1117,7 @@ MdPartCo::setUdevData(SystemInfo& systeminfo)
 }
 
 
-void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
+void MdPartCo::getInfo( MdPartCoInfo& info ) const
     {
     if( disk )
         {
@@ -1133,8 +1133,6 @@ void MdPartCo::getInfo( MdPartCoInfo& tinfo ) const
 
     info.devices = boost::join(devs, " ");
     info.spares = boost::join(spare, " ");
-
-    tinfo = info;
     }
 
 

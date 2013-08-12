@@ -196,8 +196,6 @@ class DmPartCo : public PeContainer
 	Disk* disk;
 	bool active;
 
-	mutable storage::DmPartCoInfo info; // workaround for broken ycp bindings
-
     private:
 
 	DmPartCo& operator=(const DmPartCo&); // disallow

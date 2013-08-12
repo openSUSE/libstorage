@@ -289,12 +289,11 @@ DmmultipathCo::activate(bool val)
     }
 
 
-void DmmultipathCo::getInfo( DmmultipathCoInfo& tinfo ) const
+void DmmultipathCo::getInfo( DmmultipathCoInfo& info ) const
     {
-    DmPartCo::getInfo( info );
-    tinfo.p = info;
-    tinfo.vendor = vendor;
-    tinfo.model = model;
+    DmPartCo::getInfo( info.p );
+    info.vendor = vendor;
+    info.model = model;
     }
 
 

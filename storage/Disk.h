@@ -303,8 +303,6 @@ class Disk : public Container
 	bool del_ptable;
 	bool has_fake_partition;
 
-	mutable storage::DiskInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Disk& operator=(const Disk&); // disallow

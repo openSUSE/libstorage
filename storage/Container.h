@@ -219,8 +219,6 @@ namespace storage
 
 	VCont vols;
 
-	mutable storage::ContainerInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Container& operator=(const Container&); // disallow

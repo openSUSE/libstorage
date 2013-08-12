@@ -575,24 +575,23 @@ Partition::getCommitActions(list<commitAction>& l) const
 
 
 void
-Partition::getInfo( PartitionAddInfo& tinfo ) const
+Partition::getInfo( PartitionAddInfo& info ) const
     {
-    tinfo.partitionType = type ();
-    tinfo.cylStart = cylStart ();
-    tinfo.cylSize = cylSize ();
-    tinfo.nr = num;
-    tinfo.id = idt;
-    tinfo.boot = bootflag;
+    info.partitionType = type ();
+    info.cylStart = cylStart ();
+    info.cylSize = cylSize ();
+    info.nr = num;
+    info.id = idt;
+    info.boot = bootflag;
     }
 
 void
-Partition::getInfo( PartitionInfo& tinfo ) const
+Partition::getInfo( PartitionInfo& info ) const
     {
     Volume::getInfo(info.v);
     PartitionAddInfo tmp;
     getInfo( tmp );
     info = tmp;
-    tinfo = info;
     }
 
 

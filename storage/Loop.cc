@@ -380,13 +380,12 @@ Text Loop::formatText( bool doing ) const
     return( txt );
     }
 
-void Loop::getInfo( LoopInfo& tinfo ) const
+void Loop::getInfo( LoopInfo& info ) const
     {
     Volume::getInfo(info.v);
     info.nr = num;
     info.file = lfile;
     info.reuseFile = reuseFile;
-    tinfo = info;
     }
 
 

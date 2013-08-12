@@ -587,13 +587,12 @@ string Dm::dmDeviceName( unsigned long num )
     }
 
 
-void Dm::getInfo( DmInfo& tinfo ) const
+void Dm::getInfo( DmInfo& info ) const
     {
     Volume::getInfo(info.v);
     info.nr = num;
     info.table = tname;
     info.target = target;
-    tinfo = info;
     }
 
 

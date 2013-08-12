@@ -107,8 +107,6 @@ class LvmLv : public Dm
         unsigned long long chunk_size;
         bool   pool;
 
-	mutable storage::LvmLvInfo info; // workaround for broken ycp bindings
-
     private:
 
 	LvmLv(const LvmLv&);		// disallow

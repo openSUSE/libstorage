@@ -253,10 +253,9 @@ Text Dmraid::setTypeText( bool doing ) const
     return( txt );
     }
 
-void Dmraid::getInfo( DmraidInfo& tinfo ) const
+void Dmraid::getInfo( DmraidInfo& info ) const
     {
-    DmPart::getInfo( info );
-    tinfo.p = info;
+    DmPart::getInfo( info.p );
     }
 
 

@@ -253,10 +253,9 @@ Text Dmmultipath::setTypeText( bool doing ) const
     return( txt );
     }
 
-void Dmmultipath::getInfo( DmmultipathInfo& tinfo ) const
+void Dmmultipath::getInfo( DmmultipathInfo& info ) const
     {
-    DmPart::getInfo( info );
-    tinfo.p = info;
+    DmPart::getInfo( info.p );
     }
 
 

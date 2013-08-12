@@ -53,8 +53,6 @@ class Nfs : public Volume
 
     protected:
 
-	mutable storage::NfsInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Nfs(const Nfs&);	    // disallow

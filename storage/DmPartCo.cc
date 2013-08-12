@@ -966,7 +966,7 @@ DmPartCo::setUdevData(const list<string>& id)
 }
 
 
-void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
+void DmPartCo::getInfo( DmPartCoInfo& info ) const
     {
     if( disk )
 	{
@@ -983,7 +983,6 @@ void DmPartCo::getInfo( DmPartCoInfo& tinfo ) const
 	++i;
 	}
     y2mil( "device:" << info.devices );
-    tinfo = info;
     }
 
 

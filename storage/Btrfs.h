@@ -103,8 +103,6 @@ class Btrfs : public Volume
 	list<Subvolume> subvol;
 	Volume const * findRealVolume() const;
 
-	mutable storage::BtrfsInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Btrfs& operator=(const Btrfs& v); // disallow

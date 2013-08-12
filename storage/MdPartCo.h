@@ -279,8 +279,6 @@ class MdPartCo : public Container
 	string parent_metadata;
 	string parent_member;
 
-    mutable storage::MdPartCoInfo info; // workaround for broken ycp bindings
-
     static bool active;
 
     };

@@ -206,7 +206,7 @@ Text DmPart::setTypeText( bool doing ) const
     }
 
 
-void DmPart::getInfo( DmPartInfo& tinfo ) const
+void DmPart::getInfo( DmPartInfo& info ) const
     {
     Volume::getInfo(info.v);
     if( p )
@@ -214,7 +214,6 @@ void DmPart::getInfo( DmPartInfo& tinfo ) const
     info.part = p!=NULL;
     info.table = tname;
     info.target = target;
-    tinfo = info;
     }
 
 

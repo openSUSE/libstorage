@@ -3350,7 +3350,7 @@ Text Volume::removeText( bool doing ) const
     return( txt );
     }
 
-void Volume::getInfo( VolumeInfo& tinfo ) const
+void Volume::getInfo( VolumeInfo& info ) const
     {
     info.sizeK = size_k;
     info.major = mjr;
@@ -3399,16 +3399,14 @@ void Volume::getInfo( VolumeInfo& tinfo ) const
 	info.origSizeK = orig_size_k;
     else
 	info.origSizeK = 0;
-    tinfo = info;
     }
 
-void Volume::mergeFstabInfo( VolumeInfo& tinfo, const FstabEntry& fste ) const
+void Volume::mergeFstabInfo( VolumeInfo& info, const FstabEntry& fste ) const
     {
     info.mount = fste.mount;
     info.mount_by = fste.mount_by;
     info.fstab_options = boost::join( fste.opts, "," );
     info.encryption = fste.encr;
-    tinfo = info;
     }
 
 

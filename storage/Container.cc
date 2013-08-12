@@ -383,7 +383,7 @@ bool Container::findVolume( const string& device, Volume*& vol )
     }
 
 
-void Container::getInfo(storage::ContainerInfo& tinfo) const
+void Container::getInfo(storage::ContainerInfo& info) const
 {
     info.type = type();
     info.name = name();
@@ -406,7 +406,6 @@ void Container::getInfo(storage::ContainerInfo& tinfo) const
     }
 
     info.readonly = readonly();
-    tinfo = info;
 }
 
 

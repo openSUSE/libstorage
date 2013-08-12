@@ -294,8 +294,6 @@ class Storage;
 	static const string ignore_opt[1];
 	static const string ignore_beg[4];
 
-	mutable storage::VolumeInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Volume(const Volume&);		  // disallow

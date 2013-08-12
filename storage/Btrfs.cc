@@ -827,7 +827,7 @@ Text Btrfs::deleteSubvolText(bool doing, const string& name) const
     return( txt );
     }
 
-void Btrfs::getInfo( BtrfsInfo& tinfo ) const
+void Btrfs::getInfo( BtrfsInfo& info ) const
     {
     Volume::getInfo(info.v);
     info.devices = boost::join( devices, "\n" );
@@ -859,7 +859,6 @@ void Btrfs::getInfo( BtrfsInfo& tinfo ) const
 	     info.subvol += i->path();
 	     }
 	 }
-    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Btrfs& v )

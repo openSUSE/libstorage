@@ -53,7 +53,6 @@ class Tmpfs : public Volume
 	static bool notDeleted( const Tmpfs& l ) { return( !l.deleted() ); }
 
     protected:
-	mutable storage::TmpfsInfo info; // workaround for broken ycp bindings
 
     private:
 

@@ -122,8 +122,6 @@ class Dm : public Volume
 
 	static const list<string> known_types;
 
-	mutable storage::DmInfo info; // workaround for broken ycp bindings
-
     private:
 
 	Dm(const Dm&);		  // disallow

@@ -90,10 +90,9 @@ Text Nfs::removeText( bool doing ) const
     }
 
 
-void Nfs::getInfo( NfsInfo& tinfo ) const
+void Nfs::getInfo( NfsInfo& info ) const
     {
     Volume::getInfo(info.v);
-    tinfo = info;
     }
 
 

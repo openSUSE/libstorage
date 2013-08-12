@@ -122,10 +122,9 @@ Text Tmpfs::mountText( bool doing ) const
     return( txt );
     }
 
-void Tmpfs::getInfo( TmpfsInfo& tinfo ) const
+void Tmpfs::getInfo( TmpfsInfo& info ) const
     {
     Volume::getInfo(info.v);
-    tinfo = info;
     }
 
 std::ostream& operator<< (std::ostream& s, const Tmpfs& v )

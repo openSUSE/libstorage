@@ -378,7 +378,7 @@ int LvmLv::changeMount( const string& val )
     }
 
 
-void LvmLv::getInfo( LvmLvInfo& tinfo ) const
+void LvmLv::getInfo( LvmLvInfo& info ) const
     {
     Volume::getInfo(info.v);
     //info.v.sizeK = isThin() ? size_k : (num_le * pec()->peSize());
@@ -392,7 +392,6 @@ void LvmLv::getInfo( LvmLvInfo& tinfo ) const
     info.origin = origin;
     info.used_pool = used_pool;
     info.pool = pool;
-    tinfo = info;
     }
 
 bool LvmLv::operator< ( const LvmLv& rhs ) const
