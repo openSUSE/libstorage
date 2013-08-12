@@ -1,6 +1,7 @@
 -------------------------------------------------------------------
 Mon Aug 12 10:34:38 CEST 2013 - fehr@suse.de
 
+- remove cruft to support broken ycp bindings
 - improvements in ruby bindings for usage in yast2-storage
 - version 2.24.2
 
