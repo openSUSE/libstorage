@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Aug 22 12:17:09 CEST 2013 - aschnell@suse.de
+
+- added udevadm settle call (bnc#836048)
+- version 2.24.3
+
+-------------------------------------------------------------------
 Mon Aug 12 10:34:38 CEST 2013 - fehr@suse.de
 
 - remove cruft to support broken ycp bindings

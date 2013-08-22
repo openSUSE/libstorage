@@ -7797,6 +7797,8 @@ Storage::zeroDevice(const string& device, bool random,
     if (c.execute(cmd) != 0)
 	ret = STORAGE_ZERO_DEVICE_FAILED;
 
+    waitForDevice(device);
+
     y2mil("ret:" << ret);
     return ret;
 }
