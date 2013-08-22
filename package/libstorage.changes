@@ -1,8 +1,13 @@
 -------------------------------------------------------------------
+Thu Aug 22 13:58:29 CEST 2013 - fehr@suse.de
+
+- make additonal types known to ruby/python bindings
+- version 2.24.3
+
+-------------------------------------------------------------------
 Thu Aug 22 12:17:09 CEST 2013 - aschnell@suse.de
 
 - added udevadm settle call (bnc#836048)
-- version 2.24.3
 
 -------------------------------------------------------------------
 Mon Aug 12 10:34:38 CEST 2013 - fehr@suse.de
