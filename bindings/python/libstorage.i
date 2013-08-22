@@ -33,9 +33,11 @@ using namespace storage;
 %template(DequeString) deque<string>;
 %template(ListString) list<string>;
 %template(DequeContainerInfo) deque<ContainerInfo>;
+%template(DequeVolumeInfo) deque<VolumeInfo>;
 %template(DequePartitionInfo) deque<PartitionInfo>;
 %template(DequeMdPartInfo) deque<MdPartInfo>;
 %template(DequeDmraidInfo) deque<DmraidInfo>;
+%template(DequeDmmultipathInfo) deque<DmmultipathInfo>;
 %template(DequeLvmLvInfo) deque<LvmLvInfo>;
 %template(DequeMdInfo) deque<MdInfo>;
 %template(DequeLoopInfo) deque<LoopInfo>;
@@ -45,3 +47,5 @@ using namespace storage;
 %template(DequeBtrfsInfo) deque<BtrfsInfo>;
 %template(ListPartitionSlotInfo) list<PartitionSlotInfo>;
 %template(ListCommitInfo) list<CommitInfo>;
+
+
