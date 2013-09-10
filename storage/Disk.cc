@@ -507,22 +507,6 @@ bool
 	{
 	ronly = true;
 	has_fake_partition = checkFakePartition(systeminfo, pl);
-
-	Text txt = sformat(
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
-_("The partitioning on disk %1$s is not readable by\n"
-"the partitioning tool parted, which is used to change the\n"
-"partition table.\n"
-"\n"
-"You can use the partitions on disk %1$s as they are.\n"
-"You can format them and assign mount points to them, but you\n"
-"cannot add, edit, resize, or remove partitions from that\n"
-"disk with this tool."), dev.c_str() );
-
-	if( has_fake_partition || getenv("LIBSTORAGE_NO_PART_CHECK")!=NULL )
-	    y2war( "ignoring failed partition check parted/kernel on disk:" << device() );
-	else
-	    getStorage()->addInfoPopupText( dev, txt );
 	}
     if( range_exceed>0 )
 	{

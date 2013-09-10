@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Sep 10 12:19:43 CEST 2013 - aschnell@suse.de
+
+- removed warning popup during probing about parted not being
+  able to read partition table (fate#307585)
+
+-------------------------------------------------------------------
 Thu Aug 22 13:58:29 CEST 2013 - fehr@suse.de
 
 - make additonal types known to ruby/python bindings
