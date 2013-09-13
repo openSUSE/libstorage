@@ -3,11 +3,12 @@ Tue Sep 10 12:19:43 CEST 2013 - aschnell@suse.de
 
 - removed warning popup during probing about parted not being
   able to read partition table (fate#307585)
+- version 2.24.4
 
 -------------------------------------------------------------------
 Thu Aug 22 13:58:29 CEST 2013 - fehr@suse.de
 
-- make additonal types known to ruby/python bindings
+- make additional types known to ruby/python bindings
 - version 2.24.3
 
 -------------------------------------------------------------------
@@ -541,7 +542,7 @@ Wed Aug 24 16:55:01 CEST 2011 - fehr@suse.de
 -------------------------------------------------------------------
 Tue Aug 23 12:13:48 CEST 2011 - fehr@suse.de
 
-- add option "-P _part" to make dmraid decativate raid (bnc#712671)
+- add option "-P _part" to make dmraid deactivate raid (bnc#712671)
 
 -------------------------------------------------------------------
 Wed Aug 10 16:39:19 CEST 2011 - fehr@suse.de
