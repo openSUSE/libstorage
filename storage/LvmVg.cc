@@ -974,7 +974,7 @@ void LvmVg::getVgData( const string& name, bool exists )
     LvmLvPair p=lvmLvPair(lvDeleted);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
-	cout << "Deleted:" << *i << endl;
+	//cout << "Deleted:" << *i << endl;
 	if( !i->isThin() )
 	    {
 	    map<string,unsigned long> pe_map = i->getPeMap();
