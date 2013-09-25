@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Sep 25 15:06:46 CEST 2013 - fehr@suse.de
+
+- add code to support named raids (fate#315590)
+
+-------------------------------------------------------------------
 Tue Sep 10 12:19:43 CEST 2013 - aschnell@suse.de
 
 - removed warning popup during probing about parted not being
