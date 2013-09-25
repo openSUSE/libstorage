@@ -45,12 +45,18 @@ namespace storage
 	: Volume(c, name, device), md_type(Type), md_parity(PAR_DEFAULT), chunk_k(0),
 	  sb_ver("01.00.00"), destrSb(false), devs(devices), spare(spares), has_container(false), inactive(false)
     {
-	y2deb("constructed Md " << dev << " on " << cont->device());
+	y2mil("constructed Md " << dev << " on " << cont->device());
 
 	assert(c.type() == MD);
 
-	numeric = true;
-	mdStringNum(name, num);
+	numeric = !boost::starts_with( device, "/dev/md/" );
+	if( !numeric )
+	    {
+	    nm = device.substr(8);
+	    num = 0;
+	    }
+	else
+	    mdStringNum(name, num);
 
 	getStorage()->addUsedBy(devs, UB_MD, dev);
 	getStorage()->addUsedBy(spares, UB_MD, dev);
@@ -63,7 +69,7 @@ namespace storage
 	: Volume(c, name, device, systeminfo), md_type(RAID_UNK), md_parity(PAR_DEFAULT),
 	  chunk_k(0), sb_ver("01.00.00"), destrSb(false), has_container(false), inactive(false)
     {
-	y2deb("constructed Md " << device << " on " << cont->device());
+	y2mil("constructed Md " << device << " on " << cont->device());
 
 	assert(c.type() == MD);
 
@@ -120,6 +126,14 @@ namespace storage
 	{
 	    md_uuid = details.uuid;
 	    md_name = details.devname;
+	    if( !md_name.empty() )
+		{
+		numeric=false;
+		nm = md_name;
+		dev = "/dev/md/"+md_name;
+		alt_names.remove(dev);
+		alt_names.push_back( mdDevice(mnr) );
+		}
 	}
 
 	getStorage()->addUsedBy(devs, UB_MD, dev);

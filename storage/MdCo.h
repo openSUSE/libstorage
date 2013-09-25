@@ -45,16 +45,16 @@ class MdCo : public Container
 	static storage::CType staticType() { return storage::MD; }
 	friend std::ostream& operator<< (std::ostream&, const MdCo& );
 
-	int createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares);
-	int removeMd( unsigned num, bool destroySb=true );
-	int extendMd(unsigned num, const list<string>& devs, const list<string>& spares);
-	int updateMd(unsigned num, const list<string>& devs, const list<string>& spares);
-	int shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares);
-	int changeMdType( unsigned num, storage::MdType ptype );
-	int changeMdChunk( unsigned num, unsigned long chunk );
-	int changeMdParity( unsigned num, storage::MdParity ptype );
-	int checkMd( unsigned num );
-	int getMdState(unsigned num, MdStateInfo& info);
+	int createMd(const string& dev, MdType type, const list<string>& devs, const list<string>& spares);
+	int removeMd(const string& dev, bool destroySb=true );
+	int extendMd(const string& dev, const list<string>& devs, const list<string>& spares);
+	int updateMd(const string& dev, const list<string>& devs, const list<string>& spares);
+	int shrinkMd(const string& dev, const list<string>& devs, const list<string>& spares);
+	int changeMdType( const string& dev, storage::MdType ptype );
+	int changeMdChunk( const string& dev, unsigned long chunk );
+	int changeMdParity( const string& dev, storage::MdParity ptype );
+	int checkMd( const string& dev );
+	int getMdState(const string& dev, MdStateInfo& info);
 	bool equalContent( const Container& rhs ) const;
 
 	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
@@ -64,6 +64,7 @@ class MdCo : public Container
 	void changeDeviceName( const string& old, const string& nw );
 
 	static void activate(bool val, const string& tmpDir);
+	static int getNameNum( const string& dev, string& nm, unsigned& num );
 	int removeVolume( Volume* v );
 	
 	/* returns in 'nums' numbers that are used by Md */

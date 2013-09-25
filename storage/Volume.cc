@@ -410,6 +410,8 @@ bool Volume::operator< ( const Volume& rhs ) const
         return( *static_cast<const LvmLv*>(this) <
                 *static_cast<const LvmLv*>(&rhs) );
         }
+    else if( numeric!=rhs.numeric )
+	return( numeric );
     else if( (numeric && num!=rhs.num) || (!numeric && nm != rhs.nm) )
 	{
 	if( numeric )

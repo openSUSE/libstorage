@@ -106,11 +106,11 @@ MdCo::addMd( Md* m )
 
 
 bool
-MdCo::findMd( unsigned num, MdIter& i )
+MdCo::findMd( const string& dev, MdIter& i )
     {
     MdPair p=mdPair(Md::notDeleted);
     i=p.begin();
-    while( i!=p.end() && i->nr()!=num )
+    while( i!=p.end() && i->device()!=dev )
 	++i;
     return( i!=p.end() );
     }
@@ -123,15 +123,9 @@ MdCo::findMd( unsigned num )
     }
 
 bool
-MdCo::findMd( const string& dev, MdIter& i )
+MdCo::findMd( unsigned num, MdIter& i )
     {
-    unsigned num;
-    if( Md::mdStringNum(dev,num) ) 
-	{
-	return( findMd( num, i ));
-	}
-    else
-	return( false );
+    return( findMd( Md::mdDevice(num), i ));
     }
 
 bool
@@ -154,19 +148,35 @@ MdCo::findMd( const string& dev )
 	return nums;
     }
 
+int MdCo::getNameNum( const string& dev, string& nm, unsigned& num )
+    {
+    int ret=0;
+    num = 0;
+    nm.clear();
+    if( boost::starts_with(dev, "/dev/md/"))
+	nm = dev.substr(8);
+    else if( !Md::mdStringNum( dev, num ))
+	ret = STORAGE_MD_INVALID_NAME;
+    else if( num>255 )
+	ret = MD_NUMBER_TOO_LARGE;
+    return( ret );
+    }
+
 
 int 
-MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<string>& spares)
+MdCo::createMd(const string& dev, MdType type, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " type:" << toString(type) << " devs:" << devs << " spares:" << spares);
+    string nm;
+    unsigned num;
+    y2mil("dev:" << dev << " type:" << toString(type) << " devs:" << devs << " spares:" << spares);
     if( readonly() )
 	{
 	ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 && num>=256 )
+    if( ret==0 )
 	{
-	ret = MD_NUMBER_TOO_LARGE;
+	ret = getNameNum( dev, nm, num );
 	}
     if( ret==0 && type==RAID_UNK )
 	{
@@ -174,17 +184,18 @@ MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<s
 	}
     if( ret==0 )
 	{
-	if( findMd( num ))
+	if( nm.empty() && findMd( num ))
 	    ret = MD_DUPLICATE_NUMBER;
+	else if( findMd( dev ))
+	    ret = MD_DUPLICATE_NAME;
 	}
-
     if (ret == 0)
 	ret = checkUse(devs, spares);
-
     if( ret==0 )
 	{
-	string name = "md" + decString(num);
-	Md* m = new Md(*this, name, "/dev/" + name, type, devs, spares);
+	if( nm.empty() )
+	    nm = "md" + decString(num);
+	Md* m = new Md(*this, nm, dev, type, devs, spares);
 	m->setCreated( true );
 	addToList( m );
 	}
@@ -222,12 +233,12 @@ MdCo::createMd(unsigned num, MdType type, const list<string>& devs, const list<s
 
 
 int 
-MdCo::checkMd( unsigned num )
+MdCo::checkMd( const string& dev )
     {
     int ret = 0;
-    y2mil("num:" << num);
+    y2mil("dev:" << dev);
     MdIter i;
-    if( !findMd( num, i ) )
+    if( !findMd( dev, i ) )
 	ret = MD_DEVICE_UNKNOWN;
     else if( i->created() )
 	ret = i->checkDevices();
@@ -236,10 +247,10 @@ MdCo::checkMd( unsigned num )
     }
 
 int 
-MdCo::extendMd(unsigned num, const list<string>& devs, const list<string>& spares)
+MdCo::extendMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
+    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
     MdIter i;
     if( readonly() )
 	{
@@ -251,7 +262,7 @@ MdCo::extendMd(unsigned num, const list<string>& devs, const list<string>& spare
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -279,10 +290,10 @@ MdCo::extendMd(unsigned num, const list<string>& devs, const list<string>& spare
     }
 
 int 
-MdCo::updateMd(unsigned num, const list<string>& devs, const list<string>& spares)
+MdCo::updateMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
+    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
     MdIter i;
     if( readonly() )
 	{
@@ -290,7 +301,7 @@ MdCo::updateMd(unsigned num, const list<string>& devs, const list<string>& spare
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -320,19 +331,15 @@ MdCo::updateMd(unsigned num, const list<string>& devs, const list<string>& spare
 	    if ((ret = i->addDevice(*it, true)) != 0)
 		break;
 	}
-    if( ret==0 && !getStorage()->isDisk(dev) )
-	{
-	getStorage()->changeFormatVolume( dev, false, FSNONE );
-	}
     y2mil("ret:" << ret);
     return( ret );
     }
 
 int 
-MdCo::shrinkMd(unsigned num, const list<string>& devs, const list<string>& spares)
+MdCo::shrinkMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
     int ret = 0;
-    y2mil("num:" << num << " devs:" << devs << " spares:" << spares);
+    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
     MdIter i;
     if( readonly() )
 	{
@@ -340,7 +347,7 @@ MdCo::shrinkMd(unsigned num, const list<string>& devs, const list<string>& spare
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -364,10 +371,10 @@ MdCo::shrinkMd(unsigned num, const list<string>& devs, const list<string>& spare
     }
 
 int 
-MdCo::changeMdType( unsigned num, MdType ptype )
+MdCo::changeMdType( const string& dev, MdType ptype )
     {
     int ret = 0;
-    y2mil("num:" << num << " md_type:" << toString(ptype));
+    y2mil("dev:" << dev << " md_type:" << toString(ptype));
     MdIter i;
     if( readonly() )
 	{
@@ -375,7 +382,7 @@ MdCo::changeMdType( unsigned num, MdType ptype )
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -391,10 +398,10 @@ MdCo::changeMdType( unsigned num, MdType ptype )
     }
 
 int 
-MdCo::changeMdChunk( unsigned num, unsigned long chunk )
+MdCo::changeMdChunk( const string& dev, unsigned long chunk )
     {
     int ret = 0;
-    y2mil("num:" << num << " chunk:" << chunk);
+    y2mil("dev:" << dev << " chunk:" << chunk);
     MdIter i;
     if( readonly() )
 	{
@@ -402,7 +409,7 @@ MdCo::changeMdChunk( unsigned num, unsigned long chunk )
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -418,10 +425,10 @@ MdCo::changeMdChunk( unsigned num, unsigned long chunk )
     }
 
 int
-MdCo::changeMdParity( unsigned num, MdParity ptype )
+MdCo::changeMdParity( const string& dev, MdParity ptype )
     {
     int ret = 0;
-    y2mil("num:" << num << " parity:" << toString(ptype));
+    y2mil("dev:" << dev << " parity:" << toString(ptype));
     MdIter i;
     if( readonly() )
 	{
@@ -429,7 +436,7 @@ MdCo::changeMdParity( unsigned num, MdParity ptype )
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if( ret==0 && !i->created() )
@@ -445,13 +452,13 @@ MdCo::changeMdParity( unsigned num, MdParity ptype )
     }
 
 int
-MdCo::getMdState(unsigned num, MdStateInfo& info)
+MdCo::getMdState(const string& dev, MdStateInfo& info)
 {
     int ret = 0;
     MdIter i;
     if( ret==0 )
     {
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
     }
     if( ret==0 && i->created() )
@@ -467,10 +474,10 @@ MdCo::getMdState(unsigned num, MdStateInfo& info)
 }
 
 int 
-MdCo::removeMd( unsigned num, bool destroySb )
+MdCo::removeMd( const string& dev, bool destroySb )
     {
     int ret = 0;
-    y2mil("num:" << num);
+    y2mil("dev:" << dev);
     MdIter i;
     if( readonly() )
 	{
@@ -478,7 +485,7 @@ MdCo::removeMd( unsigned num, bool destroySb )
 	}
     if( ret==0 )
 	{
-	if( !findMd( num, i ))
+	if( !findMd( dev, i ))
 	    ret = MD_UNKNOWN_NUMBER;
 	}
     if (ret == 0 && i->isUsedBy())
@@ -508,11 +515,7 @@ int MdCo::removeVolume( Volume* v )
     {
     int ret = 0;
     y2mil("name:" << v->name());
-    Md * m = dynamic_cast<Md *>(v);
-    if( m != NULL )
-	ret = removeMd( v->nr() );
-    else 
-	ret = MD_REMOVE_INVALID_VOLUME;
+    ret = removeMd( v->device() );
     return( ret );
     }
 

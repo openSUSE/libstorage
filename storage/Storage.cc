@@ -3931,19 +3931,10 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
     int ret = 0;
     assertInit();
     y2mil("name:" << name << " MdType:" << toString(rtype) << " devices:" << devs << " spares:" << spares);
-    unsigned num = 0;
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
-    if( ret==0 && !checkMdNumber(num) )
-        {
-        ret = MD_DUPLICATE_NUMBER;
-        }
     MdCo *md = NULL;
     bool have_md = true;
     if( ret==0 )
@@ -3954,7 +3945,7 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
 	}
     if( ret==0 && md!=NULL )
 	{
-	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
+	ret = md->createMd(name, rtype, normalizeDevices(devs), normalizeDevices(spares));
 	}
     if( !have_md )
 	{
@@ -3964,7 +3955,7 @@ Storage::createMd(const string& name, MdType rtype, const list<string>& devs,
 	    delete md;
 	}
     if( ret==0 )
-	checkPwdBuf( Md::mdDevice(num) );
+	checkPwdBuf( name );
     if( ret==0 )
 	{
 	ret = checkCache();
@@ -4000,7 +3991,7 @@ int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<stri
 	}
     if( ret==0 )
 	{
-	ret = md->createMd(num, rtype, normalizeDevices(devs), normalizeDevices(spares));
+	ret = md->createMd(device, rtype, normalizeDevices(devs), normalizeDevices(spares));
 	}
     if( !have_md )
 	{
@@ -4012,7 +4003,7 @@ int Storage::createMdAny(MdType rtype, const list<string>& devs, const list<stri
 	    delete md;
 	}
     if( ret==0 )
-	checkPwdBuf( Md::mdDevice(num) );
+	checkPwdBuf( device );
     if( ret==0 )
 	{
 	ret = checkCache();
@@ -4030,16 +4021,11 @@ int Storage::removeMd( const string& name, bool destroySb )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->removeMd( num, destroySb );
+	    ret = md->removeMd( name, destroySb );
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4060,16 +4046,11 @@ int Storage::extendMd(const string& name, const list<string>& devs, const list<s
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->extendMd(num, normalizeDevices(devs), normalizeDevices(spares));
+	    ret = md->extendMd(name, normalizeDevices(devs), normalizeDevices(spares));
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4090,16 +4071,11 @@ int Storage::updateMd(const string& name, const list<string>& devs, const list<s
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->updateMd(num, normalizeDevices(devs), normalizeDevices(spares));
+	    ret = md->updateMd(name, normalizeDevices(devs), normalizeDevices(spares));
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4120,16 +4096,11 @@ int Storage::shrinkMd(const string& name, const list<string>& devs, const list<s
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->shrinkMd(num, normalizeDevices(devs), normalizeDevices(spares));
+	    ret = md->shrinkMd(name, normalizeDevices(devs), normalizeDevices(spares));
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4150,16 +4121,11 @@ int Storage::changeMdType( const string& name, MdType rtype )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->changeMdType( num, rtype );
+	    ret = md->changeMdType( name, rtype );
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4180,16 +4146,11 @@ int Storage::changeMdChunk( const string& name, unsigned long chunk )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->changeMdChunk( num, chunk );
+	    ret = md->changeMdChunk( name, chunk );
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4210,16 +4171,11 @@ int Storage::changeMdParity( const string& name, MdParity ptype )
 	{
 	ret = STORAGE_CHANGE_READONLY;
 	}
-    unsigned num = 0;
-    if( ret==0 && !Md::mdStringNum( name, num ))
-	{
-	ret = STORAGE_MD_INVALID_NAME;
-	}
     if( ret==0 )
 	{
 	MdCo *md = NULL;
 	if( haveMd(md) )
-	    ret = md->changeMdParity( num, ptype );
+	    ret = md->changeMdParity( name, ptype );
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
 	}
@@ -4238,8 +4194,8 @@ int Storage::checkMd( const string& name )
     y2mil("name:" << name);
     unsigned num = 0;
     MdCo *md = NULL;
-    if( Md::mdStringNum( name, num ) && haveMd(md) )
-	ret = md->checkMd(num);
+    if( haveMd(md) )
+	ret = md->checkMd(name);
     else
 	ret = STORAGE_MD_NOT_FOUND;
     y2mil("ret:" << ret);
@@ -4252,16 +4208,11 @@ int Storage::getMdStateInfo(const string& name, MdStateInfo& info)
     int ret = 0;
     assertInit();
     y2mil("name:" << name);
-    unsigned num = 0;
-    if (ret == 0 && !Md::mdStringNum(name, num))
-    {
-	ret = STORAGE_MD_INVALID_NAME;
-    }
     if (ret == 0)
     {
 	MdCo *md = NULL;
 	if (haveMd(md))
-	    ret = md->getMdState(num, info);
+	    ret = md->getMdState(name, info);
 	else
 	    ret = STORAGE_MD_NOT_FOUND;
     }
