@@ -4192,7 +4192,6 @@ int Storage::checkMd( const string& name )
     int ret = 0;
     assertInit();
     y2mil("name:" << name);
-    unsigned num = 0;
     MdCo *md = NULL;
     if( haveMd(md) )
 	ret = md->checkMd(name);
