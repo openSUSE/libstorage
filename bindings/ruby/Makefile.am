@@ -4,7 +4,7 @@
 
 SUBDIRS = examples
 
-EXTRA_DIST = storage.i enum_ref.i
+EXTRA_DIST = storage.i enum_ref.i storage_utf8.rb
 
 MAINTAINERCLEANFILES = storage_wrap.cxx
 
@@ -34,5 +34,8 @@ storage_la_DEPENDENCIES =				\
 
 storage_wrap.cxx: storage.i $(DEPENDENCIES)
 	swig -o storage_wrap.cxx -c++ -ruby ${INCLUDES} storage.i
+
+install-data-hook:
+	$(INSTALL) storage_utf8.rb $(DESTDIR)/$(RUBY_VENDOR_DIR)
 
 CLEANFILES = storage.so storage_wrap.cxx

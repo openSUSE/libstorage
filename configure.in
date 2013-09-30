@@ -59,9 +59,11 @@ if test "$RUBY_INCLUDE_DIR" = "nil" ; then
 fi
 AC_SUBST(RUBY_INCLUDE_DIR)
 RUBY_LIB_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["libdir"]]'`
-AC_SUBST(RUBY_EXTENSION_DIR)
+AC_SUBST(RUBY_LIB_DIR)
 RUBY_EXTENSION_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["vendorarchdir"]]'`
 AC_SUBST(RUBY_EXTENSION_DIR)
+RUBY_VENDOR_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["vendordir"]]'`
+AC_SUBST(RUBY_VENDOR_DIR)
 RUBY_SO_NAME=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["RUBY_SO_NAME"]]'`
 AC_SUBST(RUBY_SO_NAME)
 RUBY_SHARED_LIB=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["LIBRUBY"]]'`

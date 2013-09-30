@@ -43,6 +43,7 @@ This package contains libstorage, a library for storage management.
 %if 0%{?fedora_version} || 0%{?centos_version} || 0%{?rhel_version} || 0%{?fedora} || 0%{?rhel}
 %{!?ruby_sitelib: %global ruby_sitelib %(ruby -r rbconfig -e 'vd = Config::CONFIG["vendorlibdir"]; print(vd ? vd : Config::CONFIG["sitelibdir"])')}
 %{!?ruby_sitearch: %global ruby_sitearch %(ruby -r rbconfig -e 'vad = Config::CONFIG["vendorarchdir"]; print(vad ? vad : Config::CONFIG["sitearchdir"])')}
+%{!?ruby_vendor: %global ruby_vendor %(ruby -r rbconfig -e 'vad = Config::CONFIG["vendor"]; print(vad ? vad : Config::CONFIG["vendor"])')}
 %endif
 %endif
 
@@ -221,6 +222,7 @@ Authors:
 %if 0%{?fedora_version} || 0%{?rhel_version} || 0%{?centos_version}
 %{ruby_sitearch}/storage.so
 %endif
+%{ruby_vendor}/storage_utf8.rb
 
 %package -n libstorage-testsuite
 
