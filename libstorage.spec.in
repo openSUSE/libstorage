@@ -215,6 +215,7 @@ Authors:
 %else
 %{rb_vendorarch}/storage.so
 %endif
+%{rb_vendordir}/storage_utf8.rb
 %endif
 %if 0%{?mandriva_version}
 %{ruby_sitearchdir}/storage.so
@@ -222,7 +223,6 @@ Authors:
 %if 0%{?fedora_version} || 0%{?rhel_version} || 0%{?centos_version}
 %{ruby_sitearch}/storage.so
 %endif
-%{ruby_vendor}/storage_utf8.rb
 
 %package -n libstorage-testsuite
 
