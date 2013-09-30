@@ -145,7 +145,7 @@ namespace storage
 	: Volume(c, v), md_type(v.md_type), md_parity(v.md_parity),
 	  chunk_k(v.chunk_k), md_uuid(v.md_uuid), md_name(v.md_name),
 	  sb_ver(v.sb_ver), destrSb(v.destrSb), devs(v.devs), spare(v.spare),
-	  udev_id(udev_id),
+	  udev_id(v.udev_id),
 	  has_container(v.has_container), inactive(v.inactive),
 	  parent_container(v.parent_container),
 	  parent_uuid(v.parent_uuid), parent_md_name(v.parent_md_name),
