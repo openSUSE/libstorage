@@ -3286,7 +3286,14 @@ Volume::createText(bool doing) const
 	}
 	else
 	{
-	    if (encryption == ENC_NONE)
+	    const Partition* p = dynamic_cast<const Partition*>(this);
+	    if (p && p->id()==Partition::ID_GPT_BIOS)
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create BIOS grub volume %1$s (%2$s)"), dev.c_str(), sizeString().c_str());
+	    }
+	    else if (encryption == ENC_NONE)
 	    {
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 		// %2$s is replaced by size (e.g. 623.5 MB)
