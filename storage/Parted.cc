@@ -90,6 +90,22 @@ namespace storage
 	y2mil("device:" << device << " label:" << label << " geometry:" << geometry <<
 	      " gpt_enlarge:" << gpt_enlarge);
 
+	iterator prev = entries.begin(); 
+	iterator it = prev;
+	if( it!=entries.end()) 
+	  ++it;
+	while(it!=entries.end())
+	    {
+	    if( prev->cylRegion.start()>=it->cylRegion.start() && it->cylRegion.len()>0 )
+		{
+		y2mil("old:" << it->cylRegion );
+	        it->cylRegion.setStart(it->cylRegion.start()+1);
+	        it->cylRegion.setLen(it->cylRegion.len()-1);
+		y2mil("new:" << it->cylRegion );
+		}
+	    prev = it;
+	    ++it;
+	    }
 	for (const_iterator it = entries.begin(); it != entries.end(); ++it)
 	    y2mil(*it);
     }
