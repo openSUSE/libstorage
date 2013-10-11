@@ -72,7 +72,7 @@ DmPartCo::addNewDev(string& device)
 {
     int ret = 0;
     y2mil("device:" << device << " dev:" << dev);
-    string::size_type pos = device.rfind("_part");
+    string::size_type pos = device.rfind("-part");
     if (pos == string::npos)
 	ret = DMPART_PARTITION_NOT_FOUND;
     else
@@ -472,7 +472,7 @@ void DmPartCo::updateMinor()
     string ret = nm;
     if( num>0 )
 	{
-	ret += "_part";
+	ret += "-part";
 	ret += decString(num);
 	}
     y2mil( "num:" << num << " ret:" << ret );
@@ -486,7 +486,7 @@ void DmPartCo::updateMinor()
     string ret = dev;
     if( num>0 )
 	{
-	ret += "_part";
+	ret += "-part";
 	ret += decString(num);
 	}
     y2mil( "num:" << num << " ret:" << ret );

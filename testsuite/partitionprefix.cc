@@ -22,7 +22,7 @@ main()
     cout << s->getPartitionPrefix("/dev/mmcblk0") << endl;
     cout << s->getPartitionPrefix("/dev/mmcblk0p3") << endl;
     cout << s->getPartitionPrefix("/dev/mapper/isw_cfcjajfdfh_test") << endl;
-    cout << s->getPartitionPrefix("/dev/mapper/isw_cfcjajfdfh_test_part4") << endl;
+    cout << s->getPartitionPrefix("/dev/mapper/isw_cfcjajfdfh_test-part4") << endl;
 
     delete s;
 }
