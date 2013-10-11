@@ -754,7 +754,7 @@ Disk::partNaming(const string& disk)
 {
     // TODO: this is hackish
     if (boost::starts_with(disk, "/dev/mapper/"))
-	return "_part";
+	return "-part";
     else if (needP(disk))
 	return "p";
     else

@@ -1,5 +1,5 @@
 /dev/sda1
 /dev/cciss/c0d1p2
 /dev/mmcblk0p3
-/dev/mapper/isw_cfcjajfdfh_test_part4
+/dev/mapper/isw_cfcjajfdfh_test-part4
 /dev/md2p5
