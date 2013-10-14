@@ -325,6 +325,9 @@ Volume::defaultMountBy() const
 {
     MountByType mby = getStorage()->getDefaultMountBy();
 
+    if (mby == MOUNTBY_UUID && cType() == LVM)
+	mby = MOUNTBY_DEVICE;
+
     if (!allowedMountBy(mby))
 	mby = MOUNTBY_DEVICE;
 

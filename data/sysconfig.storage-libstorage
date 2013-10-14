@@ -2,7 +2,7 @@
 
 ## Type: string(id,path,device,uuid,label)
 # Default mount-by method.
-DEVICE_NAMES="id"
+DEVICE_NAMES="uuid"
 
 ## Type: string(ext2,ext3,ext4,xfs,btrfs)
 # Default filesystem type.

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Oct 14 12:28:38 CEST 2013 - aschnell@suse.de
+
+- changed default mount-by to uuid (fate#316204)
+
+-------------------------------------------------------------------
 Fri Oct 11 14:26:18 CEST 2013 - aschnell@suse.de
 
 - adapted to device-mapper device name changes (bnc#810840)
