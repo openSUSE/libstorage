@@ -215,7 +215,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    {
 	    Pv pvn;
 	    unsigned long long s = getStorage()->deviceSize( d );
-	    pe = (s - 500)/pe_size;
+	    pe = (s - 4000)/pe_size;
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 
@@ -992,7 +992,7 @@ void LvmVg::getVgData( const string& name, bool exists )
 	    if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
 				     pe_map ) == 0 )
 		i->setPeMap( pe_map );
-	    free_pe -= i->getLe();
+	    free_pe -= min((unsigned long long) free_pe, i->getLe());
 	    }
 	}
     p=lvmLvPair(lvResized);
