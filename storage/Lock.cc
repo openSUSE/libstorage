@@ -61,7 +61,7 @@ namespace storage
 	    y2err("creating directory for lock-file failed: " << strerror(errno));
 	}
 
-	fd = open("/var/run/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT,
+	fd = open("/var/run/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT | O_CLOEXEC,
 		  S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd < 0)
 	{

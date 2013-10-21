@@ -7699,7 +7699,7 @@ Storage::waitForDevice(const string& device)
 unsigned long long Storage::sizeK( const string& device )
     {
     unsigned long long ret = 0;
-    int fd = open(device.c_str(), O_RDONLY);
+    int fd = open(device.c_str(), O_RDONLY | O_CLOEXEC);
     if (fd >= 0)
 	{
 	uint64_t bytes = 0;
