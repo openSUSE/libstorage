@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Oct 23 08:02:46 CEST 2013 - aschnell@suse.de
+
+- make btrfs the default filesystem (fate#315901)
+- version 2.25.1
+
+-------------------------------------------------------------------
 Tue Oct 15 10:23:49 CEST 2013 - aschnell@suse.de
 
 - fixed calculation of free physical extents (bnc#844534)

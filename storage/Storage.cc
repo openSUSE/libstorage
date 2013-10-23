@@ -92,7 +92,7 @@ Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
       recursiveRemove(false), zeroNewPartitions(false),
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
-      defaultFs(EXT4), defaultSubvolName(""), detectMounted(true), 
+      defaultFs(BTRFS), defaultSubvolName(""), detectMounted(true),
       root_mounted(!instsys()), rootprefix(), fstab(NULL), mdadm(NULL), 
       imsm_driver(IMSM_UNDECIDED), multipath_autostart(MPAS_UNDECIDED)
 {

@@ -6,7 +6,7 @@ DEVICE_NAMES="uuid"
 
 ## Type: string(ext2,ext3,ext4,xfs,btrfs)
 # Default filesystem type.
-DEFAULT_FS="ext4"
+DEFAULT_FS="btrfs"
 
 ## Type: string(optimal,cylinder)
 # Value for partition alignment
