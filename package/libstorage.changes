@@ -2,6 +2,7 @@
 Tue Oct 15 10:23:49 CEST 2013 - aschnell@suse.de
 
 - fixed calculation of free physical extents (bnc#844534)
+- version 2.24.7
 
 -------------------------------------------------------------------
 Fri Oct 11 14:26:18 CEST 2013 - aschnell@suse.de
