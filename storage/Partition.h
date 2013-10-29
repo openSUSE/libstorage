@@ -95,6 +95,9 @@ class Partition : public Volume
 	void forgetResize(); 
 	bool canUseDevice() const;
 
+	static string idToString(unsigned id);
+	string idToString() const { return idToString(id()); }
+
 	/* partition region from sysfs in 512 byte blocks */
 	Region detectSysfsBlkRegion(bool log_error = true) const;
 

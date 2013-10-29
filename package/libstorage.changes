@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 29 11:59:17 CET 2013 - aschnell@suse.de
+
+- display partition type not only by number (bnc#844577)
+
+-------------------------------------------------------------------
 Wed Oct 23 08:02:46 CEST 2013 - aschnell@suse.de
 
 - make btrfs the default filesystem (fate#315901)

@@ -293,26 +293,55 @@ bool Partition::operator< ( const Partition& rhs ) const
     }
 
 
-Text Partition::setTypeText( bool doing ) const
+    string
+    Partition::idToString(unsigned id)
     {
-    Text txt;
-    string d = dev;
-    if( doing )
-        {
-        // displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Setting type of partition %1$s to %2$X"),
-                      d.c_str(), id() );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Set type of partition %1$s to %2$X"),
-                      d.c_str(), id() );
-        }
-    return( txt );
+	switch (id)
+	{
+	    case ID_SWAP: return "Linux Swap";
+	    case ID_LINUX: return "Linux";
+	    case ID_LVM: return "Linux LVM";
+	    case ID_RAID: return "Linux RAID";
+	}
+	return "";
     }
+
+
+    Text
+    Partition::setTypeText(bool doing) const
+    {
+	string id_str = idToString();
+
+	Text txt;
+	if (doing)
+        {
+	    if (id_str.empty())
+		// displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+		// %2$X is replaced by hexadecimal number (e.g. 8E)
+		txt = sformat(_("Setting type of partition %1$s to %2$X"), dev.c_str(), id());
+	    else
+		// displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+		// %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+		// hexadecimal number (e.g. 8E)
+		txt = sformat(_("Setting type of partition %1$s to %2$s (%3$X"), dev.c_str(),
+			      id_str.c_str(), id() );
+	}
+	else
+	{
+	    if (id_str.empty())
+		// displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
+		// %2$X is replaced by hexadecimal number (e.g. 8E)
+		txt = sformat(_("Set type of partition %1$s to %2$X"), dev.c_str(), id());
+	    else
+		// displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+		// %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+		// hexadecimal number (e.g. 8E)
+		txt = sformat(_("Set type of partition %1$s to %2$s (%3$X)"), dev.c_str(),
+			      id_str.c_str(), id());
+	}
+	return txt;
+    }
+
 
 const Disk* Partition::disk() const
     {
