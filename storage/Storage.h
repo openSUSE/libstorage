@@ -534,8 +534,6 @@ class DiskData;
 	int computeMdSize(MdType md_type, const list<string>& devices, const list<string>& spares,
 			  unsigned long long& sizeK);
 	list<int> getMdAllowedParity(MdType md_type, unsigned devices );
-	void setImsmDriver(ImsmDriver val) { imsm_driver = val; }
-	ImsmDriver getImsmDriver() const { return imsm_driver; }
 	void setMultipathAutostart(MultipathAutostart val) { multipath_autostart = val; }
 	MultipathAutostart getMultipathAutostart() const { return multipath_autostart; }
 
@@ -2146,7 +2144,6 @@ class DiskData;
 	EtcFstab *fstab;
 	EtcMdadm* mdadm;
 
-	ImsmDriver imsm_driver;
 	MultipathAutostart multipath_autostart;
 
 	CallbackProgressBar progress_bar_cb;

@@ -88,9 +88,6 @@ namespace storage
 
     bool getMdadmDetails(const string& dev, MdadmDetails& details);
 
-
-    bool isImsmPlatform();
-
 }
 
 

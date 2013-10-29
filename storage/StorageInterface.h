@@ -164,8 +164,6 @@ namespace storage
 
     enum Transport { TUNKNOWN, SBP, ATA, FC, ISCSI, SAS, SATA, SPI, USB, FCOE };
 
-    enum ImsmDriver { IMSM_UNDECIDED, IMSM_DMRAID, IMSM_MDADM };
-
     enum MultipathAutostart { MPAS_UNDECIDED, MPAS_ON, MPAS_OFF };
 
     enum PartAlign { ALIGN_OPTIMAL, ALIGN_CYLINDER };
@@ -1045,20 +1043,6 @@ namespace storage
 	 */
 	virtual int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
                                          MdPartCoInfo& info) = 0;
-
-	/**
-	 * Set which driver should be used for IMSM Software RAIDs.
-	 *
-	 * @param driver driver to use for IMSM Software RAIDs.
-	 */
-	virtual void setImsmDriver(ImsmDriver driver) = 0;
-
-        /**
-	 * Query which driver is used for IMSM Software RAIDs.
-         *
-         * @return driver used for IMSM Software RAIDs.
-         */
-	virtual ImsmDriver getImsmDriver() const = 0;
 
 	/**
 	 * Set whether multipath should be started automatically if detected.

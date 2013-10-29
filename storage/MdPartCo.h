@@ -154,10 +154,6 @@ class MdPartCo : public Container
     static bool matchRegex( const string& dev );
     static bool mdStringNum( const string& name, unsigned& num );
 
-    // This function will scan for MD RAIDs and will return
-    // list with detected RAID names.
-    static bool scanForRaid(list<string>& raidNames);
-
     /* filterMdPartCo
      * Get list of detected MD RAIDs and filters them for
      * those which can be handled by MdPartCo.

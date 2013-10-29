@@ -1457,37 +1457,6 @@ MdPartCo::syncMdadm(EtcMdadm* mdadm) const
     }
 
 
-bool
-MdPartCo::scanForRaid(list<string>& raidNames)
-{
-    bool ret = false;
-  raidNames.clear();
-
-  SystemCmd c(MDADMBIN " --examine --scan");
-  if( c.retcode() == 0 )
-    {
-    for(unsigned i = 0; i < c.numLines(false); i++ )
-      {
-      //Example:
-      //ARRAY metadata=imsm UUID=b...5
-      //ARRAY /dev/md/Vol_r5 container=b...5 member=0 UUID=0...c
-      //ARRAY metadata=imsm UUID=8...b
-      //ARRAY /dev/md/Vol0 container=8...b member=0 UUID=7...9
-      string line = c.getLine(i);
-      string dev_name = extractNthWord( 1, line );
-      if( dev_name.find("/dev/md/") == 0 )
-        {
-        dev_name.erase(0,8);
-        raidNames.push_back(dev_name);
-        }
-      }
-    ret = true;
-    }
-  y2mil(" Detected list of MD RAIDs : " << raidNames);
-  return ret;
-}
-
-
 CType
 MdPartCo::envSelection(const string& name)
 {

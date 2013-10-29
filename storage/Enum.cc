@@ -117,14 +117,6 @@ namespace storage
 						    lengthof(transport_names));
 
 
-    static const string imsm_driver_names[] = {
-	"UNDECIDED", "DMRAID", "MDADM"
-    };
-
-    const vector<string> EnumInfo<ImsmDriver>::names(imsm_driver_names, imsm_driver_names +
-						     lengthof(imsm_driver_names));
-
-
     static const string multipath_autostart_names[] = {
 	"UNDECIDED", "ON", "OFF"
     };

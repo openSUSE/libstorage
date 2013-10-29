@@ -322,27 +322,4 @@ namespace storage
 	      " metadata:" << detail.metadata);
 	return true;
     }
-
-
-    bool
-    isImsmPlatform()
-    {
-	bool ret = false;
-
-	SystemCmd cmd(MDADMBIN " --detail-platform");
-
-	cmd.select("Platform : ");
-	if (cmd.numLines(true) > 0)
-	{
-	    string line = cmd.getLine(0, true);
-	    if (boost::contains(line, "Intel(R) Matrix Storage Manager"))
-	    {
-		ret = true;
-	    }
-	}
-
-	y2mil("ret:" << ret);
-	return ret;
-    }
-
 }

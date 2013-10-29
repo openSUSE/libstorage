@@ -94,7 +94,7 @@ Storage::Storage(const Environment& env)
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(BTRFS), defaultSubvolName(""), detectMounted(true),
       root_mounted(!instsys()), rootprefix(), fstab(NULL), mdadm(NULL), 
-      imsm_driver(IMSM_UNDECIDED), multipath_autostart(MPAS_UNDECIDED)
+      multipath_autostart(MPAS_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -117,14 +117,6 @@ Storage::Storage(const Environment& env)
     password_popup_cb = NULL;
 
     SystemCmd::setTestmode(testmode());
-
-    tenv = getenv("LIBSTORAGE_IMSM_DRIVER");
-    if (tenv)
-    {
-	if (!toValue(tenv, imsm_driver, false))
-	    y2war("unknown IMSM driver '" << tenv << "' in environment");
-    }
-    y2mil("imsm_driver:" << toString(imsm_driver));
 
     tenv = getenv("LIBSTORAGE_MULTIPATH_AUTOSTART");
     if (tenv)
@@ -226,8 +218,6 @@ Storage::initialize()
 
 	if (multipath_autostart == MPAS_ON)
 	    DmmultipathCo::activate(true);
-
-	decideImsm();
     }
 
     detectObjects();
@@ -276,17 +266,8 @@ void Storage::detectObjects()
 {
 	if (instsys())
 	{
-	    if (getImsmDriver() == IMSM_MDADM)
-	    {
-		MdPartCo::activate(true, tmpDir());
-		DmraidCo::activate(true);
-	    }
-	    else
-	    {
-		DmraidCo::activate(true);
-		MdPartCo::activate(true, tmpDir());
-	    }
-
+	    MdPartCo::activate(true, tmpDir());
+	    DmraidCo::activate(true);
 	    MdCo::activate(true, tmpDir());
 	    LvmVg::activate(true);
 	}
@@ -375,38 +356,6 @@ void Storage::detectObjects()
 	    }
 	}
     }
-
-
-void
-Storage::decideImsm()
-{
-    if (imsm_driver == IMSM_UNDECIDED && isImsmPlatform())
-    {
-	y2mil("IMSM platform detected");
-
-	list<string> l;
-	if (MdPartCo::scanForRaid(l) && !l.empty())
-	{
-	    y2mil("md raids:" << l);
-
-	    Text txt = sformat(
-		// popup text %1$s is replaced by disk name e.g. /dev/hda
-		_("You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
-		  "\n"
-		  "Following MD compatible RAID devices were detected:\n"
-		  "%1$s\n"
-		  "If they are clean devices or contain partitions then you can choose to use\n"
-		  "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
-		  "will be able to install system on it and boot from such RAID.\n"
-		  "Do you want MD Partitionable RAID subsystem to manage those partitions?"),
-		boost::join(l, " ").c_str());
-
-	    imsm_driver = yesnoPopupCb(txt) ? IMSM_MDADM : IMSM_DMRAID;
-	}
-    }
-
-    y2mil("imsm_driver:" << toString(imsm_driver));
-}
 
 
 void Storage::deleteBackups()
@@ -7587,16 +7536,8 @@ Storage::activateHld(bool val)
     y2mil("val:" << val);
     if (val)
     {
-        if (getImsmDriver() == IMSM_MDADM)
-          {
           MdPartCo::activate(val, tmpDir());
           Dm::activate(val);
-          }
-        else
-          {
-          Dm::activate(val);
-          MdPartCo::activate(val, tmpDir());
-          }
     }
     LvmVg::activate(val);
     if (!val)
