@@ -2,6 +2,7 @@
 Tue Oct 29 14:57:13 CET 2013 - aschnell@suse.de
 
 - always use mdadm for IMSM and DDF (fate#316007)
+- version 2.25.2
 
 -------------------------------------------------------------------
 Tue Oct 29 14:06:38 CET 2013 - aschnell@suse.de
