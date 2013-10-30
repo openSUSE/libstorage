@@ -38,7 +38,7 @@ namespace storage
      *
      * @return mapping from dmraid names to mdadm uuids
      */
-    map<string, string> Dmraid2Uuid();
+    map<string, string> DmraidToMdadm();
 
 }
 

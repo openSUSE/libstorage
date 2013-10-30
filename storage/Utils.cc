@@ -32,7 +32,7 @@ namespace storage
 
 
     map<string, string>
-    Dmraid2Uuid()
+    DmraidToMdadm()
     {
 	map<string, string> ret;
 
