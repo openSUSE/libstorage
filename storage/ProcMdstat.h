@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -87,6 +87,14 @@ namespace storage
     };
 
     bool getMdadmDetails(const string& dev, MdadmDetails& details);
+
+
+    struct MdadmExamine
+    {
+	string uuid;
+    };
+
+    bool getMdadmExamine(const list<string>& devs, MdadmExamine& examine);
 
 }
 

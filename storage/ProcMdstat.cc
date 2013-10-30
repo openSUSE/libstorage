@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -322,4 +322,37 @@ namespace storage
 	      " metadata:" << detail.metadata);
 	return true;
     }
+
+
+    bool
+    getMdadmExamine(const list<string>& devs, MdadmExamine& examine)
+    {
+	SystemCmd cmd(MDADMBIN " --examine " + quote(devs) + " --brief");
+	if (cmd.retcode() != 0)
+	{
+	    y2err("running mdadm failed");
+	    return false;
+	}
+
+	examine.uuid = "";
+
+	const vector<string>& lines = cmd.stdout();
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	{
+	    bool is_container_line = false;
+
+	    const list<string> items = splitString(*it, " ");
+	    for (list<string>::const_iterator it = items.begin(); it != items.end(); ++it)
+	    {
+		if (boost::starts_with(*it, "container="))
+		    is_container_line = true;
+		else if (boost::starts_with(*it, "UUID=") && is_container_line)
+		    examine.uuid = string(*it, 5);
+	    }
+	}
+
+	y2mil("devs:" << devs << " uuid:" << examine.uuid);
+	return true;
+    }
+
 }

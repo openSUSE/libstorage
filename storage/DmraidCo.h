@@ -52,9 +52,12 @@ class Storage;
 
 	bool getEntry(const string& name, Entry& entry) const;
 
-    private:
-
 	typedef map<string, Entry>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
+    private:
 
 	map<string, Entry> data;
 

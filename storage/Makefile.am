@@ -38,6 +38,7 @@ libstorage_la_SOURCES =					\
 	  Nfs.cc		Nfs.h			\
 	HumanString.cc		HumanString.h		\
 	Graph.cc		Graph.h			\
+	Utils.cc		Utils.h			\
 	SystemCmd.cc		SystemCmd.h		\
 	OutputProcessor.cc	OutputProcessor.h	\
 	Regex.cc		Regex.h			\
@@ -88,4 +89,5 @@ pkginclude_HEADERS =			\
 	StorageInterface.h		\
 	StorageSwig.h		        \
 	HumanString.h			\
-	Graph.h
+	Graph.h				\
+	Utils.h

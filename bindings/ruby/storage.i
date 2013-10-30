@@ -8,6 +8,7 @@
 #include <storage/StorageInterface.h>
 #include <storage/HumanString.h>
 #include <storage/Graph.h>
+#include <storage/Utils.h>
 %}
 
 using namespace std;
@@ -15,6 +16,7 @@ using namespace std;
 %include "std_string.i"
 %include "std_deque.i"
 %include "std_list.i"
+%include "std_map.i"
 %include "enum_ref.i"
 
 OUTPUT_TYPEMAP(storage::MountByType, UINT2NUM, (unsigned int));
@@ -23,12 +25,14 @@ OUTPUT_TYPEMAP(storage::MountByType, UINT2NUM, (unsigned int));
 %include "../../storage/StorageInterface.h"
 %include "../../storage/HumanString.h"
 %include "../../storage/Graph.h"
+%include "../../storage/Utils.h"
 
 using namespace storage;
 
 %template(DequeString) deque<string>;
 %template(ListString) list<string>;
 %template(ListInt) list<int>;
+%template(MapStringString) map<string, string>;
 %template(DequeContainerInfo) deque<ContainerInfo>;
 %template(DequeVolumeInfo) deque<VolumeInfo>;
 %template(DequePartitionInfo) deque<PartitionInfo>;
