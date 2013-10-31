@@ -705,10 +705,12 @@ getMajorDevices(const char* driver)
 void checkBinPaths( const string& arch, bool instsys )
     {
     y2mil( "Arch:" << arch << " Instsys:" << instsys );
-    list<string> ign;
-    const char* pathes[] = { 
+
+    const char* paths[] = {
 #include "./gen_pathlist.cc"
                            };
+
+    list<string> ign;
     ign.push_back( PORTMAPBIN );
     ign.push_back( HFORMATBIN );
     if( !boost::starts_with(arch,"s390") )
@@ -718,14 +720,15 @@ void checkBinPaths( const string& arch, bool instsys )
         ign.push_back( DASDFMTBIN );
         }
     y2mil( "ign:" << ign );
+
     LogLevel level = instsys?storage::ERROR:storage::MILESTONE;
-    for( unsigned i=0; i<lengthof(pathes); i++ )
+    for( unsigned int i=0; i<lengthof(paths); ++i )
         {
-        if( !contains( ign, pathes[i] ))
+        if( !contains( ign, paths[i] ))
             {
-            if( access( pathes[i], X_OK )!=0 )
+            if( access( paths[i], X_OK )!=0 )
                 y2log_op( level, __FILE__, __LINE__, __FUNCTION__,
-                          "error accessing:" << pathes[i] );
+                          "error accessing:" << paths[i] );
             }
         }
     }
