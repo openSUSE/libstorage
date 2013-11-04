@@ -215,7 +215,6 @@ Authors:
 %else
 %{rb_vendorarch}/storage.so
 %endif
-%{rb_vendordir}/storage_utf8.rb
 %endif
 %if 0%{?mandriva_version}
 %{ruby_sitearchdir}/storage.so
