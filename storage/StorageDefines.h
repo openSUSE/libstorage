@@ -96,6 +96,7 @@
 #define TUNEJFSBIN     "/sbin/jfs_tune"
 #define XFSADMINBIN    "/usr/sbin/xfs_admin"
 #define NTFSLABELBIN   "/usr/sbin/ntfslabel"
+#define DOSFSLABELBIN  "/usr/sbin/dosfslabel"
 
 #define FSCKBIN        "/sbin/fsck"
 #define FSCKEXT2BIN    "/sbin/fsck.ext2"

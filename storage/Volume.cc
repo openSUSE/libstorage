@@ -2608,6 +2608,9 @@ int Volume::doSetLabel()
 	    case JFS:
 		cmd = TUNEJFSBIN " -L " + quote(label) + " " + quote(mountDevice());
 		break;
+	    case VFAT:
+		cmd = DOSFSLABELBIN " " + quote(mountDevice()) + " " + quote(label);
+		break;
 	    case XFS:
 		{
 		string tlabel = label;
@@ -2660,6 +2663,7 @@ int Volume::doSetLabel()
     return( ret );
     }
 
+
 int Volume::setLabel( const string& val )
     {
     int ret=0;
@@ -2672,13 +2676,19 @@ int Volume::setLabel( const string& val )
 	else if (isUsedBy())
 	    ret = VOLUME_ALREADY_IN_USE;
 	else
-	    label = val;
+	    {
+	    if (fs == VFAT)
+		label = boost::to_upper_copy(val, locale::classic());
+	    else
+		label = val;
+	    }
 	}
     else
 	ret = VOLUME_LABEL_NOT_SUPPORTED;
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
+
 
 int Volume::mount( const string& m, bool ro )
     {
@@ -3035,6 +3045,7 @@ bool Volume::pvEncryption() const
     {
     return( encryption==ENC_LUKS && isUsedBy(UB_LVM) );
     }
+
 
 int Volume::doFstabUpdate( bool force_rewrite )
     {
