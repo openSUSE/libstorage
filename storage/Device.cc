@@ -157,11 +157,11 @@ namespace storage
     }
 
 
-bool Device::sameDevice( const string& device ) const
+    bool
+    Device::sameDevice(const string& device) const
     {
-    string d = normalizeDevice(device);
-    return( d==dev ||
-	    find( alt_names.begin(), alt_names.end(), d )!=alt_names.end() );
+	string d = normalizeDevice(device);
+	return d == dev || contains(alt_names, d);
     }
 
 
