@@ -22,8 +22,7 @@
 
 #include <string>
 
-#include "storage/DmraidCo.h"
-#include "storage/ProcMdstat.h"
+#include "storage/SystemInfo.h"
 
 
 namespace storage
@@ -34,15 +33,34 @@ namespace storage
     map<string, string>
     DmraidToMdadm()
     {
+	SystemInfo systeminfo;
+
 	map<string, string> ret;
 
-	CmdDmraid cmd_dmraid;
-	for (CmdDmraid::const_iterator it = cmd_dmraid.begin(); it != cmd_dmraid.end(); ++it)
+	const CmdDmraid& cmd_dmraid = systeminfo.getCmdDmraid();
+	for (CmdDmraid::const_iterator it1 = cmd_dmraid.begin(); it1 != cmd_dmraid.end(); ++it1)
 	{
-	    MdadmExamine examine;
-	    if (getMdadmExamine(it->second.devices, examine))
-		ret[it->first] = examine.uuid;
+	    // The name from dmraid is something like "ddf1_foo" or "isw_chadfejhhc_foo".
+	    string::size_type pos = it1->first.rfind('_');
+	    if (pos == string::npos)
+	    {
+		y2err("unexpected input");
+		continue;
+	    }
+	    string name = string(it1->first, pos + 1);
+
+	    const MdadmExamine& examine = systeminfo.getMdadmExamine(it1->second.devices);
+	    MdadmExamine::const_iterator it2 = examine.find(name);
+	    if (it2 == examine.end())
+	    {
+		y2err("failed to find mdadm");
+		continue;
+	    }
+
+	    ret[it1->first] = it2->second.uuid;
 	}
+
+	y2mil("ret:" << ret);
 
 	return ret;
     }

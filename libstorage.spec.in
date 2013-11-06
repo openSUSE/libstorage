@@ -108,8 +108,18 @@ rm -rf "$RPM_BUILD_ROOT"
 
 %package -n libstorage@LIBVERSION_MAJOR@
 
-Requires:       parted >= 2.2 mdadm device-mapper lvm2 dmraid multipath-tools cryptsetup
-Requires:       coreutils udev util-linux >= 2.16 grep lsscsi
+Requires:	coreutils
+Requires:	cryptsetup
+Requires:	device-mapper
+Requires:	dmraid
+Requires:	grep
+Requires:	lsscsi
+Requires:	lvm2
+Requires:	mdadm >= 3.3
+Requires:	multipath-tools
+Requires:	parted >= 2.2
+Requires:	udev
+Requires:	util-linux >= 2.16
 %ifarch s390 s390x
 Requires:       s390-tools
 %endif
@@ -152,8 +162,10 @@ Authors:
 
 %package -n libstorage-devel
 
-Requires:       libstorage@LIBVERSION_MAJOR@ = %version
-Requires:       gcc-c++ libstdc++-devel libxml2-devel
+Requires:	gcc-c++
+Requires:	libstdc++-devel
+Requires:	libstorage@LIBVERSION_MAJOR@ = %version
+Requires:	libxml2-devel
 Summary:        Header files and documentation for libstorage
 Group:          Development/Languages/C and C++
 

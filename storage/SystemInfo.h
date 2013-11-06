@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -60,6 +60,7 @@ namespace storage
 	map< string, Entry > fs;
     };
 
+
     class SystemInfo : boost::noncopyable
     {
 
@@ -72,6 +73,7 @@ namespace storage
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
 	const ProcMdstat& getProcMdstat() { return *procmdstat; }
+	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices); }
 	const Blkid& getBlkid() { return *blkid; }
 	const Lsscsi& getLsscsi() { return *lsscsi; }
 	const Parted& getParted(const string& device) { return parteds.get(device); }
@@ -100,25 +102,25 @@ namespace storage
 
 	};
 
-	template <class Type>
+	template <class Type, class Key = string>
 	class LazyObjects : boost::noncopyable
 	{
 	public:
 
-	    const Type& get(const string& s)
+	    const Type& get(const Key& k)
 	    {
-		typename map<string, Type>::iterator pos = data.lower_bound(s);
-		if (pos == data.end() || typename map<string, Type>::key_compare()(s, pos->first))
+		typename map<Key, Type>::iterator pos = data.lower_bound(k);
+		if (pos == data.end() || typename map<Key, Type>::key_compare()(k, pos->first))
 		{
-		    Type tmp(s);
-		    pos = data.insert(pos, typename map<string, Type>::value_type(s, tmp));
+		    Type tmp(k);
+		    pos = data.insert(pos, typename map<Key, Type>::value_type(k, tmp));
 		}
 		return pos->second;
 	    }
 
 	private:
 
-	    map<string, Type> data;
+	    map<Key, Type> data;
 
 	};
 
@@ -126,6 +128,7 @@ namespace storage
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<ProcMdstat> procmdstat;
+	LazyObjects<MdadmExamine, list<string>> mdadmexamines;
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
 	LazyObjects<Parted> parteds;

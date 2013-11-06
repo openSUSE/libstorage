@@ -324,35 +324,70 @@ namespace storage
     }
 
 
-    bool
-    getMdadmExamine(const list<string>& devs, MdadmExamine& examine)
+    MdadmExamine::MdadmExamine(const list<string>& devices)
     {
-	SystemCmd cmd(MDADMBIN " --examine " + quote(devs) + " --brief");
+	SystemCmd cmd(MDADMBIN " --examine " + quote(devices) + " --brief");
 	if (cmd.retcode() != 0)
 	{
 	    y2err("running mdadm failed");
-	    return false;
+	    return;
 	}
-
-	examine.uuid = "";
 
 	const vector<string>& lines = cmd.stdout();
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    bool is_container_line = false;
-
 	    const list<string> items = splitString(*it, " ");
+	    if (items.front() != "ARRAY" || items.size() < 3)
+	    {
+		y2err("unexpected input");
+		continue;
+	    }
+
+	    bool is_container_line = true;
 	    for (list<string>::const_iterator it = items.begin(); it != items.end(); ++it)
 	    {
 		if (boost::starts_with(*it, "container="))
-		    is_container_line = true;
-		else if (boost::starts_with(*it, "UUID=") && is_container_line)
-		    examine.uuid = string(*it, 5);
+		    is_container_line = false;
+	    }
+
+	    if (is_container_line)
+	    {
+		for (list<string>::const_iterator it = items.begin(); it != items.end(); ++it)
+		{
+		    if (boost::starts_with(*it, "metadata="))
+			metadata = string(*it, 9);
+		    else if (boost::starts_with(*it, "UUID="))
+			uuid = string(*it, 5);
+		}
+	    }
+	    else
+	    {
+		string device = *(++items.begin());
+		if (!boost::starts_with(device, "/dev/md/"))
+		{
+		    y2err("unexpected input");
+		    continue;
+		}
+
+		string name = string(device, 8);
+
+		Entry entry;
+		for (list<string>::const_iterator it = items.begin(); it != items.end(); ++it)
+		{
+		    if (boost::starts_with(*it, "member="))
+			string(*it, 7) >> entry.member;
+		    else if (boost::starts_with(*it, "UUID="))
+			entry.uuid = string(*it, 5);
+		}
+
+		data[name] = entry;
 	    }
 	}
 
-	y2mil("devs:" << devs << " uuid:" << examine.uuid);
-	return true;
+	y2mil("devices:" << devices << " metadata:" << metadata << " uuid:" << uuid);
+	for (const_iterator it = begin(); it != end(); ++it)
+	    y2mil("data["<< it->first << "] -> member:" << it->second.member << " uuid:" <<
+		  it->second.uuid);
     }
 
 }

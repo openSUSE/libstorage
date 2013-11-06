@@ -89,12 +89,35 @@ namespace storage
     bool getMdadmDetails(const string& dev, MdadmDetails& details);
 
 
-    struct MdadmExamine
+    class MdadmExamine
     {
-	string uuid;
-    };
+    public:
 
-    bool getMdadmExamine(const list<string>& devs, MdadmExamine& examine);
+	MdadmExamine(const list<string>& devices);
+
+	string metadata;
+	string uuid;
+
+	struct Entry
+	{
+	    Entry() : member(-1) {}
+
+	    int member;
+	    string uuid;
+	};
+
+	typedef map<string, Entry>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
+	const_iterator find(const string& name) const { return data.find(name); }
+
+    private:
+
+	map<string, Entry> data;
+
+    };
 
 }
 
