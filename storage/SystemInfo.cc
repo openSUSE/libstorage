@@ -85,19 +85,17 @@ CmdBtrfsShow::getEntry( const string& uuid, Entry& entry) const
     return( it!=fs.end() );
     }
 
-list<string> 
-CmdBtrfsShow::getUuids() const
-    {
-    list<string> ret;
 
-    const_iterator it = fs.begin();
-    while( it != fs.end() )
-	{
-	ret.push_back( it->first );
-	++it;
-	}
-    y2mil( "ret:" << ret );
-    return( ret );
+    list<string>
+    CmdBtrfsShow::getUuids() const
+    {
+	list<string> ret;
+
+	for (const_iterator it = fs.begin(); it != fs.end(); ++it)
+	    ret.push_back(it->first);
+
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 }
