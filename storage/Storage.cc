@@ -772,9 +772,9 @@ bool Storage::getDiskList( list< pair< string, Disk::SysfsInfo > >& dlist )
     {
     dlist.clear();
     DIR *Dir;
-    struct dirent *Entry;
     if( (Dir=opendir(SYSFSDIR))!=NULL )
 	{
+	struct dirent* Entry;
 	while( (Entry=readdir( Dir ))!=NULL )
 	    {
 	    string dn = Entry->d_name;
