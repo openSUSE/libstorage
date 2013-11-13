@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Nov 13 15:28:51 CET 2013 - aschnell@suse.de
+
+- use correct binary prefix (bnc#849276)
+- version 2.25.3
+
+-------------------------------------------------------------------
 Tue Nov 05 12:08:53 CET 2013 - aschnell@suse.de
 
 - support label on FAT (bnc#848052)
