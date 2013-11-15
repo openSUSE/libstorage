@@ -22,12 +22,29 @@
 
 #include <string>
 
+#include "storage/Storage.h"
 #include "storage/SystemInfo.h"
 
 
 namespace storage
 {
     using namespace std;
+
+
+    list<string>
+    getPresentDisks()
+    {
+	list<string> ret;
+
+	list<pair<string, Disk::SysfsInfo>> dlist;
+	Storage::getDiskList(dlist);
+
+	for (list<pair<string, Disk::SysfsInfo>>::const_iterator it = dlist.begin(); it != dlist.end(); ++it)
+	    ret.push_back("/dev/" + Disk::sysfsToDev(it->first));
+
+	y2mil("ret:" << ret);
+	return ret;
+    }
 
 
     map<string, string>

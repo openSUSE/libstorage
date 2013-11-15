@@ -33,6 +33,15 @@ using std::map;
 
 namespace storage
 {
+
+    /**
+     * Lightweight function to get existing disks without full probing.
+     *
+     * @return list of device names of present disk devices
+     */
+    list<string> getPresentDisks();
+
+
     /**
      * Lightweight function to get mapping from dmraid names to mdadm uuids.
      *

@@ -855,20 +855,6 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
 	}
     }
 
-list<string> getPresentDisks()
-    {
-    list<string> ret;
-    list< pair< string, Disk::SysfsInfo > > dlist;
-    Storage::getDiskList( dlist );
-    list< pair< string, Disk::SysfsInfo > >::const_iterator i = dlist.begin();
-    while( i!=dlist.end() )
-	{
-	ret.push_back( "/dev/"+Disk::sysfsToDev(i->first) );
-	++i;
-	}
-    y2mil( "ret:" << ret );
-    return( ret );
-    }
 
     void
     Storage::detectFsData(const VolIterator& begin, const VolIterator& end, SystemInfo& systeminfo)

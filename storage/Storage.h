@@ -584,8 +584,8 @@ class DiskData;
 	static void clean_tmpdir();
 
 	static bool getDiskList( list< pair< string, Disk::SysfsInfo > >& dlist );
-	void getDiskList( bool (* CheckFnc)( const Disk& ),
-	                  std::list<Disk*>& dl );
+	void getDiskList( bool (* CheckFnc)( const Disk& ), list<Disk*>& dl );
+
 	void changeDeviceName( const string& old, const string& nw );
 
         int commit();
