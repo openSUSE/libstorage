@@ -6917,8 +6917,11 @@ void Storage::rootMounted()
 	    string path = root()+"/etc/fstab";
 	    unlink( path.c_str() );
 	    }
+
 	int ret = fstab->changeRootPrefix( root()+"/etc" );
-	if( ret!=0 )
+	if (ret == 0)
+	    ret = fstab->flush();
+	if (ret != 0)
 	    y2err("changeRootPrefix returns " << ret);
 	}
     }
