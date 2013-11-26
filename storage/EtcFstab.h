@@ -56,7 +56,7 @@ struct FstabEntry
     string dentry;
     string mount;
     string fs;
-    std::list<string> opts;
+    list<string> opts;
     int freq;
     int passno;
     bool loop;
@@ -90,7 +90,7 @@ struct FstabChange
     string dentry;
     string mount;
     string fs;
-    std::list<string> opts;
+    list<string> opts;
     int freq;
     int passno;
     string loop_dev;
@@ -104,7 +104,7 @@ class EtcFstab
     public:
 	EtcFstab( const string& prefix = "", bool rootMounted=true );
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
-	bool findDevice( const std::list<string>& dl, FstabEntry& entry ) const;
+	bool findDevice( const list<string>& dl, FstabEntry& entry ) const;
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findMount( const string& mount ) const
 	    { FstabEntry e; return( findMount( mount,e )); }
@@ -116,7 +116,7 @@ class EtcFstab
 	int addEntry( const FstabChange& entry );
 	int removeEntry( const FstabEntry& entry );
 	int changeRootPrefix( const string& prfix );
-	void getFileBasedLoops( const string& prefix, std::list<FstabEntry>& l ) const;
+	void getFileBasedLoops( const string& prefix, list<FstabEntry>& l ) const;
 	list<FstabEntry> getEntries() const;
 	Text addText( bool doing, bool crypto, const string& mp ) const;
 	Text updateText( bool doing, bool crypto, const string& mp ) const;
@@ -145,10 +145,10 @@ class EtcFstab
 	bool findCrtab( const string& device, const AsciiFile& crtab,
 			int& lineno ) const;
 
-	string updateLine( const std::list<string>& ol, 
-			   const std::list<string>& nl, const string& line ) const;
-	string createLine( const std::list<string>& ls, unsigned fields, 
-	                   const unsigned* flen ) const;
+	string updateLine(const list<string>& ol, const list<string>& nl,
+			  const string& line) const;
+	string createLine(const list<string>& ls, unsigned fields,
+			  const unsigned* flen) const;
 
 	string createTabLine( const FstabEntry& e ) const;
 	string createCrtabLine( const FstabEntry& e ) const;
@@ -164,7 +164,7 @@ class EtcFstab
 	static const unsigned crypttabFields[6];
 
 	string prefix;
-	std::list<Entry> co;
+	list<Entry> co;
     };
 
 }
