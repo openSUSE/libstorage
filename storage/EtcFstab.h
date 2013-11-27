@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,65 +37,58 @@ namespace storage
     using std::list;
 
 
-class AsciiFile;
-struct FstabChange;
-
-struct FstabEntry
-    {
-	FstabEntry() : freq(0), passno(0), loop(false), dmcrypt(false), noauto(false),
-		       cryptotab(false), crypttab(false), tmpcrypt(false), encr(ENC_NONE),
-		       mount_by(MOUNTBY_DEVICE) {}
-
-	explicit FstabEntry(const FstabChange& change) { *this = change; }
-
-	FstabEntry& operator=(const FstabChange& rhs);
-
-    friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v );
-
-    string device;
-    string dentry;
-    string mount;
-    string fs;
-    list<string> opts;
-    int freq;
-    int passno;
-    bool loop;
-    bool dmcrypt;
-    bool noauto;
-    bool cryptotab;
-    bool crypttab;
-    bool tmpcrypt;
-    string loop_dev;
-    string cr_opts;
-    string cr_key;
-    storage::EncryptType encr;
-    storage::MountByType mount_by;
-
-    void calcDependent();
-    bool optUser() const;
-    };
+    class AsciiFile;
+    struct FstabEntry;
 
 
-struct FstabChange
+    struct FstabChange
     {
 	FstabChange() : freq(0), passno(0), encr(ENC_NONE), tmpcrypt(false) {}
 
-	explicit FstabChange(const FstabEntry& entry) { *this = entry; }
+	explicit FstabChange(const FstabEntry& entry) : FstabChange()
+	    { *this = entry; }
 
 	FstabChange& operator=(const FstabEntry& rhs);
 
-    friend std::ostream& operator<< (std::ostream& s, const FstabChange &v );
+	friend std::ostream& operator<< (std::ostream& s, const FstabChange &v);
 
-    string device;
-    string dentry;
-    string mount;
-    string fs;
-    list<string> opts;
-    int freq;
-    int passno;
-    string loop_dev;
-    storage::EncryptType encr;
-    bool tmpcrypt;
+	string device;
+	string dentry;
+	string mount;
+	string fs;
+	list<string> opts;
+	int freq;
+	int passno;
+	string loop_dev;
+	EncryptType encr;
+	bool tmpcrypt;
+    };
+
+
+    struct FstabEntry : public FstabChange
+    {
+	FstabEntry() : loop(false), dmcrypt(false), noauto(false), cryptotab(false),
+		       crypttab(false), tmpcrypt(false), mount_by(MOUNTBY_DEVICE) {}
+
+	explicit FstabEntry(const FstabChange& change) : FstabEntry()
+	    { *this = change; }
+
+	FstabEntry& operator=(const FstabChange& rhs);
+
+	friend std::ostream& operator<< (std::ostream& s, const FstabEntry &v);
+
+	bool loop;
+	bool dmcrypt;
+	bool noauto;
+	bool cryptotab;
+	bool crypttab;
+	bool tmpcrypt;
+	string cr_opts;
+	string cr_key;
+	MountByType mount_by;
+
+	void calcDependent();
+	bool optUser() const;
     };
 
 
@@ -168,5 +161,6 @@ class EtcFstab
     };
 
 }
+
 
 #endif
