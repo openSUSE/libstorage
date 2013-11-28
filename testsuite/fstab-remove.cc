@@ -23,7 +23,8 @@ test1()
     EtcFstab fstab("tmp/etc");
 
     FstabEntry c;
-    c.device = c.dentry = "/dev/sdb1";
+    c.device = "/dev/sdb1";
+    c.mount = "/test1";
 
     fstab.removeEntry(c);
     fstab.flush();
@@ -46,7 +47,8 @@ test2()
     EtcFstab fstab("tmp/etc");
 
     FstabEntry c;
-    c.device = c.dentry = "/dev/sdb1";
+    c.device = "/dev/sdb1";
+    c.mount = "swap";
 
     fstab.removeEntry(c);
     fstab.flush();
@@ -70,7 +72,8 @@ test3()
     EtcFstab fstab("tmp/etc");
 
     FstabEntry c;
-    c.device = c.dentry = "/dev/sdb1";
+    c.device = "/dev/sdb1";
+    c.mount = "/test1";
 
     fstab.removeEntry(c);
     fstab.flush();
@@ -96,7 +99,7 @@ test4()
 
     FstabEntry c;
     c.device = "/dev/sdb1";
-    c.dentry = "/dev/mapper/cr_sdb1";
+    c.mount = "/test1";
 
     fstab.removeEntry(c);
     fstab.flush();
@@ -125,6 +128,7 @@ test5()
 
     FstabEntry c;
     c.device = "/dev/sdb1";
+    c.mount = "/test1";
 
     fstab.removeEntry(c);
     fstab.flush();
