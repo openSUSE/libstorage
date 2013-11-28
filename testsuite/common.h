@@ -20,6 +20,9 @@ namespace storage
 
     void setup_system(const string& name);
 
+    void write_fstab(const list<string>& lines);
+    void write_crypttab(const list<string>& lines);
+
     void print_fstab();
     void print_crypttab();
 

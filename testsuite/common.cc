@@ -36,7 +36,28 @@ namespace storage
     {
 	system("mkdir -p tmp");
 	system("rm -rf tmp/*");
+	system("mkdir tmp/etc");
 	system(string("cp data/" + name + "/*.info tmp").c_str());
+    }
+
+
+    void
+    write_fstab(const list<string>& lines)
+    {
+	ofstream fstab("tmp/etc/fstab");
+
+	for (list<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	    fstab << *it << endl;
+    }
+
+
+    void
+    write_crypttab(const list<string>& lines)
+    {
+	ofstream fstab("tmp/etc/crypttab");
+
+	for (list<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	    fstab << *it << endl;
     }
 
 
