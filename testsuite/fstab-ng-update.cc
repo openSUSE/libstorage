@@ -23,13 +23,15 @@ test1()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry c;
-    c.device = c.dentry = "/dev/sdb1";
-    c.mount = "/test1/sub2";
-    c.fs = "btrfs";
-    c.opts = { ("subvol=sub2") };
+    FstabKey key("/dev/sdb1", "/test1/sub");
 
-    fstab.updateEntry(FstabKey("/dev/sdb1", "/test1/sub"), c);
+    FstabChange entry;
+    entry.device = entry.dentry = "/dev/sdb1";
+    entry.mount = "/test1/sub2";
+    entry.fs = "btrfs";
+    entry.opts = { ("subvol=sub2") };
+
+    fstab.updateEntry(key, entry);
     fstab.flush();
 
     print_fstab();
@@ -51,14 +53,16 @@ test2()
     EtcFstab fstab("tmp/etc");
     fstab.setDevice("/dev/sdb1", {}, "1234", "", {}, "");
 
-    FstabChange c;
-    c.device = "/dev/sdb1";
-    c.dentry = "UUID=1234";
-    c.mount = "/test1/sub2";
-    c.fs = "btrfs";
-    c.opts = { ("subvol=sub2") };
+    FstabKey key("/dev/sdb1", "/test1/sub");
 
-    fstab.updateEntry(FstabKey("/dev/sdb1", "/test1/sub"), c);
+    FstabChange entry;
+    entry.device = "/dev/sdb1";
+    entry.dentry = "UUID=1234";
+    entry.mount = "/test1/sub2";
+    entry.fs = "btrfs";
+    entry.opts = { ("subvol=sub2") };
+
+    fstab.updateEntry(key, entry);
     fstab.flush();
 
     print_fstab();

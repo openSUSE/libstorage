@@ -20,20 +20,20 @@ test1()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c1;
-    c1.device = c1.dentry = "/dev/sdb1";
-    c1.mount = "/test1";
-    c1.fs = "btrfs";
-    c1.opts = { ("defaults") };
+    FstabChange entry1;
+    entry1.device = entry1.dentry = "/dev/sdb1";
+    entry1.mount = "/test1";
+    entry1.fs = "btrfs";
+    entry1.opts = { ("defaults") };
 
-    FstabChange c2;
-    c2.device = c2.dentry = "/dev/sdb1";
-    c2.mount = "/test1/sub";
-    c2.fs = "btrfs";
-    c2.opts = { ("subvol=sub") };
+    FstabChange entry2;
+    entry2.device = entry2.dentry = "/dev/sdb1";
+    entry2.mount = "/test1/sub";
+    entry2.fs = "btrfs";
+    entry2.opts = { ("subvol=sub") };
 
-    fstab.addEntry(c1);
-    fstab.addEntry(c2);
+    fstab.addEntry(entry1);
+    fstab.addEntry(entry2);
     fstab.flush();
 
     print_fstab();
@@ -51,22 +51,22 @@ test2()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c1;
-    c1.device = "/dev/sdb1";
-    c1.dentry = "UUID=1234";
-    c1.mount = "/test1";
-    c1.fs = "btrfs";
-    c1.opts = { ("defaults") };
+    FstabChange entry1;
+    entry1.device = "/dev/sdb1";
+    entry1.dentry = "UUID=1234";
+    entry1.mount = "/test1";
+    entry1.fs = "btrfs";
+    entry1.opts = { ("defaults") };
 
-    FstabChange c2;
-    c2.device = "/dev/sdb1";
-    c2.dentry = "UUID=1234";
-    c2.mount = "/test1/sub";
-    c2.fs = "btrfs";
-    c2.opts = { ("subvol=sub") };
+    FstabChange entry2;
+    entry2.device = "/dev/sdb1";
+    entry2.dentry = "UUID=1234";
+    entry2.mount = "/test1/sub";
+    entry2.fs = "btrfs";
+    entry2.opts = { ("subvol=sub") };
 
-    fstab.addEntry(c1);
-    fstab.addEntry(c2);
+    fstab.addEntry(entry1);
+    fstab.addEntry(entry2);
     fstab.flush();
 
     print_fstab();
@@ -86,13 +86,13 @@ test3()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = c.dentry = "/dev/sdb1";
-    c.mount = "/test1/sub";
-    c.fs = "btrfs";
-    c.opts = { ("subvol=sub") };
+    FstabChange entry;
+    entry.device = entry.dentry = "/dev/sdb1";
+    entry.mount = "/test1/sub";
+    entry.fs = "btrfs";
+    entry.opts = { ("subvol=sub") };
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();

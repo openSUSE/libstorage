@@ -22,11 +22,9 @@ test1()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry c;
-    c.device = "/dev/sdb1";
-    c.mount = "/test1";
+    FstabKey key("/dev/sdb1", "/test1");
 
-    fstab.removeEntry(c);
+    fstab.removeEntry(key);
     fstab.flush();
 
     print_fstab();
@@ -46,11 +44,9 @@ test2()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry c;
-    c.device = "/dev/sdb1";
-    c.mount = "swap";
+    FstabKey key("/dev/sdb1", "swap");
 
-    fstab.removeEntry(c);
+    fstab.removeEntry(key);
     fstab.flush();
 
     print_fstab();
@@ -71,11 +67,9 @@ test3()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry c;
-    c.device = "/dev/sdb1";
-    c.mount = "/test1";
+    FstabKey key("/dev/sdb1", "/test1");
 
-    fstab.removeEntry(c);
+    fstab.removeEntry(key);
     fstab.flush();
 
     print_fstab();
@@ -97,11 +91,9 @@ test4()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry c;
-    c.device = "/dev/sdb1";
-    c.mount = "/test1";
+    FstabKey key("/dev/sdb1", "/test1");
 
-    fstab.removeEntry(c);
+    fstab.removeEntry(key);
     fstab.flush();
 
     print_fstab();
@@ -123,11 +115,9 @@ test5()
     EtcFstab fstab("tmp/etc");
     fstab.setDevice("/dev/sdb1", {}, "1234", "", {}, "");
 
-    FstabEntry c;
-    c.device = "/dev/sdb1";
-    c.mount = "/test1";
+    FstabKey key("/dev/sdb1", "/test1");
 
-    fstab.removeEntry(c);
+    fstab.removeEntry(key);
     fstab.flush();
 
     print_fstab();

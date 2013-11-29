@@ -20,13 +20,13 @@ test1()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = c.dentry = "/dev/sdb1";
-    c.mount = "/test1";
-    c.fs = "ext4";
-    c.opts = { ("defaults") };
+    FstabChange entry;
+    entry.device = entry.dentry = "/dev/sdb1";
+    entry.mount = "/test1";
+    entry.fs = "ext4";
+    entry.opts = { ("defaults") };
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();
@@ -44,13 +44,13 @@ test2()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = c.dentry = "/dev/sdb1";
-    c.mount = "swap";
-    c.fs = "swap";
-    c.opts = { ("defaults") };
+    FstabChange entry;
+    entry.device = entry.dentry = "/dev/sdb1";
+    entry.mount = "swap";
+    entry.fs = "swap";
+    entry.opts = { ("defaults") };
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();
@@ -68,15 +68,15 @@ test3()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = "/dev/sdb1";
-    c.dentry = "/dev/mapper/cr_sdb1";
-    c.mount = "/test1";
-    c.fs = "ext4";
-    c.opts = { ("defaults") };
-    c.encr = storage::ENC_LUKS;
+    FstabChange entry;
+    entry.device = "/dev/sdb1";
+    entry.dentry = "/dev/mapper/cr_sdb1";
+    entry.mount = "/test1";
+    entry.fs = "ext4";
+    entry.opts = { ("defaults") };
+    entry.encr = storage::ENC_LUKS;
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();
@@ -95,16 +95,16 @@ test4()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = "/dev/sdb1";
-    c.dentry = "/dev/mapper/cr_sdb1";
-    c.mount = "/test1";
-    c.fs = "ext4";
-    c.opts = { ("defaults") };
-    c.encr = storage::ENC_LUKS;
-    c.tmpcrypt = true;
+    FstabChange entry;
+    entry.device = "/dev/sdb1";
+    entry.dentry = "/dev/mapper/cr_sdb1";
+    entry.mount = "/test1";
+    entry.fs = "ext4";
+    entry.opts = { ("defaults") };
+    entry.encr = storage::ENC_LUKS;
+    entry.tmpcrypt = true;
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();
@@ -123,14 +123,14 @@ test5()
 
     EtcFstab fstab("tmp/etc");
 
-    FstabChange c;
-    c.device = "/dev/sdb1";
-    c.dentry = "UUID=1234";
-    c.mount = "/test1";
-    c.fs = "ext4";
-    c.opts = { ("defaults") };
+    FstabChange entry;
+    entry.device = "/dev/sdb1";
+    entry.dentry = "UUID=1234";
+    entry.mount = "/test1";
+    entry.fs = "ext4";
+    entry.opts = { ("defaults") };
 
-    fstab.addEntry(c);
+    fstab.addEntry(entry);
     fstab.flush();
 
     print_fstab();

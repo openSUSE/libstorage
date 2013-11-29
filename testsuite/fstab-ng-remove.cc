@@ -71,7 +71,6 @@ test3()
 		  "LABEL=test  /test1/sub2  btrfs  defaults  0 0" });
     EtcFstab fstab("tmp/etc");
 
-    FstabEntry entry;
     fstab.setDevice("/dev/sdb1", {}, "", "test", {}, "");
 
     FstabKey key("/dev/sdb1", "/test1/sub1");
