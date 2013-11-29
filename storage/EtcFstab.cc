@@ -330,12 +330,6 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 	    dentries.insert(alt_names.begin(), alt_names.end());
 	}
 
-	if (!ids.empty())
-	{
-	    for (list<string>::const_iterator it = ids.begin(); it != ids.end(); ++it)
-		dentries.insert("/dev/disk/by-id/" + *it);
-	}
-
 	if (!uuid.empty())
 	{
 	    dentries.insert("UUID=" + uuid);
