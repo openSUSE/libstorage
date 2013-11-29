@@ -81,7 +81,7 @@ namespace storage
     struct FstabEntry : public FstabChange
     {
 	FstabEntry() : loop(false), dmcrypt(false), noauto(false), cryptotab(false),
-		       crypttab(false), tmpcrypt(false), mount_by(MOUNTBY_DEVICE) {}
+		       crypttab(false), mount_by(MOUNTBY_DEVICE) {}
 
 	explicit FstabEntry(const FstabChange& change) : FstabEntry()
 	    { *this = change; }
@@ -95,7 +95,6 @@ namespace storage
 	bool noauto;
 	bool cryptotab;
 	bool crypttab;
-	bool tmpcrypt;
 	string cr_opts;
 	string cr_key;
 	MountByType mount_by;

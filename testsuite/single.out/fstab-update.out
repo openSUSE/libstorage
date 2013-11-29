@@ -21,7 +21,7 @@ begin of fstab
 /dev/mapper/cr_sdb1  /test2  ext4  nofail  0 0
 end of fstab
 begin of crypttab
-cr_sdb1  /dev/sdb1  none         none
+cr_sdb1  /dev/sdb1  /dev/urandom tmp
 end of crypttab
 
 test5
