@@ -901,7 +901,9 @@ int EtcFstab::flush()
 	}
     if( cryptotab != NULL )
 	{
-	cryptotab->save();
+	// Support for /etc/cryptotab was dropped from boot.crypto in 2010, see
+	// cryptsetup package.
+	// cryptotab->save();
 	delete( cryptotab );
 	}
     if( true )
