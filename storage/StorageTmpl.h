@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -30,6 +30,7 @@
 #include <list>
 #include <map>
 #include <deque>
+#include <set>
 #include <iostream>
 
 #include "storage/IterPair.h"
@@ -40,7 +41,7 @@
 namespace storage
 {
 
-template< class Value > 
+template< class Value >
 class CheckFnc
     {
     public:
@@ -196,6 +197,22 @@ template<class Value> std::ostream& operator<<( std::ostream& s, const std::dequ
     s << ">";
     return( s );
     }
+
+
+    template<class Value>
+    std::ostream& operator<<(std::ostream& s, const std::set<Value>& l)
+    {
+	s << "<";
+	for (typename std::set<Value>::const_iterator it = l.begin(); it != l.end(); ++it)
+	{
+	    if (it != l.begin())
+		s << " ";
+	    s << *it;
+	}
+	s << ">";
+	return s;
+    }
+
 
 template<class F, class S> std::ostream& operator<<( std::ostream& s, const std::pair<F,S>& p )
     {

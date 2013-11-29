@@ -41,6 +41,19 @@ namespace storage
     struct FstabEntry;
 
 
+    /*
+     * Unique key to identify entries in fstab.
+     */
+    struct FstabKey
+    {
+	FstabKey(const string& device, const string& mount)
+	    : device(device), mount(mount) {}
+
+	string device;
+	string mount;
+    };
+
+
     struct FstabChange
     {
 	FstabChange() : freq(0), passno(0), encr(ENC_NONE), tmpcrypt(false) {}
@@ -92,39 +105,49 @@ namespace storage
     };
 
 
-class EtcFstab
+    class EtcFstab
     {
     public:
-	EtcFstab( const string& prefix = "", bool rootMounted=true );
+
+	EtcFstab(const string& prefix = "", bool rootMounted = true);
+
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
 	bool findDevice( const list<string>& dl, FstabEntry& entry ) const;
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findMount( const string& mount ) const
 	    { FstabEntry e; return( findMount( mount,e )); }
-	bool findUuidLabel( const string& uuid, const string& label,
-			    FstabEntry& entry ) const;
-	bool findIdPath(const list<string>& id, const string& path, FstabEntry& entry) const;
-	void setDevice( const FstabEntry& entry, const string& device );
-	int updateEntry( const FstabChange& entry );
-	int addEntry( const FstabChange& entry );
-	int removeEntry( const FstabEntry& entry );
-	int changeRootPrefix( const string& prfix );
+
+	void setDevice(const string& device, const list<string>& alt_names, const string& uuid,
+		       const string& label, const list<string>& ids, const string& path);
+
+	int addEntry(const FstabChange& entry);
+	int updateEntry(const FstabChange& entry) __attribute__ ((deprecated));
+	int updateEntry(const FstabKey& key, const FstabChange& entry);
+	int removeEntry(const FstabEntry& entry) __attribute__ ((deprecated));
+	int removeEntry(const FstabKey& key);
+
+	int changeRootPrefix(const string& new_prefix);
+
 	void getFileBasedLoops( const string& prefix, list<FstabEntry>& l ) const;
+
 	list<FstabEntry> getEntries() const;
+
 	Text addText( bool doing, bool crypto, const string& mp ) const;
 	Text updateText( bool doing, bool crypto, const string& mp ) const;
 	Text removeText( bool doing, bool crypto, const string& mp ) const;
+
 	int flush();
 
     protected:
+
 	struct Entry
-	    {
+	{
 	    enum operation { NONE, ADD, REMOVE, UPDATE };
-	    Entry() : op(NONE) {}
+	    Entry(operation op = NONE) : op(op) {}
 	    operation op;
 	    FstabEntry nnew;
 	    FstabEntry old;
-	    };
+	};
 
 	void readFiles();
 

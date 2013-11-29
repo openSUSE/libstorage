@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -21,6 +21,7 @@
 
 
 #include <fstream>
+#include <set>
 #include <algorithm>
 
 #include "storage/AppUtil.h"
@@ -37,13 +38,14 @@ namespace storage
     using namespace std;
 
 
-EtcFstab::EtcFstab(const string& pfx, bool rootMounted) 
-    : prefix(pfx)
-{
-    y2mil("prefix:" << pfx << " rootMounted:" << rootMounted);
-    if (rootMounted)
-	readFiles();
-}
+    EtcFstab::EtcFstab(const string& prefix, bool rootMounted)
+	: prefix(prefix)
+    {
+	y2mil("prefix:" << prefix << " rootMounted:" << rootMounted);
+	if (rootMounted)
+	    readFiles();
+    }
+
 
 void
 EtcFstab::readFiles()
@@ -293,138 +295,98 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
     return( i!=co.end() );
     }
 
-int EtcFstab::changeRootPrefix( const string& prfix )
+
+    int
+    EtcFstab::changeRootPrefix(const string& new_prefix)
     {
-    y2mil("new prefix:" << prfix);
-    int ret = 0;
-    if( prfix != prefix )
+	y2mil("new prefix:" << new_prefix);
+	int ret = 0;
+	if (new_prefix != prefix)
 	{
-	list<Entry>::const_iterator i = co.begin();
-	while( i!=co.end() && (i->op==Entry::ADD || i->op==Entry::NONE) )
-	    ++i;
-	if( i==co.end() )
+	    list<Entry>::const_iterator it = co.begin();
+	    while (it != co.end() && (it->op == Entry::ADD || it->op == Entry::NONE))
+		++it;
+	    if (it == co.end())
 	    {
-	    prefix = prfix;
-	    readFiles();
+		prefix = new_prefix;
+		readFiles();
 	    }
-	else
-	    ret = FSTAB_CHANGE_PREFIX_IMPOSSIBLE;
+	    else
+		ret = FSTAB_CHANGE_PREFIX_IMPOSSIBLE;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-void EtcFstab::setDevice( const FstabEntry& entry, const string& device )
-    {
-    list<Entry>::iterator i = co.begin();
-    while( i!=co.end() && i->old.dentry != entry.dentry )
-	++i;
-    if( i!=co.end() )
-	{
-	y2mil( "entry old:" << i->nnew );
-	i->nnew.device = i->old.device = device;
-	y2mil( "entry new:" << i->nnew );
-	}
-    }
-
-
-    bool
-    EtcFstab::findUuidLabel(const string& uuid, const string& label,
-			    FstabEntry& entry) const
-    {
-	y2mil("uuid:" << uuid << " label:" << label);
-	list<Entry>::const_iterator i = co.end();
-	if (!uuid.empty())
-	{
-	    string dentry = "UUID=" + uuid;
-	    i = co.begin();
-	    while (i != co.end() && i->nnew.dentry != dentry)
-		++i;
-	}
-	if (i == co.end() && !uuid.empty())
-	{
-	    string dentry = "/dev/disk/by-uuid/" + uuid;
-	    i = co.begin();
-	    while (i != co.end() && i->nnew.dentry != dentry)
-		++i;
-	}
-	if (i == co.end() && !label.empty())
-	{
-	    string dentry = "LABEL=" + label;
-	    i = co.begin();
-	    while (i != co.end() && i->nnew.dentry != dentry)
-		++i;
-	}
-	if (i == co.end() && !label.empty())
-	{
-	    string dentry = "/dev/disk/by-label/" + udevEncode(label);
-	    i = co.begin();
-	    while (i != co.end() && i->nnew.dentry != dentry)
-		++i;
-	}
-	if (i != co.end())
-	    entry = i->nnew;
-	y2mil("ret:" << (i != co.end()));
-	return i != co.end();
-    }
-
-
-    bool
-    EtcFstab::findIdPath(const list<string>& id, const string& path, FstabEntry& entry ) const
-    {
-	y2mil("id:" << id << " path:" << path);
-	list<Entry>::const_iterator i = co.end();
-
-	if (!id.empty())
-	{
-	    for (list<string>::const_iterator j = id.begin(); j != id.end(); ++j)
-	    {
-		const string full = "/dev/disk/by-id/" + *j;
-
-		i = co.begin();
-		while(i != co.end() && i->nnew.dentry != full)
-		    ++i;
-
-		if (i != co.end())
-		    break;
-	    }
-	}
-
-	if (i == co.end() && !path.empty())
-	{
-	    const string full = "/dev/disk/by-path/" + path;
-
-	    i = co.begin();
-	    while(i != co.end() && i->nnew.dentry != full)
-		++i;
-	}
-
-	bool ret = i != co.end();
-	if (ret)
-	    entry = i->nnew;
 	y2mil("ret:" << ret);
 	return ret;
     }
 
 
-int EtcFstab::removeEntry( const FstabEntry& entry )
+    void
+    EtcFstab::setDevice(const string& device, const list<string>& alt_names, const string& uuid,
+			const string& label, const list<string>& ids, const string& path)
     {
-	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
-    list<Entry>::iterator i = co.begin();
-    while( i != co.end() &&
-           (i->op==Entry::REMOVE || i->nnew.device != entry.device) )
-	++i;
-    if( i != co.end() )
+	set<string> dentries;
+
+	if (!alt_names.empty())
 	{
-	if( i->op != Entry::ADD )
-	    i->op = Entry::REMOVE;
-	else
-	    co.erase( i );
+	    dentries.insert(alt_names.begin(), alt_names.end());
 	}
-    return( (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND );
+
+	if (!ids.empty())
+	{
+	    for (list<string>::const_iterator it = ids.begin(); it != ids.end(); ++it)
+		dentries.insert("/dev/disk/by-id/" + *it);
+	}
+
+	if (!uuid.empty())
+	{
+	    dentries.insert("UUID=" + uuid);
+	    dentries.insert("/dev/disk/by-uuid/" + uuid);
+	}
+
+	if (!label.empty())
+	{
+	    dentries.insert("LABEL=" + label);
+	    dentries.insert("/dev/disk/by-label/" + udevEncode(label));
+	}
+
+	if (!ids.empty())
+	{
+	    for (list<string>::const_iterator it = ids.begin(); it != ids.end(); ++it)
+		dentries.insert("/dev/disk/by-id/" + *it);
+	}
+
+	if (!path.empty())
+	{
+	    dentries.insert("/dev/disk/by-path/" + path);
+	}
+
+	y2mil("device:" << device << " dentries:" << dentries);
+
+	for (list<Entry>::iterator it = co.begin(); it != co.end(); ++it)
+	{
+	    if (dentries.find(it->old.dentry) != dentries.end())
+	    {
+		y2mil("entry old:" << it->nnew);
+		it->nnew.device = it->old.device = device;
+		y2mil("entry new:" << it->nnew);
+	    }
+	}
     }
 
-int EtcFstab::updateEntry( const FstabChange& entry )
+
+    int
+    EtcFstab::addEntry(const FstabChange& entry)
+    {
+	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
+	Entry e(Entry::ADD);
+	e.nnew = entry;
+	y2mil("e.nnew " << e.nnew);
+	co.push_back(e);
+	return 0;
+    }
+
+
+    int
+    EtcFstab::updateEntry(const FstabChange& entry)
     {
 	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
     list<Entry>::iterator i = co.begin();
@@ -449,16 +411,66 @@ int EtcFstab::updateEntry( const FstabChange& entry )
     return( ret );
     }
 
-int EtcFstab::addEntry( const FstabChange& entry )
+
+    int
+    EtcFstab::updateEntry(const FstabKey& key, const FstabChange& entry)
     {
-    y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
-    Entry e;
-    e.op = Entry::ADD;
-    e.nnew = entry;
-    y2mil( "e.nnew " << e.nnew );
-    co.push_back( e );
-    return( 0 );
+	y2mil("device:" << key.device << " mount:" << key.mount);
+	list<Entry>::iterator it = co.begin();
+	bool found = false;
+	while (it != co.end() && !found)
+	{
+	    if (it->op == Entry::REMOVE ||
+		(it->op != Entry::ADD && (key.device != it->old.device || key.mount != it->old.mount)) ||
+		(it->op == Entry::ADD && (key.device != it->nnew.device || key.mount != it->nnew.mount)))
+		++it;
+	    else
+		found = true;
+	}
+	if (it != co.end())
+	{
+	    if (it->op==Entry::NONE)
+		it->op = Entry::UPDATE;
+	    it->nnew = entry;
+	}
+	int ret = (it != co.end()) ? 0 : FSTAB_ENTRY_NOT_FOUND;
+	y2mil("ret:" << ret);
+	return ret;
     }
+
+
+    int
+    EtcFstab::removeEntry(const FstabEntry& entry)
+    {
+	y2mil("device:" << entry.device << " dentry:" << entry.dentry <<
+	      " mount:" << entry.mount);
+
+	return removeEntry(FstabKey(entry.device, entry.mount));
+    }
+
+
+    int
+    EtcFstab::removeEntry(const FstabKey& key)
+    {
+	y2mil("device:" << key.device << " mount:" << key.mount);
+
+	for (list<Entry>::iterator it = co.begin(); it != co.end(); ++it)
+	{
+	    if (it->op != Entry::REMOVE && it->nnew.device == key.device &&
+		it->nnew.mount == key.mount)
+	    {
+		if (it->op != Entry::ADD)
+		    it->op = Entry::REMOVE;
+		else
+		    co.erase(it);
+
+		return 0;
+	    }
+	}
+
+	return FSTAB_ENTRY_NOT_FOUND;
+    }
+
 
 AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
                                AsciiFile*& cryptotab, int& lineno ) const
@@ -481,13 +493,10 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	ret = fstab;
 	reg = "^[ \t]*" + boost::replace_all_copy(fstabEncode(e.dentry), "\\", "\\\\") + "[ \t]";
 	}
-    if( e.dentry != "tmpfs" )
-	lineno = ret->find_if_idx(regex_matches(reg));
-    else
-	{
+
 	reg = "[ \t]+" + boost::replace_all_copy(fstabEncode(e.mount), "\\", "\\\\") + "[ \t]";
 	lineno = ret->find_if_idx(regex_matches(reg));
-	}
+
     y2mil("fstab:" << fstab << " cryptotab:" << cryptotab << " lineno:" << lineno);
     return( ret );
     }

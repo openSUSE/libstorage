@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -446,23 +446,8 @@ void Volume::getFstabData( EtcFstab& fstabData )
 	}
     else
 	{
+	fstabData.setDevice(device(), alt_names, uuid, label, udevId(), udevPath());
 	found = fstabData.findDevice( device(), entry );
-	if( !found )
-	    {
-	    found = fstabData.findDevice( alt_names, entry );
-	    }
-	if( !found && !(uuid.empty()&&label.empty()) )
-	    {
-	    found = fstabData.findUuidLabel( uuid, label, entry );
-	    if(found)
-		fstabData.setDevice( entry, device() );
-	    }
-	if( !found && !(udevId().empty()&&udevPath().empty()) )
-	    {
-	    found = fstabData.findIdPath( udevId(), udevPath(), entry );
-	    if(found)
-		fstabData.setDevice( entry, device() );
-	    }
 	}
 
     if( !found && !mp.empty() )

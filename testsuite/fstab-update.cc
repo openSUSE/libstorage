@@ -134,10 +134,7 @@ test5()
     write_fstab({ "UUID=1234  /test1  ext4  defaults  0 0" });
 
     EtcFstab fstab("tmp/etc");
-
-    FstabEntry entry;
-    fstab.findUuidLabel("1234", "", entry);
-    fstab.setDevice(entry, "/dev/sdb1");
+    fstab.setDevice("/dev/sdb1", {}, "1234", "", {}, "");
 
     FstabChange c;
     c.device = "/dev/sdb1";
