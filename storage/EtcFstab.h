@@ -172,6 +172,9 @@ namespace storage
 	                    const FstabEntry& old, const FstabEntry& nnew, 
 	                    string& line ) const;
 
+	static list<string> makeStringList(const FstabEntry& e);
+	static list<string> makeCrStringList(const FstabEntry& e);
+
 	static string fstabEncode(const string&);
 	static string fstabDecode(const string&);
 

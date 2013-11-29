@@ -541,7 +541,9 @@ bool EtcFstab::findCrtab( const string& dev, const AsciiFile& tab,
     return( lineno>=0 );
     }
 
-static list<string> makeStringList(const FstabEntry& e)
+
+    list<string>
+    EtcFstab::makeStringList(const FstabEntry& e)
     {
     list<string> ls;
     if( e.cryptotab )
@@ -610,7 +612,9 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     return createLine(ls, max_fields, fields);
     }
 
-static list<string> makeCrStringList(const FstabEntry& e)
+
+    list<string>
+    EtcFstab::makeCrStringList(const FstabEntry& e)
     {
     list<string> ls;
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
