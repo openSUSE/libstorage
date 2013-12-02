@@ -120,7 +120,6 @@ namespace storage
 		       const string& label, const list<string>& ids, const string& path);
 
 	int addEntry(const FstabChange& entry);
-	int updateEntry(const FstabChange& entry) __attribute__ ((deprecated));
 	int updateEntry(const FstabKey& key, const FstabChange& entry);
 	int removeEntry(const FstabKey& key);
 

@@ -380,33 +380,6 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 
 
     int
-    EtcFstab::updateEntry(const FstabChange& entry)
-    {
-	y2mil("dentry:" << entry.dentry << " mount:" << entry.mount);
-    list<Entry>::iterator i = co.begin();
-    bool found = false;
-    while( i != co.end() && !found )
-	{
-	if( i->op==Entry::REMOVE ||
-	    (i->op!=Entry::ADD && entry.device!=i->old.device) ||
-	    (i->op==Entry::ADD && entry.device!=i->nnew.device) )
-	    ++i;
-	else
-	    found = true;
-	}
-    if( i != co.end() )
-	{
-	if( i->op==Entry::NONE )
-	    i->op = Entry::UPDATE;
-	i->nnew = entry;
-	}
-    int ret = (i != co.end())?0:FSTAB_ENTRY_NOT_FOUND;
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-
-    int
     EtcFstab::updateEntry(const FstabKey& key, const FstabChange& entry)
     {
 	y2mil("device:" << key.device << " mount:" << key.mount);

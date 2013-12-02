@@ -3057,12 +3057,11 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	else if ((!mp.empty() || pvEncryption()) && !deleted())
 	    {
 	    string fname;
-	    if( fstab->findDevice( dev, entry ) ||
+	    if( !orig_mp.empty() && (
+		fstab->findDevice( dev, entry ) ||
 		fstab->findDevice( alt_names, entry ) ||
-		(cType() == LOOP && getLoopFile(fname) &&
-		     fstab->findDevice( fname, entry )) ||
-		(cType() == TMPFSC && !mp.empty() &&
-		     fstab->findMount( mp, entry )))
+		(cType() == LOOP && getLoopFile(fname) && fstab->findDevice( fname, entry )) ||
+		(cType() == TMPFSC && !mp.empty() && fstab->findMount( mp, entry )) ))
 		{
 		y2mil( "changed:" << entry );    
 		changed = force_rewrite;
@@ -3119,7 +3118,7 @@ int Volume::doFstabUpdate( bool force_rewrite )
 			                       che.mount ), silent);
 			}
 		    y2mil( "update fstab: " << che );
-		    ret = fstab->updateEntry( che );
+		    ret = fstab->updateEntry(FstabKey(che.device, orig_mp), che);
 		    }
 		}
 	    else
