@@ -602,17 +602,15 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
     {
     list<string> ls;
     ls.push_back( e.dentry.substr(e.dentry.rfind( '/' )+1) );
-    string tmp = e.device;
-    ls.push_back( tmp );
-    tmp = e.cr_key;
+    ls.push_back(e.device);
+    string tmp = e.cr_key;
     if( e.tmpcrypt )
 	tmp = "/dev/urandom";
     if( !e.tmpcrypt && tmp=="/dev/urandom" )
 	tmp.clear();
     ls.push_back( tmp.empty()?"none":tmp );
-    tmp = e.cr_opts;
     list<string>::iterator i;
-    list<string> tls = splitString( tmp );
+    list<string> tls = splitString(e.cr_opts);
     if( e.mount=="swap" && e.tmpcrypt &&
 	find( tls.begin(), tls.end(), "swap" )==tls.end() )
 	tls.push_back("swap");
@@ -628,10 +626,10 @@ string EtcFstab::createTabLine( const FstabEntry& e ) const
 	tls.erase(i);
     else if( e.noauto && (i=find( tls.begin(), tls.end(), "noauto" ))==tls.end() )
 	tls.push_back("noauto");
-    tmp = boost::join( tls, "," );
-    ls.push_back( tmp.empty()?"none":tmp );
+    ls.push_back(tls.empty() ? "none" : boost::join(tls, ","));
     return ls;
     }
+
 
 string EtcFstab::createCrtabLine( const FstabEntry& e ) const
     {
