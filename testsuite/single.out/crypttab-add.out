@@ -1,0 +1,7 @@
+test1
+begin of fstab
+end of fstab
+begin of crypttab
+cr_sdb1         /dev/sdb1            none       none
+end of crypttab
+
