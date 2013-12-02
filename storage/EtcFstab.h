@@ -122,7 +122,6 @@ namespace storage
 	int addEntry(const FstabChange& entry);
 	int updateEntry(const FstabChange& entry) __attribute__ ((deprecated));
 	int updateEntry(const FstabKey& key, const FstabChange& entry);
-	int removeEntry(const FstabEntry& entry) __attribute__ ((deprecated));
 	int removeEntry(const FstabKey& key);
 
 	int changeRootPrefix(const string& new_prefix);

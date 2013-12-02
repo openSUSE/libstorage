@@ -3052,7 +3052,7 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	    changed = true;
 	    getStorage()->showInfoCb(fstab->removeText(true, entry.cryptotab, entry.mount), silent);
 	    y2mil("before removeEntry");
-	    ret = fstab->removeEntry( entry );
+	    ret = fstab->removeEntry(FstabKey(entry.device, entry.mount));
 	    }
 	else if ((!mp.empty() || pvEncryption()) && !deleted())
 	    {

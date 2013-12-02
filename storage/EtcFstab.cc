@@ -434,16 +434,6 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 
 
     int
-    EtcFstab::removeEntry(const FstabEntry& entry)
-    {
-	y2mil("device:" << entry.device << " dentry:" << entry.dentry <<
-	      " mount:" << entry.mount);
-
-	return removeEntry(FstabKey(entry.device, entry.mount));
-    }
-
-
-    int
     EtcFstab::removeEntry(const FstabKey& key)
     {
 	y2mil("device:" << key.device << " mount:" << key.mount);
