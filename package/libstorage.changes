@@ -4,6 +4,7 @@ Tue Dec 03 17:31:28 CET 2013 - aschnell@suse.de
 - added list of UsedByInfo to ruby bindings
 - removed deprecated variables from ContainerInfo, VolumeInfo and
   DiskInfo
+- pass some variables as list instead of joined string
 
 -------------------------------------------------------------------
 Wed Nov 20 11:35:01 CET 2013 - aschnell@suse.de
