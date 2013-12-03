@@ -2449,7 +2449,6 @@ void Disk::getInfo( DiskInfo& info ) const
     info.extendedPossible = extendedPossible();
     info.maxLogical = maxLogical();
     info.initDisk = init_disk;
-    info.iscsi = transport == ISCSI;
     info.transport = transport;
     info.has_fake_partition = has_fake_partition;
     }

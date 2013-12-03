@@ -3370,20 +3370,9 @@ void Volume::getInfo( VolumeInfo& info ) const
     info.mount_by = mount_by;
 
     info.udevPath = udevPath();
-    info.udevId = boost::join(udevId(), " ");
+    info.udevId = udevId();
 
     info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
-
-    if (uby.empty())
-    {
-	info.usedByType = UB_NONE;
-	info.usedByDevice = "";
-    }
-    else
-    {
-	info.usedByType = uby.front().type();
-	info.usedByDevice = uby.front().device();
-    }
 
     info.ignore_fstab = ignore_fstab;
     info.fstab_options = fstab_opt;

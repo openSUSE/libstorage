@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -243,6 +243,7 @@ namespace storage
 
     struct UsedByInfo
     {
+	UsedByInfo() : type(UB_NONE) {} // only for swig bindings
 	UsedByInfo(UsedByType type, const string& device) : type(type), device(device) {}
 	UsedByType type;
 	string device;
@@ -285,10 +286,8 @@ namespace storage
 	string device;
 	string name;
 	string udevPath;
-	string udevId;
+	list<string> udevId;
 	list<UsedByInfo> usedBy;
-	UsedByType usedByType;	// deprecated
-	string usedByDevice;	// deprecated
 	bool readonly;
     };
 
@@ -312,7 +311,6 @@ namespace storage
 	bool initDisk;
 	Transport transport;
 	bool has_fake_partition;
-	bool iscsi;		// deprecated
     };
 
     /**
@@ -373,10 +371,8 @@ namespace storage
 	string crypt_device;
 	MountByType mount_by;
 	string udevPath;
-	string udevId;
+	list<string> udevId;
 	list<UsedByInfo> usedBy;
-	UsedByType usedByType;	// deprecated
-	string usedByDevice;	// deprecated
 	bool ignore_fstab;
 	string fstab_options;
 	string uuid;

@@ -7060,7 +7060,6 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info.mount_by = MOUNTBY_DEVICE;
 	    info.fs = toValueWithFallback(i->fs, FSUNKNOWN);
 	    info.fstab_options = boost::join( i->opts, "," );
-	    info.usedByType = UB_NONE;
 	    s_infos.push_back(info);
 	}
 	else if( findVolume( i->dentry, vol )||findVolume( i->device, vol ) )

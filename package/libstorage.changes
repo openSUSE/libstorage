@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Dec 03 17:31:28 CET 2013 - aschnell@suse.de
+
+- added list of UsedByInfo to ruby bindings
+- removed deprecated variables from ContainerInfo, VolumeInfo and
+  DiskInfo
+
+-------------------------------------------------------------------
 Wed Nov 20 11:35:01 CET 2013 - aschnell@suse.de
 
 - fixed writing of fstab for installation on NFS (bnc#848038)
