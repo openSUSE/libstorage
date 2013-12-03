@@ -1131,8 +1131,8 @@ void MdPartCo::getInfo( MdPartCoInfo& info ) const
     info.sb_ver = sb_ver;
     info.chunkSizeK = chunk_k;
 
-    info.devices = boost::join(devs, " ");
-    info.spares = boost::join(spare, " ");
+    info.devices = devs;
+    info.spares = spare;
     }
 
 

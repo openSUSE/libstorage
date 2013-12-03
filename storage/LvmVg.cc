@@ -1778,33 +1778,19 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.lvm2 = lvm2();
     info.create = created();
     info.uuid = uuid;
+
     info.devices.clear();
-    list<Pv>::const_iterator i=pv.begin();
-    while( i!=pv.end() )
-	{
-	if( !info.devices.empty() )
-	    info.devices += ' ';
-	info.devices += i->device;
-	++i;
-	}
+    for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	info.devices.push_back(it->device);
+
     info.devices_add.clear();
-    i=pv_add.begin();
-    while( i!=pv_add.end() )
-	{
-	if( !info.devices_add.empty() )
-	    info.devices_add += ' ';
-	info.devices_add += i->device;
-	++i;
-	}
+    for (list<Pv>::const_iterator it = pv_add.begin(); it != pv_add.end(); ++it)
+	info.devices_add.push_back(it->device);
+
     info.devices_rem.clear();
-    i=pv_remove.begin();
-    while( i!=pv_remove.end() )
-	{
-	if( !info.devices_rem.empty() )
-	    info.devices_rem += ' ';
-	info.devices_rem += i->device;
-	++i;
-	}
+    for (list<Pv>::const_iterator it = pv_remove.begin(); it != pv_remove.end(); ++it)
+	info.devices_rem.push_back(it->device);
+
     y2mil( "device:" << info.devices );
     if( !info.devices_add.empty() )
 	y2mil( " devices_add:" << info.devices_add );

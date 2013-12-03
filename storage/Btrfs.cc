@@ -830,35 +830,22 @@ Text Btrfs::deleteSubvolText(bool doing, const string& name) const
 void Btrfs::getInfo( BtrfsInfo& info ) const
     {
     Volume::getInfo(info.v);
-    info.devices = boost::join( devices, "\n" );
-    info.devices_add = boost::join( dev_add, "\n" );
-    info.devices_rem = boost::join( dev_rem, "\n" );
-    info.subvol.erase();
-    info.subvol_add.erase();
-    info.subvol_rem.erase();
+    info.devices = devices;
+    info.devices_add = dev_add;
+    info.devices_rem = dev_rem;
 
-    for( list<Subvolume>::const_iterator i=subvol.begin(); 
-	 i!=subvol.end(); ++i )
-	 {
-	 if( i->deleted() )
-	     {
-	     if( !info.subvol_rem.empty() )
-		 info.subvol_rem += '\n';
-	     info.subvol_rem += i->path();
-	     }
-	 else if( i->created() )
-	     {
-	     if( !info.subvol_add.empty() )
-		 info.subvol_add += '\n';
-	     info.subvol_add += i->path();
-	     }
-	 else
-	     {
-	     if( !info.subvol.empty() )
-		 info.subvol += '\n';
-	     info.subvol += i->path();
-	     }
-	 }
+    info.subvol.clear();
+    info.subvol_add.clear();
+    info.subvol_rem.clear();
+    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
+    {
+	if (it->deleted())
+	    info.subvol_rem.push_back(it->path());
+	else if (it->created())
+	    info.subvol_add.push_back(it->path());
+	else
+	    info.subvol.push_back(it->path());
+    }
     }
 
 std::ostream& operator<< (std::ostream& s, const Btrfs& v )

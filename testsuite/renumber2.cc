@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 
 #include "common.h"
 
@@ -28,12 +29,12 @@ main()
 
     LvmVgInfo lvm_info;
     cout << s->getLvmVgInfo("test", lvm_info) << endl;
-    cout << lvm_info.devices_add << endl;
+    cout << boost::join(lvm_info.devices_add, " ") << endl;
 
     cout << s->removePartition("/dev/sda5") << endl;
 
     cout << s->getLvmVgInfo("test", lvm_info) << endl;
-    cout << lvm_info.devices_add << endl;
+    cout << boost::join(lvm_info.devices_add, " ") << endl;
 
     delete s;
 }

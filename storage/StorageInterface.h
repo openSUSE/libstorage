@@ -326,9 +326,9 @@ namespace storage
 	string uuid;
 	bool lvm2;
 	bool create;
-	string devices;
-	string devices_add;
-	string devices_rem;
+	list<string> devices;
+	list<string> devices_add;
+	list<string> devices_rem;
     };
 
     /**
@@ -338,7 +338,7 @@ namespace storage
     {
 	DmPartCoInfo() {}
 	DiskInfo d;
-	string devices;
+	list<string> devices;
 	unsigned long minor;
     };
 
@@ -462,8 +462,8 @@ namespace storage
 	string uuid;
 	string sb_ver;
 	unsigned long chunkSizeK;
-	string devices;
-	string spares;
+	list<string> devices;
+	list<string> spares;
 	bool inactive;
     };
 
@@ -490,8 +490,8 @@ namespace storage
         string   uuid;        // MD Device UUID
         string   sb_ver;      // Metadata version
 	unsigned long chunkSizeK;  // Chunksize (strip size)
-	string devices;
-	string spares;
+	list<string> devices;
+	list<string> spares;
     };
 
     struct MdPartCoStateInfo
@@ -539,12 +539,12 @@ namespace storage
     {
 	BtrfsInfo() {}
 	VolumeInfo v;
-	string devices;
-	string devices_add;
-	string devices_rem;
-	string subvol;
-	string subvol_add;
-	string subvol_rem;
+	list<string> devices;
+	list<string> devices_add;
+	list<string> devices_rem;
+	list<string> subvol;
+	list<string> subvol_add;
+	list<string> subvol_rem;
     };
 
     /**

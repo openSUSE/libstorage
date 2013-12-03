@@ -973,15 +973,11 @@ void DmPartCo::getInfo( DmPartCoInfo& info ) const
 	disk->getInfo( info.d );
 	}
     info.minor = mnr;
+
     info.devices.clear();
-    list<Pv>::const_iterator i=pv.begin();
-    while( i!=pv.end() )
-	{
-	if( !info.devices.empty() )
-	    info.devices += ' ';
-	info.devices += i->device;
-	++i;
-	}
+    for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	info.devices.push_back(it->device);
+
     y2mil( "device:" << info.devices );
     }
 

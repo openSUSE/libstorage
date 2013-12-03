@@ -562,8 +562,8 @@ void Md::getInfo( MdInfo& info ) const
     info.parity = md_parity;
     info.inactive = inactive;
 
-    info.devices = boost::join(devs, " ");
-    info.spares = boost::join(spare, " ");
+    info.devices = devs;
+    info.spares = spare;
     }
 
 

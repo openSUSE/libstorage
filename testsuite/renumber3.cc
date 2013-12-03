@@ -1,5 +1,6 @@
 
 #include <iostream>
+#include <boost/algorithm/string.hpp>
 
 #include "common.h"
 
@@ -33,14 +34,14 @@ main()
 
     deque<MdInfo> md_infos;
     cout << s->getMdInfo(md_infos) << endl;
-    cout << md_infos[0].devices << endl;
-    cout << md_infos[0].spares << endl;
+    cout << boost::join(md_infos[0].devices, " ") << endl;
+    cout << boost::join(md_infos[0].spares, " ") << endl;
 
     cout << s->removePartition("/dev/sda5") << endl;
 
     cout << s->getMdInfo(md_infos) << endl;
-    cout << md_infos[0].devices << endl;
-    cout << md_infos[0].spares << endl;
+    cout << boost::join(md_infos[0].devices, " ") << endl;
+    cout << boost::join(md_infos[0].spares, " ") << endl;
 
     delete s;
 }
