@@ -48,4 +48,5 @@ using namespace storage;
 %template(DequeBtrfsInfo) deque<BtrfsInfo>;
 %template(ListPartitionSlotInfo) list<PartitionSlotInfo>;
 %template(ListCommitInfo) list<CommitInfo>;
+%template(ListUsedByInfo) list<UsedByInfo>;
 
