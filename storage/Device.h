@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -94,6 +94,8 @@ namespace storage
 	const list<UsedBy>& getUsedBy() const { return uby; }
 
 	virtual list<string> getUsing() const { return list<string>(); }
+
+	void getInfo(DeviceInfo& info) const;
 
 	void logDifference(std::ostream& log, const Device& rhs) const;
 

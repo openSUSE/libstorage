@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -162,6 +162,19 @@ namespace storage
     {
 	string d = normalizeDevice(device);
 	return d == dev || contains(alt_names, d);
+    }
+
+
+    void
+    Device::getInfo(DeviceInfo& info) const
+    {
+	info.name = name();
+	info.device = device();
+
+	info.udevPath = udevPath();
+	info.udevId = udevId();
+
+	info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
     }
 
 

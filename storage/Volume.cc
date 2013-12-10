@@ -3359,20 +3359,15 @@ Text Volume::removeText( bool doing ) const
 
 void Volume::getInfo( VolumeInfo& info ) const
     {
+    Device::getInfo(info);
+
     info.sizeK = size_k;
     info.major = mjr;
     info.minor = mnr;
-    info.name = nm;
-    info.device = dev;
     if( dmcrypt() )
 	info.crypt_device = dmcrypt_dev;
     info.mount = mp;
     info.mount_by = mount_by;
-
-    info.udevPath = udevPath();
-    info.udevId = udevId();
-
-    info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
 
     info.ignore_fstab = ignore_fstab;
     info.fstab_options = fstab_opt;

@@ -276,18 +276,27 @@ namespace storage
     };
 
 
+    struct DeviceInfo
+    {
+	DeviceInfo() {}
+
+	string device;
+	string name;
+
+	string udevPath;
+	list<string> udevId;
+
+	list<UsedByInfo> usedBy;
+    };
+
+
     /**
      * Contains info about a generic container.
      */
-    struct ContainerInfo
+    struct ContainerInfo : public DeviceInfo
     {
 	ContainerInfo() {}
 	CType type;
-	string device;
-	string name;
-	string udevPath;
-	list<string> udevId;
-	list<UsedByInfo> usedBy;
 	bool readonly;
     };
 
@@ -359,20 +368,15 @@ namespace storage
     /**
      * Contains info about a volume.
      */
-    struct VolumeInfo
+    struct VolumeInfo : public DeviceInfo
     {
 	VolumeInfo() {}
 	unsigned long long sizeK;
 	unsigned long major;
 	unsigned long minor;
-	string name;
-	string device;
 	string mount;
 	string crypt_device;
 	MountByType mount_by;
-	string udevPath;
-	list<string> udevId;
-	list<UsedByInfo> usedBy;
 	bool ignore_fstab;
 	string fstab_options;
 	string uuid;

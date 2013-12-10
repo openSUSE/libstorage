@@ -385,14 +385,9 @@ bool Container::findVolume( const string& device, Volume*& vol )
 
 void Container::getInfo(storage::ContainerInfo& info) const
 {
+    Device::getInfo(info);
+
     info.type = type();
-    info.name = name();
-    info.device = device();
-
-    info.udevPath = udevPath();
-    info.udevId = udevId();
-
-    info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
 
     info.readonly = readonly();
 }
