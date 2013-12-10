@@ -4866,8 +4866,7 @@ Storage::getCommitActions() const
 void
 Storage::getCommitInfos(list<CommitInfo>& infos) const
 {
-    static list<CommitInfo> s_infos; // workaround for broken ycp bindings
-    s_infos.clear();
+    infos.clear();
 
         const list<commitAction> ca = getCommitActions();
 	for (list<commitAction>::const_iterator i = ca.begin(); i != ca.end(); ++i)
@@ -4881,10 +4880,9 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 		info.text += ". ";
 		info.text += v->getDescText();
 	    }
-	    s_infos.push_back(info);
+	    infos.push_back(info);
 	}
 
-    infos = s_infos;
     y2mil("infos.size:" << infos.size());
 }
 
@@ -5313,11 +5311,10 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
 int
 Storage::getContVolInfo(const string& device, ContVolInfo& info)
     {
-    static ContVolInfo s_info; // workaround for broken ycp bindings
     int ret = STORAGE_VOLUME_NOT_FOUND;
     ConstContIterator c;
     ConstVolIterator v;
-    s_info.ctype = CUNKNOWN;
+    info.ctype = CUNKNOWN;
     assertInit();
     if (findVolume(device, c, v))
 	{
@@ -5330,24 +5327,23 @@ Storage::getContVolInfo(const string& device, ContVolInfo& info)
 		findVolume(b->device(), c, v, true);
 		}
 	    }
-	s_info.ctype = c->type();
-	s_info.cname = c->name();
-	s_info.cdevice = c->device();
-	s_info.vname = v->name();
-	s_info.vdevice = v->device();
+	info.ctype = c->type();
+	info.cname = c->name();
+	info.cdevice = c->device();
+	info.vname = v->name();
+	info.vdevice = v->device();
 	if( v->isNumeric() )
-	    s_info.num = v->nr();
+	    info.num = v->nr();
 	}
     else if (findContainer(device, c))
     {
 	ret = 0;
-	s_info.ctype = c->type();
-	s_info.cname = c->name();
-	s_info.cdevice = c->device();
-	s_info.vname = "";
-	s_info.vdevice = "";
+	info.ctype = c->type();
+	info.cname = c->name();
+	info.cdevice = c->device();
+	info.vname = "";
+	info.vdevice = "";
     }
-    info = s_info;
     y2mil("device:" << device << " ret:" << ret << " cname:" << info.cname <<
 	  " vname:" << info.vname);
     return ret;
@@ -7037,9 +7033,8 @@ Storage::activateEncryption( const string& device, bool on )
 bool
 Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 {
-    static deque<VolumeInfo> s_infos; // workaround for broken ycp bindings
     static Regex disk_part( "^/dev/[sh]d[a-z]+[0-9]+$" );
-    s_infos.clear();
+    infos.clear();
     bool ret = false;
     ConstVolIterator vol;
     assertInit();
@@ -7060,7 +7055,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    info.mount_by = MOUNTBY_DEVICE;
 	    info.fs = toValueWithFallback(i->fs, FSUNKNOWN);
 	    info.fstab_options = boost::join( i->opts, "," );
-	    s_infos.push_back(info);
+	    infos.push_back(info);
 	}
 	else if( findVolume( i->dentry, vol )||findVolume( i->device, vol ) )
 	{
@@ -7068,10 +7063,9 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
 	    vol->getInfo( info );
 	    vol->mergeFstabInfo( info, *i );
 	    y2mil( "volume:" << *vol );
-	    s_infos.push_back(info);
+	    infos.push_back(info);
 	}
     }
-    infos = s_infos;
     ret = !infos.empty();
     y2mil("ret:" << ret);
     return ret;
