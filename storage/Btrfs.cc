@@ -426,13 +426,13 @@ int Btrfs::doDeleteSubvol()
     if( ret==0 )
 	{
 	SystemCmd c;
-	string cmd = BTRFSBIN " subvolume delete " + m + '/';
+	string cmd = BTRFSBIN " subvolume delete ";
 	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
 	    {
 	    if( i->deleted() )
 		{
 		getStorage()->showInfoCb( deleteSubvolText(true,i->path()),silent);
-		c.execute( cmd + i->path() );
+		c.execute(cmd + quote(m + '/' + i->path()));
 		if( c.retcode()==0 )
 		    i->setDeleted(false);
 		else
@@ -469,7 +469,7 @@ int Btrfs::doCreateSubvol()
 		    y2mil( "create path:" << dir );
 		    createPath( dir );
 		    }
-		c.execute( cmd + path );
+		c.execute(cmd + quote(path));
 		if( c.retcode()==0 )
 		    i->setCreated(false);
 		else
