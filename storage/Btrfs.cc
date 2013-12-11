@@ -145,7 +145,7 @@ void Btrfs::detectSubvol()
         if( !mp.empty() )
             {
             clearSubvol();
-            SystemCmd cmd( BTRFSBIN " subvolume list " + mp );
+            SystemCmd cmd(BTRFSBIN " subvolume list " + quote(mp));
             for( vector<string>::const_iterator s=cmd.stdout().begin(); 
                  s!=cmd.stdout().end(); ++s )
                 {
