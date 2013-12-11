@@ -496,8 +496,7 @@ int Btrfs::doCreateSubvol()
 list<string> Btrfs::getSubvolAddDel( bool add ) const
     {
     list<string> ret;
-    list<Subvolume>::const_iterator i;
-    for( i=subvol.begin(); i!=subvol.end(); ++i )
+    for (list<Subvolume>::const_iterator i = subvol.begin(); i != subvol.end(); ++i)
 	{
 	if( !add && i->deleted() )
 	    ret.push_back(i->path());
@@ -915,8 +914,7 @@ void Btrfs::logDifference(std::ostream& log, const Btrfs& rhs) const
 	log << " DevRem:" << tmp;
 
     tmp.erase();
-    list<Subvolume>::const_iterator s;
-    for( s=subvol.begin(); s!=subvol.end(); ++s )
+    for (list<Subvolume>::const_iterator s = subvol.begin(); s != subvol.end(); ++s)
 	{
 	if( s->deleted() )
 	    tmp += "<--" + s->path();
