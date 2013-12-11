@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2011] Novell, Inc.
+ * Copyright (c) [2004-2013] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -149,15 +149,25 @@ void Btrfs::detectSubvol()
             for( vector<string>::const_iterator s=cmd.stdout().begin(); 
                  s!=cmd.stdout().end(); ++s )
                 {
-                string subvol;
-                string::size_type pos = s->find( " path " );
-                if( pos!=string::npos )
-                    pos = s->find_first_not_of( app_ws, pos+5 );
-                if( pos!=string::npos )
-                    subvol = s->substr( pos, s->find_last_not_of( app_ws ) );
-                if( !subvol.empty() )
-                    addSubvol( subvol );
-                }
+		string level;
+		string::size_type pos1 = s->find(" level ");
+		if (pos1 != string::npos)
+		    pos1 = s->find_first_not_of(app_ws, pos1 + 6);
+		if (pos1 != string::npos)
+		    level = s->substr(pos1, s->find_last_not_of(app_ws));
+
+		string subvol;
+		string::size_type pos2 = s->find(" path ");
+		if (pos2 != string::npos)
+		    pos2 = s->find_first_not_of(app_ws, pos2 + 5);
+		if (pos2 != string::npos)
+		    subvol = s->substr(pos2, s->find_last_not_of(app_ws));
+
+		// subvolume can already be deleted, in that case level is "0"
+		// (and path "DELETED")
+		if (level != "0" && !subvol.empty())
+		    addSubvol(subvol);
+		}
             }
         if( mounted )
             {
