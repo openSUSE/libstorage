@@ -16,3 +16,7 @@ LABEL=test  /test1  btrfs  defaults  0 0
 LABEL=test  /test1/sub2  btrfs  defaults  0 0
 end of fstab
 
+test4
+begin of fstab
+end of fstab
+

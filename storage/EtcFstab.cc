@@ -813,6 +813,7 @@ int EtcFstab::flush()
 		    }
 		else
 		    ret = FSTAB_UPDATE_ENTRY_NOT_FOUND;
+		++i;
 	    } break;
 
 	    case Entry::ADD:
@@ -861,12 +862,13 @@ int EtcFstab::flush()
 		    }
 		i->old = i->nnew;
 		i->op = Entry::NONE;
+		++i;
 	    } break;
 
 	    default:
+		++i;
 		break;
 	    }
-	++i;
 	}
     if( fstab != NULL )
 	{
