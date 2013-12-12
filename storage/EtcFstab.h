@@ -29,6 +29,7 @@
 
 #include "storage/StorageInterface.h"
 #include "storage/AppUtil.h"
+#include "storage/Enum.h"
 
 
 namespace storage
@@ -139,9 +140,9 @@ namespace storage
 
 	struct Entry
 	{
-	    enum operation { NONE, ADD, REMOVE, UPDATE };
-	    Entry(operation op = NONE) : op(op) {}
-	    operation op;
+	    enum Operation { NONE, ADD, UPDATE, REMOVE };
+	    Entry(Operation op = NONE) : op(op) {}
+	    Operation op;
 	    FstabEntry nnew;
 	    FstabEntry old;
 	};
@@ -184,6 +185,9 @@ namespace storage
 	string prefix;
 	list<Entry> co;
     };
+
+
+    template <> struct EnumInfo<EtcFstab::Entry::Operation> { static const vector<string> names; };
 
 }
 

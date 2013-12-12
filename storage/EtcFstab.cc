@@ -705,9 +705,9 @@ void EtcFstab::updateTabLine( list<string>(*fnc)(const FstabEntry&),
 
 	for (list<Entry>::const_iterator it = co.begin(); it != co.end(); ++it)
 	{
-	    y2mil("op:" << it->op << " old.device:" << it->old.device << " old.mount:" <<
-		  it->old.mount << " new.device:" << it->nnew.device << " new.mount:" <<
-		  it->nnew.mount);
+	    y2mil("op:" << toString(it->op) << " old.device:" << it->old.device <<
+		  " old.mount:" << it->old.mount << " new.device:" << it->nnew.device <<
+		  " new.mount:" << it->nnew.mount);
 	}
     }
 
@@ -1039,5 +1039,10 @@ Text EtcFstab::removeText( bool doing, bool crypto, const string& mp ) const
     const unsigned EtcFstab::fstabFields[] = { 20, 20, 10, 21, 1, 1 };
     const unsigned EtcFstab::cryptotabFields[] = { 11, 15, 20, 10, 10, 1 };
     const unsigned EtcFstab::crypttabFields[] = { 15, 20, 10, 1 };
+
+
+    const vector<string> EnumInfo<EtcFstab::Entry::Operation>::names({
+	"NONE", "ADD", "UPDATE", "REMOVE"
+    });
 
 }
