@@ -175,6 +175,8 @@ namespace storage
 	static string fstabEncode(const string&);
 	static string fstabDecode(const string&);
 
+	void dump() const;
+
 	static const unsigned fstabFields[6];
 	static const unsigned cryptotabFields[6];
 	static const unsigned crypttabFields[6];

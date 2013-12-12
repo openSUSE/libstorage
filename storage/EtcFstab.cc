@@ -697,6 +697,21 @@ void EtcFstab::updateTabLine( list<string>(*fnc)(const FstabEntry&),
     y2mil( "new line:" << line );
     }
 
+
+    void
+    EtcFstab::dump() const
+    {
+	y2mil("fstab ops dump");
+
+	for (list<Entry>::const_iterator it = co.begin(); it != co.end(); ++it)
+	{
+	    y2mil("op:" << it->op << " old.device:" << it->old.device << " old.mount:" <<
+		  it->old.mount << " new.device:" << it->nnew.device << " new.mount:" <<
+		  it->nnew.mount);
+	}
+    }
+
+
 int EtcFstab::flush()
     {
     int ret = 0;
@@ -714,7 +729,7 @@ int EtcFstab::flush()
 	    {
 	    case Entry::REMOVE:
 	    {
-		y2mil( "REMOVE:" << i->old.device );
+		y2mil("REMOVE:" << i->old.device << " " << i->old.mount);
 		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno>=0 )
@@ -737,7 +752,7 @@ int EtcFstab::flush()
 
 	    case Entry::UPDATE:
 	    {
-		y2mil( "UPDATE:" << i->nnew.device );
+		y2mil("UPDATE:" << i->nnew.device << " " << i->nnew.mount);
 		int lineno;
 		cur = findFile( i->old, fstab, cryptotab, lineno );
 		if( lineno<0 )
@@ -803,7 +818,7 @@ int EtcFstab::flush()
 	    case Entry::ADD:
 		{
 		int lineno;
-		y2mil( "ADD:" << i->nnew.device );
+		y2mil("ADD:" << i->nnew.device << " " << i->nnew.mount);
 		cur = findFile( i->nnew, fstab, cryptotab, lineno );
 		string line = createTabLine( i->nnew );
 		string before_dev;
