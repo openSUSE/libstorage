@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Dec 12 16:47:33 CET 2013 - aschnell@suse.de
+
+- fixed fstab handling for certain remove operations
+
+-------------------------------------------------------------------
 Tue Dec 03 17:31:28 CET 2013 - aschnell@suse.de
 
 - added list of UsedByInfo to ruby bindings
