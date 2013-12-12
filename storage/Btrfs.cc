@@ -163,8 +163,8 @@ void Btrfs::detectSubvol()
 		if (pos2 != string::npos)
 		    subvol = s->substr(pos2, s->find_last_not_of(app_ws));
 
-		// subvolume can already be deleted, in that case level is "0"
-		// (and path "DELETED")
+		// Subvolume can already be deleted, in which case level is "0"
+		// (and path "DELETED"). That is a temporary state.
 		if (level != "0" && !subvol.empty())
 		    addSubvol(subvol);
 		}
