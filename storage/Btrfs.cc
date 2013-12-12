@@ -727,16 +727,13 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 		}
 	    }
 	}
+
+    for (list<string>::const_iterator it = dev_add.begin(); it != dev_add.end(); ++it)
+	l.push_back(commitAction(INCREASE, cont->type(), extendText(false, *it), this, true));
+    for (list<string>::const_iterator it = dev_rem.begin(); it != dev_rem.end(); ++it)
+	l.push_back(commitAction(DECREASE, cont->type(), reduceText(false, *it), this, false));
+
     unsigned rem, add;
-    list<string>::const_iterator i;
-    if( !dev_add.empty() )
-	for( i=dev_add.begin(); i!=dev_add.end(); ++i )
-	    l.push_back(commitAction(INCREASE, cont->type(),
-			extendText(false, *i), this, true));
-    if( !dev_rem.empty() )
-	for( i=dev_rem.begin(); i!=dev_rem.end(); ++i )
-	    l.push_back(commitAction(DECREASE, cont->type(),
-			reduceText(false, *i), this, false));
     countSubvolAddDel( add, rem );
     if( rem>0 )
 	{
