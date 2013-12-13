@@ -733,7 +733,7 @@ Region Disk::usableCylRegion() const
 
 
     const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+",
-				     "md[0-9]+", "rsxx[0-9]+" };
+				     "md[0-9]+", "rsxx[0-9]+", "nvme[0-9]+n[0-9]+" };
 
 
     bool
