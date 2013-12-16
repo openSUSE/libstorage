@@ -751,6 +751,66 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	}
     }
 
+
+    int
+    Btrfs::extraFstabAdd(EtcFstab* fstab, const FstabChange& change)
+    {
+	if (getMount() == "/")
+	{
+	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    {
+		FstabChange tmp_change = change;
+		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + it->path();
+		tmp_change.opts.remove("defaults");
+		tmp_change.opts.remove_if(string_starts_with("subvol="));
+		tmp_change.opts.push_back("subvol=" + it->path());
+		fstab->addEntry(tmp_change);
+	    }
+	}
+
+	return 0;
+    }
+
+
+    int
+    Btrfs::extraFstabUpdate(EtcFstab* fstab, const FstabKey& key, const FstabChange& change)
+    {
+	if (getMount() == "/")
+	{
+	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    {
+		FstabKey tmp_key(key);
+		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + it->path();
+		FstabChange tmp_change = change;
+		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + it->path();
+		tmp_change.opts.remove("defaults");
+		tmp_change.opts.remove_if(string_starts_with("subvol="));
+		tmp_change.opts.push_back("subvol=" + it->path());
+		fstab->updateEntry(tmp_key, tmp_change);
+	    }
+	}
+
+	return 0;
+    }
+
+
+    int
+    Btrfs::extraFstabRemove(EtcFstab* fstab, const FstabKey& key)
+    {
+	if (getMount() == "/")
+	{
+	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    {
+		FstabKey tmp_key(key);
+		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + it->path();
+		fstab->removeEntry(tmp_key);
+	    }
+	}
+
+	return 0;
+    }
+
+
 Text
 Btrfs::extendText(bool doing, const string& dev) const
     {

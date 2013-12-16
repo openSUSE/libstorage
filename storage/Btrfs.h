@@ -103,6 +103,10 @@ class Btrfs : public Volume
 	list<Subvolume> subvol;
 	Volume const * findRealVolume() const;
 
+	virtual int extraFstabAdd(EtcFstab* fstab, const FstabChange& change) override;
+	virtual int extraFstabUpdate(EtcFstab* fstab, const FstabKey& key, const FstabChange& change) override;
+	virtual int extraFstabRemove(EtcFstab* fstab, const FstabKey& key) override;
+
     private:
 
 	Btrfs& operator=(const Btrfs& v); // disallow

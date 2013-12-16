@@ -40,6 +40,8 @@ class SystemCmd;
 class ProcMounts;
 class EtcFstab;
 class FstabEntry;
+class FstabChange;
+class FstabKey;
 class Container;
 class Storage;
     
@@ -253,6 +255,11 @@ class Storage;
 				 bool empty_pwd=false ) const;
 	storage::EncryptType detectEncryption();
 	string getFilesysSysfsPath() const;
+
+	virtual int extraFstabAdd(EtcFstab* fstab, const FstabChange& change) { return 0; }
+	virtual int extraFstabUpdate(EtcFstab* fstab, const FstabKey& key,
+				     const FstabChange& change) { return 0; }
+	virtual int extraFstabRemove(EtcFstab* fstab, const FstabKey& key) { return 0; }
 
 	const Container* const cont;
 	bool numeric;

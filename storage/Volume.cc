@@ -3053,6 +3053,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	    getStorage()->showInfoCb(fstab->removeText(true, entry.cryptotab, entry.mount), silent);
 	    y2mil("before removeEntry");
 	    ret = fstab->removeEntry(FstabKey(entry.device, entry.mount));
+	    if (ret == 0)
+		ret = extraFstabRemove(fstab, FstabKey(entry.device, entry.mount));
 	    }
 	else if ((!mp.empty() || pvEncryption()) && !deleted())
 	    {
@@ -3119,6 +3121,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 			}
 		    y2mil( "update fstab: " << che );
 		    ret = fstab->updateEntry(FstabKey(che.device, orig_mp), che);
+		    if (ret == 0)
+			ret = extraFstabUpdate(fstab, FstabKey(che.device, orig_mp), che);
 		    }
 		}
 	    else
@@ -3144,6 +3148,8 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		getStorage()->showInfoCb(
 		    fstab->addText( true, inCryptotab(), che.mount ),silent);
 		ret = fstab->addEntry( che );
+		if (ret == 0)
+		    ret = extraFstabAdd(fstab, che);
 		fstab_added = true;
 		}
 	    }
