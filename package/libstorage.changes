@@ -2,6 +2,7 @@
 Mon Dec 16 14:34:18 CET 2013 - aschnell@suse.de
 
 - during installation add btrfs subvolumes to fstab (fate#316541)
+- version 2.25.5
 
 -------------------------------------------------------------------
 Fri Dec 13 14:57:59 CET 2013 - aschnell@suse.de
