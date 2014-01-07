@@ -323,7 +323,7 @@ bool Partition::operator< ( const Partition& rhs ) const
 		// displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 		// %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
 		// hexadecimal number (e.g. 8E)
-		txt = sformat(_("Setting type of partition %1$s to %2$s (%3$X"), dev.c_str(),
+		txt = sformat(_("Setting type of partition %1$s to %2$s (%3$X)"), dev.c_str(),
 			      id_str.c_str(), id() );
 	}
 	else
