@@ -3,3 +3,5 @@
 /dev/mmcblk0p3
 /dev/mapper/isw_cfcjajfdfh_test-part4
 /dev/md2p5
+/dev/rsxx0p6
+/dev/nvme0n1p7
