@@ -186,7 +186,7 @@ namespace storage
 	}
 
 	MdadmDetails details;
-	if (getMdadmDetails("/dev/" + nm, details))
+	if (getMdadmDetails(dev, details))
 	{
 	    setMdUuid(details.uuid);
 	}
@@ -348,7 +348,7 @@ Md::createCmd() const
 {
     string cmd = LSBIN " -l --full-time " + quote(devs) + " " + quote(spare) + "; "
 	MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
-	" --run --level=" + toString(md_type) + " -e 1.0";
+	" --run --level=" + toString(md_type) + " -e 1.0 --homehost=any";
     if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
 	cmd += " -b internal";
     if (chunk_k > 0)
