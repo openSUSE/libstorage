@@ -22,7 +22,9 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	md_create.single partition1.single partitionname.single			\
 	partitionprefix.single recursive1.single recursive2.single		\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
-	udevdecode.single udevencode.single usedby1.single uuid1.single
+	udevdecode.single udevencode.single usedby1.single uuid1.single		\
+	blkid.single btrfs.single dmsetup.single lsscsi.single parted.single	\
+	procparts.single
 
 backupstate1_single_SOURCES = backupstate1.cc common.h common.cc
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h common.cc
@@ -60,6 +62,13 @@ udevdecode_single_SOURCES = udevdecode.cc
 udevencode_single_SOURCES = udevencode.cc
 usedby1_single_SOURCES = usedby1.cc common.h common.cc
 uuid1_single_SOURCES = uuid1.cc common.h common.cc
+
+blkid_single_SOURCES = blkid.cc common.h common.cc
+btrfs_single_SOURCES = btrfs.cc common.h common.cc
+dmsetup_single_SOURCES = dmsetup.cc common.h common.cc
+lsscsi_single_SOURCES = lsscsi.cc common.h common.cc
+parted_single_SOURCES = parted.cc common.h common.cc
+procparts_single_SOURCES = procparts.cc common.h common.cc
 
 clean-local:
 	rm -f site.exp site.bak

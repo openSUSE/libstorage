@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -40,8 +40,10 @@ namespace storage
     {
     public:
 
-	Blkid();
+	Blkid(bool do_probe = true);
 	Blkid(const string& device);
+
+	void probe();
 
 	struct Entry
 	{
@@ -59,13 +61,14 @@ namespace storage
 	    string luks_uuid;
 	};
 
+	friend std::ostream& operator<<(std::ostream& s, const Blkid& blkid);
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	bool getEntry(const string& device, Entry& entry) const;
 
-    protected:
-
 	void parse(const vector<string>& lines);
+
+    private:
 
 	typedef map<string, Entry>::const_iterator const_iterator;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -27,6 +27,7 @@
 #include <string>
 #include <list>
 #include <map>
+#include <vector>
 
 
 namespace storage
@@ -34,15 +35,16 @@ namespace storage
     using std::string;
     using std::list;
     using std::map;
+    using std::vector;
 
 
     class ProcParts
     {
     public:
 
-	ProcParts();
+	ProcParts(bool do_probe = true);
 
-	void reload();
+	void probe();
 
 	bool getSize(const string& device, unsigned long long& sizeK) const;
 	bool findDevice(const string& device) const;
@@ -59,7 +61,11 @@ namespace storage
 	    return ret;
 	}
 
-    protected:
+	friend std::ostream& operator<<(std::ostream& s, const ProcParts& procparts);
+
+	void parse(const vector<string>& lines);
+
+    private:
 
 	typedef map<string, unsigned long long>::const_iterator const_iterator;
 

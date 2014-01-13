@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -31,21 +31,28 @@ namespace storage
     using namespace std;
 
 
-    ProcParts::ProcParts()
+    ProcParts::ProcParts(bool do_probe)
     {
-	reload();
+	if (do_probe)
+	    probe();
     }
 
 
     void
-    ProcParts::reload()
+    ProcParts::probe()
+    {
+	AsciiFile parts("/proc/partitions");
+
+	parse(parts.lines());
+    }
+
+
+    void
+    ProcParts::parse(const vector<string>& lines)
     {
 	data.clear();
 
-	AsciiFile parts("/proc/partitions");
-	parts.remove(0, 2);
-
-	for (vector<string>::const_iterator it = parts.lines().begin(); it != parts.lines().end(); ++it)
+	for (vector<string>::const_iterator it = lines.begin() + 2; it != lines.end(); ++it)
 	{
 	    string device = "/dev/" + extractNthWord(3, *it);
 	    unsigned long long sizeK;
@@ -55,6 +62,15 @@ namespace storage
 
 	for (const_iterator it = data.begin(); it != data.end(); ++it)
 	    y2mil("data[" << it->first << "] -> " << it->second);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const ProcParts& procparts)
+    {
+	for (ProcParts::const_iterator it = procparts.data.begin(); it != procparts.data.end(); ++it)
+	    cout << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
     }
 
 

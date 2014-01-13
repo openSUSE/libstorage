@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -35,14 +35,35 @@ namespace storage
     using namespace std;
 
 
-    Parted::Parted(const string& device)
-	: gpt_enlarge(false)
+    Parted::Parted(const string& device, bool do_probe)
+	: device(device), gpt_enlarge(false)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    Parted::probe()
     {
 	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print unit s print");
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
+    }
 
-	if (cmd.select("Partition Table:") > 0)
+
+    void
+    Parted::parse(const vector<string>& lines)
+    {
+	gpt_enlarge = false;
+	entries.clear();
+
+	vector<string>::const_iterator pos;
+
+	pos = find_if(lines, string_starts_with("Partition Table:"));
+	if (pos != lines.end())
 	{
-	    label = extractNthWord(2, cmd.getLine(0, true));
+	    label = extractNthWord(2, *pos);
 	    if (label == "unknown")
 		label.clear();
 	    else if(label == LABEL_GPT_SYNC_MBR)
@@ -52,24 +73,25 @@ namespace storage
 	    y2war("could not find partition table");
 
 	// only present for unrecognised disk label due to patch in parted
-	if (cmd.select("BIOS cylinder") > 0)
-	    scanGeometryLine(cmd.getLine(0, true));
+	pos = find_if(lines, string_starts_with("BIOS cylinder,head,sector geometry:"));
+	if (pos != lines.end())
+	    scanGeometryLine(*pos);
 	else
 	    y2err("could not find geometry");
 
 	// not present for unrecognised disk label
-	if (cmd.select("Sector size") > 0)
-	    scanSectorSizeLine(cmd.getLine(0, true));
+	pos = find_if(lines, string_starts_with("Sector size (logical/physical):"));
+	if (pos != lines.end())
+	    scanSectorSizeLine(*pos);
 	else
 	    y2war("could not find sector size");
 
-	gpt_enlarge = cmd.select("fix the GPT to use all") > 0;
+	gpt_enlarge = find_if(lines, string_starts_with("fix the GPT to use all")) != lines.end();
 
 	if (label != "loop")
 	{
 	    int n = 0;
 
-	    const vector<string>& lines = cmd.stdout();
 	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	    {
 		if (boost::starts_with(*it, "Number"))
@@ -127,12 +149,24 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const Parted::Entry& e)
+    std::ostream& operator<<(std::ostream& s, const Parted& parted)
     {
-	s << "num:" << e.num << " cylRegion:" << e.cylRegion << " secRegion:" << e.secRegion
-	  << " type:" << toString(e.type) << " id:" << e.id;
+	s << "device:" << parted.device << " label:" << parted.label << " geometry:"
+	  << parted.geometry << " gpt_enlarge:" << parted.gpt_enlarge << endl;
 
-	if (e.boot)
+	for (Parted::const_iterator it = parted.entries.begin(); it != parted.entries.end(); ++it)
+	    s << *it << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Parted::Entry& entry)
+    {
+	s << "num:" << entry.num << " cylRegion:" << entry.cylRegion << " secRegion:"
+	  << entry.secRegion << " type:" << toString(entry.type) << " id:" << entry.id;
+
+	if (entry.boot)
 	    s << " boot";
 
 	return s;

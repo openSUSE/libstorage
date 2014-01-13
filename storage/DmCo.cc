@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -38,13 +38,26 @@ namespace storage
     using namespace std;
 
 
-    CmdDmsetup::CmdDmsetup()
+    CmdDmsetup::CmdDmsetup(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    CmdDmsetup::probe()
     {
 	SystemCmd c(DMSETUPBIN " --columns --separator '/' --noheadings -o name,major,minor,segments,uuid info");
-	if (c.retcode() != 0 || c.numLines() == 0)
-	    return;
+	if (c.retcode() == 0 && c.numLines() > 0)
+	    parse(c.stdout());
+    }
 
-	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
+
+    void
+    CmdDmsetup::parse(const vector<string>& lines)
+    {
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 	    list<string> sl = splitString(*it, "/");
 	    if (sl.size() >= 5)
@@ -88,6 +101,24 @@ namespace storage
 	for (const_iterator i = data.begin(); i != data.end(); ++i)
 	    ret.push_back(i->first);
 	return ret;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdDmsetup& cmddmsetup)
+    {
+	for (CmdDmsetup::const_iterator it = cmddmsetup.begin(); it != cmddmsetup.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdDmsetup::Entry& entry)
+    {
+	s << "name:" << entry.name << " mjr:" << entry.mjr << " mnr:" << entry.mnr << " segments:"
+	  << entry.segments << " uuid:" << entry.uuid;
+
+	return s;
     }
 
 

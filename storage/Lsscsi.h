@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Novell, Inc.
+ * Copyright (c) [2010-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -40,7 +40,9 @@ namespace storage
     {
     public:
 
-	Lsscsi();
+	Lsscsi(bool do_probe = true);
+
+	void probe();
 
 	struct Entry
 	{
@@ -49,13 +51,14 @@ namespace storage
 	    Transport transport;
 	};
 
+	friend std::ostream& operator<<(std::ostream& s, const Lsscsi& lsscsi);
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	bool getEntry(const string& device, Entry& entry) const;
 
-    protected:
-
 	void parse(const vector<string>& lines);
+
+    private:
 
 	typedef map<string, Entry>::const_iterator const_iterator;
 

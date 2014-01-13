@@ -37,28 +37,13 @@
 #include "storage/DmCo.h"
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
+#include "storage/BtrfsCo.h"
+
 
 namespace storage
 {
     using std::map;
     using std::list;
-
-    class CmdBtrfsShow
-    {
-    public:
-	CmdBtrfsShow();
-	struct Entry
-	    {
-	    list<string> devices;
-	    };
-	bool getEntry(const string& uuid, Entry& entry) const;
-	list<string> getUuids() const;
-
-    private:
-	typedef map<string, Entry>::const_iterator const_iterator;
-
-	map< string, Entry > fs;
-    };
 
 
     class SystemInfo : boost::noncopyable

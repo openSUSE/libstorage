@@ -1,0 +1,5 @@
+parse1
+device:/dev/sda label:msdos geometry:[121601,255,63,512] gpt_enlarge:false
+num:1 cylRegion:[0,132] secRegion:[2048,2103296] type:primary id:131 boot
+num:2 cylRegion:[131,117488] secRegion:[2105344,1887442944] type:primary id:142
+

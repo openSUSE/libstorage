@@ -1,0 +1,6 @@
+parse1
+data[/dev/mapper/system-root] -> is_fs:true fs_type:ext3 fs_uuid:31e381c9-5b35-4045-8d01-9274a30e1298 fs_label:ROOT
+data[/dev/mapper/system-swap] -> is_fs:true fs_type:swap fs_uuid:fd39c3f9-2990-435d-8eed-e56b6dc2e592 fs_label:SWAP
+data[/dev/sda1] -> is_fs:true fs_type:ext3 fs_uuid:14875716-b8e3-4c83-ac86-48c20682b63a fs_label:BOOT
+data[/dev/sda2] -> is_lvm:true
+

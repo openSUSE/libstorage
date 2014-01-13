@@ -1,0 +1,5 @@
+parse1
+data[/dev/sda] -> transport:SATA
+data[/dev/sdb] -> transport:USB
+data[/dev/sr0] -> transport:SATA
+

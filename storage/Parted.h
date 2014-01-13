@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -36,7 +36,9 @@ namespace storage
 
     public:
 
-	Parted(const string& device);
+	Parted(const string& device, bool do_probe = true);
+
+	void probe();
 
 	struct Entry
 	{
@@ -48,9 +50,10 @@ namespace storage
 	    PartitionType type;
 	    unsigned id;
 	    bool boot;
-
-	    friend std::ostream& operator<<(std::ostream& s, const Entry& e);
 	};
+
+	friend std::ostream& operator<<(std::ostream& s, const Parted& parted);
+	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	const string& getLabel() const { return label; }
 	const Geometry& getGeometry() const { return geometry; }
@@ -62,10 +65,13 @@ namespace storage
 
 	bool getEntry(unsigned num, Entry& entry) const;
 
+	void parse(const vector<string>& lines);
+
     private:
 
 	typedef vector<Entry>::iterator iterator;
 
+	string device;
 	string label;
 	Geometry geometry;
 	bool gpt_enlarge;

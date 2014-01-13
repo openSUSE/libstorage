@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Novell, Inc.
+ * Copyright (c) [2010-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -36,7 +36,15 @@ namespace storage
     using namespace std;
 
 
-    Lsscsi::Lsscsi()
+    Lsscsi::Lsscsi(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    Lsscsi::probe()
     {
 	SystemCmd cmd(LSSCSIBIN " --transport");
 	if (cmd.retcode() == 0)
@@ -121,6 +129,15 @@ namespace storage
 
 	entry = i->second;
 	return true;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Lsscsi& lsscsi)
+    {
+	for (Lsscsi::const_iterator it = lsscsi.data.begin(); it != lsscsi.data.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
     }
 
 

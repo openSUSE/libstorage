@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -32,7 +32,15 @@ namespace storage
     using namespace std;
 
 
-    Blkid::Blkid()
+    Blkid::Blkid(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    Blkid::probe()
     {
 	SystemCmd cmd("BLKID_SKIP_CHECK_MDRAID=1 " BLKIDBIN " -c /dev/null");
 	if (cmd.retcode() == 0)
@@ -175,6 +183,15 @@ namespace storage
 
 	entry = i->second;
 	return true;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Blkid& blkid)
+    {
+	for (Blkid::const_iterator it = blkid.data.begin(); it != blkid.data.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
     }
 
 
