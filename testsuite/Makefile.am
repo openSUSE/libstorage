@@ -23,8 +23,9 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	partitionprefix.single recursive1.single recursive2.single		\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
 	udevdecode.single udevencode.single usedby1.single uuid1.single		\
-	blkid.single btrfs.single dmsetup.single lsscsi.single parted.single	\
-	procparts.single
+	blkid.single btrfs.single dmsetup.single lsscsi.single			\
+	mdadm-details.single mdadm-examine.single parted.single			\
+	proc-mdstat.single proc-parts.single
 
 backupstate1_single_SOURCES = backupstate1.cc common.h common.cc
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h common.cc
@@ -67,8 +68,11 @@ blkid_single_SOURCES = blkid.cc common.h common.cc
 btrfs_single_SOURCES = btrfs.cc common.h common.cc
 dmsetup_single_SOURCES = dmsetup.cc common.h common.cc
 lsscsi_single_SOURCES = lsscsi.cc common.h common.cc
+mdadm_details_single_SOURCES = mdadm-details.cc common.h common.cc
+mdadm_examine_single_SOURCES = mdadm-examine.cc common.h common.cc
 parted_single_SOURCES = parted.cc common.h common.cc
-procparts_single_SOURCES = procparts.cc common.h common.cc
+proc_mdstat_single_SOURCES = proc-mdstat.cc common.h common.cc
+proc_parts_single_SOURCES = proc-parts.cc common.h common.cc
 
 clean-local:
 	rm -f site.exp site.bak

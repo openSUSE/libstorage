@@ -58,6 +58,7 @@ namespace storage
 	const ProcParts& getProcParts() { return *procparts; }
 	const ProcMounts& getProcMounts() { return *procmounts; }
 	const ProcMdstat& getProcMdstat() { return *procmdstat; }
+	const MdadmDetails& getMdadmDetails(const string device) { return mdadmdetails.get(device); }
 	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices); }
 	const Blkid& getBlkid() { return *blkid; }
 	const Lsscsi& getLsscsi() { return *lsscsi; }
@@ -113,6 +114,7 @@ namespace storage
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<ProcMdstat> procmdstat;
+	LazyObjects<MdadmDetails> mdadmdetails;
 	LazyObjects<MdadmExamine, list<string>> mdadmexamines;
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;

@@ -1,0 +1,3 @@
+parse1
+data[md0] -> md_type:raid1 super:1.0 size_k:8387520 devices:</dev/sda1 /dev/sdb1>
+

@@ -102,13 +102,10 @@ namespace storage
 	    has_container = true;
 	    parent_container = entry.container_name;
 
-	    MdadmDetails details;
-	    if (getMdadmDetails("/dev/" + entry.container_name, details))
-	    {
-		parent_uuid = details.uuid;
-		parent_md_name = details.devname;
-		parent_metadata = details.metadata;
-	    }
+	    MdadmDetails details = systeminfo.getMdadmDetails("/dev/" + entry.container_name);
+	    parent_uuid = details.uuid;
+	    parent_md_name = details.devname;
+	    parent_metadata = details.metadata;
 
 	    parent_member = entry.container_member;
 
@@ -121,19 +118,17 @@ namespace storage
 
 	setUdevData(systeminfo);
 
-	MdadmDetails details;
-	if (getMdadmDetails(dev, details))
+	MdadmDetails details = systeminfo.getMdadmDetails(dev);
+	md_uuid = details.uuid;
+	md_name = details.devname;
+
+	if (!md_name.empty())
 	{
-	    md_uuid = details.uuid;
-	    md_name = details.devname;
-	    if( !md_name.empty() )
-		{
-		numeric=false;
-		nm = md_name;
-		dev = "/dev/md/"+md_name;
-		alt_names.remove(dev);
-		alt_names.push_back( mdDevice(mnr) );
-		}
+	    numeric=false;
+	    nm = md_name;
+	    dev = "/dev/md/" + md_name;
+	    alt_names.remove(dev);
+	    alt_names.push_back(mdDevice(mnr));
 	}
 
 	getStorage()->addUsedBy(devs, UB_MD, dev);
@@ -185,11 +180,8 @@ namespace storage
 	    y2err("not found in mdstat nm:" << nm);
 	}
 
-	MdadmDetails details;
-	if (getMdadmDetails(dev, details))
-	{
-	    setMdUuid(details.uuid);
-	}
+	MdadmDetails details = systeminfo.getMdadmDetails(dev);
+	setMdUuid(details.uuid);
     }
 
 

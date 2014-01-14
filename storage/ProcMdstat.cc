@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -38,12 +38,27 @@ namespace storage
     using namespace std;
 
 
-    ProcMdstat::ProcMdstat()
+    ProcMdstat::ProcMdstat(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    ProcMdstat::probe()
     {
 	AsciiFile mdstat("/proc/mdstat");
 	mdstat.logContent();
 
-	for (vector<string>::const_iterator it1 = mdstat.lines().begin(); it1 != mdstat.lines().end(); ++it1)
+	parse(mdstat.lines());
+    }
+
+
+    void
+    ProcMdstat::parse(const vector<string>& lines)
+    {
+	for (vector<string>::const_iterator it1 = lines.begin(); it1 != lines.end(); ++it1)
 	{
 	    if (extractNthWord(1, *it1) == ":")
 	    {
@@ -259,6 +274,15 @@ namespace storage
     }
 
 
+    std::ostream& operator<<(std::ostream& s, const ProcMdstat& procmdstat)
+    {
+	for (ProcMdstat::const_iterator it = procmdstat.data.begin(); it != procmdstat.data.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
+    }
+
+
     std::ostream& operator<<(std::ostream& s, const ProcMdstat::Entry& entry)
     {
 	s << "md_type:" << toString(entry.md_type);
@@ -295,45 +319,70 @@ namespace storage
     }
 
 
-    bool
-    getMdadmDetails(const string& dev, MdadmDetails& detail)
+    MdadmDetails::MdadmDetails(const string& device, bool do_probe)
+	: device(device)
     {
-	SystemCmd cmd(MDADMBIN " --detail " + quote(dev) + " --export");
-	if (cmd.retcode() != 0)
-	{
-	    y2err("running mdadm failed");
-	    return false;
-	}
-
-	detail.uuid = detail.devname = detail.metadata = "";
-
-	const vector<string>& lines = cmd.stdout();
-	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
-	{
-	    if (boost::starts_with(*it, "MD_UUID="))
-		detail.uuid = string(*it, 8);
-	    else if (boost::starts_with(*it, "MD_DEVNAME="))
-		detail.devname = string(*it, 11);
-	    else if (boost::starts_with(*it, "MD_METADATA="))
-		detail.metadata = string(*it, 12);
-	}
-
-	y2mil("dev:" << dev << " uuid:" << detail.uuid << " devname:" << detail.devname <<
-	      " metadata:" << detail.metadata);
-	return true;
+	if (do_probe)
+	    probe();
     }
 
 
-    MdadmExamine::MdadmExamine(const list<string>& devices)
+    void
+    MdadmDetails::probe()
     {
-	SystemCmd cmd(MDADMBIN " --examine " + quote(devices) + " --brief");
-	if (cmd.retcode() != 0)
+	SystemCmd cmd(MDADMBIN " --detail " + quote(device) + " --export");
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
+    }
+
+
+    void
+    MdadmDetails::parse(const vector<string>& lines)
+    {
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    y2err("running mdadm failed");
-	    return;
+	    if (boost::starts_with(*it, "MD_UUID="))
+		uuid = string(*it, 8);
+	    else if (boost::starts_with(*it, "MD_DEVNAME="))
+		devname = string(*it, 11);
+	    else if (boost::starts_with(*it, "MD_METADATA="))
+		metadata = string(*it, 12);
 	}
 
-	const vector<string>& lines = cmd.stdout();
+	y2mil("device:" << device << " uuid:" << uuid << " devname:" << devname << " metadata:"
+	      << metadata);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const MdadmDetails& mdadmdetails)
+    {
+	s << "device:" << mdadmdetails.device << " uuid:" << mdadmdetails.uuid << " devname:"
+	  << mdadmdetails.devname << " metadata:" << mdadmdetails.metadata << endl;
+
+	return s;
+    }
+
+
+    MdadmExamine::MdadmExamine(const list<string>& devices, bool do_probe)
+	: devices(devices)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    MdadmExamine::probe()
+    {
+	SystemCmd cmd(MDADMBIN " --examine " + quote(devices) + " --brief");
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
+    }
+
+
+    void
+    MdadmExamine::parse(const vector<string>& lines)
+    {
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
 	    const list<string> items = splitString(*it, " ");
@@ -388,6 +437,26 @@ namespace storage
 	for (const_iterator it = begin(); it != end(); ++it)
 	    y2mil("data["<< it->first << "] -> member:" << it->second.member << " uuid:" <<
 		  it->second.uuid);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const MdadmExamine& mdadmexamine)
+    {
+	cout << "devices:" << mdadmexamine.devices << " metadata:" << mdadmexamine.metadata
+	     << " uuid:" << mdadmexamine.uuid << endl;
+
+	for (MdadmExamine::const_iterator it = mdadmexamine.begin(); it != mdadmexamine.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const MdadmExamine::Entry& entry)
+    {
+	s << "member:" << entry.member << " uuid:" << entry.uuid;
+
+	return s;
     }
 
 }

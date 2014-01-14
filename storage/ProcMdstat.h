@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -24,14 +24,23 @@
 #define PROC_MDSTAT_H
 
 
+#include <map>
+#include <vector>
+
+
 namespace storage
 {
+    using std::map;
+    using std::vector;
+
 
     class ProcMdstat
     {
     public:
 
-	ProcMdstat();
+	ProcMdstat(bool do_probe = true);
+
+	void probe();
 
 	struct Entry
 	{
@@ -59,6 +68,7 @@ namespace storage
 	    string container_member;
 	};
 
+	friend std::ostream& operator<<(std::ostream& s, const ProcMdstat& procmdstat);
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	list<string> getEntries() const;
@@ -70,6 +80,8 @@ namespace storage
 	const_iterator begin() const { return data.begin(); }
 	const_iterator end() const { return data.end(); }
 
+	void parse(const vector<string>& lines);
+
     private:
 
 	Entry parse(const string& line1, const string& line2);
@@ -79,21 +91,36 @@ namespace storage
     };
 
 
-    struct MdadmDetails
+    class MdadmDetails
     {
+    public:
+
+	MdadmDetails(const string& device, bool do_probe = true);
+
+	void probe();
+
 	string uuid;
 	string devname;
 	string metadata;
-    };
 
-    bool getMdadmDetails(const string& dev, MdadmDetails& details);
+	friend std::ostream& operator<<(std::ostream& s, const MdadmDetails& mdadmdetails);
+
+	void parse(const vector<string>& lines);
+
+    private:
+
+	string device;
+
+    };
 
 
     class MdadmExamine
     {
     public:
 
-	MdadmExamine(const list<string>& devices);
+	MdadmExamine(const list<string>& devices, bool do_probe = true);
+
+	void probe();
 
 	string metadata;
 	string uuid;
@@ -113,7 +140,14 @@ namespace storage
 
 	const_iterator find(const string& name) const { return data.find(name); }
 
+	friend std::ostream& operator<<(std::ostream& s, const MdadmExamine& mdadmexamine);
+	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
+
+	void parse(const vector<string>& lines);
+
     private:
+
+	list<string> devices;
 
 	map<string, Entry> data;
 
