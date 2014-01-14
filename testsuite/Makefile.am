@@ -23,7 +23,7 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	partitionprefix.single recursive1.single recursive2.single		\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
 	udevdecode.single udevencode.single usedby1.single uuid1.single		\
-	blkid.single btrfs.single dmsetup.single lsscsi.single			\
+	blkid.single btrfs.single dmraid.single dmsetup.single lsscsi.single	\
 	mdadm-details.single mdadm-examine.single parted.single			\
 	proc-mdstat.single proc-parts.single
 
@@ -66,6 +66,7 @@ uuid1_single_SOURCES = uuid1.cc common.h common.cc
 
 blkid_single_SOURCES = blkid.cc common.h common.cc
 btrfs_single_SOURCES = btrfs.cc common.h common.cc
+dmraid_single_SOURCES = dmraid.cc common.h common.cc
 dmsetup_single_SOURCES = dmsetup.cc common.h common.cc
 lsscsi_single_SOURCES = lsscsi.cc common.h common.cc
 mdadm_details_single_SOURCES = mdadm-details.cc common.h common.cc

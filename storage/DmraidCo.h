@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -39,7 +39,9 @@ class Storage;
 
     public:
 
-	CmdDmraid();
+	CmdDmraid(bool do_probe = true);
+
+	void probe();
 
 	struct Entry
 	{
@@ -56,6 +58,11 @@ class Storage;
 
 	const_iterator begin() const { return data.begin(); }
 	const_iterator end() const { return data.end(); }
+
+	friend std::ostream& operator<<(std::ostream& s, const CmdDmraid& cmddmraid);
+	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
+
+	void parse(const vector<string>& lines);
 
     private:
 

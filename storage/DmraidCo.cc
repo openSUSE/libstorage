@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,13 +37,27 @@ namespace storage
     using namespace std;
 
 
-    CmdDmraid::CmdDmraid()
+    CmdDmraid::CmdDmraid(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    CmdDmraid::probe()
     {
 	SystemCmd c(DMRAIDBIN " -s -c -c -c");
-	if (c.retcode() != 0 || c.stdout().empty())
-	    return;
+	if (c.retcode() == 0 && !c.stdout().empty())
+	    parse(c.stdout());
+    }
 
-	const vector<string>& lines = c.stdout();
+
+    void
+    CmdDmraid::parse(const vector<string>& lines)
+    {
+	data.clear();
+
 	vector<string>::const_iterator it = lines.begin();
 	while (it != lines.end())
 	{
@@ -100,6 +114,24 @@ namespace storage
 
 	entry = it->second;
 	return true;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdDmraid& cmddmraid)
+    {
+	for (CmdDmraid::const_iterator it = cmddmraid.begin(); it != cmddmraid.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdDmraid::Entry& entry)
+    {
+	s << "raidtype:" << entry.raidtype << " controller:" << entry.controller
+	  << " devices:" << entry.devices;
+
+	return s;
     }
 
 
