@@ -49,7 +49,7 @@ namespace storage
     CmdDmsetup::probe()
     {
 	SystemCmd c(DMSETUPBIN " --columns --separator '/' --noheadings -o name,major,minor,segments,uuid info");
-	if (c.retcode() == 0 && c.numLines() > 0)
+	if (c.retcode() == 0 && !c.stdout().empty())
 	    parse(c.stdout());
     }
 

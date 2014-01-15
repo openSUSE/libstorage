@@ -52,8 +52,11 @@ namespace storage
     {
 	data.clear();
 
-	for (vector<string>::const_iterator it = lines.begin() + 2; it != lines.end(); ++it)
+	for (vector<string>::const_iterator it = lines.begin() + 1; it != lines.end(); ++it)
 	{
+	    if (it->empty())
+		continue;
+
 	    string device = "/dev/" + extractNthWord(3, *it);
 	    unsigned long long sizeK;
 	    extractNthWord(2, *it) >> sizeK;

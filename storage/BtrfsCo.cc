@@ -50,7 +50,7 @@ namespace storage
     CmdBtrfsShow::probe()
     {
 	SystemCmd c(BTRFSBIN " filesystem show");
-	if (c.retcode() == 0 && c.numLines() > 0)
+	if (c.retcode() == 0 && !c.stdout().empty())
 	    parse(c.stdout());
     }
 
