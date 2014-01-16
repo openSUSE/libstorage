@@ -980,7 +980,7 @@ int Volume::doFormatBtrfs()
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
-			ret = VOLUME_BTRFS_SUBVOL_DETDEFAULT;
+			ret = VOLUME_BTRFS_SUBVOL_SETDEFAULT;
 			setExtError( c );
 			}
 		    }
