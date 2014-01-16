@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Jan 16 11:21:38 CET 2014 - aschnell@suse.de
+
+- allow to store userdata for devices (used for fate#316221)
+
+-------------------------------------------------------------------
 Thu Jan 09 15:08:59 CET 2014 - aschnell@suse.de
 
 - fixed setup of named RAIDs (bnc#849752)

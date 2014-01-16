@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -7127,6 +7127,51 @@ bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
     y2mil( "ret:" << ret << " mp:" << mdir );
     return( ret );
     }
+
+
+    int
+    Storage::setUserdata(const string& device, const map<string, string>& userdata)
+    {
+	assertInit();
+
+	int ret = 0;
+
+	Device* tmp = findDevice(device);
+	if (tmp)
+	{
+	    tmp->setUserdata(userdata);
+	}
+	else
+	{
+	    ret = STORAGE_DEVICE_NOT_FOUND;
+	}
+
+	y2mil("device:" << device << " ret:" << ret);
+	return ret;
+    }
+
+
+    int
+    Storage::getUserdata(const string& device, map<string, string>& userdata)
+    {
+	assertInit();
+
+	int ret = 0;
+
+	Device* tmp = findDevice(device);
+	if (tmp)
+	{
+	    userdata = tmp->getUserdata();
+	}
+	else
+	{
+	    ret = STORAGE_DEVICE_NOT_FOUND;
+	}
+
+	y2mil("device:" << device << " ret:" << ret);
+	return ret;
+    }
+
 
 bool
 Storage::getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,

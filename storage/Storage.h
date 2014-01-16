@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -607,6 +607,9 @@ class DiskData;
 	void dumpCommitInfos() const;
 	bool mountTmpRo( const Volume* vol, string& mp, const string& opts="" );
 	bool mountTmp( const Volume* vol, string& mp, const string& opts="" );
+
+	int setUserdata(const string& device, const map<string, string>& userdata);
+	int getUserdata(const string& device, map<string, string>& userdata);
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }

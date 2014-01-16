@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -66,7 +66,7 @@ namespace storage
 
     Device::Device(const Device& d)
 	: nm(d.nm), dev(d.dev), create(d.create), del(d.del), silent(d.silent), size_k(d.size_k),
-	  mjr(d.mjr), mnr(d.mnr), uby(d.uby), alt_names(d.alt_names)
+	  mjr(d.mjr), mnr(d.mnr), uby(d.uby), alt_names(d.alt_names), userdata(d.userdata)
     {
 	y2deb("copy-constructed Device " << dev);
     }
@@ -175,6 +175,8 @@ namespace storage
 	info.udevId = udevId();
 
 	info.usedBy = list<UsedByInfo>(uby.begin(), uby.end());
+
+	info.userdata = userdata;
     }
 
 
@@ -191,6 +193,8 @@ namespace storage
 
 	logDiff(log, "mjr", mjr, rhs.mjr);
 	logDiff(log, "mnr", mnr, rhs.mnr);
+
+	logDiff(log, "userdata", userdata, rhs.userdata);
     }
 
 
@@ -206,6 +210,8 @@ namespace storage
 	    s << " deleted";
 	if (d.silent)
 	    s << " silent";
+	if (!d.userdata.empty())
+	    s << " userdata:" << d.userdata;
 	return s;
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -27,10 +27,12 @@
 #include <string>
 #include <deque>
 #include <list>
+#include <map>
 
 using std::string;
 using std::deque;
 using std::list;
+using std::map;
 
 
 #include "storage/StorageVersion.h"
@@ -150,7 +152,7 @@ namespace storage
 
     enum MdParity { PAR_DEFAULT, LEFT_ASYMMETRIC, LEFT_SYMMETRIC,
 		    RIGHT_ASYMMETRIC, RIGHT_SYMMETRIC, PAR_FIRST, PAR_LAST,
-		    LEFT_ASYMMETRIC_6, LEFT_SYMMETRIC_6, RIGHT_ASYMMETRIC_6, 
+		    LEFT_ASYMMETRIC_6, LEFT_SYMMETRIC_6, RIGHT_ASYMMETRIC_6,
 		    RIGHT_SYMMETRIC_6, PAR_FIRST_6,
 		    PAR_NEAR_2, PAR_OFFSET_2, PAR_FAR_2,
 		    PAR_NEAR_3, PAR_OFFSET_3, PAR_FAR_3 };
@@ -287,6 +289,8 @@ namespace storage
 	list<string> udevId;
 
 	list<UsedByInfo> usedBy;
+
+	map<string, string> userdata;
     };
 
 
@@ -1249,7 +1253,7 @@ namespace storage
 	 * @param freeCylsAfter is set to the number of free cylinders after the partition
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int freeCylindersAroundPartition(const string& device, 
+	virtual int freeCylindersAroundPartition(const string& device,
 	                                         unsigned long& SWIG_OUTPUT(freeCylsBefore),
 						 unsigned long& SWIG_OUTPUT(freeCylsAfter)) = 0;
 
@@ -1263,7 +1267,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int nextFreePartition( const string& disk, PartitionType type,
-	                               unsigned & SWIG_OUTPUT(nr), 
+	                               unsigned & SWIG_OUTPUT(nr),
 	                               string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
@@ -1488,7 +1492,7 @@ namespace storage
 	 * @param mby will be set to the mount by value of the volume.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int getMountBy( const string& device, 
+	virtual int getMountBy( const string& device,
 	                        MountByType& SWIG_OUTPUT(mby) ) = 0;
 
 	/**
@@ -1570,7 +1574,7 @@ namespace storage
 	 * @param erase if true remove password even after successful verification
 	 * @return zero if password is ok, a negative number to indicate an error
 	 */
-	virtual int verifyCryptPassword( const string& device, 
+	virtual int verifyCryptPassword( const string& device,
 	                                 const string& pwd, bool erase ) = 0;
 
 	/**
@@ -2009,23 +2013,23 @@ namespace storage
 	 * @param device is set to the device name of the new pool
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createLvmLvPool(const string& vg, const string& name, 
-                                    unsigned long long sizeK, 
+	virtual int createLvmLvPool(const string& vg, const string& name,
+                                    unsigned long long sizeK,
                                     string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a LVM logical volume that is thin provisioned
 	 *
 	 * @param vg name of volume group
-	 * @param name of logical volume 
+	 * @param name of logical volume
 	 * @param pool name of the pool this logical volume allocates from
 	 * @param sizeK virtual size of logical volume in kilobytes
 	 * @param device is set to the device name of the logical volume
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createLvmLvThin(const string& vg, const string& name, 
-                                    const string& pool, 
-                                    unsigned long long sizeK, 
+	virtual int createLvmLvThin(const string& vg, const string& name,
+                                    const string& pool,
+                                    unsigned long long sizeK,
                                     string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
@@ -2034,7 +2038,7 @@ namespace storage
 	 *
 	 * @param vg name of volume group
 	 * @param name of thin pool or snapshot
-	 * @param chunkSizeK new chunk size 
+	 * @param chunkSizeK new chunk size
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvChunkSize( const string& vg, const string& name,
@@ -2072,7 +2076,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createMdAny(MdType md_type, const list<string>& devices,
-				const list<string>& spares, 
+				const list<string>& spares,
 				string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
@@ -2354,7 +2358,7 @@ namespace storage
 				       const deque<string>& devs ) = 0;
 
 	/**
-	 * Add new tmpfs filesystem 
+	 * Add new tmpfs filesystem
 	 *
 	 * @param mp mount point for the tmpfs
 	 * @param opts mount options for tmpfs mount
@@ -2363,7 +2367,7 @@ namespace storage
 	virtual int addTmpfsMount( const string& mp, const string& opts ) = 0;
 
 	/**
-	 * Remove tmpfs filesystem 
+	 * Remove tmpfs filesystem
 	 *
 	 * @param mp mount point for the tmpfs
 	 * @return zero if all is ok, a negative number to indicate an error
@@ -2581,8 +2585,8 @@ namespace storage
 
 	/**
 	 * Umount the given device and dependent of parameter unsetup
-	 * do what is necessary to remove underlying volume (e.g. do 
-	 * losetup -d if loop is set up or dmsetup remove if dmcrypt 
+	 * do what is necessary to remove underlying volume (e.g. do
+	 * losetup -d if loop is set up or dmsetup remove if dmcrypt
 	 * is used
 	 *
 	 * The function umounts at once, /etc/fstab is unaffected
@@ -2611,7 +2615,7 @@ namespace storage
 	 *
 	 * The function mounts at once, /etc/fstab is unaffected
 	 *
-	 * @param device device name 
+	 * @param device device name
 	 * @param on if true activate access to encrypted data, otherwise deactivate it
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
@@ -2668,7 +2672,7 @@ namespace storage
 	 *
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int renameCryptDm( const string& device, 
+	virtual int renameCryptDm( const string& device,
                                    const string& new_name ) = 0;
 
 	/**
@@ -2756,6 +2760,25 @@ namespace storage
 	 */
 	virtual int getContVolInfo(const string& dev, ContVolInfo& info) = 0;
 
+	/**
+	 * Set new userdata of a device. The userdata is only stored by
+	 * libstorage but not processed.
+	 *
+	 * @param device device name of volume, e.g. /dev/sda1
+	 * @param userdata new userdata for the device
+	 * @return zero if all is ok, negative number to indicate an error
+	 */
+	virtual int setUserdata(const string& device, const map<string, string>& userdata) = 0;
+
+	/**
+	 * Get the userdata of a device.
+	 *
+	 * @param device device name of volume, e.g. /dev/sda1
+	 * @param userdata gets filled with the userdata of the device
+	 * @return zero if all is ok, negative number to indicate an error
+	 */
+	virtual int getUserdata(const string& device, map<string, string>& userdata) = 0;
+
     };
 
 
@@ -2765,10 +2788,10 @@ namespace storage
     void initDefaultLogger( const string& logdir );
 
     /**
-     * typedef for a pointer to a function that gets called for every logged 
+     * typedef for a pointer to a function that gets called for every logged
      * entry. Called function should be able to split content at newlines
      */
-    typedef void (*CallbackLogDo)( int level, const string& component, const char* file, 
+    typedef void (*CallbackLogDo)( int level, const string& component, const char* file,
                                    int line, const char* function, const string& content );
 
     /**
