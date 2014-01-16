@@ -1,6 +1,8 @@
 0
 <foo:hello>
+true
 0
 <foo:world>
+false
 0
 <foo:hello>

@@ -3558,11 +3558,13 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 
 bool Volume::equalContent( const Volume& rhs ) const
     {
+	if (!Device::equalContent(rhs))
+	    return false;
+
     return( dev==rhs.dev && numeric==rhs.numeric &&
             ((numeric&&num==rhs.num)||(!numeric&&nm==rhs.nm)) &&
 	    size_k==rhs.size_k && mnr==rhs.mnr && mjr==rhs.mjr &&
-	    ronly==rhs.ronly && create==rhs.create && del==rhs.del &&
-	    silent==rhs.silent && format==rhs.format &&
+	    ronly==rhs.ronly && format==rhs.format &&
 	    fstab_added==rhs.fstab_added &&
 	    fs==rhs.fs && mount_by==rhs.mount_by &&
 	    uuid==rhs.uuid && label==rhs.label && mp==rhs.mp &&
@@ -3570,8 +3572,7 @@ bool Volume::equalContent( const Volume& rhs ) const
 	    tunefs_opt==rhs.tunefs_opt && dtxt==rhs.dtxt &&
 	    is_loop==rhs.is_loop && loop_active==rhs.loop_active &&
 	    is_mounted==rhs.is_mounted && encryption==rhs.encryption &&
-	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev &&
-	    uby==rhs.uby );
+	    loop_dev==rhs.loop_dev && fstab_loop_dev==rhs.fstab_loop_dev );
     }
 
 

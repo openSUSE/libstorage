@@ -100,6 +100,8 @@ namespace storage
 
 	void getInfo(DeviceInfo& info) const;
 
+	bool equalContent(const Device& rhs) const;
+
 	void logDifference(std::ostream& log, const Device& rhs) const;
 
 	friend std::ostream& operator<<(std::ostream& s, const Device& d);

@@ -421,11 +421,13 @@ std::ostream& operator<< ( std::ostream& s, const Container &c )
     }
 
 
-bool Container::equalContent( const Container& rhs ) const
+    bool
+    Container::equalContent(const Container& rhs) const
     {
-    return( typ==rhs.typ && nm==rhs.nm && dev==rhs.dev && del==rhs.del &&
-            create==rhs.create && ronly==rhs.ronly && silent==rhs.silent &&
-	    uby==rhs.uby );
+	if (!Device::equalContent(rhs))
+	    return false;
+
+	return typ==rhs.typ && nm == rhs.nm && dev == rhs.dev && ronly == rhs.ronly;
     }
 
 

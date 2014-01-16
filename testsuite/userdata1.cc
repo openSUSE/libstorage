@@ -29,10 +29,14 @@ main()
 
     s->createBackupState("test");
 
+    cout << s->equalBackupStates("test", "", true) << endl;
+
     s->setUserdata("/dev/sda1", { { "foo", "world" } });
 
     cout << s->getUserdata("/dev/sda1", userdata) << endl;
     cout << userdata << endl;
+
+    cout << s->equalBackupStates("test", "", true) << endl;
 
     s->restoreBackupState("test");
 

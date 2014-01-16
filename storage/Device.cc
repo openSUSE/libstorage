@@ -180,6 +180,14 @@ namespace storage
     }
 
 
+    bool
+    Device::equalContent(const Device& rhs) const
+    {
+	return create == rhs.create && del == rhs.del && silent == rhs.silent &&
+	    uby == rhs.uby && userdata == rhs.userdata;
+    }
+
+
     void
     Device::logDifference(std::ostream& log, const Device& rhs) const
     {
