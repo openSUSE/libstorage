@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Jan 17 16:28:31 CET 2014 - aschnell@suse.de
+
+- handle default btrfs subvolume when adding subvolumes to fstab
+
+-------------------------------------------------------------------
 Thu Jan 16 11:21:38 CET 2014 - aschnell@suse.de
 
 - allow to store userdata for devices (used for fate#316221)

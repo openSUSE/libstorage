@@ -757,10 +757,16 @@ Btrfs::getCommitActions(list<commitAction>& l) const
     {
 	if (getMount() == "/")
 	{
+	    string def_subvol = getStorage()->getDefaultSubvolName();
+
 	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
+		string path = it->path();
+		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		    path = path.substr(def_subvol.size() + 1);
+
 		FstabChange tmp_change = change;
-		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + it->path();
+		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
 		tmp_change.opts.push_back("subvol=" + it->path());
@@ -777,12 +783,18 @@ Btrfs::getCommitActions(list<commitAction>& l) const
     {
 	if (getMount() == "/")
 	{
+	    string def_subvol = getStorage()->getDefaultSubvolName();
+
 	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
+		string path = it->path();
+		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		    path = path.substr(def_subvol.size() + 1);
+
 		FstabKey tmp_key(key);
 		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + it->path();
 		FstabChange tmp_change = change;
-		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + it->path();
+		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
 		tmp_change.opts.push_back("subvol=" + it->path());
@@ -799,10 +811,16 @@ Btrfs::getCommitActions(list<commitAction>& l) const
     {
 	if (getMount() == "/")
 	{
+	    string def_subvol = getStorage()->getDefaultSubvolName();
+
 	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
+		string path = it->path();
+		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		    path = path.substr(def_subvol.size() + 1);
+
 		FstabKey tmp_key(key);
-		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + it->path();
+		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + path;
 		fstab->removeEntry(tmp_key);
 	    }
 	}
