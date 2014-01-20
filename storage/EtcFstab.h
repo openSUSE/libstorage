@@ -111,8 +111,12 @@ namespace storage
 
 	EtcFstab(const string& prefix = "", bool rootMounted = true);
 
+	// find first entry for a device
 	bool findDevice( const string& dev, FstabEntry& entry ) const;
+
+	// find first entry for a list of devices
 	bool findDevice( const list<string>& dl, FstabEntry& entry ) const;
+
 	bool findMount( const string& mount, FstabEntry& entry ) const;
 	bool findMount( const string& mount ) const
 	    { FstabEntry e; return( findMount( mount,e )); }

@@ -16,7 +16,8 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	format1.single freeinfo1.single fstab1.single fstab2.single		\
 	fstab3.single fstab4.single fstab-add.single fstab-update.single	\
 	fstab-remove.single fstab-ng-add.single fstab-ng-update.single		\
-	fstab-ng-remove.single crypttab-add.single crypttab-remove.single	\
+	fstab-ng-remove.single fstab-ng-find.single crypttab-add.single		\
+	crypttab-remove.single							\
 	humanstring1.single humanstring2.single					\
 	lvm_create.single lvm_create2.single lvm_extend.single			\
 	md_create.single partition1.single partitionname.single			\
@@ -43,6 +44,7 @@ fstab_remove_single_SOURCES = fstab-remove.cc common.h common.cc
 fstab_ng_add_single_SOURCES = fstab-ng-add.cc common.h common.cc
 fstab_ng_update_single_SOURCES = fstab-ng-update.cc common.h common.cc
 fstab_ng_remove_single_SOURCES = fstab-ng-remove.cc common.h common.cc
+fstab_ng_find_single_SOURCES = fstab-ng-find.cc common.h common.cc
 crypttab_add_single_SOURCES = crypttab-add.cc common.h common.cc
 crypttab_remove_single_SOURCES = crypttab-remove.cc common.h common.cc
 humanstring1_single_SOURCES = humanstring1.cc
