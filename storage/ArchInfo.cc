@@ -77,6 +77,10 @@ namespace storage
 	    {
 		arch = "ia64";
 	    }
+	    else if (strncmp(buf.machine, "s390x", 5) == 0)
+	    {
+		arch = "s390x";
+	    }
 	    else if (strncmp(buf.machine, "s390", 4) == 0)
 	    {
 		arch = "s390";
