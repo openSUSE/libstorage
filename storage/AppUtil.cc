@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -702,35 +702,33 @@ getMajorDevices(const char* driver)
 	return s << fixed << double(tv.tv_sec) + (double)(tv.tv_usec) / 1000000.0 << "s";
     }
 
-void checkBinPaths( const string& arch, bool instsys )
+
+    void
+    checkBinPaths(const string& arch, bool instsys)
     {
-    y2mil( "Arch:" << arch << " Instsys:" << instsys );
+	y2mil("Arch:" << arch << " Instsys:" << instsys);
 
-    const char* paths[] = {
+	set<string> paths = {
 #include "./gen_pathlist.cc"
-                           };
+	};
 
-    list<string> ign;
-    ign.push_back( PORTMAPBIN );
-    ign.push_back( HFORMATBIN );
-    if( !boost::starts_with(arch,"s390") )
-        {
-        ign.push_back( FDASDBIN );
-        ign.push_back( DASDVIEWBIN );
-        ign.push_back( DASDFMTBIN );
-        }
-    y2mil( "ign:" << ign );
+	paths.erase(PORTMAPBIN);
+	paths.erase(HFORMATBIN);
 
-    LogLevel level = instsys?storage::ERROR:storage::MILESTONE;
-    for( unsigned int i=0; i<lengthof(paths); ++i )
+	if (!boost::starts_with(arch, "s390"))
+	{
+	    paths.erase(FDASDBIN);
+	    paths.erase(DASDVIEWBIN);
+	    paths.erase(DASDFMTBIN);
+	}
+
+	LogLevel level = instsys ? storage::ERROR : storage::MILESTONE;
+	for (set<string>::const_iterator it = paths.begin(); it != paths.end(); ++it)
         {
-        if( !contains( ign, paths[i] ))
-            {
-            if( access( paths[i], X_OK )!=0 )
-                y2log_op( level, __FILE__, __LINE__, __FUNCTION__,
-                          "error accessing:" << paths[i] );
-            }
-        }
+            if (access(it->c_str(), X_OK) != 0)
+                y2log_op(level, __FILE__, __LINE__, __FUNCTION__,
+		    "error accessing " << *it);
+	}
     }
 
 
