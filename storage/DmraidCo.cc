@@ -299,7 +299,7 @@ DmraidCo::doRemove()
 	    activate(false);
 	    }
 	getStorage()->showInfoCb( removeText(true), silent );
-	string cmd = "cd /var/log/YaST2 && echo y | " DMRAIDBIN " -E -r";
+	string cmd = "cd " + quote(getStorage()->logdir()) + " && echo y | " DMRAIDBIN " -E -r";
 	SystemCmd c;
 	for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
 	    {
