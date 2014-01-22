@@ -1867,19 +1867,19 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     }
 
 
-void Disk::enlargeGpt()
+    void
+    Disk::enlargeGpt()
     {
-    y2mil( "gpt_enlarge:" << gpt_enlarge );
-    if( gpt_enlarge )
+	y2mil("gpt_enlarge:" << gpt_enlarge);
+	if (gpt_enlarge)
 	{
-	string cmd_line( "yes Fix | " PARTEDBIN );
-	cmd_line += " ---pretend-input-tty ";
-	cmd_line += quote(device());
-	cmd_line += " print ";
-	SystemCmd cmd( cmd_line );
-	gpt_enlarge = false;
+	    string cmd_line("yes Fix | " PARTEDBIN " ---pretend-input-tty " +
+			    quote(device()) + " print");
+	    SystemCmd cmd(cmd_line);
+	    gpt_enlarge = false;
 	}
     }
+
 
 static bool logicalCreated( const Partition& p )
     { return( p.type()==LOGICAL && p.created() ); }
