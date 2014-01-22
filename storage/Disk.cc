@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2012] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -2365,9 +2365,8 @@ int Disk::doResize( Volume* v )
 		end_sect = max_end;
 		y2mil( "new end_sect:" << end_sect );
 		}
-	    cmd_line << "YAST_IS_RUNNING=1 " << PARTEDCMD << quote(device())
-	             << " unit s resize " << p->nr() << " "
-	             << start_sect << " " << end_sect;
+	    cmd_line << PARTEDCMD << quote(device()) << " unit s resize " << p->nr()
+		     << " " << end_sect;
 	    if( execCheckFailed( cmd_line.str() ) )
 		{
 		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;

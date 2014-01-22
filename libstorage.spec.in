@@ -117,7 +117,7 @@ Requires:	lsscsi
 Requires:	lvm2
 Requires:	mdadm >= 3.3
 Requires:	multipath-tools
-Requires:	parted >= 2.2
+Requires:	parted >= 3.1
 Requires:	udev
 Requires:	util-linux >= 2.16
 %ifarch s390 s390x

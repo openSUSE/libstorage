@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jan 22 17:41:27 CET 2014 - aschnell@suse.de
+
+- adapted parameters of parted resize command to parted 3.1
+
+-------------------------------------------------------------------
 Fri Jan 17 16:28:31 CET 2014 - aschnell@suse.de
 
 - handle default btrfs subvolume when adding subvolumes to fstab
