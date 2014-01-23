@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -1574,7 +1574,7 @@ int Volume::resizeBefore()
     int ret = 0;
     FsType fs = getFs();
     if( (needShrink()&&fs!=SWAP) && 
-        fs!=HFS && fs!=HFSPLUS && fs!=VFAT && fs!=FSNONE )
+        fs!=HFS && fs!=HFSPLUS && fs!=FSNONE )
 	ret = resizeFs();
     y2mil( "ret:" << ret );
     return( ret );
@@ -1585,7 +1585,7 @@ int Volume::resizeAfter()
     int ret = 0;
     FsType fs = getFs();
     if( (needExtend()||(needShrink()&&fs==SWAP)) && 
-        fs!=HFS && fs!=HFSPLUS && fs!=VFAT && fs!=FSNONE )
+        fs!=HFS && fs!=HFSPLUS && fs!=FSNONE )
 	ret = resizeFs();
     y2mil( "ret:" << ret );
     return( ret );
@@ -1639,6 +1639,17 @@ int Volume::resizeFs()
 		    ret = VOLUME_RESIZE_FAILED;
 		    setExtError( c );
 		    }
+		break;
+	    case VFAT:
+		cmd = FATRESIZE " " + quote(mountDevice());
+		if (needShrink())
+		    cmd += " " + decString(size_k - 1);
+		c.execute(cmd);
+		if (c.retcode() != 0)
+		{
+		    ret = VOLUME_RESIZE_FAILED;
+		    setExtError(c);
+		}
 		break;
 	    case NTFS:
 		cmd = "echo y | " NTFSRESIZEBIN " -f ";

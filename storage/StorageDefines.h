@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -90,6 +90,7 @@
 #define XFSGROWFSBIN  "/usr/sbin/xfs_growfs"
 #define REISERRESBIN  "/sbin/resize_reiserfs"
 #define EXT2RESIZEBIN "/sbin/resize2fs"
+#define FATRESIZE     "/usr/sbin/fatresize"
 
 #define TUNE2FSBIN     "/sbin/tune2fs"
 #define TUNEREISERBIN  "/sbin/reiserfstune"
