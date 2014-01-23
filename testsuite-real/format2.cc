@@ -38,7 +38,7 @@ doit(const string& disk)
     print_commitinfos(s);
     check_zero(s->commit());
 
-    static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, BTRFS, XFS, JFS, VFAT, SWAP };
+    static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, BTRFS, XFS, VFAT, SWAP };
     const list<FsType> fstypes(elem, elem + lengthof(elem));
     for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
