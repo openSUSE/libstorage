@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -59,7 +59,7 @@ namespace storage
 
 
     void
-    ArchInfo::detect(bool instsys)
+    ArchInfo::detect()
     {
 	arch = "i386";
 	struct utsname buf;

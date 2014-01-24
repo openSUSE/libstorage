@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -39,7 +39,7 @@ namespace storage
 	void readData(const xmlNode* node);
 	void saveData(xmlNode* node) const;
 
-	void detect(bool instsys);
+	void detect();
 
 	string arch;
 	bool is_ppc_mac;

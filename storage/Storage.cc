@@ -205,7 +205,7 @@ Storage::initialize()
     }
     else if (autodetect())
     {
-	archinfo.detect(instsys());
+	archinfo.detect();
 	y2mil(archinfo);
     }
 
