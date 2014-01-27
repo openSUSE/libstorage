@@ -47,8 +47,11 @@ namespace storage
     Parted::probe()
     {
 	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print unit s print");
-	if (cmd.retcode() == 0)
-	    parse(cmd.stdout());
+
+	// No check for exit status since parted 3.1 exits with 1 if no
+	// partition table is found.
+
+	parse(cmd.stdout());
     }
 
 
