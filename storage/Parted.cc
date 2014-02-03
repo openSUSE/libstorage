@@ -69,7 +69,7 @@ namespace storage
 	    label = extractNthWord(2, *pos);
 	    if (label == "unknown")
 		label.clear();
-	    else if(label == LABEL_GPT_SYNC_MBR)
+	    else if (label == LABEL_GPT_SYNC_MBR)
 		label = "gpt";
 	}
 	else
@@ -155,7 +155,12 @@ namespace storage
     std::ostream& operator<<(std::ostream& s, const Parted& parted)
     {
 	s << "device:" << parted.device << " label:" << parted.label << " geometry:"
-	  << parted.geometry << " gpt_enlarge:" << parted.gpt_enlarge << endl;
+	  << parted.geometry;
+
+	if (parted.gpt_enlarge)
+	    s << " gpt_enlarge";
+
+	s << endl;
 
 	for (Parted::const_iterator it = parted.entries.begin(); it != parted.entries.end(); ++it)
 	    s << *it << endl;
