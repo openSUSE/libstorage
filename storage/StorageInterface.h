@@ -1398,9 +1398,9 @@ namespace storage
 	virtual int destroyPartitionTable (const string& disk, const string& label) = 0;
 
 	/**
-	 * Do a what is needed for low level initialisation of a Disk.
-	 * This function does nothing on normal disks but is needed e.g. on S390
-	 * DASD devices where it executes a dasdfmt. If should be considered as
+	 * Do what is needed for low level initialisation of a disk. This
+	 * function does nothing on normal disks but is needed e.g. on S/390
+	 * DASD devices where it executes dasdfmt. If should be considered as
 	 * destroying all data on the disk.
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
