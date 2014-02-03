@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -38,19 +38,24 @@ namespace storage
 
     public:
 
-	Dasdview(const string& device);
+	Dasdview(const string& device, bool do_probe = true);
+
+	void probe();
+
+	friend std::ostream& operator<<(std::ostream& s, const Dasdview& dasdview);
 
 	const Geometry& getGeometry() const { return geometry; }
 	Dasd::DasdFormat getDasdFormat() const { return dasd_format; }
 	Dasd::DasdType getDasdType() const { return dasd_type; }
 
+	void parse(const vector<string>& lines);
+
     private:
 
+	string device;
 	Geometry geometry;
 	Dasd::DasdFormat dasd_format;
 	Dasd::DasdType dasd_type;
-
-	void scanGeometry(SystemCmd& cmd);
 
     };
 

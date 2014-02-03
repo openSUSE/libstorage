@@ -1,0 +1,6 @@
+parse1
+device: /dev/dasda geometry:[10017,15,12,4096] dasd_format:CDL dasd_type:ECKD
+parse2
+device: /dev/dasdb geometry:[3339,15,0,512] dasd_format:NONE dasd_type:ECKD
+parse3
+device: /dev/dasdc geometry:[777,16,128,512] dasd_format:LDL dasd_type:FBA

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -28,38 +28,22 @@
 namespace storage
 {
 
-    Dasdview::Dasdview(const string& device)
-	: dasd_format(Dasd::DASDF_NONE), dasd_type(Dasd::DASDTYPE_NONE)
+    Dasdview::Dasdview(const string& device, bool do_probe)
+	: device(device), dasd_format(Dasd::DASDF_NONE), dasd_type(Dasd::DASDTYPE_NONE)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    Dasdview::probe()
     {
 	SystemCmd cmd(DASDVIEWBIN " --extended " + quote(device));
 
 	if (cmd.retcode() == 0)
 	{
-	    if (cmd.select("^format") > 0)
-	    {
-		string tmp = cmd.getLine(0, true);
-		y2mil("Format line:" << tmp);
-		tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-		tmp = boost::to_lower_copy(extractNthWord(4, tmp), locale::classic());
-		if( tmp == "cdl" )
-		    dasd_format = Dasd::DASDF_CDL;
-		else if( tmp == "ldl" )
-		    dasd_format = Dasd::DASDF_LDL;
-	    }
-
-	    if (cmd.select("^type") > 0)
-            {
-                string tmp = cmd.getLine(0, true);
-                y2mil("Type line:" << tmp);
-                tmp = tmp.erase(0, tmp.find(':') + 1);
-                tmp = extractNthWord(0, tmp);
-                if (tmp == "ECKD")
-		    dasd_type = Dasd::DASDTYPE_ECKD;
-                else if (tmp == "FBA")
-                    dasd_type = Dasd::DASDTYPE_FBA;
-	    }
-
-	    scanGeometry(cmd);
+	    parse(cmd.stdout());
 	}
 	else
 	{
@@ -69,50 +53,85 @@ namespace storage
 	    geometry.sectors = 12;
 	    geometry.sector_size = 4096;
 	}
-
-	y2mil("device: " << device << " geometry:" << geometry << " dasd_format:" <<
-	      toString(dasd_format));
     }
 
 
     void
-    Dasdview::scanGeometry(SystemCmd& cmd)
+    Dasdview::parse(const vector<string>& lines)
     {
-	if (cmd.select("number of cylinders") > 0)
+	vector<string>::const_iterator pos;
+
+	pos = find_if(lines, string_starts_with("format"));
+	if (pos != lines.end())
 	{
-	    string tmp = cmd.getLine(0, true);
-	    y2mil("Cylinder line:" << tmp);
-	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = extractNthWord( 3, tmp );
+	    y2mil("Format line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(4, tmp);
+	    if (tmp == "CDL")
+		dasd_format = Dasd::DASDF_CDL;
+	    else if (tmp == "LDL")
+		dasd_format = Dasd::DASDF_LDL;
+	}
+
+	pos = find_if(lines, string_starts_with("type"));
+	if (pos != lines.end())
+	{
+	    y2mil("Type line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(0, tmp);
+	    if (tmp == "ECKD")
+		dasd_type = Dasd::DASDTYPE_ECKD;
+	    else if (tmp == "FBA")
+		dasd_type = Dasd::DASDTYPE_FBA;
+	}
+
+	pos = find_if(lines, string_starts_with("number of cylinders"));
+	if (pos != lines.end())
+	{
+	    y2mil("Cylinder line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(3, tmp);
 	    tmp >> geometry.cylinders;
 	}
 
-	if (cmd.select("tracks per cylinder") > 0)
+	pos = find_if(lines, string_starts_with("tracks per cylinder"));
+	if (pos != lines.end())
 	{
-	    string tmp = cmd.getLine(0, true);
-	    y2mil("Tracks line:" << tmp);
-	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = extractNthWord( 3, tmp );
+	    y2mil("Tracks line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(3, tmp);
 	    tmp >> geometry.heads;
 	}
 
-	if (cmd.select("blocks per track") > 0)
+	pos = find_if(lines, string_starts_with("blocks per track"));
+	if (pos != lines.end())
 	{
-	    string tmp = cmd.getLine(0, true);
-	    y2mil("Blocks line:" << tmp);
-	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = extractNthWord( 3, tmp );
+	    y2mil("Blocks line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(3, tmp);
 	    tmp >> geometry.sectors;
 	}
 
-	if (cmd.select("blocksize") > 0)
+	pos = find_if(lines, string_starts_with("blocksize"));
+	if (pos != lines.end())
 	{
-	    string tmp = cmd.getLine(0, true);
-	    y2mil("Bytes line:" << tmp);
-	    tmp = tmp.erase( 0, tmp.find( ':' ) + 1 );
-	    tmp = extractNthWord( 3, tmp );
+	    y2mil("Bytes line:" << *pos);
+	    string tmp = string(*pos, pos->find(':') + 1);
+	    tmp = extractNthWord(3, tmp);
 	    tmp >> geometry.sector_size;
 	}
+
+	y2mil(*this);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Dasdview& dasdview)
+    {
+	s << "device: " << dasdview.device << " geometry:" << dasdview.geometry
+	  << " dasd_format:" << toString(dasdview.dasd_format) << " dasd_type:"
+	  << toString(dasdview.dasd_type);
+
+	return s;
     }
 
 
