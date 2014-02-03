@@ -3,3 +3,12 @@ device:/dev/sda label:msdos geometry:[121601,255,63,512] gpt_enlarge:false
 num:1 cylRegion:[0,132] secRegion:[2048,2103296] type:primary id:131 boot
 num:2 cylRegion:[131,117488] secRegion:[2105344,1887442944] type:primary id:142
 
+parse2
+device:/dev/sdb label:gpt geometry:[60801,255,63,512] gpt_enlarge:false
+num:1 cylRegion:[0,64] secRegion:[2048,1026048] type:primary id:12
+num:2 cylRegion:[63,65] secRegion:[1028096,1028096] type:primary id:131 boot
+num:3 cylRegion:[127,18243] secRegion:[2056192,293042176] type:primary id:131
+num:4 cylRegion:[18369,18242] secRegion:[295098368,293042176] type:primary id:131
+num:5 cylRegion:[36610,263] secRegion:[588140544,4208640] type:primary id:130
+num:6 cylRegion:[36872,23929] secRegion:[592349184,384423936] type:primary id:131
+
