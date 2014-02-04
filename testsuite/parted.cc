@@ -86,6 +86,44 @@ parse2()
 }
 
 
+void
+parse3()
+{
+    cout << "parse3" << endl;
+
+    vector<string> lines = {
+	"Model: IBM S390 DASD drive (dasd)",
+	"Disk /dev/dasda: 178079cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	"BIOS cylinder,head,sector geometry: 178080,15,12.  Each cylinder is 92.2kB.",
+	"Partition Table: dasd",
+	"Disk Flags: ",
+	"",
+	"Number  Start     End        Size       File system     Flags",
+	" 1      1cyl      23303cyl   23302cyl   linux-swap(v1)",
+	" 2      23304cyl  25583cyl   2280cyl    ext2",
+	" 3      25584cyl  178079cyl  152496cyl  ext4",
+	"",
+	"Model: IBM S390 DASD drive (dasd)",
+	"Disk /dev/dasda: 32054400s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: dasd",
+	"Disk Flags: ",
+	"",
+	"Number  Start     End        Size       File system     Flags",
+	" 1      192s      4194719s   4194528s   linux-swap(v1)",
+	" 2      4194720s  4605119s   410400s    ext2",
+	" 3      4605120s  32054399s  27449280s  ext4",
+	""
+    };
+
+    Parted parted("/dev/dasda", false);
+    parted.parse(lines);
+
+    cout << parted << endl;
+}
+
+
 int
 main()
 {
@@ -95,4 +133,5 @@ main()
 
     parse1();
     parse2();
+    parse3();
 }
