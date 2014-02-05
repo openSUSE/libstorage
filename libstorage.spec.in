@@ -1,7 +1,7 @@
 #
 # spec file for package libstorage
 #
-# Copyright (c) 2013 SUSE LINUX Products GmbH, Nuernberg, Germany.
+# Copyright (c) 2014 SUSE LINUX Products GmbH, Nuernberg, Germany.
 #
 # All modifications and additions to the file contributed by third parties
 # remain the property of their copyright owners, unless otherwise agreed
@@ -127,10 +127,8 @@ Requires:       s390-tools
 %if 0%{?suse_version}
 PreReq:         %fillup_prereq
 %endif
-Obsoletes:      yast2-storage-lib
-Provides:       yast2-storage-lib
-Obsoletes:      libstorage < 2.21.2
-Provides:       libstorage = %{version}
+Obsoletes:      %(echo `seq -s " " -f "libstorage%.f" $((@LIBVERSION_MAJOR@ - 1))`)
+Obsoletes:      libstorage@LIBVERSION_MAJOR@ < %{version}
 Summary:        Library for storage management
 Group:          System/Libraries
 
