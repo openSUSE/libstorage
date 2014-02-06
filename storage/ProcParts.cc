@@ -71,7 +71,7 @@ namespace storage
     std::ostream& operator<<(std::ostream& s, const ProcParts& procparts)
     {
 	for (ProcParts::const_iterator it = procparts.data.begin(); it != procparts.data.end(); ++it)
-	    cout << "data[" << it->first << "] -> " << it->second << endl;
+	    s << "data[" << it->first << "] -> " << it->second << endl;
 
 	return s;
     }

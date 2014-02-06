@@ -442,8 +442,8 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const MdadmExamine& mdadmexamine)
     {
-	cout << "devices:" << mdadmexamine.devices << " metadata:" << mdadmexamine.metadata
-	     << " uuid:" << mdadmexamine.uuid << endl;
+	s << "devices:" << mdadmexamine.devices << " metadata:" << mdadmexamine.metadata
+	  << " uuid:" << mdadmexamine.uuid << endl;
 
 	for (MdadmExamine::const_iterator it = mdadmexamine.begin(); it != mdadmexamine.end(); ++it)
 	    s << "data[" << it->first << "] -> " << it->second << endl;

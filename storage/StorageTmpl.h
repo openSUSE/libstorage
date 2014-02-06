@@ -31,7 +31,6 @@
 #include <map>
 #include <deque>
 #include <set>
-#include <iostream>
 
 #include "storage/IterPair.h"
 #include "storage/FilterIterator.h"
@@ -412,12 +411,6 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
 template <class T, unsigned int sz>
   inline unsigned int lengthof (T (&)[sz]) { return sz; }
-
-template <class Type>
-void printtype(Type type)
-    {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
-    }
 
 }
 
