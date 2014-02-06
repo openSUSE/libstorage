@@ -21,11 +21,9 @@
 
 
 #include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
 #include "storage/AsciiFile.h"
 #include "storage/ProcMounts.h"
 #include "storage/StorageTmpl.h"
-#include "storage/StorageDefines.h"
 
 
 namespace storage
@@ -44,8 +42,6 @@ namespace storage
     {
 	data.clear();
 
-    SystemCmd mt(MOUNTBIN);
-
     AsciiFile mounts("/proc/mounts");
 
     for (vector<string>::const_iterator it = mounts.lines().begin(); it != mounts.lines().end(); ++it)
@@ -53,7 +49,7 @@ namespace storage
 	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
 	string dir = boost::replace_all_copy(extractNthWord(1, *it), "\\040", " ");
 
-	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
+	if (dev == "rootfs" || dev == "/dev/root")
 	{
 	    y2mil("skipping line:" << *it);
 	}
@@ -87,42 +83,6 @@ namespace storage
 
     for (const_iterator it = data.begin(); it != data.end(); ++it)
 	y2mil("data[" << it->first << "] -> " << it->second);
-    }
-
-
-    bool
-    ProcMounts::isBind(SystemCmd& mt, const string& dir) const
-    {
-	bool ret = false;
-
-	mt.select( (string)" on "+dir+' ' );
-	if( mt.numLines(true)>0 )
-	{
-	    list<string> sl = splitString( mt.getLine(0,true) );
-	    y2mil( "sl:" << sl );
-	    if( sl.size()>=6 )
-	    {
-		list<string>::const_iterator i=sl.begin();
-		++i;
-		++i;
-		++i;
-		++i;
-		if( *i == "none" )
-		{
-		    ++i;
-		    string opt = *i;
-		    if( !opt.empty() && opt[0]=='(' )
-			opt.erase( 0, 1 );
-		    if( !opt.empty() && opt[opt.size()-1]==')' )
-			opt.erase( opt.size()-1, 1 );
-		    sl = splitString( opt, "," );
-		    y2mil( "sl:" << sl );
-		    ret = find(sl.begin(), sl.end(), "bind") != sl.end();
-		}
-	    }
-	}
-
-	return ret;
     }
 
 

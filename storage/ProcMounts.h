@@ -57,8 +57,6 @@ namespace storage
 
     protected:
 
-	bool isBind(SystemCmd& mt, const string& dir) const;
-
 	typedef multimap<string, FstabEntry>::const_iterator const_iterator;
 
 	multimap<string, FstabEntry> data;
