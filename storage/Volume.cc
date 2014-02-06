@@ -2622,7 +2622,11 @@ int Volume::doSetLabel()
 		cmd += " " + quote(mountDevice());
 		break;
 	    case BTRFS:
-		cmd = BTRFSBIN " filesystem label " + quote(mountDevice());
+		cmd = BTRFSBIN " filesystem label ";
+		if (is_mounted)
+		    cmd += quote(getStorage()->prependRoot(orig_mp));
+		else
+		    cmd += quote(mountDevice());
 		cmd += " " + quote(label);
 		break;
 	    case NTFS:

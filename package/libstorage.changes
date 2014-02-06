@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 06 10:48:08 CET 2014 - aschnell@suse.de
+
+- allow to set filesystem label for mounted btrfs (see bnc#862409)
+
+-------------------------------------------------------------------
 Wed Feb 05 18:47:14 CET 2014 - aschnell@suse.de
 
 - fixed package obsoletes (bnc#861747)
