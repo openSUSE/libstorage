@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -41,9 +41,9 @@ namespace storage
     {
     public:
 
-	ProcMounts();
+	ProcMounts(bool do_probe = true);
 
-	void reload();
+	void probe();
 
 	string getMount(const string& device) const;
 	string getMount(const list<string>& devices) const;
@@ -54,6 +54,10 @@ namespace storage
 	map<string, string> allMounts() const;
 
 	list<FstabEntry> getEntries() const;
+
+	friend std::ostream& operator<<(std::ostream& s, const ProcMounts& procmounts);
+
+	void parse(const vector<string>& mount_lines, const vector<string>& swap_lines);
 
     protected:
 
