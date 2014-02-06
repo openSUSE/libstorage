@@ -52,9 +52,9 @@ namespace storage
     {
 	data.clear();
 
-	for (vector<string>::const_iterator it = lines.begin() + 1; it != lines.end(); ++it)
+	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
-	    if (it->empty())
+	    if (it == lines.begin() || it->empty())
 		continue;
 
 	    string device = "/dev/" + extractNthWord(3, *it);
