@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Feb 05 18:47:14 CET 2014 - aschnell@suse.de
+
+- fixed package obsoletes (bnc#861747)
+
+-------------------------------------------------------------------
 Mon Jan 27 14:04:20 CET 2014 - aschnell@suse.de
 
 - don't check exit code of parted
