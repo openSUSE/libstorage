@@ -27,7 +27,7 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	uuid1.single								\
 	blkid.single btrfs.single dasdview.single dmraid.single dmsetup.single	\
 	lsscsi.single mdadm-details.single mdadm-examine.single parted.single	\
-	proc-mdstat.single proc-parts.single
+	proc-mdstat.single proc-mounts.single proc-parts.single
 
 backupstate1_single_SOURCES = backupstate1.cc common.h common.cc
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h common.cc
@@ -78,6 +78,7 @@ mdadm_details_single_SOURCES = mdadm-details.cc common.h common.cc
 mdadm_examine_single_SOURCES = mdadm-examine.cc common.h common.cc
 parted_single_SOURCES = parted.cc common.h common.cc
 proc_mdstat_single_SOURCES = proc-mdstat.cc common.h common.cc
+proc_mounts_single_SOURCES = proc-mounts.cc common.h common.cc
 proc_parts_single_SOURCES = proc-parts.cc common.h common.cc
 
 clean-local:

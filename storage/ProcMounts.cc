@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -21,11 +21,9 @@
 
 
 #include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
 #include "storage/AsciiFile.h"
 #include "storage/ProcMounts.h"
 #include "storage/StorageTmpl.h"
-#include "storage/StorageDefines.h"
 
 
 namespace storage
@@ -33,32 +31,38 @@ namespace storage
     using namespace std;
 
 
-    ProcMounts::ProcMounts()
+    ProcMounts::ProcMounts(bool do_probe)
     {
-	reload();
+	if (do_probe)
+	    probe();
     }
 
 
     void
-    ProcMounts::reload()
+    ProcMounts::probe()
+    {
+	AsciiFile mounts("/proc/mounts");
+	AsciiFile swaps("/proc/swaps");
+	parse(mounts.lines(), swaps.lines());
+    }
+
+
+    void
+    ProcMounts::parse(const vector<string>& mount_lines, const vector<string>& swap_lines)
     {
 	data.clear();
 
-    SystemCmd mt(MOUNTBIN);
-
-    AsciiFile mounts("/proc/mounts");
-
-    for (vector<string>::const_iterator it = mounts.lines().begin(); it != mounts.lines().end(); ++it)
-    {
-	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
-	string dir = boost::replace_all_copy(extractNthWord(1, *it), "\\040", " ");
-
-	if (dev == "rootfs" || dev == "/dev/root" || isBind(mt, dir))
+	for (vector<string>::const_iterator it = mount_lines.begin(); it != mount_lines.end(); ++it)
 	{
-	    y2mil("skipping line:" << *it);
-	}
-	else
-	{
+	    string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
+	    string dir = boost::replace_all_copy(extractNthWord(1, *it), "\\040", " ");
+
+	    if (dev == "rootfs" || dev == "/dev/root")
+	    {
+		y2mil("skipping line:" << *it);
+		continue;
+	    }
+
 	    FstabEntry entry;
 	    entry.device = dev;
 	    entry.mount = dir;
@@ -66,87 +70,60 @@ namespace storage
 	    entry.opts = splitString(extractNthWord(3, *it), ",");
 	    data.insert(make_pair(dev, entry));
 	}
-    }
 
-    AsciiFile swaps("/proc/swaps");
-    swaps.remove(0, 1);
-
-    for (vector<string>::const_iterator it = swaps.lines().begin(); it != swaps.lines().end(); ++it)
-    {
-	string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
-	string::size_type pos = dev.find(" (deleted)");
-	if (pos != string::npos)
-	    dev.erase(pos);
-
-	FstabEntry entry;
-	entry.device = dev;
-	entry.mount = "swap";
-	entry.fs = "swap";
-	data.insert(make_pair(dev, entry));
-    }
-
-    for (const_iterator it = data.begin(); it != data.end(); ++it)
-	y2mil("data[" << it->first << "] -> " << it->second);
-    }
-
-
-    bool
-    ProcMounts::isBind(SystemCmd& mt, const string& dir) const
-    {
-	bool ret = false;
-
-	mt.select( (string)" on "+dir+' ' );
-	if( mt.numLines(true)>0 )
+	for (vector<string>::const_iterator it = swap_lines.begin(); it != swap_lines.end(); ++it)
 	{
-	    list<string> sl = splitString( mt.getLine(0,true) );
-	    y2mil( "sl:" << sl );
-	    if( sl.size()>=6 )
-	    {
-		list<string>::const_iterator i=sl.begin();
-		++i;
-		++i;
-		++i;
-		++i;
-		if( *i == "none" )
-		{
-		    ++i;
-		    string opt = *i;
-		    if( !opt.empty() && opt[0]=='(' )
-			opt.erase( 0, 1 );
-		    if( !opt.empty() && opt[opt.size()-1]==')' )
-			opt.erase( opt.size()-1, 1 );
-		    sl = splitString( opt, "," );
-		    y2mil( "sl:" << sl );
-		    ret = find(sl.begin(), sl.end(), "bind") != sl.end();
-		}
-	    }
+	    if (it == swap_lines.begin())
+		continue;
+
+	    string dev = boost::replace_all_copy(extractNthWord(0, *it), "\\040", " ");
+	    string::size_type pos = dev.find(" (deleted)");
+	    if (pos != string::npos)
+		dev.erase(pos);
+
+	    FstabEntry entry;
+	    entry.device = dev;
+	    entry.mount = "swap";
+	    entry.fs = "swap";
+	    data.insert(make_pair(dev, entry));
 	}
 
+	for (const_iterator it = data.begin(); it != data.end(); ++it)
+	    y2mil("data[" << it->first << "] -> " << it->second);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const ProcMounts& procmounts)
+    {
+	for (ProcMounts::const_iterator it = procmounts.data.begin(); it != procmounts.data.end(); ++it)
+	    s << "data[" << it->first << "] -> " << it->second << endl;
+
+	return s;
+    }
+
+
+    string
+    ProcMounts::getMount(const string& device) const
+    {
+	string ret;
+	const_iterator i = data.find(device);
+	if (i != data.end())
+	    ret = i->second.mount;
 	return ret;
     }
 
 
-string
-ProcMounts::getMount(const string& device) const
+    string
+    ProcMounts::getMount(const list<string>& devices) const
     {
-    string ret;
-    const_iterator i = data.find(device);
-    if (i != data.end())
-	ret = i->second.mount;
-    return ret;
-    }
-
-string
-ProcMounts::getMount(const list<string>& devices) const
-    {
-    string ret;
-    list<string>::const_iterator i = devices.begin();
-    while (ret.empty() && i != devices.end())
+	string ret;
+	list<string>::const_iterator i = devices.begin();
+	while (ret.empty() && i != devices.end())
 	{
-	ret = getMount( *i );
-	++i;
+	    ret = getMount( *i );
+	    ++i;
 	}
-    return ret;
+	return ret;
     }
 
 
@@ -175,15 +152,15 @@ ProcMounts::getMount(const list<string>& devices) const
     }
 
 
-map<string, string>
-ProcMounts::allMounts() const
+    map<string, string>
+    ProcMounts::allMounts() const
     {
-    map<string, string> ret;
-    for (const_iterator i = data.begin(); i != data.end(); ++i)
-	{
-	ret[i->second.mount] = i->first;
-	}
-    return ret;
+	map<string, string> ret;
+
+	for (const_iterator i = data.begin(); i != data.end(); ++i)
+	    ret[i->second.mount] = i->first;
+
+	return ret;
     }
 
 
@@ -191,8 +168,10 @@ ProcMounts::allMounts() const
     ProcMounts::getEntries() const
     {
 	list<FstabEntry> ret;
+
 	for (const_iterator i = data.begin(); i != data.end(); ++i)
 	    ret.push_back(i->second);
+
 	return ret;
     }
 
