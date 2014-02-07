@@ -68,6 +68,27 @@ parse1()
 }
 
 
+void
+parse2()
+{
+    cout << "parse2" << endl;
+
+    vector<string> mount_lines = {
+	"server:/data /data nfs rw,nosuid,relatime,vers=3,rsize=8192,wsize=8192,namlen=255,hard,nolock,proto=tcp,timeo=600,retrans=2,sec=sys,mountaddr=1.2.3.4,mountvers=3,mountport=635,mountproto=udp,local_lock=all,addr=1.2.3.4 0 0",
+	"/dev/mapper/system-test /test/mountpoint\\040with\\040spaces ext4 rw,relatime,commit=600 0 0"
+    };
+
+    vector<string> swap_lines = {
+	"Filename				Type		Size	Used	Priority"
+    };
+
+    ProcMounts procmounts(false);
+    procmounts.parse(mount_lines, swap_lines);
+
+    cout << procmounts << endl;
+}
+
+
 int
 main()
 {
@@ -76,4 +97,5 @@ main()
     setup_logger();
 
     parse1();
+    parse2();
 }
