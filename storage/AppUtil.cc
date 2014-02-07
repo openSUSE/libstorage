@@ -368,11 +368,26 @@ void
 logStreamClose( LogLevel level, const char* file, unsigned line, 
                 const char* func, ostringstream* stream )
     {
-    CallbackLogDo pfc = storage::getLogDoCallback();
-    if( pfc!=NULL )
-        pfc( level, component, file, line, func, stream->str() );
-    delete stream;
+	CallbackLogDo pfc = storage::getLogDoCallback();
+	if (pfc != NULL)
+	{
+	    string content = stream->str();
+	    string::size_type pos1 = 0;
+	    while (true)
+	    {
+		string::size_type pos2 = content.find('\n', pos1);;
+		if (pos2 != string::npos || pos1 != content.length())
+		    pfc(level, component, file, line, func,
+			content.substr(pos1, pos2 - pos1));
+		if (pos2 == string::npos)
+		    break;
+		pos1 = pos2 + 1;
+	    }
+	}
+
+	delete stream;
     }
+
 
 static FILE* logf = NULL;
 
@@ -404,19 +419,9 @@ void defaultLogDo( int level, const string& comp, const char* file,
             }
         }
 
-    string::size_type pos1 = 0;
-
-    while( true && logf )
-        {
-        string::size_type pos2 = content.find('\n', pos1);;
-        if (pos2 != string::npos || pos1 != content.length())
-            fprintf(logf, "%s - %s\n", prefix.c_str(), 
-                    content.substr(pos1, pos2 - pos1).c_str());
-        if (pos2 == string::npos)
-            break;
-        pos1 = pos2 + 1;
-        }
+    fprintf(logf, "%s - %s\n", prefix.c_str(), content.c_str());
     }
+
 
 string afterLast(const string& s, const string& pat )
     {

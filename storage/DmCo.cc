@@ -75,10 +75,7 @@ namespace storage
 	    }
 	}
 
-	for (const_iterator it = data.begin(); it != data.end(); ++it)
-	    y2mil("data[" << it->first << "] -> mjr:" << it->second.mjr << " mnr:" <<
-		  it->second.mnr << " segments:" << it->second.segments << " uuid:" <<
-		  it->second.uuid);
+	y2mil(*this);
     }
 
 
