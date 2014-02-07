@@ -112,9 +112,6 @@ namespace storage
 	    }
 	}
 
-	y2mil("device:" << device << " label:" << label << " geometry:" << geometry <<
-	      " gpt_enlarge:" << gpt_enlarge);
-
 	iterator prev = entries.begin(); 
 	iterator it = prev;
 	if( it!=entries.end()) 
@@ -131,8 +128,8 @@ namespace storage
 	    prev = it;
 	    ++it;
 	    }
-	for (const_iterator it = entries.begin(); it != entries.end(); ++it)
-	    y2mil(*it);
+
+	y2mil(*this);
     }
 
 
