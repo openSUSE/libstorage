@@ -226,8 +226,6 @@ std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 
 	friend void setChildValue(xmlNode* node, const char* name, const Subvolume& value);
 
-	operator SubvolInfo() const { return SubvolInfo(p); }
-
     private:
 	string p;
 	bool del;
