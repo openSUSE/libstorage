@@ -200,19 +200,20 @@ std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 
     };
 
+
     class Subvolume
     {
 
     public:
 
-	Subvolume(const string& path) : p(path), del(false), create(false) {}
+	Subvolume(const string& path) : p(path), create(false), del(false) {}
 	Subvolume(const xmlNode* node) : p()
 	    {
 	    getChildValue(node, "path", p);
 	    }
 
 	bool operator==(const Subvolume& rhs) const
-	    { return p == rhs.p && del == rhs.del; }
+	    { return p == rhs.p && create == rhs.create && del == rhs.del; }
 	bool operator!=(const Subvolume& rhs) const
 	    { return !(*this == rhs); }
 
@@ -226,12 +227,11 @@ std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 
 	friend void setChildValue(xmlNode* node, const char* name, const Subvolume& value);
 
-	operator SubvolInfo() const { return SubvolInfo(p); }
-
     private:
+
 	string p;
-	bool del;
 	bool create;
+	bool del;
 
     };
 

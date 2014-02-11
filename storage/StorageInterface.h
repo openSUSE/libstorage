@@ -252,13 +252,6 @@ namespace storage
     };
 
 
-    struct SubvolInfo
-    {
-	SubvolInfo(const string& path) : path(path) {}
-	string path;
-    };
-
-
     struct ResizeInfo
     {
 	ResizeInfo() : df_freeK(0), resize_freeK(0), usedK(0), resize_ok(false) {}
