@@ -119,6 +119,61 @@ namespace storage
     }
 
 
+    CmdCryptsetup::CmdCryptsetup(const string& name, bool do_probe)
+	: encrypt_type(ENC_UNKNOWN), name(name)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    CmdCryptsetup::probe()
+    {
+	SystemCmd c(CRYPTSETUPBIN " status " + quote(name));
+	if (c.retcode() == 0 && !c.stdout().empty())
+	    parse(c.stdout());
+    }
+
+
+    void
+    CmdCryptsetup::parse(const vector<string>& lines)
+    {
+	string cipher, keysize;
+	for (const string& line : lines)
+	{
+	    string key = extractNthWord(0, line);
+	    if (key == "cipher:")
+		cipher = extractNthWord(1, line);
+	    else if(key == "keysize:")
+		keysize = extractNthWord(1, line);
+	}
+
+	if (cipher == "aes-cbc-essiv:sha256" || cipher == "aes-cbc-plain")
+	    encrypt_type = ENC_LUKS;
+	else if (cipher == "twofish-cbc-plain")
+	    encrypt_type = ENC_TWOFISH;
+	else if (cipher == "twofish-cbc-null" && keysize == "192")
+	    encrypt_type = ENC_TWOFISH_OLD;
+	else if (cipher == "twofish-cbc-null" && keysize == "256")
+	    encrypt_type = ENC_TWOFISH256_OLD;
+	else
+	{
+	    encrypt_type = ENC_UNKNOWN;
+	    y2err("unknown encryption cipher:" << cipher << " keysize:" << keysize);
+	}
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdCryptsetup& cmdcryptsetup)
+    {
+	s << "name:" << cmdcryptsetup.name << " encrypt_type:"
+	  << toString(cmdcryptsetup.encrypt_type);
+
+	return s;
+    }
+
+
     DmCo::DmCo(Storage* s)
 	: PeContainer(s, "mapper", "/dev/mapper", staticType())
     {
@@ -177,41 +232,12 @@ void DmCo::updateDmMaps()
     }
 
 
-// dev should be something like /dev/mapper/cr_test
-storage::EncryptType
-DmCo::detectEncryption( const string& dev ) const
-{
-    storage::EncryptType ret = ENC_UNKNOWN;
-
-    if( dev.substr( 0, 12 ) == "/dev/mapper/")
+    // device should be something like /dev/mapper/cr_test
+    storage::EncryptType
+    DmCo::detectEncryption(SystemInfo& systeminfo, const string& device) const
     {
-	string tdev = dev.substr (12);
-	SystemCmd c(CRYPTSETUPBIN " status " + quote(tdev));
-
-	string cipher, keysize;
-	for( unsigned int i = 0; i < c.numLines(); i++)
-	{
-	    string line = c.getLine(i);
-	    string key = extractNthWord( 0, line );
-	    if( key == "cipher:" )
-		cipher = extractNthWord( 1, line );
-	    if( key == "keysize:" )
-		keysize = extractNthWord( 1, line );
-	}
-
-	if( cipher == "aes-cbc-essiv:sha256" || cipher == "aes-cbc-plain")
-	    ret = ENC_LUKS;
-	else if( cipher == "twofish-cbc-plain" )
-	    ret = ENC_TWOFISH;
-	else if( cipher == "twofish-cbc-null" && keysize == "192" )
-	    ret = ENC_TWOFISH_OLD;
-	else if( cipher == "twofish-cbc-null" && keysize == "256" )
-	    ret = ENC_TWOFISH256_OLD;
+	return systeminfo.getCmdCryptsetup(device.substr(12)).encrypt_type;
     }
-
-    y2mil("ret:" << toString(ret));
-    return ret;
-}
 
 
 void DmCo::getDmData(SystemInfo& systeminfo)
@@ -417,8 +443,8 @@ void DmCo::getDmDataCrypt(SystemInfo& systeminfo)
                 unsigned long long s = 0;
                 if( getProcSize( systeminfo, entry.mnr, s ))
                     m->setSize(s);
-		getStorage()->setDmcryptData( it->first, m->device(), entry.mnr,
-		                              m->sizeK(), detectEncryption (m->device()) );
+		getStorage()->setDmcryptData(it->first, m->device(), entry.mnr, m->sizeK(),
+					     detectEncryption(systeminfo, m->device()));
 		if (getStorage()->isUsedBy(it->first, UB_DM))
 		    getStorage()->clearUsedBy(it->first);
 		}

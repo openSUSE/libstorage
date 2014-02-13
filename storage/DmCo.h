@@ -82,6 +82,28 @@ namespace storage
     };
 
 
+    class CmdCryptsetup
+    {
+
+    public:
+
+	CmdCryptsetup(const string& name, bool do_probe = true);
+
+	void probe();
+
+	friend std::ostream& operator<<(std::ostream& s, const CmdCryptsetup& cmdcryptsetup);
+
+	void parse(const vector<string>& lines);
+
+	EncryptType encrypt_type;
+
+    private:
+
+	string name;
+
+    };
+
+
 class DmCo : public PeContainer
     {
     friend class Storage;
@@ -120,7 +142,7 @@ class DmCo : public PeContainer
 
 	virtual Container* getCopy() const { return( new DmCo( *this ) ); }
 
-	storage::EncryptType detectEncryption( const string& device ) const;
+	EncryptType detectEncryption(SystemInfo& systeminfo, const string& device) const;
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 
