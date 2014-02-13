@@ -232,7 +232,7 @@ void DmCo::updateDmMaps()
     }
 
 
-    // dev should be something like /dev/mapper/cr_test
+    // device should be something like /dev/mapper/cr_test
     storage::EncryptType
     DmCo::detectEncryption(SystemInfo& systeminfo, const string& device) const
     {
