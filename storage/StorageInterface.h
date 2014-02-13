@@ -432,7 +432,6 @@ namespace storage
 	unsigned stripeSizeK;
 	string uuid;
 	string status;
-	string allocation;
 	string dm_table;
 	string dm_target;
 	string origin;

@@ -37,16 +37,15 @@ namespace storage
 
 
     LvmLv::LvmLv(const LvmVg& c, const string& name, const string& device, const string& origi,
-		 unsigned long le, const string& uuid, const string& stat, const string& alloc,
-		 SystemInfo& si)
+		 unsigned long le, const string& uuid, const string& stat,
+		 SystemInfo& systeminfo)
 	: Dm(c, name, device, makeDmTableName(c.name(), name)), origin(origi), 
           chunk_size(0), pool(false)
 {
     Dm::init();
-    setUdevData(si);
+    setUdevData(systeminfo);
     setUuid( uuid );
     setStatus( stat );
-    setAlloc( alloc );
     setLe( le );
     calcSize();
     getTableInfo();
@@ -88,7 +87,7 @@ namespace storage
 
     LvmLv::LvmLv(const LvmVg& c, const LvmLv& v)
 	: Dm(c, v), origin(v.origin), vol_uuid(v.vol_uuid), status(v.status), 
-	  allocation(v.allocation), used_pool(v.used_pool),
+	  used_pool(v.used_pool),
           chunk_size(v.chunk_size), pool(v.pool)
     {
 	y2deb("copy-constructed LvmLv " << dev);
@@ -386,7 +385,6 @@ void LvmLv::getInfo( LvmLvInfo& info ) const
     info.stripeSizeK = stripe_size;
     info.uuid = vol_uuid;
     info.status = status;
-    info.allocation = allocation;
     info.dm_table = tname;
     info.dm_target = target;
     info.origin = origin;
@@ -415,8 +413,6 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
       s << " UUID:" << p.vol_uuid;
     if( !p.status.empty() )
       s << " " << p.status;
-    if( !p.allocation.empty() )
-      s << " " << p.allocation;
     if( !p.origin.empty() )
       s << " " << p.origin;
     if( !p.used_pool.empty() )
@@ -431,11 +427,10 @@ std::ostream& operator<< (std::ostream& s, const LvmLv &p )
 
 bool LvmLv::equalContent( const LvmLv& rhs ) const
     {
-    return( Dm::equalContent(rhs) &&
+    return Dm::equalContent(rhs) &&
             vol_uuid==rhs.vol_uuid && status==rhs.status && 
             pool==rhs.pool && chunk_size==rhs.chunk_size && 
-            used_pool==rhs.used_pool && origin==rhs.origin && 
-            allocation==rhs.allocation );
+            used_pool==rhs.used_pool && origin==rhs.origin;
     }
 
 
@@ -446,7 +441,6 @@ bool LvmLv::equalContent( const LvmLv& rhs ) const
 
 	logDiff(log, "vol_uuid", vol_uuid, rhs.vol_uuid);
 	logDiff(log, "status", status, rhs.status);
-	logDiff(log, "alloc", allocation, rhs.allocation);
 	logDiff(log, "origin", origin, rhs.origin);
 	logDiff(log, "pool", pool, rhs.pool);
 	logDiff(log, "chunk_size", chunk_size, rhs.chunk_size);

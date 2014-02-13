@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 13 12:45:15 CET 2014 - aschnell@suse.de
+
+- removed unfit allocation variable from LvmLvInfo
+
+-------------------------------------------------------------------
 Thu Feb 06 10:48:08 CET 2014 - aschnell@suse.de
 
 - allow to set filesystem label for mounted btrfs (see bnc#862409)

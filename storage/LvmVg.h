@@ -168,8 +168,8 @@ class LvmVg : public PeContainer
 	virtual void logData(const string& Dir) const;
 
 	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
-		   string& status, string& alloc, bool& ro, bool& pool, 
-                   string& used_pool, unsigned long long& pchunk, SystemInfo& si );
+		   string& status, bool& ro, bool& pool,
+                   string& used_pool, unsigned long long& pchunk, SystemInfo& systeminfo);
 	void addPv( Pv*& p );
         LvmLv* findLv(const string& name);
         bool checkChunk( unsigned long long val, unsigned long long mi=0, 
