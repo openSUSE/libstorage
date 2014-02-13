@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Feb 13 18:11:37 CET 2014 - aschnell@suse.de
+
+- extended testsuite
+
+-------------------------------------------------------------------
 Thu Feb 13 12:45:15 CET 2014 - aschnell@suse.de
 
 - removed unfit allocation variable from LvmLvInfo

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -37,6 +37,299 @@ namespace storage
     using namespace std;
 
 
+    CmdVgs::CmdVgs(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    CmdVgs::probe()
+    {
+	SystemCmd c(VGSBIN " --noheadings --unbuffered --options vg_name");
+	if (c.retcode() == 0 && !c.stdout().empty())
+	    parse(c.stdout());
+    }
+
+
+    void
+    CmdVgs::parse(const vector<string>& lines)
+    {
+	vgs.clear();
+
+	for (const string& line : lines)
+	    vgs.push_back(boost::trim_copy(line, locale::classic()));
+
+	y2mil(*this);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdVgs& cmdvgs)
+    {
+	s << "vgs:" << cmdvgs.vgs;
+
+	return s;
+    }
+
+
+    CmdVgdisplay::CmdVgdisplay(const string& name, bool do_probe)
+	: name(name), pe_size(0), num_pe(0), free_pe(0), read_only(false), lvm1(false)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    CmdVgdisplay::probe()
+    {
+	SystemCmd c(VGDISPLAYBIN " --units k --verbose " + quote(name));
+	if (c.retcode() == 0 && !c.stdout().empty())
+	    parse(c.stdout());
+    }
+
+
+    void
+    CmdVgdisplay::parse(const vector<string>& lines)
+    {
+	vector<string>::const_iterator it = lines.begin();
+
+	while (it != lines.end())
+	{
+	    string line = *it++;
+	    if (boost::contains(line, "Volume group"))
+	    {
+		line = *it++;
+		while (!boost::contains(line, "Logical volume") &&
+		       !boost::contains(line, "Physical volume") &&
+		       it != lines.end())
+		{
+		    line.erase(0, line.find_first_not_of(app_ws));
+		    if (boost::starts_with(line, "Format"))
+		    {
+			lvm1 = extractNthWord(1, line) == "lvm1";
+		    }
+		    else if (boost::starts_with(line, "PE Size"))
+		    {
+			string tmp = extractNthWord(2, line);
+			string::size_type pos = tmp.find('.');
+			if (pos!=string::npos)
+			    tmp.erase(pos);
+			tmp >> pe_size;
+		    }
+		    else if (boost::starts_with(line, "Total PE"))
+		    {
+			extractNthWord(2, line) >> num_pe;
+		    }
+		    else if (boost::starts_with(line, "Free  PE"))
+		    {
+			extractNthWord(4, line) >> free_pe;
+		    }
+		    else if (boost::starts_with(line, "VG Status"))
+		    {
+			status = extractNthWord(2, line);
+		    }
+		    else if (boost::starts_with(line, "VG Access"))
+		    {
+			read_only = !boost::contains(extractNthWord(2, line, true), "write");
+		    }
+		    else if (boost::starts_with(line, "VG UUID"))
+		    {
+			uuid = extractNthWord(2, line);
+		    }
+		    line = *it++;
+		}
+
+		LvEntry lv_entry;
+		lv_entry.clear();
+		while (!boost::contains(line, "Physical volume") &&
+		       it != lines.end())
+		{
+		    line.erase(0, line.find_first_not_of(app_ws));
+		    if (boost::starts_with(line, "LV Name"))
+		    {
+			if (!lv_entry.name.empty())
+			    lv_entries.push_back(lv_entry);
+			lv_entry.clear();
+			lv_entry.name = extractNthWord(2, line);
+			string::size_type pos = lv_entry.name.rfind("/");
+			if (pos != string::npos)
+			    lv_entry.name.erase(0, pos + 1);
+		    }
+		    else if (boost::starts_with(line, "LV Write Access"))
+		    {
+			lv_entry.read_only = boost::contains(extractNthWord(3, line, true), "only");
+		    }
+		    else if (boost::starts_with(line, "LV snapshot status"))
+		    {
+			if (boost::contains(line, "destination for"))
+			{
+			    lv_entry.origin = extractNthWord(6, line, true);
+			    string::size_type pos = lv_entry.origin.find("/", 5);
+			    if (pos != string::npos)
+				lv_entry.origin.erase(0, pos + 1);
+			}
+		    }
+		    else if (boost::starts_with(line, "LV Status"))
+		    {
+			lv_entry.status = extractNthWord(2, line, true);
+		    }
+		    else if (boost::starts_with(line, "Current LE"))
+		    {
+			extractNthWord(2, line) >> lv_entry.num_le;
+		    }
+		    else if (boost::starts_with(line, "COW-table LE"))
+		    {
+			extractNthWord(2, line) >> lv_entry.num_cow_le;
+		    }
+		    else if (boost::starts_with(line, "LV UUID"))
+		    {
+			lv_entry.uuid = extractNthWord(2, line);
+		    }
+		    else if (boost::starts_with(line, "LV Pool metadata"))
+		    {
+			lv_entry.pool = true;
+		    }
+		    else if (boost::starts_with(line, "LV Pool chunk size"))
+                    {
+			extractNthWord(4, line) >> lv_entry.pool_chunk;
+                    }
+		    else if (boost::starts_with(line, "LV Pool name"))
+                    {
+			lv_entry.used_pool = extractNthWord(3, line);
+                    }
+		    line = *it++;
+		}
+		if (!lv_entry.name.empty())
+		    lv_entries.push_back(lv_entry);
+
+		PvEntry pv_entry;
+		pv_entry.clear();
+		while (it != lines.end())
+		{
+		    line.erase(0, line.find_first_not_of(app_ws));
+		    if (boost::starts_with(line, "PV Name"))
+		    {
+			if (!pv_entry.device.empty())
+			    pv_entries.push_back(pv_entry);
+			pv_entry.clear();
+			pv_entry.device = extractNthWord(2, line);
+		    }
+		    else if (boost::starts_with(line, "PV UUID"))
+		    {
+			pv_entry.uuid = extractNthWord(2, line);
+		    }
+		    else if (boost::starts_with(line, "PV Status"))
+		    {
+			pv_entry.status = extractNthWord(2, line);
+		    }
+		    else if (boost::starts_with(line, "Total PE"))
+		    {
+			extractNthWord(5, line) >> pv_entry.num_pe;
+			extractNthWord(7, line) >> pv_entry.free_pe;
+		    }
+		    line = *it++;
+		}
+		if (!pv_entry.device.empty())
+		    pv_entries.push_back(pv_entry);
+	    }
+	}
+
+	y2mil(*this);
+    }
+
+
+    void
+    CmdVgdisplay::LvEntry::clear()
+    {
+	name.clear();
+	uuid.clear();
+	status.clear();
+	origin.clear();
+	used_pool.clear();
+	num_le = 0;
+	num_cow_le = 0;
+	pool_chunk = 0;
+	read_only = false;
+	pool = false;
+    }
+
+
+    void
+    CmdVgdisplay::PvEntry::clear()
+    {
+	 device.clear();
+	 uuid.clear();
+	 status.clear();
+	 num_pe = 0;
+	 free_pe = 0;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdVgdisplay& cmdvgdisplay)
+    {
+	s << "name:" << cmdvgdisplay.name << " uuid:" << cmdvgdisplay.uuid
+	  << " status:" << cmdvgdisplay.status << " pe_size:" << cmdvgdisplay.pe_size
+	  << " num_pe:" << cmdvgdisplay.num_pe << " free_pe:" << cmdvgdisplay.free_pe;
+
+	if (cmdvgdisplay.read_only)
+	    s << " read_only";
+
+	if (cmdvgdisplay.lvm1)
+	    s << " lvm1";
+
+	s << endl;
+
+	for (const CmdVgdisplay::LvEntry& lv_entry : cmdvgdisplay.lv_entries)
+	    s << "lv " << lv_entry << endl;
+
+	for (const CmdVgdisplay::PvEntry& pv_entry : cmdvgdisplay.pv_entries)
+	    s << "pv " << pv_entry << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdVgdisplay::LvEntry& lv_entry)
+    {
+	s << "name:" << lv_entry.name << " uuid:" << lv_entry.uuid
+	  << " status:" << lv_entry.status;
+
+	if (!lv_entry.origin.empty())
+	    s << " origin:" << lv_entry.origin;
+
+	if (!lv_entry.used_pool.empty())
+	    s << " used_pool:" << lv_entry.used_pool;
+
+	s << " num_le:" << lv_entry.num_le;
+
+	if (lv_entry.num_cow_le != 0)
+	    s << " num_cow_le:" << lv_entry.num_cow_le;
+
+	if (lv_entry.pool_chunk != 0)
+	    s << " pool_chunk:" << lv_entry.pool_chunk;
+
+	if (lv_entry.read_only)
+	    s << " read_only";
+
+	if (lv_entry.pool)
+	    s << " pool";
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const CmdVgdisplay::PvEntry& pv_entry)
+    {
+	s << "device:" << pv_entry.device << " uuid:" << pv_entry.uuid
+	  << " status:" << pv_entry.status << " num_pe:" << pv_entry.num_pe
+	  << " free_pe:" << pv_entry.free_pe;
+
+	return s;
+    }
+
+
 static bool lvNotCreated( const LvmLv& l ) { return( !l.created() ); }
 static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.deleted() ); }
 
@@ -53,7 +346,7 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
 	: PeContainer(s, name, device, staticType(), systeminfo), lvm1(false)
     {
 	y2deb("constructing LvmVg name:" << name);
-	getVgData(name, false);
+	getVgData(name, systeminfo, false);
     }
 
 
@@ -785,191 +1078,63 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
     }
 
 
-void LvmVg::getVgData( const string& name, bool exists )
+    void
+    LvmVg::getVgData(const string& name, SystemInfo& systeminfo, bool exists)
     {
-    y2mil("name:" << name);
-    SystemCmd c(VGDISPLAYBIN " --units k -v " + quote(name));
-    unsigned cnt = c.numLines();
-    unsigned i = 0;
-    string line;
-    string tmp;
-    string::size_type pos;
-    SystemInfo systeminfo;
-    while( i<cnt )
-	{
-	line = c.getLine( i++ );
-	if( line.find( "Volume group" )!=string::npos )
-	    {
-	    line = c.getLine( i++ );
-	    while( line.find( "Logical volume" )==string::npos &&
-		   line.find( "Physical volume" )==string::npos &&
-		   i<cnt )
-		{
-		line.erase( 0, line.find_first_not_of( app_ws ));
-		if( line.find( "Format" ) == 0 )
-		    {
-		    bool lv1 = extractNthWord( 1, line )=="lvm1";
-		    if( exists && lv1 != lvm1 )
-			y2war("inconsistent lvm1 my:" << lvm1 << " lvm:" << lv1);
-		    lvm1 = lv1;
-		    }
-		else if( line.find( "PE Size" ) == 0 )
-		    {
-		    unsigned long long pes;
-		    tmp = extractNthWord( 2, line );
-		    pos = tmp.find( '.' );
-		    if( pos!=string::npos )
-			tmp.erase( pos );
-		    tmp >> pes;
-		    if( exists && pes != pe_size )
-			y2war("inconsistent pe_size my:" << pe_size << " lvm:" << pes);
-		    pe_size = pes;
-		    calcSize();
-		    }
-		else if( line.find( "Total PE" ) == 0 )
-		    {
-		    extractNthWord( 2, line ) >> num_pe;
-		    calcSize();
-		    }
-		else if( line.find( "Free  PE" ) == 0 )
-		    {
-		    extractNthWord( 4, line ) >> free_pe;
-		    }
-		else if( line.find( "VG Status" ) == 0 )
-		    {
-		    status = extractNthWord( 2, line );
-		    }
-		else if( line.find( "VG Access" ) == 0 )
-		    {
-		    ronly = extractNthWord( 2, line, true ).find( "write" ) == string::npos;
-		    }
-		else if( line.find( "VG UUID" ) == 0 )
-		    {
-		    uuid = extractNthWord( 2, line );
-		    }
-		line = c.getLine( i++ );
-		}
-	    string vname;
-	    string origin;
-	    string uuid;
-	    string status;
-            string used_pool;
-	    unsigned long num_le = 0;
-	    unsigned long num_cow_le = 0;
-            unsigned long long pool_chunk = 0;
-	    bool readOnly = false;
-            bool pool = false;
-	    while( line.find( "Physical volume" )==string::npos && i<cnt )
-		{
-		line.erase( 0, line.find_first_not_of( app_ws ));
-		if( line.find( "LV Name" ) == 0 )
-		    {
-                    if( !vname.empty() )
-		    {
-                        addLv(origin.empty() ? num_le : num_cow_le, vname,
-                                origin, uuid, status,
-                                readOnly, pool, used_pool, pool_chunk, systeminfo);
-		    }
-		    vname = extractNthWord( 2, line );
-		    if( (pos=vname.rfind( "/" ))!=string::npos )
-			vname.erase( 0, pos+1 );
-		    }
-		else if( line.find( "LV Write Access" ) == 0 )
-		    {
-		    readOnly = extractNthWord( 3, line, true ).find( "only" ) != string::npos;
-		    }
-		else if (line.find("LV snapshot status") == 0)
-		    {
-		    if (line.find("destination for") != string::npos)
-			{
-			origin = extractNthWord(6, line, true);
-			string::size_type pos = origin.find("/", 5);
-			if (pos != string::npos)
-			    origin.erase(0, pos + 1);
-			}
-		    }
-		else if( line.find( "LV Status" ) == 0 )
-		    {
-		    status = extractNthWord( 2, line, true );
-		    }
-		else if( line.find( "Current LE" ) == 0 )
-		    {
-		    extractNthWord( 2, line ) >> num_le;
-		    }
-		else if (line.find( "COW-table LE" ) == 0)
-		    {
-		    extractNthWord( 2, line ) >> num_cow_le;
-		    }
-		else if( line.find( "LV UUID" ) == 0 )
-		    {
-		    uuid = extractNthWord( 2, line );
-		    }
-		else if( line.find( "LV Pool metadata" ) == 0 )
-		    {
-		    pool = true;
-		    }
-                else if( line.find( "LV Pool chunk size" ) == 0 )
-                    {
-                    extractNthWord( 4, line ) >> pool_chunk;
-                    }
-                else if( line.find( "LV Pool name" ) == 0 )
-                    {
-                    used_pool = extractNthWord( 3, line );
-                    }
-		line = c.getLine( i++ );
-		}
-            if( !vname.empty() )
-		{
-                addLv(origin.empty() ? num_le : num_cow_le, vname, origin,
-                      uuid, status, readOnly, pool,
-                      used_pool, pool_chunk, systeminfo);
-		}
-	    Pv *p = new Pv;
-	    while( i<cnt )
-		{
-		line.erase( 0, line.find_first_not_of( app_ws ));
-		if( line.find( "PV Name" ) == 0 )
-		    {
-		    if( !p->device.empty() )
-			{
-			addPv( p );
-			}
-		    p->device = extractNthWord( 2, line );
+	y2mil("name:" << name);
 
-		    const Volume* v;
-		    if (getStorage()->findVolume(p->device, v, true))
-			{
-			p->device = v->device();
-			p->dmcryptDevice = v->dmcryptDevice();
-			}
-		    }
-		else if( line.find( "PV UUID" ) == 0 )
-		    {
-		    p->uuid = extractNthWord( 2, line );
-		    }
-		else if( line.find( "PV Status" ) == 0 )
-		    {
-		    p->status = extractNthWord( 2, line );
-		    }
-		else if( line.find( "Total PE" ) == 0 )
-		    {
-		    extractNthWord( 5, line ) >> p->num_pe;
-		    extractNthWord( 7, line ) >> p->free_pe;
-		    calcSize();
-		    }
-		line = c.getLine( i++ );
-		}
-	    if( !p->device.empty() )
-		{
-		addPv( p );
-		}
-	    delete p;
-	    }
+	const CmdVgdisplay& cmdvgdisplay = systeminfo.getCmdVgdisplay(name);
+
+	if (exists && cmdvgdisplay.lvm1 != lvm1)
+	    y2war("inconsistent lvm1 my:" << lvm1 << " lvm:" << cmdvgdisplay.lvm1);
+
+	if (exists && cmdvgdisplay.pe_size != pe_size)
+	    y2war("inconsistent pe_size my:" << pe_size << " lvm:" << cmdvgdisplay.pe_size);
+
+	uuid = cmdvgdisplay.uuid;
+	status = cmdvgdisplay.status;
+	pe_size = cmdvgdisplay.pe_size;
+	num_pe = cmdvgdisplay.num_pe;
+	free_pe = cmdvgdisplay.free_pe;
+	ronly = cmdvgdisplay.read_only;
+	lvm1 = cmdvgdisplay.lvm1;
+
+	calcSize();
+
+	for (const CmdVgdisplay::LvEntry& lv_entry : cmdvgdisplay.lv_entries)
+	{
+	    addLv(lv_entry.origin.empty() ? lv_entry.num_le : lv_entry.num_cow_le,
+		  lv_entry.name, lv_entry.origin, lv_entry.uuid, lv_entry.status,
+		  lv_entry.read_only, lv_entry.pool, lv_entry.used_pool,
+		  lv_entry.pool_chunk, systeminfo);
+
+	    calcSize();
 	}
+
+	for (const CmdVgdisplay::PvEntry& pv_entry : cmdvgdisplay.pv_entries)
+	{
+	    Pv pv;
+
+	    pv.device = pv_entry.device;
+	    pv.uuid = pv_entry.uuid;
+	    pv.status = pv_entry.status;
+	    pv.num_pe = pv_entry.num_pe;
+	    pv.free_pe = pv_entry.free_pe;
+	    addPv(pv);
+
+	    const Volume* v;
+	    if (getStorage()->findVolume(pv.device, v, true))
+	    {
+		pv.device = v->device();
+		pv.dmcryptDevice = v->dmcryptDevice();
+	    }
+
+	    calcSize();
+        }
+
     LvmLvPair p=lvmLvPair(lvDeleted);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
-	//cout << "Deleted:" << *i << endl;
 	if( !i->isThin() )
 	    {
 	    map<string,unsigned long> pe_map = i->getPeMap();
@@ -980,7 +1145,6 @@ void LvmVg::getVgData( const string& name, bool exists )
     p=lvmLvPair(lvCreated);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
-	//cout << "Created:" << *i << endl;
 	if( !i->isThin() )
 	    {
 	    map<string,unsigned long> pe_map;
@@ -993,7 +1157,6 @@ void LvmVg::getVgData( const string& name, bool exists )
     p=lvmLvPair(lvResized);
     for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
 	{
-	//cout << "Resized:" << *i << endl;
 	if( !i->isThin() )
 	    {
 	    map<string,unsigned long> pe_map = i->getPeMap();
@@ -1014,10 +1177,11 @@ void LvmVg::getVgData( const string& name, bool exists )
 	}
     }
 
-void 
-LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
-	     string& status, bool& ro, bool& pool,
-	     string& used_pool, unsigned long long& pchunk, SystemInfo& systeminfo)
+
+    void
+    LvmVg::addLv(unsigned long le, const string& name, const string& origin, const string& uuid,
+		 const string& status, bool ro, bool pool, const string& used_pool,
+		 unsigned long long pchunk, SystemInfo& systeminfo)
     {
     y2mil("addLv:" << name);
     LvmLvPair p=lvmLvPair(lvNotDeletedCreated);
@@ -1078,21 +1242,18 @@ LvmVg::addLv(unsigned long& le, string& name, string& origin, string& uuid,
 		}
 	    }
 	}
-    name = origin = uuid = status = used_pool = "";
-    le = pchunk = 0;
-    ro = pool = false;
     }
 
 
-void LvmVg::addPv( Pv*& p )
+    void
+    LvmVg::addPv(const Pv& pv)
     {
-    PeContainer::addPv( *p );
-    if( !deleted() && p->device!=UNKNOWN_PV_DEVICE &&
-        find( pv_remove.begin(), pv_remove.end(), *p )==pv_remove.end() )
-	getStorage()->setUsedBy(p->device, UB_LVM, device());
-    delete p;
-    p = new Pv;
+	PeContainer::addPv(pv);
+	if (!deleted() && pv.device != UNKNOWN_PV_DEVICE &&
+	    find(pv_remove.begin(), pv_remove.end(), pv) == pv_remove.end())
+	    getStorage()->setUsedBy(pv.device, UB_LVM, device());
     }
+
 
 LvmLv* LvmVg::findLv( const string& name )
     {
@@ -1326,22 +1487,15 @@ LvmVg::activate(bool val)
     }
 
 
-list<string>
-LvmVg::getVgs()
+    list<string>
+    LvmVg::getVgs(SystemInfo& systeminfo)
     {
-    list<string> l;
+	list<string> l = systeminfo.getCmdVgs().vgs;
 
-    SystemCmd c(VGSBIN " --noheadings -o vg_name");
-    if (c.retcode() == 0 && !c.stdout().empty())
-	{
-	active = true;
+	if (!l.empty())
+	    active = true;
 
-	for (vector<string>::const_iterator it = c.stdout().begin(); it != c.stdout().end(); ++it)
-	    l.push_back(boost::trim_copy(*it, locale::classic()));
-	}
-
-    y2mil("detected vgs " << l);
-    return l;
+	return l;
     }
 
 
@@ -1384,7 +1538,8 @@ LvmVg::doCreateVg()
 	if( ret==0 )
 	    {
 	    setCreated( false );
-	    getVgData( name() );
+	    SystemInfo systeminfo;
+	    getVgData(name(), systeminfo);
 	    if( !pv_add.empty() )
 		{
 		y2err( "still added:" << pv_add );
@@ -1453,7 +1608,8 @@ LvmVg::doExtendVg()
 	    }
 	if( ret==0 )
 	    {
-	    getVgData( name() );
+	    SystemInfo systeminfo;
+	    getVgData(name(), systeminfo);
 	    checkConsistency();
 	    }
 	list<Pv>::iterator p = find(pv_add.begin(), pv_add.end(), d->device);
@@ -1495,7 +1651,8 @@ LvmVg::doReduceVg()
 	    }
 	if( ret==0 )
 	    {
-	    getVgData( name() );
+	    SystemInfo systeminfo;
+	    getVgData(name(), systeminfo);
 	    checkConsistency();
 	    }
 	list<Pv>::iterator p = find(pv_remove.begin(), pv_remove.end(), d->device);
@@ -1618,7 +1775,8 @@ int LvmVg::doRemove( Volume* v )
 	    getStorage()->removeDmTable( tbl+'|'+name()+'|'+l->name() );
 	    if( !removeFromList( l ) )
 		ret = LVM_LV_NOT_IN_LIST;
-	    getVgData( name() );
+	    SystemInfo systeminfo;
+	    getVgData(name(), systeminfo);
 	    checkConsistency();
 	    }
 	}
@@ -1688,7 +1846,8 @@ int LvmVg::doResize( Volume* v )
 	    ret = v->mount();
 	if( ret==0 )
 	    {
-	    getVgData( name() );
+	    SystemInfo systeminfo;
+	    getVgData(name(), systeminfo);
 	    checkConsistency();
 	    }
 	}
@@ -1699,18 +1858,17 @@ int LvmVg::doResize( Volume* v )
     }
 
 
-string LvmVg::metaString() const
+    string
+    LvmVg::metaString() const
     {
-    return( (lvm1)?"-M1 ":"-M2 " );
+	return lvm1 ? "-M1 " : "-M2 ";
     }
 
 
-string LvmVg::instSysString() const
+    string
+    LvmVg::instSysString() const
     {
-    string ret;
-    if( getStorage()->instsys() )
-	ret = "-A n ";
-    return( ret );
+	return getStorage()->instsys() ? "-A n " : "";
     }
 
 

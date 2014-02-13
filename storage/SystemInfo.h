@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -38,6 +38,7 @@
 #include "storage/DmraidCo.h"
 #include "storage/DmmultipathCo.h"
 #include "storage/BtrfsCo.h"
+#include "storage/LvmVg.h"
 
 
 namespace storage
@@ -70,6 +71,8 @@ namespace storage
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
 	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
 	const CmdBtrfsShow& getCmdBtrfsShow() { return *cmdbtrfsshow; }
+	const CmdVgs& getCmdVgs() { return *cmdvgs; }
+	const CmdVgdisplay& getCmdVgdisplay(const string& name) { return vgdisplays.get(name); }
 
     private:
 
@@ -127,6 +130,8 @@ namespace storage
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;
 	LazyObject<CmdBtrfsShow> cmdbtrfsshow;
+	LazyObject<CmdVgs> cmdvgs;
+	LazyObjects<CmdVgdisplay> vgdisplays;
 
     };
 
