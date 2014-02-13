@@ -36,8 +36,8 @@ class LvmLv : public Dm
     public:
 
 	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
-	      unsigned long le, const string& uuid, const string& status, const string& alloc,
-	      SystemInfo& si);
+	      unsigned long le, const string& uuid, const string& status,
+	      SystemInfo& systeminfo);
 	LvmLv(const LvmVg& c, const string& name, const string& device, const string& origin,
 	      unsigned long le, unsigned stripe );
 	LvmLv(const LvmVg& c, const xmlNode* node);
@@ -68,7 +68,6 @@ class LvmLv : public Dm
 
 	void setUuid( const string& uuid ) { vol_uuid=uuid; }
 	void setStatus( const string& s ) { status=s; }
-	void setAlloc( const string& a ) { allocation=a; }
 
 	friend std::ostream& operator<< (std::ostream& s, const LvmLv &p );
         bool operator< ( const LvmLv& rhs ) const;
@@ -102,7 +101,6 @@ class LvmLv : public Dm
 
 	string vol_uuid;
 	string status;
-	string allocation;
 	string used_pool;       // indicates a thin volumes, empty otherwise
         unsigned long long chunk_size;
         bool   pool;
