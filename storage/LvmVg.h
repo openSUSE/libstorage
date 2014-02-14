@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -30,6 +30,83 @@
 namespace storage
 {
     using std::list;
+
+
+    class CmdVgs
+    {
+    public:
+
+	CmdVgs(bool do_probe = true);
+
+	void probe();
+
+	friend std::ostream& operator<<(std::ostream& s, const CmdVgs& cmdvgs);
+
+	void parse(const vector<string>& lines);
+
+	const list<string>& getVgs() const { return vgs; }
+
+    private:
+
+	list<string> vgs;
+
+    };
+
+
+    class CmdVgdisplay
+    {
+    public:
+
+	CmdVgdisplay(const string& name, bool do_probe = true);
+
+	void probe();
+
+	struct LvEntry
+	{
+	    void clear();
+
+	    string name;
+	    string uuid;
+	    string status;
+	    string origin;
+	    string used_pool;
+	    unsigned long num_le;
+	    unsigned long num_cow_le;
+	    unsigned long long pool_chunk;
+	    bool read_only;
+	    bool pool;
+	};
+
+	struct PvEntry
+	{
+	    void clear();
+
+	    string device;
+	    string uuid;
+	    string status;
+	    unsigned long num_pe;
+	    unsigned long free_pe;
+	};
+
+	friend std::ostream& operator<<(std::ostream& s, const CmdVgdisplay& cmdvgdisplay);
+	friend std::ostream& operator<<(std::ostream& s, const LvEntry& lv_entry);
+	friend std::ostream& operator<<(std::ostream& s, const PvEntry& pv_entry);
+
+	void parse(const vector<string>& lines);
+
+	string name;
+	string uuid;
+	string status;
+	unsigned long long pe_size;
+	unsigned long num_pe;
+	unsigned long free_pe;
+	bool read_only;
+	bool lvm1;
+
+	list<LvEntry> lv_entries;
+	list<PvEntry> pv_entries;
+
+    };
 
 
 class LvmVg : public PeContainer
@@ -92,7 +169,7 @@ class LvmVg : public PeContainer
 	static void activate(bool val);
 	static bool isActive() { return active; }
 
-	static list<string> getVgs();
+	static list<string> getVgs(SystemInfo& systeminfo);
 
     protected:
 	// iterators over LVM LVs
@@ -143,7 +220,7 @@ class LvmVg : public PeContainer
 	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check, true )) );
 	    }
 
-	void getVgData( const string& name, bool exists=true );
+	void getVgData(const string& name, SystemInfo& systeminfo, bool exists = true);
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new LvmVg( *this ) ); }
@@ -167,11 +244,13 @@ class LvmVg : public PeContainer
 
 	virtual void logData(const string& Dir) const;
 
-	void addLv(unsigned long& le, string& name, string& origin, string& uuid,
-		   string& status, bool& ro, bool& pool,
-                   string& used_pool, unsigned long long& pchunk, SystemInfo& systeminfo);
-	void addPv( Pv*& p );
+	void addLv(unsigned long le, const string& name, const string& origin, const string& uuid,
+		   const string& status, bool ro, bool pool, const string& used_pool,
+		   unsigned long long pchunk, SystemInfo& systeminfo);
+	void addPv(const Pv& pv);
+
         LvmLv* findLv(const string& name);
+
         bool checkChunk( unsigned long long val, unsigned long long mi=0, 
                          unsigned long long mx=0 );
 

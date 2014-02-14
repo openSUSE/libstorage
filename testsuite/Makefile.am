@@ -28,7 +28,7 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	blkid.single btrfs.single cryptsetup.single dasdview.single		\
 	dmraid.single dmsetup.single lsscsi.single mdadm-details.single		\
 	mdadm-examine.single parted.single proc-mdstat.single			\
-	proc-mounts.single proc-parts.single
+	proc-mounts.single proc-parts.single vgdisplay.single vgs.single
 
 backupstate1_single_SOURCES = backupstate1.cc common.h common.cc
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h common.cc
@@ -82,6 +82,8 @@ parted_single_SOURCES = parted.cc common.h common.cc
 proc_mdstat_single_SOURCES = proc-mdstat.cc common.h common.cc
 proc_mounts_single_SOURCES = proc-mounts.cc common.h common.cc
 proc_parts_single_SOURCES = proc-parts.cc common.h common.cc
+vgdisplay_single_SOURCES = vgdisplay.cc common.h common.cc
+vgs_single_SOURCES = vgs.cc common.h common.cc
 
 clean-local:
 	rm -f site.exp site.bak

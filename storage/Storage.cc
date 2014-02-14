@@ -424,7 +424,7 @@ bool Storage::rescanCryptedObjects()
     LvmVg::activate(false);
     LvmVg::activate(true);
     SystemInfo systeminfo;
-    const list<string> l = LvmVg::getVgs();
+    const list<string> l = LvmVg::getVgs(systeminfo);
     for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	{
         LvmVgIterator vg = findLvmVg( *i );
@@ -617,7 +617,7 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
-	const list<string> l = LvmVg::getVgs();
+	const list<string> l = LvmVg::getVgs(systeminfo);
 	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
 	    {
 		LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
