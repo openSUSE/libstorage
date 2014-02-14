@@ -44,6 +44,10 @@ namespace storage
 
 	void parse(const vector<string>& lines);
 
+	const list<string>& getVgs() const { return vgs; }
+
+    private:
+
 	list<string> vgs;
 
     };

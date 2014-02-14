@@ -1490,7 +1490,7 @@ LvmVg::activate(bool val)
     list<string>
     LvmVg::getVgs(SystemInfo& systeminfo)
     {
-	list<string> l = systeminfo.getCmdVgs().vgs;
+	list<string> l = systeminfo.getCmdVgs().getVgs();
 
 	if (!l.empty())
 	    active = true;
