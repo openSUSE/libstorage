@@ -2483,7 +2483,8 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 	{
 	BtrfsCo *co = NULL;
 	FsType tmpfs = format?fs:vol->detectedFs();
-	y2mil( "tmpfs:" << tmpfs << " fs:" << fs << " det:" << vol->detectedFs() );
+	y2mil("tmpfs:" << toString(tmpfs) << " fs:" << toString(fs) << " det:" <<
+	      toString(vol->detectedFs()));
 	y2mil( "ctype:" << vol->cType() << " BTRFS:" << BTRFSC );
 
 	if( (tmpfs==BTRFS && vol->cType()==BTRFSC) ||
