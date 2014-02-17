@@ -93,7 +93,7 @@ Storage::Storage(const Environment& env)
       recursiveRemove(false), zeroNewPartitions(false),
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(BTRFS), defaultSubvolName(""), detectMounted(true),
-      root_mounted(!instsys()), rootprefix(), fstab(NULL), mdadm(NULL), 
+      root_mounted(!instsys()), rootprefix(),
       multipath_autostart(MPAS_UNDECIDED)
 {
     y2mil("constructed Storage with " << env);
@@ -284,18 +284,18 @@ void Storage::detectObjects()
     detectDm(systeminfo, true);
     detectLvmVgs(systeminfo);
     detectDm(systeminfo, false);
-    delete fstab;
+
     if (testmode())
 	{
  	rootprefix = testdir();
- 	fstab = new EtcFstab( rootprefix + "/etc" );
-	mdadm = new EtcMdadm(this, rootprefix);
+	fstab.reset(new EtcFstab(rootprefix + "/etc"));
+	mdadm.reset(new EtcMdadm(this, rootprefix));
 	}
     else
     {
-	fstab = new EtcFstab( "/etc", isRootMounted() );
+	fstab.reset(new EtcFstab("/etc", isRootMounted()));
 	if (!instsys())
-	    mdadm = new EtcMdadm(this, root());
+	    mdadm.reset(new EtcMdadm(this, root()));
     }
     
     detectLoops(systeminfo);
@@ -382,8 +382,7 @@ Storage::~Storage()
 	if( i!=tmp_dirs.end() )
 	    tmp_dirs.erase(i);
 	}
-    delete fstab;
-    delete mdadm;
+
     y2mil("destructed Storage");
     }
 
@@ -6885,14 +6884,13 @@ int Storage::removeContainer( Container* val )
 
 	if (have_mds)
 	{
-	    delete mdadm;
-	    mdadm = new EtcMdadm(this, root());
+	    mdadm.reset(new EtcMdadm(this, root()));
 
 	    if (haveMd(md))
-		md->syncMdadm(mdadm);
+		md->syncMdadm(getMdadm());
 
 	    for (MdPartCoIterator it = p.begin(); it != p.end(); ++it)
-		it->syncMdadm(mdadm);
+		it->syncMdadm(getMdadm());
 	}
     }
 

@@ -26,6 +26,7 @@
 #include <ostream>
 #include <list>
 #include <map>
+#include <memory>
 
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
@@ -266,8 +267,9 @@ class DiskData;
 
 	const ArchInfo& getArchInfo() const { return archinfo; }
 
-	EtcFstab* getFstab() { return fstab; }
-	EtcMdadm* getMdadm() { return mdadm; }
+	EtcFstab* getFstab() { return fstab.get(); }
+	EtcMdadm* getMdadm() { return mdadm.get(); }
+
 	void handleLogFile(const string& name) const;
 	static bool testFilesEqual( const string& n1, const string& n2 );
 	void printInfo(std::ostream& str) const;
@@ -2144,8 +2146,9 @@ class DiskData;
 	ArchInfo archinfo;
 
 	CCont cont;
-	EtcFstab *fstab;
-	EtcMdadm* mdadm;
+
+	unique_ptr<EtcFstab> fstab;
+	unique_ptr<EtcMdadm> mdadm;
 
 	MultipathAutostart multipath_autostart;
 
