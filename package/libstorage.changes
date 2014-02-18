@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 17 18:18:33 CET 2014 - aschnell@suse.de
+
+- fixed setting filesystem label for btrfs during installation
+  (bnc#862409)
+
+-------------------------------------------------------------------
 Thu Feb 13 18:11:37 CET 2014 - aschnell@suse.de
 
 - extended testsuite

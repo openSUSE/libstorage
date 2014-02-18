@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -371,16 +371,15 @@ int Btrfs::shrinkVolume( const list<string>& devs )
 int Btrfs::doExtend()
     {
     y2mil( "this:" << *this );
-    bool needUmount;
-    string m;
-    int ret = prepareTmpMount( m, needUmount );
+    TmpMount tmp_mount;
+    int ret = prepareTmpMount(tmp_mount);
     list<string> devs = dev_add;
     list<string>::const_iterator d = devs.begin();
     SystemCmd c;
     while( ret==0 && d!=devs.end() )
 	{
 	getStorage()->showInfoCb(extendText(true, *d),silent);
-	string cmd = BTRFSBIN " device add " + quote(*d) + " " + m;
+	string cmd = BTRFSBIN " device add " + quote(*d) + " " + quote(tmp_mount.mount_point);
 	c.execute( cmd );
 	if( c.retcode()==0 )
 	    {
@@ -391,8 +390,11 @@ int Btrfs::doExtend()
 	    ret = BTRFS_EXTEND_FAIL;
 	++d;
 	}
-    if( needUmount )
-	ret = umountTmpMount( m, ret );
+    if (tmp_mount.needs_umount)
+    {
+	ret = umountTmpMount(tmp_mount, ret);
+	is_mounted = tmp_mount.was_mounted;
+    }
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -401,16 +403,15 @@ int Btrfs::doExtend()
 int Btrfs::doReduce()
     {
     y2mil( "this:" << *this );
-    bool needUmount;
-    string m;
-    int ret = prepareTmpMount( m, needUmount );
+    TmpMount tmp_mount;
+    int ret = prepareTmpMount(tmp_mount);
     list<string> devs = dev_rem;
     list<string>::const_iterator d = devs.begin();
     SystemCmd c;
     while( ret==0 && d!=devs.end() )
 	{
 	getStorage()->showInfoCb(reduceText(true, *d),silent);
-	string cmd = BTRFSBIN " device delete " + quote(*d) + " " + m;
+	string cmd = BTRFSBIN " device delete " + quote(*d) + " " + quote(tmp_mount.mount_point);
 	c.execute( cmd );
 	if( c.retcode()==0 )
 	    {
@@ -421,8 +422,11 @@ int Btrfs::doReduce()
 	    ret = BTRFS_REDUCE_FAIL;
 	++d;
 	}
-    if( needUmount )
-	ret = umountTmpMount( m, ret );
+    if (tmp_mount.needs_umount)
+    {
+	ret = umountTmpMount(tmp_mount, ret);
+	is_mounted = tmp_mount.was_mounted;
+    }
     y2mil( "this:" << *this );
     y2mil("ret:" << ret);
     return( ret );
@@ -430,9 +434,8 @@ int Btrfs::doReduce()
 
 int Btrfs::doDeleteSubvol()
     {
-    bool needUmount;
-    string m;
-    int ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
+    TmpMount tmp_mount;
+    int ret = prepareTmpMount(tmp_mount, false, "subvolid=0");
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -442,7 +445,7 @@ int Btrfs::doDeleteSubvol()
 	    if( i->deleted() )
 		{
 		getStorage()->showInfoCb( deleteSubvolText(true,i->path()),silent);
-		c.execute(cmd + quote(m + '/' + i->path()));
+		c.execute(cmd + quote(tmp_mount.mount_point + '/' + i->path()));
 		if( c.retcode()==0 )
 		    i->setDeleted(false);
 		else
@@ -450,17 +453,19 @@ int Btrfs::doDeleteSubvol()
 		}
 	    }
 	}
-    if( needUmount )
-	ret = umountTmpMount( m, ret );
+    if (tmp_mount.needs_umount)
+    {
+	ret = umountTmpMount(tmp_mount, ret);
+	is_mounted = tmp_mount.was_mounted;
+    }
     y2mil( "ret:" << ret );
     return( ret );
     }
 
 int Btrfs::doCreateSubvol()
     {
-    bool needUmount;
-    string m;
-    int ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
+    TmpMount tmp_mount;
+    int ret = prepareTmpMount(tmp_mount, false, "subvolid=0");
     if( ret==0 )
 	{
 	SystemCmd c;
@@ -470,8 +475,8 @@ int Btrfs::doCreateSubvol()
 	    if( i->created() )
 		{
 		getStorage()->showInfoCb( createSubvolText(true,i->path()),silent);
-		y2mil( "dir:" << m << " path:" << i->path() );
-		string path = m + "/" + i->path();
+		y2mil("dir:" << tmp_mount.mount_point << " path:" << i->path());
+		string path = tmp_mount.mount_point + "/" + i->path();
 		string dir = path.substr( 0, path.find_last_of( "/" ) );
 		y2mil( "path:" << path << " dir:" << dir );
 		if( !checkDir( dir ) )
@@ -487,8 +492,11 @@ int Btrfs::doCreateSubvol()
 		}
 	    }
 	}
-    if( needUmount )
-	ret = umountTmpMount( m, ret );
+    if (tmp_mount.needs_umount)
+    {
+	ret = umountTmpMount(tmp_mount, ret);
+	is_mounted = tmp_mount.was_mounted;
+    }
     y2mil( "ret:" << ret );
     return( ret );
     }

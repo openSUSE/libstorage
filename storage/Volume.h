@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -44,7 +44,16 @@ class FstabChange;
 class FstabKey;
 class Container;
 class Storage;
-    
+
+
+    // information for Volume::prepareTmpMount() and Volume::umountTmpMount()
+    struct TmpMount
+    {
+	string mount_point;
+	bool needs_umount;
+	bool was_mounted;
+    };
+
 
     class Volume : public Device
     {
@@ -244,9 +253,9 @@ class Storage;
 	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
 	                  bool format ) const;
 	bool noFreqPassno() const;
-	int prepareTmpMount( string& m, bool& needUmount, bool useMounted=true,
-	                     const string& options="" ) const;
-	int umountTmpMount( const string& m, int ret ) const;
+	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
+			    const string& options = "") const;
+	int umountTmpMount(TmpMount& tmp_mount, int ret) const;
 	int doFormatBtrfs();
 
 	string getLosetupCmd( const string& fname ) const;

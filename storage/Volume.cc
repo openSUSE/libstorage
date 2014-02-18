@@ -786,36 +786,46 @@ int Volume::changeFstabOptions( const string& options )
     return( ret );
     }
 
-int Volume::prepareTmpMount( string& m, bool& needUmount, bool useMounted, const string& options ) const
+
+    int
+    Volume::prepareTmpMount(TmpMount& tmp_mount, bool useMounted, const string& options) const
     {
-    y2mil( "useMounted:" << useMounted << " opts:" << options ); 
-    int ret = 0;
-    needUmount=false;
-    m = getStorage()->prependRoot(getMount());
-    if( !isMounted() || !useMounted )
+	y2mil("useMounted:" << useMounted << " opts:" << options);
+	int ret = 0;
+	tmp_mount.needs_umount = false;
+	tmp_mount.was_mounted = is_mounted;
+	tmp_mount.mount_point = getStorage()->prependRoot(getMount());
+	if (!isMounted() || !useMounted)
 	{
-	m.clear();
-	if( getStorage()->mountTmp( this, m, options ) )
-	    needUmount = true;
-	else
-	    ret = VOLUME_CANNOT_TMP_MOUNT;
+	    tmp_mount.mount_point.clear();
+	    if (getStorage()->mountTmp(this, tmp_mount.mount_point, options))
+		tmp_mount.needs_umount = true;
+	    else
+		ret = VOLUME_CANNOT_TMP_MOUNT;
 	}
-    y2mil( "ret:" << ret << " mp:" << m << " needUmount:" << needUmount ); 
-    return( ret );
+	y2mil("ret:" << ret << " mount_point:" << tmp_mount.mount_point << " needs_umount:" <<
+	      tmp_mount.needs_umount << " was_mounted:" << tmp_mount.was_mounted);
+	return ret;
     }
 
-int Volume::umountTmpMount( const string& m, int ret ) const
+
+    int
+    Volume::umountTmpMount(TmpMount& tmp_mount, int ret) const
     {
-    int r = ret;
-    if( mp.empty() || !umountDir(m) )
+	if (tmp_mount.needs_umount)
 	{
-        if( !getStorage()->umountDev( mountDevice() ) && r==0 )
-	    r = VOLUME_CANNOT_TMP_UMOUNT;
+	    if (mp.empty() || !umountDir(tmp_mount.mount_point))
+	    {
+		if (!getStorage()->umountDev(mountDevice()) && ret == 0)
+		    ret = VOLUME_CANNOT_TMP_UMOUNT;
+	    }
+	    if (boost::starts_with(tmp_mount.mount_point, "/tmp/libstorage-"))
+		rmdir(tmp_mount.mount_point.c_str());
 	}
-    if( m.substr( 0, 16 )== "/tmp/libstorage-" )
-	rmdir( m.c_str() );
-    return( r );
+	y2mil("ret:" << ret);
+	return ret;
     }
+
 
 Text Volume::formatText( bool doing ) const
     {
@@ -916,8 +926,7 @@ int Volume::doFormatBtrfs()
 	ret = VOLUME_FORMAT_FAILED;
 	setExtError( c );
 	}
-    bool needUmount;
-    string m;
+    TmpMount tmp_mount;
     if( ret==0 && cType()==BTRFSC && getEncryption()==ENC_NONE )
 	{
 	const Btrfs* l = static_cast<const Btrfs*>(this);
@@ -926,14 +935,14 @@ int Volume::doFormatBtrfs()
 	if( li.size()>1 )
 	    {
 	    cmd = BTRFSBIN " device add ";
-	    ret = prepareTmpMount( m, needUmount );
+	    ret = prepareTmpMount(tmp_mount);
 	    if( ret==0 )
 		{
 		for( list<string>::const_iterator i=li.begin(); i!=li.end(); ++i )
 		    {
 		    if( *i!=device() && *i!=mountDevice() )
 			{
-			c.execute( cmd + quote(*i) + " " + m );
+			c.execute(cmd + quote(*i) + " " + quote(tmp_mount.mount_point));
 			if( c.retcode()!=0 )
 			    {
 			    ret = VOLUME_BTRFS_ADD_FAILED;
@@ -942,14 +951,17 @@ int Volume::doFormatBtrfs()
 			}
 		    }
 		}
-	    if( needUmount )
-		ret = umountTmpMount( m, ret );
+	    if (tmp_mount.needs_umount)
+	    {
+		ret = umountTmpMount(tmp_mount, ret);
+		is_mounted = tmp_mount.was_mounted;
+	    }
 	    }
 	}
     if( ret==0 && !defvol.empty() )
 	{
-	ret = prepareTmpMount( m, needUmount, false, "subvolid=0" );
-	cmd = BTRFSBIN " subvolume create " + m + "/" + defvol;
+	ret = prepareTmpMount(tmp_mount, false, "subvolid=0");
+	cmd = BTRFSBIN " subvolume create " + quote(tmp_mount.mount_point + "/" + defvol);
 	c.execute( cmd );
 	if( ret==0 && c.retcode()!=0 )
 	    {
@@ -958,9 +970,9 @@ int Volume::doFormatBtrfs()
 	    }
 	if( ret==0 )
 	    {
-	    cmd = BTRFSBIN " subvolume list " + m;
+	    cmd = BTRFSBIN " subvolume list " + quote(tmp_mount.mount_point);
 	    c.execute( cmd );
-	    int id = -1; 
+	    int id = -1;
 	    if( c.retcode()==0 )
 		{
 		c.select( " path "+defvol+"$" );
@@ -976,7 +988,8 @@ int Volume::doFormatBtrfs()
 		    }
 		if( id>=0 )
 		    {
-		    cmd = BTRFSBIN " subvolume set-default " + decString(id) + " " + m;
+		    cmd = BTRFSBIN " subvolume set-default " + decString(id) + " " +
+			quote(tmp_mount.mount_point);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
@@ -986,8 +999,11 @@ int Volume::doFormatBtrfs()
 		    }
 		}
 	    }
-	if( needUmount )
-	    ret = umountTmpMount( m, ret );
+	if (tmp_mount.needs_umount)
+	{
+	    ret = umountTmpMount(tmp_mount, ret);
+	    is_mounted = tmp_mount.was_mounted;
+	}
 	}
     y2mil( "ret:" << ret );
     return( ret );
@@ -1715,12 +1731,11 @@ int Volume::resizeFs()
 		break;
 	    case BTRFS:
 		{
-		bool needumount = false;
-		string mp;
-                const Volume* v = this;
+		TmpMount tmp_mount;
+		const Volume* v = this;
                 if( isUsedBy(UB_BTRFS) )
                     getStorage()->findUuid( getUsedBy().front().device(), v );
-		ret = v->prepareTmpMount( mp, needumount );
+		ret = v->prepareTmpMount(tmp_mount);
 		if( ret==0 )
 		    {
 		    cmd = BTRFSBIN " filesystem resize ";
@@ -1728,8 +1743,7 @@ int Volume::resizeFs()
 			cmd += " -" + decString(orig_size_k-size_k) + "K";
 		    else
 			cmd += " max";
-		    cmd += " ";
-		    cmd += mp;
+		    cmd += " " + quote(tmp_mount.mount_point);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
 			{
@@ -1737,8 +1751,11 @@ int Volume::resizeFs()
 			setExtError( c );
 			}
 		    }
-		if( needumount )
-		    ret = v->umountTmpMount( mp, ret );
+		if (tmp_mount.needs_umount)
+		{
+		    ret = v->umountTmpMount(tmp_mount, ret);
+		    is_mounted = tmp_mount.was_mounted;
+		}
 		}
 		break;
 	    default:
@@ -2570,7 +2587,7 @@ int Volume::doSetLabel()
     int ret = 0;
     bool remount = false;
     FsCapabilities caps;
-    y2mil("device:" << dev << " mp:" << mp << " label:" << label);
+    y2mil("device:" << dev << " mp:" << mp << " is_mounted:" << is_mounted << " label:" << label);
     getStorage()->showInfoCb( labelText(true), silent );
     if (!getStorage()->getFsCapabilities(fs, caps) || !caps.supportsLabel)
 	{
