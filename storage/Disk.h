@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -136,8 +136,10 @@ class Disk : public Container
 	virtual int resizePartition( Partition* p, unsigned long newCyl );
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
-	void getUnusedSpace(std::list<Region>& free, bool all = true, 
-			    bool logical = false) const;
+
+	list<Region> getUnusedSpace(bool all = true, bool logical = false) const;
+	list<PartitionSlotInfo> getUnusedPartitionSlots() const;
+
 	unsigned int numPrimary() const;
 	bool hasExtended() const;
 	unsigned int numLogical() const;

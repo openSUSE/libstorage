@@ -2206,139 +2206,27 @@ Storage::getUnusedPartitionSlots(const string& disk, list<PartitionSlotInfo>& sl
     slots.clear();
     assertInit();
 
-    // TODO: don't have code below twice
-
     ConstDiskIterator i1 = findDisk( disk );
     ConstDmPartCoIterator i2 = findDmPartCo( disk );
     ConstMdPartCoIterator i3 = findMdPartCo( disk );
 
     if (i1 != dEnd())
     {
-	// maxPrimary() and maxLogical() include limits from partition table type and
-	// minor number range
-
-	bool primaryPossible = i1->numPrimary() + (i1->hasExtended() ? 1 : 0) < i1->maxPrimary();
-	bool extendedPossible = primaryPossible && i1->extendedPossible() && !i1->hasExtended();
-	bool logicalPossible = i1->hasExtended() && i1->numLogical() < (i1->maxLogical() - i1->maxPrimary());
-
-	list<Region> regions;
-
-	i1->getUnusedSpace(regions, false, false);
-	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region->start();
-	    slot.cylSize = region->len();
-	    slot.primarySlot = true;
-	    slot.primaryPossible = primaryPossible;
-	    slot.extendedSlot = true;
-	    slot.extendedPossible = extendedPossible;
-	    slot.logicalSlot = false;
-	    slot.logicalPossible = false;
-	    slots.push_back(slot);
-	}
-
-	i1->getUnusedSpace(regions, false, true);
-	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region->start();
-	    slot.cylSize = region->len();
-	    slot.primarySlot = false;
-	    slot.primaryPossible = false;
-	    slot.extendedSlot = false;
-	    slot.extendedPossible = false;
-	    slot.logicalSlot = true;
-	    slot.logicalPossible = logicalPossible;
-	    slots.push_back(slot);
-	}
+	slots = i1->getUnusedPartitionSlots();
     }
     else if (i2 != dmpCoEnd())
     {
-	// maxPrimary() and maxLogical() include limits from partition table type and
-	// minor number range
-
-	bool primaryPossible = i2->numPrimary() + (i2->hasExtended() ? 1 : 0) < i2->maxPrimary();
-	bool extendedPossible = primaryPossible && i2->extendedPossible() && !i2->hasExtended();
-	bool logicalPossible = i2->hasExtended() && i2->numLogical() < (i2->maxLogical() - i2->maxPrimary());
-
-	list<Region> regions;
-
-	i2->getUnusedSpace(regions, false, false);
-	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region->start();
-	    slot.cylSize = region->len();
-	    slot.primarySlot = true;
-	    slot.primaryPossible = primaryPossible;
-	    slot.extendedSlot = true;
-	    slot.extendedPossible = extendedPossible;
-	    slot.logicalSlot = false;
-	    slot.logicalPossible = false;
-	    slots.push_back(slot);
-	}
-
-	i2->getUnusedSpace(regions, false, true);
-	for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region->start();
-	    slot.cylSize = region->len();
-	    slot.primarySlot = false;
-	    slot.primaryPossible = false;
-	    slot.extendedSlot = false;
-	    slot.extendedPossible = false;
-	    slot.logicalSlot = true;
-	    slot.logicalPossible = logicalPossible;
-	    slots.push_back(slot);
-	}
+	slots = i2->getUnusedPartitionSlots();
     }
     else if (i3 != mdpCoEnd())
     {
-        // maxPrimary() and maxLogical() include limits from partition table type and
-        // minor number range
-
-        bool primaryPossible = i3->numPrimary() + (i3->hasExtended() ? 1 : 0) < i3->maxPrimary();
-        bool extendedPossible = primaryPossible && i3->extendedPossible() && !i3->hasExtended();
-        bool logicalPossible = i3->hasExtended() && i3->numLogical() < (i3->maxLogical() - i3->maxPrimary());
-
-        list<Region> regions;
-
-        i3->getUnusedSpace(regions, false, false);
-        for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-        {
-            PartitionSlotInfo slot;
-            slot.cylStart = region->start();
-            slot.cylSize = region->len();
-            slot.primarySlot = true;
-            slot.primaryPossible = primaryPossible;
-            slot.extendedSlot = true;
-            slot.extendedPossible = extendedPossible;
-            slot.logicalSlot = false;
-            slot.logicalPossible = false;
-            slots.push_back(slot);
-        }
-
-        i3->getUnusedSpace(regions, false, true);
-        for (list<Region>::const_iterator region=regions.begin(); region!=regions.end(); region++)
-        {
-            PartitionSlotInfo slot;
-            slot.cylStart = region->start();
-            slot.cylSize = region->len();
-            slot.primarySlot = false;
-            slot.primaryPossible = false;
-            slot.extendedSlot = false;
-            slot.extendedPossible = false;
-            slot.logicalSlot = true;
-            slot.logicalPossible = logicalPossible;
-            slots.push_back(slot);
-        }
+	slots = i3->getUnusedPartitionSlots();
     }
     else
     {
 	ret = STORAGE_DISK_NOT_FOUND;
     }
+
     y2mil("ret:" << ret);
     return ret;
 }
