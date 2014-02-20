@@ -912,12 +912,12 @@ static bool notCreatedPrimary( const Partition& p )
     }
 
 
-void
-Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
+    list<Region>
+    Disk::getUnusedSpace(bool all, bool logical) const
 {
     y2mil("all:" << all << " logical:" << logical);
 
-    free.clear();
+    list<Region> free;
 
     if (all || !logical)
     {
@@ -986,7 +986,55 @@ Disk::getUnusedSpace(list<Region>& free, bool all, bool logical) const
     }
 
     y2deb("free:" << free);
+
+    return free;
 }
+
+
+    list<PartitionSlotInfo>
+    Disk::getUnusedPartitionSlots() const
+    {
+	list<PartitionSlotInfo> slots;
+
+	// maxPrimary() and maxLogical() include limits from partition table type and
+	// minor number range
+
+	bool tmpPrimaryPossible = numPrimary() + (hasExtended() ? 1 : 0) < maxPrimary();
+	bool tmpExtendedPossible = tmpPrimaryPossible && extendedPossible() && !hasExtended();
+	bool tmpLogicalPossible = hasExtended() && numLogical() < (maxLogical() - maxPrimary());
+
+	list<Region> regions1 = getUnusedSpace(false, false);
+	for (const Region& region : regions1)
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region.start();
+	    slot.cylSize = region.len();
+	    slot.primarySlot = true;
+	    slot.primaryPossible = tmpPrimaryPossible;
+	    slot.extendedSlot = true;
+	    slot.extendedPossible = tmpExtendedPossible;
+	    slot.logicalSlot = false;
+	    slot.logicalPossible = false;
+	    slots.push_back(slot);
+	}
+
+	list<Region> regions2 = getUnusedSpace(false, true);
+	for (const Region& region : regions2)
+	{
+	    PartitionSlotInfo slot;
+	    slot.cylStart = region.start();
+	    slot.cylSize = region.len();
+	    slot.primarySlot = false;
+	    slot.primaryPossible = false;
+	    slot.extendedSlot = false;
+	    slot.extendedPossible = false;
+	    slot.logicalSlot = true;
+	    slot.logicalPossible = tmpLogicalPossible;
+	    slots.push_back(slot);
+	}
+
+	return slots;
+    }
 
 
 static bool regions_sort_size( const Region& rhs, const Region& lhs )
@@ -1000,8 +1048,7 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     y2mil("len:" << cylLen << " relaxed:" << checkRelaxed);
     getStorage()->logCo( this );
     int ret = 0;
-    list<Region> free;
-    getUnusedSpace( free );
+    list<Region> free = getUnusedSpace();
     y2mil("free:");
     if( !free.empty() )
 	{
@@ -1046,8 +1093,7 @@ int Disk::createPartition( PartitionType type, string& device )
     {
     y2mil("type " << toString(type));
     int ret = 0;
-    list<Region> free;
-    getUnusedSpace( free, type==PTYPE_ANY, type==LOGICAL );
+    list<Region> free = getUnusedSpace(type == PTYPE_ANY, type == LOGICAL);
     if( !free.empty() )
 	{
 	free.sort( regions_sort_size );

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2009] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -90,8 +90,8 @@ class DmPartCo : public PeContainer
 	bool hasExtended() const { return disk->hasExtended(); }
 	unsigned int numLogical() const { return disk->numLogical(); }
 
-	void getUnusedSpace(std::list<Region>& free, bool all = true, bool logical = false) const
-	    { disk->getUnusedSpace(free, all, logical); }
+	list<PartitionSlotInfo> getUnusedPartitionSlots() const
+	    { return disk->getUnusedPartitionSlots(); }
 
 	unsigned long long cylinderToKb( unsigned long val ) const
 	    { return disk->cylinderToKb( val ); }

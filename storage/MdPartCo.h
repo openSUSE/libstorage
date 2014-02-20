@@ -5,7 +5,7 @@
  * Volume) like md126 which is a Container for partitions.
  *
  * Copyright (c) 2009, Intel Corporation.
- * Copyright (c) [2009-2010] Novell, Inc.
+ * Copyright (c) [2009-2014] Novell, Inc.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms and conditions of the GNU General Public License,
@@ -98,8 +98,8 @@ class MdPartCo : public Container
     bool hasExtended() const { return disk->hasExtended(); }
     unsigned int numLogical() const { return disk->numLogical(); }
 
-    void getUnusedSpace(std::list<Region>& free, bool all = true, bool logical = false) const
-    { disk->getUnusedSpace(free, all, logical); }
+	list<PartitionSlotInfo> getUnusedPartitionSlots() const
+	    { return disk->getUnusedPartitionSlots(); }
 
     unsigned long long cylinderToKb( unsigned long val ) const
     { return disk->cylinderToKb( val ); }
