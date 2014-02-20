@@ -21,6 +21,7 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	humanstring1.single humanstring2.single					\
 	lvm_create.single lvm_create2.single lvm_extend.single			\
 	md_create.single partition1.single partitionname.single			\
+	partition-slots1.single							\
 	partitionprefix.single recursive1.single recursive2.single		\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
 	udevdecode.single udevencode.single usedby1.single userdata1.single	\
@@ -57,6 +58,7 @@ md_create_single_SOURCES = md_create.cc common.h common.cc
 partition1_single_SOURCES = partition1.cc common.h common.cc
 partitionname_single_SOURCES = partitionname.cc common.cc
 partitionprefix_single_SOURCES = partitionprefix.cc common.cc
+partition_slots1_single_SOURCES = partition-slots1.cc common.cc
 recursive1_single_SOURCES = recursive1.cc common.h common.cc
 recursive2_single_SOURCES = recursive2.cc common.h common.cc
 recursive3_single_SOURCES = recursive3.cc common.h common.cc

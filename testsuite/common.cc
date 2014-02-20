@@ -6,6 +6,7 @@
 #include "common.h"
 
 #include "storage/AppUtil.h"
+#include "storage/Region.h"
 
 
 extern char* program_invocation_short_name;
@@ -103,7 +104,7 @@ namespace storage
 		case LOGICAL: cout << "LOGICAL "; break;
 		case PTYPE_ANY: cout << "ANY "; break;
 	    }
-	    cout << it->cylStart << ' ' << it->cylSize << ' ';
+	    cout << Region(it->cylRegion) << ' ';
 	    switch (it->v.fs)
 	    {
 		case FSUNKNOWN: cout << "UNKNOWN"; break;

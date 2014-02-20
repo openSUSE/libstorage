@@ -912,44 +912,34 @@ static bool notCreatedPrimary( const Partition& p )
     }
 
 
-    list<Region>
-    Disk::getUnusedSpace(bool all, bool logical) const
-{
-    y2mil("all:" << all << " logical:" << logical);
-
-    list<Region> free;
-
-    if (all || !logical)
+    list<PartitionSlotInfo>
+    Disk::getUnusedPartitionSlots(bool all, bool logical) const
     {
-	ConstPartPair p = partPair(notDeletedNotLog);
+	y2mil("all:" << all << " logical:" << logical);
 
-	unsigned long start = 0;
-	unsigned long end = cylinders();
+	// maxPrimary() and maxLogical() include limits from partition table type and
+	// minor number range
 
-	list<Region> tmp;
-	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
-	    tmp.push_back(i->cylRegion());
-	tmp.sort();
+	bool tmpPrimaryPossible = numPrimary() + (hasExtended() ? 1 : 0) < maxPrimary();
+	bool tmpExtendedPossible = tmpPrimaryPossible && extendedPossible() && !hasExtended();
+	bool tmpLogicalPossible = hasExtended() && numLogical() < (maxLogical() - maxPrimary());
 
-	for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	list<PartitionSlotInfo> slots;
+
+	if (all || !logical)
 	{
-	    if (i->start() > start)
-		free.push_back(Region(start, i->start() - start));
-	    start = i->end() + 1;
-	}
-	if (end > start)
-	    free.push_back(Region(start, end - start));
-    }
+	    PartitionSlotInfo slot;
+	    slot.primarySlot = true;
+	    slot.primaryPossible = tmpPrimaryPossible;
+	    slot.extendedSlot = true;
+	    slot.extendedPossible = tmpExtendedPossible;
+	    slot.logicalSlot = false;
+	    slot.logicalPossible = false;
 
-    if (all || logical)
-    {
-	ConstPartPair ext = partPair(notDeletedExt);
-	if (!ext.empty())
-	{
-	    ConstPartPair p = partPair(notDeletedLog);
+	    ConstPartPair p = partPair(notDeletedNotLog);
 
-	    unsigned long start = ext.begin()->cylStart();
-	    unsigned long end = ext.begin()->cylEnd();
+	    unsigned long start = 0;
+	    unsigned long end = cylinders();
 
 	    list<Region> tmp;
 	    for (ConstPartIter i = p.begin(); i != p.end(); ++i)
@@ -959,88 +949,89 @@ static bool notCreatedPrimary( const Partition& p )
 	    for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
 	    {
 		if (i->start() > start)
-		    free.push_back(Region(start, i->start() - start));
+		{
+		    slot.cylRegion = RegionInfo(start, i->start() - start);
+		    slots.push_back(slot);
+		}
 		start = i->end() + 1;
 	    }
 	    if (end > start)
-		free.push_back(Region(start, end - start));
+	    {
+		slot.cylRegion = RegionInfo(start, end - start);
+		slots.push_back(slot);
+	    }
 	}
-    }
 
-    y2deb("free:" << free);
-
-    Region usable_region = usableCylRegion();
-
-    list<Region>::iterator i = free.begin();
-    while (i != free.end())
-    {
-	if (usable_region.doIntersect(*i))
+	if (all || logical)
 	{
-	    *i = usable_region.intersect(*i);
-	    ++i;
+	    ConstPartPair ext = partPair(notDeletedExt);
+	    if (!ext.empty())
+	    {
+		PartitionSlotInfo slot;
+		slot.primarySlot = false;
+		slot.primaryPossible = false;
+		slot.extendedSlot = false;
+		slot.extendedPossible = false;
+		slot.logicalSlot = true;
+		slot.logicalPossible = tmpLogicalPossible;
+
+		ConstPartPair p = partPair(notDeletedLog);
+
+		unsigned long start = ext.begin()->cylStart();
+		unsigned long end = ext.begin()->cylEnd();
+
+		list<Region> tmp;
+		for (ConstPartIter i = p.begin(); i != p.end(); ++i)
+		    tmp.push_back(i->cylRegion());
+		tmp.sort();
+
+		for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+		{
+		    if (i->start() > start)
+		    {
+			slot.cylRegion = RegionInfo(start, i->start() - start);
+			slots.push_back(slot);
+		    }
+		    start = i->end() + 1;
+		}
+		if (end > start)
+		{
+		    slot.cylRegion = RegionInfo(start, end - start);
+		    slots.push_back(slot);
+		}
+	    }
 	}
-	else
+
+	y2deb("slots:" << slots);
+
+	Region usable_region = usableCylRegion();
+
+	list<PartitionSlotInfo>::iterator it = slots.begin();
+	while (it != slots.end())
 	{
-	    i = free.erase(i);
-	}
-    }
-
-    y2deb("free:" << free);
-
-    return free;
-}
-
-
-    list<PartitionSlotInfo>
-    Disk::getUnusedPartitionSlots() const
-    {
-	list<PartitionSlotInfo> slots;
-
-	// maxPrimary() and maxLogical() include limits from partition table type and
-	// minor number range
-
-	bool tmpPrimaryPossible = numPrimary() + (hasExtended() ? 1 : 0) < maxPrimary();
-	bool tmpExtendedPossible = tmpPrimaryPossible && extendedPossible() && !hasExtended();
-	bool tmpLogicalPossible = hasExtended() && numLogical() < (maxLogical() - maxPrimary());
-
-	list<Region> regions1 = getUnusedSpace(false, false);
-	for (const Region& region : regions1)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region.start();
-	    slot.cylSize = region.len();
-	    slot.primarySlot = true;
-	    slot.primaryPossible = tmpPrimaryPossible;
-	    slot.extendedSlot = true;
-	    slot.extendedPossible = tmpExtendedPossible;
-	    slot.logicalSlot = false;
-	    slot.logicalPossible = false;
-	    slots.push_back(slot);
+	    if (usable_region.doIntersect(it->cylRegion))
+	    {
+		it->cylRegion = usable_region.intersect(it->cylRegion);
+		++it;
+	    }
+	    else
+	    {
+		it = slots.erase(it);
+	    }
 	}
 
-	list<Region> regions2 = getUnusedSpace(false, true);
-	for (const Region& region : regions2)
-	{
-	    PartitionSlotInfo slot;
-	    slot.cylStart = region.start();
-	    slot.cylSize = region.len();
-	    slot.primarySlot = false;
-	    slot.primaryPossible = false;
-	    slot.extendedSlot = false;
-	    slot.extendedPossible = false;
-	    slot.logicalSlot = true;
-	    slot.logicalPossible = tmpLogicalPossible;
-	    slots.push_back(slot);
-	}
+	y2deb("slots:" << slots);
 
 	return slots;
     }
 
 
-static bool regions_sort_size( const Region& rhs, const Region& lhs )
+    static bool
+    partition_slots_sort_len(const PartitionSlotInfo& rhs, const PartitionSlotInfo& lhs)
     {
-    return( rhs.len()>lhs.len() );
+	return rhs.cylRegion.len > lhs.cylRegion.len;
     }
+
 
 int Disk::createPartition( unsigned long cylLen, string& device,
 			   bool checkRelaxed )
@@ -1048,16 +1039,16 @@ int Disk::createPartition( unsigned long cylLen, string& device,
     y2mil("len:" << cylLen << " relaxed:" << checkRelaxed);
     getStorage()->logCo( this );
     int ret = 0;
-    list<Region> free = getUnusedSpace();
-    y2mil("free:");
-    if( !free.empty() )
+    list<PartitionSlotInfo> slots = getUnusedPartitionSlots();
+    y2mil("slots:");
+    if (!slots.empty())
 	{
-	free.sort( regions_sort_size );
-	list<Region>::const_iterator i = free.begin();
-	while( i!=free.end() && i->len()>=cylLen )
+	slots.sort(partition_slots_sort_len);
+	list<PartitionSlotInfo>::const_iterator i = slots.begin();
+	while (i != slots.end() && i->cylRegion.len >= cylLen)
 	    ++i;
 	--i;
-	if( i->len()>=cylLen )
+	if (i->cylRegion.len >= cylLen)
 	    {
 	    ConstPartPair ext = partPair(notDeletedExt);
 	    PartitionType t = PRIMARY;
@@ -1065,17 +1056,16 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	    do
 		{
 		t = PRIMARY;
-		if( !ext.empty() && ext.begin()->contains( *i ) )
+		if (!ext.empty() && ext.begin()->contains(i->cylRegion))
 		    t = LOGICAL;
 		usable = availablePartNumber(t)>0;
-		if( !usable && i!=free.begin() )
+		if (!usable && i != slots.begin())
 		    --i;
 		}
-	    while( i!=free.begin() && !usable );
+	    while (i != slots.begin() && !usable);
 	    usable = availablePartNumber(t)>0;
 	    if( usable )
-		ret = createPartition( t, i->start(), cylLen, device,
-				       checkRelaxed );
+		ret = createPartition(t, i->cylRegion.len, cylLen, device, checkRelaxed);
 	    else
 		ret = DISK_PARTITION_NO_FREE_NUMBER;
 	    }
@@ -1086,43 +1076,44 @@ int Disk::createPartition( unsigned long cylLen, string& device,
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
     getStorage()->logCo( this );
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
+
 
 int Disk::createPartition( PartitionType type, string& device )
     {
     y2mil("type " << toString(type));
     int ret = 0;
-    list<Region> free = getUnusedSpace(type == PTYPE_ANY, type == LOGICAL);
-    if( !free.empty() )
+    list<PartitionSlotInfo> slots = getUnusedPartitionSlots(type == PTYPE_ANY, type == LOGICAL);
+    if (!slots.empty())
 	{
-	free.sort( regions_sort_size );
-	list<Region>::const_iterator i = free.begin();
+	slots.sort(partition_slots_sort_len);
+	list<PartitionSlotInfo>::const_iterator i = slots.begin();
 	ConstPartPair ext = partPair(notDeletedExt);
 	PartitionType t = type;
 	bool usable = false;
 	do
 	    {
 	    t = PRIMARY;
-	    if( !ext.empty() && ext.begin()->contains( *i ) )
+	    if (!ext.empty() && ext.begin()->contains(i->cylRegion))
 		t = LOGICAL;
 	    usable = t==type || type==PTYPE_ANY || (t==PRIMARY&&type==EXTENDED);
 	    usable = usable && availablePartNumber(t)>0;
-	    if( !usable && i!=free.end() )
+	    if (!usable && i != slots.end())
 		++i;
 	    }
-	while( i!=free.end() && !usable );
+	while (i != slots.end() && !usable);
 	usable = availablePartNumber(t)>0;
 	if( usable )
-	    ret = createPartition( type==PTYPE_ANY?t:type, i->start(),
-	                           i->len(), device, true );
+	    ret = createPartition(type == PTYPE_ANY ? t : type, i->cylRegion.start,
+				  i->cylRegion.len, device, true);
 	else
 	    ret = DISK_PARTITION_NO_FREE_NUMBER;
 	}
     else
 	ret = DISK_CREATE_PARTITION_NO_SPACE;
     y2mil("ret:" << ret);
-    return( ret );
+    return ret;
     }
 
 
