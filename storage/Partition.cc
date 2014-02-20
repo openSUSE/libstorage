@@ -607,8 +607,7 @@ void
 Partition::getInfo( PartitionAddInfo& info ) const
     {
     info.partitionType = type ();
-    info.cylStart = cylStart ();
-    info.cylSize = cylSize ();
+    info.cylRegion = reg;
     info.nr = num;
     info.id = idt;
     info.boot = bootflag;
@@ -627,8 +626,7 @@ Partition::getInfo( PartitionInfo& info ) const
 PartitionInfo& PartitionInfo::operator=( const PartitionAddInfo& rhs )
     {
     nr = rhs.nr;
-    cylStart = rhs.cylStart;
-    cylSize = rhs.cylSize;
+    cylRegion = rhs.cylRegion;
     partitionType = rhs.partitionType;
     id = rhs.id;
     boot = rhs.boot;

@@ -394,12 +394,22 @@ namespace storage
 	unsigned long long origSizeK;
     };
 
+    /**
+     * Contains info about a region.
+     */
+    struct RegionInfo
+    {
+	RegionInfo() : start(0), len(0) {}
+	RegionInfo(unsigned long long start, unsigned long long len) : start(start), len(len) {}
+	unsigned long long start;
+	unsigned long long len;
+    };
+
     struct PartitionAddInfo
     {
 	PartitionAddInfo() {}
 	unsigned nr;
-	unsigned long cylStart;
-	unsigned long cylSize;
+	RegionInfo cylRegion;
 	PartitionType partitionType;
 	unsigned id;
 	bool boot;
@@ -414,8 +424,7 @@ namespace storage
 	PartitionInfo& operator=( const PartitionAddInfo& rhs );
 	VolumeInfo v;
 	unsigned nr;
-	unsigned long cylStart;
-	unsigned long cylSize;
+	RegionInfo cylRegion;
 	PartitionType partitionType;
 	unsigned id;
 	bool boot;
@@ -619,8 +628,7 @@ namespace storage
     struct PartitionSlotInfo
     {
 	PartitionSlotInfo() {}
-	unsigned long cylStart;
-	unsigned long cylSize;
+	RegionInfo cylRegion;
 	bool primarySlot;
 	bool primaryPossible;
 	bool extendedSlot;

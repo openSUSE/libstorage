@@ -137,12 +137,12 @@ class Disk : public Container
 	int resizeVolume( Volume* v, unsigned long long newSize );
 	int removeVolume( Volume* v );
 
-	list<Region> getUnusedSpace(bool all = true, bool logical = false) const;
-	list<PartitionSlotInfo> getUnusedPartitionSlots() const;
+	list<PartitionSlotInfo> getUnusedPartitionSlots(bool all = true, bool logical = false) const;
 
 	unsigned int numPrimary() const;
 	bool hasExtended() const;
 	unsigned int numLogical() const;
+
 	Text setDiskLabelText(bool doing) const;
 
 	unsigned long long cylinderToKb(unsigned long cylinder) const

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -159,23 +159,26 @@ bool commitAction::operator<( const commitAction& rhs ) const
 
 
 
-std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a)
+    std::ostream&
+    operator<<(std::ostream& s, const PartitionSlotInfo& a)
     {
-    s << "start:" << a.cylStart
-      << " len:" << a.cylSize
-      << " primary:" << a.primarySlot << " poss:" << a.primaryPossible
-      << " extended:" << a.extendedSlot << " poss:" << a.extendedPossible
-      << " logical:" << a.logicalSlot << " poss:" << a.logicalPossible;
-    return s;
-    };
+	s << "region:" << Region(a.cylRegion)
+	  << " primary_slot:" << a.primarySlot << " primary_possible:" << a.primaryPossible
+	  << " extended_slot:" << a.extendedSlot << " extended_possible:" << a.extendedPossible
+	  << " logical_slot:" << a.logicalSlot << " logical_possible:" << a.logicalPossible;
+	return s;
+    }
 
-std::ostream& operator<<(std::ostream& s, const FsCapabilities& a)
+
+    std::ostream&
+    operator<<(std::ostream& s, const FsCapabilities& a)
     {
-    s << "ext:" << a.isExtendable << " extm:" << a.isExtendableWhileMounted
-      << " red:" << a.isReduceable << " redm:" << a.isReduceableWhileMounted
-      << " uuid:" << a.supportsUuid << " label:" << a.supportsLabel
-      << " lwm:" << a.labelWhileMounted << " ll:" << a.labelLength
-      << " minfsk:" << a.minimalFsSizeK;
-    return s;
-    };
+	s << "ext:" << a.isExtendable << " ext_mounted:" << a.isExtendableWhileMounted
+	  << " red:" << a.isReduceable << " red_mounted:" << a.isReduceableWhileMounted
+	  << " uuid:" << a.supportsUuid << " label:" << a.supportsLabel
+	  << " label_mounted:" << a.labelWhileMounted << " label_length:" << a.labelLength
+	  << " min_fs_size_k:" << a.minimalFsSizeK;
+	return s;
+    }
+
 }

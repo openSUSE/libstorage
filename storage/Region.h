@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -25,6 +25,7 @@
 
 #include <algorithm>
 
+#include "storage/StorageInterface.h"
 #include "storage/XmlFile.h"
 
 
@@ -37,6 +38,7 @@ namespace storage
 
 	Region() : s(0), l(0) {}
 	Region(unsigned long long start, unsigned long long len) : s(start), l(len) {}
+	Region(const RegionInfo& region_info) : s(region_info.start), l(region_info.len) {}
 
 	bool doIntersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
@@ -88,6 +90,8 @@ namespace storage
 
 	friend bool getChildValue(const xmlNode* node, const char* name, Region& value);
 	friend void setChildValue(xmlNode* node, const char* name, const Region& value);
+
+	operator RegionInfo() const { return RegionInfo(s, l); }
 
     protected:
 
