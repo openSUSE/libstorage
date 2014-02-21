@@ -162,7 +162,7 @@ bool commitAction::operator<( const commitAction& rhs ) const
     std::ostream&
     operator<<(std::ostream& s, const PartitionSlotInfo& a)
     {
-	s << "region:" << Region(a.cylRegion)
+	s << "region:" << Region(a.cylRegion) << " nr:" << a.nr << " device:" << a.device
 	  << " primary_slot:" << a.primarySlot << " primary_possible:" << a.primaryPossible
 	  << " extended_slot:" << a.extendedSlot << " extended_possible:" << a.extendedPossible
 	  << " logical_slot:" << a.logicalSlot << " logical_possible:" << a.logicalPossible;

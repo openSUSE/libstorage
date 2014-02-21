@@ -929,6 +929,29 @@ static bool notCreatedPrimary( const Partition& p )
 	if (all || !logical)
 	{
 	    PartitionSlotInfo slot;
+
+	    if (label != "dasd")
+	    {
+		ConstPartPair p = partPair(Partition::notDeleted);
+		ConstPartIter i = p.begin();
+		unsigned start = label != "mac" ? 1 : 2;
+		while (i != p.end() && i->nr() <= start && i->nr() <= max_primary)
+		{
+		    if (i->nr() == start)
+			start++;
+		    if (label == "sun" && start == 3)
+			start++;
+		    ++i;
+		}
+		slot.nr = start;
+		slot.device = getPartDevice(slot.nr);
+	    }
+	    else
+	    {
+		slot.nr = 1;
+		slot.device = getPartDevice(slot.nr);
+	    }
+
 	    slot.primarySlot = true;
 	    slot.primaryPossible = tmpPrimaryPossible;
 	    slot.extendedSlot = true;
@@ -954,6 +977,12 @@ static bool notCreatedPrimary( const Partition& p )
 		    slots.push_back(slot);
 		}
 		start = i->end() + 1;
+
+		if (label == "dasd")
+		{
+		    slot.nr++;
+		    slot.device = getPartDevice(slot.nr);
+		}
 	    }
 	    if (end > start)
 	    {
@@ -968,6 +997,10 @@ static bool notCreatedPrimary( const Partition& p )
 	    if (!ext.empty())
 	    {
 		PartitionSlotInfo slot;
+
+		slot.nr = maxPrimary() + numLogical() + 1;
+		slot.device = getPartDevice(slot.nr);
+
 		slot.primarySlot = false;
 		slot.primaryPossible = false;
 		slot.extendedSlot = false;

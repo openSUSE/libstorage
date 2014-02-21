@@ -629,6 +629,8 @@ namespace storage
     {
 	PartitionSlotInfo() {}
 	RegionInfo cylRegion;
+	unsigned nr;
+	string device;
 	bool primarySlot;
 	bool primaryPossible;
 	bool extendedSlot;
@@ -1265,6 +1267,10 @@ namespace storage
 	 * @param nr is set to the number of the next created partition
 	 * @param device is set to the device name of the next created partition
 	 * @return zero if all is ok, a negative number to indicate an error
+	 *
+	 * Deprecated. Do not use. Use getUnusedPartitionSlots() to get number
+	 * and device name of partition since number and device name depend on
+	 * region, e.g. for DASD partition table.
 	 */
 	virtual int nextFreePartition( const string& disk, PartitionType type,
 	                               unsigned & SWIG_OUTPUT(nr),
