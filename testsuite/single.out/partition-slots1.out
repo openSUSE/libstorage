@@ -9,8 +9,8 @@ sdc2 EXTENDED [2989,2988] UNKNOWN
 sdc5 LOGICAL [3985,996] UNKNOWN
 
 0
-[0,997]  true true  true false  false false
-[1993,996]  true true  true false  false false
-[2989,996]  false false  false false  true true
-[4981,995]  false false  false false  true true
-[5977,3752]  true true  true false  false false
+[0,997]  3 /dev/sdc3  true true  true false  false false
+[1993,996]  3 /dev/sdc3  true true  true false  false false
+[2989,996]  6 /dev/sdc6  false false  false false  true true
+[4981,995]  6 /dev/sdc6  false false  false false  true true
+[5977,3752]  3 /dev/sdc3  true true  true false  false false

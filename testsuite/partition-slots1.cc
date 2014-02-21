@@ -49,7 +49,7 @@ main()
 
     for (const PartitionSlotInfo& slot : slots)
     {
-	cout << Region(slot.cylRegion) << "  "
+	cout << Region(slot.cylRegion) << "  " << slot.nr << " " << slot.device << "  "
 	     << slot.primarySlot << " " << slot.primaryPossible << "  "
 	     << slot.extendedSlot << " " << slot.extendedPossible << "  "
 	     << slot.logicalSlot << " " << slot.logicalPossible << endl;
