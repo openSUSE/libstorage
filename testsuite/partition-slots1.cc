@@ -29,13 +29,13 @@ main()
 
     string name;
 
-    cout << s->createPartitionKb(disk, PRIMARY, S, S, name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(S, S), name) << endl;
     cout << name << endl;
 
-    cout << s->createPartitionKb(disk, EXTENDED, 3*S, 3*S, name) << endl;
+    cout << s->createPartitionKb(disk, EXTENDED, RegionInfo(3*S, 3*S), name) << endl;
     cout << name << endl;
 
-    cout << s->createPartitionKb(disk, LOGICAL, 4*S, S, name) << endl;
+    cout << s->createPartitionKb(disk, LOGICAL, RegionInfo(4*S, S), name) << endl;
     cout << name << endl;
 
     print_partitions(s, disk);

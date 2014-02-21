@@ -2,6 +2,7 @@
 Fri Feb 21 10:42:59 CET 2014 - aschnell@suse.de
 
 - provide number and device name in PartitionSlotInfo
+- use RegionInfo in libstorage API
 - 2.25.8
 
 -------------------------------------------------------------------

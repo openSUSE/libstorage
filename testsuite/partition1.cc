@@ -23,14 +23,14 @@ msdos (const string& disk, int n)
     long int S = 100000;
     string name;
 
-    cout << s->createPartitionKb(disk, PRIMARY, 0*S, S, name) << endl;
-    cout << s->createPartitionKb(disk, PRIMARY, 1*S, S, name) << endl;
-    cout << s->createPartitionKb(disk, PRIMARY, 2*S, S, name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(0*S, S), name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(1*S, S), name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(2*S, S), name) << endl;
 
-    cout << s->createPartitionKb(disk, EXTENDED, 3*S, (n+1)*S, name) << endl;
+    cout << s->createPartitionKb(disk, EXTENDED, RegionInfo(3*S, (n+1)*S), name) << endl;
 
     for (int i = 0; i < n; ++i)
-	cout << s->createPartitionKb(disk, LOGICAL, (3+i)*S, S, name) << endl;
+	cout << s->createPartitionKb(disk, LOGICAL, RegionInfo((3+i)*S, S), name) << endl;
 
     print_partitions(s, disk);
 
@@ -51,7 +51,7 @@ gpt (const string& disk, int n)
     string name;
 
     for (int i = 0; i < n; ++i)
-	cout << s->createPartitionKb(disk, PRIMARY, i*S, S, name) << endl;
+	cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(i*S, S), name) << endl;
 
     print_partitions(s, disk);
 

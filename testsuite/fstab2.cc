@@ -22,11 +22,11 @@ run()
     s->destroyPartitionTable(disk, "msdos");
 
     string name1;
-    cout << s->createPartitionKb(disk, PRIMARY, 0, 999999, name1) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(0, 999999), name1) << endl;
     cout << name1 << endl;
 
     string name2;
-    cout << s->createPartitionKb(disk, PRIMARY, 1000000, 1999999, name2) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(1000000, 1999999), name2) << endl;
     cout << name2 << endl;
 
     cout << s->changeFormatVolume(name1, true, EXT4) << endl;

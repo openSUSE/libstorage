@@ -1274,14 +1274,14 @@ void Storage::setDetectMountedVolumes(bool val)
     }
 
 
-int
-Storage::createPartition( const string& disk, PartitionType type, unsigned long start,
-			  unsigned long size, string& device )
+    int
+    Storage::createPartition(const string& disk, PartitionType type, const RegionInfo& cylRegion,
+			     string& device)
     {
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << toString(type) << " start:" << start << " size:" << size);
+    y2mil("disk:" << disk << " type:" << toString(type) << " cylRegion:" << (Region) cylRegion);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1296,7 +1296,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
-		ret = i->createPartition( type, start, size, device, true );
+		ret = i->createPartition(type, cylRegion.start, cylRegion.len, device, true);
 		if( ret==0 )
 		    checkPwdBuf( device );
 		}
@@ -1312,7 +1312,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
-		ret = i->createPartition( type, start, size, device, true );
+		ret = i->createPartition(type, cylRegion.start, cylRegion.len, device, true);
 		if( ret==0 )
 		    checkPwdBuf( device );
 		}
@@ -1328,7 +1328,7 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
                 ret = STORAGE_DISK_USED_BY;
             else
                 {
-                ret = i->createPartition( type, start, size, device, true );
+                ret = i->createPartition(type, cylRegion.start, cylRegion.len, device, true);
 		if( ret==0 )
 		    checkPwdBuf( device );
                 }
@@ -1346,16 +1346,15 @@ Storage::createPartition( const string& disk, PartitionType type, unsigned long 
     return( ret );
     }
 
-int
-Storage::createPartitionKb( const string& disk, PartitionType type,
-                            unsigned long long start,
-			    unsigned long long sizeK, string& device )
+
+    int
+    Storage::createPartitionKb(const string& disk, PartitionType type,
+			       const RegionInfo& kRegion, string& device)
     {
     int ret = 0;
     bool done = false;
     assertInit();
-    y2mil("disk:" << disk << " type:" << toString(type) << " start:" << start << " sizeK:" <<
-	  sizeK);
+    y2mil("disk:" << disk << " type:" << toString(type) << " kRegion:" << (Region) kRegion);
     if (readonly())
 	{
 	ret = STORAGE_CHANGE_READONLY;
@@ -1370,8 +1369,8 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
-		unsigned long num_cyl = i->kbToCylinder( sizeK );
-		unsigned long long tmp_start = start;
+		unsigned long num_cyl = i->kbToCylinder(kRegion.len);
+		unsigned long long tmp_start = kRegion.start;
 		if( tmp_start > i->kbToCylinder(1)/2 )
 		    tmp_start -= i->kbToCylinder(1)/2;
 		else
@@ -1391,8 +1390,8 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
 		ret = STORAGE_DISK_USED_BY;
 	    else
 		{
-		unsigned long num_cyl = i->kbToCylinder( sizeK );
-		unsigned long long tmp_start = start;
+		unsigned long num_cyl = i->kbToCylinder(kRegion.len);
+		unsigned long long tmp_start = kRegion.start;
 		if( tmp_start > i->kbToCylinder(1)/2 )
 		    tmp_start -= i->kbToCylinder(1)/2;
 		else
@@ -1412,8 +1411,8 @@ Storage::createPartitionKb( const string& disk, PartitionType type,
                 ret = STORAGE_DISK_USED_BY;
             else
                 {
-                unsigned long num_cyl = i->kbToCylinder( sizeK );
-                unsigned long long tmp_start = start;
+                unsigned long num_cyl = i->kbToCylinder(kRegion.len);
+                unsigned long long tmp_start = kRegion.start;
                 if( tmp_start > i->kbToCylinder(1)/2 )
                     tmp_start -= i->kbToCylinder(1)/2;
                 else
@@ -1761,21 +1760,20 @@ Storage::removePartition( const string& partition )
     return( ret );
     }
 
-int
-Storage::updatePartitionArea( const string& partition, unsigned long start,
-                              unsigned long size )
+
+    int
+    Storage::updatePartitionArea(const string& partition, const RegionInfo& cylRegion)
     {
-    return( updatePartitionArea( partition, start, size, false ));
+	return updatePartitionArea(partition, (Region) cylRegion, false);
     }
 
-int
-Storage::updatePartitionArea( const string& partition, unsigned long start,
-                              unsigned long size, bool noBtrfs )
+
+    int
+    Storage::updatePartitionArea(const string& partition, const Region& cylRegion, bool noBtrfs)
     {
     int ret = 0;
     assertInit();
-    y2mil("partition:" << partition << " start:" << start << " size:" << size << 
-          " noBtrfs:" << noBtrfs);
+    y2mil("partition:" << partition << " cylRegion:" << cylRegion << " noBtrfs:" << noBtrfs);
     VolIterator vol;
     ContIterator cont;
     if (readonly())
@@ -1789,7 +1787,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	    Disk* disk = dynamic_cast<Disk *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
+		ret = disk->changePartitionArea(vol->nr(), cylRegion);
 		}
 	    else
 		{
@@ -1801,7 +1799,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	    DmPartCo* disk = dynamic_cast<DmPartCo *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
+		ret = disk->changePartitionArea(vol->nr(), cylRegion);
 		}
 	    else
 		{
@@ -1813,7 +1811,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 	    MdPartCo* disk = dynamic_cast<MdPartCo *>(&(*cont));
 	    if( disk!=NULL )
 		{
-		ret = disk->changePartitionArea(vol->nr(), Region(start, size));
+		ret = disk->changePartitionArea(vol->nr(), cylRegion);
 		}
 	    else
 		{
@@ -1829,7 +1827,7 @@ Storage::updatePartitionArea( const string& partition, unsigned long start,
 		list<string> devs = b->getDevices();
 		if( devs.size()==1 )
 		    {
-		    ret = updatePartitionArea( devs.front(), start, size, true );
+		    ret = updatePartitionArea(devs.front(), cylRegion, true);
 		    if( ret==0 && findVolume( devs.front(), vol, false, true ) )
 			{
 			b->setSize( vol->sizeK() );

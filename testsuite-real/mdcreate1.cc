@@ -29,7 +29,7 @@ doit(const string& disk)
     for (int i = 0; i < 4; ++i)
     {
 	string part;
-	check_zero(s->createPartitionKb(disk, PRIMARY, i*size, size, part));
+	check_zero(s->createPartitionKb(disk, PRIMARY, RegionInfo(i*size, size), part));
 	cout << "part[" << i << "]:" << part << endl;
 	parts.push_back(part);
     }

@@ -58,7 +58,7 @@ main( int argc_iv, char** argv_ppcv )
 	}
     if( ret==0 )
 	{
-	ret = s->createPartitionKb( disk, PTYPE_ANY, 0, 3500*1024, device );
+	ret = s->createPartitionKb(disk, PTYPE_ANY, RegionInfo(0, 3500*1024), device);
 	cout << "device:" << device << endl;
 	if( ret ) cerr << "retcode:" << ret << endl;
 	}

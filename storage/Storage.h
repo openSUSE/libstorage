@@ -364,20 +364,17 @@ class DiskData;
 
 	list<string> getAllUsedFs() const;
 	void setExtError( const string& txt );
-	int createPartition( const string& disk, storage::PartitionType type,
-	                     unsigned long start, unsigned long size,
-			     string& device );
+	int createPartition(const string& disk, PartitionType type, const RegionInfo& cylRegion,
+			    string& device) override;
 	int resizePartition( const string& device, unsigned long sizeCyl );
 	int resizePartitionNoFs( const string& device, unsigned long sizeCyl );
 	int nextFreePartition( const string& disk, storage::PartitionType type,
 	                       unsigned &nr, string& device );
-	int updatePartitionArea( const string& device,
-				 unsigned long start, unsigned long size );
+	int updatePartitionArea(const string& device, const RegionInfo& cylRegion) override;
 	int freeCylindersAroundPartition(const string& device, unsigned long& freeCylsBefore,
 					 unsigned long& freeCylsAfter);
-	int createPartitionKb( const string& disk, storage::PartitionType type,
-	                       unsigned long long start,
-			       unsigned long long sizek, string& device );
+	int createPartitionKb(const string& disk, PartitionType type, const RegionInfo& kRegion,
+			      string& device) override;
 	int createPartitionAny( const string& disk, unsigned long long size,
 				string& device );
 	int createPartitionMax( const string& disk, storage::PartitionType type,
@@ -2061,8 +2058,7 @@ class DiskData;
 	void initDisk( list<DiskData>& dl, SystemInfo& systeminfo);
 	void detectFsData(const VolIterator& begin, const VolIterator& end, 
 	                  SystemInfo& systeminfo);
-	int updatePartitionArea(const string& device, unsigned long start,
-				unsigned long size, bool noBtrfs );
+	int updatePartitionArea(const string& device, const Region& cylRegion, bool noBtrfs);
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs);
 	int resizeVolume(const string& device, unsigned long long newSizeK,

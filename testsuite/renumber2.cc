@@ -19,9 +19,9 @@ main()
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
     string device;
-    cout << s->createPartition("/dev/sda", EXTENDED, 0, 1000, device) << endl;
-    cout << s->createPartition("/dev/sda", LOGICAL,   0, 200, device) << endl;
-    cout << s->createPartition("/dev/sda", LOGICAL, 200, 200, device) << endl;
+    cout << s->createPartition("/dev/sda", EXTENDED, RegionInfo(  0, 1000), device) << endl;
+    cout << s->createPartition("/dev/sda", LOGICAL,  RegionInfo(  0,  200), device) << endl;
+    cout << s->createPartition("/dev/sda", LOGICAL,  RegionInfo(200,  200), device) << endl;
 
     deque<string> lvm_devices;
     lvm_devices.push_back("/dev/sda6");

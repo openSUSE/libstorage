@@ -24,7 +24,7 @@ run1 ()
     long int S = 4 * 1000000;
 
     string name;
-    cout << s->createPartitionKb(disk, PRIMARY, 0, S, name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(0, S), name) << endl;
 
     cout << name << endl;
 
