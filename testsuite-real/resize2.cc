@@ -24,7 +24,7 @@ doit(const string& disk)
     check_zero(s->commit());
 
     string part;
-    check_zero(s->createPartitionKb(disk, PRIMARY, 0, 4*1024*1024, part));
+    check_zero(s->createPartitionKb(disk, PRIMARY, RegionInfo(0, 4*1024*1024), part));
     cout << "part:" << part << endl;
 
     deque<string> pvs;

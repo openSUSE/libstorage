@@ -1199,17 +1199,15 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param startCyl cylinder number of partition start (cylinders are numbered starting with 0)
-	 * @param sizeCyl size of partition in disk cylinders
+	 * @param cylRegion region in cylinder of partition (cylinders are numbered starting with 0)
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createPartition( const string& disk, PartitionType type,
-				     unsigned long startCyl,
-				     unsigned long sizeCyl,
-				     string& SWIG_OUTPUT(device) ) = 0;
+	virtual int createPartition(const string& disk, PartitionType type,
+				    const RegionInfo& cylRegion,
+				    string& SWIG_OUTPUT(device)) = 0;
 
 	/**
 	 * Resize an existing disk partition. Units given in disk cylinders.
@@ -1239,13 +1237,10 @@ namespace storage
 	 * committed.
 	 *
 	 * @param device device name of partition, e.g. /dev/hda1
-	 * @param startCyl cylinder number of partition start (cylinders are numbered starting with 0)
-	 * @param sizeCyl size of partition in disk cylinders
+	 * @param cylRegion region in cylinder of partition (cylinders are numbered starting with 0)
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int updatePartitionArea( const string& device,
-	                                 unsigned long startCyl,
-					 unsigned long sizeCyl ) = 0;
+	virtual int updatePartitionArea(const string& device, const RegionInfo& cylRegion) = 0;
 
 	/**
 	 * Return the number of free cylinders before and after a partition.
@@ -1281,17 +1276,15 @@ namespace storage
 	 *
 	 * @param disk device name of disk, e.g. /dev/hda
 	 * @param type type of partition to create, e.g. primary or extended
-	 * @param startK offset in kilobytes from start of disk
-	 * @param sizeK size of partition in kilobytes
+	 * @param kRegion region in kilobyte of partition
 	 * @param device is set to the device name of the new partition
 	 * The name is returned instead of the number since creating the name from the
 	 * number is not straight-forward.
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createPartitionKb( const string& disk, PartitionType type,
-				       unsigned long long startK,
-				       unsigned long long sizeK,
-				       string& SWIG_OUTPUT(device) ) = 0;
+	virtual int createPartitionKb(const string& disk, PartitionType type,
+				      const RegionInfo& kRegion,
+				      string& SWIG_OUTPUT(device)) = 0;
 
 	/**
 	 * Create a new partition of any type anywhere on the disk. Units given in Kilobytes.

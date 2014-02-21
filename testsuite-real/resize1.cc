@@ -27,7 +27,7 @@ doit(const string& disk)
     for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
     {
 	string part;
-	check_zero(s->createPartitionKb(disk, PRIMARY, 0, 1024*1024, part));
+	check_zero(s->createPartitionKb(disk, PRIMARY, RegionInfo(0, 1024*1024), part));
 	cout << "part:" << part << endl;
 
 	print_commitinfos(s);
