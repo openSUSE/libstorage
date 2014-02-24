@@ -712,7 +712,7 @@ getMajorDevices(const char* driver)
     void
     checkBinPaths(const string& arch, bool instsys)
     {
-	y2mil("Arch:" << arch << " Instsys:" << instsys);
+	y2mil("arch:" << arch << " instsys:" << instsys);
 
 	set<string> paths = {
 #include "./gen_pathlist.cc"
@@ -723,7 +723,6 @@ getMajorDevices(const char* driver)
 
 	if (!boost::starts_with(arch, "s390"))
 	{
-	    paths.erase(FDASDBIN);
 	    paths.erase(DASDVIEWBIN);
 	    paths.erase(DASDFMTBIN);
 	}

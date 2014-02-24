@@ -77,7 +77,6 @@
 
 #define DASDFMTBIN "/sbin/dasdfmt"
 #define DASDVIEWBIN "/sbin/dasdview"
-#define FDASDBIN "/sbin/fdasd"
 
 #define UDEVADMBIN "/sbin/udevadm"
 

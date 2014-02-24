@@ -97,7 +97,7 @@ class Disk : public Container
 	Region detectSysfsBlkRegion(bool log_error = true) const;
 
 	unsigned numPartitions() const;
-	bool isDasd() const { return( nm.find("dasd")==0 ); }
+	bool isDasd() const { return boost::starts_with(nm, "dasd"); }
 	bool isIScsi() const { return transport == ISCSI; }
 	static bool isIScsi(const Disk& d) { return d.isIScsi(); }
 	bool isLogical( unsigned nr ) const;

@@ -597,28 +597,28 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
 }
 
 
-bool
-Disk::checkFakePartition(SystemInfo& systeminfo, const list<Partition*>& pl) const
-{
-    // For FBA DASDs without an partition table the kernel generates a fake
-    // partition spanning almost the whole disk.
-
-    if (isDasd() && detected_label.empty() && pl.size() == 1 && pl.front()->nr() == 1)
+    bool
+    Disk::checkFakePartition(SystemInfo& systeminfo, const list<Partition*>& pl) const
     {
-	Region disk_region = detectSysfsBlkRegion();
-	Region part_region = pl.front()->detectSysfsBlkRegion();
+	// For FBA DASDs without an partition table the kernel generates a fake
+	// partition spanning almost the whole disk.
 
-	y2mil("disk:" << disk_region << " part:" << part_region);
-
-	if (disk_region.end() == part_region.end() && part_region.start() == 2)
+	if (isDasd() && detected_label.empty() && pl.size() == 1 && pl.front()->nr() == 1)
 	{
-	    y2mil("found fake partition on " << device());
-	    return true;
-	}
-    }
+	    Region disk_region = detectSysfsBlkRegion();
+	    Region part_region = pl.front()->detectSysfsBlkRegion();
 
-    return false;
-}
+	    y2mil("disk:" << disk_region << " part:" << part_region);
+
+	    if (disk_region.end() == part_region.end() && part_region.start() == 2)
+	    {
+		y2mil("found fake partition on " << device());
+		return true;
+	    }
+	}
+
+	return false;
+    }
 
 
 bool
@@ -1605,6 +1605,7 @@ Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vol
 	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
     }
 
+
 int Disk::commitChanges( CommitStage stage, Volume* vol )
     {
     y2mil("name:" << name() << " stage:" << stage);
@@ -1623,6 +1624,7 @@ int Disk::commitChanges( CommitStage stage, Volume* vol )
     y2mil("ret:" << ret);
     return( ret );
     }
+
 
 int Disk::commitChanges( CommitStage stage )
     {
@@ -1988,7 +1990,7 @@ int Disk::doCreate( Volume* v )
 	    cmd_line << PARTEDCMD;
 	    cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
 	    cmd_line << quote(device()) << " unit cyl mkpart ";
-	    if( label != "sun" )
+	    if (label != "dasd" && label != "sun")
 		{
 		switch( p->type() )
 		    {

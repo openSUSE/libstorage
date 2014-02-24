@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -34,9 +34,9 @@ namespace storage
     class ProcParts;
 
 
-class Dasd : public Disk
+    class Dasd : public Disk
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -48,42 +48,32 @@ class Dasd : public Disk
 	Dasd(const Dasd& c);
 	virtual ~Dasd();
 
-        int createPartition( storage::PartitionType type, long unsigned start,
-	                     long unsigned len, string& device,
-			     bool checkRelaxed=false );
-        int removePartition( unsigned nr );
-        int changePartitionId( unsigned nr, unsigned id ) { return 0; }
-        int resizePartition( Partition* p, unsigned long newCyl );
-	int initializeDisk( bool value );
+        int createPartition(PartitionType type, long unsigned start,
+			    long unsigned len, string& device,
+			    bool checkRelaxed = false);
+        int removePartition(unsigned nr);
+        int changePartitionId(unsigned nr, unsigned id) { return 0; }
+	int resizePartition(Partition* p, unsigned long newCyl) override;
+	int initializeDisk(bool value);
 	virtual string defaultLabel() const;
-	Text fdasdText() const;
-	Text dasdfmtText( bool doing ) const;
+	Text dasdfmtText(bool doing) const;
 	static Text dasdfmtTexts(bool doing, const list<string>& devs);
 	void getCommitActions(list<commitAction>& l) const;
-	void getToCommit(storage::CommitStage stage, list<const Container*>& col,
-			 list<const Volume*>& vol) const;
-	int commitChanges( storage::CommitStage stage );
+	int commitChanges(CommitStage stage);
 
     protected:
 
-	virtual void print( std::ostream& s ) const { s << *this; }
-	virtual Container* getCopy() const { return( new Dasd( *this ) ); }
-	bool detectPartitionsFdasd(SystemInfo& systeminfo);
+	virtual void print(std::ostream& s) const { s << *this; }
+	virtual Container* getCopy() const { return new Dasd(*this); }
 	bool detectPartitions(SystemInfo& systeminfo);
-	virtual bool checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const;
-	bool checkFdasdOutput(SystemInfo& systeminfo);
-	void redetectGeometry() {};
-        int doCreate( Volume* v ) { return(doFdasd()); }
-        int doRemove( Volume* v ) { return(init_disk?0:doFdasd()); }
-	int doFdasd();
-        int doResize( Volume* v );
-        int doSetType( Volume* v ) { return 0; }
-        int doCreateLabel() { return 0; }
+	void redetectGeometry() override {}
+	int doResize(Volume* v) override;
+        int doSetType(Volume* v) override { return 0; }
 	int doDasdfmt();
 
 	DasdFormat fmt;
 
-	friend std::ostream& operator<< (std::ostream&, const Dasd& );
+	friend std::ostream& operator<< (std::ostream&, const Dasd&);
 
     private:
 
