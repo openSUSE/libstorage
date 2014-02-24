@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Feb 24 14:31:45 CET 2014 - aschnell@suse.de
+
+- use parted for ECKD DASDs (fate#313075)
+- 2.25.9
+
+-------------------------------------------------------------------
 Fri Feb 21 10:42:59 CET 2014 - aschnell@suse.de
 
 - provide number and device name in PartitionSlotInfo

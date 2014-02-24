@@ -65,7 +65,6 @@ namespace storage
 	const Lsscsi& getLsscsi() { return *lsscsi; }
 	const Parted& getParted(const string& device) { return parteds.get(device); }
 	const Dasdview& getDasdview(const string& device) { return dasdviews.get(device); }
-	const Fdasd& getFdasd(const string& device) { return fdasds.get(device); }
 	const CmdDmsetup& getCmdDmsetup() { return *cmddmsetup; }
 	const CmdCryptsetup& getCmdCryptsetup(const string& name) { return cmdcryptsetups.get(name); }
 	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
@@ -123,7 +122,6 @@ namespace storage
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
 	LazyObjects<Parted> parteds;
-	LazyObjects<Fdasd> fdasds;
 	LazyObjects<Dasdview> dasdviews;
 	LazyObject<CmdDmsetup> cmddmsetup;
 	LazyObjects<CmdCryptsetup> cmdcryptsetups;

@@ -812,9 +812,9 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
     list<DiskData> dl;
     while( i!=dlist.end() )
 	{
-	if( i->second.range > 1 && (i->second.size > 0 || i->first.find("dasd") == 0))
+	if (i->second.range > 1 && (i->second.size > 0 || boost::starts_with(i->first, "dasd")))
 	    {
-	    DiskData::DTyp t = (i->first.find("dasd") == 0) ? DiskData::DASD : DiskData::DISK;
+	    DiskData::DTyp t = boost::starts_with(i->first, "dasd") ? DiskData::DASD : DiskData::DISK;
 
 	    if (t == DiskData::DASD)
 		{
