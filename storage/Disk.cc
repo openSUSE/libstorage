@@ -2172,9 +2172,14 @@ int Disk::doRemove( Volume* v )
 		else
 		    y2war( "suppressing failed removal del_ptable:" << del_ptable );
 		}
-	    ProcParts parts;
-	    if( parts.findDevice(getPartName(p->OrigNr())) )
-		callDelpart( p->OrigNr() );
+	    // only check for successful removal (kernel side) for partitions
+	    // where no renumbering can happen
+	    if (p->type() != LOGICAL || label == "dasd")
+	    {
+		ProcParts parts;
+		if (parts.findDevice(getPartName(p->OrigNr())))
+		    callDelpart(p->OrigNr());
+	    }
 	    }
 	if( ret==0 )
 	    {
