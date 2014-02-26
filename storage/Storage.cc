@@ -2414,11 +2414,10 @@ Storage::changeFormatVolume( const string& device, bool format, FsType fs )
 		    vol->updateFsData();
 		    vol->clearUsedBy();
 		    vol->changeMount( mp );
-                    if( !mp.empty() )
+                    if( mounted && !mp.empty() )
                         {
                         vol->setMount(mp);
-                        if( mounted )
-                            vol->setMounted();
+			vol->setMounted();
                         }
                     if( mby_uuid )
                         vol->changeMountBy( vol->defaultMountBy() );
