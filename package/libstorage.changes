@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Feb 26 18:05:56 CET 2014 - aschnell@suse.de
+
+- fixed formatting after changing filesystem type (bnc#848655)
+
+-------------------------------------------------------------------
 Mon Feb 24 14:31:45 CET 2014 - aschnell@suse.de
 
 - use parted for ECKD DASDs (fate#313075)
