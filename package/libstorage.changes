@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Feb 28 14:40:34 CET 2014 - aschnell@suse.de
+
+- adjust start cylinder of partitions on ECKD DASDs (bnc#866149)
+
+-------------------------------------------------------------------
 Wed Feb 26 18:05:56 CET 2014 - aschnell@suse.de
 
 - fixed formatting after changing filesystem type (bnc#848655)
