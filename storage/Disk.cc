@@ -722,14 +722,19 @@ Disk::defaultLabel() const
     };
 
 
-Region Disk::usableCylRegion() const
-{
-    unsigned long long maxSectors = (1ULL << 32) - 1;
-    DlabelCapabilities caps;
-    if (getDlabelCapabilities(label, caps))
-	maxSectors = caps.maxSectors;
-    return Region(0, min(cylinders(), kbToCylinder(sectorToKb(maxSectors))));
-}
+    Region
+    Disk::usableCylRegion() const
+    {
+	unsigned long long maxSectors = (1ULL << 32) - 1;
+	DlabelCapabilities caps;
+	if (getDlabelCapabilities(label, caps))
+	    maxSectors = caps.maxSectors;
+
+	unsigned long start = label == "dasd" ? 1 : 0;
+	unsigned long len = min(cylinders(), kbToCylinder(sectorToKb(maxSectors)));
+
+	return Region(start, len - start);
+    }
 
 
     const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+",
@@ -1175,6 +1180,13 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     {
     y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
 	  checkRelaxed);
+
+    if (label == "dasd" && start == 0)
+    {
+	y2war("adjusting partition start");
+	start = 1;
+    }
+
     getStorage()->logCo( this );
     int ret = createChecks(type, Region(start, len), checkRelaxed);
     unsigned number = 0;
