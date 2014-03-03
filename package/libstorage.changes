@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Mar 03 15:53:43 CET 2014 - aschnell@suse.de
+
+- fixed partition end cylinder calculation (bnc#866149)
+
+-------------------------------------------------------------------
 Fri Feb 28 14:40:34 CET 2014 - aschnell@suse.de
 
 - adjust start cylinder of partitions on ECKD DASDs (bnc#866149)

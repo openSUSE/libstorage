@@ -730,7 +730,10 @@ Disk::defaultLabel() const
 	if (getDlabelCapabilities(label, caps))
 	    maxSectors = caps.maxSectors;
 
-	unsigned long start = label == "dasd" ? 1 : 0;
+	unsigned long start = 0;
+	if (label == "mac" || label == "amiga" || label == "dasd")
+	    start = 1;
+
 	unsigned long len = min(cylinders(), kbToCylinder(sectorToKb(maxSectors)));
 
 	return Region(start, len - start);
@@ -2045,7 +2048,7 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    unsigned long start = p->cylStart();
-	    unsigned long end = p->cylStart()+p->cylSize();
+	    unsigned long end = p->cylEnd();
 	    ConstPartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
 						    : partPair( existingLog );
 	    unsigned long maxc = cylinders();
@@ -2082,7 +2085,7 @@ int Disk::doCreate( Volume* v )
 		y2mil("corrected end from " << end << " to max " << maxc);
 		end = maxc;
 		}
-	    if( start==0 && (label == "mac" || label == "amiga") )
+	    if (start == 0 && (label == "mac" || label == "amiga" || label == "dasd"))
 		start = 1;
 	    string save = cmd_line.str();
 	    y2mil( "end:" << end << " cylinders:" << cylinders() );
