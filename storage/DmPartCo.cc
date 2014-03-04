@@ -296,8 +296,8 @@ DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
 void 
     DmPartCo::init(SystemInfo& systeminfo)
     {
-	CmdDmsetup::Entry entry;
-	if (systeminfo.getCmdDmsetup().getEntry(nm, entry) && entry.segments > 0)
+	CmdDmsetupInfo::Entry entry;
+	if (systeminfo.getCmdDmsetupInfo().getEntry(nm, entry) && entry.segments > 0)
 	{
 	systeminfo.getProcParts().getSize("/dev/dm-" + decString(entry.mnr), size_k);
 	y2mil("minor:" << entry.mnr << " nm:" << nm);
@@ -313,7 +313,7 @@ void
 	    string pat = getPartName(1);
 	    pat.erase( pat.length()-1, 1 );
 	    string reg = "^" + pat + "[0-9]+" "$";
-	    list<string> tmp = systeminfo.getCmdDmsetup().getMatchingEntries(regex_matches(reg));
+	    list<string> tmp = systeminfo.getCmdDmsetupInfo().getMatchingEntries(regex_matches(reg));
 	    if (tmp.empty())
 		activate_part(true);
 	    }

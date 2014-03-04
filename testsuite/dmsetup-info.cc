@@ -26,10 +26,10 @@ parse1()
 	"system-giant--xfs/253/4/3/LVM-OMPzXFm3am1zIlAVdQi5WxtmyNcevmRnHdH1l4B0LUptYisBQuf33vP5rGosS1e2"
     };
 
-    CmdDmsetup cmddmsetup(false);
-    cmddmsetup.parse(lines);
+    CmdDmsetupInfo cmddmsetupinfo(false);
+    cmddmsetupinfo.parse(lines);
 
-    cout << cmddmsetup << endl;
+    cout << cmddmsetupinfo << endl;
 }
 
 

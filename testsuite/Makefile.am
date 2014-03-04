@@ -27,7 +27,7 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	udevdecode.single udevencode.single usedby1.single userdata1.single	\
 	uuid1.single								\
 	blkid.single btrfs.single cryptsetup.single dasdview.single		\
-	dmraid.single dmsetup.single lsscsi.single mdadm-details.single		\
+	dmraid.single dmsetup-info.single lsscsi.single mdadm-details.single	\
 	mdadm-examine.single parted.single proc-mdstat.single			\
 	proc-mounts.single proc-parts.single vgdisplay.single vgs.single
 
@@ -76,7 +76,7 @@ btrfs_single_SOURCES = btrfs.cc common.h common.cc
 cryptsetup_single_SOURCES = cryptsetup.cc common.h common.cc
 dasdview_single_SOURCES = dasdview.cc common.h common.cc
 dmraid_single_SOURCES = dmraid.cc common.h common.cc
-dmsetup_single_SOURCES = dmsetup.cc common.h common.cc
+dmsetup_info_single_SOURCES = dmsetup-info.cc common.h common.cc
 lsscsi_single_SOURCES = lsscsi.cc common.h common.cc
 mdadm_details_single_SOURCES = mdadm-details.cc common.h common.cc
 mdadm_examine_single_SOURCES = mdadm-examine.cc common.h common.cc

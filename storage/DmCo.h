@@ -31,20 +31,19 @@ namespace storage
     class SystemInfo;
 
 
-    class CmdDmsetup
+    class CmdDmsetupInfo
     {
 
     public:
 
-	CmdDmsetup(bool do_probe = true);
+	CmdDmsetupInfo(bool do_probe = true);
 
 	void probe();
 
 	struct Entry
 	{
-	    Entry() : name(), mjr(0), mnr(0), segments(0), uuid() {}
+	    Entry() : mjr(0), mnr(0), segments(0), uuid() {}
 
-	    string name;
 	    unsigned long mjr;
 	    unsigned long mnr;
 	    unsigned segments;
@@ -65,12 +64,13 @@ namespace storage
 	    return ret;
 	}
 
+	typedef map<string, Entry>::value_type value_type;
 	typedef map<string, Entry>::const_iterator const_iterator;
 
 	const_iterator begin() const { return data.begin(); }
 	const_iterator end() const { return data.end(); }
 
-	friend std::ostream& operator<<(std::ostream& s, const CmdDmsetup& cmddmsetup);
+	friend std::ostream& operator<<(std::ostream& s, const CmdDmsetupInfo& cmddmsetupinfo);
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	void parse(const vector<string>& lines);

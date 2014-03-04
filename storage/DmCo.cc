@@ -38,7 +38,7 @@ namespace storage
     using namespace std;
 
 
-    CmdDmsetup::CmdDmsetup(bool do_probe)
+    CmdDmsetupInfo::CmdDmsetupInfo(bool do_probe)
     {
 	if (do_probe)
 	    probe();
@@ -46,7 +46,7 @@ namespace storage
 
 
     void
-    CmdDmsetup::probe()
+    CmdDmsetupInfo::probe()
     {
 	SystemCmd c(DMSETUPBIN " --columns --separator '/' --noheadings -o name,major,minor,segments,uuid info");
 	if (c.retcode() == 0 && !c.stdout().empty())
@@ -55,7 +55,7 @@ namespace storage
 
 
     void
-    CmdDmsetup::parse(const vector<string>& lines)
+    CmdDmsetupInfo::parse(const vector<string>& lines)
     {
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
@@ -80,7 +80,7 @@ namespace storage
 
 
     bool
-    CmdDmsetup::getEntry(const string& name, Entry& entry) const
+    CmdDmsetupInfo::getEntry(const string& name, Entry& entry) const
     {
 	const_iterator it = data.find(name);
 	if (it == data.end())
@@ -92,7 +92,7 @@ namespace storage
 
 
     list<string>
-    CmdDmsetup::getEntries() const
+    CmdDmsetupInfo::getEntries() const
     {
 	list<string> ret;
 	for (const_iterator i = data.begin(); i != data.end(); ++i)
@@ -101,19 +101,19 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const CmdDmsetup& cmddmsetup)
+    std::ostream& operator<<(std::ostream& s, const CmdDmsetupInfo& cmddmsetupinfo)
     {
-	for (CmdDmsetup::const_iterator it = cmddmsetup.begin(); it != cmddmsetup.end(); ++it)
-	    s << "data[" << it->first << "] -> " << it->second << endl;
+	for (const CmdDmsetupInfo::value_type& it : cmddmsetupinfo)
+	    s << "data[" << it.first << "] -> " << it.second << endl;
 
 	return s;
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const CmdDmsetup::Entry& entry)
+    std::ostream& operator<<(std::ostream& s, const CmdDmsetupInfo::Entry& entry)
     {
-	s << "name:" << entry.name << " mjr:" << entry.mjr << " mnr:" << entry.mnr << " segments:"
-	  << entry.segments << " uuid:" << entry.uuid;
+	s << "mjr:" << entry.mjr << " mnr:" << entry.mnr << " segments:" << entry.segments
+	  << " uuid:" << entry.uuid;
 
 	return s;
     }
@@ -249,10 +249,10 @@ void DmCo::getDmData(SystemInfo& systeminfo)
     Storage::ConstDmmultipathCoPair dmmco = getStorage()->dmmultipathCoPair();
     Storage::ConstDmmultipathPair dmm = getStorage()->dmmPair();
 
-    const CmdDmsetup& cmddmsetup = systeminfo.getCmdDmsetup();
+    const CmdDmsetupInfo& cmddmsetupinfo = systeminfo.getCmdDmsetupInfo();
     list<string> lvm_pools;
     list<string> lvm_tmeta;
-    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
         {
         if( boost::ends_with(it1->first,"-tpool") )
             {
@@ -278,7 +278,7 @@ void DmCo::getDmData(SystemInfo& systeminfo)
         }
     y2mil( "lvm_pools:" << lvm_pools );
     y2mil( "lvm_tmeta:" << lvm_tmeta );
-    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
         {
         if( boost::ends_with(it1->first,"_tdata") )
             {
@@ -289,7 +289,7 @@ void DmCo::getDmData(SystemInfo& systeminfo)
 	    }
         }
     y2mil( "lvm_pools:" << lvm_pools );
-    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
     {
 	string table = it1->first;
 	bool found=false;
@@ -340,7 +340,7 @@ void DmCo::getDmData(SystemInfo& systeminfo)
 	    }
 	if( !found )
 	    {
-	    const CmdDmsetup::Entry& entry = it1->second;
+	    const CmdDmsetupInfo::Entry& entry = it1->second;
 
 	    Dm* m = new Dm(*this, table, "/dev/mapper/" + table, table, systeminfo);
 	    y2mil("new Dm:" << *m);
@@ -423,11 +423,11 @@ DmCo::addDm( Dm* m )
 void DmCo::getDmDataCrypt(SystemInfo& systeminfo)
     {
     y2mil( "begin:" );
-    const CmdDmsetup& cmddmsetup = systeminfo.getCmdDmsetup();
-    for (CmdDmsetup::const_iterator it1 = cmddmsetup.begin(); it1 != cmddmsetup.end(); ++it1)
+    const CmdDmsetupInfo& cmddmsetupinfo = systeminfo.getCmdDmsetupInfo();
+    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
         {
 	string table = it1->first;
-        const CmdDmsetup::Entry& entry = it1->second;
+        const CmdDmsetupInfo::Entry& entry = it1->second;
         string dev = "/dev/mapper/" + table;
 
         if( boost::starts_with(entry.uuid, "CRYPT"))
