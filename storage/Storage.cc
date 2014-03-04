@@ -5088,25 +5088,6 @@ bool Storage::removeDmMapsTo( const string& dev )
     return( ret );
     }
 
-void Storage::updateDmEmptyPeMap()
-    {
-    VPair vp = vPair( isDmContainer );
-    for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
-	{
-	Dm * dm = dynamic_cast<Dm *>(&(*v));
-	if( dm!=NULL )
-	    {
-	    if( dm->getPeMap().empty() )
-		{
-		y2mil( "dm:" << *dm );
-		dm->getTableInfo();
-		dm->updateMajorMinor();
-		}
-	    }
-	else
-	    y2war("not a Dm descendant " << v->device());
-	}
-    }
 
 bool Storage::checkDmMapsTo( const string& dev )
     {

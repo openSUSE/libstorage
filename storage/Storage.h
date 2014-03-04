@@ -601,7 +601,6 @@ class DiskData;
 	bool removeDmTable( const string& table );
 	bool removeDmMapsTo( const string& dev );
 	bool checkDmMapsTo( const string& dev );
-	void updateDmEmptyPeMap();
 	void dumpObjectList();
 	void dumpCommitInfos() const;
 	bool mountTmpRo( const Volume* vol, string& mp, const string& opts="" );
