@@ -257,8 +257,8 @@ void DmraidCo::activate( bool val )
 	list<string> entries = systeminfo.getCmdDmraid().getEntries();
 	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
         {
-	    CmdDmsetup::Entry entry;
-	    if (systeminfo.getCmdDmsetup().getEntry(*it, entry) && entry.segments > 0)
+	    CmdDmsetupInfo::Entry entry;
+	    if (systeminfo.getCmdDmsetupInfo().getEntry(*it, entry) && entry.segments > 0)
       		l.push_back(*it);
 	    else
 		y2mil("ignoring inactive dmraid " << *it);
