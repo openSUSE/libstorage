@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/SystemInfo/Blkid.h"
+#include "storage/SystemInfo/CmdBlkid.h"
 
 
 using namespace std;

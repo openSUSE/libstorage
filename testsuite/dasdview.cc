@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/SystemInfo/Dasdview.h"
+#include "storage/SystemInfo/CmdDasdview.h"
 
 
 using namespace std;

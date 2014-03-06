@@ -30,7 +30,7 @@
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo/Parted.h"
+#include "storage/Geometry.h"
 #include "storage/Enum.h"
 #include "storage/Partition.h"
 

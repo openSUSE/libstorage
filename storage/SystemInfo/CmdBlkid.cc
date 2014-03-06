@@ -23,7 +23,7 @@
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo/Blkid.h"
+#include "storage/SystemInfo/CmdBlkid.h"
 #include "storage/Enum.h"
 
 

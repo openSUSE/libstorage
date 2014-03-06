@@ -20,7 +20,7 @@
  */
 
 
-#include "storage/SystemInfo/Dasdview.h"
+#include "storage/SystemInfo/CmdDasdview.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemCmd.h"
 
