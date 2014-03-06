@@ -2,6 +2,8 @@
 # Makefile.am for libstorage/storage
 #
 
+SUBDIRS = SystemInfo
+
 lib_LTLIBRARIES = libstorage.la
 
 libstorage_la_SOURCES =					\
@@ -46,14 +48,6 @@ libstorage_la_SOURCES =					\
 	ArchInfo.cc		ArchInfo.h		\
 	AsciiFile.cc		AsciiFile.h		\
 	XmlFile.cc		XmlFile.h		\
-	SystemInfo.cc		SystemInfo.h		\
-	ProcParts.cc		ProcParts.h		\
-	Blkid.cc		Blkid.h			\
-	Lsscsi.cc		Lsscsi.h		\
-	Parted.cc		Parted.h		\
-	Dasdview.cc		Dasdview.h		\
-	ProcMounts.cc		ProcMounts.h		\
-	ProcMdstat.cc		ProcMdstat.h		\
 	EtcFstab.cc		EtcFstab.h		\
 	EtcMdadm.cc		EtcMdadm.h		\
 	Geometry.cc		Geometry.h		\
@@ -68,7 +62,7 @@ libstorage_la_SOURCES =					\
 	gen_md5sum.cc           gen_md5sum.h
 
 libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
-libstorage_la_LIBADD = -lxml2
+libstorage_la_LIBADD = SystemInfo/libsysteminfo.la -lxml2
 
 $(srcdir)/gen_pathlist.cc: StorageDefines.h
 	grep BIN $< | sed -e "/PARTEDCMD/d" -e "s/^[^ ]*[ ]\+//" -e "s/ .*/,/" >$@

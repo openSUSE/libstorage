@@ -25,7 +25,7 @@
 #include "storage/Dm.h"
 #include "storage/PeContainer.h"
 #include "storage/SystemCmd.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 #include "storage/AppUtil.h"
 #include "storage/Regex.h"
 #include "storage/Storage.h"

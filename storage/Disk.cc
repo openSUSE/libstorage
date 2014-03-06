@@ -29,14 +29,12 @@
 
 #include "storage/Region.h"
 #include "storage/Partition.h"
-#include "storage/SystemInfo.h"
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
-#include "storage/Parted.h"
 
 
 namespace storage

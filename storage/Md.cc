@@ -32,7 +32,7 @@
 #include "storage/Container.h"
 #include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

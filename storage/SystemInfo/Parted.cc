@@ -25,7 +25,7 @@
 #include "storage/AppUtil.h"
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
-#include "storage/Parted.h"
+#include "storage/SystemInfo/Parted.h"
 #include "storage/Enum.h"
 #include "storage/Partition.h"
 

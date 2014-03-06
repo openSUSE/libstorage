@@ -23,7 +23,7 @@
 #include <string>
 
 #include "storage/Storage.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

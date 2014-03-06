@@ -26,7 +26,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/StorageDefines.h"
 #include "storage/StorageTmpl.h"
-#include "storage/Lsscsi.h"
+#include "storage/SystemInfo/Lsscsi.h"
 #include "storage/Disk.h"
 #include "storage/Enum.h"
 

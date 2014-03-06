@@ -28,13 +28,11 @@
 #include <boost/algorithm/string.hpp>
 
 #include "storage/SystemCmd.h"
-#include "storage/ProcParts.h"
 #include "storage/Storage.h"
 #include "storage/OutputProcessor.h"
 #include "storage/Dasd.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo.h"
-#include "storage/Dasdview.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

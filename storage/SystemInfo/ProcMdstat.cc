@@ -26,7 +26,7 @@
 #include "storage/AppUtil.h"
 #include "storage/AsciiFile.h"
 #include "storage/StorageInterface.h"
-#include "storage/ProcMdstat.h"
+#include "storage/SystemInfo/ProcMdstat.h"
 #include "storage/Enum.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemCmd.h"
