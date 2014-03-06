@@ -34,43 +34,6 @@ class Storage;
     class SystemInfo;
 
 
-    class CmdDmraid
-    {
-
-    public:
-
-	CmdDmraid(bool do_probe = true);
-
-	void probe();
-
-	struct Entry
-	{
-	    string raidtype;
-	    string controller;
-	    list<string> devices;
-	};
-
-	list<string> getEntries() const;
-
-	bool getEntry(const string& name, Entry& entry) const;
-
-	typedef map<string, Entry>::const_iterator const_iterator;
-
-	const_iterator begin() const { return data.begin(); }
-	const_iterator end() const { return data.end(); }
-
-	friend std::ostream& operator<<(std::ostream& s, const CmdDmraid& cmddmraid);
-	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
-
-	void parse(const vector<string>& lines);
-
-    private:
-
-	map<string, Entry> data;
-
-    };
-
-
 class DmraidCo : public DmPartCo
     {
     friend class Storage;

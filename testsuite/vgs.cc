@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/LvmVg.h"
+#include "storage/SystemInfo/CmdLvm.h"
 
 
 using namespace std;

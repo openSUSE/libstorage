@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/DmraidCo.h"
+#include "storage/SystemInfo/CmdDmraid.h"
 
 
 using namespace std;

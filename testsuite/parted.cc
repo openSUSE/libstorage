@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/SystemInfo/Parted.h"
+#include "storage/SystemInfo/CmdParted.h"
 
 
 using namespace std;
