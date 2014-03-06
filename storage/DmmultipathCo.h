@@ -35,35 +35,6 @@ class Storage;
     class SystemInfo;
 
 
-    class CmdMultipath
-    {
-
-    public:
-
-	CmdMultipath(bool test = false);
-
-	struct Entry
-	{
-	    string vendor;
-	    string model;
-	    list<string> devices;
-	};
-
-	list<string> getEntries() const;
-
-	bool getEntry(const string& name, Entry& entry) const;
-
-	bool looksLikeRealMultipath() const;
-
-    private:
-
-	typedef map<string, Entry>::const_iterator const_iterator;
-
-	map<string, Entry> data;
-
-    };
-
-
 class DmmultipathCo : public DmPartCo
     {
     friend class Storage;

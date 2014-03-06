@@ -32,37 +32,6 @@ namespace storage
     class SystemInfo;
 
 
-    class CmdBtrfsShow
-    {
-    public:
-
-	CmdBtrfsShow(bool do_probe = true);
-
-	void probe();
-
-	struct Entry
-	{
-	    list<string> devices;
-	};
-
-	friend std::ostream& operator<<(std::ostream& s, const CmdBtrfsShow& cmdbtrfsshow);
-	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
-
-	bool getEntry(const string& uuid, Entry& entry) const;
-
-	list<string> getUuids() const;
-
-	void parse(const vector<string>& lines);
-
-    private:
-
-	typedef map<string, Entry>::const_iterator const_iterator;
-
-	map<string, Entry> data;
-
-    };
-
-
 class BtrfsCo : public Container
     {
     friend class Storage;

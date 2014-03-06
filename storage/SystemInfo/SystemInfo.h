@@ -34,11 +34,12 @@
 #include "storage/SystemInfo/Lsscsi.h"
 #include "storage/SystemInfo/Parted.h"
 #include "storage/SystemInfo/Dasdview.h"
-#include "storage/DmCo.h"
-#include "storage/DmraidCo.h"
-#include "storage/DmmultipathCo.h"
-#include "storage/BtrfsCo.h"
-#include "storage/LvmVg.h"
+#include "storage/SystemInfo/CmdDmsetup.h"
+#include "storage/SystemInfo/CmdCryptsetup.h"
+#include "storage/SystemInfo/CmdDmraid.h"
+#include "storage/SystemInfo/CmdMultipath.h"
+#include "storage/SystemInfo/CmdBtrfs.h"
+#include "storage/SystemInfo/CmdLvm.h"
 
 
 namespace storage
