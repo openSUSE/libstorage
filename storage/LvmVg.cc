@@ -28,7 +28,7 @@
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 #include "storage/StorageDefines.h"
 
 

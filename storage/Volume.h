@@ -23,7 +23,7 @@
 #ifndef VOLUME_H
 #define VOLUME_H
 
-#include "storage/Blkid.h"
+#include "storage/SystemInfo/Blkid.h"
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
 #include "storage/StorageTmpl.h"

@@ -24,7 +24,7 @@
 
 #include "storage/SystemCmd.h"
 
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

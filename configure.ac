@@ -77,6 +77,7 @@ AC_OUTPUT(
 	doc/autodocs/Makefile
 	storage/Makefile
 	storage/StorageVersion.h:storage/StorageVersion.h.in
+	storage/SystemInfo/Makefile
 	bindings/Makefile
 	bindings/python/Makefile
 	bindings/python/examples/Makefile

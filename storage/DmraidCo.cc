@@ -29,7 +29,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

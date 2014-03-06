@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo/ProcParts.h"
 
 
 using namespace std;

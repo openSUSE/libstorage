@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "storage/Lsscsi.h"
+#include "storage/SystemInfo/Lsscsi.h"
 
 
 using namespace std;

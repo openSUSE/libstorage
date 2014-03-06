@@ -25,13 +25,12 @@
 
 #include "storage/DmPartCo.h"
 #include "storage/DmPart.h"
-#include "storage/ProcParts.h"
 #include "storage/Partition.h"
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage

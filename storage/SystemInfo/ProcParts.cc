@@ -23,7 +23,7 @@
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"
 #include "storage/AsciiFile.h"
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo/ProcParts.h"
 
 
 namespace storage

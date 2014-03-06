@@ -35,8 +35,7 @@
 
 #include "storage/MdPartCo.h"
 #include "storage/MdPart.h"
-#include "storage/SystemInfo.h"
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Partition.h"
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"

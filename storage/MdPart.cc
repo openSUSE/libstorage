@@ -26,7 +26,7 @@
 
 #include "storage/MdPart.h"
 #include "storage/MdPartCo.h"
-#include "storage/ProcParts.h"
+#include "storage/SystemInfo/ProcParts.h"
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
