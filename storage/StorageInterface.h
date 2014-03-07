@@ -1377,7 +1377,10 @@ namespace storage
 	virtual string getPartitionName(const string& disk, int partition_no) = 0;
 
 	/**
-	 * Query unused slots on a disk suitable for creating partitions.
+	 * Query unused slots on a disk suitable for creating partitions. The
+	 * returned information gets invalid as soon as one partition is
+	 * created. If more partitions should be created the slots must be
+	 * queried again.
 	 *
 	 * @param disk name of disk, e.g. /dev/hda1
 	 * @param slots list of records that get filled with partition slot specific info
