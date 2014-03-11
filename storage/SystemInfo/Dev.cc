@@ -44,10 +44,10 @@ namespace storage
     {
 	struct stat buf;
 	if (stat(device.c_str(), &buf) != 0)
-	    throw runtime_error("not-found");
+	    throw runtime_error(device + " not found");
 
 	if (!S_ISBLK(buf.st_mode))
-	    throw runtime_error("wrong-type");
+	    throw runtime_error(device + " not block device");
 
 	majorminor = buf.st_rdev;
 
