@@ -27,6 +27,8 @@
 #include <string>
 #include <vector>
 
+#include "storage/StorageInterface.h"
+
 
 namespace storage
 {
