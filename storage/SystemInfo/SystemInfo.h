@@ -57,60 +57,86 @@ namespace storage
 	~SystemInfo();
 
 	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
-	const ProcParts& getProcParts() { return *procparts; }
-	const ProcMounts& getProcMounts() { return *procmounts; }
-	const ProcMdstat& getProcMdstat() { return *procmdstat; }
+	const ProcParts& getProcParts() { return procparts.get(); }
+	const ProcMounts& getProcMounts() { return procmounts.get(); }
+	const ProcMdstat& getProcMdstat() { return procmdstat.get(); }
 	const MdadmDetails& getMdadmDetails(const string device) { return mdadmdetails.get(device); }
 	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices); }
-	const Blkid& getBlkid() { return *blkid; }
-	const Lsscsi& getLsscsi() { return *lsscsi; }
+	const Blkid& getBlkid() { return blkid.get(); }
+	const Lsscsi& getLsscsi() { return lsscsi.get(); }
 	const Parted& getParted(const string& device) { return parteds.get(device); }
 	const Dasdview& getDasdview(const string& device) { return dasdviews.get(device); }
-	const CmdDmsetupInfo& getCmdDmsetupInfo() { return *cmddmsetupinfo; }
+	const CmdDmsetupInfo& getCmdDmsetupInfo() { return cmddmsetupinfo.get(); }
 	const CmdCryptsetup& getCmdCryptsetup(const string& name) { return cmdcryptsetups.get(name); }
-	const CmdDmraid& getCmdDmraid() { return *cmddmraid; }
-	const CmdMultipath& getCmdMultipath() { return *cmdmultipath; }
-	const CmdBtrfsShow& getCmdBtrfsShow() { return *cmdbtrfsshow; }
-	const CmdVgs& getCmdVgs() { return *cmdvgs; }
+	const CmdDmraid& getCmdDmraid() { return cmddmraid.get(); }
+	const CmdMultipath& getCmdMultipath() { return cmdmultipath.get(); }
+	const CmdBtrfsShow& getCmdBtrfsShow() { return cmdbtrfsshow.get(); }
+	const CmdVgs& getCmdVgs() { return cmdvgs.get(); }
 	const CmdVgdisplay& getCmdVgdisplay(const string& name) { return vgdisplays.get(name); }
+	const MajorMinor& getMajorMinor(const string& device) { return majorminors.get(device); }
 
     private:
 
-	template <class Type>
-	class LazyObject : boost::noncopyable
+	/* LazyObject and LazyObjects cache the object and a potential
+	   exception during object construction. HelperBase does the common
+	   part. */
+
+	template <class Object, typename... Args>
+	class HelperBase
 	{
 	public:
 
-	    LazyObject() : ptr(NULL) {}
-	    ~LazyObject() { delete ptr; }
-
-	    const Type& operator*() { if (!ptr) ptr = new Type(); return *ptr; }
-
-	private:
-
-	    Type* ptr;
-
-	};
-
-	template <class Type, class Key = string>
-	class LazyObjects : boost::noncopyable
-	{
-	public:
-
-	    const Type& get(const Key& k)
+	    const Object& get(Args... args)
 	    {
-		typename map<Key, Type>::iterator pos = data.lower_bound(k);
-		if (pos == data.end() || typename map<Key, Type>::key_compare()(k, pos->first))
+		if (e)
+		    rethrow_exception(e);
+
+		if (!object)
 		{
-		    Type tmp(k);
-		    pos = data.insert(pos, typename map<Key, Type>::value_type(k, tmp));
+		    try
+		    {
+			object.reset(new Object(args...));
+		    }
+		    catch (exception)
+		    {
+			e = current_exception();
+			rethrow_exception(e);
+		    }
 		}
-		return pos->second;
+
+		return *object;
 	    }
 
 	private:
 
-	    map<Key, Type> data;
+	    shared_ptr<Object> object;
+	    exception_ptr e;
+
+	};
+
+	template <class Object>
+	class LazyObject : public HelperBase<Object>, boost::noncopyable
+	{
+	};
+
+	template <class Object, class Key = string>
+	class LazyObjects : boost::noncopyable
+	{
+	public:
+
+	    typedef HelperBase<Object, Key> Helper;
+
+	    const Object& get(const Key& k)
+	    {
+		typename map<Key, Helper>::iterator pos = data.lower_bound(k);
+		if (pos == data.end() || typename map<Key, Helper>::key_compare()(k, pos->first))
+		    pos = data.insert(pos, typename map<Key, Helper>::value_type(k, Helper()));
+		return pos->second.get(k);
+	    }
+
+	private:
+
+	    map<Key, Helper> data;
 
 	};
 
@@ -131,6 +157,7 @@ namespace storage
 	LazyObject<CmdBtrfsShow> cmdbtrfsshow;
 	LazyObject<CmdVgs> cmdvgs;
 	LazyObjects<CmdVgdisplay> vgdisplays;
+	LazyObjects<MajorMinor> majorminors;
 
     };
 
