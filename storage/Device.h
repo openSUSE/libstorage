@@ -68,6 +68,7 @@ namespace storage
 	string sizeString() const;
 
 	bool getMajorMinor();
+	void getMajorMinor(SystemInfo& systeminfo);
 	unsigned long majorNr() const { return mjr; }
 	unsigned long minorNr() const { return mnr; }
 

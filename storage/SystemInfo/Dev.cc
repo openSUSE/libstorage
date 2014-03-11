@@ -20,43 +20,47 @@
  */
 
 
-#ifndef CMD_CRYPTSETUP_H
-#define CMD_CRYPTSETUP_H
+#include <stdexcept>
 
-
-#include <string>
-#include <vector>
-
-#include "storage/StorageInterface.h"
+#include "storage/SystemInfo/Dev.h"
+#include "storage/AppUtil.h"
 
 
 namespace storage
 {
-    using std::string;
-    using std::vector;
+    using namespace std;
 
 
-    class CmdCryptsetup
+    MajorMinor::MajorMinor(const string& device, bool do_probe)
+	: device(device)
     {
+	if (do_probe)
+	    probe();
+    }
 
-    public:
 
-	CmdCryptsetup(const string& name, bool do_probe = true);
+    void
+    MajorMinor::probe()
+    {
+	struct stat buf;
+	if (stat(device.c_str(), &buf) != 0)
+	    throw runtime_error(device + " not found");
 
-	void probe();
+	if (!S_ISBLK(buf.st_mode))
+	    throw runtime_error(device + " not block device");
 
-	friend std::ostream& operator<<(std::ostream& s, const CmdCryptsetup& cmdcryptsetup);
+	majorminor = buf.st_rdev;
 
-	void parse(const vector<string>& lines);
+	y2mil(*this);
+    }
 
-	EncryptType encrypt_type;
 
-    private:
+    std::ostream& operator<<(std::ostream& s, const MajorMinor& majorminor)
+    {
+	s << "device:" << majorminor.device << " majorminor:" << majorminor.getMajor()
+	  << ":" << majorminor.getMinor();
 
-	string name;
-
-    };
+	return s;
+    }
 
 }
-
-#endif

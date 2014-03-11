@@ -76,7 +76,7 @@ namespace storage
 	numeric = true;
 	mdStringNum(name, num);
 
-	getMajorMinor();
+	getMajorMinor(systeminfo);
 	getStorage()->fetchDanglingUsedBy(dev, uby);
 
 	ProcMdstat::Entry entry;

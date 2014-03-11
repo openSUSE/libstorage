@@ -20,40 +20,40 @@
  */
 
 
-#ifndef CMD_CRYPTSETUP_H
-#define CMD_CRYPTSETUP_H
+#ifndef DEV_H
+#define DEV_H
 
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #include <string>
-#include <vector>
-
-#include "storage/StorageInterface.h"
 
 
 namespace storage
 {
     using std::string;
-    using std::vector;
 
 
-    class CmdCryptsetup
+    class MajorMinor
     {
-
     public:
 
-	CmdCryptsetup(const string& name, bool do_probe = true);
+	MajorMinor(const string& device, bool do_probe = true);
 
 	void probe();
 
-	friend std::ostream& operator<<(std::ostream& s, const CmdCryptsetup& cmdcryptsetup);
+	friend std::ostream& operator<<(std::ostream& s, const MajorMinor& majorminor);
 
-	void parse(const vector<string>& lines);
-
-	EncryptType encrypt_type;
+	dev_t getMajorMinor() const { return majorminor; }
+	unsigned int getMajor() const { return gnu_dev_major(majorminor); }
+	unsigned int getMinor() const { return gnu_dev_minor(majorminor); }
 
     private:
 
-	string name;
+	string device;
+	dev_t majorminor;
 
     };
 

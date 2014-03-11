@@ -24,7 +24,7 @@
 #include "storage/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemInfo/SystemInfo.h"
+#include "storage/SystemInfo/CmdDmraid.h"
 
 
 namespace storage

@@ -21,8 +21,9 @@
 
 
 #include "storage/SystemCmd.h"
-#include "storage/SystemInfo/SystemInfo.h"
+#include "storage/SystemInfo/CmdCryptsetup.h"
 #include "storage/AppUtil.h"
+#include "storage/Enum.h"
 #include "storage/StorageDefines.h"
 
 

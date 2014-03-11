@@ -57,7 +57,7 @@ namespace storage
 	num = orig_num = PNr;
 	size_k = orig_size_k = SizeK;
 
-	getMajorMinor();
+	getMajorMinor(systeminfo);
 
 	addUdevData();
 	y2deb("constructed Partition " << dev << " on " << cont->device());

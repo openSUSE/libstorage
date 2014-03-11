@@ -55,7 +55,7 @@ Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	if( loopStringNum( loop_dev, num ))
 	    {
 	    setNameDev();
-	    getMajorMinor();
+	    getMajorMinor(systeminfo);
 	    }
 	proc_dev = loop_dev;
 	}

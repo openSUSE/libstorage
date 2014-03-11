@@ -51,7 +51,7 @@ namespace storage
 	  gpt_enlarge(false), del_ptable(false), has_fake_partition(false)
     {
     logfile_name = boost::replace_all_copy(nm, "/", "_");
-    getMajorMinor();
+    getMajorMinor(systeminfo);
 
     Lsscsi::Entry entry;
     if (systeminfo.getLsscsi().getEntry(device, entry))
