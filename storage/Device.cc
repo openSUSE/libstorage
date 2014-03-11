@@ -24,6 +24,7 @@
 #include "storage/AppUtil.h"
 #include "storage/StorageTmpl.h"
 #include "storage/HumanString.h"
+#include "storage/SystemInfo/SystemInfo.h"
 
 
 namespace storage
@@ -111,6 +112,22 @@ namespace storage
     Device::getMajorMinor()
     {
 	return storage::getMajorMinor(dev, mjr, mnr, create);
+    }
+
+
+    void
+    Device::getMajorMinor(SystemInfo& systeminfo)
+    {
+	try
+	{
+	    const MajorMinor& majorminor = systeminfo.getMajorMinor(dev);
+	    mjr = majorminor.getMajor();
+	    mnr = majorminor.getMinor();
+	}
+	catch (const exception& e)
+	{
+	    y2err("failed to get majorminor for " << dev);
+	}
     }
 
 

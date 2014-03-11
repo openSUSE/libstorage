@@ -55,7 +55,7 @@ namespace storage
 	  md_parity(PAR_DEFAULT), chunk_k(0), sb_ver("01.00.00"), destrSb(false),
 	  has_container(false)
     {
-	getMajorMinor();
+	getMajorMinor(systeminfo);
 
 	/* First Initialize RAID properties. */
 	initMd(systeminfo);

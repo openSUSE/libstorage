@@ -43,7 +43,7 @@ namespace storage
 	: PeContainer(s, name, device, t, systeminfo), disk(NULL), active(false)
     {
     y2deb("constructing DmPartCo name:" << name);
-	getMajorMinor();
+	getMajorMinor(systeminfo);
 	init(systeminfo);
     }
 

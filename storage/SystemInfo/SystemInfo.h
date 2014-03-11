@@ -40,6 +40,7 @@
 #include "storage/SystemInfo/CmdMultipath.h"
 #include "storage/SystemInfo/CmdBtrfs.h"
 #include "storage/SystemInfo/CmdLvm.h"
+#include "storage/SystemInfo/Dev.h"
 
 
 namespace storage
