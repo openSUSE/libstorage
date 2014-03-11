@@ -18,7 +18,7 @@ doit_procparts(SystemInfo& systeminfo)
     }
     catch (const exception& e)
     {
-	cout << "ProcParts failed" << endl;
+	cerr << "ProcParts failed" << endl;
     }
 }
 
@@ -34,7 +34,7 @@ doit_majorminor(SystemInfo& systeminfo, const string& device)
     }
     catch (const exception& e)
     {
-	cout << "MajorMinor failed for " << device << " " << e.what() << endl;
+	cerr << "MajorMinor failed for " << device << " " << e.what() << endl;
     }
 }
 
