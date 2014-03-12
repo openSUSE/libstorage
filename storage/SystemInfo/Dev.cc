@@ -21,6 +21,7 @@
 
 
 #include <stdexcept>
+#include <boost/algorithm/string.hpp>
 
 #include "storage/SystemInfo/Dev.h"
 #include "storage/AppUtil.h"
@@ -61,6 +62,76 @@ namespace storage
 	  << ":" << majorminor.getMinor();
 
 	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const DevLinks& devlinks)
+    {
+	for (const DevLinks::value_type& it : devlinks)
+	    s << "data[" << it.first << "] -> " << boost::join(it.second, " ") << endl;
+
+	return s;
+    }
+
+
+    UdevMap::UdevMap(const string& path, bool do_probe)
+	: path(path)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    UdevMap::probe()
+    {
+	map<string, string> links = getDirLinks(path);
+	for (const map<string, string>::value_type& it : links)
+	{
+	    string::size_type pos = it.second.find_first_not_of("./");
+	    if (pos != string::npos)
+	    {
+		string tmp = it.second.substr(pos);
+		if (boost::starts_with(tmp, "dev/"))
+		    tmp.erase(0, 4);
+		data[tmp].push_back(udevDecode(it.first));
+	    }
+	}
+
+	y2mil(*this);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const UdevMap& udevmap)
+    {
+	s << "path:" << udevmap.path << endl;
+	s << dynamic_cast<const DevLinks&>(udevmap);
+
+	return s;
+    }
+
+
+    MdLinks::MdLinks(bool do_probe)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    MdLinks::probe()
+    {
+	map<string, string> links = getDirLinks("/dev/md");
+	for (const map<string, string>::value_type& it : links)
+	{
+	    string::size_type pos = it.second.find_first_not_of("./");
+	    if (pos != string::npos)
+	    {
+		data[it.second.substr(pos)].push_back(it.first);
+	    }
+	}
+
+	y2mil(*this);
     }
 
 }

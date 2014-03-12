@@ -205,12 +205,15 @@ namespace storage
 	alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
 	for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
 	    alt_names.push_back("/dev/disk/by-id/" + *i);
+
 	alt_names.remove_if(string_starts_with("/dev/md/"));
-	map<string,string> md = getDirLinks("/dev/md");
-	y2mil("links:" << md );
-	for( map<string,string>::const_iterator i=md.begin(); i!=md.end(); ++i )
-	    if(i->second==nm)
-		alt_names.push_back("/dev/md/"+i->first);
+	const MdLinks& mdlinks = systeminfo.getMdLinks();
+	MdLinks::const_iterator it2 = mdlinks.find(nm);
+	if (it2 != mdlinks.end())
+	{
+	    for (const string& s : it2->second)
+		alt_names.push_back("/dev/md/" + s);
+	}
     }
 
 

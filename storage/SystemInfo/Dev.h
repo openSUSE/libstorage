@@ -29,11 +29,15 @@
 #include <unistd.h>
 
 #include <string>
+#include <map>
+#include <list>
 
 
 namespace storage
 {
     using std::string;
+    using std::map;
+    using std::list;
 
 
     class MajorMinor
@@ -54,6 +58,55 @@ namespace storage
 
 	string device;
 	dev_t majorminor;
+
+    };
+
+
+    class DevLinks
+    {
+    public:
+
+	typedef map<string, list<string>>::value_type value_type;
+	typedef map<string, list<string>>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
+	const_iterator find(const string& nm) const { return data.find(nm); }
+
+	friend std::ostream& operator<<(std::ostream& s, const DevLinks& devlinks);
+
+    protected:
+
+	map<string, list<string>> data;
+
+    };
+
+
+    class UdevMap : public DevLinks
+    {
+    public:
+
+	UdevMap(const string& path, bool do_probe = true);
+
+	void probe();
+
+	friend std::ostream& operator<<(std::ostream& s, const UdevMap& udevmap);
+
+    private:
+
+	string path;
+
+    };
+
+
+    class MdLinks : public DevLinks
+    {
+    public:
+
+	MdLinks(bool do_probe = true);
+
+	void probe();
 
     };
 
