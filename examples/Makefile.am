@@ -2,13 +2,15 @@
 # Makefile.am for libstorage/examples
 #
 
+SUBDIRS = SystemInfo
+
 INCLUDES = -I$(top_srcdir)
 
 LDADD = ../storage/libstorage.la
 
 noinst_PROGRAMS = TestDisk TestDiskLog TestStorage TestProbing TestLvm		\
 	TestMd TestLoop TestLock SaveGraph ShowBytes TestLogging TestLvmSnap	\
-	TestLvmStripe TestLvmThin TestSystemInfo
+	TestLvmStripe TestLvmThin
 
 TestDisk_SOURCES = TestDisk.cc
 
@@ -33,8 +35,6 @@ TestLoop_SOURCES = TestLoop.cc
 TestLock_SOURCES = TestLock.cc
 
 TestLogging_SOURCES = TestLogging.cc
-
-TestSystemInfo_SOURCES = TestSystemInfo.cc
 
 SaveGraph_SOURCES = SaveGraph.cc
 
