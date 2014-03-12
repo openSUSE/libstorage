@@ -8,17 +8,17 @@ using namespace storage;
 
 
 void
-test_procmounts(SystemInfo& systeminfo)
+test_procmdstat(SystemInfo& systeminfo)
 {
     try
     {
-	const ProcMounts& procmounts = systeminfo.getProcMounts();
-	cout << "ProcMounts success" << endl;
-	cout << procmounts << endl;
+	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
+	cout << "ProcMdstat success" << endl;
+	cout << procmdstat << endl;
     }
     catch (const exception& e)
     {
-	cerr << "ProcMounts failed" << endl;
+	cerr << "ProcMdstat failed" << endl;
     }
 }
 
@@ -30,5 +30,5 @@ main()
 
     SystemInfo systeminfo;
 
-    test_procmounts(systeminfo);
+    test_procmdstat(systeminfo);
 }

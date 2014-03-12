@@ -31,5 +31,4 @@ main()
     SystemInfo systeminfo;
 
     test_blkid(systeminfo);
-    test_blkid(systeminfo);
 }

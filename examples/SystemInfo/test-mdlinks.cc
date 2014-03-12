@@ -31,5 +31,4 @@ main()
     SystemInfo systeminfo;
 
     test_mdlinks(systeminfo);
-    test_mdlinks(systeminfo);
 }

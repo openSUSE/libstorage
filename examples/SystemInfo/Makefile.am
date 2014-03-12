@@ -6,13 +6,20 @@ INCLUDES = -I$(top_srcdir)
 
 LDADD = ../../storage/libstorage.la
 
-noinst_PROGRAMS = test-blkid test-majorminor test-mdlinks test-parted		\
-	test-procmounts test-procparts test-udevmap
+noinst_PROGRAMS = test-blkid test-cmdbtrfsshow test-cmddmsetupinfo		\
+	test-cmdvgdisplay test-cmdvgs test-lsscsi test-majorminor test-mdlinks	\
+	test-parted test-procmdstat test-procmounts test-procparts test-udevmap
 
 test_blkid_SOURCES = test-blkid.cc
+test_cmdbtrfsshow_SOURCES = test-cmdbtrfsshow.cc
+test_cmddmsetupinfo_SOURCES = test-cmddmsetupinfo.cc
+test_cmdvgdisplay_SOURCES = test-cmdvgdisplay.cc
+test_cmdvgs_SOURCES = test-cmdvgs.cc
+test_lsscsi_SOURCES = test-lsscsi.cc
 test_majorminor_SOURCES = test-majorminor.cc
 test_mdlinks_SOURCES = test-mdlinks.cc
 test_parted_SOURCES = test-parted.cc
+test_procmdstat_SOURCES = test-procmdstat.cc
 test_procmounts_SOURCES = test-procmounts.cc
 test_procparts_SOURCES = test-procparts.cc
 test_udevmap_SOURCES = test-udevmap.cc
