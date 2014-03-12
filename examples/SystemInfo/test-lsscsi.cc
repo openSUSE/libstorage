@@ -8,17 +8,17 @@ using namespace storage;
 
 
 void
-test_procmounts(SystemInfo& systeminfo)
+test_lsscsi(SystemInfo& systeminfo)
 {
     try
     {
-	const ProcMounts& procmounts = systeminfo.getProcMounts();
-	cout << "ProcMounts success" << endl;
-	cout << procmounts << endl;
+	const Lsscsi& lsscsi = systeminfo.getLsscsi();
+	cout << "Lsscsi success" << endl;
+	cout << lsscsi << endl;
     }
     catch (const exception& e)
     {
-	cerr << "ProcMounts failed" << endl;
+	cerr << "Lsscsi failed" << endl;
     }
 }
 
@@ -30,5 +30,5 @@ main()
 
     SystemInfo systeminfo;
 
-    test_procmounts(systeminfo);
+    test_lsscsi(systeminfo);
 }

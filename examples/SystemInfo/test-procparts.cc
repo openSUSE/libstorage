@@ -31,5 +31,4 @@ main()
     SystemInfo systeminfo;
 
     test_procparts(systeminfo);
-    test_procparts(systeminfo);
 }

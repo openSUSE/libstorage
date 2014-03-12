@@ -31,5 +31,4 @@ main()
     SystemInfo systeminfo;
 
     test_parted(systeminfo, "/dev/sda");
-    test_parted(systeminfo, "/dev/sda");
 }

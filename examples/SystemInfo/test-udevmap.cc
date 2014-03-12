@@ -31,5 +31,4 @@ main()
     SystemInfo systeminfo;
 
     test_udevmap(systeminfo, "/dev/disk/by-id");
-    test_udevmap(systeminfo, "/dev/disk/by-id");
 }

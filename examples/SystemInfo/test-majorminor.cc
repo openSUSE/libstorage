@@ -31,14 +31,10 @@ main()
     SystemInfo systeminfo;
 
     test_majorminor(systeminfo, "/dev/sda");
-    test_majorminor(systeminfo, "/dev/sda");
 
-    test_majorminor(systeminfo, "/dev/disk/by-label/BOOT");
     test_majorminor(systeminfo, "/dev/disk/by-label/BOOT");
 
     test_majorminor(systeminfo, "/dev/does-not-exist");
-    test_majorminor(systeminfo, "/dev/does-not-exist");
 
-    test_majorminor(systeminfo, "/dev/char/5:0");
     test_majorminor(systeminfo, "/dev/char/5:0");
 }

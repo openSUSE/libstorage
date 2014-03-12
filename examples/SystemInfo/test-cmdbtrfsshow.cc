@@ -8,17 +8,17 @@ using namespace storage;
 
 
 void
-test_procmounts(SystemInfo& systeminfo)
+test_cmdbtrfsshow(SystemInfo& systeminfo)
 {
     try
     {
-	const ProcMounts& procmounts = systeminfo.getProcMounts();
-	cout << "ProcMounts success" << endl;
-	cout << procmounts << endl;
+	const CmdBtrfsShow& cmdbtrfsshow = systeminfo.getCmdBtrfsShow();
+	cout << "CmdBtrfsShow success" << endl;
+	cout << cmdbtrfsshow << endl;
     }
     catch (const exception& e)
     {
-	cerr << "ProcMounts failed" << endl;
+	cerr << "CmdBtrfsShow failed" << endl;
     }
 }
 
@@ -30,5 +30,5 @@ main()
 
     SystemInfo systeminfo;
 
-    test_procmounts(systeminfo);
+    test_cmdbtrfsshow(systeminfo);
 }
