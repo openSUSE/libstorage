@@ -74,32 +74,11 @@ std::map<string,string> makeMap( const std::list<string>& l,
     string udevEncode(const string&);
     string udevDecode(const string&);
 
-    map<string, string> getDirLinks(const string& dir);
+    map<string, string> getDirLinks(const string& path);
 
     bool mkdtemp(string& path);
 
     bool readlink(const string& path, string& buf);
-
-
-    class UdevMap
-    {
-    public:
-
-	UdevMap(const string& path);
-
-	typedef map<string, list<string>>::const_iterator const_iterator;
-
-	const_iterator begin() const { return data.begin(); }
-	const_iterator end() const { return data.end(); }
-
-	const_iterator find(const string& nm) const { return data.find(nm); }
-
-    private:
-
-	map<string, list<string>> data;
-
-    };
-
 
     string normalizeDevice(const string& dev);
     list<string> normalizeDevices(const list<string>& devs);

@@ -86,6 +86,7 @@ AC_OUTPUT(
 	data/Makefile
 	po/Makefile
 	examples/Makefile
+	examples/SystemInfo/Makefile
 	testsuite/Makefile
 	testsuite/lib/Makefile
 	testsuite/config/Makefile

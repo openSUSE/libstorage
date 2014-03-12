@@ -1,0 +1,8 @@
+*.o
+test-blkid
+test-majorminor
+test-mdlinks
+test-parted
+test-procmounts
+test-procparts
+test-udevmap

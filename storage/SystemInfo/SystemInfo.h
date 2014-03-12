@@ -26,7 +26,6 @@
 
 #include <boost/noncopyable.hpp>
 
-#include "storage/AppUtil.h"
 #include "storage/SystemInfo/ProcParts.h"
 #include "storage/SystemInfo/ProcMounts.h"
 #include "storage/SystemInfo/ProcMdstat.h"
@@ -58,6 +57,7 @@ namespace storage
 	~SystemInfo();
 
 	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
+	const MdLinks& getMdLinks() { return mdlinks.get(); }
 	const ProcParts& getProcParts() { return procparts.get(); }
 	const ProcMounts& getProcMounts() { return procmounts.get(); }
 	const ProcMdstat& getProcMdstat() { return procmdstat.get(); }
@@ -142,6 +142,7 @@ namespace storage
 	};
 
 	LazyObjects<UdevMap> udevmaps;
+	LazyObject<MdLinks> mdlinks;
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<ProcMdstat> procmdstat;

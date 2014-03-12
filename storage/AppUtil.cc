@@ -526,11 +526,11 @@ readlink(const string& path, string& buf)
 
 
     map<string, string>
-    getUdevLinks(const char* path)
+    getDirLinks(const string& path)
     {
 	map<string, string> links;
 
-	int fd = open(path, O_RDONLY | O_CLOEXEC);
+	int fd = open(path.c_str(), O_RDONLY | O_CLOEXEC);
 	if (fd >= 0)
 	{
 	    DIR* dir;
@@ -543,17 +543,8 @@ readlink(const string& path, string& buf)
 			continue;
 
 		    string tmp;
-		    if (!readlinkat(fd, entry->d_name, tmp))
-			continue;
-
-		    string::size_type pos = tmp.find_first_not_of("./");
-		    if (pos != string::npos)
-			{
-			tmp.erase(0,pos);
-			if( boost::starts_with(tmp, "dev/"))
-			    tmp.erase(0,4);
-			links[udevDecode(entry->d_name)] = tmp;
-			}
+		    if (readlinkat(fd, entry->d_name, tmp))
+			links[entry->d_name] = tmp;
 		}
 		closedir(dir);
 	    }
@@ -564,25 +555,6 @@ readlink(const string& path, string& buf)
 	}
 
 	return links;
-    }
-
-map<string, string> getDirLinks(const string& dir)
-    {
-    return( getUdevLinks(dir.c_str()) );
-    }
-
-
-    UdevMap::UdevMap(const string& path)
-    {
-	y2mil("path: " << path);
-
-	const map<string, string> links = getUdevLinks(path.c_str());
-
-	for (map<string, string>::const_iterator it = links.begin(); it != links.end(); ++it)
-	    data[it->second].push_back(it->first);
-
-	for (const_iterator it = begin(); it != end(); ++it)
-	    y2mil("data[" << it->first << "] -> " << boost::join(it->second, " "));
     }
 
 
