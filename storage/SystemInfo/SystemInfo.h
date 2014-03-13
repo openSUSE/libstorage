@@ -61,7 +61,7 @@ namespace storage
 	const ProcParts& getProcParts() { return procparts.get(); }
 	const ProcMounts& getProcMounts() { return procmounts.get(); }
 	const ProcMdstat& getProcMdstat() { return procmdstat.get(); }
-	const MdadmDetails& getMdadmDetails(const string device) { return mdadmdetails.get(device); }
+	const MdadmDetails& getMdadmDetails(const string& device) { return mdadmdetails.get(device); }
 	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices); }
 	const Blkid& getBlkid() { return blkid.get(); }
 	const Lsscsi& getLsscsi() { return lsscsi.get(); }
