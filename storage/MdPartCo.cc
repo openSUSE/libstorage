@@ -1318,10 +1318,10 @@ void MdPartCo::setSize(unsigned long long size )
 	    has_container = true;
 	    parent_container = entry.container_name;
 
-	    MdadmDetails details = systeminfo.getMdadmDetails("/dev/" + entry.container_name);
-	    parent_uuid = details.uuid;
-	    parent_md_name = details.devname;
-	    parent_metadata = details.metadata;
+	    MdadmDetail detail = systeminfo.getMdadmDetail("/dev/" + entry.container_name);
+	    parent_uuid = detail.uuid;
+	    parent_md_name = detail.devname;
+	    parent_metadata = detail.metadata;
 
 	    parent_member = entry.container_member;
 
@@ -1332,9 +1332,9 @@ void MdPartCo::setSize(unsigned long long size )
 	    sb_ver = entry.super;
 	}
 
-	MdadmDetails details = systeminfo.getMdadmDetails("/dev/" + nm);
-	md_uuid = details.uuid;
-	md_name = details.devname;
+	MdadmDetail detail = systeminfo.getMdadmDetail("/dev/" + nm);
+	md_uuid = detail.uuid;
+	md_name = detail.devname;
 	alt_names.remove_if(string_starts_with("/dev/md/"));
 	alt_names.push_back("/dev/md/" + md_name);
 

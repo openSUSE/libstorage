@@ -6,6 +6,8 @@ test-cmdvgdisplay
 test-cmdvgs
 test-lsscsi
 test-majorminor
+test-mdadmdetail
+test-mdadmexamine
 test-mdlinks
 test-parted
 test-procmdstat

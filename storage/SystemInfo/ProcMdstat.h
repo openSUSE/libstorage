@@ -91,11 +91,11 @@ namespace storage
     };
 
 
-    class MdadmDetails
+    class MdadmDetail
     {
     public:
 
-	MdadmDetails(const string& device, bool do_probe = true);
+	MdadmDetail(const string& device, bool do_probe = true);
 
 	void probe();
 
@@ -103,7 +103,7 @@ namespace storage
 	string devname;
 	string metadata;
 
-	friend std::ostream& operator<<(std::ostream& s, const MdadmDetails& mdadmdetails);
+	friend std::ostream& operator<<(std::ostream& s, const MdadmDetail& mdadmdetail);
 
 	void parse(const vector<string>& lines);
 
