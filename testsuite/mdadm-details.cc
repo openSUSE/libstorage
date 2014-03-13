@@ -27,10 +27,10 @@ parse1()
 	"MD_DEVICE_sdb1_DEV=/dev/sdb1",
     };
 
-    MdadmDetails mdadmdetails("/dev/md0", false);
-    mdadmdetails.parse(lines);
+    MdadmDetail mdadmdetail("/dev/md0", false);
+    mdadmdetail.parse(lines);
 
-    cout << mdadmdetails << endl;
+    cout << mdadmdetail << endl;
 }
 
 

@@ -318,7 +318,7 @@ namespace storage
     }
 
 
-    MdadmDetails::MdadmDetails(const string& device, bool do_probe)
+    MdadmDetail::MdadmDetail(const string& device, bool do_probe)
 	: device(device)
     {
 	if (do_probe)
@@ -327,7 +327,7 @@ namespace storage
 
 
     void
-    MdadmDetails::probe()
+    MdadmDetail::probe()
     {
 	SystemCmd cmd(MDADMBIN " --detail " + quote(device) + " --export");
 	if (cmd.retcode() == 0)
@@ -336,7 +336,7 @@ namespace storage
 
 
     void
-    MdadmDetails::parse(const vector<string>& lines)
+    MdadmDetail::parse(const vector<string>& lines)
     {
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	{
@@ -353,10 +353,10 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const MdadmDetails& mdadmdetails)
+    std::ostream& operator<<(std::ostream& s, const MdadmDetail& mdadmdetail)
     {
-	s << "device:" << mdadmdetails.device << " uuid:" << mdadmdetails.uuid << " devname:"
-	  << mdadmdetails.devname << " metadata:" << mdadmdetails.metadata << endl;
+	s << "device:" << mdadmdetail.device << " uuid:" << mdadmdetail.uuid << " devname:"
+	  << mdadmdetail.devname << " metadata:" << mdadmdetail.metadata << endl;
 
 	return s;
     }
