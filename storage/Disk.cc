@@ -687,17 +687,17 @@ Disk::defaultLabel() const
 	y2mil("num_sectors:" << num_sectors);
 
 	ret = "msdos";
-	if (archinfo.is_efiboot)
+	if (archinfo.is_efiboot())
 	    ret = "gpt";
 	else if (num_sectors > (1ULL << 32) - 1)
 	    ret = "gpt";
-	else if (archinfo.arch == "ia64")
+	else if (archinfo.is_ia64())
 	    ret = "gpt";
-	else if (archinfo.arch == "sparc")
+	else if (archinfo.is_sparc())
 	    ret = "sun";
-	else if (archinfo.arch == "ppc" && archinfo.is_ppc_mac)
+	else if (archinfo.is_ppc() && archinfo.is_ppc_mac())
 	    ret = "mac";
-	else if (archinfo.arch == "ppc" && archinfo.is_ppc_pegasos)
+	else if (archinfo.is_ppc() && archinfo.is_ppc_pegasos())
 	    ret = "amiga";
 
     y2mil("ret:" << ret);
@@ -1703,12 +1703,12 @@ int Disk::doCreateLabel()
     string lab(label);
     if( lab=="gpt" )
 	{
-	const ArchInfo& ai = getStorage()->getArchInfo();
-	if( !ai.is_efiboot && 
-	    (ai.arch=="i386" || ai.arch=="ppc" || ai.arch=="x86_64"))
+	const ArchInfo& archinfo = getStorage()->getArchInfo();
+	if (!archinfo.is_efiboot() &&
+	    (archinfo.is_x86() || (archinfo.is_ppc() && !archinfo.is_ppc64le())))
 	    {
-	    y2mil( "efi:" << ai.is_efiboot << " arch:" << ai.arch );
-	    lab = LABEL_GPT_SYNC_MBR;
+		y2mil( "archinfo:" << archinfo);
+		lab = LABEL_GPT_SYNC_MBR;
 	    }
 	}
     cmd_line << PARTEDCMD << quote(device()) << " mklabel " << lab;

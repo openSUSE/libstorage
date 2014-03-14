@@ -33,7 +33,7 @@ namespace storage
 {
 
     ArchInfo::ArchInfo()
-	: arch("i386"), is_ppc_mac(false), is_ppc_pegasos(false), is_efiboot(false)
+	: arch("unknown"), ppc_mac(false), ppc_pegasos(false), efiboot(false)
     {
     }
 
@@ -43,8 +43,8 @@ namespace storage
     {
 	getChildValue(node, "arch", arch);
 
-	if (!getChildValue(node, "efiboot", is_efiboot))
-	    is_efiboot = false;
+	if (!getChildValue(node, "efiboot", efiboot))
+	    efiboot = false;
     }
 
 
@@ -53,45 +53,21 @@ namespace storage
     {
 	setChildValue(node, "arch", arch);
 
-	if (is_efiboot)
-	    setChildValue(node, "efiboot", is_efiboot);
+	if (efiboot)
+	    setChildValue(node, "efiboot", efiboot);
     }
 
 
     void
-    ArchInfo::detect()
+    ArchInfo::probe()
     {
-	arch = "i386";
 	struct utsname buf;
 	if (uname(&buf) == 0)
-	{
-	    if (strncmp(buf.machine, "ppc", 3) == 0)
-	    {
-		arch = "ppc";
-	    }
-	    else if (strncmp(buf.machine, "x86_64", 5) == 0)
-	    {
-		arch = "x86_64";
-	    }
-	    else if (strncmp(buf.machine, "ia64", 4) == 0)
-	    {
-		arch = "ia64";
-	    }
-	    else if (strncmp(buf.machine, "s390x", 5) == 0)
-	    {
-		arch = "s390x";
-	    }
-	    else if (strncmp(buf.machine, "s390", 4) == 0)
-	    {
-		arch = "s390";
-	    }
-	    else if (strncmp(buf.machine, "sparc", 5) == 0)
-	    {
-		arch = "sparc";
-	    }
-	}
+	    arch = buf.machine;
+	else
+	    arch = "unknown";
 
-	if (arch == "ppc")
+	if (is_ppc())
 	{
 	    AsciiFile cpuinfo("/proc/cpuinfo");
 	    vector<string>::const_iterator it = find_if(cpuinfo.lines(), string_starts_with("machine\t"));
@@ -101,35 +77,83 @@ namespace storage
 
 		string tmp1 = extractNthWord(2, *it);
 		y2mil("tmp1:" << tmp1);
-		is_ppc_mac = boost::starts_with(tmp1, "PowerMac") || boost::starts_with(tmp1, "PowerBook");
-		is_ppc_pegasos = boost::starts_with(tmp1, "EFIKA5K2");
+		ppc_mac = boost::starts_with(tmp1, "PowerMac") || boost::starts_with(tmp1, "PowerBook");
+		ppc_pegasos = boost::starts_with(tmp1, "EFIKA5K2");
 
-		if (!is_ppc_mac && !is_ppc_pegasos)
+		if (!ppc_mac && !ppc_pegasos)
 		{
 		    string tmp2 = extractNthWord(3, *it);
 		    y2mil("tmp2:" << tmp2);
-		    is_ppc_pegasos = boost::starts_with(tmp2, "Pegasos");
+		    ppc_pegasos = boost::starts_with(tmp2, "Pegasos");
 		}
 	    }
 	}
 
-	if (arch == "ia64")
+	if (is_ia64())
 	{
-	    is_efiboot = true;
+	    efiboot = true;
 	}
 	else
 	{
-	    is_efiboot = checkDir( "/sys/firmware/efi/vars" ) ||
-	                 getenv("LIBSTORAGE_ENFORCE_EFI")!=NULL;
+	    efiboot = checkDir("/sys/firmware/efi/vars");
 	}
+
+	const char* tenv = getenv("LIBSTORAGE_EFI");
+	if (tenv)
+	{
+	    efiboot = string(tenv) == "yes";
+	}
+    }
+
+
+    bool
+    ArchInfo::is_ia64() const
+    {
+	return boost::starts_with(arch, "ia64");
+    }
+
+
+    bool
+    ArchInfo::is_ppc() const
+    {
+	return boost::starts_with(arch, "ppc");
+    }
+
+
+    bool
+    ArchInfo::is_ppc64le() const
+    {
+	return boost::starts_with(arch, "ppc64le");
+    }
+
+
+    bool
+    ArchInfo::is_s390() const
+    {
+	return boost::starts_with(arch, "s390");
+    }
+
+
+    bool
+    ArchInfo::is_sparc() const
+    {
+	return boost::starts_with(arch, "sparc");
+    }
+
+
+    bool
+    ArchInfo::is_x86() const
+    {
+	return arch == "i386" || arch == "i486" || arch == "i586" || arch == "i686" ||
+	    arch == "x86_64";
     }
 
 
     std::ostream& operator<<(std::ostream& s, const ArchInfo& archinfo)
     {
-	return s << "arch:" << archinfo.arch << " is_ppc_mac:" << archinfo.is_ppc_mac
-		 << " is_ppc_pegasos:" << archinfo.is_ppc_pegasos << " is_efiboot:"
-		 << archinfo.is_efiboot;
+	return s << "arch:" << archinfo.arch << " ppc_mac:" << archinfo.ppc_mac
+		 << " ppc_pegasos:" << archinfo.ppc_pegasos << " efiboot:"
+		 << archinfo.efiboot;
     }
 
 }

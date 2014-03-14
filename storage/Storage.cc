@@ -202,12 +202,12 @@ Storage::initialize()
     }
     else if (autodetect())
     {
-	archinfo.detect();
+	archinfo.probe();
 	y2mil(archinfo);
     }
 
     if( !testmode() )
-        checkBinPaths( archinfo.arch, instsys() );
+        checkBinPaths(archinfo, instsys());
 
     if (instsys())
     {
@@ -443,10 +443,11 @@ bool Storage::rescanCryptedObjects()
     return( ret );
     }
 
+
     string
     Storage::bootMount() const
     {
-	if (archinfo.is_efiboot)
+	if (archinfo.is_efiboot())
 	    return "/boot/efi";
 	else
 	    return "/boot";
@@ -1209,7 +1210,7 @@ void Storage::setDefaultSubvolName( const string& val )
     Storage::getEfiBoot()
     {
 	assertInit();
-	return archinfo.is_efiboot;
+	return archinfo.is_efiboot();
     }
 
 

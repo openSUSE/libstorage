@@ -39,12 +39,28 @@ namespace storage
 	void readData(const xmlNode* node);
 	void saveData(xmlNode* node) const;
 
-	void detect();
+	void probe();
+
+	bool is_ia64() const;
+	bool is_ppc() const;
+	bool is_ppc64le() const;
+	bool is_s390() const;
+	bool is_sparc() const;
+	bool is_x86() const;
+
+	bool is_ppc_mac() const { return ppc_mac; }
+	bool is_ppc_pegasos() const { return ppc_pegasos; }
+
+	bool is_efiboot() const { return efiboot; }
+
+	friend std::ostream& operator<<(std::ostream& s, const ArchInfo& archinfo);
+
+    private:
 
 	string arch;
-	bool is_ppc_mac;
-	bool is_ppc_pegasos;
-	bool is_efiboot;
+	bool ppc_mac;
+	bool ppc_pegasos;
+	bool efiboot;
 
     };
 

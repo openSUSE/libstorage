@@ -25,8 +25,9 @@
 #include "storage/SystemInfo/CmdMultipath.h"
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
-#include "storage/Storage.h"
+#include "storage/Regex.h"
 #include "storage/StorageDefines.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage
