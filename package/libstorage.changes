@@ -2,6 +2,7 @@
 Fri Mar 14 13:57:26 CET 2014 - aschnell@suse.de
 
 - do not create gpt_sync_mbr on ppc64le (bnc#868227)
+- replaced env.var. LIBSTORAGE_ENFORCE_EFI by LIBSTORAGE_EFI
 
 -------------------------------------------------------------------
 Mon Mar 03 15:53:43 CET 2014 - aschnell@suse.de
