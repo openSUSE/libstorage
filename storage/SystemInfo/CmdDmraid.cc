@@ -20,9 +20,11 @@
  */
 
 
+#include <boost/algorithm/string.hpp>
+
 #include "storage/SystemCmd.h"
 #include "storage/AppUtil.h"
-#include "storage/Storage.h"
+#include "storage/StorageTmpl.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemInfo/CmdDmraid.h"
 
