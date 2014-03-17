@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Mar 17 14:29:00 CET 2014 - aschnell@suse.de
+
+- include PPC PReP in commit text (see bnc#867345)
+- 2.25.10
+
+-------------------------------------------------------------------
 Fri Mar 14 13:57:26 CET 2014 - aschnell@suse.de
 
 - do not create gpt_sync_mbr on ppc64le (bnc#868227)
