@@ -7,3 +7,11 @@ data[/dev/mapper/system-swap] -> is_fs:true fs_type:swap fs_uuid:fd39c3f9-2990-4
 data[/dev/sda1] -> is_fs:true fs_type:ext3 fs_uuid:14875716-b8e3-4c83-ac86-48c20682b63a fs_label:BOOT
 data[/dev/sda2] -> is_lvm:true
 
+parse2
+data[/dev/mapper/system-home] -> is_fs:true fs_type:btrfs fs_uuid:7e9e18c3-b743-47d8-9f33-464f466fc517
+data[/dev/mapper/system-root] -> is_fs:true fs_type:btrfs fs_uuid:9fca85ff-4278-4f49-932e-4060726cf0d6
+data[/dev/mapper/system-swap] -> is_fs:true fs_type:swap fs_uuid:d0f020a1-9847-4ee5-a22e-fe0cdd4aa905
+data[/dev/mapper/tmp] -> is_lvm:true
+data[/dev/sda1] -> is_fs:true fs_type:ext4 fs_uuid:fc5985ee-e069-4bb4-a36c-24d8f6022f7a
+data[/dev/sda2] -> is_luks:true luks_uuid:f98def5a-6553-49a1-940d-df55a77d7d28
+

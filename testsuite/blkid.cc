@@ -32,6 +32,27 @@ parse1()
 }
 
 
+void
+parse2()
+{
+    cout << "parse2" << endl;
+
+    vector<string> lines = {
+	"/dev/sda1: UUID=\"fc5985ee-e069-4bb4-a36c-24d8f6022f7a\" TYPE=\"ext4\" ",
+	"/dev/sda2: UUID=\"f98def5a-6553-49a1-940d-df55a77d7d28\" TYPE=\"crypto_LUKS\" ",
+	"/dev/mapper/tmp: UUID=\"wunWKW-nDeG-SUnC-CxDO-5UNt-BA4Y-Se7xVC\" TYPE=\"LVM2_member\" ",
+	"/dev/mapper/system-home: UUID=\"7e9e18c3-b743-47d8-9f33-464f466fc517\" UUID_SUB=\"4f40002c-125e-43c1-8a38-b5bf29f5319c\" TYPE=\"btrfs\" ",
+	"/dev/mapper/system-root: UUID=\"9fca85ff-4278-4f49-932e-4060726cf0d6\" UUID_SUB=\"ab28e20a-9c11-4ea6-a46d-0fe412fe0e19\" TYPE=\"btrfs\" ",
+	"/dev/mapper/system-swap: UUID=\"d0f020a1-9847-4ee5-a22e-fe0cdd4aa905\" TYPE=\"swap\" "
+    };
+
+    Blkid blkid(false);
+    blkid.parse(lines);
+
+    cout << blkid << endl;
+}
+
+
 int
 main()
 {
@@ -40,4 +61,5 @@ main()
     setup_logger();
 
     parse1();
+    parse2();
 }
