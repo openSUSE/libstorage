@@ -2046,7 +2046,8 @@ int Disk::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    unsigned long start = p->cylStart();
-	    unsigned long end = p->cylEnd();
+	    unsigned long end = p->cylEnd() + 1; // add one to avoid gaps
+
 	    ConstPartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
 						    : partPair( existingLog );
 	    unsigned long maxc = cylinders();
