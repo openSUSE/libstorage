@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 18 14:48:58 CET 2014 - aschnell@suse.de
+
+- added workaround for parted cylinder discrepancy (bnc#866535)
+
+-------------------------------------------------------------------
 Mon Mar 17 14:29:00 CET 2014 - aschnell@suse.de
 
 - include PPC PReP in commit text (see bnc#867345)

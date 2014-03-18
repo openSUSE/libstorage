@@ -82,6 +82,21 @@ namespace storage
 	else
 	    y2err("could not find geometry");
 
+	// see bnc #866535
+	pos = find_if(lines, string_starts_with("Disk " + device + ":"));
+	if (pos != lines.end())
+	{
+	    unsigned long tmp;
+	    extractNthWord(2, *pos) >> tmp;
+	    if (geometry.cylinders != tmp)
+	    {
+		y2war("parted reported different cylinder numbers");
+		geometry.cylinders = min(geometry.cylinders, tmp);
+	    }
+	}
+	else
+	    y2war("could not find cylinder number");
+
 	// not present for unrecognised disk label
 	pos = find_if(lines, string_starts_with("Sector size (logical/physical):"));
 	if (pos != lines.end())
