@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Mar 19 09:45:24 CET 2014 - aschnell@suse.de
+
+- added workaround for blkid file-system misdetection (bnc#864703)
+
+-------------------------------------------------------------------
 Tue Mar 18 14:48:58 CET 2014 - aschnell@suse.de
 
 - added workaround for parted cylinder discrepancy (bnc#866535)

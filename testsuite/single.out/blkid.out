@@ -15,3 +15,6 @@ data[/dev/mapper/tmp] -> is_lvm:true
 data[/dev/sda1] -> is_fs:true fs_type:ext4 fs_uuid:fc5985ee-e069-4bb4-a36c-24d8f6022f7a
 data[/dev/sda2] -> is_luks:true luks_uuid:f98def5a-6553-49a1-940d-df55a77d7d28
 
+parse3
+data[/dev/dasda1] -> is_fs:true fs_type:ext2 fs_uuid:ab43b144-37e2-4e9c-8369-6df220f055b0
+

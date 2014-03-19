@@ -53,6 +53,22 @@ parse2()
 }
 
 
+void
+parse3()
+{
+    cout << "parse3" << endl;
+
+    vector<string> lines = {
+	"/dev/dasda1: UUID=\"ab43b144-37e2-4e9c-8369-6df220f055b0\" SEC_TYPE=\"ext2\" TYPE=\"ext4\" "
+    };
+
+    Blkid blkid(false);
+    blkid.parse(lines);
+
+    cout << blkid << endl;
+}
+
+
 int
 main()
 {
@@ -62,4 +78,5 @@ main()
 
     parse1();
     parse2();
+    parse3();
 }
