@@ -59,6 +59,23 @@ namespace storage
     void
     Blkid::parse(const vector<string>& lines)
     {
+	static const map<string, FsType> fs_table = {
+	    { "btrfs", BTRFS },
+	    { "ext2", EXT2 },
+	    { "ext3", EXT3 },
+	    { "ext4", EXT4 },
+	    { "hfs", HFS },
+	    { "hfsplus", HFSPLUS },
+	    { "jfs", JFS },
+	    { "msdos", VFAT },
+	    { "ntfs", NTFS },
+	    { "ntfs-3g", NTFS },
+	    { "reiserfs", REISERFS },
+	    { "swap", SWAP },
+	    { "vfat", VFAT },
+	    { "xfs", XFS }
+	};
+
 	data.clear();
 
 	for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
@@ -77,65 +94,11 @@ namespace storage
 	    map<string, string>::const_iterator i = m.find("TYPE");
 	    if (i != m.end())
 	    {
-		if (i->second == "reiserfs")
+		map<string, FsType>::const_iterator it2 = fs_table.find(i->second);
+		if (it2 != fs_table.end())
 		{
 		    entry.is_fs = true;
-		    entry.fs_type = REISERFS;
-		}
-		else if (i->second == "swap")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = SWAP;
-		}
-		else if (i->second == "ext2")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = EXT2;
-		}
-		else if (i->second == "ext3")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = EXT3;
-		}
-		else if (i->second == "ext4")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = EXT4;
-		}
-		else if (i->second == "btrfs")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = BTRFS;
-		}
-		else if (i->second == "vfat")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = VFAT;
-		}
-		else if (i->second == "ntfs" || i->second == "ntfs-3g")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = NTFS;
-		}
-		else if (i->second == "jfs")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = JFS;
-		}
-		else if (i->second == "hfs")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = HFS;
-		}
-		else if (i->second == "hfsplus")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = HFSPLUS;
-		}
-		else if (i->second == "xfs")
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = XFS;
+		    entry.fs_type = it2->second;
 		}
 		else if (i->second == "LVM2_member")
 		{
@@ -144,6 +107,17 @@ namespace storage
 		else if (i->second == "crypto_LUKS")
 		{
 		    entry.is_luks = true;
+		}
+	    }
+
+	    i = m.find("SEC_TYPE");
+	    if (i != m.end())
+	    {
+		map<string, FsType>::const_iterator it2 = fs_table.find(i->second);
+		if (it2 != fs_table.end())
+		{
+		    entry.is_fs = true;
+		    entry.fs_type = it2->second;
 		}
 	    }
 
