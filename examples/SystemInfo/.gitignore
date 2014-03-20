@@ -4,6 +4,7 @@ test-cmdbtrfsshow
 test-cmddmsetupinfo
 test-cmdvgdisplay
 test-cmdvgs
+test-dir
 test-lsscsi
 test-majorminor
 test-mdadmdetail

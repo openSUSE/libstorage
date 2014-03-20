@@ -62,6 +62,29 @@ namespace storage
     };
 
 
+    class Dir
+    {
+    public:
+
+	Dir(const string& path, bool do_probe = true);
+
+	void probe();
+
+	typedef list<string>::const_iterator const_iterator;
+
+	const_iterator begin() const { return entries.begin(); }
+	const_iterator end() const { return entries.end(); }
+
+	friend std::ostream& operator<<(std::ostream& s, const Dir& dir);
+
+    private:
+
+	string path;
+	list<string> entries;
+
+    };
+
+
     class DevLinks
     {
     public:

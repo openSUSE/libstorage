@@ -39,7 +39,7 @@
 #include "storage/SystemInfo/CmdMultipath.h"
 #include "storage/SystemInfo/CmdBtrfs.h"
 #include "storage/SystemInfo/CmdLvm.h"
-#include "storage/SystemInfo/Dev.h"
+#include "storage/SystemInfo/DevAndSys.h"
 
 
 namespace storage
@@ -56,6 +56,7 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
+	const Dir& getDir(const string& path) { return dirs.get(path); }
 	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
 	const MdLinks& getMdLinks() { return mdlinks.get(); }
 	const ProcParts& getProcParts() { return procparts.get(); }
@@ -141,6 +142,7 @@ namespace storage
 
 	};
 
+	LazyObjects<Dir> dirs;
 	LazyObjects<UdevMap> udevmaps;
 	LazyObject<MdLinks> mdlinks;
 	LazyObject<ProcParts> procparts;

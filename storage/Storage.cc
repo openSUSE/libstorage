@@ -765,47 +765,43 @@ Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
     }
 
 
-bool Storage::getDiskList( list< pair< string, Disk::SysfsInfo > >& dlist )
+    list<pair<string, Disk::SysfsInfo>>
+    Storage::getDiskList(SystemInfo& systeminfo)
     {
-    dlist.clear();
-    DIR *Dir;
-    if( (Dir=opendir(SYSFSDIR))!=NULL )
+	list<pair<string, Disk::SysfsInfo>> dlist;
+
+	try
 	{
-	struct dirent* Entry;
-	while( (Entry=readdir( Dir ))!=NULL )
+	    const Dir& dir = systeminfo.getDir(SYSFSDIR);
+	    for (const string& dn : dir)
 	    {
-	    string dn = Entry->d_name;
+		// we do not treat mds as disks although they can be partitioned since kernel 2.6.28
+		if (boost::starts_with(dn, "md") || boost::starts_with(dn, "loop"))
+		    continue;
 
-	    if (dn == "." || dn == "..")
-		continue;
-	    // we do not treat mds as disks although they can be partitioned since kernel 2.6.28
-	    if (boost::starts_with(dn, "md")||boost::starts_with(dn, "loop"))
-		continue;
+		Disk::SysfsInfo sysfsinfo;
+		if (!Disk::getSysfsInfo(SYSFSDIR "/" + dn, sysfsinfo))
+		    continue;
 
-	    Disk::SysfsInfo sysfsinfo;
-	    if (!Disk::getSysfsInfo(SYSFSDIR "/" + dn, sysfsinfo))
-		continue;
-
-	    if( (sysfsinfo.range>1 && (sysfsinfo.size>0 || dn.find("dasd")==0)) ||
-	        (sysfsinfo.range==1 && sysfsinfo.size>0 && sysfsinfo.vbd) )
+		if ((sysfsinfo.range > 1 && ( sysfsinfo.size > 0 || dn.find("dasd") == 0)) ||
+		    (sysfsinfo.range == 1 && sysfsinfo.size > 0 && sysfsinfo.vbd))
 		{
-		dlist.push_back( make_pair( dn, sysfsinfo ) );
+		    dlist.push_back(make_pair(dn, sysfsinfo));
 		}
 	    }
-	closedir( Dir );
 	}
-    else
+	catch (const runtime_error& e)
 	{
-	y2err("Failed to open:" SYSFSDIR);
+	    y2err("failed to get disks, " << e.what());
 	}
-    return( !dlist.empty() );
+
+	return dlist;
     }
 
 
 void Storage::autodetectDisks(SystemInfo& systeminfo)
     {
-    list< pair< string, Disk::SysfsInfo > > dlist;
-    getDiskList( dlist );
+    list<pair<string, Disk::SysfsInfo>> dlist = getDiskList(systeminfo);
     list< pair< string, Disk::SysfsInfo > >::const_iterator i = dlist.begin();
     list<DiskData> dl;
     while( i!=dlist.end() )
