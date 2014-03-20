@@ -25,6 +25,7 @@
 
 #include "storage/SystemInfo/Dev.h"
 #include "storage/AppUtil.h"
+#include "storage/StorageTmpl.h"
 
 
 namespace storage
@@ -69,6 +70,31 @@ namespace storage
     {
 	for (const DevLinks::value_type& it : devlinks)
 	    s << "data[" << it.first << "] -> " << boost::join(it.second, " ") << endl;
+
+	return s;
+    }
+
+
+    Dir::Dir(const string& path, bool do_probe)
+	: path(path)
+    {
+	if (do_probe)
+	    probe();
+    }
+
+
+    void
+    Dir::probe()
+    {
+	entries = getDir(path);
+
+	y2mil(*this);
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const Dir& dir)
+    {
+	s << "path:" << dir.path << " entries:" << dir.entries << endl;
 
 	return s;
     }

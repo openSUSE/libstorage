@@ -582,7 +582,7 @@ class DiskData;
         static bool loadModuleIfNeeded( const string& module );
 	static void clean_tmpdir();
 
-	static bool getDiskList( list< pair< string, Disk::SysfsInfo > >& dlist );
+	static list<pair<string, Disk::SysfsInfo>> getDiskList(SystemInfo& systeminfo);
 	void getDiskList( bool (* CheckFnc)( const Disk& ), list<Disk*>& dl );
 
 	void changeDeviceName( const string& old, const string& nw );

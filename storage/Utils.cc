@@ -34,10 +34,11 @@ namespace storage
     list<string>
     getPresentDisks()
     {
+	SystemInfo systeminfo;
+
 	list<string> ret;
 
-	list<pair<string, Disk::SysfsInfo>> dlist;
-	Storage::getDiskList(dlist);
+	list<pair<string, Disk::SysfsInfo>> dlist = Storage::getDiskList(systeminfo);
 
 	for (list<pair<string, Disk::SysfsInfo>>::const_iterator it = dlist.begin(); it != dlist.end(); ++it)
 	    ret.push_back("/dev/" + Disk::sysfsToDev(it->first));

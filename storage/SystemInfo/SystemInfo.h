@@ -56,6 +56,7 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
+	const Dir& getDir(const string& path) { return dirs.get(path); }
 	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
 	const MdLinks& getMdLinks() { return mdlinks.get(); }
 	const ProcParts& getProcParts() { return procparts.get(); }
@@ -141,6 +142,7 @@ namespace storage
 
 	};
 
+	LazyObjects<Dir> dirs;
 	LazyObjects<UdevMap> udevmaps;
 	LazyObject<MdLinks> mdlinks;
 	LazyObject<ProcParts> procparts;
