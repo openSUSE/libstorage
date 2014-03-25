@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -150,6 +150,8 @@ namespace storage
 	    FstabEntry nnew;
 	    FstabEntry old;
 	};
+
+	friend EnumInfo<Entry::Operation>;
 
 	void readFiles();
 
