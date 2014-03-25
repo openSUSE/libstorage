@@ -145,7 +145,7 @@ void Btrfs::detectSubvol()
         if( !mp.empty() )
             {
             clearSubvol();
-            SystemCmd cmd(BTRFSBIN " subvolume list " + quote(mp));
+            SystemCmd cmd(BTRFSBIN " subvolume list -a " + quote(mp));
             for( vector<string>::const_iterator s=cmd.stdout().begin(); 
                  s!=cmd.stdout().end(); ++s )
                 {
@@ -162,6 +162,8 @@ void Btrfs::detectSubvol()
 		    pos2 = s->find_first_not_of(app_ws, pos2 + 5);
 		if (pos2 != string::npos)
 		    subvol = s->substr(pos2, s->find_last_not_of(app_ws));
+		if (boost::starts_with(subvol, "<FS_TREE>/"))
+		    subvol.erase(0, 10);
 
 		// Subvolume can already be deleted, in which case level is "0"
 		// (and path "DELETED"). That is a temporary state.
@@ -800,7 +802,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabKey tmp_key(key);
-		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + it->path();
+		tmp_key.mount += (tmp_key.mount == "/" ? "" : "/") + path;
 		FstabChange tmp_change = change;
 		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
