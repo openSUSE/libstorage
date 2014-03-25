@@ -767,7 +767,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
 		string path = it->path();
 		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
@@ -793,7 +793,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
 		string path = it->path();
 		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
@@ -821,7 +821,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
 	    {
 		string path = it->path();
 		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
