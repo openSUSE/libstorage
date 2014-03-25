@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Mar 25 16:58:09 CET 2014 - aschnell@suse.de
+
+- fixed type visibility for gcc 4.9
+
+-------------------------------------------------------------------
 Tue Mar 25 13:54:38 CET 2014 - aschnell@suse.de
 
 - fixed btrfs subvolume detection (bnc#869764)
