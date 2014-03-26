@@ -144,8 +144,7 @@ namespace storage
 	setChildValue(tmp, "heads", value.heads);
 	setChildValue(tmp, "sectors", value.sectors);
 
-	if (value.sector_size != 512)
-	    setChildValue(tmp, "sector_size", value.sector_size);
+	setChildValueIf(tmp, "sector_size", value.sector_size, value.sector_size != 512);
     }
 
 

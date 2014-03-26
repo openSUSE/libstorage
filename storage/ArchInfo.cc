@@ -53,8 +53,7 @@ namespace storage
     {
 	setChildValue(node, "arch", arch);
 
-	if (efiboot)
-	    setChildValue(node, "efiboot", efiboot);
+	setChildValueIf(node, "efiboot", efiboot, efiboot);
     }
 
 

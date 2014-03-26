@@ -171,30 +171,25 @@ namespace storage
 	Device::saveData(node);
 
 	setChildValue(node, "numeric", numeric);
-	if (numeric)
-	    setChildValue(node, "number", num);
+	setChildValueIf(node, "number", num, numeric);
 
 	if (fs != FSUNKNOWN)
 	{
 	    setChildValue(node, "fs_type", toString(fs));
-	    if (!uuid.empty())
-		setChildValue(node, "fs_uuid", uuid);
-	    if (!label.empty())
-		setChildValue(node, "fs_label", label);
-	    if (!mp.empty())
-		setChildValue(node, "mount", mp);
-	    if (mount_by != MOUNTBY_DEVICE)
-		setChildValue(node, "mount_by", toString(mount_by));
-	    if (!fstab_opt.empty())
-		setChildValue(node, "fstopt", fstab_opt);
+	    setChildValueIf(node, "fs_uuid", uuid, !uuid.empty());
+	    setChildValueIf(node, "fs_label", label, !label.empty());
+	    setChildValueIf(node, "mount", mp, !mp.empty());
+	    setChildValueIf(node, "mount_by", toString(mount_by), mount_by != MOUNTBY_DEVICE);
+	    setChildValueIf(node, "fstopt", fstab_opt, !fstab_opt.empty());
 	}
 
 	if (encryption != ENC_NONE)
+	{
 	    setChildValue(node, "encryption", toString(encryption));
 #ifdef DEBUG_CRYPT_PASSWORD
-	if (encryption != ENC_NONE && !crypt_pwd.empty())
-	    setChildValue(node, "password", crypt_pwd);
+	    setChildValue(node, "password", crypt_pwd, !crypt_pwd.empty());
 #endif
+	}
     }
 
 

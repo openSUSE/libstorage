@@ -97,8 +97,7 @@ namespace storage
     {
 	Device::saveData(node);
 
-	if (ronly)
-	    setChildValue(node, "readonly", ronly);
+	setChildValueIf(node, "readonly", ronly, ronly);
     }
 
 

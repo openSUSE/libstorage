@@ -111,8 +111,7 @@ namespace storage
 	setChildValue(node, "partition_type", toString(typ));
 	setChildValue(node, "partition_id", idt);
 
-	if (bootflag)
-	    setChildValue(node, "boot_flag", true);
+	setChildValueIf(node, "boot_flag", bootflag, bootflag);
     }
 
 

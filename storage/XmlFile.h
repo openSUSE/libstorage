@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Novell, Inc.
+ * Copyright (c) [2010-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -92,9 +92,11 @@ namespace storage
     void setChildValue(xmlNode* node, const char* name, const string& value);
     void setChildValue(xmlNode* node, const char* name, bool value);
 
-    template<typename Type>
-    void setChildValue(xmlNode* node, const char* name, const Type& value)
+    template<typename Num>
+    void setChildValue(xmlNode* node, const char* name, const Num& value)
     {
+	static_assert(std::is_integral<Num>::value, "not integral");
+
 	std::ostringstream ostr;
 	classic(ostr);
 	ostr << value;
@@ -106,6 +108,13 @@ namespace storage
     {
 	for (typename list<Type>::const_iterator it = values.begin(); it != values.end(); ++it)
 	    setChildValue(node, name, *it);
+    }
+
+    template<typename Type>
+    void setChildValueIf(xmlNode* node, const char* name, const Type& value, bool pred)
+    {
+	if (pred)
+	    setChildValue(node, name, value);
     }
 
 }
