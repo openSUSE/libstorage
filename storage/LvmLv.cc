@@ -104,10 +104,9 @@ namespace storage
     LvmLv::saveData(xmlNode* node) const
     {
 	Dm::saveData(node);
-        if( !used_pool.empty() )
-            setChildValue(node, "used_pool", used_pool);
-        if( !origin.empty() )
-            setChildValue(node, "origin", origin);
+
+	setChildValueIf(node, "used_pool", used_pool, !used_pool.empty());
+	setChildValueIf(node, "origin", origin, !origin.empty());
         setChildValue(node, "pool", pool);
         setChildValue(node, "chunk_size", chunk_size);
     }

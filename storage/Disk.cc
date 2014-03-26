@@ -142,19 +142,13 @@ namespace storage
 
 	setChildValue(node, "label", label);
 	setChildValue(node, "max_primary", max_primary);
-	if (ext_possible)
-	{
-	    setChildValue(node, "ext_possible", ext_possible);
-	    setChildValue(node, "max_logical", max_logical);
-	}
+	setChildValueIf(node, "ext_possible", ext_possible, ext_possible);
+	setChildValueIf(node, "max_logical", max_logical, ext_possible);
 
-	if (!udev_path.empty())
-	    setChildValue(node, "udev_path", udev_path);
-	if (!udev_id.empty())
-	    setChildValue(node, "udev_id", udev_id);
+	setChildValueIf(node, "udev_path", udev_path, !udev_path.empty());
+	setChildValueIf(node, "udev_id", udev_id, !udev_id.empty());
 
-	if (transport != TUNKNOWN)
-	    setChildValue(node, "transport", toString(transport));
+	setChildValueIf(node, "transport", toString(transport), transport != TUNKNOWN);
 
 	ConstPartPair vp = partPair();
 	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)

@@ -105,8 +105,7 @@ namespace storage
 	setChildValue(node, "table_name", tname);
 
 	setChildValue(node, "stripes", stripe);
-	if (stripe > 1)
-	    setChildValue(node, "stripe_size_k", stripe_size);
+	setChildValueIf(node, "stripe_size_k", stripe_size, stripe > 1);
     }
 
 

@@ -1010,17 +1010,19 @@ void Btrfs::logDifference(std::ostream& log, const Btrfs& rhs) const
 	log << " SubVol:" << tmp;
     }
 
-void Btrfs::saveData(xmlNode* node) const
+
+    void
+    Btrfs::saveData(xmlNode* node) const
     {
-    Volume::saveData(node);
-    setChildValue(node, "devices", devices);
-    if( !dev_add.empty() )
-	setChildValue(node, "dev_add", dev_add);
-    if( !dev_rem.empty() )
-	setChildValue(node, "dev_rem", dev_rem);
-    if (!subvol.empty())
-	setChildValue(node, "subvolume", subvol);
+	Volume::saveData(node);
+
+	setChildValue(node, "devices", devices);
+	setChildValueIf(node, "dev_add", dev_add, !dev_add.empty());
+	setChildValueIf(node, "dev_rem", dev_rem, !dev_rem.empty());
+
+	setChildValueIf(node, "subvolume", subvol, !subvol.empty());
     }
+
 
 bool Btrfs::needCreateSubvol( const Btrfs& v )
     {
