@@ -187,7 +187,7 @@ namespace storage
 	{
 	    setChildValue(node, "encryption", toString(encryption));
 #ifdef DEBUG_CRYPT_PASSWORD
-	    setChildValue(node, "password", crypt_pwd, !crypt_pwd.empty());
+	    setChildValueIf(node, "password", crypt_pwd, !crypt_pwd.empty());
 #endif
 	}
     }
