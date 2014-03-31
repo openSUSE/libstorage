@@ -66,15 +66,6 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const DevLinks& devlinks)
-    {
-	for (const DevLinks::value_type& it : devlinks)
-	    s << "data[" << it.first << "] -> " << boost::join(it.second, " ") << endl;
-
-	return s;
-    }
-
-
     Dir::Dir(const string& path, bool do_probe)
 	: path(path)
     {
@@ -95,6 +86,15 @@ namespace storage
     std::ostream& operator<<(std::ostream& s, const Dir& dir)
     {
 	s << "path:" << dir.path << " entries:" << dir.entries << endl;
+
+	return s;
+    }
+
+
+    std::ostream& operator<<(std::ostream& s, const DevLinks& devlinks)
+    {
+	for (const DevLinks::value_type& it : devlinks)
+	    s << "data[" << it.first << "] -> " << boost::join(it.second, " ") << endl;
 
 	return s;
     }

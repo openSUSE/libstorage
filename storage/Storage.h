@@ -2046,7 +2046,6 @@ class DiskData;
 	void detectBtrfs(SystemInfo& systeminfo);
 	void detectMdParts(SystemInfo& systeminfo);
 	void decideMultipath();
-	void decideImsm();
 	void detectLoops(SystemInfo& systeminfo);
 	void detectNfs(const EtcFstab& fstab, SystemInfo& systeminfo);
 	void detectTmpfs(const EtcFstab& fstab, SystemInfo& systeminfo);
