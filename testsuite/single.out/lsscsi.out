@@ -3,3 +3,6 @@ data[/dev/sda] -> transport:SATA
 data[/dev/sdb] -> transport:USB
 data[/dev/sr0] -> transport:SATA
 
+parse2
+data[/dev/sda] -> transport:iSCSI
+
