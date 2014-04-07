@@ -1362,7 +1362,7 @@ namespace storage
 	 * partition number.
 	 *
 	 * @param disk name of disk, e.g. /dev/sda
-	 * @return prefix for partitions, e.g. "", "p" or "_part"
+	 * @return prefix for partitions, e.g. "", "p" or "-part"
 	 */
 	virtual string getPartitionPrefix(const string& disk) = 0;
 
