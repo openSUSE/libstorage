@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Apr  7 19:43:18 UTC 2014 - dvaleev@suse.com
+
+- Always wipe PReP partition (bnc#870590)
+
+-------------------------------------------------------------------
 Tue Mar 25 16:58:09 CET 2014 - aschnell@suse.de
 
 - fixed type visibility for gcc 4.9
