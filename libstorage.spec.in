@@ -113,7 +113,7 @@ Requires:	cryptsetup
 Requires:	device-mapper
 Requires:	dmraid
 Requires:	grep
-Requires:	lsscsi
+Requires:	lsscsi >= 0.26
 Requires:	lvm2
 Requires:	mdadm >= 3.3
 Requires:	multipath-tools

@@ -1,8 +1,18 @@
 parse1
 data[/dev/sda] -> transport:SATA
 data[/dev/sdb] -> transport:USB
-data[/dev/sr0] -> transport:SATA
 
 parse2
+data[/dev/sda] -> transport:UNKNOWN
+
+parse3
 data[/dev/sda] -> transport:iSCSI
+
+parse4
+data[/dev/sdb] -> transport:FC
+data[/dev/sdc] -> transport:FC
+
+parse5
+data[/dev/sdb] -> transport:FCoE
+data[/dev/sdc] -> transport:FCoE
 

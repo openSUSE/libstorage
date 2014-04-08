@@ -61,8 +61,17 @@ namespace storage
 	{
 	    string line = boost::replace_all_copy(*it, " usb: ", " usb:");
 
+	    string type = extractNthWord(1, line);
+	    if (type != "disk")
+		continue;
+
 	    string transport = extractNthWord(2, line);
 	    string device = extractNthWord(3, line);
+	    if (boost::starts_with(transport, "/dev/"))
+	    {
+		device = transport;
+		transport = "";
+	    }
 
 	    if (!boost::starts_with(device, "/dev/"))
 		continue;
@@ -75,6 +84,8 @@ namespace storage
 		entry.transport = ATA;
 	    else if (boost::starts_with(transport, "fc:"))
 		entry.transport = FC;
+	    else if (boost::starts_with(transport, "fcoe:"))
+		entry.transport = FCOE;
 	    else if (boost::starts_with(transport, "iqn"))
 		entry.transport = ISCSI;
 	    else if (boost::starts_with(transport, "sas:"))
@@ -85,32 +96,6 @@ namespace storage
 		entry.transport = SPI;
 	    else if (boost::starts_with(transport, "usb:"))
 		entry.transport = USB;
-
-	    if( entry.transport == FC )
-		{
-		string link;
-		if( readlink( Disk::sysfsPath(device)+"/device", link))
-		    {
-		    y2mil( "sysfs:" << Disk::sysfsPath(device) << 
-			   " link:" << link );
-		    string::size_type pos = link.rfind( '/' ) + 1;
-		    string nums = link.substr( pos, link.find_first_not_of( "0123456789", pos ));
-		    unsigned num = 0;
-		    nums >> num;
-		    y2mil( "nums:" << nums << " num:" << num );
-		    string symname = "/sys/class/fc_host/host" + 
-		                     decString(num) + "/symbolic_name";
-		    ifstream tmpf( symname.c_str() );
-		    string line;
-		    getline( tmpf, line );
-		    y2mil( "line:" << line );
-		    if( line.find( "over eth" )!=string::npos )
-			{
-			entry.transport = FCOE;
-			y2mil( "FCoE device: " << device );
-			}
-		    }
-		}
 
 	    data[device] = entry;
 	}
