@@ -110,17 +110,6 @@ namespace storage
 		}
 	    }
 
-	    i = m.find("SEC_TYPE");
-	    if (i != m.end())
-	    {
-		map<string, FsType>::const_iterator it2 = fs_table.find(i->second);
-		if (it2 != fs_table.end())
-		{
-		    entry.is_fs = true;
-		    entry.fs_type = it2->second;
-		}
-	    }
-
 	    if (entry.is_fs)
 	    {
 		i = m.find("UUID");

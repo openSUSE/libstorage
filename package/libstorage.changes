@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Apr 11 18:10:00 CEST 2014 - aschnell@suse.de
+
+- removed workaround for blkid file-system misdetection
+  (bnc#869359)
+- 2.25.12
+
+-------------------------------------------------------------------
 Tue Apr 08 12:11:00 CEST 2014 - aschnell@suse.de
 
 - adapted to lsscsi output change concerning FCoE
