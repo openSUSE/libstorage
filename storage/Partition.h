@@ -40,7 +40,7 @@ class Partition : public Volume
 		     ID_EXTENDED = 0x0f, ID_PPC_PREP = 0x41, ID_LINUX = 0x83, ID_SWAP = 0x82,
 		     ID_LVM = 0x8e, ID_RAID = 0xfd, ID_APPLE_OTHER = 0x101, ID_APPLE_HFS = 0x102,
 		     ID_GPT_BOOT = 0x103, ID_GPT_SERVICE = 0x104, ID_GPT_MSFTRES = 0x105,
-		     ID_APPLE_UFS = 0x106, ID_GPT_BIOS = 0x107 };
+		     ID_APPLE_UFS = 0x106, ID_GPT_BIOS = 0x107, ID_GPT_PREP = 0x108 };
 
 	Partition(const Disk& c, const string& name, const string& device, unsigned Pnr,
 		  unsigned long long SizeK, const Region& cylRegion, PartitionType Type,

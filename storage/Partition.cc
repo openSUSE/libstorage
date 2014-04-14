@@ -387,7 +387,7 @@ Partition::zeroIfNeeded() const
 
     bool zero_new = getContainer()->getStorage()->getZeroNewPartitions();
     bool used_as_pv = isUsedBy(UB_LVM);
-    bool prep = id() == ID_PPC_PREP;
+    bool prep = ( id() == ID_PPC_PREP || id() == ID_GPT_PREP );
 
     y2mil("zero_new:" << zero_new << " used_as_pv:" << used_as_pv << " prep:" << prep);
 

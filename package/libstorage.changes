@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu May 15 15:00:00 CEST 2014 - dvaleev@suse.com
+
+- add GPT PReP support (Boot partition for POWER architecture)
+
+-------------------------------------------------------------------
 Fri Apr 11 18:10:00 CEST 2014 - aschnell@suse.de
 
 - removed workaround for blkid file-system misdetection
