@@ -84,6 +84,7 @@
 #define GREPBIN        "/usr/bin/grep"
 #define PORTMAPBIN     "/sbin/portmap"
 #define RPCBINDBIN     "/sbin/rpcbind"
+#define RPCSTATDBIN    "/usr/sbin/rpc.statd"
 
 #define NTFSRESIZEBIN "/usr/sbin/ntfsresize"
 #define XFSGROWFSBIN  "/usr/sbin/xfs_growfs"

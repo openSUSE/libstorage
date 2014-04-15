@@ -4310,7 +4310,6 @@ Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, uns
     ret = co.addNfs(nfsDev, 0, opts, "", nfs4);
     if( instsys() )
 	{
-	SystemCmd c;
 	string prog_name = RPCBINDBIN;
 
 	//We don't have rpcbind (#423026, #427428) ...
@@ -4321,8 +4320,9 @@ Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, uns
 	    prog_name = PORTMAPBIN;
 	}
 
+	SystemCmd c;
 	c.execute( prog_name );
-	c.execute( "/usr/sbin/rpc.statd" );
+	c.execute(RPCSTATDBIN);
 	}
     if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
 	{
