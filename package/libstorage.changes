@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Apr 22 13:55:01 CEST 2014 - aschnell@suse.de
+
+- moved lock file to /run/libstorage
+
+-------------------------------------------------------------------
 Fri Apr 11 18:10:00 CEST 2014 - aschnell@suse.de
 
 - removed workaround for blkid file-system misdetection
