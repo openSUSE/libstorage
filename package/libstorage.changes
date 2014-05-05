@@ -1,7 +1,8 @@
 -------------------------------------------------------------------
 Mon May 05 16:12:16 CEST 2014 - aschnell@suse.de
 
-- fixed parsing of /proc/mdstat (bnc#858226)
+- fixed parsing of /proc/mdstat to properly detect IMSM and DDF
+  containers (bnc#858226)
 
 -------------------------------------------------------------------
 Tue Apr 22 13:55:01 CEST 2014 - aschnell@suse.de
