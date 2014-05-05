@@ -121,7 +121,7 @@ namespace storage
 	    if( (pos=line.find_first_not_of( app_ws ))!=string::npos && pos!=0 )
 		line.erase( 0, pos );
 	}
-	else if( !entry.inactive )
+	else
 	{
 	    entry.is_container = true;
 	}
