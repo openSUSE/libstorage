@@ -33,6 +33,9 @@
 #include "storage/Lock.h"
 
 
+#define LOCKDIR "/run/libstorage"
+
+
 namespace storage
 {
 
@@ -56,12 +59,12 @@ namespace storage
 
 	y2mil("getting " << (readonly ? "read-only" : "read-write") << " lock");
 
-	if (mkdir("/var/run/libstorage", 0755) == -1 && errno != EEXIST)
+	if (mkdir(LOCKDIR, 0755) == -1 && errno != EEXIST)
 	{
 	    y2err("creating directory for lock-file failed: " << strerror(errno));
 	}
 
-	fd = open("/var/run/libstorage/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT | O_CLOEXEC,
+	fd = open(LOCKDIR "/lock", (readonly ? O_RDONLY : O_WRONLY) | O_CREAT | O_CLOEXEC,
 		  S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
 	if (fd < 0)
 	{
