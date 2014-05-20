@@ -1087,7 +1087,8 @@ int Volume::doFormat()
 		break;
 	    case XFS:
 		cmd = MKFSXFSBIN;
-		params = "-q -f";
+		// crc is use to get version 5 superblock
+		params = "-q -f -m crc=1";
 		break;
 	    case SWAP:
 		cmd = MKSWAPBIN;
