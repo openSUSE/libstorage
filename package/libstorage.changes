@@ -3,6 +3,7 @@ Tue May 20 09:29:07 CEST 2014 - aschnell@suse.de
 
 - create version 5 superblock with mkfs.xfs to have bigger ACLs
   (see fate#317042)
+- 2.25.13
 
 -------------------------------------------------------------------
 Thu May 15 15:00:00 CEST 2014 - dvaleev@suse.com
