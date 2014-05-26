@@ -126,6 +126,33 @@ test5()
 }
 
 
+void
+test6()
+{
+    cout << "test6" << endl;
+
+    setup_system("empty");
+
+    write_fstab({ "UUID=1234  swap  swap  defaults  0 0",
+		  "UUID=5678  swap  swap  defaults  0 0" });
+
+    EtcFstab fstab("tmp/etc");
+    fstab.setDevice("/dev/sda1", {}, "1234", "", {}, "");
+    fstab.setDevice("/dev/sdb1", {}, "5678", "", {}, "");
+
+    FstabKey key1("/dev/sda1", "swap");
+    FstabKey key2("/dev/sdb1", "swap");
+
+    fstab.removeEntry(key1);
+    fstab.removeEntry(key2);
+    fstab.flush();
+
+    print_fstab();
+
+    cout << endl;
+}
+
+
 int
 main()
 {
@@ -136,4 +163,5 @@ main()
     test3();
     test4();
     test5();
+    test6();
 }

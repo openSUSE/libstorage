@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon May 26 15:23:49 CEST 2014 - aschnell@suse.de
+
+- fixed fstab handling of multiple swap devices (bnc#879890)
+
+-------------------------------------------------------------------
 Tue May 20 09:29:07 CEST 2014 - aschnell@suse.de
 
 - create version 5 superblock with mkfs.xfs to have bigger ACLs
