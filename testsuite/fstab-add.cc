@@ -139,6 +139,39 @@ test5()
 }
 
 
+void
+test6()
+{
+    cout << "test6" << endl;
+
+    setup_system("empty");
+
+    EtcFstab fstab("tmp/etc");
+
+    FstabChange entry1;
+    entry1.device = "/dev/sda1";
+    entry1.dentry = "UUID=1234";
+    entry1.mount = "swap";
+    entry1.fs = "swap";
+    entry1.opts = { ("defaults") };
+
+    FstabChange entry2;
+    entry2.device = "/dev/sdb1";
+    entry2.dentry = "UUID=5678";
+    entry2.mount = "swap";
+    entry2.fs = "swap";
+    entry2.opts = { ("defaults") };
+
+    fstab.addEntry(entry1);
+    fstab.addEntry(entry2);
+    fstab.flush();
+
+    print_fstab();
+
+    cout << endl;
+}
+
+
 int
 main()
 {
@@ -149,4 +182,5 @@ main()
     test3();
     test4();
     test5();
+    test6();
 }

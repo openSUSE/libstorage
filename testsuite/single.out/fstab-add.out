@@ -29,3 +29,9 @@ begin of fstab
 UUID=1234            /test1               ext4       defaults              0 0
 end of fstab
 
+test6
+begin of fstab
+UUID=1234            swap                 swap       defaults              0 0
+UUID=5678            swap                 swap       defaults              0 0
+end of fstab
+

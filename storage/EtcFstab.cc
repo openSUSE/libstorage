@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2013] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -429,8 +429,9 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
     }
 
 
-AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
-                               AsciiFile*& cryptotab, int& lineno ) const
+    AsciiFile*
+    EtcFstab::findFile(const FstabEntry& e, AsciiFile*& fstab, AsciiFile*& cryptotab,
+		       int& lineno) const
     {
     y2mil("dentry:" << e.dentry << " mount:" << e.mount << " fstab:" << fstab <<
 	  " cryptotab:" << cryptotab);
@@ -451,12 +452,17 @@ AsciiFile* EtcFstab::findFile( const FstabEntry& e, AsciiFile*& fstab,
 	reg = "^[ \t]*" + boost::replace_all_copy(fstabEncode(e.dentry), "\\", "\\\\") + "[ \t]";
 	}
 
+    if (e.mount != "swap")
+    {
 	reg = "[ \t]+" + boost::replace_all_copy(fstabEncode(e.mount), "\\", "\\\\") + "[ \t]";
+    }
+
 	lineno = ret->find_if_idx(regex_matches(reg));
 
     y2mil("fstab:" << fstab << " cryptotab:" << cryptotab << " lineno:" << lineno);
-    return( ret );
+    return ret;
     }
+
 
 int EtcFstab::findPrefix( const AsciiFile& tab, const string& mount ) const
     {
