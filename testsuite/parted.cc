@@ -124,6 +124,38 @@ parse3()
 }
 
 
+void
+parse4()
+{
+    cout << "parse4" << endl;
+
+    vector<string> lines = {
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 9964cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 9964,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: loop",
+	"",
+	"Number  Start  End      Size     File system  Flags",
+	" 1      0cyl   9964cyl  9964cyl  xfs",
+	"",
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 160086528s",
+	"Sector size (logical/physical): 512B/512B",
+	"Partition Table: loop",
+	"",
+	"Number  Start  End         Size        File system  Flags",
+	" 1      0s     160086527s  160086528s  xfs",
+	""
+    };
+
+    Parted parted("/dev/sdb", false);
+    parted.parse(lines);
+
+    cout << parted << endl;
+}
+
+
 int
 main()
 {
@@ -134,4 +166,5 @@ main()
     parse1();
     parse2();
     parse3();
+    parse4();
 }
