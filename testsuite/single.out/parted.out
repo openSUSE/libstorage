@@ -18,3 +18,6 @@ num:1 cylRegion:[1,23303] secRegion:[192,4194528] type:primary id:130
 num:2 cylRegion:[23304,2280] secRegion:[4194720,410400] type:primary id:131
 num:3 cylRegion:[25584,152495] secRegion:[4605120,27449280] type:primary id:131
 
+parse4
+device:/dev/sdb label:loop geometry:[9964,255,63,512]
+

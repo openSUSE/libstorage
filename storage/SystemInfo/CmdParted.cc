@@ -125,24 +125,24 @@ namespace storage
 			scanSecEntryLine(*it);
 		}
 	    }
-	}
 
-	iterator prev = entries.begin(); 
-	iterator it = prev;
-	if( it!=entries.end()) 
-	  ++it;
-	while(it!=entries.end())
+	    iterator prev = entries.begin();
+	    iterator it = prev;
+	    if (it != entries.end())
+		++it;
+	    while (it != entries.end())
 	    {
-	    if( prev->cylRegion.start()>=it->cylRegion.start() && it->cylRegion.len()>0 )
+		if (prev->cylRegion.start() >= it->cylRegion.start() && it->cylRegion.len() > 0)
 		{
-		y2mil("old:" << it->cylRegion );
-	        it->cylRegion.setStart(it->cylRegion.start()+1);
-	        it->cylRegion.setLen(it->cylRegion.len()-1);
-		y2mil("new:" << it->cylRegion );
+		    y2mil("old:" << it->cylRegion);
+		    it->cylRegion.setStart(it->cylRegion.start() + 1);
+		    it->cylRegion.setLen(it->cylRegion.len() - 1);
+		    y2mil("new:" << it->cylRegion);
 		}
-	    prev = it;
-	    ++it;
+		prev = it;
+		++it;
 	    }
+	}
 
 	y2mil(*this);
     }
