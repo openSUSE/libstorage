@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jun 11 13:11:19 CEST 2014 - dvaleev@suse.com
+
+- Print different messages for msdos and gpt PReP partitions
+- 2.25.14
+
+-------------------------------------------------------------------
 Mon May 26 15:23:49 CEST 2014 - aschnell@suse.de
 
 - fixed fstab handling of multiple swap devices (bnc#879890)
