@@ -54,11 +54,7 @@ This package contains libstorage, a library for storage management.
 export CFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 export CXXFLAGS="$RPM_OPT_FLAGS -DNDEBUG"
 
-aclocal
-libtoolize --force --automake --copy
-autoheader
-automake --add-missing --copy
-autoconf
+./autogen.sh
 
 %{?suse_update_config:%{suse_update_config -f}}
 %if 0%{?fedora_version} || 0%{?centos_version}
