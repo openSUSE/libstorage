@@ -145,16 +145,16 @@ void Btrfs::detectSubvol()
         if( !mp.empty() )
             {
             clearSubvol();
-            SystemCmd cmd(BTRFSBIN " subvolume list -a " + quote(mp));
+            SystemCmd cmd(BTRFSBIN " subvolume list -a -p " + quote(mp));
             for( vector<string>::const_iterator s=cmd.stdout().begin(); 
                  s!=cmd.stdout().end(); ++s )
                 {
-		string level;
-		string::size_type pos1 = s->find(" level ");
+		string parent;
+		string::size_type pos1 = s->find(" parent ");
 		if (pos1 != string::npos)
 		    pos1 = s->find_first_not_of(app_ws, pos1 + 6);
 		if (pos1 != string::npos)
-		    level = s->substr(pos1, s->find_last_not_of(app_ws));
+		    parent = s->substr(pos1, s->find_last_not_of(app_ws));
 
 		string subvol;
 		string::size_type pos2 = s->find(" path ");
@@ -165,9 +165,9 @@ void Btrfs::detectSubvol()
 		if (boost::starts_with(subvol, "<FS_TREE>/"))
 		    subvol.erase(0, 10);
 
-		// Subvolume can already be deleted, in which case level is "0"
+		// Subvolume can already be deleted, in which case parent is "0"
 		// (and path "DELETED"). That is a temporary state.
-		if (level != "0" && !subvol.empty())
+		if (parent != "0" && !subvol.empty())
 		    addSubvol(subvol);
 		}
             }
