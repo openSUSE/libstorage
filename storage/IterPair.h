@@ -69,6 +69,12 @@ IterPair<Iter> MakeIterPair( Container& c )
     return( IterPair<Iter>( c.begin(), c.end() ));
     }
 
+template<class Iter>
+IterPair<Iter> make_range(Iter const &b, Iter const &e)
+{
+    return IterPair<Iter>(b, e);
+}
+
 template< class Pred, class Iter >
 class MakeCondIterPair : public IterPair<Iter>
     {

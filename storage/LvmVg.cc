@@ -58,7 +58,7 @@ namespace storage
     {
 	vgs.clear();
 
-	for (const string& line : lines)
+	for (auto const &line : lines)
 	    vgs.push_back(boost::trim_copy(line, locale::classic()));
 
 	y2mil(*this);
@@ -281,10 +281,10 @@ namespace storage
 
 	s << endl;
 
-	for (const CmdVgdisplay::LvEntry& lv_entry : cmdvgdisplay.lv_entries)
+	for (auto const &lv_entry : cmdvgdisplay.lv_entries)
 	    s << "lv " << lv_entry << endl;
 
-	for (const CmdVgdisplay::PvEntry& pv_entry : cmdvgdisplay.pv_entries)
+	for (auto const &pv_entry : cmdvgdisplay.pv_entries)
 	    s << "pv " << pv_entry << endl;
 
 	return s;
@@ -353,9 +353,8 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     LvmVg::LvmVg(Storage* s, const xmlNode* node)
 	: PeContainer(s, staticType(), node), lvm1(false)
     {
-	const list<const xmlNode*> l = getChildNodes(node, "logical_volume");
-	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
-	    addToList(new LvmLv(*this, *it));
+	for (auto const *it : getChildNodes(node, "logical_volume"))
+	    addToList(new LvmLv(*this, it));
 
 	y2deb("constructed LvmVg " << dev);
     }
@@ -366,12 +365,8 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     {
 	y2deb("copy-constructed LvmVg " << dev);
 
-	ConstLvmLvPair p = c.lvmLvPair();
-	for (ConstLvmLvIter i = p.begin(); i != p.end(); ++i)
-	{
-	    LvmLv* p = new LvmLv(*this, *i);
-	    vols.push_back(p);
-	}
+	for (auto const &i : c.lvmLvPair())
+	    vols.push_back(new LvmLv(*this, i));
     }
 
 
@@ -386,9 +381,8 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     {
 	PeContainer::saveData(node);
 
-	ConstLvmLvPair vp = lvmLvPair();
-	for (ConstLvmLvIter v = vp.begin(); v != vp.end(); ++v)
-	    v->saveData(xmlNewChild(node, "logical_volume"));
+	for (auto &v : lvmLvPair())
+	    v.saveData(xmlNewChild(node, "logical_volume"));
     }
 
 
@@ -416,25 +410,25 @@ LvmVg::removeVg()
     if( ret==0 )
 	{
 	LvmLvPair p = lvmLvPair(LvmLv::notDeleted);
-	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+	for (auto const &i : p)
             {
-            if( i->isSnapshot() && !created() )
-                ret = removeLv( i->name() );
+            if (i.isSnapshot() && !created())
+                ret = removeLv(i.name());
             }
-	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+	for (auto const &i : p)
             {
-            if( !i->isSnapshot() && !i->isPool() )
+            if (!i.isSnapshot() && !i.isPool())
 		{
-	        if (i->isUsedBy())
-		    getStorage()->removeUsing( i->device(), i->getUsedBy() );
-		if( !created() )
-		    ret = removeLv( i->name() );
+	        if (i.isUsedBy())
+		    getStorage()->removeUsing(i.device(), i.getUsedBy());
+		if (!created())
+		    ret = removeLv(i.name());
 		}
             }
-	for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+	for (auto const &i : p)
             {
-            if( !i->isSnapshot() && i->isPool() && !created())
-                ret = removeLv( i->name() );
+            if (!i.isSnapshot() && i.isPool() && !created())
+                ret = removeLv(i.name());
             }
 	setDeleted();
 	}
@@ -1101,7 +1095,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 
 	calcSize();
 
-	for (const CmdVgdisplay::LvEntry& lv_entry : cmdvgdisplay.lv_entries)
+	for (auto const &lv_entry : cmdvgdisplay.lv_entries)
 	{
 	    addLv(lv_entry.origin.empty() ? lv_entry.num_le : lv_entry.num_cow_le,
 		  lv_entry.name, lv_entry.origin, lv_entry.uuid, lv_entry.status,
@@ -1111,7 +1105,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 	    calcSize();
 	}
 
-	for (const CmdVgdisplay::PvEntry& pv_entry : cmdvgdisplay.pv_entries)
+	for (auto const &pv_entry : cmdvgdisplay.pv_entries)
 	{
 	    Pv pv;
 
@@ -1132,45 +1126,40 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 	    calcSize();
         }
 
-    LvmLvPair p=lvmLvPair(lvDeleted);
-    for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+    for (auto const &i : lvmLvPair(lvDeleted))
 	{
-	if( !i->isThin() )
+	if (!i.isThin())
 	    {
-	    map<string,unsigned long> pe_map = i->getPeMap();
-	    remLvPeDistribution( i->getLe(), pe_map, pv, pv_add );
-	    free_pe += i->getLe();
+	    map<string, unsigned long> pe_map = i.getPeMap();
+	    remLvPeDistribution(i.getLe(), pe_map, pv, pv_add);
+	    free_pe += i.getLe();
 	    }
 	}
-    p=lvmLvPair(lvCreated);
-    for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+    for (auto &i : lvmLvPair(lvCreated))
 	{
-	if( !i->isThin() )
+	if (!i.isThin())
 	    {
-	    map<string,unsigned long> pe_map;
-	    if( addLvPeDistribution( i->getLe(), i->stripes(), pv, pv_add,
-				     pe_map ) == 0 )
-		i->setPeMap( pe_map );
-	    free_pe -= min((unsigned long long) free_pe, i->getLe());
+	    map<string, unsigned long> pe_map;
+	    if (addLvPeDistribution(i.getLe(), i.stripes(), pv, pv_add, pe_map) == 0)
+		i.setPeMap(pe_map);
+	    free_pe -= min((unsigned long long)free_pe, i.getLe());
 	    }
 	}
-    p=lvmLvPair(lvResized);
-    for( LvmLvIter i=p.begin(); i!=p.end(); ++i )
+    for (auto &i : lvmLvPair(lvResized))
 	{
-	if( !i->isThin() )
+	if (!i.isThin())
 	    {
-	    map<string,unsigned long> pe_map = i->getPeMap();
-	    long size_diff = i->getLe() - sizeToLe(i->origSizeK());
-	    if( size_diff>0 )
+	    map<string, unsigned long> pe_map = i.getPeMap();
+	    long size_diff = i.getLe() - sizeToLe(i.origSizeK());
+	    if (size_diff > 0)
 		{
-		if( addLvPeDistribution( size_diff, i->stripes(), pv, pv_add,
-					 pe_map ) == 0 )
-		    i->setPeMap( pe_map );
+		if (addLvPeDistribution(size_diff, i.stripes(), pv, pv_add, pe_map) == 0)
+		    i.setPeMap(pe_map);
 		}
-	    else if( size_diff<0 )
+	    else if (size_diff < 0)
 		{
-		if( remLvPeDistribution( -size_diff, pe_map, pv, pv_add )==0 )
-		    i->setPeMap( pe_map );
+		if (remLvPeDistribution(-size_diff, pe_map, pv, pv_add) == 0)
+		    i.setPeMap(pe_map);
 		}
 	    free_pe -= size_diff;
 	    }
@@ -1360,15 +1349,13 @@ LvmVg::getCommitActions(list<commitAction>& l) const
     else
 	{
 	if( !pv_add.empty() )
-	    for( list<Pv>::const_iterator i=pv_add.begin(); i!=pv_add.end();
-	         ++i )
+	    for (auto const &i : pv_add)
 		l.push_back(commitAction(INCREASE, staticType(),
-					 extendText(false, i->device), this, true));
+					 extendText(false, i.device), this, true));
 	if( !pv_remove.empty() )
-	    for( list<Pv>::const_iterator i=pv_remove.begin();
-	         i!=pv_remove.end(); ++i )
+	    for (auto const &i : pv_remove)
 		l.push_back(commitAction(DECREASE, staticType(),
-					 reduceText(false, i->device), this, false));
+					 reduceText(false, i.device), this, false));
 	}
     }
 
@@ -1903,18 +1890,18 @@ void LvmVg::normalizeDmDevices()
     {
     y2mil( "normalizeDmDevices:" << name() );
     string dm = decString(Dm::dmMajor());
-    for( list<Pv>::iterator i=pv.begin(); i!=pv.end(); ++i )
+    for (auto &i : pv)
 	{
-	if( i->device.find( "/dev/dm-" )==0 )
+	if (i.device.find("/dev/dm-") == 0)
 	    {
-	    string dev = getDeviceByNumber( dm+":"+i->device.substr( 8 ) );
-	    if( !dev.empty() )
+	    string dev = getDeviceByNumber(dm + ":" + i.device.substr(8));
+	    if (!dev.empty())
 		{
-		y2mil( "dev:" << i->device << " normal dev:" << dev );
-		if( getStorage()->knownDevice( dev ) )
+		y2mil("dev:" << i.device << " normal dev:" << dev);
+		if (getStorage()->knownDevice(dev))
 		    {
-		    y2mil( "replace " << i->device << " with " << dev );
-		    i->device = dev;
+		    y2mil("replace " << i.device << " with " << dev);
+		    i.device = dev;
 		    }
 		}
 	    }
@@ -1932,16 +1919,16 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.uuid = uuid;
 
     info.devices.clear();
-    for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	info.devices.push_back(it->device);
+    for (auto const &it : pv)
+	info.devices.push_back(it.device);
 
     info.devices_add.clear();
-    for (list<Pv>::const_iterator it = pv_add.begin(); it != pv_add.end(); ++it)
-	info.devices_add.push_back(it->device);
+    for (auto const &it : pv_add)
+	info.devices_add.push_back(it.device);
 
     info.devices_rem.clear();
-    for (list<Pv>::const_iterator it = pv_remove.begin(); it != pv_remove.end(); ++it)
-	info.devices_rem.push_back(it->device);
+    for (auto const &it : pv_remove)
+	info.devices_rem.push_back(it.device);
 
     y2mil( "device:" << info.devices );
     if( !info.devices_add.empty() )

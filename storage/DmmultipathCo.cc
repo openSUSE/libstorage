@@ -76,10 +76,10 @@ namespace storage
 	    vendor = entry.vendor;
 	    model = entry.model;
 
-	    for (list<string>::const_iterator it = entry.devices.begin(); it != entry.devices.end(); ++it)
+	    for (auto const &it : entry.devices)
 	    {
 		Pv pv;
-		pv.device = *it;
+		pv.device = it;
 		addPv(pv);
 	    }
 	}
@@ -96,11 +96,8 @@ DmmultipathCo::setUdevData(const list<string>& id)
 
     DmPartCo::setUdevData(udev_id);
 
-    DmmultipathPair pp = dmmultipathPair();
-    for( DmmultipathIter p=pp.begin(); p!=pp.end(); ++p )
-	{
-	p->addUdevData();
-	}
+    for (auto &p : dmmultipathPair())
+	p.addUdevData();
 }
 
 
@@ -170,13 +167,13 @@ DmmultipathCo::activate(bool val)
 	list<string> l;
 
 	list<string> entries = systeminfo.getCmdMultipath().getEntries();
-	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
+	for (auto const &it : entries)
         {
 	    CmdDmsetupInfo::Entry entry;
-	    if (systeminfo.getCmdDmsetupInfo().getEntry(*it, entry) && entry.segments > 0)
-		l.push_back(*it);
+	    if (systeminfo.getCmdDmsetupInfo().getEntry(it, entry) && entry.segments > 0)
+		l.push_back(it);
 	    else
-		y2mil("ignoring inactive dmmultipath " << *it);
+		y2mil("ignoring inactive dmmultipath " << it);
         }
 
 	if (!l.empty())

@@ -77,16 +77,16 @@ void DmCo::updateDmMaps()
     do
 	{
 	success = false;
-	for( DmIter i=dp.begin(); i!=dp.end(); ++i )
+	for (auto &i : dp)
 	    {
-	    if( i->getPeMap().empty() )
+	    if (i.getPeMap().empty())
 		{
-		y2mil( "dm:" << *i );
-		i->getTableInfo();
-		if( !i->getPeMap().empty() )
+		y2mil("dm:" << i);
+		i.getTableInfo();
+		if (!i.getPeMap().empty())
 		    {
 		    success = true;
-		    y2mil( "dm:" << *i );
+		    y2mil("dm:" << i);
 		    }
 		}
 	    }
@@ -115,14 +115,14 @@ void DmCo::getDmData(SystemInfo& systeminfo)
     const CmdDmsetupInfo& cmddmsetupinfo = systeminfo.getCmdDmsetupInfo();
     list<string> lvm_pools;
     list<string> lvm_tmeta;
-    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
+    for (auto const &it1 : cmddmsetupinfo)
         {
-        if( boost::ends_with(it1->first,"-tpool") )
+        if (boost::ends_with(it1.first, "-tpool"))
             {
-            string name = it1->first.substr( 0, it1->first.size()-6 );
+            string name = it1.first.substr(0, it1.first.size() - 6);
             if( find( lvm_pools.begin(), lvm_pools.end(), name )==lvm_pools.end() )
                 {
-                string tb = it1->first;
+                string tb = it1.first;
                 Dm* m = new Dm(*this, tb, "/dev/mapper/" + tb, tb, systeminfo);
                 if( m && m->getTargetName()=="thin-pool" )
                     {
@@ -132,29 +132,29 @@ void DmCo::getDmData(SystemInfo& systeminfo)
                     delete(m);
                 }
             }
-        if( boost::ends_with(it1->first,"_tmeta") )
+        if (boost::ends_with(it1.first, "_tmeta"))
             {
-            string name = it1->first.substr( 0, it1->first.size()-6 );
+            string name = it1.first.substr(0, it1.first.size() - 6);
 	    if( find( lvm_tmeta.begin(), lvm_tmeta.end(), name )==lvm_tmeta.end() )
 		lvm_tmeta.push_back( name );
 	    }
         }
     y2mil( "lvm_pools:" << lvm_pools );
     y2mil( "lvm_tmeta:" << lvm_tmeta );
-    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
+    for (auto const &it1 : cmddmsetupinfo)
         {
-        if( boost::ends_with(it1->first,"_tdata") )
+        if (boost::ends_with(it1.first, "_tdata"))
             {
-            string name = it1->first.substr( 0, it1->first.size()-6 );
+            string name = it1.first.substr(0, it1.first.size() - 6);
 	    if( find( lvm_tmeta.begin(), lvm_tmeta.end(), name )!=lvm_tmeta.end() &&
 	        find( lvm_pools.begin(), lvm_pools.end(), name )==lvm_pools.end() )
 		lvm_pools.push_back( name );
 	    }
         }
     y2mil( "lvm_pools:" << lvm_pools );
-    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
+    for (auto const &it1 : cmddmsetupinfo)
     {
-	string table = it1->first;
+	string table = it1.first;
 	bool found=false;
 	if (!found)
 	{
@@ -203,22 +203,20 @@ void DmCo::getDmData(SystemInfo& systeminfo)
 	    }
 	if( !found )
 	    {
-	    const CmdDmsetupInfo::Entry& entry = it1->second;
+	    const CmdDmsetupInfo::Entry& entry = it1.second;
 
 	    Dm* m = new Dm(*this, table, "/dev/mapper/" + table, table, systeminfo);
 	    y2mil("new Dm:" << *m);
 	    bool in_use = false;
 	    bool multipath = m->getTargetName()=="multipath" ||
 			     m->getTargetName()=="emc";
-	    const map<string,unsigned long>& pe = m->getPeMap();
-	    map<string,unsigned long>::const_iterator it;
-	    for( it=pe.begin(); it!=pe.end(); ++it )
+	    for (auto const &it : m->getPeMap())
 		{
-		if( !getStorage()->canUseDevice( it->first, true ))
+		if (!getStorage()->canUseDevice(it.first, true))
 		    in_use = true;
-                y2mil( "dev:" << it->first << " in_use:" << in_use );
-		if( !in_use || multipath )
-		    getStorage()->setUsedBy(it->first, UB_DM, "/dev/mapper/" + table);
+                y2mil("dev:" << it.first << " in_use:" << in_use);
+		if (!in_use || multipath)
+		    getStorage()->setUsedBy(it.first, UB_DM, "/dev/mapper/" + table);
 		}
 	    string tmp = m->device();
 	    tmp.erase( 5, 7 );
@@ -287,10 +285,10 @@ void DmCo::getDmDataCrypt(SystemInfo& systeminfo)
     {
     y2mil( "begin:" );
     const CmdDmsetupInfo& cmddmsetupinfo = systeminfo.getCmdDmsetupInfo();
-    for (CmdDmsetupInfo::const_iterator it1 = cmddmsetupinfo.begin(); it1 != cmddmsetupinfo.end(); ++it1)
+    for (auto const &it1 : cmddmsetupinfo)
         {
-	string table = it1->first;
-        const CmdDmsetupInfo::Entry& entry = it1->second;
+	string table = it1.first;
+        const CmdDmsetupInfo::Entry& entry = it1.second;
         string dev = "/dev/mapper/" + table;
 
         if( boost::starts_with(entry.uuid, "CRYPT"))
@@ -385,12 +383,8 @@ DmCo::removeDm( const string& tname )
 	    }
 	else
 	    {
-	    const map<string,unsigned long>& pe = i->getPeMap();
-	    for( map<string,unsigned long>::const_iterator it = pe.begin();
-		 it!=pe.end(); ++it )
-		{
-		getStorage()->clearUsedBy(it->first);
-		}
+	    for (auto const &it : i->getPeMap())
+		getStorage()->clearUsedBy(it.first);
 	    i->setDeleted();
 	    }
 	}
@@ -483,12 +477,8 @@ bool DmCo::equalContent( const Container& rhs ) const
 DmCo::DmCo( const DmCo& rhs ) : PeContainer(rhs)
     {
     y2deb("constructed DmCo by copy constructor from " << rhs.nm);
-    ConstDmPair p = rhs.dmPair();
-    for( ConstDmIter i = p.begin(); i!=p.end(); ++i )
-	{
-	Dm * p = new Dm( *this, *i );
-	vols.push_back( p );
-        }
+    for (auto const &i : rhs.dmPair())
+        vols.push_back(new Dm(*this, i));
     }
 
 }

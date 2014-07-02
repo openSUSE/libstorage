@@ -60,31 +60,27 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
 
 Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node ) : Volume(d, node)
     {
-    list<const xmlNode*> l = getChildNodes(node, "devices");
-    for( list<const xmlNode*>::const_iterator it=l.begin(); it!=l.end(); ++it )
+    for (auto const *it : getChildNodes(node, "devices"))
 	{
 	string s;
-	getChildValue(*it, "devices", s);
+	getChildValue(it, "devices", s);
 	devices.push_back(s);
 	}
-    l = getChildNodes(node, "dev_add");
-    for( list<const xmlNode*>::const_iterator it=l.begin(); it!=l.end(); ++it )
+    for (auto const *it : getChildNodes(node, "dev_add"))
 	{
 	string s;
-	getChildValue(*it, "devices", s);
+	getChildValue(it, "devices", s);
 	dev_add.push_back(s);
 	}
-    l = getChildNodes(node, "dev_rem");
-    for( list<const xmlNode*>::const_iterator it=l.begin(); it!=l.end(); ++it )
+    for (auto const *it : getChildNodes(node, "dev_rem"))
 	{
 	string s;
-	getChildValue(*it, "devices", s);
+	getChildValue(it, "devices", s);
 	dev_rem.push_back(s);
 	}
-    l = getChildNodes(node, "subvolumes");
-    for (list<const xmlNode*>::const_iterator it=l.begin(); it!=l.end(); ++it )
+    for (auto const *it : getChildNodes(node, "subvolumes"))
 	{
-	subvol.push_back(Subvolume(*it));
+	subvol.push_back(Subvolume(it));
 	}
     }
 
@@ -125,8 +121,8 @@ Btrfs::getDevices( list<string>& devs, bool add_del ) const
 	if( !dev_add.empty() )
 	    devs.insert( devs.end(), dev_add.begin(), dev_add.end() );
 	if( !dev_rem.empty() )
-	    for( list<string>::const_iterator s=dev_rem.begin(); s!=dev_rem.end(); ++s )
-		devs.remove( *s );
+	    for (auto const &s : dev_rem)
+		devs.remove(s);
 	}
     y2mil( "devs:" << devs );
     }
@@ -146,22 +142,21 @@ void Btrfs::detectSubvol()
             {
             clearSubvol();
             SystemCmd cmd(BTRFSBIN " subvolume list -a -p " + quote(mp));
-            for( vector<string>::const_iterator s=cmd.stdout().begin(); 
-                 s!=cmd.stdout().end(); ++s )
+            for (auto const &s : cmd.stdout())
                 {
 		string parent;
-		string::size_type pos1 = s->find(" parent ");
+		auto pos1 = s.find(" parent ");
 		if (pos1 != string::npos)
-		    pos1 = s->find_first_not_of(app_ws, pos1 + 6);
+		    pos1 = s.find_first_not_of(app_ws, pos1 + 6);
 		if (pos1 != string::npos)
-		    parent = s->substr(pos1, s->find_last_not_of(app_ws));
+		    parent = s.substr(pos1, s.find_last_not_of(app_ws));
 
 		string subvol;
-		string::size_type pos2 = s->find(" path ");
+		auto pos2 = s.find(" path ");
 		if (pos2 != string::npos)
-		    pos2 = s->find_first_not_of(app_ws, pos2 + 5);
+		    pos2 = s.find_first_not_of(app_ws, pos2 + 5);
 		if (pos2 != string::npos)
-		    subvol = s->substr(pos2, s->find_last_not_of(app_ws));
+		    subvol = s.substr(pos2, s.find_last_not_of(app_ws));
 		if (boost::starts_with(subvol, "<FS_TREE>/"))
 		    subvol.erase(0, 10);
 
@@ -196,13 +191,10 @@ Btrfs::existSubvolume( const string& name )
     {
     bool ret=false;
     y2mil( "name:" << name );
-    list<Subvolume>::iterator i=subvol.begin();
-    while( i!=subvol.end() && !ret )
-	{
-	ret = !i->deleted() && i->path()==name && (!getFormat()||i->created());
-	if( !ret )
-	    ++i;
-	}
+    for (auto const &s : subvol) {
+	if (ret) break;
+	ret = !s.deleted() && s.path() == name && (!getFormat() || s.created());
+    }
     y2mil( "ret:" << ret );
     return( ret );
     }
@@ -442,14 +434,14 @@ int Btrfs::doDeleteSubvol()
 	{
 	SystemCmd c;
 	string cmd = BTRFSBIN " subvolume delete ";
-	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
+	for (auto &s : subvol)
 	    {
-	    if( i->deleted() )
+	    if (s.deleted())
 		{
-		getStorage()->showInfoCb( deleteSubvolText(true,i->path()),silent);
-		c.execute(cmd + quote(tmp_mount.mount_point + '/' + i->path()));
+		getStorage()->showInfoCb(deleteSubvolText(true, s.path()), silent);
+		c.execute(cmd + quote(tmp_mount.mount_point + '/' + s.path()));
 		if( c.retcode()==0 )
-		    i->setDeleted(false);
+		    s.setDeleted(false);
 		else
 		    ret = BTRFS_DELETE_SUBVOL_FAIL;
 		}
@@ -472,13 +464,13 @@ int Btrfs::doCreateSubvol()
 	{
 	SystemCmd c;
 	string cmd = BTRFSBIN " subvolume create ";
-	for( list<Subvolume>::iterator i=subvol.begin(); i!=subvol.end(); ++i )
+	for (auto &s : subvol)
 	    {
-	    if( i->created() )
+	    if (s.created())
 		{
-		getStorage()->showInfoCb( createSubvolText(true,i->path()),silent);
-		y2mil("dir:" << tmp_mount.mount_point << " path:" << i->path());
-		string path = tmp_mount.mount_point + "/" + i->path();
+		getStorage()->showInfoCb(createSubvolText(true, s.path()), silent);
+		y2mil("dir:" << tmp_mount.mount_point << " path:" << s.path());
+		string path = tmp_mount.mount_point + "/" + s.path();
 		string dir = path.substr( 0, path.find_last_of( "/" ) );
 		y2mil( "path:" << path << " dir:" << dir );
 		if( !checkDir( dir ) )
@@ -488,7 +480,7 @@ int Btrfs::doCreateSubvol()
 		    }
 		c.execute(cmd + quote(path));
 		if( c.retcode()==0 )
-		    i->setCreated(false);
+		    s.setCreated(false);
 		else
 		    ret = BTRFS_CREATE_SUBVOL_FAIL;
 		}
@@ -506,12 +498,12 @@ int Btrfs::doCreateSubvol()
 list<string> Btrfs::getSubvolAddDel( bool add ) const
     {
     list<string> ret;
-    for (list<Subvolume>::const_iterator i = subvol.begin(); i != subvol.end(); ++i)
+    for (auto const &i : subvol)
 	{
-	if( !add && i->deleted() )
-	    ret.push_back(i->path());
-	if( add && i->created() )
-	    ret.push_back(i->path());
+	if (!add && i.deleted())
+	    ret.push_back(i.path());
+	if (add && i.created())
+	    ret.push_back(i.path());
 	}
     if( !ret.empty() )
 	y2mil( "add:" << add << " ret:" << ret );
@@ -522,12 +514,11 @@ void
 Btrfs::countSubvolAddDel( unsigned& add, unsigned& del ) const
     {
     add = del = 0;
-    for( list<Subvolume>::const_iterator i=subvol.begin();
-	 i!=subvol.end(); ++i )
+    for (auto const &s : subvol)
 	{
-	if( i->deleted() )
+	if (s.deleted())
 	    del++;
-	if( i->created() )
+	if (s.created())
 	    add++;
 	}
     if( add>0 || del>0 )
@@ -538,15 +529,13 @@ string
 Btrfs::subvolNames( bool added ) const
     {
     string ret;
-    for( list<Subvolume>::const_iterator i=subvol.begin();
-	 i!=subvol.end(); ++i )
+    for (auto const &s : subvol)
 	{
-	if( (added && i->created()) ||
-	    (!added && i->deleted()))
+	if ((added && s.created()) || (!added && s.deleted()))
 	    {
 	    if( !ret.empty() )
 		ret += ' ';
-	    ret += i->path();
+	    ret += s.path();
 	    }
 	}
     y2mil( "ret:" << ret );
@@ -572,10 +561,10 @@ int Btrfs::setFormat( bool val, storage::FsType new_fs )
 
 void Btrfs::unuseDev() const
     {
-    for( list<string>::const_iterator s=devices.begin(); s!=devices.end(); ++s )
-	getContainer()->getStorage()->clearUsedBy(*s);
-    for( list<string>::const_iterator s=dev_add.begin(); s!=dev_add.end(); ++s )
-	getContainer()->getStorage()->clearUsedBy(*s);
+    for (auto const &s : devices)
+	getContainer()->getStorage()->clearUsedBy(s);
+    for (auto const &s : dev_add)
+	getContainer()->getStorage()->clearUsedBy(s);
     }
 
 int Btrfs::clearSignature()
@@ -584,8 +573,8 @@ int Btrfs::clearSignature()
     // no need to actually remove signature from single volume btrfs filesystems
     if( devices.size()>1 )
 	{
-	for( list<string>::const_iterator s=devices.begin(); s!=devices.end(); ++s )
-	    getContainer()->getStorage()->zeroDevice(*s);
+	for (auto const &s : devices)
+	    getContainer()->getStorage()->zeroDevice(s);
 	}
     y2mil( "ret:" << ret );
     return( ret );
@@ -738,26 +727,26 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	    }
 	}
 
-    for (list<string>::const_iterator it = dev_add.begin(); it != dev_add.end(); ++it)
-	l.push_back(commitAction(INCREASE, cont->type(), extendText(false, *it), this, true));
-    for (list<string>::const_iterator it = dev_rem.begin(); it != dev_rem.end(); ++it)
-	l.push_back(commitAction(DECREASE, cont->type(), reduceText(false, *it), this, false));
+    for (auto const &s : dev_add)
+	l.push_back(commitAction(INCREASE, cont->type(), extendText(false, s), this, true));
+    for (auto const &s : dev_rem)
+	l.push_back(commitAction(DECREASE, cont->type(), reduceText(false, s), this, false));
 
     unsigned rem, add;
     countSubvolAddDel( add, rem );
     if( rem>0 )
 	{
 	list<string> sl = getSubvolAddDel( false );
-	for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+	for (auto const &s : sl)
 	    l.push_back(commitAction(SUBVOL, cont->type(),
-				     deleteSubvolText(false,*i), this, true));
+				     deleteSubvolText(false, s), this, true));
 	}
     if( add>0 )
 	{
 	list<string> sl = getSubvolAddDel( true );
-	for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+	for (auto const &s : sl)
 	    l.push_back(commitAction(SUBVOL, cont->type(),
-				     createSubvolText(false,*i), this, false));
+				     createSubvolText(false, s), this, false));
 	}
     }
 
@@ -769,17 +758,17 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (auto const &s : subvol)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = s.path();
+		if (!def_subvol.empty() && boost::starts_with(s.path(), def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabChange tmp_change = change;
 		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
-		tmp_change.opts.push_back("subvol=" + it->path());
+		tmp_change.opts.push_back("subvol=" + s.path());
 		fstab->addEntry(tmp_change);
 	    }
 	}
@@ -795,10 +784,10 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (auto const &s : subvol)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = s.path();
+		if (!def_subvol.empty() && boost::starts_with(s.path(), def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabKey tmp_key(key);
@@ -807,7 +796,7 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
-		tmp_change.opts.push_back("subvol=" + it->path());
+		tmp_change.opts.push_back("subvol=" + s.path());
 		fstab->updateEntry(tmp_key, tmp_change);
 	    }
 	}
@@ -823,10 +812,10 @@ Btrfs::getCommitActions(list<commitAction>& l) const
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
+	    for (auto const &s : subvol)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = s.path();
+		if (!def_subvol.empty() && boost::starts_with(s.path(), def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabKey tmp_key(key);
@@ -931,14 +920,14 @@ void Btrfs::getInfo( BtrfsInfo& info ) const
     info.subvol.clear();
     info.subvol_add.clear();
     info.subvol_rem.clear();
-    for (list<Subvolume>::const_iterator it = subvol.begin(); it != subvol.end(); ++it)
+    for (auto const &s : subvol)
     {
-	if (it->deleted())
-	    info.subvol_rem.push_back(it->path());
-	else if (it->created())
-	    info.subvol_add.push_back(it->path());
+	if (s.deleted())
+	    info.subvol_rem.push_back(s.path());
+	else if (s.created())
+	    info.subvol_add.push_back(s.path());
 	else
-	    info.subvol.push_back(it->path());
+	    info.subvol.push_back(s.path());
     }
     }
 
@@ -967,45 +956,48 @@ bool Btrfs::equalContent( const Btrfs& rhs ) const
 void Btrfs::logDifference(std::ostream& log, const Btrfs& rhs) const
     {
     Volume::logDifference(log, rhs);
-    list<string>::const_iterator i;
     string tmp;
-    for( i = devices.begin(); i != devices.end(); ++i)
-	if (!contains(rhs.devices, *i))
-	    tmp += *i + "-->";
-    for( i = rhs.devices.begin(); i != rhs.devices.end(); ++i)
-	if (!contains(devices, *i))
-	    tmp += "<--" + *i;
+    for (auto const &it : devices)
+	if (!contains(rhs.devices, it))
+	    tmp += it + "-->";
+    for (auto const &it : rhs.devices)
+	if (!contains(devices, it))
+	    tmp += "<--" + it;
     if (!tmp.empty())
 	log << " Devices:" << tmp;
 
     tmp.erase();
-    for( i = dev_add.begin(); i != dev_add.end(); ++i)
-	if (!contains(rhs.dev_add, *i))
-	    tmp += *i + "-->";
-    for( i = rhs.dev_add.begin(); i != rhs.dev_add.end(); ++i)
-	if (!contains(dev_add, *i))
-	    tmp += "<--" + *i;
+
+    for (auto const &it : dev_add)
+	if (!contains(rhs.dev_add, it))
+	    tmp += it + "-->";
+    for (auto const &it : rhs.dev_add)
+	if (!contains(dev_add, it))
+	    tmp += "<--" + it;
     if (!tmp.empty())
 	log << " DevAdd:" << tmp;
 
     tmp.erase();
-    for( i = dev_rem.begin(); i != dev_rem.end(); ++i)
-	if (!contains(rhs.dev_rem, *i))
-	    tmp += *i + "-->";
-    for( i = rhs.dev_rem.begin(); i != rhs.dev_rem.end(); ++i)
-	if (!contains(dev_rem, *i))
-	    tmp += "<--" + *i;
+
+    for (auto const &it : dev_rem)
+	if (!contains(rhs.dev_rem, it))
+	    tmp += it + "-->";
+    for (auto const &it : rhs.dev_rem)
+	if (!contains(dev_rem, it))
+	    tmp += "<--" + it;
     if (!tmp.empty())
 	log << " DevRem:" << tmp;
 
     tmp.erase();
-    for (list<Subvolume>::const_iterator s = subvol.begin(); s != subvol.end(); ++s)
+
+    for (auto const &s : subvol)
 	{
-	if( s->deleted() )
-	    tmp += "<--" + s->path();
-	else if( s->created() )
-	    tmp += s->path() + "-->";
+	if (s.deleted())
+	    tmp += "<--" + s.path();
+	else if (s.created())
+	    tmp += s.path() + "-->";
 	}
+
     if (!tmp.empty())
 	log << " SubVol:" << tmp;
     }

@@ -55,12 +55,8 @@ TmpfsCo::TmpfsCo(const TmpfsCo& c) : Container(c)
     {
     y2deb("copy-constructed TmpfsCo from " << c.dev);
 
-    ConstTmpfsPair p = c.tmpfsPair();
-    for (ConstTmpfsIter i = p.begin(); i != p.end(); ++i)
-	{
-	Tmpfs* p = new Tmpfs(*this, *i);
-	vols.push_back(p);
-	}
+    for (auto const &i : c.tmpfsPair())
+	vols.push_back(new Tmpfs(*this, i));
     }
 
 TmpfsCo::~TmpfsCo()
@@ -95,21 +91,20 @@ int TmpfsCo::removeTmpfs( const string& mp, bool silent )
 
 void TmpfsCo::getTmpfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
-    const list<FstabEntry> l = systeminfo.getProcMounts().getEntries();
-    for (list<FstabEntry>::const_iterator i = l.begin(); i != l.end(); ++i)
+    for (auto const &i : systeminfo.getProcMounts().getEntries())
 	{
-	if( i->fs == "tmpfs" )
+	if (i.fs == "tmpfs")
 	    {
-	    y2mil( "entry:" << *i );
+	    y2mil("entry:" << i);
 	    TmpfsIter tmpfs;
-	    if( !findTmpfs( i->mount, tmpfs ))
+	    if (!findTmpfs(i.mount, tmpfs))
 		{
-		Tmpfs *t = new Tmpfs(*this, i->mount, true);
-		if( !fstab.findMount(i->mount) )
+		Tmpfs *t = new Tmpfs(*this, i.mount, true);
+		if (!fstab.findMount(i.mount))
 		    t->setIgnoreFstab();
 
 		StatVfs vfsbuf;
-		getStatVfs(i->mount, vfsbuf);
+		getStatVfs(i.mount, vfsbuf);
 		t->setSize(vfsbuf.sizeK);
 		addToList( t );
 		y2mil( "tmpfs:" << *t );
@@ -182,9 +177,8 @@ void
 TmpfsCo::saveData(xmlNode* node) const
     {
     Container::saveData(node);
-    ConstTmpfsPair vp = tmpfsPair();
-    for (ConstTmpfsIter v = vp.begin(); v != vp.end(); ++v)
-	v->saveData(xmlNewChild(node, "tmpfs"));
+    for (auto const &v : tmpfsPair())
+        v.saveData(xmlNewChild(node, "tmpfs"));
     }
 
 

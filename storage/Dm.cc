@@ -63,8 +63,8 @@ namespace storage
     getTableInfo();
 
     getStorage()->fetchDanglingUsedBy(dev, uby);
-    for (list<string>::const_iterator it = alt_names.begin(); it != alt_names.end(); ++it)
-	getStorage()->fetchDanglingUsedBy(*it, uby);
+    for (string const &it : alt_names)
+	getStorage()->fetchDanglingUsedBy(it, uby);
     }
 
 
@@ -185,8 +185,8 @@ Dm::checkConsistency() const
     {
     bool ret = false;
     unsigned long sum = 0;
-    for( PeMap::const_iterator mit=pe_map.begin(); mit!=pe_map.end(); ++mit )
-	 sum += mit->second;
+    for (auto const &mit : pe_map)
+	 sum += mit.second;
     if( (!pe_larger && sum!=num_le) ||
         ( pe_larger && sum<num_le) )
         {
@@ -225,8 +225,8 @@ void Dm::setUdevData(SystemInfo& si)
 	list<string> sl = it->second;
 	partition(sl.begin(), sl.end(), string_starts_with("dm-name-"));
 	y2mil("dev:" << dev << " udev_id:" << sl);
-	for (list<string>::const_iterator i = sl.begin(); i != sl.end(); ++i)
-	    alt_names.push_back("/dev/disk/by-id/" + *i);
+	for (string const &i : sl)
+	    alt_names.push_back("/dev/disk/by-id/" + i);
 	}
     }
 
@@ -251,9 +251,8 @@ void Dm::modifyPeSize( unsigned long long old, unsigned long long neww )
     {
     num_le = num_le * old / neww;
     calcSize();
-    for( PeMap::iterator mit=pe_map.begin();
-         mit!=pe_map.end(); ++mit )
-	 mit->second = mit->second * old / neww;
+    for (auto &mit : pe_map)
+	 mit.second = mit.second * old / neww;
     }
 	        
 void Dm::calcSize()
@@ -309,8 +308,8 @@ void Dm::computePe( const SystemCmd& c, PeMap& pe )
                 pe_larger = (tgt=="thin-pool");
 	    list<string> sl = extractMajMin(line);
             y2mil( "sl:" << sl );
-	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
-                accumulatePe( *i, le, pe );
+	    for (string const &i : sl)
+                accumulatePe(i, le, pe);
 	    }
 	}
     y2mil( "map:" << pe );
@@ -579,9 +578,9 @@ string Dm::dmDeviceName( unsigned long num )
     Dm::getUsing() const
     {
 	list<string> ret;
-	for (PeMap::const_iterator it = pe_map.begin(); it != pe_map.end(); ++it)
-	    if (it->second > 0)
-		ret.push_back(it->first);
+	for (auto const &it : pe_map)
+	    if (it.second > 0)
+		ret.push_back(it.first);
 	return ret;
     }
 

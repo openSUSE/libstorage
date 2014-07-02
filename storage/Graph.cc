@@ -144,36 +144,36 @@ namespace storage
     {
 	deque<ContainerInfo> containers;
 	s->getContainers(containers);
-	for (deque<ContainerInfo>::const_iterator i1 = containers.begin(); i1 != containers.end(); ++i1)
+	for (auto const &i1 : containers)
 	{
-	    switch (i1->type)
+	    switch (i1.type)
 	    {
 		case DISK: {
 
 		    DiskInfo diskinfo;
-		    s->getDiskInfo(i1->device, diskinfo);
+		    s->getDiskInfo(i1.device, diskinfo);
 
-		    Node disk_node(NODE_DISK, i1->device, i1->name, diskinfo.sizeK);
+		    Node disk_node(NODE_DISK, i1.device, i1.name, diskinfo.sizeK);
 		    nodes.push_back(disk_node);
 		    disks_rank.ids.push_back(disk_node.id());
 
-		    processUsedby(disk_node, i1->usedBy);
+		    processUsedby(disk_node, i1.usedBy);
 
 		    deque<PartitionInfo> partitions;
-		    s->getPartitionInfo(i1->name, partitions);
-		    for (deque<PartitionInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    s->getPartitionInfo(i1.name, partitions);
+		    for (auto const &i2 : partitions)
 		    {
-			if (i2->partitionType == EXTENDED)
+			if (i2.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node partition_node(NODE_PARTITION, i2.v.device, i2.v.name, i2.v.sizeK);
 			nodes.push_back(partition_node);
 			partitions_rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, disk_node.id(), partition_node.id()));
 
-			processUsedby(partition_node, i2->v.usedBy);
-			processMount(partition_node, i2->v);
+			processUsedby(partition_node, i2.v.usedBy);
+			processMount(partition_node, i2.v);
 		    }
 
 		} break;
@@ -181,27 +181,27 @@ namespace storage
 		case LVM: {
 
 		    LvmVgInfo lvmvginfo;
-		    s->getLvmVgInfo(i1->name, lvmvginfo);
+		    s->getLvmVgInfo(i1.name, lvmvginfo);
 
-		    Node vg_node(NODE_LVMVG, i1->device, i1->name, lvmvginfo.sizeK);
+		    Node vg_node(NODE_LVMVG, i1.device, i1.name, lvmvginfo.sizeK);
 		    nodes.push_back(vg_node);
 
-		    processUsedby(vg_node, i1->usedBy);
+		    processUsedby(vg_node, i1.usedBy);
 
 		    Rank rank;
 
 		    deque<LvmLvInfo> lvs;
-		    s->getLvmLvInfo(i1->name, lvs);
-		    for (deque<LvmLvInfo>::const_iterator i2 = lvs.begin(); i2 != lvs.end(); ++i2)
+		    s->getLvmLvInfo(i1.name, lvs);
+		    for (auto const &i2 : lvs)
 		    {
-			Node lv_node(NODE_LVMLV, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node lv_node(NODE_LVMLV, i2.v.device, i2.v.name, i2.v.sizeK);
 			nodes.push_back(lv_node);
 			rank.ids.push_back(lv_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, vg_node.id(), lv_node.id()));
 
-			processUsedby(lv_node, i2->v.usedBy);
-			processMount(lv_node, i2->v);
+			processUsedby(lv_node, i2.v.usedBy);
+			processMount(lv_node, i2.v);
 		    }
 
 		    if (!rank.ids.empty())
@@ -214,13 +214,13 @@ namespace storage
 		    deque<MdInfo> mds;
 		    s->getMdInfo(mds);
 
-		    for (deque<MdInfo>::const_iterator i2 = mds.begin(); i2 != mds.end(); ++i2)
+		    for (auto const &i2 : mds)
 		    {
-			Node md_node(NODE_MD, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node md_node(NODE_MD, i2.v.device, i2.v.name, i2.v.sizeK);
 			nodes.push_back(md_node);
 
-			processUsedby(md_node, i2->v.usedBy);
-			processMount(md_node, i2->v);
+			processUsedby(md_node, i2.v.usedBy);
+			processMount(md_node, i2.v);
 		    }
 
 		} break;
@@ -228,30 +228,30 @@ namespace storage
 		case MDPART: {
 
 		    MdPartCoInfo mdpartcoinfo;
-		    s->getMdPartCoInfo(i1->device, mdpartcoinfo);
+		    s->getMdPartCoInfo(i1.device, mdpartcoinfo);
 
-		    Node mdpart_node(NODE_MDPART, i1->device, i1->name, mdpartcoinfo.d.sizeK);
+		    Node mdpart_node(NODE_MDPART, i1.device, i1.name, mdpartcoinfo.d.sizeK);
 		    nodes.push_back(mdpart_node);
 
-		    processUsedby(mdpart_node, i1->usedBy);
+		    processUsedby(mdpart_node, i1.usedBy);
 
 		    Rank rank;
 
 		    deque<MdPartInfo> partitions;
-		    s->getMdPartInfo(i1->name, partitions);
-		    for (deque<MdPartInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    s->getMdPartInfo(i1.name, partitions);
+		    for (auto const &i2 : partitions)
 		    {
-			if (i2->p.partitionType == EXTENDED)
+			if (i2.p.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node partition_node(NODE_PARTITION, i2.v.device, i2.v.name, i2.v.sizeK);
 			nodes.push_back(partition_node);
 			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, mdpart_node.id(), partition_node.id()));
 
-			processUsedby(partition_node, i2->v.usedBy);
-			processMount(partition_node, i2->v);
+			processUsedby(partition_node, i2.v.usedBy);
+			processMount(partition_node, i2.v);
 		    }
 
 		    if (!rank.ids.empty())
@@ -264,13 +264,13 @@ namespace storage
 		    deque<DmInfo> dms;
 		    s->getDmInfo(dms);
 
-		    for (deque<DmInfo>::const_iterator i2 = dms.begin(); i2 != dms.end(); ++i2)
+		    for (auto const &i2 : dms)
 		    {
-			Node dm_node(NODE_DM, i2->v.device, i2->v.name, i2->v.sizeK);
+			Node dm_node(NODE_DM, i2.v.device, i2.v.name, i2.v.sizeK);
 			nodes.push_back(dm_node);
 
-			processUsedby(dm_node, i2->v.usedBy);
-			processMount(dm_node, i2->v);
+			processUsedby(dm_node, i2.v.usedBy);
+			processMount(dm_node, i2.v);
 		    }
 
 		} break;
@@ -278,30 +278,30 @@ namespace storage
 		case DMRAID: {
 
 		    DmraidCoInfo dmraidcoinfo;
-		    s->getDmraidCoInfo(i1->device, dmraidcoinfo);
+		    s->getDmraidCoInfo(i1.device, dmraidcoinfo);
 
-		    Node dmraid_node(NODE_DMRAID, i1->device, i1->name, dmraidcoinfo.p.d.sizeK);
+		    Node dmraid_node(NODE_DMRAID, i1.device, i1.name, dmraidcoinfo.p.d.sizeK);
 		    nodes.push_back(dmraid_node);
 
-		    processUsedby(dmraid_node, i1->usedBy);
+		    processUsedby(dmraid_node, i1.usedBy);
 
 		    Rank rank;
 
 		    deque<DmraidInfo> partitions;
-		    s->getDmraidInfo(i1->name, partitions);
-		    for (deque<DmraidInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    s->getDmraidInfo(i1.name, partitions);
+		    for (auto const &i2 : partitions)
 		    {
-			if (i2->p.p.partitionType == EXTENDED)
+			if (i2.p.p.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
+			Node partition_node(NODE_PARTITION, i2.p.v.device, i2.p.v.name, i2.p.v.sizeK);
 			nodes.push_back(partition_node);
 			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmraid_node.id(), partition_node.id()));
 
-			processUsedby(partition_node, i2->p.v.usedBy);
-			processMount(partition_node, i2->p.v);
+			processUsedby(partition_node, i2.p.v.usedBy);
+			processMount(partition_node, i2.p.v);
 		    }
 
 		    if (!rank.ids.empty())
@@ -312,30 +312,30 @@ namespace storage
 		case DMMULTIPATH: {
 
 		    DmmultipathCoInfo dmmultipathcoinfo;
-		    s->getDmmultipathCoInfo(i1->device, dmmultipathcoinfo);
+		    s->getDmmultipathCoInfo(i1.device, dmmultipathcoinfo);
 
-		    Node dmmultipath_node(NODE_DMMULTIPATH, i1->device, i1->name, dmmultipathcoinfo.p.d.sizeK);
+		    Node dmmultipath_node(NODE_DMMULTIPATH, i1.device, i1.name, dmmultipathcoinfo.p.d.sizeK);
 		    nodes.push_back(dmmultipath_node);
 
-		    processUsedby(dmmultipath_node, i1->usedBy);
+		    processUsedby(dmmultipath_node, i1.usedBy);
 
 		    Rank rank;
 
 		    deque<DmmultipathInfo> partitions;
-		    s->getDmmultipathInfo(i1->name, partitions);
-		    for (deque<DmmultipathInfo>::const_iterator i2 = partitions.begin(); i2 != partitions.end(); ++i2)
+		    s->getDmmultipathInfo(i1.name, partitions);
+		    for (auto const &i2 : partitions)
 		    {
-			if (i2->p.p.partitionType == EXTENDED)
+			if (i2.p.p.partitionType == EXTENDED)
 			    continue;
 
-			Node partition_node(NODE_PARTITION, i2->p.v.device, i2->p.v.name, i2->p.v.sizeK);
+			Node partition_node(NODE_PARTITION, i2.p.v.device, i2.p.v.name, i2.p.v.sizeK);
 			nodes.push_back(partition_node);
 			rank.ids.push_back(partition_node.id());
 
 			edges.push_back(Edge(EDGE_SUBDEVICE, dmmultipath_node.id(), partition_node.id()));
 
-			processUsedby(partition_node, i2->p.v.usedBy);
-			processMount(partition_node, i2->p.v);
+			processUsedby(partition_node, i2.p.v.usedBy);
+			processMount(partition_node, i2.p.v);
 		    }
 
 		    if (!rank.ids.empty())
@@ -348,13 +348,13 @@ namespace storage
 		    deque<BtrfsInfo> btrfss;
 		    s->getBtrfsInfo(btrfss);
 
-		    for (deque<BtrfsInfo>::const_iterator i2 = btrfss.begin(); i2 != btrfss.end(); ++i2)
+		    for (auto const &i2 : btrfss)
 		    {
-			Node btrfs_node(NODE_BTRFS, i2->v.uuid, i2->v.name, i2->v.sizeK);
+			Node btrfs_node(NODE_BTRFS, i2.v.uuid, i2.v.name, i2.v.sizeK);
 			nodes.push_back(btrfs_node);
 
-			processUsedby(btrfs_node, i2->v.usedBy);
-			processMount(btrfs_node, i2->v);
+			processUsedby(btrfs_node, i2.v.usedBy);
+			processMount(btrfs_node, i2.v);
 		    }
 
 		} break;
@@ -381,9 +381,9 @@ namespace storage
     void
     DeviceGraph::processUsedby(const Node& node, const list<UsedByInfo>& usedBy)
     {
-	for (list<UsedByInfo>::const_iterator i = usedBy.begin(); i != usedBy.end(); ++i)
+	for (auto const &i : usedBy)
 	{
-	    edges.push_back(Edge(EDGE_USED, node.id(), "device:" + i->device));
+	    edges.push_back(Edge(EDGE_USED, node.id(), "device:" + i.device));
 	}
     }
 
@@ -408,23 +408,23 @@ namespace storage
 
 	deque<VolumeInfo> volumes;
 	s->getVolumes(volumes);
-	for (deque<VolumeInfo>::const_iterator i1 = volumes.begin(); i1 != volumes.end(); ++i1)
+	for (auto const &i1 : volumes)
 	{
-	    if ((!i1->mount.empty() && i1->mount != "swap") && (i1->fs != TMPFS))
+	    if ((!i1.mount.empty() && i1.mount != "swap") && (i1.fs != TMPFS))
 	    {
-		Node mountpoint_node(NODE_MOUNTPOINT, i1->device, i1->mount, i1->sizeK);
+		Node mountpoint_node(NODE_MOUNTPOINT, i1.device, i1.mount, i1.sizeK);
 		nodes.push_back(mountpoint_node);
 
-		int r = i1->mount == "/" ? 0 : count(i1->mount.begin(), i1->mount.end(), '/');
+		int r = i1.mount == "/" ? 0 : count(i1.mount.begin(), i1.mount.end(), '/');
 		mount_ranks[r].ids.push_back(mountpoint_node.id());
 
-		entries[i1->mount] = i1->device;
+		entries[i1.mount] = i1.device;
 	    }
 	}
 
-	for (map<int, Rank>::const_iterator i1 = mount_ranks.begin(); i1 != mount_ranks.end(); ++i1)
-	    if (!i1->second.ids.empty())
-		ranks.push_back(i1->second);
+	for (auto const &i1 : mount_ranks)
+	    if (!i1.second.ids.empty())
+		ranks.push_back(i1.second);
 
 	for (Entries::const_iterator i1 = entries.begin(); i1 != entries.end(); ++i1)
 	{
@@ -551,8 +551,8 @@ namespace storage
 	static const char* names[] = { "source", "same", "sink" };
 
 	s << "{ rank=" << names[rank.type] << "; ";
-	for (list<string>::const_iterator id = rank.ids.begin(); id != rank.ids.end(); ++id)
-	    s << Graph::quote(*id) << " ";
+	for (auto const &id : rank.ids)
+	    s << Graph::quote(id) << " ";
 	return s << "};";
     }
 
@@ -573,18 +573,18 @@ namespace storage
 	out << "    edge [color=\"#444444\"];" << endl;
 	out << endl;
 
-	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-	    out << "    " << (*node) << endl;
+	for (auto const &node : nodes)
+	    out << "    " << (node) << endl;
 
 	out << endl;
 
-	for (list<Rank>::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
-	    out << "    " << (*rank) << endl;
+	for (auto const &rank : ranks)
+	    out << "    " << (rank) << endl;
 
 	out << endl;
 
-	for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
-	    out << "    " << (*edge) << endl;
+	for (auto const &edge : edges)
+	    out << "    " << (edge) << endl;
 
 	out << "}" << endl;
 

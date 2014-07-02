@@ -82,11 +82,9 @@ namespace storage
 	disk = NULL;
 	if( c.disk )
 	    disk = new Disk( *c.disk );
-	ConstMdPartPair p = c.mdpartPair();
-	for (ConstMdPartIter i = p.begin(); i != p.end(); ++i)
+	for (auto const &i : c.mdpartPair())
         {
-	    MdPart* p = new MdPart(*this, *i);
-	    vols.push_back(p);
+	    vols.push_back(new MdPart(*this, i));
         }
 	updatePointers(true);
     }
@@ -162,13 +160,12 @@ MdPartCo::addNewDev(string& device)
             md->getFsInfo( p );
             md->setCreated();
 	    md->addUdevData();
-	    ConstMdPartPair pp = mdpartPair();
-	    for( ConstMdPartIter i=pp.begin(); i!=pp.end(); ++i )
+	    for (auto const &i : mdpartPair())
 		{
-		if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		if (i.deleted() && i.nr() == p->nr() && !i.getCryptPwd().empty())
 		    {
 		    y2mil("harvesting old password");
-		    md->setCryptPwd(i->getCryptPwd());
+		    md->setCryptPwd(i.getCryptPwd());
 		    }
 		}
             addToList( md );
@@ -500,9 +497,8 @@ void MdPartCo::updatePointers( bool invalid )
 
 void MdPartCo::updateMinor()
     {
-    MdPartPair p=mdpartPair();
-    for (MdPartIter i = p.begin(); i != p.end(); ++i)
-        i->updateMinor();
+    for (auto &i : mdpartPair())
+        i.updateMinor();
     }
 
 
@@ -698,11 +694,11 @@ MdPartCo::removeMdPart()
         {
         //Remove partitions
         MdPartPair p=mdpartPair(MdPart::notDeleted);
-        for( MdPartIter i=p.begin(); i!=p.end(); ++i )
+        for (auto const &i : p)
             {
-            if( i->nr()>0 )
+            if (i.nr() > 0)
               {
-                ret = removePartition( i->nr() );
+                ret = removePartition(i.nr());
                 if( ret != 0 )
                   {
                   // Error. Break.
@@ -712,7 +708,6 @@ MdPartCo::removeMdPart()
               }
             }
         //Remove 'whole device' it was created when last partition was deleted.
-        p=mdpartPair(MdPart::notDeleted);
         if( p.begin()!=p.end() && p.begin()->nr()==0 )
             {
             if( !removeFromList( &(*p.begin()) ))
@@ -746,17 +741,15 @@ void MdPartCo::removePresentPartitions()
         {
         bool save=silent;
         setSilent( true );
-        list<VolIterator> l;
-        for( VolIterator i=p.begin(); i!=p.end(); ++i )
+        list<Volume *> l;
+        for (auto &i : p)
             {
-            y2mil( "rem:" << *i );
-            if( !i->created() )
-                l.push_front( i );
+            y2mil("rem:" << i);
+            if (!i.created())
+                l.push_front(&i);
             }
-        for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
-            {
-            doRemove( &(**i) );
-            }
+        for (auto &i : l)
+            doRemove(i);
         setSilent( save );
         }
     }
@@ -792,10 +785,9 @@ void MdPartCo::getToCommit(CommitStage stage, list<const Container*>& col,
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
         {
-        ConstMdPartPair p = mdpartPair( toChangeId );
-        for( ConstMdPartIter i=p.begin(); i!=p.end(); ++i )
-            if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-                vol.push_back( &(*i) );
+        for (auto const &i : mdpartPair(toChangeId))
+            if (find(vol.begin(), vol.end(), &i) == vol.end())
+                vol.push_back(&i);
         }
     if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
         col.push_back( this );
@@ -953,11 +945,8 @@ int MdPartCo::doRemove()
       if( ret==0 && destrSb )
         {
         SystemCmd c;
-        list<string> d = getDevs();
-        for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
-          {
-          c.execute(MDADMBIN " --zero-superblock " + quote(*i));
-          }
+        for (auto const &i : getDevs())
+          c.execute(MDADMBIN " --zero-superblock " + quote(i));
         }
       if( ret==0 )
         {
@@ -1101,18 +1090,15 @@ MdPartCo::setUdevData(SystemInfo& systeminfo)
     y2mil("dev:" << dev << " udev_id:" << udev_id);
 
     alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
-    for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
-	alt_names.push_back("/dev/disk/by-id/" + *i);
+    for (auto const &i : udev_id)
+	alt_names.push_back("/dev/disk/by-id/" + i);
 
     if (disk)
     {
         disk->setUdevData("", udev_id);
     }
-    MdPartPair pp = mdpartPair();
-    for( MdPartIter p=pp.begin(); p!=pp.end(); ++p )
-    {
-	p->addUdevData();
-    }
+    for (auto &p : mdpartPair())
+      p.addUdevData();
 }
 
 
@@ -1263,12 +1249,9 @@ bool MdPartCo::equalContent( const Container& rhs ) const
     {
 	list<string> ret;
 
-	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
-	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
-	{
-	    if (!it->second.is_container)
-		ret.push_back(it->first);
-	}
+	for (auto const &it : systeminfo.getProcMdstat())
+	    if (!it.second.is_container)
+		ret.push_back(it.first);
 
 	return ret;
     }
@@ -1487,25 +1470,23 @@ MdPartCo::filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo, b
 {
   list<string> mdpList;
 
-  for( list<string>::const_iterator i=raidList.begin(); i!=raidList.end(); ++i )
+  for (auto const &i : raidList)
     {
-	y2mil("name:" << *i);
+    y2mil("name:" << i);
 
-	CType ctype = envSelection(*i);
-	if (ctype == MD)
-      {
-      // skip
-      continue;
-      }
+    CType ctype = envSelection(i);
+    if (ctype == MD)
+      continue; // skip
+
     if (ctype == MDPART)
       {
-      mdpList.push_back(*i);
+      mdpList.push_back(i);
       continue;
       }
 
-    if (havePartsInProc(*i, systeminfo))
+    if (havePartsInProc(i, systeminfo))
       {
-      mdpList.push_back(*i);
+      mdpList.push_back(i);
       continue;
       }
 
@@ -1514,19 +1495,15 @@ MdPartCo::filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo, b
       // 1. With Partition Table
       // 2. Without Partition Table and without FS on it.
       // 3. this gives: No FS.
-	  if (!hasFileSystem(*i, systeminfo))
-        {
-        mdpList.push_back(*i);
-        }
+      if (!hasFileSystem(i, systeminfo))
+        mdpList.push_back(i);
       }
     else
       {
       // In 'normal' mode ONLY volume with Partition Table.
       // Partitions should be visible already so check it.
-	  if (hasPartitionTable(*i, systeminfo))
-        {
-        mdpList.push_back(*i);
-        }
+      if (hasPartitionTable(i, systeminfo))
+        mdpList.push_back(i);
       }
     }
   y2mil("List of partitionable devs: " << mdpList);

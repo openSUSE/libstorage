@@ -267,16 +267,16 @@ map<string,string>
 makeMap( const list<string>& l, const string& delim, const string& removeSur )
     {
     map<string,string> ret;
-    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+    for (auto const &i : l)
 	{
 	string k, v;
 	string::size_type pos;
-	if( (pos=i->find_first_of( delim ))!=string::npos )
+	if ((pos = i.find_first_of(delim)) != string::npos)
 	    {
-	    k = i->substr( 0, pos );
-	    string::size_type pos2 = i->find_first_not_of( delim, pos+1 );
-	    if( pos2 != string::npos )
-		v = i->substr( pos2 );
+	    k = i.substr(0, pos);
+	    string::size_type pos2 = i.find_first_not_of(delim, pos + 1);
+	    if (pos2 != string::npos)
+		v = i.substr(pos2);
 	    }
 	if( !removeSur.empty() )
 	    {
@@ -307,8 +307,8 @@ makeMap( const list<string>& l, const string& delim, const string& removeSur )
     list<string> normalizeDevices(const list<string>& devs)
     {
 	list<string> ret;
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    ret.push_back(normalizeDevice(*it));
+	for (auto const &s : devs)
+	    ret.push_back(normalizeDevice(s));
 	return ret;
     }
 
@@ -733,11 +733,11 @@ getMajorDevices(const char* driver)
 	}
 
 	LogLevel level = instsys ? storage::ERROR : storage::MILESTONE;
-	for (set<string>::const_iterator it = paths.begin(); it != paths.end(); ++it)
+	for (auto const &s : paths)
         {
-            if (access(it->c_str(), X_OK) != 0)
+            if (access(s.c_str(), X_OK) != 0)
                 y2log_op(level, __FILE__, __LINE__, __FUNCTION__,
-		    "error accessing " << *it);
+		    "error accessing " << s);
 	}
     }
 

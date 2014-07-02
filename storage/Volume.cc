@@ -924,11 +924,11 @@ int Volume::doFormatBtrfs()
 	    ret = prepareTmpMount(tmp_mount);
 	    if( ret==0 )
 		{
-		for( list<string>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		for (auto const &i : li)
 		    {
-		    if( *i!=device() && *i!=mountDevice() )
+		    if (i != device() && i != mountDevice())
 			{
-			c.execute(cmd + quote(*i) + " " + quote(tmp_mount.mount_point));
+			c.execute(cmd + quote(i) + " " + quote(tmp_mount.mount_point));
 			if( c.retcode()!=0 )
 			    {
 			    ret = VOLUME_BTRFS_ADD_FAILED;
@@ -1331,11 +1331,9 @@ int Volume::umount( const string& mp )
 	    if( !mps.empty() )
 		{
 		map<string, string> mp = mounts.allMounts();
-		for( list<string>::const_iterator i=mps.begin(); i!=mps.end(); ++i )
-		    {
-		    if( !mp[*i].empty() )
+		for (auto const &i : mps)
+		    if (!mp[i].empty())
 			ret = VOLUME_UMOUNT_FAILED;
-		    }
 		}
 	    }
 	if( ret==VOLUME_UMOUNT_NOT_MOUNTED )
@@ -1881,12 +1879,11 @@ int Volume::getFreeLoop( SystemCmd& loopData, const list<unsigned>& ids )
     y2mil( "ids:" << ids );
     const int loop_instsys_offset = 2;
     list<unsigned> lnum;
-    Storage::ConstVolPair p = getStorage()->volPair( hasLoopDevice );
-    for( Storage::ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+    for (auto const &i : getStorage()->volPair(hasLoopDevice))
 	{
-	y2mil( "lvol:" << *i );
+	y2mil("lvol:" << i);
 	unsigned num;
-	if( loopStringNum( i->loopDevice(), num ))
+	if (loopStringNum(i.loopDevice(), num))
 	    lnum.push_back( num );
 	}
     y2mil( "lnum:" << lnum );
@@ -2726,10 +2723,10 @@ int Volume::mount( const string& m, bool ro )
 	list<string> l = splitString( fstab_opt, "," );
 	y2mil( "l before:" << l );
 	list<string>::const_iterator i;
-	for( i=ign_opt.begin(); i!=ign_opt.end(); i++ )
-	    l.remove(*i);
-	for( i=ign_beg.begin(); i!=ign_beg.end(); i++ )
-	    l.remove_if(string_starts_with(*i));
+	for (auto const &i : ign_opt)
+	    l.remove(i);
+	for (auto const &i : ign_beg)
+	    l.remove_if(string_starts_with(i));
 	y2mil( "l  after:" << l );
 	if( !l.empty() )
 	    cmdline += "-o " + boost::join(l, ",") + " ";

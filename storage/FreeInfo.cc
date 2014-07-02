@@ -121,14 +121,13 @@ namespace storage
 
 	unsigned num = 0;
 
-	const list<string> dirs = glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR);
-	for (list<string>::const_iterator dir = dirs.begin(); dir != dirs.end(); ++dir)
+	for (auto const &dir : glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR))
 	{
-	    if ( !boost::ends_with(*dir,"/root") && checkDir(*dir))
+	    if (!boost::ends_with(dir, "/root") && checkDir(dir))
 	    {
 		for (unsigned int i = 0; i < lengthof(files); ++i)
 		{
-		    string file = *dir + "/" + files[i];
+		    string file = dir + "/" + files[i];
 		    if (access(file.c_str(), R_OK) == 0)
 		    {
 			y2mil("found home file " << quote(file));

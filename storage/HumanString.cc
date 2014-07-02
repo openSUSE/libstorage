@@ -172,11 +172,9 @@ namespace storage
 
 	for (int i = 0; i < numSuffixes(); ++i)
 	{
-	    list<Text> suffix = getAllSuffixes(i, true, !classic);
-
-	    for (list<Text>::const_iterator j = suffix.begin(); j != suffix.end(); ++j)
+	    for (auto const &sfx : getAllSuffixes(i, true, !classic))
 	    {
-		const string& tmp = classic ? j->native : j->text;
+		auto const &tmp = classic ? sfx.native : sfx.text;
 
 		if (boost::iends_with(str_trimmed, tmp, loc))
 		{

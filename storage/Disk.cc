@@ -95,9 +95,8 @@ namespace storage
 	getChildValue(node, "ext_possible", ext_possible);
 	getChildValue(node, "max_logical", max_logical);
 
-	const list<const xmlNode*> l = getChildNodes(node, "partition");
-	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
-	    addToList(new Partition(*this, *it));
+	for (auto const *it : getChildNodes(node, "partition"))
+	    addToList(new Partition(*this, it));
 
 	y2deb("constructed Disk " << dev);
     }
@@ -116,11 +115,9 @@ namespace storage
     {
 	y2deb("copy-constructed Disk " << dev);
 
-	ConstPartPair p = c.partPair();
-	for (ConstPartIter i = p.begin(); i != p.end(); ++i)
+	for (auto const &i : c.partPair())
 	{
-	    Partition* p = new Partition(*this, *i);
-	    vols.push_back(p);
+	    vols.push_back(new Partition(*this, i));
 	}
     }
 
@@ -150,9 +147,8 @@ namespace storage
 
 	setChildValueIf(node, "transport", toString(transport), transport != TUNKNOWN);
 
-	ConstPartPair vp = partPair();
-	for (ConstPartIter v = vp.begin(); v != vp.end(); ++v)
-	    v->saveData(xmlNewChild(node, "partition"));
+	for (auto const &v : partPair())
+	    v.saveData(xmlNewChild(node, "partition"));
     }
 
 string Disk::sysfsToDev( const string& nm )
@@ -197,12 +193,9 @@ Disk::sysfsPath( const string& device )
 void
 Disk::triggerUdevUpdate() const
 {
-    ConstPartPair pp = partPair();
-    for( ConstPartIter p=pp.begin(); p!=pp.end(); ++p )
-    {
-	if( !p->deleted() && !p->created() )
-	    p->triggerUdevUpdate();
-    }
+    for (auto const &p : partPair())
+        if (!p.deleted() && !p.created())
+            p.triggerUdevUpdate();
 }
 
 
@@ -221,14 +214,11 @@ Disk::setUdevData(const string& path, const list<string>& id)
 	alt_names.push_back("/dev/disk/by-path/" + udev_path);
 
     alt_names.remove_if(string_contains("/by-id/"));
-    for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
-	alt_names.push_back("/dev/disk/by-id/" + *i);
+    for (auto const &i : udev_id)
+	alt_names.push_back("/dev/disk/by-id/" + i);
 
-    PartPair pp = partPair();
-    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
-	{
-	p->addUdevData();
-	}
+    for (auto &p : partPair())
+	p.addUdevData();
 }
 
 
@@ -474,15 +464,14 @@ bool
 	unsigned long range_exceed = 0;
 	list<Partition *> pl;
 
-	for (Parted::const_iterator it = parted.getEntries().begin();
-	     it != parted.getEntries().end(); ++it)
+	for (auto const &it : parted.getEntries())
 	{
-	    if (it->num < range)
+	    if (it.num < range)
 	    {
-		unsigned long long s = cylinderToKb(it->cylRegion.len());
-		Partition* p = new Partition(*this, getPartName(it->num), getPartDevice(it->num),
-					     it->num, systeminfo, s, it->cylRegion, it->type,
-					     it->id, it->boot);
+		unsigned long long s = cylinderToKb(it.cylRegion.len());
+		Partition* p = new Partition(*this, getPartName(it.num), getPartDevice(it.num),
+					     it.num, systeminfo, s, it.cylRegion, it.type,
+					     it.id, it.boot);
 		if (parts.getSize(p->procName(), s))
 		{
 		    if( s>0 && p->type() != EXTENDED )
@@ -491,7 +480,7 @@ bool
 		pl.push_back( p );
 	    }
 	    else
-		range_exceed = max(range_exceed, (unsigned long) it->num);
+		range_exceed = max(range_exceed, (unsigned long) it.num);
 	}
 
     y2mil("nm:" << nm);
@@ -521,10 +510,8 @@ _("You have the following options:\n"
 "    as well.");
 	getStorage()->addInfoPopupText( dev, txt );
 	}
-    for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
-	{
-	addToList( *i );
-	}
+    for (auto *i : pl)
+	addToList(i);
     return( true );
     }
 
@@ -549,9 +536,9 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
     // It's allowed that the kernel sees more partitions than parted. This is
     // the case with BSD slices.
 
-    for (list<Partition*>::const_iterator i = pl.begin(); i != pl.end(); ++i)
+    for (auto const *i : pl)
     {
-	const Partition& p = **i;
+	const Partition& p = *i;
 
 	if (p.type() != EXTENDED)
 	{
@@ -622,20 +609,17 @@ Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
     if( !ret || label=="unsupported" )
 	{
 	range_exceed = 0;
-	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
-	    {
-	    delete *i;
-	    }
+	for (auto const *i : pl)
+	    delete i;
 	pl.clear();
 	unsigned long cyl_start = 1;
 	const ProcParts& parts = systeminfo.getProcParts();
-	list<string> ps = partitionsKernelKnowns(parts);
-	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
+	for (auto const &i : partitionsKernelKnowns(parts))
 	    {
 	    unsigned long cyl;
 	    unsigned long long s;
-	    pair<string,unsigned> pr = getDiskPartition( *i );
-	    if (parts.getSize(*i, s))
+	    pair<string, unsigned> pr = getDiskPartition(i);
+	    if (parts.getSize(i, s))
 		{
 		cyl = kbToCylinder(s);
 		if( pr.second!=0 && pr.second < range )
@@ -965,18 +949,18 @@ static bool notCreatedPrimary( const Partition& p )
 	    unsigned long end = cylinders();
 
 	    list<Region> tmp;
-	    for (ConstPartIter i = p.begin(); i != p.end(); ++i)
-		tmp.push_back(i->cylRegion());
+	    for (auto const &i : p)
+		tmp.push_back(i.cylRegion());
 	    tmp.sort();
 
-	    for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    for (auto const &i : tmp)
 	    {
-		if (i->start() > start)
+		if (i.start() > start)
 		{
-		    slot.cylRegion = RegionInfo(start, i->start() - start);
+		    slot.cylRegion = RegionInfo(start, i.start() - start);
 		    slots.push_back(slot);
 		}
-		start = i->end() + 1;
+		start = i.end() + 1;
 
 		if (label == "dasd")
 		{
@@ -1014,18 +998,18 @@ static bool notCreatedPrimary( const Partition& p )
 		unsigned long end = ext.begin()->cylEnd();
 
 		list<Region> tmp;
-		for (ConstPartIter i = p.begin(); i != p.end(); ++i)
-		    tmp.push_back(i->cylRegion());
+		for (auto const &i : p)
+		    tmp.push_back(i.cylRegion());
 		tmp.sort();
 
-		for (list<Region>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+		for (auto const &i : tmp)
 		{
-		    if (i->start() > start)
+		    if (i.start() > start)
 		    {
-			slot.cylRegion = RegionInfo(start, i->start() - start);
+			slot.cylRegion = RegionInfo(start, i.start() - start);
 			slots.push_back(slot);
 		    }
-		    start = i->end() + 1;
+		    start = i.end() + 1;
 		}
 		if (end > start)
 		{
@@ -1212,12 +1196,12 @@ int Disk::createPartition( PartitionType type, unsigned long start,
 	// see bnc #591075
 	if (getStorage()->instsys())
 	{
-	    for (i = pp.begin(); i != pp.end(); ++i)
+	    for (auto const &i : pp)
 	    {
-		if (i->deleted() && i->nr() == number && !i->getCryptPwd().empty())
+		if (i.deleted() && i.nr() == number && !i.getCryptPwd().empty())
 		{
 		    y2mil("harvesting old password");
-		    p->setCryptPwd(i->getCryptPwd());
+		    p->setCryptPwd(i.getCryptPwd());
 		}
 	    }
 	}
@@ -1432,39 +1416,34 @@ int Disk::removePartition( unsigned nr )
 		{
 		l.sort( volume_ptr_sort_nr );
 		unsigned old = nr;
-		list<Partition*>::iterator vi = l.begin();
-		while( vi!=l.end() )
+		for (auto *vi : l)
 		    {
-		    unsigned save = (*vi)->nr();
-		    (*vi)->changeNumber( old );
+		    unsigned save = vi->nr();
+		    vi->changeNumber(old);
 		    old = save;
-		    ++vi;
 		    }
 		}
 	    }
 	if( t==EXTENDED )
 	    {
 	    list<Volume*> l;
-	    i = p.begin();
-	    while( i!=p.end() )
+	    for (auto &i : p)
 		{
-		if( i->nr()>max_primary )
+		if (i.nr() > max_primary)
 		    {
-		    if( i->created() )
-			l.push_back( &(*i) );
+		    if (i.created())
+			l.push_back(&i);
 		    else
-			i->setDeleted();
+			i.setDeleted();
 		    }
-		++i;
 		}
-	    list<Volume*>::iterator vi = l.begin();
-	    while( ret==0 && vi!=l.end() )
+	    for (auto *vi : l)
 		{
-		if ((*vi)->isUsedBy())
-		    getStorage()->removeUsing( (*vi)->device(), (*vi)->getUsedBy() );
-		if( !removeFromList( *vi ))
+		if (ret) break;
+		if (vi->isUsedBy())
+		    getStorage()->removeUsing(vi->device(), vi->getUsedBy());
+		if (!removeFromList(vi))
 		    ret = DISK_PARTITION_NOT_FOUND;
-		++vi;
 		}
 	    }
 	}
@@ -1601,10 +1580,9 @@ Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Vol
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
 	{
-	ConstPartPair p = partPair( Partition::toChangeId );
-	for( ConstPartIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
+	for (auto const &i : partPair(Partition::toChangeId))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
 	}
     if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
 	col.push_back( this );
@@ -1734,17 +1712,15 @@ void Disk::removePresentPartitions()
 	{
 	bool save=silent;
 	setSilent( true );
-	list<VolIterator> l;
-	for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	list<Volume *> l;
+	for (auto &i : p)
 	    {
-	    y2mil( "rem:" << *i );
-	    if( !i->created() )
-		l.push_front( i );
+	    y2mil("rem:" << i);
+	    if (!i.created())
+		l.push_front(&i);
 	    }
-	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	    {
-	    doRemove( &(**i) );
-	    }
+	for (auto const &i : l)
+	    doRemove(i);
 	setSilent( save );
 	}
     }
@@ -2054,13 +2030,13 @@ int Disk::doCreate( Volume* v )
 		}
 	    y2mil("max " << maxc << " end:" << end);
 	    y2mil("pp " << *p);
-	    for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
+	    for (auto const &i : pp)
 		{
-		y2mil( "i " << *i );
-		if( i->cylStart()<maxc && i->cylStart()<end &&
-		    sub_sat(i->cylEnd(), fuzz_cyl) > p->cylStart() )
+		y2mil("i " << i);
+		if (i.cylStart() < maxc && i.cylStart() < end &&
+		    sub_sat(i.cylEnd(), fuzz_cyl) > p->cylStart())
 		    {
-		    maxc=i->cylStart();
+		    maxc = i.cylStart();
 		    y2mil( "new maxc " << maxc );
 		    }
 		}
@@ -2483,13 +2459,12 @@ const Partition* Disk::getPartitionAfter(const Partition* p) const
     {
     const Partition* ret = NULL;
     y2mil( "p:" << *p );
-    ConstPartPair pp = partPair((p->type() == LOGICAL) ? Partition::notDeleted : notDeletedLog);
-    for (ConstPartIter pi = pp.begin(); pi != pp.end(); ++pi)
+    for (auto const &pi : partPair((p->type() == LOGICAL) ? Partition::notDeleted : notDeletedLog))
 	{
-	if( !pi->created() &&
-	    pi->cylStart()>p->cylStart() &&
-	    (ret==NULL || ret->cylStart()>pi->cylStart()) )
-	    ret = &(*pi);
+	if (!pi.created() &&
+	    pi.cylStart() > p->cylStart() &&
+	    (ret == NULL || ret->cylStart() > pi.cylStart()))
+	    ret = &pi;
 	}
     if( ret==NULL )
 	y2mil( "ret:NULL" );

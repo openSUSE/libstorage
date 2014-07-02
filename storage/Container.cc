@@ -148,34 +148,30 @@ Container::getToCommit(CommitStage stage, list<const Container*>& col, list<cons
 	{
 	case DECREASE:
 	    {
-	    ConstVolPair p = volPair( stageDecrease );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
+	    for (auto const &i : volPair(stageDecrease))
+		vol.push_back(&i);
 	    if( deleted() )
 		col.push_back( this );
 	    }
 	    break;
 	case INCREASE:
 	    {
-	    ConstVolPair p = volPair(stageIncrease);
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
+	    for (auto const &i : volPair(stageIncrease))
+		vol.push_back(&i);
 	    if( created() )
 		col.push_back( this );
 	    }
 	    break;
 	case FORMAT:
 	    {
-	    ConstVolPair p = volPair( stageFormat );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
+	    for (auto const &i : volPair(stageFormat))
+		vol.push_back(&i);
 	    }
 	    break;
 	case MOUNT:
 	    {
-	    ConstVolPair p = volPair( stageMount );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
+	    for (auto const &i : volPair(stageMount))
+		vol.push_back(&i);
 	    }
 	    break;
 	case SUBVOL:
@@ -258,10 +254,9 @@ int Container::commitChanges( CommitStage stage )
 void
 Container::getCommitActions(list<commitAction>& l) const
     {
-    ConstVolPair p = volPair();
-    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-	if( !i->isSilent() )
-	    i->getCommitActions( l );
+    for (auto const &i : volPair())
+	if (!i.isSilent())
+	    i.getCommitActions(l);
     }
 
 

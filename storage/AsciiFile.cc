@@ -103,8 +103,8 @@ AsciiFile::save()
 	ofstream file( Name_C.c_str() );
 	classic(file);
 
-	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
-	    file << *it << std::endl;
+	for (auto const &s : Lines_C)
+	    file << s << std::endl;
 
 	file.close();
 
@@ -117,8 +117,8 @@ AsciiFile::save()
     AsciiFile::logContent() const
     {
 	y2mil("content of " << (Name_C.empty() ? "<nameless>" : Name_C));
-	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
-	    y2mil(*it);
+	for (auto const &s : Lines_C)
+	    y2mil(s);
     }
 
 
@@ -138,8 +138,8 @@ void AsciiFile::append( const string& Line_Cv )
 
 void AsciiFile::append( const vector<string>& lines )
     {
-    for( vector<string>::const_iterator i=lines.begin(); i!=lines.end(); ++i )
-	append( *i );
+    for (auto const &s: lines)
+        append(s);
     }
 
 void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
@@ -153,9 +153,8 @@ void AsciiFile::replace( unsigned int Start_iv, unsigned int Cnt_iv,
                          const vector<string>& lines )
     {
     remove( Start_iv, Cnt_iv );
-    for( vector<string>::const_reverse_iterator i=lines.rbegin(); i!=lines.rend();
-         ++i )
-	insert( Start_iv, *i );
+    for (auto const &i : make_range(lines.rbegin(), lines.rend()))
+        insert(Start_iv, i);
     }
 
 

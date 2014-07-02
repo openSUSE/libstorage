@@ -58,12 +58,8 @@ namespace storage
     {
 	y2deb("copy-constructed BtrfsCo from " << c.dev);
 
-	ConstBtrfsPair p = c.btrfsPair();
-	for (ConstBtrfsIter i = p.begin(); i != p.end(); ++i)
-	{
-	    Btrfs* p = new Btrfs(*this, *i);
-	    vols.push_back(p);
-	}
+	for (auto const &i : c.btrfsPair())
+	    vols.push_back(new Btrfs(*this, i));
     }
 
 
@@ -78,24 +74,23 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
     y2mil("begin");
     list<string> uuids = systeminfo.getCmdBtrfsShow().getUuids();
     CmdBtrfsShow::Entry e;
-    for( list<string>::const_iterator i=uuids.begin(); i!=uuids.end(); ++i )
+    for (string const &it : uuids)
 	{
-	if( systeminfo.getCmdBtrfsShow().getEntry( *i, e ))
+	if (systeminfo.getCmdBtrfsShow().getEntry(it, e))
 	    {
 	    Volume const* cv = NULL;
 	    unsigned long long sum_size = 0;
 	    list<string> an;
 	    bool forbidden = false;
-	    for( list<string>::const_iterator d=e.devices.begin(); d!=e.devices.end(); ++d )
+	    for (string const &d : e.devices)
 		{
 		Volume const* v;
-		if( getStorage()->findVolume( *d, v ))
+		if (getStorage()->findVolume(d, v))
 		    {
 		    list<UsedBy> ub = v->getUsedBy();
-		    for( list<UsedBy>::const_iterator i=ub.begin(); 
-		         i!=ub.end(); ++i )
+		    for (auto const &it : ub)
 			{
-			forbidden = i->type()!=UB_BTRFS;
+			forbidden = it.type() != UB_BTRFS;
 			if( forbidden )
 			    y2mil( "forbidden:" << v->device() << 
 				   " used by non-btrfs:" << v->getUsedBy() );
@@ -118,21 +113,20 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		    an.splice( an.end(), li );
 		    }
 		else
-		    y2war( "device " << *d << " not found" );
+		    y2war("device " << d << " not found");
 		}
 	    list<string> devs;
 	    if( forbidden )
 		cv = NULL;
 	    else
 		{
-		for( list<string>::const_iterator i=e.devices.begin(); 
-		     i!=e.devices.end(); ++i )
+		for (auto const &it : e.devices)
 		    {
 		    const Device* v;
-		    if( getStorage()->findDevice( *i, v ) )
+		    if (getStorage()->findDevice(it, v))
 			devs.push_back( v->device() );
 		    else
-			devs.push_back( *i );
+			devs.push_back(it);
 		    }
 		}
 	    y2mil( "forbidden:" << forbidden << " cv:" << cv << 
@@ -146,11 +140,10 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		}
 	    }
 	else
-	    y2war( "uuid " << *i << " not found" );
+	    y2war("uuid " << it << " not found");
 	}
-    BtrfsPair p( btrfsPair() );
-    for( BtrfsIter i=p.begin(); i!=p.end(); ++i )
-        i->detectSubvol();
+    for (auto &i : BtrfsPair(btrfsPair()))
+        i.detectSubvol();
     y2mil("end");
     }
 
@@ -306,16 +299,15 @@ bool BtrfsCo::deviceToUuid( const string& device, string& uuid )
     bool ret = false;
     y2mil( "device:" << device );
     const Volume* v = getStorage()->getVolume( device );
-    list<UsedBy>::const_iterator ul = v->getUsedBy().begin();
     uuid.clear();
-    while( v && ul != v->getUsedBy().end() )
+    if (v)
+	for (auto const &ul : v->getUsedBy())
 	{
-	if( ul->type()==UB_BTRFS )
+	if (ul.type() == UB_BTRFS)
 	    {
 	    uuid = v->getUsedBy().front().device();
 	    ret = true;
 	    }
-	++ul;
 	}
     y2mil( "ret:" << ret << " uuid:" << (ret?uuid:"") );
     return( ret );
@@ -372,30 +364,26 @@ void BtrfsCo::getToCommit( storage::CommitStage stage, list<const Container*>& c
     unsigned long oco = col.size();
     unsigned long ovo = vol.size();
     Container::getToCommit( stage, col, vol );
-    if( stage==DECREASE )
+    if (stage == DECREASE)
 	{
-	ConstBtrfsPair p = btrfsPair( Btrfs::needReduce );
-	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
+	for (auto const &i : btrfsPair(Btrfs::needReduce))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
 	}
-    else if( stage==INCREASE )
+    else if (stage == INCREASE)
 	{
-	ConstBtrfsPair p = btrfsPair( Btrfs::needExtend );
-	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
+	for (auto const &i : btrfsPair(Btrfs::needExtend))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
 	}
-    else if( stage==SUBVOL )
+    else if (stage == SUBVOL)
 	{
-	ConstBtrfsPair p = btrfsPair( Btrfs::needDeleteSubvol );
-	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
-	p = btrfsPair( Btrfs::needCreateSubvol );
-	for( ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
+	for (auto const &i : btrfsPair(Btrfs::needDeleteSubvol))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
+	for (auto const &i : btrfsPair(Btrfs::needCreateSubvol))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
 	}
     if( col.size()!=oco || vol.size()!=ovo )
 	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
@@ -461,11 +449,8 @@ BtrfsCo::doRemove( Volume* v )
     void
     BtrfsCo::changeDeviceName( const string& old, const string& nw )
     {
-	BtrfsPair p = btrfsPair();
-	for (BtrfsIter i = p.begin(); i != p.end(); ++i)
-	{
-	    i->changeDeviceName( old, nw );
-	}
+        for (auto &i : btrfsPair())
+            i.changeDeviceName(old, nw);
     }
 
 int BtrfsCo::resizeVolume( Volume* v, Container* r_co,
@@ -519,9 +504,8 @@ void
 BtrfsCo::saveData(xmlNode* node) const
     {
     Container::saveData(node);
-    ConstBtrfsPair vp = btrfsPair();
-    for (ConstBtrfsIter v = vp.begin(); v != vp.end(); ++v)
-	v->saveData(xmlNewChild(node, "btrfs"));
+    for (auto const &v : btrfsPair())
+        v.saveData(xmlNewChild(node, "btrfs"));
     }
 
 
