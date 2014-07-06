@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 07 13:31:30 CEST 2014 - rneuhauser@sigpipe.cz
+
+- configure{,.ac} uses python2-config to find python headers, libs
+
+-------------------------------------------------------------------
 Wed Jun 11 13:11:19 CEST 2014 - dvaleev@suse.com
 
 - Print different messages for msdos and gpt PReP partitions

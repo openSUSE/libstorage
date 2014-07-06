@@ -29,8 +29,14 @@ dnl Automake 1.11 enables silent compilation
 dnl Disable it by "configure --disable-silent-rules" or "make V=1"
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
 
-CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes"
-CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X -Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
+PYTHON_CONFIG=${PYTHON_CONFIG:-python2-config}
+PYTHON_INCLUDES=$($PYTHON_CONFIG --includes)
+PYTHON_LIBS=$($PYTHON_CONFIG --libs)
+
+CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes $PYTHON_INCLUDES"
+CXXWARNS="-Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
+CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X $CXXWARNS $PYTHON_INCLUDES"
+LIBS="$LIBS $PYTHON_LIBS"
 
 docdir=\${prefix}/share/doc/packages/libstorage
 fillupdir=/var/adm/fillup-templates
