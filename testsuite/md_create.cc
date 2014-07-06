@@ -18,14 +18,13 @@ void print_md_info()
 
     s->getMdInfo( plist );
 
-    for ( deque<MdInfo>::iterator p = plist.begin();
-	  p != plist.end(); ++p )
+    for (auto const &p : plist)
     {
-	cout << ' ' << p->v.name << ' ';
-	cout << p->v.device << ' ';
-	cout << p->nr << ' ';
-	cout << p->type << ' ';
-	cout << p->chunkSizeK << ' ';
+	cout << ' ' << p.v.name << ' ';
+	cout << p.v.device << ' ';
+	cout << p.nr << ' ';
+	cout << p.type << ' ';
+	cout << p.chunkSizeK << ' ';
     }
 }
 

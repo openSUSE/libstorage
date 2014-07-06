@@ -47,8 +47,8 @@ namespace storage
     {
 	ofstream fstab("tmp/etc/fstab");
 
-	for (list<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
-	    fstab << *it << endl;
+	for (auto const &it : lines)
+	    fstab << it << endl;
     }
 
 
@@ -57,8 +57,8 @@ namespace storage
     {
 	ofstream fstab("tmp/etc/crypttab");
 
-	for (list<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
-	    fstab << *it << endl;
+	for (auto const &it : lines)
+	    fstab << it << endl;
     }
 
 
@@ -93,19 +93,18 @@ namespace storage
     {
 	deque<PartitionInfo> partitioninfos;
 	s->getPartitionInfo(disk, partitioninfos);
-	for (deque<PartitionInfo>::iterator it = partitioninfos.begin();
-	     it != partitioninfos.end(); ++it)
+	for (auto const &it : partitioninfos)
 	{
-	    cout << it->v.name << ' ';
-	    switch (it->partitionType)
+	    cout << it.v.name << ' ';
+	    switch (it.partitionType)
 	    {
 		case PRIMARY: cout << "PRIMARY "; break;
 		case EXTENDED: cout << "EXTENDED "; break;
 		case LOGICAL: cout << "LOGICAL "; break;
 		case PTYPE_ANY: cout << "ANY "; break;
 	    }
-	    cout << Region(it->cylRegion) << ' ';
-	    switch (it->v.fs)
+	    cout << Region(it.cylRegion) << ' ';
+	    switch (it.v.fs)
 	    {
 		case FSUNKNOWN: cout << "UNKNOWN"; break;
 		case REISERFS: cout << "REISERFS"; break;
