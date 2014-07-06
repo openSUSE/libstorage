@@ -34,9 +34,7 @@ doit(const string& disk)
     print_commitinfos(s);
     check_zero(s->commit());
 
-    static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, XFS };
-    const list<FsType> fstypes(elem, elem + lengthof(elem));
-    for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
+    for (auto const &it : { EXT2, EXT3, EXT4, REISERFS, XFS })
     {
 	string lv;
 	check_zero(s->createLvmLv("test", "a", 1024*1024, 1, lv));
@@ -46,9 +44,9 @@ doit(const string& disk)
 	check_zero(s->commit());
 
 	FsCapabilities fscaps;
-	check_true(s->getFsCapabilities(*it, fscaps));
+	check_true(s->getFsCapabilities(it, fscaps));
 
-	check_zero(s->changeFormatVolume(lv, true, *it));
+	check_zero(s->changeFormatVolume(lv, true, it));
 
 	print_commitinfos(s);
 	check_zero(s->commit());
@@ -102,9 +100,9 @@ main(int argc, char** argv)
 	exit(EXIT_FAILURE);
     }
 
-    for (list<string>::const_iterator it = disks.begin(); it != disks.end(); ++it)
+    for (auto const &it : disks)
     {
-	doit(*it);
+	doit(it);
     }
 
     exit(EXIT_SUCCESS);

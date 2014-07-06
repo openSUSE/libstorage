@@ -37,12 +37,10 @@ doit(const string& disk)
     print_commitinfos(s);
     check_zero(s->commit());
 
-    static const MdType elem[] = { RAID0, RAID1, RAID5, RAID6, RAID10 };
-    const list<MdType> fstypes(elem, elem + lengthof(elem));
-    for (list<MdType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
+    for (auto const &it : { RAID0, RAID1, RAID5, RAID6, RAID10 })
     {
 	string md;
-	check_zero(s->createMdAny(*it, parts, list<string>(), md));
+	check_zero(s->createMdAny(it, parts, list<string>(), md));
 
 	check_zero(s->changeFormatVolume(md, true, EXT4));
 	check_zero(s->changeMountPoint(md, "/test1"));
@@ -71,9 +69,9 @@ main(int argc, char** argv)
 	exit(EXIT_FAILURE);
     }
 
-    for (list<string>::const_iterator it = disks.begin(); it != disks.end(); ++it)
+    for (auto const &it : disks)
     {
-	doit(*it);
+	doit(it);
     }
 
     exit(EXIT_SUCCESS);

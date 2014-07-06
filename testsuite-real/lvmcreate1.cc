@@ -59,9 +59,9 @@ main(int argc, char** argv)
 	exit(EXIT_FAILURE);
     }
 
-    for (list<string>::const_iterator it = disks.begin(); it != disks.end(); ++it)
+    for (auto const &it : disks)
     {
-	doit(*it);
+	doit(it);
     }
 
     exit(EXIT_SUCCESS);
