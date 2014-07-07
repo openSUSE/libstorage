@@ -60,10 +60,9 @@ namespace storage
 	y2deb("copy-constructed LoopCo from " << c.dev);
 
 	ConstLoopPair p = c.loopPair();
-	for (ConstLoopIter i = p.begin(); i != p.end(); ++i)
+	for (auto const &i : p)
 	{
-	    Loop* p = new Loop(*this, *i);
-	    vols.push_back(p);
+	    vols.push_back(new Loop(*this, i));
 	}
     }
 
@@ -84,24 +83,23 @@ void
     if( !l.empty() )
 	{
 	SystemCmd c(LOSETUPBIN " -a");
-	for( list<FstabEntry>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	for (auto const &i : l)
 	    {
-	    y2mil( "i:" << *i );
-	    string lfile = getStorage()->root() + i->device;
-	    if( findLoop( i->dentry ))
-		y2war("duplicate loop file " << i->dentry);
-	    else if( !i->loop_dev.empty() && Volume::loopInUse( getStorage(),
-								i->loop_dev ) )
-		y2war("duplicate loop_device " << i->loop_dev);
-	    else if( !checkNormalFile( lfile ))
+	    y2mil("i:" << i);
+	    string lfile = getStorage()->root() + i.device;
+	    if (findLoop(i.dentry))
+		y2war("duplicate loop file " << i.dentry);
+	    else if (!i.loop_dev.empty() && Volume::loopInUse(getStorage(), i.loop_dev))
+		y2war("duplicate loop_device " << i.loop_dev);
+	    else if (!checkNormalFile(lfile))
 		y2war("not existent or special file " << lfile);
 	    else
 		{
-		Loop *l = new Loop( *this, i->loop_dev, lfile,
-				    i->dmcrypt, !i->noauto?i->dentry:"",
+		Loop *l = new Loop(*this, i.loop_dev, lfile,
+				    i.dmcrypt, !i.noauto ? i.dentry : "",
 				    systeminfo, c);
-		l->setEncryption( i->encr );
-		l->setFs(toValueWithFallback(i->fs, FSUNKNOWN));
+		l->setEncryption(i.encr);
+		l->setFs(toValueWithFallback(i.fs, FSUNKNOWN));
 		y2mil( "l:" << *l );
 		addToList( l );
 		}
@@ -148,9 +146,8 @@ void
     {
 	list<unsigned> nums;
 
-	ConstLoopPair p = loopPair(Loop::notDeleted);
-	for (ConstLoopIter i = p.begin(); i != p.end(); ++i)
-	    nums.push_back(i->nr());
+	for (auto const &i : loopPair(Loop::notDeleted))
+	    nums.push_back(i.nr());
 
 	return nums;
     }

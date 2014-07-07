@@ -17,12 +17,9 @@ doit(const string& disk)
 
     cout << "disk:" << disk << endl;
 
-    list<string> labels;
-    labels.push_back("msdos");
-    labels.push_back("gpt");
-    for (list<string>::const_iterator label = labels.begin(); label != labels.end(); ++label)
+    for (auto const &label : {"msdos", "gpt"})
     {
-	check_zero(s->destroyPartitionTable(disk, *label));
+	check_zero(s->destroyPartitionTable(disk, label));
 	print_commitinfos(s);
 	check_zero(s->commit());
 
@@ -50,9 +47,9 @@ main(int argc, char** argv)
 	exit(EXIT_FAILURE);
     }
 
-    for (list<string>::const_iterator it = disks.begin(); it != disks.end(); ++it)
+    for (auto const &it : disks)
     {
-	doit(*it);
+	doit(it);
     }
 
     exit(EXIT_SUCCESS);

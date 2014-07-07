@@ -172,13 +172,12 @@ namespace storage
 					  cylinderToKb(len), Region(start, len), type);
 	    p->setCreated();
 	    device = p->device();
-	    PartPair pp = partPair();
-	    for (PartIter i = pp.begin(); i != pp.end(); ++i)
+	    for (auto const &i : partPair())
 	    {
-		if (i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		if (i.deleted() && i.nr()==p->nr() && !i.getCryptPwd().empty())
 		{
 		    y2mil("harvesting old password");
-		    p->setCryptPwd(i->getCryptPwd());
+		    p->setCryptPwd(i.getCryptPwd());
 		}
 	    }
 	    addToList(p);
@@ -268,15 +267,15 @@ namespace storage
 	getStorage()->getDiskList(needDasdfmt, dl);
 	if (!dl.empty())
 	{
-	    for (list<Disk*>::const_iterator i = dl.begin(); i != dl.end(); ++i)
+	    for (auto const *i : dl)
 	    {
-		devs.push_back(undevDevice((*i)->device()));
+		devs.push_back(undevDevice(i->device()));
 	    }
 	    y2mil("devs:" << devs);
 	    getStorage()->showInfoCb(dasdfmtTexts(true, devs), silent);
-	    for (list<string>::iterator i = devs.begin(); i != devs.end(); ++i)
+	    for (auto &i : devs)
 	    {
-		*i = "-f " + quote(normalizeDevice(*i));
+		i = "-f " + quote(normalizeDevice(i));
 	    }
 	    string cmd_line = DASDFMTBIN " -Y -P 4 -b 4096 -y -m 1 -d cdl " +
 		boost::join(devs, " ");
@@ -292,9 +291,9 @@ namespace storage
 	    if (ret == 0)
 	    {
 		SystemInfo systeminfo;
-		for (list<Disk*>::iterator i = dl.begin(); i!=dl.end(); ++i)
+		for (auto *i : dl)
 		{
-		    Dasd * ds = static_cast<Dasd *>(*i);
+		    Dasd * ds = static_cast<Dasd *>(i);
 		    ds->detectPartitions(systeminfo);
 		    ds->resetInitDisk();
 		    ds->removeFromMemory();
@@ -341,12 +340,10 @@ namespace storage
 		    }
 		    ++i;
 		}
-		list<Partition*>::const_iterator pr = rem_list.begin();
-		while (pr != rem_list.end())
+		for (auto *pr : rem_list)
 		{
-		    if (!removeFromList(*pr) && ret == 0)
+		    if (!removeFromList(pr) && ret == 0)
 			ret = DISK_REMOVE_PARTITION_LIST_ERASE;
-		    ++pr;
 		}
 	    }
 	}

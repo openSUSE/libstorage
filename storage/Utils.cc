@@ -38,10 +38,8 @@ namespace storage
 
 	list<string> ret;
 
-	list<pair<string, Disk::SysfsInfo>> dlist = Storage::getDiskList(systeminfo);
-
-	for (list<pair<string, Disk::SysfsInfo>>::const_iterator it = dlist.begin(); it != dlist.end(); ++it)
-	    ret.push_back("/dev/" + Disk::sysfsToDev(it->first));
+	for (auto const &it : Storage::getDiskList(systeminfo))
+	    ret.push_back("/dev/" + Disk::sysfsToDev(it.first));
 
 	y2mil("ret:" << ret);
 	return ret;
@@ -55,19 +53,18 @@ namespace storage
 
 	map<string, string> ret;
 
-	const CmdDmraid& cmd_dmraid = systeminfo.getCmdDmraid();
-	for (CmdDmraid::const_iterator it1 = cmd_dmraid.begin(); it1 != cmd_dmraid.end(); ++it1)
+	for (auto const &it1 : systeminfo.getCmdDmraid())
 	{
 	    // The name from dmraid is something like "ddf1_foo" or "isw_chadfejhhc_foo".
-	    string::size_type pos = it1->first.rfind('_');
+	    string::size_type pos = it1.first.rfind('_');
 	    if (pos == string::npos)
 	    {
 		y2err("unexpected input");
 		continue;
 	    }
-	    string name = string(it1->first, pos + 1);
+	    string name = string(it1.first, pos + 1);
 
-	    const MdadmExamine& examine = systeminfo.getMdadmExamine(it1->second.devices);
+	    const MdadmExamine& examine = systeminfo.getMdadmExamine(it1.second.devices);
 	    MdadmExamine::const_iterator it2 = examine.find(name);
 	    if (it2 == examine.end())
 	    {
@@ -75,7 +72,7 @@ namespace storage
 		continue;
 	    }
 
-	    ret[it1->first] = it2->second.uuid;
+	    ret[it1.first] = it2->second.uuid;
 	}
 
 	y2mil("ret:" << ret);

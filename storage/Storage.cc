@@ -219,13 +219,12 @@ Storage::initialize()
 
     detectObjects();
 
-    for (list<std::pair<string, Text>>::const_iterator i = infoPopupTxts.begin(); 
-	 i != infoPopupTxts.end(); ++i)
+    for (auto const &i : infoPopupTxts)
 	{
-	if (!isUsedBy(i->first))
-	    infoPopupCb( i->second );
+	if (!isUsedBy(i.first))
+	    infoPopupCb(i.second);
 	else
-	    y2mil( "suppressing cb:" << i->second.native );
+	    y2mil("suppressing cb:" << i.second.native);
 	}
     logProcData();
     }
@@ -307,13 +306,13 @@ void Storage::detectObjects()
     
     LvmVgPair p = lvgPair();
     y2mil( "p length:" << p.length() );
-    for( LvmVgIterator i=p.begin(); i!=p.end(); ++i )
-	i->normalizeDmDevices();
+    for (auto &i : p)
+	i.normalizeDmDevices();
 
     if (testmode())
         {
-	for (VolIterator i = vBegin(); i != vEnd(); ++i)
-	    i->getFstabData(*fstab);
+	for (auto &i : make_range(vBegin(), vEnd()))
+	    i.getFstabData(*fstab);
 
 	string t = testdir() + "/free.info";
 	if( access( t.c_str(), R_OK )==0 )
@@ -357,8 +356,8 @@ void Storage::detectObjects()
 
 void Storage::deleteBackups()
     {
-    for (map<string, CCont>::iterator i = backups.begin(); i != backups.end(); ++i)
-	clearPointerList(i->second);
+    for (auto &i : backups)
+        clearPointerList(i.second);
     backups.clear();
     }
 
@@ -420,20 +419,19 @@ bool Storage::rescanCryptedObjects()
     LvmVg::activate(false);
     LvmVg::activate(true);
     SystemInfo systeminfo;
-    const list<string> l = LvmVg::getVgs(systeminfo);
-    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+    for (auto const &i : LvmVg::getVgs(systeminfo))
 	{
-        LvmVgIterator vg = findLvmVg( *i );
+        LvmVgIterator vg = findLvmVg(i);
 	if( vg==lvgEnd() || vg->hasUnkownPv() )
 	    {
             if( vg!=lvgEnd() )
                 removeContainer( &(*vg) );
-	    LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
+	    LvmVg* v = new LvmVg(this, i, "/dev/" + i, systeminfo);
 	    addToList( v );
 	    v->normalizeDmDevices();
 	    v->checkConsistency();
-	    for( LvmVg::LvmLvIter i=v->lvmLvBegin(); i!=v->lvmLvEnd(); ++i )
-		i->updateFsData();
+	    for (auto &ii : make_range(v->lvmLvBegin(), v->lvmLvEnd()))
+		ii.updateFsData();
 	    ret = true;
 	    }
 	}
@@ -459,10 +457,9 @@ void
     {
     if (testmode())
 	{
-	    const list<string> l = glob(testdir() + "/disk_*.info", GLOB_NOSORT);
-	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
+	    for (auto const &i : glob(testdir() + "/disk_*.info", GLOB_NOSORT))
 	    {
-		XmlFile file(*i);
+		XmlFile file(i);
 		const xmlNode* root = file.getRootElement();
 		const xmlNode* disk = getChildNode(root, "disk");
 		if (disk)
@@ -484,14 +481,12 @@ Storage::detectMdParts(SystemInfo& systeminfo)
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_MDPARTRAID") == NULL)
     {
-	list<string> l = MdPartCo::getMdRaids(systeminfo);
-	list<string> mdpartlist = MdPartCo::filterMdPartCo(l, systeminfo, instsys());
-	
-	for(list<string>::const_iterator i = mdpartlist.begin(); i != mdpartlist.end(); ++i)
-	{
-	    MdPartCo* v = new MdPartCo(this, *i, "/dev/" + *i, systeminfo);
-	    addToList( v );
-	}
+        auto const l = MdPartCo::filterMdPartCo(
+            MdPartCo::getMdRaids(systeminfo),
+            systeminfo,
+            instsys());
+        for (auto const &i : l)
+            addToList(new MdPartCo(this, i, "/dev/" + i, systeminfo));
     }
 }
 
@@ -521,11 +516,8 @@ void Storage::detectBtrfs(SystemInfo& systeminfo)
 	BtrfsCo* v = new BtrfsCo(this, systeminfo);
 	if( !v->isEmpty() )
 	    {
-	    BtrfsCo::ConstBtrfsPair p(v->btrfsPair());
-	    for( BtrfsCo::ConstBtrfsIter i=p.begin(); i!=p.end(); ++i )
-		{
-		setBtrfsUsedBy( &(*i) );
-		}
+	    for (auto const &i : v->btrfsPair())
+		setBtrfsUsedBy(&i);
 	    addToList( v );
 	    }
 	else
@@ -537,10 +529,10 @@ void Storage::setBtrfsUsedBy( const Btrfs* bt )
     {
     const list<string>& devs = bt->getDevices(true);
     y2mil( "devs:" << devs << " to uuid:" << bt->getUuid() );
-    for( list<string>::const_iterator d=devs.begin(); d!=devs.end(); ++d )
+    for (auto const &d : devs)
 	{
 	VolIterator v;
-	if( findVolume( *d, v, false, true ))
+	if (findVolume(d, v, false, true))
 	    {
 	    v->setUsedByUuid( UB_BTRFS, bt->getUuid() );
 	    }
@@ -602,10 +594,9 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
     {
     if (testmode())
 	{
-	    const list<string> l = glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT);
-	    for (list<string>::const_iterator i = l.begin(); i != l.end(); ++i)
+	    for (auto const &i : glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT))
 	    {
-		XmlFile file(*i);
+		XmlFile file(i);
 		const xmlNode* root = file.getRootElement();
 		const xmlNode* volume_group = getChildNode(root, "volume_group");
 		if (volume_group)
@@ -614,10 +605,9 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
-	const list<string> l = LvmVg::getVgs(systeminfo);
-	for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	for (auto const &i : LvmVg::getVgs(systeminfo))
 	    {
-		LvmVg* v = new LvmVg(this, *i, "/dev/" + *i, systeminfo);
+		LvmVg* v = new LvmVg(this, i, "/dev/" + i, systeminfo);
 		addToList( v );
 		v->checkConsistency();
 	    }
@@ -633,10 +623,9 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
-	const list<string> l = DmraidCo::getRaids(systeminfo);
-	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	for (auto const &i : DmraidCo::getRaids(systeminfo))
 	    {
-		    DmraidCo* v = new DmraidCo(this, *i, "/dev/mapper/" + *i, systeminfo);
+		    DmraidCo* v = new DmraidCo(this, i, "/dev/mapper/" + i, systeminfo);
 		    addToList( v );
 	    }
 	}
@@ -651,10 +640,9 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
-	const list<string> l = DmmultipathCo::getMultipaths(systeminfo);
-	    for( list<string>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	for (auto const &i : DmmultipathCo::getMultipaths(systeminfo))
 	    {
-		    DmmultipathCo* v = new DmmultipathCo(this, *i, "/dev/mapper/" + *i, systeminfo);
+		    DmmultipathCo* v = new DmmultipathCo(this, i, "/dev/mapper/" + i, systeminfo);
 		    addToList( v );
 	    }
 	}
@@ -716,9 +704,9 @@ void
 Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
     {
     y2mil( "dl: " << dl );
-    for( list<DiskData>::iterator i = dl.begin(); i!=dl.end(); ++i )
+    for (auto &i : dl)
 	{
-	DiskData& data( *i );
+	DiskData& data(i);
 	data.dev = Disk::sysfsToDev(data.name);
 	y2mil("name sysfs:" << data.name << " parted:" << data.dev);
 	Disk * d = NULL;
@@ -772,8 +760,7 @@ Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
 
 	try
 	{
-	    const Dir& dir = systeminfo.getDir(SYSFSDIR);
-	    for (const string& dn : dir)
+	    for (auto const &dn : systeminfo.getDir(SYSFSDIR))
 	    {
 		// we do not treat mds as disks although they can be partitioned since kernel 2.6.28
 		if (boost::starts_with(dn, "md") || boost::starts_with(dn, "loop"))
@@ -828,22 +815,22 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
     initDisk(dl, systeminfo);
     const UdevMap& by_path = systeminfo.getUdevMap("/dev/disk/by-path");
     const UdevMap& by_id = systeminfo.getUdevMap("/dev/disk/by-id");
-    for( list<DiskData>::const_iterator i = dl.begin(); i!=dl.end(); ++i )
+    for (auto const &i : dl)
 	{
-	if( i->d )
+	if (i.d)
 	    {
 	    string tmp1;
-	    UdevMap::const_iterator it1 = by_path.find(i->dev);
+	    UdevMap::const_iterator it1 = by_path.find(i.dev);
 	    if (it1 != by_path.end())
 		tmp1 = it1->second.front();
 
 	    list<string> tmp2;
-	    UdevMap::const_iterator it2 = by_id.find(i->dev);
+	    UdevMap::const_iterator it2 = by_id.find(i.dev);
 	    if (it2 != by_id.end())
 		tmp2 = it2->second;
 
-	    i->d->setUdevData(tmp1, tmp2);
-	    addToList( i->d );
+	    i.d->setUdevData(tmp1, tmp2);
+	    addToList(i.d);
 	    }
 	}
     }
@@ -854,35 +841,33 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
     {
     y2mil("detectFsData begin");
     SystemCmd Losetup(LOSETUPBIN " -a");
-    for( VolIterator i=begin; i!=end; ++i )
+    for (auto &i : make_range(begin, end))
 	{
 	const LvmLv* l;
-	if( !i->isUsedBy() &&
-	    (i->getContainer()==NULL||!i->getContainer()->isUsedBy()))
+	if (!i.isUsedBy() && (i.getContainer() == NULL || !i.getContainer()->isUsedBy()))
 	    {
-	    i->getLoopData( Losetup );
-	    i->getFsData(systeminfo.getBlkid());
-	    if( i->cType()==LVM && (l=dynamic_cast<const LvmLv*>(&(*i)))!=NULL )
+	    i.getLoopData(Losetup);
+	    i.getFsData(systeminfo.getBlkid());
+	    if (i.cType() == LVM && (l = dynamic_cast<const LvmLv*>(&i)) != NULL)
 		{
-		if( l->isPool() )
-		    i->setFs(FSNONE);
+		if (l->isPool())
+		    i.setFs(FSNONE);
 		}
-	    y2mil( "detect:" << *i );
+	    y2mil("detect:" << i);
 	    }
 	}
-    for( VolIterator i=begin; i!=end; ++i )
+    for (auto &i : make_range(begin, end))
 	{
-	if( !i->isUsedBy() && 
-	    (i->getContainer()==NULL||!i->getContainer()->isUsedBy()))
+	if (!i.isUsedBy() && (i.getContainer() == NULL || !i.getContainer()->isUsedBy()))
 	    {
-	    i->getMountData(systeminfo.getProcMounts(), !detectMounted);
-	    i->getFstabData( *fstab );
-	    y2mil( "detect:" << *i );
-	    if( i->getFs()==FSUNKNOWN && i->getEncryption()==ENC_NONE )
+	    i.getMountData(systeminfo.getProcMounts(), !detectMounted);
+	    i.getFstabData(*fstab);
+	    y2mil("detect:" << i);
+	    if (i.getFs() == FSUNKNOWN && i.getEncryption() == ENC_NONE)
 		{
 		Blkid::Entry e;
-		if( i->findBlkid( systeminfo.getBlkid(), e ) && e.is_luks)
-		    i->initEncryption(ENC_LUKS);
+		if (i.findBlkid(systeminfo.getBlkid(), e) && e.is_luks)
+		    i.initEncryption(ENC_LUKS);
 		}
 	    }
 	}
@@ -892,16 +877,14 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
 void
 Storage::printInfo(ostream& str) const
 {
-    ConstContPair p = contPair();
-    for (ConstContIterator i = p.begin(); i != p.end(); ++i)
+    for (auto const &i : contPair())
     {
-	i->print(str);
+	i.print(str);
 	str << endl;
 
-	Container::ConstVolPair vp = i->volPair();
-	for (Container::ConstVolIterator j = vp.begin(); j != vp.end(); ++j)
+	for (auto const &j : i.volPair())
 	{
-	    j->print(str);
+	    j.print(str);
 	    str << endl;
 	}
     }
@@ -913,8 +896,8 @@ Storage::printInfo(ostream& str) const
     {
 	if (max_log_num > 0 && checkDir(Dir))
 	{
-	    for (CCIter i = cont.begin(); i != cont.end(); ++i)
-		(*i)->logData(Dir);
+	    for (auto &i : cont)
+		i->logData(Dir);
 
 	    logFreeInfo(Dir);
 	    logArchInfo(Dir);
@@ -981,9 +964,9 @@ Storage::getRecursiveUsing(const list<string>& devices, bool itself, list<string
     int ret = 0;
     using_devices.clear();
 
-    for (list<string>::const_iterator it = devices.begin(); it != devices.end(); ++it)
+    for (auto const &it : devices)
     {
-	ret = getRecursiveUsingHelper(*it, itself, using_devices);
+	ret = getRecursiveUsingHelper(it, itself, using_devices);
 	if (ret != 0)
 	    break;
     }
@@ -1008,12 +991,10 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 
 	if (vol->isUsedBy())
 	    {
-	    const list<UsedBy> usedBy = vol->getUsedBy();
-	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
-	         it != usedBy.end(); ++it)
+	    for (auto const &it : vol->getUsedBy())
 		{
-		addIfNotThere( using_devices, it->device() );
-		getRecursiveUsingHelper(it->device(), itself, using_devices);
+		addIfNotThere(using_devices, it.device());
+		getRecursiveUsingHelper(it.device(), itself, using_devices);
 		}
 	    }
 	CType typ = vol->cType();
@@ -1027,13 +1008,9 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		const Partition* p = dynamic_cast<const Partition*>(&(*vol));
 		if( p!=NULL && p->type()==EXTENDED )
 		    {
-		    const Disk* d = p->disk();
-		    Disk::ConstPartPair pp = d->partPair(Partition::notDeleted);
-		    for( Disk::ConstPartIter i=pp.begin(); i!=pp.end(); ++i )
-			{
-			if( i->type()==LOGICAL )
-			    dl.push_back(i->device());
-			}
+		    for (auto const &i : p->disk()->partPair(Partition::notDeleted))
+			if (i.type() == LOGICAL)
+			    dl.push_back(i.device());
 		    }
 		}
 		break;
@@ -1048,12 +1025,11 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		    const DmPartCo* d = dynamic_cast<const DmPartCo *>(co);
 		    if( d!=NULL )
 			{
-			DmPartCo::ConstDmPartPair pp = d->dmpartPair(DmPart::notDeleted);
-			for( DmPartCo::ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
+			for (auto const &i : d->dmpartPair(DmPart::notDeleted))
 			    {
-			    p = i->getPtr();
+			    auto const *p = i.getPtr();
 			    if( p!=NULL && p->type()==LOGICAL )
-				dl.push_back(i->device());
+				dl.push_back(i.device());
 			    }
 			}
 		    }
@@ -1069,22 +1045,21 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		    const MdPartCo* d = dynamic_cast<const MdPartCo *>(co);
 		    if( d!=NULL )
 			{
-			MdPartCo::ConstMdPartPair pp = d->mdpartPair(MdPart::notDeleted);
-			for( MdPartCo::ConstMdPartIter i=pp.begin(); i!=pp.end(); ++i )
+			for (auto const &i : d->mdpartPair(MdPart::notDeleted))
 			    {
-			    p = i->getPtr();
+			    p = i.getPtr();
 			    if( p!=NULL && p->type()==LOGICAL )
-				dl.push_back(i->device());
+				dl.push_back(i.device());
 			    }
 			}
 		    }
 		}
 		break;
 	    }
-	for( list<string>::const_iterator i = dl.begin(); i != dl.end(); ++i )
+	for (auto const &i : dl)
 	    {
-	    addIfNotThere( using_devices, *i );
-	    getRecursiveUsingHelper(*i, itself, using_devices);
+	    addIfNotThere(using_devices, i);
+	    getRecursiveUsingHelper(i, itself, using_devices);
 	    }
 	}
     else if (findContainer(device, cont))
@@ -1093,21 +1068,18 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 			   cont->device()) == using_devices.end())
 	    using_devices.push_back(cont->device());
 
-	Container::ConstVolPair p = cont->volPair(Volume::notDeleted); 
-	for( Container::ConstVolIterator it = p.begin(); it != p.end(); ++it )
+	for (auto const &it : cont->volPair(Volume::notDeleted))
 	    {
-	    addIfNotThere( using_devices, it->device() );
-	    getRecursiveUsingHelper(it->device(), itself, using_devices);
+	    addIfNotThere(using_devices, it.device());
+	    getRecursiveUsingHelper(it.device(), itself, using_devices);
 	    }
 
 	if (cont->isUsedBy())
 	    {
-	    const list<UsedBy> usedBy = cont->getUsedBy();
-	    for( list<UsedBy>::const_iterator it = usedBy.begin(); 
-	         it != usedBy.end(); ++it)
+	    for (auto const &it : cont->getUsedBy())
 		{
-		addIfNotThere( using_devices, it->device() );
-		getRecursiveUsingHelper(it->device(), itself, using_devices);
+		addIfNotThere(using_devices, it.device());
+		getRecursiveUsingHelper(it.device(), itself, using_devices);
 		}
 	    }
 	}
@@ -1127,9 +1099,9 @@ Storage::getRecursiveUsedBy(const list<string>& devices, bool itself, list<strin
     int ret = 0;
     usedby_devices.clear();
 
-    for (list<string>::const_iterator it = devices.begin(); it != devices.end(); ++it)
+    for (auto const &it : devices)
     {
-	ret = getRecursiveUsedByHelper(*it, itself, usedby_devices);
+	ret = getRecursiveUsedByHelper(it, itself, usedby_devices);
 	if (ret != 0)
 	    break;
     }
@@ -1151,13 +1123,12 @@ Storage::getRecursiveUsedByHelper(const string& device, bool itself, list<string
 			   p->device()) == usedby_devices.end())
 	    usedby_devices.push_back(p->device());
 
-	list<string> tmp = p->getUsing();
-	for (list<string>::const_iterator it = tmp.begin(); it != tmp.end(); ++it)
+	for (auto const &it : p->getUsing())
 	{
-	    if (find(usedby_devices.begin(), usedby_devices.end(), *it) == usedby_devices.end())
+	    if (find(usedby_devices.begin(), usedby_devices.end(), it) == usedby_devices.end())
 	    {
-		usedby_devices.push_back(*it);
-		getRecursiveUsedByHelper(*it, itself, usedby_devices);
+		usedby_devices.push_back(it);
+		getRecursiveUsedByHelper(it, itself, usedby_devices);
 	    }
 	}
     }
@@ -2757,12 +2728,11 @@ Storage::addFstabOptions( const string& device, const string& options )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	list<string> l = splitString( options, "," );
 	list<string> opts = splitString( vol->getFstabOption(), "," );
-	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	for (auto const &i : splitString(options, ","))
 	    {
-	    if( find( opts.begin(), opts.end(), *i )==opts.end() )
-		opts.push_back( *i );
+	    if (find(opts.begin(), opts.end(), i) == opts.end())
+		opts.push_back(i);
 	    }
 	ret = vol->changeFstabOptions( boost::join( opts, "," ) );
 	}
@@ -2792,13 +2762,10 @@ Storage::removeFstabOptions( const string& device, const string& options )
 	}
     else if( findVolume( device, cont, vol ) )
 	{
-	list<string> l = splitString( options, "," );
 	list<string> opts = splitString( vol->getFstabOption(), "," );
-	for( list<string>::const_iterator i=l.begin(); i!=l.end(); i++ )
-	    {
-	    opts.remove_if(regex_matches(*i));
-	    }
-	ret = vol->changeFstabOptions( boost::join( opts, "," ) );
+	for (auto const &i : splitString(options, ","))
+	    opts.remove_if(regex_matches(i));
+	ret = vol->changeFstabOptions(boost::join(opts, ","));
 	}
     else
 	{
@@ -4062,9 +4029,9 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<s
     unsigned long long sumK = 0;
     unsigned long long smallestK = 0;
 
-    for (list<string>::const_iterator i = devices.begin(); i != devices.end(); ++i)
+    for (auto const &i : devices)
     {
-	const Volume* v = getVolume(*i);
+	const Volume* v = getVolume(i);
 	if (!v)
 	{
 	    ret = STORAGE_VOLUME_NOT_FOUND;
@@ -4072,15 +4039,12 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<s
 	}
 
 	sumK += v->sizeK();
-	if (i == devices.begin())
-	    smallestK = v->sizeK();
-	else
-	    smallestK = min(smallestK, v->sizeK());
+	smallestK = min(smallestK, v->sizeK());
     }
 
-    for (list<string>::const_iterator i = spares.begin(); i != spares.end(); ++i)
+    for (auto const &i : spares)
     {
-	const Volume* v = getVolume(*i);
+	const Volume* v = getVolume(i);
 	if (!v)
 	{
 	    ret = STORAGE_VOLUME_NOT_FOUND;
@@ -4228,9 +4192,8 @@ bool Storage::haveMd( MdCo*& md )
     {
 	list<unsigned> nums;
 
-	ConstMdPartCoPair p = mdpartCoPair(MdPartCo::notDeleted);
-	for (ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
-	    nums.push_back(i->nr());
+	for (auto const &i : mdpartCoPair(MdPartCo::notDeleted))
+	    nums.push_back(i.nr());
 
 	return nums;
     }
@@ -4729,12 +4692,11 @@ int Storage::checkCache()
 list<commitAction>
 Storage::getCommitActions() const
 {
-    ConstContPair p = contPair();
     list<commitAction> ca;
-    for (ConstContIterator it = p.begin(); it != p.end(); ++it)
+    for (auto const &it : contPair())
     {
 	list<commitAction> l;
-	it->getCommitActions(l);
+	it.getCommitActions(l);
 	ca.splice(ca.end(), l);
     }
     ca.sort();
@@ -4747,13 +4709,12 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 {
     infos.clear();
 
-        const list<commitAction> ca = getCommitActions();
-	for (list<commitAction>::const_iterator i = ca.begin(); i != ca.end(); ++i)
+        for (auto const &i : getCommitActions())
 	{
 	    CommitInfo info;
-	    info.destructive = i->destructive;
-	    info.text = i->description.text;
-	    const Volume* v = i->vol();
+	    info.destructive = i.destructive;
+	    info.text = i.description.text;
+	    const Volume* v = i.vol();
 	    if( v && !v->getDescText().empty() )
 	    {
 		info.text += ". ";
@@ -4769,11 +4730,10 @@ Storage::getCommitInfos(list<CommitInfo>& infos) const
 void
 Storage::dumpCommitInfos() const
 {
-    const list<commitAction> ca = getCommitActions();
-    for (list<commitAction>::const_iterator it = ca.begin(); it != ca.end(); ++it)
+    for (auto const &it : getCommitActions())
     {
-	string text = it->description.native;
-	if (it->destructive)
+	string text = it.description.native;
+	if (it.destructive)
 	    text += " [destructive]";
 	y2mil("ChangeText " << text);
     }
@@ -4857,10 +4817,10 @@ Storage::sortCommitLists(CommitStage stage, list<const Container*>& co,
 	vl.sort( sort_vol_mount );
     else
 	vl.sort( sort_vol_normal );
-    for( list<const Container*>::const_iterator i=co.begin(); i!=co.end(); ++i )
-	todo.push_back(commitAction(stage, (*i)->type(), *i));
-    for( list<const Volume*>::const_iterator i=vl.begin(); i!=vl.end(); ++i )
-	todo.push_back(commitAction(stage, (*i)->cType(), *i));
+    for (auto const &i : co)
+	todo.push_back(commitAction(stage, i->type(), i));
+    for (auto const &i : vl)
+	todo.push_back(commitAction(stage, i->cType(), i));
     b.str("");
     b << "unsorted actions <";
     for (list<commitAction>::const_iterator i = todo.begin(); i != todo.end(); ++i)
@@ -4933,9 +4893,8 @@ int Storage::commit()
 	{
 	ret = commitPair( p, isLoop );
 	}
-    VPair vp = vPair( fstabAdded );
-    for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
-	i->setFstabAdded(false);
+    for (auto &i : vPair(fstabAdded))
+	i.setFstabAdded(false);
     if( ret!=0 )
 	dumpObjectList();
     y2mil("ret:" << ret);
@@ -4978,20 +4937,20 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
     typedef array<CommitStage, 5> Stages;
     const Stages stages = { { DECREASE, INCREASE, FORMAT, SUBVOL, MOUNT } };
 
-    for (Stages::const_iterator stage = stages.begin(); stage != stages.end(); ++stage)
+    for (auto const &stage : stages)
     {
 	list<const Container*> colist;
 	list<const Volume*> vlist;
 
 	if (ret == 0)
 	{
-	    for (ContIterator i = p.begin(); i != p.end(); ++i)
-		i->getToCommit(*stage, colist, vlist);
+	    for (auto &i : p)
+		i.getToCommit(stage, colist, vlist);
 	}
 
 	bool new_pair = false;
 	list<commitAction> todo;
-	sortCommitLists(*stage, colist, vlist, todo);
+	sortCommitLists(stage, colist, vlist, todo);
 	list<commitAction>::iterator ac = todo.begin();
 	while( ret==0 && ac != todo.end() )
 	    {
@@ -5002,7 +4961,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	    if( cont )
 		{
 		bool cont_removed = co->deleted() && (type == LVM || type == MDPART);
-		ret = co->commitChanges(*stage);
+		ret = co->commitChanges(stage);
 		cont_removed = cont_removed && ret==0;
 		if( cont_removed )
 		    {
@@ -5012,7 +4971,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    else
 		{
-		ret = co->commitChanges(*stage, const_cast<Volume*>(ac->vol()));
+		ret = co->commitChanges(stage, const_cast<Volume*>(ac->vol()));
 		}
 	    if( ret!=0 )
 		{
@@ -5022,7 +4981,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 		}
 	    ++ac;
 	    }
-	y2mil("stage:" << *stage << " new_pair:" << new_pair);
+	y2mil("stage:" << stage << " new_pair:" << new_pair);
 	if( new_pair )
 	    {
 	    p = cPair( fnc );
@@ -5046,10 +5005,9 @@ bool Storage::removeDmMapsTo( const string& dev )
     {
     bool ret = false;
     y2mil("dev:" << dev);
-    VPair vp = vPair( isDmContainer );
-    for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
+    for (auto &v : vPair(isDmContainer))
 	{
-	Dm * dm = dynamic_cast<Dm *>(&(*v));
+	Dm *dm = dynamic_cast<Dm *>(&v);
 	if (dm != NULL)
 	    {
 	    y2mil( "dm:" << *dm );
@@ -5065,7 +5023,7 @@ bool Storage::removeDmMapsTo( const string& dev )
 		}
 	    }
 	else
-	    y2war("not a Dm descendant " << v->device());
+	    y2war("not a Dm descendant " << v.device());
 	}
     ConstVolIterator v;
     ConstDiskIterator d;
@@ -5120,11 +5078,8 @@ bool Storage::usedDmName( const string& nm, const Volume* volp ) const
 void Storage::changeDeviceName( const string& old, const string& nw )
     {
     y2mil( "old:" << old << " new:" << nw );
-    CPair p = cPair();
-    for (ContIterator ci = p.begin(); ci != p.end(); ++ci)
-	{
-	ci->changeDeviceName( old, nw );
-	}
+    for (auto &ci : cPair())
+	ci.changeDeviceName(old, nw);
     }
 
 
@@ -5132,11 +5087,10 @@ void
 Storage::getDiskList( bool (* CheckFnc)( const Disk& ), std::list<Disk*>& dl )
     {
     dl.clear();
-    DiskPair dp = dPair( CheckFnc );
-    for (DiskIterator i = dp.begin(); i != dp.end(); ++i)
+    for (auto &i : dPair(CheckFnc))
 	{
-	y2mil( "disk:" << i->device() );
-	dl.push_back( &(*i) );
+	y2mil("disk:" << i.device());
+	dl.push_back(&i);
 	}
     }
 
@@ -5146,12 +5100,11 @@ Storage::getContainers( deque<ContainerInfo>& infos )
     {
     infos.clear();
     assertInit();
-    ConstContPair p = contPair(Container::notDeleted);
-    for( ConstContIterator i = p.begin(); i != p.end(); ++i)
+    for (auto const &i : contPair(Container::notDeleted))
 	{
-	y2mil( "co:" << *i );
-	infos.push_back( ContainerInfo() );
-	i->getInfo( infos.back() );
+	y2mil("co:" << i);
+	infos.push_back(ContainerInfo());
+	i.getInfo(infos.back());
 	}
     }
 
@@ -5160,11 +5113,10 @@ Storage::getVolumes( deque<VolumeInfo>& infos )
     {
     infos.clear ();
     assertInit();
-    ConstVolPair p = volPair( Volume::notDeleted );
-    for( ConstVolIterator i = p.begin(); i != p.end(); ++i)
+    for (auto const &i : volPair(Volume::notDeleted))
 	{
-	infos.push_back( VolumeInfo() );
-	i->getInfo( infos.back() );
+	infos.push_back(VolumeInfo());
+	i.getInfo(infos.back());
 	}
     }
 
@@ -5267,11 +5219,10 @@ int Storage::getPartitionInfo( const string& disk,
 	// TODO: those partitions shouldn't be detected at all
 	if (!i->isUsedBy())
 	{
-	    Disk::ConstPartPair p = i->partPair(Partition::notDeleted);
-	    for (Disk::ConstPartIter i2 = p.begin(); i2 != p.end(); ++i2)
+	    for (auto const &i2 : i->partPair(Partition::notDeleted))
 	    {
 		plist.push_back(PartitionInfo());
-		i2->getInfo(plist.back());
+		i2.getInfo(plist.back());
 	    }
 	}
     }
@@ -5319,11 +5270,10 @@ int Storage::getLvmLvInfo( const string& name,
     ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
-	LvmVg::ConstLvmLvPair p = i->lvmLvPair(LvmLv::notDeleted);
-	for( LvmVg::ConstLvmLvIter i2 = p.begin(); i2 != p.end(); ++i2)
+	for (auto const &i2 : i->lvmLvPair(LvmLv::notDeleted))
 	    {
-	    plist.push_back( LvmLvInfo() );
-	    i2->getInfo( plist.back() );
+	    plist.push_back(LvmLvInfo());
+	    i2.getInfo(plist.back());
 	    }
 	}
     else
@@ -5401,12 +5351,11 @@ int Storage::getMdInfo( deque<storage::MdInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstMdPair p = mdPair(Md::notDeleted);
-    for( ConstMdIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( MdInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : mdPair(Md::notDeleted))
+        {
+        plist.push_back(MdInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
@@ -5451,12 +5400,10 @@ int Storage::getMdPartInfo( const string& device, deque<MdPartInfo>& plist )
 
   if( it != mdpCoEnd() )
     {
-    MdPartCo::MdPartPair p = it->mdpartPair(MdPart::notDeleted);
-
-    for( MdPartCo::MdPartIter i2 = p.begin(); i2 != p.end(); ++i2 )
+    for (auto &i2 : it->mdpartPair(MdPart::notDeleted))
       {
-      plist.push_back( MdPartInfo() );
-      i2->getInfo( plist.back() );
+      plist.push_back(MdPartInfo());
+      i2.getInfo(plist.back());
       }
     }
   else
@@ -5470,12 +5417,11 @@ int Storage::getNfsInfo( deque<storage::NfsInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstNfsPair p = nfsPair(Nfs::notDeleted);
-    for( ConstNfsIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( NfsInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : nfsPair(Nfs::notDeleted))
+        {
+        plist.push_back(NfsInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
@@ -5484,12 +5430,11 @@ int Storage::getLoopInfo( deque<storage::LoopInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstLoopPair p = loopPair(Loop::notDeleted);
-    for( ConstLoopIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( LoopInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : loopPair(Loop::notDeleted))
+        {
+        plist.push_back(LoopInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
@@ -5498,12 +5443,11 @@ int Storage::getDmInfo( deque<storage::DmInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstDmPair p = dmPair(Dm::notDeleted);
-    for( ConstDmIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( DmInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : dmPair(Dm::notDeleted))
+        {
+        plist.push_back(DmInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
@@ -5516,11 +5460,10 @@ int Storage::getDmraidInfo( const string& name,
     DmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
-	DmraidCo::DmraidPair p = i->dmraidPair(Dmraid::notDeleted);
-	for( DmraidCo::DmraidIter i2 = p.begin(); i2 != p.end(); ++i2 )
+	for (auto const &i2 : i->dmraidPair(Dmraid::notDeleted))
 	    {
-	    plist.push_back( DmraidInfo() );
-	    i2->getInfo( plist.back() );
+	    plist.push_back(DmraidInfo());
+	    i2.getInfo(plist.back());
 	    }
 	}
     else
@@ -5539,12 +5482,11 @@ Storage::getDmmultipathInfo( const string& name,
     ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
-	DmmultipathCo::ConstDmmultipathPair p = i->dmmultipathPair(Dmmultipath::notDeleted);
-	for( DmmultipathCo::ConstDmmultipathIter i2 = p.begin(); i2 != p.end(); ++i2 )
-	{
-	    plist.push_back( DmmultipathInfo() );
-	    i2->getInfo( plist.back() );
-	}
+        for (auto const &i2 : i->dmmultipathPair(Dmmultipath::notDeleted))
+        {
+            plist.push_back(DmmultipathInfo());
+            i2.getInfo(plist.back());
+        }
     }
     else
 	ret = STORAGE_DMMULTIPATH_CO_NOT_FOUND;
@@ -5556,12 +5498,11 @@ int Storage::getBtrfsInfo( deque<storage::BtrfsInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstBtrfsPair p = btrfsPair(Btrfs::notDeleted);
-    for( ConstBtrfsIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( BtrfsInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : btrfsPair(Btrfs::notDeleted))
+        {
+        plist.push_back(BtrfsInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
@@ -5570,29 +5511,27 @@ int Storage::getTmpfsInfo( deque<storage::TmpfsInfo>& plist )
     int ret = 0;
     plist.clear();
     assertInit();
-    ConstTmpfsPair p = tmpfsPair(Tmpfs::notDeleted);
-    for( ConstTmpfsIterator i = p.begin(); i != p.end(); ++i )
-	{
-	plist.push_back( TmpfsInfo() );
-	i->getInfo( plist.back() );
-	}
+    for (auto const &i : tmpfsPair(Tmpfs::notDeleted))
+        {
+        plist.push_back(TmpfsInfo());
+        i.getInfo(plist.back());
+        }
     return( ret );
     }
 
 list<string> Storage::getAllUsedFs() const 
 {
     set<FsType> fs;
-    ConstVolPair p = volPair( Volume::notDeleted );
-    for( ConstVolIterator v=p.begin(); v!=p.end(); ++v )
+    for (auto const &v : volPair(Volume::notDeleted))
     {
-	FsType t = v->getFs();
-	if (t!=FSUNKNOWN && t!=FSNONE)
-	    fs.insert(t);
+        FsType t = v.getFs();
+        if (t != FSUNKNOWN && t != FSNONE)
+            fs.insert(t);
     }
     list<string> ret;
-    for( set<FsType>::const_iterator i=fs.begin(); i!=fs.end(); ++i )
+    for (auto const &i : fs)
     {
-	ret.push_back(toString(*i));
+        ret.push_back(toString(i));
     }
     y2mil( "ret:" << ret );
     return ret;
@@ -5838,11 +5777,11 @@ Storage::logCo(const Container* c) const
     classic(b);
     c->print( b );
     y2mil( "log co:" << b.str() );
-    for( Container::ConstPlainIterator i=c->begin(); i!=c->end(); ++i )
+    for (auto const &i : *c)
     {
-	b.str("");
-	(*i)->print( b );
-	y2mil( "log vo:" << b.str() );
+        b.str("");
+        i->print(b);
+        y2mil("log vo:" << b.str());
     }
 }
 
@@ -6176,8 +6115,8 @@ Storage::findDevice( const string& dev, const Device* &vol,
     void
     Storage::clearUsedBy(const list<string>& devs)
     {
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    clearUsedBy(*it);
+        for (auto const &it : devs)
+            clearUsedBy(it);
     }
 
 
@@ -6246,8 +6185,8 @@ Storage::isUsedBySingleBtrfs( const Volume& vol, const Volume** btrfs ) const
     void
     Storage::setUsedBy(const list<string>& devs, UsedByType type, const string& device)
     {
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    setUsedBy(*it, type, device);
+        for (auto const &it : devs)
+            setUsedBy(it, type, device);
     }
 
 
@@ -6272,8 +6211,8 @@ Storage::isUsedBySingleBtrfs( const Volume& vol, const Volume** btrfs ) const
     void
     Storage::addUsedBy(const list<string>& devs, UsedByType type, const string& device)
     {
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    addUsedBy(*it, type, device);
+        for (auto const &it : devs)
+            addUsedBy(it, type, device);
     }
 
 
@@ -6297,8 +6236,8 @@ Storage::isUsedBySingleBtrfs( const Volume& vol, const Volume** btrfs ) const
     void
     Storage::removeUsedBy(const list<string>& devs, UsedByType type, const string& device)
     {
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    removeUsedBy(*it, type, device);
+        for (auto const &it : devs)
+            removeUsedBy(it, type, device);
     }
 
 
@@ -6684,21 +6623,21 @@ int Storage::removeContainer( Container* val )
 	// iterators of usedby are invalidated during remove
 	const list<UsedBy> tmp(usedby);
 
-	for (list<UsedBy>::const_iterator it = tmp.begin(); it != tmp.end(); ++it)
+	for (auto const &it : tmp)
 	{
-	    switch (it->type())
+	    switch (it.type())
 	    {
 		case UB_MD:
-		    ret = removeVolume(it->device());
+		    ret = removeVolume(it.device());
 		    break;
 		case UB_DM:
-		    ret = removeVolume(it->device());
+		    ret = removeVolume(it.device());
 		    break;
 		case UB_LVM:
-                    if( it->device().size()>5 )
-                        ret = removeLvmVg(it->device().substr(5));
+                    if (it.device().size() > 5)
+                        ret = removeLvmVg(it.device().substr(5));
                     else
-                        y2err("strange UsedbyLvm:\"" << it->device() << "\"");
+                        y2err("strange UsedbyLvm:\"" << it.device() << "\"");
 		    break;
 		case UB_DMRAID:
 		    break;
@@ -6707,14 +6646,14 @@ int Storage::removeContainer( Container* val )
 		case UB_BTRFS:
 		    {
 		    BtrfsCo* co;
-		    if( haveBtrfs(co) )
-			ret = co->removeUuid(it->device());
+		    if (haveBtrfs(co))
+			ret = co->removeUuid(it.device());
 		    else
 			ret = STORAGE_BTRFS_CO_NOT_FOUND;
 		    }
 		    break;
 		case UB_MDPART:
-		    ret = removeMdPartCo(it->device(), true);
+		    ret = removeMdPartCo(it.device(), true);
 		    break;
 		default:
 		    ret = STORAGE_REMOVE_USING_UNKNOWN_TYPE;
@@ -6750,8 +6689,8 @@ int Storage::removeContainer( Container* val )
 	    if (haveMd(md))
 		md->syncMdadm(getMdadm());
 
-	    for (MdPartCoIterator it = p.begin(); it != p.end(); ++it)
-		it->syncMdadm(getMdadm());
+	    for (auto const &it : p)
+		it.syncMdadm(getMdadm());
 	}
     }
 
@@ -6899,29 +6838,28 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     assertInit();
     y2mil("dir:" << dir);
     EtcFstab fstab(dir, true);
-    const list<FstabEntry> le = fstab.getEntries();
-    for( list<FstabEntry>::const_iterator i=le.begin(); i!=le.end(); ++i )
+    for (auto const &i : fstab.getEntries())
     {
-	y2mil( "entry:" << *i );
-	if( disk_part.match( i->dentry ) )
+	y2mil("entry:" << i);
+	if (disk_part.match(i.dentry))
 	{
 	    VolumeInfo info;
 	    info.create = info.format = info.resize = false;
 	    info.sizeK = info.origSizeK = 0;
 	    info.minor = info.major = 0;
-	    info.device = i->dentry;
-	    info.mount = i->mount;
+	    info.device = i.dentry;
+	    info.mount = i.mount;
 	    info.mount_by = MOUNTBY_DEVICE;
-	    info.fs = toValueWithFallback(i->fs, FSUNKNOWN);
-	    info.fstab_options = boost::join( i->opts, "," );
+	    info.fs = toValueWithFallback(i.fs, FSUNKNOWN);
+	    info.fstab_options = boost::join(i.opts, ",");
 	    infos.push_back(info);
 	}
-	else if( findVolume( i->dentry, vol )||findVolume( i->device, vol ) )
+	else if (findVolume(i.dentry, vol) || findVolume(i.device, vol))
 	{
 	    VolumeInfo info;
-	    vol->getInfo( info );
-	    vol->mergeFstabInfo( info, *i );
-	    y2mil( "volume:" << *vol );
+	    vol->getInfo(info);
+	    vol->mergeFstabInfo(info, i);
+	    y2mil("volume:" << *vol);
 	    infos.push_back(info);
 	}
     }
@@ -7202,11 +7140,11 @@ void Storage::checkPwdBuf( const string& device )
 	xmlNode* node = xmlNewNode("free");
 	xml.setRootElement(node);
 
-	for (map<string, FreeInfo>::const_iterator it = free_infos.begin(); it != free_infos.end(); ++it)
+	for (auto const &it : free_infos)
 	{
 	    xmlNode* tmp = xmlNewChild(node, "free");
-	    setChildValue(tmp, "device", it->first);
-	    it->second.saveData(tmp);
+	    setChildValue(tmp, "device", it.first);
+	    it.second.saveData(tmp);
 	}
 
 	xml.save(fname);
@@ -7223,12 +7161,11 @@ void Storage::checkPwdBuf( const string& device )
 	const xmlNode* free = getChildNode(root, "free");
 	if (free)
 	{
-	    const list<const xmlNode*> frees = getChildNodes(free, "free");
-	    for(list<const xmlNode*>::const_iterator it = frees.begin(); it != frees.end(); ++it)
+	    for (auto const &it : getChildNodes(free, "free"))
 	    {
 		string device;
-		getChildValue(*it, "device", device);
-		mapInsertOrReplace(free_infos, device, FreeInfo(*it));
+		getChildValue(it, "device", device);
+		mapInsertOrReplace(free_infos, device, FreeInfo(it));
 	    }
 	}
     }
@@ -7273,8 +7210,8 @@ Storage::createBackupState( const string& name )
 	if (checkBackupState(name))
 	    removeBackupState(name);
 	CCont tmp;
-	for (CCIter i = cont.begin(); i != cont.end(); ++i)
-	    tmp.push_back((*i)->getCopy());
+	for (auto const &i : cont)
+	    tmp.push_back(i->getCopy());
 	backups.insert(make_pair(name, tmp));
 	}
     y2mil( "states:" << backupStates() );
@@ -7323,8 +7260,8 @@ Storage::restoreBackupState( const string& name )
 	if( b!=backups.end())
 	    {
 	    clearPointerList(cont);
-	    for (CCIter i = b->second.begin(); i != b->second.end(); ++i)
-		cont.push_back( (*i)->getCopy() );
+	    for (auto const *i : b->second)
+		cont.push_back(i->getCopy());
 	    }
 	else
 	    ret = STORAGE_BACKUP_STATE_NOT_FOUND;

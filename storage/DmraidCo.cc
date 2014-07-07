@@ -75,10 +75,10 @@ namespace storage
 	    controller = entry.controller;
 	    raidtype = entry.raidtype;
 
-	    for (list<string>::const_iterator it = entry.devices.begin(); it != entry.devices.end(); ++it)
+	    for (auto const &it : entry.devices)
 	    {
 		Pv pv;
-		pv.device = *it;
+		pv.device = it;
 		addPv(pv);
 	    }
 	}
@@ -95,11 +95,8 @@ DmraidCo::setUdevData( const list<string>& id )
 
     DmPartCo::setUdevData(udev_id);
 
-    DmraidPair pp = dmraidPair();
-    for( DmraidIter p=pp.begin(); p!=pp.end(); ++p )
-	{
-	p->addUdevData();
-	}
+    for (auto &p : dmraidPair())
+	p.addUdevData();
 }
 
 
@@ -156,14 +153,13 @@ void DmraidCo::activate( bool val )
     {
         list<string> l;
 
-	list<string> entries = systeminfo.getCmdDmraid().getEntries();
-	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
+	for (auto const &it : systeminfo.getCmdDmraid().getEntries())
         {
 	    CmdDmsetupInfo::Entry entry;
-	    if (systeminfo.getCmdDmsetupInfo().getEntry(*it, entry) && entry.segments > 0)
-      		l.push_back(*it);
+	    if (systeminfo.getCmdDmsetupInfo().getEntry(it, entry) && entry.segments > 0)
+      		l.push_back(it);
 	    else
-		y2mil("ignoring inactive dmraid " << *it);
+		y2mil("ignoring inactive dmraid " << it);
         }
 
         y2mil("detected dmraids " << l);
@@ -203,9 +199,9 @@ DmraidCo::doRemove()
 	getStorage()->showInfoCb( removeText(true), silent );
 	string cmd = "cd " + quote(getStorage()->logdir()) + " && echo y | " DMRAIDBIN " -E -r";
 	SystemCmd c;
-	for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
+	for (auto const &i : pv)
 	    {
-	    c.execute(cmd + " " + quote(i->device));
+	    c.execute(cmd + " " + quote(i.device));
 	    }
 	if( c.retcode()!=0 )
 	    {

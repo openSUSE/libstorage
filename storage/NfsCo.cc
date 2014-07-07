@@ -56,12 +56,8 @@ namespace storage
     {
 	y2deb("copy-constructed NfsCo from " << c.dev);
 
-	ConstNfsPair p = c.nfsPair();
-	for (ConstNfsIter i = p.begin(); i != p.end(); ++i)
-	{
-	    Nfs* p = new Nfs(*this, *i);
-	    vols.push_back(p);
-	}
+	for (auto const &i : c.nfsPair())
+	    vols.push_back(new Nfs(*this, i));
     }
 
 
@@ -159,50 +155,48 @@ NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK,
 void
 NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
-    const list<FstabEntry> l1 = fstab.getEntries();
-    for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
+    for (auto const &i : fstab.getEntries())
 	{
-	if( i->fs == "nfs" || i->fs == "nfs4")
+	if (i.fs == "nfs" || i.fs == "nfs4")
 	    {
-	    Nfs *n = new Nfs(*this, i->device, i->fs == "nfs4");
-	    n->setMount( i->mount );
-	    string opt = boost::join(i->opts, ",");
+	    Nfs *n = new Nfs(*this, i.device, i.fs == "nfs4");
+	    n->setMount(i.mount);
+	    string opt = boost::join(i.opts, ",");
 	    if (opt != "defaults")
 		n->setFstabOption(opt);
-	    addToList( n );
+	    addToList(n);
 	    }
 	}
 
-    const list<FstabEntry> l2 = systeminfo.getProcMounts().getEntries();
-    for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
+    for (auto const &i : systeminfo.getProcMounts().getEntries())
 	{
-	if( i->fs == "nfs" || i->fs == "nfs4")
+	if (i.fs == "nfs" || i.fs == "nfs4")
 	    {
 	    Nfs *n = NULL;
 	    NfsIter nfs;
 
-	    if( findNfs( Nfs::canonicalName(i->device), nfs ))
+	    if (findNfs(Nfs::canonicalName(i.device), nfs))
 		{
 		n = &(*nfs);
 
 		list<string> tmp = n->altNames();
-		if (!contains(tmp, i->device))
+		if (!contains(tmp, i.device))
 		{
-		    tmp.push_back(i->device);
+		    tmp.push_back(i.device);
 		    n->setAltNames(tmp);
 		}
 		}
 	    else
 		{
-		n = new Nfs(*this, i->device, i->fs == "nfs4");
+		n = new Nfs(*this, i.device, i.fs == "nfs4");
 		n->setIgnoreFstab();
-		string opt = boost::join(filterOpts(i->opts), ",");
+		string opt = boost::join(filterOpts(i.opts), ",");
 		n->setFstabOption(opt);
-		addToList( n );
+		addToList(n);
 		}
 
 	    StatVfs vfsbuf;
-	    getStatVfs(i->mount, vfsbuf);
+	    getStatVfs(i.mount, vfsbuf);
 	    n->setSize(vfsbuf.sizeK);
 	    }
 	}

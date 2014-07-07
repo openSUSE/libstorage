@@ -51,15 +51,9 @@ namespace storage
     {
 	y2deb("constructing MdCo");
 
-	const ProcMdstat& procmdstat = systeminfo.getProcMdstat();
-	for (ProcMdstat::const_iterator it = procmdstat.begin(); it != procmdstat.end(); ++it)
-	{
-	    if (!it->second.is_container && !isHandledByMdPart(it->first))
-	    {
-		Md* m = new Md(*this, it->first, "/dev/" + it->first, systeminfo);
-		addMd(m);
-	    }
-	}
+	for (auto const &it : systeminfo.getProcMdstat())
+	    if (!it.second.is_container && !isHandledByMdPart(it.first))
+		addMd(new Md(*this, it.first, "/dev/" + it.first, systeminfo));
     }
 
 
@@ -68,12 +62,8 @@ namespace storage
     {
 	y2deb("copy-constructed MdCo from " << c.dev);
 
-	ConstMdPair p = c.mdPair();
-	for (ConstMdIter i = p.begin(); i != p.end(); ++i)
-	{
-	    Md* p = new Md(*this, *i);
-	    vols.push_back(p);
-	}
+	for (auto const &i : c.mdPair())
+	    vols.push_back(new Md(*this, i));
     }
 
 
@@ -86,9 +76,8 @@ namespace storage
     void
     MdCo::syncMdadm(EtcMdadm* mdadm) const
     {
-	ConstMdPair p = mdPair(Md::notDeleted);
-	for (ConstMdIter it = p.begin(); it != p.end(); ++it)
-	    it->updateEntry(mdadm);
+	for (auto &it : mdPair(Md::notDeleted))
+	    it.updateEntry(mdadm);
     }
 
 
@@ -141,9 +130,8 @@ MdCo::findMd( const string& dev )
     {
 	list<unsigned> nums;
 
-	ConstMdPair p = mdPair(Md::notDeleted);
-	for (ConstMdIter i = p.begin(); i != p.end(); ++i)
-	    nums.push_back(i->nr());
+	for (auto const &i : mdPair(Md::notDeleted))
+	    nums.push_back(i.nr());
 
 	return nums;
     }
@@ -212,9 +200,9 @@ MdCo::createMd(const string& dev, MdType type, const list<string>& devs, const l
 	list<string> all = devs;
 	all.insert(all.end(), spares.begin(), spares.end());
 
-	for (list<string>::const_iterator it = all.begin(); it != all.end(); ++it)
+	for (auto const &it : all)
 	{
-	    const Volume* v = getStorage()->getVolume(*it);
+	    const Volume* v = getStorage()->getVolume(it);
 	    if (v == NULL)
 	    {
 		ret = MD_DEVICE_UNKNOWN;
@@ -271,14 +259,14 @@ MdCo::extendMd(const string& dev, const list<string>& devs, const list<string>& 
 	}
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->addDevice(*it)) != 0)
+	for (auto const &it : devs)
+	    if ((ret = i->addDevice(it)) != 0)
 		break;
 	}
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->addDevice(*it, true)) != 0)
+	for (auto const &it : spares)
+	    if ((ret = i->addDevice(it, true)) != 0)
 		break;
 	}
     if( ret==0 && !getStorage()->isDisk(dev) )
@@ -311,8 +299,8 @@ MdCo::updateMd(const string& dev, const list<string>& devs, const list<string>& 
     if( ret==0 )
 	{
         list<string> ls = i->getDevs();
-        for( list<string>::const_iterator it=ls.begin(); it!=ls.end(); ++it )
-	    if ((ret = i->removeDevice(*it)) != 0)
+        for (auto const &it : ls)
+	    if ((ret = i->removeDevice(it)) != 0)
 		break;
         }
     if( ret==0 )
@@ -321,14 +309,14 @@ MdCo::updateMd(const string& dev, const list<string>& devs, const list<string>& 
         }
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->addDevice(*it)) != 0)
+	for (auto const &it : devs)
+	    if ((ret = i->addDevice(it)) != 0)
 		break;
 	}
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->addDevice(*it, true)) != 0)
+	for (auto const &it : spares)
+	    if ((ret = i->addDevice(it, true)) != 0)
 		break;
 	}
     y2mil("ret:" << ret);
@@ -356,14 +344,14 @@ MdCo::shrinkMd(const string& dev, const list<string>& devs, const list<string>& 
 	}
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->removeDevice(*it)) != 0)
+	for (auto const &it : devs)
+	    if ((ret = i->removeDevice(it)) != 0)
 		break;
 	}
     if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->removeDevice(*it)) != 0)
+	for (auto const &it : spares)
+	    if ((ret = i->removeDevice(it)) != 0)
 		break;
 	}
     y2mil("ret:" << ret);
@@ -559,10 +547,10 @@ MdCo::doCreate( Volume* v )
 	if( ret==0 )
 	    {
 	    list<string> devs = m->getDevs();
-	    for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
+	    for (auto const &i : devs)
 		{
-		getStorage()->removeDmTableTo( *i );
-		getStorage()->unaccessDev(*i);
+		getStorage()->removeDmTableTo(i);
+		getStorage()->unaccessDev(i);
 		}
 	    }
 	if( ret==0 )
@@ -624,11 +612,8 @@ MdCo::doRemove( Volume* v )
 	if( ret==0 && m->destroySb() )
 	    {
 	    SystemCmd c;
-	    list<string> d = m->getDevs();
-	    for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
-		{
-		c.execute(MDADMBIN " --zero-superblock " + quote(*i));
-		}
+	    for (auto const &i : m->getDevs())
+		c.execute(MDADMBIN " --zero-superblock " + quote(i));
 	    }
 	if( ret==0 )
 	    {
@@ -647,11 +632,8 @@ MdCo::doRemove( Volume* v )
 
 void MdCo::changeDeviceName( const string& old, const string& nw )
     {
-    MdPair md=mdPair();
-    for( MdIter i=md.begin(); i!=md.end(); ++i )
-	{
-	i->changeDeviceName( old, nw );
-	}
+    for (auto &i : mdPair())
+        i.changeDeviceName(old, nw);
     }
 
 
@@ -694,13 +676,9 @@ bool MdCo::equalContent( const Container& rhs ) const
 
 bool MdCo::isHandledByMdPart(const string& name) const
 {
-    Storage::ConstMdPartCoPair p = getStorage()->mdpartCoPair(MdPartCo::notDeleted);
-    for (Storage::ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
-    {
-	if (i->name() == name)
-	    return true;
-    }
-
+    for (auto const &i : getStorage()->mdpartCoPair(MdPartCo::notDeleted))
+        if (i.name() == name)
+            return true;
     return false;
 }
 

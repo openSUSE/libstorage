@@ -91,13 +91,12 @@ DmPartCo::addNewDev(string& device)
 	    dm->getFsInfo( p );
 	    dm->setCreated();
 	    dm->addUdevData();
-	    ConstDmPartPair pp = dmpartPair();
-	    for( ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
+	    for (auto const &i : dmpartPair())
 		{
-		if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		if (i.deleted() && i.nr() == p->nr() && !i.getCryptPwd().empty())
 		    {
 		    y2mil("harvesting old password");
-		    dm->setCryptPwd(i->getCryptPwd());
+		    dm->setCryptPwd(i.getCryptPwd());
 		    }
 		}
 	    addToList( dm );
@@ -459,9 +458,8 @@ void DmPartCo::updatePointers( bool invalid )
 
 void DmPartCo::updateMinor()
     {
-    DmPartPair p=dmpartPair();
-    for (DmPartIter i = p.begin(); i != p.end(); ++i)
-	i->updateMinor();
+    for (auto &i : dmpartPair())
+        i.updateMinor();
     }
 
 
@@ -655,12 +653,9 @@ DmPartCo::removeDmPart()
     if( ret==0 && !created() )
 	{
 	DmPartPair p=dmpartPair(DmPart::notDeleted);
-	for( DmPartIter i=p.begin(); i!=p.end(); ++i )
-	    {
-	    if( i->nr()>0 )
-		ret = removePartition( i->nr() );
-	    }
-	p=dmpartPair(DmPart::notDeleted);
+	for (auto const &i : p)
+	    if (i.nr() > 0)
+		ret = removePartition(i.nr());
 	if( p.begin()!=p.end() && p.begin()->nr()==0 )
 	    {
 	    if( !removeFromList( &(*p.begin()) ))
@@ -683,17 +678,15 @@ void DmPartCo::removePresentPartitions()
 	{
 	bool save=silent;
 	setSilent( true );
-	list<VolIterator> l;
-	for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	list<Volume *> l;
+	for (auto &i : p)
 	    {
-	    y2mil( "rem:" << *i );
-	    if( !i->created() )
-		l.push_front( i );
+	    y2mil("rem:" << i);
+	    if (!i.created())
+		l.push_front(&i);
 	    }
-	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	    {
-	    doRemove( &(**i) );
-	    }
+	for (auto &i : l)
+	    doRemove(i);
 	setSilent( save );
 	}
     }
@@ -731,10 +724,9 @@ DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const
     Container::getToCommit( stage, col, vol );
     if( stage==INCREASE )
 	{
-	ConstDmPartPair p = dmpartPair( toChangeId );
-	for( ConstDmPartIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
+	for (auto const &i : dmpartPair(toChangeId))
+	    if (find(vol.begin(), vol.end(), &i) == vol.end())
+		vol.push_back(&i);
 	}
     if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
 	col.push_back( this );
@@ -955,8 +947,8 @@ void
 DmPartCo::setUdevData(const list<string>& id)
 {
     alt_names.remove_if(string_contains("/by-id/"));
-    for (list<string>::const_iterator i = id.begin(); i != id.end(); ++i)
-	alt_names.push_back("/dev/disk/by-id/" + *i);
+    for (auto const &i : id)
+	alt_names.push_back("/dev/disk/by-id/" + i);
 
     if (disk)
     {
@@ -974,8 +966,8 @@ void DmPartCo::getInfo( DmPartCoInfo& info ) const
     info.minor = mnr;
 
     info.devices.clear();
-    for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	info.devices.push_back(it->device);
+    for (auto const &it : pv)
+	info.devices.push_back(it.device);
 
     y2mil( "device:" << info.devices );
     }
@@ -1026,12 +1018,8 @@ bool DmPartCo::equalContent( const DmPartCo& rhs ) const
 	    disk = new Disk(*c.disk);
 
 	Storage::waitForDevice();
-	ConstDmPartPair p = c.dmpartPair();
-	for (ConstDmPartIter i = p.begin(); i != p.end(); ++i)
-	{
-	    DmPart* p = new DmPart(*this, *i);
-	    vols.push_back(p);
-	}
+	for (auto const &i : c.dmpartPair())
+	    vols.push_back(new DmPart(*this, i));
 
 	updatePointers(true);
     }

@@ -29,19 +29,17 @@ doit(const string& disk)
     print_commitinfos(s);
     check_zero(s->commit());
 
-    static const FsType elem[] = { EXT2, EXT3, EXT4, REISERFS, BTRFS, XFS, VFAT, SWAP };
-    const list<FsType> fstypes(elem, elem + lengthof(elem));
-    for (list<FsType>::const_iterator it = fstypes.begin(); it != fstypes.end(); ++it)
+    for (auto const &it : { EXT2, EXT3, EXT4, REISERFS, BTRFS, XFS, VFAT, SWAP })
     {
 	FsCapabilities fscaps;
-	check_true(s->getFsCapabilities(*it, fscaps));
+	check_true(s->getFsCapabilities(it, fscaps));
 
-	check_zero(s->changeFormatVolume(part, true, *it));
+	check_zero(s->changeFormatVolume(part, true, it));
 
 	if (fscaps.supportsLabel)
 	    check_zero(s->changeLabelVolume(part, "test"));
 
-	check_zero(s->changeMountPoint(part, *it != SWAP ? "/test" : "swap"));
+	check_zero(s->changeMountPoint(part, it != SWAP ? "/test" : "swap"));
 
 	print_commitinfos(s);
 	check_zero(s->commit());
@@ -62,9 +60,9 @@ main(int argc, char** argv)
 	exit(EXIT_FAILURE);
     }
 
-    for (list<string>::const_iterator it = disks.begin(); it != disks.end(); ++it)
+    for (auto const &it : disks)
     {
-	doit(*it);
+	doit(it);
     }
 
     exit(EXIT_SUCCESS);

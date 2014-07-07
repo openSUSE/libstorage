@@ -41,8 +41,8 @@ namespace storage
     {
 	list<CommitInfo> infos;
 	s->getCommitInfos(infos);
-	for (list<CommitInfo>::const_iterator it = infos.begin(); it != infos.end(); ++it)
-	    cout << it->text << endl;
+	for (auto const &it : infos)
+	    cout << it.text << endl;
 	cout << endl;
     }
 

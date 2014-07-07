@@ -165,8 +165,8 @@ namespace storage
     bool
     Device::isUsedBy(UsedByType type) const
     {
-	for (list<UsedBy>::const_iterator it = uby.begin(); it != uby.end(); ++it)
-	    if (it->type() == type)
+	for (auto const &it : uby)
+	    if (it.type() == type)
 		return true;
 
 	return false;

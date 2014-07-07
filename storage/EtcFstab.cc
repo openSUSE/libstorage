@@ -344,8 +344,8 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 
 	if (!ids.empty())
 	{
-	    for (list<string>::const_iterator it = ids.begin(); it != ids.end(); ++it)
-		dentries.insert("/dev/disk/by-id/" + *it);
+	    for (auto const &it : ids)
+		dentries.insert("/dev/disk/by-id/" + it);
 	}
 
 	if (!path.empty())
@@ -355,13 +355,13 @@ EtcFstab::findMount( const string& mount, FstabEntry& entry ) const
 
 	y2mil("device:" << device << " dentries:" << dentries);
 
-	for (list<Entry>::iterator it = co.begin(); it != co.end(); ++it)
+	for (auto &it : co)
 	{
-	    if (dentries.find(it->old.dentry) != dentries.end())
+	    if (dentries.find(it.old.dentry) != dentries.end())
 	    {
-		y2mil("entry old:" << it->nnew);
-		it->nnew.device = it->old.device = device;
-		y2mil("entry new:" << it->nnew);
+		y2mil("entry old:" << it.nnew);
+		it.nnew.device = it.old.device = device;
+		y2mil("entry new:" << it.nnew);
 	    }
 	}
     }
@@ -622,13 +622,13 @@ void
 EtcFstab::getFileBasedLoops(const string& prefix, list<FstabEntry>& l) const
     {
     l.clear();
-    for (list<Entry>::const_iterator i = co.begin(); i != co.end(); ++i)
+    for (auto const &i : co)
 	{
-	if (i->op == Entry::NONE)
+	if (i.op == Entry::NONE)
 	    {
-	    string lfile = prefix + i->old.device;
+	    string lfile = prefix + i.old.device;
 	    if (checkNormalFile(lfile))
-		l.push_back(i->old);
+		l.push_back(i.old);
 	    }
 	}
     }
@@ -638,10 +638,10 @@ list<FstabEntry>
 EtcFstab::getEntries() const
     {
     list<FstabEntry> ret;
-    for (list<Entry>::const_iterator i = co.begin(); i != co.end(); ++i)
+    for (auto const &i : co)
 	{
-	if (i->op == Entry::NONE)
-	    ret.push_back(i->old);
+	if (i.op == Entry::NONE)
+	    ret.push_back(i.old);
 	}
     return ret;
     }
@@ -709,11 +709,11 @@ void EtcFstab::updateTabLine( list<string>(*fnc)(const FstabEntry&),
     {
 	y2mil("fstab ops dump");
 
-	for (list<Entry>::const_iterator it = co.begin(); it != co.end(); ++it)
+	for (auto const &it : co)
 	{
-	    y2mil("op:" << toString(it->op) << " old.device:" << it->old.device <<
-		  " old.mount:" << it->old.mount << " new.device:" << it->nnew.device <<
-		  " new.mount:" << it->nnew.mount);
+	    y2mil("op:" << toString(it.op) << " old.device:" << it.old.device <<
+		  " old.mount:" << it.old.mount << " new.device:" << it.nnew.device <<
+		  " new.mount:" << it.nnew.mount);
 	}
     }
 
