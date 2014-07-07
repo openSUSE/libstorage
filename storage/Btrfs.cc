@@ -192,8 +192,8 @@ Btrfs::existSubvolume( const string& name )
     bool ret=false;
     y2mil( "name:" << name );
     for (auto const &s : subvol) {
-	if (ret) break;
 	ret = !s.deleted() && s.path() == name && (!getFormat() || s.created());
+	if (ret) break;
     }
     y2mil( "ret:" << ret );
     return( ret );
