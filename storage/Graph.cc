@@ -574,17 +574,17 @@ namespace storage
 	out << endl;
 
 	for (auto const &node : nodes)
-	    out << "    " << (node) << endl;
+	    out << "    " << node << endl;
 
 	out << endl;
 
 	for (auto const &rank : ranks)
-	    out << "    " << (rank) << endl;
+	    out << "    " << rank << endl;
 
 	out << endl;
 
 	for (auto const &edge : edges)
-	    out << "    " << (edge) << endl;
+	    out << "    " << edge << endl;
 
 	out << "}" << endl;
 
