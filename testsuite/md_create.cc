@@ -12,33 +12,32 @@ using namespace std;
 StorageInterface *s = 0;
 
 
-void print_md_info()
+void
+print_md_info()
 {
     deque<MdInfo> plist;
 
-    s->getMdInfo( plist );
+    s->getMdInfo(plist);
 
-    for ( deque<MdInfo>::iterator p = plist.begin();
-	  p != plist.end(); ++p )
+    for (const MdInfo& p : plist)
     {
-	cout << ' ' << p->v.name << ' ';
-	cout << p->v.device << ' ';
-	cout << p->nr << ' ';
-	cout << p->type << ' ';
-	cout << p->chunkSizeK << ' ';
+	cout << ' ' << p.v.name << ' ' << p.v.device << ' ' << p.nr
+	     << ' ' << p.type << ' ' << p.chunkSizeK << ' ' << p.v.sizeK;
     }
 }
 
-void createMD(MdType type, list<string> devs)
+
+void
+createMD(MdType type, list<string> devs)
 {
     s = createStorageInterface(TestEnvironment());
 
     int ret = s->createMd("/dev/md0", type, devs, list<string>());
-    if( ret==0 )
-	ret = s->checkMd( "/dev/md0" );
+    if (ret == 0)
+	ret = s->checkMd("/dev/md0");
 
     cout << "createMD: " << ret;
-    if(ret==0)
+    if (ret == 0)
 	print_md_info();
     cout << endl;
 
