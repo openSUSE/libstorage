@@ -4028,6 +4028,7 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<s
 
     unsigned long long sumK = 0;
     unsigned long long smallestK = 0;
+    vector<unsigned long long> sizes(devices.size());
 
     for (auto const &i : devices)
     {
@@ -4038,9 +4039,12 @@ Storage::computeMdSize(MdType md_type, const list<string>& devices, const list<s
 	    break;
 	}
 
-	sumK += v->sizeK();
-	smallestK = min(smallestK, v->sizeK());
+	sizes.push_back(v->sizeK());
     }
+
+    sumK = accumulate(sizes.begin(), sizes.end(), 0);
+    auto mit = min_element(sizes.begin(), sizes.end());
+    smallestK = mit != sizes.end() ? *mit : 0;
 
     for (auto const &i : spares)
     {
