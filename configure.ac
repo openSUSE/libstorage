@@ -55,26 +55,28 @@ if test -z "$RUBY" ; then
     AC_MSG_ERROR(ruby is missing; please install ruby)
 fi
 
+AC_DEFUN(RBCONFIG, [$RUBY -rrbconfig -e 'puts Config::CONFIG[["$1"]]'])
+
 RUBY_VERSION=`$RUBY -e "puts RUBY_VERSION"`
 AC_SUBST(RUBY_VERSION)
-RUBY_BIN_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["bindir"]]'`
+RUBY_BIN_DIR=$(RBCONFIG(bindir))
 AC_SUBST(RUBY_BIN_DIR)
-RUBY_INCLUDE_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["rubyhdrdir"]]'`
+RUBY_INCLUDE_DIR=$(RBCONFIG(rubyhdrdir))
 if test "$RUBY_INCLUDE_DIR" = "nil" ; then
-    RUBY_INCLUDE_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["archdir"]]'`
+    RUBY_INCLUDE_DIR=$(RBCONFIG(archdir))
 fi
 AC_SUBST(RUBY_INCLUDE_DIR)
-RUBY_LIB_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["libdir"]]'`
+RUBY_LIB_DIR=$(RBCONFIG(libdir))
 AC_SUBST(RUBY_LIB_DIR)
-RUBY_EXTENSION_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["vendorarchdir"]]'`
+RUBY_EXTENSION_DIR=$(RBCONFIG(vendorarchdir))
 AC_SUBST(RUBY_EXTENSION_DIR)
-RUBY_VENDOR_DIR=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["vendordir"]]'`
+RUBY_VENDOR_DIR=$(RBCONFIG(vendordir))
 AC_SUBST(RUBY_VENDOR_DIR)
-RUBY_SO_NAME=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["RUBY_SO_NAME"]]'`
+RUBY_SO_NAME=$(RBCONFIG(RUBY_SO_NAME))
 AC_SUBST(RUBY_SO_NAME)
-RUBY_SHARED_LIB=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["LIBRUBY"]]'`
+RUBY_SHARED_LIB=$(RBCONFIG(LIBRUBY))
 AC_SUBST(RUBY_SHARED_LIB)
-RUBY_ARCH_NAME=`$RUBY -rrbconfig -e 'puts Config::CONFIG[["arch"]]'`
+RUBY_ARCH_NAME=$(RBCONFIG(arch))
 AC_SUBST(RUBY_ARCH_NAME)
 
 AC_OUTPUT(
