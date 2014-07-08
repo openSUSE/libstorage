@@ -136,8 +136,7 @@ DmPart::addAltUdevId(unsigned num)
 	else
 	    ++e;
 	}
-    const list<string> tmp = co()->udevId();
-    for (auto const &i : tmp)
+    for (string const &i : co()->udevId())
 	{
 	string s = "/dev/disk/by-id/" + ((num > 0) ? udevAppendPart(i, num) : i);
 	e = find( by_id.begin(), by_id.end(), s );
@@ -154,8 +153,7 @@ DmPart::addAltUdevId(unsigned num)
     DmPart::udevId() const
     {
 	list<string> ret;
-	const list<string> tmp = co()->udevId();
-	for (auto const &i : tmp)
+	for (string const &i : co()->udevId())
 	    ret.push_back(udevAppendPart(i, num));
 	return ret;
     }

@@ -119,7 +119,7 @@ namespace storage
     Partition::udevId() const 
     { 
 	list<string> ret;
-	for (auto const &i : disk()->udevId())
+	for (string const &i : disk()->udevId())
 	    ret.push_back(udevAppendPart(i, num));
 	return ret;
     }
@@ -166,7 +166,7 @@ void Partition::addAltUdevId( unsigned num )
     {
     alt_names.remove_if(string_contains("/by-id/"));
 
-    for (auto const &i : disk()->udevId())
+    for (string const &i : disk()->udevId())
         alt_names.push_back("/dev/disk/by-id/" + udevAppendPart(i, num));
     }
 

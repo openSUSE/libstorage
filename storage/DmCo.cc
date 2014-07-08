@@ -210,7 +210,7 @@ void DmCo::getDmData(SystemInfo& systeminfo)
 	    bool in_use = false;
 	    bool multipath = m->getTargetName()=="multipath" ||
 			     m->getTargetName()=="emc";
-	    for (auto const &it : m->getPeMap())
+	    for (Dm::PeMap::value_type const &it : m->getPeMap())
 		{
 		if (!getStorage()->canUseDevice(it.first, true))
 		    in_use = true;
@@ -285,7 +285,7 @@ void DmCo::getDmDataCrypt(SystemInfo& systeminfo)
     {
     y2mil( "begin:" );
     const CmdDmsetupInfo& cmddmsetupinfo = systeminfo.getCmdDmsetupInfo();
-    for (auto const &it1 : cmddmsetupinfo)
+    for (CmdDmsetupInfo::value_type const &it1 : cmddmsetupinfo)
         {
 	string table = it1.first;
         const CmdDmsetupInfo::Entry& entry = it1.second;
@@ -383,7 +383,7 @@ DmCo::removeDm( const string& tname )
 	    }
 	else
 	    {
-	    for (auto const &it : i->getPeMap())
+	    for (Dm::PeMap::value_type const &it : i->getPeMap())
 		getStorage()->clearUsedBy(it.first);
 	    i->setDeleted();
 	    }

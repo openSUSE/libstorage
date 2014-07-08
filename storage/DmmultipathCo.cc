@@ -76,7 +76,7 @@ namespace storage
 	    vendor = entry.vendor;
 	    model = entry.model;
 
-	    for (auto const &it : entry.devices)
+	    for (string const &it : entry.devices)
 	    {
 		Pv pv;
 		pv.device = it;
@@ -166,8 +166,7 @@ DmmultipathCo::activate(bool val)
     {
 	list<string> l;
 
-	list<string> entries = systeminfo.getCmdMultipath().getEntries();
-	for (auto const &it : entries)
+	for (string const &it : systeminfo.getCmdMultipath().getEntries())
         {
 	    CmdDmsetupInfo::Entry entry;
 	    if (systeminfo.getCmdDmsetupInfo().getEntry(it, entry) && entry.segments > 0)

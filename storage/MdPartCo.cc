@@ -1249,7 +1249,7 @@ bool MdPartCo::equalContent( const Container& rhs ) const
     {
 	list<string> ret;
 
-	for (auto const &it : systeminfo.getProcMdstat())
+	for (ProcMdstat::const_iterator::value_type const &it : systeminfo.getProcMdstat())
 	    if (!it.second.is_container)
 		ret.push_back(it.first);
 

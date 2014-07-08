@@ -75,7 +75,7 @@ namespace storage
 	    controller = entry.controller;
 	    raidtype = entry.raidtype;
 
-	    for (auto const &it : entry.devices)
+	    for (string const &it : entry.devices)
 	    {
 		Pv pv;
 		pv.device = it;
@@ -153,7 +153,7 @@ void DmraidCo::activate( bool val )
     {
         list<string> l;
 
-	for (auto const &it : systeminfo.getCmdDmraid().getEntries())
+	for (string const &it : systeminfo.getCmdDmraid().getEntries())
         {
 	    CmdDmsetupInfo::Entry entry;
 	    if (systeminfo.getCmdDmsetupInfo().getEntry(it, entry) && entry.segments > 0)
@@ -199,7 +199,7 @@ DmraidCo::doRemove()
 	getStorage()->showInfoCb( removeText(true), silent );
 	string cmd = "cd " + quote(getStorage()->logdir()) + " && echo y | " DMRAIDBIN " -E -r";
 	SystemCmd c;
-	for (auto const &i : pv)
+	for (Pv const &i : pv)
 	    {
 	    c.execute(cmd + " " + quote(i.device));
 	    }

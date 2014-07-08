@@ -129,7 +129,7 @@ void MdPart::addUdevData()
     {
 	alt_names.remove_if(string_contains("/by-id/"));
 
-	for (auto const &i : co()->udevId())
+	for (string const &i : co()->udevId())
 	    alt_names.push_back("/dev/disk/by-id/" + udevAppendPart(i, num));
 
 	mount_by = orig_mount_by = defaultMountBy();
@@ -140,7 +140,7 @@ list<string>
 MdPart::udevId() const
 {
     list<string> ret;
-    for (auto const &i : co()->udevId())
+    for (string const &i : co()->udevId())
         ret.push_back(udevAppendPart(i, num));
     return ret;
 }

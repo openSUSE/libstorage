@@ -60,25 +60,25 @@ Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
 
 Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node ) : Volume(d, node)
     {
-    for (auto const *it : getChildNodes(node, "devices"))
+    for (xmlNode const *it : getChildNodes(node, "devices"))
 	{
 	string s;
 	getChildValue(it, "devices", s);
 	devices.push_back(s);
 	}
-    for (auto const *it : getChildNodes(node, "dev_add"))
+    for (xmlNode const *it : getChildNodes(node, "dev_add"))
 	{
 	string s;
 	getChildValue(it, "devices", s);
 	dev_add.push_back(s);
 	}
-    for (auto const *it : getChildNodes(node, "dev_rem"))
+    for (xmlNode const *it : getChildNodes(node, "dev_rem"))
 	{
 	string s;
 	getChildValue(it, "devices", s);
 	dev_rem.push_back(s);
 	}
-    for (auto const *it : getChildNodes(node, "subvolumes"))
+    for (xmlNode const *it : getChildNodes(node, "subvolumes"))
 	{
 	subvol.push_back(Subvolume(it));
 	}
@@ -142,7 +142,7 @@ void Btrfs::detectSubvol()
             {
             clearSubvol();
             SystemCmd cmd(BTRFSBIN " subvolume list -a -p " + quote(mp));
-            for (auto const &s : cmd.stdout())
+            for (string const &s : cmd.stdout())
                 {
 		string parent;
 		auto pos1 = s.find(" parent ");

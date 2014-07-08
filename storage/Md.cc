@@ -203,7 +203,7 @@ namespace storage
 	y2mil("dev:" << dev << " udev_id:" << udev_id);
 
 	alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
-	for (auto const &i : udev_id)
+	for (string const &i : udev_id)
 	    alt_names.push_back("/dev/disk/by-id/" + i);
 
 	alt_names.remove_if(string_starts_with("/dev/md/"));
@@ -211,7 +211,7 @@ namespace storage
 	MdLinks::const_iterator it2 = mdlinks.find(nm);
 	if (it2 != mdlinks.end())
 	{
-	    for (auto const &s : it2->second)
+	    for (string const &s : it2->second)
 		alt_names.push_back("/dev/md/" + s);
 	}
     }

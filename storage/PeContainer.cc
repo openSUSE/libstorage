@@ -58,7 +58,7 @@ namespace storage
 	getChildValue(node, "pe_count", num_pe);
 	getChildValue(node, "pe_free", free_pe);
 
-	for (auto const *it : getChildNodes(node, "physical_extent"))
+	for (xmlNode const *it : getChildNodes(node, "physical_extent"))
 	{
 		Pv tmp = Pv(it);
 		pv.push_back(tmp);

@@ -91,7 +91,7 @@ int TmpfsCo::removeTmpfs( const string& mp, bool silent )
 
 void TmpfsCo::getTmpfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
-    for (auto const &i : systeminfo.getProcMounts().getEntries())
+    for (FstabEntry const &i : systeminfo.getProcMounts().getEntries())
 	{
 	if (i.fs == "tmpfs")
 	    {

@@ -966,7 +966,7 @@ void DmPartCo::getInfo( DmPartCoInfo& info ) const
     info.minor = mnr;
 
     info.devices.clear();
-    for (auto const &it : pv)
+    for (Pv const &it : pv)
 	info.devices.push_back(it.device);
 
     y2mil( "device:" << info.devices );

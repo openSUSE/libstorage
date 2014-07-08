@@ -419,7 +419,7 @@ bool Storage::rescanCryptedObjects()
     LvmVg::activate(false);
     LvmVg::activate(true);
     SystemInfo systeminfo;
-    for (auto const &i : LvmVg::getVgs(systeminfo))
+    for (string const &i : LvmVg::getVgs(systeminfo))
 	{
         LvmVgIterator vg = findLvmVg(i);
 	if( vg==lvgEnd() || vg->hasUnkownPv() )
@@ -430,7 +430,7 @@ bool Storage::rescanCryptedObjects()
 	    addToList( v );
 	    v->normalizeDmDevices();
 	    v->checkConsistency();
-	    for (auto &ii : make_range(v->lvmLvBegin(), v->lvmLvEnd()))
+	    for (LvmLv &ii : make_range(v->lvmLvBegin(), v->lvmLvEnd()))
 		ii.updateFsData();
 	    ret = true;
 	    }
@@ -457,7 +457,7 @@ void
     {
     if (testmode())
 	{
-	    for (auto const &i : glob(testdir() + "/disk_*.info", GLOB_NOSORT))
+	    for (string const &i : glob(testdir() + "/disk_*.info", GLOB_NOSORT))
 	    {
 		XmlFile file(i);
 		const xmlNode* root = file.getRootElement();
@@ -481,7 +481,7 @@ Storage::detectMdParts(SystemInfo& systeminfo)
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_MDPARTRAID") == NULL)
     {
-        auto const l = MdPartCo::filterMdPartCo(
+        list<string> const l = MdPartCo::filterMdPartCo(
             MdPartCo::getMdRaids(systeminfo),
             systeminfo,
             instsys());
@@ -516,7 +516,7 @@ void Storage::detectBtrfs(SystemInfo& systeminfo)
 	BtrfsCo* v = new BtrfsCo(this, systeminfo);
 	if( !v->isEmpty() )
 	    {
-	    for (auto const &i : v->btrfsPair())
+	    for (Btrfs const &i : v->btrfsPair())
 		setBtrfsUsedBy(&i);
 	    addToList( v );
 	    }
@@ -594,7 +594,7 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
     {
     if (testmode())
 	{
-	    for (auto const &i : glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT))
+	    for (string const &i : glob(testdir() + "/lvmvg_*.info", GLOB_NOSORT))
 	    {
 		XmlFile file(i);
 		const xmlNode* root = file.getRootElement();
@@ -605,7 +605,7 @@ Storage::detectLvmVgs(SystemInfo& systeminfo)
 	}
     else if (autodetect() && getenv("LIBSTORAGE_NO_LVM") == NULL)
 	{
-	for (auto const &i : LvmVg::getVgs(systeminfo))
+	for (string const &i : LvmVg::getVgs(systeminfo))
 	    {
 		LvmVg* v = new LvmVg(this, i, "/dev/" + i, systeminfo);
 		addToList( v );
@@ -623,7 +623,7 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMRAID") == NULL)
     {
-	for (auto const &i : DmraidCo::getRaids(systeminfo))
+	for (string const &i : DmraidCo::getRaids(systeminfo))
 	    {
 		    DmraidCo* v = new DmraidCo(this, i, "/dev/mapper/" + i, systeminfo);
 		    addToList( v );
@@ -640,7 +640,7 @@ void
     }
     else if (autodetect() && getenv("LIBSTORAGE_NO_DMMULTIPATH") == NULL)
     {
-	for (auto const &i : DmmultipathCo::getMultipaths(systeminfo))
+	for (string const &i : DmmultipathCo::getMultipaths(systeminfo))
 	    {
 		    DmmultipathCo* v = new DmmultipathCo(this, i, "/dev/mapper/" + i, systeminfo);
 		    addToList( v );
@@ -760,7 +760,7 @@ Storage::initDisk(list<DiskData>& dl, SystemInfo& systeminfo)
 
 	try
 	{
-	    for (auto const &dn : systeminfo.getDir(SYSFSDIR))
+	    for (string const &dn : systeminfo.getDir(SYSFSDIR))
 	    {
 		// we do not treat mds as disks although they can be partitioned since kernel 2.6.28
 		if (boost::starts_with(dn, "md") || boost::starts_with(dn, "loop"))
@@ -841,7 +841,7 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
     {
     y2mil("detectFsData begin");
     SystemCmd Losetup(LOSETUPBIN " -a");
-    for (auto &i : make_range(begin, end))
+    for (VolIterator::value_type &i : make_range(begin, end))
 	{
 	const LvmLv* l;
 	if (!i.isUsedBy() && (i.getContainer() == NULL || !i.getContainer()->isUsedBy()))
@@ -856,7 +856,7 @@ void Storage::autodetectDisks(SystemInfo& systeminfo)
 	    y2mil("detect:" << i);
 	    }
 	}
-    for (auto &i : make_range(begin, end))
+    for (VolIterator::value_type &i : make_range(begin, end))
 	{
 	if (!i.isUsedBy() && (i.getContainer() == NULL || !i.getContainer()->isUsedBy()))
 	    {
@@ -882,7 +882,7 @@ Storage::printInfo(ostream& str) const
 	i.print(str);
 	str << endl;
 
-	for (auto const &j : i.volPair())
+	for (Volume const &j : i.volPair())
 	{
 	    j.print(str);
 	    str << endl;
@@ -991,7 +991,7 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 
 	if (vol->isUsedBy())
 	    {
-	    for (auto const &it : vol->getUsedBy())
+	    for (UsedBy const &it : vol->getUsedBy())
 		{
 		addIfNotThere(using_devices, it.device());
 		getRecursiveUsingHelper(it.device(), itself, using_devices);
@@ -1008,7 +1008,7 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		const Partition* p = dynamic_cast<const Partition*>(&(*vol));
 		if( p!=NULL && p->type()==EXTENDED )
 		    {
-		    for (auto const &i : p->disk()->partPair(Partition::notDeleted))
+		    for (Partition const &i : p->disk()->partPair(Partition::notDeleted))
 			if (i.type() == LOGICAL)
 			    dl.push_back(i.device());
 		    }
@@ -1025,9 +1025,9 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		    const DmPartCo* d = dynamic_cast<const DmPartCo *>(co);
 		    if( d!=NULL )
 			{
-			for (auto const &i : d->dmpartPair(DmPart::notDeleted))
+			for (DmPart const &i : d->dmpartPair(DmPart::notDeleted))
 			    {
-			    auto const *p = i.getPtr();
+			    Partition const *p = i.getPtr();
 			    if( p!=NULL && p->type()==LOGICAL )
 				dl.push_back(i.device());
 			    }
@@ -1045,7 +1045,7 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 		    const MdPartCo* d = dynamic_cast<const MdPartCo *>(co);
 		    if( d!=NULL )
 			{
-			for (auto const &i : d->mdpartPair(MdPart::notDeleted))
+			for (MdPart const &i : d->mdpartPair(MdPart::notDeleted))
 			    {
 			    p = i.getPtr();
 			    if( p!=NULL && p->type()==LOGICAL )
@@ -1068,7 +1068,7 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 			   cont->device()) == using_devices.end())
 	    using_devices.push_back(cont->device());
 
-	for (auto const &it : cont->volPair(Volume::notDeleted))
+	for (Volume const &it : cont->volPair(Volume::notDeleted))
 	    {
 	    addIfNotThere(using_devices, it.device());
 	    getRecursiveUsingHelper(it.device(), itself, using_devices);
@@ -1076,7 +1076,7 @@ Storage::getRecursiveUsingHelper(const string& device, bool itself, list<string>
 
 	if (cont->isUsedBy())
 	    {
-	    for (auto const &it : cont->getUsedBy())
+	    for (UsedBy const &it : cont->getUsedBy())
 		{
 		addIfNotThere(using_devices, it.device());
 		getRecursiveUsingHelper(it.device(), itself, using_devices);
@@ -1123,7 +1123,7 @@ Storage::getRecursiveUsedByHelper(const string& device, bool itself, list<string
 			   p->device()) == usedby_devices.end())
 	    usedby_devices.push_back(p->device());
 
-	for (auto const &it : p->getUsing())
+	for (string const &it : p->getUsing())
 	{
 	    if (find(usedby_devices.begin(), usedby_devices.end(), it) == usedby_devices.end())
 	    {
@@ -4947,7 +4947,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 
 	if (ret == 0)
 	{
-	    for (auto &i : p)
+	    for (CPair::itype::value_type &i : p)
 		i.getToCommit(stage, colist, vlist);
 	}
 
@@ -5222,7 +5222,7 @@ int Storage::getPartitionInfo( const string& disk,
 	// TODO: those partitions shouldn't be detected at all
 	if (!i->isUsedBy())
 	{
-	    for (auto const &i2 : i->partPair(Partition::notDeleted))
+	    for (Partition const &i2 : i->partPair(Partition::notDeleted))
 	    {
 		plist.push_back(PartitionInfo());
 		i2.getInfo(plist.back());
@@ -5273,7 +5273,7 @@ int Storage::getLvmLvInfo( const string& name,
     ConstLvmVgIterator i = findLvmVg( name );
     if( i != lvgEnd() )
 	{
-	for (auto const &i2 : i->lvmLvPair(LvmLv::notDeleted))
+	for (LvmLv const &i2 : i->lvmLvPair(LvmLv::notDeleted))
 	    {
 	    plist.push_back(LvmLvInfo());
 	    i2.getInfo(plist.back());
@@ -5403,7 +5403,7 @@ int Storage::getMdPartInfo( const string& device, deque<MdPartInfo>& plist )
 
   if( it != mdpCoEnd() )
     {
-    for (auto &i2 : it->mdpartPair(MdPart::notDeleted))
+    for (MdPart &i2 : it->mdpartPair(MdPart::notDeleted))
       {
       plist.push_back(MdPartInfo());
       i2.getInfo(plist.back());
@@ -5463,7 +5463,7 @@ int Storage::getDmraidInfo( const string& name,
     DmraidCoIterator i = findDmraidCo( name );
     if( i != dmrCoEnd() )
 	{
-	for (auto const &i2 : i->dmraidPair(Dmraid::notDeleted))
+	for (Dmraid const &i2 : i->dmraidPair(Dmraid::notDeleted))
 	    {
 	    plist.push_back(DmraidInfo());
 	    i2.getInfo(plist.back());
@@ -5485,7 +5485,7 @@ Storage::getDmmultipathInfo( const string& name,
     ConstDmmultipathCoIterator i = findDmmultipathCo( name );
     if( i != dmmCoEnd() )
     {
-        for (auto const &i2 : i->dmmultipathPair(Dmmultipath::notDeleted))
+        for (Dmmultipath const &i2 : i->dmmultipathPair(Dmmultipath::notDeleted))
         {
             plist.push_back(DmmultipathInfo());
             i2.getInfo(plist.back());
@@ -5780,7 +5780,7 @@ Storage::logCo(const Container* c) const
     classic(b);
     c->print( b );
     y2mil( "log co:" << b.str() );
-    for (auto const &i : *c)
+    for (Container::ConstPlainIterator::value_type const &i : *c)
     {
         b.str("");
         i->print(b);
@@ -6692,7 +6692,7 @@ int Storage::removeContainer( Container* val )
 	    if (haveMd(md))
 		md->syncMdadm(getMdadm());
 
-	    for (auto const &it : p)
+	    for (MdPartCo const &it : p)
 		it.syncMdadm(getMdadm());
 	}
     }
@@ -6841,7 +6841,7 @@ Storage::readFstab( const string& dir, deque<VolumeInfo>& infos )
     assertInit();
     y2mil("dir:" << dir);
     EtcFstab fstab(dir, true);
-    for (auto const &i : fstab.getEntries())
+    for (FstabEntry const &i : fstab.getEntries())
     {
 	y2mil("entry:" << i);
 	if (disk_part.match(i.dentry))
@@ -7164,7 +7164,7 @@ void Storage::checkPwdBuf( const string& device )
 	const xmlNode* free = getChildNode(root, "free");
 	if (free)
 	{
-	    for (auto const &it : getChildNodes(free, "free"))
+	    for (xmlNode const *it : getChildNodes(free, "free"))
 	    {
 		string device;
 		getChildValue(it, "device", device);
@@ -7213,7 +7213,7 @@ Storage::createBackupState( const string& name )
 	if (checkBackupState(name))
 	    removeBackupState(name);
 	CCont tmp;
-	for (auto const &i : cont)
+	for (CCont::value_type const &i : cont)
 	    tmp.push_back(i->getCopy());
 	backups.insert(make_pair(name, tmp));
 	}

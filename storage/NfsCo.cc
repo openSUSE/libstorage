@@ -155,7 +155,7 @@ NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK,
 void
 NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
-    for (auto const &i : fstab.getEntries())
+    for (FstabEntry const &i : fstab.getEntries())
 	{
 	if (i.fs == "nfs" || i.fs == "nfs4")
 	    {
@@ -168,7 +168,7 @@ NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
 	    }
 	}
 
-    for (auto const &i : systeminfo.getProcMounts().getEntries())
+    for (FstabEntry const &i : systeminfo.getProcMounts().getEntries())
 	{
 	if (i.fs == "nfs" || i.fs == "nfs4")
 	    {

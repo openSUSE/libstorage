@@ -95,7 +95,7 @@ namespace storage
 	getChildValue(node, "ext_possible", ext_possible);
 	getChildValue(node, "max_logical", max_logical);
 
-	for (auto const *it : getChildNodes(node, "partition"))
+	for (xmlNode const *it : getChildNodes(node, "partition"))
 	    addToList(new Partition(*this, it));
 
 	y2deb("constructed Disk " << dev);
@@ -464,7 +464,7 @@ bool
 	unsigned long range_exceed = 0;
 	list<Partition *> pl;
 
-	for (auto const &it : parted.getEntries())
+	for (Parted::Entry const &it : parted.getEntries())
 	{
 	    if (it.num < range)
 	    {

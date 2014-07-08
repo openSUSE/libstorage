@@ -121,7 +121,7 @@ namespace storage
 
 	unsigned num = 0;
 
-	for (auto const &dir : glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR))
+	for (string const &dir : glob(mp + "/*", GLOB_NOSORT | GLOB_ONLYDIR))
 	{
 	    if (!boost::ends_with(dir, "/root") && checkDir(dir))
 	    {

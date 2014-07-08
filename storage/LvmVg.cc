@@ -281,10 +281,10 @@ namespace storage
 
 	s << endl;
 
-	for (auto const &lv_entry : cmdvgdisplay.lv_entries)
+	for (CmdVgdisplay::LvEntry const &lv_entry : cmdvgdisplay.lv_entries)
 	    s << "lv " << lv_entry << endl;
 
-	for (auto const &pv_entry : cmdvgdisplay.pv_entries)
+	for (CmdVgdisplay::PvEntry const &pv_entry : cmdvgdisplay.pv_entries)
 	    s << "pv " << pv_entry << endl;
 
 	return s;
@@ -353,7 +353,7 @@ static bool lvNotDeletedCreated( const LvmLv& l ) { return( !l.created()&&!l.del
     LvmVg::LvmVg(Storage* s, const xmlNode* node)
 	: PeContainer(s, staticType(), node), lvm1(false)
     {
-	for (auto const *it : getChildNodes(node, "logical_volume"))
+	for (xmlNode const *it : getChildNodes(node, "logical_volume"))
 	    addToList(new LvmLv(*this, it));
 
 	y2deb("constructed LvmVg " << dev);
@@ -1095,7 +1095,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 
 	calcSize();
 
-	for (auto const &lv_entry : cmdvgdisplay.lv_entries)
+	for (CmdVgdisplay::LvEntry const &lv_entry : cmdvgdisplay.lv_entries)
 	{
 	    addLv(lv_entry.origin.empty() ? lv_entry.num_le : lv_entry.num_cow_le,
 		  lv_entry.name, lv_entry.origin, lv_entry.uuid, lv_entry.status,
@@ -1105,7 +1105,7 @@ LvmVg::getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info)
 	    calcSize();
 	}
 
-	for (auto const &pv_entry : cmdvgdisplay.pv_entries)
+	for (CmdVgdisplay::PvEntry const &pv_entry : cmdvgdisplay.pv_entries)
 	{
 	    Pv pv;
 
@@ -1349,11 +1349,11 @@ LvmVg::getCommitActions(list<commitAction>& l) const
     else
 	{
 	if( !pv_add.empty() )
-	    for (auto const &i : pv_add)
+	    for (Pv const &i : pv_add)
 		l.push_back(commitAction(INCREASE, staticType(),
 					 extendText(false, i.device), this, true));
 	if( !pv_remove.empty() )
-	    for (auto const &i : pv_remove)
+	    for (Pv const &i : pv_remove)
 		l.push_back(commitAction(DECREASE, staticType(),
 					 reduceText(false, i.device), this, false));
 	}
@@ -1890,7 +1890,7 @@ void LvmVg::normalizeDmDevices()
     {
     y2mil( "normalizeDmDevices:" << name() );
     string dm = decString(Dm::dmMajor());
-    for (auto &i : pv)
+    for (Pv &i : pv)
 	{
 	if (i.device.find("/dev/dm-") == 0)
 	    {
@@ -1919,15 +1919,15 @@ void LvmVg::getInfo( LvmVgInfo& info ) const
     info.uuid = uuid;
 
     info.devices.clear();
-    for (auto const &it : pv)
+    for (Pv const &it : pv)
 	info.devices.push_back(it.device);
 
     info.devices_add.clear();
-    for (auto const &it : pv_add)
+    for (Pv const &it : pv_add)
 	info.devices_add.push_back(it.device);
 
     info.devices_rem.clear();
-    for (auto const &it : pv_remove)
+    for (Pv const &it : pv_remove)
 	info.devices_rem.push_back(it.device);
 
     y2mil( "device:" << info.devices );

@@ -38,7 +38,7 @@ namespace storage
 
 	list<string> ret;
 
-	for (auto const &it : Storage::getDiskList(systeminfo))
+	for (pair<string, Disk::SysfsInfo> const &it : Storage::getDiskList(systeminfo))
 	    ret.push_back("/dev/" + Disk::sysfsToDev(it.first));
 
 	y2mil("ret:" << ret);
@@ -53,7 +53,7 @@ namespace storage
 
 	map<string, string> ret;
 
-	for (auto const &it1 : systeminfo.getCmdDmraid())
+	for (CmdDmraid::const_iterator::value_type const &it1 : systeminfo.getCmdDmraid())
 	{
 	    // The name from dmraid is something like "ddf1_foo" or "isw_chadfejhhc_foo".
 	    string::size_type pos = it1.first.rfind('_');

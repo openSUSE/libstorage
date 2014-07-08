@@ -120,7 +120,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 		cv = NULL;
 	    else
 		{
-		for (auto const &it : e.devices)
+		for (string const &it : e.devices)
 		    {
 		    const Device* v;
 		    if (getStorage()->findDevice(it, v))

@@ -51,7 +51,7 @@ namespace storage
     {
 	y2deb("constructing MdCo");
 
-	for (auto const &it : systeminfo.getProcMdstat())
+	for (ProcMdstat::const_iterator::value_type const &it : systeminfo.getProcMdstat())
 	    if (!it.second.is_container && !isHandledByMdPart(it.first))
 		addMd(new Md(*this, it.first, "/dev/" + it.first, systeminfo));
     }
@@ -676,7 +676,7 @@ bool MdCo::equalContent( const Container& rhs ) const
 
 bool MdCo::isHandledByMdPart(const string& name) const
 {
-    for (auto const &i : getStorage()->mdpartCoPair(MdPartCo::notDeleted))
+    for (MdPartCo const &i : getStorage()->mdpartCoPair(MdPartCo::notDeleted))
         if (i.name() == name)
             return true;
     return false;

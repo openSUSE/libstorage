@@ -174,7 +174,7 @@ namespace storage
 	{
 	    for (auto const &sfx : getAllSuffixes(i, true, !classic))
 	    {
-		auto const &tmp = classic ? sfx.native : sfx.text;
+		string const &tmp = classic ? sfx.native : sfx.text;
 
 		if (boost::iends_with(str_trimmed, tmp, loc))
 		{
