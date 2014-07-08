@@ -55,7 +55,7 @@ if test -z "$RUBY" ; then
     AC_MSG_ERROR(ruby is missing; please install ruby)
 fi
 
-AC_DEFUN(RBCONFIG, [$RUBY -rrbconfig -e 'puts RbConfig::CONFIG[["$1"]]'])
+AC_DEFUN([RBCONFIG], [$RUBY -rrbconfig -e 'puts RbConfig::CONFIG[["$1"]]'])
 
 RUBY_VERSION=`$RUBY -e "puts RUBY_VERSION"`
 AC_SUBST(RUBY_VERSION)
