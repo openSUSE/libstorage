@@ -1003,6 +1003,7 @@ void Volume::updateUuid( const string& new_uuid )
     alt_names.push_back("/dev/disk/by-uuid/" + uuid);
     }
 
+
 int Volume::doFormat()
     {
     static int fcount=1000;
@@ -1131,19 +1132,11 @@ int Volume::doFormat()
 			ret = VOLUME_TUNE2FS_FAILED;
 		}
 
-		if( ret==0 && mp=="/" &&
-		    (fstab_opt.find( "data=writeback" )!=string::npos ||
-		     fstab_opt.find( "data=journal" )!=string::npos) )
+		if (ret == 0 && mp == "/")
 		{
-		    string cmd = TUNE2FSBIN " -o ";
-		    if( fstab_opt.find( "data=writeback" )!=string::npos )
-			cmd += "journal_data_writeback ";
-		    else
-			cmd += "journal_data ";
-		    cmd += quote(mountDevice());
-		    SystemCmd c( cmd );
-		    if( c.retcode()!=0 )
-			ret = VOLUME_TUNE2FS_FAILED;
+		    string data_mode = getExtDataMode(fstab_opt);
+		    if (data_mode == "journal" || data_mode == "writeback")
+			ret = doTuneExtDataMode(data_mode);
 		}
 	    }
 	    break;
@@ -1207,6 +1200,26 @@ int Volume::doFormat()
 	}
     y2mil("ret:" << ret);
     return( ret );
+    }
+
+
+    int
+    Volume::doTuneExtDataMode(const string& data_mode)
+    {
+	int ret = 0;
+
+	string option = "journal_data_ordered";
+	if (data_mode == "journal")
+	    option = "journal_data";
+	else if (data_mode == "writeback")
+	    option = "journal_data_writeback";
+
+	string cmd = TUNE2FSBIN " -o " + option + " " + quote(mountDevice());
+	SystemCmd c(cmd);
+	if (c.retcode() != 0)
+	    ret = VOLUME_TUNE2FS_FAILED;
+
+	return ret;
     }
 
 
@@ -3195,10 +3208,18 @@ int Volume::doFstabUpdate( bool force_rewrite )
 	    {
 	    c.execute( "/etc/init.d/boot.quota restart" );
 	    }
+	if (mp == "/" && (fs == EXT3 || fs == EXT4))
+	{
+	    string orig_data_mode = getExtDataMode(orig_fstab_opt);
+	    string data_mode = getExtDataMode(fstab_opt);
+	    if (orig_data_mode != data_mode)
+		doTuneExtDataMode(data_mode);
+	}
 	}
     y2mil("changed:" << changed << " ret:" << ret);
-    return( ret );
+    return ret;
     }
+
 
 void Volume::fstabUpdateDone()
     {

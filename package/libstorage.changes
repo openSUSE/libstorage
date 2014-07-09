@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jul 09 10:28:06 CEST 2014 - aschnell@suse.de
+
+- call tune2fs when changing data mode for ext3 and ext4 root
+  filesystem (bnc#886240)
+
+-------------------------------------------------------------------
 Wed Jul 07 13:31:30 CEST 2014 - rneuhauser@sigpipe.cz
 
 - configure{,.ac} uses python2-config to find python headers, libs
