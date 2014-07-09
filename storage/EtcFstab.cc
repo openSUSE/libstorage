@@ -38,6 +38,20 @@ namespace storage
     using namespace std;
 
 
+    string
+    getExtDataMode(const string& fstab_options)
+    {
+	list<string> tmp = splitString(fstab_options, ",");
+
+	list<string>::const_iterator it = find_if(tmp.begin(), tmp.end(),
+						  string_starts_with("data="));
+	if (it == tmp.end())
+	    return "ordered";
+
+	return it->substr(5);
+    }
+
+
     EtcFstab::EtcFstab(const string& prefix, bool rootMounted)
 	: prefix(prefix)
     {

@@ -244,6 +244,7 @@ class Storage;
 	string getDmcryptName() const;
 	void addDmCryptNames(unsigned long minor);
 	void removeDmCryptNames();
+	int doTuneExtDataMode(const string& data_mode);
 	bool needLosetup( bool urgent ) const; 
 	bool needCryptsetup() const; 
 	int doLosetup();

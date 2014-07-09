@@ -43,6 +43,13 @@ namespace storage
 
 
     /*
+     * Get data mode ("journal", "ordered" or "writeback") for ext filesystems
+     * from fstab mount options.
+     */
+    string getExtDataMode(const string& fstab_options);
+
+
+    /*
      * Unique key to identify entries in fstab.
      */
     struct FstabKey
