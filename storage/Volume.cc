@@ -1135,7 +1135,7 @@ int Volume::doFormat()
 		if (ret == 0 && mp == "/")
 		{
 		    string data_mode = getExtDataMode(fstab_opt);
-		    if (data_mode == "journal" || data_mode == "writeback")
+		    if (data_mode != "ordered")
 			ret = doTuneExtDataMode(data_mode);
 		}
 	    }
@@ -1208,16 +1208,25 @@ int Volume::doFormat()
     {
 	int ret = 0;
 
-	string option = "journal_data_ordered";
-	if (data_mode == "journal")
+	string option;
+	if (data_mode == "ordered")
+	    option = "journal_data_ordered";
+	else if (data_mode == "journal")
 	    option = "journal_data";
 	else if (data_mode == "writeback")
 	    option = "journal_data_writeback";
 
-	string cmd = TUNE2FSBIN " -o " + option + " " + quote(mountDevice());
-	SystemCmd c(cmd);
-	if (c.retcode() != 0)
-	    ret = VOLUME_TUNE2FS_FAILED;
+	if (option.empty())
+	{
+	    y2err("unknown data_mode '" << data_mode << "'");
+	}
+	else
+	{
+	    string cmd = TUNE2FSBIN " -o " + option + " " + quote(mountDevice());
+	    SystemCmd c(cmd);
+	    if (c.retcode() != 0)
+		ret = VOLUME_TUNE2FS_FAILED;
+	}
 
 	return ret;
     }
