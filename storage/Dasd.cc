@@ -293,7 +293,7 @@ namespace storage
 		SystemInfo systeminfo;
 		for (auto *i : dl)
 		{
-		    Dasd * ds = static_cast<Dasd *>(i);
+		    auto *ds = static_cast<Dasd *>(i);
 		    ds->detectPartitions(systeminfo);
 		    ds->resetInitDisk();
 		    ds->removeFromMemory();

@@ -225,7 +225,7 @@ void Dm::setUdevData(SystemInfo& si)
 	list<string> sl = it->second;
 	partition(sl.begin(), sl.end(), string_starts_with("dm-name-"));
 	y2mil("dev:" << dev << " udev_id:" << sl);
-	for (string const &i : sl)
+	for (auto const &i : sl)
 	    alt_names.push_back("/dev/disk/by-id/" + i);
 	}
     }

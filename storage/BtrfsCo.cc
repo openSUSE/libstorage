@@ -93,7 +93,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 			forbidden = it.type() != UB_BTRFS;
 			if( forbidden )
 			    y2mil( "forbidden:" << v->device() << 
-				   " used by non-btrfs:" << v->getUsedBy() );
+				   " used by non-btrfs:" << ub );
 			}
 		    if( !forbidden )
 			{
@@ -142,7 +142,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	else
 	    y2war("uuid " << it << " not found");
 	}
-    for (auto &i : BtrfsPair(btrfsPair()))
+    for (auto &i : btrfsPair())
         i.detectSubvol();
     y2mil("end");
     }

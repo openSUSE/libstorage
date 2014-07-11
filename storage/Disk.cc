@@ -943,13 +943,11 @@ static bool notCreatedPrimary( const Partition& p )
 	    slot.logicalSlot = false;
 	    slot.logicalPossible = false;
 
-	    ConstPartPair p = partPair(notDeletedNotLog);
-
 	    unsigned long start = 0;
 	    unsigned long end = cylinders();
 
 	    list<Region> tmp;
-	    for (auto const &i : p)
+	    for (auto const &i : partPair(notDeletedNotLog))
 		tmp.push_back(i.cylRegion());
 	    tmp.sort();
 
@@ -992,13 +990,11 @@ static bool notCreatedPrimary( const Partition& p )
 		slot.logicalSlot = true;
 		slot.logicalPossible = tmpLogicalPossible;
 
-		ConstPartPair p = partPair(notDeletedLog);
-
 		unsigned long start = ext.begin()->cylStart();
 		unsigned long end = ext.begin()->cylEnd();
 
 		list<Region> tmp;
-		for (auto const &i : p)
+		for (auto const &i : partPair(notDeletedLog))
 		    tmp.push_back(i.cylRegion());
 		tmp.sort();
 
