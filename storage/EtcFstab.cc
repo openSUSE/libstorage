@@ -75,7 +75,7 @@ EtcFstab::readFiles()
     y2mil("entries:" << co.size());
 
     string file = prefix+"/fstab";
-    ifstream mounts( file.c_str() );
+    ifstream mounts(file);
     classic(mounts);
     string line;
     getline( mounts, line );

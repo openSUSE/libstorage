@@ -277,7 +277,7 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     bool
     read_sysfs_property(const string& path, Type& value, bool log_error = true)
     {
-	std::ifstream file(path.c_str());
+	std::ifstream file(path);
 	classic(file);
 	file >> value;
 	file.close();
