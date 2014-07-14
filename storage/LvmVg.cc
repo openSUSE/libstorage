@@ -1687,7 +1687,7 @@ LvmVg::doCreate( Volume* v )
             if( !orig || !orig->isThin() )
                 cmd += " -l " + decString(l->getLe());
             if( l->chunkSize()>0 )
-                cmd += " --chunksize " + l->chunkSize();
+                cmd += " --chunksize " + decString(l->chunkSize());
             cmd += " --snapshot";
             cmd += " --name " + quote(l->name());
             cmd += " " + quote(name() + "/" + l->getOrigin());
