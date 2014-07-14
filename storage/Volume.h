@@ -39,9 +39,9 @@ namespace storage
 class SystemCmd;
 class ProcMounts;
 class EtcFstab;
-class FstabEntry;
-class FstabChange;
-class FstabKey;
+struct FstabEntry;
+struct FstabChange;
+struct FstabKey;
 class Container;
 class Storage;
 
