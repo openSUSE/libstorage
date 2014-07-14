@@ -1278,7 +1278,7 @@ void Volume::triggerUdevUpdate() const
     string path = getFilesysSysfsPath() + "/uevent";
     if( access( path.c_str(), R_OK )==0 )
 	{
-	ofstream file( path.c_str() );
+	ofstream file(path);
 	classic(file);
 	if( file.good() )
 	    {
@@ -2199,7 +2199,7 @@ EncryptType Volume::detectEncryption()
     bool luks_ok = false;
     do
 	{
-	ofstream pwdfile( fname.c_str() );
+	ofstream pwdfile(fname);
 	classic(pwdfile);
 	pwdfile << crypt_pwd;
 	pwdfile.close();
@@ -2326,7 +2326,7 @@ int Volume::doLosetup()
 	if( !dmcrypt() )
 	    {
 	    fname = getStorage()->tmpDir() + "/pwdf";
-	    ofstream pwdfile( fname.c_str() );
+	    ofstream pwdfile(fname);
 	    classic(pwdfile);
 	    pwdfile << crypt_pwd << endl;
 	    pwdfile.close();
@@ -2458,7 +2458,7 @@ int Volume::doCryptsetup(bool readonly)
 	if( ret==0 )
 	    {
 	    string fname = getStorage()->tmpDir() + "/pwdf";
-	    ofstream pwdfile( fname.c_str() );
+	    ofstream pwdfile(fname);
 	    classic(pwdfile);
 	    pwdfile << crypt_pwd;
 	    pwdfile.close();

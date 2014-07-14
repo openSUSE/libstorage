@@ -62,7 +62,7 @@ AsciiFile::reload()
     y2mil("loading file " << Name_C);
     clear();
 
-    ifstream File_Ci(Name_C.c_str());
+    ifstream File_Ci(Name_C);
     classic(File_Ci);
     string Line_Ci;
 
@@ -100,7 +100,7 @@ AsciiFile::save()
     {
 	y2mil("saving file " << Name_C);
 
-	ofstream file( Name_C.c_str() );
+	ofstream file(Name_C);
 	classic(file);
 
 	for (vector<string>::const_iterator it = Lines_C.begin(); it != Lines_C.end(); ++it)
