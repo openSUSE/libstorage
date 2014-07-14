@@ -195,7 +195,7 @@ class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
 
 class EtcFstab;
     class EtcMdadm;
-class DiskData;
+struct DiskData;
 
 
     /**
