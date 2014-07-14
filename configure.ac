@@ -34,7 +34,7 @@ PYTHON_INCLUDES=$($PYTHON_CONFIG --includes)
 PYTHON_LIBS=$($PYTHON_CONFIG --libs)
 
 CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes $PYTHON_INCLUDES"
-CXXWARNS="-Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
+CXXWARNS="-Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-overloaded-virtual -Wno-unused-parameter"
 CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X $CXXWARNS $PYTHON_INCLUDES"
 LIBS="$LIBS $PYTHON_LIBS"
 
