@@ -455,20 +455,23 @@ Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapa
 	return ret;
     }
 
-int
-Disk::execCheckFailed( const string& cmd_line )
+
+    int
+    Disk::execCheckFailed(const string& cmd_line)
     {
-    static SystemCmd cmd;
-    return( execCheckFailed( cmd, cmd_line ) );
+	static SystemCmd cmd;
+	return execCheckFailed(cmd, cmd_line);
     }
 
-int Disk::execCheckFailed( SystemCmd& cmd, const string& cmd_line )
+
+    int
+    Disk::execCheckFailed(SystemCmd& cmd, const string& cmd_line)
     {
-    cmd.execute( cmd_line );
-    int ret = checkSystemError( cmd_line, cmd );
-    if( ret!=0 )
-	setExtError( cmd );
-    return( ret );
+	cmd.execute(cmd_line);
+	int ret = checkSystemError(cmd_line, cmd);
+	if (ret != 0)
+	    setExtError(cmd);
+	return ret;
     }
 
 
