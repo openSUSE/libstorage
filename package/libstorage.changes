@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Wed Jul 16 16:56:07 CEST 2014 - aschnell@suse.de
+
+- fixed check for parted errors (see bnc#886005)
+
+-------------------------------------------------------------------
 Wed Jul 09 10:28:06 CEST 2014 - aschnell@suse.de
 
 - call tune2fs when changing data mode for ext3 and ext4 root

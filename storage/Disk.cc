@@ -409,43 +409,50 @@ Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapa
 }
 
 
-int
-Disk::checkSystemError( const string& cmd_line, const SystemCmd& cmd ) const
+    int
+    Disk::checkSystemError(const string& cmd_line, const SystemCmd& cmd) const
     {
-    string tmp = boost::join(cmd.stderr(), "\n");
-    if (!tmp.empty())
+	string tmp_out = boost::join(cmd.stdout(), "\n");
+	if (!tmp_out.empty())
         {
-	y2err("cmd:" << cmd_line);
-	y2err("err:" << tmp);
+	    y2mil("cmd:" << cmd_line);
+	    y2mil("out:" << tmp_out);
         }
-    tmp = boost::join(cmd.stdout(), "\n");
-    if (!tmp.empty())
+
+	string tmp_err = boost::join(cmd.stderr(), "\n");
+	if (!tmp_err.empty())
         {
-	y2mil("cmd:" << cmd_line);
-	y2mil("out:" << tmp);
+	    y2err("cmd:" << cmd_line);
+	    y2err("err:" << tmp_err);
         }
-    int ret = cmd.retcode();
-    if( ret!=0 && tmp.find( "kernel failed to re-read" )!=string::npos )
+
+	int ret = cmd.retcode();
+
+	if (ret != 0 && boost::contains(tmp_err, "kernel failed to re-read"))
 	{
-	y2mil( "resetting retcode cmd " << ret << " of:" << cmd_line );
-	ret = 0;
-	}
-    if( ret!=0 && tmp.find( "Error informing the kernel about modifications" )!=string::npos )
-	{
-	y2mil( "resetting retcode cmd " << ret << " of:" << cmd_line );
-	ret = 0;
-	}
-    if( ret != 0 )
-        {
-	if( dmp_slave && tmp.empty() )
-	    {
-	    y2mil( "resetting retcode " << ret << " of:" << cmd_line );
+	    y2mil("resetting retcode cmd " << ret << " of:" << cmd_line);
 	    ret = 0;
+	}
+	if (ret != 0 && boost::contains(tmp_err, "Error informing the kernel about modifications"))
+	{
+	    y2mil("resetting retcode cmd " << ret << " of:" << cmd_line);
+	    ret = 0;
+	}
+
+	if (ret != 0)
+        {
+	    if (dmp_slave && tmp_err.empty())
+	    {
+		y2mil( "resetting retcode " << ret << " of:" << cmd_line );
+		ret = 0;
 	    }
-	else
-	    y2err("retcode:" << cmd.retcode());
-        }
-    return( ret );
+	    else
+	    {
+		y2err("retcode:" << cmd.retcode());
+	    }
+	}
+
+	return ret;
     }
 
 int
