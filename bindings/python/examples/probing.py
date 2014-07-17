@@ -8,7 +8,7 @@ env = libstorage.Environment(True)
 c = libstorage.createStorageInterface(env)
 
 
-containers = libstorage.dequecontainerinfo()
+containers = libstorage.DequeContainerInfo()
 c.getContainers(containers)
 
 for container in containers:
@@ -22,7 +22,7 @@ for container in containers:
         print "  Size:", libstorage.byteToHumanString(1024 * diskinfo.sizeK, True, 2, False)
         print "  Cylinder Size:", libstorage.byteToHumanString(diskinfo.cylSize, True, 2, False)
 
-        partitioninfos = libstorage.dequepartitioninfo()
+        partitioninfos = libstorage.DequePartitionInfo()
         c.getPartitionInfo(container.name, partitioninfos)
 
         for partitioninfo in partitioninfos:
@@ -46,12 +46,12 @@ for container in containers:
         print "  Size:", libstorage.byteToHumanString(1024 * lvmvginfo.sizeK, True, 2, False)
         print "  PE Size:", libstorage.byteToHumanString(1024 * lvmvginfo.peSizeK, True, 2, True)
 
-        lvmlvinfos = libstorage.dequelvmlvinfo()
+        lvmlvinfos = libstorage.DequeLvmLvInfo()
         c.getLvmLvInfo(container.name, lvmlvinfos)
 
         for lvmlvinfo in lvmlvinfos:
             print "  Device:", lvmlvinfo.v.device
-            print "    Size:", libstorage.byteToHumanString(1024 * lvmlvinfo.sizeK, True, 2, False)
+            print "    Size:", libstorage.byteToHumanString(1024 * lvmlvinfo.v.sizeK, True, 2, False)
             print "    Stripes:", lvmlvinfo.stripes
             if lvmlvinfo.stripes > 1:
                 print "    Stripe Size:", libstorage.byteToHumanString(1024 * lvmlvinfo.stripeSizeK, True, 2, True)

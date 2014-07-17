@@ -8,9 +8,7 @@ EXTRA_DIST = libstorage.i enum_ref.i
 
 AM_CXXFLAGS = -fPIC -DPIC
 
-PYLIBVER ?= python$(PYTHON_VERSION)
-
-INCLUDES = -I. -I${top_srcdir} -I/usr/include/$(PYLIBVER)
+INCLUDES = -I. -I${top_srcdir} -I${PYTHON_INCLUDES}
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
@@ -18,7 +16,7 @@ DEPENDENCIES =						\
 	${top_srcdir}/storage/Graph.h                   \
 	./enum_ref.i
 
-LIBS = $(top_builddir)/storage/libstorage.la
+LIBS = $(top_builddir)/storage/libstorage.la ${PYTHON_LIBS}
 
 python_PYTHON = libstorage.py
 

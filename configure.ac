@@ -33,10 +33,10 @@ PYTHON_CONFIG=${PYTHON_CONFIG:-python2-config}
 PYTHON_INCLUDES=$($PYTHON_CONFIG --includes)
 PYTHON_LIBS=$($PYTHON_CONFIG --libs)
 
-CFLAGS="${CFLAGS} -Wall -Wformat=2 -Wmissing-prototypes $PYTHON_INCLUDES"
+CWARNS="-Wall -Wformat=2 -Wmissing-prototypes"
+CFLAGS="${CFLAGS} ${CXXWARNS}"
 CXXWARNS="-Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
-CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X $CXXWARNS $PYTHON_INCLUDES"
-LIBS="$LIBS $PYTHON_LIBS"
+CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X ${CXXWARNS}"
 
 docdir=\${prefix}/share/doc/packages/libstorage
 fillupdir=/var/adm/fillup-templates
@@ -47,6 +47,8 @@ AC_SUBST(LIBVERSION_MAJOR)
 AC_SUBST(LIBVERSION_MINOR)
 AC_SUBST(LIBVERSION_PATCHLEVEL)
 AC_SUBST(LIBVERSION_INFO)
+AC_SUBST(PYTHON_INCLUDES)
+AC_SUBST(PYTHON_LIBS)
 AC_SUBST(docdir)
 AC_SUBST(fillupdir)
 
