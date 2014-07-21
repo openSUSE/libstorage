@@ -150,7 +150,7 @@ void BtrfsCo::getBtrfsData(SystemInfo& systeminfo)
 	}
     BtrfsPair p( btrfsPair() );
     for( BtrfsIter i=p.begin(); i!=p.end(); ++i )
-        i->detectSubvol();
+        i->detectSubvolumes();
     y2mil("end");
     }
 
