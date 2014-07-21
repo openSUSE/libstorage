@@ -166,10 +166,15 @@ Btrfs::getDevices( list<string>& devs, bool add_del ) const
 		if (boost::starts_with(subvolume, "<FS_TREE>/"))
 		    subvolume.erase(0, 10);
 
+		if (subvolume == getStorage()->getDefaultSubvolName())
+		    continue;
+
 		// Subvolume can already be deleted, in which case parent is "0"
 		// (and path "DELETED"). That is a temporary state.
-		if (parent != "0" && !subvolume.empty())
-		    addSubvolume(subvolume);
+		if (parent == "0" || subvolume.empty())
+		    continue;
+
+		addSubvolume(subvolume);
 		}
             }
         if( mounted )
