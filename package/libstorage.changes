@@ -2,6 +2,7 @@
 Mon Jul 21 13:47:50 CEST 2014 - aschnell@suse.de
 
 - ignore default subvolume during subvolume detection (bnc#882982)
+- fixed encryption detection (see bnc#888128)
 
 -------------------------------------------------------------------
 Wed Jul 16 16:56:07 CEST 2014 - aschnell@suse.de

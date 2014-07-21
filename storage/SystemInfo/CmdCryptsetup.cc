@@ -52,17 +52,19 @@ namespace storage
     void
     CmdCryptsetup::parse(const vector<string>& lines)
     {
-	string cipher, keysize;
+	string type, cipher, keysize;
 	for (const string& line : lines)
 	{
 	    string key = extractNthWord(0, line);
-	    if (key == "cipher:")
+	    if (key == "type:")
+		type = extractNthWord(1, line);
+	    else if (key == "cipher:")
 		cipher = extractNthWord(1, line);
 	    else if(key == "keysize:")
 		keysize = extractNthWord(1, line);
 	}
 
-	if (cipher == "aes-cbc-essiv:sha256" || cipher == "aes-cbc-plain")
+	if (type == "LUKS1")
 	    encrypt_type = ENC_LUKS;
 	else if (cipher == "twofish-cbc-plain")
 	    encrypt_type = ENC_TWOFISH;
@@ -73,7 +75,8 @@ namespace storage
 	else
 	{
 	    encrypt_type = ENC_UNKNOWN;
-	    y2err("unknown encryption cipher:" << cipher << " keysize:" << keysize);
+	    y2err("unknown encryption type:" << type << " cipher:" << cipher << " keysize:" <<
+		  keysize);
 	}
     }
 
