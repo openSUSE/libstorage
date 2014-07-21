@@ -42,12 +42,12 @@ class Btrfs : public Volume
 	Btrfs( const BtrfsCo& c, const Btrfs& v);
 	virtual ~Btrfs();
 
-	void clearSubvol() { subvol.clear(); }
-	void addSubvol( const string& path );
-        void detectSubvol();
+	void clearSubvolumes() { subvolumes.clear(); }
+	void addSubvolume(const string& path);
+	void detectSubvolumes();
 	list<string> getDevices( bool add_del=false ) const;
 	void getDevices( list<string>& devs, bool add_del=false ) const;
-	void getSubvolumes( list<Subvolume>& sv ) const { sv = subvol; }
+	list<Subvolume> getSubvolumes() const { return subvolumes; }
 
 	bool existSubvolume( const string& name );
 	int createSubvolume( const string& name );
@@ -100,7 +100,7 @@ class Btrfs : public Volume
 	list<string> devices;
 	list<string> dev_add;
 	list<string> dev_rem;
-	list<Subvolume> subvol;
+	list<Subvolume> subvolumes;
 	Volume const * findRealVolume() const;
 
 	virtual int extraFstabAdd(EtcFstab* fstab, const FstabChange& change) override;
