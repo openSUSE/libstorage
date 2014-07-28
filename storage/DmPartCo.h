@@ -176,8 +176,6 @@ class DmPartCo : public PeContainer
 	virtual void newP( DmPart*& dm, unsigned num, Partition* p );
 	int addNewDev( string& device );
 	int updateDelDev();
-	void handleWholeDevice();
-	void handleWholeDevice(SystemInfo& si);
 	void removeFromMemory();
 	void removePresentPartitions();
 	bool validPartition( const Partition* p );

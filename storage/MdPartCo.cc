@@ -175,7 +175,6 @@ MdPartCo::addNewDev(string& device)
             y2mil("device:" << device << " was added to MdPartCo : " << dev);
 
         }
-        handleWholeDevice();
     }
     if( ret != 0 )
       {
@@ -272,7 +271,6 @@ int MdPartCo::updateDelDev()
             ret = MDPART_PARTITION_NOT_FOUND;
         ++vi;
         }
-    handleWholeDevice();
     return( ret );
     }
 
@@ -421,32 +419,8 @@ MdPartCo::getVolumes(const ProcParts& ppart)
         addToList( p );
         ++i;
         }
-    handleWholeDevice();
     }
 
-void MdPartCo::handleWholeDevice()
-    {
-    Disk::PartPair pp = disk->partPair( Partition::notDeleted );
-    y2mil("empty:" << pp.empty());
-
-    if( pp.empty() )
-        {
-        MdPart * p = NULL;
-        newP( p, 0, NULL );
-        p->setSize( size_k );
-        addToList( p );
-        }
-    else
-        {
-        MdPartIter i;
-        if( findMdPart( 0, i ))
-            {
-            MdPart* md = &(*i);
-            if( !removeFromList( md ))
-                y2err( "not found:" << *i );
-            }
-        }
-    }
 
 Partition*
 MdPartCo::getPartition( unsigned nr, bool del )
@@ -677,7 +651,6 @@ int MdPartCo::doCreateLabel()
     if( ret==0 )
         {
         removeFromMemory();
-        handleWholeDevice();
         getStorage()->waitForDevice();
         }
     y2mil("ret:" << ret);
@@ -709,16 +682,6 @@ MdPartCo::removeMdPart()
                   break;
                   }
 
-              }
-            }
-        //Remove 'whole device' it was created when last partition was deleted.
-        p=mdpartPair(MdPart::notDeleted);
-        if( p.begin()!=p.end() && p.begin()->nr()==0 )
-            {
-            if( !removeFromList( &(*p.begin()) ))
-              {
-                y2err( "not found:" << *p.begin() );
-                ret = MDPART_PARTITION_NOT_FOUND;
               }
             }
         }
@@ -919,23 +882,8 @@ int MdPartCo::doRemove()
     // 2. Check for partitions.
     if( disk!=NULL && disk->numPartitions()>0 )
       {
-      int permitRemove=1;
-      //handleWholeDevice: partition 0.
-      if( disk->numPartitions() == 1 )
-        {
-        //Find partition '0' if it exists then this 'whole device'
-        MdPartIter i;
-        if( findMdPart( 0, i ) == true)
-          {
-          //Single case when removal is allowed.
-          permitRemove = 0;
-          }
-        }
-      if( permitRemove == 1 )
-        {
         y2err("Cannot remove RAID with partitions.");
-        return (MDPART_NO_REMOVE);
-        }
+        return MDPART_NO_REMOVE;
       }
     /* Try to remove this. */
     y2mil("Raid:" << name() << " is going to be removed permanently");

@@ -102,7 +102,6 @@ DmPartCo::addNewDev(string& device)
 		}
 	    addToList( dm );
 	}
-	handleWholeDevice();
     }
     y2mil("device:" << device << " ret:" << ret);
     return ret;
@@ -189,7 +188,6 @@ int DmPartCo::updateDelDev()
 	    ret = DMPART_PARTITION_NOT_FOUND;
 	++vi;
 	}
-    handleWholeDevice();
     return( ret );
     }
 
@@ -365,55 +363,9 @@ void
 	addToList( p );
 	++i;
 	}
-    handleWholeDevice(si);
     }
 
-void DmPartCo::handleWholeDevice()
-    {
-    Disk::PartPair pp = disk->partPair( Partition::notDeleted );
-    y2mil("empty:" << pp.empty());
-    if( pp.empty() )
-	{
-	DmPart * p = NULL;
-	newP( p, 0, NULL );
-	p->setSize( size_k );
-	addToList( p );
-	}
-    else
-	{
-	DmPartIter i;
-	if( findDm( 0, i ))
-	    {
-	    DmPart* dm = &(*i);
-	    if( !removeFromList( dm ))
-		y2err( "not found:" << *i );
-	    }
-	}
-    }
-    
-void DmPartCo::handleWholeDevice(SystemInfo& si)
-    {
-    Disk::PartPair pp = disk->partPair( Partition::notDeleted );
-    y2mil("empty:" << pp.empty());
-    if( pp.empty() )
-	{
-	DmPart * p = NULL;
-	newP( p, 0, NULL, si );
-	p->setSize( size_k );
-	addToList( p );
-	}
-    else
-	{
-	DmPartIter i;
-	if( findDm( 0, i ))
-	    {
-	    DmPart* dm = &(*i);
-	    if( !removeFromList( dm ))
-		y2err( "not found:" << *i );
-	    }
-	}
-    }
-    
+
 Partition* 
 DmPartCo::getPartition( unsigned nr, bool del )
     {
@@ -636,7 +588,6 @@ int DmPartCo::doCreateLabel()
     if( ret==0 )
 	{
 	removeFromMemory();
-	handleWholeDevice();
 	Storage::waitForDevice();
 	}
     y2mil("ret:" << ret);

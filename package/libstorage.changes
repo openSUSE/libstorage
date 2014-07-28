@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Jul 28 13:45:41 CEST 2014 - aschnell@suse.de
+
+- fixed used-by information for multipath with LVM (bnc#888838)
+
+-------------------------------------------------------------------
 Mon Jul 21 13:47:50 CEST 2014 - aschnell@suse.de
 
 - ignore default subvolume during subvolume detection (bnc#882982)

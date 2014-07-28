@@ -221,7 +221,6 @@ class MdPartCo : public Container
     virtual void newP( MdPart*& dm, unsigned num, Partition* p );
     int addNewDev( string& device );
     int updateDelDev();
-    void handleWholeDevice();
     void removeFromMemory();
     void removePresentPartitions();
     bool validPartition( const Partition* p );
