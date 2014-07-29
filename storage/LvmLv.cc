@@ -164,14 +164,12 @@ LvmLv::hasSnapshots() const
 void
 LvmLv::getState(LvmLvSnapshotStateInfo& info)
 {
-    SystemCmd cmd(LVSBIN " --options lv_name,lv_attr,snap_percent " + quote(cont->name()));
+    SystemCmd cmd(LVSBIN " --noheadings --options lv_name,lv_attr,snap_percent " + quote(cont->name()));
 
-    if (cmd.retcode() == 0 && cmd.numLines() > 0)
+    if (cmd.retcode() == 0)
     {
-	for (unsigned int l = 1; l < cmd.numLines(); l++)
+	for (const string& line : cmd.stdout())
 	{
-	    string line = cmd.getLine(l);
-	    
 	    if (extractNthWord(0, line) == name())
 	    {
 		string attr = extractNthWord(1, line);
