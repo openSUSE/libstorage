@@ -522,9 +522,12 @@ void Dm::activate( bool val )
 	    }
 	else
 	    {
+	    // TODO: use --noheadings, move to SystemInfo
 	    c.execute(DMSETUPBIN " info -c -o name,subsystem");
 	    SystemCmd rm;
-	    for( unsigned i=0; i<c.numLines(); i++ )
+	    if (c.numLines() > 1)
+	    {
+		for( unsigned i=1; i<c.numLines(); i++ )
 		{
 		if( extractNthWord(1, c.getLine(i)) != "CRYPT" )
 		    {
@@ -533,6 +536,7 @@ void Dm::activate( bool val )
 		    rm.execute( cmd  );
 		    }
 		}
+	    }
 	    }
 	active = val;
 	}
