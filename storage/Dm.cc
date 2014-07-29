@@ -522,18 +522,12 @@ void Dm::activate( bool val )
 	    }
 	else
 	    {
-	    // TODO: use --noheadings, move to SystemInfo
-	    c.execute(DMSETUPBIN " info -c -o name,subsystem");
 	    SystemCmd rm;
-	    if (c.numLines() > 1)
-	    {
-		for( unsigned i=1; i<c.numLines(); i++ )
+		const CmdDmsetupInfo cmddmsetupinfo;
+		for (const CmdDmsetupInfo::value_type& info : cmddmsetupinfo)
 		{
-		    string cmd = DMSETUPBIN " remove ";
-		    cmd += extractNthWord(0, c.getLine(i));
-		    rm.execute( cmd  );
+		    rm.execute(DMSETUPBIN " remove " + info.first);
 		}
-	    }
 	    }
 	active = val;
 	}
