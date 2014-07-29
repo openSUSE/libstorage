@@ -264,9 +264,8 @@ void Dm::calcSize()
 void Dm::computePe( const SystemCmd& c, PeMap& pe )
     {
     pe.clear();
-    for( unsigned i=0; i<c.numLines(); i++ )
+    for (const string& line : c.stdout())
 	{
-	string line = c.getLine(i);
 	unsigned long le = computeLe(extractNthWord( 1, line ));
         string tgt = extractNthWord( 2, line );
 	if( tgt=="linear" )
