@@ -3524,12 +3524,12 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
     if( !v.dmcrypt_dev.empty() )
 	s << " dmcrypt:" << v.dmcrypt_dev;
     if( v.dmcrypt_active )
-	s << " active";
+	s << " dmcrypt_active";
     if( v.is_loop )
 	{
 	s << " loop:" << v.loop_dev;
 	if( v.loop_active )
-	    s << " active";
+	    s << " loop_active";
 	if( v.fstab_loop_dev != v.loop_dev )
 	    {
 	    s << " fstab_loop:" << v.fstab_loop_dev;
@@ -3576,6 +3576,8 @@ std::ostream& operator<< (std::ostream& s, const Volume &v )
 	logDiff(log, "tunefsopt", tunefs_opt, rhs.tunefs_opt);
 
 	logDiff(log, "dtxt", dtxt, rhs.dtxt);
+
+	logDiff(log, "dmcrypt_active", dmcrypt_active, rhs.dmcrypt_active);
 
 	logDiff(log, "is_loop", is_loop, rhs.is_loop);
 	logDiff(log, "loop_active", loop_active, rhs.loop_active);
