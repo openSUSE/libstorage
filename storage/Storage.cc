@@ -5728,6 +5728,7 @@ Storage::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelc
     return Disk::getDlabelCapabilities(dlabel, dlabelcapabilities);
 }
 
+
 void Storage::removeDmTableTo( unsigned long mjr, unsigned long mnr )
     {
     y2mil( "mjr:" << mjr << " mnr:" << mnr );
@@ -5735,12 +5736,8 @@ void Storage::removeDmTableTo( unsigned long mjr, unsigned long mnr )
     cmd += decString(mjr) + ":" + decString(mnr);
     cmd += " | sed s/:.*// | uniq";
     SystemCmd c( cmd );
-    unsigned line=0;
-    while( line<c.numLines() )
-	{
-	removeDmTable( c.getLine(line) );
-	line++;
-	}
+    for (const string& line : c.stdout())
+	removeDmTable(line);
     }
 
 
