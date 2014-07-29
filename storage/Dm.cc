@@ -529,12 +529,9 @@ void Dm::activate( bool val )
 	    {
 		for( unsigned i=1; i<c.numLines(); i++ )
 		{
-		if( extractNthWord(1, c.getLine(i)) != "CRYPT" )
-		    {
 		    string cmd = DMSETUPBIN " remove ";
 		    cmd += extractNthWord(0, c.getLine(i));
 		    rm.execute( cmd  );
-		    }
 		}
 	    }
 	    }
