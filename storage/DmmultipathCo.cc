@@ -91,7 +91,8 @@ DmmultipathCo::setUdevData(const list<string>& id)
 {
     y2mil("disk:" << nm << " id:" << id);
     udev_id = id;
-    udev_id.remove_if(string_starts_with("dm-"));
+    partition(udev_id.begin(), udev_id.end(), string_starts_with("wwn-"));
+    stable_partition(udev_id.begin(), udev_id.end(), string_starts_with("scsi-"));
     y2mil("id:" << udev_id);
 
     DmPartCo::setUdevData(udev_id);
