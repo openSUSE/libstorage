@@ -77,6 +77,7 @@ initDefaultLogger( const string& logdir )
     createLogger(path, file);
     }
 
+
     std::ostream& operator<<(std::ostream& s, const Environment& env)
     {
 	return s << "readonly:" << env.readonly << " testmode:" << env.testmode 
@@ -87,7 +88,7 @@ initDefaultLogger( const string& logdir )
 
 Storage::Storage(const Environment& env)
     : env(env), lock(readonly(), testmode()), cache(true), initialized(false),
-      recursiveRemove(false), zeroNewPartitions(false),
+      recursiveRemove(false), zeroNewPartitions(true),
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(BTRFS), defaultSubvolName(""), detectMounted(true),
       root_mounted(!instsys()), rootprefix(),
