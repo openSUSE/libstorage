@@ -310,7 +310,8 @@ bool Disk::detectGeometry()
 
 	gpt_enlarge = parted.getGptEnlarge();
 
-	y2mil("dlabel:" << dlabel << " geometry:" << geometry << " gpt_enlarge:" << gpt_enlarge);
+	y2mil("device:" << device() << " dlabel:" << dlabel << " geometry:" << geometry <<
+	      " gpt_enlarge:" << gpt_enlarge);
 
     if( dlabel!="loop" )
 	{
@@ -342,9 +343,9 @@ _("The partition table type on disk %1$s cannot be handled by\n"
 	ronly = true;
 	}
 
-    y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << detected_label <<
-	  " label:" << label);
-    return( ret );
+	y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << detected_label <<
+	      " label:" << label << " ronly:" << ronly);
+	return ret;
     }
 
 
@@ -366,7 +367,8 @@ Disk::logData(const string& Dir) const
     void
     Disk::setLabelData(const string& disklabel)
     {
-	y2mil("disklabel:" << disklabel);
+	y2mil("device:" << device() << " disklabel:" << disklabel);
+
 	DlabelCapabilities caps;
 	if (getDlabelCapabilities(disklabel, caps))
 	{
@@ -382,8 +384,9 @@ Disk::logData(const string& Dir) const
 	    max_logical = 0;
 	    label = "unsupported";
 	}
-	y2mil("label:" << label << " max_primary:" << max_logical << " ext_possible:" <<
-	      ext_possible << " max_logical:" << max_logical);
+
+	y2mil("device:" << device() << " label:" << label << " max_primary:" << max_logical <<
+	      " ext_possible:" << ext_possible << " max_logical:" << max_logical);
     }
 
 
