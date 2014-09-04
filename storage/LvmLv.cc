@@ -108,7 +108,7 @@ namespace storage
 	setChildValueIf(node, "used_pool", used_pool, !used_pool.empty());
 	setChildValueIf(node, "origin", origin, !origin.empty());
         setChildValue(node, "pool", pool);
-        setChildValue(node, "chunk_size", chunk_size);
+        setChildValueIf(node, "chunk_size", chunk_size, chunk_size != 0);
     }
 
 
