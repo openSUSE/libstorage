@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Fri Sep 05 10:35:50 CEST 2014 - aschnell@suse.de
+
+- improved testmode
+
+-------------------------------------------------------------------
 Thu Aug 14 18:24:19 CEST 2014 - aschnell@suse.de
 
 - per default zero (wipefs) new partitions (bnc#891956)
