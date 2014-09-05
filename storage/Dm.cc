@@ -109,14 +109,20 @@ namespace storage
     }
 
 
-unsigned Dm::dmMajor()
+    unsigned
+    Dm::dmMajor(bool testmode)
     {
-    if( dm_major==0 )
-    {
-	dm_major = getMajorDevices("device-mapper");
-	y2mil("dm_major:" << dm_major);
-    }
-    return( dm_major );
+	if (dm_major == 0)
+	{
+	    if (testmode)
+		dm_major = 253;
+	    else
+		dm_major = getMajorDevices("device-mapper");
+
+	    y2mil("dm_major:" << dm_major);
+	}
+
+	return dm_major;
     }
 
 
@@ -233,7 +239,7 @@ void Dm::setUdevData(SystemInfo& si)
 void Dm::updateMajorMinor()
     {
     getMajorMinor();
-    if( majorNr()==Dm::dmMajor() )
+    if (majorNr() == Dm::dmMajor(getStorage()->testmode()))
 	{
 	string d = "/dev/dm-" + decString(minorNr());
 	if( d!=dev )

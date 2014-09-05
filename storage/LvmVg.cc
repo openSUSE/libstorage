@@ -1902,7 +1902,7 @@ LvmVg::doCreatePv(const Pv& pv)
 void LvmVg::normalizeDmDevices()
     {
     y2mil( "normalizeDmDevices:" << name() );
-    string dm = decString(Dm::dmMajor());
+    string dm = decString(Dm::dmMajor(getStorage()->testmode()));
     for( list<Pv>::iterator i=pv.begin(); i!=pv.end(); ++i )
 	{
 	if( i->device.find( "/dev/dm-" )==0 )

@@ -96,7 +96,7 @@ class Dm : public Volume
 
 	void logDifference(std::ostream& log, const Dm& rhs) const;
 
-	static unsigned dmMajor();
+	static unsigned dmMajor(bool testmode);
 	static string dmDeviceName( unsigned long num );
 
     protected:
