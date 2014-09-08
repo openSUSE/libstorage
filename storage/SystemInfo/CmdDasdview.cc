@@ -127,7 +127,7 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Dasdview& dasdview)
     {
-	s << "device: " << dasdview.device << " geometry:" << dasdview.geometry
+	s << "device:" << dasdview.device << " geometry:" << dasdview.geometry
 	  << " dasd_format:" << toString(dasdview.dasd_format) << " dasd_type:"
 	  << toString(dasdview.dasd_type);
 
