@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Sep 09 12:06:28 CEST 2014 - aschnell@suse.de
+
+- use absolute size for btrfs shrink command (bnc#894832)
+
+-------------------------------------------------------------------
 Fri Sep 05 10:35:50 CEST 2014 - aschnell@suse.de
 
 - improved testmode
