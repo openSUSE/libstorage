@@ -5636,7 +5636,9 @@ Storage::getFsCapabilities (FsType fstype, FsCapabilities& fscapabilities) const
     static FsCapabilitiesX ext4Caps (true, true, true, false, true, true,
 				     true, 16, 32*1024);
 
-    static FsCapabilitiesX btrfsCaps (true, true, true, true, true, true,
+    // btrfs can be shrunk but it is not possible to know the minimal possible
+    // size in advance (see bnc #894832), thus not allowed here
+    static FsCapabilitiesX btrfsCaps (true, true, false, false, true, true,
 				      true, 256, 256*1024);
 
     static FsCapabilitiesX xfsCaps (true, true, false, false, true, true,
