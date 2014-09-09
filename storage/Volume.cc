@@ -1755,9 +1755,9 @@ int Volume::resizeFs()
 		    {
 		    cmd = BTRFSBIN " filesystem resize ";
 		    if( needShrink() )
-			cmd += " -" + decString(orig_size_k-size_k) + "K";
+			cmd += decString(size_k) + "K";
 		    else
-			cmd += " max";
+			cmd += "max";
 		    cmd += " " + quote(tmp_mount.mount_point);
 		    c.execute( cmd );
 		    if( c.retcode()!=0 )
