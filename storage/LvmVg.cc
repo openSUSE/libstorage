@@ -446,13 +446,13 @@ LvmVg::removeVg()
     return( ret );
     }
 
+
 int
 LvmVg::extendVg( const string& dev )
     {
-    list<string> l;
-    l.push_back( dev );
-    return( extendVg( l ) );
+	return extendVg(list<string>({ dev }));
     }
+
 
 int
 LvmVg::extendVg( const list<string>& devs )
@@ -462,8 +462,6 @@ LvmVg::extendVg( const list<string>& devs )
     y2mil( "this:" << *this );
 
     checkConsistency();
-    list<string>::const_iterator i=devs.begin();
-    list<Pv>::iterator p;
     if( readonly() )
 	{
 	ret = LVM_CHANGE_READONLY;
@@ -472,6 +470,9 @@ LvmVg::extendVg( const list<string>& devs )
 	{
 	ret = LVM_LIST_EMPTY;
 	}
+
+    list<string>::const_iterator i=devs.begin();
+    list<Pv>::iterator p;
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
@@ -508,7 +509,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    {
 	    Pv pvn;
 	    unsigned long long s = getStorage()->deviceSize( d );
-	    pe = (s - 4000)/pe_size;
+	    pe = s > 4000 ? (s - 4000) / pe_size : 0;
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 
