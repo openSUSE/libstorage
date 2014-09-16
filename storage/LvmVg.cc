@@ -462,8 +462,6 @@ LvmVg::extendVg( const list<string>& devs )
     y2mil( "this:" << *this );
 
     checkConsistency();
-    list<string>::const_iterator i=devs.begin();
-    list<Pv>::iterator p;
     if( readonly() )
 	{
 	ret = LVM_CHANGE_READONLY;
@@ -472,6 +470,9 @@ LvmVg::extendVg( const list<string>& devs )
 	{
 	ret = LVM_LIST_EMPTY;
 	}
+
+    list<string>::const_iterator i=devs.begin();
+    list<Pv>::iterator p;
     while( ret==0 && i!=devs.end() )
 	{
 	string d = normalizeDevice( *i );
