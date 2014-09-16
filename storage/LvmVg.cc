@@ -446,13 +446,13 @@ LvmVg::removeVg()
     return( ret );
     }
 
+
 int
 LvmVg::extendVg( const string& dev )
     {
-    list<string> l;
-    l.push_back( dev );
-    return( extendVg( l ) );
+	return extendVg(list<string>({ dev }));
     }
+
 
 int
 LvmVg::extendVg( const list<string>& devs )
