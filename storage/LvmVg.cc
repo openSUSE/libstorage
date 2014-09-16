@@ -508,7 +508,7 @@ LvmVg::extendVg( const list<string>& devs )
 	    {
 	    Pv pvn;
 	    unsigned long long s = getStorage()->deviceSize( d );
-	    pe = (s - 4000)/pe_size;
+	    pe = s > 4000 ? (s - 4000) / pe_size : 0;
 	    pvn.num_pe = pvn.free_pe = pe;
 	    pvn.device = d;
 
