@@ -168,9 +168,6 @@ namespace storage
 	Storage* getStorage() const { return sto; }
 	const Storage* getStorageConst() const { return sto; }
 	CType type() const { return typ; }
-	bool isPartitionable() const;
-	static bool Partitionable( const Container&d ) 
-	    { return( d.isPartitionable() ); }
 	bool isDeviceUsable() const;
 	static bool DeviceUsable( const Container&d ) 
 	    { return( d.isDeviceUsable() ); }
