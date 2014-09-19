@@ -108,15 +108,13 @@ namespace storage
 	return p.empty();
     }
 
-bool Container::isPartitionable() const
+
+    bool
+    Container::isBlkdev() const
     {
-    return( typ==DISK || typ==DMRAID || typ==DMMULTIPATH || typ==MDPART );
+	return typ == DISK || typ == DMRAID || typ == DMMULTIPATH || typ == MDPART;
     }
 
-bool Container::isDeviceUsable() const
-    {
-    return( typ==DISK || typ==DMRAID || typ==DMMULTIPATH || typ==MDPART );
-    }
 
     bool Container::stageDecrease(const Volume& v)
     {

@@ -6636,7 +6636,7 @@ Storage::deviceByNumber( unsigned long maj, unsigned long min ) const
 	ret = &*v;
     if( !ret )
 	{
-	ConstContPair c = contPair(Container::DeviceUsable);
+	ConstContPair c = contPair(Container::isBlkdev);
 	ConstContIterator ci = c.begin();
 	while( ci!=c.end() && (maj!=ci->majorNr() || min!=ci->minorNr()))
 	    ++ci;
