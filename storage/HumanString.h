@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -51,8 +51,8 @@ namespace storage
 
 
     /**
-     * Return a pretty description of a size with required precision
-     * and using B, kB, MB, GB, TB or PB as unit as appropriate.
+     * Return a pretty description of a size with required precision and using
+     * B, KiB, MiB, GiB, TiB, PiB or EiB as unit as appropriate.
      *
      * @param size size in bytes
      * @param classic use classic locale instead of global C++ locale
@@ -64,7 +64,9 @@ namespace storage
 			     bool omit_zeroes);
 
     /**
-     * Converts a size description using B, kB, MB, GB, TB or PB into an integer.
+     * Converts a size description using B, KiB, KB, MiB, MB, GiB, GB, TiB,
+     * TB, PiB, PB, EiB or EB into an integer. Decimal suffixes are treated as
+     * binary.
      *
      * @param str size string
      * @param classic use classic locale instead of global C++ locale
