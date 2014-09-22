@@ -21,3 +21,7 @@ num:3 cylRegion:[25584,152495] secRegion:[4605120,27449280] type:primary id:131
 parse4
 device:/dev/sdb label:loop geometry:[9964,255,63,512]
 
+parse5
+device:/dev/dasdc label:dasd geometry:[244,16,128,512] implicit
+num:1 cylRegion:[0,244] secRegion:[2,499998] type:primary id:131
+

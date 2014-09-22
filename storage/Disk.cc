@@ -305,6 +305,7 @@ bool Disk::detectGeometry()
 	const Parted& parted = systeminfo.getParted(dev);
 
 	string dlabel = parted.getLabel();
+	ronly = parted.getImplicit();
 
 	new_geometry = geometry = parted.getGeometry();
 

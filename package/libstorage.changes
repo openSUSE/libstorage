@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Sep 22 16:34:43 CEST 2014 - aschnell@suse.de
+
+- treat disks with implicit partition table as read-only
+  (bsc#894585)
+
+-------------------------------------------------------------------
 Tue Sep 16 13:16:50 CEST 2014 - aschnell@suse.de
 
 - fixed using DM disks for LVM (bnc#896729)
