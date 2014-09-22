@@ -36,7 +36,7 @@ namespace storage
 
 
     Parted::Parted(const string& device, bool do_probe)
-	: device(device), gpt_enlarge(false)
+	: device(device), implicit(false), gpt_enlarge(false)
     {
 	if (do_probe)
 	    probe();
@@ -58,6 +58,7 @@ namespace storage
     void
     Parted::parse(const vector<string>& lines)
     {
+	implicit = false;
 	gpt_enlarge = false;
 	entries.clear();
 
@@ -103,6 +104,12 @@ namespace storage
 	    scanSectorSizeLine(*pos);
 	else
 	    y2war("could not find sector size");
+
+	pos = find_if(lines, string_starts_with("Disk Flags:"));
+	if (pos != lines.end())
+	    scanDiskFlags(*pos);
+	else
+	    y2war("could not find disk flags");
 
 	gpt_enlarge = find_if(lines, string_starts_with("fix the GPT to use all")) != lines.end();
 
@@ -169,6 +176,9 @@ namespace storage
 	s << "device:" << parted.device << " label:" << parted.label << " geometry:"
 	  << parted.geometry;
 
+	if (parted.implicit)
+	    s << " implicit";
+
 	if (parted.gpt_enlarge)
 	    s << " gpt_enlarge";
 
@@ -190,6 +200,13 @@ namespace storage
 	    s << " boot";
 
 	return s;
+    }
+
+
+    void
+    Parted::scanDiskFlags(const string& line)
+    {
+	implicit = boost::contains(line, "implicit_partition_table");
     }
 
 

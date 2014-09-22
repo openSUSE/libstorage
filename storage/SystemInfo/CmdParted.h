@@ -56,6 +56,7 @@ namespace storage
 	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
 
 	const string& getLabel() const { return label; }
+	bool getImplicit() const { return implicit; }
 	const Geometry& getGeometry() const { return geometry; }
 	bool getGptEnlarge() const { return gpt_enlarge; }
 
@@ -73,10 +74,12 @@ namespace storage
 
 	string device;
 	string label;
+	bool implicit;
 	Geometry geometry;
 	bool gpt_enlarge;
 	vector<Entry> entries;
 
+	void scanDiskFlags(const string& line);
 	void scanSectorSizeLine(const string& line);
 	void scanGeometryLine(const string& line);
 	void scanCylEntryLine(const string& line);
