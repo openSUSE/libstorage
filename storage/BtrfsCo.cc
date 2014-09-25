@@ -418,7 +418,7 @@ int BtrfsCo::removeUuid( const string& uuid )
 int BtrfsCo::removeVolume( Volume* v, bool quiet )
     {
     int ret = 0;
-    y2mil("qiet:" << quiet);
+    y2mil("quiet:" << quiet);
     y2mil("vol:" << *v);
     v->setDeleted();
     if( quiet )
