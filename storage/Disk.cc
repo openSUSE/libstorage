@@ -1387,10 +1387,20 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     return( ret );
     }
 
-static bool volume_ptr_sort_nr( Partition*& rhs, Partition*& lhs )
+
+    static bool
+    partition_ptr_sort_nr(Partition*& rhs, Partition*& lhs)
     {
-    return( rhs->nr()<lhs->nr() );
+	return rhs->nr() < lhs->nr();
     }
+
+
+    static bool
+    volume_ptr_sort_nr(const Volume* rhs, const Volume* lhs)
+    {
+	return rhs->nr() < lhs->nr();
+    }
+
 
 int Disk::removePartition( unsigned nr )
     {
@@ -1444,7 +1454,7 @@ int Disk::removePartition( unsigned nr )
 		}
 	    if( !l.empty() )
 		{
-		l.sort( volume_ptr_sort_nr );
+		l.sort(partition_ptr_sort_nr);
 		unsigned old = nr;
 		list<Partition*>::iterator vi = l.begin();
 		while( vi!=l.end() )
@@ -1454,6 +1464,8 @@ int Disk::removePartition( unsigned nr )
 		    old = save;
 		    ++vi;
 		    }
+		// bsc #898362
+		vols.sort(volume_ptr_sort_nr);
 		}
 	    }
 	if( t==EXTENDED )
