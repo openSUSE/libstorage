@@ -121,7 +121,7 @@ void TmpfsCo::getTmpfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
 int TmpfsCo::removeVolume( Volume* v, bool quiet )
     {
     int ret = 0;
-    y2mil("qiet:" << quiet);
+    y2mil("quiet:" << quiet);
     y2mil("vol:" << *v);
     v->setDeleted();
     if( quiet )

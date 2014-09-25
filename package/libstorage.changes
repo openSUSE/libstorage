@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Sep 25 16:20:52 CEST 2014 - aschnell@suse.de
+
+- sort partitions after certain remove steps (bsc#898362)
+
+-------------------------------------------------------------------
 Mon Sep 22 16:34:43 CEST 2014 - aschnell@suse.de
 
 - treat disks with implicit partition table as read-only
