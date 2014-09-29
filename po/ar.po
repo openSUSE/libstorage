@@ -1,47 +1,42 @@
-# translation of libstorage.po to Bulgarian
-# Bulgarian message file for YaST2 (@memory@).
-# Copyright (C) 2005 SUSE Linux Products GmbH.
-# Copyright (C) 2002 SuSE Linux AG.
-# Copyright (C) SuSE GmbH, 2000.
-#
-# Dimitar Boin <cyclonetc@mail.bulgaria.com>, 2000.
-# Y Gonch <gonch@mail.bulgaria.com>, 2000.
-# Borislav Mitev <morbid_viper@tkzs.org>, 2004, 2005, 2006, 2009, 2010.
+# Mohammad Alhargan <malham1@gmail.com>, 2011.
+# mohammad <malham1@gmail.com>, 2012.
+# Mohammad Alhargan <malham1@hotmail.com>, 2012.
+# malhargan <malham1@gmail.com>, 2014.
 msgid ""
 msgstr ""
-"Project-Id-Version: libstorage\n"
+"Project-Id-Version: @PACKAGE@\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-09-29 11:51+0200\n"
-"PO-Revision-Date: 2010-06-10 00:16+0300\n"
-"Last-Translator: Borislav Mitev <morbid_viper@tkzs.org>\n"
-"Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
-"Language: bg\n"
+"PO-Revision-Date: 2014-09-07 07:49+0300\n"
+"Last-Translator: malhargan <malham1@gmail.com>\n"
+"Language-Team: openSUSE\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Virtaal 0.7.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
 #: ../storage/Volume.cc:3382
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr ""
+msgstr "(لن يتحرك شريط التقدم. قد تستغرق وقتاً طويلاً جداً. لا تقم بالإجهاض!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
-msgstr "Задаване пътя за монтиране на %1$s да е %2$s"
+msgstr "إضافة إدخال لنقطة التوصيل %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:924
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
-msgstr "Задаване пътя за монтиране на %1$s да е %2$s"
+msgstr "يتم الآن إضافة إدخال لنقطة التوصيل %1$s إلى %2$s"
 
 #. symbol for "bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:51
@@ -50,7 +45,7 @@ msgstr "B"
 
 #: ../storage/Graph.cc:515
 msgid "Btrfs Volume"
-msgstr ""
+msgstr "حجم Btrfs"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -58,73 +53,73 @@ msgstr ""
 #: ../storage/Volume.cc:1456
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
-msgstr "Промяна пътя за монтиране на %1$s да е %2$s"
+msgstr "تغيير نقطة التوصيل %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:104
-#, fuzzy, c-format
+#, c-format
 msgid "Change mount point of tmpfs to %1$s"
-msgstr "Промяна пътя за монтиране на %1$s да е %2$s"
+msgstr "تغيير نقطة التوصيل tmpfs إلى %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2574
 #, c-format
 msgid "Clear label on %1$s"
-msgstr "Изчистване на етикета за %1$s"
+msgstr "مسح التسمية على %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:2567
 #, c-format
 msgid "Clearing label on %1$s"
-msgstr "Изчистване на етикета за %1$s"
+msgstr "يتم الآن مسح التسمية على %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:277
 #, c-format
 msgid "Create %1$s"
-msgstr "Създаване на %1$s"
+msgstr "إنشاء %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3319
-#, fuzzy, c-format
+#, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "إنشاء وحدت تخزين BIOS %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3323
-#, fuzzy, c-format
+#, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "إنشاء وحدت تخزين GPT PReP %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3327
-#, fuzzy, c-format
+#, c-format
 msgid "Create PReP volume %1$s (%2$s)"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "إنشاء وحدت تخزين PReP %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:138
-#, fuzzy, c-format
+#, c-format
 msgid "Create RAID partition %1$s (%2$s)"
-msgstr "Създаване на дял %1$s (%2$s)"
+msgstr "إنشاء قسم الغارة %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:112
-#, fuzzy, c-format
+#, c-format
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء قسم الغارة %1$s (%2$s) ل %4$s ب %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -133,16 +128,16 @@ msgstr "Създаване на дял %1$s (%2$s) с %3$s за %4$s"
 #: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
-msgstr "Създаване на зареждащ дял %1$s (%2$s) с %3$s"
+msgstr "إنشاء حجم إقلاع %1$s (%2$s) ب %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:122
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء قسم تشفير الغارات %1$s (%2$s) ل %4$s ب %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -152,7 +147,7 @@ msgstr "Създаване на криптиран дял %1$s (%2$s) с %3$s з
 #: ../storage/Loop.cc:307
 #, c-format
 msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Създаване на криптиран файлово-базирано устройство  %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "إنشاء جهاز مشفر يستند إلى الملف %1$s من الملف %2$s (%3$s) باعتباره %5$s بـ %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -161,7 +156,7 @@ msgstr "Създаване на криптиран файлово-базиран
 #: ../storage/LvmLv.cc:248
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран логически дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء وحدة التخزين المنطقية المشفرة %1$s (%2$s) الخاصة بـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -170,7 +165,7 @@ msgstr "Създаване на криптиран логически дял %1$
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран многопътен дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء قسم متعدد التشفير %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -180,7 +175,7 @@ msgstr "Създаване на криптиран многопътен дял %
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Създаване на криптиран софтуерен RAID %1$s (%2$s) от %5$s с %3$s за %4$s"
+msgstr "إنشاء برامج التشفير RAID %1$s (%2$s) من %5$s ل %4$s ب %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -188,7 +183,7 @@ msgstr "Създаване на криптиран софтуерен RAID %1$s 
 #: ../storage/Volume.cc:3312
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
-msgstr "Създаване на криптиран дял %1$s (%2$s)"
+msgstr "إنشاء وحدة التخزين المشفرة%1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -198,28 +193,28 @@ msgstr "Създаване на криптиран дял %1$s (%2$s)"
 #: ../storage/Volume.cc:3304
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء حجم مشفرة %1$s (%2$s) ل %4$s ب %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:131
-#, fuzzy, c-format
+#, c-format
 msgid "Create extended RAID partition %1$s (%2$s)"
-msgstr "Създаване на разширен дял %1$s (%2$s)"
+msgstr "إنشاء قسم الغارة الموسع %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:131
 #, c-format
 msgid "Create extended multipath partition %1$s (%2$s)"
-msgstr "Създаване на разширен многопътен дял %1$s (%2$s)"
+msgstr "إنشاء قسم موسع متعدد المسارات %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "Създаване на разширен дял %1$s (%2$s)"
+msgstr "إنشاء قسم موسع %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -227,7 +222,7 @@ msgstr "Създаване на разширен дял %1$s (%2$s)"
 #: ../storage/Loop.cc:317
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s)"
-msgstr "Създаване на файлово-базирано устройство %1$s в %2$s (%3$s)"
+msgstr "إنشاء ملف يعتمد على الجهاز %1$s للملف %2$s (%3$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -237,14 +232,14 @@ msgstr "Създаване на файлово-базирано устройст
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Създаване на файлово-базирано устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "إنشاء ملف يعتمد على الجهاز %1$s من الملف %2$s (%3$s) باعتباره %5$s مع %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:257
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
-msgstr "Създаване на логически дял %1$s (%2$s)"
+msgstr "إنشاء وحدة التخزين المنطقية %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -253,14 +248,14 @@ msgstr "Създаване на логически дял %1$s (%2$s)"
 #: ../storage/LvmLv.cc:238
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на логически дял %1$s (%2$s) с %3$s за %4$s "
+msgstr "إنشاء وحدة التخزين المنطقية %1$s (%2$s) الخاصة بـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:138
 #, c-format
 msgid "Create multipath partition %1$s (%2$s)"
-msgstr "Създаване на многопътен дял %1$s (%2$s)"
+msgstr "إنشاء قسم متعدد المسارات %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -269,7 +264,7 @@ msgstr "Създаване на многопътен дял %1$s (%2$s)"
 #: ../storage/Dmmultipath.cc:112
 #, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на многопътен дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "إنشاء قسم متعدد المسارات %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -278,7 +273,7 @@ msgstr "Създаване на многопътен дял %1$s (%2$s) с %3$s 
 #: ../storage/Volume.cc:3284
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
-msgstr "Създаване на коренен масив %1$s (%2$s) с %3$s"
+msgstr "إنشاء قسم جذر %1$s (%2$s) بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -286,7 +281,7 @@ msgstr "Създаване на коренен масив %1$s (%2$s) с %3$s"
 #: ../storage/Md.cc:423
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
-msgstr "Създаване на софтуерен RAID %1$s (%2$s) от %3$s"
+msgstr "إنشاء برامج غارة %1$s (%2$s) من %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -296,35 +291,35 @@ msgstr "Създаване на софтуерен RAID %1$s (%2$s) от %3$s"
 #: ../storage/Md.cc:402
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Създаване на софтуерен RAID %1$s (%2$s) от %5$s с %3$s за %4$s"
+msgstr "إنشاء برامج غارة %1$s (%2$s) من %5$s ل %4$s ب %3$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Btrfs.cc:907
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "إنشاء حجم فرعي %1$s على الجهاز %2$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:101
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap RAID partition %1$s (%2$s)"
-msgstr "Създаване на swap дял %1$s (%2$s)"
+msgstr "إنشاء مبادلة قسم غاره %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:227
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
-msgstr "Създаване на swap логически масив %1$s (%2$s)"
+msgstr "إنشاء وحدة تخزين منطقية للمبادلة %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:101
 #, c-format
 msgid "Create swap multipath partition %1$s (%2$s)"
-msgstr "Създаване на многопътен swap дял %1$s (%2$s)"
+msgstr "إنشاء قسم مبادلة متعدد المسارات %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -332,7 +327,7 @@ msgstr "Създаване на многопътен swap дял %1$s (%2$s)"
 #: ../storage/Volume.cc:3279
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
-msgstr "Създаване на swap масив %1$s (%2$s)"
+msgstr "إنشاء حجم مبادلة %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -340,7 +335,7 @@ msgstr "Създаване на swap масив %1$s (%2$s)"
 #: ../storage/Volume.cc:3308
 #, c-format
 msgid "Create volume %1$s (%2$s)"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "إنشاء حجم %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -350,7 +345,7 @@ msgstr "Създаване на масив %1$s (%2$s)"
 #: ../storage/Volume.cc:3298
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Създаване на масив %1$s (%2$s) с %3$s за %4$s "
+msgstr "إنشاء حجم %1$s (%2$s) الخاصة بـ %4$s بـ %3$s"
 
 #. displayed text before action
 #. %1$s is replaced by a name (e.g. system)
@@ -359,59 +354,59 @@ msgstr "Създаване на масив %1$s (%2$s) с %3$s за %4$s "
 #: ../storage/LvmVg.cc:1413
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Създаване на група от масиви %1$s (%2$s) от %3$s"
+msgstr "إنشاء مجموعة حجم %1$s (%2$s) من %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
 #, c-format
 msgid "Creating %1$s"
-msgstr "Създаване на %1$s"
+msgstr "يتم الآن إنشاء %1$s"
 
 #. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #: ../storage/Dmraid.cc:93
-#, fuzzy, c-format
+#, c-format
 msgid "Creating RAID partition %1$s"
-msgstr "Създаване на дял %1$s"
+msgstr "يتم الآن إنشاء قسم الغارة %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #: ../storage/Loop.cc:280
 #, c-format
 msgid "Creating file-based device %1$s of file %2$s"
-msgstr "Създаване на файлово-базирано устройство %1$s в %2$s"
+msgstr "يتم الآن إنشاء جهاز يستند إلى الملف %1$s من الملف %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:219
 #, c-format
 msgid "Creating logical volume %1$s"
-msgstr "Създаване на логически дял %1$s"
+msgstr "يتم الآن إنشاء حجم منطقي %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:93
 #, c-format
 msgid "Creating multipath partition %1$s"
-msgstr "Създаване на многопътен дял %1$s"
+msgstr "يتم الآن إنشاء قسم متعدد المسارات %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/Md.cc:388
 #, c-format
 msgid "Creating software RAID %1$s from %2$s"
-msgstr "Създаване на софтуерен RAID %1$s от %2$s"
+msgstr "يتم الآن إنشاء برنامج غارة %1$s من %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Btrfs.cc:900
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "يتم الآن إنشاء حجم فرعي %1$s على الجهاز %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:3332
 #, c-format
 msgid "Creating volume %1$s"
-msgstr "Създаване на масив %1$s"
+msgstr "يتم الآن إنشاء الحجم %1$s"
 
 #. displayed text during action
 #. %1$s is replaced by a name (e.g. system)
@@ -420,130 +415,130 @@ msgstr "Създаване на масив %1$s"
 #: ../storage/LvmVg.cc:1404
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Създаване на група от масиви %1$s (%2$s) от %3$s"
+msgstr "يتم الآن إنشاء مجموعة الحجم %1$s (%2$s) من %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
-msgstr "DM – Устройство"
+msgstr "DM جهاز"
 
 #: ../storage/Graph.cc:491
 msgid "DM Multipath"
-msgstr "DM – Многопът"
+msgstr "DM متعدد المسارات"
 
 #: ../storage/Graph.cc:487
 msgid "DM RAID"
-msgstr "DM – RAID"
+msgstr "DM غارة"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Btrfs.cc:641
-#, fuzzy, c-format
+#, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
-msgstr "Изтриване на файлово-базираното устройство %1$s (%2$s)"
+msgstr "حذف حجم Btrfs على الجهاز %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:80
-#, fuzzy, c-format
+#, c-format
 msgid "Delete RAID partition %1$s (%2$s)"
-msgstr "Изтриване на дял %1$s (%2$s)"
+msgstr "حذف قسم الغارة %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:426
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
-msgstr "Изтриване на Windows дял %1$s (%2$s)"
+msgstr "حذف قسم Windows %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dm.cc:454
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
-msgstr "Изтриване на масив на пренасочването на устройства %1$s (%2$s)"
+msgstr "حذف وحدة تخزين معَيِّن الجهاز %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Loop.cc:266
 #, c-format
 msgid "Delete file-based device %1$s (%2$s)"
-msgstr "Изтриване на файлово-базираното устройство %1$s (%2$s)"
+msgstr "حذف جهاز يستند إلى الملف %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:207
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
-msgstr "Изтриване на логически дял %1$s (%2$s)"
+msgstr "حذف وحدة التخزين المنطقية %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:80
 #, c-format
 msgid "Delete multipath partition %1$s (%2$s)"
-msgstr "Изтриване на многопътия дял %1$s (%2$s)"
+msgstr "حذف قسم متعدد المسارات %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "Изтриване на дял %1$s (%2$s)"
+msgstr "حذف قسم %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Md.cc:374
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
-msgstr "Изтриване на софтуерен RAID %1$s (%2$s)"
+msgstr "حذف برامج RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #: ../storage/Btrfs.cc:635
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
-msgstr "Изтриване на файлово-базираното устройство %1$s"
+msgstr "يتم الآن حذف حجم Btrfs من الجهاز %1$s"
 
 #. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #: ../storage/Dmraid.cc:74
-#, fuzzy, c-format
+#, c-format
 msgid "Deleting RAID partition %1$s"
-msgstr "Изтриване на дял %1$s"
+msgstr "يتم الآن حذف قسم الغارة %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #: ../storage/Dm.cc:448
 #, c-format
 msgid "Deleting device mapper volume %1$s"
-msgstr "Изтриване на масив на пренасочването на устройства: %1$s"
+msgstr "يتم الآن حذف وحدة تخزين معَيِّن الجهاز %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #: ../storage/Loop.cc:260
 #, c-format
 msgid "Deleting file-based device %1$s"
-msgstr "Изтриване на файлово-базираното устройство %1$s"
+msgstr "يتم الآن حذف جهاز يستند إلى الملف %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:201
 #, c-format
 msgid "Deleting logical volume %1$s"
-msgstr "Изтриване на логически дял %1$s"
+msgstr "يتم الآن حذف وحدة التخزين المنطقية %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:74
 #, c-format
 msgid "Deleting multipath partition %1$s"
-msgstr "Изтриване на многопътия дял %1$s"
+msgstr "يتم الآن حذف قسم متعدد المسارات %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Partition.cc:418
 #, c-format
 msgid "Deleting partition %1$s"
-msgstr "Изтриване на дял %1$s"
+msgstr "يتم الآن حذف القسم %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #: ../storage/Md.cc:368
 #, c-format
 msgid "Deleting software RAID %1$s"
-msgstr "Изтриване на софтуерен RAID %1$s"
+msgstr "يتم الآن حذف برامج RAID %1$s"
 
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
@@ -565,16 +560,24 @@ msgstr "EiB"
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
-msgstr[0] "Изпълняване на dasdfmt за диск %1$s"
-msgstr[1] "Изпълняване на dasdfmt за дискове %1$s"
+msgstr[0] "تنفيذ أمر dasdfmt على القرص %1$s"
+msgstr[1] "تنفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[2] "تنفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[3] "تنفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[4] "تنفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[5] "تنفيذ أمر dasdfmt على الأقراص %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:211
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
-msgstr[0] "Изпълняване на dasdfmt за диск %1$s"
-msgstr[1] "Изпълняване на dasdfmt за дискове %1$s"
+msgstr[0] "يفيذ أمر dasdfmt على القرص %1$s"
+msgstr[1] "يفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[2] "نفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[3] "نفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[4] "نفيذ أمر dasdfmt على الأقراص %1$s"
+msgstr[5] "نفيذ أمر dasdfmt على الأقراص %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -582,56 +585,56 @@ msgstr[1] "Изпълняване на dasdfmt за дискове %1$s"
 #: ../storage/Volume.cc:3375
 #, c-format
 msgid "Extend %1$s to %2$s"
-msgstr "Увеличаване %1$s на %2$s"
+msgstr "تمديد %1$s إلى %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:866
-#, fuzzy, c-format
+#, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
-msgstr "Увеличаване на логически дял %1$s на %2$s"
+msgstr "تمديد حجم BTRFS %1$s بواسطة %2$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:229
-#, fuzzy, c-format
+#, c-format
 msgid "Extend RAID partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "تمديد قسم غاره %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:552
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
-msgstr "Увеличаване на Windows дял %1$s на %2$s"
+msgstr "تقليص قسم Windows %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:346
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
-msgstr "Увеличаване на логически дял %1$s на %2$s"
+msgstr "توسيع وحدة التخزين المنطقية %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:229
 #, c-format
 msgid "Extend multipath partition %1$s to %2$s"
-msgstr "Увеличаване на многопътия дял %1$s на %2$s"
+msgstr "تمديد قسم متعدد المسارات %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:563
 #, c-format
 msgid "Extend partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "توسيع قسم %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1434
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
-msgstr "Разширяване на групата от масиви %1$s с %2$s"
+msgstr "توسيع مجموعة وحدة التخزين %1$s بـ %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -639,90 +642,90 @@ msgstr "Разширяване на групата от масиви %1$s с %2$
 #: ../storage/Volume.cc:3367
 #, c-format
 msgid "Extending %1$s to %2$s"
-msgstr "Увеличаване %1$s на %2$s"
+msgstr "يتم الآن تمديد %1$s إلى %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:859
-#, fuzzy, c-format
+#, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
-msgstr "Увеличаване на логически масив %1$s на %2$s"
+msgstr "يتم الآن تمديد حجم BTRFS %1$s بواسطة %2$s"
 
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:215
-#, fuzzy, c-format
+#, c-format
 msgid "Extending RAID partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "تمديد قسم غاره %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:332
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
-msgstr "Увеличаване на логически масив %1$s на %2$s"
+msgstr "يتم الآن توسيع وحدة التخزين المنطقية %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:215
 #, c-format
 msgid "Extending multipath partition %1$s to %2$s"
-msgstr "Увеличаване на многопътия дял %1$s на %2$s"
+msgstr "يتم الآن يمديد قسم متعدد المسارات %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:536
 #, c-format
 msgid "Extending partition %1$s to %2$s"
-msgstr "Увеличаване на дял %1$s на %2$s"
+msgstr "يتم الآن توسيع قسم %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1427
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
-msgstr "Разширяване на групата от масиви %1$s с %2$s"
+msgstr "يتم الآن توسيع مجموعة وحدة التخزين %1$s بـ %2$s"
 
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #: ../storage/Btrfs.cc:724
-#, fuzzy, c-format
+#, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Изтриване на файлово-базираното устройство %1$s (%2$s)"
+msgstr "تهيئة حجم Btrfs من حجم %1$s (استخدام الجهاز:%2$s)"
 
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
 #: ../storage/Btrfs.cc:718
-#, fuzzy, c-format
+#, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "Изтриване на файлово-базираното устройство %1$s (%2$s)"
+msgstr "تهيئة الحجم Btrfs من حجم %1$s ل %3$s (إستخدام الجهاز:%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:174
-#, fuzzy, c-format
+#, c-format
 msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم الغارة %1$s (%2$s) ل %4$s ب %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:165
-#, fuzzy, c-format
+#, c-format
 msgid "Format RAID partition %1$s (%2$s) for swap"
-msgstr "Форматиране на %1$s (%2$s) за swap"
+msgstr "تهيئة قسم غارة %1$s (%2$s) للتبديل"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmraid.cc:194
-#, fuzzy, c-format
+#, c-format
 msgid "Format RAID partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
+msgstr "تهيئة قسم غارة %1$s (%2$s) بواسطة %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -732,7 +735,7 @@ msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
 #: ../storage/Volume.cc:850
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на устройство %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة الجهاز %1$s (%2$s) ل %4$s ب %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -741,7 +744,7 @@ msgstr "Форматиране на устройство %1$s (%2$s) с %3$s з�
 #: ../storage/Volume.cc:841
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
-msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
+msgstr "تهيئة جهاز %1$s (%2$s) بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -750,7 +753,7 @@ msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
 #: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
+msgstr "تهيئة وحدة تخزين معَيِّن الجهاز %1$s (%2$s) الخاص بـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -758,16 +761,16 @@ msgstr "Форматиране на масив на пренасочването
 #: ../storage/Dm.cc:501
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
-msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s"
+msgstr "تهيئة وحدة تخزين معَيِّن الجهاز %1$s (%2$s) بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:184
-#, fuzzy, c-format
+#, c-format
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم الغارة المشفر %1$s (%2$s) من أجل %4$s بواسطة %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -777,7 +780,7 @@ msgstr "Форматиране на криптиран дял %1$s (%2$s) с %3$
 #: ../storage/Volume.cc:859
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптирано устройство %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة جهاز مشفر %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -786,7 +789,7 @@ msgstr "Форматиране на криптирано устройство %1
 #: ../storage/Dm.cc:491
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран масив на пренасочването на устройства %1$s (%2$s) с %3$s за %4$s "
+msgstr "تهيئة وحدة تخزين معَيِّن الجهاز المشفرة %1$s (%2$s) من أجل %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -796,7 +799,7 @@ msgstr "Форматиране на криптиран масив на прен�
 #: ../storage/Loop.cc:364
 #, c-format
 msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Форматиране на криптиран файлово-базираното устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "تهيئة جهاز مشفر يستند إلى الملف %1$s من %2$s (%3$s) باعتباره %5$s بـ %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -805,7 +808,7 @@ msgstr "Форматиране на криптиран файлово-базир
 #: ../storage/LvmLv.cc:302
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран логически дял %1$s (%2$s) с %3$s за %4$s "
+msgstr "تهيئة وحدة التخزين المنطقية المشفرة %1$s (%2$s) من أجل %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -814,7 +817,7 @@ msgstr "Форматиране на криптиран логически дял
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран многопътен дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم متعدد التشفير %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -823,7 +826,7 @@ msgstr "Форматиране на криптиран многопътен дя
 #: ../storage/Partition.cc:506
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم مشفر %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -832,7 +835,7 @@ msgstr "Форматиране на криптиран дял %1$s (%2$s) с %3$
 #: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на криптиран софтуерен RAID %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة برامج RAID مشفرة %1$s (%2$s) من أجل %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -842,7 +845,7 @@ msgstr "Форматиране на криптиран софтуерен RAID %
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) като %5$s с %4$s"
+msgstr "تهيئة جهاز يستند إلى الملف %1$s من %2$s (%3$s) باعتباره %5$s بـ %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -851,7 +854,7 @@ msgstr "Форматиране на файлово-базираното устр
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) с %4$s"
+msgstr "تهيئة جهاز يستند إلى الملف %1$s من %2$s (%3$s) بـ %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -860,14 +863,14 @@ msgstr "Форматиране на файлово-базираното устр
 #: ../storage/LvmLv.cc:292
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на логически дял %1$s (%2$s) с %3$s за %4$s "
+msgstr "تهيئة وحدة التخزين المنطقية %1$s (%2$s) الخاصة بـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:283
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
-msgstr "Форматиране на логически дял %1$s (%2$s) за swap"
+msgstr "تهيئة وحدة التخزين EVMS %1$s (%2$s) من أجل المبادلة"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -875,7 +878,7 @@ msgstr "Форматиране на логически дял %1$s (%2$s) за s
 #: ../storage/LvmLv.cc:312
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
-msgstr "Форматиране на логически дял %1$s (%2$s) с %3$s"
+msgstr "تهيئة وحدة التخزين المنطقية %1$s (%2$s) بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -884,14 +887,14 @@ msgstr "Форматиране на логически дял %1$s (%2$s) с %3$
 #: ../storage/Dmmultipath.cc:174
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на  многопътния дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم متعدد المسارات %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:165
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for swap"
-msgstr "Форматиране на многопътния дял %1$s (%2$s) за swap"
+msgstr "تهيئة قسم متعدد المسارات %1$s (%2$s) للتبديل"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -899,7 +902,7 @@ msgstr "Форматиране на многопътния дял %1$s (%2$s) з
 #: ../storage/Dmmultipath.cc:194
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на многопътния дял %1$s (%2$s) с %3$s"
+msgstr "تهيئة قسم متعدد المسارات %1$s (%2$s) ب %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -908,14 +911,14 @@ msgstr "Форматиране на многопътния дял %1$s (%2$s) с
 #: ../storage/Partition.cc:496
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة قسم %1$s (%2$s) لـ %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:487
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
-msgstr "Форматиране на %1$s (%2$s) за swap"
+msgstr "تهيئة قسم %1$s (%2$s) للتبديل"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -923,7 +926,7 @@ msgstr "Форматиране на %1$s (%2$s) за swap"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
+msgstr "تهيئة قسم %1$s (%2$s) بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -932,7 +935,7 @@ msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
 #: ../storage/Md.cc:452
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s за %4$s"
+msgstr "تهيئة برامج RAID %1$s (%2$s) من أجل %4$s بـ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -940,23 +943,23 @@ msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s 
 #: ../storage/Md.cc:472
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
-msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s"
+msgstr "تهيئة برامج RAID %1$s (%2$s) بـ %3$s"
 
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #: ../storage/Btrfs.cc:708
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Създаване на масив %1$s (%2$s)"
+msgstr "يتم الآن تهيئة حجم Btrfs من حجم %1$s (استخدام الجهاز:%2$s)"
 
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Dmraid.cc:154
-#, fuzzy, c-format
+#, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة قسم غارة %1$s (%2$s) بواسطة %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -965,7 +968,7 @@ msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
 #: ../storage/Volume.cc:833
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة جهاز %1$s (%2$s) بـ %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -973,7 +976,7 @@ msgstr "Форматиране на устройство %1$s (%2$s) с %3$s"
 #: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "Форматиране на масив на пренасочването на устройства %1$s (%2$s) с %3$s "
+msgstr "يتم الآن تهيئة وحدة تخزين معَيِّن الجهاز %1$s (%2$s) بـ %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -982,7 +985,7 @@ msgstr "Форматиране на масив на пренасочването
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Форматиране на файлово-базираното устройство %1$s в %2$s (%3$s) с %4$s"
+msgstr "يتم الآن تهيئة جهاز يستند إلى الملف %1$s من %2$s (%3$s) بـ %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -990,7 +993,7 @@ msgstr "Форматиране на файлово-базираното устр
 #: ../storage/LvmLv.cc:272
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
-msgstr "Форматиране на логически дял %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة وحدة التخزين المنطقية %1$s (%2$s) بـ %3$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -998,7 +1001,7 @@ msgstr "Форматиране на логически дял %1$s (%2$s) с %3$
 #: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "Форматиране на многопътния дял %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة قسم متعدد المسارات %1$s (%2$s) ب %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1006,7 +1009,7 @@ msgstr "Форматиране на многопътния дял %1$s (%2$s) с
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة قسم %1$s (%2$s) بـ %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1014,7 +1017,7 @@ msgstr "Форматиране на дял %1$s (%2$s) с %3$s"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "Форматиране на софтуерен RAID %1$s (%2$s) с %3$s"
+msgstr "يتم الآن تهيئة برامج RAID %1$s (%2$s) بـ %3$s "
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
@@ -1024,25 +1027,26 @@ msgstr "G"
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
 msgid "GB"
-msgstr "GB"
+msgstr "غيغابايت"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
 msgid "GiB"
-msgstr "GiB"
+msgstr "ج.ب"
 
+# menu entry for hard disk installation
 #: ../storage/Graph.cc:483
 msgid "Hard Disk"
-msgstr "Твърд диск"
+msgstr "القرص الصلب"
 
 #. symbol for "kibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:58
 msgid "KiB"
-msgstr "КВ"
+msgstr "كيبي بايت"
 
 #: ../storage/Graph.cc:511
 msgid "Logical Volume"
-msgstr "Логически масив"
+msgstr "وحدة التخزين المنطقية"
 
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:75
@@ -1052,20 +1056,20 @@ msgstr "M"
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
 msgid "MB"
-msgstr "МБ"
+msgstr "ميغابايت"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
-msgstr "MD – RAID"
+msgstr "DM غارة"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
 msgid "MiB"
-msgstr "MiB"
+msgstr "ميبي بايت"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "Път за монтиране"
+msgstr "نقطة التوصيل"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1073,13 +1077,13 @@ msgstr "Път за монтиране"
 #: ../storage/Volume.cc:1439
 #, c-format
 msgid "Mounting %1$s to %2$s"
-msgstr "Монтиране на %1$s в %2$s"
+msgstr "يتم الآن ضم %1$s ب %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:90
-#, fuzzy, c-format
+#, c-format
 msgid "Mounting tmpfs to %1$s"
-msgstr "Монтиране на %1$s в %2$s"
+msgstr "يتم الآن ضم tmpfs ل %1$s"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
@@ -1093,7 +1097,7 @@ msgstr "PB"
 
 #: ../storage/Graph.cc:495
 msgid "Partition"
-msgstr "Дял"
+msgstr "قسم"
 
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:102
@@ -1103,37 +1107,37 @@ msgstr "PiB"
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:887
-#, fuzzy, c-format
+#, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
-msgstr "Намаляване на групата от масиви %1$s с %2$s"
+msgstr "تقليل حجم BTRFS %1$s بواسطة %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1456
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
-msgstr "Намаляване на групата от масиви %1$s с %2$s"
+msgstr "تصغير مجموعة وحدة التخزين %1$s بواسطة %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:880
-#, fuzzy, c-format
+#, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
-msgstr "Намаляване на групата от масиви %1$s с %2$s"
+msgstr "يتم الآن تقليل حجم BTRFS %1$s بواسطة %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1449
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
-msgstr "Намаляване на групата от масиви %1$s с %2$s"
+msgstr "يتم الآن تصغير مجموعة وحدة التخزين %1$s بواسطة %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
 #, c-format
 msgid "Remove %1$s"
-msgstr "Премахване на %1$s"
+msgstr "إزالة %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1141,129 +1145,129 @@ msgstr "Премахване на %1$s"
 #: ../storage/Volume.cc:1487
 #, c-format
 msgid "Remove %1$s from %2$s"
-msgstr "Премахване на устройството %1$s от %2$s"
+msgstr "إزالة %1$s من %2$s"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:75
-#, fuzzy, c-format
+#, c-format
 msgid "Remove NFS volume %1$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "إزالة حجم nfs %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:185
-#, fuzzy, c-format
+#, c-format
 msgid "Remove RAID %1$s"
-msgstr "Премахване на %1$s"
+msgstr "إزالة الغارة %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:973
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
-msgstr "Премахване пътя за монтиране на %1$s от %2$s"
+msgstr "إزالة إدخال لنقطة التوصيل %1$s من %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1028
 #, c-format
 msgid "Remove software RAID %1$s"
-msgstr "Изтриване на софтуерен RAID %1$s"
+msgstr "حذف برنامج الغارة %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Btrfs.cc:927
-#, fuzzy, c-format
+#, c-format
 msgid "Remove subvolume %1$s on device %2$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "إزالة الحجم الفرعي %1$s على الجهاز %2$s"
 
 #. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
 #: ../storage/Tmpfs.cc:119
-#, fuzzy, c-format
+#, c-format
 msgid "Remove tmpfs from %1$s"
-msgstr "Премахване на устройството %1$s от %2$s"
+msgstr "إزالة tmpfs من %1$s"
 
 #. displayed text before action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:77
-#, fuzzy, c-format
+#, c-format
 msgid "Remove tmpfs volume from mount point %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "إزالة حجم Tmpfs من نقطة التوصيل %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:3395
 #, c-format
 msgid "Remove volume %1$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "إزالة الحجم %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1389
 #, c-format
 msgid "Remove volume group %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "إزالة مجموعة وحدة التخزين %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
 #, c-format
 msgid "Removing %1$s"
-msgstr "Премахване на %1$s"
+msgstr "يتم الآن إزالة %1$s"
 
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:70
-#, fuzzy, c-format
+#, c-format
 msgid "Removing NFS volume %1$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "يتم الآن إزالة حجم nfs %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:180
-#, fuzzy, c-format
+#, c-format
 msgid "Removing RAID %1$s"
-msgstr "Премахване на %1$s"
+msgstr "يتم الآن إزالة الغارة %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:966
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
-msgstr "Премахване пътя за монтиране на %1$s от %2$s"
+msgstr "يتم الآن إزالة إدخال نقطة التوصيل %1$s من %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1023
 #, c-format
 msgid "Removing software RAID %1$s"
-msgstr "Изтриване на софтуерен RAID %1$s"
+msgstr "يتم الآن إزالة برنامج الغارة %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Btrfs.cc:920
-#, fuzzy, c-format
+#, c-format
 msgid "Removing subvolume %1$s on device %2$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "يتم الآن إزالة الحجم الفرعي %1$s على الجهاز %2$s"
 
 #. displayed text during action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:72
-#, fuzzy, c-format
+#, c-format
 msgid "Removing tmpfs volume from mount point %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "يتم الآن إزالة الحجم Tmpfs من نقطة التوصيل %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:3392
 #, c-format
 msgid "Removing volume %1$s"
-msgstr "Изтриване на масив %1$s"
+msgstr "يتم الآن إزالة الحجم %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1384
 #, c-format
 msgid "Removing volume group %1$s"
-msgstr "Изтриване на група от масиви %1$s"
+msgstr "يتم الآن إزالة مجموعة وحدة التخزين %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
 #: ../storage/Disk.cc:1703
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
-msgstr "Задаване етикета на диск %1$s да е %2$s"
+msgstr "تعيين تسمية القرص من %1$s إلى %2$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1271,7 +1275,7 @@ msgstr "Задаване етикета на диск %1$s да е %2$s"
 #: ../storage/Volume.cc:2578
 #, c-format
 msgid "Set label on %1$s to %2$s"
-msgstr "Задаване етикета на %1$s да е %2$s"
+msgstr "إعداد تسمية على %1$s إلى %2$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1279,27 +1283,27 @@ msgstr "Задаване етикета на %1$s да е %2$s"
 #: ../storage/Volume.cc:1466
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
-msgstr "Задаване пътя за монтиране на %1$s да е %2$s"
+msgstr "تعيين نقطة توصيل %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:109
-#, fuzzy, c-format
+#, c-format
 msgid "Set mount point of tmpfs to %1$s"
-msgstr "Задаване пътя за монтиране на %1$s да е %2$s"
+msgstr "تعيين نقطة توصيل tmpfs إلى %1$s"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmraid.cc:250
-#, fuzzy, c-format
+#, c-format
 msgid "Set type of RAID partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "تعيين نوع قسم الغارة %1$s إلى %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:250
 #, c-format
 msgid "Set type of multipath partition %1$s to %2$X"
-msgstr "Задаване типа на многопътния дял %1$s на %2$X"
+msgstr "تعيين نوع قسم متعدد المسارات %1$s إلى %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
@@ -1309,36 +1313,36 @@ msgstr "Задаване типа на многопътния дял %1$s на %
 #: ../storage/MdPart.cc:180
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "تعيين نوع القسم %1$s إلى %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
 #. hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:338
-#, fuzzy, c-format
+#, c-format
 msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "تعيين نوع القسم %1$s إلى %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1866
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
-msgstr "Задаване на криптирано dm устройство на %1$s"
+msgstr "إعداد جهاز dm مشفر على %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1853
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
-msgstr "Задаване на криптирано loop устройство на %1$s"
+msgstr "إعداد جهاز تسلسل مشفر على %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
 #: ../storage/Disk.cc:1696
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
-msgstr "Задаване етикета на диск %1$s да е %2$s"
+msgstr "يتم الآن إعداد تسمية القرص %1$s إلى %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1346,21 +1350,21 @@ msgstr "Задаване етикета на диск %1$s да е %2$s"
 #: ../storage/Volume.cc:2571
 #, c-format
 msgid "Setting label on %1$s to %2$s"
-msgstr "Задаване етикета на %1$s да е %2$s"
+msgstr "يتم الآن إعداد تسمية على %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmraid.cc:243
-#, fuzzy, c-format
+#, c-format
 msgid "Setting type of RAID partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "يتم الآن إعداد نوع قسم الغارة %1$s إلى %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:243
 #, c-format
 msgid "Setting type of multipath partition %1$s to %2$X"
-msgstr "Задаване типа на многопътния дял %1$s на %2$X"
+msgstr "يتم الآن إعداد نوع قسم متعدد المسارات %1$s إلى %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
@@ -1370,29 +1374,29 @@ msgstr "Задаване типа на многопътния дял %1$s на %
 #: ../storage/MdPart.cc:173
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "يتم الآن إعداد نوع القسم %1$s إلى %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
 #. hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:325
-#, fuzzy, c-format
+#, c-format
 msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "Задаване типа на дяла %1$s на %2$X"
+msgstr "يتم الآن إعداد نوع القسم %1$s إلى %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1863
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
-msgstr "Задаване на криптирано dm устройство на %1$s"
+msgstr "يتم الآن إعداد جهاز dm مشفر على %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1850
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
-msgstr "Задаване на криптирано loop устройство на %1$s"
+msgstr "يتم الآن إعداد جهاز تسلسل مشفر على %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1400,42 +1404,42 @@ msgstr "Задаване на криптирано loop устройство н�
 #: ../storage/Volume.cc:3371
 #, c-format
 msgid "Shrink %1$s to %2$s"
-msgstr "Намаляване %1$s на %2$s"
+msgstr "تقليص %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:225
-#, fuzzy, c-format
+#, c-format
 msgid "Shrink RAID partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "تقليص قسم غاره %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:548
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
-msgstr "Намаляване на Windows дял %1$s на %2$s"
+msgstr "تقليص قسم Windows %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:342
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
-msgstr "Смаляване на логически дял %1$s на %2$s"
+msgstr "تقليص وحدة التخزين المنطقية %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:225
 #, c-format
 msgid "Shrink multipath partition %1$s to %2$s"
-msgstr "Намаляване на многопътния дял %1$s на %2$s"
+msgstr "تقليص قسم متعدد المسارات %1$s إلى %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:559
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "تقليص قسم %1$s إلى %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1443,35 +1447,35 @@ msgstr "Намаляване на дял %1$s на %2$s"
 #: ../storage/Volume.cc:3363
 #, c-format
 msgid "Shrinking %1$s to %2$s"
-msgstr "Намаляване %1$s на %2$s"
+msgstr "يتم الآن تقليص %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:211
-#, fuzzy, c-format
+#, c-format
 msgid "Shrinking RAID partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "يتم الآن تقليص قسم غاره %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/LvmLv.cc:328
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
-msgstr "Смаляване на логически дял %1$s на %2$s"
+msgstr "يتم الآن تقليص وحدة التخزين المنطقية %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:211
 #, c-format
 msgid "Shrinking multipath partition %1$s to %2$s"
-msgstr "Намаляване на многопътния дял %1$s на %2$s"
+msgstr "يتم الآن تقليص قسم متعدد المسارات %1$s إلى %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:532
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
-msgstr "Намаляване на дял %1$s на %2$s"
+msgstr "يتم الآن تقليص قسم %1$s إلى %2$s"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:97
@@ -1481,7 +1485,7 @@ msgstr "T"
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:94
 msgid "TB"
-msgstr "TB"
+msgstr "تيرا بايت"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #: ../storage/Disk.cc:334
@@ -1495,13 +1499,13 @@ msgid ""
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."
 msgstr ""
-"Дяловете на диск %1$s не могат да се обработят от \n"
-"този инструмент.\n"
-"\n"
-"Можете да използвате дяловете на диск %1$s както са.\n"
-"Можете да ги форматирате и задавате пътища за\n"
-"монтиране, но не можете да ги добавяте, изтривате,\n"
-"редактирате или да променяте размера им с този инструмент."
+"تعذر معالجة نوع جدول الأقسام على القرص %1$s بواسطة هذه \n"
+"الأداة.\n"
+" \n"
+" يمكنك استخدام الأقسام على القرص %1$s كما هي.\n"
+" يمكنك تهيئتها وتخصيص نقاط توصيل إليها، ولكن\n"
+" لا يمكنك إضافة أقسام إلى هذا القرص أو تحريرها أو تغيير حجمها أو إزالتها\n"
+" بهذه الأداة."
 
 #. popup text
 #: ../storage/Storage.cc:350
@@ -1509,42 +1513,43 @@ msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
 msgstr ""
+"ويبدو أن النظام ذو جهاز متعدد المسارات.\n"
+"هل تريد تنشيط تعدد المسارات؟"
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:91
 msgid "TiB"
-msgstr "TiB"
+msgstr "تيبي بايت"
 
 #: ../storage/Storage.cc:4953
 msgid "Unmount failed."
-msgstr "Демонтирането пропадна."
+msgstr "فشل إلغاء التوصيل."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:1445
 #, c-format
 msgid "Unmounting %1$s"
-msgstr "Размонтиране на %1$s"
+msgstr "يتم الآن إلغاء توصيل %1$s"
 
 #. displayed text during action
 #: ../storage/Tmpfs.cc:95
-#, fuzzy
 msgid "Unmounting tmpfs"
-msgstr "Размонтиране на %1$s"
+msgstr "يتم الآن إلغاء توصيل tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
-msgstr "Обновяване пътя за монтиране на %1$s да е %2$s"
+msgstr "تحديث إدخال لنقطة التوصيل %1$s في %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:945
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
-msgstr "Обновяване пътя за монтиране на %1$s да е %2$s"
+msgstr "يتم الآن تحديث إدخال نقطة التوصيل %1$s في %2$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1552,11 +1557,11 @@ msgstr "Обновяване пътя за монтиране на %1$s да е 
 #: ../storage/Volume.cc:1474
 #, c-format
 msgid "Use %1$s as %2$s"
-msgstr "Използване на %1$s като %2$s"
+msgstr "استخدام %1$s باعتباره %2$s"
 
 #: ../storage/Graph.cc:507
 msgid "Volume Group"
-msgstr "Група от масиви"
+msgstr "مجموعة وحدات التخزين"
 
 #. popup text
 #: ../storage/Disk.cc:529
@@ -1569,12 +1574,13 @@ msgid ""
 "    number of block devices partitions. This needs a repartition\n"
 "    as well."
 msgstr ""
-"Имате следните възможности:\n"
-"– Направете наново дяловете така, че да се използва само максимално\n"
-"разрешения брой дялове. За да направите това използвайте съществуващата\n"
-"операционна система.\n"
-"– Използвайте LVM, тъй като то предоставя произволен и гъвкав брой дялове\n"
-"с блокови устройства. Това също изисква пренаправянето на дяловете."
+"لديك الخيارات التالية:\n"
+"  - إعادة تقسيم النظام حتى يسمح بإستخدام فقط أعلى عدد من الأقسام. \n"
+"    لإعادة تقسيمه، استخدم نظام التشغيل\n"
+"    الموجود لديك. \n"
+"  - استخدام LVM حيث يمكنه توفير عدد تعسفي ومرن من الأقسام والكتل للجهاز.\n"
+"    هذا يحتاج كذلك\n"
+"    لإعادة التقسيم."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
@@ -1585,9 +1591,9 @@ msgid ""
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."
 msgstr ""
-"Вашият диск %1$s съдържа %2$lu дяла. Максималният брой\n"
-"дялове, който може да се управлява от този драйвер на ядрото\n"
-"е %3$lu. Няма да имате достъп до дяловете над  %3$lu."
+"يحتوي القرص %1$s على %2$lu قسم. الحد الأقصى لعدد الأقسام \n"
+"الذي يمكن للنواة معالجته هو %3$lu.\n"
+"لا يمكن الوصول لأكثر من %3$lu قسم."
 
 #. symbol for "kilo" (best keep untranslated)
 #: ../storage/HumanString.cc:64
@@ -1597,10 +1603,10 @@ msgstr "k"
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:61
 msgid "kB"
-msgstr "kB"
+msgstr "كيلو بايت"
 
 #~ msgid "Executing fdasd for disk %1$s"
-#~ msgstr "Изпълняване на fdasd за диск %1$s"
+#~ msgstr "يتم الآن تنفيذ أمر fdasd للقرص %1$s"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1612,14 +1618,14 @@ msgstr "kB"
 #~ "cannot add, edit, resize, or remove partitions from that\n"
 #~ "disk with this tool."
 #~ msgstr ""
-#~ "Дяловете на диск %1$s не могат да се прочетат от \n"
-#~ "инструмента fdasd, който се използва за \n"
-#~ "промяна на таблицата на дяловете.\n"
-#~ "\n"
-#~ "Можете да използвате дяловете на диск %1$s както са.\n"
-#~ "Можете да ги форматирате и задавате пътища за\n"
-#~ "монтиране, но не можете да ги добавяте, изтривате,\n"
-#~ "редактирате или да променяте размера им с този инструмент."
+#~ "تعذرت قراءة القسم على القرص %1$s بواسطة\n"
+#~ "أداة التقسيم fdasd المستخدمة لتغيير\n"
+#~ " جدول الأقسام.\n"
+#~ " \n"
+#~ " يمكنك استخدام الأقسام على القرص %1$s كما هي.\n"
+#~ " يمكنك تهيئتها وتخصيص نقاط توصيل إليها، ولكن\n"
+#~ " لا يمكنك إضافة أقسام إلى هذا القرص أو تحريرها أو تغيير حجمها أو إزالتها\n"
+#~ " بهذه الأداة."
 
 #~ msgid ""
 #~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
@@ -1631,15 +1637,14 @@ msgstr "kB"
 #~ "will be able to install system on it and boot from such RAID.\n"
 #~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 #~ msgstr ""
-#~ "Имате система, която поддържа Intel(R) Matrix Storage Manager.\n"
+#~ "تقوم بتشغيل منصة متوافق مع إدارة تخزين المصفوفة Intel(R) .\n"
 #~ "\n"
-#~ "Следните MD съвместими RAID устройства бяха открити:\n"
-#~ "%1$s\n"
-#~ "Ако са неизползвани устройства или пък съдържат дялове, то можете\n"
-#~ "да използвате подсистемата MD RAID подсистема за да ги управлявате. В случай на\n"
-#~ "неразделено устройство ще можете да инсталирате система и да \n"
-#~ "заредите от такъв RAID. \n"
-#~ "Желаете ли подсистемата MD RAID да управлява тези дялове?"
+#~ "اتبع MD المتوافقة مع جهاز الغارة الذي تم الكشف عنه في\n"
+#~ "%1$s \n"
+#~ "إذا كانت الأجهزة نظيفة أو تحتوي على أقسام يمكنك اختيار استخدام\n"
+#~ "MD القابل للتقسيم بنظام الغارة الفرعي للتعامل معها. في حالة كان الجهاز نظيفاً\n"
+#~ "ستتمكن من تثبيت النظام عليه والإقلاع من أقسام مثل الغارة.\n"
+#~ "هل تريد قسم MD القابل للتقسيم بنظام الغارة الفرعي بإدارة تلك الأقسام؟"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1651,124 +1656,105 @@ msgstr "kB"
 #~ "cannot add, edit, resize, or remove partitions from that\n"
 #~ "disk with this tool."
 #~ msgstr ""
-#~ "Дяловете на диск %1$s не могат да се прочетат от \n"
-#~ "инструмента \"parted\", който се използва за \n"
-#~ "промяна на таблицата на дяловете.\n"
-#~ "\n"
-#~ "Можете да използвате дяловете на диск %1$s както са.\n"
-#~ "Можете да ги форматирате и задавате пътища за\n"
-#~ "монтиране, но не можете да ги добавяте, изтривате,\n"
-#~ "редактирате или да променяте размера им с този инструмент."
+#~ "تعذر قراءة القسم على القرص %1$s بواسطة أداة\n"
+#~ "القسم parted المستخدمة لتغيير\n"
+#~ " جدول الأقسام.\n"
+#~ " \n"
+#~ " يمكنك استخدام الأقسام على القرص %1$s كما هي.\n"
+#~ " يمكنك تهيئتها وتخصيص نقاط توصيل إليها، ولكن\n"
+#~ " لا يمكنك إضافة أقسام إلى هذا القرص أو تحريرها أو تغيير حجمها أو إزالتها\n"
+#~ " بهذه الأداة."
 
 #~ msgid "(progress bar might not move)"
-#~ msgstr "(лентата с прогреса може да не се движи)"
+#~ msgstr "(شريط التقدم لا يتحرك)"
 
 #~ msgid "Create encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Създаване на криптиран raid дял %1$s (%2$s) с %3$s за %4$s"
+#~ msgstr "إنشاء قسم تشفير الغارات %1$s (%2$s) ل %4$s ب %3$s"
 
 #~ msgid "Create extended raid partition %1$s (%2$s)"
-#~ msgstr "Създаване на разширен raid дял %1$s (%2$s)"
+#~ msgstr "إنشاء قسم الغارة الموسع %1$s (%2$s)"
 
 #~ msgid "Create raid partition %1$s (%2$s)"
-#~ msgstr "Създаване на raid дял %1$s (%2$s)"
+#~ msgstr "إنشاء قسم الغارة %1$s (%2$s)"
 
 #~ msgid "Create raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Създаване на raid дял %1$s (%2$s) с %3$s за %4$s"
+#~ msgstr "إنشاء قسم الغارة %1$s (%2$s) ل %4$s ب %3$s"
 
 #~ msgid "Create swap raid partition %1$s (%2$s)"
-#~ msgstr "Създаване на swap raid дял %1$s (%2$s)"
+#~ msgstr "إنشاء مبادلة قسم غاره %1$s (%2$s)"
 
 #~ msgid "Creating raid partition %1$s"
-#~ msgstr "Създаване на raid дял %1$s"
+#~ msgstr "يتم الآن إنشاء قسم الغارة %1$s"
 
 #~ msgid "Delete raid partition %1$s (%2$s)"
-#~ msgstr "Изтриване на raid дял %1$s (%2$s)"
+#~ msgstr "حذف قسم الغارة %1$s (%2$s)"
 
 #~ msgid "Deleting raid partition %1$s"
-#~ msgstr "Изтриване на raid дял %1$s"
+#~ msgstr "يتم الآن حذف قسم الغارة %1$s"
 
 #~ msgid "Extend raid partition %1$s to %2$s"
-#~ msgstr "Увеличаване на raid дял %1$s на %2$s"
+#~ msgstr "تمديد قسم غاره %1$s إلى %2$s"
 
 #~ msgid "Extending raid partition %1$s to %2$s"
-#~ msgstr "Увеличаване на raid дял %1$s на %2$s"
+#~ msgstr "يتم الآن تمديد قسم غاره %1$s إلى %2$s"
 
 #~ msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Форматиране на криптиран raid дял %1$s (%2$s) с %3$s за %4$s"
+#~ msgstr "تهيئة قسم الغارة المشفر %1$s (%2$s) ل %4$s ب %3$s"
 
 #~ msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Форматиране на raid дял %1$s (%2$s) с %3$s за %4$s"
+#~ msgstr "تهيئة قسم الغارة %1$s (%2$s) ل %4$s ب %3$s"
 
 #~ msgid "Format raid partition %1$s (%2$s) for swap"
-#~ msgstr "Форматиране на raid дял %1$s (%2$s) за swap"
+#~ msgstr "تهيئة قسم غارة %1$s (%2$s) للتبديل"
 
 #~ msgid "Format raid partition %1$s (%2$s) with %3$s"
-#~ msgstr "Форматиране на raid дял %1$s (%2$s) с %3$s"
+#~ msgstr "تهيئة قسم غارة %1$s (%2$s) ب %3$s"
 
 #~ msgid "Formatting raid partition %1$s (%2$s) with %3$s"
-#~ msgstr "Форматиране на raid дял %1$s (%2$s) с %3$s"
+#~ msgstr "يتم الآن تهيئة قسم غارة %1$s (%2$s) ب %3$s"
 
 #~ msgid "Remove nfs volume %1$s"
-#~ msgstr "Изтриване nfs масив %1$s"
+#~ msgstr "إزالة حجم nfs %1$s"
 
 #~ msgid "Remove raid %1$s"
-#~ msgstr "Премахване на raid %1$s"
+#~ msgstr "إزالة الغارة %1$s"
 
 #~ msgid "Removing nfs volume %1$s"
-#~ msgstr "Изтриване на nfs масив %1$s"
+#~ msgstr "يتم الآن إزالة حجم nfs %1$s"
 
 #~ msgid "Removing raid %1$s"
-#~ msgstr "Премахване на raid %1$s"
+#~ msgstr "يتم الآن إزالة الغارة %1$s"
 
 #~ msgid "Set type of raid partition %1$s to %2$X"
-#~ msgstr "Задаване типа на raid дяла %1$s на %2$X"
+#~ msgstr "تعيين نوع قسم الغارة %1$s إلى %2$X"
 
 #~ msgid "Setting type of raid partition %1$s to %2$X"
-#~ msgstr "Задаване типа на raid дяла %1$s на %2$X"
+#~ msgstr "يتم الآن تعيين نوع قسم الغارة %1$s إلى %2$X"
 
 #~ msgid "Shrink raid partition %1$s to %2$s"
-#~ msgstr "Намаляване на raid дял %1$s на %2$s"
+#~ msgstr "تقليص قسم غاره %1$s إلى %2$s"
 
 #~ msgid "Shrinking raid partition %1$s to %2$s"
-#~ msgstr "Намаляване на raid дял %1$s на %2$s"
-
-#~ msgid "BIOS RAID"
-#~ msgstr "BIOS RAID"
+#~ msgstr "يتم الآن تقليص قسم غاره %1$s إلى %2$s"
 
 #, fuzzy
 #~| msgid "Create partition %1$s (%2$s) with id=%3$X"
 #~ msgid "Create encrypted partition %1$s (%2$s) with id=%3$X"
-#~ msgstr "Създаване на дял %1$s (%2$s) с id=%3$X"
+#~ msgstr "إنشاء قسم %1$s (%2$s) مع المعرف=%3$X"
 
 #~ msgid "Create partition %1$s (%2$s) with id=%3$X"
-#~ msgstr "Създаване на дял %1$s (%2$s) с id=%3$X"
+#~ msgstr "إنشاء قسم %1$s (%2$s) مع المعرف=%3$X"
 
 #, fuzzy
-#~| msgid "Partition"
+#~| msgid "Enable ZEN Partition"
 #~ msgid "Partitioned RAID"
-#~ msgstr "Дял"
+#~ msgstr "تمكين قسم ZEN"
 
 #~ msgid "Set disk label of disk %1$s to %2$s"
-#~ msgstr "Задаване етикета на %1$s да е %2$s"
-
-#, fuzzy
-#~| msgid "Set disk label of disk %1$s to %2$s"
-#~ msgid "Set disk label of multipath disk %1$s to %2$s"
-#~ msgstr "Задаване етикета на %1$s да е %2$s"
-
-#~ msgid "Set disk label of raid %1$s to %2$s"
-#~ msgstr "Задаване етикета на raid диска %1$s да е %2$s"
+#~ msgstr "تعيين تسمية القرص من %1$s إلى %2$s"
 
 #~ msgid "Setting disk label of disk %1$s to %2$s"
-#~ msgstr "Задаване етикета на %1$s да е %2$s"
-
-#, fuzzy
-#~| msgid "Setting disk label of disk %1$s to %2$s"
-#~ msgid "Setting disk label of multipath disk %1$s to %2$s"
-#~ msgstr "Задаване етикета на %1$s да е %2$s"
-
-#~ msgid "Setting disk label of raid %1$s to %2$s"
-#~ msgstr "Задаване етикета на raid диска %1$s да е %2$s"
+#~ msgstr "تعيين تسمية القرص من %1$s إلى %2$s"
 
 #~ msgid "Executing dasdfmt for disks: %1$s..."
-#~ msgstr "Изпълняване на dasdfmt за дискове: %1$s..."
+#~ msgstr "تنفيذ أمر dasdfmt للأقراص: %1$s..."

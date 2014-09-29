@@ -1,16 +1,16 @@
 # translation of libstorage.km.po to Khmer
-# Khmer message file for YaST2 (@memory@).
-# Copyright (C) 2006 SUSE Linux Products GmbH.
 # Leang Chumsoben <soben@khmeros.info>, 2005, 2006.
 # Khoem Sokhem <support@khmeros.info>, 2009.
 # Seng Sutha, 2010.
-# Khoem Sokhem <khoemsokhem@khmeros.info>, 2010.
+# Khoem Sokhem <khoemsokhem@khmeros.info>, 2010, 2012.
+# Khmer message file for YaST2 (@memory@).
+# Copyright (C) 2006 SUSE Linux Products GmbH.
 msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.km\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-10-12 14:38+0200\n"
-"PO-Revision-Date: 2010-06-03 08:19+0700\n"
+"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"PO-Revision-Date: 2012-05-11 12:37+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer <support@khmeros.info>\n"
 "Language: \n"
@@ -22,22 +22,22 @@ msgstr ""
 "X-Language: km-KH\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:315 ../storage/Partition.cc:509
-#: ../storage/Dmmultipath.cc:211 ../storage/Dmraid.cc:211
-#: ../storage/Volume.cc:3129
-msgid "(progress bar might not move)"
-msgstr "(របារ​វឌ្ឍនភាព​អាច​មិន​ផ្លាស់ទី)"
+#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
+#: ../storage/Volume.cc:3382
+msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
+msgstr "(របារ​វឌ្ឍនភាព​នឹង​មិន​ផ្លាស់ទី​ទេ ។ អាច​នឹង​ចំណាយ​ពេល​យូរ ។ កុំ​បោះបង់ !)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:920
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "បន្ថែម​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:913
+#: ../storage/EtcFstab.cc:924
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "កំពុង​បន្ថែម​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s ទៅ %2$s"
@@ -51,9 +51,10 @@ msgstr "បៃ"
 msgid "Btrfs Volume"
 msgstr "ភាគ Btrfs"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1328
+#: ../storage/Volume.cc:1456
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "ផ្លាស់​ប្ដូរ​ចំណុច​ម៉ោន​របស់ %1$s ទៅជា %2$s"
@@ -64,38 +65,90 @@ msgstr "ផ្លាស់​ប្ដូរ​ចំណុច​ម៉ោន​
 msgid "Change mount point of tmpfs to %1$s"
 msgstr "ផ្លាស់​ប្ដូរ​ចំណុច​ម៉ោន​របស់ tmpfs ទៅជា​ %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2358
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2574
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "សម្អាត​​ស្លាក​នៅ​លើ %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2344
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2567
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "កំពុង​សម្អាត​ស្លាក​នៅ​លើ %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:280
+#: ../storage/Container.cc:277
 #, c-format
 msgid "Create %1$s"
 msgstr "បង្កើត %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3319
+#, fuzzy, c-format
+msgid "Create BIOS grub volume %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s)"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3323
+#, fuzzy, c-format
+msgid "Create GPT PReP volume %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s)"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3327
+#, fuzzy, c-format
+msgid "Create PReP volume %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:138
+#, c-format
+msgid "Create RAID partition %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស RAID %1$s (%2$s)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3067
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:112
+#, c-format
+msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "បង្កើត​ភាគ​ថាស RAID %1$s (%2$s) សម្រាប់ %4$s ដោយប្រើ %3$s"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​ចាប់ផ្ដើម %1$s (%2$s) ដោយ​ប្រើ %3$s"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:122
+#, c-format
+msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "បង្កើត​ភាគ​ថាស RAID ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
-#: ../storage/Loop.cc:311
+#: ../storage/Loop.cc:307
 #, c-format
 msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr "បង្កើត​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ​ដែល​បាន​អ៊ិនគ្រីប %1$s នៃ​ឯកសារ %2$s (%3$s) ជា %5$s ដោយ​ប្រើ​ %4$s"
@@ -104,7 +157,7 @@ msgstr "បង្កើត​ឧបករណ៍​ដែល​ផ្អែកល
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:228
+#: ../storage/LvmLv.cc:248
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​ឡូជីខល​ដែល​បាន​អ៊ិនគ្រីប %1$s  (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -113,71 +166,64 @@ msgstr "បង្កើត​ភាគ​ថាស​ឡូជីខល​ដែ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmmultipath.cc:115
+#: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s "
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmraid.cc:115
-#, c-format
-msgid "Create encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "បង្កើត​ភាគថាស raid ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:395
+#: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "បង្កើត​ RAID កម្មវិធី​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) ពី %5$s សម្រាប់ %4$s ដោយ​ប្រើ​ %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3105
+#: ../storage/Volume.cc:3312
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) "
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3088
+#: ../storage/Volume.cc:3304
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:131
+#, c-format
+msgid "Create extended RAID partition %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស RAID បន្ថែម %1$s (%2$s)"
+
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:124
+#: ../storage/Dmmultipath.cc:131
 #, c-format
 msgid "Create extended multipath partition %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន​ដែល​បាន​បន្ថែម %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:425
+#: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាសបន្ថែម %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:124
-#, c-format
-msgid "Create extended raid partition %1$s (%2$s)"
-msgstr "បង្កើត​ភាគ​ថាស raid បន្ថែម %1$s (%2$s)"
-
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Loop.cc:321
+#: ../storage/Loop.cc:317
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s)"
 msgstr "បង្កើត​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s នៃ​ឯកសារ %2$s (%3$s)"
@@ -187,14 +233,14 @@ msgstr "បង្កើត​ឧបករណ៍​ដែល​ផ្អែកល
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
-#: ../storage/Loop.cc:300
+#: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr "បង្កើត​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s នៃ​ឯកសារ %2$s (%3$s) ជា %5$s ដោយប្រើ %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:237
+#: ../storage/LvmLv.cc:257
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​ឡូជីខល%1$s (%2$s)"
@@ -203,14 +249,14 @@ msgstr "បង្កើត​ភាគ​ថាស​ឡូជីខល%1$s (%2$
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:218
+#: ../storage/LvmLv.cc:238
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​ឡូជីខល %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s "
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:131
+#: ../storage/Dmmultipath.cc:138
 #, c-format
 msgid "Create multipath partition %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s)​"
@@ -219,31 +265,16 @@ msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmmultipath.cc:105
+#: ../storage/Dmmultipath.cc:112
 #, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:131
-#, c-format
-msgid "Create raid partition %1$s (%2$s)"
-msgstr "បង្កើត​ភាគ​ថាស raid %1$s (%2$s)"
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmraid.cc:105
-#, c-format
-msgid "Create raid partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "បង្កើត​ភាគ​ថាស​ raid %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ​ %3$s"
-
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3059
+#: ../storage/Volume.cc:3284
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស root %1$s (%2$s) ដោយ​ប្រើ %3$s"
@@ -251,7 +282,7 @@ msgstr "បង្កើត​ភាគ​ថាស root %1$s (%2$s) ដោយ​
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:405
+#: ../storage/Md.cc:423
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
 msgstr "បង្កើត​កម្មវិធី​ RAID  %1$s (%2$s) ពី %3$s"
@@ -261,58 +292,61 @@ msgstr "បង្កើត​កម្មវិធី​ RAID  %1$s (%2$s) ព�
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:384
+#: ../storage/Md.cc:402
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "បង្កើត​កម្មវិធី RAID  %1$s (%2$s) ពី %5$s សម្រាប់ %4$s ដោយ​ប្រើ %3$s​"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:709
+#: ../storage/Btrfs.cc:907
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "បង្កើត​ភាគ​ថាស​រង​ %1$s លើ​ឧបករណ៍ %2$s​"
 
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:101
+#, c-format
+msgid "Create swap RAID partition %1$s (%2$s)"
+msgstr "បង្កើត​ភាគ​ថាស​ស្វប RAID %1$s (%2$s)"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:227
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​​ឡូជីខល​​​ស្វប %1$s (%2$s)​​"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:94
+#: ../storage/Dmmultipath.cc:101
 #, c-format
 msgid "Create swap multipath partition %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន​ស្វប %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:94
-#, c-format
-msgid "Create swap raid partition %1$s (%2$s)"
-msgstr "បង្កើត​​ភាគ​ថាស raid ស្វប %1$s (%2$s)"
-
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3051
+#: ../storage/Volume.cc:3279
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស​​ស្វប %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3099
+#: ../storage/Volume.cc:3308
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3078
+#: ../storage/Volume.cc:3298
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -321,58 +355,59 @@ msgstr "បង្កើត​ភាគ​ថាស %1$s (%2$s) សម្រា�
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1102
+#: ../storage/LvmVg.cc:1413
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "បង្កើត​ក្រុម​ភាគ​ថាស %1$s (%2$s) ពី %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:275
+#: ../storage/Container.cc:272
 #, c-format
 msgid "Creating %1$s"
 msgstr "កំពុង​​បង្កើត %1$s"
 
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../storage/Dmraid.cc:93
+#, c-format
+msgid "Creating RAID partition %1$s"
+msgstr "បង្កើត​ភាគ​ថាស RAID %1$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
-#: ../storage/Loop.cc:284
+#: ../storage/Loop.cc:280
 #, c-format
 msgid "Creating file-based device %1$s of file %2$s"
 msgstr "កំពុង​បង្កើត​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s នៃ​ឯកសារ %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:199
+#: ../storage/LvmLv.cc:219
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "កំពុង​បង្កើត​ភាគ​ថាស​ឡូជីខល %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
-#: ../storage/Dmmultipath.cc:86
+#: ../storage/Dmmultipath.cc:93
 #, c-format
 msgid "Creating multipath partition %1$s"
 msgstr "កំពុង​បង្កើត​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s"
 
-#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
-#: ../storage/Dmraid.cc:86
-#, c-format
-msgid "Creating raid partition %1$s"
-msgstr "កំពុង​បង្កើត​ភាគ​ថាស raid %1$s"
-
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:370
+#: ../storage/Md.cc:388
 #, c-format
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "កំពុង​បង្កើត​កម្មវិធី​ RAID ​ %1$s ពី %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:702
+#: ../storage/Btrfs.cc:900
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "កំពុង​បង្កើត​ភាគ​ថាស​រង​ %1$s លើ​ឧបករណ៍ %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3043
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3332
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "​កំពុង​បង្កើត​ភាគ​ថាស %1$s"
@@ -381,7 +416,7 @@ msgstr "​កំពុង​បង្កើត​ភាគ​ថាស %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1093
+#: ../storage/LvmVg.cc:1404
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "កំពុង​​បង្កើត​ក្រុម​ភាគ​ថាស %1$s (%2$s) ពី %3$s"
@@ -400,111 +435,111 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:518
+#: ../storage/Btrfs.cc:641
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស​ Btrfs លើ​ឧបករណ៍ %1$s (%2$s)"
 
+#. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:80
+#, c-format
+msgid "Delete RAID partition %1$s (%2$s)"
+msgstr "លុប​ភាគ​ថាស RAID %1$s (%2$s)"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:396
+#: ../storage/Partition.cc:426
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស​វីនដូ %1$s (%2$s)​"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:389
+#: ../storage/Dm.cc:454
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Loop.cc:270
+#: ../storage/Loop.cc:266
 #, c-format
 msgid "Delete file-based device %1$s (%2$s)"
 msgstr "លុប​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:187
+#: ../storage/LvmLv.cc:207
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស​ឡូជីខល %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:73
+#: ../storage/Dmmultipath.cc:80
 #, c-format
 msgid "Delete multipath partition %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:403
+#: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "លុប​ភាគ​ថាស %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:73
-#, c-format
-msgid "Delete raid partition %1$s (%2$s)"
-msgstr "លុប​ភាគថាស raid %1$s (%2$s)"
-
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Md.cc:356
+#: ../storage/Md.cc:374
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "លុប​កម្មវិធី RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:512
+#: ../storage/Btrfs.cc:635
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "កំពុង​លុប​ភាគ​ថាស​ Btrfs លើ​ឧបករណ៍ %1$s"
 
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../storage/Dmraid.cc:74
+#, c-format
+msgid "Deleting RAID partition %1$s"
+msgstr "លុប​ភាគ​ថាស RAID %1$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:383
+#: ../storage/Dm.cc:448
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "កំពុង​លុប​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
-#: ../storage/Loop.cc:264
+#: ../storage/Loop.cc:260
 #, c-format
 msgid "Deleting file-based device %1$s"
 msgstr "កំពុង​លុប​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:181
+#: ../storage/LvmLv.cc:201
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "កំពុង​លុប​ភាគ​ថាស​ឡូជីខល %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
-#: ../storage/Dmmultipath.cc:67
+#: ../storage/Dmmultipath.cc:74
 #, c-format
 msgid "Deleting multipath partition %1$s"
 msgstr "កំពុង​លុប​ភាគ​ថាស​ផ្លូវ​ច្រើន​​ %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:388
+#: ../storage/Partition.cc:418
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "កំពុង​លុប​ភាគ​ថាស %1$s"
 
-#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
-#: ../storage/Dmraid.cc:67
-#, c-format
-msgid "Deleting raid partition %1$s"
-msgstr "កំពុង​លុប​ភាគ​ថាស​ raid %1$s"
-
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-#: ../storage/Md.cc:350
+#: ../storage/Md.cc:368
 #, c-format
 msgid "Deleting software RAID %1$s"
 msgstr "កំពុង​លុប​កម្មវិធី RAID %1$s"
@@ -515,136 +550,132 @@ msgid "E"
 msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:113
+#: ../storage/HumanString.cc:116
 msgid "EB"
 msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:116
+#: ../storage/HumanString.cc:113
 msgid "EiB"
 msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:387
+#: ../storage/Dasd.cc:218
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
 msgstr[0] "ប្រតិបត្តិ dasdfmt លើ​ថាស %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:380
+#: ../storage/Dasd.cc:211
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "​ប្រតិបត្តិ dasdfmt សម្រាប់​ថាស %1$s"
 
-#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:285
-#, c-format
-msgid "Executing fdasd for disk %1$s"
-msgstr "​កំពុង​ប្រតិបត្តិ fdasd សម្រាប់​ថាស %1$s"
-
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3140
+#: ../storage/Volume.cc:3375
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "ពង្រីក %1$s ទៅ %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:668
+#: ../storage/Btrfs.cc:866
 #, c-format
-msgid "Extend BTRFS volume %1$s by %2$s"
-msgstr "ពង្រីក​ភាគ​ថាស BTRFS %1$s ត្រឹម %2$s"
+msgid "Extend Btrfs volume %1$s by %2$s"
+msgstr "ពង្រីក​ភាគ​ថាស Btrfs %1$s ត្រឹម %2$s"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:229
+#, c-format
+msgid "Extend RAID partition %1$s to %2$s"
+msgstr "ពង្រីក​ភាគ​ថាស RAID %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:522
+#: ../storage/Partition.cc:552
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "ពង្រីក​ភាគ​ថាស​វីនដូ​ %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:326
+#: ../storage/LvmLv.cc:346
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "ពង្រីក​ភាគ​ថាស​​ឡូជីខល %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:222
+#: ../storage/Dmmultipath.cc:229
 #, c-format
 msgid "Extend multipath partition %1$s to %2$s"
 msgstr "ពង្រីក​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:533
+#: ../storage/Partition.cc:563
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "ពង្រីក​ភាគ​ថាស %1$s ទៅ %2$s"
 
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:222
-#, c-format
-msgid "Extend raid partition %1$s to %2$s"
-msgstr "ពង្រីក​ភាគ​ថាស raid %1$s ទៅ %2$s"
-
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1123
+#: ../storage/LvmVg.cc:1434
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "ពង្រីក​ក្រុម​ភាគ​ថាស​ %1$s ដោយ​ប្រើ %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3126
+#: ../storage/Volume.cc:3367
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "កំពុង​ពង្រីក %1$s ទៅ %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:661
+#: ../storage/Btrfs.cc:859
 #, c-format
-msgid "Extending BTRFS volume %1$s by %2$s"
-msgstr "កំពុង​ពង្រីក​ភាគ​ថាស BTRFS %1$s ត្រឹម %2$s"
+msgid "Extending Btrfs volume %1$s by %2$s"
+msgstr "ពង្រីក​ភាគ​ថាស Btrfs %1$s ត្រឹម %2$s"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:215
+#, c-format
+msgid "Extending RAID partition %1$s to %2$s"
+msgstr "ពង្រីក​ភាគ​ថាស RAID %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:332
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "កំពុង​ពង្រីក​ភាគ​ថាស​ឡូជីខល %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:208
+#: ../storage/Dmmultipath.cc:215
 #, c-format
 msgid "Extending multipath partition %1$s to %2$s"
 msgstr "កំពុង​ពង្រីក​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:536
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "កំពុង​ពង្រីក​ភាគ​ថាស %1$s ទៅ %2$s"
 
-#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:208
-#, c-format
-msgid "Extending raid partition %1$s to %2$s"
-msgstr "កំពុង​ពង្រីក​ភាគ​ថាស raid %1$s ទៅ​ %2$s"
-
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1116
+#: ../storage/LvmVg.cc:1427
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "កំពុង​ពង្រីក​ក្រុម​ភាគ​ថាស​ %1$s ដោយ​ប្រើ %2$s"
@@ -652,7 +683,7 @@ msgstr "កំពុង​ពង្រីក​ក្រុម​ភាគ​ថ
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:601
+#: ../storage/Btrfs.cc:724
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "ធ្វើ​​ទ្រង់ទ្រាយ​ទំហំ​ភាគ​ថាស​ Btrfs  %1$s (ឧបករណ៍​ដែល​ប្រើ ៖ %2$s)"
@@ -661,24 +692,50 @@ msgstr "ធ្វើ​​ទ្រង់ទ្រាយ​ទំហំ​ភា
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:595
+#: ../storage/Btrfs.cc:718
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ទំហំ​ភាគ​ថាស Btrfs %1$s សម្រាប់ %3$s (ឧបករណ៍​ដែល​ប្រើ ៖ %2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:765
+#: ../storage/Dmraid.cc:174
+#, c-format
+msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស RAID %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:165
+#, c-format
+msgid "Format RAID partition %1$s (%2$s) for swap"
+msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស RAID %1$s (%2$s) សម្រាប់​ស្វប"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dmraid.cc:194
+#, c-format
+msgid "Format RAID partition %1$s (%2$s) with %3$s"
+msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស RAID %1$s (%2$s) ដោយប្រើ %3$s"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:850
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍ %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s​"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:785
+#: ../storage/Volume.cc:841
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍ %1$s (%2$s) ដោយ​ប្រើ %3$s​"
@@ -687,7 +744,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍ %1$s 
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:416
+#: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -695,16 +752,26 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:436
+#: ../storage/Dm.cc:501
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ %1$s (%2$s) ដោយ​ប្រើ %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:775
+#: ../storage/Dmraid.cc:184
+#, c-format
+msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស RAID ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:859
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដែល​បាន​​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -713,7 +780,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:426
+#: ../storage/Dm.cc:491
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -723,7 +790,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
-#: ../storage/Loop.cc:368
+#: ../storage/Loop.cc:364
 #, c-format
 msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ​ដែល​បាន​អ៊ិនគ្រីប %1$s នៃ %2$s (%3$s) ជា %5$s ដោយប្រើ​ %4$s"
@@ -732,7 +799,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:282
+#: ../storage/LvmLv.cc:302
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ឡូជីខល​​ដែល​បាន​អ៊ិនគ្រីប %1$s  (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -741,7 +808,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmmultipath.cc:177
+#: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ផ្លូវ​ច្រើន​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -750,25 +817,16 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:506
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmraid.cc:177
-#, c-format
-msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ raid ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:444
+#: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី​ RAID ដែល​បាន​អ៊ិនគ្រីប %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -778,7 +836,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
 #. %5$s is replaced by mount point (e.g. /usr)
-#: ../storage/Loop.cc:357
+#: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s នៃ %2$s (%3$s) ជា %5$s ដោយ​ប្រើ​ %4$s​"
@@ -787,7 +845,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដ
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Loop.cc:379
+#: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដែល​ផ្អែក​លើ​ឯកសារ %1$s នៃ %2$s (%3$s) ដោយ​ប្រើ %4$s"
@@ -796,14 +854,14 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដ
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:292
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ឡូជីខល %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:263
+#: ../storage/LvmLv.cc:283
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​​ភាគ​ថាស​ឡូជីខល %1$s (%2$s) សម្រាប់​ស្វប"
@@ -811,7 +869,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​​ភាគ​ថាស
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:312
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ឡូជីខល %1$s (%2$s) ដោយ​ប្រើ %3$s"
@@ -820,14 +878,14 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmmultipath.cc:167
+#: ../storage/Dmmultipath.cc:174
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:158
+#: ../storage/Dmmultipath.cc:165
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for swap"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s) សម្រាប់​ស្វប"
@@ -835,7 +893,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dmmultipath.cc:187
+#: ../storage/Dmmultipath.cc:194
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s (%2$s) ដោយ​ប្រើ %3$s"
@@ -844,14 +902,14 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:466
+#: ../storage/Partition.cc:496
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:457
+#: ../storage/Partition.cc:487
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស %1$s (%2$s) សម្រាប់​ស្វប"
@@ -859,40 +917,16 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស %1
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:486
+#: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស %1$s (%2$s) ដោយ​ប្រើ %3$s"
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dmraid.cc:167
-#, c-format
-msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគថាស raid %1$s (%2$s) សម្រាប់ %4$s ដោយប្រើ​ %3$s"
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:158
-#, c-format
-msgid "Format raid partition %1$s (%2$s) for swap"
-msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ raid %1$s (%2$s) សម្រាប់​ស្វប"
-
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dmraid.cc:187
-#, c-format
-msgid "Format raid partition %1$s (%2$s) with %3$s"
-msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ raid %1$s (%2$s) ដោយប្រើ %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:434
+#: ../storage/Md.cc:452
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី​ RAID %1$s (%2$s) សម្រាប់ %4$s ដោយ​ប្រើ %3$s"
@@ -900,7 +934,7 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:454
+#: ../storage/Md.cc:472
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី RAID %1$s (%2$s) ដោយ​ប្រើ %3$s"
@@ -908,15 +942,24 @@ msgstr "ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:585
+#: ../storage/Btrfs.cc:708
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ទំហំ​ភាគ​ថាស Btrfs %1$s (ឧបករណ៍​ដែល​បាន​ប្រើ ៖%2$s)"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:752
+#: ../storage/Dmraid.cc:154
+#, c-format
+msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
+msgstr "ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស RAID %1$s (%2$s) ដោយ​ប្រើ %3$s"
+
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:833
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ %1$s (%2$s) ដោយ​ប្រើ %3$s"
@@ -924,7 +967,7 @@ msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ឧប
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:403
+#: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​នៃ​កម្មវិធី​ផ្គូផ្គង​ឧបករណ៍ %1$s (%2$s) ដោយ​ប្រើ %3$s "
@@ -933,7 +976,7 @@ msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភា
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
 #. %3$s is replaced by size (e.g. 623.5 MB)
 #. %4$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Loop.cc:339
+#: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ឧបករណ៍​ដែល​ផ្អែកលើ​ឯកសារ %1$s នៃ %2$s (%3$s) ដោយ​ប្រើ %4$s "
@@ -941,7 +984,7 @@ msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ឧប
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:252
+#: ../storage/LvmLv.cc:272
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ឡូជីខល %1$s (%2$s) ដោយ​ប្រើ %3$s​"
@@ -949,7 +992,7 @@ msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភា
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dmmultipath.cc:147
+#: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស​ផ្លូវច្រើន %1$s (%2$s) ដោយ​ប្រើ​ %3$s"
@@ -957,23 +1000,15 @@ msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភា
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:446
+#: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស %1$s (%2$s) ដោយ​ប្រើ %3$s "
 
-#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dmraid.cc:147
-#, c-format
-msgid "Formatting raid partition %1$s (%2$s) with %3$s"
-msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​ភាគ​ថាស raid %1$s (%2$s) ដោយ​ប្រើ %3$s"
-
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:421
+#: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
 msgstr "កំពុង​ធ្វើ​ទ្រង់ទ្រាយ​កម្មវិធី RAID %1$s (%2$s) ដោយ​ប្រើ %3$s "
@@ -984,12 +1019,12 @@ msgid "G"
 msgstr "ជ.ប."
 
 #. symbol for "giga bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:80
+#: ../storage/HumanString.cc:83
 msgid "GB"
 msgstr "ជីកាបៃ"
 
 #. symbol for "gibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:83
+#: ../storage/HumanString.cc:80
 msgid "GiB"
 msgstr "ជីកាបៃ"
 
@@ -998,7 +1033,7 @@ msgid "Hard Disk"
 msgstr "ថាស​រឹង"
 
 #. symbol for "kibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:61
+#: ../storage/HumanString.cc:58
 msgid "KiB"
 msgstr "គីឡូបៃ"
 
@@ -1012,7 +1047,7 @@ msgid "M"
 msgstr "ម.ប."
 
 #. symbol for "mega bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:69
+#: ../storage/HumanString.cc:72
 msgid "MB"
 msgstr "មេកាបៃ"
 
@@ -1021,7 +1056,7 @@ msgid "MD RAID"
 msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:72
+#: ../storage/HumanString.cc:69
 msgid "MiB"
 msgstr "MiB"
 
@@ -1029,9 +1064,10 @@ msgstr "MiB"
 msgid "Mount Point"
 msgstr "ចំណុច​ម៉ោន"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1313
+#: ../storage/Volume.cc:1439
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "កំពុង​ម៉ោន %1$s ទៅ %2$s"
@@ -1048,7 +1084,7 @@ msgid "P"
 msgstr "P"
 
 #. symbol for "peta bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:102
+#: ../storage/HumanString.cc:105
 msgid "PB"
 msgstr "PB"
 
@@ -1057,86 +1093,81 @@ msgid "Partition"
 msgstr "ភាគ​ថាស"
 
 #. symbol for "pebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:105
+#: ../storage/HumanString.cc:102
 msgid "PiB"
 msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:689
+#: ../storage/Btrfs.cc:887
 #, c-format
-msgid "Reduce BTRFS volume %1$s by %2$s"
-msgstr "បន្ថយ​ភាគ​ថាស​ BTRFS  %1$s ត្រឹម %2$s"
+msgid "Reduce Btrfs volume %1$s by %2$s"
+msgstr "បន្ថយ​ភាគ​ថាស Btrfs %1$s ត្រឹម %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1145
+#: ../storage/LvmVg.cc:1456
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "បន្ថយ​ក្រុមភាគ​ថាស​ %1$s ត្រឹម %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:682
+#: ../storage/Btrfs.cc:880
 #, c-format
-msgid "Reducing BTRFS volume %1$s by %2$s"
-msgstr "កំពុង​បន្ថយ​ភាគ​ថាស​ %1$s ត្រឹម %2$s"
+msgid "Reducing Btrfs volume %1$s by %2$s"
+msgstr "បន្ថយ​ភាគ​ថាស Btrfs %1$s ត្រឹម %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1138
+#: ../storage/LvmVg.cc:1449
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "កំពុង​បន្ថយ​ក្រុម​ភាគ​ថាស​ %1$s ត្រឹម %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:927
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
 #, c-format
 msgid "Remove %1$s"
 msgstr "យក %1$s ចេញ"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1356
+#: ../storage/Volume.cc:1487
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "យក %1$s ចេញ​ពី %2$s"
 
-#. displayed text before action, %1$s is replaced by path name e.g /var/run
-#: ../storage/Tmpfs.cc:77
+#. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../storage/Nfs.cc:75
 #, c-format
-msgid "Remove Tmpfs volume from mount point %1$s"
-msgstr "យក​ភាគថាស​​ Tmpfs ចេញ​ពី​ចំណុច​ម៉ោន %1$s"
+msgid "Remove NFS volume %1$s"
+msgstr "យក​ភាគ​ថាស NFS %1$s ចេញ"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/DmraidCo.cc:185
+#, c-format
+msgid "Remove RAID %1$s"
+msgstr "យក RAID %1$s ចេញ"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:962
+#: ../storage/EtcFstab.cc:973
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "យក​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s ចេញ​ពី %2$s"
 
-#. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:75
-#, c-format
-msgid "Remove nfs volume %1$s"
-msgstr "យក​ភាគ​ថាស nfs %1$s ចេញ"
-
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:245
-#, c-format
-msgid "Remove raid %1$s"
-msgstr "យក raid %1$s ចេញ"
-
-#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1092
+#: ../storage/MdPartCo.cc:1028
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "យក​កម្មវិធី​របស់ RAID %1$s ចេញ"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:729
+#: ../storage/Btrfs.cc:927
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "យក​ភាគ​ថាស​រង​ %1$s លើ​ឧបករណ៍​ %2$s ចេញ"
@@ -1147,92 +1178,102 @@ msgstr "យក​ភាគ​ថាស​រង​ %1$s លើ​ឧបករណ
 msgid "Remove tmpfs from %1$s"
 msgstr "យក​ tmpfs ចេញ​ពី %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3156
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, c-format
+msgid "Remove tmpfs volume from mount point %1$s"
+msgstr "យក​ភាគ​ថាស tmpfs ចេញពី​ចំណុច​ម៉ោន %1$s"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3395
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "យក​ភាគ​ថាស %1$s ចេញ"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1078
+#: ../storage/LvmVg.cc:1389
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "យក​ក្រុម​ភាគ​ថាស %1$s ចេញ"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:922
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
 #, c-format
 msgid "Removing %1$s"
 msgstr "កំពុង​យក %1$s ចេញ"
 
-#. displayed text during action, %1$s is replaced by path name e.g /var/run
-#: ../storage/Tmpfs.cc:72
+#. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../storage/Nfs.cc:70
 #, c-format
-msgid "Removing Tmpfs volume from mount point %1$s"
-msgstr "កំពុង​យក​ភាគ​ថាស​ Tmpfs ចេញ​ពី​ចំណុច​ម៉ោន​ %1$s"
+msgid "Removing NFS volume %1$s"
+msgstr "យក​ភាគ​ថាស NFS %1$s ចេញ"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/DmraidCo.cc:180
+#, c-format
+msgid "Removing RAID %1$s"
+msgstr "យក RAID %1$s ចេញ"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:955
+#: ../storage/EtcFstab.cc:966
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "កំពុង​យក​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s ចេញ​ពី %2$s"
 
-#. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-#: ../storage/Nfs.cc:70
-#, c-format
-msgid "Removing nfs volume %1$s"
-msgstr "កំពុង​យក​ភាគ​ថាស nfs %1$s ចេញ"
-
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:240
-#, c-format
-msgid "Removing raid %1$s"
-msgstr "កំពុង​យក​ raid %1$s ចេញ"
-
-#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1087
+#: ../storage/MdPartCo.cc:1023
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "កំពុង​យក​កម្មវិធី​​របស់​ RAID %1$s ចេញ​"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:722
+#: ../storage/Btrfs.cc:920
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "កំពុង​យក​ភាគ​ថាស​រង​ %1$s លើ​ឧបករណ៍​ %2$s ចេញ"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3151
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, c-format
+msgid "Removing tmpfs volume from mount point %1$s"
+msgstr "យក​ភាគ​ថាស tmpfs ចេញពី​ចំណុច​ម៉ោន %1$s"
+
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3392
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "កំពុង​យក​ភាគ​ថាស %1$s ចេញ"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1073
+#: ../storage/LvmVg.cc:1384
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "កំពុង​យក​ក្រុម​ភាគ​ថាស %1$s ចេញ"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1554
+#: ../storage/Disk.cc:1703
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "កំណត់​ស្លាក​ថាស​នៃ​ %1$s ទៅ​ជា %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2364
+#: ../storage/Volume.cc:2578
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "កំណត់​ស្លាក​នៅ​លើ %1$s ទៅជា​ %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1337
+#: ../storage/Volume.cc:1466
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "កំណត់​ចំណុច​ម៉ោន​នៃ​ %1$s ទៅ​ជា %2$s"
@@ -1243,168 +1284,191 @@ msgstr "កំណត់​ចំណុច​ម៉ោន​នៃ​ %1$s ទៅ
 msgid "Set mount point of tmpfs to %1$s"
 msgstr "កំណត់​ចំណុច​ម៉ោន​នៃ​ tmpfs ទៅ​ជា %1$s"
 
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmraid.cc:250
+#, c-format
+msgid "Set type of RAID partition %1$s to %2$X"
+msgstr "កំណត់​ប្រភេទ​ភាគ​ថាស RAID %1$s ទៅជា %2$X"
+
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Dmmultipath.cc:243
+#: ../storage/Dmmultipath.cc:250
 #, c-format
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "កំណត់​ប្រភេទ​របស់​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅជា %2$X"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:311 ../storage/DmPart.cc:171
+#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
 #: ../storage/MdPart.cc:180
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "កំណត់​ប្រភេទ​របស់​ភាគ​ថាស %1$s ទៅជា %2$X"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Dmraid.cc:243
-#, c-format
-msgid "Set type of raid partition %1$s to %2$X"
-msgstr "កំណត់​ប្រភេទ​របស់​ភាគ raid %1$s ទៅជា %2$X"
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:338
+#, fuzzy, c-format
+msgid "Set type of partition %1$s to %2$s (%3$X)"
+msgstr "កំណត់​ប្រភេទ​របស់​ភាគ​ថាស %1$s ទៅជា %2$X"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1666
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1866
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "រៀបចំ​ឧបករណ៍​ dm ដែល​បាន​អ៊ិនគ្រីបលើ %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1650
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1853
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "រៀបចំ​ឧបករណ៍​រង្វិល​ជុំ​ដែល​បាន​អ៊ិនគ្រីប​​លើ %1$s "
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1547
+#: ../storage/Disk.cc:1696
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "កំពុង​កំណត់​ស្លាក​ថាស​នៃ​ %1$s ទៅ​ជា %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2350
+#: ../storage/Volume.cc:2571
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "កំពុង​កំណត់​ស្លាក​នៅ​លើ %1$s ទៅជា %2$s"
 
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmraid.cc:243
+#, c-format
+msgid "Setting type of RAID partition %1$s to %2$X"
+msgstr "កំណត់​​ប្រភេទ​ភាគ​ថាស RAID %1$s ទៅជា %2$X"
+
 #. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Dmmultipath.cc:236
+#: ../storage/Dmmultipath.cc:243
 #, c-format
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "កំពុង​កំណត់​ប្រភេទ​របស់​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅជា %2$X"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:304 ../storage/DmPart.cc:164
+#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
 #: ../storage/MdPart.cc:173
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "កំពុង​កំណត់​ប្រភេទ​របស់​ភាគ​ថាស %1$s ទៅជា %2$X"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Dmraid.cc:236
-#, c-format
-msgid "Setting type of raid partition %1$s to %2$X"
-msgstr "កំពុង​កំណត់​ប្រភេទ​របស់​ភាគថាស raid %1$s ទៅ​ជា %2$X"
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:325
+#, fuzzy, c-format
+msgid "Setting type of partition %1$s to %2$s (%3$X)"
+msgstr "កំពុង​កំណត់​ប្រភេទ​របស់​ភាគ​ថាស %1$s ទៅជា %2$X"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1661
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1863
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "កំពុង​រៀបចំ​ឧបករណ៍ dm ដែល​បាន​អ៊ិនគ្រីប​លើ %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1645
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1850
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "កំពុង​រៀបចំ​​ឧបករណ៍​រង្វិល​ជុំ​ដែល​បាន​អ៊ិនគ្រីប​នៅ​លើ %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3136
+#: ../storage/Volume.cc:3371
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "បង្រួញ %1$s ទៅ %2$s"
 
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:225
+#, c-format
+msgid "Shrink RAID partition %1$s to %2$s"
+msgstr "បង្រួញ​ភាគ​ថាស RAID %1$s ទៅ %2$s"
+
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:518
+#: ../storage/Partition.cc:548
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "បង្រួញ​ភាគ​ថាសវីនដូ​ %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:322
+#: ../storage/LvmLv.cc:342
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "បង្រួញ​ភាគ​ថាស​ឡូជីខល %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:218
+#: ../storage/Dmmultipath.cc:225
 #, c-format
 msgid "Shrink multipath partition %1$s to %2$s"
 msgstr "បង្រួញ​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅ %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:529
+#: ../storage/Partition.cc:559
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "បង្រួញ​ភាគ​ថាស %1$s ទៅ %2$s"
 
-#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:218
-#, c-format
-msgid "Shrink raid partition %1$s to %2$s"
-msgstr "បង្រួញ​ភាគ​ថាស raid %1$s ទៅ​ %2$s"
-
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3122
+#: ../storage/Volume.cc:3363
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "កំពុង​បង្រួញ %1$s ទៅ %2$s"
 
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:211
+#, c-format
+msgid "Shrinking RAID partition %1$s to %2$s"
+msgstr "បង្រួញ​ភាគ​ថាស RAID  %1$s ទៅ %2$s"
+
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:308
+#: ../storage/LvmLv.cc:328
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "កំពុង​បង្រួញ​ភាគ​ថាស​ឡូជីខល %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmmultipath.cc:204
+#: ../storage/Dmmultipath.cc:211
 #, c-format
 msgid "Shrinking multipath partition %1$s to %2$s"
 msgstr "កំពុង​បង្រួញ​ភាគ​ថាស​ផ្លូវ​ច្រើន %1$s ទៅ %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:502
+#: ../storage/Partition.cc:532
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "កំពុង​បង្រួញ​ភាគ​ថាស %1$s ទៅ %2$s"
-
-#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dmraid.cc:204
-#, c-format
-msgid "Shrinking raid partition %1$s to %2$s"
-msgstr "កំពុង​បង្រួញ​ភាគថាស raid %1$s ទៅ %2$s"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:97
@@ -1412,12 +1476,12 @@ msgid "T"
 msgstr "ត.ប."
 
 #. symbol for "tera bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:91
+#: ../storage/HumanString.cc:94
 msgid "TB"
 msgstr "តេរ៉ាបៃ"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:307
+#: ../storage/Disk.cc:334
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1436,61 +1500,27 @@ msgstr ""
 "មិន​អាច​បន្ថែម កែសម្រួល ផ្លាស់​ប្ដូរ​ទំហំ ឬ​យក​ភាគ​ចេញ​ពី​ថាស​នោះ\n"
 "​ដោយ​ប្រើ​​ឧបករណ៍​នេះ​បាន​ឡើយ ។"
 
-#. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Dasd.cc:197
-#, c-format
+#. popup text
+#: ../storage/Storage.cc:350
 msgid ""
-"The partitioning on disk %1$s is not readable by\n"
-"the partitioning tool fdasd, which is used to change the\n"
-"partition table.\n"
-"\n"
-"You can use the partitions on disk %1$s as they are.\n"
-"You can format them and assign mount points to them, but you\n"
-"cannot add, edit, resize, or remove partitions from that\n"
-"disk with this tool."
+"The system seems to have multipath hardware.\n"
+"Do you want to activate multipath?"
 msgstr ""
-"ការ​ចែក​ជា​ភាគ​នៅ​លើ​ថាស %1$s មិន​អាច​អាន​បាន ដោយ\n"
-"ឧបករណ៍​ចែក​ជា​ភាគ fdasd ដែល​ប្រើ​​ក្នុង​ការ​ផ្លាស់​ប្ដូរ\n"
-"តារាង​ភាគ​បាន​ឡើយ ។\n"
-"\n"
-"អ្នក​អាច​ប្រើ​ភាគ​នៅ​លើ​ថាស %1$s ដូច​ពួក​វា ។\n"
-"អ្នក​អាច​ធ្វើ​ទ្រង់ទ្រាយ​ពួកវា និង​ផ្ដល់​ចំណុច​ម៉ោន​​ទៅ​ពួកវា ប៉ុន្តែ​អ្នក\n"
-"មិន​អាច​បន្ថែម កែសម្រួល ផ្លាស់ប្ដូរ​ទំហំ ឬ​យក​ភាគ​ចេញ​ពី​ថាស​នោះ\n"
-"ដោយ​ប្រើ​ឧបករណ៍​នេះ​បាន​ឡើយ ។"
-
-#. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:477
-#, c-format
-msgid ""
-"The partitioning on disk %1$s is not readable by\n"
-"the partitioning tool parted, which is used to change the\n"
-"partition table.\n"
-"\n"
-"You can use the partitions on disk %1$s as they are.\n"
-"You can format them and assign mount points to them, but you\n"
-"cannot add, edit, resize, or remove partitions from that\n"
-"disk with this tool."
-msgstr ""
-"ការ​ចែក​ជា​ភាគ​នៅ​លើ​ថាស %1$s មិន​អាច​អាន​បាន​ដោយ\n"
-"ឧបករណ៍​ចែក​ជា​ភាគ ដែល​ប្រើ​សម្រាប់​ផ្លាស់​ប្ដូរ\n"
-"តារាង​ភាគ​ឡើយ ។\n"
-"\n"
-"អ្នក​អាច​ប្រើ​ភាគ​នៅ​លើ​ថាស %1$s ដូច​ពួកវា ។\n"
-"អ្នក​អាច​ធ្វើ​ទ្រង់ទ្រាយ​ពួក​វា និង​ផ្ដល់​ចំណុច​ម៉ោន​ទៅ​ឲ្យ​ពួកវា ប៉ុន្តែ​អ្នក\n"
-"មិន​អាច​បន្ថែម កែសម្រួល ផ្លាស់ប្ដូរ​ទំហំ ឬ​យក​ភាគ​ចេញ​​ពី​ថាស​នោះ\n"
-"ដោយ​ប្រើ​ឧបករណ៍​នេះ​បាន​ឡើយ ។"
+"ប្រព័ន្ធ​ហាក់​ដូច​ជា​មាន​ផ្នែក​រឹង​ច្រើន​ផ្លូវ ។\n"
+"តើ​អ្នក​ចង់​ធ្វើឲ្យ​ផ្លូវ​ជាច្រើន​សកម្ម​ដែរ​ឬ​ទេ ?"
 
 #. symbol for "tebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:94
+#: ../storage/HumanString.cc:91
 msgid "TiB"
 msgstr "តេរ៉ាបៃ"
 
-#: ../storage/Storage.cc:4852
+#: ../storage/Storage.cc:4953
 msgid "Unmount failed."
 msgstr "អាន់ម៉ោន​បាន​បរាជ័យ ។"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1318
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1445
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "កំពុង​អាន់ម៉ោន %1$s"
@@ -1502,21 +1532,22 @@ msgstr "កំពុង​អាន់ម៉ោន tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:941
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "ធ្វើ​បច្ចុប្បន្នភាព​​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:934
+#: ../storage/EtcFstab.cc:945
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "កំពុង​ធ្វើ​បច្ចុប្បន្នភាព​​ធាតុ​សម្រាប់​ចំណុច​ម៉ោន %1$s នៅ​ក្នុង %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1344
+#: ../storage/Volume.cc:1474
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "ប្រើ %1$s ជា %2$s"
@@ -1525,30 +1556,8 @@ msgstr "ប្រើ %1$s ជា %2$s"
 msgid "Volume Group"
 msgstr "ក្រុម​ភាគ​ថាស"
 
-#. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:361
-#, c-format
-msgid ""
-"You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
-"\n"
-"Following MD compatible RAID devices were detected:\n"
-"%1$s\n"
-"If they are clean devices or contain partitions then you can choose to use\n"
-"MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
-"will be able to install system on it and boot from such RAID.\n"
-"Do you want MD Partitionable RAID subsystem to manage those partitions?"
-msgstr ""
-"អ្នក​កំពុងតែ​ដំណើរការ​លើ​វេទិកា​ឆប​គ្នា​នឹង​កម្មវិធី​គ្រប់គ្រង​ឧបករណ៍​ផ្ទុក Intel(R) Matrix ។\n"
-"\n"
-"ឧបករណ៍ RAID ដែល​ឆប​នឹង​ MD ខាង​ក្រោម​ត្រូវ​បាន​រកឃើញ ៖\n"
-"%1$s\n"
-"ប្រសិន​បើ​ ពួក​វា​គឺជា​ឧបករណ៍​ត្រឹមត្រូវ ឬ​មាន​ភាគ​ថាស​ ពេល​នោះ​អ្នក​អាច​ជ្រើស​រើស​ប្រើ​\n"
-"ប្រព័ន្ធ​រង​របស់​ប្រព័ន្ធ​ RAID ដែល​អាច​ចែក​ភាគ​ថាស MD បាន​ដើម្បី​ដោះស្រាយ​ពួកវា ។ ក្នុង​ករណី​ដែល​វា​ជា​ឧបករណ៍​ត្រឹមត្រូវ អ្នក​នឹង​\n"
-"អាច​ដំឡើង​ប្រព័ន្ធ​នៅ​លើ​វា និង​ចាប់ផ្ដើម​ពី​ RAID នោះ​បាន ។\n"
-"តើ​អ្នក​ចង់​ឲ្យ​ប្រព័ន្ធ​រង​របស់​ប្រព័ន្ធ​ RAID ដែល​អាច​ចែក​ភាគ​ថាស​ MD គ្រប់គ្រង​ភាគ​ថាស​ទាំង​នោះ​ឬ ?"
-
 #. popup text
-#: ../storage/Disk.cc:501
+#: ../storage/Disk.cc:529
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1568,7 +1577,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:494
+#: ../storage/Disk.cc:522
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1585,6 +1594,66 @@ msgid "k"
 msgstr "គ.ប."
 
 #. symbol for "kilo bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:58
+#: ../storage/HumanString.cc:61
 msgid "kB"
 msgstr "គីឡូបៃ"
+
+#~ msgid "Executing fdasd for disk %1$s"
+#~ msgstr "​កំពុង​ប្រតិបត្តិ fdasd សម្រាប់​ថាស %1$s"
+
+#~ msgid ""
+#~ "The partitioning on disk %1$s is not readable by\n"
+#~ "the partitioning tool fdasd, which is used to change the\n"
+#~ "partition table.\n"
+#~ "\n"
+#~ "You can use the partitions on disk %1$s as they are.\n"
+#~ "You can format them and assign mount points to them, but you\n"
+#~ "cannot add, edit, resize, or remove partitions from that\n"
+#~ "disk with this tool."
+#~ msgstr ""
+#~ "ការ​ចែក​ជា​ភាគ​នៅ​លើ​ថាស %1$s មិន​អាច​អាន​បាន ដោយ\n"
+#~ "ឧបករណ៍​ចែក​ជា​ភាគ fdasd ដែល​ប្រើ​​ក្នុង​ការ​ផ្លាស់​ប្ដូរ\n"
+#~ "តារាង​ភាគ​បាន​ឡើយ ។\n"
+#~ "\n"
+#~ "អ្នក​អាច​ប្រើ​ភាគ​នៅ​លើ​ថាស %1$s ដូច​ពួក​វា ។\n"
+#~ "អ្នក​អាច​ធ្វើ​ទ្រង់ទ្រាយ​ពួកវា និង​ផ្ដល់​ចំណុច​ម៉ោន​​ទៅ​ពួកវា ប៉ុន្តែ​អ្នក\n"
+#~ "មិន​អាច​បន្ថែម កែសម្រួល ផ្លាស់ប្ដូរ​ទំហំ ឬ​យក​ភាគ​ចេញ​ពី​ថាស​នោះ\n"
+#~ "ដោយ​ប្រើ​ឧបករណ៍​នេះ​បាន​ឡើយ ។"
+
+#~ msgid ""
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+#~ "\n"
+#~ "Following MD compatible RAID devices were detected:\n"
+#~ "%1$s\n"
+#~ "If they are clean devices or contain partitions then you can choose to use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+#~ "will be able to install system on it and boot from such RAID.\n"
+#~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
+#~ msgstr ""
+#~ "អ្នក​កំពុងតែ​ដំណើរការ​លើ​វេទិកា​ឆប​គ្នា​នឹង​កម្មវិធី​គ្រប់គ្រង​ឧបករណ៍​ផ្ទុក Intel(R) Matrix ។\n"
+#~ "\n"
+#~ "ឧបករណ៍ RAID ដែល​ឆប​នឹង​ MD ខាង​ក្រោម​ត្រូវ​បាន​រកឃើញ ៖\n"
+#~ "%1$s\n"
+#~ "ប្រសិន​បើ​ ពួក​វា​គឺជា​ឧបករណ៍​ត្រឹមត្រូវ ឬ​មាន​ភាគ​ថាស​ ពេល​នោះ​អ្នក​អាច​ជ្រើស​រើស​ប្រើ​\n"
+#~ "ប្រព័ន្ធ​រង​របស់​ប្រព័ន្ធ​ RAID ដែល​អាច​ចែក​ភាគ​ថាស MD បាន​ដើម្បី​ដោះស្រាយ​ពួកវា ។ ក្នុង​ករណី​ដែល​វា​ជា​ឧបករណ៍​ត្រឹមត្រូវ អ្នក​នឹង​\n"
+#~ "អាច​ដំឡើង​ប្រព័ន្ធ​នៅ​លើ​វា និង​ចាប់ផ្ដើម​ពី​ RAID នោះ​បាន ។\n"
+#~ "តើ​អ្នក​ចង់​ឲ្យ​ប្រព័ន្ធ​រង​របស់​ប្រព័ន្ធ​ RAID ដែល​អាច​ចែក​ភាគ​ថាស​ MD គ្រប់គ្រង​ភាគ​ថាស​ទាំង​នោះ​ឬ ?"
+
+#~ msgid ""
+#~ "The partitioning on disk %1$s is not readable by\n"
+#~ "the partitioning tool parted, which is used to change the\n"
+#~ "partition table.\n"
+#~ "\n"
+#~ "You can use the partitions on disk %1$s as they are.\n"
+#~ "You can format them and assign mount points to them, but you\n"
+#~ "cannot add, edit, resize, or remove partitions from that\n"
+#~ "disk with this tool."
+#~ msgstr ""
+#~ "ការ​ចែក​ជា​ភាគ​នៅ​លើ​ថាស %1$s មិន​អាច​អាន​បាន​ដោយ\n"
+#~ "ឧបករណ៍​ចែក​ជា​ភាគ ដែល​ប្រើ​សម្រាប់​ផ្លាស់​ប្ដូរ\n"
+#~ "តារាង​ភាគ​ឡើយ ។\n"
+#~ "\n"
+#~ "អ្នក​អាច​ប្រើ​ភាគ​នៅ​លើ​ថាស %1$s ដូច​ពួកវា ។\n"
+#~ "អ្នក​អាច​ធ្វើ​ទ្រង់ទ្រាយ​ពួក​វា និង​ផ្ដល់​ចំណុច​ម៉ោន​ទៅ​ឲ្យ​ពួកវា ប៉ុន្តែ​អ្នក\n"
+#~ "មិន​អាច​បន្ថែម កែសម្រួល ផ្លាស់ប្ដូរ​ទំហំ ឬ​យក​ភាគ​ចេញ​​ពី​ថាស​នោះ\n"
+#~ "ដោយ​ប្រើ​ឧបករណ៍​នេះ​បាន​ឡើយ ។"
