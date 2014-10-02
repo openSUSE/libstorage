@@ -1880,16 +1880,9 @@ LvmVg::doCreatePv(const Pv& pv)
     y2mil("device:" << pv.device << " realDevice:" << pv.realDevice());
     getStorage()->unaccessDev(pv.device);
     SystemCmd c;
-    string cmd = MDADMBIN " --zero-superblock " + quote(pv.realDevice());
-    c.execute( cmd );
+    c.execute(WIPEFSBIN " --all " + quote(pv.realDevice()));
     getStorage()->removeDmTableTo(pv.realDevice());
-    if (getStorage()->isDisk(pv.realDevice()))
-	{
-	cmd = PARTEDCMD + quote(pv.realDevice()) + " mklabel msdos";
-	c.execute( cmd );
-	}
-    cmd = "echo y | " PVCREATEBIN " -ff " + metaString() + quote(pv.realDevice());
-    c.execute( cmd );
+    c.execute("echo y | " PVCREATEBIN " -ff " + metaString() + quote(pv.realDevice()));
     if( c.retcode()!=0 )
 	{
 	ret = LVM_CREATE_PV_FAILED;
