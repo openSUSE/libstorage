@@ -371,18 +371,13 @@ namespace storage
     }
 
 
-    static const string dasd_type_names[] = {
+    const vector<string> EnumInfo<Dasd::DasdType>::names({
 	"NONE", "ECKD", "FBA"
-    };
+    });
 
-    const vector<string> EnumInfo<Dasd::DasdType>::names(dasd_type_names, dasd_type_names +
-							 lengthof(dasd_type_names));
 
-    static const string dasd_format_names[] = {
+    const vector<string> EnumInfo<Dasd::DasdFormat>::names({
 	"NONE", "LDL", "CDL"
-    };
-
-    const vector<string> EnumInfo<Dasd::DasdFormat>::names(dasd_format_names, dasd_format_names +
-							   lengthof(dasd_format_names));
+    });
 
 }

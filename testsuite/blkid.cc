@@ -69,6 +69,24 @@ parse3()
 }
 
 
+void
+parse4()
+{
+    cout << "parse4" << endl;
+
+    vector<string> lines = {
+	"/dev/sdb: UUID=\"2013-06-14-19-02-28-00\" LABEL=\"SLES-11-SP3-MINI-ISO-x86_640703\" TYPE=\"iso9660\" ",
+	"/dev/sdc1: SEC_TYPE=\"msdos\" LABEL=\"BOOT\" UUID=\"65CB-FEB0\" TYPE=\"vfat\" PARTUUID=\"a893698d-01\" ",
+	"/dev/sdc2: UUID=\"2013-11-06-15-55-09-00\" LABEL=\"openSUSE 13.1 KDE Live\" TYPE=\"udf\" PARTUUID=\"a893698d-02\" "
+    };
+
+    Blkid blkid(false);
+    blkid.parse(lines);
+
+    cout << blkid << endl;
+}
+
+
 int
 main()
 {
@@ -79,4 +97,5 @@ main()
     parse1();
     parse2();
     parse3();
+    parse4();
 }

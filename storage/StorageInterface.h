@@ -139,7 +139,7 @@ using std::map;
 namespace storage
 {
     enum FsType { FSUNKNOWN, REISERFS, EXT2, EXT3, EXT4, BTRFS, VFAT, XFS, JFS, HFS, NTFS,
-		  SWAP, HFSPLUS, NFS, NFS4, TMPFS, FSNONE };
+		  SWAP, HFSPLUS, NFS, NFS4, TMPFS, ISO9660, UDF, FSNONE };
 
     enum PartitionType { PRIMARY, EXTENDED, LOGICAL, PTYPE_ANY };
 
@@ -227,6 +227,7 @@ namespace storage
 	bool supportsLabel;
 	bool labelWhileMounted;
 	unsigned int labelLength;
+	bool canFormat;
 	unsigned long long minimalFsSizeK;
     };
 
