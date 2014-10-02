@@ -73,7 +73,9 @@ namespace storage
 	    { "reiserfs", REISERFS },
 	    { "swap", SWAP },
 	    { "vfat", VFAT },
-	    { "xfs", XFS }
+	    { "xfs", XFS },
+	    { "iso9660", ISO9660 },
+	    { "udf", UDF }
 	};
 
 	data.clear();

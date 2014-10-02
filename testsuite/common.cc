@@ -123,6 +123,8 @@ namespace storage
 		case NFS: cout << "NFS"; break;
 		case NFS4: cout << "NFS4"; break;
 		case TMPFS: cout << "TMPFS"; break;
+		case ISO9660: cout << "ISO9660"; break;
+		case UDF: cout << "UDF"; break;
 		case FSNONE: cout << "NONE"; break;
 	    }
 	    cout << endl;

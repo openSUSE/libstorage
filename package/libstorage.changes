@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct 02 18:00:46 CEST 2014 - aschnell@suse.de
+
+- detect iso9660 and udf filesystems (fate#317247)
+- 2.25.28
+
+-------------------------------------------------------------------
 Thu Oct 02 12:00:30 CEST 2014 - aschnell@suse.de
 
 - in general use wipefs to remove old signatures

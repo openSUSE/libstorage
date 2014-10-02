@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2004-2014] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -30,7 +30,7 @@ namespace storage
     // strings must match /etc/fstab
     const vector<string> EnumInfo<FsType>::names({
 	"unknown", "reiserfs", "ext2", "ext3", "ext4", "btrfs", "vfat", "xfs", "jfs", "hfs",
-	"ntfs-3g", "swap", "hfsplus", "nfs", "nfs4", "tmpfs", "none"
+	"ntfs-3g", "swap", "hfsplus", "nfs", "nfs4", "tmpfs", "iso9660", "udf", "none"
     });
 
 
