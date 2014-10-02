@@ -1707,7 +1707,8 @@ Disk::getCommitActions(list<commitAction>& l) const
     }
 
 
-int Disk::doCreateLabel()
+    int
+    Disk::doCreateLabel()
     {
     y2mil("label:" << label);
     int ret = 0;
@@ -1715,11 +1716,10 @@ int Disk::doCreateLabel()
     if( !dmp_slave )
 	getStorage()->removeDmMapsTo( device() );
     removePresentPartitions();
-    std::ostringstream cmd_line;
-    classic(cmd_line);
-    cmd_line << MDADMBIN " --zero-superblock --force " << quote(device());
-    execCheckFailed( cmd_line.str() );
-    cmd_line.str("");
+
+    SystemCmd cmd;
+    cmd.execute(WIPEFSBIN " --all " + quote(device()));
+
     string lab(label);
     if( lab=="gpt" )
 	{
@@ -1731,8 +1731,9 @@ int Disk::doCreateLabel()
 		lab = LABEL_GPT_SYNC_MBR;
 	    }
 	}
-    cmd_line << PARTEDCMD << quote(device()) << " mklabel " << lab;
-    if( execCheckFailed( cmd_line.str() ) )
+
+    string cmd_line = PARTEDCMD + quote(device()) + " mklabel " + lab;
+    if (execCheckFailed(cmd_line))
 	{
 	ret = DISK_SET_LABEL_PARTED_FAILED;
 	}
