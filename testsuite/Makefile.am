@@ -20,8 +20,8 @@ noinst_PROGRAMS = alt-names1.single alt-names2.single				\
 	fstab-ng-remove.single fstab-ng-find.single crypttab-add.single		\
 	crypttab-remove.single							\
 	humanstring1.single humanstring2.single					\
-	lvm_create.single lvm_create2.single lvm_extend.single			\
-	md_create.single partition1.single partitionname.single			\
+	lvm-create1.single lvm-create2.single lvm-extend.single			\
+	md-create.single partition1.single partitionname.single			\
 	partition-slots1.single							\
 	partitionprefix.single recursive1.single recursive2.single		\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
@@ -54,10 +54,10 @@ crypttab_add_single_SOURCES = crypttab-add.cc common.h common.cc
 crypttab_remove_single_SOURCES = crypttab-remove.cc common.h common.cc
 humanstring1_single_SOURCES = humanstring1.cc
 humanstring2_single_SOURCES = humanstring2.cc
-lvm_create_single_SOURCES = lvm_create.cc common.h common.cc
-lvm_create2_single_SOURCES = lvm_create2.cc common.h common.cc
-lvm_extend_single_SOURCES = lvm_extend.cc common.h common.cc
-md_create_single_SOURCES = md_create.cc common.h common.cc
+lvm_create1_single_SOURCES = lvm-create1.cc common.h common.cc
+lvm_create2_single_SOURCES = lvm-create2.cc common.h common.cc
+lvm_extend_single_SOURCES = lvm-extend.cc common.h common.cc
+md_create_single_SOURCES = md-create.cc common.h common.cc
 partition1_single_SOURCES = partition1.cc common.h common.cc
 partitionname_single_SOURCES = partitionname.cc common.cc
 partitionprefix_single_SOURCES = partitionprefix.cc common.cc
