@@ -234,6 +234,8 @@ namespace storage
 	    s << " deleted";
 	if (d.silent)
 	    s << " silent";
+	if (!d.alt_names.empty())
+	    s << " alt_names:" << d.alt_names;
 	if (!d.userdata.empty())
 	    s << " userdata:" << d.userdata;
 	return s;
