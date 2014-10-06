@@ -12,7 +12,8 @@ INCLUDES = -I$(top_srcdir)
 
 LDADD = ../storage/libstorage.la
 
-noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
+noinst_PROGRAMS = alt-names1.single alt-names2.single				\
+	backupstate1.single contvolinfo1.single disklabel1.single		\
 	format1.single freeinfo1.single fstab1.single fstab2.single		\
 	fstab3.single fstab4.single fstab-add.single fstab-update.single	\
 	fstab-remove.single fstab-ng-add.single fstab-ng-update.single		\
@@ -31,6 +32,8 @@ noinst_PROGRAMS = backupstate1.single contvolinfo1.single disklabel1.single	\
 	mdadm-examine.single parted.single proc-mdstat.single			\
 	proc-mounts.single proc-parts.single vgdisplay.single vgs.single
 
+alt_names1_single_SOURCES = alt-names1.cc common.h common.cc
+alt_names2_single_SOURCES = alt-names2.cc common.h common.cc
 backupstate1_single_SOURCES = backupstate1.cc common.h common.cc
 contvolinfo1_single_SOURCES = contvolinfo1.cc common.h common.cc
 disklabel1_single_SOURCES = disklabel1.cc common.h common.cc
@@ -51,8 +54,8 @@ crypttab_add_single_SOURCES = crypttab-add.cc common.h common.cc
 crypttab_remove_single_SOURCES = crypttab-remove.cc common.h common.cc
 humanstring1_single_SOURCES = humanstring1.cc
 humanstring2_single_SOURCES = humanstring2.cc
-lvm_create2_single_SOURCES = lvm_create2.cc common.h common.cc
 lvm_create_single_SOURCES = lvm_create.cc common.h common.cc
+lvm_create2_single_SOURCES = lvm_create2.cc common.h common.cc
 lvm_extend_single_SOURCES = lvm_extend.cc common.h common.cc
 md_create_single_SOURCES = md_create.cc common.h common.cc
 partition1_single_SOURCES = partition1.cc common.h common.cc

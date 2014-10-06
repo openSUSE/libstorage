@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Mon Oct 06 12:51:26 CEST 2014 - aschnell@suse.de
+
+- extended testsuite
+
+-------------------------------------------------------------------
 Thu Oct 02 18:00:46 CEST 2014 - aschnell@suse.de
 
 - detect iso9660 and udf filesystems (fate#317247)
