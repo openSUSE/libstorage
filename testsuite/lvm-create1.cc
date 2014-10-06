@@ -20,11 +20,10 @@ void createLvs(const string& vg, int n, const deque<string>& pvs)
 
     /* create n logical volumes */
     int ret = 0;
-    for ( int i = 0; i < n; i++ )
+    for (int i = 0; i < n; ++i)
     {
 	ostringstream name;
-	name << "volume";
-	name << i;
+	name << "volume" << i;
 
 	string dev;
 	ret = s->createLvmLv( vg, name.str(), 100, 1, dev );
