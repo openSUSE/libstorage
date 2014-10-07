@@ -2246,7 +2246,7 @@ EncryptType Volume::detectEncryption()
 			cmd = FSCKREISERBIN " --yes --check -q " + quote(use_dev);
 			break;
 		    case XFS:
-			cmd = FSCKXFSBIN " " + quote(use_dev);
+			cmd = XFSREPAIRBIN " -n " + quote(use_dev);
 			break;
 		    case JFS:
 			cmd = FSCKJFSBIN " -n " + quote(use_dev);
