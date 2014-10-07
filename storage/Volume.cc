@@ -2253,6 +2253,7 @@ bool Volume::needFstabUpdate() const
 			cmd = FSCKREISERBIN " --yes --check -q " + quote(use_dev);
 			break;
 		    case XFS:
+			// xfs_repair is the check tool for xfs
 			cmd = XFSREPAIRBIN " -n " + quote(use_dev);
 			break;
 		    case JFS:
