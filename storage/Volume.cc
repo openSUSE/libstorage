@@ -2173,7 +2173,14 @@ bool Volume::needFstabUpdate() const
     return( ret );
     }
 
-EncryptType Volume::detectEncryption()
+
+    /*
+     * Detect encryption type by trying several encruption types and verifying
+     * that the filesystem specific check tool reports no error and mounting
+     * works.
+     */
+    EncryptType
+    Volume::detectEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
     EncryptType save_enc = encryption;
