@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Oct 07 16:53:46 CEST 2014 - aschnell@suse.de
+
+- use xfs_repair instead of extinct xfs_check (bsc#899930)
+
+-------------------------------------------------------------------
 Mon Oct 06 12:51:26 CEST 2014 - aschnell@suse.de
 
 - extended testsuite

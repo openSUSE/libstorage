@@ -20,8 +20,8 @@
  */
 
 
-#ifndef BLKID_H
-#define BLKID_H
+#ifndef CMD_BLKID_H
+#define CMD_BLKID_H
 
 #include <string>
 #include <map>

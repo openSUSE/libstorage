@@ -2173,7 +2173,14 @@ bool Volume::needFstabUpdate() const
     return( ret );
     }
 
-EncryptType Volume::detectEncryption()
+
+    /*
+     * Detect encryption type by trying several encruption types and verifying
+     * that the filesystem specific check tool reports no error and mounting
+     * works.
+     */
+    EncryptType
+    Volume::detectEncryption()
     {
     EncryptType ret = ENC_UNKNOWN;
     EncryptType save_enc = encryption;
@@ -2246,7 +2253,8 @@ EncryptType Volume::detectEncryption()
 			cmd = FSCKREISERBIN " --yes --check -q " + quote(use_dev);
 			break;
 		    case XFS:
-			cmd = FSCKXFSBIN " " + quote(use_dev);
+			// xfs_repair is the check tool for xfs
+			cmd = XFSREPAIRBIN " -n " + quote(use_dev);
 			break;
 		    case JFS:
 			cmd = FSCKJFSBIN " -n " + quote(use_dev);

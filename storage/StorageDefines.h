@@ -104,7 +104,7 @@
 #define FSCKEXT3BIN    "/sbin/fsck.ext3"
 #define FSCKEXT4BIN    "/sbin/fsck.ext4"
 #define FSCKJFSBIN     "/sbin/fsck.jfs"
-#define FSCKXFSBIN     "/usr/sbin/xfs_check"
+#define XFSREPAIRBIN   "/usr/sbin/xfs_repair"
 #define FSCKREISERBIN  "/sbin/reiserfsck"
 
 #define MKSWAPBIN      "/sbin/mkswap"
