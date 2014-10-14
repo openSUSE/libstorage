@@ -128,8 +128,8 @@ Requires:       s390-tools
 PreReq:         %fillup_prereq
 %endif
 Obsoletes:      yast2-storage-lib
-# expands to Obsoletes: libstorage1 libstorage2 libstorage3...
-Obsoletes:      %(echo `seq -s " " -f "libstorage%.f" $((@LIBVERSION_MAJOR@ - 1))`)
+# expands to Obsoletes: libstorage libstorage1 libstorage2 libstorage3...
+Obsoletes:      libstorage %(echo `seq -s " " -f "libstorage%.f" $((@LIBVERSION_MAJOR@ - 1))`)
 Obsoletes:      libstorage@LIBVERSION_MAJOR@ < %{version}
 Summary:        Library for storage management
 Group:          System/Libraries
