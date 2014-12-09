@@ -37,11 +37,11 @@
 #include "storage/MdPart.h"
 #include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Partition.h"
-#include "storage/SystemCmd.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
-#include "storage/Regex.h"
+#include "storage/Utils/Regex.h"
 #include "storage/EtcMdadm.h"
 
 

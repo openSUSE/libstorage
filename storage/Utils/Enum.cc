@@ -20,8 +20,8 @@
  */
 
 
-#include "storage/Enum.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/Enum.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

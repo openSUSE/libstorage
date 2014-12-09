@@ -27,11 +27,11 @@
 #include <sys/mount.h>
 #include <linux/hdreg.h>
 
-#include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/StorageDefines.h"
 #include "storage/Geometry.h"
-#include "storage/Enum.h"
+#include "storage/Utils/Enum.h"
 #include "storage/Partition.h"
 
 

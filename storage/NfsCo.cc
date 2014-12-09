@@ -25,7 +25,7 @@
 
 #include "storage/NfsCo.h"
 #include "storage/Nfs.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Storage.h"
 #include "storage/EtcFstab.h"

@@ -35,7 +35,7 @@
 #include "storage/IterPair.h"
 #include "storage/FilterIterator.h"
 #include "storage/DerefIterator.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 
 namespace storage
 {

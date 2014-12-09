@@ -27,7 +27,7 @@
 
 #include "storage/Volume.h"
 #include "storage/StorageTypes.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

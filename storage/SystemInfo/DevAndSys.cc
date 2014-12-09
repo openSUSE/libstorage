@@ -24,8 +24,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include "storage/SystemInfo/DevAndSys.h"
-#include "storage/AppUtil.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

@@ -29,7 +29,7 @@
 #include <list>
 #include <boost/noncopyable.hpp>
 
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 
 
 namespace storage
@@ -37,7 +37,7 @@ namespace storage
     using namespace std;
 
 
-    class XmlFile : boost::noncopyable
+    class XmlFile : private boost::noncopyable
     {
 
     public:

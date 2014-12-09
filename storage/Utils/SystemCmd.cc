@@ -30,9 +30,9 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
-#include "storage/OutputProcessor.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/OutputProcessor.h"
 
 
 namespace storage

@@ -22,7 +22,7 @@
 
 #include "storage/SystemInfo/CmdDasdview.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 
 
 namespace storage

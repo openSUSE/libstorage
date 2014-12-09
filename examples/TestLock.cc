@@ -6,7 +6,7 @@
 #include <getopt.h>
 #include <iostream>
 
-#include <storage/Lock.h>
+#include <storage/Utils/Lock.h>
 #include <storage/Storage.h>
 
 using namespace std;

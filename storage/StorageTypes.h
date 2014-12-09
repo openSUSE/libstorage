@@ -29,12 +29,12 @@
 #include <ostream>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/Regex.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/Regex.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/StorageInterface.h"
-#include "storage/XmlFile.h"
-#include "storage/Enum.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/XmlFile.h"
+#include "storage/Utils/Enum.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

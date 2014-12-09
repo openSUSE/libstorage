@@ -23,14 +23,14 @@
 #include <locale>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/AppUtil.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/StorageInterface.h"
 #include "storage/SystemInfo/ProcMdstat.h"
-#include "storage/Enum.h"
+#include "storage/Utils/Enum.h"
 #include "storage/StorageDefines.h"
-#include "storage/SystemCmd.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

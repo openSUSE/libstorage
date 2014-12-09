@@ -24,11 +24,11 @@
 #include <set>
 #include <algorithm>
 
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/StorageTypes.h"
-#include "storage/AsciiFile.h"
-#include "storage/Regex.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/AsciiFile.h"
+#include "storage/Utils/Regex.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/Volume.h"
 #include "storage/EtcFstab.h"
 

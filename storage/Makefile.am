@@ -2,7 +2,7 @@
 # Makefile.am for libstorage/storage
 #
 
-SUBDIRS = SystemInfo
+SUBDIRS = SystemInfo Utils
 
 lib_LTLIBRARIES = libstorage.la
 
@@ -41,28 +41,19 @@ libstorage_la_SOURCES =					\
 	HumanString.cc		HumanString.h		\
 	Graph.cc		Graph.h			\
 	Utils.cc		Utils.h			\
-	SystemCmd.cc		SystemCmd.h		\
-	OutputProcessor.cc	OutputProcessor.h	\
-	Regex.cc		Regex.h			\
 	FreeInfo.cc		FreeInfo.h		\
 	ArchInfo.cc		ArchInfo.h		\
-	AsciiFile.cc		AsciiFile.h		\
-	XmlFile.cc		XmlFile.h		\
 	EtcFstab.cc		EtcFstab.h		\
 	EtcMdadm.cc		EtcMdadm.h		\
 	Geometry.cc		Geometry.h		\
-	AppUtil.cc		AppUtil.h		\
-	Enum.cc			Enum.h			\
-	Lock.cc			Lock.h			\
 	StorageTypes.cc		StorageTypes.h		\
 	FilterIterator.h	ListListIterator.h	\
 	DerefIterator.h		IterPair.h		\
-	Region.cc		Region.h		\
-	StorageTmpl.h		StorageDefines.h        \
+	StorageDefines.h				\
 	gen_md5sum.cc           gen_md5sum.h
 
 libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
-libstorage_la_LIBADD = SystemInfo/libsysteminfo.la -lxml2
+libstorage_la_LIBADD = SystemInfo/libsysteminfo.la Utils/libutils.la -lxml2
 
 $(srcdir)/gen_pathlist.cc: StorageDefines.h
 	grep BIN $< | sed -e "/PARTEDCMD/d" -e "s/^[^ ]*[ ]\+//" -e "s/ .*/,/" >$@

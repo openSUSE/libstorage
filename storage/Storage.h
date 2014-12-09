@@ -30,7 +30,7 @@
 
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/Container.h"
 #include "storage/Volume.h"
 #include "storage/Disk.h"
@@ -58,7 +58,7 @@
 #include "storage/DerefIterator.h"
 #include "storage/ListListIterator.h"
 #include "storage/IterPair.h"
-#include "storage/Lock.h"
+#include "storage/Utils/Lock.h"
 #include "storage/FreeInfo.h"
 #include "storage/ArchInfo.h"
 
@@ -211,7 +211,7 @@ struct DiskData;
      * additional advantage the the complete class hierarchy below Storage
      * could be changed without affecting the user interface of libstorage.
      */
-    class Storage : public storage::StorageInterface, boost::noncopyable
+    class Storage : public storage::StorageInterface, private boost::noncopyable
     {
     protected:
 

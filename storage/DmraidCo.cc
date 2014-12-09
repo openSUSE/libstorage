@@ -25,8 +25,8 @@
 
 #include "storage/DmraidCo.h"
 #include "storage/Dmraid.h"
-#include "storage/SystemCmd.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemInfo/SystemInfo.h"

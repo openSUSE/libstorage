@@ -39,7 +39,7 @@ namespace storage
 
 class OutputProcessor;
 
-class SystemCmd : boost::noncopyable
+class SystemCmd : private boost::noncopyable
     {
     public:
 

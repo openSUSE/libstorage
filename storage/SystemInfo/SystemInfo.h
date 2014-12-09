@@ -48,7 +48,7 @@ namespace storage
     using std::list;
 
 
-    class SystemInfo : boost::noncopyable
+    class SystemInfo : private boost::noncopyable
     {
 
     public:
@@ -117,12 +117,12 @@ namespace storage
 	};
 
 	template <class Object>
-	class LazyObject : public HelperBase<Object>, boost::noncopyable
+	class LazyObject : public HelperBase<Object>, private boost::noncopyable
 	{
 	};
 
 	template <class Object, class Key = string>
-	class LazyObjects : boost::noncopyable
+	class LazyObjects : private boost::noncopyable
 	{
 	public:
 

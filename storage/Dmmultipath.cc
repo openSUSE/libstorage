@@ -24,8 +24,8 @@
 
 #include "storage/Dmmultipath.h"
 #include "storage/DmmultipathCo.h"
-#include "storage/SystemCmd.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 
 

@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Tue Dec 09 13:51:44 CET 2014 - aschnell@suse.de
+
+- restructured source files
+
+-------------------------------------------------------------------
 Tue Oct 14 09:48:36 CEST 2014 - aschnell@suse.de
 
 - obsolete ancient version of libstorage (bsc#900875)

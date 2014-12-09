@@ -25,7 +25,7 @@
 
 #include "storage/StorageInterface.h"
 #include "storage/Geometry.h"
-#include "storage/Region.h"
+#include "storage/Utils/Region.h"
 
 
 namespace storage

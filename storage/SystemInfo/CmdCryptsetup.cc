@@ -20,10 +20,10 @@
  */
 
 
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/SystemInfo/CmdCryptsetup.h"
-#include "storage/AppUtil.h"
-#include "storage/Enum.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/Enum.h"
 #include "storage/StorageDefines.h"
 
 

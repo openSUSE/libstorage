@@ -28,8 +28,8 @@
 #include <boost/algorithm/string.hpp>
 
 #include "storage/StorageInterface.h"
-#include "storage/AppUtil.h"
-#include "storage/Enum.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/Enum.h"
 
 
 namespace storage

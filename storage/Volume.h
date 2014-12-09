@@ -26,9 +26,9 @@
 #include "storage/SystemInfo/CmdBlkid.h"
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/Device.h"
-#include "storage/Enum.h"
+#include "storage/Utils/Enum.h"
 
 
 namespace storage

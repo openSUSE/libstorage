@@ -20,10 +20,10 @@
  */
 
 
-#include "storage/AppUtil.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/SystemInfo/ProcMounts.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 
 
 namespace storage

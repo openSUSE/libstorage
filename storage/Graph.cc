@@ -26,7 +26,7 @@
 
 #include "config.h"
 #include "storage/Graph.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/HumanString.h"
 #include "storage/StorageInterface.h"
 
