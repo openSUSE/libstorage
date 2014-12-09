@@ -211,7 +211,7 @@ struct DiskData;
      * additional advantage the the complete class hierarchy below Storage
      * could be changed without affecting the user interface of libstorage.
      */
-    class Storage : public storage::StorageInterface, boost::noncopyable
+    class Storage : public storage::StorageInterface, private boost::noncopyable
     {
     protected:
 

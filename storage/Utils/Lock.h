@@ -51,7 +51,7 @@ namespace storage
     /**
      * Implement a global read-only or read-write lock.
      */
-    class Lock : boost::noncopyable
+    class Lock : private boost::noncopyable
     {
 
     public:

@@ -37,7 +37,7 @@ namespace storage
     using namespace std;
 
 
-    class XmlFile : boost::noncopyable
+    class XmlFile : private boost::noncopyable
     {
 
     public:

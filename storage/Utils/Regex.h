@@ -42,7 +42,7 @@ namespace storage
     };
 
 
-class Regex : boost::noncopyable
+class Regex : private boost::noncopyable
 {
 public:
 
