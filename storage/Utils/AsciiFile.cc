@@ -24,8 +24,8 @@
 #include <unistd.h>
 #include <fstream>
 
-#include "storage/AppUtil.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/StorageTypes.h"
 
 

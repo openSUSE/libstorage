@@ -88,6 +88,7 @@ AC_OUTPUT(
 	storage/Makefile
 	storage/StorageVersion.h:storage/StorageVersion.h.in
 	storage/SystemInfo/Makefile
+	storage/Utils/Makefile
 	bindings/Makefile
 	bindings/python/Makefile
 	bindings/python/examples/Makefile

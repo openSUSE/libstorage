@@ -28,7 +28,7 @@
 #include <list>
 
 #include "storage/StorageTypes.h"
-#include "storage/XmlFile.h"
+#include "storage/Utils/XmlFile.h"
 
 
 namespace storage

@@ -21,8 +21,8 @@
 
 
 #include "storage/Device.h"
-#include "storage/AppUtil.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/HumanString.h"
 #include "storage/SystemInfo/SystemInfo.h"
 

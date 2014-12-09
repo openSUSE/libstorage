@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include <storage/StorageInterface.h>
-#include <storage/StorageTmpl.h>
+#include <storage/Utils/StorageTmpl.h>
 
 
 namespace storage

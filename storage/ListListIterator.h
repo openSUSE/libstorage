@@ -23,7 +23,7 @@
 #ifndef LIST_LIST_ITERATOR_H
 #define LIST_LIST_ITERATOR_H
 
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/IterPair.h"
 
 namespace storage

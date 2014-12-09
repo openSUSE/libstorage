@@ -27,13 +27,13 @@
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/Region.h"
+#include "storage/Utils/Region.h"
 #include "storage/Partition.h"
 #include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
-#include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/StorageDefines.h"
 
 

@@ -20,9 +20,9 @@
  */
 
 
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/EtcMdadm.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/StorageTypes.h"
 
 

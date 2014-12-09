@@ -29,8 +29,8 @@
 #include <sys/types.h>
 #include <stdlib.h>
 
-#include "storage/AppUtil.h"
-#include "storage/Lock.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/Lock.h"
 
 
 #define LOCKDIR "/run/libstorage"

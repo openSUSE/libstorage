@@ -23,9 +23,9 @@
 #include <boost/algorithm/string.hpp>
 
 #include "storage/StorageTypes.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/SystemInfo/CmdBtrfs.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/StorageDefines.h"
 
 

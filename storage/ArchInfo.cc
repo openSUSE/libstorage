@@ -24,8 +24,8 @@
 #include <sys/utsname.h>
 
 #include "storage/ArchInfo.h"
-#include "storage/AsciiFile.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AsciiFile.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/StorageTypes.h"
 
 

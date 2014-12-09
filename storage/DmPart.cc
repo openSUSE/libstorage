@@ -24,9 +24,9 @@
 
 #include "storage/DmPart.h"
 #include "storage/DmPartCo.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/SystemInfo/ProcParts.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 
 

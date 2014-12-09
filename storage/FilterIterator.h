@@ -23,7 +23,7 @@
 #ifndef FILTER_ITERATOR_H
 #define FILTER_ITERATOR_H
 
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/IterPair.h"
 
 namespace storage

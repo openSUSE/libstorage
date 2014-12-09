@@ -25,12 +25,12 @@
 
 #include "storage/MdCo.h"
 #include "storage/Md.h"
-#include "storage/SystemCmd.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/EtcMdadm.h"
 #include "storage/StorageDefines.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/SystemInfo/SystemInfo.h"
 
 

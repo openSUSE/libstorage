@@ -20,7 +20,7 @@
  */
 
 
-#include "storage/Regex.h"
+#include "storage/Utils/Regex.h"
 
 #include <boost/algorithm/string.hpp>
 

@@ -26,10 +26,10 @@
 #include "storage/Tmpfs.h"
 #include "storage/StorageTypes.h"
 #include "storage/Container.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/SystemInfo/SystemInfo.h"
 #include "storage/Storage.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/StorageDefines.h"
 
 

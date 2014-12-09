@@ -24,7 +24,7 @@
 #define ARCH_INFO_H
 
 
-#include "storage/XmlFile.h"
+#include "storage/Utils/XmlFile.h"
 
 
 namespace storage

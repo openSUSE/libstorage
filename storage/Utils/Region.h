@@ -26,7 +26,7 @@
 #include <algorithm>
 
 #include "storage/StorageInterface.h"
-#include "storage/XmlFile.h"
+#include "storage/Utils/XmlFile.h"
 
 
 namespace storage

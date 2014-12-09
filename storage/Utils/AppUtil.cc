@@ -33,11 +33,11 @@
 #include <string>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/Storage.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/StorageDefines.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/StorageTypes.h"
 
 
@@ -720,7 +720,7 @@ getMajorDevices(const char* driver)
 	y2mil("archinfo:" << archinfo << " instsys:" << instsys);
 
 	set<string> paths = {
-#include "./gen_pathlist.cc"
+#include "../gen_pathlist.cc"
 	};
 
 	paths.erase(PORTMAPBIN);

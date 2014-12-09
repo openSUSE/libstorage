@@ -5,8 +5,8 @@
 
 #include "common.h"
 
-#include "storage/AppUtil.h"
-#include "storage/Region.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/Region.h"
 
 
 extern char* program_invocation_short_name;

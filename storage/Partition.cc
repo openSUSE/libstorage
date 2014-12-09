@@ -23,7 +23,7 @@
 #include <sstream>
 
 #include "storage/Partition.h"
-#include "storage/AppUtil.h"
+#include "storage/Utils/AppUtil.h"
 #include "storage/Disk.h"
 #include "storage/Storage.h"
 

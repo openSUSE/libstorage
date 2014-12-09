@@ -27,9 +27,9 @@
 #include <iomanip>
 #include <boost/algorithm/string.hpp>
 
-#include "storage/SystemCmd.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/Storage.h"
-#include "storage/OutputProcessor.h"
+#include "storage/Utils/OutputProcessor.h"
 #include "storage/Dasd.h"
 #include "storage/StorageDefines.h"
 #include "storage/SystemInfo/SystemInfo.h"

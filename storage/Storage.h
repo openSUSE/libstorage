@@ -30,7 +30,7 @@
 
 #include "storage/StorageInterface.h"
 #include "storage/StorageTypes.h"
-#include "storage/StorageTmpl.h"
+#include "storage/Utils/StorageTmpl.h"
 #include "storage/Container.h"
 #include "storage/Volume.h"
 #include "storage/Disk.h"
@@ -58,7 +58,7 @@
 #include "storage/DerefIterator.h"
 #include "storage/ListListIterator.h"
 #include "storage/IterPair.h"
-#include "storage/Lock.h"
+#include "storage/Utils/Lock.h"
 #include "storage/FreeInfo.h"
 #include "storage/ArchInfo.h"
 

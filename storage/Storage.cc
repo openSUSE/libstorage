@@ -37,9 +37,9 @@
 
 #include "config.h"
 #include "storage/Storage.h"
-#include "storage/StorageTmpl.h"
-#include "storage/AppUtil.h"
-#include "storage/SystemCmd.h"
+#include "storage/Utils/StorageTmpl.h"
+#include "storage/Utils/AppUtil.h"
+#include "storage/Utils/SystemCmd.h"
 #include "storage/Disk.h"
 #include "storage/Dasd.h"
 #include "storage/MdCo.h"
@@ -51,7 +51,7 @@
 #include "storage/SystemInfo/SystemInfo.h"
 #include "storage/EtcFstab.h"
 #include "storage/EtcMdadm.h"
-#include "storage/AsciiFile.h"
+#include "storage/Utils/AsciiFile.h"
 #include "storage/StorageDefines.h"
 #include "storage/gen_md5sum.h"
 
