@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Feb 09 18:59:38 CET 2015 - dvaleev@suse.com
+
+- Don't create gpt_sync_mbr on Power8, machine is capable to boot
+  from GPT (bsc#916935)
+- 2.25.19
+
+-------------------------------------------------------------------
 Tue Dec 09 13:51:44 CET 2014 - aschnell@suse.de
 
 - restructured source files

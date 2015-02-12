@@ -33,7 +33,7 @@ namespace storage
 {
 
     ArchInfo::ArchInfo()
-	: arch("unknown"), ppc_mac(false), ppc_pegasos(false), efiboot(false)
+	: arch("unknown"), ppc_mac(false), ppc_pegasos(false), efiboot(false), ppc_p8(false)
     {
     }
 
@@ -85,6 +85,14 @@ namespace storage
 		    y2mil("tmp2:" << tmp2);
 		    ppc_pegasos = boost::starts_with(tmp2, "Pegasos");
 		}
+	    }
+	    it = find_if(cpuinfo.lines(), string_starts_with("cpu\t"));
+	    if (it != cpuinfo.lines().end())
+	    {
+		y2mil("line:" << *it);
+		string tmp1 = extractNthWord(2, *it);
+		y2mil("tmp1:" << tmp1);
+		ppc_p8 = boost::starts_with(tmp1, "POWER8");
 	    }
 	}
 
@@ -152,7 +160,7 @@ namespace storage
     {
 	return s << "arch:" << archinfo.arch << " ppc_mac:" << archinfo.ppc_mac
 		 << " ppc_pegasos:" << archinfo.ppc_pegasos << " efiboot:"
-		 << archinfo.efiboot;
+		 << archinfo.efiboot << " ppc_p8:" << archinfo.ppc_p8;
     }
 
 }
