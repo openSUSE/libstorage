@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2004-2015] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -211,6 +211,23 @@ namespace storage
      * returned, true otherwise.
      */
     typedef bool (*CallbackPasswordPopup)(const string& device, int attempts, string& password);
+
+
+    /**
+     * Abstract class for some callbacks during commit. Currently only works
+     * for btrfs as root filesystem.
+     */
+    class CommitCallbacks
+    {
+    public:
+
+	virtual ~CommitCallbacks() {}
+
+	virtual void post_root_filesystem_create() const {}
+	virtual void post_root_mount() const {}
+	virtual void post_root_fstab_add() const {}
+
+    };
 
 
     /**
@@ -2508,6 +2525,11 @@ namespace storage
 	 * Query the caching mode.
 	 */
 	virtual bool isCacheChanges () const = 0;
+
+	/**
+	 * Set the commit callbacks.
+	 */
+	virtual void setCommitCallbacks(const CommitCallbacks* commit_callbacks) = 0;
 
 	/**
 	 * Commit the current state to the system.  Only useful in caching

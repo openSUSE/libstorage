@@ -2,7 +2,9 @@
 // Ruby interface definition for libstorage
 //
 
-%module storage
+%module(directors="1") storage
+
+%feature("director") storage::CommitCallbacks;
 
 %{
 #include <storage/StorageInterface.h>

@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Feb 12 17:19:12 CET 2015 - aschnell@suse.de
+
+- added commit callbacks (for fate#318392)
+- 2.25.20
+
+-------------------------------------------------------------------
 Mon Feb 09 18:59:38 CET 2015 - dvaleev@suse.com
 
 - Don't create gpt_sync_mbr on Power8, machine is capable to boot
