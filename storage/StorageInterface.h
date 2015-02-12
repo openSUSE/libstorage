@@ -214,7 +214,7 @@ namespace storage
 
 
     /**
-     * Abstract class for some callbacks during commit. Currently only works
+     * Interface class for some callbacks during commit. Currently only works
      * for btrfs as root filesystem.
      */
     class CommitCallbacks
