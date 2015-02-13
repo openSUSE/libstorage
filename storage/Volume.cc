@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2004-2015] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -991,9 +991,18 @@ int Volume::doFormatBtrfs()
 	    is_mounted = tmp_mount.was_mounted;
 	}
 	}
-    y2mil( "ret:" << ret );
-    return( ret );
+
+    if (getMount() == "/")
+    {
+	const CommitCallbacks* commit_callbacks = getStorage()->getCommitCallbacks();
+	if (commit_callbacks)
+	    commit_callbacks->post_root_filesystem_create();
     }
+
+    y2mil( "ret:" << ret );
+    return ret;
+    }
+
 
 void Volume::updateUuid( const string& new_uuid )
     {
@@ -1557,6 +1566,14 @@ int Volume::doMount()
 	           " to:" << mode << dec << " ok:" << ok );
 	    }
 	}
+
+    if (getMount() == "/")
+    {
+	const CommitCallbacks* commit_callbacks = getStorage()->getCommitCallbacks();
+	if (commit_callbacks)
+	    commit_callbacks->post_root_mount();
+    }
+
     if( ret==0 )
 	{
 	ret = doFstabUpdate();
@@ -3188,6 +3205,14 @@ int Volume::doFstabUpdate( bool force_rewrite )
 		if (ret == 0)
 		    ret = extraFstabAdd(fstab, che);
 		fstab_added = true;
+
+		if (getMount() == "/" && getStorage()->isRootMounted())
+		{
+		    const CommitCallbacks* commit_callbacks = getStorage()->getCommitCallbacks();
+		    if (commit_callbacks)
+			commit_callbacks->post_root_fstab_add();
+		}
+
 		}
 	    }
 	if( changed && ret==0 && getStorage()->isRootMounted() )

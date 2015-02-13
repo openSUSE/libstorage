@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2004-2015] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -92,7 +92,7 @@ Storage::Storage(const Environment& env)
       partAlignment(ALIGN_OPTIMAL), defaultMountBy(MOUNTBY_ID),
       defaultFs(BTRFS), defaultSubvolName(""), detectMounted(true),
       root_mounted(!instsys()), rootprefix(),
-      multipath_autostart(MPAS_UNDECIDED)
+      multipath_autostart(MPAS_UNDECIDED), commit_callbacks(nullptr)
 {
     y2mil("constructed Storage with " << env);
     y2mil("libstorage version " VERSION);
@@ -4915,7 +4915,9 @@ Storage::sortCommitLists(CommitStage stage, list<const Container*>& co,
 static bool notLoop( const Container& c ) { return( c.type()!=LOOP ); }
 static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
 
-int Storage::commit()
+
+    int
+    Storage::commit()
     {
     assertInit();
     lastAction.clear();
@@ -6812,6 +6814,11 @@ void Storage::rootMounted()
 	int ret = fstab->changeRootPrefix( root()+"/etc" );
 	if (ret == 0)
 	    ret = fstab->flush();
+
+	const CommitCallbacks* commit_callbacks = getCommitCallbacks();
+	if (commit_callbacks)
+	    commit_callbacks->post_root_fstab_add();
+
 	if (ret != 0)
 	    y2err("changeRootPrefix returns " << ret);
 	}

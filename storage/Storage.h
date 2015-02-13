@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2004-2015] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -586,6 +586,10 @@ struct DiskData;
 	void getDiskList( bool (* CheckFnc)( const Disk& ), list<Disk*>& dl );
 
 	void changeDeviceName( const string& old, const string& nw );
+
+	const CommitCallbacks* getCommitCallbacks() const { return commit_callbacks; }
+	void setCommitCallbacks(const CommitCallbacks* commit_callbacks)
+	    { Storage::commit_callbacks = commit_callbacks; }
 
         int commit();
 
@@ -2152,6 +2156,8 @@ struct DiskData;
 	CallbackYesNoPopup yesno_popup_cb;
 	CallbackCommitErrorPopup commit_error_popup_cb;
 	CallbackPasswordPopup password_popup_cb;
+
+	const CommitCallbacks* commit_callbacks;
 
 	friend std::ostream& operator<<(std::ostream& s, const Storage& v);
 	friend std::ostream& operator<<(std::ostream& s, Storage& v);
