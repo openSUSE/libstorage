@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Feb 17 14:55:58 CET 2015 - aschnell@suse.de
+
+- mount subvolumes of btrfs root filesystem during installation
+  (for fate#318392)
+
+-------------------------------------------------------------------
 Thu Feb 12 17:19:12 CET 2015 - aschnell@suse.de
 
 - added commit callbacks (for fate#318392)

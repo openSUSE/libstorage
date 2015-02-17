@@ -1,5 +1,5 @@
 /*
- * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2004-2015] Novell, Inc.
  *
  * All Rights Reserved.
  *
@@ -848,20 +848,81 @@ Btrfs::getCommitActions(list<commitAction>& l) const
     }
 
 
+    int
+    Btrfs::extraMount()
+    {
+	y2mil("extraMount");
+
+	if (getMount() == "/")
+	{
+	    string def_subvol = getStorage()->getDefaultSubvolName();
+
+	    list<string> ign_opt(ignore_opt, ignore_opt + lengthof(ignore_opt));
+	    list<string> ign_beg(ignore_beg, ignore_beg + lengthof(ignore_beg));
+
+	    if (getStorage()->instsys())
+		ign_opt.push_back("ro");
+
+	    ign_beg.push_back("subvol=");
+
+	    list<string> opts = splitString(fstab_opt, ",");
+
+	    y2mil("opts before:" << opts);
+	    for (const string& tmp : ign_opt)
+		opts.remove(tmp);
+	    for (const string& tmp : ign_beg)
+		opts.remove_if(string_starts_with(tmp));
+	    y2mil("opts after:" << opts);
+
+	    for (const Subvolume& subvolume : subvolumes)
+	    {
+		// TODO workaround
+		if (boost::contains(subvolume.path(), "grub2"))
+		    continue;
+
+		string real_mount_point = subvolume.path();
+		if (def_subvol.empty())
+		    real_mount_point = "/" + real_mount_point;
+		else
+		    real_mount_point.erase(0, def_subvol.size());
+		real_mount_point = getStorage()->prependRoot(real_mount_point);
+
+		if (access(real_mount_point.c_str(), R_OK ) != 0)
+		    createPath(real_mount_point);
+
+		list<string> tmp_opts = opts;
+		tmp_opts.push_back("subvol=" + subvolume.path());
+
+		string cmdline = MOUNTBIN " -t btrfs -o " + boost::join(tmp_opts, ",") + " " +
+		    quote(mountDevice()) + " " + quote(real_mount_point);
+
+		SystemCmd cmd(cmdline);
+		if (cmd.retcode() != 0)
+		{
+		    setExtError(cmd);
+		    return VOLUME_MOUNT_FAILED;
+		}
+	    }
+	}
+
+	return 0;
+    }
+
+
 Text
 Btrfs::extendText(bool doing, const string& dev) const
     {
     Text txt;
     if( doing )
         {
-        // displayed text during action, 
+        // displayed text during action,
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
         txt = sformat( _("Extending Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );
         }
     else
         {
-        // displayed text before action, 
+        // displayed text before action,
 	// %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
         txt = sformat( _("Extend Btrfs volume %1$s by %2$s"), name().c_str(),
 	               dev.c_str() );

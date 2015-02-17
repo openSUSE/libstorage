@@ -107,6 +107,8 @@ class Btrfs : public Volume
 	virtual int extraFstabUpdate(EtcFstab* fstab, const FstabKey& key, const FstabChange& change) override;
 	virtual int extraFstabRemove(EtcFstab* fstab, const FstabKey& key) override;
 
+	virtual int extraMount() override;
+
     private:
 
 	Btrfs& operator=(const Btrfs& v); // disallow
