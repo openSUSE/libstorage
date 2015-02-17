@@ -271,6 +271,8 @@ class Storage;
 				     const FstabChange& change) { return 0; }
 	virtual int extraFstabRemove(EtcFstab* fstab, const FstabKey& key) { return 0; }
 
+	virtual int extraMount() { return 0; }
+
 	const Container* const cont;
 	bool numeric;
 	bool format;

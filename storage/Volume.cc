@@ -1565,6 +1565,8 @@ int Volume::doMount()
 	    y2mil( "setting mode for " << lmount << " from:" << oct << omode <<
 	           " to:" << mode << dec << " ok:" << ok );
 	    }
+	if (ret == 0)
+	    ret = extraMount();
 	}
 
     if (getMount() == "/")
