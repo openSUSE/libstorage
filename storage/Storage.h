@@ -205,10 +205,10 @@ struct DiskData;
      * functionality provided by libstorage. It contains a list of container
      * objects.
      *
-     * All modifying member functions of the storage library will go through
+     * All modifying member functions of the storage library will go through the
      * Storage class. This is the central place where things like readonly
      * access, locking, testmode, inst-sys etc. are handled. It has the
-     * additional advantage the the complete class hierarchy below Storage
+     * additional advantage that the complete class hierarchy below Storage
      * could be changed without affecting the user interface of libstorage.
      */
     class Storage : public storage::StorageInterface, private boost::noncopyable
