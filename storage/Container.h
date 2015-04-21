@@ -113,7 +113,7 @@ namespace storage
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 
 	// public member functions for iterators over volumes
-	ConstVolPair volPair( bool (* CheckFnc)( const Volume& )=NULL ) const
+        ConstVolPair volPair( bool (* CheckFnc)( const Volume& )=NULL ) const
 	    {
 	    return( ConstVolPair( volBegin( CheckFnc ), volEnd( CheckFnc ) ));
 	    }
@@ -139,19 +139,18 @@ namespace storage
 	    return( ConstVolumeI<Pred>::type( vols.begin(), vols.end(), p, true ) );
 	    }
 
-    protected:
-	// protected member functions for iterators over volumes
-	VolPair volPair( bool (* CheckFnc)( const Volume& )=NULL )
+        // non-const member functions for iterators over volumes
+        VolPair volPair( bool (* CheckFnc)( const Volume& )=NULL )
 	    {
-	    return( VolPair( vBegin( CheckFnc ), vEnd( CheckFnc ) ));
+            return( VolPair( volBegin( CheckFnc ), volEnd( CheckFnc ) ));
 	    }
-	VolIterator vBegin( bool (* CheckFnc)( const Volume& )=NULL )
+        VolIterator volBegin( bool (* CheckFnc)( const Volume& )=NULL )
 	    {
-	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc )) );
+            return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc )) );
 	    }
-	VolIterator vEnd( bool (* CheckFnc)( const Volume& )=NULL )
+        VolIterator volEnd( bool (* CheckFnc)( const Volume& )=NULL )
 	    {
-	    return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
+            return( VolIterator( VolPIterator(vols.begin(), vols.end(), CheckFnc, true )) );
 	    }
 
     public:
