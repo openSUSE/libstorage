@@ -80,7 +80,7 @@ main( int argc_iv, char** argv_ppcv )
     struct tmp
     {
 	static bool TestIsEven(const Volume& d) { return d.nr() % 2 == 0; }
-	static bool TestIsUneven(const Volume& d) { return d.nr() % 2 != 0; }
+	static bool TestIsOdd(const Volume& d) { return d.nr() % 2 != 0; }
     };
 
     {
