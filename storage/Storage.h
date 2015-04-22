@@ -74,20 +74,20 @@ namespace storage
     extern CallbackPasswordPopup password_popup_cb_ycp;
 
 
-template <CType Value>
-class CheckType
+    template <CType Value>
+    class CheckType
     {
     public:
 	bool operator()( const Container& d ) const
 	    {
-	    return( d.type()==Value );
+		return( d.type()==Value );
 	    }
     };
 
-template< class Iter, CType Value, class CastResult >
-class CastCheckIterator : public FilterIterator< CheckType<Value>, Iter >
+    template< class Iter, CType Value, class CastResult >
+    class CastCheckIterator : public FilterIterator< CheckType<Value>, Iter >
     {
-    typedef FilterIterator<CheckType<Value>, Iter> _bclass;
+	typedef FilterIterator<CheckType<Value>, Iter> _bclass;
     public:
 	typedef CastResult value_type;
 	typedef CastResult& reference;
@@ -103,50 +103,50 @@ class CastCheckIterator : public FilterIterator< CheckType<Value>, Iter >
 	    { this->m_cur=i.cur();}
 	CastResult operator*() const
 	    {
-	    return( static_cast<CastResult>(_bclass::operator*()) );
+		return( static_cast<CastResult>(_bclass::operator*()) );
 	    }
 	CastResult* operator->() const
 	    {
-	    return( static_cast<CastResult*>(_bclass::operator->()) );
+		return( static_cast<CastResult*>(_bclass::operator->()) );
 	    }
 	CastCheckIterator& operator++()
 	    {
-	    _bclass::operator++(); return(*this);
+		_bclass::operator++(); return(*this);
 	    }
 	CastCheckIterator operator++(int)
 	    {
-	    y2war( "Expensive ++ CastCheckIterator" );
-	    CastCheckIterator tmp(*this);
-	    _bclass::operator++();
-	    return(tmp);
+		y2war( "Expensive ++ CastCheckIterator" );
+		CastCheckIterator tmp(*this);
+		_bclass::operator++();
+		return(tmp);
 	    }
 	CastCheckIterator& operator--()
 	    {
-	    _bclass::operator--(); return(*this);
+		_bclass::operator--(); return(*this);
 	    }
 	CastCheckIterator operator--(int)
 	    {
-	    y2war( "Expensive -- CastCheckIterator" );
-	    CastCheckIterator tmp(*this);
-	    _bclass::operator--();
-	    return(tmp);
+		y2war( "Expensive -- CastCheckIterator" );
+		CastCheckIterator tmp(*this);
+		_bclass::operator--();
+		return(tmp);
 	    }
     };
 
-template < bool (* FncP)( const Container& c ) >
-class CheckByFnc
+    template < bool (* FncP)( const Container& c ) >
+    class CheckByFnc
     {
     public:
 	bool operator()( const Container& d ) const
 	    {
-	    return( (*FncP)(d) );
+		return( (*FncP)(d) );
 	    }
     };
 
-template< class Iter, bool (* FncP)( const Container& c ), class CastResult >
-class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
+    template< class Iter, bool (* FncP)( const Container& c ), class CastResult >
+    class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
     {
-    typedef FilterIterator<CheckByFnc<FncP>, Iter> _bclass;
+	typedef FilterIterator<CheckByFnc<FncP>, Iter> _bclass;
     public:
 	typedef CastResult value_type;
 	typedef CastResult& reference;
@@ -161,41 +161,41 @@ class CastCheckFncIterator : public FilterIterator< CheckByFnc<FncP>, Iter >
 	CastCheckFncIterator( const It& i) : _bclass( i.begin(), i.end(), i.pred() )
 	    { this->m_cur=i.cur();}
 	CastResult operator*() const
-	    {
+	{
 	    return( static_cast<CastResult>(_bclass::operator*()) );
-	    }
+	}
 	CastResult* operator->() const
-	    {
+	{
 	    return( static_cast<CastResult*>(_bclass::operator->()) );
-	    }
+	}
 	CastCheckFncIterator& operator++()
-	    {
+	{
 	    _bclass::operator++(); return(*this);
-	    }
+	}
 	CastCheckFncIterator operator++(int)
-	    {
+	{
 	    y2war( "Expensive ++ CastCheckFncIterator" );
 	    CastCheckFncIterator tmp(*this);
 	    _bclass::operator++();
 	    return(tmp);
-	    }
+	}
 	CastCheckFncIterator& operator--()
-	    {
+	{
 	    _bclass::operator--(); return(*this);
-	    }
+	}
 	CastCheckFncIterator operator--(int)
-	    {
+	{
 	    y2war( "Expensive -- CastCheckFncIterator" );
 	    CastCheckFncIterator tmp(*this);
 	    _bclass::operator--();
 	    return(tmp);
-	    }
+	}
     };
 
 
-class EtcFstab;
+    class EtcFstab;
     class EtcMdadm;
-struct DiskData;
+    struct DiskData;
 
 
     /**
@@ -538,7 +538,7 @@ struct DiskData;
 
 	int getMdPartCoInfo( const string& name, MdPartCoInfo& info);
 	int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
-	                                         MdPartCoInfo& info);
+				 MdPartCoInfo& info);
         int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
         int removeMdPartCo(const string& devName, bool destroySb);
 
@@ -648,87 +648,87 @@ struct DiskData;
 	bool commitErrorPopupCb(int error, const Text& last_action, const string& extended_message) const;
 	bool passwordPopupCb(const string& device, int attempts, string& password) const;
 
-// iterators over container
+    // iterators over container
     protected:
 	// protected typedefs for iterators over container
 	template< class Pred >
-	    struct ConstContainerPI { typedef ContainerIter<Pred, CCIter> type; };
+	struct ConstContainerPI { typedef ContainerIter<Pred, CCIter> type; };
 	typedef CheckFnc<const Container> CheckFncCont;
 	typedef CheckerIterator< CheckFncCont, ConstContainerPI<CheckFncCont>::type,
 	                         CCIter, Container > ConstContPIterator;
 	template< class Pred >
-	    struct ContainerPI { typedef ContainerIter<Pred, CIter> type; };
+	struct ContainerPI { typedef ContainerIter<Pred, CIter> type; };
 	template< class Pred >
-	    struct ContainerI
-		{ typedef ContainerDerIter<Pred, typename ContainerPI<Pred>::type,
-					   Container> type; };
+	struct ContainerI
+	{ typedef ContainerDerIter<Pred, typename ContainerPI<Pred>::type,
+				   Container> type; };
 	typedef CheckerIterator< CheckFncCont, ContainerPI<CheckFncCont>::type,
 	                         CIter, Container > ContPIterator;
 	typedef DerefIterator<ContPIterator,Container> ContIterator;
-    typedef IterPair<ContIterator> ContPair;
+	typedef IterPair<ContIterator> ContPair;
 
     public:
 	// public typedefs for iterators over containers
 	template< class Pred >
-	    struct ConstContainerI
-		{ typedef ContainerDerIter<Pred, typename ConstContainerPI<Pred>::type,
-					   const Container> type; };
+	struct ConstContainerI
+	{ typedef ContainerDerIter<Pred, typename ConstContainerPI<Pred>::type,
+				   const Container> type; };
 	template< class Pred >
-	    struct ContCondIPair { typedef MakeCondIterPair<Pred,
-	                           typename ConstContainerI<Pred>::type> type;};
+	struct ContCondIPair { typedef MakeCondIterPair<Pred,
+							typename ConstContainerI<Pred>::type> type;};
 	typedef DerefIterator<ConstContPIterator,const Container> ConstContIterator;
 	typedef IterPair<ConstContIterator> ConstContPair;
 
 	// public member functions for iterators over containers
         ConstContPair contPair( bool (* CheckFnc)( const Container& )=NULL ) const
-	    {
-            return( ConstContPair( contBegin( CheckFnc ), contEnd( CheckFnc ) ));
-	    }
+	{
+	    return( ConstContPair( contBegin( CheckFnc ), contEnd( CheckFnc ) ));
+	}
         ConstContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL ) const
-	    {
+	{
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc )) );
-	    }
+	}
         ConstContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL ) const
-	    {
+	{
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename ContCondIPair<Pred>::type contCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename ContCondIPair<Pred>::type( contCondBegin( p ), contCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstContainerI<Pred>::type contCondBegin( const Pred& p ) const
-	    {
+	{
 	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p )) );
-	    }
+	}
 	template< class Pred > typename ConstContainerI<Pred>::type contCondEnd( const Pred& p ) const
-	    {
+	{
 	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
-	    }
-    // non-const member functions for iterators over containers
+	}
+	// non-const member functions for iterators over containers
         ContPair contPair( bool (* CheckFnc)( const Container& )=NULL )
-	    {
-            return( ContPair( contBegin(CheckFnc), contEnd(CheckFnc) ));
-	    }
+	{
+	    return( ContPair( contBegin(CheckFnc), contEnd(CheckFnc) ));
+	}
         ContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL )
-	    {
-            return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
-	    }
+	{
+	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
+	}
         ContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL )
-	    {
+	{
 	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
-	    }
+	}
 
 // iterators over disks
     protected:
 	// protected typedefs for iterators over disks
 	typedef CastCheckIterator<CCIter, storage::DISK, const Disk *> ContainerCDiskIter;
 	template< class Pred >
-	    struct ConstDiskPI { typedef ContainerIter<Pred, ContainerCDiskIter> type; };
+	struct ConstDiskPI { typedef ContainerIter<Pred, ContainerCDiskIter> type; };
 	typedef CastCheckIterator<CIter, storage::DISK, Disk *> ContainerDiskIter;
 	template< class Pred >
-	    struct DiskPI { typedef ContainerIter<Pred, ContainerDiskIter> type; };
+	struct DiskPI { typedef ContainerIter<Pred, ContainerDiskIter> type; };
 	template< class Pred >
-	    struct DiskI { typedef ContainerDerIter<Pred, typename DiskPI<Pred>::type, Disk> type; };
+	struct DiskI { typedef ContainerDerIter<Pred, typename DiskPI<Pred>::type, Disk> type; };
 	typedef CheckFnc<const Disk> CheckFncDisk;
 	typedef CheckerIterator< CheckFncDisk, ConstDiskPI<CheckFncDisk>::type,
 	                         ContainerCDiskIter, Disk > ConstDiskPIterator;
@@ -741,64 +741,64 @@ struct DiskData;
 	// public typedefs for iterators over disks
 	typedef DerefIterator<ConstDiskPIterator,const Disk> ConstDiskIterator;
 	template< class Pred >
-	    struct ConstDiskI
-		{ typedef ContainerDerIter<Pred, typename ConstDiskPI<Pred>::type,
-					   const Disk> type; };
+	struct ConstDiskI
+	{ typedef ContainerDerIter<Pred, typename ConstDiskPI<Pred>::type,
+				   const Disk> type; };
 	template< class Pred >
-	    struct DiskCondIPair { typedef MakeCondIterPair<Pred, typename ConstDiskI<Pred>::type> type; };
+	struct DiskCondIPair { typedef MakeCondIterPair<Pred, typename ConstDiskI<Pred>::type> type; };
 	typedef IterPair<ConstDiskIterator> ConstDiskPair;
 
 	// public member functions for iterators over disks
 	ConstDiskPair diskPair( bool (* CheckFnc)( const Disk& )=NULL ) const
-	    {
+	{
 	    return( ConstDiskPair( diskBegin( CheckFnc ), diskEnd( CheckFnc ) ));
-	    }
+	}
 	ConstDiskIterator diskBegin( bool (* CheckFnc)( const Disk& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( cont.begin(), cont.end() ),
-	                                    ContainerCDiskIter( cont.begin(), cont.end(), true ));
+					    ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskIterator( ConstDiskPIterator( p, CheckFnc )) );
-	    }
+	}
 	ConstDiskIterator diskEnd( bool (* CheckFnc)( const Disk& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDiskIter> p( ContainerCDiskIter( cont.begin(), cont.end() ),
-	                                    ContainerCDiskIter( cont.begin(), cont.end(), true ));
+					    ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( ConstDiskIterator( ConstDiskPIterator( p, CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename DiskCondIPair<Pred>::type diskCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DiskCondIPair<Pred>::type( diskCondBegin( p ), diskCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDiskI<Pred>::type diskCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
 					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDiskI<Pred>::type( typename ConstDiskPI<Pred>::type( pair, p )) );
-	    }
+	}
 	template< class Pred > typename ConstDiskI<Pred>::type diskCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDiskIter> pair( ContainerCDiskIter( cont.begin(), cont.end() ),
 					       ContainerCDiskIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDiskI<Pred>::type( typename ConstDiskPI<Pred>::type( pair, p, true )) );
-	    }
+	}
     protected:
 	// protected member functions for iterators over disks
 	DiskPair dPair( bool (* CheckFnc)( const Disk& )=NULL )
-	    {
+	{
 	    return( DiskPair( dBegin( CheckFnc ), dEnd( CheckFnc ) ));
-	    }
+	}
 	DiskIterator dBegin( bool (* CheckFnc)( const Disk& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDiskIter> p( ContainerDiskIter( cont.begin(), cont.end() ),
-	                                   ContainerDiskIter( cont.begin(), cont.end(), true ));
+					   ContainerDiskIter( cont.begin(), cont.end(), true ));
 	    return( DiskIterator( DiskPIterator( p, CheckFnc )) );
-	    }
+	}
 	DiskIterator dEnd( bool (* CheckFnc)( const Disk& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDiskIter> p( ContainerDiskIter( cont.begin(), cont.end() ),
-	                                   ContainerDiskIter( cont.begin(), cont.end(), true ));
+					   ContainerDiskIter( cont.begin(), cont.end(), true ));
 	    return( DiskIterator( DiskPIterator( p, CheckFnc, true )) );
-	    }
+	}
 
 
 // iterators over LVM VGs
@@ -806,12 +806,12 @@ struct DiskData;
 	// protected typedefs for iterators over LVM VGs
 	typedef CastCheckIterator<CCIter, storage::LVM, const LvmVg *> ContainerCLvmVgIter;
 	template< class Pred >
-	    struct ConstLvmVgPI { typedef ContainerIter<Pred, ContainerCLvmVgIter> type; };
+	struct ConstLvmVgPI { typedef ContainerIter<Pred, ContainerCLvmVgIter> type; };
 	typedef CastCheckIterator<CIter, storage::LVM, LvmVg *> ContainerLvmVgIter;
 	template< class Pred >
-	    struct LvmVgPI { typedef ContainerIter<Pred, ContainerLvmVgIter> type; };
+	struct LvmVgPI { typedef ContainerIter<Pred, ContainerLvmVgIter> type; };
 	template< class Pred >
-	    struct LvmVgI { typedef ContainerDerIter<Pred, typename LvmVgPI<Pred>::type, LvmVg> type; };
+	struct LvmVgI { typedef ContainerDerIter<Pred, typename LvmVgPI<Pred>::type, LvmVg> type; };
 	typedef CheckFnc<const LvmVg> CheckFncLvmVg;
 	typedef CheckerIterator< CheckFncLvmVg, ConstLvmVgPI<CheckFncLvmVg>::type,
 	                         ContainerCLvmVgIter, LvmVg > ConstLvmVgPIterator;
@@ -824,76 +824,76 @@ struct DiskData;
 	// public typedefs for iterators over LVM VGs
 	typedef DerefIterator<ConstLvmVgPIterator,const LvmVg> ConstLvmVgIterator;
 	template< class Pred >
-	    struct ConstLvmVgI
-		{ typedef ContainerDerIter<Pred, typename ConstLvmVgPI<Pred>::type,
-					   const LvmVg> type; };
+	struct ConstLvmVgI
+	{ typedef ContainerDerIter<Pred, typename ConstLvmVgPI<Pred>::type,
+				   const LvmVg> type; };
 	template< class Pred >
-	    struct LvmVgCondIPair { typedef MakeCondIterPair<Pred, typename ConstLvmVgI<Pred>::type> type; };
+	struct LvmVgCondIPair { typedef MakeCondIterPair<Pred, typename ConstLvmVgI<Pred>::type> type; };
 	typedef IterPair<ConstLvmVgIterator> ConstLvmVgPair;
 
 	// public member functions for iterators over LVM VGs
 	ConstLvmVgPair lvmVgPair( bool (* CheckFnc)( const LvmVg& )=NULL ) const
-	    {
+	{
 	    return( ConstLvmVgPair( lvmVgBegin( CheckFnc ), lvmVgEnd( CheckFnc ) ));
-	    }
+	}
 	ConstLvmVgIterator lvmVgBegin( bool (* CheckFnc)( const LvmVg& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( cont.begin(), cont.end() ),
-	                                     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
+					     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc )) );
-	    }
+	}
 	ConstLvmVgIterator lvmVgEnd( bool (* CheckFnc)( const LvmVg& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCLvmVgIter> p( ContainerCLvmVgIter( cont.begin(), cont.end() ),
-	                                     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
+					     ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( ConstLvmVgIterator( ConstLvmVgPIterator( p, CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename LvmVgCondIPair<Pred>::type lvmVgCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename LvmVgCondIPair<Pred>::type( lvmVgCondBegin( p ), lvmVgCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstLvmVgI<Pred>::type lvmVgCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
-					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
+						ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstLvmVgI<Pred>::type( typename ConstLvmVgPI<Pred>::type( pair, p )) );
-	    }
+	}
 	template< class Pred > typename ConstLvmVgI<Pred>::type lvmVgCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCLvmVgIter> pair( ContainerCLvmVgIter( cont.begin(), cont.end() ),
-					        ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
+						ContainerCLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstLvmVgI<Pred>::type( typename ConstLvmVgPI<Pred>::type( pair, p, true )) );
-	    }
+	}
     protected:
 	// protected member functions for iterators over LVM VGs
 	LvmVgPair lvgPair( bool (* CheckFnc)( const LvmVg& )=NULL )
-	    {
+	{
 	    return( LvmVgPair( lvgBegin( CheckFnc ), lvgEnd( CheckFnc ) ));
-	    }
+	}
 	LvmVgIterator lvgBegin( bool (* CheckFnc)( const LvmVg& )=NULL )
-	    {
+	{
 	    IterPair<ContainerLvmVgIter> p( ContainerLvmVgIter( cont.begin(), cont.end() ),
 					    ContainerLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( LvmVgIterator( LvmVgPIterator( p, CheckFnc )) );
-	    }
+	}
 	LvmVgIterator lvgEnd( bool (* CheckFnc)( const LvmVg& )=NULL )
-	    {
+	{
 	    IterPair<ContainerLvmVgIter> p( ContainerLvmVgIter( cont.begin(), cont.end() ),
 					    ContainerLvmVgIter( cont.begin(), cont.end(), true ));
 	    return( LvmVgIterator( LvmVgPIterator( p, CheckFnc, true )) );
-	    }
+	}
 
-// iterators over DmPart container
+    // iterators over DmPart container
     protected:
 	// protected typedefs for iterators over DmPart container
 	typedef CastCheckFncIterator<CCIter, isDmPart, const DmPartCo *> ContainerCDmPartIter;
 	template< class Pred >
-	    struct ConstDmPartCoPI { typedef ContainerIter<Pred, ContainerCDmPartIter> type; };
+	struct ConstDmPartCoPI { typedef ContainerIter<Pred, ContainerCDmPartIter> type; };
 	typedef CastCheckFncIterator<CIter, isDmPart, DmPartCo *> ContainerDmPartIter;
 	template< class Pred >
-	    struct DmPartCoPI { typedef ContainerIter<Pred, ContainerDmPartIter> type; };
+	struct DmPartCoPI { typedef ContainerIter<Pred, ContainerDmPartIter> type; };
 	template< class Pred >
-	    struct DmPartCoI { typedef ContainerDerIter<Pred, typename DmPartCoPI<Pred>::type, DmPartCo> type; };
+	struct DmPartCoI { typedef ContainerDerIter<Pred, typename DmPartCoPI<Pred>::type, DmPartCo> type; };
 	typedef CheckFnc<const DmPartCo> CheckFncDmPartCo;
 	typedef CheckerIterator< CheckFncDmPartCo, ConstDmPartCoPI<CheckFncDmPartCo>::type,
 	                         ContainerCDmPartIter, DmPartCo > ConstDmPartCoPIterator;
@@ -906,76 +906,76 @@ struct DiskData;
 	// public typedefs for iterators over DmPart container
 	typedef DerefIterator<ConstDmPartCoPIterator,const DmPartCo> ConstDmPartCoIterator;
 	template< class Pred >
-	    struct ConstDmPartCoI
-		{ typedef ContainerDerIter<Pred, typename ConstDmPartCoPI<Pred>::type,
-					   const DmPartCo> type; };
+	struct ConstDmPartCoI
+	{ typedef ContainerDerIter<Pred, typename ConstDmPartCoPI<Pred>::type,
+				   const DmPartCo> type; };
 	template< class Pred >
-	    struct DmPartCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmPartCoI<Pred>::type> type; };
+	struct DmPartCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmPartCoI<Pred>::type> type; };
 	typedef IterPair<ConstDmPartCoIterator> ConstDmPartCoPair;
 
 	// public member functions for iterators over DmPart container
 	ConstDmPartCoPair dmpartCoPair( bool (* CheckFnc)( const DmPartCo& )=NULL ) const
-	    {
+	{
 	    return( ConstDmPartCoPair( dmpartCoBegin( CheckFnc ), dmpartCoEnd( CheckFnc ) ));
-	    }
+	}
 	ConstDmPartCoIterator dmpartCoBegin( bool (* CheckFnc)( const DmPartCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmPartIter> p( ContainerCDmPartIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmPartIter( cont.begin(), cont.end(), true ));
+					      ContainerCDmPartIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmPartCoIterator( ConstDmPartCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	ConstDmPartCoIterator dmpartCoEnd( bool (* CheckFnc)( const DmPartCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmPartIter> p( ContainerCDmPartIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmPartIter( cont.begin(), cont.end(), true ));
+					      ContainerCDmPartIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmPartCoIterator( ConstDmPartCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename DmPartCoCondIPair<Pred>::type dmPartCoCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmPartCoCondIPair<Pred>::type( dmpartCoCondBegin( p ), dmpartCoCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmPartCoI<Pred>::type dmpartCoCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmPartIter> pair( ContainerCDmPartIter( cont.begin(), cont.end() ),
-					         ContainerCDmPartIter( cont.begin(), cont.end(), true ));
+						 ContainerCDmPartIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmPartCoI<Pred>::type( typename ConstDmPartCoPI<Pred>::type( pair, p )) );
-	    }
+	}
 	template< class Pred > typename ConstDmPartCoI<Pred>::type dmpartCoCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmPartIter> pair( ContainerCDmPartIter( cont.begin(), cont.end() ),
-					         ContainerCDmPartIter( cont.begin(), cont.end(), true ));
+						 ContainerCDmPartIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmPartCoI<Pred>::type( typename ConstDmPartCoPI<Pred>::type( pair, p, true )) );
-	    }
+	}
     protected:
 	// protected member functions for iterators over DmPart container
 	DmPartCoPair dmpCoPair( bool (* CheckFnc)( const DmPartCo& )=NULL )
-	    {
+	{
 	    return( DmPartCoPair( dmpCoBegin( CheckFnc ), dmpCoEnd( CheckFnc ) ));
-	    }
+	}
 	DmPartCoIterator dmpCoBegin( bool (* CheckFnc)( const DmPartCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmPartIter> p( ContainerDmPartIter( cont.begin(), cont.end() ),
 					     ContainerDmPartIter( cont.begin(), cont.end(), true ));
 	    return( DmPartCoIterator( DmPartCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	DmPartCoIterator dmpCoEnd( bool (* CheckFnc)( const DmPartCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmPartIter> p( ContainerDmPartIter( cont.begin(), cont.end() ),
 					     ContainerDmPartIter( cont.begin(), cont.end(), true ));
 	    return( DmPartCoIterator( DmPartCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 
-// iterators over DMRAID container
+    // iterators over DMRAID container
     protected:
 	// protected typedefs for iterators over DMRAID container
 	typedef CastCheckIterator<CCIter, storage::DMRAID, const DmraidCo *> ContainerCDmraidIter;
 	template< class Pred >
-	    struct ConstDmraidCoPI { typedef ContainerIter<Pred, ContainerCDmraidIter> type; };
+	struct ConstDmraidCoPI { typedef ContainerIter<Pred, ContainerCDmraidIter> type; };
 	typedef CastCheckIterator<CIter, storage::DMRAID, DmraidCo *> ContainerDmraidIter;
 	template< class Pred >
-	    struct DmraidCoPI { typedef ContainerIter<Pred, ContainerDmraidIter> type; };
+	struct DmraidCoPI { typedef ContainerIter<Pred, ContainerDmraidIter> type; };
 	template< class Pred >
-	    struct DmraidCoI { typedef ContainerDerIter<Pred, typename DmraidCoPI<Pred>::type, DmraidCo> type; };
+	struct DmraidCoI { typedef ContainerDerIter<Pred, typename DmraidCoPI<Pred>::type, DmraidCo> type; };
 	typedef CheckFnc<const DmraidCo> CheckFncDmraidCo;
 	typedef CheckerIterator< CheckFncDmraidCo, ConstDmraidCoPI<CheckFncDmraidCo>::type,
 	                         ContainerCDmraidIter, DmraidCo > ConstDmraidCoPIterator;
@@ -988,77 +988,80 @@ struct DiskData;
 	// public typedefs for iterators over DMRAID container
 	typedef DerefIterator<ConstDmraidCoPIterator,const DmraidCo> ConstDmraidCoIterator;
 	template< class Pred >
-	    struct ConstDmraidCoI
-		{ typedef ContainerDerIter<Pred, typename ConstDmraidCoPI<Pred>::type,
-					   const DmraidCo> type; };
+	struct ConstDmraidCoI
+	{
+	    typedef ContainerDerIter<Pred,
+				     typename ConstDmraidCoPI<Pred>::type,
+				     const DmraidCo> type;
+	};
 	template< class Pred >
-	    struct DmraidCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmraidCoI<Pred>::type> type; };
+	struct DmraidCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmraidCoI<Pred>::type> type; };
 	typedef IterPair<ConstDmraidCoIterator> ConstDmraidCoPair;
 
 	// public member functions for iterators over DMRAID container
 	ConstDmraidCoPair dmraidCoPair( bool (* CheckFnc)( const DmraidCo& )=NULL ) const
-	    {
+	{
 	    return( ConstDmraidCoPair( dmraidCoBegin( CheckFnc ), dmraidCoEnd( CheckFnc ) ));
-	    }
+	}
 	ConstDmraidCoIterator dmraidCoBegin( bool (* CheckFnc)( const DmraidCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmraidIter> p( ContainerCDmraidIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmraidIter( cont.begin(), cont.end(), true ));
+					      ContainerCDmraidIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmraidCoIterator( ConstDmraidCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	ConstDmraidCoIterator dmraidCoEnd( bool (* CheckFnc)( const DmraidCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmraidIter> p( ContainerCDmraidIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmraidIter( cont.begin(), cont.end(), true ));
+					      ContainerCDmraidIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmraidCoIterator( ConstDmraidCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename DmraidCoCondIPair<Pred>::type dmraidCoCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmraidCoCondIPair<Pred>::type( dmraidCoCondBegin( p ), dmraidCoCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmraidCoI<Pred>::type dmraidCoCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmraidIter> pair( ContainerCDmraidIter( cont.begin(), cont.end() ),
-					         ContainerCDmraidIter( cont.begin(), cont.end(), true ));
+						 ContainerCDmraidIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmraidCoI<Pred>::type( typename ConstDmraidCoPI<Pred>::type( pair, p )) );
-	    }
+	}
 	template< class Pred > typename ConstDmraidCoI<Pred>::type dmraidCoCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmraidIter> pair( ContainerCDmraidIter( cont.begin(), cont.end() ),
-					         ContainerCDmraidIter( cont.begin(), cont.end(), true ));
+						 ContainerCDmraidIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmraidCoI<Pred>::type( typename ConstDmraidCoPI<Pred>::type( pair, p, true )) );
-	    }
+	}
     protected:
 	// protected member functions for iterators over DMRAID container
 	DmraidCoPair dmrCoPair( bool (* CheckFnc)( const DmraidCo& )=NULL )
-	    {
+	{
 	    return( DmraidCoPair( dmrCoBegin( CheckFnc ), dmrCoEnd( CheckFnc ) ));
-	    }
+	}
 	DmraidCoIterator dmrCoBegin( bool (* CheckFnc)( const DmraidCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmraidIter> p( ContainerDmraidIter( cont.begin(), cont.end() ),
 					     ContainerDmraidIter( cont.begin(), cont.end(), true ));
 	    return( DmraidCoIterator( DmraidCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	DmraidCoIterator dmrCoEnd( bool (* CheckFnc)( const DmraidCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmraidIter> p( ContainerDmraidIter( cont.begin(), cont.end() ),
 					     ContainerDmraidIter( cont.begin(), cont.end(), true ));
 	    return( DmraidCoIterator( DmraidCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 
 
-// iterators over DMMULTIPATH container
+    // iterators over DMMULTIPATH container
     protected:
 	// protected typedefs for iterators over DMMULTIPATH container
 	typedef CastCheckIterator<CCIter, storage::DMMULTIPATH, const DmmultipathCo *> ContainerCDmmultipathIter;
 	template< class Pred >
-	    struct ConstDmmultipathCoPI { typedef ContainerIter<Pred, ContainerCDmmultipathIter> type; };
+	struct ConstDmmultipathCoPI { typedef ContainerIter<Pred, ContainerCDmmultipathIter> type; };
 	typedef CastCheckIterator<CIter, storage::DMMULTIPATH, DmmultipathCo *> ContainerDmmultipathIter;
 	template< class Pred >
-	    struct DmmultipathCoPI { typedef ContainerIter<Pred, ContainerDmmultipathIter> type; };
+	struct DmmultipathCoPI { typedef ContainerIter<Pred, ContainerDmmultipathIter> type; };
 	template< class Pred >
-	    struct DmmultipathCoI { typedef ContainerDerIter<Pred, typename DmmultipathCoPI<Pred>::type, DmmultipathCo> type; };
+	struct DmmultipathCoI { typedef ContainerDerIter<Pred, typename DmmultipathCoPI<Pred>::type, DmmultipathCo> type; };
 	typedef CheckFnc<const DmmultipathCo> CheckFncDmmultipathCo;
 	typedef CheckerIterator< CheckFncDmmultipathCo, ConstDmmultipathCoPI<CheckFncDmmultipathCo>::type,
 	                         ContainerCDmmultipathIter, DmmultipathCo > ConstDmmultipathCoPIterator;
@@ -1071,67 +1074,70 @@ struct DiskData;
 	// public typedefs for iterators over DMMULTIPATH container
 	typedef DerefIterator<ConstDmmultipathCoPIterator,const DmmultipathCo> ConstDmmultipathCoIterator;
 	template< class Pred >
-	    struct ConstDmmultipathCoI
-		{ typedef ContainerDerIter<Pred, typename ConstDmmultipathCoPI<Pred>::type,
-					   const DmmultipathCo> type; };
+	struct ConstDmmultipathCoI
+	{
+	    typedef ContainerDerIter<Pred,
+				     typename ConstDmmultipathCoPI<Pred>::type,
+				     const DmmultipathCo> type;
+	};
 	template< class Pred >
-	    struct DmmultipathCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmmultipathCoI<Pred>::type> type; };
+	struct DmmultipathCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstDmmultipathCoI<Pred>::type> type; };
 	typedef IterPair<ConstDmmultipathCoIterator> ConstDmmultipathCoPair;
 
 	// public member functions for iterators over DMMULTIPATH container
 	ConstDmmultipathCoPair dmmultipathCoPair( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
-	    {
+	{
 	    return( ConstDmmultipathCoPair( dmmultipathCoBegin( CheckFnc ), dmmultipathCoEnd( CheckFnc ) ));
-	    }
+	}
 	ConstDmmultipathCoIterator dmmultipathCoBegin( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmmultipathIter> p( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+						   ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmmultipathCoIterator( ConstDmmultipathCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	ConstDmmultipathCoIterator dmmultipathCoEnd( bool (* CheckFnc)( const DmmultipathCo& )=NULL ) const
-	    {
+	{
 	    IterPair<ContainerCDmmultipathIter> p( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
-	                                      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+						   ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( ConstDmmultipathCoIterator( ConstDmmultipathCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 	template< class Pred > typename DmmultipathCoCondIPair<Pred>::type dmmultipathCoCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmmultipathCoCondIPair<Pred>::type( dmmultipathCoCondBegin( p ), dmmultipathCoCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmmultipathCoI<Pred>::type dmmultipathCoCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmmultipathIter> pair( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
-					         ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+						      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmmultipathCoI<Pred>::type( typename ConstDmmultipathCoPI<Pred>::type( pair, p )) );
-	    }
+	}
 	template< class Pred > typename ConstDmmultipathCoI<Pred>::type dmmultipathCoCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ContainerCDmmultipathIter> pair( ContainerCDmmultipathIter( cont.begin(), cont.end() ),
-					         ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
+						      ContainerCDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( typename ConstDmmultipathCoI<Pred>::type( typename ConstDmmultipathCoPI<Pred>::type( pair, p, true )) );
-	    }
+	}
     protected:
 	// protected member functions for iterators over DMMULTIPATH container
 	DmmultipathCoPair dmmCoPair( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
-	    {
+	{
 	    return( DmmultipathCoPair( dmmCoBegin( CheckFnc ), dmmCoEnd( CheckFnc ) ));
-	    }
+	}
 	DmmultipathCoIterator dmmCoBegin( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmmultipathIter> p( ContainerDmmultipathIter( cont.begin(), cont.end() ),
-					     ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
+						  ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( DmmultipathCoIterator( DmmultipathCoPIterator( p, CheckFnc )) );
-	    }
+	}
 	DmmultipathCoIterator dmmCoEnd( bool (* CheckFnc)( const DmmultipathCo& )=NULL )
-	    {
+	{
 	    IterPair<ContainerDmmultipathIter> p( ContainerDmmultipathIter( cont.begin(), cont.end() ),
-					     ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
+						  ContainerDmmultipathIter( cont.begin(), cont.end(), true ));
 	    return( DmmultipathCoIterator( DmmultipathCoPIterator( p, CheckFnc, true )) );
-	    }
+	}
 
 
-// iterators over MdPart container
+    // iterators over MdPart container
     protected:
 	// protected typedefs for iterators over DmPart container
 	typedef CastCheckFncIterator<CCIter, isMdPart, const MdPartCo *> ContainerCMdPartIter;
@@ -1144,9 +1150,9 @@ struct DiskData;
 	struct MdPartCoI { typedef ContainerDerIter<Pred, typename MdPartCoPI<Pred>::type, MdPartCo> type; };
 	typedef CheckFnc<const MdPartCo> CheckFncMdPartCo;
 	typedef CheckerIterator< CheckFncMdPartCo, ConstMdPartCoPI<CheckFncMdPartCo>::type,
-	ContainerCMdPartIter, MdPartCo > ConstMdPartCoPIterator;
+				 ContainerCMdPartIter, MdPartCo > ConstMdPartCoPIterator;
 	typedef CheckerIterator< CheckFncMdPartCo, MdPartCoPI<CheckFncMdPartCo>::type,
-	ContainerMdPartIter, MdPartCo > MdPartCoPIterator;
+				 ContainerMdPartIter, MdPartCo > MdPartCoPIterator;
 	typedef DerefIterator<MdPartCoPIterator,MdPartCo> MdPartCoIterator;
 	typedef IterPair<MdPartCoIterator> MdPartCoPair;
 
@@ -1156,7 +1162,7 @@ struct DiskData;
 	template< class Pred >
 	struct ConstMdPartCoI
 	{ typedef ContainerDerIter<Pred, typename ConstMdPartCoPI<Pred>::type,
-	  const MdPartCo> type; };
+				   const MdPartCo> type; };
 	template< class Pred >
 	struct MdPartCoCondIPair { typedef MakeCondIterPair<Pred, typename ConstMdPartCoI<Pred>::type> type; };
 	typedef IterPair<ConstMdPartCoIterator> ConstMdPartCoPair;
@@ -1164,53 +1170,53 @@ struct DiskData;
 	// public member functions for iterators over MdPart container
 	ConstMdPartCoPair mdpartCoPair( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
 	{
-	  return( ConstMdPartCoPair( mdpartCoBegin( CheckFnc ), mdpartCoEnd( CheckFnc ) ));
+	    return( ConstMdPartCoPair( mdpartCoBegin( CheckFnc ), mdpartCoEnd( CheckFnc ) ));
 	}
 	ConstMdPartCoIterator mdpartCoBegin( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
 	{
-	  IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
-	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
-	  return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc )) );
+	    IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
+					      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	    return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc )) );
 	}
 	ConstMdPartCoIterator mdpartCoEnd( bool (* CheckFnc)( const MdPartCo& )=NULL ) const
 	{
-	  IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
-	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
-	  return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc, true )) );
+	    IterPair<ContainerCMdPartIter> p( ContainerCMdPartIter( cont.begin(), cont.end() ),
+					      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	    return( ConstMdPartCoIterator( ConstMdPartCoPIterator( p, CheckFnc, true )) );
 	}
 	template< class Pred > typename MdPartCoCondIPair<Pred>::type mdPartCoCondPair( const Pred& p ) const
 	{
-	  return( typename MdPartCoCondIPair<Pred>::type( mdpartCoCondBegin( p ), mdpartCoCondEnd( p ) ) );
+	    return( typename MdPartCoCondIPair<Pred>::type( mdpartCoCondBegin( p ), mdpartCoCondEnd( p ) ) );
 	}
 	template< class Pred > typename ConstMdPartCoI<Pred>::type mdpartCoCondBegin( const Pred& p ) const
 	{
-	  IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
-	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
-	  return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p )) );
+	    IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
+						 ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	    return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p )) );
 	}
 	template< class Pred > typename ConstMdPartCoI<Pred>::type mdpartCoCondEnd( const Pred& p ) const
 	{
-	  IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
-	      ContainerCMdPartIter( cont.begin(), cont.end(), true ));
-	  return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p, true )) );
+	    IterPair<ContainerCMdPartIter> pair( ContainerCMdPartIter( cont.begin(), cont.end() ),
+						 ContainerCMdPartIter( cont.begin(), cont.end(), true ));
+	    return( typename ConstMdPartCoI<Pred>::type( typename ConstMdPartCoPI<Pred>::type( pair, p, true )) );
 	}
     protected:
 	// protected member functions for iterators over MdPart container
 	MdPartCoPair mdpCoPair( bool (* CheckFnc)( const MdPartCo& )=NULL )
 	{
-	  return( MdPartCoPair( mdpCoBegin( CheckFnc ), mdpCoEnd( CheckFnc ) ));
+	    return( MdPartCoPair( mdpCoBegin( CheckFnc ), mdpCoEnd( CheckFnc ) ));
 	}
 	MdPartCoIterator mdpCoBegin( bool (* CheckFnc)( const MdPartCo& )=NULL )
 	{
-	  IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
-	      ContainerMdPartIter( cont.begin(), cont.end(), true ));
-	  return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc )) );
+	    IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
+					     ContainerMdPartIter( cont.begin(), cont.end(), true ));
+	    return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc )) );
 	}
 	MdPartCoIterator mdpCoEnd( bool (* CheckFnc)( const MdPartCo& )=NULL )
 	{
-	  IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
-	      ContainerMdPartIter( cont.begin(), cont.end(), true ));
-	  return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc, true )) );
+	    IterPair<ContainerMdPartIter> p( ContainerMdPartIter( cont.begin(), cont.end() ),
+					     ContainerMdPartIter( cont.begin(), cont.end(), true ));
+	    return( MdPartCoIterator( MdPartCoPIterator( p, CheckFnc, true )) );
 	}
 
 
@@ -1220,181 +1226,181 @@ struct DiskData;
 	// protected typedefs for iterators over volumes
 	typedef ListListIterator<Container::ConstPlainIterator, ConstContIterator> ConstVolInter;
 	template< class Pred >
-	    struct ConstVolumePI { typedef ContainerIter<Pred, ConstVolInter> type; };
+	struct ConstVolumePI { typedef ContainerIter<Pred, ConstVolInter> type; };
 	typedef CheckFnc<const Volume> CheckFncVol;
 	typedef CheckerIterator< CheckFncVol, ConstVolumePI<CheckFncVol>::type,
 	                         ConstVolInter, Volume > ConstVolPIterator;
 	typedef ListListIterator<Container::PlainIterator, ContIterator> VolPart;
 	template< class Pred >
-	    struct VolumeI { typedef ContainerIter<Pred, VolPart> type; };
+	struct VolumeI { typedef ContainerIter<Pred, VolPart> type; };
 	typedef CheckerIterator< CheckFncVol, VolumeI<CheckFncVol>::type,
 	                         VolPart, Volume > VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
-    typedef IterPair<VolIterator> VolPair;
+	typedef IterPair<VolIterator> VolPair;
 
     public:
 	// public typedefs for iterators over volumes
 	template< class Pred >
-	    struct ConstVolumeI { typedef ContainerDerIter<Pred, typename ConstVolumePI<Pred>::type, const Volume> type; };
+	struct ConstVolumeI { typedef ContainerDerIter<Pred, typename ConstVolumePI<Pred>::type, const Volume> type; };
 	template< class Pred >
-	    struct VolCondIPair { typedef MakeCondIterPair<Pred, typename ConstVolumeI<Pred>::type> type;};
+	struct VolCondIPair { typedef MakeCondIterPair<Pred, typename ConstVolumeI<Pred>::type> type;};
 	typedef DerefIterator<ConstVolPIterator,const Volume> ConstVolIterator;
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 
 	// public member functions for iterators over volumes
         ConstVolPair volPair( bool (* CheckCnt)( const Container& )) const
-	    {
+	{
 	    return( ConstVolPair( volBegin( CheckCnt ), volEnd( CheckCnt ) ));
-	    }
+	}
         ConstVolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
 			      bool (* CheckCnt)( const Container& )=NULL) const
-	    {
+	{
 	    return( ConstVolPair( volBegin( CheckVol, CheckCnt ),
-	                          volEnd( CheckVol, CheckCnt ) ));
-	    }
+				  volEnd( CheckVol, CheckCnt ) ));
+	}
         ConstVolIterator volBegin( bool (* CheckCnt)( const Container& )) const
-	    {
+	{
 	    return( volBegin( NULL, CheckCnt ) );
-	    }
+	}
 	ConstVolIterator volBegin( bool (* CheckVol)( const Volume& )=NULL,
 				   bool (* CheckCnt)( const Container& )=NULL) const
-	    {
+	{
 	    IterPair<ConstVolInter> p( (ConstVolInter( contPair( CheckCnt ))),
 				       (ConstVolInter( contPair( CheckCnt ), true )));
 	    return( ConstVolIterator( ConstVolPIterator(p, CheckVol )));
-	    }
+	}
 	ConstVolIterator volEnd( bool (* CheckCnt)( const Container& )) const
-	    {
+	{
 	    return( volEnd( NULL, CheckCnt ) );
-	    }
+	}
 	ConstVolIterator volEnd( bool (* CheckVol)( const Volume& )=NULL,
 				 bool (* CheckCnt)( const Container& )=NULL) const
-	    {
+	{
 	    IterPair<ConstVolInter> p( (ConstVolInter( contPair( CheckCnt ))),
 				       (ConstVolInter( contPair( CheckCnt ), true )));
 	    return( ConstVolIterator( ConstVolPIterator(p, CheckVol, true )));
-	    }
+	}
 	template< class Pred > typename VolCondIPair<Pred>::type volCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename VolCondIPair<Pred>::type( volCondBegin( p ), volCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondBegin( const Pred& p ) const
-	    {
-        IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
-                      (ConstVolInter( contPair(), true )));
+	{
+	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
+					  (ConstVolInter( contPair(), true )));
 	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondEnd( const Pred& p ) const
-	    {
-        IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
-                      (ConstVolInter( contPair(), true )));
+	{
+	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
+					  (ConstVolInter( contPair(), true )));
 	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 	VolPair volPair( bool (* CheckCnt)( const Container& ))
-	    {
+	{
 	    return( VolPair( volBegin( CheckCnt ), volEnd( CheckCnt ) ));
-	    }
+	}
 	VolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
-		     bool (* CheckCnt)( const Container& )=NULL)
-	    {
+			 bool (* CheckCnt)( const Container& )=NULL)
+	{
 	    return( VolPair( volBegin( CheckVol, CheckCnt ),
 			     volEnd( CheckVol, CheckCnt ) ));
-	    }
+	}
 	VolIterator volBegin( bool (* CheckCnt)( const Container& ))
-	    {
+	{
 	    return( volBegin( NULL, CheckCnt ) );
-	    }
+	}
 	VolIterator volBegin( bool (* CheckVol)( const Volume& )=NULL,
 			      bool (* CheckCnt)( const Container& )=NULL)
-	    {
+	{
 	    IterPair<VolPart> p( (VolPart( contPair( CheckCnt ))),
 				 (VolPart( contPair( CheckCnt ), true )));
 	    return( VolIterator( VolPIterator( p, CheckVol )));
-	    }
+	}
 	VolIterator volEnd( bool (* CheckCnt)( const Container& ))
-	    {
+	{
 	    return( volEnd( NULL, CheckCnt ) );
-	    }
+	}
 	VolIterator volEnd( bool (* CheckVol)( const Volume& )=NULL,
 			    bool (* CheckCnt)( const Container& )=NULL)
-	    {
+	{
 	    IterPair<VolPart> p( (VolPart( contPair( CheckCnt ))),
 				 (VolPart( contPair( CheckCnt ), true )));
 	    return( VolIterator( VolPIterator( p, CheckVol, true )));
-	    }
+	}
 
-// iterators over partitions
+    // iterators over partitions
     protected:
 	// protected typedefs for iterators over partitions
 	typedef ListListIterator<Container::ConstPlainIterator, ConstDiskIterator> ConstPartInter;
 	typedef CastIterator<ConstPartInter, Partition *> ConstPartInter2;
 	template< class Pred >
-	    struct ConstPartitionPI { typedef ContainerIter<Pred, ConstPartInter2> type; };
+	struct ConstPartitionPI { typedef ContainerIter<Pred, ConstPartInter2> type; };
 	typedef CheckFnc<const Partition> CheckFncPartition;
 	typedef CheckerIterator< CheckFncPartition, ConstPartitionPI<CheckFncPartition>::type,
 	                         ConstPartInter2, Partition > ConstPartPIterator;
     public:
 	// public typedefs for iterators over partitions
 	template< class Pred >
-	    struct ConstPartitionI
-		{ typedef ContainerDerIter<Pred, typename ConstPartitionPI<Pred>::type,
-		                           const Partition> type; };
+	struct ConstPartitionI
+	{ typedef ContainerDerIter<Pred, typename ConstPartitionPI<Pred>::type,
+				   const Partition> type; };
 	template< class Pred >
-	    struct PartCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstPartitionI<Pred>::type> type;};
+	struct PartCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstPartitionI<Pred>::type> type;};
 	typedef DerefIterator<ConstPartPIterator, const Partition> ConstPartIterator;
 	typedef IterPair<ConstPartIterator> ConstPartPair;
 
 	// public member functions for iterators over partitions
 	ConstPartPair partPair( bool (* CheckCnt)( const Disk& )) const
-	    {
+	{
 	    return( ConstPartPair( partBegin( CheckCnt ), partEnd( CheckCnt ) ));
-	    }
+	}
 	ConstPartPair partPair( bool (* CheckPart)( const Partition& )=NULL,
 				bool (* CheckCnt)( const Disk& )=NULL) const
-	    {
+	{
 	    return( ConstPartPair( partBegin( CheckPart, CheckCnt ),
-	                           partEnd( CheckPart, CheckCnt ) ));
-	    }
+				   partEnd( CheckPart, CheckCnt ) ));
+	}
 	ConstPartIterator partBegin( bool (* CheckDisk)( const Disk& )) const
-	    {
+	{
 	    return( partBegin( NULL, CheckDisk ) );
-	    }
+	}
 	ConstPartIterator partBegin( bool (* CheckPart)( const Partition& )=NULL,
 	                             bool (* CheckDisk)( const Disk& )=NULL) const
-	    {
+	{
 	    IterPair<ConstPartInter2> p( (ConstPartInter(diskPair( CheckDisk ))),
 					 (ConstPartInter(diskPair( CheckDisk ), true )));
 	    return( ConstPartIterator( ConstPartPIterator(p, CheckPart )));
-	    }
+	}
 	ConstPartIterator partEnd( bool (* CheckDisk)( const Disk& )) const
-	    {
+	{
 	    return( partEnd( NULL, CheckDisk ) );
-	    }
+	}
 	ConstPartIterator partEnd( bool (* CheckPart)( const Partition& )=NULL,
 	                           bool (* CheckDisk)( const Disk& )=NULL) const
-	    {
+	{
 	    IterPair<ConstPartInter2> p( (ConstPartInter(diskPair( CheckDisk ))),
 					 (ConstPartInter(diskPair( CheckDisk ), true )));
 	    return( ConstPartIterator( ConstPartPIterator(p, CheckPart, true )));
-	    }
+	}
 	template< class Pred > typename PartCondIPair<Pred>::type partCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename PartCondIPair<Pred>::type( partCondBegin( p ), partCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstPartitionI<Pred>::type partCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstPartInter2> pair( (ConstPartInter( diskPair())),
 					    (ConstPartInter( diskPair(), true )));
 	    return( typename ConstPartitionI<Pred>::type( typename ConstPartitionPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstPartitionI<Pred>::type partCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstPartInter2> pair( (ConstPartInter( diskPair())),
 					    (ConstPartInter( diskPair(), true )));
 	    return( typename ConstPartitionI<Pred>::type( typename ConstPartitionPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over LVM LVs
     protected:
@@ -1402,148 +1408,148 @@ struct DiskData;
 	typedef ListListIterator<Container::ConstPlainIterator, ConstLvmVgIterator> ConstLvmLvInter;
 	typedef CastIterator<ConstLvmLvInter, LvmLv *> ConstLvmLvInter2;
 	template< class Pred >
-	    struct ConstLvmLvPI { typedef ContainerIter<Pred, ConstLvmLvInter2> type; };
+	struct ConstLvmLvPI { typedef ContainerIter<Pred, ConstLvmLvInter2> type; };
 	typedef CheckFnc<const LvmLv> CheckFncLvmLv;
 	typedef CheckerIterator< CheckFncLvmLv, ConstLvmLvPI<CheckFncLvmLv>::type,
 	                         ConstLvmLvInter2, LvmLv > ConstLvmLvPIterator;
     public:
 	// public typedefs for iterators over LVM LVs
 	template< class Pred >
-	    struct ConstLvmLvI
-		{ typedef ContainerDerIter<Pred, typename ConstLvmLvPI<Pred>::type,
-		                           const LvmLv> type; };
+	struct ConstLvmLvI
+	{ typedef ContainerDerIter<Pred, typename ConstLvmLvPI<Pred>::type,
+				   const LvmLv> type; };
 	template< class Pred >
-	    struct LvmLvCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstLvmLvI<Pred>::type> type;};
+	struct LvmLvCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstLvmLvI<Pred>::type> type;};
 	typedef DerefIterator<ConstLvmLvPIterator, const LvmLv> ConstLvmLvIterator;
 	typedef IterPair<ConstLvmLvIterator> ConstLvmLvPair;
 
 	// public member functions for iterators over LVM LVs
 	ConstLvmLvPair lvmLvPair( bool (* CheckLvmVg)( const LvmVg& )) const
-	    {
+	{
 	    return( ConstLvmLvPair( lvmLvBegin( CheckLvmVg ), lvmLvEnd( CheckLvmVg ) ));
-	    }
+	}
 	ConstLvmLvPair lvmLvPair( bool (* CheckLvmLv)( const LvmLv& )=NULL,
 				  bool (* CheckLvmVg)( const LvmVg& )=NULL) const
-	    {
+	{
 	    return( ConstLvmLvPair( lvmLvBegin( CheckLvmLv, CheckLvmVg ),
-	                            lvmLvEnd( CheckLvmLv, CheckLvmVg ) ));
-	    }
+				    lvmLvEnd( CheckLvmLv, CheckLvmVg ) ));
+	}
 	ConstLvmLvIterator lvmLvBegin( bool (* CheckLvmVg)( const LvmVg& )) const
-	    {
+	{
 	    return( lvmLvBegin( NULL, CheckLvmVg ) );
-	    }
+	}
 	ConstLvmLvIterator lvmLvBegin( bool (* CheckLvmLv)( const LvmLv& )=NULL,
 	                               bool (* CheckLvmVg)( const LvmVg& )=NULL) const
-	    {
+	{
 	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(lvmVgPair( CheckLvmVg ))),
 					  (ConstLvmLvInter(lvmVgPair( CheckLvmVg ), true )));
 	    return( ConstLvmLvIterator( ConstLvmLvPIterator(p, CheckLvmLv )));
-	    }
+	}
 	ConstLvmLvIterator lvmLvEnd( bool (* CheckLvmVg)( const LvmVg& )) const
-	    {
+	{
 	    return( lvmLvEnd( NULL, CheckLvmVg ) );
-	    }
+	}
 	ConstLvmLvIterator lvmLvEnd( bool (* CheckLvmLv)( const LvmLv& )=NULL,
 	                             bool (* CheckLvmVg)( const LvmVg& )=NULL) const
-	    {
+	{
 	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(lvmVgPair( CheckLvmVg ))),
 					  (ConstLvmLvInter(lvmVgPair( CheckLvmVg ), true )));
 	    return( ConstLvmLvIterator( ConstLvmLvPIterator(p, CheckLvmLv, true )));
-	    }
+	}
 	template< class Pred > typename LvmLvCondIPair<Pred>::type lvmLvCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename LvmLvCondIPair<Pred>::type( lvmLvCondBegin( p ), lvmLvCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstLvmLvI<Pred>::type lvmLvCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( lvmVgPair())),
 					     (ConstLvmLvInter( lvmVgPair(), true )));
 	    return( typename ConstLvmLvI<Pred>::type( typename ConstLvmLvPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstLvmLvI<Pred>::type lvmLvCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstLvmLvInter2> pair( (ConstLvmLvInter( lvmVgPair())),
 					     (ConstLvmLvInter( lvmVgPair(), true )));
 	    return( typename ConstLvmLvI<Pred>::type( typename ConstLvmLvPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over software raid devices
     protected:
 	// protected typedefs for iterators over software raid devices
 	typedef CastIterator<ConstVolInter, Md *> ConstMdInter;
 	template< class Pred >
-	    struct ConstMdPI { typedef ContainerIter<Pred,
-	                                             ConstMdInter> type; };
+	struct ConstMdPI { typedef ContainerIter<Pred,
+						 ConstMdInter> type; };
 	typedef CheckFnc<const Md> CheckFncMd;
 	typedef CheckerIterator< CheckFncMd, ConstMdPI<CheckFncMd>::type,
 	                         ConstMdInter, Md > ConstMdPIterator;
     public:
 	// public typedefs for iterators over software raid devices
 	template< class Pred >
-	    struct ConstMdI
-		{ typedef ContainerDerIter<Pred, typename ConstMdPI<Pred>::type,
-		                           const Md> type; };
+	struct ConstMdI
+	{ typedef ContainerDerIter<Pred, typename ConstMdPI<Pred>::type,
+				   const Md> type; };
 	template< class Pred >
-	    struct MdCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstMdI<Pred>::type> type;};
+	struct MdCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstMdI<Pred>::type> type;};
 	typedef DerefIterator<ConstMdPIterator, const Md> ConstMdIterator;
 	typedef IterPair<ConstMdIterator> ConstMdPair;
 
 	// public member functions for iterators over software raid devices
 	ConstMdPair mdPair( bool (* CheckMd)( const Md& )=NULL ) const
-	    {
+	{
 	    return( ConstMdPair( mdBegin( CheckMd ), mdEnd( CheckMd ) ));
-	    }
+	}
 	ConstMdIterator mdBegin( bool (* CheckMd)( const Md& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isMd ) );
-        ConstVolInter e( contPair( isMd ), true );
+	{
+	    ConstVolInter b( contPair( isMd ) );
+	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> p( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( ConstMdIterator( ConstMdPIterator(p, CheckMd )));
-	    }
+	}
 	ConstMdIterator mdEnd( bool (* CheckMd)( const Md& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isMd ) );
-        ConstVolInter e( contPair( isMd ), true );
+	{
+	    ConstVolInter b( contPair( isMd ) );
+	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> p( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( ConstMdIterator( ConstMdPIterator(p, CheckMd, true )));
-	    }
+	}
 	template< class Pred > typename MdCondIPair<Pred>::type mdCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename MdCondIPair<Pred>::type( mdCondBegin( p ), mdCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstMdI<Pred>::type mdCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isMd ) );
-        ConstVolInter e( contPair( isMd ), true );
+	{
+	    ConstVolInter b( contPair( isMd ) );
+	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstMdI<Pred>::type mdCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isMd ) );
-        ConstVolInter e( contPair( isMd ), true );
+	{
+	    ConstVolInter b( contPair( isMd ) );
+	    ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
-///////// iterators over software raid devices - Partitions
+    // iterators over software raid devices - Partitions
     protected:
 	// protected typedefs for iterators over software raid devices
 	typedef CastIterator<ConstVolInter, MdPart *> ConstMdPartInter;
 	template< class Pred >
 	struct ConstMdPartPI { typedef ContainerIter<Pred,
-	  ConstMdPartInter> type; };
+						     ConstMdPartInter> type; };
 	typedef CheckFnc<const MdPart> CheckFncMdPart;
 	typedef CheckerIterator< CheckFncMdPart, ConstMdPartPI<CheckFncMdPart>::type,
-	ConstMdPartInter, MdPart > ConstMdPartPIterator;
+				 ConstMdPartInter, MdPart > ConstMdPartPIterator;
     public:
 	// public typedefs for iterators over software raid devices
 	template< class Pred >
 	struct ConstMdPartI
 	{ typedef ContainerDerIter<Pred, typename ConstMdPartPI<Pred>::type,
-	  const MdPart> type; };
+				   const MdPart> type; };
 	template< class Pred >
 	struct MdPartCondIPair
 	{ typedef MakeCondIterPair<Pred, typename ConstMdPartI<Pred>::type> type;};
@@ -1554,342 +1560,342 @@ struct DiskData;
 	// public member functions for iterators over software raid devices
 	ConstMdPartPair mdPartPair( bool (* CheckMdPart)( const MdPart& )=NULL ) const
 	{
-	  return( ConstMdPartPair( mdPartBegin( CheckMdPart ), mdPartEnd( CheckMdPart ) ));
+	    return( ConstMdPartPair( mdPartBegin( CheckMdPart ), mdPartEnd( CheckMdPart ) ));
 	}
 
 	ConstMdPartIterator mdPartBegin( bool (* CheckMdPart)( const MdPart& )=NULL ) const
 	{
-      ConstVolInter b( contPair( isMdPart ) );
-      ConstVolInter e( contPair( isMdPart ), true );
-	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
-	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart )));
+	    ConstVolInter b( contPair( isMdPart ) );
+	    ConstVolInter e( contPair( isMdPart ), true );
+	    IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	    return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart )));
 	}
 	ConstMdPartIterator mdPartEnd( bool (* CheckMdPart)( const MdPart& )=NULL ) const
 	{
-      ConstVolInter b( contPair( isMdPart ) );
-      ConstVolInter e( contPair( isMdPart ), true );
-	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
-	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart, true )));
+	    ConstVolInter b( contPair( isMdPart ) );
+	    ConstVolInter e( contPair( isMdPart ), true );
+	    IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	    return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart, true )));
 	}
 	template< class Pred > typename MdPartCondIPair<Pred>::type mdPartCondPair( const Pred& p ) const
 	{
-	  return( typename MdPartCondIPair<Pred>::type( mdPartCondBegin( p ), mdPartCondEnd( p ) ) );
+	    return( typename MdPartCondIPair<Pred>::type( mdPartCondBegin( p ), mdPartCondEnd( p ) ) );
 	}
 	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondBegin( const Pred& p ) const
 	{
-      ConstVolInter b( contPair( isMdPart ) );
-      ConstVolInter e( contPair( isMdPart ), true );
-	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
-	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p) ) );
+	    ConstVolInter b( contPair( isMdPart ) );
+	    ConstVolInter e( contPair( isMdPart ), true );
+	    IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	    return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p) ) );
 	}
 	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondEnd( const Pred& p ) const
 	{
-      ConstVolInter b( contPair( isMdPart ) );
-      ConstVolInter e( contPair( isMdPart ), true );
-	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
-	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p, true )) );
+	    ConstVolInter b( contPair( isMdPart ) );
+	    ConstVolInter e( contPair( isMdPart ), true );
+	    IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
+	    return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p, true )) );
 	}
 
 
-// iterators over file based loop devices
+    // iterators over file based loop devices
     protected:
 	// protected typedefs for iterators over file based loop devices
 	typedef CastIterator<ConstVolInter, Loop *> ConstLoopInter;
 	template< class Pred >
-	    struct ConstLoopPI { typedef ContainerIter<Pred,
-	                                             ConstLoopInter> type; };
+	struct ConstLoopPI { typedef ContainerIter<Pred,
+						   ConstLoopInter> type; };
 	typedef CheckFnc<const Loop> CheckFncLoop;
 	typedef CheckerIterator< CheckFncLoop, ConstLoopPI<CheckFncLoop>::type,
 	                         ConstLoopInter, Loop > ConstLoopPIterator;
     public:
 	// public typedefs for iterators over file based loop devices
 	template< class Pred >
-	    struct ConstLoopI
-		{ typedef ContainerDerIter<Pred, typename ConstLoopPI<Pred>::type,
-		                           const Loop> type; };
+	struct ConstLoopI
+	{ typedef ContainerDerIter<Pred, typename ConstLoopPI<Pred>::type,
+				   const Loop> type; };
 	template< class Pred >
-	    struct LoopCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstLoopI<Pred>::type> type;};
+	struct LoopCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstLoopI<Pred>::type> type;};
 	typedef DerefIterator<ConstLoopPIterator, const Loop> ConstLoopIterator;
 	typedef IterPair<ConstLoopIterator> ConstLoopPair;
 
 	// public member functions for iterators over file based loop devices
 	ConstLoopPair loopPair( bool (* CheckLoop)( const Loop& )=NULL ) const
-	    {
+	{
 	    return( ConstLoopPair( loopBegin( CheckLoop ), loopEnd( CheckLoop ) ));
-	    }
+	}
 	ConstLoopIterator loopBegin( bool (* CheckLoop)( const Loop& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isLoop ) );
-        ConstVolInter e( contPair( isLoop ), true );
+	{
+	    ConstVolInter b( contPair( isLoop ) );
+	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop )));
-	    }
+	}
 	ConstLoopIterator loopEnd( bool (* CheckLoop)( const Loop& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isLoop ) );
-        ConstVolInter e( contPair( isLoop ), true );
+	{
+	    ConstVolInter b( contPair( isLoop ) );
+	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop, true )));
-	    }
+	}
 	template< class Pred > typename LoopCondIPair<Pred>::type loopCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename LoopCondIPair<Pred>::type( loopCondBegin( p ), loopCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isLoop ) );
-        ConstVolInter e( contPair( isLoop ), true );
+	{
+	    ConstVolInter b( contPair( isLoop ) );
+	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isLoop ) );
-        ConstVolInter e( contPair( isLoop ), true );
+	{
+	    ConstVolInter b( contPair( isLoop ) );
+	    ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over btrfs volumes
     protected:
 	// protected typedefs for iterators over btrfs volumes
 	typedef CastIterator<ConstVolInter, Btrfs *> ConstBtrfsInter;
 	template< class Pred >
-	    struct ConstBtrfsPI { typedef ContainerIter<Pred,
-	                                             ConstBtrfsInter> type; };
+	struct ConstBtrfsPI { typedef ContainerIter<Pred,
+						    ConstBtrfsInter> type; };
 	typedef CheckFnc<const Btrfs> CheckFncBtrfs;
 	typedef CheckerIterator< CheckFncBtrfs, ConstBtrfsPI<CheckFncBtrfs>::type,
 	                         ConstBtrfsInter, Btrfs > ConstBtrfsPIterator;
     public:
 	// public typedefs for iterators over btrfs volumes
 	template< class Pred >
-	    struct ConstBtrfsI
-		{ typedef ContainerDerIter<Pred, typename ConstBtrfsPI<Pred>::type,
-		                           const Btrfs> type; };
+	struct ConstBtrfsI
+	{ typedef ContainerDerIter<Pred, typename ConstBtrfsPI<Pred>::type,
+				   const Btrfs> type; };
 	template< class Pred >
-	    struct BtrfsCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstBtrfsI<Pred>::type> type;};
+	struct BtrfsCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstBtrfsI<Pred>::type> type;};
 	typedef DerefIterator<ConstBtrfsPIterator, const Btrfs> ConstBtrfsIterator;
 	typedef IterPair<ConstBtrfsIterator> ConstBtrfsPair;
 
 	// public member functions for iterators over btrfs volumes
 	ConstBtrfsPair btrfsPair( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
-	    {
+	{
 	    return( ConstBtrfsPair( btrfsBegin( CheckBtrfs ), btrfsEnd( CheckBtrfs ) ));
-	    }
+	}
 	ConstBtrfsIterator btrfsBegin( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isBtrfs ) );
-        ConstVolInter e( contPair( isBtrfs ), true );
+	{
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs )));
-	    }
+	}
 	ConstBtrfsIterator btrfsEnd( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isBtrfs ) );
-        ConstVolInter e( contPair( isBtrfs ), true );
+	{
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs, true )));
-	    }
+	}
 	template< class Pred > typename BtrfsCondIPair<Pred>::type btrfsCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename BtrfsCondIPair<Pred>::type( btrfsCondBegin( p ), btrfsCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isBtrfs ) );
-        ConstVolInter e( contPair( isBtrfs ), true );
+	{
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isBtrfs ) );
-        ConstVolInter e( contPair( isBtrfs ), true );
+	{
+	    ConstVolInter b( contPair( isBtrfs ) );
+	    ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over tmpfs volumes
     protected:
 	// protected typedefs for iterators over tmpfs volumes
 	typedef CastIterator<ConstVolInter, Tmpfs *> ConstTmpfsInter;
 	template< class Pred >
-	    struct ConstTmpfsPI { typedef ContainerIter<Pred,
-	                                             ConstTmpfsInter> type; };
+	struct ConstTmpfsPI { typedef ContainerIter<Pred,
+						    ConstTmpfsInter> type; };
 	typedef CheckFnc<const Tmpfs> CheckFncTmpfs;
 	typedef CheckerIterator< CheckFncTmpfs, ConstTmpfsPI<CheckFncTmpfs>::type,
 	                         ConstTmpfsInter, Tmpfs > ConstTmpfsPIterator;
     public:
 	// public typedefs for iterators over tmpfs volumes
 	template< class Pred >
-	    struct ConstTmpfsI
-		{ typedef ContainerDerIter<Pred, typename ConstTmpfsPI<Pred>::type,
-		                           const Tmpfs> type; };
+	struct ConstTmpfsI
+	{ typedef ContainerDerIter<Pred, typename ConstTmpfsPI<Pred>::type,
+				   const Tmpfs> type; };
 	template< class Pred >
-	    struct TmpfsCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstTmpfsI<Pred>::type> type;};
+	struct TmpfsCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstTmpfsI<Pred>::type> type;};
 	typedef DerefIterator<ConstTmpfsPIterator, const Tmpfs> ConstTmpfsIterator;
 	typedef IterPair<ConstTmpfsIterator> ConstTmpfsPair;
 
 	// public member functions for iterators over tmpfs volumes
 	ConstTmpfsPair tmpfsPair( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
-	    {
+	{
 	    return( ConstTmpfsPair( tmpfsBegin( CheckTmpfs ), tmpfsEnd( CheckTmpfs ) ));
-	    }
+	}
 	ConstTmpfsIterator tmpfsBegin( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isTmpfs ) );
-        ConstVolInter e( contPair( isTmpfs ), true );
+	{
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs )));
-	    }
+	}
 	ConstTmpfsIterator tmpfsEnd( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isTmpfs ) );
-        ConstVolInter e( contPair( isTmpfs ), true );
+	{
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs, true )));
-	    }
+	}
 	template< class Pred > typename TmpfsCondIPair<Pred>::type tmpfsCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename TmpfsCondIPair<Pred>::type( tmpfsCondBegin( p ), tmpfsCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isTmpfs ) );
-        ConstVolInter e( contPair( isTmpfs ), true );
+	{
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isTmpfs ) );
-        ConstVolInter e( contPair( isTmpfs ), true );
+	{
+	    ConstVolInter b( contPair( isTmpfs ) );
+	    ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over nfs devices
     protected:
 	// protected typedefs for iterators over nfs devices
 	typedef CastIterator<ConstVolInter, Nfs *> ConstNfsInter;
 	template< class Pred >
-	    struct ConstNfsPI { typedef ContainerIter<Pred,
-	                                             ConstNfsInter> type; };
+	struct ConstNfsPI { typedef ContainerIter<Pred,
+						  ConstNfsInter> type; };
 	typedef CheckFnc<const Nfs> CheckFncNfs;
 	typedef CheckerIterator< CheckFncNfs, ConstNfsPI<CheckFncNfs>::type,
 	                         ConstNfsInter, Nfs > ConstNfsPIterator;
     public:
 	// public typedefs for iterators over nfs devices
 	template< class Pred >
-	    struct ConstNfsI
-		{ typedef ContainerDerIter<Pred, typename ConstNfsPI<Pred>::type,
-		                           const Nfs> type; };
+	struct ConstNfsI
+	{ typedef ContainerDerIter<Pred, typename ConstNfsPI<Pred>::type,
+				   const Nfs> type; };
 	template< class Pred >
-	    struct NfsCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstNfsI<Pred>::type> type;};
+	struct NfsCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstNfsI<Pred>::type> type;};
 	typedef DerefIterator<ConstNfsPIterator, const Nfs> ConstNfsIterator;
 	typedef IterPair<ConstNfsIterator> ConstNfsPair;
 
 	// public member functions for iterators over nfs devices
 	ConstNfsPair nfsPair( bool (* CheckNfs)( const Nfs& )=NULL ) const
-	    {
+	{
 	    return( ConstNfsPair( nfsBegin( CheckNfs ), nfsEnd( CheckNfs ) ));
-	    }
+	}
 	ConstNfsIterator nfsBegin( bool (* CheckNfs)( const Nfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isNfs ) );
-        ConstVolInter e( contPair( isNfs ), true );
+	{
+	    ConstVolInter b( contPair( isNfs ) );
+	    ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> p( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( ConstNfsIterator( ConstNfsPIterator(p, CheckNfs )));
-	    }
+	}
 	ConstNfsIterator nfsEnd( bool (* CheckNfs)( const Nfs& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isNfs ) );
-        ConstVolInter e( contPair( isNfs ), true );
+	{
+	    ConstVolInter b( contPair( isNfs ) );
+	    ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> p( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( ConstNfsIterator( ConstNfsPIterator(p, CheckNfs, true )));
-	    }
+	}
 	template< class Pred > typename NfsCondIPair<Pred>::type nfsCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename NfsCondIPair<Pred>::type( nfsCondBegin( p ), nfsCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstNfsI<Pred>::type nfsCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isNfs ) );
-        ConstVolInter e( contPair( isNfs ), true );
+	{
+	    ConstVolInter b( contPair( isNfs ) );
+	    ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> pair( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( typename ConstNfsI<Pred>::type( typename ConstNfsPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstNfsI<Pred>::type nfsCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isNfs ) );
-        ConstVolInter e( contPair( isNfs ), true );
+	{
+	    ConstVolInter b( contPair( isNfs ) );
+	    ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> pair( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( typename ConstNfsI<Pred>::type( typename ConstNfsPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over device mapper devices
     protected:
 	// protected typedefs for iterators over device mapper devices
 	typedef CastIterator<ConstVolInter, Dm *> ConstDmInter;
 	template< class Pred >
-	    struct ConstDmPI { typedef ContainerIter<Pred,
-	                                             ConstDmInter> type; };
+	struct ConstDmPI { typedef ContainerIter<Pred,
+						 ConstDmInter> type; };
 	typedef CheckFnc<const Dm> CheckFncDm;
 	typedef CheckerIterator< CheckFncDm, ConstDmPI<CheckFncDm>::type,
 	                         ConstDmInter, Dm > ConstDmPIterator;
     public:
 	// public typedefs for iterators over device mapper devices
 	template< class Pred >
-	    struct ConstDmI
-		{ typedef ContainerDerIter<Pred, typename ConstDmPI<Pred>::type,
-		                           const Dm> type; };
+	struct ConstDmI
+	{ typedef ContainerDerIter<Pred, typename ConstDmPI<Pred>::type,
+				   const Dm> type; };
 	template< class Pred >
-	    struct DmCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstDmI<Pred>::type> type;};
+	struct DmCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstDmI<Pred>::type> type;};
 	typedef DerefIterator<ConstDmPIterator, const Dm> ConstDmIterator;
 	typedef IterPair<ConstDmIterator> ConstDmPair;
 
 	// public member functions for iterators over device mapper devices
 	ConstDmPair dmPair( bool (* CheckDm)( const Dm& )=NULL ) const
-	    {
+	{
 	    return( ConstDmPair( dmBegin( CheckDm ), dmEnd( CheckDm ) ));
-	    }
+	}
 	ConstDmIterator dmBegin( bool (* CheckDm)( const Dm& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isDm ) );
-        ConstVolInter e( contPair( isDm ), true );
+	{
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm )));
-	    }
+	}
 	ConstDmIterator dmEnd( bool (* CheckDm)( const Dm& )=NULL ) const
-	    {
-        ConstVolInter b( contPair( isDm ) );
-        ConstVolInter e( contPair( isDm ), true );
+	{
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm, true )));
-	    }
+	}
 	template< class Pred > typename DmCondIPair<Pred>::type dmCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmCondIPair<Pred>::type( dmCondBegin( p ), dmCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmI<Pred>::type dmCondBegin( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isDm ) );
-        ConstVolInter e( contPair( isDm ), true );
+	{
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmI<Pred>::type dmCondEnd( const Pred& p ) const
-	    {
-        ConstVolInter b( contPair( isDm ) );
-        ConstVolInter e( contPair( isDm ), true );
+	{
+	    ConstVolInter b( contPair( isDm ) );
+	    ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 // iterators over dmraid devices
     protected:
@@ -1897,71 +1903,71 @@ struct DiskData;
 	typedef ListListIterator<Container::ConstPlainIterator, ConstDmraidCoIterator> ConstDmraidInter;
 	typedef CastIterator<ConstDmraidInter, Dmraid *> ConstDmraidInter2;
 	template< class Pred >
-	    struct ConstDmraidPI { typedef ContainerIter<Pred, ConstDmraidInter2> type; };
+	struct ConstDmraidPI { typedef ContainerIter<Pred, ConstDmraidInter2> type; };
 	typedef CheckFnc<const Dmraid> CheckFncDmraid;
 	typedef CheckerIterator< CheckFncDmraid, ConstDmraidPI<CheckFncDmraid>::type,
 	                         ConstDmraidInter2, Dmraid > ConstDmraidPIterator;
     public:
 	// public typedefs for iterators over dmraid volumes
 	template< class Pred >
-	    struct ConstDmraidI
-		{ typedef ContainerDerIter<Pred, typename ConstDmraidPI<Pred>::type,
-		                           const Dmraid> type; };
+	struct ConstDmraidI
+	{ typedef ContainerDerIter<Pred, typename ConstDmraidPI<Pred>::type,
+				   const Dmraid> type; };
 	template< class Pred >
-	    struct DmraidCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstDmraidI<Pred>::type> type;};
+	struct DmraidCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstDmraidI<Pred>::type> type;};
 	typedef DerefIterator<ConstDmraidPIterator, const Dmraid> ConstDmraidIterator;
 	typedef IterPair<ConstDmraidIterator> ConstDmraidPair;
 
 	// public member functions for iterators over dmraid volumes
 	ConstDmraidPair dmrPair( bool (* CheckDmraidCo)( const DmraidCo& )) const
-	    {
+	{
 	    return( ConstDmraidPair( dmrBegin( CheckDmraidCo ), dmrEnd( CheckDmraidCo ) ));
-	    }
+	}
 	ConstDmraidPair dmrPair( bool (* CheckDmraid)( const Dmraid& )=NULL,
 				 bool (* CheckDmraidCo)( const DmraidCo& )=NULL) const
-	    {
+	{
 	    return( ConstDmraidPair( dmrBegin( CheckDmraid, CheckDmraidCo ),
 				     dmrEnd( CheckDmraid, CheckDmraidCo ) ));
-	    }
+	}
 	ConstDmraidIterator dmrBegin( bool (* CheckDmraidCo)( const DmraidCo& )) const
-	    {
+	{
 	    return( dmrBegin( NULL, CheckDmraidCo ) );
-	    }
+	}
 	ConstDmraidIterator dmrBegin( bool (* CheckDmraid)( const Dmraid& )=NULL,
 				      bool (* CheckDmraidCo)( const DmraidCo& )=NULL) const
-	    {
+	{
 	    IterPair<ConstDmraidInter2> p( (ConstDmraidInter(dmraidCoPair( CheckDmraidCo ))),
 					   (ConstDmraidInter(dmraidCoPair( CheckDmraidCo ), true )));
 	    return( ConstDmraidIterator( ConstDmraidPIterator(p, CheckDmraid )));
-	    }
+	}
 	ConstDmraidIterator dmrEnd( bool (* CheckDmraidCo)( const DmraidCo& )) const
-	    {
+	{
 	    return( dmrEnd( NULL, CheckDmraidCo ) );
-	    }
+	}
 	ConstDmraidIterator dmrEnd( bool (* CheckDmraid)( const Dmraid& )=NULL,
-				     bool (* CheckDmraidCo)( const DmraidCo& )=NULL) const
-	    {
+				    bool (* CheckDmraidCo)( const DmraidCo& )=NULL) const
+	{
 	    IterPair<ConstDmraidInter2> p( (ConstDmraidInter(dmraidCoPair( CheckDmraidCo ))),
 					   (ConstDmraidInter(dmraidCoPair( CheckDmraidCo ), true )));
 	    return( ConstDmraidIterator( ConstDmraidPIterator(p, CheckDmraid, true )));
-	    }
+	}
 	template< class Pred > typename DmraidCondIPair<Pred>::type dmrCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmraidCondIPair<Pred>::type( dmrCondBegin( p ), dmrCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmraidI<Pred>::type dmrCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstDmraidInter2> pair( (ConstDmraidInter( dmraidCoPair())),
 					      (ConstDmraidInter( dmraidCoPair(), true )));
 	    return( typename ConstDmraidI<Pred>::type( typename ConstDmraidPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmraidI<Pred>::type dmrCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstDmraidInter2> pair( (ConstDmraidInter( dmraidCoPair())),
 					      (ConstDmraidInter( dmraidCoPair(), true )));
 	    return( typename ConstDmraidI<Pred>::type( typename ConstDmraidPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 
 // iterators over dmmultipath devices
@@ -1970,71 +1976,71 @@ struct DiskData;
 	typedef ListListIterator<Container::ConstPlainIterator, ConstDmmultipathCoIterator> ConstDmmultipathInter;
 	typedef CastIterator<ConstDmmultipathInter, Dmmultipath *> ConstDmmultipathInter2;
 	template< class Pred >
-	    struct ConstDmmultipathPI { typedef ContainerIter<Pred, ConstDmmultipathInter2> type; };
+	struct ConstDmmultipathPI { typedef ContainerIter<Pred, ConstDmmultipathInter2> type; };
 	typedef CheckFnc<const Dmmultipath> CheckFncDmmultipath;
 	typedef CheckerIterator< CheckFncDmmultipath, ConstDmmultipathPI<CheckFncDmmultipath>::type,
 	                         ConstDmmultipathInter2, Dmmultipath > ConstDmmultipathPIterator;
     public:
 	// public typedefs for iterators over dmmultipath volumes
 	template< class Pred >
-	    struct ConstDmmultipathI
-		{ typedef ContainerDerIter<Pred, typename ConstDmmultipathPI<Pred>::type,
-		                           const Dmmultipath> type; };
+	struct ConstDmmultipathI
+	{ typedef ContainerDerIter<Pred, typename ConstDmmultipathPI<Pred>::type,
+				   const Dmmultipath> type; };
 	template< class Pred >
-	    struct DmmultipathCondIPair
-		{ typedef MakeCondIterPair<Pred, typename ConstDmmultipathI<Pred>::type> type; };
+	struct DmmultipathCondIPair
+	{ typedef MakeCondIterPair<Pred, typename ConstDmmultipathI<Pred>::type> type; };
 	typedef DerefIterator<ConstDmmultipathPIterator, const Dmmultipath> ConstDmmultipathIterator;
 	typedef IterPair<ConstDmmultipathIterator> ConstDmmultipathPair;
 
 	// public member functions for iterators over dmmultipath volumes
 	ConstDmmultipathPair dmmPair( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
-	    {
+	{
 	    return( ConstDmmultipathPair( dmmBegin( CheckDmmultipathCo ), dmmEnd( CheckDmmultipathCo ) ));
-	    }
+	}
 	ConstDmmultipathPair dmmPair( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
-				 bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
-	    {
-	    return( ConstDmmultipathPair( dmmBegin( CheckDmmultipath, CheckDmmultipathCo ),
-				     dmmEnd( CheckDmmultipath, CheckDmmultipathCo ) ));
-	    }
-	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
-	    {
-	    return( dmmBegin( NULL, CheckDmmultipathCo ) );
-	    }
-	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
 				      bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
-	    {
+	{
+	    return( ConstDmmultipathPair( dmmBegin( CheckDmmultipath, CheckDmmultipathCo ),
+					  dmmEnd( CheckDmmultipath, CheckDmmultipathCo ) ));
+	}
+	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
+	{
+	    return( dmmBegin( NULL, CheckDmmultipathCo ) );
+	}
+	ConstDmmultipathIterator dmmBegin( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
+					   bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
+	{
 	    IterPair<ConstDmmultipathInter2> p( (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ))),
-					   (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
+						(ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
 	    return( ConstDmmultipathIterator( ConstDmmultipathPIterator(p, CheckDmmultipath )));
-	    }
+	}
 	ConstDmmultipathIterator dmmEnd( bool (* CheckDmmultipathCo)( const DmmultipathCo& )) const
-	    {
+	{
 	    return( dmmEnd( NULL, CheckDmmultipathCo ) );
-	    }
+	}
 	ConstDmmultipathIterator dmmEnd( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL,
-				     bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
-	    {
+					 bool (* CheckDmmultipathCo)( const DmmultipathCo& )=NULL) const
+	{
 	    IterPair<ConstDmmultipathInter2> p( (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ))),
-					   (ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
+						(ConstDmmultipathInter(dmmultipathCoPair( CheckDmmultipathCo ), true )));
 	    return( ConstDmmultipathIterator( ConstDmmultipathPIterator(p, CheckDmmultipath, true )));
-	    }
+	}
 	template< class Pred > typename DmmultipathCondIPair<Pred>::type dmmCondPair( const Pred& p ) const
-	    {
+	{
 	    return( typename DmmultipathCondIPair<Pred>::type( dmmCondBegin( p ), dmmCondEnd( p ) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmmultipathI<Pred>::type dmmCondBegin( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmultipathCoPair())),
-					      (ConstDmmultipathInter( dmmultipathCoPair(), true )));
+						   (ConstDmmultipathInter( dmmultipathCoPair(), true )));
 	    return( typename ConstDmmultipathI<Pred>::type( typename ConstDmmultipathPI<Pred>::type(pair, p) ) );
-	    }
+	}
 	template< class Pred > typename ConstDmmultipathI<Pred>::type dmmCondEnd( const Pred& p ) const
-	    {
+	{
 	    IterPair<ConstDmmultipathInter2> pair( (ConstDmmultipathInter( dmmultipathCoPair())),
-					      (ConstDmmultipathInter( dmmultipathCoPair(), true )));
+						   (ConstDmmultipathInter( dmmultipathCoPair(), true )));
 	    return( typename ConstDmmultipathI<Pred>::type( typename ConstDmmultipathPI<Pred>::type(pair, p, true )) );
-	    }
+	}
 
 
     protected:
