@@ -205,10 +205,10 @@ struct DiskData;
      * functionality provided by libstorage. It contains a list of container
      * objects.
      *
-     * All modifying member functions of the storage library will go through
+     * All modifying member functions of the storage library will go through the
      * Storage class. This is the central place where things like readonly
      * access, locking, testmode, inst-sys etc. are handled. It has the
-     * additional advantage the the complete class hierarchy below Storage
+     * additional advantage that the complete class hierarchy below Storage
      * could be changed without affecting the user interface of libstorage.
      */
     class Storage : public storage::StorageInterface, private boost::noncopyable
@@ -295,7 +295,7 @@ struct DiskData;
 
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
-	bool setDmcryptData( const string& dev, const string& dm, 
+	bool setDmcryptData( const string& dev, const string& dm,
 	                     unsigned dmnum, unsigned long long siz,
 			     storage::EncryptType typ );
 	bool deletedDevice(const string& dev) const;
@@ -309,7 +309,7 @@ struct DiskData;
 	bool isRootMounted() const { return( root_mounted ); }
 
 	string findNormalDevice( const string& device );
-	bool findVolume( const string& device, Volume const* &vol, 
+	bool findVolume( const string& device, Volume const* &vol,
 	                 bool no_btrfsc=false );
 	bool findUuid( const string& uuid, Volume const* &vol );
 	bool findDm( const string& device, const Dm*& dm );
@@ -409,7 +409,7 @@ struct DiskData;
 	int addFstabOptions( const string&, const string& options );
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
-	int verifyCryptPassword( const string& device, const string& pwd, 
+	int verifyCryptPassword( const string& device, const string& pwd,
 	                         bool erase );
 	int verifyCryptFilePassword( const string& file, const string& pwd );
 	bool needCryptPassword( const string& device );
@@ -470,13 +470,13 @@ struct DiskData;
 	bool mountDeviceOpts( const string& device, const string& mp,
 	                      const string& opts )
 	    { return( mountDev( device, mp, false, opts )); }
-	bool mountDeviceRo( const string& device, const string& mp, 
+	bool mountDeviceRo( const string& device, const string& mp,
 	                    const string& opts )
 	    { return( mountDev( device, mp, true, opts )); }
 	int activateEncryption( const string& device, bool on );
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 
-	bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info, 
+	bool getFreeInfo(const string& device, bool get_resize, ResizeInfo& resize_info,
 			 bool get_content, ContentInfo& content_info, bool use_cache);
 
 	int createBackupState( const string& name );
@@ -505,12 +505,12 @@ struct DiskData;
 				const string& name, unsigned long long cowSizeK,
 				string& device);
 	int removeLvmLvSnapshot(const string& vg, const string& name);
-	int getLvmLvSnapshotStateInfo(const string& vg, const string& name, 
+	int getLvmLvSnapshotStateInfo(const string& vg, const string& name,
 				      LvmLvSnapshotStateInfo& info);
         int createLvmLvPool( const string& vg, const string& name,
                              unsigned long long sizeK, string& device );
         int createLvmLvThin( const string& vg, const string& name,
-                             const string& pool, unsigned long long sizeK, 
+                             const string& pool, unsigned long long sizeK,
                              string& device );
         int changeLvChunkSize( const string& vg, const string& name,
                                unsigned long long chunkSizeK );
@@ -550,7 +550,7 @@ struct DiskData;
 	int createFileLoop( const string& lname, bool reuseExisting,
 			    unsigned long long sizeK, const string& mp,
 			    const string& pwd, string& device );
-	int modifyFileLoop( const string& device, const string& lname, 
+	int modifyFileLoop( const string& device, const string& lname,
 	                    bool reuseExisting, unsigned long long sizeK );
 	int removeFileLoop( const string& lname, bool removeFile );
 
@@ -665,7 +665,7 @@ struct DiskData;
 	typedef CheckerIterator< CheckFncCont, ContainerPI<CheckFncCont>::type,
 	                         CIter, Container > ContPIterator;
 	typedef DerefIterator<ContPIterator,Container> ContIterator;
-	typedef IterPair<ContIterator> CPair;
+    typedef IterPair<ContIterator> ContPair;
 
     public:
 	// public typedefs for iterators over containers
@@ -680,15 +680,15 @@ struct DiskData;
 	typedef IterPair<ConstContIterator> ConstContPair;
 
 	// public member functions for iterators over containers
-	ConstContPair contPair( bool (* CheckFnc)( const Container& )=NULL ) const
+        ConstContPair contPair( bool (* CheckFnc)( const Container& )=NULL ) const
 	    {
-	    return( ConstContPair( contBegin( CheckFnc ), contEnd( CheckFnc ) ));
+            return( ConstContPair( contBegin( CheckFnc ), contEnd( CheckFnc ) ));
 	    }
-	ConstContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL ) const
+        ConstContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL ) const
 	    {
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	    }
-	ConstContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL ) const
+        ConstContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL ) const
 	    {
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	    }
@@ -704,17 +704,16 @@ struct DiskData;
 	    {
 	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
 	    }
-    protected:
-	// protected member functions for iterators over containers
-	CPair cPair( bool (* CheckFnc)( const Container& )=NULL )
+    // non-const member functions for iterators over containers
+        ContPair contPair( bool (* CheckFnc)( const Container& )=NULL )
 	    {
-	    return( CPair( cBegin(CheckFnc), cEnd(CheckFnc) ));
+            return( ContPair( contBegin(CheckFnc), contEnd(CheckFnc) ));
 	    }
-	ContIterator cBegin( bool (* CheckFnc)( const Container& )=NULL )
+        ContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL )
 	    {
-	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
+            return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	    }
-	ContIterator cEnd( bool (* CheckFnc)( const Container& )=NULL )
+        ContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL )
 	    {
 	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	    }
@@ -1231,7 +1230,7 @@ struct DiskData;
 	typedef CheckerIterator< CheckFncVol, VolumeI<CheckFncVol>::type,
 	                         VolPart, Volume > VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
-	typedef IterPair<VolIterator> VPair;
+    typedef IterPair<VolIterator> VolPair;
 
     public:
 	// public typedefs for iterators over volumes
@@ -1243,22 +1242,22 @@ struct DiskData;
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 
 	// public member functions for iterators over volumes
-	ConstVolPair volPair( bool (* CheckCnt)( const Container& )) const
+        ConstVolPair volPair( bool (* CheckCnt)( const Container& )) const
 	    {
 	    return( ConstVolPair( volBegin( CheckCnt ), volEnd( CheckCnt ) ));
 	    }
-	ConstVolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
+        ConstVolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
 			      bool (* CheckCnt)( const Container& )=NULL) const
 	    {
 	    return( ConstVolPair( volBegin( CheckVol, CheckCnt ),
 	                          volEnd( CheckVol, CheckCnt ) ));
 	    }
-	ConstVolIterator volBegin( bool (* CheckCnt)( const Container& )) const
+        ConstVolIterator volBegin( bool (* CheckCnt)( const Container& )) const
 	    {
 	    return( volBegin( NULL, CheckCnt ) );
 	    }
 	ConstVolIterator volBegin( bool (* CheckVol)( const Volume& )=NULL,
-	                           bool (* CheckCnt)( const Container& )=NULL) const
+				   bool (* CheckCnt)( const Container& )=NULL) const
 	    {
 	    IterPair<ConstVolInter> p( (ConstVolInter( contPair( CheckCnt ))),
 				       (ConstVolInter( contPair( CheckCnt ), true )));
@@ -1269,7 +1268,7 @@ struct DiskData;
 	    return( volEnd( NULL, CheckCnt ) );
 	    }
 	ConstVolIterator volEnd( bool (* CheckVol)( const Volume& )=NULL,
-	                         bool (* CheckCnt)( const Container& )=NULL) const
+				 bool (* CheckCnt)( const Container& )=NULL) const
 	    {
 	    IterPair<ConstVolInter> p( (ConstVolInter( contPair( CheckCnt ))),
 				       (ConstVolInter( contPair( CheckCnt ), true )));
@@ -1281,49 +1280,47 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondBegin( const Pred& p ) const
 	    {
-	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
-					  (ConstVolInter( contPair(), true )));
+        IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
+                      (ConstVolInter( contPair(), true )));
 	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstVolumeI<Pred>::type volCondEnd( const Pred& p ) const
 	    {
-	    IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
-					  (ConstVolInter( contPair(), true )));
+        IterPair<ConstVolInter> pair( (ConstVolInter( contPair())),
+                      (ConstVolInter( contPair(), true )));
 	    return( typename ConstVolumeI<Pred>::type( typename ConstVolumePI<Pred>::type(pair, p, true )) );
 	    }
 
-    protected:
-	// protected member functions for iterators over volumes
-	VPair vPair( bool (* CheckCnt)( const Container& ))
+	VolPair volPair( bool (* CheckCnt)( const Container& ))
 	    {
-	    return( VPair( vBegin( CheckCnt ), vEnd( CheckCnt ) ));
+	    return( VolPair( volBegin( CheckCnt ), volEnd( CheckCnt ) ));
 	    }
-	VPair vPair( bool (* CheckVol)( const Volume& )=NULL,
+	VolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
 		     bool (* CheckCnt)( const Container& )=NULL)
 	    {
-	    return( VPair( vBegin( CheckVol, CheckCnt ),
-			   vEnd( CheckVol, CheckCnt ) ));
+	    return( VolPair( volBegin( CheckVol, CheckCnt ),
+			     volEnd( CheckVol, CheckCnt ) ));
 	    }
-	VolIterator vBegin( bool (* CheckCnt)( const Container& ))
+	VolIterator volBegin( bool (* CheckCnt)( const Container& ))
 	    {
-	    return( vBegin( NULL, CheckCnt ) );
+	    return( volBegin( NULL, CheckCnt ) );
 	    }
-	VolIterator vBegin( bool (* CheckVol)( const Volume& )=NULL,
-			    bool (* CheckCnt)( const Container& )=NULL)
+	VolIterator volBegin( bool (* CheckVol)( const Volume& )=NULL,
+			      bool (* CheckCnt)( const Container& )=NULL)
 	    {
-	    IterPair<VolPart> p( (VolPart( cPair( CheckCnt ))),
-				 (VolPart( cPair( CheckCnt ), true )));
+	    IterPair<VolPart> p( (VolPart( contPair( CheckCnt ))),
+				 (VolPart( contPair( CheckCnt ), true )));
 	    return( VolIterator( VolPIterator( p, CheckVol )));
 	    }
-	VolIterator vEnd( bool (* CheckCnt)( const Container& ))
+	VolIterator volEnd( bool (* CheckCnt)( const Container& ))
 	    {
-	    return( vEnd( NULL, CheckCnt ) );
+	    return( volEnd( NULL, CheckCnt ) );
 	    }
-	VolIterator vEnd( bool (* CheckVol)( const Volume& )=NULL,
-			  bool (* CheckCnt)( const Container& )=NULL)
+	VolIterator volEnd( bool (* CheckVol)( const Volume& )=NULL,
+			    bool (* CheckCnt)( const Container& )=NULL)
 	    {
-	    IterPair<VolPart> p( (VolPart( cPair( CheckCnt ))),
-				 (VolPart( cPair( CheckCnt ), true )));
+	    IterPair<VolPart> p( (VolPart( contPair( CheckCnt ))),
+				 (VolPart( contPair( CheckCnt ), true )));
 	    return( VolIterator( VolPIterator( p, CheckVol, true )));
 	    }
 
@@ -1500,15 +1497,15 @@ struct DiskData;
 	    }
 	ConstMdIterator mdBegin( bool (* CheckMd)( const Md& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isMd ) );
-	    ConstVolInter e( contPair( isMd ), true );
+        ConstVolInter b( contPair( isMd ) );
+        ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> p( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( ConstMdIterator( ConstMdPIterator(p, CheckMd )));
 	    }
 	ConstMdIterator mdEnd( bool (* CheckMd)( const Md& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isMd ) );
-	    ConstVolInter e( contPair( isMd ), true );
+        ConstVolInter b( contPair( isMd ) );
+        ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> p( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( ConstMdIterator( ConstMdPIterator(p, CheckMd, true )));
 	    }
@@ -1518,15 +1515,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstMdI<Pred>::type mdCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isMd ) );
-	    ConstVolInter e( contPair( isMd ), true );
+        ConstVolInter b( contPair( isMd ) );
+        ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstMdI<Pred>::type mdCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isMd ) );
-	    ConstVolInter e( contPair( isMd ), true );
+        ConstVolInter b( contPair( isMd ) );
+        ConstVolInter e( contPair( isMd ), true );
 	    IterPair<ConstMdInter> pair( (ConstMdInter(b)), (ConstMdInter(e)) );
 	    return( typename ConstMdI<Pred>::type( typename ConstMdPI<Pred>::type(pair, p, true )) );
 	    }
@@ -1562,15 +1559,15 @@ struct DiskData;
 
 	ConstMdPartIterator mdPartBegin( bool (* CheckMdPart)( const MdPart& )=NULL ) const
 	{
-	  ConstVolInter b( contPair( isMdPart ) );
-	  ConstVolInter e( contPair( isMdPart ), true );
+      ConstVolInter b( contPair( isMdPart ) );
+      ConstVolInter e( contPair( isMdPart ), true );
 	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
 	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart )));
 	}
 	ConstMdPartIterator mdPartEnd( bool (* CheckMdPart)( const MdPart& )=NULL ) const
 	{
-	  ConstVolInter b( contPair( isMdPart ) );
-	  ConstVolInter e( contPair( isMdPart ), true );
+      ConstVolInter b( contPair( isMdPart ) );
+      ConstVolInter e( contPair( isMdPart ), true );
 	  IterPair<ConstMdPartInter> p( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
 	  return( ConstMdPartIterator( ConstMdPartPIterator(p, CheckMdPart, true )));
 	}
@@ -1580,15 +1577,15 @@ struct DiskData;
 	}
 	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondBegin( const Pred& p ) const
 	{
-	  ConstVolInter b( contPair( isMdPart ) );
-	  ConstVolInter e( contPair( isMdPart ), true );
+      ConstVolInter b( contPair( isMdPart ) );
+      ConstVolInter e( contPair( isMdPart ), true );
 	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
 	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p) ) );
 	}
 	template< class Pred > typename ConstMdPartI<Pred>::type mdPartCondEnd( const Pred& p ) const
 	{
-	  ConstVolInter b( contPair( isMdPart ) );
-	  ConstVolInter e( contPair( isMdPart ), true );
+      ConstVolInter b( contPair( isMdPart ) );
+      ConstVolInter e( contPair( isMdPart ), true );
 	  IterPair<ConstMdPartInter> pair( (ConstMdPartInter(b)), (ConstMdPartInter(e)) );
 	  return( typename ConstMdPartI<Pred>::type( typename ConstMdPartPI<Pred>::type(pair, p, true )) );
 	}
@@ -1623,15 +1620,15 @@ struct DiskData;
 	    }
 	ConstLoopIterator loopBegin( bool (* CheckLoop)( const Loop& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isLoop ) );
-	    ConstVolInter e( contPair( isLoop ), true );
+        ConstVolInter b( contPair( isLoop ) );
+        ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop )));
 	    }
 	ConstLoopIterator loopEnd( bool (* CheckLoop)( const Loop& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isLoop ) );
-	    ConstVolInter e( contPair( isLoop ), true );
+        ConstVolInter b( contPair( isLoop ) );
+        ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> p( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( ConstLoopIterator( ConstLoopPIterator(p, CheckLoop, true )));
 	    }
@@ -1641,15 +1638,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isLoop ) );
-	    ConstVolInter e( contPair( isLoop ), true );
+        ConstVolInter b( contPair( isLoop ) );
+        ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstLoopI<Pred>::type loopCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isLoop ) );
-	    ConstVolInter e( contPair( isLoop ), true );
+        ConstVolInter b( contPair( isLoop ) );
+        ConstVolInter e( contPair( isLoop ), true );
 	    IterPair<ConstLoopInter> pair( (ConstLoopInter(b)), (ConstLoopInter(e)) );
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
 	    }
@@ -1683,15 +1680,15 @@ struct DiskData;
 	    }
 	ConstBtrfsIterator btrfsBegin( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isBtrfs ) );
-	    ConstVolInter e( contPair( isBtrfs ), true );
+        ConstVolInter b( contPair( isBtrfs ) );
+        ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs )));
 	    }
 	ConstBtrfsIterator btrfsEnd( bool (* CheckBtrfs)( const Btrfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isBtrfs ) );
-	    ConstVolInter e( contPair( isBtrfs ), true );
+        ConstVolInter b( contPair( isBtrfs ) );
+        ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> p( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( ConstBtrfsIterator( ConstBtrfsPIterator(p, CheckBtrfs, true )));
 	    }
@@ -1701,15 +1698,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isBtrfs ) );
-	    ConstVolInter e( contPair( isBtrfs ), true );
+        ConstVolInter b( contPair( isBtrfs ) );
+        ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstBtrfsI<Pred>::type btrfsCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isBtrfs ) );
-	    ConstVolInter e( contPair( isBtrfs ), true );
+        ConstVolInter b( contPair( isBtrfs ) );
+        ConstVolInter e( contPair( isBtrfs ), true );
 	    IterPair<ConstBtrfsInter> pair( (ConstBtrfsInter(b)), (ConstBtrfsInter(e)) );
 	    return( typename ConstBtrfsI<Pred>::type( typename ConstBtrfsPI<Pred>::type(pair, p, true )) );
 	    }
@@ -1743,15 +1740,15 @@ struct DiskData;
 	    }
 	ConstTmpfsIterator tmpfsBegin( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isTmpfs ) );
-	    ConstVolInter e( contPair( isTmpfs ), true );
+        ConstVolInter b( contPair( isTmpfs ) );
+        ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs )));
 	    }
 	ConstTmpfsIterator tmpfsEnd( bool (* CheckTmpfs)( const Tmpfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isTmpfs ) );
-	    ConstVolInter e( contPair( isTmpfs ), true );
+        ConstVolInter b( contPair( isTmpfs ) );
+        ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> p( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( ConstTmpfsIterator( ConstTmpfsPIterator(p, CheckTmpfs, true )));
 	    }
@@ -1761,15 +1758,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isTmpfs ) );
-	    ConstVolInter e( contPair( isTmpfs ), true );
+        ConstVolInter b( contPair( isTmpfs ) );
+        ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstTmpfsI<Pred>::type tmpfsCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isTmpfs ) );
-	    ConstVolInter e( contPair( isTmpfs ), true );
+        ConstVolInter b( contPair( isTmpfs ) );
+        ConstVolInter e( contPair( isTmpfs ), true );
 	    IterPair<ConstTmpfsInter> pair( (ConstTmpfsInter(b)), (ConstTmpfsInter(e)) );
 	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p, true )) );
 	    }
@@ -1803,15 +1800,15 @@ struct DiskData;
 	    }
 	ConstNfsIterator nfsBegin( bool (* CheckNfs)( const Nfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isNfs ) );
-	    ConstVolInter e( contPair( isNfs ), true );
+        ConstVolInter b( contPair( isNfs ) );
+        ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> p( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( ConstNfsIterator( ConstNfsPIterator(p, CheckNfs )));
 	    }
 	ConstNfsIterator nfsEnd( bool (* CheckNfs)( const Nfs& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isNfs ) );
-	    ConstVolInter e( contPair( isNfs ), true );
+        ConstVolInter b( contPair( isNfs ) );
+        ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> p( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( ConstNfsIterator( ConstNfsPIterator(p, CheckNfs, true )));
 	    }
@@ -1821,15 +1818,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstNfsI<Pred>::type nfsCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isNfs ) );
-	    ConstVolInter e( contPair( isNfs ), true );
+        ConstVolInter b( contPair( isNfs ) );
+        ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> pair( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( typename ConstNfsI<Pred>::type( typename ConstNfsPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstNfsI<Pred>::type nfsCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isNfs ) );
-	    ConstVolInter e( contPair( isNfs ), true );
+        ConstVolInter b( contPair( isNfs ) );
+        ConstVolInter e( contPair( isNfs ), true );
 	    IterPair<ConstNfsInter> pair( (ConstNfsInter(b)), (ConstNfsInter(e)) );
 	    return( typename ConstNfsI<Pred>::type( typename ConstNfsPI<Pred>::type(pair, p, true )) );
 	    }
@@ -1863,15 +1860,15 @@ struct DiskData;
 	    }
 	ConstDmIterator dmBegin( bool (* CheckDm)( const Dm& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isDm ) );
-	    ConstVolInter e( contPair( isDm ), true );
+        ConstVolInter b( contPair( isDm ) );
+        ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm )));
 	    }
 	ConstDmIterator dmEnd( bool (* CheckDm)( const Dm& )=NULL ) const
 	    {
-	    ConstVolInter b( contPair( isDm ) );
-	    ConstVolInter e( contPair( isDm ), true );
+        ConstVolInter b( contPair( isDm ) );
+        ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> p( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( ConstDmIterator( ConstDmPIterator(p, CheckDm, true )));
 	    }
@@ -1881,15 +1878,15 @@ struct DiskData;
 	    }
 	template< class Pred > typename ConstDmI<Pred>::type dmCondBegin( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isDm ) );
-	    ConstVolInter e( contPair( isDm ), true );
+        ConstVolInter b( contPair( isDm ) );
+        ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p) ) );
 	    }
 	template< class Pred > typename ConstDmI<Pred>::type dmCondEnd( const Pred& p ) const
 	    {
-	    ConstVolInter b( contPair( isDm ) );
-	    ConstVolInter e( contPair( isDm ), true );
+        ConstVolInter b( contPair( isDm ) );
+        ConstVolInter e( contPair( isDm ), true );
 	    IterPair<ConstDmInter> pair( (ConstDmInter(b)), (ConstDmInter(e)) );
 	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p, true )) );
 	    }
@@ -2058,7 +2055,7 @@ struct DiskData;
 	void detectDmmultipath(SystemInfo& systeminfo);
 	void detectDm(SystemInfo& systeminfo, bool only_crypt);
 	void initDisk( list<DiskData>& dl, SystemInfo& systeminfo);
-	void detectFsData(const VolIterator& begin, const VolIterator& end, 
+	void detectFsData(const VolIterator& begin, const VolIterator& end,
 	                  SystemInfo& systeminfo);
 	int updatePartitionArea(const string& device, const Region& cylRegion, bool noBtrfs);
 	int resizeVolume(const string& device, unsigned long long newSizeK,
@@ -2067,7 +2064,7 @@ struct DiskData;
 			 bool ignore_fs, bool noBtrfs );
 	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignore_fs );
-	int resizePartition( const string& device, unsigned long sizeCyl, 
+	int resizePartition( const string& device, unsigned long sizeCyl,
 	                     bool ignoreFs, bool noBtrfs );
 	void addToList(Container* e);
 	DiskIterator findDisk( const string& disk );
@@ -2105,7 +2102,7 @@ struct DiskData;
 	int removeContainer( Container* val );
 	void logContainersAndVolumes(const string& Dir) const;
 
-	int commitPair( CPair& p, bool (* fnc)( const Container& ) );
+        int commitPair( ContPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,
 			     list<const Volume*>& vl, list<commitAction>& todo) const;
 	bool ignoreError(int error, list<commitAction>::const_iterator ca) const;

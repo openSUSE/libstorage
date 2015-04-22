@@ -313,7 +313,7 @@ void Storage::detectObjects()
 
     if (testmode())
         {
-	for (VolIterator i = vBegin(); i != vEnd(); ++i)
+    for (VolIterator i = volBegin(); i != volEnd(); ++i)
 	    i->getFstabData(*fstab);
 
 	string t = testdir() + "/free.info";
@@ -322,7 +322,7 @@ void Storage::detectObjects()
 	}
     else
 	{
-	detectFsData(vBegin(), vEnd(), systeminfo);
+        detectFsData(volBegin(), volEnd(), systeminfo);
 	logContainersAndVolumes(logdir());
 	}
     detectBtrfs(systeminfo);
@@ -4216,7 +4216,7 @@ int Storage::removeMdPartCo(const string& devName, bool destroySb)
 bool Storage::haveMd( MdCo*& md )
     {
     md = NULL;
-    CPair p = cPair(isMd);
+    ContPair p = contPair(isMd);
     ContIterator i = p.begin();
     if( i != p.end() )
 	md = static_cast<MdCo*>(&(*i));
@@ -4241,7 +4241,7 @@ bool Storage::haveMd( MdCo*& md )
     Storage::haveDm(DmCo*& dm)
     {
 	dm = NULL;
-	CPair p = cPair(isDm);
+	ContPair p = contPair(isDm);
 	ContIterator i = p.begin();
 	if (i != p.end())
 	    dm = static_cast<DmCo*>(&(*i));
@@ -4252,7 +4252,7 @@ bool Storage::haveMd( MdCo*& md )
 bool Storage::haveNfs( NfsCo*& co )
     {
     co = NULL;
-    CPair p = cPair(isNfs);
+    ContPair p = contPair(isNfs);
     ContIterator i = p.begin();
     if( i != p.end() )
 	co = static_cast<NfsCo*>(&(*i));
@@ -4325,12 +4325,12 @@ Storage::checkNfsDevice(const string& nfsDev, const string& opts, bool nfs4, uns
 	c.execute( prog_name );
 	c.execute(RPCSTATDBIN);
 	}
-    if( ret==0 && (ret=co.vBegin()->mount( mdir ))==0 )
+    if( ret==0 && (ret=co.volBegin()->mount( mdir ))==0 )
 	{
 	StatVfs vfsbuf;
 	getStatVfs(mdir, vfsbuf);
 	sizeK = vfsbuf.sizeK;
-	ret = co.vBegin()->umount( mdir );
+    ret = co.volBegin()->umount( mdir );
 	}
     rmdir(mdir.c_str());
     y2mil( "name:" << nfsDev << " opts:" << opts << " nfs4:" << nfs4 << " ret:" << ret <<
@@ -4465,7 +4465,7 @@ Storage::removeFileLoop( const string& lname, bool removeFile )
 bool Storage::haveLoop( LoopCo*& loop )
     {
     loop = NULL;
-    CPair p = cPair(isLoop);
+    ContPair p = contPair(isLoop);
     ContIterator i = p.begin();
     if( i != p.end() )
 	loop = static_cast<LoopCo*>(&(*i));
@@ -4475,7 +4475,7 @@ bool Storage::haveLoop( LoopCo*& loop )
 bool Storage::haveBtrfs( BtrfsCo*& co )
     {
     co = NULL;
-    CPair p = cPair(isBtrfs);
+    ContPair p = contPair(isBtrfs);
     ContIterator i = p.begin();
     if( i != p.end() )
 	co = static_cast<BtrfsCo*>(&(*i));
@@ -4485,7 +4485,7 @@ bool Storage::haveBtrfs( BtrfsCo*& co )
 bool Storage::haveTmpfs( TmpfsCo*& co )
     {
     co = NULL;
-    CPair p = cPair(isTmpfs);
+    ContPair p = contPair(isTmpfs);
     ContIterator i = p.begin();
     if( i != p.end() )
 	co = static_cast<TmpfsCo*>(&(*i));
@@ -4923,20 +4923,20 @@ static bool fstabAdded( const Volume& v ) { return( v.fstabAdded()); }
     lastAction.clear();
     extendedError.clear();
     dumpCommitInfos();
-    CPair p = cPair( notLoop );
+    ContPair p = contPair( notLoop );
     int ret = 0;
     y2mil("empty:" << p.empty());
     if( !p.empty() )
 	{
 	ret = commitPair( p, notLoop );
 	}
-    p = cPair( isLoop );
+    p = contPair( isLoop );
     y2mil("empty:" << p.empty());
     if( ret==0 && !p.empty() )
 	{
 	ret = commitPair( p, isLoop );
 	}
-    VPair vp = vPair( fstabAdded );
+    VolPair vp = volPair( fstabAdded );
     for( VolIterator i=vp.begin(); i!=vp.end(); ++i )
 	i->setFstabAdded(false);
     if( ret!=0 )
@@ -4973,7 +4973,7 @@ Storage::ignoreError(int error, list<commitAction>::const_iterator ca) const
 
 
 int
-Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
+Storage::commitPair( ContPair& p, bool (* fnc)( const Container& ) )
     {
     int ret = 0;
     y2mil("p.length:" << p.length());
@@ -5028,7 +5028,7 @@ Storage::commitPair( CPair& p, bool (* fnc)( const Container& ) )
 	y2mil("stage:" << *stage << " new_pair:" << new_pair);
 	if( new_pair )
 	    {
-	    p = cPair( fnc );
+	    p = contPair( fnc );
 	    new_pair = false;
 	    }
 	if( !todo.empty() )
@@ -5049,7 +5049,7 @@ bool Storage::removeDmMapsTo( const string& dev )
     {
     bool ret = false;
     y2mil("dev:" << dev);
-    VPair vp = vPair( isDmContainer );
+    VolPair vp = volPair( isDmContainer );
     for( VolIterator v=vp.begin(); v!=vp.end(); ++v )
 	{
 	Dm * dm = dynamic_cast<Dm *>(&(*v));
@@ -5090,7 +5090,7 @@ bool Storage::checkDmMapsTo( const string& dev )
     {
     bool ret = false;
     y2mil("dev:" << dev);
-    VPair vp = vPair( isDmContainer );
+    VolPair vp = volPair( isDmContainer );
     ConstVolIterator v=vp.begin(); 
     while( !ret && v!=vp.end() )
 	{
@@ -5123,7 +5123,7 @@ bool Storage::usedDmName( const string& nm, const Volume* volp ) const
 void Storage::changeDeviceName( const string& old, const string& nw )
     {
     y2mil( "old:" << old << " new:" << nw );
-    CPair p = cPair();
+    ContPair p = contPair();
     for (ContIterator ci = p.begin(); ci != p.end(); ++ci)
 	{
 	ci->changeDeviceName( old, nw );
@@ -5893,7 +5893,7 @@ bool Storage::findVolume( const string& device, ContIterator& c,
     if( findVolume( device, v, false, no_btrfs ))
 	{
 	const Container *co = v->getContainer();
-	CPair cp = cPair();
+	ContPair cp = contPair();
 	c = cp.begin();
 	while( c!=cp.end() && &(*c)!=co )
 	    ++c;
@@ -5990,7 +5990,7 @@ bool Storage::findContainer( const string& device, ConstContIterator& c )
 
 bool Storage::findContainer( const string& device, ContIterator& c )
     {
-    CPair cp = cPair();
+    ContPair cp = contPair();
     c = cp.begin();
     while (c != cp.end() && !c->sameDevice(device))
 	++c;
@@ -6022,11 +6022,11 @@ bool Storage::findVolume( const string& device, VolIterator& v, bool also_del,
     if( !label.empty() || !uuid.empty() )
 	y2mil("label:" << label << " uuid:" << uuid);
     bool found = false;
-    list<VPair> pl;
+    list<VolPair> pl;
     if( !no_btrfsc )
-	pl.push_back( vPair( also_del?NULL:Volume::notDeleted, isBtrfs ));
-    pl.push_back( vPair( also_del?NULL:Volume::notDeleted, isNotBtrfs ));
-    list<VPair>::iterator li = pl.begin();
+    pl.push_back( volPair( also_del?NULL:Volume::notDeleted, isBtrfs ));
+    pl.push_back( volPair( also_del?NULL:Volume::notDeleted, isNotBtrfs ));
+    list<VolPair>::iterator li = pl.begin();
     while( li != pl.end() && !found )
 	{
 	v = li->begin();

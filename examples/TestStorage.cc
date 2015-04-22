@@ -16,29 +16,29 @@ struct Equal150 { bool operator()(const Disk&d) const {return(d.cylinders()==150
 struct Larger10 { bool operator()(const Partition&d) const {return(d.cylSize()>10);}};
 struct DiskStart { bool operator()(const Partition&d) const {return(d.cylStart()==0);}};
 
-template <class C> struct First 
+template <class C> struct First
     { bool operator()(const C&d) const {return(d.nr()==0);}};
 
 struct Raid5 { bool operator()(const Md&d) const {return(d.personality()==storage::RAID5);}};
-struct FileOther { bool operator()(const Loop&d) const 
+struct FileOther { bool operator()(const Loop&d) const
     {return(d.loopFile().find( "other" )!=string::npos);}};
 struct PVG1 { bool operator()(const LvmVg&d) const {return(d.numPv()>1);}};
 struct LVG1 { bool operator()(const LvmVg&d) const {return(d.numLv()>1);}};
 struct NoLv { bool operator()(const LvmVg&d) const {return(d.numLv()==0);}};
 
 struct StripeG1 { bool operator()(const LvmLv&d) const {return(d.stripes()>1);}};
-struct TestHaveA { bool operator()(const LvmLv&d) const 
+struct TestHaveA { bool operator()(const LvmLv&d) const
     { return( d.name().find( "a" )!=string::npos); }};
 
-template <class C> bool TestIsA( const C& d ) 
+template <class C> bool TestIsA( const C& d )
     { return( d.name().find( "a" )!=string::npos); };
-template <class C> bool TestIsB( const C& d ) 
+template <class C> bool TestIsB( const C& d )
     { return( d.name().find( "b" )!=string::npos); };
 template <class C> bool TestFalse( const C& d ) { return( false ); };
 template <class C> bool TestTrue( const C& d ) { return( true ); };
 bool TestLvG1( const LvmVg& d ) { return( d.numLv()>1 ); };
 
-template <class pair> 
+template <class pair>
 void PrintPair( ostream& s, const pair& p, const string& txt )
     {
     s << txt;
@@ -60,7 +60,7 @@ main( int argc_iv, char** argv_ppcv )
 	}
     {
     struct test_sdb t;
-    Storage::ContCondIPair<test_sdb>::type p=Sto.contCondPair<test_sdb>(t); 
+    Storage::ContCondIPair<test_sdb>::type p=Sto.contCondPair<test_sdb>(t);
     cout << "test_sdb pair empty:" << p.empty() << " length:" << p.length() << endl;
     for( Storage::ConstContainerI<test_sdb>::type i=p.begin(); i!=p.end(); ++i )
 	{
@@ -76,10 +76,10 @@ main( int argc_iv, char** argv_ppcv )
 	    cout << *i << endl;
 	}
     }
-    struct tmp { 
-	static bool TestIsEven( const Volume& d ) 
+    struct tmp {
+	static bool TestIsEven( const Volume& d )
 	    { return( d.nr()%2==0 ); }
-	static bool TestIsUnven( const Volume& d ) 
+	static bool TestIsUnven( const Volume& d )
 	    { return( d.nr()%2!=0 ); }};
     {
     Storage::ConstContPair p = Sto.contPair( TestIsB<Container> );
@@ -121,14 +121,14 @@ main( int argc_iv, char** argv_ppcv )
     if( !p.empty() )
 	{
 	cout << "Partitions first Disk" << endl;
-	Container::ConstVolPair d = Sto.contBegin()->volPair();
+        Container::ConstVolPair d = Sto.contBegin()->volPair();
 	cout << "pair empty:" << d.empty() << " length:" << d.length() << endl;
 	for( Container::ConstVolIterator i=d.begin(); i!=d.end(); ++i )
 	    {
 	    cout << *i << endl;
 	    }
 	cout << "Partitions first Disk even" << endl;
-	d = Sto.contBegin()->volPair(tmp::TestIsEven);
+        d = Sto.contBegin()->volPair(tmp::TestIsEven);
 	cout << "pair empty:" << d.empty() << " length:" << d.length() << endl;
 	for( Container::ConstVolIterator i=d.begin(); i!=d.end(); ++i )
 	    {
@@ -189,12 +189,12 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstDiskPair p = Sto.diskPair();
     PrintPair<Storage::ConstDiskPair>( cout, p, "Disks " );
-    struct tmp { 
-	static bool TestLarger20000( const Disk& d ) 
+    struct tmp {
+	static bool TestLarger20000( const Disk& d )
 	    { return( d.cylinders()>20000 ); };
-	static bool TestSmaller20000( const Disk& d ) 
+	static bool TestSmaller20000( const Disk& d )
 	    { return( d.cylinders()<20000 ); };
-	static bool TestEqual150( const Disk& d ) 
+	static bool TestEqual150( const Disk& d )
 	    { return( d.cylinders()==150 ); };
 	};
     p = Sto.diskPair(tmp::TestLarger20000);
@@ -219,10 +219,10 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstPartPair p = Sto.partPair();
     PrintPair<Storage::ConstPartPair>( cout, p, "Part " );
-    struct tmp { 
-	static bool TestStart( const Partition& d ) 
+    struct tmp {
+	static bool TestStart( const Partition& d )
 	    { return( d.cylStart()==0 ); };
-	static bool TestLarger10( const Partition& d ) 
+	static bool TestLarger10( const Partition& d )
 	    { return( d.cylSize()>10 ); };
 	};
     p = Sto.partPair(tmp::TestLarger10);
@@ -245,10 +245,10 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstMdPair p = Sto.mdPair();
     PrintPair<Storage::ConstMdPair>( cout, p, "Md " );
-    struct tmp { 
-	static bool TestFirst( const Md& d ) 
+    struct tmp {
+	static bool TestFirst( const Md& d )
 	    { return( d.nr()==0 ); };
-	static bool TestRaid5( const Md& d ) 
+	static bool TestRaid5( const Md& d )
 	    { return( d.personality()==storage::RAID5 ); };
 	};
     p = Sto.mdPair(tmp::TestFirst);
@@ -269,10 +269,10 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstLoopPair p = Sto.loopPair();
     PrintPair<Storage::ConstLoopPair>( cout, p, "Loop " );
-    struct tmp { 
-	static bool TestFirst( const Loop& d ) 
+    struct tmp {
+	static bool TestFirst( const Loop& d )
 	    { return( d.nr()==0 ); };
-	static bool TestUsc( const Loop& d ) 
+	static bool TestUsc( const Loop& d )
 	    { return( d.loopFile().find("_")!=string::npos ); };
 	};
     p = Sto.loopPair(tmp::TestFirst);
@@ -293,12 +293,12 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstLvmVgPair p = Sto.lvmVgPair();
     PrintPair<Storage::ConstLvmVgPair>( cout, p, "LvmVg " );
-    struct tmp { 
-	static bool TestPvGt1( const LvmVg& d ) 
+    struct tmp {
+	static bool TestPvGt1( const LvmVg& d )
 	    { return( d.numPv()>1 ); };
-	static bool TestLvGt1( const LvmVg& d ) 
+	static bool TestLvGt1( const LvmVg& d )
 	    { return( d.numLv()>1 ); };
-	static bool TestEmpty( const LvmVg& d ) 
+	static bool TestEmpty( const LvmVg& d )
 	    { return( d.numLv()==0 ); };
 	};
     p = Sto.lvmVgPair(tmp::TestPvGt1);
@@ -323,10 +323,10 @@ main( int argc_iv, char** argv_ppcv )
     {
     Storage::ConstLvmLvPair p = Sto.lvmLvPair();
     PrintPair<Storage::ConstLvmLvPair>( cout, p, "LvmLv " );
-    struct tmp { 
-	static bool TestNameA( const LvmLv& d ) 
+    struct tmp {
+	static bool TestNameA( const LvmLv& d )
 	    { return( d.name().find("a")!=string::npos ); };
-	static bool TestStripeG1( const LvmLv& d ) 
+	static bool TestStripeG1( const LvmLv& d )
 	    { return( d.stripes()>1 ); };
 	};
     p = Sto.lvmLvPair(tmp::TestNameA);
