@@ -76,11 +76,13 @@ main( int argc_iv, char** argv_ppcv )
 	    cout << *i << endl;
 	}
     }
-    struct tmp {
-	static bool TestIsEven( const Volume& d )
-	    { return( d.nr()%2==0 ); }
-	static bool TestIsUnven( const Volume& d )
-	    { return( d.nr()%2!=0 ); }};
+
+    struct tmp
+    {
+	static bool TestIsEven(const Volume& d) { return d.nr() % 2 == 0; }
+	static bool TestIsOdd(const Volume& d) { return d.nr() % 2 != 0; }
+    };
+
     {
     Storage::ConstContPair p = Sto.contPair( TestIsB<Container> );
     cout << "only B pair empty:" << p.empty() << " length:" << p.length() << endl;
