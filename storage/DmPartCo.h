@@ -35,14 +35,14 @@ namespace storage
     using std::list;
 
 
-class Storage;
+    class Storage;
     class SystemInfo;
-class Region;
+    class Region;
 
 
-class DmPartCo : public PeContainer
+    class DmPartCo : public PeContainer
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -117,52 +117,52 @@ class DmPartCo : public PeContainer
 
     protected:
 	// iterators over partitions
-        // protected typedefs for iterators over partitions
-        typedef CastIterator<VIter, DmPart *> DmPartInter;
-        typedef CastIterator<CVIter, const DmPart *> DmPartCInter;
-        template< class Pred >
-            struct DmPartPI { typedef ContainerIter<Pred, DmPartInter> type; };
-        template< class Pred >
-            struct DmPartCPI { typedef ContainerIter<Pred, DmPartCInter> type; };
-        typedef CheckFnc<const DmPart> CheckFncDmPart;
-        typedef CheckerIterator< CheckFncDmPart, DmPartPI<CheckFncDmPart>::type,
-                                 DmPartInter, DmPart > DmPartPIterator;
-        typedef CheckerIterator< CheckFncDmPart, DmPartCPI<CheckFncDmPart>::type,
-                                 DmPartCInter, const DmPart > DmPartCPIterator;
+	// protected typedefs for iterators over partitions
+	typedef CastIterator<VIter, DmPart *> DmPartInter;
+	typedef CastIterator<CVIter, const DmPart *> DmPartCInter;
+	template< class Pred >
+	struct DmPartPI { typedef ContainerIter<Pred, DmPartInter> type; };
+	template< class Pred >
+	struct DmPartCPI { typedef ContainerIter<Pred, DmPartCInter> type; };
+	typedef CheckFnc<const DmPart> CheckFncDmPart;
+	typedef CheckerIterator< CheckFncDmPart, DmPartPI<CheckFncDmPart>::type,
+				 DmPartInter, DmPart > DmPartPIterator;
+	typedef CheckerIterator< CheckFncDmPart, DmPartCPI<CheckFncDmPart>::type,
+				 DmPartCInter, const DmPart > DmPartCPIterator;
 	typedef DerefIterator<DmPartPIterator,DmPart> DmPartIter;
 	typedef DerefIterator<DmPartCPIterator,const DmPart> ConstDmPartIter;
-        typedef IterPair<DmPartIter> DmPartPair;
-        typedef IterPair<ConstDmPartIter> ConstDmPartPair;
+	typedef IterPair<DmPartIter> DmPartPair;
+	typedef IterPair<ConstDmPartIter> ConstDmPartPair;
 
-        DmPartPair dmpartPair( bool (* CheckDmPart)( const DmPart& )=NULL)
-            {
-            return( DmPartPair( dmpartBegin( CheckDmPart ), dmpartEnd( CheckDmPart ) ));
-            }
-        DmPartIter dmpartBegin( bool (* CheckDmPart)( const DmPart& )=NULL)
-            {
+	DmPartPair dmpartPair( bool (* CheckDmPart)( const DmPart& )=NULL)
+	{
+	    return( DmPartPair( dmpartBegin( CheckDmPart ), dmpartEnd( CheckDmPart ) ));
+	}
+	DmPartIter dmpartBegin( bool (* CheckDmPart)( const DmPart& )=NULL)
+	{
 	    IterPair<DmPartInter> p( (DmPartInter(begin())), (DmPartInter(end())) );
-            return( DmPartIter( DmPartPIterator( p, CheckDmPart )) );
-	    }
-        DmPartIter dmpartEnd( bool (* CheckDmPart)( const DmPart& )=NULL)
-            {
+	    return( DmPartIter( DmPartPIterator( p, CheckDmPart )) );
+	}
+	DmPartIter dmpartEnd( bool (* CheckDmPart)( const DmPart& )=NULL)
+	{
 	    IterPair<DmPartInter> p( (DmPartInter(begin())), (DmPartInter(end())) );
-            return( DmPartIter( DmPartPIterator( p, CheckDmPart, true )) );
-	    }
+	    return( DmPartIter( DmPartPIterator( p, CheckDmPart, true )) );
+	}
 
-        ConstDmPartPair dmpartPair( bool (* CheckDmPart)( const DmPart& )=NULL) const
-            {
-            return( ConstDmPartPair( dmpartBegin( CheckDmPart ), dmpartEnd( CheckDmPart ) ));
-            }
-        ConstDmPartIter dmpartBegin( bool (* CheckDmPart)( const DmPart& )=NULL) const
-            {
+	ConstDmPartPair dmpartPair( bool (* CheckDmPart)( const DmPart& )=NULL) const
+	{
+	    return( ConstDmPartPair( dmpartBegin( CheckDmPart ), dmpartEnd( CheckDmPart ) ));
+	}
+	ConstDmPartIter dmpartBegin( bool (* CheckDmPart)( const DmPart& )=NULL) const
+	{
 	    IterPair<DmPartCInter> p( (DmPartCInter(begin())), (DmPartCInter(end())) );
-            return( ConstDmPartIter( DmPartCPIterator( p, CheckDmPart )) );
-	    }
-        ConstDmPartIter dmpartEnd( bool (* CheckDmPart)( const DmPart& )=NULL) const
-            {
+	    return( ConstDmPartIter( DmPartCPIterator( p, CheckDmPart )) );
+	}
+	ConstDmPartIter dmpartEnd( bool (* CheckDmPart)( const DmPart& )=NULL) const
+	{
 	    IterPair<DmPartCInter> p( (DmPartCInter(begin())), (DmPartCInter(end())) );
-            return( ConstDmPartIter( DmPartCPIterator( p, CheckDmPart, true )) );
-	    }
+	    return( ConstDmPartIter( DmPartCPIterator( p, CheckDmPart, true )) );
+	}
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const = 0; // { return( new DmPartCo( *this ) ); }

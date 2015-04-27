@@ -71,70 +71,70 @@ namespace storage
     }
 
 
-int 
-NfsCo::removeVolume( Volume* v )
+    int 
+    NfsCo::removeVolume( Volume* v )
     {
-    y2mil( "v:" << *v );
-    int ret = 0;
-    NfsIter nfs;
-    if( !findNfs( v->device(), nfs ))
+	y2mil( "v:" << *v );
+	int ret = 0;
+	NfsIter nfs;
+	if( !findNfs( v->device(), nfs ))
 	{
-	ret = NFS_VOLUME_NOT_FOUND;
+	    ret = NFS_VOLUME_NOT_FOUND;
 	}
-    if( readonly() )
+	if( readonly() )
 	{
-	ret = NFS_CHANGE_READONLY;
+	    ret = NFS_CHANGE_READONLY;
 	}
-    if( ret==0 )
-	{
-	if( nfs->created() )
-	    {
-	    if( !removeFromList( &(*nfs) ))
-		ret = NFS_REMOVE_VOLUME_CREATE_NOT_FOUND;
-	    }
-	else
-	    nfs->setDeleted();
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int
-NfsCo::doRemove( Volume* v )
-    {
-    Nfs * p = dynamic_cast<Nfs *>(v);
-    int ret = 0;
-    if( p != NULL )
-	{
-	getStorage()->showInfoCb( p->removeText(true), silent );
-	y2mil("doRemove container: " << name() << " name:" << p->name());
-	ret = v->prepareRemove();
 	if( ret==0 )
-	    {
-	    if( !removeFromList( p ) )
-		ret = NFS_REMOVE_VOLUME_LIST_ERASE;
-	    }
-	}
-    else
 	{
-	ret = NFS_REMOVE_INVALID_VOLUME;
+	    if( nfs->created() )
+	    {
+		if( !removeFromList( &(*nfs) ))
+		    ret = NFS_REMOVE_VOLUME_CREATE_NOT_FOUND;
+	    }
+	    else
+		nfs->setDeleted();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK, 
-              const string& opts, const string& mp, bool nfs4)
+    int
+    NfsCo::doRemove( Volume* v )
     {
-    y2mil("nfsDev:" << nfsDev << " sizeK:" << sizeK << "opts:" << opts <<
-          " mp:" << mp << " nfs4:" << nfs4);
-    Nfs *n = new Nfs(*this, nfsDev, nfs4);
-    n->changeMount( mp );
-    n->setSize( sizeK );
-    n->setFstabOption( opts );
-    addToList( n );
-    return( 0 );
+	Nfs * p = dynamic_cast<Nfs *>(v);
+	int ret = 0;
+	if( p != NULL )
+	{
+	    getStorage()->showInfoCb( p->removeText(true), silent );
+	    y2mil("doRemove container: " << name() << " name:" << p->name());
+	    ret = v->prepareRemove();
+	    if( ret==0 )
+	    {
+		if( !removeFromList( p ) )
+		    ret = NFS_REMOVE_VOLUME_LIST_ERASE;
+	    }
+	}
+	else
+	{
+	    ret = NFS_REMOVE_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int 
+    NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK, 
+		  const string& opts, const string& mp, bool nfs4)
+    {
+	y2mil("nfsDev:" << nfsDev << " sizeK:" << sizeK << "opts:" << opts <<
+	      " mp:" << mp << " nfs4:" << nfs4);
+	Nfs *n = new Nfs(*this, nfsDev, nfs4);
+	n->changeMount( mp );
+	n->setSize( sizeK );
+	n->setFstabOption( opts );
+	addToList( n );
+	return( 0 );
     }
 
 
@@ -156,81 +156,81 @@ NfsCo::addNfs(const string& nfsDev, unsigned long long sizeK,
     }
 
 
-void
-NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
+    void
+    NfsCo::getNfsData(const EtcFstab& fstab, SystemInfo& systeminfo)
     {
-    const list<FstabEntry> l1 = fstab.getEntries();
-    for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
+	const list<FstabEntry> l1 = fstab.getEntries();
+	for (list<FstabEntry>::const_iterator i = l1.begin(); i != l1.end(); ++i)
 	{
-	if( i->fs == "nfs" || i->fs == "nfs4")
+	    if( i->fs == "nfs" || i->fs == "nfs4")
 	    {
-	    Nfs *n = new Nfs(*this, i->device, i->fs == "nfs4");
-	    n->setMount( i->mount );
-	    string opt = boost::join(i->opts, ",");
-	    if (opt != "defaults")
-		n->setFstabOption(opt);
-	    addToList( n );
-	    }
-	}
-
-    const list<FstabEntry> l2 = systeminfo.getProcMounts().getEntries();
-    for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
-	{
-	if( i->fs == "nfs" || i->fs == "nfs4")
-	    {
-	    Nfs *n = NULL;
-	    NfsIter nfs;
-
-	    if( findNfs( Nfs::canonicalName(i->device), nfs ))
-		{
-		n = &(*nfs);
-
-		list<string> tmp = n->altNames();
-		if (!contains(tmp, i->device))
-		{
-		    tmp.push_back(i->device);
-		    n->setAltNames(tmp);
-		}
-		}
-	    else
-		{
-		n = new Nfs(*this, i->device, i->fs == "nfs4");
-		n->setIgnoreFstab();
-		string opt = boost::join(filterOpts(i->opts), ",");
-		n->setFstabOption(opt);
+		Nfs *n = new Nfs(*this, i->device, i->fs == "nfs4");
+		n->setMount( i->mount );
+		string opt = boost::join(i->opts, ",");
+		if (opt != "defaults")
+		    n->setFstabOption(opt);
 		addToList( n );
+	    }
+	}
+
+	const list<FstabEntry> l2 = systeminfo.getProcMounts().getEntries();
+	for (list<FstabEntry>::const_iterator i = l2.begin(); i != l2.end(); ++i)
+	{
+	    if( i->fs == "nfs" || i->fs == "nfs4")
+	    {
+		Nfs *n = NULL;
+		NfsIter nfs;
+
+		if( findNfs( Nfs::canonicalName(i->device), nfs ))
+		{
+		    n = &(*nfs);
+
+		    list<string> tmp = n->altNames();
+		    if (!contains(tmp, i->device))
+		    {
+			tmp.push_back(i->device);
+			n->setAltNames(tmp);
+		    }
+		}
+		else
+		{
+		    n = new Nfs(*this, i->device, i->fs == "nfs4");
+		    n->setIgnoreFstab();
+		    string opt = boost::join(filterOpts(i->opts), ",");
+		    n->setFstabOption(opt);
+		    addToList( n );
 		}
 
-	    StatVfs vfsbuf;
-	    getStatVfs(i->mount, vfsbuf);
-	    n->setSize(vfsbuf.sizeK);
+		StatVfs vfsbuf;
+		getStatVfs(i->mount, vfsbuf);
+		n->setSize(vfsbuf.sizeK);
 	    }
 	}
     }
 
 
-bool
-NfsCo::findNfs( const string& dev, NfsIter& i )
+    bool
+    NfsCo::findNfs( const string& dev, NfsIter& i )
     {
-    NfsPair p=nfsPair();
-    i=p.begin();
-    while( i!=p.end() && !i->sameDevice(dev) )
-	++i;
-    return( i!=p.end() );
+	NfsPair p=nfsPair();
+	i=p.begin();
+	while( i!=p.end() && !i->sameDevice(dev) )
+	    ++i;
+	return( i!=p.end() );
     }
 
-bool
-NfsCo::findNfs( const string& dev )
+    bool
+    NfsCo::findNfs( const string& dev )
     {
-    NfsIter i;
-    return( findNfs( dev, i ));
+	NfsIter i;
+	return( findNfs( dev, i ));
     }
 
 
     std::ostream& operator<<(std::ostream& s, const NfsCo& d)
     {
-    s << dynamic_cast<const Container&>(d);
-    return( s );
+	s << dynamic_cast<const Container&>(d);
+	return( s );
     }
 
 
@@ -249,19 +249,19 @@ NfsCo::findNfs( const string& dev )
     }
 
 
-bool NfsCo::equalContent( const Container& rhs ) const
+    bool NfsCo::equalContent( const Container& rhs ) const
     {
-    const NfsCo* p = NULL;
-    bool ret = Container::equalContent(rhs);
-    if( ret )
-	p = dynamic_cast<const NfsCo*>(&rhs);
-    if( ret && p )
+	const NfsCo* p = NULL;
+	bool ret = Container::equalContent(rhs);
+	if( ret )
+	    p = dynamic_cast<const NfsCo*>(&rhs);
+	if( ret && p )
 	{
-	ConstNfsPair pp = nfsPair();
-	ConstNfsPair pc = p->nfsPair();
-	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+	    ConstNfsPair pp = nfsPair();
+	    ConstNfsPair pc = p->nfsPair();
+	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
-    return( ret );
+	return( ret );
     }
 
 }

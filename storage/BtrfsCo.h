@@ -32,9 +32,9 @@ namespace storage
     class SystemInfo;
 
 
-class BtrfsCo : public Container
+    class BtrfsCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -67,7 +67,7 @@ class BtrfsCo : public Container
 			  list<const Volume*>& vo ) const;
 
 	int resizeVolume( Volume* v, Container* r_co, Volume* r_v,
-	                  unsigned long long newSize );
+			  unsigned long long newSize );
 	int removeVolume( Volume* v );
 	int removeVolume( Volume* v, bool quiet );
 	int removeUuid( const string& uuid );
@@ -78,16 +78,16 @@ class BtrfsCo : public Container
 	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 	virtual void logData(const string& Dir) const;
 
-	
+
     protected:
 	// iterators over BTRFS volumes
 	// protected typedefs for iterators over BTRFS volumes
 	typedef CastIterator<VIter, Btrfs *> BtrfsInter;
 	typedef CastIterator<CVIter, const Btrfs *> BtrfsCInter;
 	template< class Pred >
-	    struct BtrfsPI { typedef ContainerIter<Pred, BtrfsInter> type; };
+	struct BtrfsPI { typedef ContainerIter<Pred, BtrfsInter> type; };
 	template< class Pred >
-	    struct BtrfsCPI { typedef ContainerIter<Pred, BtrfsCInter> type; };
+	struct BtrfsCPI { typedef ContainerIter<Pred, BtrfsCInter> type; };
 	typedef CheckFnc<const Btrfs> CheckFncBtrfs;
 	typedef CheckerIterator< CheckFncBtrfs, BtrfsPI<CheckFncBtrfs>::type,
 				 BtrfsInter, Btrfs > BtrfsPIterator;
@@ -100,32 +100,32 @@ class BtrfsCo : public Container
 
 	BtrfsPair btrfsPair( bool (* Check)( const Btrfs& )=NULL)
 	    {
-	    return( BtrfsPair( btrfsBegin( Check ), btrfsEnd( Check ) ));
+		return( BtrfsPair( btrfsBegin( Check ), btrfsEnd( Check ) ));
 	    }
 	BtrfsIter btrfsBegin( bool (* Check)( const Btrfs& )=NULL)
 	    {
-	    IterPair<BtrfsInter> p( (BtrfsInter(begin())), (BtrfsInter(end())) );
-	    return( BtrfsIter( BtrfsPIterator( p, Check )) );
+		IterPair<BtrfsInter> p( (BtrfsInter(begin())), (BtrfsInter(end())) );
+		return( BtrfsIter( BtrfsPIterator( p, Check )) );
 	    }
 	BtrfsIter btrfsEnd( bool (* Check)( const Btrfs& )=NULL)
 	    {
-	    IterPair<BtrfsInter> p( (BtrfsInter(begin())), (BtrfsInter(end())) );
-	    return( BtrfsIter( BtrfsPIterator( p, Check, true )) );
+		IterPair<BtrfsInter> p( (BtrfsInter(begin())), (BtrfsInter(end())) );
+		return( BtrfsIter( BtrfsPIterator( p, Check, true )) );
 	    }
 
 	ConstBtrfsPair btrfsPair( bool (* Check)( const Btrfs& )=NULL) const
 	    {
-	    return( ConstBtrfsPair( btrfsBegin( Check ), btrfsEnd( Check ) ));
+		return( ConstBtrfsPair( btrfsBegin( Check ), btrfsEnd( Check ) ));
 	    }
 	ConstBtrfsIter btrfsBegin( bool (* Check)( const Btrfs& )=NULL) const
 	    {
-	    IterPair<BtrfsCInter> p( (BtrfsCInter(begin())), (BtrfsCInter(end())) );
-	    return( ConstBtrfsIter( BtrfsCPIterator( p, Check )) );
+		IterPair<BtrfsCInter> p( (BtrfsCInter(begin())), (BtrfsCInter(end())) );
+		return( ConstBtrfsIter( BtrfsCPIterator( p, Check )) );
 	    }
 	ConstBtrfsIter btrfsEnd( bool (* Check)( const Btrfs& )=NULL) const
 	    {
-	    IterPair<BtrfsCInter> p( (BtrfsCInter(begin())), (BtrfsCInter(end())) );
-	    return( ConstBtrfsIter( BtrfsCPIterator( p, Check, true )) );
+		IterPair<BtrfsCInter> p( (BtrfsCInter(begin())), (BtrfsCInter(end())) );
+		return( ConstBtrfsIter( BtrfsCPIterator( p, Check, true )) );
 	    }
 
 	void getBtrfsData(SystemInfo& systeminfo);
@@ -138,7 +138,7 @@ class BtrfsCo : public Container
     private:
 
 	BtrfsCo& operator=(const BtrfsCo&); // disallow
-	
+
     };
 
 }

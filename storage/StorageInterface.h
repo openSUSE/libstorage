@@ -56,7 +56,7 @@ using std::map;
  *
  * When the caching mode is enabled a call of e.g. \link
  * storage::StorageInterface::createPartition() createPartition() \endlink
- * will only change the internal cache.  The user has to call \link
+ * will only change the internal cache.	 The user has to call \link
  * storage::StorageInterface::commit() commit() \endlink later on to actually
  * create the partition on the disk.
  *
@@ -463,7 +463,7 @@ namespace storage
 	string dm_target;
 	string origin;
 	string used_pool;
-        bool pool;
+	bool pool;
     };
 
     /**
@@ -509,13 +509,13 @@ namespace storage
      */
     struct MdPartCoInfo
     {
-        MdPartCoInfo() {}
-        DiskInfo d;
-	unsigned type;        // RAID level
-        unsigned nr;          // MD device number
-        unsigned parity;      // Parity (not for all RAID level)
-        string   uuid;        // MD Device UUID
-        string   sb_ver;      // Metadata version
+	MdPartCoInfo() {}
+	DiskInfo d;
+	unsigned type;	      // RAID level
+	unsigned nr;	      // MD device number
+	unsigned parity;      // Parity (not for all RAID level)
+	string	 uuid;	      // MD Device UUID
+	string	 sb_ver;      // Metadata version
 	unsigned long chunkSizeK;  // Chunksize (strip size)
 	list<string> devices;
 	list<string> spares;
@@ -523,8 +523,8 @@ namespace storage
 
     struct MdPartCoStateInfo
     {
-        MdPartCoStateInfo() {}
-        MdArrayState state;
+	MdPartCoStateInfo() {}
+	MdArrayState state;
     };
 
     /**
@@ -532,10 +532,10 @@ namespace storage
      */
     struct MdPartInfo
     {
-        MdPartInfo() {}
-        VolumeInfo v;
-        PartitionAddInfo p;
-        bool part;
+	MdPartInfo() {}
+	VolumeInfo v;
+	PartitionAddInfo p;
+	bool part;
     };
 
     /**
@@ -984,7 +984,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getContDiskInfo( const string& disk, ContainerInfo& cinfo,
-	                             DiskInfo& info ) = 0;
+				     DiskInfo& info ) = 0;
 
 	/**
 	 * Query info for a LVM volume group
@@ -1004,7 +1004,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getContLvmVgInfo( const string& name, ContainerInfo& cinfo,
-	                              LvmVgInfo& info) = 0;
+				      LvmVgInfo& info) = 0;
 
 	/**
 	 * Query container info for a DMRAID container
@@ -1024,7 +1024,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getContDmraidCoInfo( const string& name, ContainerInfo& cinfo,
-				         DmraidCoInfo& info) = 0;
+					 DmraidCoInfo& info) = 0;
 
 	/**
 	 * Query container info for a DMMULTIPATH container
@@ -1065,7 +1065,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
-                                         MdPartCoInfo& info) = 0;
+					 MdPartCoInfo& info) = 0;
 
 	/**
 	 * Set whether multipath should be started automatically if detected.
@@ -1074,11 +1074,11 @@ namespace storage
 	 */
 	virtual void setMultipathAutostart(MultipathAutostart multipath_autostart) = 0;
 
-        /**
+	/**
 	 * Query whether multipath should be started automatically if detected.
-         *
-         * @return value for automatically start of multipath.
-         */
+	 *
+	 * @return value for automatically start of multipath.
+	 */
 	virtual MultipathAutostart getMultipathAutostart() const = 0;
 
 	/**
@@ -1105,7 +1105,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getPartitionInfo( const string& disk,
-	                              deque<PartitionInfo>& plist ) = 0;
+				      deque<PartitionInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for LVM LVs of a LVM VG
@@ -1133,7 +1133,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMdPartInfo( const string& device,
-	                           deque<MdPartInfo>& plist ) = 0;
+				   deque<MdPartInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for nfs devices in system
@@ -1183,7 +1183,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getDmraidInfo( const string& name,
-	                           deque<DmraidInfo>& plist ) = 0;
+				   deque<DmraidInfo>& plist ) = 0;
 
 	/**
 	 * Query infos for dmmultipath devices in system
@@ -1268,7 +1268,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int freeCylindersAroundPartition(const string& device,
-	                                         unsigned long& SWIG_OUTPUT(freeCylsBefore),
+						 unsigned long& SWIG_OUTPUT(freeCylsBefore),
 						 unsigned long& SWIG_OUTPUT(freeCylsAfter)) = 0;
 
 	/**
@@ -1285,8 +1285,8 @@ namespace storage
 	 * region, e.g. for DASD partition table.
 	 */
 	virtual int nextFreePartition( const string& disk, PartitionType type,
-	                               unsigned & SWIG_OUTPUT(nr),
-	                               string& SWIG_OUTPUT(device) ) = 0;
+				       unsigned & SWIG_OUTPUT(nr),
+				       string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a new partition. Units given in Kilobytes.
@@ -1338,7 +1338,7 @@ namespace storage
 	 * @return number of kilobytes of given cylinders
 	 */
 	virtual unsigned long long cylinderToKb( const string& disk,
-	                                         unsigned long sizeCyl) = 0;
+						 unsigned long sizeCyl) = 0;
 
 	/**
 	 * Compute number of disk cylinders needed for given space
@@ -1512,7 +1512,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int getMountBy( const string& device,
-	                        MountByType& SWIG_OUTPUT(mby) ) = 0;
+				MountByType& SWIG_OUTPUT(mby) ) = 0;
 
 	/**
 	 * Changes the fstab options of a volume
@@ -1594,7 +1594,7 @@ namespace storage
 	 * @return zero if password is ok, a negative number to indicate an error
 	 */
 	virtual int verifyCryptPassword( const string& device,
-	                                 const string& pwd, bool erase ) = 0;
+					 const string& pwd, bool erase ) = 0;
 
 	/**
 	 * Check if crypt password is required
@@ -1678,7 +1678,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int addFstabEntry( const string& device, const string& mount,
-	                           const string& vfs, const string& options,
+				   const string& vfs, const string& options,
 				   unsigned freq, unsigned passno ) = 0;
 
 
@@ -1899,8 +1899,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmVg( const string& name,
-	                         unsigned long long peSizeK, bool lvm1,
-	                         const deque<string>& devs ) = 0;
+				 unsigned long long peSizeK, bool lvm1,
+				 const deque<string>& devs ) = 0;
 
 	/**
 	 * Remove a LVM volume group. If the volume group contains
@@ -1919,7 +1919,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int extendLvmVg( const string& name,
-	                         const deque<string>& devs ) = 0;
+				 const deque<string>& devs ) = 0;
 
 	/**
 	 * Shrink a LVM volume group
@@ -1929,7 +1929,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int shrinkLvmVg( const string& name,
-	                         const deque<string>& devs ) = 0;
+				 const deque<string>& devs ) = 0;
 
 	/**
 	 * Create a LVM logical volume
@@ -1943,7 +1943,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLv( const string& vg, const string& name,
-	                         unsigned long long sizeK, unsigned stripes,
+				 unsigned long long sizeK, unsigned stripes,
 				 string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
@@ -1973,7 +1973,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvStripeCount( const string& vg, const string& name,
-	                                 unsigned long stripes ) = 0;
+					 unsigned long stripes ) = 0;
 
 	/**
 	 * Change stripe size of a LVM logical volume.
@@ -1985,7 +1985,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvStripeSize( const string& vg, const string& name,
-	                                unsigned long long stripeSizeK) = 0;
+					unsigned long long stripeSizeK) = 0;
 
 	/**
 	 * Create a LVM logical volume snapshot
@@ -2033,8 +2033,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLvPool(const string& vg, const string& name,
-                                    unsigned long long sizeK,
-                                    string& SWIG_OUTPUT(device) ) = 0;
+				    unsigned long long sizeK,
+				    string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Create a LVM logical volume that is thin provisioned
@@ -2047,9 +2047,9 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createLvmLvThin(const string& vg, const string& name,
-                                    const string& pool,
-                                    unsigned long long sizeK,
-                                    string& SWIG_OUTPUT(device) ) = 0;
+				    const string& pool,
+				    unsigned long long sizeK,
+				    string& SWIG_OUTPUT(device) ) = 0;
 
 	/**
 	 * Change chunk size of a LVM pool or snapshot.
@@ -2061,15 +2061,15 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int changeLvChunkSize( const string& vg, const string& name,
-                                       unsigned long long chunkSizeK) = 0;
+				       unsigned long long chunkSizeK) = 0;
 
 	/**
-         * Determine the device name of the next created software raid device
-         *
-         * @param nr is set to the number of the next created software raid device
-         * @param device is set to the device name of the next created software raid device
-         * @return zero if all is ok, a negative number to indicate an error
-         */
+	 * Determine the device name of the next created software raid device
+	 *
+	 * @param nr is set to the number of the next created software raid device
+	 * @param device is set to the device name of the next created software raid device
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
 	virtual int nextFreeMd(unsigned& SWIG_OUTPUT(nr),
 			       string& SWIG_OUTPUT(device)) = 0;
 
@@ -2103,7 +2103,7 @@ namespace storage
 	 *
 	 * @param name name of software raid device to remove (e.g. /dev/md0)
 	 * @param destroySb flag if the MD superblocks on the physical devices
-	 *        should be destroyed after md device is deleted
+	 *	  should be destroyed after md device is deleted
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int removeMd( const string& name, bool destroySb ) = 0;
@@ -2193,17 +2193,17 @@ namespace storage
 	 */
 	virtual int getMdStateInfo(const string& name, MdStateInfo& info) = 0;
 
-        /**
-         * Get state of a MD software raid device.
-         *
-         * @pre This can only be done after the raid has been created on disk.
-         *
-         * @param name name of software raid device (e.g. /dev/md125)
-         * @param info record that gets filled with raid special data
-         * @return zero if all is ok, a negative number to indicate an error
-         */
+	/**
+	 * Get state of a MD software raid device.
+	 *
+	 * @pre This can only be done after the raid has been created on disk.
+	 *
+	 * @param name name of software raid device (e.g. /dev/md125)
+	 * @param info record that gets filled with raid special data
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
 	virtual int getMdPartCoStateInfo(const string& name,
-                                         MdPartCoStateInfo& info) = 0;
+					 MdPartCoStateInfo& info) = 0;
 
 	/**
 	 * Compute the size of a raid device.
@@ -2229,16 +2229,16 @@ namespace storage
 	 */
 	virtual list<int> getMdAllowedParity(MdType md_type, unsigned devnr) = 0;
 
-        /**
-         * Remove a Partitionable Software raid device.
-         *
-         * Only RAID with persistent superblock can be removed. IMSM and DDF
-         * RAIDs cannot be removed.
-         * @param name name of software raid device to remove (e.g. /dev/md0)
-         * @param destroySb flag if the MD superblocks on the physical devices
-         *        should be destroyed after md device is deleted
-         * @return zero if all is ok, a negative number to indicate an error
-         */
+	/**
+	 * Remove a Partitionable Software raid device.
+	 *
+	 * Only RAID with persistent superblock can be removed. IMSM and DDF
+	 * RAIDs cannot be removed.
+	 * @param name name of software raid device to remove (e.g. /dev/md0)
+	 * @param destroySb flag if the MD superblocks on the physical devices
+	 *	  should be destroyed after md device is deleted
+	 * @return zero if all is ok, a negative number to indicate an error
+	 */
 	virtual int removeMdPartCo(const string& name, bool destroySb ) = 0;
 
 	/**
@@ -2284,7 +2284,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int createFileLoop( const string& lname, bool reuseExisting,
-	                            unsigned long long sizeK,
+				    unsigned long long sizeK,
 				    const string& mp, const string& pwd,
 				    string& SWIG_OUTPUT(device) ) = 0;
 
@@ -2306,8 +2306,8 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int modifyFileLoop( const string& device, const string& lname,
-	                            bool reuseExisting,
-	                            unsigned long long sizeK ) = 0;
+				    bool reuseExisting,
+				    unsigned long long sizeK ) = 0;
 
 	/**
 	 * Remove a file based loop device from the system.
@@ -2657,7 +2657,7 @@ namespace storage
 	 * @return bool if mount succeeded
 	 */
 	virtual bool mountDeviceOpts( const string& device, const string& mp,
-	                              const string& opts ) = 0;
+				      const string& opts ) = 0;
 
 	/**
 	 * Mount the given device readonly and do what is necessary to access
@@ -2671,7 +2671,7 @@ namespace storage
 	 * @return bool if mount succeeded
 	 */
 	virtual bool mountDeviceRo( const string& device, const string& mp,
-	                            const string& opts ) = 0;
+				    const string& opts ) = 0;
 
 	/**
 	 * Check if there are dm maps to a given device
@@ -2697,7 +2697,7 @@ namespace storage
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
 	virtual int renameCryptDm( const string& device,
-                                   const string& new_name ) = 0;
+				   const string& new_name ) = 0;
 
 	/**
 	 * Detect potentially available free space on a partition
@@ -2816,7 +2816,7 @@ namespace storage
      * entry. Called function should be able to split content at newlines
      */
     typedef void (*CallbackLogDo)( int level, const string& component, const char* file,
-                                   int line, const char* function, const string& content );
+				   int line, const char* function, const string& content );
 
     /**
      * typedef for a pointer to a function that returns if specified level
@@ -2852,9 +2852,9 @@ namespace storage
 	Environment(bool readonly, const string& logdir = "/var/log/YaST2")
 	    : readonly(readonly), testmode(false), autodetect(true),
 	      instsys(false), logdir(logdir), testdir("tmp")
-            {
-            storage::initDefaultLogger( logdir );
-            }
+	    {
+		storage::initDefaultLogger( logdir );
+	    }
 
 	bool readonly;
 	bool testmode;

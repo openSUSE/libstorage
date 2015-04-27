@@ -2429,7 +2429,7 @@ namespace storage
 		    string mp = vol->getMount();
 		    bool mounted = vol->isMounted();
 		    bool mby_uuid = vol->getMountBy()==MOUNTBY_UUID;
-		    y2mil( "mounted btrfs:" <<  mounted );
+		    y2mil( "mounted btrfs:" <<	mounted );
 		    co->eraseVolume( &(*vol) );
 		    if( findVolume( device, vol ) && vol->cType()!=BTRFSC )
 		    {
@@ -4897,7 +4897,7 @@ namespace storage
 
     static bool sort_vol_delete( const Volume* rhs, const Volume* lhs )
     {
-	if( rhs->isMounted()==lhs->isMounted()  )
+	if( rhs->isMounted()==lhs->isMounted()	)
 	{
 	    if( rhs->isMounted() )
 		return( rhs->getMount()>lhs->getMount() );
@@ -5931,11 +5931,11 @@ namespace storage
 	    y2mil( "vol:" << *vol );
 	    if( vol->dmcrypt() )
 	    {
-		string dmnew =  new_name;
+		string dmnew =	new_name;
 		string::size_type pos = dmnew.find_last_of("/");
 		if( pos!=string::npos )
 		    dmnew.erase( 0, pos+1 );
-		string dmold =  vol->dmcryptDevice();
+		string dmold =	vol->dmcryptDevice();
 		pos = dmold.find_last_of("/");
 		if( pos!=string::npos )
 		    dmold.erase( 0, pos+1 );

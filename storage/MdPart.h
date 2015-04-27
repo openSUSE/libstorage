@@ -31,40 +31,40 @@
 namespace storage
 {
 
-class MdPartCo;
-class ProcParts;
+    class MdPartCo;
+    class ProcParts;
 
-class MdPart : public Volume
+    class MdPart : public Volume
     {
     public:
 
-        MdPart(const MdPartCo& c, const string& name, const string& device, unsigned nr,
+	MdPart(const MdPartCo& c, const string& name, const string& device, unsigned nr,
 	       Partition* p);
-        MdPart(const MdPartCo& c, const MdPart& v);
-        virtual ~MdPart();
+	MdPart(const MdPartCo& c, const MdPart& v);
+	virtual ~MdPart();
 
-        friend std::ostream& operator<< (std::ostream& s, const MdPart &p );
-        virtual void print( std::ostream& s ) const { s << *this; }
-        void getInfo( storage::MdPartInfo& info ) const;
+	friend std::ostream& operator<< (std::ostream& s, const MdPart &p );
+	virtual void print( std::ostream& s ) const { s << *this; }
+	void getInfo( storage::MdPartInfo& info ) const;
 
-        bool equalContent( const MdPart& rhs ) const;
+	bool equalContent( const MdPart& rhs ) const;
 
-        void logDifference(std::ostream& log, const MdPart& rhs) const;
+	void logDifference(std::ostream& log, const MdPart& rhs) const;
 
-        void setPtr( Partition* pa ) { p=pa; };
-        Partition* getPtr() const { return p; };
-        unsigned id() const { return p?p->id():0; }
-        void updateName();
-        void updateMinor();
-        void updateSize(const ProcParts& pp);
-        void updateSize();
-        void getCommitActions(list<commitAction>& l) const;
-        void addUdevData();
-        virtual list<string> udevId() const;
+	void setPtr( Partition* pa ) { p=pa; };
+	Partition* getPtr() const { return p; };
+	unsigned id() const { return p?p->id():0; }
+	void updateName();
+	void updateMinor();
+	void updateSize(const ProcParts& pp);
+	void updateSize();
+	void getCommitActions(list<commitAction>& l) const;
+	void addUdevData();
+	virtual list<string> udevId() const;
 
-        virtual Text setTypeText(bool doing) const;
+	virtual Text setTypeText(bool doing) const;
 
-        static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
+	static bool notDeleted( const MdPart& l ) { return( !l.deleted() ); }
 
 	virtual string procName() const { return nm; }
 	virtual string sysfsPath() const;
@@ -73,9 +73,9 @@ class MdPart : public Volume
 
     protected:
 
-        const MdPartCo* co() const;
-        void addAltUdevId( unsigned num );
-        Partition* p;
+	const MdPartCo* co() const;
+	void addAltUdevId( unsigned num );
+	Partition* p;
 
     private:
 

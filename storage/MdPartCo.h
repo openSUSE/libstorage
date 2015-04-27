@@ -38,28 +38,28 @@ namespace storage
     class Region;
 
 
-/**
- * Class: MdPartCo
- *
- * Brief:
- *  MD RAID Volume that can be partitioned and used as container for partitions.
-*/
-class MdPartCo : public Container
+    /**
+     * Class: MdPartCo
+     *
+     * Brief:
+     *	MD RAID Volume that can be partitioned and used as container for partitions.
+     */
+    class MdPartCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 	friend class Md;
 
     public:
 
 	MdPartCo(Storage* s, const string& name, const string& device, SystemInfo& systeminfo);
-    MdPartCo(const MdPartCo& c);
-    virtual ~MdPartCo();
+	MdPartCo(const MdPartCo& c);
+	virtual ~MdPartCo();
 
-    const string& labelName() const { return disk->labelName(); }
+	const string& labelName() const { return disk->labelName(); }
 	virtual list<string> udevId() const { return udev_id; }
-    unsigned numPartitions() const { return disk->numPartitions(); }
-    static storage::CType staticType() { return storage::MDPART; }
-    friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
+	unsigned numPartitions() const { return disk->numPartitions(); }
+	static storage::CType staticType() { return storage::MDPART; }
+	friend std::ostream& operator<< (std::ostream&, const MdPartCo& );
 
 	void setUdevData(SystemInfo& systeminfo);
 
@@ -70,189 +70,189 @@ class MdPartCo : public Container
 
 	int getMdPartCoState(MdPartCoStateInfo& info) const;
 
-    int createPartition( storage::PartitionType type, long unsigned start,
-        long unsigned len, string& device,
-        bool checkRelaxed=false );
-    int createPartition( long unsigned len, string& device,
-        bool checkRelaxed=false );
-    int createPartition( storage::PartitionType type, string& device );
-    int removePartition( unsigned nr );
-    int changePartitionId( unsigned nr, unsigned id );
-    int forgetChangePartitionId( unsigned nr );
+	int createPartition( storage::PartitionType type, long unsigned start,
+			     long unsigned len, string& device,
+			     bool checkRelaxed=false );
+	int createPartition( long unsigned len, string& device,
+			     bool checkRelaxed=false );
+	int createPartition( storage::PartitionType type, string& device );
+	int removePartition( unsigned nr );
+	int changePartitionId( unsigned nr, unsigned id );
+	int forgetChangePartitionId( unsigned nr );
 	int changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed = false);
-    int nextFreePartition(storage::PartitionType type, unsigned& nr,
-        string& device) const;
-    int destroyPartitionTable( const string& new_label );
+	int nextFreePartition(storage::PartitionType type, unsigned& nr,
+			      string& device) const;
+	int destroyPartitionTable( const string& new_label );
 	int freeCylindersAroundPartition(const MdPart* p, unsigned long& freeCylsBefore,
 					 unsigned long& freeCylsAfter) const;
-    int resizePartition( MdPart* p, unsigned long newCyl );
-    int resizeVolume( Volume* v, unsigned long long newSize );
-    int removeVolume( Volume* v );
-    int removeMdPart();
+	int resizePartition( MdPart* p, unsigned long newCyl );
+	int resizeVolume( Volume* v, unsigned long long newSize );
+	int removeVolume( Volume* v );
+	int removeMdPart();
 
-    unsigned maxPrimary() const { return disk->maxPrimary(); }
-    bool extendedPossible() const { return disk->extendedPossible(); }
-    unsigned maxLogical() const { return disk->maxLogical(); }
+	unsigned maxPrimary() const { return disk->maxPrimary(); }
+	bool extendedPossible() const { return disk->extendedPossible(); }
+	unsigned maxLogical() const { return disk->maxLogical(); }
 
-    unsigned int numPrimary() const { return disk->numPrimary(); }
-    bool hasExtended() const { return disk->hasExtended(); }
-    unsigned int numLogical() const { return disk->numLogical(); }
+	unsigned int numPrimary() const { return disk->numPrimary(); }
+	bool hasExtended() const { return disk->hasExtended(); }
+	unsigned int numLogical() const { return disk->numLogical(); }
 
 	list<PartitionSlotInfo> getUnusedPartitionSlots() const
 	    { return disk->getUnusedPartitionSlots(); }
 
-    unsigned long long cylinderToKb( unsigned long val ) const
-    { return disk->cylinderToKb( val ); }
-    unsigned long kbToCylinder( unsigned long long val ) const
-    { return disk->kbToCylinder( val ); }
+	unsigned long long cylinderToKb( unsigned long val ) const
+	    { return disk->cylinderToKb( val ); }
+	unsigned long kbToCylinder( unsigned long long val ) const
+	    { return disk->kbToCylinder( val ); }
 
 	string getPartName(unsigned nr) const;
 	string getPartDevice(unsigned nr) const;
 
-    virtual void getCommitActions(list<commitAction>& l) const;
-    virtual void getToCommit(CommitStage stage, list<const Container*>& col,
-			     list<const Volume*>& vol) const;
-    virtual int commitChanges( storage::CommitStage stage );
-    int commitChanges( storage::CommitStage stage, Volume* vol );
+	virtual void getCommitActions(list<commitAction>& l) const;
+	virtual void getToCommit(CommitStage stage, list<const Container*>& col,
+				 list<const Volume*>& vol) const;
+	virtual int commitChanges( storage::CommitStage stage );
+	int commitChanges( storage::CommitStage stage, Volume* vol );
 
-    Partition* getPartition( unsigned nr, bool del );
+	Partition* getPartition( unsigned nr, bool del );
 
 	virtual list<string> getUsing() const;
 
-    void getInfo( storage::MdPartCoInfo& info ) const;
-    bool equalContent( const Container& rhs ) const;
+	void getInfo( storage::MdPartCoInfo& info ) const;
+	bool equalContent( const Container& rhs ) const;
 
 	void logDifference(std::ostream& log, const MdPartCo& rhs) const;
 	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
 
-    MdPartCo& operator= ( const MdPartCo& rhs );
-    static string undevName( const string& name );
+	MdPartCo& operator= ( const MdPartCo& rhs );
+	static string undevName( const string& name );
 
 	static list<string> getMdRaids(SystemInfo& systeminfo);
 
 	void syncMdadm(EtcMdadm* mdadm) const;
 
-    /* Returns Md number. */
-    unsigned nr() const { return mnr; }
+	/* Returns Md number. */
+	unsigned nr() const { return mnr; }
 
 	unsigned long chunkSizeK() const { return chunk_k; }
 
-    storage::MdType personality() const { return md_type; }
+	storage::MdType personality() const { return md_type; }
 
 	const string& getMdUuid() const { return md_uuid; }
 
-    /* Devices from which RAID is composed. */
+	/* Devices from which RAID is composed. */
 	list<string> getDevs(bool all = true, bool spare = false) const;
 
-    static void activate( bool val, const string& tmpDir  );
+	static void activate( bool val, const string& tmpDir  );
 
-    static bool isActive() { return active; }
+	static bool isActive() { return active; }
 
 	static bool hasPartitionTable(const string& name, SystemInfo& systeminfo);
 	static bool hasFileSystem(const string& name, SystemInfo& systeminfo);
 
-    static bool matchRegex( const string& dev );
-    static bool mdStringNum( const string& name, unsigned& num );
+	static bool matchRegex( const string& dev );
+	static bool mdStringNum( const string& name, unsigned& num );
 
-    /* filterMdPartCo
-     * Get list of detected MD RAIDs and filters them for
-     * those which can be handled by MdPartCo.
-     */
+	/* filterMdPartCo
+	 * Get list of detected MD RAIDs and filters them for
+	 * those which can be handled by MdPartCo.
+	 */
 	static list<string> filterMdPartCo(const list<string>& raidList, SystemInfo& systeminfo,
 					   bool instsys);
 
     protected:
-    // iterators over partitions
-    // protected typedefs for iterators over partitions
-    typedef CastIterator<VIter, MdPart *> MdPartInter;
-    typedef CastIterator<CVIter, const MdPart *> MdPartCInter;
-    template< class Pred >
-        struct MdPartPI { typedef ContainerIter<Pred, MdPartInter> type; };
-    template< class Pred >
-        struct MdPartCPI { typedef ContainerIter<Pred, MdPartCInter> type; };
-    typedef CheckFnc<const MdPart> CheckFncMdPart;
-    typedef CheckerIterator< CheckFncMdPart, MdPartPI<CheckFncMdPart>::type,
-                             MdPartInter, MdPart > MdPartPIterator;
-    typedef CheckerIterator< CheckFncMdPart, MdPartCPI<CheckFncMdPart>::type,
-                             MdPartCInter, const MdPart > MdPartCPIterator;
-    typedef DerefIterator<MdPartPIterator,MdPart> MdPartIter;
-    typedef DerefIterator<MdPartCPIterator,const MdPart> ConstMdPartIter;
-    typedef IterPair<MdPartIter> MdPartPair;
-    typedef IterPair<ConstMdPartIter> ConstMdPartPair;
+	// iterators over partitions
+	// protected typedefs for iterators over partitions
+	typedef CastIterator<VIter, MdPart *> MdPartInter;
+	typedef CastIterator<CVIter, const MdPart *> MdPartCInter;
+	template< class Pred >
+	struct MdPartPI { typedef ContainerIter<Pred, MdPartInter> type; };
+	template< class Pred >
+	struct MdPartCPI { typedef ContainerIter<Pred, MdPartCInter> type; };
+	typedef CheckFnc<const MdPart> CheckFncMdPart;
+	typedef CheckerIterator< CheckFncMdPart, MdPartPI<CheckFncMdPart>::type,
+				 MdPartInter, MdPart > MdPartPIterator;
+	typedef CheckerIterator< CheckFncMdPart, MdPartCPI<CheckFncMdPart>::type,
+				 MdPartCInter, const MdPart > MdPartCPIterator;
+	typedef DerefIterator<MdPartPIterator,MdPart> MdPartIter;
+	typedef DerefIterator<MdPartCPIterator,const MdPart> ConstMdPartIter;
+	typedef IterPair<MdPartIter> MdPartPair;
+	typedef IterPair<ConstMdPartIter> ConstMdPartPair;
 
-    MdPartPair mdpartPair( bool (* CheckMdPart)( const MdPart& )=NULL)
-        {
-        return( MdPartPair( mdpartBegin( CheckMdPart ), mdpartEnd( CheckMdPart ) ));
-        }
-    MdPartIter mdpartBegin( bool (* CheckMdPart)( const MdPart& )=NULL)
-        {
-        IterPair<MdPartInter> p( (MdPartInter(begin())), (MdPartInter(end())) );
-        return( MdPartIter( MdPartPIterator( p, CheckMdPart )) );
-        }
-    MdPartIter mdpartEnd( bool (* CheckMdPart)( const MdPart& )=NULL)
-        {
-        IterPair<MdPartInter> p( (MdPartInter(begin())), (MdPartInter(end())) );
-        return( MdPartIter( MdPartPIterator( p, CheckMdPart, true )) );
-        }
+	MdPartPair mdpartPair( bool (* CheckMdPart)( const MdPart& )=NULL)
+	{
+	    return( MdPartPair( mdpartBegin( CheckMdPart ), mdpartEnd( CheckMdPart ) ));
+	}
+	MdPartIter mdpartBegin( bool (* CheckMdPart)( const MdPart& )=NULL)
+	{
+	    IterPair<MdPartInter> p( (MdPartInter(begin())), (MdPartInter(end())) );
+	    return( MdPartIter( MdPartPIterator( p, CheckMdPart )) );
+	}
+	MdPartIter mdpartEnd( bool (* CheckMdPart)( const MdPart& )=NULL)
+	{
+	    IterPair<MdPartInter> p( (MdPartInter(begin())), (MdPartInter(end())) );
+	    return( MdPartIter( MdPartPIterator( p, CheckMdPart, true )) );
+	}
 
-    ConstMdPartPair mdpartPair( bool (* CheckMdPart)( const MdPart& )=NULL) const
-        {
-        return( ConstMdPartPair( mdpartBegin( CheckMdPart ), mdpartEnd( CheckMdPart ) ));
-        }
-    ConstMdPartIter mdpartBegin( bool (* CheckMdPart)( const MdPart& )=NULL) const
-        {
-        IterPair<MdPartCInter> p( (MdPartCInter(begin())), (MdPartCInter(end())) );
-        return( ConstMdPartIter( MdPartCPIterator( p, CheckMdPart )) );
-        }
-    ConstMdPartIter mdpartEnd( bool (* CheckMdPart)( const MdPart& )=NULL) const
-        {
-        IterPair<MdPartCInter> p( (MdPartCInter(begin())), (MdPartCInter(end())) );
-        return( ConstMdPartIter( MdPartCPIterator( p, CheckMdPart, true )) );
-        }
+	ConstMdPartPair mdpartPair( bool (* CheckMdPart)( const MdPart& )=NULL) const
+	{
+	    return( ConstMdPartPair( mdpartBegin( CheckMdPart ), mdpartEnd( CheckMdPart ) ));
+	}
+	ConstMdPartIter mdpartBegin( bool (* CheckMdPart)( const MdPart& )=NULL) const
+	{
+	    IterPair<MdPartCInter> p( (MdPartCInter(begin())), (MdPartCInter(end())) );
+	    return( ConstMdPartIter( MdPartCPIterator( p, CheckMdPart )) );
+	}
+	ConstMdPartIter mdpartEnd( bool (* CheckMdPart)( const MdPart& )=NULL) const
+	{
+	    IterPair<MdPartCInter> p( (MdPartCInter(begin())), (MdPartCInter(end())) );
+	    return( ConstMdPartIter( MdPartCPIterator( p, CheckMdPart, true )) );
+	}
 
-    virtual void print( std::ostream& s ) const { s << *this; }
-    virtual Container* getCopy() const { return( new MdPartCo( *this ) ); }
-    void activate_part( bool val );
-    void init(SystemInfo& systeminfo);
-    void createDisk(SystemInfo& systeminfo);
-    void getVolumes(const ProcParts& ppart);
-    void updatePointers( bool invalid=false );
-    void updateMinor();
-    virtual void newP( MdPart*& dm, unsigned num, Partition* p );
-    int addNewDev( string& device );
-    int updateDelDev();
-    void removeFromMemory();
-    void removePresentPartitions();
-    bool validPartition( const Partition* p );
-    bool findMdPart( unsigned nr, MdPartIter& i );
+	virtual void print( std::ostream& s ) const { s << *this; }
+	virtual Container* getCopy() const { return( new MdPartCo( *this ) ); }
+	void activate_part( bool val );
+	void init(SystemInfo& systeminfo);
+	void createDisk(SystemInfo& systeminfo);
+	void getVolumes(const ProcParts& ppart);
+	void updatePointers( bool invalid=false );
+	void updateMinor();
+	virtual void newP( MdPart*& dm, unsigned num, Partition* p );
+	int addNewDev( string& device );
+	int updateDelDev();
+	void removeFromMemory();
+	void removePresentPartitions();
+	bool validPartition( const Partition* p );
+	bool findMdPart( unsigned nr, MdPartIter& i );
 
 	bool updateEntry(EtcMdadm* mdadm) const;
 
-    int doCreate( Volume* v );
-    int doRemove( Volume* v );
-    int doResize( Volume* v );
-    int doSetType( MdPart* v );
-    int doCreateLabel();
-    virtual int doRemove();
-    virtual Text removeText( bool doing ) const;
-    virtual Text setDiskLabelText( bool doing ) const;
+	int doCreate( Volume* v );
+	int doRemove( Volume* v );
+	int doResize( Volume* v );
+	int doSetType( MdPart* v );
+	int doCreateLabel();
+	virtual int doRemove();
+	virtual Text removeText( bool doing ) const;
+	virtual Text setDiskLabelText( bool doing ) const;
 
-    /* Initialize the MD part of object.*/
+	/* Initialize the MD part of object.*/
 	void initMd(SystemInfo& systeminfo);
 
-    void setSize(unsigned long long size );
+	void setSize(unsigned long long size );
 
-    bool isMdPart(const string& name) const;
+	bool isMdPart(const string& name) const;
 
-    void getPartNum(const string& device, unsigned& num) const;
+	void getPartNum(const string& device, unsigned& num) const;
 
 	void unuseDevs() const;
 
-    Disk* disk;
+	Disk* disk;
 
-    //Input: 'mdXXX' device.
-    static CType envSelection(const string& name);
-    static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
+	//Input: 'mdXXX' device.
+	static CType envSelection(const string& name);
+	static bool havePartsInProc(const string& name, SystemInfo& systeminfo);
 
 	MdType md_type;
 	MdParity md_parity;
@@ -274,7 +274,7 @@ class MdPartCo : public Container
 	string parent_metadata;
 	string parent_member;
 
-    static bool active;
+	static bool active;
 
     };
 }

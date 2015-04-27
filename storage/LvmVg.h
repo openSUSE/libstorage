@@ -32,10 +32,10 @@ namespace storage
     using std::list;
 
 
-class LvmVg : public PeContainer
+    class LvmVg : public PeContainer
     {
-    friend class Storage;
-    friend class LvmLv;
+	friend class Storage;
+	friend class LvmLv;
 
     public:
 
@@ -62,18 +62,18 @@ class LvmVg : public PeContainer
 	int removeLv( const string& name );
 	int changeStripe( const string& name, unsigned long stripe );
 	int changeStripeSize( const string& name,
-	                      unsigned long long stripeSize );
-        int changeChunkSize( const string& name, 
-                             unsigned long long chunkSizeK );
+			      unsigned long long stripeSize );
+	int changeChunkSize( const string& name,
+			     unsigned long long chunkSizeK );
 
 	int createLvSnapshot(const string& origin, const string& name,
 			     unsigned long long cowSizeK, string& device);
 	int removeLvSnapshot(const string& name);
 	int getLvSnapshotState(const string& name, LvmLvSnapshotStateInfo& info);
 	int createPool( const string& name, unsigned long long sizeK,
-                        string& device );
+			string& device );
 	int createThin( const string& name, const string& pool,
-                        unsigned long long sizeK, string& device );
+			unsigned long long sizeK, string& device );
 
 	int setPeSize( long long unsigned peSizeK );
 	void normalizeDmDevices();
@@ -100,9 +100,9 @@ class LvmVg : public PeContainer
 	typedef CastIterator<VIter, LvmLv *> LvmLvInter;
 	typedef CastIterator<CVIter, const LvmLv *> LvmLvCInter;
 	template< class Pred >
-	    struct LvmLvPI { typedef ContainerIter<Pred, LvmLvInter> type; };
+	struct LvmLvPI { typedef ContainerIter<Pred, LvmLvInter> type; };
 	template< class Pred >
-	    struct LvmLvCPI { typedef ContainerIter<Pred, LvmLvCInter> type; };
+	struct LvmLvCPI { typedef ContainerIter<Pred, LvmLvCInter> type; };
 	typedef CheckFnc<const LvmLv> CheckFncLvmLv;
 	typedef CheckerIterator< CheckFncLvmLv, LvmLvPI<CheckFncLvmLv>::type,
 				 LvmLvInter, LvmLv > LvmLvPIterator;
@@ -114,34 +114,34 @@ class LvmVg : public PeContainer
 	typedef IterPair<ConstLvmLvIter> ConstLvmLvPair;
 
 	LvmLvPair lvmLvPair( bool (* Check)( const LvmLv& )=NULL)
-	    {
+	{
 	    return( LvmLvPair( lvmLvBegin( Check ), lvmLvEnd( Check ) ));
-	    }
+	}
 	LvmLvIter lvmLvBegin( bool (* Check)( const LvmLv& )=NULL)
-	    {
+	{
 	    IterPair<LvmLvInter> p( (LvmLvInter(begin())), (LvmLvInter(end())) );
 	    return( LvmLvIter( LvmLvPIterator( p, Check )) );
-	    }
+	}
 	LvmLvIter lvmLvEnd( bool (* Check)( const LvmLv& )=NULL)
-	    {
+	{
 	    IterPair<LvmLvInter> p( (LvmLvInter(begin())), (LvmLvInter(end())) );
 	    return( LvmLvIter( LvmLvPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstLvmLvPair lvmLvPair( bool (* Check)( const LvmLv& )=NULL) const
-	    {
+	{
 	    return( ConstLvmLvPair( lvmLvBegin( Check ), lvmLvEnd( Check ) ));
-	    }
+	}
 	ConstLvmLvIter lvmLvBegin( bool (* Check)( const LvmLv& )=NULL) const
-	    {
+	{
 	    IterPair<LvmLvCInter> p( (LvmLvCInter(begin())), (LvmLvCInter(end())) );
 	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check )) );
-	    }
+	}
 	ConstLvmLvIter lvmLvEnd( bool (* Check)( const LvmLv& )=NULL) const
-	    {
+	{
 	    IterPair<LvmLvCInter> p( (LvmLvCInter(begin())), (LvmLvCInter(end())) );
 	    return( ConstLvmLvIter( LvmLvCPIterator( p, Check, true )) );
-	    }
+	}
 
 	void getVgData(const string& name, SystemInfo& systeminfo, bool exists = true);
 
@@ -172,10 +172,10 @@ class LvmVg : public PeContainer
 		   unsigned long long pchunk, SystemInfo& systeminfo);
 	void addPv(const Pv& pv);
 
-        LvmLv* findLv(const string& name);
+	LvmLv* findLv(const string& name);
 
-        bool checkChunk( unsigned long long val, unsigned long long mi=0, 
-                         unsigned long long mx=0 );
+	bool checkChunk( unsigned long long val, unsigned long long mi=0,
+			 unsigned long long mx=0 );
 
 	string status;
 	string uuid;
@@ -185,7 +185,7 @@ class LvmVg : public PeContainer
 
     private:
 
-	LvmVg& operator=(const LvmVg&);	// disallow
+	LvmVg& operator=(const LvmVg&);	    // disallow
 
     };
 

@@ -102,35 +102,35 @@ namespace storage
 	CastCheckIterator( const It& i) : _bclass( i.begin(), i.end(), CheckType<Value>() )
 	    { this->m_cur=i.cur();}
 	CastResult operator*() const
-	    {
-		return( static_cast<CastResult>(_bclass::operator*()) );
-	    }
+	{
+	    return( static_cast<CastResult>(_bclass::operator*()) );
+	}
 	CastResult* operator->() const
-	    {
-		return( static_cast<CastResult*>(_bclass::operator->()) );
-	    }
+	{
+	    return( static_cast<CastResult*>(_bclass::operator->()) );
+	}
 	CastCheckIterator& operator++()
-	    {
-		_bclass::operator++(); return(*this);
-	    }
+	{
+	    _bclass::operator++(); return(*this);
+	}
 	CastCheckIterator operator++(int)
-	    {
-		y2war( "Expensive ++ CastCheckIterator" );
-		CastCheckIterator tmp(*this);
-		_bclass::operator++();
-		return(tmp);
-	    }
+	{
+	    y2war( "Expensive ++ CastCheckIterator" );
+	    CastCheckIterator tmp(*this);
+	    _bclass::operator++();
+	    return(tmp);
+	}
 	CastCheckIterator& operator--()
-	    {
-		_bclass::operator--(); return(*this);
-	    }
+	{
+	    _bclass::operator--(); return(*this);
+	}
 	CastCheckIterator operator--(int)
-	    {
-		y2war( "Expensive -- CastCheckIterator" );
-		CastCheckIterator tmp(*this);
-		_bclass::operator--();
-		return(tmp);
-	    }
+	{
+	    y2war( "Expensive -- CastCheckIterator" );
+	    CastCheckIterator tmp(*this);
+	    _bclass::operator--();
+	    return(tmp);
+	}
     };
 
     template < bool (* FncP)( const Container& c ) >
@@ -262,7 +262,7 @@ namespace storage
 	string prependRoot(const string& mp) const;
 	const string& tmpDir() const { return tempdir; }
 	bool hasIScsiDisks() const;
-        bool usedDmName( const string& nm, const Volume* volp ) const;
+	bool usedDmName( const string& nm, const Volume* volp ) const;
 	string bootMount() const;
 
 	const ArchInfo& getArchInfo() const { return archinfo; }
@@ -296,7 +296,7 @@ namespace storage
 	bool canUseDevice( const string& dev, bool disks_allowed=false );
 	bool knownDevice( const string& dev, bool disks_allowed=false );
 	bool setDmcryptData( const string& dev, const string& dm,
-	                     unsigned dmnum, unsigned long long siz,
+			     unsigned dmnum, unsigned long long siz,
 			     storage::EncryptType typ );
 	bool deletedDevice(const string& dev) const;
 	bool isDisk( const string& dev );
@@ -310,12 +310,12 @@ namespace storage
 
 	string findNormalDevice( const string& device );
 	bool findVolume( const string& device, Volume const* &vol,
-	                 bool no_btrfsc=false );
+			 bool no_btrfsc=false );
 	bool findUuid( const string& uuid, Volume const* &vol );
 	bool findDm( const string& device, const Dm*& dm );
 	bool findDmUsing( const string& device, const Dm*& dm );
 	bool findDevice( const string& dev, const Device* &vol,
-	                 bool search_by_minor=false );
+			 bool search_by_minor=false );
 	bool removeDm( const string& device );
 	int unaccessDev( const string& device );
 
@@ -323,18 +323,18 @@ namespace storage
 
 	// functions for interface
 
-        void getContainers( deque<storage::ContainerInfo>& infos );
+	void getContainers( deque<storage::ContainerInfo>& infos );
 	int getDiskInfo( const string& disk, storage::DiskInfo& info);
 	int getLvmVgInfo( const string& name, storage::LvmVgInfo& info);
 	int getDmraidCoInfo( const string& name, storage::DmraidCoInfo& info);
 	int getDmmultipathCoInfo( const string& name, storage::DmmultipathCoInfo& info);
 	int getContDiskInfo( const string& disk, storage::ContainerInfo& cinfo,
-	                     storage::DiskInfo& info);
+			     storage::DiskInfo& info);
 	int getContLvmVgInfo( const string& name, storage::ContainerInfo& cinfo,
-	                      storage::LvmVgInfo& info);
+			      storage::LvmVgInfo& info);
 	int getContDmraidCoInfo( const string& name,
-	                         storage::ContainerInfo& cinfo,
-	                         storage::DmraidCoInfo& info );
+				 storage::ContainerInfo& cinfo,
+				 storage::DmraidCoInfo& info );
 	int getContDmmultipathCoInfo( const string& name,
 				      storage::ContainerInfo& cinfo,
 				      storage::DmmultipathCoInfo& info );
@@ -352,13 +352,13 @@ namespace storage
 	int getBtrfsInfo( deque<storage::BtrfsInfo>& plist );
 	int getTmpfsInfo( deque<storage::TmpfsInfo>& plist );
 	int getDmraidInfo( const string& name,
-	                   deque<storage::DmraidInfo>& plist );
+			   deque<storage::DmraidInfo>& plist );
 	int getDmmultipathInfo( const string& name,
 				deque<storage::DmmultipathInfo>& plist );
 	int getContVolInfo( const string& dev, ContVolInfo& info);
 
 	bool getFsCapabilities( storage::FsType fstype,
-	                        storage::FsCapabilities& fscapabilities) const;
+				storage::FsCapabilities& fscapabilities) const;
 	bool getDlabelCapabilities(const string& dlabel,
 				   storage::DlabelCapabilities& dlabelcapabilities) const;
 
@@ -369,7 +369,7 @@ namespace storage
 	int resizePartition( const string& device, unsigned long sizeCyl );
 	int resizePartitionNoFs( const string& device, unsigned long sizeCyl );
 	int nextFreePartition( const string& disk, storage::PartitionType type,
-	                       unsigned &nr, string& device );
+			       unsigned &nr, string& device );
 	int updatePartitionArea(const string& device, const RegionInfo& cylRegion) override;
 	int freeCylindersAroundPartition(const string& device, unsigned long& freeCylsBefore,
 					 unsigned long& freeCylsAfter);
@@ -394,7 +394,7 @@ namespace storage
 	string defaultDiskLabel(const string& device);
 
 	int changeFormatVolume( const string& device, bool format,
-	                        storage::FsType fs );
+				storage::FsType fs );
 	int changeLabelVolume( const string& device, const string& label );
 	int eraseLabelVolume( const string& device );
 	int changeMkfsOptVolume( const string& device, const string& opts );
@@ -410,7 +410,7 @@ namespace storage
 	int removeFstabOptions( const string&, const string& options );
 	int setCryptPassword( const string& device, const string& pwd );
 	int verifyCryptPassword( const string& device, const string& pwd,
-	                         bool erase );
+				 bool erase );
 	int verifyCryptFilePassword( const string& file, const string& pwd );
 	bool needCryptPassword( const string& device );
 	int forgetCryptPassword( const string& device );
@@ -421,7 +421,7 @@ namespace storage
 	int setIgnoreFstab( const string& device, bool val );
 	int getIgnoreFstab( const string& device, bool& val );
 	int addFstabEntry( const string& device, const string& mount,
-	                   const string& vfs, const string& options,
+			   const string& vfs, const string& options,
 			   unsigned freq, unsigned passno );
 	int resizeVolume(const string& device, unsigned long long newSizeK);
 	int resizeVolumeNoFs(const string& device, unsigned long long newSizeK);
@@ -464,14 +464,14 @@ namespace storage
 	    { return( umountDev( device, unsetup )); }
 	bool umountDev( const string& device, bool dounsetup=false );
 	bool mountDev( const string& device, const string& mp, bool ro=true,
-	               const string& opts="" );
+		       const string& opts="" );
 	bool mountDevice( const string& device, const string& mp )
 	    { return( mountDev( device, mp, false )); }
 	bool mountDeviceOpts( const string& device, const string& mp,
-	                      const string& opts )
+			      const string& opts )
 	    { return( mountDev( device, mp, false, opts )); }
 	bool mountDeviceRo( const string& device, const string& mp,
-	                    const string& opts )
+			    const string& opts )
 	    { return( mountDev( device, mp, true, opts )); }
 	int activateEncryption( const string& device, bool on );
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
@@ -484,10 +484,10 @@ namespace storage
 	int restoreBackupState( const string& name );
 	bool checkBackupState( const string& name ) const;
 	bool equalBackupStates( const string& lhs, const string& rhs,
-	                        bool verbose_log ) const;
+				bool verbose_log ) const;
 
 	int createLvmVg( const string& name, unsigned long long peSizeK,
-	                 bool lvm1, const deque<string>& devs );
+			 bool lvm1, const deque<string>& devs );
 	int removeLvmVg( const string& name );
 	int extendLvmVg( const string& name, const deque<string>& devs );
 	int shrinkLvmVg( const string& name, const deque<string>& devs );
@@ -507,13 +507,13 @@ namespace storage
 	int removeLvmLvSnapshot(const string& vg, const string& name);
 	int getLvmLvSnapshotStateInfo(const string& vg, const string& name,
 				      LvmLvSnapshotStateInfo& info);
-        int createLvmLvPool( const string& vg, const string& name,
-                             unsigned long long sizeK, string& device );
-        int createLvmLvThin( const string& vg, const string& name,
-                             const string& pool, unsigned long long sizeK,
-                             string& device );
-        int changeLvChunkSize( const string& vg, const string& name,
-                               unsigned long long chunkSizeK );
+	int createLvmLvPool( const string& vg, const string& name,
+			     unsigned long long sizeK, string& device );
+	int createLvmLvThin( const string& vg, const string& name,
+			     const string& pool, unsigned long long sizeK,
+			     string& device );
+	int changeLvChunkSize( const string& vg, const string& name,
+			       unsigned long long chunkSizeK );
 
 	int nextFreeMd(unsigned& nr, string &device);
 	bool checkMdNumber(unsigned num);
@@ -539,8 +539,8 @@ namespace storage
 	int getMdPartCoInfo( const string& name, MdPartCoInfo& info);
 	int getContMdPartCoInfo( const string& name, ContainerInfo& cinfo,
 				 MdPartCoInfo& info);
-        int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
-        int removeMdPartCo(const string& devName, bool destroySb);
+	int getMdPartCoStateInfo(const string& name, MdPartCoStateInfo& info);
+	int removeMdPartCo(const string& devName, bool destroySb);
 
 	int addNfsDevice(const string& nfsDev, const string& opts,
 			 unsigned long long sizeK, const string& mp, bool nfs4);
@@ -551,7 +551,7 @@ namespace storage
 			    unsigned long long sizeK, const string& mp,
 			    const string& pwd, string& device );
 	int modifyFileLoop( const string& device, const string& lname,
-	                    bool reuseExisting, unsigned long long sizeK );
+			    bool reuseExisting, unsigned long long sizeK );
 	int removeFileLoop( const string& lname, bool removeFile );
 
 	int removeDmraid( const string& name );
@@ -579,7 +579,7 @@ namespace storage
 	static int zeroDevice(const string& device, bool random = false,
 			      unsigned long long beginK = 200, unsigned long long endK = 10);
 	static unsigned long long sizeK( const string& device );
-        static bool loadModuleIfNeeded( const string& module );
+	static bool loadModuleIfNeeded( const string& module );
 	static void clean_tmpdir();
 
 	static list<pair<string, Disk::SysfsInfo>> getDiskList(SystemInfo& systeminfo);
@@ -591,7 +591,7 @@ namespace storage
 	void setCommitCallbacks(const CommitCallbacks* commit_callbacks)
 	    { Storage::commit_callbacks = commit_callbacks; }
 
-        int commit();
+	int commit();
 
 	string getErrorString(int error) const;
 
@@ -601,7 +601,7 @@ namespace storage
 	void removeDmTableTo( const Volume& vol );
 	void removeDmTableTo( const string& device );
 	void removeDmTableTo( unsigned long mjr, unsigned long mnr );
-        int renameCryptDm( const string& device, const string& new_name );
+	int renameCryptDm( const string& device, const string& new_name );
 	bool removeDmTable( const string& table );
 	bool removeDmMapsTo( const string& dev );
 	bool checkDmMapsTo( const string& dev );
@@ -655,7 +655,7 @@ namespace storage
 	struct ConstContainerPI { typedef ContainerIter<Pred, CCIter> type; };
 	typedef CheckFnc<const Container> CheckFncCont;
 	typedef CheckerIterator< CheckFncCont, ConstContainerPI<CheckFncCont>::type,
-	                         CCIter, Container > ConstContPIterator;
+				 CCIter, Container > ConstContPIterator;
 	template< class Pred >
 	struct ContainerPI { typedef ContainerIter<Pred, CIter> type; };
 	template< class Pred >
@@ -663,7 +663,7 @@ namespace storage
 	{ typedef ContainerDerIter<Pred, typename ContainerPI<Pred>::type,
 				   Container> type; };
 	typedef CheckerIterator< CheckFncCont, ContainerPI<CheckFncCont>::type,
-	                         CIter, Container > ContPIterator;
+				 CIter, Container > ContPIterator;
 	typedef DerefIterator<ContPIterator,Container> ContIterator;
 	typedef IterPair<ContIterator> ContPair;
 
@@ -680,15 +680,15 @@ namespace storage
 	typedef IterPair<ConstContIterator> ConstContPair;
 
 	// public member functions for iterators over containers
-        ConstContPair contPair( bool (* CheckFnc)( const Container& )=NULL ) const
+	ConstContPair contPair( bool (* CheckFnc)( const Container& )=NULL ) const
 	{
 	    return( ConstContPair( contBegin( CheckFnc ), contEnd( CheckFnc ) ));
 	}
-        ConstContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL ) const
+	ConstContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL ) const
 	{
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	}
-        ConstContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL ) const
+	ConstContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL ) const
 	{
 	    return( ConstContIterator( ConstContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	}
@@ -705,15 +705,15 @@ namespace storage
 	    return( typename ConstContainerI<Pred>::type( typename ConstContainerPI<Pred>::type( cont.begin(), cont.end(), p, true )) );
 	}
 	// non-const member functions for iterators over containers
-        ContPair contPair( bool (* CheckFnc)( const Container& )=NULL )
+	ContPair contPair( bool (* CheckFnc)( const Container& )=NULL )
 	{
 	    return( ContPair( contBegin(CheckFnc), contEnd(CheckFnc) ));
 	}
-        ContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL )
+	ContIterator contBegin( bool (* CheckFnc)( const Container& )=NULL )
 	{
 	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc )) );
 	}
-        ContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL )
+	ContIterator contEnd( bool (* CheckFnc)( const Container& )=NULL )
 	{
 	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	}
@@ -731,9 +731,9 @@ namespace storage
 	struct DiskI { typedef ContainerDerIter<Pred, typename DiskPI<Pred>::type, Disk> type; };
 	typedef CheckFnc<const Disk> CheckFncDisk;
 	typedef CheckerIterator< CheckFncDisk, ConstDiskPI<CheckFncDisk>::type,
-	                         ContainerCDiskIter, Disk > ConstDiskPIterator;
+				 ContainerCDiskIter, Disk > ConstDiskPIterator;
 	typedef CheckerIterator< CheckFncDisk, DiskPI<CheckFncDisk>::type,
-	                         ContainerDiskIter, Disk > DiskPIterator;
+				 ContainerDiskIter, Disk > DiskPIterator;
 	typedef DerefIterator<DiskPIterator,Disk> DiskIterator;
 	typedef IterPair<DiskIterator> DiskPair;
 
@@ -814,9 +814,9 @@ namespace storage
 	struct LvmVgI { typedef ContainerDerIter<Pred, typename LvmVgPI<Pred>::type, LvmVg> type; };
 	typedef CheckFnc<const LvmVg> CheckFncLvmVg;
 	typedef CheckerIterator< CheckFncLvmVg, ConstLvmVgPI<CheckFncLvmVg>::type,
-	                         ContainerCLvmVgIter, LvmVg > ConstLvmVgPIterator;
+				 ContainerCLvmVgIter, LvmVg > ConstLvmVgPIterator;
 	typedef CheckerIterator< CheckFncLvmVg, LvmVgPI<CheckFncLvmVg>::type,
-	                         ContainerLvmVgIter, LvmVg > LvmVgPIterator;
+				 ContainerLvmVgIter, LvmVg > LvmVgPIterator;
 	typedef DerefIterator<LvmVgPIterator,LvmVg> LvmVgIterator;
 	typedef IterPair<LvmVgIterator> LvmVgPair;
 
@@ -896,9 +896,9 @@ namespace storage
 	struct DmPartCoI { typedef ContainerDerIter<Pred, typename DmPartCoPI<Pred>::type, DmPartCo> type; };
 	typedef CheckFnc<const DmPartCo> CheckFncDmPartCo;
 	typedef CheckerIterator< CheckFncDmPartCo, ConstDmPartCoPI<CheckFncDmPartCo>::type,
-	                         ContainerCDmPartIter, DmPartCo > ConstDmPartCoPIterator;
+				 ContainerCDmPartIter, DmPartCo > ConstDmPartCoPIterator;
 	typedef CheckerIterator< CheckFncDmPartCo, DmPartCoPI<CheckFncDmPartCo>::type,
-	                         ContainerDmPartIter, DmPartCo > DmPartCoPIterator;
+				 ContainerDmPartIter, DmPartCo > DmPartCoPIterator;
 	typedef DerefIterator<DmPartCoPIterator,DmPartCo> DmPartCoIterator;
 	typedef IterPair<DmPartCoIterator> DmPartCoPair;
 
@@ -978,9 +978,9 @@ namespace storage
 	struct DmraidCoI { typedef ContainerDerIter<Pred, typename DmraidCoPI<Pred>::type, DmraidCo> type; };
 	typedef CheckFnc<const DmraidCo> CheckFncDmraidCo;
 	typedef CheckerIterator< CheckFncDmraidCo, ConstDmraidCoPI<CheckFncDmraidCo>::type,
-	                         ContainerCDmraidIter, DmraidCo > ConstDmraidCoPIterator;
+				 ContainerCDmraidIter, DmraidCo > ConstDmraidCoPIterator;
 	typedef CheckerIterator< CheckFncDmraidCo, DmraidCoPI<CheckFncDmraidCo>::type,
-	                         ContainerDmraidIter, DmraidCo > DmraidCoPIterator;
+				 ContainerDmraidIter, DmraidCo > DmraidCoPIterator;
 	typedef DerefIterator<DmraidCoPIterator,DmraidCo> DmraidCoIterator;
 	typedef IterPair<DmraidCoIterator> DmraidCoPair;
 
@@ -1064,9 +1064,9 @@ namespace storage
 	struct DmmultipathCoI { typedef ContainerDerIter<Pred, typename DmmultipathCoPI<Pred>::type, DmmultipathCo> type; };
 	typedef CheckFnc<const DmmultipathCo> CheckFncDmmultipathCo;
 	typedef CheckerIterator< CheckFncDmmultipathCo, ConstDmmultipathCoPI<CheckFncDmmultipathCo>::type,
-	                         ContainerCDmmultipathIter, DmmultipathCo > ConstDmmultipathCoPIterator;
+				 ContainerCDmmultipathIter, DmmultipathCo > ConstDmmultipathCoPIterator;
 	typedef CheckerIterator< CheckFncDmmultipathCo, DmmultipathCoPI<CheckFncDmmultipathCo>::type,
-	                         ContainerDmmultipathIter, DmmultipathCo > DmmultipathCoPIterator;
+				 ContainerDmmultipathIter, DmmultipathCo > DmmultipathCoPIterator;
 	typedef DerefIterator<DmmultipathCoPIterator,DmmultipathCo> DmmultipathCoIterator;
 	typedef IterPair<DmmultipathCoIterator> DmmultipathCoPair;
 
@@ -1229,12 +1229,12 @@ namespace storage
 	struct ConstVolumePI { typedef ContainerIter<Pred, ConstVolInter> type; };
 	typedef CheckFnc<const Volume> CheckFncVol;
 	typedef CheckerIterator< CheckFncVol, ConstVolumePI<CheckFncVol>::type,
-	                         ConstVolInter, Volume > ConstVolPIterator;
+				 ConstVolInter, Volume > ConstVolPIterator;
 	typedef ListListIterator<Container::PlainIterator, ContIterator> VolPart;
 	template< class Pred >
 	struct VolumeI { typedef ContainerIter<Pred, VolPart> type; };
 	typedef CheckerIterator< CheckFncVol, VolumeI<CheckFncVol>::type,
-	                         VolPart, Volume > VolPIterator;
+				 VolPart, Volume > VolPIterator;
 	typedef DerefIterator<VolPIterator,Volume> VolIterator;
 	typedef IterPair<VolIterator> VolPair;
 
@@ -1248,17 +1248,17 @@ namespace storage
 	typedef IterPair<ConstVolIterator> ConstVolPair;
 
 	// public member functions for iterators over volumes
-        ConstVolPair volPair( bool (* CheckCnt)( const Container& )) const
+	ConstVolPair volPair( bool (* CheckCnt)( const Container& )) const
 	{
 	    return( ConstVolPair( volBegin( CheckCnt ), volEnd( CheckCnt ) ));
 	}
-        ConstVolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
+	ConstVolPair volPair( bool (* CheckVol)( const Volume& )=NULL,
 			      bool (* CheckCnt)( const Container& )=NULL) const
 	{
 	    return( ConstVolPair( volBegin( CheckVol, CheckCnt ),
 				  volEnd( CheckVol, CheckCnt ) ));
 	}
-        ConstVolIterator volBegin( bool (* CheckCnt)( const Container& )) const
+	ConstVolIterator volBegin( bool (* CheckCnt)( const Container& )) const
 	{
 	    return( volBegin( NULL, CheckCnt ) );
 	}
@@ -1339,7 +1339,7 @@ namespace storage
 	struct ConstPartitionPI { typedef ContainerIter<Pred, ConstPartInter2> type; };
 	typedef CheckFnc<const Partition> CheckFncPartition;
 	typedef CheckerIterator< CheckFncPartition, ConstPartitionPI<CheckFncPartition>::type,
-	                         ConstPartInter2, Partition > ConstPartPIterator;
+				 ConstPartInter2, Partition > ConstPartPIterator;
     public:
 	// public typedefs for iterators over partitions
 	template< class Pred >
@@ -1368,7 +1368,7 @@ namespace storage
 	    return( partBegin( NULL, CheckDisk ) );
 	}
 	ConstPartIterator partBegin( bool (* CheckPart)( const Partition& )=NULL,
-	                             bool (* CheckDisk)( const Disk& )=NULL) const
+				     bool (* CheckDisk)( const Disk& )=NULL) const
 	{
 	    IterPair<ConstPartInter2> p( (ConstPartInter(diskPair( CheckDisk ))),
 					 (ConstPartInter(diskPair( CheckDisk ), true )));
@@ -1379,7 +1379,7 @@ namespace storage
 	    return( partEnd( NULL, CheckDisk ) );
 	}
 	ConstPartIterator partEnd( bool (* CheckPart)( const Partition& )=NULL,
-	                           bool (* CheckDisk)( const Disk& )=NULL) const
+				   bool (* CheckDisk)( const Disk& )=NULL) const
 	{
 	    IterPair<ConstPartInter2> p( (ConstPartInter(diskPair( CheckDisk ))),
 					 (ConstPartInter(diskPair( CheckDisk ), true )));
@@ -1411,7 +1411,7 @@ namespace storage
 	struct ConstLvmLvPI { typedef ContainerIter<Pred, ConstLvmLvInter2> type; };
 	typedef CheckFnc<const LvmLv> CheckFncLvmLv;
 	typedef CheckerIterator< CheckFncLvmLv, ConstLvmLvPI<CheckFncLvmLv>::type,
-	                         ConstLvmLvInter2, LvmLv > ConstLvmLvPIterator;
+				 ConstLvmLvInter2, LvmLv > ConstLvmLvPIterator;
     public:
 	// public typedefs for iterators over LVM LVs
 	template< class Pred >
@@ -1440,7 +1440,7 @@ namespace storage
 	    return( lvmLvBegin( NULL, CheckLvmVg ) );
 	}
 	ConstLvmLvIterator lvmLvBegin( bool (* CheckLvmLv)( const LvmLv& )=NULL,
-	                               bool (* CheckLvmVg)( const LvmVg& )=NULL) const
+				       bool (* CheckLvmVg)( const LvmVg& )=NULL) const
 	{
 	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(lvmVgPair( CheckLvmVg ))),
 					  (ConstLvmLvInter(lvmVgPair( CheckLvmVg ), true )));
@@ -1451,7 +1451,7 @@ namespace storage
 	    return( lvmLvEnd( NULL, CheckLvmVg ) );
 	}
 	ConstLvmLvIterator lvmLvEnd( bool (* CheckLvmLv)( const LvmLv& )=NULL,
-	                             bool (* CheckLvmVg)( const LvmVg& )=NULL) const
+				     bool (* CheckLvmVg)( const LvmVg& )=NULL) const
 	{
 	    IterPair<ConstLvmLvInter2> p( (ConstLvmLvInter(lvmVgPair( CheckLvmVg ))),
 					  (ConstLvmLvInter(lvmVgPair( CheckLvmVg ), true )));
@@ -1483,7 +1483,7 @@ namespace storage
 						 ConstMdInter> type; };
 	typedef CheckFnc<const Md> CheckFncMd;
 	typedef CheckerIterator< CheckFncMd, ConstMdPI<CheckFncMd>::type,
-	                         ConstMdInter, Md > ConstMdPIterator;
+				 ConstMdInter, Md > ConstMdPIterator;
     public:
 	// public typedefs for iterators over software raid devices
 	template< class Pred >
@@ -1606,7 +1606,7 @@ namespace storage
 						   ConstLoopInter> type; };
 	typedef CheckFnc<const Loop> CheckFncLoop;
 	typedef CheckerIterator< CheckFncLoop, ConstLoopPI<CheckFncLoop>::type,
-	                         ConstLoopInter, Loop > ConstLoopPIterator;
+				 ConstLoopInter, Loop > ConstLoopPIterator;
     public:
 	// public typedefs for iterators over file based loop devices
 	template< class Pred >
@@ -1666,7 +1666,7 @@ namespace storage
 						    ConstBtrfsInter> type; };
 	typedef CheckFnc<const Btrfs> CheckFncBtrfs;
 	typedef CheckerIterator< CheckFncBtrfs, ConstBtrfsPI<CheckFncBtrfs>::type,
-	                         ConstBtrfsInter, Btrfs > ConstBtrfsPIterator;
+				 ConstBtrfsInter, Btrfs > ConstBtrfsPIterator;
     public:
 	// public typedefs for iterators over btrfs volumes
 	template< class Pred >
@@ -1726,7 +1726,7 @@ namespace storage
 						    ConstTmpfsInter> type; };
 	typedef CheckFnc<const Tmpfs> CheckFncTmpfs;
 	typedef CheckerIterator< CheckFncTmpfs, ConstTmpfsPI<CheckFncTmpfs>::type,
-	                         ConstTmpfsInter, Tmpfs > ConstTmpfsPIterator;
+				 ConstTmpfsInter, Tmpfs > ConstTmpfsPIterator;
     public:
 	// public typedefs for iterators over tmpfs volumes
 	template< class Pred >
@@ -1786,7 +1786,7 @@ namespace storage
 						  ConstNfsInter> type; };
 	typedef CheckFnc<const Nfs> CheckFncNfs;
 	typedef CheckerIterator< CheckFncNfs, ConstNfsPI<CheckFncNfs>::type,
-	                         ConstNfsInter, Nfs > ConstNfsPIterator;
+				 ConstNfsInter, Nfs > ConstNfsPIterator;
     public:
 	// public typedefs for iterators over nfs devices
 	template< class Pred >
@@ -1846,7 +1846,7 @@ namespace storage
 						 ConstDmInter> type; };
 	typedef CheckFnc<const Dm> CheckFncDm;
 	typedef CheckerIterator< CheckFncDm, ConstDmPI<CheckFncDm>::type,
-	                         ConstDmInter, Dm > ConstDmPIterator;
+				 ConstDmInter, Dm > ConstDmPIterator;
     public:
 	// public typedefs for iterators over device mapper devices
 	template< class Pred >
@@ -1906,7 +1906,7 @@ namespace storage
 	struct ConstDmraidPI { typedef ContainerIter<Pred, ConstDmraidInter2> type; };
 	typedef CheckFnc<const Dmraid> CheckFncDmraid;
 	typedef CheckerIterator< CheckFncDmraid, ConstDmraidPI<CheckFncDmraid>::type,
-	                         ConstDmraidInter2, Dmraid > ConstDmraidPIterator;
+				 ConstDmraidInter2, Dmraid > ConstDmraidPIterator;
     public:
 	// public typedefs for iterators over dmraid volumes
 	template< class Pred >
@@ -1979,7 +1979,7 @@ namespace storage
 	struct ConstDmmultipathPI { typedef ContainerIter<Pred, ConstDmmultipathInter2> type; };
 	typedef CheckFnc<const Dmmultipath> CheckFncDmmultipath;
 	typedef CheckerIterator< CheckFncDmmultipath, ConstDmmultipathPI<CheckFncDmmultipath>::type,
-	                         ConstDmmultipathInter2, Dmmultipath > ConstDmmultipathPIterator;
+				 ConstDmmultipathInter2, Dmmultipath > ConstDmmultipathPIterator;
     public:
 	// public typedefs for iterators over dmmultipath volumes
 	template< class Pred >
@@ -2062,16 +2062,16 @@ namespace storage
 	void detectDm(SystemInfo& systeminfo, bool only_crypt);
 	void initDisk( list<DiskData>& dl, SystemInfo& systeminfo);
 	void detectFsData(const VolIterator& begin, const VolIterator& end,
-	                  SystemInfo& systeminfo);
+			  SystemInfo& systeminfo);
 	int updatePartitionArea(const string& device, const Region& cylRegion, bool noBtrfs);
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs);
 	int resizeVolume(const string& device, unsigned long long newSizeK,
 			 bool ignore_fs, bool noBtrfs );
 	int resizePartition( const string& device, unsigned long sizeCyl,
-	                     bool ignore_fs );
+			     bool ignore_fs );
 	int resizePartition( const string& device, unsigned long sizeCyl,
-	                     bool ignoreFs, bool noBtrfs );
+			     bool ignoreFs, bool noBtrfs );
 	void addToList(Container* e);
 	DiskIterator findDisk( const string& disk );
 	DiskIterator findDiskId( const string& id );
@@ -2084,13 +2084,13 @@ namespace storage
 	MdPartCoIterator findMdPartCo( const string& name );
 
 	bool findVolume( const string& device, ContIterator& c,
-	                 VolIterator& v, bool no_btrfs=false  );
+			 VolIterator& v, bool no_btrfs=false  );
 	bool findVolume( const string& device, ConstContIterator& c,
-	                 ConstVolIterator& v, bool no_btrfs=false );
+			 ConstVolIterator& v, bool no_btrfs=false );
 	bool findVolume( const string& device, VolIterator& v,
-	                 bool also_del=false, bool no_btrfs=false );
+			 bool also_del=false, bool no_btrfs=false );
 	bool findVolume( const string& device, ConstVolIterator& v,
-	                 bool also_del=false, bool no_btrfs=false );
+			 bool also_del=false, bool no_btrfs=false );
 	bool findContainer( const string& device, ContIterator& c );
 	bool findContainer( const string& device, ConstContIterator& c );
 
@@ -2108,7 +2108,7 @@ namespace storage
 	int removeContainer( Container* val );
 	void logContainersAndVolumes(const string& Dir) const;
 
-        int commitPair( ContPair& p, bool (* fnc)( const Container& ) );
+	int commitPair( ContPair& p, bool (* fnc)( const Container& ) );
 	void sortCommitLists(storage::CommitStage stage, list<const Container*>& co,
 			     list<const Volume*>& vl, list<commitAction>& todo) const;
 	bool ignoreError(int error, list<commitAction>::const_iterator ca) const;
@@ -2118,7 +2118,7 @@ namespace storage
 
 	void setCachedFreeInfo(const string& device, bool resize_cached, const ResizeInfo& resize_info,
 			       bool content_cached, const ContentInfo& content_info);
-	bool getCachedFreeInfo(	const string& device, bool get_resize, ResizeInfo& resize_info,
+	bool getCachedFreeInfo( const string& device, bool get_resize, ResizeInfo& resize_info,
 				bool get_content, ContentInfo& content_info) const;
 	void logFreeInfo(const string& Dir) const;
 	void readFreeInfo(const string& file);

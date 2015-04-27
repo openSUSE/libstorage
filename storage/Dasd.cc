@@ -372,12 +372,12 @@ namespace storage
 
 
     const vector<string> EnumInfo<Dasd::DasdType>::names({
-	"NONE", "ECKD", "FBA"
-    });
+	    "NONE", "ECKD", "FBA"
+		});
 
 
     const vector<string> EnumInfo<Dasd::DasdFormat>::names({
-	"NONE", "LDL", "CDL"
-    });
+	    "NONE", "LDL", "CDL"
+		});
 
 }

@@ -232,18 +232,18 @@ namespace storage
 	content_info.homes = numHomes(mp);
 
 	if( content_info.homes==0 && !vol.getLabel().empty() )
-	    {
+	{
 	    string lab = boost::to_lower_copy(vol.getLabel());
 	    y2mil( "label:" << vol.getLabel() << " lab:" << lab );
 	    if( boost::starts_with( lab, "home" ))
 		content_info.homes = 1;
-	    }
-	if( content_info.homes==0 && 
+	}
+	if( content_info.homes==0 &&
 	    (vol.getFs()==EXT2 || vol.getFs()==EXT3 || vol.getFs()==EXT4 ))
-	    {
+	{
 	    SystemCmd c( TUNE2FSBIN " -l " + vol.mountDevice() + " | " GREPBIN " '^Last mounted on:'" );
 	    if( c.retcode()==0 && c.numLines()>0 )
-		{
+	    {
 		string line = c.getLine(0);
 		line = line.substr( line.find( ':' )+1 );
 		y2mil( "line:" << c.getLine(0) << " lin:" << line );
@@ -251,8 +251,8 @@ namespace storage
 		y2mil( "dir:" << line );
 		if( line == "/home" )
 		    content_info.homes = 1;
-		}
 	    }
+	}
 	y2mil("device:" << vol.device() << " " << content_info);
 	return content_info;
     }

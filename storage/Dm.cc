@@ -60,11 +60,11 @@ namespace storage
 
 	updateMajorMinor();
 
-    getTableInfo();
+	getTableInfo();
 
-    getStorage()->fetchDanglingUsedBy(dev, uby);
-    for (list<string>::const_iterator it = alt_names.begin(); it != alt_names.end(); ++it)
-	getStorage()->fetchDanglingUsedBy(*it, uby);
+	getStorage()->fetchDanglingUsedBy(dev, uby);
+	for (list<string>::const_iterator it = alt_names.begin(); it != alt_names.end(); ++it)
+	    getStorage()->fetchDanglingUsedBy(*it, uby);
     }
 
 
@@ -126,445 +126,445 @@ namespace storage
     }
 
 
-void
-Dm::getTableInfo()
+    void
+    Dm::getTableInfo()
     {
-    SystemCmd c(DMSETUPBIN " table " + quote(tname));
-    inactiv = c.retcode()!=0;
-    y2mil("table:" << tname << " retcode:" << c.retcode() << " numLines:" << c.numLines() <<
-	  " inactive:" << inactiv);
-    if( c.numLines()>0 )
+	SystemCmd c(DMSETUPBIN " table " + quote(tname));
+	inactiv = c.retcode()!=0;
+	y2mil("table:" << tname << " retcode:" << c.retcode() << " numLines:" << c.numLines() <<
+	      " inactive:" << inactiv);
+	if( c.numLines()>0 )
 	{
-	string line = c.getLine(0);
-	target = extractNthWord( 2, line );
-	if( target=="striped" )
-	    extractNthWord( 3, line ) >> stripe;
+	    string line = c.getLine(0);
+	    target = extractNthWord( 2, line );
+	    if( target=="striped" )
+		extractNthWord( 3, line ) >> stripe;
 	}
-    computePe( c, pe_map );
+	computePe( c, pe_map );
     }
 
-bool Dm::removeTable()
+    bool Dm::removeTable()
     {
-    return getStorage()->removeDmTable(tname);
+	return getStorage()->removeDmTable(tname);
     }
 
-unsigned long long
-Dm::usingPe( const string& dv ) const
+    unsigned long long
+    Dm::usingPe( const string& dv ) const
     {
-    unsigned long ret = 0;
-    PeMap::const_iterator mit = pe_map.find( dv );
-    if( mit!=pe_map.end() )
-	ret = mit->second;
-    return( ret );
+	unsigned long ret = 0;
+	PeMap::const_iterator mit = pe_map.find( dv );
+	if( mit!=pe_map.end() )
+	    ret = mit->second;
+	return( ret );
     }
 
-bool
-Dm::mapsTo( const string& dv ) const
+    bool
+    Dm::mapsTo( const string& dv ) const
     {
-    bool ret = false;
-    PeMap::const_iterator mit;
-    if( dv.find_first_of( "[.*^$" ) != string::npos )
+	bool ret = false;
+	PeMap::const_iterator mit;
+	if( dv.find_first_of( "[.*^$" ) != string::npos )
 	{
-	Regex r(dv);
-	mit = pe_map.begin();
-	while( mit!=pe_map.end() && !r.match( mit->first ) && 
-	       !pec()->addedPv(mit->first) )
-	    ++mit;
+	    Regex r(dv);
+	    mit = pe_map.begin();
+	    while( mit!=pe_map.end() && !r.match( mit->first ) &&
+		   !pec()->addedPv(mit->first) )
+		++mit;
 	}
-    else
-	{
-	mit = pe_map.find( dv );
-	if( mit != pe_map.end() && pec()->addedPv(mit->first) )
-	    mit = pe_map.end();
-	}
-    ret = mit != pe_map.end();
-    if( ret )
-	{
-	y2mil("map:" << pe_map);
-	y2mil("table:" << tname << " dev:" << dv << " ret:" << ret);
-	}
-    return( ret );
-    }
-
-bool 
-Dm::checkConsistency() const
-    {
-    bool ret = false;
-    unsigned long sum = 0;
-    for( PeMap::const_iterator mit=pe_map.begin(); mit!=pe_map.end(); ++mit )
-	 sum += mit->second;
-    if( (!pe_larger && sum!=num_le) ||
-        ( pe_larger && sum<num_le) )
-        {
-	y2war("lv:" << dev << " sum:" << sum << " num:" << num_le);
-        y2war("this:" << *this );
-        }
-    else
-	ret = true;
-    return( ret );
-    }
-
-void
-Dm::setLe( unsigned long long le )
-    {
-    num_le = le;
-    }
-
-void Dm::init()
-    {
-    string dmn = "/dev/mapper/" + tname;
-    if( dmn != dev )
-	alt_names.push_back( dmn );
-    //alt_names.push_back( "/dev/"+tname );
-    if (!getStorage()->testmode())
-	updateMajorMinor();
-    pe_larger = false;
-    }
-
-void Dm::setUdevData(SystemInfo& si)
-    {
-    const UdevMap& by_id = si.getUdevMap("/dev/disk/by-id");
-    alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
-    UdevMap::const_iterator it = by_id.find(procName());
-    if (it != by_id.end())
-	{
-	list<string> sl = it->second;
-	partition(sl.begin(), sl.end(), string_starts_with("dm-name-"));
-	y2mil("dev:" << dev << " udev_id:" << sl);
-	for (list<string>::const_iterator i = sl.begin(); i != sl.end(); ++i)
-	    alt_names.push_back("/dev/disk/by-id/" + *i);
-	}
-    }
-
-void Dm::updateMajorMinor()
-    {
-    getMajorMinor();
-    if (majorNr() == Dm::dmMajor(getStorage()->testmode()))
-	{
-	string d = "/dev/dm-" + decString(minorNr());
-	if( d!=dev )
-	    replaceAltName( "/dev/dm-", d );
-	}
-    num = mnr;
-    }
-
-const PeContainer* Dm::pec() const
-    { 
-    return(dynamic_cast<const PeContainer* const>(cont));
-    }
-
-void Dm::modifyPeSize( unsigned long long old, unsigned long long neww )
-    {
-    num_le = num_le * old / neww;
-    calcSize();
-    for( PeMap::iterator mit=pe_map.begin();
-         mit!=pe_map.end(); ++mit )
-	 mit->second = mit->second * old / neww;
-    }
-	        
-void Dm::calcSize()
-    {
-    setSize( num_le*pec()->peSize() );
-    }
-
-void Dm::computePe( const SystemCmd& c, PeMap& pe )
-    {
-    pe.clear();
-    for (const string& line : c.stdout())
-	{
-	unsigned long le = computeLe(extractNthWord( 1, line ));
-        string tgt = extractNthWord( 2, line );
-	if( tgt=="linear" )
-	    {
-            accumulatePe( extractNthWord( 3, line ), le, pe );
-	    }
-	else if (tgt == "snapshot-origin")
-            {
-            accumulatePe( extractNthWord( 3, line ), le, pe );
-            }
-	else if (tgt == "snapshot")
-            {
-            accumulatePe( extractNthWord( 4, line ), le, pe );
-            }
-	else if (tgt == "thin" )
-            {
-	    // Space for these dm types is currently not tracked
-            }
-	else if( tgt=="striped" )
-	    {
-	    unsigned str;
-	    extractNthWord( 4, line ) >> stripe_size;
-	    stripe_size /= 2;
-	    extractNthWord( 3, line ) >> str;
-	    if( str<2 )
-		y2war("invalid stripe count " << str);
-	    else
-		{
-		le = (le+str-1)/str;
-		for( unsigned j=0; j<str; j++ )
-                    accumulatePe( extractNthWord( 5+j*2, line ), le, pe );
-		}
-	    }
-	else 
-	    {
-	    if( find( known_types.begin(), known_types.end(), tgt ) == 
-	        known_types.end() )
-		y2war("unknown target type \"" << tgt << "\"");
-            if( !pe_larger )
-                pe_larger = (tgt=="thin-pool");
-	    list<string> sl = extractMajMin(line);
-            y2mil( "sl:" << sl );
-	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
-                accumulatePe( *i, le, pe );
-	    }
-	}
-    y2mil( "map:" << pe );
-    }
-
-unsigned long Dm::computeLe( const string& str )
-    {
-    unsigned long ret = 0;
-    unsigned long pesize = pec()->peSize();
-    str >> ret;
-    ret /= 2;
-    if( pesize>0 )
-        {
-        ret += pesize-1;
-        ret /= pesize;
-        }
-    y2mil( "le:\"" << str << "\" ret:" << ret << " pe:" << pesize );
-    return( ret );
-    }
-
-list<string> Dm::extractMajMin( const string& line )
-    {
-    y2mil( "line:" << line );
-    list<string> ret = splitString( extractNthWord( 2, line, true ));
-    static Regex devspec( "^[0123456789]+:[0123456789]+$" );
-    list<string>::iterator i=ret.begin(); 
-    while( i!=ret.end() )
-        {
-        if( !devspec.match( *i ))
-            i=ret.erase(i);
-        else
-            ++i;
-        }
-    y2mil( "ret:" << ret );
-    return( ret );
-    }
-
-void Dm::accumulatePe( const string& majmin, unsigned long le, PeMap& pe )
-    { 
-    unsigned long mj, mi;
-    if( PeContainer::splitMajMin( majmin, mj, mi ))
-        {
-        PeMap::iterator mit;
-	string dv = pec()->getDeviceByNumber( mj, mi );
-        if( !dv.empty() )
-            {
-            if( (mit=pe.find( dv ))==pe.end() )
-                pe[dv] = le;
-            else
-                mit->second += le;
-            }
-        else if( mj==dm_major )
-            {
-            PeMap tmp;
-            getMapRecursive( mi, tmp );
-            PeMap::const_iterator i=tmp.begin();
-            while( i!=tmp.end() )
-                {
-                if( (mit=pe.find( i->first ))==pe.end() )
-                    pe[i->first] = i->second;
-                else
-                    mit->second += i->second;
-                ++i;
-                }
-            }
-        else
-            y2war("could not find major/minor pair " << majmin);
-        }
-    else
-        y2war("invalid major/minor pair " << majmin);
-    y2mil( "majmin:" << majmin << " le:" << le << " pe:" << pe );
-    }
-
-void Dm::getMapRecursive( unsigned long mi, PeMap& pe )
-    {
-    pe.clear();
-    y2mil( "mi:" << mi );
-    list<unsigned long> done;
-    list<unsigned long> todo;
-    todo.push_back(mi);
-    SystemCmd c;
-    string cmd = DMSETUPBIN " table -j " + decString(dm_major) + " -m ";
-    while( !todo.empty() )
-        {
-        unsigned long m=todo.front();
-        todo.pop_front();
-        done.push_back(m);
-        c.execute( cmd + decString(m) );
-        if( c.retcode()==0 )
-            computePe( c, pe );
-        else
-            y2war("recursive dm minor " << mi << " not found" );
-        }
-    y2mil( "mi:" << mi << " pe:" << pe );
-    }
-
-void Dm::setPeMap( const PeMap& m )
-{
-    pe_map = m;
-
-    // remove usused entries
-    // TODO: do not generate pe_maps with unused entries in the first place
-    for(PeMap::iterator i = pe_map.begin(); i != pe_map.end(); ) {
-	if (i->second == 0)
-	    pe_map.erase(i++);
 	else
-	    ++i;
+	{
+	    mit = pe_map.find( dv );
+	    if( mit != pe_map.end() && pec()->addedPv(mit->first) )
+		mit = pe_map.end();
+	}
+	ret = mit != pe_map.end();
+	if( ret )
+	{
+	    y2mil("map:" << pe_map);
+	    y2mil("table:" << tname << " dev:" << dv << " ret:" << ret);
+	}
+	return( ret );
     }
 
-    y2mil("device:" << device() << " pe_map:" << pe_map);
-}
-
-
-void Dm::changeDeviceName( const string& old, const string& nw )
+    bool
+    Dm::checkConsistency() const
     {
-    PeMap::const_iterator mit = pe_map.find( old );
-    if( mit != pe_map.end() )
+	bool ret = false;
+	unsigned long sum = 0;
+	for( PeMap::const_iterator mit=pe_map.begin(); mit!=pe_map.end(); ++mit )
+	    sum += mit->second;
+	if( (!pe_larger && sum!=num_le) ||
+	    ( pe_larger && sum<num_le) )
 	{
-        pe_map[nw] = mit->second;
-	pe_map.erase(mit->first);
+	    y2war("lv:" << dev << " sum:" << sum << " num:" << num_le);
+	    y2war("this:" << *this );
+	}
+	else
+	    ret = true;
+	return( ret );
+    }
+
+    void
+    Dm::setLe( unsigned long long le )
+    {
+	num_le = le;
+    }
+
+    void Dm::init()
+    {
+	string dmn = "/dev/mapper/" + tname;
+	if( dmn != dev )
+	    alt_names.push_back( dmn );
+	//alt_names.push_back( "/dev/"+tname );
+	if (!getStorage()->testmode())
+	    updateMajorMinor();
+	pe_larger = false;
+    }
+
+    void Dm::setUdevData(SystemInfo& si)
+    {
+	const UdevMap& by_id = si.getUdevMap("/dev/disk/by-id");
+	alt_names.remove_if(string_starts_with("/dev/disk/by-id/"));
+	UdevMap::const_iterator it = by_id.find(procName());
+	if (it != by_id.end())
+	{
+	    list<string> sl = it->second;
+	    partition(sl.begin(), sl.end(), string_starts_with("dm-name-"));
+	    y2mil("dev:" << dev << " udev_id:" << sl);
+	    for (list<string>::const_iterator i = sl.begin(); i != sl.end(); ++i)
+		alt_names.push_back("/dev/disk/by-id/" + *i);
 	}
     }
 
-Text Dm::removeText( bool doing ) const
+    void Dm::updateMajorMinor()
     {
-    Text txt;
-    if( doing )
+	getMajorMinor();
+	if (majorNr() == Dm::dmMajor(getStorage()->testmode()))
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-	txt = sformat( _("Deleting device mapper volume %1$s"), dev.c_str() );
+	    string d = "/dev/dm-" + decString(minorNr());
+	    if( d!=dev )
+		replaceAltName( "/dev/dm-", d );
 	}
-    else
-	{
-	// displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete device mapper volume %1$s (%2$s)"), dev.c_str(),
-		       sizeString().c_str() );
-	}
-    return( txt );
+	num = mnr;
     }
 
-Text Dm::formatText( bool doing ) const
+    const PeContainer* Dm::pec() const
     {
-    Text txt;
-    if( doing )
+	return(dynamic_cast<const PeContainer* const>(cont));
+    }
+
+    void Dm::modifyPeSize( unsigned long long old, unsigned long long neww )
+    {
+	num_le = num_le * old / neww;
+	calcSize();
+	for( PeMap::iterator mit=pe_map.begin();
+	     mit!=pe_map.end(); ++mit )
+	    mit->second = mit->second * old / neww;
+    }
+
+    void Dm::calcSize()
+    {
+	setSize( num_le*pec()->peSize() );
+    }
+
+    void Dm::computePe( const SystemCmd& c, PeMap& pe )
+    {
+	pe.clear();
+	for (const string& line : c.stdout())
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting device mapper volume %1$s (%2$s) with %3$s "),
-		       dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
-	}
-    else
-	{
-	if( !mp.empty() )
+	    unsigned long le = computeLe(extractNthWord( 1, line ));
+	    string tgt = extractNthWord( 2, line );
+	    if( tgt=="linear" )
 	    {
-	    if( encryption==ENC_NONE )
+		accumulatePe( extractNthWord( 3, line ), le, pe );
+	    }
+	    else if (tgt == "snapshot-origin")
+	    {
+		accumulatePe( extractNthWord( 3, line ), le, pe );
+	    }
+	    else if (tgt == "snapshot")
+	    {
+		accumulatePe( extractNthWord( 4, line ), le, pe );
+	    }
+	    else if (tgt == "thin" )
+	    {
+		// Space for these dm types is currently not tracked
+	    }
+	    else if( tgt=="striped" )
+	    {
+		unsigned str;
+		extractNthWord( 4, line ) >> stripe_size;
+		stripe_size /= 2;
+		extractNthWord( 3, line ) >> str;
+		if( str<2 )
+		    y2war("invalid stripe count " << str);
+		else
 		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format device mapper volume %1$s (%2$s) for %4$s with %3$s"),
-			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
-		}
-	    else
-		{
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"),
-			       dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			       mp.c_str() );
+		    le = (le+str-1)/str;
+		    for( unsigned j=0; j<str; j++ )
+			accumulatePe( extractNthWord( 5+j*2, line ), le, pe );
 		}
 	    }
-	else
+	    else
 	    {
+		if( find( known_types.begin(), known_types.end(), tgt ) ==
+		    known_types.end() )
+		    y2war("unknown target type \"" << tgt << "\"");
+		if( !pe_larger )
+		    pe_larger = (tgt=="thin-pool");
+		list<string> sl = extractMajMin(line);
+		y2mil( "sl:" << sl );
+		for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+		    accumulatePe( *i, le, pe );
+	    }
+	}
+	y2mil( "map:" << pe );
+    }
+
+    unsigned long Dm::computeLe( const string& str )
+    {
+	unsigned long ret = 0;
+	unsigned long pesize = pec()->peSize();
+	str >> ret;
+	ret /= 2;
+	if( pesize>0 )
+	{
+	    ret += pesize-1;
+	    ret /= pesize;
+	}
+	y2mil( "le:\"" << str << "\" ret:" << ret << " pe:" << pesize );
+	return( ret );
+    }
+
+    list<string> Dm::extractMajMin( const string& line )
+    {
+	y2mil( "line:" << line );
+	list<string> ret = splitString( extractNthWord( 2, line, true ));
+	static Regex devspec( "^[0123456789]+:[0123456789]+$" );
+	list<string>::iterator i=ret.begin();
+	while( i!=ret.end() )
+	{
+	    if( !devspec.match( *i ))
+		i=ret.erase(i);
+	    else
+		++i;
+	}
+	y2mil( "ret:" << ret );
+	return( ret );
+    }
+
+    void Dm::accumulatePe( const string& majmin, unsigned long le, PeMap& pe )
+    {
+	unsigned long mj, mi;
+	if( PeContainer::splitMajMin( majmin, mj, mi ))
+	{
+	    PeMap::iterator mit;
+	    string dv = pec()->getDeviceByNumber( mj, mi );
+	    if( !dv.empty() )
+	    {
+		if( (mit=pe.find( dv ))==pe.end() )
+		    pe[dv] = le;
+		else
+		    mit->second += le;
+	    }
+	    else if( mj==dm_major )
+	    {
+		PeMap tmp;
+		getMapRecursive( mi, tmp );
+		PeMap::const_iterator i=tmp.begin();
+		while( i!=tmp.end() )
+		{
+		    if( (mit=pe.find( i->first ))==pe.end() )
+			pe[i->first] = i->second;
+		    else
+			mit->second += i->second;
+		    ++i;
+		}
+	    }
+	    else
+		y2war("could not find major/minor pair " << majmin);
+	}
+	else
+	    y2war("invalid major/minor pair " << majmin);
+	y2mil( "majmin:" << majmin << " le:" << le << " pe:" << pe );
+    }
+
+    void Dm::getMapRecursive( unsigned long mi, PeMap& pe )
+    {
+	pe.clear();
+	y2mil( "mi:" << mi );
+	list<unsigned long> done;
+	list<unsigned long> todo;
+	todo.push_back(mi);
+	SystemCmd c;
+	string cmd = DMSETUPBIN " table -j " + decString(dm_major) + " -m ";
+	while( !todo.empty() )
+	{
+	    unsigned long m=todo.front();
+	    todo.pop_front();
+	    done.push_back(m);
+	    c.execute( cmd + decString(m) );
+	    if( c.retcode()==0 )
+		computePe( c, pe );
+	    else
+		y2war("recursive dm minor " << mi << " not found" );
+	}
+	y2mil( "mi:" << mi << " pe:" << pe );
+    }
+
+    void Dm::setPeMap( const PeMap& m )
+    {
+	pe_map = m;
+
+	// remove usused entries
+	// TODO: do not generate pe_maps with unused entries in the first place
+	for(PeMap::iterator i = pe_map.begin(); i != pe_map.end(); ) {
+	    if (i->second == 0)
+		pe_map.erase(i++);
+	    else
+		++i;
+	}
+
+	y2mil("device:" << device() << " pe_map:" << pe_map);
+    }
+
+
+    void Dm::changeDeviceName( const string& old, const string& nw )
+    {
+	PeMap::const_iterator mit = pe_map.find( old );
+	if( mit != pe_map.end() )
+	{
+	    pe_map[nw] = mit->second;
+	    pe_map.erase(mit->first);
+	}
+    }
+
+    Text Dm::removeText( bool doing ) const
+    {
+	Text txt;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+	    txt = sformat( _("Deleting device mapper volume %1$s"), dev.c_str() );
+	}
+	else
+	{
 	    // displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format device mapper volume %1$s (%2$s) with %3$s"),
-			   dev.c_str(), sizeString().c_str(), 
-			   fsTypeString().c_str() );
-	    }
+	    txt = sformat( _("Delete device mapper volume %1$s (%2$s)"), dev.c_str(),
+			   sizeString().c_str() );
 	}
-    return( txt );
+	return( txt );
     }
 
-void Dm::activate( bool val )
+    Text Dm::formatText( bool doing ) const
+    {
+	Text txt;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by file system type (e.g. reiserfs)
+	    txt = sformat( _("Formatting device mapper volume %1$s (%2$s) with %3$s "),
+			   dev.c_str(), sizeString().c_str(), fsTypeString().c_str() );
+	}
+	else
+	{
+	    if( !mp.empty() )
+	    {
+		if( encryption==ENC_NONE )
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Format device mapper volume %1$s (%2$s) for %4$s with %3$s"),
+				   dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				   mp.c_str() );
+		}
+		else
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"),
+				   dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				   mp.c_str() );
+		}
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		txt = sformat( _("Format device mapper volume %1$s (%2$s) with %3$s"),
+			       dev.c_str(), sizeString().c_str(),
+			       fsTypeString().c_str() );
+	    }
+	}
+	return( txt );
+    }
+
+    void Dm::activate( bool val )
     {
 	if (getenv("LIBSTORAGE_NO_DM") != NULL)
 	    return;
 
-    y2mil("old active:" << active << " val:" << val);
-    if( active!=val )
+	y2mil("old active:" << active << " val:" << val);
+	if( active!=val )
 	{
-	SystemCmd c;
-	if( val )
+	    SystemCmd c;
+	    if( val )
 	    {
-	    c.execute(DMSETUPBIN " version");
-	    if( c.retcode()!=0 )
+		c.execute(DMSETUPBIN " version");
+		if( c.retcode()!=0 )
 		{
 		    c.execute(MODPROBEBIN " dm-mod");
 		    c.execute(MODPROBEBIN " dm-snapshot");
-		c.execute(DMSETUPBIN " version");
+		    c.execute(DMSETUPBIN " version");
 		}
 	    }
-	else
+	    else
 	    {
-	    SystemCmd rm;
+		SystemCmd rm;
 		const CmdDmsetupInfo cmddmsetupinfo;
 		for (const CmdDmsetupInfo::value_type& info : cmddmsetupinfo)
 		{
 		    rm.execute(DMSETUPBIN " remove " + info.first);
 		}
 	    }
-	active = val;
+	    active = val;
 	}
     }
 
-string Dm::devToTable( const string& dv )
+    string Dm::devToTable( const string& dv )
     {
-    string ret = boost::replace_all_copy(undevDevice(dv), "/", "|");
-    if( dv!=ret )
-	y2mil("dev:" << dv << " ret:" << ret);
-    return( ret );
+	string ret = boost::replace_all_copy(undevDevice(dv), "/", "|");
+	if( dv!=ret )
+	    y2mil("dev:" << dv << " ret:" << ret);
+	return( ret );
     }
 
-string Dm::lvmTableToDev( const string& tab )
+    string Dm::lvmTableToDev( const string& tab )
     {
-    static Regex delim( "[^-]-[^-]" );
-    string ret( tab );
-    if( delim.match( ret ) )
-        {
-        ret[delim.so(0)+1] = '/';
-        boost::replace_all(ret,"--","-");
-        ret = "/dev/" + ret;
-        }
-    return( ret );
+	static Regex delim( "[^-]-[^-]" );
+	string ret( tab );
+	if( delim.match( ret ) )
+	{
+	    ret[delim.so(0)+1] = '/';
+	    boost::replace_all(ret,"--","-");
+	    ret = "/dev/" + ret;
+	}
+	return( ret );
     }
 
 
 
 
-string Dm::dmDeviceName( unsigned long num )
+    string Dm::dmDeviceName( unsigned long num )
     {
-    return( "/dev/dm-" + decString(num));
+	return( "/dev/dm-" + decString(num));
     }
 
 
@@ -586,45 +586,45 @@ string Dm::dmDeviceName( unsigned long num )
     }
 
 
-void Dm::getInfo( DmInfo& info ) const
+    void Dm::getInfo( DmInfo& info ) const
     {
-    Volume::getInfo(info.v);
-    info.nr = num;
-    info.table = tname;
-    info.target = target;
+	Volume::getInfo(info.v);
+	info.nr = num;
+	info.table = tname;
+	info.target = target;
     }
 
 
-std::ostream& operator<< (std::ostream& s, const Dm &p )
+    std::ostream& operator<< (std::ostream& s, const Dm &p )
     {
-    s << p.shortPrintedName() << " ";
-    s << dynamic_cast<const Volume&>(p);
-    if( p.num_le>0 )
-	s << " LE:" << p.num_le;
-    s << " Table:" << p.tname;
-    if( !p.target.empty() )
-	s << " Target:" << p.target;
-    if( p.inactiv )
-      {
-      s << " inactive";
-      }
-    if( p.stripe>1 )
-      {
-      s << " Stripes:" << p.stripe;
-      if( p.stripe_size>0 )
-	s << " StripeSize:" << p.stripe_size;
-      }
-    if( !p.pe_map.empty() )
-      s << " pe_map:" << p.pe_map;
-    return( s );
+	s << p.shortPrintedName() << " ";
+	s << dynamic_cast<const Volume&>(p);
+	if( p.num_le>0 )
+	    s << " LE:" << p.num_le;
+	s << " Table:" << p.tname;
+	if( !p.target.empty() )
+	    s << " Target:" << p.target;
+	if( p.inactiv )
+	{
+	    s << " inactive";
+	}
+	if( p.stripe>1 )
+	{
+	    s << " Stripes:" << p.stripe;
+	    if( p.stripe_size>0 )
+		s << " StripeSize:" << p.stripe_size;
+	}
+	if( !p.pe_map.empty() )
+	    s << " pe_map:" << p.pe_map;
+	return( s );
     }
-    
 
-bool Dm::equalContent( const Dm& rhs ) const
+
+    bool Dm::equalContent( const Dm& rhs ) const
     {
-    return( Volume::equalContent(rhs) &&
-            num_le==rhs.num_le && stripe==rhs.stripe && inactiv==rhs.inactiv &&
-            stripe_size==rhs.stripe_size && pe_map==rhs.pe_map );
+	return( Volume::equalContent(rhs) &&
+		num_le==rhs.num_le && stripe==rhs.stripe && inactiv==rhs.inactiv &&
+		stripe_size==rhs.stripe_size && pe_map==rhs.pe_map );
     }
 
 
@@ -641,8 +641,8 @@ bool Dm::equalContent( const Dm& rhs ) const
     }
 
 
-bool Dm::active = false;
-unsigned Dm::dm_major = 0;
+    bool Dm::active = false;
+    unsigned Dm::dm_major = 0;
 
     static const char* elem[] = { "crypt", "thin-pool" };
     const list<string> Dm::known_types(elem, elem + lengthof(elem));

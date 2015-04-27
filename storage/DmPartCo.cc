@@ -21,7 +21,7 @@
 
 
 #include <ostream>
-#include <sstream> 
+#include <sstream>
 
 #include "storage/DmPartCo.h"
 #include "storage/DmPart.h"
@@ -42,20 +42,20 @@ namespace storage
 		       SystemInfo& systeminfo)
 	: PeContainer(s, name, device, t, systeminfo), disk(NULL), active(false)
     {
-    y2deb("constructing DmPartCo name:" << name);
+	y2deb("constructing DmPartCo name:" << name);
 	getMajorMinor(systeminfo);
 	init(systeminfo);
     }
 
 
-DmPartCo::~DmPartCo()
+    DmPartCo::~DmPartCo()
     {
-    if( disk )
+	if( disk )
 	{
-	delete disk;
-	disk = NULL;
+	    delete disk;
+	    disk = NULL;
 	}
-    y2deb("destructed DmPartCo " << dev);
+	y2deb("destructed DmPartCo " << dev);
     }
 
 
@@ -66,881 +66,881 @@ DmPartCo::~DmPartCo()
     }
 
 
-int
-DmPartCo::addNewDev(string& device)
-{
-    int ret = 0;
-    y2mil("device:" << device << " dev:" << dev);
-    string::size_type pos = device.rfind("-part");
-    if (pos == string::npos)
-	ret = DMPART_PARTITION_NOT_FOUND;
-    else
+    int
+    DmPartCo::addNewDev(string& device)
     {
-	unsigned number;
-	device.substr(pos + 5) >> number;
-	y2mil("num:" << number);
-	device = getPartDevice(number);
-	Partition *p = getPartition( number, false );
-	if( p==NULL )
+	int ret = 0;
+	y2mil("device:" << device << " dev:" << dev);
+	string::size_type pos = device.rfind("-part");
+	if (pos == string::npos)
 	    ret = DMPART_PARTITION_NOT_FOUND;
 	else
 	{
-	    y2mil("*p:" << *p);
-	    DmPart * dm = NULL;
-	    newP( dm, p->nr(), p );
-	    dm->getFsInfo( p );
-	    dm->setCreated();
-	    dm->addUdevData();
-	    ConstDmPartPair pp = dmpartPair();
-	    for( ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
+	    unsigned number;
+	    device.substr(pos + 5) >> number;
+	    y2mil("num:" << number);
+	    device = getPartDevice(number);
+	    Partition *p = getPartition( number, false );
+	    if( p==NULL )
+		ret = DMPART_PARTITION_NOT_FOUND;
+	    else
+	    {
+		y2mil("*p:" << *p);
+		DmPart * dm = NULL;
+		newP( dm, p->nr(), p );
+		dm->getFsInfo( p );
+		dm->setCreated();
+		dm->addUdevData();
+		ConstDmPartPair pp = dmpartPair();
+		for( ConstDmPartIter i=pp.begin(); i!=pp.end(); ++i )
 		{
-		if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
+		    if( i->deleted() && i->nr()==p->nr() && !i->getCryptPwd().empty())
 		    {
-		    y2mil("harvesting old password");
-		    dm->setCryptPwd(i->getCryptPwd());
+			y2mil("harvesting old password");
+			dm->setCryptPwd(i->getCryptPwd());
 		    }
 		}
-	    addToList( dm );
+		addToList( dm );
+	    }
 	}
-    }
-    y2mil("device:" << device << " ret:" << ret);
-    return ret;
-}
-
-
-int 
-DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
-			   long unsigned len, string& device, bool checkRelaxed )
-    {
-    y2mil("begin type:" << toString(type) << " start:" << start << " len:" << len <<
-	  " relaxed:" << checkRelaxed);
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    if( ret==0 )
-	ret = disk->createPartition( type, start, len, device, checkRelaxed );
-    if( ret==0 )
-	ret = addNewDev( device );
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("device:" << device << " ret:" << ret);
+	return ret;
     }
 
-int 
-DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed )
+
+    int
+    DmPartCo::createPartition( storage::PartitionType type, long unsigned start,
+			       long unsigned len, string& device, bool checkRelaxed )
     {
-    y2mil("len:" << len << " relaxed:" << checkRelaxed);
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    if( ret==0 )
-	ret = disk->createPartition( len, device, checkRelaxed );
-    if( ret==0 )
-	ret = addNewDev( device );
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("begin type:" << toString(type) << " start:" << start << " len:" << len <<
+	      " relaxed:" << checkRelaxed);
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	if( ret==0 )
+	    ret = disk->createPartition( type, start, len, device, checkRelaxed );
+	if( ret==0 )
+	    ret = addNewDev( device );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-DmPartCo::createPartition( storage::PartitionType type, string& device )
+    int
+    DmPartCo::createPartition( long unsigned len, string& device, bool checkRelaxed )
     {
-    y2mil("type:" << toString(type));
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    if( ret==0 )
-	ret = disk->createPartition( type, device );
-    if( ret==0 )
-	ret = addNewDev( device );
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("len:" << len << " relaxed:" << checkRelaxed);
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	if( ret==0 )
+	    ret = disk->createPartition( len, device, checkRelaxed );
+	if( ret==0 )
+	    ret = addNewDev( device );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int DmPartCo::updateDelDev()
+    int
+    DmPartCo::createPartition( storage::PartitionType type, string& device )
     {
-    int ret = 0;
-    list<Volume*> l;
-    DmPartPair p=dmpartPair();
-    DmPartIter i=p.begin();
-    while( i!=p.end() )
+	y2mil("type:" << toString(type));
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	if( ret==0 )
+	    ret = disk->createPartition( type, device );
+	if( ret==0 )
+	    ret = addNewDev( device );
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int DmPartCo::updateDelDev()
+    {
+	int ret = 0;
+	list<Volume*> l;
+	DmPartPair p=dmpartPair();
+	DmPartIter i=p.begin();
+	while( i!=p.end() )
 	{
-	Partition *p = i->getPtr();
-	if( p && validPartition( p ) )
+	    Partition *p = i->getPtr();
+	    if( p && validPartition( p ) )
 	    {
-	    if( i->nr()!=p->nr() )
+		if( i->nr()!=p->nr() )
 		{
-		i->updateName();
-		y2mil( "updated name dm:" << *i );
+		    i->updateName();
+		    y2mil( "updated name dm:" << *i );
 		}
-	    if( i->deleted() != p->deleted() )
+		if( i->deleted() != p->deleted() )
 		{
-		i->setDeleted( p->deleted() );
-		y2mil( "updated del dm:" << *i );
+		    i->setDeleted( p->deleted() );
+		    y2mil( "updated del dm:" << *i );
 		}
 	    }
-	else
-	    l.push_back( &(*i) );
-	++i;
+	    else
+		l.push_back( &(*i) );
+	    ++i;
 	}
-    list<Volume*>::iterator vi = l.begin();
-    while( ret==0 && vi!=l.end() )
+	list<Volume*>::iterator vi = l.begin();
+	while( ret==0 && vi!=l.end() )
 	{
-	if( !removeFromList( *vi ))
-	    ret = DMPART_PARTITION_NOT_FOUND;
-	++vi;
+	    if( !removeFromList( *vi ))
+		ret = DMPART_PARTITION_NOT_FOUND;
+	    ++vi;
 	}
-    return( ret );
+	return( ret );
     }
 
-int 
-DmPartCo::removePartition( unsigned nr )
+    int
+    DmPartCo::removePartition( unsigned nr )
     {
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    if( ret==0 )
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	if( ret==0 )
 	{
-	if( nr>0 )
-	    ret = disk->removePartition( nr );
-	else
-	    ret = DMPART_PARTITION_NOT_FOUND;
+	    if( nr>0 )
+		ret = disk->removePartition( nr );
+	    else
+		ret = DMPART_PARTITION_NOT_FOUND;
 	}
-    if( ret==0 )
-	ret = updateDelDev();
-    y2mil("ret:" << ret);
-    return( ret );
+	if( ret==0 )
+	    ret = updateDelDev();
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int
-DmPartCo::removeVolume( Volume* v )
+    int
+    DmPartCo::removeVolume( Volume* v )
     {
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    if( ret==0 )
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	if( ret==0 )
 	{
-	unsigned num = v->nr();
-	if( num>0 )
-	    ret = disk->removePartition( v->nr() );
+	    unsigned num = v->nr();
+	    if( num>0 )
+		ret = disk->removePartition( v->nr() );
 	}
-    if( ret==0 )
-	ret = updateDelDev();
-    getStorage()->logCo( this );
-    y2mil("ret:" << ret);
-    return( ret );
+	if( ret==0 )
+	    ret = updateDelDev();
+	getStorage()->logCo( this );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-int
-DmPartCo::freeCylindersAroundPartition(const DmPart* dm, unsigned long& freeCylsBefore,
-				       unsigned long& freeCylsAfter) const
-{
-    const Partition* p = dm->getPtr();
-    int ret = p ? 0 : DMPART_PARTITION_NOT_FOUND;
-    if (ret == 0)
+    int
+    DmPartCo::freeCylindersAroundPartition(const DmPart* dm, unsigned long& freeCylsBefore,
+					   unsigned long& freeCylsAfter) const
     {
-	ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
-    }
-    y2mil("ret:" << ret);
-    return ret;
-}
-
-
-int DmPartCo::resizePartition( DmPart* dm, unsigned long newCyl )
-    {
-    Partition * p = dm->getPtr();
-    int ret = p?0:DMPART_PARTITION_NOT_FOUND;
-    if( ret==0 )
+	const Partition* p = dm->getPtr();
+	int ret = p ? 0 : DMPART_PARTITION_NOT_FOUND;
+	if (ret == 0)
 	{
-	p->getFsInfo( dm );
-	ret = disk->resizePartition( p, newCyl );
-	dm->updateSize();
+	    ret = disk->freeCylindersAroundPartition(p, freeCylsBefore, freeCylsAfter);
 	}
-    y2mil( "dm:" << *dm );
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return ret;
     }
 
-int
-DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
+
+    int DmPartCo::resizePartition( DmPart* dm, unsigned long newCyl )
     {
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && readonly() )
-	ret = DMPART_CHANGE_READONLY;
-    DmPart * l = dynamic_cast<DmPart *>(v);
-    if( ret==0 && l==NULL )
-	ret = DMPART_INVALID_VOLUME;
-    if( ret==0 )
+	Partition * p = dm->getPtr();
+	int ret = p?0:DMPART_PARTITION_NOT_FOUND;
+	if( ret==0 )
 	{
-	Partition *p = l->getPtr();
-	unsigned num = v->nr();
-	if( num>0 && p!=NULL )
+	    p->getFsInfo( dm );
+	    ret = disk->resizePartition( p, newCyl );
+	    dm->updateSize();
+	}
+	y2mil( "dm:" << *dm );
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int
+    DmPartCo::resizeVolume( Volume* v, unsigned long long newSize )
+    {
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && readonly() )
+	    ret = DMPART_CHANGE_READONLY;
+	DmPart * l = dynamic_cast<DmPart *>(v);
+	if( ret==0 && l==NULL )
+	    ret = DMPART_INVALID_VOLUME;
+	if( ret==0 )
+	{
+	    Partition *p = l->getPtr();
+	    unsigned num = v->nr();
+	    if( num>0 && p!=NULL )
 	    {
-	    p->getFsInfo( v );
-	    ret = disk->resizeVolume( p, newSize );
+		p->getFsInfo( v );
+		ret = disk->resizeVolume( p, newSize );
 	    }
-	else
-	    ret = DMPART_PARTITION_NOT_FOUND;
+	    else
+		ret = DMPART_PARTITION_NOT_FOUND;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	l->updateSize();
+	    l->updateSize();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-void 
+    void
     DmPartCo::init(SystemInfo& systeminfo)
     {
 	CmdDmsetupInfo::Entry entry;
 	if (systeminfo.getCmdDmsetupInfo().getEntry(nm, entry) && entry.segments > 0)
 	{
-	systeminfo.getProcParts().getSize("/dev/dm-" + decString(entry.mnr), size_k);
-	y2mil("minor:" << entry.mnr << " nm:" << nm);
-	y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
-	if( size_k>0 )
-	    pe_size = size_k;
-	else
-	    y2war("size_k zero for dm minor " << entry.mnr);
-	num_pe = 1;
-	createDisk(systeminfo);
-	if( disk->numPartitions()>0 )
+	    systeminfo.getProcParts().getSize("/dev/dm-" + decString(entry.mnr), size_k);
+	    y2mil("minor:" << entry.mnr << " nm:" << nm);
+	    y2mil( "pe_size:" << pe_size << " size_k:" << size_k );
+	    if( size_k>0 )
+		pe_size = size_k;
+	    else
+		y2war("size_k zero for dm minor " << entry.mnr);
+	    num_pe = 1;
+	    createDisk(systeminfo);
+	    if( disk->numPartitions()>0 )
 	    {
-	    string pat = getPartName(1);
-	    pat.erase( pat.length()-1, 1 );
-	    string reg = "^" + pat + "[0-9]+" "$";
-	    list<string> tmp = systeminfo.getCmdDmsetupInfo().getMatchingEntries(regex_matches(reg));
-	    if (tmp.empty())
-		activate_part(true);
+		string pat = getPartName(1);
+		pat.erase( pat.length()-1, 1 );
+		string reg = "^" + pat + "[0-9]+" "$";
+		list<string> tmp = systeminfo.getCmdDmsetupInfo().getMatchingEntries(regex_matches(reg));
+		if (tmp.empty())
+		    activate_part(true);
 	    }
-	getVolumes(systeminfo);
-	active = true;
+	    getVolumes(systeminfo);
+	    active = true;
 	}
     }
 
 
-void
+    void
     DmPartCo::createDisk(SystemInfo& systeminfo)
     {
-    if( disk )
-	delete disk;
-    disk = new Disk(getStorage(), nm, dev, size_k, systeminfo);
-    disk->setNumMinor( 64 );
-    disk->setSilent();
-    disk->setSlave();
-    disk->setAddpart(false);
-    disk->detect(systeminfo);
+	if( disk )
+	    delete disk;
+	disk = new Disk(getStorage(), nm, dev, size_k, systeminfo);
+	disk->setNumMinor( 64 );
+	disk->setSilent();
+	disk->setSlave();
+	disk->setAddpart(false);
+	disk->detect(systeminfo);
     }
 
 
-void 
-DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
+    void
+    DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
-    y2mil( "num:" << num );
-    dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p );
+	y2mil( "num:" << num );
+	dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
-void 
-DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    void
+    DmPartCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
     {
-    y2mil( "num:" << num );
-    dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p, si );
+	y2mil( "num:" << num );
+	dm = new DmPart( *this, getPartName(num), getPartDevice(num), num, p, si );
     }
 
 
-void
+    void
     DmPartCo::getVolumes(SystemInfo& si)
     {
-    clearPointerList(vols);
-    Disk::PartPair pp = disk->partPair();
-    Disk::PartIter i = pp.begin();
-    DmPart * p = NULL;
-    while( i!=pp.end() )
+	clearPointerList(vols);
+	Disk::PartPair pp = disk->partPair();
+	Disk::PartIter i = pp.begin();
+	DmPart * p = NULL;
+	while( i!=pp.end() )
 	{
-	newP( p, i->nr(), &(*i), si );
-	p->updateSize(si.getProcParts());
-	addToList( p );
-	++i;
+	    newP( p, i->nr(), &(*i), si );
+	    p->updateSize(si.getProcParts());
+	    addToList( p );
+	    ++i;
 	}
     }
 
 
-Partition* 
-DmPartCo::getPartition( unsigned nr, bool del )
+    Partition*
+    DmPartCo::getPartition( unsigned nr, bool del )
     {
-    Partition* ret = NULL;
-    Disk::PartPair pp = disk->partPair();
-    Disk::PartIter i = pp.begin();
-    while( i!=pp.end() && (nr!=i->nr() || del!=i->deleted()) )
-	++i;
-    if( i!=pp.end() )
-	ret = &(*i);
-    if( ret )
-	y2mil( "nr:" << nr << " del:" << del << " *p:" << *ret );
-    else
-	y2mil( "nr:" << nr << " del:" << del << " p:NULL" );
-    return( ret );
+	Partition* ret = NULL;
+	Disk::PartPair pp = disk->partPair();
+	Disk::PartIter i = pp.begin();
+	while( i!=pp.end() && (nr!=i->nr() || del!=i->deleted()) )
+	    ++i;
+	if( i!=pp.end() )
+	    ret = &(*i);
+	if( ret )
+	    y2mil( "nr:" << nr << " del:" << del << " *p:" << *ret );
+	else
+	    y2mil( "nr:" << nr << " del:" << del << " p:NULL" );
+	return( ret );
     }
 
-bool 
-DmPartCo::validPartition( const Partition* p )
+    bool
+    DmPartCo::validPartition( const Partition* p )
     {
-    bool ret = false;
-    Disk::PartPair pp = disk->partPair();
-    Disk::PartIter i = pp.begin();
-    while( i!=pp.end() && p != &(*i) )
-	++i;
-    ret = i!=pp.end();
-    y2mil( "nr:" << p->nr() << " ret:" << ret );
-    return( ret );
+	bool ret = false;
+	Disk::PartPair pp = disk->partPair();
+	Disk::PartIter i = pp.begin();
+	while( i!=pp.end() && p != &(*i) )
+	    ++i;
+	ret = i!=pp.end();
+	y2mil( "nr:" << p->nr() << " ret:" << ret );
+	return( ret );
     }
 
-void DmPartCo::updatePointers( bool invalid )
+    void DmPartCo::updatePointers( bool invalid )
     {
-    DmPartPair p=dmpartPair();
-    DmPartIter i=p.begin();
-    while( i!=p.end() )
+	DmPartPair p=dmpartPair();
+	DmPartIter i=p.begin();
+	while( i!=p.end() )
 	{
-	if( invalid )
-	    i->setPtr( getPartition( i->nr(), i->deleted() ));
-	i->updateName();
-	++i;
+	    if( invalid )
+		i->setPtr( getPartition( i->nr(), i->deleted() ));
+	    i->updateName();
+	    ++i;
 	}
     }
 
-void DmPartCo::updateMinor()
+    void DmPartCo::updateMinor()
     {
-    DmPartPair p=dmpartPair();
-    for (DmPartIter i = p.begin(); i != p.end(); ++i)
-	i->updateMinor();
+	DmPartPair p=dmpartPair();
+	for (DmPartIter i = p.begin(); i != p.end(); ++i)
+	    i->updateMinor();
     }
 
 
     string
     DmPartCo::getPartName(unsigned num) const
     {
-    string ret = nm;
-    if( num>0 )
+	string ret = nm;
+	if( num>0 )
 	{
-	ret += "-part";
-	ret += decString(num);
+	    ret += "-part";
+	    ret += decString(num);
 	}
-    y2mil( "num:" << num << " ret:" << ret );
-    return( ret );
+	y2mil( "num:" << num << " ret:" << ret );
+	return( ret );
     }
 
 
     string
     DmPartCo::getPartDevice(unsigned num) const
     {
-    string ret = dev;
-    if( num>0 )
+	string ret = dev;
+	if( num>0 )
 	{
-	ret += "-part";
-	ret += decString(num);
+	    ret += "-part";
+	    ret += decString(num);
 	}
-    y2mil( "num:" << num << " ret:" << ret );
-    return( ret );
+	y2mil( "num:" << num << " ret:" << ret );
+	return( ret );
     }
 
 
-string DmPartCo::undevName( const string& name )
+    string DmPartCo::undevName( const string& name )
     {
-    string ret = name;
-    if( ret.find( "/dev/" ) == 0 )
-	ret.erase( 0, 5 );
-    if( ret.find( "mapper/" ) == 0 )
-	ret.erase( 0, 7 );
-    return( ret );
+	string ret = name;
+	if( ret.find( "/dev/" ) == 0 )
+	    ret.erase( 0, 5 );
+	if( ret.find( "mapper/" ) == 0 )
+	    ret.erase( 0, 7 );
+	return( ret );
     }
 
-int DmPartCo::destroyPartitionTable( const string& new_label )
+    int DmPartCo::destroyPartitionTable( const string& new_label )
     {
-    y2mil("begin");
-    int ret = disk->destroyPartitionTable( new_label );
-    if( ret==0 )
+	y2mil("begin");
+	int ret = disk->destroyPartitionTable( new_label );
+	if( ret==0 )
 	{
-	VIter j = vols.begin();
-	while( j!=vols.end() )
+	    VIter j = vols.begin();
+	    while( j!=vols.end() )
 	    {
-	    if( (*j)->created() )
+		if( (*j)->created() )
 		{
-		delete( *j );
-		j = vols.erase( j );
+		    delete( *j );
+		    j = vols.erase( j );
 		}
-	    else
-		++j;
+		else
+		    ++j;
 	    }
-	bool save = getStorage()->getRecursiveRemoval();
-	getStorage()->setRecursiveRemoval(true);
-	if (isUsedBy())
+	    bool save = getStorage()->getRecursiveRemoval();
+	    getStorage()->setRecursiveRemoval(true);
+	    if (isUsedBy())
 	    {
-	    getStorage()->removeUsing( device(), getUsedBy() );
+		getStorage()->removeUsing( device(), getUsedBy() );
 	    }
-	ronly = false;
-	RVIter i = vols.rbegin();
-	while( i!=vols.rend() )
+	    ronly = false;
+	    RVIter i = vols.rbegin();
+	    while( i!=vols.rend() )
 	    {
-	    if( !(*i)->deleted() )
-		getStorage()->removeVolume( (*i)->device() );
-	    ++i;
+		if( !(*i)->deleted() )
+		    getStorage()->removeVolume( (*i)->device() );
+		++i;
 	    }
-	getStorage()->setRecursiveRemoval(save);
+	    getStorage()->setRecursiveRemoval(save);
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int DmPartCo::changePartitionId( unsigned nr, unsigned id )
+    int DmPartCo::changePartitionId( unsigned nr, unsigned id )
     {
-    int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
-    if( ret==0 )
+	int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
+	if( ret==0 )
 	{
-	ret = disk->changePartitionId( nr, id );
+	    ret = disk->changePartitionId( nr, id );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int DmPartCo::forgetChangePartitionId( unsigned nr )
+    int DmPartCo::forgetChangePartitionId( unsigned nr )
     {
-    int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
-    if( ret==0 )
+	int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
+	if( ret==0 )
 	{
-	ret = disk->forgetChangePartitionId( nr );
+	    ret = disk->forgetChangePartitionId( nr );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-int
-DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
-{
-    int ret = 0;
-    device = "";
-    nr = disk->availablePartNumber( type );
-    if (nr == 0)
+    int
+    DmPartCo::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
+    {
+	int ret = 0;
+	device = "";
+	nr = disk->availablePartNumber( type );
+	if (nr == 0)
 	{
-	ret = DISK_PARTITION_NO_FREE_NUMBER;
+	    ret = DISK_PARTITION_NO_FREE_NUMBER;
 	}
-    else
+	else
 	{
-	device = getPartDevice(nr);
+	    device = getPartDevice(nr);
 	}
-    y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
-    return ret;
-}
+	y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+	return ret;
+    }
 
 
     int
     DmPartCo::changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed)
     {
-    int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
-    if( ret==0 )
+	int ret = nr>0?0:DMPART_PARTITION_NOT_FOUND;
+	if( ret==0 )
 	{
-	ret = disk->changePartitionArea(nr, cylRegion, checkRelaxed);
-	DmPartIter i;
-	if( findDm( nr, i ))
-	    i->updateSize();
+	    ret = disk->changePartitionArea(nr, cylRegion, checkRelaxed);
+	    DmPartIter i;
+	    if( findDm( nr, i ))
+		i->updateSize();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-bool DmPartCo::findDm( unsigned nr, DmPartIter& i )
+    bool DmPartCo::findDm( unsigned nr, DmPartIter& i )
     {
-    DmPartPair p = dmpartPair( DmPart::notDeleted );
-    i=p.begin();
-    while( i!=p.end() && i->nr()!=nr )
-	++i;
-    return( i!=p.end() );
+	DmPartPair p = dmpartPair( DmPart::notDeleted );
+	i=p.begin();
+	while( i!=p.end() && i->nr()!=nr )
+	    ++i;
+	return( i!=p.end() );
     }
 
-void DmPartCo::activate_part( bool val )
+    void DmPartCo::activate_part( bool val )
     {
 	active = val;
     }
 
-int DmPartCo::doSetType( DmPart* dm )
+    int DmPartCo::doSetType( DmPart* dm )
     {
-    y2mil("doSetType container " << name() << " name " << dm->name());
-    Partition * p = dm->getPtr();
-    int ret = p?0:DMPART_PARTITION_NOT_FOUND;
-    if( ret==0 )
+	y2mil("doSetType container " << name() << " name " << dm->name());
+	Partition * p = dm->getPtr();
+	int ret = p?0:DMPART_PARTITION_NOT_FOUND;
+	if( ret==0 )
 	{
-	getStorage()->showInfoCb( dm->setTypeText(true), silent );
-	ret = disk->doSetType( p );
+	    getStorage()->showInfoCb( dm->setTypeText(true), silent );
+	    ret = disk->doSetType( p );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int DmPartCo::doCreateLabel()
+    int DmPartCo::doCreateLabel()
     {
-    y2mil("label:" << labelName());
-    int ret = 0;
-    getStorage()->showInfoCb( setDiskLabelText(true), silent );
-    getStorage()->removeDmMapsTo( device() );
-    removePresentPartitions();
-    ret = disk->doCreateLabel();
-    if( ret==0 )
+	y2mil("label:" << labelName());
+	int ret = 0;
+	getStorage()->showInfoCb( setDiskLabelText(true), silent );
+	getStorage()->removeDmMapsTo( device() );
+	removePresentPartitions();
+	ret = disk->doCreateLabel();
+	if( ret==0 )
 	{
-	removeFromMemory();
-	Storage::waitForDevice();
+	    removeFromMemory();
+	    Storage::waitForDevice();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int
-DmPartCo::removeDmPart()
+    int
+    DmPartCo::removeDmPart()
     {
-    int ret = 0;
-    y2mil("begin");
-    if( readonly() )
+	int ret = 0;
+	y2mil("begin");
+	if( readonly() )
 	{
-	ret = DMPART_CHANGE_READONLY;
+	    ret = DMPART_CHANGE_READONLY;
 	}
-    if( ret==0 && !created() )
+	if( ret==0 && !created() )
 	{
-	DmPartPair p=dmpartPair(DmPart::notDeleted);
-	for( DmPartIter i=p.begin(); i!=p.end(); ++i )
+	    DmPartPair p=dmpartPair(DmPart::notDeleted);
+	    for( DmPartIter i=p.begin(); i!=p.end(); ++i )
 	    {
-	    if( i->nr()>0 )
-		ret = removePartition( i->nr() );
+		if( i->nr()>0 )
+		    ret = removePartition( i->nr() );
 	    }
-	p=dmpartPair(DmPart::notDeleted);
-	if( p.begin()!=p.end() && p.begin()->nr()==0 )
+	    p=dmpartPair(DmPart::notDeleted);
+	    if( p.begin()!=p.end() && p.begin()->nr()==0 )
 	    {
-	    if( !removeFromList( &(*p.begin()) ))
-		y2err( "not found:" << *p.begin() );
+		if( !removeFromList( &(*p.begin()) ))
+		    y2err( "not found:" << *p.begin() );
 	    }
-	setDeleted();
+	    setDeleted();
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	unuseDev();
+	    unuseDev();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-void DmPartCo::removePresentPartitions()
+    void DmPartCo::removePresentPartitions()
     {
-    VolPair p = volPair();
-    if( !p.empty() )
+	VolPair p = volPair();
+	if( !p.empty() )
 	{
-	bool save=silent;
-	setSilent( true );
-	list<VolIterator> l;
-	for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    bool save=silent;
+	    setSilent( true );
+	    list<VolIterator> l;
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
 	    {
+		y2mil( "rem:" << *i );
+		if( !i->created() )
+		    l.push_front( i );
+	    }
+	    for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    {
+		doRemove( &(**i) );
+	    }
+	    setSilent( save );
+	}
+    }
+
+    void DmPartCo::removeFromMemory()
+    {
+	VIter i = vols.begin();
+	while( i!=vols.end() )
+	{
 	    y2mil( "rem:" << *i );
-	    if( !i->created() )
-		l.push_front( i );
-	    }
-	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    if( !(*i)->created() )
 	    {
-	    doRemove( &(**i) );
+		delete *i;
+		i = vols.erase( i );
 	    }
-	setSilent( save );
+	    else
+		++i;
 	}
     }
 
-void DmPartCo::removeFromMemory()
+    static bool toChangeId( const DmPart&d )
     {
-    VIter i = vols.begin();
-    while( i!=vols.end() )
+	Partition* p = d.getPtr();
+	return( p!=NULL && !d.deleted() && Partition::toChangeId(*p) );
+    }
+
+
+    void
+    DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
+    {
+	y2mil("col:" << col.size() << " vol:" << vol.size());
+	getStorage()->logCo( this );
+	unsigned long oco = col.size();
+	unsigned long ovo = vol.size();
+	Container::getToCommit( stage, col, vol );
+	if( stage==INCREASE )
 	{
-	y2mil( "rem:" << *i );
-	if( !(*i)->created() )
+	    ConstDmPartPair p = dmpartPair( toChangeId );
+	    for( ConstDmPartIter i=p.begin(); i!=p.end(); ++i )
+		if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		    vol.push_back( &(*i) );
+	}
+	if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
+	    col.push_back( this );
+	if( col.size()!=oco || vol.size()!=ovo )
+	    y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
+    }
+
+
+    int DmPartCo::commitChanges( CommitStage stage, Volume* vol )
+    {
+	y2mil("name:" << name() << " stage:" << stage);
+	int ret = Container::commitChanges( stage, vol );
+	if( ret==0 && stage==INCREASE )
+	{
+	    DmPart * dm = dynamic_cast<DmPart *>(vol);
+	    if( dm!=NULL )
 	    {
-	    delete *i;
-	    i = vols.erase( i );
+		Partition* p = dm->getPtr();
+		if( p && disk && Partition::toChangeId( *p ) )
+		    ret = doSetType( dm );
 	    }
+	    else
+		ret = DMPART_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int DmPartCo::commitChanges( CommitStage stage )
+    {
+	y2mil("name:" << name() << " stage:" << stage);
+	int ret = 0;
+	if( stage==DECREASE && deleted() )
+	{
+	    ret = doRemove();
+	}
+	else if( stage==DECREASE && disk->del_ptable )
+	{
+	    ret = doCreateLabel();
+	}
 	else
-	    ++i;
-	}
-    }
-
-static bool toChangeId( const DmPart&d ) 
-    { 
-    Partition* p = d.getPtr();
-    return( p!=NULL && !d.deleted() && Partition::toChangeId(*p) );
+	    ret = DMPART_COMMIT_NOTHING_TODO;
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-void
-DmPartCo::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
-{
-    y2mil("col:" << col.size() << " vol:" << vol.size());
-    getStorage()->logCo( this );
-    unsigned long oco = col.size();
-    unsigned long ovo = vol.size();
-    Container::getToCommit( stage, col, vol );
-    if( stage==INCREASE )
-	{
-	ConstDmPartPair p = dmpartPair( toChangeId );
-	for( ConstDmPartIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
-	}
-    if( disk->del_ptable && find( col.begin(), col.end(), this )==col.end() )
-	col.push_back( this );
-    if( col.size()!=oco || vol.size()!=ovo )
-	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
-}
-
-
-int DmPartCo::commitChanges( CommitStage stage, Volume* vol )
+    void
+    DmPartCo::getCommitActions(list<commitAction>& l) const
     {
-    y2mil("name:" << name() << " stage:" << stage);
-    int ret = Container::commitChanges( stage, vol );
-    if( ret==0 && stage==INCREASE )
-        {
-        DmPart * dm = dynamic_cast<DmPart *>(vol);
-        if( dm!=NULL )
-            {
-	    Partition* p = dm->getPtr();
-            if( p && disk && Partition::toChangeId( *p ) )
-                ret = doSetType( dm );
-            }
-        else
-            ret = DMPART_INVALID_VOLUME;
-        }
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int DmPartCo::commitChanges( CommitStage stage )
-    {
-    y2mil("name:" << name() << " stage:" << stage);
-    int ret = 0;
-    if( stage==DECREASE && deleted() )
+	y2mil( "l:" << l );
+	Container::getCommitActions( l );
+	y2mil( "l:" << l );
+	if( deleted() || disk->del_ptable )
 	{
-	ret = doRemove();
+	    l.remove_if(stage_is(DECREASE));
+	    Text txt = deleted() ? removeText(false) : setDiskLabelText(false);
+	    l.push_front(commitAction(DECREASE, staticType(), txt, this, true));
 	}
-    else if( stage==DECREASE && disk->del_ptable )
-	{
-	ret = doCreateLabel();
-	}
-    else
-	ret = DMPART_COMMIT_NOTHING_TODO;
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil( "l:" << l );
     }
 
 
-void
-DmPartCo::getCommitActions(list<commitAction>& l) const
+    int
+    DmPartCo::doCreate( Volume* v )
     {
-    y2mil( "l:" << l );
-    Container::getCommitActions( l );
-    y2mil( "l:" << l );
-    if( deleted() || disk->del_ptable )
+	y2mil("DmPart:" << name() << " name:" << v->name());
+	DmPart * l = dynamic_cast<DmPart *>(v);
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && l == NULL )
+	    ret = DMPART_INVALID_VOLUME;
+	Partition *p = NULL;
+	if( ret==0 )
 	{
-	l.remove_if(stage_is(DECREASE));
-	Text txt = deleted() ? removeText(false) : setDiskLabelText(false);
-	l.push_front(commitAction(DECREASE, staticType(), txt, this, true));
+	    getStorage()->showInfoCb( l->createText(true), silent );
+	    p = l->getPtr();
+	    if( p==NULL )
+		ret = DMPART_PARTITION_NOT_FOUND;
+	    else
+		ret = disk->doCreate( p );
+	    if( ret==0 && p->id()!=Partition::ID_LINUX )
+		ret = doSetType( l );
 	}
-    y2mil( "l:" << l );
-    }
-
-
-int 
-DmPartCo::doCreate( Volume* v ) 
-    {
-    y2mil("DmPart:" << name() << " name:" << v->name());
-    DmPart * l = dynamic_cast<DmPart *>(v);
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && l == NULL )
-	ret = DMPART_INVALID_VOLUME;
-    Partition *p = NULL;
-    if( ret==0 )
+	if( ret==0 )
 	{
-	getStorage()->showInfoCb( l->createText(true), silent );
-	p = l->getPtr();
-	if( p==NULL )
-	    ret = DMPART_PARTITION_NOT_FOUND;
-	else
-	    ret = disk->doCreate( p );
-	if( ret==0 && p->id()!=Partition::ID_LINUX )
-	    ret = doSetType( l );
-	}
-    if( ret==0 )
-	{
-	l->setCreated(false);
-	if( active )
+	    l->setCreated(false);
+	    if( active )
 	    {
+		activate_part(false);
+		activate_part(true);
+		ProcParts parts;
+		updateMinor();
+		l->updateSize(parts);
+	    }
+	    if( p->type()!=EXTENDED )
+		Storage::waitForDevice(l->device());
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int DmPartCo::doRemove()
+    {
+	return( DMPART_NO_REMOVE );
+    }
+
+    int DmPartCo::doRemove( Volume* v )
+    {
+	y2mil("DmPart:" << name() << " name:" << v->name());
+	DmPart * l = dynamic_cast<DmPart *>(v);
+	bool save_act = false;
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && l == NULL )
+	    ret = DMPART_INVALID_VOLUME;
+	if( ret==0 )
+	{
+	    getStorage()->showInfoCb( l->removeText(true), silent );
+	    ret = v->prepareRemove();
+	}
+	if( ret==0 )
+	{
+	    save_act = active;
+	    if( active )
+		activate_part(false);
+	    Partition *p = l->getPtr();
+	    if( p==NULL )
+		ret = DMPART_PARTITION_NOT_FOUND;
+	    else if( !deleted() )
+		ret = disk->doRemove( p );
+	}
+	if( ret==0 )
+	{
+	    if( !removeFromList( l ) )
+		ret = DMPART_REMOVE_PARTITION_LIST_ERASE;
+	}
+	if( save_act && !deleted() )
+	{
+	    activate_part(true);
+	    updateMinor();
+	}
+	if( ret==0 )
+	    Storage::waitForDevice();
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int DmPartCo::doResize( Volume* v )
+    {
+	y2mil("DmPart:" << name() << " name:" << v->name());
+	DmPart * l = dynamic_cast<DmPart *>(v);
+	int ret = disk ? 0 : DMPART_INTERNAL_ERR;
+	if( ret==0 && l == NULL )
+	    ret = DMPART_INVALID_VOLUME;
+	bool remount = false;
+	if( ret==0 )
+	{
+	    getStorage()->showInfoCb( l->resizeText(true), silent );
+	    if( l->isMounted() )
+	    {
+		ret = l->umount();
+		if( ret==0 )
+		    remount = true;
+	    }
+	    if( ret==0 )
+		ret = l->resizeBefore();
+	}
+	if( ret==0 )
+	{
+	    Partition *p = l->getPtr();
+	    if( p==NULL )
+		ret = DMPART_PARTITION_NOT_FOUND;
+	    else
+		ret = disk->doResize( p );
+	}
+	if( ret==0 && active )
+	{
 	    activate_part(false);
 	    activate_part(true);
+	}
+	if( ret==0 )
+	    ret = l->resizeAfter();
+	if( ret==0 )
+	{
 	    ProcParts parts;
 	    updateMinor();
 	    l->updateSize(parts);
-	    }
-	if( p->type()!=EXTENDED )
 	    Storage::waitForDevice(l->device());
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	if( ret==0 && remount )
+	    ret = l->mount();
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int DmPartCo::doRemove()
-    {
-    return( DMPART_NO_REMOVE );
-    }
-
-int DmPartCo::doRemove( Volume* v )
-    {
-    y2mil("DmPart:" << name() << " name:" << v->name());
-    DmPart * l = dynamic_cast<DmPart *>(v);
-    bool save_act = false;
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && l == NULL )
-	ret = DMPART_INVALID_VOLUME;
-    if( ret==0 )
-	{
-	getStorage()->showInfoCb( l->removeText(true), silent );
-	ret = v->prepareRemove();
-	}
-    if( ret==0 )
-	{
-	save_act = active;
-	if( active )
-	    activate_part(false);
-	Partition *p = l->getPtr();
-	if( p==NULL )
-	    ret = DMPART_PARTITION_NOT_FOUND;
-	else if( !deleted() )
-	    ret = disk->doRemove( p );
-	}
-    if( ret==0 )
-	{
-	if( !removeFromList( l ) )
-	    ret = DMPART_REMOVE_PARTITION_LIST_ERASE;
-	}
-    if( save_act && !deleted() )
-	{
-	activate_part(true);
-	updateMinor();
-	}
-    if( ret==0 )
-	Storage::waitForDevice();
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int DmPartCo::doResize( Volume* v ) 
-    {
-    y2mil("DmPart:" << name() << " name:" << v->name());
-    DmPart * l = dynamic_cast<DmPart *>(v);
-    int ret = disk ? 0 : DMPART_INTERNAL_ERR;
-    if( ret==0 && l == NULL )
-	ret = DMPART_INVALID_VOLUME;
-    bool remount = false;
-    if( ret==0 )
-	{
-	getStorage()->showInfoCb( l->resizeText(true), silent );
-	if( l->isMounted() )
-	    {
-	    ret = l->umount();
-	    if( ret==0 )
-		remount = true;
-	    }
-	if( ret==0 )
-	    ret = l->resizeBefore();
-	}
-    if( ret==0 )
-	{
-	Partition *p = l->getPtr();
-	if( p==NULL )
-	    ret = DMPART_PARTITION_NOT_FOUND;
-	else
-	    ret = disk->doResize( p );
-	}
-    if( ret==0 && active )
-	{
-	activate_part(false);
-	activate_part(true);
-	}
-    if( ret==0 )
-	ret = l->resizeAfter();
-    if( ret==0 )
-	{
-	ProcParts parts;
-	updateMinor();
-	l->updateSize(parts);
-	Storage::waitForDevice(l->device());
-	}
-    if( ret==0 && remount )
-	ret = l->mount();
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-Text DmPartCo::setDiskLabelText( bool doing ) const
+    Text DmPartCo::setDiskLabelText( bool doing ) const
     {
 	return disk->setDiskLabelText(doing);
     }
 
-Text DmPartCo::removeText( bool doing ) const
+    Text DmPartCo::removeText( bool doing ) const
     {
-    Text txt;
-    if( doing )
-        {
-        // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Removing %1$s"), name().c_str() );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Remove %1$s"), name().c_str() );
-        }
-    return( txt );
-    }
-
-
-void
-DmPartCo::setUdevData(const list<string>& id)
-{
-    alt_names.remove_if(string_contains("/by-id/"));
-    for (list<string>::const_iterator i = id.begin(); i != id.end(); ++i)
-	alt_names.push_back("/dev/disk/by-id/" + *i);
-
-    if (disk)
-    {
-	disk->setUdevData("", id);
-    }
-}
-
-
-void DmPartCo::getInfo( DmPartCoInfo& info ) const
-    {
-    if( disk )
+	Text txt;
+	if( doing )
 	{
-	disk->getInfo( info.d );
+	    // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+	    txt = sformat( _("Removing %1$s"), name().c_str() );
 	}
-    info.minor = mnr;
-
-    info.devices.clear();
-    for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	info.devices.push_back(it->device);
-
-    y2mil( "device:" << info.devices );
+	else
+	{
+	    // displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+	    txt = sformat( _("Remove %1$s"), name().c_str() );
+	}
+	return( txt );
     }
 
 
-std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
+    void
+    DmPartCo::setUdevData(const list<string>& id)
     {
-    s << dynamic_cast<const PeContainer&>(d);
-    if( !d.udev_id.empty() )
-	s << " UdevId:" << d.udev_id;
-    if( !d.active )
-      s << " inactive";
-    s << " geometry:" << d.disk->getGeometry();
-    return( s );
+	alt_names.remove_if(string_contains("/by-id/"));
+	for (list<string>::const_iterator i = id.begin(); i != id.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + *i);
+
+	if (disk)
+	{
+	    disk->setUdevData("", id);
+	}
+    }
+
+
+    void DmPartCo::getInfo( DmPartCoInfo& info ) const
+    {
+	if( disk )
+	{
+	    disk->getInfo( info.d );
+	}
+	info.minor = mnr;
+
+	info.devices.clear();
+	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
+	    info.devices.push_back(it->device);
+
+	y2mil( "device:" << info.devices );
+    }
+
+
+    std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
+    {
+	s << dynamic_cast<const PeContainer&>(d);
+	if( !d.udev_id.empty() )
+	    s << " UdevId:" << d.udev_id;
+	if( !d.active )
+	    s << " inactive";
+	s << " geometry:" << d.disk->getGeometry();
+	return( s );
     }
 
 
@@ -953,17 +953,17 @@ std::ostream& operator<< (std::ostream& s, const DmPartCo& d )
     }
 
 
-bool DmPartCo::equalContent( const DmPartCo& rhs ) const
+    bool DmPartCo::equalContent( const DmPartCo& rhs ) const
     {
-    bool ret = PeContainer::equalContent(rhs,false) &&
-	active==rhs.active;
-    if( ret )
+	bool ret = PeContainer::equalContent(rhs,false) &&
+	    active==rhs.active;
+	if( ret )
 	{
-	ConstDmPartPair pp = dmpartPair();
-	ConstDmPartPair pc = rhs.dmpartPair();
-	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+	    ConstDmPartPair pp = dmpartPair();
+	    ConstDmPartPair pc = rhs.dmpartPair();
+	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
-    return( ret );
+	return( ret );
     }
 
 

@@ -30,9 +30,9 @@
 namespace storage
 {
 
-class Disk;
+    class Disk;
 
-class Partition : public Volume
+    class Partition : public Volume
     {
     public:
 
@@ -92,7 +92,7 @@ class Partition : public Volume
 	static bool toChangeId( const Partition&d ) { return( !d.deleted() && d.idt!=d.orig_id ); }
 	virtual void print( std::ostream& s ) const { s << *this; }
 	void setResizedSize( unsigned long long SizeK );
-	void forgetResize(); 
+	void forgetResize();
 	bool canUseDevice() const;
 
 	static string idToString(unsigned id);

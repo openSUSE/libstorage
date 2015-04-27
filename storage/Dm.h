@@ -30,9 +30,9 @@
 namespace storage
 {
 
-class PeContainer;
+    class PeContainer;
 
-class Dm : public Volume
+    class Dm : public Volume
     {
     public:
 

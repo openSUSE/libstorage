@@ -35,34 +35,34 @@ namespace storage
     using std::list;
 
 
-class Storage;
-class SystemCmd;
+    class Storage;
+    class SystemCmd;
     class SystemInfo;
     class ArchInfo;
-class ProcParts;
-class Region;
+    class ProcParts;
+    class Region;
 
 
-class Disk : public Container
+    class Disk : public Container
     {
-    friend class Storage;
-    friend class DmPartCo;
-    friend class MdPartCo;
+	friend class Storage;
+	friend class DmPartCo;
+	friend class MdPartCo;
 
-    struct label_info
+	struct label_info
 	{
-	string name;
-	bool extended;
-	unsigned primary;
-	unsigned logical;
-	unsigned long long max_sectors;
+	    string name;
+	    bool extended;
+	    unsigned primary;
+	    unsigned logical;
+	    unsigned long long max_sectors;
 	};
 
     public:
 
 	Disk(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
-	Disk(Storage* s, const string& name, const string& device, unsigned num, 
+	Disk(Storage* s, const string& name, const string& device, unsigned num,
 	     unsigned long long Size, SystemInfo& systeminfo);
 	Disk(Storage* s, const xmlNode* node);
 	Disk(const Disk& c);
@@ -185,53 +185,53 @@ class Disk : public Container
     protected:
 
 	// iterators over partitions
-        // protected typedefs for iterators over partitions
-        typedef CastIterator<VIter, Partition *> PartInter;
-        typedef CastIterator<CVIter, const Partition *> PartCInter;
-        template< class Pred >
-            struct PartitionPI { typedef ContainerIter<Pred, PartInter> type; };
-        template< class Pred >
-            struct PartitionCPI { typedef ContainerIter<Pred, PartCInter> type; };
-        typedef CheckFnc<const Partition> CheckFncPartition;
-        typedef CheckerIterator< CheckFncPartition, PartitionPI<CheckFncPartition>::type,
-                                 PartInter, Partition > PartPIterator;
-        typedef CheckerIterator< CheckFncPartition, PartitionCPI<CheckFncPartition>::type,
-                                 PartCInter, const Partition > PartCPIterator;
+	// protected typedefs for iterators over partitions
+	typedef CastIterator<VIter, Partition *> PartInter;
+	typedef CastIterator<CVIter, const Partition *> PartCInter;
+	template< class Pred >
+	struct PartitionPI { typedef ContainerIter<Pred, PartInter> type; };
+	template< class Pred >
+	struct PartitionCPI { typedef ContainerIter<Pred, PartCInter> type; };
+	typedef CheckFnc<const Partition> CheckFncPartition;
+	typedef CheckerIterator< CheckFncPartition, PartitionPI<CheckFncPartition>::type,
+				 PartInter, Partition > PartPIterator;
+	typedef CheckerIterator< CheckFncPartition, PartitionCPI<CheckFncPartition>::type,
+				 PartCInter, const Partition > PartCPIterator;
 	typedef DerefIterator<PartPIterator,Partition> PartIter;
-        typedef IterPair<PartIter> PartPair;
+	typedef IterPair<PartIter> PartPair;
 
-        PartPair partPair( bool (* CheckPart)( const Partition& )=NULL)
-            {
-            return( PartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
-            }
-        PartIter partBegin( bool (* CheckPart)( const Partition& )=NULL)
-            {
+	PartPair partPair( bool (* CheckPart)( const Partition& )=NULL)
+	{
+	    return( PartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
+	}
+	PartIter partBegin( bool (* CheckPart)( const Partition& )=NULL)
+	{
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartIter( PartPIterator( p, CheckPart )) );
-	    }
-        PartIter partEnd( bool (* CheckPart)( const Partition& )=NULL)
-            {
+	    return( PartIter( PartPIterator( p, CheckPart )) );
+	}
+	PartIter partEnd( bool (* CheckPart)( const Partition& )=NULL)
+	{
 	    IterPair<PartInter> p( (PartInter(begin())), (PartInter(end())) );
-            return( PartIter( PartPIterator( p, CheckPart, true )) );
-	    }
+	    return( PartIter( PartPIterator( p, CheckPart, true )) );
+	}
 
     public:
 	typedef DerefIterator<PartCPIterator,const Partition> ConstPartIter;
-        typedef IterPair<ConstPartIter> ConstPartPair;
-        ConstPartPair partPair( bool (* CheckPart)( const Partition& )=NULL) const
-            {
-            return( ConstPartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
-            }
-        ConstPartIter partBegin( bool (* CheckPart)( const Partition& )=NULL) const
-            {
+	typedef IterPair<ConstPartIter> ConstPartPair;
+	ConstPartPair partPair( bool (* CheckPart)( const Partition& )=NULL) const
+	{
+	    return( ConstPartPair( partBegin( CheckPart ), partEnd( CheckPart ) ));
+	}
+	ConstPartIter partBegin( bool (* CheckPart)( const Partition& )=NULL) const
+	{
 	    IterPair<PartCInter> p( (PartCInter(begin())), (PartCInter(end())) );
-            return( ConstPartIter( PartCPIterator( p, CheckPart )) );
-	    }
-        ConstPartIter partEnd( bool (* CheckPart)( const Partition& )=NULL) const
-            {
+	    return( ConstPartIter( PartCPIterator( p, CheckPart )) );
+	}
+	ConstPartIter partEnd( bool (* CheckPart)( const Partition& )=NULL) const
+	{
 	    IterPair<PartCInter> p( (PartCInter(begin())), (PartCInter(end())) );
-            return( ConstPartIter( PartCPIterator( p, CheckPart, true )) );
-	    }
+	    return( ConstPartIter( PartCPIterator( p, CheckPart, true )) );
+	}
 
     protected:
 
@@ -253,15 +253,15 @@ class Disk : public Container
 
 	bool getPartedValues( Partition *p ) const;
 	bool getPartedSectors( const Partition *p, unsigned long long& start,
-	                       unsigned long long& end ) const;
+			       unsigned long long& end ) const;
 	const Partition * getPartitionAfter( const Partition * p ) const;
-	void addPartition( unsigned num, unsigned long long sz, 
-	                   SystemInfo& ppart );
+	void addPartition( unsigned num, unsigned long long sz,
+			   SystemInfo& ppart );
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new Disk( *this ) ); }
 	virtual void redetectGeometry();
-	void changeNumbers( const PartIter& b, const PartIter& e, 
-	                    unsigned start, int incr );
+	void changeNumbers( const PartIter& b, const PartIter& e,
+			    unsigned start, int incr );
 	int createChecks(PartitionType& type, const Region& cylRegion, bool checkRelaxed) const;
 	void removePresentPartitions();
 	void removeFromMemory();

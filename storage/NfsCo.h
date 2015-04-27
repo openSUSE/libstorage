@@ -31,9 +31,9 @@ namespace storage
     class SystemInfo;
 
 
-class NfsCo : public Container
+    class NfsCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -44,8 +44,8 @@ class NfsCo : public Container
 
 	static storage::CType staticType() { return storage::NFSC; }
 	friend std::ostream& operator<< ( std::ostream&, const NfsCo& );
-	int addNfs(const string& nfsDev, unsigned long long sizeK, const string& opts, 
-	           const string& mp, bool nfs4);
+	int addNfs(const string& nfsDev, unsigned long long sizeK, const string& opts,
+		   const string& mp, bool nfs4);
 
 	int removeVolume( Volume* v );
 	int doRemove( Volume* );
@@ -53,16 +53,16 @@ class NfsCo : public Container
 	bool equalContent( const Container& rhs ) const;
 
 	virtual void logDifferenceWithVolumes(std::ostream& log, const Container& rhs) const;
-	
+
     protected:
 	// iterators over NFS volumes
 	// protected typedefs for iterators over NFS volumes
 	typedef CastIterator<VIter, Nfs *> NfsInter;
 	typedef CastIterator<CVIter, const Nfs *> NfsCInter;
 	template< class Pred >
-	    struct NfsPI { typedef ContainerIter<Pred, NfsInter> type; };
+	struct NfsPI { typedef ContainerIter<Pred, NfsInter> type; };
 	template< class Pred >
-	    struct NfsCPI { typedef ContainerIter<Pred, NfsCInter> type; };
+	struct NfsCPI { typedef ContainerIter<Pred, NfsCInter> type; };
 	typedef CheckFnc<const Nfs> CheckFncNfs;
 	typedef CheckerIterator< CheckFncNfs, NfsPI<CheckFncNfs>::type,
 				 NfsInter, Nfs > NfsPIterator;
@@ -74,34 +74,34 @@ class NfsCo : public Container
 	typedef IterPair<ConstNfsIter> ConstNfsPair;
 
 	NfsPair nfsPair( bool (* Check)( const Nfs& )=NULL)
-	    {
+	{
 	    return( NfsPair( nfsBegin( Check ), nfsEnd( Check ) ));
-	    }
+	}
 	NfsIter nfsBegin( bool (* Check)( const Nfs& )=NULL)
-	    {
+	{
 	    IterPair<NfsInter> p( (NfsInter(begin())), (NfsInter(end())) );
 	    return( NfsIter( NfsPIterator( p, Check )) );
-	    }
+	}
 	NfsIter nfsEnd( bool (* Check)( const Nfs& )=NULL)
-	    {
+	{
 	    IterPair<NfsInter> p( (NfsInter(begin())), (NfsInter(end())) );
 	    return( NfsIter( NfsPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstNfsPair nfsPair( bool (* Check)( const Nfs& )=NULL) const
-	    {
+	{
 	    return( ConstNfsPair( nfsBegin( Check ), nfsEnd( Check ) ));
-	    }
+	}
 	ConstNfsIter nfsBegin( bool (* Check)( const Nfs& )=NULL) const
-	    {
+	{
 	    IterPair<NfsCInter> p( (NfsCInter(begin())), (NfsCInter(end())) );
 	    return( ConstNfsIter( NfsCPIterator( p, Check )) );
-	    }
+	}
 	ConstNfsIter nfsEnd( bool (* Check)( const Nfs& )=NULL) const
-	    {
+	{
 	    IterPair<NfsCInter> p( (NfsCInter(begin())), (NfsCInter(end())) );
 	    return( ConstNfsIter( NfsCPIterator( p, Check, true )) );
-	    }
+	}
 
 	bool findNfs( const string& dev, NfsIter& i );
 	bool findNfs( const string& dev );

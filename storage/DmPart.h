@@ -29,11 +29,11 @@
 namespace storage
 {
 
-class DmPartCo;
+    class DmPartCo;
     class ProcParts;
 
 
-class DmPart : public Dm
+    class DmPart : public Dm
     {
     public:
 
@@ -68,7 +68,7 @@ class DmPart : public Dm
     protected:
 
 	virtual const string shortPrintedName() const { return( "DmPart" ); }
-	const DmPartCo* co() const; 
+	const DmPartCo* co() const;
 	void addAltUdevId( unsigned num );
 	Partition* p;
 

@@ -36,14 +36,14 @@ namespace storage
     using std::list;
 
 
-class SystemCmd;
-class ProcMounts;
-class EtcFstab;
-struct FstabEntry;
-struct FstabChange;
-struct FstabKey;
-class Container;
-class Storage;
+    class SystemCmd;
+    class ProcMounts;
+    class EtcFstab;
+    struct FstabEntry;
+    struct FstabChange;
+    struct FstabKey;
+    class Container;
+    class Storage;
 
 
     // information for Volume::prepareTmpMount() and Volume::umountTmpMount()
@@ -57,7 +57,7 @@ class Storage;
 
     class Volume : public Device
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -100,7 +100,7 @@ class Storage;
 	bool dmcrypt() const { return encryption != ENC_NONE && encryption != ENC_UNKNOWN; }
 	bool loopActive() const { return( is_loop&&loop_active ); }
 	bool dmcryptActive() const { return( dmcrypt()&&dmcrypt_active ); }
-	bool needCrsetup( bool urgent=true ) const; 
+	bool needCrsetup( bool urgent=true ) const;
 	const string& getUuid() const { return uuid; }
 	const string& getLabel() const { return label; }
 	int setLabel( const string& val );
@@ -114,7 +114,7 @@ class Storage;
 	const string& getCryptPwd() const { return crypt_pwd; }
 	int setCryptPwd( const string& val );
 	void clearCryptPwd() { crypt_pwd.erase(); orig_crypt_pwd.erase(); }
-	bool needCryptPwd() const; 
+	bool needCryptPwd() const;
 	const string& getMount() const { return mp; }
 	bool hasOrigMount() const { return !orig_mp.empty(); }
 	bool needRemount() const;
@@ -151,16 +151,16 @@ class Storage;
 	virtual void forgetResize() { size_k=orig_size_k; }
 	virtual bool canUseDevice() const;
 
-        bool operator== ( const Volume& rhs ) const;
-        bool operator!= ( const Volume& rhs ) const
-            { return( !(*this==rhs) ); }
-        bool operator< ( const Volume& rhs ) const;
-        bool operator<= ( const Volume& rhs ) const
-            { return( *this<rhs || *this==rhs ); }
-        bool operator>= ( const Volume& rhs ) const
-            { return( !(*this<rhs) ); }
-        bool operator> ( const Volume& rhs ) const
-            { return( !(*this<=rhs) ); }
+	bool operator== ( const Volume& rhs ) const;
+	bool operator!= ( const Volume& rhs ) const
+	    { return( !(*this==rhs) ); }
+	bool operator< ( const Volume& rhs ) const;
+	bool operator<= ( const Volume& rhs ) const
+	    { return( *this<rhs || *this==rhs ); }
+	bool operator>= ( const Volume& rhs ) const
+	    { return( !(*this<rhs) ); }
+	bool operator> ( const Volume& rhs ) const
+	    { return( !(*this<=rhs) ); }
 
 	bool equalContent(const Volume& rhs) const;
 
@@ -184,7 +184,7 @@ class Storage;
 	int resizeFs();
 	void fstabUpdateDone();
 	bool isMounted() const { return( is_mounted ); }
-        void setMounted( bool mtd=true ) { is_mounted=mtd; }
+	void setMounted( bool mtd=true ) { is_mounted=mtd; }
 	virtual Text removeText(bool doing) const;
 	virtual Text createText(bool doing) const;
 	virtual Text resizeText(bool doing) const;
@@ -196,8 +196,8 @@ class Storage;
 	Text crsetupText(bool doing) const;
 	Text fstabUpdateText() const;
 	bool optNoauto() const;
-	bool inCryptotab() const { return( encryption!=ENC_NONE && 
-	                                   encryption!=ENC_LUKS && 
+	bool inCryptotab() const { return( encryption!=ENC_NONE &&
+					   encryption!=ENC_LUKS &&
 					   !optNoauto() ); }
 	bool inCrypttab() const { return( encryption==ENC_LUKS ); }
 	bool pvEncryption() const;
@@ -245,14 +245,14 @@ class Storage;
 	void addDmCryptNames(unsigned long minor);
 	void removeDmCryptNames();
 	int doTuneExtDataMode(const string& data_mode);
-	bool needLosetup( bool urgent ) const; 
-	bool needCryptsetup() const; 
+	bool needLosetup( bool urgent ) const;
+	bool needCryptsetup() const;
 	int doLosetup();
 	int doCryptsetup(bool readonly);
 	int loUnsetup( bool force=false );
 	int cryptUnsetup( bool force=false );
-	bool pwdLengthOk( storage::EncryptType typ, const string& val, 
-	                  bool format ) const;
+	bool pwdLengthOk( storage::EncryptType typ, const string& val,
+			  bool format ) const;
 	bool noFreqPassno() const;
 	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
 			    const string& options = "") const;

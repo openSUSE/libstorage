@@ -180,8 +180,8 @@ namespace storage
 	string createTabLine( const FstabEntry& e ) const;
 	string createCrtabLine( const FstabEntry& e ) const;
 	void updateTabLine( list<string>(*fnc)(const FstabEntry& e),
-	                    const FstabEntry& old, const FstabEntry& nnew, 
-	                    string& line ) const;
+			    const FstabEntry& old, const FstabEntry& nnew,
+			    string& line ) const;
 
 	static list<string> makeStringList(const FstabEntry& e);
 	static list<string> makeCrStringList(const FstabEntry& e);

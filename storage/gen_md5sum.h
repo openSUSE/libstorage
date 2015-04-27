@@ -3,8 +3,8 @@
 
 namespace storage
 {
-const char* GetSourceMd5();
-const char* GetSourceDate();
+    const char* GetSourceMd5();
+    const char* GetSourceDate();
 }
 
 #endif
