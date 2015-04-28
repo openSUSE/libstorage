@@ -51,10 +51,10 @@ namespace storage
 
 	numeric = !boost::starts_with( device, "/dev/md/" );
 	if( !numeric )
-	    {
+	{
 	    nm = device.substr(8);
 	    num = 0;
-	    }
+	}
 	else
 	    mdStringNum(name, num);
 
@@ -234,299 +234,299 @@ namespace storage
     }
 
 
-int
-Md::addDevice(const string& new_dev, bool to_spare)
+    int
+    Md::addDevice(const string& new_dev, bool to_spare)
     {
-    int ret = 0;
-    if (find(devs.begin(), devs.end(), new_dev) != devs.end() ||
-        find(spare.begin(), spare.end(), new_dev) != spare.end())
+	int ret = 0;
+	if (find(devs.begin(), devs.end(), new_dev) != devs.end() ||
+	    find(spare.begin(), spare.end(), new_dev) != spare.end())
 	{
-	ret = MD_ADD_DUPLICATE;
+	    ret = MD_ADD_DUPLICATE;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if (!to_spare)
-	    devs.push_back(new_dev);
-	else
-	    spare.push_back(new_dev);
-	getStorage()->addUsedBy(new_dev, UB_MD, dev);
-	computeSize();
-	}
-    y2mil("new_dev:" << new_dev << " to_spare:" << to_spare << " ret:" << ret);
-    return ret;
-    }
-
-
-int
-Md::removeDevice( const string& dev )
-    {
-    int ret = 0;
-    list<string>::iterator i;
-    if( (i=find( devs.begin(), devs.end(), dev ))!=devs.end() )
-	{
-	devs.erase(i);
-	getStorage()->clearUsedBy(dev);
-	computeSize();
-	}
-    else if( (i=find( spare.begin(), spare.end(), dev ))!=spare.end() )
-        {
-	spare.erase(i);
-	getStorage()->clearUsedBy(dev);
-	computeSize();
-	}
-    else
-	ret = MD_REMOVE_NONEXISTENT;
-    y2mil("dev:" << dev << " ret:" << ret);
-    return( ret );
-    }
-
-int
-Md::checkDevices()
-    {
-    unsigned nmin = 2;
-    switch( md_type )
-	{
-	case RAID5:
-	    nmin = 3;
-	    break;
-	case RAID6:
-	    nmin = 4;
-	    break;
-	default:
-	    break;
-	}
-    int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
-
-    if (ret == 0 && md_type == RAID0 && !spare.empty())
-	ret = MD_TOO_MANY_SPARES;
-
-    y2mil("type:" << toString(md_type) << " min:" << nmin << " size:" << devs.size() <<
-	  " ret:" << ret);
-    return( ret );
-    }
-
-
-int
-Md::getState(MdStateInfo& info) const
-{
-    string value;
-    if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
-	if (toValue(value, info.state))
-	    return STORAGE_NO_ERROR;
-
-    return MD_GET_STATE_FAILED;
-}
-
-
-void
-Md::computeSize()
-{
-    unsigned long long size_k = 0;
-    getStorage()->computeMdSize(md_type, devs, spare, size_k);
-    setSize(size_k);
-}
-
-
-void Md::changeDeviceName( const string& old, const string& nw )
-    {
-    list<string>::iterator i = find( devs.begin(), devs.end(), old );
-    if( i!=devs.end() )
-	*i = nw;
-    i = find( spare.begin(), spare.end(), old );
-    if( i!=spare.end() )
-	*i = nw;
-    }
-
-
-string
-Md::createCmd() const
-{
-    string cmd = LSBIN " -l --full-time " + quote(devs) + " " + quote(spare) + "; "
-	MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
-	" --run --level=" + toString(md_type) + " -e 1.0 --homehost=any";
-    if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
-	cmd += " -b internal";
-    if (chunk_k > 0)
-	cmd += " --chunk=" + decString(chunk_k);
-    if (md_parity != PAR_DEFAULT)
-	cmd += " --parity=" + toString(md_parity);
-    cmd += " --raid-devices=" + decString(devs.size());
-    if (!spare.empty())
-	cmd += " --spare-devices=" + decString(spare.size());
-    cmd += " " + quote(devs) + " " + quote(spare);
-    y2mil("ret:" << cmd);
-    return cmd;
-}
-
-
-Text Md::removeText( bool doing ) const
-{
-    Text txt;
-    if( doing )
-    {
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	txt = sformat(_("Deleting software RAID %1$s"), dev.c_str());
-    }
-    else
-    {
-	// displayed text before action, %1$s is replaced by device name e.g. md0
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat(_("Delete software RAID %1$s (%2$s)"), dev.c_str(),
-		      sizeString().c_str());
-    }
-    return txt;
-}
-
-
-Text Md::createText( bool doing ) const
-{
-    Text txt;
-    if( doing )
-    {
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	// %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-	txt = sformat(_("Creating software RAID %1$s from %2$s"), dev.c_str(), 
-		      boost::join(devs, " ").c_str());
-    }
-    else
-    {
-	if( !mp.empty() )
-	{
-	    if( encryption==ENC_NONE )
-	    {
-		// displayed text before action, %1$s is replaced by device name e.g. md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		// %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-		txt = sformat(_("Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
-			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			      mp.c_str(), boost::join(devs, " ").c_str());
-	    }
+	    if (!to_spare)
+		devs.push_back(new_dev);
 	    else
-	    {
-		// displayed text before action, %1$s is replaced by device name e.g. md0
-		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		// %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-		txt = sformat(_("Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
-			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			      mp.c_str(), boost::join(devs, " ").c_str());
-	    }
+		spare.push_back(new_dev);
+	    getStorage()->addUsedBy(new_dev, UB_MD, dev);
+	    computeSize();
+	}
+	y2mil("new_dev:" << new_dev << " to_spare:" << to_spare << " ret:" << ret);
+	return ret;
+    }
+
+
+    int
+    Md::removeDevice( const string& dev )
+    {
+	int ret = 0;
+	list<string>::iterator i;
+	if( (i=find( devs.begin(), devs.end(), dev ))!=devs.end() )
+	{
+	    devs.erase(i);
+	    getStorage()->clearUsedBy(dev);
+	    computeSize();
+	}
+	else if( (i=find( spare.begin(), spare.end(), dev ))!=spare.end() )
+	{
+	    spare.erase(i);
+	    getStorage()->clearUsedBy(dev);
+	    computeSize();
+	}
+	else
+	    ret = MD_REMOVE_NONEXISTENT;
+	y2mil("dev:" << dev << " ret:" << ret);
+	return( ret );
+    }
+
+    int
+    Md::checkDevices()
+    {
+	unsigned nmin = 2;
+	switch( md_type )
+	{
+	    case RAID5:
+		nmin = 3;
+		break;
+	    case RAID6:
+		nmin = 4;
+		break;
+	    default:
+		break;
+	}
+	int ret = devs.size()<nmin ? MD_TOO_FEW_DEVICES : 0;
+
+	if (ret == 0 && md_type == RAID0 && !spare.empty())
+	    ret = MD_TOO_MANY_SPARES;
+
+	y2mil("type:" << toString(md_type) << " min:" << nmin << " size:" << devs.size() <<
+	      " ret:" << ret);
+	return( ret );
+    }
+
+
+    int
+    Md::getState(MdStateInfo& info) const
+    {
+	string value;
+	if (read_sysfs_property(sysfsPath() + "/md/array_state", value))
+	    if (toValue(value, info.state))
+		return STORAGE_NO_ERROR;
+
+	return MD_GET_STATE_FAILED;
+    }
+
+
+    void
+    Md::computeSize()
+    {
+	unsigned long long size_k = 0;
+	getStorage()->computeMdSize(md_type, devs, spare, size_k);
+	setSize(size_k);
+    }
+
+
+    void Md::changeDeviceName( const string& old, const string& nw )
+    {
+	list<string>::iterator i = find( devs.begin(), devs.end(), old );
+	if( i!=devs.end() )
+	    *i = nw;
+	i = find( spare.begin(), spare.end(), old );
+	if( i!=spare.end() )
+	    *i = nw;
+    }
+
+
+    string
+    Md::createCmd() const
+    {
+	string cmd = LSBIN " -l --full-time " + quote(devs) + " " + quote(spare) + "; "
+	    MODPROBEBIN " " + toString(md_type) + "; " MDADMBIN " --create " + quote(device()) +
+	    " --run --level=" + toString(md_type) + " -e 1.0 --homehost=any";
+	if (md_type == RAID1 || md_type == RAID5 || md_type == RAID6 || md_type == RAID10)
+	    cmd += " -b internal";
+	if (chunk_k > 0)
+	    cmd += " --chunk=" + decString(chunk_k);
+	if (md_parity != PAR_DEFAULT)
+	    cmd += " --parity=" + toString(md_parity);
+	cmd += " --raid-devices=" + decString(devs.size());
+	if (!spare.empty())
+	    cmd += " --spare-devices=" + decString(spare.size());
+	cmd += " " + quote(devs) + " " + quote(spare);
+	y2mil("ret:" << cmd);
+	return cmd;
+    }
+
+
+    Text Md::removeText( bool doing ) const
+    {
+	Text txt;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+	    txt = sformat(_("Deleting software RAID %1$s"), dev.c_str());
 	}
 	else
 	{
 	    // displayed text before action, %1$s is replaced by device name e.g. md0
 	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    // %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-	    txt = sformat(_("Create software RAID %1$s (%2$s) from %3$s"), dev.c_str(),
-			  sizeString().c_str(), boost::join(devs, " ").c_str());
+	    txt = sformat(_("Delete software RAID %1$s (%2$s)"), dev.c_str(),
+			  sizeString().c_str());
 	}
+	return txt;
     }
-    return txt;
-}
 
 
-Text Md::formatText( bool doing ) const
-{
-    Text txt;
-    if( doing )
+    Text Md::createText( bool doing ) const
     {
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat(_("Formatting software RAID %1$s (%2$s) with %3$s "),
-		      dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
-    }
-    else
-    {
-	if( !mp.empty() )
+	Text txt;
+	if( doing )
 	{
-	    if( encryption==ENC_NONE )
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+	    // %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+	    txt = sformat(_("Creating software RAID %1$s from %2$s"), dev.c_str(),
+			  boost::join(devs, " ").c_str());
+	}
+	else
+	{
+	    if( !mp.empty() )
 	    {
-		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+		if( encryption==ENC_NONE )
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. md0
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    // %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+		    txt = sformat(_("Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str(), boost::join(devs, " ").c_str());
+		}
+		else
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. md0
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    // %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+		    txt = sformat(_("Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str(), boost::join(devs, " ").c_str());
+		}
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name e.g. md0
 		// %2$s is replaced by size (e.g. 623.5 MB)
-		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat(_("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
-			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			      mp.c_str());
+		// %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+		txt = sformat(_("Create software RAID %1$s (%2$s) from %3$s"), dev.c_str(),
+			      sizeString().c_str(), boost::join(devs, " ").c_str());
+	    }
+	}
+	return txt;
+    }
+
+
+    Text Md::formatText( bool doing ) const
+    {
+	Text txt;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    // %3$s is replaced by file system type (e.g. reiserfs)
+	    txt = sformat(_("Formatting software RAID %1$s (%2$s) with %3$s "),
+			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	}
+	else
+	{
+	    if( !mp.empty() )
+	    {
+		if( encryption==ENC_NONE )
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat(_("Format software RAID %1$s (%2$s) for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str());
+		}
+		else
+		{
+		    // displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    // %3$s is replaced by file system type (e.g. reiserfs)
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat(_("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str());
+		}
 	    }
 	    else
 	    {
 		// displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 		// %2$s is replaced by size (e.g. 623.5 MB)
 		// %3$s is replaced by file system type (e.g. reiserfs)
-		// %4$s is replaced by mount point (e.g. /usr)
-		txt = sformat(_("Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"),
-			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
-			      mp.c_str());
+		txt = sformat(_("Format software RAID %1$s (%2$s) with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
 	    }
 	}
+	return txt;
+    }
+
+
+    bool Md::matchRegex( const string& dev )
+    {
+	static Regex md( "^md[0123456789]+$" );
+	return( md.match(dev));
+    }
+
+    bool Md::mdStringNum( const string& name, unsigned& num )
+    {
+	bool ret=false;
+	string d = undevDevice(name);
+	if( matchRegex( d ))
+	{
+	    d.substr( 2 )>>num;
+	    ret = true;
+	}
+	return( ret );
+    }
+
+    string Md::mdDevice( unsigned num )
+    {
+	string dev( "/dev/md" );
+	dev += decString(num);
+	return( dev );
+    }
+
+    void Md::setPersonality( MdType val )
+    {
+	md_type=val;
+	computeSize();
+    }
+
+    int Md::setParity( MdParity val )
+    {
+	int ret = 0;
+	list<int> pars = getStorage()->getMdAllowedParity( md_type, devs.size() );
+	if( find( pars.begin(), pars.end(), val )!=pars.end() )
+	    md_parity=val;
 	else
+	    ret = MD_INVALID_PARITY;
+	return( ret );
+    }
+
+    unsigned Md::mdMajor()
+    {
+	if( md_major==0 )
 	{
-	    // displayed text before action, %1$s is replaced by device name e.g. /dev/md0
-	    // %2$s is replaced by size (e.g. 623.5 MB)
-	    // %3$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat(_("Format software RAID %1$s (%2$s) with %3$s"),
-			  dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	    md_major = getMajorDevices("md");
+	    y2mil("md_major:" << md_major);
 	}
-    }
-    return txt;
-}
-
-
-bool Md::matchRegex( const string& dev )
-    {
-    static Regex md( "^md[0123456789]+$" );
-    return( md.match(dev));
-    }
-
-bool Md::mdStringNum( const string& name, unsigned& num )
-    {
-    bool ret=false;
-    string d = undevDevice(name);
-    if( matchRegex( d ))
-	{
-	d.substr( 2 )>>num;
-	ret = true;
-	}
-    return( ret );
-    }
-
-string Md::mdDevice( unsigned num )
-    {
-    string dev( "/dev/md" );
-    dev += decString(num);
-    return( dev );
-    }
-
-void Md::setPersonality( MdType val )
-    {
-    md_type=val;
-    computeSize();
-    }
-
-int Md::setParity( MdParity val )
-    {
-    int ret = 0;
-    list<int> pars = getStorage()->getMdAllowedParity( md_type, devs.size() );
-    if( find( pars.begin(), pars.end(), val )!=pars.end() )
-	md_parity=val;
-    else
-	ret = MD_INVALID_PARITY;
-    return( ret );
-    }
-
-unsigned Md::mdMajor()
-    {
-    if( md_major==0 )
-    {
-	md_major = getMajorDevices("md");
-	y2mil("md_major:" << md_major);
-    }
-    return( md_major );
+	return( md_major );
     }
 
 
@@ -546,54 +546,54 @@ unsigned Md::mdMajor()
     }
 
 
-void Md::getInfo( MdInfo& info ) const
+    void Md::getInfo( MdInfo& info ) const
     {
-    Volume::getInfo(info.v);
-    info.nr = num;
-    info.type = md_type;
-    info.uuid = md_uuid;
-    info.sb_ver = sb_ver;
-    info.chunkSizeK = chunk_k;
-    info.parity = md_parity;
-    info.inactive = inactive;
+	Volume::getInfo(info.v);
+	info.nr = num;
+	info.type = md_type;
+	info.uuid = md_uuid;
+	info.sb_ver = sb_ver;
+	info.chunkSizeK = chunk_k;
+	info.parity = md_parity;
+	info.inactive = inactive;
 
-    info.devices = devs;
-    info.spares = spare;
+	info.devices = devs;
+	info.spares = spare;
     }
 
 
-std::ostream& operator<< (std::ostream& s, const Md& m )
+    std::ostream& operator<< (std::ostream& s, const Md& m )
     {
-    s << "Md " << dynamic_cast<const Volume&>(m)
-      << " Personality:" << toString(m.md_type);
-    if (m.chunk_k > 0)
-	s << " ChunkK:" << m.chunk_k;
-    if (m.md_parity != PAR_DEFAULT)
-	s << " Parity:" << toString(m.md_parity);
-    if( !m.sb_ver.empty() )
-	s << " SbVer:" << m.sb_ver;
-    if (m.inactive)
-	s << " inactive";
-    if (!m.md_uuid.empty())
-	s << " md_uuid:" << m.md_uuid; 
-    if (!m.md_name.empty())
-	s << " md_name:" << m.md_name;
-    if( m.destrSb )
-	s << " destroySb";
-    s << " Devices:" << m.devs;
-    if( !m.spare.empty() )
-	s << " Spares:" << m.spare;
-    return s;
+	s << "Md " << dynamic_cast<const Volume&>(m)
+	  << " Personality:" << toString(m.md_type);
+	if (m.chunk_k > 0)
+	    s << " ChunkK:" << m.chunk_k;
+	if (m.md_parity != PAR_DEFAULT)
+	    s << " Parity:" << toString(m.md_parity);
+	if( !m.sb_ver.empty() )
+	    s << " SbVer:" << m.sb_ver;
+	if (m.inactive)
+	    s << " inactive";
+	if (!m.md_uuid.empty())
+	    s << " md_uuid:" << m.md_uuid;
+	if (!m.md_name.empty())
+	    s << " md_name:" << m.md_name;
+	if( m.destrSb )
+	    s << " destroySb";
+	s << " Devices:" << m.devs;
+	if( !m.spare.empty() )
+	    s << " Spares:" << m.spare;
+	return s;
     }
 
 
-bool Md::equalContent( const Md& rhs ) const
+    bool Md::equalContent( const Md& rhs ) const
     {
-    return( Volume::equalContent(rhs) &&
-            md_type==rhs.md_type && md_parity==rhs.md_parity &&
-	    chunk_k==rhs.chunk_k && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
-	    destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare &&
-	    inactive==rhs.inactive );
+	return( Volume::equalContent(rhs) &&
+		md_type==rhs.md_type && md_parity==rhs.md_parity &&
+		chunk_k==rhs.chunk_k && md_uuid==rhs.md_uuid && sb_ver==rhs.sb_ver &&
+		destrSb==rhs.destrSb && devs == rhs.devs && spare==rhs.spare &&
+		inactive==rhs.inactive );
     }
 
 
@@ -644,6 +644,6 @@ bool Md::equalContent( const Md& rhs ) const
     }
 
 
-unsigned Md::md_major = 0;
+    unsigned Md::md_major = 0;
 
 }

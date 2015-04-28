@@ -30,13 +30,13 @@
 
 namespace storage
 {
-class Storage;
+    class Storage;
     class SystemInfo;
 
 
-class DmraidCo : public DmPartCo
+    class DmraidCo : public DmPartCo
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -61,9 +61,9 @@ class DmraidCo : public DmPartCo
         typedef CastIterator<VIter, Dmraid *> DmraidInter;
         typedef CastIterator<CVIter, const Dmraid *> DmraidCInter;
         template< class Pred >
-            struct DmraidPI { typedef ContainerIter<Pred, DmraidInter> type; };
+	struct DmraidPI { typedef ContainerIter<Pred, DmraidInter> type; };
         template< class Pred >
-            struct DmraidCPI { typedef ContainerIter<Pred, DmraidCInter> type; };
+	struct DmraidCPI { typedef ContainerIter<Pred, DmraidCInter> type; };
         typedef CheckFnc<const Dmraid> CheckFncDmraid;
         typedef CheckerIterator< CheckFncDmraid, DmraidPI<CheckFncDmraid>::type,
                                  DmraidInter, Dmraid > DmraidPIterator;
@@ -75,34 +75,34 @@ class DmraidCo : public DmPartCo
         typedef IterPair<ConstDmraidIter> ConstDmraidPair;
 
         DmraidPair dmraidPair( bool (* CheckDmraid)( const Dmraid& )=NULL)
-            {
-            return( DmraidPair( dmraidBegin( CheckDmraid ), dmraidEnd( CheckDmraid ) ));
-            }
+        {
+	    return( DmraidPair( dmraidBegin( CheckDmraid ), dmraidEnd( CheckDmraid ) ));
+	}
         DmraidIter dmraidBegin( bool (* CheckDmraid)( const Dmraid& )=NULL)
-            {
+        {
 	    IterPair<DmraidInter> p( (DmraidInter(begin())), (DmraidInter(end())) );
-            return( DmraidIter( DmraidPIterator( p, CheckDmraid )) );
-	    }
+	    return( DmraidIter( DmraidPIterator( p, CheckDmraid )) );
+	}
         DmraidIter dmraidEnd( bool (* CheckDmraid)( const Dmraid& )=NULL)
-            {
+        {
 	    IterPair<DmraidInter> p( (DmraidInter(begin())), (DmraidInter(end())) );
-            return( DmraidIter( DmraidPIterator( p, CheckDmraid, true )) );
-	    }
+	    return( DmraidIter( DmraidPIterator( p, CheckDmraid, true )) );
+	}
 
         ConstDmraidPair dmraidPair( bool (* CheckDmraid)( const Dmraid& )=NULL) const
-            {
-            return( ConstDmraidPair( dmraidBegin( CheckDmraid ), dmraidEnd( CheckDmraid ) ));
-            }
+        {
+	    return( ConstDmraidPair( dmraidBegin( CheckDmraid ), dmraidEnd( CheckDmraid ) ));
+	}
         ConstDmraidIter dmraidBegin( bool (* CheckDmraid)( const Dmraid& )=NULL) const
-            {
+        {
 	    IterPair<DmraidCInter> p( (DmraidCInter(begin())), (DmraidCInter(end())) );
-            return( ConstDmraidIter( DmraidCPIterator( p, CheckDmraid )) );
-	    }
+	    return( ConstDmraidIter( DmraidCPIterator( p, CheckDmraid )) );
+	}
         ConstDmraidIter dmraidEnd( bool (* CheckDmraid)( const Dmraid& )=NULL) const
-            {
+        {
 	    IterPair<DmraidCInter> p( (DmraidCInter(begin())), (DmraidCInter(end())) );
-            return( ConstDmraidIter( DmraidCPIterator( p, CheckDmraid, true )) );
-	    }
+	    return( ConstDmraidIter( DmraidCPIterator( p, CheckDmraid, true )) );
+	}
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmraidCo( *this ) ); }

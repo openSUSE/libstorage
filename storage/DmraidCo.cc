@@ -85,36 +85,36 @@ namespace storage
     }
 
 
-void
-DmraidCo::setUdevData( const list<string>& id )
-{
-    y2mil("disk:" << nm << " id:" << id);
-    udev_id = id;
-    udev_id.remove_if(string_starts_with("dm-"));
-    y2mil("id:" << udev_id);
-
-    DmPartCo::setUdevData(udev_id);
-
-    DmraidPair pp = dmraidPair();
-    for( DmraidIter p=pp.begin(); p!=pp.end(); ++p )
-	{
-	p->addUdevData();
-	}
-}
-
-
-void
-DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
+    void
+    DmraidCo::setUdevData( const list<string>& id )
     {
-    y2mil( "num:" << num );
-    dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p );
+	y2mil("disk:" << nm << " id:" << id);
+	udev_id = id;
+	udev_id.remove_if(string_starts_with("dm-"));
+	y2mil("id:" << udev_id);
+
+	DmPartCo::setUdevData(udev_id);
+
+	DmraidPair pp = dmraidPair();
+	for( DmraidIter p=pp.begin(); p!=pp.end(); ++p )
+	{
+	    p->addUdevData();
+	}
     }
 
-void
-DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+
+    void
+    DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
-    y2mil( "num:" << num );
-    dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p, si );
+	y2mil( "num:" << num );
+	dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p );
+    }
+
+    void
+    DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    {
+	y2mil( "num:" << num );
+	dm = new Dmraid( *this, getPartName(num), getPartDevice(num), num, p, si );
     }
 
     void
@@ -126,28 +126,28 @@ DmraidCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
     }
 
 
-void DmraidCo::activate( bool val )
+    void DmraidCo::activate( bool val )
     {
 	if (getenv("LIBSTORAGE_NO_DMRAID") != NULL)
 	    return;
 
-    y2mil("old active:" << active << " val:" << val);
-    if( active != val )
+	y2mil("old active:" << active << " val:" << val);
+	if( active != val )
 	{
-	SystemCmd c;
-	if( val )
+	    SystemCmd c;
+	    if( val )
 	    {
-	    Dm::activate(true);
-	    // option '-p' since udev creates the partition nodes
-	    c.execute(DMRAIDBIN " -ay -p");
+		Dm::activate(true);
+		// option '-p' since udev creates the partition nodes
+		c.execute(DMRAIDBIN " -ay -p");
 	    }
-	else
+	    else
 	    {
-	    c.execute(DMRAIDBIN " -an");
+		c.execute(DMRAIDBIN " -an");
 	    }
-	active = val;
+	    active = val;
 	}
-    Storage::waitForDevice();
+	Storage::waitForDevice();
     }
 
 
@@ -171,68 +171,68 @@ void DmraidCo::activate( bool val )
     }
 
 
-Text DmraidCo::removeText( bool doing ) const
+    Text DmraidCo::removeText( bool doing ) const
     {
-    Text txt;
-    if( doing )
+	Text txt;
+	if( doing )
         {
-        // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Removing RAID %1$s"), name().c_str() );
+	    // displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+	    txt = sformat( _("Removing RAID %1$s"), name().c_str() );
         }
-    else
+	else
         {
-        // displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-        txt = sformat( _("Remove RAID %1$s"), name().c_str() );
+	    // displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+	    txt = sformat( _("Remove RAID %1$s"), name().c_str() );
         }
-    return( txt );
+	return( txt );
     }
 
 
-int
-DmraidCo::doRemove()
+    int
+    DmraidCo::doRemove()
     {
-    y2mil("Raid:" << name());
-    int ret = 0;
-    if( deleted() )
+	y2mil("Raid:" << name());
+	int ret = 0;
+	if( deleted() )
 	{
-	if( active )
+	    if( active )
 	    {
-	    activate_part(false);
-	    activate(false);
+		activate_part(false);
+		activate(false);
 	    }
-	getStorage()->showInfoCb( removeText(true), silent );
-	string cmd = "cd " + quote(getStorage()->logdir()) + " && echo y | " DMRAIDBIN " -E -r";
-	SystemCmd c;
-	for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
+	    getStorage()->showInfoCb( removeText(true), silent );
+	    string cmd = "cd " + quote(getStorage()->logdir()) + " && echo y | " DMRAIDBIN " -E -r";
+	    SystemCmd c;
+	    for( list<Pv>::const_iterator i=pv.begin(); i!=pv.end(); ++i )
 	    {
-	    c.execute(cmd + " " + quote(i->device));
+		c.execute(cmd + " " + quote(i->device));
 	    }
-	if( c.retcode()!=0 )
+	    if( c.retcode()!=0 )
 	    {
-	    ret = DMRAID_REMOVE_FAILED;
-	    setExtError( c );
+		ret = DMRAID_REMOVE_FAILED;
+		setExtError( c );
 	    }
-	if( ret==0 )
+	    if( ret==0 )
 	    {
-	    setDeleted( false );
+		setDeleted( false );
 	    }
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-void DmraidCo::getInfo( DmraidCoInfo& info ) const
+    void DmraidCo::getInfo( DmraidCoInfo& info ) const
     {
-    DmPartCo::getInfo( info.p );
+	DmPartCo::getInfo( info.p );
     }
 
 
-std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
+    std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
     {
-    s << dynamic_cast<const DmPartCo&>(d);
-    s << " Cont:" << d.controller
-      << " RType:" << d.raidtype;
-    return( s );
+	s << dynamic_cast<const DmPartCo&>(d);
+	s << " Cont:" << d.controller
+	  << " RType:" << d.raidtype;
+	return( s );
     }
 
 
@@ -260,19 +260,19 @@ std::ostream& operator<< (std::ostream& s, const DmraidCo& d )
     }
 
 
-bool DmraidCo::equalContent( const Container& rhs ) const
+    bool DmraidCo::equalContent( const Container& rhs ) const
     {
-    bool ret = Container::equalContent(rhs);
-    if( ret )
+	bool ret = Container::equalContent(rhs);
+	if( ret )
 	{
-	const DmraidCo *p = dynamic_cast<const DmraidCo*>(&rhs);
-	ret = p && DmPartCo::equalContent( *p ) &&
-              controller==p->controller && raidtype==p->raidtype;
+	    const DmraidCo *p = dynamic_cast<const DmraidCo*>(&rhs);
+	    ret = p && DmPartCo::equalContent( *p ) &&
+		controller==p->controller && raidtype==p->raidtype;
 	}
-    return( ret );
+	return( ret );
     }
 
 
-bool DmraidCo::active = false;
+    bool DmraidCo::active = false;
 
 }

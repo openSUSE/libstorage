@@ -31,9 +31,9 @@
 namespace storage
 {
 
-class PeContainer : public Container
+    class PeContainer : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -50,7 +50,7 @@ class PeContainer : public Container
 	unsigned long peCount() const { return num_pe; }
 	unsigned long peFree() const { return free_pe; }
 	unsigned numPv() const { return pv.size(); }
-        bool hasUnkownPv() const;
+	bool hasUnkownPv() const;
 	friend std::ostream& operator<< (std::ostream&, const PeContainer& );
 	bool addedPv( const string& dev ) const;
 	unsigned long sizeToLe( unsigned long long sizeK ) const;
@@ -66,13 +66,13 @@ class PeContainer : public Container
 
 	string getDeviceByNumber( const string& majmin ) const;
 	string getDeviceByNumber( unsigned long mj, unsigned long mi ) const;
-        static bool splitMajMin( const string& majmin, unsigned long& mj, 
-                                 unsigned long & mi );
+	static bool splitMajMin( const string& majmin, unsigned long& mj,
+				 unsigned long & mi );
 	virtual list<string> getUsing() const;
 
     protected:
 	struct Pv
-	    {
+	{
 	    Pv() : num_pe(0), free_pe(0) {}
 	    Pv(const xmlNode* node);
 
@@ -99,17 +99,17 @@ class PeContainer : public Container
 	    bool equalContent(const Pv& rhs) const
 	    {
 		return device == rhs.device && dmcryptDevice == rhs.dmcryptDevice && uuid == rhs.uuid &&
-		    status == rhs.status && num_pe == rhs.num_pe && free_pe == rhs.free_pe; 
+		    status == rhs.status && num_pe == rhs.num_pe && free_pe == rhs.free_pe;
 	    }
-	    };
+	};
 
 	// iterators over Dm volumes
 	typedef CastIterator<VIter, Dm *> DmInter;
 	typedef CastIterator<CVIter, const Dm *> DmCInter;
 	template< class Pred >
-	    struct DmPI { typedef ContainerIter<Pred, DmInter> type; };
+	struct DmPI { typedef ContainerIter<Pred, DmInter> type; };
 	template< class Pred >
-	    struct DmCPI { typedef ContainerIter<Pred, DmCInter> type; };
+	struct DmCPI { typedef ContainerIter<Pred, DmCInter> type; };
 	typedef CheckFnc<const Dm> CheckFncDm;
 	typedef CheckerIterator< CheckFncDm, DmPI<CheckFncDm>::type,
 				 DmInter, Dm > DmPIterator;
@@ -121,34 +121,34 @@ class PeContainer : public Container
 	typedef IterPair<ConstDmIter> ConstDmPair;
 
 	DmPair dmPair( bool (* Check)( const Dm& )=NULL)
-	    {
+	{
 	    return( DmPair( dmBegin( Check ), dmEnd( Check ) ));
-	    }
+	}
 	DmIter dmBegin( bool (* Check)( const Dm& )=NULL)
-	    {
+	{
 	    IterPair<DmInter> p( (DmInter(begin())), (DmInter(end())) );
 	    return( DmIter( DmPIterator( p, Check )) );
-	    }
+	}
 	DmIter dmEnd( bool (* Check)( const Dm& )=NULL)
-	    {
+	{
 	    IterPair<DmInter> p( (DmInter(begin())), (DmInter(end())) );
 	    return( DmIter( DmPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstDmPair dmPair( bool (* Check)( const Dm& )=NULL) const
-	    {
+	{
 	    return( ConstDmPair( dmBegin( Check ), dmEnd( Check ) ));
-	    }
+	}
 	ConstDmIter dmBegin( bool (* Check)( const Dm& )=NULL) const
-	    {
+	{
 	    IterPair<DmCInter> p( (DmCInter(begin())), (DmCInter(end())) );
 	    return( ConstDmIter( DmCPIterator( p, Check )) );
-	    }
+	}
 	ConstDmIter dmEnd( bool (* Check)( const Dm& )=NULL) const
-	    {
+	{
 	    IterPair<DmCInter> p( (DmCInter(begin())), (DmCInter(end())) );
 	    return( ConstDmIter( DmCPIterator( p, Check, true )) );
-	    }
+	}
 
 
 	friend std::ostream& operator<< (std::ostream&, const Pv& );
@@ -161,10 +161,10 @@ class PeContainer : public Container
 	bool findPe(const string& dev, list<Pv>& pl, list<Pv>::iterator& i) const;
 	unsigned long leByLvRemove() const;
 	int tryUnusePe( const string& dev, std::list<Pv>& pl, std::list<Pv>& pladd,
-	                std::list<Pv>& plrem, unsigned long& removed_pe );
+			std::list<Pv>& plrem, unsigned long& removed_pe );
 	bool checkCreateConstraints();
 	static int addLvPeDistribution( unsigned long le, unsigned stripe,
-					std::list<Pv>& pl, std::list<Pv>& pladd, 
+					std::list<Pv>& pl, std::list<Pv>& pladd,
 					std::map<string,unsigned long>& pe_map );
 	int remLvPeDistribution( unsigned long le, std::map<string,unsigned long>& pe_map,
 				 std::list<Pv>& pl, std::list<Pv>& pladd );

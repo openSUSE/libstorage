@@ -27,11 +27,11 @@
 
 namespace storage
 {
-class TmpfsCo;
-class SystemInfo;
+    class TmpfsCo;
+    class SystemInfo;
 
 
-class Tmpfs : public Volume
+    class Tmpfs : public Volume
     {
     public:
 

@@ -92,47 +92,47 @@ namespace storage
     }
 
 
-void
-MdCo::addMd( Md* m )
+    void
+    MdCo::addMd( Md* m )
     {
-    if( !findMd( m->nr() ))
-	addToList( m );
-    else
+	if( !findMd( m->nr() ))
+	    addToList( m );
+	else
 	{
-	y2war("addMd already exists " << m->nr()); 
-	delete m;
+	    y2war("addMd already exists " << m->nr()); 
+	    delete m;
 	}
     }
 
 
-bool
-MdCo::findMd( const string& dev, MdIter& i )
+    bool
+    MdCo::findMd( const string& dev, MdIter& i )
     {
-    MdPair p=mdPair(Md::notDeleted);
-    i=p.begin();
-    while( i!=p.end() && i->device()!=dev )
-	++i;
-    return( i!=p.end() );
+	MdPair p=mdPair(Md::notDeleted);
+	i=p.begin();
+	while( i!=p.end() && i->device()!=dev )
+	    ++i;
+	return( i!=p.end() );
     }
 
-bool
-MdCo::findMd( unsigned num )
+    bool
+    MdCo::findMd( unsigned num )
     {
-    MdIter i;
-    return( findMd( num, i ));
+	MdIter i;
+	return( findMd( num, i ));
     }
 
-bool
-MdCo::findMd( unsigned num, MdIter& i )
+    bool
+    MdCo::findMd( unsigned num, MdIter& i )
     {
-    return( findMd( Md::mdDevice(num), i ));
+	return( findMd( Md::mdDevice(num), i ));
     }
 
-bool
-MdCo::findMd( const string& dev )
+    bool
+    MdCo::findMd( const string& dev )
     {
-    MdIter i;
-    return( findMd( dev, i ));
+	MdIter i;
+	return( findMd( dev, i ));
     }
 
 
@@ -148,59 +148,59 @@ MdCo::findMd( const string& dev )
 	return nums;
     }
 
-int MdCo::getNameNum( const string& dev, string& nm, unsigned& num )
+    int MdCo::getNameNum( const string& dev, string& nm, unsigned& num )
     {
-    int ret=0;
-    num = 0;
-    nm.clear();
-    if( boost::starts_with(dev, "/dev/md/"))
-	nm = dev.substr(8);
-    else if( !Md::mdStringNum( dev, num ))
-	ret = STORAGE_MD_INVALID_NAME;
-    else if( num>255 )
-	ret = MD_NUMBER_TOO_LARGE;
-    return( ret );
+	int ret=0;
+	num = 0;
+	nm.clear();
+	if( boost::starts_with(dev, "/dev/md/"))
+	    nm = dev.substr(8);
+	else if( !Md::mdStringNum( dev, num ))
+	    ret = STORAGE_MD_INVALID_NAME;
+	else if( num>255 )
+	    ret = MD_NUMBER_TOO_LARGE;
+	return( ret );
     }
 
 
-int 
-MdCo::createMd(const string& dev, MdType type, const list<string>& devs, const list<string>& spares)
+    int 
+    MdCo::createMd(const string& dev, MdType type, const list<string>& devs, const list<string>& spares)
     {
-    int ret = 0;
-    string nm;
-    unsigned num;
-    y2mil("dev:" << dev << " type:" << toString(type) << " devs:" << devs << " spares:" << spares);
-    if( readonly() )
+	int ret = 0;
+	string nm;
+	unsigned num;
+	y2mil("dev:" << dev << " type:" << toString(type) << " devs:" << devs << " spares:" << spares);
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	ret = getNameNum( dev, nm, num );
+	    ret = getNameNum( dev, nm, num );
 	}
-    if( ret==0 && type==RAID_UNK )
+	if( ret==0 && type==RAID_UNK )
 	{
-	ret = MD_NO_CREATE_UNKNOWN;
+	    ret = MD_NO_CREATE_UNKNOWN;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( nm.empty() && findMd( num ))
-	    ret = MD_DUPLICATE_NUMBER;
-	else if( findMd( dev ))
-	    ret = MD_DUPLICATE_NAME;
+	    if( nm.empty() && findMd( num ))
+		ret = MD_DUPLICATE_NUMBER;
+	    else if( findMd( dev ))
+		ret = MD_DUPLICATE_NAME;
 	}
-    if (ret == 0)
-	ret = checkUse(devs, spares);
-    if( ret==0 )
+	if (ret == 0)
+	    ret = checkUse(devs, spares);
+	if( ret==0 )
 	{
-	if( nm.empty() )
-	    nm = "md" + decString(num);
-	Md* m = new Md(*this, nm, dev, type, devs, spares);
-	m->setCreated( true );
-	addToList( m );
+	    if( nm.empty() )
+		nm = "md" + decString(num);
+	    Md* m = new Md(*this, nm, dev, type, devs, spares);
+	    m->setCreated( true );
+	    addToList( m );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
@@ -232,433 +232,433 @@ MdCo::createMd(const string& dev, MdType type, const list<string>& devs, const l
     }
 
 
-int 
-MdCo::checkMd( const string& dev )
+    int 
+    MdCo::checkMd( const string& dev )
     {
-    int ret = 0;
-    y2mil("dev:" << dev);
-    MdIter i;
-    if( !findMd( dev, i ) )
-	ret = MD_DEVICE_UNKNOWN;
-    else if( i->created() )
-	ret = i->checkDevices();
-    y2mil("ret:" << ret);
-    return( ret );
+	int ret = 0;
+	y2mil("dev:" << dev);
+	MdIter i;
+	if( !findMd( dev, i ) )
+	    ret = MD_DEVICE_UNKNOWN;
+	else if( i->created() )
+	    ret = i->checkDevices();
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-MdCo::extendMd(const string& dev, const list<string>& devs, const list<string>& spares)
+    int 
+    MdCo::extendMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	ret = checkUse(devs, spares);
+	    ret = checkUse(devs, spares);
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_RESIZE_ON_DISK;
+	    ret = MD_NO_RESIZE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->addDevice(*it)) != 0)
-		break;
+	    for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+		if ((ret = i->addDevice(*it)) != 0)
+		    break;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->addDevice(*it, true)) != 0)
-		break;
+	    for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+		if ((ret = i->addDevice(*it, true)) != 0)
+		    break;
 	}
-    if( ret==0 && !getStorage()->isDisk(dev) )
+	if( ret==0 && !getStorage()->isDisk(dev) )
 	{
-	getStorage()->changeFormatVolume( dev, false, FSNONE );
+	    getStorage()->changeFormatVolume( dev, false, FSNONE );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-MdCo::updateMd(const string& dev, const list<string>& devs, const list<string>& spares)
+    int 
+    MdCo::updateMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_RESIZE_ON_DISK;
+	    ret = MD_NO_RESIZE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-        list<string> ls = i->getDevs();
-        for( list<string>::const_iterator it=ls.begin(); it!=ls.end(); ++it )
-	    if ((ret = i->removeDevice(*it)) != 0)
-		break;
+	    list<string> ls = i->getDevs();
+	    for( list<string>::const_iterator it=ls.begin(); it!=ls.end(); ++it )
+		if ((ret = i->removeDevice(*it)) != 0)
+		    break;
         }
-    if( ret==0 )
+	if( ret==0 )
 	{
-        ret = checkUse(devs, spares);
+	    ret = checkUse(devs, spares);
         }
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->addDevice(*it)) != 0)
-		break;
+	    for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+		if ((ret = i->addDevice(*it)) != 0)
+		    break;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->addDevice(*it, true)) != 0)
-		break;
+	    for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+		if ((ret = i->addDevice(*it, true)) != 0)
+		    break;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-MdCo::shrinkMd(const string& dev, const list<string>& devs, const list<string>& spares)
+    int 
+    MdCo::shrinkMd(const string& dev, const list<string>& devs, const list<string>& spares)
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " devs:" << devs << " spares:" << spares);
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_RESIZE_ON_DISK;
+	    ret = MD_NO_RESIZE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
-	    if ((ret = i->removeDevice(*it)) != 0)
-		break;
+	    for (list<string>::const_iterator it = devs.begin(); it != devs.end(); ++it)
+		if ((ret = i->removeDevice(*it)) != 0)
+		    break;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
-	    if ((ret = i->removeDevice(*it)) != 0)
-		break;
+	    for (list<string>::const_iterator it = spares.begin(); it != spares.end(); ++it)
+		if ((ret = i->removeDevice(*it)) != 0)
+		    break;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-MdCo::changeMdType( const string& dev, MdType ptype )
+    int 
+    MdCo::changeMdType( const string& dev, MdType ptype )
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " md_type:" << toString(ptype));
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " md_type:" << toString(ptype));
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_CHANGE_ON_DISK;
+	    ret = MD_NO_CHANGE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	i->setPersonality( ptype );
+	    i->setPersonality( ptype );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int 
-MdCo::changeMdChunk( const string& dev, unsigned long chunk )
+    int 
+    MdCo::changeMdChunk( const string& dev, unsigned long chunk )
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " chunk:" << chunk);
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " chunk:" << chunk);
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_CHANGE_ON_DISK;
+	    ret = MD_NO_CHANGE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	i->setChunkSizeK(chunk);
+	    i->setChunkSizeK(chunk);
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int
-MdCo::changeMdParity( const string& dev, MdParity ptype )
+    int
+    MdCo::changeMdParity( const string& dev, MdParity ptype )
     {
-    int ret = 0;
-    y2mil("dev:" << dev << " parity:" << toString(ptype));
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev << " parity:" << toString(ptype));
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if( ret==0 && !i->created() )
+	if( ret==0 && !i->created() )
 	{
-	ret = MD_NO_RESIZE_ON_DISK;
+	    ret = MD_NO_RESIZE_ON_DISK;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	ret = i->setParity( ptype );
+	    ret = i->setParity( ptype );
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int
-MdCo::getMdState(const string& dev, MdStateInfo& info)
-{
-    int ret = 0;
-    MdIter i;
-    if( ret==0 )
+    int
+    MdCo::getMdState(const string& dev, MdStateInfo& info)
     {
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	int ret = 0;
+	MdIter i;
+	if( ret==0 )
+	{
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
+	}
+	if( ret==0 && i->created() )
+	{
+	    ret = MD_STATE_NOT_ON_DISK;
+	}
+	if( ret==0 )
+	{
+	    ret = i->getState(info);
+	}
+	y2mil("ret:" << ret);
+	return ret;
     }
-    if( ret==0 && i->created() )
-    {
-	ret = MD_STATE_NOT_ON_DISK;
-    }
-    if( ret==0 )
-    {
-	ret = i->getState(info);
-    }
-    y2mil("ret:" << ret);
-    return ret;
-}
 
-int 
-MdCo::removeMd( const string& dev, bool destroySb )
+    int 
+    MdCo::removeMd( const string& dev, bool destroySb )
     {
-    int ret = 0;
-    y2mil("dev:" << dev);
-    MdIter i;
-    if( readonly() )
+	int ret = 0;
+	y2mil("dev:" << dev);
+	MdIter i;
+	if( readonly() )
 	{
-	ret = MD_CHANGE_READONLY;
+	    ret = MD_CHANGE_READONLY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( !findMd( dev, i ))
-	    ret = MD_UNKNOWN_NUMBER;
+	    if( !findMd( dev, i ))
+		ret = MD_UNKNOWN_NUMBER;
 	}
-    if (ret == 0 && i->isUsedBy())
+	if (ret == 0 && i->isUsedBy())
 	{
-	ret = MD_REMOVE_USED_BY;
+	    ret = MD_REMOVE_USED_BY;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	getStorage()->clearUsedBy(i->getDevs());
+	    getStorage()->clearUsedBy(i->getDevs());
 
-	if( i->created() )
+	    if( i->created() )
 	    {
-	    if( !removeFromList( &(*i) ))
-		ret = MD_REMOVE_CREATE_NOT_FOUND;
+		if( !removeFromList( &(*i) ))
+		    ret = MD_REMOVE_CREATE_NOT_FOUND;
 	    }
-	else
+	    else
 	    {
-	    i->setDeleted();
-	    i->setDestroySb( destroySb );
+		i->setDeleted();
+		i->setDestroySb( destroySb );
 	    }
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int MdCo::removeVolume( Volume* v )
+    int MdCo::removeVolume( Volume* v )
     {
-    int ret = 0;
-    y2mil("name:" << v->name());
-    ret = removeMd( v->device() );
-    return( ret );
+	int ret = 0;
+	y2mil("name:" << v->name());
+	ret = removeMd( v->device() );
+	return( ret );
     }
 
-void MdCo::activate( bool val, const string& tmpDir )
+    void MdCo::activate( bool val, const string& tmpDir )
     {
 	if (getenv("LIBSTORAGE_NO_MDRAID") != NULL)
 	    return;
 
-    y2mil("old active:" << active << " val:" << val << " tmp:" << tmpDir);
-    if( active!=val )
+	y2mil("old active:" << active << " val:" << val << " tmp:" << tmpDir);
+	if( active!=val )
 	{
-	SystemCmd c;
-	if( val )
-	    {
-	    string mdconf = tmpDir + "/mdadm.conf";
-	    c.execute("echo 1 > /sys/module/md_mod/parameters/start_ro");
-	    c.execute(MDADMBIN " --examine --scan --config=partitions > " + mdconf);
-	    AsciiFile(mdconf).logContent();
-	    c.execute(MDADMBIN " --assemble --scan --config=" + mdconf);
-	    unlink(mdconf.c_str());
-	    }
-	else
-	    {
-	    c.execute(MDADMBIN " --stop --scan");
-	    }
-	active = val;
-	}
-    Storage::waitForDevice();
-    }
-
-int 
-MdCo::doCreate( Volume* v ) 
-    {
-    y2mil("name:" << v->name());
-    Md * m = dynamic_cast<Md *>(v);
-    int ret = 0;
-    if( m != NULL )
-	{
-	getStorage()->showInfoCb( m->createText(true), silent );
-	ret =  m->checkDevices();
-	if( ret==0 )
-	    {
-	    list<string> devs = m->getDevs();
-	    for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
-		{
-		getStorage()->removeDmTableTo( *i );
-		getStorage()->unaccessDev(*i);
-		}
-	    }
-	if( ret==0 )
-	    {
-	    string cmd = m->createCmd();
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		{
-		ret = MD_CREATE_FAILED;
-		setExtError( c );
-		}
-	    }
-	if( ret==0 )
-	    {
-	    m->setCreated(false);
-	    Storage::waitForDevice(m->device());
-	    SystemInfo systeminfo;
-	    m->updateData(systeminfo);
-	    m->setUdevData(systeminfo);
-	    EtcMdadm* mdadm = getStorage()->getMdadm();
-	    if (mdadm)
-		m->updateEntry(mdadm);
-	    bool used_as_pv = m->isUsedBy(UB_LVM);
-	    y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
-	    if( used_as_pv || getStorage()->getZeroNewPartitions() )
-		{
-		ret = Storage::zeroDevice(m->device());
-		}
-	    }
-	}
-    else
-	ret = MD_CREATE_INVALID_VOLUME;
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int 
-MdCo::doRemove( Volume* v )
-    {
-    y2mil("name:" << v->name());
-    Md * m = dynamic_cast<Md *>(v);
-    int ret = 0;
-    if( m != NULL )
-	{
-	if( !active )
-	    MdPartCo::activate(true, getStorage()->tmpDir());
-	getStorage()->showInfoCb( m->removeText(true), silent );
-	ret = m->prepareRemove();
-	if( ret==0 )
-	    {
-	    string cmd = MDADMBIN " --stop " + quote(m->device());
-	    SystemCmd c( cmd );
-	    if( c.retcode()!=0 )
-		{
-		ret = MD_REMOVE_FAILED;
-		setExtError( c );
-		}
-	    }
-	if( ret==0 && m->destroySb() )
-	    {
 	    SystemCmd c;
-	    list<string> d = m->getDevs();
-	    for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
+	    if( val )
+	    {
+		string mdconf = tmpDir + "/mdadm.conf";
+		c.execute("echo 1 > /sys/module/md_mod/parameters/start_ro");
+		c.execute(MDADMBIN " --examine --scan --config=partitions > " + mdconf);
+		AsciiFile(mdconf).logContent();
+		c.execute(MDADMBIN " --assemble --scan --config=" + mdconf);
+		unlink(mdconf.c_str());
+	    }
+	    else
+	    {
+		c.execute(MDADMBIN " --stop --scan");
+	    }
+	    active = val;
+	}
+	Storage::waitForDevice();
+    }
+
+    int 
+    MdCo::doCreate( Volume* v ) 
+    {
+	y2mil("name:" << v->name());
+	Md * m = dynamic_cast<Md *>(v);
+	int ret = 0;
+	if( m != NULL )
+	{
+	    getStorage()->showInfoCb( m->createText(true), silent );
+	    ret =  m->checkDevices();
+	    if( ret==0 )
+	    {
+		list<string> devs = m->getDevs();
+		for( list<string>::iterator i = devs.begin(); i!=devs.end(); ++i )
 		{
-		c.execute(MDADMBIN " --zero-superblock " + quote(*i));
+		    getStorage()->removeDmTableTo( *i );
+		    getStorage()->unaccessDev(*i);
 		}
 	    }
-	if( ret==0 )
+	    if( ret==0 )
 	    {
-	    EtcMdadm* mdadm = getStorage()->getMdadm();
-	    if (mdadm)
-		mdadm->removeEntry(m->getMdUuid());
-	    if( !removeFromList( m ) )
-		ret = MD_NOT_IN_LIST;
+		string cmd = m->createCmd();
+		SystemCmd c( cmd );
+		if( c.retcode()!=0 )
+		{
+		    ret = MD_CREATE_FAILED;
+		    setExtError( c );
+		}
+	    }
+	    if( ret==0 )
+	    {
+		m->setCreated(false);
+		Storage::waitForDevice(m->device());
+		SystemInfo systeminfo;
+		m->updateData(systeminfo);
+		m->setUdevData(systeminfo);
+		EtcMdadm* mdadm = getStorage()->getMdadm();
+		if (mdadm)
+		    m->updateEntry(mdadm);
+		bool used_as_pv = m->isUsedBy(UB_LVM);
+		y2mil("zeroNew:" << getStorage()->getZeroNewPartitions() << " used_as_pv:" << used_as_pv);
+		if( used_as_pv || getStorage()->getZeroNewPartitions() )
+		{
+		    ret = Storage::zeroDevice(m->device());
+		}
 	    }
 	}
-    else
-	ret = MD_REMOVE_INVALID_VOLUME;
-    y2mil("ret:" << ret);
-    return( ret );
+	else
+	    ret = MD_CREATE_INVALID_VOLUME;
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-void MdCo::changeDeviceName( const string& old, const string& nw )
+    int 
+    MdCo::doRemove( Volume* v )
     {
-    MdPair md=mdPair();
-    for( MdIter i=md.begin(); i!=md.end(); ++i )
+	y2mil("name:" << v->name());
+	Md * m = dynamic_cast<Md *>(v);
+	int ret = 0;
+	if( m != NULL )
 	{
-	i->changeDeviceName( old, nw );
+	    if( !active )
+		MdPartCo::activate(true, getStorage()->tmpDir());
+	    getStorage()->showInfoCb( m->removeText(true), silent );
+	    ret = m->prepareRemove();
+	    if( ret==0 )
+	    {
+		string cmd = MDADMBIN " --stop " + quote(m->device());
+		SystemCmd c( cmd );
+		if( c.retcode()!=0 )
+		{
+		    ret = MD_REMOVE_FAILED;
+		    setExtError( c );
+		}
+	    }
+	    if( ret==0 && m->destroySb() )
+	    {
+		SystemCmd c;
+		list<string> d = m->getDevs();
+		for( list<string>::const_iterator i=d.begin(); i!=d.end(); ++i )
+		{
+		    c.execute(MDADMBIN " --zero-superblock " + quote(*i));
+		}
+	    }
+	    if( ret==0 )
+	    {
+		EtcMdadm* mdadm = getStorage()->getMdadm();
+		if (mdadm)
+		    mdadm->removeEntry(m->getMdUuid());
+		if( !removeFromList( m ) )
+		    ret = MD_NOT_IN_LIST;
+	    }
+	}
+	else
+	    ret = MD_REMOVE_INVALID_VOLUME;
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    void MdCo::changeDeviceName( const string& old, const string& nw )
+    {
+	MdPair md=mdPair();
+	for( MdIter i=md.begin(); i!=md.end(); ++i )
+	{
+	    i->changeDeviceName( old, nw );
 	}
     }
 
 
-std::ostream& operator<< (std::ostream& s, const MdCo& d )
+    std::ostream& operator<< (std::ostream& s, const MdCo& d )
     {
-    s << dynamic_cast<const Container&>(d);
-    return( s );
+	s << dynamic_cast<const Container&>(d);
+	return( s );
     }
 
 
@@ -676,35 +676,35 @@ std::ostream& operator<< (std::ostream& s, const MdCo& d )
     }
 
 
-bool MdCo::equalContent( const Container& rhs ) const
+    bool MdCo::equalContent( const Container& rhs ) const
     {
-    const MdCo * p = NULL;
-    bool ret = Container::equalContent(rhs);
-    if( ret )
-	p = dynamic_cast<const MdCo*>(&rhs);
-    if( ret && p )
+	const MdCo * p = NULL;
+	bool ret = Container::equalContent(rhs);
+	if( ret )
+	    p = dynamic_cast<const MdCo*>(&rhs);
+	if( ret && p )
 	{
-	ConstMdPair pp = mdPair();
-	ConstMdPair pc = p->mdPair();
-	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+	    ConstMdPair pp = mdPair();
+	    ConstMdPair pc = p->mdPair();
+	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
-    return( ret );
+	return( ret );
     }
 
 
-bool MdCo::isHandledByMdPart(const string& name) const
-{
-    Storage::ConstMdPartCoPair p = getStorage()->mdpartCoPair(MdPartCo::notDeleted);
-    for (Storage::ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
+    bool MdCo::isHandledByMdPart(const string& name) const
     {
-	if (i->name() == name)
-	    return true;
+	Storage::ConstMdPartCoPair p = getStorage()->mdpartCoPair(MdPartCo::notDeleted);
+	for (Storage::ConstMdPartCoIterator i = p.begin(); i != p.end(); ++i)
+	{
+	    if (i->name() == name)
+		return true;
+	}
+
+	return false;
     }
 
-    return false;
-}
 
-
-bool MdCo::active = false;
+    bool MdCo::active = false;
 
 }

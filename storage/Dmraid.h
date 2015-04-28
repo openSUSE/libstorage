@@ -28,10 +28,10 @@
 namespace storage
 {
 
-class DmraidCo;
-class Partition;
+    class DmraidCo;
+    class Partition;
 
-class Dmraid : public DmPart
+    class Dmraid : public DmPart
     {
     public:
 

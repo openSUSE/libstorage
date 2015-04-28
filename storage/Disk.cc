@@ -50,15 +50,15 @@ namespace storage
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), del_ptable(false), has_fake_partition(false)
     {
-    logfile_name = boost::replace_all_copy(nm, "/", "_");
-    getMajorMinor(systeminfo);
+	logfile_name = boost::replace_all_copy(nm, "/", "_");
+	getMajorMinor(systeminfo);
 
-    Lsscsi::Entry entry;
-    if (systeminfo.getLsscsi().getEntry(device, entry))
-	transport = entry.transport;
+	Lsscsi::Entry entry;
+	if (systeminfo.getLsscsi().getEntry(device, entry))
+	    transport = entry.transport;
 
-    size_k = SizeK;
-    y2deb("constructed Disk name:" << name);
+	size_k = SizeK;
+	y2deb("constructed Disk name:" << name);
     }
 
 
@@ -69,12 +69,12 @@ namespace storage
 	  init_disk(false), transport(TUNKNOWN), dmp_slave(false), no_addpart(false),
 	  gpt_enlarge(false), range(255), del_ptable(false), has_fake_partition(false)
     {
-    y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
-    logfile_name = name + decString(num);
-    ronly = true;
-    label = "xenxvd";		// artificial
-    size_k = SizeK;
-    addPartition( num, size_k, systeminfo );
+	y2mil("constructed Disk name:" << name << " nr " << num << " sizeK:" << SizeK);
+	logfile_name = name + decString(num);
+	ronly = true;
+	label = "xenxvd";		// artificial
+	size_k = SizeK;
+	addPartition( num, size_k, systeminfo );
     }
 
 
@@ -155,30 +155,30 @@ namespace storage
 	    v->saveData(xmlNewChild(node, "partition"));
     }
 
-string Disk::sysfsToDev( const string& nm )
+    string Disk::sysfsToDev( const string& nm )
     {
-    return( boost::replace_all_copy(nm, "!", "/") );
+	return( boost::replace_all_copy(nm, "!", "/") );
     }
 
-string Disk::devToSysfs( const string& nm )
+    string Disk::devToSysfs( const string& nm )
     {
-    return( boost::replace_all_copy(nm, "/", "!") );
+	return( boost::replace_all_copy(nm, "/", "!") );
     }
 
-string
-Disk::sysfsPath( const string& device )
+    string
+    Disk::sysfsPath( const string& device )
     {
-    string dev(device);
-    if( boost::starts_with(dev, "/dev/"))
-	dev.erase( 0, 5 );
-    return SYSFSDIR "/" + devToSysfs(dev);
+	string dev(device);
+	if( boost::starts_with(dev, "/dev/"))
+	    dev.erase( 0, 5 );
+	return SYSFSDIR "/" + devToSysfs(dev);
     }
 
 
     string
     Disk::sysfsPath() const
     {
-    return( Disk::sysfsPath( procName() ));
+	return( Disk::sysfsPath( procName() ));
     }
 
 
@@ -194,42 +194,42 @@ Disk::sysfsPath( const string& device )
     }
 
 
-void
-Disk::triggerUdevUpdate() const
-{
-    ConstPartPair pp = partPair();
-    for( ConstPartIter p=pp.begin(); p!=pp.end(); ++p )
+    void
+    Disk::triggerUdevUpdate() const
     {
-	if( !p->deleted() && !p->created() )
-	    p->triggerUdevUpdate();
-    }
-}
-
-
-void
-Disk::setUdevData(const string& path, const list<string>& id)
-{
-    y2mil("disk:" << nm << " path:" << path << " id:" << id);
-    udev_path = path;
-    udev_id = id;
-    udev_id.remove_if(string_starts_with("edd-"));
-    partition(udev_id.begin(), udev_id.end(), string_starts_with("ata-"));
-    y2mil("id:" << udev_id);
-
-    alt_names.remove_if(string_contains("/by-path/"));
-    if (!udev_path.empty())
-	alt_names.push_back("/dev/disk/by-path/" + udev_path);
-
-    alt_names.remove_if(string_contains("/by-id/"));
-    for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
-	alt_names.push_back("/dev/disk/by-id/" + *i);
-
-    PartPair pp = partPair();
-    for( PartIter p=pp.begin(); p!=pp.end(); ++p )
+	ConstPartPair pp = partPair();
+	for( ConstPartIter p=pp.begin(); p!=pp.end(); ++p )
 	{
-	p->addUdevData();
+	    if( !p->deleted() && !p->created() )
+		p->triggerUdevUpdate();
 	}
-}
+    }
+
+
+    void
+    Disk::setUdevData(const string& path, const list<string>& id)
+    {
+	y2mil("disk:" << nm << " path:" << path << " id:" << id);
+	udev_path = path;
+	udev_id = id;
+	udev_id.remove_if(string_starts_with("edd-"));
+	partition(udev_id.begin(), udev_id.end(), string_starts_with("ata-"));
+	y2mil("id:" << udev_id);
+
+	alt_names.remove_if(string_contains("/by-path/"));
+	if (!udev_path.empty())
+	    alt_names.push_back("/dev/disk/by-path/" + udev_path);
+
+	alt_names.remove_if(string_contains("/by-id/"));
+	for (list<string>::const_iterator i = udev_id.begin(); i != udev_id.end(); ++i)
+	    alt_names.push_back("/dev/disk/by-id/" + *i);
+
+	PartPair pp = partPair();
+	for( PartIter p=pp.begin(); p!=pp.end(); ++p )
+	{
+	    p->addUdevData();
+	}
+    }
 
 
     bool
@@ -239,7 +239,7 @@ Disk::setUdevData(const string& path, const list<string>& id)
     }
 
 
-bool Disk::detectGeometry()
+    bool Disk::detectGeometry()
     {
 	return storage::detectGeometry(dev, geometry);
     }
@@ -314,34 +314,34 @@ bool Disk::detectGeometry()
 	y2mil("device:" << device() << " dlabel:" << dlabel << " geometry:" << geometry <<
 	      " gpt_enlarge:" << gpt_enlarge);
 
-    if( dlabel!="loop" )
+	if( dlabel!="loop" )
 	{
-	setLabelData( dlabel );
-	checkPartedOutput(systeminfo);
+	    setLabelData( dlabel );
+	    checkPartedOutput(systeminfo);
 	}
-    else
-	dlabel.erase();
-    if( detected_label.empty() )
-	detected_label = dlabel;
-    if( dlabel.empty() )
-	dlabel = defaultLabel();
-    setLabelData( dlabel );
+	else
+	    dlabel.erase();
+	if( detected_label.empty() )
+	    detected_label = dlabel;
+	if( dlabel.empty() )
+	    dlabel = defaultLabel();
+	setLabelData( dlabel );
 
-    if (label == "unsupported")
+	if (label == "unsupported")
 	{
-	Text txt = sformat(
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
-_("The partition table type on disk %1$s cannot be handled by\n"
-"this tool.\n"
-"\n"
-"You can use the partitions on disk %1$s as they are.\n"
-"You can format them and assign mount points to them, but you\n"
-"cannot add, edit, resize, or remove partitions from that\n"
-"disk with this tool."), dev.c_str() );
-	y2war( "unsupported disk label on " << dev << " txt:" << txt.native );
+	    Text txt = sformat(
+			       // popup text %1$s is replaced by disk name e.g. /dev/hda
+			       _("The partition table type on disk %1$s cannot be handled by\n"
+				 "this tool.\n"
+				 "\n"
+				 "You can use the partitions on disk %1$s as they are.\n"
+				 "You can format them and assign mount points to them, but you\n"
+				 "cannot add, edit, resize, or remove partitions from that\n"
+				 "disk with this tool."), dev.c_str() );
+	    y2war( "unsupported disk label on " << dev << " txt:" << txt.native );
 
-	detected_label = label;
-	ronly = true;
+	    detected_label = label;
+	    ronly = true;
 	}
 
 	y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << detected_label <<
@@ -350,18 +350,18 @@ _("The partition table type on disk %1$s cannot be handled by\n"
     }
 
 
-void
-Disk::logData(const string& Dir) const
+    void
+    Disk::logData(const string& Dir) const
     {
-    string fname(Dir + "/disk_" + logfile_name + ".info.tmp");
+	string fname(Dir + "/disk_" + logfile_name + ".info.tmp");
 
-    XmlFile xml;
-    xmlNode* node = xmlNewNode("disk");
-    xml.setRootElement(node);
-    saveData(node);
-    xml.save(fname);
+	XmlFile xml;
+	xmlNode* node = xmlNewNode("disk");
+	xml.setRootElement(node);
+	saveData(node);
+	xml.save(fname);
 
-    getStorage()->handleLogFile( fname );
+	getStorage()->handleLogFile( fname );
     }
 
 
@@ -391,26 +391,26 @@ Disk::logData(const string& Dir) const
     }
 
 
-bool
-Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapabilities)
-{
-    bool ret = false;
-    int i = 0;
-    while (!labels[i].name.empty() && labels[i].name != dlabel)
+    bool
+    Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapabilities)
     {
-	i++;
+	bool ret = false;
+	int i = 0;
+	while (!labels[i].name.empty() && labels[i].name != dlabel)
+	{
+	    i++;
+	}
+	if (!labels[i].name.empty())
+	{
+	    ret = true;
+	    dlabelcapabilities.maxPrimary = labels[i].primary;
+	    dlabelcapabilities.extendedPossible = labels[i].extended;
+	    dlabelcapabilities.maxLogical = labels[i].logical;
+	    dlabelcapabilities.maxSectors = labels[i].max_sectors;
+	}
+	y2mil("dlabel:" << dlabel << " ret:" << ret);
+	return ret;
     }
-    if (!labels[i].name.empty())
-    {
-	ret = true;
-	dlabelcapabilities.maxPrimary = labels[i].primary;
-	dlabelcapabilities.extendedPossible = labels[i].extended;
-	dlabelcapabilities.maxLogical = labels[i].logical;
-	dlabelcapabilities.maxSectors = labels[i].max_sectors;
-    }
-    y2mil("dlabel:" << dlabel << " ret:" << ret);
-    return ret;
-}
 
 
     int
@@ -479,7 +479,7 @@ Disk::getDlabelCapabilities(const string& dlabel, DlabelCapabilities& dlabelcapa
     }
 
 
-bool
+    bool
     Disk::checkPartedOutput(SystemInfo& systeminfo)
     {
 	const ProcParts& parts = systeminfo.getProcParts();
@@ -508,38 +508,38 @@ bool
 		range_exceed = max(range_exceed, (unsigned long) it->num);
 	}
 
-    y2mil("nm:" << nm);
-    if (!dmp_slave && !checkPartedValid(systeminfo, pl, range_exceed))
+	y2mil("nm:" << nm);
+	if (!dmp_slave && !checkPartedValid(systeminfo, pl, range_exceed))
 	{
-	ronly = true;
-	has_fake_partition = checkFakePartition(systeminfo, pl);
+	    ronly = true;
+	    has_fake_partition = checkFakePartition(systeminfo, pl);
 	}
-    if( range_exceed>0 )
+	if( range_exceed>0 )
 	{
-	Text txt = sformat(
-	// popup text %1$s is replaced by disk name e.g. /dev/hda
-	//            %2$lu and %3$lu are replaced by numbers.
-_("Your disk %1$s contains %2$lu partitions. The maximum number\n"
-"of partitions that the kernel driver of the disk can handle is %3$lu.\n"
-"Partitions numbered above %3$lu cannot be accessed."),
-                              dev.c_str(), range_exceed, range-1 );
-	txt += Text("\n", "\n");
-	txt += 
-	// popup text
-_("You have the following options:\n"
-"  - Repartition your system so that only the maximal allowed number\n"
-"    of partitions is used. To repartition, use your existing operating\n"
-"    system.\n"
-"  - Use LVM since it can provide an arbitrary and flexible\n"
-"    number of block devices partitions. This needs a repartition\n"
-"    as well.");
-	getStorage()->addInfoPopupText( dev, txt );
+	    Text txt = sformat(
+			       // popup text %1$s is replaced by disk name e.g. /dev/hda
+			       //            %2$lu and %3$lu are replaced by numbers.
+			       _("Your disk %1$s contains %2$lu partitions. The maximum number\n"
+				 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
+				 "Partitions numbered above %3$lu cannot be accessed."),
+			       dev.c_str(), range_exceed, range-1 );
+	    txt += Text("\n", "\n");
+	    txt += 
+		// popup text
+		_("You have the following options:\n"
+		  "  - Repartition your system so that only the maximal allowed number\n"
+		  "    of partitions is used. To repartition, use your existing operating\n"
+		  "    system.\n"
+		  "  - Use LVM since it can provide an arbitrary and flexible\n"
+		  "    number of block devices partitions. This needs a repartition\n"
+		  "    as well.");
+	    getStorage()->addInfoPopupText( dev, txt );
 	}
-    for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
+	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); ++i )
 	{
-	addToList( *i );
+	    addToList( *i );
 	}
-    return( true );
+	return( true );
     }
 
 
@@ -555,52 +555,52 @@ _("You have the following options:\n"
     }
 
 
-bool
-Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
-{
-    const Parted& parted = systeminfo.getParted(dev);
-
-    // It's allowed that the kernel sees more partitions than parted. This is
-    // the case with BSD slices.
-
-    for (list<Partition*>::const_iterator i = pl.begin(); i != pl.end(); ++i)
+    bool
+    Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) const
     {
-	const Partition& p = **i;
+	const Parted& parted = systeminfo.getParted(dev);
 
-	if (p.type() != EXTENDED)
+	// It's allowed that the kernel sees more partitions than parted. This is
+	// the case with BSD slices.
+
+	for (list<Partition*>::const_iterator i = pl.begin(); i != pl.end(); ++i)
 	{
-	    Parted::Entry entry;
-	    if (parted.getEntry(p.nr(), entry))
-	    {
-		Region sec_parted = entry.secRegion;
-		Region sec_kernel = p.detectSysfsBlkRegion() / (sectorSize() / 512);
+	    const Partition& p = **i;
 
-		if (sec_parted != sec_kernel)
+	    if (p.type() != EXTENDED)
+	    {
+		Parted::Entry entry;
+		if (parted.getEntry(p.nr(), entry))
 		{
-		    y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " sec_parted:" <<
-			  sec_parted << " sec_kernel:" << sec_kernel);
-		    return false;
+		    Region sec_parted = entry.secRegion;
+		    Region sec_kernel = p.detectSysfsBlkRegion() / (sectorSize() / 512);
+
+		    if (sec_parted != sec_kernel)
+		    {
+			y2err("region mismatch dev:" << dev << " nr:" << p.nr() << " sec_parted:" <<
+			      sec_parted << " sec_kernel:" << sec_kernel);
+			return false;
+		    }
 		}
 	    }
 	}
-    }
 
-    // But if parted sees no partitions the kernel must also see no partitions.
+	// But if parted sees no partitions the kernel must also see no partitions.
 
-    if (pl.empty())
-    {
-	const ProcParts& parts = systeminfo.getProcParts();
-	list<string> ps = partitionsKernelKnowns(parts);
-
-	if (!ps.empty())
+	if (pl.empty())
 	{
-	    y2err("parted sees no partitions but kernel does");
-	    return false;
-	}
-    }
+	    const ProcParts& parts = systeminfo.getProcParts();
+	    list<string> ps = partitionsKernelKnowns(parts);
 
-    return true;
-}
+	    if (!ps.empty())
+	    {
+		y2err("parted sees no partitions but kernel does");
+		return false;
+	    }
+	}
+
+	return true;
+    }
 
 
     bool
@@ -627,68 +627,68 @@ Disk::checkPartitionsValid(SystemInfo& systeminfo, const list<Partition*>& pl) c
     }
 
 
-bool
-Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
+    bool
+    Disk::checkPartedValid(SystemInfo& systeminfo, list<Partition*>& pl,
 			   unsigned long& range_exceed) const
-{
-    bool ret = checkPartitionsValid(systeminfo, pl);
+    {
+	bool ret = checkPartitionsValid(systeminfo, pl);
 
-    if( !ret || label=="unsupported" )
+	if( !ret || label=="unsupported" )
 	{
-	range_exceed = 0;
-	for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
+	    range_exceed = 0;
+	    for( list<Partition*>::iterator i=pl.begin(); i!=pl.end(); i++ )
 	    {
-	    delete *i;
+		delete *i;
 	    }
-	pl.clear();
-	unsigned long cyl_start = 1;
-	const ProcParts& parts = systeminfo.getProcParts();
-	list<string> ps = partitionsKernelKnowns(parts);
-	for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
+	    pl.clear();
+	    unsigned long cyl_start = 1;
+	    const ProcParts& parts = systeminfo.getProcParts();
+	    list<string> ps = partitionsKernelKnowns(parts);
+	    for( list<string>::const_iterator i=ps.begin(); i!=ps.end(); i++ )
 	    {
-	    unsigned long cyl;
-	    unsigned long long s;
-	    pair<string,unsigned> pr = getDiskPartition( *i );
-	    if (parts.getSize(*i, s))
+		unsigned long cyl;
+		unsigned long long s;
+		pair<string,unsigned> pr = getDiskPartition( *i );
+		if (parts.getSize(*i, s))
 		{
-		cyl = kbToCylinder(s);
-		if( pr.second!=0 && pr.second < range )
+		    cyl = kbToCylinder(s);
+		    if( pr.second!=0 && pr.second < range )
 		    {
-		    unsigned id = Partition::ID_LINUX;
-		    PartitionType type = PRIMARY;
-		    if( ext_possible )
+			unsigned id = Partition::ID_LINUX;
+			PartitionType type = PRIMARY;
+			if( ext_possible )
 			{
-			if (2 * s == procExtendedBlks())
+			    if (2 * s == procExtendedBlks())
 			    {
-			    type = EXTENDED;
-			    id = Partition::ID_EXTENDED;
+				type = EXTENDED;
+				id = Partition::ID_EXTENDED;
 			    }
-			if( pr.second>max_primary )
+			    if( pr.second>max_primary )
 			    {
-			    type = LOGICAL;
+				type = LOGICAL;
 			    }
 			}
-		    Partition *p = new Partition(*this, getPartName(pr.second), getPartDevice(pr.second),
-						 pr.second, systeminfo, s, Region(cyl_start, cyl), type,
-						 id);
-		    pl.push_back( p );
+			Partition *p = new Partition(*this, getPartName(pr.second), getPartDevice(pr.second),
+						     pr.second, systeminfo, s, Region(cyl_start, cyl), type,
+						     id);
+			pl.push_back( p );
 		    }
-		else if( pr.second>0 )
-		    range_exceed = max( range_exceed, (unsigned long)pr.second );
-		cyl_start += cyl;
+		    else if( pr.second>0 )
+			range_exceed = max( range_exceed, (unsigned long)pr.second );
+		    cyl_start += cyl;
 		}
 	    }
 	}
 
-    y2mil("ret:" << ret);
-    return ret;
-}
+	y2mil("ret:" << ret);
+	return ret;
+    }
 
 
-string
-Disk::defaultLabel() const
-{
-    string ret = "msdos";
+    string
+    Disk::defaultLabel() const
+    {
+	string ret = "msdos";
 
 	const ArchInfo& archinfo = getStorage()->getArchInfo();
 	unsigned long long num_sectors = kbToSector(size_k);
@@ -708,9 +708,9 @@ Disk::defaultLabel() const
 	else if (archinfo.is_ppc() && archinfo.is_ppc_pegasos())
 	    ret = "amiga";
 
-    y2mil("ret:" << ret);
-    return ret;
-}
+	y2mil("ret:" << ret);
+	return ret;
+    }
 
 
     const Disk::label_info Disk::labels[] = {
@@ -763,17 +763,17 @@ Disk::defaultLabel() const
     }
 
 
-string
-Disk::partNaming(const string& disk)
-{
-    // TODO: this is hackish
-    if (boost::starts_with(disk, "/dev/mapper/"))
-	return "-part";
-    else if (needP(disk))
-	return "p";
-    else
-	return "";
-}
+    string
+    Disk::partNaming(const string& disk)
+    {
+	// TODO: this is hackish
+	if (boost::starts_with(disk, "/dev/mapper/"))
+	    return "-part";
+	else if (needP(disk))
+	    return "p";
+	else
+	    return "";
+    }
 
 
     string
@@ -790,139 +790,139 @@ Disk::partNaming(const string& disk)
     }
 
 
-pair<string,unsigned> Disk::getDiskPartition( const string& dev )
+    pair<string,unsigned> Disk::getDiskPartition( const string& dev )
     {
-    static Regex prx( "[0123456789]p[0123456789]+$" );
-    static Regex partrx( "[-_]part[0123456789]+$" );
-    unsigned nr = 0;
-    string disk = dev;
-    bool need_p = prx.match( dev );
-    bool part = partrx.match( dev );
-    string::size_type p = dev.find_last_not_of( "0123456789" );
-    if( p != string::npos && p<dev.size() && (!need_p||dev[p]=='p') &&
-	(dev.find("/disk/by-")==string::npos||part) )
+	static Regex prx( "[0123456789]p[0123456789]+$" );
+	static Regex partrx( "[-_]part[0123456789]+$" );
+	unsigned nr = 0;
+	string disk = dev;
+	bool need_p = prx.match( dev );
+	bool part = partrx.match( dev );
+	string::size_type p = dev.find_last_not_of( "0123456789" );
+	if( p != string::npos && p<dev.size() && (!need_p||dev[p]=='p') &&
+	    (dev.find("/disk/by-")==string::npos||part) )
 	{
-	dev.substr(p+1) >> nr;
-	unsigned pos = p+1;
-	if( need_p )
-	    pos--;
-	else if( part )
-	    pos -= 5;
-	disk = dev.substr( 0, pos );
+	    dev.substr(p+1) >> nr;
+	    unsigned pos = p+1;
+	    if( need_p )
+		pos--;
+	    else if( part )
+		pos -= 5;
+	    disk = dev.substr( 0, pos );
 	}
-    y2mil( "dev:" << dev << " disk:" << disk << " nr:" << nr );
-    return make_pair(disk, nr);
+	y2mil( "dev:" << dev << " disk:" << disk << " nr:" << nr );
+	return make_pair(disk, nr);
     }
 
 
-static bool notDeletedPri( const Partition& p )
-{
-    return !p.deleted() && p.type()==PRIMARY;
-}
+    static bool notDeletedPri( const Partition& p )
+    {
+	return !p.deleted() && p.type()==PRIMARY;
+    }
 
-static bool notDeletedExt( const Partition& p )
-{
-    return !p.deleted() && p.type()==EXTENDED;
-}
+    static bool notDeletedExt( const Partition& p )
+    {
+	return !p.deleted() && p.type()==EXTENDED;
+    }
 
-static bool notDeletedLog( const Partition& p )
-{
-    return !p.deleted() && p.type()==LOGICAL;
-}
-
-
-unsigned int Disk::numPrimary() const
-{
-    return partPair(notDeletedPri).length();
-}
-
-bool Disk::hasExtended() const
-{
-    return ext_possible && !partPair(notDeletedExt).empty();
-}
-
-unsigned int Disk::numLogical() const
-{
-    return partPair(notDeletedLog).length();
-}
+    static bool notDeletedLog( const Partition& p )
+    {
+	return !p.deleted() && p.type()==LOGICAL;
+    }
 
 
-unsigned
-Disk::availablePartNumber(PartitionType type) const
-{
-    y2mil("begin name:" << name() << " type:" << toString(type));
-    unsigned ret = 0;
-    ConstPartPair p = partPair(Partition::notDeleted);
-    if( !ext_possible && type==LOGICAL )
+    unsigned int Disk::numPrimary() const
+    {
+	return partPair(notDeletedPri).length();
+    }
+
+    bool Disk::hasExtended() const
+    {
+	return ext_possible && !partPair(notDeletedExt).empty();
+    }
+
+    unsigned int Disk::numLogical() const
+    {
+	return partPair(notDeletedLog).length();
+    }
+
+
+    unsigned
+    Disk::availablePartNumber(PartitionType type) const
+    {
+	y2mil("begin name:" << name() << " type:" << toString(type));
+	unsigned ret = 0;
+	ConstPartPair p = partPair(Partition::notDeleted);
+	if( !ext_possible && type==LOGICAL )
 	{
-	ret = 0;
+	    ret = 0;
 	}
-    else if( p.empty() )
+	else if( p.empty() )
 	{
-	if( type==LOGICAL )
-	    ret = max_primary + 1;
+	    if( type==LOGICAL )
+		ret = max_primary + 1;
+	    else
+		ret = label!="mac" ? 1 : 2;
+	}
+	else if( type==LOGICAL )
+	{
+	    unsigned mx = max_primary;
+	    ConstPartIter i=p.begin();
+	    while( i!=p.end() )
+	    {
+		y2mil( "i:" << *i );
+		if( i->nr()>mx )
+		    mx = i->nr();
+		++i;
+	    }
+	    ret = mx+1;
+	    if( !ext_possible || !hasExtended() || ret>max_logical )
+		ret = 0;
+	}
 	else
-	    ret = label!="mac" ? 1 : 2;
-	}
-    else if( type==LOGICAL )
 	{
-	unsigned mx = max_primary;
-	ConstPartIter i=p.begin();
-	while( i!=p.end() )
+	    ConstPartIter i=p.begin();
+	    unsigned start = label!="mac" ? 1 : 2;
+	    while( i!=p.end() && i->nr()<=start && i->nr()<=max_primary )
 	    {
-	    y2mil( "i:" << *i );
-	    if( i->nr()>mx )
-		mx = i->nr();
-	    ++i;
+		if( i->nr()==start )
+		    start++;
+		if( label=="sun" && start==3 )
+		    start++;
+		++i;
 	    }
-	ret = mx+1;
-	if( !ext_possible || !hasExtended() || ret>max_logical )
-	    ret = 0;
-	}
-    else
-	{
-	ConstPartIter i=p.begin();
-	unsigned start = label!="mac" ? 1 : 2;
-	while( i!=p.end() && i->nr()<=start && i->nr()<=max_primary )
-	    {
-	    if( i->nr()==start )
-		start++;
-	    if( label=="sun" && start==3 )
-		start++;
-	    ++i;
-	    }
-	if( start<=max_primary )
-	    ret = start;
-	if( type==EXTENDED && (!ext_possible || hasExtended()))
-	    ret = 0;
+	    if( start<=max_primary )
+		ret = start;
+	    if( type==EXTENDED && (!ext_possible || hasExtended()))
+		ret = 0;
 	}
 
-    if( ret >= range )
-	ret = 0;
+	if( ret >= range )
+	    ret = 0;
 
-    y2mil("ret:" << ret);
-    return ret;
-}
-
-
-static bool notDeletedNotLog( const Partition& p )
-    {
-    return( !p.deleted() && p.type()!=LOGICAL );
+	y2mil("ret:" << ret);
+	return ret;
     }
 
-static bool existingNotLog( const Partition& p )
+
+    static bool notDeletedNotLog( const Partition& p )
     {
-    return( !p.deleted() && !p.created() && p.type()!=LOGICAL );
+	return( !p.deleted() && p.type()!=LOGICAL );
     }
 
-static bool existingLog( const Partition& p )
+    static bool existingNotLog( const Partition& p )
     {
-    return( !p.deleted() && !p.created() && p.type()==LOGICAL );
+	return( !p.deleted() && !p.created() && p.type()!=LOGICAL );
     }
 
-static bool notCreatedPrimary( const Partition& p )
+    static bool existingLog( const Partition& p )
     {
-    return( !p.created() && p.type()==PRIMARY );
+	return( !p.deleted() && !p.created() && p.type()==LOGICAL );
+    }
+
+    static bool notCreatedPrimary( const Partition& p )
+    {
+	return( !p.created() && p.type()==PRIMARY );
     }
 
 
@@ -1080,311 +1080,311 @@ static bool notCreatedPrimary( const Partition& p )
     }
 
 
-int Disk::createPartition( unsigned long cylLen, string& device,
-			   bool checkRelaxed )
+    int Disk::createPartition( unsigned long cylLen, string& device,
+			       bool checkRelaxed )
     {
-    y2mil("len:" << cylLen << " relaxed:" << checkRelaxed);
-    getStorage()->logCo( this );
-    int ret = 0;
-    list<PartitionSlotInfo> slots = getUnusedPartitionSlots();
-    y2mil("slots:");
-    if (!slots.empty())
+	y2mil("len:" << cylLen << " relaxed:" << checkRelaxed);
+	getStorage()->logCo( this );
+	int ret = 0;
+	list<PartitionSlotInfo> slots = getUnusedPartitionSlots();
+	y2mil("slots:");
+	if (!slots.empty())
 	{
-	slots.sort(partition_slots_sort_len);
-	list<PartitionSlotInfo>::const_iterator i = slots.begin();
-	while (i != slots.end() && i->cylRegion.len >= cylLen)
-	    ++i;
-	--i;
-	if (i->cylRegion.len >= cylLen)
+	    slots.sort(partition_slots_sort_len);
+	    list<PartitionSlotInfo>::const_iterator i = slots.begin();
+	    while (i != slots.end() && i->cylRegion.len >= cylLen)
+		++i;
+	    --i;
+	    if (i->cylRegion.len >= cylLen)
 	    {
+		ConstPartPair ext = partPair(notDeletedExt);
+		PartitionType t = PRIMARY;
+		bool usable = false;
+		do
+		{
+		    t = PRIMARY;
+		    if (!ext.empty() && ext.begin()->contains(i->cylRegion))
+			t = LOGICAL;
+		    usable = availablePartNumber(t)>0;
+		    if (!usable && i != slots.begin())
+			--i;
+		}
+		while (i != slots.begin() && !usable);
+		usable = availablePartNumber(t)>0;
+		if( usable )
+		    ret = createPartition(t, i->cylRegion.len, cylLen, device, checkRelaxed);
+		else
+		    ret = DISK_PARTITION_NO_FREE_NUMBER;
+	    }
+	    else
+		ret = DISK_CREATE_PARTITION_NO_SPACE;
+	}
+	else
+	    ret = DISK_CREATE_PARTITION_NO_SPACE;
+	getStorage()->logCo( this );
+	y2mil("ret:" << ret);
+	return ret;
+    }
+
+
+    int Disk::createPartition( PartitionType type, string& device )
+    {
+	y2mil("type " << toString(type));
+	int ret = 0;
+	list<PartitionSlotInfo> slots = getUnusedPartitionSlots(type == PTYPE_ANY, type == LOGICAL);
+	if (!slots.empty())
+	{
+	    slots.sort(partition_slots_sort_len);
+	    list<PartitionSlotInfo>::const_iterator i = slots.begin();
 	    ConstPartPair ext = partPair(notDeletedExt);
-	    PartitionType t = PRIMARY;
+	    PartitionType t = type;
 	    bool usable = false;
 	    do
-		{
+	    {
 		t = PRIMARY;
 		if (!ext.empty() && ext.begin()->contains(i->cylRegion))
 		    t = LOGICAL;
-		usable = availablePartNumber(t)>0;
-		if (!usable && i != slots.begin())
-		    --i;
-		}
-	    while (i != slots.begin() && !usable);
+		usable = t==type || type==PTYPE_ANY || (t==PRIMARY&&type==EXTENDED);
+		usable = usable && availablePartNumber(t)>0;
+		if (!usable && i != slots.end())
+		    ++i;
+	    }
+	    while (i != slots.end() && !usable);
 	    usable = availablePartNumber(t)>0;
 	    if( usable )
-		ret = createPartition(t, i->cylRegion.len, cylLen, device, checkRelaxed);
+		ret = createPartition(type == PTYPE_ANY ? t : type, i->cylRegion.start,
+				      i->cylRegion.len, device, true);
 	    else
 		ret = DISK_PARTITION_NO_FREE_NUMBER;
-	    }
+	}
 	else
 	    ret = DISK_CREATE_PARTITION_NO_SPACE;
-	}
-    else
-	ret = DISK_CREATE_PARTITION_NO_SPACE;
-    getStorage()->logCo( this );
-    y2mil("ret:" << ret);
-    return ret;
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 
-int Disk::createPartition( PartitionType type, string& device )
+    int
+    Disk::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
     {
-    y2mil("type " << toString(type));
-    int ret = 0;
-    list<PartitionSlotInfo> slots = getUnusedPartitionSlots(type == PTYPE_ANY, type == LOGICAL);
-    if (!slots.empty())
+	int ret = 0;
+	device = "";
+	nr = availablePartNumber( type );
+	if (nr == 0)
 	{
-	slots.sort(partition_slots_sort_len);
-	list<PartitionSlotInfo>::const_iterator i = slots.begin();
-	ConstPartPair ext = partPair(notDeletedExt);
-	PartitionType t = type;
-	bool usable = false;
-	do
-	    {
-	    t = PRIMARY;
-	    if (!ext.empty() && ext.begin()->contains(i->cylRegion))
-		t = LOGICAL;
-	    usable = t==type || type==PTYPE_ANY || (t==PRIMARY&&type==EXTENDED);
-	    usable = usable && availablePartNumber(t)>0;
-	    if (!usable && i != slots.end())
-		++i;
-	    }
-	while (i != slots.end() && !usable);
-	usable = availablePartNumber(t)>0;
-	if( usable )
-	    ret = createPartition(type == PTYPE_ANY ? t : type, i->cylRegion.start,
-				  i->cylRegion.len, device, true);
+	    ret = DISK_PARTITION_NO_FREE_NUMBER;
+	}
 	else
-	    ret = DISK_PARTITION_NO_FREE_NUMBER;
+	{
+	    device = getPartDevice(nr);
 	}
-    else
-	ret = DISK_CREATE_PARTITION_NO_SPACE;
-    y2mil("ret:" << ret);
-    return ret;
+	y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
+	return ret;
     }
 
 
-int
-Disk::nextFreePartition(PartitionType type, unsigned& nr, string& device) const
-{
-    int ret = 0;
-    device = "";
-    nr = availablePartNumber( type );
-    if (nr == 0)
-	{
-	ret = DISK_PARTITION_NO_FREE_NUMBER;
-	}
-    else
-	{
-	device = getPartDevice(nr);
-	}
-    y2mil("ret:" << ret << " nr:" << nr << " device:" << device);
-    return ret;
-}
-
-
-int Disk::createPartition( PartitionType type, unsigned long start,
-                           unsigned long len, string& device,
-			   bool checkRelaxed )
+    int Disk::createPartition( PartitionType type, unsigned long start,
+			       unsigned long len, string& device,
+			       bool checkRelaxed )
     {
-    y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
-	  checkRelaxed);
+	y2mil("begin type " << toString(type) << " at " << start << " len " << len << " relaxed:" <<
+	      checkRelaxed);
 
-    if (label == "dasd" && start == 0)
-    {
-	y2war("adjusting partition start");
-	start = 1;
-    }
-
-    getStorage()->logCo( this );
-    int ret = createChecks(type, Region(start, len), checkRelaxed);
-    unsigned number = 0;
-    if( ret==0 )
+	if (label == "dasd" && start == 0)
 	{
-	number = availablePartNumber( type );
-	if( number==0 )
+	    y2war("adjusting partition start");
+	    start = 1;
+	}
+
+	getStorage()->logCo( this );
+	int ret = createChecks(type, Region(start, len), checkRelaxed);
+	unsigned number = 0;
+	if( ret==0 )
+	{
+	    number = availablePartNumber( type );
+	    if( number==0 )
 	    {
-	    ret = DISK_PARTITION_NO_FREE_NUMBER;
+		ret = DISK_PARTITION_NO_FREE_NUMBER;
 	    }
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	if( label=="sun" && start==0 )
-	    start=1;
-	Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
-				      cylinderToKb(len), Region(start, len), type);
-	ConstPartPair pp = partPair();
-	ConstPartIter i = pp.begin();
-	while( i!=pp.end() && !(i->deleted() && i->cylStart()==start && i->type()==type) )
-	    ++i;
-	if( i!=pp.end() )
+	    if( label=="sun" && start==0 )
+		start=1;
+	    Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
+					  cylinderToKb(len), Region(start, len), type);
+	    ConstPartPair pp = partPair();
+	    ConstPartIter i = pp.begin();
+	    while( i!=pp.end() && !(i->deleted() && i->cylStart()==start && i->type()==type) )
+		++i;
+	    if( i!=pp.end() )
 	    {
-	    y2mil( "deleted at same start:" << *i );
-	    p->getFsInfo( &(*i) );
+		y2mil( "deleted at same start:" << *i );
+		p->getFsInfo( &(*i) );
 	    }
 
-	// see bnc #591075
-	if (getStorage()->instsys())
-	{
-	    for (i = pp.begin(); i != pp.end(); ++i)
+	    // see bnc #591075
+	    if (getStorage()->instsys())
 	    {
-		if (i->deleted() && i->nr() == number && !i->getCryptPwd().empty())
+		for (i = pp.begin(); i != pp.end(); ++i)
 		{
-		    y2mil("harvesting old password");
-		    p->setCryptPwd(i->getCryptPwd());
+		    if (i->deleted() && i->nr() == number && !i->getCryptPwd().empty())
+		    {
+			y2mil("harvesting old password");
+			p->setCryptPwd(i->getCryptPwd());
+		    }
 		}
 	    }
-	}
 
-	p->setCreated();
-	device = p->device();
-	addToList( p );
+	    p->setCreated();
+	    device = p->device();
+	    addToList( p );
 	}
-    getStorage()->logCo( this );
-    y2mil("ret:" << ret << " device:" << (ret==0?device:""));
-    return( ret );
+	getStorage()->logCo( this );
+	y2mil("ret:" << ret << " device:" << (ret==0?device:""));
+	return( ret );
     }
 
 
     int
     Disk::createChecks(PartitionType& type, const Region& cylRegion, bool checkRelaxed) const
     {
-    y2mil("type:" << toString(type) << " cylRegion:" << cylRegion << " relaxed:" <<
-	  checkRelaxed);
-    unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
-    int ret = 0;
-    ConstPartPair ext = partPair(notDeletedExt);
-    if( type==PTYPE_ANY )
+	y2mil("type:" << toString(type) << " cylRegion:" << cylRegion << " relaxed:" <<
+	      checkRelaxed);
+	unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
+	int ret = 0;
+	ConstPartPair ext = partPair(notDeletedExt);
+	if( type==PTYPE_ANY )
 	{
-	if( ext.empty() || !ext.begin()->contains( Region(cylRegion.start(), 1) ))
-	    type = PRIMARY;
-	else
-	    type = LOGICAL;
+	    if( ext.empty() || !ext.begin()->contains( Region(cylRegion.start(), 1) ))
+		type = PRIMARY;
+	    else
+		type = LOGICAL;
 	}
 
-    if( readonly() )
+	if( readonly() )
 	{
-	ret = DISK_CHANGE_READONLY;
+	    ret = DISK_CHANGE_READONLY;
 	}
-    if( ret==0 && (cylRegion.end() > cylinders()+fuzz) )
+	if( ret==0 && (cylRegion.end() > cylinders()+fuzz) )
 	{
-	y2mil("too large for disk cylinders " << cylinders());
-	ret = DISK_PARTITION_EXCEEDS_DISK;
+	    y2mil("too large for disk cylinders " << cylinders());
+	    ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
-    if( ret==0 && cylRegion.empty() )
+	if( ret==0 && cylRegion.empty() )
 	{
-	ret = DISK_PARTITION_ZERO_SIZE;
+	    ret = DISK_PARTITION_ZERO_SIZE;
 	}
-    if( ret==0 && type==LOGICAL && ext.empty() )
+	if( ret==0 && type==LOGICAL && ext.empty() )
 	{
-	ret = DISK_CREATE_PARTITION_LOGICAL_NO_EXT;
+	    ret = DISK_CREATE_PARTITION_LOGICAL_NO_EXT;
 	}
-    if( ret==0 )
+	if( ret==0 )
 	{
-	ConstPartPair p = (type != LOGICAL) ? partPair(Partition::notDeleted) : partPair(notDeletedLog);
-	ConstPartIter i = p.begin();
-	while( i!=p.end() && !i->intersectArea( cylRegion, fuzz ))
+	    ConstPartPair p = (type != LOGICAL) ? partPair(Partition::notDeleted) : partPair(notDeletedLog);
+	    ConstPartIter i = p.begin();
+	    while( i!=p.end() && !i->intersectArea( cylRegion, fuzz ))
 	    {
-	    ++i;
+		++i;
 	    }
-	if( i!=p.end() )
+	    if( i!=p.end() )
 	    {
-	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(cylRegion) );
-	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
-	    }
-	}
-    if( ret==0 && type==LOGICAL && !ext.begin()->contains( cylRegion, fuzz ))
-	{
-	y2war("outside ext r:" << cylRegion << " ext:" << ext.begin()->cylRegion() <<
-	      "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
-	ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
-	}
-    if( ret==0 && type==EXTENDED )
-	{
-	if( !ext_possible || !ext.empty())
-	    {
-	    ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE
-	                       : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
+		y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		      " inter:" << i->cylRegion().intersect(cylRegion) );
+		ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
 	}
-    y2mil("ret:" << ret);
-    return ret;
+	if( ret==0 && type==LOGICAL && !ext.begin()->contains( cylRegion, fuzz ))
+	{
+	    y2war("outside ext r:" << cylRegion << " ext:" << ext.begin()->cylRegion() <<
+		  "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
+	    ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
+	}
+	if( ret==0 && type==EXTENDED )
+	{
+	    if( !ext_possible || !ext.empty())
+	    {
+		ret = ext_possible ? DISK_CREATE_PARTITION_EXT_ONLY_ONCE
+		    : DISK_CREATE_PARTITION_EXT_IMPOSSIBLE;
+	    }
+	}
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 
     int
     Disk::changePartitionArea(unsigned nr, const Region& cylRegion, bool checkRelaxed)
     {
-    y2mil("begin nr:" << nr << " cylRegion:" << cylRegion << " relaxed:" << checkRelaxed);
-    int ret = 0;
-    unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
-    if( readonly() )
+	y2mil("begin nr:" << nr << " cylRegion:" << cylRegion << " relaxed:" << checkRelaxed);
+	int ret = 0;
+	unsigned fuzz = checkRelaxed ? fuzz_cyl : 0;
+	if( readonly() )
 	{
-	ret = DISK_CHANGE_READONLY;
+	    ret = DISK_CHANGE_READONLY;
 	}
-    PartPair p = partPair(Partition::notDeleted);
-    PartIter part = p.begin();
-    while( ret==0 && part!=p.end() && part->nr()!=nr)
+	PartPair p = partPair(Partition::notDeleted);
+	PartIter part = p.begin();
+	while( ret==0 && part!=p.end() && part->nr()!=nr)
 	{
-	++part;
+	    ++part;
 	}
-    if( ret==0 && part==p.end() )
+	if( ret==0 && part==p.end() )
 	{
-	ret = DISK_PARTITION_NOT_FOUND;
+	    ret = DISK_PARTITION_NOT_FOUND;
 	}
-    if( ret==0 && cylRegion.end() > cylinders()+fuzz )
+	if( ret==0 && cylRegion.end() > cylinders()+fuzz )
 	{
-	y2mil("too large for disk cylinders " << cylinders());
-	ret = DISK_PARTITION_EXCEEDS_DISK;
+	    y2mil("too large for disk cylinders " << cylinders());
+	    ret = DISK_PARTITION_EXCEEDS_DISK;
 	}
-    if( ret==0 && cylRegion.empty() )
+	if( ret==0 && cylRegion.empty() )
 	{
-	ret = DISK_PARTITION_ZERO_SIZE;
+	    ret = DISK_PARTITION_ZERO_SIZE;
 	}
-    if( ret==0 && part->type()==LOGICAL )
+	if( ret==0 && part->type()==LOGICAL )
 	{
-	ConstPartPair ext = partPair(notDeletedExt);
-	p = partPair( notDeletedLog );
-	ConstPartIter i = p.begin();
-	while( i!=p.end() && (i==part||!i->intersectArea( cylRegion, fuzz )) )
+	    ConstPartPair ext = partPair(notDeletedExt);
+	    p = partPair( notDeletedLog );
+	    ConstPartIter i = p.begin();
+	    while( i!=p.end() && (i==part||!i->intersectArea( cylRegion, fuzz )) )
 	    {
-	    ++i;
+		++i;
 	    }
-	if( i!=p.end() )
+	    if( i!=p.end() )
 	    {
-	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(cylRegion) );
-	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
+		y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		      " inter:" << i->cylRegion().intersect(cylRegion) );
+		ret = DISK_PARTITION_OVERLAPS_EXISTING;
 	    }
-	if( ret==0 && !ext.begin()->contains( cylRegion, fuzz ))
+	    if( ret==0 && !ext.begin()->contains( cylRegion, fuzz ))
 	    {
-	    y2war("outside ext r:" <<  cylRegion << " ext:" << ext.begin()->cylRegion() <<
-		  "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
-	    ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
-	    }
-	}
-    if( ret==0 && part->type()!=LOGICAL )
-	{
-	ConstPartIter i = p.begin();
-	while( i!=p.end() &&
-	       (i==part || i->nr()>max_primary || !i->intersectArea( cylRegion, fuzz )))
-	    {
-	    ++i;
-	    }
-	if( i!=p.end() )
-	    {
-	    y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
-		  " inter:" << i->cylRegion().intersect(cylRegion) );
-	    ret = DISK_PARTITION_OVERLAPS_EXISTING;
+		y2war("outside ext r:" <<  cylRegion << " ext:" << ext.begin()->cylRegion() <<
+		      "inter:" << ext.begin()->cylRegion().intersect(cylRegion) );
+		ret = DISK_PARTITION_LOGICAL_OUTSIDE_EXT;
 	    }
 	}
-    if( ret==0 )
+	if( ret==0 && part->type()!=LOGICAL )
 	{
-	part->changeRegion(cylRegion, cylinderToKb(cylRegion.len()));
+	    ConstPartIter i = p.begin();
+	    while( i!=p.end() &&
+		   (i==part || i->nr()>max_primary || !i->intersectArea( cylRegion, fuzz )))
+	    {
+		++i;
+	    }
+	    if( i!=p.end() )
+	    {
+		y2war("overlaps r:" << cylRegion << " p:" << i->cylRegion() <<
+		      " inter:" << i->cylRegion().intersect(cylRegion) );
+		ret = DISK_PARTITION_OVERLAPS_EXISTING;
+	    }
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	if( ret==0 )
+	{
+	    part->changeRegion(cylRegion, cylinderToKb(cylRegion.len()));
+	}
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
@@ -1402,285 +1402,285 @@ int Disk::createPartition( PartitionType type, unsigned long start,
     }
 
 
-int Disk::removePartition( unsigned nr )
+    int Disk::removePartition( unsigned nr )
     {
-    y2mil("begin nr " << nr);
-    getStorage()->logCo( this );
-    int ret = 0;
-    PartPair p = partPair(Partition::notDeleted);
-    PartIter i = p.begin();
-    while( i!=p.end() && i->nr()!=nr)
+	y2mil("begin nr " << nr);
+	getStorage()->logCo( this );
+	int ret = 0;
+	PartPair p = partPair(Partition::notDeleted);
+	PartIter i = p.begin();
+	while( i!=p.end() && i->nr()!=nr)
 	{
-	++i;
-	}
-    if( i==p.end() )
-	{
-	ret = DISK_PARTITION_NOT_FOUND;
-	}
-    if( readonly() )
-	{
-	ret = DISK_CHANGE_READONLY;
-	}
-    else if (i->isUsedBy())
-	{
-	ret = DISK_REMOVE_USED_BY;
-	}
-    if( ret==0 )
-	{
-	PartitionType t = i->type();
-	if( i->created() )
-	    {
-	    if( !removeFromList( &(*i) ))
-		ret = DISK_REMOVE_PARTITION_CREATE_NOT_FOUND;
-	    p = partPair(Partition::notDeleted);
-	    }
-	else
-	    i->setDeleted();
-	if( ret==0 && nr>max_primary )
-	    {
-	    changeNumbers( p.begin(), p.end(), nr, -1 );
-	    }
-	else if( ret==0 && nr<=max_primary )
-	    {
-	    list<Partition*> l;
-	    i = p.begin();
-	    while( i!=p.end() )
-		{
-		if( i->created() && i->nr()<=max_primary && i->nr()>nr )
-		    {
-		    l.push_back( &(*i) );
-		    }
-		++i;
-		}
-	    if( !l.empty() )
-		{
-		l.sort(partition_ptr_sort_nr);
-		unsigned old = nr;
-		list<Partition*>::iterator vi = l.begin();
-		while( vi!=l.end() )
-		    {
-		    unsigned save = (*vi)->nr();
-		    (*vi)->changeNumber( old );
-		    old = save;
-		    ++vi;
-		    }
-		// bsc #898362
-		vols.sort(volume_ptr_sort_nr);
-		}
-	    }
-	if( t==EXTENDED )
-	    {
-	    list<Volume*> l;
-	    i = p.begin();
-	    while( i!=p.end() )
-		{
-		if( i->nr()>max_primary )
-		    {
-		    if( i->created() )
-			l.push_back( &(*i) );
-		    else
-			i->setDeleted();
-		    }
-		++i;
-		}
-	    list<Volume*>::iterator vi = l.begin();
-	    while( ret==0 && vi!=l.end() )
-		{
-		if ((*vi)->isUsedBy())
-		    getStorage()->removeUsing( (*vi)->device(), (*vi)->getUsedBy() );
-		if( !removeFromList( *vi ))
-		    ret = DISK_PARTITION_NOT_FOUND;
-		++vi;
-		}
-	    }
-	}
-    getStorage()->logCo( this );
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-void Disk::changeNumbers( const PartIter& b, const PartIter& e,
-                          unsigned start, int incr )
-    {
-    y2mil("start:" << start << " incr:" << incr);
-    PartIter i(b);
-    while( i!=e )
-	{
-	if( i->nr()>start )
-	    {
-	    i->changeNumber( i->nr()+incr );
-	    }
-	++i;
-	}
-    }
-
-int Disk::destroyPartitionTable( const string& new_label )
-    {
-    y2mil("begin");
-    int ret = 0;
-    setLabelData( new_label );
-    if( max_primary==0 )
-	{
-	setLabelData( label );
-	ret = DISK_DESTROY_TABLE_INVALID_LABEL;
-	}
-    else
-	{
-	label = new_label;
-	VIter j = vols.begin();
-	while( j!=vols.end() )
-	    {
-	    if( (*j)->created() )
-		{
-		if( (*j)->isUsedBy() )
-		    getStorage()->removeUsing( (*j)->device(), (*j)->getUsedBy() );
-		delete( *j );
-		j = vols.erase( j );
-		}
-	    else
-		++j;
-	    }
-	bool save = getStorage()->getRecursiveRemoval();
-	getStorage()->setRecursiveRemoval(true);
-	if (isUsedBy())
-	    {
-	    getStorage()->removeUsing( device(), getUsedBy() );
-	    }
-	ronly = false;
-	RVIter i = vols.rbegin();
-	while( i!=vols.rend() && !dmp_slave )
-	    {
-	    if( !(*i)->deleted() )
-		getStorage()->removeVolume( (*i)->device() );
 	    ++i;
-	    }
-	getStorage()->setRecursiveRemoval(save);
-	del_ptable = true;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-
-int
-Disk::changePartitionId(unsigned nr, unsigned id)
-{
-    y2mil("begin nr:" << nr << " id:" << hex << id);
-    int ret = 0;
-    PartPair p = partPair(Partition::notDeleted);
-    PartIter i = p.begin();
-    while( i!=p.end() && i->nr()!=nr)
+	if( i==p.end() )
 	{
-	++i;
+	    ret = DISK_PARTITION_NOT_FOUND;
 	}
-    if( i==p.end() )
+	if( readonly() )
 	{
-	ret = DISK_PARTITION_NOT_FOUND;
+	    ret = DISK_CHANGE_READONLY;
 	}
-    if( readonly() )
+	else if (i->isUsedBy())
 	{
-	y2war( "trying to chang partition id on readonly disk - ignoring" );
-	i->changeIdDone();
-	ret = 0;
+	    ret = DISK_REMOVE_USED_BY;
 	}
-    else
+	if( ret==0 )
 	{
-	ret = i->changeId( id );
-	}
-    y2mil("ret:" << ret);
-    return ret;
-    }
-
-
-int Disk::forgetChangePartitionId( unsigned nr )
-    {
-    y2mil("begin nr:" << nr);
-    int ret = 0;
-    PartPair p = partPair(Partition::notDeleted);
-    PartIter i = p.begin();
-    while( i!=p.end() && i->nr()!=nr)
-	{
-	++i;
-	}
-    if( i==p.end() )
-	{
-	ret = DISK_PARTITION_NOT_FOUND;
-	}
-    if( readonly() )
-	{
-	ret = DISK_CHANGE_READONLY;
-	}
-    if( ret==0 )
-	{
-	i->unChangeId();
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-
-void
-Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
-    {
-    unsigned long oco = col.size();
-    unsigned long ovo = vol.size();
-    Container::getToCommit( stage, col, vol );
-    if( stage==INCREASE )
-	{
-	ConstPartPair p = partPair( Partition::toChangeId );
-	for( ConstPartIter i=p.begin(); i!=p.end(); ++i )
-	    if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
-		vol.push_back( &(*i) );
-	}
-    if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
-	col.push_back( this );
-    if( col.size()!=oco || vol.size()!=ovo )
-	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
-    }
-
-
-int Disk::commitChanges( CommitStage stage, Volume* vol )
-    {
-    y2mil("name:" << name() << " stage:" << stage);
-    int ret = Container::commitChanges( stage, vol );
-    if( ret==0 && stage==INCREASE )
-	{
-	Partition * p = dynamic_cast<Partition *>(vol);
-	if( p!=NULL )
+	    PartitionType t = i->type();
+	    if( i->created() )
 	    {
-	    if( Partition::toChangeId( *p ) )
-		ret = doSetType( p );
+		if( !removeFromList( &(*i) ))
+		    ret = DISK_REMOVE_PARTITION_CREATE_NOT_FOUND;
+		p = partPair(Partition::notDeleted);
 	    }
+	    else
+		i->setDeleted();
+	    if( ret==0 && nr>max_primary )
+	    {
+		changeNumbers( p.begin(), p.end(), nr, -1 );
+	    }
+	    else if( ret==0 && nr<=max_primary )
+	    {
+		list<Partition*> l;
+		i = p.begin();
+		while( i!=p.end() )
+		{
+		    if( i->created() && i->nr()<=max_primary && i->nr()>nr )
+		    {
+			l.push_back( &(*i) );
+		    }
+		    ++i;
+		}
+		if( !l.empty() )
+		{
+		    l.sort(partition_ptr_sort_nr);
+		    unsigned old = nr;
+		    list<Partition*>::iterator vi = l.begin();
+		    while( vi!=l.end() )
+		    {
+			unsigned save = (*vi)->nr();
+			(*vi)->changeNumber( old );
+			old = save;
+			++vi;
+		    }
+		    // bsc #898362
+		    vols.sort(volume_ptr_sort_nr);
+		}
+	    }
+	    if( t==EXTENDED )
+	    {
+		list<Volume*> l;
+		i = p.begin();
+		while( i!=p.end() )
+		{
+		    if( i->nr()>max_primary )
+		    {
+			if( i->created() )
+			    l.push_back( &(*i) );
+			else
+			    i->setDeleted();
+		    }
+		    ++i;
+		}
+		list<Volume*>::iterator vi = l.begin();
+		while( ret==0 && vi!=l.end() )
+		{
+		    if ((*vi)->isUsedBy())
+			getStorage()->removeUsing( (*vi)->device(), (*vi)->getUsedBy() );
+		    if( !removeFromList( *vi ))
+			ret = DISK_PARTITION_NOT_FOUND;
+		    ++vi;
+		}
+	    }
+	}
+	getStorage()->logCo( this );
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    void Disk::changeNumbers( const PartIter& b, const PartIter& e,
+			      unsigned start, int incr )
+    {
+	y2mil("start:" << start << " incr:" << incr);
+	PartIter i(b);
+	while( i!=e )
+	{
+	    if( i->nr()>start )
+	    {
+		i->changeNumber( i->nr()+incr );
+	    }
+	    ++i;
+	}
+    }
+
+    int Disk::destroyPartitionTable( const string& new_label )
+    {
+	y2mil("begin");
+	int ret = 0;
+	setLabelData( new_label );
+	if( max_primary==0 )
+	{
+	    setLabelData( label );
+	    ret = DISK_DESTROY_TABLE_INVALID_LABEL;
+	}
 	else
-	    ret = DISK_SET_TYPE_INVALID_VOLUME;
+	{
+	    label = new_label;
+	    VIter j = vols.begin();
+	    while( j!=vols.end() )
+	    {
+		if( (*j)->created() )
+		{
+		    if( (*j)->isUsedBy() )
+			getStorage()->removeUsing( (*j)->device(), (*j)->getUsedBy() );
+		    delete( *j );
+		    j = vols.erase( j );
+		}
+		else
+		    ++j;
+	    }
+	    bool save = getStorage()->getRecursiveRemoval();
+	    getStorage()->setRecursiveRemoval(true);
+	    if (isUsedBy())
+	    {
+		getStorage()->removeUsing( device(), getUsedBy() );
+	    }
+	    ronly = false;
+	    RVIter i = vols.rbegin();
+	    while( i!=vols.rend() && !dmp_slave )
+	    {
+		if( !(*i)->deleted() )
+		    getStorage()->removeVolume( (*i)->device() );
+		++i;
+	    }
+	    getStorage()->setRecursiveRemoval(save);
+	    del_ptable = true;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-int Disk::commitChanges( CommitStage stage )
+    int
+    Disk::changePartitionId(unsigned nr, unsigned id)
     {
-    y2mil("name:" << name() << " stage:" << stage);
-    int ret = 0;
-    if( stage==DECREASE && del_ptable )
+	y2mil("begin nr:" << nr << " id:" << hex << id);
+	int ret = 0;
+	PartPair p = partPair(Partition::notDeleted);
+	PartIter i = p.begin();
+	while( i!=p.end() && i->nr()!=nr)
 	{
-	ret = doCreateLabel();
+	    ++i;
 	}
-    else
-	ret = DISK_COMMIT_NOTHING_TODO;
-    y2mil("ret:" << ret);
-    return( ret );
+	if( i==p.end() )
+	{
+	    ret = DISK_PARTITION_NOT_FOUND;
+	}
+	if( readonly() )
+	{
+	    y2war( "trying to chang partition id on readonly disk - ignoring" );
+	    i->changeIdDone();
+	    ret = 0;
+	}
+	else
+	{
+	    ret = i->changeId( id );
+	}
+	y2mil("ret:" << ret);
+	return ret;
     }
 
 
-void
-Disk::getCommitActions(list<commitAction>& l) const
+    int Disk::forgetChangePartitionId( unsigned nr )
     {
-    Container::getCommitActions( l );
-    if( del_ptable )
+	y2mil("begin nr:" << nr);
+	int ret = 0;
+	PartPair p = partPair(Partition::notDeleted);
+	PartIter i = p.begin();
+	while( i!=p.end() && i->nr()!=nr)
 	{
-	l.push_front(commitAction(DECREASE, staticType(), setDiskLabelText(false), this, true));
+	    ++i;
+	}
+	if( i==p.end() )
+	{
+	    ret = DISK_PARTITION_NOT_FOUND;
+	}
+	if( readonly() )
+	{
+	    ret = DISK_CHANGE_READONLY;
+	}
+	if( ret==0 )
+	{
+	    i->unChangeId();
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+
+    void
+    Disk::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
+    {
+	unsigned long oco = col.size();
+	unsigned long ovo = vol.size();
+	Container::getToCommit( stage, col, vol );
+	if( stage==INCREASE )
+	{
+	    ConstPartPair p = partPair( Partition::toChangeId );
+	    for( ConstPartIter i=p.begin(); i!=p.end(); ++i )
+		if( find( vol.begin(), vol.end(), &(*i) )==vol.end() )
+		    vol.push_back( &(*i) );
+	}
+	if( del_ptable && find( col.begin(), col.end(), this )==col.end() )
+	    col.push_back( this );
+	if( col.size()!=oco || vol.size()!=ovo )
+	    y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
+    }
+
+
+    int Disk::commitChanges( CommitStage stage, Volume* vol )
+    {
+	y2mil("name:" << name() << " stage:" << stage);
+	int ret = Container::commitChanges( stage, vol );
+	if( ret==0 && stage==INCREASE )
+	{
+	    Partition * p = dynamic_cast<Partition *>(vol);
+	    if( p!=NULL )
+	    {
+		if( Partition::toChangeId( *p ) )
+		    ret = doSetType( p );
+	    }
+	    else
+		ret = DISK_SET_TYPE_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+
+    int Disk::commitChanges( CommitStage stage )
+    {
+	y2mil("name:" << name() << " stage:" << stage);
+	int ret = 0;
+	if( stage==DECREASE && del_ptable )
+	{
+	    ret = doCreateLabel();
+	}
+	else
+	    ret = DISK_COMMIT_NOTHING_TODO;
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+
+    void
+    Disk::getCommitActions(list<commitAction>& l) const
+    {
+	Container::getCommitActions( l );
+	if( del_ptable )
+	{
+	    l.push_front(commitAction(DECREASE, staticType(), setDiskLabelText(false), this, true));
 	}
     }
 
@@ -1688,107 +1688,107 @@ Disk::getCommitActions(list<commitAction>& l) const
     Text
     Disk::setDiskLabelText(bool doing) const
     {
-    Text txt;
-    if( doing )
+	Text txt;
+	if( doing )
         {
-        // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
-	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat(_("Setting disk label of %1$s to %2$s"), dev.c_str(),
-		      boost::to_upper_copy(label).c_str());
+	    // displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
+	    // %2$s is replaced by label name (e.g. msdos)
+	    txt = sformat(_("Setting disk label of %1$s to %2$s"), dev.c_str(),
+			  boost::to_upper_copy(label).c_str());
         }
-    else
+	else
         {
-        // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
-	// %2$s is replaced by label name (e.g. msdos)
-        txt = sformat(_("Set disk label of %1$s to %2$s"), dev.c_str(),
-		      boost::to_upper_copy(label).c_str());
+	    // displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
+	    // %2$s is replaced by label name (e.g. msdos)
+	    txt = sformat(_("Set disk label of %1$s to %2$s"), dev.c_str(),
+			  boost::to_upper_copy(label).c_str());
         }
-    return txt;
+	return txt;
     }
 
 
     int
     Disk::doCreateLabel()
     {
-    y2mil("label:" << label);
-    int ret = 0;
-    getStorage()->showInfoCb( setDiskLabelText(true), silent );
-    if( !dmp_slave )
-	getStorage()->removeDmMapsTo( device() );
-    removePresentPartitions();
+	y2mil("label:" << label);
+	int ret = 0;
+	getStorage()->showInfoCb( setDiskLabelText(true), silent );
+	if( !dmp_slave )
+	    getStorage()->removeDmMapsTo( device() );
+	removePresentPartitions();
 
-    SystemCmd cmd;
-    cmd.execute(WIPEFSBIN " --all " + quote(device()));
+	SystemCmd cmd;
+	cmd.execute(WIPEFSBIN " --all " + quote(device()));
 
-    string lab(label);
-    if( lab=="gpt" )
+	string lab(label);
+	if( lab=="gpt" )
 	{
-	const ArchInfo& archinfo = getStorage()->getArchInfo();
-	if (!archinfo.is_efiboot() &&
-	    (archinfo.is_x86() || (archinfo.is_ppc() && !archinfo.is_ppc_p8())))
+	    const ArchInfo& archinfo = getStorage()->getArchInfo();
+	    if (!archinfo.is_efiboot() &&
+		(archinfo.is_x86() || (archinfo.is_ppc() && !archinfo.is_ppc_p8())))
 	    {
 		y2mil( "archinfo:" << archinfo);
 		lab = LABEL_GPT_SYNC_MBR;
 	    }
 	}
 
-    string cmd_line = PARTEDCMD + quote(device()) + " mklabel " + lab;
-    if (execCheckFailed(cmd_line))
+	string cmd_line = PARTEDCMD + quote(device()) + " mklabel " + lab;
+	if (execCheckFailed(cmd_line))
 	{
-	ret = DISK_SET_LABEL_PARTED_FAILED;
+	    ret = DISK_SET_LABEL_PARTED_FAILED;
 	}
-    else
-	{
-	del_ptable = false;
-	detected_label = label;
-	removeFromMemory();
-	}
-    if( ret==0 )
-	{
-	if( !dmp_slave )
-	    Storage::waitForDevice();
-	redetectGeometry();
-	}
-    gpt_enlarge = false;
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-void Disk::removePresentPartitions()
-    {
-    VolPair p = volPair();
-    if( !p.empty() )
-	{
-	bool save=silent;
-	setSilent( true );
-	list<VolIterator> l;
-	for( VolIterator i=p.begin(); i!=p.end(); ++i )
-	    {
-	    y2mil( "rem:" << *i );
-	    if( !i->created() )
-		l.push_front( i );
-	    }
-	for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
-	    {
-	    doRemove( &(**i) );
-	    }
-	setSilent( save );
-	}
-    }
-
-void Disk::removeFromMemory()
-    {
-    VIter i = vols.begin();
-    while( i!=vols.end() )
-	{
-	y2mil( "rem:" << *i );
-	if( !(*i)->created() )
-	    {
-	    delete *i;
-	    i = vols.erase( i );
-	    }
 	else
-	    ++i;
+	{
+	    del_ptable = false;
+	    detected_label = label;
+	    removeFromMemory();
+	}
+	if( ret==0 )
+	{
+	    if( !dmp_slave )
+		Storage::waitForDevice();
+	    redetectGeometry();
+	}
+	gpt_enlarge = false;
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    void Disk::removePresentPartitions()
+    {
+	VolPair p = volPair();
+	if( !p.empty() )
+	{
+	    bool save=silent;
+	    setSilent( true );
+	    list<VolIterator> l;
+	    for( VolIterator i=p.begin(); i!=p.end(); ++i )
+	    {
+		y2mil( "rem:" << *i );
+		if( !i->created() )
+		    l.push_front( i );
+	    }
+	    for( list<VolIterator>::const_iterator i=l.begin(); i!=l.end(); ++i )
+	    {
+		doRemove( &(**i) );
+	    }
+	    setSilent( save );
+	}
+    }
+
+    void Disk::removeFromMemory()
+    {
+	VIter i = vols.begin();
+	while( i!=vols.end() )
+	{
+	    y2mil( "rem:" << *i );
+	    if( !(*i)->created() )
+	    {
+		delete *i;
+		i = vols.erase( i );
+	    }
+	    else
+		++i;
 	}
     }
 
@@ -1806,62 +1806,62 @@ void Disk::removeFromMemory()
     }
 
 
-int Disk::doSetType( Volume* v )
+    int Disk::doSetType( Volume* v )
     {
-    y2mil("doSetType container " << name() << " name " << v->name());
-    Partition * p = dynamic_cast<Partition *>(v);
-    int ret = 0;
-    if( p != NULL )
+	y2mil("doSetType container " << name() << " name " << v->name());
+	Partition * p = dynamic_cast<Partition *>(v);
+	int ret = 0;
+	if( p != NULL )
 	{
-	getStorage()->showInfoCb( p->setTypeText(true), silent );
-	if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
-	    p->eraseLabel();
+	    getStorage()->showInfoCb( p->setTypeText(true), silent );
+	    if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
+		p->eraseLabel();
 
-	std::ostringstream options;
-	classic(options);
+	    std::ostringstream options;
+	    classic(options);
 
-	if( ret==0 )
-	{
-	    options << " set " << p->nr() << " lvm " << (p->id()==Partition::ID_LVM ? "on" : "off");
-
-	    if (label != "sun")
-		options << " set " << p->nr() << " raid " << (p->id()==Partition::ID_RAID?"on":"off");
-
-	    if (label == "dvh" || label == "mac")
-		options << " set " << p->nr() << " swap " << (p->id()==Partition::ID_SWAP?"on":"off");
-
-	    options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
-
-	    if (label == "gpt") {
-		options << " set " << p->nr() << " prep " << (p->id()==Partition::ID_GPT_PREP?"on":"off");
-		options << " set " << p->nr() << " bios_grub " << (p->id()==Partition::ID_GPT_BIOS?"on":"off");
-	    }
-	    if (p->id() <= 255 && label == "msdos")
-		options << " set " << p->nr() << " type " << p->id();
-	}
-
-	if (!options.str().empty())
-	{
-	    string cmd_line = PARTEDCMD + quote(device()) + options.str();
-	    if( execCheckFailed( cmd_line ) && !dmp_slave )
+	    if( ret==0 )
 	    {
-		ret = DISK_SET_TYPE_PARTED_FAILED;
-	    }
-	}
+		options << " set " << p->nr() << " lvm " << (p->id()==Partition::ID_LVM ? "on" : "off");
 
-	if( ret==0 )
+		if (label != "sun")
+		    options << " set " << p->nr() << " raid " << (p->id()==Partition::ID_RAID?"on":"off");
+
+		if (label == "dvh" || label == "mac")
+		    options << " set " << p->nr() << " swap " << (p->id()==Partition::ID_SWAP?"on":"off");
+
+		options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
+
+		if (label == "gpt") {
+		    options << " set " << p->nr() << " prep " << (p->id()==Partition::ID_GPT_PREP?"on":"off");
+		    options << " set " << p->nr() << " bios_grub " << (p->id()==Partition::ID_GPT_BIOS?"on":"off");
+		}
+		if (p->id() <= 255 && label == "msdos")
+		    options << " set " << p->nr() << " type " << p->id();
+	    }
+
+	    if (!options.str().empty())
 	    {
-	    if( !dmp_slave )
-		Storage::waitForDevice(p->device());
-	    p->changeIdDone();
+		string cmd_line = PARTEDCMD + quote(device()) + options.str();
+		if( execCheckFailed( cmd_line ) && !dmp_slave )
+		{
+		    ret = DISK_SET_TYPE_PARTED_FAILED;
+		}
+	    }
+
+	    if( ret==0 )
+	    {
+		if( !dmp_slave )
+		    Storage::waitForDevice(p->device());
+		p->changeIdDone();
 	    }
 	}
-    else
+	else
 	{
-	ret = DISK_SET_TYPE_INVALID_VOLUME;
+	    ret = DISK_SET_TYPE_INVALID_VOLUME;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
@@ -1882,95 +1882,95 @@ int Disk::doSetType( Volume* v )
     }
 
 
-unsigned long long
-Disk::procExtendedBlks() const
-{
-    return std::max(2U, sectorSize() / 512);
-}
-
-
-bool
-Disk::getPartedValues( Partition *p ) const
+    unsigned long long
+    Disk::procExtendedBlks() const
     {
-    y2mil( "nr:" << p->nr() );
-    bool ret = false;
-    if (getStorage()->testmode())
+	return std::max(2U, sectorSize() / 512);
+    }
+
+
+    bool
+    Disk::getPartedValues( Partition *p ) const
+    {
+	y2mil( "nr:" << p->nr() );
+	bool ret = false;
+	if (getStorage()->testmode())
 	{
-	ret = true;
-	p->setSize( p->sizeK() );
-	}
-    else
-	{
-	Parted parted(device());
-	Parted::Entry entry;
-	if (parted.getEntry(p->nr(), entry))
-	{
-	    Region partedBlkRegion = sectorSize() / 512 * entry.secRegion;
-	    y2mil("partedBlkRegion:" << partedBlkRegion);
-
-	    if (p->type() == EXTENDED)
-		partedBlkRegion.setLen(procExtendedBlks());
-
-	    Region sysfsBlkRegion = p->detectSysfsBlkRegion(false);
-	    y2mil("sysfsBlkRegion:" << sysfsBlkRegion);
-
-	    if (!no_addpart && partedBlkRegion != sysfsBlkRegion)
-	    {
-		callDelpart(p->nr());
-		callAddpart(p->nr(), partedBlkRegion);
-
-		sysfsBlkRegion = p->detectSysfsBlkRegion();
-
-		if (partedBlkRegion != sysfsBlkRegion)
-		    y2err("addpart failed sysfsBlkRegion:" << sysfsBlkRegion);
-	    }
-
-	    const Region& partedCylRegion = entry.cylRegion;
-	    y2mil("partedCylRegion:" << partedCylRegion);
-	    p->changeRegion(partedCylRegion, cylinderToKb(partedCylRegion.len()));
-
 	    ret = true;
+	    p->setSize( p->sizeK() );
+	}
+	else
+	{
+	    Parted parted(device());
+	    Parted::Entry entry;
+	    if (parted.getEntry(p->nr(), entry))
+	    {
+		Region partedBlkRegion = sectorSize() / 512 * entry.secRegion;
+		y2mil("partedBlkRegion:" << partedBlkRegion);
 
-	    if( !no_addpart && p->type() != EXTENDED )
+		if (p->type() == EXTENDED)
+		    partedBlkRegion.setLen(procExtendedBlks());
+
+		Region sysfsBlkRegion = p->detectSysfsBlkRegion(false);
+		y2mil("sysfsBlkRegion:" << sysfsBlkRegion);
+
+		if (!no_addpart && partedBlkRegion != sysfsBlkRegion)
 		{
-		ProcParts parts;
-		unsigned long long s = 0;
-		if (!parts.getSize(p->procName(), s) || s == 0)
+		    callDelpart(p->nr());
+		    callAddpart(p->nr(), partedBlkRegion);
+
+		    sysfsBlkRegion = p->detectSysfsBlkRegion();
+
+		    if (partedBlkRegion != sysfsBlkRegion)
+			y2err("addpart failed sysfsBlkRegion:" << sysfsBlkRegion);
+		}
+
+		const Region& partedCylRegion = entry.cylRegion;
+		y2mil("partedCylRegion:" << partedCylRegion);
+		p->changeRegion(partedCylRegion, cylinderToKb(partedCylRegion.len()));
+
+		ret = true;
+
+		if( !no_addpart && p->type() != EXTENDED )
+		{
+		    ProcParts parts;
+		    unsigned long long s = 0;
+		    if (!parts.getSize(p->procName(), s) || s == 0)
 		    {
-		    y2err("device " << p->device() << " not found in /proc/partitions");
-		    ret = false;
+			y2err("device " << p->device() << " not found in /proc/partitions");
+			ret = false;
 		    }
-		else
-		    p->setSize( s );
+		    else
+			p->setSize( s );
 		}
 	    }
 	}
-    return( ret );
+	return( ret );
     }
 
-bool
-Disk::getPartedSectors( const Partition *p, unsigned long long& start,
-                        unsigned long long& end ) const
+    bool
+    Disk::getPartedSectors( const Partition *p, unsigned long long& start,
+			    unsigned long long& end ) const
     {
-    bool ret = false;
-    if (getStorage()->testmode())
+	bool ret = false;
+	if (getStorage()->testmode())
 	{
-	ret = true;
-	start = p->cylStart() * new_geometry.heads * new_geometry.sectors;
-	end = (p->cylEnd() + 1) * new_geometry.heads * new_geometry.sectors - 1;
-	}
-    else
-	{
-	Parted parted(device());
-	Parted::Entry entry;
-	if (parted.getEntry(p->nr(), entry))
-	{
-	    start = entry.secRegion.start();
-	    end = entry.secRegion.end();
 	    ret = true;
+	    start = p->cylStart() * new_geometry.heads * new_geometry.sectors;
+	    end = (p->cylEnd() + 1) * new_geometry.heads * new_geometry.sectors - 1;
 	}
+	else
+	{
+	    Parted parted(device());
+	    Parted::Entry entry;
+	    if (parted.getEntry(p->nr(), entry))
+	    {
+		start = entry.secRegion.start();
+		end = entry.secRegion.end();
+		ret = true;
+	    }
 	}
-    return( ret );
+	return( ret );
     }
 
 
@@ -1988,614 +1988,614 @@ Disk::getPartedSectors( const Partition *p, unsigned long long& start,
     }
 
 
-static bool logicalCreated( const Partition& p )
+    static bool logicalCreated( const Partition& p )
     { return( p.type()==LOGICAL && p.created() ); }
 
 
-inline unsigned long
-sub_sat(unsigned long a, unsigned long b)
-{
-    return a - min(a, b);
-}
-
-
-int Disk::doCreate( Volume* v )
+    inline unsigned long
+    sub_sat(unsigned long a, unsigned long b)
     {
-    Partition * p = dynamic_cast<Partition *>(v);
-    int ret = 0;
-    if( p != NULL )
+	return a - min(a, b);
+    }
+
+
+    int Disk::doCreate( Volume* v )
+    {
+	Partition * p = dynamic_cast<Partition *>(v);
+	int ret = 0;
+	if( p != NULL )
 	{
-	bool call_blockdev = false;
-	getStorage()->showInfoCb( p->createText(true), silent );
-	y2mil("doCreate container " << name() << " name " << p->name());
-	y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
-	y2mil("doCreate detected_label:" << detected_label << " label:" << label);
-	if( detected_label != label )
+	    bool call_blockdev = false;
+	    getStorage()->showInfoCb( p->createText(true), silent );
+	    y2mil("doCreate container " << name() << " name " << p->name());
+	    y2mil("doCreate nr:" << p->nr() << " start " << p->cylStart() << " len " << p->cylSize());
+	    y2mil("doCreate detected_label:" << detected_label << " label:" << label);
+	    if( detected_label != label )
 	    {
-	    ret = doCreateLabel();
+		ret = doCreateLabel();
 	    }
-	if( ret==0 && gpt_enlarge )
+	    if( ret==0 && gpt_enlarge )
 	    {
-	    enlargeGpt();
+		enlargeGpt();
 	    }
-	std::ostringstream cmd_line;
-	classic(cmd_line);
-	if( ret==0 )
+	    std::ostringstream cmd_line;
+	    classic(cmd_line);
+	    if( ret==0 )
 	    {
-	    cmd_line << PARTEDCMD;
-	    cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
-	    cmd_line << quote(device()) << " unit cyl mkpart ";
-	    if (label != "dasd" && label != "sun")
+		cmd_line << PARTEDCMD;
+		cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
+		cmd_line << quote(device()) << " unit cyl mkpart ";
+		if (label != "dasd" && label != "sun")
 		{
-		switch( p->type() )
+		    switch( p->type() )
 		    {
-		    case LOGICAL:
-			cmd_line << "logical ";
-			break;
-		    case PRIMARY:
-			cmd_line << "primary ";
-			break;
-		    case EXTENDED:
-			cmd_line << "extended ";
-			break;
-		    default:
-			ret = DISK_CREATE_PARTITION_INVALID_TYPE;
-			break;
+			case LOGICAL:
+			    cmd_line << "logical ";
+			    break;
+			case PRIMARY:
+			    cmd_line << "primary ";
+			    break;
+			case EXTENDED:
+			    cmd_line << "extended ";
+			    break;
+			default:
+			    ret = DISK_CREATE_PARTITION_INVALID_TYPE;
+			    break;
 		    }
 		}
 	    }
-	if( ret==0 && p->type()!=EXTENDED )
+	    if( ret==0 && p->type()!=EXTENDED )
 	    {
-	    if( p->id()==Partition::ID_SWAP )
+		if( p->id()==Partition::ID_SWAP )
 		{
-		cmd_line << "linux-swap ";
+		    cmd_line << "linux-swap ";
 		}
-	    else if( p->id()==Partition::ID_GPT_BOOT ||
-		     p->id()==Partition::ID_DOS16 ||
-	             p->id()==Partition::ID_DOS32 )
+		else if( p->id()==Partition::ID_GPT_BOOT ||
+			 p->id()==Partition::ID_DOS16 ||
+			 p->id()==Partition::ID_DOS32 )
 	        {
-		cmd_line << "fat32 ";
+		    cmd_line << "fat32 ";
 		}
-	    else if( p->id()==Partition::ID_APPLE_HFS )
+		else if( p->id()==Partition::ID_APPLE_HFS )
 		{
-		cmd_line << "hfs ";
+		    cmd_line << "hfs ";
 		}
-	    else
+		else
 		{
-		cmd_line << "ext2 ";
+		    cmd_line << "ext2 ";
 		}
 	    }
-	if( ret==0 )
+	    if( ret==0 )
 	    {
-	    unsigned long start = p->cylStart();
-	    unsigned long end = p->cylEnd() + 1; // add one to avoid gaps
+		unsigned long start = p->cylStart();
+		unsigned long end = p->cylEnd() + 1; // add one to avoid gaps
 
-	    ConstPartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
-						    : partPair( existingLog );
-	    unsigned long maxc = cylinders();
-	    if( p->type()==LOGICAL )
+		ConstPartPair pp = (p->type()!=LOGICAL) ? partPair( existingNotLog )
+		    : partPair( existingLog );
+		unsigned long maxc = cylinders();
+		if( p->type()==LOGICAL )
 		{
-		ConstPartPair ext = partPair(notDeletedExt);
-		if( !ext.empty() )
-		    maxc = ext.begin()->cylEnd();
+		    ConstPartPair ext = partPair(notDeletedExt);
+		    if( !ext.empty() )
+			maxc = ext.begin()->cylEnd();
 		}
-	    y2mil("max " << maxc << " end:" << end);
-	    y2mil("pp " << *p);
-	    for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
+		y2mil("max " << maxc << " end:" << end);
+		y2mil("pp " << *p);
+		for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
 		{
-		y2mil( "i " << *i );
-		if( i->cylStart()<maxc && i->cylStart()<end &&
-		    sub_sat(i->cylEnd(), fuzz_cyl) > p->cylStart() )
+		    y2mil( "i " << *i );
+		    if( i->cylStart()<maxc && i->cylStart()<end &&
+			sub_sat(i->cylEnd(), fuzz_cyl) > p->cylStart() )
 		    {
-		    maxc=i->cylStart();
-		    y2mil( "new maxc " << maxc );
+			maxc=i->cylStart();
+			y2mil( "new maxc " << maxc );
 		    }
 		}
-	    y2mil("max " << maxc);
-	    if( new_geometry != geometry )
+		y2mil("max " << maxc);
+		if( new_geometry != geometry )
 		{
-		y2mil("parted geometry changed old geometry:" << geometry);
-		y2mil("parted geometry changed new geometry:" << new_geometry);
-		y2mil("old start:" << start << " end:" << end);
-		start = start * new_geometry.cylinders / geometry.cylinders;
-		end = end * new_geometry.cylinders / geometry.cylinders;
-		y2mil("new start:" << start << " end:" << end);
+		    y2mil("parted geometry changed old geometry:" << geometry);
+		    y2mil("parted geometry changed new geometry:" << new_geometry);
+		    y2mil("old start:" << start << " end:" << end);
+		    start = start * new_geometry.cylinders / geometry.cylinders;
+		    end = end * new_geometry.cylinders / geometry.cylinders;
+		    y2mil("new start:" << start << " end:" << end);
 		}
-	    if( end>maxc && maxc<=cylinders() )
+		if( end>maxc && maxc<=cylinders() )
 		{
-		y2mil("corrected end from " << end << " to max " << maxc);
-		end = maxc;
+		    y2mil("corrected end from " << end << " to max " << maxc);
+		    end = maxc;
 		}
-	    if (start == 0 && (label == "mac" || label == "amiga" || label == "dasd"))
-		start = 1;
-	    string save = cmd_line.str();
-	    y2mil( "end:" << end << " cylinders:" << cylinders() );
-	    string tmp = save + decString(start) + ' ' + decString(end);
-	    if( execCheckFailed( tmp ) )
+		if (start == 0 && (label == "mac" || label == "amiga" || label == "dasd"))
+		    start = 1;
+		string save = cmd_line.str();
+		y2mil( "end:" << end << " cylinders:" << cylinders() );
+		string tmp = save + decString(start) + ' ' + decString(end);
+		if( execCheckFailed( tmp ) )
 		{
-		tmp = save + decString(start+1) + ' ' + decString(end+1);
-		if( execCheckFailed( tmp ))
+		    tmp = save + decString(start+1) + ' ' + decString(end+1);
+		    if( execCheckFailed( tmp ))
 		    {
-		    tmp = save + decString(start) + ' ' + decString(end-1);
-		    if( execCheckFailed( tmp ) )
+			tmp = save + decString(start) + ' ' + decString(end-1);
+			if( execCheckFailed( tmp ) )
 			{
-			ret = DISK_CREATE_PARTITION_PARTED_FAILED;
+			    ret = DISK_CREATE_PARTITION_PARTED_FAILED;
 
-			// used to analyse parted problems
-			SystemCmd c(PARTEDCMD + quote(device()) + " unit s print");
+			    // used to analyse parted problems
+			    SystemCmd c(PARTEDCMD + quote(device()) + " unit s print");
 			}
 		    }
 		}
 	    }
-	if( ret==0 )
-	    {
-	    p->setCreated( false );
-	    if( !getPartedValues( p ))
-		ret = DISK_PARTITION_NOT_FOUND;
-	    }
-	if( ret==0 && !dmp_slave )
-	    {
-	    if( p->type()!=EXTENDED )
-		Storage::waitForDevice(p->device());
-	    else
-		Storage::waitForDevice();
-	    if( p->type()==LOGICAL && getStorage()->instsys() )
-		{
-		// kludge to make the extended partition visible in
-		// /proc/partitions otherwise grub refuses to install if root
-		// filesystem is a logical partition
-		ConstPartPair lc = partPair(logicalCreated);
-		call_blockdev = lc.length()<=1;
-		y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
-		}
-	    }
-	if( ret==0 && p->type()!=EXTENDED )
-	    {
-	    ret = p->zeroIfNeeded();
-	    if( !dmp_slave && !p->getFormat() && !p->isUsedBy(UB_BTRFS))
-		{
-		bool lsave = false;
-		string lbl;
-		if( p->needLabel() )
-		    {
-		    lsave = true;
-		    lbl = p->getLabel();
-		    }
-		p->updateFsData();
-		if( lsave )
-		    p->setLabel(lbl);
-		}
-	    }
-	if( ret==0 && !dmp_slave && p->id()!=Partition::ID_LINUX )
-	    {
-	    ret = doSetType( p );
-	    }
-	if( !dmp_slave && call_blockdev )
-	    {
-	    SystemCmd c(BLOCKDEVBIN " --rereadpt " + quote(device()));
-	    if( p->type()!=EXTENDED )
-		Storage::waitForDevice(p->device());
-	    }
-	}
-    else
-	{
-	ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int Disk::doRemove( Volume* v )
-    {
-    Partition * p = dynamic_cast<Partition *>(v);
-    int ret = 0;
-    if( p != NULL )
-	{
-	getStorage()->showInfoCb( p->removeText(true), silent );
-	y2mil("doRemove container " << name() << " name " << p->name());
-	if( !dmp_slave )
-	    {
-	    getStorage()->removeDmMapsTo( getPartDevice(p->OrigNr()) );
-	    ret = v->prepareRemove();
-	    }
-	if( ret==0 && !p->created() )
-	    {
-	    std::ostringstream cmd_line;
-	    classic(cmd_line);
-	    cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
-	    if( execCheckFailed( cmd_line.str() ) )
-		{
-		if( !del_ptable )
-		    ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
-		else
-		    y2war( "suppressing failed removal del_ptable:" << del_ptable );
-		}
-	    // only check for successful removal (kernel side) of partitions
-	    // where no renumbering can happen
-	    if (p->type() != LOGICAL && label != "dasd")
-	    {
-		ProcParts parts;
-		if (parts.findDevice(getPartName(p->OrigNr())))
-		    callDelpart(p->OrigNr());
-	    }
-	    }
-	if( ret==0 )
-	    {
-	    if( !removeFromList( p ) )
-		ret = DISK_REMOVE_PARTITION_LIST_ERASE;
-	    }
-	if( ret==0 )
-	    {
-	    ConstPartPair p = partPair( notCreatedPrimary );
-	    if( p.empty() )
-		redetectGeometry();
-	    }
-	if( ret==0 && !dmp_slave )
-	    Storage::waitForDevice();
-	}
-    else
-	{
-	ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-
-int
-Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBefore,
-				   unsigned long& freeCylsAfter) const
-    {
-    int ret = 0;
-
-    unsigned long startBefore = 0;
-    const unsigned long endBefore = p->cylStart() - 1;
-    const unsigned long startAfter = p->cylEnd() + 1;
-    unsigned long endAfter = cylinders();
-    Region usable_region = usableCylRegion();
-    if (p->type() == LOGICAL && hasExtended())
-	{
-	ConstPartPair pp = partPair(notDeletedExt);
-	startBefore = pp.begin()->cylStart() - 1;
-	endAfter = pp.begin()->cylEnd() + 1;
-	usable_region = pp.begin()->cylRegion();
-	}
-
-    y2mil("startBefore:" << startBefore << " endBefore:" << endBefore);
-    y2mil("startAfter:" << startAfter << " endAfter:" << endAfter);
-
-    ConstPartPair pp = partPair(Partition::notDeleted);
-    ConstPartIter previous = pp.end();
-    ConstPartIter next = pp.end();
-
-    y2mil( "p:" << *p );
-
-    for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
-	{
-	y2mil( "i:" << *i );
-
-	if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
-	    i->cylEnd()<=p->cylEnd() && i->nr()!=p->nr() &&
-	    (previous==pp.end() || previous->cylEnd()<i->cylEnd()) )
-	    {
-	    previous = i;
-	    }
-
-	if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
-	    i->cylStart()>=p->cylStart() && i->nr()!=p->nr() &&
-	    (next==pp.end() || next->cylStart()>i->cylStart()) )
-	    {
-	    next = i;
-	    }
-	}
-
-    if( previous != pp.end() )
-	{
-	y2mil( "previous:" << *previous );
-	if( previous->cylEnd()<endBefore )
-	    startBefore = previous->cylEnd();
-	else
-	    startBefore = cylinders();
-        y2mil( "startBefore:" << startBefore );
-	}
-
-    if( next != pp.end() )
-	{
-	y2mil( "next:" << *next );
-	if( next->cylStart()>startAfter )
-	    {
-	    endAfter = next->cylStart();
-	    y2mil( "endAfter:" << endAfter );
-	    }
-	else
-	    endAfter = 0;
-	}
-
-    freeCylsBefore = freeCylsAfter = 0;
-    if (endBefore > startBefore)
-	freeCylsBefore = endBefore - startBefore;
-    if (endAfter > startAfter)
-	freeCylsAfter = endAfter - startAfter;
-
-    y2mil( "bef:" << freeCylsBefore << " aft:" << freeCylsAfter );
-    Region around(p->cylStart() - freeCylsBefore, p->cylSize() + freeCylsAfter + freeCylsBefore );
-    y2mil( "around:" << around );
-    if (usable_region.doIntersect(around))
-    {
-	around = around.intersect(usable_region);
-
-	freeCylsBefore = freeCylsAfter = 0;
-	if (around.start() < p->cylStart())
-	    freeCylsBefore = p->cylStart() - around.start();
-	if (around.end() > p->cylEnd())
-	    freeCylsAfter = around.end() - p->cylEnd();
-    }
-    else
-    {
-	freeCylsBefore = freeCylsAfter = 0;
-    }
-
-    y2mil("ret:" << ret << " freeCylsBefore:" << freeCylsBefore << " freeCylsAfter:" << freeCylsAfter);
-    return ret;
-    }
-
-
-int
-Disk::resizePartition(Partition* p, unsigned long newCyl)
-{
-    y2mil("newCyl:" << newCyl << " p:" << *p);
-    int ret = 0;
-    if( readonly() )
-    {
-	ret = DISK_CHANGE_READONLY;
-    }
-    else
-    {
-	unsigned long long newSize = cylinderToKb(newCyl);
-	if( newCyl!=p->cylSize() )
-	    ret = p->canResize( newSize );
-	if( ret==0 && newCyl<p->cylSize() )
-	{
-	    if( p->created() )
-		p->changeRegion(Region(p->cylStart(), newCyl), newSize);
-	    else
-		p->setResizedSize( newSize );
-	}
-	y2mil("newCyl:" << newCyl << " p->cylSize():" << p->cylSize());
-	if( ret==0 && newCyl>p->cylSize() )
-	{
-	    unsigned long free_cyls_before = 0;
-	    unsigned long free_cyls_after = 0;
-	    ret = freeCylindersAroundPartition(p, free_cyls_before, free_cyls_after);
-	    if (ret == 0)
-	    {
-		unsigned long increase = newCyl - p->cylSize();
-		if (free_cyls_after < increase)
-		{
-		    ret = DISK_RESIZE_NO_SPACE;
-		}
-		else
-		{
-		    if( p->created() )
-			p->changeRegion(Region(p->cylStart(), newCyl), newSize);
-		    else
-			p->setResizedSize( newSize );
-		}
-	    }
-	}
-    }
-    y2mil("ret:" << ret);
-    return ret;
-}
-
-
-int Disk::resizeVolume( Volume* v, unsigned long long newSize )
-    {
-    int ret = 0;
-    if( readonly() )
-	{
-	ret = DISK_CHANGE_READONLY;
-	}
-    else
-	{
-	Partition * p = dynamic_cast<Partition *>(v);
-	unsigned new_cyl_cnt = kbToCylinder(newSize);
-	newSize = cylinderToKb(new_cyl_cnt);
-	if( p!=NULL )
-	    {
-	    ret = resizePartition( p, new_cyl_cnt );
-	    }
-	else
-	    {
-	    ret = DISK_CHECK_RESIZE_INVALID_VOLUME;
-	    }
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int Disk::removeVolume( Volume* v )
-    {
-    return( removePartition( v->nr() ));
-    }
-
-bool Disk::isLogical( unsigned nr ) const
-    {
-    bool ret = ext_possible && nr>max_primary;
-    y2mil("nr:" << nr << " ret:" << ret);
-    return( ret );
-    }
-
-int Disk::doResize( Volume* v )
-    {
-    Partition * p = dynamic_cast<Partition *>(v);
-    int ret = 0;
-    if( p != NULL )
-	{
-	bool remount = false;
-	getStorage()->showInfoCb( p->resizeText(true), silent );
-	if( !dmp_slave && p->isMounted() )
-	    {
-	    ret = p->umount();
 	    if( ret==0 )
-		remount = true;
-	    }
-	if( ret==0 && !dmp_slave )
-	    ret = p->resizeBefore();
-	if( ret==0 )
 	    {
-	    y2mil("doResize container " << name() << " name " << p->name());
-	    std::ostringstream cmd_line;
-	    classic(cmd_line);
-	    unsigned long long start_sect, end_sect;
-	    getPartedSectors( p, start_sect, end_sect );
-	    end_sect = start_sect + kbToSector(p->sizeK()) - 1;
-	    y2mil("end_sect " << end_sect);
-	    const Partition * after = getPartitionAfter( p );
-	    unsigned long max_end = kbToSector(sizeK()) - 1;
-	    if( after!=NULL )
+		p->setCreated( false );
+		if( !getPartedValues( p ))
+		    ret = DISK_PARTITION_NOT_FOUND;
+	    }
+	    if( ret==0 && !dmp_slave )
+	    {
+		if( p->type()!=EXTENDED )
+		    Storage::waitForDevice(p->device());
+		else
+		    Storage::waitForDevice();
+		if( p->type()==LOGICAL && getStorage()->instsys() )
 		{
-		unsigned long long start_after, end_after;
-		getPartedSectors( after, start_after, end_after );
-		max_end = start_after-1;
-		if( p->type() == LOGICAL )
-		    max_end--;
+		    // kludge to make the extended partition visible in
+		    // /proc/partitions otherwise grub refuses to install if root
+		    // filesystem is a logical partition
+		    ConstPartPair lc = partPair(logicalCreated);
+		    call_blockdev = lc.length()<=1;
+		    y2mil("logicalCreated:" << lc.length() << " call_blockdev:" << call_blockdev);
 		}
-	    else if( p->type()==LOGICAL )
+	    }
+	    if( ret==0 && p->type()!=EXTENDED )
+	    {
+		ret = p->zeroIfNeeded();
+		if( !dmp_slave && !p->getFormat() && !p->isUsedBy(UB_BTRFS))
 		{
-		ConstPartPair ext = partPair(notDeletedExt);
-		if( !ext.empty() )
+		    bool lsave = false;
+		    string lbl;
+		    if( p->needLabel() )
 		    {
-		    unsigned long long start_ext, end_ext;
-		    getPartedSectors( &(*ext.begin()), start_ext, end_ext );
-		    max_end = end_ext;
+			lsave = true;
+			lbl = p->getLabel();
+		    }
+		    p->updateFsData();
+		    if( lsave )
+			p->setLabel(lbl);
+		}
+	    }
+	    if( ret==0 && !dmp_slave && p->id()!=Partition::ID_LINUX )
+	    {
+		ret = doSetType( p );
+	    }
+	    if( !dmp_slave && call_blockdev )
+	    {
+		SystemCmd c(BLOCKDEVBIN " --rereadpt " + quote(device()));
+		if( p->type()!=EXTENDED )
+		    Storage::waitForDevice(p->device());
+	    }
+	}
+	else
+	{
+	    ret = DISK_CREATE_PARTITION_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int Disk::doRemove( Volume* v )
+    {
+	Partition * p = dynamic_cast<Partition *>(v);
+	int ret = 0;
+	if( p != NULL )
+	{
+	    getStorage()->showInfoCb( p->removeText(true), silent );
+	    y2mil("doRemove container " << name() << " name " << p->name());
+	    if( !dmp_slave )
+	    {
+		getStorage()->removeDmMapsTo( getPartDevice(p->OrigNr()) );
+		ret = v->prepareRemove();
+	    }
+	    if( ret==0 && !p->created() )
+	    {
+		std::ostringstream cmd_line;
+		classic(cmd_line);
+		cmd_line << PARTEDCMD << quote(device()) << " rm " << p->OrigNr();
+		if( execCheckFailed( cmd_line.str() ) )
+		{
+		    if( !del_ptable )
+			ret = DISK_REMOVE_PARTITION_PARTED_FAILED;
+		    else
+			y2war( "suppressing failed removal del_ptable:" << del_ptable );
+		}
+		// only check for successful removal (kernel side) of partitions
+		// where no renumbering can happen
+		if (p->type() != LOGICAL && label != "dasd")
+		{
+		    ProcParts parts;
+		    if (parts.findDevice(getPartName(p->OrigNr())))
+			callDelpart(p->OrigNr());
+		}
+	    }
+	    if( ret==0 )
+	    {
+		if( !removeFromList( p ) )
+		    ret = DISK_REMOVE_PARTITION_LIST_ERASE;
+	    }
+	    if( ret==0 )
+	    {
+		ConstPartPair p = partPair( notCreatedPrimary );
+		if( p.empty() )
+		    redetectGeometry();
+	    }
+	    if( ret==0 && !dmp_slave )
+		Storage::waitForDevice();
+	}
+	else
+	{
+	    ret = DISK_REMOVE_PARTITION_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+
+    int
+    Disk::freeCylindersAroundPartition(const Partition* p, unsigned long& freeCylsBefore,
+				       unsigned long& freeCylsAfter) const
+    {
+	int ret = 0;
+
+	unsigned long startBefore = 0;
+	const unsigned long endBefore = p->cylStart() - 1;
+	const unsigned long startAfter = p->cylEnd() + 1;
+	unsigned long endAfter = cylinders();
+	Region usable_region = usableCylRegion();
+	if (p->type() == LOGICAL && hasExtended())
+	{
+	    ConstPartPair pp = partPair(notDeletedExt);
+	    startBefore = pp.begin()->cylStart() - 1;
+	    endAfter = pp.begin()->cylEnd() + 1;
+	    usable_region = pp.begin()->cylRegion();
+	}
+
+	y2mil("startBefore:" << startBefore << " endBefore:" << endBefore);
+	y2mil("startAfter:" << startAfter << " endAfter:" << endAfter);
+
+	ConstPartPair pp = partPair(Partition::notDeleted);
+	ConstPartIter previous = pp.end();
+	ConstPartIter next = pp.end();
+
+	y2mil( "p:" << *p );
+
+	for (ConstPartIter i = pp.begin(); i != pp.end(); ++i)
+	{
+	    y2mil( "i:" << *i );
+
+	    if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
+		i->cylEnd()<=p->cylEnd() && i->nr()!=p->nr() &&
+		(previous==pp.end() || previous->cylEnd()<i->cylEnd()) )
+	    {
+		previous = i;
+	    }
+
+	    if( (i->type()==p->type() || (i->type()==EXTENDED&&p->type()==PRIMARY)) &&
+		i->cylStart()>=p->cylStart() && i->nr()!=p->nr() &&
+		(next==pp.end() || next->cylStart()>i->cylStart()) )
+	    {
+		next = i;
+	    }
+	}
+
+	if( previous != pp.end() )
+	{
+	    y2mil( "previous:" << *previous );
+	    if( previous->cylEnd()<endBefore )
+		startBefore = previous->cylEnd();
+	    else
+		startBefore = cylinders();
+	    y2mil( "startBefore:" << startBefore );
+	}
+
+	if( next != pp.end() )
+	{
+	    y2mil( "next:" << *next );
+	    if( next->cylStart()>startAfter )
+	    {
+		endAfter = next->cylStart();
+		y2mil( "endAfter:" << endAfter );
+	    }
+	    else
+		endAfter = 0;
+	}
+
+	freeCylsBefore = freeCylsAfter = 0;
+	if (endBefore > startBefore)
+	    freeCylsBefore = endBefore - startBefore;
+	if (endAfter > startAfter)
+	    freeCylsAfter = endAfter - startAfter;
+
+	y2mil( "bef:" << freeCylsBefore << " aft:" << freeCylsAfter );
+	Region around(p->cylStart() - freeCylsBefore, p->cylSize() + freeCylsAfter + freeCylsBefore );
+	y2mil( "around:" << around );
+	if (usable_region.doIntersect(around))
+	{
+	    around = around.intersect(usable_region);
+
+	    freeCylsBefore = freeCylsAfter = 0;
+	    if (around.start() < p->cylStart())
+		freeCylsBefore = p->cylStart() - around.start();
+	    if (around.end() > p->cylEnd())
+		freeCylsAfter = around.end() - p->cylEnd();
+	}
+	else
+	{
+	    freeCylsBefore = freeCylsAfter = 0;
+	}
+
+	y2mil("ret:" << ret << " freeCylsBefore:" << freeCylsBefore << " freeCylsAfter:" << freeCylsAfter);
+	return ret;
+    }
+
+
+    int
+    Disk::resizePartition(Partition* p, unsigned long newCyl)
+    {
+	y2mil("newCyl:" << newCyl << " p:" << *p);
+	int ret = 0;
+	if( readonly() )
+	{
+	    ret = DISK_CHANGE_READONLY;
+	}
+	else
+	{
+	    unsigned long long newSize = cylinderToKb(newCyl);
+	    if( newCyl!=p->cylSize() )
+		ret = p->canResize( newSize );
+	    if( ret==0 && newCyl<p->cylSize() )
+	    {
+		if( p->created() )
+		    p->changeRegion(Region(p->cylStart(), newCyl), newSize);
+		else
+		    p->setResizedSize( newSize );
+	    }
+	    y2mil("newCyl:" << newCyl << " p->cylSize():" << p->cylSize());
+	    if( ret==0 && newCyl>p->cylSize() )
+	    {
+		unsigned long free_cyls_before = 0;
+		unsigned long free_cyls_after = 0;
+		ret = freeCylindersAroundPartition(p, free_cyls_before, free_cyls_after);
+		if (ret == 0)
+		{
+		    unsigned long increase = newCyl - p->cylSize();
+		    if (free_cyls_after < increase)
+		    {
+			ret = DISK_RESIZE_NO_SPACE;
+		    }
+		    else
+		    {
+			if( p->created() )
+			    p->changeRegion(Region(p->cylStart(), newCyl), newSize);
+			else
+			    p->setResizedSize( newSize );
 		    }
 		}
-	    y2mil( "max_end:" << max_end << " end_sect:" << end_sect );
-	    if( max_end<end_sect ||
-		max_end-end_sect < geometry.cylinderSize() / sectorSize() * 2 )
-		{
-		end_sect = max_end;
-		y2mil( "new end_sect:" << end_sect );
-		}
-	    cmd_line << PARTEDCMD << quote(device()) << " unit s resize " << p->nr()
-		     << " " << end_sect;
-	    if( execCheckFailed( cmd_line.str() ) )
-		{
-		ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
-		}
-	    if( ret==0 && !dmp_slave )
-		ret = p->resizeAfter();
-	    if( !getPartedValues( p ))
-		{
-		if( ret==0 )
-		    ret = DISK_PARTITION_NOT_FOUND;
-		}
-	    if( ret==0 && !dmp_slave )
-		Storage::waitForDevice(p->device());
-	    y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
 	    }
-	if( ret==0 && remount )
-	    ret = p->mount();
 	}
-    else
+	y2mil("ret:" << ret);
+	return ret;
+    }
+
+
+    int Disk::resizeVolume( Volume* v, unsigned long long newSize )
+    {
+	int ret = 0;
+	if( readonly() )
 	{
-	ret = DISK_RESIZE_PARTITION_INVALID_VOLUME;
+	    ret = DISK_CHANGE_READONLY;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-const Partition* Disk::getPartitionAfter(const Partition* p) const
-    {
-    const Partition* ret = NULL;
-    y2mil( "p:" << *p );
-    ConstPartPair pp = partPair((p->type() == LOGICAL) ? Partition::notDeleted : notDeletedLog);
-    for (ConstPartIter pi = pp.begin(); pi != pp.end(); ++pi)
+	else
 	{
-	if( !pi->created() &&
-	    pi->cylStart()>p->cylStart() &&
-	    (ret==NULL || ret->cylStart()>pi->cylStart()) )
-	    ret = &(*pi);
+	    Partition * p = dynamic_cast<Partition *>(v);
+	    unsigned new_cyl_cnt = kbToCylinder(newSize);
+	    newSize = cylinderToKb(new_cyl_cnt);
+	    if( p!=NULL )
+	    {
+		ret = resizePartition( p, new_cyl_cnt );
+	    }
+	    else
+	    {
+		ret = DISK_CHECK_RESIZE_INVALID_VOLUME;
+	    }
 	}
-    if( ret==NULL )
-	y2mil( "ret:NULL" );
-    else
-	y2mil( "ret:" << *ret );
-    return ret;
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-void Disk::addPartition( unsigned num, unsigned long long sz,
-		         SystemInfo& systeminfo )
+    int Disk::removeVolume( Volume* v )
     {
-    unsigned long cyl_inc = std::max(kbToSector(size_k) / geometry.heads / geometry.sectors, 1ULL);
-    Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, systeminfo, sz,
-				 Region(geometry.cylinders, cyl_inc), PRIMARY);
-    geometry.cylinders += cyl_inc;
-    new_geometry.cylinders = geometry.cylinders;
-    if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )
+	return( removePartition( v->nr() ));
+    }
+
+    bool Disk::isLogical( unsigned nr ) const
+    {
+	bool ret = ext_possible && nr>max_primary;
+	y2mil("nr:" << nr << " ret:" << ret);
+	return( ret );
+    }
+
+    int Disk::doResize( Volume* v )
+    {
+	Partition * p = dynamic_cast<Partition *>(v);
+	int ret = 0;
+	if( p != NULL )
 	{
-	p->setSize( sz );
+	    bool remount = false;
+	    getStorage()->showInfoCb( p->resizeText(true), silent );
+	    if( !dmp_slave && p->isMounted() )
+	    {
+		ret = p->umount();
+		if( ret==0 )
+		    remount = true;
+	    }
+	    if( ret==0 && !dmp_slave )
+		ret = p->resizeBefore();
+	    if( ret==0 )
+	    {
+		y2mil("doResize container " << name() << " name " << p->name());
+		std::ostringstream cmd_line;
+		classic(cmd_line);
+		unsigned long long start_sect, end_sect;
+		getPartedSectors( p, start_sect, end_sect );
+		end_sect = start_sect + kbToSector(p->sizeK()) - 1;
+		y2mil("end_sect " << end_sect);
+		const Partition * after = getPartitionAfter( p );
+		unsigned long max_end = kbToSector(sizeK()) - 1;
+		if( after!=NULL )
+		{
+		    unsigned long long start_after, end_after;
+		    getPartedSectors( after, start_after, end_after );
+		    max_end = start_after-1;
+		    if( p->type() == LOGICAL )
+			max_end--;
+		}
+		else if( p->type()==LOGICAL )
+		{
+		    ConstPartPair ext = partPair(notDeletedExt);
+		    if( !ext.empty() )
+		    {
+			unsigned long long start_ext, end_ext;
+			getPartedSectors( &(*ext.begin()), start_ext, end_ext );
+			max_end = end_ext;
+		    }
+		}
+		y2mil( "max_end:" << max_end << " end_sect:" << end_sect );
+		if( max_end<end_sect ||
+		    max_end-end_sect < geometry.cylinderSize() / sectorSize() * 2 )
+		{
+		    end_sect = max_end;
+		    y2mil( "new end_sect:" << end_sect );
+		}
+		cmd_line << PARTEDCMD << quote(device()) << " unit s resize " << p->nr()
+			 << " " << end_sect;
+		if( execCheckFailed( cmd_line.str() ) )
+		{
+		    ret = DISK_RESIZE_PARTITION_PARTED_FAILED;
+		}
+		if( ret==0 && !dmp_slave )
+		    ret = p->resizeAfter();
+		if( !getPartedValues( p ))
+		{
+		    if( ret==0 )
+			ret = DISK_PARTITION_NOT_FOUND;
+		}
+		if( ret==0 && !dmp_slave )
+		    Storage::waitForDevice(p->device());
+		y2mil("after resize size:" << p->sizeK() << " resize:" << (p->needShrink()||p->needExtend()));
+	    }
+	    if( ret==0 && remount )
+		ret = p->mount();
 	}
-    addToList( p );
-    max_primary = max(max_primary, num);
+	else
+	{
+	    ret = DISK_RESIZE_PARTITION_INVALID_VOLUME;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-unsigned Disk::numPartitions() const
+    const Partition* Disk::getPartitionAfter(const Partition* p) const
     {
-    return partPair(Partition::notDeleted).length();
+	const Partition* ret = NULL;
+	y2mil( "p:" << *p );
+	ConstPartPair pp = partPair((p->type() == LOGICAL) ? Partition::notDeleted : notDeletedLog);
+	for (ConstPartIter pi = pp.begin(); pi != pp.end(); ++pi)
+	{
+	    if( !pi->created() &&
+		pi->cylStart()>p->cylStart() &&
+		(ret==NULL || ret->cylStart()>pi->cylStart()) )
+		ret = &(*pi);
+	}
+	if( ret==NULL )
+	    y2mil( "ret:NULL" );
+	else
+	    y2mil( "ret:" << *ret );
+	return ret;
     }
 
-void Disk::getInfo( DiskInfo& info ) const
+    void Disk::addPartition( unsigned num, unsigned long long sz,
+			     SystemInfo& systeminfo )
     {
-    info.sizeK = sizeK();
-    info.cyl = cylinders();
-    info.heads = heads();
-    info.sectors = sectors();
-    info.sectorSize = sectorSize();
-    info.cylSize = geometry.cylinderSize();
-    info.disklabel = labelName();
-    if( label!=detected_label )
-	info.orig_disklabel = detected_label;
-    info.maxPrimary = maxPrimary();
-    info.extendedPossible = extendedPossible();
-    info.maxLogical = maxLogical();
-    info.initDisk = init_disk;
-    info.transport = transport;
-    info.has_fake_partition = has_fake_partition;
+	unsigned long cyl_inc = std::max(kbToSector(size_k) / geometry.heads / geometry.sectors, 1ULL);
+	Partition *p = new Partition(*this, getPartName(num), getPartDevice(num), num, systeminfo, sz,
+				     Region(geometry.cylinders, cyl_inc), PRIMARY);
+	geometry.cylinders += cyl_inc;
+	new_geometry.cylinders = geometry.cylinders;
+	if( systeminfo.getProcParts().getSize(p->procName(), sz) && sz>0 )
+	{
+	    p->setSize( sz );
+	}
+	addToList( p );
+	max_primary = max(max_primary, num);
+    }
+
+    unsigned Disk::numPartitions() const
+    {
+	return partPair(Partition::notDeleted).length();
+    }
+
+    void Disk::getInfo( DiskInfo& info ) const
+    {
+	info.sizeK = sizeK();
+	info.cyl = cylinders();
+	info.heads = heads();
+	info.sectors = sectors();
+	info.sectorSize = sectorSize();
+	info.cylSize = geometry.cylinderSize();
+	info.disklabel = labelName();
+	if( label!=detected_label )
+	    info.orig_disklabel = detected_label;
+	info.maxPrimary = maxPrimary();
+	info.extendedPossible = extendedPossible();
+	info.maxLogical = maxLogical();
+	info.initDisk = init_disk;
+	info.transport = transport;
+	info.has_fake_partition = has_fake_partition;
     }
 
 
-std::ostream& operator<< (std::ostream& s, const Disk& d )
+    std::ostream& operator<< (std::ostream& s, const Disk& d )
     {
-    s << dynamic_cast<const Container&>(d);
-    s << " geometry:" << d.geometry
-      << " Range:" << d.range
-      << " SizeK:" << d.size_k
-      << " Label:" << d.label;
-    if( d.detected_label!=d.label )
-	s << " DetectedLabel:" << d.detected_label;
-    if( !d.udev_path.empty() )
-	s << " UdevPath:" << d.udev_path;
-    if( !d.udev_id.empty() )
-	s << " UdevId:" << d.udev_id;
-    s << " MaxPrimary:" << d.max_primary;
-    if( d.ext_possible )
-	s << " ExtPossible MaxLogical:" << d.max_logical;
-    if( d.init_disk )
-	s << " InitDisk";
-    s << " transport:" << toString(d.transport);
-    if( d.dmp_slave )
-	s << " DmpSlave";
-    if( d.no_addpart )
-	s << " NoAddpart";
-    if( d.gpt_enlarge )
-	s << " GptEnlarge";
-    if (d.del_ptable)
-	s << " delPT";
-    if (d.has_fake_partition)
-	s << " has_fake_partition";
-    return( s );
+	s << dynamic_cast<const Container&>(d);
+	s << " geometry:" << d.geometry
+	  << " Range:" << d.range
+	  << " SizeK:" << d.size_k
+	  << " Label:" << d.label;
+	if( d.detected_label!=d.label )
+	    s << " DetectedLabel:" << d.detected_label;
+	if( !d.udev_path.empty() )
+	    s << " UdevPath:" << d.udev_path;
+	if( !d.udev_id.empty() )
+	    s << " UdevId:" << d.udev_id;
+	s << " MaxPrimary:" << d.max_primary;
+	if( d.ext_possible )
+	    s << " ExtPossible MaxLogical:" << d.max_logical;
+	if( d.init_disk )
+	    s << " InitDisk";
+	s << " transport:" << toString(d.transport);
+	if( d.dmp_slave )
+	    s << " DmpSlave";
+	if( d.no_addpart )
+	    s << " NoAddpart";
+	if( d.gpt_enlarge )
+	    s << " GptEnlarge";
+	if (d.del_ptable)
+	    s << " delPT";
+	if (d.has_fake_partition)
+	    s << " has_fake_partition";
+	return( s );
     }
 
 
@@ -2637,28 +2637,28 @@ std::ostream& operator<< (std::ostream& s, const Disk& d )
     }
 
 
-bool Disk::equalContent( const Container& rhs ) const
+    bool Disk::equalContent( const Container& rhs ) const
     {
-    const Disk * p = NULL;
-    bool ret = Container::equalContent(rhs);
-    if( ret )
-	p = dynamic_cast<const Disk*>(&rhs);
-    if( ret && p )
-	ret = geometry == p->geometry &&
-	      mjr==p->mjr && mnr==p->mnr && range==p->range &&
-	      size_k==p->size_k && max_primary==p->max_primary &&
-	      ext_possible==p->ext_possible && max_logical==p->max_logical &&
-	      init_disk==p->init_disk && label==p->label && 
-	      transport == p->transport &&
-	      dmp_slave==p->dmp_slave && no_addpart==p->no_addpart &&
-	      gpt_enlarge==p->gpt_enlarge && del_ptable == p->del_ptable;
-    if( ret && p )
+	const Disk * p = NULL;
+	bool ret = Container::equalContent(rhs);
+	if( ret )
+	    p = dynamic_cast<const Disk*>(&rhs);
+	if( ret && p )
+	    ret = geometry == p->geometry &&
+		mjr==p->mjr && mnr==p->mnr && range==p->range &&
+		size_k==p->size_k && max_primary==p->max_primary &&
+		ext_possible==p->ext_possible && max_logical==p->max_logical &&
+		init_disk==p->init_disk && label==p->label && 
+		transport == p->transport &&
+		dmp_slave==p->dmp_slave && no_addpart==p->no_addpart &&
+		gpt_enlarge==p->gpt_enlarge && del_ptable == p->del_ptable;
+	if( ret && p )
 	{
-	ConstPartPair pp = partPair();
-	ConstPartPair pc = p->partPair();
-	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+	    ConstPartPair pp = partPair();
+	    ConstPartPair pc = p->partPair();
+	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
-    return( ret );
+	return( ret );
     }
 
 }

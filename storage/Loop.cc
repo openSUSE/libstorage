@@ -38,85 +38,85 @@ namespace storage
     using namespace std;
 
 
-Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
+    Loop::Loop(const LoopCo& d, const string& LoopDev, const string& LoopFile,
 	       bool dmcrypt, const string& dm_dev, SystemInfo& systeminfo,
-	   SystemCmd& losetup)
-    : Volume(d, 0, 0), lfile(LoopFile), reuseFile(true), delFile(false)
+	       SystemCmd& losetup)
+	: Volume(d, 0, 0), lfile(LoopFile), reuseFile(true), delFile(false)
     {
-    y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
-	  " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
-    if( d.type() != LOOP )
-	y2err("constructed loop with wrong container");
-    loop_dev = fstab_loop_dev = LoopDev;
-    string proc_dev;
-    if( !dmcrypt )
+	y2mil("constructed loop dev:" << LoopDev << " file:" << LoopFile <<
+	      " dmcrypt:" << dmcrypt << " dmdev:" << dm_dev);
+	if( d.type() != LOOP )
+	    y2err("constructed loop with wrong container");
+	loop_dev = fstab_loop_dev = LoopDev;
+	string proc_dev;
+	if( !dmcrypt )
 	{
-	dev = loop_dev;
-	if( loopStringNum( loop_dev, num ))
+	    dev = loop_dev;
+	    if( loopStringNum( loop_dev, num ))
 	    {
-	    setNameDev();
-	    getMajorMinor(systeminfo);
+		setNameDev();
+		getMajorMinor(systeminfo);
 	    }
-	proc_dev = loop_dev;
+	    proc_dev = loop_dev;
 	}
-    else
+	else
 	{
-	numeric = false;
-	initEncryption( ENC_LUKS );
-	if( !dm_dev.empty() )
+	    numeric = false;
+	    initEncryption( ENC_LUKS );
+	    if( !dm_dev.empty() )
 	    {
-	    setDmcryptDev( dm_dev );
-	    proc_dev = alt_names.front();
+		setDmcryptDev( dm_dev );
+		proc_dev = alt_names.front();
 	    }
 	}
-    is_loop = true;
-    unsigned long long s = 0;
-    if( !proc_dev.empty() )
-	systeminfo.getProcParts().getSize(proc_dev, s);
-    if( s>0 )
+	is_loop = true;
+	unsigned long long s = 0;
+	if( !proc_dev.empty() )
+	    systeminfo.getProcParts().getSize(proc_dev, s);
+	if( s>0 )
 	{
-	setSize( s );
+	    setSize( s );
 	}
-    else
+	else
 	{
-	struct stat st;
-	if( stat( lfile.c_str(), &st )>=0 )
-	    setSize( st.st_size/1024 );
+	    struct stat st;
+	    if( stat( lfile.c_str(), &st )>=0 )
+		setSize( st.st_size/1024 );
 	}
     }
 
 
-Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
-	   unsigned long long sizeK, bool dmcr)
-    : Volume(d, 0, 0), lfile(file), reuseFile(reuseExisting), delFile(false)
+    Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
+	       unsigned long long sizeK, bool dmcr)
+	: Volume(d, 0, 0), lfile(file), reuseFile(reuseExisting), delFile(false)
     {
-    y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
-	  " sizek:" << sizeK << " dmcrypt:" << dmcr);
-    if( d.type() != LOOP )
-	y2err("constructed loop with wrong container");
-    SystemCmd c(LOSETUPBIN " -a");
-    loop_dev = getFreeLoop(c,d.usedNumbers());
-    is_loop = true;
-    if( !dmcr )
+	y2mil("constructed loop file:" << file << " reuseExisting:" << reuseExisting <<
+	      " sizek:" << sizeK << " dmcrypt:" << dmcr);
+	if( d.type() != LOOP )
+	    y2err("constructed loop with wrong container");
+	SystemCmd c(LOSETUPBIN " -a");
+	loop_dev = getFreeLoop(c,d.usedNumbers());
+	is_loop = true;
+	if( !dmcr )
 	{
-	dev = loop_dev;
-	if( loopStringNum( dev, num ))
+	    dev = loop_dev;
+	    if( loopStringNum( dev, num ))
 	    {
-	    setNameDev();
-	    getMajorMinor();
+		setNameDev();
+		getMajorMinor();
 	    }
 	}
-    else
+	else
 	{
-	numeric = false;
-	initEncryption( ENC_LUKS );
-	if( dmcrypt_dev.empty() )
-	    dmcrypt_dev = getDmcryptName();
-	setDmcryptDev( dmcrypt_dev, false );
+	    numeric = false;
+	    initEncryption( ENC_LUKS );
+	    if( dmcrypt_dev.empty() )
+		dmcrypt_dev = getDmcryptName();
+	    setDmcryptDev( dmcrypt_dev, false );
 	}
-    checkReuse();
-    if( !reuseFile )
-	setSize( sizeK );
+	checkReuse();
+	if( !reuseFile )
+	    setSize( sizeK );
     }
 
 
@@ -134,278 +134,278 @@ Loop::Loop(const LoopCo& d, const string& file, bool reuseExisting,
     }
 
 
-void
-Loop::setDmcryptDev( const string& dm_dev, bool active )
+    void
+    Loop::setDmcryptDev( const string& dm_dev, bool active )
     {
-    dev = dm_dev;
-    y2mil( "dm_dev:" << dm_dev << " active:" << active );
-    nm = dm_dev.substr( dm_dev.find_last_of( '/' )+1);
-    if( active )
+	dev = dm_dev;
+	y2mil( "dm_dev:" << dm_dev << " active:" << active );
+	nm = dm_dev.substr( dm_dev.find_last_of( '/' )+1);
+	if( active )
 	{
-	getMajorMinor();
+	    getMajorMinor();
 	}
-    Volume::setDmcryptDev( dm_dev, active );
+	Volume::setDmcryptDev( dm_dev, active );
     }
 
-void Loop::setLoopFile( const string& file )
+    void Loop::setLoopFile( const string& file )
     {
-    lfile = file;
-    checkReuse();
+	lfile = file;
+	checkReuse();
     }
 
-void Loop::setReuse( bool reuseExisting )
+    void Loop::setReuse( bool reuseExisting )
     {
-    reuseFile = reuseExisting;
-    checkReuse();
+	reuseFile = reuseExisting;
+	checkReuse();
     }
 
-void Loop::checkReuse()
+    void Loop::checkReuse()
     {
-    if( reuseFile )
+	if( reuseFile )
 	{
-	struct stat st;
-	if( stat( lfileRealPath().c_str(), &st )>=0 )
-	    setSize( st.st_size/1024 );
-	else
-	    reuseFile = false;
-	y2mil( "reuseFile:" << reuseFile << " size:" << sizeK() );
-	}
-    }
-
-bool
-Loop::removeFile()
-    {
-    bool ret = true;
-    if( delFile )
-	{
-	ret = unlink( lfileRealPath().c_str() )==0;
-	}
-    return( ret );
-    }
-
-bool
-Loop::createFile()
-    {
-    bool ret = true;
-    if( !reuseFile )
-	{
-	string pa = lfileRealPath();
-	string::size_type pos;
-	if( (pos=pa.rfind( '/' ))!=string::npos )
-	    {
-	    pa.erase( pos );
-	    y2mil( "pa:" << pa );
-	    createPath( pa );
-	    }
-	string cmd = DDBIN " if=/dev/zero of=" + quote(lfileRealPath());
-	cmd += " bs=1k count=" + decString( sizeK() );
-	SystemCmd c( cmd );
-	ret = c.retcode()==0;
-	}
-    return( ret );
-    }
-
-string
-Loop::lfileRealPath() const
-    {
-    return getStorage()->root() + lfile;
-    }
-
-
-unsigned Loop::loopMajor()
-    {
-    if( loop_major==0 )
-    {
-	loop_major = getMajorDevices("loop");
-	y2mil("loop_major:" << loop_major);
-    }
-    return( loop_major );
-    }
-
-
-string Loop::loopDeviceName( unsigned num )
-    {
-    return( "/dev/loop" + decString(num));
-    }
-
-int Loop::setEncryption( bool val, storage::EncryptType typ )
-    {
-    y2mil("val:" << val << " enc_type:" << toString(typ));
-    int ret = Volume::setEncryption( val, typ );
-    if( ret==0 && encryption!=orig_encryption )
-	{
-	numeric = !dmcrypt();
-	if( dmcrypt() )
-	    {
-	    if( dmcrypt_dev.empty() )
-		dmcrypt_dev = getDmcryptName();
-	    setDmcryptDev( dmcrypt_dev, false );
-	    }
-	else
-	    {
-	    dev = loop_dev;
-	    }
-	}
-    y2mil( "ret:" << ret );
-    return(ret);
-    }
-
-Text Loop::removeText( bool doing ) const
-    {
-    Text txt;
-    string d = dev;
-    if( doing )
-	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
-	txt = sformat( _("Deleting file-based device %1$s"), d.c_str() );
-	}
-    else
-	{
-	// displayed text before action, %1$s is replaced by device name
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	txt = sformat( _("Delete file-based device %1$s (%2$s)"), d.c_str(),
-		       sizeString().c_str() );
-	}
-    return( txt );
-    }
-
-Text Loop::createText( bool doing ) const
-    {
-    Text txt;
-    string d = dev;
-    if( doing )
-	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
-	// %2$s is replaced by filename (e.g. /var/adm/secure)
-	txt = sformat( _("Creating file-based device %1$s of file %2$s"), d.c_str(), lfile.c_str() );
-	}
-    else
-	{
-	d.erase( 0, d.find_last_of('/')+1 );
-	if( d.find( "loop" )==0 )
-	    d.erase( 0, 4 );
-	if( !mp.empty() )
-	    {
-	    if( encryption==ENC_NONE )
-		{
-		// displayed text before action, %1$s is replaced by device name
-		// %2$s is replaced by filename (e.g. /var/adm/secure)
-		// %3$s is replaced by size (e.g. 623.5 MB)
-		// %4$s is replaced by file system type (e.g. reiserfs)
-		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
+	    struct stat st;
+	    if( stat( lfileRealPath().c_str(), &st )>=0 )
+		setSize( st.st_size/1024 );
 	    else
-		{
-		// displayed text before action, %1$s is replaced by device name
-		// %2$s is replaced by filename (e.g. /var/adm/secure)
-		// %3$s is replaced by size (e.g. 623.5 MB)
-		// %4$s is replaced by file system type (e.g. reiserfs)
-		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
-	    }
-	else
+		reuseFile = false;
+	    y2mil( "reuseFile:" << reuseFile << " size:" << sizeK() );
+	}
+    }
+
+    bool
+    Loop::removeFile()
+    {
+	bool ret = true;
+	if( delFile )
+	{
+	    ret = unlink( lfileRealPath().c_str() )==0;
+	}
+	return( ret );
+    }
+
+    bool
+    Loop::createFile()
+    {
+	bool ret = true;
+	if( !reuseFile )
+	{
+	    string pa = lfileRealPath();
+	    string::size_type pos;
+	    if( (pos=pa.rfind( '/' ))!=string::npos )
 	    {
+		pa.erase( pos );
+		y2mil( "pa:" << pa );
+		createPath( pa );
+	    }
+	    string cmd = DDBIN " if=/dev/zero of=" + quote(lfileRealPath());
+	    cmd += " bs=1k count=" + decString( sizeK() );
+	    SystemCmd c( cmd );
+	    ret = c.retcode()==0;
+	}
+	return( ret );
+    }
+
+    string
+    Loop::lfileRealPath() const
+    {
+	return getStorage()->root() + lfile;
+    }
+
+
+    unsigned Loop::loopMajor()
+    {
+	if( loop_major==0 )
+	{
+	    loop_major = getMajorDevices("loop");
+	    y2mil("loop_major:" << loop_major);
+	}
+	return( loop_major );
+    }
+
+
+    string Loop::loopDeviceName( unsigned num )
+    {
+	return( "/dev/loop" + decString(num));
+    }
+
+    int Loop::setEncryption( bool val, storage::EncryptType typ )
+    {
+	y2mil("val:" << val << " enc_type:" << toString(typ));
+	int ret = Volume::setEncryption( val, typ );
+	if( ret==0 && encryption!=orig_encryption )
+	{
+	    numeric = !dmcrypt();
+	    if( dmcrypt() )
+	    {
+		if( dmcrypt_dev.empty() )
+		    dmcrypt_dev = getDmcryptName();
+		setDmcryptDev( dmcrypt_dev, false );
+	    }
+	    else
+	    {
+		dev = loop_dev;
+	    }
+	}
+	y2mil( "ret:" << ret );
+	return(ret);
+    }
+
+    Text Loop::removeText( bool doing ) const
+    {
+	Text txt;
+	string d = dev;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
+	    txt = sformat( _("Deleting file-based device %1$s"), d.c_str() );
+	}
+	else
+	{
 	    // displayed text before action, %1$s is replaced by device name
+	    // %2$s is replaced by size (e.g. 623.5 MB)
+	    txt = sformat( _("Delete file-based device %1$s (%2$s)"), d.c_str(),
+			   sizeString().c_str() );
+	}
+	return( txt );
+    }
+
+    Text Loop::createText( bool doing ) const
+    {
+	Text txt;
+	string d = dev;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
-	    // %3$s is replaced by size (e.g. 623.5 MB)
-	    txt = sformat( _("Create file-based device %1$s of file %2$s (%3$s)"),
-			   dev.c_str(), lfile.c_str(), sizeString().c_str() );
+	    txt = sformat( _("Creating file-based device %1$s of file %2$s"), d.c_str(), lfile.c_str() );
+	}
+	else
+	{
+	    d.erase( 0, d.find_last_of('/')+1 );
+	    if( d.find( "loop" )==0 )
+		d.erase( 0, 4 );
+	    if( !mp.empty() )
+	    {
+		if( encryption==ENC_NONE )
+		{
+		    // displayed text before action, %1$s is replaced by device name
+		    // %2$s is replaced by filename (e.g. /var/adm/secure)
+		    // %3$s is replaced by size (e.g. 623.5 MB)
+		    // %4$s is replaced by file system type (e.g. reiserfs)
+		    // %5$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
+				   d.c_str(), lfile.c_str(), sizeString().c_str(),
+				   fsTypeString().c_str(), mp.c_str() );
+		}
+		else
+		{
+		    // displayed text before action, %1$s is replaced by device name
+		    // %2$s is replaced by filename (e.g. /var/adm/secure)
+		    // %3$s is replaced by size (e.g. 623.5 MB)
+		    // %4$s is replaced by file system type (e.g. reiserfs)
+		    // %5$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"),
+				   d.c_str(), lfile.c_str(), sizeString().c_str(),
+				   fsTypeString().c_str(), mp.c_str() );
+		}
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name
+		// %2$s is replaced by filename (e.g. /var/adm/secure)
+		// %3$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat( _("Create file-based device %1$s of file %2$s (%3$s)"),
+			       dev.c_str(), lfile.c_str(), sizeString().c_str() );
 	    }
 	}
-    return( txt );
+	return( txt );
     }
 
 
-Text Loop::formatText( bool doing ) const
+    Text Loop::formatText( bool doing ) const
     {
-    Text txt;
-    string d = dev;
-    if( doing )
+	Text txt;
+	string d = dev;
+	if( doing )
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-	// %2$s is replaced by filename (e.g. /var/adm/secure)
-	// %3$s is replaced by size (e.g. 623.5 MB)
-	// %4$s is replaced by file system type (e.g. reiserfs)
-	txt = sformat( _("Formatting file-based device %1$s of %2$s (%3$s) with %4$s "),
-		       d.c_str(), lfile.c_str(), sizeString().c_str(),
-		       fsTypeString().c_str() );
-	}
-    else
-	{
-	d.erase( 0, d.find_last_of('/')+1 );
-	if( d.find( "loop" )==0 )
-	    d.erase( 0, 4 );
-	if( !mp.empty() )
-	    {
-	    if( encryption==ENC_NONE )
-		{
-		// displayed text before action, %1$s is replaced by device name
-		// %2$s is replaced by filename (e.g. /var/adm/secure)
-		// %3$s is replaced by size (e.g. 623.5 MB)
-		// %4$s is replaced by file system type (e.g. reiserfs)
-		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
-	    else
-		{
-		// displayed text before action, %1$s is replaced by device name
-		// %2$s is replaced by filename (e.g. /var/adm/secure)
-		// %3$s is replaced by size (e.g. 623.5 MB)
-		// %4$s is replaced by file system type (e.g. reiserfs)
-		// %5$s is replaced by mount point (e.g. /usr)
-		txt = sformat( _("Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
-			       d.c_str(), lfile.c_str(), sizeString().c_str(),
-			       fsTypeString().c_str(), mp.c_str() );
-		}
-	    }
-	else
-	    {
-	    // displayed text before action, %1$s is replaced by device name
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 	    // %2$s is replaced by filename (e.g. /var/adm/secure)
 	    // %3$s is replaced by size (e.g. 623.5 MB)
 	    // %4$s is replaced by file system type (e.g. reiserfs)
-	    txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) with %4$s"),
+	    txt = sformat( _("Formatting file-based device %1$s of %2$s (%3$s) with %4$s "),
 			   d.c_str(), lfile.c_str(), sizeString().c_str(),
 			   fsTypeString().c_str() );
+	}
+	else
+	{
+	    d.erase( 0, d.find_last_of('/')+1 );
+	    if( d.find( "loop" )==0 )
+		d.erase( 0, 4 );
+	    if( !mp.empty() )
+	    {
+		if( encryption==ENC_NONE )
+		{
+		    // displayed text before action, %1$s is replaced by device name
+		    // %2$s is replaced by filename (e.g. /var/adm/secure)
+		    // %3$s is replaced by size (e.g. 623.5 MB)
+		    // %4$s is replaced by file system type (e.g. reiserfs)
+		    // %5$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
+				   d.c_str(), lfile.c_str(), sizeString().c_str(),
+				   fsTypeString().c_str(), mp.c_str() );
+		}
+		else
+		{
+		    // displayed text before action, %1$s is replaced by device name
+		    // %2$s is replaced by filename (e.g. /var/adm/secure)
+		    // %3$s is replaced by size (e.g. 623.5 MB)
+		    // %4$s is replaced by file system type (e.g. reiserfs)
+		    // %5$s is replaced by mount point (e.g. /usr)
+		    txt = sformat( _("Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"),
+				   d.c_str(), lfile.c_str(), sizeString().c_str(),
+				   fsTypeString().c_str(), mp.c_str() );
+		}
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by device name
+		// %2$s is replaced by filename (e.g. /var/adm/secure)
+		// %3$s is replaced by size (e.g. 623.5 MB)
+		// %4$s is replaced by file system type (e.g. reiserfs)
+		txt = sformat( _("Format file-based device %1$s of %2$s (%3$s) with %4$s"),
+			       d.c_str(), lfile.c_str(), sizeString().c_str(),
+			       fsTypeString().c_str() );
 	    }
 	}
-    return( txt );
+	return( txt );
     }
 
-void Loop::getInfo( LoopInfo& info ) const
+    void Loop::getInfo( LoopInfo& info ) const
     {
-    Volume::getInfo(info.v);
-    info.nr = num;
-    info.file = lfile;
-    info.reuseFile = reuseFile;
-    }
-
-
-std::ostream& operator<< (std::ostream& s, const Loop& l )
-    {
-    s << "Loop " << dynamic_cast<const Volume&>(l)
-      << " LoopFile:" << l.lfile;
-    if( l.reuseFile )
-      s << " reuse";
-    if( l.delFile )
-      s << " delFile";
-    return( s );
+	Volume::getInfo(info.v);
+	info.nr = num;
+	info.file = lfile;
+	info.reuseFile = reuseFile;
     }
 
 
-bool Loop::equalContent( const Loop& rhs ) const
+    std::ostream& operator<< (std::ostream& s, const Loop& l )
     {
-    return( Volume::equalContent(rhs) &&
-	    lfile==rhs.lfile && reuseFile==rhs.reuseFile &&
-	    delFile==rhs.delFile );
+	s << "Loop " << dynamic_cast<const Volume&>(l)
+	  << " LoopFile:" << l.lfile;
+	if( l.reuseFile )
+	    s << " reuse";
+	if( l.delFile )
+	    s << " delFile";
+	return( s );
+    }
+
+
+    bool Loop::equalContent( const Loop& rhs ) const
+    {
+	return( Volume::equalContent(rhs) &&
+		lfile==rhs.lfile && reuseFile==rhs.reuseFile &&
+		delFile==rhs.delFile );
     }
 
 
@@ -420,6 +420,6 @@ bool Loop::equalContent( const Loop& rhs ) const
     }
 
 
-unsigned Loop::loop_major = 0;
+    unsigned Loop::loop_major = 0;
 
 }

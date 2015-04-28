@@ -31,13 +31,13 @@
 namespace storage
 {
 
-class Storage;
+    class Storage;
     class SystemInfo;
 
 
-class DmmultipathCo : public DmPartCo
+    class DmmultipathCo : public DmPartCo
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -62,9 +62,9 @@ class DmmultipathCo : public DmPartCo
         typedef CastIterator<VIter, Dmmultipath *> DmmultipathInter;
         typedef CastIterator<CVIter, const Dmmultipath *> DmmultipathCInter;
         template< class Pred >
-            struct DmmultipathPI { typedef ContainerIter<Pred, DmmultipathInter> type; };
+	struct DmmultipathPI { typedef ContainerIter<Pred, DmmultipathInter> type; };
         template< class Pred >
-            struct DmmultipathCPI { typedef ContainerIter<Pred, DmmultipathCInter> type; };
+	struct DmmultipathCPI { typedef ContainerIter<Pred, DmmultipathCInter> type; };
         typedef CheckFnc<const Dmmultipath> CheckFncDmmultipath;
         typedef CheckerIterator< CheckFncDmmultipath, DmmultipathPI<CheckFncDmmultipath>::type,
                                  DmmultipathInter, Dmmultipath > DmmultipathPIterator;
@@ -76,34 +76,34 @@ class DmmultipathCo : public DmPartCo
         typedef IterPair<ConstDmmultipathIter> ConstDmmultipathPair;
 
         DmmultipathPair dmmultipathPair( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL)
-            {
-            return( DmmultipathPair( dmmultipathBegin( CheckDmmultipath ), dmmultipathEnd( CheckDmmultipath ) ));
-            }
+        {
+	    return( DmmultipathPair( dmmultipathBegin( CheckDmmultipath ), dmmultipathEnd( CheckDmmultipath ) ));
+	}
         DmmultipathIter dmmultipathBegin( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL)
-            {
+        {
 	    IterPair<DmmultipathInter> p( (DmmultipathInter(begin())), (DmmultipathInter(end())) );
-            return( DmmultipathIter( DmmultipathPIterator( p, CheckDmmultipath )) );
-	    }
+	    return( DmmultipathIter( DmmultipathPIterator( p, CheckDmmultipath )) );
+	}
         DmmultipathIter dmmultipathEnd( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL)
-            {
+        {
 	    IterPair<DmmultipathInter> p( (DmmultipathInter(begin())), (DmmultipathInter(end())) );
-            return( DmmultipathIter( DmmultipathPIterator( p, CheckDmmultipath, true )) );
-	    }
+	    return( DmmultipathIter( DmmultipathPIterator( p, CheckDmmultipath, true )) );
+	}
 
         ConstDmmultipathPair dmmultipathPair( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL) const
-            {
-            return( ConstDmmultipathPair( dmmultipathBegin( CheckDmmultipath ), dmmultipathEnd( CheckDmmultipath ) ));
-            }
+        {
+	    return( ConstDmmultipathPair( dmmultipathBegin( CheckDmmultipath ), dmmultipathEnd( CheckDmmultipath ) ));
+	}
         ConstDmmultipathIter dmmultipathBegin( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL) const
-            {
+        {
 	    IterPair<DmmultipathCInter> p( (DmmultipathCInter(begin())), (DmmultipathCInter(end())) );
-            return( ConstDmmultipathIter( DmmultipathCPIterator( p, CheckDmmultipath )) );
-	    }
+	    return( ConstDmmultipathIter( DmmultipathCPIterator( p, CheckDmmultipath )) );
+	}
         ConstDmmultipathIter dmmultipathEnd( bool (* CheckDmmultipath)( const Dmmultipath& )=NULL) const
-            {
+        {
 	    IterPair<DmmultipathCInter> p( (DmmultipathCInter(begin())), (DmmultipathCInter(end())) );
-            return( ConstDmmultipathIter( DmmultipathCPIterator( p, CheckDmmultipath, true )) );
-	    }
+	    return( ConstDmmultipathIter( DmmultipathCPIterator( p, CheckDmmultipath, true )) );
+	}
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new DmmultipathCo( *this ) ); }

@@ -61,26 +61,26 @@ namespace storage
 	const list<const xmlNode*> l = getChildNodes(node, "physical_extent");
 	for (list<const xmlNode*>::const_iterator it = l.begin(); it != l.end(); ++it)
 	{
-		Pv tmp = Pv(*it);
-		pv.push_back(tmp);
+	    Pv tmp = Pv(*it);
+	    pv.push_back(tmp);
 
-		switch (t)
-		{
-		    case LVM:
-			s->addUsedBy(tmp.device, UB_LVM, dev);
-			break;
-		    case DM:
-			s->addUsedBy(tmp.device, UB_DM, dev);
-			break;
-		    case DMRAID:
-			s->addUsedBy(tmp.device, UB_DMRAID, dev);
-			break;
-		    case DMMULTIPATH:
-			s->addUsedBy(tmp.device, UB_DMMULTIPATH, dev);
-			break;
-		    default:
-			break;
-		}
+	    switch (t)
+	    {
+		case LVM:
+		    s->addUsedBy(tmp.device, UB_LVM, dev);
+		    break;
+		case DM:
+		    s->addUsedBy(tmp.device, UB_DM, dev);
+		    break;
+		case DMRAID:
+		    s->addUsedBy(tmp.device, UB_DMRAID, dev);
+		    break;
+		case DMMULTIPATH:
+		    s->addUsedBy(tmp.device, UB_DMMULTIPATH, dev);
+		    break;
+		default:
+		    break;
+	    }
 	}
 
 	y2deb("constructed PeContainer " << dev);
@@ -116,432 +116,432 @@ namespace storage
     }
 
 
-void PeContainer::unuseDev() const
+    void PeContainer::unuseDev() const
     {
-    for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
-	getStorage()->clearUsedBy(s->device);
-    for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
-	getStorage()->clearUsedBy(s->device);
+	for( list<Pv>::const_iterator s=pv.begin(); s!=pv.end(); ++s )
+	    getStorage()->clearUsedBy(s->device);
+	for( list<Pv>::const_iterator s=pv_add.begin(); s!=pv_add.end(); ++s )
+	    getStorage()->clearUsedBy(s->device);
     }
 
-int
-PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
+    int
+    PeContainer::setPeSize( unsigned long long peSizeK, bool lvm1 )
     {
-    int ret = 0;
-    y2mil("peSize:" << peSizeK);
+	int ret = 0;
+	y2mil("peSize:" << peSizeK);
 
-    if( pe_size!=peSizeK )
+	if( pe_size!=peSizeK )
 	{
-	if( lvm1 )
+	    if( lvm1 )
 	    {
-	    if( peSizeK<8 || peSizeK>16*1024*1024 )
-		ret = PEC_PE_SIZE_INVALID;
+		if( peSizeK<8 || peSizeK>16*1024*1024 )
+		    ret = PEC_PE_SIZE_INVALID;
 	    }
-	if( ret==0 )
+	    if( ret==0 )
 	    {
-	    unsigned long long sz = peSizeK;
-	    while( sz>1 && sz%2==0 )
-		sz /= 2;
-	    if( sz!=1 )
-		ret = PEC_PE_SIZE_INVALID;
+		unsigned long long sz = peSizeK;
+		while( sz>1 && sz%2==0 )
+		    sz /= 2;
+		if( sz!=1 )
+		    ret = PEC_PE_SIZE_INVALID;
 	    }
-	if( ret==0 )
+	    if( ret==0 )
 	    {
-	    num_pe = num_pe * pe_size / peSizeK;
-	    free_pe = free_pe * pe_size / peSizeK;
-	    list<Pv>::iterator p;
-	    for( p=pv.begin(); p!=pv.end(); ++p )
+		num_pe = num_pe * pe_size / peSizeK;
+		free_pe = free_pe * pe_size / peSizeK;
+		list<Pv>::iterator p;
+		for( p=pv.begin(); p!=pv.end(); ++p )
 		{
-		p->num_pe = p->num_pe * pe_size / peSizeK;
-		p->free_pe = p->free_pe * pe_size / peSizeK;
+		    p->num_pe = p->num_pe * pe_size / peSizeK;
+		    p->free_pe = p->free_pe * pe_size / peSizeK;
 		}
-	    for( p=pv_add.begin(); p!=pv_add.end(); ++p )
+		for( p=pv_add.begin(); p!=pv_add.end(); ++p )
 		{
-		p->num_pe = p->num_pe * pe_size / peSizeK;
-		p->free_pe = p->free_pe * pe_size / peSizeK;
+		    p->num_pe = p->num_pe * pe_size / peSizeK;
+		    p->free_pe = p->free_pe * pe_size / peSizeK;
 		}
-	    for( p=pv_remove.begin(); p!=pv_remove.end(); ++p )
+		for( p=pv_remove.begin(); p!=pv_remove.end(); ++p )
 		{
-		p->num_pe = p->num_pe * pe_size / peSizeK;
-		p->free_pe = p->free_pe * pe_size / peSizeK;
+		    p->num_pe = p->num_pe * pe_size / peSizeK;
+		    p->free_pe = p->free_pe * pe_size / peSizeK;
 		}
-	    pe_size = peSizeK;
+		pe_size = peSizeK;
 	    }
-	calcSize();
+	    calcSize();
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int
-PeContainer::tryUnusePe( const string& dv, list<Pv>& pl, list<Pv>& pladd,
-		         list<Pv>& plrem, unsigned long& removed_pe )
+    int
+    PeContainer::tryUnusePe( const string& dv, list<Pv>& pl, list<Pv>& pladd,
+			     list<Pv>& plrem, unsigned long& removed_pe )
     {
-    int ret = 0;
-    int added_pv = false;
-    Pv cur_pv;
-    list<Pv>::iterator cur;
-    if( !findPe( dv, pl, cur ))
+	int ret = 0;
+	int added_pv = false;
+	Pv cur_pv;
+	list<Pv>::iterator cur;
+	if( !findPe( dv, pl, cur ))
 	{
-	if( findPe( dv, pladd, cur ))
-	    added_pv = true;
-	else
-	    ret = PEC_PV_NOT_FOUND;
+	    if( findPe( dv, pladd, cur ))
+		added_pv = true;
+	    else
+		ret = PEC_PV_NOT_FOUND;
 	}
-    if( ret==0 )
-	cur_pv = *cur;
-    if( ret==0 && cur->free_pe<cur->num_pe )
+	if( ret==0 )
+	    cur_pv = *cur;
+	if( ret==0 && cur->free_pe<cur->num_pe )
 	{
-	list<Dm*> li;
-	DmPair lp=dmPair(Dm::notDeleted);
-	DmIter i=lp.begin();
-	while( ret==0 && i!=lp.end() )
+	    list<Dm*> li;
+	    DmPair lp=dmPair(Dm::notDeleted);
+	    DmIter i=lp.begin();
+	    while( ret==0 && i!=lp.end() )
 	    {
-	    if( i->usingPe( dv )>0 )
+		if( i->usingPe( dv )>0 )
 		{
-		if( i->created() )
-		    li.push_back( &(*i) );
+		    if( i->created() )
+			li.push_back( &(*i) );
+		    else
+			ret = PEC_REMOVE_PV_IN_USE;
+		}
+		++i;
+	    }
+	    list<Dm*>::iterator lii=li.begin();
+	    if( ret==0 )
+	    {
+		while( ret==0 && lii!=li.end() )
+		{
+		    map<string,unsigned long> pe_map = (*lii)->getPeMap();
+		    ret = remLvPeDistribution( (*lii)->getLe(), pe_map, pl, pladd );
+		    ++lii;
+		}
+	    }
+	    if( ret==0 )
+	    {
+		if( added_pv )
+		    pladd.erase( cur );
 		else
-		    ret = PEC_REMOVE_PV_IN_USE;
-		}
-	    ++i;
-	    }
-	list<Dm*>::iterator lii=li.begin();
-	if( ret==0 )
-	    {
-	    while( ret==0 && lii!=li.end() )
+		    pl.erase( cur );
+		lii=li.begin();
+		while( ret==0 && lii!=li.end() )
 		{
-		map<string,unsigned long> pe_map = (*lii)->getPeMap();
-		ret = remLvPeDistribution( (*lii)->getLe(), pe_map, pl, pladd );
-		++lii;
+		    map<string,unsigned long> pe_map;
+		    ret = addLvPeDistribution( (*lii)->getLe(), (*lii)->stripes(),
+					       pl, pladd, pe_map );
+		    if( ret==0 )
+		    {
+			(*lii)->setPeMap( pe_map );
+		    }
+		    else
+		    {
+			ret = PEC_REMOVE_PV_SIZE_NEEDED;
+		    }
+		    ++lii;
 		}
 	    }
-	if( ret==0 )
-	    {
+	}
+	else if( ret==0 )
+	{
 	    if( added_pv )
 		pladd.erase( cur );
 	    else
 		pl.erase( cur );
-	    lii=li.begin();
-	    while( ret==0 && lii!=li.end() )
-		{
-		map<string,unsigned long> pe_map;
-		ret = addLvPeDistribution( (*lii)->getLe(), (*lii)->stripes(),
-		                           pl, pladd, pe_map );
-		if( ret==0 )
-		    {
-		    (*lii)->setPeMap( pe_map );
-		    }
-		else
-		    {
-		    ret = PEC_REMOVE_PV_SIZE_NEEDED;
-		    }
-		++lii;
-		}
-	    }
 	}
-    else if( ret==0 )
+	if( ret==0 )
 	{
-	if( added_pv )
-	    pladd.erase( cur );
-	else
-	    pl.erase( cur );
+	    getStorage()->clearUsedBy(dv);
+	    removed_pe += cur_pv.num_pe;
+	    if( !added_pv )
+		plrem.push_back( cur_pv );
 	}
-    if( ret==0 )
-	{
-	getStorage()->clearUsedBy(dv);
-	removed_pe += cur_pv.num_pe;
-	if( !added_pv )
-	    plrem.push_back( cur_pv );
-	}
-    y2mil("ret:" << ret << " removed_pe:" << removed_pe << " dev:" << cur_pv.device);
-    return( ret );
+	y2mil("ret:" << ret << " removed_pe:" << removed_pe << " dev:" << cur_pv.device);
+	return( ret );
     }
 
-int
-PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& pl,
-				  list<Pv>& pladd, map<string,unsigned long>& pe_map )
+    int
+    PeContainer::addLvPeDistribution( unsigned long le, unsigned stripe, list<Pv>& pl,
+				      list<Pv>& pladd, map<string,unsigned long>& pe_map )
     {
-    int ret=0;
-    y2mil("le:" << le << " stripe:" << stripe);
-    map<string,unsigned long>::iterator mit;
-    list<Pv>::iterator i;
-    if( stripe>1 )
+	int ret=0;
+	y2mil("le:" << le << " stripe:" << stripe);
+	map<string,unsigned long>::iterator mit;
+	list<Pv>::iterator i;
+	if( stripe>1 )
 	{
-	// this is only a very rough estimate if the creation of the striped
-	// lv may be possible, no sense in emulating LVM allocation strategy
-	// here
-	unsigned long per_stripe = (le+stripe-1)/stripe;
-	list<Pv> tmp = pl;
-	tmp.insert( tmp.end(), pladd.begin(), pladd.end() );
-	tmp.sort( Pv::comp_le );
-	tmp.remove_if( Pv::no_free );
-	while( per_stripe>0 && tmp.size()>=stripe )
-	    {
-	    i = tmp.begin();
-	    unsigned rem = min( per_stripe, i->free_pe );
-	    for( unsigned cnt=0; cnt<stripe; cnt++ )
-		{
-		i->free_pe -= rem;
-		if( (mit=pe_map.find( i->device ))==pe_map.end() )
-		    pe_map[i->device] = rem;
-		else
-		    mit->second += rem;
-		++i;
-		}
-	    per_stripe -= rem;
+	    // this is only a very rough estimate if the creation of the striped
+	    // lv may be possible, no sense in emulating LVM allocation strategy
+	    // here
+	    unsigned long per_stripe = (le+stripe-1)/stripe;
+	    list<Pv> tmp = pl;
+	    tmp.insert( tmp.end(), pladd.begin(), pladd.end() );
+	    tmp.sort( Pv::comp_le );
 	    tmp.remove_if( Pv::no_free );
-	    }
-	if( per_stripe>0 )
-	    ret = PEC_LV_NO_SPACE_STRIPED;
-	else
+	    while( per_stripe>0 && tmp.size()>=stripe )
 	    {
-	    list<Pv>::iterator p;
-	    i = pl.begin();
-	    while( i!=pl.end() )
+		i = tmp.begin();
+		unsigned rem = min( per_stripe, i->free_pe );
+		for( unsigned cnt=0; cnt<stripe; cnt++ )
 		{
-		if( (p=find( tmp.begin(), tmp.end(), i->device))!=tmp.end())
-		    i->free_pe = p->free_pe;
-		else
-		    i->free_pe = 0;
-		++i;
+		    i->free_pe -= rem;
+		    if( (mit=pe_map.find( i->device ))==pe_map.end() )
+			pe_map[i->device] = rem;
+		    else
+			mit->second += rem;
+		    ++i;
 		}
-	    i = pladd.begin();
-	    while( i!=pladd.end() )
+		per_stripe -= rem;
+		tmp.remove_if( Pv::no_free );
+	    }
+	    if( per_stripe>0 )
+		ret = PEC_LV_NO_SPACE_STRIPED;
+	    else
+	    {
+		list<Pv>::iterator p;
+		i = pl.begin();
+		while( i!=pl.end() )
 		{
-		if( (p=find( tmp.begin(), tmp.end(), i->device))!=tmp.end())
-		    i->free_pe = p->free_pe;
-		else
-		    i->free_pe = 0;
-		++i;
+		    if( (p=find( tmp.begin(), tmp.end(), i->device))!=tmp.end())
+			i->free_pe = p->free_pe;
+		    else
+			i->free_pe = 0;
+		    ++i;
+		}
+		i = pladd.begin();
+		while( i!=pladd.end() )
+		{
+		    if( (p=find( tmp.begin(), tmp.end(), i->device))!=tmp.end())
+			i->free_pe = p->free_pe;
+		    else
+			i->free_pe = 0;
+		    ++i;
 		}
 	    }
 	}
-    else
-	{
-	unsigned long rest = le;
-	i = pl.begin();
-	while( rest>0 && i!=pl.end() )
-	    {
-	    rest -= min(rest,i->free_pe);
-	    ++i;
-	    }
-	i = pladd.begin();
-	while( rest>0 && i!=pladd.end() )
-	    {
-	    rest -= min(rest,i->free_pe);
-	    ++i;
-	    }
-	if( rest>0 )
-	    ret = PEC_LV_NO_SPACE_SINGLE;
 	else
-	    {
-	    rest = le;
+	{
+	    unsigned long rest = le;
 	    i = pl.begin();
 	    while( rest>0 && i!=pl.end() )
-		{
-		unsigned long tmp = min(rest,i->free_pe);
-		i->free_pe -= tmp;
-		rest -= tmp;
-		if( (mit=pe_map.find( i->device ))==pe_map.end() )
-		    pe_map[i->device] = tmp;
-		else
-		    mit->second += tmp;
+	    {
+		rest -= min(rest,i->free_pe);
 		++i;
-		}
+	    }
 	    i = pladd.begin();
 	    while( rest>0 && i!=pladd.end() )
-		{
-		unsigned long tmp = min(rest,i->free_pe);
-		i->free_pe -= tmp;
-		rest -= tmp;
-		if( (mit=pe_map.find( i->device ))==pe_map.end() )
-		    pe_map[i->device] = tmp;
-		else
-		    mit->second += tmp;
+	    {
+		rest -= min(rest,i->free_pe);
 		++i;
-		}
 	    }
-	}
-    if( ret==0 )
-	{
-	y2mil( "pe_map:" << pe_map );
-	}
-    y2mil("ret:" << ret);
-    return( ret );
-    }
-
-int
-PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
-				  list<Pv>& pl, list<Pv>& pladd )
-    {
-    int ret=0;
-    y2mil( "le:" << le << " pe_map:" << pe_map );
-    list<Pv>::iterator p;
-    map<string,unsigned long>::iterator mit = pe_map.begin();
-    y2mil( "pl:" << pl );
-    y2mil( "pladd:" << pladd );
-    while( le>0 && ret==0 && mit != pe_map.end() )
-	{
-	if( findPe( mit->first, pl, p ) || findPe( mit->first, pladd, p ) )
+	    if( rest>0 )
+		ret = PEC_LV_NO_SPACE_SINGLE;
+	    else
 	    {
-	    int tmp = min(le,mit->second);
-	    p->free_pe += tmp;
-	    mit->second -= tmp;
-	    le -= tmp;
-	    }
-	else
-	    ret = PEC_LV_PE_DEV_NOT_FOUND;
-	++mit;
-	}
-    y2mil( "pe_map:" << pe_map );
-    y2mil( "ret:" << ret );
-    return( ret );
-    }
-
-unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
-    {
-    if( pe_size>0 )
-	{
-	sizeK += pe_size-1;
-	sizeK /= pe_size;
-	}
-    return( sizeK );
-    }
-
-bool PeContainer::addedPv( const string& dv ) const
-    {
-    list<Pv>::const_iterator i;
-    bool ret = findPe( dv, pv_add, i );
-    y2mil( "dev:" << dv << " ret:" << ret );
-    return( ret );
-    }
-
-bool PeContainer::checkCreateConstraints()
-    {
-    y2mil( "peContainer:" << *this );
-    int ret = false;
-    unsigned long increase = 0;
-    unsigned long current = 0;
-    typedef pair<unsigned long,Dm*> tpair;
-    list< tpair > li;
-    DmPair lp=dmPair();
-    DmIter i=lp.begin();
-    if (!pv_add.empty())
-	y2war( "should not happen pv_add:" << pv_add );
-    if (!pv_remove.empty())
-	y2war( "should not happen pv_rem:" << pv_remove );
-    while( i!=lp.end() )
-	{
-	unsigned long long tmp;
-	if( i->deleted() || i->needShrink() )
-	    y2war( "should not happen dm:" << *i );
-	else if( i->created() || i->extendSize()>0 )
-	    {
-	    tmp = sizeToLe(i->created() ? i->sizeK() : i->extendSize());
-	    if( !i->created() )
-		current += sizeToLe( i->origSizeK() );
-	    li.push_back( make_pair(tmp,&(*i)) );
-	    increase += tmp;
-	    y2mil( "inc:" << tmp << " sum:" << increase );
-	    y2mil( "vol:" << *i );
-	    }
-	else
-	    current += sizeToLe( i->sizeK() );
-	++i;
-	}
-    y2mil( "increase:" << increase << " current:" << current << " num_pe:" << num_pe );
-    if( increase+current>num_pe )
-	{
-	unsigned long diff = increase+current - num_pe;
-	y2mil( "too much:" << diff );
-	if( diff<=5 || diff<=pv.size()*2 )
-	    {
-	    list<unsigned long> l;
-	    y2mil( "li:" << li );
-	    li.sort();
-	    y2mil( "li:" << li );
-	    for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		rest = le;
+		i = pl.begin();
+		while( rest>0 && i!=pl.end() )
 		{
-		unsigned long tmp = (diff * i->first + i->first/2) / increase;
-		l.push_back(tmp);
-		diff -= tmp;
-		increase -= i->first;
-		}
-	    y2mil( "l:" << l );
-	    list<unsigned long>::const_iterator di = l.begin();
-	    for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
-		{
-		if( *di > 0 )
-		    {
-		    y2mil( "modified vol:" << *i->second );
-		    map<string,unsigned long> pe_map = i->second->getPeMap();
-		    ret = remLvPeDistribution( *di, pe_map, pv, pv_add );
-		    i->second->setLe( i->second->getLe()-*di );
-		    i->second->setPeMap( pe_map );
-		    if( i->second->created() )
-			i->second->calcSize();
+		    unsigned long tmp = min(rest,i->free_pe);
+		    i->free_pe -= tmp;
+		    rest -= tmp;
+		    if( (mit=pe_map.find( i->device ))==pe_map.end() )
+			pe_map[i->device] = tmp;
 		    else
-			i->second->setResizedSize( i->second->getLe()*pe_size );
-		    y2mil( "modified vol:" << *i->second );
-		    }
-		++di;
+			mit->second += tmp;
+		    ++i;
+		}
+		i = pladd.begin();
+		while( rest>0 && i!=pladd.end() )
+		{
+		    unsigned long tmp = min(rest,i->free_pe);
+		    i->free_pe -= tmp;
+		    rest -= tmp;
+		    if( (mit=pe_map.find( i->device ))==pe_map.end() )
+			pe_map[i->device] = tmp;
+		    else
+			mit->second += tmp;
+		    ++i;
 		}
 	    }
-	ret = true;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	if( ret==0 )
+	{
+	    y2mil( "pe_map:" << pe_map );
+	}
+	y2mil("ret:" << ret);
+	return( ret );
+    }
+
+    int
+    PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
+				      list<Pv>& pl, list<Pv>& pladd )
+    {
+	int ret=0;
+	y2mil( "le:" << le << " pe_map:" << pe_map );
+	list<Pv>::iterator p;
+	map<string,unsigned long>::iterator mit = pe_map.begin();
+	y2mil( "pl:" << pl );
+	y2mil( "pladd:" << pladd );
+	while( le>0 && ret==0 && mit != pe_map.end() )
+	{
+	    if( findPe( mit->first, pl, p ) || findPe( mit->first, pladd, p ) )
+	    {
+		int tmp = min(le,mit->second);
+		p->free_pe += tmp;
+		mit->second -= tmp;
+		le -= tmp;
+	    }
+	    else
+		ret = PEC_LV_PE_DEV_NOT_FOUND;
+	    ++mit;
+	}
+	y2mil( "pe_map:" << pe_map );
+	y2mil( "ret:" << ret );
+	return( ret );
+    }
+
+    unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
+    {
+	if( pe_size>0 )
+	{
+	    sizeK += pe_size-1;
+	    sizeK /= pe_size;
+	}
+	return( sizeK );
+    }
+
+    bool PeContainer::addedPv( const string& dv ) const
+    {
+	list<Pv>::const_iterator i;
+	bool ret = findPe( dv, pv_add, i );
+	y2mil( "dev:" << dv << " ret:" << ret );
+	return( ret );
+    }
+
+    bool PeContainer::checkCreateConstraints()
+    {
+	y2mil( "peContainer:" << *this );
+	int ret = false;
+	unsigned long increase = 0;
+	unsigned long current = 0;
+	typedef pair<unsigned long,Dm*> tpair;
+	list< tpair > li;
+	DmPair lp=dmPair();
+	DmIter i=lp.begin();
+	if (!pv_add.empty())
+	    y2war( "should not happen pv_add:" << pv_add );
+	if (!pv_remove.empty())
+	    y2war( "should not happen pv_rem:" << pv_remove );
+	while( i!=lp.end() )
+	{
+	    unsigned long long tmp;
+	    if( i->deleted() || i->needShrink() )
+		y2war( "should not happen dm:" << *i );
+	    else if( i->created() || i->extendSize()>0 )
+	    {
+		tmp = sizeToLe(i->created() ? i->sizeK() : i->extendSize());
+		if( !i->created() )
+		    current += sizeToLe( i->origSizeK() );
+		li.push_back( make_pair(tmp,&(*i)) );
+		increase += tmp;
+		y2mil( "inc:" << tmp << " sum:" << increase );
+		y2mil( "vol:" << *i );
+	    }
+	    else
+		current += sizeToLe( i->sizeK() );
+	    ++i;
+	}
+	y2mil( "increase:" << increase << " current:" << current << " num_pe:" << num_pe );
+	if( increase+current>num_pe )
+	{
+	    unsigned long diff = increase+current - num_pe;
+	    y2mil( "too much:" << diff );
+	    if( diff<=5 || diff<=pv.size()*2 )
+	    {
+		list<unsigned long> l;
+		y2mil( "li:" << li );
+		li.sort();
+		y2mil( "li:" << li );
+		for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		{
+		    unsigned long tmp = (diff * i->first + i->first/2) / increase;
+		    l.push_back(tmp);
+		    diff -= tmp;
+		    increase -= i->first;
+		}
+		y2mil( "l:" << l );
+		list<unsigned long>::const_iterator di = l.begin();
+		for( list<tpair>::const_iterator i=li.begin(); i!=li.end(); ++i )
+		{
+		    if( *di > 0 )
+		    {
+			y2mil( "modified vol:" << *i->second );
+			map<string,unsigned long> pe_map = i->second->getPeMap();
+			ret = remLvPeDistribution( *di, pe_map, pv, pv_add );
+			i->second->setLe( i->second->getLe()-*di );
+			i->second->setPeMap( pe_map );
+			if( i->second->created() )
+			    i->second->calcSize();
+			else
+			    i->second->setResizedSize( i->second->getLe()*pe_size );
+			y2mil( "modified vol:" << *i->second );
+		    }
+		    ++di;
+		}
+	    }
+	    ret = true;
+	}
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-bool
-PeContainer::findPe(const string& dv, const list<Pv>& pl, list<Pv>::const_iterator& i) const
+    bool
+    PeContainer::findPe(const string& dv, const list<Pv>& pl, list<Pv>::const_iterator& i) const
     {
-    bool ret = !pl.empty();
-    if( ret )
+	bool ret = !pl.empty();
+	if( ret )
 	{
-	const Device *vol;
-	if( getStorage()->findDevice( dv, vol, true ) )
+	    const Device *vol;
+	    if( getStorage()->findDevice( dv, vol, true ) )
 	    {
-	    i = pl.begin();
-	    while( i!=pl.end() && !vol->sameDevice( i->device ))
-		++i;
+		i = pl.begin();
+		while( i!=pl.end() && !vol->sameDevice( i->device ))
+		    ++i;
 	    }
-	else
+	    else
 	    {
-	    y2war( "unknown volume:" << dv );
-	    i = find( pl.begin(), pl.end(), dv );
+		y2war( "unknown volume:" << dv );
+		i = find( pl.begin(), pl.end(), dv );
 	    }
-	ret = i!=pl.end();
+	    ret = i!=pl.end();
 	}
-    y2mil( "dev:" << dv << " ret:" << ret );
-    return( ret );
+	y2mil( "dev:" << dv << " ret:" << ret );
+	return( ret );
     }
 
 
-bool
-PeContainer::findPe(const string& dv, list<Pv>& pl, list<Pv>::iterator& i) const
+    bool
+    PeContainer::findPe(const string& dv, list<Pv>& pl, list<Pv>::iterator& i) const
     {
-    bool ret = !pl.empty();
-    if( ret )
+	bool ret = !pl.empty();
+	if( ret )
 	{
-	const Device *vol;
-	if( getStorage()->findDevice( dv, vol, true ) )
+	    const Device *vol;
+	    if( getStorage()->findDevice( dv, vol, true ) )
 	    {
-	    i = pl.begin();
-	    while( i!=pl.end() && !vol->sameDevice( i->device ))
-		++i;
+		i = pl.begin();
+		while( i!=pl.end() && !vol->sameDevice( i->device ))
+		    ++i;
 	    }
-	else
+	    else
 	    {
-	    y2war( "unknown volume:" << dv );
-	    i = find( pl.begin(), pl.end(), dv );
+		y2war( "unknown volume:" << dv );
+		i = find( pl.begin(), pl.end(), dv );
 	    }
-	ret = i!=pl.end();
+	    ret = i!=pl.end();
 	}
-    y2mil( "dev:" << dv << " ret:" << ret );
-    return( ret );
+	y2mil( "dev:" << dv << " ret:" << ret );
+	return( ret );
     }
 
 
@@ -562,176 +562,176 @@ PeContainer::findPe(const string& dv, list<Pv>& pl, list<Pv>::iterator& i) const
     }
 
 
-string PeContainer::addList() const
+    string PeContainer::addList() const
     {
-    string ret;
-    list<Pv>::const_iterator i = pv_add.begin();
-    while( i!=pv_add.end() )
+	string ret;
+	list<Pv>::const_iterator i = pv_add.begin();
+	while( i!=pv_add.end() )
 	{
-	if( !ret.empty() )
-	    ret += ' ';
-	ret+= i->device;
-	++i;
+	    if( !ret.empty() )
+		ret += ' ';
+	    ret+= i->device;
+	    ++i;
 	}
-    return( ret );
+	return( ret );
     }
 
 
-unsigned long
-PeContainer::leByLvRemove() const
+    unsigned long
+    PeContainer::leByLvRemove() const
     {
-    unsigned long ret=0;
-    ConstDmPair p = dmPair(Dm::isDeleted);
-    for( ConstDmIter i=p.begin(); i!=p.end(); ++i )
-	ret += i->getLe();
-    y2mil("ret:" << ret);
-    return( ret );
+	unsigned long ret=0;
+	ConstDmPair p = dmPair(Dm::isDeleted);
+	for( ConstDmIter i=p.begin(); i!=p.end(); ++i )
+	    ret += i->getLe();
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-bool
-PeContainer::checkConsistency() const
+    bool
+    PeContainer::checkConsistency() const
     {
-    bool ret = true;
-    unsigned long sum = 0;
-    ConstDmPair lp=dmPair(Dm::notDeleted);
-    map<string,unsigned long> peg;
-    map<string,unsigned long>::iterator mi;
-    for( ConstDmIter l = lp.begin(); l!=lp.end(); ++l )
+	bool ret = true;
+	unsigned long sum = 0;
+	ConstDmPair lp=dmPair(Dm::notDeleted);
+	map<string,unsigned long> peg;
+	map<string,unsigned long>::iterator mi;
+	for( ConstDmIter l = lp.begin(); l!=lp.end(); ++l )
 	{
-        if( l->getTargetName()!="thin" )
-            ret = l->checkConsistency() && ret;
-	map<string,unsigned long> pem = l->getPeMap();
-        y2mil( "name:" << l->name() << " target:" << l->getTargetName() << " map:" << pem );
-	for( map<string,unsigned long>::const_iterator mit=pem.begin();
-	     mit!=pem.end(); ++mit )
+	    if( l->getTargetName()!="thin" )
+		ret = l->checkConsistency() && ret;
+	    map<string,unsigned long> pem = l->getPeMap();
+	    y2mil( "name:" << l->name() << " target:" << l->getTargetName() << " map:" << pem );
+	    for( map<string,unsigned long>::const_iterator mit=pem.begin();
+		 mit!=pem.end(); ++mit )
 	    {
-	    if( (mi=peg.find( mit->first ))!=peg.end() )
-		mi->second += mit->second;
-	    else
-		peg[mit->first] = mit->second;
+		if( (mi=peg.find( mit->first ))!=peg.end() )
+		    mi->second += mit->second;
+		else
+		    peg[mit->first] = mit->second;
 	    }
 	}
-    sum = 0;
-    list<Pv>::const_iterator p;
-    for( map<string,unsigned long>::const_iterator mit=peg.begin();
-	 mit!=peg.end(); ++mit )
+	sum = 0;
+	list<Pv>::const_iterator p;
+	for( map<string,unsigned long>::const_iterator mit=peg.begin();
+	     mit!=peg.end(); ++mit )
 	{
-	sum += mit->second;
-	if( findPe( mit->first, pv, p ) || findPe( mit->first, pv_add, p ) )
+	    sum += mit->second;
+	    if( findPe( mit->first, pv, p ) || findPe( mit->first, pv_add, p ) )
 	    {
-	    if( mit->second != p->num_pe-p->free_pe )
+		if( mit->second != p->num_pe-p->free_pe )
 		{
-		y2war("Vg:" << name() << " used pv " << mit->first << " is " <<
-		      mit->second << " should be " << p->num_pe - p->free_pe);
-		ret = false;
+		    y2war("Vg:" << name() << " used pv " << mit->first << " is " <<
+			  mit->second << " should be " << p->num_pe - p->free_pe);
+		    ret = false;
 		}
 	    }
-	else
+	    else
 	    {
-	    y2war("Vg:" << name() << " pv " << mit->first << " not found");
-	    ret = false;
+		y2war("Vg:" << name() << " pv " << mit->first << " not found");
+		ret = false;
 	    }
 	}
-    if( sum != num_pe-free_pe )
+	if( sum != num_pe-free_pe )
 	{
-	y2war("Vg:" << name() << " used PE is " << sum << " should be " << num_pe - free_pe);
-	ret = false;
+	    y2war("Vg:" << name() << " used PE is " << sum << " should be " << num_pe - free_pe);
+	    ret = false;
 	}
-    return( ret );
+	return( ret );
     }
 
-void PeContainer::changeDeviceName( const string& old, const string& nw )
+    void PeContainer::changeDeviceName( const string& old, const string& nw )
     {
-    list<Pv>::iterator i = find( pv_add.begin(), pv_add.end(), old );
-    if( i!=pv_add.end() )
-	i->device = nw;
-    DmPair dp=dmPair();
-    for( DmIter di=dp.begin(); di!=dp.end(); ++di )
+	list<Pv>::iterator i = find( pv_add.begin(), pv_add.end(), old );
+	if( i!=pv_add.end() )
+	    i->device = nw;
+	DmPair dp=dmPair();
+	for( DmIter di=dp.begin(); di!=dp.end(); ++di )
 	{
-	di->changeDeviceName( old, nw );
+	    di->changeDeviceName( old, nw );
 	}
     }
 
-bool PeContainer::splitMajMin( const string& majmin, unsigned long& mj, 
-                               unsigned long & mi )
+    bool PeContainer::splitMajMin( const string& majmin, unsigned long& mj,
+				   unsigned long & mi )
     {
-    string pair( majmin );
-    mj = mi = 0;
-    string::size_type pos = pair.find( ':' );
-    if( pos != string::npos )
-        pair[pos] = ' ';
-    istringstream i( pair );
-    classic(i);
-    i >> mj >> mi;
-    bool ret = !i.fail();
-    y2mil( "ret:" << ret << " " << majmin << " mj:" << mj << " mi:" << mi );
-    return( ret );
+	string pair( majmin );
+	mj = mi = 0;
+	string::size_type pos = pair.find( ':' );
+	if( pos != string::npos )
+	    pair[pos] = ' ';
+	istringstream i( pair );
+	classic(i);
+	i >> mj >> mi;
+	bool ret = !i.fail();
+	y2mil( "ret:" << ret << " " << majmin << " mj:" << mj << " mi:" << mi );
+	return( ret );
     }
 
 
-string PeContainer::getDeviceByNumber( const string& majmin ) const
+    string PeContainer::getDeviceByNumber( const string& majmin ) const
     {
-    string ret;
-    unsigned long mj;
-    unsigned long mi;
-    if( splitMajMin( majmin, mj, mi ))
-        ret = getDeviceByNumber( mj, mi );
-    return( ret );
+	string ret;
+	unsigned long mj;
+	unsigned long mi;
+	if( splitMajMin( majmin, mj, mi ))
+	    ret = getDeviceByNumber( mj, mi );
+	return( ret );
     }
 
-string PeContainer::getDeviceByNumber( unsigned long mj, unsigned long mi ) const
+    string PeContainer::getDeviceByNumber( unsigned long mj, unsigned long mi ) const
     {
-    string ret;
-    const Device* d = getStorage()->deviceByNumber(mj,mi);
-    if( d )
-        ret = d->device();
-    if( ret.empty() )
+	string ret;
+	const Device* d = getStorage()->deviceByNumber(mj,mi);
+	if( d )
+	    ret = d->device();
+	if( ret.empty() )
 	{
-	if( majorNr()>0 && mj==majorNr() && mi==minorNr())
-	    ret = device();
-	if( mj==Loop::loopMajor() )
-	    ret = Loop::loopDeviceName(mi);
+	    if( majorNr()>0 && mj==majorNr() && mi==minorNr())
+		ret = device();
+	    if( mj==Loop::loopMajor() )
+		ret = Loop::loopDeviceName(mi);
 	}
-    y2mil( "mj:" << mj << " mi:" << mi << " ret:" << ret );
-    return( ret );
+	y2mil( "mj:" << mj << " mi:" << mi << " ret:" << ret );
+	return( ret );
     }
 
-void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
+    void printDevList( std::ostream& s, const std::list<PeContainer::Pv>& l )
     {
-    s << "<";
-    for( std::list<PeContainer::Pv>::const_iterator i=l.begin(); 
-	 i!=l.end(); ++i )
+	s << "<";
+	for( std::list<PeContainer::Pv>::const_iterator i=l.begin();
+	     i!=l.end(); ++i )
 	{
-	if( i!=l.begin() )
-	    s << " ";
-	s << i->device;
+	    if( i!=l.begin() )
+		s << " ";
+	    s << i->device;
 	}
-    s << ">";
+	s << ">";
     }
 
-std::ostream& operator<< (std::ostream& s, const PeContainer& d )
+    std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     {
-    s << dynamic_cast<const Container&>(d);
-    s << " SizeK:" << d.sizeK()
-      << " PeSize:" << d.pe_size
-      << " NumPE:" << d.num_pe
-      << " FreePE:" << d.free_pe;
-    if( !d.pv.empty() )
+	s << dynamic_cast<const Container&>(d);
+	s << " SizeK:" << d.sizeK()
+	  << " PeSize:" << d.pe_size
+	  << " NumPE:" << d.num_pe
+	  << " FreePE:" << d.free_pe;
+	if( !d.pv.empty() )
 	{
-	s << " pv:";
-	printDevList( s, d.pv );
+	    s << " pv:";
+	    printDevList( s, d.pv );
 	}
-    if( !d.pv_add.empty() )
+	if( !d.pv_add.empty() )
 	{
-	s << " pv_add:";
-	printDevList( s, d.pv_add );
+	    s << " pv_add:";
+	    printDevList( s, d.pv_add );
 	}
-    if( !d.pv_remove.empty() )
+	if( !d.pv_remove.empty() )
 	{
-	s << " pv_remove:";
-	printDevList( s, d.pv_remove );
+	    s << " pv_remove:";
+	    printDevList( s, d.pv_remove );
 	}
-    return s;
+	return s;
     }
 
 
@@ -789,28 +789,28 @@ std::ostream& operator<< (std::ostream& s, const PeContainer& d )
     }
 
 
-bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
+    bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     {
-    bool ret = Container::equalContent(rhs) &&
-	       pe_size==rhs.pe_size && num_pe==rhs.num_pe &&
-	       free_pe==rhs.free_pe && pv==rhs.pv && pv_add==rhs.pv_add &&
-	       pv_remove==rhs.pv_remove;
-    if( ret )
+	bool ret = Container::equalContent(rhs) &&
+	    pe_size==rhs.pe_size && num_pe==rhs.num_pe &&
+	    free_pe==rhs.free_pe && pv==rhs.pv && pv_add==rhs.pv_add &&
+	    pv_remove==rhs.pv_remove;
+	if( ret )
 	{
-	ret = ret && storage::equalContent(pv.begin(), pv.end(),
-					   rhs.pv.begin(), rhs.pv.end());
-	ret = ret && storage::equalContent(pv_add.begin(), pv_add.end(),
-					   rhs.pv_add.begin(), rhs.pv_add.end());
-	ret = ret && storage::equalContent(pv_remove.begin(), pv_remove.end(),
-					   rhs.pv_remove.begin(), rhs.pv_remove.end());
+	    ret = ret && storage::equalContent(pv.begin(), pv.end(),
+					       rhs.pv.begin(), rhs.pv.end());
+	    ret = ret && storage::equalContent(pv_add.begin(), pv_add.end(),
+					       rhs.pv_add.begin(), rhs.pv_add.end());
+	    ret = ret && storage::equalContent(pv_remove.begin(), pv_remove.end(),
+					       rhs.pv_remove.begin(), rhs.pv_remove.end());
 	}
-    if( ret && comp_vol )
+	if( ret && comp_vol )
 	{
-	ConstDmPair pp = dmPair();
-	ConstDmPair pc = rhs.dmPair();
-	ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
-       	}
-    return( ret );
+	    ConstDmPair pp = dmPair();
+	    ConstDmPair pc = rhs.dmPair();
+	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
+	}
+	return( ret );
     }
 
 
@@ -841,20 +841,20 @@ bool PeContainer::equalContent( const PeContainer& rhs, bool comp_vol ) const
     {
 	list<string> ret;
 	for (list<Pv>::const_iterator it = pv.begin(); it != pv.end(); ++it)
-	      ret.push_back(it->device);
+	    ret.push_back(it->device);
 	for (list<Pv>::const_iterator it = pv_add.begin(); it != pv_add.end(); ++it)
-	      ret.push_back(it->device);
+	    ret.push_back(it->device);
 	for (list<Pv>::const_iterator it = pv_remove.begin(); it != pv_remove.end(); ++it)
-	      ret.remove(it->device);
+	    ret.remove(it->device);
 	return ret;
     }
 
-bool PeContainer::hasUnkownPv() const
+    bool PeContainer::hasUnkownPv() const
     {
-    bool ret = find( pv.begin(), pv.end(), UNKNOWN_PV_DEVICE )!=pv.end();
-    if( ret )
-        y2mil( "name:" << nm << " ret:" << ret );
-    return( ret );
+	bool ret = find( pv.begin(), pv.end(), UNKNOWN_PV_DEVICE )!=pv.end();
+	if( ret )
+	    y2mil( "name:" << nm << " ret:" << ret );
+	return( ret );
     }
 
 }

@@ -32,9 +32,9 @@ namespace storage
     class SystemInfo;
 
 
-class LoopCo : public Container
+    class LoopCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -65,9 +65,9 @@ class LoopCo : public Container
 	typedef CastIterator<VIter, Loop *> LoopInter;
 	typedef CastIterator<CVIter, const Loop *> LoopCInter;
 	template< class Pred >
-	    struct LoopPI { typedef ContainerIter<Pred, LoopInter> type; };
+	struct LoopPI { typedef ContainerIter<Pred, LoopInter> type; };
 	template< class Pred >
-	    struct LoopCPI { typedef ContainerIter<Pred, LoopCInter> type; };
+	struct LoopCPI { typedef ContainerIter<Pred, LoopCInter> type; };
 	typedef CheckFnc<const Loop> CheckFncLoop;
 	typedef CheckerIterator< CheckFncLoop, LoopPI<CheckFncLoop>::type,
 				 LoopInter, Loop > LoopPIterator;
@@ -79,34 +79,34 @@ class LoopCo : public Container
 	typedef IterPair<ConstLoopIter> ConstLoopPair;
 
 	LoopPair loopPair( bool (* Check)( const Loop& )=NULL)
-	    {
+	{
 	    return( LoopPair( loopBegin( Check ), loopEnd( Check ) ));
-	    }
+	}
 	LoopIter loopBegin( bool (* Check)( const Loop& )=NULL)
-	    {
+	{
 	    IterPair<LoopInter> p( (LoopInter(begin())), (LoopInter(end())) );
 	    return( LoopIter( LoopPIterator( p, Check )) );
-	    }
+	}
 	LoopIter loopEnd( bool (* Check)( const Loop& )=NULL)
-	    {
+	{
 	    IterPair<LoopInter> p( (LoopInter(begin())), (LoopInter(end())) );
 	    return( LoopIter( LoopPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstLoopPair loopPair( bool (* Check)( const Loop& )=NULL) const
-	    {
+	{
 	    return( ConstLoopPair( loopBegin( Check ), loopEnd( Check ) ));
-	    }
+	}
 	ConstLoopIter loopBegin( bool (* Check)( const Loop& )=NULL) const
-	    {
+	{
 	    IterPair<LoopCInter> p( (LoopCInter(begin())), (LoopCInter(end())) );
 	    return( ConstLoopIter( LoopCPIterator( p, Check )) );
-	    }
+	}
 	ConstLoopIter loopEnd( bool (* Check)( const Loop& )=NULL) const
-	    {
+	{
 	    IterPair<LoopCInter> p( (LoopCInter(begin())), (LoopCInter(end())) );
 	    return( ConstLoopIter( LoopCPIterator( p, Check, true )) );
-	    }
+	}
 
 	void getLoopData(SystemInfo& systeminfo);
 	bool findLoop( unsigned num, LoopIter& i );

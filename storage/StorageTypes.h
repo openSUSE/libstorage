@@ -43,64 +43,64 @@ namespace storage
     using std::vector;
 
 
-inline bool operator<(CType a, CType b)
-{
-    static const int order[] = {
-	0, // CUNKNOWN
-	1, // DISK
-	5, // MD
-	8, // LOOP
-	7, // LVM
-	6, // DM
-	2, // DMRAID
-	9, // NFSC
-	3, // DMMULTIPATH
-	4, // MDPART
-       10, // BTRFSC
-       11, // TMPFSC
-    };
+    inline bool operator<(CType a, CType b)
+    {
+	static const int order[] = {
+	     0, // CUNKNOWN
+	     1, // DISK
+	     5, // MD
+	     8, // LOOP
+	     7, // LVM
+	     6, // DM
+	     2, // DMRAID
+	     9, // NFSC
+	     3, // DMMULTIPATH
+	     4, // MDPART
+	    10, // BTRFSC
+	    11, // TMPFSC
+	};
 
-    if( a>=lengthof(order)||b>=lengthof(order) )
+	if( a>=lengthof(order)||b>=lengthof(order) )
         {
-        y2err( "CType outside array a:" << toString(a) << " " << a << " b:" << toString(b) << " " << b );
-        a = (CType)min(lengthof(order)-1,(unsigned)a);
-        b = (CType)min(lengthof(order)-1,(unsigned)b);
+	    y2err( "CType outside array a:" << toString(a) << " " << a << " b:" << toString(b) << " " << b );
+	    a = (CType)min(lengthof(order)-1,(unsigned)a);
+	    b = (CType)min(lengthof(order)-1,(unsigned)b);
         }
-    bool ret = order[a] < order[b];
-    y2deb("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
-	  order[b] << " ret:" << ret);
-    return ret;
-}
-
-inline bool operator<=( CType a, CType b )
-    {
-    return( a==b || a<b );
+	bool ret = order[a] < order[b];
+	y2deb("a:" << toString(a) << " o(a):" << order[a] << " b:" << toString(b) << " o(b):" <<
+	      order[b] << " ret:" << ret);
+	return ret;
     }
 
-inline bool operator>=( CType a, CType b )
+    inline bool operator<=( CType a, CType b )
     {
-    return( !(a<b) );
+	return( a==b || a<b );
     }
 
-inline bool operator>( CType a, CType b )
+    inline bool operator>=( CType a, CType b )
     {
-    return( a!=b && !(a<b) );
+	return( !(a<b) );
     }
 
-struct contOrder
+    inline bool operator>( CType a, CType b )
     {
-    contOrder(CType t) : order(0)
-	{
-	if( t==LOOP )
-	    order=1;
-	}
-    operator unsigned() const { return( order ); }
+	return( a!=b && !(a<b) );
+    }
+
+    struct contOrder
+    {
+	contOrder(CType t) : order(0)
+	    {
+		if( t==LOOP )
+		    order=1;
+	    }
+	operator unsigned() const { return( order ); }
     protected:
 	unsigned order;
     };
 
-std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
-std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
+    std::ostream& operator<<(std::ostream& s, const PartitionSlotInfo& a);
+    std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 
     enum CommitStage { DECREASE, INCREASE, FORMAT, SUBVOL, MOUNT };
 
@@ -209,7 +209,7 @@ std::ostream& operator<<(std::ostream& s, const FsCapabilities& a);
 	Subvolume(const string& path) : p(path), create(false), del(false) {}
 	Subvolume(const xmlNode* node) : p()
 	    {
-	    getChildValue(node, "path", p);
+		getChildValue(node, "path", p);
 	    }
 
 	bool operator==(const Subvolume& rhs) const

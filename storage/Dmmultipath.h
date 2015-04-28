@@ -28,10 +28,10 @@
 namespace storage
 {
 
-class DmmultipathCo;
-class Partition;
+    class DmmultipathCo;
+    class Partition;
 
-class Dmmultipath : public DmPart
+    class Dmmultipath : public DmPart
     {
     public:
 

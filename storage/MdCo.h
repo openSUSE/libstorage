@@ -31,9 +31,9 @@ namespace storage
 
     class EtcMdadm;
 
-class MdCo : public Container
+    class MdCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -76,9 +76,9 @@ class MdCo : public Container
 	typedef CastIterator<VIter, Md *> MdInter;
 	typedef CastIterator<CVIter, const Md *> MdCInter;
 	template< class Pred >
-	    struct MdPI { typedef ContainerIter<Pred, MdInter> type; };
+	struct MdPI { typedef ContainerIter<Pred, MdInter> type; };
 	template< class Pred >
-	    struct MdCPI { typedef ContainerIter<Pred, MdCInter> type; };
+	struct MdCPI { typedef ContainerIter<Pred, MdCInter> type; };
 	typedef CheckFnc<const Md> CheckFncMd;
 	typedef CheckerIterator< CheckFncMd, MdPI<CheckFncMd>::type,
 				 MdInter, Md > MdPIterator;
@@ -90,34 +90,34 @@ class MdCo : public Container
 	typedef IterPair<ConstMdIter> ConstMdPair;
 
 	MdPair mdPair( bool (* Check)( const Md& )=NULL)
-	    {
+	{
 	    return( MdPair( mdBegin( Check ), mdEnd( Check ) ));
-	    }
+	}
 	MdIter mdBegin( bool (* Check)( const Md& )=NULL)
-	    {
+	{
 	    IterPair<MdInter> p( (MdInter(begin())), (MdInter(end())) );
 	    return( MdIter( MdPIterator( p, Check )) );
-	    }
+	}
 	MdIter mdEnd( bool (* Check)( const Md& )=NULL)
-	    {
+	{
 	    IterPair<MdInter> p( (MdInter(begin())), (MdInter(end())) );
 	    return( MdIter( MdPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstMdPair mdPair( bool (* Check)( const Md& )=NULL) const
-	    {
+	{
 	    return( ConstMdPair( mdBegin( Check ), mdEnd( Check ) ));
-	    }
+	}
 	ConstMdIter mdBegin( bool (* Check)( const Md& )=NULL) const
-	    {
+	{
 	    IterPair<MdCInter> p( (MdCInter(begin())), (MdCInter(end())) );
 	    return( ConstMdIter( MdCPIterator( p, Check )) );
-	    }
+	}
 	ConstMdIter mdEnd( bool (* Check)( const Md& )=NULL) const
-	    {
+	{
 	    IterPair<MdCInter> p( (MdCInter(begin())), (MdCInter(end())) );
 	    return( ConstMdIter( MdCPIterator( p, Check, true )) );
-	    }
+	}
 
 	bool findMd( unsigned num, MdIter& i );
 	bool findMd( unsigned num ); 

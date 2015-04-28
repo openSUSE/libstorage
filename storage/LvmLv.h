@@ -29,9 +29,9 @@
 namespace storage
 {
 
-class LvmVg;
+    class LvmVg;
 
-class LvmLv : public Dm
+    class LvmLv : public Dm
     {
     public:
 

@@ -31,9 +31,9 @@ namespace storage
     class SystemInfo;
 
 
-class DmCo : public PeContainer
+    class DmCo : public PeContainer
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 

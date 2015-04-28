@@ -39,20 +39,20 @@ namespace storage
 		   Partition* pa)
 	: Dm(c, name, device, name), p(pa)
     {
-    Dm::init();
-    numeric = true;
-    num = nr;
-    getTableInfo();
-    if( pa )
-	setSize( pa->sizeK() );
-    y2mil("constructed DmPart " << dev << " on " << cont->device());
-}
+	Dm::init();
+	numeric = true;
+	num = nr;
+	getTableInfo();
+	if( pa )
+	    setSize( pa->sizeK() );
+	y2mil("constructed DmPart " << dev << " on " << cont->device());
+    }
 
     DmPart::DmPart(const DmPartCo& c, const string& name, const string& device, unsigned nr,
 		   Partition* pa, SystemInfo& si)
 	: DmPart(c, name, device, nr, pa)
     {
-    Dm::setUdevData(si);
+	Dm::setUdevData(si);
     }
 
 
@@ -69,38 +69,38 @@ namespace storage
     }
 
 
-const DmPartCo* DmPart::co() const
+    const DmPartCo* DmPart::co() const
     {
-    return(dynamic_cast<const storage::DmPartCo*>(cont));
+	return(dynamic_cast<const storage::DmPartCo*>(cont));
     }
 
-void DmPart::updateName()
+    void DmPart::updateName()
     {
-    if( p && p->nr() != num )
+	if( p && p->nr() != num )
 	{
-	num = p->nr();
-	setNameDevice(co()->getPartName(num), co()->getPartDevice(num));
+	    num = p->nr();
+	    setNameDevice(co()->getPartName(num), co()->getPartDevice(num));
 	}
     }
 
-void DmPart::updateMinor()
+    void DmPart::updateMinor()
     {
-    unsigned long old_mjr = mjr;
-    unsigned long old_mnr = mnr;
-    getMajorMinor();
-    if (mjr != old_mjr || mnr != old_mnr)
+	unsigned long old_mjr = mjr;
+	unsigned long old_mnr = mnr;
+	getMajorMinor();
+	if (mjr != old_mjr || mnr != old_mnr)
 	{
-	getTableInfo();
-	replaceAltName("/dev/dm-", "/dev/dm-" + decString(mnr));
+	    getTableInfo();
+	    replaceAltName("/dev/dm-", "/dev/dm-" + decString(mnr));
 	}
     }
 
-void DmPart::updateSize()
+    void DmPart::updateSize()
     {
-    if( p )
+	if( p )
 	{
-	orig_size_k = p->origSizeK();
-	size_k = p->sizeK();
+	    orig_size_k = p->origSizeK();
+	    size_k = p->sizeK();
 	}
     }
 
@@ -108,45 +108,45 @@ void DmPart::updateSize()
     void
     DmPart::updateSize(const ProcParts& parts)
     {
-    unsigned long long si = 0;
-    updateSize();
-    if (mjr > 0 && parts.getSize("/dev/dm-" + decString(mnr), si))
-	setSize( si );
+	unsigned long long si = 0;
+	updateSize();
+	if (mjr > 0 && parts.getSize("/dev/dm-" + decString(mnr), si))
+	    setSize( si );
     }
 
 
-void DmPart::addUdevData()
+    void DmPart::addUdevData()
     {
-    addAltUdevId( num );
+	addAltUdevId( num );
     }
 
 
-void
-DmPart::addAltUdevId(unsigned num)
+    void
+    DmPart::addAltUdevId(unsigned num)
     {
-    list<string> by_id;
-    list<string>::iterator e = alt_names.begin();
-    while( e!=alt_names.end() )
+	list<string> by_id;
+	list<string>::iterator e = alt_names.begin();
+	while( e!=alt_names.end() )
 	{
-	if( boost::contains(*e,"/by-id/") )
+	    if( boost::contains(*e,"/by-id/") )
 	    {
-	    by_id.push_back(*e);
-	    e=alt_names.erase(e);
+		by_id.push_back(*e);
+		e=alt_names.erase(e);
 	    }
-	else
-	    ++e;
+	    else
+		++e;
 	}
-    const list<string> tmp = co()->udevId();
-    for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	const list<string> tmp = co()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
 	{
-	string s = "/dev/disk/by-id/"+((num>0)?udevAppendPart(*i, num):*i);
-	e = find( by_id.begin(), by_id.end(), s );
-	if( e!=by_id.end() )
-	    by_id.erase(e);
-	alt_names.push_back(s);
+	    string s = "/dev/disk/by-id/"+((num>0)?udevAppendPart(*i, num):*i);
+	    e = find( by_id.begin(), by_id.end(), s );
+	    if( e!=by_id.end() )
+		by_id.erase(e);
+	    alt_names.push_back(s);
 	}
-    alt_names.splice(alt_names.end(),by_id);
-    mount_by = orig_mount_by = defaultMountBy();
+	alt_names.splice(alt_names.end(),by_id);
+	mount_by = orig_mount_by = defaultMountBy();
     }
 
 
@@ -161,39 +161,39 @@ DmPart::addAltUdevId(unsigned num)
     }
 
 
-void
-DmPart::getCommitActions(list<commitAction>& l) const
+    void
+    DmPart::getCommitActions(list<commitAction>& l) const
     {
-    unsigned s = l.size();
-    Dm::getCommitActions(l);
-    if( p )
+	unsigned s = l.size();
+	Dm::getCommitActions(l);
+	if( p )
 	{
-	if( s==l.size() && Partition::toChangeId( *p ) )
-	    l.push_back(commitAction(INCREASE, cont->type(),
-				     setTypeText(false), this, false));
+	    if( s==l.size() && Partition::toChangeId( *p ) )
+		l.push_back(commitAction(INCREASE, cont->type(),
+					 setTypeText(false), this, false));
 	}
     }
 
 
-Text DmPart::setTypeText( bool doing ) const
+    Text DmPart::setTypeText( bool doing ) const
     {
-    Text txt;
-    string d = dev;
-    if( doing )
+	Text txt;
+	string d = dev;
+	if( doing )
         {
-        // displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Setting type of partition %1$s to %2$X"),
-                      d.c_str(), id() );
+	    // displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+	    // %2$s is replaced by hexadecimal number (e.g. 8E)
+	    txt = sformat( _("Setting type of partition %1$s to %2$X"),
+			   d.c_str(), id() );
         }
-    else
+	else
         {
-        // displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Set type of partition %1$s to %2$X"),
-                      d.c_str(), id() );
+	    // displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+	    // %2$s is replaced by hexadecimal number (e.g. 8E)
+	    txt = sformat( _("Set type of partition %1$s to %2$X"),
+			   d.c_str(), id() );
         }
-    return( txt );
+	return( txt );
     }
 
 
@@ -206,27 +206,27 @@ Text DmPart::setTypeText( bool doing ) const
     }
 
 
-void DmPart::getInfo( DmPartInfo& info ) const
+    void DmPart::getInfo( DmPartInfo& info ) const
     {
-    Volume::getInfo(info.v);
-    if( p )
-	p->getInfo( info.p );
-    info.part = p!=NULL;
-    info.table = tname;
-    info.target = target;
+	Volume::getInfo(info.v);
+	if( p )
+	    p->getInfo( info.p );
+	info.part = p!=NULL;
+	info.table = tname;
+	info.target = target;
     }
 
 
-std::ostream& operator<< (std::ostream& s, const DmPart &p )
+    std::ostream& operator<< (std::ostream& s, const DmPart &p )
     {
-    s << dynamic_cast<const Dm&>(p);
-    return( s );
+	s << dynamic_cast<const Dm&>(p);
+	return( s );
     }
 
 
-bool DmPart::equalContent( const DmPart& rhs ) const
+    bool DmPart::equalContent( const DmPart& rhs ) const
     {
-    return( Dm::equalContent(rhs) );
+	return( Dm::equalContent(rhs) );
     }
 
 

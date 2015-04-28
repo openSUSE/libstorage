@@ -61,20 +61,20 @@ namespace storage
     }
 
 
-Text Nfs::removeText( bool doing ) const
+    Text Nfs::removeText( bool doing ) const
     {
-    Text txt;
-    if( doing )
+	Text txt;
+	if( doing )
 	{
-	// displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
-	txt = sformat( _("Removing NFS volume %1$s"), dev.c_str() );
+	    // displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
+	    txt = sformat( _("Removing NFS volume %1$s"), dev.c_str() );
 	}
-    else
+	else
 	{
-	// displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
-	txt = sformat( _("Remove NFS volume %1$s"), dev.c_str() );
+	    // displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
+	    txt = sformat( _("Remove NFS volume %1$s"), dev.c_str() );
 	}
-    return( txt );
+	return( txt );
     }
 
 
@@ -90,22 +90,22 @@ Text Nfs::removeText( bool doing ) const
     }
 
 
-void Nfs::getInfo( NfsInfo& info ) const
+    void Nfs::getInfo( NfsInfo& info ) const
     {
-    Volume::getInfo(info.v);
+	Volume::getInfo(info.v);
     }
 
 
-std::ostream& operator<< (std::ostream& s, const Nfs& l )
+    std::ostream& operator<< (std::ostream& s, const Nfs& l )
     {
-    s << "Nfs " << dynamic_cast<const Volume&>(l);
-    return( s );
+	s << "Nfs " << dynamic_cast<const Volume&>(l);
+	return( s );
     }
 
 
-bool Nfs::equalContent( const Nfs& rhs ) const
+    bool Nfs::equalContent( const Nfs& rhs ) const
     {
-    return( Volume::equalContent(rhs) );
+	return( Volume::equalContent(rhs) );
     }
 
 

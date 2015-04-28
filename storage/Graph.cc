@@ -574,17 +574,17 @@ namespace storage
 	out << endl;
 
 	for (list<Node>::const_iterator node = nodes.begin(); node != nodes.end(); ++node)
-	    out << "    " << (*node) << endl;
+	    out << "	" << (*node) << endl;
 
 	out << endl;
 
 	for (list<Rank>::const_iterator rank = ranks.begin(); rank != ranks.end(); ++rank)
-	    out << "    " << (*rank) << endl;
+	    out << "	" << (*rank) << endl;
 
 	out << endl;
 
 	for (list<Edge>::const_iterator edge = edges.begin(); edge != edges.end(); ++edge)
-	    out << "    " << (*edge) << endl;
+	    out << "	" << (*edge) << endl;
 
 	out << "}" << endl;
 

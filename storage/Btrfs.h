@@ -27,15 +27,15 @@
 
 namespace storage
 {
-class BtrfsCo;
-class SystemInfo;
+    class BtrfsCo;
+    class SystemInfo;
 
 
-class Btrfs : public Volume
+    class Btrfs : public Volume
     {
     public:
 
-	Btrfs( const BtrfsCo& d, const Volume& v, unsigned long long sz, 
+	Btrfs( const BtrfsCo& d, const Volume& v, unsigned long long sz,
 	       const list<string>& devices );
 	Btrfs( const BtrfsCo& d, const Volume& v );
 	Btrfs( const BtrfsCo& d, const xmlNode* node );
@@ -95,8 +95,8 @@ class Btrfs : public Volume
 	static bool needExtend( const Btrfs& v );
 
     protected:
-        BtrfsCo* co();
-	string subvolNames( bool added ) const; 
+	BtrfsCo* co();
+	string subvolNames( bool added ) const;
 	list<string> devices;
 	list<string> dev_add;
 	list<string> dev_rem;
@@ -112,7 +112,7 @@ class Btrfs : public Volume
     private:
 
 	Btrfs& operator=(const Btrfs& v); // disallow
-	Btrfs(const Btrfs&);	          // disallow
+	Btrfs(const Btrfs&);		  // disallow
 
     };
 

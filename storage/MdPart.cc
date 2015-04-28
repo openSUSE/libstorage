@@ -40,19 +40,19 @@ namespace storage
     MdPart::MdPart(const MdPartCo& c, const string& name, const string& device, unsigned nr,
 		   Partition* pa)
 	: Volume(c, name, device), p(pa)
-{
-    numeric = true;
-    num = nr;
+    {
+	numeric = true;
+	num = nr;
 
 	if (!getStorage()->testmode())
 	    getMajorMinor();
 
-    if( pa )
-      {
-        setSize( pa->sizeK() );
-      }
-    y2mil("constructed MdPart " << dev << " on " << cont->name());
-}
+	if( pa )
+	{
+	    setSize( pa->sizeK() );
+	}
+	y2mil("constructed MdPart " << dev << " on " << cont->name());
+    }
 
 
     MdPart::MdPart(const MdPartCo& c, const MdPart& v)
@@ -68,9 +68,9 @@ namespace storage
     }
 
 
-const MdPartCo* MdPart::co() const
+    const MdPartCo* MdPart::co() const
     {
-    return(dynamic_cast<const storage::MdPartCo*>(cont));
+	return(dynamic_cast<const storage::MdPartCo*>(cont));
     }
 
 
@@ -81,46 +81,46 @@ const MdPartCo* MdPart::co() const
     }
 
 
-void MdPart::updateName()
+    void MdPart::updateName()
     {
-    if( p && p->nr() != num )
-        {
-        num = p->nr();
-        setNameDevice(co()->getPartName(num), co()->getPartDevice(num));
-        }
+	if( p && p->nr() != num )
+	{
+	    num = p->nr();
+	    setNameDevice(co()->getPartName(num), co()->getPartDevice(num));
+	}
     }
 
-void MdPart::updateMinor()
+    void MdPart::updateMinor()
     {
-    getMajorMinor();
+	getMajorMinor();
     }
 
-void MdPart::updateSize()
+    void MdPart::updateSize()
     {
-    if( p )
-        {
-        orig_size_k = p->origSizeK();
-        size_k = p->sizeK();
-        }
+	if( p )
+	{
+	    orig_size_k = p->origSizeK();
+	    size_k = p->sizeK();
+	}
     }
 
-void MdPart::updateSize( const ProcParts& pp )
+    void MdPart::updateSize( const ProcParts& pp )
     {
-    updateSize();
-    //In case of extended partition /proc/partition contains size 1.
-    if( p && p->type() != storage::EXTENDED )
-      {
-	unsigned long long si = 0;
-	if( mjr>0 && pp.getSize(procName(), si))
-        {
-          setSize( si );
-        }
-      }
+	updateSize();
+	//In case of extended partition /proc/partition contains size 1.
+	if( p && p->type() != storage::EXTENDED )
+	{
+	    unsigned long long si = 0;
+	    if( mjr>0 && pp.getSize(procName(), si))
+	    {
+		setSize( si );
+	    }
+	}
     }
 
-void MdPart::addUdevData()
+    void MdPart::addUdevData()
     {
-    addAltUdevId( num );
+	addAltUdevId( num );
     }
 
 
@@ -137,50 +137,50 @@ void MdPart::addUdevData()
     }
 
 
-list<string>
-MdPart::udevId() const
-{
-    list<string> ret;
-    const list<string> tmp = co()->udevId();
-    for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
-	ret.push_back(udevAppendPart(*i, num));
-    return ret;
-}
-
-
-void
-MdPart::getCommitActions(list<commitAction>& l) const
+    list<string>
+    MdPart::udevId() const
     {
-    unsigned s = l.size();
-    Volume::getCommitActions(l);
-    if( p )
-        {
-        if( s==l.size() && Partition::toChangeId( *p ) )
-            l.push_back(commitAction(INCREASE, cont->type(),
-				     setTypeText(false), this, false));
-        }
+	list<string> ret;
+	const list<string> tmp = co()->udevId();
+	for (list<string>::const_iterator i = tmp.begin(); i != tmp.end(); ++i)
+	    ret.push_back(udevAppendPart(*i, num));
+	return ret;
     }
 
 
-Text
-MdPart::setTypeText(bool doing) const
+    void
+    MdPart::getCommitActions(list<commitAction>& l) const
     {
-    Text txt;
-    if( doing )
-        {
-        // displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Setting type of partition %1$s to %2$X"),
-                      dev.c_str(), id() );
-        }
-    else
-        {
-        // displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
-        // %2$s is replaced by hexadecimal number (e.g. 8E)
-        txt = sformat( _("Set type of partition %1$s to %2$X"),
-                      dev.c_str(), id() );
-        }
-    return txt;
+	unsigned s = l.size();
+	Volume::getCommitActions(l);
+	if( p )
+	{
+	    if( s==l.size() && Partition::toChangeId( *p ) )
+		l.push_back(commitAction(INCREASE, cont->type(),
+					 setTypeText(false), this, false));
+	}
+    }
+
+
+    Text
+    MdPart::setTypeText(bool doing) const
+    {
+	Text txt;
+	if( doing )
+	{
+	    // displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+	    // %2$s is replaced by hexadecimal number (e.g. 8E)
+	    txt = sformat( _("Setting type of partition %1$s to %2$X"),
+			   dev.c_str(), id() );
+	}
+	else
+	{
+	    // displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+	    // %2$s is replaced by hexadecimal number (e.g. 8E)
+	    txt = sformat( _("Set type of partition %1$s to %2$X"),
+			   dev.c_str(), id() );
+	}
+	return txt;
     }
 
 
@@ -193,25 +193,25 @@ MdPart::setTypeText(bool doing) const
     }
 
 
-void MdPart::getInfo( MdPartInfo& info ) const
+    void MdPart::getInfo( MdPartInfo& info ) const
     {
-    Volume::getInfo(info.v);
-    if( p )
-        p->getInfo( info.p );
-    info.part = p!=NULL;
+	Volume::getInfo(info.v);
+	if( p )
+	    p->getInfo( info.p );
+	info.part = p!=NULL;
     }
 
 
-std::ostream& operator<< (std::ostream& s, const MdPart &p )
+    std::ostream& operator<< (std::ostream& s, const MdPart &p )
     {
-    s << "MdPart ";
-    s << dynamic_cast<const Volume&>(p);
-    return( s );
+	s << "MdPart ";
+	s << dynamic_cast<const Volume&>(p);
+	return( s );
     }
 
-bool MdPart::equalContent( const MdPart& rhs ) const
+    bool MdPart::equalContent( const MdPart& rhs ) const
     {
-    return Volume::equalContent(rhs);
+	return Volume::equalContent(rhs);
     }
 
 

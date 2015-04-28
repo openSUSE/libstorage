@@ -27,9 +27,9 @@
 
 namespace storage
 {
-class NfsCo;
+    class NfsCo;
 
-class Nfs : public Volume
+    class Nfs : public Volume
     {
     public:
 

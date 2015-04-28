@@ -137,192 +137,192 @@ namespace storage
     }
 
 
-void
-Container::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
+    void
+    Container::getToCommit(CommitStage stage, list<const Container*>& col, list<const Volume*>& vol) const
     {
-    unsigned long oco = col.size();
-    unsigned long ovo = vol.size();
-    switch( stage )
+	unsigned long oco = col.size();
+	unsigned long ovo = vol.size();
+	switch( stage )
 	{
-	case DECREASE:
-	    {
-	    ConstVolPair p = volPair( stageDecrease );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
-	    if( deleted() )
-		col.push_back( this );
-	    }
-	    break;
-	case INCREASE:
-	    {
-	    ConstVolPair p = volPair(stageIncrease);
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
-	    if( created() )
-		col.push_back( this );
-	    }
-	    break;
-	case FORMAT:
-	    {
-	    ConstVolPair p = volPair( stageFormat );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
-	    }
-	    break;
-	case MOUNT:
-	    {
-	    ConstVolPair p = volPair( stageMount );
-	    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-		vol.push_back( &(*i) );
-	    }
-	    break;
-	case SUBVOL:
-	    break;
-	}
-    if( col.size()!=oco || vol.size()!=ovo )
-	y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
-}
-
-
-int Container::commitChanges( CommitStage stage, Volume* vol )
-    {
-    y2mil("name:" << name() << " stage:" << stage << " vol:" << vol->name());
-    y2mil("vol:" << *vol);
-    int ret = 0;
-    switch( stage )
-	{
-	case DECREASE:
-	    if( vol->deleted() )
-	    {
-		if (vol->getEncryption() != ENC_NONE)
-		    vol->doFstabUpdate();
-		ret = doRemove( vol );
-	    }
-	    else if( vol->needShrink() )
-		ret = doResize( vol );
-	    break;
-
-	case INCREASE:
-	    if( vol->created() )
-		ret = doCreate( vol );
-	    else if( vol->needExtend() )
-		ret = doResize( vol );
-	    if (vol->needCrsetup(false))
-		ret = vol->doCrsetup(!vol->isUsedBy(UB_LVM)&&!vol->getFormat());
-	    break;
-
-	case FORMAT:
-	    if (vol->needCrsetup(true))
-		ret = vol->doCrsetup(false);
-	    if( ret==0 && vol->getFormat() )
-		ret = vol->doFormat();
-	    if( ret==0 && vol->needLabel() )
-		ret = vol->doSetLabel();
-	    break;
-
-	case MOUNT:
-	    if( vol->needRemount() )
+	    case DECREASE:
 		{
+		    ConstVolPair p = volPair( stageDecrease );
+		    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+			vol.push_back( &(*i) );
+		    if( deleted() )
+			col.push_back( this );
+		}
+		break;
+	    case INCREASE:
+		{
+		    ConstVolPair p = volPair(stageIncrease);
+		    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+			vol.push_back( &(*i) );
+		    if( created() )
+			col.push_back( this );
+		}
+		break;
+	    case FORMAT:
+		{
+		    ConstVolPair p = volPair( stageFormat );
+		    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+			vol.push_back( &(*i) );
+		}
+		break;
+	    case MOUNT:
+		{
+		    ConstVolPair p = volPair( stageMount );
+		    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+			vol.push_back( &(*i) );
+		}
+		break;
+	    case SUBVOL:
+		break;
+	}
+	if( col.size()!=oco || vol.size()!=ovo )
+	    y2mil("stage:" << stage << " col:" << col.size() << " vol:" << vol.size());
+    }
+
+
+    int Container::commitChanges( CommitStage stage, Volume* vol )
+    {
+	y2mil("name:" << name() << " stage:" << stage << " vol:" << vol->name());
+	y2mil("vol:" << *vol);
+	int ret = 0;
+	switch( stage )
+	{
+	    case DECREASE:
+		if( vol->deleted() )
+		{
+		    if (vol->getEncryption() != ENC_NONE)
+			vol->doFstabUpdate();
+		    ret = doRemove( vol );
+		}
+		else if( vol->needShrink() )
+		    ret = doResize( vol );
+		break;
+
+	    case INCREASE:
+		if( vol->created() )
+		    ret = doCreate( vol );
+		else if( vol->needExtend() )
+		    ret = doResize( vol );
+		if (vol->needCrsetup(false))
+		    ret = vol->doCrsetup(!vol->isUsedBy(UB_LVM)&&!vol->getFormat());
+		break;
+
+	    case FORMAT:
 		if (vol->needCrsetup(true))
-		    vol->doCrsetup(true);
-		ret = vol->doMount();
-		}
-	    if( ret==0 && vol->needFstabUpdate() )
+		    ret = vol->doCrsetup(false);
+		if( ret==0 && vol->getFormat() )
+		    ret = vol->doFormat();
+		if( ret==0 && vol->needLabel() )
+		    ret = vol->doSetLabel();
+		break;
+
+	    case MOUNT:
+		if( vol->needRemount() )
 		{
-		ret = vol->doFstabUpdate();
-		if( ret==0 )
-		    vol->fstabUpdateDone();
+		    if (vol->needCrsetup(true))
+			vol->doCrsetup(true);
+		    ret = vol->doMount();
 		}
-	    break;
-	case SUBVOL:
-	    break;
+		if( ret==0 && vol->needFstabUpdate() )
+		{
+		    ret = vol->doFstabUpdate();
+		    if( ret==0 )
+			vol->fstabUpdateDone();
+		}
+		break;
+	    case SUBVOL:
+		break;
 
-	default:
-	    ret = VOLUME_COMMIT_UNKNOWN_STAGE;
+	    default:
+		ret = VOLUME_COMMIT_UNKNOWN_STAGE;
 	}
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
-int Container::commitChanges( CommitStage stage )
+    int Container::commitChanges( CommitStage stage )
     {
-    y2mil("name " << name() << " stage " << stage);
-    int ret = CONTAINER_INVALID_VIRTUAL_CALL;
-    y2mil("ret:" << ret);
-    return( ret );
+	y2mil("name " << name() << " stage " << stage);
+	int ret = CONTAINER_INVALID_VIRTUAL_CALL;
+	y2mil("ret:" << ret);
+	return( ret );
     }
 
 
-void
-Container::getCommitActions(list<commitAction>& l) const
+    void
+    Container::getCommitActions(list<commitAction>& l) const
     {
-    ConstVolPair p = volPair();
-    for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
-	if( !i->isSilent() )
-	    i->getCommitActions( l );
+	ConstVolPair p = volPair();
+	for( ConstVolIterator i=p.begin(); i!=p.end(); ++i )
+	    if( !i->isSilent() )
+		i->getCommitActions( l );
     }
 
 
-Text Container::createText( bool doing ) const
+    Text Container::createText( bool doing ) const
     {
-    Text txt;
-    if( doing )
+	Text txt;
+	if( doing )
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	txt = sformat( _("Creating %1$s"), dev.c_str() );
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Creating %1$s"), dev.c_str() );
 	}
-    else
+	else
 	{
-	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	txt = sformat( _("Create %1$s"), dev.c_str() );
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Create %1$s"), dev.c_str() );
 	}
-    return( txt );
+	return( txt );
     }
 
-Text Container::removeText( bool doing ) const
+    Text Container::removeText( bool doing ) const
     {
-    Text txt;
-    if( doing )
+	Text txt;
+	if( doing )
 	{
-	// displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-	txt = sformat( _("Removing %1$s"), dev.c_str() );
+	    // displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Removing %1$s"), dev.c_str() );
 	}
-    else
+	else
 	{
-	// displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-	txt = sformat( _("Remove %1$s"), dev.c_str() );
+	    // displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+	    txt = sformat( _("Remove %1$s"), dev.c_str() );
 	}
-    return( txt );
+	return( txt );
     }
 
-int Container::doCreate( Volume * v )
-{
-    y2war("invalid container:" << toString(typ) << " name:" << name());
-    return( CONTAINER_INVALID_VIRTUAL_CALL );
-}
+    int Container::doCreate( Volume * v )
+    {
+	y2war("invalid container:" << toString(typ) << " name:" << name());
+	return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
 
-int Container::doRemove( Volume * v )
-{
-    y2war("invalid container:" << toString(typ) << " name:" << name());
-    return( CONTAINER_INVALID_VIRTUAL_CALL );
-}
+    int Container::doRemove( Volume * v )
+    {
+	y2war("invalid container:" << toString(typ) << " name:" << name());
+	return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
 
-int Container::doResize( Volume * v )
-{
-    y2war("invalid container:" << toString(typ) << " name:" << name());
-    return( CONTAINER_INVALID_VIRTUAL_CALL );
-}
+    int Container::doResize( Volume * v )
+    {
+	y2war("invalid container:" << toString(typ) << " name:" << name());
+	return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
 
-int Container::removeVolume( Volume * v )
-{
-    y2war("invalid container:" << toString(typ) << " name:" << name());
-    return( CONTAINER_INVALID_VIRTUAL_CALL );
-}
+    int Container::removeVolume( Volume * v )
+    {
+	y2war("invalid container:" << toString(typ) << " name:" << name());
+	return( CONTAINER_INVALID_VIRTUAL_CALL );
+    }
 
-int Container::resizeVolume( Volume * v, unsigned long long )
-{
-    return( VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER );
-}
+    int Container::resizeVolume( Volume * v, unsigned long long )
+    {
+	return( VOLUME_RESIZE_UNSUPPORTED_BY_CONTAINER );
+    }
 
 
     void
@@ -332,73 +332,73 @@ int Container::resizeVolume( Volume * v, unsigned long long )
     }
 
 
-bool Container::removeFromList( Volume* e )
+    bool Container::removeFromList( Volume* e )
     {
-    bool ret=false;
-    PlainIterator i = vols.begin();
-    while( i!=vols.end() && *i!=e )
-	++i;
-    if( i!=vols.end() )
+	bool ret=false;
+	PlainIterator i = vols.begin();
+	while( i!=vols.end() && *i!=e )
+	    ++i;
+	if( i!=vols.end() )
 	{
-	delete *i;
-	vols.erase( i );
-	ret = true;
+	    delete *i;
+	    vols.erase( i );
+	    ret = true;
 	}
-    y2mil("P:" << e << " ret:" << ret);
-    return( ret );
+	y2mil("P:" << e << " ret:" << ret);
+	return( ret );
     }
 
-void Container::setExtError( const string& txt ) const
+    void Container::setExtError( const string& txt ) const
     {
-    if( sto )
-	sto->setExtError(txt);
+	if( sto )
+	    sto->setExtError(txt);
     }
 
-void Container::setExtError( const SystemCmd& cmd, bool serr ) const
+    void Container::setExtError( const SystemCmd& cmd, bool serr ) const
     {
-    string s = boost::join(serr ? cmd.stderr() : cmd.stdout(), "\n");
-    if (!s.empty())
-	sto->setExtError( cmd.cmd() + ":\n" + s );
-    else
-	y2war("called with empty " << (serr?"stderr":"stdout") << " cmd:" << cmd.cmd());
+	string s = boost::join(serr ? cmd.stderr() : cmd.stdout(), "\n");
+	if (!s.empty())
+	    sto->setExtError( cmd.cmd() + ":\n" + s );
+	else
+	    y2war("called with empty " << (serr?"stderr":"stdout") << " cmd:" << cmd.cmd());
     }
 
-bool Container::findVolume( const string& device, Volume*& vol )
+    bool Container::findVolume( const string& device, Volume*& vol )
     {
-    string d = normalizeDevice( device );
-    VolPair p = volPair( Volume::notDeleted );
-    VolIterator v = p.begin();
-    const list<string>& al( v->altNames() );
-    while( v!=p.end() && v->device()!=d &&
-           find( al.begin(), al.end(), d )==al.end() )
+	string d = normalizeDevice( device );
+	VolPair p = volPair( Volume::notDeleted );
+	VolIterator v = p.begin();
+	const list<string>& al( v->altNames() );
+	while( v!=p.end() && v->device()!=d &&
+	       find( al.begin(), al.end(), d )==al.end() )
 	{
-	++v;
-        }
-    if( v!=p.end() )
-	vol = &(*v);
-    return( v!=p.end() );
+	    ++v;
+	}
+	if( v!=p.end() )
+	    vol = &(*v);
+	return( v!=p.end() );
     }
 
 
-void Container::getInfo(storage::ContainerInfo& info) const
-{
-    Device::getInfo(info);
-
-    info.type = type();
-
-    info.readonly = readonly();
-}
-
-
-std::ostream& operator<< ( std::ostream& s, const Container &c )
+    void Container::getInfo(storage::ContainerInfo& info) const
     {
-    s << "CType:" << toString(c.typ)
-      << " " << dynamic_cast<const Device&>(c);
-    if( c.ronly )
-      s << " readonly";
-    if (!c.uby.empty())
-	s << " usedby:" << c.uby;
-    return s;
+	Device::getInfo(info);
+
+	info.type = type();
+
+	info.readonly = readonly();
+    }
+
+
+    std::ostream& operator<< ( std::ostream& s, const Container &c )
+    {
+	s << "CType:" << toString(c.typ)
+	  << " " << dynamic_cast<const Device&>(c);
+	if( c.ronly )
+	    s << " readonly";
+	if (!c.uby.empty())
+	    s << " usedby:" << c.uby;
+	return s;
     }
 
 

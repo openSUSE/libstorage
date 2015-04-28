@@ -32,9 +32,9 @@ namespace storage
     class SystemInfo;
 
 
-class TmpfsCo : public Container
+    class TmpfsCo : public Container
     {
-    friend class Storage;
+	friend class Storage;
 
     public:
 
@@ -66,9 +66,9 @@ class TmpfsCo : public Container
 	typedef CastIterator<VIter, Tmpfs *> TmpfsInter;
 	typedef CastIterator<CVIter, const Tmpfs *> TmpfsCInter;
 	template< class Pred >
-	    struct TmpfsPI { typedef ContainerIter<Pred, TmpfsInter> type; };
+	struct TmpfsPI { typedef ContainerIter<Pred, TmpfsInter> type; };
 	template< class Pred >
-	    struct TmpfsCPI { typedef ContainerIter<Pred, TmpfsCInter> type; };
+	struct TmpfsCPI { typedef ContainerIter<Pred, TmpfsCInter> type; };
 	typedef CheckFnc<const Tmpfs> CheckFncTmpfs;
 	typedef CheckerIterator< CheckFncTmpfs, TmpfsPI<CheckFncTmpfs>::type,
 				 TmpfsInter, Tmpfs > TmpfsPIterator;
@@ -80,34 +80,34 @@ class TmpfsCo : public Container
 	typedef IterPair<ConstTmpfsIter> ConstTmpfsPair;
 
 	TmpfsPair tmpfsPair( bool (* Check)( const Tmpfs& )=NULL)
-	    {
+	{
 	    return( TmpfsPair( tmpfsBegin( Check ), tmpfsEnd( Check ) ));
-	    }
+	}
 	TmpfsIter tmpfsBegin( bool (* Check)( const Tmpfs& )=NULL)
-	    {
+	{
 	    IterPair<TmpfsInter> p( (TmpfsInter(begin())), (TmpfsInter(end())) );
 	    return( TmpfsIter( TmpfsPIterator( p, Check )) );
-	    }
+	}
 	TmpfsIter tmpfsEnd( bool (* Check)( const Tmpfs& )=NULL)
-	    {
+	{
 	    IterPair<TmpfsInter> p( (TmpfsInter(begin())), (TmpfsInter(end())) );
 	    return( TmpfsIter( TmpfsPIterator( p, Check, true )) );
-	    }
+	}
 
 	ConstTmpfsPair tmpfsPair( bool (* Check)( const Tmpfs& )=NULL) const
-	    {
+	{
 	    return( ConstTmpfsPair( tmpfsBegin( Check ), tmpfsEnd( Check ) ));
-	    }
+	}
 	ConstTmpfsIter tmpfsBegin( bool (* Check)( const Tmpfs& )=NULL) const
-	    {
+	{
 	    IterPair<TmpfsCInter> p( (TmpfsCInter(begin())), (TmpfsCInter(end())) );
 	    return( ConstTmpfsIter( TmpfsCPIterator( p, Check )) );
-	    }
+	}
 	ConstTmpfsIter tmpfsEnd( bool (* Check)( const Tmpfs& )=NULL) const
-	    {
+	{
 	    IterPair<TmpfsCInter> p( (TmpfsCInter(begin())), (TmpfsCInter(end())) );
 	    return( ConstTmpfsIter( TmpfsCPIterator( p, Check, true )) );
-	    }
+	}
 
 	void getTmpfsData(const EtcFstab& fstab, SystemInfo& systeminfo);
 	bool findTmpfs( const string& mp, TmpfsIter& i );

@@ -86,83 +86,83 @@ namespace storage
     }
 
 
-void
-DmmultipathCo::setUdevData(const list<string>& id)
-{
-    y2mil("disk:" << nm << " id:" << id);
-    udev_id = id;
-    partition(udev_id.begin(), udev_id.end(), string_starts_with("wwn-"));
-    stable_partition(udev_id.begin(), udev_id.end(), string_starts_with("scsi-"));
-    y2mil("id:" << udev_id);
+    void
+    DmmultipathCo::setUdevData(const list<string>& id)
+    {
+	y2mil("disk:" << nm << " id:" << id);
+	udev_id = id;
+	partition(udev_id.begin(), udev_id.end(), string_starts_with("wwn-"));
+	stable_partition(udev_id.begin(), udev_id.end(), string_starts_with("scsi-"));
+	y2mil("id:" << udev_id);
 
-    DmPartCo::setUdevData(udev_id);
+	DmPartCo::setUdevData(udev_id);
 
-    DmmultipathPair pp = dmmultipathPair();
-    for( DmmultipathIter p=pp.begin(); p!=pp.end(); ++p )
+	DmmultipathPair pp = dmmultipathPair();
+	for( DmmultipathIter p=pp.begin(); p!=pp.end(); ++p )
 	{
-	p->addUdevData();
+	    p->addUdevData();
 	}
-}
-
-
-void
-DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
-    {
-    y2mil( "num:" << num );
-    dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
-void
-DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+
+    void
+    DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p )
     {
-    y2mil( "num:" << num );
-    dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p, si );
+	y2mil( "num:" << num );
+	dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p );
     }
 
-void
+    void
+    DmmultipathCo::newP( DmPart*& dm, unsigned num, Partition* p, SystemInfo& si )
+    {
+	y2mil( "num:" << num );
+	dm = new Dmmultipath( *this, getPartName(num), getPartDevice(num), num, p, si );
+    }
+
+    void
     DmmultipathCo::addPv(const Pv& p)
-{
+    {
 	PeContainer::addPv(p);
-    if (!deleted())
+	if (!deleted())
 	    getStorage()->setUsedBy(p.device, UB_DMMULTIPATH, device());
-}
+    }
 
 
-void
-DmmultipathCo::activate(bool val)
-{
+    void
+    DmmultipathCo::activate(bool val)
+    {
 	if (getenv("LIBSTORAGE_NO_DMMULTIPATH") != NULL)
 	    return;
 
-    y2mil("old active:" << active << " val:" << val);
+	y2mil("old active:" << active << " val:" << val);
 
-    if (active != val)
-    {
-	bool lvm_active = LvmVg::isActive();
-	LvmVg::activate(false);
-
-	SystemCmd c;
-	if (val)
+	if (active != val)
 	{
-	    Dm::activate(true);
+	    bool lvm_active = LvmVg::isActive();
+	    LvmVg::activate(false);
 
-	    c.execute(MODPROBEBIN " dm-multipath");
-	    c.execute(MULTIPATHBIN);
-	    sleep(1);
-	    c.execute(MULTIPATHDBIN);
+	    SystemCmd c;
+	    if (val)
+	    {
+		Dm::activate(true);
+
+		c.execute(MODPROBEBIN " dm-multipath");
+		c.execute(MULTIPATHBIN);
+		sleep(1);
+		c.execute(MULTIPATHDBIN);
+	    }
+	    else
+	    {
+		c.execute(MULTIPATHDBIN " -F");
+		sleep(1);
+		c.execute(MULTIPATHBIN " -F");
+	    }
+
+	    LvmVg::activate(lvm_active);
+
+	    active = val;
 	}
-	else
-	{
-	    c.execute(MULTIPATHDBIN " -F");
-	    sleep(1);
-	    c.execute(MULTIPATHBIN " -F");
-	}
-
-	LvmVg::activate(lvm_active);
-
-	active = val;
     }
-}
 
 
     list<string>
@@ -172,13 +172,13 @@ DmmultipathCo::activate(bool val)
 
 	list<string> entries = systeminfo.getCmdMultipath().getEntries();
 	for (list<string>::const_iterator it = entries.begin(); it != entries.end(); ++it)
-        {
+	{
 	    CmdDmsetupInfo::Entry entry;
 	    if (systeminfo.getCmdDmsetupInfo().getEntry(*it, entry) && entry.segments > 0)
 		l.push_back(*it);
 	    else
 		y2mil("ignoring inactive dmmultipath " << *it);
-        }
+	}
 
 	if (!l.empty())
 	    active = true;
@@ -188,21 +188,21 @@ DmmultipathCo::activate(bool val)
     }
 
 
-void DmmultipathCo::getInfo( DmmultipathCoInfo& info ) const
+    void DmmultipathCo::getInfo( DmmultipathCoInfo& info ) const
     {
-    DmPartCo::getInfo( info.p );
-    info.vendor = vendor;
-    info.model = model;
+	DmPartCo::getInfo( info.p );
+	info.vendor = vendor;
+	info.model = model;
     }
 
 
-std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
-{
-    s << dynamic_cast<const DmPartCo&>(d);
-    s << " Vendor:" << d.vendor
-      << " Model:" << d.model;
-    return s;
-}
+    std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
+    {
+	s << dynamic_cast<const DmPartCo&>(d);
+	s << " Vendor:" << d.vendor
+	  << " Model:" << d.model;
+	return s;
+    }
 
 
     void
@@ -229,19 +229,19 @@ std::ostream& operator<<(std::ostream& s, const DmmultipathCo& d)
     }
 
 
-bool DmmultipathCo::equalContent( const Container& rhs ) const
-{
-    bool ret = Container::equalContent(rhs);
-    if (ret)
+    bool DmmultipathCo::equalContent( const Container& rhs ) const
     {
-	const DmmultipathCo *p = dynamic_cast<const DmmultipathCo*>(&rhs);
-	ret = p && DmPartCo::equalContent(*p) &&
-	    vendor == p->vendor && model == p->model;
+	bool ret = Container::equalContent(rhs);
+	if (ret)
+	{
+	    const DmmultipathCo *p = dynamic_cast<const DmmultipathCo*>(&rhs);
+	    ret = p && DmPartCo::equalContent(*p) &&
+		vendor == p->vendor && model == p->model;
+	}
+	return ret;
     }
-    return ret;
-}
 
 
-bool DmmultipathCo::active = false;
+    bool DmmultipathCo::active = false;
 
 }

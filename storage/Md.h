@@ -32,7 +32,7 @@ namespace storage
     class EtcMdadm;
 
 
-class Md : public Volume
+    class Md : public Volume
     {
 	friend class MdPartCo;
 
