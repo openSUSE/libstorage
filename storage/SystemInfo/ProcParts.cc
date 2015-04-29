@@ -79,7 +79,7 @@ namespace storage
     bool
     ProcParts::findDevice(const string& device) const
     {
-    return( findEntry(device)!=data.end() );
+	return( findEntry(device)!=data.end() );
     }
 
 

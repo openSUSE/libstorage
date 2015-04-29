@@ -43,15 +43,15 @@ namespace storage
 	bool doIntersect( const Region& r ) const
 	    { return( r.start() <= end() && r.end() >= start() ); }
 	Region intersect( const Region& r ) const
-	    {
+	{
 	    if (doIntersect(r))
-		{
+	    {
 		unsigned long long s = std::max(r.start(), start());
 		unsigned long long e = std::min(r.end(), end());
 		return Region(s, e - s + 1);
-		}
-	    return Region(0, 0);
 	    }
+	    return Region(0, 0);
+	}
 	bool inside( const Region& r ) const
 	    { return( start()>=r.start() && end() <= r.end() ); }
 	bool operator==(const Region& r) const

@@ -75,24 +75,24 @@ main (int argc, char** argv)
 	    } break;
 
 	    case MD:
-	    {
-		cout << "found special container (md) " << i1->name << '\n';
-
-		deque<MdInfo> mds;
-		if (s->getMdInfo(mds) != 0)
 		{
-		    cerr << "getMdInfo failed\n";
-		    exit (EXIT_FAILURE);
-		}
+		    cout << "found special container (md) " << i1->name << '\n';
 
-		for (deque<MdInfo>::const_iterator i2 = mds.begin();
-		     i2 != mds.end(); ++i2)
-		{
-		    cout << "  " << i2->v.name;
-		    cout << '\n';
-		}
+		    deque<MdInfo> mds;
+		    if (s->getMdInfo(mds) != 0)
+		    {
+			cerr << "getMdInfo failed\n";
+			exit (EXIT_FAILURE);
+		    }
 
-	    } break;
+		    for (deque<MdInfo>::const_iterator i2 = mds.begin();
+			 i2 != mds.end(); ++i2)
+		    {
+			cout << "  " << i2->v.name;
+			cout << '\n';
+		    }
+
+		} break;
 
 	    case LVM: {
 
