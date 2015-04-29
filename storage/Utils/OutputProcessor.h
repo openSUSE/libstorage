@@ -46,7 +46,7 @@ namespace storage
     public:
 	ProgressBar(const string& id, CallbackProgressBar callback)
 	    : id(id), callback(callback), first(true), max(100), cur(0)
-	{}
+	    {}
 
 	virtual ~ProgressBar() {}
 

@@ -51,7 +51,7 @@ main()
     setup_logger();
 
     setup_system("thalassa");
-    
+
     list<string> devs;
 
     /*
@@ -89,7 +89,7 @@ main()
     createMD(RAID5, devs); // works now
     createMD(RAID6, devs); // fails, too few devices
 
-    /* 
+    /*
      * Everything works now
      */
     devs.push_back("/dev/sdc5");
