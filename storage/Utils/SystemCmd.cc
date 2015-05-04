@@ -245,7 +245,8 @@ namespace storage
 		    closeOpenFds();
 		    Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
 				   Cmd.c_str(), NULL );
-		    y2err("SHOULD NOT HAPPEN \"" << Shell_Ci << "\" Ret:" << Ret_i);
+		    y2err("SHOULD NOT HAPPEN \"" << Shell_Ci << "\" Ret:" << Ret_i << " errno: " << errno );
+		    exit(127); // same as "command not found" in the shell
 		    break;
 		case -1:
 		    Ret_i = -1;
