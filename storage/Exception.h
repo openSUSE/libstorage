@@ -29,6 +29,7 @@
 
 #include <stdexcept>
 #include <string>
+#include <ostream>
 
 namespace storage
 {
@@ -57,12 +58,12 @@ namespace storage
      *	46	 {
      *	47	     ST_THROW( Exception("Something bad happened.") );
      *	48	 }
-     *	49	 catch( Exception & exception )
+     *	49	 catch( const Exception & exception )
      *	50	 {
      *	51	     ST_RETHROW( exception );
      *	52	 }
      *	53   }
-     *	54   catch( Exception & exception )
+     *	54   catch( const Exception & exception )
      *	55   {
      *	56	 ST_CAUGHT( exception );
      *	57   }
@@ -100,6 +101,19 @@ namespace storage
 #define ST_RETHROW( EXCEPTION )					\
     _ST_RETHROW( ( EXCEPTION ), ST_EXCEPTION_CODE_LOCATION )
 
+    /**
+     * Drops a log line (always) and throws the Exception
+     * if DO_THROW is 'true'.
+     **/
+#define ST_MAYBE_THROW( EXCEPTION, DO_THROW )			\
+    _ST_THROW( ( EXCEPTION ), ST_EXCEPTION_CODE_LOCATION, DO_THROW )
+
+    /**
+     * Drops a log line (always), updating the CodeLocation,
+     * and rethrows if DO_THROW is 'true'.
+     **/
+#define ST_MAYBE_RETHROW( EXCEPTION, DO_THROW )			\
+    _ST_RETHROW( ( EXCEPTION ), ST_EXCEPTION_CODE_LOCATION, DO_THROW )
 
     /**
      * Throw Exception built from a message string.
@@ -277,7 +291,7 @@ namespace storage
 	 * Constructor taking a message.
 	 * Use ST_THROW to throw exceptions.
 	 **/
-	Exception( const std::string & msg_r );
+	Exception( const std::string & msg );
 
 	/**
 	 * Destructor.
@@ -453,16 +467,16 @@ namespace storage
 	 * Reimplemented from Exception.
 	 **/
 	virtual std::ostream & dumpOn( std::ostream & str ) const
-	    {
-		std::string prefix = msg();
+	{
+	    std::string prefix = msg();
 
-		if ( prefix.empty() )
-		    prefix = "Index out of range";
+	    if ( prefix.empty() )
+		prefix = "Index out of range";
 
-		return str << prefix << ": " << _invalidIndex
-			   << " valid: " << _validMin << " .. " << _validMax
-			   << std::endl;
-	    }
+	    return str << prefix << ": " << _invalidIndex
+		       << " valid: " << _validMin << " .. " << _validMax
+		       << std::endl;
+	}
 
     private:
 
@@ -482,11 +496,13 @@ namespace storage
      * Helper for ST_THROW()
      **/
     template<class _Exception>
-    void _ST_THROW( const _Exception & exception_r, const CodeLocation & where_r )
+    void _ST_THROW( const _Exception & exception, const CodeLocation & where, bool doThrow = true )
     {
-	exception_r.relocate( where_r );
-	Exception::log( exception_r, where_r, "THROW:	" );
-	throw( exception_r );
+	exception.relocate( where );
+	Exception::log( exception, where, "THROW:	" );
+
+	if ( doThrow )
+	    throw exception;
     }
 
 
@@ -494,9 +510,9 @@ namespace storage
      * Helper for ST_CAUGHT()
      **/
     template<class _Exception>
-    void _ST_CAUGHT( const _Exception & exception_r, const CodeLocation & where_r )
+    void _ST_CAUGHT( const _Exception & exception, const CodeLocation & where )
     {
-	Exception::log( exception_r, where_r, "CAUGHT:	" );
+	Exception::log( exception, where, "CAUGHT:	" );
     }
 
 
@@ -504,11 +520,13 @@ namespace storage
      * Helper for ST_RETHROW()
      **/
     template<class _Exception>
-    void _ST_RETHROW( const _Exception & exception_r, const CodeLocation & where_r )
+    void _ST_RETHROW( const _Exception & exception, const CodeLocation & where, bool doThrow = true )
     {
-	Exception::log( exception_r, where_r, "RETHROW: " );
-	exception_r.relocate( where_r );
-	throw;
+	Exception::log( exception, where, "RETHROW: " );
+	exception.relocate( where );
+
+	if ( doThrow )
+	    throw;
     }
     
 } // namespace storage

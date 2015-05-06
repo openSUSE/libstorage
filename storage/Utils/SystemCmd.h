@@ -31,6 +31,8 @@
 #include <list>
 #include <boost/noncopyable.hpp>
 
+#include "storage/Exception.h"
+
 
 namespace storage
 {
@@ -49,12 +51,14 @@ namespace storage
     public:
 
 	enum OutputStream { IDX_STDOUT, IDX_STDERR };
+	enum ThrowBehaviour { DoThrow, NoThrow };
 
 	/**
 	 * Constructor. Invoke the specified command immediately in the foreground.
+	 * If 'throwBehaviour' is 'DoThrow', this might throw exceptions.
 	 * Use 'retcode()' to get the command's exit code.
 	 */
-	SystemCmd(const string& command);
+	SystemCmd(const string& command, ThrowBehaviour throwBehaviour = NoThrow );
 
 	/**
 	 * Default constructor for the more advanced cases or where immediate
@@ -151,6 +155,11 @@ namespace storage
 	void setCombine(bool combine = true);
 
 	/**
+	 * Set the throw behaviour: Should exceptions be thrown or not?
+	 */
+	void setThrowBehaviour( ThrowBehaviour val );
+
+	/**
 	 * Set test mode, i.e. don't actually invoke the command.
 	 */
 	static void setTestmode(bool testmode = true);
@@ -168,6 +177,7 @@ namespace storage
     protected:
 
 	void init();
+	void cleanup();
 	void invalidate();
 	void closeOpenFds() const;
 	int doExecute(const string& command);
@@ -194,6 +204,7 @@ namespace storage
 	string _lastCmd;
 	int _cmdRet;
 	int _cmdPid;
+	bool _doThrow;
 	OutputProcessor* _outputProc;
 	struct pollfd _pfds[2];
 
@@ -201,6 +212,62 @@ namespace storage
 
 	static const unsigned LINE_LIMIT = 50;
     };
+
+
+    /**
+     * Exception class for SystemCmd. This is used both to really throw
+     * exceptions (if the 'DoThrow' behaviour was set for the SystemCmd) as
+     * well as for just logging the problem (done in both cases, 'DoThrow' and
+     * 'NoThrow'.
+     */
+    class SystemCmdException: public Exception
+    {
+    public:
+	SystemCmdException( SystemCmd * sysCmd, const string & msg ):
+	    Exception( "" )
+	{
+	    if ( sysCmd )
+	    {
+		// Copy relevant information from sysCmd because it might go
+		// out of scope while this exception still exists.
+		_cmd = sysCmd->cmd();
+		setMsg( msg + ": \"" + _cmd + "\"" );
+		_cmdRet = sysCmd->retcode();
+		_stderr = sysCmd->stderr();
+	    }
+	    else
+	    {
+		setMsg( msg );
+	    }
+	}
+
+	virtual ~SystemCmdException() throw()
+	    {}
+
+	/**
+	 * Return the command that was to be called with all arguments.
+	 */
+	string cmd() const { return _cmd; }
+
+	/**
+	 * Return the return code (the exit code) of the command. This might
+	 * not always be meaningful, e.g. if fork() failed or if the command
+	 * could not even be started.
+	 */
+	int cmdRet() const { return _cmdRet; }
+
+	/**
+	 * Return the stderr output of the command. If the command could not be
+	 * started, this will be empty.
+	 */
+	vector<string> stderr() const { return _stderr; }
+
+    protected:
+	string _cmd;
+	int    _cmdRet;
+	vector<string> _stderr;
+    };
+
 
 
     inline string quote(const string& str)
