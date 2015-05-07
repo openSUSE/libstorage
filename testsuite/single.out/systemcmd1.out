@@ -1,0 +1,91 @@
+### test_hello_stdout()
+cmd: "helpers/echoargs hello stdout"
+ret code: 0
+stdout:
+stdout #1: hello
+stdout #2: stdout
+stderr:
+<empty>
+
+### test_hello_stderr()
+cmd: "helpers/echoargs_stderr hello stderr"
+ret code: 0
+stdout:
+<empty>
+stderr:
+stderr #1: hello
+stderr #2: stderr
+
+### test_hello_mixed()
+cmd: "helpers/echoargs_mixed mixed to stdout and stderr"
+ret code: 0
+stdout:
+line #1: stdout #1: mixed
+line #3: stdout #2: stdout
+line #5: stdout #3: stderr
+stderr:
+line #2: stderr #1: to
+line #4: stderr #2: and
+
+### test_retcode_42()
+cmd: "helpers/retcode 42"
+ret code: 42
+stdout:
+<empty>
+stderr:
+<empty>
+
+### test_nonexistent()
+throw behaviour: NoThrow
+cmd: "/bin/wrglbrmpf"
+ret code: 127
+stdout:
+<empty>
+stderr:
+/bin/sh: /bin/wrglbrmpf: No such file or directory
+
+### test_nonexistent()
+throw behaviour: DoThrow
+CAUGHT SystemCmdException: Command not found: "/bin/wrglbrmpf"
+cmd: "/bin/wrglbrmpf"
+cmdRet: 127
+stderr:
+/bin/sh: /bin/wrglbrmpf: No such file or directory
+
+
+### test_segfault()
+throw behaviour: NoThrow
+cmd: "helpers/segfaulter"
+ret code: -127
+stdout:
+<empty>
+stderr:
+<empty>
+
+### test_segfault()
+throw behaviour: DoThrow
+CAUGHT SystemCmdException: Command failed: "helpers/segfaulter"
+cmd: "helpers/segfaulter"
+cmdRet: -127
+stderr:
+<empty>
+
+
+### test_not_executable()
+throw behaviour: NoThrow
+cmd: "/etc/fstab"
+ret code: 126
+stdout:
+<empty>
+stderr:
+/bin/sh: /etc/fstab: Permission denied
+
+### test_not_executable()
+throw behaviour: DoThrow
+CAUGHT SystemCmdException: Command not executable: "/etc/fstab"
+cmd: "/etc/fstab"
+cmdRet: 126
+stderr:
+/bin/sh: /etc/fstab: Permission denied
+
+

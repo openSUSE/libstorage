@@ -4,7 +4,7 @@
 
 int main ( int argc, char *argv[] )
 {
-    int retCode = 42;
+    int retCode = 0;
     
     if ( argc > 1 )
     {

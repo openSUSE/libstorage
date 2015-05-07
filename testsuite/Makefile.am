@@ -30,7 +30,8 @@ noinst_PROGRAMS = alt-names1.single alt-names2.single				\
 	blkid.single btrfs.single cryptsetup.single dasdview.single		\
 	dmraid.single dmsetup-info.single lsscsi.single mdadm-detail.single	\
 	mdadm-examine.single parted.single proc-mdstat.single			\
-	proc-mounts.single proc-parts.single vgdisplay.single vgs.single
+	proc-mounts.single proc-parts.single vgdisplay.single vgs.single	\
+	systemcmd1.single
 
 alt_names1_single_SOURCES = alt-names1.cc common.h common.cc
 alt_names2_single_SOURCES = alt-names2.cc common.h common.cc
@@ -89,6 +90,8 @@ proc_mounts_single_SOURCES = proc-mounts.cc common.h common.cc
 proc_parts_single_SOURCES = proc-parts.cc common.h common.cc
 vgdisplay_single_SOURCES = vgdisplay.cc common.h common.cc
 vgs_single_SOURCES = vgs.cc common.h common.cc
+
+systemcmd1_single_SOURCES = systemcmd1.cc common.h common.cc
 
 clean-local:
 	rm -f site.exp site.bak
