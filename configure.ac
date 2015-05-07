@@ -101,6 +101,7 @@ AC_OUTPUT(
 	testsuite/Makefile
 	testsuite/lib/Makefile
 	testsuite/config/Makefile
+	testsuite/helpers/Makefile
 	testsuite/libstorage.test/Makefile
 	testsuite/single.out/Makefile
 	testsuite/data/Makefile
