@@ -56,16 +56,6 @@ ostream & operator<<( ostream & stream, const SystemCmdException & ex )
 }
 
 
-#if 0
-ostream & operator<<( ostream & stream, const Exception & ex )
-{
-    stream << "Exception: " << ex.what() << endl;
-
-    return stream;
-}
-#endif
-
-
 void dump( const string & name, const SystemCmd & cmd )
 {
     cout << name << endl;
