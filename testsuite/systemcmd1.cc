@@ -165,10 +165,10 @@ int main( int argc, char *argv[] )
     test_hello_stderr();
     test_hello_mixed();
     test_retcode_42();
-    test_nonexistent( SystemCmd:: NoThrow );
-    test_nonexistent( SystemCmd:: DoThrow );
-    test_segfault( SystemCmd:: NoThrow );
-    test_segfault( SystemCmd:: DoThrow );
-    test_not_executable( SystemCmd:: NoThrow );
-    test_not_executable( SystemCmd:: DoThrow );
+    test_nonexistent( SystemCmd::NoThrow );
+    test_nonexistent( SystemCmd::DoThrow );
+    test_segfault( SystemCmd::NoThrow );
+    test_segfault( SystemCmd::DoThrow );
+    test_not_executable( SystemCmd::NoThrow );
+    test_not_executable( SystemCmd::DoThrow );
 }
