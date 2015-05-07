@@ -9,7 +9,7 @@ using namespace std;
 
 int
 main( int argc_iv, char** argv_ppcv )
-    {
+{
     int ret;
     StorageInterface* s = createStorageInterface(Environment(false));
     string dev;
@@ -21,12 +21,12 @@ main( int argc_iv, char** argv_ppcv )
     unsigned kb = s->cylinderToKb( "/dev/hdb", 40 );
     int i=0;
     while( i<40 && ret==0 )
-	{
+    {
 	ret = s->createPartitionKb("/dev/hdb", LOGICAL, RegionInfo(5000*1024+i*kb, kb), dev);
 	if(ret==0) cout << dev << endl;
 	i++;
-	}
+    }
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;
     delete(s);
-    }
+}

@@ -39,6 +39,7 @@ libstorage_la_SOURCES =					\
 	  Loop.cc		Loop.h			\
 	  Nfs.cc		Nfs.h			\
 	HumanString.cc		HumanString.h		\
+	Exception.cc		Exception.h		\
 	Graph.cc		Graph.h			\
 	Utils.cc		Utils.h			\
 	FreeInfo.cc		FreeInfo.h		\
@@ -50,7 +51,7 @@ libstorage_la_SOURCES =					\
 	FilterIterator.h	ListListIterator.h	\
 	DerefIterator.h		IterPair.h		\
 	StorageDefines.h				\
-	gen_md5sum.cc           gen_md5sum.h
+	gen_md5sum.cc		gen_md5sum.h
 
 libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
 libstorage_la_LIBADD = SystemInfo/libsysteminfo.la Utils/libutils.la -lxml2
@@ -72,7 +73,8 @@ pkgincludedir = $(includedir)/storage
 pkginclude_HEADERS =			\
 	StorageVersion.h		\
 	StorageInterface.h		\
-	StorageSwig.h		        \
+	StorageSwig.h			\
 	HumanString.h			\
 	Graph.h				\
+	Exception.h			\
 	Utils.h

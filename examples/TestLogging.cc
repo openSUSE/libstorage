@@ -19,20 +19,20 @@ unsigned pid;
 
 void logDo( int level, const string& component, const char* file,
             int line, const char* function, const string& content )
-    {
+{
     logstream << "<" << level << "> " << component << "(" << pid << ") " 
               << file << "(" << function << "):" << line << " " 
               << content << endl;
-    }
+}
 
 bool logQuery( int level, const string& component )
-    {
+{
     return( level>=0 );
-    }
+}
 
 int
 main (int argc, char** argv)
-    {
+{
     pid = getpid();
     logstream.open( "/tmp/emil_log", ios_base::app );
     storage::setLogDoCallback( logDo );
@@ -97,24 +97,24 @@ main (int argc, char** argv)
 	    } break;
 
 	    case MD:
-	    {
-		cout << "found special container (md) " << i1->name << '\n';
-
-		deque<MdInfo> mds;
-		if (s->getMdInfo(mds) != 0)
 		{
-		    cerr << "getMdInfo failed\n";
-		    exit (EXIT_FAILURE);
-		}
+		    cout << "found special container (md) " << i1->name << '\n';
 
-		for (deque<MdInfo>::const_iterator i2 = mds.begin();
-		     i2 != mds.end(); ++i2)
-		{
-		    cout << "  " << i2->v.name;
-		    cout << '\n';
-		}
+		    deque<MdInfo> mds;
+		    if (s->getMdInfo(mds) != 0)
+		    {
+			cerr << "getMdInfo failed\n";
+			exit (EXIT_FAILURE);
+		    }
 
-	    } break;
+		    for (deque<MdInfo>::const_iterator i2 = mds.begin();
+			 i2 != mds.end(); ++i2)
+		    {
+			cout << "  " << i2->v.name;
+			cout << '\n';
+		    }
+
+		} break;
 
 	    case LVM: {
 
@@ -151,4 +151,4 @@ main (int argc, char** argv)
     logstream.close();
 
     exit (EXIT_SUCCESS);
-    }
+}

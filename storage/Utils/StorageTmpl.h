@@ -40,21 +40,21 @@
 namespace storage
 {
 
-template< class Value >
-class CheckFnc
+    template< class Value >
+    class CheckFnc
     {
     public:
         CheckFnc( bool (* ChkFnc)( Value& )=NULL ) : m_check(ChkFnc) {}
 	bool operator()(Value& d) const
 	    { return(m_check==NULL || (*m_check)(d)); }
-	private:
-	    bool (* m_check)( Value& d );
+    private:
+	bool (* m_check)( Value& d );
     };
 
-template< class Pred, class Iter >
-class ContainerIter : public FilterIterator< Pred, Iter >
+    template< class Pred, class Iter >
+    class ContainerIter : public FilterIterator< Pred, Iter >
     {
-    typedef FilterIterator< Pred, Iter > _bclass;
+	typedef FilterIterator< Pred, Iter > _bclass;
     public:
 	ContainerIter() : _bclass() {}
 	ContainerIter( const Iter& b, const Iter& e, const Pred& p,
@@ -68,10 +68,10 @@ class ContainerIter : public FilterIterator< Pred, Iter >
 	    { this->m_cur=i.cur(); }
     };
 
-template< class Pred, class Iter, class Value >
-class ContainerDerIter : public DerefIterator<Iter,Value>
+    template< class Pred, class Iter, class Value >
+    class ContainerDerIter : public DerefIterator<Iter,Value>
     {
-    typedef DerefIterator<Iter,Value> _bclass;
+	typedef DerefIterator<Iter,Value> _bclass;
     public:
 	ContainerDerIter() : _bclass() {}
 	ContainerDerIter( const _bclass& i ) : _bclass(i) {}
@@ -80,8 +80,8 @@ class ContainerDerIter : public DerefIterator<Iter,Value>
 	    { this->m_cur=i.cur(); }
     };
 
-template< class Iter, class CastResult >
-class CastIterator : public Iter
+    template< class Iter, class CastResult >
+    class CastIterator : public Iter
     {
     public:
 	typedef CastResult value_type;
@@ -93,39 +93,39 @@ class CastIterator : public Iter
 	template< class It >
 	CastIterator( const It& i ) : Iter( i ) {}
 	CastResult operator*() const
-	    {
+	{
 	    return( static_cast<CastResult>(Iter::operator*()) );
-	    }
+	}
 	CastResult* operator->() const
-	    {
+	{
 	    return( static_cast<CastResult*>(Iter::operator->()) );
-	    }
+	}
 	CastIterator& operator++() 
-	    { 
+	{ 
 	    Iter::operator++(); return(*this); 
-	    }
+	}
 	CastIterator operator++(int) 
-	    { 
+	{ 
 	    y2war( "Expensive ++ CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator++(); 
 	    return(tmp); 
-	    }
+	}
 	CastIterator& operator--() 
-	    { 
+	{ 
 	    Iter::operator--(); return(*this); 
-	    }
+	}
 	CastIterator operator--(int) 
-	    { 
+	{ 
 	    y2war( "Expensive -- CastIterator" );
 	    CastIterator tmp(*this);
 	    Iter::operator--(); 
 	    return(tmp); 
-	    }
+	}
     };
 
-template < class Checker, class ContIter, class Iter, class Value >
-class CheckerIterator : public ContIter
+    template < class Checker, class ContIter, class Iter, class Value >
+    class CheckerIterator : public ContIter
     {
     public:
 	CheckerIterator() {};
@@ -144,57 +144,57 @@ class CheckerIterator : public ContIter
     };
 
 
-template<class Num> string decString(Num number)
-{
-    static_assert(std::is_integral<Num>::value, "not integral");
-
-    std::ostringstream num_str;
-    classic(num_str);
-    num_str << number;
-    return num_str.str();
-}
-
-template<class Num> string hexString(Num number)
-{
-    static_assert(std::is_integral<Num>::value, "not integral");
-
-    std::ostringstream num_str;
-    classic(num_str);
-    num_str << std::hex << number;
-    return num_str.str();
-}
-
-template<class Value> void operator>>(const string& d, Value& v)
-{
-    std::istringstream Data(d);
-    classic(Data);
-    Data >> v;
-}
-
-template<class Value> std::ostream& operator<<( std::ostream& s, const std::list<Value>& l )
+    template<class Num> string decString(Num number)
     {
-    s << "<";
-    for( typename std::list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
-	{
-	if( i!=l.begin() )
-	    s << " ";
-	s << *i;
-	}
-    s << ">";
-    return( s );
+	static_assert(std::is_integral<Num>::value, "not integral");
+
+	std::ostringstream num_str;
+	classic(num_str);
+	num_str << number;
+	return num_str.str();
     }
 
-template<class Value> std::ostream& operator<<( std::ostream& s, const std::deque<Value>& l )
+    template<class Num> string hexString(Num number)
     {
-    s << "<";
-    for( typename std::deque<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	static_assert(std::is_integral<Num>::value, "not integral");
+
+	std::ostringstream num_str;
+	classic(num_str);
+	num_str << std::hex << number;
+	return num_str.str();
+    }
+
+    template<class Value> void operator>>(const string& d, Value& v)
+    {
+	std::istringstream Data(d);
+	classic(Data);
+	Data >> v;
+    }
+
+    template<class Value> std::ostream& operator<<( std::ostream& s, const std::list<Value>& l )
+    {
+	s << "<";
+	for( typename std::list<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
 	{
-	if( i!=l.begin() )
-	    s << " ";
-	s << *i;
+	    if( i!=l.begin() )
+		s << " ";
+	    s << *i;
 	}
-    s << ">";
-    return( s );
+	s << ">";
+	return( s );
+    }
+
+    template<class Value> std::ostream& operator<<( std::ostream& s, const std::deque<Value>& l )
+    {
+	s << "<";
+	for( typename std::deque<Value>::const_iterator i=l.begin(); i!=l.end(); i++ )
+	{
+	    if( i!=l.begin() )
+		s << " ";
+	    s << *i;
+	}
+	s << ">";
+	return( s );
     }
 
 
@@ -213,23 +213,23 @@ template<class Value> std::ostream& operator<<( std::ostream& s, const std::dequ
     }
 
 
-template<class F, class S> std::ostream& operator<<( std::ostream& s, const std::pair<F,S>& p )
+    template<class F, class S> std::ostream& operator<<( std::ostream& s, const std::pair<F,S>& p )
     {
-    s << "[" << p.first << ":" << p.second << "]";
-    return( s );
+	s << "[" << p.first << ":" << p.second << "]";
+	return( s );
     }
 
-template<class Key, class Value> std::ostream& operator<<( std::ostream& s, const std::map<Key,Value>& m )
+    template<class Key, class Value> std::ostream& operator<<( std::ostream& s, const std::map<Key,Value>& m )
     {
-    s << "<";
-    for( typename std::map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
+	s << "<";
+	for( typename std::map<Key,Value>::const_iterator i=m.begin(); i!=m.end(); i++ )
 	{
-	if( i!=m.begin() )
-	    s << " ";
-	s << i->first << ":" << i->second;
+	    if( i!=m.begin() )
+		s << " ";
+	    s << i->first << ":" << i->second;
 	}
-    s << ">";
-    return( s );
+	s << ">";
+	return( s );
     }
 
 
@@ -350,12 +350,12 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
 
     template<typename List, typename Value>
     typename List::const_iterator addIfNotThere(List& l, const Value& v)
-	{
+    {
 	typename List::const_iterator pos = find( l.begin(), l.end(), v );
 	if (pos == l.end() )
 	    pos = l.insert(l.end(), v);
 	return pos;
-	}
+    }
 
 
     template <class InputIterator1, class InputIterator2>
@@ -409,8 +409,8 @@ template<class Key, class Value> std::ostream& operator<<( std::ostream& s, cons
     }
 
 
-template <class T, unsigned int sz>
-  inline unsigned int lengthof (T (&)[sz]) { return sz; }
+    template <class T, unsigned int sz>
+    inline unsigned int lengthof (T (&)[sz]) { return sz; }
 
 }
 
