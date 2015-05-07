@@ -33,7 +33,7 @@ void createLvs(const string& vg, int n, const deque<string>& pvs)
     deque<LvmLvInfo> plist;
     s->getLvmLvInfo( vg, plist );
     cout << plist.size() << endl;
-    
+
     delete s;
 }
 

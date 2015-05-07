@@ -8,7 +8,7 @@ using namespace std;
 
 int
 main( int argc_iv, char** argv_ppcv )
-    {
+{
     int ret;
     StorageInterface* s = createStorageInterface(Environment(false));
     string disk = "/dev/hdb";
@@ -36,4 +36,4 @@ main( int argc_iv, char** argv_ppcv )
     ret = s->commit();
     if( ret ) cerr << "retcode:" << ret << endl;
     delete(s);
-    }
+}

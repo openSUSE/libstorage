@@ -259,11 +259,11 @@ namespace storage
     void
     CmdVgdisplay::PvEntry::clear()
     {
-	 device.clear();
-	 uuid.clear();
-	 status.clear();
-	 num_pe = 0;
-	 free_pe = 0;
+	device.clear();
+	uuid.clear();
+	status.clear();
+	num_pe = 0;
+	free_pe = 0;
     }
 
 
