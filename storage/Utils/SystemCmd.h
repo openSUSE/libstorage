@@ -223,9 +223,11 @@ namespace storage
     class SystemCmdException: public Exception
     {
     public:
-	SystemCmdException( SystemCmd * sysCmd, const string & msg ):
+	SystemCmdException( const SystemCmd * sysCmd, const string & msg ):
 	    Exception( "" )
 	{
+	    _cmdRet = -1;
+
 	    if ( sysCmd )
 	    {
 		// Copy relevant information from sysCmd because it might go
@@ -247,7 +249,7 @@ namespace storage
 	/**
 	 * Return the command that was to be called with all arguments.
 	 */
-	string cmd() const { return _cmd; }
+	const string & cmd() const { return _cmd; }
 
 	/**
 	 * Return the return code (the exit code) of the command. This might
@@ -260,7 +262,7 @@ namespace storage
 	 * Return the stderr output of the command. If the command could not be
 	 * started, this will be empty.
 	 */
-	vector<string> stderr() const { return _stderr; }
+	const vector<string> & stderr() const { return _stderr; }
 
     protected:
 	string _cmd;
