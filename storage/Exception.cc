@@ -36,13 +36,9 @@ namespace storage
 {
     std::string CodeLocation::asString() const
     {
+	// Format as "MySource.cc(myFunc):177"
 	std::string str( _file );
-	str += "(" + _func + "):";
-
-	char formatted_number[ 20 ];
-	sprintf( formatted_number, "%u", _line );
-
-	str += formatted_number;
+	str += "(" + _func + "):" + std::to_string( _line );
 
 	return str;
     }
@@ -113,9 +109,7 @@ namespace storage
     std::string
     Exception::strErrno( int errno_r, const std::string & msg )
     {
-	std::string ret( msg );
-	ret += ": ";
-	return ret += strErrno( errno_r );
+	return msg + ": " + strErrno( errno_r );
     }
 
 
