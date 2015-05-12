@@ -28,24 +28,50 @@
 #include <fstream>
 #include <sys/wait.h>
 #include <string>
+#include <sstream>
 #include <boost/algorithm/string.hpp>
 
+#include "storage/Exception.h"
 #include "storage/Utils/AppUtil.h"
 #include "storage/Utils/SystemCmd.h"
 #include "storage/Utils/OutputProcessor.h"
 
+
+#define SYSCALL_FAILED( SYSCALL_MSG ) \
+    ST_MAYBE_THROW( Exception( Exception::strErrno( errno, SYSCALL_MSG ) ), _doThrow )
+
+#define SYSCALL_FAILED_NOTHROW( SYSCALL_MSG ) \
+    ST_MAYBE_THROW( Exception( Exception::strErrno( errno, SYSCALL_MSG ) ), false )
+
+// See man bash
+// Since all commands are started via a shell, only the shell's return value is returned.
+#define SHELL_RET_COMMAND_NOT_EXECUTABLE	126
+#define SHELL_RET_COMMAND_NOT_FOUND		127
+#define SHELL_RET_SIGNAL			128
 
 namespace storage
 {
     using namespace std;
 
 
-    SystemCmd::SystemCmd( const string& command )
-	: _combineOutput(false), _outputProc(NULL)
+    SystemCmd::SystemCmd( const string& command, ThrowBehaviour throwBehaviour ):
+	_combineOutput( false ),
+	_doThrow( throwBehaviour == DoThrow ),
+	_outputProc( NULL )
     {
-	y2mil("constructor SystemCmd( \"" << command << "\" )");
+	y2mil("constructor SystemCmd( \"" << command << "\" ) doThrow: " << _doThrow );
 	init();
-	execute( command );
+
+	try
+	{
+	    execute( command );
+	}
+	catch ( const Exception &exception )
+	{
+	    ST_CAUGHT( exception );
+	    cleanup();
+	    ST_RETHROW( exception );
+	}
     }
 
 
@@ -57,19 +83,34 @@ namespace storage
     }
 
 
-    void SystemCmd::init()
+    void
+    SystemCmd::init()
     {
 	_files[0] = _files[1] = NULL;
 	_pfds[0].events = _pfds[1].events = POLLIN;
     }
 
 
-    SystemCmd::~SystemCmd()
+    void
+    SystemCmd::cleanup()
     {
 	if ( _files[IDX_STDOUT] )
+	{
 	    fclose( _files[IDX_STDOUT] );
+	    _files[IDX_STDOUT] = NULL;
+	}
+
 	if ( _files[IDX_STDERR] )
+	{
 	    fclose( _files[IDX_STDERR] );
+	    _files[IDX_STDERR] = NULL;
+	}
+    }
+
+
+    SystemCmd::~SystemCmd()
+    {
+	cleanup();
     }
 
 
@@ -195,12 +236,12 @@ namespace storage
 	bool ok = true;
 	if ( !_testmode && pipe(sout)<0 )
 	{
-	    y2err("pipe stdout creation failed errno:" << errno << " (" << strerror(errno) << ")");
+	    SYSCALL_FAILED( "pipe stdout creation failed" );
 	    ok = false;
 	}
 	if ( !_testmode && !_combineOutput && pipe(serr)<0 )
 	{
-	    y2err("pipe stderr creation failed errno:" << errno << " (" << strerror(errno) << ")");
+	    SYSCALL_FAILED( "pipe stderr creation failed" );
 	    ok = false;
 	}
 	if ( !_testmode && ok )
@@ -208,14 +249,14 @@ namespace storage
 	    _pfds[0].fd = sout[0];
 	    if ( fcntl( _pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
 	    {
-		y2err("fcntl O_NONBLOCK failed errno:" << errno << " (" << strerror(errno) << ")");
+		SYSCALL_FAILED( "fcntl O_NONBLOCK failed for stdout" );
 	    }
 	    if ( !_combineOutput )
 	    {
 		_pfds[1].fd = serr[0];
 		if ( fcntl( _pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
 		{
-		    y2err("fcntl O_NONBLOCK failed errno:" << errno << " (" << strerror(errno) << ")");
+		    SYSCALL_FAILED( "fcntl O_NONBLOCK failed for stderr" );
 		}
 	    }
 	    y2deb("sout:" << _pfds[0].fd << " serr:" << (_combineOutput?-1:_pfds[1].fd));
@@ -224,60 +265,67 @@ namespace storage
 		case 0:
 		    setenv( "LC_ALL", "C", 1 );
 		    setenv( "LANGUAGE", "C", 1 );
+
 		    if ( dup2( sout[1], STDOUT_FILENO )<0 )
 		    {
-			y2err("dup2 stdout child failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "dup2 stdout failed in child process" );
 		    }
 		    if ( !_combineOutput && dup2( serr[1], STDERR_FILENO )<0 )
 		    {
-			y2err("dup2 stderr child failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "dup2 stderr failed in child process" );
 		    }
 		    if ( _combineOutput && dup2( STDOUT_FILENO, STDERR_FILENO )<0 )
 		    {
-			y2err("dup2 stderr child failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "dup2 stderr failed in child process" );
 		    }
 		    if ( close( sout[0] )<0 )
 		    {
-			y2err("close child failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "close( stdout ) failed in child process" );
 		    }
 		    if ( !_combineOutput && close( serr[0] )<0 )
 		    {
-			y2err("close child failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "close( stderr ) failed in child process" );
 		    }
 		    closeOpenFds();
 		    _cmdRet = execl( shell.c_str(), shell.c_str(), "-c",
 				     command.c_str(), NULL );
-		    // execl() should not return
-		    y2err("execl() failed: THIS SHOULD NOT HAPPEN \"" << shell
-			  << "\" Ret:" << _cmdRet << " errno: " << errno );
+
+		    // execl() should not return. If we get here, it failed.
+		    // Throwing an exception here would not make any sense, however:
+		    // We are in the forked child process, and there is nothing
+		    // to return to that could make use of an exception.
+		    y2err( "execl() failed: THIS SHOULD NOT HAPPEN \"" << shell
+			   << "\" Ret:" << _cmdRet << " errno: " << errno );
+		    y2err( "Exiting child process" );
 		    exit(127); // same as "command not found" in the shell
 		    break;
 
 		case -1:
 		    _cmdRet = -1;
+		    SYSCALL_FAILED( "fork() failed" );
 		    break;
 
 		default:
 		    if ( close( sout[1] )<0 )
 		    {
-			y2err("close parent failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "close( stdout ) in parent failed" );
 		    }
 		    if ( !_combineOutput && close( serr[1] )<0 )
 		    {
-			y2err("close parent failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "close( stderr ) in parent failed" );
 		    }
 		    _cmdRet = 0;
 		    _files[IDX_STDOUT] = fdopen( sout[0], "r" );
 		    if ( _files[IDX_STDOUT] == NULL )
 		    {
-			y2err("fdopen stdout failed errno:" << errno << " (" << strerror(errno) << ")");
+			SYSCALL_FAILED_NOTHROW( "fdopen( stdout ) failed" );
 		    }
 		    if ( !_combineOutput )
 		    {
 			_files[IDX_STDERR] = fdopen( serr[0], "r" );
 			if ( _files[IDX_STDERR] == NULL )
 			{
-			    y2err("fdopen stderr failed errno:" << errno << " (" << strerror(errno) << ")");
+			    SYSCALL_FAILED_NOTHROW( "fdopen( stderr ) failed" );
 			}
 		    }
 		    if ( !_execInBackground )
@@ -323,7 +371,7 @@ namespace storage
 	    int sel = poll( _pfds, _combineOutput?1:2, 1000 );
 	    if (sel < 0)
 	    {
-		y2err("poll failed errno:" << errno << " (" << strerror(errno) << ")");
+		SYSCALL_FAILED_NOTHROW( "poll() failed" );
 	    }
 	    y2deb("poll ret:" << sel);
 	    if ( sel>0 )
@@ -348,15 +396,21 @@ namespace storage
 	    if (WIFEXITED(cmdStatus))
 	    {
 		cmdRet_ret = WEXITSTATUS(cmdStatus);
-		if (cmdRet_ret == 126)
-		    y2err("command \"" << _lastCmd << "\" not executable");
-		else if (cmdRet_ret == 127)
-		    y2err("command \"" << _lastCmd << "\" not found");
+		if ( cmdRet_ret == SHELL_RET_COMMAND_NOT_EXECUTABLE )
+		    ST_MAYBE_THROW( SystemCmdException( this, "Command not executable" ), _doThrow );
+		else if ( cmdRet_ret == SHELL_RET_COMMAND_NOT_FOUND )
+		    ST_MAYBE_THROW( SystemCmdException( this, "Command not found" ), _doThrow );
+		else if ( cmdRet_ret > SHELL_RET_SIGNAL )
+		{
+		    std::stringstream msg;
+		    msg << "Caught signal #" << ( cmdRet_ret - SHELL_RET_SIGNAL );
+		    ST_MAYBE_THROW( SystemCmdException( this, msg.str() ), _doThrow );
+		}
 	    }
 	    else
 	    {
 		cmdRet_ret = -127;
-		y2err("command \"" << _lastCmd << "\" failed");
+		ST_MAYBE_THROW( SystemCmdException( this, "Command failed" ), _doThrow );
 	    }
 	    if ( _outputProc )
 	    {
