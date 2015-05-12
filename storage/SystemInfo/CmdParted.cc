@@ -46,12 +46,15 @@ namespace storage
     void
     Parted::probe()
     {
-	SystemCmd cmd(PARTEDCMD + quote(device) + " unit cyl print unit s print");
+	SystemCmd cmd( PARTEDCMD + quote(device) + " unit cyl print unit s print", SystemCmd::DoThrow );
 
 	// No check for exit status since parted 3.1 exits with 1 if no
 	// partition table is found.
 
-	parse(cmd.stdout());
+	if ( !cmd.stderr().empty() )
+	    ST_THROW( SystemCmdException( &cmd, "parted reports error: " + cmd.stderr().front() ) );
+
+	parse( cmd.stdout() );
     }
 
 
@@ -81,7 +84,11 @@ namespace storage
 	if (pos != lines.end())
 	    scanGeometryLine(*pos);
 	else
-	    y2err("could not find geometry");
+	{
+	    ST_THROW( ParseException( "No disk geometry line",
+				      "...", // don't pass complete parted output to exception
+				      "BIOS cylinder,head,sector geometry:" ) );
+	}
 
 	// see bnc #866535
 	pos = find_if(lines, string_starts_with("Disk " + device + ":"));
@@ -117,6 +124,9 @@ namespace storage
 	{
 	    int n = 0;
 
+	    
+	    // Parse partition tables: One with cylinder sizes, one with sector sizes
+	    
 	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	    {
 		if (boost::starts_with(*it, "Number"))
@@ -125,11 +135,13 @@ namespace storage
 		string tmp = extractNthWord(0, *it);
 		if (!tmp.empty() && isdigit(tmp[0]))
 		{
-		    assert(n == 1 || n == 2);
 		    if (n == 1)
 			scanCylEntryLine(*it);
 		    else if (n == 2)
 			scanSecEntryLine(*it);
+		    else
+			ST_THROW( ParseException( string( "Unexpected partition table #" )
+						  + std::to_string(n), "", "" ) );
 		}
 	    }
 
@@ -218,7 +230,7 @@ namespace storage
 	tmp = extractNthWord(0, tmp);
 
 	list<string> l = splitString(extractNthWord(0, tmp), ",");
-	assert(l.size() == 3);
+
 	if (l.size() == 3)
 	{
 	    list<string>::const_iterator i = l.begin();
@@ -228,7 +240,8 @@ namespace storage
 	}
 	else
 	{
-	    y2err("could not find geometry");
+	    ST_THROW( ParseException( "Bad disk geometry line", line,
+				      "BIOS cylinder,head,sector geometry: 243201,255,63.  Each cylinder is 8225kB." ) );
 	}
     }
 
@@ -240,16 +253,17 @@ namespace storage
 	tmp.erase(0, tmp.find(':') + 1);
 	tmp = extractNthWord(0, tmp);
 
-	list<string> l = splitString(extractNthWord(0, tmp), "/");
-	assert(l.size() == 2);
-	if (l.size() == 2)
+	list<string> l = splitString( extractNthWord(0, tmp), "/" );
+
+	if ( l.size() == 2 )
 	{
 	    list<string>::const_iterator i = l.begin();
 	    *i >> geometry.sector_size;
 	}
 	else
 	{
-	    y2war("could not find sector size");
+	    ST_THROW( ParseException( "Bad sector size line", line,
+				      "Sector size (logical/physical): 512B/4096B" ) );
 	}
     }
 
@@ -257,7 +271,7 @@ namespace storage
     void
     Parted::scanCylEntryLine(const string& line)
     {
-	// Sample input:
+	// Sample input: (msdos disk label)
 	//
 	//  1      0cyl      261cyl     261cyl     primary   linux-swap(v1)  type=82
 	//  2      261cyl    5484cyl    5222cyl    primary   btrfs           boot, type=83
@@ -266,6 +280,10 @@ namespace storage
 	//  5      10706cyl  243200cyl  232493cyl  logical   xfs             type=83
 	//
 	// (Number) (Start)  (End)      (Size)     (Type)    (File system)   (Flags)
+	//
+	// gpt disk label: no primary/extended/logical column:
+	//
+	//  1      0cyl      261cyl     261cyl     linux-swap(v1)  type=82
 
 	Entry entry;
 
@@ -278,7 +296,7 @@ namespace storage
 	string PartitionTypeStr;
 	string skip;
 
-	if( label == "msdos" )
+	if ( label == "msdos" )
 	{
 	    Data >> entry.num >> StartM >> skip >> EndM >> skip >> SizeM >> skip >> PartitionTypeStr;
 	}
@@ -287,14 +305,15 @@ namespace storage
 	    Data >> entry.num >> StartM >> skip >> EndM >> skip >> SizeM >> skip;
 	}
 
-	assert(!Data.fail());
-	assert(entry.num != 0);
-
-	if (Data.fail() || entry.num == 0)
+	if ( Data.fail() ) // parse error?
 	{
-	    y2err("invalid line:" << line);
-	    return;
+	    ST_THROW( ParseException( "Bad cylinder-based partition entry", line,
+				      "2  261cyl  5484cyl  5222cyl primary  btrfs  boot, type=83" ) );
 	}
+
+	if ( entry.num == 0 )
+	    ST_THROW( ParseException( "Illegal partition number 0", line, "" ) );
+
 
 	char c;
 	string TInfo;
@@ -303,14 +322,14 @@ namespace storage
 	char last_char = ',';
 	while( Data.good() && !Data.eof() )
 	{
-	    if( !isspace(c) )
+	    if ( !isspace(c) )
 	    {
 		TInfo += c;
 		last_char = c;
 	    }
 	    else
 	    {
-		if( last_char != ',' )
+		if ( last_char != ',' )
 		{
 		    TInfo += ",";
 		    last_char = ',';
@@ -323,7 +342,7 @@ namespace storage
 
 	unsigned long start = StartM;
 	unsigned long csize = EndM-StartM+1;
-	if( start + csize > geometry.cylinders )
+	if ( start + csize > geometry.cylinders )
 	{
 	    csize = geometry.cylinders - start;
 	    y2mil("new csize:" << csize);
@@ -338,14 +357,14 @@ namespace storage
 
 	entry.id = Partition::ID_LINUX;
 
-	if( label == "msdos" )
+	if ( label == "msdos" )
 	{
-	    if( PartitionTypeStr == "extended" )
+	    if ( PartitionTypeStr == "extended" )
 	    {
 		entry.type = EXTENDED;
 		entry.id = Partition::ID_EXTENDED;
 	    }
-	    else if( entry.num >= 5 )
+	    else if ( entry.num >= 5 )
 	    {
 		entry.type = LOGICAL;
 	    }
@@ -377,27 +396,27 @@ namespace storage
 	{
 	    string val = string(*it1, 5);
 
-	    if( label != "mac" )
+	    if ( label != "mac" )
 	    {
 		int tmp_id = 0;
 		std::istringstream Data2(val);
 		classic(Data2);
 		Data2 >> std::hex >> tmp_id;
-		if( tmp_id>0 )
+		if ( tmp_id>0 )
 		{
 		    entry.id = tmp_id;
 		}
 	    }
-	    else
+	    else // label == "mac"
 	    {
-		if( entry.id == Partition::ID_LINUX )
+		if ( entry.id == Partition::ID_LINUX )
 		{
-		    if( val.find( "apple_hfs" ) != string::npos ||
-			val.find( "apple_bootstrap" ) != string::npos )
+		    if ( val.find( "apple_hfs" ) != string::npos ||
+			 val.find( "apple_bootstrap" ) != string::npos )
 		    {
 			entry.id = Partition::ID_APPLE_HFS;
 		    }
-		    else if( val.find( "apple_partition" ) != string::npos ||
+		    else if ( val.find( "apple_partition" ) != string::npos ||
 			     val.find( "apple_driver" ) != string::npos ||
 			     val.find( "apple_loader" ) != string::npos ||
 			     val.find( "apple_boot" ) != string::npos ||
@@ -407,7 +426,7 @@ namespace storage
 		    {
 			entry.id = Partition::ID_APPLE_OTHER;
 		    }
-		    else if( val.find( "apple_ufs" ) != string::npos )
+		    else if ( val.find( "apple_ufs" ) != string::npos )
 		    {
 			entry.id = Partition::ID_APPLE_UFS;
 		    }
@@ -415,7 +434,7 @@ namespace storage
 	    }
 	}
 
-	if( label == "gpt" )
+	if ( label == "gpt" )
 	{
 	    if (contains(flags, "boot") && contains_if(flags, string_starts_with("fat")))
 	    {
@@ -472,14 +491,18 @@ namespace storage
 
 	Data >> num >> startSec >> skip >> endSec >> skip >> sizeSec >> skip;
 
-	assert(!Data.fail());
-	assert(num != 0);
-
-	if (Data.fail() || num == 0)
+	if ( Data.fail() ) // parse error?
 	{
-	    y2err("invalid line:" << line);
-	    return;
+	    ST_THROW( ParseException( "Bad sector-based partition entry", line,
+				      "2  4208640s  88100863s  83892224s  primary  btrfs boot, type=83" ) );
 	}
+
+	if ( num == 0 )
+	    ST_THROW( ParseException( "Illegal partition number 0", line, "" ) );
+
+
+	// Search corresponding entry in 'entries' vector which was created earlier
+	// from the by-cylinder output
 
 	for (iterator it = entries.begin(); it != entries.end(); ++it)
 	{
@@ -489,6 +512,9 @@ namespace storage
 		return;
 	    }
 	}
+
+	// Entry no. 'num' not found
+	ST_THROW( ParseException( "No corresponding partition number in cylinder table", line, "" ) );
     }
 
 }
