@@ -189,6 +189,29 @@ parse5()
 }
 
 
+void
+parse6()
+{
+    cout << "parse6" << endl;
+
+    // Disk with no partition table at all (brand new or after 'wipefs')
+    vector<string> lines = {
+	"Error: /dev/sdb: unrecognised disk label",
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 9964cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 9964,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: unknown",
+	"Disk Flags: "
+    };
+
+    Parted parted("/dev/sdb", false);
+    parted.parse(lines);
+
+    cout << parted << endl;
+}
+
+
 int
 main()
 {
@@ -201,4 +224,5 @@ main()
     parse3();
     parse4();
     parse5();
+    parse6();
 }
