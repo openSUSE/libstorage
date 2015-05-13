@@ -12,7 +12,6 @@
 using namespace std;
 using namespace storage;
 
-#define TRACE() cout << "### " << __FUNCTION__ << "()" << endl
 
 #define TRACE_THROW_BEHAVIOUR( throwBehaviour ) \
     cout << "throw behaviour: " << ( throwBehaviour == SystemCmd::DoThrow ? "DoThrow" : "NoThrow" ) << endl
@@ -159,7 +158,8 @@ void test_not_executable( SystemCmd::ThrowBehaviour throwBehaviour )
 
 int main( int argc, char *argv[] )
 {
-    storage::setup_logger();
+    cout.setf(std::ios::boolalpha);
+    setup_logger();
 
     test_hello_stdout();
     test_hello_stderr();

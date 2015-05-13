@@ -13,7 +13,7 @@ using namespace storage;
 void
 run1 ()
 {
-    cout << "run1" << endl;
+    TRACE();
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 
@@ -21,10 +21,10 @@ run1 ()
 
     s->destroyPartitionTable (disk, "msdos");
 
-    long int S = 4 * 1000000;
+    long int size = 4 * 1000000;
 
     string name;
-    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(0, S), name) << endl;
+    cout << s->createPartitionKb(disk, PRIMARY, RegionInfo(0, size), name) << endl;
 
     cout << name << endl;
 
@@ -32,6 +32,7 @@ run1 ()
     cout << s->changeMountPoint(name, "/tmp/mnt") << endl;
     cout << s->changeMountBy(name, MOUNTBY_UUID) << endl;
 
+    cout << "Committing: " << endl;
     cout << s->commit() << endl;
 
     delete s;
@@ -41,7 +42,7 @@ run1 ()
 void
 run2 ()
 {
-    cout << "run2" << endl;
+    TRACE();
 
     StorageInterface* s = createStorageInterface(TestEnvironment());
 

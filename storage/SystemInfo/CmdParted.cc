@@ -52,7 +52,7 @@ namespace storage
 	// partition table is found.
 
 	if ( !cmd.stderr().empty() )
-	    ST_THROW( SystemCmdException( &cmd, "parted reports error: " + cmd.stderr().front() ) );
+	    ST_THROW( SystemCmdException( &cmd, "parted complains: " + cmd.stderr().front() ) );
 
 	parse( cmd.stdout() );
     }
@@ -124,9 +124,9 @@ namespace storage
 	{
 	    int n = 0;
 
-	    
+
 	    // Parse partition tables: One with cylinder sizes, one with sector sizes
-	    
+
 	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
 	    {
 		if (boost::starts_with(*it, "Number"))
@@ -249,6 +249,10 @@ namespace storage
     void
     Parted::scanSectorSizeLine(const string& line)
     {
+	// FIXME: This parser is too minimalistic and allows too much illegal input.
+	// It turned out to be near impossible to come up with any test case that
+	// actually made it throw an exception and not just silently do something random.
+	// -- shundhammer 2015-05-13
 	string tmp(line);
 	tmp.erase(0, tmp.find(':') + 1);
 	tmp = extractNthWord(0, tmp);
