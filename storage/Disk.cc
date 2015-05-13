@@ -110,7 +110,7 @@ namespace storage
 	  max_primary(c.max_primary),
 	  ext_possible(c.ext_possible), max_logical(c.max_logical),
 	  init_disk(c.init_disk), transport(c.transport),
-	  dmp_slave(c.dmp_slave), no_addpart(c.no_addpart), 
+	  dmp_slave(c.dmp_slave), no_addpart(c.no_addpart),
 	  gpt_enlarge(c.gpt_enlarge), range(c.range),
 	  del_ptable(c.del_ptable), has_fake_partition(c.has_fake_partition)
     {
@@ -524,7 +524,7 @@ namespace storage
 				 "Partitions numbered above %3$lu cannot be accessed."),
 			       dev.c_str(), range_exceed, range-1 );
 	    txt += Text("\n", "\n");
-	    txt += 
+	    txt +=
 		// popup text
 		_("You have the following options:\n"
 		  "  - Repartition your system so that only the maximal allowed number\n"
@@ -1796,12 +1796,24 @@ namespace storage
     void
     Disk::redetectGeometry()
     {
-	Parted parted(device());
-	Geometry tmp_geometry = parted.getGeometry();
-	if (tmp_geometry != geometry)
+	bool testmode = false;
+
+	if ( getStorage() )
+	    testmode = getStorage()->getEnvironment().testmode;
+
+	if ( ! testmode )
 	{
-	    new_geometry = tmp_geometry;
-	    y2mil("new parted geometry " << new_geometry);
+	    // Don't do this in test mode since 'parted' is not actually called
+	    // there, so its output is empty, so there is no 'geometry' line
+	    // that could be parsed, so this would throw a ParseException.
+
+	    Parted parted(device());
+	    Geometry tmp_geometry = parted.getGeometry();
+	    if (tmp_geometry != geometry)
+	    {
+		new_geometry = tmp_geometry;
+		y2mil("new parted geometry " << new_geometry);
+	    }
 	}
     }
 
@@ -2648,7 +2660,7 @@ namespace storage
 		mjr==p->mjr && mnr==p->mnr && range==p->range &&
 		size_k==p->size_k && max_primary==p->max_primary &&
 		ext_possible==p->ext_possible && max_logical==p->max_logical &&
-		init_disk==p->init_disk && label==p->label && 
+		init_disk==p->init_disk && label==p->label &&
 		transport == p->transport &&
 		dmp_slave==p->dmp_slave && no_addpart==p->no_addpart &&
 		gpt_enlarge==p->gpt_enlarge && del_ptable == p->del_ptable;

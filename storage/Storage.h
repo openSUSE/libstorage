@@ -612,6 +612,7 @@ namespace storage
 
 	int setUserdata(const string& device, const map<string, string>& userdata);
 	int getUserdata(const string& device, map<string, string>& userdata);
+	const Environment &getEnvironment() const { return env; }
 
 	void setCallbackProgressBar(CallbackProgressBar pfnc) { progress_bar_cb = pfnc; }
 	CallbackProgressBar getCallbackProgressBar() const { return progress_bar_cb; }
@@ -718,7 +719,7 @@ namespace storage
 	    return( ContIterator( ContPIterator( cont.begin(), cont.end(), CheckFnc, true )) );
 	}
 
-// iterators over disks
+    // iterators over disks
     protected:
 	// protected typedefs for iterators over disks
 	typedef CastCheckIterator<CCIter, storage::DISK, const Disk *> ContainerCDiskIter;
@@ -1221,7 +1222,7 @@ namespace storage
 
 
 
-// iterators over volumes
+    // iterators over volumes
     protected:
 	// protected typedefs for iterators over volumes
 	typedef ListListIterator<Container::ConstPlainIterator, ConstContIterator> ConstVolInter;
@@ -1402,7 +1403,7 @@ namespace storage
 	    return( typename ConstPartitionI<Pred>::type( typename ConstPartitionPI<Pred>::type(pair, p, true )) );
 	}
 
-// iterators over LVM LVs
+    // iterators over LVM LVs
     protected:
 	// protected typedefs for iterators over LVM LVs
 	typedef ListListIterator<Container::ConstPlainIterator, ConstLvmVgIterator> ConstLvmLvInter;
@@ -1657,7 +1658,7 @@ namespace storage
 	    return( typename ConstLoopI<Pred>::type( typename ConstLoopPI<Pred>::type(pair, p, true )) );
 	}
 
-// iterators over btrfs volumes
+    // iterators over btrfs volumes
     protected:
 	// protected typedefs for iterators over btrfs volumes
 	typedef CastIterator<ConstVolInter, Btrfs *> ConstBtrfsInter;
@@ -1777,7 +1778,7 @@ namespace storage
 	    return( typename ConstTmpfsI<Pred>::type( typename ConstTmpfsPI<Pred>::type(pair, p, true )) );
 	}
 
-// iterators over nfs devices
+    // iterators over nfs devices
     protected:
 	// protected typedefs for iterators over nfs devices
 	typedef CastIterator<ConstVolInter, Nfs *> ConstNfsInter;
@@ -1837,7 +1838,7 @@ namespace storage
 	    return( typename ConstNfsI<Pred>::type( typename ConstNfsPI<Pred>::type(pair, p, true )) );
 	}
 
-// iterators over device mapper devices
+    // iterators over device mapper devices
     protected:
 	// protected typedefs for iterators over device mapper devices
 	typedef CastIterator<ConstVolInter, Dm *> ConstDmInter;
@@ -1897,7 +1898,7 @@ namespace storage
 	    return( typename ConstDmI<Pred>::type( typename ConstDmPI<Pred>::type(pair, p, true )) );
 	}
 
-// iterators over dmraid devices
+    // iterators over dmraid devices
     protected:
 	// protected typedefs for iterators over dmraid devices
 	typedef ListListIterator<Container::ConstPlainIterator, ConstDmraidCoIterator> ConstDmraidInter;
@@ -1970,7 +1971,7 @@ namespace storage
 	}
 
 
-// iterators over dmmultipath devices
+    // iterators over dmmultipath devices
     protected:
 	// protected typedefs for iterators over dmmultipath devices
 	typedef ListListIterator<Container::ConstPlainIterator, ConstDmmultipathCoIterator> ConstDmmultipathInter;
