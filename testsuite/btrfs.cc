@@ -4,6 +4,7 @@
 #include "common.h"
 
 #include "storage/SystemInfo/CmdBtrfs.h"
+#include "storage/Exception.h"
 
 
 using namespace std;
@@ -11,9 +12,9 @@ using namespace storage;
 
 
 void
-parse1()
+parse_good()
 {
-    cout << "parse1" << endl;
+    TRACE();
 
     vector<string> lines = {
 	"Label: none  uuid: ea108250-d02c-41dd-b4d8-d4a707a5c649",
@@ -31,10 +32,80 @@ parse1()
 	"Btrfs v3.12+20131125"
     };
 
-    CmdBtrfsShow cmdbtrfsshow(false);
-    cmdbtrfsshow.parse(lines);
+    CmdBtrfsShow cmd( false );
+    cmd.parse( lines );
 
-    cout << cmdbtrfsshow << endl;
+    cout << cmd << endl;
+}
+
+
+void
+parse_empty()
+{
+    TRACE();
+
+    // Sample output if there is no btrfs filesystem at all on the system
+    vector<string> lines = {
+	"Btrfs v3.12+20131125"
+    };
+
+    CmdBtrfsShow cmd( false );
+    cmd.parse( lines );
+
+    cout << cmd << endl;
+}
+
+
+void
+parse_bad_device_name()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Label: none  uuid: ea108250-d02c-41dd-b4d8-d4a707a5c649",
+	"        Total devices 1 FS bytes used 28.00KiB",
+	"        devid    1 size 1.00GiB used 138.38MiB path notadevicename", // no /dev/...
+	"",
+	"Btrfs v3.12+20131125"
+    };
+
+    try
+    {
+	CmdBtrfsShow cmd( false );
+	cmd.parse( lines );
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_no_devices()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Label: none  uuid: ea108250-d02c-41dd-b4d8-d4a707a5c649",
+	"        Total devices 1 FS bytes used 28.00KiB",
+	"",
+	"Btrfs v3.12+20131125"
+    };
+
+    try
+    {
+	CmdBtrfsShow cmd( false );
+	cmd.parse( lines );
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
 }
 
 
@@ -45,5 +116,8 @@ main()
 
     setup_logger();
 
-    parse1();
+    parse_good();
+    parse_empty();
+    parse_bad_device_name();
+    parse_no_devices();
 }

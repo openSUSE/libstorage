@@ -11,23 +11,6 @@ using namespace std;
 using namespace storage;
 
 
-#define EXCEPTION_EXPECTED() \
-    cout << "\n*** " << __FILE__ << "(" << __FUNCTION__ << "):" << __LINE__ << ": " \
-    << "EXPECTED EXCEPTION NOT CAUGHT! ***\n\n" << endl;
-
-
-ostream & operator<<( ostream & stream, const ParseException & ex )
-{
-    stream << "ParseException: " << ex.msg()
-	   << "\n  seen:     \"" << ex.seen()     << "\""
-	   << "\n  expected: \"" << ex.expected() << "\""
-	   << endl;
-
-    return stream;
-}
-
-
-
 void
 parse_msdos_disk_label_good()
 {
