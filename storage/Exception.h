@@ -486,6 +486,69 @@ namespace storage
     };
 
 
+    /**
+     * Exception class for parse errors, e.g. when parsing the output of
+     * external commands like "parted".
+     */
+    class ParseException: public Exception
+    {
+    public:
+
+	/**
+	 * Constructor.
+	 *
+	 * 'seen' the offending line that was to be parsed, 'expected' what the
+	 * parser expected, 'msg' is an optional more exact error message
+	 * (beyond "Parse error").
+	 */
+	ParseException( const std::string & msg,
+			const std::string & seen,
+			const std::string & expected ):
+	    Exception( msg ),
+	    _seen( seen ),
+	    _expected( expected )
+	    {}
+
+	/**
+	 * Destructor.
+	 */
+	virtual ~ParseException() throw()
+	    {}
+
+	/**
+	 * The offending line that caused the parse error.
+	 */
+	const std::string & seen() const { return _seen; }
+
+	/**
+	 * Short textual description of what the parser expected.
+	 */
+	const std::string & expected() const { return _expected; }
+
+	/**
+	 * Write proper error message with all relevant data.
+	 * Reimplemented from Exception.
+	 **/
+	virtual std::ostream & dumpOn( std::ostream & str ) const
+	{
+	    std::string prefix = "Parse error";
+
+	    if ( ! msg().empty() )
+		prefix += ": ";
+
+	    return str << prefix << msg()
+		       << "; expected: \"" << _expected
+		       << "\" seen: \"" << _seen
+		       << std::endl;
+	}
+
+    private:
+
+	std::string _seen;
+	std::string _expected;
+    };
+
+
 
     //
     // Helper templates
@@ -528,7 +591,7 @@ namespace storage
 	if ( doThrow )
 	    throw;
     }
-    
+
 } // namespace storage
 
 #endif // Exception_h

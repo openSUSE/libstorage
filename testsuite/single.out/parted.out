@@ -1,9 +1,9 @@
-parse1
+### parse_msdos_disk_label_good()
 device:/dev/sda label:msdos geometry:[121601,255,63,512]
 num:1 cylRegion:[0,132] secRegion:[2048,2103296] type:primary id:131 boot
 num:2 cylRegion:[131,117488] secRegion:[2105344,1887442944] type:primary id:142
 
-parse2
+### parse_gpt_good()
 device:/dev/sdb label:gpt geometry:[60801,255,63,512]
 num:1 cylRegion:[0,64] secRegion:[2048,1026048] type:primary id:12
 num:2 cylRegion:[63,65] secRegion:[1028096,1028096] type:primary id:131 boot
@@ -12,16 +12,62 @@ num:4 cylRegion:[18369,18242] secRegion:[295098368,293042176] type:primary id:13
 num:5 cylRegion:[36610,263] secRegion:[588140544,4208640] type:primary id:130
 num:6 cylRegion:[36872,23929] secRegion:[592349184,384423936] type:primary id:131
 
-parse3
+### parse_dasd_good()
 device:/dev/dasda label:dasd geometry:[178079,15,12,512]
 num:1 cylRegion:[1,23303] secRegion:[192,4194528] type:primary id:130
 num:2 cylRegion:[23304,2280] secRegion:[4194720,410400] type:primary id:131
 num:3 cylRegion:[25584,152495] secRegion:[4605120,27449280] type:primary id:131
 
-parse4
+### parse_loop_good()
 device:/dev/sdb label:loop geometry:[9964,255,63,512]
 
-parse5
+### parse_dasd_implicit_good()
 device:/dev/dasdc label:dasd geometry:[244,16,128,512] implicit
 num:1 cylRegion:[0,244] secRegion:[2,499998] type:primary id:131
+
+### parse_wiped_disk_good()
+device:/dev/sdb label: geometry:[9964,255,63,512]
+
+### parse_bad_device()
+CAUGHT EXCEPTION (expected): parted complains: Error: Could not stat device /dev/wrglbrmpf - No such file or directory.: "/usr/sbin/parted  -s  '/dev/wrglbrmpf' unit cyl print unit s print"
+
+### parse_no_geometry()
+CAUGHT EXCEPTION (expected): ParseException: No disk geometry line
+  seen:     "..."
+  expected: "BIOS cylinder,head,sector geometry:"
+
+### parse_bad_geometry()
+CAUGHT EXCEPTION (expected): ParseException: Bad disk geometry line
+  seen:     "BIOS cylinder,head,sector geometry:  Each cylinder is 8225kB."
+  expected: "BIOS cylinder,head,sector geometry: 243201,255,63.  Each cylinder is 8225kB."
+
+### parse_bad_sector_size_line()
+CAUGHT EXCEPTION (expected): ParseException: Bad sector size line
+  seen:     "Sector size (logical/physical): 512B, 4096B"
+  expected: "Sector size (logical/physical): 512B/4096B"
+
+### parse_bad_msdos_part_entry_1()
+CAUGHT EXCEPTION (expected): ParseException: Bad cylinder-based partition entry
+  seen:     " 1      0       131     130     primary  ext3         boot, type=83"
+  expected: "2  261cyl  5484cyl  5222cyl primary  btrfs  boot, type=83"
+
+### parse_bad_msdos_part_entry_2()
+CAUGHT EXCEPTION (expected): ParseException: Bad sector-based partition entry
+  seen:     " 1      2048     2105343     2103296     primary  ext3         boot, type=83"
+  expected: "2  4208640s  88100863s  83892224s  primary  btrfs boot, type=83"
+
+### parse_bad_gpt_part_entry()
+CAUGHT EXCEPTION (expected): ParseException: Bad cylinder-based partition entry
+  seen:     " 1      0      63     63     fat16           primary"
+  expected: "2  261cyl  5484cyl  5222cyl primary  btrfs  boot, type=83"
+
+### parse_inconsistent_partition_tables()
+CAUGHT EXCEPTION (expected): ParseException: No corresponding partition number in cylinder table
+  seen:     " 3      2056192s    295098367s  293042176s  ext3            primary"
+  expected: ""
+
+### parse_third_partition_table()
+CAUGHT EXCEPTION (expected): ParseException: Unexpected partition table #3
+  seen:     ""
+  expected: ""
 

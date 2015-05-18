@@ -4,16 +4,34 @@
 #include "common.h"
 
 #include "storage/SystemInfo/CmdParted.h"
+#include "storage/Utils/SystemCmd.h"
 
 
 using namespace std;
 using namespace storage;
 
 
-void
-parse1()
+#define EXCEPTION_EXPECTED() \
+    cout << "\n*** " << __FILE__ << "(" << __FUNCTION__ << "):" << __LINE__ << ": " \
+    << "EXPECTED EXCEPTION NOT CAUGHT! ***\n\n" << endl;
+
+
+ostream & operator<<( ostream & stream, const ParseException & ex )
 {
-    cout << "parse1" << endl;
+    stream << "ParseException: " << ex.msg()
+	   << "\n  seen:     \"" << ex.seen()     << "\""
+	   << "\n  expected: \"" << ex.expected() << "\""
+	   << endl;
+
+    return stream;
+}
+
+
+
+void
+parse_msdos_disk_label_good()
+{
+    TRACE();
 
     vector<string> lines = {
 	"Model: ATA WDC WD10EADS-00M (scsi)",
@@ -45,9 +63,9 @@ parse1()
 
 
 void
-parse2()
+parse_gpt_good()
 {
-    cout << "parse2" << endl;
+    TRACE();
 
     vector<string> lines = {
 	"Model: ATA ST3500320NS (scsi)",
@@ -87,9 +105,9 @@ parse2()
 
 
 void
-parse3()
+parse_dasd_good()
 {
-    cout << "parse3" << endl;
+    TRACE();
 
     vector<string> lines = {
 	"Model: IBM S390 DASD drive (dasd)",
@@ -125,9 +143,9 @@ parse3()
 
 
 void
-parse4()
+parse_loop_good()
 {
-    cout << "parse4" << endl;
+    TRACE();
 
     vector<string> lines = {
 	"Model: Maxtor 6 Y080L0 (scsi)",
@@ -157,9 +175,9 @@ parse4()
 
 
 void
-parse5()
+parse_dasd_implicit_good()
 {
-    cout << "parse5" << endl;
+    TRACE();
 
     vector<string> lines = {
 	"Model: IBM S390 DASD drive (dasd)",
@@ -189,6 +207,382 @@ parse5()
 }
 
 
+void
+parse_wiped_disk_good()
+{
+    TRACE();
+
+    // Disk with no partition table at all (brand new or after 'wipefs')
+    vector<string> lines = {
+	"Error: /dev/sdb: unrecognised disk label",
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 9964cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 9964,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: unknown",
+	"Disk Flags: "
+    };
+
+    Parted parted("/dev/sdb", false);
+    parted.parse(lines);
+
+    cout << parted << endl;
+}
+
+
+void
+parse_bad_device()
+{
+    TRACE();
+
+    try
+    {
+	Parted parted( "/dev/wrglbrmpf", true );
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const SystemCmdException &e )
+    {
+	ST_CAUGHT( e );
+	// Expecting a SystemCmdException:
+	// parted complains "cannot stat device" on stderr
+	cout << "CAUGHT EXCEPTION (expected): " << e.what() << endl << endl;
+    }
+}
+
+
+void
+parse_no_geometry()
+{
+    TRACE();
+
+    // Missing the geometry line completely
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	// "BIOS cylinder,head,sector geometry: 121601,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End        Size       Type     File system  Flags",
+	" 1      0cyl    131cyl     130cyl     primary  ext3         boot, type=83",
+	" 2      131cyl  117618cyl  117487cyl  primary               lvm, type=8e",
+	"",
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start     End          Size         Type     File system  Flags",
+	" 1      2048s     2105343s     2103296s     primary  ext3         boot, type=83",
+	" 2      2105344s  1889548287s  1887442944s  primary               lvm, type=8e",
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_bad_geometry()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	"BIOS cylinder,head,sector geometry:  Each cylinder is 8225kB.", // malformed
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End        Size       Type     File system  Flags",
+	" 1      0cyl    131cyl     130cyl     primary  ext3         boot, type=83",
+	" 2      131cyl  117618cyl  117487cyl  primary               lvm, type=8e",
+	"",
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start     End          Size         Type     File system  Flags",
+	" 1      2048s     2105343s     2103296s     primary  ext3         boot, type=83",
+	" 2      2105344s  1889548287s  1887442944s  primary               lvm, type=8e",
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_bad_sector_size_line()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B, 4096B",
+	"BIOS cylinder,head,sector geometry: 121601,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End        Size       Type     File system  Flags",
+	" 1      0cyl    131cyl     130cyl     primary  ext3         boot, type=83",
+	" 2      131cyl  117618cyl  117487cyl  primary               lvm, type=8e",
+	"",
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start     End          Size         Type     File system  Flags",
+	" 1      2048s     2105343s     2103296s     primary  ext3         boot, type=83",
+	" 2      2105344s  1889548287s  1887442944s  primary               lvm, type=8e",
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_bad_msdos_part_entry_1()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	"BIOS cylinder,head,sector geometry: 121601,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End     Size    Type     File system  Flags",
+	" 1      0       131     130     primary  ext3         boot, type=83", // no "cyl" units
+	" 2      131     117618  117487  primary               lvm, type=8e",  // no "cyl" units
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_bad_msdos_part_entry_2()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	"BIOS cylinder,head,sector geometry: 121601,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End        Size       Type     File system  Flags",
+	" 1      0cyl    131cyl     130cyl     primary  ext3         boot, type=83",
+	" 2      131cyl  117618cyl  117487cyl  primary               lvm, type=8e",
+	"",
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start    End         Size        Type     File system  Flags",
+	" 1      2048     2105343     2103296     primary  ext3         boot, type=83", // no "s" units
+	" 2      2105344  1889548287  1887442944  primary               lvm, type=8e",  // no "s" units
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_bad_gpt_part_entry()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA ST3500320NS (scsi)",
+	"Disk /dev/sda: 60801cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 60801,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: gpt_sync_mbr",
+	"",
+	"Number  Start  End    Size   File system     Name     Flags",
+	" 1      0      63     63     fat16           primary",                    // no "cyl" units
+	" 2      63     127    63     ext3            primary  boot, legacy_boot", // no "cyl" units
+	" 3      127    18369  18241  ext3            primary",                    // no "cyl" units
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_inconsistent_partition_tables()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA ST3500320NS (scsi)",
+	"Disk /dev/sda: 60801cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 60801,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: gpt_sync_mbr",
+	"",
+	"Number  Start     End       Size      File system     Name     Flags",
+	" 1      0cyl      63cyl     63cyl     fat16           primary",
+	" 2      63cyl     127cyl    63cyl     ext3            primary  boot, legacy_boot",
+	"",
+	"Model: ATA ST3500320NS (scsi)",
+	"Disk /dev/sda: 976773168s",
+	"Sector size (logical/physical): 512B/512B",
+	"Partition Table: gpt_sync_mbr",
+	"",
+	"Number  Start       End         Size        File system     Name     Flags",
+	" 1      2048s       1028095s    1026048s    fat16           primary",
+	" 2      1028096s    2056191s    1028096s    ext3            primary  boot, legacy_boot",
+	// Partition #3 is not in first (cylinder-based) partition table
+	" 3      2056192s    295098367s  293042176s  ext3            primary",
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+void
+parse_third_partition_table()
+{
+    TRACE();
+
+    vector<string> lines = {
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 121601cyl",
+	"Sector size (logical/physical): 512B/4096B",
+	"BIOS cylinder,head,sector geometry: 121601,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: msdos",
+	"",
+	"Number  Start   End        Size       Type     File system  Flags",
+	" 1      0cyl    131cyl     130cyl     primary  ext3         boot, type=83",
+	" 2      131cyl  117618cyl  117487cyl  primary               lvm, type=8e",
+	"",
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start     End          Size         Type     File system  Flags",
+	" 1      2048s     2105343s     2103296s     primary  ext3         boot, type=83",
+	" 2      2105344s  1889548287s  1887442944s  primary               lvm, type=8e",
+	"",
+	// One partition table too many
+	"Model: ATA WDC WD10EADS-00M (scsi)",
+	"Disk /dev/sda: 1953525168s",
+	"Sector size (logical/physical): 512B/4096B",
+	"Partition Table: msdos",
+	"",
+	"Number  Start       End            Size           Type     File system  Flags",
+	" 1      2048foo     2105343foo     2103296foo     primary  ext3         boot, type=83",
+	" 2      2105344foo  1889548287foo  1887442944foo  primary               lvm, type=8e",
+	""
+    };
+
+    Parted parted("/dev/sda", false);
+
+    try
+    {
+	parted.parse(lines);
+	EXCEPTION_EXPECTED();
+    }
+    catch ( const ParseException &ex )
+    {
+	ST_CAUGHT( ex );
+	cout << "CAUGHT EXCEPTION (expected): " << ex << endl;
+    }
+}
+
+
+
 int
 main()
 {
@@ -196,9 +590,22 @@ main()
 
     setup_logger();
 
-    parse1();
-    parse2();
-    parse3();
-    parse4();
-    parse5();
+    parse_msdos_disk_label_good();
+    parse_gpt_good();
+    parse_dasd_good();
+    parse_loop_good();
+    parse_dasd_implicit_good();
+    parse_wiped_disk_good();
+
+    parse_bad_device();
+    parse_no_geometry();
+    parse_bad_geometry();
+    parse_bad_sector_size_line();
+
+    parse_bad_msdos_part_entry_1();
+    parse_bad_msdos_part_entry_2();
+    parse_bad_gpt_part_entry();
+
+    parse_inconsistent_partition_tables();
+    parse_third_partition_table();
 }
