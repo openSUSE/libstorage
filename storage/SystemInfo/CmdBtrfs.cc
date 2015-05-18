@@ -44,9 +44,25 @@ namespace storage
     void
     CmdBtrfsShow::probe()
     {
-	SystemCmd c(BTRFSBIN " filesystem show");
-	if (c.retcode() == 0 && !c.stdout().empty())
-	    parse(c.stdout());
+	SystemCmd cmd( BTRFSBIN " filesystem show", SystemCmd::DoThrow );
+
+	if ( cmd.retcode() == 0 && !cmd.stdout().empty() )
+	    parse( cmd.stdout() );
+	else if ( ! cmd.stderr().empty() )
+	{
+	    ST_THROW( SystemCmdException( &cmd, "'btrfs filesystem show' complains: "
+					  + cmd.stderr().front() ) );
+	}
+
+	// Intentionally not throwing an exception here if retcode != 0 since
+	// this command might return 1 if no btrfs at all was found -- which is
+	// not an error condition: We are probing here to determine if there
+	// are any btrfs file systems, and if yes, some more information about
+	// them.
+
+	// stdout is rarely empty for this command since in almost all cases it
+	// at least reports its version number, so this is also not very useful
+	// to indicate errors.
     }
 
 
@@ -65,19 +81,30 @@ namespace storage
 		y2mil( "uuid line:" << *it );
 		string uuid = extractNthWord( 3, *it );
 		y2mil( "uuid:" << uuid );
-		Entry e;
+		Entry entry;
 		++it;
 		while( it!=lines.end() && !boost::contains( *it, " uuid: " ) &&
 		       !boost::contains( *it, "devid " ) )
 		    ++it;
+
 		while( it!=lines.end() && boost::contains( *it, "devid " ) )
 		{
 		    y2mil( "devs line:" << *it );
-		    e.devices.push_back( extractNthWord( 7, *it ));
+		    string device = extractNthWord( 7, *it );
+		    if ( !boost::contains( device, "/dev" ) )  // Allow /sys/dev or /proc/devices
+			ST_THROW( ParseException( "Not a valid device name", device, "/dev/..." ) );
+		    entry.devices.push_back( device );
 		    ++it;
 		}
-		y2mil( "devs:" << e.devices );
-		data[uuid] = e;
+
+		if ( entry.devices.empty() )
+		{
+		    ST_THROW( ParseException( "No devices for UUID " + uuid, "",
+					      "devid  1 size 40.00GiB used 16.32GiB path /dev/sda2" ) );
+		}
+
+		y2mil( "devs:" << entry.devices );
+		data[ uuid ] = entry;
 	    }
 	}
 

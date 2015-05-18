@@ -1,12 +1,19 @@
 
+#include <iosfwd>
 #include <storage/StorageInterface.h>
 
 
 #define TRACE() cout << "### " << __FUNCTION__ << "()" << endl
 
+#define EXCEPTION_EXPECTED() \
+    cout << "\n*** " << __FILE__ << "(" << __FUNCTION__ << "):" << __LINE__ << ": " \
+    << "EXPECTED EXCEPTION NOT CAUGHT! ***\n\n" << endl;
+
 
 namespace storage
 {
+    class ParseException;
+
     void setup_logger();
 
     void setup_system(const string& name);
@@ -32,3 +39,5 @@ namespace storage
     };
 
 }
+
+std::ostream & operator<<( std::ostream & stream, const storage::ParseException & ex );

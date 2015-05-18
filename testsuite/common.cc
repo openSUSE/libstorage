@@ -7,6 +7,7 @@
 
 #include "storage/Utils/AppUtil.h"
 #include "storage/Utils/Region.h"
+#include "storage/Exception.h"
 
 
 extern char* program_invocation_short_name;
@@ -131,5 +132,15 @@ namespace storage
 
 	cout << endl;
     }
+}
 
+
+std::ostream & operator<<( std::ostream & stream, const storage::ParseException & ex )
+{
+    stream << "ParseException: " << ex.msg()
+	   << "\n  seen:     \"" << ex.seen()     << "\""
+	   << "\n  expected: \"" << ex.expected() << "\""
+	   << std::endl;
+
+    return stream;
 }
