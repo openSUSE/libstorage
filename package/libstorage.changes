@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon May 18 15:01:44 UTC 2015 - mvidner@suse.com
+
+- Added stub error strings. Now you should see
+  "DISK_PARTITION_NOT_FOUND" instead of "-1008".
+
+-------------------------------------------------------------------
 Tue Feb 17 14:55:58 CET 2015 - aschnell@suse.de
 
 - mount subvolumes of btrfs root filesystem during installation
