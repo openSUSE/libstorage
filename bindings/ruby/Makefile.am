@@ -14,7 +14,7 @@ rubyextensiondirdir = $(RUBY_EXTENSION_DIR)
 
 AM_CXXFLAGS = -fPIC -DPIC
 
-INCLUDES = -I${top_srcdir} -I$(RUBY_INCLUDE_DIR) -I$(RUBY_INCLUDE_DIR)/$(RUBY_ARCH_NAME)
+AM_CPPFLAGS = -I${top_srcdir} -I$(RUBY_INCLUDE_DIR) -I$(RUBY_INCLUDE_DIR)/$(RUBY_ARCH_NAME)
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
@@ -33,6 +33,6 @@ storage_la_DEPENDENCIES =				\
 	${top_builddir}/storage/libstorage.la
 
 storage_wrap.cxx: storage.i $(DEPENDENCIES)
-	swig -o storage_wrap.cxx -c++ -ruby ${INCLUDES} storage.i
+	swig -o storage_wrap.cxx -c++ -ruby ${AM_CPPFLAGS} storage.i
 
 CLEANFILES = storage.so storage_wrap.cxx
