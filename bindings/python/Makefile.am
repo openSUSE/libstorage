@@ -8,7 +8,7 @@ EXTRA_DIST = libstorage.i enum_ref.i
 
 AM_CXXFLAGS = -fPIC -DPIC
 
-INCLUDES = -I. -I${top_srcdir} -I${PYTHON_INCLUDES}
+AM_CPPFLAGS = -I. -I${top_srcdir} -I${PYTHON_INCLUDES}
 
 DEPENDENCIES =						\
 	${top_srcdir}/storage/StorageInterface.h	\
@@ -32,6 +32,6 @@ _libstorage_la_DEPENDENCIES =				\
 nodist__libstorage_la_SOURCES = libstorage_wrap.cxx
 
 libstorage.py libstorage_wrap.cxx: libstorage.i $(DEPENDENCIES)
-	swig -o libstorage_wrap.cxx -c++ -python ${INCLUDES} libstorage.i
+	swig -o libstorage_wrap.cxx -c++ -python ${AM_CPPFLAGS} libstorage.i
 
 CLEANFILES = libstorage.py libstorage_wrap.cxx

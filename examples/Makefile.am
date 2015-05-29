@@ -4,7 +4,7 @@
 
 SUBDIRS = SystemInfo
 
-INCLUDES = -I$(top_srcdir)
+AM_CPPFLAGS = -I$(top_srcdir)
 
 LDADD = ../storage/libstorage.la
 
