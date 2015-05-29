@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Fri May 29 11:54:47 CEST 2015 - aschnell@suse.de
+
+- fixed access to uninitialized memory (see bsc#932306)
+- 2.25.21
+
+-------------------------------------------------------------------
 Mon May 18 15:01:44 UTC 2015 - mvidner@suse.com
 
 - Added stub error strings. Now you should see
