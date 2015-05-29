@@ -2,7 +2,7 @@
 # Makefile.am for libstorage/testsuite
 #
 
-SUBDIRS = lib config libstorage.test single.out data
+SUBDIRS = lib config libstorage.test single.out data helpers
 
 PACKAGE = libstorage
 
