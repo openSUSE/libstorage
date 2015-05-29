@@ -721,7 +721,7 @@ namespace storage
     {
 	int ret = 0;
 	y2mil("device:" << dev << " mby:" << toString(mby));
-	y2mil( "vorher:" << *this );
+	y2mil("beforehand:" << *this);
 	if (isUsedBy())
 	{
 	    ret = VOLUME_ALREADY_IN_USE;
@@ -732,9 +732,15 @@ namespace storage
 	    {
 		FsCapabilities caps;
 		if( encryption != ENC_NONE )
+		{
 		    ret = VOLUME_MOUNTBY_NOT_ENCRYPTED;
-		else if( !getStorage()->getFsCapabilities( fs, caps ) ||
-			 (mby==MOUNTBY_LABEL && !caps.supportsLabel) ||
+		}
+		else if (!getStorage()->getFsCapabilities(fs, caps))
+		{
+		    y2mil("unknown caps, fs:" << toString(fs));
+		    ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
+		}
+		else if ((mby==MOUNTBY_LABEL && !caps.supportsLabel) ||
 			 (mby==MOUNTBY_UUID && !caps.supportsUuid))
 		{
 		    y2mil( "fs:" << toString(fs) << " caps:" << caps );
@@ -748,7 +754,7 @@ namespace storage
 	    if( ret==0 )
 		mount_by = mby;
 	}
-	y2mil( "nachher:" << *this );
+	y2mil("afterwards:" << *this);
 	y2mil( "needFstabUdpate:" << needFstabUpdate() );
 	y2mil("ret:" << ret);
 	return ret;
