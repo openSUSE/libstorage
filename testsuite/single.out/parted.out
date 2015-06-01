@@ -29,7 +29,7 @@ num:1 cylRegion:[0,244] secRegion:[2,499998] type:primary id:131
 device:/dev/sdb label: geometry:[9964,255,63,512]
 
 ### parse_bad_device()
-CAUGHT EXCEPTION (expected): parted complains: Error: Could not stat device /dev/wrglbrmpf - No such file or directory.: "/usr/sbin/parted  -s  '/dev/wrglbrmpf' unit cyl print unit s print"
+CAUGHT EXCEPTION (expected)
 
 ### parse_no_geometry()
 CAUGHT EXCEPTION (expected): ParseException: No disk geometry line
