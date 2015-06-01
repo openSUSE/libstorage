@@ -228,7 +228,10 @@ parse_bad_device()
 	ST_CAUGHT( e );
 	// Expecting a SystemCmdException:
 	// parted complains "cannot stat device" on stderr
-	cout << "CAUGHT EXCEPTION (expected): " << e.what() << endl << endl;
+	// or SystemCmd could not find the parted binary
+	// (avoiding to add it to libstorage BuildRequires)
+	// -> intentionally not printing exception here
+	cout << "CAUGHT EXCEPTION (expected)" << endl << endl;
     }
 }
 
