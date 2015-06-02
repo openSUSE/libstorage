@@ -876,10 +876,6 @@ namespace storage
 
 	    for (const Subvolume& subvolume : subvolumes)
 	    {
-		// TODO workaround
-		if (boost::contains(subvolume.path(), "grub2"))
-		    continue;
-
 		string real_mount_point = subvolume.path();
 		if (def_subvol.empty())
 		    real_mount_point = "/" + real_mount_point;

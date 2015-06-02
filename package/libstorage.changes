@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jun 02 12:25:13 CEST 2015 - aschnell@suse.de
+
+- enable mounting subvolumes of btrfs root filesystem during
+  installation after grub2 is fixed (for fate#318392)
+
+-------------------------------------------------------------------
 Fri May 29 11:54:47 CEST 2015 - aschnell@suse.de
 
 - fixed access to uninitialized memory (see bsc#932306)
