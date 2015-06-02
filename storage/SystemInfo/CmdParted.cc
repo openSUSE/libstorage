@@ -52,7 +52,11 @@ namespace storage
 	// partition table is found.
 
 	if ( !cmd.stderr().empty() )
-	    ST_THROW( SystemCmdException( &cmd, "parted complains: " + cmd.stderr().front() ) );
+	{
+	    // suppress complaints about "unrecognised disk label" (might be an empty disk)
+	    if ( ! boost::ends_with( cmd.stderr().front(), "unrecognised disk label" ) )
+		ST_THROW( SystemCmdException( &cmd, "parted complains: " + cmd.stderr().front() ) );
+	}
 
 	parse( cmd.stdout() );
     }
