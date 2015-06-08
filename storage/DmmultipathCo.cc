@@ -153,7 +153,7 @@ namespace storage
 	    }
 	    else
 	    {
-		c.execute(MULTIPATHDBIN " -F");
+                c.execute(MULTIPATHDBIN " -k'shutdown'");
 		sleep(1);
 		c.execute(MULTIPATHBIN " -F");
 	    }

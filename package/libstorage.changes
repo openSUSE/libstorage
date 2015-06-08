@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Jun  8 11:55:33 CEST 2015 - schubi@suse.de
+
+- Taking shutdown option for multipathd stopping.
+  (bnc#928572)
+- 2.25.22
+
+-------------------------------------------------------------------
 Tue Jun 02 12:25:13 CEST 2015 - aschnell@suse.de
 
 - enable mounting subvolumes of btrfs root filesystem during
