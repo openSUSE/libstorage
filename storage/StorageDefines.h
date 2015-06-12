@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -75,6 +76,9 @@
 
 #define	 LSBIN		     "/bin/ls"
 
+#define  CHATTRBIN		"/usr/bin/chattr"
+#define  LSATTRBIN		"/usr/bin/lsattr"
+
 #define	 DASDFMTBIN	     "/sbin/dasdfmt"
 #define	 DASDVIEWBIN	     "/sbin/dasdview"
 
@@ -115,5 +119,6 @@
 #define	 MKFSREISERBIN	     "/sbin/mkreiserfs"
 #define	 MKFSEXT2BIN	     "/sbin/mke2fs"
 #define	 MKFSBTRFSBIN	     "/sbin/mkfs.btrfs"
+
 
 #endif

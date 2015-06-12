@@ -1,10 +1,12 @@
 *.o
 test-blkid
 test-cmdbtrfsshow
+test-cmdbtrfssubvolumes
 test-cmddmsetupinfo
 test-cmdvgdisplay
 test-cmdvgs
 test-dir
+test-lsattr
 test-lsscsi
 test-majorminor
 test-mdadmdetail

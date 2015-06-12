@@ -47,7 +47,7 @@ namespace storage
 	void eraseVolume( Volume* v );
 
 	bool existSubvolume( const string& device, const string& name );
-	int createSubvolume( const string& device, const string& name );
+	int createSubvolume(const string& device, const string& name, bool nocow);
 	int removeSubvolume( const string& device, const string& name );
 	int extendVolume( const string& device, const string& dev );
 	int extendVolume( const string& device, const list<string>& devs );

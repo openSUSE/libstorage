@@ -1,0 +1,21 @@
+### parse_good()
+data @
+data boot/grub2/i386-pc
+data boot/grub2/x86_64-efi
+data home
+data opt
+data srv
+data tmp
+data usr/local
+data var/crash
+data var/lib/mailman
+data var/lib/named
+data var/lib/pgsql
+data var/log
+data var/opt
+data var/spool
+data var/tmp
+data .snapshots
+data .snapshots/1/snapshot
+data .snapshots/2/snapshot
+

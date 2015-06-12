@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -144,17 +145,26 @@ namespace storage
 	setChildValue(tmp, "device", value.ub_device);
     }
 
-    std::ostream& operator<<(std::ostream& s, const Subvolume& sv)
+
+    std::ostream&
+    operator<<(std::ostream& s, const Subvolume& subvolume)
     {
-	s << sv.path();
+	s << subvolume.path;
+
+	if (subvolume.nocow)
+	    s << " nocow:" << subvolume.nocow;
+
 	return s;
     }
 
+
     void
-    setChildValue(xmlNode* node, const char* name, const Subvolume& v)
+    setChildValue(xmlNode* node, const char* name, const Subvolume& subvolume)
     {
 	xmlNode* tmp = xmlNewChild(node, name);
-	setChildValue(tmp, "path", v.path());
+
+	setChildValue(tmp, "path", subvolume.path);
+	setChildValueIf(tmp, "nocow", subvolume.nocow, subvolume.nocow);
     }
 
 

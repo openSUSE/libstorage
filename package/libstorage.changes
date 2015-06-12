@@ -1,8 +1,15 @@
 -------------------------------------------------------------------
+Fri Jun 12 11:35:51 CEST 2015 - aschnell@suse.de
+
+- added flag nocow to Subvolume class (API change) (fate#316718)
+- generate python and ruby bindings from common swig interface
+  file, renaming python module
+- 2.25.23
+
+-------------------------------------------------------------------
 Mon Jun  8 11:55:33 CEST 2015 - schubi@suse.de
 
-- Taking shutdown option for multipathd stopping.
-  (bnc#928572)
+- Taking shutdown option for multipathd stopping (bnc#928572)
 - 2.25.22
 
 -------------------------------------------------------------------

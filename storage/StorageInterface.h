@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2015] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -25,11 +26,13 @@
 
 
 #include <string>
+#include <vector>
 #include <deque>
 #include <list>
 #include <map>
 
 using std::string;
+using std::vector;
 using std::deque;
 using std::list;
 using std::map;
@@ -559,6 +562,25 @@ namespace storage
 	string file;
     };
 
+
+    /**
+     * Contains info about btrfs subvolumes.
+     */
+    struct SubvolumeInfo
+    {
+	SubvolumeInfo()
+	    : path(), nocow(false), created(false), deleted(false) {}
+	SubvolumeInfo(const string& path, bool nocow, bool created, bool deleted)
+	    : path(path), nocow(nocow), created(created), deleted(deleted) {}
+
+	string path;
+	bool nocow;
+
+	bool created;
+	bool deleted;
+    };
+
+
     /**
      * Contains info about btrfs volume.
      */
@@ -569,10 +591,9 @@ namespace storage
 	list<string> devices;
 	list<string> devices_add;
 	list<string> devices_rem;
-	list<string> subvol;
-	list<string> subvol_add;
-	list<string> subvol_rem;
+	vector<SubvolumeInfo> subvolumes;
     };
+
 
     /**
      * Contains info about tmpfs volume.
@@ -944,6 +965,8 @@ namespace storage
 	TMPFS_REMOVE_INVALID_VOLUME = -16001,
 	TMPFS_REMOVE_NO_TMPFS = -16002,
 	TMPFS_REMOVE_NOT_FOUND = -16003,
+
+	CHATTR_FAILED = -17001,
 
 	CONTAINER_INTERNAL_ERROR = -99000,
 	CONTAINER_INVALID_VIRTUAL_CALL = -99001,
@@ -2340,10 +2363,11 @@ namespace storage
 	 * Create a BTRFS subvolume
 	 *
 	 * @param device of the main BTRFS volume
-	 * @param name of subvolume
+	 * @param name name of subvolume
+	 * @param nocow whether the subvolume should have the nocow attribute
 	 * @return zero if all is ok, a negative number to indicate an error
 	 */
-	virtual int createSubvolume( const string& device, const string& name ) = 0;
+	virtual int createSubvolume(const string& device, const string& name, bool nocow) = 0;
 
 	/**
 	 * Remove a BTRFS subvolume

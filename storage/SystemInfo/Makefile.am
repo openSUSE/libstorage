@@ -12,6 +12,7 @@ libsysteminfo_la_SOURCES =				\
 	CmdDasdview.cc		CmdDasdview.h		\
 	CmdDmraid.cc		CmdDmraid.h		\
 	CmdDmsetup.cc		CmdDmsetup.h		\
+	CmdLsattr.cc		CmdLsattr.h		\
 	CmdLsscsi.cc		CmdLsscsi.h		\
 	CmdLvm.cc		CmdLvm.h		\
 	CmdMultipath.cc		CmdMultipath.h		\

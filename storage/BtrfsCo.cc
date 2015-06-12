@@ -150,7 +150,7 @@ namespace storage
 	}
 	BtrfsPair p( btrfsPair() );
 	for( BtrfsIter i=p.begin(); i!=p.end(); ++i )
-	    i->detectSubvolumes();
+	    i->detectSubvolumes(systeminfo);
 	y2mil("end");
     }
 
@@ -186,20 +186,23 @@ namespace storage
 	return( ret );
     }
 
-    int BtrfsCo::createSubvolume( const string& device, const string& name )
+
+    int
+    BtrfsCo::createSubvolume(const string& device, const string& name, bool nocow)
     {
 	int ret = 0;
-	y2mil( "device:" << device << " name:" << name );
+	y2mil("device:" << device << " name:" << name << " nocow:" << nocow);
 	BtrfsIter i;
 	if( readonly() )
 	    ret = BTRFS_CHANGE_READONLY;
 	else if( findBtrfs( device, i ))
-	    ret = i->createSubvolume( name );
+	    ret = i->createSubvolume(name, nocow);
 	else
 	    ret = BTRFS_VOLUME_NOT_FOUND;
-	y2mil( "ret:" << ret );
-	return( ret );
+	y2mil("ret:" << ret);
+	return ret;
     }
+
 
     int BtrfsCo::removeSubvolume( const string& device, const string& name )
     {

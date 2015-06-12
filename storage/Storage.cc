@@ -4612,11 +4612,12 @@ namespace storage
     }
 
 
-    int Storage::createSubvolume( const string& device, const string& name )
+    int
+    Storage::createSubvolume(const string& device, const string& name, bool nocow)
     {
 	int ret = 0;
 	assertInit();
-	y2mil("device:" << device << " name:" << name);
+	y2mil("device:" << device << " name:" << name << " nocow:" << nocow);
 	BtrfsCo* co;
 	if (readonly())
 	{
@@ -4624,7 +4625,7 @@ namespace storage
 	}
 	else if( haveBtrfs(co) )
 	{
-	    ret = co->createSubvolume( device, name );
+	    ret = co->createSubvolume(device, name, nocow);
 	}
 	else
 	{
@@ -4635,7 +4636,7 @@ namespace storage
 	    ret = checkCache();
 	}
 	y2mil("ret:" << ret);
-	return( ret );
+	return ret;
     }
 
 
@@ -5581,6 +5582,9 @@ namespace storage
 		return "TMPFS_REMOVE_NO_TMPFS";
 	    case TMPFS_REMOVE_NOT_FOUND:
 		return "TMPFS_REMOVE_NOT_FOUND";
+
+	    case CHATTR_FAILED:
+		return _("Setting file attributes with chattr failed.").text;
 
 	    case CONTAINER_INTERNAL_ERROR:
 		return "CONTAINER_INTERNAL_ERROR";

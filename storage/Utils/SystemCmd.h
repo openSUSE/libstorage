@@ -220,11 +220,11 @@ namespace storage
      * well as for just logging the problem (done in both cases, 'DoThrow' and
      * 'NoThrow'.
      */
-    class SystemCmdException: public Exception
+    class SystemCmdException : public Exception
     {
     public:
-	SystemCmdException( const SystemCmd * sysCmd, const string & msg ):
-	    Exception( "" )
+	SystemCmdException( const SystemCmd * sysCmd, const string & msg )
+	    : Exception( "" )
 	{
 	    _cmdRet = -1;
 

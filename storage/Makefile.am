@@ -57,7 +57,7 @@ libstorage_la_LDFLAGS = -version-info @LIBVERSION_INFO@
 libstorage_la_LIBADD = SystemInfo/libsysteminfo.la Utils/libutils.la -lxml2
 
 $(srcdir)/gen_pathlist.cc: StorageDefines.h
-	grep BIN $< | sed -e "/PARTEDCMD/d" -e "s/^[^ ]*[ ]\+//" -e "s/ .*/,/" >$@
+	grep BIN $< | sed -e "/PARTEDCMD/d" -e "s/^[^ ]*[ ]\+//" -e "s/[ \t].*/,/" > $@
 
 $(srcdir)/gen_md5sum.cc: $(filter-out gen_md5sum.cc,$(libstorage_la_SOURCES))
 	./create_md5sum_date_file $(filter-out gen_md5sum.cc,$(libstorage_la_SOURCES))

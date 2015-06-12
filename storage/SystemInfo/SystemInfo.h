@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -24,12 +25,14 @@
 #define SYSTEM_INFO_H
 
 
+#include <tuple>
 #include <boost/noncopyable.hpp>
 
 #include "storage/SystemInfo/ProcParts.h"
 #include "storage/SystemInfo/ProcMounts.h"
 #include "storage/SystemInfo/ProcMdstat.h"
 #include "storage/SystemInfo/CmdBlkid.h"
+#include "storage/SystemInfo/CmdLsattr.h"
 #include "storage/SystemInfo/CmdLsscsi.h"
 #include "storage/SystemInfo/CmdParted.h"
 #include "storage/SystemInfo/CmdDasdview.h"
@@ -56,28 +59,43 @@ namespace storage
 	SystemInfo();
 	~SystemInfo();
 
-	const Dir& getDir(const string& path) { return dirs.get(path); }
-	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path); }
+	const Dir& getDir(const string& path) { return dirs.get(path, path); }
+	const UdevMap& getUdevMap(const string& path) { return udevmaps.get(path, path); }
 	const MdLinks& getMdLinks() { return mdlinks.get(); }
 	const ProcParts& getProcParts() { return procparts.get(); }
 	const ProcMounts& getProcMounts() { return procmounts.get(); }
 	const ProcMdstat& getProcMdstat() { return procmdstat.get(); }
-	const MdadmDetail& getMdadmDetail(const string& device) { return mdadmdetails.get(device); }
-	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices); }
+	const MdadmDetail& getMdadmDetail(const string& device) { return mdadmdetails.get(device, device); }
+	const MdadmExamine& getMdadmExamine(const list<string>& devices) { return mdadmexamines.get(devices, devices); }
 	const Blkid& getBlkid() { return blkid.get(); }
 	const Lsscsi& getLsscsi() { return lsscsi.get(); }
-	const Parted& getParted(const string& device) { return parteds.get(device); }
-	const Dasdview& getDasdview(const string& device) { return dasdviews.get(device); }
+	const Parted& getParted(const string& device) { return parteds.get(device, device); }
+	const Dasdview& getDasdview(const string& device) { return dasdviews.get(device, device); }
 	const CmdDmsetupInfo& getCmdDmsetupInfo() { return cmddmsetupinfo.get(); }
-	const CmdCryptsetup& getCmdCryptsetup(const string& name) { return cmdcryptsetups.get(name); }
+	const CmdCryptsetup& getCmdCryptsetup(const string& name) { return cmdcryptsetups.get(name, name); }
 	const CmdDmraid& getCmdDmraid() { return cmddmraid.get(); }
 	const CmdMultipath& getCmdMultipath() { return cmdmultipath.get(); }
 	const CmdBtrfsShow& getCmdBtrfsShow() { return cmdbtrfsshow.get(); }
 	const CmdVgs& getCmdVgs() { return cmdvgs.get(); }
-	const CmdVgdisplay& getCmdVgdisplay(const string& name) { return vgdisplays.get(name); }
-	const MajorMinor& getMajorMinor(const string& device) { return majorminors.get(device); }
+	const CmdVgdisplay& getCmdVgdisplay(const string& name) { return vgdisplays.get(name, name); }
+	const MajorMinor& getMajorMinor(const string& device) { return majorminors.get(device, device); }
+
+	// Device is only used for the cache-key.
+	bool isCmdBtrfsSubvolumesCached(const string& device) const
+	    { return cmdbtrfssubvolumes.includes(device); }
+	const CmdBtrfsSubvolumes& getCmdBtrfsSubvolumes(const string& device, const string& mount_point)
+	    { return cmdbtrfssubvolumes.get(device, mount_point); }
+
+	// Device is only used for the cache-key.
+	bool isCmdLsattrCached(const string& device, const string& path) const
+	    { return cmdlsattr.includes(CmdLsattrKey(device, path)); }
+	const CmdLsattr& getCmdLsattr(const string& device, const string& mount_point, const string& path)
+	    { return cmdlsattr.get(CmdLsattrKey(device, path), mount_point, path); }
 
     private:
+
+	// The key for the map needs operator< which std::tuple provides.
+	using CmdLsattrKey = std::tuple<string, string>;
 
 	/* LazyObject and LazyObjects cache the object and a potential
 	   exception during object construction. HelperBase does the common
@@ -121,19 +139,25 @@ namespace storage
 	{
 	};
 
-	template <class Object, class Key = string>
+	template <class Object, class Key, typename... Args>
 	class LazyObjects : private boost::noncopyable
 	{
 	public:
 
-	    typedef HelperBase<Object, Key> Helper;
+	    typedef HelperBase<Object, Args...> Helper;
 
-	    const Object& get(const Key& k)
+	    bool includes(const Key& key) const
 	    {
-		typename map<Key, Helper>::iterator pos = data.lower_bound(k);
-		if (pos == data.end() || typename map<Key, Helper>::key_compare()(k, pos->first))
-		    pos = data.insert(pos, typename map<Key, Helper>::value_type(k, Helper()));
-		return pos->second.get(k);
+		typename map<Key, Helper>::const_iterator pos = data.lower_bound(key);
+		return pos != data.end() && !typename map<Key, Helper>::key_compare()(key, pos->first);
+	    }
+
+	    const Object& get(const Key& key, Args... args)
+	    {
+		typename map<Key, Helper>::iterator pos = data.lower_bound(key);
+		if (pos == data.end() || typename map<Key, Helper>::key_compare()(key, pos->first))
+		    pos = data.insert(pos, typename map<Key, Helper>::value_type(key, Helper()));
+		return pos->second.get(args...);
 	    }
 
 	private:
@@ -142,26 +166,28 @@ namespace storage
 
 	};
 
-	LazyObjects<Dir> dirs;
-	LazyObjects<UdevMap> udevmaps;
+	LazyObjects<Dir, string, string> dirs;
+	LazyObjects<UdevMap, string, string> udevmaps;
 	LazyObject<MdLinks> mdlinks;
 	LazyObject<ProcParts> procparts;
 	LazyObject<ProcMounts> procmounts;
 	LazyObject<ProcMdstat> procmdstat;
-	LazyObjects<MdadmDetail> mdadmdetails;
-	LazyObjects<MdadmExamine, list<string>> mdadmexamines;
+	LazyObjects<MdadmDetail, string, string> mdadmdetails;
+	LazyObjects<MdadmExamine, list<string>, list<string>> mdadmexamines;
 	LazyObject<Blkid> blkid;
 	LazyObject<Lsscsi> lsscsi;
-	LazyObjects<Parted> parteds;
-	LazyObjects<Dasdview> dasdviews;
+	LazyObjects<Parted, string, string> parteds;
+	LazyObjects<Dasdview, string, string> dasdviews;
 	LazyObject<CmdDmsetupInfo> cmddmsetupinfo;
-	LazyObjects<CmdCryptsetup> cmdcryptsetups;
+	LazyObjects<CmdCryptsetup, string, string> cmdcryptsetups;
 	LazyObject<CmdDmraid> cmddmraid;
 	LazyObject<CmdMultipath> cmdmultipath;
 	LazyObject<CmdBtrfsShow> cmdbtrfsshow;
 	LazyObject<CmdVgs> cmdvgs;
-	LazyObjects<CmdVgdisplay> vgdisplays;
-	LazyObjects<MajorMinor> majorminors;
+	LazyObjects<CmdVgdisplay, string, string> vgdisplays;
+	LazyObjects<MajorMinor, string, string> majorminors;
+	LazyObjects<CmdBtrfsSubvolumes, string, string> cmdbtrfssubvolumes;
+	LazyObjects<CmdLsattr, CmdLsattrKey, string, string> cmdlsattr;
 
     };
 
