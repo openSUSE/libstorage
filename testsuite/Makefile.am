@@ -27,8 +27,10 @@ noinst_PROGRAMS = alt-names1.single alt-names2.single				\
 	recursive3.single renumber1.single renumber2.single renumber3.single	\
 	udevdecode.single udevencode.single usedby1.single userdata1.single	\
 	uuid1.single								\
-	blkid.single btrfs.single cryptsetup.single dasdview.single		\
-	dmraid.single dmsetup-info.single lsscsi.single mdadm-detail.single	\
+	blkid.single btrfs-show.single btrfs-subvolumes.single			\
+	cryptsetup.single dasdview.single					\
+	dmraid.single dmsetup-info.single lsattr.single				\
+	lsscsi.single mdadm-detail.single					\
 	mdadm-examine.single parted.single proc-mdstat.single			\
 	proc-mounts.single proc-parts.single vgdisplay.single vgs.single	\
 	systemcmd1.single
@@ -76,11 +78,13 @@ userdata1_single_SOURCES = userdata1.cc common.h common.cc
 uuid1_single_SOURCES = uuid1.cc common.h common.cc
 
 blkid_single_SOURCES = blkid.cc common.h common.cc
-btrfs_single_SOURCES = btrfs.cc common.h common.cc
+btrfs_show_single_SOURCES = btrfs-show.cc common.h common.cc
+btrfs_subvolumes_single_SOURCES = btrfs-subvolumes.cc common.h common.cc
 cryptsetup_single_SOURCES = cryptsetup.cc common.h common.cc
 dasdview_single_SOURCES = dasdview.cc common.h common.cc
 dmraid_single_SOURCES = dmraid.cc common.h common.cc
 dmsetup_info_single_SOURCES = dmsetup-info.cc common.h common.cc
+lsattr_single_SOURCES = lsattr.cc common.h common.cc
 lsscsi_single_SOURCES = lsscsi.cc common.h common.cc
 mdadm_detail_single_SOURCES = mdadm-detail.cc common.h common.cc
 mdadm_examine_single_SOURCES = mdadm-examine.cc common.h common.cc

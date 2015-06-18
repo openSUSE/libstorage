@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -135,7 +136,8 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const CmdBtrfsShow& cmdbtrfsshow)
+    std::ostream&
+    operator<<(std::ostream& s, const CmdBtrfsShow& cmdbtrfsshow)
     {
 	for (CmdBtrfsShow::const_iterator it = cmdbtrfsshow.data.begin(); it != cmdbtrfsshow.data.end(); ++it)
 	    s << "data[" << it->first << "] -> " << it->second << endl;
@@ -144,9 +146,84 @@ namespace storage
     }
 
 
-    std::ostream& operator<<(std::ostream& s, const CmdBtrfsShow::Entry& entry)
+    std::ostream&
+    operator<<(std::ostream& s, const CmdBtrfsShow::Entry& entry)
     {
 	s << entry.devices;
+
+	return s;
+    }
+
+
+
+    CmdBtrfsSubvolumes::CmdBtrfsSubvolumes(const string& mount_point, bool do_probe)
+    {
+	if (do_probe)
+	    probe(mount_point);
+    }
+
+
+    void
+    CmdBtrfsSubvolumes::probe(const string& mount_point)
+    {
+	SystemCmd cmd(BTRFSBIN " subvolume list -a -p " + quote(mount_point), SystemCmd::DoThrow);
+
+	if (cmd.retcode() == 0)
+	    parse(cmd.stdout());
+	else
+	    ST_THROW(SystemCmdException(&cmd, "'btrfs subvolume list' failed, ret: " +
+					to_string(cmd.retcode())));
+    }
+
+
+    void
+    CmdBtrfsSubvolumes::parse(const vector<string>& lines)
+    {
+	for (const string& line : lines)
+	{
+	    Entry entry;
+
+	    string parent;
+	    string::size_type pos1 = line.find(" parent ");
+	    if (pos1 != string::npos)
+		pos1 = line.find_first_not_of(app_ws, pos1 + 6);
+	    if (pos1 != string::npos)
+		parent = line.substr(pos1, line.find_last_not_of(app_ws));
+
+	    // Subvolume can already be deleted, in which case parent is "0"
+	    // (and path "DELETED"). That is a temporary state.
+	    if (parent == "0")
+		continue;
+
+	    string::size_type pos2 = line.find(" path ");
+	    if (pos2 != string::npos)
+		pos2 = line.find_first_not_of(app_ws, pos2 + 5);
+	    if (pos2 != string::npos)
+		entry.path = line.substr(pos2, line.find_last_not_of(app_ws));
+	    if (boost::starts_with(entry.path, "<FS_TREE>/"))
+		entry.path.erase(0, 10);
+
+	    data.push_back(entry);
+	}
+
+	y2mil(*this);
+    }
+
+
+    std::ostream&
+    operator<<(std::ostream& s, const CmdBtrfsSubvolumes& cmdbtrfssubvolumes)
+    {
+	for (const CmdBtrfsSubvolumes::Entry& entry : cmdbtrfssubvolumes)
+	    s << "data " << entry.path << endl;
+
+	return s;
+    }
+
+
+    std::ostream&
+    operator<<(std::ostream& s, const CmdBtrfsSubvolumes::Entry& entry)
+    {
+	s << entry.path;
 
 	return s;
     }

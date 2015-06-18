@@ -1,37 +1,38 @@
 //
-// Python interface definition for libstorage
+// Common SWIG interface definition for libstorage
 //
 
-%module libstorage
+%module(directors="1") storage
+
+%feature("director") storage::CommitCallbacks;
 
 %{
 #include <storage/StorageInterface.h>
 #include <storage/HumanString.h>
 #include <storage/Graph.h>
+#include <storage/Utils.h>
 %}
 
 using namespace std;
 
 %include "std_string.i"
+%include "std_vector.i"
 %include "std_deque.i"
 %include "std_list.i"
-%include "enum_ref.i"
-
-%typemap(out) std::string* {
-    $result = PyString_FromString($1->c_str());
-}
-
-%RefOutputEnum( storage::MountByType, OUTPUT );
+%include "std_map.i"
 
 %include "../../storage/StorageSwig.h"
 %include "../../storage/StorageInterface.h"
 %include "../../storage/HumanString.h"
 %include "../../storage/Graph.h"
+%include "../../storage/Utils.h"
 
 using namespace storage;
 
 %template(DequeString) deque<string>;
 %template(ListString) list<string>;
+%template(ListInt) list<int>;
+%template(MapStringString) map<string, string>;
 %template(DequeContainerInfo) deque<ContainerInfo>;
 %template(DequeVolumeInfo) deque<VolumeInfo>;
 %template(DequePartitionInfo) deque<PartitionInfo>;
@@ -45,7 +46,8 @@ using namespace storage;
 %template(DequeNfsInfo) deque<NfsInfo>;
 %template(DequeTmpfsInfo) deque<TmpfsInfo>;
 %template(DequeBtrfsInfo) deque<BtrfsInfo>;
+%template(VectorSubvolumeInfo) vector<SubvolumeInfo>;
 %template(ListPartitionSlotInfo) list<PartitionSlotInfo>;
 %template(ListCommitInfo) list<CommitInfo>;
-
+%template(ListUsedByInfo) list<UsedByInfo>;
 

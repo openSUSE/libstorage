@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2010] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -206,18 +207,28 @@ namespace storage
 
     public:
 
-	Subvolume(const string& path) : p(path), create(false), del(false) {}
-	Subvolume(const xmlNode* node) : p()
-	    {
-		getChildValue(node, "path", p);
-	    }
+	Subvolume(const string& path, bool nocow)
+	    : path(path), nocow(nocow), create(false), del(false) {}
+
+	Subvolume(const xmlNode* node) : path(), nocow(false)
+	{
+	    getChildValue(node, "path", path);
+	    getChildValue(node, "nocow", nocow);
+	}
 
 	bool operator==(const Subvolume& rhs) const
-	    { return p == rhs.p && create == rhs.create && del == rhs.del; }
+	{
+	    return path == rhs.path && nocow == rhs.nocow && create == rhs.create &&
+		del == rhs.del;
+	}
 	bool operator!=(const Subvolume& rhs) const
 	    { return !(*this == rhs); }
 
-	string path() const { return p; }
+	string getPath() const { return path; }
+
+	bool isNocow() const { return nocow; }
+	void setNocow(bool nocow) { Subvolume::nocow = nocow; }
+
 	bool deleted() const { return del; }
 	void setDeleted( bool val=true ) { del=val; }
 	bool created() const { return create; }
@@ -227,9 +238,13 @@ namespace storage
 
 	friend void setChildValue(xmlNode* node, const char* name, const Subvolume& value);
 
+	operator SubvolumeInfo() const { return SubvolumeInfo(path, nocow, create, del); }
+
     private:
 
-	string p;
+	string path;
+	bool nocow;
+
 	bool create;
 	bool del;
 

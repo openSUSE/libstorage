@@ -4,7 +4,7 @@
 
 SUBDIRS = examples
 
-EXTRA_DIST = storage.i enum_ref.i
+EXTRA_DIST = storage-ruby.i enum_ref.i
 
 MAINTAINERCLEANFILES = storage_wrap.cxx
 
@@ -16,11 +16,7 @@ AM_CXXFLAGS = -fPIC -DPIC
 
 AM_CPPFLAGS = -I${top_srcdir} -I$(RUBY_INCLUDE_DIR) -I$(RUBY_INCLUDE_DIR)/$(RUBY_ARCH_NAME)
 
-DEPENDENCIES =						\
-	${top_srcdir}/storage/StorageInterface.h	\
-	${top_srcdir}/storage/HumanString.h		\
-	${top_srcdir}/storage/Graph.h                   \
-	./enum_ref.i
+include ../storage.deps
 
 # Build Ruby module as shared library
 rubyextensiondir_LTLIBRARIES = storage.la
@@ -32,7 +28,8 @@ storage_la_DEPENDENCIES =				\
 	$(DEPENDENCIES)					\
 	${top_builddir}/storage/libstorage.la
 
-storage_wrap.cxx: storage.i $(DEPENDENCIES)
-	swig -o storage_wrap.cxx -c++ -ruby ${AM_CPPFLAGS} storage.i
+storage_wrap.cxx: storage-ruby.i enum_ref.i ../storage.i $(DEPENDENCIES)
+	swig -o storage_wrap.cxx -c++ -ruby ${AM_CPPFLAGS} storage-ruby.i
 
 CLEANFILES = storage.so storage_wrap.cxx
+

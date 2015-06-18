@@ -557,7 +557,7 @@ namespace storage
 	int removeDmraid( const string& name );
 
 	bool existSubvolume( const string& device, const string& name );
-	int createSubvolume( const string& device, const string& name );
+	int createSubvolume(const string& device, const string& name, bool nocow);
 	int removeSubvolume( const string& device, const string& name );
 	int extendBtrfsVolume( const string& device, const string& dev );
 	int extendBtrfsVolume( const string& device, const deque<string>& devs );

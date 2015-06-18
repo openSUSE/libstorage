@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2015] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -37,8 +38,10 @@ namespace storage
 {
     using namespace std;
 
+
     Btrfs::Btrfs(const BtrfsCo& d, const Volume& v, unsigned long long sz,
-		 const list<string>& devs ) : Volume(d, v), devices(devs)
+		 const list<string>& devs)
+	: Volume(d, v), devices(devs)
     {
 	y2mil("constructed btrfs vol size:" << sz << " devs:" << devs );
 	y2mil("constructed btrfs vol from:" << v );
@@ -48,7 +51,9 @@ namespace storage
 	setSize( sz );
     }
 
-    Btrfs::Btrfs(const BtrfsCo& d, const Volume& v ) : Volume(d, v)
+
+    Btrfs::Btrfs(const BtrfsCo& d, const Volume& v)
+	: Volume(d, v)
     {
 	y2mil("constructed btrfs vol from:" << v );
 	y2mil( "fs:" << fs << " det:" << detected_fs );
@@ -58,7 +63,9 @@ namespace storage
 	y2mil("constructed btrfs vol:" << *this );
     }
 
-    Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node ) : Volume(d, node)
+
+    Btrfs::Btrfs(const BtrfsCo& d, const xmlNode* node)
+	: Volume(d, node)
     {
 	list<const xmlNode*> l = getChildNodes(node, "devices");
 	for( list<const xmlNode*>::const_iterator it=l.begin(); it!=l.end(); ++it )
@@ -132,71 +139,74 @@ namespace storage
     }
 
 
-    void
-    Btrfs::detectSubvolumes()
+    int
+    Btrfs::detectSubvolumes(SystemInfo& systeminfo)
     {
-	y2mil( "dev:" << device() );
-	if( getFormat() )
+	y2mil("dev:" << device());
+	int ret = 0;
+	if (getFormat())
+	{
 	    clearSubvolumes();
+	}
 	else
 	{
-	    bool mounted = false;
 	    string mp = getMount();
-	    if( !isMounted() && getStorage()->mountTmpRo( this, mp ) )
-		mounted = true;
-	    if( !mp.empty() )
+	    TmpMount tmp_mount;
+	    if (!systeminfo.isCmdBtrfsSubvolumesCached(device()))
+	    {
+		ret = prepareTmpMount(tmp_mount, true, "ro");
+		mp = tmp_mount.mount_point;
+	    }
+
+	    if (ret == 0 && !mp.empty())
 	    {
 		clearSubvolumes();
-		SystemCmd cmd(BTRFSBIN " subvolume list -a -p " + quote(mp));
-		for (const string& line : cmd.stdout())
+
+		const CmdBtrfsSubvolumes& cmdbtrfssubvolumes = systeminfo.getCmdBtrfsSubvolumes(device(), mp);
+		for (const CmdBtrfsSubvolumes::Entry& entry : cmdbtrfssubvolumes)
 		{
-		    string parent;
-		    string::size_type pos1 = line.find(" parent ");
-		    if (pos1 != string::npos)
-			pos1 = line.find_first_not_of(app_ws, pos1 + 6);
-		    if (pos1 != string::npos)
-			parent = line.substr(pos1, line.find_last_not_of(app_ws));
-
-		    string subvolume;
-		    string::size_type pos2 = line.find(" path ");
-		    if (pos2 != string::npos)
-			pos2 = line.find_first_not_of(app_ws, pos2 + 5);
-		    if (pos2 != string::npos)
-			subvolume = line.substr(pos2, line.find_last_not_of(app_ws));
-		    if (boost::starts_with(subvolume, "<FS_TREE>/"))
-			subvolume.erase(0, 10);
-
-		    if (subvolume == getStorage()->getDefaultSubvolName())
+		    if (entry.path == getStorage()->getDefaultSubvolName())
 			continue;
 
-		    // Subvolume can already be deleted, in which case parent is "0"
-		    // (and path "DELETED"). That is a temporary state.
-		    if (parent == "0" || subvolume.empty())
-			continue;
-
-		    addSubvolume(subvolume);
+		    try
+		    {
+			const CmdLsattr& cmdlsattr = systeminfo.getCmdLsattr(device(), mp, entry.path);
+			addSubvolume(entry.path, cmdlsattr.isNocow());
+		    }
+		    catch(const SystemCmdException& e)
+		    {
+			// TODO properly handle error but so far framework is missing
+		    }
 		}
 	    }
-	    if( mounted )
+
+	    if (tmp_mount.needs_umount)
 	    {
-		getStorage()->umountDev( device() );
-		if( mp!=getMount() )
-		    rmdir( mp.c_str() );
+		ret = umountTmpMount(tmp_mount, ret);
+		is_mounted = tmp_mount.was_mounted;
 	    }
 	}
-	y2mil("ret dev:" << device() << " subvolumes:" << subvolumes);
+
+	y2mil("dev:" << device() << " subvolumes:" << subvolumes);
+	y2mil(" ret:" << ret);
+	return ret;
     }
 
 
     void
-    Btrfs::addSubvolume(const string& path)
+    Btrfs::addSubvolume(const string& path, bool nocow)
     {
-	y2mil( "path:\"" << path << "\"" );
-	Subvolume v( path );
-	if (!contains(subvolumes, v))
-	    subvolumes.push_back( v );
+	y2mil("path:\"" << path << "\" nocow:" << nocow);
+
+	list<Subvolume>::const_iterator it =
+	    find_if(subvolumes.begin(), subvolumes.end(), [&path](Subvolume subvolume) {
+		return subvolume.getPath() == path;
+	});
+
+	if (it == subvolumes.end())
+	    subvolumes.emplace_back(path, nocow);
 	else
-	    y2war( "subvolume " << v << " already exists!" );
+	    y2war("subvolume " << path << " already exists!");
     }
 
 
@@ -208,7 +218,7 @@ namespace storage
 	list<Subvolume>::iterator i=subvolumes.begin();
 	while( i!=subvolumes.end() && !ret )
 	{
-	    ret = !i->deleted() && i->path()==name && (!getFormat()||i->created());
+	    ret = !i->deleted() && i->getPath() == name && (!getFormat()||i->created());
 	    if( !ret )
 		++i;
 	}
@@ -216,29 +226,32 @@ namespace storage
 	return( ret );
     }
 
+
     int
-    Btrfs::createSubvolume( const string& name )
+    Btrfs::createSubvolume(const string& name, bool nocow)
     {
-	int ret=0;
-	y2mil( "name:" << name );
+	int ret = 0;
+	y2mil("name:" << name << " nocow:" << nocow);
 	list<Subvolume>::iterator i=subvolumes.begin();
-	while( i!=subvolumes.end() && !i->deleted() && i->path()!=name )
+	while( i!=subvolumes.end() && !i->deleted() && i->getPath() != name )
 	    ++i;
 	if( i==subvolumes.end() )
 	{
-	    Subvolume v( name );
+	    Subvolume v(name, nocow);
 	    v.setCreated();
 	    subvolumes.push_back( v );
 	}
 	else if( getFormat() )
 	{
 	    i->setCreated();
+	    i->setNocow(nocow);
 	}
 	else
 	    ret = BTRFS_SUBVOL_EXISTS;
-	y2mil( "ret:" << ret );
-	return( ret );
+	y2mil("ret:" << ret);
+	return ret;
     }
+
 
     int
     Btrfs::deleteSubvolume( const string& name )
@@ -246,7 +259,7 @@ namespace storage
 	int ret=0;
 	y2mil( "name:" << name );
 	list<Subvolume>::iterator i=subvolumes.begin();
-	while( i!=subvolumes.end() && i->path()!=name )
+	while( i!=subvolumes.end() && i->getPath() != name )
 	    ++i;
 	if( i!=subvolumes.end() )
 	{
@@ -443,7 +456,9 @@ namespace storage
 	return( ret );
     }
 
-    int Btrfs::doDeleteSubvol()
+
+    int
+    Btrfs::doDeleteSubvol()
     {
 	TmpMount tmp_mount;
 	int ret = prepareTmpMount(tmp_mount, false, "subvolid=0");
@@ -451,14 +466,14 @@ namespace storage
 	{
 	    SystemCmd c;
 	    string cmd = BTRFSBIN " subvolume delete ";
-	    for( list<Subvolume>::iterator i=subvolumes.begin(); i!=subvolumes.end(); ++i )
+	    for (Subvolume& subvolume : subvolumes)
 	    {
-		if( i->deleted() )
+		if (subvolume.deleted())
 		{
-		    getStorage()->showInfoCb( deleteSubvolText(true,i->path()),silent);
-		    c.execute(cmd + quote(tmp_mount.mount_point + '/' + i->path()));
+		    getStorage()->showInfoCb(deleteSubvolText(true, subvolume), silent);
+		    c.execute(cmd + quote(tmp_mount.mount_point + '/' + subvolume.getPath()));
 		    if( c.retcode()==0 )
-			i->setDeleted(false);
+			subvolume.setDeleted(false);
 		    else
 			ret = BTRFS_DELETE_SUBVOL_FAIL;
 		}
@@ -469,25 +484,25 @@ namespace storage
 	    ret = umountTmpMount(tmp_mount, ret);
 	    is_mounted = tmp_mount.was_mounted;
 	}
-	y2mil( "ret:" << ret );
-	return( ret );
+	y2mil("ret:" << ret);
+	return ret;
     }
 
-    int Btrfs::doCreateSubvol()
+
+    int
+    Btrfs::doCreateSubvol()
     {
 	TmpMount tmp_mount;
 	int ret = prepareTmpMount(tmp_mount, false, "subvolid=0");
 	if( ret==0 )
 	{
-	    SystemCmd c;
-	    string cmd = BTRFSBIN " subvolume create ";
-	    for( list<Subvolume>::iterator i=subvolumes.begin(); i!=subvolumes.end(); ++i )
+	    for (Subvolume& subvolume : subvolumes)
 	    {
-		if( i->created() )
+		if (subvolume.created())
 		{
-		    getStorage()->showInfoCb( createSubvolText(true,i->path()),silent);
-		    y2mil("dir:" << tmp_mount.mount_point << " path:" << i->path());
-		    string path = tmp_mount.mount_point + "/" + i->path();
+		    getStorage()->showInfoCb(createSubvolText(true, subvolume), silent);
+		    y2mil("dir:" << tmp_mount.mount_point << " path:" << subvolume.getPath());
+		    string path = tmp_mount.mount_point + "/" + subvolume.getPath();
 		    string dir = path.substr( 0, path.find_last_of( "/" ) );
 		    y2mil( "path:" << path << " dir:" << dir );
 		    if( !checkDir( dir ) )
@@ -495,11 +510,20 @@ namespace storage
 			y2mil( "create path:" << dir );
 			createPath( dir );
 		    }
-		    c.execute(cmd + quote(path));
+
+		    SystemCmd c;
+		    c.execute(BTRFSBIN " subvolume create " + quote(path));
 		    if( c.retcode()==0 )
-			i->setCreated(false);
+			subvolume.setCreated(false);
 		    else
 			ret = BTRFS_CREATE_SUBVOL_FAIL;
+
+		    if (ret == 0 && subvolume.isNocow())
+		    {
+			c.execute(CHATTRBIN " +C " + quote(path));
+			if (c.retcode() != 0)
+			    ret = CHATTR_FAILED;
+		    }
 		}
 	    }
 	}
@@ -509,58 +533,42 @@ namespace storage
 	    is_mounted = tmp_mount.was_mounted;
 	}
 	y2mil( "ret:" << ret );
-	return( ret );
+	return ret;
     }
 
-    list<string> Btrfs::getSubvolAddDel( bool add ) const
-    {
-	list<string> ret;
-	for (list<Subvolume>::const_iterator i = subvolumes.begin(); i != subvolumes.end(); ++i)
-	{
-	    if( !add && i->deleted() )
-		ret.push_back(i->path());
-	    if( add && i->created() )
-		ret.push_back(i->path());
-	}
-	if( !ret.empty() )
-	    y2mil( "add:" << add << " ret:" << ret );
-	return( ret );
-    }
 
     void
-    Btrfs::countSubvolAddDel( unsigned& add, unsigned& del ) const
+    Btrfs::countSubvolAddDel(unsigned& add, unsigned& del) const
     {
 	add = del = 0;
-	for( list<Subvolume>::const_iterator i=subvolumes.begin();
-	     i!=subvolumes.end(); ++i )
+	for (const Subvolume& subvolume : subvolumes)
 	{
-	    if( i->deleted() )
+	    if (subvolume.deleted())
 		del++;
-	    if( i->created() )
+	    if (subvolume.created())
 		add++;
 	}
-	if( add>0 || del>0 )
-	    y2mil( "add:" << add << " del:" << del );
+	if (add > 0 || del > 0)
+	    y2mil("add:" << add << " del:" << del);
     }
 
-    string
-    Btrfs::subvolNames( bool added ) const
+
+    list<Subvolume>
+    Btrfs::getSubvolAddDel(bool add) const
     {
-	string ret;
-	for( list<Subvolume>::const_iterator i=subvolumes.begin();
-	     i!=subvolumes.end(); ++i )
+	list<Subvolume> ret;
+	for (const Subvolume& subvolume : subvolumes)
 	{
-	    if( (added && i->created()) ||
-		(!added && i->deleted()))
-	    {
-		if( !ret.empty() )
-		    ret += ' ';
-		ret += i->path();
-	    }
+	    if (!add && subvolume.deleted())
+		ret.push_back(subvolume);
+	    if (add && subvolume.created())
+		ret.push_back(subvolume);
 	}
-	y2mil( "ret:" << ret );
-	return( ret );
+	if (!ret.empty())
+	    y2mil("add:" << add << " ret:" << ret);
+	return ret;
     }
+
 
     int Btrfs::setFormat( bool val, storage::FsType new_fs )
     {
@@ -571,7 +579,8 @@ namespace storage
 	{
 	    if( val )
 		uuid = co()->fakeUuid();
-	    detectSubvolumes();
+	    SystemInfo systeminfo;
+	    detectSubvolumes(systeminfo);
 	    getStorage()->setBtrfsUsedBy( this );
 	}
 	y2mil("device:" << *this );
@@ -752,21 +761,19 @@ namespace storage
 	for (list<string>::const_iterator it = dev_rem.begin(); it != dev_rem.end(); ++it)
 	    l.push_back(commitAction(DECREASE, cont->type(), reduceText(false, *it), this, false));
 
-	unsigned rem, add;
-	countSubvolAddDel( add, rem );
-	if( rem>0 )
+	unsigned add, rem;
+	countSubvolAddDel(add, rem);
+	if (rem > 0)
 	{
-	    list<string> sl = getSubvolAddDel( false );
-	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+	    for (const Subvolume& subvolume : getSubvolAddDel(false))
 		l.push_back(commitAction(SUBVOL, cont->type(),
-					 deleteSubvolText(false,*i), this, true));
+					 deleteSubvolText(false, subvolume), this, true));
 	}
-	if( add>0 )
+	if (add > 0)
 	{
-	    list<string> sl = getSubvolAddDel( true );
-	    for( list<string>::const_iterator i=sl.begin(); i!=sl.end(); ++i )
+	    for (const Subvolume& subvolume : getSubvolAddDel(true))
 		l.push_back(commitAction(SUBVOL, cont->type(),
-					 createSubvolText(false,*i), this, false));
+					 createSubvolText(false, subvolume), this, false));
 	}
     }
 
@@ -778,17 +785,17 @@ namespace storage
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvolumes.begin(); it != subvolumes.end(); ++it)
+	    for (const Subvolume& subvolume : subvolumes)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = subvolume.getPath();
+		if (!def_subvol.empty() && boost::starts_with(path, def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabChange tmp_change = change;
 		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
-		tmp_change.opts.push_back("subvol=" + it->path());
+		tmp_change.opts.push_back("subvol=" + subvolume.getPath());
 		fstab->addEntry(tmp_change);
 	    }
 	}
@@ -804,10 +811,10 @@ namespace storage
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvolumes.begin(); it != subvolumes.end(); ++it)
+	    for (const Subvolume& subvolume : subvolumes)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = subvolume.getPath();
+		if (!def_subvol.empty() && boost::starts_with(path, def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabKey tmp_key(key);
@@ -816,7 +823,7 @@ namespace storage
 		tmp_change.mount += (tmp_change.mount == "/" ? "" : "/") + path;
 		tmp_change.opts.remove("defaults");
 		tmp_change.opts.remove_if(string_starts_with("subvol="));
-		tmp_change.opts.push_back("subvol=" + it->path());
+		tmp_change.opts.push_back("subvol=" + subvolume.getPath());
 		fstab->updateEntry(tmp_key, tmp_change);
 	    }
 	}
@@ -832,10 +839,10 @@ namespace storage
 	{
 	    string def_subvol = getStorage()->getDefaultSubvolName();
 
-	    for (list<Subvolume>::const_iterator it = subvolumes.begin(); it != subvolumes.end(); ++it)
+	    for (const Subvolume& subvolume : subvolumes)
 	    {
-		string path = it->path();
-		if (!def_subvol.empty() && boost::starts_with(it->path(), def_subvol + "/"))
+		string path = subvolume.getPath();
+		if (!def_subvol.empty() && boost::starts_with(path, def_subvol + "/"))
 		    path = path.substr(def_subvol.size() + 1);
 
 		FstabKey tmp_key(key);
@@ -876,7 +883,7 @@ namespace storage
 
 	    for (const Subvolume& subvolume : subvolumes)
 	    {
-		string real_mount_point = subvolume.path();
+		string real_mount_point = subvolume.getPath();
 		if (def_subvol.empty())
 		    real_mount_point = "/" + real_mount_point;
 		else
@@ -887,7 +894,7 @@ namespace storage
 		    createPath(real_mount_point);
 
 		list<string> tmp_opts = opts;
-		tmp_opts.push_back("subvol=" + subvolume.path());
+		tmp_opts.push_back("subvol=" + subvolume.getPath());
 
 		string cmdline = MOUNTBIN " -t btrfs -o " + boost::join(tmp_opts, ",") + " " +
 		    quote(mountDevice()) + " " + quote(real_mount_point);
@@ -947,66 +954,84 @@ namespace storage
 	return( txt );
     }
 
-    Text Btrfs::createSubvolText(bool doing, const string& name) const
+
+    Text
+    Btrfs::createSubvolText(bool doing, const Subvolume& subvolume) const
     {
 	Text txt;
-	if( doing )
+	if (doing)
+	{
+	    if (!subvolume.isNocow())
+	    {
+		// displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+		// %2$s is replaced by device name e.g. /dev/sda1
+		txt = sformat(_("Creating subvolume %1$s on device %2$s"), subvolume.getPath().c_str(),
+			      dev.c_str());
+	    }
+	    else
+	    {
+		// displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+		// %2$s is replaced by device name e.g. /dev/sda
+		txt = sformat(_("Creating subvolume %1$s on device %2$s with option \"no copy on write\""),
+			      subvolume.getPath().c_str(), dev.c_str());
+	    }
+	}
+	else
+	{
+	    if (!subvolume.isNocow())
+	    {
+		// displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+		// %2$s is replaced by device name e.g. /dev/sda1
+		txt = sformat(_("Create subvolume %1$s on device %2$s"), subvolume.getPath().c_str(),
+			      dev.c_str());
+	    }
+	    else
+	    {
+		// displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+		// %2$s is replaced by device name e.g. /dev/sda1
+		txt = sformat(_("Create subvolume %1$s on device %2$s with option \"no copy on write\""),
+			      subvolume.getPath().c_str(), dev.c_str());
+	    }
+	}
+	return txt;
+    }
+
+
+    Text
+    Btrfs::deleteSubvolText(bool doing, const Subvolume& subvolume) const
+    {
+	Text txt;
+	if (doing)
 	{
 	    // displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-	    // %2$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Creating subvolume %1$s on device %2$s"),
-			   name.c_str(), dev.c_str() );
+	    // %2$s is replaced by device name e.g. /dev/sda1
+	    txt = sformat(_("Removing subvolume %1$s on device %2$s"), subvolume.getPath().c_str(),
+			  dev.c_str());
 	}
 	else
 	{
 	    // displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-	    // %2$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Create subvolume %1$s on device %2$s"),
-			   name.c_str(), dev.c_str() );
+	    // %2$s is replaced by device name e.g. /dev/sda1
+	    txt = sformat(_("Remove subvolume %1$s on device %2$s"), subvolume.getPath().c_str(),
+			  dev.c_str());
 	}
-	return( txt );
+	return txt;
     }
 
-    Text Btrfs::deleteSubvolText(bool doing, const string& name) const
-    {
-	Text txt;
-	if( doing )
-	{
-	    // displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-	    // %2$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Removing subvolume %1$s on device %2$s"),
-			   name.c_str(), dev.c_str() );
-	}
-	else
-	{
-	    // displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-	    // %2$s is replaced by device name e.g. /dev/hda1
-	    txt = sformat( _("Remove subvolume %1$s on device %2$s"),
-			   name.c_str(), dev.c_str() );
-	}
-	return( txt );
-    }
 
-    void Btrfs::getInfo( BtrfsInfo& info ) const
+    void
+    Btrfs::getInfo(BtrfsInfo& info) const
     {
 	Volume::getInfo(info.v);
 	info.devices = devices;
 	info.devices_add = dev_add;
 	info.devices_rem = dev_rem;
 
-	info.subvol.clear();
-	info.subvol_add.clear();
-	info.subvol_rem.clear();
-	for (list<Subvolume>::const_iterator it = subvolumes.begin(); it != subvolumes.end(); ++it)
-	{
-	    if (it->deleted())
-		info.subvol_rem.push_back(it->path());
-	    else if (it->created())
-		info.subvol_add.push_back(it->path());
-	    else
-		info.subvol.push_back(it->path());
-	}
+	info.subvolumes.clear();
+	for (const Subvolume& subvolume : subvolumes)
+	    info.subvolumes.emplace_back(subvolume);
     }
+
 
     std::ostream& operator<< (std::ostream& s, const Btrfs& v )
     {
@@ -1068,9 +1093,9 @@ namespace storage
 	for (const Subvolume& subvolume : subvolumes)
 	{
 	    if (subvolume.deleted())
-		tmp += "<--" + subvolume.path();
+		tmp += "<--" + subvolume.getPath();
 	    else if (subvolume.created())
-		tmp += subvolume.path() + "-->";
+		tmp += subvolume.getPath() + "-->";
 	}
 	if (!tmp.empty())
 	    log << " Subvolumes:" << tmp;
@@ -1090,19 +1115,23 @@ namespace storage
     }
 
 
-    bool Btrfs::needCreateSubvol( const Btrfs& v )
+    bool
+    Btrfs::needCreateSubvol(const Btrfs& v)
     {
 	unsigned dummy, cnt;
-	v.countSubvolAddDel( cnt, dummy );
-	return( cnt>0 );
+	v.countSubvolAddDel(cnt, dummy);
+	return cnt > 0;
     }
 
-    bool Btrfs::needDeleteSubvol( const Btrfs& v )
+
+    bool
+    Btrfs::needDeleteSubvol(const Btrfs& v)
     {
 	unsigned dummy, cnt;
-	v.countSubvolAddDel( dummy, cnt );
-	return( cnt>0 );
+	v.countSubvolAddDel(dummy, cnt);
+	return cnt > 0;
     }
+
 
     bool Btrfs::needReduce( const Btrfs& v )
     {

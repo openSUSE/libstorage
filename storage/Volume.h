@@ -49,6 +49,8 @@ namespace storage
     // information for Volume::prepareTmpMount() and Volume::umountTmpMount()
     struct TmpMount
     {
+	TmpMount() : mount_point(), needs_umount(false), was_mounted(false) {}
+
 	string mount_point;
 	bool needs_umount;
 	bool was_mounted;

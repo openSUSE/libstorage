@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -99,6 +100,62 @@ namespace storage
 	typedef map<string, Entry>::const_iterator const_iterator;
 
 	map<string, Entry> data;
+
+    };
+
+
+    /**
+     * Class to probe for btrfs subvolumes: Call "btrfs subvolume list <mount-point>"
+     */
+    class CmdBtrfsSubvolumes
+    {
+    public:
+
+	/**
+	 * Constructor. If 'do_probe' is 'true', call "btrfs subvolume list
+	 * <mount-point>" as an external command. If 'do_probe' is 'false', do
+	 * nothing for now (this is mostly useful for testing).
+	 *
+	 * This may throw a SystemCmdException or a ParseException.
+	 */
+	CmdBtrfsSubvolumes(const string& mount_point, bool do_probe = true);
+
+	/**
+	 * Probe for btrfs subvolumes with the "btrfs subvolume list
+	 * <mount-point>" command and parse its output.
+	 *
+	 * This may throw a SystemCmdException or a ParseException.
+	 */
+	void probe(const string& mount_point);
+
+	/**
+	 * Entry for one btrfs subvolume.
+	 */
+	struct Entry
+	{
+	    string path;
+	};
+
+	typedef vector<Entry>::value_type value_type;
+	typedef vector<Entry>::const_iterator const_iterator;
+
+	const_iterator begin() const { return data.begin(); }
+	const_iterator end() const { return data.end(); }
+
+	friend std::ostream& operator<<(std::ostream& s, const CmdBtrfsSubvolumes& cmdbtrfssubvolumes);
+	friend std::ostream& operator<<(std::ostream& s, const Entry& entry);
+
+	/**
+	 * Parse the output of "btrfs subvolume list <mount-point>" passed in
+	 * 'lines'.
+	 *
+	 * This may throw a ParseException.
+	 */
+	void parse(const vector<string>& lines);
+
+    private:
+
+	vector<Entry> data;
 
     };
 

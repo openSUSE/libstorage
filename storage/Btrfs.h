@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2011] Novell, Inc.
+ * Copyright (c) [2015] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -43,14 +44,14 @@ namespace storage
 	virtual ~Btrfs();
 
 	void clearSubvolumes() { subvolumes.clear(); }
-	void addSubvolume(const string& path);
-	void detectSubvolumes();
+	void addSubvolume(const string& path, bool nocow);
+	int detectSubvolumes(SystemInfo& systeminfo);
 	list<string> getDevices( bool add_del=false ) const;
 	void getDevices( list<string>& devs, bool add_del=false ) const;
 	list<Subvolume> getSubvolumes() const { return subvolumes; }
 
 	bool existSubvolume( const string& name );
-	int createSubvolume( const string& name );
+	int createSubvolume(const string& name, bool nocow);
 	int deleteSubvolume( const string& name );
 	int extendVolume( const string& dev );
 	int extendVolume( const list<string>& devs );
@@ -62,8 +63,8 @@ namespace storage
 	int doCreateSubvol();
 	int doReduce();
 	int doExtend();
-	Text createSubvolText(bool doing, const string& name) const;
-	Text deleteSubvolText(bool doing, const string& name) const;
+	Text createSubvolText(bool doing, const Subvolume& subvolume) const;
+	Text deleteSubvolText(bool doing, const Subvolume& subvolume) const;
 	Text extendText(bool doing, const string& device) const;
 	Text reduceText(bool doing, const string& device) const;
 	Text removeText( bool doing ) const;
@@ -74,8 +75,8 @@ namespace storage
 	virtual list<string> udevId() const;
 	virtual string sysfsPath() const;
 
-	void countSubvolAddDel( unsigned& add, unsigned& rem ) const;
-	list<string> getSubvolAddDel( bool ) const;
+	void countSubvolAddDel(unsigned& add, unsigned& rem) const;
+	list<Subvolume> getSubvolAddDel(bool) const;
 
 	void saveData(xmlNode* node) const;
 	friend std::ostream& operator<< (std::ostream& s, const Btrfs& l );
@@ -96,7 +97,6 @@ namespace storage
 
     protected:
 	BtrfsCo* co();
-	string subvolNames( bool added ) const;
 	list<string> devices;
 	list<string> dev_add;
 	list<string> dev_rem;

@@ -87,9 +87,9 @@ touch $RPM_BUILD_ROOT/run/libstorage/lock
 
 %{find_lang} libstorage
 
-rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.a  
-rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_libstorage.la
-%if 0%{?suse_version} 
+rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_storage.a
+rm -f $RPM_BUILD_ROOT/%{python_sitearch}/_storage.la
+%if 0%{?suse_version}
 %if "%{?rb_vendorarchdir}" != ""
 rm -f $RPM_BUILD_ROOT/%{rb_vendorarchdir}/storage.la
 %else
@@ -202,8 +202,8 @@ Authors:
 
 %files -n libstorage-python
 %defattr(-,root,root)
-%{python_sitelib}/libstorage.py*
-%attr(755,root,root) %{python_sitearch}/_libstorage.so
+%{python_sitelib}/storage.py*
+%attr(755,root,root) %{python_sitearch}/_storage.so
 
 %package -n libstorage-ruby
 
@@ -221,7 +221,7 @@ Authors:
 
 %files -n libstorage-ruby
 %defattr(-,root,root)
-%if 0%{?suse_version} 
+%if 0%{?suse_version}
 %if "%{?rb_vendorarchdir}" != ""
 %{rb_vendorarchdir}/storage.so
 %else
