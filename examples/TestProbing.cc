@@ -27,7 +27,7 @@ main (int argc, char** argv)
 	{
 	    case DISK: {
 
-		cout << "found container (disk) " << i1->name << '\n';
+		cout << "found container (disk) " << i1->name << ( i1->readonly ? " (read only)" : "" ) << '\n';
 
 		deque<PartitionInfo> partitions;
 		if (s->getPartitionInfo (i1->name, partitions) != 0)

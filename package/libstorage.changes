@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 22 16:10:57 CEST 2015 - shundhammer@suse.de
+
+- Catch I/O errors while probing disks with parted (bsc#934640)
+- 2.25.24
+
+-------------------------------------------------------------------
 Fri Jun 12 11:35:51 CEST 2015 - aschnell@suse.de
 
 - added flag nocow to Subvolume class (API change) (fate#316718)
