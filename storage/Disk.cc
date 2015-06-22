@@ -302,46 +302,67 @@ namespace storage
     {
 	bool ret = true;
 
-	const Parted& parted = systeminfo.getParted(dev);
-
-	string dlabel = parted.getLabel();
-	ronly = parted.getImplicit();
-
-	new_geometry = geometry = parted.getGeometry();
-
-	gpt_enlarge = parted.getGptEnlarge();
-
-	y2mil("device:" << device() << " dlabel:" << dlabel << " geometry:" << geometry <<
-	      " gpt_enlarge:" << gpt_enlarge);
-
-	if( dlabel!="loop" )
+	try
 	{
+	    const Parted& parted = systeminfo.getParted(dev);
+
+	    string dlabel = parted.getLabel();
+	    ronly = parted.getImplicit();
+
+	    new_geometry = geometry = parted.getGeometry();
+
+	    gpt_enlarge = parted.getGptEnlarge();
+
+	    y2mil("device:" << device() << " dlabel:" << dlabel << " geometry:" << geometry <<
+		  " gpt_enlarge:" << gpt_enlarge);
+
+	    if( dlabel!="loop" )
+	    {
+		setLabelData( dlabel );
+		checkPartedOutput(systeminfo);
+	    }
+	    else
+		dlabel.erase();
+	    if( detected_label.empty() )
+		detected_label = dlabel;
+	    if( dlabel.empty() )
+		dlabel = defaultLabel();
 	    setLabelData( dlabel );
-	    checkPartedOutput(systeminfo);
+
+	    if (label == "unsupported")
+	    {
+		Text txt = sformat(
+				   // popup text %1$s is replaced by disk name e.g. /dev/hda
+				   _("The partition table type on disk %1$s cannot be handled by\n"
+				     "this tool.\n"
+				     "\n"
+				     "You can use the partitions on disk %1$s as they are.\n"
+				     "You can format them and assign mount points to them, but you\n"
+				     "cannot add, edit, resize, or remove partitions from that\n"
+				     "disk with this tool."), dev.c_str() );
+		y2war( "unsupported disk label on " << dev << " txt:" << txt.native );
+
+		detected_label = label;
+		ronly = true;
+	    }
 	}
-	else
-	    dlabel.erase();
-	if( detected_label.empty() )
-	    detected_label = dlabel;
-	if( dlabel.empty() )
-	    dlabel = defaultLabel();
-	setLabelData( dlabel );
-
-	if (label == "unsupported")
+	catch ( const SystemCmdException &ex )
 	{
-	    Text txt = sformat(
-			       // popup text %1$s is replaced by disk name e.g. /dev/hda
-			       _("The partition table type on disk %1$s cannot be handled by\n"
-				 "this tool.\n"
-				 "\n"
-				 "You can use the partitions on disk %1$s as they are.\n"
-				 "You can format them and assign mount points to them, but you\n"
-				 "cannot add, edit, resize, or remove partitions from that\n"
-				 "disk with this tool."), dev.c_str() );
-	    y2war( "unsupported disk label on " << dev << " txt:" << txt.native );
+	    ST_CAUGHT( ex );
 
-	    detected_label = label;
-	    ronly = true;
+	    if ( boost::starts_with( ex.what(), "parted complains: Input/output error" ) )
+	    {
+		// bsc#934640: Probing /dev/mmcblk0rpmb ("Replay Protected Memory Block - eMMC") crashes YaST
+		//
+		// There is no really elegant solution to this, but we need at least to make sure
+		// the exception doesn't cascade up to the user level and crash the application
+		// due to an uncaught exception. Let's handle this device as read-only from here on.
+		ronly = true;
+	    }
+	    else
+	    {
+		ST_RETHROW( ex );
+	    }
 	}
 
 	y2mil("ret:" << ret << " partitions:" << vols.size() << " detected label:" << detected_label <<
