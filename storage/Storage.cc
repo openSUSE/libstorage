@@ -7566,7 +7566,7 @@ namespace storage
 	assertInit();
 	y2mil("device:" << device << " mp:" << mp << " ro:" << ro << " opts:" << opts);
 	VolIterator vol;
-	if( !readonly() && findVolume( device, vol ) )
+	if( findVolume( device, vol ) )
 	{
 	    if( vol->needCrsetup() )
 	    {
