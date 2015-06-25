@@ -101,13 +101,30 @@ namespace storage
     }
 
 
+    bool
+    ProcMounts::getMountEntry(const list<string>& devices, FstabEntry& entry) const
+    {
+	for (const string& device : devices)
+	{
+	    const_iterator it = data.find(device);
+	    if (it != data.end())
+	    {
+		entry = it->second;
+		return true;
+	    }
+	}
+
+	return false;
+    }
+
+
     string
     ProcMounts::getMount(const string& device) const
     {
 	string ret;
-	const_iterator i = data.find(device);
-	if (i != data.end())
-	    ret = i->second.mount;
+	FstabEntry entry;
+	if (getMountEntry({ device }, entry))
+	    ret = entry.mount;
 	return ret;
     }
 
@@ -116,12 +133,9 @@ namespace storage
     ProcMounts::getMount(const list<string>& devices) const
     {
 	string ret;
-	list<string>::const_iterator i = devices.begin();
-	while (ret.empty() && i != devices.end())
-	{
-	    ret = getMount( *i );
-	    ++i;
-	}
+	FstabEntry entry;
+	if (getMountEntry(devices, entry))
+	    ret = entry.mount;
 	return ret;
     }
 

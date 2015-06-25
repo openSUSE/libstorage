@@ -109,6 +109,7 @@ namespace storage
 
 	void calcDependent();
 	bool optUser() const;
+	bool optReadOnly() const;
     };
 
 
