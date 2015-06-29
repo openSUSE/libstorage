@@ -7537,13 +7537,31 @@ namespace storage
 
 
     bool
+    Storage::umountDevice( const string& device )
+    {
+        if (readonly())
+            return false;
+        return( umountDev( device, true ));
+    }
+
+
+    bool
+    Storage::umountDeviceUns( const string& device, bool unsetup )
+    {
+        if (readonly())
+            return false;
+        return( umountDev( device, unsetup ));
+    }
+
+
+    bool
     Storage::umountDev( const string& device, bool unsetup )
     {
 	bool ret = false;
 	assertInit();
 	y2mil("device:" << device << " unsetup:" << unsetup );
 	VolIterator vol;
-	if( !readonly() && findVolume( device, vol ) )
+	if( findVolume( device, vol ) )
 	{
 	    if( vol->umount()==0 )
 	    {
@@ -7558,6 +7576,35 @@ namespace storage
 
 
     bool
+    Storage::mountDevice( const string& device, const string& mp )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, false ));
+    }
+
+
+    bool
+    Storage::mountDeviceOpts( const string& device, const string& mp,
+			      const string& opts )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, false, opts ));
+    }
+
+
+    bool
+    Storage::mountDeviceRo( const string& device, const string& mp,
+			    const string& opts )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, true, opts ));
+    }
+
+
+    bool
     Storage::mountDev( const string& device, const string& mp, bool ro,
 		       const string& opts )
     {
@@ -7566,7 +7613,7 @@ namespace storage
 	assertInit();
 	y2mil("device:" << device << " mp:" << mp << " ro:" << ro << " opts:" << opts);
 	VolIterator vol;
-	if( !readonly() && findVolume( device, vol ) )
+	if( findVolume( device, vol ) )
 	{
 	    if( vol->needCrsetup() )
 	    {
@@ -7592,6 +7639,7 @@ namespace storage
 	y2mil("ret:" << ret);
 	return( ret );
     }
+
 
     int
     Storage::activateEncryption( const string& device, bool on )

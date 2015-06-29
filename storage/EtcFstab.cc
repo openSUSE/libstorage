@@ -269,11 +269,20 @@ namespace storage
 	crypttab = dmcrypt;
     }
 
+
     bool
     FstabEntry::optUser() const
     {
-	return find( opts.begin(), opts.end(), "user" ) != opts.end();
+	return contains(opts, "user");
     }
+
+
+    bool
+    FstabEntry::optReadOnly() const
+    {
+	return contains(opts, "ro" );
+    }
+
 
     bool
     EtcFstab::findDevice( const string& dev, FstabEntry& entry ) const

@@ -154,7 +154,19 @@ namespace storage
 	    TmpMount tmp_mount;
 	    if (!systeminfo.isCmdBtrfsSubvolumesCached(device()))
 	    {
-		ret = prepareTmpMount(tmp_mount, true, "ro");
+		// We cannot reuse existing mounts since a different subvolume
+		// than 0 might be mounted and then lsattr can fail.
+
+		string options = "subvolid=0";
+
+		list<string> tmp = alt_names;
+		tmp.push_back(mountDevice());
+		FstabEntry entry;
+		if (systeminfo.getProcMounts().getMountEntry(tmp, entry))
+		    if (entry.optReadOnly())
+			options += ",ro";
+
+		ret = prepareTmpMount(tmp_mount, false, options);
 		mp = tmp_mount.mount_point;
 	    }
 

@@ -458,21 +458,16 @@ namespace storage
 	int removeVolume( const string& device );
 	int removeUsing(const string& device, const list<UsedBy>& uby);
 	bool checkDeviceMounted(const string& device, list<string>& mps);
-	bool umountDevice( const string& device )
-	    { return( umountDev( device, true )); }
-	bool umountDeviceUns( const string& device, bool unsetup )
-	    { return( umountDev( device, unsetup )); }
+	bool umountDevice( const string& device );
+	bool umountDeviceUns( const string& device, bool unsetup );
 	bool umountDev( const string& device, bool dounsetup=false );
 	bool mountDev( const string& device, const string& mp, bool ro=true,
 		       const string& opts="" );
-	bool mountDevice( const string& device, const string& mp )
-	    { return( mountDev( device, mp, false )); }
-	bool mountDeviceOpts( const string& device, const string& mp,
-			      const string& opts )
-	    { return( mountDev( device, mp, false, opts )); }
+	bool mountDevice( const string& device, const string& mp );
+    	bool mountDeviceOpts( const string& device, const string& mp,
+			      const string& opts );
 	bool mountDeviceRo( const string& device, const string& mp,
-			    const string& opts )
-	    { return( mountDev( device, mp, true, opts )); }
+			    const string& opts );
 	int activateEncryption( const string& device, bool on );
 	bool readFstab( const string& dir, deque<storage::VolumeInfo>& infos);
 

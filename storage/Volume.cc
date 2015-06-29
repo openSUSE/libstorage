@@ -481,7 +481,9 @@ namespace storage
 	}
     }
 
-    void Volume::getMountData( const ProcMounts& mounts, bool swap_only )
+
+    void
+    Volume::getMountData(const ProcMounts& mounts, bool swap_only)
     {
 	if( fs != TMPFS )
 	{
@@ -507,7 +509,9 @@ namespace storage
 	}
     }
 
-    void Volume::getLoopData( SystemCmd& loopData )
+
+    void
+    Volume::getLoopData( SystemCmd& loopData )
     {
 	bool found = false;
 	if( cType()==LOOP )
@@ -2765,8 +2769,8 @@ namespace storage
 		cmd.execute(MODPROBEBIN " nls_iso8859-1");
 	    }
 	    cmdline = MOUNTBIN " ";
-	    if( ro )
-		cmdline += "-r ";
+	    if (ro)
+		cmdline += "--read-only ";
 	    cmdline += "-t " + fsn + " ";
 
 	    list<string> ign_opt( ignore_opt, ignore_opt+lengthof(ignore_opt));

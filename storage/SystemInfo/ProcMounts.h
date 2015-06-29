@@ -45,6 +45,8 @@ namespace storage
 
 	void probe();
 
+	bool getMountEntry(const list<string>& devices, FstabEntry& entry) const;
+
 	string getMount(const string& device) const;
 	string getMount(const list<string>& devices) const;
 
