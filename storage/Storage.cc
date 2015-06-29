@@ -7537,6 +7537,24 @@ namespace storage
 
 
     bool
+    Storage::umountDevice( const string& device )
+    {
+        if (readonly())
+            return false;
+        return( umountDev( device, true ));
+    }
+
+
+    bool
+    Storage::umountDeviceUns( const string& device, bool unsetup )
+    {
+        if (readonly())
+            return false;
+        return( umountDev( device, unsetup ));
+    }
+
+
+    bool
     Storage::umountDev( const string& device, bool unsetup )
     {
 	bool ret = false;
@@ -7554,6 +7572,35 @@ namespace storage
 	}
 	y2mil("ret:" << ret);
 	return( ret );
+    }
+
+
+    bool
+    Storage::mountDevice( const string& device, const string& mp )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, false ));
+    }
+
+
+    bool
+    Storage::mountDeviceOpts( const string& device, const string& mp,
+			      const string& opts )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, false, opts ));
+    }
+
+
+    bool
+    Storage::mountDeviceRo( const string& device, const string& mp,
+			    const string& opts )
+    {
+        if (readonly())
+            return false;
+        return( mountDev( device, mp, true, opts ));
     }
 
 
@@ -7592,6 +7639,7 @@ namespace storage
 	y2mil("ret:" << ret);
 	return( ret );
     }
+
 
     int
     Storage::activateEncryption( const string& device, bool on )
