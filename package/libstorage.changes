@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Mon Jun 29 14:31:40 UTC 2015 - jreidinger@suse.com
+
+- Read subvolumes information even in readonly mode (bnc#935769)
+- 2.25.25
+
+-------------------------------------------------------------------
 Mon Jun 22 16:10:57 CEST 2015 - shundhammer@suse.de
 
 - Catch I/O errors while probing disks with parted (bsc#934640)
