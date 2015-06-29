@@ -7543,7 +7543,7 @@ namespace storage
 	assertInit();
 	y2mil("device:" << device << " unsetup:" << unsetup );
 	VolIterator vol;
-	if( !readonly() && findVolume( device, vol ) )
+	if( findVolume( device, vol ) )
 	{
 	    if( vol->umount()==0 )
 	    {
