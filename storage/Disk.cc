@@ -2231,6 +2231,17 @@ namespace storage
 		getStorage()->removeDmMapsTo( getPartDevice(p->OrigNr()) );
 		ret = v->prepareRemove();
 	    }
+	    // before deleting partitions ensure that efi do not contain it
+	    const ArchInfo& ai = getStorage()->getArchInfo();
+	    if( ai.is_efiboot() && label == "gpt" && ret==0 && !p->created() )
+	    {
+		std::ostringstream cmd_line;
+		cmd_line << EFIBOOTMGRBIN << " -v --delete --disk " << quote(device())
+		    << " --part " << p->OrigNr();
+		SystemCmd c(cmd_line.str());
+		if ( c.retcode() != 0 )
+		    y2war( "Failed to remove entry from efi for " << device() );
+	    }
 	    if( ret==0 && !p->created() )
 	    {
 		std::ostringstream cmd_line;
