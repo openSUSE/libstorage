@@ -90,6 +90,8 @@
 #define	 RPCBINDBIN	     "/sbin/rpcbind"
 #define	 RPCSTATDBIN	     "/usr/sbin/rpc.statd"
 
+#define	 EFIBOOTMGRBIN	     "/usr/sbin/efibootmgr"
+
 #define	 NTFSRESIZEBIN	     "/usr/sbin/ntfsresize"
 #define	 XFSGROWFSBIN	     "/usr/sbin/xfs_growfs"
 #define	 REISERRESBIN	     "/sbin/resize_reiserfs"

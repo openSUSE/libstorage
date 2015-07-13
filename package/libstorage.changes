@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Jul 10 10:07:26 UTC 2015 - ancor@suse.com
+
+- remove partition from efi before destroying it on GPT disks
+  (bnc#929677, bnc#870211)
+- 2.25.26
+
+-------------------------------------------------------------------
 Mon Jun 29 14:31:40 UTC 2015 - jreidinger@suse.com
 
 - Read subvolumes information even in readonly mode (bnc#935769)
