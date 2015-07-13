@@ -51,6 +51,11 @@ Wed Jul 22 17:15:17 CEST 2015 - shundhammer@suse.de
 - 2.25.27
 
 -------------------------------------------------------------------
+Mon Jul 13 18:50:25 UTC 2015 - dmueller@suse.com
+
+- skip checks on qemu user mode builds (bsc#937215)
+
+-------------------------------------------------------------------
 Fri Jul 10 10:07:26 UTC 2015 - ancor@suse.com
 
 - remove partition from efi before destroying it on GPT disks

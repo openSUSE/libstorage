@@ -85,7 +85,9 @@ sed -i -e 's/DEVICE_NAMES=".*"/DEVICE_NAMES="path"/' data/sysconfig.storage-libs
 %endif
 
 %check
+%if ! 0%{?qemu_user_space_build}
 LOCALEDIR=$RPM_BUILD_ROOT/usr/share/locale make check
+%endif
 
 %install
 make install DESTDIR="$RPM_BUILD_ROOT"
