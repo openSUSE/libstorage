@@ -2,7 +2,7 @@
 Fri Jul 10 10:07:26 UTC 2015 - ancor@suse.com
 
 - remove partition from efi before destroying it on GPT disks
-  (bnc#929677)
+  (bnc#929677, bnc#870211)
 - 2.25.26
 
 -------------------------------------------------------------------
