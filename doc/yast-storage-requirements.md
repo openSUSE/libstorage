@@ -30,7 +30,7 @@ This is about _libstorage_ and the _yast-storage_ Ruby code.
 (ways to create partition tables)
 
 - MS-DOS (PC classic/legacy)
- 
+
     - can be used on all supported architectures: i586, x86_64, ppc, s/390
     - 4 partition entries in MBR (Master Boot Record)
     - one partition can be an "extended partition": A container for _logical partitions_
@@ -46,7 +46,7 @@ This is about _libstorage_ and the _yast-storage_ Ruby code.
 
 - Other:
     - DASD (s/390 specific)
- 
+
 - Not supported or very limited support (which may be dropped in the future) in YaST storage:
     - BSD
         - Fixed number of 8 or 16 partition slots
@@ -212,7 +212,7 @@ _**Caution: Voodoo inside**_
         - there have always been limits, they always seemed way out of reach, and we always reached them before we thought it possible.
 
 
-- UEFI (Unified Extensible Firmware Interface): 
+- UEFI (Unified Extensible Firmware Interface):
     - typically used with GPT disk label
     - requires EFI system partition (with FAT file system)
 
