@@ -115,6 +115,19 @@ namespace storage
 	 */
 	void parse(const vector<string>& lines);
 
+	/**
+	 * Return the stderr output of parted command.
+	 *
+	 * Unlike many similar classes in the SystemInfo/ directory, This class
+	 * does not throw an exception whenever the underlying command (here:
+	 * parted) writes any output to stderr: It is quite common for the
+	 * parted command to write messages to stderr in certain situations
+	 * that may not necessarily be fatal.
+	 *
+	 * Any stderr messages are written to the log, though.
+	 */
+	const vector<string> & getStderr() const { return stderr; }
+
     private:
 
 	typedef vector<Entry>::iterator iterator;
@@ -125,6 +138,8 @@ namespace storage
 	Geometry geometry;
 	bool gpt_enlarge;
 	vector<Entry> entries;
+	vector<string> stderr;
+
 
 	void scanDiskFlags(const string& line);
 	void scanSectorSizeLine(const string& line);
