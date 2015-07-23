@@ -26,8 +26,16 @@ Source:         libstorage-%{version}.tar.bz2
 
 Prefix:         /usr
 
-BuildRequires:  boost-devel dejagnu doxygen gcc-c++ libtool libxml2-devel python-devel swig
-BuildRequires:	ruby ruby-devel
+BuildRequires:	boost-devel
+BuildRequires:	dejagnu
+BuildRequires:	doxygen
+BuildRequires:	gcc-c++
+BuildRequires:	libtool
+BuildRequires:	libxml2-devel
+BuildRequires:	python-devel
+BuildRequires:	swig
+BuildRequires:	ruby
+BuildRequires:	ruby-devel
 
 Summary:        Library for storage management
 Url:            http://en.opensuse.org/Portal:Libstorage
