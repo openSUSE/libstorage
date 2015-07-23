@@ -53,9 +53,24 @@ namespace storage
 
 	if ( !cmd.stderr().empty() )
 	{
-	    // suppress complaints about "unrecognised disk label" (might be an empty disk)
-	    if ( ! boost::ends_with( cmd.stderr().front(), "unrecognised disk label" ) )
+	    this->stderr = cmd.stderr(); // Save stderr output
+
+	    if ( boost::starts_with( cmd.stderr().front(), "Error: Could not stat device" ) )
 		ST_THROW( SystemCmdException( &cmd, "parted complains: " + cmd.stderr().front() ) );
+	    else
+	    {
+		// Intentionally NOT throwing an exception here for just any kind
+		// of stderr output because it's quite common for the parted
+		// command to write messages to stderr in certain situations that
+		// may not necessarily be fatal.
+		//
+		// See also bsc#938572, bsc#938561
+
+		for ( string line: stderr )
+		{
+		    y2war( "parted stderr> " + line );
+		}
+	    }
 	}
 
 	parse( cmd.stdout() );

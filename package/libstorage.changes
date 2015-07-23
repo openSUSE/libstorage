@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Jul 22 17:15:17 CEST 2015 - shundhammer@suse.de
+
+- Don't throw exception for all kinds of parted stderr output
+  (bnc#938561, bnc#938572)
+- 2.25.27
+
+-------------------------------------------------------------------
 Fri Jul 10 10:07:26 UTC 2015 - ancor@suse.com
 
 - remove partition from efi before destroying it on GPT disks
