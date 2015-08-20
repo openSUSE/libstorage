@@ -46,7 +46,7 @@ stderr:
 
 ### test_nonexistent()
 throw behaviour: DoThrow
-CAUGHT SystemCmdException: Command not found: "/bin/wrglbrmpf"
+CAUGHT CommandNotFoundException: Command not found: "/bin/wrglbrmpf"
 cmd: "/bin/wrglbrmpf"
 cmdRet: 127
 stderr:

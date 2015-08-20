@@ -271,6 +271,27 @@ namespace storage
     };
 
 
+    /**
+     * Specialized exception class for the very common case "command not found".
+     * This might legally happen while probing for storage features with a
+     * command that might or might not be installed.
+     *
+     * The purpose of this class is to make this special case easily
+     * distinguishable from other error cases (command installed, but failed
+     * for some reason).
+     **/
+    class CommandNotFoundException: public SystemCmdException
+    {
+    public:
+	CommandNotFoundException( const SystemCmd * sysCmd )
+	    : SystemCmdException( sysCmd, "Command not found" )
+	    {}
+
+	virtual ~CommandNotFoundException() throw()
+	    {}
+    };
+
+
 
     inline string quote(const string& str)
     {

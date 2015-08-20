@@ -399,7 +399,7 @@ namespace storage
 		if ( cmdRet_ret == SHELL_RET_COMMAND_NOT_EXECUTABLE )
 		    ST_MAYBE_THROW( SystemCmdException( this, "Command not executable" ), _doThrow );
 		else if ( cmdRet_ret == SHELL_RET_COMMAND_NOT_FOUND )
-		    ST_MAYBE_THROW( SystemCmdException( this, "Command not found" ), _doThrow );
+		    ST_MAYBE_THROW( CommandNotFoundException( this ), _doThrow );
 		else if ( cmdRet_ret > SHELL_RET_SIGNAL )
 		{
 		    std::stringstream msg;
