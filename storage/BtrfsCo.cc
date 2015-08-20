@@ -31,6 +31,7 @@
 #include "storage/Utils/AppUtil.h"
 #include "storage/Storage.h"
 #include "storage/StorageDefines.h"
+#include "storage/Utils/SystemCmd.h"
 
 
 namespace storage
@@ -49,7 +50,16 @@ namespace storage
 	: Container(s, "btrfs", "/dev/btrfs", staticType(), systeminfo)
     {
 	y2deb("constructing BtrfsCo");
-	getBtrfsData(systeminfo);
+
+	try
+	{
+	    getBtrfsData(systeminfo);
+	}
+	catch ( const CommandNotFoundException & ex )
+	{
+	    ST_CAUGHT( ex );
+	    y2war( "Package with command \"" << ex.cmd() << "\" not installed?" );
+	}
     }
 
 

@@ -55,6 +55,17 @@ ostream & operator<<( ostream & stream, const SystemCmdException & ex )
 }
 
 
+ostream & operator<<( ostream & stream, const CommandNotFoundException & ex )
+{
+    stream << "CommandNotFoundException: " << ex.what() << endl;
+    stream << "cmd: \"" << ex.cmd() << "\"" << endl;
+    stream << "cmdRet: " << ex.cmdRet() << endl;
+    stream << "stderr:\n" << ex.stderr() << endl;
+
+    return stream;
+}
+
+
 void dump( const string & name, const SystemCmd & cmd )
 {
     cout << name << endl;
@@ -103,6 +114,10 @@ void test_nonexistent( SystemCmd::ThrowBehaviour throwBehaviour )
 	SystemCmd cmd( "/bin/wrglbrmpf", throwBehaviour );
 	cout << cmd << endl;
     }
+    catch ( const CommandNotFoundException &ex )
+    {
+	cout << "CAUGHT " << ex << endl;
+    }
     catch ( const SystemCmdException &ex )
     {
 	cout << "CAUGHT " << ex << endl;
@@ -144,6 +159,10 @@ void test_not_executable( SystemCmd::ThrowBehaviour throwBehaviour )
     {
 	SystemCmd cmd( "/etc/fstab", throwBehaviour );
 	cout << cmd << endl;
+    }
+    catch ( const CommandNotFoundException &ex )
+    {
+	cout << "CAUGHT " << ex << endl;
     }
     catch ( const SystemCmdException &ex )
     {
