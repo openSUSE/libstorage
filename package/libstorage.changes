@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 20 14:40:35 CEST 2015 - shundhammer@suse.de
+
+- Handle 'command not found' for /sbin/btrfs gracefully (bsc#936710)
+- New exception class CommandNotFoundException for the general case
+- 2.25.28 
+
+-------------------------------------------------------------------
 Wed Jul 22 17:15:17 CEST 2015 - shundhammer@suse.de
 
 - Don't throw exception for all kinds of parted stderr output
