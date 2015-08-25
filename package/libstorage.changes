@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Aug 25 13:50:31 CEST 2015 - shundhammer@suse.de
+
+- Properly initialize _doThrow flag in SystemCmd default constructor
+- Catch exception if boot.quota command not found (bsc#942324)
+- 2.25.29 
+
+-------------------------------------------------------------------
 Thu Aug 20 14:40:35 CEST 2015 - shundhammer@suse.de
 
 - Handle 'command not found' for /sbin/btrfs gracefully (bsc#936710)
