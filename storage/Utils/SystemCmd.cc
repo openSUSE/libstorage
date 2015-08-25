@@ -76,7 +76,9 @@ namespace storage
 
 
     SystemCmd::SystemCmd()
-	: _combineOutput(false), _outputProc(NULL)
+	: _combineOutput( false ),
+	  _doThrow( false ),
+	  _outputProc( NULL )
     {
 	y2mil("constructor SystemCmd()");
 	init();
