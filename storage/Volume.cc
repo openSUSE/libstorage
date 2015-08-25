@@ -3236,7 +3236,6 @@ namespace storage
 	    fstab_opt!=orig_fstab_opt && !orig_fstab_opt.empty() &&
 	    mp==orig_mp && mp!="swap" )
 	{
-	    SystemCmd c;
 	    y2mil( "fstab_opt:" << fstab_opt << " fstab_opt_orig:" << orig_fstab_opt );
 	    y2mil( "remount:" << *this );
 	    int r = 0;
@@ -3252,15 +3251,29 @@ namespace storage
 	    }
 	    else
 	    {
-		c.execute(MOUNTBIN " -oremount " + quote(mp));
-		y2mil( "remount remount:" << c.retcode() );
-		if( c.retcode()!=0 )
+		SystemCmd cmd( MOUNTBIN " -oremount " + quote(mp) );
+		y2mil( "remount remount:" << cmd.retcode() );
+		if( cmd.retcode()!=0 )
 		    ret = VOLUME_REMOUNT_FAILED;
 	    }
 	    if( !getStorage()->instsys() &&
 		haveQuota(fstab_opt)!=haveQuota(orig_fstab_opt) )
 	    {
-		c.execute( "/etc/init.d/boot.quota restart" );
+		try
+		{
+		    SystemCmd cmd( "/etc/init.d/boot.quota restart", SystemCmd::DoThrow );
+		}
+		catch ( const CommandNotFoundException & ex )
+		{
+		    ST_CAUGHT( ex );
+		    y2war( "Package \"quota\" not installed?" );
+		    ret = QUOTA_RESTART_FAILED;
+		}
+		catch ( const SystemCmdException & ex )
+		{
+		    ST_CAUGHT( ex );
+		    ret = QUOTA_RESTART_FAILED;
+		}
 	    }
 	    if (mp == "/" && (fs == EXT3 || fs == EXT4))
 	    {
