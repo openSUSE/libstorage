@@ -105,10 +105,20 @@ namespace storage
 	    efiboot = checkDir("/sys/firmware/efi/vars");
 	}
 
-	const char* tenv = getenv("LIBSTORAGE_EFI");
-	if (tenv)
+	// Efi detection can be overridden by EFI env.var., see bsc
+	// #937067. Reading /etc/install.inf is not reliable, see bsc #806490.
+	const char* tenv1 = getenv("EFI");
+	if (tenv1)
 	{
-	    efiboot = string(tenv) == "yes";
+	    efiboot = string(tenv1) == "1";
+	}
+
+	// Efi detection can also be overridden by LIBSTORAGE_EFI env.var. for
+	// compatibility.
+	const char* tenv2 = getenv("LIBSTORAGE_EFI");
+	if (tenv2)
+	{
+	    efiboot = string(tenv2) == "yes";
 	}
     }
 

@@ -253,18 +253,4 @@ namespace storage
 	return true;
     }
 
-
-    bool
-    InstallInfFile::getValue(const string& key, string& value) const
-    {
-	Regex rx('^' + key + ":" + Regex::ws + "([^ ]*)" + '$');
-
-	if (find_if(lines(), regex_matches(rx)) == lines().end())
-	    return false;
-
-	value = rx.cap(1);
-	y2mil("key:" << key << " value:" << value);
-	return true;
-    }
-
 }
