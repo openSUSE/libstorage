@@ -98,17 +98,6 @@ namespace storage
 
     };
 
-
-    class InstallInfFile : protected AsciiFile
-    {
-    public:
-
-	InstallInfFile(const char* name) : AsciiFile(name) {}
-
-	bool getValue(const string& key, string& value) const;
-
-    };
-
 }
 
 
