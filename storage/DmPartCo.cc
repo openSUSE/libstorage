@@ -457,39 +457,44 @@ namespace storage
 
     int DmPartCo::destroyPartitionTable( const string& new_label )
     {
-	y2mil("begin");
-	int ret = disk->destroyPartitionTable( new_label );
-	if( ret==0 )
+	int ret = 0;
+
+	// Collect dev names for all disk volumes
+
+	vector<string> dev_names;
+	ConstVolPair vol_pair( disk->volPair( Volume::notDeleted ) );
+
+	for ( ConstVolIterator it = vol_pair.begin(); it != vol_pair.end(); ++it )
 	{
-	    VIter j = vols.begin();
-	    while( j!=vols.end() )
-	    {
-		if( (*j)->created() )
-		{
-		    delete( *j );
-		    j = vols.erase( j );
-		}
-		else
-		    ++j;
-	    }
-	    bool save = getStorage()->getRecursiveRemoval();
-	    getStorage()->setRecursiveRemoval(true);
-	    if (isUsedBy())
-	    {
-		getStorage()->removeUsing( device(), getUsedBy() );
-	    }
-	    ronly = false;
-	    RVIter i = vols.rbegin();
-	    while( i!=vols.rend() )
-	    {
-		if( !(*i)->deleted() )
-		    getStorage()->removeVolume( (*i)->device() );
-		++i;
-	    }
-	    getStorage()->setRecursiveRemoval(save);
+	    string dev = it->device();
+	    y2mil( "Going to delete dev " << dev );
+	    dev_names.push_back( dev );
 	}
-	y2mil("ret:" << ret);
-	return( ret );
+
+	// Remove disk partitions one by one from last to first
+
+	bool save = getStorage()->getRecursiveRemoval();
+	getStorage()->setRecursiveRemoval(true);
+
+	for ( int i = dev_names.size()-1; i >= 0; i-- )
+	{
+	    string dev_name = dev_names[i];
+	    y2mil( "Removing volume " << dev_name );
+	    ret = getStorage()->removeVolume( dev_name );
+	    if ( ret != 0 )
+	    {
+		y2err( "ERROR: Couldn't remove volume " << dev_name << ": " << ret );
+		// break;
+	    }
+	}
+
+	getStorage()->setRecursiveRemoval(save);
+
+	// Create new disk label
+	disk->destroyPartitionTable( new_label );
+
+	y2mil("ret: " << ret );
+	return ret;
     }
 
     int DmPartCo::changePartitionId( unsigned nr, unsigned id )

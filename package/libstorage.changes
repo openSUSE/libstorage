@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Sep  9 11:07:32 CEST 2015 - shundhammer@suse.de
+
+- Make sure no volumes are left behind when writing a new disk
+  label for multipath (bsc#888513)
+- 2.25.31 
+
+-------------------------------------------------------------------
 Tue Sep 01 14:47:40 CEST 2015 - aschnell@suse.com
 
 - allow to override EFI detection with env var EFI (bsc#937067)
