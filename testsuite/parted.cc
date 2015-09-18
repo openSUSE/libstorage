@@ -39,7 +39,7 @@ parse_msdos_disk_label_good()
     };
 
     Parted parted("/dev/sda", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
 
     cout << parted << endl;
 }
@@ -81,7 +81,44 @@ parse_gpt_good()
     };
 
     Parted parted("/dev/sdb", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
+
+    cout << parted << endl;
+}
+
+
+void
+parse_gpt_enlarge_good()
+{
+    TRACE();
+
+    vector<string> stdout = {
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 9964cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 9964,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: gpt",
+	"Disk Flags: ",
+	"",
+	"Number  Start  End  Size  File system  Name  Flags",
+	"",
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 160086528s",
+	"Sector size (logical/physical): 512B/512B",
+	"Partition Table: gpt",
+	"Disk Flags: ",
+	"",
+	"Number  Start  End  Size  File system  Name  Flags",
+	""
+    };
+
+    vector<string> stderr = {
+	"Warning: Not all of the space available to /dev/sdb appears to be used, you can fix the GPT to use all of the space (an extra 78164480 blocks) or continue with the current setting? ",
+	"Warning: Not all of the space available to /dev/sdb appears to be used, you can fix the GPT to use all of the space (an extra 78164480 blocks) or continue with the current setting? "
+    };
+
+    Parted parted("/dev/sdb", false);
+    parted.parse(stdout, stderr);
 
     cout << parted << endl;
 }
@@ -119,7 +156,7 @@ parse_dasd_good()
     };
 
     Parted parted("/dev/dasda", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
 
     cout << parted << endl;
 }
@@ -151,7 +188,7 @@ parse_loop_good()
     };
 
     Parted parted("/dev/sdb", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
 
     cout << parted << endl;
 }
@@ -184,7 +221,7 @@ parse_dasd_implicit_good()
     };
 
     Parted parted("/dev/dasdc", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
 
     cout << parted << endl;
 }
@@ -207,7 +244,7 @@ parse_wiped_disk_good()
     };
 
     Parted parted("/dev/sdb", false);
-    parted.parse(lines);
+    parted.parse(lines, {});
 
     cout << parted << endl;
 }
@@ -268,7 +305,7 @@ parse_no_geometry()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -310,7 +347,7 @@ parse_bad_geometry()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -352,7 +389,7 @@ parse_bad_sector_size_line()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -385,7 +422,7 @@ parse_bad_msdos_part_entry_1()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -427,7 +464,7 @@ parse_bad_msdos_part_entry_2()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -461,7 +498,7 @@ parse_bad_gpt_part_entry()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -505,7 +542,7 @@ parse_inconsistent_partition_tables()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -557,7 +594,7 @@ parse_third_partition_table()
 
     try
     {
-	parted.parse(lines);
+	parted.parse(lines, {});
 	EXCEPTION_EXPECTED();
     }
     catch ( const ParseException &ex )
@@ -578,6 +615,7 @@ main()
 
     parse_msdos_disk_label_good();
     parse_gpt_good();
+    parse_gpt_enlarge_good();
     parse_dasd_good();
     parse_loop_good();
     parse_dasd_implicit_good();

@@ -73,12 +73,12 @@ namespace storage
 	    }
 	}
 
-	parse( cmd.stdout() );
+	parse(cmd.stdout(), cmd.stderr());
     }
 
 
     void
-    Parted::parse(const vector<string>& lines)
+    Parted::parse(const vector<string>& stdout, const vector<string>& stderr)
     {
 	implicit = false;
 	gpt_enlarge = false;
@@ -86,8 +86,8 @@ namespace storage
 
 	vector<string>::const_iterator pos;
 
-	pos = find_if(lines, string_starts_with("Partition Table:"));
-	if (pos != lines.end())
+	pos = find_if(stdout, string_starts_with("Partition Table:"));
+	if (pos != stdout.end())
 	{
 	    label = extractNthWord(2, *pos);
 	    if (label == "unknown")
@@ -99,8 +99,8 @@ namespace storage
 	    y2war("could not find partition table");
 
 	// only present for unrecognised disk label due to patch in parted
-	pos = find_if(lines, string_starts_with("BIOS cylinder,head,sector geometry:"));
-	if (pos != lines.end())
+	pos = find_if(stdout, string_starts_with("BIOS cylinder,head,sector geometry:"));
+	if (pos != stdout.end())
 	    scanGeometryLine(*pos);
 	else
 	{
@@ -110,8 +110,8 @@ namespace storage
 	}
 
 	// see bnc #866535
-	pos = find_if(lines, string_starts_with("Disk " + device + ":"));
-	if (pos != lines.end())
+	pos = find_if(stdout, string_starts_with("Disk " + device + ":"));
+	if (pos != stdout.end())
 	{
 	    unsigned long tmp;
 	    extractNthWord(2, *pos) >> tmp;
@@ -125,19 +125,19 @@ namespace storage
 	    y2war("could not find cylinder number");
 
 	// not present for unrecognised disk label
-	pos = find_if(lines, string_starts_with("Sector size (logical/physical):"));
-	if (pos != lines.end())
+	pos = find_if(stdout, string_starts_with("Sector size (logical/physical):"));
+	if (pos != stdout.end())
 	    scanSectorSizeLine(*pos);
 	else
 	    y2war("could not find sector size");
 
-	pos = find_if(lines, string_starts_with("Disk Flags:"));
-	if (pos != lines.end())
+	pos = find_if(stdout, string_starts_with("Disk Flags:"));
+	if (pos != stdout.end())
 	    scanDiskFlags(*pos);
 	else
 	    y2war("could not find disk flags");
 
-	gpt_enlarge = find_if(lines, string_starts_with("fix the GPT to use all")) != lines.end();
+	gpt_enlarge = find_if(stderr, string_contains("fix the GPT to use all")) != stderr.end();
 
 	if (label != "loop")
 	{
@@ -146,7 +146,7 @@ namespace storage
 
 	    // Parse partition tables: One with cylinder sizes, one with sector sizes
 
-	    for (vector<string>::const_iterator it = lines.begin(); it != lines.end(); ++it)
+	    for (vector<string>::const_iterator it = stdout.begin(); it != stdout.end(); ++it)
 	    {
 		if (boost::starts_with(*it, "Number"))
 		    n++;

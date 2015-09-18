@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Sep 18 15:33:45 CEST 2015 - aschnell@suse.com
+
+- fixed detection for parted reporting that GPT does not use
+  complete disk (bsc#946013)
+- 2.25.32
+
+-------------------------------------------------------------------
 Wed Sep  9 11:07:32 CEST 2015 - shundhammer@suse.de
 
 - Make sure no volumes are left behind when writing a new disk
