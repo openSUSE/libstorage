@@ -113,7 +113,7 @@ namespace storage
 	 * Parse the output of the 'parted' command in 'lines'.
 	 * This may throw a ParseException.
 	 */
-	void parse(const vector<string>& lines);
+	void parse(const vector<string>& stdout, const vector<string>& stderr);
 
 	/**
 	 * Return the stderr output of parted command.
