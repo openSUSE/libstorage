@@ -1,7 +1,7 @@
 -------------------------------------------------------------------
 Wed Sep 23 16:13:20 CEST 2015 - aschnell@suse.com
 
-- changed some requires to suggests (bsc#915097)
+- changed some requires to suggests (bsc#907331 and bsc#915097)
 - 2.25.33
 
 -------------------------------------------------------------------
