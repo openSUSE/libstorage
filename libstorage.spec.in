@@ -117,14 +117,14 @@ rm -rf "$RPM_BUILD_ROOT"
 %package -n libstorage@LIBVERSION_MAJOR@
 
 Requires:	coreutils
-Requires:	cryptsetup
+Suggests:	cryptsetup
 Requires:	device-mapper
-Requires:	dmraid
+Suggests:	dmraid
 Requires:	grep
 Requires:	lsscsi >= 0.26
-Requires:	lvm2
-Requires:	mdadm >= 3.3
-Requires:	multipath-tools
+Suggests:	lvm2
+Suggests:	mdadm >= 3.3
+Suggests:	multipath-tools
 Requires:	parted >= 3.1
 Requires:	udev
 Requires:	util-linux >= 2.16

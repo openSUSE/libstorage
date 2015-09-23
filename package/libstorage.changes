@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Sep 23 16:13:20 CEST 2015 - aschnell@suse.com
+
+- changed some requires to suggests (bsc#915097)
+- 2.25.33
+
+-------------------------------------------------------------------
 Fri Sep 18 15:33:45 CEST 2015 - aschnell@suse.com
 
 - fixed detection for parted reporting that GPT does not use
