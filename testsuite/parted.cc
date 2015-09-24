@@ -125,6 +125,43 @@ parse_gpt_enlarge_good()
 
 
 void
+parse_gpt_fix_backup_good()
+{
+    TRACE();
+
+    vector<string> stdout = {
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 9964cyl",
+	"Sector size (logical/physical): 512B/512B",
+	"BIOS cylinder,head,sector geometry: 9964,255,63.  Each cylinder is 8225kB.",
+	"Partition Table: gpt",
+	"Disk Flags: ",
+	"",
+	"Number  Start  End  Size  File system  Name  Flags",
+	"",
+	"Model: Maxtor 6 Y080L0 (scsi)",
+	"Disk /dev/sdb: 160086528s",
+	"Sector size (logical/physical): 512B/512B",
+	"Partition Table: gpt",
+	"Disk Flags: ",
+	"",
+	"Number  Start  End  Size  File system  Name  Flags",
+	""
+    };
+
+    vector<string> stderr = {
+	"Error: The backup GPT table is corrupt, but the primary appears OK, so that will be used.",
+	"Error: The backup GPT table is corrupt, but the primary appears OK, so that will be used."
+    };
+
+    Parted parted("/dev/sdb", false);
+    parted.parse(stdout, stderr);
+
+    cout << parted << endl;
+}
+
+
+void
 parse_dasd_good()
 {
     TRACE();
@@ -616,6 +653,7 @@ main()
     parse_msdos_disk_label_good();
     parse_gpt_good();
     parse_gpt_enlarge_good();
+    parse_gpt_fix_backup_good();
     parse_dasd_good();
     parse_loop_good();
     parse_dasd_implicit_good();

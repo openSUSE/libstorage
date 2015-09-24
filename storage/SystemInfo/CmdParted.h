@@ -95,6 +95,11 @@ namespace storage
 	 */
 	bool getGptEnlarge() const { return gpt_enlarge; }
 
+	/**
+	 * Special for GPT disk labels: True if the backup GPT is broken.
+	 */
+	bool getGptFixBackup() const { return gpt_fix_backup; }
+
 	typedef vector<Entry>::const_iterator const_iterator;
 
 	/**
@@ -137,6 +142,7 @@ namespace storage
 	bool implicit;
 	Geometry geometry;
 	bool gpt_enlarge;
+	bool gpt_fix_backup;
 	vector<Entry> entries;
 	vector<string> stderr;
 

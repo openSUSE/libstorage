@@ -1,4 +1,9 @@
 -------------------------------------------------------------------
+Thu Sep 24 17:23:08 CEST 2015 - aschnell@suse.com
+
+- detect corrupt backup GPT in parted output (see bsc#946673)
+
+-------------------------------------------------------------------
 Wed Sep 23 16:13:20 CEST 2015 - aschnell@suse.com
 
 - changed some requires to suggests (bsc#907331 and bsc#915097)
