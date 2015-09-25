@@ -15,6 +15,9 @@ num:6 cylRegion:[36872,23929] secRegion:[592349184,384423936] type:primary id:13
 ### parse_gpt_enlarge_good()
 device:/dev/sdb label:gpt geometry:[9964,255,63,512] gpt_enlarge
 
+### parse_gpt_fix_backup_good()
+device:/dev/sdb label:gpt geometry:[9964,255,63,512] gpt_fix_backup
+
 ### parse_dasd_good()
 device:/dev/dasda label:dasd geometry:[178079,15,12,512]
 num:1 cylRegion:[1,23303] secRegion:[192,4194528] type:primary id:130
