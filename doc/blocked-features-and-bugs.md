@@ -4,8 +4,7 @@ _(work in progress)_
 
 ## Features
 
-- Create filesystem directly on disk without any partitioning
-
+- Create filesystem directly on disk without any partitioning (https://fate.suse.com/316251)
 
 ## Bugs
 
