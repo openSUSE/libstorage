@@ -8,6 +8,9 @@ _(work in progress)_
 
 ## Bugs
 
-- Can't create Btrfs on encrypted LVM
-  https://bugzilla.suse.com/show_bug.cgi?id=908073
+- Can't create Btrfs on encrypted LVM (https://bugzilla.suse.com/show_bug.cgi?id=908073)
+
+## PBIs
+
+- Testability of repairing GPT (https://trello.com/c/TuV2zSUY/183-sle12-sp1-p2-946013-libstorage-parted-failed-to-create-partition-on-a-disk-with-gpt-not-enough-space-available)
 
