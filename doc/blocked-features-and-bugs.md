@@ -5,6 +5,7 @@ _(work in progress)_
 ## Features
 
 - Create filesystem directly on disk without any partitioning (https://fate.suse.com/316251)
+- Use in kiwi (https://fate.suse.com/318198)
 
 ## Bugs
 
