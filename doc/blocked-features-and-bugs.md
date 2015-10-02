@@ -10,6 +10,7 @@ _(work in progress)_
 ## Bugs
 
 - Can't create Btrfs on encrypted LVM (https://bugzilla.suse.com/show_bug.cgi?id=908073)
+- Partly clean shutdown of DASDs (https://bugzilla.suse.com/show_bug.cgi?id=941636)
 
 ## PBIs
 
