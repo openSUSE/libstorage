@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2014-06-30 15:51+0200\n"
 "PO-Revision-Date: 2014-07-03 11:50+0800\n"
 "Last-Translator: Andrea Turrini <andrea.turrini@gmail.com>\n"
 "Language-Team: Italian <opensuse-translation@opensuse.org>\n"
@@ -25,22 +25,24 @@ msgstr ""
 "X-Poedit-Language: Italian\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(La barra d'avanzamento non si muoverà. Può impiegarci molto tempo. NON INTERROMPERE!)"
+msgstr ""
+"(La barra d'avanzamento non si muoverà. Può impiegarci molto tempo. NON "
+"INTERROMPERE!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Aggiunta della voce per il punto di montaggio %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:910
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Aggiunta della voce per il punto di montaggio %1$s a %2$s in corso"
@@ -57,7 +59,7 @@ msgstr "Volume btrfs"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1434
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Modifica del punto di montaggio di %1$s in %2$s"
@@ -70,14 +72,14 @@ msgstr "Modifica del punto di montaggio del tmpfs a %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#: ../storage/Volume.cc:2552
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Azzeramento dell'etichetta su %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#: ../storage/Volume.cc:2545
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Azzeramento dell'etichetta su %1$s in corso"
@@ -85,7 +87,7 @@ msgstr "Azzeramento dell'etichetta su %1$s in corso"
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:2183
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:279
 #, c-format
 msgid "Create %1$s"
 msgstr "Creazione di %1$s"
@@ -93,7 +95,7 @@ msgstr "Creazione di %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr "Creazione del volume grub BIOS %1$s (%2$s)"
@@ -101,7 +103,7 @@ msgstr "Creazione del volume grub BIOS %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
+#: ../storage/Volume.cc:3293
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr "Creazione del volume PReP GPT %1$s (%2$s)"
@@ -109,7 +111,7 @@ msgstr "Creazione del volume PReP GPT %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr "Creazione del volume PReP %1$s (%2$s)"
@@ -136,7 +138,7 @@ msgstr "Creazione della partizione RAID %1$s (%2$s) per %4$s con %3$s"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Creazione del volume di avvio %1$s (%2$s) con %3$s"
@@ -157,8 +159,11 @@ msgstr "Creazione della partizione RAID cifrata %1$s (%2$s) per %4$s con %3$s"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Creazione del dispositivo basato su file cifrato %1$s del file %2$s (%3$s) come %5$s con %4$s"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Creazione del dispositivo basato su file cifrato %1$s del file %2$s (%3$s) "
+"come %5$s con %4$s"
 
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:2474
@@ -166,7 +171,7 @@ msgstr "Creazione del dispositivo basato su file cifrato %1$s del file %2$s (%3$
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:250
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Creazione del volume logico cifrato %1$s (%2$s) per %4$s con %3$s"
@@ -180,7 +185,8 @@ msgstr "Creazione del volume logico cifrato %1$s (%2$s) per %4$s con %3$s"
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Creazione della partizione cifrata multipath %1$s (%2$s) per %4$s con %3$s"
+msgstr ""
+"Creazione della partizione cifrata multipath %1$s (%2$s) per %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -190,14 +196,15 @@ msgstr "Creazione della partizione cifrata multipath %1$s (%2$s) per %4$s con %3
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Creazione del RAID software cifrato %1$s (%2$s) da %5$s per %4$s con %3$s"
+msgstr ""
+"Creazione del RAID software cifrato %1$s (%2$s) da %5$s per %4$s con %3$s"
 
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:2472
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Creazione del volume cifrato %1$s (%2$s)"
@@ -209,7 +216,7 @@ msgstr "Creazione del volume cifrato %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Creazione del volume cifrato %1$s (%2$s) per %4$s con %3$s"
@@ -236,7 +243,7 @@ msgstr "Creazione della partizione estesa multipath %1$s (%2$s)"
 # TLABEL modules/inst_custom_part.ycp:2472
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:453
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "Creazione della partizione estesa %1$s (%2$s)"
@@ -257,11 +264,13 @@ msgstr "Creazione del dispositivo basato su file %1$s del file %2$s (%3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Creazione del dispositivo basato su file %1$s di %2$s (%3$s) come %5$s con %4$s"
+msgstr ""
+"Creazione del dispositivo basato su file %1$s di %2$s (%3$s) come %5$s con "
+"%4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:259
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Creazione del volume logico %1$s (%2$s)"
@@ -272,7 +281,7 @@ msgstr "Creazione del volume logico %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:240
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Creazione del volume logico %1$s (%2$s) per %4$s con %3$s"
@@ -303,7 +312,7 @@ msgstr "Creazione della partizione multipath %1$s (%2$s) per %4$s con %3$s"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Creazione del volume radice %1$s (%2$s) con %3$s"
@@ -329,7 +338,7 @@ msgstr "Creazione del RAID software %1$s (%2$s) da %5$s per %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "Creazione del sotto-volume %1$s sul dispositivo %2$s"
@@ -343,7 +352,7 @@ msgstr "Creazione della partizione RAID di swap %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:229
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Creazione del volume logico di swap %1$s (%2$s)"
@@ -359,7 +368,7 @@ msgstr "Creazione della partizione multipath di swap %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Creazione del volume di swap %1$s (%2$s)"
@@ -367,7 +376,7 @@ msgstr "Creazione del volume di swap %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Creazione del volume %1$s (%2$s)"
@@ -379,7 +388,7 @@ msgstr "Creazione del volume %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Creazione del volume %1$s (%2$s) per %4$s come %3$s"
@@ -388,13 +397,13 @@ msgstr "Creazione del volume %1$s (%2$s) per %4$s come %3$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Creazione del gruppo di volumi %1$s (%2$s) in %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:274
 #, c-format
 msgid "Creating %1$s"
 msgstr "Creazione di %1$s in corso"
@@ -413,7 +422,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "Creazione del dispositivo basato su file %1$s del file %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:221
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Creazione del volume logico %1$s in corso"
@@ -433,14 +442,14 @@ msgstr "Creazione del RAID software %1$s da %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Creazione del sotto-volume %1$s sul dispositivo %2$s in corso"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Creazione del volume %1$s in corso"
@@ -449,7 +458,7 @@ msgstr "Creazione del volume %1$s in corso"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Creazione del gruppo di volumi %1$s (%2$s) in %3$s in corso"
@@ -470,7 +479,7 @@ msgstr "RAID DM"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Eliminazione del volume btrfs sui dispositivi %1$s (%2$s)"
@@ -488,14 +497,14 @@ msgstr "Eliminazione della partizione RAID %1$s (%2$s)"
 # TLABEL modules/inst_custom_part.ycp:2472
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:424
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "Eliminazione della partizione Windows %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:449
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "Eliminazione del volume del mappatore dei dispositivi %1$s (%2$s)"
@@ -509,7 +518,7 @@ msgstr "Eliminazione del dispositivo basato su file %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:209
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "Eliminazione del volume logico %1$s (%2$s)"
@@ -526,7 +535,7 @@ msgstr "Eliminazione della partizione multipath %1$s (%2$s)"
 # TLABEL modules/inst_custom_part.ycp:2472
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:431
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "Eliminazione della partizione %1$s (%2$s)"
@@ -539,7 +548,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Eliminazione del RAID software %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Eliminazione del volume btrfs sui dispositivi %1$s in corso"
@@ -551,7 +560,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "Eliminazione della partizione RAID %1$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:443
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Eliminazione del volume del mappatore dei dispositivi %1$s in corso"
@@ -563,7 +572,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "Eliminazione del dispositivo basato su file %1$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:203
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "Eliminazione del volume logico %1$s in corso"
@@ -575,7 +584,7 @@ msgid "Deleting multipath partition %1$s"
 msgstr "Eliminazione della partizione multipath %1$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:416
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "Eliminazione della partizione %1$s in corso"
@@ -620,14 +629,14 @@ msgstr[1] "Esecuzione di dasdfmt per i dischi %1$s in corso"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3345
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Estensione di %1$s a %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "Estensione del volume Btrfs %1$s in %2$s"
@@ -641,14 +650,14 @@ msgstr "Estensione della partizione RAID %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:550
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "Estensione della partizione Windows %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:348
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "Estensione del volume logico %1$s a %2$s"
@@ -662,14 +671,14 @@ msgstr "Estensione della partizione multipath %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:561
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "Estensione della partizione %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1433
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Estensione del gruppo di volumi %1$s con %2$s"
@@ -677,14 +686,14 @@ msgstr "Estensione del gruppo di volumi %1$s con %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Estensione di %1$s in %2$s in corso"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "Estensione del volume Btrfs %1$s in %2$s in corso"
@@ -698,7 +707,7 @@ msgstr "Estensione della partizione RAID %1$s a %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:334
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "Estensione del volume logico %1$s a %2$s in corso"
@@ -712,14 +721,14 @@ msgstr "Estensione della partizione multipath %1$s a %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:534
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "Estensione della partizione %1$s a %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1426
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Estensione del gruppo di volumi %1$s con %2$s in corso"
@@ -727,19 +736,22 @@ msgstr "Estensione del gruppo di volumi %1$s con %2$s in corso"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Formattazione del volume btrfs con dimensione %1$s (dispositivi usati: %2$s)"
+msgstr ""
+"Formattazione del volume btrfs con dimensione %1$s (dispositivi usati: %2$s)"
 
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "Formattazione del volume btrfs di dimensione %1$s per %3$s (dispositivi usati: %2$s)"
+msgstr ""
+"Formattazione del volume btrfs di dimensione %1$s per %3$s (dispositivi "
+"usati: %2$s)"
 
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:2474
@@ -796,18 +808,21 @@ msgstr "Formattazione del dispositivo %1$s (%2$s) con %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:476
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) per %4$s con %3$s"
+msgstr ""
+"Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) per %4$s "
+"con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:496
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
-msgstr "Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %3$s"
+msgstr ""
+"Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -816,7 +831,8 @@ msgstr "Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %
 #: ../storage/Dmraid.cc:184
 #, c-format
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Formattazione della partizione RAID cifrata %1$s (%2$s) per %4$s con %3$s"
+msgstr ""
+"Formattazione della partizione RAID cifrata %1$s (%2$s) per %4$s con %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -832,10 +848,12 @@ msgstr "Formattazione del dispositivo cifrato %1$s (%2$s) per %4$s con %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:486
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Formattazione del volume cifrato del mappatore dei dispositivi %1$s (%2$s) per %4$s con %3$s"
+msgstr ""
+"Formattazione del volume cifrato del mappatore dei dispositivi %1$s (%2$s) "
+"per %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -844,14 +862,17 @@ msgstr "Formattazione del volume cifrato del mappatore dei dispositivi %1$s (%2$
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Formattazione del dispositivo cifrato basato su file %1$s di %2$s (%3$s) come %5$s con %4$s"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Formattazione del dispositivo cifrato basato su file %1$s di %2$s (%3$s) "
+"come %5$s con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:304
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formattazione del volume logico cifrato %1$s (%2$s) per %4$s con %3$s"
@@ -863,13 +884,15 @@ msgstr "Formattazione del volume logico cifrato %1$s (%2$s) per %4$s con %3$s"
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Formattazione della partizione cifrata multipath %1$s (%2$s) per %4$s con %3$s"
+msgstr ""
+"Formattazione della partizione cifrata multipath %1$s (%2$s) per %4$s con "
+"%3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:504
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formattazione della partizione cifrata %1$s (%2$s) per %4$s con %3$s"
@@ -891,7 +914,9 @@ msgstr "Formattazione del RAID software cifrato %1$s (%2$s) per %4$s con %3$s"
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Formattazione del dispositivo basato su file %1$s di %2$s (%3$s) come %5$s con %4$s"
+msgstr ""
+"Formattazione del dispositivo basato su file %1$s di %2$s (%3$s) come %5$s "
+"con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -900,20 +925,21 @@ msgstr "Formattazione del dispositivo basato su file %1$s di %2$s (%3$s) come %5
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Formattazione del dispositivo basato sul file %1$s di %2$s (%3$s) con %4$s"
+msgstr ""
+"Formattazione del dispositivo basato sul file %1$s di %2$s (%3$s) con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:294
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formattazione del volume logico %1$s (%2$s) per %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:285
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "Formattazione del volume logico %1$s (%2$s) per swap"
@@ -921,7 +947,7 @@ msgstr "Formattazione del volume logico %1$s (%2$s) per swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:314
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "Formattazione del volume logico %1$s (%2$s) con %3$s"
@@ -961,7 +987,7 @@ msgstr "Formattazione della partizione multipath %1$s (%2$s) con %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:494
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formattazione della partizione %1$s (%2$s) per %4$s con %3$s"
@@ -970,7 +996,7 @@ msgstr "Formattazione della partizione %1$s (%2$s) per %4$s con %3$s"
 # TLABEL modules/inst_prepdisk.ycp:98
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:485
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "Formattazione della partizione %1$s (%2$s) per swap"
@@ -980,7 +1006,7 @@ msgstr "Formattazione della partizione %1$s (%2$s) per swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:514
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "Formattazione della partizione %1$s (%2$s) con %3$s"
@@ -1005,10 +1031,12 @@ msgstr "Formattazione del RAID software %1$s (%2$s) con %3$s"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Formattazione del volume btrfs di dimensione%1$s (dispositivi usati: %2$s) in corso"
+msgstr ""
+"Formattazione del volume btrfs di dimensione%1$s (dispositivi usati: %2$s) "
+"in corso"
 
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:2474
@@ -1032,10 +1060,12 @@ msgstr "Formattazione del dispositivo %1$s (%2$s) come %3$s in corso"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:463
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %3$s in corso"
+msgstr ""
+"Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %3$s "
+"in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1044,12 +1074,14 @@ msgstr "Formattazione del volume del mappatore dei dispositivi %1$s (%2$s) con %
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Formattazione del dispositivo basato sul file %1$s di %2$s (%3$s) con %4$s in corso"
+msgstr ""
+"Formattazione del dispositivo basato sul file %1$s di %2$s (%3$s) con %4$s "
+"in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:274
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "Formattazione del volume logico %1$s (%2$s) con %3$s in corso"
@@ -1067,7 +1099,7 @@ msgstr "Formattazione della partizione multipath %1$s (%2$s) con %3$s in corso"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:474
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "Formattazione della partizione %1$s (%2$s) con %3$s in corso"
@@ -1148,7 +1180,7 @@ msgstr "Punto di montaggio"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1417
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Montaggio di %1$s su %2$s in corso"
@@ -1182,28 +1214,28 @@ msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Riduzione del volume Btrfs %1$s di %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1455
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Riduzione del gruppo di volumi %1$s del %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "Riduzione del volume Btrfs %1$s di %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1448
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Riduzione del gruppo di volumi %1$s di %2$s in corso"
@@ -1212,7 +1244,7 @@ msgstr "Riduzione del gruppo di volumi %1$s di %2$s in corso"
 # TLABEL modules/inst_custom_part.ycp:2183
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
 #, c-format
 msgid "Remove %1$s"
 msgstr "Rimozione di %1$s"
@@ -1220,7 +1252,7 @@ msgstr "Rimozione di %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1465
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Rimozione di %1$s da %2$s"
@@ -1242,13 +1274,13 @@ msgstr "Rimozione del RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Rimozione della voce per il punto di montaggio %1$s da %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1080
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Rimozione del RAID software %1$s"
@@ -1256,7 +1288,7 @@ msgstr "Rimozione del RAID software %1$s"
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Rimozione del sotto-volume %1$s sul dispositivo %2$s"
@@ -1278,7 +1310,7 @@ msgstr "Rimozione del volume tmpfs dal punto di montaggio %1$s"
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Rimozione del volume %1$s"
@@ -1286,14 +1318,14 @@ msgstr "Rimozione del volume %1$s"
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1388
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Rimozione del gruppo di volumi %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
 #, c-format
 msgid "Removing %1$s"
 msgstr "Rimozione di %1$s in corso"
@@ -1313,13 +1345,13 @@ msgstr "Rimozione del RAID %1$s in corso"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Rimozione della voce per il punto di montaggio %1$s da %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1075
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Rimozione del RAID software %1$s in corso"
@@ -1327,7 +1359,7 @@ msgstr "Rimozione del RAID software %1$s in corso"
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Rimozione del sotto-volume %1$s dal dispositivo %2$s in corso"
@@ -1343,7 +1375,7 @@ msgstr "Rimozione del volume tmpfs dal punto di montaggio %1$s in corso"
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Rimozione del volume %1$s in corso"
@@ -1351,14 +1383,14 @@ msgstr "Rimozione del volume %1$s in corso"
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1383
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Rimozione del gruppo di volumi %1$s in corso"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1677
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Impostazione dell'etichetta disco di %1$s come %2$s"
@@ -1366,7 +1398,7 @@ msgstr "Impostazione dell'etichetta disco di %1$s come %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2556
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Impostazione dell'etichetta di %1$s come %2$s"
@@ -1374,7 +1406,7 @@ msgstr "Impostazione dell'etichetta di %1$s come %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1444
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Impostazione del punto di montaggio di %1$s su %2$s"
@@ -1399,12 +1431,14 @@ msgstr "Impostazione del tipo di partizione RAID %1$s come %2$X"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Impostazione del tipo di partizione multipath %1$s come %2$X"
 
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Impostazione del tipo di partizione %1$s come %2$X"
@@ -1419,21 +1453,21 @@ msgstr "Impostazione del tipo di partizione %1$s come %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#: ../storage/Volume.cc:1844
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Impostazione del dispositivo dm cifrato su %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#: ../storage/Volume.cc:1831
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Impostazione del dispositivo di loop cifrato su %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1670
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Impostazione dell'etichetta disco di %1$s come %2$s in corso"
@@ -1441,7 +1475,7 @@ msgstr "Impostazione dell'etichetta disco di %1$s come %2$s in corso"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2549
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Impostazione dell'etichetta di %1$s come %2$s in corso"
@@ -1460,12 +1494,14 @@ msgstr "Impostazione del tipo di partizione RAID %1$s come %2$X in corso"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Impostazione del tipo di partizione multipath %1$s come %2$X in corso"
 
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Impostazione del tipo di partizione %1$s come %2$X in corso"
@@ -1480,14 +1516,14 @@ msgstr "Impostazione del tipo di partizione %1$s come %2$s (%3$X) in corso"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#: ../storage/Volume.cc:1841
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Impostazione del dispositivo dm cifrato su %1$s in corso"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#: ../storage/Volume.cc:1828
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Impostazione del dispositivo di loop cifrato su %1$s in corso"
@@ -1495,7 +1531,7 @@ msgstr "Impostazione del dispositivo di loop cifrato su %1$s in corso"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3341
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Riduzione di %1$s a %2$s"
@@ -1509,14 +1545,14 @@ msgstr "Riduzione della partizione RAID %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:546
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Riduzione della partizione Windows %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:344
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "Riduzione del volume logico %1$s a %2$s"
@@ -1530,7 +1566,7 @@ msgstr "Riduzione della partizione multipath %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:557
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "Riduzione della partizione %1$s a %2$s"
@@ -1538,7 +1574,7 @@ msgstr "Riduzione della partizione %1$s a %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3333
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Riduzione di %1$s a %2$s in corso"
@@ -1552,7 +1588,7 @@ msgstr "Riduzione della partizione RAID %1$s a %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:330
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "Riduzione del volume logico %1$s a %2$s in corso"
@@ -1566,7 +1602,7 @@ msgstr "Riduzione della partizione multipath %1$s a %2$s in corso"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "Riduzione della partizione %1$s a %2$s in corso"
@@ -1582,7 +1618,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:332
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1593,7 +1629,8 @@ msgid ""
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."
 msgstr ""
-"Il tipo di tabella delle partizioni sul disco %1$s non può essere gestito da\n"
+"Il tipo di tabella delle partizioni sul disco %1$s non può essere gestito "
+"da\n"
 "questo strumento.\n"
 "\n"
 "È possibile usare le partizioni sul disco %1$s così come sono.\n"
@@ -1602,7 +1639,7 @@ msgstr ""
 "da tale disco con questo strumento."
 
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1615,13 +1652,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:4952
 msgid "Unmount failed."
 msgstr "Smontaggio fallito."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Smontaggio di %1$s in corso"
@@ -1633,22 +1670,23 @@ msgstr "Smontaggio del tmpfs in corso"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Aggiornamento della voce per il punto di montaggio %1$s in %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
-msgstr "Aggiornamento della voce per il punto di montaggio %1$s in %2$s in corso"
+msgstr ""
+"Aggiornamento della voce per il punto di montaggio %1$s in %2$s in corso"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1452
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Uso di %1$s come %2$s"
@@ -1658,7 +1696,7 @@ msgid "Volume Group"
 msgstr "Gruppo di volumi"
 
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:515
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1670,7 +1708,8 @@ msgid ""
 msgstr ""
 "Sono disponibili le seguenti opzioni:\n"
 "  - Ripartizionare il sistema in modo da usare solo il numero massimo\n"
-"    di partizioni consentito. Per ripartizionare, usare il sistema operativo\n"
+"    di partizioni consentito. Per ripartizionare, usare il sistema "
+"operativo\n"
 "    già in uso.\n"
 "  - Usare LVM poiché può fornire un numero arbitrario e flessibile\n"
 "    di partizioni di dispositivi a blocchi. È comunque necessario\n"
@@ -1678,7 +1717,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:508
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1686,7 +1725,8 @@ msgid ""
 "Partitions numbered above %3$lu cannot be accessed."
 msgstr ""
 "Il disco %1$s contiene %2$lu partizioni. Il numero massimo\n"
-"di partizioni che il driver del disco del kernel è in grado di gestire è %3$lu.\n"
+"di partizioni che il driver del disco del kernel è in grado di gestire è "
+"%3$lu.\n"
 "Le partizioni con numeri superiori a %3$lu non saranno accessibili."
 
 #. symbol for "kilo" (best keep untranslated)
@@ -1717,28 +1757,36 @@ msgstr "kB"
 #~ "tabella delle partizioni.\n"
 #~ "\n"
 #~ "È possibile usare le partizioni sul disco %1$s così come sono.\n"
-#~ "È possibile formattare e assegnare punti di montaggio alle partizioni, ma\n"
+#~ "È possibile formattare e assegnare punti di montaggio alle partizioni, "
+#~ "ma\n"
 #~ "non aggiungerle, modificarle, ridimensionarle o eliminarle\n"
 #~ "da tale disco con questo strumento."
 
 #~ msgid ""
-#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible "
+#~ "platform.\n"
 #~ "\n"
 #~ "Following MD compatible RAID devices were detected:\n"
 #~ "%1$s\n"
-#~ "If they are clean devices or contain partitions then you can choose to use\n"
-#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+#~ "If they are clean devices or contain partitions then you can choose to "
+#~ "use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+#~ "you\n"
 #~ "will be able to install system on it and boot from such RAID.\n"
 #~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 #~ msgstr ""
-#~ "Si sta lavorando su una piattaforma compatibile con Intel(R) Matrix Storage Manager.\n"
+#~ "Si sta lavorando su una piattaforma compatibile con Intel(R) Matrix "
+#~ "Storage Manager.\n"
 #~ "\n"
 #~ "I seguenti dispositivi RAID compatibili MD sono stati rilevati:\n"
 #~ "%1$s\n"
-#~ "Se sono dispositivi vuoti o contengono delle partizioni, si può scegliere di usare\n"
-#~ "il sottosistema RAID Partizionabile MD per gestirli. Nel caso di un dispositivo vuoto\n"
+#~ "Se sono dispositivi vuoti o contengono delle partizioni, si può scegliere "
+#~ "di usare\n"
+#~ "il sottosistema RAID Partizionabile MD per gestirli. Nel caso di un "
+#~ "dispositivo vuoto\n"
 #~ "si potrà installarvi il sistema e avviarlo da questo RAID.\n"
-#~ "Si vuole che il sottosistema RAID Partizionabile MD gestisca queste partizioni?"
+#~ "Si vuole che il sottosistema RAID Partizionabile MD gestisca queste "
+#~ "partizioni?"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1755,7 +1803,8 @@ msgstr "kB"
 #~ "tabella delle partizioni.\n"
 #~ "\n"
 #~ "È possibile usare le partizioni sul disco %1$s così come sono.\n"
-#~ "È possibile formattare e assegnare punti di montaggio alle partizioni, ma\n"
+#~ "È possibile formattare e assegnare punti di montaggio alle partizioni, "
+#~ "ma\n"
 #~ "non aggiungerle, modificarle, ridimensionarle o eliminarle\n"
 #~ "da tale disco con questo strumento."
 
@@ -1778,7 +1827,8 @@ msgstr "kB"
 #~ msgstr "Estensione della partizione raid %1$s a %2$s in corso"
 
 #~ msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Formattazione della partizione raid cifrata %1$s (%2$s) per %4$s con %3$s"
+#~ msgstr ""
+#~ "Formattazione della partizione raid cifrata %1$s (%2$s) per %4$s con %3$s"
 
 #~ msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
 #~ msgstr "Formattazione della partizione raid %1$s (%2$s)  per %4$s con %3$s"

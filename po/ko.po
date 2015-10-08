@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.ko\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2013-09-12 11:05+0200\n"
 "PO-Revision-Date: 2010-04-06 18:38+0900\n"
 "Last-Translator: Yunseok Choi <xein@naver.com>\n"
 "Language-Team: Korean <xein@naver.com>\n"
@@ -23,22 +23,24 @@ msgstr ""
 
 # SLE12
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(진행률 표시줄이 움직이지 않습니다. 오래 걸릴 수 있습니다. 중단하지 마십시오.)"
+msgstr ""
+"(진행률 표시줄이 움직이지 않습니다. 오래 걸릴 수 있습니다. 중단하지 마십시"
+"오.)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:924
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "마운트 포인트 %1$s의 항목을 %2$s에 추가"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "마운트 포인트 %1$s의 항목을 %2$s에 추가 중"
@@ -54,10 +56,9 @@ msgstr "B"
 msgid "Btrfs Volume"
 msgstr "BTRFS 볼륨"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1438
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1$s의 마운트 포인트를 %2$s(으)로 변경"
@@ -69,52 +70,23 @@ msgstr "%1$s의 마운트 포인트를 %2$s(으)로 변경"
 msgid "Change mount point of tmpfs to %1$s"
 msgstr "tmpfs의 마운트 포인트를 %1$s(으)로 변경합니다."
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2555
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "%1$s의 레이블을 청소"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2541
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "%1$s의 레이블을 청소 중"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:280
 #, c-format
 msgid "Create %1$s"
 msgstr "%1$s 을(를) 생성"
-
-# SLE12
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
-#, c-format
-msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr "BIOS grub 볼륨 %1$s(%2$s) 생성"
-
-# SLE12
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
-#, c-format
-msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr "GPT PReP 볼륨 %1$s(%2$s) 생성"
-
-# SLE12
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
-#, c-format
-msgid "Create PReP volume %1$s (%2$s)"
-msgstr "PReP 볼륨 %1$s(%2$s) 생성"
 
 # SLE12
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
@@ -139,7 +111,7 @@ msgstr "%3$s(으)로 %4$s용 RAID 파티션 %1$s(%2$s) 생성"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 부트 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -161,14 +133,16 @@ msgstr "%3$s(으)로 %4$s용 암호화 RAID 파티션 %1$s(%2$s) 생성"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "%2$s 파일(%3$s)의 %1$s 암호화 파일 기반 장치를 %4$s의 %5$s(으)로 만들기"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"%2$s 파일(%3$s)의 %1$s 암호화 파일 기반 장치를 %4$s의 %5$s(으)로 만들기"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:252
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s (으)로 %4$s에 대해 암호화된 논리적 볼륨 %1$s(%2$s)을(를) 생성"
@@ -181,23 +155,26 @@ msgstr "%3$s (으)로 %4$s에 대해 암호화된 논리적 볼륨 %1$s(%2$s)을
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%3$s (으)로 %4$s 에 대해 암호화된 다중경로 파티션 %1$s (%2$s) 을(를) 생성"
+msgstr ""
+"%3$s (으)로 %4$s 에 대해 암호화된 다중경로 파티션 %1$s (%2$s) 을(를) 생성"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:413
+#: ../storage/Md.cc:404
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "%5$s 로부터 %4$s 과(와) %3$s 으로된 암호화 소프트웨어 RAID %1$s (%2$s) 을 생성"
+msgstr ""
+"%5$s 로부터 %4$s 과(와) %3$s 으로된 암호화 소프트웨어 RAID %1$s (%2$s) 을 생"
+"성"
 
 # SLE12
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "암호화된 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -208,7 +185,7 @@ msgstr "암호화된 볼륨 %1$s(%2$s)을(를) 생성합니다."
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대한 암호화된 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -232,7 +209,7 @@ msgstr "확장 다중경로 파티션 %1$s (%2$s) 을(를) 생성"
 #  to translators: * Create extended partition 1.2 GB (hda1)
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:422
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "확장 파티션 %1$s(%2$s)을(를) 생성"
@@ -257,7 +234,7 @@ msgstr "%2$s 파일(%3$s)의 %1$s 파일 기반 장치를 %4$s의 %5$s(으)로 �
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:261
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "논리적 볼륨 %1$s(%2$s)을(를) 생성"
@@ -266,7 +243,7 @@ msgstr "논리적 볼륨 %1$s(%2$s)을(를) 생성"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:242
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 논리적 볼륨 %1$s(%2$s)을(를) 생성"
@@ -293,7 +270,7 @@ msgstr "%3$s (으)로 %4$s 에 대해 다중경로 파티션 %1$s (%2$s) 을(를
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 루트 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -301,7 +278,7 @@ msgstr "%3$s(으)로 루트 볼륨 %1$s(%2$s)을(를) 생성합니다."
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:423
+#: ../storage/Md.cc:414
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
 msgstr "%3$s 으로부터 소프트웨어 RAID %1$s (%2$s) 을 생성"
@@ -311,15 +288,16 @@ msgstr "%3$s 으로부터 소프트웨어 RAID %1$s (%2$s) 을 생성"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:402
+#: ../storage/Md.cc:393
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "%5$s 로부터 %4$s 과(와) %3$s 으로된 소프트웨어 RAID %1$s (%2$s) 을(를) 생성"
+msgstr ""
+"%5$s 로부터 %4$s 과(와) %3$s 으로된 소프트웨어 RAID %1$s (%2$s) 을(를) 생성"
 
 # SLE12
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "%2$s 장치에 %1$s 하위 볼륨을 생성합니다."
@@ -334,7 +312,7 @@ msgstr "스왑 RAID 파티션 %1$s(%2$s) 생성 중"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:231
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "스왑 논리적 볼륨 %1$s(%2$s)을(를) 생성"
@@ -351,7 +329,7 @@ msgstr "스왑 다중경로 파티션 %1$s(%2$s) 을(를) 생성"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "스왑 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -360,7 +338,7 @@ msgstr "스왑 볼륨 %1$s(%2$s)을(를) 생성합니다."
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "%1$s(%2$s) 볼륨을 생성합니다."
@@ -371,7 +349,7 @@ msgstr "%1$s(%2$s) 볼륨을 생성합니다."
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대한 볼륨 %1$s(%2$s)을(를) 생성합니다."
@@ -381,13 +359,13 @@ msgstr "%3$s(으)로 %4$s에 대한 볼륨 %1$s(%2$s)을(를) 생성합니다."
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "%3$s에서 %1$s 볼륨 그룹(%2$s)을 생성합니다."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:275
 #, c-format
 msgid "Creating %1$s"
 msgstr "%1$s 생성 중"
@@ -407,7 +385,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "%2$s 파일의 %1$s 파일 기반 장치 만드는 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:223
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "논리적 볼륨 %1$s 생성 중"
@@ -420,7 +398,7 @@ msgstr "%1$s 다중경로 파티션 생성 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:388
+#: ../storage/Md.cc:379
 #, c-format
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "%2$s 로부터 소프트웨어 RAID %1$s 생성 중"
@@ -428,7 +406,7 @@ msgstr "%2$s 로부터 소프트웨어 RAID %1$s 생성 중"
 # SLE12
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "%2$s 장치에 %1$s 하위 볼륨 생성 중"
@@ -436,7 +414,7 @@ msgstr "%2$s 장치에 %1$s 하위 볼륨 생성 중"
 # SLE12
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "%1$s 볼륨 생성 중"
@@ -446,7 +424,7 @@ msgstr "%1$s 볼륨 생성 중"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "%3$s에서 %1$s 볼륨 그룹(%2$s) 생성 중"
@@ -469,7 +447,7 @@ msgstr "DM RAID"
 # SLE12
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "%1$s(%2$s) 장치에서 BTRFS 볼륨을 삭제합니다."
@@ -485,14 +463,14 @@ msgstr "RAID 파티션 %1$s(%2$s) 삭제"
 #  to translators: * Create extended partition 1.2 GB (hda1)
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:393
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "윈도우 파티션 %1$s(%2$s)을(를) 삭제"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:450
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "장치 매퍼 볼륨 %1$s (%2$s) 을(를) 삭제"
@@ -506,7 +484,7 @@ msgstr "%1$s(%2$s) 파일 기반 장치 삭제"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:211
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "논리적 볼륨 %1$s(%2$s)을(를) 삭제"
@@ -522,21 +500,21 @@ msgstr "%1$s (%2$s) 다중경로 파티션을 삭제"
 #  to translators: * Create extended partition 1.2 GB (hda1)
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:400
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "%1$s (%2$s) 파티션을 삭제"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Md.cc:374
+#: ../storage/Md.cc:365
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "소프트웨어 RAID %1$s (%2$s)을(를) 삭제"
 
 # SLE12
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "%1$s 장치에서 BTRFS 볼륨 삭제 중"
@@ -550,7 +528,7 @@ msgstr "RAID 파티션 %1$s 삭제 중"
 
 #  Progress text
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:444
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "장치 매퍼 볼륨 %1$s 삭제 중"
@@ -562,7 +540,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "%1$s 파일 기반 장치 삭제 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:205
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "논리적 볼륨 %1$s 삭제 중"
@@ -574,13 +552,13 @@ msgid "Deleting multipath partition %1$s"
 msgstr "%1$s 다중경로 파티션 삭제 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:385
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "%1$s 파티션 삭제 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-#: ../storage/Md.cc:368
+#: ../storage/Md.cc:359
 #, c-format
 msgid "Deleting software RAID %1$s"
 msgstr "소프트웨어 RAID %1$s 삭제 중"
@@ -605,7 +583,7 @@ msgstr "EiB"
 
 #  label text, %1 is replaced by disk name
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:218
+#: ../storage/Dasd.cc:403
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
@@ -613,16 +591,21 @@ msgstr[0] "%1$s 디스크에서 dasdfmt를 실행"
 
 #  label text, %1 is replaced by disk name
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:211
+#: ../storage/Dasd.cc:396
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "%1$s 디스크에 dasdfmt 실행 중"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
+#: ../storage/Dasd.cc:294
+#, c-format
+msgid "Executing fdasd for disk %1$s"
+msgstr "%1$s 디스크에 fdasd 실행 중"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3332
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%1$s을(를) %2$s(으)로 확장"
@@ -630,7 +613,7 @@ msgstr "%1$s을(를) %2$s(으)로 확장"
 # SLE12
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "%2$s(으)로 BTRFS 볼륨 %1$s을(를) 확장합니다."
@@ -645,14 +628,14 @@ msgstr "RAID 파티션 %1$s을(를) %2$s(으)로 확장"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:519
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "윈도우 파티션 %1$s을(를) %2$s(으)로 확장"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:350
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "논리적 볼륨 %1$s을(를) %2$s(으)로 확장"
@@ -666,22 +649,21 @@ msgstr "%1$s 다중경로 파티션을 %2$s (으)로 확장"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "%1$s 파티션을 %2$s(으)로 확장"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1278
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "%2$s (으)로 볼륨 그룹 %1$s을(를) 확장"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3318
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s을(를) %2$s(으)로 확장 중"
@@ -689,7 +671,7 @@ msgstr "%1$s을(를) %2$s(으)로 확장 중"
 # SLE12
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "%2$s(으)로 BTRFS 볼륨 %1$s 확장 중"
@@ -704,7 +686,7 @@ msgstr "RAID 파티션 %1$s을(를) %2$s(으)로 확장 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:336
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "논리적 볼륨 %1$s을(를) %2$s(으)로 확장 중"
@@ -718,14 +700,14 @@ msgstr "%1$s 다중경로 파티션을 %2$s(으)로 확장 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:503
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "%1$s 파티션을 %2$s(으)로 확장 중"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1271
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "%2$s(으)로 볼륨 그룹 %1$s 확장 중"
@@ -734,7 +716,7 @@ msgstr "%2$s(으)로 볼륨 그룹 %1$s 확장 중"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "%1$s 크기(사용된 장치: %2$s)의 BTRFS 볼륨을 포맷합니다."
@@ -744,7 +726,7 @@ msgstr "%1$s 크기(사용된 장치: %2$s)의 BTRFS 볼륨을 포맷합니다."
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "%3$s에 대한 %1$s 크기(사용된 장치: %2$s)의 BTRFS 볼륨을 포맷합니다."
@@ -776,21 +758,19 @@ msgstr "스왑을 위해 RAID 파티션 %1$s(%2$s) 포맷"
 msgid "Format RAID partition %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 RAID 파티션 %1$s(%2$s) 포맷"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:850
+#: ../storage/Volume.cc:851
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 %1$s(%2$s) 장치를 포맷"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:841
+#: ../storage/Volume.cc:871
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 %1$s(%2$s) 장치를 포맷"
@@ -799,7 +779,7 @@ msgstr "%3$s(으)로 %1$s(%2$s) 장치를 포맷"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:477
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s 에 대해 장치 매퍼 볼륨 %1$s (%2$s) 을(를) 포맷"
@@ -807,7 +787,7 @@ msgstr "%3$s(으)로 %4$s 에 대해 장치 매퍼 볼륨 %1$s (%2$s) 을(를) �
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:497
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 장치 매퍼 볼륨 %1$s (%2$s) 을(를) 포맷"
@@ -822,12 +802,11 @@ msgstr "%3$s(으)로 장치 매퍼 볼륨 %1$s (%2$s) 을(를) 포맷"
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s용 암호화 RAID 파티션 %1$s(%2$s) 포맷"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:859
+#: ../storage/Volume.cc:861
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 암호화된 장치 %1$s(%2$s)을(를) 포맷"
@@ -836,7 +815,7 @@ msgstr "%3$s(으)로 %4$s에 대해 암호화된 장치 %1$s(%2$s)을(를) 포�
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:487
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s 에 대해 암호화된 장치 매퍼 볼륨 %1$s(%2$s) 을(를) 포맷"
@@ -848,14 +827,15 @@ msgstr "%3$s(으)로 %4$s 에 대해 암호화된 장치 매퍼 볼륨 %1$s(%2$s
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr "%2$s(%3$s)의 %1$s 암호화 파일 기반 장치를 %4$s의 %5$s(으)로 포맷"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:306
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 암호화된 논리적 볼륨 %1$s(%2$s)을(를) 포맷"
@@ -867,13 +847,14 @@ msgstr "%3$s(으)로 %4$s에 대해 암호화된 논리적 볼륨 %1$s(%2$s)을(
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%3$s(으)로 %4$s 에 대해 암호화된 다중경로 파티션 %1$s (%2$s) 을(를) 포맷"
+msgstr ""
+"%3$s(으)로 %4$s 에 대해 암호화된 다중경로 파티션 %1$s (%2$s) 을(를) 포맷"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:473
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 암호화된 파티션 %1$s(%2$s)을(를) 포맷"
@@ -882,7 +863,7 @@ msgstr "%3$s(으)로 %4$s에 대해 암호화된 파티션 %1$s(%2$s)을(를) �
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:462
+#: ../storage/Md.cc:453
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 암호화된 소프트웨어 RAID %1$s(%2$s)을(를) 포맷"
@@ -910,14 +891,14 @@ msgstr "%2$s(%3$s)의 %1$s 파일 기반 장치(%4$s) 포맷"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:296
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 논리적 볼륨 %1$s(%2$s)을(를) 포맷"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:287
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "스왑을 위해 논리적 볼륨 %1$s(%2$s)을(를) 포맷"
@@ -925,7 +906,7 @@ msgstr "스왑을 위해 논리적 볼륨 %1$s(%2$s)을(를) 포맷"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:316
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 논리적 볼륨 %1$s(%2$s)을(를) 포맷"
@@ -959,7 +940,7 @@ msgstr "%3$s (으)로 %1$s (%2$s) 다중경로 파티션을 포맷"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:463
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 파티션 %1$s(%2$s)을(를) 포맷"
@@ -967,7 +948,7 @@ msgstr "%3$s(으)로 %4$s에 대해 파티션 %1$s(%2$s)을(를) 포맷"
 #  label text %1 replaced by partition name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:454
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "스왑을 위해 %1$s(%2$s) 파티션을 포맷"
@@ -975,7 +956,7 @@ msgstr "스왑을 위해 %1$s(%2$s) 파티션을 포맷"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:483
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 %1$s(%2$s) 파티션을 포맷"
@@ -984,7 +965,7 @@ msgstr "%3$s(으)로 %1$s(%2$s) 파티션을 포맷"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:452
+#: ../storage/Md.cc:443
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3$s(으)로 %4$s에 대해 소프트웨어 RAID %1$s(%2$s)을(를) 포맷"
@@ -992,7 +973,7 @@ msgstr "%3$s(으)로 %4$s에 대해 소프트웨어 RAID %1$s(%2$s)을(를) 포�
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:472
+#: ../storage/Md.cc:463
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 소프트웨어 RAID %1$s(%2$s)을(를) 포맷"
@@ -1001,7 +982,7 @@ msgstr "%3$s(으)로 소프트웨어 RAID %1$s(%2$s)을(를) 포맷"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "%1$s 크기(사용된 장치: %2$s)의 BTRFS 볼륨 포맷 중"
@@ -1028,7 +1009,7 @@ msgstr "%3$s(으)로 %1$s(%2$s) 장치 포맷 중"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:464
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "%3$s (으)로 장치 매퍼 볼륨 %1$s (%2$s) 포맷 중"
@@ -1045,7 +1026,7 @@ msgstr "%2$s(%3$s)의 %1$s 파일 기반 장치(%4$s) 포맷 중"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:276
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "%3$s(으)로 논리적 볼륨 %1$s(%2$s) 포맷 중"
@@ -1061,7 +1042,7 @@ msgstr "%3$s (으)로 %1$s (%2$s) 다중경로 파티션 포맷 중"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:443
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "%3$s(으)로 파티션 %1$s(%2$s) 포맷 중"
@@ -1069,7 +1050,7 @@ msgstr "%3$s(으)로 파티션 %1$s(%2$s) 포맷 중"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:439
+#: ../storage/Md.cc:430
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
 msgstr "%3$s(으)로 소프트웨어 RAID %1$s(%2$s) 포맷 중"
@@ -1082,13 +1063,13 @@ msgstr "G"
 
 #  GigaByte abbreviated
 #. symbol for "giga bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:83
+#: ../storage/HumanString.cc:80
 msgid "GB"
 msgstr "GB"
 
 #  GigaByte abbreviated
 #. symbol for "gibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:80
+#: ../storage/HumanString.cc:83
 msgid "GiB"
 msgstr "GiB"
 
@@ -1101,7 +1082,7 @@ msgstr "하드디스크"
 
 #  KiloByte abbreviated
 #. symbol for "kibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:58
+#: ../storage/HumanString.cc:61
 msgid "KiB"
 msgstr "KiB"
 
@@ -1129,7 +1110,7 @@ msgstr "M"
 
 #  10^6 bytes
 #. symbol for "mega bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:72
+#: ../storage/HumanString.cc:69
 msgid "MB"
 msgstr "MB"
 
@@ -1140,7 +1121,7 @@ msgstr "MD RAID"
 
 #  2^20 bytes
 #. symbol for "mebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:69
+#: ../storage/HumanString.cc:72
 msgid "MiB"
 msgstr "MiB"
 
@@ -1148,10 +1129,9 @@ msgstr "MiB"
 msgid "Mount Point"
 msgstr "마운트 포인트"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1$s을(를) %2$s(으)로 마운트 중"
@@ -1171,7 +1151,7 @@ msgstr "P"
 
 #  10^3 bytes
 #. symbol for "peta bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:105
+#: ../storage/HumanString.cc:102
 msgid "PB"
 msgstr "PB"
 
@@ -1181,21 +1161,21 @@ msgstr "파티션"
 
 #  10^3 bytes
 #. symbol for "pebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:102
+#: ../storage/HumanString.cc:105
 msgid "PiB"
 msgstr "PiB"
 
 # SLE12
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "%2$s(으)로 BTRFS 볼륨 %1$s을(를) 축소합니다."
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1300
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "%2$s(으)로 볼륨 그룹 %1$s을(를) 축소"
@@ -1203,29 +1183,28 @@ msgstr "%2$s(으)로 볼륨 그룹 %1$s을(를) 축소"
 # SLE12
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "%2$s(으)로 BTRFS 볼륨 %1$s 축소 중"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1293
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "%2$s(으)로 볼륨 그룹 %1$s 축소 중"
 
-#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:949
 #, c-format
 msgid "Remove %1$s"
 msgstr "%1$s 을(를) 제거"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1466
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%2$s에서 %1$s을(를) 제거"
@@ -1246,13 +1225,13 @@ msgstr "RAID %1$s 제거"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:966
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "마운트 포인트 %1$s의 항목을 %2$s에서 제거"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1081
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "소프트웨어 RAID %1$s 제거 중"
@@ -1260,7 +1239,7 @@ msgstr "소프트웨어 RAID %1$s 제거 중"
 # SLE12
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "%2$s 장치에서 %1$s 하위 볼륨을 제거합니다."
@@ -1282,20 +1261,20 @@ msgstr "마운트 포인트 %1$s에서 TMPFS 볼륨 제거"
 # SLE12
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "%1$s 볼륨을 제거합니다."
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1233
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "볼륨 그룹 %1$s을(를) 제거"
 
-#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:944
 #, c-format
 msgid "Removing %1$s"
 msgstr "%1$s 제거 중"
@@ -1316,13 +1295,13 @@ msgstr "RAID %1$s 제거 중"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "마운트 포인트 %1$s의 항목을 %2$s에서 제거 중"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1076
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "소프트웨어 RAID %1$s 제거 중"
@@ -1330,7 +1309,7 @@ msgstr "소프트웨어 RAID %1$s 제거 중"
 # SLE12
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "%2$s 장치에서 %1$s 하위 볼륨 제거 중"
@@ -1345,36 +1324,34 @@ msgstr "마운트 포인트 %1$s에서 TMPFS 볼륨 제거 중"
 # SLE12
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "%1$s 볼륨 제거 중"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1228
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "볼륨 그룹 %1$s 제거 중"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1598
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "%1$s 의 디스크 레이블을 %2$s(으)로 설정"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2561
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "%1$s의 레이블을 %2$s(으)로 설정"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1447
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "%1$s의 마운트 포인트를 %2$s(으)로 설정"
@@ -1401,50 +1378,40 @@ msgstr "RAID 파티션 %1$s의 형식을 %2$X(으)로 설정"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "%1$s 다중경로 파티션의 형식을 %2$X (으)로 설정"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "%1$s 파티션의 형식을 %2$X(으)로 설정"
 
-# SLE12
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:338
-#, c-format
-msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "파티션 %1$s의 유형을 %2$s(%3$X)(으)로 설정"
-
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1839
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "%1$s에 암호화된 dm 장치 설정"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1823
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "%1$s에 암호화된 루프 장치를 설정"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1591
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "%1$s 의 디스크 레이블을 %2$s(으)로 설정 중"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2547
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%1$s의 레이블을 %2$s(으)로 설정 중"
@@ -1464,43 +1431,33 @@ msgstr "RAID 파티션 %1$s의 형식을 %2$X(으)로 설정 중"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "%1$s 다중경로 파티션의 형식을 %2$X (으)로 설정 중"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "%1$s 파티션의 형식을 %2$X(으)로 설정 중"
 
-# SLE12
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:325
-#, c-format
-msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "파티션 %1$s의 유형을 %2$s(%3$X)(으)로 설정 중"
-
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1834
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "%1$s에 암호화된 dm 장치 설정 중"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1818
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "%1$s에 암호화된 루프 장치 설정 중"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3328
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%1$s을(를) %2$s(으)로 축소"
@@ -1515,14 +1472,14 @@ msgstr "RAID 파티션 %1$s을(를) %2$s(으)로 축소"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:515
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Windows 파티션 %1$s을(를) %2$s(으)로 축소"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:346
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "논리적 볼륨 %1$s을(를) %2$s(으)로 축소"
@@ -1536,15 +1493,14 @@ msgstr "%1$s 다중경로 파티션을 %2$s (으)로 축소"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:526
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "%1$s 파티션을 %2$s(으)로 축소"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3314
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s을(를) %2$s(으)로 축소 중"
@@ -1559,7 +1515,7 @@ msgstr "RAID 파티션 %1$s을(를) %2$s(으)로 축소 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:332
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "논리적 볼륨 %1$s을(를) %2$s(으)로 축소 중"
@@ -1573,7 +1529,7 @@ msgstr "%1$s 다중경로 파티션을 %2$s (으)로 축소 중"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:499
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "%1$s 파티션을 %2$s(으)로 축소 중"
@@ -1586,13 +1542,13 @@ msgstr "T"
 
 #  TeraByte abbreviated
 #. symbol for "tera bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:94
+#: ../storage/HumanString.cc:91
 msgid "TB"
 msgstr "TB"
 
 #  popup text %1 is replaced by disk name e.g. /dev/hda
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:340
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1611,9 +1567,32 @@ msgstr ""
 " 사용하여 해당 디스크에서 파티션을 추가, 편집, 크기 조정 또는\n"
 " 제거할 수는 없습니다."
 
+#  popup text %1 is replaced by disk name e.g. /dev/hda
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Dasd.cc:197
+#, c-format
+msgid ""
+"The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool fdasd, which is used to change the\n"
+"partition table.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"파티션 테이블을 변경하는 데 사용되는 파티셔닝\n"
+"도구 fdasd에서 %1$s 디스크의 파티셔닝을 읽을 수\n"
+" 없습니다.\n"
+" \n"
+" %1$s 디스크의 파티션을 있는 그대로 사용할 수 있습니다.\n"
+" 이러한 파티션을 포맷하고 마운트 포인트를 지정할 수는 있지만, 이 도구를\n"
+" 사용하여 해당 디스크에서 파티션을 추가, 편집, 크기 조정 또는\n"
+" 제거할 수는 없습니다."
+
 # SLE12
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1623,17 +1602,16 @@ msgstr ""
 
 #  TeraByte abbreviated
 #. symbol for "tebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:91
+#: ../storage/HumanString.cc:94
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:5190
 msgid "Unmount failed."
 msgstr "마운트 해제에 실패"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1428
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$s을(를) 언마운트 중"
@@ -1646,22 +1624,21 @@ msgstr "tmpfs 마운트 해제 중"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:945
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "%2$s에서 마운트 포인트 %1$s의 항목을 업데이트"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "%2$s에서 마운트 포인트 %1$s의 항목 업데이트 중"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1454
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$s을(를) %2$s(으)로 사용"
@@ -1670,8 +1647,23 @@ msgstr "%1$s을(를) %2$s(으)로 사용"
 msgid "Volume Group"
 msgstr "볼륨 그룹"
 
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Storage.cc:394
+#, c-format
+msgid ""
+"You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+"\n"
+"Following MD compatible RAID devices were detected:\n"
+"%1$s\n"
+"If they are clean devices or contain partitions then you can choose to use\n"
+"MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+"you\n"
+"will be able to install system on it and boot from such RAID.\n"
+"Do you want MD Partitionable RAID subsystem to manage those partitions?"
+msgstr ""
+
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:523
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1691,7 +1683,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:516
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1710,32 +1702,54 @@ msgstr "K"
 
 #  10^3 bytes
 #. symbol for "kilo bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:61
+#: ../storage/HumanString.cc:58
 msgid "kB"
 msgstr "kB"
 
-#~ msgid "Executing fdasd for disk %1$s"
-#~ msgstr "%1$s 디스크에 fdasd 실행 중"
+# SLE12
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3289
+#, c-format
+msgid "Create BIOS grub volume %1$s (%2$s)"
+msgstr "BIOS grub 볼륨 %1$s(%2$s) 생성"
 
-#  popup text %1 is replaced by disk name e.g. /dev/hda
-#~ msgid ""
-#~ "The partitioning on disk %1$s is not readable by\n"
-#~ "the partitioning tool fdasd, which is used to change the\n"
-#~ "partition table.\n"
-#~ "\n"
-#~ "You can use the partitions on disk %1$s as they are.\n"
-#~ "You can format them and assign mount points to them, but you\n"
-#~ "cannot add, edit, resize, or remove partitions from that\n"
-#~ "disk with this tool."
-#~ msgstr ""
-#~ "파티션 테이블을 변경하는 데 사용되는 파티셔닝\n"
-#~ "도구 fdasd에서 %1$s 디스크의 파티셔닝을 읽을 수\n"
-#~ " 없습니다.\n"
-#~ " \n"
-#~ " %1$s 디스크의 파티션을 있는 그대로 사용할 수 있습니다.\n"
-#~ " 이러한 파티션을 포맷하고 마운트 포인트를 지정할 수는 있지만, 이 도구를\n"
-#~ " 사용하여 해당 디스크에서 파티션을 추가, 편집, 크기 조정 또는\n"
-#~ " 제거할 수는 없습니다."
+# SLE12
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3293
+#, c-format
+msgid "Create GPT PReP volume %1$s (%2$s)"
+msgstr "GPT PReP 볼륨 %1$s(%2$s) 생성"
+
+# SLE12
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3297
+#, c-format
+msgid "Create PReP volume %1$s (%2$s)"
+msgstr "PReP 볼륨 %1$s(%2$s) 생성"
+
+# SLE12
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:338
+#, c-format
+msgid "Set type of partition %1$s to %2$s (%3$X)"
+msgstr "파티션 %1$s의 유형을 %2$s(%3$X)(으)로 설정"
+
+# SLE12
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:325
+#, c-format
+msgid "Setting type of partition %1$s to %2$s (%3$X)"
+msgstr "파티션 %1$s의 유형을 %2$s(%3$X)(으)로 설정 중"
 
 #  popup text %1 is replaced by disk name e.g. /dev/hda
 #~ msgid ""

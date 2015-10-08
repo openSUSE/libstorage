@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: yast memory\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2013-09-12 11:05+0200\n"
 "PO-Revision-Date: 2011-02-08 22:07+0100\n"
 "Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
 "Language-Team: Walloon <linux-wa@walon.org>\n"
@@ -19,22 +19,22 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:339 ../storage/Partition.cc:506
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3321
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:924
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Radjouter ene intrêye pol pont d' montaedje %1$s so %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Dji radjoute ene intrêye pol pont d' montaedje %1$s so %2$s"
@@ -48,10 +48,9 @@ msgstr "B"
 msgid "Btrfs Volume"
 msgstr ""
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1438
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Candjî l' pont d' montaedje di %1$s so %2$s"
@@ -62,49 +61,23 @@ msgstr "Candjî l' pont d' montaedje di %1$s so %2$s"
 msgid "Change mount point of tmpfs to %1$s"
 msgstr "Candjî l' pont d' montaedje di %1$s so %2$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2555
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Netyî l' etikete so %1$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2541
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Dji neteye l' etikete di %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:280
 #, c-format
 msgid "Create %1$s"
 msgstr "Ahiver %1$s"
-
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
-#, fuzzy, c-format
-msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr "Ahiver l' volume %1$s (%2$s)"
-
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
-#, fuzzy, c-format
-msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr "Ahiver l' volume %1$s (%2$s)"
-
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
-#, fuzzy, c-format
-msgid "Create PReP volume %1$s (%2$s)"
-msgstr "Ahiver l' volume %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -122,11 +95,10 @@ msgstr "Ahiver l' pårticion %1$s (%2$s)"
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' pårticion %1$s (%2$s) po %4$s avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Ahiver l' volume boot %1$s (%2$s) avou %3$s"
@@ -147,14 +119,17 @@ msgstr "Ahiver l' pårticion ecriptêye %1$s (%2$s) po %4$s avou %3$s"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Ahiver l' éndjin båzé so fitchî  ecripté %1$s do fitchî %2$s (%3$s) come %5$s avou %4$s"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Ahiver l' éndjin båzé so fitchî  ecripté %1$s do fitchî %2$s (%3$s) come "
+"%5$s avou %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:252
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' volume lodjike ecripté %1$s (%2$s) po %4$s avou %3$s"
@@ -166,32 +141,32 @@ msgstr "Ahiver l' volume lodjike ecripté %1$s (%2$s) po %4$s avou %3$s"
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Ahiver l' pårticion swap ecriptêye multipath %1$s (%2$s) po %4$s avou %3$s"
+msgstr ""
+"Ahiver l' pårticion swap ecriptêye multipath %1$s (%2$s) po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:413
+#: ../storage/Md.cc:404
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Ahiver l' programe RAID ecripté %1$s (%2$s) a pårti d' %5$s po %4$s avou %3$s"
+msgstr ""
+"Ahiver l' programe RAID ecripté %1$s (%2$s) a pårti d' %5$s po %4$s avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Ahiver l' volume ecripté %1$s (%2$s)"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3280
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' volume ecripté %1$s (%2$s) po %4$s avou %3$s"
@@ -212,7 +187,7 @@ msgstr "Ahiver l' sitindowe pårticion multipath %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:422
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "Ahiver l' sitindowe pårticion %1$s (%2$s)"
@@ -233,11 +208,13 @@ msgstr "Ahiver l' éndjin båzé so fitchî %1$s do fitchî %2$s (%3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Ahiver l' éndjin båzé so fitchî %1$s do fitchî %2$s (%3$s) come %5$s avou %4$s"
+msgstr ""
+"Ahiver l' éndjin båzé so fitchî %1$s do fitchî %2$s (%3$s) come %5$s avou "
+"%4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:261
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Ahiver l' volume lodjike %1$s (%2$s)"
@@ -246,7 +223,7 @@ msgstr "Ahiver l' volume lodjike %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:242
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' volume lodjike swap %1$s (%2$s) po %4$s avou %3$s"
@@ -267,11 +244,10 @@ msgstr "Ahiver l' pårticion multipath %1$s (%2$s)"
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' pårticion swap multipath %1$s (%2$s) po %4$s avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3251
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Ahiver l' volume root %1$s (%2$s) avou %3$s"
@@ -279,7 +255,7 @@ msgstr "Ahiver l' volume root %1$s (%2$s) avou %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:423
+#: ../storage/Md.cc:414
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
 msgstr "Ahver l' programe RAID %1$s (%2$s) a pårti d' %3$s"
@@ -289,14 +265,14 @@ msgstr "Ahver l' programe RAID %1$s (%2$s) a pårti d' %3$s"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:402
+#: ../storage/Md.cc:393
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "Ahiver l' programe RAID %1$s (%2$s) a pårti d' %5$s po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:804
 #, fuzzy, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "Ahiver l' volume %1$s (%2$s)"
@@ -310,7 +286,7 @@ msgstr "Ahiver l' pårticion swap %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:231
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Dj' ahive li volume lodjike swap %1$s (%2$s)"
@@ -322,28 +298,25 @@ msgstr "Dj' ahive li volume lodjike swap %1$s (%2$s)"
 msgid "Create swap multipath partition %1$s (%2$s)"
 msgstr "Ahiver l' pårticion swap multipath %1$s (%2$s)"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3243
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Dj' ahive li volume swap %1$s (%2$s)"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3291
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Ahiver l' volume %1$s (%2$s)"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3270
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Ahiver l' volume %1$s (%2$s) po %4$s avou %3$s"
@@ -352,13 +325,13 @@ msgstr "Ahiver l' volume %1$s (%2$s) po %4$s avou %3$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1257
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Ahiver l' groupe di volumes %1$s (%2$s) a pårti d' %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:275
 #, c-format
 msgid "Creating %1$s"
 msgstr "Dj' ahive %1$s"
@@ -377,7 +350,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "Dj' ahive l' éndjin båzé so fitchî %1$s do fitchî %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:223
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Dj' ahive li volume lodjike %1$s"
@@ -390,21 +363,20 @@ msgstr "Dj' ahive li pårticion multipath %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:388
+#: ../storage/Md.cc:379
 #, c-format
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "Dj' ahive li programe RAID %1$s a pårti d' %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:797
 #, fuzzy, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Ahiver l' volume %1$s (%2$s)"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3235
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Dj' ahive li volume %1$s"
@@ -413,7 +385,7 @@ msgstr "Dj' ahive li volume %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1248
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Dj' ahive li groupe di volumes %1$s (%2$s) a pårti d' %3$s"
@@ -432,7 +404,7 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:613
 #, fuzzy, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Disfacer l' éndjin båzé so fitchî %1$s (%2$s)"
@@ -446,14 +418,14 @@ msgstr "Disfacer l' pårticion %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:393
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "Disfacer l' pårticion Windows %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:450
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "Disfacer l' éndjin mapeu d' volume %1$s (%2$s)"
@@ -467,7 +439,7 @@ msgstr "Disfacer l' éndjin båzé so fitchî %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:211
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "Disfacer l' volume lodjike %1$s (%2$s)"
@@ -481,20 +453,20 @@ msgstr "Disfacer l' pårticion multipath %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:400
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "Disfacer l' pårticion %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Md.cc:374
+#: ../storage/Md.cc:365
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Disfacer l' programe RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:607
 #, fuzzy, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Dji disface l' éndjin båzé so fitchî %1$s"
@@ -506,7 +478,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "Dji disface li pårticion %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:444
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Dji disface l' éndjin mapeu d' volume %1$s"
@@ -518,7 +490,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "Dji disface l' éndjin båzé so fitchî %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:205
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "Dji disface li volume lodjike %1$s"
@@ -530,13 +502,13 @@ msgid "Deleting multipath partition %1$s"
 msgstr "Dji disface li pårticion multipath %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:385
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "Dji disface li pårticion %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-#: ../storage/Md.cc:368
+#: ../storage/Md.cc:359
 #, c-format
 msgid "Deleting software RAID %1$s"
 msgstr "Dji disface li programe RAID %1$s"
@@ -547,17 +519,17 @@ msgid "E"
 msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:116
+#: ../storage/HumanString.cc:113
 msgid "EB"
 msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:113
+#: ../storage/HumanString.cc:116
 msgid "EiB"
 msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:218
+#: ../storage/Dasd.cc:403
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
@@ -565,24 +537,29 @@ msgstr[0] "Enonder dasdfmt sol plake %1$s"
 msgstr[1] "Enonder dasdfmt so les plakes %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:211
+#: ../storage/Dasd.cc:396
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "Dj' enonde dasdfmt pol plake %1$s"
 msgstr[1] "Dj' enonde dasdfmt po les plakes %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
+#: ../storage/Dasd.cc:294
+#, c-format
+msgid "Executing fdasd for disk %1$s"
+msgstr "Dj' enonde fdasd pol plake %1$s"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3332
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Agrandi %1$s a %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:763
 #, fuzzy, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "Agrandi l' volume lodjike %1$s a %2$s"
@@ -596,14 +573,14 @@ msgstr "Agrandi l' pårticion %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:519
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "Agrandi l' pårticion Windows %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:350
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "Agrandi l' volume lodjike %1$s a %2$s"
@@ -617,29 +594,28 @@ msgstr "Agrandi l' pårticion multipath %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "Agrandi l' pårticion %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1278
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Agrandi l' groupe di volumes %1$s avou %2$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3318
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Dj' agrandi %1$s a %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:756
 #, fuzzy, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "Dj' agrandi l' volume lodjike %1$s a %2$s"
@@ -653,7 +629,7 @@ msgstr "Dj' agrandi l' pårticion %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:336
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "Dj' agrandi l' volume lodjike %1$s a %2$s"
@@ -667,14 +643,14 @@ msgstr "Dj' agrandi l' pårticion multipath %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:503
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "Dj' agrandi l' pårticion %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1271
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Dj' agrandi l' groupe di volumes %1$s avou %2$s"
@@ -682,7 +658,7 @@ msgstr "Dj' agrandi l' groupe di volumes %1$s avou %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:696
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Disfacer l' éndjin båzé so fitchî %1$s (%2$s)"
@@ -691,7 +667,7 @@ msgstr "Disfacer l' éndjin båzé so fitchî %1$s (%2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:690
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "Disfacer l' éndjin båzé so fitchî %1$s (%2$s)"
@@ -720,21 +696,19 @@ msgstr "Abwesner l' pårticion %1$s (%2$s) po swap"
 msgid "Format RAID partition %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' pårticion %1$s (%2$s) avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:850
+#: ../storage/Volume.cc:851
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' éndjin %1$s (%2$s) po %4$s avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:841
+#: ../storage/Volume.cc:871
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' éndjin %1$s (%2$s) avou %3$s"
@@ -743,7 +717,7 @@ msgstr "Abwesner l' éndjin %1$s (%2$s) avou %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:477
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' éndjin mapeu d' volume %1$s (%2$s) po %4$s avou %3$s"
@@ -751,7 +725,7 @@ msgstr "Abwesner l' éndjin mapeu d' volume %1$s (%2$s) po %4$s avou %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:497
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' éndjin mapeu d' volume %1$s (%2$s) avou %3$s"
@@ -765,12 +739,11 @@ msgstr "Abwesner l' éndjin mapeu d' volume %1$s (%2$s) avou %3$s"
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' pårticion ecriptêye %1$s (%2$s) po %4$s avou %3$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:859
+#: ../storage/Volume.cc:861
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' éndjin ecripté %1$s (%2$s) po %4$s avou %3$s"
@@ -779,10 +752,11 @@ msgstr "Abwesner l' éndjin ecripté %1$s (%2$s) po %4$s avou %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:487
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Abwesner l' éndjin ecripté mapeu d' volume %1$s (%2$s) po %4$s avou %3$s"
+msgstr ""
+"Abwesner l' éndjin ecripté mapeu d' volume %1$s (%2$s) po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -791,14 +765,17 @@ msgstr "Abwesner l' éndjin ecripté mapeu d' volume %1$s (%2$s) po %4$s avou %3
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Abwesner l' éndjin båzé so fitchî ecripté %1$s di %2$s (%3$s) come %5$s avou %4$s"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Abwesner l' éndjin båzé so fitchî ecripté %1$s di %2$s (%3$s) come %5$s avou "
+"%4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:306
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' volume lodjike ecripté %1$s (%2$s) po %4$s avou %3$s"
@@ -810,13 +787,14 @@ msgstr "Abwesner l' volume lodjike ecripté %1$s (%2$s) po %4$s avou %3$s"
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Abwesner l' pårticion ecriptêye multipath %1$s (%2$s) po %4$s avou %3$s"
+msgstr ""
+"Abwesner l' pårticion ecriptêye multipath %1$s (%2$s) po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:473
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' pårticion ecriptêye %1$s (%2$s) po %4$s avou %3$s"
@@ -825,7 +803,7 @@ msgstr "Abwesner l' pårticion ecriptêye %1$s (%2$s) po %4$s avou %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:462
+#: ../storage/Md.cc:453
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' programe RAID ecripté %1$s (%2$s) po %4$s avou %3$s"
@@ -838,7 +816,8 @@ msgstr "Abwesner l' programe RAID ecripté %1$s (%2$s) po %4$s avou %3$s"
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Abwesner l' éndjin båzé so fitchî %1$s di %2$s (%3$s) come %5$s avou %4$s"
+msgstr ""
+"Abwesner l' éndjin båzé so fitchî %1$s di %2$s (%3$s) come %5$s avou %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -847,20 +826,21 @@ msgstr "Abwesner l' éndjin båzé so fitchî %1$s di %2$s (%3$s) come %5$s avou
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Abwesner l' éndjin båzé so fitchî ecripté %1$s di %2$s (%3$s) avou %4$s"
+msgstr ""
+"Abwesner l' éndjin båzé so fitchî ecripté %1$s di %2$s (%3$s) avou %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:296
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' volume lodjike %1$s (%2$s) po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:287
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "Abwesner l' volume lodjike %1$s (%2$s) pol swap"
@@ -868,7 +848,7 @@ msgstr "Abwesner l' volume lodjike %1$s (%2$s) pol swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:316
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' volume lodjike %1$s (%2$s) avou %3$s"
@@ -901,14 +881,14 @@ msgstr "Abwesner l' pårticion multipath %1$s (%2$s) avou %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:463
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' pårticion %1$s (%2$s) po %4$s avou %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:454
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "Abwesner l' pårticion %1$s (%2$s) po swap"
@@ -916,7 +896,7 @@ msgstr "Abwesner l' pårticion %1$s (%2$s) po swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:483
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' pårticion %1$s (%2$s) avou %3$s"
@@ -925,7 +905,7 @@ msgstr "Abwesner l' pårticion %1$s (%2$s) avou %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:452
+#: ../storage/Md.cc:443
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr "Abwesner l' programe RAID %1$s (%2$s) po %4$s avou %3$s"
@@ -933,7 +913,7 @@ msgstr "Abwesner l' programe RAID %1$s (%2$s) po %4$s avou %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:472
+#: ../storage/Md.cc:463
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "Abwesner l' programe RAID %1$s (%2$s) avou %3$s"
@@ -941,7 +921,7 @@ msgstr "Abwesner l' programe RAID %1$s (%2$s) avou %3$s"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:680
 #, fuzzy, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Ahiver l' volume %1$s (%2$s)"
@@ -954,11 +934,10 @@ msgstr "Ahiver l' volume %1$s (%2$s)"
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
 msgstr "Dj' abwesnêye li pårticion %1$s (%2$s) avou %3$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:833
+#: ../storage/Volume.cc:838
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Dj' abwesnêye l' éndjin %1$s (%2$s) avou %3$s"
@@ -966,7 +945,7 @@ msgstr "Dj' abwesnêye l' éndjin %1$s (%2$s) avou %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:464
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "Dj' abwesnêye l' éndjin mapeu d' volume %1$s (%2$s) avou %3$s"
@@ -983,7 +962,7 @@ msgstr "Dj' abwesnêye l' éndjin båzé so fitchî %1$s di %2$s (%3$s) avou %4$
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:276
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "Dj' abwesnêye li volume lodjike %1$s (%2$s) avou %3$s"
@@ -999,7 +978,7 @@ msgstr "Dj' abwesnêye li pårticion multipath %1$s (%2$s) avou %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:443
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "Dj' abwesnêye li pårticion %1$s (%2$s) avou %3$s"
@@ -1007,7 +986,7 @@ msgstr "Dj' abwesnêye li pårticion %1$s (%2$s) avou %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:439
+#: ../storage/Md.cc:430
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
 msgstr "Abwesnêye li programe raid %1$s (%2$s) avou %3$s"
@@ -1018,12 +997,12 @@ msgid "G"
 msgstr "G"
 
 #. symbol for "giga bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:83
+#: ../storage/HumanString.cc:80
 msgid "GB"
 msgstr "Gb"
 
 #. symbol for "gibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:80
+#: ../storage/HumanString.cc:83
 msgid "GiB"
 msgstr "GiB"
 
@@ -1032,7 +1011,7 @@ msgid "Hard Disk"
 msgstr "Deure plake"
 
 #. symbol for "kibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:58
+#: ../storage/HumanString.cc:61
 msgid "KiB"
 msgstr "KiB"
 
@@ -1046,7 +1025,7 @@ msgid "M"
 msgstr "M"
 
 #. symbol for "mega bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:72
+#: ../storage/HumanString.cc:69
 msgid "MB"
 msgstr "Mb"
 
@@ -1055,7 +1034,7 @@ msgid "MD RAID"
 msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:69
+#: ../storage/HumanString.cc:72
 msgid "MiB"
 msgstr "MiB"
 
@@ -1063,10 +1042,9 @@ msgstr "MiB"
 msgid "Mount Point"
 msgstr "Pont d' montaedje"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Dji monte %1$s so %2$s"
@@ -1083,7 +1061,7 @@ msgid "P"
 msgstr "P"
 
 #. symbol for "peta bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:105
+#: ../storage/HumanString.cc:102
 msgid "PB"
 msgstr "Pb"
 
@@ -1092,49 +1070,48 @@ msgid "Partition"
 msgstr "Pårticion"
 
 #. symbol for "pebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:102
+#: ../storage/HumanString.cc:105
 msgid "PiB"
 msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:784
 #, fuzzy, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Raptiti l' groupe di volumes %1$s pa %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1300
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Raptiti l' groupe di volumes %1$s pa %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:777
 #, fuzzy, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "Dji raptiti l' groupe di volumes %1$s pa %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1293
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Dji raptiti l' groupe di volumes %1$s pa %2$s"
 
-#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:949
 #, c-format
 msgid "Remove %1$s"
 msgstr "Oister %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1466
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Oister %1$s di %2$s"
@@ -1146,27 +1123,27 @@ msgid "Remove NFS volume %1$s"
 msgstr "Oister li volume %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:185
+#: ../storage/DmraidCo.cc:251
 #, fuzzy, c-format
 msgid "Remove RAID %1$s"
 msgstr "Oister %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:966
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Oister ene intrêye pol pont d' montaedje %1$s di %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1081
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Disfacer li programe RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:824
 #, fuzzy, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Oister li volume %1$s"
@@ -1183,22 +1160,21 @@ msgstr "Oister %1$s di %2$s"
 msgid "Remove tmpfs volume from mount point %1$s"
 msgstr "Oister l' groupe di volumes %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3348
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Oister li volume %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1233
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Oister l' groupe di volumes %1$s"
 
-#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:944
 #, c-format
 msgid "Removing %1$s"
 msgstr "Dji oistêye %1$s"
@@ -1210,27 +1186,27 @@ msgid "Removing NFS volume %1$s"
 msgstr "Dji oistêye li volume %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:180
+#: ../storage/DmraidCo.cc:246
 #, fuzzy, c-format
 msgid "Removing RAID %1$s"
 msgstr "Dji oistêye %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Dji oistêye ene intrêye pol pont d' montaedje %1$s di %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1076
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Dji disface li programe RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:817
 #, fuzzy, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Dji oistêye li volume %1$s"
@@ -1241,38 +1217,35 @@ msgstr "Dji oistêye li volume %1$s"
 msgid "Removing tmpfs volume from mount point %1$s"
 msgstr "Dji oistêye li groupe di volumes %1$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3343
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Dji oistêye li volume %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1228
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Dji oistêye li groupe di volumes %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1598
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Aprester l' etikete del plake di %1$s so %2$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2561
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Defini l' etikete so %1$s viè %2$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1447
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Defini l' pont d' montaedje di %1$s so %2$s"
@@ -1297,49 +1270,40 @@ msgstr "Aprester l' sôre del pårticion %1$s so %2$X"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Aprester l' sôre del pårticion a sacwats tchmins %1$s so %2$X"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Aprester l' sôre del pårticion %1$s so %2$X"
 
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:338
-#, fuzzy, c-format
-msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "Aprester l' sôre del pårticion %1$s so %2$X"
-
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1839
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Apontyî en éndjin dm ecripté so %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1823
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Apontyî en éndjin di blouke ecripté so %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1591
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Dj' apresteye l' etikete del plake di %1$s so %2$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2547
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Dji defini l' etikete so %1$s viè %2$s"
@@ -1358,42 +1322,33 @@ msgstr "Dj' apresteye l' sôre del pårticion %1$s so %2$X"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Dj' apresteye l' sôre del pårticion a sacwats tchmins %1$s so %2$X"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Dj' apresteye l' sôre del pårticion %1$s so %2$X"
 
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:325
-#, fuzzy, c-format
-msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "Dj' apresteye l' sôre del pårticion %1$s so %2$X"
-
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1834
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Dj' aponteye en éndjin dm ecripté so %1$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1818
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Dj' aponteye en éndjin di blouke ecripté so %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3328
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Raptiti %1$s a %2$s"
@@ -1407,14 +1362,14 @@ msgstr "Raptiti l' pårticion %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:515
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Raptiti l' pårticion Windows %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:346
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "Raptiti l' volume lodjike %1$s a %2$s"
@@ -1428,15 +1383,14 @@ msgstr "Raptiti l' pårticion multipath %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:526
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "Raptiti l' pårticion %1$s a %2$s"
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3314
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Dji raptiti %1$s a %2$s"
@@ -1450,7 +1404,7 @@ msgstr "Dji raptiti l' pårticion %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:332
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "Dji raptiti l' volume lodjike %1$s a %2$s"
@@ -1464,7 +1418,7 @@ msgstr "Dji raptiti l' pårticion multipath %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:499
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "Dji raptiti l' pårticion %1$s a %2$s"
@@ -1475,12 +1429,12 @@ msgid "T"
 msgstr "T"
 
 #. symbol for "tera bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:94
+#: ../storage/HumanString.cc:91
 msgid "TB"
 msgstr "Tb"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:340
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1499,25 +1453,46 @@ msgstr ""
 " vos n' poloz nén radjouter, candjî, candjî l' grandeu ou co oister des\n"
 " pårticions d' cisse plake avou ciste usteye."
 
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Dasd.cc:197
+#, c-format
+msgid ""
+"The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool fdasd, which is used to change the\n"
+"partition table.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"Li pårtixhaedje sol plake %1$s n' est nén léjhåve pa\n"
+" l' usteye d' pårtixhaedje fdasd, k' est eployî po candjî l'\n"
+" tåve des pårticions.\n"
+" \n"
+" Vos vs poloz  siervi des pårticions sol plake %1$s come ele sont.\n"
+" Vos les ploz abwesner eyet lzî aroyî des ponts d' montaedje mins\n"
+" vos n' poloz nén radjouter, candjî, candjî l' grandeu ou co oister des\n"
+" pårticions d' cisse plake avou ciste usteye. "
+
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:371
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
 msgstr ""
 
 #. symbol for "tebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:91
+#: ../storage/HumanString.cc:94
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:5190
 msgid "Unmount failed."
 msgstr "Li dismontaedje a fwait berwete."
 
-#. displayed during action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1428
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Dji dismonte %1$s"
@@ -1530,22 +1505,21 @@ msgstr "Dji dismonte %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:945
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Mete a djoû ene intrêye pol pont d' montaedje %1$s dins %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Dji met a djoû ene intrêye pol pont d' montaedje %1$s dins %2$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1454
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Si siervi d' %1$s come %2$s"
@@ -1554,8 +1528,33 @@ msgstr "Si siervi d' %1$s come %2$s"
 msgid "Volume Group"
 msgstr "Groupe di volumes"
 
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Storage.cc:394
+#, c-format
+msgid ""
+"You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+"\n"
+"Following MD compatible RAID devices were detected:\n"
+"%1$s\n"
+"If they are clean devices or contain partitions then you can choose to use\n"
+"MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+"you\n"
+"will be able to install system on it and boot from such RAID.\n"
+"Do you want MD Partitionable RAID subsystem to manage those partitions?"
+msgstr ""
+"Vos ovrez sol platfôme compatibe Intel(R) Matrix Storage Manager.\n"
+"\n"
+"Les éndjins RAID compatibes MD ont stî trovés :\n"
+"%1$s\n"
+"Si ces éndjins sont vudes ou k' il ont des pårticions, vos ploz tchoezi "
+"adon\n"
+"d' vos siervi do sorsistinme RAID pårtixhåve MD po ls apougnî. Si c' est on "
+"vudeéndjin, vos såroz astaler l' sistinme dizeu eyet tcherdjî l' sistinme a "
+"pårti d' on sfwait RAID.\n"
+"Voloz vs kel sorsistinme RAID pårtixhåve MD manaedje ces pårticions la ?"
+
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:523
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1568,12 +1567,13 @@ msgstr ""
 "Vos avoz les tchuzes shuvantes:\n"
 "  - Ripårtixhoz vosse sistinme po kel nombe macsimom di pårticions\n"
 "    permetou soeyexhe eployeyî. Pol fé, eployîz vosse sistinme d'\n"
-"    operance egzistant.  - Si siervi d' LVM ca i pout dner tolminme ké nombe d' éndjins blocs pårticions.\n"
+"    operance egzistant.  - Si siervi d' LVM ca i pout dner tolminme ké nombe "
+"d' éndjins blocs pårticions.\n"
 "    Po ça i rfåt ossu fé les pårticions."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:516
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1590,49 +1590,49 @@ msgid "k"
 msgstr "k"
 
 #. symbol for "kilo bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:61
+#: ../storage/HumanString.cc:58
 msgid "kB"
 msgstr "Kb"
 
-#~ msgid "Executing fdasd for disk %1$s"
-#~ msgstr "Dj' enonde fdasd pol plake %1$s"
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3319
+#, fuzzy, c-format
+msgid "Create BIOS grub volume %1$s (%2$s)"
+msgstr "Ahiver l' volume %1$s (%2$s)"
 
-#~ msgid ""
-#~ "The partitioning on disk %1$s is not readable by\n"
-#~ "the partitioning tool fdasd, which is used to change the\n"
-#~ "partition table.\n"
-#~ "\n"
-#~ "You can use the partitions on disk %1$s as they are.\n"
-#~ "You can format them and assign mount points to them, but you\n"
-#~ "cannot add, edit, resize, or remove partitions from that\n"
-#~ "disk with this tool."
-#~ msgstr ""
-#~ "Li pårtixhaedje sol plake %1$s n' est nén léjhåve pa\n"
-#~ " l' usteye d' pårtixhaedje fdasd, k' est eployî po candjî l'\n"
-#~ " tåve des pårticions.\n"
-#~ " \n"
-#~ " Vos vs poloz  siervi des pårticions sol plake %1$s come ele sont.\n"
-#~ " Vos les ploz abwesner eyet lzî aroyî des ponts d' montaedje mins\n"
-#~ " vos n' poloz nén radjouter, candjî, candjî l' grandeu ou co oister des\n"
-#~ " pårticions d' cisse plake avou ciste usteye. "
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3323
+#, fuzzy, c-format
+msgid "Create GPT PReP volume %1$s (%2$s)"
+msgstr "Ahiver l' volume %1$s (%2$s)"
 
-#~ msgid ""
-#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
-#~ "\n"
-#~ "Following MD compatible RAID devices were detected:\n"
-#~ "%1$s\n"
-#~ "If they are clean devices or contain partitions then you can choose to use\n"
-#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
-#~ "will be able to install system on it and boot from such RAID.\n"
-#~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
-#~ msgstr ""
-#~ "Vos ovrez sol platfôme compatibe Intel(R) Matrix Storage Manager.\n"
-#~ "\n"
-#~ "Les éndjins RAID compatibes MD ont stî trovés :\n"
-#~ "%1$s\n"
-#~ "Si ces éndjins sont vudes ou k' il ont des pårticions, vos ploz tchoezi adon\n"
-#~ "d' vos siervi do sorsistinme RAID pårtixhåve MD po ls apougnî. Si c' est on vudeéndjin, vos såroz astaler l' sistinme dizeu eyet tcherdjî l' sistinme a pårti d' on sfwait RAID.\n"
-#~ "Voloz vs kel sorsistinme RAID pårtixhåve MD manaedje ces pårticions la ?"
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3327
+#, fuzzy, c-format
+msgid "Create PReP volume %1$s (%2$s)"
+msgstr "Ahiver l' volume %1$s (%2$s)"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:338
+#, fuzzy, c-format
+msgid "Set type of partition %1$s to %2$s (%3$X)"
+msgstr "Aprester l' sôre del pårticion %1$s so %2$X"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:325
+#, fuzzy, c-format
+msgid "Setting type of partition %1$s to %2$s (%3$X)"
+msgstr "Dj' apresteye l' sôre del pårticion %1$s so %2$X"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1657,7 +1657,8 @@ msgstr "Kb"
 #~ msgstr "(li båre d' avançmint n' pôreut nén bodjî)"
 
 #~ msgid "Create encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Ahiver l' pårticion swap ecriptêye raid %1$s (%2$s) po %4$s avou %3$s"
+#~ msgstr ""
+#~ "Ahiver l' pårticion swap ecriptêye raid %1$s (%2$s) po %4$s avou %3$s"
 
 #~ msgid "Create extended raid partition %1$s (%2$s)"
 #~ msgstr "Ahiver l' sitindowe pårticion raid %1$s (%2$s)"

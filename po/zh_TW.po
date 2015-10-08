@@ -6,13 +6,14 @@
 #
 # swyear <swyear@gmail.com>, 2009, 2011.
 # Ray Chen <swyear@opensuse.org>, 2012.
+# Ramax Lo <ramaxlo@gmail.com>, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
-"PO-Revision-Date: 2012-05-29 23:26+0800\n"
-"Last-Translator: Ray Chen <swyear@opensuse.org>\n"
+"POT-Creation-Date: 2014-06-30 15:51+0200\n"
+"PO-Revision-Date: 2015-03-11 01:20+0800\n"
+"Last-Translator: Ramax Lo <ramaxlo@gmail.com>\n"
 "Language-Team: Chinese Traditional <kde-i18n-doc@kde.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
@@ -22,22 +23,22 @@ msgstr ""
 "X-Generator: Lokalize 1.4\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
 msgstr "(進度條將不會動。可能會花很長的時間。請不要跳出！)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "將裝載點 %1$s 的項目新增到 %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:910
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "正在將裝載點 %1$s 的項目新增到 %2$s"
@@ -54,7 +55,7 @@ msgstr "Btrfs 卷冊"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1434
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "將 %1$s 的裝載點變更為 %2$s"
@@ -67,20 +68,20 @@ msgstr "變更 tmpfs 的裝載點為 %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#: ../storage/Volume.cc:2552
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "清除 %1$s 上的標籤"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#: ../storage/Volume.cc:2545
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "正在清除 %1$s 上的標籤"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:279
 #, c-format
 msgid "Create %1$s"
 msgstr "建立 %1$s"
@@ -89,7 +90,7 @@ msgstr "建立 %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr "建立 BIOS Grub 磁碟區 %1$s (%2$s)"
@@ -98,7 +99,7 @@ msgstr "建立 BIOS Grub 磁碟區 %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
+#: ../storage/Volume.cc:3293
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr "建立 GPT PReP 磁碟區 %1$s (%2$s)"
@@ -107,7 +108,7 @@ msgstr "建立 GPT PReP 磁碟區 %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr "建立 PReP 磁碟區 %1$s (%2$s)"
@@ -132,7 +133,7 @@ msgstr "使用 %3$s 建立用於 %4$s 的 RAID 分割區 %1$s (%2$s)"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 建立開機卷冊 %1$s (%2$s)"
@@ -153,14 +154,15 @@ msgstr "使用 %3$s 建立用於 %4$s 的加密 RAID 分割區 %1$s (%2$s)"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr "使用 %4$s 建立做為 %5$s 的檔案 %2$s (%3$s) 加密檔案為主設備 %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:250
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 建立用於 %4$s 的加密邏輯卷冊 %1$s (%2$s)"
@@ -187,7 +189,7 @@ msgstr "使用 %3$s 從 %5$s 建立用於 %4$s 的加密軟體 RAID %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "建立加密分割區 %1$s (%2$s)"
@@ -197,7 +199,7 @@ msgstr "建立加密分割區 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 建立用於 %4$s 的加密卷冊 %1$s (%2$s)"
@@ -218,7 +220,7 @@ msgstr "建立延伸多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:453
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "建立延伸分割區 %1$s (%2$s)"
@@ -243,7 +245,7 @@ msgstr "使用 %4$s 建立做為 %5$s 的檔案 %2$s (%3$s) 檔案為主設備 %
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:259
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "建立邏輯卷冊 %1$s (%2$s)"
@@ -252,7 +254,7 @@ msgstr "建立邏輯卷冊 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:240
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 建立用於 %4$s 的邏輯卷冊 %1$s (%2$s)"
@@ -277,7 +279,7 @@ msgstr "使用 %3$s 建立用於 %4$s 的多重路徑分割區 %1$s (%2$s)"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 建立根卷冊 %1$s (%2$s)"
@@ -302,7 +304,7 @@ msgstr "使用 %3$s 從 %5$s 建立用於 %4$s 的軟體 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "在裝置 %2$s 建立子卷冊 %1$s "
@@ -316,7 +318,7 @@ msgstr "建立交換 RAID 分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:229
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "建立交換邏輯卷冊 %1$s (%2$s)"
@@ -331,7 +333,7 @@ msgstr "建立交換多重路徑分割區 %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "建立交換卷冊 %1$s (%2$s)"
@@ -339,7 +341,7 @@ msgstr "建立交換卷冊 %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "建立卷冊 %1$s (%2$s)"
@@ -349,7 +351,7 @@ msgstr "建立卷冊 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 建立用於 %4$s 的卷冊 %1$s (%2$s)"
@@ -358,13 +360,13 @@ msgstr "使用 %3$s 建立用於 %4$s 的卷冊 %1$s (%2$s)"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s) "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:274
 #, c-format
 msgid "Creating %1$s"
 msgstr "正在建立 %1$s"
@@ -383,7 +385,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "正在建立檔案 %2$s 的檔案為主設備 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:221
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "正在建立邏輯卷冊 %1$s"
@@ -403,14 +405,14 @@ msgstr "正在從 %2$s 建立軟體 RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "在裝置 %2$s 建立子卷冊 %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "正在建立卷冊 %1$s"
@@ -419,7 +421,7 @@ msgstr "正在建立卷冊 %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s)"
@@ -439,7 +441,7 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "在裝置 %1$s (%2$s) 刪除 Btrfs 卷冊"
@@ -453,14 +455,14 @@ msgstr "刪除 RAID 分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:424
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "刪除 Windows 分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:449
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "刪除設備對應卷冊 %1$s (%2$s)"
@@ -474,7 +476,7 @@ msgstr "刪除檔案為主的設備 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:209
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "刪除邏輯卷冊 %1$s (%2$s)"
@@ -488,7 +490,7 @@ msgstr "刪除多重路徑分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:431
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "刪除分割區 %1$s (%2$s)"
@@ -501,7 +503,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "刪除軟體 RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "正在刪除裝置 %1$s 上的 Btrfs 卷冊"
@@ -513,7 +515,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "正在刪除 RAID 分割區 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:443
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "正在刪除設備對應卷冊 %1$s"
@@ -525,7 +527,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "正在刪除檔案為主的設備 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:203
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "正在刪除邏輯卷冊 %1$s"
@@ -537,7 +539,7 @@ msgid "Deleting multipath partition %1$s"
 msgstr "正在刪除多重路徑分割區 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:416
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "正在刪除分割區 %1$s"
@@ -583,14 +585,14 @@ msgstr[0] "正在為磁碟 %1$s 執行 dasdfmt"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3345
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "將 %1$s 延伸到 %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "擴充 Btrfs 卷冊 %1$s 由 %2$s"
@@ -604,14 +606,14 @@ msgstr "擴充 RAID 分割區 %1$s 到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:550
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "將 Windows 分割區 %1$s 延伸到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:348
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "將邏輯卷冊 %1$s 延伸到 %2$s"
@@ -625,14 +627,14 @@ msgstr "將多重路徑分割區 %1$s 延伸到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:561
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "將分割區 %1$s 延伸到 %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1433
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "使用 %2$s 延伸卷冊群組 %1$s"
@@ -640,14 +642,14 @@ msgstr "使用 %2$s 延伸卷冊群組 %1$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "正在將 %1$s 延伸到 %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "正在擴充 Btrfs 卷冊 %1$s 由 %2$s"
@@ -661,7 +663,7 @@ msgstr "正在擴充 RAID 分割區 %1$s 到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:334
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "正在將邏輯卷冊 %1$s 延伸到 %2$s"
@@ -675,14 +677,14 @@ msgstr "正在將多重路徑分割區 %1$s 延伸到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:534
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "正在將分割區 %1$s 延伸到 %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1426
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "正在使用 %2$s 延伸卷冊群組 %1$s"
@@ -690,7 +692,7 @@ msgstr "正在使用 %2$s 延伸卷冊群組 %1$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "格式化大小為 %1$s 的 Btrfs 卷冊 (使用裝置：%2$s)"
@@ -699,7 +701,7 @@ msgstr "格式化大小為 %1$s 的 Btrfs 卷冊 (使用裝置：%2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "為 %3$s 格式化大小為 %1$s 的 Btrfs 卷冊(使用裝置：%2$s)"
@@ -751,7 +753,7 @@ msgstr "使用 %3$s 格式化設備 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:476
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的設備對應卷冊 %1$s (%2$s)"
@@ -759,7 +761,7 @@ msgstr "使用 %3$s 格式化用於 %4$s 的設備對應卷冊 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:496
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 格式化設備對應卷冊 %1$s (%2$s)"
@@ -787,7 +789,7 @@ msgstr "使用 %3$s 格式化用於 %4$s 的加密設備 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:486
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的加密設備對應卷冊%1$s (%2$s)"
@@ -799,14 +801,15 @@ msgstr "使用 %3$s 格式化用於 %4$s 的加密設備對應卷冊%1$s (%2$s)"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr "使用 %4$s 格式化做為 %5$s 的 %2$s (%3$s) 加密檔案為主設備 %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:304
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的加密邏輯卷冊 %1$s (%2$s)"
@@ -824,7 +827,7 @@ msgstr "使用 %3$s 格式化用於 %4$s 的加密多重路徑分割區 %1$s (%2
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:504
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的加密分割區 %1$s (%2$s)"
@@ -861,14 +864,14 @@ msgstr "使用 %4$s 格式化 %2$s (%3$s) 的檔案為主設備 %1$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:294
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的邏輯卷冊 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:285
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "格式化用於交換的邏輯卷冊 %1$s (%2$s)"
@@ -876,7 +879,7 @@ msgstr "格式化用於交換的邏輯卷冊 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:314
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 格式化邏輯卷冊 %1$s (%2$s)"
@@ -909,14 +912,14 @@ msgstr "使用 %3$s 格式化多重路徑分割區 %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:494
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "使用 %3$s 格式化用於 %4$s 的分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:485
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "格式化用於交換的分割區 %1$s (%2$s)"
@@ -924,7 +927,7 @@ msgstr "格式化用於交換的分割區 %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:514
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "使用 %3$s 格式化分割區 %1$s (%2$s)"
@@ -949,7 +952,7 @@ msgstr "使用 %3$s 格式化軟體 RAID %1$s (%2$s)"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "正在格式化大小為 %1$s 的 Btrfs 卷冊 (使用裝置：%2$s)"
@@ -974,7 +977,7 @@ msgstr "正在使用 %3$s 格式化設備 %1$s (%2$s)"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:463
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "正在使用 %3$s 格式化設備對應卷冊 %1$s (%2$s)"
@@ -991,7 +994,7 @@ msgstr "正在使用 %4$s 格式化 %2$s (%3$s) 的檔案為主設備 %1$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:274
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "正在使用 %3$s 格式化邏輯卷冊 %1$s (%2$s)"
@@ -1007,7 +1010,7 @@ msgstr "正在使用 %3$s 格式化多重路徑分割區 %1$s (%2$s)"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:474
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "正在使用 %3$s 格式化分割區 %1$s (%2$s)"
@@ -1078,7 +1081,7 @@ msgstr "裝載點"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1417
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "正在將 %1$s 裝載到 %2$s"
@@ -1113,35 +1116,35 @@ msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "縮減 Btrfs 卷冊 %1$s 由 %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1455
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "按 %2$s 縮小卷冊群組 %1$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "正在縮減 Btrfs 卷冊 %1$s 由 %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1448
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "正在按 %2$s 縮小卷冊群組 %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
 #, c-format
 msgid "Remove %1$s"
 msgstr "移除 %1$s"
@@ -1149,7 +1152,7 @@ msgstr "移除 %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1465
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "從 %2$s 移除 %1$s"
@@ -1168,20 +1171,20 @@ msgstr "移除 RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "從 %2$s 移除用於裝載點 %1$s 的項目"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1080
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "移除軟體 RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "移除在裝置 %2$s 的子卷冊 %1$s"
@@ -1200,20 +1203,20 @@ msgstr "由載掛點 %1$s 移除 tmpfs 卷冊"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "移除卷冊 %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1388
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "移除卷冊群組 %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
 #, c-format
 msgid "Removing %1$s"
 msgstr "正在移除 %1$s"
@@ -1232,20 +1235,20 @@ msgstr "正在移除 RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "正在從 %2$s 移除用於裝載點 %1$s 的項目"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1075
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "正在移除軟體 RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "正在移除在裝置 %2$s 的子卷冊 %1$s"
@@ -1258,20 +1261,20 @@ msgstr "正在由載掛點 %1$s 移除 tmpfs 卷冊"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "正在移除卷冊 %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1383
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "正在移除卷冊群組 %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1677
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
@@ -1279,7 +1282,7 @@ msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2556
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "將 %1$s 上的標籤設定為 %2$s"
@@ -1287,7 +1290,7 @@ msgstr "將 %1$s 上的標籤設定為 %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1444
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "將 %1$s 的裝載點設定為 %2$s"
@@ -1312,12 +1315,14 @@ msgstr "將 RAID 分割區 %1$s 的類型設定為 %2$X"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "將多重路徑分割區 %1$s 的類型設定為 %2$X"
 
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "將分割區 %1$s 的類型設定為 %2$X"
@@ -1333,21 +1338,21 @@ msgstr "將分割區 %1$s 的類型設定為 %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#: ../storage/Volume.cc:1844
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "在 %1$s 上設定加密的 dm 設備"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#: ../storage/Volume.cc:1831
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "在 %1$s 上設定加密的迴路設備"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1670
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
@@ -1355,7 +1360,7 @@ msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2549
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "正在將 %1$s 上的標籤設定為 %2$s"
@@ -1374,12 +1379,14 @@ msgstr "正在將 RAID 分割區 %1$s 的類型設定為 %2$X"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "正在將多重路徑分割區 %1$s 的類型設定為 %2$X"
 
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "正在將分割區 %1$s 的類型設定為 %2$X"
@@ -1395,14 +1402,14 @@ msgstr "正在將分割區 %1$s 的類型設定為 %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#: ../storage/Volume.cc:1841
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "正在 %1$s 上設定加密的 dm 設備"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#: ../storage/Volume.cc:1828
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "正在 %1$s 上設定加密的迴路設備"
@@ -1410,7 +1417,7 @@ msgstr "正在 %1$s 上設定加密的迴路設備"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3341
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "將 %1$s 縮減到 %2$s"
@@ -1424,14 +1431,14 @@ msgstr "將 RAID 分割區 %1$s 縮減到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:546
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "將 Windows 分割區 %1$s 縮減到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:344
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "將邏輯卷冊 %1$s 縮減到 %2$s"
@@ -1445,7 +1452,7 @@ msgstr "將多重路徑分割區 %1$s 縮減到 %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:557
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "將分割區 %1$s 縮減到 %2$s"
@@ -1453,7 +1460,7 @@ msgstr "將分割區 %1$s 縮減到 %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3333
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "正在將 %1$s 縮減到 %2$s"
@@ -1467,7 +1474,7 @@ msgstr "正在將 RAID 分割區 %1$s 縮減到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:330
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "正在將邏輯卷冊 %1$s 縮減到 %2$s"
@@ -1481,7 +1488,7 @@ msgstr "正在將多重路徑分割區 %1$s 縮減到 %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "正在將分割區 %1$s 縮減到 %2$s"
@@ -1498,7 +1505,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:332
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1518,7 +1525,7 @@ msgstr ""
 "磁碟移除分割區。"
 
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1532,13 +1539,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:4952
 msgid "Unmount failed."
 msgstr "卸載失敗。"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "正在取消裝載 %1$s"
@@ -1550,14 +1557,14 @@ msgstr "正在卸載 tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "更新 %2$s 中用於裝載點 %1$s 的項目"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "正在更新 %2$s 中用於裝載點 %1$s 的項目"
@@ -1565,7 +1572,7 @@ msgstr "正在更新 %2$s 中用於裝載點 %1$s 的項目"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1452
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "將 %1$s 用做為 %2$s"
@@ -1575,7 +1582,7 @@ msgid "Volume Group"
 msgstr "磁碟區群組"
 
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:515
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1595,7 +1602,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:508
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

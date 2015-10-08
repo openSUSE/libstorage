@@ -2,6 +2,7 @@
 # Copyright (C) 2005 SUSE Linux Products GmbH.
 # Copyright (C) 2002, 2003 SuSE Linux AG.
 # Copyright (C) 1999, 2000, 2001 SuSE GmbH.
+# CER - NOTE 20141101: removed "faked" translator comments. Maybe they should have been hash-:, not hash-space. They are not present in the .pot file. They are include refrence from .ycp files.
 #
 # Ibán josé García Castillo <Iban.Garcia@alufis35.uv.es>, 2000.
 # Javier Moreno <javier.moreno@alufis35.uv.es>, 2000.
@@ -15,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2014-06-30 15:51+0200\n"
 "PO-Revision-Date: 2012-06-06 10:28-0300\n"
 "Last-Translator: Sergio Gabriel Teves <gabriel@opensuse.org>\n"
 "Language-Team: Spanish <opensuse-translation-es@opensuse.org>\n"
@@ -28,27 +29,27 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(La barra de progreso no se moverá. Puede tomar bastante tiempo. ¡NO ABORTE!)"
+msgstr ""
+"(La barra de progreso no se moverá. Puede tomar bastante tiempo. ¡NO ABORTE!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Añadir entrada para el punto de montaje %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:910
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Añadiendo entrada para el punto de montaje %1$s a %2$s"
 
-# modules/Backup.ycp:83
 #. symbol for "bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:51
 msgid "B"
@@ -61,7 +62,7 @@ msgstr "Volumen Btrfs"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1434
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Cambiar el punto de montaje de %1$s a %2$s"
@@ -74,23 +75,20 @@ msgstr "Cambiar el punto de montaje de tmpfs a %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#: ../storage/Volume.cc:2552
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Quitar la etiqueta de %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#: ../storage/Volume.cc:2545
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Quitando la etiqueta de %1$s"
 
-# clients/inst_custom_part.ycp:2337
-# clients/inst_custom_part.ycp:2336
-# clients/inst_custom_part.ycp:2350
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:279
 #, c-format
 msgid "Create %1$s"
 msgstr "Crear %1$s"
@@ -99,7 +97,7 @@ msgstr "Crear %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr "Crear volumen GRUB de BIOS de %1$s (%2$s)"
@@ -108,7 +106,7 @@ msgstr "Crear volumen GRUB de BIOS de %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
+#: ../storage/Volume.cc:3293
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr "Crear volumen PReP de GPT de %1$s (%2$s)"
@@ -117,7 +115,7 @@ msgstr "Crear volumen PReP de GPT de %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr "Crear volumen PReP de %1$s (%2$s)"
@@ -138,14 +136,11 @@ msgstr "Crear partición RAID %1$s (%2$s)"
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear partición RAID %1$s (%2$s) para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Crear volumen de arranque %1$s (%2$s) con %3$s"
@@ -166,24 +161,21 @@ msgstr "Crear partición RAID cifrada %1$s (%2$s) para %4$s con %3$s"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Crear el dispositivo basado en archivo cifrado %1$s del archivo %2$s (%3$s) como %5$s con %4$s"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Crear el dispositivo basado en archivo cifrado %1$s del archivo %2$s (%3$s) "
+"como %5$s con %4$s"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:250
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear el volumen lógico cifrado %1$s (%2$s) para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -201,35 +193,27 @@ msgstr "Crear la partición multipath cifrada %1$s (%2$s) para %4$s con %3$s"
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Crear el RAID por software cifrado %1$s (%2$s) desde %5$s para %4$s con %3$s"
+msgstr ""
+"Crear el RAID por software cifrado %1$s (%2$s) desde %5$s para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Crear volumen cifrado %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear volumen cifrado %1$s (%2$s) para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:131
@@ -237,9 +221,6 @@ msgstr "Crear volumen cifrado %1$s (%2$s) para %4$s con %3$s"
 msgid "Create extended RAID partition %1$s (%2$s)"
 msgstr "Crear la partición extendida %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:131
@@ -247,12 +228,9 @@ msgstr "Crear la partición extendida %1$s (%2$s)"
 msgid "Create extended multipath partition %1$s (%2$s)"
 msgstr "Crear la partición multipath extendida %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:453
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "Crear la partición extendida %1$s (%2$s)"
@@ -273,33 +251,26 @@ msgstr "Crear el dispositivo basado en archivo %1$s del archivo %2$s (%3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Crear el dispositivo basado en archivo %1$s del archivo %2$s (%3$s) como %5$s con %4$s"
+msgstr ""
+"Crear el dispositivo basado en archivo %1$s del archivo %2$s (%3$s) como "
+"%5$s con %4$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:259
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Crear el volumen lógico %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:240
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear el volumen lógico %1$s (%2$s) para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:138
@@ -307,9 +278,6 @@ msgstr "Crear el volumen lógico %1$s (%2$s) para %4$s con %3$s"
 msgid "Create multipath partition %1$s (%2$s)"
 msgstr "Crear la partición multipath %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -319,14 +287,11 @@ msgstr "Crear la partición multipath %1$s (%2$s)"
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear la partición multipath %1$s (%2$s) para %4$s con %3$s"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Crear volumen raíz %1$s (%2$s) con %3$s"
@@ -339,9 +304,6 @@ msgstr "Crear volumen raíz %1$s (%2$s) con %3$s"
 msgid "Create software RAID %1$s (%2$s) from %3$s"
 msgstr "Crear el RAID por software %1$s (%2$s) desde %3$s"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -352,12 +314,9 @@ msgstr "Crear el RAID por software %1$s (%2$s) desde %3$s"
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr "Crear el RAID por software %1$s (%2$s) desde %5$s para %4$s con %3$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "Crear subvolumen %1$s en dispositivo %2$s"
@@ -369,19 +328,13 @@ msgstr "Crear subvolumen %1$s en dispositivo %2$s"
 msgid "Create swap RAID partition %1$s (%2$s)"
 msgstr "Crear partición de intercambio RAID %1$s (%2$s)"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:229
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Crear el volumen lógico de intercambio %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:101
@@ -389,37 +342,28 @@ msgstr "Crear el volumen lógico de intercambio %1$s (%2$s)"
 msgid "Create swap multipath partition %1$s (%2$s)"
 msgstr "Crear la partición multipath de intercambio %1$s (%2$s)"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Crear volumen de intercambio %1$s (%2$s)"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Crear volumen lógico %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Crear volumen %1$s (%2$s) para %4$s con %3$s"
@@ -428,14 +372,13 @@ msgstr "Crear volumen %1$s (%2$s) para %4$s con %3$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Crear grupo de volúmenes %1$s (%2$s) de %3$s"
 
-# modules/SlideShow.ycp:239
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:274
 #, c-format
 msgid "Creating %1$s"
 msgstr "Creando %1$s"
@@ -453,16 +396,12 @@ msgstr "Creando partición RAID %1$s"
 msgid "Creating file-based device %1$s of file %2$s"
 msgstr "Creando el dispositivo basado en archivo %1$s del archivo %2$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:221
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Creando el volumen lógico %1$s"
 
-# clients/inst_rootpart.ycp:74 clients/inst_rootpart.ycp:212
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:93
 #, c-format
@@ -476,22 +415,16 @@ msgstr "Creando la partición multipath %1$s"
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "Creando el RAID por software %1$s desde %2$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Creando subvolumen %1$s en dispositivo %2$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Creando el volumen %1$s"
@@ -500,14 +433,11 @@ msgstr "Creando el volumen %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Creando grupo de volúmenes %1$s (%2$s) de %3$s"
 
-# include/partitioning/lvm_ui_lib.ycp:351
-# include/partitioning/lvm_ui_lib.ycp:351
-# include/partitioning/lvm_ui_lib.ycp:377
 #: ../storage/Graph.cc:519
 msgid "DM Device"
 msgstr "Dispositivo DM"
@@ -516,23 +446,17 @@ msgstr "Dispositivo DM"
 msgid "DM Multipath"
 msgstr "Multipath DM"
 
-# include/partitioning/raid_ui.ycp:316
-# include/partitioning/raid_ui.ycp:316
-# include/partitioning/raid_ui.ycp:316
 #: ../storage/Graph.cc:487
 msgid "DM RAID"
 msgstr "RAID DM"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Eliminar volumen Btrfs de dispositivos %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:80
@@ -540,19 +464,16 @@ msgstr "Eliminar volumen Btrfs de dispositivos %1$s (%2$s)"
 msgid "Delete RAID partition %1$s (%2$s)"
 msgstr "Suprimir la partición %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:424
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "Suprimir la partición de Windows %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:449
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "Suprimir el volumen del mapeador de dispositivos %1$s (%2$s)"
@@ -564,19 +485,13 @@ msgstr "Suprimir el volumen del mapeador de dispositivos %1$s (%2$s)"
 msgid "Delete file-based device %1$s (%2$s)"
 msgstr "Suprimir el dispositivo basado en archivo %1$s (%2$s)"
 
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:209
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "Suprimir el volumen lógico %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:80
@@ -584,12 +499,9 @@ msgstr "Suprimir el volumen lógico %1$s (%2$s)"
 msgid "Delete multipath partition %1$s (%2$s)"
 msgstr "Suprimir la partición multipath %1$s (%2$s)"
 
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:382
-# include/partitioning/partition_defines.ycp:391
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:431
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "Suprimir la partición %1$s (%2$s)"
@@ -602,21 +514,19 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Suprimir el RAID por software %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Eliminando volumen Btrfs de dispositivos %1$s"
 
-# clients/inst_rootpart.ycp:74 clients/inst_rootpart.ycp:212
 #. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #: ../storage/Dmraid.cc:74
 #, c-format
 msgid "Deleting RAID partition %1$s"
 msgstr "Suprimiendo la partición %1$s"
 
-# modules/SlideShow.ycp:239
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:443
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Suprimiendo el volumen del mapeador de dispositivos %1$s"
@@ -627,25 +537,20 @@ msgstr "Suprimiendo el volumen del mapeador de dispositivos %1$s"
 msgid "Deleting file-based device %1$s"
 msgstr "Suprimiendo el dispositivo basado en archivo %1$s"
 
-# clients/lvm_config_ui.ycp:483
-# clients/lvm_config_ui.ycp:492
-# clients/lvm_config_ui.ycp:497
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:203
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "Suprimiendo el volumen lógico %1$s"
 
-# clients/inst_rootpart.ycp:74 clients/inst_rootpart.ycp:212
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:74
 #, c-format
 msgid "Deleting multipath partition %1$s"
 msgstr "Suprimiendo la partición multipath %1$s"
 
-# clients/inst_rootpart.ycp:74 clients/inst_rootpart.ycp:212
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:416
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "Suprimiendo la partición %1$s"
@@ -690,24 +595,18 @@ msgstr[1] "Ejecutando dasdfmt para los discos %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3345
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Ampliar %1$s a %2$s"
 
-# clients/lvm_config_ui.ycp:483
-# clients/lvm_config_ui.ycp:492
-# clients/lvm_config_ui.ycp:497
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "Ampliar volumen BTRFS %1$s en %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:229
@@ -715,29 +614,20 @@ msgstr "Ampliar volumen BTRFS %1$s en %2$s"
 msgid "Extend RAID partition %1$s to %2$s"
 msgstr "Ampliar la partición %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:550
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "Ampliar la partición de Windows %1$s a %2$s"
 
-# clients/lvm_config_ui.ycp:483
-# clients/lvm_config_ui.ycp:492
-# clients/lvm_config_ui.ycp:497
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:348
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "Ampliar el volumen lógico %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:229
@@ -745,47 +635,35 @@ msgstr "Ampliar el volumen lógico %1$s a %2$s"
 msgid "Extend multipath partition %1$s to %2$s"
 msgstr "Ampliar la partición multipath %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:561
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "Ampliar la partición %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1433
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Ampliar el grupo de volúmenes %1$s con %2$s"
 
-# clients/inst_do_resize.ycp:468
-# clients/inst_do_resize.ycp:468
-# clients/inst_do_resize.ycp:468
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Ampliando %1$s a %2$s"
 
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "Ampliando volumen BTRFS %1$s en %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:215
@@ -793,19 +671,13 @@ msgstr "Ampliando volumen BTRFS %1$s en %2$s"
 msgid "Extending RAID partition %1$s to %2$s"
 msgstr "Ampliando la partición %1$s a %2$s"
 
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
-# clients/inst_lvm_lv.ycp:410
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:334
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "Ampliando el volumen lógico %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:215
@@ -813,19 +685,16 @@ msgstr "Ampliando el volumen lógico %1$s a %2$s"
 msgid "Extending multipath partition %1$s to %2$s"
 msgstr "Ampliando la partición multipath %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:534
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "Ampliando la partición %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1426
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Ampliando el grupo de volúmenes %1$s con %2$s"
@@ -833,23 +702,23 @@ msgstr "Ampliando el grupo de volúmenes %1$s con %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Dar formato al volumen Btrfs con tamaño %1$s (dispositivos usados:%2$s)"
+msgstr ""
+"Dar formato al volumen Btrfs con tamaño %1$s (dispositivos usados:%2$s)"
 
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "Dar formato al volumen Btrfs con tamaño %1$s por %3$s (dispositivos usados:%2$s)"
+msgstr ""
+"Dar formato al volumen Btrfs con tamaño %1$s por %3$s (dispositivos usados:"
+"%2$s)"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -859,9 +728,6 @@ msgstr "Dar formato al volumen Btrfs con tamaño %1$s por %3$s (dispositivos usa
 msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato a la partición %1$s (%2$s) para %4$s con %3$s"
 
-# clients/inst_prepdisk.ycp:795
-# clients/inst_prepdisk.ycp:817
-# clients/inst_prepdisk.ycp:664 clients/inst_prepdisk.ycp:845
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:165
@@ -869,9 +735,6 @@ msgstr "Dar formato a la partición %1$s (%2$s) para %4$s con %3$s"
 msgid "Format RAID partition %1$s (%2$s) for swap"
 msgstr "Dar formato a la partición %1$s (%2$s) para intercambio"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -880,9 +743,6 @@ msgstr "Dar formato a la partición %1$s (%2$s) para intercambio"
 msgid "Format RAID partition %1$s (%2$s) with %3$s"
 msgstr "Dar formato a la partición %1$s (%2$s) con %3$s"
 
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:387
-# include/partitioning/partition_defines.ycp:396
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -906,18 +766,21 @@ msgstr "Dar formato al dispositivo %1$s (%2$s) con %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:476
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Dar formato al volumen del mapeador de dispositivos %1$s (%2$s) para %4$s con %3$s"
+msgstr ""
+"Dar formato al volumen del mapeador de dispositivos %1$s (%2$s) para %4$s "
+"con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:496
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
-msgstr "Dar formato al volumen del mapeador de dispositivos %1$s (%2$s) con %3$s"
+msgstr ""
+"Dar formato al volumen del mapeador de dispositivos %1$s (%2$s) con %3$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -942,10 +805,12 @@ msgstr "Dar formato al dispositivo cifrado %1$s (%2$s) para %4$s con %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:486
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Dar formato al volumen del mapeador de dispositivos cifrado %1$s (%2$s) para %4$s con %3$s"
+msgstr ""
+"Dar formato al volumen del mapeador de dispositivos cifrado %1$s (%2$s) para "
+"%4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -954,14 +819,17 @@ msgstr "Dar formato al volumen del mapeador de dispositivos cifrado %1$s (%2$s) 
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Dar formato al dispositivo basado en archivo cifrado %1$s de %2$s (%3$s) como %5$s con %4$s"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Dar formato al dispositivo basado en archivo cifrado %1$s de %2$s (%3$s) "
+"como %5$s con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:304
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato al volumen lógico cifrado %1$s (%2$s) para %4$s con %3$s"
@@ -973,13 +841,14 @@ msgstr "Dar formato al volumen lógico cifrado %1$s (%2$s) para %4$s con %3$s"
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Dar formato a la partición multipath cifrada %1$s (%2$s) para %4$s con %3$s"
+msgstr ""
+"Dar formato a la partición multipath cifrada %1$s (%2$s) para %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:504
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato a la partición cifrada %1$s (%2$s) para %4$s con %3$s"
@@ -991,7 +860,8 @@ msgstr "Dar formato a la partición cifrada %1$s (%2$s) para %4$s con %3$s"
 #: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "Dar formato al RAID por software cifrado %1$s (%2$s) para %4$s con %3$s"
+msgstr ""
+"Dar formato al RAID por software cifrado %1$s (%2$s) para %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1001,7 +871,9 @@ msgstr "Dar formato al RAID por software cifrado %1$s (%2$s) para %4$s con %3$s"
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Dar formato al dispositivo basado en archivo %1$s de %2$s (%3$s) como %5$s con %4$s"
+msgstr ""
+"Dar formato al dispositivo basado en archivo %1$s de %2$s (%3$s) como %5$s "
+"con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1010,20 +882,21 @@ msgstr "Dar formato al dispositivo basado en archivo %1$s de %2$s (%3$s) como %5
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Dar formato al dispositivo basado en archivo %1$s de %2$s (%3$s) con %4$s"
+msgstr ""
+"Dar formato al dispositivo basado en archivo %1$s de %2$s (%3$s) con %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:294
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato al volumen lógico %1$s (%2$s) para %4$s con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:285
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "Dar formato al volumen lógico %1$s (%2$s) para intercambio"
@@ -1031,14 +904,11 @@ msgstr "Dar formato al volumen lógico %1$s (%2$s) para intercambio"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:314
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "Dar formato al volumen lógico %1$s (%2$s) con %3$s"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -1048,9 +918,6 @@ msgstr "Dar formato al volumen lógico %1$s (%2$s) con %3$s"
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato a la partición multipath %1$s (%2$s) para %4$s con %3$s"
 
-# clients/inst_prepdisk.ycp:795
-# clients/inst_prepdisk.ycp:817
-# clients/inst_prepdisk.ycp:664 clients/inst_prepdisk.ycp:845
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:165
@@ -1058,9 +925,6 @@ msgstr "Dar formato a la partición multipath %1$s (%2$s) para %4$s con %3$s"
 msgid "Format multipath partition %1$s (%2$s) for swap"
 msgstr "Dar formato a la partición multipath %1$s (%2$s) para intercambio"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -1069,35 +933,26 @@ msgstr "Dar formato a la partición multipath %1$s (%2$s) para intercambio"
 msgid "Format multipath partition %1$s (%2$s) with %3$s"
 msgstr "Dar formato a la partición multipath %1$s (%2$s) con %3$s"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:494
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Dar formato a la partición %1$s (%2$s) para %4$s con %3$s"
 
-# clients/inst_prepdisk.ycp:795
-# clients/inst_prepdisk.ycp:817
-# clients/inst_prepdisk.ycp:664 clients/inst_prepdisk.ycp:845
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:485
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "Dar formato a la partición %1$s (%2$s) para intercambio"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:514
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "Dar formato a la partición %1$s (%2$s) con %3$s"
@@ -1119,20 +974,15 @@ msgstr "Dar formato al RAID por software %1$s (%2$s) para %4$s con %3$s"
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr "Dar formato al RAID por software %1$s (%2$s) con %3$s"
 
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:95
-# include/partitioning/lvm_ui_dialogs.ycp:94
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
-msgstr "Dando formato al volumen Btrfs con tamaño %1$s (dispositivos usados:%2$s)"
+msgstr ""
+"Dando formato al volumen Btrfs con tamaño %1$s (dispositivos usados:%2$s)"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
@@ -1153,10 +1003,11 @@ msgstr "Formateando dispositivo %1$s (%2$s) con %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:463
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "Formateando el volumen del mapeador de dispositivos %1$s (%2$s) con %3$s"
+msgstr ""
+"Formateando el volumen del mapeador de dispositivos %1$s (%2$s) con %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1165,12 +1016,13 @@ msgstr "Formateando el volumen del mapeador de dispositivos %1$s (%2$s) con %3$s
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Formateando el dispositivo basado en archivo %1$s de %2$s (%3$s) con %4$s"
+msgstr ""
+"Formateando el dispositivo basado en archivo %1$s de %2$s (%3$s) con %4$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:274
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "Formateando el volumen lógico %1$s (%2$s) con %3$s"
@@ -1183,13 +1035,10 @@ msgstr "Formateando el volumen lógico %1$s (%2$s) con %3$s"
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
 msgstr "Formateando partición multipath %1$s (%2$s) con %3$s"
 
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:377
-# include/partitioning/partition_defines.ycp:386
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:474
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "Formateando la partición %1$s (%2$s) con %3$s"
@@ -1202,25 +1051,16 @@ msgstr "Formateando la partición %1$s (%2$s) con %3$s"
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
 msgstr "Formateando el RAID por software %1$s (%2$s) con %3$s"
 
-# include/ui/wizard_misc.ycp:27
-# include/ui/common_functions.ycp:40
-# include/ui/common_functions.ycp:39
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
 msgid "G"
 msgstr "G"
 
-# include/ui/wizard_misc.ycp:27
-# include/ui/common_functions.ycp:40
-# include/ui/common_functions.ycp:39
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
 msgid "GB"
 msgstr "GB"
 
-# include/ui/wizard_misc.ycp:27
-# include/ui/common_functions.ycp:40
-# include/ui/common_functions.ycp:39
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
 msgid "GiB"
@@ -1236,16 +1076,10 @@ msgstr "Disco duro"
 msgid "KiB"
 msgstr "KiB"
 
-# include/partitioning/lvm_ui_lib.ycp:210
-# include/partitioning/lvm_ui_lib.ycp:210
-# include/partitioning/lvm_ui_lib.ycp:210
 #: ../storage/Graph.cc:511
 msgid "Logical Volume"
 msgstr "Volumen &lógico"
 
-# clients/inst_resize_ui.ycp:592 include/partitioning/partition_defines.ycp:579 include/partitioning/partition_defines.ycp:610
-# clients/inst_resize_ui.ycp:592 include/partitioning/partition_defines.ycp:579 include/partitioning/partition_defines.ycp:610
-# clients/inst_resize_ui.ycp:592 include/partitioning/partition_defines.ycp:588 include/partitioning/partition_defines.ycp:619
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:75
 msgid "M"
@@ -1256,9 +1090,6 @@ msgstr "M"
 msgid "MB"
 msgstr "MB"
 
-# include/partitioning/raid_ui.ycp:316
-# include/partitioning/raid_ui.ycp:316
-# include/partitioning/raid_ui.ycp:316
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
 msgstr "RAID MD"
@@ -1272,45 +1103,34 @@ msgstr "MiB"
 msgid "Mount Point"
 msgstr "Punto de montaje"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1417
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Montando %1$s en %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:90
 #, c-format
 msgid "Mounting tmpfs to %1$s"
 msgstr "Montando tmpfs en %1$s"
 
-# modules/Backup.ycp:83
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
 msgid "P"
 msgstr "P"
 
-# modules/Backup.ycp:83
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
 msgid "PB"
 msgstr "PB"
 
-# clients/inst_sw_single.ycp:1431
-# clients/inst_sw_single.ycp:1546
 #: ../storage/Graph.cc:495
 msgid "Partition"
 msgstr "Partición"
 
-# modules/Backup.ycp:83
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:102
 msgid "PiB"
@@ -1318,38 +1138,35 @@ msgstr "PB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Reducir volumen BTRFS %1$s en %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1455
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Reducir el grupo de volúmenes %1$s para %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "Reduciendo volumen BTRFS %1$s en %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1448
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Reduciendo el grupo de volúmenes %1$s para %2$s"
 
-# clients/inst_custom_part.ycp:2337
-# clients/inst_custom_part.ycp:2336
-# clients/inst_custom_part.ycp:2350
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
 #, c-format
 msgid "Remove %1$s"
 msgstr "Eliminar %1$s"
@@ -1357,23 +1174,17 @@ msgstr "Eliminar %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1465
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Eliminar %1$s de %2$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:75
 #, c-format
 msgid "Remove NFS volume %1$s"
 msgstr "Eliminar volumen %1$s"
 
-# clients/inst_custom_part.ycp:2337
-# clients/inst_custom_part.ycp:2336
-# clients/inst_custom_part.ycp:2350
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:185
 #, c-format
@@ -1382,23 +1193,20 @@ msgstr "Eliminar RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Eliminar entrada para el punto de montaje %1$s de %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1080
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Eliminar el RAID por software %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Eliminar subvolumen %1$s del dispositivo %2$s"
@@ -1409,52 +1217,38 @@ msgstr "Eliminar subvolumen %1$s del dispositivo %2$s"
 msgid "Remove tmpfs from %1$s"
 msgstr "Eliminar tmpfs de %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text before action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:77
 #, c-format
 msgid "Remove tmpfs volume from mount point %1$s"
 msgstr "Eliminar volumen Tmpfs del punto de montaje %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Eliminar volumen %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1388
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Eliminar el grupo de volúmenes %1$s"
 
-# include/nis_server/io.ycp:481
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
 #, c-format
 msgid "Removing %1$s"
 msgstr "Eliminando %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:70
 #, c-format
 msgid "Removing NFS volume %1$s"
 msgstr "Eliminando el volumen NFS %1$s"
 
-# include/nis_server/io.ycp:481
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/DmraidCo.cc:180
 #, c-format
@@ -1463,58 +1257,46 @@ msgstr "Eliminando RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Eliminando entrada para el punto de montaje %1$s de %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1075
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Eliminando el RAID por software %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Eliminando subvolumen %1$s de dispositivo %2$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text during action, %1$s is replaced by path name e.g /var/run
 #: ../storage/Tmpfs.cc:72
 #, c-format
 msgid "Removing tmpfs volume from mount point %1$s"
 msgstr "Eliminando volumen Tmpfs del punto de montaje %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Eliminando el volumen %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1383
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Eliminando el grupo de volúmenes %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1677
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Definir etiqueta de disco de %1$s a %2$s"
@@ -1522,7 +1304,7 @@ msgstr "Definir etiqueta de disco de %1$s a %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2556
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Definir la etiqueta de %1$s en %2$s"
@@ -1530,7 +1312,7 @@ msgstr "Definir la etiqueta de %1$s en %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1444
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Definir el punto de montaje de %1$s en %2$s"
@@ -1541,9 +1323,6 @@ msgstr "Definir el punto de montaje de %1$s en %2$s"
 msgid "Set mount point of tmpfs to %1$s"
 msgstr "Definir el punto de montaje de tmpfs a %1$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmraid.cc:250
@@ -1551,9 +1330,6 @@ msgstr "Definir el punto de montaje de tmpfs a %1$s"
 msgid "Set type of RAID partition %1$s to %2$X"
 msgstr "Definir el tipo de partición RAID %1$s como %2$X"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:250
@@ -1561,15 +1337,14 @@ msgstr "Definir el tipo de partición RAID %1$s como %2$X"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Definir el tipo de partición multipath %1$s en %2$X"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Definir el tipo de partición %1$s en %2$X"
@@ -1583,37 +1358,23 @@ msgstr "Definir el tipo de partición %1$s en %2$X"
 msgid "Set type of partition %1$s to %2$s (%3$X)"
 msgstr "Definir el tipo de partición %1$s en %2$s (%3$X)"
 
-# include/ui/file_popups.ycp:85 include/ui/file_popups.ycp:127 include/ui/file_popups.ycp:138 include/ui/file_popups.ycp:180 include/ui/file_popups.ycp:230 include/ui/file_popups.ycp:271 include/ui/file_popups.ycp:281 include/ui/file_popups.ycp:323
-# include/ui/file_popups.ycp:88 include/ui/file_popups.ycp:130
-# include/ui/file_popups.ycp:141 include/ui/file_popups.ycp:183
-# include/ui/file_popups.ycp:233 include/ui/file_popups.ycp:274
-# include/ui/file_popups.ycp:284 include/ui/file_popups.ycp:326
-# include/ui/file_popups.ycp:369 include/ui/file_popups.ycp:427
-# include/ui/file_popups.ycp:469
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#: ../storage/Volume.cc:1844
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Configurar el dispositivo DM cifrado en %1$s"
 
-# include/ui/file_popups.ycp:85 include/ui/file_popups.ycp:127 include/ui/file_popups.ycp:138 include/ui/file_popups.ycp:180 include/ui/file_popups.ycp:230 include/ui/file_popups.ycp:271 include/ui/file_popups.ycp:281 include/ui/file_popups.ycp:323
-# include/ui/file_popups.ycp:88 include/ui/file_popups.ycp:130
-# include/ui/file_popups.ycp:141 include/ui/file_popups.ycp:183
-# include/ui/file_popups.ycp:233 include/ui/file_popups.ycp:274
-# include/ui/file_popups.ycp:284 include/ui/file_popups.ycp:326
-# include/ui/file_popups.ycp:369 include/ui/file_popups.ycp:427
-# include/ui/file_popups.ycp:469
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#: ../storage/Volume.cc:1831
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Configurar el dispositivo de bucle cifrado en %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1670
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Definiendo etiqueta de disco de %1$s a %2$s"
@@ -1621,14 +1382,11 @@ msgstr "Definiendo etiqueta de disco de %1$s a %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2549
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Definiendo la etiqueta de %1$s en %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmraid.cc:243
@@ -1636,9 +1394,6 @@ msgstr "Definiendo la etiqueta de %1$s en %2$s"
 msgid "Setting type of RAID partition %1$s to %2$X"
 msgstr "Definiendo el tipo de partición RAID %1$s como %2$X"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
 #: ../storage/Dmmultipath.cc:243
@@ -1646,15 +1401,14 @@ msgstr "Definiendo el tipo de partición RAID %1$s como %2$X"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Definiendo el tipo de partición multipath %1$s en %2$X"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Definiendo el tipo de partición %1$s en %2$X"
@@ -1668,30 +1422,16 @@ msgstr "Definiendo el tipo de partición %1$s en %2$X"
 msgid "Setting type of partition %1$s to %2$s (%3$X)"
 msgstr "Definiendo el tipo de partición %1$s en %2$s (%3$X)"
 
-# include/ui/file_popups.ycp:85 include/ui/file_popups.ycp:127 include/ui/file_popups.ycp:138 include/ui/file_popups.ycp:180 include/ui/file_popups.ycp:230 include/ui/file_popups.ycp:271 include/ui/file_popups.ycp:281 include/ui/file_popups.ycp:323
-# include/ui/file_popups.ycp:88 include/ui/file_popups.ycp:130
-# include/ui/file_popups.ycp:141 include/ui/file_popups.ycp:183
-# include/ui/file_popups.ycp:233 include/ui/file_popups.ycp:274
-# include/ui/file_popups.ycp:284 include/ui/file_popups.ycp:326
-# include/ui/file_popups.ycp:369 include/ui/file_popups.ycp:427
-# include/ui/file_popups.ycp:469
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#: ../storage/Volume.cc:1841
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Configurando el dispositivo DM cifrado en %1$s"
 
-# include/ui/file_popups.ycp:85 include/ui/file_popups.ycp:127 include/ui/file_popups.ycp:138 include/ui/file_popups.ycp:180 include/ui/file_popups.ycp:230 include/ui/file_popups.ycp:271 include/ui/file_popups.ycp:281 include/ui/file_popups.ycp:323
-# include/ui/file_popups.ycp:88 include/ui/file_popups.ycp:130
-# include/ui/file_popups.ycp:141 include/ui/file_popups.ycp:183
-# include/ui/file_popups.ycp:233 include/ui/file_popups.ycp:274
-# include/ui/file_popups.ycp:284 include/ui/file_popups.ycp:326
-# include/ui/file_popups.ycp:369 include/ui/file_popups.ycp:427
-# include/ui/file_popups.ycp:469
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#: ../storage/Volume.cc:1828
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Configurando el dispositivo de bucle cifrado en %1$s"
@@ -1699,14 +1439,11 @@ msgstr "Configurando el dispositivo de bucle cifrado en %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3341
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Reducir %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:225
@@ -1714,29 +1451,20 @@ msgstr "Reducir %1$s a %2$s"
 msgid "Shrink RAID partition %1$s to %2$s"
 msgstr "Reducir la partición RAID %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:546
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Reducir la partición de Windows %1$s a %2$s"
 
-# clients/lvm_config_ui.ycp:483
-# clients/lvm_config_ui.ycp:492
-# clients/lvm_config_ui.ycp:497
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:344
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "Reducir el volumen lógico %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:225
@@ -1744,30 +1472,21 @@ msgstr "Reducir el volumen lógico %1$s a %2$s"
 msgid "Shrink multipath partition %1$s to %2$s"
 msgstr "Reducir la partición multipath %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:557
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "Reducir la partición %1$s a %2$s"
 
-# clients/inst_do_resize.ycp:468
-# clients/inst_do_resize.ycp:468
-# clients/inst_do_resize.ycp:468
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3333
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Reduciendo %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:211
@@ -1777,14 +1496,11 @@ msgstr "Reduciendo la partición RAID %1$s a %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:330
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "Reduciendo el volumen lógico %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmmultipath.cc:211
@@ -1792,12 +1508,9 @@ msgstr "Reduciendo el volumen lógico %1$s a %2$s"
 msgid "Shrinking multipath partition %1$s to %2$s"
 msgstr "Reduciendo la partición multipath %1$s a %2$s"
 
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:404
-# include/partitioning/partition_defines.ycp:413
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "Reduciendo la partición %1$s a %2$s"
@@ -1813,7 +1526,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:332
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1833,7 +1546,7 @@ msgstr ""
 "disco con esta herramienta."
 
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1846,13 +1559,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:4952
 msgid "Unmount failed."
 msgstr "Error al desmontar."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Desmontando %1$s"
@@ -1864,14 +1577,14 @@ msgstr "Desmontando tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Actualizar entrada para el punto de montaje %1$s en %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Actualizando entrada para el punto de montaje %1$s en %2$s"
@@ -1879,20 +1592,17 @@ msgstr "Actualizando entrada para el punto de montaje %1$s en %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1452
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Usar %1$s como %2$s"
 
-# include/partitioning/lvm_ui_lib.ycp:558
-# include/partitioning/lvm_ui_lib.ycp:558
-# include/partitioning/lvm_ui_lib.ycp:584
 #: ../storage/Graph.cc:507
 msgid "Volume Group"
 msgstr "Grupo de volúmenes"
 
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:515
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1903,14 +1613,16 @@ msgid ""
 "    as well."
 msgstr ""
 "Usted tiene las siguientes opciones:\n"
-"  - Volver a particionar su sistema de manera que sólo el número permitido máximo\n"
-"   de particiones sea usado. Para reparticionar, utilice su sistema operativo existente.\n"
+"  - Volver a particionar su sistema de manera que sólo el número permitido "
+"máximo\n"
+"   de particiones sea usado. Para reparticionar, utilice su sistema "
+"operativo existente.\n"
 "  - Utilice LVM, debido a que le permite un número arbitrario y\n"
 "   flexible de bloques de particiones. Esto requiere reparticionar también."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:508
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1918,7 +1630,8 @@ msgid ""
 "Partitions numbered above %3$lu cannot be accessed."
 msgstr ""
 "El disco %1$s contiene %2$lu particiones. El número máximo de\n"
-"particiones que puede gestionar el controlador del núcleo del disco es %3$lu.\n"
+"particiones que puede gestionar el controlador del núcleo del disco es "
+"%3$lu.\n"
 "No es posible acceder a las particiones %3$lu, indicadas anteriormente."
 
 #. symbol for "kilo" (best keep untranslated)
@@ -1931,9 +1644,6 @@ msgstr "k"
 msgid "kB"
 msgstr "kB"
 
-# clients/inst_custom_part.ycp:2385
-# clients/inst_custom_part.ycp:2384
-# clients/inst_custom_part.ycp:2398
 #~ msgid "Executing fdasd for disk %1$s"
 #~ msgstr "Ejecutando fdasd para el disco %1$s"
 
@@ -1957,23 +1667,30 @@ msgstr "kB"
 #~ "disco con esta herramienta."
 
 #~ msgid ""
-#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible "
+#~ "platform.\n"
 #~ "\n"
 #~ "Following MD compatible RAID devices were detected:\n"
 #~ "%1$s\n"
-#~ "If they are clean devices or contain partitions then you can choose to use\n"
-#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+#~ "If they are clean devices or contain partitions then you can choose to "
+#~ "use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+#~ "you\n"
 #~ "will be able to install system on it and boot from such RAID.\n"
 #~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 #~ msgstr ""
-#~ "Usted está utilizando la plataforma compatible con Intel(R) Matrix Storage Manager.\n"
+#~ "Usted está utilizando la plataforma compatible con Intel(R) Matrix "
+#~ "Storage Manager.\n"
 #~ "\n"
 #~ "Las siguientes unidades RAID compatibles con MD fueron encontradas:\n"
 #~ "%1$s\n"
-#~ "Si se trata de unidades limpias o contienen particiones entonces usted puede elegir usar\n"
-#~ "el subsistema de RAID particionable por MD para manipularlos. En caso de una unidad limpia usted\n"
+#~ "Si se trata de unidades limpias o contienen particiones entonces usted "
+#~ "puede elegir usar\n"
+#~ "el subsistema de RAID particionable por MD para manipularlos. En caso de "
+#~ "una unidad limpia usted\n"
 #~ "será capaz de instalar el sistema en ella e iniciar desde el RAID.\n"
-#~ "¿Desea que el subsistema de RAID particionable por MD gestione esas particiones?"
+#~ "¿Desea que el subsistema de RAID particionable por MD gestione esas "
+#~ "particiones?"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1994,18 +1711,12 @@ msgstr "kB"
 #~ "no podrá añadir particiones, editarlas, cambiarles el tamaño\n"
 #~ "ni eliminarlas con esta herramienta."
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #~ msgid "Remove nfs volume %1$s"
 #~ msgstr "Eliminar volumen nfs %1$s"
 
 #~ msgid "Remove raid %1$s"
 #~ msgstr "Eliminar RAID %1$s"
 
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:284
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:287
-# clients/inst_lvm_pv.ycp:261 clients/lvm_config_ui.ycp:292
 #~ msgid "Removing nfs volume %1$s"
 #~ msgstr "Eliminando el volumen nfs %1$s"
 
@@ -2046,7 +1757,8 @@ msgstr "kB"
 #~ msgstr "Extendiendo partición RAID %1$s a %2$s"
 
 #~ msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "Dar formato a la partición RAID cifrada %1$s (%2$s) para %4$s con %3$s"
+#~ msgstr ""
+#~ "Dar formato a la partición RAID cifrada %1$s (%2$s) para %4$s con %3$s"
 
 #~ msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
 #~ msgstr "Dar formato partición RAID %1$s (%2$s) para %4$s con %3$s"

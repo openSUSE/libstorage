@@ -1,0 +1,1752 @@
+# Slovenian message file for YaST2 (@memory@).
+# Copyright (C) 2005, 2006 SUSE Linux Products GmbH.
+# Copyright (C) 2002 SuSE Linux AG.
+# Copyright (C) 2001 SuSE GmbH.
+# Janez Krek <janez.krek@euroteh.si>, 2001, 2006.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: YaST (@memory@)\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-09-12 11:05+0200\n"
+"PO-Revision-Date: 2001-10-18 11:02+0200\n"
+"Last-Translator: Janez Krek <janez.krek@euroteh.si>\n"
+"Language-Team: Slovenian\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. text displayed during action
+#: ../storage/LvmLv.cc:339 ../storage/Partition.cc:506
+#: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
+#: ../storage/Volume.cc:3321
+msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:924
+#, fuzzy, c-format
+msgid "Add entry for mount point %1$s to %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:917
+#, fuzzy, c-format
+msgid "Adding entry for mount point %1$s to %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. symbol for "bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:51
+#, fuzzy
+msgid "B"
+msgstr "kB"
+
+#: ../storage/Graph.cc:515
+msgid "Btrfs Volume"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../storage/Volume.cc:1438
+#, fuzzy, c-format
+msgid "Change mount point of %1$s to %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:104
+#, fuzzy, c-format
+msgid "Change mount point of tmpfs to %1$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2555
+#, fuzzy, c-format
+msgid "Clear label on %1$s"
+msgstr "Izbriši vse naštete možnosti"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2541
+#, c-format
+msgid "Clearing label on %1$s"
+msgstr ""
+
+# &A is taken
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Container.cc:280
+#, fuzzy, c-format
+msgid "Create %1$s"
+msgstr "Kreiraj VG %1"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:138
+#, fuzzy, c-format
+msgid "Create RAID partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:112
+#, fuzzy, c-format
+msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:3259
+#, fuzzy, c-format
+msgid "Create boot volume %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:122
+#, fuzzy, c-format
+msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../storage/Loop.cc:307
+#, c-format
+msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/LvmLv.cc:252
+#, c-format
+msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmmultipath.cc:122
+#, c-format
+msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/Md.cc:404
+#, c-format
+msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3297
+#, fuzzy, c-format
+msgid "Create encrypted volume %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:3280
+#, fuzzy, c-format
+msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:131
+#, fuzzy, c-format
+msgid "Create extended RAID partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:131
+#, fuzzy, c-format
+msgid "Create extended multipath partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:422
+#, fuzzy, c-format
+msgid "Create extended partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Loop.cc:317
+#, c-format
+msgid "Create file-based device %1$s of file %2$s (%3$s)"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../storage/Loop.cc:296
+#, c-format
+msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:261
+#, fuzzy, c-format
+msgid "Create logical volume %1$s (%2$s)"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/LvmLv.cc:242
+#, fuzzy, c-format
+msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "Ustvari  %5 %1 %2 (za %3 z %4)"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:138
+#, fuzzy, c-format
+msgid "Create multipath partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmmultipath.cc:112
+#, fuzzy, c-format
+msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:3251
+#, fuzzy, c-format
+msgid "Create root volume %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/Md.cc:414
+#, c-format
+msgid "Create software RAID %1$s (%2$s) from %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/Md.cc:393
+#, c-format
+msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:804
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:101
+#, fuzzy, c-format
+msgid "Create swap RAID partition %1$s (%2$s)"
+msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:231
+#, fuzzy, c-format
+msgid "Create swap logical volume %1$s (%2$s)"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:101
+#, fuzzy, c-format
+msgid "Create swap multipath partition %1$s (%2$s)"
+msgstr "%1 Kreiraj logično particijo na %2 %3"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3243
+#, fuzzy, c-format
+msgid "Create swap volume %1$s (%2$s)"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3291
+#, fuzzy, c-format
+msgid "Create volume %1$s (%2$s)"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:3270
+#, fuzzy, c-format
+msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
+msgstr "Ustvari  %5 %1 %2 (za %3 z %4)"
+
+#. displayed text before action
+#. %1$s is replaced by a name (e.g. system)
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/LvmVg.cc:1257
+#, fuzzy, c-format
+msgid "Create volume group %1$s (%2$s) from %3$s"
+msgstr "Ustvari skupino nosilcev"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Container.cc:275
+#, fuzzy, c-format
+msgid "Creating %1$s"
+msgstr "Formatiranje %1"
+
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../storage/Dmraid.cc:93
+#, fuzzy, c-format
+msgid "Creating RAID partition %1$s"
+msgstr "Preverjanje razdelka %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#: ../storage/Loop.cc:280
+#, c-format
+msgid "Creating file-based device %1$s of file %2$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#: ../storage/LvmLv.cc:223
+#, fuzzy, c-format
+msgid "Creating logical volume %1$s"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#: ../storage/Dmmultipath.cc:93
+#, fuzzy, c-format
+msgid "Creating multipath partition %1$s"
+msgstr "Izdelava izmenjalnega prostora na razdelku %1..."
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/Md.cc:379
+#, c-format
+msgid "Creating software RAID %1$s from %2$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:797
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3235
+#, fuzzy, c-format
+msgid "Creating volume %1$s"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text during action
+#. %1$s is replaced by a name (e.g. system)
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
+#: ../storage/LvmVg.cc:1248
+#, fuzzy, c-format
+msgid "Creating volume group %1$s (%2$s) from %3$s"
+msgstr "Ustvari skupino nosilcev"
+
+#: ../storage/Graph.cc:519
+#, fuzzy
+msgid "DM Device"
+msgstr "DSL naprave"
+
+#: ../storage/Graph.cc:491
+#, fuzzy
+msgid "DM Multipath"
+msgstr "Več zaslonov"
+
+#: ../storage/Graph.cc:487
+#, fuzzy
+msgid "DM RAID"
+msgstr "&RAID..."
+
+#. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Btrfs.cc:613
+#, fuzzy, c-format
+msgid "Delete Btrfs volume on devices %1$s (%2$s)"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:80
+#, fuzzy, c-format
+msgid "Delete RAID partition %1$s (%2$s)"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:393
+#, fuzzy, c-format
+msgid "Delete Windows partition %1$s (%2$s)"
+msgstr "Spremeni velikost Windows particije %1 (%2) z %3 na %4"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dm.cc:450
+#, c-format
+msgid "Delete device mapper volume %1$s (%2$s)"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Loop.cc:266
+#, c-format
+msgid "Delete file-based device %1$s (%2$s)"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:211
+#, fuzzy, c-format
+msgid "Delete logical volume %1$s (%2$s)"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:80
+#, c-format
+msgid "Delete multipath partition %1$s (%2$s)"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:400
+#, fuzzy, c-format
+msgid "Delete partition %1$s (%2$s)"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Md.cc:365
+#, c-format
+msgid "Delete software RAID %1$s (%2$s)"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:607
+#, fuzzy, c-format
+msgid "Deleting Btrfs volume on devices %1$s"
+msgstr "Brisanje naprave: %1"
+
+#. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
+#: ../storage/Dmraid.cc:74
+#, fuzzy, c-format
+msgid "Deleting RAID partition %1$s"
+msgstr "Preverjanje razdelka %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+#: ../storage/Dm.cc:444
+#, fuzzy, c-format
+msgid "Deleting device mapper volume %1$s"
+msgstr "Brisanje naprave: %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
+#: ../storage/Loop.cc:260
+#, fuzzy, c-format
+msgid "Deleting file-based device %1$s"
+msgstr "Brisanje naprave: %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#: ../storage/LvmLv.cc:205
+#, fuzzy, c-format
+msgid "Deleting logical volume %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
+#: ../storage/Dmmultipath.cc:74
+#, fuzzy, c-format
+msgid "Deleting multipath partition %1$s"
+msgstr "Preverjanje razdelka %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Partition.cc:385
+#, fuzzy, c-format
+msgid "Deleting partition %1$s"
+msgstr "Preverjanje razdelka %1"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#: ../storage/Md.cc:359
+#, c-format
+msgid "Deleting software RAID %1$s"
+msgstr ""
+
+#. symbol for "exa" (best keep untranslated)
+#: ../storage/HumanString.cc:119
+msgid "E"
+msgstr ""
+
+#. symbol for "exa bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:113
+#, fuzzy
+msgid "EB"
+msgstr "kB"
+
+#. symbol for "exbi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:116
+#, fuzzy
+msgid "EiB"
+msgstr "GB"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
+#: ../storage/Dasd.cc:403
+#, fuzzy, c-format
+msgid "Execute dasdfmt on disk %1$s"
+msgid_plural "Execute dasdfmt on disks %1$s"
+msgstr[0] "dasdfmt disk %1"
+msgstr[1] "dasdfmt disk %1"
+msgstr[2] "dasdfmt disk %1"
+msgstr[3] "dasdfmt disk %1"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
+#: ../storage/Dasd.cc:396
+#, fuzzy, c-format
+msgid "Executing dasdfmt for disk %1$s"
+msgid_plural "Executing dasdfmt for disks %1$s"
+msgstr[0] "dasdfmt disk %1"
+msgstr[1] "dasdfmt disk %1"
+msgstr[2] "dasdfmt disk %1"
+msgstr[3] "dasdfmt disk %1"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
+#: ../storage/Dasd.cc:294
+#, fuzzy, c-format
+msgid "Executing fdasd for disk %1$s"
+msgstr "Iskanje trdih diskov..."
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3332
+#, c-format
+msgid "Extend %1$s to %2$s"
+msgstr ""
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:763
+#, fuzzy, c-format
+msgid "Extend Btrfs volume %1$s by %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:229
+#, fuzzy, c-format
+msgid "Extend RAID partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:519
+#, fuzzy, c-format
+msgid "Extend Windows partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:350
+#, fuzzy, c-format
+msgid "Extend logical volume %1$s to %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:229
+#, fuzzy, c-format
+msgid "Extend multipath partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:530
+#, fuzzy, c-format
+msgid "Extend partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../storage/LvmVg.cc:1278
+#, c-format
+msgid "Extend volume group %1$s with %2$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3318
+#, fuzzy, c-format
+msgid "Extending %1$s to %2$s"
+msgstr "Spreminjanje velikosti particije %1 na %2 MB"
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:756
+#, fuzzy, c-format
+msgid "Extending Btrfs volume %1$s by %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:215
+#, fuzzy, c-format
+msgid "Extending RAID partition %1$s to %2$s"
+msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:336
+#, fuzzy, c-format
+msgid "Extending logical volume %1$s to %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:215
+#, fuzzy, c-format
+msgid "Extending multipath partition %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:503
+#, fuzzy, c-format
+msgid "Extending partition %1$s to %2$s"
+msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../storage/LvmVg.cc:1271
+#, c-format
+msgid "Extending volume group %1$s with %2$s"
+msgstr ""
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:696
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#. %3$s is replaced by mount point (e.g. /usr)
+#: ../storage/Btrfs.cc:690
+#, fuzzy, c-format
+msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:174
+#, fuzzy, c-format
+msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:165
+#, fuzzy, c-format
+msgid "Format RAID partition %1$s (%2$s) for swap"
+msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dmraid.cc:194
+#, fuzzy, c-format
+msgid "Format RAID partition %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:851
+#, c-format
+msgid "Format device %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:871
+#, c-format
+msgid "Format device %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dm.cc:477
+#, c-format
+msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dm.cc:497
+#, c-format
+msgid "Format device mapper volume %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmraid.cc:184
+#, fuzzy, c-format
+msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Spremeni velikost Windows particije %1 (%2) z %3 na %4"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Volume.cc:861
+#, c-format
+msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dm.cc:487
+#, c-format
+msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../storage/Loop.cc:364
+#, c-format
+msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/LvmLv.cc:306
+#, c-format
+msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmmultipath.cc:184
+#, c-format
+msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Partition.cc:473
+#, c-format
+msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Md.cc:453
+#, c-format
+msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#. %5$s is replaced by mount point (e.g. /usr)
+#: ../storage/Loop.cc:353
+#, c-format
+msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Loop.cc:375
+#, c-format
+msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/LvmLv.cc:296
+#, c-format
+msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:287
+#, c-format
+msgid "Format logical volume %1$s (%2$s) for swap"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/LvmLv.cc:316
+#, c-format
+msgid "Format logical volume %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Dmmultipath.cc:174
+#, c-format
+msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:165
+#, c-format
+msgid "Format multipath partition %1$s (%2$s) for swap"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dmmultipath.cc:194
+#, fuzzy, c-format
+msgid "Format multipath partition %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Partition.cc:463
+#, fuzzy, c-format
+msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:454
+#, fuzzy, c-format
+msgid "Format partition %1$s (%2$s) for swap"
+msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Partition.cc:483
+#, fuzzy, c-format
+msgid "Format partition %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#. %4$s is replaced by mount point (e.g. /usr)
+#: ../storage/Md.cc:443
+#, c-format
+msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Md.cc:463
+#, c-format
+msgid "Format software RAID %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text during action,
+#. %1$s is replaced by size (e.g. 623.5 MB)
+#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:680
+#, fuzzy, c-format
+msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dmraid.cc:154
+#, fuzzy, c-format
+msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Volume.cc:838
+#, fuzzy, c-format
+msgid "Formatting device %1$s (%2$s) with %3$s"
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dm.cc:464
+#, c-format
+msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by filename (e.g. /var/adm/secure)
+#. %3$s is replaced by size (e.g. 623.5 MB)
+#. %4$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Loop.cc:335
+#, c-format
+msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/LvmLv.cc:276
+#, c-format
+msgid "Formatting logical volume %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Dmmultipath.cc:154
+#, c-format
+msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Partition.cc:443
+#, fuzzy, c-format
+msgid "Formatting partition %1$s (%2$s) with %3$s "
+msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#. %3$s is replaced by file system type (e.g. reiserfs)
+#: ../storage/Md.cc:430
+#, c-format
+msgid "Formatting software RAID %1$s (%2$s) with %3$s "
+msgstr ""
+
+#. symbol for "giga" (best keep untranslated)
+#: ../storage/HumanString.cc:86
+#, fuzzy
+msgid "G"
+msgstr "GB"
+
+#. symbol for "giga bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:80
+msgid "GB"
+msgstr "GB"
+
+#. symbol for "gibi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:83
+#, fuzzy
+msgid "GiB"
+msgstr "GB"
+
+# &F is taken by "&FTP"
+# 2001-10-12 11:34:26 CEST -ke-
+#: ../storage/Graph.cc:483
+msgid "Hard Disk"
+msgstr "Trdi disk"
+
+#. symbol for "kibi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:61
+msgid "KiB"
+msgstr "KIB"
+
+#: ../storage/Graph.cc:511
+#, fuzzy
+msgid "Logical Volume"
+msgstr "Logični nosilci"
+
+#. symbol for "mega" (best keep untranslated)
+#: ../storage/HumanString.cc:75
+#, fuzzy
+msgid "M"
+msgstr "MB"
+
+#. symbol for "mega bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:69
+msgid "MB"
+msgstr "MB"
+
+#: ../storage/Graph.cc:499 ../storage/Graph.cc:503
+#, fuzzy
+msgid "MD RAID"
+msgstr "&RAID..."
+
+#. symbol for "mebi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:72
+msgid "MiB"
+msgstr "MiB"
+
+#: ../storage/Graph.cc:523
+msgid "Mount Point"
+msgstr "Priključna točka"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../storage/Volume.cc:1423
+#, fuzzy, c-format
+msgid "Mounting %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:90
+#, fuzzy, c-format
+msgid "Mounting tmpfs to %1$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. symbol for "peta" (best keep untranslated)
+#: ../storage/HumanString.cc:108
+#, fuzzy
+msgid "P"
+msgstr "IP"
+
+#. symbol for "peta bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:102
+msgid "PB"
+msgstr ""
+
+#: ../storage/Graph.cc:495
+msgid "Partition"
+msgstr "Razdelek"
+
+#. symbol for "pebi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:105
+#, fuzzy
+msgid "PiB"
+msgstr "KIB"
+
+#. displayed text before action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:784
+#, fuzzy, c-format
+msgid "Reduce Btrfs volume %1$s by %2$s"
+msgstr "Ustvari logični nosilec"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../storage/LvmVg.cc:1300
+#, c-format
+msgid "Reduce volume group %1$s by %2$s"
+msgstr ""
+
+#. displayed text during action,
+#. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
+#: ../storage/Btrfs.cc:777
+#, fuzzy, c-format
+msgid "Reducing Btrfs volume %1$s by %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#. %2$s is replaced by a device name (e.g. /dev/hda1)
+#: ../storage/LvmVg.cc:1293
+#, c-format
+msgid "Reducing volume group %1$s by %2$s"
+msgstr ""
+
+# &A is taken
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:949
+#, fuzzy, c-format
+msgid "Remove %1$s"
+msgstr "Odstrani VG %1"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Volume.cc:1466
+#, fuzzy, c-format
+msgid "Remove %1$s from %2$s"
+msgstr "Odmakni napravo %1 iz /etc/fstab"
+
+#. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../storage/Nfs.cc:75
+#, fuzzy, c-format
+msgid "Remove NFS volume %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+# &A is taken
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/DmraidCo.cc:251
+#, fuzzy, c-format
+msgid "Remove RAID %1$s"
+msgstr "Odstrani VG %1"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:966
+#, fuzzy, c-format
+msgid "Remove entry for mount point %1$s from %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/MdPartCo.cc:1081
+#, fuzzy, c-format
+msgid "Remove software RAID %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:824
+#, fuzzy, c-format
+msgid "Remove subvolume %1$s on device %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
+#: ../storage/Tmpfs.cc:119
+#, fuzzy, c-format
+msgid "Remove tmpfs from %1$s"
+msgstr "Odmakni napravo %1 iz /etc/fstab"
+
+#. displayed text before action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:77
+#, fuzzy, c-format
+msgid "Remove tmpfs volume from mount point %1$s"
+msgstr "Res želite odstraniti skupino nosilcev \"%1\"?"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3348
+#, fuzzy, c-format
+msgid "Remove volume %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by a name (e.g. system),
+#: ../storage/LvmVg.cc:1233
+#, fuzzy, c-format
+msgid "Remove volume group %1$s"
+msgstr "Res želite odstraniti skupino nosilcev \"%1\"?"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:944
+#, fuzzy, c-format
+msgid "Removing %1$s"
+msgstr "Odstranjevanje /var/yp/%1"
+
+#. displayed text during action, %1$s is replaced by volume name e.g. hilbert:/work
+#: ../storage/Nfs.cc:70
+#, fuzzy, c-format
+msgid "Removing NFS volume %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/DmraidCo.cc:246
+#, fuzzy, c-format
+msgid "Removing RAID %1$s"
+msgstr "Odstranjevanje /var/yp/%1"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:959
+#, fuzzy, c-format
+msgid "Removing entry for mount point %1$s from %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
+#: ../storage/MdPartCo.cc:1076
+#, fuzzy, c-format
+msgid "Removing software RAID %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Btrfs.cc:817
+#, fuzzy, c-format
+msgid "Removing subvolume %1$s on device %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by path name e.g /var/run
+#: ../storage/Tmpfs.cc:72
+#, fuzzy, c-format
+msgid "Removing tmpfs volume from mount point %1$s"
+msgstr "Res želite odstraniti skupino nosilcev \"%1\"?"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3343
+#, fuzzy, c-format
+msgid "Removing volume %1$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text during action, %1$s is replaced by a name (e.g. system),
+#: ../storage/LvmVg.cc:1228
+#, fuzzy, c-format
+msgid "Removing volume group %1$s"
+msgstr "Res želite odstraniti skupino nosilcev \"%1\"?"
+
+#. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../storage/Disk.cc:1598
+#, fuzzy, c-format
+msgid "Set disk label of %1$s to %2$s"
+msgstr "Nastavi ime nosilca %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by a name e.g. ROOT
+#: ../storage/Volume.cc:2561
+#, fuzzy, c-format
+msgid "Set label on %1$s to %2$s"
+msgstr "Nastavi ime nosilca %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by mount point e.g. /home
+#: ../storage/Volume.cc:1447
+#, fuzzy, c-format
+msgid "Set mount point of %1$s to %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#: ../storage/Tmpfs.cc:109
+#, fuzzy, c-format
+msgid "Set mount point of tmpfs to %1$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmraid.cc:250
+#, fuzzy, c-format
+msgid "Set type of RAID partition %1$s to %2$X"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmmultipath.cc:250
+#, fuzzy, c-format
+msgid "Set type of multipath partition %1$s to %2$X"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/DmPart.cc:193
+#, fuzzy, c-format
+msgid "Set type of partition %1$s to %2$X"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1839
+#, fuzzy, c-format
+msgid "Set up encrypted dm device on %1$s"
+msgstr "Izbrana disketna enota %1"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1823
+#, fuzzy, c-format
+msgid "Set up encrypted loop device on %1$s"
+msgstr "Izbrana disketna enota %1"
+
+#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
+#. %2$s is replaced by label name (e.g. msdos)
+#: ../storage/Disk.cc:1591
+#, fuzzy, c-format
+msgid "Setting disk label of %1$s to %2$s"
+msgstr "Nastavi ime nosilca %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by a name e.g. ROOT
+#: ../storage/Volume.cc:2547
+#, fuzzy, c-format
+msgid "Setting label on %1$s to %2$s"
+msgstr "Nastavi ime nosilca %1 na %2"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmraid.cc:243
+#, fuzzy, c-format
+msgid "Setting type of RAID partition %1$s to %2$X"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. 3600508b400105f590000900000300000_part1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/Dmmultipath.cc:243
+#, fuzzy, c-format
+msgid "Setting type of multipath partition %1$s to %2$X"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/DmPart.cc:186
+#, fuzzy, c-format
+msgid "Setting type of partition %1$s to %2$X"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1834
+#, fuzzy, c-format
+msgid "Setting up encrypted dm device on %1$s"
+msgstr "Nastavljam omrežne storitve"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1818
+#, fuzzy, c-format
+msgid "Setting up encrypted loop device on %1$s"
+msgstr "Izbrana disketna enota %1"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3328
+#, c-format
+msgid "Shrink %1$s to %2$s"
+msgstr ""
+
+#. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:225
+#, fuzzy, c-format
+msgid "Shrink RAID partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:515
+#, fuzzy, c-format
+msgid "Shrink Windows partition %1$s to %2$s"
+msgstr "&Skrči Windows particijo"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:346
+#, fuzzy, c-format
+msgid "Shrink logical volume %1$s to %2$s"
+msgstr "Odstranim logični nosilec %1?"
+
+#. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:225
+#, fuzzy, c-format
+msgid "Shrink multipath partition %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:526
+#, fuzzy, c-format
+msgid "Shrink partition %1$s to %2$s"
+msgstr "Spremeni velikost particije %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3314
+#, fuzzy, c-format
+msgid "Shrinking %1$s to %2$s"
+msgstr "Spreminjanje velikosti particije %1 na %2 MB"
+
+#. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmraid.cc:211
+#, fuzzy, c-format
+msgid "Shrinking RAID partition %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/LvmLv.cc:332
+#, c-format
+msgid "Shrinking logical volume %1$s to %2$s"
+msgstr ""
+
+#. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Dmmultipath.cc:211
+#, fuzzy, c-format
+msgid "Shrinking multipath partition %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Partition.cc:499
+#, fuzzy, c-format
+msgid "Shrinking partition %1$s to %2$s"
+msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#. symbol for "tera" (best keep untranslated)
+#: ../storage/HumanString.cc:97
+#, fuzzy
+msgid "T"
+msgstr "TB"
+
+#. symbol for "tera bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:91
+msgid "TB"
+msgstr "TB"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Disk.cc:340
+#, fuzzy, c-format
+msgid ""
+"The partition table type on disk %1$s cannot be handled by\n"
+"this tool.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"\n"
+"Razdelitev na vašem disku %1 ni berljiva s strani razdelitvenega\n"
+"orodja \"parted\", ki ga YaST uporablja pri spreminjanju\n"
+"razdelitvene tabele.\n"
+"\n"
+"Lahko uporabljate obstoječe razdelke na diku %1.\n"
+"Lahko jih formatirate in jim določite priključne točke, ne morete\n"
+"pa jih dodajati, spreminjati jim velikosti ali jih odstraniti iz\n"
+"diska s pomočjo YaST.\n"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Dasd.cc:197
+#, fuzzy, c-format
+msgid ""
+"The partitioning on disk %1$s is not readable by\n"
+"the partitioning tool fdasd, which is used to change the\n"
+"partition table.\n"
+"\n"
+"You can use the partitions on disk %1$s as they are.\n"
+"You can format them and assign mount points to them, but you\n"
+"cannot add, edit, resize, or remove partitions from that\n"
+"disk with this tool."
+msgstr ""
+"\n"
+"Razdelitev na vašem disku %1 ni berljiva s strani razdelitvenega\n"
+"orodja \"parted\", ki ga YaST uporablja pri spreminjanju\n"
+"razdelitvene tabele.\n"
+"\n"
+"Lahko uporabljate obstoječe razdelke na diku %1.\n"
+"Lahko jih formatirate in jim določite priključne točke, ne morete\n"
+"pa jih dodajati, spreminjati jim velikosti ali jih odstraniti iz\n"
+"diska s pomočjo YaST.\n"
+
+#. popup text
+#: ../storage/Storage.cc:371
+msgid ""
+"The system seems to have multipath hardware.\n"
+"Do you want to activate multipath?"
+msgstr ""
+
+#. symbol for "tebi bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:94
+#, fuzzy
+msgid "TiB"
+msgstr "TB"
+
+#: ../storage/Storage.cc:5190
+#, fuzzy
+msgid "Unmount failed."
+msgstr "Zaustavitev ni uspela"
+
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1428
+#, fuzzy, c-format
+msgid "Unmounting %1$s"
+msgstr "Odklapljam disketno enoto..."
+
+#. displayed text during action
+#: ../storage/Tmpfs.cc:95
+#, fuzzy
+msgid "Unmounting tmpfs"
+msgstr "Odklapljam disketno enoto..."
+
+#. displayed text before action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:945
+#, fuzzy, c-format
+msgid "Update entry for mount point %1$s in %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text during action, %1$s is replaced by mount point e.g. /home
+#. %2$s is replaced by a pathname e.g. /etc/fstab
+#: ../storage/EtcFstab.cc:938
+#, fuzzy, c-format
+msgid "Updating entry for mount point %1$s in %2$s"
+msgstr "Nastavi priključno točko %1 v %2"
+
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by "swap"
+#: ../storage/Volume.cc:1454
+#, c-format
+msgid "Use %1$s as %2$s"
+msgstr ""
+
+#: ../storage/Graph.cc:507
+msgid "Volume Group"
+msgstr "Skupina nosilcev"
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#: ../storage/Storage.cc:394
+#, c-format
+msgid ""
+"You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+"\n"
+"Following MD compatible RAID devices were detected:\n"
+"%1$s\n"
+"If they are clean devices or contain partitions then you can choose to use\n"
+"MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+"will be able to install system on it and boot from such RAID.\n"
+"Do you want MD Partitionable RAID subsystem to manage those partitions?"
+msgstr ""
+
+#. popup text
+#: ../storage/Disk.cc:523
+msgid ""
+"You have the following options:\n"
+"  - Repartition your system so that only the maximal allowed number\n"
+"    of partitions is used. To repartition, use your existing operating\n"
+"    system.\n"
+"  - Use LVM since it can provide an arbitrary and flexible\n"
+"    number of block devices partitions. This needs a repartition\n"
+"    as well."
+msgstr ""
+
+#. popup text %1$s is replaced by disk name e.g. /dev/hda
+#. %2$lu and %3$lu are replaced by numbers.
+#: ../storage/Disk.cc:516
+#, c-format
+msgid ""
+"Your disk %1$s contains %2$lu partitions. The maximum number\n"
+"of partitions that the kernel driver of the disk can handle is %3$lu.\n"
+"Partitions numbered above %3$lu cannot be accessed."
+msgstr ""
+
+#. symbol for "kilo" (best keep untranslated)
+#: ../storage/HumanString.cc:64
+#, fuzzy
+msgid "k"
+msgstr "kB"
+
+#. symbol for "kilo bytes" (best keep untranslated)
+#: ../storage/HumanString.cc:58
+msgid "kB"
+msgstr "kB"
+
+#, fuzzy
+#~ msgid ""
+#~ "The partitioning on disk %1$s is not readable by\n"
+#~ "the partitioning tool parted, which is used to change the\n"
+#~ "partition table.\n"
+#~ "\n"
+#~ "You can use the partitions on disk %1$s as they are.\n"
+#~ "You can format them and assign mount points to them, but you\n"
+#~ "cannot add, edit, resize, or remove partitions from that\n"
+#~ "disk with this tool."
+#~ msgstr ""
+#~ "\n"
+#~ "Razdelitev na vašem disku %1 ni berljiva s strani razdelitvenega\n"
+#~ "orodja \"parted\", ki ga YaST uporablja pri spreminjanju\n"
+#~ "razdelitvene tabele.\n"
+#~ "\n"
+#~ "Lahko uporabljate obstoječe razdelke na diku %1.\n"
+#~ "Lahko jih formatirate in jim določite priključne točke, ne morete\n"
+#~ "pa jih dodajati, spreminjati jim velikosti ali jih odstraniti iz\n"
+#~ "diska s pomočjo YaST.\n"
+
+#, fuzzy
+#~| msgid "Create extended partition %2 (%3)"
+#~ msgid "Create extended raid partition %1$s (%2$s)"
+#~ msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#, fuzzy
+#~| msgid "Create extended partition %2 (%3)"
+#~ msgid "Create raid partition %1$s (%2$s)"
+#~ msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#, fuzzy
+#~| msgid "Creating swap area on partition %1..."
+#~ msgid "Create swap raid partition %1$s (%2$s)"
+#~ msgstr "Izdelava izmenjalnega prostora na razdelku %1..."
+
+#, fuzzy
+#~| msgid "Creating swap area on partition %1..."
+#~ msgid "Creating raid partition %1$s"
+#~ msgstr "Izdelava izmenjalnega prostora na razdelku %1..."
+
+#, fuzzy
+#~| msgid "Create extended partition %2 (%3)"
+#~ msgid "Delete raid partition %1$s (%2$s)"
+#~ msgstr "Kreiraj razširjeno particijo %2 (%3)"
+
+#, fuzzy
+#~| msgid "Checking partition %1"
+#~ msgid "Deleting raid partition %1$s"
+#~ msgstr "Preverjanje razdelka %1"
+
+#, fuzzy
+#~| msgid "Resize partition %1 to %2"
+#~ msgid "Extend raid partition %1$s to %2$s"
+#~ msgstr "Spremeni velikost particije %1 na %2"
+
+#, fuzzy
+#~| msgid "Mounting root partition %1 to %2"
+#~ msgid "Extending raid partition %1$s to %2$s"
+#~ msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#, fuzzy
+#~| msgid "Adding partition %1 to swap"
+#~ msgid "Format raid partition %1$s (%2$s) for swap"
+#~ msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
+
+#, fuzzy
+#~| msgid "Create %1 partition %2 (%3 with %4)"
+#~ msgid "Format raid partition %1$s (%2$s) with %3$s"
+#~ msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#, fuzzy
+#~| msgid "Create %1 partition %2 (%3 with %4)"
+#~ msgid "Formatting raid partition %1$s (%2$s) with %3$s"
+#~ msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#, fuzzy
+#~| msgid "Remove the logical volume %1?"
+#~ msgid "Remove nfs volume %1$s"
+#~ msgstr "Odstranim logični nosilec %1?"
+
+# &A is taken
+#, fuzzy
+#~| msgid "Remove VG %1"
+#~ msgid "Remove raid %1$s"
+#~ msgstr "Odstrani VG %1"
+
+#, fuzzy
+#~| msgid "Remove the logical volume %1?"
+#~ msgid "Removing nfs volume %1$s"
+#~ msgstr "Odstranim logični nosilec %1?"
+
+#, fuzzy
+#~| msgid "Removing /var/yp/%1"
+#~ msgid "Removing raid %1$s"
+#~ msgstr "Odstranjevanje /var/yp/%1"
+
+#, fuzzy
+#~| msgid "Resize partition %1 to %2"
+#~ msgid "Set type of raid partition %1$s to %2$X"
+#~ msgstr "Spremeni velikost particije %1 na %2"
+
+#, fuzzy
+#~| msgid "Mounting root partition %1 to %2"
+#~ msgid "Setting type of raid partition %1$s to %2$X"
+#~ msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#, fuzzy
+#~| msgid "Mounting root partition %1 to %2"
+#~ msgid "Shrink raid partition %1$s to %2$s"
+#~ msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#, fuzzy
+#~| msgid "Mounting root partition %1 to %2"
+#~ msgid "Shrinking raid partition %1$s to %2$s"
+#~ msgstr "Priključevanje korenskega razdelka %1 na %2"
+
+#, fuzzy
+#~| msgid "BIOS"
+#~ msgid "BIOS RAID"
+#~ msgstr "BIOS"
+
+#, fuzzy
+#~| msgid "Create %1 partition %2 (%3 with %4)"
+#~ msgid "Create encrypted partition %1$s (%2$s) with id=%3$X"
+#~ msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#, fuzzy
+#~| msgid "Create %1 partition %2 (%3 with %4)"
+#~ msgid "Create partition %1$s (%2$s) with id=%3$X"
+#~ msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+
+#, fuzzy
+#~| msgid "Partition"
+#~ msgid "Partitioned RAID"
+#~ msgstr "Razdelek"
+
+#, fuzzy
+#~| msgid "Set volume label of %1 to %2"
+#~ msgid "Set disk label of disk %1$s to %2$s"
+#~ msgstr "Nastavi ime nosilca %1 na %2"
+
+#, fuzzy
+#~| msgid "Set volume label of %1 to %2"
+#~ msgid "Set disk label of multipath disk %1$s to %2$s"
+#~ msgstr "Nastavi ime nosilca %1 na %2"
+
+#, fuzzy
+#~| msgid "Set volume label of %1 to %2"
+#~ msgid "Set disk label of raid %1$s to %2$s"
+#~ msgstr "Nastavi ime nosilca %1 na %2"
+
+#, fuzzy
+#~| msgid "Set volume label of %1 to %2"
+#~ msgid "Setting disk label of disk %1$s to %2$s"
+#~ msgstr "Nastavi ime nosilca %1 na %2"
+
+#, fuzzy
+#~| msgid "Set volume label of %1 to %2"
+#~ msgid "Setting disk label of raid %1$s to %2$s"
+#~ msgstr "Nastavi ime nosilca %1 na %2"

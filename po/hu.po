@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2014-06-30 15:51+0200\n"
 "PO-Revision-Date: 2012-06-09 07:21+0200\n"
 "Last-Translator: Kalman Kemenczy <kkemenczy@opensuse.org>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -24,22 +24,23 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(A folyamatjelző nem fog változni. Hosszú ideig tarthat. NE SZAKÍTSA FÉLBE!)"
+msgstr ""
+"(A folyamatjelző nem fog változni. Hosszú ideig tarthat. NE SZAKÍTSA FÉLBE!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "%1$s csatolási pont hozzáadása a(z) %2$s fájlhoz"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:910
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "%1$s csatolási pont hozzáadása a(z) %2$s fájlhoz"
@@ -56,7 +57,7 @@ msgstr "Btrfs kötet"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1434
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1$s eszköz módosítása a(z) %2$s csatolási pontra"
@@ -69,21 +70,21 @@ msgstr "A tmpfs csatolási pontjának módosítása erre: %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#: ../storage/Volume.cc:2552
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "%1$s címkéjének törlése"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#: ../storage/Volume.cc:2545
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "%1$s címkéjének törlése"
 
 # modules/inst_custom_part.ycp:498
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:279
 #, c-format
 msgid "Create %1$s"
 msgstr "%1$s létrehozása"
@@ -92,7 +93,7 @@ msgstr "%1$s létrehozása"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr "%1$s BIOS GRUB kötet létrehozása (%2$s)"
@@ -101,7 +102,7 @@ msgstr "%1$s BIOS GRUB kötet létrehozása (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
+#: ../storage/Volume.cc:3293
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr "%1$s GPT PReP kötet létrehozása (%2$s)"
@@ -110,7 +111,7 @@ msgstr "%1$s GPT PReP kötet létrehozása (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr "%1$s PReP kötet létrehozása (%2$s)"
@@ -131,14 +132,15 @@ msgstr "%1$s RAID-partíció létrehozása (%2$s)"
 #: ../storage/Dmraid.cc:112
 #, c-format
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
 
 # modules/inst_custom_part.ycp:623
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "%1$s rendszerindító kötet létrehozása (%2$s), %3$s fájlrendszerrel"
@@ -151,7 +153,9 @@ msgstr "%1$s rendszerindító kötet létrehozása (%2$s), %3$s fájlrendszerrel
 #: ../storage/Dmraid.cc:122
 #, c-format
 msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s titkosított RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s "
+"fájlrendszer"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -160,17 +164,22 @@ msgstr "%1$s titkosított RAID-partíció létrehozása (%2$s), %4$s csatolási 
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "%1$s titkosított fájlalapú eszköz létrehozása (fájl: %2$s, méret: %3$s), %5$s csatolási ponttal, %4$s fájlrendszerrel"
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"%1$s titkosított fájlalapú eszköz létrehozása (fájl: %2$s, méret: %3$s), "
+"%5$s csatolási ponttal, %4$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:250
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított logikai kötet létrehozása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított logikai kötet létrehozása (%2$s), %4$s csatolási ponttal, "
+"%3$s fájlrendszerrel"
 
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
@@ -180,7 +189,9 @@ msgstr "%1$s titkosított logikai kötet létrehozása (%2$s), %4$s csatolási p
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított többutas partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s titkosított többutas partíció létrehozása (%2$s), %4$s csatolási pont, "
+"%3$s fájlrendszer"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -190,13 +201,15 @@ msgstr "%1$s titkosított többutas partíció létrehozása (%2$s), %4$s csatol
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "%1$s titkosított szoftveres RAID létrehozása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel, a(z) %5$s eszközön"
+msgstr ""
+"%1$s titkosított szoftveres RAID létrehozása (%2$s), %4$s csatolási ponttal, "
+"%3$s fájlrendszerrel, a(z) %5$s eszközön"
 
 # modules/inst_custom_part.ycp:623
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "%1$s titkosított kötet létrehozása (%2$s)"
@@ -206,10 +219,12 @@ msgstr "%1$s titkosított kötet létrehozása (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított kötet létrehozása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított kötet létrehozása (%2$s), %4$s csatolási ponttal, %3$s "
+"fájlrendszerrel"
 
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
@@ -230,7 +245,7 @@ msgstr "%1$s kiterjesztett többutas partíció létrehozása (%2$s)"
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:453
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "%1$s kiterjesztett partíció létrehozása (%2$s)"
@@ -251,11 +266,13 @@ msgstr "%1$s fájlalapú eszköz létrehozása (fájl: %2$s, méret: %3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "%1$s fájlalapú eszköz létrehozása (fájl: %2$s, méret: %3$s), %5$s csatolási ponttal, %4$s fájlrendszerrel"
+msgstr ""
+"%1$s fájlalapú eszköz létrehozása (fájl: %2$s, méret: %3$s), %5$s csatolási "
+"ponttal, %4$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:259
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "%1$s logikai kötet létrehozása (%2$s)"
@@ -265,10 +282,11 @@ msgstr "%1$s logikai kötet létrehozása (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:240
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s logikai kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s logikai kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
 
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
@@ -286,14 +304,16 @@ msgstr "%1$s többutas partíció létrehozása (%2$s)"
 #: ../storage/Dmmultipath.cc:112
 #, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s többutas partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s többutas partíció létrehozása (%2$s), %4$s csatolási pont, %3$s "
+"fájlrendszer"
 
 # modules/inst_custom_part.ycp:623
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "%1$s gyökérkötet létrehozása (%2$s) %3$s fájlrendszerrel"
@@ -315,11 +335,13 @@ msgstr "%1$s szoftveres RAID létrehozása (%2$s) a(z) %3$s eszközön"
 #: ../storage/Md.cc:402
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "%1$s (%2$s) szoftveres RAID létrehozása, %4$s csatolási ponttal, %3$s fájlrendszerrel, a(z) %5$s eszköz(ök)ből"
+msgstr ""
+"%1$s (%2$s) szoftveres RAID létrehozása, %4$s csatolási ponttal, %3$s "
+"fájlrendszerrel, a(z) %5$s eszköz(ök)ből"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "%1$s alkötet létrehozása ezen az eszközön: %2$s"
@@ -334,7 +356,7 @@ msgstr "%1$s RAID-cserepartíció létrehozása (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:229
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "%1$s logikai cserekötet létrehozása (%2$s)"
@@ -350,7 +372,7 @@ msgstr "%1$s többutas cserepartíció létrehozása (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "%1$s cserekötet létrehozása (%2$s)"
@@ -358,7 +380,7 @@ msgstr "%1$s cserekötet létrehozása (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "%1$s kötet létrehozása (%2$s)"
@@ -369,7 +391,7 @@ msgstr "%1$s kötet létrehozása (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%1$s kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
@@ -378,13 +400,13 @@ msgstr "%1$s kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendsz
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "%1$s kötetcsoport létrehozása (%2$s) ebből: %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:274
 #, c-format
 msgid "Creating %1$s"
 msgstr "%1$s létrehozása"
@@ -403,7 +425,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "%1$s fájlalapú eszköz létrehozása a(z) %2$s fájlból"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:221
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "%1$s logikai kötet létrehozása"
@@ -423,14 +445,14 @@ msgstr "%1$s szoftveres RAID létrehozása a következő(k)ből: %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "%1$s alkötet létrehozása ezen az eszközön: %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "%1$s kötet létrehozása"
@@ -439,7 +461,7 @@ msgstr "%1$s kötet létrehozása"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "%1$s kötetcsoport létrehozása (%2$s) ebből: %3$s"
@@ -459,7 +481,7 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Brtfs kötet törlése ezen a köteten: %1$s (%2$s)"
@@ -475,14 +497,14 @@ msgstr "%1$s RAID-partíció törlése (%2$s)"
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:424
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "%1$s Windows-partíció törlése (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:449
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "%1$s eszközösszerendelő-kötet törlése (%2$s)"
@@ -496,7 +518,7 @@ msgstr "%1$s fájlalapú eszköz törlése (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:209
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "%1$s logikai kötet törlése (%2$s)"
@@ -512,7 +534,7 @@ msgstr "%1$s többutas partíció törlése (%2$s)"
 # modules/inst_custom_part.ycp:623
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:431
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "%1$s partíció törlése (%2$s)"
@@ -525,7 +547,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "%1$s szoftveres RAID törlése (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Brtfs kötet törlése a(z) %1$s eszközön"
@@ -537,7 +559,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "%1$s RAID-partíció törlése"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:443
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "%1$s eszközösszerendelő-kötet törlése"
@@ -549,7 +571,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "%1$s fájlalapú eszköz törlése"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:203
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "%1$s logikai kötet törlése"
@@ -561,7 +583,7 @@ msgid "Deleting multipath partition %1$s"
 msgstr "%1$s többutas partíció törlése"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:416
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "%1$s partíció törlése"
@@ -607,14 +629,14 @@ msgstr[1] "dasdfmt futtatása a következő lemezekhez: %1$s "
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3345
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "%1$s növelése %2$s méretre"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "%1$s Btrfs kötet kibővítése a(z) %2$s eszközzel"
@@ -628,14 +650,14 @@ msgstr "%1$s RAID-partíció növelése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:550
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "%1$s Windows-partíció növelése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:348
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "%1$s logikai kötet kibővítése %2$s méretre"
@@ -649,14 +671,14 @@ msgstr "%1$s többutas partíció növelése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:561
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "%1$s partíció növelése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1433
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "%1$s kötetcsoport bővítése a(z) %2$s eszközzel"
@@ -664,14 +686,14 @@ msgstr "%1$s kötetcsoport bővítése a(z) %2$s eszközzel"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1$s növelése %2$s méretre"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "%1$s Btrfs kötet kibővítése a(z) %2$s eszközzel"
@@ -685,7 +707,7 @@ msgstr "%1$s RAID-partíció növelése a következő méretre: %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:334
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "%1$s logikai kötet kibővítése %2$s méretre"
@@ -699,14 +721,14 @@ msgstr "%1$s többutas partíció növelése a következő méretre: %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:534
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "%1$s partíció növelése a következő méretre: %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1426
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "%1$s kötetcsoport növelése a(z) %2$s kötettel"
@@ -714,7 +736,7 @@ msgstr "%1$s kötetcsoport növelése a(z) %2$s kötettel"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Brtfs kötet formázása: %1$s (%2$s)"
@@ -723,7 +745,7 @@ msgstr "Brtfs kötet formázása: %1$s (%2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "Brtfs kötet formázása: %1$s, csatolási pont: %3$s (%2$s)"
@@ -736,7 +758,8 @@ msgstr "Brtfs kötet formázása: %1$s, csatolási pont: %3$s (%2$s)"
 #: ../storage/Dmraid.cc:174
 #, c-format
 msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s RAID-partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s RAID-partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
 
 # modules/inst_prepdisk.ycp:116
 # modules/inst_prepdisk.ycp:166
@@ -780,15 +803,17 @@ msgstr "%1$s eszköz formázása (%2$s) %3$s fájlrendszerrel"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:476
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s eszközösszerendelő-kötet formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s eszközösszerendelő-kötet formázása (%2$s), %4$s csatolási pont, %3$s "
+"fájlrendszer"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:496
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "%1$s eszközösszerendelő-kötet formázása (%2$s) %3$s fájlrendszerrel"
@@ -800,7 +825,9 @@ msgstr "%1$s eszközösszerendelő-kötet formázása (%2$s) %3$s fájlrendszerr
 #: ../storage/Dmraid.cc:184
 #, c-format
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított RAID-partíció formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított RAID-partíció formázása (%2$s), %4$s csatolási ponttal, "
+"%3$s fájlrendszerrel"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -810,16 +837,20 @@ msgstr "%1$s titkosított RAID-partíció formázása (%2$s), %4$s csatolási po
 #: ../storage/Volume.cc:859
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított eszköz formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított eszköz formázása (%2$s), %4$s csatolási ponttal, %3$s "
+"fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:486
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított eszközösszerendelő-kötet formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s titkosított eszközösszerendelő-kötet formázása (%2$s), %4$s csatolási "
+"pont, %3$s fájlrendszer"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -828,17 +859,22 @@ msgstr "%1$s titkosított eszközösszerendelő-kötet formázása (%2$s), %4$s 
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "%1$s titkosított fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s), %5$s csatolási ponttal, %4$s fájlrendszerrel"
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"%1$s titkosított fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s), %5$s "
+"csatolási ponttal, %4$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:304
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított logikai kötet formázása (%2$s), %3$s fájlrendszer, %4$s csatolási pont"
+msgstr ""
+"%1$s titkosított logikai kötet formázása (%2$s), %3$s fájlrendszer, %4$s "
+"csatolási pont"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -847,16 +883,20 @@ msgstr "%1$s titkosított logikai kötet formázása (%2$s), %3$s fájlrendszer,
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított többutas partíció formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított többutas partíció formázása (%2$s), %4$s csatolási ponttal, "
+"%3$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:504
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított partíció formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított partíció formázása (%2$s), %4$s csatolási ponttal, %3$s "
+"fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -865,7 +905,9 @@ msgstr "%1$s titkosított partíció formázása (%2$s), %4$s csatolási ponttal
 #: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s titkosított szoftveres RAID formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s titkosított szoftveres RAID formázása (%2$s), %4$s csatolási ponttal, "
+"%3$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -875,7 +917,9 @@ msgstr "%1$s titkosított szoftveres RAID formázása (%2$s), %4$s csatolási po
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s), %5$s csatolási ponttal, %4$s fájlrendszerrel"
+msgstr ""
+"%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s), %5$s csatolási "
+"ponttal, %4$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -884,20 +928,23 @@ msgstr "%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s), %5$s c
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s) %4$s fájlrendszerrel"
+msgstr ""
+"%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s) %4$s "
+"fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:294
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s logikai kötet formázása (%2$s), %3$s fájlrendszer, %4$s csatolási pont"
+msgstr ""
+"%1$s logikai kötet formázása (%2$s), %3$s fájlrendszer, %4$s csatolási pont"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:285
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "%1$s logikai kötet formázása (%2$s) cseréhez"
@@ -905,7 +952,7 @@ msgstr "%1$s logikai kötet formázása (%2$s) cseréhez"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:314
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "%1$s logikai kötet formázása (%2$s) %3$s fájlrendszerrel"
@@ -918,7 +965,9 @@ msgstr "%1$s logikai kötet formázása (%2$s) %3$s fájlrendszerrel"
 #: ../storage/Dmmultipath.cc:174
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s többutas partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+msgstr ""
+"%1$s többutas partíció formázása (%2$s), %4$s csatolási pont, %3$s "
+"fájlrendszer"
 
 # modules/inst_prepdisk.ycp:116
 # modules/inst_prepdisk.ycp:166
@@ -943,7 +992,7 @@ msgstr "%1$s többutas partíció formázása (%2$s) %3$s fájlrendszerrel"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:494
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "%1$s partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
@@ -952,7 +1001,7 @@ msgstr "%1$s partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrend
 # modules/inst_prepdisk.ycp:166
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:485
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "%1$s partíció formázása (%2$s) cserepartíciónak"
@@ -961,7 +1010,7 @@ msgstr "%1$s partíció formázása (%2$s) cserepartíciónak"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:514
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "%1$s partíció formázása (%2$s) %3$s fájlrendszerrel"
@@ -973,7 +1022,9 @@ msgstr "%1$s partíció formázása (%2$s) %3$s fájlrendszerrel"
 #: ../storage/Md.cc:452
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1$s szoftveres RAID formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+msgstr ""
+"%1$s szoftveres RAID formázása (%2$s), %4$s csatolási ponttal, %3$s "
+"fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -986,7 +1037,7 @@ msgstr "%1$s szoftveres RAID formázása (%2$s) %3$s fájlrendszerrel"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Brtfs kötet formázása: %1$s (%2$s)"
@@ -1012,7 +1063,7 @@ msgstr "%1$s eszköz formázása (%2$s), %3$s fájlrendszerrel"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:463
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "%1$s eszközösszerendelő-kötet formázása (%2$s) %3$s fájlrendszerrel"
@@ -1024,12 +1075,14 @@ msgstr "%1$s eszközösszerendelő-kötet formázása (%2$s) %3$s fájlrendszerr
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s) %4$s fájlrendszerrel"
+msgstr ""
+"%1$s fájlalapú eszköz formázása (fájl: %2$s, méret: %3$s) %4$s "
+"fájlrendszerrel"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:274
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "%1$s logikai kötet formázása (%2$s) %3$s fájlrendszerrel"
@@ -1047,7 +1100,7 @@ msgstr "%1$s többutas partíció formázása (%2$s) %3$s fájlrendszerrel"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:474
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "%1$s partíció formázása (%2$s) %3$s fájlrendszerrel"
@@ -1126,7 +1179,7 @@ msgstr "Csatolási pont"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1417
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1$s kötet csatolása a(z) %2$s csatolási pontra"
@@ -1160,28 +1213,28 @@ msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "%1$s Btrfs kötet csökkentése a(z) %2$s eszközzel"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1455
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "%1$s kötetcsoport csökkentése a(z) %2$s eszközzel"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "%1$s Btrfs kötet csökkentése a(z) %2$s eszközzel"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1448
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "%1$s kötetcsoport csökkentése a(z) %2$s eszközzel"
@@ -1189,7 +1242,7 @@ msgstr "%1$s kötetcsoport csökkentése a(z) %2$s eszközzel"
 # modules/inst_custom_part.ycp:498
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
 #, c-format
 msgid "Remove %1$s"
 msgstr "%1$s eltávolítása"
@@ -1197,7 +1250,7 @@ msgstr "%1$s eltávolítása"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1465
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%1$s eltávolítása a(z) %2$s fájlból"
@@ -1217,20 +1270,20 @@ msgstr "%1$s RAID eltávolítása"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "%2$s fájlban megadott %1$s csatolási pont bejegyzésének törlése"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1080
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "%1$s szoftveres RAID eltávolítása"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "%1$s alkötet eltávolítása erről az eszközön: %2$s"
@@ -1249,20 +1302,20 @@ msgstr "Tmpfs kötet eltávolítása a(z) %1$s csatolási pontról"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "%1$s kötet eltávolítása"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1388
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "%1$s kötetcsoport eltávolítása"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
 #, c-format
 msgid "Removing %1$s"
 msgstr "%1$s eltávolítása"
@@ -1281,20 +1334,20 @@ msgstr "%1$s RAID eltávolítása"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "%2$s fájlban megadott %1$s csatolási pont bejegyzésének törlése"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1075
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "%1$s szoftveres RAID eltávolítása"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "%1$s alkötet létrehozása a(z) %2$s eszközön"
@@ -1307,20 +1360,20 @@ msgstr "Tmpfs kötet eltávolítása a(z) %1$s csatolási pontról"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "%1$s kötet eltávolítása"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1383
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "%1$s kötetcsoport eltávolítása"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1677
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "%1$s kötet átnevezése erre: %2$s"
@@ -1328,7 +1381,7 @@ msgstr "%1$s kötet átnevezése erre: %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2556
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "%1$s címkéjének beállítása a(z) %2$s értékre"
@@ -1336,7 +1389,7 @@ msgstr "%1$s címkéjének beállítása a(z) %2$s értékre"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1444
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "%1$s csatolási pontjának beállítása a(z) %2$s helyre"
@@ -1361,12 +1414,14 @@ msgstr "%1$s RAID-partíció átállítása %2$X típusúra"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "%1$s többutas partíció átállítása %2$X típusúra"
 
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "%1$s partíció átállítása %2$X típusúra"
@@ -1382,21 +1437,21 @@ msgstr "%1$s partíció átállítása %2$s (%3$X) típusúra"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#: ../storage/Volume.cc:1844
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Titkosított DM-eszköz létrehozása a(z) %1$s eszközön"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#: ../storage/Volume.cc:1831
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Titkosított hurokeszköz létrehozása a(z) %1$s eszközön"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1670
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "%1$s kötet átnevezése erre: %2$s"
@@ -1404,7 +1459,7 @@ msgstr "%1$s kötet átnevezése erre: %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2549
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%1$s címkéjének beállítása a(z) %2$s értékre"
@@ -1423,12 +1478,14 @@ msgstr "%1$s RAID-partíció átállítása %2$X típusúra"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "%1$s többutas partíció átállítása %2$X típusúra"
 
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "%1$s partíció átállítása %2$X típusúra"
@@ -1444,14 +1501,14 @@ msgstr "%1$s partíciótípusának beállítása: %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#: ../storage/Volume.cc:1841
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Titkosított DM-eszköz létrehozása a(z) %1$s eszközön"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#: ../storage/Volume.cc:1828
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Titkosított hurokeszköz létrehozása a(z) %1$s eszközön"
@@ -1459,7 +1516,7 @@ msgstr "Titkosított hurokeszköz létrehozása a(z) %1$s eszközön"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3341
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "%1$s csökkentése %2$s méretre"
@@ -1473,14 +1530,14 @@ msgstr "%1$s RAID-partíció csökkentése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:546
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "%1$s Windows-partíció csökkentése erre a méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:344
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "%1$s logikai kötet csökkentése %2$s méretre"
@@ -1494,7 +1551,7 @@ msgstr "%1$s többutas partíció csökkentése a következő méretre: %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:557
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "%1$s partíció csökkentése a következő méretre: %2$s"
@@ -1502,7 +1559,7 @@ msgstr "%1$s partíció csökkentése a következő méretre: %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3333
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1$s csökkentése %2$s méretre"
@@ -1516,7 +1573,7 @@ msgstr "%1$s RAID-partíció csökkentése a következő méretre: %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:330
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "%1$s logikai kötet csökkentése %2$s méretre"
@@ -1530,7 +1587,7 @@ msgstr "%1$s többutas partíció csökkentése a következő méretre: %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "%1$s partíció csökkentése a következő méretre: %2$s"
@@ -1546,7 +1603,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:332
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1567,7 +1624,7 @@ msgstr ""
 "partíciókat ezen a lemezen ezzel a programmal."
 
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1580,13 +1637,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:4952
 msgid "Unmount failed."
 msgstr "Sikertelen lecsatolás"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "%1$s leválasztása"
@@ -1598,14 +1655,14 @@ msgstr "Tmpfs leválasztása"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "%2$s fájlban megadott %1$s csatolási pont bejegyzésének frissítése"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "%2$s fájlban megadott %1$s csatolási pont bejegyzésének frissítése"
@@ -1613,7 +1670,7 @@ msgstr "%2$s fájlban megadott %1$s csatolási pont bejegyzésének frissítése
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1452
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "%1$s használata, mint %2$s"
@@ -1623,7 +1680,7 @@ msgid "Volume Group"
 msgstr "Kötetcsoport"
 
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:515
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1642,14 +1699,15 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:508
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
 "of partitions that the kernel driver of the disk can handle is %3$lu.\n"
 "Partitions numbered above %3$lu cannot be accessed."
 msgstr ""
-"A(z) %1$s lemez %2$lu partíciót tartalmaz. A lemez kernel-illesztőprogramja \n"
+"A(z) %1$s lemez %2$lu partíciót tartalmaz. A lemez kernel-"
+"illesztőprogramja \n"
 "legfeljebb %3$lu partíciót tud kezelni.\n"
 "A(z) %3$lu feletti számú partíciók nem érhetők el."
 
@@ -1687,12 +1745,15 @@ msgstr "kB"
 #~ "partíciókat ezen a lemezen ezzel a segédprogrammal."
 
 #~ msgid ""
-#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible "
+#~ "platform.\n"
 #~ "\n"
 #~ "Following MD compatible RAID devices were detected:\n"
 #~ "%1$s\n"
-#~ "If they are clean devices or contain partitions then you can choose to use\n"
-#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+#~ "If they are clean devices or contain partitions then you can choose to "
+#~ "use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+#~ "you\n"
 #~ "will be able to install system on it and boot from such RAID.\n"
 #~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 #~ msgstr ""
@@ -1700,8 +1761,12 @@ msgstr "kB"
 #~ "\n"
 #~ "A következő MD-kompatibilis RAID-eszközök találhatók:\n"
 #~ "%1$s\n"
-#~ "Amennyiben ezek üres eszközök vagy partíciókat tartalmaznak, akkor választhatja azt a lehetőséget, ahol az MD-particionálható RAID alrendszer kezeli őket. Amennyiben ezek üres eszközök, akkor lehetőség van ezekre telepíteni az operációs rendszert és erről indítani.\n"
-#~ "Szeretné, hogy az MD-particionálható RAID alrendszer kezelje ezeket a partíciókat?"
+#~ "Amennyiben ezek üres eszközök vagy partíciókat tartalmaznak, akkor "
+#~ "választhatja azt a lehetőséget, ahol az MD-particionálható RAID "
+#~ "alrendszer kezeli őket. Amennyiben ezek üres eszközök, akkor lehetőség "
+#~ "van ezekre telepíteni az operációs rendszert és erről indítani.\n"
+#~ "Szeretné, hogy az MD-particionálható RAID alrendszer kezelje ezeket a "
+#~ "partíciókat?"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
@@ -1727,7 +1792,9 @@ msgstr "kB"
 
 # modules/inst_custom_part.ycp:623
 #~ msgid "Create encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "%1$s titkosított RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+#~ msgstr ""
+#~ "%1$s titkosított RAID-partíció létrehozása (%2$s), %4$s csatolási pont, "
+#~ "%3$s fájlrendszer"
 
 # modules/inst_custom_part.ycp:623
 #~ msgid "Create extended raid partition %1$s (%2$s)"
@@ -1739,7 +1806,9 @@ msgstr "kB"
 
 # modules/inst_custom_part.ycp:623
 #~ msgid "Create raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "%1$s RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+#~ msgstr ""
+#~ "%1$s RAID-partíció létrehozása (%2$s), %4$s csatolási pont, %3$s "
+#~ "fájlrendszer"
 
 # modules/inst_custom_part.ycp:623
 #~ msgid "Create swap raid partition %1$s (%2$s)"
@@ -1762,11 +1831,15 @@ msgstr "kB"
 #~ msgstr "%1$s RAID-partíció növelése a következő méretre: %2$s"
 
 #~ msgid "Format encrypted raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "%1$s titkosított RAID-partíció formázása (%2$s), %4$s csatolási ponttal, %3$s fájlrendszerrel"
+#~ msgstr ""
+#~ "%1$s titkosított RAID-partíció formázása (%2$s), %4$s csatolási ponttal, "
+#~ "%3$s fájlrendszerrel"
 
 # modules/inst_custom_part.ycp:623
 #~ msgid "Format raid partition %1$s (%2$s) for %4$s with %3$s"
-#~ msgstr "%1$s RAID-partíció formázása (%2$s), %4$s csatolási pont, %3$s fájlrendszer"
+#~ msgstr ""
+#~ "%1$s RAID-partíció formázása (%2$s), %4$s csatolási pont, %3$s "
+#~ "fájlrendszer"
 
 # modules/inst_prepdisk.ycp:116
 # modules/inst_prepdisk.ycp:166

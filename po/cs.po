@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-09-29 11:51+0200\n"
+"POT-Creation-Date: 2014-06-30 15:51+0200\n"
 "PO-Revision-Date: 2012-05-24 13:53+0200\n"
 "Last-Translator: Jan Papez <honyczek@centrum.cz>\n"
 "Language-Team: Czech <opensuse-translation@opensuse.org>\n"
@@ -24,22 +24,24 @@ msgstr ""
 "X-Generator: Lokalize 1.4\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:335 ../storage/Partition.cc:539
+#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
 #: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3382
+#: ../storage/Volume.cc:3352
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(Ukazatel průběhu se nebude pohybovat. Může to trvat velmi dlouho. NESMÍTE TO ZRUŠIT!)"
+msgstr ""
+"(Ukazatel průběhu se nebude pohybovat. Může to trvat velmi dlouho. NESMÍTE "
+"TO ZRUŠIT!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:917
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Přidat bod připojení %1$s do %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:910
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Přidává se bod připojení %1$s do %2$s"
@@ -56,7 +58,7 @@ msgstr "Svazek Btrfs"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1456
+#: ../storage/Volume.cc:1434
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Změnit bod připojení %1$s na %2$s"
@@ -69,20 +71,20 @@ msgstr "Změnit bod připojení z tmpfs na %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2574
+#: ../storage/Volume.cc:2552
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Vyčistit popisek svazku %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2567
+#: ../storage/Volume.cc:2545
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Čistí se popisek svazku %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:277
+#: ../storage/Container.cc:279
 #, c-format
 msgid "Create %1$s"
 msgstr "Vytvořit %1$s"
@@ -91,7 +93,7 @@ msgstr "Vytvořit %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
+#: ../storage/Volume.cc:3289
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr "Vytvořit svazek grup systému BIOS %1$s (%2$s)"
@@ -100,7 +102,7 @@ msgstr "Vytvořit svazek grup systému BIOS %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
+#: ../storage/Volume.cc:3293
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr "Vytvořit svazek GPT PReP %1$s (%2$s)"
@@ -109,7 +111,7 @@ msgstr "Vytvořit svazek GPT PReP %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
+#: ../storage/Volume.cc:3297
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr "Vytvořit svazek PReP %1$s (%2$s)"
@@ -134,7 +136,7 @@ msgstr "Vytvořit oddíl RAID %1$s (%2$s) pro %4$s s %3$s"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3259
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Vytvořit startovací oddíl %1$s (%2$s) s %3$s"
@@ -155,14 +157,17 @@ msgstr "Vytvořit šifrovaný oddíl RAID %1$s (%2$s) pro %4$s s %3$s"
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:307
 #, c-format
-msgid "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Vytvořit šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s se systémem %4$s."
+msgid ""
+"Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Vytvořit šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s "
+"se systémem %4$s."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:248
+#: ../storage/LvmLv.cc:250
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Vytvořit šifrovaný logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -184,12 +189,13 @@ msgstr "Vytvořit šifrovaný multipath oddíl %1$s (%2$s) pro %4$s pomocí %3$s
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "Vytvořit šifrovaný softwarový RAID %1$s (%2$s) z %5$s pro %4$s pomocí %3$s"
+msgstr ""
+"Vytvořit šifrovaný softwarový RAID %1$s (%2$s) z %5$s pro %4$s pomocí %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3312
+#: ../storage/Volume.cc:3282
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Vytvořit šifrovaný oddíl %1$s (%2$s)"
@@ -199,7 +205,7 @@ msgstr "Vytvořit šifrovaný oddíl %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3304
+#: ../storage/Volume.cc:3274
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Vytvořit šifrovaný logický svazek %1$s (%2$s) pro %4$s s %3$s"
@@ -220,7 +226,7 @@ msgstr "Vytvořit rozšířený multipath oddíl %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:455
+#: ../storage/Partition.cc:453
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "Vytvořit rozšířený oddíl %1$s (%2$s)"
@@ -241,11 +247,13 @@ msgstr "Vytvořit souborové zařízení %1$s ze souboru %2$s (%3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "Vytvořit souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s se systémem %4$s."
+msgstr ""
+"Vytvořit souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s se "
+"systémem %4$s."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:257
+#: ../storage/LvmLv.cc:259
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Vytvořit logický svazek %1$s (%2$s)"
@@ -254,7 +262,7 @@ msgstr "Vytvořit logický svazek %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:238
+#: ../storage/LvmLv.cc:240
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Vytvořit logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -279,7 +287,7 @@ msgstr "Vytvořit multipath oddíl %1$s (%2$s) pro %4$s pomocí %3$s"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3284
+#: ../storage/Volume.cc:3254
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Vytvořit kořenový oddíl %1$s (%2$s) s %3$s"
@@ -304,7 +312,7 @@ msgstr "Vytvořit softwarový RAID %1$s (%2$s) z %5$s pro %4$s pomocí %3$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:907
+#: ../storage/Btrfs.cc:898
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
 msgstr "Vytvořit podřízený svazek %1$s zařízení %2$s"
@@ -318,7 +326,7 @@ msgstr "Vytvořit odkládací oddíl RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:227
+#: ../storage/LvmLv.cc:229
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Vytvořit odkládací logický svazek %1$s (%2$s)"
@@ -333,7 +341,7 @@ msgstr "Vytvořit odkládací multipath oddíl %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3279
+#: ../storage/Volume.cc:3249
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Vytvořit odkládací svazek %1$s (%2$s)"
@@ -341,7 +349,7 @@ msgstr "Vytvořit odkládací svazek %1$s (%2$s)"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3308
+#: ../storage/Volume.cc:3278
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Vytvořit svazek %1$s (%2$s)"
@@ -351,7 +359,7 @@ msgstr "Vytvořit svazek %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3298
+#: ../storage/Volume.cc:3268
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Vytvořit svazek %1$s (%2$s) pro %4$s s %3$s"
@@ -360,13 +368,13 @@ msgstr "Vytvořit svazek %1$s (%2$s) pro %4$s s %3$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1413
+#: ../storage/LvmVg.cc:1412
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Vytvořit skupinu svazků %1$s (%2$s) z %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:272
+#: ../storage/Container.cc:274
 #, c-format
 msgid "Creating %1$s"
 msgstr "Vytváří se %1$s"
@@ -385,7 +393,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "Vytváří se souborové zařízení %1$s ze souboru %2$s."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:219
+#: ../storage/LvmLv.cc:221
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Vytváří se logický svazek %1$s"
@@ -405,14 +413,14 @@ msgstr "Vytváří se softwarový RAID %1$s z %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:900
+#: ../storage/Btrfs.cc:891
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Vytváření podřízeného svazku %1$s zařízení %2$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3302
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Vytváří se svazek %1$s"
@@ -421,7 +429,7 @@ msgstr "Vytváří se svazek %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1404
+#: ../storage/LvmVg.cc:1403
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Vytváří se skupina svazků %1$s (%2$s) z %3$s"
@@ -440,7 +448,7 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:641
+#: ../storage/Btrfs.cc:632
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Odstranit Btrfs svazek na zařízeních %1$s (%2$s)"
@@ -454,14 +462,14 @@ msgstr "Odstranit oddíl RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:426
+#: ../storage/Partition.cc:424
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "Odstranit windowsový oddíl %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:454
+#: ../storage/Dm.cc:449
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "Odstranit svazek mapperu %1$s (%2$s)"
@@ -475,7 +483,7 @@ msgstr "Odstranit zařízení založené na souboru %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:207
+#: ../storage/LvmLv.cc:209
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "Odstranit logický svazek %1$s (%2$s)"
@@ -489,7 +497,7 @@ msgstr "Smazat multipath oddíl %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:433
+#: ../storage/Partition.cc:431
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "Odstranit oddíl %1$s (%2$s)"
@@ -502,7 +510,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Odstranit softwarový RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:635
+#: ../storage/Btrfs.cc:626
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Odstraňuje se Btrfs svazek na zařízení %1$s"
@@ -514,7 +522,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "Odstraňuje se oddíl RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:448
+#: ../storage/Dm.cc:443
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Odstraňuje se svazek mapperu %1$s"
@@ -526,7 +534,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "Odstraňuje se zařízení založené na souboru %1$s."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:201
+#: ../storage/LvmLv.cc:203
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "Odstraňuje se logický oddíl %1$s"
@@ -538,7 +546,7 @@ msgid "Deleting multipath partition %1$s"
 msgstr "Odstraňuje se multipath oddíl %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:418
+#: ../storage/Partition.cc:416
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "Odstraňuje se oddíl %1$s"
@@ -585,14 +593,14 @@ msgstr[2] "Spouštění dasdfmt pro disky %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3375
+#: ../storage/Volume.cc:3345
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Rozšířit %1$s na %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:866
+#: ../storage/Btrfs.cc:857
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "Rozšířit BTRFS svazek %1$s na %2$s"
@@ -606,14 +614,14 @@ msgstr "Rozšířit oddíl RAID %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:552
+#: ../storage/Partition.cc:550
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "Rozšiřuje se Windows oddíl %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:348
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "Rozšířit logický svazek %1$s na %2$s"
@@ -627,14 +635,14 @@ msgstr "Rozšířit multipath oddíl %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:563
+#: ../storage/Partition.cc:561
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "Rozšířit oddíl %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1434
+#: ../storage/LvmVg.cc:1433
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Rozšířit skupinu svazků %1$s o %2$s"
@@ -642,14 +650,14 @@ msgstr "Rozšířit skupinu svazků %1$s o %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3367
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Rozšiřuje se %1$s na %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:859
+#: ../storage/Btrfs.cc:850
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "Rozšiřuje se BTRFS svazek %1$s na %2$s"
@@ -663,7 +671,7 @@ msgstr "Rozšiřuje se oddíl RAID %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:334
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "Rozšiřuje se logický svazek %1$s na %2$s"
@@ -677,14 +685,14 @@ msgstr "Rozšiřuje se multipath oddíl %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:536
+#: ../storage/Partition.cc:534
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "Rozšiřuje se oddíl %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1427
+#: ../storage/LvmVg.cc:1426
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Rozšiřuje se skupina svazků %1$s o %2$s"
@@ -692,7 +700,7 @@ msgstr "Rozšiřuje se skupina svazků %1$s o %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:724
+#: ../storage/Btrfs.cc:715
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Formátovat Btrfs svazek o velikosti %1$s (použitá zařízení: %2$s)"
@@ -701,10 +709,11 @@ msgstr "Formátovat Btrfs svazek o velikosti %1$s (použitá zařízení: %2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:718
+#: ../storage/Btrfs.cc:709
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "Formátovat Btrfs svazek o velikosti %1$s pro %3$s (použitá zařízení: %2$s)"
+msgstr ""
+"Formátovat Btrfs svazek o velikosti %1$s pro %3$s (použitá zařízení: %2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -753,7 +762,7 @@ msgstr "Formátovat zařízení %1$s (%2$s) pomocí %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:481
+#: ../storage/Dm.cc:476
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat svazek mapperu %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -761,7 +770,7 @@ msgstr "Formátovat svazek mapperu %1$s (%2$s) pro %4$s pomocí %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:501
+#: ../storage/Dm.cc:496
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "Formátovat svazek mapperu %1$s (%2$s) pomocí %3$s"
@@ -789,7 +798,7 @@ msgstr "Formátovat šifrované zařízení %1$s (%2$s) pro %4$s pomocí %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:491
+#: ../storage/Dm.cc:486
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat šifrovaný svazek mapperu %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -801,14 +810,17 @@ msgstr "Formátovat šifrovaný svazek mapperu %1$s (%2$s) pro %4$s pomocí %3$s
 #. %5$s is replaced by mount point (e.g. /usr)
 #: ../storage/Loop.cc:364
 #, c-format
-msgid "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Formátovat šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s v systému %4$s."
+msgid ""
+"Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
+msgstr ""
+"Formátovat šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako "
+"%5$s v systému %4$s."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:302
+#: ../storage/LvmLv.cc:304
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat šifrovaný logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -826,7 +838,7 @@ msgstr "Formátovat šifrovaný multipath oddíl %1$s (%2$s) pro %4$s pomocí %3
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:506
+#: ../storage/Partition.cc:504
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat šifrovaný oddíl %1$s (%2$s) pro %4$s pomocí %3$s"
@@ -848,7 +860,9 @@ msgstr "Formátovat šifrovaný softwarový RAID %1$s (%2$s) pro %4$s pomocí %3
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s v systému %4$s."
+msgstr ""
+"Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s v "
+"systému %4$s."
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -857,20 +871,21 @@ msgstr "Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
+msgstr ""
+"Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:292
+#: ../storage/LvmLv.cc:294
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat logický svazek %1$s (%2$s) pro %4$s pomocí %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:283
+#: ../storage/LvmLv.cc:285
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "Formátovat logický svazek %1$s (%2$s) pro swap"
@@ -878,7 +893,7 @@ msgstr "Formátovat logický svazek %1$s (%2$s) pro swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:312
+#: ../storage/LvmLv.cc:314
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "Formátovat logický svazek %1$s (%2$s) pomocí %3$s"
@@ -911,14 +926,14 @@ msgstr "Formátovat multipath oddíl %1$s (%2$s) pomocí %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:496
+#: ../storage/Partition.cc:494
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "Formátovat oddíl %1$s (%2$s) pro %4$s pomocí %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:487
+#: ../storage/Partition.cc:485
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "Formátovat oddíl %1$s (%2$s) pro swap"
@@ -926,7 +941,7 @@ msgstr "Formátovat oddíl %1$s (%2$s) pro swap"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:516
+#: ../storage/Partition.cc:514
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "Formátovat oddíl %1$s (%2$s) pomocí %3$s"
@@ -951,7 +966,7 @@ msgstr "Formátovat softwarový RAID %1$s (%2$s) pomocí %3$s"
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:708
+#: ../storage/Btrfs.cc:699
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Formátuje se Btrfs svazek o velikosti %1$s (použitá zařízení: %2$s)"
@@ -976,7 +991,7 @@ msgstr "Formátuje se zařízení %1$s (%2$s) s %3$s "
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:468
+#: ../storage/Dm.cc:463
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "Formátuje se svazek mapperu %1$s (%2$s) pomocí %3$s "
@@ -988,12 +1003,13 @@ msgstr "Formátuje se svazek mapperu %1$s (%2$s) pomocí %3$s "
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Formátuje se souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
+msgstr ""
+"Formátuje se souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:272
+#: ../storage/LvmLv.cc:274
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "Formátuje se logický svazek %1$s (%2$s) pomocí %3$s"
@@ -1009,7 +1025,7 @@ msgstr "Formátuje se multipath oddíl %1$s (%2$s) pomocí %3$s "
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:476
+#: ../storage/Partition.cc:474
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "Formátuje se oddíl %1$s (%2$s) pomocí %3$s "
@@ -1076,7 +1092,7 @@ msgstr "Bod připojení"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1439
+#: ../storage/Volume.cc:1417
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Připojuje se %1$s k %2$s"
@@ -1109,35 +1125,35 @@ msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:887
+#: ../storage/Btrfs.cc:878
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Zmenšit BTRFS svazek %1$s o %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1456
+#: ../storage/LvmVg.cc:1455
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Zmenšit skupinu svazků %1$s o %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:880
+#: ../storage/Btrfs.cc:871
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "Zmenšuje se svazek BTRFS %1$s o %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1449
+#: ../storage/LvmVg.cc:1448
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Zmenšuje se skupina svazků %1$s o %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:293
+#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
 #, c-format
 msgid "Remove %1$s"
 msgstr "Odstranit %1$s"
@@ -1145,7 +1161,7 @@ msgstr "Odstranit %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1487
+#: ../storage/Volume.cc:1465
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Odstranit %1$s z %2$s"
@@ -1164,20 +1180,20 @@ msgstr "Odstranit RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:973
+#: ../storage/EtcFstab.cc:959
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Odstranit bod připojení %1$s z %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1028
+#: ../storage/MdPartCo.cc:1080
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Odstranit softwarový RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:927
+#: ../storage/Btrfs.cc:918
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Odstranit podřízený svazek %1$s na zařízení %2$s"
@@ -1196,20 +1212,20 @@ msgstr "Odstranit Tmpfs svazek z bodu připojení %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3395
+#: ../storage/Volume.cc:3365
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Odstranit svazek %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1389
+#: ../storage/LvmVg.cc:1388
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Odstranit skupinu svazků %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:894 ../storage/Container.cc:288
+#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
 #, c-format
 msgid "Removing %1$s"
 msgstr "Odstraňuje se %1$s"
@@ -1228,20 +1244,20 @@ msgstr "Odstraňuje se RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:952
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Odstraňuje se bod připojení %1$s z %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1023
+#: ../storage/MdPartCo.cc:1075
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Odstranit softwarový RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:920
+#: ../storage/Btrfs.cc:911
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Odstraňuje se podřízený svazek %1$s na zařízení %2$s"
@@ -1254,20 +1270,20 @@ msgstr "Odstraňuje se Tmpfs svazek z bodu připojení %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3392
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Odstranit svazek %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1384
+#: ../storage/LvmVg.cc:1383
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Odstraňuje se skupina svazků %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1703
+#: ../storage/Disk.cc:1677
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Nastavit popisek disku %1$s na %2$s"
@@ -1275,7 +1291,7 @@ msgstr "Nastavit popisek disku %1$s na %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2578
+#: ../storage/Volume.cc:2556
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Nastavit popisek svazku %1$s na %2$s"
@@ -1283,7 +1299,7 @@ msgstr "Nastavit popisek svazku %1$s na %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1444
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Nastavit bod připojení %1$s na %2$s"
@@ -1308,12 +1324,14 @@ msgstr "Nastavit oddíl RAID %1$s na typ %2$X"
 msgid "Set type of multipath partition %1$s to %2$X"
 msgstr "Nastavit multipath oddíl %1$s na typ %2$X"
 
+#. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:333 ../storage/DmPart.cc:193
-#: ../storage/MdPart.cc:180
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
+#: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Nastavit oddíl %1$s na typ %2$X"
@@ -1329,21 +1347,21 @@ msgstr "Nastavit typ oddílu %1$s na %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1866
+#: ../storage/Volume.cc:1844
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Nastavit šifrované zařízení dm na %1$s."
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1853
+#: ../storage/Volume.cc:1831
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Nastavit šifrované loop zařízení na %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1696
+#: ../storage/Disk.cc:1670
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Nastavuje se popisek disku %1$s na %2$s"
@@ -1351,7 +1369,7 @@ msgstr "Nastavuje se popisek disku %1$s na %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2571
+#: ../storage/Volume.cc:2549
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Nastavuje se popisek svazku %1$s na %2$s"
@@ -1370,12 +1388,14 @@ msgstr "Oddíl RAID %1$s se nastavuje na typ %2$X"
 msgid "Setting type of multipath partition %1$s to %2$X"
 msgstr "Multipath oddíl %1$s se nastavuje na typ %2$X"
 
+#. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
+#. %2$s is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:320 ../storage/DmPart.cc:186
-#: ../storage/MdPart.cc:173
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
+#: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Oddíl %1$s se nastavuje na typ %2$X"
@@ -1391,14 +1411,14 @@ msgstr "Nastavování typu oddílu %1$s na %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1863
+#: ../storage/Volume.cc:1841
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Nastavuje se šifrované zařízení dm na %1$s."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1850
+#: ../storage/Volume.cc:1828
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Nastavuje se šifrované loop zařízení na %1$s"
@@ -1406,7 +1426,7 @@ msgstr "Nastavuje se šifrované loop zařízení na %1$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3371
+#: ../storage/Volume.cc:3341
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Zmenšit %1$s na %2$s"
@@ -1420,14 +1440,14 @@ msgstr "Zmenšit oddíl RAID %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:548
+#: ../storage/Partition.cc:546
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Zmenšuje se Windows oddíl %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:342
+#: ../storage/LvmLv.cc:344
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "Zmenšit logický svazek %1$s na %2$s"
@@ -1441,7 +1461,7 @@ msgstr "Zmenšit multipath oddíl %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:559
+#: ../storage/Partition.cc:557
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "Zmenšit oddíl %1$s na %2$s"
@@ -1449,7 +1469,7 @@ msgstr "Zmenšit oddíl %1$s na %2$s"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3363
+#: ../storage/Volume.cc:3333
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Zmenšuje se %1$s na %2$s"
@@ -1463,7 +1483,7 @@ msgstr "Zmenšuje se oddíl RAID %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:328
+#: ../storage/LvmLv.cc:330
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "Zmenšuje se logický svazek %1$s na %2$s"
@@ -1477,7 +1497,7 @@ msgstr "Zmenšuje se multipath oddíl %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:532
+#: ../storage/Partition.cc:530
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "Zmenšuje se oddíl %1$s na %2$s"
@@ -1493,7 +1513,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:334
+#: ../storage/Disk.cc:332
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1511,7 +1531,7 @@ msgstr ""
 "nástrojem upravovat, přidávat, odstraňovat ani měnit jejich velikost."
 
 #. popup text
-#: ../storage/Storage.cc:350
+#: ../storage/Storage.cc:349
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1524,13 +1544,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:4953
+#: ../storage/Storage.cc:4952
 msgid "Unmount failed."
 msgstr "Odpojení selhalo."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1445
+#: ../storage/Volume.cc:1423
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Odpojuje se %1$s"
@@ -1542,14 +1562,14 @@ msgstr "Odpojuje se tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:938
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Aktualizovat bod připojení %1$s v %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:931
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Aktualizuje se bod připojení %1$s v %2$s"
@@ -1557,7 +1577,7 @@ msgstr "Aktualizuje se bod připojení %1$s v %2$s"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1474
+#: ../storage/Volume.cc:1452
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Použít %1$s jako %2$s"
@@ -1567,7 +1587,7 @@ msgid "Volume Group"
 msgstr "Skupina svazků"
 
 #. popup text
-#: ../storage/Disk.cc:529
+#: ../storage/Disk.cc:515
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1585,7 +1605,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:522
+#: ../storage/Disk.cc:508
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1627,12 +1647,15 @@ msgstr "kB"
 #~ "nástrojem upravovat, přidávat, odstraňovat ani měnit jejich velikost."
 
 #~ msgid ""
-#~ "You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible "
+#~ "platform.\n"
 #~ "\n"
 #~ "Following MD compatible RAID devices were detected:\n"
 #~ "%1$s\n"
-#~ "If they are clean devices or contain partitions then you can choose to use\n"
-#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device you\n"
+#~ "If they are clean devices or contain partitions then you can choose to "
+#~ "use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+#~ "you\n"
 #~ "will be able to install system on it and boot from such RAID.\n"
 #~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
 #~ msgstr ""
@@ -1640,10 +1663,13 @@ msgstr "kB"
 #~ "\n"
 #~ "Následující MD kompatibilní zařízení RAID byly detekovány:\n"
 #~ "%1$s\n"
-#~ "Pokud jde o čistá zařízení nebi zařízení obsahující oddíly, můžete použít\n"
+#~ "Pokud jde o čistá zařízení nebi zařízení obsahující oddíly, můžete "
+#~ "použít\n"
 #~ "k manipulaci použít MD rozdělitelný RAID subsystém. V případě čistého\n"
-#~ "zařízení na něj budeme moci nainstalovat systém a bootovat z takového RAIDu.\n"
-#~ "Chcete, aby byl ke správě těchto oddílů použit MD rozdělitelný RAID subsystém?"
+#~ "zařízení na něj budeme moci nainstalovat systém a bootovat z takového "
+#~ "RAIDu.\n"
+#~ "Chcete, aby byl ke správě těchto oddílů použit MD rozdělitelný RAID "
+#~ "subsystém?"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
