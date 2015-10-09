@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-30 15:51+0200\n"
+"POT-Creation-Date: 2015-10-09 15:59+0200\n"
 "PO-Revision-Date: 2001-10-18 10:13+0200\n"
 "Last-Translator: Görkem Çetin <gorkem@gelecek.com.tr>\n"
 "Language-Team: turkish <i18n@suse.de>\n"
@@ -21,22 +21,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:337 ../storage/Partition.cc:537
-#: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3352
+#: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
+#: ../storage/Partition.cc:539 ../storage/Dmmultipath.cc:218
+#: ../storage/Dmraid.cc:218
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:917
+#: ../storage/EtcFstab.cc:940
 #, fuzzy, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:910
+#: ../storage/EtcFstab.cc:933
 #, fuzzy, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
@@ -54,7 +54,7 @@ msgstr ""
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1434
+#: ../storage/Volume.cc:1475
 #, fuzzy, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
@@ -67,21 +67,21 @@ msgstr "%1 aygıtının bağlama noktasını %2 yap"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2552
+#: ../storage/Volume.cc:2611
 #, fuzzy, c-format
 msgid "Clear label on %1$s"
 msgstr "Listelenmiş tüm seçenekleri sil"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2545
+#: ../storage/Volume.cc:2604
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr ""
 
 # clients/inst_custom_part.ycp:2940
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:279
+#: ../storage/Container.cc:277
 #, fuzzy, c-format
 msgid "Create %1$s"
 msgstr "%1 yığın grubunu oluştur"
@@ -89,7 +89,7 @@ msgstr "%1 yığın grubunu oluştur"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3289
+#: ../storage/Volume.cc:3377
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
 msgstr ""
@@ -97,7 +97,7 @@ msgstr ""
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3293
+#: ../storage/Volume.cc:3381
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
 msgstr ""
@@ -105,7 +105,7 @@ msgstr ""
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3297
+#: ../storage/Volume.cc:3385
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
 msgstr ""
@@ -139,7 +139,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3259
+#: ../storage/Volume.cc:3347
 #, fuzzy, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -172,7 +172,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:250
+#: ../storage/LvmLv.cc:248
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -200,7 +200,7 @@ msgstr ""
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3282
+#: ../storage/Volume.cc:3370
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "%3 üzerinde %2 genişletilmiş bölüm oluştur"
@@ -214,7 +214,7 @@ msgstr "%3 üzerinde %2 genişletilmiş bölüm oluştur"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3274
+#: ../storage/Volume.cc:3362
 #, fuzzy, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -238,7 +238,7 @@ msgstr "%3 üzerinde %2 genişletilmiş bölüm oluştur"
 # clients/inst_custom_part.ycp:3254
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:453
+#: ../storage/Partition.cc:455
 #, fuzzy, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "%3 üzerinde %2 genişletilmiş bölüm oluştur"
@@ -264,7 +264,7 @@ msgstr ""
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:259
+#: ../storage/LvmLv.cc:257
 #, fuzzy, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Mantıksal yığın oluştur"
@@ -277,7 +277,7 @@ msgstr "Mantıksal yığın oluştur"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:240
+#: ../storage/LvmLv.cc:238
 #, fuzzy, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%1 üzerinde %3 için %2 %4 %5 oluştur"
@@ -311,7 +311,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3254
+#: ../storage/Volume.cc:3342
 #, fuzzy, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -336,10 +336,18 @@ msgstr ""
 
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:898
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:997
 #, fuzzy, c-format
 msgid "Create subvolume %1$s on device %2$s"
+msgstr "Mantıksal yığın oluştur"
+
+# include/partitioning/lvm_ui_dialogs.ycp:81
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1004
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
 msgstr "Mantıksal yığın oluştur"
 
 # clients/inst_custom_part.ycp:3254
@@ -353,7 +361,7 @@ msgstr "%3 üzerinde %2 genişletilmiş bölüm oluştur"
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:229
+#: ../storage/LvmLv.cc:227
 #, fuzzy, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Mantıksal yığın oluştur"
@@ -373,7 +381,7 @@ msgstr "%2 üzerinde mantıksal bölüm oluştur %1 %3"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3249
+#: ../storage/Volume.cc:3337
 #, fuzzy, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Mantıksal yığın oluştur"
@@ -382,7 +390,7 @@ msgstr "Mantıksal yığın oluştur"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3278
+#: ../storage/Volume.cc:3366
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Mantıksal yığın oluştur"
@@ -396,7 +404,7 @@ msgstr "Mantıksal yığın oluştur"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3268
+#: ../storage/Volume.cc:3356
 #, fuzzy, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "%1 üzerinde %3 için %2 %4 %5 oluştur"
@@ -406,14 +414,14 @@ msgstr "%1 üzerinde %3 için %2 %4 %5 oluştur"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1412
+#: ../storage/LvmVg.cc:1120
 #, fuzzy, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Yığın grubu oluştur"
 
 # clients/inst_prepdisk.ycp:360
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:274
+#: ../storage/Container.cc:272
 #, fuzzy, c-format
 msgid "Creating %1$s"
 msgstr "%1 biçimlendiriliyor"
@@ -434,7 +442,7 @@ msgstr ""
 
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:221
+#: ../storage/LvmLv.cc:219
 #, fuzzy, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Mantıksal yığın oluştur"
@@ -454,16 +462,24 @@ msgstr ""
 
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:891
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:980
 #, fuzzy, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Mantıksal yığın oluştur"
 
 # include/partitioning/lvm_ui_dialogs.ycp:81
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/sda
+#: ../storage/Btrfs.cc:987
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
+msgstr "Mantıksal yığın oluştur"
+
+# include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3302
+#: ../storage/Volume.cc:3390
 #, fuzzy, c-format
 msgid "Creating volume %1$s"
 msgstr "Mantıksal yığın oluştur"
@@ -473,7 +489,7 @@ msgstr "Mantıksal yığın oluştur"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1403
+#: ../storage/LvmVg.cc:1111
 #, fuzzy, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Yığın grubu oluştur"
@@ -498,7 +514,7 @@ msgstr "&RAID..."
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:632
+#: ../storage/Btrfs.cc:662
 #, fuzzy, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -514,14 +530,14 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 # include/partitioning/partition_defines.ycp:248
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:424
+#: ../storage/Partition.cc:426
 #, fuzzy, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "%3 olan Windows %1 (%2) bölümünün boyutunu %4 olarak değiştir"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:449
+#: ../storage/Dm.cc:454
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr ""
@@ -536,7 +552,7 @@ msgstr ""
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:209
+#: ../storage/LvmLv.cc:207
 #, fuzzy, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -551,7 +567,7 @@ msgstr ""
 # clients/inst_do_resize.ycp:450
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:431
+#: ../storage/Partition.cc:433
 #, fuzzy, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
@@ -564,7 +580,7 @@ msgid "Delete software RAID %1$s (%2$s)"
 msgstr ""
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:626
+#: ../storage/Btrfs.cc:656
 #, fuzzy, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Aygıt siliniyor: %1"
@@ -577,7 +593,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "%1 sabit disk bölümü kontrol ediliyor"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:443
+#: ../storage/Dm.cc:448
 #, fuzzy, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Aygıt siliniyor: %1"
@@ -590,7 +606,7 @@ msgstr "Aygıt siliniyor: %1"
 
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:203
+#: ../storage/LvmLv.cc:201
 #, fuzzy, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -604,7 +620,7 @@ msgstr "%1 sabit disk bölümü kontrol ediliyor"
 
 # clients/inst_rootpart.ycp:129
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:416
+#: ../storage/Partition.cc:418
 #, fuzzy, c-format
 msgid "Deleting partition %1$s"
 msgstr "%1 sabit disk bölümü kontrol ediliyor"
@@ -651,7 +667,7 @@ msgstr[0] "dasdfmt disk %1"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3345
+#: ../storage/Volume.cc:3433
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr ""
@@ -659,7 +675,7 @@ msgstr ""
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:857
+#: ../storage/Btrfs.cc:942
 #, fuzzy, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -675,7 +691,7 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 # clients/inst_do_resize.ycp:450
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:550
+#: ../storage/Partition.cc:552
 #, fuzzy, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
@@ -683,7 +699,7 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:348
+#: ../storage/LvmLv.cc:346
 #, fuzzy, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -699,14 +715,14 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 # clients/inst_do_resize.ycp:450
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:561
+#: ../storage/Partition.cc:563
 #, fuzzy, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1433
+#: ../storage/LvmVg.cc:1141
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr ""
@@ -715,7 +731,7 @@ msgstr ""
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3337
+#: ../storage/Volume.cc:3425
 #, fuzzy, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "%1 bölümünün boyutu %2 MB olarak değiştiriliyor"
@@ -723,7 +739,7 @@ msgstr "%1 bölümünün boyutu %2 MB olarak değiştiriliyor"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:850
+#: ../storage/Btrfs.cc:935
 #, fuzzy, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -739,7 +755,7 @@ msgstr "%1 bölümü takasa ekleniyor"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:334
+#: ../storage/LvmLv.cc:332
 #, fuzzy, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -755,14 +771,14 @@ msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
 # clients/inst_rootpart.ycp:129
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:534
+#: ../storage/Partition.cc:536
 #, fuzzy, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "%1 bölümü takasa ekleniyor"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1426
+#: ../storage/LvmVg.cc:1134
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr ""
@@ -771,7 +787,7 @@ msgstr ""
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:715
+#: ../storage/Btrfs.cc:745
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -781,7 +797,7 @@ msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:709
+#: ../storage/Btrfs.cc:739
 #, fuzzy, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -824,7 +840,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:850
+#: ../storage/Volume.cc:860
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -833,7 +849,7 @@ msgstr ""
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:841
+#: ../storage/Volume.cc:851
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr ""
@@ -842,7 +858,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:476
+#: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -850,7 +866,7 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:496
+#: ../storage/Dm.cc:501
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr ""
@@ -870,7 +886,7 @@ msgstr "%3 olan Windows %1 (%2) bölümünün boyutunu %4 olarak değiştir"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:859
+#: ../storage/Volume.cc:869
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -879,7 +895,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:486
+#: ../storage/Dm.cc:491
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -899,7 +915,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:304
+#: ../storage/LvmLv.cc:302
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -917,7 +933,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:504
+#: ../storage/Partition.cc:506
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -954,14 +970,14 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:294
+#: ../storage/LvmLv.cc:292
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:285
+#: ../storage/LvmLv.cc:283
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr ""
@@ -969,7 +985,7 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:314
+#: ../storage/LvmLv.cc:312
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr ""
@@ -1010,7 +1026,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:494
+#: ../storage/Partition.cc:496
 #, fuzzy, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -1018,7 +1034,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 # clients/inst_rootpart.ycp:129
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:485
+#: ../storage/Partition.cc:487
 #, fuzzy, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "%1 bölümü takasa ekleniyor"
@@ -1030,7 +1046,7 @@ msgstr "%1 bölümü takasa ekleniyor"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:514
+#: ../storage/Partition.cc:516
 #, fuzzy, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -1055,8 +1071,8 @@ msgstr ""
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
-#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:699
+#. %2$s	 is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:729
 #, fuzzy, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Mantıksal yığın oluştur"
@@ -1081,7 +1097,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:833
+#: ../storage/Volume.cc:843
 #, fuzzy, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -1089,7 +1105,7 @@ msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:463
+#: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr ""
@@ -1106,7 +1122,7 @@ msgstr ""
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:274
+#: ../storage/LvmLv.cc:272
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr ""
@@ -1126,7 +1142,7 @@ msgstr ""
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:474
+#: ../storage/Partition.cc:476
 #, fuzzy, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "%3 üzerinde %2 %4 %1 bölümü oluştur"
@@ -1215,7 +1231,7 @@ msgstr "Bağlanma Noktası"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1417
+#: ../storage/Volume.cc:1458
 #, fuzzy, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
@@ -1253,14 +1269,14 @@ msgstr "MiB"
 # include/partitioning/lvm_ui_dialogs.ycp:81
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:878
+#: ../storage/Btrfs.cc:963
 #, fuzzy, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Mantıksal yığın oluştur"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1455
+#: ../storage/LvmVg.cc:1163
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr ""
@@ -1268,14 +1284,14 @@ msgstr ""
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:871
+#: ../storage/Btrfs.cc:956
 #, fuzzy, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1448
+#: ../storage/LvmVg.cc:1156
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr ""
@@ -1283,7 +1299,7 @@ msgstr ""
 # clients/inst_custom_part.ycp:2940
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:948 ../storage/Container.cc:295
+#: ../storage/DmPartCo.cc:904 ../storage/Container.cc:293
 #, fuzzy, c-format
 msgid "Remove %1$s"
 msgstr "%1 mantıksal grubunu sil"
@@ -1291,7 +1307,7 @@ msgstr "%1 mantıksal grubunu sil"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1465
+#: ../storage/Volume.cc:1506
 #, fuzzy, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "%1 aygıtını /etc/fstab içinden kaldır"
@@ -1312,22 +1328,22 @@ msgstr "%1 mantıksal grubunu sil"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:959
+#: ../storage/EtcFstab.cc:982
 #, fuzzy, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
 
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1080
+#: ../storage/MdPartCo.cc:1028
 #, fuzzy, c-format
 msgid "Remove software RAID %1$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:918
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1027
 #, fuzzy, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -1348,14 +1364,14 @@ msgstr "\"%1\" yığın grubunu silmek istediğinize emin misiniz?"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3365
+#: ../storage/Volume.cc:3453
 #, fuzzy, c-format
 msgid "Remove volume %1$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 
 # clients/inst_lvm_pv.ycp:240 clients/lvm_config_ui.ycp:284
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1388
+#: ../storage/LvmVg.cc:1096
 #, fuzzy, c-format
 msgid "Remove volume group %1$s"
 msgstr "\"%1\" yığın grubunu silmek istediğinize emin misiniz?"
@@ -1363,7 +1379,7 @@ msgstr "\"%1\" yığın grubunu silmek istediğinize emin misiniz?"
 # include/nis_server/io.ycp:410
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/DmPartCo.cc:943 ../storage/Container.cc:290
+#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:288
 #, fuzzy, c-format
 msgid "Removing %1$s"
 msgstr "/var/yp/%1 siliniyor."
@@ -1384,22 +1400,22 @@ msgstr "/var/yp/%1 siliniyor."
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:952
+#: ../storage/EtcFstab.cc:975
 #, fuzzy, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
 
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1075
+#: ../storage/MdPartCo.cc:1023
 #, fuzzy, c-format
 msgid "Removing software RAID %1$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:911
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1020
 #, fuzzy, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -1414,21 +1430,21 @@ msgstr "\"%1\" yığın grubunu silmek istediğinize emin misiniz?"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3362
+#: ../storage/Volume.cc:3450
 #, fuzzy, c-format
 msgid "Removing volume %1$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
 
 # clients/inst_lvm_pv.ycp:240 clients/lvm_config_ui.ycp:284
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1383
+#: ../storage/LvmVg.cc:1091
 #, fuzzy, c-format
 msgid "Removing volume group %1$s"
 msgstr "\"%1\" yığın grubunu silmek istediğinize emin misiniz?"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1677
+#: ../storage/Disk.cc:1724
 #, fuzzy, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "%1 yığının adını %2 olarak değiştir"
@@ -1436,7 +1452,7 @@ msgstr "%1 yığının adını %2 olarak değiştir"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2556
+#: ../storage/Volume.cc:2615
 #, fuzzy, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "%1 yığının adını %2 olarak değiştir"
@@ -1444,7 +1460,7 @@ msgstr "%1 yığının adını %2 olarak değiştir"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1444
+#: ../storage/Volume.cc:1485
 #, fuzzy, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
@@ -1495,7 +1511,7 @@ msgstr ""
 # include/ui/file_popups.ycp:84 include/ui/file_popups.ycp:125 include/ui/file_popups.ycp:136 include/ui/file_popups.ycp:178 include/ui/file_popups.ycp:227 include/ui/file_popups.ycp:267 include/ui/file_popups.ycp:277 include/ui/file_popups.ycp:319
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1844
+#: ../storage/Volume.cc:1895
 #, fuzzy, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Seçili disket sürücüsü %1"
@@ -1503,22 +1519,26 @@ msgstr "Seçili disket sürücüsü %1"
 # include/ui/file_popups.ycp:84 include/ui/file_popups.ycp:125 include/ui/file_popups.ycp:136 include/ui/file_popups.ycp:178 include/ui/file_popups.ycp:227 include/ui/file_popups.ycp:267 include/ui/file_popups.ycp:277 include/ui/file_popups.ycp:319
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1831
+#: ../storage/Volume.cc:1882
 #, fuzzy, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Seçili disket sürücüsü %1"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1670
+#: ../storage/Disk.cc:1717
 #, fuzzy, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "%1 yığının adını %2 olarak değiştir"
 
+#: ../storage/Storage.cc:5587
+msgid "Setting file attributes with chattr failed."
+msgstr ""
+
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2549
+#: ../storage/Volume.cc:2608
 #, fuzzy, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "%1 yığının adını %2 olarak değiştir"
@@ -1562,7 +1582,7 @@ msgstr ""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1841
+#: ../storage/Volume.cc:1892
 #, fuzzy, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Ağ hizmetleri ayarlanıyor"
@@ -1570,7 +1590,7 @@ msgstr "Ağ hizmetleri ayarlanıyor"
 # include/ui/file_popups.ycp:84 include/ui/file_popups.ycp:125 include/ui/file_popups.ycp:136 include/ui/file_popups.ycp:178 include/ui/file_popups.ycp:227 include/ui/file_popups.ycp:267 include/ui/file_popups.ycp:277 include/ui/file_popups.ycp:319
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1828
+#: ../storage/Volume.cc:1879
 #, fuzzy, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Seçili disket sürücüsü %1"
@@ -1578,7 +1598,7 @@ msgstr "Seçili disket sürücüsü %1"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3341
+#: ../storage/Volume.cc:3429
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr ""
@@ -1595,7 +1615,7 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 # include/partitioning/auto_part_ui.ycp:151
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:546
+#: ../storage/Partition.cc:548
 #, fuzzy, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "&Windows bölümünü küçült"
@@ -1603,7 +1623,7 @@ msgstr "&Windows bölümünü küçült"
 # clients/inst_lvm_lv.ycp:363 clients/lvm_config_ui.ycp:483
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:344
+#: ../storage/LvmLv.cc:342
 #, fuzzy, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "%1 mantıksal yığınını silmek istiyor musunuz?"
@@ -1619,7 +1639,7 @@ msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
 # clients/inst_do_resize.ycp:450
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:557
+#: ../storage/Partition.cc:559
 #, fuzzy, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
@@ -1628,7 +1648,7 @@ msgstr "%1 bölümünün boyutunu %2 olarak değiştir"
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3333
+#: ../storage/Volume.cc:3421
 #, fuzzy, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "%1 bölümünün boyutu %2 MB olarak değiştiriliyor"
@@ -1643,7 +1663,7 @@ msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:330
+#: ../storage/LvmLv.cc:328
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr ""
@@ -1659,7 +1679,7 @@ msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
 # clients/inst_rootpart.ycp:401
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:530
+#: ../storage/Partition.cc:532
 #, fuzzy, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "%1 root bölümü %2 noktasında sisteme bağlanıyor..."
@@ -1676,7 +1696,7 @@ msgid "TB"
 msgstr "TB"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:332
+#: ../storage/Disk.cc:336
 #, fuzzy, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1699,7 +1719,7 @@ msgstr ""
 "işlemler uygulayamazsınız.\n"
 
 #. popup text
-#: ../storage/Storage.cc:349
+#: ../storage/Storage.cc:350
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1711,13 +1731,13 @@ msgstr ""
 msgid "TiB"
 msgstr "TB"
 
-#: ../storage/Storage.cc:4952
+#: ../storage/Storage.cc:5199
 msgid "Unmount failed."
 msgstr ""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1423
+#: ../storage/Volume.cc:1464
 #, fuzzy, c-format
 msgid "Unmounting %1$s"
 msgstr "Disket sürücüsü sistemden kopartılıyor..."
@@ -1730,14 +1750,14 @@ msgstr "Disket sürücüsü sistemden kopartılıyor..."
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:938
+#: ../storage/EtcFstab.cc:961
 #, fuzzy, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:931
+#: ../storage/EtcFstab.cc:954
 #, fuzzy, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "%1 aygıtının bağlama noktasını %2 yap"
@@ -1745,7 +1765,7 @@ msgstr "%1 aygıtının bağlama noktasını %2 yap"
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1452
+#: ../storage/Volume.cc:1493
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr ""
@@ -1756,7 +1776,7 @@ msgid "Volume Group"
 msgstr "Yığın grubu"
 
 #. popup text
-#: ../storage/Disk.cc:515
+#: ../storage/Disk.cc:550
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1769,7 +1789,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:508
+#: ../storage/Disk.cc:543
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"

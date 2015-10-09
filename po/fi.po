@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-12 11:05+0200\n"
+"POT-Creation-Date: 2015-10-09 15:59+0200\n"
 "PO-Revision-Date: 2012-04-08 10:02+0300\n"
 "Last-Translator: Jyri Palokangas <jyri.palokangas@opensuse.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -23,9 +23,9 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 
 #. text displayed during action
-#: ../storage/LvmLv.cc:339 ../storage/Partition.cc:506
-#: ../storage/Dmmultipath.cc:218 ../storage/Dmraid.cc:218
-#: ../storage/Volume.cc:3321
+#: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
+#: ../storage/Partition.cc:539 ../storage/Dmmultipath.cc:218
+#: ../storage/Dmraid.cc:218
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
 msgstr ""
 "(Etenemispalkki ei liiku ja toiminto saattaa kestää kauan. ÄLÄ KESKEYTÄ "
@@ -33,14 +33,14 @@ msgstr ""
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:924
+#: ../storage/EtcFstab.cc:940
 #, c-format
 msgid "Add entry for mount point %1$s to %2$s"
 msgstr "Lisää liitoskohdalle %1$s merkintä tiedostoon %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:917
+#: ../storage/EtcFstab.cc:933
 #, c-format
 msgid "Adding entry for mount point %1$s to %2$s"
 msgstr "Lisätään liitoskohdalle %1$s merkintä hakemistoon %2$s"
@@ -54,9 +54,10 @@ msgstr "B"
 msgid "Btrfs Volume"
 msgstr "Btrfs taltio"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1438
+#: ../storage/Volume.cc:1475
 #, c-format
 msgid "Change mount point of %1$s to %2$s"
 msgstr "Vaihda liitoskohta %1$s -> %2$s"
@@ -67,23 +68,49 @@ msgstr "Vaihda liitoskohta %1$s -> %2$s"
 msgid "Change mount point of tmpfs to %1$s"
 msgstr "Vaihda tmpfs liitoskohta -> %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2555
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2611
 #, c-format
 msgid "Clear label on %1$s"
 msgstr "Poista nimi taltiolta %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:2541
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:2604
 #, c-format
 msgid "Clearing label on %1$s"
 msgstr "Poistetaan nimi taltiolta %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:280
+#: ../storage/Container.cc:277
 #, c-format
 msgid "Create %1$s"
 msgstr "Luo %1$s"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3377
+#, fuzzy, c-format
+msgid "Create BIOS grub volume %1$s (%2$s)"
+msgstr "Luo taltio %1$s (%2$s)"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3381
+#, fuzzy, c-format
+msgid "Create GPT PReP volume %1$s (%2$s)"
+msgstr "Luo taltio %1$s (%2$s)"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#. %2$s is replaced by size (e.g. 623.5 MB)
+#: ../storage/Volume.cc:3385
+#, fuzzy, c-format
+msgid "Create PReP volume %1$s (%2$s)"
+msgstr "Luo taltio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -102,10 +129,11 @@ msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
 "Luo RAID-osio %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3259
+#: ../storage/Volume.cc:3347
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
 msgstr "Luo käynnistysosio (boot) %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -138,7 +166,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:252
+#: ../storage/LvmLv.cc:248
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -161,25 +189,27 @@ msgstr ""
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:404
+#: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr ""
 "Luo salattu ohjelmistopohjainen RAID %1$s (%2$s) laitteelle %5$s "
 "liitoskohtaan %4$s käyttämällä tiedostojärjestelmää %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3297
+#: ../storage/Volume.cc:3370
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
 msgstr "Luo salattu taltio %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3280
+#: ../storage/Volume.cc:3362
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -202,7 +232,7 @@ msgstr "Luo jatkettu multipath-osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:422
+#: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
 msgstr "Luo jatkettu osio %1$s (%2$s)"
@@ -229,7 +259,7 @@ msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:261
+#: ../storage/LvmLv.cc:257
 #, c-format
 msgid "Create logical volume %1$s (%2$s)"
 msgstr "Luo looginen taltio %1$s (%2$s)"
@@ -238,7 +268,7 @@ msgstr "Luo looginen taltio %1$s (%2$s)"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:242
+#: ../storage/LvmLv.cc:238
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -262,10 +292,11 @@ msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
 "Luo multipath-osio %1$s (%2$s) liitoskohtaan %4$s tiedostojärjestelmällä %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:3251
+#: ../storage/Volume.cc:3342
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
 msgstr "Luo juuritaltio %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -273,7 +304,7 @@ msgstr "Luo juuritaltio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:414
+#: ../storage/Md.cc:423
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
 msgstr "Luo ohjelmistopohjainen RAID %1$s (%2$s) laitteelle %3$s"
@@ -283,7 +314,7 @@ msgstr "Luo ohjelmistopohjainen RAID %1$s (%2$s) laitteelle %3$s"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #. %5$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:393
+#: ../storage/Md.cc:402
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr ""
@@ -291,10 +322,17 @@ msgstr ""
 "käyttäen tiedostojärjestelmää %3$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:804
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:997
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
+msgstr "Luo alitaltio %1$s laitteelle %2$s"
+
+#. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1004
+#, fuzzy, c-format
+msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
 msgstr "Luo alitaltio %1$s laitteelle %2$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
@@ -306,7 +344,7 @@ msgstr "Luo swap-osio RAID-osiolle %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:231
+#: ../storage/LvmLv.cc:227
 #, c-format
 msgid "Create swap logical volume %1$s (%2$s)"
 msgstr "Luodaan looginen swap-taltio %1$s (%2$s)"
@@ -318,25 +356,28 @@ msgstr "Luodaan looginen swap-taltio %1$s (%2$s)"
 msgid "Create swap multipath partition %1$s (%2$s)"
 msgstr "Luo swap-multipath-osio %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3243
+#: ../storage/Volume.cc:3337
 #, c-format
 msgid "Create swap volume %1$s (%2$s)"
 msgstr "Luo swap-taltio %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3291
+#: ../storage/Volume.cc:3366
 #, c-format
 msgid "Create volume %1$s (%2$s)"
 msgstr "Luo taltio %1$s (%2$s)"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:3270
+#: ../storage/Volume.cc:3356
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
 msgstr "Luo taltio %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$s"
@@ -345,13 +386,13 @@ msgstr "Luo taltio %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1257
+#: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "Luo taltioryhmä %1$s (%2$s) laitteesta %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Container.cc:275
+#: ../storage/Container.cc:272
 #, c-format
 msgid "Creating %1$s"
 msgstr "Luodaan %1$s"
@@ -370,7 +411,7 @@ msgid "Creating file-based device %1$s of file %2$s"
 msgstr "Luodaan tiedoston %2$s tiedostopohjaista laitetta %1$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:223
+#: ../storage/LvmLv.cc:219
 #, c-format
 msgid "Creating logical volume %1$s"
 msgstr "Luodaan looginen taltio %1$s"
@@ -383,20 +424,28 @@ msgstr "Luodaan multipath-osio %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/Md.cc:379
+#: ../storage/Md.cc:388
 #, c-format
 msgid "Creating software RAID %1$s from %2$s"
 msgstr "Luodaan ohjelmistopohjainen RAID %1$s laitteelle %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:797
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:980
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s"
 msgstr "Luodaan alitaltio %1$s laitteeseen %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3235
+#. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
+#. %2$s is replaced by device name e.g. /dev/sda
+#: ../storage/Btrfs.cc:987
+#, fuzzy, c-format
+msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
+msgstr "Luodaan alitaltio %1$s laitteeseen %2$s"
+
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3390
 #, c-format
 msgid "Creating volume %1$s"
 msgstr "Luodaan taltio %1$s"
@@ -405,7 +454,7 @@ msgstr "Luodaan taltio %1$s"
 #. %1$s is replaced by a name (e.g. system)
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
-#: ../storage/LvmVg.cc:1248
+#: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "Luodaan taltioryhmä %1$s (%2$s) laitteesta %3$s"
@@ -424,7 +473,7 @@ msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Btrfs.cc:613
+#: ../storage/Btrfs.cc:662
 #, c-format
 msgid "Delete Btrfs volume on devices %1$s (%2$s)"
 msgstr "Poista Btrfs taltio laitteilta %1$s (%2$s)"
@@ -438,14 +487,14 @@ msgstr "Poista RAID-osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:393
+#: ../storage/Partition.cc:426
 #, c-format
 msgid "Delete Windows partition %1$s (%2$s)"
 msgstr "Poista Windows-osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Dm.cc:450
+#: ../storage/Dm.cc:454
 #, c-format
 msgid "Delete device mapper volume %1$s (%2$s)"
 msgstr "Poista laitekuvaintaltio %1$s (%2$s)"
@@ -459,7 +508,7 @@ msgstr "Poista tiedostopohjainen laite %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:211
+#: ../storage/LvmLv.cc:207
 #, c-format
 msgid "Delete logical volume %1$s (%2$s)"
 msgstr "Poista looginen taltio %1$s (%2$s)"
@@ -473,20 +522,20 @@ msgstr "Poista multipath-osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:400
+#: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
 msgstr "Poista osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Md.cc:365
+#: ../storage/Md.cc:374
 #, c-format
 msgid "Delete software RAID %1$s (%2$s)"
 msgstr "Poista ohjelmistopohjainen RAID %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:607
+#: ../storage/Btrfs.cc:656
 #, c-format
 msgid "Deleting Btrfs volume on devices %1$s"
 msgstr "Poistetaan Btrfs taltio laitteilta %1$s"
@@ -498,7 +547,7 @@ msgid "Deleting RAID partition %1$s"
 msgstr "Poistetaan RAID-osio %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
-#: ../storage/Dm.cc:444
+#: ../storage/Dm.cc:448
 #, c-format
 msgid "Deleting device mapper volume %1$s"
 msgstr "Poistetaan laitekuvaintaltio %1$s"
@@ -510,7 +559,7 @@ msgid "Deleting file-based device %1$s"
 msgstr "Poistetaan tiedostopohjaista laitetta %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
-#: ../storage/LvmLv.cc:205
+#: ../storage/LvmLv.cc:201
 #, c-format
 msgid "Deleting logical volume %1$s"
 msgstr "Poistetaan looginen taltio %1$s"
@@ -522,13 +571,13 @@ msgid "Deleting multipath partition %1$s"
 msgstr "Poistetaan multipath-osio %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Partition.cc:385
+#: ../storage/Partition.cc:418
 #, c-format
 msgid "Deleting partition %1$s"
 msgstr "Poistetaan osio %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
-#: ../storage/Md.cc:359
+#: ../storage/Md.cc:368
 #, c-format
 msgid "Deleting software RAID %1$s"
 msgstr "Poistetaan ohjelmistopohjainen RAID %1$s"
@@ -539,17 +588,17 @@ msgid "E"
 msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:113
+#: ../storage/HumanString.cc:116
 msgid "EB"
 msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:116
+#: ../storage/HumanString.cc:113
 msgid "EiB"
 msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:403
+#: ../storage/Dasd.cc:218
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
@@ -557,29 +606,24 @@ msgstr[0] "Suorita dasdfmt levylle %1$s"
 msgstr[1] "Suorita dasdfmt levyille %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
-#: ../storage/Dasd.cc:396
+#: ../storage/Dasd.cc:211
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "Suoritetaan dasdfmt levylle %1$s..."
 msgstr[1] "Suoritetaan dasdfmt levyille %1$s..."
 
-#. displayed text during action, %1$s is replaced by disk name (e.g. /dev/dasda),
-#: ../storage/Dasd.cc:294
-#, c-format
-msgid "Executing fdasd for disk %1$s"
-msgstr "Suoritetaan fdasd levylle %1$s"
-
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3332
+#: ../storage/Volume.cc:3433
 #, c-format
 msgid "Extend %1$s to %2$s"
 msgstr "Laajenna %1$s kokoon %2$s"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:763
+#: ../storage/Btrfs.cc:942
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
 msgstr "Laajenna Btrfs taltio %1$s -> %2$s"
@@ -593,14 +637,14 @@ msgstr "Laajenna RAID-osio %1$s kokoon %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:519
+#: ../storage/Partition.cc:552
 #, c-format
 msgid "Extend Windows partition %1$s to %2$s"
 msgstr "Laajenna Windows-osio %1$s -> %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:350
+#: ../storage/LvmLv.cc:346
 #, c-format
 msgid "Extend logical volume %1$s to %2$s"
 msgstr "Laajenna looginen taltio %1$s kokoon %2$s"
@@ -614,28 +658,29 @@ msgstr "Laajenna multipath-osio %1$s kokoon %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:530
+#: ../storage/Partition.cc:563
 #, c-format
 msgid "Extend partition %1$s to %2$s"
 msgstr "Laajenna osio %1$s kokoon %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1278
+#: ../storage/LvmVg.cc:1141
 #, c-format
 msgid "Extend volume group %1$s with %2$s"
 msgstr "Laajenna taltioryhmä %1$s laitteella %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3318
+#: ../storage/Volume.cc:3425
 #, c-format
 msgid "Extending %1$s to %2$s"
 msgstr "Laajennetaan %1$s kokoon %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:756
+#: ../storage/Btrfs.cc:935
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
 msgstr "Laajennetaan Btrfs taltiota %1$s -> %2$s"
@@ -649,7 +694,7 @@ msgstr "Laajennetaan RAID-osiota %1$s kokoon %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:336
+#: ../storage/LvmLv.cc:332
 #, c-format
 msgid "Extending logical volume %1$s to %2$s"
 msgstr "Laajennetaan loogista taltiota %1$s kokoon %2$s"
@@ -663,14 +708,14 @@ msgstr "Laajennetaan multipath-osiota %1$s kokoon %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:503
+#: ../storage/Partition.cc:536
 #, c-format
 msgid "Extending partition %1$s to %2$s"
 msgstr "Laajennetaan osiota %1$s kokoon %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1271
+#: ../storage/LvmVg.cc:1134
 #, c-format
 msgid "Extending volume group %1$s with %2$s"
 msgstr "Laajennetaan taltioryhmää %1$s laitteella %2$s"
@@ -678,7 +723,7 @@ msgstr "Laajennetaan taltioryhmää %1$s laitteella %2$s"
 #. displayed text before action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:696
+#: ../storage/Btrfs.cc:745
 #, c-format
 msgid "Format Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Alusta Btrfs taltio kokoon %1$s (käyttäen laitteita:%2$s)"
@@ -687,7 +732,7 @@ msgstr "Alusta Btrfs taltio kokoon %1$s (käyttäen laitteita:%2$s)"
 #. %1$s is replaced by size (e.g. 623.5 MB)
 #. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
 #. %3$s is replaced by mount point (e.g. /usr)
-#: ../storage/Btrfs.cc:690
+#: ../storage/Btrfs.cc:739
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
 msgstr ""
@@ -719,20 +764,22 @@ msgstr "Alustetaan swap RAID-osiolle %1$s (%2$s)"
 msgid "Format RAID partition %1$s (%2$s) with %3$s"
 msgstr "Alusta RAID-osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:851
+#: ../storage/Volume.cc:860
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
 "Alusta laite %1$s (%2$s) liitoskohdalle %4$s tiedostojärjestelmällä %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:871
+#: ../storage/Volume.cc:851
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
 msgstr "Alusta laite %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -741,7 +788,7 @@ msgstr "Alusta laite %1$s (%2$s) tiedostojärjestelmällä %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:477
+#: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -751,7 +798,7 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:497
+#: ../storage/Dm.cc:501
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
 msgstr "Alusta laitekuvaintaltio %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -767,11 +814,12 @@ msgstr ""
 "Alusta salattu RAID-osio %1$s (%2$s) liitoskohdalle %4$s "
 "tiedostojärjestelmällä %3$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Volume.cc:861
+#: ../storage/Volume.cc:869
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -782,7 +830,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Dm.cc:487
+#: ../storage/Dm.cc:491
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -806,7 +854,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:306
+#: ../storage/LvmLv.cc:302
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -828,7 +876,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:473
+#: ../storage/Partition.cc:506
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -839,7 +887,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:453
+#: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -873,7 +921,7 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/LvmLv.cc:296
+#: ../storage/LvmLv.cc:292
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -882,7 +930,7 @@ msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:287
+#: ../storage/LvmLv.cc:283
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
 msgstr "Alustetaan looginen taltio %1$s (%2$s) swapille"
@@ -890,7 +938,7 @@ msgstr "Alustetaan looginen taltio %1$s (%2$s) swapille"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:316
+#: ../storage/LvmLv.cc:312
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
 msgstr "Alusta looginen taltio %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -925,7 +973,7 @@ msgstr "Alusta multipath-osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Partition.cc:463
+#: ../storage/Partition.cc:496
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -933,7 +981,7 @@ msgstr ""
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:454
+#: ../storage/Partition.cc:487
 #, c-format
 msgid "Format partition %1$s (%2$s) for swap"
 msgstr "Alustetaan swap-osio %1$s (%2$s)"
@@ -941,7 +989,7 @@ msgstr "Alustetaan swap-osio %1$s (%2$s)"
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:483
+#: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
 msgstr "Alusta osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -950,7 +998,7 @@ msgstr "Alusta osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
-#: ../storage/Md.cc:443
+#: ../storage/Md.cc:452
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
@@ -960,7 +1008,7 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:463
+#: ../storage/Md.cc:472
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
 msgstr ""
@@ -968,8 +1016,8 @@ msgstr ""
 
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
-#. %2$s  is repleace by a list of names e.g /dev/sda1 /dev/sda2
-#: ../storage/Btrfs.cc:680
+#. %2$s	 is repleace by a list of names e.g /dev/sda1 /dev/sda2
+#: ../storage/Btrfs.cc:729
 #, c-format
 msgid "Formatting Btrfs volume of size %1$s (used devices:%2$s)"
 msgstr "Alustetaan Btrfs taltioa kokoon %1$s (käyttäen laitteita:%2$s)"
@@ -982,10 +1030,11 @@ msgstr "Alustetaan Btrfs taltioa kokoon %1$s (käyttäen laitteita:%2$s)"
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
 msgstr "Alustetaan RAID-osio %1$s (%2$s) tiedostojärjestelmällä %3$s "
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Volume.cc:838
+#: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
 msgstr "Alustetaan laite %1$s (%2$s) tiedostojärjestelmällä %3$s "
@@ -993,7 +1042,7 @@ msgstr "Alustetaan laite %1$s (%2$s) tiedostojärjestelmällä %3$s "
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Dm.cc:464
+#: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr "Alustetaan laitekuvaintaltio %1$s (%2$s) tiedostojärjestelmällä %3$s "
@@ -1012,7 +1061,7 @@ msgstr ""
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/LvmLv.cc:276
+#: ../storage/LvmLv.cc:272
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
 msgstr "Alustetaan looginen taltio %1$s (%2$s) tiedostojärjestelmällä %3$s"
@@ -1028,7 +1077,7 @@ msgstr "Alustetaan multipath-osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Partition.cc:443
+#: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
 msgstr "Alustetaan osio %1$s (%2$s) tiedostojärjestelmällä %3$s "
@@ -1036,7 +1085,7 @@ msgstr "Alustetaan osio %1$s (%2$s) tiedostojärjestelmällä %3$s "
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
-#: ../storage/Md.cc:430
+#: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
 msgstr ""
@@ -1048,12 +1097,12 @@ msgid "G"
 msgstr "G"
 
 #. symbol for "giga bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:80
+#: ../storage/HumanString.cc:83
 msgid "GB"
 msgstr "Gt"
 
 #. symbol for "gibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:83
+#: ../storage/HumanString.cc:80
 msgid "GiB"
 msgstr "GiB"
 
@@ -1062,7 +1111,7 @@ msgid "Hard Disk"
 msgstr "Kiintolevy"
 
 #. symbol for "kibi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:61
+#: ../storage/HumanString.cc:58
 msgid "KiB"
 msgstr "Kt"
 
@@ -1076,7 +1125,7 @@ msgid "M"
 msgstr "M"
 
 #. symbol for "mega bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:69
+#: ../storage/HumanString.cc:72
 msgid "MB"
 msgstr "Mt"
 
@@ -1085,7 +1134,7 @@ msgid "MD RAID"
 msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:72
+#: ../storage/HumanString.cc:69
 msgid "MiB"
 msgstr "Mit"
 
@@ -1093,9 +1142,10 @@ msgstr "Mit"
 msgid "Mount Point"
 msgstr "Liitoskohta"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1423
+#: ../storage/Volume.cc:1458
 #, c-format
 msgid "Mounting %1$s to %2$s"
 msgstr "Liitetään %1$s liitoskohtaan %2$s"
@@ -1112,7 +1162,7 @@ msgid "P"
 msgstr "P"
 
 #. symbol for "peta bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:102
+#: ../storage/HumanString.cc:105
 msgid "PB"
 msgstr "Pt"
 
@@ -1121,48 +1171,49 @@ msgid "Partition"
 msgstr "Osio"
 
 #. symbol for "pebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:105
+#: ../storage/HumanString.cc:102
 msgid "PiB"
 msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:784
+#: ../storage/Btrfs.cc:963
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
 msgstr "Pienennä Btrfs taltioa %1$s -> %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1300
+#: ../storage/LvmVg.cc:1163
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
 msgstr "Vähennä taltioryhmästä %1$s laite %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
-#: ../storage/Btrfs.cc:777
+#: ../storage/Btrfs.cc:956
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
 msgstr "Pienennetään Btrfs taltioa %1$s -> %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
-#: ../storage/LvmVg.cc:1293
+#: ../storage/LvmVg.cc:1156
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
 msgstr "Vähennetään taltioryhmästä %1$s laite %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:296 ../storage/DmPartCo.cc:949
+#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/DmPartCo.cc:904 ../storage/Container.cc:293
 #, c-format
 msgid "Remove %1$s"
 msgstr "Poista %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
-#: ../storage/Volume.cc:1466
+#: ../storage/Volume.cc:1506
 #, c-format
 msgid "Remove %1$s from %2$s"
 msgstr "Poista %1$s polusta %2$s"
@@ -1174,27 +1225,27 @@ msgid "Remove NFS volume %1$s"
 msgstr "Poista NFS-taltio %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:251
+#: ../storage/DmraidCo.cc:185
 #, c-format
 msgid "Remove RAID %1$s"
 msgstr "Poista RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:966
+#: ../storage/EtcFstab.cc:982
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
 msgstr "Poista liitoskohdalta %1$s merkintä hakemistosta %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1081
+#: ../storage/MdPartCo.cc:1028
 #, c-format
 msgid "Remove software RAID %1$s"
 msgstr "Poista ohjelmistopohjainen RAID %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:824
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1027
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
 msgstr "Poista alitaltio %1$s laitteelta %2$s"
@@ -1211,21 +1262,22 @@ msgstr "Poista tmpfs polusta %1$s"
 msgid "Remove tmpfs volume from mount point %1$s"
 msgstr "Poista tmpfs taltio liitospisteestä %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3348
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3453
 #, c-format
 msgid "Remove volume %1$s"
 msgstr "Poista taltio %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1233
+#: ../storage/LvmVg.cc:1096
 #, c-format
 msgid "Remove volume group %1$s"
 msgstr "Poista taltioryhmä %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/Container.cc:291 ../storage/DmPartCo.cc:944
+#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/DmPartCo.cc:899 ../storage/Container.cc:288
 #, c-format
 msgid "Removing %1$s"
 msgstr "Poistetaan %1$s"
@@ -1237,27 +1289,27 @@ msgid "Removing NFS volume %1$s"
 msgstr "Poistetaan NFS-taltio %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/DmraidCo.cc:246
+#: ../storage/DmraidCo.cc:180
 #, c-format
 msgid "Removing RAID %1$s"
 msgstr "Poistetaan RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:959
+#: ../storage/EtcFstab.cc:975
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
 msgstr "Poistetaan liitoskohdalta %1$s merkintä hakemistosta %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
-#: ../storage/MdPartCo.cc:1076
+#: ../storage/MdPartCo.cc:1023
 #, c-format
 msgid "Removing software RAID %1$s"
 msgstr "Poistetaan ohjelmistopohjainen RAID %1$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
-#. %2$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Btrfs.cc:817
+#. %2$s is replaced by device name e.g. /dev/sda1
+#: ../storage/Btrfs.cc:1020
 #, c-format
 msgid "Removing subvolume %1$s on device %2$s"
 msgstr "Poistetaan alitaltio %1$s laitteelta %2$s"
@@ -1268,35 +1320,38 @@ msgstr "Poistetaan alitaltio %1$s laitteelta %2$s"
 msgid "Removing tmpfs volume from mount point %1$s"
 msgstr "Poistetaan tmpfs taltio liitospisteestä %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:3343
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:3450
 #, c-format
 msgid "Removing volume %1$s"
 msgstr "Poistetaan taltio %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
-#: ../storage/LvmVg.cc:1228
+#: ../storage/LvmVg.cc:1091
 #, c-format
 msgid "Removing volume group %1$s"
 msgstr "Poistetaan taltioryhmä %1$s"
 
 #. displayed text before action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1598
+#: ../storage/Disk.cc:1724
 #, c-format
 msgid "Set disk label of %1$s to %2$s"
 msgstr "Aseta levyn %1$s nimeksi %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2561
+#: ../storage/Volume.cc:2615
 #, c-format
 msgid "Set label on %1$s to %2$s"
 msgstr "Aseta laitteen %1$s taltion nimeksi %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by mount point e.g. /home
-#: ../storage/Volume.cc:1447
+#: ../storage/Volume.cc:1485
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
 msgstr "Aseta laitteelle %1$s liitoskohta %2$s"
@@ -1323,38 +1378,53 @@ msgstr "Aseta multipath-osion %1$s tyypiksi %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text before action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:180 ../storage/Partition.cc:311
+#: ../storage/MdPart.cc:180 ../storage/Partition.cc:333
 #: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
 msgstr "Aseta osion %1$s tyypiksi %2$X"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1839
+#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:338
+#, fuzzy, c-format
+msgid "Set type of partition %1$s to %2$s (%3$X)"
+msgstr "Aseta osion %1$s tyypiksi %2$X"
+
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1895
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
 msgstr "Aseta salattu dm-laite %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1823
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1882
 #, c-format
 msgid "Set up encrypted loop device on %1$s"
 msgstr "Aseta salattu silmukkalaite %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. /dev/hda),
 #. %2$s is replaced by label name (e.g. msdos)
-#: ../storage/Disk.cc:1591
+#: ../storage/Disk.cc:1717
 #, c-format
 msgid "Setting disk label of %1$s to %2$s"
 msgstr "Asetetaan levyn %1$s nimeksi %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Storage.cc:5587
+msgid "Setting file attributes with chattr failed."
+msgstr ""
+
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by a name e.g. ROOT
-#: ../storage/Volume.cc:2547
+#: ../storage/Volume.cc:2608
 #, c-format
 msgid "Setting label on %1$s to %2$s"
 msgstr "Asetetaan laitteen %1$s taltion nimeksi %2$s"
@@ -1375,31 +1445,42 @@ msgstr "Asetetaan multipath-osion %1$s tyypiksi %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by hexadecimal number (e.g. 8E)
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$X is replaced by hexadecimal number (e.g. 8E)
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
-#: ../storage/MdPart.cc:173 ../storage/Partition.cc:304
+#: ../storage/MdPart.cc:173 ../storage/Partition.cc:320
 #: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
 msgstr "Asetetaan osion %1$s tyypiksi %2$X"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1834
+#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
+#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
+#. hexadecimal number (e.g. 8E)
+#: ../storage/Partition.cc:325
+#, fuzzy, c-format
+msgid "Setting type of partition %1$s to %2$s (%3$X)"
+msgstr "Asetetaan osion %1$s tyypiksi %2$X"
+
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1892
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
 msgstr "Asetetaan salattu dm-laite %1$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1818
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1879
 #, c-format
 msgid "Setting up encrypted loop device on %1$s"
 msgstr "Asetetaan salattu silmukkalaite %1$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3328
+#: ../storage/Volume.cc:3429
 #, c-format
 msgid "Shrink %1$s to %2$s"
 msgstr "Pienennä %1$s kokoon %2$s"
@@ -1413,14 +1494,14 @@ msgstr "Pienennä RAID-osio %1$s -> %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:515
+#: ../storage/Partition.cc:548
 #, c-format
 msgid "Shrink Windows partition %1$s to %2$s"
 msgstr "Pienennä Windows-osiota %1$s -> %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:346
+#: ../storage/LvmLv.cc:342
 #, c-format
 msgid "Shrink logical volume %1$s to %2$s"
 msgstr "Pienennä looginen taltio %1$s kokoon %2$s"
@@ -1434,14 +1515,15 @@ msgstr "Pienennä multipath-osio %1$s -> %2$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:526
+#: ../storage/Partition.cc:559
 #, c-format
 msgid "Shrink partition %1$s to %2$s"
 msgstr "Pienennä osio %1$s -> %2$s"
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3314
+#: ../storage/Volume.cc:3421
 #, c-format
 msgid "Shrinking %1$s to %2$s"
 msgstr "Pienennetään %1$s kokoon %2$s"
@@ -1455,7 +1537,7 @@ msgstr "Pienennetään RAID-osiota %1$s -> %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/LvmLv.cc:332
+#: ../storage/LvmLv.cc:328
 #, c-format
 msgid "Shrinking logical volume %1$s to %2$s"
 msgstr "Pienennetään loogista taltiota %1$s kokoon %2$s"
@@ -1469,7 +1551,7 @@ msgstr "Pienennetään multipath-osiota %1$s -> %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Partition.cc:499
+#: ../storage/Partition.cc:532
 #, c-format
 msgid "Shrinking partition %1$s to %2$s"
 msgstr "Pienennetään osiota %1$s -> %2$s"
@@ -1480,12 +1562,12 @@ msgid "T"
 msgstr "T"
 
 #. symbol for "tera bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:91
+#: ../storage/HumanString.cc:94
 msgid "TB"
 msgstr "Tt"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Disk.cc:340
+#: ../storage/Disk.cc:336
 #, c-format
 msgid ""
 "The partition table type on disk %1$s cannot be handled by\n"
@@ -1504,29 +1586,8 @@ msgstr ""
 "voi lisätä, muokata, muuttaa kokoa tai poistaa osioita\n"
 "tältä levyltä tällä työkalulla."
 
-#. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Dasd.cc:197
-#, c-format
-msgid ""
-"The partitioning on disk %1$s is not readable by\n"
-"the partitioning tool fdasd, which is used to change the\n"
-"partition table.\n"
-"\n"
-"You can use the partitions on disk %1$s as they are.\n"
-"You can format them and assign mount points to them, but you\n"
-"cannot add, edit, resize, or remove partitions from that\n"
-"disk with this tool."
-msgstr ""
-"Levyn %1$s  osiointi ei ole luettavissa \n"
-"fdasd-osiointityökalulla, jota käytetään osiotaulun muuttamiseen.\n"
-"\n"
-"Voit käyttää levyn %1$s osioita kuten ne nyt ovat.\n"
-"Voit alustaa niitä ja kohdistaa liitoskohtia niille. Et\n"
-"voi lisätä, muokata, muuttaa kokoa tai poistaa osioita\n"
-"tältä levyltä tällä työkalulla."
-
 #. popup text
-#: ../storage/Storage.cc:371
+#: ../storage/Storage.cc:350
 msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
@@ -1535,16 +1596,17 @@ msgstr ""
 "Haluatko ottaa multipath-laitteiston käyttöön?"
 
 #. symbol for "tebi bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:94
+#: ../storage/HumanString.cc:91
 msgid "TiB"
 msgstr "TiB"
 
-#: ../storage/Storage.cc:5190
+#: ../storage/Storage.cc:5199
 msgid "Unmount failed."
 msgstr "Irrotus epäonnistui."
 
-#. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
-#: ../storage/Volume.cc:1428
+#. displayed during action
+#. %1$s is replaced by device name e.g. /dev/hda1
+#: ../storage/Volume.cc:1464
 #, c-format
 msgid "Unmounting %1$s"
 msgstr "Irrotetaan %1$s liitoksesta"
@@ -1556,21 +1618,22 @@ msgstr "Irrotetaan tmpfs"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:945
+#: ../storage/EtcFstab.cc:961
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
 msgstr "Päivitä liitoskohdan %1$s merkintä hakemistossa %2$s"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
-#: ../storage/EtcFstab.cc:938
+#: ../storage/EtcFstab.cc:954
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
 msgstr "Päivitetään liitoskohdan %1$s merkintä hakemistossa %2$s"
 
-#. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
+#. displayed before action
+#. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by "swap"
-#: ../storage/Volume.cc:1454
+#: ../storage/Volume.cc:1493
 #, c-format
 msgid "Use %1$s as %2$s"
 msgstr "Käytä %1$s nimellä %2$s"
@@ -1579,32 +1642,8 @@ msgstr "Käytä %1$s nimellä %2$s"
 msgid "Volume Group"
 msgstr "Taltioryhmä"
 
-#. popup text %1$s is replaced by disk name e.g. /dev/hda
-#: ../storage/Storage.cc:394
-#, c-format
-msgid ""
-"You are running on the Intel(R) Matrix Storage Manager compatible platform.\n"
-"\n"
-"Following MD compatible RAID devices were detected:\n"
-"%1$s\n"
-"If they are clean devices or contain partitions then you can choose to use\n"
-"MD Partitionable RAID sysbsystem to handle them. In case of clean device "
-"you\n"
-"will be able to install system on it and boot from such RAID.\n"
-"Do you want MD Partitionable RAID subsystem to manage those partitions?"
-msgstr ""
-"Käytät Intel(R) Matrix Storage Manager yhteensopivaa alustaa.\n"
-"\n"
-"Seuraavat MD yhteensopivat RAID-laitteet tunnistettiin:\n"
-"%1$s\n"
-"Jos ne ovat tyhjiä laitteita tai sisältävät osioita voit käyttää\n"
-"MD osioivaa RAID-alijärjestelmää niiden käsittelyyn. Jos kyseessä on tyhjä "
-"laite\n"
-"voit asentaa ja käynnistää järjestelmän sellaiselta RAID:lta.\n"
-"Haluatko MD osioivan RAID-alijärjestelmän hallitsevan noita osioita?"
-
 #. popup text
-#: ../storage/Disk.cc:523
+#: ../storage/Disk.cc:550
 msgid ""
 "You have the following options:\n"
 "  - Repartition your system so that only the maximal allowed number\n"
@@ -1624,7 +1663,7 @@ msgstr ""
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
-#: ../storage/Disk.cc:516
+#: ../storage/Disk.cc:543
 #, c-format
 msgid ""
 "Your disk %1$s contains %2$lu partitions. The maximum number\n"
@@ -1641,49 +1680,53 @@ msgid "k"
 msgstr "k"
 
 #. symbol for "kilo bytes" (best keep untranslated)
-#: ../storage/HumanString.cc:58
+#: ../storage/HumanString.cc:61
 msgid "kB"
 msgstr "kt"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3319
-#, fuzzy, c-format
-msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
+#~ msgid "Executing fdasd for disk %1$s"
+#~ msgstr "Suoritetaan fdasd levylle %1$s"
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3323
-#, fuzzy, c-format
-msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
+#~ msgid ""
+#~ "The partitioning on disk %1$s is not readable by\n"
+#~ "the partitioning tool fdasd, which is used to change the\n"
+#~ "partition table.\n"
+#~ "\n"
+#~ "You can use the partitions on disk %1$s as they are.\n"
+#~ "You can format them and assign mount points to them, but you\n"
+#~ "cannot add, edit, resize, or remove partitions from that\n"
+#~ "disk with this tool."
+#~ msgstr ""
+#~ "Levyn %1$s  osiointi ei ole luettavissa \n"
+#~ "fdasd-osiointityökalulla, jota käytetään osiotaulun muuttamiseen.\n"
+#~ "\n"
+#~ "Voit käyttää levyn %1$s osioita kuten ne nyt ovat.\n"
+#~ "Voit alustaa niitä ja kohdistaa liitoskohtia niille. Et\n"
+#~ "voi lisätä, muokata, muuttaa kokoa tai poistaa osioita\n"
+#~ "tältä levyltä tällä työkalulla."
 
-#. displayed before action
-#. %1$s is replaced by device name e.g. /dev/hda1
-#. %2$s is replaced by size (e.g. 623.5 MB)
-#: ../storage/Volume.cc:3327
-#, fuzzy, c-format
-msgid "Create PReP volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
-
-#. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:338
-#, fuzzy, c-format
-msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "Aseta osion %1$s tyypiksi %2$X"
-
-#. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
-#. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
-#. hexadecimal number (e.g. 8E)
-#: ../storage/Partition.cc:325
-#, fuzzy, c-format
-msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "Asetetaan osion %1$s tyypiksi %2$X"
+#~ msgid ""
+#~ "You are running on the Intel(R) Matrix Storage Manager compatible "
+#~ "platform.\n"
+#~ "\n"
+#~ "Following MD compatible RAID devices were detected:\n"
+#~ "%1$s\n"
+#~ "If they are clean devices or contain partitions then you can choose to "
+#~ "use\n"
+#~ "MD Partitionable RAID sysbsystem to handle them. In case of clean device "
+#~ "you\n"
+#~ "will be able to install system on it and boot from such RAID.\n"
+#~ "Do you want MD Partitionable RAID subsystem to manage those partitions?"
+#~ msgstr ""
+#~ "Käytät Intel(R) Matrix Storage Manager yhteensopivaa alustaa.\n"
+#~ "\n"
+#~ "Seuraavat MD yhteensopivat RAID-laitteet tunnistettiin:\n"
+#~ "%1$s\n"
+#~ "Jos ne ovat tyhjiä laitteita tai sisältävät osioita voit käyttää\n"
+#~ "MD osioivaa RAID-alijärjestelmää niiden käsittelyyn. Jos kyseessä on "
+#~ "tyhjä laite\n"
+#~ "voit asentaa ja käynnistää järjestelmän sellaiselta RAID:lta.\n"
+#~ "Haluatko MD osioivan RAID-alijärjestelmän hallitsevan noita osioita?"
 
 #~ msgid ""
 #~ "The partitioning on disk %1$s is not readable by\n"
