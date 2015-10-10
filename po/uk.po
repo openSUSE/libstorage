@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libstorage.uk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-10 20:07+0200\n"
+"PO-Revision-Date: 2015-10-10 20:08+0200\n"
 "Last-Translator: Andriy Bandura <andriykopanytsia@gmail.com>\n"
 "Language-Team: Ukrainian "
 "<http://10n.opensuse.org/projects/libstorage/master/uk/>\n"
@@ -310,7 +310,7 @@ msgstr "Створити програмний RAID %1$s (%2$s) від %5$s дл�
 #: ../storage/Btrfs.cc:997
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
-msgstr "Створити підтом %1$s (%2$s)"
+msgstr "Створити підрозділ %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
@@ -428,7 +428,7 @@ msgstr "Створити підтом %1$s на пристрої %2$s"
 #, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
 msgstr ""
-"Створити підозді %1$s на пристрої %2$s із параметром \"не копіювати при "
+"Створити підрозділ %1$s на пристрої %2$s із параметром \"не копіювати при "
 "записуванні\""
 
 #. displayed during action
