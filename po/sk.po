@@ -7,15 +7,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-08-30 15:07+0200\n"
+"PO-Revision-Date: 2015-10-10 21:01+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
-"Language-Team: Slovak <opensuse-translation-sk@opensuse.org>\n"
+"Language-Team: Slovak "
+"<http://10n.opensuse.org/projects/libstorage/master/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Weblate 2.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -308,9 +309,10 @@ msgstr "Vytvoriť podzväzok %1$s na zariadení %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Vytvoriť podzväzok %1$s na zariadení %2$s"
+msgstr ""
+"Vytvoriť podzväzok %1$s na zariadení %2$s s voľbou \"žiadna kópia na zápis\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -416,9 +418,11 @@ msgstr "Vytvorenie podzväzku %1$s na zariadení %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Vytvorenie podzväzku %1$s na zariadení %2$s"
+msgstr ""
+"Vytvorenie podzväzku %1$s na zariadení %2$s s voľbou \"žiadna kópia na "
+"zápis\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -995,7 +999,7 @@ msgstr "Formátujem zariadenie %1$s (%2$s) s %3$s"
 #: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "Formátujem zväzok mapovača zariadení %1$s (%2$s) s %3$s"
+msgstr "Formátujem zväzok mapovača zariadení %1$s (%2$s) s %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1028,7 +1032,7 @@ msgstr "Formátujem viaccestný oddiel %1$s (%2$s) s %3$s"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Formátujem oddiel %1$s (%2$s) s %3$s"
+msgstr "Formátujem oddiel %1$s (%2$s) s %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1036,7 +1040,7 @@ msgstr "Formátujem oddiel %1$s (%2$s) s %3$s"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "Formátujem softvérový RAID %1$s (%2$s) s %3$s"
+msgstr "Formátujem softvérový RAID %1$s (%2$s) s %3$s "
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
@@ -1366,7 +1370,7 @@ msgstr "Nastavujem popis disku %1$s na %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Nastavenie atribútov súboru s chattr zlyhalo."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
