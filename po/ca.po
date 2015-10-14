@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-14 17:36+0200\n"
+"PO-Revision-Date: 2015-10-14 17:37+0200\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan "
 "<http://10n.opensuse.org/projects/libstorage/master/ca/>\n"
@@ -987,7 +987,7 @@ msgstr "Formatant el volum Btrfs amb mida de %1$s (dispositius usats:%2$s)"
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "Formatant la partició RAID %1$s (%2$s) amb %3$s "
+msgstr "Formatant la partició RAID %1$s (%2$s) amb %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -996,7 +996,7 @@ msgstr "Formatant la partició RAID %1$s (%2$s) amb %3$s "
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Formatant el dispositiu %1$s (%2$s) amb %3$s "
+msgstr "Formatant el dispositiu %1$s (%2$s) amb %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1031,7 +1031,7 @@ msgstr "Formatant el volum lògic %1$s (%2$s) amb %3$s"
 #: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "Formatant la partició multiruta %1$s (%2$s) amb %3$s "
+msgstr "Formatant la partició multicamí %1$s (%2$s) amb %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1560,7 +1560,7 @@ msgstr "TiB"
 
 #: ../storage/Storage.cc:5199
 msgid "Unmount failed."
-msgstr "Ha fallat el desmuntatge"
+msgstr "Ha fallat el desmuntatge."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
