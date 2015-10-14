@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-06-18 18:24+0100\n"
-"Last-Translator: David Medina <opensusecatala@gmail.com>\n"
-"Language-Team: Catalan\n"
+"PO-Revision-Date: 2015-10-14 17:36+0200\n"
+"Last-Translator: David Medina <medipas@gmail.com>\n"
+"Language-Team: Catalan "
+"<http://10n.opensuse.org/projects/libstorage/master/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.9\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -310,9 +311,11 @@ msgstr "Crea un subvolum %1$s al dispositiu %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Crea un subvolum %1$s al dispositiu %2$s"
+msgstr ""
+"Crea un subvolum %1$s al dispositiu %2$s amb l'opció \"no copiïs en "
+"escriure\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -418,9 +421,11 @@ msgstr "Creant el subvolum %1$s al dispositiu %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Creant el subvolum %1$s al dispositiu %2$s"
+msgstr ""
+"Creant el subvolum %1$s al dispositiu %2$s amb l'opció \"no copiïs en "
+"escriure\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1372,7 +1377,7 @@ msgstr "Establint l’etiqueta del disc %1$s a %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Ha fallat establir els atributs del fitxer amb chattr."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
