@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2014-09-23 02:18+0200\n"
-"Last-Translator: Mariusz Fik <fisiu82@jabster.pl>\n"
-"Language-Team: Polish <opensuse-pl@opensuse.org>\n"
+"PO-Revision-Date: 2015-10-16 18:15+0200\n"
+"Last-Translator: Mariusz Fik <fisiu@opensuse.org>\n"
+"Language-Team: Polish "
+"<http://10n.opensuse.org/projects/libstorage/master/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Weblate 2.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -192,7 +193,7 @@ msgstr ""
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
 msgstr ""
 "Zaszyfrowany programowy RAID %1$s (%2$s) z %5$s zostanie utworzony dla %4$s "
-"z systemem plików %3$s "
+"z systemem plików %3$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -613,8 +614,8 @@ msgstr[2] "Wywoływanie dasdfmt na dyskach %1$s"
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "Uruchamianie dasdfmt na dysku %1$s"
-msgstr[1] "Wywoływanie dasdfmt dla dysków %1$s..."
-msgstr[2] "Wywoływanie dasdfmt dla dysków %1$s..."
+msgstr[1] "Uruchamianie dasdfmt dla dysków %1$s"
+msgstr[2] "Uruchamianie dasdfmt dla dysków %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1048,7 +1049,7 @@ msgstr "Formatowanie partycji RAID %1$s (%2$s) z systemem plików %3$s"
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Formatowanie urządzenia %1$s (%2$s) z systemem plików %3$s "
+msgstr "Formatowanie urządzenia %1$s (%2$s) z systemem plików %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
