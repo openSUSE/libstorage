@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-14 17:37+0200\n"
+"PO-Revision-Date: 2015-10-16 13:14+0200\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan "
 "<http://10n.opensuse.org/projects/libstorage/master/ca/>\n"
@@ -152,7 +152,7 @@ msgstr "Crea una partició xifrada RAID %1$s (%2$s) per a %4$s amb %3$s"
 msgid ""
 "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Crea un dispositiu xifrat basat en fitxers %1$s del fitxer %2$s (%3$s) com "
+"Crea un dispositiu xifrat basat en fitxers %1$s del fitxer %2$s (%3$s) com a "
 "%5$s amb %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
@@ -239,8 +239,8 @@ msgstr "Crea un dispositiu basat en fitxers %1$s del fitxer %2$s (%3$s)"
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Crea un dispositiu basat en fitxers %1$s del fitxer %2$s (%3$s) com %5$s amb "
-"%4$s"
+"Crea un dispositiu basat en fitxers %1$s del fitxer %2$s (%3$s) com a %5$s "
+"amb %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -825,7 +825,7 @@ msgstr ""
 msgid ""
 "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Formata el dispositiu xifrat basat en fitxers %1$s de %2$s (%3$s) com %5$s "
+"Formata el dispositiu xifrat basat en fitxers %1$s de %2$s (%3$s) com a %5$s "
 "amb %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
@@ -873,7 +873,8 @@ msgstr "Formata el programari xifrat RAID %1$s (%2$s) per a %4$s amb %3$s"
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Formata el dispositiu basat en fitxers %1$s de %2$s (%3$s) com %5$s amb %4$s"
+"Formata el dispositiu basat en fitxers %1$s de %2$s (%3$s) com a %5$s amb "
+"%4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1304,7 +1305,7 @@ msgstr "Estableix l’etiqueta del disc %1$s a %2$s"
 #: ../storage/Volume.cc:2615
 #, c-format
 msgid "Set label on %1$s to %2$s"
-msgstr "Configura l'etiqueta de %1$s com %2$s"
+msgstr "Estableix l'etiqueta de %1$s com a %2$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1312,7 +1313,7 @@ msgstr "Configura l'etiqueta de %1$s com %2$s"
 #: ../storage/Volume.cc:1485
 #, c-format
 msgid "Set mount point of %1$s to %2$s"
-msgstr "Configura el punt de muntatge de %1$s a %2$s"
+msgstr "Estableix el punt de muntatge de %1$s a %2$s"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #: ../storage/Tmpfs.cc:109
@@ -1344,7 +1345,7 @@ msgstr "Estableix el tipus de partició multiruta %1$s a %2$X"
 #: ../storage/DmPart.cc:193
 #, c-format
 msgid "Set type of partition %1$s to %2$X"
-msgstr "Configura el tipus de partició %1$s a %2$X"
+msgstr "Estableix el tipus de partició %1$s a %2$X"
 
 #. displayed text before action, %1$s is replaced by partition name (e.g. /dev/hda1),
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
@@ -1385,7 +1386,7 @@ msgstr "Ha fallat establir els atributs del fitxer amb chattr."
 #: ../storage/Volume.cc:2608
 #, c-format
 msgid "Setting label on %1$s to %2$s"
-msgstr "Configurant l'etiqueta de %1$s com %2$s"
+msgstr "Establint l'etiqueta de %1$s com a %2$s"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. pdc_dabaheedj_part1),
 #. %2$s is replaced by hexadecimal number (e.g. 8E)
@@ -1411,7 +1412,7 @@ msgstr "Establint el tipus de partició multiruta %1$s a %2$X"
 #: ../storage/DmPart.cc:186
 #, c-format
 msgid "Setting type of partition %1$s to %2$X"
-msgstr "Configurant el tipus de partició %1$s a %2$X"
+msgstr "Establint el tipus de partició %1$s a %2$X"
 
 #. displayed text during action, %1$s is replaced by partition name (e.g. /dev/sda1),
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
