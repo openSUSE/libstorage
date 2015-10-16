@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-16 22:36+0200\n"
+"PO-Revision-Date: 2015-10-16 22:40+0200\n"
 "Last-Translator: Jan Papež <honyczek@centrum.cz>\n"
 "Language-Team: Czech <http://10n.opensuse.org/projects/libstorage/master/cs/>"
 "\n"
@@ -162,7 +162,7 @@ msgid ""
 "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
 "Vytvořit šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s "
-"se systémem %4$s."
+"se systémem %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -250,7 +250,7 @@ msgstr "Vytvořit souborové zařízení %1$s ze souboru %2$s (%3$s)"
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
 "Vytvořit souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s se "
-"systémem %4$s."
+"systémem %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -399,7 +399,7 @@ msgstr "Vytváří se oddíl RAID %1$s"
 #: ../storage/Loop.cc:280
 #, c-format
 msgid "Creating file-based device %1$s of file %2$s"
-msgstr "Vytváří se souborové zařízení %1$s ze souboru %2$s."
+msgstr "Vytváří se souborové zařízení %1$s ze souboru %2$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:219
@@ -549,7 +549,7 @@ msgstr "Odstraňuje se svazek mapperu %1$s"
 #: ../storage/Loop.cc:260
 #, c-format
 msgid "Deleting file-based device %1$s"
-msgstr "Odstraňuje se zařízení založené na souboru %1$s."
+msgstr "Odstraňuje se zařízení založené na souboru %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:201
@@ -596,8 +596,8 @@ msgstr "EiB"
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
 msgstr[0] "Spustit dasdfmt na disku %1$s"
-msgstr[1] "Spustit dasdfmt na disku %1$s"
-msgstr[2] "Spustit dasdfmt na disku %1$s "
+msgstr[1] "Spustit dasdfmt na discích %1$s"
+msgstr[2] "Spustit dasdfmt na discích %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:211
@@ -831,8 +831,8 @@ msgstr "Formátovat šifrovaný svazek mapperu %1$s (%2$s) pro %4$s pomocí %3$s
 msgid ""
 "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Formátovat šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako "
-"%5$s v systému %4$s."
+"Formátovat šifrované souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$"
+"s v systému %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -880,7 +880,7 @@ msgstr "Formátovat šifrovaný softwarový RAID %1$s (%2$s) pro %4$s pomocí %3
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
 "Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) jako %5$s v "
-"systému %4$s."
+"systému %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -889,8 +889,7 @@ msgstr ""
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr ""
-"Formátovat souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
+msgstr "Formátovat souborové zařízení %1$s z %2$s (%3$s) s %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -995,7 +994,7 @@ msgstr "Formátuje se Btrfs svazek o velikosti %1$s (použitá zařízení: %2$s
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "Formátuje se oddíl RAID %1$s (%2$s) s %3$s "
+msgstr "Formátuje se oddíl RAID %1$s (%2$s) s %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1004,7 +1003,7 @@ msgstr "Formátuje se oddíl RAID %1$s (%2$s) s %3$s "
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Formátuje se zařízení %1$s (%2$s) s %3$s "
+msgstr "Formátuje se zařízení %1$s (%2$s) s %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1021,8 +1020,7 @@ msgstr "Formátuje se svazek mapperu %1$s (%2$s) pomocí %3$s "
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr ""
-"Formátuje se souborové zařízení %1$s ze souboru %2$s (%3$s) v systému %4$s."
+msgstr "Formátuje se souborové zařízení %1$s z %2$s (%3$s) s %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1038,7 +1036,7 @@ msgstr "Formátuje se logický svazek %1$s (%2$s) pomocí %3$s"
 #: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "Formátuje se multipath oddíl %1$s (%2$s) pomocí %3$s "
+msgstr "Formátuje se multipath oddíl %1$s (%2$s) pomocí %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1368,7 +1366,7 @@ msgstr "Nastavit typ oddílu %1$s na %2$s (%3$X)"
 #: ../storage/Volume.cc:1895
 #, c-format
 msgid "Set up encrypted dm device on %1$s"
-msgstr "Nastavit šifrované zařízení dm na %1$s."
+msgstr "Nastavit šifrované zařízení dm na %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1436,7 +1434,7 @@ msgstr "Nastavování typu oddílu %1$s na %2$s (%3$X)"
 #: ../storage/Volume.cc:1892
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
-msgstr "Nastavuje se šifrované zařízení dm na %1$s."
+msgstr "Nastavuje se šifrované zařízení dm na %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
