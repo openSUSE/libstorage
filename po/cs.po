@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-16 22:35+0200\n"
-"Last-Translator: Martin Pluskal <mpluskal@suse.com>\n"
+"PO-Revision-Date: 2015-10-16 22:36+0200\n"
+"Last-Translator: Jan Papež <honyczek@centrum.cz>\n"
 "Language-Team: Czech <http://10n.opensuse.org/projects/libstorage/master/cs/>"
 "\n"
 "Language: cs\n"
@@ -430,9 +430,11 @@ msgstr "Vytváření podřízeného svazku %1$s zařízení %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Vytváření podřízeného svazku %1$s zařízení %2$s"
+msgstr ""
+"Vytváření podřízeného svazku %1$s na zařízení %2$s s volbou \"no copy on "
+"write\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1384,7 +1386,7 @@ msgstr "Nastavuje se popisek disku %1$s na %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Nastavení atributů souboru pomocí chattr selhalo."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
