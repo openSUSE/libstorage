@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-25 09:42+0200\n"
+"PO-Revision-Date: 2015-10-25 13:23+0200\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
 "Language-Team: Lithuanian "
 "<http://10n.opensuse.org/projects/libstorage/master/lt/>\n"
@@ -455,6 +455,7 @@ msgid "DM Device"
 msgstr "DM įrenginys"
 
 #: ../storage/Graph.cc:491
+#, fuzzy
 msgid "DM Multipath"
 msgstr "DM Multipath"
 
@@ -999,7 +1000,7 @@ msgstr "Suženklinamas Btrfs tomas, kurio dydis %1$s (įrenginyje %2$s)"
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "Suženklinamas RAID skaidinys %1$s (%2$s) kaip %3$s "
+msgstr "Suženklinamas RAID skaidinys %1$s (%2$s) kaip %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1008,7 +1009,7 @@ msgstr "Suženklinamas RAID skaidinys %1$s (%2$s) kaip %3$s "
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Suženklinamas įrenginys %1$s (%2$s) kaip %3$s "
+msgstr "Suženklinamas įrenginys %1$s (%2$s) kaip %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1621,6 +1622,13 @@ msgid ""
 "    number of block devices partitions. This needs a repartition\n"
 "    as well."
 msgstr ""
+"Galite pasirinkti:\n"
+"  - Pakeiskite savo sistemos skaidinių sąranką taip, kad būtų naudojamas \n"
+"    tik didžiausias leidžiamas skaidinių kiekis. Skaidinių sąranką\n"
+"    keiskite jau esančioje operacinėje sistemoje.\n"
+"  - Naudokite LVM, kadangi tai leidžia lanksčiai nustatyti\n"
+"    blokinių įrenginių skaidinių skaičių. Skaidinių sąranką keisti\n"
+"    reikia keisti taip pat."
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
