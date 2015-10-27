@@ -1387,7 +1387,7 @@ namespace storage
 		activate(true);
 	    getStorage()->showInfoCb( l->createText(true), silent );
 	    checkConsistency();
-	    string cmd = LVCREATEBIN " " + instSysString();
+	    string cmd = LVCREATEBIN " " + instSysString() + zeroString();
 	    if( !l->getOrigin().empty() )
 	    {
 		Storage::loadModuleIfNeeded("dm-snapshot");
@@ -1577,6 +1577,13 @@ namespace storage
     LvmVg::instSysString() const
     {
 	return getStorage()->instsys() ? "-A n " : "";
+    }
+
+
+    string
+    LvmVg::zeroString() const
+    {
+	return "--zero=y --yes ";
     }
 
 
