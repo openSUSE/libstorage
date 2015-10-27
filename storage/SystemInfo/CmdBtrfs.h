@@ -101,6 +101,10 @@ namespace storage
 
 	map<string, Entry> data;
 
+        const int RACE_TIMEOUT = 2;
+        const int RACE_RETRY = 3;
+
+        bool no_such_file(const vector<string>& lines);
     };
 
 
