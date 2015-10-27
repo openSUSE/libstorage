@@ -144,8 +144,7 @@ msgstr "Sukurti operacinės sistemos paleidimo tomą %1$s (%2$s) kaip %3$s"
 #: ../storage/Dmraid.cc:122
 #, c-format
 msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr ""
-"Sukurti šifruotą RAID skaidinį %1$s (%2$s) jungiamą prie %4$s kaip %3$s"
+msgstr "Sukurti šifruotą RAID skaidinį %1$s (%2$s) jungiamą prie %4$s kaip %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -597,7 +596,6 @@ msgid_plural "Execute dasdfmt on disks %1$s"
 msgstr[0] "Vykdyti dasdfmt diskui %1$s"
 msgstr[1] "Vykdyti dasdfmt diskams %1$s"
 msgstr[2] "Vykdyti dasdfmt diskams %1$s"
-msgstr[3] "Vykdyti dasdfmt diskams %1$s"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:211
@@ -607,7 +605,6 @@ msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "Vykdomas dasdfmt diskui %1$s"
 msgstr[1] "Vykdomas dasdfmt diskams %1$s"
 msgstr[2] "Vykdomas dasdfmt diskams %1$s"
-msgstr[3] "Vykdomas dasdfmt diskams %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -812,8 +809,7 @@ msgstr "Suženklinti šifruotą RAID skaidinį %1$s (%2$s) %4$s kaip %3$s"
 #: ../storage/Volume.cc:869
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
-msgstr ""
-"Suženklinti šifruotą įrenginį %1$s (%2$s), jungiamą prie %4$s kaip %3$s"
+msgstr "Suženklinti šifruotą įrenginį %1$s (%2$s), jungiamą prie %4$s kaip %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -884,8 +880,8 @@ msgstr ""
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Suženklinti rinkmenos pagrindu sukurtą %1$s iš %2$s (%3$s), jungiamą prie "
-"%5$s kaip %4$s"
+"Suženklinti rinkmenos pagrindu sukurtą %1$s iš %2$s (%3$s), jungiamą prie %5$"
+"s kaip %4$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1365,7 +1361,7 @@ msgstr "Keisti skaidinio %1$s tipą į %2$X"
 #: ../storage/Partition.cc:338
 #, c-format
 msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "Keisti skaidinio %1$s tipą į %2$X (%3$X)"
+msgstr "Keisti skaidinio %1$s tipą į %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1432,7 +1428,7 @@ msgstr "Keičiamas skaidinio %1$s tipas į %2$X"
 #: ../storage/Partition.cc:325
 #, c-format
 msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "Keičiamas skaidinio %1$s tipas į %2$X (%3$X)"
+msgstr "Keičiamas skaidinio %1$s tipas į %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
