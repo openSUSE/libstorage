@@ -1,4 +1,12 @@
 -------------------------------------------------------------------
+Tue Oct 27 11:11:29 CET 2015 - shundhammer@suse.de
+
+- Added --zero=y --yes to 'lvcreate' call to prevent interactive
+  prompt (bsc#948539)
+- Temporarily removed lt.po that breaks build
+- 2.25.34
+
+-------------------------------------------------------------------
 Thu Sep 24 17:23:08 CEST 2015 - aschnell@suse.com
 
 - detect corrupt backup GPT in parted output (see bsc#946673)

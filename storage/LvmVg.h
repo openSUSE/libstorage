@@ -164,6 +164,7 @@ namespace storage
 
 	string metaString() const;
 	string instSysString() const;
+	string zeroString() const;
 
 	virtual void logData(const string& Dir) const;
 
