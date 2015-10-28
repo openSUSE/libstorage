@@ -1,9 +1,14 @@
 -------------------------------------------------------------------
+Wed Oct 28 11:02:26 CET 2015 - shundhammer@suse.de
+
+- Added fixed lt.po again that had broken build
+- 2.25.35
+
+-------------------------------------------------------------------
 Wed Oct 27 18:53:15 UTC 2015 - lslezak@suse.cz
 
 - repeat the btrfs file system detection when a race condition in
   the "btrfs" command is detected (bsc#948247)
-- 2.25.35
 
 -------------------------------------------------------------------
 Tue Oct 27 11:11:29 CET 2015 - shundhammer@suse.de
