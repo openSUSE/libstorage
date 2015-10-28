@@ -22,6 +22,8 @@
 
 
 #include <boost/algorithm/string.hpp>
+// sleep()
+#include <unistd.h>
 
 #include "storage/StorageTypes.h"
 #include "storage/Utils/SystemCmd.h"
@@ -45,25 +47,43 @@ namespace storage
     void
     CmdBtrfsShow::probe()
     {
-	SystemCmd cmd( BTRFSBIN " filesystem show", SystemCmd::DoThrow );
+        // there is a race condition inside the btrfs command, if it seems to
+        // happen then wait a bit a retry again (bsc#948247)
+        int attempt = 0;
 
-	if ( cmd.retcode() == 0 && !cmd.stdout().empty() )
-	    parse( cmd.stdout() );
-	else if ( ! cmd.stderr().empty() )
-	{
-	    ST_THROW( SystemCmdException( &cmd, "'btrfs filesystem show' complains: "
-					  + cmd.stderr().front() ) );
-	}
+        do {
+            SystemCmd cmd( BTRFSBIN " filesystem show", SystemCmd::DoThrow );
 
-	// Intentionally not throwing an exception here if retcode != 0 since
-	// this command might return 1 if no btrfs at all was found -- which is
-	// not an error condition: We are probing here to determine if there
-	// are any btrfs file systems, and if yes, some more information about
-	// them.
+            if ( cmd.retcode() == 0 && !cmd.stdout().empty() )
+            {
+                parse( cmd.stdout() );
+                return;
+            }
+            else if ( ! cmd.stderr().empty() && (attempt == RACE_RETRY || !no_such_file(cmd.stderr())))
+            {
+                ST_THROW( SystemCmdException( &cmd, "'btrfs filesystem show' complains: "
+                                              + cmd.stderr().front() ) );
+            }
 
-	// stdout is rarely empty for this command since in almost all cases it
-	// at least reports its version number, so this is also not very useful
-	// to indicate errors.
+            // Intentionally not throwing an exception here if retcode != 0 since
+            // this command might return 1 if no btrfs at all was found -- which is
+            // not an error condition: We are probing here to determine if there
+            // are any btrfs file systems, and if yes, some more information about
+            // them.
+
+            // stdout is rarely empty for this command since in almost all cases it
+            // at least reports its version number, so this is also not very useful
+            // to indicate errors.
+
+            if (!no_such_file(cmd.stderr()))
+                return;
+
+            y2war("Btrfs 'no such file or directory' race condition detected, retrying after "
+                << RACE_RETRY << " seconds...");
+
+            sleep(RACE_TIMEOUT);
+        }
+        while(attempt++ < RACE_RETRY);
     }
 
 
@@ -135,6 +155,13 @@ namespace storage
 	return ret;
     }
 
+    // check if the lines contain the "No such file or directory" error string
+    bool CmdBtrfsShow::no_such_file(const vector<string>& lines)
+    {
+        return std::find_if(lines.begin(), lines.end(),
+            [](const string& s) -> bool { return s.find("No such file or directory") != string::npos;}
+        ) != lines.end();
+    }
 
     std::ostream&
     operator<<(std::ostream& s, const CmdBtrfsShow& cmdbtrfsshow)
