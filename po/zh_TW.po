@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-29 16:04+0200\n"
+"PO-Revision-Date: 2015-10-29 16:08+0200\n"
 "Last-Translator: Ramax Lo <ramaxlo@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) "
 "<http://10n.opensuse.org/projects/libstorage/master/zh_TW/>\n"
@@ -308,7 +308,7 @@ msgstr "使用 %3$s 從 %5$s 建立用於 %4$s 的軟體 RAID %1$s (%2$s)"
 #: ../storage/Btrfs.cc:997
 #, c-format
 msgid "Create subvolume %1$s on device %2$s"
-msgstr "在裝置 %2$s 建立子卷冊 %1$s "
+msgstr "在裝置 %2$s 建立子卷冊 %1$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
@@ -371,7 +371,7 @@ msgstr "使用 %3$s 建立用於 %4$s 的卷冊 %1$s (%2$s)"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s) "
+msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -995,7 +995,7 @@ msgstr "正在使用 %3$s 格式化設備 %1$s (%2$s)"
 #: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化設備對應卷冊 %1$s (%2$s)"
+msgstr "正在使用 %3$s 格式化設備對應卷冊 %1$s (%2$s) "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1004,7 +1004,7 @@ msgstr "正在使用 %3$s 格式化設備對應卷冊 %1$s (%2$s)"
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "正在使用 %4$s 格式化 %2$s (%3$s) 的檔案為主設備 %1$s"
+msgstr "正在使用 %4$s 格式化 %2$s (%3$s) 的檔案為主設備 %1$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1028,7 +1028,7 @@ msgstr "正在使用 %3$s 格式化多重路徑分割區 %1$s (%2$s)"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化分割區 %1$s (%2$s)"
+msgstr "正在使用 %3$s 格式化分割區 %1$s (%2$s) "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1036,7 +1036,7 @@ msgstr "正在使用 %3$s 格式化分割區 %1$s (%2$s)"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化軟體 RAID %1$s (%2$s)"
+msgstr "正在使用 %3$s 格式化軟體 RAID %1$s (%2$s) "
 
 # SLE12
 #. symbol for "giga" (best keep untranslated)
