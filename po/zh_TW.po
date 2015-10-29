@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-17 04:39+0200\n"
+"PO-Revision-Date: 2015-10-29 16:04+0200\n"
 "Last-Translator: Ramax Lo <ramaxlo@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) "
 "<http://10n.opensuse.org/projects/libstorage/master/zh_TW/>\n"
@@ -1374,7 +1374,7 @@ msgstr "將 %1$s 的磁碟標籤設定為 %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "以 chattr 設定檔案屬性失敗。"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
