@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: libstorage.nl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-11-04 12:00+0200\n"
+"PO-Revision-Date: 2015-11-04 12:06+0200\n"
 "Last-Translator: Freek de Kruijf <freek@opensuse.org>\n"
 "Language-Team: Dutch <http://10n.opensuse.org/projects/libstorage/master/nl/>"
 "\n"
@@ -781,7 +781,7 @@ msgstr "Apparaat %1$s (%2$s) formatteren met %3$s"
 #: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "Device mapper volume %1$s (%2$s) formatteren voor %4$s met %3$s "
+msgstr "Device-mapper-volume %1$s (%2$s) formatteren voor %4$s met %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -818,7 +818,7 @@ msgstr "Versleuteld apparaat %1$s (%2$s) voor %4$s formatteren met %3$s"
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
-"Versleuteld device mapper volume %1$s (%2$s) formatteren voor %4$s met %3$s "
+"Versleuteld device-mapper-volume %1$s (%2$s) formatteren voor %4$s met %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -905,7 +905,7 @@ msgstr "Logisch volume %1$s (%2$s) voor %4$s formatteren met %3$s"
 #: ../storage/LvmLv.cc:283
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for swap"
-msgstr "Logisch volume %1$s (%2$s) aanmaken voor wisselgeheugen "
+msgstr "Logisch volume %1$s (%2$s) formatteren voor wisselgeheugen (swap)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -995,7 +995,7 @@ msgstr ""
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "RAID-partitie %1$s (%2$s) formatteren met %3$s "
+msgstr "RAID-partitie %1$s (%2$s) formatteren met %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1022,8 +1022,8 @@ msgstr "Device mapper volume %1$s (%2$s) formatteren met %3$s "
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
 msgstr ""
-"Bezig met formatteren van op bestanden gebaseerd apparaat %1$s van %2$s "
-"(%3$s) met %4$s"
+"Bestanden gebaseerd op apparaat %1$s van %2$s (%3$s) wordt met %4$s "
+"geformatteerd "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1039,7 +1039,7 @@ msgstr "Logisch volume %1$s (%2$s) formatteren met %3$s"
 #: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "Multipad-partitie %1$s (%2$s) formatteren met %3$s "
+msgstr "Multipad-partitie %1$s (%2$s) met %3$s formatteren"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
