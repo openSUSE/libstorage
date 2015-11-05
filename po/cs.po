@@ -621,7 +621,7 @@ msgstr "Rozšířit %1$s na %2$s"
 #: ../storage/Btrfs.cc:942
 #, c-format
 msgid "Extend Btrfs volume %1$s by %2$s"
-msgstr "Rozšířit BTRFS svazek %1$s na %2$s"
+msgstr "Rozšířit Btrfs svazek %1$s na %2$s"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -678,7 +678,7 @@ msgstr "Rozšiřuje se %1$s na %2$s"
 #: ../storage/Btrfs.cc:935
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
-msgstr "Rozšiřuje se BTRFS svazek %1$s na %2$s"
+msgstr "Rozšiřuje se Btrfs svazek %1$s na %2$s"
 
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1144,7 +1144,7 @@ msgstr "PiB"
 #: ../storage/Btrfs.cc:963
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
-msgstr "Zmenšit BTRFS svazek %1$s o %2$s"
+msgstr "Zmenšit Btrfs svazek %1$s o %2$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
@@ -1158,7 +1158,7 @@ msgstr "Zmenšit skupinu svazků %1$s o %2$s"
 #: ../storage/Btrfs.cc:956
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
-msgstr "Zmenšuje se svazek BTRFS %1$s o %2$s"
+msgstr "Zmenšuje se svazek Btrfs %1$s o %2$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
@@ -1224,7 +1224,7 @@ msgstr "Odstranit tmpfs z %1$s"
 #: ../storage/Tmpfs.cc:77
 #, c-format
 msgid "Remove tmpfs volume from mount point %1$s"
-msgstr "Odstranit Tmpfs svazek z bodu připojení %1$s"
+msgstr "Odstranit tmpfs svazek z bodu připojení %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1282,7 +1282,7 @@ msgstr "Odstraňuje se podřízený svazek %1$s na zařízení %2$s"
 #: ../storage/Tmpfs.cc:72
 #, c-format
 msgid "Removing tmpfs volume from mount point %1$s"
-msgstr "Odstraňuje se Tmpfs svazek z bodu připojení %1$s"
+msgstr "Odstraňuje se tmpfs svazek z bodu připojení %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1556,7 +1556,7 @@ msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
 msgstr ""
-"Zdáse, že systém má vícecestný hardware.\n"
+"Zdá se, že systém má vícecestný hardware.\n"
 "Chcete aktivovat multipath?"
 
 #. symbol for "tebi bytes" (best keep untranslated)
