@@ -3,7 +3,7 @@ Makefile.bak
 Makefile
 .deps
 .libs
-
+/.obsdir/
 aclocal.m4
 autom4te.cache
 config.*
@@ -13,6 +13,7 @@ install-sh
 libtool
 ltmain.sh
 missing
+/obs-package-from-git
 stamp-h1
 py-compile
 compile
