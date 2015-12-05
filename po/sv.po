@@ -10,14 +10,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2002-01-04 13:30+0100\n"
-"Last-Translator: Mattias Newzella <newzella@linux.nu>\n"
-"Language-Team: Swedish <i18n@suse.de>\n"
+"PO-Revision-Date: 2015-12-05 23:26+0200\n"
+"Last-Translator: Jonas Svensson <jonas@ekhorva.se>\n"
+"Language-Team: Swedish "
+"<http://l10n.opensuse.org/projects/libstorage/master/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.3\n"
 
 # SLE12
 #. text displayed during action
@@ -337,9 +339,10 @@ msgstr "Skapa undervolym %1$s på enhet %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Skapa undervolym %1$s på enhet %2$s"
+msgstr ""
+"Skapa undervolym %1$s på enhet %2$s med inställning \"no copy on write\""
 
 # SLE12
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
@@ -456,9 +459,10 @@ msgstr "Skapar undervolym %1$s på enhet %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Skapar undervolym %1$s på enhet %2$s"
+msgstr ""
+"Skapar undervolym %1$s på enhet %2$s med inställning \"no copy on write\""
 
 # SLE12
 #. displayed during action
@@ -1468,7 +1472,7 @@ msgstr "Anger disketikett för %1$s till %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Misslyckades att ställa in filattribut med chattr."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
