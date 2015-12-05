@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-12-05 23:26+0200\n"
+"PO-Revision-Date: 2015-12-05 23:28+0200\n"
 "Last-Translator: Jonas Svensson <jonas@ekhorva.se>\n"
 "Language-Team: Swedish "
 "<http://l10n.opensuse.org/projects/libstorage/master/sv/>\n"
@@ -638,7 +638,7 @@ msgstr "EiB"
 #, c-format
 msgid "Execute dasdfmt on disk %1$s"
 msgid_plural "Execute dasdfmt on disks %1$s"
-msgstr[0] "Kör dasdfmt på disken %1$s..."
+msgstr[0] "Kör dasdfmt på disken %1$s"
 msgstr[1] "Kör dasdfmt på diskarna %1$s"
 
 # SLE12
@@ -647,8 +647,8 @@ msgstr[1] "Kör dasdfmt på diskarna %1$s"
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
-msgstr[0] "Kör dasdfmt för disken %1$s..."
-msgstr[1] "Kör dasdfmt för diskarna %1$s..."
+msgstr[0] "Kör dasdfmt på disken %1$s"
+msgstr[1] "Kör dasdfmt på diskarna %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1064,7 +1064,7 @@ msgstr "Formaterar RAID-partitionen %1$s (%2$s) med %3$s"
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Formaterar enhet %1$s (%2$s) med %3$s "
+msgstr "Formaterar enhet %1$s (%2$s) med %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1081,7 +1081,7 @@ msgstr "Formaterar device mapper-volym %1$s (%2$s) med %3$s "
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Formaterar den filbaserade enheten %1$s från %2$s (%3$s) med %4$s"
+msgstr "Formaterar den filbaserade enheten %1$s från %2$s (%3$s) med %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1106,7 +1106,7 @@ msgstr "Formatera Multipath-partitionen %1$s (%2$s) med %3$s"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Formaterar partitionen %1$s (%2$s) med %3$s"
+msgstr "Formaterar partitionen %1$s (%2$s) med %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
