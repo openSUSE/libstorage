@@ -242,6 +242,9 @@ Supported scenarios:
 - with or without Btrfs
 - with or without LVM full disk encryption
 - with or without automated file system snapshots (if using Btrfs)
+- with or without SWAP partition
+- using all available space or leaving up unpartitioned disk space
+- using whole disk or keeping (and resizing) already installed system
 
 Not supported:
 
