@@ -14,10 +14,10 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-23 15:31+0200\n"
-"Last-Translator: Dominique Leuenberger <dimstar@opensuse.org>\n"
+"PO-Revision-Date: 2016-02-13 09:06+0200\n"
+"Last-Translator: Ettore Atalan <atalanttore@googlemail.com>\n"
 "Language-Team: German "
-"<http://10n.opensuse.org/projects/libstorage/master/de/>\n"
+"<http://l10n.opensuse.org/projects/libstorage/master/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -605,7 +605,7 @@ msgstr[1] "dasdfmt auf Festplatten %1$s ausführen"
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
 msgstr[0] "dasdfmt wird für Festplatte %1$s ausgeführt"
-msgstr[1] "dasdfmt wird für Festplatten %1$s ausgeführt ..."
+msgstr[1] "dasdfmt wird für Festplatten %1$s ausgeführt"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1024,7 +1024,7 @@ msgstr "DM-Volume %1$s (%2$s) wird mit %3$s formatiert"
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "Dateibasiertes Gerät %1$s von %2$s (%3$s) wird mit %4$s formatiert"
+msgstr "Dateibasiertes Gerät %1$s von %2$s (%3$s) wird mit %4$s formatiert "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1048,7 +1048,7 @@ msgstr "Multipath-Partition %1$s (%2$s) wird mit %3$s formatiert"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Partition %1$s (%2$s) wird mit %3$s formatiert"
+msgstr "Partition %1$s (%2$s) wird mit %3$s formatiert "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1056,7 +1056,7 @@ msgstr "Partition %1$s (%2$s) wird mit %3$s formatiert"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "Software-RAID %1$s (%2$s) wird mit %3$s formatiert"
+msgstr "Software-RAID %1$s (%2$s) wird mit %3$s formatiert "
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
