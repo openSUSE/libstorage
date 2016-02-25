@@ -12,15 +12,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2012-07-23 09:35+0200\n"
+"PO-Revision-Date: 2016-02-25 14:57+0200\n"
 "Last-Translator: Guillaume GARDET <guillaume.gardet@opensuse.org>\n"
-"Language-Team: French <opensuse-fr@opensuse.org>\n"
+"Language-Team: French "
+"<http://l10n.opensuse.org/projects/libstorage/master/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2.3\n"
 "X-Poedit-Language: French\n"
 
 #. text displayed during action
@@ -347,9 +348,11 @@ msgstr "Créer le sous-volume %1$s sur le périphérique %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Créer le sous-volume %1$s sur le périphérique %2$s"
+msgstr ""
+"Créer le sous-volume %1$s sur le périphérique %2$s avec l'option \"no copy "
+"on write\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -465,9 +468,11 @@ msgstr "Creation du sous-volume %1$s sur le périphérique %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Creation du sous-volume %1$s sur le périphérique %2$s"
+msgstr ""
+"Création du sous-volume %1$s sur le périphérique %2$s avec l'option \"no "
+"copy on write\""
 
 # TLABEL partitioning_2002_01_04_0147__351
 #. displayed during action
@@ -1091,7 +1096,7 @@ msgstr "Formatage du périphérique %1$s (%2$s) avec %3$s"
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr ""
-"Formatage du volume d'assignation de périphérique %1$s (%2$s) avec %3$s"
+"Formatage du volume d'assignation de périphérique %1$s (%2$s) avec %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1101,7 +1106,7 @@ msgstr ""
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
 msgstr ""
-"Formatage du périphérique basé sur fichier %1$s de %2$s (%3$s) avec %4$s"
+"Formatage du périphérique basé sur fichier %1$s de %2$s (%3$s) avec %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1126,7 +1131,7 @@ msgstr "Formatage de la partition multipath %1$s (%2$s) avec %3$s"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Formatage de la partition %1$s (%2$s) avec %3$s"
+msgstr "Formatage de la partition %1$s (%2$s) avec %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1134,7 +1139,7 @@ msgstr "Formatage de la partition %1$s (%2$s) avec %3$s"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "Formatage du RAID logiciel %1$s (%2$s) avec %3$s"
+msgstr "Formatage du RAID logiciel %1$s (%2$s) avec %3$s "
 
 # TLABEL wizard_2002_01_04_0147__10
 #. symbol for "giga" (best keep untranslated)
@@ -1508,7 +1513,7 @@ msgstr "Configuration de l'étiquette de disque de %1$s à %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Échec de la configuration de l'attribut de fichier avec chattr."
 
 # TLABEL storage_2002_08_07_0216__32
 #. displayed during action
