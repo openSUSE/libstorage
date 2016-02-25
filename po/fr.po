@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-02-25 14:57+0200\n"
+"PO-Revision-Date: 2016-02-25 14:58+0200\n"
 "Last-Translator: Guillaume GARDET <guillaume.gardet@opensuse.org>\n"
 "Language-Team: French "
 "<http://l10n.opensuse.org/projects/libstorage/master/fr/>\n"
@@ -501,7 +501,7 @@ msgstr "Périph. DM"
 
 #: ../storage/Graph.cc:491
 msgid "DM Multipath"
-msgstr "DM Multipath"
+msgstr "DM-Multipath"
 
 # TLABEL partitioning_2002_01_04_0147__465
 #: ../storage/Graph.cc:487
