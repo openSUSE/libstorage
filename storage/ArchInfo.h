@@ -51,6 +51,7 @@ namespace storage
 	bool is_ppc_mac() const { return ppc_mac; }
 	bool is_ppc_pegasos() const { return ppc_pegasos; }
 	bool is_ppc_p8() const { return ppc_p8; }
+	bool is_ppc_powernv() const { return ppc_powernv; }
 
 	bool is_efiboot() const { return efiboot; }
 
@@ -63,6 +64,7 @@ namespace storage
 	bool ppc_pegasos;
 	bool efiboot;
 	bool ppc_p8;
+	bool ppc_powernv;
 
     };
 

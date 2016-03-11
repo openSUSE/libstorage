@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Mar 10 12:22:56 CET 2016 - dvaleev@suse.com
+
+- Add PowerNV support (boo#970582) 
+- 2.25.36
+
+-------------------------------------------------------------------
 Wed Oct 28 11:02:26 CET 2015 - shundhammer@suse.de
 
 - Added fixed lt.po again that had broken build

@@ -33,7 +33,7 @@ namespace storage
 {
 
     ArchInfo::ArchInfo()
-	: arch("unknown"), ppc_mac(false), ppc_pegasos(false), efiboot(false), ppc_p8(false)
+	: arch("unknown"), ppc_mac(false), ppc_pegasos(false), efiboot(false), ppc_p8(false), ppc_powernv(false)
     {
     }
 
@@ -54,6 +54,8 @@ namespace storage
 	setChildValue(node, "arch", arch);
 
 	setChildValueIf(node, "efiboot", efiboot, efiboot);
+
+	setChildValueIf(node, "powernv", ppc_powernv, ppc_powernv);
     }
 
 
@@ -93,6 +95,15 @@ namespace storage
 		string tmp1 = extractNthWord(2, *it);
 		y2mil("tmp1:" << tmp1);
 		ppc_p8 = boost::starts_with(tmp1, "POWER8");
+	    }
+
+	    it = find_if(cpuinfo.lines(), string_starts_with("platform\t"));
+	    if (it != cpuinfo.lines().end())
+	    {
+		y2mil("line:" << *it);
+		string tmp1 = extractNthWord(2, *it);
+		y2mil("tmp1:" << tmp1);
+		ppc_powernv = boost::starts_with(tmp1, "PowerNV");
 	    }
 	}
 
@@ -170,7 +181,8 @@ namespace storage
     {
 	return s << "arch:" << archinfo.arch << " ppc_mac:" << archinfo.ppc_mac
 		 << " ppc_pegasos:" << archinfo.ppc_pegasos << " efiboot:"
-		 << archinfo.efiboot << " ppc_p8:" << archinfo.ppc_p8;
+		 << archinfo.efiboot << " ppc_p8:" << archinfo.ppc_p8
+		 << " ppc_powernv:" << archinfo.ppc_powernv;
     }
 
 }
