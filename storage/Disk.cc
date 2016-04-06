@@ -1741,19 +1741,7 @@ namespace storage
 	SystemCmd cmd;
 	cmd.execute(WIPEFSBIN " --all " + quote(device()));
 
-	string lab(label);
-	if( lab=="gpt" )
-	{
-	    const ArchInfo& archinfo = getStorage()->getArchInfo();
-	    if (!archinfo.is_efiboot() &&
-		(archinfo.is_x86() || (archinfo.is_ppc() && !archinfo.is_ppc_p8())))
-	    {
-		y2mil( "archinfo:" << archinfo);
-		lab = LABEL_GPT_SYNC_MBR;
-	    }
-	}
-
-	string cmd_line = PARTEDCMD + quote(device()) + " mklabel " + lab;
+	string cmd_line = PARTEDCMD + quote(device()) + " mklabel " + label;
 	if (execCheckFailed(cmd_line))
 	{
 	    ret = DISK_SET_LABEL_PARTED_FAILED;
