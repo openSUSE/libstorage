@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Apr 06 11:13:22 CEST 2016 - aschnell@suse.com
+
+- drop support for GPT with sync to MBR (fate#317849)
+- 2.25.37
+
+-------------------------------------------------------------------
 Thu Mar 10 12:22:56 CET 2016 - dvaleev@suse.com
 
 - Add PowerNV support (boo#970582) 
