@@ -45,8 +45,8 @@ namespace storage
 	friend std::ostream& operator<<(std::ostream& s, const Dasdview& dasdview);
 
 	const Geometry& getGeometry() const { return geometry; }
-	Dasd::DasdFormat getDasdFormat() const { return dasd_format; }
-	Dasd::DasdType getDasdType() const { return dasd_type; }
+	storage::DasdFormat getDasdFormat() const { return dasd_format; }
+	storage::DasdType getDasdType() const { return dasd_type; }
 
 	void parse(const vector<string>& lines);
 
@@ -54,8 +54,8 @@ namespace storage
 
 	string device;
 	Geometry geometry;
-	Dasd::DasdFormat dasd_format;
-	Dasd::DasdType dasd_type;
+	storage::DasdFormat dasd_format;
+	storage::DasdType dasd_type;
 
     };
 

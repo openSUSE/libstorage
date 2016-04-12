@@ -362,6 +362,13 @@ namespace storage
 	return ret;
     }
 
+    void
+    Dasd::getInfo( storage::DiskInfo& info ) const
+    {
+        Disk::getInfo( info );
+        info.dasd_format = fmt;
+        info.dasd_type = type;
+    }
 
     std::ostream& operator<< (std::ostream& s, const Dasd& d)
     {
@@ -371,12 +378,12 @@ namespace storage
     }
 
 
-    const vector<string> EnumInfo<Dasd::DasdType>::names({
+    const vector<string> EnumInfo<storage::DasdType>::names({
 	    "NONE", "ECKD", "FBA"
 		});
 
 
-    const vector<string> EnumInfo<Dasd::DasdFormat>::names({
+    const vector<string> EnumInfo<storage::DasdFormat>::names({
 	    "NONE", "LDL", "CDL"
 		});
 

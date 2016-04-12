@@ -35,7 +35,7 @@
 #include "storage/Utils/AppUtil.h"
 #include "storage/Utils/SystemCmd.h"
 #include "storage/StorageDefines.h"
-
+#include "storage/Dasd.h"
 
 namespace storage
 {
@@ -2595,6 +2595,8 @@ namespace storage
 	info.initDisk = init_disk;
 	info.transport = transport;
 	info.has_fake_partition = has_fake_partition;
+        info.dasd_format = storage::DASDF_NONE;
+        info.dasd_type = storage::DASDTYPE_NONE;
     }
 
 

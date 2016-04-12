@@ -173,6 +173,9 @@ namespace storage
 
     enum PartAlign { ALIGN_OPTIMAL, ALIGN_CYLINDER };
 
+    enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
+
+    enum DasdType { DASDTYPE_NONE, DASDTYPE_ECKD, DASDTYPE_FBA };
 
     /**
      * typedef for a pointer to a function that is called on progress bar
@@ -338,6 +341,8 @@ namespace storage
 	bool initDisk;
 	Transport transport;
 	bool has_fake_partition;
+        storage::DasdFormat dasd_format;
+        storage::DasdType dasd_type;
     };
 
     /**

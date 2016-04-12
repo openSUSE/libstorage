@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Apr  7 13:32:17 CEST 2016 - gs@suse.de
+- provide information about DASD format and type 
+  (related to bnc#958893)
+- 2.26.1
+
+-------------------------------------------------------------------
 Wed Apr 06 11:13:22 CEST 2016 - aschnell@suse.com
 
 - drop support for GPT with sync to MBR (fate#317849)
