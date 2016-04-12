@@ -2595,6 +2595,8 @@ namespace storage
 	info.initDisk = init_disk;
 	info.transport = transport;
 	info.has_fake_partition = has_fake_partition;
+        info.dasd_format = storage::DASDF_NONE;
+        info.dasd_type = storage::DASDTYPE_NONE;
     }
 
 

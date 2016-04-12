@@ -5878,8 +5878,6 @@ namespace storage
 	ConstDiskIterator i = findDisk( disk );
 	if( i != dEnd() )
 	{
-            info.dasd_format = storage::DASDF_NONE;
-            info.dasd_type = storage::DASDTYPE_NONE;
 	    i->getInfo( info );
 	}
 	else
