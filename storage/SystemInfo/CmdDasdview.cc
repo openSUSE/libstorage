@@ -29,7 +29,7 @@ namespace storage
 {
 
     Dasdview::Dasdview(const string& device, bool do_probe)
-	: device(device), dasd_format(Dasd::DASDF_NONE), dasd_type(Dasd::DASDTYPE_NONE)
+	: device(device), dasd_format(storage::DASDF_NONE), dasd_type(storage::DASDTYPE_NONE)
     {
 	if (do_probe)
 	    probe();
@@ -68,9 +68,9 @@ namespace storage
 	    string tmp = string(*pos, pos->find(':') + 1);
 	    tmp = extractNthWord(4, tmp);
 	    if (tmp == "CDL")
-		dasd_format = Dasd::DASDF_CDL;
+		dasd_format = storage::DASDF_CDL;
 	    else if (tmp == "LDL")
-		dasd_format = Dasd::DASDF_LDL;
+		dasd_format = storage::DASDF_LDL;
 	}
 
 	pos = find_if(lines, string_starts_with("type"));
@@ -80,9 +80,9 @@ namespace storage
 	    string tmp = string(*pos, pos->find(':') + 1);
 	    tmp = extractNthWord(0, tmp);
 	    if (tmp == "ECKD")
-		dasd_type = Dasd::DASDTYPE_ECKD;
+		dasd_type = storage::DASDTYPE_ECKD;
 	    else if (tmp == "FBA")
-		dasd_type = Dasd::DASDTYPE_FBA;
+		dasd_type = storage::DASDTYPE_FBA;
 	}
 
 	pos = find_if(lines, string_starts_with("number of cylinders"));

@@ -822,7 +822,7 @@ namespace storage
 		if (t == DiskData::DASD)
 		{
 		    const Dasdview& dasdview = systeminfo.getDasdview("/dev/" + i->first);
-		    if (dasdview.getDasdType() == Dasd::DASDTYPE_FBA)
+		    if (dasdview.getDasdType() == storage::DASDTYPE_FBA)
 			t = DiskData::DISK;
 		}
 
@@ -5878,6 +5878,8 @@ namespace storage
 	ConstDiskIterator i = findDisk( disk );
 	if( i != dEnd() )
 	{
+            info.dasd_format = storage::DASDF_NONE;
+            info.dasd_type = storage::DASDTYPE_NONE;
 	    i->getInfo( info );
 	}
 	else

@@ -158,7 +158,7 @@ namespace storage
 	string getPartName(unsigned nr) const;
 	string getPartDevice(unsigned nr) const;
 
-	void getInfo( storage::DiskInfo& info ) const;
+	virtual void getInfo( storage::DiskInfo& info ) const;
 	bool equalContent( const Container& rhs ) const;
 
 	void logDifference(std::ostream& log, const Disk& rhs) const;

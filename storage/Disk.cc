@@ -35,7 +35,7 @@
 #include "storage/Utils/AppUtil.h"
 #include "storage/Utils/SystemCmd.h"
 #include "storage/StorageDefines.h"
-
+#include "storage/Dasd.h"
 
 namespace storage
 {

@@ -24,7 +24,7 @@
 #define DASD_H
 
 #include "storage/Disk.h"
-
+#include "storage/StorageInterface.h"
 
 namespace storage
 {
@@ -39,9 +39,6 @@ namespace storage
 	friend class Storage;
 
     public:
-
-	enum DasdFormat { DASDF_NONE, DASDF_LDL, DASDF_CDL };
-	enum DasdType { DASDTYPE_NONE, DASDTYPE_ECKD, DASDTYPE_FBA };
 
 	Dasd(Storage* s, const string& name, const string& device, unsigned long long Size,
 	     SystemInfo& systeminfo);
@@ -60,7 +57,8 @@ namespace storage
 	static Text dasdfmtTexts(bool doing, const list<string>& devs);
 	void getCommitActions(list<commitAction>& l) const;
 	int commitChanges(CommitStage stage);
-
+        virtual void getInfo( storage::DiskInfo& info ) const;
+        
     protected:
 
 	virtual void print(std::ostream& s) const { s << *this; }
@@ -71,8 +69,9 @@ namespace storage
         int doSetType(Volume* v) override { return 0; }
 	int doDasdfmt();
 
-	DasdFormat fmt;
-
+        storage::DasdFormat fmt;
+        storage::DasdType type;
+        
 	friend std::ostream& operator<< (std::ostream&, const Dasd&);
 
     private:
@@ -82,8 +81,8 @@ namespace storage
     };
 
 
-    template <> struct EnumInfo<Dasd::DasdType> { static const vector<string> names; };
-    template <> struct EnumInfo<Dasd::DasdFormat> { static const vector<string> names; };
+    template <> struct EnumInfo<storage::DasdType> { static const vector<string> names; };
+    template <> struct EnumInfo<storage::DasdFormat> { static const vector<string> names; };
 
 }
 
