@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) 2016 SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -1923,6 +1924,10 @@ namespace storage
 	else
 	{
 	    Parted parted(device());
+
+	    // parted triggers udev to rescan the device, see bsc #975162.
+	    getStorage()->waitForDevice(p->device());
+
 	    Parted::Entry entry;
 	    if (parted.getEntry(p->nr(), entry))
 	    {
