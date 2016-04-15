@@ -1,5 +1,12 @@
 -------------------------------------------------------------------
+Fri Apr 15 12:24:25 CEST 2016 - aschnell@suse.com
+
+- call udevadm settle after call of parted (bsc#975162)
+- 2.26.2
+
+-------------------------------------------------------------------
 Thu Apr  7 13:32:17 CEST 2016 - gs@suse.de
+
 - provide information about DASD format and type 
   (related to bnc#958893)
 - 2.26.1
