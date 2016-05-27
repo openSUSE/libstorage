@@ -1235,19 +1235,13 @@ namespace storage
 		start=1;
 	    Partition * p = new Partition(*this, getPartName(number), getPartDevice(number), number,
 					  cylinderToKb(len), Region(start, len), type);
-	    ConstPartPair pp = partPair();
-	    ConstPartIter i = pp.begin();
-	    while( i!=pp.end() && !(i->deleted() && i->cylStart()==start && i->type()==type) )
-		++i;
-	    if( i!=pp.end() )
-	    {
-		y2mil( "deleted at same start:" << *i );
-		p->getFsInfo( &(*i) );
-	    }
 
 	    // see bnc #591075
 	    if (getStorage()->instsys())
 	    {
+		ConstPartPair pp = partPair();
+		ConstPartIter i = pp.begin();
+
 		for (i = pp.begin(); i != pp.end(); ++i)
 		{
 		    if (i->deleted() && i->nr() == number && !i->getCryptPwd().empty())
@@ -2048,7 +2042,7 @@ namespace storage
 	    classic(cmd_line);
 	    if( ret==0 )
 	    {
-		cmd_line << PARTEDCMD;
+		cmd_line << PARTEDCMD "--wipesignatures ";
 		cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
 		cmd_line << quote(device()) << " unit cyl mkpart ";
 		if (label != "dasd" && label != "sun")

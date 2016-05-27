@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu May 19 16:26:11 CEST 2016 - aschnell@suse.com
+
+- call parted with --wipesignatures when creating partitions to
+  avoid auto-assembly of old MD RAIDs (fate#319893, bsc#943623)
+- 2.26.3
+
+-------------------------------------------------------------------
 Fri Apr 15 12:24:25 CEST 2016 - aschnell@suse.com
 
 - call udevadm settle after call of parted (bsc#975162)
