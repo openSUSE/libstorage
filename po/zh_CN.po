@@ -10,15 +10,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2014-07-04 17:27+0800\n"
-"Last-Translator: 玛格丽特 · 苏 <marguerite@opensuse.org>\n"
-"Language-Team: Chinese Simplified <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2016-06-08 18:02+0000\n"
+"Last-Translator: Marguerite Su <i@marguerite.su>\n"
+"Language-Team: Chinese (China) "
+"<https://l10n.opensuse.org/projects/libstorage/master/zh_CN/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Weblate 2.6\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -307,9 +308,9 @@ msgstr "在设备 %2$s 上创建子卷 %1$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "在设备 %2$s 上创建子卷 %1$s"
+msgstr "在设备 %2$s 上创建子卷 %1$s，带有 \"非写入时复制\" 选项"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -415,9 +416,9 @@ msgstr "正在设备 %2$s 上创建子卷 %1$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "正在设备 %2$s 上创建子卷 %1$s"
+msgstr "正在设备 %2$s 上创建子卷 %1$s，带有 ”非写入时复制“ 选项"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1356,7 +1357,7 @@ msgstr "正在设置 %1$s 到 %2$s 的磁盘标签"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "使用 chattr 设置文件属性失败。"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
