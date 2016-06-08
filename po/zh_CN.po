@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-06-08 18:02+0000\n"
+"PO-Revision-Date: 2016-06-08 19:24+0000\n"
 "Last-Translator: Marguerite Su <i@marguerite.su>\n"
 "Language-Team: Chinese (China) "
 "<https://l10n.opensuse.org/projects/libstorage/master/zh_CN/>\n"
@@ -123,7 +123,7 @@ msgstr "创建 RAID 分区 %1$s(%2$s)"
 #: ../storage/Dmraid.cc:112
 #, c-format
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建 RAID 分区 %1$s (%2$s) 以作为 %4$s"
+msgstr "以 %3$s 格式创建 RAID 分区 %1$s (%2$s) 以挂载到 %4$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -986,7 +986,7 @@ msgstr "正在使用 %3$s 格式化设备 %1$s(%2$s)"
 #: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化设备映射器卷 %1$s(%2$s)"
+msgstr "正在使用 %3$s 格式化设备映射器卷 %1$s(%2$s) "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -995,7 +995,7 @@ msgstr "正在使用 %3$s 格式化设备映射器卷 %1$s(%2$s)"
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr "正在使用 %4$s 格式化 %2$s 的基于文件的设备 %1$s(%3$s)"
+msgstr "正在以 %4$s 格式化 %2$s (%3$s) 位于基于文件的设备 %1$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1003,7 +1003,7 @@ msgstr "正在使用 %4$s 格式化 %2$s 的基于文件的设备 %1$s(%3$s)"
 #: ../storage/LvmLv.cc:272
 #, c-format
 msgid "Formatting logical volume %1$s (%2$s) with %3$s"
-msgstr "正在使用 %3$s 格式化逻辑卷 %1$s(%2$s)"
+msgstr "正在以 %3$s 格式化逻辑卷 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1011,7 +1011,7 @@ msgstr "正在使用 %3$s 格式化逻辑卷 %1$s(%2$s)"
 #: ../storage/Dmmultipath.cc:154
 #, c-format
 msgid "Formatting multipath partition %1$s (%2$s) with %3$s"
-msgstr "正在用 %3$s 格式化多路径分区 %1$s (%2$s)"
+msgstr "正在以 %3$s 格式化多路径分区 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1019,7 +1019,7 @@ msgstr "正在用 %3$s 格式化多路径分区 %1$s (%2$s)"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化分区 %1$s(%2$s)"
+msgstr "正在以 %3$s 格式化分区 %1$s (%2$s) "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1027,7 +1027,7 @@ msgstr "正在使用 %3$s 格式化分区 %1$s(%2$s)"
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "正在使用 %3$s 格式化软件 RAID %1$s(%2$s)"
+msgstr "正在以 %3$s 格式化软 RAID %1$s (%2$s) "
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
@@ -1092,7 +1092,7 @@ msgstr "正在将 %1$s 挂载到 %2$s"
 #: ../storage/Tmpfs.cc:90
 #, c-format
 msgid "Mounting tmpfs to %1$s"
-msgstr "正在挂载缓存文件系统到 %1$s "
+msgstr "正在挂载缓存文件系统到 %1$s"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
