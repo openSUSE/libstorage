@@ -116,6 +116,15 @@ namespace storage
 	 */
 	const vector<string>& stderr() const { return _outputLines[IDX_STDERR]; }
 
+        /**
+         * Set stdin text to be sent via pipe to the command.
+         *
+         * Notice this has only an effect if the command is not executed
+         * immediately from the constructor; use the default constructor, set
+         * the stdin text and explicitly call execute() with the command.
+         **/
+        void setStdinText( const string & stdinText ) { _stdinText = stdinText; }
+
 	/**
 	 * Return the (last) command executed.
 	 */
@@ -183,6 +192,7 @@ namespace storage
 	int doExecute(const string& command);
 	bool doWait(bool hang, int& cmdRet_ret);
 	void checkOutput();
+        void sendStdin();
 	void getUntilEOF(FILE* file, std::vector<string>& lines,
 			 bool& newLineSeen_ret, bool isStderr) const;
 	void extractNewline(const string& buffer, int count, bool& newLineSeen_ret,
@@ -196,8 +206,10 @@ namespace storage
 	//
 
 	FILE* _files[2];
+        FILE* _childStdin;
 	std::vector<string> _outputLines[2];
 	std::vector<string*> _selectedOutputLines[2];
+        string _stdinText;
 	bool _newLineSeen[2];
 	bool _combineOutput;
 	bool _execInBackground;
@@ -206,7 +218,7 @@ namespace storage
 	int _cmdPid;
 	bool _doThrow;
 	OutputProcessor* _outputProc;
-	struct pollfd _pfds[2];
+	struct pollfd _pfds[3];
 
 	static bool _testmode;
 

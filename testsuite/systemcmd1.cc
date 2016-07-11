@@ -175,6 +175,17 @@ void test_not_executable( SystemCmd::ThrowBehaviour throwBehaviour )
 }
 
 
+void test_stdin( const string & stdin_text )
+{
+    TRACE();
+
+    SystemCmd cmd;
+    cmd.setStdinText( stdin_text );
+    cmd.execute( "od -ta -tx1" );
+    cout << cmd << endl;
+}
+
+
 int main( int argc, char *argv[] )
 {
     cout.setf(std::ios::boolalpha);
@@ -190,4 +201,6 @@ int main( int argc, char *argv[] )
     test_segfault( SystemCmd::DoThrow );
     test_not_executable( SystemCmd::NoThrow );
     test_not_executable( SystemCmd::DoThrow );
+    test_stdin( "Hello, world" );
+    test_stdin( "Hello,\ncruel\nworld,\nI'm\nleaving\nyou\ntoday" );
 }

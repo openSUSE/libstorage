@@ -88,14 +88,23 @@ namespace storage
     void
     SystemCmd::init()
     {
+        _childStdin = NULL;
 	_files[0] = _files[1] = NULL;
-	_pfds[0].events = _pfds[1].events = POLLIN;
+	_pfds[0].events = POLLOUT; // stdin
+	_pfds[1].events = POLLIN;  // stdout
+	_pfds[2].events = POLLIN;  // stderr
     }
 
 
     void
     SystemCmd::cleanup()
     {
+        if ( _childStdin )
+        {
+            fclose( _childStdin );
+            _childStdin = NULL;
+        }
+
 	if ( _files[IDX_STDOUT] )
 	{
 	    fclose( _files[IDX_STDOUT] );
@@ -194,10 +203,10 @@ namespace storage
 	      waitDone = false;
 	      while ( count<8 && !waitDone )
 	      {
-	          y2mil( "doWait:" << count );
-	          waitDone = doWait( false, ret );
-	          count++;
-	          sleep( 1 );
+		  y2mil( "doWait:" << count );
+		  waitDone = doWait( false, ret );
+		  count++;
+		  sleep( 1 );
 	      }
 	    */
 	    _cmdRet = -257;
@@ -231,11 +240,18 @@ namespace storage
 
 	StopWatch stopwatch;
 
+        _childStdin = NULL;
 	_files[IDX_STDERR] = _files[IDX_STDOUT] = NULL;
 	invalidate();
+	int sin[2];
 	int sout[2];
 	int serr[2];
 	bool ok = true;
+	if ( !_testmode && pipe(sin)<0 )
+	{
+	    SYSCALL_FAILED( "pipe stdin creation failed" );
+	    ok = false;
+	}
 	if ( !_testmode && pipe(sout)<0 )
 	{
 	    SYSCALL_FAILED( "pipe stdout creation failed" );
@@ -248,26 +264,35 @@ namespace storage
 	}
 	if ( !_testmode && ok )
 	{
-	    _pfds[0].fd = sout[0];
+	    _pfds[0].fd = sin[1];
 	    if ( fcntl( _pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
+	    {
+		SYSCALL_FAILED( "fcntl O_NONBLOCK failed for stdin" );
+	    }
+	    _pfds[1].fd = sout[0];
+	    if ( fcntl( _pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
 	    {
 		SYSCALL_FAILED( "fcntl O_NONBLOCK failed for stdout" );
 	    }
 	    if ( !_combineOutput )
 	    {
-		_pfds[1].fd = serr[0];
-		if ( fcntl( _pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
+		_pfds[2].fd = serr[0];
+		if ( fcntl( _pfds[2].fd, F_SETFL, O_NONBLOCK )<0 )
 		{
 		    SYSCALL_FAILED( "fcntl O_NONBLOCK failed for stderr" );
 		}
 	    }
-	    y2deb("sout:" << _pfds[0].fd << " serr:" << (_combineOutput?-1:_pfds[1].fd));
+	    y2deb("sout:" << _pfds[1].fd << " serr:" << (_combineOutput?-1:_pfds[2].fd));
 	    switch( (_cmdPid=fork()) )
 	    {
-		case 0:
+		case 0: // child process
 		    setenv( "LC_ALL", "C", 1 );
 		    setenv( "LANGUAGE", "C", 1 );
 
+		    if ( dup2( sin[0], STDIN_FILENO )<0 )
+		    {
+			SYSCALL_FAILED_NOTHROW( "dup2 stdin failed in child process" );
+		    }
 		    if ( dup2( sout[1], STDOUT_FILENO )<0 )
 		    {
 			SYSCALL_FAILED_NOTHROW( "dup2 stdout failed in child process" );
@@ -279,6 +304,10 @@ namespace storage
 		    if ( _combineOutput && dup2( STDOUT_FILENO, STDERR_FILENO )<0 )
 		    {
 			SYSCALL_FAILED_NOTHROW( "dup2 stderr failed in child process" );
+		    }
+		    if ( close( sin[1] )<0 )
+		    {
+			SYSCALL_FAILED_NOTHROW( "close( stdin ) failed in child process" );
 		    }
 		    if ( close( sout[0] )<0 )
 		    {
@@ -307,7 +336,11 @@ namespace storage
 		    SYSCALL_FAILED( "fork() failed" );
 		    break;
 
-		default:
+		default: // parent process
+		    if ( close( sin[0] ) < 0 )
+		    {
+			SYSCALL_FAILED_NOTHROW( "close( stdin ) in parent failed" );
+		    }
 		    if ( close( sout[1] )<0 )
 		    {
 			SYSCALL_FAILED_NOTHROW( "close( stdout ) in parent failed" );
@@ -317,6 +350,13 @@ namespace storage
 			SYSCALL_FAILED_NOTHROW( "close( stderr ) in parent failed" );
 		    }
 		    _cmdRet = 0;
+
+                    _childStdin = fdopen( sin[1], "a" );
+		    if ( _childStdin == NULL )
+		    {
+			SYSCALL_FAILED_NOTHROW( "fdopen( stdin ) failed" );
+		    }
+
 		    _files[IDX_STDOUT] = fdopen( sout[0], "r" );
 		    if ( _files[IDX_STDOUT] == NULL )
 		    {
@@ -368,9 +408,9 @@ namespace storage
 
 	do
 	{
-	    y2deb("[0] id:" <<  _pfds[0].fd << " ev:" << hex << (unsigned)_pfds[0].events << dec << " [1] fs:" <<
-		  (_combineOutput?-1:_pfds[1].fd) << " ev:" << hex << (_combineOutput?0:(unsigned)_pfds[1].events));
-	    int sel = poll( _pfds, _combineOutput?1:2, 1000 );
+	    y2deb("[0] id:" <<	_pfds[1].fd << " ev:" << hex << (unsigned)_pfds[1].events << dec << " [1] fs:" <<
+		  (_combineOutput?-1:_pfds[2].fd) << " ev:" << hex << (_combineOutput?0:(unsigned)_pfds[2].events));
+	    int sel = poll( _pfds, _combineOutput?2:3, 1000 );
 	    if (sel < 0)
 	    {
 		SYSCALL_FAILED_NOTHROW( "poll() failed" );
@@ -378,7 +418,10 @@ namespace storage
 	    y2deb("poll ret:" << sel);
 	    if ( sel>0 )
 	    {
-		checkOutput();
+                if ( _pfds[0].revents )
+                    sendStdin();
+                if ( _pfds[1].revents || _pfds[2].revents )
+                    checkOutput();
 	    }
 	    waitpidRet = waitpid( _cmdPid, &cmdStatus, WNOHANG );
 	    y2deb("Wait ret:" << waitpidRet);
@@ -388,6 +431,11 @@ namespace storage
 	if ( waitpidRet != 0 )
 	{
 	    checkOutput();
+            if ( _childStdin )
+            {
+                fclose( _childStdin );
+                _childStdin = NULL;
+            }
 	    fclose( _files[IDX_STDOUT] );
 	    _files[IDX_STDOUT] = NULL;
 	    if ( !_combineOutput )
@@ -558,6 +606,33 @@ namespace storage
 	if (_files[IDX_STDERR])
 	    getUntilEOF(_files[IDX_STDERR], _outputLines[IDX_STDERR], _newLineSeen[IDX_STDERR], true);
 	y2deb("NewLine out:" << _newLineSeen[IDX_STDOUT] << " err:" << _newLineSeen[IDX_STDERR]);
+    }
+
+
+    void
+    SystemCmd::sendStdin()
+    {
+        if ( ! _childStdin )
+            return;
+
+        if ( ! _stdinText.empty() )
+        {
+            string::size_type count = 0;
+            string::size_type len   = _stdinText.size();
+            int result = 1;
+
+            while ( count < len && result > 0 )
+                result = fputc( _stdinText[ count++ ], _childStdin );
+
+            _stdinText.erase( 0, count );
+            // y2deb( count << " characters written; left over: \"" << _stdinText << "\"" );
+        }
+
+        if ( _stdinText.empty() )
+        {
+            fclose( _childStdin );
+            _childStdin = NULL;
+        }
     }
 
 
