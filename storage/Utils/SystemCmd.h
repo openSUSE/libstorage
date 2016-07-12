@@ -73,14 +73,16 @@ namespace storage
 
 	/**
 	 * Execute the specified command in the foreground and return its exit code.
+         * If 'command' is empty, use the last used command.
 	 **/
-	int execute(const string& command);
+	int execute(const string& command = "");
 
 	/**
 	 * Execute the specified command in the background.
+         * If 'command' is empty, use the last used command.
 	 * The return value is only meaningful if < 0 (fork() or exec() failed).
 	 */
-	int executeBackground(const string& command);
+	int executeBackground(const string& command = "");
 
 	/**
 	 * Execute the specified command in the foreground with some restrictions:
@@ -128,7 +130,13 @@ namespace storage
 	/**
 	 * Return the (last) command executed.
 	 */
-	string cmd() const { return _lastCmd; }
+	string cmd() const { return _cmd; }
+
+        /**
+         * Set the command to be called when execute() without arguments is
+         * called later.
+         **/
+        void setCmd( const string & cmd ) { _cmd = cmd; }
 
 	/**
 	 * Return the exit code of the command.
@@ -213,7 +221,7 @@ namespace storage
 	bool _newLineSeen[2];
 	bool _combineOutput;
 	bool _execInBackground;
-	string _lastCmd;
+	string _cmd;
 	int _cmdRet;
 	int _cmdPid;
 	bool _doThrow;

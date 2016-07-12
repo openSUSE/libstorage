@@ -231,12 +231,20 @@ namespace storage
 	    shell = ALTERNATE_SHELL;
 	}
 
-	_lastCmd = command;
+        if ( ! command.empty() )
+            _cmd = command;
+
+        if ( _cmd.empty() )
+        {
+            ST_MAYBE_THROW( SystemCmdException( this, "No command specified" ), _doThrow );
+            return -1;
+        }
+
 	if ( _outputProc )
 	{
 	    _outputProc->reset();
 	}
-	y2deb("Cmd:" << command);
+	y2deb("Cmd:" << _cmd);
 
 	StopWatch stopwatch;
 
@@ -319,7 +327,7 @@ namespace storage
 		    }
 		    closeOpenFds();
 		    _cmdRet = execl( shell.c_str(), shell.c_str(), "-c",
-				     command.c_str(), NULL );
+				     _cmd.c_str(), NULL );
 
 		    // execl() should not return. If we get here, it failed.
 		    // Throwing an exception here would not make any sense, however:
@@ -385,11 +393,11 @@ namespace storage
 	else
 	{
 	    _cmdRet = 0;
-	    y2mil("TESTMODE would execute \"" << command << "\"");
+	    y2mil("TESTMODE would execute \"" << _cmd << "\"");
 	}
 	if ( _cmdRet==-127 || _cmdRet==-1 )
 	{
-	    y2err("system (\"" << command << "\") = " << _cmdRet);
+	    y2err("system (\"" << _cmd << "\") = " << _cmdRet);
 	}
 	if ( !_testmode )
 	    checkOutput();
