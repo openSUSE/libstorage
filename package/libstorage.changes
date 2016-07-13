@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jul 13 12:27:47 CEST 2016 - shundhammer@suse.de
+
+- Use stdin, not tmp files for passwords (bsc#986971)
+- 2.26.4
+
+-------------------------------------------------------------------
 Thu May 19 16:26:11 CEST 2016 - aschnell@suse.com
 
 - call parted with --wipesignatures when creating partitions to
