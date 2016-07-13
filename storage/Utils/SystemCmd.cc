@@ -640,6 +640,7 @@ namespace storage
         {
             fclose( _childStdin );
             _childStdin = NULL;
+            _pfds[0].fd = -1; // ignore for poll() from now on
         }
     }
 
