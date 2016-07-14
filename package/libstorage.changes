@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jul 14 17:52:29 CEST 2016 - shundhammer@suse.de
+
+- Use stdin, not tmp files for passwords (bsc#986971)
+- 2.25.16.1
+
+-------------------------------------------------------------------
 Mon Sep 29 11:52:38 CEST 2014 - aschnell@suse.de
 
 - updated translations (bsc#877325)
