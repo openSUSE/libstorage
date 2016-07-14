@@ -61,6 +61,10 @@ void SystemCmd::init()
     {
     File_aC[0] = File_aC[1] = NULL;
     pfds[0].events = pfds[1].events = POLLIN;
+    _childStdin = NULL;
+    pfds[0].events = POLLOUT; // stdin
+    pfds[1].events = POLLIN;  // stdout
+    pfds[2].events = POLLIN;  // stderr
     }
 
 
@@ -70,6 +74,8 @@ SystemCmd::~SystemCmd()
 	fclose( File_aC[IDX_STDOUT] );
     if( File_aC[IDX_STDERR] )
 	fclose( File_aC[IDX_STDERR] );
+    if ( _childStdin )
+        fclose( _childStdin );
     }
 
 
@@ -169,28 +175,41 @@ SystemCmd::executeRestricted( const string& Command_Cv,
 #define ALTERNATE_SHELL "/bin/bash"
 
 int
-SystemCmd::doExecute( const string& Cmd )
+SystemCmd::doExecute( const string& command )
     {
     string Shell_Ci = PRIMARY_SHELL;
     if( access( Shell_Ci.c_str(), X_OK ) != 0 )
 	{
 	Shell_Ci = ALTERNATE_SHELL;
 	}
+    if ( ! command.empty() )
+        _cmd = command;
 
-    lastCmd = Cmd;
+    if ( _cmd.empty() )
+        {
+        y2err("No command specified" );
+        return -1;
+        }
     if( output_proc )
 	{
 	output_proc->reset();
 	}
-    y2deb("Cmd:" << Cmd);
+    y2deb("Cmd:" << _cmd);
 
     StopWatch stopwatch;
 
+    _childStdin = NULL;
     File_aC[IDX_STDERR] = File_aC[IDX_STDOUT] = NULL;
     invalidate();
+    int sin[2];
     int sout[2];
     int serr[2];
     bool ok_bi = true;
+    if ( !testmode && pipe(sin)<0 )
+	{
+	y2err("pipe stdin creation failed errno:" << errno << " (" << strerror(errno) << ")");
+	ok_bi = false;
+	}
     if( !testmode && pipe(sout)<0 )
 	{
 	y2err("pipe stdout creation failed errno:" << errno << " (" << strerror(errno) << ")");
@@ -203,25 +222,34 @@ SystemCmd::doExecute( const string& Cmd )
 	}
     if( !testmode && ok_bi )
 	{
-	pfds[0].fd = sout[0];
+	pfds[0].fd = sin[1];
 	if( fcntl( pfds[0].fd, F_SETFL, O_NONBLOCK )<0 )
+	    {
+	    y2err("fcntl O_NONBLOCK failed for stdin errno:" << errno << " (" << strerror(errno) << ")");
+	    }
+	pfds[1].fd = sout[0];
+	if( fcntl( pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
 	    {
 	    y2err("fcntl O_NONBLOCK failed errno:" << errno << " (" << strerror(errno) << ")");
 	    }
 	if( !Combine_b )
 	    {
-	    pfds[1].fd = serr[0];
-	    if( fcntl( pfds[1].fd, F_SETFL, O_NONBLOCK )<0 )
+	    pfds[2].fd = serr[0];
+	    if( fcntl( pfds[2].fd, F_SETFL, O_NONBLOCK )<0 )
 		{
 		y2err("fcntl O_NONBLOCK failed errno:" << errno << " (" << strerror(errno) << ")");
 		}
 	    }
-	y2deb("sout:" << pfds[0].fd << " serr:" << (Combine_b?-1:pfds[1].fd));
+	y2deb("sout:" << pfds[1].fd << " serr:" << (Combine_b?-1:pfds[2].fd));
 	switch( (Pid_i=fork()) )
 	    {
 	    case 0:
 		setenv( "LC_ALL", "C", 1 );
 		setenv( "LANGUAGE", "C", 1 );
+		if( dup2( sin[0], STDIN_FILENO )<0 )
+		    {
+		    y2err("dup2 stdin child failed errno:" << errno << " (" << strerror(errno) << ")");
+		    }
 		if( dup2( sout[1], STDOUT_FILENO )<0 )
 		    {
 		    y2err("dup2 stdout child failed errno:" << errno << " (" << strerror(errno) << ")");
@@ -234,6 +262,10 @@ SystemCmd::doExecute( const string& Cmd )
 		    {
 		    y2err("dup2 stderr child failed errno:" << errno << " (" << strerror(errno) << ")");
 		    }
+		if( close( sin[1] )<0 )
+		    {
+		    y2err("close( stdin ) child failed errno:" << errno << " (" << strerror(errno) << ")");
+		    }
 		if( close( sout[0] )<0 )
 		    {
 		    y2err("close child failed errno:" << errno << " (" << strerror(errno) << ")");
@@ -244,13 +276,17 @@ SystemCmd::doExecute( const string& Cmd )
 		    }
 		closeOpenFds();
 		Ret_i = execl( Shell_Ci.c_str(), Shell_Ci.c_str(), "-c",
-			       Cmd.c_str(), NULL );
+			       _cmd.c_str(), NULL );
 		y2err("SHOULD NOT HAPPEN \"" << Shell_Ci << "\" Ret:" << Ret_i);
 		break;
 	    case -1:
 		Ret_i = -1;
 		break;
 	    default:
+		if( close( sin[0] ) < 0 )
+		    {
+		    y2err("close( stdin ) parent failed errno:" << errno << " (" << strerror(errno) << ")");
+		    }
 		if( close( sout[1] )<0 )
 		    {
 		    y2err("close parent failed errno:" << errno << " (" << strerror(errno) << ")");
@@ -260,6 +296,13 @@ SystemCmd::doExecute( const string& Cmd )
 		    y2err("close parent failed errno:" << errno << " (" << strerror(errno) << ")");
 		    }
 		Ret_i = 0;
+
+                _childStdin = fdopen( sin[1], "a" );
+                if ( _childStdin == NULL )
+		    {
+		    y2err("fdopen stdin failed errno:" << errno << " (" << strerror(errno) << ")");
+		    }
+
 		File_aC[IDX_STDOUT] = fdopen( sout[0], "r" );
 		if( File_aC[IDX_STDOUT] == NULL )
 		    {
@@ -288,11 +331,11 @@ SystemCmd::doExecute( const string& Cmd )
     else
 	{
 	Ret_i = 0;
-	y2mil("TESTMODE would execute \"" << Cmd << "\"");
+	y2mil("TESTMODE would execute \"" << _cmd << "\"");
 	}
     if( Ret_i==-127 || Ret_i==-1 )
 	{
-	y2err("system (\"" << Cmd << "\") = " << Ret_i);
+	y2err("system (\"" << _cmd << "\") = " << Ret_i);
 	}
     if( !testmode )
 	checkOutput();
@@ -311,9 +354,9 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 
     do
 	{
-	y2deb("[0] id:" <<  pfds[0].fd << " ev:" << hex << (unsigned)pfds[0].events << dec << " [1] fs:" <<
-	      (Combine_b?-1:pfds[1].fd) << " ev:" << hex << (Combine_b?0:(unsigned)pfds[1].events));
-	int sel = poll( pfds, Combine_b?1:2, 1000 );
+	y2deb("[0] id:" <<  pfds[1].fd << " ev:" << hex << (unsigned)pfds[1].events << dec << " [1] fs:" <<
+	      (Combine_b?-1:pfds[2].fd) << " ev:" << hex << (Combine_b?0:(unsigned)pfds[2].events));
+	int sel = poll( pfds, Combine_b?2:3, 1000 );
 	if (sel < 0)
 	    {
 	    y2err("poll failed errno:" << errno << " (" << strerror(errno) << ")");
@@ -321,7 +364,10 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	y2deb("poll ret:" << sel);
 	if( sel>0 )
 	    {
-	    checkOutput();
+            if ( pfds[0].revents )
+                sendStdin();
+            if ( pfds[1].revents || pfds[2].revents )
+                checkOutput();
 	    }
 	Wait_ii = waitpid( Pid_i, &Status_ii, WNOHANG );
 	y2deb("Wait ret:" << Wait_ii);
@@ -331,6 +377,11 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
     if( Wait_ii != 0 )
 	{
 	checkOutput();
+        if ( _childStdin )
+            {
+            fclose( _childStdin );
+            _childStdin = NULL;
+            }
 	fclose( File_aC[IDX_STDOUT] );
 	File_aC[IDX_STDOUT] = NULL;
 	if( !Combine_b )
@@ -342,14 +393,14 @@ SystemCmd::doWait( bool Hang_bv, int& Ret_ir )
 	{
 	    Ret_ir = WEXITSTATUS(Status_ii);
 	    if (Ret_ir == 126)
-		y2err("command \"" << lastCmd << "\" not executable");
+		y2err("command \"" << _cmd << "\" not executable");
 	    else if (Ret_ir == 127)
-		y2err("command \"" << lastCmd << "\" not found");
+		y2err("command \"" << _cmd << "\" not found");
 	}
 	else
 	{
 	    Ret_ir = -127;
-	    y2err("command \"" << lastCmd << "\" failed");
+	    y2err("command \"" << _cmd << "\" failed");
 	}
 	if( output_proc )
 	    {
@@ -494,6 +545,34 @@ SystemCmd::checkOutput()
     if (File_aC[IDX_STDERR])
 	getUntilEOF(File_aC[IDX_STDERR], Lines_aC[IDX_STDERR], NewLineSeen_ab[IDX_STDERR], true);
     y2deb("NewLine out:" << NewLineSeen_ab[IDX_STDOUT] << " err:" << NewLineSeen_ab[IDX_STDERR]);
+}
+
+
+void
+SystemCmd::sendStdin()
+{
+    if ( ! _childStdin )
+        return;
+
+    if ( ! _stdinText.empty() )
+    {
+        string::size_type count = 0;
+        string::size_type len   = _stdinText.size();
+        int result = 1;
+
+        while ( count < len && result > 0 )
+            result = fputc( _stdinText[ count++ ], _childStdin );
+
+        _stdinText.erase( 0, count );
+        // y2deb( count << " characters written; left over: \"" << _stdinText << "\"" );
+    }
+
+    if ( _stdinText.empty() )
+    {
+        fclose( _childStdin );
+        _childStdin = NULL;
+        pfds[0].fd = -1; // ignore for poll() from now on
+    }
 }
 
 
