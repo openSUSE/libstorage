@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Aug 05 11:05:11 CEST 2016 - aschnell@suse.com
+
+- fixed removing volume groups with encrypted physical volumes
+  (bsc#989750)
+- 2.26.5
+
+-------------------------------------------------------------------
 Wed Jul 13 12:27:47 CEST 2016 - shundhammer@suse.de
 
 - Use stdin, not tmp files for passwords (bsc#986971)

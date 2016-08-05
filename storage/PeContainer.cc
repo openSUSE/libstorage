@@ -371,18 +371,19 @@ namespace storage
 	return( ret );
     }
 
+
     int
     PeContainer::remLvPeDistribution( unsigned long le, map<string,unsigned long>& pe_map,
 				      list<Pv>& pl, list<Pv>& pladd )
     {
 	int ret=0;
 	y2mil( "le:" << le << " pe_map:" << pe_map );
-	list<Pv>::iterator p;
 	map<string,unsigned long>::iterator mit = pe_map.begin();
 	y2mil( "pl:" << pl );
 	y2mil( "pladd:" << pladd );
 	while( le>0 && ret==0 && mit != pe_map.end() )
 	{
+	    list<Pv>::iterator p;
 	    if( findPe( mit->first, pl, p ) || findPe( mit->first, pladd, p ) )
 	    {
 		int tmp = min(le,mit->second);
@@ -398,6 +399,7 @@ namespace storage
 	y2mil( "ret:" << ret );
 	return( ret );
     }
+
 
     unsigned long PeContainer::sizeToLe( unsigned long long sizeK ) const
     {
@@ -501,7 +503,7 @@ namespace storage
 	bool ret = !pl.empty();
 	if( ret )
 	{
-	    const Device *vol;
+	    const Device* vol = NULL;
 	    if( getStorage()->findDevice( dv, vol, true ) )
 	    {
 		i = pl.begin();
@@ -516,7 +518,7 @@ namespace storage
 	    ret = i!=pl.end();
 	}
 	y2mil( "dev:" << dv << " ret:" << ret );
-	return( ret );
+	return ret;
     }
 
 

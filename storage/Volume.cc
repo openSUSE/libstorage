@@ -237,9 +237,10 @@ namespace storage
 	setDmcryptDev(dm,active);
     }
 
+
     void Volume::addDmCryptNames( unsigned long minor )
     {
-	y2mil( "alt before:" << altNames() );
+	y2mil("alt names before:" << altNames());
 	string crname = Dm::dmDeviceName(minor);
 	if( !Storage::isDmContainer(*cont))
 	    replaceAltName( "/dev/dm-", crname );
@@ -281,8 +282,12 @@ namespace storage
 	    else
 		alt_names.push_back(pre+s);
 	}
-	y2mil( "alt	 after:" << altNames() );
+
+	alt_names.push_back(dmcrypt_dev);
+
+	y2mil( "alt names after:" << altNames() );
     }
+
 
     void Volume::removeDmCryptNames()
     {
@@ -302,8 +307,12 @@ namespace storage
 	}
 	string s = afterLast(dmcrypt_dev,"/");
 	if( !s.empty() )
+	{
 	    replaceAltName( "/dev/disk/by-id/dm-name-"+s, "" );
+	    replaceAltName( "/dev/mapper/" + s, "" );
+	}
     }
+
 
     const string& Volume::mountDevice() const
     {
