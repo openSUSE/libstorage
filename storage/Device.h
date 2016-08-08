@@ -1,5 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
+ * Copyright (c) 2016 SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -72,9 +73,9 @@ namespace storage
 	unsigned long majorNr() const { return mjr; }
 	unsigned long minorNr() const { return mnr; }
 
-	const std::list<string>& altNames() const { return( alt_names ); }
-	void setAltNames( std::list<string>& li ) { alt_names=li; }
-	bool sameDevice( const string& device ) const;
+	const std::list<string>& altNames() const { return alt_names; }
+	void setAltNames(std::list<string>& li) { alt_names = li; }
+	bool sameDevice(const string& device) const;
 
 	// udev path and ids (without leading "/dev/disk/by-*/")
 	virtual string udevPath() const;
@@ -123,6 +124,12 @@ namespace storage
 	unsigned long mnr;
 
 	list<UsedBy> uby;
+
+	/**
+	 * Alternative names for the device, e.g. udev by-id and by-path
+	 * links. Also includes names of the encrypted device although linux
+	 * storage stack wise that is another block device.
+	 */
 	list<string> alt_names;
 
 	map<string, string> userdata;
