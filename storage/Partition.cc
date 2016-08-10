@@ -301,6 +301,7 @@ namespace storage
 	    case ID_LINUX: return "Linux";
 	    case ID_LVM: return "Linux LVM";
 	    case ID_RAID: return "Linux RAID";
+	    case ID_GPT_BIOS: return "GPT BIOS";
 	}
 	return "";
     }

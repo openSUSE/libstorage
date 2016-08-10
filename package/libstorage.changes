@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Aug 10 11:49:48 CEST 2016 - aschnell@suse.com
+
+- added partition id string for GPT BIOS (bsc#991252)
+- 2.26.6
+
+-------------------------------------------------------------------
 Fri Aug 05 11:05:11 CEST 2016 - aschnell@suse.com
 
 - fixed removing volume groups with encrypted physical volumes
