@@ -50,8 +50,8 @@ class SystemCmd : boost::noncopyable
 
 	virtual ~SystemCmd();
 
-	int execute(const string& Command_Cv);
-	int executeBackground(const string& Command_Cv);
+	int execute(const string& Command_Cv = "");
+	int executeBackground(const string& Command_Cv = "");
 	int executeRestricted(const string& Command_Cv,
 			      unsigned long MaxTimeSec, unsigned long MaxLineOut,
 			      bool& ExceedTime, bool& ExceedLines);
@@ -60,8 +60,10 @@ class SystemCmd : boost::noncopyable
 
 	const vector<string>& stdout() const { return Lines_aC[IDX_STDOUT]; }
 	const vector<string>& stderr() const { return Lines_aC[IDX_STDERR]; }
+        void setStdinText( const string & stdinText ) { _stdinText = stdinText; }
 
-	string cmd() const { return lastCmd; }
+	string cmd() const { return _cmd; }
+        void setCmd( const string & cmd ) { _cmd = cmd; }
 	int retcode() const { return Ret_i; }
 
 	int select(const string& Reg_Cv, OutputStream Idx_ii = IDX_STDOUT);
@@ -89,6 +91,7 @@ class SystemCmd : boost::noncopyable
 	int doExecute(const string& Cmd_Cv);
 	bool doWait(bool Hang_bv, int& Ret_ir);
         void checkOutput();
+        void sendStdin();
 	void getUntilEOF(FILE* File_Cr, std::vector<string>& Lines_Cr,
 			 bool& NewLineSeen_br, bool Stderr_bv);
 	void extractNewline(const string& Buf_ti, int Cnt_ii, bool& NewLineSeen_br,
@@ -99,16 +102,18 @@ class SystemCmd : boost::noncopyable
 	void logOutput() const;
 
 	FILE* File_aC[2];
+        FILE* _childStdin;
 	std::vector<string> Lines_aC[2];
 	std::vector<string*> SelLines_aC[2];
+        string _stdinText;
 	bool NewLineSeen_ab[2];
 	bool Combine_b;
 	bool Background_b;
-	string lastCmd;
+	string _cmd;
 	int Ret_i;
 	int Pid_i;
 	OutputProcessor* output_proc;
-	struct pollfd pfds[2];
+	struct pollfd pfds[3];
 
 	static bool testmode;
 
