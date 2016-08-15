@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Jul 14 14:34:34 CEST 2016 - shundhammer@suse.de
+
+- Use stdin, not tmp files for passwords (bsc#986971)
+- 2.25.35.1
+
+-------------------------------------------------------------------
 Wed Oct 27 18:53:15 UTC 2015 - lslezak@suse.cz
 
 - repeat the btrfs file system detection when a race condition in
