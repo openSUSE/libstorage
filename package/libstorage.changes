@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Tue Sep 06 10:45:35 CEST 2016 - aschnell@suse.com
+
+- merged pull request to not set boot flag on DASDs (see
+  bsc#935127)
+- 2.26.7
+
+-------------------------------------------------------------------
 Wed Aug 10 11:49:48 CEST 2016 - aschnell@suse.com
 
 - added partition id string for GPT BIOS (bsc#991252)
