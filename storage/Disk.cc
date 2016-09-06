@@ -1846,7 +1846,8 @@ namespace storage
 		if (label == "dvh" || label == "mac")
 		    options << " set " << p->nr() << " swap " << (p->id()==Partition::ID_SWAP?"on":"off");
 
-		options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
+		if (label != "dasd")
+		    options << " set " << p->nr() << " boot " << ((p->boot()||p->id()==Partition::ID_GPT_BOOT)?"on":"off");
 
 		if (label == "gpt") {
 		    options << " set " << p->nr() << " prep " << (p->id()==Partition::ID_GPT_PREP?"on":"off");
