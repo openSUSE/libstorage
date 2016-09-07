@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Wed Sep 07 14:16:38 CEST 2016 - aschnell@suse.com
+
+- improved message for creating volumes with a filesystem but
+  without a mountpoint (bsc#996208)
+- 2.26.8
+
+-------------------------------------------------------------------
 Tue Sep 06 10:45:35 CEST 2016 - aschnell@suse.com
 
 - merged pull request to not set boot flag on DASDs (see

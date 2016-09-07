@@ -3347,85 +3347,135 @@ namespace storage
     Text
     Volume::createText(bool doing) const
     {
-	// key: mountpoint
-	std::map<std::string, Text> msgs_by_mp;
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_mp["swap"] = _("Create swap volume %1$s (%2$s)");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	msgs_by_mp["/"] = _("Create root volume %1$s (%2$s) with %3$s");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	msgs_by_mp[getStorage()->bootMount()] = _("Create boot volume %1$s (%2$s) with %3$s");
-
-	// key: (has-mountpoint, is-encrypted)
-	std::map<std::pair<bool, bool>, Text> msgs_by_mpenc;
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	// %4$s is replaced by mount point (e.g. /usr)
-	msgs_by_mpenc[std::make_pair(1, 0)] = _("Create volume %1$s (%2$s) for %4$s with %3$s");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	// %3$s is replaced by file system type (e.g. reiserfs)
-	// %4$s is replaced by mount point (e.g. /usr)
-	msgs_by_mpenc[std::make_pair(1, 1)] = _("Create encrypted volume %1$s (%2$s) for %4$s with %3$s");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_mpenc[std::make_pair(0, 0)] = _("Create volume %1$s (%2$s)");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_mpenc[std::make_pair(0, 1)] = _("Create encrypted volume %1$s (%2$s)");
-
-	// key: partition-id
-	std::map<int, Text> msgs_by_pid;
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_pid[Partition::ID_GPT_BIOS] = _("Create BIOS grub volume %1$s (%2$s)");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_pid[Partition::ID_GPT_PREP] = _("Create GPT PReP volume %1$s (%2$s)");
-	// displayed before action
-	// %1$s is replaced by device name e.g. /dev/hda1
-	// %2$s is replaced by size (e.g. 623.5 MB)
-	msgs_by_pid[Partition::ID_PPC_PREP] = _("Create PReP volume %1$s (%2$s)");
+	Text txt;
 
 	if (doing)
-	    // displayed during action
-	    // %1$s is replaced by device name e.g. /dev/hda1
-	    return sformat(_("Creating volume %1$s"), dev.c_str());
-
-	auto msg = msgs_by_mpenc[std::make_pair(!mp.empty(), encryption != ENC_NONE)];
-
-	if (!mp.empty())
 	{
-	    auto it = msgs_by_mp.find(mp);
-	    if (it != msgs_by_mp.end())
-		msg = (*it).second;
+	    // displayed text during action,
+	    // %1$s is replaced by device name e.g. /dev/sda1
+	    txt = sformat(_("Creating volume %1$s"), dev.c_str());
 	}
 	else
 	{
-	    if (auto p = dynamic_cast<const Partition*>(this))
+	    const Partition* p = dynamic_cast<const Partition*>(this);
+
+	    if (mp == "swap")
 	    {
-		auto it = msgs_by_pid.find(p->id());
-		if (it != msgs_by_pid.end())
-		    msg = (*it).second;
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create swap volume %1$s (%2$s)"), dev.c_str(),
+			      sizeString().c_str());
+	    }
+	    else if (mp == "/")
+	    {
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB),
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		txt = sformat(_("Create root volume %1$s (%2$s) with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	    }
+	    else if (p && p->id() == Partition::ID_GPT_BIOS)
+	    {
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create BIOS grub volume %1$s (%2$s)"), dev.c_str(),
+			      sizeString().c_str());
+	    }
+	    else if (p && p->id() == Partition::ID_PPC_PREP)
+	    {
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create PReP volume %1$s (%2$s)"), dev.c_str(),
+			      sizeString().c_str());
+	    }
+	    else if (p && p->id() == Partition::ID_GPT_PREP)
+	    {
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB)
+		txt = sformat(_("Create GPT PReP volume %1$s (%2$s)"), dev.c_str(),
+			      sizeString().c_str());
+	    }
+	    else if (mp == getStorage()->bootMount())
+	    {
+		// displayed text before action,
+		// %1$s is replaced by device name e.g. /dev/sda1,
+		// %2$s is replaced by size (e.g. 623.5 MB),
+		// %3$s is replaced by file system type (e.g. reiserfs)
+		txt = sformat(_("Create boot volume %1$s (%2$s) with %3$s"),
+			      dev.c_str(), sizeString().c_str(), fsTypeString().c_str());
+	    }
+	    else if (!mp.empty())
+	    {
+		if (encryption == ENC_NONE)
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1
+		    // %2$s is replaced by size (e.g. 623.5 MB),
+		    // %3$s is replaced by file system type (e.g. reiserfs),
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat(_("Create volume %1$s (%2$s) for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str());
+		}
+		else
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1,
+		    // %2$s is replaced by size (e.g. 623.5 MB),
+		    // %3$s is replaced by file system type (e.g. reiserfs),
+		    // %4$s is replaced by mount point (e.g. /usr)
+		    txt = sformat(_("Create encrypted volume %1$s (%2$s) for %4$s with %3$s"),
+				  dev.c_str(), sizeString().c_str(), fsTypeString().c_str(),
+				  mp.c_str());
+		}
+	    }
+	    else if (!contains(vector<FsType>({ FSUNKNOWN, FSNONE }), fs))
+	    {
+		if (encryption == ENC_NONE)
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1,
+		    // %2$s is replaced by size (e.g. 623.5 MB),
+		    // %3$s is replaced by file system type (e.g. ext4)
+		    txt = sformat(_("Create volume %1$s (%2$s) with %3$s"), dev.c_str(),
+				  sizeString().c_str(), fsTypeString().c_str());
+		}
+		else
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1,
+		    // %2$s is replaced by size (e.g. 623.5 MB),
+		    // %3$s is replaced by file system type (e.g. ext4)
+		    txt = sformat(_("Create encrypted volume %1$s (%2$s) with %3$s"), dev.c_str(),
+				  sizeString().c_str(), fsTypeString().c_str());
+		}
+	    }
+	    else
+	    {
+		if (encryption == ENC_NONE)
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1,
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    txt = sformat(_("Create volume %1$s (%2$s)"), dev.c_str(), sizeString().c_str());
+		}
+		else
+		{
+		    // displayed text before action,
+		    // %1$s is replaced by device name e.g. /dev/sda1,
+		    // %2$s is replaced by size (e.g. 623.5 MB)
+		    txt = sformat(_("Create encrypted volume %1$s (%2$s)"), dev.c_str(),
+				  sizeString().c_str());
+		}
 	    }
 	}
 
-	return sformat(msg, dev.c_str(), sizeString().c_str(), fsTypeString().c_str(), mp.c_str());
+	return txt;
     }
 
 
