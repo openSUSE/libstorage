@@ -503,7 +503,6 @@ namespace storage
 	    y2mil( "ret:" << ret << " size_diff:" << size_diff );
 	    if( ret==0 )
 	    {
-		v->setSilent();
 		v->setResizedSize( v->sizeK()+size_diff );
 	    }
 	    y2mil( "size_diff:" << size_diff );
