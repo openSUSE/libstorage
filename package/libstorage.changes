@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep 22 11:32:34 CEST 2016 - shundhammer@suse.de
+
+- Don't suppress subvol commit actions after resize (bsc#1000165)
+- 2.26.9
+
+-------------------------------------------------------------------
 Wed Sep 07 14:16:38 CEST 2016 - aschnell@suse.com
 
 - improved message for creating volumes with a filesystem but
