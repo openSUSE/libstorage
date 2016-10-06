@@ -648,8 +648,7 @@ namespace storage
     {
 	int ret = 0;
 	y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
-	format = val;
-	if( !format )
+	if( !val )
 	{
 	    fs = detected_fs;
 	    mkfs_opt = "";
@@ -691,8 +690,20 @@ namespace storage
 		uuid.erase();
 	    }
 	}
+
+        if ( ret == 0 )
+        {
+            y2mil("Accepting new format value " << val << " for " << device()
+                  << " ret: " << ret);
+            format = val;
+        }
+        else
+        {
+            y2war("REJECTING new format value " << val << " for " << device()
+                  << "; keeping " << format << " ret: " << ret );
+        }
+
 	y2mil("device:" << *this );
-	y2mil("ret:" << ret);
 	return( ret );
     }
 
