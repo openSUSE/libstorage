@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Oct  6 16:00:33 CEST 2016 - shundhammer@suse.de
+
+- Don't accept 'format' flag if volume is in use (bsc#996007)
+- 2.26.10
+
+-------------------------------------------------------------------
 Thu Sep 22 11:32:34 CEST 2016 - shundhammer@suse.de
 
 - Don't suppress subvol commit actions after resize (bsc#1000165)

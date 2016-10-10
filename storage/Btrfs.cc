@@ -97,7 +97,9 @@ namespace storage
 
 
     Btrfs::Btrfs(const BtrfsCo& c, const Btrfs& v)
-	: Volume(c, v), devices(v.devices), subvolumes(v.subvolumes)
+	: Volume(c, v), devices(v.devices)
+        , dev_add(v.dev_add), dev_rem(v.dev_rem)
+        , subvolumes(v.subvolumes)
     {
 	y2deb("copy-constructed Btrfs from " << v.dev);
     }
