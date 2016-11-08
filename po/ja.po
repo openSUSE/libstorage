@@ -11,16 +11,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-11 02:22+0200\n"
+"PO-Revision-Date: 2016-11-08 04:57+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese "
-"<http://10n.opensuse.org/projects/libstorage/master/ja/>\n"
+"<https://l10n.opensuse.org/projects/libstorage/master/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 2.6\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -1001,8 +1001,7 @@ msgstr "デバイス %1$s (%2$s) を %3$s でフォーマットしています"
 #: ../storage/Dm.cc:468
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
-msgstr ""
-"デバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマットしています"
+msgstr "デバイスマッパーボリューム %1$s (%2$s) を %3$s でフォーマットしています "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1011,9 +1010,7 @@ msgstr ""
 #: ../storage/Loop.cc:335
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
-msgstr ""
-"ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %4$s でフォーマットして"
-"います"
+msgstr "ファイル %2$s (%3$s) のファイルベースデバイス %1$s を %4$s でフォーマットしています "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1037,7 +1034,7 @@ msgstr "マルチパスパーティション %1$s (%2$s) を %3$s でフォー�
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "パーティション %1$s (%2$s) を %3$s でフォーマットしています"
+msgstr "パーティション %1$s (%2$s) を %3$s でフォーマットしています "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1045,7 +1042,7 @@ msgstr "パーティション %1$s (%2$s) を %3$s でフォーマットして�
 #: ../storage/Md.cc:439
 #, c-format
 msgid "Formatting software RAID %1$s (%2$s) with %3$s "
-msgstr "ソフトウエア RAID %1$s (%2$s) を %3$s でフォーマットしています"
+msgstr "ソフトウエア RAID %1$s (%2$s) を %3$s でフォーマットしています "
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
@@ -1611,15 +1608,11 @@ msgid ""
 "    as well."
 msgstr ""
 "以下のような選択ができます:\n"
-"  - お使いのシステムでパーティション設定を修正し、パーティション数を許され"
-"る\n"
-"    範囲内に収めます。パーティション設定を修正するには、既存のオペレーティン"
-"グ\n"
+"  - お使いのシステムでパーティション設定を修正し、パーティション数を許される\n"
+"    範囲内に収めます。パーティション設定を修正するには、既存のオペレーティング\n"
 "    システムをご利用ください。\n"
-"  - 任意のパーティションを設定できて柔軟性のある LVM を使用することもできま"
-"す。\n"
-"    この場合にもパーティション設定を修正する必要があります。\n"
-"    "
+"  - 任意のパーティションを設定できて柔軟性のある LVM を使用することもできます。\n"
+"    この場合にもパーティション設定を修正する必要があります。"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #. %2$lu and %3$lu are replaced by numbers.
