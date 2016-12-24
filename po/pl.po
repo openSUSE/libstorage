@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-12-24 13:08+0000\n"
+"PO-Revision-Date: 2016-12-24 13:09+0000\n"
 "Last-Translator: Kamil Stańczyk <suszaraa@gmail.com>\n"
 "Language-Team: Polish "
 "<https://l10n.opensuse.org/projects/libstorage/master/pl/>\n"
@@ -1062,7 +1062,7 @@ msgstr "Formatowanie urządzenia %1$s (%2$s) z systemem plików %3$s"
 #, c-format
 msgid "Formatting device mapper volume %1$s (%2$s) with %3$s "
 msgstr ""
-"Formatowanie woluminu device mapper (DM) %1$s (%2$s) z systemem plików %3$s"
+"Formatowanie woluminu device mapper (DM) %1$s (%2$s) z systemem plików %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1073,7 +1073,7 @@ msgstr ""
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
 msgstr ""
 "Formatowanie urządzenia plikowego %1$s dla pliku %2$s (%3$s) z systemem "
-"plików %4$s"
+"plików %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1097,7 +1097,7 @@ msgstr "Formatowanie partycji multipath %1$s (%2$s) z systemem plików %3$s"
 #: ../storage/Partition.cc:476
 #, c-format
 msgid "Formatting partition %1$s (%2$s) with %3$s "
-msgstr "Formatowanie partycji %1$s (%2$s) z systemem plików %3$s"
+msgstr "Formatowanie partycji %1$s (%2$s) z systemem plików %3$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
