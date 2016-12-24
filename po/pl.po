@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-16 18:15+0200\n"
-"Last-Translator: Mariusz Fik <fisiu@opensuse.org>\n"
+"PO-Revision-Date: 2016-12-24 13:08+0000\n"
+"Last-Translator: Kamil Stańczyk <suszaraa@gmail.com>\n"
 "Language-Team: Polish "
-"<http://10n.opensuse.org/projects/libstorage/master/pl/>\n"
+"<https://l10n.opensuse.org/projects/libstorage/master/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 2.6\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -331,9 +331,11 @@ msgstr "Wolumin podrzędny %1$s na urządzeniu %2$s zostanie utworzony"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Wolumin podrzędny %1$s na urządzeniu %2$s zostanie utworzony"
+msgstr ""
+"Wolumin podrzędny %1$s na urządzeniu %2$s zostanie utworzony z opcją \"nie "
+"kopiuj przy zapisie\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -441,9 +443,11 @@ msgstr "Tworzenie woluminu podrzędnego %1$s na urządzeniu %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Tworzenie woluminu podrzędnego %1$s na urządzeniu %2$s"
+msgstr ""
+"Tworzenie woluminu podrzędnego %1$s na urządzeniu %2$s z opcją \"nie kopiuj "
+"przy zapisie\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1431,7 +1435,7 @@ msgstr "Ustawianie etykiety woluminu dla dysku %1$s na %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Przydzielanie właściwości pliku przy użyciu chattr nie powiodło się."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
