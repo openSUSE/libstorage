@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Tue Jan 24 17:32:40 CET 2017 - shundhammer@suse.de
+
+- Fix out of range exception if root is dm-encrypted (fate#320215)
+- 2.26.11
+
+-------------------------------------------------------------------
 Thu Oct  6 16:00:33 CEST 2016 - shundhammer@suse.de
 
 - Don't accept 'format' flag if volume is in use (bsc#996007)
