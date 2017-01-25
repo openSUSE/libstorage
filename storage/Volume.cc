@@ -2441,7 +2441,11 @@ namespace storage
     string Volume::getDmcryptName() const
     {
 	string nm;
-	if( !mp.empty() )
+        if ( mp == "/" )
+        {
+            nm = "ROOT";
+        }
+        else if ( !mp.empty() )
 	{
 	    string m = mp.substr(mp.find_first_not_of( "/" ));
 	    if( m.empty() )
