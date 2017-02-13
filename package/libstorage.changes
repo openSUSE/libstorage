@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Mon Feb 13 11:39:52 CET 2017 - aschnell@suse.com
+
+- omit option --zero for lvcreate when creating thin provisioned
+  volumes (bsc#968346)
+- 2.26.12
+
+-------------------------------------------------------------------
 Tue Jan 24 17:32:40 CET 2017 - shundhammer@suse.de
 
 - Fix out of range exception if root is dm-encrypted (fate#320215)
