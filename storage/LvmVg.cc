@@ -1387,7 +1387,7 @@ namespace storage
 		activate(true);
 	    getStorage()->showInfoCb( l->createText(true), silent );
 	    checkConsistency();
-	    string cmd = LVCREATEBIN " " + instSysString() + zeroString();
+	    string cmd = LVCREATEBIN " " + instSysString() + zeroString(l);
 	    if( !l->getOrigin().empty() )
 	    {
 		Storage::loadModuleIfNeeded("dm-snapshot");
@@ -1581,9 +1581,9 @@ namespace storage
 
 
     string
-    LvmVg::zeroString() const
+    LvmVg::zeroString(const LvmLv * lvm_lv) const
     {
-	return "--zero=y --yes ";
+	return lvm_lv->isThin() ? "--yes " : "--zero=y --yes ";
     }
 
 
