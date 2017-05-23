@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-11-08 04:57+0000\n"
+"PO-Revision-Date: 2017-05-23 07:33+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese "
 "<https://l10n.opensuse.org/projects/libstorage/master/ja/>\n"
@@ -1563,12 +1563,12 @@ msgstr "マウント解除に失敗しました。"
 #: ../storage/Volume.cc:1464
 #, c-format
 msgid "Unmounting %1$s"
-msgstr "%1$s をアンマウントしています"
+msgstr "%1$s をマウント解除しています"
 
 #. displayed text during action
 #: ../storage/Tmpfs.cc:95
 msgid "Unmounting tmpfs"
-msgstr "tmpfs をアンマウントしています"
+msgstr "tmpfs をマウント解除しています"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
