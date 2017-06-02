@@ -12,17 +12,18 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-28 08:21+0200\n"
+"PO-Revision-Date: 2017-06-02 19:39+0000\n"
 "Last-Translator: Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>\n"
-"Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
-"<http://10n.opensuse.org/projects/libstorage/master/lt/>\n"
+"Language-Team: Lithuanian "
+"<https://l10n.opensuse.org/projects/libstorage/master/lt/>\n"
 "Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10==1 && n%100!=11 ? 1 : n%"
-"10>=2 && (n%100<10 || n%100>=20) ? 2 : 3);\n"
-"X-Generator: Lokalize 1.5\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || "
+"n%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Weblate 2.6\n"
+"<http: //10n.opensuse.org/projects/libstorage/master/lt/>\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -1219,7 +1220,7 @@ msgstr "Pašalinti programinį RAID %1$s"
 #: ../storage/Btrfs.cc:1027
 #, c-format
 msgid "Remove subvolume %1$s on device %2$s"
-msgstr "Šalinti potomį %1$s įrenginyje %2$s"
+msgstr "%2$s įrenginyje pašalinti %1$s potomį"
 
 #. displayed text before action, %1$s is replaced by pathname e.g. /etc/fstab
 #: ../storage/Tmpfs.cc:119
@@ -1238,7 +1239,7 @@ msgstr "Pašalinti tmpfs tomą iš prijungimo vietos %1$s"
 #: ../storage/Volume.cc:3453
 #, c-format
 msgid "Remove volume %1$s"
-msgstr "Šalinti tomą %1$s"
+msgstr "Pašalinti tomą %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #: ../storage/LvmVg.cc:1096
