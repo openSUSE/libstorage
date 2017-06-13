@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-08-27 18:51+0000\n"
-"Last-Translator: Gustavo Sobrales <newredboy@gmail.com>\n"
+"PO-Revision-Date: 2017-06-13 11:05+0000\n"
+"Last-Translator: Javier Llorente <javier@opensuse.org>\n"
 "Language-Team: Spanish "
 "<https://l10n.opensuse.org/projects/libstorage/master/es/>\n"
 "Language: es\n"
@@ -35,7 +35,8 @@ msgstr ""
 #: ../storage/Dmraid.cc:218
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
 msgstr ""
-"(La barra de progreso no se moverá. Puede tomar bastante tiempo. ¡NO ABORTE!)"
+"(La barra de progreso no se moverá. Puede llevar bastante tiempo. ¡NO "
+"CANCELE!)"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
