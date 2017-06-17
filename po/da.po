@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-06-08 18:46+0000\n"
+"PO-Revision-Date: 2017-06-17 17:23+0000\n"
 "Last-Translator: scootergrisen <scootergrisen@gmail.com>\n"
 "Language-Team: Danish "
 "<https://l10n.opensuse.org/projects/libstorage/master/da/>\n"
@@ -307,9 +307,11 @@ msgstr "Opret underdiskområde %1$s på enheden %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Opret underdiskområde %1$s på enheden %2$s"
+msgstr ""
+"Opret underdiskområde %1$s på enheden %2$s med valgmuligheden \"no copy on "
+"write\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -415,9 +417,11 @@ msgstr "Opretter underdiskområde %1$s på enheden %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Opretter underdiskområde %1$s på enheden %2$s"
+msgstr ""
+"Opretter underdiskområde %1$s på enheden %2$s med valgmuligheden \"no copy "
+"on write\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
