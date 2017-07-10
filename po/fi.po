@@ -12,15 +12,16 @@ msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2012-04-08 10:02+0300\n"
-"Last-Translator: Jyri Palokangas <jyri.palokangas@opensuse.org>\n"
-"Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2017-07-10 16:47+0000\n"
+"Last-Translator: Jyri Palokangas <jmp@opensuse.org>\n"
+"Language-Team: Finnish "
+"<https://l10n.opensuse.org/projects/libstorage/master/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Weblate 2.13.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -243,7 +244,7 @@ msgstr "Luo jatkettu osio %1$s (%2$s)"
 #: ../storage/Loop.cc:317
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s)"
-msgstr "Luo tiedoston %2$s (%3$s) tiedostopohjainen laite %1$s "
+msgstr "Luo tiedoston%2$s (%3$s) tiedostopohjainen laite %1$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -254,8 +255,8 @@ msgstr "Luo tiedoston %2$s (%3$s) tiedostopohjainen laite %1$s "
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
-"Luo tiedoston %2$s (%3$s) tiedostopohjainen laite %1$s liitoskohtaan %5$s "
-"tiedostojärjestelmällä %4$s"
+"Luo tiedoston %2$s (%3$s) tiedostopohjainen laite %1$s liitoskohtaan %4$s "
+"tiedostojärjestelmällä %5$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -408,7 +409,7 @@ msgstr "Luodaan RAID-osio %1$s"
 #: ../storage/Loop.cc:280
 #, c-format
 msgid "Creating file-based device %1$s of file %2$s"
-msgstr "Luodaan tiedoston %2$s tiedostopohjaista laitetta %1$s "
+msgstr "Luodaan tiedoston %2$s tiedostopohjaista laitetta %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:219
@@ -610,8 +611,8 @@ msgstr[1] "Suorita dasdfmt levyille %1$s"
 #, c-format
 msgid "Executing dasdfmt for disk %1$s"
 msgid_plural "Executing dasdfmt for disks %1$s"
-msgstr[0] "Suoritetaan dasdfmt levylle %1$s..."
-msgstr[1] "Suoritetaan dasdfmt levyille %1$s..."
+msgstr[0] "Suoritetaan dasdfmt levylle %1$s"
+msgstr[1] "Suoritetaan dasdfmt levyille %1$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -848,7 +849,7 @@ msgid ""
 "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
 msgstr ""
 "Alusta tiedoston %2$s (%3$s) salattu tiedostopohjainen laite %1$s "
-"liitoskohtaan %5$s tiedostojärjestelmällä %4$s"
+"liitoskohtaan%5$s tiedostojärjestelmällä %4$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1028,7 +1029,7 @@ msgstr "Alustetaan Btrfs taltioa kokoon %1$s (käyttäen laitteita:%2$s)"
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "Alustetaan RAID-osio %1$s (%2$s) tiedostojärjestelmällä %3$s "
+msgstr "Alustetaan RAID-osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1037,7 +1038,7 @@ msgstr "Alustetaan RAID-osio %1$s (%2$s) tiedostojärjestelmällä %3$s "
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "Alustetaan laite %1$s (%2$s) tiedostojärjestelmällä %3$s "
+msgstr "Alustetaan laite %1$s (%2$s) tiedostojärjestelmällä %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1055,8 +1056,8 @@ msgstr "Alustetaan laitekuvaintaltio %1$s (%2$s) tiedostojärjestelmällä %3$s 
 #, c-format
 msgid "Formatting file-based device %1$s of %2$s (%3$s) with %4$s "
 msgstr ""
-"Alustetaan tiedoston %2$s (%3$s) tiedostopohjainen laite %1$s "
-"tiedostojärjestelmällä %4$s"
+"Alustetaan tiedoston%2$s (%3$s) tiedostopohjainen laite %1$s "
+"tiedostojärjestelmällä %4$s "
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
