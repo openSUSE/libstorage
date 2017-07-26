@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-07-26 17:49+0000\n"
-"Last-Translator: scootergrisen Required Fields <scootergrisen@gmail.com>\n"
+"PO-Revision-Date: 2017-07-26 22:00+0000\n"
+"Last-Translator: Martin Eilsøe <martin@eilsoe.dk>\n"
 "Language-Team: Danish "
 "<https://l10n.opensuse.org/projects/libstorage/master/da/>\n"
 "Language: da\n"
@@ -89,7 +89,7 @@ msgstr "Opret %1$s"
 #: ../storage/Volume.cc:3377
 #, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr ""
+msgstr "Opret BIOS grub volume %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -97,7 +97,7 @@ msgstr ""
 #: ../storage/Volume.cc:3381
 #, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr ""
+msgstr "Opret GPT PReP volume %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -105,7 +105,7 @@ msgstr ""
 #: ../storage/Volume.cc:3385
 #, c-format
 msgid "Create PReP volume %1$s (%2$s)"
-msgstr ""
+msgstr "Opret PReP volume %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1339,7 +1339,7 @@ msgstr "Sæt type af partition %1$s til %2$X"
 #: ../storage/Partition.cc:338
 #, c-format
 msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr ""
+msgstr "Sæt type af partition %1$s to %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1364,7 +1364,7 @@ msgstr "Sætter diskmærkat for %1$s til %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Fastsættelse af fil attributter med chattr fejlede."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1406,7 +1406,7 @@ msgstr "Sætter type af partition %1$s til %2$X"
 #: ../storage/Partition.cc:325
 #, c-format
 msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr ""
+msgstr "Sætter type af partition %1$s to %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
