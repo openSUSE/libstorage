@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-05-23 07:33+0000\n"
+"PO-Revision-Date: 2017-09-13 08:52+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese "
 "<https://l10n.opensuse.org/projects/libstorage/master/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.6\n"
+"X-Generator: Weblate 2.13.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -224,7 +224,7 @@ msgstr "拡張マルチパスパーティション %1$s (%2$s) を作成"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "拡張パーティション %1$s (%2$s) を作成"
+msgstr "拡張パーティション %1$s (%2$s) の作成"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -508,7 +508,7 @@ msgstr "マルチパスパーティション %1$s (%2$s) を削除"
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "パーティション %1$s (%2$s) を削除"
+msgstr "パーティション %1$s (%2$s) の削除"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
