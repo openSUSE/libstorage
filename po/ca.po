@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-16 13:14+0200\n"
+"PO-Revision-Date: 2017-09-13 13:10+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan "
-"<http://10n.opensuse.org/projects/libstorage/master/ca/>\n"
+"<https://l10n.opensuse.org/projects/libstorage/master/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 2.13.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -1599,7 +1599,7 @@ msgstr "Usa %1$s com a %2$s"
 
 #: ../storage/Graph.cc:507
 msgid "Volume Group"
-msgstr "Grup de volum"
+msgstr "Grup de volums"
 
 #. popup text
 #: ../storage/Disk.cc:550
