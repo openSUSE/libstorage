@@ -1830,8 +1830,6 @@ namespace storage
 	if( p != NULL )
 	{
 	    getStorage()->showInfoCb( p->setTypeText(true), silent );
-	    if( p->id()!=Partition::ID_LINUX && p->id()!=Partition::ID_SWAP )
-		p->eraseLabel();
 
 	    std::ostringstream options;
 	    classic(options);
