@@ -16,6 +16,11 @@
 #
 
 
+#Compat macro for new _fillupdir macro introduced in Nov 2017
+%if ! %{defined _fillupdir}
+  %define _fillupdir /var/adm/fillup-templates
+%endif
+
 Name:           libstorage
 Version:        @VERSION@
 Release:        0
@@ -156,7 +161,7 @@ Authors:
 %defattr(-,root,root)
 %{_libdir}/libstorage.so.*
 %ghost /run/libstorage
-/var/adm/fillup-templates/sysconfig.storage-libstorage
+%{_fillupdir}/sysconfig.storage-libstorage
 %doc %dir %{prefix}/share/doc/packages/libstorage
 %doc %{prefix}/share/doc/packages/libstorage/AUTHORS
 %doc %{prefix}/share/doc/packages/libstorage/COPYING
