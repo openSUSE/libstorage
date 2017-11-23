@@ -39,7 +39,7 @@ CXXWARNS="-Wall -Wextra -Wformat=2 -Wnon-virtual-dtor -Wno-unused-parameter"
 CXXFLAGS="${CXXFLAGS} -std=c++0x -DHAVE_CXX0X ${CXXWARNS}"
 
 docdir=\${prefix}/share/doc/packages/libstorage
-fillupdir=/var/adm/fillup-templates
+fillupdir=/usr/share/fillup-templates
 
 AC_SUBST(VERSION)
 AC_SUBST(LIBVERSION)
