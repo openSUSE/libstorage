@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-11-16 08:19+0000\n"
+"PO-Revision-Date: 2017-12-13 12:03+0000\n"
 "Last-Translator: Alessio Adamo <alessio.adamo@gmail.com>\n"
 "Language-Team: Italian "
 "<https://l10n.opensuse.org/projects/libstorage/master/it/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.6\n"
+"X-Generator: Weblate 2.17.1\n"
 "X-Poedit-Language: Italian\n"
 
 #. text displayed during action
@@ -247,7 +247,7 @@ msgstr "Creazione della partizione estesa multipath %1$s (%2$s)"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "Creazione della partizione estesa %1$s (%2$s)"
+msgstr "Crea la partizione estesa %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
