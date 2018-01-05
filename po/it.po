@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-12-13 12:03+0000\n"
+"PO-Revision-Date: 2018-01-05 18:02+0000\n"
 "Last-Translator: Alessio Adamo <alessio.adamo@gmail.com>\n"
 "Language-Team: Italian "
 "<https://l10n.opensuse.org/projects/libstorage/master/it/>\n"
@@ -247,7 +247,7 @@ msgstr "Creazione della partizione estesa multipath %1$s (%2$s)"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "Crea la partizione estesa %1$s (%2$s)"
+msgstr "Creare la partizione estesa %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -557,7 +557,7 @@ msgstr "Eliminazione della partizione multipath %1$s (%2$s)"
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "Eliminazione della partizione %1$s (%2$s)"
+msgstr "Eliminare la partizione %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1274,7 +1274,7 @@ msgstr "Rimozione di %1$s"
 #: ../storage/Volume.cc:1506
 #, c-format
 msgid "Remove %1$s from %2$s"
-msgstr "Rimozione di %1$s da %2$s"
+msgstr "Rimuovere %1$s da %2$s"
 
 # TLABEL modules/inst_custom_part.ycp:1787
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
