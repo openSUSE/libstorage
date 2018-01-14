@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-09-20 04:54+0000\n"
-"Last-Translator: Marguerite Su <i@marguerite.su>\n"
+"PO-Revision-Date: 2018-01-14 14:01+0000\n"
+"Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
 "Language-Team: Chinese (China) "
 "<https://l10n.opensuse.org/projects/libstorage/master/zh_CN/>\n"
 "Language: zh_CN\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.13.1\n"
+"X-Generator: Weblate 2.18\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -132,7 +132,7 @@ msgstr "以 %3$s 格式创建 RAID 分区 %1$s (%2$s) 以挂载到 %4$s"
 #: ../storage/Volume.cc:3347
 #, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 创建引导分区 %1$s(%2$s)"
+msgstr "使用 %3$s 创建引导卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
