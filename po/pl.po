@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2016-12-24 13:09+0000\n"
-"Last-Translator: Kamil Stańczyk <suszaraa@gmail.com>\n"
+"PO-Revision-Date: 2018-01-25 16:04+0000\n"
+"Last-Translator: Ewelina Michalowska <ewelina.michalowska@stgambit.com>\n"
 "Language-Team: Polish "
 "<https://l10n.opensuse.org/projects/libstorage/master/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.6\n"
+"X-Generator: Weblate 2.18\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -234,7 +234,7 @@ msgstr "Rozszerzona partycja multipath %1$s (%2$s) zostanie utworzona"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "Rozszerzona partycja %1$s (%2$s) zostanie utworzona"
+msgstr "Utwórz partycję rozszerzoną %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -531,7 +531,7 @@ msgstr "Partycja multipath %1$s (%2$s) zostanie usunięta"
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "Partycja %1$s (%2$s) zostanie usunięta"
+msgstr "Usuń partycję %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1232,7 +1232,7 @@ msgstr "%1$s zostanie usunięty"
 #: ../storage/Volume.cc:1506
 #, c-format
 msgid "Remove %1$s from %2$s"
-msgstr "%1$s zostanie usunięty z %2$s"
+msgstr "Usuń urządzenie %1$s z urządzenia %2$s"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:75
