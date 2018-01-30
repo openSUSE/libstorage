@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: @PACKAGE@\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-01-28 11:00+0000\n"
+"PO-Revision-Date: 2018-01-30 14:00+0000\n"
 "Last-Translator: George Yacoub <george.yacoub@arabize.com>\n"
 "Language-Team: Arabic "
 "<https://l10n.opensuse.org/projects/libstorage/master/ar/>\n"
@@ -219,7 +219,7 @@ msgstr "إنشاء قسم موسع متعدد المسارات %1$s (%2$s)"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "%1$sإنشاء قسم موسع %1$s (%2$s)"
+msgstr "إنشاء قسم موسع %1$s (‏%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -504,7 +504,7 @@ msgstr "حذف قسم متعدد المسارات %1$s (%2$s)"
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "حذف قسم %1$s (%2$s)"
+msgstr "حذف قسم %1$s (‏%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
