@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-01-14 14:01+0000\n"
+"PO-Revision-Date: 2018-02-03 18:01+0000\n"
 "Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
 "Language-Team: Chinese (China) "
 "<https://l10n.opensuse.org/projects/libstorage/master/zh_CN/>\n"
@@ -141,7 +141,7 @@ msgstr "使用 %3$s 创建引导卷 %1$s (%2$s)"
 #: ../storage/Dmraid.cc:122
 #, c-format
 msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建加密 RAID 分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的加密 RAID 分区 %1$s(%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
