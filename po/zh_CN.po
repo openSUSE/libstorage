@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-02-03 18:01+0000\n"
+"PO-Revision-Date: 2018-02-05 14:01+0000\n"
 "Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
 "Language-Team: Chinese (China) "
 "<https://l10n.opensuse.org/projects/libstorage/master/zh_CN/>\n"
@@ -26,7 +26,7 @@ msgstr ""
 #: ../storage/Partition.cc:539 ../storage/Dmmultipath.cc:218
 #: ../storage/Dmraid.cc:218
 msgid "(Progress bar will not move. May take very long. DO NOT ABORT!)"
-msgstr "(进度条不会移动。可能要花很长时间。不要中断！)"
+msgstr "（进度条不会移动。可能要花很长时间。请不要中止！）"
 
 #. displayed text before action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
@@ -152,7 +152,7 @@ msgstr "使用 %3$s 创建用于 %4$s 的加密 RAID 分区 %1$s(%2$s)"
 #, c-format
 msgid ""
 "Create encrypted file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "使用 %4$s 将文件 %2$s 的加密且基于文件的设备 %1$s(%3$s) 创建为 %5$s"
+msgstr "使用 %4$s 创建基于文件 %2$s (%3$s) 的加密设备 %1$s 作为 %5$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -161,7 +161,7 @@ msgstr "使用 %4$s 将文件 %2$s 的加密且基于文件的设备 %1$s(%3$s) 
 #: ../storage/LvmLv.cc:248
 #, c-format
 msgid "Create encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建加密逻辑卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的加密逻辑卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -170,7 +170,7 @@ msgstr "使用 %3$s 创建加密逻辑卷 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Dmmultipath.cc:122
 #, c-format
 msgid "Create encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建加密多路径分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的加密多路径分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -180,7 +180,7 @@ msgstr "使用 %3$s 创建加密多路径分区 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Md.cc:413
 #, c-format
 msgid "Create encrypted software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "使用 %3$s 从 %5$s 创建加密软件 RAID %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 从 %5$s 创建用于 %4$s 的加密软件 RAID %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -198,7 +198,7 @@ msgstr "创建加密分区 %1$s(%2$s)"
 #: ../storage/Volume.cc:3362
 #, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建加密卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的加密卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -227,7 +227,7 @@ msgstr "创建扩展分区 %1$s(%2$s)"
 #: ../storage/Loop.cc:317
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s)"
-msgstr "创建文件 %2$s 的基于文件的设备 %1$s(%3$s)"
+msgstr "创建基于文件 %2$s (%3$s) 的设备 %1$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -237,7 +237,7 @@ msgstr "创建文件 %2$s 的基于文件的设备 %1$s(%3$s)"
 #: ../storage/Loop.cc:296
 #, c-format
 msgid "Create file-based device %1$s of file %2$s (%3$s) as %5$s with %4$s"
-msgstr "使用 %4$s 将文件 %2$s 的基于文件的设备 %1$s(%3$s) 创建为 %5$s"
+msgstr "使用 %4$s 创建基于文件 %2$s (%3$s) 的设备 %1$s 作为 %5$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -253,7 +253,7 @@ msgstr "创建逻辑卷 %1$s(%2$s)"
 #: ../storage/LvmLv.cc:238
 #, c-format
 msgid "Create logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建逻辑卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的逻辑卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -269,7 +269,7 @@ msgstr "创建多路径分区 %1$s(%2$s)"
 #: ../storage/Dmmultipath.cc:112
 #, c-format
 msgid "Create multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建多路径分区 %1$s (%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的多路径分区 %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -278,7 +278,7 @@ msgstr "使用 %3$s 创建多路径分区 %1$s (%2$s) 以作为 %4$s"
 #: ../storage/Volume.cc:3342
 #, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 创建根分区 %1$s(%2$s)"
+msgstr "使用 %3$s 创建根卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -286,7 +286,7 @@ msgstr "使用 %3$s 创建根分区 %1$s(%2$s)"
 #: ../storage/Md.cc:423
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %3$s"
-msgstr "从 %3$s 创建软件 RAID %1$s(%2$s)"
+msgstr "从 %3$s 创建软件 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -296,7 +296,7 @@ msgstr "从 %3$s 创建软件 RAID %1$s(%2$s)"
 #: ../storage/Md.cc:402
 #, c-format
 msgid "Create software RAID %1$s (%2$s) from %5$s for %4$s with %3$s"
-msgstr "使用 %3$s 从 %5$s 创建软件 RAID %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 从 %5$s 创建用于 %4$s 的软件 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
@@ -357,7 +357,7 @@ msgstr "创建卷 %1$s(%2$s)"
 #: ../storage/Volume.cc:3356
 #, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 创建卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 创建用于 %4$s 的卷 %1$s (%2$s)"
 
 #. displayed text before action
 #. %1$s is replaced by a name (e.g. system)
@@ -385,7 +385,7 @@ msgstr "正在创建 RAID 分区 %1$s"
 #: ../storage/Loop.cc:280
 #, c-format
 msgid "Creating file-based device %1$s of file %2$s"
-msgstr "正在创建文件 %2$s 的基于文件的设备 %1$s"
+msgstr "正在创建基于文件 %2$s 的设备 %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:219
@@ -710,7 +710,7 @@ msgstr "格式化 %1$s 大小的 Btrfs 卷 (使用中的设备：%2$s)"
 #: ../storage/Btrfs.cc:739
 #, c-format
 msgid "Format Btrfs volume of size %1$s for %3$s (used devices:%2$s)"
-msgstr "为 %3$s 格式化 %1$s 大小的 Btrfs 卷 (使用中的设备：%2$s)"
+msgstr "为 %3$s 格式化 %1$s 大小的 Btrfs 卷（使用中的设备：%2$s）"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -719,7 +719,7 @@ msgstr "为 %3$s 格式化 %1$s 大小的 Btrfs 卷 (使用中的设备：%2$s)"
 #: ../storage/Dmraid.cc:174
 #, c-format
 msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化 RAID 分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的 RAID 分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -744,7 +744,7 @@ msgstr "使用 %3$s 格式化 RAID 分区 %1$s (%2$s)"
 #: ../storage/Volume.cc:860
 #, c-format
 msgid "Format device %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化设备 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的设备 %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -753,7 +753,7 @@ msgstr "使用 %3$s 格式化设备 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Volume.cc:851
 #, c-format
 msgid "Format device %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化设备 %1$s(%2$s)"
+msgstr "使用 %3$s 格式化设备 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -762,7 +762,7 @@ msgstr "使用 %3$s 格式化设备 %1$s(%2$s)"
 #: ../storage/Dm.cc:481
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化设备映射器卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的设备映射器卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -770,7 +770,7 @@ msgstr "使用 %3$s 格式化设备映射器卷 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Dm.cc:501
 #, c-format
 msgid "Format device mapper volume %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化设备映射器卷 %1$s(%2$s)"
+msgstr "使用 %3$s 格式化设备映射器卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -779,7 +779,7 @@ msgstr "使用 %3$s 格式化设备映射器卷 %1$s(%2$s)"
 #: ../storage/Dmraid.cc:184
 #, c-format
 msgid "Format encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密 RAID 分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密 RAID 分区 %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -789,7 +789,7 @@ msgstr "使用 %3$s 格式化加密 RAID 分区 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Volume.cc:869
 #, c-format
 msgid "Format encrypted device %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密设备 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密设备 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -798,7 +798,7 @@ msgstr "使用 %3$s 格式化加密设备 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Dm.cc:491
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密设备映射器卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密设备映射器卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -809,7 +809,7 @@ msgstr "使用 %3$s 格式化加密设备映射器卷 %1$s(%2$s) 以作为 %4$s"
 #, c-format
 msgid ""
 "Format encrypted file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "使用 %4$s 将 %2$s 加密且基于文件的设备 %1$s(%3$s) 格式化为 %5$s"
+msgstr "使用 %4$s 格式化基于文件 %2$s (%3$s) 的加密设备 %1$s 作为 %5$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -818,7 +818,7 @@ msgstr "使用 %4$s 将 %2$s 加密且基于文件的设备 %1$s(%3$s) 格式化
 #: ../storage/LvmLv.cc:302
 #, c-format
 msgid "Format encrypted logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密逻辑卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密逻辑卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -827,7 +827,7 @@ msgstr "使用 %3$s 格式化加密逻辑卷 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Dmmultipath.cc:184
 #, c-format
 msgid "Format encrypted multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密多路径分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密多路径分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -836,7 +836,7 @@ msgstr "使用 %3$s 格式化加密多路径分区 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Partition.cc:506
 #, c-format
 msgid "Format encrypted partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -845,7 +845,7 @@ msgstr "使用 %3$s 格式化加密分区 %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Md.cc:462
 #, c-format
 msgid "Format encrypted software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化加密软件 RAID %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的加密软件 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -855,7 +855,7 @@ msgstr "使用 %3$s 格式化加密软件 RAID %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Loop.cc:353
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) as %5$s with %4$s"
-msgstr "使用 %4$s 将 %2$s 的基于文件的设备 %1$s(%3$s) 格式化为 %5$s"
+msgstr "使用 %4$s 格式化基于文件 %2$s (%3$s) 的设备 %1$s 作为 %5$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -864,7 +864,7 @@ msgstr "使用 %4$s 将 %2$s 的基于文件的设备 %1$s(%3$s) 格式化为 %5
 #: ../storage/Loop.cc:375
 #, c-format
 msgid "Format file-based device %1$s of %2$s (%3$s) with %4$s"
-msgstr "使用 %4$s 格式化 %2$s 的基于文件的设备 %1$s(%3$s)"
+msgstr "使用 %4$s 格式化基于 %2$s (%3$s) 的设备 %1$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -873,7 +873,7 @@ msgstr "使用 %4$s 格式化 %2$s 的基于文件的设备 %1$s(%3$s)"
 #: ../storage/LvmLv.cc:292
 #, c-format
 msgid "Format logical volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化逻辑卷 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的逻辑卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -888,7 +888,7 @@ msgstr "格式化逻辑卷 %1$s(%2$s) 以作为交换分区"
 #: ../storage/LvmLv.cc:312
 #, c-format
 msgid "Format logical volume %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化逻辑卷 %1$s(%2$s)"
+msgstr "使用 %3$s 格式化逻辑卷 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -897,7 +897,7 @@ msgstr "使用 %3$s 格式化逻辑卷 %1$s(%2$s)"
 #: ../storage/Dmmultipath.cc:174
 #, c-format
 msgid "Format multipath partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化多路径分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的多路径分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -921,7 +921,7 @@ msgstr "使用 %3$s 格式化多路径分区 %1$s (%2$s)"
 #: ../storage/Partition.cc:496
 #, c-format
 msgid "Format partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化分区 %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的分区 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -945,7 +945,7 @@ msgstr "使用 %3$s 格式化分区 %1$s (%2$s)"
 #: ../storage/Md.cc:452
 #, c-format
 msgid "Format software RAID %1$s (%2$s) for %4$s with %3$s"
-msgstr "使用 %3$s 格式化软件 RAID %1$s(%2$s) 以作为 %4$s"
+msgstr "使用 %3$s 格式化用于 %4$s 的软件 RAID %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -953,7 +953,7 @@ msgstr "使用 %3$s 格式化软件 RAID %1$s(%2$s) 以作为 %4$s"
 #: ../storage/Md.cc:472
 #, c-format
 msgid "Format software RAID %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化软件 RAID %1$s(%2$s)"
+msgstr "使用 %3$s 格式化软件 RAID %1$s (%2$s)"
 
 #. displayed text during action,
 #. %1$s is replaced by size (e.g. 623.5 MB)
@@ -969,7 +969,7 @@ msgstr "正在格式化 %1$s 大小的 Btrfs 卷 (使用中的设备：%2$s)"
 #: ../storage/Dmraid.cc:154
 #, c-format
 msgid "Formatting RAID partition %1$s (%2$s) with %3$s"
-msgstr "正在使用 %3$s 格式化 RAID 分区 %1$s(%2$s)"
+msgstr "正在使用 %3$s 格式化 RAID 分区 %1$s (%2$s)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -978,7 +978,7 @@ msgstr "正在使用 %3$s 格式化 RAID 分区 %1$s(%2$s)"
 #: ../storage/Volume.cc:843
 #, c-format
 msgid "Formatting device %1$s (%2$s) with %3$s"
-msgstr "正在使用 %3$s 格式化设备 %1$s(%2$s)"
+msgstr "正在使用 %3$s 格式化设备 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/mapper/system
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1118,28 +1118,28 @@ msgstr "PiB"
 #: ../storage/Btrfs.cc:963
 #, c-format
 msgid "Reduce Btrfs volume %1$s by %2$s"
-msgstr "使用 %2$s 减少 Btrfs 卷 %1$s"
+msgstr "由 %2$s 缩减 Btrfs 卷 %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1163
 #, c-format
 msgid "Reduce volume group %1$s by %2$s"
-msgstr "使用 %2$s 减少卷组 %1$s"
+msgstr "由 %2$s 缩减卷组 %1$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:956
 #, c-format
 msgid "Reducing Btrfs volume %1$s by %2$s"
-msgstr "正在使用 %2$s 减少 Btrfs 卷 %1$s"
+msgstr "正在由 %2$s 缩减 Btrfs 卷 %1$s"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. system),
 #. %2$s is replaced by a device name (e.g. /dev/hda1)
 #: ../storage/LvmVg.cc:1156
 #, c-format
 msgid "Reducing volume group %1$s by %2$s"
-msgstr "正在使用 %2$s 减少卷组 %1$s"
+msgstr "正在由 %2$s 缩减卷组 %1$s"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
@@ -1173,7 +1173,7 @@ msgstr "去除 RAID %1$s"
 #: ../storage/EtcFstab.cc:982
 #, c-format
 msgid "Remove entry for mount point %1$s from %2$s"
-msgstr "从 %2$s 中去除挂载点 %1$s 的项"
+msgstr "从 %2$s 中去除挂载点 %1$s 的条目"
 
 #. displayed text before action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1028
@@ -1237,7 +1237,7 @@ msgstr "正在去除 RAID %1$s"
 #: ../storage/EtcFstab.cc:975
 #, c-format
 msgid "Removing entry for mount point %1$s from %2$s"
-msgstr "正在从 %2$s 中去除挂载点 %1$s 的项"
+msgstr "正在从 %2$s 中去除挂载点 %1$s 的条目"
 
 #. displayed text during action, %1$s is replaced by a name (e.g. pdc_igeeeadj),
 #: ../storage/MdPartCo.cc:1023
@@ -1559,14 +1559,14 @@ msgstr "正在卸载缓存文件系统"
 #: ../storage/EtcFstab.cc:961
 #, c-format
 msgid "Update entry for mount point %1$s in %2$s"
-msgstr "更新 %2$s 中的挂载点 %1$s 的项"
+msgstr "更新 %2$s 中的挂载点 %1$s 的条目"
 
 #. displayed text during action, %1$s is replaced by mount point e.g. /home
 #. %2$s is replaced by a pathname e.g. /etc/fstab
 #: ../storage/EtcFstab.cc:954
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
-msgstr "正在更新 %2$s 中的挂载点 %1$s 的项"
+msgstr "正在更新 %2$s 中的挂载点 %1$s 的条目"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
