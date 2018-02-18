@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-09-13 09:29+0000\n"
-"Last-Translator: Arvin Schnell <aschnell@suse.com>\n"
+"PO-Revision-Date: 2018-02-18 16:56+0000\n"
+"Last-Translator: Tommi Nieminen <software@legisign.org>\n"
 "Language-Team: Finnish "
 "<https://l10n.opensuse.org/projects/libstorage/master/fi/>\n"
 "Language: fi\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.13.1\n"
+"X-Generator: Weblate 2.18\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -93,25 +93,25 @@ msgstr "Luo %1$s"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3377
-#, fuzzy, c-format
+#, c-format
 msgid "Create BIOS grub volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
+msgstr "Luo BIOS-grub-taltio %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3381
-#, fuzzy, c-format
+#, c-format
 msgid "Create GPT PReP volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
+msgstr "Luo GPT-PReP-taltio %1$s (%2$s)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3385
-#, fuzzy, c-format
+#, c-format
 msgid "Create PReP volume %1$s (%2$s)"
-msgstr "Luo taltio %1$s (%2$s)"
+msgstr "Luo PrEP-taltio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -332,9 +332,9 @@ msgstr "Luo alitaltio %1$s laitteelle %2$s"
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Luo alitaltio %1$s laitteelle %2$s"
+msgstr "Luo alitaltio %1$s laitteelle %2$s \"no copy on write\" -asetuksella"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -440,9 +440,10 @@ msgstr "Luodaan alitaltio %1$s laitteeseen %2$s"
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "Luodaan alitaltio %1$s laitteeseen %2$s"
+msgstr ""
+"Luodaan alitaltio %1$s laitteeseen %2$s \"no copy on write\" -asetuksella"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1393,9 +1394,9 @@ msgstr "Aseta osion %1$s tyypiksi %2$X"
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
 #. hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:338
-#, fuzzy, c-format
+#, c-format
 msgid "Set type of partition %1$s to %2$s (%3$X)"
-msgstr "Aseta osion %1$s tyypiksi %2$X"
+msgstr "Aseta osion %1$s tyypiksi %2$s (%3$X)"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1420,7 +1421,7 @@ msgstr "Asetetaan levyn %1$s nimeksi %2$s"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Tiedostomääritteiden asettaminen chattr-komennolla epäonnistui."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1460,9 +1461,9 @@ msgstr "Asetetaan osion %1$s tyypiksi %2$X"
 #. %2$s is replaced by partiton type (e.g. Linux LVM), %3$X is replaced by
 #. hexadecimal number (e.g. 8E)
 #: ../storage/Partition.cc:325
-#, fuzzy, c-format
+#, c-format
 msgid "Setting type of partition %1$s to %2$s (%3$X)"
-msgstr "Asetetaan osion %1$s tyypiksi %2$X"
+msgstr "Asetetaan osion %1$s tyypiksi %2$s (%3$X)"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
