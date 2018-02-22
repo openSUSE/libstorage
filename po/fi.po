@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-02-18 16:56+0000\n"
+"PO-Revision-Date: 2018-02-23 00:02+0000\n"
 "Last-Translator: Tommi Nieminen <software@legisign.org>\n"
 "Language-Team: Finnish "
 "<https://l10n.opensuse.org/projects/libstorage/master/fi/>\n"
@@ -236,7 +236,7 @@ msgstr "Luo jatkettu multipath-osio %1$s (%2$s)"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "Luo jatkettu osio %1$s (%2$s)"
+msgstr "Luo laajennettu osio %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -592,7 +592,7 @@ msgstr "E"
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
 msgid "EB"
-msgstr "EB"
+msgstr "Et"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
@@ -1101,7 +1101,7 @@ msgstr "G"
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
 msgid "GB"
-msgstr "GB"
+msgstr "Gt"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
@@ -1129,7 +1129,7 @@ msgstr "M"
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
 msgid "MB"
-msgstr "MB"
+msgstr "Mt"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
@@ -1166,7 +1166,7 @@ msgstr "P"
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
 msgid "PB"
-msgstr "PB"
+msgstr "Pt"
 
 #: ../storage/Graph.cc:495
 msgid "Partition"
@@ -1566,7 +1566,7 @@ msgstr "T"
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:94
 msgid "TB"
-msgstr "TB"
+msgstr "Tt"
 
 #. popup text %1$s is replaced by disk name e.g. /dev/hda
 #: ../storage/Disk.cc:336
@@ -1684,7 +1684,7 @@ msgstr "k"
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:61
 msgid "kB"
-msgstr "kB"
+msgstr "kt"
 
 #~ msgid "Executing fdasd for disk %1$s"
 #~ msgstr "Suoritetaan fdasd levylle %1$s"
