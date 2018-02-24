@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-12-05 23:28+0200\n"
-"Last-Translator: Jonas Svensson <jonas@ekhorva.se>\n"
+"PO-Revision-Date: 2018-02-25 01:06+0000\n"
+"Last-Translator: Ruta Reknere <ruta.reknere@nordtext.com>\n"
 "Language-Team: Swedish "
-"<http://l10n.opensuse.org/projects/libstorage/master/sv/>\n"
+"<https://l10n.opensuse.org/projects/libstorage/master/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 2.18\n"
 
 # SLE12
 #. text displayed during action
@@ -1140,7 +1140,7 @@ msgstr "Hårddisk"
 #. symbol for "kibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:58
 msgid "KiB"
-msgstr "KB"
+msgstr "KiB"
 
 # SLE12
 #: ../storage/Graph.cc:511
