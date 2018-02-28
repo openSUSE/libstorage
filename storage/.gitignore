@@ -1,5 +1,0 @@
-StorageVersion.h
-gen_pathlist.cc
-gen_md5sum.cc
-*.lo
-*.la
