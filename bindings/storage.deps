@@ -1,7 +1,0 @@
-
-DEPENDENCIES =						\
-	${top_srcdir}/storage/StorageInterface.h	\
-	${top_srcdir}/storage/HumanString.h		\
-	${top_srcdir}/storage/Graph.h			\
-	${top_srcdir}/storage/Utils.h
-

@@ -1,7 +1,0 @@
-*.o
-*.single
-libstorage.log
-libstorage.sum
-site.bak
-site.exp
-tmp

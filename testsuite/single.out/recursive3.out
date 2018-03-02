@@ -1,6 +1,0 @@
-/dev/sda: 
-/dev/sda1: /dev/sda
-/dev/sda2: /dev/sda
-/dev/system: /dev/sda2 /dev/sda
-/dev/system/root: /dev/system /dev/sda2 /dev/sda
-/dev/sdxyz: -2034

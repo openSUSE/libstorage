@@ -1,7 +1,0 @@
-parse1
-name:system uuid:0CjwWr-FrTK-wpFX-jagq-hdqS-cLbX-QNLQyH status:resizable pe_size:4096 num_pe:3994 free_pe:1
-lv name:home uuid:RhARFY-6Ygt-fD6z-sfce-guO0-wF3W-VVDOuz status:available num_le:2084
-lv name:root uuid:7tqhRv-uE2c-Nepc-6qd8-Uz80-kyMW-5Ce7Pm status:available num_le:1536
-lv name:swap uuid:hTHP5T-d1Au-s79B-OYBH-vn1U-i4v0-kvBAzO status:available num_le:373
-pv device:/dev/sda2 uuid:xzyv9B-emKN-tx32-ySlg-EId1-pbHW-D5XkdZ status:allocatable num_pe:3994 free_pe:1
-
