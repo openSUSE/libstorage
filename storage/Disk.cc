@@ -2046,7 +2046,7 @@ namespace storage
 		cmd_line << PARTEDCMD "--wipesignatures ";
 		cmd_line << "--align=" << toString(getStorage()->getPartitionAlignment()) << " ";
 		cmd_line << quote(device()) << " unit cyl mkpart ";
-		if (label != "dasd" && label != "sun")
+		if (label != "dasd" && label != "sun" && label != "gpt")
 		{
 		    switch( p->type() )
 		    {
@@ -2064,6 +2064,10 @@ namespace storage
 			    break;
 		    }
 		}
+		if (label == "gpt")
+		    // pass empty string as partition name (see
+		    // https://bugzilla.suse.com/show_bug.cgi?id=1023818)
+		    cmd_line << "'\"\"' ";
 	    }
 	    if( ret==0 && p->type()!=EXTENDED )
 	    {
