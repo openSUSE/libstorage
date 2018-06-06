@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jun  6 13:04:08 UTC 2018 - igonzalezsosa@suse.com
+
+- Create partitions on GPT with empty name (bsc#1023818)
+- 2.26.14
+
+-------------------------------------------------------------------
 Thu Oct 12 17:22:01 CEST 2017 - shundhammer@suse.de
 
 - Don't discard the internally stored volume label before it is
