@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 02 11:38:53 CEST 2018 - aschnell@suse.com
+
+- added special handling when creating udev ids starting with
+  dm-uuid for partitions on multipath (bsc#1099394)
+- 2.26.12.1
+
+-------------------------------------------------------------------
 Mon Feb 13 11:39:52 CET 2017 - aschnell@suse.com
 
 - omit option --zero for lvcreate when creating thin provisioned

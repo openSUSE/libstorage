@@ -432,10 +432,19 @@ namespace storage
 	return( ret );
     }
 
+
     string
     udevAppendPart(const string& s, unsigned num)
     {
-	return s + "-part" + decString(num);
+	string addition = "-part" + decString(num);
+
+	// The partition link for udev id links starting with dm-uuid is
+	// special for multipath and dmraid (see bsc #1099394).
+
+	if (boost::starts_with(s, "dm-uuid-mpath") || boost::starts_with(s, "dm-uuid-DMRAID"))
+	    return "dm-uuid" + addition + s.substr(strlen("dm-uuid"));
+
+	return s + addition;
     }
 
 
