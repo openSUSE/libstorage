@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Thu Aug 02 11:38:53 CEST 2018 - aschnell@suse.com
+
+- added special handling when creating udev ids starting with
+  dm-uuid for partitions on multipath (bsc#1099394)
+- 2.26.15
+
+-------------------------------------------------------------------
 Wed Jun  6 13:04:08 UTC 2018 - igonzalezsosa@suse.com
 
 - Create partitions on GPT with empty name (bsc#1023818)
