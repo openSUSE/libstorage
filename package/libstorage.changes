@@ -1,4 +1,11 @@
 -------------------------------------------------------------------
+Fri Aug 17 11:22:00 UTC 2018 - snwint@suse.com
+
+- Don't discard the internally stored volume label before it is applied
+  (bsc#1061850)
+- 2.26.12.2
+
+-------------------------------------------------------------------
 Thu Aug 02 11:38:53 CEST 2018 - aschnell@suse.com
 
 - added special handling when creating udev ids starting with
