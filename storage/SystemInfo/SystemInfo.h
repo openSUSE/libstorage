@@ -107,9 +107,9 @@ namespace storage
 	public:
 
 	    const Object& get(Args... args)
-	    {
-		if (e)
-		    rethrow_exception(e);
+            {
+		if (ep)
+                    std::rethrow_exception(ep);
 
 		if (!object)
 		{
@@ -117,10 +117,10 @@ namespace storage
 		    {
 			object.reset(new Object(args...));
 		    }
-		    catch (exception)
+		    catch (const std::exception &e)
 		    {
-			e = current_exception();
-			rethrow_exception(e);
+			ep = std::current_exception();
+                        std::rethrow_exception(ep);
 		    }
 		}
 
@@ -129,9 +129,8 @@ namespace storage
 
 	private:
 
-	    shared_ptr<Object> object;
-	    exception_ptr e;
-
+            std::shared_ptr<Object> object;
+            std::exception_ptr ep;
 	};
 
 	template <class Object>
