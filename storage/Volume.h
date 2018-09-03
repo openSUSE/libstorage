@@ -250,6 +250,7 @@ namespace storage
 	int doTuneExtDataMode(const string& data_mode);
 	bool needLosetup( bool urgent ) const;
 	bool needCryptsetup() const;
+        bool needLuksFormat( bool readonly ) const;
 	int doLosetup();
 	int doCryptsetup(bool readonly);
 	int loUnsetup( bool force=false );

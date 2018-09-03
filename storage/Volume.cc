@@ -1290,7 +1290,7 @@ namespace storage
 	setUsedBy( ubt, uuid );
 	y2mil( "volume:" << *this );
     }
-    
+
     void Volume::initUsedByUuid( UsedByType ubt, const string& uuid )
     {
 	y2mil( "device:" << device() << " to uuid:" << uuid );
@@ -2222,6 +2222,27 @@ namespace storage
 	return( ret );
     }
 
+    bool Volume::needLuksFormat( bool readonly ) const
+    {
+        bool ret = false;
+
+        if ( !readonly )
+        {
+            if ( format )
+                ret = true;
+            else if ( isTmpCryptMp( mp ) && crypt_pwd.empty() )
+                ret = true;
+            else if ( encryption != ENC_NONE &&
+                      orig_crypt_pwd != crypt_pwd )
+            {
+                ret = true;
+            }
+        }
+
+        y2mil("ret: " << ret );
+        return ret;
+    }
+
     bool Volume::needCrsetup( bool urgent ) const
     {
 	return( needLosetup(urgent)||needCryptsetup() );
@@ -2536,9 +2557,7 @@ namespace storage
 #ifdef DEBUG_CRYPT_PASSWORD
 		y2mil( "pw:\"" << crypt_pwd << "\" orig:\"" << orig_crypt_pwd << "\"" );
 #endif
-		if( !readonly &&
-		    (format || (isTmpCryptMp(mp) && crypt_pwd.empty()) ||
-		     (encryption!=ENC_NONE && orig_crypt_pwd!=crypt_pwd)) )
+		if( needLuksFormat( readonly ) )
 		{
                     SystemCmd * cryptSetupCmd = createCryptSetupCmd( encryption, dmcrypt_dev, mp, crypt_pwd, true );
 
