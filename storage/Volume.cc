@@ -662,6 +662,7 @@ namespace storage
 	    FsCapabilities caps;
 	    if (isUsedBy())
 	    {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
 	    }
 	    else if (getStorage()->getFsCapabilities(new_fs, caps) && caps.minimalFsSizeK > size_k)
@@ -719,6 +720,7 @@ namespace storage
 	}
 	else if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -747,6 +749,7 @@ namespace storage
 	y2mil("beforehand: " << *this);
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -798,6 +801,7 @@ namespace storage
 	y2mil("device: " << dev << " options: " << options << " encr: " << toString(encryption));
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -1051,6 +1055,7 @@ namespace storage
 	getStorage()->showInfoCb( formatText(true), silent );
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else if( isMounted() )
@@ -1573,6 +1578,7 @@ namespace storage
 	}
 	if (ret == 0 && !mp.empty() && isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	if( ret==0 && !mp.empty() && !getStorage()->testmode() )
@@ -1639,7 +1645,10 @@ namespace storage
 		ret = btrfs->canResize( newSizeK );
 	    }
 	    else
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	}
 	else
 	{
@@ -1852,7 +1861,10 @@ namespace storage
 	{
 	    const Volume* btrfs = NULL;
 	    if( !getStorage()->isUsedBySingleBtrfs(*this, &btrfs) )
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	}
 	if( ret==0 )
 	{
@@ -2688,6 +2700,7 @@ namespace storage
 	}
 	if (ret == 0 && isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	if( ret==0 && is_mounted && !caps.labelWhileMounted )
@@ -2784,7 +2797,10 @@ namespace storage
 	    if( caps.labelLength < val.size() )
 		ret = VOLUME_LABEL_TOO_LONG;
 	    else if (isUsedBy())
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	    else
 	    {
 		if (fs == VFAT)
