@@ -634,7 +634,6 @@ namespace storage
 	    if (setUsedByLvm && entry.is_lvm)
 	    {
 		setUsedBy(UB_LVM,"");
-
 	    }
 	}
     }
