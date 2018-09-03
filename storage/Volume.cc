@@ -1288,6 +1288,13 @@ namespace storage
     void Volume::setUsedByUuid( UsedByType ubt, const string& uuid )
     {
 	y2mil( "device:" << device() << " to uuid:" << uuid );
+	setUsedBy( ubt, uuid );
+	y2mil( "volume:" << *this );
+    }
+    
+    void Volume::initUsedByUuid( UsedByType ubt, const string& uuid )
+    {
+	y2mil( "device:" << device() << " to uuid:" << uuid );
 	eraseUuid();
 	eraseLabel();
 	setMount( "" );
@@ -1295,6 +1302,7 @@ namespace storage
 	is_mounted = false;
 	detected_fs = fs;
 	setUsedBy( ubt, uuid );
+	y2mil( "volume:" << *this );
     }
 
     string Volume::getFilesysSysfsPath() const

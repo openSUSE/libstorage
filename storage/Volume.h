@@ -148,6 +148,7 @@ namespace storage
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
 	void setUsedByUuid( UsedByType type, const string& uuid );
+	void initUsedByUuid( UsedByType type, const string& uuid );
 	void setDmcryptDev( const string& dm, bool active );
 	void setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active );
 	virtual void forgetResize() { size_k=orig_size_k; }
