@@ -2415,7 +2415,6 @@ namespace storage
 		    {
 			string uuid;
 			co->addFromVolume( *vol, uuid );
-			vol->setUsedByUuid( UB_BTRFS, uuid );
 		    }
 		}
 	    }
