@@ -188,7 +188,7 @@ namespace storage
     bool BtrfsCo::existSubvolume( const string& device, const string& name )
     {
 	bool ret = false;
-	y2mil( "device:" << device << " name:" << name );
+	y2mil( "device: " << device << " name: " << name );
 	BtrfsIter i;
 	if( findBtrfs( device, i ))
 	    ret = i->existSubvolume( name );
@@ -201,7 +201,7 @@ namespace storage
     BtrfsCo::createSubvolume(const string& device, const string& name, bool nocow)
     {
 	int ret = 0;
-	y2mil("device:" << device << " name:" << name << " nocow:" << nocow);
+	y2mil("device: " << device << " name: " << name << " nocow: " << nocow);
 	BtrfsIter i;
 	if( readonly() )
 	    ret = BTRFS_CHANGE_READONLY;
@@ -217,7 +217,7 @@ namespace storage
     int BtrfsCo::removeSubvolume( const string& device, const string& name )
     {
 	int ret = 0;
-	y2mil( "device:" << device << " name:" << name );
+	y2mil( "device: " << device << " name: " << name );
 	BtrfsIter i;
 	if( readonly() )
 	    ret = BTRFS_CHANGE_READONLY;
