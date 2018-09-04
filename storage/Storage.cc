@@ -7721,7 +7721,7 @@ namespace storage
 
     bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
     {
-	y2mil( "device:" << vol->device() << " opts:" << opt );
+	y2mil( "mountDevice: " << vol->mountDevice() << " opts: " << opt );
 	bool ret = false;
 	removeDmTableTo( *vol );
 	mdir = tmpDir() + "/tmp-mp-XXXXXX";
@@ -7751,7 +7751,7 @@ namespace storage
 	    list<string> opt_l = splitString(opt, ",");
 	    bool ro = find(opt_l.begin(), opt_l.end(), "ro") != opt_l.end();
 
-	    if( mountDev( vol->device(), mdir, ro, opts ) )
+	    if( mountDev( vol->mountDevice(), mdir, ro, opts ) )
 	    {
 		ret = true;
 	    }
