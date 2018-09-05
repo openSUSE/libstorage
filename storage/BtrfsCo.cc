@@ -336,7 +336,7 @@ namespace storage
 
     int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
     {
-	y2mil("name:" << name() << " stage:" << stage);
+	y2mil("name: " << name() << " stage: " << stage);
 	int ret = 0;
 	if( stage==DECREASE )
 	{
@@ -350,7 +350,12 @@ namespace storage
 		ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}
 	if( ret==0 )
-	    ret = Container::commitChanges( stage, vol );
+        {
+            if ( stage == FORMAT )
+                ret = formatBtrfs( vol );
+            else
+                ret = Container::commitChanges( stage, vol );
+        }
 	if( ret==0 && stage==INCREASE )
 	{
 	    Btrfs * b = dynamic_cast<Btrfs *>(vol);
@@ -375,7 +380,34 @@ namespace storage
 	    else
 		ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
+	return( ret );
+    }
+
+    int BtrfsCo::formatBtrfs( Volume * vol )
+    {
+        y2mil("vol: " << *vol );
+        int ret = 0;
+        Btrfs * btrfsVol = dynamic_cast<Btrfs *>(vol);
+
+        if (!btrfsVol )
+            ret = BTRFS_COMMIT_INVALID_VOLUME;
+
+        if ( ret == 0 )
+        {
+            Volume * realVol = btrfsVol->findRealVolume();
+            y2mil("realVol: " << *realVol );
+
+            if ( !realVol->getFormat() )
+                y2mil("Volume already formatted: " << *realVol );
+            else
+            {
+                y2mil("Formatting volume " << *realVol );
+                ret = Container::commitChanges( FORMAT, realVol );
+            }
+        }
+
+	y2mil("ret: " << ret);
 	return( ret );
     }
 

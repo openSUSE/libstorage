@@ -88,6 +88,8 @@ namespace storage
 	int clearSignature();
 
 	void changeDeviceName( const string& old, const string& nw );
+	Volume const * findRealVolume() const;
+	Volume * findRealVolume();
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
 	static bool needCreateSubvol( const Btrfs& v );
@@ -101,7 +103,6 @@ namespace storage
 	list<string> dev_add;
 	list<string> dev_rem;
 	list<Subvolume> subvolumes;
-	Volume const * findRealVolume() const;
 
 	virtual int extraFstabAdd(EtcFstab* fstab, const FstabChange& change) override;
 	virtual int extraFstabUpdate(EtcFstab* fstab, const FstabKey& key, const FstabChange& change) override;

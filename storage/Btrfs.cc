@@ -695,6 +695,19 @@ namespace storage
 	return( ret );
     }
 
+    Volume * Btrfs::findRealVolume()
+    {
+	Volume const *constVol = NULL;
+	if( !getStorage()->findVolume( devices.front(), constVol, true ))
+	    constVol = NULL;
+
+        // No, this const_cast is not elegant, but the way this library is
+        // designed doesn't leave us with a better option without changing it
+        // in a gazillion places.
+        Volume * vol = const_cast<Volume *>(constVol);
+	return( vol );
+    }
+
     Volume const * Btrfs::findRealVolume() const
     {
 	Volume const *v = NULL;

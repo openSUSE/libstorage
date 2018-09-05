@@ -80,6 +80,8 @@ namespace storage
 
 
     protected:
+        int formatBtrfs( Volume * vol );
+
 	// iterators over BTRFS volumes
 	// protected typedefs for iterators over BTRFS volumes
 	typedef CastIterator<VIter, Btrfs *> BtrfsInter;
