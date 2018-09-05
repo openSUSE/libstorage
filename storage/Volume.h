@@ -73,7 +73,7 @@ namespace storage
 
 	void saveData(xmlNode* node) const;
 
-	const string& mountDevice() const;
+	virtual const string& mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
 
@@ -224,6 +224,10 @@ namespace storage
 	static bool isTmpCryptMp( const string& mp );
 	static bool umountDir( const string& mp );
 
+	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
+			    const string& options = "") const;
+	int umountTmpMount(TmpMount& tmp_mount, int ret) const;
+        
     protected:
 	void init();
 	void setNameDev();
@@ -258,9 +262,6 @@ namespace storage
 	bool pwdLengthOk( storage::EncryptType typ, const string& val,
 			  bool format ) const;
 	bool noFreqPassno() const;
-	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
-			    const string& options = "") const;
-	int umountTmpMount(TmpMount& tmp_mount, int ret) const;
 	int doFormatBtrfs();
 
 	string getLosetupCmd( const string& fname ) const;

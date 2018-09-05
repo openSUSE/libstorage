@@ -43,6 +43,7 @@ namespace storage
 	Btrfs( const BtrfsCo& c, const Btrfs& v);
 	virtual ~Btrfs();
 
+	virtual const string& mountDevice() const;
 	void clearSubvolumes() { subvolumes.clear(); }
 	void addSubvolume(const string& path, bool nocow);
 	int detectSubvolumes(SystemInfo& systeminfo);

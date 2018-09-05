@@ -694,6 +694,22 @@ namespace storage
 	    ret = v->sysfsPath();
 	return( ret );
     }
+    
+    const string& Btrfs::mountDevice() const
+    {
+        if ( cont && dynamic_cast<const BtrfsCo *>(cont) )
+        {
+            Volume const *realVolume = findRealVolume();
+
+            if ( realVolume && realVolume != this )
+            {
+                y2mil( "Real mount device: " << realVolume->mountDevice() );
+                return realVolume->mountDevice();
+            }
+        }
+
+        return this->Volume::mountDevice();
+    }
 
     Volume * Btrfs::findRealVolume()
     {
