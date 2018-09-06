@@ -694,21 +694,68 @@ namespace storage
 	    ret = v->sysfsPath();
 	return( ret );
     }
-    
-    const string& Btrfs::mountDevice() const
+
+    bool Btrfs::hasBtrfsCoParent() const
     {
-        if ( cont && dynamic_cast<const BtrfsCo *>(cont) )
+        if ( !cont )
+            return false;
+
+        return dynamic_cast<const BtrfsCo *>(cont) != 0;
+    }
+
+    const string& Btrfs::realDevice() const
+    {
+        if ( hasBtrfsCoParent() )
         {
+            // The volumes below the BtrfsCo object (/dev/btrfs) are just
+            // clones of the volumes that are changed all the time by the
+            // partitioner and the proposal (i.e. the partitions or RAIDs or
+            // LVM LVs. Whenever they are changed, for example when a LUKS
+            // layer is added between them and their parent storage object
+            // (partition, RAID), the Btrfs volumes below the BtrfsCo object
+            // will not be notified since they are only a one-time clone
+            // without any update functionality whatsoever.
+            //
+            // So we need to look up important information in the real volume,
+            // such as which device is actually used; it might have changed
+            // there, e.g. from /dev/md/md0 to /dev/mapper/cr_xy when a LUKS
+            // layer was added.
+            //
+            // That is a major design flaw in the data structures used in this
+            // library. This function only alleviates the problem a little bit
+            // for certain very common cases.
+
             Volume const *realVolume = findRealVolume();
 
             if ( realVolume && realVolume != this )
             {
-                y2mil( "Real mount device: " << realVolume->mountDevice() );
+                string realDev = realVolume->mountDevice();
+                if ( realDev != dev )
+                    y2mil( "dev: " << dev << " realDev: " << realDev );
+
                 return realVolume->mountDevice();
+
+                // Can't return the realDev variable since we need to return a
+                // const string &, and that would be returning a reference to a
+                // local variable that will be deallocated after returning from
+                // the function.
             }
         }
 
-        return this->Volume::mountDevice();
+        return dev;
+    }
+
+    const string& Btrfs::device() const
+    {
+        return realDevice();
+    }
+
+    const string& Btrfs::mountDevice() const
+    {
+        if ( hasBtrfsCoParent() )
+            return realDevice();
+        else
+            return this->Volume::mountDevice();
     }
 
     Volume * Btrfs::findRealVolume()
