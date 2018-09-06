@@ -1565,7 +1565,13 @@ namespace storage
     int Volume::doMount()
     {
 	int ret = 0;
-	y2mil("device: " << dev << " mp: " << mp << " orig_mp: " << orig_mp);
+	y2mil("mountDevice: " << mountDevice() << " mp: " << mp << " orig_mp: " << orig_mp);
+        if ( isUsedBy( UB_BTRFS ) )
+        {
+            y2mil("In use by Btrfs - skipping");
+            return 0;
+        }
+
 	getStorage()->showInfoCb( mountText(true), silent );
 	if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
