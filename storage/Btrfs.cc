@@ -703,7 +703,7 @@ namespace storage
         return dynamic_cast<const BtrfsCo *>(cont) != 0;
     }
 
-    const string& Btrfs::realDevice() const
+    const string Btrfs::realDevice() const
     {
         if ( hasBtrfsCoParent() )
         {
@@ -733,24 +733,34 @@ namespace storage
                 if ( realDev != dev )
                     y2mil( "dev: " << dev << " realDev: " << realDev );
 
-                return realVolume->mountDevice();
-
-                // Can't return the realDev variable since we need to return a
-                // const string &, and that would be returning a reference to a
-                // local variable that will be deallocated after returning from
-                // the function.
+                return realDev;
             }
         }
 
         return dev;
     }
 
-    const string& Btrfs::device() const
+    const string Btrfs::device() const
     {
         return realDevice();
     }
 
-    const string& Btrfs::mountDevice() const
+    const string Btrfs::name() const
+    {
+        if ( !hasBtrfsCoParent() )
+            return nm;
+
+        string name = realDevice();
+
+        // Remove everything up to the last "/"
+        size_t slashPos = name.find_last_of("/");
+        if ( slashPos != string::npos )
+            name.erase( 0, slashPos+1 );
+
+        return name;
+    }
+
+    const string Btrfs::mountDevice() const
     {
         if ( hasBtrfsCoParent() )
             return realDevice();

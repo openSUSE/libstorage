@@ -73,7 +73,7 @@ namespace storage
 
 	void saveData(xmlNode* node) const;
 
-	virtual const string& mountDevice() const;
+	virtual const string mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
 

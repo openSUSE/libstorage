@@ -314,7 +314,7 @@ namespace storage
     }
 
 
-    const string& Volume::mountDevice() const
+    const string Volume::mountDevice() const
     {
 	if( dmcrypt() && !dmcrypt_dev.empty() )
 	    return( dmcrypt_dev );
@@ -3183,15 +3183,17 @@ namespace storage
     {
 	int ret = 0;
 	bool changed = false;
+        y2mil( "device(): " << device() << " name(): " << name() );
+	y2mil( "vol: " << *this);
 	y2mil( "force_rewrite: " << force_rewrite );
-	y2mil(*this);
+
 	if( !ignore_fstab )
 	{
 	    EtcFstab* fstab = getStorage()->getFstab();
 	    FstabEntry entry;
 	    if( (!orig_mp.empty() || orig_encryption != ENC_NONE) &&
 		(deleted() || (mp.empty() && !pvEncryption())) &&
-		(fstab->findDevice( dev, entry ) ||
+		(fstab->findDevice( device(), entry ) ||
 		 fstab->findDevice( alt_names, entry ) ||
 		 ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( orig_mp, entry )) ||
 		 ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( mp, entry ))) )
@@ -3207,7 +3209,7 @@ namespace storage
 	    {
 		string fname;
 		if( !orig_mp.empty() && (
-					 fstab->findDevice( dev, entry ) ||
+					 fstab->findDevice( device(), entry ) ||
 					 fstab->findDevice( alt_names, entry ) ||
 					 (cType() == LOOP && getLoopFile(fname) && fstab->findDevice( fname, entry )) ||
 					 (cType() == TMPFSC && !mp.empty() && fstab->findMount( mp, entry )) ))
