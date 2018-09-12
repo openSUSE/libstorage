@@ -2577,6 +2577,8 @@ namespace storage
 #endif
 		if( needLuksFormat( readonly ) )
 		{
+                    // cryptsetup luksFormat
+
                     SystemCmd * cryptSetupCmd = createCryptSetupCmd( encryption, dmcrypt_dev, mp, crypt_pwd, true );
 
 		    if( cryptSetupCmd )
@@ -2597,12 +2599,20 @@ namespace storage
 		}
 		if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
 		{
+                    // cryptsetup luksOpen
+
 		    SystemCmd * cryptSetupCmd = createCryptSetupCmd( encryption, dmcrypt_dev, mp, crypt_pwd, false );
 		    if ( cryptSetupCmd )
 		    {
                         cryptSetupCmd->execute();
 
-			if( cryptSetupCmd->retcode()!=0 )
+			if( cryptSetupCmd->retcode() == 5 &&
+                            cryptSetupCmd->select( "already exists", SystemCmd::IDX_STDERR ) == 1 )
+                        {
+                            // Be graceful with a LUKS device that is already (or still) open
+                            y2mil( "LUKS device already open - ignoring" );
+                        }
+			else if( cryptSetupCmd->retcode()!=0 )
 			    ret = VOLUME_CRYPTSETUP_FAILED;
 
                         delete cryptSetupCmd;
