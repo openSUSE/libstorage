@@ -41,6 +41,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(Storage* s)
 	: Container(s, "btrfs", "/dev/btrfs", staticType())
+        , sync_dirty( false )
     {
 	y2deb("constructing BtrfsCo");
     }
@@ -48,6 +49,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(Storage* s, SystemInfo& systeminfo)
 	: Container(s, "btrfs", "/dev/btrfs", staticType(), systeminfo)
+        , sync_dirty( false )
     {
 	y2deb("constructing BtrfsCo");
 
@@ -65,6 +67,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(const BtrfsCo& c)
 	: Container(c)
+        , sync_dirty( false )
     {
 	y2deb("copy-constructed BtrfsCo from " << c.dev);
 
@@ -183,6 +186,7 @@ namespace storage
 	uuid = fakeUuid();
 	b->initUuid( uuid );
 	vols.push_back(b);
+        sync_dirty = true;
     }
 
     bool BtrfsCo::existSubvolume( const string& device, const string& name )
@@ -248,6 +252,7 @@ namespace storage
 	else
 	    ret = BTRFS_VOLUME_NOT_FOUND;
 	y2mil( "ret:" << ret );
+        sync_dirty = true;
 	return( ret );
     }
 
@@ -270,6 +275,7 @@ namespace storage
 	else
 	    ret = BTRFS_VOLUME_NOT_FOUND;
 	y2mil( "ret:" << ret );
+        sync_dirty = true;
 	return( ret );
     }
 
@@ -337,7 +343,10 @@ namespace storage
     int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
     {
 	y2mil("name: " << name() << " stage: " << stage);
+
+        ensureSyncedWithRealVolumes();
 	int ret = 0;
+
 	if( stage==DECREASE )
 	{
 	    Btrfs * b = dynamic_cast<Btrfs *>(vol);
@@ -602,6 +611,27 @@ namespace storage
 	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
 	return( ret );
+    }
+
+
+    void BtrfsCo::syncWithRealVolumes()
+    {
+        y2mil( "Syncing " << *this );
+
+        BtrfsPair pair( btrfsPair() );
+
+	for( BtrfsIter it = pair.begin(); it != pair.end(); ++it )
+            it->syncWithRealVolume();
+    }
+
+
+    void BtrfsCo::ensureSyncedWithRealVolumes()
+    {
+        if ( sync_dirty )
+        {
+            syncWithRealVolumes();
+            sync_dirty = false;
+        }
     }
 
 }

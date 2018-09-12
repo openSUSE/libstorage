@@ -126,6 +126,7 @@ namespace storage
 	storage::FsType getFs() const { return fs; }
 	storage::FsType detectedFs() const { return detected_fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
+	void setUuid( const string& id ) { uuid=id; }
 	void initUuid( const string& id ) { uuid=orig_uuid=id; }
 	void initLabel( const string& lbl ) { label=orig_label=lbl; }
 	storage::MountByType getMountBy() const { return mount_by; }

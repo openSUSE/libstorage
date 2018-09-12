@@ -93,6 +93,7 @@ namespace storage
 	void changeDeviceName( const string& old, const string& nw );
 	Volume const * findRealVolume() const;
 	Volume * findRealVolume();
+        void syncWithRealVolume();
         bool hasBtrfsCoParent() const;
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }

@@ -133,9 +133,13 @@ namespace storage
 	void getBtrfsData(SystemInfo& systeminfo);
 	bool findBtrfs( const string& uuid, BtrfsIter& i );
 	void addBtrfs( Btrfs* m );
+        void syncWithRealVolumes();
+        void ensureSyncedWithRealVolumes();
 
 	virtual void print( std::ostream& s ) const { s << *this; }
 	virtual Container* getCopy() const { return( new BtrfsCo( *this ) ); }
+
+        bool sync_dirty;
 
     private:
 

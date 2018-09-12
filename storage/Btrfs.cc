@@ -789,6 +789,50 @@ namespace storage
 	return( v );
     }
 
+    void Btrfs::syncWithRealVolume()
+    {
+        if ( !hasBtrfsCoParent() )
+            return;
+
+        // This is a best-effort attempt to synchronize the Btrfs volume (below
+        // the BtrfsCo /dev/btrfs with the underlying real volume which might
+        // be a partition, an LVM LV, an MD RAID.
+        //
+        // This Btrfs object has some more specific information, mostly the
+        // Btrfs related things, but other fields might be outdated after this
+        // was cloned in the constructor.
+        //
+        // The entire underlying design of this is poor; information is
+        // duplicated, so it is bound to get out of sync. This is an attempt to
+        // synchronize both objects at least at strategic points so during the
+        // commit phase there is no contradictory information, resulting in a
+        // lot of bugs like bsc#1101830 and the dozen (literally!) follow-up
+        // problems that showed up during fixing that bug.
+        //
+        // -- shundhammer@suse.de 2018-09-12
+
+        y2mil( "Updating Btrfs   before: " << *this );
+        Volume * vol = findRealVolume();
+
+        if ( !vol )
+        {
+            y2war( "Real volume not found for " << *this );
+            return;
+        }
+
+        y2mil( "Updating realVol before: " << *vol );
+
+        this->mount_by    = vol->getMountBy();
+        this->encryption  = vol->getEncryption();
+        this->dmcrypt_dev = vol->dmcryptDevice();
+
+        vol->setUuid ( this->uuid );
+        vol->setMount( this->mp );
+
+        y2mil( "Updated Btrfs   after: " << *this );
+        y2mil( "Updated realVol after: " << *vol );
+    }
+
     Text Btrfs::formatText(bool doing) const
     {
 	Text txt;
@@ -1136,13 +1180,13 @@ namespace storage
     std::ostream& operator<< (std::ostream& s, const Btrfs& v )
     {
 	s << "Btrfs " << dynamic_cast<const Volume&>(v);
-	s << " devices:" << v.devices;
+	s << " devices: " << v.devices;
 	if( !v.dev_add.empty() )
-	    s << " dev_add:" << v.dev_add;
+	    s << " dev_add: " << v.dev_add;
 	if( !v.dev_rem.empty() )
-	    s << " dev_rem:" << v.dev_rem;
+	    s << " dev_rem: " << v.dev_rem;
 	if (!v.subvolumes.empty())
-	    s << " subvolumes:" << v.subvolumes;
+	    s << " subvolumes: " << v.subvolumes;
 	return( s );
     }
 
