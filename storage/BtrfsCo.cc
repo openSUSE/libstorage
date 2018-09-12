@@ -307,6 +307,21 @@ namespace storage
 	    while( i!=p.end() && !found )
 	    {
 		found = i->device()==id;
+
+		if( !found )
+                {
+                    // Btrfs::device() uses realDevice(). If there is a LUKS
+                    // layer, this will be different from the device it got in
+                    // the constructor, so let's check the inherited device()
+                    // as well.
+                    //
+                    // No, this isn't exactly pretty, but it's fallout of the
+                    // Btrfs volume appearing twice, once under its real disk
+                    // or MD or or LVM VG and once under the BtrfsCo.
+
+                    found = i->Volume::device()==id;
+                }
+
 		if( !found )
 		{
 		    const list<string>& al( i->altNames() );

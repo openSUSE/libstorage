@@ -825,8 +825,8 @@ namespace storage
         this->mount_by    = vol->getMountBy();
         this->encryption  = vol->getEncryption();
         this->dmcrypt_dev = vol->dmcryptDevice();
+        this->uuid        = vol->getUuid();
 
-        vol->setUuid ( this->uuid );
         vol->setMount( this->mp );
 
         y2mil( "Updated Btrfs   after: " << *this );
