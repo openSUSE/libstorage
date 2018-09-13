@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Thu Sep 13 17:12:39 UTC 2018 - shundhammer@suse.com
+
+- Enable encrypted Btrfs on non-LVM (bsc#1101830)
+- 2.27.1
+
+-------------------------------------------------------------------
 Thu Aug 02 11:38:53 CEST 2018 - aschnell@suse.com
 
 - added special handling when creating udev ids starting with
