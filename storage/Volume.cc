@@ -1027,10 +1027,15 @@ namespace storage
 
 	if (getMount() == "/")
 	{
+            y2mil("Formatting root Btrfs finished: " << *this);
 	    const CommitCallbacks* commit_callbacks = getStorage()->getCommitCallbacks();
 	    if (commit_callbacks)
 		commit_callbacks->post_root_filesystem_create();
 	}
+        else
+        {
+            y2mil("Formatting non-root Btrfs finished: " << *this);
+        }
 
 	y2mil( "ret: " << ret );
 	return ret;

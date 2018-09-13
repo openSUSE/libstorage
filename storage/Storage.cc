@@ -5023,6 +5023,10 @@ namespace storage
 	lastAction.clear();
 	extendedError.clear();
 	dumpCommitInfos();
+        BtrfsCo *btrfsCo = 0;
+        if ( haveBtrfs( btrfsCo ) )
+            btrfsCo->ensureSyncedWithRealVolumes();
+
 	ContPair p = contPair( notLoop );
 	int ret = 0;
 	y2mil("empty:" << p.empty());
