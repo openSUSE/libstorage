@@ -420,14 +420,19 @@ namespace storage
         if ( ret == 0 )
         {
             Volume * realVol = btrfsVol->findRealVolume();
-            y2mil("realVol: " << *realVol );
 
-            if ( !realVol->getFormat() )
-                y2mil("Volume already formatted: " << *realVol );
+            if ( realVol )
+            {
+                y2mil( "Using realVol: " << *realVol );
+                vol = realVol;
+            }
+
+            if ( !vol->getFormat() )
+                y2mil( "Volume already formatted: " << *vol );
             else
             {
-                y2mil("Formatting volume " << *realVol );
-                ret = Container::commitChanges( FORMAT, realVol );
+                y2mil( "Formatting volume " << *vol );
+                ret = Container::commitChanges( FORMAT, vol );
             }
         }
 
