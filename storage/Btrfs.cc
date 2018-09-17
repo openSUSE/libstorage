@@ -826,6 +826,7 @@ namespace storage
         this->encryption  = vol->getEncryption();
         this->dmcrypt_dev = vol->dmcryptDevice();
         this->uuid        = vol->getUuid();
+        this->crypt_pwd   = vol->getCryptPwd();
 
         vol->setMount( this->mp );
 

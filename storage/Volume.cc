@@ -2547,7 +2547,7 @@ namespace storage
 	int ret = 0;
 	y2mil("device: " << dev << " mp: " << mp << " dmcrypt: " << dmcrypt() <<
 	      " active: " << dmcrypt_active << " format: " << format <<
-	      " ro: " << readonly );
+	      " ro: " << readonly << " have_crypt_pwd: " << !crypt_pwd.empty(); );
 	if( dmcrypt() )
 	{
 	    getStorage()->showInfoCb( crsetupText(true), silent );
