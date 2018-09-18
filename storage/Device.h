@@ -53,8 +53,8 @@ namespace storage
 
 	void saveData(xmlNode* node) const;
 
-	const string& name() const { return nm; }
-	const string& device() const { return dev; }
+	virtual const string name() const { return nm; }
+	virtual const string device() const { return dev; }
 	void setNameDevice(const string& nm, const string& dev);
 
 	bool created() const { return create; }

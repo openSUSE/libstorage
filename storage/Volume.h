@@ -73,7 +73,7 @@ namespace storage
 
 	void saveData(xmlNode* node) const;
 
-	const string& mountDevice() const;
+	virtual const string mountDevice() const;
 	const string& loopDevice() const { return( loop_dev ); }
 	const string& dmcryptDevice() const { return( dmcrypt_dev ); }
 
@@ -126,6 +126,7 @@ namespace storage
 	storage::FsType getFs() const { return fs; }
 	storage::FsType detectedFs() const { return detected_fs; }
 	void setFs( storage::FsType val ) { detected_fs=fs=val; }
+	void setUuid( const string& id ) { uuid=id; }
 	void initUuid( const string& id ) { uuid=orig_uuid=id; }
 	void initLabel( const string& lbl ) { label=orig_label=lbl; }
 	storage::MountByType getMountBy() const { return mount_by; }
@@ -148,6 +149,7 @@ namespace storage
 	void setSize( unsigned long long SizeK ) { size_k=orig_size_k=SizeK; }
 	virtual void setResizedSize( unsigned long long SizeK ) { size_k=SizeK; }
 	void setUsedByUuid( UsedByType type, const string& uuid );
+	void initUsedByUuid( UsedByType type, const string& uuid );
 	void setDmcryptDev( const string& dm, bool active );
 	void setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active );
 	virtual void forgetResize() { size_k=orig_size_k; }
@@ -223,6 +225,10 @@ namespace storage
 	static bool isTmpCryptMp( const string& mp );
 	static bool umountDir( const string& mp );
 
+	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
+			    const string& options = "") const;
+	int umountTmpMount(TmpMount& tmp_mount, int ret) const;
+        
     protected:
 	void init();
 	void setNameDev();
@@ -249,6 +255,7 @@ namespace storage
 	int doTuneExtDataMode(const string& data_mode);
 	bool needLosetup( bool urgent ) const;
 	bool needCryptsetup() const;
+        bool needLuksFormat( bool readonly ) const;
 	int doLosetup();
 	int doCryptsetup(bool readonly);
 	int loUnsetup( bool force=false );
@@ -256,9 +263,6 @@ namespace storage
 	bool pwdLengthOk( storage::EncryptType typ, const string& val,
 			  bool format ) const;
 	bool noFreqPassno() const;
-	int prepareTmpMount(TmpMount& tmp_mount, bool useMounted = true,
-			    const string& options = "") const;
-	int umountTmpMount(TmpMount& tmp_mount, int ret) const;
 	int doFormatBtrfs();
 
 	string getLosetupCmd( const string& fname ) const;

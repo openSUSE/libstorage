@@ -2415,9 +2415,6 @@ namespace storage
 		    {
 			string uuid;
 			co->addFromVolume( *vol, uuid );
-			y2mil( "vol before:" << *vol );
-			vol->setUsedByUuid( UB_BTRFS, uuid );
-			y2mil( "vol after :" << *vol );
 		    }
 		}
 	    }
@@ -5026,6 +5023,10 @@ namespace storage
 	lastAction.clear();
 	extendedError.clear();
 	dumpCommitInfos();
+        BtrfsCo *btrfsCo = 0;
+        if ( haveBtrfs( btrfsCo ) )
+            btrfsCo->ensureSyncedWithRealVolumes();
+
 	ContPair p = contPair( notLoop );
 	int ret = 0;
 	y2mil("empty:" << p.empty());
@@ -7724,7 +7725,7 @@ namespace storage
 
     bool Storage::mountTmp( const Volume* vol, string& mdir, const string& opt )
     {
-	y2mil( "device:" << vol->device() << " opts:" << opt );
+	y2mil( "mountDevice: " << vol->mountDevice() << " opts: " << opt );
 	bool ret = false;
 	removeDmTableTo( *vol );
 	mdir = tmpDir() + "/tmp-mp-XXXXXX";
@@ -7754,7 +7755,7 @@ namespace storage
 	    list<string> opt_l = splitString(opt, ",");
 	    bool ro = find(opt_l.begin(), opt_l.end(), "ro") != opt_l.end();
 
-	    if( mountDev( vol->device(), mdir, ro, opts ) )
+	    if( mountDev( vol->mountDevice(), mdir, ro, opts ) )
 	    {
 		ret = true;
 	    }

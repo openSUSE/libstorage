@@ -43,6 +43,9 @@ namespace storage
 	Btrfs( const BtrfsCo& c, const Btrfs& v);
 	virtual ~Btrfs();
 
+	virtual const string device() const override;
+	virtual const string name() const override;
+	virtual const string mountDevice() const override;
 	void clearSubvolumes() { subvolumes.clear(); }
 	void addSubvolume(const string& path, bool nocow);
 	int detectSubvolumes(SystemInfo& systeminfo);
@@ -88,6 +91,10 @@ namespace storage
 	int clearSignature();
 
 	void changeDeviceName( const string& old, const string& nw );
+	Volume const * findRealVolume() const;
+	Volume * findRealVolume();
+        void syncWithRealVolume();
+        bool hasBtrfsCoParent() const;
 
 	static bool notDeleted( const Btrfs& l ) { return( !l.deleted() ); }
 	static bool needCreateSubvol( const Btrfs& v );
@@ -101,13 +108,13 @@ namespace storage
 	list<string> dev_add;
 	list<string> dev_rem;
 	list<Subvolume> subvolumes;
-	Volume const * findRealVolume() const;
 
 	virtual int extraFstabAdd(EtcFstab* fstab, const FstabChange& change) override;
 	virtual int extraFstabUpdate(EtcFstab* fstab, const FstabKey& key, const FstabChange& change) override;
 	virtual int extraFstabRemove(EtcFstab* fstab, const FstabKey& key) override;
 
 	virtual int extraMount() override;
+        const string realDevice() const;
 
     private:
 

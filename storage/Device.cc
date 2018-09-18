@@ -207,7 +207,7 @@ namespace storage
     void
     Device::logDifference(std::ostream& log, const Device& rhs) const
     {
-	log << "nm:" + nm;
+	log << "nm: " + nm;
 	if (nm != rhs.nm)
 	    log << "-->" << rhs.nm;
 	logDiff(log, "dev", dev, rhs.dev);
@@ -224,10 +224,10 @@ namespace storage
 
     std::ostream& operator<<(std::ostream& s, const Device& d)
     {
-	s << "Name:" << d.nm << " Device:" << d.dev;
-	s << " SizeK:" << d.size_k;
+	s << "Name: " << d.nm << " Device: " << d.dev;
+	s << " SizeK: " << d.size_k;
 	if (d.mjr != 0 || d.mnr != 0)
-	    s << " Node:<" << d.mjr << ":" << d.mnr << ">";
+	    s << " Node: <" << d.mjr << ":" << d.mnr << ">";
 	if (d.create)
 	    s << " created";
 	if (d.del)
@@ -235,9 +235,9 @@ namespace storage
 	if (d.silent)
 	    s << " silent";
 	if (!d.alt_names.empty())
-	    s << " alt_names:" << d.alt_names;
+	    s << " alt_names: " << d.alt_names;
 	if (!d.userdata.empty())
-	    s << " userdata:" << d.userdata;
+	    s << " userdata: " << d.userdata;
 	return s;
     }
 

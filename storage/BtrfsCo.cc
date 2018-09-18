@@ -41,6 +41,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(Storage* s)
 	: Container(s, "btrfs", "/dev/btrfs", staticType())
+        , sync_dirty( false )
     {
 	y2deb("constructing BtrfsCo");
     }
@@ -48,6 +49,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(Storage* s, SystemInfo& systeminfo)
 	: Container(s, "btrfs", "/dev/btrfs", staticType(), systeminfo)
+        , sync_dirty( false )
     {
 	y2deb("constructing BtrfsCo");
 
@@ -65,6 +67,7 @@ namespace storage
 
     BtrfsCo::BtrfsCo(const BtrfsCo& c)
 	: Container(c)
+        , sync_dirty( false )
     {
 	y2deb("copy-constructed BtrfsCo from " << c.dev);
 
@@ -183,12 +186,13 @@ namespace storage
 	uuid = fakeUuid();
 	b->initUuid( uuid );
 	vols.push_back(b);
+        sync_dirty = true;
     }
 
     bool BtrfsCo::existSubvolume( const string& device, const string& name )
     {
 	bool ret = false;
-	y2mil( "device:" << device << " name:" << name );
+	y2mil( "device: " << device << " name: " << name );
 	BtrfsIter i;
 	if( findBtrfs( device, i ))
 	    ret = i->existSubvolume( name );
@@ -201,7 +205,7 @@ namespace storage
     BtrfsCo::createSubvolume(const string& device, const string& name, bool nocow)
     {
 	int ret = 0;
-	y2mil("device:" << device << " name:" << name << " nocow:" << nocow);
+	y2mil("device: " << device << " name: " << name << " nocow: " << nocow);
 	BtrfsIter i;
 	if( readonly() )
 	    ret = BTRFS_CHANGE_READONLY;
@@ -217,7 +221,7 @@ namespace storage
     int BtrfsCo::removeSubvolume( const string& device, const string& name )
     {
 	int ret = 0;
-	y2mil( "device:" << device << " name:" << name );
+	y2mil( "device: " << device << " name: " << name );
 	BtrfsIter i;
 	if( readonly() )
 	    ret = BTRFS_CHANGE_READONLY;
@@ -248,6 +252,7 @@ namespace storage
 	else
 	    ret = BTRFS_VOLUME_NOT_FOUND;
 	y2mil( "ret:" << ret );
+        sync_dirty = true;
 	return( ret );
     }
 
@@ -270,6 +275,7 @@ namespace storage
 	else
 	    ret = BTRFS_VOLUME_NOT_FOUND;
 	y2mil( "ret:" << ret );
+        sync_dirty = true;
 	return( ret );
     }
 
@@ -301,6 +307,21 @@ namespace storage
 	    while( i!=p.end() && !found )
 	    {
 		found = i->device()==id;
+
+		if( !found )
+                {
+                    // Btrfs::device() uses realDevice(). If there is a LUKS
+                    // layer, this will be different from the device it got in
+                    // the constructor, so let's check the inherited device()
+                    // as well.
+                    //
+                    // No, this isn't exactly pretty, but it's fallout of the
+                    // Btrfs volume appearing twice, once under its real disk
+                    // or MD or or LVM VG and once under the BtrfsCo.
+
+                    found = i->Volume::device()==id;
+                }
+
 		if( !found )
 		{
 		    const list<string>& al( i->altNames() );
@@ -336,8 +357,11 @@ namespace storage
 
     int BtrfsCo::commitChanges( CommitStage stage, Volume* vol )
     {
-	y2mil("name:" << name() << " stage:" << stage);
+	y2mil("name: " << name() << " stage: " << stage);
+
+        ensureSyncedWithRealVolumes();
 	int ret = 0;
+
 	if( stage==DECREASE )
 	{
 	    Btrfs * b = dynamic_cast<Btrfs *>(vol);
@@ -350,7 +374,12 @@ namespace storage
 		ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}
 	if( ret==0 )
-	    ret = Container::commitChanges( stage, vol );
+        {
+            if ( stage == FORMAT )
+                ret = formatBtrfs( vol );
+            else
+                ret = Container::commitChanges( stage, vol );
+        }
 	if( ret==0 && stage==INCREASE )
 	{
 	    Btrfs * b = dynamic_cast<Btrfs *>(vol);
@@ -375,7 +404,39 @@ namespace storage
 	    else
 		ret = BTRFS_COMMIT_INVALID_VOLUME;
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
+	return( ret );
+    }
+
+    int BtrfsCo::formatBtrfs( Volume * vol )
+    {
+        y2mil("vol: " << *vol );
+        int ret = 0;
+        Btrfs * btrfsVol = dynamic_cast<Btrfs *>(vol);
+
+        if (!btrfsVol )
+            ret = BTRFS_COMMIT_INVALID_VOLUME;
+
+        if ( ret == 0 )
+        {
+            Volume * realVol = btrfsVol->findRealVolume();
+
+            if ( realVol )
+            {
+                y2mil( "Using realVol: " << *realVol );
+                vol = realVol;
+            }
+
+            if ( !vol->getFormat() )
+                y2mil( "Volume already formatted: " << *vol );
+            else
+            {
+                y2mil( "Formatting volume " << *vol );
+                ret = Container::commitChanges( FORMAT, vol );
+            }
+        }
+
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -570,6 +631,27 @@ namespace storage
 	    ret = ret && storage::equalContent(pp.begin(), pp.end(), pc.begin(), pc.end());
 	}
 	return( ret );
+    }
+
+
+    void BtrfsCo::syncWithRealVolumes()
+    {
+        y2mil( "Syncing " << *this );
+
+        BtrfsPair pair( btrfsPair() );
+
+	for( BtrfsIter it = pair.begin(); it != pair.end(); ++it )
+            it->syncWithRealVolume();
+    }
+
+
+    void BtrfsCo::ensureSyncedWithRealVolumes()
+    {
+        if ( sync_dirty )
+        {
+            syncWithRealVolumes();
+            sync_dirty = false;
+        }
     }
 
 }

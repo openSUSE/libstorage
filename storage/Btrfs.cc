@@ -695,12 +695,143 @@ namespace storage
 	return( ret );
     }
 
+    bool Btrfs::hasBtrfsCoParent() const
+    {
+        if ( !cont )
+            return false;
+
+        return dynamic_cast<const BtrfsCo *>(cont) != 0;
+    }
+
+    const string Btrfs::realDevice() const
+    {
+        if ( hasBtrfsCoParent() )
+        {
+            // The volumes below the BtrfsCo object (/dev/btrfs) are just
+            // clones of the volumes that are changed all the time by the
+            // partitioner and the proposal (i.e. the partitions or RAIDs or
+            // LVM LVs. Whenever they are changed, for example when a LUKS
+            // layer is added between them and their parent storage object
+            // (partition, RAID), the Btrfs volumes below the BtrfsCo object
+            // will not be notified since they are only a one-time clone
+            // without any update functionality whatsoever.
+            //
+            // So we need to look up important information in the real volume,
+            // such as which device is actually used; it might have changed
+            // there, e.g. from /dev/md/md0 to /dev/mapper/cr_xy when a LUKS
+            // layer was added.
+            //
+            // That is a major design flaw in the data structures used in this
+            // library. This function only alleviates the problem a little bit
+            // for certain very common cases.
+
+            Volume const *realVolume = findRealVolume();
+
+            if ( realVolume && realVolume != this )
+            {
+                string realDev = realVolume->mountDevice();
+                if ( realDev != dev )
+                    y2mil( "dev: " << dev << " realDev: " << realDev );
+
+                return realDev;
+            }
+        }
+
+        return dev;
+    }
+
+    const string Btrfs::device() const
+    {
+        return realDevice();
+    }
+
+    const string Btrfs::name() const
+    {
+        if ( !hasBtrfsCoParent() )
+            return nm;
+
+        string name = realDevice();
+
+        // Remove everything up to the last "/"
+        size_t slashPos = name.find_last_of("/");
+        if ( slashPos != string::npos )
+            name.erase( 0, slashPos+1 );
+
+        return name;
+    }
+
+    const string Btrfs::mountDevice() const
+    {
+        if ( hasBtrfsCoParent() )
+            return realDevice();
+        else
+            return this->Volume::mountDevice();
+    }
+
+    Volume * Btrfs::findRealVolume()
+    {
+	Volume const *constVol = NULL;
+	if( !getStorage()->findVolume( devices.front(), constVol, true ))
+	    constVol = NULL;
+
+        // No, this const_cast is not elegant, but the way this library is
+        // designed doesn't leave us with a better option without changing it
+        // in a gazillion places.
+        Volume * vol = const_cast<Volume *>(constVol);
+	return( vol );
+    }
+
     Volume const * Btrfs::findRealVolume() const
     {
 	Volume const *v = NULL;
 	if( !getStorage()->findVolume( devices.front(), v, true ))
 	    v = NULL;
 	return( v );
+    }
+
+    void Btrfs::syncWithRealVolume()
+    {
+        if ( !hasBtrfsCoParent() )
+            return;
+
+        // This is a best-effort attempt to synchronize the Btrfs volume (below
+        // the BtrfsCo /dev/btrfs with the underlying real volume which might
+        // be a partition, an LVM LV, an MD RAID.
+        //
+        // This Btrfs object has some more specific information, mostly the
+        // Btrfs related things, but other fields might be outdated after this
+        // was cloned in the constructor.
+        //
+        // The entire underlying design of this is poor; information is
+        // duplicated, so it is bound to get out of sync. This is an attempt to
+        // synchronize both objects at least at strategic points so during the
+        // commit phase there is no contradictory information, resulting in a
+        // lot of bugs like bsc#1101830 and the dozen (literally!) follow-up
+        // problems that showed up during fixing that bug.
+        //
+        // -- shundhammer@suse.de 2018-09-12
+
+        y2mil( "Updating Btrfs   before: " << *this );
+        Volume * vol = findRealVolume();
+
+        if ( !vol )
+        {
+            y2war( "Real volume not found for " << *this );
+            return;
+        }
+
+        y2mil( "Updating realVol before: " << *vol );
+
+        this->mount_by    = vol->getMountBy();
+        this->encryption  = vol->getEncryption();
+        this->dmcrypt_dev = vol->dmcryptDevice();
+        this->uuid        = vol->getUuid();
+        this->crypt_pwd   = vol->getCryptPwd();
+
+        vol->setMount( this->mp );
+
+        y2mil( "Updated Btrfs   after: " << *this );
+        y2mil( "Updated realVol after: " << *vol );
     }
 
     Text Btrfs::formatText(bool doing) const
@@ -1050,13 +1181,13 @@ namespace storage
     std::ostream& operator<< (std::ostream& s, const Btrfs& v )
     {
 	s << "Btrfs " << dynamic_cast<const Volume&>(v);
-	s << " devices:" << v.devices;
+	s << " devices: " << v.devices;
 	if( !v.dev_add.empty() )
-	    s << " dev_add:" << v.dev_add;
+	    s << " dev_add: " << v.dev_add;
 	if( !v.dev_rem.empty() )
-	    s << " dev_rem:" << v.dev_rem;
+	    s << " dev_rem: " << v.dev_rem;
 	if (!v.subvolumes.empty())
-	    s << " subvolumes:" << v.subvolumes;
+	    s << " subvolumes: " << v.subvolumes;
 	return( s );
     }
 

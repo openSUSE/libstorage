@@ -216,7 +216,7 @@ namespace storage
 // TODO: maybe obsoleted by function setDmcryptDevEnc
     void Volume::setDmcryptDev( const string& dm, bool active )
     {
-	y2mil( "dev:" << dev << " dm:" << dm << " active:" << active );
+	y2mil( "dev: " << dev << " dm: " << dm << " active: " << active );
 	dmcrypt_dev = dm;
 	dmcrypt_active = active;
 	if( active )
@@ -227,12 +227,12 @@ namespace storage
 	}
 	else
 	    removeDmCryptNames();
-	y2mil( "this:" << *this );
+	y2mil( "this: " << *this );
     }
 
     void Volume::setDmcryptDevEnc( const string& dm, storage::EncryptType typ, bool active )
     {
-	y2mil("enc_type:" << toString(typ));
+	y2mil("enc_type: " << toString(typ));
 	encryption = orig_encryption = typ;
 	setDmcryptDev(dm,active);
     }
@@ -240,14 +240,14 @@ namespace storage
 
     void Volume::addDmCryptNames( unsigned long minor )
     {
-	y2mil("alt names before:" << altNames());
+	y2mil("alt names before: " << altNames());
 	string crname = Dm::dmDeviceName(minor);
 	if( !Storage::isDmContainer(*cont))
 	    replaceAltName( "/dev/dm-", crname );
 	else
 	{
 	    string my_name = Dm::dmDeviceName(mnr);
-	    y2mil( "my_name:" << my_name << " cr_name:" << crname );
+	    y2mil( "my_name: " << my_name << " cr_name: " << crname );
 	    list<string>::iterator i = alt_names.begin();
 	    while( i!=alt_names.end() && boost::starts_with( *i, "/dev/dm-" ) &&
 		   *i!=my_name )
@@ -272,7 +272,7 @@ namespace storage
 	}
 	else
 	{
-	    y2mil( "my_name:" << my_name << " cr_name:" << s );
+	    y2mil( "my_name: " << my_name << " cr_name: " << s );
 	    list<string>::iterator i = alt_names.begin();
 	    while( i!=alt_names.end() && boost::starts_with( *i, pre ) &&
 		   *i!=my_name )
@@ -285,7 +285,7 @@ namespace storage
 
 	alt_names.push_back(dmcrypt_dev);
 
-	y2mil( "alt names after:" << altNames() );
+	y2mil( "alt names after: " << altNames() );
     }
 
 
@@ -314,7 +314,7 @@ namespace storage
     }
 
 
-    const string& Volume::mountDevice() const
+    const string Volume::mountDevice() const
     {
 	if( dmcrypt() && !dmcrypt_dev.empty() )
 	    return( dmcrypt_dev );
@@ -334,7 +334,7 @@ namespace storage
 	if (!allowedMountBy(mby))
 	    mby = MOUNTBY_DEVICE;
 
-	y2mil("dev:" << dev << " ctype:" << toString(cType()) << " ret:" << toString(mby));
+	y2mil("dev: " << dev << " ctype: " << toString(cType()) << " ret: " << toString(mby));
 	return mby;
     }
 
@@ -373,8 +373,8 @@ namespace storage
 		break;
 	}
 
-	y2mil("dev:" << dev << " ctype:" << toString(cType()) << " mby:" << toString(mby) <<
-	      " ret:" << ret);
+	y2mil("dev: " << dev << " ctype: " << toString(cType()) << " mby: " << toString(mby) <<
+	      " ret: " << ret);
 	return ret;
     }
 
@@ -496,8 +496,8 @@ namespace storage
     {
 	if( fs != TMPFS )
 	{
-	    y2mil( "this:" << *this );
-	    y2mil( "swap_only:" << swap_only << " mountDevice:" << mountDevice() );
+	    y2mil( "this: " << *this );
+	    y2mil( "swap_only: " << swap_only << " mountDevice: " << mountDevice() );
 	    mp = mounts.getMount(mountDevice());
 	    if( mp.empty() )
 	    {
@@ -610,7 +610,7 @@ namespace storage
 
 	if( findBlkid( blkid, entry ))
 	{
-	    y2mil("device:" << device() << " mountDevice:" << mountDevice() << " entry:" << entry);
+	    y2mil("device: " << device() << " mountDevice: " << mountDevice() << " entry: " << entry);
 
 	    if (entry.is_fs)
 	    {
@@ -634,7 +634,6 @@ namespace storage
 	    if (setUsedByLvm && entry.is_lvm)
 	    {
 		setUsedBy(UB_LVM,"");
-
 	    }
 	}
     }
@@ -647,7 +646,7 @@ namespace storage
     int Volume::setFormat( bool val, storage::FsType new_fs )
     {
 	int ret = 0;
-	y2mil("device:" << dev << " val:" << val << " fs:" << toString(new_fs));
+	y2mil("device: " << dev << " val: " << val << " fs: " << toString(new_fs));
 	if( !val )
 	{
 	    fs = detected_fs;
@@ -663,6 +662,7 @@ namespace storage
 	    FsCapabilities caps;
 	    if (isUsedBy())
 	    {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
 	    }
 	    else if (getStorage()->getFsCapabilities(new_fs, caps) && caps.minimalFsSizeK > size_k)
@@ -703,7 +703,7 @@ namespace storage
                   << "; keeping " << format << " ret: " << ret );
         }
 
-	y2mil("device:" << *this );
+	y2mil("device: " << *this );
 	return( ret );
     }
 
@@ -712,7 +712,7 @@ namespace storage
     Volume::changeMount(const string& m)
     {
 	int ret = 0;
-	y2mil("device:" << dev << " mount:" << m);
+	y2mil("device: " << dev << " mount: " << m);
 	if( (!m.empty() && m[0]!='/' && m!="swap") ||
 	    m.find_first_of( " \t\n" ) != string::npos )
 	{
@@ -720,6 +720,7 @@ namespace storage
 	}
 	else if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -735,7 +736,7 @@ namespace storage
 	      mount_by = defaultMountBy(m);
 	    */
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return ret;
     }
 
@@ -744,10 +745,11 @@ namespace storage
     Volume::changeMountBy(MountByType mby)
     {
 	int ret = 0;
-	y2mil("device:" << dev << " mby:" << toString(mby));
-	y2mil("beforehand:" << *this);
+	y2mil("device: " << dev << " mby: " << toString(mby));
+	y2mil("beforehand: " << *this);
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -761,13 +763,13 @@ namespace storage
 		}
 		else if (!getStorage()->getFsCapabilities(fs, caps))
 		{
-		    y2mil("unknown caps, fs:" << toString(fs));
+		    y2mil("unknown caps, fs: " << toString(fs));
 		    ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
 		}
 		else if ((mby==MOUNTBY_LABEL && !caps.supportsLabel) ||
 			 (mby==MOUNTBY_UUID && !caps.supportsUuid))
 		{
-		    y2mil( "fs:" << toString(fs) << " caps:" << caps );
+		    y2mil( "fs: " << toString(fs) << " caps: " << caps );
 		    ret = VOLUME_MOUNTBY_UNSUPPORTED_BY_FS;
 		}
 	    }
@@ -778,9 +780,9 @@ namespace storage
 	    if( ret==0 )
 		mount_by = mby;
 	}
-	y2mil("afterwards:" << *this);
-	y2mil( "needFstabUdpate:" << needFstabUpdate() );
-	y2mil("ret:" << ret);
+	y2mil("afterwards: " << *this);
+	y2mil( "needFstabUdpate: " << needFstabUpdate() );
+	y2mil("ret: " << ret);
 	return ret;
     }
 
@@ -796,9 +798,10 @@ namespace storage
     int Volume::changeFstabOptions( const string& options )
     {
 	int ret = 0;
-	y2mil("device:" << dev << " options:" << options << " encr:" << toString(encryption));
+	y2mil("device: " << dev << " options: " << options << " encr: " << toString(encryption));
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else
@@ -806,7 +809,7 @@ namespace storage
 	    fstab_opt = options;
 	    updateFstabOptions();
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -814,7 +817,7 @@ namespace storage
     int
     Volume::prepareTmpMount(TmpMount& tmp_mount, bool useMounted, const string& options) const
     {
-	y2mil("useMounted:" << useMounted << " opts:" << options);
+	y2mil("useMounted: " << useMounted << " opts: " << options);
 	int ret = 0;
 	tmp_mount.needs_umount = false;
 	tmp_mount.was_mounted = is_mounted;
@@ -827,8 +830,8 @@ namespace storage
 	    else
 		ret = VOLUME_CANNOT_TMP_MOUNT;
 	}
-	y2mil("ret:" << ret << " mount_point:" << tmp_mount.mount_point << " needs_umount:" <<
-	      tmp_mount.needs_umount << " was_mounted:" << tmp_mount.was_mounted);
+	y2mil("ret: " << ret << " mount_point: " << tmp_mount.mount_point << " needs_umount: " <<
+	      tmp_mount.needs_umount << " was_mounted: " << tmp_mount.was_mounted);
 	return ret;
     }
 
@@ -846,7 +849,7 @@ namespace storage
 	    if (boost::starts_with(tmp_mount.mount_point, "/tmp/libstorage-"))
 		rmdir(tmp_mount.mount_point.c_str());
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return ret;
     }
 
@@ -924,8 +927,8 @@ namespace storage
 	}
 	if( ret!=opts )
 	{
-	    y2mil( "org:" << opts );
-	    y2mil( "ret:" << ret );
+	    y2mil( "org: " << opts );
+	    y2mil( "ret: " << ret );
 	}
 	return( ret );
     }
@@ -947,7 +950,7 @@ namespace storage
 	{
 	    const Btrfs* l = static_cast<const Btrfs*>(this);
 	    list<string> li = l->getDevices(true);
-	    y2mil( "devices:" << li );
+	    y2mil( "devices: " << li );
 	    if( li.size()>1 )
 	    {
 		cmd = BTRFSBIN " device add ";
@@ -993,14 +996,14 @@ namespace storage
 		{
 		    c.select( " path "+defvol+"$" );
 		    list<string> sl = splitString(c.getLine( 0, true )," ");
-		    y2mil( "sl:" << sl );
+		    y2mil( "sl: " << sl );
 		    list<string>::const_iterator i = sl.begin();
 		    if( i!=sl.end() )
 			++i;
 		    if( i!=sl.end() )
 		    {
 			*i >> id;
-			y2mil( "val:" << *i << " id:" << id );
+			y2mil( "val: " << *i << " id: " << id );
 		    }
 		    if( id>=0 )
 		    {
@@ -1024,12 +1027,17 @@ namespace storage
 
 	if (getMount() == "/")
 	{
+            y2mil("Formatting root Btrfs finished: " << *this);
 	    const CommitCallbacks* commit_callbacks = getStorage()->getCommitCallbacks();
 	    if (commit_callbacks)
 		commit_callbacks->post_root_filesystem_create();
 	}
+        else
+        {
+            y2mil("Formatting non-root Btrfs finished: " << *this);
+        }
 
-	y2mil( "ret:" << ret );
+	y2mil( "ret: " << ret );
 	return ret;
     }
 
@@ -1048,10 +1056,11 @@ namespace storage
 	static int fcount=1000;
 	int ret = 0;
 	bool needMount = false;
-	y2mil("device:" << dev);
+	y2mil("device: " << dev);
 	getStorage()->showInfoCb( formatText(true), silent );
 	if (isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	else if( isMounted() )
@@ -1237,7 +1246,7 @@ namespace storage
 	    int r = mount( orig_mp );
 	    ret = (ret==0)?r:ret;
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -1287,7 +1296,14 @@ namespace storage
 
     void Volume::setUsedByUuid( UsedByType ubt, const string& uuid )
     {
-	y2mil( "device:" << device() << " to uuid:" << uuid );
+	y2mil( "device: " << device() << " to uuid: " << uuid );
+	setUsedBy( ubt, uuid );
+	y2mil( "volume: " << *this );
+    }
+
+    void Volume::initUsedByUuid( UsedByType ubt, const string& uuid )
+    {
+	y2mil( "device: " << device() << " to uuid: " << uuid );
 	eraseUuid();
 	eraseLabel();
 	setMount( "" );
@@ -1295,6 +1311,7 @@ namespace storage
 	is_mounted = false;
 	detected_fs = fs;
 	setUsedBy( ubt, uuid );
+	y2mil( "volume: " << *this );
     }
 
     string Volume::getFilesysSysfsPath() const
@@ -1308,7 +1325,7 @@ namespace storage
 	}
 	else
 	    ret = sysfsPath();
-	y2mil( "ret:" << ret );
+	y2mil( "ret: " << ret );
 	return( ret );
     }
 
@@ -1337,7 +1354,7 @@ namespace storage
     bool Volume::umountDir( const string& mp )
     {
 	bool ret = false;
-	y2mil("mp:" << mp);
+	y2mil("mp: " << mp);
 	if( !mp.empty() )
 	{
 	    SystemCmd cmd( UMOUNTBIN " " + quote(mp) );
@@ -1349,7 +1366,7 @@ namespace storage
     int Volume::umount( const string& mp )
     {
 	SystemCmd cmd;
-	y2mil("device:" << dev << " mp:" << mp);
+	y2mil("device: " << dev << " mp: " << mp);
 	string d = mountDevice();
 	if( dmcrypt_active )
 	    d = dmcrypt_dev;
@@ -1404,7 +1421,7 @@ namespace storage
 	}
 	else
 	    is_mounted = false;
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -1433,7 +1450,7 @@ namespace storage
     int Volume::cryptUnsetup( bool force )
     {
 	int ret=0;
-	y2mil("force:" << force << " active:" << dmcrypt_active << " table:" << dmcrypt_dev);
+	y2mil("force: " << force << " active: " << dmcrypt_active << " table: " << dmcrypt_dev);
 	if( dmcrypt_active || force )
 	{
 	    string table = dmcrypt_dev;
@@ -1546,14 +1563,20 @@ namespace storage
 	    else if( !S_ISBLK(sbuf.st_mode) )
 		ret = VOLUME_DEVICE_NOT_BLOCK;
 	}
-	y2mil("checkDevice:" << device << " ret:" << ret);
+	y2mil("checkDevice: " << device << " ret: " << ret);
 	return( ret );
     }
 
     int Volume::doMount()
     {
 	int ret = 0;
-	y2mil("device:" << dev << " mp:" << mp << " orig_mp:" << orig_mp);
+	y2mil("mountDevice: " << mountDevice() << " mp: " << mp << " orig_mp: " << orig_mp);
+        if ( isUsedBy( UB_BTRFS ) )
+        {
+            y2mil("In use by Btrfs - skipping");
+            return 0;
+        }
+
 	getStorage()->showInfoCb( mountText(true), silent );
 	if( ret==0 && !orig_mp.empty() && isMounted() )
 	{
@@ -1566,6 +1589,7 @@ namespace storage
 	}
 	if (ret == 0 && !mp.empty() && isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	if( ret==0 && !mp.empty() && !getStorage()->testmode() )
@@ -1615,24 +1639,27 @@ namespace storage
 	{
 	    getStorage()->rootMounted();
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
     int Volume::canResize( unsigned long long newSizeK ) const
     {
 	int ret=0;
-	y2mil("val:" << newSizeK);
+	y2mil("val: " << newSizeK);
 	if( isUsedBy() )
 	{
 	    const Volume* btrfs = NULL;
 	    if( getStorage()->isUsedBySingleBtrfs(*this, &btrfs) )
 	    {
-		y2mil( "btrfs:" << btrfs );
+		y2mil( "btrfs: " << btrfs );
 		ret = btrfs->canResize( newSizeK );
 	    }
 	    else
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	}
 	else
 	{
@@ -1645,7 +1672,7 @@ namespace storage
 		ret = VOLUME_RESIZE_UNSUPPORTED_BY_FS;
 	    }
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -1656,7 +1683,7 @@ namespace storage
 	if( (needShrink()&&fs!=SWAP) &&
 	    fs!=HFS && fs!=HFSPLUS && fs!=FSNONE )
 	    ret = resizeFs();
-	y2mil( "ret:" << ret );
+	y2mil( "ret: " << ret );
 	return( ret );
     }
 
@@ -1667,13 +1694,13 @@ namespace storage
 	if( (needExtend()||(needShrink()&&fs==SWAP)) &&
 	    fs!=HFS && fs!=HFSPLUS && fs!=FSNONE )
 	    ret = resizeFs();
-	y2mil( "ret:" << ret );
+	y2mil( "ret: " << ret );
 	return( ret );
     }
 
     int Volume::resizeFs()
     {
-	y2mil( "vol:" << *this );
+	y2mil( "vol: " << *this );
 	SystemCmd c;
 	string cmd;
 	int ret = 0;
@@ -1831,7 +1858,7 @@ namespace storage
 	    }
 	}
 	ignore_fs = false;
-	y2mil( "ret:" << ret << " needFsResize:" << needFsResize );
+	y2mil( "ret: " << ret << " needFsResize: " << needFsResize );
 	return( ret );
     }
 
@@ -1840,12 +1867,15 @@ namespace storage
     Volume::setEncryption(bool val, EncryptType typ )
     {
 	int ret = 0;
-	y2mil("val:" << val << " typ:" << toString(typ));
+	y2mil("val: " << val << " typ: " << toString(typ));
 	if (isUsedBy())
 	{
 	    const Volume* btrfs = NULL;
 	    if( !getStorage()->isUsedBySingleBtrfs(*this, &btrfs) )
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	}
 	if( ret==0 )
 	{
@@ -1887,7 +1917,7 @@ namespace storage
 	{
 	    updateFstabOptions();
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -1949,18 +1979,18 @@ namespace storage
     int Volume::getFreeLoop( SystemCmd& loopData, const list<unsigned>& ids )
     {
 	int ret = 0;
-	y2mil( "ids:" << ids );
+	y2mil( "ids: " << ids );
 	const int loop_instsys_offset = 2;
 	list<unsigned> lnum;
 	Storage::ConstVolPair p = getStorage()->volPair( hasLoopDevice );
 	for( Storage::ConstVolIterator i=p.begin(); i!=p.end(); ++i )
 	{
-	    y2mil( "lvol:" << *i );
+	    y2mil( "lvol: " << *i );
 	    unsigned num;
 	    if( loopStringNum( i->loopDevice(), num ))
 		lnum.push_back( num );
 	}
-	y2mil( "lnum:" << lnum );
+	y2mil( "lnum: " << lnum );
 	unsigned num = getStorage()->instsys() ? loop_instsys_offset : 0;
 	bool found;
 	string ldev;
@@ -1984,7 +2014,7 @@ namespace storage
 	    else
 		fstab_loop_dev = loop_dev;
 	}
-	y2mil("loop_dev:" << loop_dev << " fstab_loop_dev:" << fstab_loop_dev);
+	y2mil("loop_dev: " << loop_dev << " fstab_loop_dev: " << fstab_loop_dev);
 	return( ret );
     }
 
@@ -1993,7 +2023,7 @@ namespace storage
 	int ret = 0;
 	if( loop_dev.empty() )
 	    ret = getFreeLoop(loopData, list<unsigned>());
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2005,7 +2035,7 @@ namespace storage
 	    SystemCmd c(LOSETUPBIN " -a");
 	    ret = getFreeLoop( c );
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2019,7 +2049,7 @@ namespace storage
 	}
 	else
 	    cmd += quote(fpath);
-	y2mil("cmd:" << cmd);
+	y2mil("cmd: " << cmd);
 	return( cmd );
     }
 
@@ -2030,8 +2060,8 @@ namespace storage
                                              bool format ) const
     {
 	string table = dmdev;
-	y2mil( "enctype:" << toString(encryption) << " dmdev:" << dmdev << " mount:" << mount <<
-	       " format:" << format );
+	y2mil( "enctype: " << toString(encryption) << " dmdev: " << dmdev << " mount: " << mount <<
+	       " format: " << format );
 	if( table.find( '/' )!=string::npos )
 	    table.erase( 0, table.find_last_of( '/' )+1 );
 	string cmd = CRYPTSETUPBIN " -q";
@@ -2157,7 +2187,7 @@ namespace storage
     Volume::setCryptPwd( const string& val )
     {
 #ifdef DEBUG_CRYPT_PASSWORD
-	y2mil("pwd:" << val << " orig_pwd:" << orig_crypt_pwd );
+	y2mil("pwd: " << val << " orig_pwd: " << orig_crypt_pwd );
 #endif
 	int ret = 0;
 
@@ -2171,9 +2201,9 @@ namespace storage
 		detectEncryption();
 	}
 #ifdef DEBUG_CRYPT_PASSWORD
-	y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
+	y2mil("pwd: " << crypt_pwd << " orig_pwd: " << orig_crypt_pwd );
 #endif
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2185,7 +2215,7 @@ namespace storage
 	    ret = ret && !loop_active;
 	if( ret && dmcrypt() )
 	    ret = ret && !dmcrypt_active;
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2215,6 +2245,27 @@ namespace storage
 	return( ret );
     }
 
+    bool Volume::needLuksFormat( bool readonly ) const
+    {
+        bool ret = false;
+
+        if ( !readonly )
+        {
+            if ( format )
+                ret = true;
+            else if ( isTmpCryptMp( mp ) && crypt_pwd.empty() )
+                ret = true;
+            else if ( encryption != ENC_NONE &&
+                      orig_crypt_pwd != crypt_pwd )
+            {
+                ret = true;
+            }
+        }
+
+        y2mil("ret: " << ret );
+        return ret;
+    }
+
     bool Volume::needCrsetup( bool urgent ) const
     {
 	return( needLosetup(urgent)||needCryptsetup() );
@@ -2228,10 +2279,10 @@ namespace storage
 	     encryption!=orig_encryption);
 	if( ret )
 	{
-	    y2mil( "opt:" << fstab_opt << " oopt:" << orig_fstab_opt <<
-		   " mby:" << mount_by << " omby:" << orig_mount_by <<
-		   " enc:" << encryption << " oenc:" << orig_encryption );
-	    y2mil( "dev:" << device() << " ret:" << ret );
+	    y2mil( "opt: " << fstab_opt << " oopt: " << orig_fstab_opt <<
+		   " mby: " << mount_by << " omby: " << orig_mount_by <<
+		   " enc: " << encryption << " oenc: " << orig_encryption );
+	    y2mil( "dev: " << device() << " ret: " << ret );
 	}
 	return( ret );
     }
@@ -2252,7 +2303,7 @@ namespace storage
 	if (getStorage()->testmode())
 	{
 	    ret = encryption = orig_encryption = ENC_TWOFISH;
-	    y2mil("ret:" << toString(ret));
+	    y2mil("ret: " << toString(ret));
 	    return( ret );
 	}
 
@@ -2260,7 +2311,7 @@ namespace storage
 	static EncryptType try_order[] = { ENC_LUKS, ENC_TWOFISH_OLD,
 					   ENC_TWOFISH256_OLD, ENC_TWOFISH };
 	string mpname = getStorage()->tmpDir() + "/tmp-enc-mp";
-	y2mil("device:" << dev);
+	y2mil("device: " << dev);
 
 	mkdir( mpname.c_str(), 0700 );
 	detected_fs = fs = FSUNKNOWN;
@@ -2274,10 +2325,10 @@ namespace storage
 	    if( is_loop )
 	    {
 		SystemCmd losetupCmd(getLosetupCmd(""));
-		y2mil( "loop_dev:" << loop_dev );
+		y2mil( "loop_dev: " << loop_dev );
 		if( !losetupCmd.stdout().empty() )
 		    loop_dev = losetupCmd.stdout().front();
-		y2mil( "loop_dev:" << loop_dev );
+		y2mil( "loop_dev: " << loop_dev );
 	    }
             SystemCmd modprobeCmd(MODPROBEBIN " dm-crypt");
             bool cryptSetupOk = false;
@@ -2334,8 +2385,8 @@ namespace storage
                     SystemCmd fsckCmd;
 		    fsckCmd.executeRestricted( cmd, 15, 500, excTime, excLines );
 		    bool ok = fsckCmd.retcode()==0 || (excTime && !excLines);
-		    y2mil("ok:" << ok << " retcode:" << fsckCmd.retcode()
-                          << " excTime:" << excTime << " excLines:" << excLines);
+		    y2mil("ok: " << ok << " retcode: " << fsckCmd.retcode()
+                          << " excTime: " << excTime << " excLines: " << excLines);
 		    if( ok )
 		    {
 			SystemCmd modprobeCmd(MODPROBEBIN " " + toString(detected_fs));
@@ -2354,7 +2405,7 @@ namespace storage
 	    }
 	    if( fs==FSUNKNOWN && !luks_ok )
 		pos++;
-	    y2mil("pos:" << pos << " luks_ok:" << luks_ok << " fs:" << toString(fs));
+	    y2mil("pos: " << pos << " luks_ok: " << luks_ok << " fs: " << toString(fs));
 	}
 	while( !luks_ok && detected_fs==FSUNKNOWN && pos<lengthof(try_order) );
 	crUnsetup( true );
@@ -2376,16 +2427,16 @@ namespace storage
 	}
 	rmdir( mpname.c_str() );
 #ifdef DEBUG_CRYPT_PASSWORD
-	y2mil("pwd:" << crypt_pwd << " orig_pwd:" << orig_crypt_pwd );
+	y2mil("pwd: " << crypt_pwd << " orig_pwd: " << orig_crypt_pwd );
 #endif
-	y2mil("ret:" << toString(ret));
+	y2mil("ret: " << toString(ret));
 	return( ret );
     }
 
     int Volume::doLosetup()
     {
 	int ret = 0;
-	y2mil("device:" << dev << " mp:" << mp << " is_loop:" << is_loop << " loop_active:" << loop_active);
+	y2mil("device: " << dev << " mp: " << mp << " is_loop: " << is_loop << " loop_active: " << loop_active);
 	if( is_loop && !dmcrypt() )
 	{
 	    getStorage()->showInfoCb( losetupText(true), silent );
@@ -2402,10 +2453,10 @@ namespace storage
 		ret = VOLUME_LOSETUP_FAILED;
 	    else
 	    {
-		y2mil( "loop_dev:" << loop_dev );
+		y2mil( "loop_dev: " << loop_dev );
 		if( !c.stdout().empty() )
 		    loop_dev = c.stdout().front();
-		y2mil( "loop_dev:" << loop_dev );
+		y2mil( "loop_dev: " << loop_dev );
 		orig_crypt_pwd = crypt_pwd;
 	    }
 	    Storage::waitForDevice(loop_dev);
@@ -2434,7 +2485,7 @@ namespace storage
 	    updateFstabOptions();
 	    loop_active = false;
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2470,13 +2521,13 @@ namespace storage
 	unsigned cnt=1;
 	while( getStorage()->usedDmName(ret,this))
 	    ret = "/dev/mapper/cr_" + nm + "_" + decString(cnt++);
-	y2mil( "nm:" << ret );
+	y2mil( "nm: " << ret );
 	return( ret );
     }
 
     void Volume::replaceAltName( const string& prefix, const string& newn )
     {
-	y2mil("device:" << dev << " prefix:" << prefix << " new:" << newn);
+	y2mil("device: " << dev << " prefix: " << prefix << " new: " << newn);
 	list<string>::iterator i =
 	    find_if( alt_names.begin(), alt_names.end(), string_starts_with( prefix ) );
 	if( i!=alt_names.end() )
@@ -2494,9 +2545,9 @@ namespace storage
     int Volume::doCryptsetup(bool readonly)
     {
 	int ret = 0;
-	y2mil("device:" << dev << " mp:" << mp << " dmcrypt:" << dmcrypt() <<
-	      " active:" << dmcrypt_active << " format:" << format <<
-	      " ro:" << readonly );
+	y2mil("device: " << dev << " mp: " << mp << " dmcrypt: " << dmcrypt() <<
+	      " active: " << dmcrypt_active << " format: " << format <<
+	      " ro: " << readonly << " have_crypt_pwd: " << !crypt_pwd.empty(); );
 	if( dmcrypt() )
 	{
 	    getStorage()->showInfoCb( crsetupText(true), silent );
@@ -2523,16 +2574,16 @@ namespace storage
 	    }
 	    if( ret==0 )
 	    {
-		y2mil( "format:" << format << " tmpc:" << isTmpCryptMp(mp) <<
-		       " pwempty:" << crypt_pwd.empty() << " ro:" << readonly <<
-		       " enc!=NONE:" << (encryption!=ENC_NONE) );
+		y2mil( "format: " << format << " tmpc: " << isTmpCryptMp(mp) <<
+		       " pwempty: " << crypt_pwd.empty() << " ro: " << readonly <<
+		       " enc!=NONE: " << (encryption!=ENC_NONE) );
 #ifdef DEBUG_CRYPT_PASSWORD
-		y2mil( "pw:\"" << crypt_pwd << "\" orig:\"" << orig_crypt_pwd << "\"" );
+		y2mil( "pw: \"" << crypt_pwd << "\" orig: \"" << orig_crypt_pwd << "\"" );
 #endif
-		if( !readonly &&
-		    (format || (isTmpCryptMp(mp) && crypt_pwd.empty()) ||
-		     (encryption!=ENC_NONE && orig_crypt_pwd!=crypt_pwd)) )
+		if( needLuksFormat( readonly ) )
 		{
+                    // cryptsetup luksFormat
+
                     SystemCmd * cryptSetupCmd = createCryptSetupCmd( encryption, dmcrypt_dev, mp, crypt_pwd, true );
 
 		    if( cryptSetupCmd )
@@ -2553,12 +2604,20 @@ namespace storage
 		}
 		if( ret==0 && (!isTmpCryptMp(mp)||!crypt_pwd.empty()) )
 		{
+                    // cryptsetup luksOpen
+
 		    SystemCmd * cryptSetupCmd = createCryptSetupCmd( encryption, dmcrypt_dev, mp, crypt_pwd, false );
 		    if ( cryptSetupCmd )
 		    {
                         cryptSetupCmd->execute();
 
-			if( cryptSetupCmd->retcode()!=0 )
+			if( cryptSetupCmd->retcode() == 5 &&
+                            cryptSetupCmd->select( "already exists", SystemCmd::IDX_STDERR ) == 1 )
+                        {
+                            // Be graceful with a LUKS device that is already (or still) open
+                            y2mil( "LUKS device already open - ignoring" );
+                        }
+			else if( cryptSetupCmd->retcode()!=0 )
 			    ret = VOLUME_CRYPTSETUP_FAILED;
 
                         delete cryptSetupCmd;
@@ -2588,14 +2647,14 @@ namespace storage
 	    cryptUnsetup();
 	    updateFstabOptions();
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
     int Volume::doCrsetup(bool readonly)
     {
 	int ret = 0;
-	y2mil("ro:" << readonly);
+	y2mil("ro: " << readonly);
 	bool force_fstab_rewrite = false;
 	bool losetup_done = false;
 	bool did_cryptsetup = false;
@@ -2623,7 +2682,7 @@ namespace storage
 	{
 	    doFstabUpdate(force_fstab_rewrite);
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return ret;
     }
 
@@ -2654,7 +2713,7 @@ namespace storage
 	int ret = 0;
 	bool remount = false;
 	FsCapabilities caps;
-	y2mil("device:" << dev << " mp:" << mp << " is_mounted:" << is_mounted << " label:" << label);
+	y2mil("device: " << dev << " mp: " << mp << " is_mounted: " << is_mounted << " label: " << label);
 	getStorage()->showInfoCb( labelText(true), silent );
 	if (!getStorage()->getFsCapabilities(fs, caps) || !caps.supportsLabel)
 	{
@@ -2662,6 +2721,7 @@ namespace storage
 	}
 	if (ret == 0 && isUsedBy())
 	{
+            y2war("VOLUME_ALREADY_IN_USE: " << *this );
 	    ret = VOLUME_ALREADY_IN_USE;
 	}
 	if( ret==0 && is_mounted && !caps.labelWhileMounted )
@@ -2743,7 +2803,7 @@ namespace storage
 	{
 	    orig_label = label;
 	}
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2751,14 +2811,17 @@ namespace storage
     int Volume::setLabel( const string& val )
     {
 	int ret=0;
-	y2mil("label:" << val);
+	y2mil("label: " << val);
 	FsCapabilities caps;
 	if (getStorage()->getFsCapabilities(fs, caps) && caps.supportsLabel)
 	{
 	    if( caps.labelLength < val.size() )
 		ret = VOLUME_LABEL_TOO_LONG;
 	    else if (isUsedBy())
+            {
+                y2war("VOLUME_ALREADY_IN_USE: " << *this );
 		ret = VOLUME_ALREADY_IN_USE;
+            }
 	    else
 	    {
 		if (fs == VFAT)
@@ -2769,7 +2832,7 @@ namespace storage
 	}
 	else
 	    ret = VOLUME_LABEL_NOT_SUPPORTED;
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return ret;
     }
 
@@ -2777,12 +2840,12 @@ namespace storage
     int Volume::mount( const string& m, bool ro )
     {
 	SystemCmd cmd;
-	y2mil("device:" << dev << " mp:" << m << " ro:" << ro);
+	y2mil("device: " << dev << " mp: " << m << " ro: " << ro);
 	string cmdline;
 	if( fs != SWAP )
 	{
 	    string lmount = (!m.empty())?m:mp;
-	    y2mil("device:" << dev << " mp:" << lmount);
+	    y2mil("device: " << dev << " mp: " << lmount);
 	    string fsn = toString(fs);
 	    switch( fs )
 	    {
@@ -2816,13 +2879,13 @@ namespace storage
 	    if( fs==BTRFS )
 		ign_opt.push_back("subvol="+getStorage()->getDefaultSubvolName());
 	    list<string> l = splitString( fstab_opt, "," );
-	    y2mil( "l before:" << l );
+	    y2mil( "l before: " << l );
 	    list<string>::const_iterator i;
 	    for( i=ign_opt.begin(); i!=ign_opt.end(); i++ )
 		l.remove(*i);
 	    for( i=ign_beg.begin(); i!=ign_beg.end(); i++ )
 		l.remove_if(string_starts_with(*i));
-	    y2mil( "l  after:" << l );
+	    y2mil( "l  after: " << l );
 	    if( !l.empty() )
 		cmdline += "-o " + boost::join(l, ",") + " ";
 
@@ -2851,7 +2914,7 @@ namespace storage
 	}
 	else
 	    is_mounted = true;
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2874,7 +2937,7 @@ namespace storage
 
     int Volume::prepareRemove()
     {
-	y2mil("device:" << dev);
+	y2mil("device: " << dev);
 	int ret = unaccessVol();
 	if( loop_active || dmcrypt_active )
 	{
@@ -2882,7 +2945,7 @@ namespace storage
 	}
 	getStorage()->eraseCachedFreeInfo(dev);
 	getStorage()->removeDmTableTo(*this);
-	y2mil("ret:" << ret);
+	y2mil("ret: " << ret);
 	return( ret );
     }
 
@@ -2938,11 +3001,11 @@ namespace storage
 	{
 	    Volume const * n=NULL;
 	    string id = "UUID="+getUsedBy().front().device();
-	    y2mil( "usedBy:" << id );
+	    y2mil( "usedBy: " << id );
 	    if( getStorage()->findVolume( id, n ))
 	    {
 		p = n;
-		y2mil( "found:" << *p );
+		y2mil( "found: " << *p );
 	    }
 	}
 	if( deleted() )
@@ -3007,7 +3070,7 @@ namespace storage
 	    if( l && dmcrypt() )
 		ret = l->loopFile();
 	}
-	y2mil( "ret:" << ret );
+	y2mil( "ret: " << ret );
 	return( ret );
     }
 
@@ -3031,7 +3094,7 @@ namespace storage
 	    else if( l )
 		ret = l->loopFile();
 	}
-	y2mil( "dev:" << dev << " ret:" << ret );
+	y2mil( "dev: " << dev << " ret: " << ret );
 	return( ret );
     }
 
@@ -3097,7 +3160,7 @@ namespace storage
 		i->find("usrjquota=")==0 || i->find("grpjquota=")==0;
 	    ++i;
 	}
-	y2mil( "fstopt:" << fstopt << " ret:" << ret );
+	y2mil( "fstopt: " << fstopt << " ret: " << ret );
 	return( ret );
     }
 
@@ -3135,15 +3198,17 @@ namespace storage
     {
 	int ret = 0;
 	bool changed = false;
-	y2mil( "force_rewrite:" << force_rewrite );
-	y2mil(*this);
+        y2mil( "device(): " << device() << " name(): " << name() );
+	y2mil( "vol: " << *this);
+	y2mil( "force_rewrite: " << force_rewrite );
+
 	if( !ignore_fstab )
 	{
 	    EtcFstab* fstab = getStorage()->getFstab();
 	    FstabEntry entry;
 	    if( (!orig_mp.empty() || orig_encryption != ENC_NONE) &&
 		(deleted() || (mp.empty() && !pvEncryption())) &&
-		(fstab->findDevice( dev, entry ) ||
+		(fstab->findDevice( device(), entry ) ||
 		 fstab->findDevice( alt_names, entry ) ||
 		 ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( orig_mp, entry )) ||
 		 ((cType()==LOOP||cType()==TMPFSC) && fstab->findMount( mp, entry ))) )
@@ -3159,12 +3224,12 @@ namespace storage
 	    {
 		string fname;
 		if( !orig_mp.empty() && (
-					 fstab->findDevice( dev, entry ) ||
+					 fstab->findDevice( device(), entry ) ||
 					 fstab->findDevice( alt_names, entry ) ||
 					 (cType() == LOOP && getLoopFile(fname) && fstab->findDevice( fname, entry )) ||
 					 (cType() == TMPFSC && !mp.empty() && fstab->findMount( mp, entry )) ))
 		{
-		    y2mil( "changed:" << entry );
+		    y2mil( "changed: " << entry );
 		    changed = force_rewrite;
 		    FstabChange che( entry );
 		    string de = getFstabDentry();
@@ -3269,23 +3334,23 @@ namespace storage
 	    fstab_opt!=orig_fstab_opt && !orig_fstab_opt.empty() &&
 	    mp==orig_mp && mp!="swap" )
 	{
-	    y2mil( "fstab_opt:" << fstab_opt << " fstab_opt_orig:" << orig_fstab_opt );
-	    y2mil( "remount:" << *this );
+	    y2mil( "fstab_opt: " << fstab_opt << " fstab_opt_orig: " << orig_fstab_opt );
+	    y2mil( "remount: " << *this );
 	    int r = 0;
 	    if( isMounted() )
 	    {
 		r = umount( mp );
-		y2mil( "remount umount:" << r );
+		y2mil( "remount umount: " << r );
 	    }
 	    if( r==0 || r==VOLUME_UMOUNT_NOT_MOUNTED )
 	    {
 		ret = mount(getStorage()->prependRoot(mp));
-		y2mil( "remount mount:" << ret );
+		y2mil( "remount mount: " << ret );
 	    }
 	    else
 	    {
 		SystemCmd cmd( MOUNTBIN " -oremount " + quote(mp) );
-		y2mil( "remount remount:" << cmd.retcode() );
+		y2mil( "remount remount: " << cmd.retcode() );
 		if( cmd.retcode()!=0 )
 		    ret = VOLUME_REMOUNT_FAILED;
 	    }
@@ -3316,7 +3381,7 @@ namespace storage
 		    doTuneExtDataMode(data_mode);
 	    }
 	}
-	y2mil("changed:" << changed << " ret:" << ret);
+	y2mil("changed: " << changed << " ret: " << ret);
 	return ret;
     }
 
@@ -3585,9 +3650,9 @@ namespace storage
     std::ostream& operator<< (std::ostream& s, const Volume &v )
     {
 	s << dynamic_cast<const Device&>(v);
-	s << " Nr:" << v.num;
+	s << " Nr: " << v.num;
 	if( v.size_k != v.orig_size_k )
-	    s << " orig_SizeK:" << v.orig_size_k;
+	    s << " orig_SizeK: " << v.orig_size_k;
 	if( v.ronly )
 	    s << " readonly";
 	if( v.format )
@@ -3597,81 +3662,81 @@ namespace storage
 	if( v.ignore_fs )
 	    s << " ignoreFs";
 	if (!v.uby.empty())
-	    s << " usedby:" << v.uby;
+	    s << " usedby: " << v.uby;
 	if( v.fs != storage::FSUNKNOWN )
 	{
-	    s << " fs:" << toString(v.fs);
+	    s << " fs: " << toString(v.fs);
 	    if( v.fs != v.detected_fs && v.detected_fs!=storage::FSUNKNOWN )
-		s << " det_fs:" << toString(v.detected_fs);
+		s << " det_fs: " << toString(v.detected_fs);
 	}
 	if (!v.mp.empty())
 	{
-	    s << " mount:" << v.mp;
+	    s << " mount: " << v.mp;
 	    if( !v.is_mounted )
 		s << " not_mounted";
 	}
 	if( v.mp != v.orig_mp && !v.orig_mp.empty() )
-	    s << " orig_mount:" << v.orig_mp;
+	    s << " orig_mount: " << v.orig_mp;
 	if( v.mount_by != storage::MOUNTBY_DEVICE )
 	{
-	    s << " mount_by:" << toString(v.mount_by);
+	    s << " mount_by: " << toString(v.mount_by);
 	    if( v.mount_by != v.orig_mount_by )
-		s << " orig_mount_by:" << toString(v.orig_mount_by);
+		s << " orig_mount_by: " << toString(v.orig_mount_by);
 	}
 	if (!v.uuid.empty())
 	{
-	    s << " uuid:" << v.uuid;
+	    s << " uuid: " << v.uuid;
 	}
 	if (!v.label.empty())
 	{
-	    s << " label:" << v.label;
+	    s << " label: " << v.label;
 	}
 	if( v.label != v.orig_label && !v.orig_label.empty() )
-	    s << " orig_label:" << v.orig_label;
+	    s << " orig_label: " << v.orig_label;
 	if( !v.fstab_opt.empty() )
 	{
-	    s << " fstopt:" << v.fstab_opt;
+	    s << " fstopt: " << v.fstab_opt;
 	    if( v.fstab_opt != v.orig_fstab_opt && !v.orig_fstab_opt.empty() )
-		s << " orig_fstopt:" << v.orig_fstab_opt;
+		s << " orig_fstopt: " << v.orig_fstab_opt;
 	}
 	if (!v.mkfs_opt.empty())
 	{
-	    s << " mkfsopt:" << v.mkfs_opt;
+	    s << " mkfsopt: " << v.mkfs_opt;
 	}
 	if (!v.tunefs_opt.empty())
 	{
-	    s << " tunefsopt:" << v.tunefs_opt;
+	    s << " tunefsopt: " << v.tunefs_opt;
 	}
 	if (!v.dtxt.empty())
 	{
-	    s << " dtxt:" << v.dtxt;
+	    s << " dtxt: " << v.dtxt;
 	}
 	if( v.encryption != storage::ENC_NONE ||
 	    v.orig_encryption != storage::ENC_NONE )
 	{
-	    s << " encr:" << toString(v.encryption);
+	    s << " encr: " << toString(v.encryption);
 	    if( v.encryption != v.orig_encryption &&
 		v.orig_encryption!=storage::ENC_NONE )
-		s << " orig_encr:" << toString(v.orig_encryption);
+		s << " orig_encr: " << toString(v.orig_encryption);
 	}
 #ifdef DEBUG_CRYPT_PASSWORD
 	if( !v.crypt_pwd.empty() )
-	    s << " pwd:" << v.crypt_pwd;
+	    s << " pwd: " << v.crypt_pwd;
 	if( !v.orig_crypt_pwd.empty() && v.crypt_pwd!=v.orig_crypt_pwd )
-	    s << " orig_pwd:" << v.orig_crypt_pwd;
+	    s << " orig_pwd: " << v.orig_crypt_pwd;
 #endif
 	if( !v.dmcrypt_dev.empty() )
-	    s << " dmcrypt:" << v.dmcrypt_dev;
+	    s << " dmcrypt: " << v.dmcrypt_dev;
 	if( v.dmcrypt_active )
 	    s << " dmcrypt_active";
 	if( v.is_loop )
 	{
-	    s << " loop:" << v.loop_dev;
+	    s << " loop: " << v.loop_dev;
 	    if( v.loop_active )
 		s << " loop_active";
 	    if( v.fstab_loop_dev != v.loop_dev )
 	    {
-		s << " fstab_loop:" << v.fstab_loop_dev;
+		s << " fstab_loop: " << v.fstab_loop_dev;
 	    }
 	}
 	return( s );
@@ -3756,7 +3821,7 @@ namespace storage
     {
 	const string* end = tmp_mount + lengthof(tmp_mount);
 	bool ret = find(tmp_mount, end, mp) != end;
-	y2mil("find mp:" << mp << " ret:" << ret);
+	y2mil("find mp: " << mp << " ret: " << ret);
 	return ret;
     }
 
