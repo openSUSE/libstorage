@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-11-10 20:21+0000\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive68@gmail.com>\n"
-"Language-Team: Portuguese (Brazil) "
-"<https://l10n.opensuse.org/projects/libstorage/master/pt_BR/>\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Samanta Magalhaes <samanta@texttrans.com>\n"
+"Language-Team: Portuguese (Brazil) <https://l10n.opensuse.org/projects/"
+"libstorage/sle-12-sp4/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.13.1\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -458,7 +458,7 @@ msgstr "Caminhos múltiplos DM"
 
 #: ../storage/Graph.cc:487
 msgid "DM RAID"
-msgstr "RAID DM"
+msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -959,7 +959,7 @@ msgstr "Formatar a partição %1$s (%2$s) para swap"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Formatar a partição %1$s (%2$s) com %3$s"
+msgstr "Formatar partição %1$s (%2$s) com %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1093,7 +1093,7 @@ msgstr "MB"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
-msgstr "RAID MD"
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
