@@ -17,16 +17,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-06-13 11:05+0000\n"
-"Last-Translator: Javier Llorente <javier@opensuse.org>\n"
-"Language-Team: Spanish "
-"<https://l10n.opensuse.org/projects/libstorage/master/es/>\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Patricia Pazos <pms.malaga@hermestrans.com>\n"
+"Language-Team: Spanish <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.6\n"
+"X-Generator: Weblate 3.3\n"
 "X-Poedit-Language: Spanish\n"
 
 #. text displayed during action
@@ -973,7 +973,7 @@ msgstr "Dar formato a la partición %1$s (%2$s) para intercambio"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Dar formato a la partición %1$s (%2$s) con %3$s"
+msgstr "Formatear partición %1$s (%2$s) con %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
