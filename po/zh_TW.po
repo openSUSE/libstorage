@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-29 16:08+0200\n"
-"Last-Translator: Ramax Lo <ramaxlo@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) "
-"<http://10n.opensuse.org/projects/libstorage/master/zh_TW/>\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Emily Dong <Emily.Dong@excel-gits.com>\n"
+"Language-Team: Chinese (Taiwan) <https://l10n.opensuse.org/projects/"
+"libstorage/sle-12-sp4/zh_TW/>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -371,7 +371,7 @@ msgstr "使用 %3$s 建立用於 %4$s 的卷冊 %1$s (%2$s)"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s)"
+msgstr "從 %3$s 建立磁碟區群組 %1$s (%2$s)"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -439,7 +439,7 @@ msgstr "正在建立卷冊 %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "從 %3$s 建立卷冊群組 %1$s (%2$s)"
+msgstr "正在從 %3$s 建立磁碟區群組 %1$s (%2$s)"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
@@ -945,7 +945,7 @@ msgstr "格式化用於交換的分割區 %1$s (%2$s)"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "使用 %3$s 格式化分割區 %1$s (%2$s)"
+msgstr "格式化包含 %3$s 的分割區 %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
