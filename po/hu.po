@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-02-02 19:03+0000\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
 "Last-Translator: Robert Taisz <robert.taisz@emerald.hu>\n"
-"Language-Team: Hungarian "
-"<https://l10n.opensuse.org/projects/libstorage/master/hu/>\n"
+"Language-Team: Hungarian <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.18\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -249,7 +249,7 @@ msgstr "%1$s kiterjesztett többutas partíció létrehozása (%2$s)"
 #: ../storage/Partition.cc:455
 #, c-format
 msgid "Create extended partition %1$s (%2$s)"
-msgstr "%1$s kiterjesztett partíció létrehozása (%2$s)"
+msgstr "%1$s (%2$s) kiterjesztett partíció létrehozása"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -411,7 +411,7 @@ msgstr "%1$s kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendsz
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "%1$s kötetcsoport létrehozása (%2$s) ebből: %3$s"
+msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s fájlrendszerből"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -479,7 +479,7 @@ msgstr "%1$s kötet létrehozása"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "%1$s kötetcsoport létrehozása (%2$s) ebből: %3$s"
+msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s eszközről"
 
 # modules/inst_custom_part.ycp:491
 #: ../storage/Graph.cc:519
@@ -552,7 +552,7 @@ msgstr "%1$s többutas partíció törlése (%2$s)"
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "%1$s partíció törlése (%2$s)"
+msgstr "%1$s (%2$s) partíció törlése"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1028,7 +1028,7 @@ msgstr "%1$s partíció formázása (%2$s) cserepartíciónak"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "%1$s partíció formázása (%2$s) %3$s fájlrendszerrel"
+msgstr "%1$s (%2$s) partíció  formázása %3$s fájlrendszerrel"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1189,7 +1189,7 @@ msgstr "MiB"
 # modules/inst_custom_part.ycp:301 modules/inst_custom_part.ycp:370
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "Csatolási pont"
+msgstr "Csatlakoztatási pont"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
