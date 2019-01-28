@@ -5,17 +5,17 @@ msgstr ""
 "Project-Id-Version: libstorage.ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-11-02 17:17+0200\n"
-"Last-Translator: Alex Minton <alex239@gmail.com>\n"
-"Language-Team: Russian "
-"<http://10n.opensuse.org/projects/libstorage/master/ru/>\n"
+"PO-Revision-Date: 2019-01-29 04:12+0000\n"
+"Last-Translator: Nikita Maynagashev <maynagashev@palex.ru>\n"
+"Language-Team: Russian <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -953,7 +953,7 @@ msgstr "Форматировать раздел %1$s (%2$s) для подкач�
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Форматировать раздел %1$s (%2$s) в %3$s"
+msgstr "Форматировать раздел %1$s (%2$s) с файловой системой %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
