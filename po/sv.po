@@ -10,16 +10,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-02-25 01:06+0000\n"
-"Last-Translator: Ruta Reknere <ruta.reknere@nordtext.com>\n"
-"Language-Team: Swedish "
-"<https://l10n.opensuse.org/projects/libstorage/master/sv/>\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Sven Åhr <anders.ahr@gmail.com>\n"
+"Language-Team: Swedish <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/sv/>\n"
 "Language: sv\n"
 "MIME-Version: 1\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.18\n"
+"X-Generator: Weblate 3.3\n"
 
 # SLE12
 #. text displayed during action
@@ -404,7 +404,7 @@ msgstr "Skapa volymen %1$s (%2$s) för %4$s med %3$s"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Skapa volymgruppen %1$s (%2$s) från %3$s"
+msgstr "Skapa volymgrupp %1$s (%2$s) från %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -480,7 +480,7 @@ msgstr "Skapar volymen %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Skapar volymgruppen %1$s (%2$s) från %3$s"
+msgstr "Skapar volymgrupp %1$s (%2$s) från %3$s"
 
 # SLE12
 #: ../storage/Graph.cc:519
@@ -495,7 +495,7 @@ msgstr "DM-flersökväg"
 # SLE12
 #: ../storage/Graph.cc:487
 msgid "DM RAID"
-msgstr "DM-RAID"
+msgstr "DM RAID"
 
 # SLE12
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
@@ -1019,7 +1019,7 @@ msgstr "Formatera partitionen %1$s (%2$s) för växling"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Formatera partitionen %1$s (%2$s) med %3$s"
+msgstr "Skapa partition %1$s (%2$s) med %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1161,7 +1161,7 @@ msgstr "MB"
 # SLE12
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
-msgstr "MD-RAID"
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
