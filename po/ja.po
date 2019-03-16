@@ -11,16 +11,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2018-01-04 05:03+0000\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
-"Language-Team: Japanese "
-"<https://l10n.opensuse.org/projects/libstorage/master/ja/>\n"
+"Language-Team: Japanese <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.17.1\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -372,7 +372,7 @@ msgstr "%4$s 用のボリューム %1$s (%2$s) を %3$s で作成"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "%3$s からボリュームグループ %1$s (%2$s) を作成"
+msgstr "%3$s からのボリュームグループ %1$s (%2$s) の作成"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
