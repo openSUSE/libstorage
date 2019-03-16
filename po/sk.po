@@ -7,16 +7,16 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-10 21:01+0200\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
-"Language-Team: Slovak "
-"<http://10n.opensuse.org/projects/libstorage/master/sk/>\n"
+"Language-Team: Slovak <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -438,7 +438,7 @@ msgstr "Vytváram zväzok %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Vytváram skupinu zväzkov %1$s (%2$s) z %3$s"
+msgstr "Vytvorenie skupiny zväzkov %1$s (%2$s) z %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
