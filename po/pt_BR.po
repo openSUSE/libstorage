@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
 "PO-Revision-Date: 2019-03-27 22:38+0000\n"
-"Last-Translator: Samanta Magalhaes <samanta@texttrans.com>\n"
+"Last-Translator: Rodrigo Macedo <rmsolucoeseminformatic4@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://l10n.opensuse.org/projects/"
 "libstorage/sle-12-sp4/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -377,7 +377,7 @@ msgstr "Criar volume %1$s (%2$s) para %4$s com %3$s"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Criar grupo de volume %1$s (%2$s) a partir de %3$s"
+msgstr "Criar grupo de volumes %1$s (%2$s) com %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -446,7 +446,7 @@ msgstr "Criando o volume %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Criando o grupo de volume %1$s (%2$s) a partir de %3$s"
+msgstr "Criando grupo de volume %1$s (%2$s) de %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
