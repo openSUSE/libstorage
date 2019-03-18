@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-09-13 13:10+0000\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
-"Language-Team: Catalan "
-"<https://l10n.opensuse.org/projects/libstorage/master/ca/>\n"
+"Language-Team: Catalan <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.13.1\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -371,7 +371,7 @@ msgstr "Crea un volum %1$s (%2$s) per a %4$s amb %3$s"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Crea un grup de volum %1$s (%2$s) de %3$s"
+msgstr "Crea el grup de volums %1$s (%2$s) a partir de %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -441,7 +441,7 @@ msgstr "Creant el volum %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Creant el grup de volum %1$s (%2$s) de %3$s"
+msgstr "Creant el grup de volums %1$s (%2$s) a partir de %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
