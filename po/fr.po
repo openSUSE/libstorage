@@ -12,16 +12,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2017-11-19 10:42+0000\n"
-"Last-Translator: Antoine Belvire <antoine.belvire@laposte.net>\n"
-"Language-Team: French "
-"<https://l10n.opensuse.org/projects/libstorage/master/fr/>\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Antoine Belvire <antoine.belvire@opensuse.org>\n"
+"Language-Team: French <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.13.1\n"
+"X-Generator: Weblate 3.3\n"
 "X-Poedit-Language: French\n"
 
 #. text displayed during action
@@ -413,7 +413,7 @@ msgstr "Créer le volume %1$s (%2$s) pour %4$s avec %3$s"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Créer le groupe de volumes %1$s (%2$s) à partir de %3$s"
+msgstr "Création du groupe de volumes %1$s (%2$s) à partir de %3$s"
 
 # TLABEL packages_2002_01_04_0147__198
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
