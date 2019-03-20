@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: libstorage.ru\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-01-29 04:12+0000\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
 "Last-Translator: Nikita Maynagashev <maynagashev@palex.ru>\n"
 "Language-Team: Russian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/ru/>\n"
@@ -369,7 +369,7 @@ msgstr "Создать том %1$s (%2$s) для %4$s с %3$s"
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Создать группу томов %1$s (%2$s) из %3$s"
+msgstr "Создать группу томов %1$s (%2$s) на основе устройств %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -439,7 +439,7 @@ msgstr "Создание тома %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Создание группы томов %1$s (%2$s) из %3$s"
+msgstr "Создание группы томов %1$s (%2$s) на основе устройств %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
