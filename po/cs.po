@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2015-10-16 22:40+0200\n"
-"Last-Translator: Jan Papež <honyczek@centrum.cz>\n"
-"Language-Team: Czech <http://10n.opensuse.org/projects/libstorage/master/cs/>"
-"\n"
+"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"Last-Translator: Aleš Kastner <alkas@volny.cz>\n"
+"Language-Team: Czech <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp4/cs/>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Weblate 2.3\n"
+"X-Generator: Weblate 3.3\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -450,7 +450,7 @@ msgstr "Vytváří se svazek %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Vytváří se skupina svazků %1$s (%2$s) z %3$s"
+msgstr "Vytvářím skupinu svazků %1$s (%2$s) z %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
