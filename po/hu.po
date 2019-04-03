@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"PO-Revision-Date: 2019-04-04 15:02+0000\n"
 "Last-Translator: Robert Taisz <robert.taisz@emerald.hu>\n"
 "Language-Team: Hungarian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/hu/>\n"
@@ -411,7 +411,7 @@ msgstr "%1$s kötet létrehozása (%2$s), %4$s csatolási pont, %3$s fájlrendsz
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s fájlrendszerből"
+msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s eszközön"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -479,7 +479,7 @@ msgstr "%1$s kötet létrehozása"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s eszközről"
+msgstr "%1$s kötetcsoport (%2$s) létrehozása a(z) %3$s eszközön"
 
 # modules/inst_custom_part.ycp:491
 #: ../storage/Graph.cc:519
