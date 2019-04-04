@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: @PACKAGE@\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-04-04 12:07+0000\n"
-"Last-Translator: George Yacoub <george.yacoub@arabize.com>\n"
+"PO-Revision-Date: 2019-04-04 15:01+0000\n"
+"Last-Translator: Iman Abd Elaziz <Iman.AbdelAziz@arabize.com>\n"
 "Language-Team: Arabic <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/ar/>\n"
 "Language: ar\n"
@@ -365,7 +365,7 @@ msgstr "إنشاء حجم %1$s (%2$s) الخاصة بـ %4$s بـ %3$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1120
-#, c-format, fuzzy
+#, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
 msgstr "قم بإنشاء مجموعة وحدات تخزين %1$s (%2$s) من %3$s"
 
@@ -434,7 +434,7 @@ msgstr "يتم الآن إنشاء الحجم %1$s"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
 #: ../storage/LvmVg.cc:1111
-#, c-format, fuzzy
+#, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
 msgstr "يتم الآن إنشاء مجموعة وحدات تخزين %1$s (%2$s) من %3$s"
 
