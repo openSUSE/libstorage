@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: libstorage.nl\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-03-27 22:38+0000\n"
-"Last-Translator: Freek de Kruijf <freek@opensuse.org>\n"
+"PO-Revision-Date: 2019-04-04 15:01+0000\n"
+"Last-Translator: Eva van Rein <vistatec@globaltextware.nl>\n"
 "Language-Team: Dutch <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/nl/>\n"
 "Language: nl\n"
@@ -449,7 +449,7 @@ msgstr "Volume %1$s aanmaken"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Volumegroep %1$s (%2$s) wordt uit %3$s aangemaakt"
+msgstr "Volumegroep %1$s (%2$s) uit %3$s aanmaken"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
