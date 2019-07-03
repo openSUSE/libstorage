@@ -33,5 +33,17 @@ main()
     cout << s->getPartitionPrefix("/dev/nvme0n1") << endl;
     cout << s->getPartitionPrefix("/dev/nvme0n1p6") << endl;
 
+    cout << s->getPartitionPrefix("/dev/pmem0") << endl;
+    cout << s->getPartitionPrefix("/dev/pmem0p1") << endl;
+
+    cout << s->getPartitionPrefix("/dev/pmem0s") << endl;
+    cout << s->getPartitionPrefix("/dev/pmem0s1") << endl;
+
+    cout << s->getPartitionPrefix("/dev/pmem0.1") << endl;
+    cout << s->getPartitionPrefix("/dev/pmem0.1p1") << endl;
+
+    cout << s->getPartitionPrefix("/dev/pmem0.1s") << endl;
+    cout << s->getPartitionPrefix("/dev/pmem0.1s1") << endl;
+
     delete s;
 }

@@ -5,3 +5,7 @@
 /dev/md2p5
 /dev/rsxx0p6
 /dev/nvme0n1p7
+/dev/pmem0p1
+/dev/pmem0s1
+/dev/pmem0.1p1
+/dev/pmem0.1s1

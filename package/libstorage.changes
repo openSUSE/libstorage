@@ -1,4 +1,10 @@
 -------------------------------------------------------------------
+Wed Jul 03 14:36:23 CEST 2019 - aschnell@suse.com
+
+- added handling for pmem devices (NVDIMM) (jsd#SLE-7139)
+- 2.26.16
+
+-------------------------------------------------------------------
 Thu Aug 02 11:38:53 CEST 2018 - aschnell@suse.com
 
 - added special handling when creating udev ids starting with

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) [2004-2014] Novell, Inc.
- * Copyright (c) 2016 SUSE LLC
+ * Copyright (c) [2016-2019] SUSE LLC
  *
  * All Rights Reserved.
  *
@@ -768,8 +768,11 @@ namespace storage
     }
 
 
+    // For pmem there are four naming schemas: 1. pmem0, 2. pmem0s, 3. pmem0.0 and 4. pmem0.0s.
+
     const string Disk::p_disks[] = { "cciss/", "ida/", "ataraid/", "etherd/", "rd/", "mmcblk[0-9]+",
-				     "md[0-9]+", "rsxx[0-9]+", "nvme[0-9]+n[0-9]+" };
+				     "md[0-9]+", "rsxx[0-9]+", "nvme[0-9]+n[0-9]+",
+				     "pmem([0-9]+)(p[0-9]+)?$", "pmem([0-9]+\\.[0-9]+)(p[0-9]+)?$" };
 
 
     bool
