@@ -29,5 +29,10 @@ main()
 
     cout << s->getPartitionName("/dev/nvme0n1", 7) << endl;
 
+    cout << s->getPartitionName("/dev/pmem0", 1) << endl;
+    cout << s->getPartitionName("/dev/pmem0s", 1) << endl;
+    cout << s->getPartitionName("/dev/pmem0.1", 1) << endl;
+    cout << s->getPartitionName("/dev/pmem0.1s", 1) << endl;
+
     delete s;
 }
