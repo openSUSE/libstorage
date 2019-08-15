@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-03-27 22:38+0000\n"
-"Last-Translator: Franziska Weinberger <f.weinberger@gemino.de>\n"
+"PO-Revision-Date: 2019-08-15 23:51+0000\n"
+"Last-Translator: Thomas Koller <tk120@protonmail.com>\n"
 "Language-Team: German <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/de/>\n"
 "Language: de\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.3\n"
+"X-Generator: Weblate 3.6.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -54,8 +54,9 @@ msgid "B"
 msgstr "B"
 
 #: ../storage/Graph.cc:515
+#, fuzzy
 msgid "Btrfs Volume"
-msgstr "Btrfs Volume"
+msgstr "Btrfs Lautstärke"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
