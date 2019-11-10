@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: autoinst.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-11-09 10:53+0000\n"
+"PO-Revision-Date: 2019-11-10 10:53+0000\n"
 "Last-Translator: Jaanus Ojangu <jaanus.ojangu@gmail.com>\n"
 "Language-Team: Estonian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/et/>\n"
@@ -1081,9 +1081,8 @@ msgid "MB"
 msgstr "MB"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
-#, fuzzy
 msgid "MD RAID"
-msgstr "&RAID..."
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
@@ -1092,7 +1091,7 @@ msgstr "MiB"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "Ühenduskoht"
+msgstr "Haakepunkt"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
