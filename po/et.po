@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: autoinst.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-11-18 14:53+0000\n"
+"PO-Revision-Date: 2019-11-27 12:54+0000\n"
 "Last-Translator: Jaanus Ojangu <jaanus.ojangu@gmail.com>\n"
 "Language-Team: Estonian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/et/>\n"
@@ -49,7 +49,7 @@ msgstr "kB"
 
 #: ../storage/Graph.cc:515
 msgid "Btrfs Volume"
-msgstr ""
+msgstr "Btrfs osajaotus"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -564,7 +564,7 @@ msgstr "Tarkvaralise RAID-i %1$s kustutamine"
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
@@ -1118,7 +1118,7 @@ msgstr "IP"
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
 msgid "PB"
-msgstr ""
+msgstr "PB"
 
 #: ../storage/Graph.cc:495
 msgid "Partition"
@@ -1374,7 +1374,7 @@ msgstr "Kettale %1$s nime %2$s määramine"
 
 #: ../storage/Storage.cc:5587
 msgid "Setting file attributes with chattr failed."
-msgstr ""
+msgstr "Faili atribuutide seadistamine chattr-iga nurjus."
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1423,7 +1423,7 @@ msgstr "Partitsioonile %1$s tüübi %2$X määramine"
 #: ../storage/Volume.cc:1892
 #, c-format
 msgid "Setting up encrypted dm device on %1$s"
-msgstr ""
+msgstr "Krüptitud dm-seadme seadistamine seadmel %1$s"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1534,6 +1534,11 @@ msgid ""
 "cannot add, edit, resize, or remove partitions from that\n"
 "disk with this tool."
 msgstr ""
+"Ketta % 1$s partitsioonitabeli tüüpi ei saa hallata selle tööriistaga.\n"
+"\n"
+"Ketta %1$s partitsioone saate kasutada sellisena, nagu nad on. Saate neid "
+"vormindada ja neile haakepunkte määrata, kuid teie ise ei saa partitsioone "
+"lisada, redigeerida, suurust muuta ega neid eemaldada selle tööriistaga."
 
 #. popup text
 #: ../storage/Storage.cc:350
@@ -1541,6 +1546,8 @@ msgid ""
 "The system seems to have multipath hardware.\n"
 "Do you want to activate multipath?"
 msgstr ""
+"Tundub, et süsteemil on multipath riistvara.\n"
+"Kas soovite aktiveerida multipath?"
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:91
