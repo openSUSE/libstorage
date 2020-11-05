@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: libstorage.fi\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2020-06-30 08:32+0000\n"
+"PO-Revision-Date: 2020-11-05 17:49+0000\n"
 "Last-Translator: Tommi Nieminen <software@legisign.org>\n"
 "Language-Team: Finnish <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/fi/>\n"
@@ -994,7 +994,7 @@ msgstr "Alustetaan swap-osio %1$s (%2$s)"
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Alusta osio %1$s (%2$s) tiedostojärjestelmällä %3$s"
+msgstr "Alusta osio %1$s (%2$s) tiedostojärjestelmään %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1133,7 +1133,7 @@ msgstr "Mt"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
-msgstr "MD RAID"
+msgstr "MD-RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
@@ -1142,7 +1142,7 @@ msgstr "MiB"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "Liitoskohta"
+msgstr "Liitospiste"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1218,7 +1218,7 @@ msgstr "Poista %1$s"
 #: ../storage/Volume.cc:1506
 #, c-format
 msgid "Remove %1$s from %2$s"
-msgstr "Poista %1$s polusta %2$s"
+msgstr "Poista %1$s laitteelta %2$s"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:75
