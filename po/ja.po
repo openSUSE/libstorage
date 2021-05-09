@@ -11,16 +11,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-03-27 22:38+0000\n"
+"PO-Revision-Date: 2021-05-09 02:57+0000\n"
 "Last-Translator: Yasuhiko Kamata <belphegor@belbel.or.jp>\n"
 "Language-Team: Japanese <https://l10n.opensuse.org/projects/libstorage/"
-"sle-12-sp4/ja/>\n"
+"sle-12-sp5/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.3\n"
+"X-Generator: Weblate 4.6.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -950,7 +950,7 @@ msgstr "スワップ用のパーティション %1$s (%2$s) をフォーマッ�
 #: ../storage/Partition.cc:516
 #, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "パーティション %1$s (%2$s) を %3$s でフォーマット"
+msgstr "パーティション %1$s (%2$s) のフォーマット (%3$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1535,9 +1535,9 @@ msgstr ""
 "できません。\n"
 "\n"
 "ディスク %1$s のパーティションは従来通りお使いいただけます。\n"
-"フォーマットやマウントポイントの割り当てなどは行なえますが、\n"
+"フォーマットやマウントポイントの割り当てなどは行えますが、\n"
 "このツールを利用したパーティションの追加／編集／サイズ変更／削除などは\n"
-"行なうことができません。"
+"行うことができません。"
 
 #. popup text
 #: ../storage/Storage.cc:350
