@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2020-02-12 17:54+0000\n"
+"PO-Revision-Date: 2021-07-09 16:10+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/ca/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.6.1\n"
+"X-Generator: Weblate 4.6.2\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -453,7 +453,7 @@ msgstr "Multiruta DM"
 
 #: ../storage/Graph.cc:487
 msgid "DM RAID"
-msgstr "DM RAID"
+msgstr "RAID DM"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1090,7 +1090,7 @@ msgstr "MB"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
 msgid "MD RAID"
-msgstr "MD RAID"
+msgstr "RAID MD"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
