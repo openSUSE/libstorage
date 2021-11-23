@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2021-07-09 16:11+0000\n"
+"PO-Revision-Date: 2021-11-23 13:12+0000\n"
 "Last-Translator: David Medina <medipas@gmail.com>\n"
 "Language-Team: Catalan <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/ca/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.6.2\n"
+"X-Generator: Weblate 4.8.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -812,8 +812,8 @@ msgstr "Formata el dispositiu xifrat %1$s (%2$s) per a %4$s amb %3$s"
 #, c-format
 msgid "Format encrypted device mapper volume %1$s (%2$s) for %4$s with %3$s"
 msgstr ""
-"Formata  el volum codificat mapador de dispositius (device mapper) %1$s "
-"(%2$s) per a %4$s amb %3$s"
+"Formata el volum codificat mapador de dispositius (device mapper) %1$s (%2$s)"
+" per a %4$s amb %3$s"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -1541,9 +1541,9 @@ msgstr ""
 "del disc %1$s.\n"
 "\n"
 "Es poden usar les particions del disc %1$s tal com estan.\n"
-"Amb aquesta eina les podeu formatar i assignar-los punts de muntatge, però "
-"no podeu\n"
-"afegir, editar, redimensionar ni suprimir particions del disc."
+"Amb aquesta eina les podeu formatar i assignar-los punts\n"
+"de muntatge, però no podeu afegir, editar, canviar la mida\n"
+"ni suprimir particions del disc."
 
 #. popup text
 #: ../storage/Storage.cc:350
