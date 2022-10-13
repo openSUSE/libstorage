@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2019-04-04 15:02+0000\n"
-"Last-Translator: Davide Aiello <davidea@novilinguists.com>\n"
+"PO-Revision-Date: 2022-10-13 18:13+0000\n"
+"Last-Translator: Paolo Za <zapaolo@email.it>\n"
 "Language-Team: Italian <https://l10n.opensuse.org/projects/libstorage/"
-"sle-12-sp4/it/>\n"
+"sle-12-sp5/it/>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.3\n"
+"X-Generator: Weblate 4.9.1\n"
 "X-Poedit-Language: Italian\n"
 
 #. text displayed during action
@@ -781,7 +781,7 @@ msgstr ""
 #: ../storage/Dmraid.cc:174
 #, c-format
 msgid "Format RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "Formattazione della partizione RAID %1$s (%2$s)  per %4$s con %3$s"
+msgstr "Formattazione della partizione RAID %1$s (%2$s) per %4$s con %3$s"
 
 # #-#-#-#-#  storage.it.po (storage)  #-#-#-#-#
 # TLABEL modules/inst_prepdisk.ycp:98
