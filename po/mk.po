@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: base\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2022-11-11 01:13+0000\n"
+"PO-Revision-Date: 2022-12-20 09:13+0000\n"
 "Last-Translator: Kristijan Fremen Velkovski <me@krisfremen.com>\n"
 "Language-Team: Macedonian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/mk/>\n"
@@ -364,7 +364,7 @@ msgstr ""
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr ""
+msgstr "Создади група за волумен %1$s (%2$s) од %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -432,7 +432,7 @@ msgstr "&Креирај"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr ""
+msgstr "Создавање група за волумен %1$s (%2$s) од %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
@@ -500,7 +500,7 @@ msgstr ""
 #: ../storage/Partition.cc:433
 #, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr ""
+msgstr "Избриши партиција %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
