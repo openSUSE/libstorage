@@ -8,14 +8,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date:  2005-05-17 19:57+0200\n"
-"Last-Translator: Aiet Kolkhi <aiet@qartuli.net>\n"
-"Language-Team: Georgian <i18n@suse.de>\n"
+"PO-Revision-Date: 2023-02-02 11:20+0000\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <https://l10n.opensuse.org/projects/libstorage/"
+"sle-12-sp5/ka/>\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -443,9 +445,8 @@ msgid "DM Multipath"
 msgstr "მულტიმედია"
 
 #: ../storage/Graph.cc:487
-#, fuzzy
 msgid "DM RAID"
-msgstr "BIOS"
+msgstr "DM RAID"
 
 #. displayed text before action, %1$s is replaced by device names e.g /dev/sda1 /dev/sda2
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1052,7 +1053,7 @@ msgstr "მყარი დისკი"
 #. symbol for "kibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:58
 msgid "KiB"
-msgstr "კბტ"
+msgstr "კბ"
 
 #: ../storage/Graph.cc:511
 #, fuzzy
@@ -1078,7 +1079,7 @@ msgstr "BIOS"
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
 msgid "MiB"
-msgstr "მბტ"
+msgstr "მიბ"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
