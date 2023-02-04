@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2023-02-02 11:20+0000\n"
+"PO-Revision-Date: 2023-02-04 20:14+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/ka/>\n"
@@ -43,7 +43,7 @@ msgstr ""
 #. symbol for "bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:51
 msgid "B"
-msgstr "ბ"
+msgstr "სი"
 
 #: ../storage/Graph.cc:515
 msgid "Btrfs Volume"
@@ -562,17 +562,17 @@ msgstr "აირჩიეთ პროგრამული უზრუნვ�
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
 msgid "EB"
-msgstr ""
+msgstr "ებ"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
 msgid "EiB"
-msgstr ""
+msgstr "ეიბ"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:218
@@ -1031,9 +1031,8 @@ msgstr ""
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
-#, fuzzy
 msgid "G"
-msgstr "გბ"
+msgstr "სოლ"
 
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
@@ -1042,9 +1041,8 @@ msgstr "გბ"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
-#, fuzzy
 msgid "GiB"
-msgstr "გბ"
+msgstr "გიბ"
 
 #: ../storage/Graph.cc:483
 msgid "Hard Disk"
@@ -1053,7 +1051,7 @@ msgstr "მყარი დისკი"
 #. symbol for "kibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:58
 msgid "KiB"
-msgstr "კბ"
+msgstr "კიბ"
 
 #: ../storage/Graph.cc:511
 #, fuzzy
@@ -1062,9 +1060,8 @@ msgstr "ადგილობრივი დრო"
 
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:75
-#, fuzzy
 msgid "M"
-msgstr "მბ"
+msgstr "ო"
 
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
@@ -1072,9 +1069,8 @@ msgid "MB"
 msgstr "მბ"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
-#, fuzzy
 msgid "MD RAID"
-msgstr "BIOS"
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
@@ -1083,7 +1079,7 @@ msgstr "მიბ"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "მონტირების წერტილი"
+msgstr "მიმაგრების წერტილი"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1101,15 +1097,13 @@ msgstr ""
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
-#, fuzzy
 msgid "P"
-msgstr "IP"
+msgstr "პ"
 
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
-#, fuzzy
 msgid "PB"
-msgstr "ბ"
+msgstr "პბ"
 
 #: ../storage/Graph.cc:495
 msgid "Partition"
@@ -1117,9 +1111,8 @@ msgstr "დანაყოფი"
 
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:102
-#, fuzzy
 msgid "PiB"
-msgstr "კბტ"
+msgstr "პიბ"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
@@ -1508,9 +1501,8 @@ msgstr "%1 დანაყოფის შემოწმება"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:97
-#, fuzzy
 msgid "T"
-msgstr "ტბ"
+msgstr "ტერა"
 
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:94
@@ -1539,9 +1531,8 @@ msgstr ""
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:91
-#, fuzzy
 msgid "TiB"
-msgstr "ტბ"
+msgstr "ტიბ"
 
 #: ../storage/Storage.cc:5199
 msgid "Unmount failed."
@@ -1609,9 +1600,8 @@ msgstr ""
 
 #. symbol for "kilo" (best keep untranslated)
 #: ../storage/HumanString.cc:64
-#, fuzzy
 msgid "k"
-msgstr "კბ"
+msgstr "k"
 
 #. symbol for "kilo bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:61
