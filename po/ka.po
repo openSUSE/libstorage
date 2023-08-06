@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2023-07-15 21:15+0000\n"
+"PO-Revision-Date: 2023-08-06 15:15+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/ka/>\n"
@@ -432,7 +432,7 @@ msgstr "%1 რეპოზიტორიის შექმნა"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr ""
+msgstr "შეიქმნება ტომების ჯგუფ %1$s (%2$s) %3$s-სგან"
 
 #: ../storage/Graph.cc:519
 #, fuzzy
