@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: libstorage\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2022-10-13 18:13+0000\n"
+"PO-Revision-Date: 2023-10-14 21:15+0000\n"
 "Last-Translator: Paolo Za <zapaolo@email.it>\n"
 "Language-Team: Italian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/it/>\n"
@@ -708,14 +708,14 @@ msgstr "Estensione del gruppo di volumi %1$s con %2$s"
 #: ../storage/Volume.cc:3425
 #, c-format
 msgid "Extending %1$s to %2$s"
-msgstr "Estensione di %1$s in %2$s in corso"
+msgstr "Estensione di %1$s in %2$s"
 
 #. displayed text during action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
 #: ../storage/Btrfs.cc:935
 #, c-format
 msgid "Extending Btrfs volume %1$s by %2$s"
-msgstr "Estensione del volume Btrfs %1$s in %2$s in corso"
+msgstr "Estensione del volume Btrfs %1$s in %2$s"
 
 #. displayed text during action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1703,8 +1703,7 @@ msgstr "Aggiornamento della voce per il punto di montaggio %1$s in %2$s"
 #: ../storage/EtcFstab.cc:954
 #, c-format
 msgid "Updating entry for mount point %1$s in %2$s"
-msgstr ""
-"Aggiornamento della voce per il punto di montaggio %1$s in %2$s in corso"
+msgstr "Aggiornamento della voce per il punto di montaggio %1$s in %2$s"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
