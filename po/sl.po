@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2024-06-13 21:46+0000\n"
+"PO-Revision-Date: 2024-06-14 00:46+0000\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/sl/>\n"
@@ -1071,9 +1071,8 @@ msgstr "Logični nosilci"
 
 #. symbol for "mega" (best keep untranslated)
 #: ../storage/HumanString.cc:75
-#, fuzzy
 msgid "M"
-msgstr "MB"
+msgstr "M"
 
 #. symbol for "mega bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:72
@@ -1081,9 +1080,8 @@ msgid "MB"
 msgstr "MB"
 
 #: ../storage/Graph.cc:499 ../storage/Graph.cc:503
-#, fuzzy
 msgid "MD RAID"
-msgstr "&RAID..."
+msgstr "MD RAID"
 
 #. symbol for "mebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:69
