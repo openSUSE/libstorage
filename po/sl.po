@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2024-06-13 18:46+0000\n"
+"PO-Revision-Date: 2024-06-13 21:46+0000\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp4/sl/>\n"
@@ -503,9 +503,9 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Partition.cc:433
-#, fuzzy, c-format
+#, c-format
 msgid "Delete partition %1$s (%2$s)"
-msgstr "Spremeni velikost particije %1 na %2"
+msgstr "Izbriši razdelek %1$s (%2$s)"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -565,19 +565,17 @@ msgstr ""
 #. symbol for "exa" (best keep untranslated)
 #: ../storage/HumanString.cc:119
 msgid "E"
-msgstr ""
+msgstr "E"
 
 #. symbol for "exa bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:116
-#, fuzzy
 msgid "EB"
-msgstr "kB"
+msgstr "EB"
 
 #. symbol for "exbi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:113
-#, fuzzy
 msgid "EiB"
-msgstr "GB"
+msgstr "EiB"
 
 #. displayed text during action, %1$s is replaced by disk name (e.g. dasda)
 #: ../storage/Dasd.cc:218
@@ -945,9 +943,9 @@ msgstr "Dodajanje razdelka %1 k izmenjalnemu prostoru"
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Partition.cc:516
-#, fuzzy, c-format
+#, c-format
 msgid "Format partition %1$s (%2$s) with %3$s"
-msgstr "Kreiraj %1 particijo velikosti  %2 (%3 z %4)"
+msgstr "Formatiraj razdelek %1$s (%2$s) z datotečnim sistemom %3$s"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -1042,9 +1040,8 @@ msgstr ""
 
 #. symbol for "giga" (best keep untranslated)
 #: ../storage/HumanString.cc:86
-#, fuzzy
 msgid "G"
-msgstr "GB"
+msgstr "G"
 
 #. symbol for "giga bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:83
@@ -1053,9 +1050,8 @@ msgstr "GB"
 
 #. symbol for "gibi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:80
-#, fuzzy
 msgid "GiB"
-msgstr "GB"
+msgstr "GiB"
 
 # &F is taken by "&FTP"
 # 2001-10-12 11:34:26 CEST -ke-
