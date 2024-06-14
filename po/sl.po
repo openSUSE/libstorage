@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2024-06-14 00:46+0000\n"
+"PO-Revision-Date: 2024-06-14 10:46+0000\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/sl/>\n"
@@ -1090,7 +1090,7 @@ msgstr "MiB"
 
 #: ../storage/Graph.cc:523
 msgid "Mount Point"
-msgstr "Priključna točka"
+msgstr "Priklopna točka"
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -1108,14 +1108,13 @@ msgstr "Priključevanje korenskega razdelka %1 na %2"
 
 #. symbol for "peta" (best keep untranslated)
 #: ../storage/HumanString.cc:108
-#, fuzzy
 msgid "P"
-msgstr "IP"
+msgstr "P"
 
 #. symbol for "peta bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:105
 msgid "PB"
-msgstr ""
+msgstr "PB"
 
 #: ../storage/Graph.cc:495
 msgid "Partition"
@@ -1123,9 +1122,8 @@ msgstr "Razdelek"
 
 #. symbol for "pebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:102
-#, fuzzy
 msgid "PiB"
-msgstr "KIB"
+msgstr "PiB"
 
 #. displayed text before action,
 #. %1$s and %2$s are replaced by a device names (e.g. /dev/hda1)
@@ -1167,9 +1165,9 @@ msgstr "Odstrani VG %1"
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by pathname e.g. /etc/fstab
 #: ../storage/Volume.cc:1506
-#, fuzzy, c-format
+#, c-format
 msgid "Remove %1$s from %2$s"
-msgstr "Odmakni napravo %1 iz /etc/fstab"
+msgstr "Odstrani %1$s iz %2$s"
 
 #. displayed text before action, %1$s is replaced by volume name e.g. hilbert:/work
 #: ../storage/Nfs.cc:75
@@ -1512,9 +1510,8 @@ msgstr "Priključevanje korenskega razdelka %1 na %2"
 
 #. symbol for "tera" (best keep untranslated)
 #: ../storage/HumanString.cc:97
-#, fuzzy
 msgid "T"
-msgstr "TB"
+msgstr "T"
 
 #. symbol for "tera bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:94
@@ -1552,9 +1549,8 @@ msgstr ""
 
 #. symbol for "tebi bytes" (best keep untranslated)
 #: ../storage/HumanString.cc:91
-#, fuzzy
 msgid "TiB"
-msgstr "TB"
+msgstr "TiB"
 
 #: ../storage/Storage.cc:5199
 #, fuzzy
