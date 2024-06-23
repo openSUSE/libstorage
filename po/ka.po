@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2023-08-09 07:15+0000\n"
+"PO-Revision-Date: 2024-06-24 01:46+0000\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <https://l10n.opensuse.org/projects/libstorage/"
 "sle-12-sp5/ka/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.9.1\n"
+"X-Generator: Weblate 5.6\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -110,36 +110,36 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:138
-#, fuzzy, c-format
+#, c-format
 msgid "Create RAID partition %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "RAID დანაყოფის %1$s (%2$s) შექმნა"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:112
-#, fuzzy, c-format
+#, c-format
 msgid "Create RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "RAID დანაყოფის %1$s (%2$s) შექმნა %4$s-ისთვის %3$s-ით"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:3347
-#, fuzzy, c-format
+#, c-format
 msgid "Create boot volume %1$s (%2$s) with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "ჩატვირთვადი ტომის %1$s (%2$s) შექმნა %3$s-ით"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Dmraid.cc:122
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted RAID partition %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "დაშიფრული RAID დანაყოფის %1$s (%2$s) შექმნა %4$s-სთვის %3$s-ით"
 
 #. displayed text before action, %1$s is replaced by device name
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -184,9 +184,9 @@ msgstr ""
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3370
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "დაშიფრული ტომის %1$s (%2$s) შექმნა"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -194,16 +194,16 @@ msgstr "%1 დანაყოფის შემოწმება"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:3362
-#, fuzzy, c-format
+#, c-format
 msgid "Create encrypted volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "დაშიფრული ტომის %1$s (%2$s) შექმნა %4$s-სთვის %3$s-ით"
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:131
-#, fuzzy, c-format
+#, c-format
 msgid "Create extended RAID partition %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "გაფართოებული RAID დანაყოფის %1$s (%2$s) შექმნა"
 
 #. displayed text before action, %1$s is replaced by multipath partition e.g. 3600508b400105f590000900000300000_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -274,9 +274,9 @@ msgstr ""
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #: ../storage/Volume.cc:3342
-#, fuzzy, c-format
+#, c-format
 msgid "Create root volume %1$s (%2$s) with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "ჩატვირთვადი ტომის %1$s (%2$s %3$s-ით) შექმნა"
 
 #. displayed text before action, %1$s is replaced by device name e.g. md0
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -299,23 +299,25 @@ msgstr ""
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:997
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "ქვეტომის %1$s შექმნა მოწყობილობაზე %2$s"
 
 #. displayed text before action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:1004
-#, fuzzy, c-format
+#, c-format
 msgid "Create subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr ""
+"ქვეტომის %1$s შექმნა მოწყობილობაზე %2$s პარამეტრით \"ჩაწერისას კოპირების "
+"გარეშე\""
 
 #. displayed text before action, %1$s is replaced by raid partition e.g. pdc_dabaheedj_part1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Dmraid.cc:101
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap RAID partition %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "სვოპის RAID დანაყოფის %1$s (%2$s) შექმნა"
 
 #. displayed text before action, %1$s is replaced by device name e.g. /dev/system/var
 #. %2$s is replaced by size (e.g. 623.5 MB)
@@ -335,17 +337,17 @@ msgstr ""
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3337
-#, fuzzy, c-format
+#, c-format
 msgid "Create swap volume %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "სვოპის ტომის %1$s (%2$s) შექმნა"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #. %2$s is replaced by size (e.g. 623.5 MB)
 #: ../storage/Volume.cc:3366
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s)"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "სვოპის ტომის %1$s (%2$s) შექმნა"
 
 #. displayed before action
 #. %1$s is replaced by device name e.g. /dev/hda1
@@ -353,9 +355,9 @@ msgstr "%1 დანაყოფის შემოწმება"
 #. %3$s is replaced by file system type (e.g. reiserfs)
 #. %4$s is replaced by mount point (e.g. /usr)
 #: ../storage/Volume.cc:3356
-#, fuzzy, c-format
+#, c-format
 msgid "Create volume %1$s (%2$s) for %4$s with %3$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "ტომის %1$s (%2$s) შექმნა %4$s-სთვის %3$s-ით"
 
 #. displayed text before action
 #. %1$s is replaced by a name (e.g. system)
@@ -368,15 +370,15 @@ msgstr "ტომების ჯგუფის %1$s (%2$s) შექმნა 
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
-#, fuzzy, c-format
+#, c-format
 msgid "Creating %1$s"
-msgstr "%1-ის წაშლა"
+msgstr "%1-ის შექმნა"
 
 #. displayed text during action, %1$s is replaced by raid partition name e.g. pdc_dabaheedj_part1
 #: ../storage/Dmraid.cc:93
-#, fuzzy, c-format
+#, c-format
 msgid "Creating RAID partition %1$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "იქმნება RAID დანაყოფი %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/loop0
 #. %2$s is replaced by filename (e.g. /var/adm/secure)
@@ -387,15 +389,15 @@ msgstr ""
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/system/var
 #: ../storage/LvmLv.cc:219
-#, fuzzy, c-format
+#, c-format
 msgid "Creating logical volume %1$s"
-msgstr "%1 რეპოზიტორიის შექმნა"
+msgstr "იქმნება ლოგიკური ტომი %1$s"
 
 #. displayed text during action, %1$s is replaced by multipath partition name e.g. 3600508b400105f590000900000300000_part1
 #: ../storage/Dmmultipath.cc:93
-#, fuzzy, c-format
+#, c-format
 msgid "Creating multipath partition %1$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "იქმნება მრავალბილიკიანი დანაყოფი %1$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/md0
 #. %2$s is replaced by one or more devices (e.g /dev/sda1 /dev/sda2)
@@ -407,23 +409,25 @@ msgstr ""
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda1
 #: ../storage/Btrfs.cc:980
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s"
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr "იქმნება ქვეტომი %1$s მოწყობილობაზე %2$s"
 
 #. displayed text during action, %1$s is replaced by subvolume name e.g. tmp
 #. %2$s is replaced by device name e.g. /dev/sda
 #: ../storage/Btrfs.cc:987
-#, fuzzy, c-format
+#, c-format
 msgid "Creating subvolume %1$s on device %2$s with option \"no copy on write\""
-msgstr "%1 დანაყოფის შემოწმება"
+msgstr ""
+"იქმნება ქვეტომი %1$s მოწყობილობაზე %2$s პარამეტრით \"ჩაწერისას კოპირების "
+"გარეშე\""
 
 #. displayed during action
 #. %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Volume.cc:3390
-#, fuzzy, c-format
+#, c-format
 msgid "Creating volume %1$s"
-msgstr "%1 რეპოზიტორიის შექმნა"
+msgstr "იქმნება ტომი %1$s"
 
 #. displayed text during action
 #. %1$s is replaced by a name (e.g. system)
