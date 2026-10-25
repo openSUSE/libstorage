@@ -10,15 +10,16 @@ msgstr ""
 "Project-Id-Version: YaST (@memory@)\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-10-09 15:59+0200\n"
-"PO-Revision-Date: 2014-08-03 18:19+0300\n"
-"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
-"Language-Team: Ελληνικά <opensuse-translation-el@opensuse.org>\n"
+"PO-Revision-Date: 2026-10-25 21:21+0000\n"
+"Last-Translator: Efstathios Iosifidis <eiosifidis@gmail.com>\n"
+"Language-Team: Greek <https://l10n.opensuse.org/projects/libstorage/sle-12-"
+"sp5/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2026.10.1\n"
 
 #. text displayed during action
 #: ../storage/LvmLv.cc:335 ../storage/Volume.cc:3440
@@ -373,7 +374,7 @@ msgstr "Δημιουργία λογικού τόμου %1$s (%2$s) για %4$s �
 #: ../storage/LvmVg.cc:1120
 #, c-format
 msgid "Create volume group %1$s (%2$s) from %3$s"
-msgstr "Δημιουργία κατάτμησης εκκίνησης %1$s (%2$s) με %3$s"
+msgstr "Δημιουργία ομάδας τόμων %1$s (%2$s) από %3$s"
 
 #. displayed text during action, %1$s is replaced by device name e.g. /dev/hda1
 #: ../storage/Container.cc:272
@@ -441,7 +442,7 @@ msgstr "Δημιουργία Λογικού Τόμου %1$s"
 #: ../storage/LvmVg.cc:1111
 #, c-format
 msgid "Creating volume group %1$s (%2$s) from %3$s"
-msgstr "Δημιουργία ομάδας τόμου %1$s (%2$s) από το %3$s"
+msgstr "Δημιουργία ομάδας τόμων %1$s (%2$s) από %3$s"
 
 #: ../storage/Graph.cc:519
 msgid "DM Device"
